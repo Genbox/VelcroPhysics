@@ -1,0 +1,15 @@
+obj\Debug\ResolveAssemblyReference.cache
+bin\Debug\FarseerDemo1.exe
+bin\Debug\FarseerDemo1.pdb
+bin\Debug\Microsoft.Xna.Framework.dll
+bin\Debug\Microsoft.Xna.Framework.xml
+obj\Debug\FarseerDemo1.exe
+obj\Debug\FarseerDemo1.pdb
+obj\Debug\FarseerDemo1.DemoGame.resources
+obj\Debug\FarseerDemo1.csproj.GenerateResource.Cache
+bin\Debug\Textures\sprite.bmp
+bin\Debug\Textures\A.jpg
+bin\Debug\Textures\N.jpg
+bin\Debug\Textures\X.jpg
+bin\Debug\FarseerGames.FarseerXNAPhysics.dll
+bin\Debug\FarseerGames.FarseerXNAPhysics.pdb

@@ -1,0 +1,14 @@
+bin\Debug\FarseerGames.FarseerPhysics.dll
+bin\Debug\FarseerGames.FarseerPhysics.pdb
+bin\Debug\Microsoft.Xna.Framework.dll
+bin\Debug\Microsoft.Xna.Framework.xml
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\FarseerGames.FarseerPhysics.dll
+obj\Debug\FarseerGames.FarseerPhysics.pdb
+bin\Release\FarseerGames.FarseerPhysics.dll
+bin\Release\FarseerGames.FarseerPhysics.pdb
+bin\Release\Microsoft.Xna.Framework.dll
+bin\Release\Microsoft.Xna.Framework.xml
+obj\Release\ResolveAssemblyReference.cache
+obj\Release\FarseerGames.FarseerPhysics.dll
+obj\Release\FarseerGames.FarseerPhysics.pdb
