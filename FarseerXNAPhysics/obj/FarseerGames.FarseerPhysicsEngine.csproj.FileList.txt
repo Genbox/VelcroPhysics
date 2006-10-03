@@ -1,5 +1,0 @@
-obj\Debug\ResolveAssemblyReference.cache
-bin\Debug\FarseerGames.FarseerPhysicsEngine.dll
-bin\Debug\FarseerGames.FarseerPhysicsEngine.pdb
-obj\Debug\FarseerGames.FarseerPhysicsEngine.dll
-obj\Debug\FarseerGames.FarseerPhysicsEngine.pdb
