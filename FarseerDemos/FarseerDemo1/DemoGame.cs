@@ -11,7 +11,7 @@ using FarseerGames.FarseerXNAPhysics;
 using FarseerGames.FarseerXNAPhysics.Dynamics;
 
 namespace FarseerDemo1 {
-    /// <summary>
+    /// <summary>e
     /// DEMO1(HELLO WORLD):
     /// This is the "Hello World" demo for the 1st release of the Farseer Physics Engine.
     /// This is a modified version of the "How To: Rotate a Sprite" demo from the XNA 
