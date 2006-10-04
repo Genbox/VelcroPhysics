@@ -17,7 +17,7 @@ namespace FarseerGames.FarseerXNATestharness.Components {
         private PhysicsSimulator _physicsSimulator;
 
         private Vector2 _gravity = new Vector2(0, 0);
-        private int _iterationsPerCollision = 1;
+        private int _iterationsPerCollision = 3;
         private float _allowedCollisionPenetration = .01f;
         private float _impulseBiasFactor = .8f;
 

@@ -40,6 +40,7 @@
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -48,12 +49,6 @@
     </Compile>
     <Compile Include="Components\FarseerPhysicsComponent.Designer.cs">
       <DependentUpon>FarseerPhysicsComponent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Demos\FarseerDemo2.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Demos\FarseerDemo2.Designer.cs">
-      <DependentUpon>FarseerDemo2.cs</DependentUpon>
     </Compile>
     <Compile Include="Demos\FarseerDemo.cs">
       <SubType>Component</SubType>
@@ -70,24 +65,24 @@
     <Compile Include="Entities\RigidBodyEntity.cs" />
     <Compile Include="Entities\ShipEntity.cs" />
     <Compile Include="EntityViews\ShipShape.cs" />
-    <Compile Include="TestharnessGame.Designer.cs">
-      <DependentUpon>TestharnessGame.cs</DependentUpon>
+    <Compile Include="TestharnessXNAGame.Designer.cs">
+      <DependentUpon>TestharnessXNAGame.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs">
     </Compile>
-    <Compile Include="TestharnessGame.cs">
+    <Compile Include="TestharnessXNAGame.cs">
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestharnessGame.resx">
+    <EmbeddedResource Include="TestharnessXNAGame.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>TestharnessGame.cs</DependentUpon>
+      <DependentUpon>TestharnessXNAGame.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FarseerXNAGame\FarseerXNAGame.csproj">
-      <Project>{5EF855CA-7E65-424B-8685-5F6102FA004D}</Project>
+      <Project>{EB6EEEA6-6FED-46FB-AC55-87A06474D170}</Project>
       <Name>FarseerXNAGame</Name>
     </ProjectReference>
     <ProjectReference Include="..\FarseerXNAPhysics\FarseerXNAPhysics.csproj">
