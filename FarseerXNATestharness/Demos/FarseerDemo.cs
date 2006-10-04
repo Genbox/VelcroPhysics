@@ -7,10 +7,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 
+using FarseerGames.FarseerXNAGame;
 using FarseerGames.FarseerXNAPhysics;
 
+
 namespace FarseerGames.FarseerXNATestharness.Samples {
-    public partial class FarseerDemo : Microsoft.Xna.Framework.GameComponent {
+    public partial class FarseerDemo : GameComponent {
         protected PhysicsSimulator _physicsSimulator;
 
         public FarseerDemo() {
