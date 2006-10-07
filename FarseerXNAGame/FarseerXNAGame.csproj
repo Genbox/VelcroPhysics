@@ -1,6 +1,6 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{5EF855CA-7E65-424B-8685-5F6102FA004D}</ProjectGuid>
+    <ProjectGuid>{EB6EEEA6-6FED-46FB-AC55-87A06474D170}</ProjectGuid>
     <ProjectTypeGuids>{9F340DF3-2AED-4330-AC16-78AC2D9B4738};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -43,6 +43,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\FarseerPhysicsComponent.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\FarseerPhysicsComponent.Designer.cs">
+      <DependentUpon>FarseerPhysicsComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\IEntityController.cs" />
+    <Compile Include="Input\IKeyboardInputService.cs" />
+    <Compile Include="Input\KeyboardEntityController.cs" />
+    <Compile Include="Input\KeyAction.cs" />
     <Compile Include="Components\KeyboardInputComponent.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -52,14 +62,14 @@
     <Compile Include="FarseerGame.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="FarseerGraphicsComponent.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Fonts\BitmapFont.cs" />
     <Compile Include="Fonts\BitmapText.cs" />
     <Compile Include="Fonts\BitmapTextList.cs" />
-    <Compile Include="IEntity.cs" />
-    <Compile Include="IEntityView.cs" />
+    <Compile Include="Entities\IEntity.cs" />
+    <Compile Include="Entities\IEntityView.cs" />
+    <Compile Include="Input\KeyDownAction.cs" />
+    <Compile Include="Input\KeyPressedAction.cs" />
+    <Compile Include="Input\KeyUpAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Components\FrameRateComponent.cs">
       <SubType>Component</SubType>
@@ -69,8 +79,16 @@
     </Compile>
     <Compile Include="Drawing\PolygonShape.cs" />
     <Compile Include="Drawing\Shape.cs" />
-    <Compile Include="TestEntity.cs" />
-    <Compile Include="TestEntityView.cs" />
+    <Compile Include="Sprites\ISpriteManagerService.cs" />
+    <Compile Include="Sprites\Sprite.cs" />
+    <Compile Include="Sprites\SpriteEntityView.cs" />
+    <Compile Include="Sprites\SpriteManager.cs" />
+    <Compile Include="Components\SpriteManagerComponent.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\SpriteManagerComponent.Designer.cs">
+      <DependentUpon>SpriteManagerComponent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\FrameRate.cs" />
   </ItemGroup>
   <ItemGroup>
