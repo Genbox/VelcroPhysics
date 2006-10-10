@@ -8,21 +8,29 @@ using FarseerGames.FarseerXNAPhysics.Collisions;
 
 namespace FarseerGames.FarseerXNAPhysics.Dynamics {
     public class RectangleRigidBody : RigidBody {
-        protected float _width = 1;
-        protected float _height = 1;
-
-        public RectangleRigidBody() {
+        private float collisionPrecisionFactor = .25f;
+        private RectangleRigidBody() {
         }
 
-
         public RectangleRigidBody(float width, float height, float mass) {
-            _width = width;
-            _height = height;
+            InitializeBody(width, height, mass);
+            InitializeGeometry(width, height);
+
+            float collisionPrecision = Math.Min(_geometry.AABB.Width, _geometry.AABB.Height) * collisionPrecisionFactor;
+
+            InitializeGrid(collisionPrecision, 0, true);
+        }
+
+        private void InitializeBody(float width, float height, float mass) {
             Mass = mass;
-            MomentOfInertia = Mass * (_width * _width + _height * _height) / 12;
-           
-            Geometry = new RectangleGeometry(_width, _height);
-            float collisionPrecision = Math.Min(_geometry.AABB.Width, _geometry.AABB.Height) * .25f;
+            MomentOfInertia = Mass * (width * width + height * height) / 12;
+        }
+
+        private void InitializeGeometry(float width, float height) {
+            Geometry = new RectangleGeometry(width, height);
+        }
+
+        private void InitializeGrid(float collisionPrecision, float padding, bool prime) {
             Grid = new Grid(_geometry, collisionPrecision, 0, true); 
         }
     }
