@@ -64,6 +64,7 @@
     <Compile Include="FarseerXNATestharnessGame.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Ships\Ship.cs" />
     <Compile Include="Ships\ShipEntity.cs" />
     <Compile Include="Ships\ShipKeyboardEntityController.cs" />
     <Compile Include="Ships\ShipEntityView.cs" />
@@ -90,6 +91,9 @@
     <Content Include="Textures\N.jpg" />
     <Content Include="Textures\ship.png" />
     <Content Include="Textures\sprite.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Textures\spriteSmall.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Textures\X.jpg" />
