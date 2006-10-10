@@ -9,20 +9,37 @@ using FarseerGames.FarseerXNAPhysics.Mathematics;
 
 namespace FarseerGames.FarseerXNAPhysics.Dynamics {
     public class PolygonRigidBody : RigidBody {
+        private float collionPrecisionFactor = .25f;
+
         public PolygonRigidBody() : base() {
 
         }
 
-        public PolygonRigidBody(Vertices vertices)
+        public PolygonRigidBody(float mass, Vertices vertices)
             : base() {
-            SetVertices(vertices);
+
+            InitializeGeometry(vertices);
+
+            //setup a default precision if necassary
+            float collisionPrecision = Math.Min(_geometry.AABB.Width, _geometry.AABB.Height) * collionPrecisionFactor; 
+            InitializeGrid(collisionPrecision, 0, true);
+            
+            //by default, estimate moment of inertia to be MOI for original bounding box.
+            float momentOfInertia = mass * (Geometry.AABB.Width * Geometry.AABB.Width + Geometry.AABB.Height * Geometry.AABB.Height) / 12;
+            InitializeBody(mass, momentOfInertia);
         }
 
-        public void SetVertices(Vertices vertices) {
+        private void InitializeBody(float mass, float momentOfInertia) {
+            Mass = mass;
+            MomentOfInertia = momentOfInertia;
+        }
+
+        private void InitializeGeometry(Vertices vertices) {
             Geometry = new PolygonGeometry(vertices);
-            //TODO the grid parameters more customizable.
-            float collisionPrecision = Math.Min(_geometry.AABB.Width, _geometry.AABB.Height) * .25f; //setup a default precision if necassary
-            _grid = new Grid(_geometry, collisionPrecision, 0, true);
+        }
+
+        private void InitializeGrid(float collisionPrecision, float padding, bool prime) {            
+            Grid = new Grid(_geometry, collisionPrecision, 0, true);
         }
     }
 }
