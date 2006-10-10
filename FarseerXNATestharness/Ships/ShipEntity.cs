@@ -32,19 +32,14 @@ namespace FarseerGames.FarseerXNATestharness.Ships {
             vertices.Add(new Vector2(9, -13));
             vertices.Add(new Vector2(2, -22));
             vertices.Add(new Vector2(2, -27));
-            rigidBody = new PolygonRigidBody(vertices);
+            rigidBody = new PolygonRigidBody(.2f, vertices);
 
             //setup some default physics parameters for all rigid body sprites
-            rigidBody.Mass = .2f;
             rigidBody.RotationalDragCoefficient = 50;
             rigidBody.LinearDragCoefficient = .001f;
             rigidBody.FrictionCoefficient = .1f;
             rigidBody.RestitutionCoefficient = .1f;
 
-            //use the dimenstions of the bottles bounding box to estimate the moment of inertia (using MOI of rectangle as estimate)
-            float bbWidth = rigidBody.Geometry.AABB.Width;
-            float bbHeight = rigidBody.Geometry.AABB.Height;
-            rigidBody.MomentOfInertia = Mass * (bbWidth * bbWidth + bbHeight * bbHeight) / 12f;
             //add rigid body to physics simulator
             physicsSimulator.Add(rigidBody);
         }
