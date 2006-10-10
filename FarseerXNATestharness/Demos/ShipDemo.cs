@@ -11,8 +11,7 @@ using FarseerGames.FarseerXNATestharness.Ships;
 
 namespace FarseerGames.FarseerXNATestharness.Demos {
     public partial class ShipDemo : FarseerDemoComponent {
-        private ShipEntity ship;
-        private ShipEntityView shipView;
+        private Ship ship;
         private ShipKeyboardEntityController shipKeyboardController;
 
         public ShipDemo() {
@@ -22,20 +21,8 @@ namespace FarseerGames.FarseerXNATestharness.Demos {
         public override void Start() {
             // TODO: Add your start up code here
             base.Start();
-            ship = new ShipEntity(physicsSimulator);
-            shipView = new ShipEntityView(ship, "sprite.png", spriteManager);
-            shipKeyboardController = new ShipKeyboardEntityController(ship,keyboardInputService);
-
-            ship.Position = new Vector2(400, 400);
+            shipKeyboardController = new ShipKeyboardEntityController(keyboardInputService);
+            ship = new Ship(physicsSimulator, spriteManager,shipKeyboardController);
         }
-
-        //public override void Update() {
-        //    // TODO: Add your update code here
-        //}
-
-        //public override void Draw() {
-        //    // TODO: Add your drawing code here
-            
-        //}
     }
 }

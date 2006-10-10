@@ -14,12 +14,20 @@ namespace FarseerGames.FarseerXNATestharness.Ships {
         private Keys turnLeftKey = Keys.A;
         private Keys turnRightKey = Keys.D;
 
+        public ShipKeyboardEntityController(IKeyboardInputService keyboardInputService)
+            : base(keyboardInputService) {
+            MapKeys();
+        }
+
         public ShipKeyboardEntityController(ShipEntity shipEntity, IKeyboardInputService keyboardInputService)
             : base(shipEntity, keyboardInputService) {
+            MapKeys();
+        }
 
+        private void MapKeys() {
             keyboardInputService.AddKeyAction(new KeyPressedAction(thrustKey, Thrust));
-            keyboardInputService.AddKeyAction(new KeyPressedAction(turnLeftKey,TurnLeft));
-            keyboardInputService.AddKeyAction(new KeyPressedAction(turnRightKey,TurnRight));
+            keyboardInputService.AddKeyAction(new KeyPressedAction(turnLeftKey, TurnLeft));
+            keyboardInputService.AddKeyAction(new KeyPressedAction(turnRightKey, TurnRight));
         }
 
         private void Thrust() {entity.Thrust();}
