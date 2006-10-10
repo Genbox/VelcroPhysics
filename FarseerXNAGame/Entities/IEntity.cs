@@ -8,6 +8,5 @@ namespace FarseerGames.FarseerXNAGame.Entities {
     public interface IEntity {
         float Orientation{ get;set;}
         Vector2 Position { get;set;}
-        //bool Remove { get;set;}
     }
 }
