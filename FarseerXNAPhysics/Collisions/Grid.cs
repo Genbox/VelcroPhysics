@@ -26,7 +26,6 @@ namespace FarseerGames.FarseerXNAPhysics.Collisions
         private Int32 _gridCellsWide; //# of grid cells wide
         private Int32 _gridCellsHigh; //# of grid cell high
 
-
         internal Geometry Geometry {
             get { return _geometry; }
             set { _geometry = value; }
@@ -36,7 +35,7 @@ namespace FarseerGames.FarseerXNAPhysics.Collisions
             get { return _gridCellSize; }
             set { 
                 _gridCellSize = value;
-                _gridCellSizeInverse = 1f / value;
+                _gridCellSizeInverse = 1f / value;                
             }
         }
 

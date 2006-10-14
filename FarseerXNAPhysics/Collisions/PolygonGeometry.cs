@@ -8,14 +8,11 @@ using FarseerGames.FarseerXNAPhysics.Mathematics;
 
 namespace FarseerGames.FarseerXNAPhysics.Collisions {
     public class PolygonGeometry : Geometry {
-        private float _maxEdgeLength;
-
         public PolygonGeometry(Vertices vertices): base(vertices) {
         }
 
         public PolygonGeometry(Vertices vertices, float maxEdgeLength)
             : base(vertices) {
-            _maxEdgeLength = maxEdgeLength;
         }
     }
 }

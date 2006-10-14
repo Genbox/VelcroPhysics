@@ -44,5 +44,18 @@ namespace FarseerGames.FarseerXNAGame.Entities {
             get { return rigidBody.Mass; }
             set { rigidBody.Mass = Mass; }
         }
+
+        public void Dispose() {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing) {
+            //subclasses can override incase they need to dispose of resources
+            //otherwise do nothing.
+            if (disposing) {
+                rigidBody.Dispose();
+            }
+        }
     }
 }

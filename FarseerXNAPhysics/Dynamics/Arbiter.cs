@@ -17,8 +17,8 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
     /// </summary>
     internal class Arbiter : IEquatable<Arbiter> {
 
-        private RigidBody _rigidBodyA;
-        private RigidBody _rigidBodyB;        
+        protected RigidBody _rigidBodyA;
+        protected RigidBody _rigidBodyB;        
         private ContactList _contactList;
         private ContactList _newContactList;
         private ContactList _mergedContactList;
@@ -66,6 +66,10 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
 
         internal int ContactCount {
             get { return _contactList.Count; }
+        }
+
+        internal bool ContainsDisposedRigidBody() {
+            return _rigidBodyA.IsDisposed || _rigidBodyB.IsDisposed;
         }
 
         internal void Collide() {            

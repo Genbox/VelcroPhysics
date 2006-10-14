@@ -10,5 +10,9 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
         internal static bool ContactCountEqualsZero(Arbiter a) {
             return a.ContactCount == 0;
         }
+
+        internal static bool ContainsDisposedBody(Arbiter a) {
+            return a.ContainsDisposedRigidBody();
+        }
     }
 }

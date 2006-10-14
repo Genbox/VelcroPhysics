@@ -62,6 +62,10 @@ namespace FarseerGames.FarseerXNAPhysics {
         }
 
         public override void Update(float dt) {
+            //remove all arbiters that contain 1 or more disposed rigid bodies.
+            _rigidBodyList.RemoveAll(RigidBodyList.IsDisposed);
+            _arbiterList.RemoveAll(ArbiterList.ContainsDisposedBody); 
+          
             DoBroadPhaseCollision();
             DoNarrowPhaseCollision();
             ApplyForces(dt);

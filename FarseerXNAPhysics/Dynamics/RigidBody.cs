@@ -70,6 +70,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             int vertexIndex = -1;
             foreach (Vector2 vertex in rigidBody._geometry.WorldVertices) {
                 if (contactList.Count == contactList.Capacity) { return; }
+                if (_grid == null) { return; }//grid can be null for "one-way" collision (points)
                 vertexIndex += 1;
                 localVertex = _geometry.ConvertToLocalCoordinates(vertex);
                 feature = _grid.Evaluate(localVertex);
@@ -80,6 +81,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
                 }
             }
             foreach (Vector2 vertex in _geometry.WorldVertices) {
+                if (rigidBody._grid == null) { return; } //grid can be null for "one-way" collision(points)
                 vertexIndex += 1;
                 localVertex = rigidBody._geometry.ConvertToLocalCoordinates(vertex);
                 feature = rigidBody._grid.Evaluate(localVertex);
@@ -87,7 +89,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
                     feature.Normal = rigidBody._geometry.ConvertToWorldOrientation(feature.Normal);
                     feature.Normal = -feature.Normal; //normals must point in same direction.
                     Contact contact = new Contact(vertex, feature.Normal, feature.Distance, new ContactId(1, vertexIndex, 2));
-                    contactList.Add(contact);
+                    contactList.Add(contact);                    
                 }
             }
         }
