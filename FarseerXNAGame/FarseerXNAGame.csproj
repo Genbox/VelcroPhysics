@@ -49,7 +49,17 @@
     <Compile Include="Components\FarseerPhysicsComponent.Designer.cs">
       <DependentUpon>FarseerPhysicsComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CircleEntity.cs" />
     <Compile Include="Entities\IEntityController.cs" />
+    <Compile Include="Entities\PointEntity.cs" />
+    <Compile Include="Entities\PolygonEntity.cs" />
+    <Compile Include="Entities\RectangleEntity.cs" />
+    <Compile Include="FarseerSceneComponent.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FarseerSceneComponent.Designer.cs">
+      <DependentUpon>FarseerSceneComponent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Input\IKeyboardInputService.cs" />
     <Compile Include="Input\KeyboardEntityController.cs" />
     <Compile Include="Input\KeyAction.cs" />
@@ -82,6 +92,7 @@
     <Compile Include="Sprites\ISpriteManagerService.cs" />
     <Compile Include="Sprites\Sprite.cs" />
     <Compile Include="Sprites\SpriteEntityView.cs" />
+    <Compile Include="Sprites\SpriteList.cs" />
     <Compile Include="Sprites\SpriteManager.cs" />
     <Compile Include="Components\SpriteManagerComponent.cs">
       <SubType>Component</SubType>

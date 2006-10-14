@@ -7,9 +7,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 using FarseerGames.FarseerXNAGame.Sprites;
 
+using FarseerGames.FarseerXNAPhysics;
+
 
 namespace FarseerGames.FarseerXNAGame.Sprites {
-    public class Sprite {
+    public class Sprite : IIsDisposable  {
         private Texture2D spriteTexture;
         private TextureInformation textureInformation;
         private Vector2 origin;
@@ -45,6 +47,25 @@ namespace FarseerGames.FarseerXNAGame.Sprites {
             textureInformation = Texture2D.GetTextureInformation(fullTexturePath);
             origin.X = textureInformation.Width / 2f;
             origin.Y = textureInformation.Height / 2f;
+        }
+
+        private bool isDisposed = false;
+        public bool IsDisposed {
+            get { return isDisposed; }
+        }
+
+        public void Dispose() {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing) {
+            if (!isDisposed) {
+                if (disposing) {
+                    spriteTexture.Dispose();
+                }
+                isDisposed = true;
+            }
         }
     }
 }

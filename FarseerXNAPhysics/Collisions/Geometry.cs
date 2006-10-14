@@ -11,7 +11,7 @@ namespace FarseerGames.FarseerXNAPhysics.Collisions {
     /// <remark>
     /// The geometry class is the unit of collision detection.
     /// </remark>
-    public abstract class Geometry {
+    public abstract class Geometry  {
         //private Grid _grid;
         private Vertices _localVertices;
         private Vertices _worldVertices;
@@ -23,7 +23,7 @@ namespace FarseerGames.FarseerXNAPhysics.Collisions {
         }
 
         public Geometry(Vertices vertices) {
-            SetVertices(vertices);
+            SetVertices(vertices);                     
         }
 
         public Vertices LocalVertices {
@@ -254,5 +254,6 @@ namespace FarseerGames.FarseerXNAPhysics.Collisions {
                 return index - 1;
             }
         }
+
     }
 }

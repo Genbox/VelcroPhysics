@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collisions\AABB.cs" />
+    <Compile Include="Collisions\CircleGeometry.cs" />
     <Compile Include="Collisions\Contact.cs" />
     <Compile Include="Collisions\ContactId.cs" />
     <Compile Include="Collisions\ContactList.cs" />
@@ -48,16 +49,20 @@
     <Compile Include="Collisions\GridCell.cs" />
     <Compile Include="Collisions\GridPoint.cs" />
     <Compile Include="Collisions\ICollideable.cs" />
+    <Compile Include="Collisions\PointGeometry.cs" />
     <Compile Include="Collisions\PolygonGeometry.cs" />
     <Compile Include="Collisions\RectangleGeometry.cs" />
     <Compile Include="Collisions\Vertices.cs" />
     <Compile Include="Dynamics\Arbiter.cs" />
     <Compile Include="Dynamics\ArbiterList.cs" />
     <Compile Include="Dynamics\Body.cs" />
+    <Compile Include="Dynamics\CircleRigidBody.cs" />
+    <Compile Include="Dynamics\PointRigidBody.cs" />
     <Compile Include="Dynamics\PolygonRigidBody.cs" />
     <Compile Include="Dynamics\RectangleRigidBody.cs" />
     <Compile Include="Dynamics\RigidBody.cs" />
     <Compile Include="Dynamics\RigidBodyList.cs" />
+    <Compile Include="IIsDisposable.cs" />
     <Compile Include="Mathematics\Calculator.cs" />
     <Compile Include="PhysicsSimulator.cs" />
     <Compile Include="PhysicsSimulatorBase.cs" />

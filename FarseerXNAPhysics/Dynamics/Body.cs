@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using FarseerGames.FarseerXNAPhysics.Mathematics;
 
 namespace FarseerGames.FarseerXNAPhysics.Dynamics {
-    public class Body {
+    public class Body : IIsDisposable  {
         private float _mass = 1;
         private float _inverseMass = 1;
         private float _momentOfInertia = 1; //1 unit square ;
@@ -255,5 +255,24 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
         public void ClearTorque() {
             _torque = 0;
         }
-    }
+
+        protected bool isDisposed = false;
+        public bool IsDisposed {
+            get { return isDisposed; }
+        }
+        
+        public void Dispose() {            
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing) {
+            //subclasses can override incase they need to dispose of resources
+            //otherwise do nothing.
+            if (!isDisposed) {
+                if (disposing) { };
+                isDisposed = true;
+            }            
+        }
+     }
 }

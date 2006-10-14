@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace FarseerGames.FarseerXNAGame.Sprites {
     public class SpriteManager : ISpriteManagerService  {
         private GraphicsDevice graphicsDevice;
-        private List<Sprite> spriteList;
+        private SpriteList spriteList;
         private SpriteBatch spriteBatch;
 
         public GraphicsDevice  GraphicsDevice {
@@ -17,11 +17,12 @@ namespace FarseerGames.FarseerXNAGame.Sprites {
         }	
 
         public SpriteManager(GraphicsDevice graphicsDevice) {
-            spriteList = new List<Sprite>();
+            spriteList = new SpriteList();
             LoadResources(graphicsDevice);
         }
 
         public void Draw() {
+            spriteList.RemoveAll(SpriteList.IsDisposed); //remove any disposed sprites
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             spriteList.ForEach(DrawSprite);
             spriteBatch.End();            
