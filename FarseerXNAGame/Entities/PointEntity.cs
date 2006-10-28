@@ -23,8 +23,8 @@ namespace FarseerGames.FarseerXNAGame.Entities {
             //setup some default physics parameters for all rigid body sprites
             rigidBody.RotationalDragCoefficient = 50;
             rigidBody.LinearDragCoefficient = .00001f;
-            rigidBody.FrictionCoefficient = .01f;
-            rigidBody.RestitutionCoefficient = 0f;
+            rigidBody.FrictionCoefficient = .001f;
+            rigidBody.RestitutionCoefficient = .9f;
 
             //add rigid body to physics simulator
             physicsSimulator.Add(rigidBody);
@@ -43,6 +43,10 @@ namespace FarseerGames.FarseerXNAGame.Entities {
         public float Mass {
             get { return rigidBody.Mass; }
             set { rigidBody.Mass = Mass; }
+        }
+
+        public void ApplyImpulse(Vector2 impulse) {
+            rigidBody.LinearVelocity += impulse;
         }
 
         public void Dispose() {

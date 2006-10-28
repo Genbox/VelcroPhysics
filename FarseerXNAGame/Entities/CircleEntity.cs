@@ -18,16 +18,20 @@ namespace FarseerGames.FarseerXNAGame.Entities {
 
         public CircleEntity(float radius, int edgeCount,  PhysicsSimulator physicsSimulator) {
 
-            rigidBody = new CircleRigidBody(radius, edgeCount, .1f);
+            rigidBody = new CircleRigidBody(radius, edgeCount, 1f);
 
             //setup some default physics parameters for all rigid body sprites
             rigidBody.RotationalDragCoefficient = 50;
             rigidBody.LinearDragCoefficient = .001f;
             rigidBody.FrictionCoefficient = .8f;
-            rigidBody.RestitutionCoefficient = .1f;
+            rigidBody.RestitutionCoefficient = .51f;
 
             //add rigid body to physics simulator
             physicsSimulator.Add(rigidBody);
+        }
+
+        public RigidBody RigidBody {
+            get { return rigidBody; }
         }
 
         public Vector2 Position {
