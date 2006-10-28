@@ -16,7 +16,7 @@ namespace FarseerGames.FarseerXNAGame.Components {
     public partial class FarseerPhysicsComponent : GameComponent {
         private PhysicsSimulator _physicsSimulator;
 
-        private Vector2 gravity = new Vector2(0, 10);
+        private Vector2 gravity = new Vector2(0, 0);
         private int iterationsPerCollision = 3;
         private float allowedCollisionPenetration = .01f;
         private float impulseBiasFactor = .8f;
@@ -50,7 +50,7 @@ namespace FarseerGames.FarseerXNAGame.Components {
         }
 
         public override void Start() {
-            gravity = new Vector2(0, 50); //TODO: change this once Vector2's are editable in the property grid
+            gravity = new Vector2(0, 150); //TODO: change this once Vector2's are editable in the property grid
             _physicsSimulator = new PhysicsSimulator(gravity);
             _physicsSimulator.Iterations = iterationsPerCollision;
             _physicsSimulator.SetAllowedPenetration(allowedCollisionPenetration);

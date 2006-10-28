@@ -18,16 +18,20 @@ namespace FarseerGames.FarseerXNAGame.Entities {
 
         public RectangleEntity(float width, float height, PhysicsSimulator physicsSimulator) {
 
-            rigidBody = new RectangleRigidBody(width, height, .1f);
+            rigidBody = new RectangleRigidBody(width, height, 1f);
 
             //setup some default physics parameters for all rigid body sprites
-            rigidBody.RotationalDragCoefficient = 50;
-            rigidBody.LinearDragCoefficient = .001f;
+            rigidBody.RotationalDragCoefficient = 10;
+            rigidBody.LinearDragCoefficient = .0001f;
             rigidBody.FrictionCoefficient = .8f;
             rigidBody.RestitutionCoefficient = .1f;
 
             //add rigid body to physics simulator
             physicsSimulator.Add(rigidBody);
+        }
+
+        public RigidBody RigidBody {
+            get { return rigidBody; }
         }
 
         public Vector2 Position {

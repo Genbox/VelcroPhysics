@@ -11,8 +11,8 @@ namespace FarseerGames.FarseerXNAGame.Sprites {
     public class SpriteEntityView<TEntity> : Sprite, IEntityView<TEntity> where TEntity : IEntity {
         protected TEntity entity;
         
-        public SpriteEntityView(TEntity entity, string textureName, SpriteManager spriteManager)
-            : base(textureName, spriteManager) {
+        public SpriteEntityView(TEntity entity, Texture2D texture, SpriteManager spriteManager)
+            : base(texture, spriteManager) {
             this.entity = entity;
         }
 
