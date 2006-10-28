@@ -13,6 +13,7 @@ namespace FarseerGames.FarseerXNAPhysics {
     public class PhysicsSimulator : PhysicsSimulatorBase {
         RigidBodyList _rigidBodyList;
         ArbiterList _arbiterList;
+        LinearSpringList _linearSpringList;
 
         private int _iterations = 5;
         private float _allowedPenetration = .01f;
@@ -30,6 +31,7 @@ namespace FarseerGames.FarseerXNAPhysics {
         private void PhysicsConstructor(Vector2 gravity) {
             _rigidBodyList = new RigidBodyList();
             _arbiterList = new ArbiterList();
+            _linearSpringList = new LinearSpringList();
             _gravity = gravity;
         }
 
@@ -59,6 +61,10 @@ namespace FarseerGames.FarseerXNAPhysics {
 
         public void Remove(RigidBody rigidBody) {
             _rigidBodyList.Remove(rigidBody);
+        }
+
+        public void AddLinearSpring(LinearSpring linearSpring) {
+            _linearSpringList.Add(linearSpring);
         }
 
         public override void Update(float dt) {
@@ -103,6 +109,10 @@ namespace FarseerGames.FarseerXNAPhysics {
         }
 
         public void ApplyForces(float dt) {
+            for (int i = 0; i < _linearSpringList.Count; i++) {
+                _linearSpringList[i].Update();
+            }
+
             for (int i = 0; i < _rigidBodyList.Count; i++) {
                 _rigidBodyList[i].ApplyForce(_gravity*_rigidBodyList[i].Mass);
                 _rigidBodyList[i].IntegrateVelocity(dt);

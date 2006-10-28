@@ -170,8 +170,23 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             get {
                 Matrix translationMatrix = Matrix.CreateTranslation(_position.X, _position.Y, 0);
                 Matrix rotationMatrix = Matrix.CreateRotationZ(_orientation);
-                return Matrix.Multiply(translationMatrix, rotationMatrix);
+                return Matrix.Multiply(rotationMatrix,translationMatrix);
             }
+        }
+
+        public Vector2 GetWorldPosition(Vector2 localPosition) {
+            //Matrix translationMatrix = Matrix.CreateTranslation(_position.X, _position.Y, 0);
+            //Matrix rotationMatrix = Matrix.CreateRotationZ(-_orientation);
+            //Matrix transform = Matrix.Multiply(rotationMatrix, translationMatrix);
+           // Matrix transform = translationMatrix;
+
+            Vector2 retVector =  Vector2.Transform(localPosition, BodyMatrix);
+            return retVector;
+        }
+
+        public Vector2 GetVelocityAtPoint(Vector2 localPoint) {
+            Vector2 velocity = LinearVelocity + AngularVelocity * (GetWorldPosition(localPoint) - Position);
+            return velocity;
         }
 
         private void ApplyDrag() {
