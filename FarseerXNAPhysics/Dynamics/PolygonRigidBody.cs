@@ -21,7 +21,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             InitializeGeometry(vertices);
 
             //setup a default precision if necassary
-            float collisionPrecision = Math.Min(_geometry.AABB.Width, _geometry.AABB.Height) * collionPrecisionFactor; 
+            float collisionPrecision = Math.Min(geometry.AABB.Width, geometry.AABB.Height) * collionPrecisionFactor; 
             InitializeGrid(collisionPrecision, 0, true);
             
             //by default, estimate moment of inertia to be MOI for original bounding box.
@@ -39,7 +39,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
         }
 
         private void InitializeGrid(float collisionPrecision, float padding, bool prime) {            
-            Grid = new Grid(_geometry, collisionPrecision, 0, true);
+            Grid = new Grid(geometry, collisionPrecision, 0, true);
         }
     }
 }

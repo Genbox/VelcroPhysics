@@ -13,7 +13,7 @@ namespace FarseerGames.FarseerXNAPhysics {
     public class PhysicsSimulator : PhysicsSimulatorBase {
         RigidBodyList _rigidBodyList;
         ArbiterList _arbiterList;
-        LinearSpringList _linearSpringList;
+        SpringList _linearSpringList;
 
         private int _iterations = 5;
         private float _allowedPenetration = .01f;
@@ -31,7 +31,7 @@ namespace FarseerGames.FarseerXNAPhysics {
         private void PhysicsConstructor(Vector2 gravity) {
             _rigidBodyList = new RigidBodyList();
             _arbiterList = new ArbiterList();
-            _linearSpringList = new LinearSpringList();
+            _linearSpringList = new SpringList();
             _gravity = gravity;
         }
 
@@ -89,12 +89,19 @@ namespace FarseerGames.FarseerXNAPhysics {
                 {
                     rigidBodyA = _rigidBodyList[i];
                     rigidBodyB = _rigidBodyList[j];
-                    if (!rigidBodyA.IsStatic || !rigidBodyB.IsStatic) { //don't collide two static bodies
-                        if (AABB.Intersect(rigidBodyA.Geometry.AABB, rigidBodyB.Geometry.AABB)) {
-                            Arbiter arbiter = new Arbiter(rigidBodyA, rigidBodyB, _allowedPenetration, _biasFactor, _maxContactsPerRigidBodyPair);
-                            if (!_arbiterList.Contains(arbiter)) {
-                                _arbiterList.Add(arbiter);
-                            }
+                    //possible early exit
+                    if((rigidBodyA.CollisionGroup == rigidBodyB.CollisionGroup) && rigidBodyA.CollisionGroup !=0 && rigidBodyB.CollisionGroup !=0){
+                        continue;
+                    }
+
+                    if (rigidBodyA.IsStatic && rigidBodyB.IsStatic) { //don't collide two static bodies
+                        continue;
+                    }
+
+                    if (AABB.Intersect(rigidBodyA.Geometry.AABB, rigidBodyB.Geometry.AABB)) {
+                        Arbiter arbiter = new Arbiter(rigidBodyA, rigidBodyB, _allowedPenetration, _biasFactor, _maxContactsPerRigidBodyPair);
+                        if (!_arbiterList.Contains(arbiter)) {
+                            _arbiterList.Add(arbiter);
                         }
                     }
                 }
