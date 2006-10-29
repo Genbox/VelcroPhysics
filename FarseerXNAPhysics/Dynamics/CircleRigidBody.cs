@@ -14,7 +14,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             InitializeBody(radius, mass);
             InitializeGeometry(radius, edgeCount);
 
-            float collisionPrecision = Math.Min(_geometry.AABB.Width, _geometry.AABB.Height) * collisionPrecisionFactor;
+            float collisionPrecision = Math.Min(geometry.AABB.Width, geometry.AABB.Height) * collisionPrecisionFactor;
 
             InitializeGrid(collisionPrecision, 0, true);
         }
@@ -29,7 +29,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
         }
 
         private void InitializeGrid(float collisionPrecision, float padding, bool prime) {
-            Grid = new Grid(_geometry, collisionPrecision, 0, true); 
+            Grid = new Grid(geometry, collisionPrecision, 0, true); 
         }
     }
 }

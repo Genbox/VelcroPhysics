@@ -250,10 +250,16 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
 
         public void ApplyForceAtLocalPoint(Vector2 force, Vector2 point) {
             //calculate torque (2D cross product point X force)
-            float torque = point.X * force.Y - point.Y * force.X;
+            //Vector2 torqueVector = new Vector2(-point.Y, point.X);
+
+            //torqueVector = Calculator.Project(force, torqueVector);
+
+            Vector2 diff = GetWorldPosition(point) - Position;
+
+            float torque = diff.X * force.Y - diff.Y * force.X;
 
             //add to torque
-            _torque += torque;
+           _torque += torque;
 
             //also add linear force
             ApplyForce(force);

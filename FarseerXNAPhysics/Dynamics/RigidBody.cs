@@ -8,18 +8,19 @@ using FarseerGames.FarseerXNAPhysics.Collisions;
 
 namespace FarseerGames.FarseerXNAPhysics.Dynamics {
     public class RigidBody : Body, ICollideable<RigidBody>, IEquatable<RigidBody>{
-        protected Geometry _geometry;
-        protected Grid _grid;
-        private int _id;
-
+        protected Geometry geometry;
+        protected Grid grid;
+        private int id;
+        private int collisionGroup = 0;
+       
         public RigidBody() {
-           _id = RigidBody.GetNextId();
+           id = RigidBody.GetNextId();
         }
 
         public RigidBody(Geometry geometry, Grid grid) {
-            _id = RigidBody.GetNextId();
-            _grid = grid;
-            _geometry = geometry;
+            id = RigidBody.GetNextId();
+            this.grid = grid;
+            this.geometry = geometry;
         }
 
         public sealed override Vector2 Position {
@@ -28,8 +29,8 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             }
             set {
                 base.Position = value;
-                if (_geometry != null) {
-                    _geometry.Update(value, Orientation);
+                if (geometry != null) {
+                    geometry.Update(value, Orientation);
                 }
             }
         }
@@ -40,53 +41,59 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             }
             set {
                 base.Orientation = value;
-                if (_geometry != null) {
-                    _geometry.Update(Position, value);
+                if (geometry != null) {
+                    geometry.Update(Position, value);
                 }
             }
         }
 
         public Geometry Geometry {
-            get { return _geometry; }
+            get { return geometry; }
             set { 
-                _geometry = value;
-                _geometry.Update(Position, Orientation);
+                geometry = value;
+                geometry.Update(Position, Orientation);
             }
         }
 
         public Grid Grid {
-            get { return _grid; }
-            set { _grid = value; }
+            get { return grid; }
+            set { grid = value; }
         }
+
+        public int CollisionGroup {
+            get { return collisionGroup; }
+            set { collisionGroup = value; }
+        }
+	
 
         public override void IntegratePosition(float dt) {
             base.IntegratePosition(dt);
-            _geometry.Update(Position, Orientation);
+            geometry.Update(Position, Orientation);
         }
 
         public void Collide(RigidBody rigidBody, ContactList contactList) {
             Feature feature; ;
             Vector2 localVertex;
             int vertexIndex = -1;
-            foreach (Vector2 vertex in rigidBody._geometry.WorldVertices) {
+            foreach (Vector2 vertex in rigidBody.geometry.WorldVertices) {
                 if (contactList.Count == contactList.Capacity) { return; }
-                if (_grid == null) { return; }//grid can be null for "one-way" collision (points)
+                if (grid == null) { return; }//grid can be null for "one-way" collision (points)
                 vertexIndex += 1;
-                localVertex = _geometry.ConvertToLocalCoordinates(vertex);
-                feature = _grid.Evaluate(localVertex);
+                localVertex = geometry.ConvertToLocalCoordinates(vertex);
+                feature = grid.Evaluate(localVertex);
                 if (feature.Distance < 0f) {
-                    feature.Normal = _geometry.ConvertToWorldOrientation(feature.Normal);
+                    feature.Normal = geometry.ConvertToWorldOrientation(feature.Normal);
                     Contact contact = new Contact(vertex, feature.Normal, feature.Distance, new ContactId(2, vertexIndex, 1));
                     contactList.Add(contact);
                 }
             }
-            foreach (Vector2 vertex in _geometry.WorldVertices) {
-                if (rigidBody._grid == null) { return; } //grid can be null for "one-way" collision(points)
+            foreach (Vector2 vertex in geometry.WorldVertices) {
+                if (rigidBody.grid == null) { return; } //grid can be null for "one-way" collision(points)
                 vertexIndex += 1;
-                localVertex = rigidBody._geometry.ConvertToLocalCoordinates(vertex);
-                feature = rigidBody._grid.Evaluate(localVertex);
+                localVertex = rigidBody.geometry.ConvertToLocalCoordinates(vertex);
+                feature = rigidBody.grid.Evaluate(localVertex);
                 if (feature.Distance < 0f) {
-                    feature.Normal = rigidBody._geometry.ConvertToWorldOrientation(feature.Normal);
+                    feature.Normal = rigidBody.geometry.ConvertToWorldOrientation(feature.Normal);
                     feature.Normal = -feature.Normal; //normals must point in same direction.
                     Contact contact = new Contact(vertex, feature.Normal, feature.Distance, new ContactId(1, vertexIndex, 2));
                     contactList.Add(contact);                    
@@ -95,7 +102,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
         }
 
         public bool Equals(RigidBody other) {
-            return _id == other._id;
+            return id == other.id;
         }
 
         public override int GetHashCode() {
@@ -124,7 +131,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
         }
 
         internal int Id {
-            get { return _id; }
+            get { return id; }
         }
 
         private static int _newId = -1;

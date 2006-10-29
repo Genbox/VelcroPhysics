@@ -63,6 +63,18 @@ namespace FarseerGames.FarseerXNAPhysics.Mathematics
             vecOut.X = vec1.X + vec2.X;
             vecOut.Y = vec1.Y + vec2.Y;
         }
+
+        public static Vector2 Project(Vector2 projectVector, Vector2 onToVector) {
+            float multiplier = 0;
+            float numerator = (onToVector.X * projectVector.X + onToVector.Y * projectVector.Y);
+            float denominator = (onToVector.X * onToVector.X + onToVector.Y * onToVector.Y);
+            
+            if(denominator !=0){
+                multiplier = numerator/denominator;
+            }
+ 
+            return Vector2.Multiply(onToVector,multiplier);
+        }
     
     }
 }

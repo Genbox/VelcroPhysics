@@ -6,7 +6,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerXNAPhysics.Dynamics {
-    public class LinearSpring {
+    public class LinearSpring : ISpring {
         private RigidBody rigidBody1;
         private RigidBody rigidBody2;
         private Vector2 attachPoint1;
@@ -36,21 +36,29 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             Vector2 difference = worldPoint2 - worldPoint1;
 
             float stretch = difference.Length() - restLength;
-            
 
-            difference.Normalize();
+
+            if (difference.Length() > 0) {
+                difference.Normalize();
+            }
+            
 
             Vector2 velocityAtPoint1 = rigidBody1.GetVelocityAtPoint(attachPoint1);
             Vector2 velocityAtPoint2 = rigidBody2.GetVelocityAtPoint(attachPoint2);
 
             Vector2 relativeVelocity = Vector2.Subtract(velocityAtPoint2, velocityAtPoint1);
-            
-            Vector2 force = springConstant * Vector2.Multiply(difference, stretch) + Vector2.Multiply(relativeVelocity, dampningConstant);
-            rigidBody1.ApplyForceAtLocalPoint(force, attachPoint1);
 
-            force = -springConstant * Vector2.Multiply(difference,stretch) -Vector2.Multiply(relativeVelocity, dampningConstant);
-            rigidBody2.ApplyForceAtLocalPoint(force, attachPoint2);
+            Vector2 force;
 
+            if (!rigidBody1.IsStatic) {
+                force = springConstant * Vector2.Multiply(difference, stretch) + Vector2.Multiply(relativeVelocity, dampningConstant);
+                rigidBody1.ApplyForceAtLocalPoint(force, attachPoint1);
+            }
+
+            if (!rigidBody2.IsStatic) {
+                force = -springConstant * Vector2.Multiply(difference, stretch) - Vector2.Multiply(relativeVelocity, dampningConstant);
+                rigidBody2.ApplyForceAtLocalPoint(force, attachPoint2);
+            }
         }
     }
 }
