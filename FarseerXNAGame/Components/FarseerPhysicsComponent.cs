@@ -50,7 +50,7 @@ namespace FarseerGames.FarseerXNAGame.Components {
         }
 
         public override void Start() {
-            gravity = new Vector2(0, 150); //TODO: change this once Vector2's are editable in the property grid
+            gravity = new Vector2(0, 200); //TODO: change this once Vector2's are editable in the property grid
             _physicsSimulator = new PhysicsSimulator(gravity);
             _physicsSimulator.Iterations = iterationsPerCollision;
             _physicsSimulator.SetAllowedPenetration(allowedCollisionPenetration);

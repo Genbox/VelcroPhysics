@@ -21,8 +21,8 @@ namespace FarseerGames.FarseerXNAGame.Entities {
             rigidBody = new RectangleRigidBody(width, height, 1f);
 
             //setup some default physics parameters for all rigid body sprites
-            rigidBody.RotationalDragCoefficient = 10;
-            rigidBody.LinearDragCoefficient = .0001f;
+            rigidBody.RotationalDragCoefficient = 20;
+            rigidBody.LinearDragCoefficient = .001f;
             rigidBody.FrictionCoefficient = .8f;
             rigidBody.RestitutionCoefficient = .1f;
 
