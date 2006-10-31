@@ -4,6 +4,6 @@ using System.Text;
 
 namespace FarseerGames.FarseerXNAPhysics.Dynamics {
     public interface ISpring {
-        void Update();
+        void Update(float dt);
     }
 }

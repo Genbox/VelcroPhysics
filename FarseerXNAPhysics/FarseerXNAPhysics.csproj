@@ -58,8 +58,11 @@
     <Compile Include="Dynamics\ArbiterList.cs" />
     <Compile Include="Dynamics\Body.cs" />
     <Compile Include="Dynamics\CircleRigidBody.cs" />
+    <Compile Include="Dynamics\IJoint.cs" />
     <Compile Include="Dynamics\ISpring.cs" />
+    <Compile Include="Dynamics\JointList.cs" />
     <Compile Include="Dynamics\LinearSpring.cs" />
+    <Compile Include="Dynamics\RevoluteJoint.cs" />
     <Compile Include="Dynamics\SpringList.cs" />
     <Compile Include="Dynamics\PointRigidBody.cs" />
     <Compile Include="Dynamics\PolygonRigidBody.cs" />

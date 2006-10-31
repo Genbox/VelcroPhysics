@@ -27,13 +27,20 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             restLength = difference.Length();
         }
 
-        public void Update() {
+        public void Update(float dt) {
             //calculate and apply spring force
             //F = -kX - bV
             Vector2 worldPoint1 = rigidBody1.GetWorldPosition(attachPoint1);
             Vector2 worldPoint2 = rigidBody2.GetWorldPosition(attachPoint2);
 
-            Vector2 difference = worldPoint2 - worldPoint1;
+            Vector2 velocityAtPoint1 = rigidBody1.GetVelocityAtPoint(attachPoint1);
+            Vector2 velocityAtPoint2 = rigidBody2.GetVelocityAtPoint(attachPoint2);
+
+            Vector2 relativeVelocity = Vector2.Subtract(velocityAtPoint2, velocityAtPoint1);
+
+            Vector2 difference = worldPoint2 - worldPoint1 +dt * relativeVelocity / 2;
+
+
 
             float stretch = difference.Length() - restLength;
 
@@ -41,12 +48,6 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             if (difference.Length() > 0) {
                 difference.Normalize();
             }
-            
-
-            Vector2 velocityAtPoint1 = rigidBody1.GetVelocityAtPoint(attachPoint1);
-            Vector2 velocityAtPoint2 = rigidBody2.GetVelocityAtPoint(attachPoint2);
-
-            Vector2 relativeVelocity = Vector2.Subtract(velocityAtPoint2, velocityAtPoint1);
 
             Vector2 force;
 

@@ -13,7 +13,8 @@ namespace FarseerGames.FarseerXNAPhysics {
     public class PhysicsSimulator : PhysicsSimulatorBase {
         RigidBodyList _rigidBodyList;
         ArbiterList _arbiterList;
-        SpringList _linearSpringList;
+        SpringList _springList;
+        JointList _jointList;
 
         private int _iterations = 5;
         private float _allowedPenetration = .01f;
@@ -31,7 +32,8 @@ namespace FarseerGames.FarseerXNAPhysics {
         private void PhysicsConstructor(Vector2 gravity) {
             _rigidBodyList = new RigidBodyList();
             _arbiterList = new ArbiterList();
-            _linearSpringList = new SpringList();
+            _springList = new SpringList();
+            _jointList = new JointList();
             _gravity = gravity;
         }
 
@@ -63,8 +65,12 @@ namespace FarseerGames.FarseerXNAPhysics {
             _rigidBodyList.Remove(rigidBody);
         }
 
-        public void AddLinearSpring(LinearSpring linearSpring) {
-            _linearSpringList.Add(linearSpring);
+        public void AddSpring(ISpring spring) {
+            _springList.Add(spring);
+        }
+
+        public void AddJoint(IJoint joint) {
+            _jointList.Add(joint);
         }
 
         public override void Update(float dt) {
@@ -116,8 +122,8 @@ namespace FarseerGames.FarseerXNAPhysics {
         }
 
         public void ApplyForces(float dt) {
-            for (int i = 0; i < _linearSpringList.Count; i++) {
-                _linearSpringList[i].Update();
+            for (int i = 0; i < _springList.Count; i++) {
+                _springList[i].Update(dt);
             }
 
             for (int i = 0; i < _rigidBodyList.Count; i++) {
@@ -138,6 +144,16 @@ namespace FarseerGames.FarseerXNAPhysics {
             for (int h = 0; h < _iterations; h++) {
                 for (int i = 0; i < _arbiterList.Count; i++) {
                     _arbiterList[i].ApplyImpulse();
+                }
+            }
+
+            for (int i = 0; i < _jointList.Count; i++) {
+                _jointList[i].PreStep(inverseDt);
+            }
+
+            for (int h = 0; h < _iterations; h++) {
+                for (int i = 0; i < _jointList.Count; i++) {
+                    _jointList[i].ApplyImpulse();
                 }
             }
         }
