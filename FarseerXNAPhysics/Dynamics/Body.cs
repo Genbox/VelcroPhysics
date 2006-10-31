@@ -174,14 +174,24 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             }
         }
 
-        public Vector2 GetWorldPosition(Vector2 localPosition) {
-            //Matrix translationMatrix = Matrix.CreateTranslation(_position.X, _position.Y, 0);
-            //Matrix rotationMatrix = Matrix.CreateRotationZ(-_orientation);
-            //Matrix transform = Matrix.Multiply(rotationMatrix, translationMatrix);
-           // Matrix transform = translationMatrix;
+        public Matrix BodyRotationMatrix {
+            get {
+                Matrix rotationMatrix = Matrix.CreateRotationZ(_orientation);
+                return rotationMatrix;
+            }
+        }
 
+        public Vector2 GetWorldPosition(Vector2 localPosition) {
             Vector2 retVector =  Vector2.Transform(localPosition, BodyMatrix);
             return retVector;
+        }
+
+        public Vector2 GetLocalPosition(Vector2 worldPosition) {
+            Matrix rotationMatrix = BodyRotationMatrix;
+            rotationMatrix = Matrix.Transpose(rotationMatrix);
+            Vector2 localPosition = worldPosition - Position;
+            localPosition = Vector2.Transform(localPosition, rotationMatrix);
+            return localPosition;
         }
 
         public Vector2 GetVelocityAtPoint(Vector2 localPoint) {

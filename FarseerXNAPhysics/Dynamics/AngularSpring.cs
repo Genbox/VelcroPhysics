@@ -14,7 +14,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
         private float dampningConstant;
         private float targetAngle;
         
-        public AngularSpring(RigidBody rigidBody1, RigidBody rigidBodyB,Vector2 attachPoint,float springConstant, float dampningConstant) {
+        public AngularSpring(RigidBody rigidBody1, RigidBody rigidBody2,Vector2 attachPoint,float springConstant, float dampningConstant) {
             this.rigidBody1 = rigidBody1;
             this.rigidBody2 = rigidBody2;
             this.attachPoint = attachPoint;
@@ -24,7 +24,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             //restLength = difference.Length();
         }
 
-        public void Update() {
+        public void Update(float dt) {
             ////calculate and apply spring force
             ////F = -kX - bV
             //Vector2 worldPoint1 = rigidBody1.GetWorldPosition(attachPoint1);
