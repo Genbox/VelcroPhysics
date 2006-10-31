@@ -24,7 +24,7 @@ namespace FarseerGames.FarseerXNAGame.Entities {
             rigidBody.RotationalDragCoefficient = 50;
             rigidBody.LinearDragCoefficient = .001f;
             rigidBody.FrictionCoefficient = .8f;
-            rigidBody.RestitutionCoefficient = .51f;
+            rigidBody.RestitutionCoefficient = .91f;
 
             //add rigid body to physics simulator
             physicsSimulator.Add(rigidBody);
