@@ -21,6 +21,14 @@ namespace FarseerGames.FarseerXNAPhysics.Mathematics
             return (float)Math.Cos((double)angle);
         }
 
+        public static float ACos(float value) {
+            return (float)Math.Acos((double)value);
+        }
+
+        public static float ATan2(float y, float x) {
+            return (float)Math.Atan2((double)y,(double)x);
+        }
+
         public static float Clamp(float value, float low, float high){
 	        return Math.Max(low, Math.Min(value, high));
         }

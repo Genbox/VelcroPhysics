@@ -8,6 +8,23 @@ using Microsoft.Xna.Framework;
 using FarseerGames.FarseerXNAPhysics.Mathematics;
 
 namespace FarseerGames.FarseerXNAPhysics.Dynamics {
+    /// <summary>
+    /// <para>
+    /// Body is at the core of the Rigid Body System.  It is a <see cref="RigidBody">RigidBody</see>
+    /// without the geometry.</para>
+    /// <para>
+    /// The Body handles all the physics of motion: position, velocity, acceleration
+    /// forces, torques, etc...</para>
+    ///<list type="number">
+    ///<listheader>
+    /// The Body is integrated every timestep (which should be fixed) by the <see cref="PhysicsSimulator">PhysicsSimulator</see> in the following manner:</listheader> 
+    /// <item>-Set forces and torques (gravity, springs, user input...)</item>
+    /// <item>-Apply forces and torques (updating velocity only)</item>
+    /// <item>-Update positions and orientations</item>
+    ///</list>
+    /// <para>In technical terms, this is known as Symplectic Euler Integration because
+    /// velocity is updated prior to position (The reverse of simple Euler Integration)</para>
+    /// </summary>
     public class Body : IIsDisposable  {
         private float _mass = 1;
         private float _inverseMass = 1;
@@ -24,7 +41,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
         private Vector2 _linearVelocityBias = Vector2.Zero;
         private float _angularVelocityBias = 0;
         private Vector2 _force = Vector2.Zero;
-        private Vector2 _constantForce = Vector2.Zero;
+        //private Vector2 _constantForce = Vector2.Zero;
         private float _torque = 0;
         private float _restitutionCoefficient = 0f;
         private float _frictionCoefficient = 0f;
@@ -34,6 +51,9 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
 
         private bool _isStatic = false;
 
+        /// <summary>
+        /// The mass of the Body
+        /// </summary>
         public float Mass {
             get { return _mass; }
             set {
@@ -48,10 +68,25 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             }
         }
 
+        /// <summary>
+        /// The inverse of the mass of the body (1/Mass)
+        /// </summary>
         public float InverseMass {
             get { return _inverseMass; }
         }
 
+        /// <summary>
+        /// The moment of inertia of the body. 
+        /// <para>The moment of intertia of a body in 2d is a scalar value that represents how
+        /// difficult (or not difficult) it is to rotate a body about the center of mass.</para>
+        /// <para>The moment of inertia is varies by the shape of the body.  For basic shapes like
+        /// circles and rectangles, forumulas exist for computing the moment of interia based on
+        /// the shape properties (radius of the circle, or length and width of the rectangle)</para>
+        /// <para>For bodies that are not basic, it is usually good enough to estimate the moment of
+        /// intertia by picking a basic shape that is close to the same shape. It is also possible
+        /// using more advance calculus techniques to compute the actual moment of intertia of 
+        /// non-basic shapes.</para>
+        /// </summary>
         public float MomentOfInertia {
             get { return _momentOfInertia; }
             set {
@@ -66,10 +101,17 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             }
         }
 
+        /// <summary>
+        /// The inverse of the moment of inertia of the body (1/MomentOfInertia)
+        /// </summary>
         public float InverseMomentOfInertia {
             get { return _inverseMomentOfInertia; }
         }
 
+        /// <summary>
+        /// Indicates this body is fixed within the world and will not move no matter what forces are applied.
+        /// <para>Bodies that represent land or world borders are a good examples of static bodies.</para>
+        /// </summary>
         public bool IsStatic {
             get { return _isStatic; }
             set {
@@ -85,16 +127,37 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             }
         }
 
+        /// <summary>
+        /// The coefficient of restitution of the body.
+        /// <para>This parameter controls how bouncy an object is when it collides with other
+        /// bodies. Valid values range from 0 to 1 inclusive.  1 implies 100% restitution (think of a really good bouncing)
+        /// 0 implies no restitution (think a ball of clay)</para>
+        /// <para>NOTE: In this engine, he RestitutionCoefficient is not the only thing that can cause "bounce"
+        /// Because of the way collision response is handle (allowing some penetration between objects) fast moving
+        /// objects may bounce even when their RestitutionCoefficent is set to zero. Hopefully in future versions this
+        /// can be fixed or at least minamized</para>
+        /// </summary>
         public float RestitutionCoefficient {
             get { return _restitutionCoefficient; }
             set { _restitutionCoefficient = value; }
         }	
 
+        /// <summary>
+        /// Controls the amount of friction a body has when in contact with another body. A value of zero implies
+        /// no friction.
+        /// </summary>
         public float FrictionCoefficient {
             get { return _frictionCoefficient; }
             set { _frictionCoefficient = value; }
         }
 
+        /// <summary>
+        /// Linear drag can be thought of as "air drag". The LinearDragCoefficient controls how much linear (non-rotational) drag
+        /// a body is subject to. 
+        /// <para>Linear drag causes a force to be applied to the body always in the direction opposite its velocity vector.
+        /// The magnitude of this force is the speed of the body squared multiplied by its LinearDragCoefficent. 
+        /// <c>force = velocity*velocity*LinearDragCoeficcent</c></para>
+        /// </summary>
         public float LinearDragCoefficient {
             get { return _linearDragCoefficient ; }
             set { _linearDragCoefficient  = value; }
@@ -161,10 +224,10 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             get { return _torque / _momentOfInertia; }
         }
 
-        public Vector2 ConstantForce {
-            get { return _constantForce; }
-            set { _constantForce = value; }
-        }
+        //public Vector2 ConstantForce {
+        //    get { return _constantForce; }
+        //    set { _constantForce = value; }
+        //}
 
         public Matrix BodyMatrix {
             get {
@@ -179,6 +242,21 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
                 Matrix rotationMatrix = Matrix.CreateRotationZ(_orientation);
                 return rotationMatrix;
             }
+        }
+
+        public Vector2 UnitWorldXDirection{
+            get {
+                Matrix bodyMatrix = BodyMatrix;
+                return new Vector2(bodyMatrix.Right.X, bodyMatrix.Right.Y); 
+            }
+        }
+
+        public Vector2 UnitWorldYDirection {
+            get {
+                Matrix bodyMatrix = BodyMatrix;
+                return new Vector2(bodyMatrix.Up.X, bodyMatrix.Up.Y);
+            }
+        
         }
 
         public Vector2 GetWorldPosition(Vector2 localPosition) {
@@ -272,7 +350,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
            _torque += torque;
 
             //also add linear force
-            ApplyForce(force);
+            ApplyForce(force);           
         }
 
         public void ClearForce() { 

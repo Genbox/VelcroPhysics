@@ -20,8 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>bin\Debug\FarseerGames.FarseerXNAPhysics.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -58,8 +57,8 @@
     <Compile Include="Dynamics\ArbiterList.cs" />
     <Compile Include="Dynamics\Body.cs" />
     <Compile Include="Dynamics\CircleRigidBody.cs" />
-    <Compile Include="Dynamics\IJoint.cs" />
-    <Compile Include="Dynamics\ISpring.cs" />
+    <Compile Include="Dynamics\Joint.cs" />
+    <Compile Include="Dynamics\Spring.cs" />
     <Compile Include="Dynamics\JointList.cs" />
     <Compile Include="Dynamics\LinearSpring.cs" />
     <Compile Include="Dynamics\RevoluteJoint.cs" />
