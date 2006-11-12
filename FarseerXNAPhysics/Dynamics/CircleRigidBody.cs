@@ -5,31 +5,31 @@ using System.Text;
 using FarseerGames.FarseerXNAPhysics.Collisions;
 
 namespace FarseerGames.FarseerXNAPhysics.Dynamics {
-    public class CircleRigidBody : RigidBody {
+    public class CircleRigidBody : PolygonRigidBody {
         private float collisionPrecisionFactor = .25f;
-        private CircleRigidBody() {
+        public CircleRigidBody() {
         }
 
         public CircleRigidBody(float radius, int edgeCount, float mass) {
-            InitializeBody(radius, mass);
-            InitializeGeometry(radius, edgeCount);
-
-            float collisionPrecision = Math.Min(geometry.AABB.Width, geometry.AABB.Height) * collisionPrecisionFactor;
-
-            InitializeGrid(collisionPrecision, 0, true);
+            CircleRigidBodyConstructor(radius, edgeCount, mass, _collisionPrecisionFactor);
         }
 
-        private void InitializeBody(float radius, float mass) {
-            Mass = mass;
-            MomentOfInertia = .5f * Mass * radius * radius;
+        public CircleRigidBody(float radius, int edgeCount, float mass, float collisionPrecisionFactor) {
+            CircleRigidBodyConstructor(radius, edgeCount, mass, collisionPrecisionFactor);
         }
 
-        private void InitializeGeometry(float radius, int edgeCount) {
-            Geometry = new CircleGeometry(radius, edgeCount);
+        private void CircleRigidBodyConstructor(float radius, int edgeCount, float mass, float collisionPrecisionFactor) {
+            _collisionPrecisionFactor = collisionPrecisionFactor;
+            float momentOfInertia = .5f * Mass * radius * radius;
+
+            Vertices vertices = Vertices.CreateCircle(radius, edgeCount);
+
+            base.PolygonRigidBodyConstructor(mass, momentOfInertia, vertices, _collisionPrecisionFactor);
         }
 
-        private void InitializeGrid(float collisionPrecision, float padding, bool prime) {
-            Grid = new Grid(geometry, collisionPrecision, 0, true); 
+        public void InitializeGeometry(float radius, int edgeCount) {
+            Vertices vertices = Vertices.CreateCircle(radius,edgeCount);
+            base.InitializeGeometry(vertices);
         }
     }
 }

@@ -75,6 +75,7 @@ namespace FarseerGames.FarseerXNAPhysics.Collisions
 
         internal Grid(Geometry geometry, float gridCellSize, bool primeTheGrid)
         {
+            if (geometry.LocalVertices.Count < 3) { throw new InvalidOperationException("A grid can only be constructed for geometries with 3 vertices or more"); }
             GridConstructor(geometry,gridCellSize, 0, primeTheGrid);
         }
 

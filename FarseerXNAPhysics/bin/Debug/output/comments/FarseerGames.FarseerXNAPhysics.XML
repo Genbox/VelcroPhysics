@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FarseerGames.FarseerXNAPhysics</name>
+    </assembly>
+    <members>
+        <member name="T:FarseerGames.FarseerXNAPhysics.Dynamics.Arbiter">
+            <summary>
+            Much of the code and ideas in this class were taken from a paper entitled
+            "Fast and Simple Physics using Sequential Impulses" by Erin Catto
+            </summary>
+        </member>
+        <member name="T:FarseerGames.FarseerXNAPhysics.Collisions.Geometry">
+            <remark>
+            The geometry class is the unit of collision detection.
+            </remark>
+        </member>
+    </members>
+</doc>

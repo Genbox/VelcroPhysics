@@ -65,17 +65,21 @@ namespace FarseerGames.FarseerXNAPhysics {
             _rigidBodyList.Remove(rigidBody);
         }
 
-        public void AddSpring(ISpring spring) {
+        public void AddSpring(Spring spring) {
             _springList.Add(spring);
         }
 
-        public void AddJoint(IJoint joint) {
+        public void AddJoint(Joint joint) {
             _jointList.Add(joint);
         }
 
         public override void Update(float dt) {
+            if (dt == 0) { return; }
             //remove all arbiters that contain 1 or more disposed rigid bodies.
             _rigidBodyList.RemoveAll(RigidBodyList.IsDisposed);
+            _springList.RemoveAll(SpringList.IsDisposed);
+            _jointList.RemoveAll(JointList.IsDisposed);           
+
             _arbiterList.RemoveAll(ArbiterList.ContainsDisposedBody); 
           
             DoBroadPhaseCollision();
@@ -153,7 +157,7 @@ namespace FarseerGames.FarseerXNAPhysics {
 
             for (int h = 0; h < _iterations; h++) {
                 for (int i = 0; i < _jointList.Count; i++) {
-                    _jointList[i].ApplyImpulse();
+                    _jointList[i].Update();
                 }
             }
         }

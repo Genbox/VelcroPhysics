@@ -77,7 +77,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             int vertexIndex = -1;
             foreach (Vector2 vertex in rigidBody.geometry.WorldVertices) {
                 if (contactList.Count == contactList.Capacity) { return; }
-                if (grid == null) { return; }//grid can be null for "one-way" collision (points)
+                if (grid == null) { break; }//grid can be null for "one-way" collision (points)
                 vertexIndex += 1;
                 localVertex = geometry.ConvertToLocalCoordinates(vertex);
                 feature = grid.Evaluate(localVertex);
