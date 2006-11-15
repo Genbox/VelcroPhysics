@@ -90,6 +90,19 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
                 }                   
             }
             _contactList = new ContactList(_mergedContactList);
+
+            //sort by seperation (depth)
+            _contactList.Sort(CompareDepth);
+        }
+
+        private int CompareDepth(Contact c1, Contact c2) {
+            if(c1.Seperation<c2.Seperation){
+                return -1;
+            }else if(c1.Seperation == c2.Seperation){
+                return 0;
+            }else{
+                return 1;
+            }
         }
 
         internal void PreStepImpulse(float inverseDt) {
@@ -133,7 +146,6 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
                 _rigidBodyB.AngularVelocity += _rigidBodyB.InverseMomentOfInertia * Calculator.Cross(r2, impulse);
                 contact.NormalImpulseBias = 0;
                 _contactList[i] = contact;
-
             }
         }
 
