@@ -40,6 +40,7 @@
     <Compile Include="Collisions\AABB.cs" />
     <Compile Include="Collisions\CircleGeometry.cs" />
     <Compile Include="Collisions\Contact.cs" />
+    <Compile Include="Collisions\ContactEventArgs.cs" />
     <Compile Include="Collisions\ContactId.cs" />
     <Compile Include="Collisions\ContactList.cs" />
     <Compile Include="Collisions\Feature.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="PhysicsSimulator.cs" />
     <Compile Include="PhysicsSimulatorBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScreenCollisionBorder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FarseerGames.snk" />
