@@ -42,7 +42,7 @@ namespace FarseerGames.FarseerXNAPhysics {
             set { _iterations = value; }
         }
 
-        public float AllowedPenetrations {
+        public float AllowedPenetration {
             get { return _allowedPenetration ; }
             set { _allowedPenetration  = value; }
         }

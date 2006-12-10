@@ -80,12 +80,14 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             for (int i = 0; i < _newContactList.Count; i++) {
                 int index = _contactList.IndexOf(_newContactList[i]);
                 if (index > -1) {
+                    //continuation of collision
                     Contact contact = _newContactList[i];
                     contact.NormalImpulse = _contactList[index].NormalImpulse;
                     contact.TangentImpulse = _contactList[index].TangentImpulse;
                     _mergedContactList.Add(contact);
                 }
                 else {
+                    //first time collision
                     _mergedContactList.Add(_newContactList[i]);
                 }                   
             }
@@ -131,7 +133,6 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
 
                 float min = Math.Min(0,_allowedPenetration + contact.Seperation);
                 contact.NormalVelocityBias = -_biasFactor * inverseDt * min;
-
                 //apply impulses
                 Vector2 impulse = Vector2.Multiply(contact.Normal,contact.NormalImpulse) + Vector2.Multiply(tangent,contact.TangentImpulse);
 
@@ -155,8 +156,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
  
                 contact = _contactList[i];
                 
-                contact.R1 = Vector2.Subtract(contact.Position, _rigidBodyA.Position);                
-
+                contact.R1 = Vector2.Subtract(contact.Position, _rigidBodyA.Position);
                 contact.R2 = Vector2.Subtract(contact.Position, _rigidBodyB.Position);
 
                 //relative vel at contact
