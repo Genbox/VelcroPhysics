@@ -316,16 +316,19 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             Vector2 dp;
             float orientationChange;
             //linear
-            _linearVelocity = Vector2.Add(_linearVelocity, _linearVelocityBias);
-            dp = Vector2.Multiply(_linearVelocity, dt);
+
+            Vector2 linearVelocity = Vector2.Add(_linearVelocity, _linearVelocityBias);
+            dp = Vector2.Multiply(linearVelocity, dt);
+
             _previousPosition = _position;
             _position = Vector2.Add(_previousPosition, dp);
 
             _linearVelocityBias = Vector2.Zero; //reset velocityBias to zero
 
             //angular
-            _angularVelocity += _angularVelocityBias; 
-            orientationChange = _angularVelocity * dt;
+            float angularVelocity = _angularVelocity + _angularVelocityBias;
+
+            orientationChange = angularVelocity * dt;
             _previousOrientation = _orientation;
             Orientation = _previousOrientation + orientationChange;
 
