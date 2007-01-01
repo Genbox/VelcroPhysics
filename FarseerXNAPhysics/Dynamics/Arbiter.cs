@@ -72,7 +72,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             return _rigidBodyA.IsDisposed || _rigidBodyB.IsDisposed;
         }
 
-        internal void Collide() {            
+        internal void Collide() {
             _newContactList.Clear();
             _rigidBodyA.Collide(_rigidBodyB, _newContactList);
             _mergedContactList.Clear();
@@ -89,15 +89,15 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
                 else {
                     //first time collision
                     _mergedContactList.Add(_newContactList[i]);
-                }                   
+                }
             }
             _contactList = new ContactList(_mergedContactList);
 
-            //sort by seperation (depth)
-            _contactList.Sort(CompareDepth);
+            //sort by seperation (seperation)
+            _contactList.Sort(CompareSeperation);
         }
 
-        private int CompareDepth(Contact c1, Contact c2) {
+        private int CompareSeperation(Contact c1, Contact c2) {
             if(c1.Seperation<c2.Seperation){
                 return -1;
             }else if(c1.Seperation == c2.Seperation){
@@ -109,15 +109,15 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
 
         internal void PreStepImpulse(float inverseDt) {
             Contact contact;
-            for (int i = 0; i < _contactList.Count; i++) {
- 
+            if (!_rigidBodyA.CollisionResponseEnabled || !_rigidBodyB.CollisionResponseEnabled) { return; }
+            for (int i = 0; i < _contactList.Count; i++) { 
                 contact = _contactList[i];               
 
                 Vector2 r1 = Vector2.Subtract(contact.Position, _rigidBodyA.Position);
                 Vector2 r2 = Vector2.Subtract(contact.Position, _rigidBodyB.Position);
 
                 float rn1 = Vector2.Dot(r1, contact.Normal);
-                float rn2 = Vector2.Dot(r2, contact.Normal);
+                float rn2 = Vector2.Dot(r2, contact.Normal);                
 
                 float kNormal = _rigidBodyA.InverseMass + _rigidBodyB.InverseMass;
                 kNormal += _rigidBodyA.InverseMomentOfInertia * (Vector2.Dot(r1, r1) - rn1 * rn1) + _rigidBodyB.InverseMomentOfInertia * (Vector2.Dot(r2, r2) - rn2 * rn2);
@@ -136,15 +136,15 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
                 //apply impulses
                 Vector2 impulse = Vector2.Multiply(contact.Normal,contact.NormalImpulse) + Vector2.Multiply(tangent,contact.TangentImpulse);
 
-                //calculate restitution
-                // Compute the restitution, we average the restitution of the two bodies
+                //Compute the restitution, we average the restitution of the two bodies
                 float restitution = (2.0f + _rigidBodyA.RestitutionCoefficient + _rigidBodyB.RestitutionCoefficient) * 0.5f;
 
                 _rigidBodyA.LinearVelocity -= Vector2.Multiply(impulse * restitution, _rigidBodyA.InverseMass);
                 _rigidBodyA.AngularVelocity -= _rigidBodyA.InverseMomentOfInertia * Calculator.Cross(r1, impulse);
-
+ 
                 _rigidBodyB.LinearVelocity += Vector2.Multiply(impulse * restitution, _rigidBodyB.InverseMass);
                 _rigidBodyB.AngularVelocity += _rigidBodyB.InverseMomentOfInertia * Calculator.Cross(r2, impulse);
+
                 contact.NormalImpulseBias = 0;
                 _contactList[i] = contact;
             }
@@ -152,6 +152,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
 
         Contact contact;
         internal void ApplyImpulse() {
+            if (!_rigidBodyA.CollisionResponseEnabled || !_rigidBodyB.CollisionResponseEnabled) { return; }
             for (int i = 0; i < _contactList.Count; i++) {
  
                 contact = _contactList[i];
@@ -199,7 +200,6 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
                 _rigidBodyB.LinearVelocityBias += _rigidBodyB.InverseMass * impulseBias;
                 _rigidBodyB.AngularVelocityBias += _rigidBodyB.InverseMomentOfInertia * Calculator.Cross(contact.R2, impulseBias);
 
-
                 //relative vel at contact
                 dv = _rigidBodyB.LinearVelocity + Calculator.Cross(_rigidBodyB.AngularVelocity, contact.R2) - _rigidBodyA.LinearVelocity - Calculator.Cross(_rigidBodyA.AngularVelocity, contact.R1);
 
@@ -215,7 +215,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
                 contact.TangentImpulse = Calculator.Clamp(oldTangentImpulse + tangentImpulse, -maxTangentImpulse, maxTangentImpulse);
                 tangentImpulse = contact.TangentImpulse - oldTangentImpulse;
 
-                //Apply contact impulse
+                //Apply friction impulse
                 impulse = Vector2.Multiply(tangent,tangentImpulse);
 
                 _rigidBodyA.LinearVelocity -= _rigidBodyA.InverseMass * impulse;

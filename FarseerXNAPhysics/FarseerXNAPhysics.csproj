@@ -20,7 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\FarseerGames.FarseerXNAPhysics.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -53,11 +54,15 @@
     <Compile Include="Collisions\PolygonGeometry.cs" />
     <Compile Include="Collisions\RectangleGeometry.cs" />
     <Compile Include="Collisions\Vertices.cs" />
+    <Compile Include="Dynamics\AngleJoint.cs" />
     <Compile Include="Dynamics\AngularSpring.cs" />
     <Compile Include="Dynamics\Arbiter.cs" />
     <Compile Include="Dynamics\ArbiterList.cs" />
     <Compile Include="Dynamics\Body.cs" />
+    <Compile Include="Dynamics\BodyList.cs" />
     <Compile Include="Dynamics\CircleRigidBody.cs" />
+    <Compile Include="Dynamics\CollisionPrecisionType.cs" />
+    <Compile Include="Dynamics\FixedSpring.cs" />
     <Compile Include="Dynamics\Joint.cs" />
     <Compile Include="Dynamics\Spring.cs" />
     <Compile Include="Dynamics\JointList.cs" />
@@ -72,9 +77,7 @@
     <Compile Include="IIsDisposable.cs" />
     <Compile Include="Mathematics\Calculator.cs" />
     <Compile Include="PhysicsSimulator.cs" />
-    <Compile Include="PhysicsSimulatorBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScreenCollisionBorder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FarseerGames.snk" />

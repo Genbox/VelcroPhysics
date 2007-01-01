@@ -16,11 +16,11 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
         private void PointRigidBodyConstructor(float mass) {
             Mass = mass;
             MomentOfInertia = 1;
-            InitializeGeometry();
+            SetGeometry();
             Grid = null;
         }
 
-        private void InitializeGeometry() {
+        private void SetGeometry() {
             Geometry = new PointGeometry();
         }
     }

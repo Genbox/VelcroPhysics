@@ -158,11 +158,12 @@ namespace FarseerGames.FarseerXNAPhysics.Collisions {
         public void Rotate(float angle) {
             Matrix rotationMatrix = Matrix.CreateRotationZ(angle);
             _orientation = Matrix.Multiply(_orientation ,rotationMatrix);
-            Update();
+               Update();
         }
 
         public Vector2 ConvertToLocalCoordinates(Vector2 point) {
-           Vector2 localPoint = Vector2.Subtract(point, _position);
+            Vector2 localPoint = Vector2.Subtract(point, _position);
+          
             Matrix inverseOrientation = Matrix.Transpose(_orientation);
             localPoint = Vector2.Transform(localPoint,inverseOrientation);
             return localPoint;

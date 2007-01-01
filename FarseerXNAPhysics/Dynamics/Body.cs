@@ -32,6 +32,8 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
         private float _inverseMomentOfInertia = 1;
         private Vector2 _position = Vector2.Zero;
         private float _orientation = 0;
+        private float _revolutions = 0;
+        private float _totalOrientation = 0;
         private Vector2 _linearVelocity = Vector2.Zero;
         private float _angularVelocity = 0;
         private Vector2 _previousPosition = Vector2.Zero;
@@ -45,9 +47,9 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
         private float _torque = 0;
         private float _restitutionCoefficient = 0f;
         private float _frictionCoefficient = 0f;
-        private float _linearDragCoefficient = 0f;
-        private float _linearDragVelocityThreshhold = .000000001f;
-        private float _rotationalDragCoefficient = .1f;
+        private float _linearDragCoefficient = .01f; //tuned for a body of mass 1
+        private float _linearDragVelocityThreshhold = .000001f;
+        private float _rotationalDragCoefficient = .001f; //tuned for a 1.28m X 1.28m rectangle with mass = 1
 
         private bool _isStatic = false;
 
@@ -176,14 +178,21 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
         public virtual float Orientation {
             get { return _orientation; }
             set {
-                _orientation = value;
+                _orientation = value;                
                 if (_orientation > Calculator.PiX2) {
                     _orientation = _orientation % Calculator.PiX2;
+                    _revolutions +=1;
                 }
                 if (_orientation < -Calculator.PiX2) {
                     _orientation = _orientation % Calculator.PiX2;
+                    _revolutions -= 1;                    
                 }
+                _totalOrientation = _orientation + _revolutions * Calculator.PiX2;
             }
+        }
+
+        public float TotalOrientation {
+            get { return _totalOrientation; }
         }
 
         public Vector2 LinearVelocity {
@@ -198,7 +207,9 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
 
         public float AngularVelocity {
             get { return _angularVelocity; }
-            set { _angularVelocity = value; }
+            set { 
+                _angularVelocity = value;
+            }
         }
 
         public float AngularVelocityBias {
@@ -223,11 +234,6 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
         public float AngularAcceleration {
             get { return _torque / _momentOfInertia; }
         }
-
-        //public Vector2 ConstantForce {
-        //    get { return _constantForce; }
-        //    set { _constantForce = value; }
-        //}
 
         public Matrix BodyMatrix {
             get {
@@ -255,8 +261,7 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             get {
                 Matrix bodyMatrix = BodyMatrix;
                 return new Vector2(bodyMatrix.Up.X, bodyMatrix.Up.Y);
-            }
-        
+            }        
         }
 
         public Vector2 GetWorldPosition(Vector2 localPosition) {
@@ -288,8 +293,8 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
                 linearDrag = Vector2.Multiply(linearDrag, _linearDragCoefficient * dragDirection);
                 ApplyForce(linearDrag);
             }
-            float rotationalDrag = _angularVelocity * _angularVelocity * Math.Sign(_angularVelocity);
 
+            float rotationalDrag = _angularVelocity * _angularVelocity * Math.Sign(_angularVelocity);
             rotationalDrag *= -_rotationalDragCoefficient;
             ApplyTorque(rotationalDrag);
         }
@@ -316,7 +321,6 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             Vector2 dp;
             float orientationChange;
             //linear
-
             Vector2 linearVelocity = Vector2.Add(_linearVelocity, _linearVelocityBias);
             dp = Vector2.Multiply(linearVelocity, dt);
 
@@ -327,7 +331,6 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
 
             //angular
             float angularVelocity = _angularVelocity + _angularVelocityBias;
-
             orientationChange = angularVelocity * dt;
             _previousOrientation = _orientation;
             Orientation = _previousOrientation + orientationChange;

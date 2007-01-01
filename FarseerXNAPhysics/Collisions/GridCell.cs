@@ -53,7 +53,7 @@ namespace FarseerGames.FarseerXNAPhysics.Collisions
 
             //calc gradient to find normal
             feature.Normal = new Vector2(right - left, bottom - top);
-            feature.Normal.Normalize();            
+            feature.Normal.Normalize();
             return feature;
         }
 
