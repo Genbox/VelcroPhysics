@@ -9,16 +9,17 @@ using FarseerGames.FarseerXNAPhysics.Mathematics;
 
 namespace FarseerGames.FarseerXNAPhysics.Dynamics {
     public class RevoluteJoint : Joint {
-        private Matrix matrix;
-        private Vector2 localAnchor1;
-        private Vector2 localAnchor2;
+        private Matrix _matrix;
+        private Vector2 _localAnchor1;
+        private Vector2 _localAnchor2;
 
-        private Vector2 r1;
-        private Vector2 r2;
+        private Vector2 _r1;
+        private Vector2 _r2;
 
-        private Vector2 bias;
-        private float relaxation;
-        private Vector2 accumulatedImpulse;
+        private float _biasFactor = .1f;
+        private Vector2 _bias;
+        private float _relaxation;
+        private Vector2 _accumulatedImpulse;
 
         public RevoluteJoint(Body body1, Body body2, Vector2 anchor) {
             this._body1 = body1;
@@ -26,16 +27,16 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
 
             //Matrix  rotation1
 
-            localAnchor1 = body1.GetLocalPosition(anchor);
-            localAnchor2 = body2.GetLocalPosition(anchor);
+            _localAnchor1 = body1.GetLocalPosition(anchor);
+            _localAnchor2 = body2.GetLocalPosition(anchor);
 
-            accumulatedImpulse = Vector2.Zero;
-            relaxation = 1f;            
+            _accumulatedImpulse = Vector2.Zero;
+            _relaxation = 1f;            
         }
 
         public override void PreStep(float inverseDt) {
-            r1 = Vector2.TransformNormal(localAnchor1, _body1.BodyMatrix);
-            r2 = Vector2.TransformNormal(localAnchor2, _body2.BodyMatrix);
+            _r1 = Vector2.TransformNormal(_localAnchor1, _body1.BodyMatrix);
+            _r2 = Vector2.TransformNormal(_localAnchor2, _body2.BodyMatrix);
 
             Matrix K1 = new Matrix();
             K1.M11 = _body1.InverseMass + _body2.InverseMass;
@@ -44,33 +45,33 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
             K1.M22 = _body1.InverseMass + _body2.InverseMass;
 
             Matrix K2 = new Matrix();
-            K2.M11 = _body1.InverseMomentOfInertia * r1.Y * r1.Y;
-            K2.M12 = -_body1.InverseMomentOfInertia * r1.X*r1.Y;
-            K2.M21 = -_body1.InverseMomentOfInertia * r1.X*r1.Y;
-            K2.M22 = _body1.InverseMomentOfInertia * r1.X*r1.X;
+            K2.M11 = _body1.InverseMomentOfInertia * _r1.Y * _r1.Y;
+            K2.M12 = -_body1.InverseMomentOfInertia * _r1.X*_r1.Y;
+            K2.M21 = -_body1.InverseMomentOfInertia * _r1.X*_r1.Y;
+            K2.M22 = _body1.InverseMomentOfInertia * _r1.X*_r1.X;
 
             Matrix K3 = new Matrix();
-            K3.M11 = _body2.InverseMomentOfInertia * r2.Y * r2.Y;
-            K3.M12 = -_body2.InverseMomentOfInertia * r2.X * r2.Y;
-            K3.M21 = -_body2.InverseMomentOfInertia * r2.X * r2.Y;
-            K3.M22 = _body2.InverseMomentOfInertia * r2.X * r2.X;
+            K3.M11 = _body2.InverseMomentOfInertia * _r2.Y * _r2.Y;
+            K3.M12 = -_body2.InverseMomentOfInertia * _r2.X * _r2.Y;
+            K3.M21 = -_body2.InverseMomentOfInertia * _r2.X * _r2.Y;
+            K3.M22 = _body2.InverseMomentOfInertia * _r2.X * _r2.X;
 
             Matrix K = K1 + K2 + K3;
 
-            matrix = MatrixInvert2D(K);
+            _matrix = MatrixInvert2D(K);
 
-            Vector2 position1 = _body1.Position + r1;
-            Vector2 position2 = _body2.Position + r2;
+            Vector2 position1 = _body1.Position + _r1;
+            Vector2 position2 = _body2.Position + _r2;
             Vector2 difference = position2 - position1;
-            bias = -.1f * inverseDt * difference;
+            _bias = -_biasFactor * inverseDt * difference;
 
-            accumulatedImpulse *= relaxation;
+            _accumulatedImpulse *= _relaxation;
 
-            _body1.LinearVelocity -= _body1.InverseMass * accumulatedImpulse;
-            _body1.AngularVelocity -= _body1.InverseMomentOfInertia * Calculator.Cross(r1, accumulatedImpulse);
+            _body1.LinearVelocity -= _body1.InverseMass * _accumulatedImpulse;
+            _body1.AngularVelocity -= _body1.InverseMomentOfInertia * Calculator.Cross(_r1, _accumulatedImpulse);
 
-            _body2.LinearVelocity += _body2.InverseMass * accumulatedImpulse;
-            _body2.AngularVelocity += _body2.InverseMomentOfInertia * Calculator.Cross(r2, accumulatedImpulse);
+            _body2.LinearVelocity += _body2.InverseMass * _accumulatedImpulse;
+            _body2.AngularVelocity += _body2.InverseMomentOfInertia * Calculator.Cross(_r2, _accumulatedImpulse);
         }
 
         public Matrix MatrixInvert2D(Matrix matrix) {
@@ -85,18 +86,19 @@ namespace FarseerGames.FarseerXNAPhysics.Dynamics {
         }
 
         public override void Update() {
-            Vector2 dv = _body2.LinearVelocity + Calculator.Cross(_body2.AngularVelocity, r2) - _body1.LinearVelocity - Calculator.Cross(_body1.AngularVelocity, r1);
-            Vector2 dvBias = -dv + bias;
-            Vector2 impulse = Vector2.Transform(dvBias, matrix);
+            Vector2 dv = _body2.LinearVelocity + Calculator.Cross(_body2.AngularVelocity, _r2) - _body1.LinearVelocity - Calculator.Cross(_body1.AngularVelocity, _r1);
+            Vector2 dvBias = -dv + _bias;
+            Vector2 impulse = Vector2.Transform(dvBias, _matrix);
 
             _body1.LinearVelocity -= _body1.InverseMass * impulse;
-            _body1.AngularVelocity -= _body1.InverseMomentOfInertia * Calculator.Cross(r1, impulse);
+            _body1.AngularVelocity -= _body1.InverseMomentOfInertia * Calculator.Cross(_r1, impulse);
 
             _body2.LinearVelocity += _body2.InverseMass * impulse;
-            _body2.AngularVelocity += _body2.InverseMomentOfInertia * Calculator.Cross(r2, impulse);
+            _body2.AngularVelocity += _body2.InverseMomentOfInertia * Calculator.Cross(_r2, impulse);
 
-            accumulatedImpulse += impulse;
+            _accumulatedImpulse += impulse;
 
         }
+
     }
 }

@@ -10,13 +10,15 @@ using FarseerGames.FarseerXNAPhysics.Dynamics;
 using FarseerGames.FarseerXNAPhysics.Collisions;
 
 namespace FarseerGames.FarseerXNAPhysics {
-    public class PhysicsSimulator : PhysicsSimulatorBase {
+    public class PhysicsSimulator {
         RigidBodyList _rigidBodyList;
+        BodyList _bodyList; //no colliding bodies.
         ArbiterList _arbiterList;
         SpringList _springList;
         JointList _jointList;
 
-        private int _iterations = 5;
+        private Vector2 _gravity = Vector2.Zero;
+        private int _iterations = 10;
         private float _allowedPenetration = .01f;
         private float _biasFactor = .8f;
         private int _maxContactsPerRigidBodyPair = 5;
@@ -37,14 +39,19 @@ namespace FarseerGames.FarseerXNAPhysics {
             _gravity = gravity;
         }
 
+        public Vector2 Gravity {
+            get { return _gravity; }
+            set { _gravity = value; }
+        }
+
         public int Iterations {
             get { return _iterations; }
             set { _iterations = value; }
         }
 
         public float AllowedPenetration {
-            get { return _allowedPenetration ; }
-            set { _allowedPenetration  = value; }
+            get { return _allowedPenetration; }
+            set { _allowedPenetration = value; }
         }
 
         public float BiasFactor {
@@ -56,32 +63,63 @@ namespace FarseerGames.FarseerXNAPhysics {
             get { return _maxContactsPerRigidBodyPair; }
             set { _maxContactsPerRigidBodyPair = value; }
         }
-	
+
         public void Add(RigidBody rigidBody) {
-            _rigidBodyList.Add(rigidBody);
+            if (!_rigidBodyList.Contains(rigidBody)) {
+                _rigidBodyList.Add(rigidBody);
+            }
         }
 
         public void Remove(RigidBody rigidBody) {
             _rigidBodyList.Remove(rigidBody);
         }
 
+        public void Add(Body body) {
+            if (!_bodyList.Contains(body)) {
+                _bodyList.Add(body);
+            }
+        }
+
+        public void Remove(Body body) {
+            _bodyList.Remove(body);
+        }
+
         public void AddSpring(Spring spring) {
-            _springList.Add(spring);
+            if (!_springList.Contains(spring)) {
+                _springList.Add(spring);
+            }
+        }
+
+        public void RemoveSpring(Spring spring) {
+            _springList.Remove(spring);
         }
 
         public void AddJoint(Joint joint) {
-            _jointList.Add(joint);
+            if (!_jointList.Contains(joint)) {
+                _jointList.Add(joint);
+            }
         }
 
-        public override void Update(float dt) {
+        public void RemoveJoint(Joint joint) {
+            _jointList.Remove(joint);
+        }
+
+        public void Reset() {
+            _rigidBodyList.Clear();
+            _bodyList.Clear();
+            _jointList.Clear();
+            _springList.Clear();
+        }
+
+        public void Update(float dt) {
             if (dt == 0) { return; }
             //remove all arbiters that contain 1 or more disposed rigid bodies.
             _rigidBodyList.RemoveAll(RigidBodyList.IsDisposed);
             _springList.RemoveAll(SpringList.IsDisposed);
-            _jointList.RemoveAll(JointList.IsDisposed);           
+            _jointList.RemoveAll(JointList.IsDisposed);
 
-            _arbiterList.RemoveAll(ArbiterList.ContainsDisposedBody); 
-          
+            _arbiterList.RemoveAll(ArbiterList.ContainsDisposedBody);
+
             DoBroadPhaseCollision();
             DoNarrowPhaseCollision();
             ApplyForces(dt);
@@ -93,14 +131,16 @@ namespace FarseerGames.FarseerXNAPhysics {
             RigidBody rigidBodyA;
             RigidBody rigidBodyB;
 
-            for (int i = 0; i < _rigidBodyList.Count - 1; i++)
-            {
-                for (int j = i + 1; j < _rigidBodyList.Count; j++)
-                {
+            for (int i = 0; i < _rigidBodyList.Count - 1; i++) {
+                for (int j = i + 1; j < _rigidBodyList.Count; j++) {
                     rigidBodyA = _rigidBodyList[i];
                     rigidBodyB = _rigidBodyList[j];
-                    //possible early exit
-                    if((rigidBodyA.CollisionGroup == rigidBodyB.CollisionGroup) && rigidBodyA.CollisionGroup !=0 && rigidBodyB.CollisionGroup !=0){
+                    //possible early exits
+                    if ((rigidBodyA.CollisionGroup == rigidBodyB.CollisionGroup) && rigidBodyA.CollisionGroup != 0 && rigidBodyB.CollisionGroup != 0) {
+                        continue;
+                    }
+
+                    if (!rigidBodyA.CollisionEnabled || !rigidBodyB.CollisionEnabled) {
                         continue;
                     }
 
@@ -125,41 +165,79 @@ namespace FarseerGames.FarseerXNAPhysics {
             _arbiterList.RemoveAll(ArbiterList.ContactCountEqualsZero);
         }
 
+        public CollisionPoint CollidePoint(Vector2 point) {
+            foreach(RigidBody rigidBody in _rigidBodyList){
+                if(rigidBody.Collide(point)){
+                    return new CollisionPoint(true, rigidBody);
+                }
+            }
+            return new CollisionPoint(false, null);
+        }
+
         public void ApplyForces(float dt) {
             for (int i = 0; i < _springList.Count; i++) {
                 _springList[i].Update(dt);
             }
 
             for (int i = 0; i < _rigidBodyList.Count; i++) {
-                _rigidBodyList[i].ApplyForce(_gravity*_rigidBodyList[i].Mass);
+                _rigidBodyList[i].ApplyForce(_gravity * _rigidBodyList[i].Mass);
                 _rigidBodyList[i].IntegrateVelocity(dt);
                 _rigidBodyList[i].ClearForce();
                 _rigidBodyList[i].ClearTorque();
-            }           
+            }
         }
 
         public void ApplyImpulses(float dt) {
-            
-            float inverseDt = 1f/dt;
-            for (int i = 0; i < _arbiterList.Count; i++) {
-                _arbiterList[i].PreStepImpulse(inverseDt);
-            }
 
-            for (int h = 0; h < _iterations; h++) {
-                for (int i = 0; i < _arbiterList.Count; i++) {
-                    _arbiterList[i].ApplyImpulse();
-                }
-            }
+            float inverseDt = 1f / dt;
 
             for (int i = 0; i < _jointList.Count; i++) {
                 _jointList[i].PreStep(inverseDt);
             }
 
+            for (int i = 0; i < _arbiterList.Count; i++) {
+                _arbiterList[i].PreStepImpulse(inverseDt);
+            }
+
             for (int h = 0; h < _iterations; h++) {
+
                 for (int i = 0; i < _jointList.Count; i++) {
                     _jointList[i].Update();
                 }
+
+                for (int i = 0; i < _arbiterList.Count; i++) {
+                    _arbiterList[i].ApplyImpulse();
+                }
+                
+
             }
+
+            //for (int h = 0; h < _iterations; h++) {
+            //    for (int i = 0; i < _arbiterList.Count; i++) {
+            //        _arbiterList[i].ApplyImpulse();
+            //    }
+            //}
+
+            //for (int i = 0; i < _jointList.Count; i++) {
+            //    _jointList[i].PreStep(inverseDt);
+            //}
+
+            //for (int h = 0; h < _iterations; h++) {
+            //    for (int i = 0; i < _jointList.Count; i++) {
+            //        _jointList[i].Update();
+            //    }
+            //}
+
+            //for (int i = 0; i < _arbiterList.Count; i++) {
+            //    _arbiterList[i].PreStepImpulse(inverseDt);
+            //}
+
+            //for (int h = 0; h < _iterations; h++) {
+            //    for (int i = 0; i < _arbiterList.Count; i++) {
+            //        _arbiterList[i].ApplyImpulse();
+            //    }
+            //}
+
         }
 
         public void UpdatePositions(float dt) {
@@ -167,17 +245,15 @@ namespace FarseerGames.FarseerXNAPhysics {
                 _rigidBodyList[i].IntegratePosition(dt);
             }
         }
+    }
 
-        public void SetAllowedPenetration(float allowedPenetration) {
+    public class CollisionPoint {
+        public bool IsCollison;
+        public RigidBody RigidBody;
 
-        }
-
-        public void SetBiasFactor(float biasFactor) {
-
-        }
-
-        public void SetMaxContactsPerRigidBodyPair(int maxContacts) {
-
+        public CollisionPoint(bool isCollision, RigidBody rigidBody) {
+            IsCollison = isCollision;
+            RigidBody = rigidBody;
         }
     }
 }
