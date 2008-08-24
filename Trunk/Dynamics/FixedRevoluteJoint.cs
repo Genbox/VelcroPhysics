@@ -1,9 +1,6 @@
 using System;
 using System.Diagnostics;
 using FarseerGames.FarseerPhysics.Mathematics;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {

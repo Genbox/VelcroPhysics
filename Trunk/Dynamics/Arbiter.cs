@@ -6,9 +6,6 @@
 using System;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Mathematics;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
@@ -29,9 +26,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         //used for ref/out methods
         private Vector2 vec1 = Vector2.Zero;
         private Vector2 vec2 = Vector2.Zero;
-        private Vector2 vec3 = Vector2.Zero;
-        private Vector2 vec4 = Vector2.Zero;
-        private Vector2 vec5 = Vector2.Zero;
+
+        //Note: Cleanup, variables never used
+        //private Vector2 vec3 = Vector2.Zero;
+        //private Vector2 vec4 = Vector2.Zero;
+        //private Vector2 vec5 = Vector2.Zero;
 
         public Arbiter()
         {

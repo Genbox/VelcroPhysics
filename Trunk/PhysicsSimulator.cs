@@ -4,9 +4,6 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Mathematics;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics
 {
@@ -327,9 +324,6 @@ namespace FarseerGames.FarseerPhysics
             {
                 return;
             }
-#if (XNA)
-            if (EnableDiagnostics) sw.Start();
-#endif
 
             #region Added by Daniel Pramel 08/24/08
 
@@ -352,50 +346,17 @@ namespace FarseerGames.FarseerPhysics
             #endregion
 
             ProcessAddedItems();
-                //moved to before 'removeitems' to avoid confusion when calling add/remove without calling update.
+            //moved to before 'removeitems' to avoid confusion when calling add/remove without calling update.
             ProcessRemovedItems();
             ProcessDisposedItems();
 
             if (!enabled) return;
 
-#if (XNA)
-            if (EnableDiagnostics) cleanUpTime = sw.ElapsedTicks;
-#endif
             DoBroadPhaseCollision();
-#if (XNA)
-            if (EnableDiagnostics) broadPhaseCollisionTime = sw.ElapsedTicks - cleanUpTime;
-#endif
             DoNarrowPhaseCollision();
-#if (XNA)
-            if (EnableDiagnostics) narrowPhaseCollisionTime = sw.ElapsedTicks - broadPhaseCollisionTime - cleanUpTime;
-#endif
             ApplyForces(dt);
-#if (XNA)
-            if (EnableDiagnostics) applyForcesTime = sw.ElapsedTicks - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
-#endif
             ApplyImpulses(dt);
-#if (XNA)
-            if (EnableDiagnostics) applyImpulsesTime = sw.ElapsedTicks - applyForcesTime - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
-#endif
             UpdatePositions(dt);
-#if (XNA)
-            if (EnableDiagnostics) updatePositionsTime = sw.ElapsedTicks - applyImpulsesTime - applyForcesTime - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
-#endif
-#if (XNA)
-            if (EnableDiagnostics) {
-                sw.Stop();
-                updateTime = sw.ElapsedTicks;
-
-                cleanUpTime = 1000 * cleanUpTime/Stopwatch.Frequency;
-                broadPhaseCollisionTime = 1000*broadPhaseCollisionTime/Stopwatch.Frequency;
-                narrowPhaseCollisionTime =1000 * narrowPhaseCollisionTime/Stopwatch.Frequency;
-                applyForcesTime = 1000*applyForcesTime / Stopwatch.Frequency;
-                applyImpulsesTime = 1000*applyImpulsesTime / Stopwatch.Frequency;
-                updatePositionsTime = 1000*updatePositionsTime / Stopwatch.Frequency;
-                updateTime = 1000* updateTime/Stopwatch.Frequency;
-                sw.Reset();
-            }
-#endif
         }
 
         public Geom Collide(float x, float y)
@@ -532,21 +493,23 @@ namespace FarseerGames.FarseerPhysics
             }
         }
 
-        private void ReleaseArbitersWithDisposedGeom(Arbiter arbiter)
-        {
-            if (arbiter.ContainsDisposedGeom())
-            {
-                arbiterPool.Release(arbiter);
-            }
-        }
+        //Note: Cleanup, Method never used
+        //private void ReleaseArbitersWithDisposedGeom(Arbiter arbiter)
+        //{
+        //    if (arbiter.ContainsDisposedGeom())
+        //    {
+        //        arbiterPool.Release(arbiter);
+        //    }
+        //}
 
-        private void ReleaseArbitersWithContactCountZero(Arbiter arbiter)
-        {
-            if (arbiter.ContactCount == 0)
-            {
-                arbiterPool.Release(arbiter);
-            }
-        }
+        //Note: Cleanup, Method never used
+        //private void ReleaseArbitersWithContactCountZero(Arbiter arbiter)
+        //{
+        //    if (arbiter.ContactCount == 0)
+        //    {
+        //        arbiterPool.Release(arbiter);
+        //    }
+        //}
 
         private void ProcessAddedItems()
         {

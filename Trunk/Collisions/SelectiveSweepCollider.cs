@@ -1,10 +1,6 @@
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Dynamics;
 
-#if (SILVERLIGHT)
-//using FarseerGames.FarseerPhysics.Collections.Generic;
-#endif
-
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     public sealed class SelectiveSweepCollider : IBroadPhaseCollider
@@ -85,78 +81,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             return stub.wrapper.geom.isRemoved;
         }
-
-#if (!SILVERLIGHT)
-#else
-        public void ProcessRemovedGeoms()
-        {
-            bool match = false;
-            for (int i = 0; i < wrappers.Count; i++)
-            {
-                if (WrapperIsRemoved(wrappers[i]))
-                {
-                    match = true;
-                    wrappers.RemoveAt(i);
-                    i--;
-                }
-            }
-
-            if (match)
-            {
-                for (int j = 0; j < xStubs.Count; j++)
-                {
-                    if (StubIsRemoved(xStubs[j]))
-                    {
-                        xStubs.RemoveAt(j);
-                        j--;
-                    }
-                }
-                for (int j = 0; j < yStubs.Count; j++)
-                {
-                    if (StubIsRemoved(yStubs[j]))
-                    {
-                        yStubs.RemoveAt(j);
-                        j--;
-                    }
-                }
-            }
-        }
-
-        public void ProcessDisposedGeoms()
-        {
-            bool match = false;
-            for (int i = 0; i < wrappers.Count; i++)
-            {
-                if (WrapperIsDisposed(wrappers[i]))
-                {
-                    match = true;
-                    wrappers.RemoveAt(i);
-                    i--;
-                }
-            }
-
-            if (match)
-            {
-                for (int j = 0; j < xStubs.Count; j++)
-                {
-                    if (StubIsDisposed(xStubs[j]))
-                    {
-                        xStubs.RemoveAt(j);
-                        j--;
-                    }
-                }
-                for (int j = 0; j < yStubs.Count; j++)
-                {
-                    if (StubIsDisposed(yStubs[j]))
-                    {
-                        yStubs.RemoveAt(j);
-                        j--;
-                    }
-                }
-            }
-        }
-#endif
-
 
         /// <summary>
         /// updates all the nodes to their new values and sorts the lists

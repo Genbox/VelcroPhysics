@@ -1,7 +1,4 @@
 using System;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
@@ -12,6 +9,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         protected Body body2;
 
         private float breakpoint = float.MaxValue;
+
+        //Note: Cleanup, variable never used
         private bool enabled = true;
 
         private float jointError;

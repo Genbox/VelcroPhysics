@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Mathematics;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Controllers
 {
@@ -24,6 +21,8 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private Vector2 axis = Vector2.Zero;
         private Vector2 buoyancyForce = Vector2.Zero;
         private Vector2 centroid = Vector2.Zero;
+
+        //Note: Cleanup, variable never used
         private float centroidSpeed;
         private Vector2 centroidVelocity;
         private float density;

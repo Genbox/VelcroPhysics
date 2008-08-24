@@ -28,7 +28,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public void Add(Geom geom)
         {
-            //not 
+            //not required by brute force collider
         }
 
         public void Update()
