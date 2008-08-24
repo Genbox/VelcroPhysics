@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Mathematics;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -183,7 +180,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 vertA = this[i];
                 vertB = this[NextIndex(i)];
-                edge = Vector2.Zero;
+
+                //Note: Code cleanup, could be without assignment?
+                //edge = Vector2.Zero;
                 Vector2.Subtract(ref vertA, ref vertB, out edge);
                 edgeLength = edge.Length();
 

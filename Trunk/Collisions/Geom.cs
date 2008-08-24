@@ -1,9 +1,6 @@
 using System;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Mathematics;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -26,12 +23,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private Body.UpdatedEventHandler bodyUpdated;
 
         internal Enums.CollisionCategories collidesWith = Enums.CollisionCategories.All;
-                                           //collides with all categories by default
+        //collides with all categories by default
 
         public CollisionEventHandler Collision;
 
         internal Enums.CollisionCategories collisionCategories = Enums.CollisionCategories.All;
-                                           //member off all categories by default
+        //member off all categories by default
 
         internal bool collisionEnabled = true;
         internal int collisionGroup;

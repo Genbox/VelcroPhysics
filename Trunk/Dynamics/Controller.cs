@@ -39,7 +39,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 {
                     //dispose managed resources
                 }
-                ;
+
                 //dispose unmanaged resources
             }
             isDisposed = true;

@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerGames.FarseerPhysics.Dynamics;
-#if (XNA)
-using System.Collections.Specialized;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -39,8 +36,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             yInfoList = new ExtentInfoList(this);
             collisionPairs = new CollisionPairDictionary();
         }
-
-#if (!SILVERLIGHT)
 
         #region IBroadPhaseCollider Members
 
@@ -85,109 +80,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             // collisionPairs get recreated and that the geometry isn't being held
             // by overlaps, etc. Its just easier this way.
             ForceNonIncrementalUpdate();
-        }   
-        
-        #endregion
-#else
-
-        private int ExtentInfoListRemoveAllRemoved(ExtentInfoList l)
-        {
-            int removed = 0;
-            for (int i = 0; i < l.Count; i++)
-            {
-                if (l[i].geometry.isRemoved)
-                {
-                    removed++;
-                    l.RemoveAt(i);
-                    i--;
-                }
-            }
-            return removed;
         }
-
-        private int ExtentListRemoveAllRemoved(ExtentList l)
-        {
-            int removed = 0;
-            for (int i = 0; i < l.Count; i++)
-            {
-                if (l[i].info.geometry.isRemoved)
-                {
-                    removed++;
-                    l.RemoveAt(i);
-                    i--;
-                }
-            }
-            return removed;
-        }
-
-        private int ExtentInfoListRemoveAllDisposed(ExtentInfoList l)
-        {
-            int removed = 0;
-            for (int i = 0; i < l.Count; i++)
-            {
-                if (l[i].geometry.IsDisposed)
-                {
-                    removed++;
-                    l.RemoveAt(i);
-                    i--;
-                }
-            }
-            return removed;
-        }
-
-        private int ExtentListRemoveAllDisposed(ExtentList l)
-        {
-            int removed = 0;
-            for (int i = 0; i < l.Count; i++)
-            {
-                if (l[i].info.geometry.IsDisposed)
-                {
-                    removed++;
-                    l.RemoveAt(i);
-                    i--;
-                }
-            }
-            return removed;
-        }
-
-        /// <summary>
-        /// Used by the PhysicsSimulator to remove geometry from Sweep and Prune once it
-        /// has been disposed.
-        /// </summary>
-        public void ProcessDisposedGeoms()
-        {
-            if (ExtentInfoListRemoveAllDisposed(xInfoList) > 0)
-            {
-                ExtentListRemoveAllDisposed(xExtentList);
-            }
-            if (ExtentInfoListRemoveAllDisposed(yInfoList) > 0)
-            {
-                ExtentListRemoveAllDisposed(yExtentList);
-            }
-
-
-            // We force a non-incremental update because that will insure that the
-            // collisionPairs get recreated and that the geometry isn't being held
-            // by overlaps, etc. Its just easier this way.
-            ForceNonIncrementalUpdate();
-        }
-        public void ProcessRemovedGeoms()
-        {
-            if (ExtentInfoListRemoveAllRemoved(xInfoList) > 0)
-            {
-                ExtentListRemoveAllRemoved(xExtentList);
-            }
-            if (ExtentInfoListRemoveAllRemoved(yInfoList) > 0)
-            {
-                ExtentListRemoveAllRemoved(yExtentList);
-            }
-
-            // We force a non-incremental update because that will insure that the
-            // collisionPairs get recreated and that the geometry isn't being held
-            // by overlaps, etc. Its just easier this way.
-            ForceNonIncrementalUpdate();
-        }
-#endif
 
         /// <summary>
         /// This method is used by the PhysicsSimulator to notify Sweep and Prune that 
@@ -220,6 +113,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             HandleCollisions();
         }
+
+        #endregion
 
         /// <summary>
         /// Test AABB collisions between two geometries. Tests include checking if the
@@ -324,6 +219,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void Run()
         {
+            //BUG: This might be a bug, bForce is never assigned to and will always be false
             if (bForce)
                 ForceNonIncrementalUpdate();
             else
@@ -552,7 +448,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         continue;
 
                     Geom g1 = this[i].geometry;
-                    AABB aabb1 = g1.aabb;
+
+                    //Note: Code cleanup, variable never used
+                    //AABB aabb1 = g1.aabb;
 
                     // First transfer those under consideration to overlaps,
                     // for, they have been considered...

@@ -1,8 +1,5 @@
 using System;
 using FarseerGames.FarseerPhysics.Mathematics;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
@@ -453,7 +450,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             Vector2 velocity = linearVelocity +
                                Calculator.Cross(angularVelocity, (GetWorldPosition(localPoint) - Position));
-                // angularVelocity * (GetWorldPosition(localPoint) - Position);
+            // angularVelocity * (GetWorldPosition(localPoint) - Position);
             GetVelocityAtLocalPoint(ref localPoint, out tempVelocity);
             return tempVelocity;
         }
@@ -481,11 +478,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public void GetVelocityAtWorldOffset(ref Vector2 offset, out Vector2 velocity)
         {
-#if(XNA)
-    //required by xbox
-            velocity = velocityTemp;
-#endif
-
             #region INLINED: Calculator.Cross(ref angularVelocity, ref offset, out velocity);
 
             velocity.X = -angularVelocity*offset.Y;
@@ -503,11 +495,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public void GetVelocityBiasAtWorldOffset(ref Vector2 offset, out Vector2 velocityBias)
         {
-#if(XNA)
-    //required by xbox
-            velocityBias = velocityTemp;
-#endif
-
             #region INLINED: Calculator.Cross(ref angularVelocityBias, ref offset, out velocityBias);
 
             velocityBias.X = -angularVelocityBias*offset.Y;

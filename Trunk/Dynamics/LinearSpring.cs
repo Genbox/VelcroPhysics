@@ -1,8 +1,5 @@
 using System;
 using FarseerGames.FarseerPhysics.Mathematics;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
@@ -27,7 +24,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private float springError;
         private float springForce;
         private float temp;
-        private Vector2 vectorTemp2 = Vector2.Zero;
+        //Note: Cleanup, variable never used
+        //private Vector2 vectorTemp2 = Vector2.Zero;
         private Vector2 velocityAtPoint1 = Vector2.Zero;
         private Vector2 velocityAtPoint2 = Vector2.Zero;
         private Vector2 worldPoint1 = Vector2.Zero;
