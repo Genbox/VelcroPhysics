@@ -92,11 +92,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             if (IsDisposed) return;
 
-            _body1InverseMass = Body1.inverseMass;
-            _body1InverseMomentOfInertia = Body1.inverseMomentOfInertia;
+            _body1InverseMass = Body1.InverseMass;
+            _body1InverseMomentOfInertia = Body1.InverseMomentOfInertia;
 
-            _body2InverseMass = Body2.inverseMass;
-            _body2InverseMomentOfInertia = Body2.inverseMomentOfInertia;
+            _body2InverseMass = Body2.InverseMass;
+            _body2InverseMomentOfInertia = Body2.InverseMomentOfInertia;
 
             Body1.GetBodyMatrix(out _body1MatrixTemp);
             Body2.GetBodyMatrix(out _body2MatrixTemp);
@@ -234,8 +234,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             #region INLINE: body2.ApplyImpulse(ref impulse);
 
-            _dv.X = _impulse.X*Body2.inverseMass;
-            _dv.Y = _impulse.Y*Body2.inverseMass;
+            _dv.X = _impulse.X*Body2.InverseMass;
+            _dv.Y = _impulse.Y*Body2.InverseMass;
 
             Body2.linearVelocity.X = _dv.X + Body2.linearVelocity.X;
             Body2.linearVelocity.Y = _dv.Y + Body2.linearVelocity.Y;
@@ -250,7 +250,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             #region INLINE: body2.ApplyAngularImpulse(ref floatTemp1);
 
-            Body2.angularVelocity += _floatTemp1*Body2.inverseMomentOfInertia;
+            Body2.angularVelocity += _floatTemp1*Body2.InverseMomentOfInertia;
 
             #endregion
 
@@ -263,8 +263,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             #region INLINE: body1.ApplyImpulse(ref vectorTemp1);
 
-            _dv.X = _vectorTemp1.X*Body1.inverseMass;
-            _dv.Y = _vectorTemp1.Y*Body1.inverseMass;
+            _dv.X = _vectorTemp1.X*Body1.InverseMass;
+            _dv.Y = _vectorTemp1.Y*Body1.InverseMass;
 
             Body1.linearVelocity.X = _dv.X + Body1.linearVelocity.X;
             Body1.linearVelocity.Y = _dv.Y + Body1.linearVelocity.Y;
@@ -281,7 +281,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             #region INLINE: body1.ApplyAngularImpulse(ref floatTemp1);
 
-            Body1.angularVelocity += _floatTemp1*Body1.inverseMomentOfInertia;
+            Body1.angularVelocity += _floatTemp1*Body1.InverseMomentOfInertia;
 
             #endregion
 
