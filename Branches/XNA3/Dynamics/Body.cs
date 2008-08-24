@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 
-#if (XNA)
-using Microsoft.Xna.Framework; 
-#endif
 
 using FarseerGames.FarseerPhysics.Mathematics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Dynamics {
     /// <summary>
@@ -421,10 +419,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics {
         //for offset, think r1!
         Vector2 velocityTemp = Vector2.Zero;
         public void GetVelocityAtWorldOffset(ref Vector2 offset, out Vector2 velocity) {
-#if(XNA)
             //required by xbox
             velocity = velocityTemp;
-#endif
 
             #region INLINED: Calculator.Cross(ref angularVelocity, ref offset, out velocity);
             velocity.X = -angularVelocity * offset.Y;
@@ -438,10 +434,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics {
         }
 
         public void GetVelocityBiasAtWorldOffset(ref Vector2 offset, out Vector2 velocityBias) {
-#if(XNA)
             //required by xbox
             velocityBias = velocityTemp;
-#endif
 
             #region INLINED: Calculator.Cross(ref angularVelocityBias, ref offset, out velocityBias);
             velocityBias.X = -angularVelocityBias * offset.Y;

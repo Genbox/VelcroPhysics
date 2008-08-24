@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 
-#if (XNA)
-using Microsoft.Xna.Framework; 
-#endif
-
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     public class ContactList : List<Contact>

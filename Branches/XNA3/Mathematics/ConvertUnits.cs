@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
-#if (XNA)
-using Microsoft.Xna.Framework; 
-#endif
+using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Mathematics {
     public class ConvertUnits {

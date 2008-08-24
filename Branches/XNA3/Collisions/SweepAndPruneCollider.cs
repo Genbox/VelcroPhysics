@@ -1,9 +1,6 @@
 // Contributor: Andrew D. Jones
 using System;
 using System.Collections;
-#if (XNA)
-using System.Collections.Specialized;
-#endif
 using System.Collections.Generic;
 using System.Text;
 
@@ -42,7 +39,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             this.collisionPairs = new CollisionPairDictionary();
         }
 
-#if (!SILVERLIGHT)
         /// <summary>
         /// Used by the PhysicsSimulator to remove geometry from Sweep and Prune once it
         /// has been disposed.
@@ -93,106 +89,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             // by overlaps, etc. Its just easier this way.
             ForceNonIncrementalUpdate();
         }
-#else
 
-        private int ExtentInfoListRemoveAllRemoved(ExtentInfoList l)
-        {
-            int removed = 0;
-            for (int i = 0; i < l.Count; i++)
-            {
-                if (l[i].geometry.isRemoved)
-                {
-                    removed++;
-                    l.RemoveAt(i);
-                    i--;
-                }
-            }
-            return removed;
-        }
-
-        private int ExtentListRemoveAllRemoved(ExtentList l)
-        {
-            int removed = 0;
-            for (int i = 0; i < l.Count; i++)
-            {
-                if (l[i].info.geometry.isRemoved)
-                {
-                    removed++;
-                    l.RemoveAt(i);
-                    i--;
-                }
-            }
-            return removed;
-        }
-
-        private int ExtentInfoListRemoveAllDisposed(ExtentInfoList l)
-        {
-            int removed = 0;
-            for (int i = 0; i < l.Count; i++)
-            {
-                if (l[i].geometry.IsDisposed)
-                {
-                    removed++;
-                    l.RemoveAt(i);
-                    i--;
-                }
-            }
-            return removed;
-        }
-
-        private int ExtentListRemoveAllDisposed(ExtentList l)
-        {
-            int removed = 0;
-            for (int i = 0; i < l.Count; i++)
-            {
-                if (l[i].info.geometry.IsDisposed)
-                {
-                    removed++;
-                    l.RemoveAt(i);
-                    i--;
-                }
-            }
-            return removed;
-        }
-
-        /// <summary>
-        /// Used by the PhysicsSimulator to remove geometry from Sweep and Prune once it
-        /// has been disposed.
-        /// </summary>
-        public void ProcessDisposedGeoms()
-        {
-            if (ExtentInfoListRemoveAllDisposed(xInfoList) > 0)
-            {
-                ExtentListRemoveAllDisposed(xExtentList);
-            }
-            if (ExtentInfoListRemoveAllDisposed(yInfoList) > 0)
-            {
-                ExtentListRemoveAllDisposed(yExtentList);
-            }
-
-
-            // We force a non-incremental update because that will insure that the
-            // collisionPairs get recreated and that the geometry isn't being held
-            // by overlaps, etc. Its just easier this way.
-            ForceNonIncrementalUpdate();
-        }
-        public void ProcessRemovedGeoms()
-        {
-            if (ExtentInfoListRemoveAllRemoved(xInfoList) > 0)
-            {
-                ExtentListRemoveAllRemoved(xExtentList);
-            }
-            if (ExtentInfoListRemoveAllRemoved(yInfoList) > 0)
-            {
-                ExtentListRemoveAllRemoved(yExtentList);
-            }
-
-            // We force a non-incremental update because that will insure that the
-            // collisionPairs get recreated and that the geometry isn't being held
-            // by overlaps, etc. Its just easier this way.
-            ForceNonIncrementalUpdate();
-        }
-#endif
         /// <summary>
         /// This method is used by the PhysicsSimulator to notify Sweep and Prune that 
         /// new geometry is to be tracked.

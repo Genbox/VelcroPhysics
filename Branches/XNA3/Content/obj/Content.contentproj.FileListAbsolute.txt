@@ -1,0 +1,2 @@
+C:\Users\Genbox\Documents\Visual Studio 2008\Projects\FarseerPhysics\FarseerPhysics\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Genbox\Desktop\New Folder\FarseerPhysics\Branches\XNA3\Content\obj\x86\Debug\ResolveAssemblyReference.cache

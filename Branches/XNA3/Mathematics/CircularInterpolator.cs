@@ -2,10 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
-
-#if (XNA)
-using Microsoft.Xna.Framework; 
-#endif
+using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Mathematics {
     /// <summary>

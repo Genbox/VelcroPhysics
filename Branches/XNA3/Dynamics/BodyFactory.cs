@@ -2,10 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-#if (XNA)
-using Microsoft.Xna.Framework; 
-#endif
-
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Mathematics;
 using FarseerGames.FarseerPhysics.Dynamics;
