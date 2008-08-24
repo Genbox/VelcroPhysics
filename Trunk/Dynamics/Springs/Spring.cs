@@ -1,13 +1,14 @@
-using System;
+﻿using System;
 
-namespace FarseerGames.FarseerPhysics.Dynamics.Joints
+namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
-    public abstract class Joint : DynamicsBase
+    public abstract class Spring : DynamicsBase
     {
-        public float Softness { get; set; }
+        public float SpringConstant { get; set; }
+        public float DampningConstant { get; set; }
         public event EventHandler<EventArgs> Broke;
 
-        public virtual void PreStep(float inverseDt)
+        public virtual void Update(float dt)
         {
             if (Enabled && Math.Abs(Error) > Breakpoint)
             {
@@ -15,7 +16,5 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 if (Broke != null) Broke(this, new EventArgs());
             }
         }
-
-        public abstract void Update();
     }
 }

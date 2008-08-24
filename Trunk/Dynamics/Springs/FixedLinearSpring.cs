@@ -1,10 +1,8 @@
-using System;
-using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
-    public class FixedLinearSpring : Controller
+    public class FixedLinearSpring : Spring
     {
         internal Vector2 bodyAttachPoint;
         private Vector2 difference = Vector2.Zero;
@@ -49,13 +47,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             set { worldAttachPoint = value; }
         }
 
-        public float SpringConstant { get; set; }
-        public float DampningConstant { get; set; }
         public float RestLength { get; set; }
-        public float Breakpoint { get; set; }
-        public float SpringError { get; private set; }
-
-        public event EventHandler<EventArgs> Broke;
 
         public override void Validate()
         {
@@ -68,20 +60,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public override void Update(float dt)
         {
-            if (Enabled && Math.Abs(SpringError) > Breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, new EventArgs());
-            }
+            base.Update(dt);
 
-            if (IsDisposed)
-            {
-                return;
-            }
-            if (Body.isStatic)
-            {
-                return;
-            }
+            if (IsDisposed) return;
+            if (Body.isStatic) return;
 
             //calculate and apply spring force
             //F = -{s(L-r) + d[(v1-v2).L]/l}L/l   : s=spring const, d = dampning const, L=difference vector (p1-p2), l = difference magnitude, r = rest length,            
@@ -94,9 +76,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             } //if already close to rest length then return
 
             //calculate spring force (kX)
-            SpringError = differenceMagnitude - RestLength;
+            Error = differenceMagnitude - RestLength;
             Vector2.Normalize(ref difference, out _differenceNormalized);
-            _springForce = SpringConstant*SpringError; //kX
+            _springForce = SpringConstant*Error; //kX
 
             //calculate relative velocity 
             Body.GetVelocityAtLocalPoint(ref bodyAttachPoint, out _bodyVelocity);

@@ -1,9 +1,8 @@
 using System;
-using FarseerGames.FarseerPhysics.Controllers;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
-    public class FixedAngleSpring : Controller
+    public class FixedAngleSpring : Spring
     {
         public FixedAngleSpring()
         {
@@ -24,10 +23,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         }
 
         public Body Body { get; set; }
-        public float SpringConstant { get; set; }
-        public float DampningConstant { get; set; }
         public float TargetAngle { get; set; }
-        public float Breakpoint { get; set; }
         public float MaxTorque { get; set; }
 
         /// <summary>
@@ -35,8 +31,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// For normal spring behavior this value should be 1
         /// </summary>
         public float TorqueMultiplier { get; set; }
-        public float SpringError { get; private set; }
-        public event EventHandler<EventArgs> Broke;
 
         public override void Validate()
         {
@@ -49,19 +43,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public override void Update(float dt)
         {
-            if (Enabled && Math.Abs(SpringError) > Breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, new EventArgs());
-            }
-            if (IsDisposed)
-            {
-                return;
-            }
+            base.Update(dt);
+
+            if (IsDisposed) return;
+
             //calculate and apply spring force
             float angleDifference = TargetAngle - Body.TotalRotation;
             float springTorque = SpringConstant*angleDifference;
-            SpringError = angleDifference;
+            Error = angleDifference;
 
             //apply torque at anchor
             if (!Body.IsStatic)

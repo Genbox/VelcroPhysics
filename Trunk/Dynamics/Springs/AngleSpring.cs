@@ -1,9 +1,8 @@
 using System;
-using FarseerGames.FarseerPhysics.Controllers;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
-    public class AngleSpring : Controller
+    public class AngleSpring : Spring
     {
         private float targetAngle;
 
@@ -28,8 +27,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public Body Body1 { get; set; }
         public Body Body2 { get; set; }
-        public float SpringConstant { get; set; }
-        public float DampningConstant { get; set; }
 
         //TODO: magic numbers
         public float TargetAngle
@@ -49,7 +46,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             }
         }
 
-        public float Breakpoint { get; set; }
         public float MaxTorque { get; set; }
 
         /// <summary>
@@ -57,8 +53,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// For normal spring behavior this value should be 1
         /// </summary>
         public float TorqueMultiplier { get; set; }
-        public float SpringError { get; private set; }
-        public event EventHandler<EventArgs> Broke;
 
         public override void Validate()
         {
@@ -71,22 +65,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public override void Update(float dt)
         {
-            if (Enabled && Math.Abs(SpringError) > Breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, new EventArgs());
-            }
+            base.Update(dt);
 
-            if (IsDisposed)
-            {
-                return;
-            }
+            if (IsDisposed) return;
+
             //calculate and apply spring force
             //Note: Cleanup. Variable never used.
             //float angle = Body2.totalRotation - Body1.totalRotation;
             float angleDifference = Body2.TotalRotation - (Body1.TotalRotation + targetAngle);
             float springTorque = SpringConstant*angleDifference;
-            SpringError = angleDifference; //keep track of 'springError' for breaking joint
+            Error = angleDifference; //keep track of 'springError' for breaking joint
 
             //apply torque at anchor
             if (!Body1.IsStatic)
