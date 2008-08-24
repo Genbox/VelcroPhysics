@@ -5,11 +5,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public class ArbiterList : List<Arbiter>
     {
-        private readonly List<Arbiter> markedForRemovalList;
+        private readonly List<Arbiter> _markedForRemovalList;
 
         public ArbiterList()
         {
-            markedForRemovalList = new List<Arbiter>();
+            _markedForRemovalList = new List<Arbiter>();
         }
 
         public void ForEachSafe(Action<Arbiter> action)
@@ -26,15 +26,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 if (match(this[i]))
                 {
-                    markedForRemovalList.Add(this[i]);
+                    _markedForRemovalList.Add(this[i]);
                 }
             }
-            for (int j = 0; j < markedForRemovalList.Count; j++)
+            for (int j = 0; j < _markedForRemovalList.Count; j++)
             {
-                Remove(markedForRemovalList[j]);
-                markedForRemovalList[j].Reset();
+                Remove(_markedForRemovalList[j]);
+                _markedForRemovalList[j].Reset();
             }
-            markedForRemovalList.Clear();
+            _markedForRemovalList.Clear();
         }
 
         public void RemoveContactCountEqualsZero(Pool<Arbiter> arbiterPool)
@@ -43,15 +43,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 if (ContactCountEqualsZero(this[i]))
                 {
-                    markedForRemovalList.Add(this[i]);
+                    _markedForRemovalList.Add(this[i]);
                 }
             }
-            for (int j = 0; j < markedForRemovalList.Count; j++)
+            for (int j = 0; j < _markedForRemovalList.Count; j++)
             {
-                Remove(markedForRemovalList[j]);
-                arbiterPool.Release(markedForRemovalList[j]);
+                Remove(_markedForRemovalList[j]);
+                arbiterPool.Release(_markedForRemovalList[j]);
             }
-            markedForRemovalList.Clear();
+            _markedForRemovalList.Clear();
         }
 
         public void RemoveContainsDisposedBody(Pool<Arbiter> arbiterPool)
@@ -60,15 +60,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 if (ContainsDisposedBody(this[i]))
                 {
-                    markedForRemovalList.Add(this[i]);
+                    _markedForRemovalList.Add(this[i]);
                 }
             }
-            for (int j = 0; j < markedForRemovalList.Count; j++)
+            for (int j = 0; j < _markedForRemovalList.Count; j++)
             {
-                Remove(markedForRemovalList[j]);
-                arbiterPool.Release(markedForRemovalList[j]);
+                Remove(_markedForRemovalList[j]);
+                arbiterPool.Release(_markedForRemovalList[j]);
             }
-            markedForRemovalList.Clear();
+            _markedForRemovalList.Clear();
         }
 
         internal static bool ContactCountEqualsZero(Arbiter a)
