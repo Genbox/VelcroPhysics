@@ -1,7 +1,8 @@
+using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerGames.FarseerPhysics.Collisions
+namespace FarseerGames.FarseerPhysics.Factories
 {
     public class GeomFactory
     {
