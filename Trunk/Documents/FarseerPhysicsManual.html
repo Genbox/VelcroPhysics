@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<title>Farseer Physics Manual</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<style type="text/css"> h1 { text-align: center; font-size: 300%; }
+	h2, h3 { background-color: lightsteelblue; padding: 3px; }
+	p { margin-left: 1em; }
+	p.expl { margin-left: 2em; }
+	csharpcode, csharpcode pre { font-size: small; color: black; font-family: Consolas, "Courier New", Courier, Monospace; background-color: #ffffff; /*white-space: pre;*/ }
+	csharpcode pre { margin: 0em; }
+	csharpcode .rem { color: #008000; }
+	csharpcode .kwrd { color: #0000ff; }
+	csharpcode .str { color: #006080; }
+	csharpcode .op { color: #0000c0; }
+	csharpcode .preproc { color: #cc6633; }
+	csharpcode .asp { background-color: #ffff00; }
+	csharpcode .html { color: #800000; }
+	csharpcode .attr { color: #ff0000; }
+	csharpcode .alt { background-color: #f4f4f4; width: 100%; margin: 0em; }
+	csharpcode .lnum { color: #606060; }
+	</style>
+	</head>
+	<body>
+		<h1>Farseer Physice Engine Manual&nbsp;</h1>
+		<h2>Introduction</h2>
+		<P>The Farseer Physics Engine&nbsp;is an easy to use 2D physics engine designed 
+			specifically for Microsoft's XNA platform. The Farseer Physics Engine focuses 
+			on simplicity, useful features, and enabling the creation of fun, dynamic 
+			games.</P>
+		<H2><SPAN class="caps">Overview</SPAN></H2>
+		<P>Getting right to the nut, the Farseer Physics Engine is designed to control the 
+			position and rotation of game entities over time.&nbsp;</P>
+		<P>In the real world, things move and spin due to applied forces and torques. In 
+			Farseer, the same is true. Objects called "Bodies" represent the real world 
+			things.&nbsp;&nbsp;As forces and torques are&nbsp;applied,&nbsp;the 
+			bodies&nbsp;react according to the laws&nbsp;of 2D physics.&nbsp;The position 
+			and rotation of these bodies are then used to update game entities.</P>
+		<P>In the very simplest outline it works like this:</P>
+		<P>1. Create "Body" object<BR>
+			2. Add Body object to simulator.<BR>
+			Begin&nbsp;Game Loop<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp; 3. Apply forces and torques to Body.<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp; 4.&nbsp;Update&nbsp;the&nbsp;simulator<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp; 5.&nbsp;Set game entity(sprite or 
+			whatever)&nbsp;position and rotation equal to Body position and rotation.<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp; 6. Draw game entity<BR>
+			End Game Loop</P>
+		<P>Bodies, by design, have no geometry in the 2D world and therefore&nbsp;have no 
+			concept of collisions.&nbsp;</P>
+		<P>For collision, Farseer has the "Geometry" object. Geometry objects are 
+			represented&nbsp;as 2D polygons and can be either concave or convex. They are 
+			defined by a set of vertices.&nbsp; One or more Geometries are attached to a 
+			Body in order to give the Body&nbsp;geometrical awareness. This 
+			allows&nbsp;the&nbsp;Body&nbsp;to participate in collisions with other 
+			Bodies(actually other Geometries attached to other Bodies, but you get the 
+			picture.)</P>
+		<H2>Dynamics</H2>
+		<H3>Body</H3>
+		<H3>Body Factory</H3>
+		<H3>Revolute Joint</H3>
+		<H3>Angle Joint</H3>
+		<H3>Joint Factory</H3>
+		<H3>Linear Spring</H3>
+		<H3>Angle Spring</H3>
+		<H2>Collision</H2>
+		<H3>Geometry</H3>
+		<H3>Grid</H3>
+		<H3>Vertices</H3>
+		<H3>Collision Groups</H3>
+		<H3>Collision Layers</H3>
+		<H3>Collision Events</H3>
+		<H2>Example Code Snippets</H2>
+		<P>&nbsp;</P>
+	</body>
+</html>
