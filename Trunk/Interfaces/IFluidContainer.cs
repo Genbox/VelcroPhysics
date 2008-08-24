@@ -1,7 +1,7 @@
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerGames.FarseerPhysics.Controllers
+namespace FarseerGames.FarseerPhysics.Interfaces
 {
     public interface IFluidContainer
     {
