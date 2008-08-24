@@ -174,8 +174,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             //calc mass normal (effective mass in relation to constraint)
             Calculator.Cross(ref _r1, ref _worldAnchorDifferenceNormalized, out _r1cn);
             Calculator.Cross(ref _r2, ref _worldAnchorDifferenceNormalized, out _r2cn);
-            _kNormal = Body1.inverseMass + Body2.inverseMass + Body1.inverseMomentOfInertia*_r1cn*_r1cn +
-                       Body2.inverseMomentOfInertia*_r2cn*_r2cn;
+            _kNormal = Body1.InverseMass + Body2.InverseMass + Body1.InverseMomentOfInertia*_r1cn*_r1cn +
+                       Body2.InverseMomentOfInertia*_r2cn*_r2cn;
             _effectiveMass = (1)/(_kNormal + Softness);
 
             //convert scalar accumulated impulse to vector

@@ -66,8 +66,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             if (IsDisposed) return;
 
-            _bodyInverseMass = Body.inverseMass;
-            _bodyInverseMomentOfInertia = Body.inverseMomentOfInertia;
+            _bodyInverseMass = Body.InverseMass;
+            _bodyInverseMomentOfInertia = Body.InverseMomentOfInertia;
 
             Body.GetBodyMatrix(out _bodyMatrixTemp);
             Vector2.TransformNormal(ref _localAnchor, ref _bodyMatrixTemp, out _r1);

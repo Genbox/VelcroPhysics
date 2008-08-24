@@ -24,11 +24,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private Vector2 _vec1 = Vector2.Zero;
         private Vector2 _vec2 = Vector2.Zero;
 
-        //Note: Cleanup, variables never used
-        //private Vector2 vec3 = Vector2.Zero;
-        //private Vector2 vec4 = Vector2.Zero;
-        //private Vector2 vec5 = Vector2.Zero;
-
         public Arbiter()
         {
         }
@@ -129,11 +124,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 Vector2.Dot(ref r2, ref contact.Normal, out rn2);
 
                 //calculate mass normal
-                float invMassSum = GeomA.Body.inverseMass + GeomB.Body.inverseMass;
+                float invMassSum = GeomA.Body.InverseMass + GeomB.Body.InverseMass;
                 Vector2.Dot(ref r1, ref r1, out _float1);
                 Vector2.Dot(ref r2, ref r2, out _float2);
-                kNormal = invMassSum + GeomA.Body.inverseMomentOfInertia*(_float1 - rn1*rn1) +
-                          GeomB.Body.inverseMomentOfInertia*(_float2 - rn2*rn2);
+                kNormal = invMassSum + GeomA.Body.InverseMomentOfInertia*(_float1 - rn1*rn1) +
+                          GeomB.Body.InverseMomentOfInertia*(_float2 - rn2*rn2);
                 contact.MassNormal = 1f/kNormal;
 
                 //calculate mass tangent
@@ -145,7 +140,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 Vector2.Dot(ref r1, ref r1, out _float1);
                 Vector2.Dot(ref r2, ref r2, out _float2);
-                kTangent += GeomA.Body.inverseMomentOfInertia*(_float1 - rt1*rt1) +
+                kTangent += GeomA.Body.InverseMomentOfInertia*(_float1 - rt1*rt1) +
                             GeomB.Body.InverseMomentOfInertia*(_float2 - rt2*rt2);
                 contact.MassTangent = 1f/kTangent;
 
@@ -385,7 +380,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
              * we don't want to check for a collision, if both bodies are disabled...
              */
 
-            if (GeomA.Body.enabled == false && GeomB.Body.enabled == false)
+            if (GeomA.Body.Enabled == false && GeomB.Body.Enabled == false)
             {
                 _mergedContactList.Clear();
                 ContactList.Clear();
@@ -439,17 +434,17 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 } //grid can be null for "one-way" collision (points)
 
                 vertexIndex += 1;
-                vertRef = geometry2.WorldVertices[i];
-                geometry1.TransformToLocalCoordinates(ref vertRef, out localVertex);
-                if (!geometry1.Intersect(ref localVertex, out feature))
+                _vertRef = geometry2.WorldVertices[i];
+                geometry1.TransformToLocalCoordinates(ref _vertRef, out _localVertex);
+                if (!geometry1.Intersect(ref _localVertex, out _feature))
                 {
                     continue;
                 }
 
-                if (feature.Distance < 0f)
+                if (_feature.Distance < 0f)
                 {
-                    geometry1.TransformNormalToWorld(ref feature.Normal, out feature.Normal);
-                    Contact contact = new Contact(geometry2.WorldVertices[i], feature.Normal, feature.Distance,
+                    geometry1.TransformNormalToWorld(ref _feature.Normal, out _feature.Normal);
+                    Contact contact = new Contact(geometry2.WorldVertices[i], _feature.Normal, _feature.Distance,
                                                   new ContactId(2, vertexIndex, 1));
                     contactList.Add(contact);
                 }
@@ -471,18 +466,18 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 vertexIndex += 1;
 
-                vertRef = geometry1.WorldVertices[i];
-                geometry2.TransformToLocalCoordinates(ref vertRef, out localVertex);
-                if (!geometry2.Intersect(ref localVertex, out feature))
+                _vertRef = geometry1.WorldVertices[i];
+                geometry2.TransformToLocalCoordinates(ref _vertRef, out _localVertex);
+                if (!geometry2.Intersect(ref _localVertex, out _feature))
                 {
                     continue;
                 }
 
-                if (feature.Distance < 0f)
+                if (_feature.Distance < 0f)
                 {
-                    geometry2.TransformNormalToWorld(ref feature.Normal, out feature.Normal);
-                    feature.Normal = -feature.Normal;
-                    Contact contact = new Contact(geometry1.WorldVertices[i], feature.Normal, feature.Distance,
+                    geometry2.TransformNormalToWorld(ref _feature.Normal, out _feature.Normal);
+                    _feature.Normal = -_feature.Normal;
+                    Contact contact = new Contact(geometry1.WorldVertices[i], _feature.Normal, _feature.Distance,
                                                   new ContactId(2, vertexIndex, 1));
                     contactList.Add(contact);
                 }
@@ -579,12 +574,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         #region Collide variables
 
-        private Feature feature;
-        private Vector2 localVertex;
-        //Note: Cleanup. Never used
-        //private Matrix matrixInverseTemp;
-        //private Matrix matrixTemp;
-        private Vector2 vertRef;
+        private Feature _feature;
+        private Vector2 _localVertex;
+        private Vector2 _vertRef;
 
         #endregion
 
