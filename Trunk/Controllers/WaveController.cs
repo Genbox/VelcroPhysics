@@ -1,49 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-
+using System;
+using FarseerGames.FarseerPhysics.Collisions;
+using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
 using Microsoft.Xna.Framework;
 #endif
-
-using FarseerGames.FarseerPhysics;
-using FarseerGames.FarseerPhysics.Mathematics;
-using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics;
 
 namespace FarseerGames.FarseerPhysics.Controllers
 {
     public class WaveController : Controller, IFluidContainer
     {
-        private float width;
-        private float height;
-        private Vector2 position;
-        private float singleWaveWidth;
-
-        private int nodeCount;
+        private AABB aabb;
+        private float aabbMin = float.MaxValue;
+        private float[] currentWave;
         private float dampningCoefficient = .95f;
         private float frequency = .18f; //seconds;
+        private bool goingUp = true;
+        private float height;
+        private int nodeCount;
+        private Vector2 pointVector;
+        private Vector2 position;
 
-        private float[] currentWave;
         private float[] previousWave;
         private float[] resultWave;
+        private float singleWaveWidth;
+        private float timePassed;
+        public Vector2 vectorFarWaveEdge;
+        public Vector2 vectorNearWaveEdge;
+        public Vector2 vectorPoint;
+
+        private Vector2 waveEdgeVector;
+        private float waveGeneratorCount;
+
+        private float waveGeneratorMax;
+        private float waveGeneratorMin;
+        private float waveGeneratorStep;
+        private float width;
         private float[] xPosition;
 
-        private float waveGeneratorMax = 0;
-        private float waveGeneratorMin = 0;
-        private float waveGeneratorStep = 0;
-        private bool goingUp = true;
-        private float waveGeneratorCount = 0;
-
-
-        private AABB aabb;
-
-        public WaveController()
-        {
-
-        }
-
         #region properties
+
         public float Width
         {
             get { return width; }
@@ -116,106 +112,21 @@ namespace FarseerGames.FarseerPhysics.Controllers
             get { return frequency; }
             set { frequency = value; }
         }
+
         #endregion
 
-        /// <summary>
-        /// Create a disturbance in the water surface that will create waves.
-        /// </summary>
-        /// <param name="node">Which node to change the hieght of</param>
-        /// <param name="offset">The amount to move the node up or down (negative values moves the node up, positive moves it down)</param>
-        public void Disturb(int node, float offset)
-        {
-            currentWave[node] = currentWave[node] + offset;
-        }
-       
-        public void Initialize()
-        {
-            xPosition = new float[nodeCount];
-            currentWave = new float[nodeCount];
-            previousWave = new float[nodeCount];
-            resultWave = new float[nodeCount];
-
-            for (int i = 0; i < nodeCount; i++)
-            {
-                xPosition[i] = MathHelper.Lerp(position.X, position.X + width, (float)i / (nodeCount - 1));
-                currentWave[i] = 0;
-                previousWave[i] = 0;
-                resultWave[i] = 0;
-            }
-
-            aabb = new AABB(position, new Vector2(position.X + width, position.Y + height));
-            singleWaveWidth = width / (nodeCount - 1);
-        }
-
-        float aabbMin = float.MaxValue;
-        float timePassed = 0;
-        public override void Update(float dt)
-        {
-            if (timePassed < frequency)
-            {
-                timePassed += dt;
-                return;
-            }
-            else
-            {
-                timePassed = 0;
-            }
-
-            aabbMin = float.MaxValue;
-            aabb.min.Y = aabbMin;
-            for (int i = 1; i < nodeCount - 1; i++)
-            {
-                resultWave[i] = (currentWave[i - 1] + currentWave[i + 1]) - previousWave[i];
-                resultWave[i] = resultWave[i] * dampningCoefficient;
-
-                //keep track of aabb min value                
-                if (resultWave[i] + position.Y < aabbMin) { aabbMin = resultWave[i] + position.Y; }
-            }
-            aabb.min.Y = aabbMin;
-            currentWave.CopyTo(previousWave, 0);
-            resultWave.CopyTo(currentWave, 0);
-
-            if (goingUp)
-            {
-                if (waveGeneratorCount > waveGeneratorMax)
-                {
-                    goingUp = false;
-                }
-                else
-                {
-                    waveGeneratorCount += waveGeneratorStep;
-                }
-            }
-            else
-            {
-                if (waveGeneratorCount < waveGeneratorMin)
-                {
-                    goingUp = true;
-                }
-                else
-                {
-                    waveGeneratorCount -= waveGeneratorStep;
-                }
-            }
-            currentWave[currentWave.Length - 1] = ConvertUnits.ToSimUnits(waveGeneratorCount);
-        }
+        #region IFluidContainer Members
 
         public bool Intersect(AABB aabb)
         {
             return AABB.Intersect(aabb, this.aabb);
         }
 
-        public Vector2 vectorNearWaveEdge;
-        public Vector2 vectorFarWaveEdge;
-        public Vector2 vectorPoint;
-
-        Vector2 waveEdgeVector;
-        Vector2 pointVector;
         public bool Contains(ref Vector2 vector)
         {
             try
             {
-                int index = (int)Math.Floor((vector.X - xPosition[0]) / singleWaveWidth);
+                int index = (int) Math.Floor((vector.X - xPosition[0])/singleWaveWidth);
 
                 //handle the boundry conditions
                 if (index > nodeCount - 2) index = nodeCount - 2;
@@ -249,17 +160,98 @@ namespace FarseerGames.FarseerPhysics.Controllers
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
+        }
 
+        #endregion
 
+        /// <summary>
+        /// Create a disturbance in the water surface that will create waves.
+        /// </summary>
+        /// <param name="node">Which node to change the hieght of</param>
+        /// <param name="offset">The amount to move the node up or down (negative values moves the node up, positive moves it down)</param>
+        public void Disturb(int node, float offset)
+        {
+            currentWave[node] = currentWave[node] + offset;
+        }
+
+        public void Initialize()
+        {
+            xPosition = new float[nodeCount];
+            currentWave = new float[nodeCount];
+            previousWave = new float[nodeCount];
+            resultWave = new float[nodeCount];
+
+            for (int i = 0; i < nodeCount; i++)
+            {
+                xPosition[i] = MathHelper.Lerp(position.X, position.X + width, (float) i/(nodeCount - 1));
+                currentWave[i] = 0;
+                previousWave[i] = 0;
+                resultWave[i] = 0;
+            }
+
+            aabb = new AABB(position, new Vector2(position.X + width, position.Y + height));
+            singleWaveWidth = width/(nodeCount - 1);
+        }
+
+        public override void Update(float dt)
+        {
+            if (timePassed < frequency)
+            {
+                timePassed += dt;
+                return;
+            }
+            else
+            {
+                timePassed = 0;
+            }
+
+            aabbMin = float.MaxValue;
+            aabb.min.Y = aabbMin;
+            for (int i = 1; i < nodeCount - 1; i++)
+            {
+                resultWave[i] = (currentWave[i - 1] + currentWave[i + 1]) - previousWave[i];
+                resultWave[i] = resultWave[i]*dampningCoefficient;
+
+                //keep track of aabb min value                
+                if (resultWave[i] + position.Y < aabbMin)
+                {
+                    aabbMin = resultWave[i] + position.Y;
+                }
+            }
+            aabb.min.Y = aabbMin;
+            currentWave.CopyTo(previousWave, 0);
+            resultWave.CopyTo(currentWave, 0);
+
+            if (goingUp)
+            {
+                if (waveGeneratorCount > waveGeneratorMax)
+                {
+                    goingUp = false;
+                }
+                else
+                {
+                    waveGeneratorCount += waveGeneratorStep;
+                }
+            }
+            else
+            {
+                if (waveGeneratorCount < waveGeneratorMin)
+                {
+                    goingUp = true;
+                }
+                else
+                {
+                    waveGeneratorCount -= waveGeneratorStep;
+                }
+            }
+            currentWave[currentWave.Length - 1] = ConvertUnits.ToSimUnits(waveGeneratorCount);
         }
 
         public override void Validate()
         {
             //just do nothing for now. will revisit later.
-            
         }
     }
 }

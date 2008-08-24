@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-
 using FarseerGames.FarseerPhysics.Dynamics;
+
 #if (SILVERLIGHT)
 //using FarseerGames.FarseerPhysics.Collections.Generic;
 #endif
@@ -11,124 +9,30 @@ namespace FarseerGames.FarseerPhysics.Collisions
 {
     public sealed class SelectiveSweepCollider : IBroadPhaseCollider
     {
-        sealed class StubComparer : IComparer<Stub>
-        {
-            public int Compare(Stub left, Stub right)
-            {
-                if (left.value < right.value) { return -1; }
-                if (left.value > right.value) { return 1; }
-                return ((left == right) ? (0) : ((left.begin) ? (-1) : (1)));
-            }
-        }
-        sealed class Wrapper
-        {
-            public LinkedListNode<Wrapper> node;
-            public Geom geom;
-            public bool shouldAddNode;
-            public float min;
-            public float max;
-            Stub xBegin;
-            Stub xEnd;
-            Stub yBegin;
-            Stub yEnd;
-            public Wrapper(Geom body)
-            {
-                this.geom = body;
-                this.node = new LinkedListNode<Wrapper>(this);
-                xBegin = new Stub(this, true);
-                xEnd = new Stub(this, false);
-                yBegin = new Stub(this, true);
-                yEnd = new Stub(this, false);
-            }
-            public void AddStubs(List<Stub> xStubs, List<Stub> yStubs)
-            {
-                xStubs.Add(xBegin);
-                xStubs.Add(xEnd);
+        private static readonly StubComparer comparer = new StubComparer();
 
-                yStubs.Add(yBegin);
-                yStubs.Add(yEnd);
-            }
-            public void Update()
-            {
-                AABB rect = geom.AABB;
-                //if it is a single point in space
-                //then dont even add it to the link list.
-                shouldAddNode = rect.Min.X != rect.Max.X || rect.Min.Y != rect.Max.Y;
-
-                xBegin.value = rect.Min.X;
-                xEnd.value = rect.Max.X;
-
-                yBegin.value = rect.Min.Y;
-                yEnd.value = rect.Max.Y;
-            }
-
-            public void SetX()
-            {
-                this.min = this.xBegin.value;
-                this.max = this.xEnd.value;
-            }
-            public void SetY()
-            {
-                this.min = this.yBegin.value;
-                this.max = this.yEnd.value;
-            }
-        }
-        sealed class Stub
-        {
-            public Wrapper wrapper;
-            public bool begin;
-            public float value;
-            public Stub(Wrapper wrapper, bool begin)
-            {
-                this.wrapper = wrapper;
-                this.begin = begin;
-            }
-        }
-
-        static StubComparer comparer = new StubComparer();
-
-        PhysicsSimulator physicsSimulator;
-        List<Wrapper> wrappers;
-        List<Stub> xStubs;
-        List<Stub> yStubs;
+        private readonly PhysicsSimulator physicsSimulator;
+        private readonly List<Wrapper> wrappers;
+        private readonly List<Stub> xStubs;
+        private readonly List<Stub> yStubs;
 
         public SelectiveSweepCollider(PhysicsSimulator physicsSimulator)
         {
             this.physicsSimulator = physicsSimulator;
-            this.wrappers = new List<Wrapper>();
-            this.xStubs = new List<Stub>();
-            this.yStubs = new List<Stub>();
+            wrappers = new List<Wrapper>();
+            xStubs = new List<Stub>();
+            yStubs = new List<Stub>();
         }
+
+        #region IBroadPhaseCollider Members
+
         public void Add(Geom item)
         {
             Wrapper wrapper = new Wrapper(item);
             wrappers.Add(wrapper);
             wrapper.AddStubs(xStubs, yStubs);
         }
-        public void Clear()
-        {
-            wrappers.Clear();
-            xStubs.Clear();
-            yStubs.Clear();
-        }
 
-        static bool WrapperIsDisposed(Wrapper wrapper)
-        {
-            return wrapper.geom.IsDisposed;
-        }
-        static bool StubIsDisposed(Stub stub)
-        {
-            return stub.wrapper.geom.IsDisposed;
-        }
-        static bool WrapperIsRemoved(Wrapper wrapper)
-        {
-            return wrapper.geom.isRemoved;
-        }
-        static bool StubIsRemoved(Stub stub)
-        {
-            return stub.wrapper.geom.isRemoved;
-        }
-#if (!SILVERLIGHT)
         public void ProcessRemovedGeoms()
         {
             if (wrappers.RemoveAll(WrapperIsRemoved) > 0)
@@ -137,6 +41,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 yStubs.RemoveAll(StubIsRemoved);
             }
         }
+
         public void ProcessDisposedGeoms()
         {
             if (wrappers.RemoveAll(WrapperIsDisposed) > 0)
@@ -145,6 +50,43 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 yStubs.RemoveAll(StubIsDisposed);
             }
         }
+
+        public void Update()
+        {
+            InternalUpdate();
+            DetectInternal(ShouldDoX());
+        }
+
+        #endregion
+
+        public void Clear()
+        {
+            wrappers.Clear();
+            xStubs.Clear();
+            yStubs.Clear();
+        }
+
+        private static bool WrapperIsDisposed(Wrapper wrapper)
+        {
+            return wrapper.geom.IsDisposed;
+        }
+
+        private static bool StubIsDisposed(Stub stub)
+        {
+            return stub.wrapper.geom.IsDisposed;
+        }
+
+        private static bool WrapperIsRemoved(Wrapper wrapper)
+        {
+            return wrapper.geom.isRemoved;
+        }
+
+        private static bool StubIsRemoved(Stub stub)
+        {
+            return stub.wrapper.geom.isRemoved;
+        }
+
+#if (!SILVERLIGHT)
 #else
         public void ProcessRemovedGeoms()
         {
@@ -241,20 +183,27 @@ namespace FarseerGames.FarseerPhysics.Collisions
             int ydepth = 0;
             for (int index = 0; index < xStubs.Count; index++)
             {
-                if (xStubs[index].begin) { xCount += xdepth++; }
-                else { xdepth--; }
+                if (xStubs[index].begin)
+                {
+                    xCount += xdepth++;
+                }
+                else
+                {
+                    xdepth--;
+                }
 
-                if (yStubs[index].begin) { yCount += ydepth++; }
-                else { ydepth--; }
+                if (yStubs[index].begin)
+                {
+                    yCount += ydepth++;
+                }
+                else
+                {
+                    ydepth--;
+                }
             }
             return xCount < yCount;
         }
 
-        public void Update()
-        {
-            InternalUpdate();
-            DetectInternal(ShouldDoX());
-        }
         private void DetectInternal(bool doX)
         {
             List<Stub> stubs = (doX) ? (xStubs) : (yStubs);
@@ -266,13 +215,19 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 if (stub.begin)
                 {
                     //set the min and max values
-                    if (doX) { wrapper1.SetY(); }
-                    else { wrapper1.SetX(); }
+                    if (doX)
+                    {
+                        wrapper1.SetY();
+                    }
+                    else
+                    {
+                        wrapper1.SetX();
+                    }
 
                     Geom geom1 = wrapper1.geom;
                     for (LinkedListNode<Wrapper> node = currentBodies.First;
-                        node != null;
-                        node = node.Next)
+                         node != null;
+                         node = node.Next)
                     {
                         Wrapper wrapper2 = node.Value;
                         Geom geom2 = wrapper2.geom;
@@ -296,6 +251,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 }
             }
         }
+
         private void OnCollision(Geom geom1, Geom geom2)
         {
             if (!geom1.body.enabled || !geom2.body.enabled)
@@ -316,11 +272,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             if (geom1.body.isStatic && geom2.body.isStatic)
-            { //don't collide two static bodies
+            {
+                //don't collide two static bodies
                 return;
             }
 
-            if (((geom1.collisionCategories & geom2.collidesWith) == Enums.CollisionCategories.None) & ((geom2.collisionCategories & geom1.collidesWith) == Enums.CollisionCategories.None))
+            if (((geom1.collisionCategories & geom2.collidesWith) == Enums.CollisionCategories.None) &
+                ((geom2.collisionCategories & geom1.collidesWith) == Enums.CollisionCategories.None))
             {
                 return;
             }
@@ -338,6 +296,107 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
-    }
+        #region Nested type: Stub
 
+        private sealed class Stub
+        {
+            public readonly bool begin;
+            public readonly Wrapper wrapper;
+            public float value;
+
+            public Stub(Wrapper wrapper, bool begin)
+            {
+                this.wrapper = wrapper;
+                this.begin = begin;
+            }
+        }
+
+        #endregion
+
+        #region Nested type: StubComparer
+
+        private sealed class StubComparer : IComparer<Stub>
+        {
+            #region IComparer<Stub> Members
+
+            public int Compare(Stub left, Stub right)
+            {
+                if (left.value < right.value)
+                {
+                    return -1;
+                }
+                if (left.value > right.value)
+                {
+                    return 1;
+                }
+                return ((left == right) ? (0) : ((left.begin) ? (-1) : (1)));
+            }
+
+            #endregion
+        }
+
+        #endregion
+
+        #region Nested type: Wrapper
+
+        private sealed class Wrapper
+        {
+            public readonly Geom geom;
+            public readonly LinkedListNode<Wrapper> node;
+            private readonly Stub xBegin;
+            private readonly Stub xEnd;
+            private readonly Stub yBegin;
+            private readonly Stub yEnd;
+            public float max;
+            public float min;
+            public bool shouldAddNode;
+
+            public Wrapper(Geom body)
+            {
+                geom = body;
+                node = new LinkedListNode<Wrapper>(this);
+                xBegin = new Stub(this, true);
+                xEnd = new Stub(this, false);
+                yBegin = new Stub(this, true);
+                yEnd = new Stub(this, false);
+            }
+
+            public void AddStubs(List<Stub> xStubs, List<Stub> yStubs)
+            {
+                xStubs.Add(xBegin);
+                xStubs.Add(xEnd);
+
+                yStubs.Add(yBegin);
+                yStubs.Add(yEnd);
+            }
+
+            public void Update()
+            {
+                AABB rect = geom.AABB;
+                //if it is a single point in space
+                //then dont even add it to the link list.
+                shouldAddNode = rect.Min.X != rect.Max.X || rect.Min.Y != rect.Max.Y;
+
+                xBegin.value = rect.Min.X;
+                xEnd.value = rect.Max.X;
+
+                yBegin.value = rect.Min.Y;
+                yEnd.value = rect.Max.Y;
+            }
+
+            public void SetX()
+            {
+                min = xBegin.value;
+                max = xEnd.value;
+            }
+
+            public void SetY()
+            {
+                min = yBegin.value;
+                max = yEnd.value;
+            }
+        }
+
+        #endregion
+    }
 }

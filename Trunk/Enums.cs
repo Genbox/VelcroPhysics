@@ -1,11 +1,24 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace FarseerGames.FarseerPhysics {
-    public class Enums {
+namespace FarseerGames.FarseerPhysics
+{
+    public class Enums
+    {
+        #region BroadPhaseCollider enum
+
+        public enum BroadPhaseCollider
+        {
+            BruteForce = 1,
+            SweepAndPrune = 2
+        }
+
+        #endregion
+
+        #region CollisionCategories enum
+
         [Flags]
-        public enum CollisionCategories {
+        public enum CollisionCategories
+        {
             None = 0,
             All = Int32.MaxValue,
             Cat1 = 1,
@@ -41,9 +54,6 @@ namespace FarseerGames.FarseerPhysics {
             Cat31 = 1073741824
         }
 
-        public enum BroadPhaseCollider {
-            BruteForce = 1,
-            SweepAndPrune = 2
-        }
+        #endregion
     }
 }

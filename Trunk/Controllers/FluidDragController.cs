@@ -1,52 +1,64 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-
+using FarseerGames.FarseerPhysics.Collisions;
+using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
 using Microsoft.Xna.Framework;
 #endif
-
-using FarseerGames.FarseerPhysics;
-using FarseerGames.FarseerPhysics.Mathematics;
-using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics;
 
 namespace FarseerGames.FarseerPhysics.Controllers
 {
     public class FluidDragController : Controller
     {
-        IFluidContainer fluidContainer;
-        List<Geom> geomList;
-        float density = 0;
-        float linearDragCoefficient = 0;
-        float rotationalDragCoeficient = 0;
-        Vector2 gravity = Vector2.Zero;
-        Vertices vertices;
+        #region Delegates
 
-        float totalArea = 0;
-        float area = 0;
-        Vector2 centroid = Vector2.Zero;
-        Vector2 buoyancyForce = Vector2.Zero;
-        Vector2 linearDragForce = Vector2.Zero;
-        float rotationalDragTorque = 0;
-
-        Dictionary<Geom,bool> geomInFluidList;
-        public OnEntryHandler OnEntry;
         public delegate void OnEntryHandler(Geom geom);
 
-        public FluidDragController() {
+        #endregion
+
+        private readonly Dictionary<Geom, bool> geomInFluidList;
+
+        private readonly List<Geom> geomList;
+        private float area;
+        private Vector2 axis = Vector2.Zero;
+        private Vector2 buoyancyForce = Vector2.Zero;
+        private Vector2 centroid = Vector2.Zero;
+        private float centroidSpeed;
+        private Vector2 centroidVelocity;
+        private float density;
+        private float dragArea;
+        private IFluidContainer fluidContainer;
+        private Vector2 gravity = Vector2.Zero;
+        private float linearDragCoefficient;
+        private Vector2 linearDragForce = Vector2.Zero;
+        private Vector2 localCentroid = Vector2.Zero;
+        private float max;
+        private float min;
+        public OnEntryHandler OnEntry;
+        private float partialMass;
+        private float rotationalDragCoeficient;
+        private float rotationalDragTorque;
+        private float totalArea;
+        private Vector2 totalForce;
+        private Vector2 vert;
+        private Vertices vertices;
+
+        public FluidDragController()
+        {
             geomList = new List<Geom>();
             geomInFluidList = new Dictionary<Geom, bool>();
         }
 
-        public void Initialize(IFluidContainer fluidContainer, float density, float linearDragCoeficient, float rotationalDragCoeficient, Vector2 gravity)
+        public void Initialize(IFluidContainer fluidContainer, float density, float linearDragCoeficient,
+                               float rotationalDragCoeficient, Vector2 gravity)
         {
             this.fluidContainer = fluidContainer;
             this.density = density;
-            this.linearDragCoefficient = linearDragCoeficient;
+            linearDragCoefficient = linearDragCoeficient;
             this.rotationalDragCoeficient = rotationalDragCoeficient;
             this.gravity = gravity;
-            vertices = new Vertices();           
+            vertices = new Vertices();
         }
 
         public void AddGeom(Geom geom)
@@ -69,7 +81,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
             }
         }
 
-        Vector2 totalForce;
         public override void Update(float dt)
         {
             for (int i = 0; i < geomList.Count; i++)
@@ -101,10 +112,9 @@ namespace FarseerGames.FarseerPhysics.Controllers
                         OnEntry(geomList[i]);
                     }
                 }
-            }         
+            }
         }
 
-        Vector2 vert;
         private void FindVerticesInFluid(Geom geom)
         {
             vertices.Clear();
@@ -121,61 +131,38 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private void CalculateAreaAndCentroid()
         {
             area = vertices.GetArea();
-            
+
             centroid = vertices.GetCentroid(area);
         }
 
         private void CalculateBuoyancy()
         {
-            buoyancyForce = -gravity * area * density;            
+            buoyancyForce = -gravity*area*density;
         }
 
 
-        float centroidSpeed;
-        Vector2 centroidVelocity;        
-        Vector2 axis = Vector2.Zero;
-        float min;
-        float max;
-        float dragArea = 0;
-        float partialMass = 0;
-        Vector2 localCentroid = Vector2.Zero;
         private void CalculateDrag(Geom geom)
         {
             //localCentroid = geom.body.GetLocalPosition(centroid);
-            geom.body.GetVelocityAtWorldPoint(ref centroid, out centroidVelocity);        
-            
+            geom.body.GetVelocityAtWorldPoint(ref centroid, out centroidVelocity);
+
             axis.X = -centroidVelocity.Y;
             axis.Y = centroidVelocity.X;
             //can't normalize a zero length vector
             if (axis.X != 0 || axis.Y != 0)
             {
-             axis.Normalize();
-            }           
+                axis.Normalize();
+            }
 
             vertices.ProjectToAxis(ref axis, out min, out max);
 
             dragArea = Math.Abs(max - min);
 
-            partialMass = geom.body.mass * (area / totalArea);
-            
-            linearDragForce = -.5f*density* dragArea*linearDragCoefficient * partialMass * centroidVelocity;
- 
+            partialMass = geom.body.mass*(area/totalArea);
+
+            linearDragForce = -.5f*density*dragArea*linearDragCoefficient*partialMass*centroidVelocity;
+
             rotationalDragTorque = -geom.body.angularVelocity*rotationalDragCoeficient*partialMass;
-       }        
+        }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

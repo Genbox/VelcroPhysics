@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FarseerGames.FarseerPhysics.Collisions {
-    interface ICollideable<T> {
+namespace FarseerGames.FarseerPhysics.Collisions
+{
+    internal interface ICollideable<T>
+    {
         void Collide(T t, ContactList contactList);
     }
 }
