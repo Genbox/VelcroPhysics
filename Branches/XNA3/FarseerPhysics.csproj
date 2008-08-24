@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XNA3</RootNamespace>
-    <AssemblyName>XNA3</AssemblyName>
+    <RootNamespace>FarseerGames.FarseerPhysics</RootNamespace>
+    <AssemblyName>FarseerPhysics</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
@@ -126,10 +126,6 @@
     <Compile Include="Mathematics\Calculator.cs" />
     <Compile Include="Mathematics\CircularInterpolator.cs" />
     <Compile Include="Mathematics\ConvertUnits.cs" />
-    <Compile Include="Mathematics\MathHelper.cs" />
-    <Compile Include="Mathematics\Matrix.cs" />
-    <Compile Include="Mathematics\Vector2.cs" />
-    <Compile Include="Mathematics\Vector3.cs" />
     <Compile Include="PhysicsSimulator.cs" />
     <Compile Include="Pool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
