@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
-
 using FarseerGames.FarseerPhysics.Mathematics;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Controllers;
+using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics {
     public class PhysicsSimulator {
@@ -47,9 +44,7 @@ namespace FarseerGames.FarseerPhysics {
         private bool enabled = true;
 
         public bool EnableDiagnostics = false;
-        #if (XNA)
         private Stopwatch sw = new Stopwatch();
-        #endif
         internal float updateTime = -1;
         internal float cleanUpTime = -1;
         internal float broadPhaseCollisionTime = -1;
@@ -304,9 +299,8 @@ namespace FarseerGames.FarseerPhysics {
         public void Update(float dt, float dtReal) {
 
             if (dt == 0) { return; }
-#if (XNA)
+
             if (EnableDiagnostics) sw.Start();
-#endif
 
             #region Added by Daniel Pramel 08/24/08
             dt = scaling.GetUpdateInterval(dt);
@@ -326,30 +320,18 @@ namespace FarseerGames.FarseerPhysics {
 
             if (!enabled) return;
 
-            #if (XNA)
+            
             if (EnableDiagnostics) cleanUpTime = sw.ElapsedTicks;
-            #endif
             DoBroadPhaseCollision();    
-            #if (XNA)
             if (EnableDiagnostics) broadPhaseCollisionTime = sw.ElapsedTicks - cleanUpTime;
-            #endif
             DoNarrowPhaseCollision();
-            #if (XNA)
             if (EnableDiagnostics) narrowPhaseCollisionTime = sw.ElapsedTicks - broadPhaseCollisionTime - cleanUpTime; 
-            #endif
             ApplyForces(dt);
-            #if (XNA)
             if (EnableDiagnostics) applyForcesTime = sw.ElapsedTicks - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime; 
-            #endif
             ApplyImpulses(dt);
-            #if (XNA)
             if (EnableDiagnostics) applyImpulsesTime = sw.ElapsedTicks - applyForcesTime - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime; 
-            #endif
             UpdatePositions(dt);
-            #if (XNA)
             if (EnableDiagnostics) updatePositionsTime = sw.ElapsedTicks - applyImpulsesTime - applyForcesTime - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime; 
-            #endif
-            #if (XNA)
             if (EnableDiagnostics) {
                 sw.Stop();
                 updateTime = sw.ElapsedTicks;
@@ -363,7 +345,6 @@ namespace FarseerGames.FarseerPhysics {
                 updateTime = 1000* updateTime/Stopwatch.Frequency;
                 sw.Reset();
             }
-            #endif
             
         }
 
