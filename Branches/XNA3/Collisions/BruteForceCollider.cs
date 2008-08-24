@@ -48,7 +48,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     _geometryA = _physicsSimulator.GeomList[i];
                     _geometryB = _physicsSimulator.GeomList[j];
                     //possible early exits
-                    if (!_geometryA.Body.enabled || !_geometryB.Body.enabled)
+                    if (!_geometryA.Body.Enabled || !_geometryB.Body.Enabled)
                     {
                         continue;
                     }

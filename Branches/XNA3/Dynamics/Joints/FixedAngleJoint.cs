@@ -4,8 +4,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     public class FixedAngleJoint : Joint
     {
-        private float massFactor;
-        private float velocityBias;
+        private float _massFactor;
+        private float _velocityBias;
 
         public FixedAngleJoint()
         {
@@ -51,8 +51,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             Error = Body.TotalRotation - TargetAngle;
 
-            velocityBias = -BiasFactor*inverseDt*Error;
-            massFactor = (1 - Softness)/(Body.inverseMomentOfInertia);
+            _velocityBias = -BiasFactor*inverseDt*Error;
+            _massFactor = (1 - Softness)/(Body.InverseMomentOfInertia);
         }
 
         public override void Update()
@@ -61,8 +61,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             {
                 return;
             }
-            float angularImpulse = (velocityBias - Body.angularVelocity)*massFactor;
-            Body.angularVelocity += Body.inverseMomentOfInertia*Math.Sign(angularImpulse)*
+            float angularImpulse = (_velocityBias - Body.angularVelocity)*_massFactor;
+            Body.angularVelocity += Body.InverseMomentOfInertia*Math.Sign(angularImpulse)*
                                     Math.Min(Math.Abs(angularImpulse), MaxImpulse);
         }
     }

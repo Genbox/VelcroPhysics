@@ -4,7 +4,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
     public class AngleSpring : Spring
     {
-        private float targetAngle;
+        private float _targetAngle;
 
         public AngleSpring()
         {
@@ -22,7 +22,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             Body2 = body2;
             SpringConstant = springConstant;
             DampningConstant = dampningConstant;
-            targetAngle = Body2.TotalRotation - Body1.TotalRotation;
+            _targetAngle = Body2.TotalRotation - Body1.TotalRotation;
         }
 
         public Body Body1 { get; set; }
@@ -31,17 +31,17 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         //TODO: magic numbers
         public float TargetAngle
         {
-            get { return targetAngle; }
+            get { return _targetAngle; }
             set
             {
-                targetAngle = value;
-                if (targetAngle > 5.5)
+                _targetAngle = value;
+                if (_targetAngle > 5.5)
                 {
-                    targetAngle = 5.5f;
+                    _targetAngle = 5.5f;
                 }
-                if (targetAngle < -5.5f)
+                if (_targetAngle < -5.5f)
                 {
-                    targetAngle = -5.5f;
+                    _targetAngle = -5.5f;
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             //calculate and apply spring force
             //Note: Cleanup. Variable never used.
             //float angle = Body2.totalRotation - Body1.totalRotation;
-            float angleDifference = Body2.TotalRotation - (Body1.TotalRotation + targetAngle);
+            float angleDifference = Body2.TotalRotation - (Body1.TotalRotation + _targetAngle);
             float springTorque = SpringConstant*angleDifference;
             Error = angleDifference; //keep track of 'springError' for breaking joint
 

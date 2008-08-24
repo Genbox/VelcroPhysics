@@ -379,7 +379,7 @@ namespace FarseerGames.FarseerPhysics
                 //apply accumulated external impules
                 _body.ApplyImpulses();
 
-                if (!_body.ignoreGravity)
+                if (!_body.IgnoreGravity)
                 {
                     _gravityForce.X = Gravity.X*_body._mass;
                     _gravityForce.Y = Gravity.Y*_body._mass;
@@ -436,7 +436,7 @@ namespace FarseerGames.FarseerPhysics
         {
             for (int i = 0; i < BodyList.Count; i++)
             {
-                if (!BodyList[i].enabled)
+                if (!BodyList[i].Enabled)
                 {
                     continue;
                 }

@@ -95,8 +95,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 _accumulatedAngularImpulse = 0;
             }
             _velocityBias = BiasFactor*inverseDt*Error;
-            _massFactor = (1 - Softness)/Body.inverseMomentOfInertia;
-            Body.angularVelocity += Body.inverseMomentOfInertia*_accumulatedAngularImpulse;
+            _massFactor = (1 - Softness)/Body.InverseMomentOfInertia;
+            Body.angularVelocity += Body.InverseMomentOfInertia*_accumulatedAngularImpulse;
         }
 
         public override void Update()
@@ -126,7 +126,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             _angularImpulse = _accumulatedAngularImpulse - _accumlatedAngularImpulseOld;
 
-            Body.angularVelocity += Body.inverseMomentOfInertia*_angularImpulse;
+            Body.angularVelocity += Body.InverseMomentOfInertia*_angularImpulse;
         }
     }
 }

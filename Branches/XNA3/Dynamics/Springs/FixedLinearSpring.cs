@@ -6,7 +6,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
     public class FixedLinearSpring : Spring
     {
         internal Vector2 bodyAttachPoint;
-        private Vector2 difference = Vector2.Zero;
+        private Vector2 _difference = Vector2.Zero;
 
         internal Vector2 worldAttachPoint;
 
@@ -24,8 +24,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             this.worldAttachPoint = worldAttachPoint;
             SpringConstant = springConstant;
             DampningConstant = dampningConstant;
-            difference = worldAttachPoint - Body.GetWorldPosition(_bodyAttachPoint);
-            RestLength = difference.Length();
+            _difference = worldAttachPoint - Body.GetWorldPosition(_bodyAttachPoint);
+            RestLength = _difference.Length();
         }
 
         public Body Body { get; set; }
@@ -69,8 +69,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             //calculate and apply spring force
             //F = -{s(L-r) + d[(v1-v2).L]/l}L/l   : s=spring const, d = dampning const, L=difference vector (p1-p2), l = difference magnitude, r = rest length,            
             Body.GetWorldPosition(ref bodyAttachPoint, out _bodyWorldPoint);
-            Vector2.Subtract(ref _bodyWorldPoint, ref worldAttachPoint, out difference);
-            float differenceMagnitude = difference.Length();
+            Vector2.Subtract(ref _bodyWorldPoint, ref worldAttachPoint, out _difference);
+            float differenceMagnitude = _difference.Length();
             if (differenceMagnitude < _epsilon)
             {
                 return;
@@ -78,14 +78,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
             //calculate spring force (kX)
             Error = differenceMagnitude - RestLength;
-            Vector2.Normalize(ref difference, out _differenceNormalized);
+            Vector2.Normalize(ref _difference, out _differenceNormalized);
             _springForce = SpringConstant*Error; //kX
 
             //calculate relative velocity 
             Body.GetVelocityAtLocalPoint(ref bodyAttachPoint, out _bodyVelocity);
 
             //calculate dampning force (bV)
-            Vector2.Dot(ref _bodyVelocity, ref difference, out _temp);
+            Vector2.Dot(ref _bodyVelocity, ref _difference, out _temp);
             _dampningForce = DampningConstant*_temp/differenceMagnitude; //bV     
 
             //calculate final force (spring + dampning)
