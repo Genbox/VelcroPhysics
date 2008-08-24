@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics
@@ -87,7 +88,7 @@ namespace FarseerGames.FarseerPhysics
         /// <summary>
         /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
         /// </summary>
-        public GeomList GeomList { get; internal set; }
+        public ItemList<Geom> GeomList { get; internal set; }
 
         /// <summary>
         /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
@@ -144,7 +145,7 @@ namespace FarseerGames.FarseerPhysics
 
         private void ConstructPhysicsSimulator(Vector2 gravity)
         {
-            GeomList = new GeomList();
+            GeomList = new ItemList<Geom>();
             geomAddList = new List<Geom>();
             geomRemoveList = new List<Geom>();
 

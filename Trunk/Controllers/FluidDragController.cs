@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Controllers
@@ -85,12 +84,12 @@ namespace FarseerGames.FarseerPhysics.Controllers
         {
             for (int i = 0; i < _geomList.Count; i++)
             {
-                _totalArea = _geomList[i].LocalVertices.GetArea();
+                _totalArea = _geomList[i].LocalVertices.GetArea(false);
                 if (!_fluidContainer.Intersect(_geomList[i].AABB)) continue;
                 FindVerticesInFluid(_geomList[i]);
                 if (_vertices.Count < 3) continue;
 
-                _area = _vertices.GetArea();
+                _area = _vertices.GetArea(false);
                 if (_area < .000001) continue;
 
                 _centroid = _vertices.GetCentroid(_area);
