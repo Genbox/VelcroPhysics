@@ -4,7 +4,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public abstract class Controller
     {
-        protected bool isDisposed;
         protected bool isEnabled = true;
 
         public bool Enabled
@@ -15,10 +14,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public Object Tag { get; set; }
 
-        public bool IsDisposed
-        {
-            get { return isDisposed; }
-        }
+        public bool IsDisposed { get; protected set; }
 
         public abstract void Validate();
         public abstract void Update(float dt);
@@ -33,7 +29,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             //subclasses can override incase they need to dispose of resources
             //otherwise do nothing.
-            if (!isDisposed)
+            if (!IsDisposed)
             {
                 if (disposing)
                 {
@@ -42,7 +38,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 //dispose unmanaged resources
             }
-            isDisposed = true;
+            IsDisposed = true;
             //base.Dispose(disposing)        
         }
     }

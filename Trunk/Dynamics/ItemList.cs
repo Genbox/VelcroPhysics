@@ -1,43 +1,44 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
-    public class JointList : List<Joint>
+    public class ItemList<T> : List<T>
     {
         #region Delegates
 
-        public delegate void ContentsChangedEventHandler(Joint joint);
+        public delegate void ContentsChangedEventHandler(T item);
 
         #endregion
 
-        private readonly List<Joint> _markedForRemovalList = new List<Joint>();
+        private readonly List<T> _markedForRemovalList = new List<T>();
 
         public ContentsChangedEventHandler Added;
+        private int _numberDisposed;
         public ContentsChangedEventHandler Removed;
 
-        public new void Add(Joint joint)
+        public new void Add(T item)
         {
-            base.Add(joint);
+            base.Add(item);
             if (Added != null)
             {
-                Added(joint);
+                Added(item);
             }
         }
 
-        public new void Remove(Joint joint)
+        public new void Remove(T item)
         {
-            base.Remove(joint);
+            base.Remove(item);
             if (Removed != null)
             {
-                Removed(joint);
+                Removed(item);
             }
         }
 
-        public void RemoveDisposed()
+        public int RemoveDisposed()
         {
             for (int i = 0; i < Count; i++)
             {
-                if (this[i].IsDisposed)
+                if (IsDisposed(this[i]))
                 {
                     _markedForRemovalList.Add(this[i]);
                 }
@@ -46,7 +47,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 Remove(_markedForRemovalList[j]);
             }
+            _numberDisposed = _markedForRemovalList.Count;
             _markedForRemovalList.Clear();
+            return _numberDisposed;
+        }
+
+        internal static bool IsDisposed(T item)
+        {
+            return ((IIsDisposable)item).IsDisposed;
         }
     }
 }

@@ -96,7 +96,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
             }
-            if (isDisposed)
+            if (IsDisposed)
             {
                 return;
             }
