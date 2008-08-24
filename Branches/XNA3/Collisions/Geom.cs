@@ -1,7 +1,7 @@
 using System;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Interfaces;
-using FarseerGames.FarseerPhysics.Mathematics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {

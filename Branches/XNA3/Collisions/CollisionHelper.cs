@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Mathematics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {

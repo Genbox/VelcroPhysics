@@ -1,4 +1,5 @@
 using FarseerGames.FarseerPhysics.Mathematics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {

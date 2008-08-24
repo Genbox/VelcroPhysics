@@ -7,6 +7,7 @@ using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Interfaces;
 using FarseerGames.FarseerPhysics.Mathematics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics
 {
