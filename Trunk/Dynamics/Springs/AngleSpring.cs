@@ -1,6 +1,7 @@
 using System;
+using FarseerGames.FarseerPhysics.Controllers;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
     public class AngleSpring : Controller
     {
@@ -56,9 +57,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// For normal spring behavior this value should be 1
         /// </summary>
         public float TorqueMultiplier { get; set; }
-
         public float SpringError { get; private set; }
-
         public event EventHandler<EventArgs> Broke;
 
         public override void Validate()

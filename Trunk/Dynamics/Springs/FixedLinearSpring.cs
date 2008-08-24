@@ -1,7 +1,8 @@
 using System;
+using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
     public class FixedLinearSpring : Controller
     {
@@ -49,13 +50,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
 
         public float SpringConstant { get; set; }
-
         public float DampningConstant { get; set; }
-
         public float RestLength { get; set; }
-
         public float Breakpoint { get; set; }
-
         public float SpringError { get; private set; }
 
         public event EventHandler<EventArgs> Broke;

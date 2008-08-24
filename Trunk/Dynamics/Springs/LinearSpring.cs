@@ -1,7 +1,8 @@
 using System;
+using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
     public class LinearSpring : Controller
     {
@@ -14,8 +15,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         private float _springForce;
         private float _temp;
-        //Note: Cleanup, variable never used
-        //private Vector2 vectorTemp2 = Vector2.Zero;
         private Vector2 _velocityAtPoint1 = Vector2.Zero;
         private Vector2 _velocityAtPoint2 = Vector2.Zero;
         private Vector2 _worldPoint1 = Vector2.Zero;
@@ -43,7 +42,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
 
         public Body Body1 { get; set; }
-
         public Body Body2 { get; set; }
 
         public Vector2 AttachPoint1

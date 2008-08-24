@@ -1,19 +1,16 @@
 using System;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Controllers
 {
     public abstract class Controller
     {
-        protected bool isEnabled = true;
-
-        public bool Enabled
+        protected Controller()
         {
-            get { return isEnabled; }
-            set { isEnabled = value; }
+            Enabled = true;
         }
 
+        public bool Enabled { get; set; }
         public Object Tag { get; set; }
-
         public bool IsDisposed { get; protected set; }
 
         public abstract void Validate();

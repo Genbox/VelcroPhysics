@@ -1,14 +1,11 @@
 using System;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     public class AngleJoint : Joint
     {
-        //Note: Cleanup, variable never used
-        //private bool enabled = true;
-
-        private float massFactor;
-        private float velocityBias;
+        private float _massFactor;
+        private float _velocityBias;
 
         public AngleJoint()
         {
@@ -38,13 +35,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public Body Body1 { get; set; }
         public Body Body2 { get; set; }
-        public float BiasFactor { get; set; }
         public float TargetAngle { get; set; }
-        public float Softness { get; set; }
         public float MaxImpulse { get; set; }
-        public float Breakpoint { get; set; }
-        public float JointError { get; private set; }
-        public event EventHandler<EventArgs> Broke;
 
         public override void Validate()
         {
@@ -56,32 +48,27 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(JointError) > Breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, new EventArgs());
-            }
+            base.PreStep(inverseDt);
 
-            if (isDisposed)
-            {
-                return;
-            }
+            if (IsDisposed) return;
+
             JointError = (Body2.TotalRotation - Body1.TotalRotation) - TargetAngle;
 
-            velocityBias = -BiasFactor*inverseDt*JointError;
+            _velocityBias = -BiasFactor * inverseDt * JointError;
 
-            massFactor = (1 - Softness)/(Body1.inverseMomentOfInertia + Body2.inverseMomentOfInertia);
+            _massFactor = (1 - Softness) / (Body1.inverseMomentOfInertia + Body2.inverseMomentOfInertia);
         }
 
         public override void Update()
         {
-            if (isDisposed) return;
+            if (IsDisposed) return;
             if (!Enabled) return;
-            float angularImpulse = (velocityBias - Body2.angularVelocity + Body1.angularVelocity)*massFactor;
 
-            Body1.angularVelocity -= Body1.inverseMomentOfInertia*Math.Sign(angularImpulse)*
+            float angularImpulse = (_velocityBias - Body2.angularVelocity + Body1.angularVelocity) * _massFactor;
+
+            Body1.angularVelocity -= Body1.inverseMomentOfInertia * Math.Sign(angularImpulse) *
                                      Math.Min(Math.Abs(angularImpulse), MaxImpulse);
-            Body2.angularVelocity += Body2.inverseMomentOfInertia*Math.Sign(angularImpulse)*
+            Body2.angularVelocity += Body2.inverseMomentOfInertia * Math.Sign(angularImpulse) *
                                      Math.Min(Math.Abs(angularImpulse), MaxImpulse);
         }
     }
