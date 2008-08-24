@@ -1,4 +1,5 @@
 ﻿using System;
+using FarseerGames.FarseerPhysics.Interfaces;
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {

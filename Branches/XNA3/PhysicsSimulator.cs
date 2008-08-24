@@ -5,6 +5,7 @@ using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
+using FarseerGames.FarseerPhysics.Interfaces;
 using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics
@@ -124,17 +125,19 @@ namespace FarseerGames.FarseerPhysics
         public float ApplyImpulsesTime { get; internal set; }
         public float UpdatePositionsTime { get; internal set; }
         public float UpdateTime { get; internal set; }
-        #region Added by Daniel Pramel 08/24/08
 
-        public Scaling Scaling { get; set; }
-
-        #endregion
         public FrictionType FrictionType { get; set; }
 
         /// <summary>
         /// If false, calling Update() will have no affect.  Essentially "pauses" the physics engine.
         /// </summary>
         public bool Enabled { get; set; }
+
+        #region Added by Daniel Pramel 08/24/08
+
+        public Scaling Scaling { get; set; }
+
+        #endregion
 
         private void ConstructPhysicsSimulator(Vector2 gravity)
         {
