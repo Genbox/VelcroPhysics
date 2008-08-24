@@ -1,6 +1,6 @@
 using System;
 
-namespace FarseerGames.FarseerPhysics
+namespace FarseerGames.FarseerPhysics.Interfaces
 {
     /// <summary>
     /// Extends IDisposable to include the boolean check 'IsDisposed'.
