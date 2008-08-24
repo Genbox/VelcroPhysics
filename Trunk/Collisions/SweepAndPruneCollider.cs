@@ -45,14 +45,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void ProcessDisposedGeoms()
         {
-            if (xInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.IsDisposed; }) > 0)
+            if (xInfoList.RemoveAll(i => i.geometry.IsDisposed) > 0)
             {
-                xExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.IsDisposed; });
+                xExtentList.RemoveAll(n => n.info.geometry.IsDisposed);
             }
 
-            if (yInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.IsDisposed; }) > 0)
+            if (yInfoList.RemoveAll(i => i.geometry.IsDisposed) > 0)
             {
-                yExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.IsDisposed; });
+                yExtentList.RemoveAll(n => n.info.geometry.IsDisposed);
             }
 
             // We force a non-incremental update because that will insure that the
@@ -67,13 +67,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void ProcessRemovedGeoms()
         {
-            if (xInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.isRemoved; }) > 0)
+            if (xInfoList.RemoveAll(i => i.geometry.IsRemoved) > 0)
             {
-                xExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.isRemoved; });
+                xExtentList.RemoveAll(n => n.info.geometry.IsRemoved);
             }
-            if (yInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.isRemoved; }) > 0)
+            if (yInfoList.RemoveAll(i => i.geometry.IsRemoved) > 0)
             {
-                yExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.isRemoved; });
+                yExtentList.RemoveAll(n => n.info.geometry.IsRemoved);
             }
 
             // We force a non-incremental update because that will insure that the
@@ -123,34 +123,34 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns>Returns true if there is a collision, false otherwise</returns>
         public static bool DoCollision(Geom g1, Geom g2)
         {
-            if (!g1.body.enabled || !g2.body.enabled)
+            if (!g1.Body.enabled || !g2.Body.enabled)
                 return false;
 
-            if ((g1.collisionGroup == g2.collisionGroup) &&
-                g1.collisionGroup != 0 && g2.collisionGroup != 0)
+            if ((g1.CollisionGroup == g2.CollisionGroup) &&
+                g1.CollisionGroup != 0 && g2.CollisionGroup != 0)
                 return false;
 
-            if (!g1.collisionEnabled || !g2.collisionEnabled)
+            if (!g1.CollisionEnabled || !g2.CollisionEnabled)
                 return false;
 
-            if (g1.body.isStatic && g2.body.isStatic)
+            if (g1.Body.isStatic && g2.Body.isStatic)
                 return false;
 
-            if (g1.body == g2.body)
+            if (g1.Body == g2.Body)
                 return false;
 
-            if (((g1.collisionCategories & g2.collidesWith) ==
-                 Enums.CollisionCategories.None) & ((g2.collisionCategories &
-                                                     g1.collidesWith) == Enums.CollisionCategories.None))
+            if (((g1.CollisionCategories & g2.CollidesWith) ==
+                 Enums.CollisionCategories.None) & ((g2.CollisionCategories &
+                                                     g1.CollidesWith) == Enums.CollisionCategories.None))
                 return false;
 
             //TMP
             AABB aabb1 = new AABB();
             AABB aabb2 = new AABB();
-            aabb1.min = g1.aabb.min;
-            aabb1.max = g1.aabb.max;
-            aabb2.min = g2.aabb.min;
-            aabb2.max = g2.aabb.max;
+            aabb1.min = g1.AABB.min;
+            aabb1.max = g1.AABB.max;
+            aabb2.min = g2.AABB.min;
+            aabb2.max = g2.AABB.max;
             aabb1.min.X -= fTol;
             aabb1.min.Y -= fTol;
             aabb1.max.X += fTol;
@@ -179,7 +179,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 ExtentInfo xInfo = xInfoList[i];
                 ExtentInfo yInfo = yInfoList[i];
                 Debug.Assert(xInfo.geometry == yInfo.geometry);
-                AABB aabb = xInfo.geometry.aabb;
+                AABB aabb = xInfo.geometry.AABB;
 
                 /*xInfo.min.value = aabb.min.X;
                 xInfo.max.value = aabb.max.X;
@@ -203,12 +203,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 // Note: Possible optimization. Maybe arbiter can be cached into value of
                 // collisionPairs? Currently, the collisionPairs hash doesn't use its
                 // value parameter - its just an unused bool value.
-                Arbiter arbiter;
-                arbiter = physicsSimulator.arbiterPool.Fetch();
+                Arbiter arbiter = physicsSimulator.arbiterPool.Fetch();
                 arbiter.ConstructArbiter(cp.geom1, cp.geom2, physicsSimulator);
 
-                if (!physicsSimulator.arbiterList.Contains(arbiter))
-                    physicsSimulator.arbiterList.Add(arbiter);
+                if (!physicsSimulator.ArbiterList.Contains(arbiter))
+                    physicsSimulator.ArbiterList.Add(arbiter);
                 else
                     physicsSimulator.arbiterPool.Release(arbiter);
             }
@@ -252,8 +251,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             // Force sort
-            xExtentList.Sort(delegate(Extent l, Extent r) { return l.value.CompareTo(r.value); });
-            yExtentList.Sort(delegate(Extent l, Extent r) { return l.value.CompareTo(r.value); });
+            xExtentList.Sort((l, r) => l.value.CompareTo(r.value));
+            yExtentList.Sort((l, r) => l.value.CompareTo(r.value));
 
             // Rebuild overlap information
             List<Geom> overlaps = new List<Geom>();
@@ -261,11 +260,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 overlaps.Clear();
 
-                ExtentList extentList = null;
-                if (i == 0)
-                    extentList = xExtentList;
-                else
-                    extentList = yExtentList;
+                ExtentList extentList = i == 0 ? xExtentList : yExtentList;
 
                 foreach (Extent extent in extentList)
                 {

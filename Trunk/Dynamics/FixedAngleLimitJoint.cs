@@ -101,7 +101,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 return;
             }
-            difference = body.totalRotation;
+            difference = body.TotalRotation;
 
             if (difference > upperLimit)
             {

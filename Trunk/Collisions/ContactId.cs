@@ -4,41 +4,23 @@ namespace FarseerGames.FarseerPhysics.Collisions
 {
     public struct ContactId : IEquatable<ContactId>
     {
-        private int geometryAIndex;
-        private int geometryAVertex;
-        private int geometryBIndex;
-
-        public ContactId(int geometryAIndex, int geometryAVertex, int geometryBIndex)
+        public ContactId(int geometryAIndex, int geometryAVertex, int geometryBIndex) : this()
         {
-            this.geometryAIndex = geometryAIndex;
-            this.geometryAVertex = geometryAVertex;
-            this.geometryBIndex = geometryBIndex;
+            Geom1Index = geometryAIndex;
+            Geom1Vertex = geometryAVertex;
+            Geom2Index = geometryBIndex;
         }
 
-        public int Geom1Index
-        {
-            get { return geometryAIndex; }
-            set { geometryAIndex = value; }
-        }
-
-        public int Geom1Vertex
-        {
-            get { return geometryAVertex; }
-            set { geometryAVertex = value; }
-        }
-
-        public int Geom2Index
-        {
-            get { return geometryBIndex; }
-            set { geometryBIndex = value; }
-        }
+        public int Geom1Index { get; set; }
+        public int Geom1Vertex { get; set; }
+        public int Geom2Index { get; set; }
 
         #region IEquatable<ContactId> Members
 
         public bool Equals(ContactId other)
         {
-            return (geometryAIndex == other.geometryAIndex) && (geometryAVertex == other.geometryAVertex) &&
-                   (geometryBIndex == other.geometryBIndex);
+            return (Geom1Index == other.Geom1Index) && (Geom1Vertex == other.Geom1Vertex) &&
+                   (Geom2Index == other.Geom2Index);
         }
 
         #endregion

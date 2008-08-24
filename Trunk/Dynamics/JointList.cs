@@ -10,7 +10,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         #endregion
 
-        private readonly List<Joint> markedForRemovalList = new List<Joint>();
+        private readonly List<Joint> _markedForRemovalList = new List<Joint>();
 
         public ContentsChangedEventHandler Added;
         public ContentsChangedEventHandler Removed;
@@ -39,14 +39,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 if (this[i].IsDisposed)
                 {
-                    markedForRemovalList.Add(this[i]);
+                    _markedForRemovalList.Add(this[i]);
                 }
             }
-            for (int j = 0; j < markedForRemovalList.Count; j++)
+            for (int j = 0; j < _markedForRemovalList.Count; j++)
             {
-                Remove(markedForRemovalList[j]);
+                Remove(_markedForRemovalList[j]);
             }
-            markedForRemovalList.Clear();
+            _markedForRemovalList.Clear();
         }
     }
 }

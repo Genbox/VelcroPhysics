@@ -5,60 +5,46 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public class LinearSpring : Controller
     {
-        internal Vector2 attachPoint1;
-        internal Vector2 attachPoint2;
-        protected Body body1;
-        protected Body body2;
-        private float breakpoint = float.MaxValue;
+        private const float _epsilon = .00001f;
+        private float _dampningForce;
+        private Vector2 _difference = Vector2.Zero;
+        private Vector2 _differenceNormalized = Vector2.Zero;
+        private Vector2 _force;
+        private Vector2 _relativeVelocity = Vector2.Zero;
 
-        private float dampningConstant;
-        private float dampningForce;
-        private Vector2 difference = Vector2.Zero;
-        private Vector2 differenceNormalized = Vector2.Zero;
-        private float epsilon = .00001f;
-        private Vector2 force;
-        private Vector2 relativeVelocity = Vector2.Zero;
-        private float restLength;
-        private float springConstant;
-
-        private float springError;
-        private float springForce;
-        private float temp;
+        private float _springForce;
+        private float _temp;
         //Note: Cleanup, variable never used
         //private Vector2 vectorTemp2 = Vector2.Zero;
-        private Vector2 velocityAtPoint1 = Vector2.Zero;
-        private Vector2 velocityAtPoint2 = Vector2.Zero;
-        private Vector2 worldPoint1 = Vector2.Zero;
-        private Vector2 worldPoint2 = Vector2.Zero;
+        private Vector2 _velocityAtPoint1 = Vector2.Zero;
+        private Vector2 _velocityAtPoint2 = Vector2.Zero;
+        private Vector2 _worldPoint1 = Vector2.Zero;
+        private Vector2 _worldPoint2 = Vector2.Zero;
+        internal Vector2 attachPoint1;
+        internal Vector2 attachPoint2;
 
         public LinearSpring()
         {
+            Breakpoint = float.MaxValue;
         }
 
         public LinearSpring(Body body1, Vector2 attachPoint1, Body body2, Vector2 attachPoint2, float springConstant,
                             float dampningConstant)
         {
-            this.body1 = body1;
-            this.body2 = body2;
+            Breakpoint = float.MaxValue;
+            Body1 = body1;
+            Body2 = body2;
             this.attachPoint1 = attachPoint1;
             this.attachPoint2 = attachPoint2;
-            this.springConstant = springConstant;
-            this.dampningConstant = dampningConstant;
-            difference = body2.GetWorldPosition(attachPoint2) - body1.GetWorldPosition(attachPoint1);
-            restLength = difference.Length();
+            SpringConstant = springConstant;
+            DampningConstant = dampningConstant;
+            _difference = body2.GetWorldPosition(attachPoint2) - body1.GetWorldPosition(attachPoint1);
+            RestLength = _difference.Length();
         }
 
-        public Body Body1
-        {
-            get { return body1; }
-            set { body1 = value; }
-        }
+        public Body Body1 { get; set; }
 
-        public Body Body2
-        {
-            get { return body2; }
-            set { body2 = value; }
-        }
+        public Body Body2 { get; set; }
 
         public Vector2 AttachPoint1
         {
@@ -72,41 +58,17 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             set { attachPoint2 = value; }
         }
 
-        public float SpringConstant
-        {
-            get { return springConstant; }
-            set { springConstant = value; }
-        }
-
-        public float DampningConstant
-        {
-            get { return dampningConstant; }
-            set { dampningConstant = value; }
-        }
-
-        public float RestLength
-        {
-            get { return restLength; }
-            set { restLength = value; }
-        }
-
-        public float Breakpoint
-        {
-            get { return breakpoint; }
-            set { breakpoint = value; }
-        }
-
-        public float SpringError
-        {
-            get { return springError; }
-        }
-
+        public float SpringConstant { get; set; }
+        public float DampningConstant { get; set; }
+        public float RestLength { get; set; }
+        public float Breakpoint { get; set; }
+        public float SpringError { get; private set; }
         public event EventHandler<EventArgs> Broke;
 
         public override void Validate()
         {
             //if either of the joint's connected bodies are disposed then dispose the joint.
-            if (body1.IsDisposed || body2.IsDisposed)
+            if (Body1.IsDisposed || Body2.IsDisposed)
             {
                 Dispose();
             }
@@ -114,7 +76,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public override void Update(float dt)
         {
-            if (Enabled && Math.Abs(springError) > breakpoint)
+            if (Enabled && Math.Abs(SpringError) > Breakpoint)
             {
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
@@ -126,47 +88,48 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             }
             //calculate and apply spring force
             //F = -{s(L-r) + d[(v1-v2).L]/l}L/l   : s=spring const, d = dampning const, L=difference vector (p1-p2), l = difference magnitude, r = rest length,
-            body1.GetWorldPosition(ref attachPoint1, out worldPoint1);
-            body2.GetWorldPosition(ref attachPoint2, out worldPoint2);
-            Vector2.Subtract(ref worldPoint1, ref worldPoint2, out difference);
-            float differenceMagnitude = difference.Length();
-            if (differenceMagnitude < epsilon)
+            Body1.GetWorldPosition(ref attachPoint1, out _worldPoint1);
+            Body2.GetWorldPosition(ref attachPoint2, out _worldPoint2);
+            Vector2.Subtract(ref _worldPoint1, ref _worldPoint2, out _difference);
+            float differenceMagnitude = _difference.Length();
+            if (differenceMagnitude < _epsilon)
             {
                 return;
             } //if already close to rest length then return
 
             //calculate spring force
-            springError = differenceMagnitude - restLength;
-            Vector2.Normalize(ref difference, out differenceNormalized);
-            springForce = springConstant*springError; //kX
+            SpringError = differenceMagnitude - RestLength;
+            Vector2.Normalize(ref _difference, out _differenceNormalized);
+            _springForce = SpringConstant*SpringError; //kX
 
             //calculate relative velocity
-            body1.GetVelocityAtLocalPoint(ref attachPoint1, out velocityAtPoint1);
-            body2.GetVelocityAtLocalPoint(ref attachPoint2, out velocityAtPoint2);
-            Vector2.Subtract(ref velocityAtPoint1, ref velocityAtPoint2, out relativeVelocity);
+            Body1.GetVelocityAtLocalPoint(ref attachPoint1, out _velocityAtPoint1);
+            Body2.GetVelocityAtLocalPoint(ref attachPoint2, out _velocityAtPoint2);
+            Vector2.Subtract(ref _velocityAtPoint1, ref _velocityAtPoint2, out _relativeVelocity);
 
             //calculate dampning force
-            Vector2.Dot(ref relativeVelocity, ref difference, out temp);
-            dampningForce = dampningConstant*temp/differenceMagnitude; //bV     
+            Vector2.Dot(ref _relativeVelocity, ref _difference, out _temp);
+            _dampningForce = DampningConstant*_temp/differenceMagnitude; //bV     
 
             //calculate final force (spring + dampning)
-            Vector2.Multiply(ref differenceNormalized, -(springForce + dampningForce), out force);
+            Vector2.Multiply(ref _differenceNormalized, -(_springForce + _dampningForce), out _force);
 
-            if (!body1.IsStatic)
+            if (!Body1.IsStatic)
             {
-                body1.ApplyForceAtLocalPoint(ref force, ref attachPoint1);
+                Body1.ApplyForceAtLocalPoint(ref _force, ref attachPoint1);
             }
 
-            if (!body2.IsStatic)
+            if (!Body2.IsStatic)
             {
-                Vector2.Multiply(ref force, -1, out force);
-                body2.ApplyForceAtLocalPoint(ref force, ref attachPoint2);
+                Vector2.Multiply(ref _force, -1, out _force);
+                Body2.ApplyForceAtLocalPoint(ref _force, ref attachPoint2);
             }
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-        }
+        //Note: Redundant
+        //protected override void Dispose(bool disposing)
+        //{
+        //    base.Dispose(disposing);
+        //}
     }
 }

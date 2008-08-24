@@ -92,7 +92,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 return;
             }
-            jointError = body.totalRotation - targetAngle;
+            jointError = body.TotalRotation - targetAngle;
 
             velocityBias = -biasFactor*inverseDt*jointError;
             massFactor = (1 - softness)/(body.inverseMomentOfInertia);

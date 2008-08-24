@@ -6,88 +6,63 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public class RevoluteJoint : Joint
     {
+        private Vector2 _accumulatedImpulse;
+        private Vector2 _anchor;
+        private Matrix _b;
+
+        private Vector2 _currentAnchor;
+        private Vector2 _dv;
+        private Vector2 _dvBias;
+        private Vector2 _impulse;
         private Matrix _matrix;
-        private Vector2 accumulatedImpulse;
-        private Vector2 anchor;
-        private Matrix B;
-        private float biasFactor = .2f;
-        protected Body body1;
-        protected Body body2;
 
-        private float breakpoint = float.MaxValue;
-        private Vector2 currentAnchor;
-        private Vector2 dv;
-        private Vector2 dvBias;
-        private Vector2 impulse;
-
-        private float jointError;
+        private Vector2 _r1;
+        private Vector2 _r2;
+        private Vector2 _velocityBias;
         internal Vector2 localAnchor1;
         internal Vector2 localAnchor2;
-        private Vector2 r1;
-        private Vector2 r2;
-        private float softness;
-        private Vector2 velocityBias;
 
         public RevoluteJoint()
         {
+            Breakpoint = float.MaxValue;
+            BiasFactor = .2f;
         }
 
         public RevoluteJoint(Body body1, Body body2, Vector2 anchor)
         {
-            this.body1 = body1;
-            this.body2 = body2;
+            Breakpoint = float.MaxValue;
+            BiasFactor = .2f;
+            Body1 = body1;
+            Body2 = body2;
 
-            this.anchor = anchor;
+            _anchor = anchor;
 
             body1.GetLocalPosition(ref anchor, out localAnchor1);
             body2.GetLocalPosition(ref anchor, out localAnchor2);
 
-            accumulatedImpulse = Vector2.Zero;
+            _accumulatedImpulse = Vector2.Zero;
         }
 
-        public Body Body1
-        {
-            get { return body1; }
-            set { body1 = value; }
-        }
+        public Body Body1 { get; set; }
 
-        public Body Body2
-        {
-            get { return body2; }
-            set { body2 = value; }
-        }
+        public Body Body2 { get; set; }
 
-        public float BiasFactor
-        {
-            get { return biasFactor; }
-            set { biasFactor = value; }
-        }
+        public float BiasFactor { get; set; }
 
-        public float Softness
-        {
-            get { return softness; }
-            set { softness = value; }
-        }
+        public float Softness { get; set; }
 
-        public float Breakpoint
-        {
-            get { return breakpoint; }
-            set { breakpoint = value; }
-        }
+        public float Breakpoint { get; set; }
 
-        public float JointError
-        {
-            get { return jointError; }
-        }
+        public float JointError { get; private set; }
 
         public Vector2 Anchor
         {
-            get { return anchor; }
+            get { return _anchor; }
             set
             {
-                anchor = value;
-                body1.GetLocalPosition(ref anchor, out localAnchor1);
-                body2.GetLocalPosition(ref anchor, out localAnchor2);
+                _anchor = value;
+                Body1.GetLocalPosition(ref _anchor, out localAnchor1);
+                Body2.GetLocalPosition(ref _anchor, out localAnchor2);
             }
         }
 
@@ -96,8 +71,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             get
             {
-                Vector2.Add(ref body1.position, ref r1, out currentAnchor); //anchor moves once simulator starts
-                return currentAnchor;
+                Vector2.Add(ref Body1.position, ref _r1, out _currentAnchor); //anchor moves once simulator starts
+                return _currentAnchor;
             }
         }
 
@@ -105,18 +80,18 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public void SetInitialAnchor(Vector2 initialAnchor)
         {
-            anchor = initialAnchor;
-            if (body1 == null)
+            _anchor = initialAnchor;
+            if (Body1 == null)
             {
                 throw new NullReferenceException("Body must be set prior to setting the anchor of the Revolute Joint");
             }
-            body1.GetLocalPosition(ref initialAnchor, out localAnchor1);
-            body2.GetLocalPosition(ref initialAnchor, out localAnchor2);
+            Body1.GetLocalPosition(ref initialAnchor, out localAnchor1);
+            Body2.GetLocalPosition(ref initialAnchor, out localAnchor2);
         }
 
         public override void Validate()
         {
-            if (body1.IsDisposed || body2.IsDisposed)
+            if (Body1.IsDisposed || Body2.IsDisposed)
             {
                 Dispose();
             }
@@ -124,64 +99,64 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(jointError) > breakpoint)
+            if (Enabled && Math.Abs(JointError) > Breakpoint)
             {
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
             }
             if (isDisposed) return;
 
-            body1InverseMass = body1.inverseMass;
-            body1InverseMomentOfInertia = body1.inverseMomentOfInertia;
+            body1InverseMass = Body1.inverseMass;
+            body1InverseMomentOfInertia = Body1.inverseMomentOfInertia;
 
-            body2InverseMass = body2.inverseMass;
-            body2InverseMomentOfInertia = body2.inverseMomentOfInertia;
+            body2InverseMass = Body2.inverseMass;
+            body2InverseMomentOfInertia = Body2.inverseMomentOfInertia;
 
-            body1.GetBodyMatrix(out body1MatrixTemp);
-            body2.GetBodyMatrix(out body2MatrixTemp);
-            Vector2.TransformNormal(ref localAnchor1, ref body1MatrixTemp, out r1);
-            Vector2.TransformNormal(ref localAnchor2, ref body2MatrixTemp, out r2);
+            Body1.GetBodyMatrix(out body1MatrixTemp);
+            Body2.GetBodyMatrix(out body2MatrixTemp);
+            Vector2.TransformNormal(ref localAnchor1, ref body1MatrixTemp, out _r1);
+            Vector2.TransformNormal(ref localAnchor2, ref body2MatrixTemp, out _r2);
 
             K1.M11 = body1InverseMass + body2InverseMass;
             K1.M12 = 0;
             K1.M21 = 0;
             K1.M22 = body1InverseMass + body2InverseMass;
 
-            K2.M11 = body1InverseMomentOfInertia*r1.Y*r1.Y;
-            K2.M12 = -body1InverseMomentOfInertia*r1.X*r1.Y;
-            K2.M21 = -body1InverseMomentOfInertia*r1.X*r1.Y;
-            K2.M22 = body1InverseMomentOfInertia*r1.X*r1.X;
+            K2.M11 = body1InverseMomentOfInertia*_r1.Y*_r1.Y;
+            K2.M12 = -body1InverseMomentOfInertia*_r1.X*_r1.Y;
+            K2.M21 = -body1InverseMomentOfInertia*_r1.X*_r1.Y;
+            K2.M22 = body1InverseMomentOfInertia*_r1.X*_r1.X;
 
-            K3.M11 = body2InverseMomentOfInertia*r2.Y*r2.Y;
-            K3.M12 = -body2InverseMomentOfInertia*r2.X*r2.Y;
-            K3.M21 = -body2InverseMomentOfInertia*r2.X*r2.Y;
-            K3.M22 = body2InverseMomentOfInertia*r2.X*r2.X;
+            K3.M11 = body2InverseMomentOfInertia*_r2.Y*_r2.Y;
+            K3.M12 = -body2InverseMomentOfInertia*_r2.X*_r2.Y;
+            K3.M21 = -body2InverseMomentOfInertia*_r2.X*_r2.Y;
+            K3.M22 = body2InverseMomentOfInertia*_r2.X*_r2.X;
 
             //Matrix K = K1 + K2 + K3;
             Matrix.Add(ref K1, ref K2, out K);
             Matrix.Add(ref K, ref K3, out K);
 
-            K.M11 += softness;
-            K.M12 += softness;
+            K.M11 += Softness;
+            K.M12 += Softness;
 
             //_matrix = MatrixInvert2D(K);
             MatrixInvert2D(ref K, out _matrix);
 
-            Vector2.Add(ref body1.position, ref r1, out vectorTemp1);
-            Vector2.Add(ref body2.position, ref r2, out vectorTemp2);
+            Vector2.Add(ref Body1.position, ref _r1, out vectorTemp1);
+            Vector2.Add(ref Body2.position, ref _r2, out vectorTemp2);
             Vector2.Subtract(ref vectorTemp2, ref vectorTemp1, out vectorTemp3);
-            Vector2.Multiply(ref vectorTemp3, -biasFactor*inverseDt, out velocityBias);
+            Vector2.Multiply(ref vectorTemp3, -BiasFactor*inverseDt, out _velocityBias);
 
-            jointError = vectorTemp3.Length();
+            JointError = vectorTemp3.Length();
 
-            body2.ApplyImmediateImpulse(ref accumulatedImpulse);
-            Calculator.Cross(ref r2, ref accumulatedImpulse, out floatTemp1);
-            body2.ApplyAngularImpulse(floatTemp1);
+            Body2.ApplyImmediateImpulse(ref _accumulatedImpulse);
+            Calculator.Cross(ref _r2, ref _accumulatedImpulse, out floatTemp1);
+            Body2.ApplyAngularImpulse(floatTemp1);
 
-            Vector2.Multiply(ref accumulatedImpulse, -1, out vectorTemp1);
-            body1.ApplyImmediateImpulse(ref vectorTemp1);
-            Calculator.Cross(ref r1, ref accumulatedImpulse, out floatTemp1);
-            body1.ApplyAngularImpulse(-floatTemp1);
+            Vector2.Multiply(ref _accumulatedImpulse, -1, out vectorTemp1);
+            Body1.ApplyImmediateImpulse(ref vectorTemp1);
+            Calculator.Cross(ref _r1, ref _accumulatedImpulse, out floatTemp1);
+            Body1.ApplyAngularImpulse(-floatTemp1);
         }
 
         private void MatrixInvert2D(ref Matrix matrix, out Matrix invertedMatrix)
@@ -190,11 +165,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             float det = a*d - b*c;
             Debug.Assert(det != 0.0f);
             det = 1.0f/det;
-            B.M11 = det*d;
-            B.M12 = -det*b;
-            B.M21 = -det*c;
-            B.M22 = det*a;
-            invertedMatrix = B;
+            _b.M11 = det*d;
+            _b.M12 = -det*b;
+            _b.M21 = -det*c;
+            _b.M22 = det*a;
+            invertedMatrix = _b;
         }
 
         public override void Update()
@@ -207,111 +182,111 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
             #region INLINE: Calculator.Cross(ref body2.angularVelocity, ref r2, out vectorTemp1);
 
-            vectorTemp1.X = -body2.angularVelocity*r2.Y;
-            vectorTemp1.Y = body2.angularVelocity*r2.X;
+            vectorTemp1.X = -Body2.angularVelocity*_r2.Y;
+            vectorTemp1.Y = Body2.angularVelocity*_r2.X;
 
             #endregion
 
             #region INLINE: Calculator.Cross(ref body1.angularVelocity, ref r1, out vectorTemp2);
 
-            vectorTemp2.X = -body1.angularVelocity*r1.Y;
-            vectorTemp2.Y = body1.angularVelocity*r1.X;
+            vectorTemp2.X = -Body1.angularVelocity*_r1.Y;
+            vectorTemp2.Y = Body1.angularVelocity*_r1.X;
 
             #endregion
 
             #region INLINE: Vector2.Add(ref body2.linearVelocity, ref vectorTemp1, out vectorTemp3);
 
-            vectorTemp3.X = body2.linearVelocity.X + vectorTemp1.X;
-            vectorTemp3.Y = body2.linearVelocity.Y + vectorTemp1.Y;
+            vectorTemp3.X = Body2.linearVelocity.X + vectorTemp1.X;
+            vectorTemp3.Y = Body2.linearVelocity.Y + vectorTemp1.Y;
 
             #endregion
 
             #region INLINE: Vector2.Add(ref body1.linearVelocity, ref vectorTemp2, out vectorTemp4);
 
-            vectorTemp4.X = body1.linearVelocity.X + vectorTemp2.X;
-            vectorTemp4.Y = body1.linearVelocity.Y + vectorTemp2.Y;
+            vectorTemp4.X = Body1.linearVelocity.X + vectorTemp2.X;
+            vectorTemp4.Y = Body1.linearVelocity.Y + vectorTemp2.Y;
 
             #endregion
 
             #region INLINE: Vector2.Subtract(ref vectorTemp3, ref vectorTemp4, out dv);
 
-            dv.X = vectorTemp3.X - vectorTemp4.X;
-            dv.Y = vectorTemp3.Y - vectorTemp4.Y;
+            _dv.X = vectorTemp3.X - vectorTemp4.X;
+            _dv.Y = vectorTemp3.Y - vectorTemp4.Y;
 
             #endregion
 
             #region INLINE: Vector2.Subtract(ref velocityBias, ref dv, out vectorTemp1);
 
-            vectorTemp1.X = velocityBias.X - dv.X;
-            vectorTemp1.Y = velocityBias.Y - dv.Y;
+            vectorTemp1.X = _velocityBias.X - _dv.X;
+            vectorTemp1.Y = _velocityBias.Y - _dv.Y;
 
             #endregion
 
             #region INLINE: Vector2.Multiply(ref accumulatedImpulse, softness, out vectorTemp2);
 
-            vectorTemp2.X = accumulatedImpulse.X*softness;
-            vectorTemp2.Y = accumulatedImpulse.Y*softness;
+            vectorTemp2.X = _accumulatedImpulse.X*Softness;
+            vectorTemp2.Y = _accumulatedImpulse.Y*Softness;
 
             #endregion
 
             #region INLINE: Vector2.Subtract(ref vectorTemp1, ref vectorTemp2, out dvBias);
 
-            dvBias.X = vectorTemp1.X - vectorTemp2.X;
-            dvBias.Y = vectorTemp1.Y - vectorTemp2.Y;
+            _dvBias.X = vectorTemp1.X - vectorTemp2.X;
+            _dvBias.Y = vectorTemp1.Y - vectorTemp2.Y;
 
             #endregion
 
             #region INLINE: Vector2.Transform(ref dvBias, ref _matrix, out impulse);
 
-            float num2 = ((dvBias.X*_matrix.M11) + (dvBias.Y*_matrix.M21)) + _matrix.M41;
-            float num = ((dvBias.X*_matrix.M12) + (dvBias.Y*_matrix.M22)) + _matrix.M42;
-            impulse.X = num2;
-            impulse.Y = num;
+            float num2 = ((_dvBias.X*_matrix.M11) + (_dvBias.Y*_matrix.M21)) + _matrix.M41;
+            float num = ((_dvBias.X*_matrix.M12) + (_dvBias.Y*_matrix.M22)) + _matrix.M42;
+            _impulse.X = num2;
+            _impulse.Y = num;
 
             #endregion
 
             #region INLINE: body2.ApplyImpulse(ref impulse);
 
-            dv.X = impulse.X*body2.inverseMass;
-            dv.Y = impulse.Y*body2.inverseMass;
+            _dv.X = _impulse.X*Body2.inverseMass;
+            _dv.Y = _impulse.Y*Body2.inverseMass;
 
-            body2.linearVelocity.X = dv.X + body2.linearVelocity.X;
-            body2.linearVelocity.Y = dv.Y + body2.linearVelocity.Y;
+            Body2.linearVelocity.X = _dv.X + Body2.linearVelocity.X;
+            Body2.linearVelocity.Y = _dv.Y + Body2.linearVelocity.Y;
 
             #endregion
 
             #region INLINE: Calculator.Cross(ref r2, ref impulse, out floatTemp1);
 
-            floatTemp1 = r2.X*impulse.Y - r2.Y*impulse.X;
+            floatTemp1 = _r2.X*_impulse.Y - _r2.Y*_impulse.X;
 
             #endregion
 
             #region INLINE: body2.ApplyAngularImpulse(ref floatTemp1);
 
-            body2.angularVelocity += floatTemp1*body2.inverseMomentOfInertia;
+            Body2.angularVelocity += floatTemp1*Body2.inverseMomentOfInertia;
 
             #endregion
 
             #region INLINE: Vector2.Multiply(ref impulse, -1, out vectorTemp1);
 
-            vectorTemp1.X = impulse.X*-1;
-            vectorTemp1.Y = impulse.Y*-1;
+            vectorTemp1.X = _impulse.X*-1;
+            vectorTemp1.Y = _impulse.Y*-1;
 
             #endregion
 
             #region INLINE: body1.ApplyImpulse(ref vectorTemp1);
 
-            dv.X = vectorTemp1.X*body1.inverseMass;
-            dv.Y = vectorTemp1.Y*body1.inverseMass;
+            _dv.X = vectorTemp1.X*Body1.inverseMass;
+            _dv.Y = vectorTemp1.Y*Body1.inverseMass;
 
-            body1.linearVelocity.X = dv.X + body1.linearVelocity.X;
-            body1.linearVelocity.Y = dv.Y + body1.linearVelocity.Y;
+            Body1.linearVelocity.X = _dv.X + Body1.linearVelocity.X;
+            Body1.linearVelocity.Y = _dv.Y + Body1.linearVelocity.Y;
 
             #endregion
 
             #region INLINE: Calculator.Cross(ref r1, ref impulse, out floatTemp1);
 
-            floatTemp1 = r1.X*impulse.Y - r1.Y*impulse.X;
+            floatTemp1 = _r1.X*_impulse.Y - _r1.Y*_impulse.X;
 
             #endregion
 
@@ -319,14 +294,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
             #region INLINE: body1.ApplyAngularImpulse(ref floatTemp1);
 
-            body1.angularVelocity += floatTemp1*body1.inverseMomentOfInertia;
+            Body1.angularVelocity += floatTemp1*Body1.inverseMomentOfInertia;
 
             #endregion
 
             #region INLINE: Vector2.Add(ref accumulatedImpulse, ref impulse, out accumulatedImpulse);
 
-            accumulatedImpulse.X = accumulatedImpulse.X + impulse.X;
-            accumulatedImpulse.Y = accumulatedImpulse.Y + impulse.Y;
+            _accumulatedImpulse.X = _accumulatedImpulse.X + _impulse.X;
+            _accumulatedImpulse.Y = _accumulatedImpulse.Y + _impulse.Y;
 
             #endregion
         }

@@ -5,123 +5,93 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public class PinJoint : Joint
     {
-        private float accumulatedImpulse;
-        private Vector2 anchor1;
-        private Vector2 anchor2;
-        private float biasFactor = .2f;
-        protected Body body1;
-        protected Body body2;
+        private float _accumulatedImpulse;
+        private Vector2 _anchor1;
+        private Vector2 _anchor2;
 
-        private float breakpoint = float.MaxValue;
-        private float effectiveMass;
+        private float _effectiveMass;
 
-        private float jointError;
-        private Vector2 r1;
-        private Vector2 r2;
-        private float softness;
-        private float targetDistance;
-        private float velocityBias;
-        private Vector2 worldAnchor1;
-        private Vector2 worldAnchor2;
-        private Vector2 worldAnchorDifferenceNormalized;
+        private Vector2 _r1;
+        private Vector2 _r2;
+        private float _velocityBias;
+        private Vector2 _worldAnchor1;
+        private Vector2 _worldAnchor2;
+        private Vector2 _worldAnchorDifferenceNormalized;
 
         public PinJoint()
         {
+            Breakpoint = float.MaxValue;
+            BiasFactor = .2f;
         }
 
         public PinJoint(Body body1, Vector2 anchor1, Body body2, Vector2 anchor2)
         {
-            this.body1 = body1;
-            this.body2 = body2;
+            Breakpoint = float.MaxValue;
+            BiasFactor = .2f;
+            Body1 = body1;
+            Body2 = body2;
 
             Vector2 difference = (body2.position + anchor2) - (body1.position + anchor1);
-            targetDistance = difference.Length(); //by default the target distance is the diff between anchors.
+            TargetDistance = difference.Length(); //by default the target distance is the diff between anchors.
 
             //initialize the world anchors (only needed to give valid values to the WorldAnchor properties)
             Anchor1 = anchor1;
             Anchor2 = anchor2;
         }
 
-        public Body Body1
-        {
-            get { return body1; }
-            set { body1 = value; }
-        }
+        public Body Body1 { get; set; }
 
-        public Body Body2
-        {
-            get { return body2; }
-            set { body2 = value; }
-        }
+        public Body Body2 { get; set; }
 
-        public float BiasFactor
-        {
-            get { return biasFactor; }
-            set { biasFactor = value; }
-        }
+        public float BiasFactor { get; set; }
 
-        public float Softness
-        {
-            get { return softness; }
-            set { softness = value; }
-        }
+        public float Softness { get; set; }
 
-        public float Breakpoint
-        {
-            get { return breakpoint; }
-            set { breakpoint = value; }
-        }
+        public float Breakpoint { get; set; }
 
-        public float JointError
-        {
-            get { return jointError; }
-        }
+        public float JointError { get; private set; }
 
-        public float TargetDistance
-        {
-            get { return targetDistance; }
-            set { targetDistance = value; }
-        }
+        public float TargetDistance { get; set; }
 
         public Vector2 Anchor1
         {
-            get { return anchor1; }
+            get { return _anchor1; }
             set
             {
-                anchor1 = value;
-                body1.GetBodyMatrix(out body1MatrixTemp);
-                Vector2.TransformNormal(ref anchor1, ref body1MatrixTemp, out r1);
-                Vector2.Add(ref body1.position, ref r1, out worldAnchor1);
+                _anchor1 = value;
+                Body1.GetBodyMatrix(out body1MatrixTemp);
+                Vector2.TransformNormal(ref _anchor1, ref body1MatrixTemp, out _r1);
+                Vector2.Add(ref Body1.position, ref _r1, out _worldAnchor1);
             }
         }
 
         public Vector2 Anchor2
         {
-            get { return anchor2; }
+            get { return _anchor2; }
             set
             {
-                anchor2 = value;
-                body2.GetBodyMatrix(out body2MatrixTemp);
-                Vector2.TransformNormal(ref anchor2, ref body2MatrixTemp, out r2);
-                Vector2.Add(ref body2.position, ref r2, out worldAnchor2);
+                _anchor2 = value;
+                Body2.GetBodyMatrix(out body2MatrixTemp);
+                Vector2.TransformNormal(ref _anchor2, ref body2MatrixTemp, out _r2);
+                Vector2.Add(ref Body2.position, ref _r2, out _worldAnchor2);
             }
         }
 
         public Vector2 WorldAnchor1
         {
-            get { return worldAnchor1; }
+            get { return _worldAnchor1; }
         }
 
         public Vector2 WorldAnchor2
         {
-            get { return worldAnchor2; }
+            get { return _worldAnchor2; }
         }
 
         public event EventHandler<EventArgs> Broke;
 
         public override void Validate()
         {
-            if (body1.IsDisposed || body2.IsDisposed)
+            if (Body1.IsDisposed || Body2.IsDisposed)
             {
                 Dispose();
             }
@@ -129,7 +99,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(jointError) > breakpoint)
+            if (Enabled && Math.Abs(JointError) > Breakpoint)
             {
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
@@ -147,50 +117,50 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             //body2InverseMomentOfInertia = body2.inverseMomentOfInertia;
 
             //calc r1 and r2 from the anchors
-            body1.GetBodyMatrix(out body1MatrixTemp);
-            body2.GetBodyMatrix(out body2MatrixTemp);
-            Vector2.TransformNormal(ref anchor1, ref body1MatrixTemp, out r1);
-            Vector2.TransformNormal(ref anchor2, ref body2MatrixTemp, out r2);
+            Body1.GetBodyMatrix(out body1MatrixTemp);
+            Body2.GetBodyMatrix(out body2MatrixTemp);
+            Vector2.TransformNormal(ref _anchor1, ref body1MatrixTemp, out _r1);
+            Vector2.TransformNormal(ref _anchor2, ref body2MatrixTemp, out _r2);
 
             //calc the diff between anchor positions
-            Vector2.Add(ref body1.position, ref r1, out worldAnchor1);
-            Vector2.Add(ref body2.position, ref r2, out worldAnchor2);
-            Vector2.Subtract(ref worldAnchor2, ref worldAnchor1, out worldAnchorDifference);
+            Vector2.Add(ref Body1.position, ref _r1, out _worldAnchor1);
+            Vector2.Add(ref Body2.position, ref _r2, out _worldAnchor2);
+            Vector2.Subtract(ref _worldAnchor2, ref _worldAnchor1, out worldAnchorDifference);
 
             float distance = worldAnchorDifference.Length();
-            jointError = distance - targetDistance;
+            JointError = distance - TargetDistance;
 
             //normalize the difference vector
             Vector2.Multiply(ref worldAnchorDifference, 1/(distance != 0 ? distance : float.PositiveInfinity),
-                             out worldAnchorDifferenceNormalized); //distance = 0 --> error (fix) 
+                             out _worldAnchorDifferenceNormalized); //distance = 0 --> error (fix) 
 
             //calc velocity bias
-            velocityBias = -biasFactor*inverseDt*(distance - targetDistance);
+            _velocityBias = -BiasFactor*inverseDt*(distance - TargetDistance);
 
             //calc mass normal (effective mass in relation to constraint)
-            Calculator.Cross(ref r1, ref worldAnchorDifferenceNormalized, out r1cn);
-            Calculator.Cross(ref r2, ref worldAnchorDifferenceNormalized, out r2cn);
-            kNormal = body1.inverseMass + body2.inverseMass + body1.inverseMomentOfInertia*r1cn*r1cn +
-                      body2.inverseMomentOfInertia*r2cn*r2cn;
-            effectiveMass = 1/(kNormal + softness);
+            Calculator.Cross(ref _r1, ref _worldAnchorDifferenceNormalized, out r1cn);
+            Calculator.Cross(ref _r2, ref _worldAnchorDifferenceNormalized, out r2cn);
+            kNormal = Body1.inverseMass + Body2.inverseMass + Body1.inverseMomentOfInertia*r1cn*r1cn +
+                      Body2.inverseMomentOfInertia*r2cn*r2cn;
+            _effectiveMass = 1/(kNormal + Softness);
 
             //convert scalar accumulated impulse to vector
-            Vector2.Multiply(ref worldAnchorDifferenceNormalized, accumulatedImpulse, out accumulatedImpulseVector);
+            Vector2.Multiply(ref _worldAnchorDifferenceNormalized, _accumulatedImpulse, out accumulatedImpulseVector);
 
             //apply accumulated impulses (warm starting)
-            body2.ApplyImmediateImpulse(ref accumulatedImpulseVector);
-            Calculator.Cross(ref r2, ref accumulatedImpulseVector, out angularImpulse);
-            body2.ApplyAngularImpulse(angularImpulse);
+            Body2.ApplyImmediateImpulse(ref accumulatedImpulseVector);
+            Calculator.Cross(ref _r2, ref accumulatedImpulseVector, out angularImpulse);
+            Body2.ApplyAngularImpulse(angularImpulse);
 
             Vector2.Multiply(ref accumulatedImpulseVector, -1, out accumulatedImpulseVector);
-            body1.ApplyImmediateImpulse(ref accumulatedImpulseVector);
-            Calculator.Cross(ref r1, ref accumulatedImpulseVector, out angularImpulse);
-            body1.ApplyAngularImpulse(angularImpulse);
+            Body1.ApplyImmediateImpulse(ref accumulatedImpulseVector);
+            Calculator.Cross(ref _r1, ref accumulatedImpulseVector, out angularImpulse);
+            Body1.ApplyAngularImpulse(angularImpulse);
         }
 
         public override void Update()
         {
-            if (Math.Abs(jointError) > breakpoint)
+            if (Math.Abs(JointError) > Breakpoint)
             {
                 Dispose();
             } //check if joint is broken
@@ -200,37 +170,37 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             }
 
             //calc velocity anchor points (angular component + linear)
-            Calculator.Cross(ref body1.angularVelocity, ref r1, out angularVelocityComponent1);
-            Vector2.Add(ref body1.linearVelocity, ref angularVelocityComponent1, out velocity1);
+            Calculator.Cross(ref Body1.angularVelocity, ref _r1, out angularVelocityComponent1);
+            Vector2.Add(ref Body1.linearVelocity, ref angularVelocityComponent1, out velocity1);
 
-            Calculator.Cross(ref body2.angularVelocity, ref r2, out angularVelocityComponent2);
-            Vector2.Add(ref body2.linearVelocity, ref angularVelocityComponent2, out velocity2);
+            Calculator.Cross(ref Body2.angularVelocity, ref _r2, out angularVelocityComponent2);
+            Vector2.Add(ref Body2.linearVelocity, ref angularVelocityComponent2, out velocity2);
 
             //calc velocity difference
             Vector2.Subtract(ref velocity2, ref velocity1, out dv);
 
             //map the velocity difference into constraint space
-            Vector2.Dot(ref dv, ref worldAnchorDifferenceNormalized, out dvNormal);
+            Vector2.Dot(ref dv, ref _worldAnchorDifferenceNormalized, out dvNormal);
 
             //calc the impulse magnitude
-            impulseMagnitude = (velocityBias - dvNormal - softness*accumulatedImpulse)*effectiveMass;
+            impulseMagnitude = (_velocityBias - dvNormal - Softness*_accumulatedImpulse)*_effectiveMass;
             //not sure if softness is implemented correctly.
 
             //convert scalar impulse to vector
-            Vector2.Multiply(ref worldAnchorDifferenceNormalized, impulseMagnitude, out impulse);
+            Vector2.Multiply(ref _worldAnchorDifferenceNormalized, impulseMagnitude, out impulse);
 
             //apply impulse
-            body2.ApplyImmediateImpulse(ref impulse);
-            Calculator.Cross(ref r2, ref impulse, out angularImpulse);
-            body2.ApplyAngularImpulse(angularImpulse);
+            Body2.ApplyImmediateImpulse(ref impulse);
+            Calculator.Cross(ref _r2, ref impulse, out angularImpulse);
+            Body2.ApplyAngularImpulse(angularImpulse);
 
             Vector2.Multiply(ref impulse, -1, out impulse);
-            body1.ApplyImmediateImpulse(ref impulse);
-            Calculator.Cross(ref r1, ref impulse, out angularImpulse);
-            body1.ApplyAngularImpulse(angularImpulse);
+            Body1.ApplyImmediateImpulse(ref impulse);
+            Calculator.Cross(ref _r1, ref impulse, out angularImpulse);
+            Body1.ApplyAngularImpulse(angularImpulse);
 
             //add to the accumulated impulse
-            accumulatedImpulse += impulseMagnitude;
+            _accumulatedImpulse += impulseMagnitude;
         }
 
         #region Update variables

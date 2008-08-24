@@ -8,92 +8,45 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private float accumlatedAngularImpulseOld;
         private float accumulatedAngularImpulse;
         private float angularImpulse;
-        private float biasFactor = .2f;
-        protected Body body1;
-        protected Body body2;
-        private float breakpoint = float.MaxValue;
         private float difference;
-        private float jointError;
-        private float lowerLimit;
         private bool lowerLimitViolated;
         private float massFactor;
 
-        private float slop = .01f;
-        private float softness;
-        private float upperLimit;
         private bool upperLimitViolated;
         private float velocityBias;
 
         public AngleLimitJoint()
         {
+            Breakpoint = float.MaxValue;
+            Slop = .01f;
+            BiasFactor = .2f;
         }
 
         public AngleLimitJoint(Body body1, Body body2, float lowerLimit, float upperLimit)
         {
-            this.body1 = body1;
-            this.body2 = body2;
-            this.lowerLimit = lowerLimit;
-            this.upperLimit = upperLimit;
+            Breakpoint = float.MaxValue;
+            Slop = .01f;
+            BiasFactor = .2f;
+            Body1 = body1;
+            Body2 = body2;
+            LowerLimit = lowerLimit;
+            UpperLimit = upperLimit;
         }
 
-        public Body Body1
-        {
-            get { return body1; }
-            set { body1 = value; }
-        }
-
-        public Body Body2
-        {
-            get { return body2; }
-            set { body2 = value; }
-        }
-
-        public float BiasFactor
-        {
-            get { return biasFactor; }
-            set { biasFactor = value; }
-        }
-
-        public float Slop
-        {
-            get { return slop; }
-            set { slop = value; }
-        }
-
-        public float Softness
-        {
-            get { return softness; }
-            set { softness = value; }
-        }
-
-        public float UpperLimit
-        {
-            get { return upperLimit; }
-            set { upperLimit = value; }
-        }
-
-        public float LowerLimit
-        {
-            get { return lowerLimit; }
-            set { lowerLimit = value; }
-        }
-
-        public float Breakpoint
-        {
-            get { return breakpoint; }
-            set { breakpoint = value; }
-        }
-
-        public float JointError
-        {
-            get { return jointError; }
-        }
-
+        public Body Body1 { get; set; }
+        public Body Body2 { get; set; }
+        public float BiasFactor { get; set; }
+        public float Slop { get; set; }
+        public float Softness { get; set; }
+        public float UpperLimit { get; set; }
+        public float LowerLimit { get; set; }
+        public float Breakpoint { get; set; }
+        public float JointError { get; private set; }
         public event EventHandler<EventArgs> Broke;
 
         public override void Validate()
         {
-            if (body1.IsDisposed || body2.IsDisposed)
+            if (Body1.IsDisposed || Body2.IsDisposed)
             {
                 Dispose();
             }
@@ -101,7 +54,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(jointError) > breakpoint)
+            if (Enabled && Math.Abs(JointError) > Breakpoint)
             {
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
@@ -110,10 +63,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 return;
             }
-            difference = (body2.totalRotation - body1.totalRotation);
-            jointError = 0;
+            difference = (Body2.TotalRotation - Body1.TotalRotation);
+            JointError = 0;
 
-            if (difference > upperLimit)
+            if (difference > UpperLimit)
             {
                 if (lowerLimitViolated)
                 {
@@ -121,16 +74,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     lowerLimitViolated = false;
                 }
                 upperLimitViolated = true;
-                if (difference < upperLimit + slop)
+                if (difference < UpperLimit + Slop)
                 {
-                    jointError = 0;
+                    JointError = 0;
                 }
                 else
                 {
-                    jointError = difference - upperLimit;
+                    JointError = difference - UpperLimit;
                 }
             }
-            else if (difference < lowerLimit)
+            else if (difference < LowerLimit)
             {
                 if (upperLimitViolated)
                 {
@@ -138,28 +91,28 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     upperLimitViolated = false;
                 }
                 lowerLimitViolated = true;
-                if (difference > lowerLimit - slop)
+                if (difference > LowerLimit - Slop)
                 {
-                    jointError = 0;
+                    JointError = 0;
                 }
                 else
                 {
-                    jointError = difference - lowerLimit;
+                    JointError = difference - LowerLimit;
                 }
             }
             else
             {
                 upperLimitViolated = false;
                 lowerLimitViolated = false;
-                jointError = 0;
+                JointError = 0;
                 accumulatedAngularImpulse = 0;
             }
-            velocityBias = biasFactor*inverseDt*jointError;
+            velocityBias = BiasFactor*inverseDt*JointError;
 
-            massFactor = 1/(softness + body1.inverseMomentOfInertia + body2.inverseMomentOfInertia);
+            massFactor = 1/(Softness + Body1.inverseMomentOfInertia + Body2.inverseMomentOfInertia);
 
-            body1.angularVelocity -= body1.inverseMomentOfInertia*accumulatedAngularImpulse;
-            body2.angularVelocity += body2.inverseMomentOfInertia*accumulatedAngularImpulse;
+            Body1.angularVelocity -= Body1.inverseMomentOfInertia*accumulatedAngularImpulse;
+            Body2.angularVelocity += Body2.inverseMomentOfInertia*accumulatedAngularImpulse;
         }
 
         public override void Update()
@@ -174,7 +127,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             }
             angularImpulse = 0;
             angularImpulse =
-                -(velocityBias + (body2.angularVelocity - body1.angularVelocity) + softness*accumulatedAngularImpulse)*
+                -(velocityBias + (Body2.angularVelocity - Body1.angularVelocity) + Softness*accumulatedAngularImpulse)*
                 massFactor;
 
             accumlatedAngularImpulseOld = accumulatedAngularImpulse;
@@ -190,8 +143,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
             angularImpulse = accumulatedAngularImpulse - accumlatedAngularImpulseOld;
 
-            body1.angularVelocity -= body1.inverseMomentOfInertia*angularImpulse;
-            body2.angularVelocity += body2.inverseMomentOfInertia*angularImpulse;
+            Body1.angularVelocity -= Body1.inverseMomentOfInertia*angularImpulse;
+            Body2.angularVelocity += Body2.inverseMomentOfInertia*angularImpulse;
         }
     }
 }

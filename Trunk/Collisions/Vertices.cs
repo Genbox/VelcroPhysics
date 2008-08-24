@@ -38,28 +38,23 @@ namespace FarseerGames.FarseerPhysics.Collisions
             get { return ToArray(); }
         }
 
-        public Int32 NextIndex(Int32 index)
+        public int NextIndex(Int32 index)
         {
             if (index == Count - 1)
             {
                 return 0;
             }
-            else
-            {
-                return index + 1;
-            }
+            return index + 1;
         }
 
-        public Int32 PreviousIndex(Int32 index)
+        public int PreviousIndex(Int32 index)
         {
             if (index == 0)
             {
                 return Count - 1;
             }
-            else
-            {
-                return index - 1;
-            }
+
+            return index - 1;
         }
 
         public Vector2 GetEdge(Int32 index)
@@ -173,9 +168,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Vertices verticesTemp = new Vertices();
             double edgeCount;
             float edgeLength;
-            Vector2 vertA = Vector2.Zero;
-            Vector2 vertB = Vector2.Zero;
-            Vector2 edge = Vector2.Zero;
+            Vector2 vertA;
+            Vector2 vertB;
+            Vector2 edge;
             for (int i = 0; i < Count; i++)
             {
                 vertA = this[i];
@@ -263,7 +258,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             float cx = 0, cy = 0;
             int i, j;
 
-            float factor = 0;
+            float factor;
             //Debug.WriteLine(verts.ToString());
             for (i = 0; i < Count; i++)
             {
@@ -302,8 +297,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             float denom = 0;
             float numer = 0;
             float a, b, c, d;
-            Vector2 v1, v2;
-            v1 = verts[verts.Count - 1];
+            Vector2 v2;
+            Vector2 v1 = verts[verts.Count - 1];
             for (int index = 0; index < verts.Count; index++, v1 = v2)
             {
                 v2 = verts[index];
