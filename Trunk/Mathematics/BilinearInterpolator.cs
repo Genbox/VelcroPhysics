@@ -1,39 +1,37 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-
 #if (XNA)
-using Microsoft.Xna.Framework; 
+using Microsoft.Xna.Framework;
 #endif
 
-namespace FarseerGames.FarseerPhysics.Mathematics {
+namespace FarseerGames.FarseerPhysics.Mathematics
+{
     /// <summary>
     /// Encapsulates the logic to do bilinear interpolation
     /// .V1    .V4
     /// .V2    .V3
     /// </summary>
-    public class BilinearInterpolator {
-        Vector2 max;
-        Vector2 min;
-
-        float value1 = 0;
-        float value2 = 0;
-        float value3 = 0;
-        float value4 = 0;
-
-        float maxValue = float.MaxValue;
-        float minValue = float.MinValue;
+    public class BilinearInterpolator
+    {
+        private readonly float maxValue = float.MaxValue;
+        private readonly float minValue = float.MinValue;
+        private readonly float value1;
+        private readonly float value2;
+        private readonly float value3;
+        private readonly float value4;
+        private Vector2 max;
+        private Vector2 min;
 
         public BilinearInterpolator()
-        { }
-        
-        public BilinearInterpolator(Vector2 min, Vector2 max) {
-            this.max = max;
-            this.min = min;            
+        {
         }
 
-        public BilinearInterpolator(Vector2 min, Vector2 max, float value1, float value2, float value3, float value4, float minValue, float maxValue)
+        public BilinearInterpolator(Vector2 min, Vector2 max)
+        {
+            this.max = max;
+            this.min = min;
+        }
+
+        public BilinearInterpolator(Vector2 min, Vector2 max, float value1, float value2, float value3, float value4,
+                                    float minValue, float maxValue)
         {
             this.min = min;
             this.max = max;
@@ -57,16 +55,18 @@ namespace FarseerGames.FarseerPhysics.Mathematics {
             set { max = value; }
         }
 
-        public float GetValue(Vector2 position) {
+        public float GetValue(Vector2 position)
+        {
             return GetValue(position.X, position.Y);
         }
 
-         public float GetValue(float x, float y) {
+        public float GetValue(float x, float y)
+        {
             float value;
 
             x = MathHelper.Clamp(x, min.X, max.X);
             y = MathHelper.Clamp(y, min.Y, max.Y);
-        
+
             float xRatio = (x - min.X)/(max.X - min.X);
             float yRatio = (y - min.Y)/(max.Y - min.Y);
 
@@ -75,7 +75,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics {
 
             value = MathHelper.Lerp(top, bottom, yRatio);
             value = MathHelper.Clamp(value, minValue, maxValue);
-            return value;  
-         }
+            return value;
+        }
     }
 }
