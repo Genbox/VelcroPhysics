@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{95B40504-C1C2-4FCD-98B3-B63AD35D6336}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FarseerGames.FarseerPhysics</RootNamespace>
+    <AssemblyName>FarseerPhysics</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\FarseerPhysics.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Collisions\AABB.cs" />
+    <Compile Include="Collisions\BruteForceCollider.cs" />
+    <Compile Include="Collisions\CollisionHelper.cs" />
+    <Compile Include="Collisions\Contact.cs" />
+    <Compile Include="Collisions\ContactId.cs" />
+    <Compile Include="Collisions\ContactList.cs" />
+    <Compile Include="Collisions\Feature.cs" />
+    <Compile Include="Collisions\Geom.cs" />
+    <Compile Include="Collisions\GeomFactory.cs" />
+    <Compile Include="Collisions\GeomList.cs" />
+    <Compile Include="Collisions\Grid.cs" />
+    <Compile Include="Collisions\IBroadPhaseCollider.cs" />
+    <Compile Include="Collisions\ICollideable.cs" />
+    <Compile Include="Collisions\SelectiveSweepCollider.cs" />
+    <Compile Include="Collisions\SweepAndPruneCollider.cs" />
+    <Compile Include="Collisions\Vertices.cs" />
+    <Compile Include="Controllers\AABBFluidContainer.cs" />
+    <Compile Include="Controllers\FluidContainer.cs" />
+    <Compile Include="Controllers\FluidDragController.cs" />
+    <Compile Include="Controllers\InactivityController.cs" />
+    <Compile Include="Controllers\WaveController.cs" />
+    <Compile Include="Dynamics\AngleJoint.cs" />
+    <Compile Include="Dynamics\AngleLimitJoint.cs" />
+    <Compile Include="Dynamics\AngleSpring.cs" />
+    <Compile Include="Dynamics\Arbiter.cs" />
+    <Compile Include="Dynamics\ArbiterList.cs" />
+    <Compile Include="Dynamics\Body.cs" />
+    <Compile Include="Dynamics\BodyFactory.cs" />
+    <Compile Include="Dynamics\BodyList.cs" />
+    <Compile Include="Dynamics\Controller.cs" />
+    <Compile Include="Dynamics\ControllerFactory.cs" />
+    <Compile Include="Dynamics\ControllerList.cs" />
+    <Compile Include="Dynamics\FixedAngleJoint.cs" />
+    <Compile Include="Dynamics\FixedAngleLimitJoint.cs" />
+    <Compile Include="Dynamics\FixedAngleSpring.cs" />
+    <Compile Include="Dynamics\FixedLinearSpring.cs" />
+    <Compile Include="Dynamics\FixedRevoluteJoint.cs" />
+    <Compile Include="Dynamics\InteractiveAngleJoint.cs" />
+    <Compile Include="Dynamics\Joint.cs" />
+    <Compile Include="Dynamics\JointFactory.cs" />
+    <Compile Include="Dynamics\JointList.cs" />
+    <Compile Include="Dynamics\LinearSpring.cs" />
+    <Compile Include="Dynamics\PinJoint.cs" />
+    <Compile Include="Dynamics\RevoluteJoint.cs" />
+    <Compile Include="Dynamics\SliderJoint.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="IIsDisposable.cs" />
+    <Compile Include="Mathematics\BilinearInterpolator.cs" />
+    <Compile Include="Mathematics\Calculator.cs" />
+    <Compile Include="Mathematics\CircularInterpolator.cs" />
+    <Compile Include="Mathematics\ConvertUnits.cs" />
+    <Compile Include="Mathematics\MathHelper.cs" />
+    <Compile Include="Mathematics\Matrix.cs" />
+    <Compile Include="Mathematics\Vector2.cs" />
+    <Compile Include="Mathematics\Vector3.cs" />
+    <Compile Include="PhysicsSimulator.cs" />
+    <Compile Include="Pool.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scaling.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
