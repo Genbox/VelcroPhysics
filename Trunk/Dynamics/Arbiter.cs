@@ -16,8 +16,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private float _float2;
         private float _frictionCoefficientCombined;
 
-        private ContactList _mergedContactList;
-        private ContactList _newContactList;
+        private ItemList<Contact>_mergedContactList;
+        private ItemList<Contact> _newContactList;
         private PhysicsSimulator _physicsSimulator;
 
         //used for ref/out methods
@@ -44,7 +44,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <summary>
         /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
         /// </summary>
-        public ContactList ContactList { get; internal set; }
+        public ItemList<Contact> ContactList { get; internal set; }
 
         internal int ContactCount
         {
@@ -422,7 +422,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             }
         }
 
-        private void Collide(Geom geometry1, Geom geometry2, ContactList contactList)
+        private void Collide(Geom geometry1, Geom geometry2, ItemList<Contact> contactList)
         {
             int vertexIndex = -1;
             //matrixInverseTemp = this.MatrixInverse;

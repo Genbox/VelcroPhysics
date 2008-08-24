@@ -43,7 +43,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
             BodiesEnabled = 0;
 
-            if (isDisposed)
+            if (IsDisposed)
             {
                 return;
             }

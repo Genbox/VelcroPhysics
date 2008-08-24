@@ -92,17 +92,17 @@ namespace FarseerGames.FarseerPhysics
         /// <summary>
         /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
         /// </summary>
-        public BodyList BodyList { get; internal set; }
+        public ItemList<Body> BodyList { get; internal set; }
 
         /// <summary>
         /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
         /// </summary>
-        public ControllerList ControllerList { get; internal set; }
+        public ItemList<Controller> ControllerList { get; internal set; }
 
         /// <summary>
         /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
         /// </summary>
-        public JointList JointList { get; internal set; }
+        public ItemList<Joint> JointList { get; internal set; }
 
         /// <summary>
         /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
@@ -148,15 +148,15 @@ namespace FarseerGames.FarseerPhysics
             geomAddList = new List<Geom>();
             geomRemoveList = new List<Geom>();
 
-            BodyList = new BodyList();
+            BodyList = new ItemList<Body>();
             bodyAddList = new List<Body>();
             bodyRemoveList = new List<Body>();
 
-            ControllerList = new ControllerList();
+            ControllerList = new ItemList<Controller>();
             controllerAddList = new List<Controller>();
             controllerRemoveList = new List<Controller>();
 
-            JointList = new JointList();
+            JointList = new ItemList<Joint>();
             jointAddList = new List<Joint>();
             jointRemoveList = new List<Joint>();
 

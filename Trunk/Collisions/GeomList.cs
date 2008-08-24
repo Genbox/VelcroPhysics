@@ -10,10 +10,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #endregion
 
-        private readonly List<Geom> markedForRemovalList = new List<Geom>();
+        private readonly List<Geom> _markedForRemovalList = new List<Geom>();
 
         public ContentsChangedEventHandler Added;
-        private int numberDisposed;
+        private int _numberDisposed;
         public ContentsChangedEventHandler Removed;
 
         public new void Add(Geom geom)
@@ -40,16 +40,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 if (IsDisposed(this[i]))
                 {
-                    markedForRemovalList.Add(this[i]);
+                    _markedForRemovalList.Add(this[i]);
                 }
             }
-            for (int j = 0; j < markedForRemovalList.Count; j++)
+            for (int j = 0; j < _markedForRemovalList.Count; j++)
             {
-                Remove(markedForRemovalList[j]);
+                Remove(_markedForRemovalList[j]);
             }
-            numberDisposed = markedForRemovalList.Count;
-            markedForRemovalList.Clear();
-            return numberDisposed;
+            _numberDisposed = _markedForRemovalList.Count;
+            _markedForRemovalList.Clear();
+            return _numberDisposed;
         }
 
         internal static bool IsDisposed(Geom a)
