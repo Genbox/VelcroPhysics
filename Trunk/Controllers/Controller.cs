@@ -16,6 +16,10 @@ namespace FarseerGames.FarseerPhysics.Controllers
         public abstract void Validate();
         public abstract void Update(float dt);
 
+        public virtual void PreStep(float dt)
+        {
+        }
+
         public void Dispose()
         {
             Dispose(true);
@@ -24,19 +28,8 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         protected virtual void Dispose(bool disposing)
         {
-            //subclasses can override incase they need to dispose of resources
-            //otherwise do nothing.
             if (!IsDisposed)
-            {
-                if (disposing)
-                {
-                    //dispose managed resources
-                }
-
-                //dispose unmanaged resources
-            }
-            IsDisposed = true;
-            //base.Dispose(disposing)        
+                IsDisposed = true;
         }
     }
 }

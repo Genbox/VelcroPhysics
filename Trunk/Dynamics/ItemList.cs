@@ -12,8 +12,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         private readonly List<T> _markedForRemovalList = new List<T>();
 
-        public ContentsChangedEventHandler Added;
         private int _numberDisposed;
+        public ContentsChangedEventHandler Added;
         public ContentsChangedEventHandler Removed;
 
         public new void Add(T item)
@@ -54,7 +54,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         internal static bool IsDisposed(T item)
         {
-            return ((IIsDisposable)item).IsDisposed;
+            return ((IIsDisposable) item).IsDisposed;
         }
     }
 }

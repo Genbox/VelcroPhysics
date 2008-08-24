@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.30428</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{95B40504-C1C2-4FCD-98B3-B63AD35D6336}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -59,7 +59,9 @@
     <Compile Include="Collisions\ContactList.cs" />
     <Compile Include="Collisions\Feature.cs" />
     <Compile Include="Collisions\Geom.cs" />
+    <Compile Include="Dynamics\DynamicsBase.cs" />
     <Compile Include="Dynamics\ItemList.cs" />
+    <Compile Include="Dynamics\Springs\Spring.cs" />
     <Compile Include="Factories\GeomFactory.cs" />
     <Compile Include="Collisions\Grid.cs" />
     <Compile Include="Interfaces\IBroadPhaseCollider.cs" />
@@ -68,7 +70,7 @@
     <Compile Include="Collisions\SweepAndPruneCollider.cs" />
     <Compile Include="Collisions\Vertices.cs" />
     <Compile Include="Controllers\AABBFluidContainer.cs" />
-    <Compile Include="Controllers\FluidContainer.cs" />
+    <Compile Include="Interfaces\IFluidContainer.cs" />
     <Compile Include="Controllers\FluidDragController.cs" />
     <Compile Include="Controllers\InactivityController.cs" />
     <Compile Include="Controllers\WaveController.cs" />

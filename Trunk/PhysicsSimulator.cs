@@ -4,6 +4,7 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
+using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics
@@ -30,18 +31,16 @@ namespace FarseerGames.FarseerPhysics
         internal List<Joint> jointAddList;
         internal List<Joint> jointRemoveList;
 
-        #region Added by Daniel Pramel 08/17/08
+        internal List<Spring> springAddList;
+        internal List<Spring> springRemoveList;
 
-        private InactivityController inactivityController;
+        #region Added by Daniel Pramel 08/17/08
 
         /// <summary>
         /// Returns the InactivityController to automatically disable not used bodies.
         /// It is disabled by default!
         /// </summary>
-        public InactivityController InactivityController
-        {
-            get { return inactivityController; }
-        }
+        public InactivityController InactivityController { get; private set; }
 
         #endregion
 
@@ -105,37 +104,31 @@ namespace FarseerGames.FarseerPhysics
         /// </summary>
         public ItemList<Joint> JointList { get; internal set; }
 
+        public ItemList<Spring> SpringList { get; internal set; }
+
         /// <summary>
         /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
         /// </summary>
         public ArbiterList ArbiterList { get; internal set; }
 
         public Vector2 Gravity { get; set; }
-
         public int Iterations { get; set; }
-
         public float AllowedPenetration { get; set; }
-
         public float BiasFactor { get; set; }
-
         public int MaxContactsToDetect { get; set; }
-
         public int MaxContactsToResolve { get; set; }
-
         public float CleanUpTime { get; internal set; }
-
         public float BroadPhaseCollisionTime { get; internal set; }
-
         public float NarrowPhaseCollisionTime { get; internal set; }
-
         public float ApplyForcesTime { get; internal set; }
-
         public float ApplyImpulsesTime { get; internal set; }
-
         public float UpdatePositionsTime { get; internal set; }
-
         public float UpdateTime { get; internal set; }
+        #region Added by Daniel Pramel 08/24/08
 
+        public Scaling Scaling { get; set; }
+
+        #endregion
         public FrictionType FrictionType { get; set; }
 
         /// <summary>
@@ -161,6 +154,10 @@ namespace FarseerGames.FarseerPhysics
             jointAddList = new List<Joint>();
             jointRemoveList = new List<Joint>();
 
+            SpringList = new ItemList<Spring>();
+            springAddList = new List<Spring>();
+            springRemoveList = new List<Spring>();
+
             _broadPhaseCollider = new SelectiveSweepCollider(this);
 
             ArbiterList = new ArbiterList();
@@ -170,13 +167,12 @@ namespace FarseerGames.FarseerPhysics
 
             #region Added by Daniel Pramel 08/17/08
 
-            inactivityController = new InactivityController(this);
+            InactivityController = new InactivityController(this);
 
-            scaling = new Scaling(0.001f, 0.01f);
+            Scaling = new Scaling(0.001f, 0.01f);
 
             #endregion
         }
-
 
         public void SetBroadPhaseCollider(IBroadPhaseCollider broadPhaseCollider)
         {
@@ -226,6 +222,19 @@ namespace FarseerGames.FarseerPhysics
             controllerRemoveList.Add(controller);
         }
 
+        public void Add(Spring spring)
+        {
+            if (!springAddList.Contains(spring))
+            {
+                springAddList.Add(spring);
+            }
+        }
+
+        public void Remove(Spring spring)
+        {
+            springRemoveList.Add(spring);
+        }
+
         public void Add(Joint joint)
         {
             if (!jointAddList.Contains(joint))
@@ -265,20 +274,20 @@ namespace FarseerGames.FarseerPhysics
 
             #region Added by Daniel Pramel 08/24/08
 
-            dt = scaling.GetUpdateInterval(dt);
+            dt = Scaling.GetUpdateInterval(dt);
             if (dt == 0)
             {
                 return;
             }
 
 
-            if (scaling.UpdateInterval < dtReal)
+            if (Scaling.UpdateInterval < dtReal)
             {
-                scaling.IncreaseUpdateInterval();
+                Scaling.IncreaseUpdateInterval();
             }
             else
             {
-                scaling.DecreaseUpdateInterval();
+                Scaling.DecreaseUpdateInterval();
             }
 
             #endregion
@@ -431,24 +440,6 @@ namespace FarseerGames.FarseerPhysics
             }
         }
 
-        //Note: Cleanup, Method never used
-        //private void ReleaseArbitersWithDisposedGeom(Arbiter arbiter)
-        //{
-        //    if (arbiter.ContainsDisposedGeom())
-        //    {
-        //        arbiterPool.Release(arbiter);
-        //    }
-        //}
-
-        //Note: Cleanup, Method never used
-        //private void ReleaseArbitersWithContactCountZero(Arbiter arbiter)
-        //{
-        //    if (arbiter.ContactCount == 0)
-        //    {
-        //        arbiterPool.Release(arbiter);
-        //    }
-        //}
-
         private void ProcessAddedItems()
         {
             //add any new geometries
@@ -493,6 +484,16 @@ namespace FarseerGames.FarseerPhysics
                 }
             }
             jointAddList.Clear();
+
+            //add any new springs
+            for (int i = 0; i < springAddList.Count; i++)
+            {
+                if (!SpringList.Contains(springAddList[i]))
+                {
+                    SpringList.Add(springAddList[i]);
+                }
+            }
+            springAddList.Clear();
         }
 
         private void ProcessRemovedItems()
@@ -541,6 +542,13 @@ namespace FarseerGames.FarseerPhysics
                 JointList.Remove(jointRemoveList[i]);
             }
             jointRemoveList.Clear();
+
+            //remove any new springs
+            for (int i = 0; i < springRemoveList.Count; i++)
+            {
+                SpringList.Remove(springRemoveList[i]);
+            }
+            springRemoveList.Clear();
         }
 
         private void ProcessDisposedItems()
@@ -567,21 +575,16 @@ namespace FarseerGames.FarseerPhysics
             }
             JointList.RemoveDisposed();
 
+            //allow each joint to validate itself. this is where a joint can Dispose of itself if need be.
+            for (int i = 0; i < SpringList.Count; i++)
+            {
+                SpringList[i].Validate();
+            }
+            SpringList.RemoveDisposed();
+
             //remove all arbiters that contain 1 or more disposed rigid bodies.
             ArbiterList.RemoveContainsDisposedBody(arbiterPool);
         }
-
-        #region Added by Daniel Pramel 08/24/08
-
-        private Scaling scaling;
-
-        public Scaling Scaling
-        {
-            get { return scaling; }
-            set { scaling = value; }
-        }
-
-        #endregion
     }
 
     public enum FrictionType
