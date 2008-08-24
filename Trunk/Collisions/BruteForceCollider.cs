@@ -4,14 +4,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
 {
     public class BruteForceCollider : IBroadPhaseCollider
     {
-        private readonly PhysicsSimulator physicsSimulator;
-        private Arbiter arbiter;
-        private Geom geometryA;
-        private Geom geometryB;
+        private readonly PhysicsSimulator _physicsSimulator;
+        private Arbiter _arbiter;
+        private Geom _geometryA;
+        private Geom _geometryB;
 
         public BruteForceCollider(PhysicsSimulator physicsSimulator)
         {
-            this.physicsSimulator = physicsSimulator;
+            _physicsSimulator = physicsSimulator;
         }
 
         #region IBroadPhaseCollider Members
@@ -40,43 +40,43 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private void DoCollision()
         {
-            for (int i = 0; i < physicsSimulator.geomList.Count - 1; i++)
+            for (int i = 0; i < _physicsSimulator.GeomList.Count - 1; i++)
             {
-                for (int j = i + 1; j < physicsSimulator.geomList.Count; j++)
+                for (int j = i + 1; j < _physicsSimulator.GeomList.Count; j++)
                 {
-                    geometryA = physicsSimulator.geomList[i];
-                    geometryB = physicsSimulator.geomList[j];
+                    _geometryA = _physicsSimulator.GeomList[i];
+                    _geometryB = _physicsSimulator.GeomList[j];
                     //possible early exits
-                    if (!geometryA.body.enabled || !geometryB.body.enabled)
+                    if (!_geometryA.Body.enabled || !_geometryB.Body.enabled)
                     {
                         continue;
                     }
 
-                    if ((geometryA.collisionGroup == geometryB.collisionGroup) && geometryA.collisionGroup != 0 &&
-                        geometryB.collisionGroup != 0)
+                    if ((_geometryA.CollisionGroup == _geometryB.CollisionGroup) && _geometryA.CollisionGroup != 0 &&
+                        _geometryB.CollisionGroup != 0)
                     {
                         continue;
                     }
 
-                    if (!geometryA.collisionEnabled || !geometryB.collisionEnabled)
+                    if (!_geometryA.CollisionEnabled || !_geometryB.CollisionEnabled)
                     {
                         continue;
                     }
 
-                    if (geometryA.body.isStatic && geometryB.body.isStatic)
+                    if (_geometryA.Body.isStatic && _geometryB.Body.isStatic)
                     {
                         //don't collide two static bodies
                         continue;
                     }
 
-                    if (geometryA.body == geometryB.body)
+                    if (_geometryA.Body == _geometryB.Body)
                     {
                         //don't collide two geometries connected to the same body
                         continue;
                     }
 
-                    if (((geometryA.collisionCategories & geometryB.collidesWith) == Enums.CollisionCategories.None) &
-                        ((geometryB.collisionCategories & geometryA.collidesWith) == Enums.CollisionCategories.None))
+                    if (((_geometryA.CollisionCategories & _geometryB.CollidesWith) == Enums.CollisionCategories.None) &
+                        ((_geometryB.CollisionCategories & _geometryA.CollidesWith) == Enums.CollisionCategories.None))
                     {
                         continue;
                     }
@@ -85,11 +85,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                     #region INLINE: if (AABB.Intersect(geometryA.aabb, geometryB.aabb)) ....
 
-                    if (geometryA.aabb.min.X > geometryB.aabb.max.X || geometryB.aabb.min.X > geometryA.aabb.max.X)
+                    if (_geometryA.AABB.min.X > _geometryB.AABB.max.X || _geometryB.AABB.min.X > _geometryA.AABB.max.X)
                     {
                         intersection = false;
                     }
-                    else if (geometryA.aabb.min.Y > geometryB.aabb.Max.Y || geometryB.aabb.min.Y > geometryA.aabb.Max.Y)
+                    else if (_geometryA.AABB.min.Y > _geometryB.AABB.Max.Y ||
+                             _geometryB.AABB.min.Y > _geometryA.AABB.Max.Y)
                     {
                         intersection = false;
                     }
@@ -98,16 +99,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                     if (intersection)
                     {
-                        arbiter = physicsSimulator.arbiterPool.Fetch();
-                        arbiter.ConstructArbiter(geometryA, geometryB, physicsSimulator);
+                        _arbiter = _physicsSimulator.arbiterPool.Fetch();
+                        _arbiter.ConstructArbiter(_geometryA, _geometryB, _physicsSimulator);
 
-                        if (!physicsSimulator.arbiterList.Contains(arbiter))
+                        if (!_physicsSimulator.ArbiterList.Contains(_arbiter))
                         {
-                            physicsSimulator.arbiterList.Add(arbiter);
+                            _physicsSimulator.ArbiterList.Add(_arbiter);
                         }
                         else
                         {
-                            physicsSimulator.arbiterPool.Release(arbiter);
+                            _physicsSimulator.arbiterPool.Release(_arbiter);
                         }
                     }
                 }

@@ -7,17 +7,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
     {
         private static readonly StubComparer comparer = new StubComparer();
 
-        private readonly PhysicsSimulator physicsSimulator;
-        private readonly List<Wrapper> wrappers;
-        private readonly List<Stub> xStubs;
-        private readonly List<Stub> yStubs;
+        private readonly PhysicsSimulator _physicsSimulator;
+        private readonly List<Wrapper> _wrappers;
+        private readonly List<Stub> _xStubs;
+        private readonly List<Stub> _yStubs;
 
         public SelectiveSweepCollider(PhysicsSimulator physicsSimulator)
         {
-            this.physicsSimulator = physicsSimulator;
-            wrappers = new List<Wrapper>();
-            xStubs = new List<Stub>();
-            yStubs = new List<Stub>();
+            _physicsSimulator = physicsSimulator;
+            _wrappers = new List<Wrapper>();
+            _xStubs = new List<Stub>();
+            _yStubs = new List<Stub>();
         }
 
         #region IBroadPhaseCollider Members
@@ -25,25 +25,25 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public void Add(Geom item)
         {
             Wrapper wrapper = new Wrapper(item);
-            wrappers.Add(wrapper);
-            wrapper.AddStubs(xStubs, yStubs);
+            _wrappers.Add(wrapper);
+            wrapper.AddStubs(_xStubs, _yStubs);
         }
 
         public void ProcessRemovedGeoms()
         {
-            if (wrappers.RemoveAll(WrapperIsRemoved) > 0)
+            if (_wrappers.RemoveAll(WrapperIsRemoved) > 0)
             {
-                xStubs.RemoveAll(StubIsRemoved);
-                yStubs.RemoveAll(StubIsRemoved);
+                _xStubs.RemoveAll(StubIsRemoved);
+                _yStubs.RemoveAll(StubIsRemoved);
             }
         }
 
         public void ProcessDisposedGeoms()
         {
-            if (wrappers.RemoveAll(WrapperIsDisposed) > 0)
+            if (_wrappers.RemoveAll(WrapperIsDisposed) > 0)
             {
-                xStubs.RemoveAll(StubIsDisposed);
-                yStubs.RemoveAll(StubIsDisposed);
+                _xStubs.RemoveAll(StubIsDisposed);
+                _yStubs.RemoveAll(StubIsDisposed);
             }
         }
 
@@ -57,9 +57,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public void Clear()
         {
-            wrappers.Clear();
-            xStubs.Clear();
-            yStubs.Clear();
+            _wrappers.Clear();
+            _xStubs.Clear();
+            _yStubs.Clear();
         }
 
         private static bool WrapperIsDisposed(Wrapper wrapper)
@@ -74,12 +74,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private static bool WrapperIsRemoved(Wrapper wrapper)
         {
-            return wrapper.geom.isRemoved;
+            return wrapper.geom.IsRemoved;
         }
 
         private static bool StubIsRemoved(Stub stub)
         {
-            return stub.wrapper.geom.isRemoved;
+            return stub.wrapper.geom.IsRemoved;
         }
 
         /// <summary>
@@ -87,12 +87,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void InternalUpdate()
         {
-            for (int index = 0; index < wrappers.Count; ++index)
+            for (int index = 0; index < _wrappers.Count; ++index)
             {
-                wrappers[index].Update();
+                _wrappers[index].Update();
             }
-            xStubs.Sort(comparer);
-            yStubs.Sort(comparer);
+            _xStubs.Sort(comparer);
+            _yStubs.Sort(comparer);
         }
 
         /// <summary>
@@ -105,9 +105,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             int xdepth = 0;
             int yCount = 0;
             int ydepth = 0;
-            for (int index = 0; index < xStubs.Count; index++)
+            for (int index = 0; index < _xStubs.Count; index++)
             {
-                if (xStubs[index].begin)
+                if (_xStubs[index].begin)
                 {
                     xCount += xdepth++;
                 }
@@ -116,7 +116,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     xdepth--;
                 }
 
-                if (yStubs[index].begin)
+                if (_yStubs[index].begin)
                 {
                     yCount += ydepth++;
                 }
@@ -130,7 +130,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private void DetectInternal(bool doX)
         {
-            List<Stub> stubs = (doX) ? (xStubs) : (yStubs);
+            List<Stub> stubs = (doX) ? (_xStubs) : (_yStubs);
             LinkedList<Wrapper> currentBodies = new LinkedList<Wrapper>();
             for (int index = 0; index < stubs.Count; index++)
             {
@@ -178,45 +178,45 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private void OnCollision(Geom geom1, Geom geom2)
         {
-            if (!geom1.body.enabled || !geom2.body.enabled)
+            if (!geom1.Body.enabled || !geom2.Body.enabled)
             {
                 return;
             }
 
-            if ((geom1.collisionGroup == geom2.collisionGroup) &&
-                geom1.collisionGroup != 0 &&
-                geom2.collisionGroup != 0)
+            if ((geom1.CollisionGroup == geom2.CollisionGroup) &&
+                geom1.CollisionGroup != 0 &&
+                geom2.CollisionGroup != 0)
             {
                 return;
             }
 
-            if (!geom1.collisionEnabled || !geom2.collisionEnabled)
+            if (!geom1.CollisionEnabled || !geom2.CollisionEnabled)
             {
                 return;
             }
 
-            if (geom1.body.isStatic && geom2.body.isStatic)
+            if (geom1.Body.isStatic && geom2.Body.isStatic)
             {
                 //don't collide two static bodies
                 return;
             }
 
-            if (((geom1.collisionCategories & geom2.collidesWith) == Enums.CollisionCategories.None) &
-                ((geom2.collisionCategories & geom1.collidesWith) == Enums.CollisionCategories.None))
+            if (((geom1.CollisionCategories & geom2.CollidesWith) == Enums.CollisionCategories.None) &
+                ((geom2.CollisionCategories & geom1.CollidesWith) == Enums.CollisionCategories.None))
             {
                 return;
             }
 
-            Arbiter arbiter = physicsSimulator.arbiterPool.Fetch();
-            arbiter.ConstructArbiter(geom1, geom2, physicsSimulator);
+            Arbiter arbiter = _physicsSimulator.arbiterPool.Fetch();
+            arbiter.ConstructArbiter(geom1, geom2, _physicsSimulator);
 
-            if (!physicsSimulator.arbiterList.Contains(arbiter))
+            if (!_physicsSimulator.ArbiterList.Contains(arbiter))
             {
-                physicsSimulator.arbiterList.Add(arbiter);
+                _physicsSimulator.ArbiterList.Add(arbiter);
             }
             else
             {
-                physicsSimulator.arbiterPool.Release(arbiter);
+                _physicsSimulator.arbiterPool.Release(arbiter);
             }
         }
 
@@ -285,7 +285,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 yEnd = new Stub(this, false);
             }
 
-            public void AddStubs(List<Stub> xStubs, List<Stub> yStubs)
+            public void AddStubs(ICollection<Stub> xStubs, ICollection<Stub> yStubs)
             {
                 xStubs.Add(xBegin);
                 xStubs.Add(xEnd);

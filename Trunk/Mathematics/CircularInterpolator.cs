@@ -37,10 +37,9 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         {
             float theta;
             float lerpValue;
-            float d;
             float value = 0;
 
-            d = MathHelper.Distance(x, y);
+            float d = MathHelper.Distance(x, y);
 
             //quadrant 1
             if (x > 0 && y > 0)

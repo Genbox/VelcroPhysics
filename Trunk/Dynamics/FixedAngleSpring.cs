@@ -101,7 +101,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 return;
             }
             //calculate and apply spring force
-            float angleDifference = targetAngle - body.totalRotation;
+            float angleDifference = targetAngle - body.TotalRotation;
             float springTorque = springConstant*angleDifference;
             springError = angleDifference;
 

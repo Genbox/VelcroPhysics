@@ -4,91 +4,51 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public class AngleJoint : Joint
     {
-        private float biasFactor = .2f;
-        protected Body body1;
-        protected Body body2;
-
-        private float breakpoint = float.MaxValue;
-
         //Note: Cleanup, variable never used
-        private bool enabled = true;
+        //private bool enabled = true;
 
-        private float jointError;
         private float massFactor;
-        private float maxImpulse = float.MaxValue;
-        private float softness;
-        private float targetAngle;
         private float velocityBias;
 
         public AngleJoint()
         {
+            Breakpoint = float.MaxValue;
+            MaxImpulse = float.MaxValue;
+            BiasFactor = .2f;
         }
 
         public AngleJoint(Body body1, Body body2)
         {
-            this.body1 = body1;
-            this.body2 = body2;
+            Breakpoint = float.MaxValue;
+            MaxImpulse = float.MaxValue;
+            BiasFactor = .2f;
+            Body1 = body1;
+            Body2 = body2;
         }
 
         public AngleJoint(Body body1, Body body2, float targetAngle)
         {
-            this.body1 = body1;
-            this.body2 = body2;
-            this.targetAngle = targetAngle;
+            Breakpoint = float.MaxValue;
+            MaxImpulse = float.MaxValue;
+            BiasFactor = .2f;
+            Body1 = body1;
+            Body2 = body2;
+            TargetAngle = targetAngle;
         }
 
-        public Body Body1
-        {
-            get { return body1; }
-            set { body1 = value; }
-        }
-
-        public Body Body2
-        {
-            get { return body2; }
-            set { body2 = value; }
-        }
-
-        public float BiasFactor
-        {
-            get { return biasFactor; }
-            set { biasFactor = value; }
-        }
-
-        public float TargetAngle
-        {
-            get { return targetAngle; }
-            set { targetAngle = value; }
-        }
-
-        public float Softness
-        {
-            get { return softness; }
-            set { softness = value; }
-        }
-
-        public float MaxImpulse
-        {
-            get { return maxImpulse; }
-            set { maxImpulse = value; }
-        }
-
-        public float Breakpoint
-        {
-            get { return breakpoint; }
-            set { breakpoint = value; }
-        }
-
-        public float JointError
-        {
-            get { return jointError; }
-        }
-
+        public Body Body1 { get; set; }
+        public Body Body2 { get; set; }
+        public float BiasFactor { get; set; }
+        public float TargetAngle { get; set; }
+        public float Softness { get; set; }
+        public float MaxImpulse { get; set; }
+        public float Breakpoint { get; set; }
+        public float JointError { get; private set; }
         public event EventHandler<EventArgs> Broke;
 
         public override void Validate()
         {
-            if (body1.IsDisposed || body2.IsDisposed)
+            if (Body1.IsDisposed || Body2.IsDisposed)
             {
                 Dispose();
             }
@@ -96,7 +56,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(jointError) > breakpoint)
+            if (Enabled && Math.Abs(JointError) > Breakpoint)
             {
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
@@ -106,24 +66,23 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 return;
             }
-            jointError = (body2.totalRotation - body1.totalRotation) - targetAngle;
+            JointError = (Body2.TotalRotation - Body1.TotalRotation) - TargetAngle;
 
-            velocityBias = -biasFactor*inverseDt*jointError;
+            velocityBias = -BiasFactor*inverseDt*JointError;
 
-            massFactor = (1 - softness)/(body1.inverseMomentOfInertia + body2.inverseMomentOfInertia);
+            massFactor = (1 - Softness)/(Body1.inverseMomentOfInertia + Body2.inverseMomentOfInertia);
         }
 
         public override void Update()
         {
             if (isDisposed) return;
             if (!Enabled) return;
-            float angularImpulse;
-            angularImpulse = (velocityBias - body2.angularVelocity + body1.angularVelocity)*massFactor;
+            float angularImpulse = (velocityBias - Body2.angularVelocity + Body1.angularVelocity)*massFactor;
 
-            body1.angularVelocity -= body1.inverseMomentOfInertia*Math.Sign(angularImpulse)*
-                                     Math.Min(Math.Abs(angularImpulse), maxImpulse);
-            body2.angularVelocity += body2.inverseMomentOfInertia*Math.Sign(angularImpulse)*
-                                     Math.Min(Math.Abs(angularImpulse), maxImpulse);
+            Body1.angularVelocity -= Body1.inverseMomentOfInertia*Math.Sign(angularImpulse)*
+                                     Math.Min(Math.Abs(angularImpulse), MaxImpulse);
+            Body2.angularVelocity += Body2.inverseMomentOfInertia*Math.Sign(angularImpulse)*
+                                     Math.Min(Math.Abs(angularImpulse), MaxImpulse);
         }
     }
 }
