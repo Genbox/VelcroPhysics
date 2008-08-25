@@ -1,6 +1,6 @@
 using System;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Mathematics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -135,6 +135,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// no friction.  When two geometries collide, the minimum friction coeficent between the two bodies is used.
         /// </summary>
         public float FrictionCoefficient { get; set; }
+
         public Object Tag { get; set; }
         internal int Id { get; private set; }
 

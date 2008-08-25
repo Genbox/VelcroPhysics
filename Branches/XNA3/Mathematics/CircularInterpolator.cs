@@ -1,3 +1,5 @@
+using Microsoft.Xna.Framework;
+
 namespace FarseerGames.FarseerPhysics.Mathematics
 {
     /// <summary>
@@ -7,10 +9,10 @@ namespace FarseerGames.FarseerPhysics.Mathematics
     /// </summary>
     public class CircularInterpolator
     {
+        private const float _twoOverPi = 1f/MathHelper.PiOver2;
         private readonly float _maxValue = float.MaxValue;
         private readonly float _minValue = float.MinValue;
         //Note:Should it use MathHelper.PiOver2? It may not be scaleable.
-        private readonly float _twoOverPi = 1f/MathHelper.PiOver2;
         private readonly float _value1;
         private readonly float _value2;
         private readonly float _value3;

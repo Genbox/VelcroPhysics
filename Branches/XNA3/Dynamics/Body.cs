@@ -1,5 +1,5 @@
 using System;
-using FarseerGames.FarseerPhysics.Mathematics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
@@ -203,6 +203,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <c>force = velocity*velocity*LinearDragCoeficcent</c></para>
         /// </summary>
         public float LinearDragCoefficient { get; set; }
+
         public float QuadraticeDragCoeficient { get; set; }
         public bool IsQuadraticDragEnabled { get; set; }
         public float RotationalDragCoefficient { get; set; }

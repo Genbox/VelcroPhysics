@@ -1,13 +1,13 @@
 using System;
 using FarseerGames.FarseerPhysics.Controllers;
-using FarseerGames.FarseerPhysics.Mathematics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
     public class FixedLinearSpring : Controller
     {
-        internal Vector2 bodyAttachPoint;
         private Vector2 _difference = Vector2.Zero;
+        internal Vector2 bodyAttachPoint;
 
         internal Vector2 worldAttachPoint;
 
