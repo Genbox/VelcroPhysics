@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Controllers
@@ -21,9 +20,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private Vector2 _axis = Vector2.Zero;
         private Vector2 _buoyancyForce = Vector2.Zero;
         private Vector2 _centroid = Vector2.Zero;
-
-        //Note: Cleanup, variable never used
-        //private float centroidSpeed;
         private Vector2 _centroidVelocity;
         private float _density;
         private float _dragArea;
@@ -31,8 +27,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private Vector2 _gravity = Vector2.Zero;
         private float _linearDragCoefficient;
         private Vector2 _linearDragForce = Vector2.Zero;
-        //Note: Cleanup, variable never used
-        //private Vector2 localCentroid = Vector2.Zero;
         private float _max;
         private float _min;
         private float _partialMass;

@@ -123,7 +123,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns>Returns true if there is a collision, false otherwise</returns>
         public static bool DoCollision(Geom g1, Geom g2)
         {
-            if (!g1.Body.enabled || !g2.Body.enabled)
+            if (!g1.Body.Enabled || !g2.Body.Enabled)
                 return false;
 
             if ((g1.CollisionGroup == g2.CollisionGroup) &&
@@ -140,8 +140,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 return false;
 
             if (((g1.CollisionCategories & g2.CollidesWith) ==
-                 Enums.CollisionCategories.None) & ((g2.CollisionCategories &
-                                                     g1.CollidesWith) == Enums.CollisionCategories.None))
+                 CollisionCategories.None) & ((g2.CollisionCategories &
+                                                     g1.CollidesWith) == CollisionCategories.None))
                 return false;
 
             //TMP

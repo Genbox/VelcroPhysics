@@ -1,11 +1,12 @@
+using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Factories
 {
     public class ControllerFactory
     {
-        private static ControllerFactory instance;
+        private static ControllerFactory _instance;
 
         private ControllerFactory()
         {
@@ -15,11 +16,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = new ControllerFactory();
+                    _instance = new ControllerFactory();
                 }
-                return instance;
+                return _instance;
             }
         }
 

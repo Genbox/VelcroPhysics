@@ -1,6 +1,5 @@
 using System;
 using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Controllers
@@ -9,16 +8,10 @@ namespace FarseerGames.FarseerPhysics.Controllers
     {
         private AABB _aabb;
         private float _aabbMin = float.MaxValue;
-        private float[] _currentWave;
-        private float _dampningCoefficient = .95f;
-        private float _frequency = .18f; //seconds;
         private bool _goingUp = true;
-        private float _height;
-        private int _nodeCount;
         private Vector2 _pointVector;
         private Vector2 _position;
 
-        private float[] _previousWave;
         private float[] _resultWave;
         private float _singleWaveWidth;
         private float _timePassed;
@@ -29,25 +22,12 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private Vector2 _waveEdgeVector;
         private float _waveGeneratorCount;
 
-        private float _waveGeneratorMax;
-        private float _waveGeneratorMin;
-        private float _waveGeneratorStep;
-        private float _width;
-        private float[] _xPosition;
-
-        #region properties
-
-        public float Width
+        public WaveController()
         {
-            get { return _width; }
-            set { _width = value; }
+            Frequency = .18f;
+            DampningCoefficient = .95f;
         }
 
-        public float Height
-        {
-            get { return _height; }
-            set { _height = value; }
-        }
 
         /// <summary>
         /// Top left position of wave area
@@ -58,59 +38,17 @@ namespace FarseerGames.FarseerPhysics.Controllers
             set { _position = value; }
         }
 
-        public int NodeCount
-        {
-            get { return _nodeCount; }
-            set { _nodeCount = value; }
-        }
-
-        public float DampningCoefficient
-        {
-            get { return _dampningCoefficient; }
-            set { _dampningCoefficient = value; }
-        }
-
-        public float[] CurrentWave
-        {
-            get { return _currentWave; }
-        }
-
-        public float[] PreviousWave
-        {
-            get { return _previousWave; }
-        }
-
-        public float[] XPosition
-        {
-            get { return _xPosition; }
-            set { _xPosition = value; }
-        }
-
-        public float WaveGeneratorMax
-        {
-            get { return _waveGeneratorMax; }
-            set { _waveGeneratorMax = value; }
-        }
-
-        public float WaveGeneratorMin
-        {
-            get { return _waveGeneratorMin; }
-            set { _waveGeneratorMin = value; }
-        }
-
-        public float WaveGeneratorStep
-        {
-            get { return _waveGeneratorStep; }
-            set { _waveGeneratorStep = value; }
-        }
-
-        public float Frequency
-        {
-            get { return _frequency; }
-            set { _frequency = value; }
-        }
-
-        #endregion
+        public float Width { get; set; }
+        public float Height { get; set; }
+        public int NodeCount { get; set; }
+        public float DampningCoefficient { get; set; }
+        public float[] CurrentWave { get; private set; }
+        public float[] PreviousWave { get; private set; }
+        public float[] XPosition { get; set; }
+        public float WaveGeneratorMax { get; set; }
+        public float WaveGeneratorMin { get; set; }
+        public float WaveGeneratorStep { get; set; }
+        public float Frequency { get; set; }
 
         #region IFluidContainer Members
 
@@ -121,28 +59,25 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         public bool Contains(ref Vector2 vector)
         {
-            //Note: Cleanup. This try catch just retrows the exception
-            //try
-            //{
-            int index = (int) Math.Floor((vector.X - _xPosition[0])/_singleWaveWidth);
+            int index = (int) Math.Floor((vector.X - XPosition[0])/_singleWaveWidth);
 
             //handle the boundry conditions
-            if (index > _nodeCount - 2) index = _nodeCount - 2;
+            if (index > NodeCount - 2) index = NodeCount - 2;
             if (index < 0) index = 0;
 
-            _vectorNearWaveEdge.X = _xPosition[index];
-            _vectorNearWaveEdge.Y = _position.Y + _currentWave[index];
+            _vectorNearWaveEdge.X = XPosition[index];
+            _vectorNearWaveEdge.Y = _position.Y + CurrentWave[index];
 
-            _vectorFarWaveEdge.X = _xPosition[index + 1];
-            _vectorFarWaveEdge.Y = _position.Y + _currentWave[index + 1];
+            _vectorFarWaveEdge.X = XPosition[index + 1];
+            _vectorFarWaveEdge.Y = _position.Y + CurrentWave[index + 1];
 
             _vectorPoint = vector;
 
-            _waveEdgeVector.X = _xPosition[index + 1] - _xPosition[index];
-            _waveEdgeVector.Y = _currentWave[index + 1] - _currentWave[index];
+            _waveEdgeVector.X = XPosition[index + 1] - XPosition[index];
+            _waveEdgeVector.Y = CurrentWave[index + 1] - CurrentWave[index];
 
-            _pointVector.X = vector.X - _xPosition[index];
-            _pointVector.Y = vector.Y - (_position.Y + _currentWave[index]);
+            _pointVector.X = vector.X - XPosition[index];
+            _pointVector.Y = vector.Y - (_position.Y + CurrentWave[index]);
 
             float perpDot;
             Calculator.Cross(ref _waveEdgeVector, ref _pointVector, out perpDot);
@@ -153,11 +88,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
             }
 
             return true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw ex;
-            //}
         }
 
         #endregion
@@ -169,31 +99,31 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// <param name="offset">The amount to move the node up or down (negative values moves the node up, positive moves it down)</param>
         public void Disturb(int node, float offset)
         {
-            _currentWave[node] = _currentWave[node] + offset;
+            CurrentWave[node] = CurrentWave[node] + offset;
         }
 
         public void Initialize()
         {
-            _xPosition = new float[_nodeCount];
-            _currentWave = new float[_nodeCount];
-            _previousWave = new float[_nodeCount];
-            _resultWave = new float[_nodeCount];
+            XPosition = new float[NodeCount];
+            CurrentWave = new float[NodeCount];
+            PreviousWave = new float[NodeCount];
+            _resultWave = new float[NodeCount];
 
-            for (int i = 0; i < _nodeCount; i++)
+            for (int i = 0; i < NodeCount; i++)
             {
-                _xPosition[i] = MathHelper.Lerp(_position.X, _position.X + _width, (float) i/(_nodeCount - 1));
-                _currentWave[i] = 0;
-                _previousWave[i] = 0;
+                XPosition[i] = MathHelper.Lerp(_position.X, _position.X + Width, (float) i/(NodeCount - 1));
+                CurrentWave[i] = 0;
+                PreviousWave[i] = 0;
                 _resultWave[i] = 0;
             }
 
-            _aabb = new AABB(_position, new Vector2(_position.X + _width, _position.Y + _height));
-            _singleWaveWidth = _width/(_nodeCount - 1);
+            _aabb = new AABB(_position, new Vector2(_position.X + Width, _position.Y + Height));
+            _singleWaveWidth = Width/(NodeCount - 1);
         }
 
         public override void Update(float dt)
         {
-            if (_timePassed < _frequency)
+            if (_timePassed < Frequency)
             {
                 _timePassed += dt;
                 return;
@@ -202,10 +132,10 @@ namespace FarseerGames.FarseerPhysics.Controllers
             _timePassed = 0;
             _aabbMin = float.MaxValue;
             _aabb.min.Y = _aabbMin;
-            for (int i = 1; i < _nodeCount - 1; i++)
+            for (int i = 1; i < NodeCount - 1; i++)
             {
-                _resultWave[i] = (_currentWave[i - 1] + _currentWave[i + 1]) - _previousWave[i];
-                _resultWave[i] = _resultWave[i]*_dampningCoefficient;
+                _resultWave[i] = (CurrentWave[i - 1] + CurrentWave[i + 1]) - PreviousWave[i];
+                _resultWave[i] = _resultWave[i]*DampningCoefficient;
 
                 //keep track of aabb min value                
                 if (_resultWave[i] + _position.Y < _aabbMin)
@@ -214,32 +144,32 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 }
             }
             _aabb.min.Y = _aabbMin;
-            _currentWave.CopyTo(_previousWave, 0);
-            _resultWave.CopyTo(_currentWave, 0);
+            CurrentWave.CopyTo(PreviousWave, 0);
+            _resultWave.CopyTo(CurrentWave, 0);
 
             if (_goingUp)
             {
-                if (_waveGeneratorCount > _waveGeneratorMax)
+                if (_waveGeneratorCount > WaveGeneratorMax)
                 {
                     _goingUp = false;
                 }
                 else
                 {
-                    _waveGeneratorCount += _waveGeneratorStep;
+                    _waveGeneratorCount += WaveGeneratorStep;
                 }
             }
             else
             {
-                if (_waveGeneratorCount < _waveGeneratorMin)
+                if (_waveGeneratorCount < WaveGeneratorMin)
                 {
                     _goingUp = true;
                 }
                 else
                 {
-                    _waveGeneratorCount -= _waveGeneratorStep;
+                    _waveGeneratorCount -= WaveGeneratorStep;
                 }
             }
-            _currentWave[_currentWave.Length - 1] = ConvertUnits.ToSimUnits(_waveGeneratorCount);
+            CurrentWave[CurrentWave.Length - 1] = ConvertUnits.ToSimUnits(_waveGeneratorCount);
         }
 
         public override void Validate()
