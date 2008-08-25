@@ -1,9 +1,8 @@
 using System;
-using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerGames.FarseerPhysics.Factories
+namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public class JointFactory
     {

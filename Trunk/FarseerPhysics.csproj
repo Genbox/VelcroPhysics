@@ -56,6 +56,7 @@
     <Compile Include="Collisions\CollisionHelper.cs" />
     <Compile Include="Collisions\Contact.cs" />
     <Compile Include="Collisions\ContactId.cs" />
+    <Compile Include="Collisions\ContactList.cs" />
     <Compile Include="Collisions\Feature.cs" />
     <Compile Include="Collisions\Geom.cs" />
     <Compile Include="Dynamics\Arbiter.cs" />
@@ -76,7 +77,6 @@
     <Compile Include="Dynamics\Springs\FixedLinearSpring.cs" />
     <Compile Include="Dynamics\Springs\LinearSpring.cs" />
     <Compile Include="Factories\GeomFactory.cs" />
-    <Compile Include="Collisions\GeomList.cs" />
     <Compile Include="Collisions\Grid.cs" />
     <Compile Include="Interfaces\IBroadPhaseCollider.cs" />
     <Compile Include="Interfaces\ICollideable.cs" />

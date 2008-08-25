@@ -165,18 +165,18 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
 
             //normalize the difference vector
-            Vector2.Multiply(ref _worldAnchorDifference, 1 / (_distance != 0 ? _distance : float.PositiveInfinity),
+            Vector2.Multiply(ref _worldAnchorDifference, 1/(_distance != 0 ? _distance : float.PositiveInfinity),
                              out _worldAnchorDifferenceNormalized); //distance = 0 --> error (fix) 
 
             //calc velocity bias
-            _velocityBias = BiasFactor * inverseDt * (JointError);
+            _velocityBias = BiasFactor*inverseDt*(JointError);
 
             //calc mass normal (effective mass in relation to constraint)
             Calculator.Cross(ref _r1, ref _worldAnchorDifferenceNormalized, out _r1cn);
             Calculator.Cross(ref _r2, ref _worldAnchorDifferenceNormalized, out _r2cn);
-            _kNormal = Body1.inverseMass + Body2.inverseMass + Body1.inverseMomentOfInertia * _r1cn * _r1cn +
-                      Body2.inverseMomentOfInertia * _r2cn * _r2cn;
-            _effectiveMass = (1) / (_kNormal + Softness);
+            _kNormal = Body1.inverseMass + Body2.inverseMass + Body1.inverseMomentOfInertia*_r1cn*_r1cn +
+                       Body2.inverseMomentOfInertia*_r2cn*_r2cn;
+            _effectiveMass = (1)/(_kNormal + Softness);
 
             //convert scalar accumulated impulse to vector
             Vector2.Multiply(ref _worldAnchorDifferenceNormalized, _accumulatedImpulse, out _accumulatedImpulseVector);
@@ -221,7 +221,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             Vector2.Dot(ref _dv, ref _worldAnchorDifferenceNormalized, out _dvNormal);
 
             //calc the impulse magnitude
-            _impulseMagnitude = (-_velocityBias - _dvNormal - Softness * _accumulatedImpulse) * _effectiveMass;
+            _impulseMagnitude = (-_velocityBias - _dvNormal - Softness*_accumulatedImpulse)*_effectiveMass;
             //softness not implemented correctly yet
 
             float oldAccumulatedImpulse = _accumulatedImpulse;

@@ -1,4 +1,3 @@
-using System;
 using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
@@ -51,7 +50,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             base.PreStep(inverseDt);
 
             if (IsDisposed) return;
-            
+
             _difference = (Body2.TotalRotation - Body1.TotalRotation);
             JointError = 0;
 
@@ -96,12 +95,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 JointError = 0;
                 _accumulatedAngularImpulse = 0;
             }
-            _velocityBias = BiasFactor * inverseDt * JointError;
+            _velocityBias = BiasFactor*inverseDt*JointError;
 
-            _massFactor = 1 / (Softness + Body1.inverseMomentOfInertia + Body2.inverseMomentOfInertia);
+            _massFactor = 1/(Softness + Body1.inverseMomentOfInertia + Body2.inverseMomentOfInertia);
 
-            Body1.angularVelocity -= Body1.inverseMomentOfInertia * _accumulatedAngularImpulse;
-            Body2.angularVelocity += Body2.inverseMomentOfInertia * _accumulatedAngularImpulse;
+            Body1.angularVelocity -= Body1.inverseMomentOfInertia*_accumulatedAngularImpulse;
+            Body2.angularVelocity += Body2.inverseMomentOfInertia*_accumulatedAngularImpulse;
         }
 
         public override void Update()
@@ -111,7 +110,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             _angularImpulse = 0;
             _angularImpulse =
-                -(_velocityBias + (Body2.angularVelocity - Body1.angularVelocity) + Softness * _accumulatedAngularImpulse) *
+                -(_velocityBias + (Body2.angularVelocity - Body1.angularVelocity) + Softness*_accumulatedAngularImpulse)*
                 _massFactor;
 
             _accumlatedAngularImpulseOld = _accumulatedAngularImpulse;
@@ -127,8 +126,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             _angularImpulse = _accumulatedAngularImpulse - _accumlatedAngularImpulseOld;
 
-            Body1.angularVelocity -= Body1.inverseMomentOfInertia * _angularImpulse;
-            Body2.angularVelocity += Body2.inverseMomentOfInertia * _angularImpulse;
+            Body1.angularVelocity -= Body1.inverseMomentOfInertia*_angularImpulse;
+            Body2.angularVelocity += Body2.inverseMomentOfInertia*_angularImpulse;
         }
     }
 }

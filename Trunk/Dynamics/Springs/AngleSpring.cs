@@ -1,5 +1,4 @@
 using System;
-using FarseerGames.FarseerPhysics.Controllers;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
@@ -57,6 +56,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// For normal spring behavior this value should be 1
         /// </summary>
         public float TorqueMultiplier { get; set; }
+
         public float SpringError { get; private set; }
         public event EventHandler<EventArgs> Broke;
 

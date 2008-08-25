@@ -54,9 +54,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             JointError = (Body2.TotalRotation - Body1.TotalRotation) - TargetAngle;
 
-            _velocityBias = -BiasFactor * inverseDt * JointError;
+            _velocityBias = -BiasFactor*inverseDt*JointError;
 
-            _massFactor = (1 - Softness) / (Body1.inverseMomentOfInertia + Body2.inverseMomentOfInertia);
+            _massFactor = (1 - Softness)/(Body1.inverseMomentOfInertia + Body2.inverseMomentOfInertia);
         }
 
         public override void Update()
@@ -64,11 +64,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             if (IsDisposed) return;
             if (!Enabled) return;
 
-            float angularImpulse = (_velocityBias - Body2.angularVelocity + Body1.angularVelocity) * _massFactor;
+            float angularImpulse = (_velocityBias - Body2.angularVelocity + Body1.angularVelocity)*_massFactor;
 
-            Body1.angularVelocity -= Body1.inverseMomentOfInertia * Math.Sign(angularImpulse) *
+            Body1.angularVelocity -= Body1.inverseMomentOfInertia*Math.Sign(angularImpulse)*
                                      Math.Min(Math.Abs(angularImpulse), MaxImpulse);
-            Body2.angularVelocity += Body2.inverseMomentOfInertia * Math.Sign(angularImpulse) *
+            Body2.angularVelocity += Body2.inverseMomentOfInertia*Math.Sign(angularImpulse)*
                                      Math.Min(Math.Abs(angularImpulse), MaxImpulse);
         }
     }

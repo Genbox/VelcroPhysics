@@ -1,8 +1,7 @@
-using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerGames.FarseerPhysics.Factories
+namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public class ControllerFactory
     {

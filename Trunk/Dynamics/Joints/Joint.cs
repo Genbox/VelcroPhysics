@@ -15,18 +15,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         public float Breakpoint { get; set; }
         public float JointError { get; set; }
         public Object Tag { get; set; }
-        public event EventHandler<EventArgs> Broke;
-
-        public abstract void Validate();
-        public virtual void PreStep(float inverseDt)
-        {
-            if (Enabled && Math.Abs(JointError) > Breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, new EventArgs());
-            }
-        }
-        public abstract void Update();
 
         #region IIsDisposable Members
 
@@ -37,6 +25,23 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        #endregion
+
+        public event EventHandler<EventArgs> Broke;
+
+        public abstract void Validate();
+
+        public virtual void PreStep(float inverseDt)
+        {
+            if (Enabled && Math.Abs(JointError) > Breakpoint)
+            {
+                Enabled = false;
+                if (Broke != null) Broke(this, new EventArgs());
+            }
+        }
+
+        public abstract void Update();
 
         protected virtual void Dispose(bool disposing)
         {
@@ -51,7 +56,5 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 IsDisposed = true;
             }
         }
-
-        #endregion
     }
 }
