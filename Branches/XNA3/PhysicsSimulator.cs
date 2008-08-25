@@ -4,7 +4,7 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
-using FarseerGames.FarseerPhysics.Mathematics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics
 {
@@ -103,6 +103,7 @@ namespace FarseerGames.FarseerPhysics
         /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
         /// </summary>
         public ArbiterList ArbiterList { get; internal set; }
+
         public Vector2 Gravity { get; set; }
         public int Iterations { get; set; }
         public bool EnableDiagnostics { get; set; }
@@ -118,16 +119,17 @@ namespace FarseerGames.FarseerPhysics
         public float UpdatePositionsTime { get; internal set; }
         public float UpdateTime { get; internal set; }
         public FrictionType FrictionType { get; set; }
-        #region Added by Daniel Pramel 08/24/08
-
-        public Scaling Scaling { get; set; }
-
-        #endregion
 
         /// <summary>
         /// If false, calling Update() will have no affect.  Essentially "pauses" the physics engine.
         /// </summary>
         public bool Enabled { get; set; }
+
+        #region Added by Daniel Pramel 08/24/08
+
+        public Scaling Scaling { get; set; }
+
+        #endregion
 
         private void ConstructPhysicsSimulator(Vector2 gravity)
         {
@@ -556,6 +558,4 @@ namespace FarseerGames.FarseerPhysics
             ArbiterList.RemoveContainsDisposedBody(arbiterPool);
         }
     }
-
-
 }

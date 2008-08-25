@@ -141,7 +141,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             if (((g1.CollisionCategories & g2.CollidesWith) ==
                  CollisionCategories.None) & ((g2.CollisionCategories &
-                                                     g1.CollidesWith) == CollisionCategories.None))
+                                               g1.CollidesWith) == CollisionCategories.None))
                 return false;
 
             //TMP

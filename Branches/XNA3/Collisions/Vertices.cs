@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Mathematics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -258,7 +259,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 cx += (verts[i].X + verts[j].X)*factor;
                 cy += (verts[i].Y + verts[j].Y)*factor;
             }
-        
+
             area *= 6.0f;
             factor = 1/area;
             cx *= factor;
