@@ -33,8 +33,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             AABB = new AABB();
             CollisionEnabled = true;
             CollisionResponseEnabled = true;
-            CollisionCategories = Enums.CollisionCategories.All;
-            CollidesWith = Enums.CollisionCategories.All;
+            CollisionCategories = CollisionCategories.All;
+            CollidesWith = CollisionCategories.All;
             Id = GetNextId();
             Grid = new Grid();
         }
@@ -44,8 +44,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             AABB = new AABB();
             CollisionEnabled = true;
             CollisionResponseEnabled = true;
-            CollisionCategories = Enums.CollisionCategories.All;
-            CollidesWith = Enums.CollisionCategories.All;
+            CollisionCategories = CollisionCategories.All;
+            CollidesWith = CollisionCategories.All;
             Construct(body, vertices, Vector2.Zero, 0, collisionGridCellSize);
         }
 
@@ -54,8 +54,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             AABB = new AABB();
             CollisionEnabled = true;
             CollisionResponseEnabled = true;
-            CollisionCategories = Enums.CollisionCategories.All;
-            CollidesWith = Enums.CollisionCategories.All;
+            CollisionCategories = CollisionCategories.All;
+            CollidesWith = CollisionCategories.All;
             Construct(body, vertices, offset, rotationOffset, collisionGridCellSize);
         }
 
@@ -64,8 +64,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             AABB = new AABB();
             CollisionEnabled = true;
             CollisionResponseEnabled = true;
-            CollisionCategories = Enums.CollisionCategories.All;
-            CollidesWith = Enums.CollisionCategories.All;
+            CollisionCategories = CollisionCategories.All;
+            CollidesWith = CollisionCategories.All;
             ConstructClone(body, geometry, geometry._offset, geometry._rotationOffset);
         }
 
@@ -74,8 +74,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             AABB = new AABB();
             CollisionEnabled = true;
             CollisionResponseEnabled = true;
-            CollisionCategories = Enums.CollisionCategories.All;
-            CollidesWith = Enums.CollisionCategories.All;
+            CollisionCategories = CollisionCategories.All;
+            CollidesWith = CollisionCategories.All;
             ConstructClone(body, geometry, offset, rotationOffset);
         }
 
@@ -117,8 +117,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public int CollisionGroup { get; set; }
         public bool CollisionEnabled { get; set; }
         public bool CollisionResponseEnabled { get; set; }
-        public Enums.CollisionCategories CollisionCategories { get; set; }
-        public Enums.CollisionCategories CollidesWith { get; set; }
+        public CollisionCategories CollisionCategories { get; set; }
+        public CollisionCategories CollidesWith { get; set; }
         public Grid Grid { get; internal set; }
         public Body Body { get; internal set; }
 
@@ -135,9 +135,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// no friction.  When two geometries collide, the minimum friction coeficent between the two bodies is used.
         /// </summary>
         public float FrictionCoefficient { get; set; }
-
         public Object Tag { get; set; }
-
         internal int Id { get; private set; }
 
         #region GetNextId variables

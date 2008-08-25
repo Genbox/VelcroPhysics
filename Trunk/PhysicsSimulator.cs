@@ -10,7 +10,7 @@ namespace FarseerGames.FarseerPhysics
 {
     public class PhysicsSimulator
     {
-        private const int arbiterPoolSize = 10;
+        private const int _arbiterPoolSize = 10;
         private Body _body;
         private IBroadPhaseCollider _broadPhaseCollider;
         private Vector2 _gravityForce;
@@ -22,7 +22,6 @@ namespace FarseerGames.FarseerPhysics
         internal List<Controller> controllerAddList;
         internal List<Controller> controllerRemoveList;
 
-        public bool EnableDiagnostics;
         internal List<Geom> geomAddList;
         internal List<Geom> geomRemoveList;
 
@@ -32,16 +31,11 @@ namespace FarseerGames.FarseerPhysics
 
         #region Added by Daniel Pramel 08/17/08
 
-        private InactivityController inactivityController;
-
         /// <summary>
         /// Returns the InactivityController to automatically disable not used bodies.
         /// It is disabled by default!
         /// </summary>
-        public InactivityController InactivityController
-        {
-            get { return inactivityController; }
-        }
+        public InactivityController InactivityController { get; private set; }
 
         #endregion
 
@@ -109,34 +103,26 @@ namespace FarseerGames.FarseerPhysics
         /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
         /// </summary>
         public ArbiterList ArbiterList { get; internal set; }
-
         public Vector2 Gravity { get; set; }
-
         public int Iterations { get; set; }
-
+        public bool EnableDiagnostics { get; set; }
         public float AllowedPenetration { get; set; }
-
         public float BiasFactor { get; set; }
-
         public int MaxContactsToDetect { get; set; }
-
         public int MaxContactsToResolve { get; set; }
-
         public float CleanUpTime { get; internal set; }
-
         public float BroadPhaseCollisionTime { get; internal set; }
-
         public float NarrowPhaseCollisionTime { get; internal set; }
-
         public float ApplyForcesTime { get; internal set; }
-
         public float ApplyImpulsesTime { get; internal set; }
-
         public float UpdatePositionsTime { get; internal set; }
-
         public float UpdateTime { get; internal set; }
-
         public FrictionType FrictionType { get; set; }
+        #region Added by Daniel Pramel 08/24/08
+
+        public Scaling Scaling { get; set; }
+
+        #endregion
 
         /// <summary>
         /// If false, calling Update() will have no affect.  Essentially "pauses" the physics engine.
@@ -166,13 +152,12 @@ namespace FarseerGames.FarseerPhysics
             ArbiterList = new ArbiterList();
             Gravity = gravity;
 
-            arbiterPool = new Pool<Arbiter>(arbiterPoolSize);
+            arbiterPool = new Pool<Arbiter>(_arbiterPoolSize);
 
             #region Added by Daniel Pramel 08/17/08
 
-            inactivityController = new InactivityController(this);
-
-            scaling = new Scaling(0.001f, 0.01f);
+            InactivityController = new InactivityController(this);
+            Scaling = new Scaling(0.001f, 0.01f);
 
             #endregion
         }
@@ -265,20 +250,20 @@ namespace FarseerGames.FarseerPhysics
 
             #region Added by Daniel Pramel 08/24/08
 
-            dt = scaling.GetUpdateInterval(dt);
+            dt = Scaling.GetUpdateInterval(dt);
             if (dt == 0)
             {
                 return;
             }
 
 
-            if (scaling.UpdateInterval < dtReal)
+            if (Scaling.UpdateInterval < dtReal)
             {
-                scaling.IncreaseUpdateInterval();
+                Scaling.IncreaseUpdateInterval();
             }
             else
             {
-                scaling.DecreaseUpdateInterval();
+                Scaling.DecreaseUpdateInterval();
             }
 
             #endregion
@@ -366,15 +351,15 @@ namespace FarseerGames.FarseerPhysics
                 //apply accumulated external impules
                 _body.ApplyImpulses();
 
-                if (!_body.ignoreGravity)
+                if (!_body.IgnoreGravity)
                 {
                     _gravityForce.X = Gravity.X*_body._mass;
                     _gravityForce.Y = Gravity.Y*_body._mass;
 
                     #region INLINE: body.ApplyForce(ref gravityForce);
 
-                    _body.force.X = _body.force.X + _gravityForce.X;
-                    _body.force.Y = _body.force.Y + _gravityForce.Y;
+                    _body.force.X = _body.Force.X + _gravityForce.X;
+                    _body.force.Y = _body.Force.Y + _gravityForce.Y;
 
                     #endregion
                 }
@@ -423,7 +408,7 @@ namespace FarseerGames.FarseerPhysics
         {
             for (int i = 0; i < BodyList.Count; i++)
             {
-                if (!BodyList[i].enabled)
+                if (!BodyList[i].Enabled)
                 {
                     continue;
                 }
@@ -570,23 +555,7 @@ namespace FarseerGames.FarseerPhysics
             //remove all arbiters that contain 1 or more disposed rigid bodies.
             ArbiterList.RemoveContainsDisposedBody(arbiterPool);
         }
-
-        #region Added by Daniel Pramel 08/24/08
-
-        private Scaling scaling;
-
-        public Scaling Scaling
-        {
-            get { return scaling; }
-            set { scaling = value; }
-        }
-
-        #endregion
     }
 
-    public enum FrictionType
-    {
-        Average = 0,
-        Minimum = 1
-    }
+
 }

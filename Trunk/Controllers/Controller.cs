@@ -1,16 +1,15 @@
 using System;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Controllers
 {
     public abstract class Controller : IIsDisposable
     {
-        protected bool isEnabled = true;
-
-        public bool Enabled
+        protected Controller()
         {
-            get { return isEnabled; }
-            set { isEnabled = value; }
+            Enabled = true;
         }
+
+        public bool Enabled { get; set; }
 
         public Object Tag { get; set; }
 

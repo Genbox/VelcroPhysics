@@ -47,7 +47,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     _geometryA = _physicsSimulator.GeomList[i];
                     _geometryB = _physicsSimulator.GeomList[j];
                     //possible early exits
-                    if (!_geometryA.Body.enabled || !_geometryB.Body.enabled)
+                    if (!_geometryA.Body.Enabled || !_geometryB.Body.Enabled)
                     {
                         continue;
                     }
@@ -75,8 +75,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         continue;
                     }
 
-                    if (((_geometryA.CollisionCategories & _geometryB.CollidesWith) == Enums.CollisionCategories.None) &
-                        ((_geometryB.CollisionCategories & _geometryA.CollidesWith) == Enums.CollisionCategories.None))
+                    if (((_geometryA.CollisionCategories & _geometryB.CollidesWith) == CollisionCategories.None) &
+                        ((_geometryB.CollisionCategories & _geometryA.CollidesWith) == CollisionCategories.None))
                     {
                         continue;
                     }

@@ -76,12 +76,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public Vector2 GetEdgeMidPoint(Int32 index)
         {
-            //Vector2 edge = GetEdge(index);
             GetEdge(index, out vectorTemp1);
-            //edge = Vector2.Multiply(edge, .5f);
             Vector2.Multiply(ref vectorTemp1, .5f, out vectorTemp2);
 
-            //Vector2 midPoint = Vector2.Add(localVertices[index], edge);
             vectorTemp3 = this[index];
             Vector2.Add(ref vectorTemp3, ref vectorTemp2, out vectorTemp1);
 
@@ -98,14 +95,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public Vector2 GetEdgeNormal(Int32 index)
         {
-            //Vector2 edge = GetEdge(index);
             GetEdge(index, out vectorTemp1);
 
-            //Vector2 edgeNormal = new Vector2(-edge.Y, edge.X);
             vectorTemp2.X = -vectorTemp1.Y;
             vectorTemp2.Y = vectorTemp1.X;
 
-            //edgeNormal.Normalize();
             Vector2.Normalize(ref vectorTemp2, out vectorTemp3);
 
             return vectorTemp3;
@@ -121,17 +115,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public Vector2 GetVertexNormal(Int32 index)
         {
-            //Vector2 nextEdge = GetEdgeNormal(index);
             GetEdgeNormal(index, out vectorTemp1);
 
-            //Vector2 prevEdge = GetEdgeNormal(PreviousIndex(index));
             int prevIndex = PreviousIndex(index);
             GetEdgeNormal(prevIndex, out vectorTemp2);
 
-            //Vector2 vertexNormal = Vector2.Add(nextEdge, prevEdge);
             Vector2.Add(ref vectorTemp1, ref vectorTemp2, out vectorTemp3);
 
-            //vertexNormal.Normalize();
             Vector2.Normalize(ref vectorTemp3, out vectorTemp1);
 
             return vectorTemp1;
@@ -259,7 +249,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             int i, j;
 
             float factor;
-            //Debug.WriteLine(verts.ToString());
+
             for (i = 0; i < Count; i++)
             {
                 j = (i + 1)%Count;
@@ -267,8 +257,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 factor = -(verts[i].X*verts[j].Y - verts[j].X*verts[i].Y);
                 cx += (verts[i].X + verts[j].X)*factor;
                 cy += (verts[i].Y + verts[j].Y)*factor;
-                //Debug.WriteLine(i.ToString() + factor.ToString() + " -- " + verts[i].ToString());
             }
+        
             area *= 6.0f;
             factor = 1/area;
             cx *= factor;

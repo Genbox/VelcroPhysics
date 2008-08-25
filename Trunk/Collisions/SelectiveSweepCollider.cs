@@ -5,7 +5,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 {
     public sealed class SelectiveSweepCollider : IBroadPhaseCollider
     {
-        private static readonly StubComparer comparer = new StubComparer();
+        private static readonly StubComparer _comparer = new StubComparer();
 
         private readonly PhysicsSimulator _physicsSimulator;
         private readonly List<Wrapper> _wrappers;
@@ -91,8 +91,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 _wrappers[index].Update();
             }
-            _xStubs.Sort(comparer);
-            _yStubs.Sort(comparer);
+            _xStubs.Sort(_comparer);
+            _yStubs.Sort(_comparer);
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private void OnCollision(Geom geom1, Geom geom2)
         {
-            if (!geom1.Body.enabled || !geom2.Body.enabled)
+            if (!geom1.Body.Enabled || !geom2.Body.Enabled)
             {
                 return;
             }
@@ -201,8 +201,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 return;
             }
 
-            if (((geom1.CollisionCategories & geom2.CollidesWith) == Enums.CollisionCategories.None) &
-                ((geom2.CollisionCategories & geom1.CollidesWith) == Enums.CollisionCategories.None))
+            if (((geom1.CollisionCategories & geom2.CollidesWith) == CollisionCategories.None) &
+                ((geom2.CollisionCategories & geom1.CollidesWith) == CollisionCategories.None))
             {
                 return;
             }
