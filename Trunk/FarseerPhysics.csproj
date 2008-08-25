@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30428</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{95B40504-C1C2-4FCD-98B3-B63AD35D6336}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -56,13 +56,10 @@
     <Compile Include="Collisions\CollisionHelper.cs" />
     <Compile Include="Collisions\Contact.cs" />
     <Compile Include="Collisions\ContactId.cs" />
-    <Compile Include="Collisions\ContactList.cs" />
     <Compile Include="Collisions\Feature.cs" />
     <Compile Include="Collisions\Geom.cs" />
-    <Compile Include="Dynamics\DynamicsBase.cs" />
-    <Compile Include="Dynamics\ItemList.cs" />
-    <Compile Include="Dynamics\Springs\Spring.cs" />
     <Compile Include="Factories\GeomFactory.cs" />
+    <Compile Include="Collisions\GeomList.cs" />
     <Compile Include="Collisions\Grid.cs" />
     <Compile Include="Interfaces\IBroadPhaseCollider.cs" />
     <Compile Include="Interfaces\ICollideable.cs" />
@@ -70,30 +67,14 @@
     <Compile Include="Collisions\SweepAndPruneCollider.cs" />
     <Compile Include="Collisions\Vertices.cs" />
     <Compile Include="Controllers\AABBFluidContainer.cs" />
-    <Compile Include="Interfaces\IFluidContainer.cs" />
+    <Compile Include="Controllers\FluidContainer.cs" />
     <Compile Include="Controllers\FluidDragController.cs" />
     <Compile Include="Controllers\InactivityController.cs" />
     <Compile Include="Controllers\WaveController.cs" />
-    <Compile Include="Dynamics\Joints\AngleJoint.cs" />
-    <Compile Include="Dynamics\Joints\AngleLimitJoint.cs" />
-    <Compile Include="Dynamics\Springs\AngleSpring.cs" />
-    <Compile Include="Dynamics\Arbiter.cs" />
-    <Compile Include="Dynamics\ArbiterList.cs" />
-    <Compile Include="Dynamics\Body.cs" />
     <Compile Include="Factories\BodyFactory.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Factories\ControllerFactory.cs" />
-    <Compile Include="Dynamics\Joints\FixedAngleJoint.cs" />
-    <Compile Include="Dynamics\Joints\FixedAngleLimitJoint.cs" />
-    <Compile Include="Dynamics\Springs\FixedAngleSpring.cs" />
-    <Compile Include="Dynamics\Springs\FixedLinearSpring.cs" />
-    <Compile Include="Dynamics\Joints\FixedRevoluteJoint.cs" />
-    <Compile Include="Dynamics\Joints\Joint.cs" />
     <Compile Include="Factories\JointFactory.cs" />
-    <Compile Include="Dynamics\Springs\LinearSpring.cs" />
-    <Compile Include="Dynamics\Joints\PinJoint.cs" />
-    <Compile Include="Dynamics\Joints\RevoluteJoint.cs" />
-    <Compile Include="Dynamics\Joints\SliderJoint.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Interfaces\IIsDisposable.cs" />
     <Compile Include="Mathematics\BilinearInterpolator.cs" />
@@ -108,6 +89,9 @@
     <Compile Include="Pool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scaling.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Dynamics\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
