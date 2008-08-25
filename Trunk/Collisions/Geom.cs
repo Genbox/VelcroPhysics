@@ -1,6 +1,5 @@
 using System;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Interfaces;
 using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Collisions
