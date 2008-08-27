@@ -1,8 +1,8 @@
 #region Using Statements
-using System;
-using System.Diagnostics;
 
+using System;
 using Microsoft.Xna.Framework;
+
 #endregion
 
 namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
@@ -30,6 +30,12 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
     {
         #region Properties
 
+        private bool isExiting;
+        private bool otherScreenHasFocus;
+        private ScreenState screenState = ScreenState.TransitionOn;
+        private TimeSpan transitionOffTime = TimeSpan.Zero;
+        private TimeSpan transitionOnTime = TimeSpan.Zero;
+        private float transitionPosition = 1;
 
         /// <summary>
         /// Normally when one screen is brought up over the top of another,
@@ -38,13 +44,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// popup, in which case screens underneath it do not need to bother
         /// transitioning off.
         /// </summary>
-        public bool IsPopup
-        {
-            get { return isPopup; }
-            protected set { isPopup = value; }
-        }
-
-        bool isPopup = false;
+        public bool IsPopup { get; protected set; }
 
 
         /// <summary>
@@ -57,8 +57,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             protected set { transitionOnTime = value; }
         }
 
-        TimeSpan transitionOnTime = TimeSpan.Zero;
-
 
         /// <summary>
         /// Indicates how long the screen takes to
@@ -69,8 +67,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             get { return transitionOffTime; }
             protected set { transitionOffTime = value; }
         }
-
-        TimeSpan transitionOffTime = TimeSpan.Zero;
 
 
         /// <summary>
@@ -84,8 +80,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             protected set { transitionPosition = value; }
         }
 
-        float transitionPosition = 1;
-
 
         /// <summary>
         /// Gets the current alpha of the screen transition, ranging
@@ -94,7 +88,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// </summary>
         public byte TransitionAlpha
         {
-            get { return (byte)(255 - TransitionPosition * 255); }
+            get { return (byte) (255 - TransitionPosition*255); }
         }
 
 
@@ -106,8 +100,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             get { return screenState; }
             protected set { screenState = value; }
         }
-
-        ScreenState screenState = ScreenState.TransitionOn;
 
 
         /// <summary>
@@ -124,8 +116,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             protected set { isExiting = value; }
         }
 
-        bool isExiting = false;
-
 
         /// <summary>
         /// Checks whether this screen is active and can respond to user input.
@@ -140,35 +130,32 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             }
         }
 
-        bool otherScreenHasFocus;
-
 
         /// <summary>
         /// Gets the manager that this screen belongs to.
         /// </summary>
-        public ScreenManager ScreenManager
-        {
-            get { return screenManager; }
-            internal set { screenManager = value; }
-        }
-
-        ScreenManager screenManager;
-
+        public ScreenManager ScreenManager { get; internal set; }
 
         #endregion
 
-        public virtual void Initialize(){}
+        public virtual void Initialize()
+        {
+        }
 
         /// <summary>
         /// Load graphics content for the screen.
         /// </summary>
-        public virtual void LoadContent() { }
+        public virtual void LoadContent()
+        {
+        }
 
         /// <summary>
         /// Unload content for the screen.
         /// </summary>
-        public virtual void UnloadContent() { }
-        
+        public virtual void UnloadContent()
+        {
+        }
+
 
         /// <summary>
         /// Allows the screen to run logic, such as updating the transition position.
@@ -176,7 +163,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// is active, hidden, or in the middle of a transition.
         /// </summary>
         public virtual void Update(GameTime gameTime, bool otherScreenHasFocus,
-                                                      bool coveredByOtherScreen)
+                                   bool coveredByOtherScreen)
         {
             this.otherScreenHasFocus = otherScreenHasFocus;
 
@@ -227,7 +214,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// <summary>
         /// Helper for updating the screen transition position.
         /// </summary>
-        bool UpdateTransition(GameTime gameTime, TimeSpan time, int direction)
+        private bool UpdateTransition(GameTime gameTime, TimeSpan time, int direction)
         {
             // How much should we move by?
             float transitionDelta;
@@ -235,18 +222,18 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             if (time == TimeSpan.Zero)
                 transitionDelta = 1;
             else
-                transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
-                                          time.TotalMilliseconds);
+                transitionDelta = (float) (gameTime.ElapsedGameTime.TotalMilliseconds/
+                                           time.TotalMilliseconds);
 
             // Update the transition position.
-            transitionPosition += transitionDelta * direction;
+            transitionPosition += transitionDelta*direction;
 
             // Did we reach the end of the transition?
             if ((transitionPosition <= 0) || (transitionPosition >= 1))
             {
                 transitionPosition = MathHelper.Clamp(transitionPosition, 0, 1);
                 return false;
-            }            
+            }
             // Otherwise we are still busy transitioning.
             return true;
         }
@@ -257,7 +244,9 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// is only called when the screen is active, and not when some other
         /// screen has taken the focus.
         /// </summary>
-        public virtual void HandleInput(InputState input) { }
+        public virtual void HandleInput(InputState input)
+        {
+        }
 
 
         /// <summary>
