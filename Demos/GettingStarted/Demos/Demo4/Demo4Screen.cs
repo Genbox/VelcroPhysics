@@ -1,71 +1,76 @@
-using System;
-using System.Collections.Generic;
 using System.Text;
-
-using Microsoft.Xna;
+using FarseerGames.FarseerPhysics;
+using FarseerGames.FarseerPhysics.Collisions;
+using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Dynamics.Springs;
+using FarseerGames.FarseerPhysics.Factories;
+using FarseerGames.FarseerPhysicsDemos.Demos.DemoShare;
+using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
+using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using FarseerGames.FarseerPhysics; 
-using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Collisions;
+namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
+{
+    public class Demo4Screen : GameScreen
+    {
+        private readonly LineBrush lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
 
-using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
-using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
+        private readonly PhysicsSimulator physicsSimulator;
+        private readonly PhysicsSimulatorView physicsSimulatorView;
 
-using FarseerGames.FarseerPhysicsDemos.Demos.DemoShare;
-
-namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4 {
-    public class Demo4Screen : GameScreen{
-        LineBrush lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
-        ContentManager contentManager;
-        bool debugViewEnabled = false;
-        Texture2D rectangleTexture;
-        Vector2 rectangleOrigin;
-
-        PhysicsSimulator physicsSimulator;
-        PhysicsSimulatorView physicsSimulatorView;
-        
-        Body rectangleBody;
-        Geom rectangleGeom;
-
-        Pyramid pyramid;
-        Floor floor;
-        Agent agent;
+        private Agent agent;
+        private ContentManager contentManager;
+        private bool debugViewEnabled;
+        private bool firstRun = true;
+        private Floor floor;
+        private FixedLinearSpring mousePickSpring;
+        private Geom pickedGeom;
+        private Pyramid pyramid;
 
 #if XBOX
         private int pyramidBaseBodyCount = 8;
 #else
-        private int pyramidBaseBodyCount = 16;
-#endif      
+        private const int pyramidBaseBodyCount = 16;
+        private Body rectangleBody;
+        private Geom rectangleGeom;
+        private Texture2D rectangleTexture;
+        public bool updatedOnce;
+#endif
 
-        public Demo4Screen() {
-            physicsSimulator = new PhysicsSimulator(new Vector2(0,50));
+        public Demo4Screen()
+        {
+            physicsSimulator = new PhysicsSimulator(new Vector2(0, 50));
             physicsSimulator.BiasFactor = .4f;
-            physicsSimulator.MaxContactsToDetect = 2; //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
+            physicsSimulator.MaxContactsToDetect = 2;
+                //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
             physicsSimulatorView = new PhysicsSimulatorView(physicsSimulator);
         }
 
-        public override void LoadContent() {
+        public override void LoadContent()
+        {
             if (contentManager == null) contentManager = new ContentManager(ScreenManager.Game.Services);
             lineBrush.Load(ScreenManager.GraphicsDevice);
             physicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, contentManager);
 
-            rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 32, 32, 2, 0, 0, Color.White, Color.Black);
-            rectangleOrigin = new Vector2(rectangleTexture.Width / 2f, rectangleTexture.Height / 2f);
+            rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 32, 32, 2, 0, 0,
+                                                                    Color.White, Color.Black);
 
-            rectangleBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 1f);  //template              
+            rectangleBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 1f); //template              
             rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(rectangleBody, 32, 32); //template
             rectangleGeom.FrictionCoefficient = .4f;
             rectangleGeom.RestitutionCoefficient = 0f;
 
             //create the pyramid near the bottom of the screen.
-            pyramid = new Pyramid(rectangleBody, rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, pyramidBaseBodyCount, new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount * .5f * (32 + 32 / 3), ScreenManager.ScreenHeight - 125));
+            pyramid = new Pyramid(rectangleBody, rectangleGeom, 32f/3f, 32f/3f, 32, 32, pyramidBaseBodyCount,
+                                  new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount*.5f*(32 + 32/3),
+                                              ScreenManager.ScreenHeight - 125));
             pyramid.Load(physicsSimulator);
 
-            floor = new Floor(ScreenManager.ScreenWidth, 100, new Vector2(ScreenManager.ScreenCenter.X, ScreenManager.ScreenHeight - 50));
+            floor = new Floor(ScreenManager.ScreenWidth, 100,
+                              new Vector2(ScreenManager.ScreenCenter.X, ScreenManager.ScreenHeight - 50));
             floor.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             agent = new Agent(ScreenManager.ScreenCenter - new Vector2(320, 300));
@@ -78,46 +83,59 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4 {
             physicsSimulator.Clear();
         }
 
-        public bool updatedOnce = false;
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen) {
-            if (IsActive) {
-                physicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds * .001f);
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        {
+            if (IsActive)
+            {
+                physicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
                 updatedOnce = true;
-            }       
-            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);            
+            }
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
 
-        public override void Draw(Microsoft.Xna.Framework.GameTime gameTime) {
-            if (!updatedOnce) { return; }
+        public override void Draw(GameTime gameTime)
+        {
+            if (!updatedOnce)
+            {
+                return;
+            }
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             pyramid.Draw(ScreenManager.SpriteBatch, rectangleTexture);
             floor.Draw(ScreenManager.SpriteBatch);
             agent.Draw(ScreenManager.SpriteBatch);
 
-            if (mousePickSpring != null) {
-                lineBrush.Draw(ScreenManager.SpriteBatch, mousePickSpring.Body.GetWorldPosition(mousePickSpring.BodyAttachPoint), mousePickSpring.WorldAttachPoint);
+            if (mousePickSpring != null)
+            {
+                lineBrush.Draw(ScreenManager.SpriteBatch,
+                               mousePickSpring.Body.GetWorldPosition(mousePickSpring.BodyAttachPoint),
+                               mousePickSpring.WorldAttachPoint);
             }
-            if (debugViewEnabled) {
+            if (debugViewEnabled)
+            {
                 physicsSimulatorView.Draw(ScreenManager.SpriteBatch);
             }
             ScreenManager.SpriteBatch.End();
         }
 
-        bool firstRun = true;
-        public override void HandleInput(InputState input) {
-            if (firstRun) {
+        public override void HandleInput(InputState input)
+        {
+            if (firstRun)
+            {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
                 firstRun = false;
             }
-            
-            if (input.PauseGame) {
+
+            if (input.PauseGame)
+            {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
             }
 
-            if (input.CurrentGamePadState.IsConnected) {
+            if (input.CurrentGamePadState.IsConnected)
+            {
                 HandleGamePadInput(input);
             }
-            else {
+            else
+            {
                 HandleKeyboardInput(input);
 #if !XBOX
                 HandleMouseInput(input);
@@ -126,78 +144,113 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4 {
             base.HandleInput(input);
         }
 
-        private void HandleGamePadInput(InputState input) {
-            if (input.LastGamePadState.Buttons.Y != ButtonState.Pressed && input.CurrentGamePadState.Buttons.Y == ButtonState.Pressed) {
+        private void HandleGamePadInput(InputState input)
+        {
+            if (input.LastGamePadState.Buttons.Y != ButtonState.Pressed &&
+                input.CurrentGamePadState.Buttons.Y == ButtonState.Pressed)
+            {
                 debugViewEnabled = !debugViewEnabled;
                 physicsSimulator.EnableDiagnostics = debugViewEnabled;
             }
 
-            Vector2 force = 1000 * input.CurrentGamePadState.ThumbSticks.Left;
+            Vector2 force = 1000*input.CurrentGamePadState.ThumbSticks.Left;
             force.Y = -force.Y;
             agent.ApplyForce(force);
 
-            float rotation = -14000 * input.CurrentGamePadState.Triggers.Left;
+            float rotation = -14000*input.CurrentGamePadState.Triggers.Left;
             agent.ApplyTorque(rotation);
 
-            rotation = 14000 * input.CurrentGamePadState.Triggers.Right;
+            rotation = 14000*input.CurrentGamePadState.Triggers.Right;
             agent.ApplyTorque(rotation);
         }
 
-        private void HandleKeyboardInput(InputState input) {
-            if (!input.LastKeyboardState.IsKeyDown(Keys.F1) && input.CurrentKeyboardState.IsKeyDown(Keys.F1)) {
+        private void HandleKeyboardInput(InputState input)
+        {
+            if (!input.LastKeyboardState.IsKeyDown(Keys.F1) && input.CurrentKeyboardState.IsKeyDown(Keys.F1))
+            {
                 debugViewEnabled = !debugViewEnabled;
                 physicsSimulator.EnableDiagnostics = debugViewEnabled;
             }
 
-            float forceAmount = 1000;
+            const float forceAmount = 1000;
             Vector2 force = Vector2.Zero;
             force.Y = -force.Y;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.A)) { force += new Vector2(-forceAmount, 0); }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { force += new Vector2(0, forceAmount); }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { force += new Vector2(forceAmount, 0); }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, -forceAmount); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.A))
+            {
+                force += new Vector2(-forceAmount, 0);
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.S))
+            {
+                force += new Vector2(0, forceAmount);
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.D))
+            {
+                force += new Vector2(forceAmount, 0);
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.W))
+            {
+                force += new Vector2(0, -forceAmount);
+            }
 
             agent.ApplyForce(force);
 
-            float torqueAmount = 14000;
+            const float torqueAmount = 14000;
             float torque = 0;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque -= torqueAmount; }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque += torqueAmount; }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left))
+            {
+                torque -= torqueAmount;
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right))
+            {
+                torque += torqueAmount;
+            }
             agent.ApplyTorque(torque);
         }
 
-        FixedLinearSpring mousePickSpring;
-        Geom pickedGeom;
 #if !XBOX
-        private void HandleMouseInput(InputState input) {
+        private void HandleMouseInput(InputState input)
+        {
             Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
-            if (input.LastMouseState.LeftButton == ButtonState.Released && input.CurrentMouseState.LeftButton == ButtonState.Pressed) {
+            if (input.LastMouseState.LeftButton == ButtonState.Released &&
+                input.CurrentMouseState.LeftButton == ButtonState.Pressed)
+            {
                 //create mouse spring
                 pickedGeom = physicsSimulator.Collide(point);
-                if (pickedGeom != null) {
-                    mousePickSpring = ControllerFactory.Instance.CreateFixedLinearSpring(physicsSimulator, pickedGeom.Body, pickedGeom.Body.GetLocalPosition(point), point, 20, 10);
+                if (pickedGeom != null)
+                {
+                    mousePickSpring = ControllerFactory.Instance.CreateFixedLinearSpring(physicsSimulator,
+                                                                                         pickedGeom.Body,
+                                                                                         pickedGeom.Body.
+                                                                                             GetLocalPosition(point),
+                                                                                         point, 20, 10);
                 }
             }
-            else if (input.LastMouseState.LeftButton == ButtonState.Pressed && input.CurrentMouseState.LeftButton == ButtonState.Released) {
+            else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&
+                     input.CurrentMouseState.LeftButton == ButtonState.Released)
+            {
                 //destroy mouse spring
-                if (mousePickSpring != null && mousePickSpring.IsDisposed == false) {
+                if (mousePickSpring != null && mousePickSpring.IsDisposed == false)
+                {
                     mousePickSpring.Dispose();
                     mousePickSpring = null;
                 }
             }
 
             //move anchor point
-            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && mousePickSpring != null) {
+            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && mousePickSpring != null)
+            {
                 mousePickSpring.WorldAttachPoint = point;
             }
         }
 #endif
 
-        public string GetTitle() {
-            return "Stacked Objects";  
+        public string GetTitle()
+        {
+            return "Stacked Objects";
         }
 
-        public string GetDetails() {
+        public string GetDetails()
+        {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows the stacking stability of the engine.");
             sb.AppendLine("It shows a stack of rectangular bodies stacked in");
@@ -205,11 +258,11 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4 {
             sb.AppendLine("");
             sb.AppendLine("GamePad:");
             sb.AppendLine("  -Rotate : left and right triggers");
-            sb.AppendLine ("  -Move : left thumbstick");
+            sb.AppendLine("  -Move : left thumbstick");
             sb.AppendLine("");
-            sb.AppendLine ("Keyboard:");
-            sb.AppendLine ("  -Rotate : left and right arrows");
-            sb.AppendLine ("  -Move : A,S,D,W");
+            sb.AppendLine("Keyboard:");
+            sb.AppendLine("  -Rotate : left and right arrows");
+            sb.AppendLine("  -Move : A,S,D,W");
             sb.AppendLine("");
             sb.AppendLine("Mouse");
             sb.AppendLine("  -Hold down left button and drag");

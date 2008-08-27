@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FarseerGames.FarseerPhysics</RootNamespace>
     <AssemblyName>FarseerPhysics</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
     <XnaCrossPlatformGroupID>f09cac15-8015-4937-8288-84972ace0911</XnaCrossPlatformGroupID>
@@ -36,6 +36,8 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkSubset>
+    </TargetFrameworkSubset>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -166,6 +168,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v3.0\Microsoft.Xna.GameStudio.Common.targets" />

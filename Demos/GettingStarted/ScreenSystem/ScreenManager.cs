@@ -1,21 +1,23 @@
 #region File Description
+
 //-----------------------------------------------------------------------------
 // ScreenManager.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
+
 #endregion
 
 #region Using Statements
+
 using System;
-using System.Diagnostics;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-using FarseerGames.FarseerPhysicsDemos.Components;
 #endregion
 
 namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
@@ -30,44 +32,41 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
     {
         #region Fields
 
-        List<GameScreen> screens = new List<GameScreen>();
-        List<GameScreen> screensToUpdate = new List<GameScreen>();
+        private readonly IGraphicsDeviceService _graphicsDeviceService;
 
-        InputState input = new InputState();
+        private readonly ContentManager contentManager;
+        private readonly InputState input = new InputState();
+        private readonly List<GameScreen> screens = new List<GameScreen>();
+        private readonly List<GameScreen> screensToUpdate = new List<GameScreen>();
+        private Texture2D blankTexture;
+        private SpriteFont diagnosticSpriteFont;
+        private SpriteFont menuSpriteFont;
+        private SpriteBatch spriteBatch;
 
-        IGraphicsDeviceService _graphicsDeviceService;
-
-        ContentManager contentManager;
-        SpriteBatch spriteBatch;
-        SpriteFont diagnosticSpriteFont;
-        SpriteFont menuSpriteFont;
-        Texture2D blankTexture;
-
-        bool traceEnabled;
+        private bool traceEnabled;
 
         #endregion
 
         #region Properties
 
-
         /// <summary>
         /// Expose access to our Game instance (this is protected in the
         /// default GameComponent, but we want to make it public).
         /// </summary>
-        new public Game Game
+        public new Game Game
         {
             get { return base.Game; }
         }
-        
+
         /// <summary>
         /// Expose access to our graphics device (this is protected in the
         /// default DrawableGameComponent, but we want to make it public).
         /// </summary>
-        new public GraphicsDevice GraphicsDevice
+        public new GraphicsDevice GraphicsDevice
         {
             get { return base.GraphicsDevice; }
         }
-        
+
         /// <summary>
         /// A content manager used to load data that is shared between multiple
         /// screens. This is never unloaded, so if a screen requires a large amount
@@ -100,20 +99,27 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// A default font shared by all the screens. This saves
         /// each screen having to bother loading their own local copy.
         /// </summary>
-        public SpriteFont MenuSpriteFont {
+        public SpriteFont MenuSpriteFont
+        {
             get { return menuSpriteFont; }
         }
 
         public Vector2 ScreenCenter
         {
-            get{return new Vector2(_graphicsDeviceService.GraphicsDevice.Viewport.Width/2, _graphicsDeviceService.GraphicsDevice.Viewport.Height/2);}
+            get
+            {
+                return new Vector2(_graphicsDeviceService.GraphicsDevice.Viewport.Width/2f,
+                                   _graphicsDeviceService.GraphicsDevice.Viewport.Height/2f);
+            }
         }
 
-        public int ScreenWidth {
+        public int ScreenWidth
+        {
             get { return _graphicsDeviceService.GraphicsDevice.Viewport.Width; }
         }
 
-        public int ScreenHeight {
+        public int ScreenHeight
+        {
             get { return _graphicsDeviceService.GraphicsDevice.Viewport.Height; }
         }
 
@@ -128,7 +134,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             set { traceEnabled = value; }
         }
 
-
         #endregion
 
         /// <summary>
@@ -139,8 +144,8 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         {
             contentManager = new ContentManager(game.Services);
 
-            _graphicsDeviceService = (IGraphicsDeviceService)game.Services.GetService(
-                                                        typeof(IGraphicsDeviceService));           
+            _graphicsDeviceService = (IGraphicsDeviceService) game.Services.GetService(
+                                                                  typeof (IGraphicsDeviceService));
             if (_graphicsDeviceService == null)
                 throw new InvalidOperationException("No graphics device service.");
         }
@@ -149,9 +154,10 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// Allows the game component to perform any initialization it needs to before starting
         /// to run.  This is where it can query for any required services and load content.
         /// </summary>
-        public override void Initialize() {
-            // TODO: Add your initialization code here
-            foreach (GameScreen screen in screens) {
+        public override void Initialize()
+        {
+            foreach (GameScreen screen in screens)
+            {
                 screen.Initialize();
             }
             base.Initialize();
@@ -204,8 +210,8 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             screensToUpdate.Clear();
 
             //foreach (GameScreen screen in screens)  
-                //screensToUpdate.Add(screen);
-            for(int i=0;i<screens.Count;i++)
+            //screensToUpdate.Add(screen);
+            for (int i = 0; i < screens.Count; i++)
                 screensToUpdate.Add(screens[i]);
 
             bool otherScreenHasFocus = !Game.IsActive;
@@ -250,7 +256,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// <summary>
         /// Prints a list of all the screens, for debugging.
         /// </summary>
-        void TraceScreens()
+        private void TraceScreens()
         {
             List<string> screenNames = new List<string>();
 
@@ -270,11 +276,12 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             //{
             //    if (screen.ScreenState == ScreenState.Hidden)
             //        continue;
-             
+
             //    screen.Draw(gameTime);
             //}
 
-            for(int i=0;i<screens.Count;i++){ 
+            for (int i = 0; i < screens.Count; i++)
+            {
                 if (screens[i].ScreenState == ScreenState.Hidden)
                     continue;
 
@@ -302,7 +309,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             {
                 screen.LoadContent();
             }
-            
+
             screens.Add(screen);
         }
 
@@ -321,7 +328,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             {
                 screen.UnloadContent();
             }
-            
+
             screens.Remove(screen);
             screensToUpdate.Remove(screen);
         }
@@ -350,8 +357,8 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 
             spriteBatch.Draw(blankTexture,
                              new Rectangle(0, 0, viewport.Width, viewport.Height),
-                             new Color(0, 0, 0, (byte)alpha));
-            
+                             new Color(0, 0, 0, (byte) alpha));
+
             spriteBatch.End();
         }
     }

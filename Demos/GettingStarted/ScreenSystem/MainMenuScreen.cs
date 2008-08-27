@@ -1,9 +1,3 @@
-#region Using Statements
-using System;
-
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
 using FarseerGames.FarseerPhysicsDemos.Demos.Demo1;
 using FarseerGames.FarseerPhysicsDemos.Demos.Demo2;
 using FarseerGames.FarseerPhysicsDemos.Demos.Demo3;
@@ -12,14 +6,15 @@ using FarseerGames.FarseerPhysicsDemos.Demos.Demo5;
 using FarseerGames.FarseerPhysicsDemos.Demos.Demo6;
 using FarseerGames.FarseerPhysicsDemos.Demos.Demo7;
 using FarseerGames.FarseerPhysicsDemos.Demos.Demo8;
-#endregion
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 {
     /// <summary>
     /// The main menu screen is the first thing displayed when the game starts up.
     /// </summary>
-    class MainMenuScreen : MenuScreen
+    internal class MainMenuScreen : MenuScreen
     {
         /// <summary>
         /// Constructor fills in the menu contents.
@@ -46,7 +41,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             switch (entryIndex)
             {
                 case 0:
-                         ScreenManager.AddScreen(new Demo1Screen());
+                    ScreenManager.AddScreen(new Demo1Screen());
                     break;
 
                 case 1:
@@ -73,7 +68,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                 case 7:
                     ScreenManager.AddScreen(new Demo8Screen());
                     break;
-                case 8: 
+                case 8:
                     // Exit the sample.
                     OnCancel();
                     break;
@@ -89,30 +84,16 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             ScreenManager.Game.Exit();
         }
 
-
-        /// <summary>
-        /// Event handler for when the user selects ok on the "are you sure
-        /// you want to exit" message box.
-        /// </summary>
-        void ExitMessageBoxAccepted(object sender, EventArgs e)
+        public override void Draw(GameTime gameTime)
         {
-            ScreenManager.Game.Exit();
-        }
-
-
-        /// <summary>
-        /// Loading screen callback for activating the gameplay screen.
-        /// </summary>
-        void LoadGameplayScreen(object sender, EventArgs e)
-        {
-            //ScreenManager.AddScreen(new GameplayScreen());
-        }
-
-        public override void Draw(Microsoft.Xna.Framework.GameTime gameTime) {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.DiagnosticSpriteFont, "*toggle between debug and normal view using either F1 on the keyboard or 'Y' on the controller", new Vector2(100, ScreenManager.ScreenHeight - 116), Color.Black);            
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.DiagnosticSpriteFont,
+                                                 "*toggle between debug and normal view using either F1 on the keyboard or 'Y' on the controller",
+                                                 new Vector2(100, ScreenManager.ScreenHeight - 116), Color.Black);
 #if (!XBOX)
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.DiagnosticSpriteFont, "**keyboard users, use arrows and enter to navigate menus", new Vector2(100, ScreenManager.ScreenHeight - 100), Color.Black);
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.DiagnosticSpriteFont,
+                                                 "**keyboard users, use arrows and enter to navigate menus",
+                                                 new Vector2(100, ScreenManager.ScreenHeight - 100), Color.Black);
 #endif
             base.Draw(gameTime);
             ScreenManager.SpriteBatch.End();
