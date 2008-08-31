@@ -34,16 +34,10 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 
         private readonly IGraphicsDeviceService _graphicsDeviceService;
 
-        private readonly ContentManager contentManager;
         private readonly InputState input = new InputState();
         private readonly List<GameScreen> screens = new List<GameScreen>();
         private readonly List<GameScreen> screensToUpdate = new List<GameScreen>();
         private Texture2D blankTexture;
-        private SpriteFont diagnosticSpriteFont;
-        private SpriteFont menuSpriteFont;
-        private SpriteBatch spriteBatch;
-
-        private bool traceEnabled;
 
         #endregion
 
@@ -72,37 +66,25 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// screens. This is never unloaded, so if a screen requires a large amount
         /// of temporary data, it should create a local content manager instead.
         /// </summary>
-        public ContentManager ContentManager
-        {
-            get { return contentManager; }
-        }
+        public ContentManager ContentManager { get; private set; }
 
         /// <summary>
         /// A default SpriteBatch shared by all the screens. This saves
         /// each screen having to bother creating their own local instance.
         /// </summary>
-        public SpriteBatch SpriteBatch
-        {
-            get { return spriteBatch; }
-        }
+        public SpriteBatch SpriteBatch { get; private set; }
 
         /// <summary>
         /// A default font shared by all the screens. This saves
         /// each screen having to bother loading their own local copy.
         /// </summary>
-        public SpriteFont DiagnosticSpriteFont
-        {
-            get { return diagnosticSpriteFont; }
-        }
+        public SpriteFont DiagnosticSpriteFont { get; private set; }
 
         /// <summary>
         /// A default font shared by all the screens. This saves
         /// each screen having to bother loading their own local copy.
         /// </summary>
-        public SpriteFont MenuSpriteFont
-        {
-            get { return menuSpriteFont; }
-        }
+        public SpriteFont MenuSpriteFont { get; private set; }
 
         public Vector2 ScreenCenter
         {
@@ -128,11 +110,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// each time it is updated. This can be useful for making sure
         /// everything is being added and removed at the right times.
         /// </summary>
-        public bool TraceEnabled
-        {
-            get { return traceEnabled; }
-            set { traceEnabled = value; }
-        }
+        public bool TraceEnabled { get; set; }
 
         #endregion
 
@@ -142,7 +120,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         public ScreenManager(Game game)
             : base(game)
         {
-            contentManager = new ContentManager(game.Services);
+            ContentManager = new ContentManager(game.Services);
 
             _graphicsDeviceService = (IGraphicsDeviceService) game.Services.GetService(
                                                                   typeof (IGraphicsDeviceService));
@@ -169,10 +147,10 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         protected override void LoadContent()
         {
             // Load content belonging to the screen manager.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            diagnosticSpriteFont = contentManager.Load<SpriteFont>("Content/Fonts/diagnosticFont");
-            menuSpriteFont = contentManager.Load<SpriteFont>("Content/Fonts/menuFont");
-            blankTexture = contentManager.Load<Texture2D>("Content/Common/blank");
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
+            DiagnosticSpriteFont = ContentManager.Load<SpriteFont>("Content/Fonts/diagnosticFont");
+            MenuSpriteFont = ContentManager.Load<SpriteFont>("Content/Fonts/menuFont");
+            blankTexture = ContentManager.Load<Texture2D>("Content/Common/blank");
 
 
             // Tell each of the screens to load their content.
@@ -188,7 +166,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// </summary>
         protected override void UnloadContent()
         {
-            contentManager.Unload();
+            ContentManager.Unload();
 
             // Tell each of the screens to unload their content.
             foreach (GameScreen screen in screens)
@@ -248,7 +226,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             }
 
             // Print debug trace?
-            if (traceEnabled)
+            if (TraceEnabled)
                 TraceScreens();
         }
 
@@ -353,13 +331,13 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         {
             Viewport viewport = GraphicsDevice.Viewport;
 
-            spriteBatch.Begin();
+            SpriteBatch.Begin();
 
-            spriteBatch.Draw(blankTexture,
+            SpriteBatch.Draw(blankTexture,
                              new Rectangle(0, 0, viewport.Width, viewport.Height),
                              new Color(0, 0, 0, (byte) alpha));
 
-            spriteBatch.End();
+            SpriteBatch.End();
         }
     }
 }
