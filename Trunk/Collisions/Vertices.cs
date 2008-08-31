@@ -153,8 +153,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public void SubDivideEdges(float maxEdgeLength)
         {
-            //throw new NotImplementedException("SubDivideEdges is not yet implemented");
-            //TODO: Implement SubDivideEdges()
             Vertices verticesTemp = new Vertices();
             double edgeCount;
             float edgeLength;
@@ -174,22 +172,21 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 verticesTemp.Add(vertA);
                 if (edgeLength > maxEdgeLength) //need to subdivide
                 {
-                    edgeCount = Math.Ceiling(edgeLength/(double) maxEdgeLength);
+                    edgeCount = Math.Ceiling(edgeLength / (double)maxEdgeLength);
 
                     for (int j = 0; j < edgeCount - 1; j++)
                     {
-                        Vector2 vert = Vector2.Lerp(vertA, vertB, (j + 1)/(float) edgeCount);
+                        Vector2 vert = Vector2.Lerp(vertA, vertB, (j + 1) / (float)edgeCount);
                         verticesTemp.Add(vert);
                     }
                 }
             }
-            //Debug.WriteLine(verticesTemp.ToString());
+
             Clear();
             for (int k = 0; k < verticesTemp.Count; k++)
             {
                 Add(verticesTemp[k]);
             }
-            //Debug.WriteLine(this.ToString());
         }
 
         public void ForceCounterClockWiseOrder()
@@ -210,9 +207,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             for (i = 0; i < Count; i++)
             {
-                j = (i + 1)%Count;
-                area += this[i].X*this[j].Y;
-                area -= this[i].Y*this[j].X;
+                j = (i + 1) % Count;
+                area += this[i].X * this[j].Y;
+                area -= this[i].Y * this[j].X;
             }
             area /= 2.0f;
             return area;
@@ -225,9 +222,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             for (i = 0; i < Count; i++)
             {
-                j = (i + 1)%Count;
-                area += this[i].X*this[j].Y;
-                area -= this[i].Y*this[j].X;
+                j = (i + 1) % Count;
+                area += this[i].X * this[j].Y;
+                area -= this[i].Y * this[j].X;
             }
             area /= 2.0f;
             return (area < 0 ? -area : area);
@@ -252,15 +249,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             for (i = 0; i < Count; i++)
             {
-                j = (i + 1)%Count;
+                j = (i + 1) % Count;
 
-                factor = -(verts[i].X*verts[j].Y - verts[j].X*verts[i].Y);
-                cx += (verts[i].X + verts[j].X)*factor;
-                cy += (verts[i].Y + verts[j].Y)*factor;
+                factor = -(verts[i].X * verts[j].Y - verts[j].X * verts[i].Y);
+                cx += (verts[i].X + verts[j].X) * factor;
+                cy += (verts[i].Y + verts[j].Y) * factor;
             }
-        
+
             area *= 6.0f;
-            factor = 1/area;
+            factor = 1 / area;
             cx *= factor;
             cy *= factor;
             res.X = cx;
@@ -299,9 +296,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 Calculator.Cross(ref v1, ref v2, out d);
                 d = Math.Abs(d);
                 numer += d;
-                denom += (a + b + c)*d;
+                denom += (a + b + c) * d;
             }
-            return denom/(numer*6);
+            return denom / (numer * 6);
         }
 
         public void ProjectToAxis(ref Vector2 axis, out float min, out float max)
@@ -339,22 +336,22 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public static Vertices CreateRectangle(float width, float height)
         {
             Vertices vertices = new Vertices();
-            vertices.Add(new Vector2(-width*.5f, -height*.5f));
-            vertices.Add(new Vector2(-width*.5f, -height*.25f));
-            vertices.Add(new Vector2(-width*.5f, 0));
-            vertices.Add(new Vector2(-width*.5f, height*.25f));
-            vertices.Add(new Vector2(-width*.5f, height*.5f));
-            vertices.Add(new Vector2(-width*.25f, height*.5f));
-            vertices.Add(new Vector2(0, height*.5f));
-            vertices.Add(new Vector2(width*.25f, height*.5f));
-            vertices.Add(new Vector2(width*.5f, height*.5f));
-            vertices.Add(new Vector2(width*.5f, height*.25f));
-            vertices.Add(new Vector2(width*.5f, 0));
-            vertices.Add(new Vector2(width*.5f, -height*.25f));
-            vertices.Add(new Vector2(width*.5f, -height*.5f));
-            vertices.Add(new Vector2(width*.25f, -height*.5f));
-            vertices.Add(new Vector2(0, -height*.5f));
-            vertices.Add(new Vector2(-width*.25f, -height*.5f));
+            vertices.Add(new Vector2(-width * .5f, -height * .5f));
+            vertices.Add(new Vector2(-width * .5f, -height * .25f));
+            vertices.Add(new Vector2(-width * .5f, 0));
+            vertices.Add(new Vector2(-width * .5f, height * .25f));
+            vertices.Add(new Vector2(-width * .5f, height * .5f));
+            vertices.Add(new Vector2(-width * .25f, height * .5f));
+            vertices.Add(new Vector2(0, height * .5f));
+            vertices.Add(new Vector2(width * .25f, height * .5f));
+            vertices.Add(new Vector2(width * .5f, height * .5f));
+            vertices.Add(new Vector2(width * .5f, height * .25f));
+            vertices.Add(new Vector2(width * .5f, 0));
+            vertices.Add(new Vector2(width * .5f, -height * .25f));
+            vertices.Add(new Vector2(width * .5f, -height * .5f));
+            vertices.Add(new Vector2(width * .25f, -height * .5f));
+            vertices.Add(new Vector2(0, -height * .5f));
+            vertices.Add(new Vector2(-width * .25f, -height * .5f));
             return vertices;
         }
 
@@ -362,13 +359,21 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             Vertices vertices = new Vertices();
 
-            float stepSize = Calculator.TwoPi/numberOfEdges;
+            float stepSize = Calculator.TwoPi / numberOfEdges;
             vertices.Add(new Vector2(radius, 0));
             for (int i = 1; i < numberOfEdges; i++)
             {
-                vertices.Add(new Vector2(radius*Calculator.Cos(stepSize*i), -radius*Calculator.Sin(stepSize*i)));
+                vertices.Add(new Vector2(radius * Calculator.Cos(stepSize * i), -radius * Calculator.Sin(stepSize * i)));
             }
             return vertices;
+        }
+
+        public void Scale(Vector2 scale)
+        {
+            for (int i = Count - 1; i >= 0; i--)
+            {
+                this[i] *= scale;
+            }
         }
 
         public override string ToString()
