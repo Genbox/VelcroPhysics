@@ -154,8 +154,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public void SubDivideEdges(float maxEdgeLength)
         {
-            //throw new NotImplementedException("SubDivideEdges is not yet implemented");
-            //TODO: Implement SubDivideEdges()
             Vertices verticesTemp = new Vertices();
             double edgeCount;
             float edgeLength;
@@ -184,13 +182,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     }
                 }
             }
-            //Debug.WriteLine(verticesTemp.ToString());
+
             Clear();
             for (int k = 0; k < verticesTemp.Count; k++)
             {
                 Add(verticesTemp[k]);
             }
-            //Debug.WriteLine(this.ToString());
         }
 
         public void ForceCounterClockWiseOrder()
@@ -370,6 +367,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 vertices.Add(new Vector2(radius*Calculator.Cos(stepSize*i), -radius*Calculator.Sin(stepSize*i)));
             }
             return vertices;
+        }
+
+        public void Scale(Vector2 scale)
+        {
+            for (int i = Count - 1; i >= 0; i--)
+            {
+                this[i] *= scale;
+            }
         }
 
         public override string ToString()

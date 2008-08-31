@@ -3,7 +3,6 @@ namespace FarseerGames.FarseerPhysics
     public class Scaling
     {
         private float elapsedTime; // holds the total time since the last update
-        private bool enabled;
 
         private float maximumUpdateInterval;
         private float scalingPenalty;
@@ -16,11 +15,7 @@ namespace FarseerGames.FarseerPhysics
             this.maximumUpdateInterval = maximumUpdateInterval;
         }
 
-        public bool Enabled
-        {
-            get { return enabled; }
-            set { enabled = value; }
-        }
+        public bool Enabled { get; set; }
 
         /// <summary>
         /// The maximum interval to use
@@ -52,7 +47,7 @@ namespace FarseerGames.FarseerPhysics
         {
             float interval;
 
-            if (updateInterval > 0 && enabled)
+            if (updateInterval > 0 && Enabled)
             {
                 elapsedTime += dt;
                 if (elapsedTime < UpdateInterval)
