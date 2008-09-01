@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerGames.FarseerPhysics.Dynamics;
+#if (XNA)
+using System.Collections.Specialized;
+#endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -37,6 +40,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             collisionPairs = new CollisionPairDictionary();
         }
 
+#if (!SILVERLIGHT)
+
         #region IBroadPhaseCollider Members
 
         /// <summary>
@@ -45,14 +50,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void ProcessDisposedGeoms()
         {
-            if (xInfoList.RemoveAll(i => i.geometry.IsDisposed) > 0)
+            if (xInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.IsDisposed; }) > 0)
             {
-                xExtentList.RemoveAll(n => n.info.geometry.IsDisposed);
+                xExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.IsDisposed; });
             }
 
-            if (yInfoList.RemoveAll(i => i.geometry.IsDisposed) > 0)
+            if (yInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.IsDisposed; }) > 0)
             {
-                yExtentList.RemoveAll(n => n.info.geometry.IsDisposed);
+                yExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.IsDisposed; });
             }
 
             // We force a non-incremental update because that will insure that the
@@ -67,13 +72,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void ProcessRemovedGeoms()
         {
-            if (xInfoList.RemoveAll(i => i.geometry.IsRemoved) > 0)
+            if (xInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.isRemoved; }) > 0)
             {
-                xExtentList.RemoveAll(n => n.info.geometry.IsRemoved);
+                xExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.isRemoved; });
             }
-            if (yInfoList.RemoveAll(i => i.geometry.IsRemoved) > 0)
+            if (yInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.isRemoved; }) > 0)
             {
-                yExtentList.RemoveAll(n => n.info.geometry.IsRemoved);
+                yExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.isRemoved; });
             }
 
             // We force a non-incremental update because that will insure that the
@@ -81,6 +86,106 @@ namespace FarseerGames.FarseerPhysics.Collisions
             // by overlaps, etc. Its just easier this way.
             ForceNonIncrementalUpdate();
         }
+#else
+
+        private int ExtentInfoListRemoveAllRemoved(ExtentInfoList l)
+        {
+            int removed = 0;
+            for (int i = 0; i < l.Count; i++)
+            {
+                if (l[i].geometry.isRemoved)
+                {
+                    removed++;
+                    l.RemoveAt(i);
+                    i--;
+                }
+            }
+            return removed;
+        }
+
+        private int ExtentListRemoveAllRemoved(ExtentList l)
+        {
+            int removed = 0;
+            for (int i = 0; i < l.Count; i++)
+            {
+                if (l[i].info.geometry.isRemoved)
+                {
+                    removed++;
+                    l.RemoveAt(i);
+                    i--;
+                }
+            }
+            return removed;
+        }
+
+        private int ExtentInfoListRemoveAllDisposed(ExtentInfoList l)
+        {
+            int removed = 0;
+            for (int i = 0; i < l.Count; i++)
+            {
+                if (l[i].geometry.IsDisposed)
+                {
+                    removed++;
+                    l.RemoveAt(i);
+                    i--;
+                }
+            }
+            return removed;
+        }
+
+        private int ExtentListRemoveAllDisposed(ExtentList l)
+        {
+            int removed = 0;
+            for (int i = 0; i < l.Count; i++)
+            {
+                if (l[i].info.geometry.IsDisposed)
+                {
+                    removed++;
+                    l.RemoveAt(i);
+                    i--;
+                }
+            }
+            return removed;
+        }
+
+        /// <summary>
+        /// Used by the PhysicsSimulator to remove geometry from Sweep and Prune once it
+        /// has been disposed.
+        /// </summary>
+        public void ProcessDisposedGeoms()
+        {
+            if (ExtentInfoListRemoveAllDisposed(xInfoList) > 0)
+            {
+                ExtentListRemoveAllDisposed(xExtentList);
+            }
+            if (ExtentInfoListRemoveAllDisposed(yInfoList) > 0)
+            {
+                ExtentListRemoveAllDisposed(yExtentList);
+            }
+
+
+            // We force a non-incremental update because that will insure that the
+            // collisionPairs get recreated and that the geometry isn't being held
+            // by overlaps, etc. Its just easier this way.
+            ForceNonIncrementalUpdate();
+        }
+        public void ProcessRemovedGeoms()
+        {
+            if (ExtentInfoListRemoveAllRemoved(xInfoList) > 0)
+            {
+                ExtentListRemoveAllRemoved(xExtentList);
+            }
+            if (ExtentInfoListRemoveAllRemoved(yInfoList) > 0)
+            {
+                ExtentListRemoveAllRemoved(yExtentList);
+            }
+
+            // We force a non-incremental update because that will insure that the
+            // collisionPairs get recreated and that the geometry isn't being held
+            // by overlaps, etc. Its just easier this way.
+            ForceNonIncrementalUpdate();
+        }
+#endif
 
         /// <summary>
         /// This method is used by the PhysicsSimulator to notify Sweep and Prune that 
@@ -123,34 +228,34 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns>Returns true if there is a collision, false otherwise</returns>
         public static bool DoCollision(Geom g1, Geom g2)
         {
-            if (!g1.Body.Enabled || !g2.Body.Enabled)
+            if (!g1.body.enabled || !g2.body.enabled)
                 return false;
 
-            if ((g1.CollisionGroup == g2.CollisionGroup) &&
-                g1.CollisionGroup != 0 && g2.CollisionGroup != 0)
+            if ((g1.collisionGroup == g2.collisionGroup) &&
+                g1.collisionGroup != 0 && g2.collisionGroup != 0)
                 return false;
 
-            if (!g1.CollisionEnabled || !g2.CollisionEnabled)
+            if (!g1.collisionEnabled || !g2.collisionEnabled)
                 return false;
 
-            if (g1.Body.isStatic && g2.Body.isStatic)
+            if (g1.body.isStatic && g2.body.isStatic)
                 return false;
 
-            if (g1.Body == g2.Body)
+            if (g1.body == g2.body)
                 return false;
 
-            if (((g1.CollisionCategories & g2.CollidesWith) ==
-                 CollisionCategories.None) & ((g2.CollisionCategories &
-                                               g1.CollidesWith) == CollisionCategories.None))
+            if (((g1.collisionCategories & g2.collidesWith) ==
+                 Enums.CollisionCategories.None) & ((g2.collisionCategories &
+                                                     g1.collidesWith) == Enums.CollisionCategories.None))
                 return false;
 
             //TMP
             AABB aabb1 = new AABB();
             AABB aabb2 = new AABB();
-            aabb1.min = g1.AABB.min;
-            aabb1.max = g1.AABB.max;
-            aabb2.min = g2.AABB.min;
-            aabb2.max = g2.AABB.max;
+            aabb1.min = g1.aabb.min;
+            aabb1.max = g1.aabb.max;
+            aabb2.min = g2.aabb.min;
+            aabb2.max = g2.aabb.max;
             aabb1.min.X -= fTol;
             aabb1.min.Y -= fTol;
             aabb1.max.X += fTol;
@@ -179,7 +284,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 ExtentInfo xInfo = xInfoList[i];
                 ExtentInfo yInfo = yInfoList[i];
                 Debug.Assert(xInfo.geometry == yInfo.geometry);
-                AABB aabb = xInfo.geometry.AABB;
+                AABB aabb = xInfo.geometry.aabb;
 
                 /*xInfo.min.value = aabb.min.X;
                 xInfo.max.value = aabb.max.X;
@@ -203,11 +308,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 // Note: Possible optimization. Maybe arbiter can be cached into value of
                 // collisionPairs? Currently, the collisionPairs hash doesn't use its
                 // value parameter - its just an unused bool value.
-                Arbiter arbiter = physicsSimulator.arbiterPool.Fetch();
+                Arbiter arbiter;
+                arbiter = physicsSimulator.arbiterPool.Fetch();
                 arbiter.ConstructArbiter(cp.geom1, cp.geom2, physicsSimulator);
 
-                if (!physicsSimulator.ArbiterList.Contains(arbiter))
-                    physicsSimulator.ArbiterList.Add(arbiter);
+                if (!physicsSimulator.arbiterList.Contains(arbiter))
+                    physicsSimulator.arbiterList.Add(arbiter);
                 else
                     physicsSimulator.arbiterPool.Release(arbiter);
             }
@@ -218,7 +324,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void Run()
         {
-            //BUG: This might be a bug, bForce is never assigned to and will always be false
             if (bForce)
                 ForceNonIncrementalUpdate();
             else
@@ -251,8 +356,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             // Force sort
-            xExtentList.Sort((l, r) => l.value.CompareTo(r.value));
-            yExtentList.Sort((l, r) => l.value.CompareTo(r.value));
+            xExtentList.Sort(delegate(Extent l, Extent r) { return l.value.CompareTo(r.value); });
+            yExtentList.Sort(delegate(Extent l, Extent r) { return l.value.CompareTo(r.value); });
 
             // Rebuild overlap information
             List<Geom> overlaps = new List<Geom>();
@@ -260,7 +365,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 overlaps.Clear();
 
-                ExtentList extentList = i == 0 ? xExtentList : yExtentList;
+                ExtentList extentList = null;
+                if (i == 0)
+                    extentList = xExtentList;
+                else
+                    extentList = yExtentList;
 
                 foreach (Extent extent in extentList)
                 {
@@ -443,9 +552,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         continue;
 
                     Geom g1 = this[i].geometry;
-
-                    //Note: Code cleanup, variable never used
-                    //AABB aabb1 = g1.aabb;
+                    AABB aabb1 = g1.aabb;
 
                     // First transfer those under consideration to overlaps,
                     // for, they have been considered...

@@ -1,12 +1,13 @@
-using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using Microsoft.Xna.Framework;
+#if (XNA)
+using Microsoft.Xna.Framework;
+#endif
 
-namespace FarseerGames.FarseerPhysics.Factories
+namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public class ControllerFactory
     {
-        private static ControllerFactory _instance;
+        private static ControllerFactory instance;
 
         private ControllerFactory()
         {
@@ -16,11 +17,11 @@ namespace FarseerGames.FarseerPhysics.Factories
         {
             get
             {
-                if (_instance == null)
+                if (instance == null)
                 {
-                    _instance = new ControllerFactory();
+                    instance = new ControllerFactory();
                 }
-                return _instance;
+                return instance;
             }
         }
 

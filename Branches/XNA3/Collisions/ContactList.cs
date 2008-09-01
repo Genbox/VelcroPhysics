@@ -1,10 +1,14 @@
 using System.Collections.Generic;
 
+#if (XNA)
+using Microsoft.Xna.Framework;
+#endif
+
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     public class ContactList : List<Contact>
     {
-        private int _index = -1;
+        private int index = -1;
 
         public ContactList(int capacity) : base(capacity)
         {
@@ -16,16 +20,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public int IndexOfSafe(Contact contact)
         {
-            _index = -1;
+            index = -1;
             for (int i = 0; i < Count; i++)
             {
                 if (this[i] == contact)
                 {
-                    _index = i;
+                    index = i;
                     break;
                 }
             }
-            return _index;
+            return index;
         }
     }
 }

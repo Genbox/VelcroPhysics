@@ -3,163 +3,241 @@ using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
+#if (XNA)
+using Microsoft.Xna.Framework;
+#endif
 
 namespace FarseerGames.FarseerPhysics
 {
     public class PhysicsSimulator
     {
-        private const int _arbiterPoolSize = 10;
-        private Body _body;
-        private IBroadPhaseCollider _broadPhaseCollider;
-        private Vector2 _gravityForce;
+        internal float allowedPenetration = .05f;
+        internal float applyForcesTime = -1;
+        internal float applyImpulsesTime = -1;
+        internal ArbiterList arbiterList;
         internal Pool<Arbiter> arbiterPool;
+        private int arbiterPoolSize = 10; //initial arbiter size.  will grow as needed
+        internal float biasFactor = .8f;
+        private Body body;
 
         internal List<Body> bodyAddList;
+        internal BodyList bodyList;
         internal List<Body> bodyRemoveList;
+        private IBroadPhaseCollider broadPhaseCollider;
+        internal float broadPhaseCollisionTime = -1;
+        internal float cleanUpTime = -1;
 
         internal List<Controller> controllerAddList;
+        internal ControllerList controllerList;
         internal List<Controller> controllerRemoveList;
+        private bool enabled = true;
 
+        public bool EnableDiagnostics;
+        internal FrictionType frictionType = FrictionType.Average;
         internal List<Geom> geomAddList;
+        internal GeomList geomList;
         internal List<Geom> geomRemoveList;
 
+        private Vector2 gravity = Vector2.Zero;
+        private Vector2 gravityForce;
+
         //default settings
+        private int iterations = 5;
         internal List<Joint> jointAddList;
+        internal JointList jointList;
         internal List<Joint> jointRemoveList;
+        internal int maxContactsToDetect = 3;
+        internal int maxContactsToResolve = 2;
+        internal float narrowPhaseCollisionTime = -1;
+        internal float updatePositionsTime = -1;
+        internal float updateTime = -1;
 
         #region Added by Daniel Pramel 08/17/08
+
+        private InactivityController inactivityController;
 
         /// <summary>
         /// Returns the InactivityController to automatically disable not used bodies.
         /// It is disabled by default!
         /// </summary>
-        public InactivityController InactivityController { get; private set; }
+        public InactivityController InactivityController
+        {
+            get { return inactivityController; }
+        }
 
         #endregion
 
         public PhysicsSimulator()
         {
-            Enabled = true;
-            FrictionType = FrictionType.Average;
-            UpdateTime = -1;
-            UpdatePositionsTime = -1;
-            ApplyImpulsesTime = -1;
-            ApplyForcesTime = -1;
-            NarrowPhaseCollisionTime = -1;
-            BroadPhaseCollisionTime = -1;
-            CleanUpTime = -1;
-            MaxContactsToResolve = 2;
-            MaxContactsToDetect = 3;
-            BiasFactor = .8f;
-            AllowedPenetration = .05f;
-            Iterations = 5;
-            Gravity = Vector2.Zero;
             ConstructPhysicsSimulator(Vector2.Zero);
         }
 
         public PhysicsSimulator(Vector2 gravity)
         {
-            Enabled = true;
-            FrictionType = FrictionType.Average;
-            UpdateTime = -1;
-            UpdatePositionsTime = -1;
-            ApplyImpulsesTime = -1;
-            ApplyForcesTime = -1;
-            NarrowPhaseCollisionTime = -1;
-            BroadPhaseCollisionTime = -1;
-            CleanUpTime = -1;
-            MaxContactsToResolve = 2;
-            MaxContactsToDetect = 3;
-            BiasFactor = .8f;
-            AllowedPenetration = .05f;
-            Iterations = 5;
-            Gravity = Vector2.Zero;
             ConstructPhysicsSimulator(gravity);
         }
 
         /// <summary>
         /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
         /// </summary>
-        public ItemList<Geom> GeomList { get; internal set; }
+        public GeomList GeomList
+        {
+            get { return geomList; }
+            //set { geometryList = value; }
+        }
 
         /// <summary>
         /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
         /// </summary>
-        public ItemList<Body> BodyList { get; internal set; }
+        public BodyList BodyList
+        {
+            get { return bodyList; }
+            //set { bodyList = value; }
+        }
 
         /// <summary>
         /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
         /// </summary>
-        public ItemList<Controller> ControllerList { get; internal set; }
+        public ControllerList ControllerList
+        {
+            get { return controllerList; }
+            //set { controllerList = value; }
+        }
 
         /// <summary>
         /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
         /// </summary>
-        public ItemList<Joint> JointList { get; internal set; }
+        public JointList JointList
+        {
+            get { return jointList; }
+            //set { controllerList = value; }
+        }
 
         /// <summary>
         /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
         /// </summary>
-        public ArbiterList ArbiterList { get; internal set; }
+        public ArbiterList ArbiterList
+        {
+            get { return arbiterList; }
+        }
 
-        public Vector2 Gravity { get; set; }
-        public int Iterations { get; set; }
-        public bool EnableDiagnostics { get; set; }
-        public float AllowedPenetration { get; set; }
-        public float BiasFactor { get; set; }
-        public int MaxContactsToDetect { get; set; }
-        public int MaxContactsToResolve { get; set; }
-        public float CleanUpTime { get; internal set; }
-        public float BroadPhaseCollisionTime { get; internal set; }
-        public float NarrowPhaseCollisionTime { get; internal set; }
-        public float ApplyForcesTime { get; internal set; }
-        public float ApplyImpulsesTime { get; internal set; }
-        public float UpdatePositionsTime { get; internal set; }
-        public float UpdateTime { get; internal set; }
-        public FrictionType FrictionType { get; set; }
+        public Vector2 Gravity
+        {
+            get { return gravity; }
+            set { gravity = value; }
+        }
+
+        public int Iterations
+        {
+            get { return iterations; }
+            set { iterations = value; }
+        }
+
+        public float AllowedPenetration
+        {
+            get { return allowedPenetration; }
+            set { allowedPenetration = value; }
+        }
+
+        public float BiasFactor
+        {
+            get { return biasFactor; }
+            set { biasFactor = value; }
+        }
+
+        public int MaxContactsToDetect
+        {
+            get { return maxContactsToDetect; }
+            set { maxContactsToDetect = value; }
+        }
+
+        public int MaxContactsToResolve
+        {
+            get { return maxContactsToResolve; }
+            set { maxContactsToResolve = value; }
+        }
+
+        public float CleanUpTime
+        {
+            get { return cleanUpTime; }
+        }
+
+        public float BroadPhaseCollisionTime
+        {
+            get { return broadPhaseCollisionTime; }
+        }
+
+        public float NarrowPhaseCollisionTime
+        {
+            get { return narrowPhaseCollisionTime; }
+        }
+
+        public float ApplyForcesTime
+        {
+            get { return applyForcesTime; }
+        }
+
+        public float ApplyImpulsesTime
+        {
+            get { return applyImpulsesTime; }
+        }
+
+        public float UpdatePositionsTime
+        {
+            get { return updatePositionsTime; }
+        }
+
+        public float UpdateTime
+        {
+            get { return updateTime; }
+        }
+
+        public FrictionType FrictionType
+        {
+            get { return frictionType; }
+            set { frictionType = value; }
+        }
 
         /// <summary>
         /// If false, calling Update() will have no affect.  Essentially "pauses" the physics engine.
         /// </summary>
-        public bool Enabled { get; set; }
-
-        #region Added by Daniel Pramel 08/24/08
-
-        public Scaling Scaling { get; set; }
-
-        #endregion
+        public bool Enabled
+        {
+            get { return enabled; }
+            set { enabled = value; }
+        }
 
         private void ConstructPhysicsSimulator(Vector2 gravity)
         {
-            GeomList = new ItemList<Geom>();
+            geomList = new GeomList();
             geomAddList = new List<Geom>();
             geomRemoveList = new List<Geom>();
 
-            BodyList = new ItemList<Body>();
+            bodyList = new BodyList();
             bodyAddList = new List<Body>();
             bodyRemoveList = new List<Body>();
 
-            ControllerList = new ItemList<Controller>();
+            controllerList = new ControllerList();
             controllerAddList = new List<Controller>();
             controllerRemoveList = new List<Controller>();
 
-            JointList = new ItemList<Joint>();
+            jointList = new JointList();
             jointAddList = new List<Joint>();
             jointRemoveList = new List<Joint>();
 
-            _broadPhaseCollider = new SelectiveSweepCollider(this);
+            broadPhaseCollider = new SelectiveSweepCollider(this);
 
-            ArbiterList = new ArbiterList();
-            Gravity = gravity;
+            arbiterList = new ArbiterList();
+            this.gravity = gravity;
 
-            arbiterPool = new Pool<Arbiter>(_arbiterPoolSize);
+            arbiterPool = new Pool<Arbiter>(arbiterPoolSize);
 
             #region Added by Daniel Pramel 08/17/08
 
-            InactivityController = new InactivityController(this);
-            Scaling = new Scaling(0.001f, 0.01f);
+            inactivityController = new InactivityController(this);
+
+            scaling = new Scaling(0.001f, 0.01f);
 
             #endregion
         }
@@ -167,11 +245,11 @@ namespace FarseerGames.FarseerPhysics
 
         public void SetBroadPhaseCollider(IBroadPhaseCollider broadPhaseCollider)
         {
-            if (GeomList.Count > 0)
+            if (geomList.Count > 0)
             {
                 throw new Exception("The GeomList must be empty when setting the broad phase collider type");
             }
-            _broadPhaseCollider = broadPhaseCollider;
+            this.broadPhaseCollider = broadPhaseCollider;
         }
 
         public void Add(Geom geometry)
@@ -235,7 +313,7 @@ namespace FarseerGames.FarseerPhysics
             //controllerList.Clear();
             //arbiterPool = new Pool<Arbiter>(arbiterPoolSize); 
             //broadPhaseCollider = new SelectiveSweepCollider(this);
-            ConstructPhysicsSimulator(Gravity);
+            ConstructPhysicsSimulator(gravity);
         }
 
         public void Update(float dt)
@@ -249,39 +327,75 @@ namespace FarseerGames.FarseerPhysics
             {
                 return;
             }
+#if (XNA)
+            if (EnableDiagnostics) sw.Start();
+#endif
 
             #region Added by Daniel Pramel 08/24/08
 
-            dt = Scaling.GetUpdateInterval(dt);
+            dt = scaling.GetUpdateInterval(dt);
             if (dt == 0)
             {
                 return;
             }
 
 
-            if (Scaling.UpdateInterval < dtReal)
+            if (scaling.UpdateInterval < dtReal)
             {
-                Scaling.IncreaseUpdateInterval();
+                scaling.IncreaseUpdateInterval();
             }
             else
             {
-                Scaling.DecreaseUpdateInterval();
+                scaling.DecreaseUpdateInterval();
             }
 
             #endregion
 
             ProcessAddedItems();
-            //moved to before 'removeitems' to avoid confusion when calling add/remove without calling update.
+                //moved to before 'removeitems' to avoid confusion when calling add/remove without calling update.
             ProcessRemovedItems();
             ProcessDisposedItems();
 
-            if (!Enabled) return;
+            if (!enabled) return;
 
+#if (XNA)
+            if (EnableDiagnostics) cleanUpTime = sw.ElapsedTicks;
+#endif
             DoBroadPhaseCollision();
+#if (XNA)
+            if (EnableDiagnostics) broadPhaseCollisionTime = sw.ElapsedTicks - cleanUpTime;
+#endif
             DoNarrowPhaseCollision();
+#if (XNA)
+            if (EnableDiagnostics) narrowPhaseCollisionTime = sw.ElapsedTicks - broadPhaseCollisionTime - cleanUpTime;
+#endif
             ApplyForces(dt);
+#if (XNA)
+            if (EnableDiagnostics) applyForcesTime = sw.ElapsedTicks - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
+#endif
             ApplyImpulses(dt);
+#if (XNA)
+            if (EnableDiagnostics) applyImpulsesTime = sw.ElapsedTicks - applyForcesTime - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
+#endif
             UpdatePositions(dt);
+#if (XNA)
+            if (EnableDiagnostics) updatePositionsTime = sw.ElapsedTicks - applyImpulsesTime - applyForcesTime - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
+#endif
+#if (XNA)
+            if (EnableDiagnostics) {
+                sw.Stop();
+                updateTime = sw.ElapsedTicks;
+
+                cleanUpTime = 1000 * cleanUpTime/Stopwatch.Frequency;
+                broadPhaseCollisionTime = 1000*broadPhaseCollisionTime/Stopwatch.Frequency;
+                narrowPhaseCollisionTime =1000 * narrowPhaseCollisionTime/Stopwatch.Frequency;
+                applyForcesTime = 1000*applyForcesTime / Stopwatch.Frequency;
+                applyImpulsesTime = 1000*applyImpulsesTime / Stopwatch.Frequency;
+                updatePositionsTime = 1000*updatePositionsTime / Stopwatch.Frequency;
+                updateTime = 1000* updateTime/Stopwatch.Frequency;
+                sw.Reset();
+            }
+#endif
         }
 
         public Geom Collide(float x, float y)
@@ -291,7 +405,7 @@ namespace FarseerGames.FarseerPhysics
 
         public Geom Collide(Vector2 point)
         {
-            foreach (Geom geometry in GeomList)
+            foreach (Geom geometry in geomList)
             {
                 if (geometry.Collide(point))
                 {
@@ -309,7 +423,7 @@ namespace FarseerGames.FarseerPhysics
         public List<Geom> CollideAll(Vector2 point)
         {
             List<Geom> returnGeomList = new List<Geom>();
-            foreach (Geom geom in GeomList)
+            foreach (Geom geom in geomList)
             {
                 if (geom.Collide(point))
                 {
@@ -321,54 +435,54 @@ namespace FarseerGames.FarseerPhysics
 
         private void DoBroadPhaseCollision()
         {
-            _broadPhaseCollider.Update();
+            broadPhaseCollider.Update();
         }
 
         private void DoNarrowPhaseCollision()
         {
-            for (int i = 0; i < ArbiterList.Count; i++)
+            for (int i = 0; i < arbiterList.Count; i++)
             {
-                ArbiterList[i].Collide();
+                arbiterList[i].Collide();
             }
-            ArbiterList.RemoveContactCountEqualsZero(arbiterPool);
+            arbiterList.RemoveContactCountEqualsZero(arbiterPool);
         }
 
         private void ApplyForces(float dt)
         {
-            for (int i = 0; i < ControllerList.Count; i++)
+            for (int i = 0; i < controllerList.Count; i++)
             {
-                if (ControllerList[i].Enabled)
+                if (controllerList[i].Enabled)
                 {
-                    ControllerList[i].Update(dt);
+                    controllerList[i].Update(dt);
                 }
             }
 
-            for (int i = 0; i < BodyList.Count; i++)
+            for (int i = 0; i < bodyList.Count; i++)
             {
-                _body = BodyList[i];
-                if (!_body.Enabled)
+                body = bodyList[i];
+                if (!body.Enabled)
                 {
                     continue;
                 }
                 //apply accumulated external impules
-                _body.ApplyImpulses();
+                body.ApplyImpulses();
 
-                if (!_body.IgnoreGravity)
+                if (!body.ignoreGravity)
                 {
-                    _gravityForce.X = Gravity.X*_body._mass;
-                    _gravityForce.Y = Gravity.Y*_body._mass;
+                    gravityForce.X = gravity.X*body.mass;
+                    gravityForce.Y = gravity.Y*body.mass;
 
                     #region INLINE: body.ApplyForce(ref gravityForce);
 
-                    _body.force.X = _body.Force.X + _gravityForce.X;
-                    _body.force.Y = _body.Force.Y + _gravityForce.Y;
+                    body.force.X = body.force.X + gravityForce.X;
+                    body.force.Y = body.force.Y + gravityForce.Y;
 
                     #endregion
                 }
 
-                _body.IntegrateVelocity(dt);
-                _body.ClearForce();
-                _body.ClearTorque();
+                body.IntegrateVelocity(dt);
+                body.ClearForce();
+                body.ClearTorque();
             }
         }
 
@@ -376,77 +490,75 @@ namespace FarseerGames.FarseerPhysics
         {
             float inverseDt = 1f/dt;
 
-            for (int i = 0; i < JointList.Count; i++)
+            for (int i = 0; i < jointList.Count; i++)
             {
-                if (JointList[i].Enabled)
+                if (jointList[i].Enabled)
                 {
-                    JointList[i].PreStep(inverseDt);
+                    jointList[i].PreStep(inverseDt);
                 }
             }
 
-            for (int i = 0; i < ArbiterList.Count; i++)
+            for (int i = 0; i < arbiterList.Count; i++)
             {
-                ArbiterList[i].PreStepImpulse(inverseDt);
+                arbiterList[i].PreStepImpulse(inverseDt);
             }
 
-            for (int h = 0; h < Iterations; h++)
+            for (int h = 0; h < iterations; h++)
             {
-                for (int i = 0; i < JointList.Count; i++)
+                for (int i = 0; i < jointList.Count; i++)
                 {
-                    if (JointList[i].Enabled)
+                    if (jointList[i].Enabled)
                     {
-                        JointList[i].Update();
+                        jointList[i].Update();
                     }
                 }
 
-                for (int i = 0; i < ArbiterList.Count; i++)
+                for (int i = 0; i < arbiterList.Count; i++)
                 {
-                    ArbiterList[i].ApplyImpulse();
+                    arbiterList[i].ApplyImpulse();
                 }
             }
         }
 
         private void UpdatePositions(float dt)
         {
-            for (int i = 0; i < BodyList.Count; i++)
+            for (int i = 0; i < bodyList.Count; i++)
             {
-                if (!BodyList[i].Enabled)
+                if (!bodyList[i].enabled)
                 {
                     continue;
                 }
-                BodyList[i].IntegratePosition(dt);
+                bodyList[i].IntegratePosition(dt);
             }
         }
 
-        //Note: Cleanup, Method never used
-        //private void ReleaseArbitersWithDisposedGeom(Arbiter arbiter)
-        //{
-        //    if (arbiter.ContainsDisposedGeom())
-        //    {
-        //        arbiterPool.Release(arbiter);
-        //    }
-        //}
+        private void ReleaseArbitersWithDisposedGeom(Arbiter arbiter)
+        {
+            if (arbiter.ContainsDisposedGeom())
+            {
+                arbiterPool.Release(arbiter);
+            }
+        }
 
-        //Note: Cleanup, Method never used
-        //private void ReleaseArbitersWithContactCountZero(Arbiter arbiter)
-        //{
-        //    if (arbiter.ContactCount == 0)
-        //    {
-        //        arbiterPool.Release(arbiter);
-        //    }
-        //}
+        private void ReleaseArbitersWithContactCountZero(Arbiter arbiter)
+        {
+            if (arbiter.ContactCount == 0)
+            {
+                arbiterPool.Release(arbiter);
+            }
+        }
 
         private void ProcessAddedItems()
         {
             //add any new geometries
             for (int i = 0; i < geomAddList.Count; i++)
             {
-                if (!GeomList.Contains(geomAddList[i]))
+                if (!geomList.Contains(geomAddList[i]))
                 {
-                    geomAddList[i].IsRemoved = false;
-                    GeomList.Add(geomAddList[i]);
+                    geomAddList[i].isRemoved = false;
+                    geomList.Add(geomAddList[i]);
 
-                    _broadPhaseCollider.Add(geomAddList[i]);
+                    broadPhaseCollider.Add(geomAddList[i]);
                 }
             }
             geomAddList.Clear();
@@ -454,9 +566,9 @@ namespace FarseerGames.FarseerPhysics
             //add any new bodies
             for (int i = 0; i < bodyAddList.Count; i++)
             {
-                if (!BodyList.Contains(bodyAddList[i]))
+                if (!bodyList.Contains(bodyAddList[i]))
                 {
-                    BodyList.Add(bodyAddList[i]);
+                    bodyList.Add(bodyAddList[i]);
                 }
             }
             bodyAddList.Clear();
@@ -464,9 +576,9 @@ namespace FarseerGames.FarseerPhysics
             //add any new controllers
             for (int i = 0; i < controllerAddList.Count; i++)
             {
-                if (!ControllerList.Contains(controllerAddList[i]))
+                if (!controllerList.Contains(controllerAddList[i]))
                 {
-                    ControllerList.Add(controllerAddList[i]);
+                    controllerList.Add(controllerAddList[i]);
                 }
             }
             controllerAddList.Clear();
@@ -474,9 +586,9 @@ namespace FarseerGames.FarseerPhysics
             //add any new joints
             for (int i = 0; i < jointAddList.Count; i++)
             {
-                if (!JointList.Contains(jointAddList[i]))
+                if (!jointList.Contains(jointAddList[i]))
                 {
-                    JointList.Add(jointAddList[i]);
+                    jointList.Add(jointAddList[i]);
                 }
             }
             jointAddList.Clear();
@@ -487,23 +599,23 @@ namespace FarseerGames.FarseerPhysics
             //remove any new geometries
             for (int i = 0; i < geomRemoveList.Count; i++)
             {
-                geomRemoveList[i].IsRemoved = true;
-                GeomList.Remove(geomRemoveList[i]);
+                geomRemoveList[i].isRemoved = true;
+                geomList.Remove(geomRemoveList[i]);
 
                 //remove any arbiters associated with the geometries being removed
-                for (int j = ArbiterList.Count; j > 0; j--)
+                for (int j = arbiterList.Count; j > 0; j--)
                 {
-                    if (ArbiterList[j - 1].GeomA == geomRemoveList[i] ||
-                        ArbiterList[j - 1].GeomB == geomRemoveList[i])
+                    if (arbiterList[j - 1].geometryA == geomRemoveList[i] ||
+                        arbiterList[j - 1].geometryB == geomRemoveList[i])
                     {
-                        ArbiterList.Remove(ArbiterList[j - 1]);
+                        arbiterList.Remove(arbiterList[j - 1]);
                     }
                 }
             }
 
             if (geomRemoveList.Count > 0)
             {
-                _broadPhaseCollider.ProcessRemovedGeoms();
+                broadPhaseCollider.ProcessRemovedGeoms();
             }
 
             geomRemoveList.Clear();
@@ -511,51 +623,70 @@ namespace FarseerGames.FarseerPhysics
             //remove any new bodies
             for (int i = 0; i < bodyRemoveList.Count; i++)
             {
-                BodyList.Remove(bodyRemoveList[i]);
+                bodyList.Remove(bodyRemoveList[i]);
             }
             bodyRemoveList.Clear();
 
             //remove any new controllers
             for (int i = 0; i < controllerRemoveList.Count; i++)
             {
-                ControllerList.Remove(controllerRemoveList[i]);
+                controllerList.Remove(controllerRemoveList[i]);
             }
             controllerRemoveList.Clear();
 
             //remove any new joints
             for (int i = 0; i < jointRemoveList.Count; i++)
             {
-                JointList.Remove(jointRemoveList[i]);
+                jointList.Remove(jointRemoveList[i]);
             }
             jointRemoveList.Clear();
         }
 
         private void ProcessDisposedItems()
         {
+            int disposedGeomCount;
             //allow each controller to validate itself. this is where a controller can Dispose of itself if need be.
-            for (int i = 0; i < ControllerList.Count; i++)
+            for (int i = 0; i < controllerList.Count; i++)
             {
-                ControllerList[i].Validate();
+                controllerList[i].Validate();
             }
-            int disposedGeomCount = GeomList.RemoveDisposed();
+            disposedGeomCount = geomList.RemoveDisposed();
 
             if (disposedGeomCount > 0)
             {
-                _broadPhaseCollider.ProcessDisposedGeoms();
+                broadPhaseCollider.ProcessDisposedGeoms();
             }
 
-            BodyList.RemoveDisposed();
-            ControllerList.RemoveDisposed();
+            bodyList.RemoveDisposed();
+            controllerList.RemoveDisposed();
 
             //allow each joint to validate itself. this is where a joint can Dispose of itself if need be.
-            for (int i = 0; i < JointList.Count; i++)
+            for (int i = 0; i < jointList.Count; i++)
             {
-                JointList[i].Validate();
+                jointList[i].Validate();
             }
-            JointList.RemoveDisposed();
+            jointList.RemoveDisposed();
 
             //remove all arbiters that contain 1 or more disposed rigid bodies.
-            ArbiterList.RemoveContainsDisposedBody(arbiterPool);
+            arbiterList.RemoveContainsDisposedBody(arbiterPool);
         }
+
+        #region Added by Daniel Pramel 08/24/08
+
+        private Scaling scaling;
+
+        public Scaling Scaling
+        {
+            get { return scaling; }
+            set { scaling = value; }
+        }
+
+        #endregion
+    }
+
+    public enum FrictionType
+    {
+        Average = 0,
+        Minimum = 1
     }
 }

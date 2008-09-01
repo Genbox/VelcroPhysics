@@ -1,8 +1,6 @@
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
-using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -126,7 +124,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             {
                 spriteBatch.Draw(rectangleTexture, rectangleGeom[i].Position, null, Color.White,
                                  rectangleGeom[i].Rotation,
-                                 new Vector2(rectangleTexture.Width/2f, rectangleTexture.Height/2f), 1, SpriteEffects.None,
+                                 new Vector2(rectangleTexture.Width/2f, rectangleTexture.Height/2f), 1,
+                                 SpriteEffects.None,
                                  0);
             }
         }

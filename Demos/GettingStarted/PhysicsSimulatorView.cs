@@ -1,7 +1,6 @@
 using System;
 using FarseerGames.FarseerPhysics;
-using FarseerGames.FarseerPhysics.Dynamics.Joints;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
+using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;

@@ -3,8 +3,6 @@ using System.Text;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
-using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysicsDemos.Demos.DemoShare;
 using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
 using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
@@ -17,6 +15,12 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
 {
     public class Demo6Screen : GameScreen
     {
+        private const float platform1HeightRatio = .6f;
+        private const float platform1WidthRatio = .1f;
+        private const float platform2HeightRatio = .7f;
+        private const float platform2WidthRatio = .1f;
+        private const float platform3HeightRatio = .6f;
+        private const float platform3WidthRatio = .1f;
         private readonly LineBrush lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
 
         private readonly PhysicsSimulator physicsSimulator;
@@ -39,16 +43,10 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
         private FixedLinearSpring mousePickSpring;
         private Geom pickedGeom;
         private RectanglePlatform platform1;
-        private const float platform1HeightRatio = .6f;
-        private const float platform1WidthRatio = .1f;
 
         private RectanglePlatform platform2;
-        private const float platform2HeightRatio = .7f;
-        private const float platform2WidthRatio = .1f;
 
         private RectanglePlatform platform3;
-        private const float platform3HeightRatio = .6f;
-        private const float platform3WidthRatio = .1f;
         private SpringRectangleRope springRectangleRope1;
         private SpringRectangleRope springRectangleRope2;
         public bool updatedOnce;
@@ -57,7 +55,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
         {
             physicsSimulator = new PhysicsSimulator(new Vector2(0, 200));
             physicsSimulator.MaxContactsToDetect = 2;
-                //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
+            //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
             physicsSimulatorView = new PhysicsSimulatorView(physicsSimulator);
             physicsSimulatorView.EnableGridView = false;
             physicsSimulatorView.EnableEdgeView = false;
@@ -79,8 +77,9 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
             border.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             agent = new Agent(new Vector2(ScreenManager.ScreenCenter.X, 100));
-            agent.CollisionCategory = CollisionCategories.Cat5;
-            agent.CollidesWith = CollisionCategories.All & ~CollisionCategories.Cat4; //collide with all but Cat5(black)
+            agent.CollisionCategory = Enums.CollisionCategories.Cat5;
+            agent.CollidesWith = Enums.CollisionCategories.All & ~Enums.CollisionCategories.Cat4;
+                //collide with all but Cat5(black)
             agent.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             LoadPlatforms();
@@ -151,10 +150,10 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
             springRectangleRope1.DampningConstant = 3f;
             springRectangleRope1.Load(ScreenManager.GraphicsDevice, physicsSimulator);
             ControllerFactory.Instance.CreateLinearSpring(physicsSimulator, angularSpringLever3.Body,
-                                                                          new Vector2(
-                                                                              angularSpringLever3.RectangleWidth/2f, 0),
-                                                                          springRectangleRope1.FirstBody, Vector2.Zero,
-                                                                          400, 3);
+                                                          new Vector2(
+                                                              angularSpringLever3.RectangleWidth/2f, 0),
+                                                          springRectangleRope1.FirstBody, Vector2.Zero,
+                                                          400, 3);
 
             //platform 3
             width = Convert.ToInt32(ScreenManager.ScreenWidth*platform3WidthRatio);
@@ -169,9 +168,9 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
             hangingBody.Position = new Vector2(position.X - 200, 200);
             hangingGeom = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, hangingBody, 40, 20);
             ControllerFactory.Instance.CreateFixedLinearSpring(physicsSimulator, hangingBody,
-                                                                                    new Vector2(0, -35),
-                                                                                    new Vector2(position.X - 200, 100),
-                                                                                    2, .1f);
+                                                               new Vector2(0, -35),
+                                                               new Vector2(position.X - 200, 100),
+                                                               2, .1f);
 
             angularSpringLever4 = new AngularSpringLever();
             angularSpringLever4.AttachPoint = 2;
@@ -204,8 +203,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
             springRectangleRope2.CollisionGroup = 1; //same as agent collision group
             springRectangleRope2.Load(ScreenManager.GraphicsDevice, physicsSimulator);
             ControllerFactory.Instance.CreateLinearSpring(physicsSimulator, agent.Body, Vector2.Zero,
-                                                                          springRectangleRope2.FirstBody, Vector2.Zero,
-                                                                          200, 4f);
+                                                          springRectangleRope2.FirstBody, Vector2.Zero,
+                                                          200, 4f);
         }
 
         public override void UnloadContent()

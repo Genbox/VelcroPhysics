@@ -1,5 +1,6 @@
 using System;
 using FarseerGames.FarseerPhysicsDemos.Components;
+using FarseerGames.FarseerPhysicsDemos.Demos.Demo4;
 using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -59,7 +60,7 @@ namespace FarseerGames.FarseerPhysicsDemos
             //safeAreaComponent.DrawOrder = 100;
             //Components.Add(safeAreaComponent);
 
-            screenManager.AddScreen(new LogoScreen());
+            screenManager.AddScreen(new Demo4Screen());
         }
 
         public ScreenManager ScreenManager

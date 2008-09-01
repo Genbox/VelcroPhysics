@@ -1,13 +1,14 @@
 using System;
-using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
+#if (XNA)
+using Microsoft.Xna.Framework;
+#endif
 
-namespace FarseerGames.FarseerPhysics.Factories
+namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public class JointFactory
     {
-        private static JointFactory _instance;
+        private static JointFactory instance;
 
         private JointFactory()
         {
@@ -17,11 +18,11 @@ namespace FarseerGames.FarseerPhysics.Factories
         {
             get
             {
-                if (_instance == null)
+                if (instance == null)
                 {
-                    _instance = new JointFactory();
+                    instance = new JointFactory();
                 }
-                return _instance;
+                return instance;
             }
         }
 

@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
+#if (XNA)
+using Microsoft.Xna.Framework;
+#endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -39,23 +42,28 @@ namespace FarseerGames.FarseerPhysics.Collisions
             get { return ToArray(); }
         }
 
-        public int NextIndex(Int32 index)
+        public Int32 NextIndex(Int32 index)
         {
             if (index == Count - 1)
             {
                 return 0;
             }
-            return index + 1;
+            else
+            {
+                return index + 1;
+            }
         }
 
-        public int PreviousIndex(Int32 index)
+        public Int32 PreviousIndex(Int32 index)
         {
             if (index == 0)
             {
                 return Count - 1;
             }
-
-            return index - 1;
+            else
+            {
+                return index - 1;
+            }
         }
 
         public Vector2 GetEdge(Int32 index)
@@ -77,9 +85,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public Vector2 GetEdgeMidPoint(Int32 index)
         {
+            //Vector2 edge = GetEdge(index);
             GetEdge(index, out vectorTemp1);
+            //edge = Vector2.Multiply(edge, .5f);
             Vector2.Multiply(ref vectorTemp1, .5f, out vectorTemp2);
 
+            //Vector2 midPoint = Vector2.Add(localVertices[index], edge);
             vectorTemp3 = this[index];
             Vector2.Add(ref vectorTemp3, ref vectorTemp2, out vectorTemp1);
 
@@ -96,11 +107,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public Vector2 GetEdgeNormal(Int32 index)
         {
+            //Vector2 edge = GetEdge(index);
             GetEdge(index, out vectorTemp1);
 
+            //Vector2 edgeNormal = new Vector2(-edge.Y, edge.X);
             vectorTemp2.X = -vectorTemp1.Y;
             vectorTemp2.Y = vectorTemp1.X;
 
+            //edgeNormal.Normalize();
             Vector2.Normalize(ref vectorTemp2, out vectorTemp3);
 
             return vectorTemp3;
@@ -116,13 +130,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public Vector2 GetVertexNormal(Int32 index)
         {
+            //Vector2 nextEdge = GetEdgeNormal(index);
             GetEdgeNormal(index, out vectorTemp1);
 
+            //Vector2 prevEdge = GetEdgeNormal(PreviousIndex(index));
             int prevIndex = PreviousIndex(index);
             GetEdgeNormal(prevIndex, out vectorTemp2);
 
+            //Vector2 vertexNormal = Vector2.Add(nextEdge, prevEdge);
             Vector2.Add(ref vectorTemp1, ref vectorTemp2, out vectorTemp3);
 
+            //vertexNormal.Normalize();
             Vector2.Normalize(ref vectorTemp3, out vectorTemp1);
 
             return vectorTemp1;
@@ -154,19 +172,19 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public void SubDivideEdges(float maxEdgeLength)
         {
+            //throw new NotImplementedException("SubDivideEdges is not yet implemented");
+            //TODO: Implement SubDivideEdges()
             Vertices verticesTemp = new Vertices();
             double edgeCount;
             float edgeLength;
-            Vector2 vertA;
-            Vector2 vertB;
-            Vector2 edge;
+            Vector2 vertA = Vector2.Zero;
+            Vector2 vertB = Vector2.Zero;
+            Vector2 edge = Vector2.Zero;
             for (int i = 0; i < Count; i++)
             {
                 vertA = this[i];
                 vertB = this[NextIndex(i)];
-
-                //Note: Code cleanup, could be without assignment?
-                //edge = Vector2.Zero;
+                edge = Vector2.Zero;
                 Vector2.Subtract(ref vertA, ref vertB, out edge);
                 edgeLength = edge.Length();
 
@@ -182,12 +200,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     }
                 }
             }
-
+            //Debug.WriteLine(verticesTemp.ToString());
             Clear();
             for (int k = 0; k < verticesTemp.Count; k++)
             {
                 Add(verticesTemp[k]);
             }
+            //Debug.WriteLine(this.ToString());
         }
 
         public void ForceCounterClockWiseOrder()
@@ -246,8 +265,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             float cx = 0, cy = 0;
             int i, j;
 
-            float factor;
-
+            float factor = 0;
+            //Debug.WriteLine(verts.ToString());
             for (i = 0; i < Count; i++)
             {
                 j = (i + 1)%Count;
@@ -255,8 +274,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 factor = -(verts[i].X*verts[j].Y - verts[j].X*verts[i].Y);
                 cx += (verts[i].X + verts[j].X)*factor;
                 cy += (verts[i].Y + verts[j].Y)*factor;
+                //Debug.WriteLine(i.ToString() + factor.ToString() + " -- " + verts[i].ToString());
             }
-
             area *= 6.0f;
             factor = 1/area;
             cx *= factor;
@@ -285,8 +304,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             float denom = 0;
             float numer = 0;
             float a, b, c, d;
-            Vector2 v2;
-            Vector2 v1 = verts[verts.Count - 1];
+            Vector2 v1, v2;
+            v1 = verts[verts.Count - 1];
             for (int index = 0; index < verts.Count; index++, v1 = v2)
             {
                 v2 = verts[index];
@@ -367,14 +386,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 vertices.Add(new Vector2(radius*Calculator.Cos(stepSize*i), -radius*Calculator.Sin(stepSize*i)));
             }
             return vertices;
-        }
-
-        public void Scale(Vector2 scale)
-        {
-            for (int i = Count - 1; i >= 0; i--)
-            {
-                this[i] *= scale;
-            }
         }
 
         public override string ToString()

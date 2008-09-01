@@ -1,8 +1,6 @@
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Dynamics.Joints;
-using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -136,13 +134,14 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
                                                                            position);
             physicsSimulator.Add(revoluteJoint);
             ControllerFactory.Instance.CreateFixedAngleSpring(physicsSimulator, angleSpringleverBody,
-                                                                                 springConstant, dampningConstant);
+                                                              springConstant, dampningConstant);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(rectangleTexture, rectangleGeom.Position, null, Color.White, rectangleGeom.Rotation,
-                             new Vector2(rectangleTexture.Width/2f, rectangleTexture.Height/2f), 1, SpriteEffects.None, 0);
+                             new Vector2(rectangleTexture.Width/2f, rectangleTexture.Height/2f), 1, SpriteEffects.None,
+                             0);
             spriteBatch.Draw(circleTexture, circleGeom.Position, null, Color.White, circleGeom.Rotation,
                              new Vector2(circleTexture.Width/2f, circleTexture.Height/2f), 1, SpriteEffects.None, 0);
         }

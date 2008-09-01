@@ -7,24 +7,24 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 {
     internal class PauseScreen : MenuScreen
     {
+        private const int leftBorder = 20;
+        private const int panelHeight = 512;
+
+        private const int panelWidth = 640;
+        private const int textLeftBorder = 20;
+        private const int textPanelHeight = 512;
+        private const int textPanelLeftBorder = 200;
+
+        private const int textPanelWidth = 440;
+        private const int textTopBorder = 20;
         private readonly string details = "Details";
         private readonly Color panelColor = new Color(100, 100, 100, 200);
         private readonly Color textColor = Color.White;
         private readonly Color textPanelColor = new Color(100, 100, 100, 220);
         private readonly string title = "Title";
         private SpriteFont detailsFont;
-        private const int leftBorder = 20;
-        private const int panelHeight = 512;
-
         private Texture2D panelTexture;
-        private const int panelWidth = 640;
-        private const int textLeftBorder = 20;
-        private const int textPanelHeight = 512;
-        private const int textPanelLeftBorder = 200;
-
         private Texture2D textPanelTexture;
-        private const int textPanelWidth = 440;
-        private const int textTopBorder = 20;
 
         public PauseScreen(string title, string details)
         {

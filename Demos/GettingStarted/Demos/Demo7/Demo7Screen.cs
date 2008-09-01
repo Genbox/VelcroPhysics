@@ -1,8 +1,7 @@
 using System.Text;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
-using FarseerGames.FarseerPhysics.Factories;
+using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysicsDemos.Demos.DemoShare;
 using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
 using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
@@ -54,8 +53,9 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo7
             border.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             agent = new Agent(ScreenManager.ScreenCenter - new Vector2(200, 0));
-            agent.CollisionCategory = CollisionCategories.Cat5;
-            agent.CollidesWith = CollisionCategories.All & ~CollisionCategories.Cat4; //collide with all but Cat5(black)
+            agent.CollisionCategory = Enums.CollisionCategories.Cat5;
+            agent.CollidesWith = Enums.CollisionCategories.All & ~Enums.CollisionCategories.Cat4;
+                //collide with all but Cat5(black)
             agent.Load(ScreenManager.GraphicsDevice, physicsSimulator);
             agent.Body.LinearDragCoefficient = .001f;
 

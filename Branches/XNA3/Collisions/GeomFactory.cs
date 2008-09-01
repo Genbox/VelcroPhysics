@@ -1,31 +1,43 @@
-using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
+#if (XNA)
+using Microsoft.Xna.Framework;
+#endif
 
-namespace FarseerGames.FarseerPhysics.Factories
+namespace FarseerGames.FarseerPhysics.Collisions
 {
     public class GeomFactory
     {
-        private static GeomFactory _instance;
+        private static GeomFactory instance;
+
+        /// <summary>
+        ///used to calculate a cell size from the aabb whenever the collisionGridCellSize
+        ///is not set explicitly. The more sharp corners a body has, the smaller this value will 
+        ///need to be. 
+        /// </summary>
+        private float gridCellSizeAABBFactor = .1f;
 
         private GeomFactory()
         {
-            GridCellSizeAABBFactor = .1f;
         }
 
         public static GeomFactory Instance
         {
             get
             {
-                if (_instance == null)
+                if (instance == null)
                 {
-                    _instance = new GeomFactory();
+                    instance = new GeomFactory();
                 }
-                return _instance;
+                return instance;
             }
         }
 
-        public float GridCellSizeAABBFactor { get; set; }
+        public float GridCellSizeAABBFactor
+        {
+            get { return gridCellSizeAABBFactor; }
+            set { gridCellSizeAABBFactor = value; }
+        }
 
         //rectangles
         public Geom CreateRectangleGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height)
@@ -200,7 +212,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         public float CalculateGridCellSizeFromAABB(Vertices vertices)
         {
             AABB aabb = new AABB(vertices);
-            return aabb.GetShortestSide()*GridCellSizeAABBFactor;
+            return aabb.GetShortestSide()*gridCellSizeAABBFactor;
         }
     }
 }

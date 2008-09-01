@@ -6,12 +6,15 @@ namespace FarseerGames.FarseerPhysics.Controllers
     public class InactivityController : Controller
     {
         private readonly PhysicsSimulator _physicsSimulator;
+
+        private float _activationDistance = 100;
+        private int _bodiesEnabled;
+
         private Vector2 _difference = Vector2.Zero;
+        private float _maxIdleTime = 1000;
 
         public InactivityController(PhysicsSimulator physicsSimulator)
         {
-            MaxIdleTime = 1000;
-            ActivationDistance = 100;
             _physicsSimulator = physicsSimulator;
             _physicsSimulator.Add(this);
             Enabled = false; // disable by default
@@ -20,17 +23,28 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// <summary>
         /// Returns the number of active bodies before updating
         /// </summary>
-        public int BodiesEnabled { get; private set; }
+        public int BodiesEnabled
+        {
+            get { return _bodiesEnabled; }
+        }
 
         /// <summary>
         /// Returns or sets the distance in which deactivated bodies can be reactivated by an active body
         /// </summary>
-        public float ActivationDistance { get; set; }
+        public float ActivationDistance
+        {
+            get { return _activationDistance; }
+            set { _activationDistance = value; }
+        }
 
         /// <summary>
         /// Returns or sets the idle time in ms before a body will be deactivated
         /// </summary>
-        public float MaxIdleTime { get; set; }
+        public float MaxIdleTime
+        {
+            get { return _maxIdleTime; }
+            set { _maxIdleTime = value; }
+        }
 
         public override void Validate()
         {
@@ -41,9 +55,9 @@ namespace FarseerGames.FarseerPhysics.Controllers
         {
             float ms = dt*1000;
 
-            BodiesEnabled = 0;
+            _bodiesEnabled = 0;
 
-            if (IsDisposed)
+            if (isDisposed)
             {
                 return;
             }
@@ -52,13 +66,13 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 if (b.IsStatic) continue; // do not apply to static bodies
                 if (b.Enabled == false) continue; // do not apply to disabled bodies
 
-                BodiesEnabled++;
+                _bodiesEnabled++;
 
                 if (!b.Moves && b.IsAutoIdle)
                 {
                     // body doesn't move -> increment idle time
                     b.IdleTime += ms;
-                    if (b.IdleTime >= MaxIdleTime) b.Enabled = false;
+                    if (b.IdleTime >= _maxIdleTime) b.Enabled = false;
                 }
                 else
                 {
@@ -66,13 +80,13 @@ namespace FarseerGames.FarseerPhysics.Controllers
                     b.IdleTime = 0;
 
                     // ... and check if this body can enable disabled bodies
-                    foreach (Body b2 in _physicsSimulator.BodyList)
+                    foreach (Body b2 in _physicsSimulator.bodyList)
                     {
-                        if (b2.Enabled == false && b2.IsAutoIdle)
+                        if (b2.enabled == false && b2.IsAutoIdle)
                         {
                             if (IsInActivationDistance(b, b2))
                             {
-                                b2.Enabled = true;
+                                b2.enabled = true;
                                 b2.IdleTime = 0;
                             }
                         }
@@ -83,14 +97,15 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         public bool IsInActivationDistance(Body b1, Body b2)
         {
+            float distance;
             _difference = b1.position - b2.position;
-            float distance = _difference.Length();
+            distance = _difference.Length();
             if (distance < 0)
             {
                 _difference *= -1;
             }
 
-            return distance <= ActivationDistance;
+            return distance <= _activationDistance;
         }
     }
 }

@@ -2,7 +2,6 @@ using System;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -22,8 +21,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
         private CircleBrush circleBrush;
         private Geom[] circleGeom;
 
-        private CollisionCategories collidesWith = CollisionCategories.All;
-        private CollisionCategories collisionCategories = CollisionCategories.All;
+        private Enums.CollisionCategories collidesWith = Enums.CollisionCategories.All;
+        private Enums.CollisionCategories collisionCategories = Enums.CollisionCategories.All;
 
         public Circles(Vector2 startPosition, Vector2 endPosition, int count, int radius, Color color, Color borderColor)
         {
@@ -39,13 +38,13 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             this.endPosition = endPosition;
         }
 
-        public CollisionCategories CollisionCategories
+        public Enums.CollisionCategories CollisionCategories
         {
             get { return collisionCategories; }
             set { collisionCategories = value; }
         }
 
-        public CollisionCategories CollidesWith
+        public Enums.CollisionCategories CollidesWith
         {
             get { return collidesWith; }
             set { collidesWith = value; }
