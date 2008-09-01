@@ -21,8 +21,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
         private CircleBrush circleBrush;
         private Geom[] circleGeom;
 
-        private Enums.CollisionCategories collidesWith = Enums.CollisionCategories.All;
-        private Enums.CollisionCategories collisionCategories = Enums.CollisionCategories.All;
+        private CollisionCategories collidesWith = CollisionCategories.All;
+        private CollisionCategories collisionCategories = CollisionCategories.All;
 
         public Circles(Vector2 startPosition, Vector2 endPosition, int count, int radius, Color color, Color borderColor)
         {
@@ -38,13 +38,13 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             this.endPosition = endPosition;
         }
 
-        public Enums.CollisionCategories CollisionCategories
+        public CollisionCategories CollisionCategories
         {
             get { return collisionCategories; }
             set { collisionCategories = value; }
         }
 
-        public Enums.CollisionCategories CollidesWith
+        public CollisionCategories CollidesWith
         {
             get { return collidesWith; }
             set { collidesWith = value; }

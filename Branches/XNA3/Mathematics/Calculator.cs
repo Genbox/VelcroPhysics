@@ -1,8 +1,5 @@
 using System;
 using Microsoft.Xna.Framework;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Mathematics
 {
@@ -174,10 +171,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
             {
                 return true;
             }
-            else
-            {
                 return false;
-            }
         }
 
         public static float VectorToRadians(Vector2 vector)

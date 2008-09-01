@@ -77,8 +77,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
             border.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             agent = new Agent(new Vector2(ScreenManager.ScreenCenter.X, 100));
-            agent.CollisionCategory = Enums.CollisionCategories.Cat5;
-            agent.CollidesWith = Enums.CollisionCategories.All & ~Enums.CollisionCategories.Cat4;
+            agent.CollisionCategory = CollisionCategories.Cat5;
+            agent.CollidesWith = CollisionCategories.All & ~CollisionCategories.Cat4;
                 //collide with all but Cat5(black)
             agent.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 

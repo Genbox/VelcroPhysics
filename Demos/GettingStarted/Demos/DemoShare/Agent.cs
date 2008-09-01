@@ -17,8 +17,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
         private Vector2 agentOrigin;
         private Texture2D agentTexture;
 
-        private Enums.CollisionCategories collidesWith = Enums.CollisionCategories.All;
-        private Enums.CollisionCategories collisionCategory = Enums.CollisionCategories.All;
+        private CollisionCategories collidesWith = CollisionCategories.All;
+        private CollisionCategories collisionCategory = CollisionCategories.All;
 
         public Agent(Vector2 position)
         {
@@ -30,13 +30,13 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             get { return agentBody; }
         }
 
-        public Enums.CollisionCategories CollisionCategory
+        public CollisionCategories CollisionCategory
         {
             get { return collisionCategory; }
             set { collisionCategory = value; }
         }
 
-        public Enums.CollisionCategories CollidesWith
+        public CollisionCategories CollidesWith
         {
             get { return collidesWith; }
             set { collidesWith = value; }

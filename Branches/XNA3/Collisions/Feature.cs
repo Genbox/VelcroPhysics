@@ -1,15 +1,10 @@
 using System;
 using Microsoft.Xna.Framework;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     public struct Feature
     {
-        //public Feature() { }
-
         public float Distance; // = float.MaxValue;
         public Vector2 Normal; // = Vector2.Zero;
         public Vector2 Position; // = Vector2.Zero;

@@ -1,9 +1,6 @@
 using System;
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
@@ -143,12 +140,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 return;
             }
 
-            //set some temp variables
-            body1InverseMass = body1.inverseMass;
-            body1InverseMomentOfInertia = body1.inverseMomentOfInertia;
-            body2InverseMass = body2.inverseMass;
-            body2InverseMomentOfInertia = body2.inverseMomentOfInertia;
-
             //calc r1 and r2 from the anchors
             body1.GetBodyMatrix(out body1MatrixTemp);
             body2.GetBodyMatrix(out body2MatrixTemp);
@@ -253,12 +244,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         private Vector2 accumulatedImpulseVector;
         private float angularImpulse;
-        private float body1InverseMass;
-        private float body1InverseMomentOfInertia;
         private Matrix body1MatrixTemp;
 
-        private float body2InverseMass;
-        private float body2InverseMomentOfInertia;
         private Matrix body2MatrixTemp;
         private float kNormal;
 

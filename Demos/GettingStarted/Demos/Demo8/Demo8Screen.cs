@@ -53,8 +53,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo8
             border.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             agent = new Agent(ScreenManager.ScreenCenter);
-            agent.CollisionCategory = Enums.CollisionCategories.Cat5;
-            agent.CollidesWith = Enums.CollisionCategories.All & ~Enums.CollisionCategories.Cat4;
+            agent.CollisionCategory = CollisionCategories.Cat5;
+            agent.CollidesWith = CollisionCategories.All & ~CollisionCategories.Cat4;
                 //collide with all but Cat5(black)
             agent.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
@@ -81,8 +81,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo8
             for (int i = 0; i < redCircles.Length; i++)
             {
                 redCircles[i] = new Circles(startPosition, endPosition, balls, 5, new Color(200, 0, 0, 175), Color.Black);
-                redCircles[i].CollisionCategories = (Enums.CollisionCategories.Cat1);
-                redCircles[i].CollidesWith = (Enums.CollisionCategories.Cat5);
+                redCircles[i].CollisionCategories = (CollisionCategories.Cat1);
+                redCircles[i].CollidesWith = (CollisionCategories.Cat5);
                 redCircles[i].Load(ScreenManager.GraphicsDevice, physicsSimulator);
                 startPosition.Y += ySpacing;
                 endPosition.Y += ySpacing;
@@ -95,8 +95,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo8
             {
                 blueCircles[i] = new Circles(startPosition, endPosition, balls, 5, new Color(0, 0, 200, 175),
                                              Color.Black);
-                blueCircles[i].CollisionCategories = (Enums.CollisionCategories.Cat3);
-                blueCircles[i].CollidesWith = (Enums.CollisionCategories.Cat5);
+                blueCircles[i].CollisionCategories = (CollisionCategories.Cat3);
+                blueCircles[i].CollidesWith = (CollisionCategories.Cat5);
                 blueCircles[i].Load(ScreenManager.GraphicsDevice, physicsSimulator);
                 startPosition.Y += ySpacing;
                 endPosition.Y += ySpacing;
@@ -109,8 +109,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo8
             {
                 greenCircles[i] = new Circles(startPosition, endPosition, balls, 5, new Color(0, 200, 0, 175),
                                               Color.Black);
-                greenCircles[i].CollisionCategories = (Enums.CollisionCategories.Cat2);
-                greenCircles[i].CollidesWith = (Enums.CollisionCategories.Cat5);
+                greenCircles[i].CollisionCategories = (CollisionCategories.Cat2);
+                greenCircles[i].CollidesWith = (CollisionCategories.Cat5);
                 greenCircles[i].Load(ScreenManager.GraphicsDevice, physicsSimulator);
                 startPosition.Y += ySpacing;
                 endPosition.Y += ySpacing;
@@ -122,8 +122,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo8
             for (int i = 0; i < blackCircles.Length; i++)
             {
                 blackCircles[i] = new Circles(startPosition, endPosition, balls, 5, new Color(0, 0, 0, 175), Color.Black);
-                blackCircles[i].CollisionCategories = (Enums.CollisionCategories.Cat4);
-                blackCircles[i].CollidesWith = (Enums.CollisionCategories.Cat5);
+                blackCircles[i].CollisionCategories = (CollisionCategories.Cat4);
+                blackCircles[i].CollidesWith = (CollisionCategories.Cat5);
                 blackCircles[i].Load(ScreenManager.GraphicsDevice, physicsSimulator);
                 startPosition.Y += ySpacing;
                 endPosition.Y += ySpacing;

@@ -1,8 +1,5 @@
 using System;
 using Microsoft.Xna.Framework;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
@@ -155,8 +152,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private Vector2 force;
         private float springForce;
         private float temp;
-        private Vector2 vectorTemp1 = Vector2.Zero;
-        private Vector2 vectorTemp2 = Vector2.Zero;
 
         #endregion
     }

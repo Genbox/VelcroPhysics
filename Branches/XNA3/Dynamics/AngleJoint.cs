@@ -1,7 +1,4 @@
 using System;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
@@ -12,7 +9,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         protected Body body2;
 
         private float breakpoint = float.MaxValue;
-        private bool enabled = true;
 
         private float jointError;
         private float massFactor;
@@ -118,8 +114,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             if (isDisposed) return;
             if (!Enabled) return;
-            float angularImpulse;
-            angularImpulse = (velocityBias - body2.angularVelocity + body1.angularVelocity)*massFactor;
+            float angularImpulse = (velocityBias - body2.angularVelocity + body1.angularVelocity)*massFactor;
 
             body1.angularVelocity -= body1.inverseMomentOfInertia*Math.Sign(angularImpulse)*
                                      Math.Min(Math.Abs(angularImpulse), maxImpulse);

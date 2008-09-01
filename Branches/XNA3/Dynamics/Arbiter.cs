@@ -7,9 +7,6 @@ using System;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
@@ -30,9 +27,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         //used for ref/out methods
         private Vector2 vec1 = Vector2.Zero;
         private Vector2 vec2 = Vector2.Zero;
-        private Vector2 vec3 = Vector2.Zero;
-        private Vector2 vec4 = Vector2.Zero;
-        private Vector2 vec5 = Vector2.Zero;
 
         public Arbiter()
         {
@@ -442,8 +436,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private void Collide(Geom geometry1, Geom geometry2, ContactList contactList)
         {
             int vertexIndex = -1;
-            //matrixInverseTemp = this.MatrixInverse;
-            matrixTemp = geometry1.Matrix;
+
             for (int i = 0; i < geometry2.worldVertices.Count; i++)
             {
                 if (contactList.Count == physicsSimulator.maxContactsToDetect)
@@ -471,9 +464,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     contactList.Add(contact);
                 }
             }
-
-            matrixInverseTemp = geometry2.MatrixInverse;
-            matrixTemp = geometry2.Matrix;
 
             for (int i = 0; i < geometry1.WorldVertices.Count; i++)
             {
@@ -547,14 +537,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 return -1;
             }
-            else if (c1.Seperation == c2.Seperation)
+            
+            if (c1.Seperation == c2.Seperation)
             {
                 return 0;
             }
-            else
-            {
-                return 1;
-            }
+                            return 1;
+           
         }
 
         private void InitializeContactLists(int maxContactsToDetect)
@@ -601,8 +590,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         private Feature feature;
         private Vector2 localVertex;
-        private Matrix matrixInverseTemp;
-        private Matrix matrixTemp;
         private Vector2 vertRef;
 
         #endregion

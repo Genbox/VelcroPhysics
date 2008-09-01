@@ -1,10 +1,6 @@
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Dynamics;
 
-#if (SILVERLIGHT)
-//using FarseerGames.FarseerPhysics.Collections.Generic;
-#endif
-
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     public sealed class SelectiveSweepCollider : IBroadPhaseCollider
@@ -33,61 +29,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             wrapper.AddStubs(xStubs, yStubs);
         }
 
-        public void ProcessRemovedGeoms()
-        {
-            if (wrappers.RemoveAll(WrapperIsRemoved) > 0)
-            {
-                xStubs.RemoveAll(StubIsRemoved);
-                yStubs.RemoveAll(StubIsRemoved);
-            }
-        }
-
-        public void ProcessDisposedGeoms()
-        {
-            if (wrappers.RemoveAll(WrapperIsDisposed) > 0)
-            {
-                xStubs.RemoveAll(StubIsDisposed);
-                yStubs.RemoveAll(StubIsDisposed);
-            }
-        }
-
-        public void Update()
-        {
-            InternalUpdate();
-            DetectInternal(ShouldDoX());
-        }
-
-        #endregion
-
-        public void Clear()
-        {
-            wrappers.Clear();
-            xStubs.Clear();
-            yStubs.Clear();
-        }
-
-        private static bool WrapperIsDisposed(Wrapper wrapper)
-        {
-            return wrapper.geom.IsDisposed;
-        }
-
-        private static bool StubIsDisposed(Stub stub)
-        {
-            return stub.wrapper.geom.IsDisposed;
-        }
-
-        private static bool WrapperIsRemoved(Wrapper wrapper)
-        {
-            return wrapper.geom.isRemoved;
-        }
-
-        private static bool StubIsRemoved(Stub stub)
-        {
-            return stub.wrapper.geom.isRemoved;
-        }
-
-#if (!SILVERLIGHT)
-#else
         public void ProcessRemovedGeoms()
         {
             bool match = false;
@@ -155,8 +96,41 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 }
             }
         }
-#endif
 
+        public void Update()
+        {
+            InternalUpdate();
+            DetectInternal(ShouldDoX());
+        }
+
+        #endregion
+
+        public void Clear()
+        {
+            wrappers.Clear();
+            xStubs.Clear();
+            yStubs.Clear();
+        }
+
+        private static bool WrapperIsDisposed(Wrapper wrapper)
+        {
+            return wrapper.geom.IsDisposed;
+        }
+
+        private static bool StubIsDisposed(Stub stub)
+        {
+            return stub.wrapper.geom.IsDisposed;
+        }
+
+        private static bool WrapperIsRemoved(Wrapper wrapper)
+        {
+            return wrapper.geom.isRemoved;
+        }
+
+        private static bool StubIsRemoved(Stub stub)
+        {
+            return stub.wrapper.geom.isRemoved;
+        }
 
         /// <summary>
         /// updates all the nodes to their new values and sorts the lists
@@ -277,8 +251,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 return;
             }
 
-            if (((geom1.collisionCategories & geom2.collidesWith) == Enums.CollisionCategories.None) &
-                ((geom2.collisionCategories & geom1.collidesWith) == Enums.CollisionCategories.None))
+            if (((geom1.collisionCategories & geom2.collidesWith) == CollisionCategories.None) &
+                ((geom2.collisionCategories & geom1.collidesWith) == CollisionCategories.None))
             {
                 return;
             }

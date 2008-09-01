@@ -2,9 +2,6 @@ using System;
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -48,10 +45,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return 0;
             }
-            else
-            {
                 return index + 1;
-            }
         }
 
         public Int32 PreviousIndex(Int32 index)
@@ -60,10 +54,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return Count - 1;
             }
-            else
-            {
                 return index - 1;
-            }
         }
 
         public Vector2 GetEdge(Int32 index)
@@ -172,8 +163,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public void SubDivideEdges(float maxEdgeLength)
         {
-            //throw new NotImplementedException("SubDivideEdges is not yet implemented");
-            //TODO: Implement SubDivideEdges()
             Vertices verticesTemp = new Vertices();
             double edgeCount;
             float edgeLength;
@@ -265,7 +254,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             float cx = 0, cy = 0;
             int i, j;
 
-            float factor = 0;
+            float factor;
             //Debug.WriteLine(verts.ToString());
             for (i = 0; i < Count; i++)
             {
@@ -304,8 +293,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             float denom = 0;
             float numer = 0;
             float a, b, c, d;
-            Vector2 v1, v2;
-            v1 = verts[verts.Count - 1];
+            Vector2 v2;
+            Vector2 v1 = verts[verts.Count - 1];
             for (int index = 0; index < verts.Count; index++, v1 = v2)
             {
                 v2 = verts[index];

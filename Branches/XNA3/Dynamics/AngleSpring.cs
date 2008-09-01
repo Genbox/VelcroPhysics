@@ -1,7 +1,4 @@
 using System;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
@@ -126,7 +123,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 return;
             }
             //calculate and apply spring force
-            float angle = body2.totalRotation - body1.totalRotation;
             float angleDifference = body2.totalRotation - (body1.totalRotation + targetAngle);
             float springTorque = springConstant*angleDifference;
             springError = angleDifference; //keep track of 'springError' for breaking joint

@@ -4,9 +4,6 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics
 {
@@ -532,22 +529,6 @@ namespace FarseerGames.FarseerPhysics
             }
         }
 
-        private void ReleaseArbitersWithDisposedGeom(Arbiter arbiter)
-        {
-            if (arbiter.ContainsDisposedGeom())
-            {
-                arbiterPool.Release(arbiter);
-            }
-        }
-
-        private void ReleaseArbitersWithContactCountZero(Arbiter arbiter)
-        {
-            if (arbiter.ContactCount == 0)
-            {
-                arbiterPool.Release(arbiter);
-            }
-        }
-
         private void ProcessAddedItems()
         {
             //add any new geometries
@@ -682,11 +663,5 @@ namespace FarseerGames.FarseerPhysics
         }
 
         #endregion
-    }
-
-    public enum FrictionType
-    {
-        Average = 0,
-        Minimum = 1
     }
 }

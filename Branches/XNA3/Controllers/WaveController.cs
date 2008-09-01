@@ -3,9 +3,6 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Controllers
 {
@@ -154,10 +151,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 {
                     return false;
                 }
-                else
-                {
                     return true;
-                }
             }
             catch (Exception ex)
             {
@@ -203,10 +197,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 timePassed += dt;
                 return;
             }
-            else
-            {
                 timePassed = 0;
-            }
 
             aabbMin = float.MaxValue;
             aabb.min.Y = aabbMin;

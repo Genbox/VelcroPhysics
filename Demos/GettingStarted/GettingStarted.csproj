@@ -163,7 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Branches\XNA3\FarseerPhysics.csproj">
-      <Project>{B5AEA352-0946-43C0-8D67-4358946AFF91}</Project>
+      <Project>{4B438D36-4203-455A-B9DF-35E1939D0BAA}</Project>
       <Name>FarseerPhysics</Name>
     </ProjectReference>
   </ItemGroup>
