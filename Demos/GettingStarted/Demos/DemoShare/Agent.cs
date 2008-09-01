@@ -1,7 +1,6 @@
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,8 +17,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
         private Vector2 agentOrigin;
         private Texture2D agentTexture;
 
-        private CollisionCategories collidesWith = CollisionCategories.All;
-        private CollisionCategories collisionCategory = CollisionCategories.All;
+        private Enums.CollisionCategories collidesWith = Enums.CollisionCategories.All;
+        private Enums.CollisionCategories collisionCategory = Enums.CollisionCategories.All;
 
         public Agent(Vector2 position)
         {
@@ -31,13 +30,13 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             get { return agentBody; }
         }
 
-        public CollisionCategories CollisionCategory
+        public Enums.CollisionCategories CollisionCategory
         {
             get { return collisionCategory; }
             set { collisionCategory = value; }
         }
 
-        public CollisionCategories CollidesWith
+        public Enums.CollisionCategories CollidesWith
         {
             get { return collidesWith; }
             set { collidesWith = value; }

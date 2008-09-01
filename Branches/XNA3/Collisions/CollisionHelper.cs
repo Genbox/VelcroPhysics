@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+#if (XNA)
+using Microsoft.Xna.Framework;
+#endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -225,9 +228,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             for (int i = 0; i < verts.Count; i++)
             {
                 Vector2 point;
-
-                //Note: Cleanup, variable not used
-                //int nextIndex = (i == verts.Count - 1 ? 0 : i + 1);
+                int nextIndex = (i == verts.Count - 1 ? 0 : i + 1);
                 if (LineIntersect(verts[i], verts[verts.NextIndex(i)],
                                   p1, p2, true, true, defaultFloatTolerance, out point))
                 {

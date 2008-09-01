@@ -1,5 +1,8 @@
 using System;
 using Microsoft.Xna.Framework;
+#if (XNA)
+using Microsoft.Xna.Framework;
+#endif
 
 namespace FarseerGames.FarseerPhysics.Mathematics
 {
@@ -8,16 +11,16 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         public const float DegreesToRadiansRatio = 57.29577957855f;
         public const float RadiansToDegreesRatio = 1f/57.29577957855f;
         public const float TwoPi = 6.28318531f;
-        private static readonly Random _random = new Random();
-        private static Vector2 _curveEnd;
-        private static Vector2 _startCurve;
+        private static readonly Random random = new Random();
         private static Vector2 _temp;
+        private static Vector2 curveEnd;
+        private static Vector2 startCurve;
 
         /// Temp variables to speed up the following code.
-        private static float _tPow2;
+        private static float tPow2;
 
-        private static float _wayToGo;
-        private static float _wayToGoPow2;
+        private static float wayToGo;
+        private static float wayToGoPow2;
 
         public static float Sin(float angle)
         {
@@ -45,6 +48,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         {
             float x = point.X;
             float y = point.Y;
+            float value;
 
             x = MathHelper.Clamp(x, min.X, max.X);
             y = MathHelper.Clamp(y, min.Y, max.Y);
@@ -55,7 +59,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
             float top = MathHelper.Lerp(value1, value4, xRatio);
             float bottom = MathHelper.Lerp(value2, value3, xRatio);
 
-            float value = MathHelper.Lerp(top, bottom, yRatio);
+            value = MathHelper.Lerp(top, bottom, yRatio);
             value = MathHelper.Clamp(value, minValue, maxValue);
             return value;
         }
@@ -73,7 +77,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
 
         public static float DistanceBetweenPointAndPoint(ref Vector2 point1, ref Vector2 point2)
         {
-            Vector2 v;
+            Vector2 v = Vector2.Zero;
             Vector2.Subtract(ref point1, ref point2, out v);
             return v.Length();
         }
@@ -161,7 +165,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
 
         public static float RandomNumber(float min, float max)
         {
-            return (float) ((max - min)*_random.NextDouble() + min);
+            return (float) ((max - min)*random.NextDouble() + min);
         }
 
         public static bool IsBetweenNonInclusive(float number, float min, float max)
@@ -170,8 +174,10 @@ namespace FarseerGames.FarseerPhysics.Mathematics
             {
                 return true;
             }
-
-            return false;
+            else
+            {
+                return false;
+            }
         }
 
         public static float VectorToRadians(Vector2 vector)
@@ -221,21 +227,21 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         /// <returns></returns>
         public static Vector2 QuadraticBezierCurve(Vector2 start, Vector2 curve, Vector2 end, float t)
         {
-            _wayToGo = 1.0f - t;
+            wayToGo = 1.0f - t;
 
-            return _wayToGo*_wayToGo*start
-                   + 2.0f*t*_wayToGo*curve
+            return wayToGo*wayToGo*start
+                   + 2.0f*t*wayToGo*curve
                    + t*t*end;
         }
 
         public static Vector2 QuadraticBezierCurve(Vector2 start, Vector2 curve, Vector2 end, float t, ref float radians)
         {
-            _startCurve = start + (curve - start)*t;
-            _curveEnd = curve + (end - curve)*t;
-            _temp = _curveEnd - _startCurve;
+            startCurve = start + (curve - start)*t;
+            curveEnd = curve + (end - curve)*t;
+            _temp = curveEnd - startCurve;
 
             radians = (float) Math.Atan2(_temp.X, -(double) _temp.Y);
-            return _startCurve + _temp*t;
+            return startCurve + _temp*t;
         }
 
         public static Vector2 CubicBezierCurve2(Vector2 start, Vector2 startPointsTo, Vector2 end, Vector2 endPointsTo,
@@ -264,14 +270,14 @@ namespace FarseerGames.FarseerPhysics.Mathematics
 
         public static Vector2 CubicBezierCurve(Vector2 start, Vector2 curve1, Vector2 curve2, Vector2 end, float t)
         {
-            _tPow2 = t*t;
-            _wayToGo = 1.0f - t;
-            _wayToGoPow2 = _wayToGo*_wayToGo;
+            tPow2 = t*t;
+            wayToGo = 1.0f - t;
+            wayToGoPow2 = wayToGo*wayToGo;
 
-            return _wayToGo*_wayToGoPow2*start
-                   + 3.0f*t*_wayToGoPow2*curve1
-                   + 3.0f*_tPow2*_wayToGo*curve2
-                   + t*_tPow2*end;
+            return wayToGo*wayToGoPow2*start
+                   + 3.0f*t*wayToGoPow2*curve1
+                   + 3.0f*tPow2*wayToGo*curve2
+                   + t*tPow2*end;
         }
 
         public static Vector2 CubicBezierCurve(Vector2 start, Vector2 curve1, Vector2 curve2, Vector2 end, float t,

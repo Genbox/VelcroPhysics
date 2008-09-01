@@ -1,12 +1,14 @@
 using System;
 using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics;
+#if (XNA)
+using Microsoft.Xna.Framework;
+#endif
 
-namespace FarseerGames.FarseerPhysics.Factories
+namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public class BodyFactory
     {
-        private static BodyFactory _instance;
+        private static BodyFactory instance;
 
         private BodyFactory()
         {
@@ -16,11 +18,11 @@ namespace FarseerGames.FarseerPhysics.Factories
         {
             get
             {
-                if (_instance == null)
+                if (instance == null)
                 {
-                    _instance = new BodyFactory();
+                    instance = new BodyFactory();
                 }
-                return _instance;
+                return instance;
             }
         }
 

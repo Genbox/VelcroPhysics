@@ -2,8 +2,6 @@ using System.Text;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
-using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysicsDemos.Demos.DemoShare;
 using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
 using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
@@ -16,6 +14,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
 {
     public class Demo4Screen : GameScreen
     {
+        private const int pyramidBaseBodyCount = 16;
         private readonly LineBrush lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
 
         private readonly PhysicsSimulator physicsSimulator;
@@ -24,7 +23,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
         private Agent agent;
         private ContentManager contentManager;
         private bool debugViewEnabled;
-        private bool firstRun = true;
+        private bool firstRun;
         private Floor floor;
         private FixedLinearSpring mousePickSpring;
         private Geom pickedGeom;
@@ -33,7 +32,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
 #if XBOX
         private int pyramidBaseBodyCount = 8;
 #else
-        private const int pyramidBaseBodyCount = 16;
         private Body rectangleBody;
         private Geom rectangleGeom;
         private Texture2D rectangleTexture;
@@ -45,7 +43,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
             physicsSimulator = new PhysicsSimulator(new Vector2(0, 50));
             physicsSimulator.BiasFactor = .4f;
             physicsSimulator.MaxContactsToDetect = 2;
-                //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
+            //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
             physicsSimulatorView = new PhysicsSimulatorView(physicsSimulator);
         }
 
