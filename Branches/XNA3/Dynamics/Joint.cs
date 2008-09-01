@@ -43,7 +43,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 if (disposing)
                 {
                 }
-                ;
                 isDisposed = true;
             }
         }

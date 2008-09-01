@@ -11,8 +11,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
     {
         private const int spiderBodyRadius = 20;
         private readonly Vector2 position;
-        private Enums.CollisionCategories collidesWith = Enums.CollisionCategories.All;
-        private Enums.CollisionCategories collisionCategory = Enums.CollisionCategories.All;
+        private CollisionCategories collidesWith = CollisionCategories.All;
+        private CollisionCategories collisionCategory = CollisionCategories.All;
         private int collisionGroup;
         private bool kneeFlexed;
         private float kneeTargetAngle = .4f;
@@ -54,13 +54,13 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             get { return spiderBody; }
         }
 
-        public Enums.CollisionCategories CollisionCategory
+        public CollisionCategories CollisionCategory
         {
             get { return collisionCategory; }
             set { collisionCategory = value; }
         }
 
-        public Enums.CollisionCategories CollidesWith
+        public CollisionCategories CollidesWith
         {
             get { return collidesWith; }
             set { collidesWith = value; }

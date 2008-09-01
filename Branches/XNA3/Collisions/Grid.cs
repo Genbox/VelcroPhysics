@@ -1,8 +1,5 @@
 using System;
 using Microsoft.Xna.Framework;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -85,18 +82,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     topLeft <= 0 ||
                     topRight <= 0)
                 {
-                    float top, bottom, distance;
-
-                    top = MathHelper.Lerp(topLeft, topRight, xPercent);
-                    bottom = MathHelper.Lerp(bottomLeft, bottomRight, xPercent);
-                    distance = MathHelper.Lerp(bottom, top, yPercent);
+                    float top = MathHelper.Lerp(topLeft, topRight, xPercent);
+                    float bottom = MathHelper.Lerp(bottomLeft, bottomRight, xPercent);
+                    float distance = MathHelper.Lerp(bottom, top, yPercent);
 
                     if (distance <= 0)
                     {
-                        float right, left;
-
-                        right = MathHelper.Lerp(bottomRight, topRight, yPercent);
-                        left = MathHelper.Lerp(bottomLeft, topLeft, yPercent);
+                        float right = MathHelper.Lerp(bottomRight, topRight, yPercent);
+                        float left = MathHelper.Lerp(bottomLeft, topLeft, yPercent);
 
                         Vector2 normal = Vector2.Zero;
                         normal.X = right - left;
@@ -117,7 +110,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 }
             }
             feature = new Feature();
-            //feature = null;
             return false;
         }
     }

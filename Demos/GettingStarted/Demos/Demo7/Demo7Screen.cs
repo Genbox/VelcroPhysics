@@ -53,8 +53,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo7
             border.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             agent = new Agent(ScreenManager.ScreenCenter - new Vector2(200, 0));
-            agent.CollisionCategory = Enums.CollisionCategories.Cat5;
-            agent.CollidesWith = Enums.CollisionCategories.All & ~Enums.CollisionCategories.Cat4;
+            agent.CollisionCategory = CollisionCategories.Cat5;
+            agent.CollidesWith = CollisionCategories.All & ~CollisionCategories.Cat4;
                 //collide with all but Cat5(black)
             agent.Load(ScreenManager.GraphicsDevice, physicsSimulator);
             agent.Body.LinearDragCoefficient = .001f;

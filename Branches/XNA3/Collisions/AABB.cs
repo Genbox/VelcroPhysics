@@ -1,8 +1,5 @@
 using System;
 using Microsoft.Xna.Framework;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -98,10 +95,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return true;
             }
-            else
-            {
                 return false;
-            }
         }
 
         public bool Contains(ref Vector2 point)
@@ -112,10 +106,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return true;
             }
-            else
-            {
                 return false;
-            }
         }
 
         public static bool Intersect(AABB aabb1, AABB aabb2)
@@ -124,7 +115,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return false;
             }
-            else if (aabb1.min.Y > aabb2.Max.Y || aabb2.min.Y > aabb1.Max.Y)
+            
+            if (aabb1.min.Y > aabb2.Max.Y || aabb2.min.Y > aabb1.Max.Y)
             {
                 return false;
             }

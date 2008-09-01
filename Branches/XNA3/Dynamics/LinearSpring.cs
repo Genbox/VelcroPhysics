@@ -1,8 +1,5 @@
 using System;
 using Microsoft.Xna.Framework;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
@@ -27,7 +24,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private float springError;
         private float springForce;
         private float temp;
-        private Vector2 vectorTemp2 = Vector2.Zero;
         private Vector2 velocityAtPoint1 = Vector2.Zero;
         private Vector2 velocityAtPoint2 = Vector2.Zero;
         private Vector2 worldPoint1 = Vector2.Zero;
@@ -164,11 +160,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 Vector2.Multiply(ref force, -1, out force);
                 body2.ApplyForceAtLocalPoint(ref force, ref attachPoint2);
             }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
         }
     }
 }

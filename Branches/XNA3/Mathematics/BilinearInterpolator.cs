@@ -1,9 +1,5 @@
 using Microsoft.Xna.Framework;
 
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
-
 namespace FarseerGames.FarseerPhysics.Mathematics
 {
     /// <summary>
@@ -64,8 +60,6 @@ namespace FarseerGames.FarseerPhysics.Mathematics
 
         public float GetValue(float x, float y)
         {
-            float value;
-
             x = MathHelper.Clamp(x, min.X, max.X);
             y = MathHelper.Clamp(y, min.Y, max.Y);
 
@@ -75,7 +69,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
             float top = MathHelper.Lerp(value1, value4, xRatio);
             float bottom = MathHelper.Lerp(value2, value3, xRatio);
 
-            value = MathHelper.Lerp(top, bottom, yRatio);
+            float value = MathHelper.Lerp(top, bottom, yRatio);
             value = MathHelper.Clamp(value, minValue, maxValue);
             return value;
         }

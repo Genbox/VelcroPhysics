@@ -1,9 +1,6 @@
 using System;
 using FarseerGames.FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -25,12 +22,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private EventHandler<EventArgs> bodyDisposed;
         private Body.UpdatedEventHandler bodyUpdated;
 
-        internal Enums.CollisionCategories collidesWith = Enums.CollisionCategories.All;
+        internal CollisionCategories collidesWith = CollisionCategories.All;
                                            //collides with all categories by default
 
         public CollisionEventHandler Collision;
 
-        internal Enums.CollisionCategories collisionCategories = Enums.CollisionCategories.All;
+        internal CollisionCategories collisionCategories = CollisionCategories.All;
                                            //member off all categories by default
 
         internal bool collisionEnabled = true;
@@ -152,13 +149,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
             set { collsionResponseEnabled = value; }
         }
 
-        public Enums.CollisionCategories CollisionCategories
+        public CollisionCategories CollisionCategories
         {
             get { return collisionCategories; }
             set { collisionCategories = value; }
         }
 
-        public Enums.CollisionCategories CollidesWith
+        public CollisionCategories CollidesWith
         {
             get { return collidesWith; }
             set { collidesWith = value; }
@@ -383,10 +380,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return true;
             }
-            else
-            {
                 return false;
-            }
         }
 
         public bool Collide(Geom geometry)
@@ -491,7 +485,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             // If one is null, but not both, return false.
-            if (((object) geometry1 == null) || ((object) geometry1 == null))
+            if (((object) geometry1 == null) || ((object) geometry2 == null))
             {
                 return false;
             }
@@ -545,7 +539,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         body.Disposed -= bodyDisposed;
                     }
                 }
-                ;
+                
                 //dispose unmanaged resources
             }
             isDisposed = true;

@@ -2,9 +2,6 @@ using System;
 using System.Diagnostics;
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
@@ -352,7 +349,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private Vector2 vectorTemp2 = Vector2.Zero;
         private Vector2 vectorTemp3 = Vector2.Zero;
         private Vector2 vectorTemp4 = Vector2.Zero;
-        private Vector2 vectorTemp5 = Vector2.Zero;
 
         #endregion
     }

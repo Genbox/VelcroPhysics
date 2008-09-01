@@ -62,8 +62,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
             border.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             agent = new Agent(ScreenManager.ScreenCenter);
-            agent.CollisionCategory = Enums.CollisionCategories.Cat5;
-            agent.CollidesWith = Enums.CollisionCategories.All & ~Enums.CollisionCategories.Cat4;
+            agent.CollisionCategory = CollisionCategories.Cat5;
+            agent.CollidesWith = CollisionCategories.All & ~CollisionCategories.Cat4;
                 //collide with all but Cat5(black)
             agent.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
@@ -76,96 +76,96 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
             Vector2 startPosition = new Vector2(100, 100);
             Vector2 endPosition = new Vector2(100, ScreenManager.ScreenHeight - 100);
             redCircles1 = new Circles(startPosition, endPosition, 15, 15, new Color(200, 0, 0, 175), Color.Black);
-            redCircles1.CollisionCategories = (Enums.CollisionCategories.Cat1);
-            redCircles1.CollidesWith = (Enums.CollisionCategories.Cat1 | Enums.CollisionCategories.Cat4 |
-                                        Enums.CollisionCategories.Cat5);
+            redCircles1.CollisionCategories = (CollisionCategories.Cat1);
+            redCircles1.CollidesWith = (CollisionCategories.Cat1 | CollisionCategories.Cat4 |
+                                        CollisionCategories.Cat5);
             redCircles1.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             startPosition = new Vector2(200, 200);
             endPosition = new Vector2(200, ScreenManager.ScreenHeight - 200);
             redCircles2 = new Circles(startPosition, endPosition, 15, 12, new Color(200, 0, 0, 175), Color.Black);
-            redCircles2.CollisionCategories = (Enums.CollisionCategories.Cat1);
-            redCircles2.CollidesWith = (Enums.CollisionCategories.Cat1 | Enums.CollisionCategories.Cat4 |
-                                        Enums.CollisionCategories.Cat5);
+            redCircles2.CollisionCategories = (CollisionCategories.Cat1);
+            redCircles2.CollidesWith = (CollisionCategories.Cat1 | CollisionCategories.Cat4 |
+                                        CollisionCategories.Cat5);
             redCircles2.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             startPosition = new Vector2(300, 300);
             endPosition = new Vector2(300, ScreenManager.ScreenHeight - 300);
             redCircles3 = new Circles(startPosition, endPosition, 10, 9, new Color(200, 0, 0, 175), Color.Black);
-            redCircles3.CollisionCategories = (Enums.CollisionCategories.Cat1);
-            redCircles3.CollidesWith = (Enums.CollisionCategories.Cat1 | Enums.CollisionCategories.Cat4 |
-                                        Enums.CollisionCategories.Cat5);
+            redCircles3.CollisionCategories = (CollisionCategories.Cat1);
+            redCircles3.CollidesWith = (CollisionCategories.Cat1 | CollisionCategories.Cat4 |
+                                        CollisionCategories.Cat5);
             redCircles3.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             startPosition = new Vector2(200, 100);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 200, 100);
             greenCircles1 = new Circles(startPosition, endPosition, 15, 15, new Color(0, 200, 0, 175), Color.Black);
-            greenCircles1.CollisionCategories = (Enums.CollisionCategories.Cat2);
-            greenCircles1.CollidesWith = (Enums.CollisionCategories.Cat2 | Enums.CollisionCategories.Cat4 |
-                                          Enums.CollisionCategories.Cat5);
+            greenCircles1.CollisionCategories = (CollisionCategories.Cat2);
+            greenCircles1.CollidesWith = (CollisionCategories.Cat2 | CollisionCategories.Cat4 |
+                                          CollisionCategories.Cat5);
             greenCircles1.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             startPosition = new Vector2(300, 200);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 300, 200);
             greenCircles2 = new Circles(startPosition, endPosition, 15, 12, new Color(0, 200, 0, 175), Color.Black);
-            greenCircles2.CollisionCategories = (Enums.CollisionCategories.Cat2);
-            greenCircles2.CollidesWith = (Enums.CollisionCategories.Cat2 | Enums.CollisionCategories.Cat4 |
-                                          Enums.CollisionCategories.Cat5);
+            greenCircles2.CollisionCategories = (CollisionCategories.Cat2);
+            greenCircles2.CollidesWith = (CollisionCategories.Cat2 | CollisionCategories.Cat4 |
+                                          CollisionCategories.Cat5);
             greenCircles2.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             startPosition = new Vector2(400, 300);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 400, 300);
             greenCircles3 = new Circles(startPosition, endPosition, 10, 9, new Color(0, 200, 0, 175), Color.Black);
-            greenCircles3.CollisionCategories = (Enums.CollisionCategories.Cat2);
-            greenCircles3.CollidesWith = (Enums.CollisionCategories.Cat2 | Enums.CollisionCategories.Cat4 |
-                                          Enums.CollisionCategories.Cat5);
+            greenCircles3.CollisionCategories = (CollisionCategories.Cat2);
+            greenCircles3.CollidesWith = (CollisionCategories.Cat2 | CollisionCategories.Cat4 |
+                                          CollisionCategories.Cat5);
             greenCircles3.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             startPosition = new Vector2(ScreenManager.ScreenWidth - 100, 100);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 100, ScreenManager.ScreenHeight - 100);
             blueCircles1 = new Circles(startPosition, endPosition, 15, 15, new Color(0, 0, 200, 175), Color.Black);
-            blueCircles1.CollisionCategories = (Enums.CollisionCategories.Cat3);
-            blueCircles1.CollidesWith = (Enums.CollisionCategories.Cat3 | Enums.CollisionCategories.Cat4 |
-                                         Enums.CollisionCategories.Cat5);
+            blueCircles1.CollisionCategories = (CollisionCategories.Cat3);
+            blueCircles1.CollidesWith = (CollisionCategories.Cat3 | CollisionCategories.Cat4 |
+                                         CollisionCategories.Cat5);
             blueCircles1.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             startPosition = new Vector2(ScreenManager.ScreenWidth - 200, 200);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 200, ScreenManager.ScreenHeight - 200);
             blueCircles2 = new Circles(startPosition, endPosition, 15, 12, new Color(0, 0, 200, 175), Color.Black);
-            blueCircles2.CollisionCategories = (Enums.CollisionCategories.Cat3);
-            blueCircles2.CollidesWith = (Enums.CollisionCategories.Cat3 | Enums.CollisionCategories.Cat4 |
-                                         Enums.CollisionCategories.Cat5);
+            blueCircles2.CollisionCategories = (CollisionCategories.Cat3);
+            blueCircles2.CollidesWith = (CollisionCategories.Cat3 | CollisionCategories.Cat4 |
+                                         CollisionCategories.Cat5);
             blueCircles2.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             startPosition = new Vector2(ScreenManager.ScreenWidth - 300, 300);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 300, ScreenManager.ScreenHeight - 300);
             blueCircles3 = new Circles(startPosition, endPosition, 10, 9, new Color(0, 0, 200, 175), Color.Black);
-            blueCircles3.CollisionCategories = (Enums.CollisionCategories.Cat3);
-            blueCircles3.CollidesWith = (Enums.CollisionCategories.Cat3 | Enums.CollisionCategories.Cat4 |
-                                         Enums.CollisionCategories.Cat5);
+            blueCircles3.CollisionCategories = (CollisionCategories.Cat3);
+            blueCircles3.CollidesWith = (CollisionCategories.Cat3 | CollisionCategories.Cat4 |
+                                         CollisionCategories.Cat5);
             blueCircles3.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             startPosition = new Vector2(200, ScreenManager.ScreenHeight - 100);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 200, ScreenManager.ScreenHeight - 100);
             blackCircles1 = new Circles(startPosition, endPosition, 15, 15, new Color(0, 0, 0, 200), Color.Black);
-            blackCircles1.CollisionCategories = Enums.CollisionCategories.Cat4;
-            blackCircles1.CollidesWith = Enums.CollisionCategories.All & ~Enums.CollisionCategories.Cat5;
+            blackCircles1.CollisionCategories = CollisionCategories.Cat4;
+            blackCircles1.CollidesWith = CollisionCategories.All & ~CollisionCategories.Cat5;
             //Collide with all but Cat5
             blackCircles1.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             startPosition = new Vector2(300, ScreenManager.ScreenHeight - 200);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 300, ScreenManager.ScreenHeight - 200);
             blackCircles2 = new Circles(startPosition, endPosition, 15, 12, new Color(0, 0, 0, 200), Color.Black);
-            blackCircles2.CollisionCategories = Enums.CollisionCategories.Cat4;
-            blackCircles2.CollidesWith = Enums.CollisionCategories.All & ~Enums.CollisionCategories.Cat5;
+            blackCircles2.CollisionCategories = CollisionCategories.Cat4;
+            blackCircles2.CollidesWith = CollisionCategories.All & ~CollisionCategories.Cat5;
             //Collide with all but Cat5
             blackCircles2.Load(ScreenManager.GraphicsDevice, physicsSimulator);
 
             startPosition = new Vector2(400, ScreenManager.ScreenHeight - 300);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 400, ScreenManager.ScreenHeight - 300);
             blackCircles3 = new Circles(startPosition, endPosition, 10, 9, new Color(0, 0, 0, 200), Color.Black);
-            blackCircles3.CollisionCategories = Enums.CollisionCategories.Cat4;
-            blackCircles3.CollidesWith = Enums.CollisionCategories.All & ~Enums.CollisionCategories.Cat5;
+            blackCircles3.CollisionCategories = CollisionCategories.Cat4;
+            blackCircles3.CollidesWith = CollisionCategories.All & ~CollisionCategories.Cat5;
             //Collide with all but Cat5
             blackCircles3.Load(ScreenManager.GraphicsDevice, physicsSimulator);
         }

@@ -1,9 +1,5 @@
 using System.Collections.Generic;
 
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
-
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     public class ContactList : List<Contact>

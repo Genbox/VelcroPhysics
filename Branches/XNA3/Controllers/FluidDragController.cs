@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Controllers
 {
@@ -24,7 +21,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private Vector2 axis = Vector2.Zero;
         private Vector2 buoyancyForce = Vector2.Zero;
         private Vector2 centroid = Vector2.Zero;
-        private float centroidSpeed;
         private Vector2 centroidVelocity;
         private float density;
         private float dragArea;
@@ -32,7 +28,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private Vector2 gravity = Vector2.Zero;
         private float linearDragCoefficient;
         private Vector2 linearDragForce = Vector2.Zero;
-        private Vector2 localCentroid = Vector2.Zero;
         private float max;
         private float min;
         public OnEntryHandler OnEntry;
@@ -126,13 +121,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
                     vertices.Add(vert);
                 }
             }
-        }
-
-        private void CalculateAreaAndCentroid()
-        {
-            area = vertices.GetArea();
-
-            centroid = vertices.GetCentroid(area);
         }
 
         private void CalculateBuoyancy()
