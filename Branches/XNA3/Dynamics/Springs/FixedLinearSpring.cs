@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
     public class FixedLinearSpring : Controller
     {

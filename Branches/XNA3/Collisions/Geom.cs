@@ -1,5 +1,6 @@
 using System;
 using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Interfaces;
 using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Collisions
@@ -9,8 +10,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </remark>
     public class Geom : IEquatable<Geom>, IIsDisposable
     {
-        //public class Geom : ICollideable<Geom>, IEquatable<Geom>, IIsDisposable {
-
         #region Delegates
 
         public delegate bool CollisionEventHandler(Geom geometry1, Geom geometry2, ContactList contactList);
@@ -363,9 +362,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             float b = c1/c2;
             v = Vector2.Multiply(v, b);
-            Vector2 Pb = Vector2.Add(localVertices[index], v);
-            Vector2 d2 = Vector2.Subtract(point, Pb);
-            feature.Position = Pb;
+            Vector2 pb = Vector2.Add(localVertices[index], v);
+            Vector2 d2 = Vector2.Subtract(point, pb);
+            feature.Position = pb;
             feature.Normal = localVertices.GetEdgeNormal(index); // GetEdgeNormal(index);
             feature.Distance = d2.Length();
             return feature;

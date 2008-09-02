@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Interfaces;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -46,14 +47,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void ProcessDisposedGeoms()
         {
-            if (_xInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.IsDisposed; }) > 0)
+            if (_xInfoList.RemoveAll(i => i.geometry.IsDisposed) > 0)
             {
-                _xExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.IsDisposed; });
+                _xExtentList.RemoveAll(n => n.info.geometry.IsDisposed);
             }
 
-            if (_yInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.IsDisposed; }) > 0)
+            if (_yInfoList.RemoveAll(i => i.geometry.IsDisposed) > 0)
             {
-                _yExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.IsDisposed; });
+                _yExtentList.RemoveAll(n => n.info.geometry.IsDisposed);
             }
 
             // We force a non-incremental update because that will insure that the
@@ -68,13 +69,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void ProcessRemovedGeoms()
         {
-            if (_xInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.isRemoved; }) > 0)
+            if (_xInfoList.RemoveAll(i => i.geometry.isRemoved) > 0)
             {
-                _xExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.isRemoved; });
+                _xExtentList.RemoveAll(n => n.info.geometry.isRemoved);
             }
-            if (_yInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.isRemoved; }) > 0)
+            if (_yInfoList.RemoveAll(i => i.geometry.isRemoved) > 0)
             {
-                _yExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.isRemoved; });
+                _yExtentList.RemoveAll(n => n.info.geometry.isRemoved);
             }
 
             // We force a non-incremental update because that will insure that the
@@ -252,8 +253,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             // Force sort
-            _xExtentList.Sort(delegate(Extent l, Extent r) { return l.value.CompareTo(r.value); });
-            _yExtentList.Sort(delegate(Extent l, Extent r) { return l.value.CompareTo(r.value); });
+            _xExtentList.Sort((l, r) => l.value.CompareTo(r.value));
+            _yExtentList.Sort((l, r) => l.value.CompareTo(r.value));
 
             // Rebuild overlap information
             List<Geom> overlaps = new List<Geom>();
@@ -261,11 +262,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 overlaps.Clear();
 
-                ExtentList extentList = null;
-                if (i == 0)
-                    extentList = _xExtentList;
-                else
-                    extentList = _yExtentList;
+                ExtentList extentList = i == 0 ? _xExtentList : _yExtentList;
 
                 foreach (Extent extent in extentList)
                 {

@@ -1,6 +1,7 @@
 using System;
+using FarseerGames.FarseerPhysics.Dynamics.Joints;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     public class FixedAngleJoint : Joint
     {

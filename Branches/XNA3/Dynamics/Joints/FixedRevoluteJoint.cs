@@ -1,9 +1,10 @@
 using System;
 using System.Diagnostics;
+using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     public class FixedRevoluteJoint : Joint
     {

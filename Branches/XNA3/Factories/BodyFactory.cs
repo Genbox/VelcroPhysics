@@ -1,7 +1,8 @@
 using System;
 using FarseerGames.FarseerPhysics.Collisions;
+using FarseerGames.FarseerPhysics.Dynamics;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Factories
 {
     public class BodyFactory
     {

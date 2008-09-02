@@ -1,6 +1,8 @@
+using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using Microsoft.Xna.Framework;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Factories
 {
     public class ControllerFactory
     {

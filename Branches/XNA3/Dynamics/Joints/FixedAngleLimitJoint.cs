@@ -1,51 +1,43 @@
 using System;
+using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
-    public class AngleLimitJoint : Joint
+    public class FixedAngleLimitJoint : Joint
     {
         private float _accumlatedAngularImpulseOld;
         private float _accumulatedAngularImpulse;
         private float _angularImpulse;
         private float _biasFactor = .2f;
-        protected Body body1;
-        protected Body body2;
+        protected Body body;
         private float _breakpoint = float.MaxValue;
         private float _difference;
         private float _jointError;
         private float _lowerLimit;
         private bool _lowerLimitViolated;
         private float _massFactor;
-
         private float _slop = .01f;
         private float _softness;
         private float _upperLimit;
         private bool _upperLimitViolated;
         private float _velocityBias;
 
-        public AngleLimitJoint()
+        public FixedAngleLimitJoint()
         {
         }
 
-        public AngleLimitJoint(Body body1, Body body2, float lowerLimit, float upperLimit)
+        public FixedAngleLimitJoint(Body body, float lowerLimit, float upperLimit)
         {
-            this.body1 = body1;
-            this.body2 = body2;
+            this.body = body;
             _lowerLimit = lowerLimit;
             _upperLimit = upperLimit;
         }
 
-        public Body Body1
+        public Body Body
         {
-            get { return body1; }
-            set { body1 = value; }
-        }
-
-        public Body Body2
-        {
-            get { return body2; }
-            set { body2 = value; }
+            get { return body; }
+            set { body = value; }
         }
 
         public float BiasFactor
@@ -93,7 +85,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public override void Validate()
         {
-            if (body1.IsDisposed || body2.IsDisposed)
+            if (body.IsDisposed)
             {
                 Dispose();
             }
@@ -110,8 +102,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 return;
             }
-            _difference = (body2.totalRotation - body1.totalRotation);
-            _jointError = 0;
+            _difference = body.totalRotation;
 
             if (_difference > _upperLimit)
             {
@@ -129,6 +120,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 {
                     _jointError = _difference - _upperLimit;
                 }
+                _velocityBias = _biasFactor*inverseDt*_jointError;
             }
             else if (_difference < _lowerLimit)
             {
@@ -155,11 +147,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 _accumulatedAngularImpulse = 0;
             }
             _velocityBias = _biasFactor*inverseDt*_jointError;
-
-            _massFactor = 1/(_softness + body1.inverseMomentOfInertia + body2.inverseMomentOfInertia);
-
-            body1.angularVelocity -= body1.inverseMomentOfInertia*_accumulatedAngularImpulse;
-            body2.angularVelocity += body2.inverseMomentOfInertia*_accumulatedAngularImpulse;
+            _massFactor = (1 - _softness)/body.inverseMomentOfInertia;
+            body.angularVelocity += body.inverseMomentOfInertia*_accumulatedAngularImpulse;
         }
 
         public override void Update()
@@ -172,10 +161,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 return;
             }
+
             _angularImpulse = 0;
-            _angularImpulse =
-                -(_velocityBias + (body2.angularVelocity - body1.angularVelocity) + _softness*_accumulatedAngularImpulse)*
-                _massFactor;
+            _angularImpulse = -(_velocityBias + body.angularVelocity + _softness*_accumulatedAngularImpulse)*_massFactor;
 
             _accumlatedAngularImpulseOld = _accumulatedAngularImpulse;
 
@@ -190,8 +178,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
             _angularImpulse = _accumulatedAngularImpulse - _accumlatedAngularImpulseOld;
 
-            body1.angularVelocity -= body1.inverseMomentOfInertia*_angularImpulse;
-            body2.angularVelocity += body2.inverseMomentOfInertia*_angularImpulse;
+            body.angularVelocity += body.inverseMomentOfInertia*_angularImpulse;
         }
     }
 }

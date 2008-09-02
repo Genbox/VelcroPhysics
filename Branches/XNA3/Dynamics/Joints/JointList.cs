@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     public class JointList : List<Joint>
     {

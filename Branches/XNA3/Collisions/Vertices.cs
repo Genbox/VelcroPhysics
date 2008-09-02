@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
 
@@ -76,12 +77,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public Vector2 GetEdgeMidPoint(Int32 index)
         {
-            //Vector2 edge = GetEdge(index);
             GetEdge(index, out _vectorTemp1);
-            //edge = Vector2.Multiply(edge, .5f);
             Vector2.Multiply(ref _vectorTemp1, .5f, out _vectorTemp2);
 
-            //Vector2 midPoint = Vector2.Add(localVertices[index], edge);
             _vectorTemp3 = this[index];
             Vector2.Add(ref _vectorTemp3, ref _vectorTemp2, out _vectorTemp1);
 
@@ -98,14 +96,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public Vector2 GetEdgeNormal(Int32 index)
         {
-            //Vector2 edge = GetEdge(index);
             GetEdge(index, out _vectorTemp1);
 
-            //Vector2 edgeNormal = new Vector2(-edge.Y, edge.X);
             _vectorTemp2.X = -_vectorTemp1.Y;
             _vectorTemp2.Y = _vectorTemp1.X;
 
-            //edgeNormal.Normalize();
             Vector2.Normalize(ref _vectorTemp2, out _vectorTemp3);
 
             return _vectorTemp3;
@@ -121,17 +116,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public Vector2 GetVertexNormal(Int32 index)
         {
-            //Vector2 nextEdge = GetEdgeNormal(index);
             GetEdgeNormal(index, out _vectorTemp1);
 
-            //Vector2 prevEdge = GetEdgeNormal(PreviousIndex(index));
             int prevIndex = PreviousIndex(index);
             GetEdgeNormal(prevIndex, out _vectorTemp2);
 
-            //Vector2 vertexNormal = Vector2.Add(nextEdge, prevEdge);
             Vector2.Add(ref _vectorTemp1, ref _vectorTemp2, out _vectorTemp3);
 
-            //vertexNormal.Normalize();
             Vector2.Normalize(ref _vectorTemp3, out _vectorTemp1);
 
             return _vectorTemp1;
@@ -164,23 +155,18 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public void SubDivideEdges(float maxEdgeLength)
         {
             Vertices verticesTemp = new Vertices();
-            double edgeCount;
-            float edgeLength;
-            Vector2 vertA = Vector2.Zero;
-            Vector2 vertB = Vector2.Zero;
-            Vector2 edge = Vector2.Zero;
             for (int i = 0; i < Count; i++)
             {
-                vertA = this[i];
-                vertB = this[NextIndex(i)];
-                edge = Vector2.Zero;
+                Vector2 vertA = this[i];
+                Vector2 vertB = this[NextIndex(i)];
+                Vector2 edge;
                 Vector2.Subtract(ref vertA, ref vertB, out edge);
-                edgeLength = edge.Length();
+                float edgeLength = edge.Length();
 
                 verticesTemp.Add(vertA);
                 if (edgeLength > maxEdgeLength) //need to subdivide
                 {
-                    edgeCount = Math.Ceiling(edgeLength/(double) maxEdgeLength);
+                    double edgeCount = Math.Ceiling(edgeLength/(double) maxEdgeLength);
 
                     for (int j = 0; j < edgeCount - 1; j++)
                     {
@@ -189,13 +175,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     }
                 }
             }
-            //Debug.WriteLine(verticesTemp.ToString());
+
             Clear();
             for (int k = 0; k < verticesTemp.Count; k++)
             {
                 Add(verticesTemp[k]);
             }
-            //Debug.WriteLine(this.ToString());
         }
 
         public void ForceCounterClockWiseOrder()
@@ -211,12 +196,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private float GetSignedArea()
         {
-            int i, j;
+            int i;
             float area = 0;
 
             for (i = 0; i < Count; i++)
             {
-                j = (i + 1)%Count;
+                int j = (i + 1)%Count;
                 area += this[i].X*this[j].Y;
                 area -= this[i].Y*this[j].X;
             }
@@ -226,12 +211,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public float GetArea()
         {
-            int i, j;
+            int i;
             float area = 0;
 
             for (i = 0; i < Count; i++)
             {
-                j = (i + 1)%Count;
+                int j = (i + 1)%Count;
                 area += this[i].X*this[j].Y;
                 area -= this[i].Y*this[j].X;
             }
@@ -252,13 +237,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
             verts.ForceCounterClockWiseOrder();
 
             float cx = 0, cy = 0;
-            int i, j;
+            int i;
 
             float factor;
             //Debug.WriteLine(verts.ToString());
             for (i = 0; i < Count; i++)
             {
-                j = (i + 1)%Count;
+                int j = (i + 1)%Count;
 
                 factor = -(verts[i].X*verts[j].Y - verts[j].X*verts[i].Y);
                 cx += (verts[i].X + verts[j].X)*factor;
@@ -283,7 +268,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             if (verts.Count == 0)
             {
-                throw new ArgumentOutOfRangeException("vertexes");
+                throw new Exception("vertexes");
             }
             if (verts.Count == 1)
             {
@@ -292,16 +277,19 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             float denom = 0;
             float numer = 0;
-            float a, b, c, d;
             Vector2 v2;
             Vector2 v1 = verts[verts.Count - 1];
             for (int index = 0; index < verts.Count; index++, v1 = v2)
             {
                 v2 = verts[index];
+                float a;
                 Vector2.Dot(ref v2, ref v2, out a);
+                float b;
                 Vector2.Dot(ref v2, ref v1, out b);
+                float c;
                 Vector2.Dot(ref v1, ref v1, out c);
                 //Vector2.Cross(ref v1, ref v2, out d);
+                float d;
                 Calculator.Cross(ref v1, ref v2, out d);
                 d = Math.Abs(d);
                 numer += d;
@@ -379,17 +367,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public override string ToString()
         {
-            //TODO: Convert to stringbuilder
-            string toString = "";
+            //Note: Converted to stringbuilder for Farseer 2.0
+            StringBuilder toString = new StringBuilder();
             for (int i = 0; i < Count; i++)
             {
-                toString += this[i].ToString();
+                toString.Append(this[i].ToString());
                 if (i < Count - 1)
                 {
-                    toString += " ";
+                    toString.Append(" ");
                 }
             }
-            return toString;
+            return toString.ToString();
         }
     }
 }
