@@ -7,54 +7,92 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     public class FixedRevoluteJoint : Joint
     {
         private Vector2 _accumulatedImpulse;
-        private Vector2 _anchor;
         private Matrix _b;
+        private float _biasFactor = .8f;
+        private float _breakpoint = float.MaxValue;
 
+        private float _jointError;
         private Vector2 _localAnchor;
         private Matrix _matrix;
+        private float _maxImpulse = float.MaxValue;
         private Vector2 _r1;
+        private float _softness;
         private Vector2 _velocityBias;
+        internal Vector2 anchor;
+        protected Body body;
 
         public FixedRevoluteJoint()
         {
-            BiasFactor = .8f;
-            Breakpoint = float.MaxValue;
-            MaxImpulse = float.MaxValue;
         }
 
         public FixedRevoluteJoint(Body body, Vector2 anchor)
         {
-            BiasFactor = .8f;
-            Breakpoint = float.MaxValue;
-            MaxImpulse = float.MaxValue;
-            Body = body;
-            _anchor = anchor;
+            this.body = body;
+            this.anchor = anchor;
             _accumulatedImpulse = Vector2.Zero;
             body.GetLocalPosition(ref anchor, out _localAnchor);
         }
 
-        public Body Body { get; set; }
-        public float MaxImpulse { get; set; }
+        public Body Body
+        {
+            get { return body; }
+            set { body = value; }
+        }
+
+        public float BiasFactor
+        {
+            get { return _biasFactor; }
+            set { _biasFactor = value; }
+        }
+
+        public float Softness
+        {
+            get { return _softness; }
+            set { _softness = value; }
+        }
+
+        public float Breakpoint
+        {
+            get { return _breakpoint; }
+            set { _breakpoint = value; }
+        }
+
+        public float MaxImpulse
+        {
+            get { return _maxImpulse; }
+            set { _maxImpulse = value; }
+        }
+
+        public float JointError
+        {
+            get { return _jointError; }
+        }
 
         public Vector2 Anchor
         {
-            get { return _anchor; }
-            set { SetAnchor(value); }
+            get { return anchor; }
+            set
+            {
+                anchor = value;
+                SetAnchor(anchor);
+            }
         }
+
+        public event EventHandler<EventArgs> Broke;
 
         public void SetAnchor(Vector2 anchor)
         {
-            _anchor = anchor;
-            if (Body == null)
+            this.anchor = anchor;
+            if (body == null)
             {
                 throw new NullReferenceException("Body must be set prior to setting the anchor of the Revolute Joint");
             }
-            Body.GetLocalPosition(ref anchor, out _localAnchor);
+            body.GetLocalPosition(ref anchor, out _localAnchor);
         }
 
         public override void Validate()
         {
-            if (Body.IsDisposed)
+            if (body.IsDisposed)
             {
                 Dispose();
             }
@@ -62,14 +100,20 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            base.PreStep(inverseDt);
+            if (Enabled && Math.Abs(_jointError) > _breakpoint)
+            {
+                Enabled = false;
+                if (Broke != null) Broke(this, new EventArgs());
+            }
+            if (isDisposed)
+            {
+                return;
+            }
 
-            if (IsDisposed) return;
+            _bodyInverseMass = body.inverseMass;
+            _bodyInverseMomentOfInertia = body.inverseMomentOfInertia;
 
-            _bodyInverseMass = Body.InverseMass;
-            _bodyInverseMomentOfInertia = Body.InverseMomentOfInertia;
-
-            Body.GetBodyMatrix(out _bodyMatrixTemp);
+            body.GetBodyMatrix(out _bodyMatrixTemp);
             Vector2.TransformNormal(ref _localAnchor, ref _bodyMatrixTemp, out _r1);
 
             _k1.M11 = _bodyInverseMass;
@@ -85,27 +129,27 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             //Matrix _k = _k1 + _k2 + K3;
             Matrix.Add(ref _k1, ref _k2, out _k);
 
-            _k.M11 += Softness;
-            _k.M12 += Softness;
+            _k.M11 += _softness;
+            _k.M12 += _softness;
 
             //_matrix = MatrixInvert2D(_k);
             MatrixInvert2D(ref _k, out _matrix);
 
-            Vector2.Add(ref Body.position, ref _r1, out _vectorTemp1);
-            Vector2.Subtract(ref _anchor, ref _vectorTemp1, out _vectorTemp2);
-            Vector2.Multiply(ref _vectorTemp2, -BiasFactor*inverseDt, out _velocityBias);
-            JointError = _vectorTemp2.Length();
+            Vector2.Add(ref body.position, ref _r1, out _vectorTemp1);
+            Vector2.Subtract(ref anchor, ref _vectorTemp1, out _vectorTemp2);
+            Vector2.Multiply(ref _vectorTemp2, -_biasFactor*inverseDt, out _velocityBias);
+            _jointError = _vectorTemp2.Length();
 
             //warm starting
             _vectorTemp1.X = -_accumulatedImpulse.X;
             _vectorTemp1.Y = -_accumulatedImpulse.Y;
-            if (MaxImpulse < float.MaxValue)
+            if (_maxImpulse < float.MaxValue)
             {
-                Calculator.Truncate(ref _vectorTemp1, MaxImpulse, out _vectorTemp1);
+                Calculator.Truncate(ref _vectorTemp1, _maxImpulse, out _vectorTemp1);
             }
-            Body.ApplyImmediateImpulse(ref _vectorTemp1);
+            body.ApplyImmediateImpulse(ref _vectorTemp1);
             Calculator.Cross(ref _r1, ref _vectorTemp1, out _floatTemp1);
-            Body.ApplyAngularImpulse(_floatTemp1);
+            body.ApplyAngularImpulse(_floatTemp1);
         }
 
         private void MatrixInvert2D(ref Matrix matrix, out Matrix invertedMatrix)
@@ -123,30 +167,31 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void Update()
         {
-            //This implementation is diff from base. Use this one.
-            if (Math.Abs(JointError) > Breakpoint)
+            if (Math.Abs(_jointError) > _breakpoint)
             {
                 Dispose();
+            } //check if joint is broken
+            if (isDisposed)
+            {
+                return;
             }
 
-            if (IsDisposed) return;
-
-            Calculator.Cross(ref Body.angularVelocity, ref _r1, out _vectorTemp1);
-            Vector2.Add(ref Body.linearVelocity, ref _vectorTemp1, out _dv);
+            Calculator.Cross(ref body.angularVelocity, ref _r1, out _vectorTemp1);
+            Vector2.Add(ref body.linearVelocity, ref _vectorTemp1, out _dv);
             _dv = -_dv;
 
             Vector2.Subtract(ref _velocityBias, ref _dv, out _vectorTemp1);
-            Vector2.Multiply(ref _accumulatedImpulse, Softness, out _vectorTemp2);
+            Vector2.Multiply(ref _accumulatedImpulse, _softness, out _vectorTemp2);
             Vector2.Subtract(ref _vectorTemp1, ref _vectorTemp2, out _dvBias);
 
             Vector2.Transform(ref _dvBias, ref _matrix, out _impulse);
 
             _vectorTemp1.X = -_impulse.X;
             _vectorTemp1.Y = -_impulse.Y;
-            if (MaxImpulse < float.MaxValue) Calculator.Truncate(ref _vectorTemp1, MaxImpulse, out _vectorTemp1);
-            Body.ApplyImmediateImpulse(ref _vectorTemp1);
+            if (_maxImpulse < float.MaxValue) Calculator.Truncate(ref _vectorTemp1, _maxImpulse, out _vectorTemp1);
+            body.ApplyImmediateImpulse(ref _vectorTemp1);
             Calculator.Cross(ref _r1, ref _vectorTemp1, out _floatTemp1);
-            Body.ApplyAngularImpulse(_floatTemp1);
+            body.ApplyAngularImpulse(_floatTemp1);
 
             Vector2.Add(ref _accumulatedImpulse, ref _impulse, out _accumulatedImpulse);
         }

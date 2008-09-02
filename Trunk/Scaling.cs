@@ -2,28 +2,33 @@ namespace FarseerGames.FarseerPhysics
 {
     public class Scaling
     {
-        private float elapsedTime; // holds the total time since the last update
+        private float _elapsedTime; // holds the total time since the last update
+        private bool _enabled;
 
-        private float maximumUpdateInterval;
-        private float scalingPenalty;
+        private float _maximumUpdateInterval;
+        private float _scalingPenalty;
 
-        private float updateInterval;
+        private float _updateInterval;
 
         public Scaling(float preferredUpdateInterval, float maximumUpdateInterval)
         {
-            updateInterval = preferredUpdateInterval;
-            this.maximumUpdateInterval = maximumUpdateInterval;
+            _updateInterval = preferredUpdateInterval;
+            _maximumUpdateInterval = maximumUpdateInterval;
         }
 
-        public bool Enabled { get; set; }
+        public bool Enabled
+        {
+            get { return _enabled; }
+            set { _enabled = value; }
+        }
 
         /// <summary>
         /// The maximum interval to use
         /// </summary>
         public float MaximumUpdateInterval
         {
-            get { return maximumUpdateInterval; }
-            set { if (value > updateInterval) maximumUpdateInterval = value; }
+            get { return _maximumUpdateInterval; }
+            set { if (value > _updateInterval) _maximumUpdateInterval = value; }
         }
 
         /// <summary>
@@ -34,30 +39,28 @@ namespace FarseerGames.FarseerPhysics
             get
             {
                 // todo -> add current scaling penalty
-                return updateInterval + scalingPenalty;
+                return _updateInterval + _scalingPenalty;
             }
             set
             {
-                updateInterval = value;
-                if (updateInterval > maximumUpdateInterval) maximumUpdateInterval = value;
+                _updateInterval = value;
+                if (_updateInterval > _maximumUpdateInterval) _maximumUpdateInterval = value;
             }
         }
 
         public float GetUpdateInterval(float dt)
         {
-            float interval;
-
-            if (updateInterval > 0 && Enabled)
+            if (_updateInterval > 0 && _enabled)
             {
-                elapsedTime += dt;
-                if (elapsedTime < UpdateInterval)
+                _elapsedTime += dt;
+                if (_elapsedTime < UpdateInterval)
                 {
                     // must use UpdateInterval property
                     return 0;
                 }
 
-                interval = elapsedTime;
-                elapsedTime = 0;
+                float interval = _elapsedTime;
+                _elapsedTime = 0;
                 return interval;
             }
 
@@ -66,18 +69,18 @@ namespace FarseerGames.FarseerPhysics
 
         public void IncreaseUpdateInterval()
         {
-            if (scalingPenalty + updateInterval/4 <= maximumUpdateInterval)
+            if (_scalingPenalty + _updateInterval/4 <= _maximumUpdateInterval)
             {
-                scalingPenalty += updateInterval/4;
+                _scalingPenalty += _updateInterval/4;
             }
         }
 
         public void DecreaseUpdateInterval()
         {
-            scalingPenalty -= updateInterval/8;
-            if (scalingPenalty < 0)
+            _scalingPenalty -= _updateInterval/8;
+            if (_scalingPenalty < 0)
             {
-                scalingPenalty = 0;
+                _scalingPenalty = 0;
             }
         }
     }

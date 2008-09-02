@@ -13,6 +13,8 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         private readonly float _value2;
         private readonly float _value3;
         private readonly float _value4;
+        private Vector2 _max;
+        private Vector2 _min;
 
         public BilinearInterpolator()
         {
@@ -20,15 +22,15 @@ namespace FarseerGames.FarseerPhysics.Mathematics
 
         public BilinearInterpolator(Vector2 min, Vector2 max)
         {
-            Max = max;
-            Min = min;
+            _max = max;
+            _min = min;
         }
 
         public BilinearInterpolator(Vector2 min, Vector2 max, float value1, float value2, float value3, float value4,
                                     float minValue, float maxValue)
         {
-            Min = min;
-            Max = max;
+            _min = min;
+            _max = max;
             _value1 = value1;
             _value2 = value2;
             _value3 = value3;
@@ -37,9 +39,17 @@ namespace FarseerGames.FarseerPhysics.Mathematics
             _maxValue = maxValue;
         }
 
-        public Vector2 Min { get; set; }
+        public Vector2 Min
+        {
+            get { return _min; }
+            set { _min = value; }
+        }
 
-        public Vector2 Max { get; set; }
+        public Vector2 Max
+        {
+            get { return _max; }
+            set { _max = value; }
+        }
 
         public float GetValue(Vector2 position)
         {
@@ -48,11 +58,11 @@ namespace FarseerGames.FarseerPhysics.Mathematics
 
         public float GetValue(float x, float y)
         {
-            x = MathHelper.Clamp(x, Min.X, Max.X);
-            y = MathHelper.Clamp(y, Min.Y, Max.Y);
+            x = MathHelper.Clamp(x, _min.X, _max.X);
+            y = MathHelper.Clamp(y, _min.Y, _max.Y);
 
-            float xRatio = (x - Min.X)/(Max.X - Min.X);
-            float yRatio = (y - Min.Y)/(Max.Y - Min.Y);
+            float xRatio = (x - _min.X)/(_max.X - _min.X);
+            float yRatio = (y - _min.Y)/(_max.Y - _min.Y);
 
             float top = MathHelper.Lerp(_value1, _value4, xRatio);
             float bottom = MathHelper.Lerp(_value2, _value3, xRatio);

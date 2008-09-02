@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
+using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Interfaces;
 using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Controllers
@@ -79,8 +81,8 @@ namespace FarseerGames.FarseerPhysics.Controllers
         {
             for (int i = 0; i < _geomList.Count; i++)
             {
-                _totalArea = _geomList[i].LocalVertices.GetArea();
-                if (!_fluidContainer.Intersect(_geomList[i].AABB)) continue;
+                _totalArea = _geomList[i].localVertices.GetArea();
+                if (!_fluidContainer.Intersect(_geomList[i].aabb)) continue;
                 FindVerticesInFluid(_geomList[i]);
                 if (_vertices.Count < 3) continue;
 
@@ -94,9 +96,9 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 CalculateDrag(_geomList[i]);
 
                 Vector2.Add(ref _buoyancyForce, ref _linearDragForce, out _totalForce);
-                _geomList[i].Body.ApplyForceAtWorldPoint(ref _totalForce, ref _centroid);
+                _geomList[i].body.ApplyForceAtWorldPoint(ref _totalForce, ref _centroid);
 
-                _geomList[i].Body.ApplyTorque(_rotationalDragTorque);
+                _geomList[i].body.ApplyTorque(_rotationalDragTorque);
 
                 if (_geomInFluidList[_geomList[i]] == false)
                 {
@@ -112,23 +114,15 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private void FindVerticesInFluid(Geom geom)
         {
             _vertices.Clear();
-            for (int i = 0; i < geom.WorldVertices.Count; i++)
+            for (int i = 0; i < geom.worldVertices.Count; i++)
             {
-                _vert = geom.WorldVertices[i];
+                _vert = geom.worldVertices[i];
                 if (_fluidContainer.Contains(ref _vert))
                 {
                     _vertices.Add(_vert);
                 }
             }
         }
-
-        //Note: Cleanup, method never used
-        //private void CalculateAreaAndCentroid()
-        //{
-        //    area = vertices.GetArea();
-
-        //    centroid = vertices.GetCentroid(area);
-        //}
 
         private void CalculateBuoyancy()
         {
@@ -138,8 +132,8 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         private void CalculateDrag(Geom geom)
         {
-            //localCentroid = geom.body.GetLocalPosition(centroid);
-            geom.Body.GetVelocityAtWorldPoint(ref _centroid, out _centroidVelocity);
+            //localCentroid = geom.body.GetLocalPosition(_centroid);
+            geom.body.GetVelocityAtWorldPoint(ref _centroid, out _centroidVelocity);
 
             _axis.X = -_centroidVelocity.Y;
             _axis.Y = _centroidVelocity.X;
@@ -153,11 +147,11 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
             _dragArea = Math.Abs(_max - _min);
 
-            _partialMass = geom.Body._mass*(_area/_totalArea);
+            _partialMass = geom.body.mass*(_area/_totalArea);
 
             _linearDragForce = -.5f*_density*_dragArea*_linearDragCoefficient*_partialMass*_centroidVelocity;
 
-            _rotationalDragTorque = -geom.Body.angularVelocity*_rotationalDragCoeficient*_partialMass;
+            _rotationalDragTorque = -geom.body.angularVelocity*_rotationalDragCoeficient*_partialMass;
         }
     }
 }

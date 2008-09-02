@@ -2,12 +2,6 @@ using System;
 
 namespace FarseerGames.FarseerPhysics
 {
-    public enum FrictionType
-    {
-        Average = 0,
-        Minimum = 1
-    }
-
     public enum BroadPhaseCollider
     {
         BruteForce = 1,
@@ -50,5 +44,11 @@ namespace FarseerGames.FarseerPhysics
         Cat29 = 268435456,
         Cat30 = 536870912,
         Cat31 = 1073741824
+    }
+
+    public enum FrictionType
+    {
+        Average = 0,
+        Minimum = 1
     }
 }

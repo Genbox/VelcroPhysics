@@ -8,9 +8,15 @@ namespace FarseerGames.FarseerPhysics.Factories
     {
         private static GeomFactory _instance;
 
+        /// <summary>
+        ///used to calculate a cell size from the aabb whenever the collisionGridCellSize
+        ///is not set explicitly. The more sharp corners a body has, the smaller this value will 
+        ///need to be. 
+        /// </summary>
+        private float _gridCellSizeAABBFactor = .1f;
+
         private GeomFactory()
         {
-            GridCellSizeAABBFactor = .1f;
         }
 
         public static GeomFactory Instance
@@ -25,7 +31,11 @@ namespace FarseerGames.FarseerPhysics.Factories
             }
         }
 
-        public float GridCellSizeAABBFactor { get; set; }
+        public float GridCellSizeAABBFactor
+        {
+            get { return _gridCellSizeAABBFactor; }
+            set { _gridCellSizeAABBFactor = value; }
+        }
 
         //rectangles
         public Geom CreateRectangleGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height)
@@ -200,7 +210,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         public float CalculateGridCellSizeFromAABB(Vertices vertices)
         {
             AABB aabb = new AABB(vertices);
-            return aabb.GetShortestSide()*GridCellSizeAABBFactor;
+            return aabb.GetShortestSide()*_gridCellSizeAABBFactor;
         }
     }
 }

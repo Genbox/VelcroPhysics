@@ -8,9 +8,9 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         public const float RadiansToDegreesRatio = 1f/57.29577957855f;
         public const float TwoPi = 6.28318531f;
         private static readonly Random _random = new Random();
-        private static Vector2 _temp;
         private static Vector2 _curveEnd;
         private static Vector2 _startCurve;
+        private static Vector2 _temp;
 
         /// Temp variables to speed up the following code.
         private static float _tPow2;
@@ -44,6 +44,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         {
             float x = point.X;
             float y = point.Y;
+            float value;
 
             x = MathHelper.Clamp(x, min.X, max.X);
             y = MathHelper.Clamp(y, min.Y, max.Y);
@@ -54,7 +55,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
             float top = MathHelper.Lerp(value1, value4, xRatio);
             float bottom = MathHelper.Lerp(value2, value3, xRatio);
 
-            float value = MathHelper.Lerp(top, bottom, yRatio);
+            value = MathHelper.Lerp(top, bottom, yRatio);
             value = MathHelper.Clamp(value, minValue, maxValue);
             return value;
         }
@@ -72,7 +73,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
 
         public static float DistanceBetweenPointAndPoint(ref Vector2 point1, ref Vector2 point2)
         {
-            Vector2 v;
+            Vector2 v = Vector2.Zero;
             Vector2.Subtract(ref point1, ref point2, out v);
             return v.Length();
         }
@@ -169,7 +170,6 @@ namespace FarseerGames.FarseerPhysics.Mathematics
             {
                 return true;
             }
-
             return false;
         }
 

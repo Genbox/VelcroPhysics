@@ -1,9 +1,9 @@
-using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Collisions;
 
-namespace FarseerGames.FarseerPhysics.Collisions
+namespace FarseerGames.FarseerPhysics.Interfaces
 {
     internal interface ICollideable<T>
     {
-        void Collide(T t, ItemList<Contact> contactList);
+        void Collide(T t, ContactList contactList);
     }
 }
