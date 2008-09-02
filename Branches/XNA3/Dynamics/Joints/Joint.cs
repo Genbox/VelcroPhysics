@@ -1,6 +1,7 @@
 using System;
+using FarseerGames.FarseerPhysics.Interfaces;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     public abstract class Joint : IIsDisposable
     {

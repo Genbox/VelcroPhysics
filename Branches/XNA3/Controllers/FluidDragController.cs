@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Interfaces;
 using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Controllers

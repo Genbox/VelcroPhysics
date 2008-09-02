@@ -1,7 +1,8 @@
+using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
-namespace FarseerGames.FarseerPhysics.Collisions
+namespace FarseerGames.FarseerPhysics.Factories
 {
     public class GeomFactory
     {

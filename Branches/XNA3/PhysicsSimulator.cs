@@ -4,6 +4,8 @@ using System.Diagnostics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Dynamics.Joints;
+using FarseerGames.FarseerPhysics.Interfaces;
 using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics

@@ -1,8 +1,9 @@
 using System;
+using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     public class SliderJoint : Joint
     {
@@ -237,7 +238,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             Calculator.Cross(ref _r1, ref _worldAnchorDifferenceNormalized, out _r1cn);
             Calculator.Cross(ref _r2, ref _worldAnchorDifferenceNormalized, out _r2cn);
             _kNormal = body1.inverseMass + body2.inverseMass + body1.inverseMomentOfInertia*_r1cn*_r1cn +
-                      body2.inverseMomentOfInertia*_r2cn*_r2cn;
+                       body2.inverseMomentOfInertia*_r2cn*_r2cn;
             _effectiveMass = (1)/(_kNormal + _softness);
 
             //convert scalar accumulated _impulse to vector
@@ -284,7 +285,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
             //calc the _impulse magnitude
             _impulseMagnitude = (-_velocityBias - _dvNormal - _softness*_accumulatedImpulse)*_effectiveMass;
-                //_softness not implemented correctly yet
+            //_softness not implemented correctly yet
 
             float oldAccumulatedImpulse = _accumulatedImpulse;
 
