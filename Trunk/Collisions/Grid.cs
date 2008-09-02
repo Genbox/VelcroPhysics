@@ -9,8 +9,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private float _gridCellSize;
         private float _gridCellSizeInv;
         private float[,] _nodes;
+        private Vector2[] _points;
 
-        public Vector2[] Points { get; private set; }
+        public Vector2[] Points
+        {
+            get { return _points; }
+        }
 
         public Grid Clone()
         {
@@ -19,7 +23,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             grid._gridCellSizeInv = _gridCellSizeInv;
             grid._aabb = _aabb;
             grid._nodes = (float[,]) _nodes.Clone();
-            grid.Points = (Vector2[]) Points.Clone();
+            grid._points = (Vector2[]) _points.Clone();
             return grid;
         }
 
@@ -38,7 +42,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             int ySize = (int) Math.Ceiling(Convert.ToDouble((_aabb.Max.Y - _aabb.Min.Y)*_gridCellSizeInv)) + 1;
 
             _nodes = new float[xSize,ySize];
-            Points = new Vector2[xSize*ySize];
+            _points = new Vector2[xSize*ySize];
             int i = 0;
             Vector2 vector = _aabb.Min;
             for (int x = 0; x < xSize; ++x, vector.X += gridCellSize)
@@ -47,7 +51,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 for (int y = 0; y < ySize; ++y, vector.Y += gridCellSize)
                 {
                     _nodes[x, y] = geometry.GetNearestDistance(vector); // shape.GetDistance(vector);
-                    Points[i] = vector;
+                    _points[i] = vector;
                     i += 1;
                 }
             }
@@ -106,7 +110,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 }
             }
             feature = new Feature();
-            //feature = null;
             return false;
         }
     }

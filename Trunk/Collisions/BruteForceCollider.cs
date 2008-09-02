@@ -1,4 +1,5 @@
 using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Interfaces;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -28,7 +29,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public void Add(Geom geom)
         {
-            //not required by brute force collider
+            //not 
         }
 
         public void Update()
@@ -40,14 +41,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private void DoCollision()
         {
-            for (int i = 0; i < _physicsSimulator.GeomList.Count - 1; i++)
+            for (int i = 0; i < _physicsSimulator.geomList.Count - 1; i++)
             {
-                for (int j = i + 1; j < _physicsSimulator.GeomList.Count; j++)
+                for (int j = i + 1; j < _physicsSimulator.geomList.Count; j++)
                 {
-                    _geometryA = _physicsSimulator.GeomList[i];
-                    _geometryB = _physicsSimulator.GeomList[j];
+                    _geometryA = _physicsSimulator.geomList[i];
+                    _geometryB = _physicsSimulator.geomList[j];
                     //possible early exits
-                    if (!_geometryA.Body.Enabled || !_geometryB.Body.Enabled)
+                    if (!_geometryA.Body.enabled || !_geometryB.Body.enabled)
                     {
                         continue;
                     }
@@ -83,7 +84,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                     bool intersection = true;
 
-                    #region INLINE: if (AABB.Intersect(geometryA.aabb, geometryB.aabb)) ....
+                    #region INLINE: if (AABB.Intersect(_geometryA.aabb, _geometryB.aabb)) ....
 
                     if (_geometryA.AABB.min.X > _geometryB.AABB.max.X || _geometryB.AABB.min.X > _geometryA.AABB.max.X)
                     {
@@ -102,9 +103,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         _arbiter = _physicsSimulator.arbiterPool.Fetch();
                         _arbiter.ConstructArbiter(_geometryA, _geometryB, _physicsSimulator);
 
-                        if (!_physicsSimulator.ArbiterList.Contains(_arbiter))
+                        if (!_physicsSimulator.arbiterList.Contains(_arbiter))
                         {
-                            _physicsSimulator.ArbiterList.Add(_arbiter);
+                            _physicsSimulator.arbiterList.Add(_arbiter);
                         }
                         else
                         {

@@ -1,40 +1,39 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
-    public class ItemList<T> : List<T>
+    public class BodyList : List<Body>
     {
         #region Delegates
 
-        public delegate void ContentsChangedEventHandler(T item);
+        public delegate void ContentsChangedEventHandler(Body body);
 
         #endregion
 
-        private readonly List<T> _markedForRemovalList = new List<T>();
+        private readonly List<Body> _markedForRemovalList = new List<Body>();
 
-        private int _numberDisposed;
         public ContentsChangedEventHandler Added;
         public ContentsChangedEventHandler Removed;
 
-        public new void Add(T item)
+        public new void Add(Body body)
         {
-            base.Add(item);
+            base.Add(body);
             if (Added != null)
             {
-                Added(item);
+                Added(body);
             }
         }
 
-        public new void Remove(T item)
+        public new void Remove(Body body)
         {
-            base.Remove(item);
+            base.Remove(body);
             if (Removed != null)
             {
-                Removed(item);
+                Removed(body);
             }
         }
 
-        public int RemoveDisposed()
+        public void RemoveDisposed()
         {
             for (int i = 0; i < Count; i++)
             {
@@ -47,14 +46,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 Remove(_markedForRemovalList[j]);
             }
-            _numberDisposed = _markedForRemovalList.Count;
             _markedForRemovalList.Clear();
-            return _numberDisposed;
         }
 
-        internal static bool IsDisposed(T item)
+
+        internal static bool IsDisposed(Body a)
         {
-            return ((IIsDisposable) item).IsDisposed;
+            return a.IsDisposed;
         }
     }
 }

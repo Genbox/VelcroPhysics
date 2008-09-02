@@ -9,7 +9,6 @@ namespace FarseerGames.FarseerPhysics.Mathematics
     {
         private readonly float _maxValue = float.MaxValue;
         private readonly float _minValue = float.MinValue;
-        //Note:Should it use MathHelper.PiOver2? It may not be scaleable.
         private readonly float _twoOverPi = 1f/MathHelper.PiOver2;
         private readonly float _value1;
         private readonly float _value2;
@@ -17,6 +16,8 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         private readonly float _value4;
         private float _circleValue1;
         private float _circleValue2;
+
+        //TODO: Use calculator or mathhelper
 
         public CircularInterpolator(float value1, float value2, float value3, float value4, float minValue,
                                     float maxValue)
@@ -38,9 +39,10 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         {
             float theta;
             float lerpValue;
+            float d;
             float value = 0;
 
-            float d = MathHelper.Distance(x, y);
+            d = MathHelper.Distance(x, y);
 
             //quadrant 1
             if (x > 0 && y > 0)

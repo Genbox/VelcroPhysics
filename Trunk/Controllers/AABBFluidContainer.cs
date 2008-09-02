@@ -1,31 +1,38 @@
 using FarseerGames.FarseerPhysics.Collisions;
+using FarseerGames.FarseerPhysics.Interfaces;
 using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Controllers
 {
     public class AABBFluidContainer : IFluidContainer
     {
+        private AABB _aabb;
+
         public AABBFluidContainer()
         {
         }
 
         public AABBFluidContainer(AABB aabb)
         {
-            AABB = aabb;
+            _aabb = aabb;
         }
 
-        public AABB AABB { get; set; }
+        public AABB AABB
+        {
+            get { return _aabb; }
+            set { _aabb = value; }
+        }
 
         #region IFluidContainer Members
 
         public bool Intersect(AABB aabb)
         {
-            return AABB.Intersect(aabb, AABB);
+            return AABB.Intersect(aabb, _aabb);
         }
 
         public bool Contains(ref Vector2 vector)
         {
-            return AABB.Contains(vector);
+            return _aabb.Contains(vector);
         }
 
         #endregion
