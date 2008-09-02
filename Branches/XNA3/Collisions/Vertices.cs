@@ -7,12 +7,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
 {
     public class Vertices : List<Vector2>
     {
-        private Vector2 res;
-        private Vector2 vectorTemp1 = Vector2.Zero;
-        private Vector2 vectorTemp2 = Vector2.Zero;
-        private Vector2 vectorTemp3 = Vector2.Zero;
-        private Vector2 vectorTemp4 = Vector2.Zero;
-        private Vector2 vectorTemp5 = Vector2.Zero;
+        private Vector2 _res;
+        private Vector2 _vectorTemp1 = Vector2.Zero;
+        private Vector2 _vectorTemp2 = Vector2.Zero;
+        private Vector2 _vectorTemp3 = Vector2.Zero;
+        private Vector2 _vectorTemp4 = Vector2.Zero;
+        private Vector2 _vectorTemp5 = Vector2.Zero;
 
         public Vertices()
         {
@@ -60,90 +60,90 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public Vector2 GetEdge(Int32 index)
         {
             Int32 nextIndex = NextIndex(index);
-            vectorTemp2 = this[nextIndex];
-            vectorTemp3 = this[index];
-            Vector2.Subtract(ref vectorTemp2, ref vectorTemp3, out vectorTemp1);
-            return vectorTemp1;
+            _vectorTemp2 = this[nextIndex];
+            _vectorTemp3 = this[index];
+            Vector2.Subtract(ref _vectorTemp2, ref _vectorTemp3, out _vectorTemp1);
+            return _vectorTemp1;
         }
 
         public void GetEdge(Int32 index, out Vector2 edge)
         {
             Int32 nextIndex = NextIndex(index);
-            vectorTemp2 = this[nextIndex];
-            vectorTemp3 = this[index];
-            Vector2.Subtract(ref vectorTemp2, ref vectorTemp3, out edge);
+            _vectorTemp2 = this[nextIndex];
+            _vectorTemp3 = this[index];
+            Vector2.Subtract(ref _vectorTemp2, ref _vectorTemp3, out edge);
         }
 
         public Vector2 GetEdgeMidPoint(Int32 index)
         {
             //Vector2 edge = GetEdge(index);
-            GetEdge(index, out vectorTemp1);
+            GetEdge(index, out _vectorTemp1);
             //edge = Vector2.Multiply(edge, .5f);
-            Vector2.Multiply(ref vectorTemp1, .5f, out vectorTemp2);
+            Vector2.Multiply(ref _vectorTemp1, .5f, out _vectorTemp2);
 
             //Vector2 midPoint = Vector2.Add(localVertices[index], edge);
-            vectorTemp3 = this[index];
-            Vector2.Add(ref vectorTemp3, ref vectorTemp2, out vectorTemp1);
+            _vectorTemp3 = this[index];
+            Vector2.Add(ref _vectorTemp3, ref _vectorTemp2, out _vectorTemp1);
 
-            return vectorTemp1;
+            return _vectorTemp1;
         }
 
         public void GetEdgeMidPoint(Int32 index, out Vector2 midPoint)
         {
-            GetEdge(index, out vectorTemp1);
-            Vector2.Multiply(ref vectorTemp1, .5f, out vectorTemp2);
-            vectorTemp3 = this[index];
-            Vector2.Add(ref vectorTemp3, ref vectorTemp2, out midPoint);
+            GetEdge(index, out _vectorTemp1);
+            Vector2.Multiply(ref _vectorTemp1, .5f, out _vectorTemp2);
+            _vectorTemp3 = this[index];
+            Vector2.Add(ref _vectorTemp3, ref _vectorTemp2, out midPoint);
         }
 
         public Vector2 GetEdgeNormal(Int32 index)
         {
             //Vector2 edge = GetEdge(index);
-            GetEdge(index, out vectorTemp1);
+            GetEdge(index, out _vectorTemp1);
 
             //Vector2 edgeNormal = new Vector2(-edge.Y, edge.X);
-            vectorTemp2.X = -vectorTemp1.Y;
-            vectorTemp2.Y = vectorTemp1.X;
+            _vectorTemp2.X = -_vectorTemp1.Y;
+            _vectorTemp2.Y = _vectorTemp1.X;
 
             //edgeNormal.Normalize();
-            Vector2.Normalize(ref vectorTemp2, out vectorTemp3);
+            Vector2.Normalize(ref _vectorTemp2, out _vectorTemp3);
 
-            return vectorTemp3;
+            return _vectorTemp3;
         }
 
         public void GetEdgeNormal(Int32 index, out Vector2 edgeNormal)
         {
-            GetEdge(index, out vectorTemp4);
-            vectorTemp5.X = -vectorTemp4.Y;
-            vectorTemp5.Y = vectorTemp4.X;
-            Vector2.Normalize(ref vectorTemp5, out edgeNormal);
+            GetEdge(index, out _vectorTemp4);
+            _vectorTemp5.X = -_vectorTemp4.Y;
+            _vectorTemp5.Y = _vectorTemp4.X;
+            Vector2.Normalize(ref _vectorTemp5, out edgeNormal);
         }
 
         public Vector2 GetVertexNormal(Int32 index)
         {
             //Vector2 nextEdge = GetEdgeNormal(index);
-            GetEdgeNormal(index, out vectorTemp1);
+            GetEdgeNormal(index, out _vectorTemp1);
 
             //Vector2 prevEdge = GetEdgeNormal(PreviousIndex(index));
             int prevIndex = PreviousIndex(index);
-            GetEdgeNormal(prevIndex, out vectorTemp2);
+            GetEdgeNormal(prevIndex, out _vectorTemp2);
 
             //Vector2 vertexNormal = Vector2.Add(nextEdge, prevEdge);
-            Vector2.Add(ref vectorTemp1, ref vectorTemp2, out vectorTemp3);
+            Vector2.Add(ref _vectorTemp1, ref _vectorTemp2, out _vectorTemp3);
 
             //vertexNormal.Normalize();
-            Vector2.Normalize(ref vectorTemp3, out vectorTemp1);
+            Vector2.Normalize(ref _vectorTemp3, out _vectorTemp1);
 
-            return vectorTemp1;
+            return _vectorTemp1;
         }
 
         public void GetVertexNormal(Int32 index, out Vector2 vertexNormal)
         {
-            GetEdgeNormal(index, out vectorTemp1);
+            GetEdgeNormal(index, out _vectorTemp1);
             int prevIndex = PreviousIndex(index);
-            GetEdgeNormal(prevIndex, out vectorTemp2);
-            Vector2.Add(ref vectorTemp1, ref vectorTemp2, out vectorTemp3);
-            Vector2.Normalize(ref vectorTemp3, out vertexNormal);
+            GetEdgeNormal(prevIndex, out _vectorTemp2);
+            Vector2.Add(ref _vectorTemp1, ref _vectorTemp2, out _vectorTemp3);
+            Vector2.Normalize(ref _vectorTemp3, out vertexNormal);
         }
 
         public float GetShortestEdge()
@@ -151,8 +151,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             float shortestEdge = float.MaxValue;
             for (int i = 0; i < Count; i++)
             {
-                GetEdge(i, out vectorTemp1);
-                float length = vectorTemp1.Length();
+                GetEdge(i, out _vectorTemp1);
+                float length = _vectorTemp1.Length();
                 if (length < shortestEdge)
                 {
                     shortestEdge = length;
@@ -269,9 +269,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             factor = 1/area;
             cx *= factor;
             cy *= factor;
-            res.X = cx;
-            res.Y = cy;
-            return res;
+            _res.X = cx;
+            _res.Y = cy;
+            return _res;
         }
 
         public float GetMomentOfInertia()
@@ -379,6 +379,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public override string ToString()
         {
+            //TODO: Convert to stringbuilder
             string toString = "";
             for (int i = 0; i < Count; i++)
             {

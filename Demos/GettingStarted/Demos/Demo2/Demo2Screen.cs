@@ -14,67 +14,67 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
     public class Demo2Screen : GameScreen
     {
         //declare variables
-        private readonly LineBrush lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
+        private readonly LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
 
-        private readonly PhysicsSimulator physicsSimulator;
-        private readonly PhysicsSimulatorView physicsSimulatorView;
+        private readonly PhysicsSimulator _physicsSimulator;
+        private readonly PhysicsSimulatorView _physicsSimulatorView;
 
-        private Body circleBody;
+        private Body _circleBody;
 
-        private Geom circleGeom;
-        private Vector2 circleOrigin;
-        private Texture2D circleTexture;
-        private ContentManager contentManager;
-        private bool debugViewEnabled;
-        private bool firstRun = true;
-        private FixedLinearSpring mousePickSpring;
-        private Geom pickedGeom;
-        private Body rectangleBody;
-        private Geom rectangleGeom;
-        private Vector2 rectangleOrigin;
-        private Texture2D rectangleTexture;
+        private Geom _circleGeom;
+        private Vector2 _circleOrigin;
+        private Texture2D _circleTexture;
+        private ContentManager _contentManager;
+        private bool _debugViewEnabled;
+        private bool _firstRun = true;
+        private FixedLinearSpring _mousePickSpring;
+        private Geom _pickedGeom;
+        private Body _rectangleBody;
+        private Geom _rectangleGeom;
+        private Vector2 _rectangleOrigin;
+        private Texture2D _rectangleTexture;
         public bool updatedOnce;
 
 
         public Demo2Screen()
         {
-            physicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
-            physicsSimulatorView = new PhysicsSimulatorView(physicsSimulator);
+            _physicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
+            _physicsSimulatorView = new PhysicsSimulatorView(_physicsSimulator);
         }
 
         public override void LoadContent()
         {
-            if (contentManager == null) contentManager = new ContentManager(ScreenManager.Game.Services);
-            lineBrush.Load(ScreenManager.GraphicsDevice);
-            physicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, contentManager);
+            if (_contentManager == null) _contentManager = new ContentManager(ScreenManager.Game.Services);
+            _lineBrush.Load(ScreenManager.GraphicsDevice);
+            _physicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, _contentManager);
 
-            rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 128, Color.Gold,
+            _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 128, Color.Gold,
                                                                     Color.Black);
-            rectangleOrigin = new Vector2(rectangleTexture.Width/2f, rectangleTexture.Height/2f);
+            _rectangleOrigin = new Vector2(_rectangleTexture.Width/2f, _rectangleTexture.Height/2f);
 
-            circleTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 64, Color.White, Color.Black);
-            circleOrigin = new Vector2(circleTexture.Width/2f, circleTexture.Height/2f);
+            _circleTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 64, Color.White, Color.Black);
+            _circleOrigin = new Vector2(_circleTexture.Width/2f, _circleTexture.Height/2f);
 
-            rectangleBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 128, 128, 1);
-            rectangleBody.Position = new Vector2(256, 384);
-            rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, rectangleBody, 128, 128);
+            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(_physicsSimulator, 128, 128, 1);
+            _rectangleBody.Position = new Vector2(256, 384);
+            _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_physicsSimulator, _rectangleBody, 128, 128);
 
-            circleBody = BodyFactory.Instance.CreateCircleBody(physicsSimulator, 64, 1); //fix 
-            circleBody.Position = new Vector2(725, 384);
-            circleGeom = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, circleBody, 64, 20);
+            _circleBody = BodyFactory.Instance.CreateCircleBody(_physicsSimulator, 64, 1); //fix 
+            _circleBody.Position = new Vector2(725, 384);
+            _circleGeom = GeomFactory.Instance.CreateCircleGeom(_physicsSimulator, _circleBody, 64, 20);
         }
 
         public override void UnloadContent()
         {
-            contentManager.Unload();
-            physicsSimulator.Clear();
+            _contentManager.Unload();
+            _physicsSimulator.Clear();
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             if (IsActive)
             {
-                physicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
+                _physicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
                 updatedOnce = true;
             }
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -87,30 +87,30 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
                 return;
             }
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            ScreenManager.SpriteBatch.Draw(circleTexture, circleGeom.Position, null, Color.White, circleGeom.Rotation,
-                                           circleOrigin, 1, SpriteEffects.None, 0);
-            ScreenManager.SpriteBatch.Draw(rectangleTexture, rectangleGeom.Position, null, Color.White,
-                                           rectangleGeom.Rotation, rectangleOrigin, 1, SpriteEffects.None, 0);
+            ScreenManager.SpriteBatch.Draw(_circleTexture, _circleGeom.Position, null, Color.White, _circleGeom.Rotation,
+                                           _circleOrigin, 1, SpriteEffects.None, 0);
+            ScreenManager.SpriteBatch.Draw(_rectangleTexture, _rectangleGeom.Position, null, Color.White,
+                                           _rectangleGeom.Rotation, _rectangleOrigin, 1, SpriteEffects.None, 0);
 
-            if (mousePickSpring != null)
+            if (_mousePickSpring != null)
             {
-                lineBrush.Draw(ScreenManager.SpriteBatch,
-                               mousePickSpring.Body.GetWorldPosition(mousePickSpring.BodyAttachPoint),
-                               mousePickSpring.WorldAttachPoint);
+                _lineBrush.Draw(ScreenManager.SpriteBatch,
+                               _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
+                               _mousePickSpring.WorldAttachPoint);
             }
-            if (debugViewEnabled)
+            if (_debugViewEnabled)
             {
-                physicsSimulatorView.Draw(ScreenManager.SpriteBatch);
+                _physicsSimulatorView.Draw(ScreenManager.SpriteBatch);
             }
             ScreenManager.SpriteBatch.End();
         }
 
         public override void HandleInput(InputState input)
         {
-            if (firstRun)
+            if (_firstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
-                firstRun = false;
+                _firstRun = false;
             }
 
             if (input.PauseGame)
@@ -137,27 +137,27 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
             if (input.LastGamePadState.Buttons.Y != ButtonState.Pressed &&
                 input.CurrentGamePadState.Buttons.Y == ButtonState.Pressed)
             {
-                debugViewEnabled = !debugViewEnabled;
-                physicsSimulator.EnableDiagnostics = debugViewEnabled;
+                _debugViewEnabled = !_debugViewEnabled;
+                _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
             }
 
             Vector2 force = 50*input.CurrentGamePadState.ThumbSticks.Left;
             force.Y = -force.Y;
-            rectangleBody.ApplyForce(force);
+            _rectangleBody.ApplyForce(force);
 
             float rotation = -1000*input.CurrentGamePadState.Triggers.Left;
-            rectangleBody.ApplyTorque(rotation);
+            _rectangleBody.ApplyTorque(rotation);
 
             rotation = 1000*input.CurrentGamePadState.Triggers.Right;
-            rectangleBody.ApplyTorque(rotation);
+            _rectangleBody.ApplyTorque(rotation);
         }
 
         private void HandleKeyboardInput(InputState input)
         {
             if (!input.LastKeyboardState.IsKeyDown(Keys.F1) && input.CurrentKeyboardState.IsKeyDown(Keys.F1))
             {
-                debugViewEnabled = !debugViewEnabled;
-                physicsSimulator.EnableDiagnostics = debugViewEnabled;
+                _debugViewEnabled = !_debugViewEnabled;
+                _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
             }
             const float forceAmount = 50;
             Vector2 force = Vector2.Zero;
@@ -179,7 +179,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
                 force += new Vector2(0, -forceAmount);
             }
 
-            rectangleBody.ApplyForce(force);
+            _rectangleBody.ApplyForce(force);
 
             const float torqueAmount = 1000;
             float torque = 0;
@@ -191,7 +191,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
             {
                 torque += torqueAmount;
             }
-            rectangleBody.ApplyTorque(torque);
+            _rectangleBody.ApplyTorque(torque);
         }
 
 #if !XBOX
@@ -202,12 +202,12 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
                 input.CurrentMouseState.LeftButton == ButtonState.Pressed)
             {
                 //create mouse spring
-                pickedGeom = physicsSimulator.Collide(point);
-                if (pickedGeom != null)
+                _pickedGeom = _physicsSimulator.Collide(point);
+                if (_pickedGeom != null)
                 {
-                    mousePickSpring = ControllerFactory.Instance.CreateFixedLinearSpring(physicsSimulator,
-                                                                                         pickedGeom.Body,
-                                                                                         pickedGeom.Body.
+                    _mousePickSpring = ControllerFactory.Instance.CreateFixedLinearSpring(_physicsSimulator,
+                                                                                         _pickedGeom.Body,
+                                                                                         _pickedGeom.Body.
                                                                                              GetLocalPosition(point),
                                                                                          point, 20, 10);
                 }
@@ -216,17 +216,17 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
                      input.CurrentMouseState.LeftButton == ButtonState.Released)
             {
                 //destroy mouse spring
-                if (mousePickSpring != null && mousePickSpring.IsDisposed == false)
+                if (_mousePickSpring != null && _mousePickSpring.IsDisposed == false)
                 {
-                    mousePickSpring.Dispose();
-                    mousePickSpring = null;
+                    _mousePickSpring.Dispose();
+                    _mousePickSpring = null;
                 }
             }
 
             //move anchor point
-            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && mousePickSpring != null)
+            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && _mousePickSpring != null)
             {
-                mousePickSpring.WorldAttachPoint = point;
+                _mousePickSpring.WorldAttachPoint = point;
             }
         }
 #endif

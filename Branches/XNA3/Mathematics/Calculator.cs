@@ -8,16 +8,16 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         public const float DegreesToRadiansRatio = 57.29577957855f;
         public const float RadiansToDegreesRatio = 1f/57.29577957855f;
         public const float TwoPi = 6.28318531f;
-        private static readonly Random random = new Random();
+        private static readonly Random _random = new Random();
         private static Vector2 _temp;
-        private static Vector2 curveEnd;
-        private static Vector2 startCurve;
+        private static Vector2 _curveEnd;
+        private static Vector2 _startCurve;
 
         /// Temp variables to speed up the following code.
-        private static float tPow2;
+        private static float _tPow2;
 
-        private static float wayToGo;
-        private static float wayToGoPow2;
+        private static float _wayToGo;
+        private static float _wayToGoPow2;
 
         public static float Sin(float angle)
         {
@@ -162,7 +162,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
 
         public static float RandomNumber(float min, float max)
         {
-            return (float) ((max - min)*random.NextDouble() + min);
+            return (float) ((max - min)*_random.NextDouble() + min);
         }
 
         public static bool IsBetweenNonInclusive(float number, float min, float max)
@@ -221,21 +221,21 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         /// <returns></returns>
         public static Vector2 QuadraticBezierCurve(Vector2 start, Vector2 curve, Vector2 end, float t)
         {
-            wayToGo = 1.0f - t;
+            _wayToGo = 1.0f - t;
 
-            return wayToGo*wayToGo*start
-                   + 2.0f*t*wayToGo*curve
+            return _wayToGo*_wayToGo*start
+                   + 2.0f*t*_wayToGo*curve
                    + t*t*end;
         }
 
         public static Vector2 QuadraticBezierCurve(Vector2 start, Vector2 curve, Vector2 end, float t, ref float radians)
         {
-            startCurve = start + (curve - start)*t;
-            curveEnd = curve + (end - curve)*t;
-            _temp = curveEnd - startCurve;
+            _startCurve = start + (curve - start)*t;
+            _curveEnd = curve + (end - curve)*t;
+            _temp = _curveEnd - _startCurve;
 
             radians = (float) Math.Atan2(_temp.X, -(double) _temp.Y);
-            return startCurve + _temp*t;
+            return _startCurve + _temp*t;
         }
 
         public static Vector2 CubicBezierCurve2(Vector2 start, Vector2 startPointsTo, Vector2 end, Vector2 endPointsTo,
@@ -264,14 +264,14 @@ namespace FarseerGames.FarseerPhysics.Mathematics
 
         public static Vector2 CubicBezierCurve(Vector2 start, Vector2 curve1, Vector2 curve2, Vector2 end, float t)
         {
-            tPow2 = t*t;
-            wayToGo = 1.0f - t;
-            wayToGoPow2 = wayToGo*wayToGo;
+            _tPow2 = t*t;
+            _wayToGo = 1.0f - t;
+            _wayToGoPow2 = _wayToGo*_wayToGo;
 
-            return wayToGo*wayToGoPow2*start
-                   + 3.0f*t*wayToGoPow2*curve1
-                   + 3.0f*tPow2*wayToGo*curve2
-                   + t*tPow2*end;
+            return _wayToGo*_wayToGoPow2*start
+                   + 3.0f*t*_wayToGoPow2*curve1
+                   + 3.0f*_tPow2*_wayToGo*curve2
+                   + t*_tPow2*end;
         }
 
         public static Vector2 CubicBezierCurve(Vector2 start, Vector2 curve1, Vector2 curve2, Vector2 end, float t,

@@ -5,24 +5,24 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public class AngleLimitJoint : Joint
     {
-        private float accumlatedAngularImpulseOld;
-        private float accumulatedAngularImpulse;
-        private float angularImpulse;
-        private float biasFactor = .2f;
+        private float _accumlatedAngularImpulseOld;
+        private float _accumulatedAngularImpulse;
+        private float _angularImpulse;
+        private float _biasFactor = .2f;
         protected Body body1;
         protected Body body2;
-        private float breakpoint = float.MaxValue;
-        private float difference;
-        private float jointError;
-        private float lowerLimit;
-        private bool lowerLimitViolated;
-        private float massFactor;
+        private float _breakpoint = float.MaxValue;
+        private float _difference;
+        private float _jointError;
+        private float _lowerLimit;
+        private bool _lowerLimitViolated;
+        private float _massFactor;
 
-        private float slop = .01f;
-        private float softness;
-        private float upperLimit;
-        private bool upperLimitViolated;
-        private float velocityBias;
+        private float _slop = .01f;
+        private float _softness;
+        private float _upperLimit;
+        private bool _upperLimitViolated;
+        private float _velocityBias;
 
         public AngleLimitJoint()
         {
@@ -32,8 +32,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             this.body1 = body1;
             this.body2 = body2;
-            this.lowerLimit = lowerLimit;
-            this.upperLimit = upperLimit;
+            _lowerLimit = lowerLimit;
+            _upperLimit = upperLimit;
         }
 
         public Body Body1
@@ -50,43 +50,43 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public float BiasFactor
         {
-            get { return biasFactor; }
-            set { biasFactor = value; }
+            get { return _biasFactor; }
+            set { _biasFactor = value; }
         }
 
         public float Slop
         {
-            get { return slop; }
-            set { slop = value; }
+            get { return _slop; }
+            set { _slop = value; }
         }
 
         public float Softness
         {
-            get { return softness; }
-            set { softness = value; }
+            get { return _softness; }
+            set { _softness = value; }
         }
 
         public float UpperLimit
         {
-            get { return upperLimit; }
-            set { upperLimit = value; }
+            get { return _upperLimit; }
+            set { _upperLimit = value; }
         }
 
         public float LowerLimit
         {
-            get { return lowerLimit; }
-            set { lowerLimit = value; }
+            get { return _lowerLimit; }
+            set { _lowerLimit = value; }
         }
 
         public float Breakpoint
         {
-            get { return breakpoint; }
-            set { breakpoint = value; }
+            get { return _breakpoint; }
+            set { _breakpoint = value; }
         }
 
         public float JointError
         {
-            get { return jointError; }
+            get { return _jointError; }
         }
 
         public event EventHandler<EventArgs> Broke;
@@ -101,7 +101,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(jointError) > breakpoint)
+            if (Enabled && Math.Abs(_jointError) > _breakpoint)
             {
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
@@ -110,56 +110,56 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 return;
             }
-            difference = (body2.totalRotation - body1.totalRotation);
-            jointError = 0;
+            _difference = (body2.totalRotation - body1.totalRotation);
+            _jointError = 0;
 
-            if (difference > upperLimit)
+            if (_difference > _upperLimit)
             {
-                if (lowerLimitViolated)
+                if (_lowerLimitViolated)
                 {
-                    accumulatedAngularImpulse = 0;
-                    lowerLimitViolated = false;
+                    _accumulatedAngularImpulse = 0;
+                    _lowerLimitViolated = false;
                 }
-                upperLimitViolated = true;
-                if (difference < upperLimit + slop)
+                _upperLimitViolated = true;
+                if (_difference < _upperLimit + _slop)
                 {
-                    jointError = 0;
+                    _jointError = 0;
                 }
                 else
                 {
-                    jointError = difference - upperLimit;
+                    _jointError = _difference - _upperLimit;
                 }
             }
-            else if (difference < lowerLimit)
+            else if (_difference < _lowerLimit)
             {
-                if (upperLimitViolated)
+                if (_upperLimitViolated)
                 {
-                    accumulatedAngularImpulse = 0;
-                    upperLimitViolated = false;
+                    _accumulatedAngularImpulse = 0;
+                    _upperLimitViolated = false;
                 }
-                lowerLimitViolated = true;
-                if (difference > lowerLimit - slop)
+                _lowerLimitViolated = true;
+                if (_difference > _lowerLimit - _slop)
                 {
-                    jointError = 0;
+                    _jointError = 0;
                 }
                 else
                 {
-                    jointError = difference - lowerLimit;
+                    _jointError = _difference - _lowerLimit;
                 }
             }
             else
             {
-                upperLimitViolated = false;
-                lowerLimitViolated = false;
-                jointError = 0;
-                accumulatedAngularImpulse = 0;
+                _upperLimitViolated = false;
+                _lowerLimitViolated = false;
+                _jointError = 0;
+                _accumulatedAngularImpulse = 0;
             }
-            velocityBias = biasFactor*inverseDt*jointError;
+            _velocityBias = _biasFactor*inverseDt*_jointError;
 
-            massFactor = 1/(softness + body1.inverseMomentOfInertia + body2.inverseMomentOfInertia);
+            _massFactor = 1/(_softness + body1.inverseMomentOfInertia + body2.inverseMomentOfInertia);
 
-            body1.angularVelocity -= body1.inverseMomentOfInertia*accumulatedAngularImpulse;
-            body2.angularVelocity += body2.inverseMomentOfInertia*accumulatedAngularImpulse;
+            body1.angularVelocity -= body1.inverseMomentOfInertia*_accumulatedAngularImpulse;
+            body2.angularVelocity += body2.inverseMomentOfInertia*_accumulatedAngularImpulse;
         }
 
         public override void Update()
@@ -168,30 +168,30 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 return;
             }
-            if (!upperLimitViolated && !lowerLimitViolated)
+            if (!_upperLimitViolated && !_lowerLimitViolated)
             {
                 return;
             }
-            angularImpulse = 0;
-            angularImpulse =
-                -(velocityBias + (body2.angularVelocity - body1.angularVelocity) + softness*accumulatedAngularImpulse)*
-                massFactor;
+            _angularImpulse = 0;
+            _angularImpulse =
+                -(_velocityBias + (body2.angularVelocity - body1.angularVelocity) + _softness*_accumulatedAngularImpulse)*
+                _massFactor;
 
-            accumlatedAngularImpulseOld = accumulatedAngularImpulse;
+            _accumlatedAngularImpulseOld = _accumulatedAngularImpulse;
 
-            if (upperLimitViolated)
+            if (_upperLimitViolated)
             {
-                accumulatedAngularImpulse = MathHelper.Min(accumlatedAngularImpulseOld + angularImpulse, 0);
+                _accumulatedAngularImpulse = MathHelper.Min(_accumlatedAngularImpulseOld + _angularImpulse, 0);
             }
-            else if (lowerLimitViolated)
+            else if (_lowerLimitViolated)
             {
-                accumulatedAngularImpulse = MathHelper.Max(accumlatedAngularImpulseOld + angularImpulse, 0);
+                _accumulatedAngularImpulse = MathHelper.Max(_accumlatedAngularImpulseOld + _angularImpulse, 0);
             }
 
-            angularImpulse = accumulatedAngularImpulse - accumlatedAngularImpulseOld;
+            _angularImpulse = _accumulatedAngularImpulse - _accumlatedAngularImpulseOld;
 
-            body1.angularVelocity -= body1.inverseMomentOfInertia*angularImpulse;
-            body2.angularVelocity += body2.inverseMomentOfInertia*angularImpulse;
+            body1.angularVelocity -= body1.inverseMomentOfInertia*_angularImpulse;
+            body2.angularVelocity += body2.inverseMomentOfInertia*_angularImpulse;
         }
     }
 }

@@ -14,52 +14,52 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         #endregion
 
-        private readonly Dictionary<Geom, bool> geomInFluidList;
+        private readonly Dictionary<Geom, bool> _geomInFluidList;
 
-        private readonly List<Geom> geomList;
-        private float area;
-        private Vector2 axis = Vector2.Zero;
-        private Vector2 buoyancyForce = Vector2.Zero;
-        private Vector2 centroid = Vector2.Zero;
-        private Vector2 centroidVelocity;
-        private float density;
-        private float dragArea;
-        private IFluidContainer fluidContainer;
-        private Vector2 gravity = Vector2.Zero;
-        private float linearDragCoefficient;
-        private Vector2 linearDragForce = Vector2.Zero;
-        private float max;
-        private float min;
+        private readonly List<Geom> _geomList;
+        private float _area;
+        private Vector2 _axis = Vector2.Zero;
+        private Vector2 _buoyancyForce = Vector2.Zero;
+        private Vector2 _centroid = Vector2.Zero;
+        private Vector2 _centroidVelocity;
+        private float _density;
+        private float _dragArea;
+        private IFluidContainer _fluidContainer;
+        private Vector2 _gravity = Vector2.Zero;
+        private float _linearDragCoefficient;
+        private Vector2 _linearDragForce = Vector2.Zero;
+        private float _max;
+        private float _min;
         public OnEntryHandler OnEntry;
-        private float partialMass;
-        private float rotationalDragCoeficient;
-        private float rotationalDragTorque;
-        private float totalArea;
-        private Vector2 totalForce;
-        private Vector2 vert;
-        private Vertices vertices;
+        private float _partialMass;
+        private float _rotationalDragCoeficient;
+        private float _rotationalDragTorque;
+        private float _totalArea;
+        private Vector2 _totalForce;
+        private Vector2 _vert;
+        private Vertices _vertices;
 
         public FluidDragController()
         {
-            geomList = new List<Geom>();
-            geomInFluidList = new Dictionary<Geom, bool>();
+            _geomList = new List<Geom>();
+            _geomInFluidList = new Dictionary<Geom, bool>();
         }
 
         public void Initialize(IFluidContainer fluidContainer, float density, float linearDragCoeficient,
                                float rotationalDragCoeficient, Vector2 gravity)
         {
-            this.fluidContainer = fluidContainer;
-            this.density = density;
-            linearDragCoefficient = linearDragCoeficient;
-            this.rotationalDragCoeficient = rotationalDragCoeficient;
-            this.gravity = gravity;
-            vertices = new Vertices();
+            _fluidContainer = fluidContainer;
+            _density = density;
+            _linearDragCoefficient = linearDragCoeficient;
+            _rotationalDragCoeficient = rotationalDragCoeficient;
+            _gravity = gravity;
+            _vertices = new Vertices();
         }
 
         public void AddGeom(Geom geom)
         {
-            geomList.Add(geom);
-            geomInFluidList.Add(geom, false);
+            _geomList.Add(geom);
+            _geomInFluidList.Add(geom, false);
         }
 
         public override void Validate()
@@ -69,42 +69,42 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         public void Reset()
         {
-            geomInFluidList.Clear();
-            foreach (Geom geom in geomList)
+            _geomInFluidList.Clear();
+            foreach (Geom geom in _geomList)
             {
-                geomInFluidList.Add(geom, false);
+                _geomInFluidList.Add(geom, false);
             }
         }
 
         public override void Update(float dt)
         {
-            for (int i = 0; i < geomList.Count; i++)
+            for (int i = 0; i < _geomList.Count; i++)
             {
-                totalArea = geomList[i].localVertices.GetArea();
-                if (!fluidContainer.Intersect(geomList[i].aabb)) continue;
-                FindVerticesInFluid(geomList[i]);
-                if (vertices.Count < 3) continue;
+                _totalArea = _geomList[i].localVertices.GetArea();
+                if (!_fluidContainer.Intersect(_geomList[i].aabb)) continue;
+                FindVerticesInFluid(_geomList[i]);
+                if (_vertices.Count < 3) continue;
 
-                area = vertices.GetArea();
-                if (area < .000001) continue;
+                _area = _vertices.GetArea();
+                if (_area < .000001) continue;
 
-                centroid = vertices.GetCentroid(area);
+                _centroid = _vertices.GetCentroid(_area);
 
                 CalculateBuoyancy();
 
-                CalculateDrag(geomList[i]);
+                CalculateDrag(_geomList[i]);
 
-                Vector2.Add(ref buoyancyForce, ref linearDragForce, out totalForce);
-                geomList[i].body.ApplyForceAtWorldPoint(ref totalForce, ref centroid);
+                Vector2.Add(ref _buoyancyForce, ref _linearDragForce, out _totalForce);
+                _geomList[i].body.ApplyForceAtWorldPoint(ref _totalForce, ref _centroid);
 
-                geomList[i].body.ApplyTorque(rotationalDragTorque);
+                _geomList[i].body.ApplyTorque(_rotationalDragTorque);
 
-                if (geomInFluidList[geomList[i]] == false)
+                if (_geomInFluidList[_geomList[i]] == false)
                 {
-                    geomInFluidList[geomList[i]] = true;
+                    _geomInFluidList[_geomList[i]] = true;
                     if (OnEntry != null)
                     {
-                        OnEntry(geomList[i]);
+                        OnEntry(_geomList[i]);
                     }
                 }
             }
@@ -112,45 +112,45 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         private void FindVerticesInFluid(Geom geom)
         {
-            vertices.Clear();
+            _vertices.Clear();
             for (int i = 0; i < geom.worldVertices.Count; i++)
             {
-                vert = geom.worldVertices[i];
-                if (fluidContainer.Contains(ref vert))
+                _vert = geom.worldVertices[i];
+                if (_fluidContainer.Contains(ref _vert))
                 {
-                    vertices.Add(vert);
+                    _vertices.Add(_vert);
                 }
             }
         }
 
         private void CalculateBuoyancy()
         {
-            buoyancyForce = -gravity*area*density;
+            _buoyancyForce = -_gravity*_area*_density;
         }
 
 
         private void CalculateDrag(Geom geom)
         {
-            //localCentroid = geom.body.GetLocalPosition(centroid);
-            geom.body.GetVelocityAtWorldPoint(ref centroid, out centroidVelocity);
+            //localCentroid = geom.body.GetLocalPosition(_centroid);
+            geom.body.GetVelocityAtWorldPoint(ref _centroid, out _centroidVelocity);
 
-            axis.X = -centroidVelocity.Y;
-            axis.Y = centroidVelocity.X;
+            _axis.X = -_centroidVelocity.Y;
+            _axis.Y = _centroidVelocity.X;
             //can't normalize a zero length vector
-            if (axis.X != 0 || axis.Y != 0)
+            if (_axis.X != 0 || _axis.Y != 0)
             {
-                axis.Normalize();
+                _axis.Normalize();
             }
 
-            vertices.ProjectToAxis(ref axis, out min, out max);
+            _vertices.ProjectToAxis(ref _axis, out _min, out _max);
 
-            dragArea = Math.Abs(max - min);
+            _dragArea = Math.Abs(_max - _min);
 
-            partialMass = geom.body.mass*(area/totalArea);
+            _partialMass = geom.body.mass*(_area/_totalArea);
 
-            linearDragForce = -.5f*density*dragArea*linearDragCoefficient*partialMass*centroidVelocity;
+            _linearDragForce = -.5f*_density*_dragArea*_linearDragCoefficient*_partialMass*_centroidVelocity;
 
-            rotationalDragTorque = -geom.body.angularVelocity*rotationalDragCoeficient*partialMass;
+            _rotationalDragTorque = -geom.body.angularVelocity*_rotationalDragCoeficient*_partialMass;
         }
     }
 }

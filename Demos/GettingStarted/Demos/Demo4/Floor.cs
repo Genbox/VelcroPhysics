@@ -9,39 +9,39 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
 {
     internal class Floor
     {
-        private readonly int height;
-        private readonly Vector2 position;
-        private readonly int width;
-        private Body floorBody;
-        private Geom floorGeom;
-        private Vector2 floorOrigin;
-        private Texture2D floorTexture;
+        private readonly int _height;
+        private readonly Vector2 _position;
+        private readonly int _width;
+        private Body _floorBody;
+        private Geom _floorGeom;
+        private Vector2 _floorOrigin;
+        private Texture2D _floorTexture;
 
         public Floor(int width, int height, Vector2 position)
         {
-            this.width = width;
-            this.height = height;
-            this.position = position;
+            _width = width;
+            _height = height;
+            _position = position;
         }
 
         public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
-            floorTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, width, height, 0, 1, 1, Color.White,
+            _floorTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, _width, _height, 0, 1, 1, Color.White,
                                                                 Color.Black);
-            floorOrigin = new Vector2(floorTexture.Width/2f, floorTexture.Height/2f);
+            _floorOrigin = new Vector2(_floorTexture.Width/2f, _floorTexture.Height/2f);
 
             //use the body factory to create the physics body
-            floorBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, width, height, 1);
-            floorBody.IsStatic = true;
-            floorGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, floorBody, width, height);
-            floorGeom.RestitutionCoefficient = .4f;
-            floorGeom.FrictionCoefficient = .4f;
-            floorBody.Position = position;
+            _floorBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _width, _height, 1);
+            _floorBody.IsStatic = true;
+            _floorGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _floorBody, _width, _height);
+            _floorGeom.RestitutionCoefficient = .4f;
+            _floorGeom.FrictionCoefficient = .4f;
+            _floorBody.Position = _position;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(floorTexture, floorBody.Position, null, Color.White, floorBody.Rotation, floorOrigin, 1,
+            spriteBatch.Draw(_floorTexture, _floorBody.Position, null, Color.White, _floorBody.Rotation, _floorOrigin, 1,
                              SpriteEffects.None, 0f);
         }
     }

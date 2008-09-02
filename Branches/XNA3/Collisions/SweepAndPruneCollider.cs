@@ -19,22 +19,22 @@ namespace FarseerGames.FarseerPhysics.Collisions
     public class SweepAndPruneCollider : IBroadPhaseCollider
     {
         public static float fTol = 0.01f; //1.5f; //.01f;
-        private readonly PhysicsSimulator physicsSimulator;
-        private readonly ExtentList xExtentList;
-        private readonly ExtentInfoList xInfoList;
-        private readonly ExtentList yExtentList;
-        private readonly ExtentInfoList yInfoList;
+        private readonly PhysicsSimulator _physicsSimulator;
+        private readonly ExtentList _xExtentList;
+        private readonly ExtentInfoList _xInfoList;
+        private readonly ExtentList _yExtentList;
+        private readonly ExtentInfoList _yInfoList;
         //private bool bForce;
         public CollisionPairDictionary collisionPairs;
 
 
         public SweepAndPruneCollider(PhysicsSimulator physicsSimulator)
         {
-            this.physicsSimulator = physicsSimulator;
-            xExtentList = new ExtentList(this);
-            yExtentList = new ExtentList(this);
-            xInfoList = new ExtentInfoList(this);
-            yInfoList = new ExtentInfoList(this);
+            _physicsSimulator = physicsSimulator;
+            _xExtentList = new ExtentList(this);
+            _yExtentList = new ExtentList(this);
+            _xInfoList = new ExtentInfoList(this);
+            _yInfoList = new ExtentInfoList(this);
             collisionPairs = new CollisionPairDictionary();
         }
 
@@ -46,14 +46,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void ProcessDisposedGeoms()
         {
-            if (xInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.IsDisposed; }) > 0)
+            if (_xInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.IsDisposed; }) > 0)
             {
-                xExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.IsDisposed; });
+                _xExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.IsDisposed; });
             }
 
-            if (yInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.IsDisposed; }) > 0)
+            if (_yInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.IsDisposed; }) > 0)
             {
-                yExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.IsDisposed; });
+                _yExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.IsDisposed; });
             }
 
             // We force a non-incremental update because that will insure that the
@@ -68,13 +68,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void ProcessRemovedGeoms()
         {
-            if (xInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.isRemoved; }) > 0)
+            if (_xInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.isRemoved; }) > 0)
             {
-                xExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.isRemoved; });
+                _xExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.isRemoved; });
             }
-            if (yInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.isRemoved; }) > 0)
+            if (_yInfoList.RemoveAll(delegate(ExtentInfo i) { return i.geometry.isRemoved; }) > 0)
             {
-                yExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.isRemoved; });
+                _yExtentList.RemoveAll(delegate(Extent n) { return n.info.geometry.isRemoved; });
             }
 
             // We force a non-incremental update because that will insure that the
@@ -91,12 +91,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public void Add(Geom g)
         {
             ExtentInfo xExtentInfo = new ExtentInfo(g, g.AABB.Min.X, g.AABB.Max.X);
-            xInfoList.Add(xExtentInfo);
-            xExtentList.IncrementalInsertExtent(xExtentInfo);
+            _xInfoList.Add(xExtentInfo);
+            _xExtentList.IncrementalInsertExtent(xExtentInfo);
 
             ExtentInfo yExtentInfo = new ExtentInfo(g, g.AABB.Min.Y, g.AABB.Max.Y);
-            yInfoList.Add(yExtentInfo);
-            yExtentList.IncrementalInsertExtent(yExtentInfo);
+            _yInfoList.Add(yExtentInfo);
+            _yExtentList.IncrementalInsertExtent(yExtentInfo);
         }
 
         /// <summary>
@@ -106,11 +106,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             UpdateExtentValues();
 
-            xExtentList.IncrementalSort();
-            yExtentList.IncrementalSort();
+            _xExtentList.IncrementalSort();
+            _yExtentList.IncrementalSort();
 
-            xInfoList.MoveUnderConsiderationToOverlaps();
-            yInfoList.MoveUnderConsiderationToOverlaps();
+            _xInfoList.MoveUnderConsiderationToOverlaps();
+            _yInfoList.MoveUnderConsiderationToOverlaps();
 
             HandleCollisions();
         }
@@ -174,11 +174,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         private void UpdateExtentValues()
         {
-            Debug.Assert(xInfoList.Count == yInfoList.Count);
-            for (int i = 0; i < xInfoList.Count; i++)
+            Debug.Assert(_xInfoList.Count == _yInfoList.Count);
+            for (int i = 0; i < _xInfoList.Count; i++)
             {
-                ExtentInfo xInfo = xInfoList[i];
-                ExtentInfo yInfo = yInfoList[i];
+                ExtentInfo xInfo = _xInfoList[i];
+                ExtentInfo yInfo = _yInfoList[i];
                 Debug.Assert(xInfo.geometry == yInfo.geometry);
                 AABB aabb = xInfo.geometry.aabb;
 
@@ -204,14 +204,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 // Note: Possible optimization. Maybe arbiter can be cached into value of
                 // collisionPairs? Currently, the collisionPairs hash doesn't use its
                 // value parameter - its just an unused bool value.
-                Arbiter arbiter;
-                arbiter = physicsSimulator.arbiterPool.Fetch();
-                arbiter.ConstructArbiter(cp.geom1, cp.geom2, physicsSimulator);
+                Arbiter arbiter = _physicsSimulator.arbiterPool.Fetch();
+                arbiter.ConstructArbiter(cp.geom1, cp.geom2, _physicsSimulator);
 
-                if (!physicsSimulator.arbiterList.Contains(arbiter))
-                    physicsSimulator.arbiterList.Add(arbiter);
+                if (!_physicsSimulator.arbiterList.Contains(arbiter))
+                    _physicsSimulator.arbiterList.Add(arbiter);
                 else
-                    physicsSimulator.arbiterPool.Release(arbiter);
+                    _physicsSimulator.arbiterPool.Release(arbiter);
             }
         }
 
@@ -243,18 +242,18 @@ namespace FarseerGames.FarseerPhysics.Collisions
             collisionPairs.Clear();
 
             // And clear out all the overlap records
-            Debug.Assert(xInfoList.Count == yInfoList.Count);
-            for (int i = 0; i < xInfoList.Count; i++)
+            Debug.Assert(_xInfoList.Count == _yInfoList.Count);
+            for (int i = 0; i < _xInfoList.Count; i++)
             {
-                xInfoList[i].overlaps.Clear();
-                xInfoList[i].underConsideration.Clear();
-                yInfoList[i].overlaps.Clear();
-                yInfoList[i].underConsideration.Clear();
+                _xInfoList[i].overlaps.Clear();
+                _xInfoList[i].underConsideration.Clear();
+                _yInfoList[i].overlaps.Clear();
+                _yInfoList[i].underConsideration.Clear();
             }
 
             // Force sort
-            xExtentList.Sort(delegate(Extent l, Extent r) { return l.value.CompareTo(r.value); });
-            yExtentList.Sort(delegate(Extent l, Extent r) { return l.value.CompareTo(r.value); });
+            _xExtentList.Sort(delegate(Extent l, Extent r) { return l.value.CompareTo(r.value); });
+            _yExtentList.Sort(delegate(Extent l, Extent r) { return l.value.CompareTo(r.value); });
 
             // Rebuild overlap information
             List<Geom> overlaps = new List<Geom>();
@@ -264,9 +263,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                 ExtentList extentList = null;
                 if (i == 0)
-                    extentList = xExtentList;
+                    extentList = _xExtentList;
                 else
-                    extentList = yExtentList;
+                    extentList = _yExtentList;
 
                 foreach (Extent extent in extentList)
                 {

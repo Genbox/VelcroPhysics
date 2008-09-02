@@ -5,25 +5,25 @@ namespace FarseerGames.FarseerPhysics.Collisions
 {
     public sealed class Grid
     {
-        private AABB aabb;
-        private float gridCellSize;
-        private float gridCellSizeInv;
-        private float[,] nodes;
-        private Vector2[] points;
+        private AABB _aabb;
+        private float _gridCellSize;
+        private float _gridCellSizeInv;
+        private float[,] _nodes;
+        private Vector2[] _points;
 
         public Vector2[] Points
         {
-            get { return points; }
+            get { return _points; }
         }
 
         public Grid Clone()
         {
             Grid grid = new Grid();
-            grid.gridCellSize = gridCellSize;
-            grid.gridCellSizeInv = gridCellSizeInv;
-            grid.aabb = aabb;
-            grid.nodes = (float[,]) nodes.Clone();
-            grid.points = (Vector2[]) points.Clone();
+            grid._gridCellSize = _gridCellSize;
+            grid._gridCellSizeInv = _gridCellSizeInv;
+            grid._aabb = _aabb;
+            grid._nodes = (float[,]) _nodes.Clone();
+            grid._points = (Vector2[]) _points.Clone();
             return grid;
         }
 
@@ -34,24 +34,24 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Matrix identity = Matrix.Identity;
             geometry.Matrix = identity;
 
-            aabb = new AABB(geometry.AABB);
-            this.gridCellSize = gridCellSize;
-            gridCellSizeInv = 1/gridCellSize;
+            _aabb = new AABB(geometry.AABB);
+            _gridCellSize = gridCellSize;
+            _gridCellSizeInv = 1/gridCellSize;
 
-            int xSize = (int) Math.Ceiling(Convert.ToDouble((aabb.Max.X - aabb.Min.X)*gridCellSizeInv)) + 1;
-            int ySize = (int) Math.Ceiling(Convert.ToDouble((aabb.Max.Y - aabb.Min.Y)*gridCellSizeInv)) + 1;
+            int xSize = (int) Math.Ceiling(Convert.ToDouble((_aabb.Max.X - _aabb.Min.X)*_gridCellSizeInv)) + 1;
+            int ySize = (int) Math.Ceiling(Convert.ToDouble((_aabb.Max.Y - _aabb.Min.Y)*_gridCellSizeInv)) + 1;
 
-            nodes = new float[xSize,ySize];
-            points = new Vector2[xSize*ySize];
+            _nodes = new float[xSize,ySize];
+            _points = new Vector2[xSize*ySize];
             int i = 0;
-            Vector2 vector = aabb.Min;
+            Vector2 vector = _aabb.Min;
             for (int x = 0; x < xSize; ++x, vector.X += gridCellSize)
             {
-                vector.Y = aabb.Min.Y;
+                vector.Y = _aabb.Min.Y;
                 for (int y = 0; y < ySize; ++y, vector.Y += gridCellSize)
                 {
-                    nodes[x, y] = geometry.GetNearestDistance(vector); // shape.GetDistance(vector);
-                    points[i] = vector;
+                    _nodes[x, y] = geometry.GetNearestDistance(vector); // shape.GetDistance(vector);
+                    _points[i] = vector;
                     i += 1;
                 }
             }
@@ -63,19 +63,19 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             //TODO: Keep and eye out for floating point accuracy issues here. Possibly some
             //VERY intermittent errors exist?
-            if (aabb.Contains(ref vector))
+            if (_aabb.Contains(ref vector))
             {
-                int x = (int) Math.Floor((vector.X - aabb.Min.X)*gridCellSizeInv);
-                int y = (int) Math.Floor((vector.Y - aabb.Min.Y)*gridCellSizeInv);
+                int x = (int) Math.Floor((vector.X - _aabb.Min.X)*_gridCellSizeInv);
+                int y = (int) Math.Floor((vector.Y - _aabb.Min.Y)*_gridCellSizeInv);
 
 
-                float xPercent = (vector.X - (gridCellSize*x + aabb.Min.X))*gridCellSizeInv;
-                float yPercent = (vector.Y - (gridCellSize*y + aabb.Min.Y))*gridCellSizeInv;
+                float xPercent = (vector.X - (_gridCellSize*x + _aabb.Min.X))*_gridCellSizeInv;
+                float yPercent = (vector.Y - (_gridCellSize*y + _aabb.Min.Y))*_gridCellSizeInv;
 
-                float bottomLeft = nodes[x, y];
-                float bottomRight = nodes[x + 1, y];
-                float topLeft = nodes[x, y + 1];
-                float topRight = nodes[x + 1, y + 1];
+                float bottomLeft = _nodes[x, y];
+                float bottomRight = _nodes[x + 1, y];
+                float topLeft = _nodes[x, y + 1];
+                float topRight = _nodes[x + 1, y + 1];
 
                 if (bottomLeft <= 0 ||
                     bottomRight <= 0 ||

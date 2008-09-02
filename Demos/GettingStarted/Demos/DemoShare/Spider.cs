@@ -10,211 +10,211 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
     public class Spider
     {
         private const int spiderBodyRadius = 20;
-        private readonly Vector2 position;
-        private CollisionCategories collidesWith = CollisionCategories.All;
-        private CollisionCategories collisionCategory = CollisionCategories.All;
-        private int collisionGroup;
-        private bool kneeFlexed;
-        private float kneeTargetAngle = .4f;
-        private AngleJoint leftKneeAngleJoint;
-        private Body leftLowerLegBody;
-        private Geom leftLowerLegGeom;
-        private AngleJoint leftShoulderAngleJoint;
-        private Body leftUpperLegBody;
-        private Geom leftUpperLegGeom;
-        private Vector2 lowerLegOrigin;
-        private Vector2 lowerLegSize = new Vector2(30, 12);
-        private Texture2D lowerLegTexture;
+        private readonly Vector2 _position;
+        private CollisionCategories _collidesWith = CollisionCategories.All;
+        private CollisionCategories _collisionCategory = CollisionCategories.All;
+        private int _collisionGroup;
+        private bool _kneeFlexed;
+        private float _kneeTargetAngle = .4f;
+        private AngleJoint _leftKneeAngleJoint;
+        private Body _leftLowerLegBody;
+        private Geom _leftLowerLegGeom;
+        private AngleJoint _leftShoulderAngleJoint;
+        private Body _leftUpperLegBody;
+        private Geom _leftUpperLegGeom;
+        private Vector2 _lowerLegOrigin;
+        private Vector2 _lowerLegSize = new Vector2(30, 12);
+        private Texture2D _lowerLegTexture;
 
-        private AngleJoint rightKneeAngleJoint;
-        private Body rightLowerLegBody;
-        private Geom rightLowerLegGeom;
-        private AngleJoint rightShoulderAngleJoint;
-        private Body rightUpperLegBody;
-        private Geom rightUpperLegGeom;
-        private float s;
-        private bool shoulderFlexed;
-        private float shoulderTargetAngle = .2f;
-        private Body spiderBody;
+        private AngleJoint _rightKneeAngleJoint;
+        private Body _rightLowerLegBody;
+        private Geom _rightLowerLegGeom;
+        private AngleJoint _rightShoulderAngleJoint;
+        private Body _rightUpperLegBody;
+        private Geom _rightUpperLegGeom;
+        private float _s;
+        private bool _shoulderFlexed;
+        private float _shoulderTargetAngle = .2f;
+        private Body _spiderBody;
 
-        private Geom spiderGeom;
-        private Vector2 spiderOrigin;
-        private Texture2D spiderTexture;
-        private Vector2 upperLegOrigin;
-        private Vector2 upperLegSize = new Vector2(40, 12); //x=width, y=height
-        private Texture2D upperLegTexture;
+        private Geom _spiderGeom;
+        private Vector2 _spiderOrigin;
+        private Texture2D _spiderTexture;
+        private Vector2 _upperLegOrigin;
+        private Vector2 _upperLegSize = new Vector2(40, 12); //x=width, y=height
+        private Texture2D _upperLegTexture;
 
         public Spider(Vector2 position)
         {
-            this.position = position;
+            _position = position;
         }
 
         public Body Body
         {
-            get { return spiderBody; }
+            get { return _spiderBody; }
         }
 
         public CollisionCategories CollisionCategory
         {
-            get { return collisionCategory; }
-            set { collisionCategory = value; }
+            get { return _collisionCategory; }
+            set { _collisionCategory = value; }
         }
 
         public CollisionCategories CollidesWith
         {
-            get { return collidesWith; }
-            set { collidesWith = value; }
+            get { return _collidesWith; }
+            set { _collidesWith = value; }
         }
 
         public int CollisionGroup
         {
-            get { return collisionGroup; }
-            set { collisionGroup = value; }
+            get { return _collisionGroup; }
+            set { _collisionGroup = value; }
         }
 
         public void ApplyForce(Vector2 force)
         {
-            spiderBody.ApplyForce(force);
+            _spiderBody.ApplyForce(force);
         }
 
         public void ApplyTorque(float torque)
         {
-            spiderBody.ApplyTorque(torque);
+            _spiderBody.ApplyTorque(torque);
         }
 
 
         public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
-            spiderTexture = DrawingHelper.CreateCircleTexture(graphicsDevice, spiderBodyRadius, Color.White, Color.Black);
-            spiderOrigin = new Vector2(spiderTexture.Width/2f, spiderTexture.Height/2f);
+            _spiderTexture = DrawingHelper.CreateCircleTexture(graphicsDevice, spiderBodyRadius, Color.White, Color.Black);
+            _spiderOrigin = new Vector2(_spiderTexture.Width/2f, _spiderTexture.Height/2f);
 
-            upperLegTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int) upperLegSize.X,
-                                                                   (int) upperLegSize.Y, Color.White, Color.Black);
-            upperLegOrigin = new Vector2(upperLegTexture.Width/2f, upperLegTexture.Height/2f);
+            _upperLegTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int) _upperLegSize.X,
+                                                                   (int) _upperLegSize.Y, Color.White, Color.Black);
+            _upperLegOrigin = new Vector2(_upperLegTexture.Width/2f, _upperLegTexture.Height/2f);
 
-            lowerLegTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int) lowerLegSize.X,
-                                                                   (int) lowerLegSize.Y, Color.Red, Color.Black);
-            lowerLegOrigin = new Vector2(lowerLegTexture.Width/2f, lowerLegTexture.Height/2f);
+            _lowerLegTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int) _lowerLegSize.X,
+                                                                   (int) _lowerLegSize.Y, Color.Red, Color.Black);
+            _lowerLegOrigin = new Vector2(_lowerLegTexture.Width/2f, _lowerLegTexture.Height/2f);
 
             //Load bodies
-            spiderBody = BodyFactory.Instance.CreateCircleBody(physicsSimulator, spiderBodyRadius, 1);
-            spiderBody.Position = position;
-            spiderBody.IsStatic = false;
+            _spiderBody = BodyFactory.Instance.CreateCircleBody(physicsSimulator, spiderBodyRadius, 1);
+            _spiderBody.Position = _position;
+            _spiderBody.IsStatic = false;
 
-            leftUpperLegBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, upperLegSize.X, upperLegSize.Y,
+            _leftUpperLegBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _upperLegSize.X, _upperLegSize.Y,
                                                                         1);
-            leftUpperLegBody.Position = spiderBody.Position - new Vector2(spiderBodyRadius, 0) -
-                                        new Vector2(upperLegSize.X/2, 0);
+            _leftUpperLegBody.Position = _spiderBody.Position - new Vector2(spiderBodyRadius, 0) -
+                                        new Vector2(_upperLegSize.X/2, 0);
 
-            leftLowerLegBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, lowerLegSize.X, lowerLegSize.Y,
+            _leftLowerLegBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _lowerLegSize.X, _lowerLegSize.Y,
                                                                         1);
-            leftLowerLegBody.Position = spiderBody.Position - new Vector2(spiderBodyRadius, 0) -
-                                        new Vector2(upperLegSize.X, 0) - new Vector2(lowerLegSize.X/2, 0);
+            _leftLowerLegBody.Position = _spiderBody.Position - new Vector2(spiderBodyRadius, 0) -
+                                        new Vector2(_upperLegSize.X, 0) - new Vector2(_lowerLegSize.X/2, 0);
 
-            rightUpperLegBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, upperLegSize.X,
-                                                                         upperLegSize.Y, 1);
-            rightUpperLegBody.Position = spiderBody.Position + new Vector2(spiderBodyRadius, 0) +
-                                         new Vector2(upperLegSize.X/2, 0);
+            _rightUpperLegBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _upperLegSize.X,
+                                                                         _upperLegSize.Y, 1);
+            _rightUpperLegBody.Position = _spiderBody.Position + new Vector2(spiderBodyRadius, 0) +
+                                         new Vector2(_upperLegSize.X/2, 0);
 
-            rightLowerLegBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, lowerLegSize.X,
-                                                                         lowerLegSize.Y, 1);
-            rightLowerLegBody.Position = spiderBody.Position + new Vector2(spiderBodyRadius, 0) +
-                                         new Vector2(upperLegSize.X, 0) + new Vector2(lowerLegSize.X/2, 0);
+            _rightLowerLegBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _lowerLegSize.X,
+                                                                         _lowerLegSize.Y, 1);
+            _rightLowerLegBody.Position = _spiderBody.Position + new Vector2(spiderBodyRadius, 0) +
+                                         new Vector2(_upperLegSize.X, 0) + new Vector2(_lowerLegSize.X/2, 0);
 
             //load geometries
-            spiderGeom = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, spiderBody, spiderBodyRadius, 14);
-            leftUpperLegGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, leftUpperLegBody,
-                                                                        upperLegSize.X, upperLegSize.Y);
-            leftLowerLegGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, leftLowerLegBody,
-                                                                        lowerLegSize.X, lowerLegSize.Y);
-            rightUpperLegGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, rightUpperLegBody,
-                                                                         upperLegSize.X, upperLegSize.Y);
-            rightLowerLegGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, rightLowerLegBody,
-                                                                         lowerLegSize.X, lowerLegSize.Y);
-            spiderGeom.CollisionGroup = collisionGroup;
-            leftUpperLegGeom.CollisionGroup = collisionGroup;
-            leftLowerLegGeom.CollisionGroup = collisionGroup;
-            rightUpperLegGeom.CollisionGroup = collisionGroup;
-            rightLowerLegGeom.CollisionGroup = collisionGroup;
+            _spiderGeom = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _spiderBody, spiderBodyRadius, 14);
+            _leftUpperLegGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _leftUpperLegBody,
+                                                                        _upperLegSize.X, _upperLegSize.Y);
+            _leftLowerLegGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _leftLowerLegBody,
+                                                                        _lowerLegSize.X, _lowerLegSize.Y);
+            _rightUpperLegGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _rightUpperLegBody,
+                                                                         _upperLegSize.X, _upperLegSize.Y);
+            _rightLowerLegGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _rightLowerLegBody,
+                                                                         _lowerLegSize.X, _lowerLegSize.Y);
+            _spiderGeom.CollisionGroup = _collisionGroup;
+            _leftUpperLegGeom.CollisionGroup = _collisionGroup;
+            _leftLowerLegGeom.CollisionGroup = _collisionGroup;
+            _rightUpperLegGeom.CollisionGroup = _collisionGroup;
+            _rightLowerLegGeom.CollisionGroup = _collisionGroup;
 
             //load joints
-            JointFactory.Instance.CreateRevoluteJoint(physicsSimulator, spiderBody,
-                                                      leftUpperLegBody,
-                                                      spiderBody.Position -
+            JointFactory.Instance.CreateRevoluteJoint(physicsSimulator, _spiderBody,
+                                                      _leftUpperLegBody,
+                                                      _spiderBody.Position -
                                                       new Vector2(spiderBodyRadius, 0));
-            leftShoulderAngleJoint = JointFactory.Instance.CreateAngleJoint(physicsSimulator, spiderBody,
-                                                                            leftUpperLegBody);
-            leftShoulderAngleJoint.TargetAngle = -.4f;
-            leftShoulderAngleJoint.MaxImpulse = 300;
+            _leftShoulderAngleJoint = JointFactory.Instance.CreateAngleJoint(physicsSimulator, _spiderBody,
+                                                                            _leftUpperLegBody);
+            _leftShoulderAngleJoint.TargetAngle = -.4f;
+            _leftShoulderAngleJoint.MaxImpulse = 300;
 
-            JointFactory.Instance.CreateRevoluteJoint(physicsSimulator, spiderBody,
-                                                      rightUpperLegBody,
-                                                      spiderBody.Position +
+            JointFactory.Instance.CreateRevoluteJoint(physicsSimulator, _spiderBody,
+                                                      _rightUpperLegBody,
+                                                      _spiderBody.Position +
                                                       new Vector2(spiderBodyRadius, 0));
-            rightShoulderAngleJoint = JointFactory.Instance.CreateAngleJoint(physicsSimulator, spiderBody,
-                                                                             rightUpperLegBody);
-            rightShoulderAngleJoint.TargetAngle = .4f;
-            leftShoulderAngleJoint.MaxImpulse = 300;
+            _rightShoulderAngleJoint = JointFactory.Instance.CreateAngleJoint(physicsSimulator, _spiderBody,
+                                                                             _rightUpperLegBody);
+            _rightShoulderAngleJoint.TargetAngle = .4f;
+            _leftShoulderAngleJoint.MaxImpulse = 300;
 
-            JointFactory.Instance.CreateRevoluteJoint(physicsSimulator, leftUpperLegBody,
-                                                      leftLowerLegBody,
-                                                      spiderBody.Position -
+            JointFactory.Instance.CreateRevoluteJoint(physicsSimulator, _leftUpperLegBody,
+                                                      _leftLowerLegBody,
+                                                      _spiderBody.Position -
                                                       new Vector2(spiderBodyRadius, 0) -
-                                                      new Vector2(upperLegSize.X, 0));
-            leftKneeAngleJoint = JointFactory.Instance.CreateAngleJoint(physicsSimulator, leftUpperLegBody,
-                                                                        leftLowerLegBody);
-            leftKneeAngleJoint.TargetAngle = -kneeTargetAngle;
-            leftKneeAngleJoint.MaxImpulse = 300;
+                                                      new Vector2(_upperLegSize.X, 0));
+            _leftKneeAngleJoint = JointFactory.Instance.CreateAngleJoint(physicsSimulator, _leftUpperLegBody,
+                                                                        _leftLowerLegBody);
+            _leftKneeAngleJoint.TargetAngle = -_kneeTargetAngle;
+            _leftKneeAngleJoint.MaxImpulse = 300;
 
-            JointFactory.Instance.CreateRevoluteJoint(physicsSimulator, rightUpperLegBody,
-                                                      rightLowerLegBody,
-                                                      spiderBody.Position +
+            JointFactory.Instance.CreateRevoluteJoint(physicsSimulator, _rightUpperLegBody,
+                                                      _rightLowerLegBody,
+                                                      _spiderBody.Position +
                                                       new Vector2(spiderBodyRadius, 0) +
-                                                      new Vector2(upperLegSize.X, 0));
-            rightKneeAngleJoint = JointFactory.Instance.CreateAngleJoint(physicsSimulator, rightUpperLegBody,
-                                                                         rightLowerLegBody);
-            rightKneeAngleJoint.TargetAngle = kneeTargetAngle;
-            rightKneeAngleJoint.MaxImpulse = 300;
+                                                      new Vector2(_upperLegSize.X, 0));
+            _rightKneeAngleJoint = JointFactory.Instance.CreateAngleJoint(physicsSimulator, _rightUpperLegBody,
+                                                                         _rightLowerLegBody);
+            _rightKneeAngleJoint.TargetAngle = _kneeTargetAngle;
+            _rightKneeAngleJoint.MaxImpulse = 300;
         }
 
         public void Update(GameTime gameTime)
         {
-            s += gameTime.ElapsedGameTime.Milliseconds;
-            if (s > 4000)
+            _s += gameTime.ElapsedGameTime.Milliseconds;
+            if (_s > 4000)
             {
-                s = 0;
+                _s = 0;
 
-                kneeFlexed = !kneeFlexed;
-                shoulderFlexed = !shoulderFlexed;
+                _kneeFlexed = !_kneeFlexed;
+                _shoulderFlexed = !_shoulderFlexed;
 
-                if (kneeFlexed)
-                    kneeTargetAngle = 1.4f;
+                if (_kneeFlexed)
+                    _kneeTargetAngle = 1.4f;
                 else
-                    kneeTargetAngle = .4f;
+                    _kneeTargetAngle = .4f;
 
-                if (kneeFlexed)
-                    shoulderTargetAngle = 1.2f;
+                if (_kneeFlexed)
+                    _shoulderTargetAngle = 1.2f;
                 else
-                    shoulderTargetAngle = .2f;
+                    _shoulderTargetAngle = .2f;
             }
-            leftKneeAngleJoint.TargetAngle = -kneeTargetAngle;
-            rightKneeAngleJoint.TargetAngle = kneeTargetAngle;
+            _leftKneeAngleJoint.TargetAngle = -_kneeTargetAngle;
+            _rightKneeAngleJoint.TargetAngle = _kneeTargetAngle;
 
-            leftShoulderAngleJoint.TargetAngle = -shoulderTargetAngle;
-            rightShoulderAngleJoint.TargetAngle = shoulderTargetAngle;
+            _leftShoulderAngleJoint.TargetAngle = -_shoulderTargetAngle;
+            _rightShoulderAngleJoint.TargetAngle = _shoulderTargetAngle;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(upperLegTexture, leftUpperLegGeom.Position, null, Color.White, leftUpperLegGeom.Rotation,
-                             upperLegOrigin, 1, SpriteEffects.None, 0f);
-            spriteBatch.Draw(lowerLegTexture, leftLowerLegGeom.Position, null, Color.White, leftLowerLegGeom.Rotation,
-                             lowerLegOrigin, 1, SpriteEffects.None, 0f);
-            spriteBatch.Draw(upperLegTexture, rightUpperLegGeom.Position, null, Color.White, rightUpperLegGeom.Rotation,
-                             upperLegOrigin, 1, SpriteEffects.None, 0f);
-            spriteBatch.Draw(lowerLegTexture, rightLowerLegGeom.Position, null, Color.White, rightLowerLegGeom.Rotation,
-                             lowerLegOrigin, 1, SpriteEffects.None, 0f);
-            spriteBatch.Draw(spiderTexture, spiderGeom.Position, null, Color.White, spiderGeom.Rotation, spiderOrigin, 1,
+            spriteBatch.Draw(_upperLegTexture, _leftUpperLegGeom.Position, null, Color.White, _leftUpperLegGeom.Rotation,
+                             _upperLegOrigin, 1, SpriteEffects.None, 0f);
+            spriteBatch.Draw(_lowerLegTexture, _leftLowerLegGeom.Position, null, Color.White, _leftLowerLegGeom.Rotation,
+                             _lowerLegOrigin, 1, SpriteEffects.None, 0f);
+            spriteBatch.Draw(_upperLegTexture, _rightUpperLegGeom.Position, null, Color.White, _rightUpperLegGeom.Rotation,
+                             _upperLegOrigin, 1, SpriteEffects.None, 0f);
+            spriteBatch.Draw(_lowerLegTexture, _rightLowerLegGeom.Position, null, Color.White, _rightLowerLegGeom.Rotation,
+                             _lowerLegOrigin, 1, SpriteEffects.None, 0f);
+            spriteBatch.Draw(_spiderTexture, _spiderGeom.Position, null, Color.White, _spiderGeom.Rotation, _spiderOrigin, 1,
                              SpriteEffects.None, 0f);
         }
     }

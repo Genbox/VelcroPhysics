@@ -5,67 +5,69 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
 {
     internal class RectangleBrush
     {
-        private Color borderColor;
-        private Color color = Color.Black;
-        private int height;
-        private float layer;
-        private Texture2D rectangleTexture;
-        private int width = 5;
+        private Color _borderColor;
+        private Color _color;
+        private int _height;
+        private float _layer;
+        private Texture2D _rectangleTexture;
+        private int _width = 5;
 
         public RectangleBrush()
         {
+            _color = Color.Black;
         }
 
         public RectangleBrush(int width, int height, Color color, Color borderColor)
         {
-            this.color = color;
-            this.borderColor = borderColor;
-            this.width = width;
-            this.height = height;
+            _color = Color.Black;
+            _color = color;
+            _borderColor = borderColor;
+            _width = width;
+            _height = height;
         }
 
         public Color Color
         {
-            get { return color; }
-            set { color = value; }
+            get { return _color; }
+            set { _color = value; }
         }
 
         public Color BorderColor
         {
-            get { return borderColor; }
-            set { borderColor = value; }
+            get { return _borderColor; }
+            set { _borderColor = value; }
         }
 
 
         public int Width
         {
-            get { return width; }
-            set { width = value; }
+            get { return _width; }
+            set { _width = value; }
         }
 
         public int Height
         {
-            get { return height; }
-            set { height = value; }
+            get { return _height; }
+            set { _height = value; }
         }
 
         public float Layer
         {
-            get { return layer; }
-            set { layer = value; }
+            get { return _layer; }
+            set { _layer = value; }
         }
 
 
         public void Load(GraphicsDevice graphicsDevice)
         {
-            rectangleTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, width, height, color, borderColor);
+            _rectangleTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, _width, _height, _color, _borderColor);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-            spriteBatch.Draw(rectangleTexture, position, null, Color.White, 0,
-                             new Vector2(1 + rectangleTexture.Width/2f, 1 + rectangleTexture.Height/2), 1,
-                             SpriteEffects.None, layer);
+            spriteBatch.Draw(_rectangleTexture, position, null, Color.White, 0,
+                             new Vector2(1 + _rectangleTexture.Width/2f, 1 + _rectangleTexture.Height/2), 1,
+                             SpriteEffects.None, _layer);
             //new Vector2(radius, radius)
         }
     }

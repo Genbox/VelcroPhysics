@@ -12,58 +12,59 @@ namespace FarseerGames.FarseerPhysicsDemos.Components
 {
     public class FrameRateCounter : DrawableGameComponent
     {
-        private readonly ContentManager content;
-        private readonly NumberFormatInfo format;
-        private TimeSpan elapsedTime = TimeSpan.Zero;
-        private int frameCounter;
-        private int frameRate;
-        private SpriteBatch spriteBatch;
-        private SpriteFont spriteFont;
+        private readonly ContentManager _content;
+        private readonly NumberFormatInfo _format;
+        private TimeSpan _elapsedTime = TimeSpan.Zero;
+        private int _frameCounter;
+        private int _frameRate;
+    // TODO: Use screenmanager.
+        private SpriteBatch _spriteBatch;
+        private SpriteFont _spriteFont;
 
 
         public FrameRateCounter(Game game)
             : base(game)
         {
-            content = new ContentManager(game.Services);
+            _content = new ContentManager(game.Services);
 
-            format = new NumberFormatInfo();
-            format.NumberDecimalSeparator = ".";
+            _format = new NumberFormatInfo();
+            _format.NumberDecimalSeparator = ".";
         }
 
 
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            spriteFont = content.Load<SpriteFont>(@"Content\Fonts\FrameRateCounterFont");
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteFont = _content.Load<SpriteFont>(@"Content\Fonts\FrameRateCounterFont");
         }
 
         protected override void UnloadContent()
         {
-            content.Unload();
+            _content.Unload();
         }
 
         public override void Update(GameTime gameTime)
         {
-            elapsedTime += gameTime.ElapsedGameTime;
+            _elapsedTime += gameTime.ElapsedGameTime;
 
-            if (elapsedTime > TimeSpan.FromSeconds(1))
+            if (_elapsedTime > TimeSpan.FromSeconds(1))
             {
-                elapsedTime -= TimeSpan.FromSeconds(1);
-                frameRate = frameCounter;
-                frameCounter = 0;
+                _elapsedTime -= TimeSpan.FromSeconds(1);
+                _frameRate = _frameCounter;
+                _frameCounter = 0;
             }
         }
 
 
         public override void Draw(GameTime gameTime)
         {
-            frameCounter++;
+            _frameCounter++;
 
-            string fps = string.Format(format, "fps: {0}", frameRate);
+            string fps = string.Format(_format, "fps: {0}", _frameRate);
 
-            spriteBatch.Begin();
-            spriteBatch.DrawString(spriteFont, fps, new Vector2(100, 80), Color.White);
-            spriteBatch.End();
+            _spriteBatch.Begin();
+            _spriteBatch.DrawString(_spriteFont, fps, new Vector2(100, 80), Color.White);
+            _spriteBatch.End();
         }
     }
 }

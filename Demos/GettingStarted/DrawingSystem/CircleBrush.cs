@@ -5,11 +5,11 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
 {
     public class CircleBrush
     {
-        private Color borderColor;
-        private Texture2D circleTexture;
-        private Color color = Color.Black;
-        private float layer;
-        private int radius = 5;
+        private Color _borderColor;
+        private Texture2D _circleTexture;
+        private Color _color = Color.Black;
+        private float _layer;
+        private int _radius = 5;
 
         public CircleBrush()
         {
@@ -17,48 +17,48 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
 
         public CircleBrush(int radius, Color color, Color borderColor)
         {
-            this.color = color;
-            this.borderColor = borderColor;
-            this.radius = radius;
+            _color = color;
+            _borderColor = borderColor;
+            _radius = radius;
         }
 
         public Color Color
         {
-            get { return color; }
-            set { color = value; }
+            get { return _color; }
+            set { _color = value; }
         }
 
         public Color BorderColor
         {
-            get { return borderColor; }
-            set { borderColor = value; }
+            get { return _borderColor; }
+            set { _borderColor = value; }
         }
 
 
         public int Radius
         {
-            get { return radius; }
-            set { radius = value; }
+            get { return _radius; }
+            set { _radius = value; }
         }
 
         public float Layer
         {
-            get { return layer; }
-            set { layer = value; }
+            get { return _layer; }
+            set { _layer = value; }
         }
 
 
         public void Load(GraphicsDevice graphicsDevice)
         {
-            circleTexture = DrawingHelper.CreateCircleTexture(graphicsDevice, radius, color, borderColor);
+            _circleTexture = DrawingHelper.CreateCircleTexture(graphicsDevice, _radius, _color, _borderColor);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-            spriteBatch.Draw(circleTexture, position, null, Color.White, 0,
-                             new Vector2(1 + circleTexture.Width/2f, 1 + circleTexture.Height/2), 1, SpriteEffects.None,
-                             layer);
-            //new Vector2(radius, radius)
+            spriteBatch.Draw(_circleTexture, position, null, Color.White, 0,
+                             new Vector2(1 + _circleTexture.Width/2f, 1 + _circleTexture.Height/2), 1, SpriteEffects.None,
+                             _layer);
+            //new Vector2(_radius, _radius)
         }
     }
 }
