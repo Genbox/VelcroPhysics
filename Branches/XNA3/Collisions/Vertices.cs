@@ -365,6 +365,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return vertices;
         }
 
+        public void ScaleVectors(Vector2 scale)
+        {
+            for (int i = Count - 1; i >= 0; i--)
+            {
+                this[i] *= scale;
+            }
+        }
+
         public override string ToString()
         {
             //Note: Converted to stringbuilder for Farseer 2.0
