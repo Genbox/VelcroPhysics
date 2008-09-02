@@ -9,12 +9,8 @@
 
 #endregion
 
-#region Using Statements
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-
-#endregion
 
 namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 {
@@ -26,24 +22,13 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
     /// </summary>
     public class InputState
     {
-        #region Fields
-
         public GamePadState CurrentGamePadState;
         public KeyboardState CurrentKeyboardState;
-#if !XBOX
         public MouseState CurrentMouseState;
-#endif
-
 
         public GamePadState LastGamePadState;
         public KeyboardState LastKeyboardState;
-#if !XBOX
         public MouseState LastMouseState;
-#endif
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         /// Checks for a "menu up" input action (on either keyboard or gamepad).
@@ -125,10 +110,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// Reads the latest state of the keyboard and gamepad.
         /// </summary>
@@ -136,17 +117,11 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         {
             LastKeyboardState = CurrentKeyboardState;
             LastGamePadState = CurrentGamePadState;
-#if !XBOX
             LastMouseState = CurrentMouseState;
-#endif
-
             CurrentKeyboardState = Keyboard.GetState();
             CurrentGamePadState = GamePad.GetState(PlayerIndex.One);
-#if !XBOX
             CurrentMouseState = Mouse.GetState();
-#endif
         }
-
 
         /// <summary>
         /// Helper for checking if a key was newly pressed during this update.
@@ -156,7 +131,5 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             return (CurrentKeyboardState.IsKeyDown(key) &&
                     LastKeyboardState.IsKeyUp(key));
         }
-
-        #endregion
     }
 }

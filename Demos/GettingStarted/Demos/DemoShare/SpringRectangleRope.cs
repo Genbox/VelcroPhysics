@@ -88,12 +88,12 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
         public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
             _rectangleTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, _rectangleWidth, _rectangleHeight,
-                                                                    Color.White, Color.Black);
+                                                                     Color.White, Color.Black);
 
             _linearSpring = new LinearSpring[_rectangleCount - 1];
             _rectangleBody = new Body[_rectangleCount];
             _rectangleBody[0] = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _rectangleWidth,
-                                                                        _rectangleHeight, _rectangleMass);
+                                                                         _rectangleHeight, _rectangleMass);
             _rectangleBody[0].Position = _position;
             for (int i = 1; i < _rectangleBody.Length; i++)
             {
@@ -103,19 +103,20 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
 
             _rectangleGeom = new Geom[_rectangleCount];
             _rectangleGeom[0] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _rectangleBody[0],
-                                                                        _rectangleWidth, _rectangleHeight);
+                                                                         _rectangleWidth, _rectangleHeight);
             _rectangleGeom[0].CollisionGroup = _collisionGroup;
             for (int j = 1; j < _rectangleGeom.Length; j++)
             {
-                _rectangleGeom[j] = GeomFactory.Instance.CreateGeom(physicsSimulator, _rectangleBody[j], _rectangleGeom[0]);
+                _rectangleGeom[j] = GeomFactory.Instance.CreateGeom(physicsSimulator, _rectangleBody[j],
+                                                                    _rectangleGeom[0]);
             }
 
             for (int k = 0; k < _linearSpring.Length; k++)
             {
                 _linearSpring[k] = ControllerFactory.Instance.CreateLinearSpring(physicsSimulator, _rectangleBody[k],
-                                                                                Vector2.Zero, _rectangleBody[k + 1],
-                                                                                Vector2.Zero, _springConstant,
-                                                                                _dampningConstant);
+                                                                                 Vector2.Zero, _rectangleBody[k + 1],
+                                                                                 Vector2.Zero, _springConstant,
+                                                                                 _dampningConstant);
             }
         }
 

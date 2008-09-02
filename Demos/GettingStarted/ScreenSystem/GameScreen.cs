@@ -1,9 +1,7 @@
-#region Using Statements
-
 using System;
+using FarseerGames.FarseerPhysics;
 using Microsoft.Xna.Framework;
-
-#endregion
+using Microsoft.Xna.Framework.Input;
 
 namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 {
@@ -18,7 +16,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         Hidden,
     }
 
-
     /// <summary>
     /// A screen is a single layer that has update and draw logic, and which
     /// can be combined with other layers to build up a complex menu system.
@@ -28,14 +25,35 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
     /// </summary>
     public abstract class GameScreen
     {
-        #region Properties
+        //Note: This should not really be here. It should be in an engine instead that takes care of physics
 
-        private bool isExiting;
-        private bool otherScreenHasFocus;
-        private ScreenState screenState = ScreenState.TransitionOn;
-        private TimeSpan transitionOffTime = TimeSpan.Zero;
-        private TimeSpan transitionOnTime = TimeSpan.Zero;
-        private float transitionPosition = 1;
+        private bool _debugViewEnabled;
+        private bool _isExiting;
+        private bool _otherScreenHasFocus;
+        private PhysicsSimulator _physicsSimulator;
+        private PhysicsSimulatorView _physicsSimulatorView;
+        private ScreenState _screenState = ScreenState.TransitionOn;
+        private TimeSpan _transitionOffTime = TimeSpan.Zero;
+        private TimeSpan _transitionOnTime = TimeSpan.Zero;
+        private float _transitionPosition = 1;
+
+        protected GameScreen()
+        {
+            _physicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
+            _physicsSimulatorView = new PhysicsSimulatorView(_physicsSimulator);
+        }
+
+        public PhysicsSimulator PhysicsSimulator
+        {
+            get { return _physicsSimulator; }
+            set { _physicsSimulator = value; }
+        }
+
+        public PhysicsSimulatorView PhysicsSimulatorView
+        {
+            get { return _physicsSimulatorView; }
+            set { _physicsSimulatorView = value; }
+        }
 
         /// <summary>
         /// Normally when one screen is brought up over the top of another,
@@ -46,17 +64,15 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// </summary>
         public bool IsPopup { get; protected set; }
 
-
         /// <summary>
         /// Indicates how long the screen takes to
         /// transition on when it is activated.
         /// </summary>
         public TimeSpan TransitionOnTime
         {
-            get { return transitionOnTime; }
-            protected set { transitionOnTime = value; }
+            get { return _transitionOnTime; }
+            protected set { _transitionOnTime = value; }
         }
-
 
         /// <summary>
         /// Indicates how long the screen takes to
@@ -64,10 +80,9 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// </summary>
         public TimeSpan TransitionOffTime
         {
-            get { return transitionOffTime; }
-            protected set { transitionOffTime = value; }
+            get { return _transitionOffTime; }
+            protected set { _transitionOffTime = value; }
         }
-
 
         /// <summary>
         /// Gets the current position of the screen transition, ranging
@@ -76,10 +91,9 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// </summary>
         public float TransitionPosition
         {
-            get { return transitionPosition; }
-            protected set { transitionPosition = value; }
+            get { return _transitionPosition; }
+            protected set { _transitionPosition = value; }
         }
-
 
         /// <summary>
         /// Gets the current alpha of the screen transition, ranging
@@ -91,16 +105,14 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             get { return (byte) (255 - TransitionPosition*255); }
         }
 
-
         /// <summary>
         /// Gets the current screen transition state.
         /// </summary>
         public ScreenState ScreenState
         {
-            get { return screenState; }
-            protected set { screenState = value; }
+            get { return _screenState; }
+            protected set { _screenState = value; }
         }
-
 
         /// <summary>
         /// There are two possible reasons why a screen might be transitioning
@@ -112,10 +124,9 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// </summary>
         public bool IsExiting
         {
-            get { return isExiting; }
-            protected set { isExiting = value; }
+            get { return _isExiting; }
+            protected set { _isExiting = value; }
         }
-
 
         /// <summary>
         /// Checks whether this screen is active and can respond to user input.
@@ -124,19 +135,16 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         {
             get
             {
-                return !otherScreenHasFocus &&
-                       (screenState == ScreenState.TransitionOn ||
-                        screenState == ScreenState.Active);
+                return !_otherScreenHasFocus &&
+                       (_screenState == ScreenState.TransitionOn ||
+                        _screenState == ScreenState.Active);
             }
         }
-
 
         /// <summary>
         /// Gets the manager that this screen belongs to.
         /// </summary>
         public ScreenManager ScreenManager { get; internal set; }
-
-        #endregion
 
         public virtual void Initialize()
         {
@@ -147,6 +155,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// </summary>
         public virtual void LoadContent()
         {
+            _physicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
         }
 
         /// <summary>
@@ -154,8 +163,8 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// </summary>
         public virtual void UnloadContent()
         {
+            _physicsSimulator.Clear();
         }
-
 
         /// <summary>
         /// Allows the screen to run logic, such as updating the transition position.
@@ -165,51 +174,50 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         public virtual void Update(GameTime gameTime, bool otherScreenHasFocus,
                                    bool coveredByOtherScreen)
         {
-            this.otherScreenHasFocus = otherScreenHasFocus;
+            _otherScreenHasFocus = otherScreenHasFocus;
 
-            if (isExiting)
+            if (_isExiting)
             {
                 // If the screen is going away to die, it should transition off.
-                screenState = ScreenState.TransitionOff;
+                _screenState = ScreenState.TransitionOff;
 
-                if (!UpdateTransition(gameTime, transitionOffTime, 1))
+                if (!UpdateTransition(gameTime, _transitionOffTime, 1))
                 {
                     // When the transition finishes, remove the screen.
                     ScreenManager.RemoveScreen(this);
 
-                    isExiting = false;
+                    _isExiting = false;
                 }
             }
             else if (coveredByOtherScreen)
             {
                 // If the screen is covered by another, it should transition off.
-                if (UpdateTransition(gameTime, transitionOffTime, 1))
+                if (UpdateTransition(gameTime, _transitionOffTime, 1))
                 {
                     // Still busy transitioning.
-                    screenState = ScreenState.TransitionOff;
+                    _screenState = ScreenState.TransitionOff;
                 }
                 else
                 {
                     // Transition finished!
-                    screenState = ScreenState.Hidden;
+                    _screenState = ScreenState.Hidden;
                 }
             }
             else
             {
                 // Otherwise the screen should transition on and become active.
-                if (UpdateTransition(gameTime, transitionOnTime, -1))
+                if (UpdateTransition(gameTime, _transitionOnTime, -1))
                 {
                     // Still busy transitioning.
-                    screenState = ScreenState.TransitionOn;
+                    _screenState = ScreenState.TransitionOn;
                 }
                 else
                 {
                     // Transition finished!
-                    screenState = ScreenState.Active;
+                    _screenState = ScreenState.Active;
                 }
             }
         }
-
 
         /// <summary>
         /// Helper for updating the screen transition position.
@@ -226,18 +234,17 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                                            time.TotalMilliseconds);
 
             // Update the transition position.
-            transitionPosition += transitionDelta*direction;
+            _transitionPosition += transitionDelta*direction;
 
             // Did we reach the end of the transition?
-            if ((transitionPosition <= 0) || (transitionPosition >= 1))
+            if ((_transitionPosition <= 0) || (_transitionPosition >= 1))
             {
-                transitionPosition = MathHelper.Clamp(transitionPosition, 0, 1);
+                _transitionPosition = MathHelper.Clamp(_transitionPosition, 0, 1);
                 return false;
             }
             // Otherwise we are still busy transitioning.
             return true;
         }
-
 
         /// <summary>
         /// Allows the screen to handle user input. Unlike Update, this method
@@ -246,13 +253,28 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// </summary>
         public virtual void HandleInput(InputState input)
         {
-        }
+            if (!input.LastKeyboardState.IsKeyDown(Keys.F1) && input.CurrentKeyboardState.IsKeyDown(Keys.F1))
+            {
+                _debugViewEnabled = !_debugViewEnabled;
+                _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
+            }
 
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Escape))
+            {
+                ExitScreen();
+            }
+        }
 
         /// <summary>
         /// This is called when the screen should draw itself.
         /// </summary>
-        public abstract void Draw(GameTime gameTime);
+        public virtual void Draw(GameTime gameTime)
+        {
+            if (_debugViewEnabled)
+            {
+                _physicsSimulatorView.Draw(ScreenManager.SpriteBatch);
+            }
+        }
 
         /// <summary>
         /// Tells the screen to go away. Unlike ScreenManager.RemoveScreen, which
@@ -269,7 +291,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             else
             {
                 // Otherwise flag that it should transition off and then exit.
-                isExiting = true;
+                _isExiting = true;
             }
         }
     }

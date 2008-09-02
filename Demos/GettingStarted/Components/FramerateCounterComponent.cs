@@ -2,8 +2,8 @@
 
 using System;
 using System.Globalization;
+using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 #endregion
@@ -12,36 +12,20 @@ namespace FarseerGames.FarseerPhysicsDemos.Components
 {
     public class FrameRateCounter : DrawableGameComponent
     {
-        private readonly ContentManager _content;
         private readonly NumberFormatInfo _format;
+        private readonly ScreenManager _screenManager;
         private TimeSpan _elapsedTime = TimeSpan.Zero;
         private int _frameCounter;
         private int _frameRate;
-    // TODO: Use screenmanager.
-        private SpriteBatch _spriteBatch;
-        private SpriteFont _spriteFont;
 
-
-        public FrameRateCounter(Game game)
-            : base(game)
+        public FrameRateCounter(ScreenManager screenManager)
+            : base(screenManager.Game)
         {
-            _content = new ContentManager(game.Services);
-
+            _screenManager = screenManager;
             _format = new NumberFormatInfo();
             _format.NumberDecimalSeparator = ".";
         }
 
-
-        protected override void LoadContent()
-        {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _spriteFont = _content.Load<SpriteFont>(@"Content\Fonts\FrameRateCounterFont");
-        }
-
-        protected override void UnloadContent()
-        {
-            _content.Unload();
-        }
 
         public override void Update(GameTime gameTime)
         {
@@ -62,9 +46,10 @@ namespace FarseerGames.FarseerPhysicsDemos.Components
 
             string fps = string.Format(_format, "fps: {0}", _frameRate);
 
-            _spriteBatch.Begin();
-            _spriteBatch.DrawString(_spriteFont, fps, new Vector2(100, 80), Color.White);
-            _spriteBatch.End();
+            _screenManager.SpriteBatch.Begin();
+            _screenManager.SpriteBatch.DrawString(_screenManager.SpriteFonts.FrameRateCounterFont, fps,
+                                                  new Vector2(100, 80), Color.White);
+            _screenManager.SpriteBatch.End();
         }
     }
 }

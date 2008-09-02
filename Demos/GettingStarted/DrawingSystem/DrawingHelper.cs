@@ -50,7 +50,6 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
         {
             int y = -1;
             int diameter = (radius + 2)*2;
-            //Vector2 center = new Vector2(0, 0);
             Vector2 center = new Vector2((diameter - 1)/2f, (diameter - 1)/2f);
 
             Texture2D circle = new Texture2D(graphicsDevice, diameter, diameter, 1, TextureUsage.None,
@@ -124,7 +123,6 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
         {
             Texture2D texture2D = new Texture2D(graphicsDevice, width, height, 1, TextureUsage.None, SurfaceFormat.Color);
 
-            //Texture2D texture2D = new Texture2D(graphicsDevice, 2, lineWidth + 2);
             int y = -1;
             int j;
             int count = width*height;
@@ -136,12 +134,10 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
             {
                 transitionAmount = (j)/(float) (borderOuterTransitionWidth);
                 shellColor[j] = new Color(borderColor.R, borderColor.G, borderColor.B, (byte) (255*transitionAmount));
-                //shellColor[j] = Color.Red;
             }
             for (j = borderOuterTransitionWidth; j < borderWidth + borderOuterTransitionWidth; j++)
             {
                 shellColor[j] = borderColor;
-                //shellColor[j] = Color.Green;
             }
             for (j = borderWidth + borderOuterTransitionWidth;
                  j < borderWidth + borderOuterTransitionWidth + borderInnerTransitionWidth;

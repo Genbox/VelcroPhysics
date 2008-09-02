@@ -1,11 +1,7 @@
-#region Using Statements
-
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-#endregion
 
 namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 {
@@ -15,34 +11,11 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
     /// </summary>
     internal abstract class MenuScreen : GameScreen
     {
-        #region Fields
-
-        private readonly List<string> menuEntries = new List<string>();
-        private float leftBorder = 100;
-        private SpriteFont menuSpriteFont;
-        private Vector2 position = Vector2.Zero;
-        private int selectedEntry;
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the list of menu entry strings, so derived classes can add
-        /// or change the menu contents.
-        /// </summary>
-        protected IList<string> MenuEntries
-        {
-            get { return menuEntries; }
-        }
-
-        public float LeftBorder
-        {
-            get { return leftBorder; }
-            set { leftBorder = value; }
-        }
-
-        #endregion
+        private readonly List<string> _menuEntries = new List<string>();
+        private float _leftBorder = 100;
+        private SpriteFont _menuSpriteFont;
+        private Vector2 _position = Vector2.Zero;
+        private int _selectedEntry;
 
         /// <summary>
         /// Constructor.
@@ -54,6 +27,21 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         }
 
         /// <summary>
+        /// Gets the list of menu entry strings, so derived classes can add
+        /// or change the menu contents.
+        /// </summary>
+        protected IList<string> MenuEntries
+        {
+            get { return _menuEntries; }
+        }
+
+        public float LeftBorder
+        {
+            get { return _leftBorder; }
+            set { _leftBorder = value; }
+        }
+
+        /// <summary>
         /// Responds to user input, changing the selected entry and accepting
         /// or cancelling the menu.
         /// </summary>
@@ -62,25 +50,25 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             // Move to the previous menu entry?
             if (input.MenuUp)
             {
-                selectedEntry--;
+                _selectedEntry--;
 
-                if (selectedEntry < 0)
-                    selectedEntry = menuEntries.Count - 1;
+                if (_selectedEntry < 0)
+                    _selectedEntry = _menuEntries.Count - 1;
             }
 
             // Move to the next menu entry?
             if (input.MenuDown)
             {
-                selectedEntry++;
+                _selectedEntry++;
 
-                if (selectedEntry >= menuEntries.Count)
-                    selectedEntry = 0;
+                if (_selectedEntry >= _menuEntries.Count)
+                    _selectedEntry = 0;
             }
 
             // Accept or cancel the menu?
             if (input.MenuSelect)
             {
-                OnSelectEntry(selectedEntry);
+                OnSelectEntry(_selectedEntry);
             }
             else if (input.MenuCancel)
             {
@@ -88,12 +76,10 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             }
         }
 
-
         /// <summary>
         /// Notifies derived classes that a menu entry has been chosen.
         /// </summary>
         protected abstract void OnSelectEntry(int entryIndex);
-
 
         /// <summary>
         /// Notifies derived classes that the menu has been cancelled.
@@ -102,18 +88,17 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 
         public override void LoadContent()
         {
-            menuSpriteFont = ScreenManager.ContentManager.Load<SpriteFont>("Content/Fonts/menuFont");
+            _menuSpriteFont = ScreenManager.ContentManager.Load<SpriteFont>("Content/Fonts/menuFont");
             CalculatePosition();
         }
 
         private void CalculatePosition()
         {
-            float totalHeight = menuSpriteFont.MeasureString("T").Y;
-            //totalHeight += ScreenManager.MenuSpriteFont.LineSpacing;
-            totalHeight *= menuEntries.Count;
+            float totalHeight = _menuSpriteFont.MeasureString("T").Y;
+            totalHeight *= _menuEntries.Count;
 
-            position.Y = (ScreenManager.GraphicsDevice.Viewport.Height - totalHeight)/2;
-            position.X = leftBorder;
+            _position.Y = (ScreenManager.GraphicsDevice.Viewport.Height - totalHeight)/2;
+            _position.X = _leftBorder;
         }
 
         /// <summary>
@@ -121,17 +106,14 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            Vector2 itemPosition = position;
+            Vector2 itemPosition = _position;
 
-            // Draw each menu entry in turn.
-            //ScreenManager.SpriteBatch.Begin();
-
-            for (int i = 0; i < menuEntries.Count; i++)
+            for (int i = 0; i < _menuEntries.Count; i++)
             {
                 Color color;
                 float scale;
 
-                if (IsActive && (i == selectedEntry))
+                if (IsActive && (i == _selectedEntry))
                 {
                     //// The selected entry is yellow, and has an animating size.
                     double time = gameTime.TotalGameTime.TotalSeconds;
@@ -140,7 +122,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                     scale = 1 + pulsate*0.05f;
 
                     color = Color.White;
-                    //scale = 1;
                 }
                 else
                 {
@@ -153,16 +134,13 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                 color = new Color(color.R, color.G, color.B, TransitionAlpha);
 
                 // Draw text, centered on the middle of each line.
-                Vector2 origin = new Vector2(0, ScreenManager.MenuSpriteFont.LineSpacing/2f);
+                Vector2 origin = new Vector2(0, ScreenManager.SpriteFonts.MenuSpriteFont.LineSpacing/2f);
 
-                ScreenManager.SpriteBatch.DrawString(menuSpriteFont, menuEntries[i],
+                ScreenManager.SpriteBatch.DrawString(_menuSpriteFont, _menuEntries[i],
                                                      itemPosition, color, 0, origin, scale,
                                                      SpriteEffects.None, 0);
-                // itemPosition.Y += ScreenManager.MenuSpriteFont.MeasureString("T").Y;
-                itemPosition.Y += menuSpriteFont.LineSpacing;
+                itemPosition.Y += _menuSpriteFont.LineSpacing;
             }
-
-            // ScreenManager.SpriteBatch.End();
         }
     }
 }

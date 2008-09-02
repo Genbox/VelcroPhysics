@@ -77,7 +77,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
         public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
             _rectangleTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, _rectangleWidth, _rectangleHeight,
-                                                                    Color.White, Color.Black);
+                                                                     Color.White, Color.Black);
             int radius;
             if (_attachPoint == 0 | _attachPoint == 2)
             {
@@ -91,11 +91,11 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
 
             //body is created as rectangle so that it has the moment of inertia closer to the final shape of the object.
             _angleSpringleverBody = BodyFactory.Instance.CreateBody(physicsSimulator, 1,
-                                                                   BodyFactory.MOIForRectangle(_rectangleWidth,
-                                                                                               _rectangleHeight, 1f));
+                                                                    BodyFactory.MOIForRectangle(_rectangleWidth,
+                                                                                                _rectangleHeight, 1f));
 
             _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _angleSpringleverBody,
-                                                                     _rectangleWidth, _rectangleHeight);
+                                                                      _rectangleWidth, _rectangleHeight);
             _rectangleGeom.FrictionCoefficient = .5f;
             _rectangleGeom.CollisionGroup = _collisionGroup;
 
@@ -127,12 +127,12 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             _angleSpringleverBody.Position = _position - offset;
 
             _circleGeom = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _angleSpringleverBody, radius, 20,
-                                                               offset, 0);
+                                                                offset, 0);
             _circleGeom.FrictionCoefficient = .5f;
             _circleGeom.CollisionGroup = _collisionGroup;
 
             _revoluteJoint = JointFactory.Instance.CreateFixedRevoluteJoint(physicsSimulator, _angleSpringleverBody,
-                                                                           _position);
+                                                                            _position);
             physicsSimulator.Add(_revoluteJoint);
             ControllerFactory.Instance.CreateFixedAngleSpring(physicsSimulator, _angleSpringleverBody,
                                                               _springConstant, _dampningConstant);

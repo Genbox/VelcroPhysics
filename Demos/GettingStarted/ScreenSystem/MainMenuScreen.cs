@@ -75,7 +75,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             }
         }
 
-
         /// <summary>
         /// When the user cancels the main menu, ask if they want to exit the sample.
         /// </summary>
@@ -87,14 +86,12 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.DiagnosticSpriteFont,
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont,
                                                  "*toggle between debug and normal view using either F1 on the keyboard or 'Y' on the controller",
                                                  new Vector2(100, ScreenManager.ScreenHeight - 116), Color.Black);
-#if (!XBOX)
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.DiagnosticSpriteFont,
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont,
                                                  "**keyboard users, use arrows and enter to navigate menus",
                                                  new Vector2(100, ScreenManager.ScreenHeight - 100), Color.Black);
-#endif
             base.Draw(gameTime);
             ScreenManager.SpriteBatch.End();
         }
