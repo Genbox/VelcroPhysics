@@ -11,6 +11,15 @@ namespace FarseerGames.FarseerPhysicsDemos
 {
     public class PhysicsSimulatorView
     {
+        private const string _applyForces = "Apply Forces: {0}";
+        private const string _applyImpulses = "Apply Impulses: {0}";
+        private const string _broadPhaseCollision = "Broad Phase Collsion: {0}";
+        private const string _cleanUp = "Clean Up: {0}";
+        private const string _narrowPhaseCollision = "Narrow Phase Collsion: {0}";
+        private const int _performancePanelHeight = 150;
+        private const int _performancePanelWidth = 220;
+        private const string _updatePosition = "Update Positions: {0}";
+        private const string _updateTotal = "Update Total: {0}";
         private readonly Vector2 _performancePanelPosition = new Vector2(100, 110);
         private readonly PhysicsSimulator _physicsSimulator;
 
@@ -18,14 +27,10 @@ namespace FarseerGames.FarseerPhysicsDemos
         private Color _aabbColor = new Color(0, 0, 0, 150); // Color.Gainsboro;
         private LineBrush _aabbLineBrush;
         private int _aabbLineThickness = 1;
-        private const string _applyForces = "Apply Forces: {0}";
-        private const string _applyImpulses = "Apply Impulses: {0}";
         private Vector2 _attachPoint1;
         private Vector2 _attachPoint2;
         private Vector2 _body1AttachPointInWorldCoordinates;
         private Vector2 _body2AttachPointInWorldCoordinates;
-        private const string _broadPhaseCollision = "Broad Phase Collsion: {0}";
-        private const string _cleanUp = "Clean Up: {0}";
         private CircleBrush _contactCircleBrush;
         private Color _contactColor = new Color(255, 0, 0, 150);
         private int _contactRadius = 4;
@@ -54,12 +59,9 @@ namespace FarseerGames.FarseerPhysicsDemos
         private CircleBrush _gridCircleBrush;
         private Color _gridColor = new Color(0, 0, 0, 150);
         private int _gridRadius = 1;
-        private const string _narrowPhaseCollision = "Narrow Phase Collsion: {0}";
         private Color _performancePanelColor = new Color(0, 0, 0, 150);
-        private const int _performancePanelHeight = 150;
         private Color _performancePanelTextColor = new Color(0, 0, 0, 255);
         private Texture2D _performancePanelTexture;
-        private const int _performancePanelWidth = 220;
 
         //pin joint
         private Color _pinJointColor = new Color(0, 0, 0, 200);
@@ -81,8 +83,6 @@ namespace FarseerGames.FarseerPhysicsDemos
         private Color _springLineColor = new Color(0, 0, 0, 150);
         private int _springLineThickness = 1;
         private SpriteFont _spriteFont;
-        private const string _updatePosition = "Update Positions: {0}";
-        private const string _updateTotal = "Update Total: {0}";
         private Vector2 _vectorTemp1;
         private CircleBrush _verticeCircleBrush;
         private Color _verticeColor = new Color(0, 50, 0, 150);
@@ -342,8 +342,8 @@ namespace FarseerGames.FarseerPhysicsDemos
         private void LoadPerformancePanelContent(GraphicsDevice graphicsDevice, ContentManager content)
         {
             _performancePanelTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, _performancePanelWidth,
-                                                                           _performancePanelHeight,
-                                                                           new Color(0, 0, 0, 155));
+                                                                            _performancePanelHeight,
+                                                                            new Color(0, 0, 0, 155));
             _spriteFont = content.Load<SpriteFont>(@"Content\Fonts\diagnosticFont");
         }
 
@@ -468,7 +468,8 @@ namespace FarseerGames.FarseerPhysicsDemos
         {
             spriteBatch.Draw(_performancePanelTexture, _performancePanelPosition, _performancePanelColor);
 
-            spriteBatch.DrawString(_spriteFont, String.Format(_updateTotal, _physicsSimulator.UpdateTime.ToString("0.00")),
+            spriteBatch.DrawString(_spriteFont,
+                                   String.Format(_updateTotal, _physicsSimulator.UpdateTime.ToString("0.00")),
                                    new Vector2(110, 110), Color.White);
             spriteBatch.DrawString(_spriteFont, String.Format(_cleanUp, _physicsSimulator.CleanUpTime.ToString("0.00")),
                                    new Vector2(120, 125), Color.White);
@@ -517,12 +518,12 @@ namespace FarseerGames.FarseerPhysicsDemos
                         if (j < verticeCount - 1)
                         {
                             _edgeLineBrush.Draw(spriteBatch, _physicsSimulator.GeomList[i].WorldVertices[j],
-                                               _physicsSimulator.GeomList[i].WorldVertices[j + 1]);
+                                                _physicsSimulator.GeomList[i].WorldVertices[j + 1]);
                         }
                         else
                         {
                             _edgeLineBrush.Draw(spriteBatch, _physicsSimulator.GeomList[i].WorldVertices[j],
-                                               _physicsSimulator.GeomList[i].WorldVertices[0]);
+                                                _physicsSimulator.GeomList[i].WorldVertices[0]);
                         }
                     }
                     if (_enableVerticeView)
@@ -565,7 +566,8 @@ namespace FarseerGames.FarseerPhysicsDemos
                 int count = _physicsSimulator.GeomList[i].Grid.Points.Length;
                 for (int j = 0; j < count; j++)
                 {
-                    Vector2 point = _physicsSimulator.GeomList[i].GetWorldPosition(_physicsSimulator.GeomList[i].Grid.Points[j]);
+                    Vector2 point =
+                        _physicsSimulator.GeomList[i].GetWorldPosition(_physicsSimulator.GeomList[i].Grid.Points[j]);
                     _gridCircleBrush.Draw(spriteBatch, point);
                 }
             }
@@ -577,10 +579,12 @@ namespace FarseerGames.FarseerPhysicsDemos
             {
                 Vector2 startX =
                     _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(-_coordinateAxisLineLength/2f, 0));
-                Vector2 endX = _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(_coordinateAxisLineLength/2f, 0));
+                Vector2 endX =
+                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(_coordinateAxisLineLength/2f, 0));
                 Vector2 startY =
                     _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(0, -_coordinateAxisLineLength/2f));
-                Vector2 endY = _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(0, _coordinateAxisLineLength/2f));
+                Vector2 endY =
+                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(0, _coordinateAxisLineLength/2f));
 
                 _coordinateAxisLineBrush.Draw(spriteBatch, startX, endX);
                 _coordinateAxisLineBrush.Draw(spriteBatch, startY, endY);
@@ -610,7 +614,7 @@ namespace FarseerGames.FarseerPhysicsDemos
                     _springCircleBrush.Draw(spriteBatch, _vectorTemp1);
 
                     _springLineBrush.Draw(spriteBatch, _body1AttachPointInWorldCoordinates,
-                                         fixedLinearSpring.WorldAttachPoint);
+                                          fixedLinearSpring.WorldAttachPoint);
                 }
             }
 
@@ -639,7 +643,7 @@ namespace FarseerGames.FarseerPhysicsDemos
                     _springCircleBrush.Draw(spriteBatch, _vectorTemp1);
 
                     _springLineBrush.Draw(spriteBatch, _body1AttachPointInWorldCoordinates,
-                                         _body2AttachPointInWorldCoordinates);
+                                          _body2AttachPointInWorldCoordinates);
                 }
             }
         }

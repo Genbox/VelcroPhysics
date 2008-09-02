@@ -21,7 +21,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
         private Body[] _blockBody;
         private Geom[] _blockGeom;
 
-
         public Pyramid(Body referenceBody, Geom referenceGeom, float horizontalSpacing, float verticleSpacing,
                        float blockWidth, float blockHeight, int bottomRowBlockCount, Vector2 bottomRightBlockPosition)
         {

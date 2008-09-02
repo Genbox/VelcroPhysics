@@ -60,7 +60,8 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
 
         public void Load(GraphicsDevice graphicsDevice)
         {
-            _rectangleTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, _width, _height, _color, _borderColor);
+            _rectangleTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, _width, _height, _color,
+                                                                     _borderColor);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
@@ -68,7 +69,6 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
             spriteBatch.Draw(_rectangleTexture, position, null, Color.White, 0,
                              new Vector2(1 + _rectangleTexture.Width/2f, 1 + _rectangleTexture.Height/2), 1,
                              SpriteEffects.None, _layer);
-            //new Vector2(radius, radius)
         }
     }
 }

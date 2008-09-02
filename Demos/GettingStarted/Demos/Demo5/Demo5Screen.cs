@@ -7,7 +7,6 @@ using FarseerGames.FarseerPhysicsDemos.Demos.DemoShare;
 using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
 using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -16,23 +15,15 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
     public class Demo5Screen : GameScreen
     {
         private readonly LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
-
-        private readonly PhysicsSimulator _physicsSimulator;
-        private readonly PhysicsSimulatorView _physicsSimulatorView;
-
         private Agent _agent;
         private Circles _blackCircles1;
         private Circles _blackCircles2;
         private Circles _blackCircles3;
-
         private Circles _blueCircles1;
         private Circles _blueCircles2;
         private Circles _blueCircles3;
         private Border _border;
-        private ContentManager _contentManager;
-        private bool _debugViewEnabled;
         private bool _firstRun = true;
-
         private Circles _greenCircles1;
         private Circles _greenCircles2;
         private Circles _greenCircles3;
@@ -41,32 +32,31 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
         private Circles _redCircles1;
         private Circles _redCircles2;
         private Circles _redCircles3;
-        public bool updatedOnce;
 
-        public Demo5Screen()
+        public override void Initialize()
         {
-            _physicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
-            _physicsSimulator.MaxContactsToDetect = 2;
-            //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
-            _physicsSimulatorView = new PhysicsSimulatorView(_physicsSimulator);
+            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
+            PhysicsSimulator.MaxContactsToDetect = 2;
+                //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
+            PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
+
+            base.Initialize();
         }
 
         public override void LoadContent()
         {
-            if (_contentManager == null) _contentManager = new ContentManager(ScreenManager.Game.Services);
             _lineBrush.Load(ScreenManager.GraphicsDevice);
-            _physicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, _contentManager);
 
             int borderWidth = (int) (ScreenManager.ScreenHeight*.05f);
             _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, borderWidth,
-                                ScreenManager.ScreenCenter);
-            _border.Load(ScreenManager.GraphicsDevice, _physicsSimulator);
+                                 ScreenManager.ScreenCenter);
+            _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             _agent = new Agent(ScreenManager.ScreenCenter);
             _agent.CollisionCategory = CollisionCategories.Cat5;
             _agent.CollidesWith = CollisionCategories.All & ~CollisionCategories.Cat4;
-                //collide with all but Cat5(black)
-            _agent.Load(ScreenManager.GraphicsDevice, _physicsSimulator);
+            //collide with all but Cat5(black)
+            _agent.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             LoadCircles();
         }
@@ -79,72 +69,72 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
             _redCircles1 = new Circles(startPosition, endPosition, 15, 15, new Color(200, 0, 0, 175), Color.Black);
             _redCircles1.CollisionCategories = (CollisionCategories.Cat1);
             _redCircles1.CollidesWith = (CollisionCategories.Cat1 | CollisionCategories.Cat4 |
-                                        CollisionCategories.Cat5);
-            _redCircles1.Load(ScreenManager.GraphicsDevice, _physicsSimulator);
+                                         CollisionCategories.Cat5);
+            _redCircles1.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             startPosition = new Vector2(200, 200);
             endPosition = new Vector2(200, ScreenManager.ScreenHeight - 200);
             _redCircles2 = new Circles(startPosition, endPosition, 15, 12, new Color(200, 0, 0, 175), Color.Black);
             _redCircles2.CollisionCategories = (CollisionCategories.Cat1);
             _redCircles2.CollidesWith = (CollisionCategories.Cat1 | CollisionCategories.Cat4 |
-                                        CollisionCategories.Cat5);
-            _redCircles2.Load(ScreenManager.GraphicsDevice, _physicsSimulator);
+                                         CollisionCategories.Cat5);
+            _redCircles2.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             startPosition = new Vector2(300, 300);
             endPosition = new Vector2(300, ScreenManager.ScreenHeight - 300);
             _redCircles3 = new Circles(startPosition, endPosition, 10, 9, new Color(200, 0, 0, 175), Color.Black);
             _redCircles3.CollisionCategories = (CollisionCategories.Cat1);
             _redCircles3.CollidesWith = (CollisionCategories.Cat1 | CollisionCategories.Cat4 |
-                                        CollisionCategories.Cat5);
-            _redCircles3.Load(ScreenManager.GraphicsDevice, _physicsSimulator);
+                                         CollisionCategories.Cat5);
+            _redCircles3.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             startPosition = new Vector2(200, 100);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 200, 100);
             _greenCircles1 = new Circles(startPosition, endPosition, 15, 15, new Color(0, 200, 0, 175), Color.Black);
             _greenCircles1.CollisionCategories = (CollisionCategories.Cat2);
             _greenCircles1.CollidesWith = (CollisionCategories.Cat2 | CollisionCategories.Cat4 |
-                                          CollisionCategories.Cat5);
-            _greenCircles1.Load(ScreenManager.GraphicsDevice, _physicsSimulator);
+                                           CollisionCategories.Cat5);
+            _greenCircles1.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             startPosition = new Vector2(300, 200);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 300, 200);
             _greenCircles2 = new Circles(startPosition, endPosition, 15, 12, new Color(0, 200, 0, 175), Color.Black);
             _greenCircles2.CollisionCategories = (CollisionCategories.Cat2);
             _greenCircles2.CollidesWith = (CollisionCategories.Cat2 | CollisionCategories.Cat4 |
-                                          CollisionCategories.Cat5);
-            _greenCircles2.Load(ScreenManager.GraphicsDevice, _physicsSimulator);
+                                           CollisionCategories.Cat5);
+            _greenCircles2.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             startPosition = new Vector2(400, 300);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 400, 300);
             _greenCircles3 = new Circles(startPosition, endPosition, 10, 9, new Color(0, 200, 0, 175), Color.Black);
             _greenCircles3.CollisionCategories = (CollisionCategories.Cat2);
             _greenCircles3.CollidesWith = (CollisionCategories.Cat2 | CollisionCategories.Cat4 |
-                                          CollisionCategories.Cat5);
-            _greenCircles3.Load(ScreenManager.GraphicsDevice, _physicsSimulator);
+                                           CollisionCategories.Cat5);
+            _greenCircles3.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             startPosition = new Vector2(ScreenManager.ScreenWidth - 100, 100);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 100, ScreenManager.ScreenHeight - 100);
             _blueCircles1 = new Circles(startPosition, endPosition, 15, 15, new Color(0, 0, 200, 175), Color.Black);
             _blueCircles1.CollisionCategories = (CollisionCategories.Cat3);
             _blueCircles1.CollidesWith = (CollisionCategories.Cat3 | CollisionCategories.Cat4 |
-                                         CollisionCategories.Cat5);
-            _blueCircles1.Load(ScreenManager.GraphicsDevice, _physicsSimulator);
+                                          CollisionCategories.Cat5);
+            _blueCircles1.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             startPosition = new Vector2(ScreenManager.ScreenWidth - 200, 200);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 200, ScreenManager.ScreenHeight - 200);
             _blueCircles2 = new Circles(startPosition, endPosition, 15, 12, new Color(0, 0, 200, 175), Color.Black);
             _blueCircles2.CollisionCategories = (CollisionCategories.Cat3);
             _blueCircles2.CollidesWith = (CollisionCategories.Cat3 | CollisionCategories.Cat4 |
-                                         CollisionCategories.Cat5);
-            _blueCircles2.Load(ScreenManager.GraphicsDevice, _physicsSimulator);
+                                          CollisionCategories.Cat5);
+            _blueCircles2.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             startPosition = new Vector2(ScreenManager.ScreenWidth - 300, 300);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 300, ScreenManager.ScreenHeight - 300);
             _blueCircles3 = new Circles(startPosition, endPosition, 10, 9, new Color(0, 0, 200, 175), Color.Black);
             _blueCircles3.CollisionCategories = (CollisionCategories.Cat3);
             _blueCircles3.CollidesWith = (CollisionCategories.Cat3 | CollisionCategories.Cat4 |
-                                         CollisionCategories.Cat5);
-            _blueCircles3.Load(ScreenManager.GraphicsDevice, _physicsSimulator);
+                                          CollisionCategories.Cat5);
+            _blueCircles3.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             startPosition = new Vector2(200, ScreenManager.ScreenHeight - 100);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 200, ScreenManager.ScreenHeight - 100);
@@ -152,7 +142,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
             _blackCircles1.CollisionCategories = CollisionCategories.Cat4;
             _blackCircles1.CollidesWith = CollisionCategories.All & ~CollisionCategories.Cat5;
             //Collide with all but Cat5
-            _blackCircles1.Load(ScreenManager.GraphicsDevice, _physicsSimulator);
+            _blackCircles1.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             startPosition = new Vector2(300, ScreenManager.ScreenHeight - 200);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 300, ScreenManager.ScreenHeight - 200);
@@ -160,7 +150,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
             _blackCircles2.CollisionCategories = CollisionCategories.Cat4;
             _blackCircles2.CollidesWith = CollisionCategories.All & ~CollisionCategories.Cat5;
             //Collide with all but Cat5
-            _blackCircles2.Load(ScreenManager.GraphicsDevice, _physicsSimulator);
+            _blackCircles2.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             startPosition = new Vector2(400, ScreenManager.ScreenHeight - 300);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 400, ScreenManager.ScreenHeight - 300);
@@ -168,32 +158,20 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
             _blackCircles3.CollisionCategories = CollisionCategories.Cat4;
             _blackCircles3.CollidesWith = CollisionCategories.All & ~CollisionCategories.Cat5;
             //Collide with all but Cat5
-            _blackCircles3.Load(ScreenManager.GraphicsDevice, _physicsSimulator);
-        }
-
-        public override void UnloadContent()
-        {
-            _contentManager.Unload();
-            _physicsSimulator.Clear();
+            _blackCircles3.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             if (IsActive)
             {
-                _physicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
-                updatedOnce = true;
+                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
             }
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            if (!updatedOnce)
-            {
-                return;
-            }
-
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             _border.Draw(ScreenManager.SpriteBatch);
             _agent.Draw(ScreenManager.SpriteBatch);
@@ -217,13 +195,10 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
             if (_mousePickSpring != null)
             {
                 _lineBrush.Draw(ScreenManager.SpriteBatch,
-                               _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
-                               _mousePickSpring.WorldAttachPoint);
+                                _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
+                                _mousePickSpring.WorldAttachPoint);
             }
-            if (_debugViewEnabled)
-            {
-                _physicsSimulatorView.Draw(ScreenManager.SpriteBatch);
-            }
+
             ScreenManager.SpriteBatch.End();
         }
 
@@ -240,48 +215,14 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
             }
 
-            if (input.CurrentGamePadState.IsConnected)
-            {
-                HandleGamePadInput(input);
-            }
-            else
-            {
-                HandleKeyboardInput(input);
-#if !XBOX
-                HandleMouseInput(input);
-#endif
-            }
+            HandleKeyboardInput(input);
+            HandleMouseInput(input);
+
             base.HandleInput(input);
-        }
-
-        private void HandleGamePadInput(InputState input)
-        {
-            if (input.LastGamePadState.Buttons.Y != ButtonState.Pressed &&
-                input.CurrentGamePadState.Buttons.Y == ButtonState.Pressed)
-            {
-                _debugViewEnabled = !_debugViewEnabled;
-                _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
-            }
-
-            Vector2 force = 1000*input.CurrentGamePadState.ThumbSticks.Left;
-            force.Y = -force.Y;
-            _agent.ApplyForce(force);
-
-            float rotation = -14000*input.CurrentGamePadState.Triggers.Left;
-            _agent.ApplyTorque(rotation);
-
-            rotation = 14000*input.CurrentGamePadState.Triggers.Right;
-            _agent.ApplyTorque(rotation);
         }
 
         private void HandleKeyboardInput(InputState input)
         {
-            if (!input.LastKeyboardState.IsKeyDown(Keys.F1) && input.CurrentKeyboardState.IsKeyDown(Keys.F1))
-            {
-                _debugViewEnabled = !_debugViewEnabled;
-                _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
-            }
-
             const float forceAmount = 1000;
             Vector2 force = Vector2.Zero;
             force.Y = -force.Y;
@@ -317,7 +258,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
             _agent.ApplyTorque(torque);
         }
 
-#if !XBOX
         private void HandleMouseInput(InputState input)
         {
             Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
@@ -325,14 +265,14 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
                 input.CurrentMouseState.LeftButton == ButtonState.Pressed)
             {
                 //create mouse spring
-                _pickedGeom = _physicsSimulator.Collide(point);
+                _pickedGeom = PhysicsSimulator.Collide(point);
                 if (_pickedGeom != null)
                 {
-                    _mousePickSpring = ControllerFactory.Instance.CreateFixedLinearSpring(_physicsSimulator,
-                                                                                         _pickedGeom.Body,
-                                                                                         _pickedGeom.Body.
-                                                                                             GetLocalPosition(point),
-                                                                                         point, 20, 10);
+                    _mousePickSpring = ControllerFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
+                                                                                          _pickedGeom.Body,
+                                                                                          _pickedGeom.Body.
+                                                                                              GetLocalPosition(point),
+                                                                                          point, 20, 10);
                 }
             }
             else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&
@@ -352,7 +292,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
                 _mousePickSpring.WorldAttachPoint = point;
             }
         }
-#endif
 
         public string GetTitle()
         {

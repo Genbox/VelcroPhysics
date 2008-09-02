@@ -28,7 +28,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
         public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
             _floorTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, _width, _height, 0, 1, 1, Color.White,
-                                                                Color.Black);
+                                                                 Color.Black);
             _floorOrigin = new Vector2(_floorTexture.Width/2f, _floorTexture.Height/2f);
 
             //use the body factory to create the physics body

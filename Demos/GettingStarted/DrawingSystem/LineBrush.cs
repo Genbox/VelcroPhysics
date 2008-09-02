@@ -57,7 +57,8 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
             Vector2.Subtract(ref endPoint, ref startPoint, out _difference);
             CalculateRotation(_difference);
             CalculateScale(_difference);
-            spriteBatch.Draw(_lineTexture, startPoint, null, _color, _rotation, _origin, _scale, SpriteEffects.None, _layer);
+            spriteBatch.Draw(_lineTexture, startPoint, null, _color, _rotation, _origin, _scale, SpriteEffects.None,
+                             _layer);
         }
 
         private void CalculateRotation(Vector2 difference)

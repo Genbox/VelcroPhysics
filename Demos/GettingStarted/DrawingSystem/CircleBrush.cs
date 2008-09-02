@@ -34,7 +34,6 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
             set { _borderColor = value; }
         }
 
-
         public int Radius
         {
             get { return _radius; }
@@ -47,7 +46,6 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
             set { _layer = value; }
         }
 
-
         public void Load(GraphicsDevice graphicsDevice)
         {
             _circleTexture = DrawingHelper.CreateCircleTexture(graphicsDevice, _radius, _color, _borderColor);
@@ -56,9 +54,9 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
             spriteBatch.Draw(_circleTexture, position, null, Color.White, 0,
-                             new Vector2(1 + _circleTexture.Width/2f, 1 + _circleTexture.Height/2), 1, SpriteEffects.None,
+                             new Vector2(1 + _circleTexture.Width/2f, 1 + _circleTexture.Height/2), 1,
+                             SpriteEffects.None,
                              _layer);
-            //new Vector2(_radius, _radius)
         }
     }
 }

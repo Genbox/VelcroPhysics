@@ -1,12 +1,7 @@
-#region Using Statements
-
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
-#endregion
 
 namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 {
@@ -17,9 +12,8 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
     /// </summary>
     internal class LogoScreen : GameScreen
     {
-        private ContentManager contentManager;
-        private Texture2D farseerLogoTexture;
-        private Vector2 origin;
+        private Texture2D _farseerLogoTexture;
+        private Vector2 _origin;
 
         public LogoScreen()
         {
@@ -29,16 +23,8 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 
         public override void LoadContent()
         {
-            if (contentManager == null)
-                contentManager = new ContentManager(ScreenManager.Game.Services);
-
-            farseerLogoTexture = contentManager.Load<Texture2D>("Content/Common/logo");
-            origin = new Vector2(farseerLogoTexture.Width/2f, farseerLogoTexture.Height/2f);
-        }
-
-        public override void UnloadContent()
-        {
-            contentManager.Unload();
+            _farseerLogoTexture = ScreenManager.ContentManager.Load<Texture2D>("Content/Common/logo");
+            _origin = new Vector2(_farseerLogoTexture.Width/2f, _farseerLogoTexture.Height/2f);
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,
@@ -62,21 +48,16 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             ScreenManager.GraphicsDevice.Clear(Color.White);
 
             const byte fade = 255; // TransitionAlpha;               
-
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-
             Color tint = new Color(fade, fade, fade, fade);
-
-            ScreenManager.SpriteBatch.Draw(farseerLogoTexture, ScreenManager.ScreenCenter, null, tint, 0, origin,
+            ScreenManager.SpriteBatch.Draw(_farseerLogoTexture, ScreenManager.ScreenCenter, null, tint, 0, _origin,
                                            Vector2.One, SpriteEffects.None, 0);
-
             ScreenManager.SpriteBatch.End();
         }
 
         public override void HandleInput(InputState input)
         {
             if (input.CurrentKeyboardState.IsKeyDown(Keys.Escape)) ScreenManager.Game.Exit();
-            if (input.CurrentGamePadState.Buttons.X == ButtonState.Pressed) ScreenManager.Game.Exit();
 
             base.HandleInput(input);
         }

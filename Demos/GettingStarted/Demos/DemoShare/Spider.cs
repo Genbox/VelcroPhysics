@@ -87,15 +87,16 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
 
         public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
-            _spiderTexture = DrawingHelper.CreateCircleTexture(graphicsDevice, spiderBodyRadius, Color.White, Color.Black);
+            _spiderTexture = DrawingHelper.CreateCircleTexture(graphicsDevice, spiderBodyRadius, Color.White,
+                                                               Color.Black);
             _spiderOrigin = new Vector2(_spiderTexture.Width/2f, _spiderTexture.Height/2f);
 
             _upperLegTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int) _upperLegSize.X,
-                                                                   (int) _upperLegSize.Y, Color.White, Color.Black);
+                                                                    (int) _upperLegSize.Y, Color.White, Color.Black);
             _upperLegOrigin = new Vector2(_upperLegTexture.Width/2f, _upperLegTexture.Height/2f);
 
             _lowerLegTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int) _lowerLegSize.X,
-                                                                   (int) _lowerLegSize.Y, Color.Red, Color.Black);
+                                                                    (int) _lowerLegSize.Y, Color.Red, Color.Black);
             _lowerLegOrigin = new Vector2(_lowerLegTexture.Width/2f, _lowerLegTexture.Height/2f);
 
             //Load bodies
@@ -103,36 +104,38 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             _spiderBody.Position = _position;
             _spiderBody.IsStatic = false;
 
-            _leftUpperLegBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _upperLegSize.X, _upperLegSize.Y,
-                                                                        1);
+            _leftUpperLegBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _upperLegSize.X,
+                                                                         _upperLegSize.Y,
+                                                                         1);
             _leftUpperLegBody.Position = _spiderBody.Position - new Vector2(spiderBodyRadius, 0) -
-                                        new Vector2(_upperLegSize.X/2, 0);
-
-            _leftLowerLegBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _lowerLegSize.X, _lowerLegSize.Y,
-                                                                        1);
-            _leftLowerLegBody.Position = _spiderBody.Position - new Vector2(spiderBodyRadius, 0) -
-                                        new Vector2(_upperLegSize.X, 0) - new Vector2(_lowerLegSize.X/2, 0);
-
-            _rightUpperLegBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _upperLegSize.X,
-                                                                         _upperLegSize.Y, 1);
-            _rightUpperLegBody.Position = _spiderBody.Position + new Vector2(spiderBodyRadius, 0) +
                                          new Vector2(_upperLegSize.X/2, 0);
 
+            _leftLowerLegBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _lowerLegSize.X,
+                                                                         _lowerLegSize.Y,
+                                                                         1);
+            _leftLowerLegBody.Position = _spiderBody.Position - new Vector2(spiderBodyRadius, 0) -
+                                         new Vector2(_upperLegSize.X, 0) - new Vector2(_lowerLegSize.X/2, 0);
+
+            _rightUpperLegBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _upperLegSize.X,
+                                                                          _upperLegSize.Y, 1);
+            _rightUpperLegBody.Position = _spiderBody.Position + new Vector2(spiderBodyRadius, 0) +
+                                          new Vector2(_upperLegSize.X/2, 0);
+
             _rightLowerLegBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _lowerLegSize.X,
-                                                                         _lowerLegSize.Y, 1);
+                                                                          _lowerLegSize.Y, 1);
             _rightLowerLegBody.Position = _spiderBody.Position + new Vector2(spiderBodyRadius, 0) +
-                                         new Vector2(_upperLegSize.X, 0) + new Vector2(_lowerLegSize.X/2, 0);
+                                          new Vector2(_upperLegSize.X, 0) + new Vector2(_lowerLegSize.X/2, 0);
 
             //load geometries
             _spiderGeom = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _spiderBody, spiderBodyRadius, 14);
             _leftUpperLegGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _leftUpperLegBody,
-                                                                        _upperLegSize.X, _upperLegSize.Y);
-            _leftLowerLegGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _leftLowerLegBody,
-                                                                        _lowerLegSize.X, _lowerLegSize.Y);
-            _rightUpperLegGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _rightUpperLegBody,
                                                                          _upperLegSize.X, _upperLegSize.Y);
-            _rightLowerLegGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _rightLowerLegBody,
+            _leftLowerLegGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _leftLowerLegBody,
                                                                          _lowerLegSize.X, _lowerLegSize.Y);
+            _rightUpperLegGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _rightUpperLegBody,
+                                                                          _upperLegSize.X, _upperLegSize.Y);
+            _rightLowerLegGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _rightLowerLegBody,
+                                                                          _lowerLegSize.X, _lowerLegSize.Y);
             _spiderGeom.CollisionGroup = _collisionGroup;
             _leftUpperLegGeom.CollisionGroup = _collisionGroup;
             _leftLowerLegGeom.CollisionGroup = _collisionGroup;
@@ -145,7 +148,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
                                                       _spiderBody.Position -
                                                       new Vector2(spiderBodyRadius, 0));
             _leftShoulderAngleJoint = JointFactory.Instance.CreateAngleJoint(physicsSimulator, _spiderBody,
-                                                                            _leftUpperLegBody);
+                                                                             _leftUpperLegBody);
             _leftShoulderAngleJoint.TargetAngle = -.4f;
             _leftShoulderAngleJoint.MaxImpulse = 300;
 
@@ -154,7 +157,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
                                                       _spiderBody.Position +
                                                       new Vector2(spiderBodyRadius, 0));
             _rightShoulderAngleJoint = JointFactory.Instance.CreateAngleJoint(physicsSimulator, _spiderBody,
-                                                                             _rightUpperLegBody);
+                                                                              _rightUpperLegBody);
             _rightShoulderAngleJoint.TargetAngle = .4f;
             _leftShoulderAngleJoint.MaxImpulse = 300;
 
@@ -164,7 +167,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
                                                       new Vector2(spiderBodyRadius, 0) -
                                                       new Vector2(_upperLegSize.X, 0));
             _leftKneeAngleJoint = JointFactory.Instance.CreateAngleJoint(physicsSimulator, _leftUpperLegBody,
-                                                                        _leftLowerLegBody);
+                                                                         _leftLowerLegBody);
             _leftKneeAngleJoint.TargetAngle = -_kneeTargetAngle;
             _leftKneeAngleJoint.MaxImpulse = 300;
 
@@ -174,7 +177,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
                                                       new Vector2(spiderBodyRadius, 0) +
                                                       new Vector2(_upperLegSize.X, 0));
             _rightKneeAngleJoint = JointFactory.Instance.CreateAngleJoint(physicsSimulator, _rightUpperLegBody,
-                                                                         _rightLowerLegBody);
+                                                                          _rightLowerLegBody);
             _rightKneeAngleJoint.TargetAngle = _kneeTargetAngle;
             _rightKneeAngleJoint.MaxImpulse = 300;
         }
@@ -212,11 +215,14 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
                              _upperLegOrigin, 1, SpriteEffects.None, 0f);
             spriteBatch.Draw(_lowerLegTexture, _leftLowerLegGeom.Position, null, Color.White, _leftLowerLegGeom.Rotation,
                              _lowerLegOrigin, 1, SpriteEffects.None, 0f);
-            spriteBatch.Draw(_upperLegTexture, _rightUpperLegGeom.Position, null, Color.White, _rightUpperLegGeom.Rotation,
+            spriteBatch.Draw(_upperLegTexture, _rightUpperLegGeom.Position, null, Color.White,
+                             _rightUpperLegGeom.Rotation,
                              _upperLegOrigin, 1, SpriteEffects.None, 0f);
-            spriteBatch.Draw(_lowerLegTexture, _rightLowerLegGeom.Position, null, Color.White, _rightLowerLegGeom.Rotation,
+            spriteBatch.Draw(_lowerLegTexture, _rightLowerLegGeom.Position, null, Color.White,
+                             _rightLowerLegGeom.Rotation,
                              _lowerLegOrigin, 1, SpriteEffects.None, 0f);
-            spriteBatch.Draw(_spiderTexture, _spiderGeom.Position, null, Color.White, _spiderGeom.Rotation, _spiderOrigin, 1,
+            spriteBatch.Draw(_spiderTexture, _spiderGeom.Position, null, Color.White, _spiderGeom.Rotation,
+                             _spiderOrigin, 1,
                              SpriteEffects.None, 0f);
         }
     }

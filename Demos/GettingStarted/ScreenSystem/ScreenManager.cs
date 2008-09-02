@@ -24,24 +24,37 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 {
     /// <summary>
     /// The screen manager is a component which manages one or more GameScreen
-    /// instances. It maintains a stack of screens, calls their Update and Draw
-    /// methods at the appropriate times, and automatically routes input to the
+    /// instances. It maintains a stack of _screens, calls their Update and Draw
+    /// methods at the appropriate times, and automatically routes _input to the
     /// topmost active screen.
     /// </summary>
     public class ScreenManager : DrawableGameComponent
     {
-        #region Fields
-
         private readonly IGraphicsDeviceService _graphicsDeviceService;
+        private readonly InputState _input = new InputState();
+        private readonly List<GameScreen> _screens = new List<GameScreen>();
+        private readonly List<GameScreen> _screensToUpdate = new List<GameScreen>();
+        private Texture2D _blankTexture;
+        private SpriteFonts _spriteFonts;
 
-        private readonly InputState input = new InputState();
-        private readonly List<GameScreen> screens = new List<GameScreen>();
-        private readonly List<GameScreen> screensToUpdate = new List<GameScreen>();
-        private Texture2D blankTexture;
+        /// <summary>
+        /// Constructs a new screen manager component.
+        /// </summary>
+        public ScreenManager(Game game)
+            : base(game)
+        {
+            ContentManager = new ContentManager(game.Services);
+            _graphicsDeviceService = (IGraphicsDeviceService) game.Services.GetService(
+                                                                  typeof (IGraphicsDeviceService));
 
-        #endregion
+            if (_graphicsDeviceService == null)
+                throw new InvalidOperationException("No graphics device service.");
+        }
 
-        #region Properties
+        public SpriteFonts SpriteFonts
+        {
+            get { return _spriteFonts; }
+        }
 
         /// <summary>
         /// Expose access to our Game instance (this is protected in the
@@ -63,28 +76,16 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 
         /// <summary>
         /// A content manager used to load data that is shared between multiple
-        /// screens. This is never unloaded, so if a screen requires a large amount
+        /// _screens. This is never unloaded, so if a screen requires a large amount
         /// of temporary data, it should create a local content manager instead.
         /// </summary>
         public ContentManager ContentManager { get; private set; }
 
         /// <summary>
-        /// A default SpriteBatch shared by all the screens. This saves
+        /// A default SpriteBatch shared by all the _screens. This saves
         /// each screen having to bother creating their own local instance.
         /// </summary>
         public SpriteBatch SpriteBatch { get; private set; }
-
-        /// <summary>
-        /// A default font shared by all the screens. This saves
-        /// each screen having to bother loading their own local copy.
-        /// </summary>
-        public SpriteFont DiagnosticSpriteFont { get; private set; }
-
-        /// <summary>
-        /// A default font shared by all the screens. This saves
-        /// each screen having to bother loading their own local copy.
-        /// </summary>
-        public SpriteFont MenuSpriteFont { get; private set; }
 
         public Vector2 ScreenCenter
         {
@@ -106,27 +107,11 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         }
 
         /// <summary>
-        /// If true, the manager prints out a list of all the screens
+        /// If true, the manager prints out a list of all the _screens
         /// each time it is updated. This can be useful for making sure
         /// everything is being added and removed at the right times.
         /// </summary>
         public bool TraceEnabled { get; set; }
-
-        #endregion
-
-        /// <summary>
-        /// Constructs a new screen manager component.
-        /// </summary>
-        public ScreenManager(Game game)
-            : base(game)
-        {
-            ContentManager = new ContentManager(game.Services);
-
-            _graphicsDeviceService = (IGraphicsDeviceService) game.Services.GetService(
-                                                                  typeof (IGraphicsDeviceService));
-            if (_graphicsDeviceService == null)
-                throw new InvalidOperationException("No graphics device service.");
-        }
 
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting
@@ -134,7 +119,9 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// </summary>
         public override void Initialize()
         {
-            foreach (GameScreen screen in screens)
+            _spriteFonts = new SpriteFonts(ContentManager);
+
+            foreach (GameScreen screen in _screens)
             {
                 screen.Initialize();
             }
@@ -148,18 +135,14 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         {
             // Load content belonging to the screen manager.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-            DiagnosticSpriteFont = ContentManager.Load<SpriteFont>("Content/Fonts/diagnosticFont");
-            MenuSpriteFont = ContentManager.Load<SpriteFont>("Content/Fonts/menuFont");
-            blankTexture = ContentManager.Load<Texture2D>("Content/Common/blank");
+            _blankTexture = ContentManager.Load<Texture2D>("Content/Common/blank");
 
-
-            // Tell each of the screens to load their content.
-            foreach (GameScreen screen in screens)
+            // Tell each of the _screens to load their content.
+            foreach (GameScreen screen in _screens)
             {
                 screen.LoadContent();
             }
         }
-
 
         /// <summary>
         /// Unload your graphics content.
@@ -168,8 +151,8 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         {
             ContentManager.Unload();
 
-            // Tell each of the screens to unload their content.
-            foreach (GameScreen screen in screens)
+            // Tell each of the _screens to unload their content.
+            foreach (GameScreen screen in _screens)
             {
                 screen.UnloadContent();
             }
@@ -181,27 +164,25 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         public override void Update(GameTime gameTime)
         {
             // Read the keyboard and gamepad.
-            input.Update();
+            _input.Update();
 
             // Make a copy of the master screen list, to avoid confusion if
             // the process of updating one screen adds or removes others.
-            screensToUpdate.Clear();
+            _screensToUpdate.Clear();
 
-            //foreach (GameScreen screen in screens)  
-            //screensToUpdate.Add(screen);
-            for (int i = 0; i < screens.Count; i++)
-                screensToUpdate.Add(screens[i]);
+            for (int i = 0; i < _screens.Count; i++)
+                _screensToUpdate.Add(_screens[i]);
 
             bool otherScreenHasFocus = !Game.IsActive;
             bool coveredByOtherScreen = false;
 
-            // Loop as long as there are screens waiting to be updated.
-            while (screensToUpdate.Count > 0)
+            // Loop as long as there are _screens waiting to be updated.
+            while (_screensToUpdate.Count > 0)
             {
                 // Pop the topmost screen off the waiting list.
-                GameScreen screen = screensToUpdate[screensToUpdate.Count - 1];
+                GameScreen screen = _screensToUpdate[_screensToUpdate.Count - 1];
 
-                screensToUpdate.RemoveAt(screensToUpdate.Count - 1);
+                _screensToUpdate.RemoveAt(_screensToUpdate.Count - 1);
 
                 // Update the screen.
                 screen.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -210,16 +191,16 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                     screen.ScreenState == ScreenState.Active)
                 {
                     // If this is the first active screen we came across,
-                    // give it a chance to handle input.
+                    // give it a chance to handle _input.
                     if (!otherScreenHasFocus)
                     {
-                        screen.HandleInput(input);
+                        screen.HandleInput(_input);
 
                         otherScreenHasFocus = true;
                     }
 
                     // If this is an active non-popup, inform any subsequent
-                    // screens that they are covered by it.
+                    // _screens that they are covered by it.
                     if (!screen.IsPopup)
                         coveredByOtherScreen = true;
                 }
@@ -232,46 +213,30 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 
 
         /// <summary>
-        /// Prints a list of all the screens, for debugging.
+        /// Prints a list of all the _screens, for debugging.
         /// </summary>
         private void TraceScreens()
         {
             List<string> screenNames = new List<string>();
 
-            foreach (GameScreen screen in screens)
+            foreach (GameScreen screen in _screens)
                 screenNames.Add(screen.GetType().Name);
 
             Trace.WriteLine(string.Join(", ", screenNames.ToArray()));
         }
-
 
         /// <summary>
         /// Tells each screen to draw itself.
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            //foreach (GameScreen screen in screens)
-            //{
-            //    if (screen.ScreenState == ScreenState.Hidden)
-            //        continue;
-
-            //    screen.Draw(gameTime);
-            //}
-
-            for (int i = 0; i < screens.Count; i++)
+            for (int i = 0; i < _screens.Count; i++)
             {
-                if (screens[i].ScreenState == ScreenState.Hidden)
+                if (_screens[i].ScreenState == ScreenState.Hidden)
                     continue;
 
-                screens[i].Draw(gameTime);
+                _screens[i].Draw(gameTime);
             }
-
-            //spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            //Vector2 stringSize = menuSpriteFont.MeasureString("Farseer Physics Engine");
-            //Vector2 origin = new Vector2(stringSize.X/2,stringSize.Y/2);
-            //spriteBatch.DrawString(menuSpriteFont, "Farseer Physics Engine", ScreenCenter, new Color(255, 255, 255, 30), -0, origin, 1, SpriteEffects.None, 0);
-            //spriteBatch.End();
-            //new Vector2(ScreenWidth - 25,ScreenHeight-10)
         }
 
         /// <summary>
@@ -288,9 +253,8 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                 screen.LoadContent();
             }
 
-            screens.Add(screen);
+            _screens.Add(screen);
         }
-
 
         /// <summary>
         /// Removes a screen from the screen manager. You should normally
@@ -307,25 +271,13 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                 screen.UnloadContent();
             }
 
-            screens.Remove(screen);
-            screensToUpdate.Remove(screen);
+            _screens.Remove(screen);
+            _screensToUpdate.Remove(screen);
         }
-
-
-        /// <summary>
-        /// Expose an array holding all the screens. We return a copy rather
-        /// than the real master list, because screens should only ever be added
-        /// or removed using the AddScreen and RemoveScreen methods.
-        /// </summary>
-        public GameScreen[] GetScreens()
-        {
-            return screens.ToArray();
-        }
-
 
         /// <summary>
         /// Helper draws a translucent black fullscreen sprite, used for fading
-        /// screens in and out, and for darkening the background behind popups.
+        /// _screens in and out, and for darkening the background behind popups.
         /// </summary>
         public void FadeBackBufferToBlack(int alpha)
         {
@@ -333,7 +285,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 
             SpriteBatch.Begin();
 
-            SpriteBatch.Draw(blankTexture,
+            SpriteBatch.Draw(_blankTexture,
                              new Rectangle(0, 0, viewport.Width, viewport.Height),
                              new Color(0, 0, 0, (byte) alpha));
 

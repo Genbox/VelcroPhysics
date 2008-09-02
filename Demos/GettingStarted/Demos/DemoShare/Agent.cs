@@ -60,7 +60,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             _agentOrigin = new Vector2(_agentTexture.Width/2f, _agentTexture.Height/2f);
 
             _agentCrossBeamTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, 16, 120, Color.DarkGray,
-                                                                         Color.Black);
+                                                                          Color.Black);
             _agentCrossBeamOrigin = new Vector2(_agentCrossBeamTexture.Width/2f, _agentCrossBeamTexture.Height/2f);
 
             _agentBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 80, 80, 5);
@@ -68,29 +68,30 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
 
             _agentGeom = new Geom[7];
             _agentGeom[0] = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _agentBody, 16, 10,
-                                                                 new Vector2(-40, -40), 0);
+                                                                  new Vector2(-40, -40), 0);
             _agentGeom[0].RestitutionCoefficient = .4f;
             _agentGeom[0].FrictionCoefficient = .2f;
             _agentGeom[0].CollisionGroup = 1;
             _agentGeom[0].CollisionCategories = _collisionCategory;
             _agentGeom[0].CollidesWith = _collidesWith;
             _agentGeom[1] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0],
-                                                           new Vector2(-40, 40), 0);
+                                                            new Vector2(-40, 40), 0);
             _agentGeom[2] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0],
-                                                           new Vector2(40, -40), 0);
+                                                            new Vector2(40, -40), 0);
             _agentGeom[3] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0],
-                                                           new Vector2(40, 40), 0);
-            _agentGeom[4] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0], new Vector2(0, 0),
-                                                           0);
+                                                            new Vector2(40, 40), 0);
+            _agentGeom[4] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0],
+                                                            new Vector2(0, 0),
+                                                            0);
 
             _agentGeom[5] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _agentBody, 16, 120, Vector2.Zero,
-                                                                    MathHelper.PiOver4);
+                                                                     MathHelper.PiOver4);
             _agentGeom[5].CollisionGroup = 1;
             _agentGeom[5].CollisionCategories = _collisionCategory;
             _agentGeom[5].CollidesWith = _collidesWith;
 
             _agentGeom[6] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _agentBody, 16, 120, Vector2.Zero,
-                                                                    -MathHelper.PiOver4);
+                                                                     -MathHelper.PiOver4);
             _agentGeom[6].CollisionGroup = 1;
             _agentGeom[6].CollisionCategories = _collisionCategory;
             _agentGeom[6].CollidesWith = _collidesWith;
@@ -100,7 +101,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
         {
             for (int i = 5; i < 7; i++)
             {
-                spriteBatch.Draw(_agentCrossBeamTexture, _agentGeom[i].Position, null, Color.White, _agentGeom[i].Rotation,
+                spriteBatch.Draw(_agentCrossBeamTexture, _agentGeom[i].Position, null, Color.White,
+                                 _agentGeom[i].Rotation,
                                  _agentCrossBeamOrigin, 1, SpriteEffects.None, 0f);
             }
             for (int i = 0; i < 5; i++)

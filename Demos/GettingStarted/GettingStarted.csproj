@@ -114,6 +114,7 @@
     <Compile Include="ScreenSystem\MenuScreen.cs" />
     <Compile Include="ScreenSystem\PauseScreen.cs" />
     <Compile Include="ScreenSystem\ScreenManager.cs" />
+    <Compile Include="ScreenSystem\SpriteFonts.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

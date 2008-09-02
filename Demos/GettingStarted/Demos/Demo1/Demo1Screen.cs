@@ -5,7 +5,6 @@ using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
 using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -13,50 +12,35 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
 {
     public class Demo1Screen : GameScreen
     {
-        //TODO: Put physicssimulator into engine files and use Contentmanager from screenmanager.
-        private readonly PhysicsSimulator _physicsSimulator;
-        private readonly PhysicsSimulatorView _physicsSimulatorView;
         private Texture2D _bodyTexture;
-        private ContentManager _contentManager;
-        private bool _debugViewEnabled;
         private bool _firstRun = true;
         private Vector2 _origin;
-
         private Body _rectangleBody;
-        public bool updatedOnce;
 
-        public Demo1Screen()
+        public override void Initialize()
         {
-            _physicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
-            _physicsSimulatorView = new PhysicsSimulatorView(_physicsSimulator);
+            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
+
+            base.Initialize();
         }
 
         public override void LoadContent()
         {
-            if (_contentManager == null) _contentManager = new ContentManager(ScreenManager.Game.Services);
-            _physicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, _contentManager);
-
             //load texture that will visually represent the physics body
             _bodyTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 128, Color.Gold,
-                                                               Color.Black);
+                                                                Color.Black);
             _origin = new Vector2(_bodyTexture.Width/2f, _bodyTexture.Height/2f);
 
             //use the body factory to create the physics body
-            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(_physicsSimulator, 128, 128, 1);
+            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 128, 128, 1);
             _rectangleBody.Position = ScreenManager.ScreenCenter;
-        }
-
-        public override void UnloadContent()
-        {
-            _physicsSimulator.Clear();
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             if (IsActive)
             {
-                _physicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
-                updatedOnce = true;
+                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
             }
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -67,10 +51,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             ScreenManager.SpriteBatch.Draw(_bodyTexture, _rectangleBody.Position, null, Color.White,
                                            _rectangleBody.Rotation, _origin, 1, SpriteEffects.None, 0);
-            if (_debugViewEnabled)
-            {
-                _physicsSimulatorView.Draw(ScreenManager.SpriteBatch);
-            }
             ScreenManager.SpriteBatch.End();
         }
 
@@ -85,10 +65,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
             }
-            if (input.CurrentGamePadState.IsConnected)
-            {
-                HandleGamePadInput(input);
-            }
             else
             {
                 HandleKeyboardInput(input);
@@ -96,34 +72,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
             base.HandleInput(input);
         }
 
-        private void HandleGamePadInput(InputState input)
-        {
-            if (input.LastGamePadState.Buttons.Y != ButtonState.Pressed &&
-                input.CurrentGamePadState.Buttons.Y == ButtonState.Pressed)
-            {
-                _debugViewEnabled = !_debugViewEnabled;
-                _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
-            }
-
-            Vector2 force = 50*input.CurrentGamePadState.ThumbSticks.Left;
-            force.Y = -force.Y;
-            _rectangleBody.ApplyForce(force);
-
-            float rotation = -1000*input.CurrentGamePadState.Triggers.Left;
-            _rectangleBody.ApplyTorque(rotation);
-
-            rotation = 1000*input.CurrentGamePadState.Triggers.Right;
-            _rectangleBody.ApplyTorque(rotation);
-        }
-
         private void HandleKeyboardInput(InputState input)
         {
-            if (!input.LastKeyboardState.IsKeyDown(Keys.F1) && input.CurrentKeyboardState.IsKeyDown(Keys.F1))
-            {
-                _debugViewEnabled = !_debugViewEnabled;
-                _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
-            }
-
             const float forceAmount = 50;
             Vector2 force = Vector2.Zero;
             force.Y = -force.Y;

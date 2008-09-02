@@ -36,7 +36,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
         public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
             _platformTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, _width, _height, 2, 0, 0, _color,
-                                                                   _borderColor);
+                                                                    _borderColor);
             _platformOrigin = new Vector2(_platformTexture.Width/2f, _platformTexture.Height/2f);
             //use the body factory to create the physics body
             _platformBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _width, _height, 1);
