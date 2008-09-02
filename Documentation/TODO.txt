@@ -1,0 +1,9 @@
+Public:
+Create a multithreading sample. (Secret and normal threading)
+Create a InactivityController sample.
+Change structure on GettingStarted demos to simplify.
+Write some documentation.
+
+Private:
+Publish theclaw prototype (simplify it first)
+Publish info about polygon mapper
