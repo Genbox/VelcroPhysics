@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Dynamics;
@@ -9,26 +10,27 @@ namespace FarseerGames.FarseerPhysics
 {
     public class PhysicsSimulator
     {
+        private readonly Stopwatch _sw = new Stopwatch();
         internal float allowedPenetration = .05f;
         internal float applyForcesTime = -1;
         internal float applyImpulsesTime = -1;
         internal ArbiterList arbiterList;
         internal Pool<Arbiter> arbiterPool;
-        private int arbiterPoolSize = 10; //initial arbiter size.  will grow as needed
+        private const int _arbiterPoolSize = 10;  //initial arbiter size.  will grow as needed
         internal float biasFactor = .8f;
-        private Body body;
+        private Body _body;
 
         internal List<Body> bodyAddList;
         internal BodyList bodyList;
         internal List<Body> bodyRemoveList;
-        private IBroadPhaseCollider broadPhaseCollider;
+        private IBroadPhaseCollider _broadPhaseCollider;
         internal float broadPhaseCollisionTime = -1;
         internal float cleanUpTime = -1;
 
         internal List<Controller> controllerAddList;
         internal ControllerList controllerList;
         internal List<Controller> controllerRemoveList;
-        private bool enabled = true;
+        private bool _enabled = true;
 
         public bool EnableDiagnostics;
         internal FrictionType frictionType = FrictionType.Average;
@@ -36,11 +38,11 @@ namespace FarseerGames.FarseerPhysics
         internal GeomList geomList;
         internal List<Geom> geomRemoveList;
 
-        private Vector2 gravity = Vector2.Zero;
-        private Vector2 gravityForce;
+        private Vector2 _gravity = Vector2.Zero;
+        private Vector2 _gravityForce;
 
         //default settings
-        private int iterations = 5;
+        private int _iterations = 5;
         internal List<Joint> jointAddList;
         internal JointList jointList;
         internal List<Joint> jointRemoveList;
@@ -52,7 +54,7 @@ namespace FarseerGames.FarseerPhysics
 
         #region Added by Daniel Pramel 08/17/08
 
-        private InactivityController inactivityController;
+        private InactivityController _inactivityController;
 
         /// <summary>
         /// Returns the InactivityController to automatically disable not used bodies.
@@ -60,7 +62,7 @@ namespace FarseerGames.FarseerPhysics
         /// </summary>
         public InactivityController InactivityController
         {
-            get { return inactivityController; }
+            get { return _inactivityController; }
         }
 
         #endregion
@@ -121,14 +123,14 @@ namespace FarseerGames.FarseerPhysics
 
         public Vector2 Gravity
         {
-            get { return gravity; }
-            set { gravity = value; }
+            get { return _gravity; }
+            set { _gravity = value; }
         }
 
         public int Iterations
         {
-            get { return iterations; }
-            set { iterations = value; }
+            get { return _iterations; }
+            set { _iterations = value; }
         }
 
         public float AllowedPenetration
@@ -201,8 +203,8 @@ namespace FarseerGames.FarseerPhysics
         /// </summary>
         public bool Enabled
         {
-            get { return enabled; }
-            set { enabled = value; }
+            get { return _enabled; }
+            set { _enabled = value; }
         }
 
         private void ConstructPhysicsSimulator(Vector2 gravity)
@@ -223,18 +225,18 @@ namespace FarseerGames.FarseerPhysics
             jointAddList = new List<Joint>();
             jointRemoveList = new List<Joint>();
 
-            broadPhaseCollider = new SelectiveSweepCollider(this);
+            _broadPhaseCollider = new SelectiveSweepCollider(this);
 
             arbiterList = new ArbiterList();
-            this.gravity = gravity;
+            _gravity = gravity;
 
-            arbiterPool = new Pool<Arbiter>(arbiterPoolSize);
+            arbiterPool = new Pool<Arbiter>(_arbiterPoolSize);
 
             #region Added by Daniel Pramel 08/17/08
 
-            inactivityController = new InactivityController(this);
+            _inactivityController = new InactivityController(this);
 
-            scaling = new Scaling(0.001f, 0.01f);
+            _scaling = new Scaling(0.001f, 0.01f);
 
             #endregion
         }
@@ -246,7 +248,7 @@ namespace FarseerGames.FarseerPhysics
             {
                 throw new Exception("The GeomList must be empty when setting the broad phase collider type");
             }
-            this.broadPhaseCollider = broadPhaseCollider;
+            _broadPhaseCollider = broadPhaseCollider;
         }
 
         public void Add(Geom geometry)
@@ -308,9 +310,9 @@ namespace FarseerGames.FarseerPhysics
             //bodyList.Clear();
             //jointList.Clear();
             //controllerList.Clear();
-            //arbiterPool = new Pool<Arbiter>(arbiterPoolSize); 
-            //broadPhaseCollider = new SelectiveSweepCollider(this);
-            ConstructPhysicsSimulator(gravity);
+            //arbiterPool = new Pool<Arbiter>(_arbiterPoolSize); 
+            //_broadPhaseCollider = new SelectiveSweepCollider(this);
+            ConstructPhysicsSimulator(_gravity);
         }
 
         public void Update(float dt)
@@ -324,26 +326,27 @@ namespace FarseerGames.FarseerPhysics
             {
                 return;
             }
-#if (XNA)
-            if (EnableDiagnostics) sw.Start();
-#endif
+
+            if (EnableDiagnostics) _sw.Start();
+
+
 
             #region Added by Daniel Pramel 08/24/08
 
-            dt = scaling.GetUpdateInterval(dt);
+            dt = _scaling.GetUpdateInterval(dt);
             if (dt == 0)
             {
                 return;
             }
 
 
-            if (scaling.UpdateInterval < dtReal)
+            if (_scaling.UpdateInterval < dtReal)
             {
-                scaling.IncreaseUpdateInterval();
+                _scaling.IncreaseUpdateInterval();
             }
             else
             {
-                scaling.DecreaseUpdateInterval();
+                _scaling.DecreaseUpdateInterval();
             }
 
             #endregion
@@ -353,35 +356,23 @@ namespace FarseerGames.FarseerPhysics
             ProcessRemovedItems();
             ProcessDisposedItems();
 
-            if (!enabled) return;
+            if (!_enabled) return;
 
-#if (XNA)
-            if (EnableDiagnostics) cleanUpTime = sw.ElapsedTicks;
-#endif
+            if (EnableDiagnostics) cleanUpTime = _sw.ElapsedTicks;
             DoBroadPhaseCollision();
-#if (XNA)
-            if (EnableDiagnostics) broadPhaseCollisionTime = sw.ElapsedTicks - cleanUpTime;
-#endif
+            if (EnableDiagnostics) broadPhaseCollisionTime = _sw.ElapsedTicks - cleanUpTime;
             DoNarrowPhaseCollision();
-#if (XNA)
-            if (EnableDiagnostics) narrowPhaseCollisionTime = sw.ElapsedTicks - broadPhaseCollisionTime - cleanUpTime;
-#endif
+            if (EnableDiagnostics) narrowPhaseCollisionTime = _sw.ElapsedTicks - broadPhaseCollisionTime - cleanUpTime;
             ApplyForces(dt);
-#if (XNA)
-            if (EnableDiagnostics) applyForcesTime = sw.ElapsedTicks - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
-#endif
+            if (EnableDiagnostics) applyForcesTime = _sw.ElapsedTicks - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
             ApplyImpulses(dt);
-#if (XNA)
-            if (EnableDiagnostics) applyImpulsesTime = sw.ElapsedTicks - applyForcesTime - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
-#endif
+            if (EnableDiagnostics) applyImpulsesTime = _sw.ElapsedTicks - applyForcesTime - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
             UpdatePositions(dt);
-#if (XNA)
-            if (EnableDiagnostics) updatePositionsTime = sw.ElapsedTicks - applyImpulsesTime - applyForcesTime - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
-#endif
-#if (XNA)
+            if (EnableDiagnostics) updatePositionsTime = _sw.ElapsedTicks - applyImpulsesTime - applyForcesTime - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
+            
             if (EnableDiagnostics) {
-                sw.Stop();
-                updateTime = sw.ElapsedTicks;
+                _sw.Stop();
+                updateTime = _sw.ElapsedTicks;
 
                 cleanUpTime = 1000 * cleanUpTime/Stopwatch.Frequency;
                 broadPhaseCollisionTime = 1000*broadPhaseCollisionTime/Stopwatch.Frequency;
@@ -390,9 +381,8 @@ namespace FarseerGames.FarseerPhysics
                 applyImpulsesTime = 1000*applyImpulsesTime / Stopwatch.Frequency;
                 updatePositionsTime = 1000*updatePositionsTime / Stopwatch.Frequency;
                 updateTime = 1000* updateTime/Stopwatch.Frequency;
-                sw.Reset();
+                _sw.Reset();
             }
-#endif
         }
 
         public Geom Collide(float x, float y)
@@ -432,7 +422,7 @@ namespace FarseerGames.FarseerPhysics
 
         private void DoBroadPhaseCollision()
         {
-            broadPhaseCollider.Update();
+            _broadPhaseCollider.Update();
         }
 
         private void DoNarrowPhaseCollision()
@@ -456,30 +446,30 @@ namespace FarseerGames.FarseerPhysics
 
             for (int i = 0; i < bodyList.Count; i++)
             {
-                body = bodyList[i];
-                if (!body.Enabled)
+                _body = bodyList[i];
+                if (!_body.Enabled)
                 {
                     continue;
                 }
                 //apply accumulated external impules
-                body.ApplyImpulses();
+                _body.ApplyImpulses();
 
-                if (!body.ignoreGravity)
+                if (!_body.ignoreGravity)
                 {
-                    gravityForce.X = gravity.X*body.mass;
-                    gravityForce.Y = gravity.Y*body.mass;
+                    _gravityForce.X = _gravity.X*_body.mass;
+                    _gravityForce.Y = _gravity.Y*_body.mass;
 
-                    #region INLINE: body.ApplyForce(ref gravityForce);
+                    #region INLINE: _body.ApplyForce(ref _gravityForce);
 
-                    body.force.X = body.force.X + gravityForce.X;
-                    body.force.Y = body.force.Y + gravityForce.Y;
+                    _body.force.X = _body.force.X + _gravityForce.X;
+                    _body.force.Y = _body.force.Y + _gravityForce.Y;
 
                     #endregion
                 }
 
-                body.IntegrateVelocity(dt);
-                body.ClearForce();
-                body.ClearTorque();
+                _body.IntegrateVelocity(dt);
+                _body.ClearForce();
+                _body.ClearTorque();
             }
         }
 
@@ -500,7 +490,7 @@ namespace FarseerGames.FarseerPhysics
                 arbiterList[i].PreStepImpulse(inverseDt);
             }
 
-            for (int h = 0; h < iterations; h++)
+            for (int h = 0; h < _iterations; h++)
             {
                 for (int i = 0; i < jointList.Count; i++)
                 {
@@ -539,7 +529,7 @@ namespace FarseerGames.FarseerPhysics
                     geomAddList[i].isRemoved = false;
                     geomList.Add(geomAddList[i]);
 
-                    broadPhaseCollider.Add(geomAddList[i]);
+                    _broadPhaseCollider.Add(geomAddList[i]);
                 }
             }
             geomAddList.Clear();
@@ -596,7 +586,7 @@ namespace FarseerGames.FarseerPhysics
 
             if (geomRemoveList.Count > 0)
             {
-                broadPhaseCollider.ProcessRemovedGeoms();
+                _broadPhaseCollider.ProcessRemovedGeoms();
             }
 
             geomRemoveList.Clear();
@@ -625,17 +615,16 @@ namespace FarseerGames.FarseerPhysics
 
         private void ProcessDisposedItems()
         {
-            int disposedGeomCount;
             //allow each controller to validate itself. this is where a controller can Dispose of itself if need be.
             for (int i = 0; i < controllerList.Count; i++)
             {
                 controllerList[i].Validate();
             }
-            disposedGeomCount = geomList.RemoveDisposed();
+            int disposedGeomCount = geomList.RemoveDisposed();
 
             if (disposedGeomCount > 0)
             {
-                broadPhaseCollider.ProcessDisposedGeoms();
+                _broadPhaseCollider.ProcessDisposedGeoms();
             }
 
             bodyList.RemoveDisposed();
@@ -654,12 +643,12 @@ namespace FarseerGames.FarseerPhysics
 
         #region Added by Daniel Pramel 08/24/08
 
-        private Scaling scaling;
+        private Scaling _scaling;
 
         public Scaling Scaling
         {
-            get { return scaling; }
-            set { scaling = value; }
+            get { return _scaling; }
+            set { _scaling = value; }
         }
 
         #endregion

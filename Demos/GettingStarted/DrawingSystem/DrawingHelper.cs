@@ -48,7 +48,6 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
                                                     int borderInnerTransitionWidth, int borderOuterTransitionWidth,
                                                     Color color, Color borderColor)
         {
-            int x;
             int y = -1;
             int diameter = (radius + 2)*2;
             //Vector2 center = new Vector2(0, 0);
@@ -64,7 +63,7 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
                 {
                     y += 1;
                 }
-                x = i%diameter;
+                int x = i%diameter;
 
                 Vector2 diff = new Vector2(x, y) - center;
                 float length = diff.Length(); // distance.Length();
@@ -126,7 +125,6 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
             Texture2D texture2D = new Texture2D(graphicsDevice, width, height, 1, TextureUsage.None, SurfaceFormat.Color);
 
             //Texture2D texture2D = new Texture2D(graphicsDevice, 2, lineWidth + 2);
-            int x;
             int y = -1;
             int j;
             int count = width*height;
@@ -164,7 +162,7 @@ namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
                 {
                     y += 1;
                 }
-                x = i%width;
+                int x = i%width;
 
                 //check if pixel is in one of the rectangular border shells
                 bool isInShell = false;

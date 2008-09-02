@@ -10,78 +10,78 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
 {
     public class Circles
     {
-        private readonly Color borderColor = Color.Black;
-        private readonly Color color = Color.White;
+        private readonly Color _borderColor = Color.Black;
+        private readonly Color _color = Color.White;
 
-        private readonly int count = 2;
-        private readonly Vector2 endPosition;
-        private readonly int radius = 100;
-        private readonly Vector2 startPosition;
-        private Body[] circleBody;
-        private CircleBrush circleBrush;
-        private Geom[] circleGeom;
+        private readonly int _count = 2;
+        private readonly Vector2 _endPosition;
+        private readonly int _radius = 100;
+        private readonly Vector2 _startPosition;
+        private Body[] _circleBody;
+        private CircleBrush _circleBrush;
+        private Geom[] _circleGeom;
 
-        private CollisionCategories collidesWith = CollisionCategories.All;
-        private CollisionCategories collisionCategories = CollisionCategories.All;
+        private CollisionCategories _collidesWith = CollisionCategories.All;
+        private CollisionCategories _collisionCategories = CollisionCategories.All;
 
         public Circles(Vector2 startPosition, Vector2 endPosition, int count, int radius, Color color, Color borderColor)
         {
             if (count < 2)
             {
-                throw new Exception("count must be 2 or greater");
+                throw new Exception("_count must be 2 or greater");
             }
-            this.count = count;
-            this.radius = radius;
-            this.color = color;
-            this.borderColor = borderColor;
-            this.startPosition = startPosition;
-            this.endPosition = endPosition;
+            _count = count;
+            _radius = radius;
+            _color = color;
+            _borderColor = borderColor;
+            _startPosition = startPosition;
+            _endPosition = endPosition;
         }
 
         public CollisionCategories CollisionCategories
         {
-            get { return collisionCategories; }
-            set { collisionCategories = value; }
+            get { return _collisionCategories; }
+            set { _collisionCategories = value; }
         }
 
         public CollisionCategories CollidesWith
         {
-            get { return collidesWith; }
-            set { collidesWith = value; }
+            get { return _collidesWith; }
+            set { _collidesWith = value; }
         }
 
         public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
-            circleBrush = new CircleBrush(radius, color, borderColor);
-            circleBrush.Load(graphicsDevice);
+            _circleBrush = new CircleBrush(_radius, _color, _borderColor);
+            _circleBrush.Load(graphicsDevice);
 
-            circleBody = new Body[count];
-            circleGeom = new Geom[count];
+            _circleBody = new Body[_count];
+            _circleGeom = new Geom[_count];
 
-            circleBody[0] = BodyFactory.Instance.CreateCircleBody(physicsSimulator, radius, .5f);
-            circleBody[0].Position = startPosition;
-            for (int i = 1; i < count; i++)
+            _circleBody[0] = BodyFactory.Instance.CreateCircleBody(physicsSimulator, _radius, .5f);
+            _circleBody[0].Position = _startPosition;
+            for (int i = 1; i < _count; i++)
             {
-                circleBody[i] = BodyFactory.Instance.CreateBody(physicsSimulator, circleBody[0]);
-                circleBody[i].Position = Vector2.Lerp(startPosition, endPosition, i/(float) (count - 1));
+                _circleBody[i] = BodyFactory.Instance.CreateBody(physicsSimulator, _circleBody[0]);
+                _circleBody[i].Position = Vector2.Lerp(_startPosition, _endPosition, i/(float) (_count - 1));
             }
 
-            circleGeom[0] = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, circleBody[0], radius, 10);
-            circleGeom[0].RestitutionCoefficient = .7f;
-            circleGeom[0].FrictionCoefficient = .2f;
-            circleGeom[0].CollisionCategories = collisionCategories;
-            circleGeom[0].CollidesWith = collidesWith;
-            for (int j = 1; j < count; j++)
+            _circleGeom[0] = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _circleBody[0], _radius, 10);
+            _circleGeom[0].RestitutionCoefficient = .7f;
+            _circleGeom[0].FrictionCoefficient = .2f;
+            _circleGeom[0].CollisionCategories = _collisionCategories;
+            _circleGeom[0].CollidesWith = _collidesWith;
+            for (int j = 1; j < _count; j++)
             {
-                circleGeom[j] = GeomFactory.Instance.CreateGeom(physicsSimulator, circleBody[j], circleGeom[0]);
+                _circleGeom[j] = GeomFactory.Instance.CreateGeom(physicsSimulator, _circleBody[j], _circleGeom[0]);
             }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < _count; i++)
             {
-                circleBrush.Draw(spriteBatch, circleGeom[i].Position);
+                _circleBrush.Draw(spriteBatch, _circleGeom[i].Position);
             }
         }
     }

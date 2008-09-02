@@ -12,48 +12,49 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
 {
     public class Demo1Screen : GameScreen
     {
-        private readonly PhysicsSimulator physicsSimulator;
-        private readonly PhysicsSimulatorView physicsSimulatorView;
-        private Texture2D bodyTexture;
-        private ContentManager contentManager;
-        private bool debugViewEnabled;
-        private bool firstRun = true;
-        private Vector2 origin;
+        //TODO: Put physicssimulator into engine files and use Contentmanager from screenmanager.
+        private readonly PhysicsSimulator _physicsSimulator;
+        private readonly PhysicsSimulatorView _physicsSimulatorView;
+        private Texture2D _bodyTexture;
+        private ContentManager _contentManager;
+        private bool _debugViewEnabled;
+        private bool _firstRun = true;
+        private Vector2 _origin;
 
-        private Body rectangleBody;
+        private Body _rectangleBody;
         public bool updatedOnce;
 
         public Demo1Screen()
         {
-            physicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
-            physicsSimulatorView = new PhysicsSimulatorView(physicsSimulator);
+            _physicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
+            _physicsSimulatorView = new PhysicsSimulatorView(_physicsSimulator);
         }
 
         public override void LoadContent()
         {
-            if (contentManager == null) contentManager = new ContentManager(ScreenManager.Game.Services);
-            physicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, contentManager);
+            if (_contentManager == null) _contentManager = new ContentManager(ScreenManager.Game.Services);
+            _physicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, _contentManager);
 
             //load texture that will visually represent the physics body
-            bodyTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 128, Color.Gold,
+            _bodyTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 128, Color.Gold,
                                                                Color.Black);
-            origin = new Vector2(bodyTexture.Width/2f, bodyTexture.Height/2f);
+            _origin = new Vector2(_bodyTexture.Width/2f, _bodyTexture.Height/2f);
 
             //use the body factory to create the physics body
-            rectangleBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 128, 128, 1);
-            rectangleBody.Position = ScreenManager.ScreenCenter;
+            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(_physicsSimulator, 128, 128, 1);
+            _rectangleBody.Position = ScreenManager.ScreenCenter;
         }
 
         public override void UnloadContent()
         {
-            physicsSimulator.Clear();
+            _physicsSimulator.Clear();
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             if (IsActive)
             {
-                physicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
+                _physicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
                 updatedOnce = true;
             }
 
@@ -63,21 +64,21 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            ScreenManager.SpriteBatch.Draw(bodyTexture, rectangleBody.Position, null, Color.White,
-                                           rectangleBody.Rotation, origin, 1, SpriteEffects.None, 0);
-            if (debugViewEnabled)
+            ScreenManager.SpriteBatch.Draw(_bodyTexture, _rectangleBody.Position, null, Color.White,
+                                           _rectangleBody.Rotation, _origin, 1, SpriteEffects.None, 0);
+            if (_debugViewEnabled)
             {
-                physicsSimulatorView.Draw(ScreenManager.SpriteBatch);
+                _physicsSimulatorView.Draw(ScreenManager.SpriteBatch);
             }
             ScreenManager.SpriteBatch.End();
         }
 
         public override void HandleInput(InputState input)
         {
-            if (firstRun)
+            if (_firstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
-                firstRun = false;
+                _firstRun = false;
             }
             if (input.PauseGame)
             {
@@ -99,27 +100,27 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
             if (input.LastGamePadState.Buttons.Y != ButtonState.Pressed &&
                 input.CurrentGamePadState.Buttons.Y == ButtonState.Pressed)
             {
-                debugViewEnabled = !debugViewEnabled;
-                physicsSimulator.EnableDiagnostics = debugViewEnabled;
+                _debugViewEnabled = !_debugViewEnabled;
+                _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
             }
 
             Vector2 force = 50*input.CurrentGamePadState.ThumbSticks.Left;
             force.Y = -force.Y;
-            rectangleBody.ApplyForce(force);
+            _rectangleBody.ApplyForce(force);
 
             float rotation = -1000*input.CurrentGamePadState.Triggers.Left;
-            rectangleBody.ApplyTorque(rotation);
+            _rectangleBody.ApplyTorque(rotation);
 
             rotation = 1000*input.CurrentGamePadState.Triggers.Right;
-            rectangleBody.ApplyTorque(rotation);
+            _rectangleBody.ApplyTorque(rotation);
         }
 
         private void HandleKeyboardInput(InputState input)
         {
             if (!input.LastKeyboardState.IsKeyDown(Keys.F1) && input.CurrentKeyboardState.IsKeyDown(Keys.F1))
             {
-                debugViewEnabled = !debugViewEnabled;
-                physicsSimulator.EnableDiagnostics = debugViewEnabled;
+                _debugViewEnabled = !_debugViewEnabled;
+                _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
             }
 
             const float forceAmount = 50;
@@ -142,7 +143,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
                 force += new Vector2(0, -forceAmount);
             }
 
-            rectangleBody.ApplyForce(force);
+            _rectangleBody.ApplyForce(force);
 
             const float torqueAmount = 1000;
             float torque = 0;
@@ -154,7 +155,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
             {
                 torque += torqueAmount;
             }
-            rectangleBody.ApplyTorque(torque);
+            _rectangleBody.ApplyTorque(torque);
         }
 
         public string GetTitle()

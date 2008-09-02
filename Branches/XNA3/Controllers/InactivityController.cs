@@ -97,9 +97,8 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         public bool IsInActivationDistance(Body b1, Body b2)
         {
-            float distance;
             _difference = b1.position - b2.position;
-            distance = _difference.Length();
+            float distance = _difference.Length();
             if (distance < 0)
             {
                 _difference *= -1;

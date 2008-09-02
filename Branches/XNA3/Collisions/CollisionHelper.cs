@@ -11,7 +11,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #endregion
 
-        private const float defaultFloatTolerance = .00001f;
+        private const float _defaultFloatTolerance = .00001f;
 
         /// <summary>
         /// Checks if a floating point value is equal to another,
@@ -185,7 +185,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public static bool LineIntersect(ref Vector2 p1, ref Vector2 p2, ref Vector2 p3, ref Vector2 p4,
                                          out Vector2 point)
         {
-            return LineIntersect(ref p1, ref p2, ref p3, ref p4, true, true, defaultFloatTolerance, out point);
+            return LineIntersect(ref p1, ref p2, ref p3, ref p4, true, true, _defaultFloatTolerance, out point);
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns>True if an intersection is detected, false otherwise.</returns>
         public static bool LineIntersect(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, out Vector2 point)
         {
-            return LineIntersect(ref p1, ref p2, ref p3, ref p4, true, true, defaultFloatTolerance, out point);
+            return LineIntersect(ref p1, ref p2, ref p3, ref p4, true, true, _defaultFloatTolerance, out point);
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 Vector2 point;
                 if (LineIntersect(verts[i], verts[verts.NextIndex(i)],
-                                  p1, p2, true, true, defaultFloatTolerance, out point))
+                                  p1, p2, true, true, _defaultFloatTolerance, out point))
                 {
                     points.Add(point);
                 }
@@ -289,23 +289,23 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     public class LineIntersectInfo
     {
-        private readonly Geom geom;
-        private readonly List<Vector2> points;
+        private readonly Geom _geom;
+        private readonly List<Vector2> _points;
 
         public LineIntersectInfo(Geom geom, List<Vector2> points)
         {
-            this.geom = geom;
-            this.points = points;
+            _geom = geom;
+            _points = points;
         }
 
         public List<Vector2> Points
         {
-            get { return points; }
+            get { return _points; }
         }
 
         public Geom Geom
         {
-            get { return geom; }
+            get { return _geom; }
         }
     }
 }

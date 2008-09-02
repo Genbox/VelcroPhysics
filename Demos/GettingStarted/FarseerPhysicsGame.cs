@@ -56,10 +56,6 @@ namespace FarseerGames.FarseerPhysicsDemos
             frameRateCounter.DrawOrder = 101;
             Components.Add(frameRateCounter);
 
-            //SafeAreaComponent safeAreaComponent = new SafeAreaComponent(this);
-            //safeAreaComponent.DrawOrder = 100;
-            //Components.Add(safeAreaComponent);
-
             screenManager.AddScreen(new Demo4Screen());
         }
 

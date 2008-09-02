@@ -1,21 +1,18 @@
 using FarseerGames.FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
-#if (XNA)
-using Microsoft.Xna.Framework;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     public class GeomFactory
     {
-        private static GeomFactory instance;
+        private static GeomFactory _instance;
 
         /// <summary>
         ///used to calculate a cell size from the aabb whenever the collisionGridCellSize
         ///is not set explicitly. The more sharp corners a body has, the smaller this value will 
         ///need to be. 
         /// </summary>
-        private float gridCellSizeAABBFactor = .1f;
+        private float _gridCellSizeAABBFactor = .1f;
 
         private GeomFactory()
         {
@@ -25,18 +22,18 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = new GeomFactory();
+                    _instance = new GeomFactory();
                 }
-                return instance;
+                return _instance;
             }
         }
 
         public float GridCellSizeAABBFactor
         {
-            get { return gridCellSizeAABBFactor; }
-            set { gridCellSizeAABBFactor = value; }
+            get { return _gridCellSizeAABBFactor; }
+            set { _gridCellSizeAABBFactor = value; }
         }
 
         //rectangles
@@ -212,7 +209,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public float CalculateGridCellSizeFromAABB(Vertices vertices)
         {
             AABB aabb = new AABB(vertices);
-            return aabb.GetShortestSide()*gridCellSizeAABBFactor;
+            return aabb.GetShortestSide()*_gridCellSizeAABBFactor;
         }
     }
 }

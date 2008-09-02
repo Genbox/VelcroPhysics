@@ -8,13 +8,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         protected Body body;
 
         internal Vector2 bodyAttachPoint;
-        private float breakpoint = float.MaxValue;
-        private float dampningConstant;
-        private Vector2 difference = Vector2.Zero;
-        private float restLength;
-        private float springConstant;
+        private float _breakpoint = float.MaxValue;
+        private float _dampningConstant;
+        private Vector2 _difference = Vector2.Zero;
+        private float _restLength;
+        private float _springConstant;
 
-        private float springError;
+        private float _springError;
         internal Vector2 worldAttachPoint;
 
         public FixedLinearSpring()
@@ -27,10 +27,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             this.body = body;
             bodyAttachPoint = _bodyAttachPoint;
             this.worldAttachPoint = worldAttachPoint;
-            this.springConstant = springConstant;
-            this.dampningConstant = dampningConstant;
-            difference = worldAttachPoint - this.body.GetWorldPosition(_bodyAttachPoint);
-            restLength = difference.Length();
+            _springConstant = springConstant;
+            _dampningConstant = dampningConstant;
+            _difference = worldAttachPoint - this.body.GetWorldPosition(_bodyAttachPoint);
+            _restLength = _difference.Length();
         }
 
         public Body Body
@@ -59,31 +59,31 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public float SpringConstant
         {
-            get { return springConstant; }
-            set { springConstant = value; }
+            get { return _springConstant; }
+            set { _springConstant = value; }
         }
 
         public float DampningConstant
         {
-            get { return dampningConstant; }
-            set { dampningConstant = value; }
+            get { return _dampningConstant; }
+            set { _dampningConstant = value; }
         }
 
         public float RestLength
         {
-            get { return restLength; }
-            set { restLength = value; }
+            get { return _restLength; }
+            set { _restLength = value; }
         }
 
         public float Breakpoint
         {
-            get { return breakpoint; }
-            set { breakpoint = value; }
+            get { return _breakpoint; }
+            set { _breakpoint = value; }
         }
 
         public float SpringError
         {
-            get { return springError; }
+            get { return _springError; }
         }
 
         public event EventHandler<EventArgs> Broke;
@@ -99,7 +99,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public override void Update(float dt)
         {
-            if (Enabled && Math.Abs(springError) > breakpoint)
+            if (Enabled && Math.Abs(_springError) > _breakpoint)
             {
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
@@ -114,44 +114,44 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 return;
             }
 
-            //calculate and apply spring force
-            //F = -{s(L-r) + d[(v1-v2).L]/l}L/l   : s=spring const, d = dampning const, L=difference vector (p1-p2), l = difference magnitude, r = rest length,            
-            body.GetWorldPosition(ref bodyAttachPoint, out bodyWorldPoint);
-            Vector2.Subtract(ref bodyWorldPoint, ref worldAttachPoint, out difference);
-            float differenceMagnitude = difference.Length();
-            if (differenceMagnitude < epsilon)
+            //calculate and apply spring _force
+            //F = -{s(L-r) + d[(v1-v2).L]/l}L/l   : s=spring const, d = dampning const, L=_difference vector (p1-p2), l = _difference magnitude, r = rest length,            
+            body.GetWorldPosition(ref bodyAttachPoint, out _bodyWorldPoint);
+            Vector2.Subtract(ref _bodyWorldPoint, ref worldAttachPoint, out _difference);
+            float differenceMagnitude = _difference.Length();
+            if (differenceMagnitude < _epsilon)
             {
                 return;
             } //if already close to rest length then return
 
-            //calculate spring force (kX)
-            springError = differenceMagnitude - restLength;
-            Vector2.Normalize(ref difference, out differenceNormalized);
-            springForce = springConstant*springError; //kX
+            //calculate spring _force (kX)
+            _springError = differenceMagnitude - _restLength;
+            Vector2.Normalize(ref _difference, out _differenceNormalized);
+            _springForce = _springConstant*_springError; //kX
 
             //calculate relative velocity 
-            body.GetVelocityAtLocalPoint(ref bodyAttachPoint, out bodyVelocity);
+            body.GetVelocityAtLocalPoint(ref bodyAttachPoint, out _bodyVelocity);
 
-            //calculate dampning force (bV)
-            Vector2.Dot(ref bodyVelocity, ref difference, out temp);
-            dampningForce = dampningConstant*temp/differenceMagnitude; //bV     
+            //calculate dampning _force (bV)
+            Vector2.Dot(ref _bodyVelocity, ref _difference, out _temp);
+            _dampningForce = _dampningConstant*_temp/differenceMagnitude; //bV     
 
-            //calculate final force (spring + dampning)
-            Vector2.Multiply(ref differenceNormalized, -(springForce + dampningForce), out force);
+            //calculate final _force (spring + dampning)
+            Vector2.Multiply(ref _differenceNormalized, -(_springForce + _dampningForce), out _force);
 
-            body.ApplyForceAtLocalPoint(ref force, ref bodyAttachPoint);
+            body.ApplyForceAtLocalPoint(ref _force, ref bodyAttachPoint);
         }
 
         #region ApplyForce variables
 
-        private Vector2 bodyVelocity = Vector2.Zero;
-        private Vector2 bodyWorldPoint = Vector2.Zero;
-        private float dampningForce;
-        private Vector2 differenceNormalized;
-        private float epsilon = .00001f;
-        private Vector2 force;
-        private float springForce;
-        private float temp;
+        private Vector2 _bodyVelocity = Vector2.Zero;
+        private Vector2 _bodyWorldPoint = Vector2.Zero;
+        private float _dampningForce;
+        private Vector2 _differenceNormalized;
+        private const float _epsilon = .00001f;
+        private Vector2 _force;
+        private float _springForce;
+        private float _temp;
 
         #endregion
     }

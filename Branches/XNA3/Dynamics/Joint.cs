@@ -4,13 +4,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public abstract class Joint : IIsDisposable
     {
-        private bool enabled = true;
+        private bool _enabled = true;
         protected bool isDisposed;
 
         public bool Enabled
         {
-            get { return enabled; }
-            set { enabled = value; }
+            get { return _enabled; }
+            set { _enabled = value; }
         }
 
         public Object Tag { get; set; }

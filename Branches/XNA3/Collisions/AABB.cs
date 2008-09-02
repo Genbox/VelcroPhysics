@@ -5,10 +5,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
 {
     public class AABB
     {
-        private float epsilon = .00001f;
+        private const float _epsilon = .00001f;
         internal Vector2 max = Vector2.Zero;
         internal Vector2 min = Vector2.Zero;
-        private Vector2 vertice;
+        private Vector2 _vertice;
 
         public AABB()
         {
@@ -79,19 +79,19 @@ namespace FarseerGames.FarseerPhysics.Collisions
             max = min;
             for (int i = 0; i < vertices.Count; i++)
             {
-                vertice = vertices[i];
-                if (vertice.X < min.X) min.X = vertice.X;
-                if (vertice.X > max.X) max.X = vertice.X;
-                if (vertice.Y < min.Y) min.Y = vertice.Y;
-                if (vertice.Y > max.Y) max.Y = vertice.Y;
+                _vertice = vertices[i];
+                if (_vertice.X < min.X) min.X = _vertice.X;
+                if (_vertice.X > max.X) max.X = _vertice.X;
+                if (_vertice.Y < min.Y) min.Y = _vertice.Y;
+                if (_vertice.Y > max.Y) max.Y = _vertice.Y;
             }
         }
 
         public bool Contains(Vector2 point)
         {
-            //using epsilon to try and gaurd against float rounding errors.
-            if ((point.X > (min.X + epsilon) && point.X < (max.X - epsilon) &&
-                 (point.Y > (min.Y + epsilon) && point.Y < (max.Y - epsilon))))
+            //using _epsilon to try and gaurd against float rounding errors.
+            if ((point.X > (min.X + _epsilon) && point.X < (max.X - _epsilon) &&
+                 (point.Y > (min.Y + _epsilon) && point.Y < (max.Y - _epsilon))))
             {
                 return true;
             }
@@ -100,9 +100,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public bool Contains(ref Vector2 point)
         {
-            //using epsilon to try and gaurd against float rounding errors.
-            if ((point.X > (min.X + epsilon) && point.X < (max.X - epsilon) &&
-                 (point.Y > (min.Y + epsilon) && point.Y < (max.Y - epsilon))))
+            //using _epsilon to try and gaurd against float rounding errors.
+            if ((point.X > (min.X + _epsilon) && point.X < (max.X - _epsilon) &&
+                 (point.Y > (min.Y + _epsilon) && point.Y < (max.Y - _epsilon))))
             {
                 return true;
             }

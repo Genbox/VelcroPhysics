@@ -4,7 +4,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public class ControllerFactory
     {
-        private static ControllerFactory instance;
+        private static ControllerFactory _instance;
 
         private ControllerFactory()
         {
@@ -14,11 +14,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = new ControllerFactory();
+                    _instance = new ControllerFactory();
                 }
-                return instance;
+                return _instance;
             }
         }
 

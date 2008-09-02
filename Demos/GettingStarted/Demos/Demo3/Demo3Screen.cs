@@ -13,46 +13,46 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo3
 {
     public class Demo3Screen : GameScreen
     {
-        private readonly LineBrush lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
+        private readonly LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
 
-        private readonly PhysicsSimulator physicsSimulator;
-        private readonly PhysicsSimulatorView physicsSimulatorView;
-        private Body agentBody;
-        private Vector2 agentCrossBeamOrigin;
-        private Texture2D agentCrossBeamTexture;
-        private Geom[] agentGeom;
-        private Vector2 agentOrigin;
-        private Texture2D agentTexture;
-        private ContentManager contentManager;
-        private bool debugViewEnabled;
-        private bool firstRun = true;
+        private readonly PhysicsSimulator _physicsSimulator;
+        private readonly PhysicsSimulatorView _physicsSimulatorView;
+        private Body _agentBody;
+        private Vector2 _agentCrossBeamOrigin;
+        private Texture2D _agentCrossBeamTexture;
+        private Geom[] _agentGeom;
+        private Vector2 _agentOrigin;
+        private Texture2D _agentTexture;
+        private ContentManager _contentManager;
+        private bool _debugViewEnabled;
+        private bool _firstRun = true;
 
-        private Body floorBody;
-        private Geom floorGeom;
-        private Vector2 floorOrigin;
-        private Texture2D floorTexture;
-        private FixedLinearSpring mousePickSpring;
+        private Body _floorBody;
+        private Geom _floorGeom;
+        private Vector2 _floorOrigin;
+        private Texture2D _floorTexture;
+        private FixedLinearSpring _mousePickSpring;
 
-        private Body[] obstacleBody;
-        private Geom[] obstacleGeom;
-        private Vector2 obstacleOrigin;
-        private Texture2D obstacleTexture;
-        private Geom pickedGeom;
+        private Body[] _obstacleBody;
+        private Geom[] _obstacleGeom;
+        private Vector2 _obstacleOrigin;
+        private Texture2D _obstacleTexture;
+        private Geom _pickedGeom;
         public float simTime;
         public bool updatedOnce;
 
         public Demo3Screen()
         {
-            physicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
-            physicsSimulatorView = new PhysicsSimulatorView(physicsSimulator);
-            physicsSimulatorView.EnableGridView = false;
+            _physicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
+            _physicsSimulatorView = new PhysicsSimulatorView(_physicsSimulator);
+            _physicsSimulatorView.EnableGridView = false;
         }
 
         public override void LoadContent()
         {
-            if (contentManager == null) contentManager = new ContentManager(ScreenManager.Game.Services);
-            lineBrush.Load(ScreenManager.GraphicsDevice);
-            physicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, contentManager);
+            if (_contentManager == null) _contentManager = new ContentManager(ScreenManager.Game.Services);
+            _lineBrush.Load(ScreenManager.GraphicsDevice);
+            _physicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, _contentManager);
 
             LoadAgent();
             LoadFloor();
@@ -61,100 +61,100 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo3
 
         public void LoadAgent()
         {
-            agentTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 16, Color.Gold, Color.Black);
-            agentOrigin = new Vector2(agentTexture.Width/2f, agentTexture.Height/2f);
+            _agentTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 16, Color.Gold, Color.Black);
+            _agentOrigin = new Vector2(_agentTexture.Width/2f, _agentTexture.Height/2f);
 
-            agentCrossBeamTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 16, 120,
+            _agentCrossBeamTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 16, 120,
                                                                          Color.DarkGray, Color.Black);
-            agentCrossBeamOrigin = new Vector2(agentCrossBeamTexture.Width/2f, agentCrossBeamTexture.Height/2f);
+            _agentCrossBeamOrigin = new Vector2(_agentCrossBeamTexture.Width/2f, _agentCrossBeamTexture.Height/2f);
 
-            agentBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 80, 80, 5);
-            agentBody.Position = new Vector2(ScreenManager.ScreenCenter.X, 110);
+            _agentBody = BodyFactory.Instance.CreateRectangleBody(_physicsSimulator, 80, 80, 5);
+            _agentBody.Position = new Vector2(ScreenManager.ScreenCenter.X, 110);
 
-            agentGeom = new Geom[7];
-            agentGeom[0] = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, agentBody, 16, 10,
+            _agentGeom = new Geom[7];
+            _agentGeom[0] = GeomFactory.Instance.CreateCircleGeom(_physicsSimulator, _agentBody, 16, 10,
                                                                  new Vector2(-40, -40), 0);
-            agentGeom[0].RestitutionCoefficient = .2f;
-            agentGeom[0].FrictionCoefficient = .2f;
-            agentGeom[0].CollisionGroup = 1;
-            agentGeom[1] = GeomFactory.Instance.CreateGeom(physicsSimulator, agentBody, agentGeom[0],
+            _agentGeom[0].RestitutionCoefficient = .2f;
+            _agentGeom[0].FrictionCoefficient = .2f;
+            _agentGeom[0].CollisionGroup = 1;
+            _agentGeom[1] = GeomFactory.Instance.CreateGeom(_physicsSimulator, _agentBody, _agentGeom[0],
                                                            new Vector2(-40, 40), 0);
-            agentGeom[2] = GeomFactory.Instance.CreateGeom(physicsSimulator, agentBody, agentGeom[0],
+            _agentGeom[2] = GeomFactory.Instance.CreateGeom(_physicsSimulator, _agentBody, _agentGeom[0],
                                                            new Vector2(40, -40), 0);
-            agentGeom[3] = GeomFactory.Instance.CreateGeom(physicsSimulator, agentBody, agentGeom[0],
+            _agentGeom[3] = GeomFactory.Instance.CreateGeom(_physicsSimulator, _agentBody, _agentGeom[0],
                                                            new Vector2(40, 40), 0);
-            agentGeom[4] = GeomFactory.Instance.CreateGeom(physicsSimulator, agentBody, agentGeom[0], new Vector2(0, 0),
+            _agentGeom[4] = GeomFactory.Instance.CreateGeom(_physicsSimulator, _agentBody, _agentGeom[0], new Vector2(0, 0),
                                                            0);
 
-            agentGeom[5] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, agentBody, 16, 130, Vector2.Zero,
+            _agentGeom[5] = GeomFactory.Instance.CreateRectangleGeom(_physicsSimulator, _agentBody, 16, 130, Vector2.Zero,
                                                                     MathHelper.PiOver4);
-            agentGeom[5].CollisionGroup = 1;
-            agentGeom[6] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, agentBody, 16, 130, Vector2.Zero,
+            _agentGeom[5].CollisionGroup = 1;
+            _agentGeom[6] = GeomFactory.Instance.CreateRectangleGeom(_physicsSimulator, _agentBody, 16, 130, Vector2.Zero,
                                                                     -MathHelper.PiOver4);
-            agentGeom[6].CollisionGroup = 1;
+            _agentGeom[6].CollisionGroup = 1;
         }
 
         public void LoadFloor()
         {
             //load texture that will visually represent the physics body
-            floorTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, ScreenManager.ScreenWidth,
+            _floorTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, ScreenManager.ScreenWidth,
                                                                 100, Color.White, Color.Black);
-            floorOrigin = new Vector2(floorTexture.Width/2f, floorTexture.Height/2f);
+            _floorOrigin = new Vector2(_floorTexture.Width/2f, _floorTexture.Height/2f);
 
             //use the body factory to create the physics body
-            floorBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, ScreenManager.ScreenWidth, 100, 1);
-            floorBody.IsStatic = true;
-            floorGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, floorBody, ScreenManager.ScreenWidth,
+            _floorBody = BodyFactory.Instance.CreateRectangleBody(_physicsSimulator, ScreenManager.ScreenWidth, 100, 1);
+            _floorBody.IsStatic = true;
+            _floorGeom = GeomFactory.Instance.CreateRectangleGeom(_physicsSimulator, _floorBody, ScreenManager.ScreenWidth,
                                                                  100);
-            floorGeom.RestitutionCoefficient = .2f;
-            floorGeom.FrictionCoefficient = .2f;
-            floorBody.Position = new Vector2(ScreenManager.ScreenCenter.X, ScreenManager.ScreenHeight - 50);
+            _floorGeom.RestitutionCoefficient = .2f;
+            _floorGeom.FrictionCoefficient = .2f;
+            _floorBody.Position = new Vector2(ScreenManager.ScreenCenter.X, ScreenManager.ScreenHeight - 50);
         }
 
         public void LoadObstacles()
         {
-            obstacleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 32, Color.White,
+            _obstacleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 32, Color.White,
                                                                    Color.Black);
-            obstacleOrigin = new Vector2(obstacleTexture.Width/2f, obstacleTexture.Height/2f);
+            _obstacleOrigin = new Vector2(_obstacleTexture.Width/2f, _obstacleTexture.Height/2f);
 
-            obstacleBody = new Body[5];
-            obstacleGeom = new Geom[5];
-            for (int i = 0; i < obstacleBody.Length; i++)
+            _obstacleBody = new Body[5];
+            _obstacleGeom = new Geom[5];
+            for (int i = 0; i < _obstacleBody.Length; i++)
             {
-                obstacleBody[i] = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 128, 32, 1);
-                obstacleBody[i].IsStatic = true;
+                _obstacleBody[i] = BodyFactory.Instance.CreateRectangleBody(_physicsSimulator, 128, 32, 1);
+                _obstacleBody[i].IsStatic = true;
 
                 if (i == 0)
                 {
-                    obstacleGeom[i] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, obstacleBody[i], 128,
+                    _obstacleGeom[i] = GeomFactory.Instance.CreateRectangleGeom(_physicsSimulator, _obstacleBody[i], 128,
                                                                                32);
-                    obstacleGeom[i].RestitutionCoefficient = .2f;
-                    obstacleGeom[i].FrictionCoefficient = .2f;
+                    _obstacleGeom[i].RestitutionCoefficient = .2f;
+                    _obstacleGeom[i].FrictionCoefficient = .2f;
                 }
                 else
                 {
-                    obstacleGeom[i] = GeomFactory.Instance.CreateGeom(physicsSimulator, obstacleBody[i], obstacleGeom[0]);
+                    _obstacleGeom[i] = GeomFactory.Instance.CreateGeom(_physicsSimulator, _obstacleBody[i], _obstacleGeom[0]);
                 }
             }
 
-            obstacleBody[0].Position = ScreenManager.ScreenCenter + new Vector2(-50, -200);
-            obstacleBody[1].Position = ScreenManager.ScreenCenter + new Vector2(150, -100);
-            obstacleBody[2].Position = ScreenManager.ScreenCenter + new Vector2(100, 50);
-            obstacleBody[3].Position = ScreenManager.ScreenCenter + new Vector2(-100, 200);
-            obstacleBody[4].Position = ScreenManager.ScreenCenter + new Vector2(-170, 0);
+            _obstacleBody[0].Position = ScreenManager.ScreenCenter + new Vector2(-50, -200);
+            _obstacleBody[1].Position = ScreenManager.ScreenCenter + new Vector2(150, -100);
+            _obstacleBody[2].Position = ScreenManager.ScreenCenter + new Vector2(100, 50);
+            _obstacleBody[3].Position = ScreenManager.ScreenCenter + new Vector2(-100, 200);
+            _obstacleBody[4].Position = ScreenManager.ScreenCenter + new Vector2(-170, 0);
         }
 
         public override void UnloadContent()
         {
-            contentManager.Unload();
-            physicsSimulator.Clear();
+            _contentManager.Unload();
+            _physicsSimulator.Clear();
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             if (IsActive)
             {
-                physicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
+                _physicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
                 updatedOnce = true;
             }
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -167,20 +167,20 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo3
                 return;
             }
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            ScreenManager.SpriteBatch.Draw(floorTexture, floorBody.Position, null, Color.White, floorBody.Rotation,
-                                           floorOrigin, 1, SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.Draw(_floorTexture, _floorBody.Position, null, Color.White, _floorBody.Rotation,
+                                           _floorOrigin, 1, SpriteEffects.None, 0f);
             DrawObstacles();
             DrawAgent();
 
-            if (mousePickSpring != null)
+            if (_mousePickSpring != null)
             {
-                lineBrush.Draw(ScreenManager.SpriteBatch,
-                               mousePickSpring.Body.GetWorldPosition(mousePickSpring.BodyAttachPoint),
-                               mousePickSpring.WorldAttachPoint);
+                _lineBrush.Draw(ScreenManager.SpriteBatch,
+                               _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
+                               _mousePickSpring.WorldAttachPoint);
             }
-            if (debugViewEnabled)
+            if (_debugViewEnabled)
             {
-                physicsSimulatorView.Draw(ScreenManager.SpriteBatch);
+                _physicsSimulatorView.Draw(ScreenManager.SpriteBatch);
             }
             ScreenManager.SpriteBatch.End();
         }
@@ -189,31 +189,31 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo3
         {
             for (int i = 5; i < 7; i++)
             {
-                ScreenManager.SpriteBatch.Draw(agentCrossBeamTexture, agentGeom[i].Position, null, Color.White,
-                                               agentGeom[i].Rotation, agentCrossBeamOrigin, 1, SpriteEffects.None, 0f);
+                ScreenManager.SpriteBatch.Draw(_agentCrossBeamTexture, _agentGeom[i].Position, null, Color.White,
+                                               _agentGeom[i].Rotation, _agentCrossBeamOrigin, 1, SpriteEffects.None, 0f);
             }
             for (int i = 0; i < 5; i++)
             {
-                ScreenManager.SpriteBatch.Draw(agentTexture, agentGeom[i].Position, null, Color.White,
-                                               agentGeom[i].Rotation, agentOrigin, 1, SpriteEffects.None, 0f);
+                ScreenManager.SpriteBatch.Draw(_agentTexture, _agentGeom[i].Position, null, Color.White,
+                                               _agentGeom[i].Rotation, _agentOrigin, 1, SpriteEffects.None, 0f);
             }
         }
 
         private void DrawObstacles()
         {
-            for (int i = 0; i < obstacleBody.Length; i++)
+            for (int i = 0; i < _obstacleBody.Length; i++)
             {
-                ScreenManager.SpriteBatch.Draw(obstacleTexture, obstacleBody[i].Position, null, Color.White,
-                                               obstacleBody[i].Rotation, obstacleOrigin, 1, SpriteEffects.None, 0f);
+                ScreenManager.SpriteBatch.Draw(_obstacleTexture, _obstacleBody[i].Position, null, Color.White,
+                                               _obstacleBody[i].Rotation, _obstacleOrigin, 1, SpriteEffects.None, 0f);
             }
         }
 
         public override void HandleInput(InputState input)
         {
-            if (firstRun)
+            if (_firstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
-                firstRun = false;
+                _firstRun = false;
             }
             if (input.PauseGame)
             {
@@ -238,27 +238,27 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo3
             if (input.LastGamePadState.Buttons.Y != ButtonState.Pressed &&
                 input.CurrentGamePadState.Buttons.Y == ButtonState.Pressed)
             {
-                debugViewEnabled = !debugViewEnabled;
-                physicsSimulator.EnableDiagnostics = debugViewEnabled;
+                _debugViewEnabled = !_debugViewEnabled;
+                _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
             }
 
             Vector2 force = 800*input.CurrentGamePadState.ThumbSticks.Left;
             force.Y = -force.Y;
-            agentBody.ApplyForce(force);
+            _agentBody.ApplyForce(force);
 
             float rotation = -8000*input.CurrentGamePadState.Triggers.Left;
-            agentBody.ApplyTorque(rotation);
+            _agentBody.ApplyTorque(rotation);
 
             rotation = 8000*input.CurrentGamePadState.Triggers.Right;
-            agentBody.ApplyTorque(rotation);
+            _agentBody.ApplyTorque(rotation);
         }
 
         private void HandleKeyboardInput(InputState input)
         {
             if (!input.LastKeyboardState.IsKeyDown(Keys.F1) && input.CurrentKeyboardState.IsKeyDown(Keys.F1))
             {
-                debugViewEnabled = !debugViewEnabled;
-                physicsSimulator.EnableDiagnostics = debugViewEnabled;
+                _debugViewEnabled = !_debugViewEnabled;
+                _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
             }
 
             const float forceAmount = 800;
@@ -281,7 +281,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo3
                 force += new Vector2(0, -forceAmount);
             }
 
-            agentBody.ApplyForce(force);
+            _agentBody.ApplyForce(force);
 
             const float torqueAmount = 8000;
             float torque = 0;
@@ -293,7 +293,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo3
             {
                 torque += torqueAmount;
             }
-            agentBody.ApplyTorque(torque);
+            _agentBody.ApplyTorque(torque);
         }
 
 
@@ -305,12 +305,12 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo3
                 input.CurrentMouseState.LeftButton == ButtonState.Pressed)
             {
                 //create mouse spring
-                pickedGeom = physicsSimulator.Collide(point);
-                if (pickedGeom != null)
+                _pickedGeom = _physicsSimulator.Collide(point);
+                if (_pickedGeom != null)
                 {
-                    mousePickSpring = ControllerFactory.Instance.CreateFixedLinearSpring(physicsSimulator,
-                                                                                         pickedGeom.Body,
-                                                                                         pickedGeom.Body.
+                    _mousePickSpring = ControllerFactory.Instance.CreateFixedLinearSpring(_physicsSimulator,
+                                                                                         _pickedGeom.Body,
+                                                                                         _pickedGeom.Body.
                                                                                              GetLocalPosition(point),
                                                                                          point, 20, 10);
                 }
@@ -319,17 +319,17 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo3
                      input.CurrentMouseState.LeftButton == ButtonState.Released)
             {
                 //destroy mouse spring
-                if (mousePickSpring != null && mousePickSpring.IsDisposed == false)
+                if (_mousePickSpring != null && _mousePickSpring.IsDisposed == false)
                 {
-                    mousePickSpring.Dispose();
-                    mousePickSpring = null;
+                    _mousePickSpring.Dispose();
+                    _mousePickSpring = null;
                 }
             }
 
             //move anchor point
-            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && mousePickSpring != null)
+            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && _mousePickSpring != null)
             {
-                mousePickSpring.WorldAttachPoint = point;
+                _mousePickSpring.WorldAttachPoint = point;
             }
         }
 #endif
