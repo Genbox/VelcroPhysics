@@ -186,15 +186,11 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows two bodies each with a single geometry");
             sb.AppendLine("object attached.");
-            sb.AppendLine("");
-            sb.AppendLine("GamePad:");
-            sb.AppendLine("  -Rotate : left and right triggers");
-            sb.AppendLine("  -Move : left thumbstick");
-            sb.AppendLine("");
+            sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  -Rotate : left and right arrows");
             sb.AppendLine("  -Move : A,S,D,W");
-            sb.AppendLine("");
+            sb.AppendLine(string.Empty);
             sb.AppendLine("Mouse");
             sb.AppendLine("  -Hold down left button and drag");
             return sb.ToString();

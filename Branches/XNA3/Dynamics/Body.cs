@@ -5,10 +5,6 @@ using Microsoft.Xna.Framework;
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
     /// <summary>
-    /// <para>
-    /// Body is at the core of the Rigid Body System.  It is a <see cref="RigidBody">RigidBody</see>
-    /// without the geometry.</para>
-    /// <para>
     /// The Body handles all the physics of motion: position, velocity, _acceleration
     /// forces, torques, etc...</para>
     /// <para>The Body is integrated every timestep (which should be fixed) by the <see cref="PhysicsSimulator">PhysicsSimulator</see> in the following manner:
@@ -309,7 +305,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             get { return _torque; }
         }
 
-        public Object Tag { get; set; }
+        private object _tag;
+        public Object Tag
+        {
+            get { return _tag; }
+            set { _tag = value; }
+        }
 
         public bool IgnoreGravity
         {

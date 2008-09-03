@@ -48,7 +48,7 @@ namespace FarseerGames.FarseerPhysicsDemos
             frameRateCounter.DrawOrder = 101;
             Components.Add(frameRateCounter);
 
-            _screenManager.AddScreen(new Demo4Screen());
+            _screenManager.AddScreen(new LogoScreen());
         }
 
         public ScreenManager ScreenManager

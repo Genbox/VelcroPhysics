@@ -204,14 +204,11 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo7
             sb.AppendLine("This demo demonstrates the use of revolute joints ");
             sb.AppendLine("combined with angle joints that have a dynamic ");
             sb.AppendLine("target angle");
-            sb.AppendLine("");
-            sb.AppendLine("  -Rotate : left and right triggers");
-            sb.AppendLine("  -Move : left thumbstick");
-            sb.AppendLine("");
+            sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  -Rotate : left and right arrows");
             sb.AppendLine("  -Move : A,S,D,W");
-            sb.AppendLine("");
+            sb.AppendLine(string.Empty);
             sb.AppendLine("Mouse");
             sb.AppendLine("  -Hold down left button and drag");
             return sb.ToString();

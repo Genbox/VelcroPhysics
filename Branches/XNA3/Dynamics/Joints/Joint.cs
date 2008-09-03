@@ -14,7 +14,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             set { _enabled = value; }
         }
 
-        public Object Tag { get; set; }
+        private object _tag;
+        public Object Tag
+        {
+            get { return _tag; }
+            set { _tag = value; }
+        }
 
         #region IIsDisposable Members
 
