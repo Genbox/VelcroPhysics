@@ -270,15 +270,12 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo8
             sb.AppendLine("In this demo:");
             sb.AppendLine("Narrow phase collision is disabled between");
             sb.AppendLine(" all balls.");
-            sb.AppendLine("");
-            sb.AppendLine("");
-            sb.AppendLine("  -Rotate : left and right triggers");
-            sb.AppendLine("  -Move : left thumbstick");
-            sb.AppendLine("");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  -Rotate : left and right arrows");
             sb.AppendLine("  -Move : A,S,D,W");
-            sb.AppendLine("");
+            sb.AppendLine(string.Empty);
             sb.AppendLine("Mouse");
             sb.AppendLine("  -Hold down left button and drag");
             return sb.ToString();

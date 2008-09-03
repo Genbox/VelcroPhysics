@@ -1,12 +1,8 @@
-#region Using Statements
-
 using System;
 using System.Globalization;
 using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-#endregion
 
 namespace FarseerGames.FarseerPhysicsDemos.Components
 {
@@ -38,7 +34,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Components
                 _frameCounter = 0;
             }
         }
-
 
         public override void Draw(GameTime gameTime)
         {

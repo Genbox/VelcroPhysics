@@ -18,7 +18,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
         private const int pyramidBaseBodyCount = 16;
         private readonly LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private Agent _agent;
-        private bool _firstRun;
+        private bool _firstRun = true;
         private Floor _floor;
         private FixedLinearSpring _mousePickSpring;
         private Geom _pickedGeom;
@@ -31,8 +31,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 50));
             PhysicsSimulator.BiasFactor = .4f;
+            //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
             PhysicsSimulator.MaxContactsToDetect = 2;
-                //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
 
             base.Initialize();
@@ -51,8 +51,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
             _rectangleGeom.RestitutionCoefficient = 0f;
 
             //create the _pyramid near the bottom of the screen.
-            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f/3f, 32f/3f, 32, 32, pyramidBaseBodyCount,
-                                   new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount*.5f*(32 + 32/3),
+            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, pyramidBaseBodyCount,
+                                   new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount * .5f * (32 + 32 / 3),
                                                ScreenManager.ScreenHeight - 125));
             _pyramid.Load(PhysicsSimulator);
 
@@ -68,7 +68,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
         {
             if (IsActive)
             {
-                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
+                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds * .001f);
             }
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
@@ -189,15 +189,11 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
             sb.AppendLine("This demo shows the stacking stability of the engine.");
             sb.AppendLine("It shows a stack of rectangular bodies stacked in");
             sb.AppendLine("the shape of a _pyramid.");
-            sb.AppendLine("");
-            sb.AppendLine("GamePad:");
-            sb.AppendLine("  -Rotate : left and right triggers");
-            sb.AppendLine("  -Move : left thumbstick");
-            sb.AppendLine("");
+            sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  -Rotate : left and right arrows");
             sb.AppendLine("  -Move : A,S,D,W");
-            sb.AppendLine("");
+            sb.AppendLine(string.Empty);
             sb.AppendLine("Mouse");
             sb.AppendLine("  -Hold down left button and drag");
             return sb.ToString();
