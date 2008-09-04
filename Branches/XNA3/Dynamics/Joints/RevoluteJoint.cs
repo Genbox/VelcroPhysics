@@ -7,13 +7,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     public class RevoluteJoint : Joint
     {
-        private Matrix _matrix;
         private Vector2 _accumulatedImpulse;
         private Vector2 _anchor;
         private Matrix _b;
         private float _biasFactor = .2f;
-        protected Body body1;
-        protected Body body2;
 
         private float _breakpoint = float.MaxValue;
         private Vector2 _currentAnchor;
@@ -22,12 +19,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private Vector2 _impulse;
 
         private float _jointError;
-        internal Vector2 localAnchor1;
-        internal Vector2 localAnchor2;
+        private Matrix _matrix;
         private Vector2 _r1;
         private Vector2 _r2;
         private float _softness;
         private Vector2 _velocityBias;
+        protected Body body1;
+        protected Body body2;
+        internal Vector2 localAnchor1;
+        internal Vector2 localAnchor2;
 
         public RevoluteJoint()
         {

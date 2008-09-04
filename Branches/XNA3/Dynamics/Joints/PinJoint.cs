@@ -10,8 +10,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private Vector2 _anchor1;
         private Vector2 _anchor2;
         private float _biasFactor = .2f;
-        protected Body body1;
-        protected Body body2;
 
         private float _breakpoint = float.MaxValue;
         private float _effectiveMass;
@@ -25,6 +23,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private Vector2 _worldAnchor1;
         private Vector2 _worldAnchor2;
         private Vector2 _worldAnchorDifferenceNormalized;
+        protected Body body1;
+        protected Body body2;
 
         public PinJoint()
         {

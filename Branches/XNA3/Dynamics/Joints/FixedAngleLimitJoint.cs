@@ -1,5 +1,4 @@
 using System;
-using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
@@ -10,7 +9,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private float _accumulatedAngularImpulse;
         private float _angularImpulse;
         private float _biasFactor = .2f;
-        protected Body body;
         private float _breakpoint = float.MaxValue;
         private float _difference;
         private float _jointError;
@@ -22,6 +20,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private float _upperLimit;
         private bool _upperLimitViolated;
         private float _velocityBias;
+        protected Body body;
 
         public FixedAngleLimitJoint()
         {

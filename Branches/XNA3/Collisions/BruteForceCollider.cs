@@ -90,7 +90,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     {
                         intersection = false;
                     }
-                    else if (_geometryA.aabb.min.Y > _geometryB.aabb.Max.Y || _geometryB.aabb.min.Y > _geometryA.aabb.Max.Y)
+                    else if (_geometryA.aabb.min.Y > _geometryB.aabb.Max.Y ||
+                             _geometryB.aabb.min.Y > _geometryA.aabb.Max.Y)
                     {
                         intersection = false;
                     }

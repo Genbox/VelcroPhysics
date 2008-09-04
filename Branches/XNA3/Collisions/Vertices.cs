@@ -46,7 +46,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return 0;
             }
-                return index + 1;
+            return index + 1;
         }
 
         public Int32 PreviousIndex(Int32 index)
@@ -55,7 +55,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return Count - 1;
             }
-                return index - 1;
+            return index - 1;
         }
 
         public Vector2 GetEdge(Int32 index)

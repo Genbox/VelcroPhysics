@@ -12,8 +12,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private readonly List<Geom> _markedForRemovalList = new List<Geom>();
 
-        public ContentsChangedEventHandler Added;
         private int _numberDisposed;
+        public ContentsChangedEventHandler Added;
         public ContentsChangedEventHandler Removed;
 
         public new void Add(Geom geom)

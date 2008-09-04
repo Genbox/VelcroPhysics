@@ -1,12 +1,10 @@
 using System;
+using FarseerGames.FarseerPhysics.Controllers;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
     public class AngleSpring : Controller
     {
-        protected Body body1;
-        protected Body body2;
-
         private float _breakpoint = float.MaxValue;
         private float _dampningConstant;
         private float _maxTorque = float.MaxValue;
@@ -15,6 +13,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         private float _springError;
         private float _targetAngle;
         private float _torqueMultiplier = 1f;
+        protected Body body1;
+        protected Body body2;
 
         public AngleSpring()
         {

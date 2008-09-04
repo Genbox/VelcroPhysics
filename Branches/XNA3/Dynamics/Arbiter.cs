@@ -13,13 +13,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     public class Arbiter : IEquatable<Arbiter>
     {
         private Comparison<Contact> _contactComparer;
-        internal ContactList contactList;
         private float _float1;
         private float _float2;
         private float _frictionCoefficientCombined;
 
-        public Geom geometryA;
-        public Geom geometryB;
         private ContactList _mergedContactList;
         private ContactList _newContactList;
         private PhysicsSimulator _physicsSimulator;
@@ -27,6 +24,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         //used for ref/out methods
         private Vector2 _vec1 = Vector2.Zero;
         private Vector2 _vec2 = Vector2.Zero;
+        internal ContactList contactList;
+        public Geom geometryA;
+        public Geom geometryB;
 
         public Arbiter()
         {
@@ -88,7 +88,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         internal void ConstructArbiter(Geom geometry1, Geom geometry2, PhysicsSimulator physicsSimulator)
         {
-            this._physicsSimulator = physicsSimulator;
+            _physicsSimulator = physicsSimulator;
 
             if (geometry1 < geometry2)
             {
@@ -343,7 +343,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 ////clamp friction
                 _oldTangentImpulse = _contact.TangentImpulse;
                 _contact.TangentImpulse = Calculator.Clamp(_oldTangentImpulse + _tangentImpulse, -_maxTangentImpulse,
-                                                          _maxTangentImpulse);
+                                                           _maxTangentImpulse);
                 _tangentImpulse = _contact.TangentImpulse - _oldTangentImpulse;
 
                 //apply friction _impulse
@@ -537,13 +537,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 return -1;
             }
-            
+
             if (c1.Seperation == c2.Seperation)
             {
                 return 0;
             }
-                            return 1;
-           
+            return 1;
         }
 
         private void InitializeContactLists(int maxContactsToDetect)

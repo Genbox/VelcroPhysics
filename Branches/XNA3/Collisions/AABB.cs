@@ -6,9 +6,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
     public class AABB
     {
         private const float _epsilon = .00001f;
+        private Vector2 _vertice;
         internal Vector2 max = Vector2.Zero;
         internal Vector2 min = Vector2.Zero;
-        private Vector2 _vertice;
 
         public AABB()
         {
@@ -95,7 +95,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return true;
             }
-                return false;
+            return false;
         }
 
         public bool Contains(ref Vector2 point)
@@ -106,7 +106,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return true;
             }
-                return false;
+            return false;
         }
 
         public static bool Intersect(AABB aabb1, AABB aabb2)
@@ -115,7 +115,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return false;
             }
-            
+
             if (aabb1.min.Y > aabb2.Max.Y || aabb2.min.Y > aabb1.Max.Y)
             {
                 return false;

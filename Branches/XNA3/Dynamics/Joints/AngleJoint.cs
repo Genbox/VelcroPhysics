@@ -1,13 +1,10 @@
 using System;
-using FarseerGames.FarseerPhysics.Dynamics.Joints;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     public class AngleJoint : Joint
     {
         private float _biasFactor = .2f;
-        protected Body body1;
-        protected Body body2;
 
         private float _breakpoint = float.MaxValue;
 
@@ -17,6 +14,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private float _softness;
         private float _targetAngle;
         private float _velocityBias;
+        protected Body body1;
+        protected Body body2;
 
         public AngleJoint()
         {
