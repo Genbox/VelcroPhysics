@@ -57,6 +57,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
             _circleBody = BodyFactory.Instance.CreateCircleBody(PhysicsSimulator, 64, 1); //fix 
             _circleBody.Position = new Vector2(725, 384);
             _circleGeom = GeomFactory.Instance.CreateCircleGeom(PhysicsSimulator, _circleBody, 64, 20);
+
+            base.LoadContent();
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
@@ -83,6 +85,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
                                 _mousePickSpring.WorldAttachPoint);
             }
             ScreenManager.SpriteBatch.End();
+
+            base.Draw(gameTime);
         }
 
         public override void HandleInput(InputState input)

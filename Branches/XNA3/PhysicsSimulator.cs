@@ -331,8 +331,6 @@ namespace FarseerGames.FarseerPhysics
 
             if (EnableDiagnostics) _sw.Start();
 
-
-
             #region Added by Daniel Pramel 08/24/08
 
             dt = _scaling.GetUpdateInterval(dt);
@@ -340,7 +338,6 @@ namespace FarseerGames.FarseerPhysics
             {
                 return;
             }
-
 
             if (_scaling.UpdateInterval < dtReal)
             {
@@ -354,7 +351,7 @@ namespace FarseerGames.FarseerPhysics
             #endregion
 
             ProcessAddedItems();
-                //moved to before 'removeitems' to avoid confusion when calling add/remove without calling update.
+            //moved to before 'removeitems' to avoid confusion when calling add/remove without calling update.
             ProcessRemovedItems();
             ProcessDisposedItems();
 
@@ -371,18 +368,19 @@ namespace FarseerGames.FarseerPhysics
             if (EnableDiagnostics) applyImpulsesTime = _sw.ElapsedTicks - applyForcesTime - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
             UpdatePositions(dt);
             if (EnableDiagnostics) updatePositionsTime = _sw.ElapsedTicks - applyImpulsesTime - applyForcesTime - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
-            
-            if (EnableDiagnostics) {
+
+            if (EnableDiagnostics)
+            {
                 _sw.Stop();
                 updateTime = _sw.ElapsedTicks;
 
-                cleanUpTime = 1000 * cleanUpTime/Stopwatch.Frequency;
-                broadPhaseCollisionTime = 1000*broadPhaseCollisionTime/Stopwatch.Frequency;
-                narrowPhaseCollisionTime =1000 * narrowPhaseCollisionTime/Stopwatch.Frequency;
-                applyForcesTime = 1000*applyForcesTime / Stopwatch.Frequency;
-                applyImpulsesTime = 1000*applyImpulsesTime / Stopwatch.Frequency;
-                updatePositionsTime = 1000*updatePositionsTime / Stopwatch.Frequency;
-                updateTime = 1000* updateTime/Stopwatch.Frequency;
+                cleanUpTime = 1000 * cleanUpTime / Stopwatch.Frequency;
+                broadPhaseCollisionTime = 1000 * broadPhaseCollisionTime / Stopwatch.Frequency;
+                narrowPhaseCollisionTime = 1000 * narrowPhaseCollisionTime / Stopwatch.Frequency;
+                applyForcesTime = 1000 * applyForcesTime / Stopwatch.Frequency;
+                applyImpulsesTime = 1000 * applyImpulsesTime / Stopwatch.Frequency;
+                updatePositionsTime = 1000 * updatePositionsTime / Stopwatch.Frequency;
+                updateTime = 1000 * updateTime / Stopwatch.Frequency;
                 _sw.Reset();
             }
         }
@@ -458,8 +456,8 @@ namespace FarseerGames.FarseerPhysics
 
                 if (!_body.ignoreGravity)
                 {
-                    _gravityForce.X = _gravity.X*_body.mass;
-                    _gravityForce.Y = _gravity.Y*_body.mass;
+                    _gravityForce.X = _gravity.X * _body.mass;
+                    _gravityForce.Y = _gravity.Y * _body.mass;
 
                     #region INLINE: _body.ApplyForce(ref _gravityForce);
 
@@ -477,7 +475,7 @@ namespace FarseerGames.FarseerPhysics
 
         private void ApplyImpulses(float dt)
         {
-            float inverseDt = 1f/dt;
+            float inverseDt = 1f / dt;
 
             for (int i = 0; i < jointList.Count; i++)
             {

@@ -74,6 +74,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
             _agent.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             LoadPlatforms();
+
+            base.LoadContent();
         }
 
         public void LoadPlatforms()
@@ -238,6 +240,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
             }
 
             ScreenManager.SpriteBatch.End();
+
+            base.Draw(gameTime);
         }
 
         public override void HandleInput(InputState input)

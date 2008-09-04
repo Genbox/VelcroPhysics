@@ -50,6 +50,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo3
             LoadAgent();
             LoadFloor();
             LoadObstacles();
+
+            base.LoadContent();
         }
 
         public void LoadAgent()
@@ -166,6 +168,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo3
             }
 
             ScreenManager.SpriteBatch.End();
+
+            base.Draw(gameTime);
         }
 
         private void DrawAgent()

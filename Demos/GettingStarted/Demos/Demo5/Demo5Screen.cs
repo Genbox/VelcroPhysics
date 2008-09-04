@@ -59,6 +59,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
             _agent.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             LoadCircles();
+
+            base.LoadContent();
         }
 
         private void LoadCircles()
@@ -200,6 +202,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
             }
 
             ScreenManager.SpriteBatch.End();
+
+            base.Draw(gameTime);
         }
 
         public override void HandleInput(InputState input)

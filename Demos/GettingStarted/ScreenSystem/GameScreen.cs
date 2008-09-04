@@ -1,6 +1,7 @@
 using System;
 using FarseerGames.FarseerPhysics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
@@ -25,11 +26,10 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
     /// </summary>
     public abstract class GameScreen
     {
-        //Note: This should not really be here. It should be in an engine instead that takes care of physics
-
         private bool _debugViewEnabled;
         private bool _isExiting;
         private bool _otherScreenHasFocus;
+        //Note: This should not really be here. It should be in an engine instead that takes care of physics
         private PhysicsSimulator _physicsSimulator;
         private PhysicsSimulatorView _physicsSimulatorView;
         private ScreenState _screenState = ScreenState.TransitionOn;
@@ -272,7 +272,9 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         {
             if (_debugViewEnabled)
             {
+                ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
                 _physicsSimulatorView.Draw(ScreenManager.SpriteBatch);
+                ScreenManager.SpriteBatch.End();
             }
         }
 
