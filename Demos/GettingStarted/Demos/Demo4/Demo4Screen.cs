@@ -62,6 +62,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
 
             _agent = new Agent(ScreenManager.ScreenCenter - new Vector2(320, 300));
             _agent.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
+
+            base.LoadContent();
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
@@ -87,6 +89,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
                                 _mousePickSpring.WorldAttachPoint);
             }
             ScreenManager.SpriteBatch.End();
+
+            base.Draw(gameTime);
         }
 
         public override void HandleInput(InputState input)

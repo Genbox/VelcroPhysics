@@ -34,6 +34,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
             //use the body factory to create the physics body
             _rectangleBody = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 128, 128, 1);
             _rectangleBody.Position = ScreenManager.ScreenCenter;
+
+            base.LoadContent();
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
@@ -52,6 +54,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
             ScreenManager.SpriteBatch.Draw(_bodyTexture, _rectangleBody.Position, null, Color.White,
                                            _rectangleBody.Rotation, _origin, 1, SpriteEffects.None, 0);
             ScreenManager.SpriteBatch.End();
+
+            base.Draw(gameTime);
         }
 
         public override void HandleInput(InputState input)

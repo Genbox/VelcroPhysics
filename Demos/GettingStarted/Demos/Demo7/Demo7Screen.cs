@@ -51,6 +51,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo7
             _agent.Body.LinearDragCoefficient = .001f;
 
             LoadSpiders();
+
+            base.LoadContent();
         }
 
         private void LoadSpiders()
@@ -93,6 +95,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo7
                                 _mousePickSpring.WorldAttachPoint);
             }
             ScreenManager.SpriteBatch.End();
+
+            base.Draw(gameTime);
         }
 
         private void DrawSpiders()
