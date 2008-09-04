@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using FarseerGames.FarseerPhysics.Controllers;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Controllers
 {
     public class ControllerList : List<Controller>
     {

@@ -1,21 +1,18 @@
 using System;
+using FarseerGames.FarseerPhysics.Controllers;
 using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
     public class LinearSpring : Controller
     {
-        internal Vector2 attachPoint1;
-        internal Vector2 attachPoint2;
-        protected Body body1;
-        protected Body body2;
+        private const float _epsilon = .00001f;
         private float _breakpoint = float.MaxValue;
 
         private float _dampningConstant;
         private float _dampningForce;
         private Vector2 _difference = Vector2.Zero;
         private Vector2 _differenceNormalized = Vector2.Zero;
-        private const float _epsilon = .00001f;
         private Vector2 _force;
         private Vector2 _relativeVelocity = Vector2.Zero;
         private float _restLength;
@@ -28,6 +25,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         private Vector2 _velocityAtPoint2 = Vector2.Zero;
         private Vector2 _worldPoint1 = Vector2.Zero;
         private Vector2 _worldPoint2 = Vector2.Zero;
+        internal Vector2 attachPoint1;
+        internal Vector2 attachPoint2;
+        protected Body body1;
+        protected Body body2;
 
         public LinearSpring()
         {

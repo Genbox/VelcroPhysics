@@ -143,7 +143,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             if (((g1.collisionCategories & g2.collidesWith) ==
                  CollisionCategories.None) & ((g2.collisionCategories &
-                                                     g1.collidesWith) == CollisionCategories.None))
+                                               g1.collidesWith) == CollisionCategories.None))
                 return false;
 
             //TMP
@@ -226,7 +226,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //if (bForce)
             //    ForceNonIncrementalUpdate();
             //else
-                Update();
+            Update();
         }
 
         /// <summary>

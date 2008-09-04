@@ -20,6 +20,20 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         #endregion
 
+        private bool _isQuadraticDragEnabled;
+        private float _linearDragCoefficient = .001f; //tuned for a body of mass 1
+        private float _momentOfInertia = 1; //1 unit square ;
+        private float _previousAngularVelocity;
+        private Vector2 _previousLinearVelocity = Vector2.Zero;
+        private Vector2 _previousPosition = Vector2.Zero;
+        private float _previousRotation;
+        private float _quadraticDragCoefficient = .001f;
+        private int _revolutions;
+        private float _rotationalDragCoefficient = .001f; //tuned for a 1.28m X 1.28m rectangle with mass = 1
+        private object _tag;
+        private Vector2 _tempVelocity = Vector2.Zero;
+        private float _torque;
+
         internal float angularVelocity;
         internal float angularVelocityBias;
         internal bool enabled = true;
@@ -29,26 +43,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         internal float inverseMass = 1;
         internal float inverseMomentOfInertia = 1;
         protected bool isDisposed;
-        private bool _isQuadraticDragEnabled;
         internal bool isStatic;
-        private float _linearDragCoefficient = .001f; //tuned for a body of mass 1
         internal Vector2 linearVelocity = Vector2.Zero;
         internal Vector2 linearVelocityBias = Vector2.Zero;
         internal float mass = 1;
-        private float _momentOfInertia = 1; //1 unit square ;
         internal Vector2 position = Vector2.Zero;
-        private float _previousAngularVelocity;
-        private Vector2 _previousLinearVelocity = Vector2.Zero;
-        private Vector2 _previousPosition = Vector2.Zero;
-        private float _previousRotation;
-        private float _quadraticDragCoefficient = .001f;
-        private int _revolutions;
         internal float rotation;
         //shouldn't need this. commenting out but keeping incase needed in the future.
         //private float linearDragVelocityThreshhold = .000001f;
-        private float _rotationalDragCoefficient = .001f; //tuned for a 1.28m X 1.28m rectangle with mass = 1
-        private Vector2 _tempVelocity = Vector2.Zero;
-        private float _torque;
         internal float totalRotation;
 
         public UpdatedEventHandler Updated;
@@ -305,7 +307,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             get { return _torque; }
         }
 
-        private object _tag;
         public Object Tag
         {
             get { return _tag; }
@@ -450,7 +451,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         public Vector2 GetVelocityAtLocalPoint(Vector2 localPoint)
         {
             //Vector2 velocity = linearVelocity + Calculator.Cross(angularVelocity, (GetWorldPosition(localPoint) - Position));
-                // angularVelocity * (GetWorldPosition(localPoint) - Position);
+            // angularVelocity * (GetWorldPosition(localPoint) - Position);
             GetVelocityAtLocalPoint(ref localPoint, out _tempVelocity);
             return _tempVelocity;
         }
@@ -549,7 +550,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             float torque = _diff.X*force.Y - _diff.Y*force.X;
 
             //add to _torque
-            this._torque += torque;
+            _torque += torque;
 
             // add linear force
             this.force.X += force.X;
@@ -593,7 +594,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             float torque = _diff.X*force.Y - _diff.Y*force.X;
 
             //add to _torque
-            this._torque += torque;
+            _torque += torque;
 
             // add linear force
             this.force.X += force.X;
@@ -608,7 +609,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public void ApplyTorque(float torque)
         {
-            this._torque += torque;
+            _torque += torque;
         }
 
         public void ClearTorque()

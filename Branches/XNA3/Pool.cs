@@ -26,7 +26,7 @@ namespace FarseerGames.FarseerPhysics
             {
                 return _stack.Pop();
             }
-                return new T();
+            return new T();
         }
 
         public void Release(T item)

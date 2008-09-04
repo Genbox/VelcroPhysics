@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
 
@@ -9,10 +8,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     public class FixedRevoluteJoint : Joint
     {
         private Vector2 _accumulatedImpulse;
-        internal Vector2 anchor;
         private Matrix _b;
         private float _biasFactor = .8f;
-        protected Body body;
         private float _breakpoint = float.MaxValue;
 
         private float _jointError;
@@ -22,6 +19,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private Vector2 _r1;
         private float _softness;
         private Vector2 _velocityBias;
+        internal Vector2 anchor;
+        protected Body body;
 
         public FixedRevoluteJoint()
         {

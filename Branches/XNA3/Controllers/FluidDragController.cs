@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Interfaces;
 using Microsoft.Xna.Framework;
 
@@ -31,7 +30,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private Vector2 _linearDragForce = Vector2.Zero;
         private float _max;
         private float _min;
-        public OnEntryHandler OnEntry;
         private float _partialMass;
         private float _rotationalDragCoeficient;
         private float _rotationalDragTorque;
@@ -39,6 +37,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private Vector2 _totalForce;
         private Vector2 _vert;
         private Vertices _vertices;
+        public OnEntryHandler OnEntry;
 
         public FluidDragController()
         {

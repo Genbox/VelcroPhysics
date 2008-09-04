@@ -316,12 +316,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private sealed class Wrapper
         {
-            public readonly Geom geom;
-            public readonly LinkedListNode<Wrapper> node;
             private readonly Stub _xBegin;
             private readonly Stub _xEnd;
             private readonly Stub _yBegin;
             private readonly Stub _yEnd;
+            public readonly Geom geom;
+            public readonly LinkedListNode<Wrapper> node;
             public float max;
             public float min;
             public bool shouldAddNode;

@@ -1,9 +1,10 @@
 using System;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Controllers
 {
     public abstract class Controller
     {
+        private object _tag;
         protected bool isDisposed;
         protected bool isEnabled = true;
 
@@ -13,7 +14,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             set { isEnabled = value; }
         }
 
-        private object _tag;
         public Object Tag
         {
             get { return _tag; }

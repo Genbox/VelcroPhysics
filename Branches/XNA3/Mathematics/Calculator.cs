@@ -9,9 +9,9 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         public const float RadiansToDegreesRatio = 1f/57.29577957855f;
         public const float TwoPi = 6.28318531f;
         private static readonly Random _random = new Random();
-        private static Vector2 _temp;
         private static Vector2 _curveEnd;
         private static Vector2 _startCurve;
+        private static Vector2 _temp;
 
         /// Temp variables to speed up the following code.
         private static float _tPow2;
@@ -171,7 +171,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
             {
                 return true;
             }
-                return false;
+            return false;
         }
 
         public static float VectorToRadians(Vector2 vector)

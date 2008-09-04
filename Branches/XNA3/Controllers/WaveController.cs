@@ -1,6 +1,5 @@
 using System;
 using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Interfaces;
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
@@ -24,9 +23,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private float[] _resultWave;
         private float _singleWaveWidth;
         private float _timePassed;
-        public Vector2 vectorFarWaveEdge;
-        public Vector2 vectorNearWaveEdge;
-        public Vector2 vectorPoint;
 
         private Vector2 _waveEdgeVector;
         private float _waveGeneratorCount;
@@ -36,6 +32,9 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private float _waveGeneratorStep;
         private float _width;
         private float[] _xPosition;
+        public Vector2 vectorFarWaveEdge;
+        public Vector2 vectorNearWaveEdge;
+        public Vector2 vectorPoint;
 
         #region properties
 
@@ -125,34 +124,34 @@ namespace FarseerGames.FarseerPhysics.Controllers
         {
             //try
             //{
-                int index = (int) Math.Floor((vector.X - _xPosition[0])/_singleWaveWidth);
+            int index = (int) Math.Floor((vector.X - _xPosition[0])/_singleWaveWidth);
 
-                //handle the boundry conditions
-                if (index > _nodeCount - 2) index = _nodeCount - 2;
-                if (index < 0) index = 0;
+            //handle the boundry conditions
+            if (index > _nodeCount - 2) index = _nodeCount - 2;
+            if (index < 0) index = 0;
 
-                vectorNearWaveEdge.X = _xPosition[index];
-                vectorNearWaveEdge.Y = _position.Y + _currentWave[index];
+            vectorNearWaveEdge.X = _xPosition[index];
+            vectorNearWaveEdge.Y = _position.Y + _currentWave[index];
 
-                vectorFarWaveEdge.X = _xPosition[index + 1];
-                vectorFarWaveEdge.Y = _position.Y + _currentWave[index + 1];
+            vectorFarWaveEdge.X = _xPosition[index + 1];
+            vectorFarWaveEdge.Y = _position.Y + _currentWave[index + 1];
 
-                vectorPoint = vector;
+            vectorPoint = vector;
 
-                _waveEdgeVector.X = _xPosition[index + 1] - _xPosition[index];
-                _waveEdgeVector.Y = _currentWave[index + 1] - _currentWave[index];
+            _waveEdgeVector.X = _xPosition[index + 1] - _xPosition[index];
+            _waveEdgeVector.Y = _currentWave[index + 1] - _currentWave[index];
 
-                _pointVector.X = vector.X - _xPosition[index];
-                _pointVector.Y = vector.Y - (_position.Y + _currentWave[index]);
+            _pointVector.X = vector.X - _xPosition[index];
+            _pointVector.Y = vector.Y - (_position.Y + _currentWave[index]);
 
-                float perpDot;
-                Calculator.Cross(ref _waveEdgeVector, ref _pointVector, out perpDot);
+            float perpDot;
+            Calculator.Cross(ref _waveEdgeVector, ref _pointVector, out perpDot);
 
-                if (perpDot < 0)
-                {
-                    return false;
-                }
-                    return true;
+            if (perpDot < 0)
+            {
+                return false;
+            }
+            return true;
             //}
             //catch (Exception ex)
             //{
@@ -198,7 +197,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 _timePassed += dt;
                 return;
             }
-                _timePassed = 0;
+            _timePassed = 0;
 
             _aabbMin = float.MaxValue;
             _aabb.min.Y = _aabbMin;

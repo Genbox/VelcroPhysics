@@ -16,39 +16,40 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #endregion
 
-        internal AABB aabb = new AABB();
-        internal Body body;
         private EventHandler<EventArgs> _bodyDisposed;
         private Body.UpdatedEventHandler _bodyUpdated;
-
-        internal CollisionCategories collidesWith = CollisionCategories.All;
-                                           //collides with all categories by default
-
-        public CollisionEventHandler Collision;
-
-        internal CollisionCategories collisionCategories = CollisionCategories.All;
-                                           //member off all categories by default
-
-        internal bool collisionEnabled = true;
-        internal int collisionGroup;
         private float _collisonGridCellSize;
-        internal bool collsionResponseEnabled = true;
-        internal float frictionCoefficient;
-
-        internal Grid grid;
         private int _id;
-        protected bool isDisposed;
-        internal bool isRemoved = true; //true=>geometry removed from simulation
-        internal Vertices localVertices;
         private Matrix _matrix = Matrix.Identity;
         private Matrix _matrixInverse = Matrix.Identity;
         private Matrix _matrixInverseTemp;
         private Vector2 _offset = Vector2.Zero;
         private Vector2 _position = new Vector2(0, 0);
-        internal float restitutionCoefficient;
         private float _rotation;
         private float _rotationOffset;
+        private object _tag;
         private Vector2 _vert;
+        internal AABB aabb = new AABB();
+        internal Body body;
+
+        internal CollisionCategories collidesWith = CollisionCategories.All;
+        //collides with all categories by default
+
+        public CollisionEventHandler Collision;
+
+        internal CollisionCategories collisionCategories = CollisionCategories.All;
+        //member off all categories by default
+
+        internal bool collisionEnabled = true;
+        internal int collisionGroup;
+        internal bool collsionResponseEnabled = true;
+        internal float frictionCoefficient;
+
+        internal Grid grid;
+        protected bool isDisposed;
+        internal bool isRemoved = true; //true=>geometry removed from simulation
+        internal Vertices localVertices;
+        internal float restitutionCoefficient;
         internal Vertices worldVertices;
 
         public Geom()
@@ -192,7 +193,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             set { frictionCoefficient = value; }
         }
 
-        private object _tag;
         public Object Tag
         {
             get { return _tag; }
@@ -262,8 +262,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             collisionEnabled = geometry.collisionEnabled;
             collsionResponseEnabled = geometry.collsionResponseEnabled;
             _collisonGridCellSize = geometry._collisonGridCellSize;
-            this._offset = offset;
-            this._rotationOffset = rotationOffset;
+            _offset = offset;
+            _rotationOffset = rotationOffset;
             collisionCategories = geometry.collisionCategories;
             collidesWith = geometry.collidesWith;
             SetVertices(geometry.localVertices);
@@ -384,7 +384,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return true;
             }
-                return false;
+            return false;
         }
 
         public bool Collide(Geom geometry)
@@ -543,7 +543,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         body.Disposed -= _bodyDisposed;
                     }
                 }
-                
+
                 //dispose unmanaged resources
             }
             isDisposed = true;

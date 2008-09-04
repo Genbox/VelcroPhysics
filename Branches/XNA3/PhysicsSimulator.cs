@@ -12,27 +12,32 @@ namespace FarseerGames.FarseerPhysics
 {
     public class PhysicsSimulator
     {
+        private const int _arbiterPoolSize = 10; //initial arbiter size.  will grow as needed
         private readonly Stopwatch _sw = new Stopwatch();
+        private Body _body;
+        private IBroadPhaseCollider _broadPhaseCollider;
+        private bool _enabled = true;
+        private Vector2 _gravity = Vector2.Zero;
+        private Vector2 _gravityForce;
+
+        //default settings
+        private int _iterations = 5;
         internal float allowedPenetration = .05f;
         internal float applyForcesTime = -1;
         internal float applyImpulsesTime = -1;
         internal ArbiterList arbiterList;
         internal Pool<Arbiter> arbiterPool;
-        private const int _arbiterPoolSize = 10;  //initial arbiter size.  will grow as needed
         internal float biasFactor = .8f;
-        private Body _body;
 
         internal List<Body> bodyAddList;
         internal BodyList bodyList;
         internal List<Body> bodyRemoveList;
-        private IBroadPhaseCollider _broadPhaseCollider;
         internal float broadPhaseCollisionTime = -1;
         internal float cleanUpTime = -1;
 
         internal List<Controller> controllerAddList;
         internal ControllerList controllerList;
         internal List<Controller> controllerRemoveList;
-        private bool _enabled = true;
 
         public bool EnableDiagnostics;
         internal FrictionType frictionType = FrictionType.Average;
@@ -40,11 +45,6 @@ namespace FarseerGames.FarseerPhysics
         internal GeomList geomList;
         internal List<Geom> geomRemoveList;
 
-        private Vector2 _gravity = Vector2.Zero;
-        private Vector2 _gravityForce;
-
-        //default settings
-        private int _iterations = 5;
         internal List<Joint> jointAddList;
         internal JointList jointList;
         internal List<Joint> jointRemoveList;
@@ -363,24 +363,29 @@ namespace FarseerGames.FarseerPhysics
             DoNarrowPhaseCollision();
             if (EnableDiagnostics) narrowPhaseCollisionTime = _sw.ElapsedTicks - broadPhaseCollisionTime - cleanUpTime;
             ApplyForces(dt);
-            if (EnableDiagnostics) applyForcesTime = _sw.ElapsedTicks - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
+            if (EnableDiagnostics)
+                applyForcesTime = _sw.ElapsedTicks - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
             ApplyImpulses(dt);
-            if (EnableDiagnostics) applyImpulsesTime = _sw.ElapsedTicks - applyForcesTime - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
+            if (EnableDiagnostics)
+                applyImpulsesTime = _sw.ElapsedTicks - applyForcesTime - narrowPhaseCollisionTime -
+                                    broadPhaseCollisionTime - cleanUpTime;
             UpdatePositions(dt);
-            if (EnableDiagnostics) updatePositionsTime = _sw.ElapsedTicks - applyImpulsesTime - applyForcesTime - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
+            if (EnableDiagnostics)
+                updatePositionsTime = _sw.ElapsedTicks - applyImpulsesTime - applyForcesTime - narrowPhaseCollisionTime -
+                                      broadPhaseCollisionTime - cleanUpTime;
 
             if (EnableDiagnostics)
             {
                 _sw.Stop();
                 updateTime = _sw.ElapsedTicks;
 
-                cleanUpTime = 1000 * cleanUpTime / Stopwatch.Frequency;
-                broadPhaseCollisionTime = 1000 * broadPhaseCollisionTime / Stopwatch.Frequency;
-                narrowPhaseCollisionTime = 1000 * narrowPhaseCollisionTime / Stopwatch.Frequency;
-                applyForcesTime = 1000 * applyForcesTime / Stopwatch.Frequency;
-                applyImpulsesTime = 1000 * applyImpulsesTime / Stopwatch.Frequency;
-                updatePositionsTime = 1000 * updatePositionsTime / Stopwatch.Frequency;
-                updateTime = 1000 * updateTime / Stopwatch.Frequency;
+                cleanUpTime = 1000*cleanUpTime/Stopwatch.Frequency;
+                broadPhaseCollisionTime = 1000*broadPhaseCollisionTime/Stopwatch.Frequency;
+                narrowPhaseCollisionTime = 1000*narrowPhaseCollisionTime/Stopwatch.Frequency;
+                applyForcesTime = 1000*applyForcesTime/Stopwatch.Frequency;
+                applyImpulsesTime = 1000*applyImpulsesTime/Stopwatch.Frequency;
+                updatePositionsTime = 1000*updatePositionsTime/Stopwatch.Frequency;
+                updateTime = 1000*updateTime/Stopwatch.Frequency;
                 _sw.Reset();
             }
         }
@@ -456,8 +461,8 @@ namespace FarseerGames.FarseerPhysics
 
                 if (!_body.ignoreGravity)
                 {
-                    _gravityForce.X = _gravity.X * _body.mass;
-                    _gravityForce.Y = _gravity.Y * _body.mass;
+                    _gravityForce.X = _gravity.X*_body.mass;
+                    _gravityForce.Y = _gravity.Y*_body.mass;
 
                     #region INLINE: _body.ApplyForce(ref _gravityForce);
 
@@ -475,7 +480,7 @@ namespace FarseerGames.FarseerPhysics
 
         private void ApplyImpulses(float dt)
         {
-            float inverseDt = 1f / dt;
+            float inverseDt = 1f/dt;
 
             for (int i = 0; i < jointList.Count; i++)
             {
