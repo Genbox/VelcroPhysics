@@ -175,12 +175,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         private void UpdateExtentValues()
         {
-            Debug.Assert(_xInfoList.Count == _yInfoList.Count);
+            //NOTE: Comment.. No debug in release
+            //Debug.Assert(_xInfoList.Count == _yInfoList.Count);
             for (int i = 0; i < _xInfoList.Count; i++)
             {
                 ExtentInfo xInfo = _xInfoList[i];
                 ExtentInfo yInfo = _yInfoList[i];
-                Debug.Assert(xInfo.geometry == yInfo.geometry);
+                //NOTE: Comment.. No debug in release
+                //Debug.Assert(xInfo.geometry == yInfo.geometry);
                 AABB aabb = xInfo.geometry.aabb;
 
                 /*xInfo.min.value = aabb.min.X;
