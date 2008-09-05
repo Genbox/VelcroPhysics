@@ -47,7 +47,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo8
             _agent = new Agent(ScreenManager.ScreenCenter);
             _agent.CollisionCategory = CollisionCategories.Cat5;
             _agent.CollidesWith = CollisionCategories.All & ~CollisionCategories.Cat4;
-            //collide with all but Cat5(black)
+            //collide with all but Cat4 (black)
             _agent.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             LoadCircles();
