@@ -64,16 +64,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         #region PreStepImpulse variables
 
-        private float kNormal;
-        private float kTangent;
-        private float min;
-        private Vector2 r1;
-        private Vector2 r2;
-        private float restitution;
-        private float rn1;
-        private float rn2;
-        private float rt1;
-        private float rt2;
+        private float _kNormal;
+        private float _kTangent;
+        private float _min;
+        private Vector2 _r1;
+        private Vector2 _r2;
+        private float _restitution;
+        private float _rn1;
+        private float _rn2;
+        private float _rt1;
+        private float _rt2;
 
         #endregion
 
@@ -132,60 +132,60 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 contact = contactList[i];
 
                 //calculate _contact offset from body position
-                Vector2.Subtract(ref contact.Position, ref geometryA.body.position, out r1);
-                Vector2.Subtract(ref contact.Position, ref geometryB.body.position, out r2);
+                Vector2.Subtract(ref contact.Position, ref geometryA.body.position, out _r1);
+                Vector2.Subtract(ref contact.Position, ref geometryB.body.position, out _r2);
 
                 //project normal onto offset vectors
-                Vector2.Dot(ref r1, ref contact.Normal, out rn1);
-                Vector2.Dot(ref r2, ref contact.Normal, out rn2);
+                Vector2.Dot(ref _r1, ref contact.Normal, out _rn1);
+                Vector2.Dot(ref _r2, ref contact.Normal, out _rn2);
 
                 //calculate mass normal
                 float invMassSum = geometryA.body.inverseMass + geometryB.body.inverseMass;
-                Vector2.Dot(ref r1, ref r1, out _float1);
-                Vector2.Dot(ref r2, ref r2, out _float2);
-                kNormal = invMassSum + geometryA.body.inverseMomentOfInertia*(_float1 - rn1*rn1) +
-                          geometryB.body.inverseMomentOfInertia*(_float2 - rn2*rn2);
-                contact.MassNormal = 1f/kNormal;
+                Vector2.Dot(ref _r1, ref _r1, out _float1);
+                Vector2.Dot(ref _r2, ref _r2, out _float2);
+                _kNormal = invMassSum + geometryA.body.inverseMomentOfInertia*(_float1 - _rn1*_rn1) +
+                          geometryB.body.inverseMomentOfInertia*(_float2 - _rn2*_rn2);
+                contact.MassNormal = 1f/_kNormal;
 
                 //calculate mass _tangent
                 _float1 = 1;
                 Calculator.Cross(ref contact.Normal, ref _float1, out _tangent);
-                Vector2.Dot(ref r1, ref _tangent, out rt1);
-                Vector2.Dot(ref r2, ref _tangent, out rt2);
-                kTangent = geometryA.Body.InverseMass + geometryB.Body.InverseMass;
+                Vector2.Dot(ref _r1, ref _tangent, out _rt1);
+                Vector2.Dot(ref _r2, ref _tangent, out _rt2);
+                _kTangent = geometryA.Body.InverseMass + geometryB.Body.InverseMass;
 
-                Vector2.Dot(ref r1, ref r1, out _float1);
-                Vector2.Dot(ref r2, ref r2, out _float2);
-                kTangent += geometryA.body.inverseMomentOfInertia*(_float1 - rt1*rt1) +
-                            geometryB.Body.InverseMomentOfInertia*(_float2 - rt2*rt2);
-                contact.MassTangent = 1f/kTangent;
+                Vector2.Dot(ref _r1, ref _r1, out _float1);
+                Vector2.Dot(ref _r2, ref _r2, out _float2);
+                _kTangent += geometryA.body.inverseMomentOfInertia*(_float1 - _rt1*_rt1) +
+                            geometryB.Body.InverseMomentOfInertia*(_float2 - _rt2*_rt2);
+                contact.MassTangent = 1f/_kTangent;
 
                 //calc velocity bias
-                min = Math.Min(0, _physicsSimulator.allowedPenetration + contact.Seperation);
-                contact.NormalVelocityBias = -_physicsSimulator.biasFactor*inverseDt*min;
+                _min = Math.Min(0, _physicsSimulator.allowedPenetration + contact.Seperation);
+                contact.NormalVelocityBias = -_physicsSimulator.biasFactor*inverseDt*_min;
 
-                //Compute the restitution, we average the restitution of the two bodies
-                //restitution = (2.0f + _geometryA.RestitutionCoefficient + _geometryB.RestitutionCoefficient) * 0.5f;
-                restitution = (geometryA.restitutionCoefficient + geometryB.restitutionCoefficient)*.5f;
+                //Compute the _restitution, we average the _restitution of the two bodies
+                //_restitution = (2.0f + _geometryA.RestitutionCoefficient + _geometryB.RestitutionCoefficient) * 0.5f;
+                _restitution = (geometryA.restitutionCoefficient + geometryB.restitutionCoefficient)*.5f;
 
                 //calc bounce velocity
-                geometryA.body.GetVelocityAtWorldOffset(ref r1, out _vec1);
-                geometryB.body.GetVelocityAtWorldOffset(ref r2, out _vec2);
+                geometryA.body.GetVelocityAtWorldOffset(ref _r1, out _vec1);
+                geometryB.body.GetVelocityAtWorldOffset(ref _r2, out _vec2);
                 Vector2.Subtract(ref _vec2, ref _vec1, out _dv);
 
                 //calc velocity difference along _contact normal
                 Vector2.Dot(ref _dv, ref contact.Normal, out _vn);
-                contact.BounceVelocity = _vn*restitution;
+                contact.BounceVelocity = _vn*_restitution;
 
                 //apply accumulated _impulse
                 Vector2.Multiply(ref contact.Normal, contact.NormalImpulse, out _vec1);
                 Vector2.Multiply(ref _tangent, contact.TangentImpulse, out _vec2);
                 Vector2.Add(ref _vec1, ref _vec2, out _impulse);
 
-                geometryB.body.ApplyImpulseAtWorldOffset(ref _impulse, ref r2);
+                geometryB.body.ApplyImpulseAtWorldOffset(ref _impulse, ref _r2);
 
                 Vector2.Multiply(ref _impulse, -1, out _impulse);
-                geometryA.body.ApplyImpulseAtWorldOffset(ref _impulse, ref r1);
+                geometryA.body.ApplyImpulseAtWorldOffset(ref _impulse, ref _r1);
 
                 contact.NormalImpulseBias = 0;
                 contactList[i] = contact;
