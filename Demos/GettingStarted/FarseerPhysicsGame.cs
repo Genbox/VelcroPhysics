@@ -22,8 +22,8 @@ namespace FarseerGames.FarseerPhysicsDemos
 
             _graphics.SynchronizeWithVerticalRetrace = false;
 
-            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 10);
-            IsFixedTimeStep = true;
+            //TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 10);
+            IsFixedTimeStep = false;
 
             //windowed
             _graphics.PreferredBackBufferWidth = 1024;
@@ -48,7 +48,7 @@ namespace FarseerGames.FarseerPhysicsDemos
             frameRateCounter.DrawOrder = 101;
             Components.Add(frameRateCounter);
 
-            _screenManager.AddScreen(new LogoScreen());
+            _screenManager.AddScreen(new MainMenuScreen());
         }
 
         public ScreenManager ScreenManager
