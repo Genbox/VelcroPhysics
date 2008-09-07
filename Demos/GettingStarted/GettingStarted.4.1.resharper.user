@@ -1,0 +1,146 @@
+<Configuration>
+  <SettingsComponent>
+    <string />
+    <integer>
+      <setting name="UsedSolutionBuilderID">0</setting>
+    </integer>
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">True</setting>
+    </boolean>
+  </SettingsComponent>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <RecentFiles>
+    <RecentFiles>
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Mathematics/f:ConvertUnits.cs" caret="34" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Mathematics/f:BilinearInterpolator.cs" caret="2157" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/f:Pool.cs" caret="635" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/f:Scaling.cs" caret="1200" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/f:PhysicsSimulator.cs" caret="20253" scrollPosition="0|0" />
+      <File id="EB86FDCF-D29A-460D-960B-06CD485180CA/d:Demos/d:Demo5/f:Demo5Screen.cs" caret="2716" scrollPosition="0|50" />
+      <File id="EB86FDCF-D29A-460D-960B-06CD485180CA/d:Demos/d:DemoShare/f:Spider.cs" caret="0" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/f:Enums.cs" caret="1103" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Factories/f:JointFactory.cs" caret="228" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Factories/f:GeomFactory.cs" caret="831" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Factories/f:ControllerFactory.cs" caret="119" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Factories/f:BodyFactory.cs" caret="446" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Interfaces/f:IIsDisposable.cs" caret="251" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Interfaces/f:ICollideable.cs" caret="76" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Interfaces/f:IBroadPhaseCollider.cs" caret="74" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Interfaces/f:IFluidContainer.cs" caret="156" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:ContactList.cs" caret="0" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:ContactId.cs" caret="0" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:Contact.cs" caret="47" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:CollisionHelper.cs" caret="0" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:AABB.cs" caret="0" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:BruteForceCollider.cs" caret="0" scrollPosition="0|0" />
+      <File id="EB86FDCF-D29A-460D-960B-06CD485180CA/d:Components/f:FramerateCounterComponent.cs" caret="157" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:Vertices.cs" caret="960" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:SweepAndPruneCollider.cs" caret="1353" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:SelectiveSweepCollider.cs" caret="596" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:Grid.cs" caret="3823" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:GeomList.cs" caret="377" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:Geom.cs" caret="2843" scrollPosition="0|21" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:Feature.cs" caret="0" scrollPosition="0|0" />
+    </RecentFiles>
+    <RecentEdits>
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/f:Pool.cs" caret="635" scrollPosition="0|14" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/f:PhysicsSimulator.cs" caret="222" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/f:PhysicsSimulator.cs" caret="15880" scrollPosition="0|471" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/f:PhysicsSimulator.cs" caret="20253" scrollPosition="0|597" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/f:Enums.cs" caret="1102" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:BruteForceCollider.cs" caret="2490" scrollPosition="23|41" />
+      <File id="EB86FDCF-D29A-460D-960B-06CD485180CA/d:Demos/d:Demo5/f:Demo5Screen.cs" caret="2716" scrollPosition="0|50" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/f:Enums.cs" caret="1015" scrollPosition="0|15" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/f:Enums.cs" caret="59" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/f:Enums.cs" caret="163" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Factories/f:JointFactory.cs" caret="47" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:Vertices.cs" caret="513" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:Vertices.cs" caret="9097" scrollPosition="0|265" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:GeomList.cs" caret="1013" scrollPosition="0|15" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:GeomList.cs" caret="1108" scrollPosition="0|15" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:Contact.cs" caret="47" scrollPosition="0|0" />
+      <File id="EB86FDCF-D29A-460D-960B-06CD485180CA/d:Components/f:FramerateCounterComponent.cs" caret="0" scrollPosition="0|0" />
+      <File id="EB86FDCF-D29A-460D-960B-06CD485180CA/d:Components/f:FramerateCounterComponent.cs" caret="157" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:SweepAndPruneCollider.cs" caret="1255" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:SweepAndPruneCollider.cs" caret="1735" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:SweepAndPruneCollider.cs" caret="972" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:SweepAndPruneCollider.cs" caret="1353" scrollPosition="0|4" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:SelectiveSweepCollider.cs" caret="596" scrollPosition="0|1" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:Grid.cs" caret="309" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:Grid.cs" caret="1085" scrollPosition="0|15" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:Grid.cs" caret="1983" scrollPosition="0|36" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:GeomList.cs" caret="377" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:Geom.cs" caret="734" scrollPosition="0|0" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:Geom.cs" caret="1252" scrollPosition="0|6" />
+      <File id="4B438D36-4203-455A-B9DF-35E1939D0BAA/d:Collisions/f:Geom.cs" caret="1991" scrollPosition="0|24" />
+    </RecentEdits>
+  </RecentFiles>
+  <UnitTestRunner>
+    <CustomStartDirectory>
+    </CustomStartDirectory>
+    <UseShadowCopy>True</UseShadowCopy>
+    <UseCustomFolder>False</UseCustomFolder>
+    <EnableUnitTesting>True</EnableUnitTesting>
+    <Providers />
+  </UnitTestRunner>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Default">
+      <Item value="Demo4" priority="3" />
+      <Item value="Demo4Screen" priority="3" />
+      <Item value="if" priority="0" />
+      <Item value="gameTime" priority="0" />
+      <Item value="new" priority="0" />
+      <Item value="TimeSpan" priority="0" />
+      <Item value="ScreenManager" priority="0" />
+      <Item value="physicsSimulator" priority="2" />
+      <Item value="true" priority="1" />
+      <Item value="physicsSimulatorView" priority="0" />
+      <Item value="GeomA" priority="0" />
+      <Item value="Demos" priority="1" />
+      <Item value="BodyList" priority="0" />
+      <Item value="Enum" priority="0" />
+      <Item value="Exception" priority="0" />
+      <Item value="Microsoft" priority="0" />
+      <Item value="CSharp" priority="0" />
+      <Item value="System" priority="0" />
+      <Item value="Reflection" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Microsoft.Xna.Framework.GameTime">
+      <Item value="ElapsedRealTime" priority="0" />
+      <Item value="TotalRealTime" priority="0" />
+      <Item value="TotalGameTime" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FarseerGames.FarseerPhysicsDemos.ScreenSystem.ScreenManager">
+      <Item value="Game" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Microsoft.Xna.Framework.Game">
+      <Item value="Exit" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FarseerGames.FarseerPhysics.PhysicsSimulator">
+      <Item value="Scaling" priority="1" />
+      <Item value="InactivityController" priority="1" />
+      <Item value="MaxContactsToResolve" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FarseerGames.FarseerPhysics.Scaling">
+      <Item value="Enabled" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FarseerGames.FarseerPhysics.Controllers.InactivityController">
+      <Item value="Enabled" priority="0" />
+      <Item value="ActivationDistance" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FarseerGames.FarseerPhysics.Dynamics.Body">
+      <Item value="IgnoreGravity" priority="0" />
+      <Item value="Mass" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FarseerGames.FarseerPhysics.Dynamics.Arbiter">
+      <Item value="GeomA" priority="2" />
+      <Item value="GeomB" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FarseerGames.FarseerPhysics.Collisions.Geom">
+      <Item value="IsRemoved" priority="0" />
+      <Item value="AABB" priority="0" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+</Configuration>
