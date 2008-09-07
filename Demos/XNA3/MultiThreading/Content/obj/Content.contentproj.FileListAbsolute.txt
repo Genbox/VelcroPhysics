@@ -1,1 +1,2 @@
 D:\Projects\TFS\FarseerPhysics\Demos\GettingStarted\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Projects\TFS\FarseerPhysics\Demos\XNA3\MultiThreading\Content\obj\x86\Debug\ResolveAssemblyReference.cache
