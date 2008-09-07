@@ -74,7 +74,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo7
                 {
                     _spiders[i].Update(gameTime);
                 }
-                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
             }
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
