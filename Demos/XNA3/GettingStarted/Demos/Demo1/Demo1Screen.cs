@@ -38,16 +38,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
             base.LoadContent();
         }
 
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
-        {
-            if (IsActive)
-            {
-                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
-            }
-
-            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
-        }
-
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);

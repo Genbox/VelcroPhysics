@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GettingStarted", "GettingStarted.csproj", "{EB86FDCF-D29A-460D-960B-06CD485180CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerPhysics", "..\..\Branches\XNA3\FarseerPhysics.csproj", "{4B438D36-4203-455A-B9DF-35E1939D0BAA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerPhysics", "..\..\..\Branches\XNA3\FarseerPhysics.csproj", "{4B438D36-4203-455A-B9DF-35E1939D0BAA}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -15,10 +15,10 @@ Global
 		SccAuxPath0 = https://tfs01.codeplex.com
 		SccLocalPath0 = .
 		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName1 = ..\\..\\Branches\\XNA3\\FarseerPhysics.csproj
-		SccProjectName1 = ../../Branches/XNA3
+		SccProjectUniqueName1 = ..\\..\\..\\Branches\\XNA3\\FarseerPhysics.csproj
+		SccProjectName1 = ../../../Branches/XNA3
 		SccAuxPath1 = https://tfs01.codeplex.com
-		SccLocalPath1 = ..\\..\\Branches\\XNA3
+		SccLocalPath1 = ..\\..\\..\\Branches\\XNA3
 		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,10 +34,10 @@ Global
 		{4B438D36-4203-455A-B9DF-35E1939D0BAA}.Debug|x86.Build.0 = Debug|x86
 		{4B438D36-4203-455A-B9DF-35E1939D0BAA}.Release|x86.ActiveCfg = Release|x86
 		{4B438D36-4203-455A-B9DF-35E1939D0BAA}.Release|x86.Build.0 = Release|x86
-		{D02CA378-A184-49AD-91D5-C017D1559CAC}.Debug|x86.ActiveCfg = Debug|x86
-		{D02CA378-A184-49AD-91D5-C017D1559CAC}.Release|x86.ActiveCfg = Release|x86
 		{827D1CB6-E697-46F8-91A4-0579AFED84F9}.Debug|x86.ActiveCfg = Debug|x86
 		{827D1CB6-E697-46F8-91A4-0579AFED84F9}.Release|x86.ActiveCfg = Release|x86
+		{D02CA378-A184-49AD-91D5-C017D1559CAC}.Debug|x86.ActiveCfg = Debug|x86
+		{D02CA378-A184-49AD-91D5-C017D1559CAC}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

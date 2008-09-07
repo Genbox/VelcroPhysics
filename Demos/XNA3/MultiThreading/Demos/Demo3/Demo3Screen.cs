@@ -142,16 +142,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo3
             _obstacleBody[4].Position = ScreenManager.ScreenCenter + new Vector2(-170, 0);
         }
 
-
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
-        {
-            if (IsActive)
-            {
-                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
-            }
-            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
-        }
-
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);

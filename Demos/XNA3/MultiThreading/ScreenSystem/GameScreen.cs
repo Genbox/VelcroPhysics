@@ -217,6 +217,11 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                     _screenState = ScreenState.Active;
                 }
             }
+
+            if (!coveredByOtherScreen && !otherScreenHasFocus)
+            {
+                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds * .001f);
+            }
         }
 
         /// <summary>

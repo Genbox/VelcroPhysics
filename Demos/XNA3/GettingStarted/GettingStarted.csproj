@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FarseerGames.FarseerPhysicsDemos</RootNamespace>
     <AssemblyName>GettingStarted</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
     <XnaCrossPlatformGroupID>cb903495-ca02-48ba-9bf1-9f0fcdb16587</XnaCrossPlatformGroupID>
@@ -78,9 +78,6 @@
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -166,7 +163,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\XNA3-FX\FarseerPhysics.csproj">
+    <ProjectReference Include="..\..\..\Branches\XNA3\FarseerPhysics.csproj">
       <Project>{4B438D36-4203-455A-B9DF-35E1939D0BAA}</Project>
       <Name>FarseerPhysics</Name>
     </ProjectReference>
