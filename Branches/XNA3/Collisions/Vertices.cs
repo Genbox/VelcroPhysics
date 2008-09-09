@@ -365,7 +365,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return vertices;
         }
 
-        public void ScaleVectors(Vector2 scale)
+        public void Scale(Vector2 scale)
         {
             for (int i = Count - 1; i >= 0; i--)
             {
