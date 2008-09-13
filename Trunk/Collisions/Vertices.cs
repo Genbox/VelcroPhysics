@@ -267,7 +267,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             if (verts.Count == 0)
             {
-                throw new Exception("vertexes");
+                throw new ArgumentException("Can't calculate MOI on zero vertices");
             }
             if (verts.Count == 1)
             {
@@ -364,11 +364,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return vertices;
         }
 
-        public void Scale(Vector2 scale)
+        public void Scale(Vector2 value)
         {
             for (int i = Count - 1; i >= 0; i--)
             {
-                this[i] *= scale;
+                this[i] *= value;
             }
         }
 

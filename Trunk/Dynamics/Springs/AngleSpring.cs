@@ -1,4 +1,5 @@
 using System;
+using FarseerGames.FarseerPhysics.Controllers;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
@@ -12,8 +13,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         private float _springError;
         private float _targetAngle;
         private float _torqueMultiplier = 1f;
-        protected Body body1;
-        protected Body body2;
+        private Body _body1;
+        private Body _body2;
 
         public AngleSpring()
         {
@@ -21,23 +22,23 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public AngleSpring(Body body1, Body body2, float springConstant, float dampningConstant)
         {
-            this.body1 = body1;
-            this.body2 = body2;
+            _body1 = body1;
+            _body2 = body2;
             _springConstant = springConstant;
             _dampningConstant = dampningConstant;
-            _targetAngle = this.body2.TotalRotation - this.body1.TotalRotation;
+            _targetAngle = _body2.TotalRotation - _body1.TotalRotation;
         }
 
         public Body Body1
         {
-            get { return body1; }
-            set { body1 = value; }
+            get { return _body1; }
+            set { _body1 = value; }
         }
 
         public Body Body2
         {
-            get { return body2; }
-            set { body2 = value; }
+            get { return _body2; }
+            set { _body2 = value; }
         }
 
         public float SpringConstant
@@ -103,7 +104,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         public override void Validate()
         {
             //if either of the springs connected bodies are disposed then dispose the joint.
-            if (body1.IsDisposed || body2.IsDisposed)
+            if (_body1.IsDisposed || _body2.IsDisposed)
             {
                 Dispose();
             }
@@ -117,28 +118,28 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
                 if (Broke != null) Broke(this, new EventArgs());
             }
 
-            if (isDisposed)
+            if (IsDisposed)
             {
                 return;
             }
             //calculate and apply spring force
-            float angleDifference = body2.totalRotation - (body1.totalRotation + _targetAngle);
+            float angleDifference = _body2.totalRotation - (_body1.totalRotation + _targetAngle);
             float springTorque = _springConstant*angleDifference;
             _springError = angleDifference; //keep track of '_springError' for breaking joint
 
             //apply torque at anchor
-            if (!body1.IsStatic)
+            if (!_body1.IsStatic)
             {
-                float torque1 = springTorque - _dampningConstant*body1.angularVelocity;
+                float torque1 = springTorque - _dampningConstant*_body1.angularVelocity;
                 torque1 = Math.Min(Math.Abs(torque1*_torqueMultiplier), _maxTorque)*Math.Sign(torque1);
-                body1.ApplyTorque(torque1);
+                _body1.ApplyTorque(torque1);
             }
 
-            if (!body2.IsStatic)
+            if (!_body2.IsStatic)
             {
-                float torque2 = -springTorque - _dampningConstant*body2.angularVelocity;
+                float torque2 = -springTorque - _dampningConstant*_body2.angularVelocity;
                 torque2 = Math.Min(Math.Abs(torque2*_torqueMultiplier), _maxTorque)*Math.Sign(torque2);
-                body2.ApplyTorque(torque2);
+                _body2.ApplyTorque(torque2);
             }
         }
     }

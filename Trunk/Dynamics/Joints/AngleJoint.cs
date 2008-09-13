@@ -14,8 +14,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private float _softness;
         private float _targetAngle;
         private float _velocityBias;
-        protected Body body1;
-        protected Body body2;
+        private Body _body1;
+        private Body _body2;
 
         public AngleJoint()
         {
@@ -23,27 +23,27 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public AngleJoint(Body body1, Body body2)
         {
-            this.body1 = body1;
-            this.body2 = body2;
+            _body1 = body1;
+            _body2 = body2;
         }
 
         public AngleJoint(Body body1, Body body2, float targetAngle)
         {
-            this.body1 = body1;
-            this.body2 = body2;
+            _body1 = body1;
+            _body2 = body2;
             _targetAngle = targetAngle;
         }
 
         public Body Body1
         {
-            get { return body1; }
-            set { body1 = value; }
+            get { return _body1; }
+            set { _body1 = value; }
         }
 
         public Body Body2
         {
-            get { return body2; }
-            set { body2 = value; }
+            get { return _body2; }
+            set { _body2 = value; }
         }
 
         public float BiasFactor
@@ -85,7 +85,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void Validate()
         {
-            if (body1.IsDisposed || body2.IsDisposed)
+            if (_body1.IsDisposed || _body2.IsDisposed)
             {
                 Dispose();
             }
@@ -99,26 +99,26 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 if (Broke != null) Broke(this, new EventArgs());
             }
 
-            if (isDisposed)
+            if (IsDisposed)
             {
                 return;
             }
-            _jointError = (body2.totalRotation - body1.totalRotation) - _targetAngle;
+            _jointError = (_body2.totalRotation - _body1.totalRotation) - _targetAngle;
 
             _velocityBias = -_biasFactor*inverseDt*_jointError;
 
-            _massFactor = (1 - _softness)/(body1.inverseMomentOfInertia + body2.inverseMomentOfInertia);
+            _massFactor = (1 - _softness)/(_body1.inverseMomentOfInertia + _body2.inverseMomentOfInertia);
         }
 
         public override void Update()
         {
-            if (isDisposed) return;
+            if (IsDisposed) return;
             if (!Enabled) return;
-            float angularImpulse = (_velocityBias - body2.angularVelocity + body1.angularVelocity)*_massFactor;
+            float angularImpulse = (_velocityBias - _body2.angularVelocity + _body1.angularVelocity)*_massFactor;
 
-            body1.angularVelocity -= body1.inverseMomentOfInertia*Math.Sign(angularImpulse)*
+            _body1.angularVelocity -= _body1.inverseMomentOfInertia*Math.Sign(angularImpulse)*
                                      Math.Min(Math.Abs(angularImpulse), _maxImpulse);
-            body2.angularVelocity += body2.inverseMomentOfInertia*Math.Sign(angularImpulse)*
+            _body2.angularVelocity += _body2.inverseMomentOfInertia*Math.Sign(angularImpulse)*
                                      Math.Min(Math.Abs(angularImpulse), _maxImpulse);
         }
     }

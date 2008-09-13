@@ -10,10 +10,10 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics
 {
-    public class PhysicsSimulator
+    public class PhysicsSimulator : IDisposable
     {
         private const int _arbiterPoolSize = 10; //initial arbiter size.  will grow as needed
-        private readonly Stopwatch _sw = new Stopwatch();
+        private Stopwatch _sw = new Stopwatch();
         private Body _body;
         private IBroadPhaseCollider _broadPhaseCollider;
         private bool _enabled = true;
@@ -80,7 +80,7 @@ namespace FarseerGames.FarseerPhysics
         }
 
         /// <summary>
-        /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
+        /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
         public GeomList GeomList
         {
@@ -89,7 +89,7 @@ namespace FarseerGames.FarseerPhysics
         }
 
         /// <summary>
-        /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
+        /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
         public BodyList BodyList
         {
@@ -98,7 +98,7 @@ namespace FarseerGames.FarseerPhysics
         }
 
         /// <summary>
-        /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
+        /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
         public ControllerList ControllerList
         {
@@ -107,7 +107,7 @@ namespace FarseerGames.FarseerPhysics
         }
 
         /// <summary>
-        /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
+        /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
         public JointList JointList
         {
@@ -116,7 +116,7 @@ namespace FarseerGames.FarseerPhysics
         }
 
         /// <summary>
-        /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
+        /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
         public ArbiterList ArbiterList
         {
@@ -582,8 +582,8 @@ namespace FarseerGames.FarseerPhysics
                 //remove any arbiters associated with the geometries being removed
                 for (int j = arbiterList.Count; j > 0; j--)
                 {
-                    if (arbiterList[j - 1].geometryA == geomRemoveList[i] ||
-                        arbiterList[j - 1].geometryB == geomRemoveList[i])
+                    if (arbiterList[j - 1].GeometryA == geomRemoveList[i] ||
+                        arbiterList[j - 1].GeometryB == geomRemoveList[i])
                     {
                         arbiterList.Remove(arbiterList[j - 1]);
                     }
@@ -655,6 +655,15 @@ namespace FarseerGames.FarseerPhysics
         {
             get { return _scaling; }
             set { _scaling = value; }
+        }
+
+        #endregion
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            _inactivityController.Dispose();
         }
 
         #endregion

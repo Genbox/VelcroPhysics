@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Interfaces;
 using FarseerGames.FarseerPhysics.Mathematics;
 
@@ -15,9 +14,9 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         #endregion
 
-        private readonly Dictionary<Geom, bool> _geomInFluidList;
+        private Dictionary<Geom, bool> _geomInFluidList;
 
-        private readonly List<Geom> _geomList;
+        private List<Geom> _geomList;
         private float _area;
         private Vector2 _axis = Vector2.Zero;
         private Vector2 _buoyancyForce = Vector2.Zero;

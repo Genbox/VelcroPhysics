@@ -52,7 +52,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         {
             if (body.isStatic)
             {
-                throw new Exception("Fixed joints cannot be created on static bodies");
+                throw new InvalidOperationException("Fixed joints cannot be created on static bodies");
             }
             FixedRevoluteJoint revoluteJoint = new FixedRevoluteJoint(body, anchor);
             return revoluteJoint;

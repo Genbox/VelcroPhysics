@@ -27,6 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
+    <CodeAnalysisRules>-Microsoft.Design#CA1020;-Microsoft.Design#CA1021;-Microsoft.Design#CA1051;-Microsoft.Design#CA1002;-Microsoft.Design#CA1045;-Microsoft.Design#CA1034;-Microsoft.Design#CA1025;-Microsoft.Design#CA1024;-Microsoft.Maintainability#CA1500;-Microsoft.Naming#CA1702;-Microsoft.Naming#CA1709;-Microsoft.Naming#CA1704;-Microsoft.Naming#CA1708;-Microsoft.Naming#CA1710;-Microsoft.Performance#CA1822;-Microsoft.Usage#CA2225</CodeAnalysisRules>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -81,6 +82,7 @@
     <Compile Include="Dynamics\Springs\LinearSpring.cs" />
     <Compile Include="Factories\GeomFactory.cs" />
     <Compile Include="Collisions\Grid.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Interfaces\IBroadPhaseCollider.cs" />
     <Compile Include="Interfaces\ICollideable.cs" />
     <Compile Include="Collisions\SelectiveSweepCollider.cs" />
@@ -96,7 +98,6 @@
     <Compile Include="Factories\JointFactory.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Interfaces\IFluidContainer.cs" />
-    <Compile Include="Interfaces\IIsDisposable.cs" />
     <Compile Include="Mathematics\BilinearInterpolator.cs" />
     <Compile Include="Mathematics\Calculator.cs" />
     <Compile Include="Mathematics\CircularInterpolator.cs" />

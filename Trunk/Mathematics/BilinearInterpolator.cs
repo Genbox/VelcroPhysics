@@ -7,12 +7,12 @@ namespace FarseerGames.FarseerPhysics.Mathematics
     /// </summary>
     public class BilinearInterpolator
     {
-        private readonly float _maxValue = float.MaxValue;
-        private readonly float _minValue = float.MinValue;
-        private readonly float _value1;
-        private readonly float _value2;
-        private readonly float _value3;
-        private readonly float _value4;
+        private float _maxValue = float.MaxValue;
+        private float _minValue = float.MinValue;
+        private float _value1;
+        private float _value2;
+        private float _value3;
+        private float _value4;
         private Vector2 _max;
         private Vector2 _min;
 
