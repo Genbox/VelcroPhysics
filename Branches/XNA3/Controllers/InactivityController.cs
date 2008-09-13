@@ -5,7 +5,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
 {
     public class InactivityController : Controller
     {
-        private readonly PhysicsSimulator _physicsSimulator;
+        private PhysicsSimulator _physicsSimulator;
 
         private float _activationDistance = 100;
         private int _bodiesEnabled;

@@ -20,11 +20,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
     public class SweepAndPruneCollider : IBroadPhaseCollider
     {
         public static float fTol = 0.01f; //1.5f; //.01f;
-        private readonly PhysicsSimulator _physicsSimulator;
-        private readonly ExtentList _xExtentList;
-        private readonly ExtentInfoList _xInfoList;
-        private readonly ExtentList _yExtentList;
-        private readonly ExtentInfoList _yInfoList;
+        private PhysicsSimulator _physicsSimulator;
+        private ExtentList _xExtentList;
+        private ExtentInfoList _xInfoList;
+        private ExtentList _yExtentList;
+        private ExtentInfoList _yInfoList;
         //private bool bForce;
         public CollisionPairDictionary collisionPairs;
 
@@ -432,7 +432,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         private class ExtentInfoList : List<ExtentInfo>
         {
-            public readonly SweepAndPruneCollider owner;
+            public  SweepAndPruneCollider owner;
 
             public ExtentInfoList(SweepAndPruneCollider sap)
             {
