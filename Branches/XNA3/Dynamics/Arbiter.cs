@@ -50,7 +50,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Fully exposed for convenience. Should be treated as readonly. Do not add or remove directly from this list.
+        /// Fully exposed for convenience. Should be treated as . Do not add or remove directly from this list.
         /// </summary>
         public ContactList ContactList
         {

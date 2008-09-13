@@ -5,7 +5,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public class ArbiterList : List<Arbiter>
     {
-        private readonly List<Arbiter> _markedForRemovalList;
+        private List<Arbiter> _markedForRemovalList;
 
         public ArbiterList()
         {

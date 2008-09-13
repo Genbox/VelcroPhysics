@@ -10,7 +10,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         #endregion
 
-        private readonly List<Body> _markedForRemovalList = new List<Body>();
+        private List<Body> _markedForRemovalList = new List<Body>();
 
         public ContentsChangedEventHandler Added;
         public ContentsChangedEventHandler Removed;

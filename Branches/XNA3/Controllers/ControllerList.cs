@@ -11,7 +11,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         #endregion
 
-        private readonly List<Controller> _markedForRemovalList = new List<Controller>();
+        private List<Controller> _markedForRemovalList = new List<Controller>();
 
         public ContentsChangedEventHandler Added;
         public ContentsChangedEventHandler Removed;

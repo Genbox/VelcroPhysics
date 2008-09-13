@@ -289,8 +289,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     public class LineIntersectInfo
     {
-        private readonly Geom _geom;
-        private readonly List<Vector2> _points;
+        private Geom _geom;
+        private List<Vector2> _points;
 
         public LineIntersectInfo(Geom geom, List<Vector2> points)
         {
