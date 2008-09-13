@@ -17,7 +17,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
     {
         private const int pyramidBaseBodyCount = 16;
         private readonly LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
-        //private Agent _agent;
+        private Agent _agent;
         private bool _firstRun = true;
         private Floor _floor;
         private FixedLinearSpring _mousePickSpring;
@@ -60,8 +60,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
                                new Vector2(ScreenManager.ScreenCenter.X, ScreenManager.ScreenHeight - 50));
             _floor.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
-            //_agent = new Agent(ScreenManager.ScreenCenter - new Vector2(320, 300));
-            //_agent.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
+            _agent = new Agent(ScreenManager.ScreenCenter - new Vector2(320, 300));
+            _agent.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             base.LoadContent();
         }
@@ -71,7 +71,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             _pyramid.Draw(ScreenManager.SpriteBatch, _rectangleTexture);
             _floor.Draw(ScreenManager.SpriteBatch);
-            //_agent.Draw(ScreenManager.SpriteBatch);
+            _agent.Draw(ScreenManager.SpriteBatch);
 
             if (_mousePickSpring != null)
             {
@@ -123,7 +123,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
                 force += new Vector2(0, -forceAmount);
             }
 
-            //_agent.ApplyForce(force);
+            _agent.ApplyForce(force);
 
             const float torqueAmount = 14000;
             float torque = 0;
@@ -135,7 +135,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
             {
                 torque += torqueAmount;
             }
-            //_agent.ApplyTorque(torque);
+            _agent.ApplyTorque(torque);
         }
 
         private void HandleMouseInput(InputState input)
