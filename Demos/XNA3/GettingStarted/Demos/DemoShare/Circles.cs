@@ -11,13 +11,13 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
 {
     public class Circles
     {
-        private readonly Color _borderColor = Color.Black;
-        private readonly Color _color = Color.White;
+        private Color _borderColor = Color.Black;
+        private Color _color = Color.White;
 
-        private readonly int _count = 2;
-        private readonly Vector2 _endPosition;
-        private readonly int _radius = 100;
-        private readonly Vector2 _startPosition;
+        private int _count = 2;
+        private Vector2 _endPosition;
+        private int _radius = 100;
+        private Vector2 _startPosition;
         private Body[] _circleBody;
         private CircleBrush _circleBrush;
         private Geom[] _circleGeom;
@@ -29,7 +29,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
         {
             if (count < 2)
             {
-                throw new Exception("_count must be 2 or greater");
+                throw new ArgumentException("Count must be 2 or greater", "count");
             }
             _count = count;
             _radius = radius;
@@ -64,7 +64,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             for (int i = 1; i < _count; i++)
             {
                 _circleBody[i] = BodyFactory.Instance.CreateBody(physicsSimulator, _circleBody[0]);
-                _circleBody[i].Position = Vector2.Lerp(_startPosition, _endPosition, i/(float) (_count - 1));
+                _circleBody[i].Position = Vector2.Lerp(_startPosition, _endPosition, i / (float)(_count - 1));
             }
 
             _circleGeom[0] = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _circleBody[0], _radius, 10);

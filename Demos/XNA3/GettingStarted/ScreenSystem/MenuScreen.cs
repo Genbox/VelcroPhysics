@@ -11,7 +11,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
     /// </summary>
     internal abstract class MenuScreen : GameScreen
     {
-        private readonly List<string> _menuEntries = new List<string>();
+        private List<string> _menuEntries = new List<string>();
         private float _leftBorder = 100;
         private SpriteFont _menuSpriteFont;
         private Vector2 _position = Vector2.Zero;

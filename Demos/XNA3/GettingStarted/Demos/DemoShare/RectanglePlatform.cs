@@ -10,12 +10,12 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
 {
     public class RectanglePlatform
     {
-        private readonly Color _borderColor;
-        private readonly int _collisionGroup;
-        private readonly Color _color;
-        private readonly int _height;
-        private readonly Vector2 _position;
-        private readonly int _width;
+        private Color _borderColor;
+        private int _collisionGroup;
+        private Color _color;
+        private int _height;
+        private Vector2 _position;
+        private int _width;
         private Body _platformBody;
         private Geom _platformGeom;
 

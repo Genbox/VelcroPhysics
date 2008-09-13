@@ -20,8 +20,8 @@ namespace FarseerGames.FarseerPhysicsDemos
         private const int _performancePanelWidth = 220;
         private const string _updatePosition = "Update Positions: {0}";
         private const string _updateTotal = "Update Total: {0}";
-        private readonly Vector2 _performancePanelPosition = new Vector2(100, 110);
-        private readonly PhysicsSimulator _physicsSimulator;
+        private Vector2 _performancePanelPosition = new Vector2(100, 110);
+        private PhysicsSimulator _physicsSimulator;
 
         //aabb
         private Color _aabbColor = new Color(0, 0, 0, 150); // Color.Gainsboro;

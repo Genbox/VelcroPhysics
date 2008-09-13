@@ -10,10 +10,10 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
 {
     internal class Border
     {
-        private readonly int _borderWidth;
-        private readonly int _height;
-        private readonly Vector2 _position;
-        private readonly int _width;
+        private int _borderWidth;
+        private int _height;
+        private Vector2 _position;
+        private int _width;
         private Body _borderBody;
         private Geom[] _borderGeom;
         private Texture2D[] _borderTexture;

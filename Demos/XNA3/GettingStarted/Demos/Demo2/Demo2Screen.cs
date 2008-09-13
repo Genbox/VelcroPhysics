@@ -7,7 +7,6 @@ using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
 using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -15,14 +14,11 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
 {
     public class Demo2Screen : GameScreen
     {
-        //declare variables
-        private readonly LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
+        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private Body _circleBody;
         private Geom _circleGeom;
         private Vector2 _circleOrigin;
         private Texture2D _circleTexture;
-        private ContentManager _contentManager;
-        private bool _firstRun = true;
         private FixedLinearSpring _mousePickSpring;
         private Geom _pickedGeom;
         private Body _rectangleBody;
@@ -39,7 +35,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
 
         public override void LoadContent()
         {
-            if (_contentManager == null) _contentManager = new ContentManager(ScreenManager.Game.Services);
             _lineBrush.Load(ScreenManager.GraphicsDevice);
 
             _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 128, Color.Gold,
@@ -82,10 +77,10 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
 
         public override void HandleInput(InputState input)
         {
-            if (_firstRun)
+            if (FirstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
-                _firstRun = false;
+                FirstRun = false;
             }
 
             if (input.PauseGame)

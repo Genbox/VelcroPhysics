@@ -14,10 +14,9 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo7
 {
     public class Demo7Screen : GameScreen
     {
-        private readonly LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
+        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private Agent _agent;
         private Border _border;
-        private bool _firstRun = true;
         private FixedLinearSpring _mousePickSpring;
         private Geom _pickedGeom;
         private Spider[] _spiders;
@@ -108,10 +107,10 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo7
 
         public override void HandleInput(InputState input)
         {
-            if (_firstRun)
+            if (FirstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
-                _firstRun = false;
+                FirstRun = false;
             }
 
             if (input.PauseGame)

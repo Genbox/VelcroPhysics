@@ -9,14 +9,14 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
 {
     internal class Pyramid
     {
-        private readonly float _blockHeight;
-        private readonly float _blockWidth;
-        private readonly Vector2 _bottomRightBlockPosition;
-        private readonly int _bottomRowBlockCount;
-        private readonly float _horizontalSpacing;
-        private readonly Body _referenceBody;
-        private readonly Geom _referenceGeom;
-        private readonly float _verticleSpacing;
+        private float _blockHeight;
+        private float _blockWidth;
+        private Vector2 _bottomRightBlockPosition;
+        private int _bottomRowBlockCount;
+        private float _horizontalSpacing;
+        private Body _referenceBody;
+        private Geom _referenceGeom;
+        private float _verticleSpacing;
 
         private Body[] _blockBody;
         private Geom[] _blockGeom;

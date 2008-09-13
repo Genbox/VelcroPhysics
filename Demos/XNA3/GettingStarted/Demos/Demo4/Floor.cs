@@ -10,9 +10,9 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
 {
     internal class Floor
     {
-        private readonly int _height;
-        private readonly Vector2 _position;
-        private readonly int _width;
+        private int _height;
+        private Vector2 _position;
+        private int _width;
         private Body _floorBody;
         private Geom _floorGeom;
         private Vector2 _floorOrigin;

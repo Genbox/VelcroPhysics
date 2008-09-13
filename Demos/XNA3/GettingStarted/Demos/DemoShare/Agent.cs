@@ -10,7 +10,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
 {
     public class Agent
     {
-        private readonly Vector2 _position;
+        private Vector2 _position;
         private Body _agentBody;
         private Vector2 _agentCrossBeamOrigin;
         private Texture2D _agentCrossBeamTexture;

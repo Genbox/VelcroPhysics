@@ -13,7 +13,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
     public class Demo1Screen : GameScreen
     {
         private Texture2D _bodyTexture;
-        private bool _firstRun = true;
         private Vector2 _origin;
         private Body _rectangleBody;
 
@@ -50,10 +49,10 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
 
         public override void HandleInput(InputState input)
         {
-            if (_firstRun)
+            if (FirstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
-                _firstRun = false;
+                FirstRun = false;
             }
             if (input.PauseGame)
             {

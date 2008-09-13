@@ -14,7 +14,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
 {
     public class Demo5Screen : GameScreen
     {
-        private readonly LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
+        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private Agent _agent;
         private Circles _blackCircles1;
         private Circles _blackCircles2;
@@ -23,7 +23,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
         private Circles _blueCircles2;
         private Circles _blueCircles3;
         private Border _border;
-        private bool _firstRun = true;
         private Circles _greenCircles1;
         private Circles _greenCircles2;
         private Circles _greenCircles3;
@@ -199,10 +198,10 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
 
         public override void HandleInput(InputState input)
         {
-            if (_firstRun)
+            if (FirstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
-                _firstRun = false;
+                FirstRun = false;
             }
 
             if (input.PauseGame)

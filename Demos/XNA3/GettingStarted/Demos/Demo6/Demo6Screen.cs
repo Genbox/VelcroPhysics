@@ -22,14 +22,13 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
         private const float platform2WidthRatio = .1f;
         private const float platform3HeightRatio = .6f;
         private const float platform3WidthRatio = .1f;
-        private readonly LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
+        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private Agent _agent;
         private AngularSpringLever _angularSpringLever1;
         private AngularSpringLever _angularSpringLever2;
         private AngularSpringLever _angularSpringLever3;
         private AngularSpringLever _angularSpringLever4;
         private Border _border;
-        private bool _firstRun = true;
         private RectanglePlatform _floor;
         private Body _hangingBody;
         private Geom _hangingGeom;
@@ -41,7 +40,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
         private RectanglePlatform _platform3;
         private SpringRectangleRope _springRectangleRope1;
         private SpringRectangleRope _springRectangleRope2;
-        public bool updatedOnce;
 
         public override void Initialize()
         {
@@ -246,10 +244,10 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
 
         public override void HandleInput(InputState input)
         {
-            if (_firstRun)
+            if (FirstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
-                _firstRun = false;
+                FirstRun = false;
             }
 
             if (input.PauseGame)

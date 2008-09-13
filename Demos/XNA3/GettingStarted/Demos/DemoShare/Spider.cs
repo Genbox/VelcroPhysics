@@ -12,7 +12,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
     public class Spider
     {
         private const int spiderBodyRadius = 20;
-        private readonly Vector2 _position;
+        private Vector2 _position;
         private CollisionCategories _collidesWith = CollisionCategories.All;
         private CollisionCategories _collisionCategory = CollisionCategories.All;
         private int _collisionGroup;

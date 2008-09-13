@@ -14,14 +14,13 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo3
 {
     public class Demo3Screen : GameScreen
     {
-        private readonly LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
+        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private Body _agentBody;
         private Vector2 _agentCrossBeamOrigin;
         private Texture2D _agentCrossBeamTexture;
         private Geom[] _agentGeom;
         private Vector2 _agentOrigin;
         private Texture2D _agentTexture;
-        private bool _firstRun = true;
         private Body _floorBody;
         private Geom _floorGeom;
         private Vector2 _floorOrigin;
@@ -187,10 +186,10 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo3
 
         public override void HandleInput(InputState input)
         {
-            if (_firstRun)
+            if (FirstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
-                _firstRun = false;
+                FirstRun = false;
             }
             if (input.PauseGame)
             {
