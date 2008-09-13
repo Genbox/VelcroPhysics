@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics
 {
-    public class PhysicsSimulator : IDisposable
+    public sealed class PhysicsSimulator : IDisposable
     {
         private const int _arbiterPoolSize = 10; //initial arbiter size.  will grow as needed
         private Stopwatch _sw = new Stopwatch();
