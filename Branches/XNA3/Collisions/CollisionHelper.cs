@@ -3,11 +3,13 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
-    public class CollisionHelper
+    public sealed class CollisionHelper
     {
+        private CollisionHelper() { }
+        
         #region Delegates
 
-        public delegate bool BroadPhaseCollisionHandlerDelegate(Geom geometry1, Geom geometry2);
+        public delegate bool BroadPhaseCollisionHandler(Geom geometry1, Geom geometry2);
 
         #endregion
 

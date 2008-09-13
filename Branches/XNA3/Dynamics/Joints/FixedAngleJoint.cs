@@ -13,7 +13,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private float _softness;
         private float _targetAngle;
         private float _velocityBias;
-        protected Body body;
+        private Body _body;
 
         public FixedAngleJoint()
         {
@@ -21,19 +21,19 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public FixedAngleJoint(Body body)
         {
-            this.body = body;
+            _body = body;
         }
 
         public FixedAngleJoint(Body body, float targetAngle)
         {
-            this.body = body;
+            _body = body;
             _targetAngle = targetAngle;
         }
 
         public Body Body
         {
-            get { return body; }
-            set { body = value; }
+            get { return _body; }
+            set { _body = value; }
         }
 
         public float BiasFactor
@@ -75,7 +75,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void Validate()
         {
-            if (body.IsDisposed)
+            if (_body.IsDisposed)
             {
                 Dispose();
             }
@@ -88,24 +88,24 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
             }
-            if (isDisposed)
+            if (IsDisposed)
             {
                 return;
             }
-            _jointError = body.totalRotation - _targetAngle;
+            _jointError = _body.totalRotation - _targetAngle;
 
             _velocityBias = -_biasFactor*inverseDt*_jointError;
-            _massFactor = (1 - _softness)/(body.inverseMomentOfInertia);
+            _massFactor = (1 - _softness)/(_body.inverseMomentOfInertia);
         }
 
         public override void Update()
         {
-            if (isDisposed)
+            if (IsDisposed)
             {
                 return;
             }
-            float angularImpulse = (_velocityBias - body.angularVelocity)*_massFactor;
-            body.angularVelocity += body.inverseMomentOfInertia*Math.Sign(angularImpulse)*
+            float angularImpulse = (_velocityBias - _body.angularVelocity)*_massFactor;
+            _body.angularVelocity += _body.inverseMomentOfInertia*Math.Sign(angularImpulse)*
                                     Math.Min(Math.Abs(angularImpulse), _maxImpulse);
         }
     }

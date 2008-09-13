@@ -9,9 +9,9 @@ namespace FarseerGames.FarseerPhysics.Mathematics
     /// </summary>
     public class CircularInterpolator
     {
-        private const float _twoOverPi = 1f/MathHelper.PiOver2;
         private float _maxValue = float.MaxValue;
         private float _minValue = float.MinValue;
+        private float _twoOverPi = 1f/MathHelper.PiOver2;
         private float _value1;
         private float _value2;
         private float _value3;

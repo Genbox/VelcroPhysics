@@ -2,10 +2,12 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Mathematics
 {
-    public class ConvertUnits
+    public sealed class ConvertUnits
     {
         private static float _displayUnitsToSimUnitsRatio = 50;
         private static float _simUnitsToDisplayUnitsRatio = 1/_displayUnitsToSimUnitsRatio;
+
+        private ConvertUnits() {}
 
         public static void SetDisplayUnitToSimUnitRatio(float displayUnitsPerSimUnit)
         {

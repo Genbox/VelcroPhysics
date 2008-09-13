@@ -91,6 +91,7 @@
     <Compile Include="Factories\GeomFactory.cs" />
     <Compile Include="Collisions\GeomList.cs" />
     <Compile Include="Collisions\Grid.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Interfaces\IBroadPhaseCollider.cs" />
     <Compile Include="Interfaces\ICollideable.cs" />
     <Compile Include="Collisions\SelectiveSweepCollider.cs" />
@@ -125,7 +126,6 @@
     <Compile Include="Dynamics\Joints\RevoluteJoint.cs" />
     <Compile Include="Dynamics\Joints\SliderJoint.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="Interfaces\IIsDisposable.cs" />
     <Compile Include="Mathematics\BilinearInterpolator.cs" />
     <Compile Include="Mathematics\Calculator.cs" />
     <Compile Include="Mathematics\CircularInterpolator.cs" />

@@ -6,7 +6,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 {
     public sealed class SelectiveSweepCollider : IBroadPhaseCollider
     {
-        private static  StubComparer _comparer = new StubComparer();
+        private static StubComparer _comparer = new StubComparer();
 
         private PhysicsSimulator _physicsSimulator;
         private List<Wrapper> _wrappers;
@@ -23,9 +23,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #region IBroadPhaseCollider Members
 
-        public void Add(Geom item)
+        public void Add(Geom geom)
         {
-            Wrapper wrapper = new Wrapper(item);
+            Wrapper wrapper = new Wrapper(geom);
             _wrappers.Add(wrapper);
             wrapper.AddStubs(_xStubs, _yStubs);
         }
@@ -275,8 +275,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private sealed class Stub
         {
-            public  bool begin;
-            public  Wrapper wrapper;
+            public bool begin;
+            public Wrapper wrapper;
             public float value;
 
             public Stub(Wrapper wrapper, bool begin)
@@ -320,8 +320,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             private Stub _xEnd;
             private Stub _yBegin;
             private Stub _yEnd;
-            public  Geom geom;
-            public  LinkedListNode<Wrapper> node;
+            public Geom geom;
+            public LinkedListNode<Wrapper> node;
             public float max;
             public float min;
             public bool shouldAddNode;
