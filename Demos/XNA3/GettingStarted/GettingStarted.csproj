@@ -52,6 +52,7 @@
     <NoStdLib>true</NoStdLib>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRules>-Microsoft.Design#CA1051;-Microsoft.Design#CA1024;-Microsoft.Naming#CA1709;-Microsoft.Naming#CA1704;-Microsoft.Performance#CA1822</CodeAnalysisRules>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>

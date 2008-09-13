@@ -15,11 +15,11 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         private const int textPanelLeftBorder = 200;
         private const int textPanelWidth = 440;
         private const int textTopBorder = 20;
-        private readonly string _details = "Details";
-        private readonly Color _panelColor = new Color(100, 100, 100, 200);
-        private readonly Color _textColor = Color.White;
-        private readonly Color _textPanelColor = new Color(100, 100, 100, 220);
-        private readonly string _title = "Title";
+        private string _details = "Details";
+        private Color _panelColor = new Color(100, 100, 100, 200);
+        private Color _textColor = Color.White;
+        private Color _textPanelColor = new Color(100, 100, 100, 220);
+        private string _title = "Title";
         private Texture2D _panelTexture;
         private Texture2D _textPanelTexture;
 

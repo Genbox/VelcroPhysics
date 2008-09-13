@@ -12,7 +12,7 @@ namespace FarseerGames.FarseerPhysicsDemos
     /// </summary>
     public class FarseerPhysicsGame : Game
     {
-        private readonly GraphicsDeviceManager _graphics;
+        private GraphicsDeviceManager _graphics;
         private ScreenManager _screenManager;
 
         public FarseerPhysicsGame()

@@ -16,9 +16,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
     public class Demo4Screen : GameScreen
     {
         private const int pyramidBaseBodyCount = 16;
-        private readonly LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
+        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private Agent _agent;
-        private bool _firstRun = true;
         private Floor _floor;
         private FixedLinearSpring _mousePickSpring;
         private Geom _pickedGeom;
@@ -86,10 +85,10 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
 
         public override void HandleInput(InputState input)
         {
-            if (_firstRun)
+            if (FirstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
-                _firstRun = false;
+                FirstRun = false;
             }
 
             if (input.PauseGame)

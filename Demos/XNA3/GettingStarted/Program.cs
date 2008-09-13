@@ -5,7 +5,7 @@ namespace FarseerGames.FarseerPhysicsDemos
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        private static void Main(string[] args)
+        private static void Main()
         {
             using (FarseerPhysicsGame game = new FarseerPhysicsGame())
             {

@@ -30,10 +30,10 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
     /// </summary>
     public class ScreenManager : DrawableGameComponent
     {
-        private readonly IGraphicsDeviceService _graphicsDeviceService;
-        private readonly InputState _input = new InputState();
-        private readonly List<GameScreen> _screens = new List<GameScreen>();
-        private readonly List<GameScreen> _screensToUpdate = new List<GameScreen>();
+        private IGraphicsDeviceService _graphicsDeviceService;
+        private InputState _input = new InputState();
+        private List<GameScreen> _screens = new List<GameScreen>();
+        private List<GameScreen> _screensToUpdate = new List<GameScreen>();
         private Texture2D _blankTexture;
         private SpriteFonts _spriteFonts;
 
