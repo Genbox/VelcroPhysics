@@ -53,14 +53,13 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         public override void Update(float dt)
         {
+            if (IsDisposed)
+                return;
+
             float ms = dt*1000;
 
             _bodiesEnabled = 0;
 
-            if (isDisposed)
-            {
-                return;
-            }
             foreach (Body b in _physicsSimulator.BodyList)
             {
                 if (b.IsStatic) continue; // do not apply to static bodies

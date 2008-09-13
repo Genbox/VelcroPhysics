@@ -46,9 +46,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public override bool Equals(object obj)
         {
             if (!(obj is ContactId))
-            {
-                throw new ArgumentException("The object being compared must be of type 'ContactId'");
-            }
+                return false;
+
             return Equals((ContactId) obj);
         }
 

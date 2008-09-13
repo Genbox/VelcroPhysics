@@ -24,10 +24,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private Vector2 _r2;
         private float _softness;
         private Vector2 _velocityBias;
-        protected Body body1;
-        protected Body body2;
-        internal Vector2 localAnchor1;
-        internal Vector2 localAnchor2;
+        private Body _body1;
+        private Body _body2;
+        private Vector2 _localAnchor1;
+        private Vector2 _localAnchor2;
 
         public RevoluteJoint()
         {
@@ -35,27 +35,27 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public RevoluteJoint(Body body1, Body body2, Vector2 anchor)
         {
-            this.body1 = body1;
-            this.body2 = body2;
+            _body1 = body1;
+            _body2 = body2;
 
             _anchor = anchor;
 
-            body1.GetLocalPosition(ref anchor, out localAnchor1);
-            body2.GetLocalPosition(ref anchor, out localAnchor2);
+            body1.GetLocalPosition(ref anchor, out _localAnchor1);
+            body2.GetLocalPosition(ref anchor, out _localAnchor2);
 
             _accumulatedImpulse = Vector2.Zero;
         }
 
         public Body Body1
         {
-            get { return body1; }
-            set { body1 = value; }
+            get { return _body1; }
+            set { _body1 = value; }
         }
 
         public Body Body2
         {
-            get { return body2; }
-            set { body2 = value; }
+            get { return _body2; }
+            set { _body2 = value; }
         }
 
         public float BiasFactor
@@ -87,8 +87,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             set
             {
                 _anchor = value;
-                body1.GetLocalPosition(ref _anchor, out localAnchor1);
-                body2.GetLocalPosition(ref _anchor, out localAnchor2);
+                _body1.GetLocalPosition(ref _anchor, out _localAnchor1);
+                _body2.GetLocalPosition(ref _anchor, out _localAnchor2);
             }
         }
 
@@ -97,7 +97,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         {
             get
             {
-                Vector2.Add(ref body1.position, ref _r1, out _currentAnchor); //_anchor moves once simulator starts
+                Vector2.Add(ref _body1.position, ref _r1, out _currentAnchor); //_anchor moves once simulator starts
                 return _currentAnchor;
             }
         }
@@ -107,17 +107,17 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         public void SetInitialAnchor(Vector2 initialAnchor)
         {
             _anchor = initialAnchor;
-            if (body1 == null)
+            if (_body1 == null)
             {
-                throw new NullReferenceException("Body must be set prior to setting the _anchor of the Revolute Joint");
+                throw new ArgumentNullException("initialAnchor", "Body must be set prior to setting the _anchor of the Revolute Joint");
             }
-            body1.GetLocalPosition(ref initialAnchor, out localAnchor1);
-            body2.GetLocalPosition(ref initialAnchor, out localAnchor2);
+            _body1.GetLocalPosition(ref initialAnchor, out _localAnchor1);
+            _body2.GetLocalPosition(ref initialAnchor, out _localAnchor2);
         }
 
         public override void Validate()
         {
-            if (body1.IsDisposed || body2.IsDisposed)
+            if (_body1.IsDisposed || _body2.IsDisposed)
             {
                 Dispose();
             }
@@ -130,18 +130,18 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
             }
-            if (isDisposed) return;
+            if (IsDisposed) return;
 
-            _body1InverseMass = body1.inverseMass;
-            _body1InverseMomentOfInertia = body1.inverseMomentOfInertia;
+            _body1InverseMass = _body1.inverseMass;
+            _body1InverseMomentOfInertia = _body1.inverseMomentOfInertia;
 
-            _body2InverseMass = body2.inverseMass;
-            _body2InverseMomentOfInertia = body2.inverseMomentOfInertia;
+            _body2InverseMass = _body2.inverseMass;
+            _body2InverseMomentOfInertia = _body2.inverseMomentOfInertia;
 
-            body1.GetBodyMatrix(out _body1MatrixTemp);
-            body2.GetBodyMatrix(out _body2MatrixTemp);
-            Vector2.TransformNormal(ref localAnchor1, ref _body1MatrixTemp, out _r1);
-            Vector2.TransformNormal(ref localAnchor2, ref _body2MatrixTemp, out _r2);
+            _body1.GetBodyMatrix(out _body1MatrixTemp);
+            _body2.GetBodyMatrix(out _body2MatrixTemp);
+            Vector2.TransformNormal(ref _localAnchor1, ref _body1MatrixTemp, out _r1);
+            Vector2.TransformNormal(ref _localAnchor2, ref _body2MatrixTemp, out _r2);
 
             _k1.M11 = _body1InverseMass + _body2InverseMass;
             _k1.M12 = 0;
@@ -168,21 +168,21 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             //_matrix = MatrixInvert2D(_k);
             MatrixInvert2D(ref _k, out _matrix);
 
-            Vector2.Add(ref body1.position, ref _r1, out _vectorTemp1);
-            Vector2.Add(ref body2.position, ref _r2, out _vectorTemp2);
+            Vector2.Add(ref _body1.position, ref _r1, out _vectorTemp1);
+            Vector2.Add(ref _body2.position, ref _r2, out _vectorTemp2);
             Vector2.Subtract(ref _vectorTemp2, ref _vectorTemp1, out _vectorTemp3);
             Vector2.Multiply(ref _vectorTemp3, -_biasFactor*inverseDt, out _velocityBias);
 
             _jointError = _vectorTemp3.Length();
 
-            body2.ApplyImmediateImpulse(ref _accumulatedImpulse);
+            _body2.ApplyImmediateImpulse(ref _accumulatedImpulse);
             Calculator.Cross(ref _r2, ref _accumulatedImpulse, out _floatTemp1);
-            body2.ApplyAngularImpulse(_floatTemp1);
+            _body2.ApplyAngularImpulse(_floatTemp1);
 
             Vector2.Multiply(ref _accumulatedImpulse, -1, out _vectorTemp1);
-            body1.ApplyImmediateImpulse(ref _vectorTemp1);
+            _body1.ApplyImmediateImpulse(ref _vectorTemp1);
             Calculator.Cross(ref _r1, ref _accumulatedImpulse, out _floatTemp1);
-            body1.ApplyAngularImpulse(-_floatTemp1);
+            _body1.ApplyAngularImpulse(-_floatTemp1);
         }
 
         private void MatrixInvert2D(ref Matrix matrix, out Matrix invertedMatrix)
@@ -201,36 +201,36 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         public override void Update()
         {
             //if (Math.Abs(_jointError) > _breakpoint) { Dispose(); } //check if joint is broken
-            if (isDisposed) return;
+            if (IsDisposed) return;
             if (!Enabled) return;
 
-            //Vector2 _dv = body2.LinearVelocity + Calculator.Cross(body2.AngularVelocity, _r2) - body1.LinearVelocity - Calculator.Cross(body1.AngularVelocity, _r1);
+            //Vector2 _dv = _body2.LinearVelocity + Calculator.Cross(_body2.AngularVelocity, _r2) - _body1.LinearVelocity - Calculator.Cross(_body1.AngularVelocity, _r1);
 
-            #region INLINE: Calculator.Cross(ref body2.angularVelocity, ref _r2, out _vectorTemp1);
+            #region INLINE: Calculator.Cross(ref _body2.angularVelocity, ref _r2, out _vectorTemp1);
 
-            _vectorTemp1.X = -body2.angularVelocity*_r2.Y;
-            _vectorTemp1.Y = body2.angularVelocity*_r2.X;
-
-            #endregion
-
-            #region INLINE: Calculator.Cross(ref body1.angularVelocity, ref _r1, out _vectorTemp2);
-
-            _vectorTemp2.X = -body1.angularVelocity*_r1.Y;
-            _vectorTemp2.Y = body1.angularVelocity*_r1.X;
+            _vectorTemp1.X = -_body2.angularVelocity*_r2.Y;
+            _vectorTemp1.Y = _body2.angularVelocity*_r2.X;
 
             #endregion
 
-            #region INLINE: Vector2.Add(ref body2.linearVelocity, ref _vectorTemp1, out _vectorTemp3);
+            #region INLINE: Calculator.Cross(ref _body1.angularVelocity, ref _r1, out _vectorTemp2);
 
-            _vectorTemp3.X = body2.linearVelocity.X + _vectorTemp1.X;
-            _vectorTemp3.Y = body2.linearVelocity.Y + _vectorTemp1.Y;
+            _vectorTemp2.X = -_body1.angularVelocity*_r1.Y;
+            _vectorTemp2.Y = _body1.angularVelocity*_r1.X;
 
             #endregion
 
-            #region INLINE: Vector2.Add(ref body1.linearVelocity, ref _vectorTemp2, out _vectorTemp4);
+            #region INLINE: Vector2.Add(ref _body2.linearVelocity, ref _vectorTemp1, out _vectorTemp3);
 
-            _vectorTemp4.X = body1.linearVelocity.X + _vectorTemp2.X;
-            _vectorTemp4.Y = body1.linearVelocity.Y + _vectorTemp2.Y;
+            _vectorTemp3.X = _body2.linearVelocity.X + _vectorTemp1.X;
+            _vectorTemp3.Y = _body2.linearVelocity.Y + _vectorTemp1.Y;
+
+            #endregion
+
+            #region INLINE: Vector2.Add(ref _body1.linearVelocity, ref _vectorTemp2, out _vectorTemp4);
+
+            _vectorTemp4.X = _body1.linearVelocity.X + _vectorTemp2.X;
+            _vectorTemp4.Y = _body1.linearVelocity.Y + _vectorTemp2.Y;
 
             #endregion
 
@@ -271,13 +271,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             #endregion
 
-            #region INLINE: body2.ApplyImpulse(ref _impulse);
+            #region INLINE: _body2.ApplyImpulse(ref _impulse);
 
-            _dv.X = _impulse.X*body2.inverseMass;
-            _dv.Y = _impulse.Y*body2.inverseMass;
+            _dv.X = _impulse.X*_body2.inverseMass;
+            _dv.Y = _impulse.Y*_body2.inverseMass;
 
-            body2.linearVelocity.X = _dv.X + body2.linearVelocity.X;
-            body2.linearVelocity.Y = _dv.Y + body2.linearVelocity.Y;
+            _body2.linearVelocity.X = _dv.X + _body2.linearVelocity.X;
+            _body2.linearVelocity.Y = _dv.Y + _body2.linearVelocity.Y;
 
             #endregion
 
@@ -287,9 +287,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             #endregion
 
-            #region INLINE: body2.ApplyAngularImpulse(ref _floatTemp1);
+            #region INLINE: _body2.ApplyAngularImpulse(ref _floatTemp1);
 
-            body2.angularVelocity += _floatTemp1*body2.inverseMomentOfInertia;
+            _body2.angularVelocity += _floatTemp1*_body2.inverseMomentOfInertia;
 
             #endregion
 
@@ -300,13 +300,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             #endregion
 
-            #region INLINE: body1.ApplyImpulse(ref _vectorTemp1);
+            #region INLINE: _body1.ApplyImpulse(ref _vectorTemp1);
 
-            _dv.X = _vectorTemp1.X*body1.inverseMass;
-            _dv.Y = _vectorTemp1.Y*body1.inverseMass;
+            _dv.X = _vectorTemp1.X*_body1.inverseMass;
+            _dv.Y = _vectorTemp1.Y*_body1.inverseMass;
 
-            body1.linearVelocity.X = _dv.X + body1.linearVelocity.X;
-            body1.linearVelocity.Y = _dv.Y + body1.linearVelocity.Y;
+            _body1.linearVelocity.X = _dv.X + _body1.linearVelocity.X;
+            _body1.linearVelocity.Y = _dv.Y + _body1.linearVelocity.Y;
 
             #endregion
 
@@ -318,9 +318,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             _floatTemp1 = -_floatTemp1;
 
-            #region INLINE: body1.ApplyAngularImpulse(ref _floatTemp1);
+            #region INLINE: _body1.ApplyAngularImpulse(ref _floatTemp1);
 
-            body1.angularVelocity += _floatTemp1*body1.inverseMomentOfInertia;
+            _body1.angularVelocity += _floatTemp1*_body1.inverseMomentOfInertia;
 
             #endregion
 

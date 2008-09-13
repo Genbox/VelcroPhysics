@@ -20,7 +20,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private float _upperLimit;
         private bool _upperLimitViolated;
         private float _velocityBias;
-        protected Body body;
+        private Body _body;
 
         public FixedAngleLimitJoint()
         {
@@ -28,15 +28,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public FixedAngleLimitJoint(Body body, float lowerLimit, float upperLimit)
         {
-            this.body = body;
+            _body = body;
             _lowerLimit = lowerLimit;
             _upperLimit = upperLimit;
         }
 
         public Body Body
         {
-            get { return body; }
-            set { body = value; }
+            get { return _body; }
+            set { _body = value; }
         }
 
         public float BiasFactor
@@ -84,7 +84,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void Validate()
         {
-            if (body.IsDisposed)
+            if (_body.IsDisposed)
             {
                 Dispose();
             }
@@ -97,11 +97,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
             }
-            if (isDisposed)
+            if (IsDisposed)
             {
                 return;
             }
-            _difference = body.totalRotation;
+            _difference = _body.totalRotation;
 
             if (_difference > _upperLimit)
             {
@@ -146,13 +146,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 _accumulatedAngularImpulse = 0;
             }
             _velocityBias = _biasFactor*inverseDt*_jointError;
-            _massFactor = (1 - _softness)/body.inverseMomentOfInertia;
-            body.angularVelocity += body.inverseMomentOfInertia*_accumulatedAngularImpulse;
+            _massFactor = (1 - _softness)/_body.inverseMomentOfInertia;
+            _body.angularVelocity += _body.inverseMomentOfInertia*_accumulatedAngularImpulse;
         }
 
         public override void Update()
         {
-            if (isDisposed)
+            if (IsDisposed)
             {
                 return;
             }
@@ -162,7 +162,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
 
             _angularImpulse = 0;
-            _angularImpulse = -(_velocityBias + body.angularVelocity + _softness*_accumulatedAngularImpulse)*_massFactor;
+            _angularImpulse = -(_velocityBias + _body.angularVelocity + _softness*_accumulatedAngularImpulse)*_massFactor;
 
             _accumlatedAngularImpulseOld = _accumulatedAngularImpulse;
 
@@ -177,7 +177,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             _angularImpulse = _accumulatedAngularImpulse - _accumlatedAngularImpulseOld;
 
-            body.angularVelocity += body.inverseMomentOfInertia*_angularImpulse;
+            _body.angularVelocity += _body.inverseMomentOfInertia*_angularImpulse;
         }
     }
 }

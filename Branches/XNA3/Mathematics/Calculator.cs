@@ -8,7 +8,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         public const float DegreesToRadiansRatio = 57.29577957855f;
         public const float RadiansToDegreesRatio = 1f/57.29577957855f;
         public const float TwoPi = 6.28318531f;
-        private static  Random _random = new Random();
+        private static Random _random = new Random();
         private static Vector2 _curveEnd;
         private static Vector2 _startCurve;
         private static Vector2 _temp;
@@ -74,7 +74,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
 
         public static float DistanceBetweenPointAndPoint(ref Vector2 point1, ref Vector2 point2)
         {
-            Vector2 v = Vector2.Zero;
+            Vector2 v;
             Vector2.Subtract(ref point1, ref point2, out v);
             return v.Length();
         }
