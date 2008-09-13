@@ -10,7 +10,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #endregion
 
-        private readonly List<Geom> _markedForRemovalList = new List<Geom>();
+        private List<Geom> _markedForRemovalList = new List<Geom>();
 
         private int _numberDisposed;
         public ContentsChangedEventHandler Added;

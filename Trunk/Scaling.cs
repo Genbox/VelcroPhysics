@@ -36,6 +36,8 @@ namespace FarseerGames.FarseerPhysics
         /// </summary>
         public float UpdateInterval
         {
+            //TODO: Rename this or the GetUpdateInterval(float dt) method
+            //it is confusing for users having 2 similar named prop/method
             get
             {
                 // todo -> add current scaling penalty

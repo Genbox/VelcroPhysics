@@ -6,12 +6,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
 {
     public sealed class SelectiveSweepCollider : IBroadPhaseCollider
     {
-        private static readonly StubComparer _comparer = new StubComparer();
+        private static StubComparer _comparer = new StubComparer();
 
-        private readonly PhysicsSimulator _physicsSimulator;
-        private readonly List<Wrapper> _wrappers;
-        private readonly List<Stub> _xStubs;
-        private readonly List<Stub> _yStubs;
+        private PhysicsSimulator _physicsSimulator;
+        private List<Wrapper> _wrappers;
+        private List<Stub> _xStubs;
+        private List<Stub> _yStubs;
 
         public SelectiveSweepCollider(PhysicsSimulator physicsSimulator)
         {
@@ -23,9 +23,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #region IBroadPhaseCollider Members
 
-        public void Add(Geom item)
+        public void Add(Geom geom)
         {
-            Wrapper wrapper = new Wrapper(item);
+            Wrapper wrapper = new Wrapper(geom);
             _wrappers.Add(wrapper);
             wrapper.AddStubs(_xStubs, _yStubs);
         }
@@ -275,8 +275,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private sealed class Stub
         {
-            public readonly bool begin;
-            public readonly Wrapper wrapper;
+            public bool begin;
+            public Wrapper wrapper;
             public float value;
 
             public Stub(Wrapper wrapper, bool begin)
@@ -316,12 +316,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private sealed class Wrapper
         {
-            private readonly Stub _xBegin;
-            private readonly Stub _xEnd;
-            private readonly Stub _yBegin;
-            private readonly Stub _yEnd;
-            public readonly Geom geom;
-            public readonly LinkedListNode<Wrapper> node;
+            private Stub _xBegin;
+            private Stub _xEnd;
+            private Stub _yBegin;
+            private Stub _yEnd;
+            public Geom geom;
+            public LinkedListNode<Wrapper> node;
             public float max;
             public float min;
             public bool shouldAddNode;

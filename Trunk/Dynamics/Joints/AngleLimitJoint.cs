@@ -21,8 +21,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private float _upperLimit;
         private bool _upperLimitViolated;
         private float _velocityBias;
-        protected Body body1;
-        protected Body body2;
+        private Body _body1;
+        private Body _body2;
 
         public AngleLimitJoint()
         {
@@ -30,22 +30,22 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public AngleLimitJoint(Body body1, Body body2, float lowerLimit, float upperLimit)
         {
-            this.body1 = body1;
-            this.body2 = body2;
+            _body1 = body1;
+            _body2 = body2;
             _lowerLimit = lowerLimit;
             _upperLimit = upperLimit;
         }
 
         public Body Body1
         {
-            get { return body1; }
-            set { body1 = value; }
+            get { return _body1; }
+            set { _body1 = value; }
         }
 
         public Body Body2
         {
-            get { return body2; }
-            set { body2 = value; }
+            get { return _body2; }
+            set { _body2 = value; }
         }
 
         public float BiasFactor
@@ -93,7 +93,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void Validate()
         {
-            if (body1.IsDisposed || body2.IsDisposed)
+            if (_body1.IsDisposed || _body2.IsDisposed)
             {
                 Dispose();
             }
@@ -106,11 +106,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
             }
-            if (isDisposed)
+            if (IsDisposed)
             {
                 return;
             }
-            _difference = (body2.totalRotation - body1.totalRotation);
+            _difference = (_body2.totalRotation - _body1.totalRotation);
             _jointError = 0;
 
             if (_difference > _upperLimit)
@@ -156,15 +156,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
             _velocityBias = _biasFactor*inverseDt*_jointError;
 
-            _massFactor = 1/(_softness + body1.inverseMomentOfInertia + body2.inverseMomentOfInertia);
+            _massFactor = 1/(_softness + _body1.inverseMomentOfInertia + _body2.inverseMomentOfInertia);
 
-            body1.angularVelocity -= body1.inverseMomentOfInertia*_accumulatedAngularImpulse;
-            body2.angularVelocity += body2.inverseMomentOfInertia*_accumulatedAngularImpulse;
+            _body1.angularVelocity -= _body1.inverseMomentOfInertia*_accumulatedAngularImpulse;
+            _body2.angularVelocity += _body2.inverseMomentOfInertia*_accumulatedAngularImpulse;
         }
 
         public override void Update()
         {
-            if (isDisposed)
+            if (IsDisposed)
             {
                 return;
             }
@@ -174,7 +174,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
             _angularImpulse = 0;
             _angularImpulse =
-                -(_velocityBias + (body2.angularVelocity - body1.angularVelocity) + _softness*_accumulatedAngularImpulse)*
+                -(_velocityBias + (_body2.angularVelocity - _body1.angularVelocity) + _softness*_accumulatedAngularImpulse)*
                 _massFactor;
 
             _accumlatedAngularImpulseOld = _accumulatedAngularImpulse;
@@ -190,8 +190,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             _angularImpulse = _accumulatedAngularImpulse - _accumlatedAngularImpulseOld;
 
-            body1.angularVelocity -= body1.inverseMomentOfInertia*_angularImpulse;
-            body2.angularVelocity += body2.inverseMomentOfInertia*_angularImpulse;
+            _body1.angularVelocity -= _body1.inverseMomentOfInertia*_angularImpulse;
+            _body2.angularVelocity += _body2.inverseMomentOfInertia*_angularImpulse;
         }
     }
 }

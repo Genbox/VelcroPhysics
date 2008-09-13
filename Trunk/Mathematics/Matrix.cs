@@ -4,7 +4,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
 {
     public struct Matrix
     {
-        private static readonly Matrix _identity;
+        private static Matrix _identity;
         public float M11;
         public float M12;
         public float M13;
@@ -22,6 +22,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         public float M43;
         public float M44;
 
+        //TODO: This should be removed and the fields should be initialized by declaration instead.
         static Matrix()
         {
             _identity = new Matrix(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f);

@@ -3,11 +3,13 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
-    public class CollisionHelper
+    public sealed class CollisionHelper
     {
+        private CollisionHelper() { }
+        
         #region Delegates
 
-        public delegate bool BroadPhaseCollisionHandlerDelegate(Geom geometry1, Geom geometry2);
+        public delegate bool BroadPhaseCollisionHandler(Geom geometry1, Geom geometry2);
 
         #endregion
 
@@ -289,8 +291,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     public class LineIntersectInfo
     {
-        private readonly Geom _geom;
-        private readonly List<Vector2> _points;
+        private Geom _geom;
+        private List<Vector2> _points;
 
         public LineIntersectInfo(Geom geom, List<Vector2> points)
         {

@@ -1,4 +1,5 @@
 using System;
+using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
@@ -24,10 +25,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         private Vector2 _velocityAtPoint2 = Vector2.Zero;
         private Vector2 _worldPoint1 = Vector2.Zero;
         private Vector2 _worldPoint2 = Vector2.Zero;
-        internal Vector2 attachPoint1;
-        internal Vector2 attachPoint2;
-        protected Body body1;
-        protected Body body2;
+        private Vector2 _attachPoint1;
+        private Vector2 _attachPoint2;
+        private Body _body1;
+        private Body _body2;
 
         public LinearSpring()
         {
@@ -36,10 +37,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         public LinearSpring(Body body1, Vector2 attachPoint1, Body body2, Vector2 attachPoint2, float springConstant,
                             float dampningConstant)
         {
-            this.body1 = body1;
-            this.body2 = body2;
-            this.attachPoint1 = attachPoint1;
-            this.attachPoint2 = attachPoint2;
+            _body1 = body1;
+            _body2 = body2;
+            _attachPoint1 = attachPoint1;
+            _attachPoint2 = attachPoint2;
             _springConstant = springConstant;
             _dampningConstant = dampningConstant;
             _difference = body2.GetWorldPosition(attachPoint2) - body1.GetWorldPosition(attachPoint1);
@@ -48,26 +49,26 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public Body Body1
         {
-            get { return body1; }
-            set { body1 = value; }
+            get { return _body1; }
+            set { _body1 = value; }
         }
 
         public Body Body2
         {
-            get { return body2; }
-            set { body2 = value; }
+            get { return _body2; }
+            set { _body2 = value; }
         }
 
         public Vector2 AttachPoint1
         {
-            get { return attachPoint1; }
-            set { attachPoint1 = value; }
+            get { return _attachPoint1; }
+            set { _attachPoint1 = value; }
         }
 
         public Vector2 AttachPoint2
         {
-            get { return attachPoint2; }
-            set { attachPoint2 = value; }
+            get { return _attachPoint2; }
+            set { _attachPoint2 = value; }
         }
 
         public float SpringConstant
@@ -104,7 +105,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         public override void Validate()
         {
             //if either of the joint's connected bodies are disposed then dispose the joint.
-            if (body1.IsDisposed || body2.IsDisposed)
+            if (_body1.IsDisposed || _body2.IsDisposed)
             {
                 Dispose();
             }
@@ -118,14 +119,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
                 if (Broke != null) Broke(this, new EventArgs());
             }
 
-            if (isDisposed)
+            if (IsDisposed)
             {
                 return;
             }
             //calculate and apply spring _force
             //F = -{s(L-r) + d[(v1-v2).L]/l}L/l   : s=spring const, d = dampning const, L=_difference vector (p1-p2), l = _difference magnitude, r = rest length,
-            body1.GetWorldPosition(ref attachPoint1, out _worldPoint1);
-            body2.GetWorldPosition(ref attachPoint2, out _worldPoint2);
+            _body1.GetWorldPosition(ref _attachPoint1, out _worldPoint1);
+            _body2.GetWorldPosition(ref _attachPoint2, out _worldPoint2);
             Vector2.Subtract(ref _worldPoint1, ref _worldPoint2, out _difference);
             float differenceMagnitude = _difference.Length();
             if (differenceMagnitude < _epsilon)
@@ -139,8 +140,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             _springForce = _springConstant*_springError; //kX
 
             //calculate relative velocity
-            body1.GetVelocityAtLocalPoint(ref attachPoint1, out _velocityAtPoint1);
-            body2.GetVelocityAtLocalPoint(ref attachPoint2, out _velocityAtPoint2);
+            _body1.GetVelocityAtLocalPoint(ref _attachPoint1, out _velocityAtPoint1);
+            _body2.GetVelocityAtLocalPoint(ref _attachPoint2, out _velocityAtPoint2);
             Vector2.Subtract(ref _velocityAtPoint1, ref _velocityAtPoint2, out _relativeVelocity);
 
             //calculate dampning _force
@@ -150,15 +151,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             //calculate final _force (spring + dampning)
             Vector2.Multiply(ref _differenceNormalized, -(_springForce + _dampningForce), out _force);
 
-            if (!body1.IsStatic)
+            if (!_body1.IsStatic)
             {
-                body1.ApplyForceAtLocalPoint(ref _force, ref attachPoint1);
+                _body1.ApplyForceAtLocalPoint(ref _force, ref _attachPoint1);
             }
 
-            if (!body2.IsStatic)
+            if (!_body2.IsStatic)
             {
                 Vector2.Multiply(ref _force, -1, out _force);
-                body2.ApplyForceAtLocalPoint(ref _force, ref attachPoint2);
+                _body2.ApplyForceAtLocalPoint(ref _force, ref _attachPoint2);
             }
         }
     }

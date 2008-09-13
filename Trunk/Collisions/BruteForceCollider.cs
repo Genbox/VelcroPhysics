@@ -5,7 +5,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 {
     public class BruteForceCollider : IBroadPhaseCollider
     {
-        private readonly PhysicsSimulator _physicsSimulator;
+        private PhysicsSimulator _physicsSimulator;
         private Arbiter _arbiter;
         private Geom _geometryA;
         private Geom _geometryB;

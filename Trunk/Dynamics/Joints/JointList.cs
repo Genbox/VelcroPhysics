@@ -10,7 +10,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         #endregion
 
-        private readonly List<Joint> _markedForRemovalList = new List<Joint>();
+        private List<Joint> _markedForRemovalList = new List<Joint>();
 
         public ContentsChangedEventHandler Added;
         public ContentsChangedEventHandler Removed;

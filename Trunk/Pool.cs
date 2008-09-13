@@ -4,7 +4,7 @@ namespace FarseerGames.FarseerPhysics
 {
     public class Pool<T> where T : new()
     {
-        private readonly Stack<T> _stack;
+        private Stack<T> _stack;
 
         public Pool()
         {

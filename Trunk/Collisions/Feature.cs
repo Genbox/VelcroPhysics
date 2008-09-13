@@ -22,5 +22,34 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Normal = normal;
             Distance = distance;
         }
+
+        //TODO: There might be a better way to generate the hashcode
+        public override int GetHashCode()
+        {
+            return (int)(Normal.X + Normal.Y + Position.X + Position.Y + Distance);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Feature))
+                return false;
+
+            return Equals((Feature)obj);
+        }
+
+        public bool Equals(Feature other)
+        {
+            return ((Normal == other.Normal) && (Position == other.Position) && (Distance == other.Distance));
+        }
+
+        public static bool operator ==(Feature first, Feature second)
+        {
+            return first.Equals(second);
+        }
+
+        public static bool operator !=(Feature first, Feature second)
+        {
+            return !first.Equals(second);
+        }
     }
 }

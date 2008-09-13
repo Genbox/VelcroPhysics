@@ -7,13 +7,13 @@ namespace FarseerGames.FarseerPhysics.Mathematics
     /// </summary>
     public class CircularInterpolator
     {
-        private readonly float _maxValue = float.MaxValue;
-        private readonly float _minValue = float.MinValue;
-        private readonly float _twoOverPi = 1f/MathHelper.PiOver2;
-        private readonly float _value1;
-        private readonly float _value2;
-        private readonly float _value3;
-        private readonly float _value4;
+        private float _maxValue = float.MaxValue;
+        private float _minValue = float.MinValue;
+        private float _twoOverPi = 1f/MathHelper.PiOver2;
+        private float _value1;
+        private float _value2;
+        private float _value3;
+        private float _value4;
         private float _circleValue1;
         private float _circleValue2;
 

@@ -1,6 +1,5 @@
 using System;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Interfaces;
 using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Collisions
@@ -8,7 +7,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// <remark>
     /// The geometry class is the unit of collision detection.
     /// </remark>
-    public class Geom : IEquatable<Geom>, IIsDisposable
+    public class Geom : IEquatable<Geom>, IDisposable
     {
         #region Delegates
 
@@ -45,7 +44,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         internal float frictionCoefficient;
 
         internal Grid grid;
-        protected bool isDisposed;
+        public bool IsDisposed;
         internal bool isRemoved = true; //true=>geometry removed from simulation
         internal Vertices localVertices;
         internal float restitutionCoefficient;
@@ -96,13 +95,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public Vertices LocalVertices
         {
             get { return localVertices; }
-            set { localVertices = value; }
+            //set { localVertices = value; }
         }
 
         public Vertices WorldVertices
         {
             get { return worldVertices; }
-            set { worldVertices = value; }
+            //set { worldVertices = value; }
         }
 
         public Matrix Matrix
@@ -218,20 +217,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #endregion
 
-        #region IIsDisposable Members
-
-        public bool IsDisposed
-        {
-            get { return isDisposed; }
-        }
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        #endregion
 
         private void Construct(Body body, Vertices vertices, Vector2 offset, float rotationOffset,
                                float collisionGridCellSize)
@@ -527,7 +517,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             //subclasses can override incase they need to dispose of resources
             //otherwise do nothing.
-            if (!isDisposed)
+            if (!IsDisposed)
             {
                 if (disposing)
                 {
@@ -541,8 +531,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                 //dispose unmanaged resources
             }
-            isDisposed = true;
-            //base.Dispose(disposing)        
+            IsDisposed = true;
         }
 
         #region Update variables

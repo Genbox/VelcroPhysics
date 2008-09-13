@@ -73,9 +73,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public override bool Equals(object obj)
         {
             if (!(obj is Contact))
-            {
-                throw new ArgumentException("The object being compared must be of type 'Arbiter'");
-            }
+                return false;
+
             return Equals((Contact) obj);
         }
 

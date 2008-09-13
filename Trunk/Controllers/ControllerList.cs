@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FarseerGames.FarseerPhysics.Controllers;
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
@@ -10,7 +11,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         #endregion
 
-        private readonly List<Controller> _markedForRemovalList = new List<Controller>();
+        private List<Controller> _markedForRemovalList = new List<Controller>();
 
         public ContentsChangedEventHandler Added;
         public ContentsChangedEventHandler Removed;

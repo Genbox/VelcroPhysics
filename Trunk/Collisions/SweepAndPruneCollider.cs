@@ -19,12 +19,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     public class SweepAndPruneCollider : IBroadPhaseCollider
     {
-        public static float fTol = 0.01f; //1.5f; //.01f;
-        private readonly PhysicsSimulator _physicsSimulator;
-        private readonly ExtentList _xExtentList;
-        private readonly ExtentInfoList _xInfoList;
-        private readonly ExtentList _yExtentList;
-        private readonly ExtentInfoList _yInfoList;
+        public const float fTol = 0.01f; //1.5f; //.01f;
+        private PhysicsSimulator _physicsSimulator;
+        private ExtentList _xExtentList;
+        private ExtentInfoList _xInfoList;
+        private ExtentList _yExtentList;
+        private ExtentInfoList _yInfoList;
         //private bool bForce;
         public CollisionPairDictionary collisionPairs;
 
@@ -88,14 +88,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// This method is used by the PhysicsSimulator to notify Sweep and Prune that 
         /// new geometry is to be tracked.
         /// </summary>
-        /// <param name="g">The geometry to be added</param>
-        public void Add(Geom g)
+        /// <param name="geom">The geometry to be added</param>
+        public void Add(Geom geom)
         {
-            ExtentInfo xExtentInfo = new ExtentInfo(g, g.AABB.Min.X, g.AABB.Max.X);
+            ExtentInfo xExtentInfo = new ExtentInfo(geom, geom.AABB.Min.X, geom.AABB.Max.X);
             _xInfoList.Add(xExtentInfo);
             _xExtentList.IncrementalInsertExtent(xExtentInfo);
 
-            ExtentInfo yExtentInfo = new ExtentInfo(g, g.AABB.Min.Y, g.AABB.Max.Y);
+            ExtentInfo yExtentInfo = new ExtentInfo(geom, geom.AABB.Min.Y, geom.AABB.Max.Y);
             _yInfoList.Add(yExtentInfo);
             _yExtentList.IncrementalInsertExtent(yExtentInfo);
         }
@@ -330,6 +330,33 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 // approach any time soon.
                 return (geom1.Id*10000 + geom2.Id);
             }
+
+            public override bool Equals(object obj)
+            {
+                if (!(obj is CollisionPair))
+                    return false;
+
+                return Equals((CollisionPair)obj);
+            }
+
+            public bool Equals(CollisionPair other)
+            {
+                if (geom1 == other.geom1)
+                    return (geom2 == other.geom2);
+
+                return false;
+            }
+
+            public static bool operator ==(CollisionPair first, CollisionPair second)
+            {
+                return first.Equals(second);
+            }
+
+            public static bool operator !=(CollisionPair first, CollisionPair second)
+            {
+                return !first.Equals(second);
+            }
+
         }
 
         #endregion
@@ -432,7 +459,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         private class ExtentInfoList : List<ExtentInfo>
         {
-            public readonly SweepAndPruneCollider owner;
+            public SweepAndPruneCollider owner;
 
             public ExtentInfoList(SweepAndPruneCollider sap)
             {

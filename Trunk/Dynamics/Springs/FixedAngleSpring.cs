@@ -1,4 +1,5 @@
 using System;
+using FarseerGames.FarseerPhysics.Controllers;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
@@ -12,7 +13,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         private float _springError;
         private float _targetAngle;
         private float _torqueMultiplier = 1f;
-        protected Body body;
+        private Body _body;
 
         public FixedAngleSpring()
         {
@@ -20,7 +21,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public FixedAngleSpring(Body body, float springConstant, float dampningConstant)
         {
-            this.body = body;
+            _body = body;
             _springConstant = springConstant;
             _dampningConstant = dampningConstant;
             _targetAngle = body.TotalRotation;
@@ -28,8 +29,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public Body Body
         {
-            get { return body; }
-            set { body = value; }
+            get { return _body; }
+            set { _body = value; }
         }
 
         public float SpringConstant
@@ -81,8 +82,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public override void Validate()
         {
-            //if body is disposed then dispose the joint.
-            if (body.IsDisposed)
+            //if _body is disposed then dispose the joint.
+            if (_body.IsDisposed)
             {
                 Dispose();
             }
@@ -95,21 +96,21 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
             }
-            if (isDisposed)
+            if (IsDisposed)
             {
                 return;
             }
             //calculate and apply spring force
-            float angleDifference = _targetAngle - body.totalRotation;
+            float angleDifference = _targetAngle - _body.totalRotation;
             float springTorque = _springConstant*angleDifference;
             _springError = angleDifference;
 
             //apply torque at anchor
-            if (!body.IsStatic)
+            if (!_body.IsStatic)
             {
-                float torque1 = springTorque - _dampningConstant*body.angularVelocity;
+                float torque1 = springTorque - _dampningConstant*_body.angularVelocity;
                 torque1 = Math.Min(Math.Abs(torque1*_torqueMultiplier), _maxTorque)*Math.Sign(torque1);
-                body.ApplyTorque(torque1);
+                _body.ApplyTorque(torque1);
             }
         }
     }
