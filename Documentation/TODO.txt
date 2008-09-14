@@ -1,8 +1,8 @@
 Public:
 Create a multithreading sample. (Secret and normal threading)
 Create a InactivityController sample.
-Change structure on GettingStarted demos to simplify.
-Write some documentation.
+Write some documentation. (Update wiki and write manual) - Could perhaps use the silverlight version
+to demonstrate Farseer while reading manual?
 
 Private:
 Publish theclaw prototype (simplify it first)
