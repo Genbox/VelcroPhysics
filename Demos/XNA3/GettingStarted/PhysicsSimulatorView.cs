@@ -326,17 +326,17 @@ namespace FarseerGames.FarseerPhysicsDemos
 
         public virtual void UnloadContent(GraphicsDevice graphicsDevice, ContentManager content)
         {
-            LoadVerticeContent(graphicsDevice);
-            LoadEdgeContent(graphicsDevice);
-            LoadGridContent(graphicsDevice);
-            LoadAABBContent(graphicsDevice);
-            LoadCoordinateAxisContent(graphicsDevice);
-            LoadContactContent(graphicsDevice);
-            LoadPerformancePanelContent(graphicsDevice, content);
-            LoadSpringContent(graphicsDevice);
-            LoadRevoluteJointContent(graphicsDevice);
-            LoadPinJointContent(graphicsDevice);
-            LoadSliderJointContent(graphicsDevice);
+            //UnloadVerticeContent();
+            //UnloadEdgeContent();
+            //UnloadGridContent();
+            //UnloadAABBContent();
+            //UnloadCoordinateAxisContent();
+            //UnloadContactContent();
+            //UnloadPerformancePanelContent();
+            //UnloadSpringContent();
+            //UnloadRevoluteJointContent();
+            //UnloadPinJointContent();
+            //UnloadSliderJointContent();
         }
 
         private void LoadPerformancePanelContent(GraphicsDevice graphicsDevice, ContentManager content)
