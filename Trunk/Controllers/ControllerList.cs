@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Controllers;
 
-namespace FarseerGames.FarseerPhysics.Dynamics
+namespace FarseerGames.FarseerPhysics.Controllers
 {
+    /// <summary>
+    /// Provides a type strong list of controllers
+    /// </summary>
     public class ControllerList : List<Controller>
     {
         #region Delegates

@@ -4,6 +4,9 @@ using FarseerGames.FarseerPhysics.Interfaces;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
+    /// <summary>
+    /// A broad phase collider that uses the Selective Sweep algorithm
+    /// </summary>
     public sealed class SelectiveSweepCollider : IBroadPhaseCollider
     {
         private static StubComparer _comparer = new StubComparer();
@@ -134,7 +137,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// updates all the nodes to their new values and sorts the lists
+        /// Updates all the nodes to their new values and sorts the lists
         /// </summary>
         public void InternalUpdate()
         {

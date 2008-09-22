@@ -2,6 +2,9 @@ using System;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
+    /// <summary>
+    /// Fixed angle joint put a body at an angle in it's current position
+    /// </summary>
     public class FixedAngleJoint : Joint
     {
         private float _biasFactor = .2f;

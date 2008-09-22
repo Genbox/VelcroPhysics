@@ -3,6 +3,10 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
+    /// <summary>
+    /// An Axis Aligned Bounding Box.
+    /// Used for collision detection
+    /// </summary>
     public class AABB
     {
         private const float _epsilon = .00001f;

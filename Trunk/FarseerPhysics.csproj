@@ -81,6 +81,7 @@
     <Compile Include="Collisions\Feature.cs" />
     <Compile Include="Collisions\Geom.cs" />
     <Compile Include="Collisions\GeomList.cs" />
+    <Compile Include="Collisions\LineIntersectInfo.cs" />
     <Compile Include="Controllers\ControllerList.cs" />
     <Compile Include="Dynamics\Arbiter.cs" />
     <Compile Include="Dynamics\ArbiterList.cs" />

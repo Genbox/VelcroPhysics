@@ -2,6 +2,9 @@ using System;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
+    /// <summary>
+    /// TODO: Write documentation
+    /// </summary>
     public struct ContactId : IEquatable<ContactId>
     {
         private int _geometryAIndex;

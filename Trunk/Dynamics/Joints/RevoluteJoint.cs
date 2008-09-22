@@ -4,6 +4,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
+    /// <summary>
+    /// Creates a revolute joint between 2 bodies.
+    /// </summary>
     public class RevoluteJoint : Joint
     {
         private Vector2 _accumulatedImpulse;

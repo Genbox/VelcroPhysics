@@ -2,6 +2,9 @@ using System;
 
 namespace FarseerGames.FarseerPhysics.Controllers
 {
+    /// <summary>
+    /// Provides the implementation that all controllers need.
+    /// </summary>
     public abstract class Controller : IDisposable
     {
         public bool IsDisposed;

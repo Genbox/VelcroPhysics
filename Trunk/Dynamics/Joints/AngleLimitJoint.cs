@@ -3,6 +3,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
+    /// <summary>
+    /// Angle limit joint joins together 2 bodies at an upper and lower angel limit.
+    /// </summary>
     public class AngleLimitJoint : Joint
     {
         private float _accumlatedAngularImpulseOld;
