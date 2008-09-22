@@ -37,7 +37,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             _aabb = new AABB(geometry.AABB);
             _gridCellSize = gridCellSize;
             _gridCellSizeInv = 1/gridCellSize;
-
+            
+            //TODO: Possible optimization (minor)! use casting, use _aabb.Width and Height and check if Height==Width instead of calculating twice.
             int xSize = (int) Math.Ceiling(Convert.ToDouble((_aabb.Max.X - _aabb.Min.X)*_gridCellSizeInv)) + 1;
             int ySize = (int) Math.Ceiling(Convert.ToDouble((_aabb.Max.Y - _aabb.Min.Y)*_gridCellSizeInv)) + 1;
 
@@ -45,6 +46,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             _points = new Vector2[xSize*ySize];
             int i = 0;
             Vector2 vector = _aabb.Min;
+
+            //TODO: Possible optimization (normal)! If the shape is symmetric in X and Y axis, don't calculate the points, replicate them.
             for (int x = 0; x < xSize; ++x, vector.X += gridCellSize)
             {
                 vector.Y = _aabb.Min.Y;
