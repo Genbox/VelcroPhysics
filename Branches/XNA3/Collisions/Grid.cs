@@ -47,6 +47,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             int i = 0;
             Vector2 vector = _aabb.Min;
 
+            //TODO: Possible optimization (normal)! Cache the grids for later use. (don't recreate a grid of 64x64 if it's already made)
+
             //TODO: Possible optimization (normal)! If the shape is symmetric in X and Y axis, don't calculate the points, replicate them.
             for (int x = 0; x < xSize; ++x, vector.X += gridCellSize)
             {
