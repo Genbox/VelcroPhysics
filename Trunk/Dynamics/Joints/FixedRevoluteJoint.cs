@@ -4,6 +4,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
+    /// <summary>
+    /// Fixed revolute joint creates a revolute joint at the attached body position.
+    /// </summary>
     public class FixedRevoluteJoint : Joint
     {
         private Vector2 _accumulatedImpulse;

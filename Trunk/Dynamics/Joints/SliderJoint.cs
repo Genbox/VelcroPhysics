@@ -3,6 +3,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
+    /// <summary>
+    /// TODO: Write documentation
+    /// </summary>
     public class SliderJoint : Joint
     {
         private float _accumulatedImpulse;

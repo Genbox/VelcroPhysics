@@ -2,6 +2,9 @@ using System;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
+    /// <summary>
+    /// Angle joint joins together 2 bodies in an angle
+    /// </summary>
     public class AngleJoint : Joint
     {
         private float _biasFactor = .2f;

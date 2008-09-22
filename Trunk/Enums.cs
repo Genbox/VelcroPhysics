@@ -12,7 +12,7 @@ namespace FarseerGames.FarseerPhysics
     public enum CollisionCategories
     {
         None = 0,
-        All = Int32.MaxValue,
+        All = int.MaxValue,
         Cat1 = 1,
         Cat2 = 2,
         Cat3 = 4,

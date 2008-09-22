@@ -2,6 +2,9 @@ using System;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
+    /// <summary>
+    /// Provides common functionality for joints.
+    /// </summary>
     public abstract class Joint : IDisposable
     {
         private bool _enabled = true;

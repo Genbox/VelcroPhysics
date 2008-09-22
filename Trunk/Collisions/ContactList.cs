@@ -2,6 +2,10 @@ using System.Collections.Generic;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
+    /// <summary>
+    /// Contains a list of contacts
+    /// Inherits List<Contact>.
+    /// </summary>
     public class ContactList : List<Contact>
     {
         private int _index = -1;

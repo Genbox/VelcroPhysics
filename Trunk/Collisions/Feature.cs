@@ -3,6 +3,10 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
+    /// <summary>
+    /// Contains info about distance, normal and position.
+    /// Used in collision detection
+    /// </summary>
     public struct Feature
     {
         public float Distance; // = float.MaxValue;
@@ -23,7 +27,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Distance = distance;
         }
 
-        //TODO: There might be a better way to generate the hashcode
+        //NOTE: There might be a better way to generate the hashcode
         public override int GetHashCode()
         {
             return (int)(Normal.X + Normal.Y + Position.X + Position.Y + Distance);

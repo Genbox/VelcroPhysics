@@ -3,6 +3,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
+    /// <summary>
+    /// TODO: Write documentation
+    /// </summary>
     public struct Contact : IEquatable<Contact>
     {
         internal float BounceVelocity;

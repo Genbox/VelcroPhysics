@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
+    /// <summary>
+    /// Provides a strongly typed list of joints
+    /// </summary>
     public class JointList : List<Joint>
     {
         #region Delegates

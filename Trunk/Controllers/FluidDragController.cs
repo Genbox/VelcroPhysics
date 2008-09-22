@@ -6,6 +6,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Controllers
 {
+    /// <summary>
+    /// TODO: Create documentation
+    /// </summary>
     public class FluidDragController : Controller
     {
         #region Delegates

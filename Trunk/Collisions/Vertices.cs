@@ -5,6 +5,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
+    /// <summary>
+    /// Contains a list of Vector2's
+    /// </summary>
     public class Vertices : List<Vector2>
     {
         private Vector2 _res;
@@ -39,7 +42,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             get { return ToArray(); }
         }
 
-        public Int32 NextIndex(Int32 index)
+        public int NextIndex(int index)
         {
             if (index == Count - 1)
             {
@@ -48,7 +51,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return index + 1;
         }
 
-        public Int32 PreviousIndex(Int32 index)
+        public int PreviousIndex(int index)
         {
             if (index == 0)
             {
@@ -57,24 +60,24 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return index - 1;
         }
 
-        public Vector2 GetEdge(Int32 index)
+        public Vector2 GetEdge(int index)
         {
-            Int32 nextIndex = NextIndex(index);
+            int nextIndex = NextIndex(index);
             _vectorTemp2 = this[nextIndex];
             _vectorTemp3 = this[index];
             Vector2.Subtract(ref _vectorTemp2, ref _vectorTemp3, out _vectorTemp1);
             return _vectorTemp1;
         }
 
-        public void GetEdge(Int32 index, out Vector2 edge)
+        public void GetEdge(int index, out Vector2 edge)
         {
-            Int32 nextIndex = NextIndex(index);
+            int nextIndex = NextIndex(index);
             _vectorTemp2 = this[nextIndex];
             _vectorTemp3 = this[index];
             Vector2.Subtract(ref _vectorTemp2, ref _vectorTemp3, out edge);
         }
 
-        public Vector2 GetEdgeMidPoint(Int32 index)
+        public Vector2 GetEdgeMidPoint(int index)
         {
             GetEdge(index, out _vectorTemp1);
             Vector2.Multiply(ref _vectorTemp1, .5f, out _vectorTemp2);
@@ -85,7 +88,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return _vectorTemp1;
         }
 
-        public void GetEdgeMidPoint(Int32 index, out Vector2 midPoint)
+        public void GetEdgeMidPoint(int index, out Vector2 midPoint)
         {
             GetEdge(index, out _vectorTemp1);
             Vector2.Multiply(ref _vectorTemp1, .5f, out _vectorTemp2);
@@ -93,7 +96,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Vector2.Add(ref _vectorTemp3, ref _vectorTemp2, out midPoint);
         }
 
-        public Vector2 GetEdgeNormal(Int32 index)
+        public Vector2 GetEdgeNormal(int index)
         {
             GetEdge(index, out _vectorTemp1);
 
@@ -105,7 +108,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return _vectorTemp3;
         }
 
-        public void GetEdgeNormal(Int32 index, out Vector2 edgeNormal)
+        public void GetEdgeNormal(int index, out Vector2 edgeNormal)
         {
             GetEdge(index, out _vectorTemp4);
             _vectorTemp5.X = -_vectorTemp4.Y;
@@ -113,7 +116,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Vector2.Normalize(ref _vectorTemp5, out edgeNormal);
         }
 
-        public Vector2 GetVertexNormal(Int32 index)
+        public Vector2 GetVertexNormal(int index)
         {
             GetEdgeNormal(index, out _vectorTemp1);
 
@@ -127,7 +130,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return _vectorTemp1;
         }
 
-        public void GetVertexNormal(Int32 index, out Vector2 vertexNormal)
+        public void GetVertexNormal(int index, out Vector2 vertexNormal)
         {
             GetEdgeNormal(index, out _vectorTemp1);
             int prevIndex = PreviousIndex(index);
@@ -136,6 +139,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Vector2.Normalize(ref _vectorTemp3, out vertexNormal);
         }
 
+        /// <summary>
+        /// Finds the shortest edge.
+        /// </summary>
+        /// <returns></returns>
         public float GetShortestEdge()
         {
             float shortestEdge = float.MaxValue;
@@ -151,6 +158,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return shortestEdge;
         }
 
+        /// <summary>
+        /// Divides the edges up into the specified length.
+        /// </summary>
+        /// <param name="maxEdgeLength">Length of the max edge.</param>
         public void SubDivideEdges(float maxEdgeLength)
         {
             Vertices verticesTemp = new Vertices();
@@ -258,6 +269,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return _res;
         }
 
+        /// <summary>
+        /// Gets the moment of inertia from the vertices
+        /// </summary>
+        /// <returns></returns>
         public float GetMomentOfInertia()
         {
             Vertices verts = new Vertices(this);
@@ -329,6 +344,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
+        /// <summary>
+        /// Creates a rectangle with the specified width and height.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <returns>The vertices that define a rectangle</returns>
         public static Vertices CreateRectangle(float width, float height)
         {
             Vertices vertices = new Vertices();
@@ -351,6 +372,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return vertices;
         }
 
+        /// <summary>
+        /// Creates a circle with the specified radius and number of edges.
+        /// </summary>
+        /// <param name="radius">The radius.</param>
+        /// <param name="numberOfEdges">The number of edges. The more edges, the more it resembles a circle</param>
+        /// <returns></returns>
         public static Vertices CreateCircle(float radius, int numberOfEdges)
         {
             Vertices vertices = new Vertices();

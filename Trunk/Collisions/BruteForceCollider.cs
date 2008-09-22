@@ -3,6 +3,9 @@ using FarseerGames.FarseerPhysics.Interfaces;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
+    /// <summary>
+    /// A broad phase collider that uses a brute force algorithm
+    /// </summary>
     public class BruteForceCollider : IBroadPhaseCollider
     {
         private PhysicsSimulator _physicsSimulator;
@@ -41,13 +44,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private void DoCollision()
         {
+            //Iterate all the geoms and check against the next
             for (int i = 0; i < _physicsSimulator.geomList.Count - 1; i++)
             {
                 for (int j = i + 1; j < _physicsSimulator.geomList.Count; j++)
                 {
                     _geometryA = _physicsSimulator.geomList[i];
                     _geometryB = _physicsSimulator.geomList[j];
-                    //possible early exits
+                    
+                    //Possible early exits
                     if (!_geometryA.Body.enabled || !_geometryB.Body.enabled)
                     {
                         continue;
@@ -64,15 +69,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         continue;
                     }
 
+                    //Don't collide two static bodies
                     if (_geometryA.Body.isStatic && _geometryB.Body.isStatic)
                     {
-                        //don't collide two static bodies
                         continue;
                     }
 
+                    //Don't collide two geometries connected to the same body
                     if (_geometryA.Body == _geometryB.Body)
                     {
-                        //don't collide two geometries connected to the same body
                         continue;
                     }
 
@@ -82,10 +87,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         continue;
                     }
 
+                    //Assume intersection
                     bool intersection = true;
 
                     #region INLINE: if (AABB.Intersect(_geometryA.aabb, _geometryB.aabb)) ....
 
+                    //Check if there is no intersection
                     if (_geometryA.AABB.min.X > _geometryB.AABB.max.X || _geometryB.AABB.min.X > _geometryA.AABB.max.X)
                     {
                         intersection = false;
@@ -103,13 +110,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         _arbiter = _physicsSimulator.arbiterPool.Fetch();
                         _arbiter.ConstructArbiter(_geometryA, _geometryB, _physicsSimulator);
 
-                        if (!_physicsSimulator.arbiterList.Contains(_arbiter))
+                        if (_physicsSimulator.arbiterList.Contains(_arbiter))
                         {
-                            _physicsSimulator.arbiterList.Add(_arbiter);
+                            _physicsSimulator.arbiterPool.Release(_arbiter);
                         }
                         else
                         {
-                            _physicsSimulator.arbiterPool.Release(_arbiter);
+                            _physicsSimulator.arbiterList.Add(_arbiter);
                         }
                     }
                 }

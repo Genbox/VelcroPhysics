@@ -17,7 +17,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private EventHandler<EventArgs> _bodyDisposed;
         private Body.UpdatedEventHandler _bodyUpdated;
-        private float _collisonGridCellSize;
+        private float _collisionGridCellSize;
         private int _id;
         private Matrix _matrix = Matrix.Identity;
         private Matrix _matrixInverse = Matrix.Identity;
@@ -30,13 +30,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         internal AABB aabb = new AABB();
         internal Body body;
 
-        internal CollisionCategories collidesWith = CollisionCategories.All;
         //collides with all categories by default
+        internal CollisionCategories collidesWith = CollisionCategories.All;
 
         public CollisionEventHandler Collision;
 
-        internal CollisionCategories collisionCategories = CollisionCategories.All;
         //member off all categories by default
+        internal CollisionCategories collisionCategories = CollisionCategories.All;
 
         internal bool collisionEnabled = true;
         internal int collisionGroup;
@@ -76,32 +76,43 @@ namespace FarseerGames.FarseerPhysics.Collisions
             ConstructClone(body, geometry, offset, rotationOffset);
         }
 
+        /// <summary>
+        /// Gets the position.
+        /// </summary>
+        /// <value>The position.</value>
         public Vector2 Position
         {
             get { return _position; }
         }
 
+        /// <summary>
+        /// Gets the rotation.
+        /// </summary>
+        /// <value>The rotation.</value>
         public float Rotation
         {
             get { return _rotation; }
         }
 
-        public float CollisonGridCellSize
+        /// <summary>
+        /// Gets or sets the size of the collison grid cells.
+        /// Be sure to run ComputeCollisionGrid() for any changes to take effect.
+        /// </summary>
+        /// <value>The size of the collison grid cell.</value>
+        public float CollisionGridCellSize
         {
-            get { return _collisonGridCellSize; }
-            set { _collisonGridCellSize = value; }
+            get { return _collisionGridCellSize; }
+            set { _collisionGridCellSize = value; }
         }
 
         public Vertices LocalVertices
         {
             get { return localVertices; }
-            //set { localVertices = value; }
         }
 
         public Vertices WorldVertices
         {
             get { return worldVertices; }
-            //set { worldVertices = value; }
         }
 
         public Matrix Matrix
@@ -123,36 +134,62 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
+        /// <summary>
+        /// Gets or sets the Axis Aligned Bounding Box of the geom.
+        /// </summary>
+        /// <value>The AABB.</value>
         public AABB AABB
         {
             get { return aabb; }
             set { aabb = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the collision group.
+        /// </summary>
+        /// <value>The collision group.</value>
         public int CollisionGroup
         {
             get { return collisionGroup; }
             set { collisionGroup = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether collision is enabled.
+        /// </summary>
+        /// <value><c>true</c> if collision is enabled; otherwise, <c>false</c>.</value>
         public bool CollisionEnabled
         {
             get { return collisionEnabled; }
             set { collisionEnabled = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether collision response is enabled.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if collision response enabled; otherwise, <c>false</c>.
+        /// </value>
         public bool CollisionResponseEnabled
         {
             get { return collsionResponseEnabled; }
             set { collsionResponseEnabled = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the collision categories.
+        /// </summary>
+        /// <value>The collision categories.</value>
         public CollisionCategories CollisionCategories
         {
             get { return collisionCategories; }
             set { collisionCategories = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the collision categories that this geom collides with.
+        /// </summary>
+        /// <value>The collides with.</value>
         public CollisionCategories CollidesWith
         {
             get { return collidesWith; }
@@ -164,6 +201,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             get { return grid; }
         }
 
+        /// <summary>
+        /// Gets the body attached to the geom.
+        /// </summary>
+        /// <value>The body.</value>
         public Body Body
         {
             get { return body; }
@@ -227,26 +268,26 @@ namespace FarseerGames.FarseerPhysics.Collisions
                                float collisionGridCellSize)
         {
             _id = GetNextId();
-            _collisonGridCellSize = collisionGridCellSize;
+            _collisionGridCellSize = collisionGridCellSize;
             _offset = offset;
             _rotationOffset = rotationOffset;
             grid = new Grid();
             SetVertices(vertices);
-            ComputeCollisonGrid();
+            ComputeCollisionGrid();
             SetBody(body);
         }
 
         private void ConstructClone(Body body, Geom geometry, Vector2 offset, float rotationOffset)
         {
             _id = GetNextId();
-            _collisonGridCellSize = geometry._collisonGridCellSize;
+            _collisionGridCellSize = geometry._collisionGridCellSize;
             grid = geometry.grid.Clone();
             restitutionCoefficient = geometry.restitutionCoefficient;
             frictionCoefficient = geometry.frictionCoefficient;
             collisionGroup = geometry.collisionGroup;
             collisionEnabled = geometry.collisionEnabled;
             collsionResponseEnabled = geometry.collsionResponseEnabled;
-            _collisonGridCellSize = geometry._collisonGridCellSize;
+            _collisionGridCellSize = geometry._collisionGridCellSize;
             _offset = offset;
             _rotationOffset = rotationOffset;
             collisionCategories = geometry.collisionCategories;
@@ -255,6 +296,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             SetBody(body);
         }
 
+        /// <summary>
+        /// Sets the vertices of the geom.
+        /// </summary>
+        /// <param name="vertices">The vertices.</param>
         public void SetVertices(Vertices vertices)
         {
             vertices.ForceCounterClockWiseOrder();
@@ -264,6 +309,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             aabb.Update(ref vertices);
         }
 
+        /// <summary>
+        /// Sets the body.
+        /// </summary>
+        /// <param name="body">The body.</param>
         public void SetBody(Body body)
         {
             this.body = body;
@@ -275,11 +324,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Update(ref body.position, ref body.rotation);
         }
 
-        public void ComputeCollisonGrid()
+        /// <summary>
+        /// Computes the collision grid.
+        /// </summary>
+        public void ComputeCollisionGrid()
         {
             if (localVertices.Count > 2)
             {
-                grid.ComputeGrid(this, _collisonGridCellSize);
+                grid.ComputeGrid(this, _collisionGridCellSize);
             }
             else
             {
@@ -287,12 +339,22 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
+        /// <summary>
+        /// Gets the world position.
+        /// </summary>
+        /// <param name="localPosition">The local position.</param>
+        /// <returns></returns>
         public Vector2 GetWorldPosition(Vector2 localPosition)
         {
             Vector2 retVector = Vector2.Transform(localPosition, _matrix);
             return retVector;
         }
 
+        /// <summary>
+        /// Gets the nearest distance relative to the point given.
+        /// </summary>
+        /// <param name="point">The point that should be calculated against.</param>
+        /// <returns>The distance</returns>
         public float GetNearestDistance(Vector2 point)
         {
             float distance;
@@ -308,7 +370,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 }
             }
 
-            //determine if inside or outside of geometry.
+            //Determine if inside or outside of geometry.
             Vector2 diff = Vector2.Subtract(point, nearestFeature.Position);
             float dot = Vector2.Dot(diff, nearestFeature.Normal);
 
@@ -323,7 +385,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return distance;
         }
 
-        public Feature GetNearestFeature(Vector2 point, Int32 index)
+        /// <summary>
+        /// Gets the nearest feature relative to a point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="index">The index of a vector in the vertices.</param>
+        /// <returns></returns>
+        public Feature GetNearestFeature(Vector2 point, int index)
         {
             Feature feature = new Feature();
             Vector2 v = localVertices.GetEdge(index);
@@ -360,10 +428,18 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return feature;
         }
 
+        /// <summary>
+        /// Checks to see if the geom collides with the specified point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <returns>true if colliding</returns>
         public bool Collide(Vector2 point)
         {
             Feature feature;
             point = Vector2.Transform(point, MatrixInverse);
+            
+            //NOTE: Could use the boolean returned by the Intersect methods instead?
+            // feature.Distance < 0, should this be <= 0?
             grid.Intersect(ref point, out feature);
             if (feature.Distance < 0)
             {
@@ -372,8 +448,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return false;
         }
 
+        /// <summary>
+        /// Checks to see if the geom collides with the specified geom.
+        /// </summary>
+        /// <param name="geometry">The geometry.</param>
+        /// <returns></returns>
         public bool Collide(Geom geometry)
         {
+            //Check each vertice (of self) against the provided geometry
             for (int i = 0; i < worldVertices.Count; i++)
             {
                 _vert = worldVertices[i];
@@ -382,6 +464,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     return true;
                 }
             }
+
+            //Check each vertice of the provided geometry, against it self
             for (int i = 0; i < geometry.worldVertices.Count; i++)
             {
                 _vert = geometry.worldVertices[i];
@@ -393,17 +477,33 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return false;
         }
 
+        /// <summary>
+        /// Wrapper for grid.Intersect()
+        /// </summary>
+        /// <param name="localVertex">The vertex.</param>
+        /// <param name="feature">A feature.</param>
+        /// <returns></returns>
         public bool Intersect(ref Vector2 localVertex, out Feature feature)
         {
             return grid.Intersect(ref localVertex, out feature);
         }
 
+        /// <summary>
+        /// Transforms a world vertex to local vertex.
+        /// </summary>
+        /// <param name="worldVertex">The world vertex.</param>
+        /// <param name="localVertex">The local vertex.</param>
         public void TransformToLocalCoordinates(ref Vector2 worldVertex, out Vector2 localVertex)
         {
             _matrixInverseTemp = MatrixInverse;
             Vector2.Transform(ref worldVertex, ref _matrixInverseTemp, out localVertex);
         }
 
+        /// <summary>
+        /// Transforms a local normal to a world normal.
+        /// </summary>
+        /// <param name="localNormal">The local normal.</param>
+        /// <param name="worldNormal">The world normal.</param>
         public void TransformNormalToWorld(ref Vector2 localNormal, out Vector2 worldNormal)
         {
             Vector2.TransformNormal(ref localNormal, ref _matrix, out worldNormal);

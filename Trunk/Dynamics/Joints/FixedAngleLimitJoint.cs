@@ -3,6 +3,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
+    /// <summary>
+    /// Fixed angle limit joint puts a body at an angle, with an upper and lower angle limit at it's current position.
+    /// </summary>
     public class FixedAngleLimitJoint : Joint
     {
         private float _accumlatedAngularImpulseOld;
