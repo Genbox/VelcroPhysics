@@ -3,11 +3,11 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
+    //TODO: This is not used, remove it or use it.
     public static class CollisionHelper
     {
         #region Delegates
 
-        //TODO: This is not used, remove it or use it.
         public delegate bool BroadPhaseCollisionHandler(Geom geometry1, Geom geometry2);
 
         #endregion
