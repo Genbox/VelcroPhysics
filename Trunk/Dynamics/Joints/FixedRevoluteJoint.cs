@@ -11,21 +11,18 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     {
         private Vector2 _accumulatedImpulse;
         private Matrix _b;
-        private float _biasFactor = .8f;
-        private float _breakpoint = float.MaxValue;
-
-        private float _jointError;
         private Vector2 _localAnchor;
         private Matrix _matrix;
         private float _maxImpulse = float.MaxValue;
         private Vector2 _r1;
-        private float _softness;
         private Vector2 _velocityBias;
         private Vector2 _anchor;
         private Body _body;
 
         public FixedRevoluteJoint()
         {
+            //Has a different biasfactor than the default
+            BiasFactor = .8f;
         }
 
         public FixedRevoluteJoint(Body body, Vector2 anchor)
@@ -34,6 +31,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _anchor = anchor;
             _accumulatedImpulse = Vector2.Zero;
             body.GetLocalPosition(ref anchor, out _localAnchor);
+
+            //Has a different biasfactor than the default
+            BiasFactor = .8f;
         }
 
         public Body Body
@@ -42,33 +42,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             set { _body = value; }
         }
 
-        public float BiasFactor
-        {
-            get { return _biasFactor; }
-            set { _biasFactor = value; }
-        }
-
-        public float Softness
-        {
-            get { return _softness; }
-            set { _softness = value; }
-        }
-
-        public float Breakpoint
-        {
-            get { return _breakpoint; }
-            set { _breakpoint = value; }
-        }
-
         public float MaxImpulse
         {
             get { return _maxImpulse; }
             set { _maxImpulse = value; }
-        }
-
-        public float JointError
-        {
-            get { return _jointError; }
         }
 
         public Vector2 Anchor
@@ -103,7 +80,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(_jointError) > _breakpoint)
+            if (Enabled && Math.Abs(JointError) > Breakpoint)
             {
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
@@ -132,16 +109,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             //Matrix _k = _k1 + _k2 + K3;
             Matrix.Add(ref _k1, ref _k2, out _k);
 
-            _k.M11 += _softness;
-            _k.M12 += _softness;
+            _k.M11 += Softness;
+            _k.M12 += Softness;
 
             //_matrix = MatrixInvert2D(_k);
             MatrixInvert2D(ref _k, out _matrix);
 
             Vector2.Add(ref _body.position, ref _r1, out _vectorTemp1);
             Vector2.Subtract(ref _anchor, ref _vectorTemp1, out _vectorTemp2);
-            Vector2.Multiply(ref _vectorTemp2, -_biasFactor * inverseDt, out _velocityBias);
-            _jointError = _vectorTemp2.Length();
+            Vector2.Multiply(ref _vectorTemp2, -BiasFactor * inverseDt, out _velocityBias);
+            JointError = _vectorTemp2.Length();
 
             //warm starting
             _vectorTemp1.X = -_accumulatedImpulse.X;
@@ -170,7 +147,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void Update()
         {
-            if (Math.Abs(_jointError) > _breakpoint)
+            if (Math.Abs(JointError) > Breakpoint)
             {
                 Dispose();
             } //check if joint is broken
@@ -184,7 +161,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _dv = -_dv;
 
             Vector2.Subtract(ref _velocityBias, ref _dv, out _vectorTemp1);
-            Vector2.Multiply(ref _accumulatedImpulse, _softness, out _vectorTemp2);
+            Vector2.Multiply(ref _accumulatedImpulse, Softness, out _vectorTemp2);
             Vector2.Subtract(ref _vectorTemp1, ref _vectorTemp2, out _dvBias);
 
             Vector2.Transform(ref _dvBias, ref _matrix, out _impulse);

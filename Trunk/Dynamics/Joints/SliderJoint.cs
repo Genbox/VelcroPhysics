@@ -12,19 +12,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private Vector2 _anchor;
         private Vector2 _anchor1;
         private Vector2 _anchor2;
-        private float _biasFactor = .2f;
-
-        private float _breakpoint = float.MaxValue;
         private float _effectiveMass;
-
-        private float _jointError;
         private bool _lowerLimitViolated;
         private float _max;
         private float _min;
         private Vector2 _r1;
         private Vector2 _r2;
         private float _slop = .01f;
-        private float _softness;
         private bool _upperLimitViolated;
         private float _velocityBias;
         private Vector2 _worldAnchor1;
@@ -65,33 +59,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             set { _body2 = value; }
         }
 
-        public float BiasFactor
-        {
-            get { return _biasFactor; }
-            set { _biasFactor = value; }
-        }
-
         public float Slop
         {
             get { return _slop; }
             set { _slop = value; }
-        }
-
-        public float Softness
-        {
-            get { return _softness; }
-            set { _softness = value; }
-        }
-
-        public float Breakpoint
-        {
-            get { return _breakpoint; }
-            set { _breakpoint = value; }
-        }
-
-        public float JointError
-        {
-            get { return _jointError; }
         }
 
         public float Min
@@ -161,7 +132,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(_jointError) > _breakpoint)
+            if (Enabled && Math.Abs(JointError) > Breakpoint)
             {
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
@@ -184,7 +155,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             Vector2.Subtract(ref _worldAnchor2, ref _worldAnchor1, out _worldAnchorDifference);
 
             _distance = _worldAnchorDifference.Length();
-            _jointError = 0;
+            JointError = 0;
 
             if (_distance > _max)
             {
@@ -196,11 +167,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 _upperLimitViolated = true;
                 if (_distance < _max + _slop)
                 {
-                    _jointError = 0; //allow some _slop 
+                    JointError = 0; //allow some _slop 
                 }
                 else
                 {
-                    _jointError = _distance - _max;
+                    JointError = _distance - _max;
                 }
             }
             else if (_distance < _min)
@@ -213,18 +184,18 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 _lowerLimitViolated = true;
                 if (_distance > _min - _slop)
                 {
-                    _jointError = 0;
+                    JointError = 0;
                 }
                 else
                 {
-                    _jointError = _distance - _min;
+                    JointError = _distance - _min;
                 }
             }
             else
             {
                 _upperLimitViolated = false;
                 _lowerLimitViolated = false;
-                _jointError = 0;
+                JointError = 0;
                 _accumulatedImpulse = 0;
             }
 
@@ -233,14 +204,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                              out _worldAnchorDifferenceNormalized); //_distance = 0 --> error (fix) 
 
             //calc velocity bias
-            _velocityBias = _biasFactor*inverseDt*(_jointError);
+            _velocityBias = BiasFactor * inverseDt * (JointError);
 
             //calc mass normal (effective mass in relation to constraint)
             Calculator.Cross(ref _r1, ref _worldAnchorDifferenceNormalized, out _r1cn);
             Calculator.Cross(ref _r2, ref _worldAnchorDifferenceNormalized, out _r2cn);
             _kNormal = _body1.inverseMass + _body2.inverseMass + _body1.inverseMomentOfInertia*_r1cn*_r1cn +
                        _body2.inverseMomentOfInertia*_r2cn*_r2cn;
-            _effectiveMass = (1)/(_kNormal + _softness);
+            _effectiveMass = (1)/(_kNormal + Softness);
 
             //convert scalar accumulated _impulse to vector
             Vector2.Multiply(ref _worldAnchorDifferenceNormalized, _accumulatedImpulse, out _accumulatedImpulseVector);
@@ -258,7 +229,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void Update()
         {
-            if (Math.Abs(_jointError) > _breakpoint)
+            if (Math.Abs(JointError) > Breakpoint)
             {
                 Dispose();
             } //check if joint is broken
@@ -285,7 +256,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             Vector2.Dot(ref _dv, ref _worldAnchorDifferenceNormalized, out _dvNormal);
 
             //calc the _impulse magnitude
-            _impulseMagnitude = (-_velocityBias - _dvNormal - _softness*_accumulatedImpulse)*_effectiveMass;
+            _impulseMagnitude = (-_velocityBias - _dvNormal - Softness*_accumulatedImpulse)*_effectiveMass;
             //_softness not implemented correctly yet
 
             float oldAccumulatedImpulse = _accumulatedImpulse;
