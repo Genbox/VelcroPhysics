@@ -18,9 +18,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// Gets all the points that makes up the grid
         /// </summary>
         /// <value>The points.</value>
-        public Vector2[] Points
+        public Vector2[] GetPoints()
         {
-            get { return _points; }
+            return _points;
         }
 
         /// <summary>

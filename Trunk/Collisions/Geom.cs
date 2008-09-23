@@ -29,12 +29,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
         internal Body body;
 
         //collides with all categories by default
-        internal CollisionCategories collidesWith = CollisionCategories.All;
+        internal CollisionCategory collidesWith = CollisionCategory.All;
 
         public CollisionEventHandler Collision;
 
         //member off all categories by default
-        internal CollisionCategories collisionCategories = CollisionCategories.All;
+        internal CollisionCategory collisionCategories = CollisionCategory.All;
 
         internal bool collisionEnabled = true;
         internal int collisionGroup;
@@ -178,7 +178,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// Gets or sets the collision categories.
         /// </summary>
         /// <value>The collision categories.</value>
-        public CollisionCategories CollisionCategories
+        public CollisionCategory CollisionCategories
         {
             get { return collisionCategories; }
             set { collisionCategories = value; }
@@ -188,7 +188,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// Gets or sets the collision categories that this geom collides with.
         /// </summary>
         /// <value>The collides with.</value>
-        public CollisionCategories CollidesWith
+        public CollisionCategory CollidesWith
         {
             get { return collidesWith; }
             set { collidesWith = value; }
@@ -327,8 +327,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //body.Disposing += _bodyDisposed;
             
             //TO:
-            body.Updated += body_OnChange;
-            body.Disposed += body_OnDisposed;
+            body.Updated += BodyOnChange;
+            body.Disposed += BodyOnDisposed;
 
             Update(ref body.position, ref body.rotation);
         }
@@ -612,12 +612,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return _newId;
         }
 
-        private void body_OnChange(ref Vector2 position, ref float rotation)
+        private void BodyOnChange(ref Vector2 position, ref float rotation)
         {
             Update(ref position, ref rotation);
         }
 
-        private void body_OnDisposed(object sender, EventArgs e)
+        private void BodyOnDisposed(object sender, EventArgs e)
         {
             Dispose();
         }
@@ -634,8 +634,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     if (body != null)
                     {
                         //Release event subscriptions
-                        body.Updated -= body_OnChange;
-                        body.Disposed -= body_OnDisposed;
+                        body.Updated -= BodyOnChange;
+                        body.Disposed -= BodyOnDisposed;
                     }
                 }
 

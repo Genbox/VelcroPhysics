@@ -3,7 +3,7 @@ using System;
 namespace FarseerGames.FarseerPhysics
 {
     [Flags]
-    public enum CollisionCategories
+    public enum CollisionCategory
     {
         None = 0,
         All = int.MaxValue,
