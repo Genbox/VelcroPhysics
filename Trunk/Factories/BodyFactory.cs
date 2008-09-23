@@ -4,6 +4,9 @@ using FarseerGames.FarseerPhysics.Dynamics;
 
 namespace FarseerGames.FarseerPhysics.Factories
 {
+    /// <summary>
+    /// An easy to use factory for creating bodies
+    /// </summary>
     public class BodyFactory
     {
         private static BodyFactory _instance;

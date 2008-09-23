@@ -9,6 +9,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
+    /// <summary>
+    /// TODO: Write documentation
+    /// </summary>
     public class Arbiter : IEquatable<Arbiter>
     {
         private Comparison<Contact> _contactComparer;
@@ -407,7 +410,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
             for (int i = 0; i < _newContactList.Count; i++)
             {
-                //int index = _contactList.IndexOf(_newContactList[i]);
                 int index = _contactList.IndexOfSafe(_newContactList[i]);
                 if (index > -1)
                 {

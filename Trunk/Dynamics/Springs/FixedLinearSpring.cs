@@ -4,6 +4,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
+    /// <summary>
+    /// Fixed linear spring attaches a body to a fixed point. The spring is acting kind of like a rubber band.
+    /// </summary>
     public class FixedLinearSpring : Controller
     {
         private float _breakpoint = float.MaxValue;
@@ -100,16 +103,19 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public override void Update(float dt)
         {
+            //TODO: Move up in layers
             if (Enabled && Math.Abs(_springError) > _breakpoint)
             {
                 Enabled = false;
-                if (Broke != null) Broke(this, new EventArgs());
+                if (Broke != null) Broke(this, EventArgs.Empty);
             }
 
+            //TODO: Move up in code
             if (IsDisposed)
             {
                 return;
             }
+
             if (_body.isStatic)
             {
                 return;

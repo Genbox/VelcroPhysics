@@ -3,8 +3,7 @@ using System.Collections.Generic;
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     /// <summary>
-    /// Contains a list of contacts
-    /// Inherits List<Contact>.
+    /// Provides an implementation of a strongly typed List with Contact
     /// </summary>
     public class ContactList : List<Contact>
     {

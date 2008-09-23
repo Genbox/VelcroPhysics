@@ -3,6 +3,9 @@ using FarseerGames.FarseerPhysics.Controllers;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
+    /// <summary>
+    /// Puts a body at an angle at the body's current position. The angle is variable.
+    /// </summary>
     public class FixedAngleSpring : Controller
     {
         private float _breakpoint = float.MaxValue;

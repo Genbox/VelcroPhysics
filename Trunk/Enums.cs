@@ -2,12 +2,6 @@ using System;
 
 namespace FarseerGames.FarseerPhysics
 {
-    public enum BroadPhaseCollider
-    {
-        BruteForce = 1,
-        SweepAndPrune = 2
-    }
-
     [Flags]
     public enum CollisionCategories
     {

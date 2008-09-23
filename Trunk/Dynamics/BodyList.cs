@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
+    /// <summary>
+    /// Provides an implementation of a strongly typed List with Body
+    /// </summary>
     public class BodyList : List<Body>
     {
         #region Delegates

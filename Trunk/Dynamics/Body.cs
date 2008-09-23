@@ -4,7 +4,7 @@ using FarseerGames.FarseerPhysics.Mathematics;
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
     /// <summary>
-    /// The Body handles all the physics of motion: position, velocity, _acceleration
+    /// The Body handles all the physics of motion: position, velocity, acceleration
     /// forces, torques, etc...</para>
     /// <para>The Body is integrated every timestep (which should be fixed) by the <see cref="PhysicsSimulator">PhysicsSimulator</see> in the following manner:
     /// Set forces and torques (gravity, springs, user input...)->Apply forces and torques (updating velocity only)->Update positions and Rotations</para>
@@ -21,7 +21,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         private bool _isQuadraticDragEnabled;
         private float _linearDragCoefficient = .001f; //tuned for a body of mass 1
-        private float _momentOfInertia = 1; //1 unit square ;
+        private float _momentOfInertia = 1; //1 unit square
         private float _previousAngularVelocity;
         private Vector2 _previousLinearVelocity = Vector2.Zero;
         private Vector2 _previousPosition = Vector2.Zero;
@@ -40,7 +40,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         internal Vector2 impulse = Vector2.Zero;
         internal float inverseMass = 1;
         internal float inverseMomentOfInertia = 1;
-        public bool IsDisposed;
         internal bool isStatic;
         internal Vector2 linearVelocity = Vector2.Zero;
         internal Vector2 linearVelocityBias = Vector2.Zero;
@@ -51,7 +50,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         //private float linearDragVelocityThreshhold = .000001f;
         internal float totalRotation;
 
+        public bool IsDisposed;
         public UpdatedEventHandler Updated;
+        public event EventHandler<EventArgs> Disposed;
 
         public Body()
         {
@@ -157,9 +158,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             get { return _momentOfInertia; }
             set
             {
-                if (value == 0)
+                if (value <= 0)
                 {
-                    throw new ArgumentException("Mass cannot be 0","value");
+                    throw new ArgumentException("Moment of inertia cannot be 0 or less", "value");
                 }
                 _momentOfInertia = value;
                 if (isStatic)
@@ -217,24 +218,43 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             set { _linearDragCoefficient = value; }
         }
 
-        public float QuadraticeDragCoeficient
+
+        /// <summary>
+        /// Gets or sets the quadratic drag coefficient.
+        /// </summary>
+        /// <value>The quadratic drag coefficient.</value>
+        public float QuadraticDragCoefficient
         {
             get { return _quadraticDragCoefficient; }
             set { _quadraticDragCoefficient = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this body is quadratic drag enabled.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this body is quadratic drag enabled; otherwise, <c>false</c>.
+        /// </value>
         public bool IsQuadraticDragEnabled
         {
             get { return _isQuadraticDragEnabled; }
             set { _isQuadraticDragEnabled = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the rotational drag coefficient.
+        /// </summary>
+        /// <value>The rotational drag coefficient.</value>
         public float RotationalDragCoefficient
         {
             get { return _rotationalDragCoefficient; }
             set { _rotationalDragCoefficient = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the position.
+        /// </summary>
+        /// <value>The position.</value>
         public Vector2 Position
         {
             get { return position; }
@@ -248,6 +268,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
+        /// Gets the revolutions relative to the original state of the body
+        /// </summary>
+        /// <value>The revolutions.</value>
         public int Revolutions
         {
             get { return _revolutions; }
@@ -283,23 +307,39 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             get { return totalRotation; }
         }
 
+        /// <summary>
+        /// Gets or sets the linear velocity.
+        /// </summary>
+        /// <value>The linear velocity.</value>
         public Vector2 LinearVelocity
         {
             get { return linearVelocity; }
             set { linearVelocity = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the angular velocity.
+        /// </summary>
+        /// <value>The angular velocity.</value>
         public float AngularVelocity
         {
             get { return angularVelocity; }
             set { angularVelocity = value; }
         }
 
+        /// <summary>
+        /// Gets the force.
+        /// </summary>
+        /// <value>The force.</value>
         public Vector2 Force
         {
             get { return force; }
         }
 
+        /// <summary>
+        /// Gets the torque.
+        /// </summary>
+        /// <value>The torque.</value>
         public float Torque
         {
             get { return _torque; }
@@ -339,14 +379,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         #endregion
 
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        public event EventHandler<EventArgs> Disposed;
 
         /// <summary>
         /// This method will reset position and motion properties. This method is useful
@@ -436,8 +473,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public Vector2 GetVelocityAtLocalPoint(Vector2 localPoint)
         {
-            //Vector2 velocity = linearVelocity + Calculator.Cross(angularVelocity, (GetWorldPosition(localPoint) - Position));
-            // angularVelocity * (GetWorldPosition(localPoint) - Position);
             GetVelocityAtLocalPoint(ref localPoint, out _tempVelocity);
             return _tempVelocity;
         }
@@ -465,11 +500,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public void GetVelocityAtWorldOffset(ref Vector2 offset, out Vector2 velocity)
         {
-#if(XNA)
-    //required by xbox
-            velocity = velocityTemp;
-#endif
-
             #region INLINED: Calculator.Cross(ref angularVelocity, ref offset, out velocity);
 
             velocity.X = -angularVelocity * offset.Y;
@@ -487,11 +517,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public void GetVelocityBiasAtWorldOffset(ref Vector2 offset, out Vector2 velocityBias)
         {
-#if(XNA)
-    //required by xbox
-            velocityBias = velocityTemp;
-#endif
-
             #region INLINED: Calculator.Cross(ref angularVelocityBias, ref offset, out velocityBias);
 
             velocityBias.X = -angularVelocityBias * offset.Y;
@@ -507,6 +532,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             #endregion
         }
 
+        /// <summary>
+        /// Applies a force to the body.
+        /// </summary>
+        /// <param name="force">The force.</param>
         public void ApplyForce(Vector2 force)
         {
             #region INLINE:  Vector2.Add(ref this.force, ref force, out this.force);
@@ -517,6 +546,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             #endregion
         }
 
+        /// <summary>
+        /// Applies a force to the body.
+        /// </summary>
+        /// <param name="force">The force.</param>
         public void ApplyForce(ref Vector2 force)
         {
             #region INLINE: Vector2.Add(ref this.force, ref force, out this.force);
@@ -593,6 +626,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             force.Y = 0;
         }
 
+        /// <summary>
+        /// Applies torque to the body
+        /// </summary>
+        /// <param name="torque">The torque.</param>
         public void ApplyTorque(float torque)
         {
             _torque += torque;
@@ -863,11 +900,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
             #endregion
 
-            float angularImpulse;
-
             #region INLINE: Calculator.Cross(ref offset, ref impulse, out angularImpulse);
 
-            angularImpulse = offset.X * impulse.Y - offset.Y * impulse.X;
+            float angularImpulse = offset.X * impulse.Y - offset.Y * impulse.X;
 
             #endregion
 
@@ -891,11 +926,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
             #endregion
 
-            float angularImpulseBias;
-
             #region INLINE: Calculator.Cross(ref offset, ref impulseBias, out angularImpulseBias);
 
-            angularImpulseBias = offset.X * impulseBias.Y - offset.Y * impulseBias.X;
+            float angularImpulseBias = offset.X * impulseBias.Y - offset.Y * impulseBias.X;
 
             #endregion
 
@@ -905,21 +938,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         protected virtual void Dispose(bool disposing)
         {
-            //subclasses can override incase they need to dispose of resources
-            //otherwise do nothing.
-            if (!IsDisposed)
-            {
-                if (disposing)
-                {
-                    //dispose managed resources
-                }
-                ;
-                //dispose unmanaged resources
-            }
             IsDisposed = true;
+
             if (Disposed != null)
             {
-                Disposed(this, null);
+                Disposed(this, EventArgs.Empty);
             }
         }
 
