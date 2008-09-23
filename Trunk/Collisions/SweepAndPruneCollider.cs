@@ -336,7 +336,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 if (!(obj is CollisionPair))
                     return false;
 
-                return Equals((CollisionPair)obj);
+                return Equals((CollisionPair) obj);
             }
 
             public bool Equals(CollisionPair other)
@@ -356,7 +356,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return !first.Equals(second);
             }
-
         }
 
         #endregion

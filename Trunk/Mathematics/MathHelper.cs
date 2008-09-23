@@ -2,16 +2,14 @@ using System;
 
 namespace FarseerGames.FarseerPhysics.Mathematics
 {
-    public sealed class MathHelper
+    public static class MathHelper
     {
         public const float DegreesToRadiansRatio = 57.29577957855f;
-        public const float RadiansToDegreesRatio = 1f/57.29577957855f;
         public const float Pi = (float) (Math.PI);
-        public const float PiOver2 = (float)(Math.PI / 2.0);
-        public const float PiOver4 = (float)(Math.PI / 4.0);
-        public const float TwoPi = (float)(Math.PI * 2.0);
-
-        private MathHelper() {}
+        public const float PiOver2 = (float) (Math.PI/2.0);
+        public const float PiOver4 = (float) (Math.PI/4.0);
+        public const float RadiansToDegreesRatio = 1f/57.29577957855f;
+        public const float TwoPi = (float) (Math.PI*2.0);
 
         public static float Lerp(float value1, float value2, float amount)
         {

@@ -11,6 +11,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private float _accumulatedImpulse;
         private Vector2 _anchor1;
         private Vector2 _anchor2;
+        private Body _body1;
+        private Body _body2;
         private float _effectiveMass;
         private Vector2 _r1;
         private Vector2 _r2;
@@ -19,8 +21,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private Vector2 _worldAnchor1;
         private Vector2 _worldAnchor2;
         private Vector2 _worldAnchorDifferenceNormalized;
-        private Body _body1;
-        private Body _body2;
 
         public PinJoint()
         {

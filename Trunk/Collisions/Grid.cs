@@ -33,8 +33,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             grid._gridCellSize = _gridCellSize;
             grid._gridCellSizeInv = _gridCellSizeInv;
             grid._aabb = _aabb;
-            grid._nodes = (float[,])_nodes.Clone();
-            grid._points = (Vector2[])_points.Clone();
+            grid._nodes = (float[,]) _nodes.Clone();
+            grid._points = (Vector2[]) _points.Clone();
             return grid;
         }
 
@@ -52,14 +52,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             _aabb = new AABB(geometry.AABB);
             _gridCellSize = gridCellSize;
-            _gridCellSizeInv = 1 / gridCellSize;
+            _gridCellSizeInv = 1/gridCellSize;
 
             //TODO: Possible optimization (minor)! use casting, use _aabb.Width and Height and check if Height==Width instead of calculating twice.
-            int xSize = (int)Math.Ceiling(Convert.ToDouble((_aabb.Max.X - _aabb.Min.X) * _gridCellSizeInv)) + 1;
-            int ySize = (int)Math.Ceiling(Convert.ToDouble((_aabb.Max.Y - _aabb.Min.Y) * _gridCellSizeInv)) + 1;
+            int xSize = (int) Math.Ceiling(Convert.ToDouble((_aabb.Max.X - _aabb.Min.X)*_gridCellSizeInv)) + 1;
+            int ySize = (int) Math.Ceiling(Convert.ToDouble((_aabb.Max.Y - _aabb.Min.Y)*_gridCellSizeInv)) + 1;
 
-            _nodes = new float[xSize, ySize];
-            _points = new Vector2[xSize * ySize];
+            _nodes = new float[xSize,ySize];
+            _points = new Vector2[xSize*ySize];
             int i = 0;
             Vector2 vector = _aabb.Min;
 
@@ -93,12 +93,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //VERY intermittent errors exist?
             if (_aabb.Contains(ref vector))
             {
-                int x = (int)Math.Floor((vector.X - _aabb.Min.X) * _gridCellSizeInv);
-                int y = (int)Math.Floor((vector.Y - _aabb.Min.Y) * _gridCellSizeInv);
+                int x = (int) Math.Floor((vector.X - _aabb.Min.X)*_gridCellSizeInv);
+                int y = (int) Math.Floor((vector.Y - _aabb.Min.Y)*_gridCellSizeInv);
 
 
-                float xPercent = (vector.X - (_gridCellSize * x + _aabb.Min.X)) * _gridCellSizeInv;
-                float yPercent = (vector.Y - (_gridCellSize * y + _aabb.Min.Y)) * _gridCellSizeInv;
+                float xPercent = (vector.X - (_gridCellSize*x + _aabb.Min.X))*_gridCellSizeInv;
+                float yPercent = (vector.Y - (_gridCellSize*y + _aabb.Min.Y))*_gridCellSizeInv;
 
                 float bottomLeft = _nodes[x, y];
                 float bottomRight = _nodes[x + 1, y];

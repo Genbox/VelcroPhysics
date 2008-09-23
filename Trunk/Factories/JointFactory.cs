@@ -51,6 +51,7 @@ namespace FarseerGames.FarseerPhysics.Factories
             return revoluteJoint;
         }
 
+        /// <exception cref="InvalidOperationException">Fixed joints cannot be created on static bodies</exception>
         public FixedRevoluteJoint CreateFixedRevoluteJoint(Body body, Vector2 anchor)
         {
             if (body.isStatic)

@@ -12,6 +12,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private Vector2 _anchor;
         private Vector2 _anchor1;
         private Vector2 _anchor2;
+        private Body _body1;
+        private Body _body2;
         private float _effectiveMass;
         private bool _lowerLimitViolated;
         private float _max;
@@ -24,8 +26,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private Vector2 _worldAnchor1;
         private Vector2 _worldAnchor2;
         private Vector2 _worldAnchorDifferenceNormalized;
-        private Body _body1;
-        private Body _body2;
 
         public SliderJoint()
         {
@@ -204,7 +204,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                              out _worldAnchorDifferenceNormalized); //_distance = 0 --> error (fix) 
 
             //calc velocity bias
-            _velocityBias = BiasFactor * inverseDt * (JointError);
+            _velocityBias = BiasFactor*inverseDt*(JointError);
 
             //calc mass normal (effective mass in relation to constraint)
             Calculator.Cross(ref _r1, ref _worldAnchorDifferenceNormalized, out _r1cn);

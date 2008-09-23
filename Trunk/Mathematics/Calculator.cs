@@ -7,8 +7,8 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         public const float DegreesToRadiansRatio = 57.29577957855f;
         public const float RadiansToDegreesRatio = 1f/57.29577957855f;
         public const float TwoPi = 6.28318531f;
-        private static Random _random = new Random();
         private static Vector2 _curveEnd;
+        private static Random _random = new Random();
         private static Vector2 _startCurve;
         private static Vector2 _temp;
 
@@ -44,7 +44,6 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         {
             float x = point.X;
             float y = point.Y;
-            float value;
 
             x = MathHelper.Clamp(x, min.X, max.X);
             y = MathHelper.Clamp(y, min.Y, max.Y);
@@ -55,7 +54,7 @@ namespace FarseerGames.FarseerPhysics.Mathematics
             float top = MathHelper.Lerp(value1, value4, xRatio);
             float bottom = MathHelper.Lerp(value2, value3, xRatio);
 
-            value = MathHelper.Lerp(top, bottom, yRatio);
+            float value = MathHelper.Lerp(top, bottom, yRatio);
             value = MathHelper.Clamp(value, minValue, maxValue);
             return value;
         }

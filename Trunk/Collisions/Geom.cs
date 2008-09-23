@@ -243,6 +243,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #endregion
 
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
+
         #region IEquatable<Geom> Members
 
         public bool Equals(Geom other)
@@ -255,12 +265,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         #endregion
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
 
         private void Construct(Body body, Vertices vertices, Vector2 offset, float rotationOffset,
                                float collisionGridCellSize)
@@ -314,15 +318,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public void SetBody(Body body)
         {
             this.body = body;
-            
+
             //NOTE: Changed this from:
             //_bodyUpdated = body_OnChange;
             //body.Updated += _bodyUpdated;
 
             //_bodyDisposed = body_OnDisposed;
             //body.Disposing += _bodyDisposed;
+            
             //TO:
-
             body.Updated += body_OnChange;
             body.Disposed += body_OnDisposed;
 
@@ -442,7 +446,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             Feature feature;
             point = Vector2.Transform(point, MatrixInverse);
-            
+
             //NOTE: Could use the boolean returned by the Intersect methods instead?
             // feature.Distance < 0, should this be <= 0?
             grid.Intersect(ref point, out feature);

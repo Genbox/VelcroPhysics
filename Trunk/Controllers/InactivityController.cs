@@ -8,13 +8,12 @@ namespace FarseerGames.FarseerPhysics.Controllers
     /// </summary>
     public class InactivityController : Controller
     {
-        private PhysicsSimulator _physicsSimulator;
-
         private float _activationDistance = 100;
         private int _bodiesEnabled;
 
         private Vector2 _difference = Vector2.Zero;
         private float _maxIdleTime = 1000;
+        private PhysicsSimulator _physicsSimulator;
 
         public InactivityController(PhysicsSimulator physicsSimulator)
         {

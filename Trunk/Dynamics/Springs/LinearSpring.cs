@@ -10,6 +10,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
     public class LinearSpring : Controller
     {
         private const float _epsilon = .00001f;
+        private Vector2 _attachPoint1;
+        private Vector2 _attachPoint2;
+        private Body _body1;
+        private Body _body2;
         private float _breakpoint = float.MaxValue;
 
         private float _dampningConstant;
@@ -28,10 +32,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         private Vector2 _velocityAtPoint2 = Vector2.Zero;
         private Vector2 _worldPoint1 = Vector2.Zero;
         private Vector2 _worldPoint2 = Vector2.Zero;
-        private Vector2 _attachPoint1;
-        private Vector2 _attachPoint2;
-        private Body _body1;
-        private Body _body2;
 
         public LinearSpring()
         {

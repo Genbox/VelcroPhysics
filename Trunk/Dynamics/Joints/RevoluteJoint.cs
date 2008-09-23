@@ -12,20 +12,18 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private Vector2 _accumulatedImpulse;
         private Vector2 _anchor;
         private Matrix _b;
+        private Body _body1;
+        private Body _body2;
         private Vector2 _currentAnchor;
         private Vector2 _dv;
         private Vector2 _dvBias;
         private Vector2 _impulse;
+        private Vector2 _localAnchor1;
+        private Vector2 _localAnchor2;
         private Matrix _matrix;
         private Vector2 _r1;
         private Vector2 _r2;
         private Vector2 _velocityBias;
-        private Body _body1;
-        private Body _body2;
-        private Vector2 _localAnchor1;
-        private Vector2 _localAnchor2;
-
-        public event EventHandler<EventArgs> Broke;
 
         public RevoluteJoint()
         {
@@ -77,12 +75,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
         }
 
+        public event EventHandler<EventArgs> Broke;
+
+        /// <exception cref="ArgumentNullException"><c>_body1</c> is null.</exception>
         public void SetInitialAnchor(Vector2 initialAnchor)
         {
             _anchor = initialAnchor;
             if (_body1 == null)
             {
-                throw new ArgumentNullException("initialAnchor", "Body must be set prior to setting the _anchor of the Revolute Joint");
+                throw new ArgumentNullException("initialAnchor",
+                                                "Body must be set prior to setting the _anchor of the Revolute Joint");
             }
             _body1.GetLocalPosition(ref initialAnchor, out _localAnchor1);
             _body2.GetLocalPosition(ref initialAnchor, out _localAnchor2);
