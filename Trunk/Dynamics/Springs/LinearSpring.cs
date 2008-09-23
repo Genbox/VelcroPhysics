@@ -4,6 +4,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
+    /// <summary>
+    /// Attaches 2 bodies with a spring. Works kind of like a rubber band.
+    /// </summary>
     public class LinearSpring : Controller
     {
         private const float _epsilon = .00001f;

@@ -5,6 +5,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Factories
 {
+    /// <summary>
+    /// An easy to use factory for creating joints
+    /// </summary>
     public class JointFactory
     {
         private static JointFactory _instance;

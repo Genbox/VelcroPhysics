@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
+    /// <summary>
+    /// Provides an implementation of a strongly typed List with Arbiter
+    /// </summary>
     public class ArbiterList : List<Arbiter>
     {
         private List<Arbiter> _markedForRemovalList;

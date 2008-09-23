@@ -6,7 +6,7 @@ using FarseerGames.FarseerPhysics.Mathematics;
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     /// <summary>
-    /// Contains a list of Vector2's
+    /// Provides an implementation of a strongly typed List with Vector2
     /// </summary>
     public class Vertices : List<Vector2>
     {

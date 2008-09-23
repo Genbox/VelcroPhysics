@@ -15,8 +15,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #endregion
 
-        private EventHandler<EventArgs> _bodyDisposed;
-        private Body.UpdatedEventHandler _bodyUpdated;
         private float _collisionGridCellSize;
         private int _id;
         private Matrix _matrix = Matrix.Identity;
@@ -316,11 +314,18 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public void SetBody(Body body)
         {
             this.body = body;
-            _bodyUpdated = body_OnChange;
-            body.Updated += _bodyUpdated;
+            
+            //NOTE: Changed this from:
+            //_bodyUpdated = body_OnChange;
+            //body.Updated += _bodyUpdated;
 
-            _bodyDisposed = body_OnDisposed;
-            body.Disposed += _bodyDisposed;
+            //_bodyDisposed = body_OnDisposed;
+            //body.Disposing += _bodyDisposed;
+            //TO:
+
+            body.Updated += body_OnChange;
+            body.Disposed += body_OnDisposed;
+
             Update(ref body.position, ref body.rotation);
         }
 
@@ -622,10 +627,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 if (disposing)
                 {
                     //dispose managed resources 
-                    if (body != null && _bodyUpdated != null)
+                    if (body != null)
                     {
-                        body.Updated -= _bodyUpdated;
-                        body.Disposed -= _bodyDisposed;
+                        //Release event subscriptions
+                        body.Updated -= body_OnChange;
+                        body.Disposed -= body_OnDisposed;
                     }
                 }
 

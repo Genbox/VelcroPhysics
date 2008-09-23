@@ -4,6 +4,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Factories
 {
+    /// <summary>
+    /// An easy to use factory for creating controllers (springs)
+    /// </summary>
     public class ControllerFactory
     {
         private static ControllerFactory _instance;

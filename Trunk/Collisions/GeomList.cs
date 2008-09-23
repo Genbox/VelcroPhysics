@@ -3,8 +3,7 @@ using System.Collections.Generic;
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     /// <summary>
-    /// Contains a list of geoms
-    /// Inherits List<Geom>
+    /// Provides an implementation of a strongly typed List with Geom
     /// </summary>
     public class GeomList : List<Geom>
     {

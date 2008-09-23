@@ -3,6 +3,9 @@ using FarseerGames.FarseerPhysics.Controllers;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
+    /// <summary>
+    /// Puts 2 bodies at an angle. The angle is variable.
+    /// </summary>
     public class AngleSpring : Controller
     {
         private float _breakpoint = float.MaxValue;
