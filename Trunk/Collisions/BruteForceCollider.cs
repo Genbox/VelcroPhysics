@@ -81,8 +81,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         continue;
                     }
 
-                    if (((_geometryA.CollisionCategories & _geometryB.CollidesWith) == CollisionCategories.None) &
-                        ((_geometryB.CollisionCategories & _geometryA.CollidesWith) == CollisionCategories.None))
+                    if (((_geometryA.CollisionCategories & _geometryB.CollidesWith) == CollisionCategory.None) &
+                        ((_geometryB.CollisionCategories & _geometryA.CollidesWith) == CollisionCategory.None))
                     {
                         continue;
                     }

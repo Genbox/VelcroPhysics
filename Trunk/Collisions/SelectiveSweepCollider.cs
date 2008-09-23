@@ -255,8 +255,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 return;
             }
 
-            if (((geom1.collisionCategories & geom2.collidesWith) == CollisionCategories.None) &
-                ((geom2.collisionCategories & geom1.collidesWith) == CollisionCategories.None))
+            if (((geom1.collisionCategories & geom2.collidesWith) == CollisionCategory.None) &
+                ((geom2.collisionCategories & geom1.collidesWith) == CollisionCategory.None))
             {
                 return;
             }

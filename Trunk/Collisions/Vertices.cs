@@ -37,9 +37,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
-        public Vector2[] VerticesArray
+        public Vector2[] GetVerticesArray()
         {
-            get { return ToArray(); }
+            return ToArray();
         }
 
         public int NextIndex(int index)
