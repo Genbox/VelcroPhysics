@@ -17,14 +17,24 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         public void Dispose()
         {
-            IsDisposed = true;
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
         {
+            //subclasses can override incase they need to dispose of resources
+            //otherwise do nothing.
+            if (!IsDisposed)
+            {
+                if (disposing)
+                {
+                    //dispose managed resources 
+                }
 
+                //dispose unmanaged resources
+            }
+            IsDisposed = true;
         }
     }
 }
