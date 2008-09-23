@@ -11,6 +11,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private float _accumlatedAngularImpulseOld;
         private float _accumulatedAngularImpulse;
         private float _angularImpulse;
+        private Body _body;
         private float _difference;
         private float _lowerLimit;
         private bool _lowerLimitViolated;
@@ -19,7 +20,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private float _upperLimit;
         private bool _upperLimitViolated;
         private float _velocityBias;
-        private Body _body;
 
         public FixedAngleLimitJoint()
         {
@@ -95,7 +95,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 {
                     JointError = _difference - _upperLimit;
                 }
-                _velocityBias = BiasFactor * inverseDt * JointError;
+                _velocityBias = BiasFactor*inverseDt*JointError;
             }
             else if (_difference < _lowerLimit)
             {
@@ -121,7 +121,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 JointError = 0;
                 _accumulatedAngularImpulse = 0;
             }
-            _velocityBias = BiasFactor * inverseDt * JointError;
+            _velocityBias = BiasFactor*inverseDt*JointError;
             _massFactor = (1 - Softness)/_body.inverseMomentOfInertia;
             _body.angularVelocity += _body.inverseMomentOfInertia*_accumulatedAngularImpulse;
         }

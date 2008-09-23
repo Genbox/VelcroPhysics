@@ -7,12 +7,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public abstract class Joint : IDisposable
     {
-        private bool _enabled = true;
-        public bool IsDisposed;
-        private float _jointError;
-        private float _breakpoint = float.MaxValue;
-        private float _softness;
         private float _biasFactor = .2f;
+        private float _breakpoint = float.MaxValue;
+        private bool _enabled = true;
+        private float _jointError;
+        private float _softness;
+        public bool IsDisposed;
 
         public bool Enabled
         {
@@ -46,6 +46,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             set { _biasFactor = value; }
         }
 
+        #region IDisposable Members
+
         public void Dispose()
         {
             IsDisposed = true;
@@ -53,13 +55,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             GC.SuppressFinalize(this);
         }
 
+        #endregion
+
         public abstract void Validate();
         public abstract void PreStep(float inverseDt);
         public abstract void Update();
 
         protected virtual void Dispose(bool disposing)
         {
-
         }
     }
 }

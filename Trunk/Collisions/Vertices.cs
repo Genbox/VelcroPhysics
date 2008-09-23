@@ -273,6 +273,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// Gets the moment of inertia from the vertices
         /// </summary>
         /// <returns></returns>
+        /// <exception cref="ArgumentException">Can't calculate MOI on zero vertices</exception>
         public float GetMomentOfInertia()
         {
             Vertices verts = new Vertices(this);

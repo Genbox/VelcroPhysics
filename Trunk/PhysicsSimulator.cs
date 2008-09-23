@@ -13,7 +13,6 @@ namespace FarseerGames.FarseerPhysics
     public class PhysicsSimulator : IDisposable
     {
         private const int _arbiterPoolSize = 10; //initial arbiter size.  will grow as needed
-        private Stopwatch _sw = new Stopwatch();
         private Body _body;
         private IBroadPhaseCollider _broadPhaseCollider;
         private bool _enabled = true;
@@ -22,6 +21,7 @@ namespace FarseerGames.FarseerPhysics
 
         //default settings
         private int _iterations = 5;
+        private Stopwatch _sw = new Stopwatch();
         internal float allowedPenetration = .05f;
         internal float applyForcesTime = -1;
         internal float applyImpulsesTime = -1;
@@ -209,6 +209,15 @@ namespace FarseerGames.FarseerPhysics
             set { _enabled = value; }
         }
 
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            _inactivityController.Dispose();
+        }
+
+        #endregion
+
         private void ConstructPhysicsSimulator(Vector2 gravity)
         {
             geomList = new GeomList();
@@ -244,6 +253,7 @@ namespace FarseerGames.FarseerPhysics
         }
 
 
+        /// <exception cref="Exception">The GeomList must be empty when setting the broad phase collider type</exception>
         public void SetBroadPhaseCollider(IBroadPhaseCollider broadPhaseCollider)
         {
             if (geomList.Count > 0)
@@ -655,15 +665,6 @@ namespace FarseerGames.FarseerPhysics
         {
             get { return _scaling; }
             set { _scaling = value; }
-        }
-
-        #endregion
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            _inactivityController.Dispose();
         }
 
         #endregion

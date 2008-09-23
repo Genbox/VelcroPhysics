@@ -279,8 +279,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private sealed class Stub
         {
             public bool begin;
-            public Wrapper wrapper;
             public float value;
+            public Wrapper wrapper;
 
             public Stub(Wrapper wrapper, bool begin)
             {
@@ -324,9 +324,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             private Stub _yBegin;
             private Stub _yEnd;
             public Geom geom;
-            public LinkedListNode<Wrapper> node;
             public float max;
             public float min;
+            public LinkedListNode<Wrapper> node;
             public bool shouldAddNode;
 
             public Wrapper(Geom body)

@@ -7,14 +7,14 @@ namespace FarseerGames.FarseerPhysics.Mathematics
     /// </summary>
     public class BilinearInterpolator
     {
+        private Vector2 _max;
         private float _maxValue = float.MaxValue;
+        private Vector2 _min;
         private float _minValue = float.MinValue;
         private float _value1;
         private float _value2;
         private float _value3;
         private float _value4;
-        private Vector2 _max;
-        private Vector2 _min;
 
         public BilinearInterpolator()
         {

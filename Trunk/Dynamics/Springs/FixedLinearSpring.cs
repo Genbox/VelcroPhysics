@@ -9,6 +9,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
     /// </summary>
     public class FixedLinearSpring : Controller
     {
+        private Body _body;
+
+        private Vector2 _bodyAttachPoint;
         private float _breakpoint = float.MaxValue;
         private float _dampningConstant;
         private Vector2 _difference = Vector2.Zero;
@@ -16,9 +19,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         private float _springConstant;
 
         private float _springError;
-        private Body _body;
-
-        private Vector2 _bodyAttachPoint;
         private Vector2 _worldAttachPoint;
 
         public FixedLinearSpring()

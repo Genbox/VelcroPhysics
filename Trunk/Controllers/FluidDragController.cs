@@ -17,9 +17,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         #endregion
 
-        private Dictionary<Geom, bool> _geomInFluidList;
-
-        private List<Geom> _geomList;
         private float _area;
         private Vector2 _axis = Vector2.Zero;
         private Vector2 _buoyancyForce = Vector2.Zero;
@@ -28,6 +25,9 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private float _density;
         private float _dragArea;
         private IFluidContainer _fluidContainer;
+        private Dictionary<Geom, bool> _geomInFluidList;
+
+        private List<Geom> _geomList;
         private Vector2 _gravity = Vector2.Zero;
         private float _linearDragCoefficient;
         private Vector2 _linearDragForce = Vector2.Zero;

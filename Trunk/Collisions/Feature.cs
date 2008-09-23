@@ -30,7 +30,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         //NOTE: There might be a better way to generate the hashcode
         public override int GetHashCode()
         {
-            return (int)(Normal.X + Normal.Y + Position.X + Position.Y + Distance);
+            return (int) (Normal.X + Normal.Y + Position.X + Position.Y + Distance);
         }
 
         public override bool Equals(object obj)
@@ -38,7 +38,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             if (!(obj is Feature))
                 return false;
 
-            return Equals((Feature)obj);
+            return Equals((Feature) obj);
         }
 
         public bool Equals(Feature other)

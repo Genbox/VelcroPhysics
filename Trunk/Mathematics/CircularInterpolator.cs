@@ -7,18 +7,17 @@ namespace FarseerGames.FarseerPhysics.Mathematics
     /// </summary>
     public class CircularInterpolator
     {
+        private float _circleValue1;
+        private float _circleValue2;
         private float _maxValue = float.MaxValue;
         private float _minValue = float.MinValue;
-        private float _twoOverPi = 1f/MathHelper.PiOver2;
+        private const float _twoOverPi = 1f/MathHelper.PiOver2;
         private float _value1;
         private float _value2;
         private float _value3;
         private float _value4;
-        private float _circleValue1;
-        private float _circleValue2;
 
         //TODO: Use calculator or mathhelper
-
         public CircularInterpolator(float value1, float value2, float value3, float value4, float minValue,
                                     float maxValue)
         {
@@ -39,10 +38,9 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         {
             float theta;
             float lerpValue;
-            float d;
             float value = 0;
 
-            d = MathHelper.Distance(x, y);
+            float d = MathHelper.Distance(x, y);
 
             //quadrant 1
             if (x > 0 && y > 0)

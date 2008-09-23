@@ -7,19 +7,23 @@ namespace FarseerGames.FarseerPhysics.Controllers
     /// </summary>
     public abstract class Controller : IDisposable
     {
-        public bool IsDisposed;
         public bool Enabled = true;
+        public bool IsDisposed;
 
         public Object Tag { get; set; }
 
-        public abstract void Validate();
-        public abstract void Update(float dt);
+        #region IDisposable Members
 
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        #endregion
+
+        public abstract void Validate();
+        public abstract void Update(float dt);
 
         protected virtual void Dispose(bool disposing)
         {

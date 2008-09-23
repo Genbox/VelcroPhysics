@@ -15,6 +15,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     public class Arbiter : IEquatable<Arbiter>
     {
         private Comparison<Contact> _contactComparer;
+        private ContactList _contactList;
         private float _float1;
         private float _float2;
         private float _frictionCoefficientCombined;
@@ -26,7 +27,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         //used for ref/out methods
         private Vector2 _vec1 = Vector2.Zero;
         private Vector2 _vec2 = Vector2.Zero;
-        private ContactList _contactList;
         public Geom GeometryA;
         public Geom GeometryB;
 
@@ -146,7 +146,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 Vector2.Dot(ref _r1, ref _r1, out _float1);
                 Vector2.Dot(ref _r2, ref _r2, out _float2);
                 _kNormal = invMassSum + GeometryA.body.inverseMomentOfInertia*(_float1 - _rn1*_rn1) +
-                          GeometryB.body.inverseMomentOfInertia*(_float2 - _rn2*_rn2);
+                           GeometryB.body.inverseMomentOfInertia*(_float2 - _rn2*_rn2);
                 contact.MassNormal = 1f/_kNormal;
 
                 //calculate mass _tangent
@@ -159,7 +159,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 Vector2.Dot(ref _r1, ref _r1, out _float1);
                 Vector2.Dot(ref _r2, ref _r2, out _float2);
                 _kTangent += GeometryA.body.inverseMomentOfInertia*(_float1 - _rt1*_rt1) +
-                            GeometryB.Body.InverseMomentOfInertia*(_float2 - _rt2*_rt2);
+                             GeometryB.Body.InverseMomentOfInertia*(_float2 - _rt2*_rt2);
                 contact.MassTangent = 1f/_kTangent;
 
                 //calc velocity bias

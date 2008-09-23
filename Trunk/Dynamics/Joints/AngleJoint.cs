@@ -7,14 +7,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class AngleJoint : Joint
     {
+        private Body _body1;
+        private Body _body2;
         private float _massFactor;
         private float _maxImpulse = float.MaxValue;
         private float _targetAngle;
         private float _velocityBias;
-        private Body _body1;
-        private Body _body2;
-
-        public event EventHandler<EventArgs> Broke;
 
         public AngleJoint()
         {
@@ -57,6 +55,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             set { _maxImpulse = value; }
         }
 
+        public event EventHandler<EventArgs> Broke;
+
         public override void Validate()
         {
             if (_body1.IsDisposed || _body2.IsDisposed)
@@ -79,7 +79,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
             JointError = (_body2.totalRotation - _body1.totalRotation) - _targetAngle;
 
-            _velocityBias = -BiasFactor * inverseDt * JointError;
+            _velocityBias = -BiasFactor*inverseDt*JointError;
 
             _massFactor = (1 - Softness)/(_body1.inverseMomentOfInertia + _body2.inverseMomentOfInertia);
         }
@@ -91,9 +91,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             float angularImpulse = (_velocityBias - _body2.angularVelocity + _body1.angularVelocity)*_massFactor;
 
             _body1.angularVelocity -= _body1.inverseMomentOfInertia*Math.Sign(angularImpulse)*
-                                     Math.Min(Math.Abs(angularImpulse), _maxImpulse);
+                                      Math.Min(Math.Abs(angularImpulse), _maxImpulse);
             _body2.angularVelocity += _body2.inverseMomentOfInertia*Math.Sign(angularImpulse)*
-                                     Math.Min(Math.Abs(angularImpulse), _maxImpulse);
+                                      Math.Min(Math.Abs(angularImpulse), _maxImpulse);
         }
     }
 }

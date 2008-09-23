@@ -8,10 +8,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     public class BruteForceCollider : IBroadPhaseCollider
     {
-        private PhysicsSimulator _physicsSimulator;
         private Arbiter _arbiter;
         private Geom _geometryA;
         private Geom _geometryB;
+        private PhysicsSimulator _physicsSimulator;
 
         public BruteForceCollider(PhysicsSimulator physicsSimulator)
         {
@@ -51,7 +51,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 {
                     _geometryA = _physicsSimulator.geomList[i];
                     _geometryB = _physicsSimulator.geomList[j];
-                    
+
                     //Possible early exits
                     if (!_geometryA.Body.enabled || !_geometryB.Body.enabled)
                     {
