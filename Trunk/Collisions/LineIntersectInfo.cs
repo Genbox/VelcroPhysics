@@ -2,6 +2,9 @@
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Mathematics;
 
+//TODO: This is only used by CollisionHelper, remove it or use it.
+//Could possibly be a struct
+
 /// <summary>
 /// Encapsulates the collision details between a line and a Geom.
 /// </summary>
