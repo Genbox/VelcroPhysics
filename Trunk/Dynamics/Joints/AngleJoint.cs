@@ -7,18 +7,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class AngleJoint : Joint
     {
-        private float _biasFactor = .2f;
-
-        private float _breakpoint = float.MaxValue;
-
-        private float _jointError;
         private float _massFactor;
         private float _maxImpulse = float.MaxValue;
-        private float _softness;
         private float _targetAngle;
         private float _velocityBias;
         private Body _body1;
         private Body _body2;
+
+        public event EventHandler<EventArgs> Broke;
 
         public AngleJoint()
         {
@@ -49,22 +45,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             set { _body2 = value; }
         }
 
-        public float BiasFactor
-        {
-            get { return _biasFactor; }
-            set { _biasFactor = value; }
-        }
-
         public float TargetAngle
         {
             get { return _targetAngle; }
             set { _targetAngle = value; }
-        }
-
-        public float Softness
-        {
-            get { return _softness; }
-            set { _softness = value; }
         }
 
         public float MaxImpulse
@@ -72,19 +56,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             get { return _maxImpulse; }
             set { _maxImpulse = value; }
         }
-
-        public float Breakpoint
-        {
-            get { return _breakpoint; }
-            set { _breakpoint = value; }
-        }
-
-        public float JointError
-        {
-            get { return _jointError; }
-        }
-
-        public event EventHandler<EventArgs> Broke;
 
         public override void Validate()
         {
@@ -96,7 +67,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(_jointError) > _breakpoint)
+            if (Enabled && Math.Abs(JointError) > Breakpoint)
             {
                 Enabled = false;
                 if (Broke != null) Broke(this, new EventArgs());
@@ -106,11 +77,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             {
                 return;
             }
-            _jointError = (_body2.totalRotation - _body1.totalRotation) - _targetAngle;
+            JointError = (_body2.totalRotation - _body1.totalRotation) - _targetAngle;
 
-            _velocityBias = -_biasFactor*inverseDt*_jointError;
+            _velocityBias = -BiasFactor * inverseDt * JointError;
 
-            _massFactor = (1 - _softness)/(_body1.inverseMomentOfInertia + _body2.inverseMomentOfInertia);
+            _massFactor = (1 - Softness)/(_body1.inverseMomentOfInertia + _body2.inverseMomentOfInertia);
         }
 
         public override void Update()
