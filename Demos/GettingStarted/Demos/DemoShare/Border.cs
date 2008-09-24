@@ -74,8 +74,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             _borderGeom[2].RestitutionCoefficient = .2f;
             _borderGeom[2].FrictionCoefficient = .2f;
             _borderGeom[2].CollisionGroup = 100;
-            _borderGeom[2].CollisonGridCellSize = 20;
-            _borderGeom[2].ComputeCollisonGrid();
+            _borderGeom[2].CollisionGridCellSize = 20;
+            _borderGeom[2].ComputeCollisionGrid();;
 
             //bottom border (clone top border since geometry is same size)
             geometryOffset = new Vector2(0, _height*.5f - _borderWidth*.5f);

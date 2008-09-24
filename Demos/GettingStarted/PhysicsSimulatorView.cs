@@ -563,11 +563,11 @@ namespace FarseerGames.FarseerPhysicsDemos
                 {
                     continue;
                 }
-                int count = _physicsSimulator.GeomList[i].Grid.Points.Length;
+                int count = _physicsSimulator.GeomList[i].Grid.GetPoints().Length;
                 for (int j = 0; j < count; j++)
                 {
                     Vector2 point =
-                        _physicsSimulator.GeomList[i].GetWorldPosition(_physicsSimulator.GeomList[i].Grid.Points[j]);
+                        _physicsSimulator.GeomList[i].GetWorldPosition(_physicsSimulator.GeomList[i].Grid.GetPoints()[j]);
                     _gridCircleBrush.Draw(spriteBatch, point);
                 }
             }

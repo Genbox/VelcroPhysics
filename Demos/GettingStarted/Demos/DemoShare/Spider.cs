@@ -13,8 +13,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
     {
         private const int spiderBodyRadius = 20;
         private Vector2 _position;
-        private CollisionCategories _collidesWith = CollisionCategories.All;
-        private CollisionCategories _collisionCategory = CollisionCategories.All;
+        private CollisionCategory _collidesWith = CollisionCategory.All;
+        private CollisionCategory _collisionCategory = CollisionCategory.All;
         private int _collisionGroup;
         private bool _kneeFlexed;
         private float _kneeTargetAngle = .4f;
@@ -56,13 +56,13 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             get { return _spiderBody; }
         }
 
-        public CollisionCategories CollisionCategory
+        public CollisionCategory CollisionCategory
         {
             get { return _collisionCategory; }
             set { _collisionCategory = value; }
         }
 
-        public CollisionCategories CollidesWith
+        public CollisionCategory CollidesWith
         {
             get { return _collidesWith; }
             set { _collidesWith = value; }
