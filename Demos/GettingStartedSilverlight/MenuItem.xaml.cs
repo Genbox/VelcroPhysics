@@ -1,20 +1,14 @@
-﻿using System;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 
 namespace FarseerSilverlightDemos
 {
     public delegate void MenuItemSelectedEvent(int index);
+
     public partial class MenuItem : UserControl
     {
-        bool selected;
         public int Index;
+        private bool selected;
 
         public MenuItem()
         {
@@ -23,22 +17,13 @@ namespace FarseerSilverlightDemos
 
         public string Text
         {
-            set
-            {
-                text.Text = value;
-            }
-            get
-            {
-                return text.Text;
-            }
+            set { text.Text = value; }
+            get { return text.Text; }
         }
 
         public bool Selected
         {
-            get
-            {
-                return selected;
-            }
+            get { return selected; }
             set
             {
                 if (value != selected)

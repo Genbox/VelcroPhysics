@@ -1,33 +1,21 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 
 namespace FarseerSilverlightDemos
 {
     public partial class DemoMenu : UserControl
     {
-        MenuItem resume;
-        MenuItem quit;
         public Key lastKey = Key.ENTER;
-        public bool QuitSelected = false;
-
-        void WireUpMouseEvents(MenuItem itm)
-        {
-            itm.MouseLeftButtonDown += new MouseButtonEventHandler(itm_MouseLeftButtonDown);
-            itm.MouseEnter += new MouseEventHandler(itm_MouseEnter);
-            itm.MouseLeave += new MouseEventHandler(itm_MouseLeave);
-        }
+        private MenuItem quit;
+        public bool QuitSelected;
+        private MenuItem resume;
 
         public DemoMenu()
         {
             InitializeComponent();
-            Canvas c = ir as Canvas;
+            Canvas c = ir;
             resume = new MenuItem();
             resume.SetValue(Canvas.LeftProperty, Convert.ToDouble(175));
             resume.SetValue(Canvas.TopProperty, Convert.ToDouble(320));
@@ -42,57 +30,12 @@ namespace FarseerSilverlightDemos
             quit.Index = 1;
             WireUpMouseEvents(quit);
             c.Children.Add(quit);
-            this.Loaded += new RoutedEventHandler(DemoMenu_Loaded);
-        }
-
-        void itm_MouseLeftButtonDown(object sender, MouseEventArgs e)
-        {
-            MenuItem itm = sender as MenuItem;
-            if (itm.Index == 0)
-            {
-                Visible = false;
-            }
-            else
-            {
-                QuitSelected = true;
-            }
-        }
-
-        void itm_MouseEnter(object sender, MouseEventArgs e)
-        {
-            MenuItem itm = sender as MenuItem;
-            itm.Selected = true;
-        }
-
-        void itm_MouseLeave(object sender, EventArgs e)
-        {
-            MenuItem itm = sender as MenuItem;
-            itm.Selected = false;
-        }
-
-
-        void DemoMenu_Loaded(object sender, EventArgs e)
-        {
-        }
-
-        public void HandleKeyboard()
-        {
-            Key k = (Key)0;
-            if (Page.KeyHandler.IsKeyPressed(Key.ESCAPE)) k = Key.ESCAPE;
-            if (k == lastKey) return;
-            if (k == Key.ESCAPE)
-            {
-                QuitSelected = true;
-            }
-            lastKey = k;
+            Loaded += DemoMenu_Loaded;
         }
 
         public bool Visible
         {
-            get
-            {
-                return ir.Visibility == Visibility.Visible;
-            }
+            get { return ir.Visibility == Visibility.Visible; }
             set
             {
                 if (value)
@@ -106,26 +49,69 @@ namespace FarseerSilverlightDemos
             }
         }
 
-        public void Dispose()
-        {
-            resume.Selected = false;
-            quit.Selected = false;
-        }
-
         public string Title
         {
-            set
-            {
-                title.Text = value;
-            }
+            set { title.Text = value; }
         }
 
         public string Details
         {
-            set
+            set { details.Text = value; }
+        }
+
+        private void WireUpMouseEvents(MenuItem itm)
+        {
+            itm.MouseLeftButtonDown += itm_MouseLeftButtonDown;
+            itm.MouseEnter += itm_MouseEnter;
+            itm.MouseLeave += itm_MouseLeave;
+        }
+
+        private void itm_MouseLeftButtonDown(object sender, MouseEventArgs e)
+        {
+            MenuItem itm = sender as MenuItem;
+            if (itm.Index == 0)
             {
-                details.Text = value;
+                Visible = false;
             }
+            else
+            {
+                QuitSelected = true;
+            }
+        }
+
+        private void itm_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MenuItem itm = sender as MenuItem;
+            itm.Selected = true;
+        }
+
+        private void itm_MouseLeave(object sender, EventArgs e)
+        {
+            MenuItem itm = sender as MenuItem;
+            itm.Selected = false;
+        }
+
+
+        private void DemoMenu_Loaded(object sender, EventArgs e)
+        {
+        }
+
+        public void HandleKeyboard()
+        {
+            Key k = 0;
+            if (Page.KeyHandler.IsKeyPressed(Key.ESCAPE)) k = Key.ESCAPE;
+            if (k == lastKey) return;
+            if (k == Key.ESCAPE)
+            {
+                QuitSelected = true;
+            }
+            lastKey = k;
+        }
+
+        public void Dispose()
+        {
+            resume.Selected = false;
+            quit.Selected = false;
         }
     }
 }

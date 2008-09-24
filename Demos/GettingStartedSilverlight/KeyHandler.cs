@@ -1,19 +1,14 @@
-﻿using System;
-using System.Windows;
+using System;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 
 namespace FarseerSilverlightDemos
 {
     public class KeyHandler
     {
-        bool[] isPressed = new bool[255];
-        UserControl targetCanvas = null;
+        private bool[] isPressed = new bool[255];
+        private UserControl targetCanvas;
+
         public void ClearKeyPresses()
         {
             for (int i = 0; i < 255; i++)
@@ -26,37 +21,37 @@ namespace FarseerSilverlightDemos
         {
             ClearKeyPresses();
             targetCanvas = target;
-            target.KeyDown += new KeyEventHandler(target_KeyDown);
-            target.KeyUp += new KeyEventHandler(target_KeyUp);
-            target.LostFocus += new RoutedEventHandler(target_LostFocus);
+            target.KeyDown += target_KeyDown;
+            target.KeyUp += target_KeyUp;
+            target.LostFocus += target_LostFocus;
         }
 
         public void Detach(UserControl target)
         {
-            target.KeyDown -= new KeyEventHandler(target_KeyDown);
-            target.KeyUp -= new KeyEventHandler(target_KeyUp);
-            target.LostFocus -= new RoutedEventHandler(target_LostFocus);
+            target.KeyDown -= target_KeyDown;
+            target.KeyUp -= target_KeyUp;
+            target.LostFocus -= target_LostFocus;
             ClearKeyPresses();
         }
 
-        void target_KeyDown(object sender, KeyEventArgs e)
+        private void target_KeyDown(object sender, KeyEventArgs e)
         {
-            isPressed[(int)e.Key] = true;
+            isPressed[(int) e.Key] = true;
         }
 
-        void target_KeyUp(object sender, KeyEventArgs e)
+        private void target_KeyUp(object sender, KeyEventArgs e)
         {
-            isPressed[(int)e.Key] = false;
+            isPressed[(int) e.Key] = false;
         }
-            
-        void target_LostFocus(object sender, EventArgs e)
+
+        private void target_LostFocus(object sender, EventArgs e)
         {
-            ClearKeyPresses();            
+            ClearKeyPresses();
         }
 
         public bool IsKeyPressed(Key k)
         {
-            int v = (int)k;
+            int v = (int) k;
             if (v < 0 || v > 82) return false;
             return isPressed[v];
         }

@@ -1,27 +1,17 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
+﻿using System.Windows.Controls;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Mathematics;
-using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics;
 
 namespace FarseerSilverlightDemos.Drawing
 {
     public partial class FixedLinearSpringBrush : UserControl, IDrawingBrush
     {
-        public FixedLinearSpring FixedLinearSpring;
-        float x1;
-        float x2;
-        float y1;
-        float y2;
         public BrushExtender Extender = new BrushExtender();
+        public FixedLinearSpring FixedLinearSpring;
+        private float x1;
+        private float x2;
+        private float y1;
+        private float y2;
 
 
         public FixedLinearSpringBrush()
@@ -63,6 +53,8 @@ namespace FarseerSilverlightDemos.Drawing
             }
         }
 
+        #region IDrawingBrush Members
+
         public void Update()
         {
             if (FixedLinearSpring == null) return;
@@ -70,5 +62,6 @@ namespace FarseerSilverlightDemos.Drawing
             Endpoint2 = FixedLinearSpring.WorldAttachPoint;
         }
 
+        #endregion
     }
 }

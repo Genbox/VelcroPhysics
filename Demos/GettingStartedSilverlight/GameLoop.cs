@@ -1,23 +1,25 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 
 namespace FarseerSilverlightDemos
 {
     public class GameLoop
     {
-        Canvas targetCanvas = null;
-        Storyboard storyboard;
-        DateTime lastUpdateTime = DateTime.MinValue;
-        TimeSpan elapsedTime;
+        #region Delegates
+
         public delegate void UpdateDelegate(TimeSpan ElapsedTime);
+
+        #endregion
+
+        private TimeSpan elapsedTime;
+        private DateTime lastUpdateTime = DateTime.MinValue;
+        private Storyboard storyboard;
+        private Canvas targetCanvas;
+
         public event UpdateDelegate Update;
+
         public void Attach(Canvas canvas)
         {
             targetCanvas = canvas;
@@ -25,7 +27,7 @@ namespace FarseerSilverlightDemos
             storyboard.SetValue(FrameworkElement.NameProperty, "gameloop");
             canvas.Resources.Add("gameloop", storyboard);
             lastUpdateTime = DateTime.Now;
-            storyboard.Completed += new EventHandler(storyboard_Completed);
+            storyboard.Completed += storyboard_Completed;
             storyboard.Begin();
         }
 
@@ -35,11 +37,11 @@ namespace FarseerSilverlightDemos
             canvas.Resources.Remove("gameloop");
         }
 
-        void storyboard_Completed(object sender, EventArgs e)
+        private void storyboard_Completed(object sender, EventArgs e)
         {
             elapsedTime = DateTime.Now - lastUpdateTime;
             lastUpdateTime = DateTime.Now;
-            if (Update!=null) Update(elapsedTime);
+            if (Update != null) Update(elapsedTime);
             storyboard.Begin();
         }
     }

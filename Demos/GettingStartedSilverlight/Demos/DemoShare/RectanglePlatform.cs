@@ -1,39 +1,27 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using FarseerGames.FarseerPhysics.Factories;
-using Media = System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
+﻿using System.Windows.Media;
+using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Drawing;
-using FarseerGames.FarseerPhysics;
+using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
-using System.Collections.Generic;
-using FarseerSilverlightDemos.Drawing;
-using FarseerSilverlightDemos.Demos.DemoShare;
 
 namespace FarseerSilverlightDemos.Demos.DemoShare
 {
     public class RectanglePlatform
     {
-        Body platformBody;
-        Geom platformGeom;
+        private Color borderColor;
+        private int collisionGroup;
+        private Color color;
+        private int height;
+        private Body platformBody;
+        private Geom platformGeom;
 
-        int width;
-        int height;
-        Vector2 position;
-        Media.Color color;
-        Media.Color borderColor;
-        int collisionGroup;
+        private Vector2 platformOrigin;
+        private Vector2 position;
+        private int width;
 
-        Vector2 platformOrigin;
-
-        public RectanglePlatform(int width, int height, Vector2 position, Media.Color color, Media.Color borderColor, int collisionGroup)
+        public RectanglePlatform(int width, int height, Vector2 position, Color color, Color borderColor,
+                                 int collisionGroup)
         {
             this.width = width;
             this.height = height;
@@ -45,10 +33,9 @@ namespace FarseerSilverlightDemos.Demos.DemoShare
 
         public void Load(SimulatorView view, PhysicsSimulator physicsSimulator)
         {
-
             //use the body factory to create the physics body
             platformBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, width, height, 1);
-            view.AddRectangleToCanvas(platformBody, Media.Colors.White, new Vector2(width, height));
+            view.AddRectangleToCanvas(platformBody, Colors.White, new Vector2(width, height));
             platformBody.IsStatic = true;
             platformBody.Position = position;
 

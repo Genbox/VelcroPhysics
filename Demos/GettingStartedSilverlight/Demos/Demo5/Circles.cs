@@ -1,42 +1,34 @@
 ﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using FarseerGames.FarseerPhysics.Factories;
-using Media = System.Windows.Media;
-using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Drawing;
-using FarseerGames.FarseerPhysics.Collisions;
+using System.Windows.Media;
 using FarseerGames.FarseerPhysics;
+using FarseerGames.FarseerPhysics.Collisions;
+using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
-using System.Collections.Generic;
-using FarseerSilverlightDemos.Drawing;
 
 namespace FarseerSilverlightDemos.Demos.Demo5
 {
     public class Circles
     {
+        private Color borderColor = Colors.Black;
         private Body[] circleBody;
         private Geom[] circleGeom;
+        private CollisionCategory collidesWith = CollisionCategory.All;
+        private CollisionCategory collisionCategories = CollisionCategory.All;
 
-        private int radius = 100;
-        private Media.Color color = Media.Colors.White;
-        private Media.Color borderColor = Media.Colors.Black;
+        private Color color = Colors.White;
 
         private int count = 2;
-        private Vector2 startPosition;
         private Vector2 endPosition;
+        private int radius = 100;
+        private Vector2 startPosition;
 
-        private CollisionCategory collisionCategories = CollisionCategory.All;
-        private CollisionCategory collidesWith = CollisionCategory.All;
-
-        public Circles(Vector2 startPosition, Vector2 endPosition, int count, int radius, Media.Color color, Media.Color borderColor)
+        public Circles(Vector2 startPosition, Vector2 endPosition, int count, int radius, Color color, Color borderColor)
         {
-            if (count < 2) { throw new Exception("count must be 2 or greater"); }
+            if (count < 2)
+            {
+                throw new Exception("count must be 2 or greater");
+            }
             this.count = count;
             this.radius = radius;
             this.color = color;
@@ -68,7 +60,7 @@ namespace FarseerSilverlightDemos.Demos.Demo5
             for (int i = 1; i < count; i++)
             {
                 circleBody[i] = BodyFactory.Instance.CreateBody(physicsSimulator, circleBody[0]);
-                circleBody[i].Position = Vector2.Lerp(startPosition, endPosition, (float)i / (float)(count - 1));
+                circleBody[i].Position = Vector2.Lerp(startPosition, endPosition, i/(float) (count - 1));
                 view.AddCircleToCanvas(circleBody[i], color, radius);
             }
 
