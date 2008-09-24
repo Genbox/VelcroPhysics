@@ -1,5 +1,8 @@
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Mathematics;
+#if (XNA)
+using Microsoft.Xna.Framework; 
+#endif
 
 namespace FarseerGames.FarseerPhysics.Controllers
 {

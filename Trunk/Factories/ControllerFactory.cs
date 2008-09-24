@@ -1,6 +1,9 @@
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Mathematics;
+#if (XNA)
+using Microsoft.Xna.Framework; 
+#endif
 
 namespace FarseerGames.FarseerPhysics.Factories
 {

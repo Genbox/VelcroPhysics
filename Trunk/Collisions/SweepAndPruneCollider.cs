@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Interfaces;
+#if (XNA)
+using System.Collections.Specialized;
+#endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -41,20 +44,25 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #region IBroadPhaseCollider Members
 
+#if (!SILVERLIGHT)
         /// <summary>
         /// Used by the PhysicsSimulator to remove geometry from Sweep and Prune once it
         /// has been disposed.
         /// </summary>
         public void ProcessDisposedGeoms()
         {
-            if (_xInfoList.RemoveAll(i => i.geometry.IsDisposed) > 0)
+            if (_xInfoList.RemoveAll(delegate(ExtentInfo i)
+            { return i.geometry.IsDisposed; }) > 0)
             {
-                _xExtentList.RemoveAll(n => n.info.geometry.IsDisposed);
+                _xExtentList.RemoveAll(delegate(Extent n)
+                { return n.info.geometry.IsDisposed; });
             }
 
-            if (_yInfoList.RemoveAll(i => i.geometry.IsDisposed) > 0)
+            if (_yInfoList.RemoveAll(delegate(ExtentInfo i)
+            { return i.geometry.IsDisposed; }) > 0)
             {
-                _yExtentList.RemoveAll(n => n.info.geometry.IsDisposed);
+                _yExtentList.RemoveAll(delegate(Extent n)
+                { return n.info.geometry.IsDisposed; });
             }
 
             // We force a non-incremental update because that will insure that the
@@ -69,13 +77,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void ProcessRemovedGeoms()
         {
-            if (_xInfoList.RemoveAll(i => i.geometry.isRemoved) > 0)
+            if (_xInfoList.RemoveAll(delegate(ExtentInfo i)
+            { return i.geometry.isRemoved; }) > 0)
             {
-                _xExtentList.RemoveAll(n => n.info.geometry.isRemoved);
+                _xExtentList.RemoveAll(delegate(Extent n)
+                { return n.info.geometry.isRemoved; });
             }
-            if (_yInfoList.RemoveAll(i => i.geometry.isRemoved) > 0)
+            if (_yInfoList.RemoveAll(delegate(ExtentInfo i)
+            { return i.geometry.isRemoved; }) > 0)
             {
-                _yExtentList.RemoveAll(n => n.info.geometry.isRemoved);
+                _yExtentList.RemoveAll(delegate(Extent n)
+                { return n.info.geometry.isRemoved; });
             }
 
             // We force a non-incremental update because that will insure that the
@@ -83,6 +95,105 @@ namespace FarseerGames.FarseerPhysics.Collisions
             // by overlaps, etc. Its just easier this way.
             ForceNonIncrementalUpdate();
         }
+#else
+        private int ExtentInfoListRemoveAllRemoved(ExtentInfoList l)
+        {
+            int removed = 0;
+            for (int i = 0; i < l.Count; i++)
+            {
+                if (l[i].geometry.isRemoved)
+                {
+                    removed++;
+                    l.RemoveAt(i);
+                    i--;
+                }
+            }
+            return removed;
+        }
+
+        private int ExtentListRemoveAllRemoved(ExtentList l)
+        {
+            int removed = 0;
+            for (int i = 0; i < l.Count; i++)
+            {
+                if (l[i].info.geometry.isRemoved)
+                {
+                    removed++;
+                    l.RemoveAt(i);
+                    i--;
+                }
+            }
+            return removed;
+        }
+
+        private int ExtentInfoListRemoveAllDisposed(ExtentInfoList l)
+        {
+            int removed = 0;
+            for (int i = 0; i < l.Count; i++)
+            {
+                if (l[i].geometry.IsDisposed)
+                {
+                    removed++;
+                    l.RemoveAt(i);
+                    i--;
+                }
+            }
+            return removed;
+        }
+
+        private int ExtentListRemoveAllDisposed(ExtentList l)
+        {
+            int removed = 0;
+            for (int i = 0; i < l.Count; i++)
+            {
+                if (l[i].info.geometry.IsDisposed)
+                {
+                    removed++;
+                    l.RemoveAt(i);
+                    i--;
+                }
+            }
+            return removed;
+        }
+
+        /// <summary>
+        /// Used by the PhysicsSimulator to remove geometry from Sweep and Prune once it
+        /// has been disposed.
+        /// </summary>
+        public void ProcessDisposedGeoms()
+        {
+            if (ExtentInfoListRemoveAllDisposed(_xInfoList) > 0)
+            {
+                ExtentListRemoveAllDisposed(_xExtentList);
+            }
+            if (ExtentInfoListRemoveAllDisposed(_yInfoList) > 0)
+            {
+                ExtentListRemoveAllDisposed(_yExtentList);
+            }
+
+
+            // We force a non-incremental update because that will insure that the
+            // collisionPairs get recreated and that the geometry isn't being held
+            // by overlaps, etc. Its just easier this way.
+            ForceNonIncrementalUpdate();
+        }
+        public void ProcessRemovedGeoms()
+        {
+            if (ExtentInfoListRemoveAllRemoved(_xInfoList) > 0)
+            {
+                ExtentListRemoveAllRemoved(_xExtentList);
+            }
+            if (ExtentInfoListRemoveAllRemoved(_yInfoList) > 0)
+            {
+                ExtentListRemoveAllRemoved(_yExtentList);
+            }
+
+            // We force a non-incremental update because that will insure that the
+            // collisionPairs get recreated and that the geometry isn't being held
+            // by overlaps, etc. Its just easier this way.
+            ForceNonIncrementalUpdate();
+        }
+#endif
 
         /// <summary>
         /// This method is used by the PhysicsSimulator to notify Sweep and Prune that 

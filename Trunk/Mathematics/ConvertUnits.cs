@@ -1,3 +1,7 @@
+#if (XNA)
+using Microsoft.Xna.Framework; 
+#endif
+
 namespace FarseerGames.FarseerPhysics.Mathematics
 {
     public static class ConvertUnits

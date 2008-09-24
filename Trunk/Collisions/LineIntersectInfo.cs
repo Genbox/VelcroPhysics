@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Mathematics;
+#if (XNA)
+using Microsoft.Xna.Framework;
+#endif
 
 //TODO: This is only used by CollisionHelper, remove it or use it.
 //Could possibly be a struct

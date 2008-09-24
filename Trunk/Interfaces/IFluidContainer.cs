@@ -1,5 +1,8 @@
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Mathematics;
+#if (XNA)
+using Microsoft.Xna.Framework; 
+#endif
 
 namespace FarseerGames.FarseerPhysics.Interfaces
 {
