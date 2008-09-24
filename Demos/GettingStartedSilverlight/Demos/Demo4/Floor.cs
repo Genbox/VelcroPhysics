@@ -1,31 +1,20 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using FarseerGames.FarseerPhysics.Factories;
-using Media = System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
+﻿using System.Windows.Media;
+using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Drawing;
-using FarseerGames.FarseerPhysics;
+using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
-using System.Collections.Generic;
-using FarseerSilverlightDemos.Drawing;
 
 namespace FarseerSilverlightDemos.Demos.Demo4
 {
     public class Floor
     {
-        Body floorBody;
-        Geom floorGeom;
+        private Body floorBody;
+        private Geom floorGeom;
 
-        int width;
-        int height;
-        Vector2 position;
+        private int height;
+        private Vector2 position;
+        private int width;
 
         public Floor(int width, int height, Vector2 position)
         {
@@ -38,7 +27,7 @@ namespace FarseerSilverlightDemos.Demos.Demo4
         {
             //use the body factory to create the physics body
             floorBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, width, height, 1);
-            view.AddRectangleToCanvas(floorBody, Media.Colors.White, new Vector2(width, height));
+            view.AddRectangleToCanvas(floorBody, Colors.White, new Vector2(width, height));
             floorBody.IsStatic = true;
             floorGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, floorBody, width, height);
             floorGeom.RestitutionCoefficient = .4f;

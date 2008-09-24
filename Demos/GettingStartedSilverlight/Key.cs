@@ -1,15 +1,5 @@
-﻿// provided by http://SilverlightRocks.com and http://SilverlightGames101.net
+// provided by http://SilverlightRocks.com and http://SilverlightGames101.net
 // free for any use, personal or commercial
-using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-
 namespace FarseerSilverlightDemos
 {
     public enum Key
@@ -67,7 +57,7 @@ namespace FarseerSilverlightDemos
         U = 50,
         V = 51,
         W = 52,
-        X = 53, 
+        X = 53,
         Y = 54,
         Z = 55,
         F1 = 56,

@@ -1,12 +1,7 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
+using FarseerGames.FarseerPhysics;
 using FarseerSilverlightDemos.Demos.Demo1;
 using FarseerSilverlightDemos.Demos.Demo2;
 using FarseerSilverlightDemos.Demos.Demo3;
@@ -14,10 +9,6 @@ using FarseerSilverlightDemos.Demos.Demo4;
 using FarseerSilverlightDemos.Demos.Demo5;
 using FarseerSilverlightDemos.Demos.Demo6;
 using FarseerSilverlightDemos.Demos.Demo7;
-using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Drawing;
-using FarseerGames.FarseerPhysics;
-using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerSilverlightDemos
 {
@@ -25,18 +16,18 @@ namespace FarseerSilverlightDemos
     {
         public static GameLoop gameLoop;
         public static KeyHandler KeyHandler;
-        public SimulatorView currentDemo = null;
-        MainMenu mainMenu;
-        Splash splash;
-        DateTime splashTime;
-        bool firstTime = true;
+        public SimulatorView currentDemo;
+        private bool firstTime = true;
+        private MainMenu mainMenu;
+        private Splash splash;
+        private DateTime splashTime;
 
         public Page()
         {
             // Required to initialize variables
             InitializeComponent();
-            this.Loaded += new RoutedEventHandler(Page_Loaded);
-            this.SizeChanged += new SizeChangedEventHandler(Page_SizeChanged);
+            Loaded += Page_Loaded;
+            SizeChanged += Page_SizeChanged;
         }
 
         public void Page_Loaded(object o, EventArgs e)
@@ -47,33 +38,33 @@ namespace FarseerSilverlightDemos
             splash.SetValue(Canvas.ZIndexProperty, 20000);
             KeyHandler = new KeyHandler();
             KeyHandler.Attach(this);
-            this.Focus();
+            Focus();
             gameLoop = new GameLoop();
             gameLoop.Attach(parentCanvas);
-            gameLoop.Update += new GameLoop.UpdateDelegate(gameLoop_Update);
+            gameLoop.Update += gameLoop_Update;
             Fps fps = new Fps();
             canvas.Children.Add(fps);
             fps.SetValue(Canvas.ZIndexProperty, 1000);
             mainMenu = new MainMenu();
             canvas.Children.Add(mainMenu);
-            mainMenu.MenuItemSelected += new MenuItemSelectedEvent(mainMenu_MenuItemSelected);
+            mainMenu.MenuItemSelected += mainMenu_MenuItemSelected;
             Page_SizeChanged(null, null);
         }
 
-        void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            float scaleY = (float)(this.ActualHeight / 768);
-            float scaleX = (float)(this.ActualWidth / 1024);
+            float scaleY = (float) (ActualHeight/768);
+            float scaleX = (float) (ActualWidth/1024);
             float scl = Math.Min(scaleX, scaleY);
             if (scl <= 0) return;
-            translate.X = ((this.ActualWidth) - 1024d * scl) / 2d;
-            translate.Y = ((this.ActualHeight) - 768d * scl) / 2d;
+            translate.X = ((ActualWidth) - 1024d*scl)/2d;
+            translate.Y = ((ActualHeight) - 768d*scl)/2d;
             scale.ScaleX = scl;
             scale.ScaleY = scl;
         }
 
 
-        void mainMenu_MenuItemSelected(int index)
+        private void mainMenu_MenuItemSelected(int index)
         {
             switch (index)
             {
@@ -99,23 +90,23 @@ namespace FarseerSilverlightDemos
                     currentDemo = new Demo7();
                     break;
             }
-            currentDemo.Quit += new SimulatorView.QuitEvent(currentDemo_Quit);
+            currentDemo.Quit += currentDemo_Quit;
             mainMenu.Visible = false;
             canvas.Children.Add(currentDemo);
         }
 
-        void currentDemo_Quit()
+        private void currentDemo_Quit()
         {
             currentDemo.Dispose();
             canvas.Children.Remove(currentDemo);
             mainMenu.Visible = true;
         }
 
-        void HandleKeyboard()
+        private void HandleKeyboard()
         {
         }
 
-        void gameLoop_Update(TimeSpan ElapsedTime)
+        private void gameLoop_Update(TimeSpan ElapsedTime)
         {
             if (firstTime)
             {
@@ -130,8 +121,6 @@ namespace FarseerSilverlightDemos
                     splash.Visibility = Visibility.Collapsed;
                 }
             }
-
         }
-
     }
 }

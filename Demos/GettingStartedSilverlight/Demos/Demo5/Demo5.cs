@@ -1,55 +1,78 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
+﻿using System.IO;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Drawing;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Mathematics;
-using System.Collections.Generic;
-using FarseerSilverlightDemos.Drawing;
 using FarseerSilverlightDemos.Demos.DemoShare;
-using System.IO;
 
 namespace FarseerSilverlightDemos.Demos.Demo5
 {
     public class Demo5 : SimulatorView
     {
-        FarseerSilverlightDemos.Demos.DemoShare.Border border;
-        Agent agent;
+        private Agent agent;
+        private Circles blackCircles1;
+        private Circles blackCircles2;
+        private Circles blackCircles3;
 
-        Circles redCircles1;
-        Circles redCircles2;
-        Circles redCircles3;
+        private Circles blueCircles1;
+        private Circles blueCircles2;
+        private Circles blueCircles3;
+        private Border border;
 
-        Circles blueCircles1;
-        Circles blueCircles2;
-        Circles blueCircles3;
+        private Circles greenCircles1;
+        private Circles greenCircles2;
+        private Circles greenCircles3;
+        private Circles redCircles1;
+        private Circles redCircles2;
+        private Circles redCircles3;
 
-        Circles greenCircles1;
-        Circles greenCircles2;
-        Circles greenCircles3;
-
-        Circles blackCircles1;
-        Circles blackCircles2;
-        Circles blackCircles3;
-
-        public Demo5() {
+        public Demo5()
+        {
             Initialize();
             forceAmount = 1000;
             torqueAmount = 14000;
         }
 
-        public override void Initialize() 
+        public override string Title
         {
-            physicsSimulator = new PhysicsSimulator(new Vector2(0, 0)); 
-            int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
-            border = new FarseerSilverlightDemos.Demos.DemoShare.Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, borderWidth, ScreenManager.ScreenCenter);
+            get { return "Collision Categories"; }
+        }
+
+        public override string Details
+        {
+            get
+            {
+                StringWriter sb = new StringWriter();
+                sb.WriteLine("This demo shows how to setup complex collision scenarios.");
+                sb.WriteLine();
+                sb.WriteLine("In this demo:");
+                sb.Write("-Red, Green, and Blue are set to only collide with");
+                sb.WriteLine(" their own color.");
+                sb.Write("-Black is set to collide with itself, Red, Green, ");
+                sb.WriteLine(" and Blue.");
+                sb.Write("-The 'Agent' (the cross thing) is set to collide");
+                sb.WriteLine(" with all but Black");
+                sb.WriteLine("");
+                sb.Write("NOTE: If two objects define conflicting");
+                sb.WriteLine(" collision status, collide wins over not colliding.");
+                sb.Write("This is the case with Black vs. the Red, Green, ");
+                sb.WriteLine(" and Blue circles");
+                sb.WriteLine("");
+                sb.WriteLine("Keyboard:");
+                sb.WriteLine("  -Rotate : K and L");
+                sb.WriteLine("  -Move : A,S,D,W");
+                sb.WriteLine("");
+                sb.WriteLine("Mouse:");
+                sb.WriteLine("  -Hold down left button and drag");
+                return sb.ToString();
+            }
+        }
+
+        public override void Initialize()
+        {
+            physicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
+            int borderWidth = (int) (ScreenManager.ScreenHeight*.05f);
+            border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, borderWidth,
+                                ScreenManager.ScreenCenter);
             border.Load(this, physicsSimulator);
 
             agent = new Agent(ScreenManager.ScreenCenter);
@@ -62,16 +85,17 @@ namespace FarseerSilverlightDemos.Demos.Demo5
             base.Initialize();
         }
 
-        private void LoadCircles() {
+        private void LoadCircles()
+        {
             Vector2 startPosition;
             Vector2 endPosition;
 
             //Cat1=Red, Cat2=Green, Cat3=Blue, Cat4=Black, Cat5=Agent
             startPosition = new Vector2(100, 100);
             endPosition = new Vector2(100, ScreenManager.ScreenHeight - 100);
-            redCircles1 = new Circles(startPosition,endPosition, 15, 15, Color.FromArgb(175, 200, 0, 0), Colors.Black);
+            redCircles1 = new Circles(startPosition, endPosition, 15, 15, Color.FromArgb(175, 200, 0, 0), Colors.Black);
             redCircles1.CollisionCategories = (CollisionCategory.Cat1);
-            redCircles1.CollidesWith = (CollisionCategory.Cat1 | CollisionCategory.Cat4 | CollisionCategory.Cat5);            
+            redCircles1.CollidesWith = (CollisionCategory.Cat1 | CollisionCategory.Cat4 | CollisionCategory.Cat5);
             redCircles1.Load(this, physicsSimulator);
 
             startPosition = new Vector2(200, 200);
@@ -151,44 +175,5 @@ namespace FarseerSilverlightDemos.Demos.Demo5
             blackCircles3.CollidesWith = CollisionCategory.All & ~CollisionCategory.Cat5; //Collide with all but Cat5
             blackCircles3.Load(this, physicsSimulator);
         }
-
-        public override string Title
-        {
-            get
-            {
-                return "Collision Categories";
-            }
-        }
-
-        public override string Details
-        {
-            get
-            {
-                StringWriter sb = new StringWriter();
-                sb.WriteLine("This demo shows how to setup complex collision scenarios.");
-                sb.WriteLine();
-                sb.WriteLine("In this demo:");
-                sb.Write("-Red, Green, and Blue are set to only collide with");
-                sb.WriteLine(" their own color.");
-                sb.Write("-Black is set to collide with itself, Red, Green, ");
-                sb.WriteLine(" and Blue.");
-                sb.Write("-The 'Agent' (the cross thing) is set to collide");
-                sb.WriteLine(" with all but Black");
-                sb.WriteLine("");
-                sb.Write("NOTE: If two objects define conflicting");
-                sb.WriteLine(" collision status, collide wins over not colliding.");
-                sb.Write("This is the case with Black vs. the Red, Green, ");
-                sb.WriteLine(" and Blue circles");
-                sb.WriteLine("");
-                sb.WriteLine("Keyboard:");
-                sb.WriteLine("  -Rotate : K and L");
-                sb.WriteLine("  -Move : A,S,D,W");
-                sb.WriteLine("");
-                sb.WriteLine("Mouse:");
-                sb.WriteLine("  -Hold down left button and drag");
-                return sb.ToString();
-            }
-        }
-    
     }
 }
