@@ -5,8 +5,6 @@ namespace FarseerSilverlightDemos.Drawing
     public partial class AgentBrush : UserControl, IDrawingBrush
     {
         public BrushExtender Extender = new BrushExtender();
-        private float height = 120;
-        private float width = 120;
 
         public AgentBrush()
         {

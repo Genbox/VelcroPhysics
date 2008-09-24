@@ -6,21 +6,19 @@ namespace FarseerSilverlightDemos
 {
     public class KeyHandler
     {
-        private bool[] isPressed = new bool[255];
-        private UserControl targetCanvas;
+        private bool[] _isPressed = new bool[255];
 
         public void ClearKeyPresses()
         {
             for (int i = 0; i < 255; i++)
             {
-                isPressed[i] = false;
+                _isPressed[i] = false;
             }
         }
 
         public void Attach(UserControl target)
         {
             ClearKeyPresses();
-            targetCanvas = target;
             target.KeyDown += target_KeyDown;
             target.KeyUp += target_KeyUp;
             target.LostFocus += target_LostFocus;
@@ -36,12 +34,12 @@ namespace FarseerSilverlightDemos
 
         private void target_KeyDown(object sender, KeyEventArgs e)
         {
-            isPressed[(int) e.Key] = true;
+            _isPressed[(int) e.Key] = true;
         }
 
         private void target_KeyUp(object sender, KeyEventArgs e)
         {
-            isPressed[(int) e.Key] = false;
+            _isPressed[(int) e.Key] = false;
         }
 
         private void target_LostFocus(object sender, EventArgs e)
@@ -53,7 +51,7 @@ namespace FarseerSilverlightDemos
         {
             int v = (int) k;
             if (v < 0 || v > 82) return false;
-            return isPressed[v];
+            return _isPressed[v];
         }
     }
 }

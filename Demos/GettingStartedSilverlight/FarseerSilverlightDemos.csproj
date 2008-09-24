@@ -94,7 +94,6 @@
       <DependentUpon>FixedLinearSpringBrush.xaml</DependentUpon>
     </Compile>
     <Compile Include="Drawing\IDrawingBrush.cs" />
-    <Compile Include="Drawing\LineBrush.cs" />
     <Compile Include="Drawing\RectangleBrush.xaml.cs">
       <DependentUpon>RectangleBrush.xaml</DependentUpon>
     </Compile>
@@ -165,7 +164,7 @@
     <Resource Include="logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FarseerPhysics\FarseerPhysics.csproj">
+    <ProjectReference Include="..\..\Branches\Silverlight\FarseerPhysics.csproj">
       <Project>{1D0B97EA-FE4A-498E-A21B-D0D476464925}</Project>
       <Name>FarseerPhysics</Name>
     </ProjectReference>
