@@ -5,6 +5,7 @@ using System.Windows.Documents;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
+using FarseerGames.FarseerPhysics.Factories;
 using Media = System.Windows.Media;
 using System.Windows.Shapes;
 using FarseerGames.FarseerPhysics.Collisions;

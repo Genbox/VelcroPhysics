@@ -6,6 +6,8 @@ using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using FarseerGames.FarseerPhysics.Dynamics.Springs;
+using FarseerGames.FarseerPhysics.Factories;
 using Media = System.Windows.Media;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
@@ -69,8 +71,8 @@ namespace FarseerSilverlightDemos.Demos.Demo6
             border.Load(this, physicsSimulator);
 
             agent = new Agent(new Vector2(ScreenManager.ScreenCenter.X, 100));
-            agent.CollisionCategory = Enums.CollisionCategories.Cat5;
-            agent.CollidesWith = Enums.CollisionCategories.All & ~Enums.CollisionCategories.Cat4; //collide with all but Cat5(black)
+            agent.CollisionCategory = CollisionCategory.Cat5;
+            agent.CollidesWith = CollisionCategory.All & ~CollisionCategory.Cat4; //collide with all but Cat5(black)
             agent.Load(this, physicsSimulator);
             AddAgentToCanvas(agent.Body);
             LoadPlatforms();

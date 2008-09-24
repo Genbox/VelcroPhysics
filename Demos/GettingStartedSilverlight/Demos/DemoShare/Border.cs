@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Ink;
 using System.Windows.Input;
+using FarseerGames.FarseerPhysics.Factories;
 using Media = System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
@@ -80,8 +81,8 @@ namespace FarseerSilverlightDemos.Demos.DemoShare
             borderGeom[2].RestitutionCoefficient = .2f;
             borderGeom[2].FrictionCoefficient = .2f;
             borderGeom[2].CollisionGroup = 100;
-            borderGeom[2].CollisonGridCellSize = 20;
-            borderGeom[2].ComputeCollisonGrid();
+            borderGeom[2].CollisionGridCellSize = 20;
+            borderGeom[2].ComputeCollisionGrid();
 
             //bottom border (clone top border since geometry is same size)
             geometryOffset = new Vector2(0, height * .5f - borderWidth * .5f);
