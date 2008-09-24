@@ -124,14 +124,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         internal void PreStepImpulse(float inverseDt)
         {
-            Contact contact;
             if (!GeometryA.CollisionResponseEnabled || !GeometryB.CollisionResponseEnabled)
             {
                 return;
             }
             for (int i = 0; i < _contactList.Count; i++)
             {
-                contact = _contactList[i];
+                Contact contact = _contactList[i];
 
                 //calculate _contact offset from body position
                 Vector2.Subtract(ref contact.Position, ref GeometryA.body.position, out _r1);
@@ -494,7 +493,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 }
             }
 
-            //sort _contact list by seperation (amount of penetration)
+            //sort contact list by seperation (amount of penetration)
             contactList.Sort(_contactComparer);
 
             //resolve deepest contacts first

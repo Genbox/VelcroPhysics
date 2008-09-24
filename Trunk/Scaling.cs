@@ -40,7 +40,7 @@ namespace FarseerGames.FarseerPhysics
             //it is confusing for users having 2 similar named prop/method
             get
             {
-                // todo -> add current scaling penalty
+                // TODO: Add current scaling penalty
                 return _updateInterval + _scalingPenalty;
             }
             set

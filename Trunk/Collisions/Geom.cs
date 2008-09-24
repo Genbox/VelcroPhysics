@@ -338,6 +338,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void ComputeCollisionGrid()
         {
+            //TODO: Don't compute grid if collision is disabled?
             if (localVertices.Count > 2)
             {
                 grid.ComputeGrid(this, _collisionGridCellSize);
@@ -444,6 +445,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns>true if colliding</returns>
         public bool Collide(Vector2 point)
         {
+            //TODO: Don't check collision if it's disabled?
             Feature feature;
             point = Vector2.Transform(point, MatrixInverse);
 
@@ -464,6 +466,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns></returns>
         public bool Collide(Geom geometry)
         {
+            //TODO: Don't check collision if it's disabled?
             //Check each vertice (of self) against the provided geometry
             for (int i = 0; i < worldVertices.Count; i++)
             {
@@ -494,6 +497,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns></returns>
         public bool Intersect(ref Vector2 localVertex, out Feature feature)
         {
+            //TODO: Don't check collision if it's disabled?
             return grid.Intersect(ref localVertex, out feature);
         }
 
