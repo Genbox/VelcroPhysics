@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Ink;
 using System.Windows.Input;
+using FarseerGames.FarseerPhysics.Factories;
 using Media = System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
@@ -22,8 +23,8 @@ namespace FarseerSilverlightDemos.Demos.DemoShare
         Body agentBody;
         Geom[] agentGeom;
 
-        Enums.CollisionCategories collisionCategory = Enums.CollisionCategories.All;
-        Enums.CollisionCategories collidesWith = Enums.CollisionCategories.All;
+        CollisionCategory collisionCategory = CollisionCategory.All;
+        CollisionCategory collidesWith = CollisionCategory.All;
 
         Vector2 position;
 
@@ -47,13 +48,13 @@ namespace FarseerSilverlightDemos.Demos.DemoShare
             agentBody.ApplyTorque(torque);
         }
 
-        public Enums.CollisionCategories CollisionCategory
+        public CollisionCategory CollisionCategory
         {
             get { return collisionCategory; }
             set { collisionCategory = value; }
         }
 
-        public Enums.CollisionCategories CollidesWith
+        public CollisionCategory CollidesWith
         {
             get { return collidesWith; }
             set { collidesWith = value; }

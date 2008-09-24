@@ -4,6 +4,8 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Ink;
 using System.Windows.Input;
+using FarseerGames.FarseerPhysics.Dynamics.Joints;
+using FarseerGames.FarseerPhysics.Factories;
 using SM = System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
@@ -44,8 +46,8 @@ namespace FarseerSilverlightDemos.Demos.DemoShare
         private Vector2 upperLegSize = new Vector2(40,12); //x=width, y=height
         private Vector2 lowerLegSize = new Vector2(30,12);
 
-        Enums.CollisionCategories collisionCategory =Enums.CollisionCategories.All;
-        Enums.CollisionCategories collidesWith = Enums.CollisionCategories.All;
+        CollisionCategory collisionCategory =CollisionCategory.All;
+        CollisionCategory collidesWith = CollisionCategory.All;
 
         Vector2 position;
 
@@ -65,12 +67,12 @@ namespace FarseerSilverlightDemos.Demos.DemoShare
             spiderBody.ApplyTorque(torque);
         }
 
-        public Enums.CollisionCategories CollisionCategory {
+        public CollisionCategory CollisionCategory {
             get { return collisionCategory; }
             set { collisionCategory = value; }
         }
 
-        public Enums.CollisionCategories  CollidesWith {
+        public CollisionCategory  CollidesWith {
             get { return collidesWith; }
             set { collidesWith = value; }
         }

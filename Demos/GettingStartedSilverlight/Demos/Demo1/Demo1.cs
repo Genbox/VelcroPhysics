@@ -10,6 +10,7 @@ using System.Windows.Shapes;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Drawing;
 using FarseerGames.FarseerPhysics;
+using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 using System.Collections.Generic;
 using FarseerSilverlightDemos.Drawing;

@@ -6,6 +6,7 @@ using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using FarseerGames.FarseerPhysics.Factories;
 using Media = System.Windows.Media;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Drawing;
@@ -30,8 +31,8 @@ namespace FarseerSilverlightDemos.Demos.Demo5
         private Vector2 startPosition;
         private Vector2 endPosition;
 
-        private Enums.CollisionCategories collisionCategories = Enums.CollisionCategories.All;
-        private Enums.CollisionCategories collidesWith = Enums.CollisionCategories.All;
+        private CollisionCategory collisionCategories = CollisionCategory.All;
+        private CollisionCategory collidesWith = CollisionCategory.All;
 
         public Circles(Vector2 startPosition, Vector2 endPosition, int count, int radius, Media.Color color, Media.Color borderColor)
         {
@@ -44,13 +45,13 @@ namespace FarseerSilverlightDemos.Demos.Demo5
             this.endPosition = endPosition;
         }
 
-        public Enums.CollisionCategories CollisionCategories
+        public CollisionCategory CollisionCategories
         {
             get { return collisionCategories; }
             set { collisionCategories = value; }
         }
 
-        public Enums.CollisionCategories CollidesWith
+        public CollisionCategory CollidesWith
         {
             get { return collidesWith; }
             set { collidesWith = value; }
