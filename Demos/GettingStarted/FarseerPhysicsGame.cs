@@ -1,6 +1,5 @@
 using System;
 using FarseerGames.FarseerPhysicsDemos.Components;
-using FarseerGames.FarseerPhysicsDemos.Demos.Demo4;
 using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,14 +25,14 @@ namespace FarseerGames.FarseerPhysicsDemos
             IsFixedTimeStep = false;
 
             //windowed
-            _graphics.PreferredBackBufferWidth = 1024;
-            _graphics.PreferredBackBufferHeight = 768;
-            _graphics.IsFullScreen = false;
+            //_graphics.PreferredBackBufferWidth = 1024;
+            //_graphics.PreferredBackBufferHeight = 768;
+            //_graphics.IsFullScreen = false;
 
             //fullscreen
-            //_graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            //_graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            //_graphics.IsFullScreen = true;
+            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            _graphics.IsFullScreen = true;
 
             IsMouseVisible = true;
             //Set window defaults. Parent game can override in constructor

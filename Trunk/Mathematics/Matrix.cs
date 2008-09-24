@@ -22,7 +22,6 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         public float M43;
         public float M44;
 
-        //TODO: This should be removed and the fields should be initialized by declaration instead.
         static Matrix()
         {
             _identity = new Matrix(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f);

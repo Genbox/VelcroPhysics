@@ -66,6 +66,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public override int GetHashCode()
         {
+            //TODO: Implement correctly.
             return base.GetHashCode();
         }
     }

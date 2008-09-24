@@ -40,17 +40,18 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         internal Vector2 impulse = Vector2.Zero;
         internal float inverseMass = 1;
         internal float inverseMomentOfInertia = 1;
-        public bool IsDisposed;
         internal bool isStatic;
         internal Vector2 linearVelocity = Vector2.Zero;
         internal Vector2 linearVelocityBias = Vector2.Zero;
         internal float mass = 1;
         internal Vector2 position = Vector2.Zero;
         internal float rotation;
-        //shouldn't need this. commenting out but keeping incase needed in the future.
-        //private float linearDragVelocityThreshhold = .000001f;
         internal float totalRotation;
 
+        //shouldn't need this. commenting out but keeping incase needed in the future.
+        //private float linearDragVelocityThreshhold = .000001f;
+
+        public bool IsDisposed;
         public UpdatedEventHandler Updated;
 
         public Body()
