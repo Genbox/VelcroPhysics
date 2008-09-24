@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("FarseerPhysics")]
+[assembly: AssemblyTitle("Farseer Physics Engine")]
 [assembly: AssemblyDescription("2D Physics Engine")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
