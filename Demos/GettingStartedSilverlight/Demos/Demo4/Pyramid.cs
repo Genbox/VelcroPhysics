@@ -9,43 +9,43 @@ namespace FarseerSilverlightDemos.Demos.Demo4
 {
     public class Pyramid
     {
-        private Body[] blockBody;
-        private Geom[] blockGeom;
+        private Body[] _blockBody;
+        private Geom[] _blockGeom;
 
-        private float blockHeight;
-        private float blockWidth;
-        private Vector2 bottomRightBlockPosition;
-        private int bottomRowBlockCount;
-        private float horizontalSpacing;
-        private Body referenceBody;
-        private Geom referenceGeom;
-        private float verticleSpacing;
+        private float _blockHeight;
+        private float _blockWidth;
+        private Vector2 _bottomRightBlockPosition;
+        private int _bottomRowBlockCount;
+        private float _horizontalSpacing;
+        private Body _referenceBody;
+        private Geom _referenceGeom;
+        private float _verticleSpacing;
 
 
         public Pyramid(Body referenceBody, Geom referenceGeom, float horizontalSpacing, float verticleSpacing,
                        float blockWidth, float blockHeight, int bottomRowBlockCount, Vector2 bottomRightBlockPosition)
         {
-            this.referenceBody = referenceBody;
-            this.referenceGeom = referenceGeom;
-            this.horizontalSpacing = horizontalSpacing;
-            this.verticleSpacing = verticleSpacing;
-            this.blockWidth = blockWidth;
-            this.blockHeight = blockHeight;
-            this.bottomRowBlockCount = bottomRowBlockCount;
-            this.bottomRightBlockPosition = bottomRightBlockPosition;
+            _referenceBody = referenceBody;
+            _referenceGeom = referenceGeom;
+            _horizontalSpacing = horizontalSpacing;
+            _verticleSpacing = verticleSpacing;
+            _blockWidth = blockWidth;
+            _blockHeight = blockHeight;
+            _bottomRowBlockCount = bottomRowBlockCount;
+            _bottomRightBlockPosition = bottomRightBlockPosition;
         }
 
         public void Load(SimulatorView view, PhysicsSimulator physicsSimulator)
         {
-            int count = bottomRowBlockCount*(1 + bottomRowBlockCount)/2;
-            blockBody = new Body[count];
-            blockGeom = new Geom[count];
+            int count = _bottomRowBlockCount*(1 + _bottomRowBlockCount)/2;
+            _blockBody = new Body[count];
+            _blockGeom = new Geom[count];
 
-            for (int i = 0; i < blockBody.Length; i++)
+            for (int i = 0; i < _blockBody.Length; i++)
             {
-                blockBody[i] = BodyFactory.Instance.CreateBody(physicsSimulator, referenceBody);
-                blockGeom[i] = GeomFactory.Instance.CreateGeom(physicsSimulator, blockBody[i], referenceGeom);
-                view.AddRectangleToCanvas(blockBody[i], Colors.White, new Vector2(32, 32));
+                _blockBody[i] = BodyFactory.Instance.CreateBody(physicsSimulator, _referenceBody);
+                _blockGeom[i] = GeomFactory.Instance.CreateGeom(physicsSimulator, _blockBody[i], _referenceGeom);
+                view.AddRectangleToCanvas(_blockBody[i], Colors.White, new Vector2(32, 32));
             }
 
             CreatePyramid();
@@ -53,17 +53,17 @@ namespace FarseerSilverlightDemos.Demos.Demo4
 
         private void CreatePyramid()
         {
-            Vector2 rowOffset = new Vector2((blockWidth/2) + (horizontalSpacing/2), -(blockHeight + verticleSpacing));
-            Vector2 colOffset = new Vector2(horizontalSpacing + blockWidth, 0);
+            Vector2 rowOffset = new Vector2((_blockWidth/2) + (_horizontalSpacing/2), -(_blockHeight + _verticleSpacing));
+            Vector2 colOffset = new Vector2(_horizontalSpacing + _blockWidth, 0);
             Vector2 position = Vector2.Zero;
             int blockCounter = 0;
-            for (int i = 0; i < bottomRowBlockCount; i++)
+            for (int i = 0; i < _bottomRowBlockCount; i++)
             {
-                position = bottomRightBlockPosition + rowOffset*i;
-                for (int j = 0; j < bottomRowBlockCount - i; j++)
+                position = _bottomRightBlockPosition + rowOffset*i;
+                for (int j = 0; j < _bottomRowBlockCount - i; j++)
                 {
                     Vector2 rowPosition = position + colOffset*j;
-                    blockBody[blockCounter].Position = rowPosition;
+                    _blockBody[blockCounter].Position = rowPosition;
                     blockCounter += 1;
                 }
             }

@@ -9,40 +9,41 @@ namespace FarseerSilverlightDemos.Demos.DemoShare
 {
     public class RectanglePlatform
     {
-        private Color borderColor;
-        private int collisionGroup;
-        private Color color;
-        private int height;
-        private Body platformBody;
-        private Geom platformGeom;
+        //TODO: Implement
+        private Color _borderColor;
+        private Color _color;
 
-        private Vector2 platformOrigin;
-        private Vector2 position;
-        private int width;
+        private int _collisionGroup;
+        private int _height;
+        private Body _platformBody;
+        private Geom _platformGeom;
+
+        private Vector2 _position;
+        private int _width;
 
         public RectanglePlatform(int width, int height, Vector2 position, Color color, Color borderColor,
                                  int collisionGroup)
         {
-            this.width = width;
-            this.height = height;
-            this.position = position;
-            this.color = color;
-            this.borderColor = borderColor;
-            this.collisionGroup = collisionGroup;
+            _width = width;
+            _height = height;
+            _position = position;
+            _color = color;
+            _borderColor = borderColor;
+            _collisionGroup = collisionGroup;
         }
 
         public void Load(SimulatorView view, PhysicsSimulator physicsSimulator)
         {
             //use the body factory to create the physics body
-            platformBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, width, height, 1);
-            view.AddRectangleToCanvas(platformBody, Colors.White, new Vector2(width, height));
-            platformBody.IsStatic = true;
-            platformBody.Position = position;
+            _platformBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _width, _height, 1);
+            view.AddRectangleToCanvas(_platformBody, Colors.White, new Vector2(_width, _height));
+            _platformBody.IsStatic = true;
+            _platformBody.Position = _position;
 
-            platformGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, platformBody, width, height);
-            platformGeom.CollisionGroup = 100;
-            platformGeom.CollisionGroup = collisionGroup;
-            platformGeom.FrictionCoefficient = 1;
+            _platformGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _platformBody, _width, _height);
+            _platformGeom.CollisionGroup = 100;
+            _platformGeom.CollisionGroup = _collisionGroup;
+            _platformGeom.FrictionCoefficient = 1;
         }
     }
 }

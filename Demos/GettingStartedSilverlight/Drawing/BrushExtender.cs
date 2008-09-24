@@ -13,9 +13,9 @@ namespace FarseerSilverlightDemos.Drawing
         public Body Body;
         public FrameworkElement child;
         public RotateTransform rotateTransform;
-        private float rotation;
-        private float X;
-        private float Y;
+        private float _rotation;
+        private float _x;
+        private float _y;
 
         public Vector2 Position
         {
@@ -40,20 +40,20 @@ namespace FarseerSilverlightDemos.Drawing
         public virtual void Update()
         {
             if (Body == null) return;
-            if (X != Body.Position.X)
+            if (_x != Body.Position.X)
             {
-                X = Body.Position.X;
-                child.SetValue(Canvas.LeftProperty, Convert.ToDouble(X));
+                _x = Body.Position.X;
+                child.SetValue(Canvas.LeftProperty, Convert.ToDouble(_x));
             }
-            if (Y != Body.Position.Y)
+            if (_y != Body.Position.Y)
             {
-                Y = Body.Position.Y;
-                child.SetValue(Canvas.TopProperty, Convert.ToDouble(Y));
+                _y = Body.Position.Y;
+                child.SetValue(Canvas.TopProperty, Convert.ToDouble(_y));
             }
-            if (Body.Rotation != rotation)
+            if (Body.Rotation != _rotation)
             {
-                rotation = Body.Rotation;
-                rotateTransform.Angle = (rotation*360)/(2*Math.PI);
+                _rotation = Body.Rotation;
+                rotateTransform.Angle = (_rotation*360)/(2*Math.PI);
             }
         }
     }

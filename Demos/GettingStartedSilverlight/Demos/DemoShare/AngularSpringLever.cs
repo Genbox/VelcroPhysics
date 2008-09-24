@@ -3,7 +3,6 @@ using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 using FarseerSilverlightDemos.Drawing;
@@ -12,131 +11,128 @@ namespace FarseerSilverlightDemos.Demos.DemoShare
 {
     public class AngularSpringLever
     {
-        private Body angleSpringleverBody;
-        private int attachPoint; //0=left, 1=top, 2=right,3=bottom
-        private Geom circleGeom;
-        private int collisionGroup;
-        private float dampningConstant = 1;
-        private FixedAngleSpring fixedAngleSpring;
-        private Vector2 position;
-        private Geom rectangleGeom;
-        private int rectangleHeight = 20;
-        private int rectangleWidth = 100;
+        private Body _angleSpringleverBody;
+        private int _attachPoint; //0=left, 1=top, 2=right,3=bottom
+        private Geom _circleGeom;
+        private int _collisionGroup;
+        private float _dampningConstant = 1;
+        private Vector2 _position;
+        private Geom _rectangleGeom;
+        private int _rectangleHeight = 20;
+        private int _rectangleWidth = 100;
 
-        private FixedRevoluteJoint revoluteJoint;
-        private float springConstant = 1;
-        private Body staticBody;
-
+        private FixedRevoluteJoint _revoluteJoint;
+        private float _springConstant = 1;
 
         public Vector2 Position
         {
-            get { return position; }
-            set { position = value; }
+            get { return _position; }
+            set { _position = value; }
         }
 
         public int AttachPoint
         {
-            get { return attachPoint; }
-            set { attachPoint = value; }
+            get { return _attachPoint; }
+            set { _attachPoint = value; }
         }
 
         public int RectangleWidth
         {
-            get { return rectangleWidth; }
-            set { rectangleWidth = value; }
+            get { return _rectangleWidth; }
+            set { _rectangleWidth = value; }
         }
 
         public int RectangleHeight
         {
-            get { return rectangleHeight; }
-            set { rectangleHeight = value; }
+            get { return _rectangleHeight; }
+            set { _rectangleHeight = value; }
         }
 
         public float SpringConstant
         {
-            get { return springConstant; }
-            set { springConstant = value; }
+            get { return _springConstant; }
+            set { _springConstant = value; }
         }
 
         public float DampningConstant
         {
-            get { return dampningConstant; }
-            set { dampningConstant = value; }
+            get { return _dampningConstant; }
+            set { _dampningConstant = value; }
         }
 
 
         public int CollisionGroup
         {
-            get { return collisionGroup; }
-            set { collisionGroup = value; }
+            get { return _collisionGroup; }
+            set { _collisionGroup = value; }
         }
 
         public Body Body
         {
-            get { return angleSpringleverBody; }
+            get { return _angleSpringleverBody; }
         }
 
         public void Load(SimulatorView view, PhysicsSimulator physicsSimulator)
         {
             int radius;
-            if (attachPoint == 0 | attachPoint == 2)
+            if (_attachPoint == 0 | _attachPoint == 2)
             {
-                radius = rectangleHeight;
+                radius = _rectangleHeight;
             }
             else
             {
-                radius = rectangleWidth;
+                radius = _rectangleWidth;
             }
 
             //body is created as rectangle so that it has the moment of inertia closer to the final shape of the object.
-            angleSpringleverBody = BodyFactory.Instance.CreateBody(physicsSimulator, 1,
-                                                                   BodyFactory.MOIForRectangle(rectangleWidth,
-                                                                                               rectangleHeight, 1f));
-            view.AddRectangleToCanvas(angleSpringleverBody, Colors.White, new Vector2(rectangleWidth, rectangleHeight));
+            _angleSpringleverBody = BodyFactory.Instance.CreateBody(physicsSimulator, 1,
+                                                                   BodyFactory.MOIForRectangle(_rectangleWidth,
+                                                                                               _rectangleHeight, 1f));
+            view.AddRectangleToCanvas(_angleSpringleverBody, Colors.White, new Vector2(_rectangleWidth, _rectangleHeight));
 
-            rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, angleSpringleverBody,
-                                                                     rectangleWidth, rectangleHeight);
-            rectangleGeom.FrictionCoefficient = .5f;
-            rectangleGeom.CollisionGroup = collisionGroup;
+            _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _angleSpringleverBody,
+                                                                     _rectangleWidth, _rectangleHeight);
+            _rectangleGeom.FrictionCoefficient = .5f;
+            _rectangleGeom.CollisionGroup = _collisionGroup;
 
             Vector2 offset = Vector2.Zero;
-            switch (attachPoint)
+            switch (_attachPoint)
             {
                 case 0:
                     {
-                        offset = new Vector2(-rectangleWidth/2, 0); //offset to rectangle to left
+                        offset = new Vector2(-_rectangleWidth/2f, 0); //offset to rectangle to left
                         break;
                     }
                 case 1:
                     {
-                        offset = new Vector2(0, -rectangleHeight/2); //offset to rectangle to top
+                        offset = new Vector2(0, -_rectangleHeight/2f); //offset to rectangle to top
                         break;
                     }
                 case 2:
                     {
-                        offset = new Vector2(rectangleWidth/2, 0); //offset to rectangle to right
+                        offset = new Vector2(_rectangleWidth/2f, 0); //offset to rectangle to right
                         break;
                     }
                 case 3:
                     {
-                        offset = new Vector2(0, rectangleHeight/2); //offset to rectangle to bottom
+                        offset = new Vector2(0, _rectangleHeight/2f); //offset to rectangle to bottom
                         break;
                     }
             }
 
-            angleSpringleverBody.Position = position - offset;
+            _angleSpringleverBody.Position = _position - offset;
             CircleBrush circle = view.AddCircleToCanvas(null, Colors.White, 20);
-            circle.Extender.Position = position;
-            circleGeom = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, angleSpringleverBody, radius, 20,
+            circle.Extender.Position = _position;
+            _circleGeom = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _angleSpringleverBody, radius, 20,
                                                                offset, 0);
-            circleGeom.FrictionCoefficient = .5f;
-            circleGeom.CollisionGroup = collisionGroup;
+            _circleGeom.FrictionCoefficient = .5f;
+            _circleGeom.CollisionGroup = _collisionGroup;
 
-            revoluteJoint = JointFactory.Instance.CreateFixedRevoluteJoint(physicsSimulator, angleSpringleverBody,
-                                                                           position);
-            physicsSimulator.Add(revoluteJoint);
-            fixedAngleSpring = ControllerFactory.Instance.CreateFixedAngleSpring(physicsSimulator, angleSpringleverBody,
-                                                                                 springConstant, dampningConstant);
+            _revoluteJoint = JointFactory.Instance.CreateFixedRevoluteJoint(physicsSimulator, _angleSpringleverBody,
+                                                                           _position);
+            physicsSimulator.Add(_revoluteJoint);
+            ControllerFactory.Instance.CreateFixedAngleSpring(physicsSimulator, _angleSpringleverBody,
+                                                                                 _springConstant, _dampningConstant);
         }
     }
 }

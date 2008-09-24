@@ -8,80 +8,80 @@ namespace FarseerSilverlightDemos.Demos.DemoShare
 {
     public class Agent
     {
-        private Body agentBody;
-        private Geom[] agentGeom;
+        private Body _agentBody;
+        private Geom[] _agentGeom;
 
-        private CollisionCategory collidesWith = CollisionCategory.All;
-        private CollisionCategory collisionCategory = CollisionCategory.All;
+        private CollisionCategory _collidesWith = CollisionCategory.All;
+        private CollisionCategory _collisionCategory = CollisionCategory.All;
 
-        private Vector2 position;
+        private Vector2 _position;
 
         public Agent(Vector2 position)
         {
-            this.position = position;
+            _position = position;
         }
 
         public Body Body
         {
-            get { return agentBody; }
+            get { return _agentBody; }
         }
 
         public CollisionCategory CollisionCategory
         {
-            get { return collisionCategory; }
-            set { collisionCategory = value; }
+            get { return _collisionCategory; }
+            set { _collisionCategory = value; }
         }
 
         public CollisionCategory CollidesWith
         {
-            get { return collidesWith; }
-            set { collidesWith = value; }
+            get { return _collidesWith; }
+            set { _collidesWith = value; }
         }
 
         public void ApplyForce(Vector2 force)
         {
-            agentBody.ApplyForce(force);
+            _agentBody.ApplyForce(force);
         }
 
         public void ApplyTorque(float torque)
         {
-            agentBody.ApplyTorque(torque);
+            _agentBody.ApplyTorque(torque);
         }
 
 
         public void Load(SimulatorView view, PhysicsSimulator physicsSimulator)
         {
-            agentBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 80, 80, 5);
-            agentBody.Position = position;
-            view.AddAgentToCanvas(agentBody);
-            agentGeom = new Geom[7];
-            agentGeom[0] = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, agentBody, 16, 10,
+            _agentBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 80, 80, 5);
+            _agentBody.Position = _position;
+            view.AddAgentToCanvas(_agentBody);
+            _agentGeom = new Geom[7];
+            _agentGeom[0] = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _agentBody, 16, 10,
                                                                  new Vector2(-40, -40), 0);
-            agentGeom[0].RestitutionCoefficient = .4f;
-            agentGeom[0].FrictionCoefficient = .2f;
-            agentGeom[0].CollisionGroup = 1;
-            agentGeom[0].CollisionCategories = collisionCategory;
-            agentGeom[0].CollidesWith = collidesWith;
-            agentGeom[1] = GeomFactory.Instance.CreateGeom(physicsSimulator, agentBody, agentGeom[0],
+            _agentGeom[0].RestitutionCoefficient = .4f;
+            _agentGeom[0].FrictionCoefficient = .2f;
+            _agentGeom[0].CollisionGroup = 1;
+            _agentGeom[0].CollisionCategories = _collisionCategory;
+            _agentGeom[0].CollidesWith = _collidesWith;
+            _agentGeom[1] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0],
                                                            new Vector2(-40, 40), 0);
-            agentGeom[2] = GeomFactory.Instance.CreateGeom(physicsSimulator, agentBody, agentGeom[0],
+            _agentGeom[2] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0],
                                                            new Vector2(40, -40), 0);
-            agentGeom[3] = GeomFactory.Instance.CreateGeom(physicsSimulator, agentBody, agentGeom[0],
+            _agentGeom[3] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0],
                                                            new Vector2(40, 40), 0);
-            agentGeom[4] = GeomFactory.Instance.CreateGeom(physicsSimulator, agentBody, agentGeom[0], new Vector2(0, 0),
+            _agentGeom[4] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0], new Vector2(0, 0),
                                                            0);
 
-            agentGeom[5] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, agentBody, 16, 120, Vector2.Zero,
+            _agentGeom[5] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _agentBody, 16, 120, Vector2.Zero,
                                                                     MathHelper.PiOver4);
-            agentGeom[5].CollisionGroup = 1;
-            agentGeom[5].CollisionCategories = collisionCategory;
-            agentGeom[5].CollidesWith = collidesWith;
+            _agentGeom[5].CollisionGroup = 1;
+            _agentGeom[5].CollisionCategories = _collisionCategory;
+            _agentGeom[5].CollidesWith = _collidesWith;
 
-            agentGeom[6] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, agentBody, 16, 120, Vector2.Zero,
+            _agentGeom[6] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _agentBody, 16, 120, Vector2.Zero,
                                                                     -MathHelper.PiOver4);
-            agentGeom[6].CollisionGroup = 1;
-            agentGeom[6].CollisionCategories = collisionCategory;
-            agentGeom[6].CollidesWith = collidesWith;
+            _agentGeom[6].CollisionGroup = 1;
+            _agentGeom[6].CollisionCategories = _collisionCategory;
+            _agentGeom[6].CollidesWith = _collidesWith;
         }
     }
 }
