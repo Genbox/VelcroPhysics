@@ -6,8 +6,8 @@ namespace FarseerSilverlightDemos.Drawing
     public partial class RectangleBrush : UserControl, IDrawingBrush
     {
         public BrushExtender Extender = new BrushExtender();
-        private float height;
-        private float width;
+        private float _height;
+        private float _width;
 
         public RectangleBrush()
         {
@@ -16,21 +16,20 @@ namespace FarseerSilverlightDemos.Drawing
             Extender.child = rectangle;
         }
 
-
         public Vector2 Size
         {
             set
             {
-                width = value.X;
-                rectangle.Width = width;
-                translateTransform.X = -width/2;
-                height = value.Y;
-                rectangle.Height = height;
-                translateTransform.Y = -height/2;
-                rotateTransform.CenterX = width/2;
-                rotateTransform.CenterY = height/2;
+                _width = value.X;
+                rectangle.Width = _width;
+                translateTransform.X = -_width/2;
+                _height = value.Y;
+                rectangle.Height = _height;
+                translateTransform.Y = -_height/2;
+                rotateTransform.CenterX = _width/2;
+                rotateTransform.CenterY = _height/2;
             }
-            get { return new Vector2(width, height); }
+            get { return new Vector2(_width, _height); }
         }
 
         #region IDrawingBrush Members
