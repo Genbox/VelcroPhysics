@@ -117,6 +117,182 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Trunk\Collisions\AABB.cs">
+      <Link>Collisions\AABB.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Collisions\BruteForceCollider.cs">
+      <Link>Collisions\BruteForceCollider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Collisions\CollisionHelper.cs">
+      <Link>Collisions\CollisionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Collisions\Contact.cs">
+      <Link>Collisions\Contact.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Collisions\ContactId.cs">
+      <Link>Collisions\ContactId.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Collisions\ContactList.cs">
+      <Link>Collisions\ContactList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Collisions\Feature.cs">
+      <Link>Collisions\Feature.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Collisions\Geom.cs">
+      <Link>Collisions\Geom.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Collisions\GeomList.cs">
+      <Link>Collisions\GeomList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Collisions\Grid.cs">
+      <Link>Collisions\Grid.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Collisions\LineIntersectInfo.cs">
+      <Link>Collisions\LineIntersectInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Collisions\SelectiveSweepCollider.cs">
+      <Link>Collisions\SelectiveSweepCollider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Collisions\SweepAndPruneCollider.cs">
+      <Link>Collisions\SweepAndPruneCollider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Collisions\Vertices.cs">
+      <Link>Collisions\Vertices.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Controllers\AABBFluidContainer.cs">
+      <Link>Controllers\AABBFluidContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Controllers\Controller.cs">
+      <Link>Controllers\Controller.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Controllers\ControllerList.cs">
+      <Link>Controllers\ControllerList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Controllers\FluidDragController.cs">
+      <Link>Controllers\FluidDragController.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Controllers\InactivityController.cs">
+      <Link>Controllers\InactivityController.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Controllers\WaveController.cs">
+      <Link>Controllers\WaveController.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Arbiter.cs">
+      <Link>Dynamics\Arbiter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\ArbiterList.cs">
+      <Link>Dynamics\ArbiterList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Body.cs">
+      <Link>Dynamics\Body.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\BodyList.cs">
+      <Link>Dynamics\BodyList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Joints\AngleJoint.cs">
+      <Link>Dynamics\Joints\AngleJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Joints\AngleLimitJoint.cs">
+      <Link>Dynamics\Joints\AngleLimitJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Joints\FixedAngleJoint.cs">
+      <Link>Dynamics\Joints\FixedAngleJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Joints\FixedAngleLimitJoint.cs">
+      <Link>Dynamics\Joints\FixedAngleLimitJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Joints\FixedRevoluteJoint.cs">
+      <Link>Dynamics\Joints\FixedRevoluteJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Joints\Joint.cs">
+      <Link>Dynamics\Joints\Joint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Joints\JointList.cs">
+      <Link>Dynamics\Joints\JointList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Joints\PinJoint.cs">
+      <Link>Dynamics\Joints\PinJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Joints\RevoluteJoint.cs">
+      <Link>Dynamics\Joints\RevoluteJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Joints\SliderJoint.cs">
+      <Link>Dynamics\Joints\SliderJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Springs\AngleSpring.cs">
+      <Link>Dynamics\Springs\AngleSpring.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Springs\FixedAngleSpring.cs">
+      <Link>Dynamics\Springs\FixedAngleSpring.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Springs\FixedLinearSpring.cs">
+      <Link>Dynamics\Springs\FixedLinearSpring.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Springs\LinearSpring.cs">
+      <Link>Dynamics\Springs\LinearSpring.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Enums.cs">
+      <Link>Enums.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Factories\BodyFactory.cs">
+      <Link>Factories\BodyFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Factories\ControllerFactory.cs">
+      <Link>Factories\ControllerFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Factories\GeomFactory.cs">
+      <Link>Factories\GeomFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Factories\JointFactory.cs">
+      <Link>Factories\JointFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\GlobalSuppressions.cs">
+      <Link>GlobalSuppressions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Interfaces\IBroadPhaseCollider.cs">
+      <Link>Interfaces\IBroadPhaseCollider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Interfaces\ICollideable.cs">
+      <Link>Interfaces\ICollideable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Interfaces\IFluidContainer.cs">
+      <Link>Interfaces\IFluidContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Mathematics\BilinearInterpolator.cs">
+      <Link>Mathematics\BilinearInterpolator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Mathematics\Calculator.cs">
+      <Link>Mathematics\Calculator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Mathematics\CircularInterpolator.cs">
+      <Link>Mathematics\CircularInterpolator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Mathematics\ConvertUnits.cs">
+      <Link>Mathematics\ConvertUnits.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Mathematics\MathHelper.cs">
+      <Link>Mathematics\MathHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Mathematics\Matrix.cs">
+      <Link>Mathematics\Matrix.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Mathematics\Vector2.cs">
+      <Link>Mathematics\Vector2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Mathematics\Vector3.cs">
+      <Link>Mathematics\Vector3.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\PhysicsSimulator.cs">
+      <Link>PhysicsSimulator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Pool.cs">
+      <Link>Pool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Scaling.cs">
+      <Link>Scaling.cs</Link>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v3.0\Microsoft.Xna.GameStudio.Common.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v3.0\Microsoft.Xna.GameStudio.NestedContent.targets" />
