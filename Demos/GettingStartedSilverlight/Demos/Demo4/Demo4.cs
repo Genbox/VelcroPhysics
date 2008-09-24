@@ -55,18 +55,18 @@ namespace FarseerSilverlightDemos.Demos.Demo4
             ClearCanvas();
             physicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
             physicsSimulator.BiasFactor = .4f;
-            int borderWidth = (int) (ScreenManager.ScreenHeight*.05f);
-            _border = new Border(ScreenManager.ScreenWidth + borderWidth*2, ScreenManager.ScreenHeight + borderWidth*2,
+            int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
+            _border = new Border(ScreenManager.ScreenWidth + borderWidth * 2, ScreenManager.ScreenHeight + borderWidth * 2,
                                 borderWidth, ScreenManager.ScreenCenter);
             _border.Load(this, physicsSimulator);
-            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 1f);
-            _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_rectangleBody, 32, 32);
+            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 32, 32, 1f);
+            _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _rectangleBody, 32, 32);
             _rectangleGeom.FrictionCoefficient = .4f;
             _rectangleGeom.RestitutionCoefficient = 0f;
 
             //create the pyramid near the bottom of the screen.
-            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f/3f, 32f/3f, 32, 32, _pyramidBaseBodyCount,
-                                  new Vector2(ScreenManager.ScreenCenter.X - _pyramidBaseBodyCount*.5f*(32 + 32/3),
+            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, _pyramidBaseBodyCount,
+                                  new Vector2(ScreenManager.ScreenCenter.X - _pyramidBaseBodyCount * .5f * (32 + 32 / 3),
                                               ScreenManager.ScreenHeight - 125));
             _pyramid.Load(this, physicsSimulator);
 
