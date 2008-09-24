@@ -1,3 +1,4 @@
+#if (!XNA)
 using System;
 
 namespace FarseerGames.FarseerPhysics.Mathematics
@@ -384,3 +385,4 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         }
     }
 }
+#endif

@@ -1,9 +1,15 @@
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Mathematics;
+#if (XNA)
+using Microsoft.Xna.Framework; 
+#endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     //TODO: This is not used, remove it or use it.
+    /// <summary>
+    /// TODO: Write documentation
+    /// </summary>
     public static class CollisionHelper
     {
         #region Delegates

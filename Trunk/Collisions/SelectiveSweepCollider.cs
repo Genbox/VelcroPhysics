@@ -33,6 +33,24 @@ namespace FarseerGames.FarseerPhysics.Collisions
             wrapper.AddStubs(_xStubs, _yStubs);
         }
 
+#if (!SILVERLIGHT)
+        public void ProcessRemovedGeoms()
+        {
+            if (_wrappers.RemoveAll(WrapperIsRemoved) > 0)
+            {
+                _xStubs.RemoveAll(StubIsRemoved);
+                _yStubs.RemoveAll(StubIsRemoved);
+            }
+        }
+        public void ProcessDisposedGeoms()
+        {
+            if (_wrappers.RemoveAll(WrapperIsDisposed) > 0)
+            {
+                _xStubs.RemoveAll(StubIsDisposed);
+                _yStubs.RemoveAll(StubIsDisposed);
+            }
+        }
+#else
         public void ProcessRemovedGeoms()
         {
             bool match = false;
@@ -100,6 +118,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 }
             }
         }
+#endif
 
         public void Update()
         {
@@ -339,13 +358,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 _yEnd = new Stub(this, false);
             }
 
-            public void AddStubs(List<Stub> xStubs, List<Stub> yStubs)
+            public void AddStubs(List<Stub> _xStubs, List<Stub> _yStubs)
             {
-                xStubs.Add(_xBegin);
-                xStubs.Add(_xEnd);
+                _xStubs.Add(_xBegin);
+                _xStubs.Add(_xEnd);
 
-                yStubs.Add(_yBegin);
-                yStubs.Add(_yEnd);
+                _yStubs.Add(_yBegin);
+                _yStubs.Add(_yEnd);
             }
 
             public void Update()
