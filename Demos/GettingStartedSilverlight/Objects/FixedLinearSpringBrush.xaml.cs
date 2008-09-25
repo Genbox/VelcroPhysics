@@ -1,17 +1,17 @@
-﻿using System.Windows.Controls;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Mathematics;
+using GettingStartedSilverlight.Drawing;
 
-namespace FarseerSilverlightDemos.Drawing
+namespace GettingStartedSilverlight.Objects
 {
-    public partial class FixedLinearSpringBrush : UserControl, IDrawingBrush
+    public partial class FixedLinearSpringBrush : IDrawingBrush
     {
+        private float _x1;
+        private float _x2;
+        private float _y1;
+        private float _y2;
         public BrushExtender Extender = new BrushExtender();
         public FixedLinearSpring FixedLinearSpring;
-        private float x1;
-        private float x2;
-        private float y1;
-        private float y2;
 
 
         public FixedLinearSpringBrush()
@@ -23,15 +23,15 @@ namespace FarseerSilverlightDemos.Drawing
         {
             set
             {
-                if (x1 != value.X)
+                if (_x1 != value.X)
                 {
-                    x1 = value.X;
-                    line.X1 = x1;
+                    _x1 = value.X;
+                    line.X1 = _x1;
                 }
-                if (y1 != value.Y)
+                if (_y1 != value.Y)
                 {
-                    y1 = value.Y;
-                    line.Y1 = y1;
+                    _y1 = value.Y;
+                    line.Y1 = _y1;
                 }
             }
         }
@@ -40,15 +40,15 @@ namespace FarseerSilverlightDemos.Drawing
         {
             set
             {
-                if (x2 != value.X)
+                if (_x2 != value.X)
                 {
-                    x2 = value.X;
-                    line.X2 = x2;
+                    _x2 = value.X;
+                    line.X2 = _x2;
                 }
-                if (y2 != value.Y)
+                if (_y2 != value.Y)
                 {
-                    y2 = value.Y;
-                    line.Y2 = y2;
+                    _y2 = value.Y;
+                    line.Y2 = _y2;
                 }
             }
         }

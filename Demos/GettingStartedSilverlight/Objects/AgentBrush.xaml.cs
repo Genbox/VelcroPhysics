@@ -1,8 +1,8 @@
-using System.Windows.Controls;
+using GettingStartedSilverlight.Drawing;
 
-namespace FarseerSilverlightDemos.Drawing
+namespace GettingStartedSilverlight.Objects
 {
-    public partial class AgentBrush : UserControl, IDrawingBrush
+    public partial class AgentBrush : IDrawingBrush
     {
         public BrushExtender Extender = new BrushExtender();
 

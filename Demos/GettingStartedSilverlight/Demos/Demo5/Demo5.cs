@@ -2,9 +2,9 @@
 using System.Windows.Media;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Mathematics;
-using FarseerSilverlightDemos.Demos.DemoShare;
+using GettingStartedSilverlight.Demos.DemoShare;
 
-namespace FarseerSilverlightDemos.Demos.Demo5
+namespace GettingStartedSilverlight.Demos.Demo5
 {
     public class Demo5 : SimulatorView
     {
@@ -72,7 +72,7 @@ namespace FarseerSilverlightDemos.Demos.Demo5
             physicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
             int borderWidth = (int) (ScreenManager.ScreenHeight*.05f);
             _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, borderWidth,
-                                ScreenManager.ScreenCenter);
+                                 ScreenManager.ScreenCenter);
             _border.Load(this, physicsSimulator);
 
             _agent = new Agent(ScreenManager.ScreenCenter);
@@ -111,14 +111,16 @@ namespace FarseerSilverlightDemos.Demos.Demo5
 
             startPosition = new Vector2(200, 100);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 200, 100);
-            _greenCircles1 = new Circles(startPosition, endPosition, 15, 15, Color.FromArgb(175, 0, 200, 0), Colors.Black);
+            _greenCircles1 = new Circles(startPosition, endPosition, 15, 15, Color.FromArgb(175, 0, 200, 0),
+                                         Colors.Black);
             _greenCircles1.CollisionCategories = (CollisionCategory.Cat2);
             _greenCircles1.CollidesWith = (CollisionCategory.Cat2 | CollisionCategory.Cat4 | CollisionCategory.Cat5);
             _greenCircles1.Load(this, physicsSimulator);
 
             startPosition = new Vector2(300, 200);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 300, 200);
-            _greenCircles2 = new Circles(startPosition, endPosition, 15, 12, Color.FromArgb(175, 0, 200, 0), Colors.Black);
+            _greenCircles2 = new Circles(startPosition, endPosition, 15, 12, Color.FromArgb(175, 0, 200, 0),
+                                         Colors.Black);
             _greenCircles2.CollisionCategories = (CollisionCategory.Cat2);
             _greenCircles2.CollidesWith = (CollisionCategory.Cat2 | CollisionCategory.Cat4 | CollisionCategory.Cat5);
             _greenCircles2.Load(this, physicsSimulator);

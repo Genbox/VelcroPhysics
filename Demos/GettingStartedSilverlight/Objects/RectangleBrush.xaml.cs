@@ -1,13 +1,13 @@
-using System.Windows.Controls;
 using FarseerGames.FarseerPhysics.Mathematics;
+using GettingStartedSilverlight.Drawing;
 
-namespace FarseerSilverlightDemos.Drawing
+namespace GettingStartedSilverlight.Objects
 {
-    public partial class RectangleBrush : UserControl, IDrawingBrush
+    public partial class RectangleBrush : IDrawingBrush
     {
-        public BrushExtender Extender = new BrushExtender();
         private float _height;
         private float _width;
+        public BrushExtender Extender = new BrushExtender();
 
         public RectangleBrush()
         {

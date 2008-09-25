@@ -1,14 +1,13 @@
-using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace FarseerSilverlightDemos
+namespace GettingStartedSilverlight.Screens
 {
     public delegate void MenuItemSelectedEvent(int index);
 
-    public partial class MenuItem : UserControl
+    public partial class MenuItem
     {
+        private bool _selected;
         public int Index;
-        private bool selected;
 
         public MenuItem()
         {
@@ -23,10 +22,10 @@ namespace FarseerSilverlightDemos
 
         public bool Selected
         {
-            get { return selected; }
+            get { return _selected; }
             set
             {
-                if (value != selected)
+                if (value != _selected)
                 {
                     if (value)
                     {
@@ -39,7 +38,7 @@ namespace FarseerSilverlightDemos
                         text.Foreground = new SolidColorBrush(Colors.Black);
                     }
                 }
-                selected = value;
+                _selected = value;
             }
         }
     }

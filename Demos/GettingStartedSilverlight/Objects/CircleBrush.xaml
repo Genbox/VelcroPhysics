@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="FarseerSilverlightDemos.Drawing.CircleBrush" xmlns="http://schemas.microsoft.com/client/2007" 
+<UserControl x:Class="GettingStartedSilverlight.Objects.CircleBrush" xmlns="http://schemas.microsoft.com/client/2007" 
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 Width="640"
         Height="480"

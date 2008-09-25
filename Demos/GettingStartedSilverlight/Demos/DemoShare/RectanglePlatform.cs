@@ -5,15 +5,15 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerSilverlightDemos.Demos.DemoShare
+namespace GettingStartedSilverlight.Demos.DemoShare
 {
     public class RectanglePlatform
     {
         //TODO: Implement
         private Color _borderColor;
-        private Color _color;
 
         private int _collisionGroup;
+        private Color _color;
         private int _height;
         private Body _platformBody;
         private Geom _platformGeom;

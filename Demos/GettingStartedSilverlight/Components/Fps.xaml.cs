@@ -1,32 +1,32 @@
 using System;
-using System.Windows.Controls;
+using GettingStartedSilverlight.Screens;
 
-namespace FarseerSilverlightDemos
+namespace GettingStartedSilverlight.Components
 {
-    public partial class Fps : UserControl
+    public partial class Fps
     {
-        private int frameCounter = -1;
-        private double timeSinceLastUpdate;
+        private int _frameCounter = -1;
+        private double _timeSinceLastUpdate;
 
         public Fps()
         {
             InitializeComponent();
-            Page.gameLoop.Update += gameLoop_Update;
+            Page.gameLoop.Update += GameLoop_Update;
         }
 
-        private void gameLoop_Update(TimeSpan ElapsedTime)
+        private void GameLoop_Update(TimeSpan elapsedTime)
         {
-            if (frameCounter == -1)
+            if (_frameCounter == -1)
             {
-                timeSinceLastUpdate = 0;
+                _timeSinceLastUpdate = 0;
             }
-            frameCounter++;
-            timeSinceLastUpdate += ElapsedTime.TotalSeconds;
-            if (frameCounter >= 100)
+            _frameCounter++;
+            _timeSinceLastUpdate += elapsedTime.TotalSeconds;
+            if (_frameCounter >= 100)
             {
-                text.Text = "FPS: " + (int) (frameCounter/timeSinceLastUpdate);
-                frameCounter = 0;
-                timeSinceLastUpdate = 0;
+                text.Text = "FPS: " + (int) (_frameCounter/_timeSinceLastUpdate);
+                _frameCounter = 0;
+                _timeSinceLastUpdate = 0;
             }
         }
     }

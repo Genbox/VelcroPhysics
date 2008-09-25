@@ -2,16 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Browser;
-using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace FarseerSilverlightDemos
+namespace GettingStartedSilverlight.Screens
 {
-    public partial class MainMenu : UserControl
+    public partial class MainMenu
     {
-        private Key lastKey;
-        private List<MenuItem> menuItems = new List<MenuItem>();
-        private int selectedItem;
+        private List<MenuItem> _menuItems = new List<MenuItem>();
 
         public MainMenu()
         {
@@ -48,8 +45,8 @@ namespace FarseerSilverlightDemos
             MenuItem itm = new MenuItem();
             itm.Text = text;
             menuStack.Children.Add(itm);
-            itm.Index = menuItems.Count;
-            menuItems.Add(itm);
+            itm.Index = _menuItems.Count;
+            _menuItems.Add(itm);
             itm.MouseLeftButtonDown += itm_MouseLeftButtonDown;
             itm.MouseEnter += itm_MouseEnter;
             itm.MouseLeave += itm_MouseLeave;

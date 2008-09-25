@@ -1,26 +1,26 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using FarseerGames.FarseerPhysics;
-using FarseerSilverlightDemos.Demos.Demo1;
-using FarseerSilverlightDemos.Demos.Demo2;
-using FarseerSilverlightDemos.Demos.Demo3;
-using FarseerSilverlightDemos.Demos.Demo4;
-using FarseerSilverlightDemos.Demos.Demo5;
-using FarseerSilverlightDemos.Demos.Demo6;
-using FarseerSilverlightDemos.Demos.Demo7;
+using GettingStartedSilverlight.Components;
+using GettingStartedSilverlight.Demos.Demo1;
+using GettingStartedSilverlight.Demos.Demo2;
+using GettingStartedSilverlight.Demos.Demo3;
+using GettingStartedSilverlight.Demos.Demo4;
+using GettingStartedSilverlight.Demos.Demo5;
+using GettingStartedSilverlight.Demos.Demo6;
+using GettingStartedSilverlight.Demos.Demo7;
 
-namespace FarseerSilverlightDemos
+namespace GettingStartedSilverlight.Screens
 {
-    public partial class Page : UserControl
+    public partial class Page
     {
         public static GameLoop gameLoop;
         public static KeyHandler KeyHandler;
+        private bool _firstTime = true;
+        private MainMenu _mainMenu;
+        private Splash _splash;
+        private DateTime _splashTime;
         public SimulatorView currentDemo;
-        private bool firstTime = true;
-        private MainMenu mainMenu;
-        private Splash splash;
-        private DateTime splashTime;
 
         public Page()
         {
@@ -33,9 +33,9 @@ namespace FarseerSilverlightDemos
         public void Page_Loaded(object o, EventArgs e)
         {
             // Required to initialize variables
-            splash = new Splash();
-            canvas.Children.Add(splash);
-            splash.SetValue(Canvas.ZIndexProperty, 20000);
+            _splash = new Splash();
+            canvas.Children.Add(_splash);
+            _splash.SetValue(Canvas.ZIndexProperty, 20000);
             KeyHandler = new KeyHandler();
             KeyHandler.Attach(this);
             Focus();
@@ -45,9 +45,9 @@ namespace FarseerSilverlightDemos
             Fps fps = new Fps();
             canvas.Children.Add(fps);
             fps.SetValue(Canvas.ZIndexProperty, 1000);
-            mainMenu = new MainMenu();
-            canvas.Children.Add(mainMenu);
-            mainMenu.MenuItemSelected += mainMenu_MenuItemSelected;
+            _mainMenu = new MainMenu();
+            canvas.Children.Add(_mainMenu);
+            _mainMenu.MenuItemSelected += mainMenu_MenuItemSelected;
             Page_SizeChanged(null, null);
         }
 
@@ -91,7 +91,7 @@ namespace FarseerSilverlightDemos
                     break;
             }
             currentDemo.Quit += currentDemo_Quit;
-            mainMenu.Visible = false;
+            _mainMenu.Visible = false;
             canvas.Children.Add(currentDemo);
         }
 
@@ -99,26 +99,21 @@ namespace FarseerSilverlightDemos
         {
             currentDemo.Dispose();
             canvas.Children.Remove(currentDemo);
-            mainMenu.Visible = true;
+            _mainMenu.Visible = true;
         }
 
-        private void HandleKeyboard()
+        private void gameLoop_Update(TimeSpan elapsedTime)
         {
-        }
-
-        private void gameLoop_Update(TimeSpan ElapsedTime)
-        {
-            if (firstTime)
+            if (_firstTime)
             {
-                PhysicsSimulator sim = new PhysicsSimulator();
-                firstTime = false;
-                splashTime = DateTime.Now;
+                _firstTime = false;
+                _splashTime = DateTime.Now;
             }
-            if (splash.Visibility != Visibility.Collapsed)
+            if (_splash.Visibility != Visibility.Collapsed)
             {
-                if ((DateTime.Now - splashTime).TotalSeconds > 2)
+                if ((DateTime.Now - _splashTime).TotalSeconds > 2)
                 {
-                    splash.Visibility = Visibility.Collapsed;
+                    _splash.Visibility = Visibility.Collapsed;
                 }
             }
         }

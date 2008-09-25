@@ -1,6 +1,6 @@
-﻿<Application xmlns="http://schemas.microsoft.com/client/2007"
+<Application xmlns="http://schemas.microsoft.com/client/2007"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-             x:Class="FarseerSilverlightDemos.App"
+             x:Class="GettingStartedSilverlight.App"
              >
     <Application.Resources>
         

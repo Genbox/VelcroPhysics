@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,10 +10,12 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
-using FarseerSilverlightDemos.Drawing;
+using GettingStartedSilverlight.Drawing;
+using GettingStartedSilverlight.Objects;
+using GettingStartedSilverlight.Screens;
 using SWM = System.Windows.Media;
 
-namespace FarseerSilverlightDemos
+namespace GettingStartedSilverlight
 {
     public class SimulatorView : Canvas
     {
@@ -23,18 +25,18 @@ namespace FarseerSilverlightDemos
 
         #endregion
 
+        private double _leftoverUpdateTime;
+
+        private FixedLinearSpring _mousePickSpring;
+        private FixedLinearSpringBrush _mouseSpringBrush;
+        private Geom _pickedGeom;
+        private Canvas _simulatorCanvas;
         protected Body controlledBody;
 
         protected List<IDrawingBrush> drawingList = new List<IDrawingBrush>();
         protected float forceAmount = 50;
-        private double _leftoverUpdateTime;
         protected DemoMenu menu;
-
-        private FixedLinearSpring _mousePickSpring;
-        private FixedLinearSpringBrush _mouseSpringBrush;
         protected PhysicsSimulator physicsSimulator;
-        private Geom _pickedGeom;
-        private Canvas _simulatorCanvas;
         protected float torqueAmount = 1000;
 
         public SimulatorView()
@@ -122,8 +124,8 @@ namespace FarseerSilverlightDemos
             if (_pickedGeom != null)
             {
                 _mousePickSpring = ControllerFactory.Instance.CreateFixedLinearSpring(physicsSimulator, _pickedGeom.Body,
-                                                                                     _pickedGeom.Body.GetLocalPosition(
-                                                                                         point), point, 20, 10);
+                                                                                      _pickedGeom.Body.GetLocalPosition(
+                                                                                          point), point, 20, 10);
                 _mouseSpringBrush = AddFixedLinearSpringBrushToCanvas(_mousePickSpring);
             }
         }

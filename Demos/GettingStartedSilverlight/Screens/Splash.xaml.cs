@@ -1,8 +1,6 @@
-using System.Windows.Controls;
-
-namespace FarseerSilverlightDemos
+namespace GettingStartedSilverlight.Screens
 {
-    public partial class Splash : UserControl
+    public partial class Splash
     {
         public Splash()
         {

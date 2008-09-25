@@ -5,7 +5,7 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerSilverlightDemos.Demos.Demo4
+namespace GettingStartedSilverlight.Demos.Demo4
 {
     public class Pyramid
     {

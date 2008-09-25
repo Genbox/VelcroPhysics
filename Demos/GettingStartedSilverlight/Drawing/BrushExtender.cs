@@ -6,16 +6,16 @@ using System.Windows.Shapes;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerSilverlightDemos.Drawing
+namespace GettingStartedSilverlight.Drawing
 {
     public class BrushExtender
     {
-        public Body Body;
-        public FrameworkElement child;
-        public RotateTransform rotateTransform;
         private float _rotation;
         private float _x;
         private float _y;
+        public Body Body;
+        public FrameworkElement child;
+        public RotateTransform rotateTransform;
 
         public Vector2 Position
         {
