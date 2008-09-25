@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
-namespace FarseerSilverlightDemos
+namespace GettingStartedSilverlight
 {
     public class GameLoop
     {

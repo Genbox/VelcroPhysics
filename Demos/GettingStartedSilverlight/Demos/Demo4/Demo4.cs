@@ -4,18 +4,18 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
-using FarseerSilverlightDemos.Demos.DemoShare;
+using GettingStartedSilverlight.Demos.DemoShare;
 
-namespace FarseerSilverlightDemos.Demos.Demo4
+namespace GettingStartedSilverlight.Demos.Demo4
 {
     public class Demo4 : SimulatorView
     {
+        private const int _pyramidBaseBodyCount = 8;
         private Agent _agent;
         private Border _border;
         private Floor _floor;
         private Pyramid _pyramid;
 
-        private const int _pyramidBaseBodyCount = 8;
         private Body _rectangleBody;
         private Geom _rectangleGeom;
 
@@ -55,9 +55,9 @@ namespace FarseerSilverlightDemos.Demos.Demo4
             ClearCanvas();
             physicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
             physicsSimulator.BiasFactor = .4f;
-            int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
-            _border = new Border(ScreenManager.ScreenWidth + borderWidth * 2, ScreenManager.ScreenHeight + borderWidth * 2,
-                                borderWidth, ScreenManager.ScreenCenter);
+            int borderWidth = (int) (ScreenManager.ScreenHeight*.05f);
+            _border = new Border(ScreenManager.ScreenWidth + borderWidth*2, ScreenManager.ScreenHeight + borderWidth*2,
+                                 borderWidth, ScreenManager.ScreenCenter);
             _border.Load(this, physicsSimulator);
             _rectangleBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 32, 32, 1f);
             _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _rectangleBody, 32, 32);
@@ -65,13 +65,13 @@ namespace FarseerSilverlightDemos.Demos.Demo4
             _rectangleGeom.RestitutionCoefficient = 0f;
 
             //create the pyramid near the bottom of the screen.
-            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, _pyramidBaseBodyCount,
-                                  new Vector2(ScreenManager.ScreenCenter.X - _pyramidBaseBodyCount * .5f * (32 + 32 / 3),
-                                              ScreenManager.ScreenHeight - 125));
+            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f/3f, 32f/3f, 32, 32, _pyramidBaseBodyCount,
+                                   new Vector2(ScreenManager.ScreenCenter.X - _pyramidBaseBodyCount*.5f*(32 + 32/3),
+                                               ScreenManager.ScreenHeight - 125));
             _pyramid.Load(this, physicsSimulator);
 
             _floor = new Floor(ScreenManager.ScreenWidth, 100,
-                              new Vector2(ScreenManager.ScreenCenter.X, ScreenManager.ScreenHeight - 50));
+                               new Vector2(ScreenManager.ScreenCenter.X, ScreenManager.ScreenHeight - 50));
             _floor.Load(this, physicsSimulator);
 
             _agent = new Agent(ScreenManager.ScreenCenter - new Vector2(320, 300));

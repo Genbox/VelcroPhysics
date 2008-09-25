@@ -6,7 +6,7 @@ using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerSilverlightDemos.Demos.DemoShare
+namespace GettingStartedSilverlight.Demos.DemoShare
 {
     public class SpringRectangleRope
     {
@@ -89,34 +89,35 @@ namespace FarseerSilverlightDemos.Demos.DemoShare
             _linearSpring = new LinearSpring[_rectangleCount - 1];
             _rectangleBody = new Body[_rectangleCount];
             _rectangleBody[0] = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _rectangleWidth,
-                                                                        _rectangleHeight, _rectangleMass);
+                                                                         _rectangleHeight, _rectangleMass);
             _rectangleBody[0].Position = _position;
             view.AddRectangleToCanvas(_rectangleBody[0], Colors.White, new Vector2(_rectangleWidth, _rectangleHeight));
             for (int i = 1; i < _rectangleBody.Length; i++)
             {
                 _rectangleBody[i] = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _rectangleWidth,
-                                                                            _rectangleHeight, _rectangleMass);
+                                                                             _rectangleHeight, _rectangleMass);
                 _rectangleBody[i].Position = _rectangleBody[i - 1].Position + new Vector2(0, _springLength);
-                view.AddRectangleToCanvas(_rectangleBody[i], Colors.White, new Vector2(_rectangleWidth, _rectangleHeight));
+                view.AddRectangleToCanvas(_rectangleBody[i], Colors.White,
+                                          new Vector2(_rectangleWidth, _rectangleHeight));
             }
 
             _rectangleGeom = new Geom[_rectangleCount];
             _rectangleGeom[0] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _rectangleBody[0],
-                                                                        _rectangleWidth, _rectangleHeight);
+                                                                         _rectangleWidth, _rectangleHeight);
             _rectangleGeom[0].CollisionGroup = _collisionGroup;
             for (int j = 1; j < _rectangleGeom.Length; j++)
             {
                 _rectangleGeom[j] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _rectangleBody[j],
-                                                                            _rectangleWidth, _rectangleHeight);
+                                                                             _rectangleWidth, _rectangleHeight);
                 _rectangleGeom[j].CollisionGroup = _collisionGroup;
             }
 
             for (int k = 0; k < _linearSpring.Length; k++)
             {
                 _linearSpring[k] = ControllerFactory.Instance.CreateLinearSpring(physicsSimulator, _rectangleBody[k],
-                                                                                Vector2.Zero, _rectangleBody[k + 1],
-                                                                                Vector2.Zero, _springConstant,
-                                                                                _dampningConstant);
+                                                                                 Vector2.Zero, _rectangleBody[k + 1],
+                                                                                 Vector2.Zero, _springConstant,
+                                                                                 _dampningConstant);
             }
         }
     }

@@ -1,7 +1,8 @@
 using System;
 using System.Windows;
+using GettingStartedSilverlight.Screens;
 
-namespace FarseerSilverlightDemos
+namespace GettingStartedSilverlight
 {
     public partial class App : Application
     {

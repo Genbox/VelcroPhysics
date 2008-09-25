@@ -2,18 +2,22 @@
 using System.IO;
 using System.Windows.Media;
 using FarseerGames.FarseerPhysics;
-using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
-using FarseerSilverlightDemos.Demos.DemoShare;
+using GettingStartedSilverlight.Demos.DemoShare;
 
-namespace FarseerSilverlightDemos.Demos.Demo6
+namespace GettingStartedSilverlight.Demos.Demo6
 {
     public class Demo6 : SimulatorView
     {
-        private Agent agent;
+        private const float _platform1HeightRatio = .6f;
+        private const float _platform1WidthRatio = .1f;
+        private const float _platform2HeightRatio = .7f;
+        private const float _platform2WidthRatio = .1f;
+        private const float _platform3HeightRatio = .6f;
+        private const float _platform3WidthRatio = .1f;
+        private Agent _agent;
 
         private AngularSpringLever _angularSpringLever1;
         private AngularSpringLever _angularSpringLever2;
@@ -24,16 +28,10 @@ namespace FarseerSilverlightDemos.Demos.Demo6
         private Body _hangingBody;
 
         private RectanglePlatform _platform1;
-        private const float _platform1HeightRatio = .6f;
-        private const float _platform1WidthRatio = .1f;
 
         private RectanglePlatform _platform2;
-        private const float _platform2HeightRatio = .7f;
-        private const float _platform2WidthRatio = .1f;
 
         private RectanglePlatform _platform3;
-        private const float _platform3HeightRatio = .6f;
-        private const float _platform3WidthRatio = .1f;
         private SpringRectangleRope _springRectangleRope1;
         private SpringRectangleRope _springRectangleRope2;
 
@@ -78,19 +76,19 @@ namespace FarseerSilverlightDemos.Demos.Demo6
         {
             physicsSimulator = new PhysicsSimulator(new Vector2(0, 200));
             physicsSimulator.MaxContactsToDetect = 2;
-                //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
+            //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
             int borderWidth = (int) (ScreenManager.ScreenHeight*.05f);
             _border = new Border(ScreenManager.ScreenWidth + borderWidth*2, ScreenManager.ScreenHeight + borderWidth*2,
-                                borderWidth, ScreenManager.ScreenCenter);
+                                 borderWidth, ScreenManager.ScreenCenter);
             _border.Load(this, physicsSimulator);
 
-            agent = new Agent(new Vector2(ScreenManager.ScreenCenter.X, 100));
-            agent.CollisionCategory = CollisionCategory.Cat5;
-            agent.CollidesWith = CollisionCategory.All & ~CollisionCategory.Cat4; //collide with all but Cat5(black)
-            agent.Load(this, physicsSimulator);
-            AddAgentToCanvas(agent.Body);
+            _agent = new Agent(new Vector2(ScreenManager.ScreenCenter.X, 100));
+            _agent.CollisionCategory = CollisionCategory.Cat5;
+            _agent.CollidesWith = CollisionCategory.All & ~CollisionCategory.Cat4; //collide with all but Cat5(black)
+            _agent.Load(this, physicsSimulator);
+            AddAgentToCanvas(_agent.Body);
             LoadPlatforms();
-            controlledBody = agent.Body;
+            controlledBody = _agent.Body;
             base.Initialize();
         }
 
@@ -160,10 +158,10 @@ namespace FarseerSilverlightDemos.Demos.Demo6
             _springRectangleRope1.DampningConstant = 3f;
             _springRectangleRope1.Load(this, physicsSimulator);
             ControllerFactory.Instance.CreateLinearSpring(physicsSimulator, _angularSpringLever3.Body,
-                                                                          new Vector2(
-                                                                              _angularSpringLever3.RectangleWidth/2f, 0),
-                                                                          _springRectangleRope1.FirstBody, Vector2.Zero,
-                                                                          400, 3);
+                                                          new Vector2(
+                                                              _angularSpringLever3.RectangleWidth/2f, 0),
+                                                          _springRectangleRope1.FirstBody, Vector2.Zero,
+                                                          400, 3);
 
             //platform 3
             width = Convert.ToInt32(ScreenManager.ScreenWidth*_platform3WidthRatio);
@@ -177,9 +175,9 @@ namespace FarseerSilverlightDemos.Demos.Demo6
             _hangingBody.Position = new Vector2(position.X - 200, 200);
             GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _hangingBody, 40, 20);
             ControllerFactory.Instance.CreateFixedLinearSpring(physicsSimulator, _hangingBody,
-                                                                                    new Vector2(0, -35),
-                                                                                    new Vector2(position.X - 200, 100),
-                                                                                    2, .1f);
+                                                               new Vector2(0, -35),
+                                                               new Vector2(position.X - 200, 100),
+                                                               2, .1f);
 
 
             _angularSpringLever4 = new AngularSpringLever();
@@ -196,9 +194,9 @@ namespace FarseerSilverlightDemos.Demos.Demo6
 
             height = (int) (ScreenManager.ScreenHeight*.05f);
             _floor = new RectanglePlatform(ScreenManager.ScreenWidth + 10, height,
-                                          new Vector2(ScreenManager.ScreenCenter.X,
-                                                      ScreenManager.ScreenHeight + 5 - height/2), Colors.Black,
-                                          Colors.Black, 0);
+                                           new Vector2(ScreenManager.ScreenCenter.X,
+                                                       ScreenManager.ScreenHeight + 5 - height/2), Colors.Black,
+                                           Colors.Black, 0);
             _floor.Load(this, physicsSimulator);
 
             _springRectangleRope2 = new SpringRectangleRope();
@@ -212,9 +210,9 @@ namespace FarseerSilverlightDemos.Demos.Demo6
             _springRectangleRope2.DampningConstant = 4f;
             _springRectangleRope2.CollisionGroup = 1; //same as agent collision group
             _springRectangleRope2.Load(this, physicsSimulator);
-            ControllerFactory.Instance.CreateLinearSpring(physicsSimulator, agent.Body, Vector2.Zero,
-                                                                          _springRectangleRope2.FirstBody, Vector2.Zero,
-                                                                          200, 2f);
+            ControllerFactory.Instance.CreateLinearSpring(physicsSimulator, _agent.Body, Vector2.Zero,
+                                                          _springRectangleRope2.FirstBody, Vector2.Zero,
+                                                          200, 2f);
         }
     }
 }

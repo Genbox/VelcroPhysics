@@ -3,33 +3,33 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace FarseerSilverlightDemos
+namespace GettingStartedSilverlight.Screens
 {
-    public partial class DemoMenu : UserControl
+    public partial class DemoMenu
     {
+        private MenuItem _quit;
+        private MenuItem _resume;
         public Key lastKey = Key.ENTER;
-        private MenuItem quit;
         public bool QuitSelected;
-        private MenuItem resume;
 
         public DemoMenu()
         {
             InitializeComponent();
             Canvas c = ir;
-            resume = new MenuItem();
-            resume.SetValue(Canvas.LeftProperty, Convert.ToDouble(175));
-            resume.SetValue(Canvas.TopProperty, Convert.ToDouble(320));
-            resume.Text = "Resume Demo";
-            resume.Index = 0;
-            WireUpMouseEvents(resume);
-            c.Children.Add(resume);
-            quit = new MenuItem();
-            quit.SetValue(Canvas.LeftProperty, Convert.ToDouble(175));
-            quit.SetValue(Canvas.TopProperty, Convert.ToDouble(360));
-            quit.Text = "Quit Demo";
-            quit.Index = 1;
-            WireUpMouseEvents(quit);
-            c.Children.Add(quit);
+            _resume = new MenuItem();
+            _resume.SetValue(Canvas.LeftProperty, Convert.ToDouble(175));
+            _resume.SetValue(Canvas.TopProperty, Convert.ToDouble(320));
+            _resume.Text = "Resume Demo";
+            _resume.Index = 0;
+            WireUpMouseEvents(_resume);
+            c.Children.Add(_resume);
+            _quit = new MenuItem();
+            _quit.SetValue(Canvas.LeftProperty, Convert.ToDouble(175));
+            _quit.SetValue(Canvas.TopProperty, Convert.ToDouble(360));
+            _quit.Text = "Quit Demo";
+            _quit.Index = 1;
+            WireUpMouseEvents(_quit);
+            c.Children.Add(_quit);
             Loaded += DemoMenu_Loaded;
         }
 
@@ -69,26 +69,27 @@ namespace FarseerSilverlightDemos
         private void itm_MouseLeftButtonDown(object sender, MouseEventArgs e)
         {
             MenuItem itm = sender as MenuItem;
-            if (itm.Index == 0)
-            {
-                Visible = false;
-            }
-            else
-            {
-                QuitSelected = true;
-            }
+            if (itm != null)
+                if (itm.Index == 0)
+                {
+                    Visible = false;
+                }
+                else
+                {
+                    QuitSelected = true;
+                }
         }
 
         private void itm_MouseEnter(object sender, MouseEventArgs e)
         {
             MenuItem itm = sender as MenuItem;
-            itm.Selected = true;
+            if (itm != null) itm.Selected = true;
         }
 
         private void itm_MouseLeave(object sender, EventArgs e)
         {
             MenuItem itm = sender as MenuItem;
-            itm.Selected = false;
+            if (itm != null) itm.Selected = false;
         }
 
 
@@ -110,8 +111,8 @@ namespace FarseerSilverlightDemos
 
         public void Dispose()
         {
-            resume.Selected = false;
-            quit.Selected = false;
+            _resume.Selected = false;
+            _quit.Selected = false;
         }
     }
 }

@@ -4,9 +4,9 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
-using FarseerSilverlightDemos.Drawing;
+using GettingStartedSilverlight.Objects;
 
-namespace FarseerSilverlightDemos.Demos.DemoShare
+namespace GettingStartedSilverlight.Demos.DemoShare
 {
     public class Border
     {
@@ -58,22 +58,25 @@ namespace FarseerSilverlightDemos.Demos.DemoShare
             _borderGeom = new Geom[4];
             //left border
             geometryOffset = new Vector2(-(_width*.5f - _borderWidth*.5f), 0);
-            _borderGeom[0] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _borderBody, _borderWidth, _height,
-                                                                     geometryOffset, 0);
+            _borderGeom[0] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _borderBody, _borderWidth,
+                                                                      _height,
+                                                                      geometryOffset, 0);
             _borderGeom[0].RestitutionCoefficient = .2f;
             _borderGeom[0].FrictionCoefficient = .5f;
             _borderGeom[0].CollisionGroup = 100;
 
             //right border (clone left border since geometry is same size)
             geometryOffset = new Vector2(_width*.5f - _borderWidth*.5f, 0);
-            _borderGeom[1] = GeomFactory.Instance.CreateGeom(physicsSimulator, _borderBody, _borderGeom[0], geometryOffset,
-                                                            0);
+            _borderGeom[1] = GeomFactory.Instance.CreateGeom(physicsSimulator, _borderBody, _borderGeom[0],
+                                                             geometryOffset,
+                                                             0);
 
 
             //top border
             geometryOffset = new Vector2(0, -(_height*.5f - _borderWidth*.5f));
-            _borderGeom[2] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _borderBody, _width, _borderWidth,
-                                                                     geometryOffset, 0);
+            _borderGeom[2] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _borderBody, _width,
+                                                                      _borderWidth,
+                                                                      geometryOffset, 0);
             _borderGeom[2].RestitutionCoefficient = .2f;
             _borderGeom[2].FrictionCoefficient = .2f;
             _borderGeom[2].CollisionGroup = 100;
@@ -82,8 +85,9 @@ namespace FarseerSilverlightDemos.Demos.DemoShare
 
             //bottom border (clone top border since geometry is same size)
             geometryOffset = new Vector2(0, _height*.5f - _borderWidth*.5f);
-            _borderGeom[3] = GeomFactory.Instance.CreateGeom(physicsSimulator, _borderBody, _borderGeom[2], geometryOffset,
-                                                            0);
+            _borderGeom[3] = GeomFactory.Instance.CreateGeom(physicsSimulator, _borderBody, _borderGeom[2],
+                                                             geometryOffset,
+                                                             0);
         }
     }
 }

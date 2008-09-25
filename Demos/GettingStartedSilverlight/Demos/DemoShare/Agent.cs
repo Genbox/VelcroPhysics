@@ -4,7 +4,7 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerSilverlightDemos.Demos.DemoShare
+namespace GettingStartedSilverlight.Demos.DemoShare
 {
     public class Agent
     {
@@ -56,29 +56,30 @@ namespace FarseerSilverlightDemos.Demos.DemoShare
             view.AddAgentToCanvas(_agentBody);
             _agentGeom = new Geom[7];
             _agentGeom[0] = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _agentBody, 16, 10,
-                                                                 new Vector2(-40, -40), 0);
+                                                                  new Vector2(-40, -40), 0);
             _agentGeom[0].RestitutionCoefficient = .4f;
             _agentGeom[0].FrictionCoefficient = .2f;
             _agentGeom[0].CollisionGroup = 1;
             _agentGeom[0].CollisionCategories = _collisionCategory;
             _agentGeom[0].CollidesWith = _collidesWith;
             _agentGeom[1] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0],
-                                                           new Vector2(-40, 40), 0);
+                                                            new Vector2(-40, 40), 0);
             _agentGeom[2] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0],
-                                                           new Vector2(40, -40), 0);
+                                                            new Vector2(40, -40), 0);
             _agentGeom[3] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0],
-                                                           new Vector2(40, 40), 0);
-            _agentGeom[4] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0], new Vector2(0, 0),
-                                                           0);
+                                                            new Vector2(40, 40), 0);
+            _agentGeom[4] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0],
+                                                            new Vector2(0, 0),
+                                                            0);
 
             _agentGeom[5] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _agentBody, 16, 120, Vector2.Zero,
-                                                                    MathHelper.PiOver4);
+                                                                     MathHelper.PiOver4);
             _agentGeom[5].CollisionGroup = 1;
             _agentGeom[5].CollisionCategories = _collisionCategory;
             _agentGeom[5].CollidesWith = _collidesWith;
 
             _agentGeom[6] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _agentBody, 16, 120, Vector2.Zero,
-                                                                    -MathHelper.PiOver4);
+                                                                     -MathHelper.PiOver4);
             _agentGeom[6].CollisionGroup = 1;
             _agentGeom[6].CollisionCategories = _collisionCategory;
             _agentGeom[6].CollidesWith = _collidesWith;

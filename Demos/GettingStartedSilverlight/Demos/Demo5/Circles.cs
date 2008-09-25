@@ -6,7 +6,7 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerSilverlightDemos.Demos.Demo5
+namespace GettingStartedSilverlight.Demos.Demo5
 {
     public class Circles
     {
@@ -29,7 +29,7 @@ namespace FarseerSilverlightDemos.Demos.Demo5
             {
                 throw new Exception("count must be 2 or greater");
             }
-            
+
             _count = count;
             _radius = radius;
             _color = color;

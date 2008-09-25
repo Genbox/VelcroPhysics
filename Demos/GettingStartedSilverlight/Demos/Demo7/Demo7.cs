@@ -2,9 +2,9 @@
 using System.IO;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Mathematics;
-using FarseerSilverlightDemos.Demos.DemoShare;
+using GettingStartedSilverlight.Demos.DemoShare;
 
-namespace FarseerSilverlightDemos.Demos.Demo7
+namespace GettingStartedSilverlight.Demos.Demo7
 {
     public class Demo7 : SimulatorView
     {
@@ -49,7 +49,7 @@ namespace FarseerSilverlightDemos.Demos.Demo7
 
             int borderWidth = (int) (ScreenManager.ScreenHeight*.05f);
             _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, borderWidth,
-                                ScreenManager.ScreenCenter);
+                                 ScreenManager.ScreenCenter);
             _border.Load(this, physicsSimulator);
 
             _agent = new Agent(ScreenManager.ScreenCenter - new Vector2(200, 0));

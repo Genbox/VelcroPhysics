@@ -1,12 +1,12 @@
-using System.Windows.Controls;
+using GettingStartedSilverlight.Drawing;
 
-namespace FarseerSilverlightDemos.Drawing
+namespace GettingStartedSilverlight.Objects
 {
-    public partial class CircleBrush : UserControl, IDrawingBrush
+    public partial class CircleBrush : IDrawingBrush
     {
+        private float _height;
+        private float _width;
         public BrushExtender Extender = new BrushExtender();
-        private float height;
-        private float width;
 
 
         public CircleBrush()
@@ -21,16 +21,16 @@ namespace FarseerSilverlightDemos.Drawing
         {
             set
             {
-                width = value*2;
-                ellipse.Width = width;
-                translateTransform.X = -width/2;
-                height = value*2;
-                ellipse.Height = height;
-                translateTransform.Y = -height/2;
+                _width = value*2;
+                ellipse.Width = _width;
+                translateTransform.X = -_width/2;
+                _height = value*2;
+                ellipse.Height = _height;
+                translateTransform.Y = -_height/2;
                 rotateTransform.CenterX = value;
                 rotateTransform.CenterY = value;
             }
-            get { return width/2; }
+            get { return _width/2; }
         }
 
         #region IDrawingBrush Members
