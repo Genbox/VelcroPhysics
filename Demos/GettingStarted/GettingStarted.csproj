@@ -168,7 +168,7 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\XNA3 Beta\FarseerProject.csproj">
+    <ProjectReference Include="..\..\Branches\XNA3 Beta\FarseerPhysics.csproj">
       <Project>{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}</Project>
       <Name>FarseerProject</Name>
     </ProjectReference>
