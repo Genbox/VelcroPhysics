@@ -15,6 +15,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private List<Wrapper> _wrappers;
         private List<Stub> _xStubs;
         private List<Stub> _yStubs;
+        private LinkedList<Wrapper> _currentBodies = new LinkedList<Wrapper>();
 
         public SelectiveSweepCollider(PhysicsSimulator physicsSimulator)
         {
@@ -204,7 +205,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private void DetectInternal(bool doX)
         {
             List<Stub> stubs = (doX) ? (_xStubs) : (_yStubs);
-            LinkedList<Wrapper> currentBodies = new LinkedList<Wrapper>();
+            _currentBodies.Clear();
             for (int index = 0; index < stubs.Count; index++)
             {
                 Stub stub = stubs[index];
@@ -222,7 +223,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     }
 
                     Geom geom1 = wrapper1.geom;
-                    for (LinkedListNode<Wrapper> node = currentBodies.First;
+                    for (LinkedListNode<Wrapper> node = _currentBodies.First;
                          node != null;
                          node = node.Next)
                     {
@@ -236,14 +237,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     }
                     if (wrapper1.shouldAddNode)
                     {
-                        currentBodies.AddLast(wrapper1.node);
+                        _currentBodies.AddLast(wrapper1.node);
                     }
                 }
                 else
                 {
                     if (wrapper1.shouldAddNode)
                     {
-                        currentBodies.Remove(wrapper1.node);
+                        _currentBodies.Remove(wrapper1.node);
                     }
                 }
             }

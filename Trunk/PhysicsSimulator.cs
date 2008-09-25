@@ -257,7 +257,6 @@ namespace FarseerGames.FarseerPhysics
             #endregion
         }
 
-
         /// <exception cref="Exception">The GeomList must be empty when setting the broad phase collider type</exception>
         public void SetBroadPhaseCollider(IBroadPhaseCollider broadPhaseCollider)
         {
@@ -347,6 +346,7 @@ namespace FarseerGames.FarseerPhysics
 #if (XNA)
             if (EnableDiagnostics) _sw.Start();
 #endif
+            
             #region Added by Daniel Pramel 08/24/08
 
             dt = _scaling.GetUpdateInterval(dt);
