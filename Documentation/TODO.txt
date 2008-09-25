@@ -1,9 +1,8 @@
 Public:
-Create a multithreading sample. (Secret and normal threading)
-Create a InactivityController sample.
+Create a multithreading sample. (monster is working on it)
+Create an InactivityController sample.
 Write some documentation. (Update wiki and write manual) - Could perhaps use the silverlight version
 to demonstrate Farseer while reading manual?
 
 Private:
-Publish theclaw prototype (simplify it first)
 Publish info about polygon mapper
