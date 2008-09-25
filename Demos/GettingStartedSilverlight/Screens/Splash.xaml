@@ -7,7 +7,7 @@
 	<Canvas 
         Background="White"
         >
-		<Image Source="logo.png" Canvas.Left="297" Canvas.Top="254"></Image>
+		<Image Source="../logo.png" Canvas.Left="297" Canvas.Top="254"></Image>
 		<Rectangle Stroke="Gray" Width="1024" Height="768"/>
 	</Canvas>
 </UserControl>
