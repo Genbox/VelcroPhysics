@@ -17,7 +17,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     /// </summary>
     public class Arbiter : IEquatable<Arbiter>
     {
-        private Comparison<Contact> _contactComparer;
+        //To prevent garbage build up the contact comparer is pre-initialized and held in memory
+        private static Comparison<Contact> _contactComparer = CompareSeperation;
         private ContactList _contactList;
         private float _float1;
         private float _float2;
@@ -120,9 +121,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             }
 
             InitializeContactLists(physicsSimulator.maxContactsToDetect);
-
-            //to prevent garbage build up the _contact comparer is pre-initialized and held in memory
-            _contactComparer = CompareSeperation;
         }
 
         internal void PreStepImpulse(float inverseDt)
@@ -593,7 +591,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         #endregion
 
-        #region variables for ApplyImpulse
+        #region Variables for ApplyImpulse
 
         private Contact _contact;
         private Vector2 _dv = Vector2.Zero;
