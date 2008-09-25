@@ -21,8 +21,8 @@ namespace FarseerGames.FarseerPhysicsDemos
 
             _graphics.SynchronizeWithVerticalRetrace = false;
 
-            //TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 10);
-            IsFixedTimeStep = false;
+            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 10);
+            IsFixedTimeStep = true;
 
             //windowed
             //_graphics.PreferredBackBufferWidth = 1024;
