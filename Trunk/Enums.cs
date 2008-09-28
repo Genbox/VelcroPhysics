@@ -2,6 +2,14 @@ using System;
 
 namespace FarseerGames.FarseerPhysics
 {
+    public enum Bounciness
+    {
+        High,
+        Normal,
+        Low,
+        None
+    }
+
     [Flags]
     public enum CollisionCategory
     {
