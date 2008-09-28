@@ -8,7 +8,8 @@ using FarseerGames.FarseerPhysics.Mathematics;
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     /// <summary>
-    /// TODO: Write documentation
+    /// Used in collision detection.
+    /// Represents a contact point
     /// </summary>
     public struct Contact : IEquatable<Contact>
     {

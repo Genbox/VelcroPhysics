@@ -387,7 +387,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             Vertices vertices = new Vertices();
 
-            float stepSize = Calculator.TwoPi/numberOfEdges;
+            float stepSize = MathHelper.TwoPi/numberOfEdges;
             vertices.Add(new Vector2(radius, 0));
             for (int i = 1; i < numberOfEdges; i++)
             {

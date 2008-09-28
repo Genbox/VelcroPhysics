@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
-    /// TODO: Write documentation
+    /// A pin joint works like 2 revolute joints with a fixed distance between them.
     /// </summary>
     public class PinJoint : Joint
     {
@@ -34,6 +34,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _body1 = body1;
             _body2 = body2;
 
+            //TODO: Bug still exist? http://www.codeplex.com/FarseerPhysics/Thread/View.aspx?ThreadId=22839
             Vector2 difference = (body2.position + anchor2) - (body1.position + anchor1);
             _targetDistance = difference.Length(); //by default the target distance is the diff between anchors.
 

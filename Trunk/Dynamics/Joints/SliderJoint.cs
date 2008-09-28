@@ -7,7 +7,8 @@ using Microsoft.Xna.Framework;
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
-    /// TODO: Write documentation
+    /// Slider joint is just like pin joint, but the distance between the bodies is not fixed.
+    /// The bodies can move towards to away from each other within limits.
     /// </summary>
     public class SliderJoint : Joint
     {
