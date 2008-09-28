@@ -507,11 +507,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             }
 
             //allow user to cancel collision if desired
-            if (geometry1.Collision != null)
+            if (geometry1.OnCollision != null)
             {
                 if (contactList.Count > 0)
                 {
-                    if (!geometry1.Collision(geometry1, geometry2, contactList))
+                    if (!geometry1.OnCollision(geometry1, geometry2, contactList))
                     {
                         contactList.Clear();
                     }
@@ -519,11 +519,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             }
 
             //allow user to cancel collision if desired
-            if (geometry2.Collision != null)
+            if (geometry2.OnCollision != null)
             {
                 if (contactList.Count > 0)
                 {
-                    if (!geometry2.Collision(geometry2, geometry1, contactList))
+                    if (!geometry2.OnCollision(geometry2, geometry1, contactList))
                     {
                         contactList.Clear();
                     }
