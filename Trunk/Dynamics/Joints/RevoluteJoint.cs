@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics;
-using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
-using Microsoft.Xna.Framework; 
+using FarseerGames.FarseerPhysics.Mathematics;
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
@@ -154,6 +154,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             JointError = _vectorTemp3.Length();
 
             _body2.ApplyImmediateImpulse(ref _accumulatedImpulse);
+            
             Calculator.Cross(ref _r2, ref _accumulatedImpulse, out _floatTemp1);
             _body2.ApplyAngularImpulse(_floatTemp1);
 

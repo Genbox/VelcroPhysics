@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Interfaces;
-#if (XNA)
-using System.Collections.Specialized;
-#endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
@@ -272,13 +269,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
             aabb2.min.Y -= fTol;
             aabb2.max.X += fTol;
             aabb2.max.Y += fTol;
-            if (AABB.Intersect(aabb1, aabb2) == false)
-                return false;
 
+            //NOTE: Changed from
             //            if (AABB.Intersect(g1.aabb, g2.aabb) == false)
             //                return false;
+            // return true
 
-            return true;
+            //TO:
+            return AABB.Intersect(aabb1, aabb2);
+
         }
 
         /// <summary>
@@ -333,7 +332,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void Run()
         {
-            //NOTE: bForce was always false
+            //NOTE: bForce was always false, bug?
             //if (bForce)
             //    ForceNonIncrementalUpdate();
             //else

@@ -5,10 +5,11 @@ using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Interfaces;
-using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
 using Microsoft.Xna.Framework; 
 using System.Diagnostics;
+#else
+using FarseerGames.FarseerPhysics.Mathematics;
 #endif
 
 namespace FarseerGames.FarseerPhysics
@@ -423,11 +424,22 @@ namespace FarseerGames.FarseerPhysics
 #endif
         }
 
+        /// <summary>
+        /// Checks if the physicssimulator geoms collide with the specified X and Y coordinates.
+        /// </summary>
+        /// <param name="x">The x value</param>
+        /// <param name="y">The y value</param>
+        /// <returns>The first geom that collides with the specified x and y coordinates</returns>
         public Geom Collide(float x, float y)
         {
             return Collide(new Vector2(x, y));
         }
 
+        /// <summary>
+        /// Checks if the physicssimulator geoms collide with the specified point.
+        /// </summary>
+        /// <param name="point">The point to check against.</param>
+        /// <returns>The first geom that collides with the specified point</returns>
         public Geom Collide(Vector2 point)
         {
             foreach (Geom geometry in geomList)
@@ -440,11 +452,22 @@ namespace FarseerGames.FarseerPhysics
             return null;
         }
 
+        /// <summary>
+        /// Finds all geoms that collides with the specified X and Y coordinates
+        /// </summary>
+        /// <param name="x">The x value.</param>
+        /// <param name="y">The y value.</param>
+        /// <returns>A list of geoms that collided with the X and Y values</returns>
         public List<Geom> CollideAll(float x, float y)
         {
             return CollideAll(new Vector2(x, y));
         }
 
+        /// <summary>
+        /// Finds all geoms that collides with the specified point
+        /// </summary>
+        /// <param name="point">The point to check against.</param>
+        /// <returns>A list of geoms that collided with the point</returns>
         public List<Geom> CollideAll(Vector2 point)
         {
             List<Geom> returnGeomList = new List<Geom>();
