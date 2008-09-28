@@ -8,7 +8,7 @@ using FarseerGames.FarseerPhysics.Mathematics;
 namespace FarseerGames.FarseerPhysics.Controllers
 {
     /// <summary>
-    /// TODO: Create documentation
+    /// Can be used to add support for resting bodies.
     /// </summary>
     public class InactivityController : Controller
     {

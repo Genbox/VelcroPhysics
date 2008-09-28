@@ -107,14 +107,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public override void Update(float dt)
         {
-            //TODO: Move up in layers
-            if (Enabled && Math.Abs(_springError) > _breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, EventArgs.Empty);
-            }
-
-            //TODO: Move up in code
             if (IsDisposed)
             {
                 return;
@@ -123,6 +115,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             if (_body.isStatic)
             {
                 return;
+            }
+
+            //TODO: Move up in layers?
+            if (Enabled && Math.Abs(_springError) > _breakpoint)
+            {
+                Enabled = false;
+                if (Broke != null) Broke(this, EventArgs.Empty);
             }
 
             //calculate and apply spring _force

@@ -21,7 +21,6 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         private float _value3;
         private float _value4;
 
-        //TODO: Use calculator or mathhelper
         public CircularInterpolator(float value1, float value2, float value3, float value4, float minValue,
                                     float maxValue)
         {

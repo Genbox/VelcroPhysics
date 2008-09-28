@@ -13,7 +13,8 @@ using Microsoft.Xna.Framework;
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
     /// <summary>
-    /// TODO: Write documentation
+    /// Used for collision detection.
+    /// Constructed when 2 geoms collide. Applies impulses between the 2 geoms.
     /// </summary>
     public class Arbiter : IEquatable<Arbiter>
     {

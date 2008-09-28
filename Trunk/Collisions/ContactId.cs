@@ -3,7 +3,8 @@ using System;
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     /// <summary>
-    /// TODO: Write documentation
+    /// Used in collision detection
+    /// Provides an implementation that gives an ID for contacts
     /// </summary>
     public struct ContactId : IEquatable<ContactId>
     {
@@ -51,7 +52,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             if (!(obj is ContactId))
                 return false;
 
-            return Equals((ContactId) obj);
+            return Equals((ContactId)obj);
         }
 
         public static bool operator ==(ContactId contactId1, ContactId contactId2)
@@ -66,8 +67,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public override int GetHashCode()
         {
-            //TODO: Implement correctly.
-            return base.GetHashCode();
+            return _geometryAIndex + _geometryAVertex + _geometryBIndex;
         }
     }
 }
