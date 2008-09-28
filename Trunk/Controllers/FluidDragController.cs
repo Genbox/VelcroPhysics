@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Interfaces;
-using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
-using Microsoft.Xna.Framework; 
+using Microsoft.Xna.Framework;
+#else
+using FarseerGames.FarseerPhysics.Mathematics;
 #endif
 
 namespace FarseerGames.FarseerPhysics.Controllers
@@ -76,9 +77,9 @@ namespace FarseerGames.FarseerPhysics.Controllers
         public void Reset()
         {
             _geomInFluidList.Clear();
-            foreach (Geom geom in _geomList)
+            for (int i = 0; i < _geomList.Count; i++)
             {
-                _geomInFluidList.Add(geom, false);
+                _geomInFluidList.Add(_geomList[i], false);
             }
         }
 
@@ -131,7 +132,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         private void CalculateBuoyancy()
         {
-            _buoyancyForce = -_gravity*_area*_density;
+            _buoyancyForce = -_gravity * _area * _density;
         }
 
 
@@ -152,11 +153,11 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
             _dragArea = Math.Abs(_max - _min);
 
-            _partialMass = geom.body.mass*(_area/_totalArea);
+            _partialMass = geom.body.mass * (_area / _totalArea);
 
-            _linearDragForce = -.5f*_density*_dragArea*_linearDragCoefficient*_partialMass*_centroidVelocity;
+            _linearDragForce = -.5f * _density * _dragArea * _linearDragCoefficient * _partialMass * _centroidVelocity;
 
-            _rotationalDragTorque = -geom.body.angularVelocity*_rotationalDragCoeficient*_partialMass;
+            _rotationalDragTorque = -geom.body.angularVelocity * _rotationalDragCoeficient * _partialMass;
         }
     }
 }

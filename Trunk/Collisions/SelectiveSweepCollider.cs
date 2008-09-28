@@ -359,13 +359,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 _yEnd = new Stub(this, false);
             }
 
-            public void AddStubs(List<Stub> _xStubs, List<Stub> _yStubs)
+            public void AddStubs(List<Stub> xStubs, List<Stub> yStubs)
             {
-                _xStubs.Add(_xBegin);
-                _xStubs.Add(_xEnd);
+                xStubs.Add(_xBegin);
+                xStubs.Add(_xEnd);
 
-                _yStubs.Add(_yBegin);
-                _yStubs.Add(_yEnd);
+                yStubs.Add(_yBegin);
+                yStubs.Add(_yEnd);
             }
 
             public void Update()

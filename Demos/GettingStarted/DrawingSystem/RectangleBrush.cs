@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
 {
-    internal class RectangleBrush
+    public class RectangleBrush
     {
         private Color _borderColor;
         private Color _color;

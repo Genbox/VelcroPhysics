@@ -1,34 +1,37 @@
 ﻿using System.Collections.Generic;
-using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
 using Microsoft.Xna.Framework;
+#else
+using FarseerGames.FarseerPhysics.Mathematics;
 #endif
 
 //TODO: This is only used by CollisionHelper, remove it or use it.
 //Could possibly be a struct
 
-/// <summary>
-/// Encapsulates the collision details between a line and a Geom.
-/// </summary>
-public class LineIntersectInfo
+namespace FarseerGames.FarseerPhysics.Collisions
 {
-    private Geom _geom;
-    private List<Vector2> _points;
-
-    public LineIntersectInfo(Geom geom, List<Vector2> points)
+    /// <summary>
+    /// Encapsulates the collision details between a line and a Geom.
+    /// </summary>
+    public class LineIntersectInfo
     {
-        _geom = geom;
-        _points = points;
-    }
+        private Geom _geom;
+        private List<Vector2> _points;
 
-    public List<Vector2> Points
-    {
-        get { return _points; }
-    }
+        public LineIntersectInfo(Geom geom, List<Vector2> points)
+        {
+            _geom = geom;
+            _points = points;
+        }
 
-    public Geom Geom
-    {
-        get { return _geom; }
+        public List<Vector2> Points
+        {
+            get { return _points; }
+        }
+
+        public Geom Geom
+        {
+            get { return _geom; }
+        }
     }
 }
