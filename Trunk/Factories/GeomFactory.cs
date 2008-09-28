@@ -45,6 +45,30 @@ namespace FarseerGames.FarseerPhysics.Factories
         }
 
         //rectangles
+        public Geom CreateRectangleGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height, Bounciness bounciness)
+        {
+            //NOTE: Could this be used for bounciness?
+            Geom geom = CreateRectangleGeom(physicsSimulator, body, width, height, Vector2.Zero, 0, 0);
+
+            switch (bounciness)
+            {
+                case Bounciness.High:
+                    geom.restitutionCoefficient = 1f;
+                    break;
+                case Bounciness.Normal:
+                    //geom.restitutionCoefficient = 1f;
+                    break;
+                case Bounciness.Low:
+                    geom.restitutionCoefficient = 0.1f;
+                    break;
+                case Bounciness.None:
+                    geom.restitutionCoefficient = 0f;
+                    break;
+            }
+
+            return geom;
+        }
+
         public Geom CreateRectangleGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height)
         {
             return CreateRectangleGeom(physicsSimulator, body, width, height, Vector2.Zero, 0, 0);
@@ -319,7 +343,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         public float CalculateGridCellSizeFromAABB(Vertices vertices)
         {
             AABB aabb = new AABB(vertices);
-            return aabb.GetShortestSide()*_gridCellSizeAABBFactor;
+            return aabb.GetShortestSide() * _gridCellSizeAABBFactor;
         }
     }
 }
