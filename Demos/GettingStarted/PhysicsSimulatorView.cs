@@ -11,17 +11,26 @@ namespace FarseerGames.FarseerPhysicsDemos
 {
     public class PhysicsSimulatorView
     {
+        private PhysicsSimulator _physicsSimulator;
+
+        //Performance panel
         private const string _applyForces = "Apply Forces: {0}";
         private const string _applyImpulses = "Apply Impulses: {0}";
         private const string _broadPhaseCollision = "Broad Phase Collsion: {0}";
         private const string _cleanUp = "Clean Up: {0}";
         private const string _narrowPhaseCollision = "Narrow Phase Collsion: {0}";
-        private const int _performancePanelHeight = 150;
-        private const int _performancePanelWidth = 220;
         private const string _updatePosition = "Update Positions: {0}";
         private const string _updateTotal = "Update Total: {0}";
+        private const string _bodyCount = "Bodies: {0}";
+        private const string _geomCount = "Geoms: {0}";
+        private const string _jointCount = "Joints: {0}";
+        private const string _arbiterCount = "Arbiters: {0}";
+        private const string _controllerCount = "Controllers: {0}";
+
+        private const int _performancePanelHeight = 150;
+        private int _performancePanelWidth = 220;
         private Vector2 _performancePanelPosition = new Vector2(100, 110);
-        private PhysicsSimulator _physicsSimulator;
+        private bool _performancePanelCount = true;
 
         //aabb
         private Color _aabbColor = new Color(0, 0, 0, 150); // Color.Gainsboro;
@@ -92,6 +101,9 @@ namespace FarseerGames.FarseerPhysicsDemos
         public PhysicsSimulatorView(PhysicsSimulator physicsSimulator)
         {
             _physicsSimulator = physicsSimulator;
+
+            if (_performancePanelCount)
+                _performancePanelWidth = 360;
         }
 
         //aabb
@@ -309,6 +321,16 @@ namespace FarseerGames.FarseerPhysicsDemos
             set { _enablePerformancePanelView = value; }
         }
 
+        public bool EnablePerformancePanelBodyCount
+        {
+            get { return _performancePanelCount; }
+            set
+            {
+                _performancePanelWidth = value ? 360 : 220;
+                _performancePanelCount = value;
+            }
+        }
+
         public virtual void LoadContent(GraphicsDevice graphicsDevice, ContentManager content)
         {
             LoadVerticeContent(graphicsDevice);
@@ -490,6 +512,28 @@ namespace FarseerGames.FarseerPhysicsDemos
             spriteBatch.DrawString(_spriteFont,
                                    String.Format(_updatePosition, _physicsSimulator.UpdatePositionsTime.ToString("0.00")),
                                    new Vector2(120, 200), Color.White);
+
+            spriteBatch.DrawString(_spriteFont,
+                       String.Format(_bodyCount, _physicsSimulator.BodyList.Count),
+                       new Vector2(340, 125), Color.White);
+
+            spriteBatch.DrawString(_spriteFont,
+                       String.Format(_geomCount, _physicsSimulator.GeomList.Count),
+                       new Vector2(340, 140), Color.White);
+
+            spriteBatch.DrawString(_spriteFont,
+                       String.Format(_jointCount, _physicsSimulator.JointList.Count),
+                       new Vector2(340, 155), Color.White);
+
+            spriteBatch.DrawString(_spriteFont,
+                       String.Format(_controllerCount, _physicsSimulator.ControllerList.Count),
+                       new Vector2(340, 170), Color.White);
+
+            spriteBatch.DrawString(_spriteFont,
+                       String.Format(_arbiterCount, _physicsSimulator.ArbiterList.Count),
+                       new Vector2(340, 185), Color.White);
+
+
             //spriteBatch.DrawString(_spriteFont, String.Format("Broadphase Pairs: {0}",this._physicsSimulator.sweepAndPrune.collisionPairs.Keys.Count), new Vector2(120, 215), Color.White);
         }
 
@@ -578,13 +622,13 @@ namespace FarseerGames.FarseerPhysicsDemos
             for (int i = 0; i < _physicsSimulator.BodyList.Count; i++)
             {
                 Vector2 startX =
-                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(-_coordinateAxisLineLength/2f, 0));
+                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(-_coordinateAxisLineLength / 2f, 0));
                 Vector2 endX =
-                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(_coordinateAxisLineLength/2f, 0));
+                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(_coordinateAxisLineLength / 2f, 0));
                 Vector2 startY =
-                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(0, -_coordinateAxisLineLength/2f));
+                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(0, -_coordinateAxisLineLength / 2f));
                 Vector2 endY =
-                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(0, _coordinateAxisLineLength/2f));
+                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(0, _coordinateAxisLineLength / 2f));
 
                 _coordinateAxisLineBrush.Draw(spriteBatch, startX, endX);
                 _coordinateAxisLineBrush.Draw(spriteBatch, startY, endY);
@@ -595,56 +639,55 @@ namespace FarseerGames.FarseerPhysicsDemos
         {
             for (int i = 0; i < _physicsSimulator.ControllerList.Count; i++)
             {
-                if (_physicsSimulator.ControllerList[i] is FixedLinearSpring)
-                {
-                    FixedLinearSpring fixedLinearSpring = (FixedLinearSpring) _physicsSimulator.ControllerList[i];
-                    _worldAttachPoint = fixedLinearSpring.WorldAttachPoint;
-                    _body1AttachPointInWorldCoordinates =
-                        fixedLinearSpring.Body.GetWorldPosition(fixedLinearSpring.BodyAttachPoint);
-                    _springCircleBrush.Draw(spriteBatch, _body1AttachPointInWorldCoordinates);
-                    _springCircleBrush.Draw(spriteBatch, _worldAttachPoint);
+                if (!(_physicsSimulator.ControllerList[i] is FixedLinearSpring))
+                    continue;
 
-                    Vector2.Lerp(ref _worldAttachPoint, ref _body1AttachPointInWorldCoordinates, .25f, out _vectorTemp1);
-                    _springCircleBrush.Draw(spriteBatch, _vectorTemp1);
+                FixedLinearSpring fixedLinearSpring = (FixedLinearSpring)_physicsSimulator.ControllerList[i];
+                _worldAttachPoint = fixedLinearSpring.WorldAttachPoint;
+                _body1AttachPointInWorldCoordinates =
+                    fixedLinearSpring.Body.GetWorldPosition(fixedLinearSpring.BodyAttachPoint);
+                _springCircleBrush.Draw(spriteBatch, _body1AttachPointInWorldCoordinates);
+                _springCircleBrush.Draw(spriteBatch, _worldAttachPoint);
 
-                    Vector2.Lerp(ref _worldAttachPoint, ref _body1AttachPointInWorldCoordinates, .50f, out _vectorTemp1);
-                    _springCircleBrush.Draw(spriteBatch, _vectorTemp1);
+                Vector2.Lerp(ref _worldAttachPoint, ref _body1AttachPointInWorldCoordinates, .25f, out _vectorTemp1);
+                _springCircleBrush.Draw(spriteBatch, _vectorTemp1);
 
-                    Vector2.Lerp(ref _worldAttachPoint, ref _body1AttachPointInWorldCoordinates, .75f, out _vectorTemp1);
-                    _springCircleBrush.Draw(spriteBatch, _vectorTemp1);
+                Vector2.Lerp(ref _worldAttachPoint, ref _body1AttachPointInWorldCoordinates, .50f, out _vectorTemp1);
+                _springCircleBrush.Draw(spriteBatch, _vectorTemp1);
 
-                    _springLineBrush.Draw(spriteBatch, _body1AttachPointInWorldCoordinates,
-                                          fixedLinearSpring.WorldAttachPoint);
-                }
+                Vector2.Lerp(ref _worldAttachPoint, ref _body1AttachPointInWorldCoordinates, .75f, out _vectorTemp1);
+                _springCircleBrush.Draw(spriteBatch, _vectorTemp1);
+
+                _springLineBrush.Draw(spriteBatch, _body1AttachPointInWorldCoordinates,
+                                      fixedLinearSpring.WorldAttachPoint);
             }
 
             for (int i = 0; i < _physicsSimulator.ControllerList.Count; i++)
             {
-                if (_physicsSimulator.ControllerList[i] is LinearSpring)
-                {
-                    LinearSpring linearSpring = (LinearSpring) _physicsSimulator.ControllerList[i];
-                    _attachPoint1 = linearSpring.AttachPoint1;
-                    _attachPoint2 = linearSpring.AttachPoint2;
-                    linearSpring.Body1.GetWorldPosition(ref _attachPoint1, out _body1AttachPointInWorldCoordinates);
-                    linearSpring.Body2.GetWorldPosition(ref _attachPoint2, out _body2AttachPointInWorldCoordinates);
-                    _springCircleBrush.Draw(spriteBatch, _body1AttachPointInWorldCoordinates);
-                    _springCircleBrush.Draw(spriteBatch, _body2AttachPointInWorldCoordinates);
+                if (!(_physicsSimulator.ControllerList[i] is LinearSpring)) continue;
 
-                    Vector2.Lerp(ref _body1AttachPointInWorldCoordinates, ref _body2AttachPointInWorldCoordinates, .25f,
-                                 out _vectorTemp1);
-                    _springCircleBrush.Draw(spriteBatch, _vectorTemp1);
+                LinearSpring linearSpring = (LinearSpring)_physicsSimulator.ControllerList[i];
+                _attachPoint1 = linearSpring.AttachPoint1;
+                _attachPoint2 = linearSpring.AttachPoint2;
+                linearSpring.Body1.GetWorldPosition(ref _attachPoint1, out _body1AttachPointInWorldCoordinates);
+                linearSpring.Body2.GetWorldPosition(ref _attachPoint2, out _body2AttachPointInWorldCoordinates);
+                _springCircleBrush.Draw(spriteBatch, _body1AttachPointInWorldCoordinates);
+                _springCircleBrush.Draw(spriteBatch, _body2AttachPointInWorldCoordinates);
 
-                    Vector2.Lerp(ref _body1AttachPointInWorldCoordinates, ref _body2AttachPointInWorldCoordinates, .50f,
-                                 out _vectorTemp1);
-                    _springCircleBrush.Draw(spriteBatch, _vectorTemp1);
+                Vector2.Lerp(ref _body1AttachPointInWorldCoordinates, ref _body2AttachPointInWorldCoordinates, .25f,
+                             out _vectorTemp1);
+                _springCircleBrush.Draw(spriteBatch, _vectorTemp1);
 
-                    Vector2.Lerp(ref _body1AttachPointInWorldCoordinates, ref _body2AttachPointInWorldCoordinates, .75f,
-                                 out _vectorTemp1);
-                    _springCircleBrush.Draw(spriteBatch, _vectorTemp1);
+                Vector2.Lerp(ref _body1AttachPointInWorldCoordinates, ref _body2AttachPointInWorldCoordinates, .50f,
+                             out _vectorTemp1);
+                _springCircleBrush.Draw(spriteBatch, _vectorTemp1);
 
-                    _springLineBrush.Draw(spriteBatch, _body1AttachPointInWorldCoordinates,
-                                          _body2AttachPointInWorldCoordinates);
-                }
+                Vector2.Lerp(ref _body1AttachPointInWorldCoordinates, ref _body2AttachPointInWorldCoordinates, .75f,
+                             out _vectorTemp1);
+                _springCircleBrush.Draw(spriteBatch, _vectorTemp1);
+
+                _springLineBrush.Draw(spriteBatch, _body1AttachPointInWorldCoordinates,
+                                      _body2AttachPointInWorldCoordinates);
             }
         }
 
@@ -654,17 +697,16 @@ namespace FarseerGames.FarseerPhysicsDemos
             {
                 if (_physicsSimulator.JointList[i] is FixedRevoluteJoint)
                 {
-                    FixedRevoluteJoint fixedRevoluteJoint = (FixedRevoluteJoint) _physicsSimulator.JointList[i];
+                    FixedRevoluteJoint fixedRevoluteJoint = (FixedRevoluteJoint)_physicsSimulator.JointList[i];
                     _revoluteJointRectangleBrush.Draw(spriteBatch, fixedRevoluteJoint.Anchor);
                 }
 
-                if (_physicsSimulator.JointList[i] is RevoluteJoint)
-                {
-                    RevoluteJoint revoluteJoint = (RevoluteJoint) _physicsSimulator.JointList[i];
-                    _revoluteJointRectangleBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor);
-                    _revoluteJointLineBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor, revoluteJoint.Body1.Position);
-                    _revoluteJointLineBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor, revoluteJoint.Body2.Position);
-                }
+                if (!(_physicsSimulator.JointList[i] is RevoluteJoint)) continue;
+
+                RevoluteJoint revoluteJoint = (RevoluteJoint)_physicsSimulator.JointList[i];
+                _revoluteJointRectangleBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor);
+                _revoluteJointLineBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor, revoluteJoint.Body1.Position);
+                _revoluteJointLineBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor, revoluteJoint.Body2.Position);
             }
         }
 
@@ -672,13 +714,13 @@ namespace FarseerGames.FarseerPhysicsDemos
         {
             for (int i = 0; i < _physicsSimulator.JointList.Count; i++)
             {
-                if (_physicsSimulator.JointList[i] is PinJoint)
-                {
-                    PinJoint pinJoint = (PinJoint) _physicsSimulator.JointList[i];
-                    _pinJointRectangleBrush.Draw(spriteBatch, pinJoint.WorldAnchor1);
-                    _pinJointRectangleBrush.Draw(spriteBatch, pinJoint.WorldAnchor2);
-                    _pinJointLineBrush.Draw(spriteBatch, pinJoint.WorldAnchor1, pinJoint.WorldAnchor2);
-                }
+                if (!(_physicsSimulator.JointList[i] is PinJoint))
+                    continue;
+
+                PinJoint pinJoint = (PinJoint)_physicsSimulator.JointList[i];
+                _pinJointRectangleBrush.Draw(spriteBatch, pinJoint.WorldAnchor1);
+                _pinJointRectangleBrush.Draw(spriteBatch, pinJoint.WorldAnchor2);
+                _pinJointLineBrush.Draw(spriteBatch, pinJoint.WorldAnchor1, pinJoint.WorldAnchor2);
             }
         }
 
@@ -687,13 +729,13 @@ namespace FarseerGames.FarseerPhysicsDemos
         {
             for (int i = 0; i < _physicsSimulator.JointList.Count; i++)
             {
-                if (_physicsSimulator.JointList[i] is SliderJoint)
-                {
-                    SliderJoint sliderJoint = (SliderJoint) _physicsSimulator.JointList[i];
-                    _sliderJointRectangleBrush.Draw(spriteBatch, sliderJoint.WorldAnchor1);
-                    _sliderJointRectangleBrush.Draw(spriteBatch, sliderJoint.WorldAnchor2);
-                    _sliderJointLineBrush.Draw(spriteBatch, sliderJoint.WorldAnchor1, sliderJoint.WorldAnchor2);
-                }
+                if (!(_physicsSimulator.JointList[i] is SliderJoint))
+                    continue;
+
+                SliderJoint sliderJoint = (SliderJoint)_physicsSimulator.JointList[i];
+                _sliderJointRectangleBrush.Draw(spriteBatch, sliderJoint.WorldAnchor1);
+                _sliderJointRectangleBrush.Draw(spriteBatch, sliderJoint.WorldAnchor2);
+                _sliderJointLineBrush.Draw(spriteBatch, sliderJoint.WorldAnchor1, sliderJoint.WorldAnchor2);
             }
         }
     }
