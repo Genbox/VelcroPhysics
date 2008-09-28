@@ -16,6 +16,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         #region Delegates
 
         public delegate bool CollisionEventHandler(Geom geometry1, Geom geometry2, ContactList contactList);
+        public delegate void SeperationEventHandler(Geom geometry1, Geom geometry2);
 
         #endregion
 
@@ -29,24 +30,23 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private float _rotation;
         private float _rotationOffset;
         private Vector2 _vert;
-        internal AABB aabb = new AABB();
-        internal Body body;
+        private bool _isSensor;
+
+        public CollisionEventHandler OnCollision;
+        public SeperationEventHandler OnSeperation;
+        public bool IsDisposed;
 
         //collides with all categories by default
         internal CollisionCategory collidesWith = CollisionCategory.All;
-
-        public CollisionEventHandler Collision;
-
         //member off all categories by default
         internal CollisionCategory collisionCategories = CollisionCategory.All;
-
+        internal AABB aabb = new AABB();
+        internal Body body;
         internal bool collisionEnabled = true;
         internal int collisionGroup;
-        internal bool collsionResponseEnabled = true;
+        internal bool collisionResponseEnabled = true;
         internal float frictionCoefficient;
-
         internal Grid grid;
-        public bool IsDisposed;
         internal bool isRemoved = true; //true=>geometry removed from simulation
         internal Vertices localVertices;
         internal float restitutionCoefficient;
@@ -166,16 +166,38 @@ namespace FarseerGames.FarseerPhysics.Collisions
             set { collisionEnabled = value; }
         }
 
+        public bool IsSensor
+        {
+            get { return _isSensor; }
+            set
+            {
+                _isSensor = value;
+                if (_isSensor)
+                {
+                    body.isStatic = true;
+                    collisionResponseEnabled = false;
+                }
+                else
+                {
+                    body.isStatic = false;
+                    collisionResponseEnabled = true;
+                }
+            }
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether collision response is enabled.
+        /// If 2 geoms collide and CollisionResponseEnabled is false, then impulses will not be calculated
+        /// for the 2 colliding geoms. They will pass through each other, but will still be able to fire the
+        /// Collide event.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if collision response enabled; otherwise, <c>false</c>.
         /// </value>
         public bool CollisionResponseEnabled
         {
-            get { return collsionResponseEnabled; }
-            set { collsionResponseEnabled = value; }
+            get { return collisionResponseEnabled; }
+            set { collisionResponseEnabled = value; }
         }
 
         /// <summary>
@@ -292,7 +314,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             frictionCoefficient = geometry.frictionCoefficient;
             collisionGroup = geometry.collisionGroup;
             collisionEnabled = geometry.collisionEnabled;
-            collsionResponseEnabled = geometry.collsionResponseEnabled;
+            collisionResponseEnabled = geometry.collisionResponseEnabled;
             _collisionGridCellSize = geometry._collisionGridCellSize;
             _offset = offset;
             _rotationOffset = rotationOffset;

@@ -53,6 +53,18 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 Remove(_markedForRemovalList[j]);
                 arbiterPool.Release(_markedForRemovalList[j]);
+                
+                if (_markedForRemovalList[j].GeometryA.OnSeperation != null)
+                {
+                    _markedForRemovalList[j].GeometryA.OnSeperation(_markedForRemovalList[j].GeometryA,
+                                                                    _markedForRemovalList[j].GeometryB);
+                }
+
+                if (_markedForRemovalList[j].GeometryB.OnSeperation != null)
+                {
+                    _markedForRemovalList[j].GeometryB.OnSeperation(_markedForRemovalList[j].GeometryB,
+                                                _markedForRemovalList[j].GeometryA);
+                }
             }
             _markedForRemovalList.Clear();
         }
