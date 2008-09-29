@@ -581,13 +581,10 @@ namespace FarseerGames.FarseerPhysicsDemos
         private void DrawAABB(SpriteBatch spriteBatch)
         {
             //draw aabb
-            Vector2 min;
-            Vector2 max;
-
             for (int i = 0; i < _physicsSimulator.GeomList.Count; i++)
             {
-                min = _physicsSimulator.GeomList[i].AABB.Min;
-                max = _physicsSimulator.GeomList[i].AABB.Max;
+                Vector2 min = _physicsSimulator.GeomList[i].AABB.Min;
+                Vector2 max = _physicsSimulator.GeomList[i].AABB.Max;
 
                 Vector2 topRight = new Vector2(max.X, min.Y);
                 Vector2 bottomLeft = new Vector2(min.X, max.Y);
@@ -607,11 +604,11 @@ namespace FarseerGames.FarseerPhysicsDemos
                 {
                     continue;
                 }
-                int count = _physicsSimulator.GeomList[i].Grid.GetPoints().Length;
+                int count = _physicsSimulator.GeomList[i].Grid.Points.Length;
                 for (int j = 0; j < count; j++)
                 {
                     Vector2 point =
-                        _physicsSimulator.GeomList[i].GetWorldPosition(_physicsSimulator.GeomList[i].Grid.GetPoints()[j]);
+                        _physicsSimulator.GeomList[i].GetWorldPosition(_physicsSimulator.GeomList[i].Grid.Points[j]);
                     _gridCircleBrush.Draw(spriteBatch, point);
                 }
             }
