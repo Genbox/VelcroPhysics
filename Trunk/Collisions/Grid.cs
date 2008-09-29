@@ -92,11 +92,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             //TODO: Keep and eye out for floating point accuracy issues here. Possibly some
             //VERY intermittent errors exist?
+
+            //NOTE: This bug exist:
+            //http://www.codeplex.com/FarseerPhysics/Thread/View.aspx?ThreadId=34188
             if (_aabb.Contains(ref vector))
             {
                 int x = (int)Math.Floor((vector.X - _aabb.Min.X) * _gridCellSizeInv);
                 int y = (int)Math.Floor((vector.Y - _aabb.Min.Y) * _gridCellSizeInv);
-
 
                 float xPercent = (vector.X - (_gridCellSize * x + _aabb.Min.X)) * _gridCellSizeInv;
                 float yPercent = (vector.Y - (_gridCellSize * y + _aabb.Min.Y)) * _gridCellSizeInv;
