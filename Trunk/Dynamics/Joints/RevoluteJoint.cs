@@ -3,6 +3,8 @@ using System.Diagnostics;
 #if (XNA)
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
+#else
+using FarseerGames.FarseerPhysics.Mathematics;
 #endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
