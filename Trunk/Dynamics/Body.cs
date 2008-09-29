@@ -104,8 +104,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         #endregion
 
         /// <summary>
-        /// Determines if this body is enabled or not. This value will be used by the physics simulator 
-        /// to determine whether or not to update this body
+        ///Sets whether or not the body will take part in the simulation.
+        /// If not enabled, the body will remain in the internal list of bodies but it will not be updated.
         /// </summary>
         public bool Enabled
         {
@@ -223,8 +223,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             get { return _linearDragCoefficient; }
             set { _linearDragCoefficient = value; }
         }
-
-
+        
         /// <summary>
         /// Gets or sets the quadratic drag coefficient.
         /// </summary>
@@ -308,6 +307,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
+        ///Returns the total rotation of a body.
+        ///If a body spins around 10 times then TotalRotation wold return 2 * Pi * 10.
+        /// This property is mostly intended for internal use by the angle joints and springs but it could be useful in some situataions for game related things.
+        /// This property is read-only 
+        /// </summary>
+        /// <value>The total rotation.</value>
         public float TotalRotation
         {
             get { return totalRotation; }
@@ -324,7 +330,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Gets or sets the angular velocity.
+        /// The rate at which a body is rotating 
         /// </summary>
         /// <value>The angular velocity.</value>
         public float AngularVelocity
@@ -334,7 +340,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Gets the force.
+        /// The total amount of force that will be applied to the body in the upcoming loop.
+        /// The Force is cleared at the end of every update call, so this value should only be called just prior to calling update.
+        /// This property is read-only. 
         /// </summary>
         /// <value>The force.</value>
         public Vector2 Force
@@ -343,7 +351,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Gets the torque.
+        /// The total amount of torque that will be applied to the body in the upcoming loop.
+        /// The Torque is cleared at the end of every update call, so this value should only be called just prior to calling update.
+        /// Torque can be thought of as the rotational analog of a force.
+        /// This property is read-only. 
         /// </summary>
         /// <value>The torque.</value>
         public float Torque
@@ -359,6 +370,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             set { ignoreGravity = value; }
         }
 
+
+        /// <summary>
+        /// Returns a unit vector that represents the local X direction of a body converted to world coordinates.
+        /// This property is read-only 
+        /// </summary>
+        /// <value>The X vector in world coordinates.</value>
         public Vector2 XVectorInWorldCoordinates
         {
             get
@@ -369,6 +386,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
+        /// Returns a unit vector that represents the local Y direction of a body converted to world coordinates.
+        /// This property is read-only 
+        /// </summary>
+        /// <value>The Y vector in world coordinates.</value>
         public Vector2 YVectorInWorldCoordinates
         {
             get
@@ -557,7 +579,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Applies a force to the body.
+        /// Adds a force to the body. Takes a Vector2 as parameter 
         /// </summary>
         /// <param name="force">The force.</param>
         public void ApplyForce(Vector2 force)
@@ -644,6 +666,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             this.force.Y += force.Y;
         }
 
+        /// <summary>
+        /// Clears the force of the body.
+        /// </summary>
         public void ClearForce()
         {
             force.X = 0;
@@ -651,7 +676,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Applies torque to the body
+        /// Adds a torque to the body. Takes a float as parameter 
         /// </summary>
         /// <param name="torque">The torque.</param>
         public void ApplyTorque(float torque)
@@ -659,6 +684,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             _torque += torque;
         }
 
+        /// <summary>
+        /// Clears the torque of the body.
+        /// </summary>
         public void ClearTorque()
         {
             _torque = 0;

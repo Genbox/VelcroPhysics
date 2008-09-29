@@ -492,6 +492,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns></returns>
         public bool Collide(Geom geometry)
         {
+            //NOTE: Could check arbiterlist to see if geom collide? (if arbiterlist contains geom) This prevents the use of the grid.
             //TODO: Don't check collision if it's disabled?
             //Check each vertice (of self) against the provided geometry
             for (int i = 0; i < worldVertices.Count; i++)
