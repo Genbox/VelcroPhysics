@@ -71,7 +71,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo8
             {
                 _redCircles[i] = new Circles(startPosition, endPosition, balls, 5, new Color(200, 0, 0, 175),
                                              Color.Black);
-                _redCircles[i].CollisionCategory = (CollisionCategory.Cat1);
+                _redCircles[i].CollisionCategories = (CollisionCategory.Cat1);
                 _redCircles[i].CollidesWith = (CollisionCategory.Cat5);
                 _redCircles[i].Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
                 startPosition.Y += ySpacing;
@@ -85,7 +85,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo8
             {
                 _blueCircles[i] = new Circles(startPosition, endPosition, balls, 5, new Color(0, 0, 200, 175),
                                               Color.Black);
-                _blueCircles[i].CollisionCategory = (CollisionCategory.Cat3);
+                _blueCircles[i].CollisionCategories = (CollisionCategory.Cat3);
                 _blueCircles[i].CollidesWith = (CollisionCategory.Cat5);
                 _blueCircles[i].Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
                 startPosition.Y += ySpacing;
@@ -99,7 +99,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo8
             {
                 _greenCircles[i] = new Circles(startPosition, endPosition, balls, 5, new Color(0, 200, 0, 175),
                                                Color.Black);
-                _greenCircles[i].CollisionCategory = (CollisionCategory.Cat2);
+                _greenCircles[i].CollisionCategories = (CollisionCategory.Cat2);
                 _greenCircles[i].CollidesWith = (CollisionCategory.Cat5);
                 _greenCircles[i].Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
                 startPosition.Y += ySpacing;
@@ -113,7 +113,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo8
             {
                 _blackCircles[i] = new Circles(startPosition, endPosition, balls, 5, new Color(0, 0, 0, 175),
                                                Color.Black);
-                _blackCircles[i].CollisionCategory = (CollisionCategory.Cat4);
+                _blackCircles[i].CollisionCategories = (CollisionCategory.Cat4);
                 _blackCircles[i].CollidesWith = (CollisionCategory.Cat5);
                 _blackCircles[i].Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
                 startPosition.Y += ySpacing;
