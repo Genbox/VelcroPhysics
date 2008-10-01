@@ -24,7 +24,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
     /// want to quit" message box, and the main game itself are all implemented
     /// as screens.
     /// </summary>
-    public abstract class GameScreen
+    public abstract class GameScreen : IDisposable
     {
         private bool _debugViewEnabled;
         private bool _isExiting;
@@ -44,6 +44,10 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             _physicsSimulatorView = new PhysicsSimulatorView(_physicsSimulator);
         }
 
+        public virtual void Dispose()
+        {
+        }
+
         public PhysicsSimulator PhysicsSimulator
         {
             get { return _physicsSimulator; }
@@ -54,6 +58,11 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         {
             get { return _physicsSimulatorView; }
             set { _physicsSimulatorView = value; }
+        }
+
+        public bool DebugViewEnabled
+        {
+            get { return _debugViewEnabled; }
         }
 
         /// <summary>
@@ -218,11 +227,12 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                     _screenState = ScreenState.Active;
                 }
             }
+        }
 
-            if (!coveredByOtherScreen && !otherScreenHasFocus)
-            {
-                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds * .001f);
-            }
+        public virtual void UpdatePhysics( GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen )
+        {
+            if ( !coveredByOtherScreen && !otherScreenHasFocus )
+                PhysicsSimulator.Update( gameTime.ElapsedGameTime.Milliseconds * .001f );
         }
 
         /// <summary>

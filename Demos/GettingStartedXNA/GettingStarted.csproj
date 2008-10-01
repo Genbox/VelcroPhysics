@@ -88,6 +88,8 @@
     <Compile Include="Demos\Demo3\Demo3Screen.cs" />
     <Compile Include="Demos\Demo4\Demo4Screen.cs" />
     <Compile Include="Demos\Demo4\Floor.cs" />
+    <Compile Include="Demos\Demo4\ObjectLinker.cs" />
+    <Compile Include="Demos\Demo4\PhysicsProcessor.cs" />
     <Compile Include="Demos\Demo4\Pyramid.cs" />
     <Compile Include="Demos\Demo5\Demo5Screen.cs" />
     <Compile Include="Demos\Demo6\Demo6Screen.cs" />
