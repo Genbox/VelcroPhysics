@@ -23,7 +23,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
         private Geom[] _circleGeom;
 
         private CollisionCategory _collidesWith = CollisionCategory.All;
-        private CollisionCategory _collisionCategory = CollisionCategory.All;
+        private CollisionCategory _collisionCategories = CollisionCategory.All;
 
         public Circles(Vector2 startPosition, Vector2 endPosition, int count, int radius, Color color, Color borderColor)
         {
@@ -39,10 +39,10 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             _endPosition = endPosition;
         }
 
-        public CollisionCategory CollisionCategory
+        public CollisionCategory CollisionCategories
         {
-            get { return _collisionCategory; }
-            set { _collisionCategory = value; }
+            get { return _collisionCategories; }
+            set { _collisionCategories = value; }
         }
 
         public CollisionCategory CollidesWith
@@ -70,7 +70,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             _circleGeom[0] = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _circleBody[0], _radius, 10);
             _circleGeom[0].RestitutionCoefficient = .7f;
             _circleGeom[0].FrictionCoefficient = .2f;
-            _circleGeom[0].CollisionCategories = _collisionCategory;
+            _circleGeom[0].CollisionCategories = _collisionCategories;
             _circleGeom[0].CollidesWith = _collidesWith;
             for (int j = 1; j < _count; j++)
             {

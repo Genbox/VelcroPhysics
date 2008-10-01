@@ -9,16 +9,12 @@
 
 #endregion
 
-#region Using Statements
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-
-#endregion
 
 namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 {
@@ -40,12 +36,13 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// <summary>
         /// Constructs a new screen manager component.
         /// </summary>
+        /// <exception cref="InvalidOperationException">No graphics device service.</exception>
         public ScreenManager(Game game)
             : base(game)
         {
             ContentManager = new ContentManager(game.Services);
-            _graphicsDeviceService = (IGraphicsDeviceService) game.Services.GetService(
-                                                                  typeof (IGraphicsDeviceService));
+            _graphicsDeviceService = (IGraphicsDeviceService)game.Services.GetService(
+                                                                  typeof(IGraphicsDeviceService));
 
             if (_graphicsDeviceService == null)
                 throw new InvalidOperationException("No graphics device service.");
@@ -91,8 +88,8 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         {
             get
             {
-                return new Vector2(_graphicsDeviceService.GraphicsDevice.Viewport.Width/2f,
-                                   _graphicsDeviceService.GraphicsDevice.Viewport.Height/2f);
+                return new Vector2(_graphicsDeviceService.GraphicsDevice.Viewport.Width / 2f,
+                                   _graphicsDeviceService.GraphicsDevice.Viewport.Height / 2f);
             }
         }
 
@@ -121,10 +118,11 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         {
             _spriteFonts = new SpriteFonts(ContentManager);
 
-            foreach (GameScreen screen in _screens)
+            for (int i = 0; i < _screens.Count; i++)
             {
-                screen.Initialize();
+                _screens[i].Initialize();
             }
+
             base.Initialize();
         }
 
@@ -187,9 +185,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                 // Update the screen.
                 screen.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-                bool _otherScreenHasFocus  = otherScreenHasFocus;
-                bool _coveredByOtherScreen = coveredByOtherScreen;
-
                 if (screen.ScreenState == ScreenState.TransitionOn ||
                     screen.ScreenState == ScreenState.Active)
                 {
@@ -207,12 +202,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                     if (!screen.IsPopup)
                         coveredByOtherScreen = true;
                 }
-
-                // POINT OF INTEREST
-                // This is moved here from the screen's update to be able to handle
-                // the user input before starting the physics processing on the other thread,
-                // as the HandleInput functions interact with the simulator
-                screen.UpdatePhysics( gameTime, _coveredByOtherScreen, _otherScreenHasFocus );
             }
 
             // Print debug trace?
@@ -282,8 +271,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 
             _screens.Remove(screen);
             _screensToUpdate.Remove(screen);
-
-            screen.Dispose();
         }
 
         /// <summary>
@@ -298,7 +285,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 
             SpriteBatch.Draw(_blankTexture,
                              new Rectangle(0, 0, viewport.Width, viewport.Height),
-                             new Color(0, 0, 0, (byte) alpha));
+                             new Color(0, 0, 0, (byte)alpha));
 
             SpriteBatch.End();
         }

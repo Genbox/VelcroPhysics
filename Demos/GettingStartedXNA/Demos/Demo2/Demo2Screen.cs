@@ -39,11 +39,11 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
 
             _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 128, Color.Gold,
                                                                      Color.Black);
-            _rectangleOrigin = new Vector2(_rectangleTexture.Width/2f, _rectangleTexture.Height/2f);
+            _rectangleOrigin = new Vector2(_rectangleTexture.Width / 2f, _rectangleTexture.Height / 2f);
 
             _circleTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 64, Color.White,
                                                                Color.Black);
-            _circleOrigin = new Vector2(_circleTexture.Width/2f, _circleTexture.Height/2f);
+            _circleOrigin = new Vector2(_circleTexture.Width / 2f, _circleTexture.Height / 2f);
 
             _rectangleBody = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 128, 128, 1);
             _rectangleBody.Position = new Vector2(256, 384);
