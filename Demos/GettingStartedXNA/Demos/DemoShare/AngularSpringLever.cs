@@ -134,7 +134,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             _revoluteJoint = JointFactory.Instance.CreateFixedRevoluteJoint(physicsSimulator, _angleSpringleverBody,
                                                                             _position);
             physicsSimulator.Add(_revoluteJoint);
-            ControllerFactory.Instance.CreateFixedAngleSpring(physicsSimulator, _angleSpringleverBody,
+            SpringFactory.Instance.CreateFixedAngleSpring(physicsSimulator, _angleSpringleverBody,
                                                               _springConstant, _dampningConstant);
         }
 

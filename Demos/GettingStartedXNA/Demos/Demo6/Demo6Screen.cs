@@ -140,7 +140,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
             _springRectangleRope1.SpringConstant = 400;
             _springRectangleRope1.DampningConstant = 3f;
             _springRectangleRope1.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
-            ControllerFactory.Instance.CreateLinearSpring(PhysicsSimulator, _angularSpringLever3.Body,
+            SpringFactory.Instance.CreateLinearSpring(PhysicsSimulator, _angularSpringLever3.Body,
                                                           new Vector2(
                                                               _angularSpringLever3.RectangleWidth/2f, 0),
                                                           _springRectangleRope1.FirstBody, Vector2.Zero,
@@ -158,7 +158,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
             _hangingBody = BodyFactory.Instance.CreateCircleBody(PhysicsSimulator, 40, 1);
             _hangingBody.Position = new Vector2(position.X - 200, 200);
             _hangingGeom = GeomFactory.Instance.CreateCircleGeom(PhysicsSimulator, _hangingBody, 40, 20);
-            ControllerFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator, _hangingBody,
+            SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator, _hangingBody,
                                                                new Vector2(0, -35),
                                                                new Vector2(position.X - 200, 100),
                                                                2, .1f);
@@ -193,7 +193,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
             _springRectangleRope2.DampningConstant = 4f;
             _springRectangleRope2.CollisionGroup = 1; //same as _agent collision group
             _springRectangleRope2.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
-            ControllerFactory.Instance.CreateLinearSpring(PhysicsSimulator, _agent.Body, Vector2.Zero,
+            SpringFactory.Instance.CreateLinearSpring(PhysicsSimulator, _agent.Body, Vector2.Zero,
                                                           _springRectangleRope2.FirstBody, Vector2.Zero,
                                                           200, 4f);
         }
@@ -307,7 +307,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
                 _pickedGeom = PhysicsSimulator.Collide(point);
                 if (_pickedGeom != null)
                 {
-                    _mousePickSpring = ControllerFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
+                    _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
                                                                                           _pickedGeom.Body,
                                                                                           _pickedGeom.Body.
                                                                                               GetLocalPosition(point),

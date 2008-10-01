@@ -430,6 +430,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public Feature GetNearestFeature(Vector2 point, int index)
         {
             Feature feature = new Feature();
+            //TODO: Name variables correctly
             Vector2 v = localVertices.GetEdge(index);
             Vector2 w = Vector2.Subtract(point, localVertices[index]);
 

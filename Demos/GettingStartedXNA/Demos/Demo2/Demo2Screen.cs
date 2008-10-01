@@ -25,6 +25,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
         private Geom _rectangleGeom;
         private Vector2 _rectangleOrigin;
         private Texture2D _rectangleTexture;
+        private Vector2 distance;
 
         public override void Initialize()
         {
@@ -39,11 +40,11 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
 
             _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 128, Color.Gold,
                                                                      Color.Black);
-            _rectangleOrigin = new Vector2(_rectangleTexture.Width/2f, _rectangleTexture.Height/2f);
+            _rectangleOrigin = new Vector2(_rectangleTexture.Width / 2f, _rectangleTexture.Height / 2f);
 
             _circleTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 64, Color.White,
                                                                Color.Black);
-            _circleOrigin = new Vector2(_circleTexture.Width/2f, _circleTexture.Height/2f);
+            _circleOrigin = new Vector2(_circleTexture.Width / 2f, _circleTexture.Height / 2f);
 
             _rectangleBody = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 128, 128, 1);
             _rectangleBody.Position = new Vector2(256, 384);
@@ -56,6 +57,12 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
             base.LoadContent();
         }
 
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        {
+            distance = Vector2.Subtract(_circleBody.Position, _rectangleBody.Position);
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+        }
+
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
@@ -63,6 +70,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
                                            _circleOrigin, 1, SpriteEffects.None, 0);
             ScreenManager.SpriteBatch.Draw(_rectangleTexture, _rectangleGeom.Position, null, Color.White,
                                            _rectangleGeom.Rotation, _rectangleOrigin, 1, SpriteEffects.None, 0);
+
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Distance: " + distance.Length(), new Vector2(100, 100), Color.Black);
 
             if (_mousePickSpring != null)
             {
@@ -141,7 +150,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
                 _pickedGeom = PhysicsSimulator.Collide(point);
                 if (_pickedGeom != null)
                 {
-                    _mousePickSpring = ControllerFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
+                    _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
                                                                                           _pickedGeom.Body,
                                                                                           _pickedGeom.Body.
                                                                                               GetLocalPosition(point),

@@ -170,7 +170,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo7
                 _pickedGeom = PhysicsSimulator.Collide(point);
                 if (_pickedGeom != null)
                 {
-                    _mousePickSpring = ControllerFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
+                    _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
                                                                                           _pickedGeom.Body,
                                                                                           _pickedGeom.Body.
                                                                                               GetLocalPosition(point),

@@ -7,18 +7,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public abstract class Joint : IDisposable
     {
-        private float _biasFactor = .2f;
-        private float _breakpoint = float.MaxValue;
-        private bool _enabled = true;
+        //TODO: Use public fields instead to decrease method calls
+        public float BiasFactor = .2f;
+        public float Breakpoint = float.MaxValue;
+        public bool Enabled = true;
         private float _jointError;
-        private float _softness;
+        public float Softness;
         public bool IsDisposed;
 
-        public bool Enabled
-        {
-            get { return _enabled; }
-            set { _enabled = value; }
-        }
 
         public Object Tag { get; set; }
 
@@ -26,24 +22,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         {
             get { return _jointError; }
             protected set { _jointError = value; }
-        }
-
-        public float Breakpoint
-        {
-            get { return _breakpoint; }
-            set { _breakpoint = value; }
-        }
-
-        public float Softness
-        {
-            get { return _softness; }
-            set { _softness = value; }
-        }
-
-        public float BiasFactor
-        {
-            get { return _biasFactor; }
-            set { _biasFactor = value; }
         }
 
         #region IDisposable Members
