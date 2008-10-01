@@ -1,0 +1,570 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Windows.Controls.Extended</name>
+  </assembly>
+  <members>
+    <member name="T:System.Windows.Controls.Calendar">
+      <summary>Represents a control that enables a user to select a date by using a visual calendar display. </summary>
+    </member>
+    <member name="M:System.Windows.Controls.Calendar.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Windows.Controls.Calendar" /> class. </summary>
+    </member>
+    <member name="P:System.Windows.Controls.Calendar.BlackoutDates">
+      <summary>Gets or sets a collection of dates that are marked as not selectable.</summary>
+      <returns>A collection of dates that cannot be selected. The default value is an empty collection.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.Calendar.DisplayDate">
+      <summary>Gets or sets the date to display.</summary>
+      <returns>The date to display.</returns>
+      <exception cref="T:System.ArgumentOutOfRangeException">The given date is not in the range specified by <see cref="P:System.Windows.Controls.Calendar.DisplayDateStart" /> and <see cref="P:System.Windows.Controls.Calendar.DisplayDateEnd" />.</exception>
+    </member>
+    <member name="E:System.Windows.Controls.Calendar.DisplayDateChanged">
+      <summary>Occurs when the <see cref="P:System.Windows.Controls.Calendar.DisplayDate" /> property is changed.</summary>
+    </member>
+    <member name="P:System.Windows.Controls.Calendar.DisplayDateEnd">
+      <summary>Gets or sets the last date to be displayed.</summary>
+      <returns>The last date to display.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.Calendar.DisplayDateEndProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.Calendar.DisplayDateEnd" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.Calendar.DisplayDateEnd" /> dependency property.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.Calendar.DisplayDateProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.Calendar.DisplayDate" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.Calendar.DisplayDate" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.Calendar.DisplayDateStart">
+      <summary>Gets or sets the first date to be displayed.</summary>
+      <returns>The first date to display.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.Calendar.DisplayDateStartProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.Calendar.DisplayDateStart" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.Calendar.DisplayDateStart" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.Calendar.DisplayMode">
+      <summary>Gets or sets a value indicating whether the calendar is displayed in months, years, or decades.</summary>
+      <returns>A value indicating what length of time the <see cref="T:System.Windows.Controls.Calendar" /> should display.</returns>
+    </member>
+    <member name="E:System.Windows.Controls.Calendar.DisplayModeChanged">
+      <summary>Occurs when the <see cref="P:System.Windows.Controls.Calendar.DisplayMode" /> property is changed. </summary>
+    </member>
+    <member name="F:System.Windows.Controls.Calendar.DisplayModeProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.Calendar.DisplayMode" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.Calendar.DisplayMode" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.Calendar.FirstDayOfWeek">
+      <summary>Gets or sets the day that is considered the beginning of the week.</summary>
+      <returns>A <see cref="T:System.DayOfWeek" /> representing the beginning of the week. The default is <see cref="F:System.DayOfWeek.Sunday" />.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.Calendar.FirstDayOfWeekProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.Calendar.FirstDayOfWeek" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.Calendar.FirstDayOfWeek" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.Calendar.IsEnabled">
+      <summary>Gets or sets a value indicating whether this calendar is enabled in the user interface (UI).</summary>
+      <returns>true if the calendar is enabled; otherwise, false. The default value is true.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.Calendar.IsEnabledProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.Calendar.IsEnabled" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.Calendar.IsEnabled" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.Calendar.IsTodayHighlighted">
+      <summary>Gets or sets a value indicating whether the current date is highlighted.</summary>
+      <returns>true if the current date is highlighted; otherwise, false. The default is true. </returns>
+    </member>
+    <member name="F:System.Windows.Controls.Calendar.IsTodayHighlightedProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.Calendar.IsTodayHighlighted" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.Calendar.IsTodayHighlighted" /> dependency property.</returns>
+    </member>
+    <member name="M:System.Windows.Controls.Calendar.OnApplyTemplate">
+      <summary>Invoked whenever application code or an internal process, such as a rebuilding layout pass, calls the <see cref="M:System.Windows.Controls.Control.ApplyTemplate" /> method.</summary>
+    </member>
+    <member name="P:System.Windows.Controls.Calendar.SelectedDate">
+      <summary>Gets or sets the currently selected date.</summary>
+      <returns>The date currently selected. The default is null.</returns>
+      <exception cref="T:System.ArgumentOutOfRangeException">The given date is outside the range specified by <see cref="P:System.Windows.Controls.Calendar.DisplayDateStart" /> and <see cref="P:System.Windows.Controls.Calendar.DisplayDateEnd" />-or-The given date is in the <see cref="P:System.Windows.Controls.Calendar.BlackoutDates" /> collection.</exception>
+      <exception cref="T:System.InvalidOperationException">If set to anything other than null when <see cref="P:System.Windows.Controls.Calendar.SelectionMode" /> is set to <see cref="F:System.Windows.Controls.CalendarSelectionMode.None" />.</exception>
+    </member>
+    <member name="F:System.Windows.Controls.Calendar.SelectedDateProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.Calendar.SelectedDate" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.Calendar.SelectedDate" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.Calendar.SelectedDates">
+      <summary>Gets a collection of selected dates.</summary>
+      <returns>A <see cref="T:System.Windows.Controls.SelectedDatesCollection" /> object that contains the currently selected dates. The default is an empty collection.</returns>
+    </member>
+    <member name="E:System.Windows.Controls.Calendar.SelectedDatesChanged">
+      <summary>Occurs when the collection returned by the <see cref="P:System.Windows.Controls.Calendar.SelectedDates" /> property is changed. </summary>
+    </member>
+    <member name="P:System.Windows.Controls.Calendar.SelectionMode">
+      <summary>Gets or sets a value that indicates what kind of selections are allowed.</summary>
+      <returns>A value that indicates the current selection mode. The default is <see cref="F:System.Windows.Controls.CalendarSelectionMode.SingleDate" />.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.Calendar.SelectionModeProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.Calendar.SelectionMode" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.Calendar.SelectionMode" /> dependency property.</returns>
+    </member>
+    <member name="M:System.Windows.Controls.Calendar.ToString">
+      <summary>Provides a text representation of the selected date.</summary>
+      <returns>A text representation of the selected date, or an empty string if <see cref="P:System.Windows.Controls.Calendar.SelectedDate" /> is null.</returns>
+    </member>
+    <member name="T:System.Windows.Controls.CalendarButton"></member>
+    <member name="M:System.Windows.Controls.CalendarButton.OnApplyTemplate"></member>
+    <member name="T:System.Windows.Controls.CalendarDateChangedEventArgs">
+      <summary>Provides data for the <see cref="E:System.Windows.Controls.Calendar.DisplayDateChanged" /> event. </summary>
+    </member>
+    <member name="P:System.Windows.Controls.CalendarDateChangedEventArgs.AddedDate">
+      <summary>Gets the date to be newly displayed.</summary>
+      <returns>The new date to display.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.CalendarDateChangedEventArgs.RemovedDate">
+      <summary>Gets the date that was previously displayed.</summary>
+      <returns>The date previously displayed. </returns>
+    </member>
+    <member name="T:System.Windows.Controls.CalendarDateRange"></member>
+    <member name="M:System.Windows.Controls.CalendarDateRange.#ctor"></member>
+    <member name="M:System.Windows.Controls.CalendarDateRange.#ctor(System.DateTime)"></member>
+    <member name="M:System.Windows.Controls.CalendarDateRange.#ctor(System.DateTime,System.DateTime)"></member>
+    <member name="P:System.Windows.Controls.CalendarDateRange.End"></member>
+    <member name="P:System.Windows.Controls.CalendarDateRange.Start"></member>
+    <member name="T:System.Windows.Controls.CalendarDateRangeCollection"></member>
+    <member name="M:System.Windows.Controls.CalendarDateRangeCollection.#ctor(System.Windows.Controls.Calendar)"></member>
+    <member name="M:System.Windows.Controls.CalendarDateRangeCollection.AddDatesInPast"></member>
+    <member name="M:System.Windows.Controls.CalendarDateRangeCollection.Contains(System.DateTime)"></member>
+    <member name="M:System.Windows.Controls.CalendarDateRangeCollection.Contains(System.DateTime,System.DateTime)"></member>
+    <member name="M:System.Windows.Controls.CalendarDateRangeCollection.ContainsAny(System.Windows.Controls.CalendarDateRange)"></member>
+    <member name="T:System.Windows.Controls.CalendarMode">
+      <summary>Specifies values for the different modes of operation of a <see cref="T:System.Windows.Controls.Calendar" />. </summary>
+    </member>
+    <member name="F:System.Windows.Controls.CalendarMode.Month">
+      <summary>The <see cref="T:System.Windows.Controls.Calendar" /> displays a month at a time.</summary>
+    </member>
+    <member name="F:System.Windows.Controls.CalendarMode.Year">
+      <summary>The <see cref="T:System.Windows.Controls.Calendar" /> displays a year at a time.</summary>
+    </member>
+    <member name="F:System.Windows.Controls.CalendarMode.Decade">
+      <summary>The <see cref="T:System.Windows.Controls.Calendar" /> displays a decade at a time.</summary>
+    </member>
+    <member name="T:System.Windows.Controls.CalendarModeChangedEventArgs">
+      <summary>Provides data for the <see cref="E:System.Windows.Controls.Calendar.DisplayModeChanged" /> event. </summary>
+    </member>
+    <member name="M:System.Windows.Controls.CalendarModeChangedEventArgs.#ctor(System.Windows.Controls.CalendarMode,System.Windows.Controls.CalendarMode)">
+      <summary>Initializes a new instance of the <see cref="T:System.Windows.Controls.CalendarModeChangedEventArgs" /> class. </summary>
+      <param name="oldMode">The previous mode.</param>
+      <param name="newMode">The new mode.</param>
+    </member>
+    <member name="P:System.Windows.Controls.CalendarModeChangedEventArgs.NewMode">
+      <summary>Gets the new mode of the <see cref="T:System.Windows.Controls.Calendar" />.</summary>
+      <returns>A <see cref="T:System.Windows.Controls.CalendarMode" /> representing the new mode. </returns>
+    </member>
+    <member name="P:System.Windows.Controls.CalendarModeChangedEventArgs.OldMode">
+      <summary>Gets the previous mode of the <see cref="T:System.Windows.Controls.Calendar" />.</summary>
+      <returns>A <see cref="T:System.Windows.Controls.CalendarMode" /> representing the previous mode. </returns>
+    </member>
+    <member name="T:System.Windows.Controls.CalendarSelectionMode">
+      <summary>Specifies values that describe the available selection modes for a <see cref="T:System.Windows.Controls.Calendar" />.</summary>
+    </member>
+    <member name="F:System.Windows.Controls.CalendarSelectionMode.SingleDate">
+      <summary>Only a single date can be selected. Use the <see cref="P:System.Windows.Controls.Calendar.SelectedDate" /> property to retrieve the selected date.</summary>
+    </member>
+    <member name="F:System.Windows.Controls.CalendarSelectionMode.SingleRange">
+      <summary>A single range of dates can be selected. Use the <see cref="P:System.Windows.Controls.Calendar.SelectedDates" /> property to retrieve the selected dates.</summary>
+    </member>
+    <member name="F:System.Windows.Controls.CalendarSelectionMode.MultipleRange">
+      <summary>Multiple non-contiguous ranges of dates can be selected. Use the <see cref="P:System.Windows.Controls.Calendar.SelectedDates" /> property to retrieve the selected dates.</summary>
+    </member>
+    <member name="F:System.Windows.Controls.CalendarSelectionMode.None">
+      <summary>No selections are allowed.</summary>
+    </member>
+    <member name="T:System.Windows.Controls.DatePicker">
+      <summary>Represents a control that allows the user to select a date.</summary>
+    </member>
+    <member name="M:System.Windows.Controls.DatePicker.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Windows.Controls.DatePicker" /> class. </summary>
+    </member>
+    <member name="P:System.Windows.Controls.DatePicker.BlackoutDates">
+      <summary>Gets or sets a collection of dates that are marked as not selectable.</summary>
+      <returns>A collection of dates that cannot be selected. The default value is an empty collection.</returns>
+    </member>
+    <member name="E:System.Windows.Controls.DatePicker.CalendarClosed">
+      <summary>Occurs when the drop-down <see cref="T:System.Windows.Controls.Calendar" /> is closed.</summary>
+    </member>
+    <member name="E:System.Windows.Controls.DatePicker.CalendarOpened">
+      <summary>Occurs when the drop-down <see cref="T:System.Windows.Controls.Calendar" /> is opened.</summary>
+    </member>
+    <member name="P:System.Windows.Controls.DatePicker.CalendarStyle">
+      <summary>Gets or sets the style that is used when rendering the calendar.</summary>
+      <returns>The style that is used when rendering the calendar.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.DatePicker.CalendarStyleProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.DatePicker.CalendarStyle" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.DatePicker.CalendarStyle" /> dependency property.</returns>
+    </member>
+    <member name="E:System.Windows.Controls.DatePicker.DateValidationError"></member>
+    <member name="P:System.Windows.Controls.DatePicker.DisplayDate">
+      <summary>Gets or sets the date to display.</summary>
+      <returns>The date to display. The default is <see cref="P:System.DateTime.Today" />.</returns>
+      <exception cref="T:System.ArgumentOutOfRangeException">The specified date is not in the range defined by <see cref="P:System.Windows.Controls.DatePicker.DisplayDateStart" />. and <see cref="P:System.Windows.Controls.DatePicker.DisplayDateEnd" />.</exception>
+    </member>
+    <member name="P:System.Windows.Controls.DatePicker.DisplayDateEnd">
+      <summary>Gets or sets the last date to be displayed.</summary>
+      <returns>The last date to display.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.DatePicker.DisplayDateEndProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.DatePicker.DisplayDateEnd" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.DatePicker.DisplayDateEnd" /> dependency property.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.DatePicker.DisplayDateProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.DatePicker.DisplayDate" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.DatePicker.DisplayDate" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.DatePicker.DisplayDateStart">
+      <summary>Gets or sets the first date to be displayed.</summary>
+      <returns>The first date to display.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.DatePicker.DisplayDateStartProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.DatePicker.DisplayDateStart" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.DatePicker.DisplayDateStart" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.DatePicker.FirstDayOfWeek">
+      <summary>Gets or sets the day that is considered the beginning of the week.</summary>
+      <returns>A <see cref="T:System.DayOfWeek" /> representing the beginning of the week. The default is <see cref="F:System.DayOfWeek.Sunday" />.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.DatePicker.FirstDayOfWeekProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.DatePicker.FirstDayOfWeek" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.DatePicker.FirstDayOfWeek" /> dependency property.</returns>
+    </member>
+    <member name="M:System.Windows.Controls.DatePicker.GetValue(System.Windows.DependencyProperty)">
+      <summary>Gets the value of any one of the <see cref="T:System.Windows.Controls.DatePicker" /> object's dependency properties.</summary>
+      <returns>The value of the specified dependency property.</returns>
+      <param name="dp">The dependency property to get the value of.</param>
+    </member>
+    <member name="P:System.Windows.Controls.DatePicker.IsDropDownOpen">
+      <summary>Gets or sets a value that indicates whether the drop-down <see cref="T:System.Windows.Controls.Calendar" /> is open or closed.</summary>
+      <returns>true if the <see cref="T:System.Windows.Controls.Calendar" /> is open; otherwise, false. The default is false.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.DatePicker.IsDropDownOpenProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.DatePicker.IsDropDownOpen" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.DatePicker.IsDropDownOpen" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.DatePicker.IsEnabled">
+      <summary>Gets or sets a value that indicates whether this element is enabled in the user interface (UI).</summary>
+      <returns>true if the element is enabled; otherwise, false. The default value is true.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.DatePicker.IsEnabledProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.DatePicker.IsEnabled" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.DatePicker.IsEnabled" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.DatePicker.IsTodayHighlighted">
+      <summary>Gets or sets a value that indicates whether the current date will be highlighted.</summary>
+      <returns>true if the current date is highlighted; otherwise, false. The default is true. </returns>
+    </member>
+    <member name="F:System.Windows.Controls.DatePicker.IsTodayHighlightedProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.DatePicker.IsTodayHighlighted" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.DatePicker.IsTodayHighlighted" /> dependency property.</returns>
+    </member>
+    <member name="M:System.Windows.Controls.DatePicker.OnApplyTemplate">
+      <summary>Builds the visual tree for the <see cref="T:System.Windows.Controls.DatePicker" /> control when a new template is applied.</summary>
+    </member>
+    <member name="M:System.Windows.Controls.DatePicker.OnDateValidationError(System.Windows.Controls.DatePickerDateValidationErrorEventArgs)">
+      <summary>Raises the <see cref="E:System.Windows.Controls.DatePicker.DateValidationError" /> event.</summary>
+      <param name="e">A <see cref="T:System.Windows.Controls.DatePickerDateValidationErrorEventArgs" /> that contains the event data.</param>
+    </member>
+    <member name="P:System.Windows.Controls.DatePicker.SelectedDate">
+      <summary>Gets or sets the currently selected date.</summary>
+      <returns>The date currently selected. The default is null.</returns>
+      <exception cref="T:System.ArgumentOutOfRangeException">The specified date is not in the range defined by <see cref="P:System.Windows.Controls.DatePicker.DisplayDateStart" /> and <see cref="P:System.Windows.Controls.DatePicker.DisplayDateEnd" />, or the specified date is in the <see cref="P:System.Windows.Controls.DatePicker.BlackoutDates" /> collection. </exception>
+    </member>
+    <member name="E:System.Windows.Controls.DatePicker.SelectedDateChanged">
+      <summary>Occurs when the <see cref="P:System.Windows.Controls.DatePicker.SelectedDate" /> property is changed.</summary>
+    </member>
+    <member name="P:System.Windows.Controls.DatePicker.SelectedDateFormat">
+      <summary>Gets or sets the format that is used to display the selected date.</summary>
+      <returns>The format that is used to display the selected date. The default is <see cref="F:System.Windows.Controls.DatePickerFormat.Short" />.</returns>
+      <exception cref="T:System.ArgumentOutOfRangeException">An specified format is not valid.</exception>
+    </member>
+    <member name="F:System.Windows.Controls.DatePicker.SelectedDateFormatProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.DatePicker.SelectedDateFormat" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.DatePicker.SelectedDateFormat" /> dependency property.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.DatePicker.SelectedDateProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.DatePicker.SelectedDate" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.DatePicker.SelectedDate" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.DatePicker.Text">
+      <summary>Gets or sets the text that is displayed by the <see cref="T:System.Windows.Controls.DatePicker" />.</summary>
+      <returns>The text displayed by the <see cref="T:System.Windows.Controls.DatePicker" />.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.DatePicker.TextProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.DatePicker.Text" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.DatePicker.Text" /> dependency property.</returns>
+    </member>
+    <member name="M:System.Windows.Controls.DatePicker.ToString"></member>
+    <member name="T:System.Windows.Controls.DatePickerDateValidationErrorEventArgs"></member>
+    <member name="M:System.Windows.Controls.DatePickerDateValidationErrorEventArgs.#ctor(System.Exception,System.String)"></member>
+    <member name="P:System.Windows.Controls.DatePickerDateValidationErrorEventArgs.Exception"></member>
+    <member name="P:System.Windows.Controls.DatePickerDateValidationErrorEventArgs.Text"></member>
+    <member name="P:System.Windows.Controls.DatePickerDateValidationErrorEventArgs.ThrowException"></member>
+    <member name="T:System.Windows.Controls.DatePickerFormat">
+      <summary>Specifies date formats for a <see cref="T:System.Windows.Controls.DatePicker" />.</summary>
+    </member>
+    <member name="F:System.Windows.Controls.DatePickerFormat.Long">
+      <summary>Specifies that the date should be displayed using unabbreviated days of the week and month names.</summary>
+    </member>
+    <member name="F:System.Windows.Controls.DatePickerFormat.Short">
+      <summary>Specifies that the date should be displayed using abbreviated days of the week and month names.</summary>
+    </member>
+    <member name="T:System.Windows.Controls.DatePickerTextBox">
+      <summary>Represents the text input of a <see cref="T:System.Windows.Controls.DatePicker" />. </summary>
+    </member>
+    <member name="M:System.Windows.Controls.DatePickerTextBox.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Windows.Controls.DatePickerTextBox" /> class. </summary>
+    </member>
+    <member name="P:System.Windows.Controls.DatePickerTextBox.IsEnabled"></member>
+    <member name="F:System.Windows.Controls.DatePickerTextBox.IsEnabledProperty"></member>
+    <member name="M:System.Windows.Controls.DatePickerTextBox.OnApplyTemplate">
+      <summary>Builds the visual tree for the <see cref="T:System.Windows.Controls.DatePickerTextBox" /> control when a new template is applied.</summary>
+    </member>
+    <member name="P:System.Windows.Controls.DatePickerTextBox.Watermark">
+      <summary>Gets or sets the watermark to be displayed whenever the <see cref="T:System.Windows.Controls.DatePickerTextBox" /> is empty and does not have focus. </summary>
+      <returns>The current watermark.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.DatePickerTextBox.WatermarkProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.DatePickerTextBox.Watermark" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.DatePickerTextBox.Watermark" /> dependency property.</returns>
+    </member>
+    <member name="T:System.Windows.Controls.DateTimeTypeConverter">
+      <summary>Provides a converter to convert <see cref="T:System.DateTime" /> objects to and from other representations.</summary>
+    </member>
+    <member name="M:System.Windows.Controls.DateTimeTypeConverter.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Windows.Controls.DateTimeTypeConverter" /> class. </summary>
+    </member>
+    <member name="M:System.Windows.Controls.DateTimeTypeConverter.CanConvertFrom(System.Type)">
+      <summary>Returns a value that indicates whether this converter can convert from the specified type.</summary>
+      <returns>true if the specified type can be converted to a <see cref="T:System.DateTime" /> object; otherwise, false.</returns>
+      <param name="sourceType">The type to be converted from.</param>
+    </member>
+    <member name="M:System.Windows.Controls.DateTimeTypeConverter.CanConvertTo(System.Type)">
+      <summary>Returns a value that indicates whether this converter can convert to the specified type.</summary>
+      <returns>true if a <see cref="T:System.DateTime" /> object can be converted to the specified type; otherwise, false.</returns>
+      <param name="destinationType">The type to be converted to.</param>
+    </member>
+    <member name="M:System.Windows.Controls.DateTimeTypeConverter.ConvertFrom(System.Object)">
+      <summary>Converts an object to a <see cref="T:System.DateTime" /> object.</summary>
+      <returns>A <see cref="T:System.DateTime" /> object converted from <paramref name="value" />.</returns>
+      <param name="value">The object to be converted.</param>
+    </member>
+    <member name="T:System.Windows.Controls.DayButton">
+      <summary>Represents a single date on a <see cref="T:System.Windows.Controls.Calendar" /> control.</summary>
+    </member>
+    <member name="E:System.Windows.Controls.DayButton.DayButtonMouseDown"></member>
+    <member name="E:System.Windows.Controls.DayButton.DayButtonMouseUp"></member>
+    <member name="M:System.Windows.Controls.DayButton.OnApplyTemplate"></member>
+    <member name="T:System.Windows.Controls.Dock">
+      <summary>Specifies values that control the behavior of a <see cref="T:System.Windows.Controls.TabControl" /> through the <see cref="P:System.Windows.Controls.TabControl.TabStripPlacement" /> property.</summary>
+    </member>
+    <member name="F:System.Windows.Controls.Dock.Left">
+      <summary>Specifies that the tab strip should be positioned on the left of the control.</summary>
+    </member>
+    <member name="F:System.Windows.Controls.Dock.Top">
+      <summary>Specifies that the tab strip should be positioned on top of the control.</summary>
+    </member>
+    <member name="F:System.Windows.Controls.Dock.Right">
+      <summary>Specifies that the tab strip should be positioned on the right of the control.</summary>
+    </member>
+    <member name="F:System.Windows.Controls.Dock.Bottom">
+      <summary>Specifies that the tab strip should be positioned at the bottom of the control.</summary>
+    </member>
+    <member name="T:System.Windows.Controls.GridSplitter">
+      <summary>Represents a control that redistributes space between the rows of columns of a <see cref="T:System.Windows.Controls.Grid" /> control.</summary>
+    </member>
+    <member name="M:System.Windows.Controls.GridSplitter.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Windows.Controls.GridSplitter" /> class. </summary>
+    </member>
+    <member name="P:System.Windows.Controls.GridSplitter.IsEnabled">
+      <summary>Gets or sets a value that indicates whether this element is enabled in the user interface (UI).</summary>
+      <returns>true if this element is enabled, false if not.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.GridSplitter.IsEnabledProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.GridSplitter.IsEnabled" /> dependency property.</summary>
+      <returns>An identifier for the <see cref="P:System.Windows.Controls.GridSplitter.IsEnabled" /> dependency property.</returns>
+    </member>
+    <member name="M:System.Windows.Controls.GridSplitter.OnApplyTemplate">
+      <summary>Builds the visual tree for the <see cref="T:System.Windows.Controls.GridSplitter" /> control when a new template is applied.</summary>
+    </member>
+    <member name="P:System.Windows.Controls.GridSplitter.PreviewStyle">
+      <summary>Gets or sets the <see cref="T:System.Windows.Style" /> that is used for previewing changes.</summary>
+      <returns>The style that is used to preview changes.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.GridSplitter.PreviewStyleProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.GridSplitter.PreviewStyle" /> dependency property.</summary>
+      <returns>An identifier for the <see cref="P:System.Windows.Controls.GridSplitter.PreviewStyle" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.GridSplitter.ShowsPreview">
+      <summary>Gets or sets a value that indicates whether the <see cref="T:System.Windows.Controls.GridSplitter" /> displays a preview.</summary>
+      <returns>true if a preview is displayed; otherwise, false.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.GridSplitter.ShowsPreviewProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.GridSplitter.ShowsPreview" /> dependency property.</summary>
+      <returns>An identifier for the <see cref="P:System.Windows.Controls.GridSplitter.ShowsPreview" /> dependency property.</returns>
+    </member>
+    <member name="T:System.Windows.Controls.SelectedDatesCollection"></member>
+    <member name="M:System.Windows.Controls.SelectedDatesCollection.#ctor(System.Windows.Controls.Calendar)"></member>
+    <member name="M:System.Windows.Controls.SelectedDatesCollection.AddRange(System.DateTime,System.DateTime)"></member>
+    <member name="T:System.Windows.Controls.TabControl">
+      <summary>Represents a control that contains multiple items that share the same space on the screen.</summary>
+    </member>
+    <member name="M:System.Windows.Controls.TabControl.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Windows.Controls.TabControl" /> class. </summary>
+    </member>
+    <member name="P:System.Windows.Controls.TabControl.IsEnabled"></member>
+    <member name="F:System.Windows.Controls.TabControl.IsEnabledProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.TabControl.IsEnabled" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.TabControl.IsEnabled" /> dependency property.</returns>
+    </member>
+    <member name="M:System.Windows.Controls.TabControl.OnApplyTemplate">
+      <summary>Builds the visual tree for the <see cref="T:System.Windows.Controls.TabControl" /> when a new template is applied.</summary>
+    </member>
+    <member name="M:System.Windows.Controls.TabControl.OnIsEnabledChanged(System.Boolean)">
+      <param name="isEnabled">value</param>
+    </member>
+    <member name="M:System.Windows.Controls.TabControl.OnItemsChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs)">
+      <param name="e">Data used by the event.</param>
+    </member>
+    <member name="M:System.Windows.Controls.TabControl.OnKeyDown(System.Windows.Input.KeyEventArgs)">
+      <param name="e">Data used by the event.</param>
+    </member>
+    <member name="M:System.Windows.Controls.TabControl.OnSelectionChanged(System.Windows.Controls.SelectionChangedEventArgs)">
+      <summary>Raises the <see cref="E:System.Windows.Controls.TabControl.SelectionChanged" /> event.</summary>
+      <param name="args">Provides data for the <see cref="E:System.Windows.Controls.TabControl.SelectionChanged" /> event.</param>
+    </member>
+    <member name="P:System.Windows.Controls.TabControl.SelectedContent">
+      <summary>Gets the content of the currently selected <see cref="T:System.Windows.Controls.TabItem" />.</summary>
+      <returns>The content of the currently selected <see cref="T:System.Windows.Controls.TabItem" />. The default is null.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.TabControl.SelectedContentProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.TabControl.SelectedContent" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.TabControl.SelectedContent" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.TabControl.SelectedIndex">
+      <summary>Gets or sets the index of the currently selected <see cref="T:System.Windows.Controls.TabItem" />.</summary>
+      <returns>The index of the currently selected <see cref="T:System.Windows.Controls.TabItem" />, or -1 if a <see cref="T:System.Windows.Controls.TabItem" /> is not selected.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.TabControl.SelectedIndexProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.TabControl.SelectedIndex" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.TabControl.SelectedIndex" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.TabControl.SelectedItem">
+      <summary>Gets or sets the currently selected <see cref="T:System.Windows.Controls.TabItem" />.</summary>
+      <returns>The currently selected <see cref="T:System.Windows.Controls.TabItem" />, or null if a <see cref="T:System.Windows.Controls.TabItem" /> is not selected.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.TabControl.SelectedItemProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.TabControl.SelectedItem" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.TabControl.SelectedItem" /> dependency property.</returns>
+    </member>
+    <member name="E:System.Windows.Controls.TabControl.SelectionChanged">
+      <summary>Occurs when the selected <see cref="T:System.Windows.Controls.TabItem" /> changes.</summary>
+    </member>
+    <member name="P:System.Windows.Controls.TabControl.TabStripPlacement">
+      <summary>Gets or sets how <see cref="T:System.Windows.Controls.TabItem" /> headers align relative to the <see cref="T:System.Windows.Controls.TabItem" /> content.</summary>
+      <returns>The alignment of <see cref="T:System.Windows.Controls.TabItem" /> headers relative to the <see cref="T:System.Windows.Controls.TabItem" /> content. The default is <see cref="F:System.Windows.Controls.Dock.Top" />.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.TabControl.TabStripPlacementProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.TabControl.TabStripPlacement" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.TabControl.TabStripPlacement" /> dependency property.</returns>
+    </member>
+    <member name="T:System.Windows.Controls.TabItem">
+      <summary>Represents a selectable item in a <see cref="T:System.Windows.Controls.TabControl" />.</summary>
+    </member>
+    <member name="M:System.Windows.Controls.TabItem.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Windows.Controls.TabItem" /> class. </summary>
+    </member>
+    <member name="P:System.Windows.Controls.TabItem.HasHeader">
+      <summary>Gets a value that indicates whether the <see cref="T:System.Windows.Controls.TabItem" /> has a header.</summary>
+      <returns>true if <see cref="P:System.Windows.Controls.TabItem.Header" /> is not null; otherwise, false.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.TabItem.HasHeaderProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.TabItem.HasHeader" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.TabItem.HasHeader" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.TabItem.Header">
+      <summary>Gets or sets the header of the <see cref="T:System.Windows.Controls.TabItem" />.</summary>
+      <returns>The current header of the <see cref="T:System.Windows.Controls.TabItem" />.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.TabItem.HeaderProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.TabItem.Header" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.TabItem.Header" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.TabItem.HeaderTemplate">
+      <summary>Gets or sets the template that is used to display the content of the <see cref="T:System.Windows.Controls.TabItem" /> header.</summary>
+      <returns>The current template that is used to display <see cref="T:System.Windows.Controls.TabItem" /> header content.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.TabItem.HeaderTemplateProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.TabItem.HeaderTemplate" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.TabItem.HeaderTemplate" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.TabItem.IsFocused"></member>
+    <member name="F:System.Windows.Controls.TabItem.IsFocusedProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.TabItem.IsFocused" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.TabItem.IsFocused" /> dependency property.</returns>
+    </member>
+    <member name="P:System.Windows.Controls.TabItem.IsSelected">
+      <summary>Gets or sets a value that indicates whether the <see cref="T:System.Windows.Controls.TabItem" /> is currently selected.</summary>
+      <returns>true if the <see cref="T:System.Windows.Controls.TabItem" /> is selected; otherwise, false.</returns>
+    </member>
+    <member name="F:System.Windows.Controls.TabItem.IsSelectedProperty">
+      <summary>Identifies the <see cref="P:System.Windows.Controls.TabItem.IsSelected" /> dependency property.</summary>
+      <returns>The identifier for the <see cref="P:System.Windows.Controls.TabItem.IsSelected" /> dependency property.</returns>
+    </member>
+    <member name="M:System.Windows.Controls.TabItem.OnApplyTemplate">
+      <summary>Builds the visual tree for the <see cref="T:System.Windows.Controls.TabItem" /> when a new template is applied.</summary>
+    </member>
+    <member name="M:System.Windows.Controls.TabItem.OnContentChanged(System.Object,System.Object)">
+      <param name="oldContent">The previous <see cref="T:System.Windows.Controls.TabItem" /> content.</param>
+      <param name="newContent">The new <see cref="T:System.Windows.Controls.TabItem" /> content.</param>
+    </member>
+    <member name="M:System.Windows.Controls.TabItem.OnHeaderChanged(System.Object,System.Object)">
+      <summary>Called when the <see cref="P:System.Windows.Controls.TabItem.Header" /> property changes.</summary>
+      <param name="oldHeader">The previous value of the <see cref="P:System.Windows.Controls.TabItem.Header" /> property.</param>
+      <param name="newHeader">The new value of the <see cref="P:System.Windows.Controls.TabItem.Header" /> property.</param>
+    </member>
+    <member name="M:System.Windows.Controls.TabItem.OnHeaderTemplateChanged(System.Windows.DataTemplate,System.Windows.DataTemplate)">
+      <summary>Called when the <see cref="P:System.Windows.Controls.TabItem.HeaderTemplate" /> property changes.</summary>
+      <param name="oldHeaderTemplate">The previous value of the <see cref="P:System.Windows.Controls.TabItem.HeaderTemplate" /> property.</param>
+      <param name="newHeaderTemplate">The new value of the <see cref="P:System.Windows.Controls.TabItem.HeaderTemplate" /> property.</param>
+    </member>
+    <member name="M:System.Windows.Controls.TabItem.OnIsEnabledChanged(System.Boolean)">
+      <param name="isEnabled">The new value of IsEnabled.</param>
+    </member>
+    <member name="M:System.Windows.Controls.TabItem.OnIsFocusChanged(System.Windows.DependencyPropertyChangedEventArgs)">
+      <param name="e">A <see cref="T:System.Windows.DependencyPropertyChangedEventArgs" /> that contains the event data.</param>
+    </member>
+    <member name="M:System.Windows.Controls.TabItem.OnSelected(System.Windows.RoutedEventArgs)">
+      <summary>Called to indicate that the <see cref="P:System.Windows.Controls.TabItem.IsSelected" /> property has changed to true.</summary>
+      <param name="e">A <see cref="T:System.Windows.RoutedEventArgs" /> that contains the event data. </param>
+    </member>
+    <member name="M:System.Windows.Controls.TabItem.OnUnselected(System.Windows.RoutedEventArgs)">
+      <summary>Called to indicate that the <see cref="P:System.Windows.Controls.TabItem.IsSelected" /> property has changed to false.</summary>
+      <param name="e">A <see cref="T:System.Windows.RoutedEventArgs" /> that contains the event data. </param>
+    </member>
+    <member name="P:System.Windows.Controls.TabItem.TabStripPlacement">
+      <summary>Gets the location of the tab strip relative to the <see cref="T:System.Windows.Controls.TabItem" /> content.</summary>
+      <returns>The location of the tab strip relative to the <see cref="T:System.Windows.Controls.TabItem" /> content.</returns>
+    </member>
+    <member name="T:System.Windows.Controls.Primitives.TabPanel">
+      <summary>Handles the layout of <see cref="T:System.Windows.Controls.TabItem" /> objects on a <see cref="T:System.Windows.Controls.TabControl" />.</summary>
+    </member>
+    <member name="M:System.Windows.Controls.Primitives.TabPanel.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Windows.Controls.Primitives.TabPanel" /> class. </summary>
+    </member>
+    <member name="M:System.Windows.Controls.Primitives.TabPanel.ArrangeOverride(System.Windows.Size)">
+      <summary>Arranges and sizes the content of a <see cref="T:System.Windows.Controls.Primitives.TabPanel" /> object.</summary>
+      <param name="finalSize">The size that a tab panel uses to position child elements.</param>
+    </member>
+    <member name="M:System.Windows.Controls.Primitives.TabPanel.MeasureOverride(System.Windows.Size)">
+      <summary>Called when remeasuring the control is required.</summary>
+      <param name="availableSize">Constraint size as an upper limit. The return value should not exceed this size.</param>
+    </member>
+  </members>
+</doc>
