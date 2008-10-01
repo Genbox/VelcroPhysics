@@ -3,8 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
 {
-    public static class DrawingHelper
+    public sealed class DrawingHelper
     {
+        private DrawingHelper() {}
+
         public static Texture2D CreateLineTexture(GraphicsDevice graphicsDevice, int lineThickness, Color color)
         {
             Texture2D texture2D = new Texture2D(graphicsDevice, 2, lineThickness + 2, 1, TextureUsage.None,

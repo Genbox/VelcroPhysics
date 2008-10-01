@@ -20,6 +20,9 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
 
         private Body[] _blockBody;
         private Geom[] _blockGeom;
+        // POINT OF INTEREST
+        // We are going to use this list while drawing
+        private ObjectLinker[] _blockLink;
 
         public Pyramid(Body referenceBody, Geom referenceGeom, float horizontalSpacing, float verticleSpacing,
                        float blockWidth, float blockHeight, int bottomRowBlockCount, Vector2 bottomRightBlockPosition)
@@ -34,16 +37,21 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
             _bottomRightBlockPosition = bottomRightBlockPosition;
         }
 
-        public void Load(PhysicsSimulator physicsSimulator)
+        public void Load(PhysicsSimulator physicsSimulator, PhysicsProcessor physicsProcessor)
         {
             int count = _bottomRowBlockCount*(1 + _bottomRowBlockCount)/2;
             _blockBody = new Body[count];
             _blockGeom = new Geom[count];
+            _blockLink = new ObjectLinker[count];
 
             for (int i = 0; i < _blockBody.Length; i++)
             {
                 _blockBody[i] = BodyFactory.Instance.CreateBody(physicsSimulator, _referenceBody);
                 _blockGeom[i] = GeomFactory.Instance.CreateGeom(physicsSimulator, _blockBody[i], _referenceGeom);
+                // POINT OF INTEREST
+                // Create the link for each body, and register it into the phyisics processor
+                _blockLink[i] = new ObjectLinker(_blockBody[i]);
+                physicsProcessor.AddLink(_blockLink[i]);
             }
 
             CreatePyramid();
@@ -61,6 +69,9 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
                 {
                     Vector2 rowPosition = position + colOffset*j;
                     _blockBody[blockCounter].Position = rowPosition;
+                    // POINT OF INTEREST
+                    // Resync after the position has been set
+                    _blockLink[blockCounter].Syncronize();
                     blockCounter += 1;
                 }
             }
@@ -68,9 +79,11 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
 
         public void Draw(SpriteBatch spriteBatch, Texture2D texture)
         {
-            for (int i = 0; i < _blockBody.Length; i++)
+          // POINT OF INTEREST
+          // Now use the link's values for drawing
+          for ( int i = 0; i < _blockLink.Length; i++ )
             {
-                spriteBatch.Draw(texture, _blockBody[i].Position, null, Color.White, _blockBody[i].Rotation,
+                spriteBatch.Draw( texture, _blockLink[ i ].Position, null, Color.White, _blockLink[ i ].Rotation,
                                  new Vector2(texture.Width/2f, texture.Height/2f), 1, SpriteEffects.None, 0f);
             }
         }
