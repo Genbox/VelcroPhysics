@@ -11,6 +11,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
     /// Creates a revolute joint between 2 bodies.
+    /// Can be used as wheels on a car.
     /// </summary>
     public class RevoluteJoint : Joint
     {
@@ -47,18 +48,30 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _accumulatedImpulse = Vector2.Zero;
         }
 
+        /// <summary>
+        /// Gets or sets the first body.
+        /// </summary>
+        /// <value>The body1.</value>
         public Body Body1
         {
             get { return _body1; }
             set { _body1 = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the second body.
+        /// </summary>
+        /// <value>The body2.</value>
         public Body Body2
         {
             get { return _body2; }
             set { _body2 = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the anchor.
+        /// </summary>
+        /// <value>The anchor.</value>
         public Vector2 Anchor
         {
             get { return _anchor; }
@@ -70,7 +83,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
         }
 
-        //this gives the _anchor position after the simulation starts
+        /// <summary>
+        /// This gives the anchor position after the simulation starts
+        /// </summary>
+        /// <value>The current anchor.</value>
         public Vector2 CurrentAnchor
         {
             get
@@ -80,8 +96,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
         }
 
-        public event EventHandler<EventArgs> Broke;
-
+        /// <summary>
+        /// Sets the initial anchor.
+        /// </summary>
+        /// <param name="initialAnchor">The initial anchor.</param>
         /// <exception cref="ArgumentNullException"><c>_body1</c> is null.</exception>
         public void SetInitialAnchor(Vector2 initialAnchor)
         {
@@ -105,12 +123,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(JointError) > Breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, new EventArgs());
-            }
-            if (IsDisposed) return;
+            if (IsDisposed)
+                return;
 
             _body1InverseMass = _body1.inverseMass;
             _body1InverseMomentOfInertia = _body1.inverseMomentOfInertia;
@@ -181,12 +195,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void Update()
         {
-            //if (Math.Abs(_jointError) > _breakpoint) { Dispose(); } //check if joint is broken
-            if (IsDisposed) return;
-            if (!Enabled) return;
+            base.Update();
 
-            //Vector2 _dv = _body2.LinearVelocity + Calculator.Cross(_body2.AngularVelocity, _r2) - _body1.LinearVelocity - Calculator.Cross(_body1.AngularVelocity, _r1);
-
+            if (IsDisposed)
+                return;
+            
             #region INLINE: Calculator.Cross(ref _body2.angularVelocity, ref _r2, out _vectorTemp1);
 
             _vectorTemp1.X = -_body2.angularVelocity*_r2.Y;

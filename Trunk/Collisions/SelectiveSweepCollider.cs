@@ -253,33 +253,25 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private void OnCollision(Geom geom1, Geom geom2)
         {
             if (!geom1.body.enabled || !geom2.body.enabled)
-            {
                 return;
-            }
 
             if ((geom1.collisionGroup == geom2.collisionGroup) &&
-                geom1.collisionGroup != 0 &&
-                geom2.collisionGroup != 0)
-            {
+                geom1.collisionGroup != 0 && geom2.collisionGroup != 0)
                 return;
-            }
 
             if (!geom1.collisionEnabled || !geom2.collisionEnabled)
-            {
                 return;
-            }
 
             if (geom1.body.isStatic && geom2.body.isStatic)
-            {
-                //don't collide two static bodies
                 return;
-            }
 
-            if (((geom1.collisionCategories & geom2.collidesWith) == CollisionCategory.None) &
-                ((geom2.collisionCategories & geom1.collidesWith) == CollisionCategory.None))
-            {
+            if (geom1.body == geom2.body)
                 return;
-            }
+
+            if (((geom1.collisionCategories & geom2.collidesWith) ==
+                 CollisionCategory.None) & ((geom2.collisionCategories &
+                                               geom1.collidesWith) == CollisionCategory.None))
+                return;
 
             Arbiter arbiter = _physicsSimulator.arbiterPool.Fetch();
             arbiter.ConstructArbiter(geom1, geom2, _physicsSimulator);

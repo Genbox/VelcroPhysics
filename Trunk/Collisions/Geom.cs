@@ -9,7 +9,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     /// <remark>
-    /// The geometry class is the unit of collision detection.
+    /// The geometry class is the heart of collision detection.
+    /// A Geom need a body and a set of vertices. The vertices should define the edge of the shape.
+    /// AABB and Grid is part of the collision detection.
     /// </remark>
     public class Geom : IEquatable<Geom>, IDisposable
     {
@@ -21,7 +23,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         #endregion
 
         private float _collisionGridCellSize;
-        private int _id;
         private Matrix _matrix = Matrix.Identity;
         private Matrix _matrixInverse = Matrix.Identity;
         private Matrix _matrixInverseTemp;
@@ -32,7 +33,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private Vector2 _vert;
         private bool _isSensor;
 
+        /// <summary>
+        /// Fires when a collision occurs with the geom
+        /// </summary>
         public CollisionEventHandler OnCollision;
+
+        /// <summary>
+        /// Fires when a seperation between this and another geom occurs
+        /// </summary>
         public SeperationEventHandler OnSeperation;
         public bool IsDisposed;
 
@@ -54,7 +62,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public Geom()
         {
-            _id = GetNextId();
+            Id = GetNextId();
             grid = new Grid();
         }
 
@@ -107,11 +115,19 @@ namespace FarseerGames.FarseerPhysics.Collisions
             set { _collisionGridCellSize = value; }
         }
 
+        /// <summary>
+        /// Gets the local vertices of the geom. Local vertices are relative to the center of the vertices.
+        /// </summary>
+        /// <value>The local vertices.</value>
         public Vertices LocalVertices
         {
             get { return localVertices; }
         }
 
+        /// <summary>
+        /// Gets the world vertices.
+        /// </summary>
+        /// <value>The world vertices.</value>
         public Vertices WorldVertices
         {
             get { return worldVertices; }
@@ -148,6 +164,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         /// <summary>
         /// Gets or sets the collision group.
+        /// If 2 geoms are in the same collisiongroup, they will not collide.
         /// </summary>
         /// <value>The collision group.</value>
         public int CollisionGroup
@@ -166,6 +183,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
             set { collisionEnabled = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is a sensor.
+        /// A sensor does not calculate impulses and does not change position (it's static)
+        /// i does however calculate collisions. Sensors can be used to sense other geoms.
+        /// </summary>
+        /// <value><c>true</c> if this instance is sensor; otherwise, <c>false</c>.</value>
         public bool IsSensor
         {
             get { return _isSensor; }
@@ -189,7 +212,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// Gets or sets a value indicating whether collision response is enabled.
         /// If 2 geoms collide and CollisionResponseEnabled is false, then impulses will not be calculated
         /// for the 2 colliding geoms. They will pass through each other, but will still be able to fire the
-        /// Collide event.
+        /// OnCollision event.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if collision response enabled; otherwise, <c>false</c>.
@@ -220,6 +243,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             set { collidesWith = value; }
         }
 
+        /// <summary>
+        /// Gets the grid from this geom.
+        /// Grids are used to test for intersections.
+        /// </summary>
+        /// <value>The grid.</value>
         public Grid Grid
         {
             get { return grid; }
@@ -248,7 +276,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         /// <summary>
         /// Controls the amount of friction a geometry has when in contact with another geometry. A value of zero implies
-        /// no friction.  When two geometries collide, the minimum friction coeficent between the two bodies is used.
+        /// no friction. When two geometries collide, the minimum friction coeficent between the two bodies is used.
         /// </summary>
         public float FrictionCoefficient
         {
@@ -256,12 +284,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
             set { frictionCoefficient = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the tag. A tag is used to attach a custom object to the Geom.
+        /// </summary>
+        /// <value>The tag.</value>
         public Object Tag { get; set; }
 
-        internal int Id
-        {
-            get { return _id; }
-        }
+        /// <summary>
+        /// Gets the id of this geom.
+        /// </summary>
+        /// <value>The id.</value>
+        internal int Id { get; private set; }
 
         #region GetNextId variables
 
@@ -287,7 +320,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return false;
             }
-            return _id == other._id;
+            return Id == other.Id;
         }
 
         #endregion
@@ -295,7 +328,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private void Construct(Body body, Vertices vertices, Vector2 offset, float rotationOffset,
                                float collisionGridCellSize)
         {
-            _id = GetNextId();
+            Id = GetNextId();
             _collisionGridCellSize = collisionGridCellSize;
             _offset = offset;
             _rotationOffset = rotationOffset;
@@ -307,7 +340,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private void ConstructClone(Body body, Geom geometry, Vector2 offset, float rotationOffset)
         {
-            _id = GetNextId();
+            Id = GetNextId();
             _collisionGridCellSize = geometry._collisionGridCellSize;
             grid = geometry.grid.Clone();
             restitutionCoefficient = geometry.restitutionCoefficient;
@@ -584,7 +617,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 _vertice.X = num2;
                 _vertice.Y = num;
                 worldVertices[i] = _vertice;
-
+                
                 #endregion
             }
 

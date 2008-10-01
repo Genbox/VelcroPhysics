@@ -26,8 +26,9 @@ namespace FarseerGames.FarseerPhysicsDemos
         private const string _jointCount = "Joints: {0}";
         private const string _arbiterCount = "Arbiters: {0}";
         private const string _controllerCount = "Controllers: {0}";
+        private const string _springCount = "Springs: {0}";
 
-        private const int _performancePanelHeight = 150;
+        private const int _performancePanelHeight = 130;
         private int _performancePanelWidth = 220;
         private Vector2 _performancePanelPosition = new Vector2(100, 110);
         private bool _performancePanelCount = true;
@@ -526,12 +527,16 @@ namespace FarseerGames.FarseerPhysicsDemos
                        new Vector2(340, 155), Color.White);
 
             spriteBatch.DrawString(_spriteFont,
-                       String.Format(_controllerCount, _physicsSimulator.ControllerList.Count),
+                       String.Format(_springCount, _physicsSimulator.SpringList.Count),
                        new Vector2(340, 170), Color.White);
 
             spriteBatch.DrawString(_spriteFont,
-                       String.Format(_arbiterCount, _physicsSimulator.ArbiterList.Count),
+                       String.Format(_controllerCount, _physicsSimulator.ControllerList.Count),
                        new Vector2(340, 185), Color.White);
+
+            spriteBatch.DrawString(_spriteFont,
+                       String.Format(_arbiterCount, _physicsSimulator.ArbiterList.Count),
+                       new Vector2(340, 200), Color.White);
 
 
             //spriteBatch.DrawString(_spriteFont, String.Format("Broadphase Pairs: {0}",this._physicsSimulator.sweepAndPrune.collisionPairs.Keys.Count), new Vector2(120, 215), Color.White);
@@ -634,12 +639,12 @@ namespace FarseerGames.FarseerPhysicsDemos
 
         private void DrawSprings(SpriteBatch spriteBatch)
         {
-            for (int i = 0; i < _physicsSimulator.ControllerList.Count; i++)
+            for (int i = 0; i < _physicsSimulator.SpringList.Count; i++)
             {
-                if (!(_physicsSimulator.ControllerList[i] is FixedLinearSpring))
+                if (!(_physicsSimulator.SpringList[i] is FixedLinearSpring))
                     continue;
 
-                FixedLinearSpring fixedLinearSpring = (FixedLinearSpring)_physicsSimulator.ControllerList[i];
+                FixedLinearSpring fixedLinearSpring = (FixedLinearSpring)_physicsSimulator.SpringList[i];
                 _worldAttachPoint = fixedLinearSpring.WorldAttachPoint;
                 _body1AttachPointInWorldCoordinates =
                     fixedLinearSpring.Body.GetWorldPosition(fixedLinearSpring.BodyAttachPoint);
@@ -659,11 +664,11 @@ namespace FarseerGames.FarseerPhysicsDemos
                                       fixedLinearSpring.WorldAttachPoint);
             }
 
-            for (int i = 0; i < _physicsSimulator.ControllerList.Count; i++)
+            for (int i = 0; i < _physicsSimulator.SpringList.Count; i++)
             {
-                if (!(_physicsSimulator.ControllerList[i] is LinearSpring)) continue;
+                if (!(_physicsSimulator.SpringList[i] is LinearSpring)) continue;
 
-                LinearSpring linearSpring = (LinearSpring)_physicsSimulator.ControllerList[i];
+                LinearSpring linearSpring = (LinearSpring)_physicsSimulator.SpringList[i];
                 _attachPoint1 = linearSpring.AttachPoint1;
                 _attachPoint2 = linearSpring.AttachPoint2;
                 linearSpring.Body1.GetWorldPosition(ref _attachPoint1, out _body1AttachPointInWorldCoordinates);
@@ -720,7 +725,6 @@ namespace FarseerGames.FarseerPhysicsDemos
                 _pinJointLineBrush.Draw(spriteBatch, pinJoint.WorldAnchor1, pinJoint.WorldAnchor2);
             }
         }
-
 
         private void DrawSliderJoints(SpriteBatch spriteBatch)
         {

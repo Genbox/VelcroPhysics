@@ -2,13 +2,14 @@ using System;
 using System.Diagnostics;
 using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
-using Microsoft.Xna.Framework; 
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
-    /// Fixed revolute joint creates a revolute joint at the attached body position.
+    /// Fixed revolute joint creates a revolute joint at the anchor.
+    /// Fixed revolute joint pins the body to a fixed position, and makes sure that it can rotate, but not move.
     /// </summary>
     public class FixedRevoluteJoint : Joint
     {
@@ -39,18 +40,30 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             BiasFactor = .8f;
         }
 
+        /// <summary>
+        /// Gets or sets the body.
+        /// </summary>
+        /// <value>The body.</value>
         public Body Body
         {
             get { return _body; }
             set { _body = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the max impulse.
+        /// </summary>
+        /// <value>The max impulse.</value>
         public float MaxImpulse
         {
             get { return _maxImpulse; }
             set { _maxImpulse = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the anchor.
+        /// </summary>
+        /// <value>The anchor.</value>
         public Vector2 Anchor
         {
             get { return _anchor; }
@@ -61,8 +74,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
         }
 
-        public event EventHandler<EventArgs> Broke;
-
+        /// <summary>
+        /// Sets the anchor.
+        /// </summary>
+        /// <param name="anchor">The anchor.</param>
         /// <exception cref="ArgumentNullException"><c>_body</c> is null.</exception>
         public void SetAnchor(Vector2 anchor)
         {
@@ -85,15 +100,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(JointError) > Breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, new EventArgs());
-            }
             if (IsDisposed)
-            {
                 return;
-            }
 
             _bodyInverseMass = _body.inverseMass;
             _bodyInverseMomentOfInertia = _body.inverseMomentOfInertia;
@@ -106,10 +114,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _k1.M21 = 0;
             _k1.M22 = _bodyInverseMass;
 
-            _k2.M11 = _bodyInverseMomentOfInertia*_r1.Y*_r1.Y;
-            _k2.M12 = -_bodyInverseMomentOfInertia*_r1.X*_r1.Y;
-            _k2.M21 = -_bodyInverseMomentOfInertia*_r1.X*_r1.Y;
-            _k2.M22 = _bodyInverseMomentOfInertia*_r1.X*_r1.X;
+            _k2.M11 = _bodyInverseMomentOfInertia * _r1.Y * _r1.Y;
+            _k2.M12 = -_bodyInverseMomentOfInertia * _r1.X * _r1.Y;
+            _k2.M21 = -_bodyInverseMomentOfInertia * _r1.X * _r1.Y;
+            _k2.M22 = _bodyInverseMomentOfInertia * _r1.X * _r1.X;
 
             //Matrix _k = _k1 + _k2 + K3;
             Matrix.Add(ref _k1, ref _k2, out _k);
@@ -122,7 +130,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             Vector2.Add(ref _body.position, ref _r1, out _vectorTemp1);
             Vector2.Subtract(ref _anchor, ref _vectorTemp1, out _vectorTemp2);
-            Vector2.Multiply(ref _vectorTemp2, -BiasFactor*inverseDt, out _velocityBias);
+            Vector2.Multiply(ref _vectorTemp2, -BiasFactor * inverseDt, out _velocityBias);
             JointError = _vectorTemp2.Length();
 
             //warm starting
@@ -140,26 +148,22 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         private void MatrixInvert2D(ref Matrix matrix, out Matrix invertedMatrix)
         {
             float a = matrix.M11, b = matrix.M12, c = matrix.M21, d = matrix.M22;
-            float det = a*d - b*c;
+            float det = a * d - b * c;
             Debug.Assert(det != 0.0f);
-            det = 1.0f/det;
-            _b.M11 = det*d;
-            _b.M12 = -det*b;
-            _b.M21 = -det*c;
-            _b.M22 = det*a;
+            det = 1.0f / det;
+            _b.M11 = det * d;
+            _b.M12 = -det * b;
+            _b.M21 = -det * c;
+            _b.M22 = det * a;
             invertedMatrix = _b;
         }
 
         public override void Update()
         {
-            if (Math.Abs(JointError) > Breakpoint)
-            {
-                Dispose();
-            } //check if joint is broken
+            base.Update();
+
             if (IsDisposed)
-            {
                 return;
-            }
 
             Calculator.Cross(ref _body.angularVelocity, ref _r1, out _vectorTemp1);
             Vector2.Add(ref _body.linearVelocity, ref _vectorTemp1, out _dv);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
     /// <summary>
-    /// Provides a type strong list of Springs
+    /// Provides an implementation of a strongly typed List with Spring
     /// </summary>
     public class SpringList : List<Spring>
     {

@@ -1,5 +1,3 @@
-using System;
-using FarseerGames.FarseerPhysics.Controllers;
 #if (XNA)
 using Microsoft.Xna.Framework;
 #else
@@ -9,20 +7,15 @@ using FarseerGames.FarseerPhysics.Mathematics;
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
     /// <summary>
-    /// Fixed linear spring attaches a body to a fixed point. The spring is acting kind of like a rubber band.
+    /// Fixed linear spring attaches a body to a fixed point.
+    /// The linear spring is acting kind of like a rubber band.
     /// </summary>
-    public class FixedLinearSpring : Controller
+    public class FixedLinearSpring : Spring
     {
         private Body _body;
-
         private Vector2 _bodyAttachPoint;
-        private float _breakpoint = float.MaxValue;
-        private float _dampningConstant;
         private Vector2 _difference = Vector2.Zero;
         private float _restLength;
-        private float _springConstant;
-
-        private float _springError;
         private Vector2 _worldAttachPoint;
 
         public FixedLinearSpring()
@@ -35,66 +28,61 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             _body = body;
             _bodyAttachPoint = bodyAttachPoint;
             _worldAttachPoint = worldAttachPoint;
-            _springConstant = springConstant;
-            _dampningConstant = dampningConstant;
+            SpringConstant = springConstant;
+            DampningConstant = dampningConstant;
             _difference = worldAttachPoint - _body.GetWorldPosition(bodyAttachPoint);
             _restLength = _difference.Length();
         }
 
+        /// <summary>
+        /// Gets or sets the body.
+        /// </summary>
+        /// <value>The body.</value>
         public Body Body
         {
             get { return _body; }
             set { _body = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the position.
+        /// </summary>
+        /// <value>The position.</value>
         public Vector2 Position
         {
             get { return _worldAttachPoint; }
             set { _worldAttachPoint = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the body attach point.
+        /// </summary>
+        /// <value>The body attach point.</value>
         public Vector2 BodyAttachPoint
         {
             get { return _bodyAttachPoint; }
             set { _bodyAttachPoint = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the world attach point.
+        /// </summary>
+        /// <value>The world attach point.</value>
         public Vector2 WorldAttachPoint
         {
             get { return _worldAttachPoint; }
             set { _worldAttachPoint = value; }
         }
 
-        public float SpringConstant
-        {
-            get { return _springConstant; }
-            set { _springConstant = value; }
-        }
-
-        public float DampningConstant
-        {
-            get { return _dampningConstant; }
-            set { _dampningConstant = value; }
-        }
-
+        /// <summary>
+        /// Gets or sets the length of the rest.
+        /// </summary>
+        /// <value>The length of the rest.</value>
         public float RestLength
         {
             get { return _restLength; }
             set { _restLength = value; }
         }
-
-        public float Breakpoint
-        {
-            get { return _breakpoint; }
-            set { _breakpoint = value; }
-        }
-
-        public float SpringError
-        {
-            get { return _springError; }
-        }
-
-        public event EventHandler<EventArgs> Broke;
 
         public override void Validate()
         {
@@ -107,6 +95,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public override void Update(float dt)
         {
+            base.Update(dt);
+
             if (IsDisposed)
             {
                 return;
@@ -115,13 +105,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             if (_body.isStatic)
             {
                 return;
-            }
-
-            //TODO: Move up in layers?
-            if (Enabled && Math.Abs(_springError) > _breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, EventArgs.Empty);
             }
 
             //calculate and apply spring _force
@@ -135,16 +118,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             } //if already close to rest length then return
 
             //calculate spring _force (kX)
-            _springError = differenceMagnitude - _restLength;
+            SpringError = differenceMagnitude - _restLength;
             Vector2.Normalize(ref _difference, out _differenceNormalized);
-            _springForce = _springConstant*_springError; //kX
+            _springForce = SpringConstant*SpringError; //kX
 
             //calculate relative velocity 
             _body.GetVelocityAtLocalPoint(ref _bodyAttachPoint, out _bodyVelocity);
 
             //calculate dampning _force (bV)
             Vector2.Dot(ref _bodyVelocity, ref _difference, out _temp);
-            _dampningForce = _dampningConstant*_temp/differenceMagnitude; //bV     
+            _dampningForce = DampningConstant*_temp/differenceMagnitude; //bV     
 
             //calculate final _force (spring + dampning)
             Vector2.Multiply(ref _differenceNormalized, -(_springForce + _dampningForce), out _force);

@@ -8,8 +8,8 @@ using FarseerGames.FarseerPhysics.Mathematics;
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     /// <summary>
-    /// Used in collision detection.
-    /// Represents a contact point
+    /// Used internal in collision detection.
+    /// Represents a contact point between 2 geoms.
     /// </summary>
     public struct Contact : IEquatable<Contact>
     {
@@ -17,15 +17,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
         internal ContactId ContactId;
         internal float MassNormal;
         internal float MassTangent;
-        public Vector2 Normal;
         internal float NormalImpulse;
         internal float NormalImpulseBias;
         internal float NormalVelocityBias;
-        public Vector2 Position;
         internal Vector2 R1;
         internal Vector2 R2;
-        public float Seperation;
         internal float TangentImpulse;
+
+        public Vector2 Normal;
+        public Vector2 Position;
+        public float Seperation;
 
         public Contact(Vector2 position, Vector2 normal, float seperation, ContactId contactId)
         {

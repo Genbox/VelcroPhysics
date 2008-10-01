@@ -7,6 +7,11 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
+
+    /// <summary>
+    /// Grid is used to test for intersection.
+    /// Computation of the grid may take a long time, depending on the grid cell size provided.
+    /// </summary>
     public sealed class Grid
     {
         private AABB _aabb;

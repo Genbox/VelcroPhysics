@@ -7,8 +7,8 @@ using Microsoft.Xna.Framework;
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
-    /// Slider joint is just like pin joint, but the distance between the bodies is not fixed.
-    /// The bodies can move towards to away from each other within limits.
+    /// Slider joint is just like pin joint, but the distance between the bodies are not fixed.
+    /// The bodies can move towards or away from each other within limits.
     /// </summary>
     public class SliderJoint : Joint
     {
@@ -51,36 +51,60 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             Anchor2 = anchor2;
         }
 
+        /// <summary>
+        /// Gets or sets the first body.
+        /// </summary>
+        /// <value>The body1.</value>
         public Body Body1
         {
             get { return _body1; }
             set { _body1 = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the second body.
+        /// </summary>
+        /// <value>The body2.</value>
         public Body Body2
         {
             get { return _body2; }
             set { _body2 = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the slop.
+        /// </summary>
+        /// <value>The slop.</value>
         public float Slop
         {
             get { return _slop; }
             set { _slop = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the min.
+        /// </summary>
+        /// <value>The min.</value>
         public float Min
         {
             get { return _min; }
             set { _min = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the max.
+        /// </summary>
+        /// <value>The max.</value>
         public float Max
         {
             get { return _max; }
             set { _max = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the first anchor.
+        /// </summary>
+        /// <value>The anchor1.</value>
         public Vector2 Anchor1
         {
             get { return _anchor1; }
@@ -93,6 +117,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
         }
 
+        /// <summary>
+        /// Gets or sets the second anchor.
+        /// </summary>
+        /// <value>The anchor2.</value>
         public Vector2 Anchor2
         {
             get { return _anchor2; }
@@ -105,16 +133,28 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
         }
 
+        /// <summary>
+        /// Gets the first world anchor.
+        /// </summary>
+        /// <value>The world anchor1.</value>
         public Vector2 WorldAnchor1
         {
             get { return _worldAnchor1; }
         }
 
+        /// <summary>
+        /// Gets the second world anchor.
+        /// </summary>
+        /// <value>The world anchor2.</value>
         public Vector2 WorldAnchor2
         {
             get { return _worldAnchor2; }
         }
 
+        /// <summary>
+        /// Gets the current anchor position.
+        /// </summary>
+        /// <value>The current anchor position.</value>
         public Vector2 CurrentAnchorPosition
         {
             get
@@ -123,8 +163,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 return _anchor;
             }
         }
-
-        public event EventHandler<EventArgs> Broke;
 
         public override void Validate()
         {
@@ -136,16 +174,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(JointError) > Breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, new EventArgs());
-            }
-
             if (IsDisposed)
-            {
                 return;
-            }
 
             //calc _r1 and _r2 from the anchors
             _body1.GetBodyMatrix(out _body1MatrixTemp);
@@ -233,18 +263,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void Update()
         {
-            if (Math.Abs(JointError) > Breakpoint)
-            {
-                Dispose();
-            } //check if joint is broken
+            base.Update();
+
             if (IsDisposed)
-            {
                 return;
-            }
+
             if (!_upperLimitViolated && !_lowerLimitViolated)
-            {
                 return;
-            }
 
             //calc velocity _anchor points (angular component + linear)
             Calculator.Cross(ref _body1.angularVelocity, ref _r1, out _angularVelocityComponent1);

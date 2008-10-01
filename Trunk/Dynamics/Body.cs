@@ -56,6 +56,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         //private float linearDragVelocityThreshhold = .000001f;
 
         public bool IsDisposed;
+
+        public event EventHandler<EventArgs> Disposed;
         public UpdatedEventHandler Updated;
 
         public Body()
@@ -282,6 +284,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             get { return _revolutions; }
         }
 
+        /// <summary>
+        /// Gets or sets the rotation.
+        /// </summary>
+        /// <value>The rotation.</value>
         public float Rotation
         {
             get { return rotation; }
@@ -362,14 +368,21 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             get { return _torque; }
         }
 
+        /// <summary>
+        /// Gets or sets the tag. A tag is used to attach a custom object to the Body.
+        /// </summary>
+        /// <value>The tag.</value>
         public Object Tag { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this body ignores gravity.
+        /// </summary>
+        /// <value><c>true</c> if it ignores gravity; otherwise, <c>false</c>.</value>
         public bool IgnoreGravity
         {
             get { return ignoreGravity; }
             set { ignoreGravity = value; }
         }
-
 
         /// <summary>
         /// Returns a unit vector that represents the local X direction of a body converted to world coordinates.
@@ -416,8 +429,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
 
         #endregion
-
-        public event EventHandler<EventArgs> Disposed;
 
         /// <summary>
         /// This method will reset position and motion properties. This method is useful

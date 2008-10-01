@@ -1,4 +1,3 @@
-using System;
 #if (XNA)
 using Microsoft.Xna.Framework;
 #else
@@ -39,37 +38,55 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _upperLimit = upperLimit;
         }
 
+        /// <summary>
+        /// Gets or sets the first body
+        /// </summary>
+        /// <value>The body1.</value>
         public Body Body1
         {
             get { return _body1; }
             set { _body1 = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the second body.
+        /// </summary>
+        /// <value>The body2.</value>
         public Body Body2
         {
             get { return _body2; }
             set { _body2 = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the slop.
+        /// </summary>
+        /// <value>The slop.</value>
         public float Slop
         {
             get { return _slop; }
             set { _slop = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the upper limit.
+        /// </summary>
+        /// <value>The upper limit.</value>
         public float UpperLimit
         {
             get { return _upperLimit; }
             set { _upperLimit = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the lower limit.
+        /// </summary>
+        /// <value>The lower limit.</value>
         public float LowerLimit
         {
             get { return _lowerLimit; }
             set { _lowerLimit = value; }
         }
-
-        public event EventHandler<EventArgs> Broke;
 
         public override void Validate()
         {
@@ -81,15 +98,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(JointError) > Breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, new EventArgs());
-            }
             if (IsDisposed)
-            {
                 return;
-            }
+
             _difference = (_body2.totalRotation - _body1.totalRotation);
             JointError = 0;
 
@@ -144,14 +155,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void Update()
         {
+            base.Update();
+
             if (IsDisposed)
-            {
                 return;
-            }
+
             if (!_upperLimitViolated && !_lowerLimitViolated)
-            {
                 return;
-            }
+
             _angularImpulse = 0;
             _angularImpulse =
                 -(_velocityBias + (_body2.angularVelocity - _body1.angularVelocity) +

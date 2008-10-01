@@ -4,7 +4,7 @@ using FarseerGames.FarseerPhysics.Interfaces;
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     /// <summary>
-    /// A broad phase collider that uses a brute force algorithm
+    /// A broad phase collider that uses a brute force algorithm.
     /// </summary>
     public class BruteForceCollider : IBroadPhaseCollider
     {

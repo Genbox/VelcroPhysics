@@ -3,7 +3,7 @@ using System;
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
-    /// Angle joint joins together 2 bodies in an angle
+    /// Angle joint joins together 2 bodies at an angle
     /// </summary>
     public class AngleJoint : Joint
     {
@@ -31,31 +31,45 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _targetAngle = targetAngle;
         }
 
+        /// <summary>
+        /// Gets or sets the fist body.
+        /// </summary>
+        /// <value>The body1.</value>
         public Body Body1
         {
             get { return _body1; }
             set { _body1 = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the second body.
+        /// </summary>
+        /// <value>The body2.</value>
         public Body Body2
         {
             get { return _body2; }
             set { _body2 = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the target angle.
+        /// </summary>
+        /// <value>The target angle.</value>
         public float TargetAngle
         {
             get { return _targetAngle; }
             set { _targetAngle = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the max impulse.
+        /// </summary>
+        /// <value>The max impulse.</value>
         public float MaxImpulse
         {
             get { return _maxImpulse; }
             set { _maxImpulse = value; }
         }
-
-        public event EventHandler<EventArgs> Broke;
 
         public override void Validate()
         {
@@ -67,16 +81,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(JointError) > Breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, new EventArgs());
-            }
-
             if (IsDisposed)
-            {
                 return;
-            }
+
             JointError = (_body2.totalRotation - _body1.totalRotation) - _targetAngle;
 
             _velocityBias = -BiasFactor*inverseDt*JointError;
@@ -86,8 +93,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void Update()
         {
-            if (IsDisposed) return;
-            if (!Enabled) return;
+            base.Update();
+
+            if (IsDisposed)
+                return;
+
             float angularImpulse = (_velocityBias - _body2.angularVelocity + _body1.angularVelocity)*_massFactor;
 
             _body1.angularVelocity -= _body1.inverseMomentOfInertia*Math.Sign(angularImpulse)*

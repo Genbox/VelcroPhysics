@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
-    /// Provides a strongly typed list of joints
+    /// Provides an implementation of a strongly typed List with Joint
     /// </summary>
     public class JointList : List<Joint>
     {

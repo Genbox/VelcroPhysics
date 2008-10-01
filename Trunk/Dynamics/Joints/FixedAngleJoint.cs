@@ -28,25 +28,35 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _targetAngle = targetAngle;
         }
 
+        /// <summary>
+        /// Gets or sets the body.
+        /// </summary>
+        /// <value>The body.</value>
         public Body Body
         {
             get { return _body; }
             set { _body = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the target angle.
+        /// </summary>
+        /// <value>The target angle.</value>
         public float TargetAngle
         {
             get { return _targetAngle; }
             set { _targetAngle = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the max impulse.
+        /// </summary>
+        /// <value>The max impulse.</value>
         public float MaxImpulse
         {
             get { return _maxImpulse; }
             set { _maxImpulse = value; }
         }
-
-        public event EventHandler<EventArgs> Broke;
 
         public override void Validate()
         {
@@ -58,15 +68,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(JointError) > Breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, new EventArgs());
-            }
             if (IsDisposed)
-            {
                 return;
-            }
+
             JointError = _body.totalRotation - _targetAngle;
 
             _velocityBias = -BiasFactor*inverseDt*JointError;
@@ -75,10 +79,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void Update()
         {
+            base.Update();
+
             if (IsDisposed)
-            {
                 return;
-            }
+
             float angularImpulse = (_velocityBias - _body.angularVelocity)*_massFactor;
             _body.angularVelocity += _body.inverseMomentOfInertia*Math.Sign(angularImpulse)*
                                      Math.Min(Math.Abs(angularImpulse), _maxImpulse);

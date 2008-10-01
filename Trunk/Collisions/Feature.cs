@@ -9,7 +9,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 {
     /// <summary>
     /// Contains info about distance, normal and position.
-    /// Used in collision detection
+    /// Used internal in collision detection.
     /// </summary>
     public struct Feature
     {
