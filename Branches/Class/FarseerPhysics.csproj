@@ -187,20 +187,26 @@
     <Compile Include="..\..\Trunk\Dynamics\Springs\LinearSpring.cs">
       <Link>Dynamics\Springs\LinearSpring.cs</Link>
     </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Springs\Spring.cs">
+      <Link>Dynamics\Springs\Spring.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Springs\SpringList.cs">
+      <Link>Dynamics\Springs\SpringList.cs</Link>
+    </Compile>
     <Compile Include="..\..\Trunk\Enums.cs">
       <Link>Enums.cs</Link>
     </Compile>
     <Compile Include="..\..\Trunk\Factories\BodyFactory.cs">
       <Link>Factories\BodyFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Factories\ControllerFactory.cs">
-      <Link>Factories\ControllerFactory.cs</Link>
-    </Compile>
     <Compile Include="..\..\Trunk\Factories\GeomFactory.cs">
       <Link>Factories\GeomFactory.cs</Link>
     </Compile>
     <Compile Include="..\..\Trunk\Factories\JointFactory.cs">
       <Link>Factories\JointFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Factories\SpringFactory.cs">
+      <Link>Factories\SpringFactory.cs</Link>
     </Compile>
     <Compile Include="..\..\Trunk\GlobalSuppressions.cs">
       <Link>GlobalSuppressions.cs</Link>
