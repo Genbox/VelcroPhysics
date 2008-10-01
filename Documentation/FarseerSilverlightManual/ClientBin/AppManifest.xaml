@@ -1,8 +1,0 @@
-﻿<Deployment xmlns="http://schemas.microsoft.com/client/2007/deployment" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" EntryPointAssembly="FarseerSilverlightManual" EntryPointType="FarseerSilverlightManual.App" RuntimeVersion="2.0.30523.6">
-  <Deployment.Parts>
-    <AssemblyPart x:Name="FarseerSilverlightManual" Source="FarseerSilverlightManual.dll" />
-    <AssemblyPart x:Name="FarseerGames.FarseerPhysics" Source="FarseerGames.FarseerPhysics.dll" />
-    <AssemblyPart x:Name="System.Windows.Controls.Data" Source="System.Windows.Controls.Data.dll" />
-    <AssemblyPart x:Name="System.Windows.Controls.Extended" Source="System.Windows.Controls.Extended.dll" />
-  </Deployment.Parts>
-</Deployment>
