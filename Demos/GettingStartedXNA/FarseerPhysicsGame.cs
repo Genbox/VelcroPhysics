@@ -1,5 +1,6 @@
 using System;
 using FarseerGames.FarseerPhysicsDemos.Components;
+using FarseerGames.FarseerPhysicsDemos.Demos.Demo4;
 using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

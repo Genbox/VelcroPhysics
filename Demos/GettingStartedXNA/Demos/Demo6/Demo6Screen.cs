@@ -200,11 +200,17 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            if (IsActive)
-            {
-                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
-            }
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+        }
+
+        public override void UpdatePhysics( GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen )
+        {
+          // POINT OF INTEREST
+          // Moved here
+          if ( IsActive )
+            {
+                PhysicsSimulator.Update( gameTime.ElapsedGameTime.Milliseconds * .001f );
+            }
         }
 
         public override void Draw(GameTime gameTime)
