@@ -1,4 +1,4 @@
-namespace FarseerPerformanceTest
+namespace InactivityPerformanceXNA
 {
     internal static class Program
     {

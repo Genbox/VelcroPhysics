@@ -1,27 +1,26 @@
 using System;
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics;
+using FarseerPerformanceTest;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPerformanceTest
+namespace InactivityPerformanceXNA
 {
     public class Game1 : Game
     {
-        private List<Box> boxes;
-        private GraphicsDeviceManager graphics;
-        private Ground ground;
-
-        private KeyboardState oldKs;
-        private MouseState oldMs;
-        private SpriteBatch spriteBatch;
-        private SpriteFont spriteFont;
-
+        private List<Box> _boxes;
+        private GraphicsDeviceManager _graphics;
+        private Ground _ground;
+        private KeyboardState _oldKs;
+        private MouseState _oldMs;
+        private SpriteBatch _spriteBatch;
+        private SpriteFont _spriteFont;
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
@@ -32,15 +31,8 @@ namespace FarseerPerformanceTest
             IsFixedTimeStep = true;
             TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 1); //1 ms --> 1000 fps for physics update  
 
-            graphics.SynchronizeWithVerticalRetrace = false;
-
-#if DEBUG
-
-#else
-            //graphics.IsFullScreen = true;
-#endif
-
-            graphics.ApplyChanges();
+            _graphics.SynchronizeWithVerticalRetrace = false;
+            _graphics.ApplyChanges();
 
             Globals.Physics = new PhysicsSimulator(new Vector2(0, 800));
 
@@ -65,28 +57,23 @@ namespace FarseerPerformanceTest
             base.Initialize();
         }
 
-
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            spriteFont = Content.Load<SpriteFont>("arial");
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteFont = Content.Load<SpriteFont>("arial");
 
-            boxes = new List<Box>();
+            _boxes = new List<Box>();
 
             // add some boxes...
             for (int u = 1; u < 6; u++)
             {
                 for (int i = 1; i < 14; i++)
                 {
-                    boxes.Add(new Box(this, new Vector2(80 + i*28, 00 + u*28)));
+                    _boxes.Add(new Box(this, new Vector2(80 + i*28, 00 + u*28)));
                 }
             }
 
-            ground = new Ground(new Vector2(400, 600));
-        }
-
-        protected override void UnloadContent()
-        {
+            _ground = new Ground(new Vector2(400, 600));
         }
 
         protected override void Update(GameTime gameTime)
@@ -99,19 +86,18 @@ namespace FarseerPerformanceTest
                 Exit();
             }
 
-
-            if (ms.LeftButton == ButtonState.Pressed && oldMs.LeftButton == ButtonState.Released)
+            if (ms.LeftButton == ButtonState.Pressed && _oldMs.LeftButton == ButtonState.Released)
             {
-                boxes.Add(new Box(this, new Vector2(ms.X, ms.Y)));
-                Console.WriteLine(boxes.Count.ToString());
+                _boxes.Add(new Box(this, new Vector2(ms.X, ms.Y)));
+                Console.WriteLine(_boxes.Count.ToString());
             }
 
-            if (ks.IsKeyDown(Keys.F1) && oldKs.IsKeyUp(Keys.F1))
+            if (ks.IsKeyDown(Keys.F1) && _oldKs.IsKeyUp(Keys.F1))
             {
                 Globals.Physics.Scaling.Enabled = !Globals.Physics.Scaling.Enabled;
             }
 
-            if (ks.IsKeyDown(Keys.F2) && oldKs.IsKeyUp(Keys.F2))
+            if (ks.IsKeyDown(Keys.F2) && _oldKs.IsKeyUp(Keys.F2))
             {
                 Globals.Physics.InactivityController.Enabled = !Globals.Physics.InactivityController.Enabled;
             }
@@ -127,8 +113,8 @@ namespace FarseerPerformanceTest
             }
 
 
-            oldMs = ms;
-            oldKs = ks;
+            _oldMs = ms;
+            _oldKs = ks;
 
             base.Update(gameTime);
         }
@@ -136,12 +122,12 @@ namespace FarseerPerformanceTest
 
         protected override void Draw(GameTime gameTime)
         {
-            graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
+            _graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            _spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             RenderBoxes();
             RenderInfo();
-            spriteBatch.End();
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
@@ -150,7 +136,7 @@ namespace FarseerPerformanceTest
         {
             Color color;
 
-            foreach (Box b in boxes)
+            foreach (Box b in _boxes)
             {
                 // visualize the current box state
                 if (b.Body.Enabled == false)
@@ -169,7 +155,7 @@ namespace FarseerPerformanceTest
                     }
                 }
                 // draw the box
-                spriteBatch.Draw(b.Texture, b.Position, null, color, b.Body.Rotation, b.Center, 1, SpriteEffects.None, 0);
+                _spriteBatch.Draw(b.Texture, b.Position, null, color, b.Body.Rotation, b.Center, 1, SpriteEffects.None, 0);
             }
         }
 
@@ -183,11 +169,11 @@ namespace FarseerPerformanceTest
                     " (press <F1> to toggle)" + Environment.NewLine;
             info += "InactivityController: " + ((Globals.Physics.InactivityController.Enabled) ? "enabled" : "disabled") +
                     " (press <F2> to toggle)" + Environment.NewLine;
-            info += "Box count: " + boxes.Count;
+            info += "Box count: " + _boxes.Count;
 
 
             // render the info string
-            spriteBatch.DrawString(spriteFont, info, Vector2.Zero, Color.White);
+            _spriteBatch.DrawString(_spriteFont, info, Vector2.Zero, Color.White);
         }
     }
 }

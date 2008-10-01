@@ -1,26 +1,27 @@
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
+using FarseerPerformanceTest;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPerformanceTest
+namespace InactivityPerformanceXNA
 {
     public class Ground
     {
-        private Body body;
-        private Geom geom;
+        private Body _body;
+        private Geom _geom;
 
-        private float height = 25f;
-        private float width = 800f;
+        private const float _height = 25f;
+        private const float _width = 800f;
 
         public Ground(Vector2 position)
         {
-            body = BodyFactory.Instance.CreateRectangleBody(Globals.Physics, width, height, 1);
-            body.Position = position;
-            body.IsStatic = true;
+            _body = BodyFactory.Instance.CreateRectangleBody(Globals.Physics, _width, _height, 1);
+            _body.Position = position;
+            _body.IsStatic = true;
 
-            geom = GeomFactory.Instance.CreateRectangleGeom(Globals.Physics, body, width, height);
-            geom.FrictionCoefficient = 1;
+            _geom = GeomFactory.Instance.CreateRectangleGeom(Globals.Physics, _body, _width, _height);
+            _geom.FrictionCoefficient = 1;
         }
     }
 }
