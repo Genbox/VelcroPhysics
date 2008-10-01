@@ -114,7 +114,7 @@ namespace GettingStartedSilverlight.Demos.DemoShare
 
             for (int k = 0; k < _linearSpring.Length; k++)
             {
-                _linearSpring[k] = ControllerFactory.Instance.CreateLinearSpring(physicsSimulator, _rectangleBody[k],
+                _linearSpring[k] = SpringFactory.Instance.CreateLinearSpring(physicsSimulator, _rectangleBody[k],
                                                                                  Vector2.Zero, _rectangleBody[k + 1],
                                                                                  Vector2.Zero, _springConstant,
                                                                                  _dampningConstant);

@@ -157,7 +157,7 @@ namespace GettingStartedSilverlight.Demos.Demo6
             _springRectangleRope1.SpringConstant = 400;
             _springRectangleRope1.DampningConstant = 3f;
             _springRectangleRope1.Load(this, physicsSimulator);
-            ControllerFactory.Instance.CreateLinearSpring(physicsSimulator, _angularSpringLever3.Body,
+            SpringFactory.Instance.CreateLinearSpring(physicsSimulator, _angularSpringLever3.Body,
                                                           new Vector2(
                                                               _angularSpringLever3.RectangleWidth/2f, 0),
                                                           _springRectangleRope1.FirstBody, Vector2.Zero,
@@ -174,7 +174,7 @@ namespace GettingStartedSilverlight.Demos.Demo6
             AddCircleToCanvas(_hangingBody, 40);
             _hangingBody.Position = new Vector2(position.X - 200, 200);
             GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _hangingBody, 40, 20);
-            ControllerFactory.Instance.CreateFixedLinearSpring(physicsSimulator, _hangingBody,
+            SpringFactory.Instance.CreateFixedLinearSpring(physicsSimulator, _hangingBody,
                                                                new Vector2(0, -35),
                                                                new Vector2(position.X - 200, 100),
                                                                2, .1f);
@@ -210,7 +210,7 @@ namespace GettingStartedSilverlight.Demos.Demo6
             _springRectangleRope2.DampningConstant = 4f;
             _springRectangleRope2.CollisionGroup = 1; //same as agent collision group
             _springRectangleRope2.Load(this, physicsSimulator);
-            ControllerFactory.Instance.CreateLinearSpring(physicsSimulator, _agent.Body, Vector2.Zero,
+            SpringFactory.Instance.CreateLinearSpring(physicsSimulator, _agent.Body, Vector2.Zero,
                                                           _springRectangleRope2.FirstBody, Vector2.Zero,
                                                           200, 2f);
         }
