@@ -8,8 +8,8 @@ using FarseerGames.FarseerPhysics.Mathematics;
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     /// <summary>
-    /// An Axis Aligned Bounding Box.
-    /// Used for collision detection
+    /// Axis Aligned Bounding Box. Can be used to check for intersections with other AABB's.
+    /// Use AABB.Intersect() to check for intersections.
     /// </summary>
     public class AABB
     {

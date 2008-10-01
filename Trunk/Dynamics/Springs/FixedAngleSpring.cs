@@ -1,20 +1,14 @@
 using System;
-using FarseerGames.FarseerPhysics.Controllers;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
     /// <summary>
     /// Puts a body at an angle at the body's current position. The angle is variable.
     /// </summary>
-    public class FixedAngleSpring : Controller
+    public class FixedAngleSpring : Spring
     {
         private Body _body;
-        private float _breakpoint = float.MaxValue;
-        private float _dampningConstant;
         private float _maxTorque = float.MaxValue;
-        private float _springConstant;
-
-        private float _springError;
         private float _targetAngle;
         private float _torqueMultiplier = 1f;
 
@@ -25,41 +19,35 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         public FixedAngleSpring(Body body, float springConstant, float dampningConstant)
         {
             _body = body;
-            _springConstant = springConstant;
-            _dampningConstant = dampningConstant;
+            SpringConstant = springConstant;
+            DampningConstant = dampningConstant;
             _targetAngle = body.TotalRotation;
         }
 
+        /// <summary>
+        /// Gets or sets the body.
+        /// </summary>
+        /// <value>The body.</value>
         public Body Body
         {
             get { return _body; }
             set { _body = value; }
         }
 
-        public float SpringConstant
-        {
-            get { return _springConstant; }
-            set { _springConstant = value; }
-        }
-
-        public float DampningConstant
-        {
-            get { return _dampningConstant; }
-            set { _dampningConstant = value; }
-        }
-
+        /// <summary>
+        /// Gets or sets the target angle.
+        /// </summary>
+        /// <value>The target angle.</value>
         public float TargetAngle
         {
             get { return _targetAngle; }
             set { _targetAngle = value; }
         }
 
-        public float Breakpoint
-        {
-            get { return _breakpoint; }
-            set { _breakpoint = value; }
-        }
-
+        /// <summary>
+        /// Gets or sets the max torque.
+        /// </summary>
+        /// <value>The max torque.</value>
         public float MaxTorque
         {
             get { return _maxTorque; }
@@ -76,13 +64,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             set { _torqueMultiplier = value; }
         }
 
-        public float SpringError
-        {
-            get { return _springError; }
-        }
-
-        public event EventHandler<EventArgs> Broke;
-
         public override void Validate()
         {
             //if _body is disposed then dispose the joint.
@@ -94,24 +75,20 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public override void Update(float dt)
         {
-            if (Enabled && Math.Abs(_springError) > _breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, new EventArgs());
-            }
+            base.Update(dt);
+            
             if (IsDisposed)
-            {
                 return;
-            }
+            
             //calculate and apply spring force
             float angleDifference = _targetAngle - _body.totalRotation;
-            float springTorque = _springConstant*angleDifference;
-            _springError = angleDifference;
+            float springTorque = SpringConstant*angleDifference;
+            SpringError = angleDifference;
 
             //apply torque at anchor
             if (!_body.IsStatic)
             {
-                float torque1 = springTorque - _dampningConstant*_body.angularVelocity;
+                float torque1 = springTorque - DampningConstant*_body.angularVelocity;
                 torque1 = Math.Min(Math.Abs(torque1*_torqueMultiplier), _maxTorque)*Math.Sign(torque1);
                 _body.ApplyTorque(torque1);
             }

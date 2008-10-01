@@ -3,19 +3,33 @@ using System;
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
     /// <summary>
-    /// Provides the implementation that all springs need.
+    /// Provides common functionality for springs.
     /// </summary>
     public abstract class Spring : IDisposable
     {
         public bool Enabled = true;
         public bool IsDisposed;
+
+        /// <summary>
+        /// The Breakpoint simply indicates the maximum value the JointError can be before it breaks.
+        /// </summary>
         public float Breakpoint = float.MaxValue;
         public float DampningConstant;
         public float SpringConstant;
-        private float _springError;
+
+        /// <summary>
+        /// Fires when the spring is broken.
+        /// </summary>
         public event EventHandler<EventArgs> Broke;
 
         public Object Tag { get; set; }
+
+        /// <summary>
+        /// Gets or sets the spring error. The SpringError is a measure of how "broken" a spring is.
+        /// When the SpringError is greater than the Breakpoint, the spring is automatically disabled.
+        /// </summary>
+        /// <value>The spring error.</value>
+        public float SpringError { get; protected set; }
 
         #region IDisposable Members
 
@@ -31,18 +45,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public virtual void Update(float dt)
         {
-            if (Enabled && Math.Abs(SpringError) > Breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, new EventArgs());
-            }
+            if (!Enabled || Math.Abs(SpringError) <= Breakpoint)
+                return;
+
+            Enabled = false;
+
+            if (Broke != null)
+                Broke(this,EventArgs.Empty);
         }
 
-        public float SpringError
-        {
-            get { return _springError; }
-            protected set { _springError = value; }
-        }
 
         protected virtual void Dispose(bool disposing)
         {

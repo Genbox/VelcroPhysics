@@ -25,9 +25,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private ExtentInfoList _xInfoList;
         private ExtentList _yExtentList;
         private ExtentInfoList _yInfoList;
-        //private bool bForce;
         public CollisionPairDictionary collisionPairs;
-
 
         public SweepAndPruneCollider(PhysicsSimulator physicsSimulator)
         {
@@ -48,6 +46,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void ProcessDisposedGeoms()
         {
+            //TODO: Could use lamda expressions. Need to test the performance first.
             if (_xInfoList.RemoveAll(delegate(ExtentInfo i)
             { return i.geometry.IsDisposed; }) > 0)
             {

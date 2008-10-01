@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace FarseerGames.FarseerPhysics.Controllers
 {
     /// <summary>
-    /// Provides a type strong list of controllers
+    /// Provides an implementation of a strongly typed List with Controller
     /// </summary>
     public class ControllerList : List<Controller>
     {

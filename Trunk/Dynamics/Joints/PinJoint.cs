@@ -1,4 +1,3 @@
-using System;
 using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
 using Microsoft.Xna.Framework; 
@@ -8,6 +7,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
     /// A pin joint works like 2 revolute joints with a fixed distance between them.
+    /// Essentially it places 2 bodies at a fixed distance from each other.
     /// </summary>
     public class PinJoint : Joint
     {
@@ -43,24 +43,40 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             Anchor2 = anchor2;
         }
 
+        /// <summary>
+        /// Gets or sets the first body.
+        /// </summary>
+        /// <value>The body1.</value>
         public Body Body1
         {
             get { return _body1; }
             set { _body1 = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the second body.
+        /// </summary>
+        /// <value>The body2.</value>
         public Body Body2
         {
             get { return _body2; }
             set { _body2 = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the target distance.
+        /// </summary>
+        /// <value>The target distance.</value>
         public float TargetDistance
         {
             get { return _targetDistance; }
             set { _targetDistance = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the fist anchor.
+        /// </summary>
+        /// <value>The anchor1.</value>
         public Vector2 Anchor1
         {
             get { return _anchor1; }
@@ -73,6 +89,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
         }
 
+        /// <summary>
+        /// Gets or sets the second anchor.
+        /// </summary>
+        /// <value>The anchor2.</value>
         public Vector2 Anchor2
         {
             get { return _anchor2; }
@@ -85,17 +105,23 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
         }
 
+        /// <summary>
+        /// Gets the first world anchor.
+        /// </summary>
+        /// <value>The world anchor1.</value>
         public Vector2 WorldAnchor1
         {
             get { return _worldAnchor1; }
         }
 
+        /// <summary>
+        /// Gets the second world anchor.
+        /// </summary>
+        /// <value>The world anchor2.</value>
         public Vector2 WorldAnchor2
         {
             get { return _worldAnchor2; }
         }
-
-        public event EventHandler<EventArgs> Broke;
 
         public override void Validate()
         {
@@ -107,15 +133,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (Enabled && Math.Abs(JointError) > Breakpoint)
-            {
-                Enabled = false;
-                if (Broke != null) Broke(this, new EventArgs());
-            }
             if (IsDisposed)
-            {
                 return;
-            }
 
             //calc _r1 and _r2 from the anchors
             _body1.GetBodyMatrix(out _body1MatrixTemp);
@@ -161,14 +180,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void Update()
         {
-            if (Math.Abs(JointError) > Breakpoint)
-            {
-                Dispose();
-            } //check if joint is broken
+            base.Update();
+
             if (IsDisposed)
-            {
                 return;
-            }
 
             //calc velocity anchor points (angular component + linear)
             Calculator.Cross(ref _body1.angularVelocity, ref _r1, out _angularVelocityComponent1);
