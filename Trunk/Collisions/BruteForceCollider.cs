@@ -52,34 +52,21 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     _geometryA = _physicsSimulator.geomList[i];
                     _geometryB = _physicsSimulator.geomList[j];
 
-                    //Possible early exits
-                    if (!_geometryA.Body.enabled || !_geometryB.Body.enabled)
-                    {
+                    if (!_geometryA.body.enabled || !_geometryB.body.enabled)
                         continue;
-                    }
 
-                    if ((_geometryA.CollisionGroup == _geometryB.CollisionGroup) && _geometryA.CollisionGroup != 0 &&
-                        _geometryB.CollisionGroup != 0)
-                    {
+                    if ((_geometryA.collisionGroup == _geometryB.collisionGroup) &&
+                        _geometryA.collisionGroup != 0 && _geometryB.collisionGroup != 0)
                         continue;
-                    }
 
-                    if (!_geometryA.CollisionEnabled || !_geometryB.CollisionEnabled)
-                    {
+                    if (!_geometryA.collisionEnabled || !_geometryB.collisionEnabled)
                         continue;
-                    }
 
-                    //Don't collide two static bodies
-                    if (_geometryA.Body.isStatic && _geometryB.Body.isStatic)
-                    {
+                    if (_geometryA.body.isStatic && _geometryB.body.isStatic)
                         continue;
-                    }
 
-                    //Don't collide two geometries connected to the same body
-                    if (_geometryA.Body == _geometryB.Body)
-                    {
+                    if (_geometryA.body == _geometryB.body)
                         continue;
-                    }
 
                     if (((_geometryA.CollisionCategories & _geometryB.CollidesWith) == CollisionCategory.None) &
                         ((_geometryB.CollisionCategories & _geometryA.CollidesWith) == CollisionCategory.None))
