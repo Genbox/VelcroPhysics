@@ -38,17 +38,21 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public void ComputeGrid(Geom geometry, float gridCellSize)
         {
-            //prepare the geometry.
+            //Prepare the geometry.
             Matrix old = geometry.Matrix;
+
+            //TODO: Assign geometry.Matrix to Matrix.Identity directly
             Matrix identity = Matrix.Identity;
             geometry.Matrix = identity;
 
+            //Copy the AABB to the grid field
             _aabb = new AABB(geometry.AABB);
             _gridCellSize = gridCellSize;
             _gridCellSizeInv = 1/gridCellSize;
 
-            int xSize = (int) Math.Ceiling(Convert.ToDouble((_aabb.Max.X - _aabb.Min.X)*_gridCellSizeInv)) + 1;
-            int ySize = (int) Math.Ceiling(Convert.ToDouble((_aabb.Max.Y - _aabb.Min.Y)*_gridCellSizeInv)) + 1;
+            //NOTE: Useing double cast instead of converting.
+            int xSize = (int) Math.Ceiling((double)(_aabb.Max.X - _aabb.Min.X)*_gridCellSizeInv) + 1;
+            int ySize = (int) Math.Ceiling((double)(_aabb.Max.Y - _aabb.Min.Y)*_gridCellSizeInv) + 1;
 
             //TODO: Possible optimization (normal)! If the shape is symmetric in X and Y axis, don't calculate the points, replicate them.
             _nodes = new float[xSize,ySize];
@@ -77,7 +81,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 int x = (int) Math.Floor((vector.X - _aabb.Min.X)*_gridCellSizeInv);
                 int y = (int) Math.Floor((vector.Y - _aabb.Min.Y)*_gridCellSizeInv);
-
 
                 float xPercent = (vector.X - (_gridCellSize*x + _aabb.Min.X))*_gridCellSizeInv;
                 float yPercent = (vector.Y - (_gridCellSize*y + _aabb.Min.Y))*_gridCellSizeInv;

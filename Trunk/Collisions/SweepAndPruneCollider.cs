@@ -26,6 +26,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private ExtentList _yExtentList;
         private ExtentInfoList _yInfoList;
         public CollisionPairDictionary collisionPairs;
+        public event BroadPhaseCollisionHandler OnBroadPhaseCollision;
 
         public SweepAndPruneCollider(PhysicsSimulator physicsSimulator)
         {
@@ -397,6 +398,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                             if (DoCollision(thisGeom, g) == false)
                                 continue;
 
+                            //TODO: Should call OnBroadPhaseCollision event here. But not until
+                            //the Run() method has been looked after
+
                             collisionPairs.AddPair(thisGeom, g);
                         }
                     }
@@ -437,7 +441,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 // Arbitrarly choose 10000 as a number of colliders that we won't 
                 // approach any time soon.
-                return (geom1.Id*10000 + geom2.Id);
+                return (geom1.Id * 10000 + geom2.Id);
             }
 
             public override bool Equals(object obj)
@@ -445,7 +449,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 if (!(obj is CollisionPair))
                     return false;
 
-                return Equals((CollisionPair) obj);
+                return Equals((CollisionPair)obj);
             }
 
             public bool Equals(CollisionPair other)
@@ -600,7 +604,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         if (DoCollision(g1, g2) == false)
                             continue;
 
-                        owner.collisionPairs.AddPair(g1, g2);
+                        //Call the OnBroadPhaseCollision event first. If the user aborts the collision
+                        //it will not create an arbiter
+                        if (owner.OnBroadPhaseCollision != null)
+                        {
+                            if (owner.OnBroadPhaseCollision(g1, g2))
+                                owner.collisionPairs.AddPair(g1, g2);
+                        }
+                        else
+                        {
+                            owner.collisionPairs.AddPair(g1, g2);
+                        }
                     }
                 }
             }
@@ -775,7 +789,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     if (evalExtent.isMin)
                     {
                         while (currExtent.value > evalExtent.value)
-                            //while (currExtent.value >= evalExtent.value)
+                        //while (currExtent.value >= evalExtent.value)
                         {
                             if (currExtent.isMin)
                             {
@@ -815,7 +829,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     else
                     {
                         while (currExtent.value > evalExtent.value)
-                            //while (currExtent.value >= evalExtent.value)
+                        //while (currExtent.value >= evalExtent.value)
                         {
                             if (currExtent.isMin)
                             {

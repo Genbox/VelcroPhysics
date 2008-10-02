@@ -12,6 +12,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private Geom _geometryA;
         private Geom _geometryB;
         private PhysicsSimulator _physicsSimulator;
+        public event BroadPhaseCollisionHandler OnBroadPhaseCollision;
 
         public BruteForceCollider(PhysicsSimulator physicsSimulator)
         {
@@ -39,6 +40,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             DoCollision();
         }
+
 
         #endregion
 
@@ -91,6 +93,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     }
 
                     #endregion
+
+                    //Call the OnBroadPhaseCollision event first. If the user aborts the collision
+                    //it will not create an arbiter
+                    if (intersection)
+                    {
+                        if (OnBroadPhaseCollision != null)
+                        {
+                            intersection = OnBroadPhaseCollision(_geometryA, _geometryB);
+                        }
+                    }
 
                     if (intersection)
                     {

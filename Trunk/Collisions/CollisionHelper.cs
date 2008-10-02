@@ -13,12 +13,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     public static class CollisionHelper
     {
-        #region Delegates
-
-        public delegate bool BroadPhaseCollisionHandler(Geom geometry1, Geom geometry2);
-
-        #endregion
-
         private const float _defaultFloatTolerance = .00001f;
 
         /// <summary>
