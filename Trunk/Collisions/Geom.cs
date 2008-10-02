@@ -17,7 +17,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         #region Delegates
 
         public delegate bool CollisionEventHandler(Geom geometry1, Geom geometry2, ContactList contactList);
-        public delegate void SeperationEventHandler(Geom geometry1, Geom geometry2);
+        public delegate void SeparationEventHandler(Geom geometry1, Geom geometry2);
 
         #endregion
 
@@ -40,7 +40,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Fires when a seperation between this and another geom occurs
         /// </summary>
-        public SeperationEventHandler OnSeperation;
+        public SeparationEventHandler OnSeparation;
         public bool IsDisposed;
 
         //collides with all categories by default
