@@ -49,7 +49,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo2
             _rectangleBody.Position = new Vector2(256, 384);
             _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(PhysicsSimulator, _rectangleBody, 128, 128);
 
-            _circleBody = BodyFactory.Instance.CreateCircleBody(PhysicsSimulator, 64, 1); //fix 
+            _circleBody = BodyFactory.Instance.CreateCircleBody(PhysicsSimulator, 64, 1); 
             _circleBody.Position = new Vector2(725, 384);
             _circleGeom = GeomFactory.Instance.CreateCircleGeom(PhysicsSimulator, _circleBody, 64, 20);
 
