@@ -90,9 +90,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             _circleTexture = DrawingHelper.CreateCircleTexture(graphicsDevice, radius, Color.White, Color.Black);
 
             //body is created as rectangle so that it has the moment of inertia closer to the final shape of the object.
-            _angleSpringleverBody = BodyFactory.Instance.CreateBody(physicsSimulator, 1,
-                                                                    BodyFactory.MOIForRectangle(_rectangleWidth,
-                                                                                                _rectangleHeight, 1f));
+            _angleSpringleverBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _rectangleWidth,
+                                                                             _rectangleHeight, 1f);
 
             _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _angleSpringleverBody,
                                                                       _rectangleWidth, _rectangleHeight);

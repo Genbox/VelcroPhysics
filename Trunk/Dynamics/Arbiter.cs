@@ -396,7 +396,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             /*
              * we don't want to check for a collision, if both bodies are disabled...
              */
-
+            //NOTE: Arbiters should not be created in the broad phase if both bodies are disabled
+            //is this redundant?
             if (GeomA.body.enabled == false && GeomB.body.enabled == false)
             {
                 _mergedContactList.Clear();
@@ -437,25 +438,27 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             int vertexIndex = -1;
 
+            //Iterate the second geometry vertices
             for (int i = 0; i < geometry2.worldVertices.Count; i++)
             {
                 if (contactList.Count == _physicsSimulator.maxContactsToDetect)
-                {
                     break;
-                }
+
+                //grid can be null for "one-way" collision (points)
                 if (geometry1.grid == null)
-                {
                     break;
-                } //grid can be null for "one-way" collision (points)
 
                 vertexIndex += 1;
                 _vertRef = geometry2.WorldVertices[i];
                 geometry1.TransformToLocalCoordinates(ref _vertRef, out _localVertex);
-                if (!geometry1.Intersect(ref _localVertex, out _feature))
-                {
-                    continue;
-                }
 
+                //The geometry intersects when distance <= 0
+                //Continue in the list if the current vector does not intersect
+                if (!geometry1.Intersect(ref _localVertex, out _feature))
+                    continue;
+
+                //If the second geometry's current vector intersects with the first geometry
+                //create a new contact and add it to the contact list.
                 if (_feature.Distance < 0f)
                 {
                     geometry1.TransformNormalToWorld(ref _feature.Normal, out _feature.Normal);
@@ -465,25 +468,22 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 }
             }
 
+            //Iterate the first geometry vertices
             for (int i = 0; i < geometry1.WorldVertices.Count; i++)
             {
                 if (contactList.Count == _physicsSimulator.maxContactsToDetect)
-                {
                     break;
-                }
+
+                    //grid can be null for "one-way" collision (points)
                 if (geometry2.grid == null)
-                {
                     break;
-                } //grid can be null for "one-way" collision (points)
 
                 vertexIndex += 1;
-
                 _vertRef = geometry1.WorldVertices[i];
                 geometry2.TransformToLocalCoordinates(ref _vertRef, out _localVertex);
+
                 if (!geometry2.Intersect(ref _localVertex, out _feature))
-                {
                     continue;
-                }
 
                 if (_feature.Distance < 0f)
                 {
@@ -500,7 +500,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
             //resolve deepest contacts first
             int contactCount = contactList.Count;
-            if (contactList.Count > _physicsSimulator.maxContactsToResolve)
+            if (contactCount > _physicsSimulator.maxContactsToResolve)
             {
                 contactList.RemoveRange(_physicsSimulator.maxContactsToResolve,
                                         contactCount - _physicsSimulator.maxContactsToResolve);
@@ -509,10 +509,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             //allow user to cancel collision if desired
             if (geometry1.OnCollision != null)
             {
+                //If the contactlist is populated, this means that there is an collision.
                 if (contactList.Count > 0)
                 {
                     if (!geometry1.OnCollision(geometry1, geometry2, contactList))
                     {
+                        //The user aborted the collision. Clear the contact list as we don't need it anymore.
                         contactList.Clear();
                     }
                 }

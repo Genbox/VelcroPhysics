@@ -39,6 +39,8 @@ namespace FarseerGames.FarseerPhysics.Factories
         {
             Body body = new Body();
             body.Mass = mass;
+
+            //MOI for rectangles.
             body.MomentOfInertia = mass*(width*width + height*height)/12;
             return body;
         }
@@ -55,6 +57,8 @@ namespace FarseerGames.FarseerPhysics.Factories
         {
             Body body = new Body();
             body.Mass = mass;
+
+            //MOI for circles
             body.MomentOfInertia = .5f*mass*(float) Math.Pow(radius, 2f);
             return body;
         }
@@ -117,11 +121,6 @@ namespace FarseerGames.FarseerPhysics.Factories
         {
             Body bodyClone = new Body(body);
             return bodyClone;
-        }
-
-        public static float MOIForRectangle(float width, float height, float mass)
-        {
-            return mass*(width*width + height*height)/12;
         }
     }
 }
