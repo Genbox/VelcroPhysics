@@ -16,6 +16,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private List<Stub> _xStubs;
         private List<Stub> _yStubs;
         private LinkedList<Wrapper> _currentBodies = new LinkedList<Wrapper>();
+        public event BroadPhaseCollisionHandler OnBroadPhaseCollision;
 
         public SelectiveSweepCollider(PhysicsSimulator physicsSimulator)
         {
@@ -232,7 +233,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         if (wrapper1.min <= wrapper2.max && //tests the other axis
                             wrapper2.min <= wrapper1.max)
                         {
-                            OnCollision(geom1, geom2);
+                            //Call the OnBroadPhaseCollision event first. If the user aborts the collision
+                            //it will not create an arbiter
+                            if (OnBroadPhaseCollision != null)
+                            {
+                                if (OnBroadPhaseCollision(geom1, geom2))
+                                    OnCollision(geom1, geom2);
+                            }
+                            else
+                            {
+                                OnCollision(geom1, geom2);
+                            }
                         }
                     }
                     if (wrapper1.shouldAddNode)

@@ -8,11 +8,10 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
-    /// <remark>
+    /// <summary>
     /// The geometry class is the heart of collision detection.
     /// A Geom need a body and a set of vertices. The vertices should define the edge of the shape.
-    /// AABB and Grid is part of the collision detection.
-    /// </remark>
+    /// </summary>
     public class Geom : IEquatable<Geom>, IDisposable
     {
         #region Delegates

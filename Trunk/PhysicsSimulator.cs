@@ -4,9 +4,10 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
+using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Interfaces;
 #if (XNA)
-using Microsoft.Xna.Framework; 
+using Microsoft.Xna.Framework;
 using System.Diagnostics;
 #else
 using FarseerGames.FarseerPhysics.Mathematics;
@@ -54,6 +55,11 @@ namespace FarseerGames.FarseerPhysics
         internal List<Joint> jointAddList;
         internal JointList jointList;
         internal List<Joint> jointRemoveList;
+
+        internal List<Spring> springAddList;
+        internal SpringList springList;
+        internal List<Spring> springRemoveList;
+
         internal int maxContactsToDetect = 3;
         internal int maxContactsToResolve = 2;
         internal float narrowPhaseCollisionTime = -1;
@@ -86,12 +92,29 @@ namespace FarseerGames.FarseerPhysics
         }
 
         /// <summary>
+        /// Gets or sets the broad phase collider.
+        /// Make sure that the engine does not contain any geom's when setting the broad phase collider.
+        /// </summary>
+        /// <value>The current broad phase collider.</value>
+        /// <exception cref="Exception">The GeomList must be empty when setting the broad phase collider type</exception>
+        public IBroadPhaseCollider BroadPhaseCollider
+        {
+            get { return _broadPhaseCollider; }
+            set
+            {
+                if (geomList.Count > 0)
+                    throw new Exception("The GeomList must be empty when setting the broad phase collider type");
+
+                _broadPhaseCollider = value;
+            }
+        }
+
+        /// <summary>
         /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
         public GeomList GeomList
         {
             get { return geomList; }
-            //set { geometryList = value; }
         }
 
         /// <summary>
@@ -100,7 +123,6 @@ namespace FarseerGames.FarseerPhysics
         public BodyList BodyList
         {
             get { return bodyList; }
-            //set { bodyList = value; }
         }
 
         /// <summary>
@@ -109,7 +131,14 @@ namespace FarseerGames.FarseerPhysics
         public ControllerList ControllerList
         {
             get { return controllerList; }
-            //set { controllerList = value; }
+        }
+
+        /// <summary>
+        /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
+        /// </summary>
+        public SpringList SpringList
+        {
+            get { return springList; }
         }
 
         /// <summary>
@@ -242,6 +271,10 @@ namespace FarseerGames.FarseerPhysics
             jointAddList = new List<Joint>();
             jointRemoveList = new List<Joint>();
 
+            springList = new SpringList();
+            springAddList = new List<Spring>();
+            springRemoveList = new List<Spring>();
+
             _broadPhaseCollider = new SelectiveSweepCollider(this);
 
             arbiterList = new ArbiterList();
@@ -256,16 +289,6 @@ namespace FarseerGames.FarseerPhysics
             _scaling = new Scaling(0.001f, 0.01f);
 
             #endregion
-        }
-
-        /// <exception cref="Exception">The GeomList must be empty when setting the broad phase collider type</exception>
-        public void SetBroadPhaseCollider(IBroadPhaseCollider broadPhaseCollider)
-        {
-            if (geomList.Count > 0)
-            {
-                throw new Exception("The GeomList must be empty when setting the broad phase collider type");
-            }
-            _broadPhaseCollider = broadPhaseCollider;
         }
 
         public void Add(Geom geometry)
@@ -320,6 +343,19 @@ namespace FarseerGames.FarseerPhysics
             jointRemoveList.Add(joint);
         }
 
+        public void Add(Spring spring)
+        {
+            if (!springAddList.Contains(spring))
+            {
+                springAddList.Add(spring);
+            }
+        }
+
+        public void Remove(Spring spring)
+        {
+            springRemoveList.Add(spring);
+        }
+
         public void Clear()
         {
             //arbiterList.Clear();
@@ -347,7 +383,7 @@ namespace FarseerGames.FarseerPhysics
 #if (XNA)
             if (EnableDiagnostics) _sw.Start();
 #endif
-            
+
             #region Added by Daniel Pramel 08/24/08
 
             dt = _scaling.GetUpdateInterval(dt);
@@ -412,13 +448,13 @@ namespace FarseerGames.FarseerPhysics
                 _sw.Stop();
                 updateTime = _sw.ElapsedTicks;
 
-                cleanUpTime = 1000*cleanUpTime/Stopwatch.Frequency;
-                broadPhaseCollisionTime = 1000*broadPhaseCollisionTime/Stopwatch.Frequency;
-                narrowPhaseCollisionTime = 1000*narrowPhaseCollisionTime/Stopwatch.Frequency;
-                applyForcesTime = 1000*applyForcesTime/Stopwatch.Frequency;
-                applyImpulsesTime = 1000*applyImpulsesTime/Stopwatch.Frequency;
-                updatePositionsTime = 1000*updatePositionsTime/Stopwatch.Frequency;
-                updateTime = 1000*updateTime/Stopwatch.Frequency;
+                cleanUpTime = 1000 * cleanUpTime / Stopwatch.Frequency;
+                broadPhaseCollisionTime = 1000 * broadPhaseCollisionTime / Stopwatch.Frequency;
+                narrowPhaseCollisionTime = 1000 * narrowPhaseCollisionTime / Stopwatch.Frequency;
+                applyForcesTime = 1000 * applyForcesTime / Stopwatch.Frequency;
+                applyImpulsesTime = 1000 * applyImpulsesTime / Stopwatch.Frequency;
+                updatePositionsTime = 1000 * updatePositionsTime / Stopwatch.Frequency;
+                updateTime = 1000 * updateTime / Stopwatch.Frequency;
                 _sw.Reset();
             }
 #endif
@@ -502,6 +538,14 @@ namespace FarseerGames.FarseerPhysics
                 if (controllerList[i].Enabled)
                 {
                     controllerList[i].Update(dt);
+                }
+            }
+
+            for (int i = 0; i < springList.Count; i++)
+            {
+                if (springList[i].Enabled)
+                {
+                    springList[i].Update(dt);
                 }
             }
 
@@ -624,6 +668,16 @@ namespace FarseerGames.FarseerPhysics
                 }
             }
             jointAddList.Clear();
+
+            //add any new springs
+            for (int i = 0; i < springAddList.Count; i++)
+            {
+                if (!springList.Contains(springAddList[i]))
+                {
+                    springList.Add(springAddList[i]);
+                }
+            }
+            springAddList.Clear();
         }
 
         private void ProcessRemovedItems()
@@ -672,6 +726,13 @@ namespace FarseerGames.FarseerPhysics
                 jointList.Remove(jointRemoveList[i]);
             }
             jointRemoveList.Clear();
+
+            //remove any new springs
+            for (int i = 0; i < springRemoveList.Count; i++)
+            {
+                springList.Remove(springRemoveList[i]);
+            }
+            springRemoveList.Clear();
         }
 
         private void ProcessDisposedItems()
@@ -681,6 +742,19 @@ namespace FarseerGames.FarseerPhysics
             {
                 controllerList[i].Validate();
             }
+
+            //allow each joint to validate itself. this is where a joint can Dispose of itself if need be.
+            for (int i = 0; i < jointList.Count; i++)
+            {
+                jointList[i].Validate();
+            }
+
+            //allow each spring to validate itself. this is where a joint can Dispose of itself if need be.
+            for (int i = 0; i < springList.Count; i++)
+            {
+                springList[i].Validate();
+            }
+
             int disposedGeomCount = geomList.RemoveDisposed();
 
             if (disposedGeomCount > 0)
@@ -690,12 +764,7 @@ namespace FarseerGames.FarseerPhysics
 
             bodyList.RemoveDisposed();
             controllerList.RemoveDisposed();
-
-            //allow each joint to validate itself. this is where a joint can Dispose of itself if need be.
-            for (int i = 0; i < jointList.Count; i++)
-            {
-                jointList[i].Validate();
-            }
+            springList.RemoveDisposed();
             jointList.RemoveDisposed();
 
             //remove all arbiters that contain 1 or more disposed rigid bodies.
