@@ -590,7 +590,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Adds a force to the body. Takes a Vector2 as parameter 
+        /// Adds force to the body.
         /// </summary>
         /// <param name="force">The force.</param>
         public void ApplyForce(Vector2 force)
