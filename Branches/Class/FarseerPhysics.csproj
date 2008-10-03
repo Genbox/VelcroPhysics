@@ -214,9 +214,6 @@
     <Compile Include="..\..\Trunk\Interfaces\IBroadPhaseCollider.cs">
       <Link>Interfaces\IBroadPhaseCollider.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Interfaces\ICollideable.cs">
-      <Link>Interfaces\ICollideable.cs</Link>
-    </Compile>
     <Compile Include="..\..\Trunk\Interfaces\IFluidContainer.cs">
       <Link>Interfaces\IFluidContainer.cs</Link>
     </Compile>

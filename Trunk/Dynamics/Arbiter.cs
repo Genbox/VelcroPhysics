@@ -127,9 +127,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         internal void PreStepImpulse(float inverseDt)
         {
             if (!GeometryA.CollisionResponseEnabled || !GeometryB.CollisionResponseEnabled)
-            {
                 return;
-            }
+
             for (int i = 0; i < _contactList.Count; i++)
             {
                 Contact contact = _contactList[i];
@@ -198,9 +197,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         internal void ApplyImpulse()
         {
             if (!GeometryA.CollisionResponseEnabled || !GeometryB.CollisionResponseEnabled)
-            {
                 return;
-            }
+
             for (int i = 0; i < _contactList.Count; i++)
             {
                 _contact = _contactList[i];
@@ -230,8 +228,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 #endregion
 
-                //calc velocity difference along _contact normal
-
+                //calc velocity difference along contact normal
                 #region INLINE: Vector2.Dot(ref _dv, ref _contact.Normal, out _vn);
 
                 _vn = (_dv.X*_contact.Normal.X) + (_dv.Y*_contact.Normal.Y);
@@ -240,13 +237,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 _normalImpulse = _contact.MassNormal*-(_vn + _contact.BounceVelocity); //uncomment for preserve momentum
 
-                //clamp accumulated _impulse
+                //clamp accumulated impulse
                 _oldNormalImpulse = _contact.NormalImpulse;
                 _contact.NormalImpulse = Math.Max(_oldNormalImpulse + _normalImpulse, 0);
                 _normalImpulse = _contact.NormalImpulse - _oldNormalImpulse;
 
-                //apply _contact _impulse
-
+                //apply contact impulse
                 #region INLINE: Vector2.Multiply(ref _contact.Normal, _normalImpulse, out _impulse);
 
                 _impulse.X = _contact.Normal.X*_normalImpulse;
@@ -276,8 +272,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 #endregion
 
-                //calc velocity bias along _contact normal
-
+                //calc velocity bias along contact normal
                 #region INLINE: Vector2.Dot(ref _dv, ref _contact.Normal, out _normalVelocityBias);
 
                 _normalVelocityBias = (_dv.X*_contact.Normal.X) + (_dv.Y*_contact.Normal.Y);
@@ -296,7 +291,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 #endregion
 
-                //apply bias _impulse
+                //apply bias impulse
                 GeometryB.body.ApplyBiasImpulseAtWorldOffset(ref _impulseBias, ref _contact.R2);
 
                 #region INLINE: Vector2.Multiply(ref _impulseBias, -1, out _impulseBias);
@@ -308,7 +303,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 GeometryA.body.ApplyBiasImpulseAtWorldOffset(ref _impulseBias, ref _contact.R1);
 
-                //calc relative velocity at _contact.
+                //calc relative velocity at contact.
                 GeometryA.body.GetVelocityAtWorldOffset(ref _contact.R1, out _vec1);
                 GeometryB.body.GetVelocityAtWorldOffset(ref _contact.R2, out _vec2);
 
@@ -319,7 +314,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 #endregion
 
-                //compute friction _impulse
+                //compute friction impulse
                 _maxTangentImpulse = _frictionCoefficientCombined*_contact.NormalImpulse;
 
                 //Vector2 _tangent = Calculator.Cross(_contact.Normal, 1);
@@ -342,14 +337,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 _tangentImpulse = _contact.MassTangent*(-_vt);
 
-                ////clamp friction
+                //clamp friction
                 _oldTangentImpulse = _contact.TangentImpulse;
                 _contact.TangentImpulse = Calculator.Clamp(_oldTangentImpulse + _tangentImpulse, -_maxTangentImpulse,
                                                            _maxTangentImpulse);
                 _tangentImpulse = _contact.TangentImpulse - _oldTangentImpulse;
 
-                //apply friction _impulse
-
+                //apply friction impulse
                 #region INLINE:Vector2.Multiply(ref _tangent, _tangentImpulse, out _impulse);
 
                 _impulse.X = _tangent.X*_tangentImpulse;
@@ -357,7 +351,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 #endregion
 
-                //apply _impulse
+                //apply impulse
                 GeometryB.body.ApplyImpulseAtWorldOffset(ref _impulse, ref _contact.R2);
 
                 #region INLINE: Vector2.Multiply(ref _impulse, -1, out _impulse);
