@@ -286,15 +286,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             Arbiter arbiter = _physicsSimulator.arbiterPool.Fetch();
             arbiter.ConstructArbiter(geom1, geom2, _physicsSimulator);
-
+            
+            //TODO: Since we insert all arbiters that is already in the arbiterList into the pool
+            //should we not restrict the size of the pool to a fixed number? A large simulation
+            //that runs for some time might accumulate A LOT of arbiters in the pool.
             if (!_physicsSimulator.arbiterList.Contains(arbiter))
-            {
                 _physicsSimulator.arbiterList.Add(arbiter);
-            }
             else
-            {
-                _physicsSimulator.arbiterPool.Release(arbiter);
-            }
+                _physicsSimulator.arbiterPool.Insert(arbiter);
         }
 
         #region Nested type: Stub

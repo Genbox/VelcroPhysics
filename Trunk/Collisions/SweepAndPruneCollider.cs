@@ -323,7 +323,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 if (!_physicsSimulator.arbiterList.Contains(arbiter))
                     _physicsSimulator.arbiterList.Add(arbiter);
                 else
-                    _physicsSimulator.arbiterPool.Release(arbiter);
+                    _physicsSimulator.arbiterPool.Insert(arbiter);
             }
         }
 
