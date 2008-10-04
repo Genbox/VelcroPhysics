@@ -66,33 +66,33 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
             _bodiesEnabled = 0;
 
-            foreach (Body b in _physicsSimulator.BodyList)
+            foreach (Body body in _physicsSimulator.BodyList)
             {
-                if (b.IsStatic) continue; // do not apply to static bodies
-                if (b.Enabled == false) continue; // do not apply to disabled bodies
+                if (body.IsStatic) continue; // do not apply to static bodies
+                if (body.Enabled == false) continue; // do not apply to disabled bodies
 
                 _bodiesEnabled++;
 
-                if (!b.Moves && b.IsAutoIdle)
+                if (!body.Moves && body.IsAutoIdle)
                 {
                     // body doesn't move -> increment idle time
-                    b.IdleTime += ms;
-                    if (b.IdleTime >= _maxIdleTime) b.Enabled = false;
+                    body.IdleTime += ms;
+                    if (body.IdleTime >= _maxIdleTime) body.Enabled = false;
                 }
                 else
                 {
                     // body moves -> reset the idle time...
-                    b.IdleTime = 0;
+                    body.IdleTime = 0;
 
                     // ... and check if this body can enable disabled bodies
-                    foreach (Body b2 in _physicsSimulator.bodyList)
+                    foreach (Body body2 in _physicsSimulator.bodyList)
                     {
-                        if (b2.enabled == false && b2.IsAutoIdle)
+                        if (body2.enabled == false && body2.IsAutoIdle)
                         {
-                            if (IsInActivationDistance(b, b2))
+                            if (IsInActivationDistance(body, body2))
                             {
-                                b2.enabled = true;
-                                b2.IdleTime = 0;
+                                body2.enabled = true;
+                                body2.IdleTime = 0;
                             }
                         }
                     }

@@ -8,7 +8,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     public class BruteForceCollider : IBroadPhaseCollider
     {
-        private Arbiter _arbiter;
         private Geom _geometryA;
         private Geom _geometryB;
         private PhysicsSimulator _physicsSimulator;
@@ -96,28 +95,34 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                     //Call the OnBroadPhaseCollision event first. If the user aborts the collision
                     //it will not create an arbiter
-                    if (intersection)
-                    {
-                        if (OnBroadPhaseCollision != null)
-                        {
-                            intersection = OnBroadPhaseCollision(_geometryA, _geometryB);
-                        }
-                    }
 
-                    if (intersection)
-                    {
-                        _arbiter = _physicsSimulator.arbiterPool.Fetch();
-                        _arbiter.ConstructArbiter(_geometryA, _geometryB, _physicsSimulator);
+                    if (OnBroadPhaseCollision != null)
+                        intersection = OnBroadPhaseCollision(_geometryA, _geometryB);
 
-                        if (_physicsSimulator.arbiterList.Contains(_arbiter))
-                        {
-                            _physicsSimulator.arbiterPool.Release(_arbiter);
-                        }
-                        else
-                        {
-                            _physicsSimulator.arbiterList.Add(_arbiter);
-                        }
-                    }
+                    //If the user aborted the intersection, continue to the next geometry.
+                    if (!intersection)
+                        continue;
+                   
+                    //Note: Commented this out and copy-paste into from other colliders
+                    //_arbiter = _physicsSimulator.arbiterPool.Fetch();
+                    //_arbiter.ConstructArbiter(_geometryA, _geometryB, _physicsSimulator);
+
+                    //if (_physicsSimulator.arbiterList.Contains(_arbiter))
+                    //{
+                    //    _physicsSimulator.arbiterPool.Insert(_arbiter);
+                    //}
+                    //else
+                    //{
+                    //    _physicsSimulator.arbiterList.Add(_arbiter);
+                    //}
+
+                    Arbiter arbiter = _physicsSimulator.arbiterPool.Fetch();
+                    arbiter.ConstructArbiter(_geometryA, _geometryB, _physicsSimulator);
+
+                    if (!_physicsSimulator.arbiterList.Contains(arbiter))
+                        _physicsSimulator.arbiterList.Add(arbiter);
+                    else
+                        _physicsSimulator.arbiterPool.Insert(arbiter);
                 }
             }
         }

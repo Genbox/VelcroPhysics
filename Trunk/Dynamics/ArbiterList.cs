@@ -52,7 +52,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             for (int j = 0; j < _markedForRemovalList.Count; j++)
             {
                 Remove(_markedForRemovalList[j]);
-                arbiterPool.Release(_markedForRemovalList[j]);
+                arbiterPool.Insert(_markedForRemovalList[j]);
                 
                 if (_markedForRemovalList[j].GeometryA.OnSeparation != null)
                 {
@@ -81,7 +81,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             for (int j = 0; j < _markedForRemovalList.Count; j++)
             {
                 Remove(_markedForRemovalList[j]);
-                arbiterPool.Release(_markedForRemovalList[j]);
+                arbiterPool.Insert(_markedForRemovalList[j]);
             }
             _markedForRemovalList.Clear();
         }

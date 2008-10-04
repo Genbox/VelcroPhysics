@@ -29,7 +29,7 @@ namespace FarseerGames.FarseerPhysics
             return new T();
         }
 
-        public void Release(T item)
+        public void Insert(T item)
         {
             _stack.Push(item);
         }
