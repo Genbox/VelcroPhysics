@@ -87,11 +87,11 @@ namespace FarseerGames.FarseerPhysics.Controllers
                     // ... and check if this body can enable disabled bodies
                     foreach (Body body2 in _physicsSimulator.bodyList)
                     {
-                        if (body2.enabled == false && body2.IsAutoIdle)
+                        if (body2.Enabled == false && body2.IsAutoIdle)
                         {
                             if (IsInActivationDistance(body, body2))
                             {
-                                body2.enabled = true;
+                                body2.Enabled = true;
                                 body2.IdleTime = 0;
                             }
                         }

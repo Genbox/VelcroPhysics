@@ -186,11 +186,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 return;
 
             //calc velocity anchor points (angular component + linear)
-            Calculator.Cross(ref _body1.angularVelocity, ref _r1, out _angularVelocityComponent1);
-            Vector2.Add(ref _body1.linearVelocity, ref _angularVelocityComponent1, out _velocity1);
+            Calculator.Cross(ref _body1.AngularVelocity, ref _r1, out _angularVelocityComponent1);
+            Vector2.Add(ref _body1.LinearVelocity, ref _angularVelocityComponent1, out _velocity1);
 
-            Calculator.Cross(ref _body2.angularVelocity, ref _r2, out _angularVelocityComponent2);
-            Vector2.Add(ref _body2.linearVelocity, ref _angularVelocityComponent2, out _velocity2);
+            Calculator.Cross(ref _body2.AngularVelocity, ref _r2, out _angularVelocityComponent2);
+            Vector2.Add(ref _body2.LinearVelocity, ref _angularVelocityComponent2, out _velocity2);
 
             //calc velocity difference
             Vector2.Subtract(ref _velocity2, ref _velocity1, out _dv);

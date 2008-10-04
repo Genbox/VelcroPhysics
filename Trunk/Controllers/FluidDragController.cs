@@ -157,7 +157,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
             _linearDragForce = -.5f * _density * _dragArea * _linearDragCoefficient * _partialMass * _centroidVelocity;
 
-            _rotationalDragTorque = -geom.body.angularVelocity * _rotationalDragCoeficient * _partialMass;
+            _rotationalDragTorque = -geom.body.AngularVelocity * _rotationalDragCoeficient * _partialMass;
         }
     }
 }

@@ -200,31 +200,31 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             if (IsDisposed)
                 return;
             
-            #region INLINE: Calculator.Cross(ref _body2.angularVelocity, ref _r2, out _vectorTemp1);
+            #region INLINE: Calculator.Cross(ref _body2.AngularVelocity, ref _r2, out _vectorTemp1);
 
-            _vectorTemp1.X = -_body2.angularVelocity*_r2.Y;
-            _vectorTemp1.Y = _body2.angularVelocity*_r2.X;
+            _vectorTemp1.X = -_body2.AngularVelocity*_r2.Y;
+            _vectorTemp1.Y = _body2.AngularVelocity*_r2.X;
 
             #endregion
 
-            #region INLINE: Calculator.Cross(ref _body1.angularVelocity, ref _r1, out _vectorTemp2);
+            #region INLINE: Calculator.Cross(ref _body1.AngularVelocity, ref _r1, out _vectorTemp2);
 
-            _vectorTemp2.X = -_body1.angularVelocity*_r1.Y;
-            _vectorTemp2.Y = _body1.angularVelocity*_r1.X;
+            _vectorTemp2.X = -_body1.AngularVelocity*_r1.Y;
+            _vectorTemp2.Y = _body1.AngularVelocity*_r1.X;
 
             #endregion
 
             #region INLINE: Vector2.Add(ref _body2.linearVelocity, ref _vectorTemp1, out _vectorTemp3);
 
-            _vectorTemp3.X = _body2.linearVelocity.X + _vectorTemp1.X;
-            _vectorTemp3.Y = _body2.linearVelocity.Y + _vectorTemp1.Y;
+            _vectorTemp3.X = _body2.LinearVelocity.X + _vectorTemp1.X;
+            _vectorTemp3.Y = _body2.LinearVelocity.Y + _vectorTemp1.Y;
 
             #endregion
 
             #region INLINE: Vector2.Add(ref _body1.linearVelocity, ref _vectorTemp2, out _vectorTemp4);
 
-            _vectorTemp4.X = _body1.linearVelocity.X + _vectorTemp2.X;
-            _vectorTemp4.Y = _body1.linearVelocity.Y + _vectorTemp2.Y;
+            _vectorTemp4.X = _body1.LinearVelocity.X + _vectorTemp2.X;
+            _vectorTemp4.Y = _body1.LinearVelocity.Y + _vectorTemp2.Y;
 
             #endregion
 
@@ -270,8 +270,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _dv.X = _impulse.X*_body2.inverseMass;
             _dv.Y = _impulse.Y*_body2.inverseMass;
 
-            _body2.linearVelocity.X = _dv.X + _body2.linearVelocity.X;
-            _body2.linearVelocity.Y = _dv.Y + _body2.linearVelocity.Y;
+            _body2.LinearVelocity.X = _dv.X + _body2.LinearVelocity.X;
+            _body2.LinearVelocity.Y = _dv.Y + _body2.LinearVelocity.Y;
 
             #endregion
 
@@ -283,7 +283,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             #region INLINE: _body2.ApplyAngularImpulse(ref _floatTemp1);
 
-            _body2.angularVelocity += _floatTemp1*_body2.inverseMomentOfInertia;
+            _body2.AngularVelocity += _floatTemp1*_body2.inverseMomentOfInertia;
 
             #endregion
 
@@ -299,8 +299,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _dv.X = _vectorTemp1.X*_body1.inverseMass;
             _dv.Y = _vectorTemp1.Y*_body1.inverseMass;
 
-            _body1.linearVelocity.X = _dv.X + _body1.linearVelocity.X;
-            _body1.linearVelocity.Y = _dv.Y + _body1.linearVelocity.Y;
+            _body1.LinearVelocity.X = _dv.X + _body1.LinearVelocity.X;
+            _body1.LinearVelocity.Y = _dv.Y + _body1.LinearVelocity.Y;
 
             #endregion
 
@@ -314,7 +314,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             #region INLINE: _body1.ApplyAngularImpulse(ref _floatTemp1);
 
-            _body1.angularVelocity += _floatTemp1*_body1.inverseMomentOfInertia;
+            _body1.AngularVelocity += _floatTemp1*_body1.inverseMomentOfInertia;
 
             #endregion
 

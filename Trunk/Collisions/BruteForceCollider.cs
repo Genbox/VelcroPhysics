@@ -53,7 +53,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     _geometryA = _physicsSimulator.geomList[i];
                     _geometryB = _physicsSimulator.geomList[j];
 
-                    if (!_geometryA.body.enabled || !_geometryB.body.enabled)
+                    if (!_geometryA.body.Enabled || !_geometryB.body.Enabled)
                         continue;
 
                     if ((_geometryA.collisionGroup == _geometryB.collisionGroup) &&

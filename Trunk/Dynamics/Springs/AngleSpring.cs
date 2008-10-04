@@ -112,14 +112,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             //apply torque at anchor
             if (!_body1.IsStatic)
             {
-                float torque1 = springTorque - DampningConstant*_body1.angularVelocity;
+                float torque1 = springTorque - DampningConstant*_body1.AngularVelocity;
                 torque1 = Math.Min(Math.Abs(torque1*_torqueMultiplier), _maxTorque)*Math.Sign(torque1);
                 _body1.ApplyTorque(torque1);
             }
 
             if (!_body2.IsStatic)
             {
-                float torque2 = -springTorque - DampningConstant*_body2.angularVelocity;
+                float torque2 = -springTorque - DampningConstant*_body2.AngularVelocity;
                 torque2 = Math.Min(Math.Abs(torque2*_torqueMultiplier), _maxTorque)*Math.Sign(torque2);
                 _body2.ApplyTorque(torque2);
             }

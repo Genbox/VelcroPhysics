@@ -392,7 +392,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
              */
             //NOTE: Arbiters should not be created in the broad phase if both bodies are disabled
             //is this redundant?
-            if (GeomA.body.enabled == false && GeomB.body.enabled == false)
+            if (GeomA.body.Enabled == false && GeomB.body.Enabled == false)
             {
                 _mergedContactList.Clear();
                 _contactList.Clear();

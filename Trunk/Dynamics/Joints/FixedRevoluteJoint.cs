@@ -165,8 +165,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             if (IsDisposed)
                 return;
 
-            Calculator.Cross(ref _body.angularVelocity, ref _r1, out _vectorTemp1);
-            Vector2.Add(ref _body.linearVelocity, ref _vectorTemp1, out _dv);
+            Calculator.Cross(ref _body.AngularVelocity, ref _r1, out _vectorTemp1);
+            Vector2.Add(ref _body.LinearVelocity, ref _vectorTemp1, out _dv);
             _dv = -_dv;
 
             Vector2.Subtract(ref _velocityBias, ref _dv, out _vectorTemp1);
