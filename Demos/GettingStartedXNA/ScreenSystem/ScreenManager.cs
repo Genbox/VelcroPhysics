@@ -47,11 +47,24 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             ContentManager = new ContentManager(game.Services);
             _graphicsDeviceService = (IGraphicsDeviceService)game.Services.GetService(
                                                                   typeof(IGraphicsDeviceService));
-
+            game.Exiting += Game_Exiting;
             TraceEnabled = true;
 
             if (_graphicsDeviceService == null)
                 throw new InvalidOperationException("No graphics device service.");
+        }
+
+        private void Game_Exiting(object sender, EventArgs e)
+        {
+            //Make sure to dispose ALL screens when the game is forcefully closed
+            //We do this to ensure that open resources and threads created by screens are closed.
+            foreach (GameScreen screen in _screens)
+            {
+                screen.Dispose();
+            }
+
+            _screens.Clear();
+            _screensToUpdate.Clear();
         }
 
         public SpriteFonts SpriteFonts
