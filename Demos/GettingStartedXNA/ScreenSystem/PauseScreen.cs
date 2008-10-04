@@ -22,10 +22,12 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         private string _title = "Title";
         private Texture2D _panelTexture;
         private Texture2D _textPanelTexture;
+        private GameScreen _caller;
 
-        public PauseScreen(string title, string details)
+        public PauseScreen(string title, string details, GameScreen caller)
         {
             IsPopup = true;
+            _caller = caller;
             _title = title;
             _details = details;
             TransitionOnTime = TimeSpan.FromSeconds(.2f);
@@ -47,6 +49,8 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                     ExitScreen();
                     break;
                 case 1:
+                    //also remove the screen that called this pausescreen
+                    ScreenManager.RemoveScreen(_caller);
                     ExitScreen();
                     ScreenManager.AddScreen(new MainMenuScreen());
                     break;
@@ -88,20 +92,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 
             base.Draw(gameTime);
             ScreenManager.SpriteBatch.End();
-        }
-
-        public override void HandleInput(InputState input)
-        {
-            if (input.MenuCancel)
-            {
-                ExitScreen();
-            }
-            base.HandleInput(input);
-        }
-
-        protected override void OnCancel()
-        {
-            ScreenManager.AddScreen(new MainMenuScreen());
         }
     }
 }

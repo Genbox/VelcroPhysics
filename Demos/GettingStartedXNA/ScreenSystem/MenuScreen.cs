@@ -70,21 +70,12 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
             {
                 OnSelectEntry(_selectedEntry);
             }
-            else if (input.MenuCancel)
-            {
-                OnCancel();
-            }
         }
 
         /// <summary>
         /// Notifies derived classes that a menu entry has been chosen.
         /// </summary>
         protected abstract void OnSelectEntry(int entryIndex);
-
-        /// <summary>
-        /// Notifies derived classes that the menu has been cancelled.
-        /// </summary>
-        protected abstract void OnCancel();
 
         public override void LoadContent()
         {

@@ -40,12 +40,15 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         /// <summary>
         /// Constructs a new screen manager component.
         /// </summary>
+        /// <exception cref="InvalidOperationException">No graphics device service.</exception>
         public ScreenManager(Game game)
             : base(game)
         {
             ContentManager = new ContentManager(game.Services);
-            _graphicsDeviceService = (IGraphicsDeviceService) game.Services.GetService(
-                                                                  typeof (IGraphicsDeviceService));
+            _graphicsDeviceService = (IGraphicsDeviceService)game.Services.GetService(
+                                                                  typeof(IGraphicsDeviceService));
+
+            TraceEnabled = true;
 
             if (_graphicsDeviceService == null)
                 throw new InvalidOperationException("No graphics device service.");
@@ -91,8 +94,8 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
         {
             get
             {
-                return new Vector2(_graphicsDeviceService.GraphicsDevice.Viewport.Width/2f,
-                                   _graphicsDeviceService.GraphicsDevice.Viewport.Height/2f);
+                return new Vector2(_graphicsDeviceService.GraphicsDevice.Viewport.Width / 2f,
+                                   _graphicsDeviceService.GraphicsDevice.Viewport.Height / 2f);
             }
         }
 
@@ -187,8 +190,8 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                 // Update the screen.
                 screen.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-                bool _otherScreenHasFocus  = otherScreenHasFocus;
-                bool _coveredByOtherScreen = coveredByOtherScreen;
+                bool otherScreenHasFocusClone = otherScreenHasFocus;
+                bool coveredByOtherScreenClone = coveredByOtherScreen;
 
                 if (screen.ScreenState == ScreenState.TransitionOn ||
                     screen.ScreenState == ScreenState.Active)
@@ -212,7 +215,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                 // This is moved here from the screen's update to be able to handle
                 // the user input before starting the physics processing on the other thread,
                 // as the HandleInput functions interact with the simulator
-                screen.UpdatePhysics( gameTime, _coveredByOtherScreen, _otherScreenHasFocus );
+                screen.UpdatePhysics(gameTime, coveredByOtherScreenClone, otherScreenHasFocusClone);
             }
 
             // Print debug trace?
@@ -298,7 +301,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 
             SpriteBatch.Draw(_blankTexture,
                              new Rectangle(0, 0, viewport.Width, viewport.Height),
-                             new Color(0, 0, 0, (byte) alpha));
+                             new Color(0, 0, 0, (byte)alpha));
 
             SpriteBatch.End();
         }
