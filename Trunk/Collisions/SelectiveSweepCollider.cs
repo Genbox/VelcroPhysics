@@ -263,7 +263,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private void OnCollision(Geom geom1, Geom geom2)
         {
-            if (!geom1.body.enabled || !geom2.body.enabled)
+            if (!geom1.body.Enabled || !geom2.body.Enabled)
                 return;
 
             if ((geom1.collisionGroup == geom2.collisionGroup) &&

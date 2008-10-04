@@ -98,11 +98,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             if (IsDisposed)
                 return;
 
-            float angularImpulse = (_velocityBias - _body2.angularVelocity + _body1.angularVelocity)*_massFactor;
+            float angularImpulse = (_velocityBias - _body2.AngularVelocity + _body1.AngularVelocity)*_massFactor;
 
-            _body1.angularVelocity -= _body1.inverseMomentOfInertia*Math.Sign(angularImpulse)*
+            _body1.AngularVelocity -= _body1.inverseMomentOfInertia*Math.Sign(angularImpulse)*
                                       Math.Min(Math.Abs(angularImpulse), _maxImpulse);
-            _body2.angularVelocity += _body2.inverseMomentOfInertia*Math.Sign(angularImpulse)*
+            _body2.AngularVelocity += _body2.inverseMomentOfInertia*Math.Sign(angularImpulse)*
                                       Math.Min(Math.Abs(angularImpulse), _maxImpulse);
         }
     }
