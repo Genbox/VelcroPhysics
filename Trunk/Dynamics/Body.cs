@@ -100,7 +100,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// </summary>
         public bool Moves
         {
-            get { return linearVelocity.Length() >= 55; }
+            //Note: Changed from
+            // get { return linearVelocity.Length() >= 55; }
+
+            get { return linearVelocity.Length() >= MinimumVelocity; }
         }
 
         #endregion
