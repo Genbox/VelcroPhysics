@@ -28,7 +28,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
             //load texture that will visually represent the physics body
             _bodyTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 128, Color.Gold,
                                                                 Color.Black);
-            _origin = new Vector2(_bodyTexture.Width/2f, _bodyTexture.Height/2f);
+            _origin = new Vector2(_bodyTexture.Width / 2f, _bodyTexture.Height / 2f);
 
             //use the body factory to create the physics body
             _rectangleBody = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 128, 128, 1);
@@ -51,12 +51,12 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
         {
             if (FirstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
                 FirstRun = false;
             }
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
             else
             {

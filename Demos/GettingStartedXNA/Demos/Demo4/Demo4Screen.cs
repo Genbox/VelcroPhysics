@@ -30,18 +30,19 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
         // POINT OF INTEREST
         // This is the processor used to communicate with the physics thread
         private PhysicsProcessor _physicsProcessor;
-        private Thread           _physicsThread;
+        private Thread _physicsThread;
 
         public override void Dispose()
         {
-            base.Dispose();
-
             // POINT OF INTEREST
             // On screen destroy Dispose the physics processor and use Join to wait the thread to exit
             _physicsProcessor.Dispose();
             _physicsProcessor = null;
+            //_physicsThread.Abort();
             _physicsThread.Join();
             _physicsThread = null;
+
+            base.Dispose();
         }
 
         public override void Initialize()
@@ -54,11 +55,11 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
 
             // POINT OF INTEREST
             // Create a physics processor based on the physics processor
-            _physicsProcessor = new PhysicsProcessor( PhysicsSimulator );
+            _physicsProcessor = new PhysicsProcessor(PhysicsSimulator);
             // POINT OF INTEREST
             // Create the physics thread with the StartThinking function as the entry point.
             // The StartThinking is going to be the main function of the physics thread.
-            _physicsThread = new Thread( _physicsProcessor.StartThinking );
+            _physicsThread = new Thread(_physicsProcessor.StartThinking);
             // POINT OF INTEREST
             // Name the thread for debugging purposes
             _physicsThread.Name = "PhysicsThread";
@@ -87,7 +88,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
                                                ScreenManager.ScreenHeight - 125));
             // POINT OF INTEREST
             // It needs the processor to register the links
-            _pyramid.Load( PhysicsSimulator, _physicsProcessor );
+            _pyramid.Load(PhysicsSimulator, _physicsProcessor);
 
             _floor = new Floor(ScreenManager.ScreenWidth, 100,
                                new Vector2(ScreenManager.ScreenCenter.X, ScreenManager.ScreenHeight - 50));
@@ -124,14 +125,15 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
         {
             if (FirstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
                 FirstRun = false;
             }
 
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
+
             HandleKeyboardInput(input);
             HandleMouseInput(input);
             base.HandleInput(input);
@@ -211,21 +213,21 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
 
         // POINT OF INTEREST
         // We override this to be able to wait for the physics simulator to finish a frame
-        public override void Update( GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen )
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-          // POINT OF INTEREST
-          // Wait for the physics thread to finish the physics frame. Without this
-          // this thread and the physics thread can read and modify the simulator
-          // at the same time. That can cause incorrect updates and even crashes.
-          if ( _physicsProcessor != null )
-              _physicsProcessor.BlockUntilIdle();
+            // POINT OF INTEREST
+            // Wait for the physics thread to finish the physics frame. Without this
+            // this thread and the physics thread can read and modify the simulator
+            // at the same time. That can cause incorrect updates and even crashes.
+            if (_physicsProcessor != null)
+                _physicsProcessor.BlockUntilIdle();
 
-          base.Update( gameTime, otherScreenHasFocus, coveredByOtherScreen );
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
 
         // POINT OF INTEREST
         // We are going to update the physiscs through the processor, so override this function and do this ourselves
-        public override void UpdatePhysics( GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen )
+        public override void UpdatePhysics(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             if (otherScreenHasFocus || coveredByOtherScreen)
                 return;
@@ -236,8 +238,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
             // to do so on the other thread.
             // But if the DebugViewEnabled, we force the simulator to update instantly
             // as the debug view doesn't use the links.
-            if ( _physicsProcessor != null )
-                _physicsProcessor.Iterate( gameTime, DebugViewEnabled );
+            if (_physicsProcessor != null)
+                _physicsProcessor.Iterate(gameTime, DebugViewEnabled);
         }
 
         public string GetTitle()

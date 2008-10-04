@@ -43,19 +43,15 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                 case 0:
                     ScreenManager.AddScreen(new Demo1Screen());
                     break;
-
                 case 1:
                     ScreenManager.AddScreen(new Demo2Screen());
                     break;
-
                 case 2:
                     ScreenManager.AddScreen(new Demo3Screen());
                     break;
-
                 case 3:
                     ScreenManager.AddScreen(new Demo4Screen());
                     break;
-
                 case 4:
                     ScreenManager.AddScreen(new Demo5Screen());
                     break;
@@ -70,17 +66,11 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                     break;
                 case 8:
                     // Exit the sample.
-                    OnCancel();
+                    ScreenManager.Game.Exit();
                     break;
             }
-        }
 
-        /// <summary>
-        /// When the user cancels the main menu, ask if they want to exit the sample.
-        /// </summary>
-        protected override void OnCancel()
-        {
-            ScreenManager.Game.Exit();
+            ExitScreen();
         }
 
         public override void Draw(GameTime gameTime)

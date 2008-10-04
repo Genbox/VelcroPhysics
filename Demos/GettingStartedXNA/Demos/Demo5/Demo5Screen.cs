@@ -200,13 +200,13 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo5
         {
             if (FirstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(),this));
                 FirstRun = false;
             }
 
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(),this));
             }
 
             HandleKeyboardInput(input);

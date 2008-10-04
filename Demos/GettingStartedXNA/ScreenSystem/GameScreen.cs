@@ -274,11 +274,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                 _debugViewEnabled = !_debugViewEnabled;
                 _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
             }
-
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Escape))
-            {
-                ExitScreen();
-            }
         }
 
         /// <summary>
