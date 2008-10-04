@@ -1,7 +1,6 @@
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerPerformanceTest;
 using Microsoft.Xna.Framework;
 
 namespace InactivityPerformanceXNA

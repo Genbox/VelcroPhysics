@@ -1,6 +1,6 @@
 using FarseerGames.FarseerPhysics;
 
-namespace FarseerPerformanceTest
+namespace InactivityPerformanceXNA
 {
     public static class Globals
     {

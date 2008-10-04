@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics;
-using FarseerPerformanceTest;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -111,7 +110,6 @@ namespace InactivityPerformanceXNA
             {
                 Globals.Physics.Update(gameTime.ElapsedGameTime.Milliseconds*0.001f);
             }
-
 
             _oldMs = ms;
             _oldKs = ks;
