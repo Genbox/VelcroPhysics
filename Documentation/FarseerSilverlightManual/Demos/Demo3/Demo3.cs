@@ -1,10 +1,9 @@
-﻿using System.IO;
-using System.Windows.Media;
-using FarseerGames.FarseerPhysics;
+﻿using System.Windows.Media;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
+using FarseerSilverlightManual.Screens;
 
 namespace FarseerSilverlightManual.Demos.Demo3
 {
@@ -12,53 +11,18 @@ namespace FarseerSilverlightManual.Demos.Demo3
     {
         private Body _agentBody;
         private Geom[] _agentGeom;
-        private Body _floorBody;
-        private Geom _floorGeom;
-
         private Body[] _obstacleBody;
         private Geom[] _obstacleGeom;
 
         public Demo3()
         {
             Initialize();
-            forceAmount = 800;
-            torqueAmount = 8000;
-        }
-
-        public override string Title
-        {
-            get { return "Static Bodies And\nOffset Geometries"; }
-        }
-
-        public override string Details
-        {
-            get
-            {
-                StringWriter sb = new StringWriter();
-                sb.Write("This demo shows a single body with multiple geometry");
-                sb.Write(" objects attached.  The yellow circles are offset");
-                sb.Write(" from the bodies center. The body itself is created");
-                sb.Write(" using 'CreateRectangleBody' so that its moment of");
-                sb.WriteLine(" inertia is that of a rectangle.");
-                sb.WriteLine(string.Empty);
-                sb.WriteLine("This demo also shows the use of static bodies.");
-                sb.WriteLine(string.Empty);
-                sb.WriteLine("Keyboard:");
-                sb.WriteLine("  -Rotate : K and L");
-                sb.WriteLine("  -Move : A,S,D,W");
-                sb.WriteLine(string.Empty);
-                sb.WriteLine("Mouse:");
-                sb.WriteLine("  -Hold down left button and drag");
-                return sb.ToString();
-            }
         }
 
         public override void Initialize()
         {
             ClearCanvas();
-            physicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
             LoadAgent();
-            LoadFloor();
             LoadObstacles();
             base.Initialize();
         }
@@ -90,22 +54,7 @@ namespace FarseerSilverlightManual.Demos.Demo3
             _agentGeom[6] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _agentBody, 16, 130, Vector2.Zero,
                                                                      -MathHelper.PiOver4);
             _agentGeom[6].CollisionGroup = 1;
-            controlledBody = _agentBody;
             AddAgentToCanvas(_agentBody);
-        }
-
-        public void LoadFloor()
-        {
-            //use the body factory to create the physics body
-            _floorBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, ScreenManager.ScreenWidth, 100, 1);
-            AddRectangleToCanvas(_floorBody, Colors.White, new Vector2(ScreenManager.ScreenWidth, 100));
-            _floorBody.IsStatic = true;
-            _floorGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _floorBody,
-                                                                  ScreenManager.ScreenWidth,
-                                                                  100);
-            _floorGeom.RestitutionCoefficient = .2f;
-            _floorGeom.FrictionCoefficient = .2f;
-            _floorBody.Position = new Vector2(ScreenManager.ScreenCenter.X, ScreenManager.ScreenHeight - 50);
         }
 
         public void LoadObstacles()

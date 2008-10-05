@@ -5,6 +5,7 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 using FarseerSilverlightManual.Objects;
+using FarseerSilverlightManual.Screens;
 
 namespace FarseerSilverlightManual.Demos.DemoShare
 {
