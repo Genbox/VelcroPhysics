@@ -74,10 +74,6 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-      <Private>False</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Trunk\Collisions\AABB.cs">
@@ -214,9 +210,6 @@
     </Compile>
     <Compile Include="..\..\Trunk\Factories\SpringFactory.cs">
       <Link>Factories\SpringFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Trunk\GlobalSuppressions.cs">
-      <Link>GlobalSuppressions.cs</Link>
     </Compile>
     <Compile Include="..\..\Trunk\Interfaces\IBroadPhaseCollider.cs">
       <Link>Interfaces\IBroadPhaseCollider.cs</Link>
