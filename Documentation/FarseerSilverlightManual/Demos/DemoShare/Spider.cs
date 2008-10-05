@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Media;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
@@ -6,6 +6,7 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
+using FarseerSilverlightManual.Screens;
 using SM = System.Windows.Media;
 
 namespace FarseerSilverlightManual.Demos.DemoShare

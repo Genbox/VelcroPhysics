@@ -1,11 +1,11 @@
 using System;
-using System.IO;
 using System.Windows.Media;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 using FarseerSilverlightManual.Demos.DemoShare;
+using FarseerSilverlightManual.Screens;
 
 namespace FarseerSilverlightManual.Demos.Demo6
 {
@@ -23,7 +23,6 @@ namespace FarseerSilverlightManual.Demos.Demo6
         private AngularSpringLever _angularSpringLever2;
         private AngularSpringLever _angularSpringLever3;
         private AngularSpringLever _angularSpringLever4;
-        private Border _border;
         private RectanglePlatform _floor;
         private Body _hangingBody;
 
@@ -38,49 +37,13 @@ namespace FarseerSilverlightManual.Demos.Demo6
         public Demo6()
         {
             Initialize();
-            forceAmount = 3000;
-            torqueAmount = 14000;
-        }
-
-        public override string Title
-        {
-            get { return "Linear and Angular Springs"; }
-        }
-
-        public override string Details
-        {
-            get
-            {
-                StringWriter sb = new StringWriter();
-                sb.Write("This demo shows the use of angular and linear");
-                sb.WriteLine(" springs");
-                sb.WriteLine(string.Empty);
-                sb.Write("The levers are connected to the walls using");
-                sb.Write(" revolute joints and they each have an angular");
-                sb.WriteLine(" spring attached.");
-                sb.WriteLine();
-                sb.Write("The hanging squares are connected by linear");
-                sb.WriteLine(" springs.");
-                sb.WriteLine(string.Empty);
-                sb.WriteLine("Keyboard:");
-                sb.WriteLine("  -Rotate : K and L");
-                sb.WriteLine("  -Move : A,S,D,W");
-                sb.WriteLine(string.Empty);
-                sb.WriteLine("Mouse:");
-                sb.WriteLine("  -Hold down left button and drag");
-                return sb.ToString();
-            }
         }
 
         public override void Initialize()
         {
-            physicsSimulator = new PhysicsSimulator(new Vector2(0, 200));
+            //TODO: Reset this in when disposing
             physicsSimulator.MaxContactsToDetect = 2;
             //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
-            int borderWidth = (int) (ScreenManager.ScreenHeight*.05f);
-            _border = new Border(ScreenManager.ScreenWidth + borderWidth*2, ScreenManager.ScreenHeight + borderWidth*2,
-                                 borderWidth, ScreenManager.ScreenCenter);
-            _border.Load(this, physicsSimulator);
 
             _agent = new Agent(new Vector2(ScreenManager.ScreenCenter.X, 100));
             _agent.CollisionCategory = CollisionCategory.Cat5;
@@ -88,7 +51,6 @@ namespace FarseerSilverlightManual.Demos.Demo6
             _agent.Load(this, physicsSimulator);
             AddAgentToCanvas(_agent.Body);
             LoadPlatforms();
-            controlledBody = _agent.Body;
             base.Initialize();
         }
 

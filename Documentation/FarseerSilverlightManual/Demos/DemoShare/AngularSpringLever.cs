@@ -6,6 +6,7 @@ using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 using FarseerSilverlightManual.Objects;
+using FarseerSilverlightManual.Screens;
 
 namespace FarseerSilverlightManual.Demos.DemoShare
 {
@@ -60,7 +61,6 @@ namespace FarseerSilverlightManual.Demos.DemoShare
             set { _dampningConstant = value; }
         }
 
-
         public int CollisionGroup
         {
             get { return _collisionGroup; }
@@ -85,9 +85,8 @@ namespace FarseerSilverlightManual.Demos.DemoShare
             }
 
             //body is created as rectangle so that it has the moment of inertia closer to the final shape of the object.
-            _angleSpringleverBody = BodyFactory.Instance.CreateBody(physicsSimulator, 1,
-                                                                    BodyFactory.MOIForRectangle(_rectangleWidth,
-                                                                                                _rectangleHeight, 1f));
+            _angleSpringleverBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _rectangleWidth,
+                                                                             _rectangleHeight, 1f);
             view.AddRectangleToCanvas(_angleSpringleverBody, Colors.White,
                                       new Vector2(_rectangleWidth, _rectangleHeight));
 

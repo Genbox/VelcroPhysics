@@ -8,7 +8,6 @@ namespace FarseerSilverlightManual.Objects
         private float _width;
         public BrushExtender Extender = new BrushExtender();
 
-
         public CircleBrush()
         {
             InitializeComponent();

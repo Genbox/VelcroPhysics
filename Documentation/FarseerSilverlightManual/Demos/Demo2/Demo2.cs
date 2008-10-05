@@ -1,9 +1,9 @@
-﻿using System.IO;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
+using FarseerSilverlightManual.Screens;
 
 namespace FarseerSilverlightManual.Demos.Demo2
 {
@@ -14,33 +14,9 @@ namespace FarseerSilverlightManual.Demos.Demo2
             Initialize();
         }
 
-        public override string Title
-        {
-            get { return "Two Bodies With Geom"; }
-        }
-
-        public override string Details
-        {
-            get
-            {
-                StringWriter sb = new StringWriter();
-                sb.Write("This demo shows two bodies each with a single geometry");
-                sb.WriteLine(" object attached.");
-                sb.WriteLine(string.Empty);
-                sb.WriteLine("Keyboard:");
-                sb.WriteLine("  -Rotate : K and L");
-                sb.WriteLine("  -Move : A,S,D,W");
-                sb.WriteLine(string.Empty);
-                sb.WriteLine("Mouse:");
-                sb.WriteLine("  -Hold down left button and drag");
-                return sb.ToString();
-            }
-        }
-
         public override void Initialize()
         {
             ClearCanvas();
-            physicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
 
             Body rectangleBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 128, 128, 1);
             rectangleBody.Position = new Vector2(256, 384);
@@ -56,7 +32,6 @@ namespace FarseerSilverlightManual.Demos.Demo2
 
             AddRectangleToCanvas(rectangleBody, new Vector2(128, 128));
             AddCircleToCanvas(circleBody, 64);
-            controlledBody = rectangleBody;
 
             base.Initialize();
         }

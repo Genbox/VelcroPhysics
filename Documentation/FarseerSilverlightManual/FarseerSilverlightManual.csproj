@@ -91,7 +91,6 @@
     <Compile Include="Demos\Demo2\Demo2.cs" />
     <Compile Include="Demos\Demo3\Demo3.cs" />
     <Compile Include="Demos\Demo4\Demo4.cs" />
-    <Compile Include="Demos\Demo4\Floor.cs" />
     <Compile Include="Demos\Demo4\Pyramid.cs" />
     <Compile Include="Demos\Demo5\Circles.cs" />
     <Compile Include="Demos\Demo5\Demo5.cs" />
@@ -106,8 +105,6 @@
     <Compile Include="Drawing\BrushExtender.cs" />
     <Compile Include="Drawing\IDrawingBrush.cs" />
     <Compile Include="GameLoop.cs" />
-    <Compile Include="Key.cs" />
-    <Compile Include="KeyHandler.cs" />
     <Compile Include="Objects\AgentBrush.xaml.cs">
       <DependentUpon>AgentBrush.xaml</DependentUpon>
     </Compile>
@@ -125,7 +122,7 @@
     <Compile Include="Screens\Page.xaml.cs">
       <DependentUpon>Page.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SimulatorView.cs" />
+    <Compile Include="Screens\SimulatorView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AppManifest.xml" />

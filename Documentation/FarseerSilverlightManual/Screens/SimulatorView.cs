@@ -12,10 +12,9 @@ using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 using FarseerSilverlightManual.Drawing;
 using FarseerSilverlightManual.Objects;
-using FarseerSilverlightManual.Screens;
 using SWM = System.Windows.Media;
 
-namespace FarseerSilverlightManual
+namespace FarseerSilverlightManual.Screens
 {
     public class SimulatorView : Canvas
     {
@@ -31,25 +30,28 @@ namespace FarseerSilverlightManual
         private FixedLinearSpringBrush _mouseSpringBrush;
         private Geom _pickedGeom;
         private Canvas _simulatorCanvas;
-        protected Body controlledBody;
-
         protected List<IDrawingBrush> drawingList = new List<IDrawingBrush>();
-        protected float forceAmount = 50;
         protected PhysicsSimulator physicsSimulator;
-        protected float torqueAmount = 1000;
+        private Demos.DemoShare.Border _border;
 
         public SimulatorView()
         {
+            physicsSimulator = new PhysicsSimulator(new Vector2(0, 150));
             _simulatorCanvas = new Canvas();
             _simulatorCanvas.Width = 1024;
             _simulatorCanvas.Height = 768;
             Children.Add(_simulatorCanvas);
-            Page.gameLoop.Update += gameLoop_Update;
+            Page.gameLoop.Update += GameLoop_Update;
             _simulatorCanvas.MouseLeftButtonDown += SimulatorView_MouseLeftButtonDown;
             _simulatorCanvas.MouseLeftButtonUp += SimulatorView_MouseLeftButtonUp;
             _simulatorCanvas.MouseMove += SimulatorView_MouseMove;
             _simulatorCanvas.IsHitTestVisible = true;
             _simulatorCanvas.Background = new SolidColorBrush(Color.FromArgb(255, 100, 149, 237));
+            int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
+            _border = new Demos.DemoShare.Border(ScreenManager.ScreenWidth + borderWidth * 2, ScreenManager.ScreenHeight + borderWidth * 2,
+                                                 borderWidth, ScreenManager.ScreenCenter);
+            _border.Load(this, physicsSimulator);
+
         }
 
         public bool Visible
@@ -68,16 +70,6 @@ namespace FarseerSilverlightManual
             }
         }
 
-        public virtual string Title
-        {
-            get { return "Title"; }
-        }
-
-        public virtual string Details
-        {
-            get { return "Details"; }
-        }
-
         public void ClearCanvas()
         {
             _simulatorCanvas.Children.Clear();
@@ -87,7 +79,7 @@ namespace FarseerSilverlightManual
         {
             if (_mousePickSpring != null)
             {
-                Vector2 point = new Vector2((float) (e.GetPosition(this).X), (float) (e.GetPosition(this).Y));
+                Vector2 point = new Vector2((float)(e.GetPosition(this).X), (float)(e.GetPosition(this).Y));
                 _mousePickSpring.WorldAttachPoint = point;
             }
         }
@@ -104,7 +96,7 @@ namespace FarseerSilverlightManual
 
         private void SimulatorView_MouseLeftButtonDown(object sender, MouseEventArgs e)
         {
-            Vector2 point = new Vector2((float) (e.GetPosition(this).X), (float) (e.GetPosition(this).Y));
+            Vector2 point = new Vector2((float)(e.GetPosition(this).X), (float)(e.GetPosition(this).Y));
             _pickedGeom = physicsSimulator.Collide(point);
             if (_pickedGeom != null)
             {
@@ -183,7 +175,7 @@ namespace FarseerSilverlightManual
 
         public virtual void Update(TimeSpan elapsedTime)
         {
-            HandleKeyboard();
+
         }
 
         public virtual void Initialize()
@@ -194,9 +186,11 @@ namespace FarseerSilverlightManual
             }
         }
 
-        private void gameLoop_Update(TimeSpan elapsedTime)
+        private void GameLoop_Update(TimeSpan elapsedTime)
         {
-            if (!Visible) return;
+            if (!Visible)
+                return;
+
             double secs = elapsedTime.TotalSeconds + _leftoverUpdateTime;
             while (secs > .01)
             {
@@ -210,49 +204,6 @@ namespace FarseerSilverlightManual
                 secs -= .01;
             }
             _leftoverUpdateTime = secs;
-        }
-
-        private void HandleKeyboard()
-        {
-            if (!Visible) return;
-
-            if (Page.KeyHandler.IsKeyPressed(Key.ESCAPE))
-            {
-                return;
-            }
-
-            if (controlledBody == null) return;
-            Vector2 force = Vector2.Zero;
-            force.Y = -force.Y;
-            if (Page.KeyHandler.IsKeyPressed(Key.A))
-            {
-                force += new Vector2(-forceAmount, 0);
-            }
-            if (Page.KeyHandler.IsKeyPressed(Key.S))
-            {
-                force += new Vector2(0, forceAmount);
-            }
-            if (Page.KeyHandler.IsKeyPressed(Key.D))
-            {
-                force += new Vector2(forceAmount, 0);
-            }
-            if (Page.KeyHandler.IsKeyPressed(Key.W))
-            {
-                force += new Vector2(0, -forceAmount);
-            }
-
-            controlledBody.ApplyForce(force);
-
-            float torque = 0;
-            if (Page.KeyHandler.IsKeyPressed(Key.K))
-            {
-                torque -= torqueAmount;
-            }
-            if (Page.KeyHandler.IsKeyPressed(Key.L))
-            {
-                torque += torqueAmount;
-            }
-            controlledBody.ApplyTorque(torque);
         }
 
         public void Dispose()
