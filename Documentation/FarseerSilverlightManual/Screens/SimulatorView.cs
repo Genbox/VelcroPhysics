@@ -12,6 +12,7 @@ using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 using FarseerSilverlightManual.Drawing;
 using FarseerSilverlightManual.Objects;
+using Border=FarseerSilverlightManual.Demos.DemoShare.Border;
 using SWM = System.Windows.Media;
 
 namespace FarseerSilverlightManual.Screens
@@ -24,6 +25,8 @@ namespace FarseerSilverlightManual.Screens
 
         #endregion
 
+        private Border _border;
+
         private double _leftoverUpdateTime;
 
         private FixedLinearSpring _mousePickSpring;
@@ -32,7 +35,6 @@ namespace FarseerSilverlightManual.Screens
         private Canvas _simulatorCanvas;
         protected List<IDrawingBrush> drawingList = new List<IDrawingBrush>();
         protected PhysicsSimulator physicsSimulator;
-        private Demos.DemoShare.Border _border;
 
         public SimulatorView()
         {
@@ -47,11 +49,10 @@ namespace FarseerSilverlightManual.Screens
             _simulatorCanvas.MouseMove += SimulatorView_MouseMove;
             _simulatorCanvas.IsHitTestVisible = true;
             _simulatorCanvas.Background = new SolidColorBrush(Color.FromArgb(255, 100, 149, 237));
-            int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
-            _border = new Demos.DemoShare.Border(ScreenManager.ScreenWidth + borderWidth * 2, ScreenManager.ScreenHeight + borderWidth * 2,
-                                                 borderWidth, ScreenManager.ScreenCenter);
+            int borderWidth = (int) (ScreenManager.ScreenHeight*.05f);
+            _border = new Border(ScreenManager.ScreenWidth + borderWidth*2, ScreenManager.ScreenHeight + borderWidth*2,
+                                 borderWidth, ScreenManager.ScreenCenter);
             _border.Load(this, physicsSimulator);
-
         }
 
         public bool Visible
@@ -79,7 +80,7 @@ namespace FarseerSilverlightManual.Screens
         {
             if (_mousePickSpring != null)
             {
-                Vector2 point = new Vector2((float)(e.GetPosition(this).X), (float)(e.GetPosition(this).Y));
+                Vector2 point = new Vector2((float) (e.GetPosition(this).X), (float) (e.GetPosition(this).Y));
                 _mousePickSpring.WorldAttachPoint = point;
             }
         }
@@ -96,7 +97,7 @@ namespace FarseerSilverlightManual.Screens
 
         private void SimulatorView_MouseLeftButtonDown(object sender, MouseEventArgs e)
         {
-            Vector2 point = new Vector2((float)(e.GetPosition(this).X), (float)(e.GetPosition(this).Y));
+            Vector2 point = new Vector2((float) (e.GetPosition(this).X), (float) (e.GetPosition(this).Y));
             _pickedGeom = physicsSimulator.Collide(point);
             if (_pickedGeom != null)
             {
@@ -125,6 +126,15 @@ namespace FarseerSilverlightManual.Screens
             circle.Extender.Color = color;
             _simulatorCanvas.Children.Add(circle);
             drawingList.Add(circle);
+            return circle;
+        }
+
+        public CircleBrush AddCircleToCanvas(Color color, float radius)
+        {
+            CircleBrush circle = new CircleBrush();
+            circle.Radius = radius;
+            circle.Extender.Color = color;
+            _simulatorCanvas.Children.Add(circle);
             return circle;
         }
 
@@ -167,6 +177,15 @@ namespace FarseerSilverlightManual.Screens
             return fls;
         }
 
+        public LinearSpringBrush AddLinearSpringBrushToCanvas(LinearSpring spring)
+        {
+            LinearSpringBrush fls = new LinearSpringBrush();
+            fls.LinearSpring = spring;
+            _simulatorCanvas.Children.Add(fls);
+            drawingList.Add(fls);
+            return fls;
+        }
+
         public void RemoveFixedLinearSpringBrush(FixedLinearSpringBrush fls)
         {
             _simulatorCanvas.Children.Remove(fls);
@@ -175,7 +194,6 @@ namespace FarseerSilverlightManual.Screens
 
         public virtual void Update(TimeSpan elapsedTime)
         {
-
         }
 
         public virtual void Initialize()

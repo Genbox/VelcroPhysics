@@ -1,13 +1,6 @@
 using System;
 using System.Windows;
-using System.Windows.Controls;
-using FarseerSilverlightManual.Demos.Demo1;
-using FarseerSilverlightManual.Demos.Demo2;
-using FarseerSilverlightManual.Demos.Demo3;
-using FarseerSilverlightManual.Demos.Demo4;
-using FarseerSilverlightManual.Demos.Demo5;
-using FarseerSilverlightManual.Demos.Demo6;
-using FarseerSilverlightManual.Demos.Demo7;
+using FarseerSilverlightManual.Demos;
 
 namespace FarseerSilverlightManual.Screens
 {
@@ -39,12 +32,12 @@ namespace FarseerSilverlightManual.Screens
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            float scaleY = (float)(ActualHeight / 768);
-            float scaleX = (float)(ActualWidth / 1024);
+            float scaleY = (float) (ActualHeight/768);
+            float scaleX = (float) (ActualWidth/1024);
             float scl = Math.Min(scaleX, scaleY);
             if (scl <= 0) return;
-            translate.X = ((ActualWidth) - 1024d * scl) / 2d;
-            translate.Y = ((ActualHeight) - 768d * scl) / 2d;
+            translate.X = ((ActualWidth) - 1024d*scl)/2d;
+            translate.Y = ((ActualHeight) - 768d*scl)/2d;
             scale.ScaleX = scl;
             scale.ScaleY = scl;
         }
@@ -54,25 +47,22 @@ namespace FarseerSilverlightManual.Screens
             switch (_demo)
             {
                 case 1:
-                    currentDemo = new Demo1();
+                    currentDemo = new RevoluteJointDemo();
                     break;
                 case 2:
-                    currentDemo = new Demo2();
+                    currentDemo = new AngleJointDemo();
                     break;
                 case 3:
-                    currentDemo = new Demo3();
+                    currentDemo = new AngleLimitJointDemo();
                     break;
                 case 4:
-                    currentDemo = new Demo4();
+                    currentDemo = new PinSliderJointDemo();
                     break;
                 case 5:
-                    currentDemo = new Demo5();
+                    currentDemo = new LinearSpringDemo();
                     break;
                 case 6:
-                    currentDemo = new Demo6();
-                    break;
-                case 7:
-                    currentDemo = new Demo7();
+                    currentDemo = new AngleSpringDemo();
                     break;
             }
 

@@ -4,16 +4,16 @@ using FarseerSilverlightManual.Drawing;
 
 namespace FarseerSilverlightManual.Objects
 {
-    public partial class FixedLinearSpringBrush : IDrawingBrush
+    public partial class LinearSpringBrush : IDrawingBrush
     {
         private float _x1;
         private float _x2;
         private float _y1;
         private float _y2;
         public BrushExtender Extender = new BrushExtender();
-        public FixedLinearSpring FixedLinearSpring;
+        public LinearSpring LinearSpring;
 
-        public FixedLinearSpringBrush()
+        public LinearSpringBrush()
         {
             InitializeComponent();
         }
@@ -56,9 +56,9 @@ namespace FarseerSilverlightManual.Objects
 
         public void Update()
         {
-            if (FixedLinearSpring == null) return;
-            Endpoint1 = FixedLinearSpring.Body.GetWorldPosition(FixedLinearSpring.BodyAttachPoint);
-            Endpoint2 = FixedLinearSpring.WorldAttachPoint;
+            if (LinearSpring == null) return;
+            Endpoint1 = LinearSpring.Body1.GetWorldPosition(LinearSpring.AttachPoint1);
+            Endpoint2 = LinearSpring.Body2.GetWorldPosition(LinearSpring.AttachPoint2);
         }
 
         #endregion
