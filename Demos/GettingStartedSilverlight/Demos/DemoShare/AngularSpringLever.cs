@@ -85,9 +85,7 @@ namespace GettingStartedSilverlight.Demos.DemoShare
             }
 
             //body is created as rectangle so that it has the moment of inertia closer to the final shape of the object.
-            _angleSpringleverBody = BodyFactory.Instance.CreateBody(physicsSimulator, 1,
-                                                                    BodyFactory.MOIForRectangle(_rectangleWidth,
-                                                                                                _rectangleHeight, 1f));
+            _angleSpringleverBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _rectangleWidth, _rectangleHeight, 1f);
             view.AddRectangleToCanvas(_angleSpringleverBody, Colors.White,
                                       new Vector2(_rectangleWidth, _rectangleHeight));
 
@@ -101,22 +99,22 @@ namespace GettingStartedSilverlight.Demos.DemoShare
             {
                 case 0:
                     {
-                        offset = new Vector2(-_rectangleWidth/2f, 0); //offset to rectangle to left
+                        offset = new Vector2(-_rectangleWidth / 2f, 0); //offset to rectangle to left
                         break;
                     }
                 case 1:
                     {
-                        offset = new Vector2(0, -_rectangleHeight/2f); //offset to rectangle to top
+                        offset = new Vector2(0, -_rectangleHeight / 2f); //offset to rectangle to top
                         break;
                     }
                 case 2:
                     {
-                        offset = new Vector2(_rectangleWidth/2f, 0); //offset to rectangle to right
+                        offset = new Vector2(_rectangleWidth / 2f, 0); //offset to rectangle to right
                         break;
                     }
                 case 3:
                     {
-                        offset = new Vector2(0, _rectangleHeight/2f); //offset to rectangle to bottom
+                        offset = new Vector2(0, _rectangleHeight / 2f); //offset to rectangle to bottom
                         break;
                     }
             }

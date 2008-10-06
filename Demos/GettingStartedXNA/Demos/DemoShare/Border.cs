@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
 {
-    internal class Border
+    public class Border
     {
         private int _borderWidth;
         private int _height;

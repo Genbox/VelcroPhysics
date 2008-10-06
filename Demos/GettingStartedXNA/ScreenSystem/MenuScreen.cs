@@ -9,7 +9,7 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
     /// Base class for screens that contain a menu of options. The user can
     /// move up and down to select an entry, or cancel to back out of the screen.
     /// </summary>
-    internal abstract class MenuScreen : GameScreen
+    public abstract class MenuScreen : GameScreen
     {
         private List<string> _menuEntries = new List<string>();
         private float _leftBorder = 100;
