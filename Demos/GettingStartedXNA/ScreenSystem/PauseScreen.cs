@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
 {
-    internal class PauseScreen : MenuScreen
+    public class PauseScreen : MenuScreen
     {
         private const int leftBorder = 20;
         private const int panelHeight = 512;

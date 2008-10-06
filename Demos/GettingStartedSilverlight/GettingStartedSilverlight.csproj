@@ -14,9 +14,9 @@
     <SilverlightApplication>true</SilverlightApplication>
     <XapOutputs>true</XapOutputs>
     <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
-    <XapFilename>FarseerSilverlightDemos.xap</XapFilename>
+    <XapFilename>GettingStartedSilverlight.xap</XapFilename>
     <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
-    <SilverlightAppEntry>FarseerSilverlightDemos.App</SilverlightAppEntry>
+    <SilverlightAppEntry>GettingStartedSilverlight.App</SilverlightAppEntry>
     <TestPageFileName>TestPage.html</TestPageFileName>
     <CreateTestPage>true</CreateTestPage>
     <ValidateXaml>true</ValidateXaml>
@@ -164,7 +164,7 @@
     <Resource Include="logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\Silverlight\FarseerPhysics.csproj">
+    <ProjectReference Include="..\..\Branches\Silverlight Beta2\FarseerPhysics.csproj">
       <Project>{1D0B97EA-FE4A-498E-A21B-D0D476464925}</Project>
       <Name>FarseerPhysics</Name>
     </ProjectReference>
