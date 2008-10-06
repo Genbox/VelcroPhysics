@@ -51,7 +51,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\x86\Release</OutputPath>
-    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <DefineConstants>TRACE;WINDOWS;XNA</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoStdLib>true</NoStdLib>
@@ -231,18 +231,6 @@
     </Compile>
     <Compile Include="..\..\Trunk\Mathematics\ConvertUnits.cs">
       <Link>Mathematics\ConvertUnits.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Trunk\Mathematics\MathHelper.cs">
-      <Link>Mathematics\MathHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Trunk\Mathematics\Matrix.cs">
-      <Link>Mathematics\Matrix.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Trunk\Mathematics\Vector2.cs">
-      <Link>Mathematics\Vector2.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Trunk\Mathematics\Vector3.cs">
-      <Link>Mathematics\Vector3.cs</Link>
     </Compile>
     <Compile Include="..\..\Trunk\PhysicsSimulator.cs">
       <Link>PhysicsSimulator.cs</Link>
