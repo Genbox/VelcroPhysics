@@ -15,7 +15,7 @@ namespace FarseerSilverlightManual
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             // Load the main control
-            string inputParm = "6";
+            string inputParm = "5";
 
             if (e.InitParams.ContainsKey("demo"))
             {

@@ -87,15 +87,12 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Demos\Demo1\Demo1.cs" />
-    <Compile Include="Demos\Demo2\Demo2.cs" />
-    <Compile Include="Demos\Demo3\Demo3.cs" />
-    <Compile Include="Demos\Demo4\Demo4.cs" />
-    <Compile Include="Demos\Demo4\Pyramid.cs" />
-    <Compile Include="Demos\Demo5\Circles.cs" />
-    <Compile Include="Demos\Demo5\Demo5.cs" />
-    <Compile Include="Demos\Demo6\Demo6.cs" />
-    <Compile Include="Demos\Demo7\Demo7.cs" />
+    <Compile Include="Demos\LinearSpringDemo.cs" />
+    <Compile Include="Demos\RevoluteJointDemo.cs" />
+    <Compile Include="Demos\AngleJointDemo.cs" />
+    <Compile Include="Demos\AngleLimitJointDemo.cs" />
+    <Compile Include="Demos\PinSliderJointDemo.cs" />
+    <Compile Include="Demos\AngleSpringDemo.cs" />
     <Compile Include="Demos\DemoShare\Agent.cs" />
     <Compile Include="Demos\DemoShare\AngularSpringLever.cs" />
     <Compile Include="Demos\DemoShare\Border.cs" />
@@ -110,6 +107,9 @@
     </Compile>
     <Compile Include="Objects\CircleBrush.xaml.cs">
       <DependentUpon>CircleBrush.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Objects\LinearSpringBrush.xaml.cs">
+      <DependentUpon>LinearSpringBrush.xaml</DependentUpon>
     </Compile>
     <Compile Include="Objects\FixedLinearSpringBrush.xaml.cs">
       <DependentUpon>FixedLinearSpringBrush.xaml</DependentUpon>
@@ -137,6 +137,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Objects\CircleBrush.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Objects\LinearSpringBrush.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
