@@ -58,11 +58,12 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <exception cref="InvalidOperationException">Fixed joints cannot be created on static bodies</exception>
         public FixedRevoluteJoint CreateFixedRevoluteJoint(Body body, Vector2 anchor)
         {
+            FixedRevoluteJoint revoluteJoint = new FixedRevoluteJoint(body, anchor);
             if (body.isStatic)
             {
-                throw new InvalidOperationException("Fixed joints cannot be created on static bodies");
+                //throw new InvalidOperationException("Fixed joints cannot be created on static bodies");
+                revoluteJoint.Enabled = false;      // if you create a joint of a static body it is created as disabled.
             }
-            FixedRevoluteJoint revoluteJoint = new FixedRevoluteJoint(body, anchor);
             return revoluteJoint;
         }
 
@@ -143,31 +144,31 @@ namespace FarseerGames.FarseerPhysics.Factories
 
         //angle limit joint
         public AngleLimitJoint CreateAngleLimitJoint(PhysicsSimulator physicsSimulator, Body body1, Body body2,
-                                                     float lowerLimit, float upperLimit)
+                                                     float min, float max)
         {
-            AngleLimitJoint angleLimitJoint = CreateAngleLimitJoint(body1, body2, lowerLimit, upperLimit);
+            AngleLimitJoint angleLimitJoint = CreateAngleLimitJoint(body1, body2, min, max);
             physicsSimulator.Add(angleLimitJoint);
             return angleLimitJoint;
         }
 
-        public AngleLimitJoint CreateAngleLimitJoint(Body body1, Body body2, float lowerLimit, float upperLimit)
+        public AngleLimitJoint CreateAngleLimitJoint(Body body1, Body body2, float min, float max)
         {
-            AngleLimitJoint angleLimitJoint = new AngleLimitJoint(body1, body2, lowerLimit, upperLimit);
+            AngleLimitJoint angleLimitJoint = new AngleLimitJoint(body1, body2, min, max);
             return angleLimitJoint;
         }
 
         //fixed angle limit joint
         public FixedAngleLimitJoint CreateFixedAngleLimitJoint(PhysicsSimulator physicsSimulator, Body body,
-                                                               float lowerLimit, float upperLimit)
+                                                               float min, float max)
         {
-            FixedAngleLimitJoint fixedAngleLimitJoint = CreateFixedAngleLimitJoint(body, lowerLimit, upperLimit);
+            FixedAngleLimitJoint fixedAngleLimitJoint = CreateFixedAngleLimitJoint(body, min, max);
             physicsSimulator.Add(fixedAngleLimitJoint);
             return fixedAngleLimitJoint;
         }
 
-        public FixedAngleLimitJoint CreateFixedAngleLimitJoint(Body body, float lowerLimit, float upperLimit)
+        public FixedAngleLimitJoint CreateFixedAngleLimitJoint(Body body, float min, float max)
         {
-            FixedAngleLimitJoint fixedAngleLimitJoint = new FixedAngleLimitJoint(body, lowerLimit, upperLimit);
+            FixedAngleLimitJoint fixedAngleLimitJoint = new FixedAngleLimitJoint(body, min, max);
             return fixedAngleLimitJoint;
         }
     }
