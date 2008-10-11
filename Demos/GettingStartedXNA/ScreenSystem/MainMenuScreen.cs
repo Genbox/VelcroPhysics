@@ -77,11 +77,11 @@ namespace FarseerGames.GettingStarted.ScreenSystem
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont,
-                                                 "*toggle between debug and normal view using either F1 on the keyboard or 'Y' on the controller",
-                                                 new Vector2(100, ScreenManager.ScreenHeight - 116), Color.Black);
+                                                 "1) Toggle between debug and normal view using either F1 on the keyboard or 'Y' on the controller",
+                                                 new Vector2(100, ScreenManager.ScreenHeight - 116), Color.White);
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont,
-                                                 "**keyboard users, use arrows and enter to navigate menus",
-                                                 new Vector2(100, ScreenManager.ScreenHeight - 100), Color.Black);
+                                                 "2) Keyboard users, use arrows and enter to navigate menus",
+                                                 new Vector2(100, ScreenManager.ScreenHeight - 100), Color.White);
             base.Draw(gameTime);
             ScreenManager.SpriteBatch.End();
         }

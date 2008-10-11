@@ -11,7 +11,10 @@ namespace FarseerGames.AdvancedSamples
 {
     public class PhysicsSimulatorView
     {
+        private PhysicsSimulator _physicsSimulator;
+
         //Performance panel
+        private bool _enablePerformancePanelView = true;
         private const string _applyForces = "Apply Forces: {0}";
         private const string _applyImpulses = "Apply Impulses: {0}";
         private const string _arbiterCount = "Arbiters: {0}";
@@ -22,81 +25,88 @@ namespace FarseerGames.AdvancedSamples
         private const string _geomCount = "Geoms: {0}";
         private const string _jointCount = "Joints: {0}";
         private const string _narrowPhaseCollision = "Narrow Phase Collsion: {0}";
-
-        private const int _performancePanelHeight = 130;
         private const string _springCount = "Springs: {0}";
         private const string _updatePosition = "Update Positions: {0}";
         private const string _updateTotal = "Update Total: {0}";
-
-        //aabb
-        private Color _aabbColor = new Color(0, 0, 0, 150); // Color.Gainsboro;
-        private LineBrush _aabbLineBrush;
-        private int _aabbLineThickness = 1;
-        private Vector2 _attachPoint1;
-        private Vector2 _attachPoint2;
-        private Vector2 _body1AttachPointInWorldCoordinates;
-        private Vector2 _body2AttachPointInWorldCoordinates;
-        private CircleBrush _contactCircleBrush;
-        private Color _contactColor = new Color(255, 0, 0, 150);
-        private int _contactRadius = 4;
-        private Color _coordinateAxisColor = new Color(0, 0, 0, 150);
-        private LineBrush _coordinateAxisLineBrush;
-        private int _coordinateAxisLineLength = 20;
-        private int _coordinateAxisLineThickness = 1;
-        private Color _edgeColor = new Color(0, 0, 0, 150);
-        private LineBrush _edgeLineBrush;
-        private int _edgeLineThickness = 1;
-        private bool _enableAABBView = true;
-        private bool _enableContactView = true;
-        private bool _enableCoordinateAxisView = true;
-        private bool _enableEdgeView;
-
-        //grid
-        private bool _enableGridView;
-        private bool _enablePerformancePanelView = true;
-        private bool _enablePinJointView = true;
-
-        //coordinate axis
-        private bool _enableRevoluteJointView = true;
-        private bool _enableSliderJointView = true;
-        private bool _enableSpringView = true;
-        private bool _enableVerticeView = true;
-        private CircleBrush _gridCircleBrush;
-        private Color _gridColor = new Color(0, 0, 0, 150);
-        private int _gridRadius = 1;
         private Color _performancePanelColor = new Color(0, 0, 0, 150);
         private bool _performancePanelCount = true;
         private Vector2 _performancePanelPosition = new Vector2(100, 110);
         private Color _performancePanelTextColor = new Color(0, 0, 0, 255);
         private Texture2D _performancePanelTexture;
         private int _performancePanelWidth = 220;
-        private PhysicsSimulator _physicsSimulator;
+        private const int _performancePanelHeight = 130;
+        private SpriteFont _spriteFont;
 
-        //pin joint
-        private Color _pinJointColor = new Color(0, 0, 0, 200);
-        private LineBrush _pinJointLineBrush;
-        private int _pinJointLineThickness = 1;
-        private RectangleBrush _pinJointRectangleBrush;
+        //AABB
+        private Color _aabbColor = new Color(0, 0, 0, 150); // Color.Gainsboro;
+        private LineBrush _aabbLineBrush;
+        private int _aabbLineThickness = 1;
+
+        //Contacts
+        private bool _enableContactView = true;
+        private CircleBrush _contactCircleBrush;
+        private Color _contactColor = new Color(255, 0, 0, 150);
+        private int _contactRadius = 4;
+
+        //Coordinate axis
+        private bool _enableCoordinateAxisView = true;
+        private Color _coordinateAxisColor = new Color(0, 0, 0, 150);
+        private LineBrush _coordinateAxisLineBrush;
+        private int _coordinateAxisLineLength = 20;
+        private int _coordinateAxisLineThickness = 1;
+
+        //Grid
+        private bool _enableGridView;
+        private bool _enablePinJointView = true;
+        private CircleBrush _gridCircleBrush;
+        private Color _gridColor = new Color(0, 0, 0, 150);
+        private int _gridRadius = 1;
+
+        //Vertice
+        private bool _enableVerticeView = true;
+        private CircleBrush _verticeCircleBrush;
+        private Color _verticeColor = new Color(0, 50, 0, 150);
+        private int _verticeRadius = 3;
+
+        //Edge
+        private bool _enableEdgeView;
+        private Color _edgeColor = new Color(0, 0, 0, 150);
+        private LineBrush _edgeLineBrush;
+        private int _edgeLineThickness = 1;
+        private bool _enableAABBView = true;
+
+        //Revolute joint
+        private bool _enableRevoluteJointView = true;
         private Color _revoluteJointColor = new Color(0, 0, 0, 200);
         private LineBrush _revoluteJointLineBrush;
         private int _revoluteJointLineThickness = 1;
         private RectangleBrush _revoluteJointRectangleBrush;
 
-        //slider joint
+        //Pin joint
+        private Color _pinJointColor = new Color(0, 0, 0, 200);
+        private LineBrush _pinJointLineBrush;
+        private int _pinJointLineThickness = 1;
+        private RectangleBrush _pinJointRectangleBrush;
+
+        //Slider joint
+        private bool _enableSliderJointView = true;
         private Color _sliderJointColor = new Color(0, 0, 0, 200);
         private LineBrush _sliderJointLineBrush;
         private int _sliderJointLineThickness = 1;
         private RectangleBrush _sliderJointRectangleBrush;
+
+        //Spring 
+        private bool _enableSpringView = true;
+        private Vector2 _attachPoint1;
+        private Vector2 _attachPoint2;
+        private Vector2 _body1AttachPointInWorldCoordinates;
+        private Vector2 _body2AttachPointInWorldCoordinates;
         private CircleBrush _springCircleBrush;
         private LineBrush _springLineBrush;
         private Color _springLineColor = new Color(0, 0, 0, 150);
         private int _springLineThickness = 1;
-        private SpriteFont _spriteFont;
-        private Vector2 _vectorTemp1;
-        private CircleBrush _verticeCircleBrush;
-        private Color _verticeColor = new Color(0, 50, 0, 150);
-        private int _verticeRadius = 3;
         private Vector2 _worldAttachPoint;
+        private Vector2 _vectorTemp1;
 
         public PhysicsSimulatorView(PhysicsSimulator physicsSimulator)
         {

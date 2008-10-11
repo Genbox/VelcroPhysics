@@ -2,14 +2,8 @@
 using FarseerGames.FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
-namespace FarseerGames.AdvancedSamples.Demos.Demo4
+namespace FarseerGames.AdvancedSamples.Demos.Demo1
 {
-    // POINT OF INTEREST
-    // This is a class to link the physics object to the simulator
-    // After each physics update, the physics processor is going to
-    // copy the position and rotation into this class. While drawing
-    // the drawer should use this valuse instead of the physics
-    // body's, as the body could be in use by the physics thread.
     public class ObjectLinker
     {
         private Body _body;

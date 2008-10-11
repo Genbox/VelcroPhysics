@@ -1,4 +1,5 @@
 using FarseerGames.AdvancedSamples.Demos.Demo1;
+using FarseerGames.AdvancedSamples.Demos.Demo2;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -15,6 +16,7 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         public MainMenuScreen()
         {
             MenuEntries.Add("Demo1: Multithreaded Stacked Objects");
+            MenuEntries.Add("Demo2: Object pre-loading/caching (Starts with pool disabled)");
             MenuEntries.Add("Exit");
             LeftBorder = 100;
         }
@@ -30,6 +32,9 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
                     ScreenManager.AddScreen(new Demo1Screen());
                     break;
                 case 1:
+                    ScreenManager.AddScreen(new Demo2Screen(false));
+                    break;
+                case 2:
                     // Exit the sample.
                     ScreenManager.Game.Exit();
                     break;
@@ -42,11 +47,11 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont,
-                                                 "*toggle between debug and normal view using either F1 on the keyboard or 'Y' on the controller",
-                                                 new Vector2(100, ScreenManager.ScreenHeight - 116), Color.Black);
+                                                 "1) Toggle between debug and normal view using either F1 on the keyboard or 'Y' on the controller",
+                                                 new Vector2(100, ScreenManager.ScreenHeight - 116), Color.White);
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont,
-                                                 "**keyboard users, use arrows and enter to navigate menus",
-                                                 new Vector2(100, ScreenManager.ScreenHeight - 100), Color.Black);
+                                                 "2) Keyboard users, use arrows and enter to navigate menus",
+                                                 new Vector2(100, ScreenManager.ScreenHeight - 100), Color.White);
             base.Draw(gameTime);
             ScreenManager.SpriteBatch.End();
         }

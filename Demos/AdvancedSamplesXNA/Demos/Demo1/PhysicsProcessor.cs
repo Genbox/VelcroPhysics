@@ -4,10 +4,8 @@ using System.Threading;
 using FarseerGames.FarseerPhysics;
 using Microsoft.Xna.Framework;
 
-namespace FarseerGames.AdvancedSamples.Demos.Demo4
+namespace FarseerGames.AdvancedSamples.Demos.Demo1
 {
-    // POINT OF INTEREST
-    // This is the class that syncronise the threads.
     public class PhysicsProcessor : IDisposable
     {
         // POINT OF INTEREST
