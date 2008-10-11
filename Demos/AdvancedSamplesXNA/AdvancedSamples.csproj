@@ -76,6 +76,8 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\FramerateCounterComponent.cs" />
@@ -84,7 +86,6 @@
     <Compile Include="Demos\Demo1\ObjectLinker.cs" />
     <Compile Include="Demos\Demo1\PhysicsProcessor.cs" />
     <Compile Include="Demos\Demo1\Pyramid.cs" />
-    <Compile Include="Demos\Demo2\Demo1Screen.cs" />
     <Compile Include="Demos\DemoShare\Agent.cs" />
     <Compile Include="Demos\DemoShare\AngularSpringLever.cs" />
     <Compile Include="Demos\DemoShare\Border.cs" />
@@ -161,6 +162,9 @@
       <Project>{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}</Project>
       <Name>FarseerPhysics</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Demos\Demo2\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
