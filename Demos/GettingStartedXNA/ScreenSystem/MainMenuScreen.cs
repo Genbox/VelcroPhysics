@@ -1,15 +1,15 @@
-using FarseerGames.FarseerPhysicsDemos.Demos.Demo1;
-using FarseerGames.FarseerPhysicsDemos.Demos.Demo2;
-using FarseerGames.FarseerPhysicsDemos.Demos.Demo3;
-using FarseerGames.FarseerPhysicsDemos.Demos.Demo4;
-using FarseerGames.FarseerPhysicsDemos.Demos.Demo5;
-using FarseerGames.FarseerPhysicsDemos.Demos.Demo6;
-using FarseerGames.FarseerPhysicsDemos.Demos.Demo7;
-using FarseerGames.FarseerPhysicsDemos.Demos.Demo8;
+using FarseerGames.GettingStarted.Demos.Demo1;
+using FarseerGames.GettingStarted.Demos.Demo2;
+using FarseerGames.GettingStarted.Demos.Demo3;
+using FarseerGames.GettingStarted.Demos.Demo4;
+using FarseerGames.GettingStarted.Demos.Demo5;
+using FarseerGames.GettingStarted.Demos.Demo6;
+using FarseerGames.GettingStarted.Demos.Demo7;
+using FarseerGames.GettingStarted.Demos.Demo8;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
+namespace FarseerGames.GettingStarted.ScreenSystem
 {
     /// <summary>
     /// The main menu screen is the first thing displayed when the game starts up.

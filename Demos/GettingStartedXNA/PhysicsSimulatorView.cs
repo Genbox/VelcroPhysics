@@ -2,12 +2,12 @@ using System;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
-using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
+using FarseerGames.GettingStarted.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.FarseerPhysicsDemos
+namespace FarseerGames.GettingStarted
 {
     public class PhysicsSimulatorView
     {

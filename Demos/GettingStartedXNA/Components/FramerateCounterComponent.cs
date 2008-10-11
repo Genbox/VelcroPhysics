@@ -1,10 +1,10 @@
 using System;
 using System.Globalization;
-using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
+using FarseerGames.GettingStarted.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.FarseerPhysicsDemos.Components
+namespace FarseerGames.GettingStarted.Components
 {
     public class FrameRateCounter : DrawableGameComponent
     {
