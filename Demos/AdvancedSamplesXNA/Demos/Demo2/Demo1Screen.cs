@@ -1,35 +1,26 @@
 using System.Text;
+using FarseerGames.AdvancedSamples.DrawingSystem;
+using FarseerGames.AdvancedSamples.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.GettingStarted.DrawingSystem;
-using FarseerGames.GettingStarted.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.GettingStarted.Demos.Demo2
+namespace FarseerGames.AdvancedSamples.Demos.Demo2
 {
     public class Demo2Screen : GameScreen
     {
-        private Body _circleBody;
-        private Geom _circleGeom;
-        private Vector2 _circleOrigin;
-        private Texture2D _circleTexture;
         private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private FixedLinearSpring _mousePickSpring;
         private Geom _pickedGeom;
-        private Body _rectangleBody;
-        private Geom _rectangleGeom;
-        private Vector2 _rectangleOrigin;
-        private Texture2D _rectangleTexture;
 
         public override void Initialize()
         {
-            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
-
+            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 50));
+            PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
             base.Initialize();
         }
 
@@ -37,32 +28,12 @@ namespace FarseerGames.GettingStarted.Demos.Demo2
         {
             _lineBrush.Load(ScreenManager.GraphicsDevice);
 
-            _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 128, Color.Gold,
-                                                                     Color.Black);
-            _rectangleOrigin = new Vector2(_rectangleTexture.Width/2f, _rectangleTexture.Height/2f);
-
-            _circleTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 64, Color.White,
-                                                               Color.Black);
-            _circleOrigin = new Vector2(_circleTexture.Width/2f, _circleTexture.Height/2f);
-
-            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 128, 128, 1);
-            _rectangleBody.Position = new Vector2(256, 384);
-            _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(PhysicsSimulator, _rectangleBody, 128, 128);
-
-            _circleBody = BodyFactory.Instance.CreateCircleBody(PhysicsSimulator, 64, 1);
-            _circleBody.Position = new Vector2(725, 384);
-            _circleGeom = GeomFactory.Instance.CreateCircleGeom(PhysicsSimulator, _circleBody, 64, 20);
-
             base.LoadContent();
         }
 
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            ScreenManager.SpriteBatch.Draw(_circleTexture, _circleGeom.Position, null, Color.White, _circleGeom.Rotation,
-                                           _circleOrigin, 1, SpriteEffects.None, 0);
-            ScreenManager.SpriteBatch.Draw(_rectangleTexture, _rectangleGeom.Position, null, Color.White,
-                                           _rectangleGeom.Rotation, _rectangleOrigin, 1, SpriteEffects.None, 0);
 
             if (_mousePickSpring != null)
             {
@@ -88,47 +59,8 @@ namespace FarseerGames.GettingStarted.Demos.Demo2
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
 
-            HandleKeyboardInput(input);
             HandleMouseInput(input);
-
             base.HandleInput(input);
-        }
-
-        private void HandleKeyboardInput(InputState input)
-        {
-            const float forceAmount = 50;
-            Vector2 force = Vector2.Zero;
-            force.Y = -force.Y;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.A))
-            {
-                force += new Vector2(-forceAmount, 0);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.S))
-            {
-                force += new Vector2(0, forceAmount);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.D))
-            {
-                force += new Vector2(forceAmount, 0);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.W))
-            {
-                force += new Vector2(0, -forceAmount);
-            }
-
-            _rectangleBody.ApplyForce(force);
-
-            const float torqueAmount = 1000;
-            float torque = 0;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left))
-            {
-                torque -= torqueAmount;
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right))
-            {
-                torque += torqueAmount;
-            }
-            _rectangleBody.ApplyTorque(torque);
         }
 
         private void HandleMouseInput(InputState input)
@@ -168,14 +100,15 @@ namespace FarseerGames.GettingStarted.Demos.Demo2
 
         public string GetTitle()
         {
-            return "Two Bodies With Geom";
+            return "Multithreaded Stacked Objects";
         }
 
         public string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows two bodies each with a single geometry");
-            sb.AppendLine("object attached.");
+            sb.AppendLine("This demo shows the stacking stability of the engine combined with multithreading.");
+            sb.AppendLine("It shows a stack of rectangular bodies stacked in");
+            sb.AppendLine("the shape of a pyramid.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  -Rotate : left and right arrows");

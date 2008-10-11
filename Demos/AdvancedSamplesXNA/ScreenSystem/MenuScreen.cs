@@ -11,8 +11,8 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
     /// </summary>
     public abstract class MenuScreen : GameScreen
     {
-        private List<string> _menuEntries = new List<string>();
         private float _leftBorder = 100;
+        private List<string> _menuEntries = new List<string>();
         private SpriteFont _menuSpriteFont;
         private Vector2 _position = Vector2.Zero;
         private int _selectedEntry;

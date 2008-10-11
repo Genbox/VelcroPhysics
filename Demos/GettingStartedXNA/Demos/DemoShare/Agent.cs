@@ -10,7 +10,6 @@ namespace FarseerGames.GettingStarted.Demos.DemoShare
 {
     public class Agent
     {
-        private Vector2 _position;
         private Body _agentBody;
         private Vector2 _agentCrossBeamOrigin;
         private Texture2D _agentCrossBeamTexture;
@@ -20,6 +19,7 @@ namespace FarseerGames.GettingStarted.Demos.DemoShare
 
         private CollisionCategory _collidesWith = CollisionCategory.All;
         private CollisionCategory _collisionCategory = CollisionCategory.All;
+        private Vector2 _position;
 
         public Agent(Vector2 position)
         {
@@ -56,11 +56,11 @@ namespace FarseerGames.GettingStarted.Demos.DemoShare
         public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
             _agentTexture = DrawingHelper.CreateCircleTexture(graphicsDevice, 16, Color.Gold, Color.Black);
-            _agentOrigin = new Vector2(_agentTexture.Width / 2f, _agentTexture.Height / 2f);
+            _agentOrigin = new Vector2(_agentTexture.Width/2f, _agentTexture.Height/2f);
 
             _agentCrossBeamTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, 16, 120, Color.DarkGray,
                                                                           Color.Black);
-            _agentCrossBeamOrigin = new Vector2(_agentCrossBeamTexture.Width / 2f, _agentCrossBeamTexture.Height / 2f);
+            _agentCrossBeamOrigin = new Vector2(_agentCrossBeamTexture.Width/2f, _agentCrossBeamTexture.Height/2f);
 
             _agentBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 80, 80, 5);
             _agentBody.Position = _position;

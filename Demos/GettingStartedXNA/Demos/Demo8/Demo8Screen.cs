@@ -14,12 +14,12 @@ namespace FarseerGames.GettingStarted.Demos.Demo8
 {
     public class Demo8Screen : GameScreen
     {
-        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private Agent _agent;
         private Circles[] _blackCircles;
         private Circles[] _blueCircles;
         private Border _border;
         private Circles[] _greenCircles;
+        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private FixedLinearSpring _mousePickSpring;
         private Geom _pickedGeom;
         private Circles[] _redCircles;
@@ -28,7 +28,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo8
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
             PhysicsSimulator.MaxContactsToDetect = 2;
-                //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
+            //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
 
             base.Initialize();
@@ -165,13 +165,13 @@ namespace FarseerGames.GettingStarted.Demos.Demo8
         {
             if (FirstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(),this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
                 FirstRun = false;
             }
 
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(),this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
 
 
@@ -228,10 +228,10 @@ namespace FarseerGames.GettingStarted.Demos.Demo8
                 if (_pickedGeom != null)
                 {
                     _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
-                                                                                          _pickedGeom.Body,
-                                                                                          _pickedGeom.Body.
-                                                                                              GetLocalPosition(point),
-                                                                                          point, 20, 10);
+                                                                                      _pickedGeom.Body,
+                                                                                      _pickedGeom.Body.
+                                                                                          GetLocalPosition(point),
+                                                                                      point, 20, 10);
                 }
             }
             else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&

@@ -1,8 +1,8 @@
+using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.AdvancedSamples.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,13 +14,13 @@ namespace FarseerGames.AdvancedSamples.Demos.DemoShare
         private int _collisionGroup;
         private Color _color;
         private int _height;
-        private Vector2 _position;
-        private int _width;
         private Body _platformBody;
         private Geom _platformGeom;
 
         private Vector2 _platformOrigin;
         private Texture2D _platformTexture;
+        private Vector2 _position;
+        private int _width;
 
         public RectanglePlatform(int width, int height, Vector2 position, Color color, Color borderColor,
                                  int collisionGroup)

@@ -30,11 +30,11 @@ namespace FarseerGames.GettingStarted.ScreenSystem
     /// </summary>
     public class ScreenManager : DrawableGameComponent
     {
+        private Texture2D _blankTexture;
         private IGraphicsDeviceService _graphicsDeviceService;
         private InputState _input = new InputState();
         private List<GameScreen> _screens = new List<GameScreen>();
         private List<GameScreen> _screensToUpdate = new List<GameScreen>();
-        private Texture2D _blankTexture;
         private SpriteFonts _spriteFonts;
 
         /// <summary>
@@ -45,26 +45,13 @@ namespace FarseerGames.GettingStarted.ScreenSystem
             : base(game)
         {
             ContentManager = new ContentManager(game.Services);
-            _graphicsDeviceService = (IGraphicsDeviceService)game.Services.GetService(
-                                                                  typeof(IGraphicsDeviceService));
+            _graphicsDeviceService = (IGraphicsDeviceService) game.Services.GetService(
+                                                                  typeof (IGraphicsDeviceService));
             game.Exiting += Game_Exiting;
             TraceEnabled = true;
 
             if (_graphicsDeviceService == null)
                 throw new InvalidOperationException("No graphics device service.");
-        }
-
-        private void Game_Exiting(object sender, EventArgs e)
-        {
-            //Make sure to dispose ALL screens when the game is forcefully closed
-            //We do this to ensure that open resources and threads created by screens are closed.
-            foreach (GameScreen screen in _screens)
-            {
-                screen.Dispose();
-            }
-
-            _screens.Clear();
-            _screensToUpdate.Clear();
         }
 
         public SpriteFonts SpriteFonts
@@ -107,8 +94,8 @@ namespace FarseerGames.GettingStarted.ScreenSystem
         {
             get
             {
-                return new Vector2(_graphicsDeviceService.GraphicsDevice.Viewport.Width / 2f,
-                                   _graphicsDeviceService.GraphicsDevice.Viewport.Height / 2f);
+                return new Vector2(_graphicsDeviceService.GraphicsDevice.Viewport.Width/2f,
+                                   _graphicsDeviceService.GraphicsDevice.Viewport.Height/2f);
             }
         }
 
@@ -128,6 +115,19 @@ namespace FarseerGames.GettingStarted.ScreenSystem
         /// everything is being added and removed at the right times.
         /// </summary>
         public bool TraceEnabled { get; set; }
+
+        private void Game_Exiting(object sender, EventArgs e)
+        {
+            //Make sure to dispose ALL screens when the game is forcefully closed
+            //We do this to ensure that open resources and threads created by screens are closed.
+            foreach (GameScreen screen in _screens)
+            {
+                screen.Dispose();
+            }
+
+            _screens.Clear();
+            _screensToUpdate.Clear();
+        }
 
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting
@@ -308,7 +308,7 @@ namespace FarseerGames.GettingStarted.ScreenSystem
 
             SpriteBatch.Draw(_blankTexture,
                              new Rectangle(0, 0, viewport.Width, viewport.Height),
-                             new Color(0, 0, 0, (byte)alpha));
+                             new Color(0, 0, 0, (byte) alpha));
 
             SpriteBatch.End();
         }

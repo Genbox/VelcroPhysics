@@ -44,10 +44,6 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
             _physicsSimulatorView = new PhysicsSimulatorView(_physicsSimulator);
         }
 
-        public virtual void Dispose()
-        {
-        }
-
         public PhysicsSimulator PhysicsSimulator
         {
             get { return _physicsSimulator; }
@@ -156,6 +152,14 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         /// </summary>
         public ScreenManager ScreenManager { get; internal set; }
 
+        #region IDisposable Members
+
+        public virtual void Dispose()
+        {
+        }
+
+        #endregion
+
         public virtual void Initialize()
         {
         }
@@ -229,10 +233,10 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
             }
         }
 
-        public virtual void UpdatePhysics( GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen )
+        public virtual void UpdatePhysics(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            if ( !coveredByOtherScreen && !otherScreenHasFocus )
-                PhysicsSimulator.Update( gameTime.ElapsedGameTime.Milliseconds * .001f );
+            if (!coveredByOtherScreen && !otherScreenHasFocus)
+                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
         }
 
         /// <summary>

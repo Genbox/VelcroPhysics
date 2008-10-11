@@ -9,7 +9,10 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
 {
     internal class Pyramid
     {
+        private Body[] _blockBody;
+        private Geom[] _blockGeom;
         private float _blockHeight;
+        private ObjectLinker[] _blockLink;
         private float _blockWidth;
         private Vector2 _bottomRightBlockPosition;
         private int _bottomRowBlockCount;
@@ -17,12 +20,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
         private Body _referenceBody;
         private Geom _referenceGeom;
         private float _verticleSpacing;
-
-        private Body[] _blockBody;
-        private Geom[] _blockGeom;
-        // POINT OF INTEREST
-        // We are going to use this list while drawing
-        private ObjectLinker[] _blockLink;
 
         public Pyramid(Body referenceBody, Geom referenceGeom, float horizontalSpacing, float verticleSpacing,
                        float blockWidth, float blockHeight, int bottomRowBlockCount, Vector2 bottomRightBlockPosition)
@@ -79,11 +76,11 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
 
         public void Draw(SpriteBatch spriteBatch, Texture2D texture)
         {
-          // POINT OF INTEREST
-          // Now use the link's values for drawing
-          for ( int i = 0; i < _blockLink.Length; i++ )
+            // POINT OF INTEREST
+            // Now use the link's values for drawing
+            for (int i = 0; i < _blockLink.Length; i++)
             {
-                spriteBatch.Draw( texture, _blockLink[ i ].Position, null, Color.White, _blockLink[ i ].Rotation,
+                spriteBatch.Draw(texture, _blockLink[i].Position, null, Color.White, _blockLink[i].Rotation,
                                  new Vector2(texture.Width/2f, texture.Height/2f), 1, SpriteEffects.None, 0f);
             }
         }

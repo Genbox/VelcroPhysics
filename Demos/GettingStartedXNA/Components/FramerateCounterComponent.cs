@@ -8,11 +8,11 @@ namespace FarseerGames.GettingStarted.Components
 {
     public class FrameRateCounter : DrawableGameComponent
     {
-        private NumberFormatInfo _format;
-        private ScreenManager _screenManager;
         private TimeSpan _elapsedTime = TimeSpan.Zero;
+        private NumberFormatInfo _format;
         private int _frameCounter;
         private int _frameRate;
+        private ScreenManager _screenManager;
 
         public FrameRateCounter(ScreenManager screenManager)
             : base(screenManager.Game)

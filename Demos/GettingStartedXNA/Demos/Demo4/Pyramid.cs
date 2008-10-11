@@ -9,6 +9,8 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
 {
     internal class Pyramid
     {
+        private Body[] _blockBody;
+        private Geom[] _blockGeom;
         private float _blockHeight;
         private float _blockWidth;
         private Vector2 _bottomRightBlockPosition;
@@ -17,9 +19,6 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
         private Body _referenceBody;
         private Geom _referenceGeom;
         private float _verticleSpacing;
-
-        private Body[] _blockBody;
-        private Geom[] _blockGeom;
 
         public Pyramid(Body referenceBody, Geom referenceGeom, float horizontalSpacing, float verticleSpacing,
                        float blockWidth, float blockHeight, int bottomRowBlockCount, Vector2 bottomRightBlockPosition)

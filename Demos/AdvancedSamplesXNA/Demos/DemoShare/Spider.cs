@@ -1,9 +1,9 @@
+using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.AdvancedSamples.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -12,7 +12,6 @@ namespace FarseerGames.AdvancedSamples.Demos.DemoShare
     public class Spider
     {
         private const int spiderBodyRadius = 20;
-        private Vector2 _position;
         private CollisionCategory _collidesWith = CollisionCategory.All;
         private CollisionCategory _collisionCategory = CollisionCategory.All;
         private int _collisionGroup;
@@ -27,6 +26,7 @@ namespace FarseerGames.AdvancedSamples.Demos.DemoShare
         private Vector2 _lowerLegOrigin;
         private Vector2 _lowerLegSize = new Vector2(30, 12);
         private Texture2D _lowerLegTexture;
+        private Vector2 _position;
 
         private AngleJoint _rightKneeAngleJoint;
         private Body _rightLowerLegBody;

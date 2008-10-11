@@ -1,9 +1,9 @@
 using System;
+using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.AdvancedSamples.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -12,18 +12,18 @@ namespace FarseerGames.AdvancedSamples.Demos.DemoShare
     public class Circles
     {
         private Color _borderColor = Color.Black;
-        private Color _color = Color.White;
-
-        private int _count = 2;
-        private Vector2 _endPosition;
-        private int _radius = 100;
-        private Vector2 _startPosition;
         private Body[] _circleBody;
         private CircleBrush _circleBrush;
         private Geom[] _circleGeom;
 
         private CollisionCategory _collidesWith = CollisionCategory.All;
         private CollisionCategory _collisionCategories = CollisionCategory.All;
+        private Color _color = Color.White;
+
+        private int _count = 2;
+        private Vector2 _endPosition;
+        private int _radius = 100;
+        private Vector2 _startPosition;
 
         public Circles(Vector2 startPosition, Vector2 endPosition, int count, int radius, Color color, Color borderColor)
         {
@@ -64,7 +64,7 @@ namespace FarseerGames.AdvancedSamples.Demos.DemoShare
             for (int i = 1; i < _count; i++)
             {
                 _circleBody[i] = BodyFactory.Instance.CreateBody(physicsSimulator, _circleBody[0]);
-                _circleBody[i].Position = Vector2.Lerp(_startPosition, _endPosition, i / (float)(_count - 1));
+                _circleBody[i].Position = Vector2.Lerp(_startPosition, _endPosition, i/(float) (_count - 1));
             }
 
             _circleGeom[0] = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _circleBody[0], _radius, 10);

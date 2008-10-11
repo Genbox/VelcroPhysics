@@ -1,8 +1,8 @@
+using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.AdvancedSamples.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,13 +10,13 @@ namespace FarseerGames.AdvancedSamples.Demos.DemoShare
 {
     public class Border
     {
+        private Body _borderBody;
+        private Geom[] _borderGeom;
+        private Texture2D[] _borderTexture;
         private int _borderWidth;
         private int _height;
         private Vector2 _position;
         private int _width;
-        private Body _borderBody;
-        private Geom[] _borderGeom;
-        private Texture2D[] _borderTexture;
 
         public Border(int width, int height, int borderWidth, Vector2 position)
         {
@@ -75,7 +75,8 @@ namespace FarseerGames.AdvancedSamples.Demos.DemoShare
             _borderGeom[2].FrictionCoefficient = .2f;
             _borderGeom[2].CollisionGroup = 100;
             _borderGeom[2].CollisionGridCellSize = 20;
-            _borderGeom[2].ComputeCollisionGrid();;
+            _borderGeom[2].ComputeCollisionGrid();
+            ;
 
             //bottom border (clone top border since geometry is same size)
             geometryOffset = new Vector2(0, _height*.5f - _borderWidth*.5f);
