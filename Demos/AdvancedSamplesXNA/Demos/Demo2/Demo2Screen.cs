@@ -1,10 +1,12 @@
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
+using FarseerGames.AdvancedSamples.Demos.DemoShare;
 using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.AdvancedSamples.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
-using FarseerGames.FarseerPhysics.Factories;
+using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -13,34 +15,152 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo2
 {
     public class Demo2Screen : GameScreen
     {
-        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
-        private FixedLinearSpring _mousePickSpring;
-        private Geom _pickedGeom;
+        private Border _border;
+        private Pool<Ball> _pool;
+        private bool _usePool;
+        private List<Ball> _ballsToDraw = new List<Ball>();
+        private Stopwatch _stopWatch = new Stopwatch();
+        private Vector2 _timerPosition = new Vector2(100, 150);
+        private Vector2 _ballCountPosition = new Vector2(100, 170);
+        private Vector2 _poolEnabledPosition = new Vector2(100, 190);
+        private Texture2D _panelTexture;
+        private Vector2 _panelPosition = new Vector2(80, 130);
+        private const int _maxBalls = 120;
+
+        public Demo2Screen(bool usePool)
+        {
+            _usePool = usePool;
+        }
 
         public override void Initialize()
         {
-            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 50));
+            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 150));
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
+
+            _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 25, ScreenManager.ScreenCenter);
+
+            if (_usePool)
+                LoadPool();
+
             base.Initialize();
+        }
+
+        public void LoadPool()
+        {
+            //Create the empty pool
+            _pool = new Pool<Ball>();
+
+            //Preload balls
+            for (int i = 0; i < _maxBalls; i++)
+            {
+                Ball ball = new Ball();
+                ball.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
+                ball.Geom.Tag = ball;
+
+                _pool.Insert(ball);
+            }
         }
 
         public override void LoadContent()
         {
-            _lineBrush.Load(ScreenManager.GraphicsDevice);
+            _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
+
+            _panelTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 250, 100, new Color(0, 0, 0, 155));
 
             base.LoadContent();
+        }
+
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        {
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+
+            if (IsActive)
+            {
+                while (_ballsToDraw.Count < _maxBalls)
+                {
+                    _stopWatch.Reset();
+                    _stopWatch.Start();
+
+                    if (_usePool)
+                    {
+                        Ball ball = _pool.Fetch();
+
+                        //We need to reset the dynamics of the body.
+                        ball.Body.ResetDynamics();
+
+                        ball.Body.Position = new Vector2(Calculator.RandomNumber(50, ScreenManager.ScreenWidth - 50),
+                                                         Calculator.RandomNumber(50, ScreenManager.ScreenHeight - 50));
+                        ball.Geom.OnCollision += OnCollision;
+
+                        //Reactivate the body
+                        ball.Geom.Body.Enabled = true;
+
+                        _ballsToDraw.Add(ball);
+                    }
+                    else
+                    {
+                        Ball ball = new Ball();
+                        ball.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
+                        ball.Body.Position = new Vector2(Calculator.RandomNumber(50, ScreenManager.ScreenWidth - 50),
+                                     Calculator.RandomNumber(50, ScreenManager.ScreenHeight - 50));
+                        ball.Geom.OnCollision += OnCollision;
+                        ball.Geom.Tag = ball;
+                        _ballsToDraw.Add(ball);
+                    }
+
+                    _stopWatch.Stop();
+
+                }
+            }
+        }
+
+        private bool OnCollision(Geom geom1, Geom geom2, ContactList contactList)
+        {
+            Ball ball = (Ball)geom1.Tag;
+
+            //Remove the collision event
+            geom1.OnCollision -= OnCollision;
+
+            //Disable the body
+            geom1.Body.Enabled = false;
+
+            if (_usePool)
+            {
+                //Insert the ball back to the pool
+                _pool.Insert(ball);
+            }
+            else
+            {
+                //Remove from physics simulator
+                geom1.Tag = null;
+                PhysicsSimulator.Remove(geom1.Body);
+                PhysicsSimulator.Remove(geom1);
+            }
+
+            //Remove it from drawing list
+            _ballsToDraw.Remove(ball);
+
+            //Cancel the collision since we are removing the geom from simulation.
+            return false;
         }
 
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
 
-            if (_mousePickSpring != null)
+            foreach (Ball ball in _ballsToDraw)
             {
-                _lineBrush.Draw(ScreenManager.SpriteBatch,
-                                _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
-                                _mousePickSpring.WorldAttachPoint);
+                ball.Draw(ScreenManager.SpriteBatch);
             }
+
+            ScreenManager.SpriteBatch.Draw(_panelTexture, _panelPosition, Color.Black);
+
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, "Ticks per ball creation: " + _stopWatch.ElapsedTicks, _timerPosition, Color.White);
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, "Current number of balls: " + _ballsToDraw.Count, _ballCountPosition, Color.White);
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, "Using pool: " + _usePool, _poolEnabledPosition, Color.White);
+
+            _border.Draw(ScreenManager.SpriteBatch);
+
             ScreenManager.SpriteBatch.End();
 
             base.Draw(gameTime);
@@ -59,63 +179,43 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo2
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
 
-            HandleMouseInput(input);
+            HandleKeyboardInput(input);
             base.HandleInput(input);
         }
 
-        private void HandleMouseInput(InputState input)
+        private void HandleKeyboardInput(InputState input)
         {
-            Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
-            if (input.LastMouseState.LeftButton == ButtonState.Released &&
-                input.CurrentMouseState.LeftButton == ButtonState.Pressed)
+            if (input.LastKeyboardState.IsKeyUp(Keys.R) && input.CurrentKeyboardState.IsKeyDown(Keys.R))
             {
-                //create mouse spring
-                _pickedGeom = PhysicsSimulator.Collide(point);
-                if (_pickedGeom != null)
-                {
-                    _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
-                                                                                      _pickedGeom.Body,
-                                                                                      _pickedGeom.Body.
-                                                                                          GetLocalPosition(point),
-                                                                                      point, 20, 10);
-                }
-            }
-            else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&
-                     input.CurrentMouseState.LeftButton == ButtonState.Released)
-            {
-                //destroy mouse spring
-                if (_mousePickSpring != null && _mousePickSpring.IsDisposed == false)
-                {
-                    _mousePickSpring.Dispose();
-                    _mousePickSpring = null;
-                }
-            }
-
-            //move anchor point
-            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && _mousePickSpring != null)
-            {
-                _mousePickSpring.WorldAttachPoint = point;
+                ExitScreen();
+                ScreenManager.AddScreen(new Demo2Screen(!_usePool));
             }
         }
 
         public string GetTitle()
         {
-            return "Multithreaded Stacked Objects";
+            return "Object pre-loading/caching";
         }
 
         public string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows the stacking stability of the engine combined with multithreading.");
-            sb.AppendLine("It shows a stack of rectangular bodies stacked in");
-            sb.AppendLine("the shape of a pyramid.");
+            sb.AppendLine("Shows the performance improvement using pools.");
+            sb.AppendLine("Please have patience while the demo loads.");
+            sb.AppendLine("In a real game, you should create a pause screen to");
+            sb.AppendLine("cover up that the game loads.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
-            sb.AppendLine("  -Rotate : left and right arrows");
-            sb.AppendLine("  -Move : A,S,D,W");
+            sb.AppendLine("Press R to reload the demo and toggle the use of a pool");
             sb.AppendLine(string.Empty);
-            sb.AppendLine("Mouse");
-            sb.AppendLine("  -Hold down left button and drag");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine(string.Empty);
+
+            if (_usePool)
+                sb.AppendLine("Pool is ENABLED");
+            else
+                sb.AppendLine("Pool is DISABLED");
+
             return sb.ToString();
         }
     }

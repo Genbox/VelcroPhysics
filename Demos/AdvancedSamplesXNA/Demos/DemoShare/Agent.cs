@@ -1,4 +1,4 @@
-using FarseerGames.AdvancedSamples.Demos.Demo4;
+using FarseerGames.AdvancedSamples.Demos.Demo1;
 using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
@@ -57,7 +57,6 @@ namespace FarseerGames.AdvancedSamples.Demos.DemoShare
         {
             _agentBody.ApplyTorque(torque);
         }
-
 
         public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {

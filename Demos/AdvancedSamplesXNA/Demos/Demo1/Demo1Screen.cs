@@ -1,6 +1,5 @@
 using System.Text;
 using System.Threading;
-using FarseerGames.AdvancedSamples.Demos.Demo4;
 using FarseerGames.AdvancedSamples.Demos.DemoShare;
 using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.AdvancedSamples.ScreenSystem;

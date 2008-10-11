@@ -47,7 +47,7 @@ namespace FarseerGames.GettingStarted.Demos.DemoShare
             LoadBorderGeom(physicsSimulator);
         }
 
-        public void LoadBorderGeom(PhysicsSimulator physicsSimulator)
+        private void LoadBorderGeom(PhysicsSimulator physicsSimulator)
         {
             _borderGeom = new Geom[4];
             //left border
