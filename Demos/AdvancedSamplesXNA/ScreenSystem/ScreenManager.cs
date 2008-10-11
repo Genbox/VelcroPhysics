@@ -20,7 +20,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 #endregion
 
-namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
+namespace FarseerGames.AdvancedSamples.ScreenSystem
 {
     /// <summary>
     /// The screen manager is a component which manages one or more GameScreen

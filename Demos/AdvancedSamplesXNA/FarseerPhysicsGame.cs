@@ -1,10 +1,10 @@
 using System;
-using FarseerGames.FarseerPhysicsDemos.Components;
-using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
+using FarseerGames.AdvancedSamples.Components;
+using FarseerGames.AdvancedSamples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.FarseerPhysicsDemos
+namespace FarseerGames.AdvancedSamples
 {
     /// <summary>
     /// This is the main type for your game

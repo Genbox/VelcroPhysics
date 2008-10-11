@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using FarseerGames.FarseerPhysics;
 
-namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
+namespace FarseerGames.AdvancedSamples.Demos.Demo4
 {
     // POINT OF INTEREST
     // This is the class that syncronise the threads.
