@@ -2,13 +2,13 @@ using System.Text;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
-using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
+using FarseerGames.GettingStarted.DrawingSystem;
+using FarseerGames.GettingStarted.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo1
+namespace FarseerGames.GettingStarted.Demos.Demo1
 {
     public class Demo1Screen : GameScreen
     {

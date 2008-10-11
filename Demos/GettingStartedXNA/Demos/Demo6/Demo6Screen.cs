@@ -5,14 +5,14 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.FarseerPhysicsDemos.Demos.DemoShare;
-using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
-using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
+using FarseerGames.GettingStarted.Demos.DemoShare;
+using FarseerGames.GettingStarted.DrawingSystem;
+using FarseerGames.GettingStarted.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo6
+namespace FarseerGames.GettingStarted.Demos.Demo6
 {
     public class Demo6Screen : GameScreen
     {

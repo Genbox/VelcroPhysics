@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
+namespace FarseerGames.GettingStarted.DrawingSystem
 {
     public class RectangleBrush
     {

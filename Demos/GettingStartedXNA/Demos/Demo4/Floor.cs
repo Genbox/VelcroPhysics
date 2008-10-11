@@ -2,11 +2,11 @@ using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
+using FarseerGames.GettingStarted.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
+namespace FarseerGames.GettingStarted.Demos.Demo4
 {
     internal class Floor
     {
