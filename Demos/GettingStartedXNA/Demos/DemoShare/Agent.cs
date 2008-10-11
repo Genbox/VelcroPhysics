@@ -6,8 +6,6 @@ using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using FarseerGames.FarseerPhysicsDemos.Demos.Demo4;
-
 namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
 {
     public class Agent
@@ -22,10 +20,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
 
         private CollisionCategory _collidesWith = CollisionCategory.All;
         private CollisionCategory _collisionCategory = CollisionCategory.All;
-
-        // POINT OF INTEREST
-        // Using this for linking in the Demo4
-        private ObjectLinker[] _agentLink;
 
         public Agent(Vector2 position)
         {
@@ -59,15 +53,14 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
             _agentBody.ApplyTorque(torque);
         }
 
-
         public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
             _agentTexture = DrawingHelper.CreateCircleTexture(graphicsDevice, 16, Color.Gold, Color.Black);
-            _agentOrigin = new Vector2(_agentTexture.Width/2f, _agentTexture.Height/2f);
+            _agentOrigin = new Vector2(_agentTexture.Width / 2f, _agentTexture.Height / 2f);
 
             _agentCrossBeamTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, 16, 120, Color.DarkGray,
                                                                           Color.Black);
-            _agentCrossBeamOrigin = new Vector2(_agentCrossBeamTexture.Width/2f, _agentCrossBeamTexture.Height/2f);
+            _agentCrossBeamOrigin = new Vector2(_agentCrossBeamTexture.Width / 2f, _agentCrossBeamTexture.Height / 2f);
 
             _agentBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 80, 80, 5);
             _agentBody.Position = _position;
@@ -105,47 +98,16 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            // POINT OF INTEREST
-            // Use the link to draw if possible
-            if (_agentLink == null)
+            for (int i = 5; i < 7; i++)
             {
-                for (int i = 5; i < 7; i++)
-                {
-                    spriteBatch.Draw(_agentCrossBeamTexture, _agentGeom[i].Position, null, Color.White,
-                                     _agentGeom[i].Rotation,
-                                     _agentCrossBeamOrigin, 1, SpriteEffects.None, 0f);
-                }
-                for (int i = 0; i < 5; i++)
-                {
-                    spriteBatch.Draw(_agentTexture, _agentGeom[i].Position, null, Color.White, _agentGeom[i].Rotation,
-                                     _agentOrigin, 1, SpriteEffects.None, 0f);
-                }
+                spriteBatch.Draw(_agentCrossBeamTexture, _agentGeom[i].Position, null, Color.White,
+                                 _agentGeom[i].Rotation,
+                                 _agentCrossBeamOrigin, 1, SpriteEffects.None, 0f);
             }
-            else
+            for (int i = 0; i < 5; i++)
             {
-                for (int i = 5; i < 7; i++)
-                {
-                    spriteBatch.Draw(_agentCrossBeamTexture, _agentLink[i].Position, null, Color.White,
-                                     _agentLink[i].Rotation,
-                                     _agentCrossBeamOrigin, 1, SpriteEffects.None, 0f);
-                }
-                for (int i = 0; i < 5; i++)
-                {
-                    spriteBatch.Draw(_agentTexture, _agentLink[i].Position, null, Color.White, _agentLink[i].Rotation,
-                                     _agentOrigin, 1, SpriteEffects.None, 0f);
-                }
-            }
-        }
-
-        // POINT OF INTEREST
-        // Use this to link the agent's bodies to the specified processor
-        public void LinkToProcessor(PhysicsProcessor physicsProcessor)
-        {
-            _agentLink = new ObjectLinker[_agentGeom.Length];
-            for (int iGeom = 0; iGeom < _agentGeom.Length; iGeom++)
-            {
-                _agentLink[iGeom] = new ObjectLinker(_agentGeom[iGeom]);
-                physicsProcessor.AddLink(_agentLink[iGeom]);
+                spriteBatch.Draw(_agentTexture, _agentGeom[i].Position, null, Color.White, _agentGeom[i].Rotation,
+                                 _agentOrigin, 1, SpriteEffects.None, 0f);
             }
         }
     }
