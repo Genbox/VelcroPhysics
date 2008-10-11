@@ -27,24 +27,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
         private Geom _rectangleGeom;
         private Texture2D _rectangleTexture;
 
-        // POINT OF INTEREST
-        // This is the processor used to communicate with the physics thread
-        private PhysicsProcessor _physicsProcessor;
-        private Thread _physicsThread;
-
-        public override void Dispose()
-        {
-            // POINT OF INTEREST
-            // On screen destroy Dispose the physics processor and use Join to wait the thread to exit
-            _physicsProcessor.Dispose();
-            _physicsProcessor = null;
-            //_physicsThread.Abort();
-            _physicsThread.Join();
-            _physicsThread = null;
-
-            base.Dispose();
-        }
-
         public override void Initialize()
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 50));
@@ -52,20 +34,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
             //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
             PhysicsSimulator.MaxContactsToDetect = 2;
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
-
-            // POINT OF INTEREST
-            // Create a physics processor based on the physics processor
-            _physicsProcessor = new PhysicsProcessor(PhysicsSimulator);
-            // POINT OF INTEREST
-            // Create the physics thread with the StartThinking function as the entry point.
-            // The StartThinking is going to be the main function of the physics thread.
-            _physicsThread = new Thread(_physicsProcessor.StartThinking);
-            // POINT OF INTEREST
-            // Name the thread for debugging purposes
-            _physicsThread.Name = "PhysicsThread";
-            // POINT OF INTEREST
-            // And now start the thread
-            _physicsThread.Start();
 
             base.Initialize();
         }
@@ -86,9 +54,8 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
             _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, pyramidBaseBodyCount,
                                    new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount * .5f * (32 + 32 / 3),
                                                ScreenManager.ScreenHeight - 125));
-            // POINT OF INTEREST
-            // It needs the processor to register the links
-            _pyramid.Load(PhysicsSimulator, _physicsProcessor);
+
+            _pyramid.Load(PhysicsSimulator);
 
             _floor = new Floor(ScreenManager.ScreenWidth, 100,
                                new Vector2(ScreenManager.ScreenCenter.X, ScreenManager.ScreenHeight - 50));
@@ -96,9 +63,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
 
             _agent = new Agent(ScreenManager.ScreenCenter - new Vector2(320, 300));
             _agent.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
-            // POINT OF INTEREST
-            // Link the agent to the processor
-            _agent.LinkToProcessor(_physicsProcessor);
 
             base.LoadContent();
         }
@@ -209,37 +173,6 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
             {
                 _mousePickSpring.WorldAttachPoint = point;
             }
-        }
-
-        // POINT OF INTEREST
-        // We override this to be able to wait for the physics simulator to finish a frame
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
-        {
-            // POINT OF INTEREST
-            // Wait for the physics thread to finish the physics frame. Without this
-            // this thread and the physics thread can read and modify the simulator
-            // at the same time. That can cause incorrect updates and even crashes.
-            if (_physicsProcessor != null)
-                _physicsProcessor.BlockUntilIdle();
-
-            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
-        }
-
-        // POINT OF INTEREST
-        // We are going to update the physiscs through the processor, so override this function and do this ourselves
-        public override void UpdatePhysics(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
-        {
-            if (otherScreenHasFocus || coveredByOtherScreen)
-                return;
-
-            // POINT OF INTEREST
-            // Signal the physiscs processor to calculate the next physics frame
-            // It isn't advance the simulator, just tell the physics processor
-            // to do so on the other thread.
-            // But if the DebugViewEnabled, we force the simulator to update instantly
-            // as the debug view doesn't use the links.
-            if (_physicsProcessor != null)
-                _physicsProcessor.Iterate(gameTime, DebugViewEnabled);
         }
 
         public string GetTitle()

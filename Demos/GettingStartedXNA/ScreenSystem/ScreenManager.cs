@@ -223,12 +223,6 @@ namespace FarseerGames.FarseerPhysicsDemos.ScreenSystem
                     if (!screen.IsPopup)
                         coveredByOtherScreen = true;
                 }
-
-                // POINT OF INTEREST
-                // This is moved here from the screen's update to be able to handle
-                // the user input before starting the physics processing on the other thread,
-                // as the HandleInput functions interact with the simulator
-                screen.UpdatePhysics(gameTime, coveredByOtherScreenClone, otherScreenHasFocusClone);
             }
 
             // Print debug trace?
