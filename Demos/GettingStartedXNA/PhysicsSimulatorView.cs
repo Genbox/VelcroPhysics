@@ -11,7 +11,10 @@ namespace FarseerGames.GettingStarted
 {
     public class PhysicsSimulatorView
     {
+        private PhysicsSimulator _physicsSimulator;
+
         //Performance panel
+        private bool _enablePerformancePanelView = true;
         private const string _applyForces = "Apply Forces: {0}";
         private const string _applyImpulses = "Apply Impulses: {0}";
         private const string _arbiterCount = "Arbiters: {0}";
@@ -22,81 +25,88 @@ namespace FarseerGames.GettingStarted
         private const string _geomCount = "Geoms: {0}";
         private const string _jointCount = "Joints: {0}";
         private const string _narrowPhaseCollision = "Narrow Phase Collsion: {0}";
-
-        private const int _performancePanelHeight = 130;
         private const string _springCount = "Springs: {0}";
         private const string _updatePosition = "Update Positions: {0}";
         private const string _updateTotal = "Update Total: {0}";
-
-        //aabb
-        private Color _aabbColor = new Color(0, 0, 0, 150); // Color.Gainsboro;
-        private LineBrush _aabbLineBrush;
-        private int _aabbLineThickness = 1;
-        private Vector2 _attachPoint1;
-        private Vector2 _attachPoint2;
-        private Vector2 _body1AttachPointInWorldCoordinates;
-        private Vector2 _body2AttachPointInWorldCoordinates;
-        private CircleBrush _contactCircleBrush;
-        private Color _contactColor = new Color(255, 0, 0, 150);
-        private int _contactRadius = 4;
-        private Color _coordinateAxisColor = new Color(0, 0, 0, 150);
-        private LineBrush _coordinateAxisLineBrush;
-        private int _coordinateAxisLineLength = 20;
-        private int _coordinateAxisLineThickness = 1;
-        private Color _edgeColor = new Color(0, 0, 0, 150);
-        private LineBrush _edgeLineBrush;
-        private int _edgeLineThickness = 1;
-        private bool _enableAABBView = true;
-        private bool _enableContactView = true;
-        private bool _enableCoordinateAxisView = true;
-        private bool _enableEdgeView;
-
-        //grid
-        private bool _enableGridView;
-        private bool _enablePerformancePanelView = true;
-        private bool _enablePinJointView = true;
-
-        //coordinate axis
-        private bool _enableRevoluteJointView = true;
-        private bool _enableSliderJointView = true;
-        private bool _enableSpringView = true;
-        private bool _enableVerticeView = true;
-        private CircleBrush _gridCircleBrush;
-        private Color _gridColor = new Color(0, 0, 0, 150);
-        private int _gridRadius = 1;
         private Color _performancePanelColor = new Color(0, 0, 0, 150);
         private bool _performancePanelCount = true;
         private Vector2 _performancePanelPosition = new Vector2(100, 110);
         private Color _performancePanelTextColor = new Color(0, 0, 0, 255);
         private Texture2D _performancePanelTexture;
         private int _performancePanelWidth = 220;
-        private PhysicsSimulator _physicsSimulator;
+        private const int _performancePanelHeight = 130;
+        private SpriteFont _spriteFont;
 
-        //pin joint
-        private Color _pinJointColor = new Color(0, 0, 0, 200);
-        private LineBrush _pinJointLineBrush;
-        private int _pinJointLineThickness = 1;
-        private RectangleBrush _pinJointRectangleBrush;
+        //AABB
+        private Color _aabbColor = new Color(0, 0, 0, 150); // Color.Gainsboro;
+        private LineBrush _aabbLineBrush;
+        private int _aabbLineThickness = 1;
+
+        //Contacts
+        private bool _enableContactView = true;
+        private CircleBrush _contactCircleBrush;
+        private Color _contactColor = new Color(255, 0, 0, 150);
+        private int _contactRadius = 4;
+
+        //Coordinate axis
+        private bool _enableCoordinateAxisView = true;
+        private Color _coordinateAxisColor = new Color(0, 0, 0, 150);
+        private LineBrush _coordinateAxisLineBrush;
+        private int _coordinateAxisLineLength = 20;
+        private int _coordinateAxisLineThickness = 1;
+
+        //Grid
+        private bool _enableGridView;
+        private bool _enablePinJointView = true;
+        private CircleBrush _gridCircleBrush;
+        private Color _gridColor = new Color(0, 0, 0, 150);
+        private int _gridRadius = 1;
+
+        //Vertice
+        private bool _enableVerticeView = true;
+        private CircleBrush _verticeCircleBrush;
+        private Color _verticeColor = new Color(0, 50, 0, 150);
+        private int _verticeRadius = 3;
+
+        //Edge
+        private bool _enableEdgeView;
+        private Color _edgeColor = new Color(0, 0, 0, 150);
+        private LineBrush _edgeLineBrush;
+        private int _edgeLineThickness = 1;
+        private bool _enableAABBView = true;
+
+        //Revolute joint
+        private bool _enableRevoluteJointView = true;
         private Color _revoluteJointColor = new Color(0, 0, 0, 200);
         private LineBrush _revoluteJointLineBrush;
         private int _revoluteJointLineThickness = 1;
         private RectangleBrush _revoluteJointRectangleBrush;
 
-        //slider joint
+        //Pin joint
+        private Color _pinJointColor = new Color(0, 0, 0, 200);
+        private LineBrush _pinJointLineBrush;
+        private int _pinJointLineThickness = 1;
+        private RectangleBrush _pinJointRectangleBrush;
+
+        //Slider joint
+        private bool _enableSliderJointView = true;
         private Color _sliderJointColor = new Color(0, 0, 0, 200);
         private LineBrush _sliderJointLineBrush;
         private int _sliderJointLineThickness = 1;
         private RectangleBrush _sliderJointRectangleBrush;
+
+        //Spring 
+        private bool _enableSpringView = true;
+        private Vector2 _attachPoint1;
+        private Vector2 _attachPoint2;
+        private Vector2 _body1AttachPointInWorldCoordinates;
+        private Vector2 _body2AttachPointInWorldCoordinates;
         private CircleBrush _springCircleBrush;
         private LineBrush _springLineBrush;
         private Color _springLineColor = new Color(0, 0, 0, 150);
         private int _springLineThickness = 1;
-        private SpriteFont _spriteFont;
-        private Vector2 _vectorTemp1;
-        private CircleBrush _verticeCircleBrush;
-        private Color _verticeColor = new Color(0, 50, 0, 150);
-        private int _verticeRadius = 3;
         private Vector2 _worldAttachPoint;
+        private Vector2 _vectorTemp1;
 
         public PhysicsSimulatorView(PhysicsSimulator physicsSimulator)
         {
@@ -623,13 +633,13 @@ namespace FarseerGames.GettingStarted
             for (int i = 0; i < _physicsSimulator.BodyList.Count; i++)
             {
                 Vector2 startX =
-                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(-_coordinateAxisLineLength/2f, 0));
+                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(-_coordinateAxisLineLength / 2f, 0));
                 Vector2 endX =
-                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(_coordinateAxisLineLength/2f, 0));
+                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(_coordinateAxisLineLength / 2f, 0));
                 Vector2 startY =
-                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(0, -_coordinateAxisLineLength/2f));
+                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(0, -_coordinateAxisLineLength / 2f));
                 Vector2 endY =
-                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(0, _coordinateAxisLineLength/2f));
+                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(0, _coordinateAxisLineLength / 2f));
 
                 _coordinateAxisLineBrush.Draw(spriteBatch, startX, endX);
                 _coordinateAxisLineBrush.Draw(spriteBatch, startY, endY);
@@ -643,7 +653,7 @@ namespace FarseerGames.GettingStarted
                 if (!(_physicsSimulator.SpringList[i] is FixedLinearSpring))
                     continue;
 
-                FixedLinearSpring fixedLinearSpring = (FixedLinearSpring) _physicsSimulator.SpringList[i];
+                FixedLinearSpring fixedLinearSpring = (FixedLinearSpring)_physicsSimulator.SpringList[i];
                 _worldAttachPoint = fixedLinearSpring.WorldAttachPoint;
                 _body1AttachPointInWorldCoordinates =
                     fixedLinearSpring.Body.GetWorldPosition(fixedLinearSpring.BodyAttachPoint);
@@ -667,7 +677,7 @@ namespace FarseerGames.GettingStarted
             {
                 if (!(_physicsSimulator.SpringList[i] is LinearSpring)) continue;
 
-                LinearSpring linearSpring = (LinearSpring) _physicsSimulator.SpringList[i];
+                LinearSpring linearSpring = (LinearSpring)_physicsSimulator.SpringList[i];
                 _attachPoint1 = linearSpring.AttachPoint1;
                 _attachPoint2 = linearSpring.AttachPoint2;
                 linearSpring.Body1.GetWorldPosition(ref _attachPoint1, out _body1AttachPointInWorldCoordinates);
@@ -698,13 +708,13 @@ namespace FarseerGames.GettingStarted
             {
                 if (_physicsSimulator.JointList[i] is FixedRevoluteJoint)
                 {
-                    FixedRevoluteJoint fixedRevoluteJoint = (FixedRevoluteJoint) _physicsSimulator.JointList[i];
+                    FixedRevoluteJoint fixedRevoluteJoint = (FixedRevoluteJoint)_physicsSimulator.JointList[i];
                     _revoluteJointRectangleBrush.Draw(spriteBatch, fixedRevoluteJoint.Anchor);
                 }
 
                 if (!(_physicsSimulator.JointList[i] is RevoluteJoint)) continue;
 
-                RevoluteJoint revoluteJoint = (RevoluteJoint) _physicsSimulator.JointList[i];
+                RevoluteJoint revoluteJoint = (RevoluteJoint)_physicsSimulator.JointList[i];
                 _revoluteJointRectangleBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor);
                 _revoluteJointLineBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor, revoluteJoint.Body1.Position);
                 _revoluteJointLineBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor, revoluteJoint.Body2.Position);
@@ -718,7 +728,7 @@ namespace FarseerGames.GettingStarted
                 if (!(_physicsSimulator.JointList[i] is PinJoint))
                     continue;
 
-                PinJoint pinJoint = (PinJoint) _physicsSimulator.JointList[i];
+                PinJoint pinJoint = (PinJoint)_physicsSimulator.JointList[i];
                 _pinJointRectangleBrush.Draw(spriteBatch, pinJoint.WorldAnchor1);
                 _pinJointRectangleBrush.Draw(spriteBatch, pinJoint.WorldAnchor2);
                 _pinJointLineBrush.Draw(spriteBatch, pinJoint.WorldAnchor1, pinJoint.WorldAnchor2);
@@ -732,7 +742,7 @@ namespace FarseerGames.GettingStarted
                 if (!(_physicsSimulator.JointList[i] is SliderJoint))
                     continue;
 
-                SliderJoint sliderJoint = (SliderJoint) _physicsSimulator.JointList[i];
+                SliderJoint sliderJoint = (SliderJoint)_physicsSimulator.JointList[i];
                 _sliderJointRectangleBrush.Draw(spriteBatch, sliderJoint.WorldAnchor1);
                 _sliderJointRectangleBrush.Draw(spriteBatch, sliderJoint.WorldAnchor2);
                 _sliderJointLineBrush.Draw(spriteBatch, sliderJoint.WorldAnchor1, sliderJoint.WorldAnchor2);
