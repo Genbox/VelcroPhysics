@@ -86,6 +86,7 @@
     <Compile Include="Demos\Demo1\ObjectLinker.cs" />
     <Compile Include="Demos\Demo1\PhysicsProcessor.cs" />
     <Compile Include="Demos\Demo1\Pyramid.cs" />
+    <Compile Include="Demos\Demo2\Demo2Screen.cs" />
     <Compile Include="Demos\DemoShare\Agent.cs" />
     <Compile Include="Demos\DemoShare\AngularSpringLever.cs" />
     <Compile Include="Demos\DemoShare\Border.cs" />
