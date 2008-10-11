@@ -1,15 +1,14 @@
 using System.Text;
 using System.Threading;
+using FarseerGames.AdvancedSamples.Demos.Demo4;
+using FarseerGames.AdvancedSamples.Demos.DemoShare;
+using FarseerGames.AdvancedSamples.DrawingSystem;
+using FarseerGames.AdvancedSamples.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.AdvancedSamples;
-using FarseerGames.AdvancedSamples.Demos.Demo4;
-using FarseerGames.AdvancedSamples.Demos.DemoShare;
-using FarseerGames.AdvancedSamples.DrawingSystem;
-using FarseerGames.AdvancedSamples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -19,10 +18,12 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo1
     public class Demo1Screen : GameScreen
     {
         private const int pyramidBaseBodyCount = 16;
-        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private Agent _agent;
         private Floor _floor;
+        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private FixedLinearSpring _mousePickSpring;
+        private PhysicsProcessor _physicsProcessor;
+        private Thread _physicsThread;
         private Geom _pickedGeom;
         private Pyramid _pyramid;
         private Body _rectangleBody;
@@ -31,8 +32,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo1
 
         // POINT OF INTEREST
         // This is the processor used to communicate with the physics thread
-        private PhysicsProcessor _physicsProcessor;
-        private Thread _physicsThread;
 
         public override void Dispose()
         {
@@ -85,8 +84,8 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo1
             _rectangleGeom.RestitutionCoefficient = 0f;
 
             //create the _pyramid near the bottom of the screen.
-            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, pyramidBaseBodyCount,
-                                   new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount * .5f * (32 + 32 / 3),
+            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f/3f, 32f/3f, 32, 32, pyramidBaseBodyCount,
+                                   new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount*.5f*(32 + 32/3),
                                                ScreenManager.ScreenHeight - 125));
             // POINT OF INTEREST
             // It needs the processor to register the links

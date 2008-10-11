@@ -134,7 +134,7 @@ namespace FarseerGames.GettingStarted.Demos.DemoShare
                                                                             _position);
             physicsSimulator.Add(_revoluteJoint);
             SpringFactory.Instance.CreateFixedAngleSpring(physicsSimulator, _angleSpringleverBody,
-                                                              _springConstant, _dampningConstant);
+                                                          _springConstant, _dampningConstant);
         }
 
         public void Draw(SpriteBatch spriteBatch)

@@ -14,7 +14,6 @@ namespace FarseerGames.GettingStarted.Demos.Demo3
 {
     public class Demo3Screen : GameScreen
     {
-        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private Body _agentBody;
         private Vector2 _agentCrossBeamOrigin;
         private Texture2D _agentCrossBeamTexture;
@@ -25,6 +24,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo3
         private Geom _floorGeom;
         private Vector2 _floorOrigin;
         private Texture2D _floorTexture;
+        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private FixedLinearSpring _mousePickSpring;
 
         private Body[] _obstacleBody;
@@ -188,12 +188,12 @@ namespace FarseerGames.GettingStarted.Demos.Demo3
         {
             if (FirstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(),this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
                 FirstRun = false;
             }
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(),this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
 
             HandleKeyboardInput(input);
@@ -249,10 +249,10 @@ namespace FarseerGames.GettingStarted.Demos.Demo3
                 if (_pickedGeom != null)
                 {
                     _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
-                                                                                          _pickedGeom.Body,
-                                                                                          _pickedGeom.Body.
-                                                                                              GetLocalPosition(point),
-                                                                                          point, 20, 10);
+                                                                                      _pickedGeom.Body,
+                                                                                      _pickedGeom.Body.
+                                                                                          GetLocalPosition(point),
+                                                                                      point, 20, 10);
                 }
             }
             else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&

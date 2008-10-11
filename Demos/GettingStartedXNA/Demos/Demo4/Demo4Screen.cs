@@ -1,5 +1,4 @@
 using System.Text;
-using System.Threading;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
@@ -17,9 +16,9 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
     public class Demo4Screen : GameScreen
     {
         private const int pyramidBaseBodyCount = 16;
-        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private Agent _agent;
         private Floor _floor;
+        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private FixedLinearSpring _mousePickSpring;
         private Geom _pickedGeom;
         private Pyramid _pyramid;
@@ -51,8 +50,8 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
             _rectangleGeom.RestitutionCoefficient = 0f;
 
             //create the _pyramid near the bottom of the screen.
-            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, pyramidBaseBodyCount,
-                                   new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount * .5f * (32 + 32 / 3),
+            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f/3f, 32f/3f, 32, 32, pyramidBaseBodyCount,
+                                   new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount*.5f*(32 + 32/3),
                                                ScreenManager.ScreenHeight - 125));
 
             _pyramid.Load(PhysicsSimulator);
@@ -151,10 +150,10 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
                 if (_pickedGeom != null)
                 {
                     _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
-                                                                                          _pickedGeom.Body,
-                                                                                          _pickedGeom.Body.
-                                                                                              GetLocalPosition(point),
-                                                                                          point, 20, 10);
+                                                                                      _pickedGeom.Body,
+                                                                                      _pickedGeom.Body.
+                                                                                          GetLocalPosition(point),
+                                                                                      point, 20, 10);
                 }
             }
             else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&
@@ -185,7 +184,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows the stacking stability of the engine.");
             sb.AppendLine("It shows a stack of rectangular bodies stacked in");
-            sb.AppendLine("the shape of a _pyramid.");
+            sb.AppendLine("the shape of a pyramid.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  -Rotate : left and right arrows");

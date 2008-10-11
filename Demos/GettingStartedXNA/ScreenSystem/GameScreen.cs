@@ -44,10 +44,6 @@ namespace FarseerGames.GettingStarted.ScreenSystem
             _physicsSimulatorView = new PhysicsSimulatorView(_physicsSimulator);
         }
 
-        public virtual void Dispose()
-        {
-        }
-
         public PhysicsSimulator PhysicsSimulator
         {
             get { return _physicsSimulator; }
@@ -156,6 +152,14 @@ namespace FarseerGames.GettingStarted.ScreenSystem
         /// </summary>
         public ScreenManager ScreenManager { get; internal set; }
 
+        #region IDisposable Members
+
+        public virtual void Dispose()
+        {
+        }
+
+        #endregion
+
         public virtual void Initialize()
         {
         }
@@ -230,7 +234,7 @@ namespace FarseerGames.GettingStarted.ScreenSystem
 
             if (!coveredByOtherScreen && !otherScreenHasFocus)
             {
-                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds * .001f);
+                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
             }
         }
 

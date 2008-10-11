@@ -1,9 +1,9 @@
+using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.AdvancedSamples.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -134,7 +134,7 @@ namespace FarseerGames.AdvancedSamples.Demos.DemoShare
                                                                             _position);
             physicsSimulator.Add(_revoluteJoint);
             SpringFactory.Instance.CreateFixedAngleSpring(physicsSimulator, _angleSpringleverBody,
-                                                              _springConstant, _dampningConstant);
+                                                          _springConstant, _dampningConstant);
         }
 
         public void Draw(SpriteBatch spriteBatch)

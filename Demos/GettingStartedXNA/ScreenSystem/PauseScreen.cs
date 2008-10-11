@@ -15,14 +15,14 @@ namespace FarseerGames.GettingStarted.ScreenSystem
         private const int textPanelLeftBorder = 200;
         private const int textPanelWidth = 440;
         private const int textTopBorder = 20;
+        private GameScreen _caller;
         private string _details = "Details";
         private Color _panelColor = new Color(100, 100, 100, 200);
+        private Texture2D _panelTexture;
         private Color _textColor = Color.White;
         private Color _textPanelColor = new Color(100, 100, 100, 220);
-        private string _title = "Title";
-        private Texture2D _panelTexture;
         private Texture2D _textPanelTexture;
-        private GameScreen _caller;
+        private string _title = "Title";
 
         public PauseScreen(string title, string details, GameScreen caller)
         {

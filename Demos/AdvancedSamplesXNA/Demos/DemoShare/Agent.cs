@@ -1,31 +1,30 @@
+using FarseerGames.AdvancedSamples.Demos.Demo4;
+using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.AdvancedSamples.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-using FarseerGames.AdvancedSamples.Demos.Demo4;
 
 namespace FarseerGames.AdvancedSamples.Demos.DemoShare
 {
     public class Agent
     {
-        private Vector2 _position;
         private Body _agentBody;
         private Vector2 _agentCrossBeamOrigin;
         private Texture2D _agentCrossBeamTexture;
         private Geom[] _agentGeom;
+        private ObjectLinker[] _agentLink;
         private Vector2 _agentOrigin;
         private Texture2D _agentTexture;
 
         private CollisionCategory _collidesWith = CollisionCategory.All;
         private CollisionCategory _collisionCategory = CollisionCategory.All;
+        private Vector2 _position;
 
         // POINT OF INTEREST
         // Using this for linking in the Demo4
-        private ObjectLinker[] _agentLink;
 
         public Agent(Vector2 position)
         {

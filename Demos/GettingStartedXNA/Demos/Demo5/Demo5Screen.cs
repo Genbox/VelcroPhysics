@@ -14,7 +14,6 @@ namespace FarseerGames.GettingStarted.Demos.Demo5
 {
     public class Demo5Screen : GameScreen
     {
-        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private Agent _agent;
         private Circles _blackCircles1;
         private Circles _blackCircles2;
@@ -26,6 +25,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo5
         private Circles _greenCircles1;
         private Circles _greenCircles2;
         private Circles _greenCircles3;
+        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private FixedLinearSpring _mousePickSpring;
         private Geom _pickedGeom;
         private Circles _redCircles1;
@@ -36,7 +36,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo5
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
             PhysicsSimulator.MaxContactsToDetect = 2;
-                //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
+            //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
 
             base.Initialize();
@@ -200,13 +200,13 @@ namespace FarseerGames.GettingStarted.Demos.Demo5
         {
             if (FirstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(),this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
                 FirstRun = false;
             }
 
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(),this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
 
             HandleKeyboardInput(input);
@@ -263,10 +263,10 @@ namespace FarseerGames.GettingStarted.Demos.Demo5
                 if (_pickedGeom != null)
                 {
                     _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
-                                                                                          _pickedGeom.Body,
-                                                                                          _pickedGeom.Body.
-                                                                                              GetLocalPosition(point),
-                                                                                          point, 20, 10);
+                                                                                      _pickedGeom.Body,
+                                                                                      _pickedGeom.Body.
+                                                                                          GetLocalPosition(point),
+                                                                                      point, 20, 10);
                 }
             }
             else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&

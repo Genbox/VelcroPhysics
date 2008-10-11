@@ -10,13 +10,13 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
 {
     internal class Floor
     {
-        private int _height;
-        private Vector2 _position;
-        private int _width;
         private Body _floorBody;
         private Geom _floorGeom;
         private Vector2 _floorOrigin;
         private Texture2D _floorTexture;
+        private int _height;
+        private Vector2 _position;
+        private int _width;
 
         public Floor(int width, int height, Vector2 position)
         {

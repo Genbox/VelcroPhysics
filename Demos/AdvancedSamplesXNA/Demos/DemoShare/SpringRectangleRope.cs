@@ -1,9 +1,9 @@
+using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.AdvancedSamples.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -114,9 +114,9 @@ namespace FarseerGames.AdvancedSamples.Demos.DemoShare
             for (int k = 0; k < _linearSpring.Length; k++)
             {
                 _linearSpring[k] = SpringFactory.Instance.CreateLinearSpring(physicsSimulator, _rectangleBody[k],
-                                                                                 Vector2.Zero, _rectangleBody[k + 1],
-                                                                                 Vector2.Zero, _springConstant,
-                                                                                 _dampningConstant);
+                                                                             Vector2.Zero, _rectangleBody[k + 1],
+                                                                             Vector2.Zero, _springConstant,
+                                                                             _dampningConstant);
             }
         }
 

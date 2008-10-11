@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Threading;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+using System.Threading;
 using FarseerGames.FarseerPhysics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerGames.AdvancedSamples.Demos.Demo4
 {
@@ -12,53 +12,33 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
     {
         // POINT OF INTEREST
         // The simulator what will be used by the processor
-        private PhysicsSimulator _physicsSimulator;
-        // POINT OF INTEREST
-        // When there is only one hardware thread in the system, there is no meaning of multithreading
-        private bool _useMultiThreading;
-        // POINT OF INTEREST
-        // We can use this to diable multithreading for one frame /for the debug view/
-        private bool _forceSingleThreaded;
         // POINT OF INTEREST
         // Use this to signal the termination of the physics thread. volatile is a simple syncronisation
         // specifier.
         private volatile bool _doExit;
+        private bool _forceSingleThreaded;
 
         // POINT OF INTEREST
         // This is a package holding all the information to update the simulator like time and game related stuff
-        struct IterateParam
-        {
-            GameTime _gameTime;
-
-            public GameTime GameTime { get { return _gameTime; } }
-
-            public IterateParam(GameTime gameTime)
-            {
-                _gameTime = gameTime;
-            }
-        };
-
-        // POINT OF INTEREST
-        // Our instance of the iteration parameters
-        private IterateParam _iterateParam;
-
-        // POINT OF INTEREST
-        // This will signal the thread to update the simulator. AutoReset means it is going
-        // to unsignal itself after the other thread received the signal.
-        private AutoResetEvent _processEvent = new AutoResetEvent(false);
         // POINT OF INTEREST
         // This is signaled when the thread is not updating. the code using this to determine 
         // if the thread is not using the simulator /so it can be disposed/.
         private ManualResetEvent _idleEvent = new ManualResetEvent(true);
+        private IterateParam _iterateParam;
 
         // POINT OF INTEREST
         // The links the physics thread needs to syncronise after the updates
-        List<ObjectLinker> _linkList = new List<ObjectLinker>();
+        private List<ObjectLinker> _linkList = new List<ObjectLinker>();
+        private PhysicsSimulator _physicsSimulator;
+        private AutoResetEvent _processEvent = new AutoResetEvent(false);
+        private bool _useMultiThreading;
 
         public PhysicsProcessor(PhysicsSimulator physicsSimulator)
         {
             _physicsSimulator = physicsSimulator;
         }
+
+        #region IDisposable Members
 
         public void Dispose()
         {
@@ -70,14 +50,16 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
             _processEvent.Set();
         }
 
+        #endregion
+
         // POINT OF INTEREST
         // This is the entry point for the physics thread, like the Main function for it
         public void StartThinking()
         {
 #if XBOX
-      // POINT OF INTEREST
-      // On the Xbox360, we need to specify the hardware threads /CPUs/ for the physics
-      // thread. It is going to run on the fourth HW thread /it is almost fully idle/
+    // POINT OF INTEREST
+    // On the Xbox360, we need to specify the hardware threads /CPUs/ for the physics
+    // thread. It is going to run on the fourth HW thread /it is almost fully idle/
       Thread.CurrentThread.SetProcessorAffinity( new int[] { 4 } );
       useMultiThreading = true;
 #else
@@ -167,7 +149,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
             // Linit the frame rate to 100ms. This is going to cause a slowdown in the simulator when
             // the framerate drops below 10FPS. But I think the lagg is more frustrating than the
             // slowdown. I prefer a little slowdown, instead of dying between two frames.
-            _physicsSimulator.Update(Math.Min(_iterateParam.GameTime.ElapsedGameTime.Milliseconds, 100) * .001f);
+            _physicsSimulator.Update(Math.Min(_iterateParam.GameTime.ElapsedGameTime.Milliseconds, 100)*.001f);
             // POINT OF INTEREST
             // Done updating, now syncronise the links
             SyncronizeLinks();
@@ -185,5 +167,24 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
                 link.Syncronize();
             }
         }
+
+        #region Nested type: IterateParam
+
+        private struct IterateParam
+        {
+            private GameTime _gameTime;
+
+            public IterateParam(GameTime gameTime)
+            {
+                _gameTime = gameTime;
+            }
+
+            public GameTime GameTime
+            {
+                get { return _gameTime; }
+            }
+        } ;
+
+        #endregion
     }
 }

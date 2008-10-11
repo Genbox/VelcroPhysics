@@ -1,8 +1,8 @@
 using System;
+using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
-using FarseerGames.AdvancedSamples.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,27 +11,22 @@ namespace FarseerGames.AdvancedSamples
 {
     public class PhysicsSimulatorView
     {
-        private PhysicsSimulator _physicsSimulator;
-
         //Performance panel
         private const string _applyForces = "Apply Forces: {0}";
         private const string _applyImpulses = "Apply Impulses: {0}";
+        private const string _arbiterCount = "Arbiters: {0}";
+        private const string _bodyCount = "Bodies: {0}";
         private const string _broadPhaseCollision = "Broad Phase Collsion: {0}";
         private const string _cleanUp = "Clean Up: {0}";
-        private const string _narrowPhaseCollision = "Narrow Phase Collsion: {0}";
-        private const string _updatePosition = "Update Positions: {0}";
-        private const string _updateTotal = "Update Total: {0}";
-        private const string _bodyCount = "Bodies: {0}";
+        private const string _controllerCount = "Controllers: {0}";
         private const string _geomCount = "Geoms: {0}";
         private const string _jointCount = "Joints: {0}";
-        private const string _arbiterCount = "Arbiters: {0}";
-        private const string _controllerCount = "Controllers: {0}";
-        private const string _springCount = "Springs: {0}";
+        private const string _narrowPhaseCollision = "Narrow Phase Collsion: {0}";
 
         private const int _performancePanelHeight = 130;
-        private int _performancePanelWidth = 220;
-        private Vector2 _performancePanelPosition = new Vector2(100, 110);
-        private bool _performancePanelCount = true;
+        private const string _springCount = "Springs: {0}";
+        private const string _updatePosition = "Update Positions: {0}";
+        private const string _updateTotal = "Update Total: {0}";
 
         //aabb
         private Color _aabbColor = new Color(0, 0, 0, 150); // Color.Gainsboro;
@@ -70,8 +65,12 @@ namespace FarseerGames.AdvancedSamples
         private Color _gridColor = new Color(0, 0, 0, 150);
         private int _gridRadius = 1;
         private Color _performancePanelColor = new Color(0, 0, 0, 150);
+        private bool _performancePanelCount = true;
+        private Vector2 _performancePanelPosition = new Vector2(100, 110);
         private Color _performancePanelTextColor = new Color(0, 0, 0, 255);
         private Texture2D _performancePanelTexture;
+        private int _performancePanelWidth = 220;
+        private PhysicsSimulator _physicsSimulator;
 
         //pin joint
         private Color _pinJointColor = new Color(0, 0, 0, 200);
@@ -515,28 +514,28 @@ namespace FarseerGames.AdvancedSamples
                                    new Vector2(120, 200), Color.White);
 
             spriteBatch.DrawString(_spriteFont,
-                       String.Format(_bodyCount, _physicsSimulator.BodyList.Count),
-                       new Vector2(340, 125), Color.White);
+                                   String.Format(_bodyCount, _physicsSimulator.BodyList.Count),
+                                   new Vector2(340, 125), Color.White);
 
             spriteBatch.DrawString(_spriteFont,
-                       String.Format(_geomCount, _physicsSimulator.GeomList.Count),
-                       new Vector2(340, 140), Color.White);
+                                   String.Format(_geomCount, _physicsSimulator.GeomList.Count),
+                                   new Vector2(340, 140), Color.White);
 
             spriteBatch.DrawString(_spriteFont,
-                       String.Format(_jointCount, _physicsSimulator.JointList.Count),
-                       new Vector2(340, 155), Color.White);
+                                   String.Format(_jointCount, _physicsSimulator.JointList.Count),
+                                   new Vector2(340, 155), Color.White);
 
             spriteBatch.DrawString(_spriteFont,
-                       String.Format(_springCount, _physicsSimulator.SpringList.Count),
-                       new Vector2(340, 170), Color.White);
+                                   String.Format(_springCount, _physicsSimulator.SpringList.Count),
+                                   new Vector2(340, 170), Color.White);
 
             spriteBatch.DrawString(_spriteFont,
-                       String.Format(_controllerCount, _physicsSimulator.ControllerList.Count),
-                       new Vector2(340, 185), Color.White);
+                                   String.Format(_controllerCount, _physicsSimulator.ControllerList.Count),
+                                   new Vector2(340, 185), Color.White);
 
             spriteBatch.DrawString(_spriteFont,
-                       String.Format(_arbiterCount, _physicsSimulator.ArbiterList.Count),
-                       new Vector2(340, 200), Color.White);
+                                   String.Format(_arbiterCount, _physicsSimulator.ArbiterList.Count),
+                                   new Vector2(340, 200), Color.White);
 
 
             //spriteBatch.DrawString(_spriteFont, String.Format("Broadphase Pairs: {0}",this._physicsSimulator.sweepAndPrune.collisionPairs.Keys.Count), new Vector2(120, 215), Color.White);
@@ -624,13 +623,13 @@ namespace FarseerGames.AdvancedSamples
             for (int i = 0; i < _physicsSimulator.BodyList.Count; i++)
             {
                 Vector2 startX =
-                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(-_coordinateAxisLineLength / 2f, 0));
+                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(-_coordinateAxisLineLength/2f, 0));
                 Vector2 endX =
-                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(_coordinateAxisLineLength / 2f, 0));
+                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(_coordinateAxisLineLength/2f, 0));
                 Vector2 startY =
-                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(0, -_coordinateAxisLineLength / 2f));
+                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(0, -_coordinateAxisLineLength/2f));
                 Vector2 endY =
-                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(0, _coordinateAxisLineLength / 2f));
+                    _physicsSimulator.BodyList[i].GetWorldPosition(new Vector2(0, _coordinateAxisLineLength/2f));
 
                 _coordinateAxisLineBrush.Draw(spriteBatch, startX, endX);
                 _coordinateAxisLineBrush.Draw(spriteBatch, startY, endY);
@@ -644,7 +643,7 @@ namespace FarseerGames.AdvancedSamples
                 if (!(_physicsSimulator.SpringList[i] is FixedLinearSpring))
                     continue;
 
-                FixedLinearSpring fixedLinearSpring = (FixedLinearSpring)_physicsSimulator.SpringList[i];
+                FixedLinearSpring fixedLinearSpring = (FixedLinearSpring) _physicsSimulator.SpringList[i];
                 _worldAttachPoint = fixedLinearSpring.WorldAttachPoint;
                 _body1AttachPointInWorldCoordinates =
                     fixedLinearSpring.Body.GetWorldPosition(fixedLinearSpring.BodyAttachPoint);
@@ -668,7 +667,7 @@ namespace FarseerGames.AdvancedSamples
             {
                 if (!(_physicsSimulator.SpringList[i] is LinearSpring)) continue;
 
-                LinearSpring linearSpring = (LinearSpring)_physicsSimulator.SpringList[i];
+                LinearSpring linearSpring = (LinearSpring) _physicsSimulator.SpringList[i];
                 _attachPoint1 = linearSpring.AttachPoint1;
                 _attachPoint2 = linearSpring.AttachPoint2;
                 linearSpring.Body1.GetWorldPosition(ref _attachPoint1, out _body1AttachPointInWorldCoordinates);
@@ -699,13 +698,13 @@ namespace FarseerGames.AdvancedSamples
             {
                 if (_physicsSimulator.JointList[i] is FixedRevoluteJoint)
                 {
-                    FixedRevoluteJoint fixedRevoluteJoint = (FixedRevoluteJoint)_physicsSimulator.JointList[i];
+                    FixedRevoluteJoint fixedRevoluteJoint = (FixedRevoluteJoint) _physicsSimulator.JointList[i];
                     _revoluteJointRectangleBrush.Draw(spriteBatch, fixedRevoluteJoint.Anchor);
                 }
 
                 if (!(_physicsSimulator.JointList[i] is RevoluteJoint)) continue;
 
-                RevoluteJoint revoluteJoint = (RevoluteJoint)_physicsSimulator.JointList[i];
+                RevoluteJoint revoluteJoint = (RevoluteJoint) _physicsSimulator.JointList[i];
                 _revoluteJointRectangleBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor);
                 _revoluteJointLineBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor, revoluteJoint.Body1.Position);
                 _revoluteJointLineBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor, revoluteJoint.Body2.Position);
@@ -719,7 +718,7 @@ namespace FarseerGames.AdvancedSamples
                 if (!(_physicsSimulator.JointList[i] is PinJoint))
                     continue;
 
-                PinJoint pinJoint = (PinJoint)_physicsSimulator.JointList[i];
+                PinJoint pinJoint = (PinJoint) _physicsSimulator.JointList[i];
                 _pinJointRectangleBrush.Draw(spriteBatch, pinJoint.WorldAnchor1);
                 _pinJointRectangleBrush.Draw(spriteBatch, pinJoint.WorldAnchor2);
                 _pinJointLineBrush.Draw(spriteBatch, pinJoint.WorldAnchor1, pinJoint.WorldAnchor2);
@@ -733,7 +732,7 @@ namespace FarseerGames.AdvancedSamples
                 if (!(_physicsSimulator.JointList[i] is SliderJoint))
                     continue;
 
-                SliderJoint sliderJoint = (SliderJoint)_physicsSimulator.JointList[i];
+                SliderJoint sliderJoint = (SliderJoint) _physicsSimulator.JointList[i];
                 _sliderJointRectangleBrush.Draw(spriteBatch, sliderJoint.WorldAnchor1);
                 _sliderJointRectangleBrush.Draw(spriteBatch, sliderJoint.WorldAnchor2);
                 _sliderJointLineBrush.Draw(spriteBatch, sliderJoint.WorldAnchor1, sliderJoint.WorldAnchor2);
