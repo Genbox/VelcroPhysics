@@ -2,7 +2,7 @@ using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.FarseerPhysicsDemos.DrawingSystem
+namespace FarseerGames.AdvancedSamples.DrawingSystem
 {
     public class LineBrush
     {

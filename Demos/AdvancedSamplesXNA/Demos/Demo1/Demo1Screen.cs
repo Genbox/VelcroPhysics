@@ -5,16 +5,18 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.FarseerPhysicsDemos.Demos.DemoShare;
-using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
-using FarseerGames.FarseerPhysicsDemos.ScreenSystem;
+using FarseerGames.AdvancedSamples;
+using FarseerGames.AdvancedSamples.Demos.Demo4;
+using FarseerGames.AdvancedSamples.Demos.DemoShare;
+using FarseerGames.AdvancedSamples.DrawingSystem;
+using FarseerGames.AdvancedSamples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
+namespace FarseerGames.AdvancedSamples.Demos.Demo1
 {
-    public class Demo4Screen : GameScreen
+    public class Demo1Screen : GameScreen
     {
         private const int pyramidBaseBodyCount = 16;
         private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
@@ -187,10 +189,10 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
                 if (_pickedGeom != null)
                 {
                     _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
-                                                                                          _pickedGeom.Body,
-                                                                                          _pickedGeom.Body.
-                                                                                              GetLocalPosition(point),
-                                                                                          point, 20, 10);
+                                                                                      _pickedGeom.Body,
+                                                                                      _pickedGeom.Body.
+                                                                                          GetLocalPosition(point),
+                                                                                      point, 20, 10);
                 }
             }
             else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&
@@ -244,7 +246,7 @@ namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
 
         public string GetTitle()
         {
-            return "Stacked Objects";
+            return "Multithreaded Stacked Objects";
         }
 
         public string GetDetails()

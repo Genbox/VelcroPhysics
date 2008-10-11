@@ -2,13 +2,13 @@ using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.FarseerPhysicsDemos.DrawingSystem;
+using FarseerGames.AdvancedSamples.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using FarseerGames.FarseerPhysicsDemos.Demos.Demo4;
+using FarseerGames.AdvancedSamples.Demos.Demo4;
 
-namespace FarseerGames.FarseerPhysicsDemos.Demos.DemoShare
+namespace FarseerGames.AdvancedSamples.Demos.DemoShare
 {
     public class Agent
     {

@@ -1,4 +1,4 @@
-namespace FarseerGames.FarseerPhysicsDemos
+namespace FarseerGames.AdvancedSamples
 {
     internal static class Program
     {

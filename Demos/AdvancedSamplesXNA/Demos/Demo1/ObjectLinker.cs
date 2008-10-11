@@ -2,7 +2,7 @@
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Collisions;
 
-namespace FarseerGames.FarseerPhysicsDemos.Demos.Demo4
+namespace FarseerGames.AdvancedSamples.Demos.Demo4
 {
   // POINT OF INTEREST
   // This is a class to link the physics object to the simulator
