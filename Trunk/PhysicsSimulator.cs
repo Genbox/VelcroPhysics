@@ -147,7 +147,6 @@ namespace FarseerGames.FarseerPhysics
         public JointList JointList
         {
             get { return jointList; }
-            //set { controllerList = value; }
         }
 
         /// <summary>
