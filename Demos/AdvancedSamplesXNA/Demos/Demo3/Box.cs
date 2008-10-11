@@ -5,9 +5,9 @@ using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.AdvancedSamples.Demos.Demo2
+namespace FarseerGames.AdvancedSamples.Demos.Demo3
 {
-    public class Ball
+    public class Box
     {
         private Body _body;
         private Geom _geom;
@@ -15,7 +15,14 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo2
         private Vector2 _origin;
         private CollisionCategory _collidesWith = CollisionCategory.All;
         private CollisionCategory _collisionCategory = CollisionCategory.All;
-        private int _radius = 12;
+        private Vector2 _position;
+        private const int _width = 25;
+        private const int _height = 25;
+
+        public Box(Vector2 position)
+        {
+            _position = position;
+        }
 
         public Body Body
         {
@@ -41,22 +48,27 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo2
 
         public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
-            _texture = DrawingSystem.DrawingHelper.CreateCircleTexture(graphicsDevice, _radius, Color.Yellow, Color.Black);
+            _texture = DrawingSystem.DrawingHelper.CreateRectangleTexture(graphicsDevice, _width, _height, Color.White, Color.Black);
             _origin = new Vector2(_texture.Width / 2f, _texture.Height / 2f);
 
-            _body = BodyFactory.Instance.CreateCircleBody(physicsSimulator, _radius, 1);
+            _body = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _width, _height, 1);
+            _body.Position = _position;
 
-            //NOTICE how the grid cell size is 0.5f, this causes the physics engine to take a long time
-            //to calculate the collision grid. This is only a demonstration!
-            _geom = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _body, _radius, 10, 0.5f);
-            _geom.CollisionGroup = 1;
+            // Enable so that the can idle
+            // and set the minimum velocity is 25
+            _body.IsAutoIdle = true;
+            _body.MinimumVelocity = 25;
+
+            _geom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _body, _width, _height);
+            //_geom.CollisionGroup = 1;
             _geom.CollidesWith = _collidesWith;
             _geom.CollisionCategories = _collisionCategory;
+            _geom.FrictionCoefficient = 1;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Color color)
         {
-            spriteBatch.Draw(_texture, _body.Position, null, Color.White, _body.Rotation, _origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(_texture, _body.Position, null, color, _body.Rotation, _origin, 1f, SpriteEffects.None, 0f);
         }
     }
 }
