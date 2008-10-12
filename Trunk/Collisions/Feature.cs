@@ -45,6 +45,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return Equals((Feature) obj);
         }
 
+        /// <summary>
+        /// Checks against another Features to see if they are equal.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns></returns>
         public bool Equals(Feature other)
         {
             return ((Normal == other.Normal) && (Position == other.Position) && (Distance == other.Distance));

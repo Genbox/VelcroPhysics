@@ -26,14 +26,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public Vector2 Normal;
         public Vector2 Position;
-        public float Seperation;
+        public float Separation;
 
-        public Contact(Vector2 position, Vector2 normal, float seperation, ContactId contactId)
+        public Contact(Vector2 position, Vector2 normal, float separation, ContactId contactId)
         {
             ContactId = contactId;
             Position = position;
             Normal = normal;
-            Seperation = seperation;
+            Separation = separation;
             NormalImpulse = 0;
             TangentImpulse = 0;
             MassNormal = 0;
@@ -54,26 +54,46 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #endregion
 
+        /// <summary>
+        /// Sets the mass normal.
+        /// </summary>
+        /// <param name="massNormal">The mass normal.</param>
         public void SetMassNormal(float massNormal)
         {
             MassNormal = massNormal;
         }
 
+        /// <summary>
+        /// Sets the mass tangent.
+        /// </summary>
+        /// <param name="massTangent">The mass tangent.</param>
         public void SetMassTangent(float massTangent)
         {
             MassTangent = massTangent;
         }
 
+        /// <summary>
+        /// Sets the bias.
+        /// </summary>
+        /// <param name="bias">The bias.</param>
         public void SetBias(float bias)
         {
             NormalVelocityBias = bias;
         }
 
+        /// <summary>
+        /// Sets the normal impulse.
+        /// </summary>
+        /// <param name="normalImpulse">The normal impulse.</param>
         public void SetNormalImpulse(float normalImpulse)
         {
             NormalImpulse = normalImpulse;
         }
 
+        /// <summary>
+        /// Sets the tangent impulse.
+        /// </summary>
+        /// <param name="tangentImpulse">The tangent impulse.</param>
         public void SetTangentImpulse(float tangentImpulse)
         {
             TangentImpulse = tangentImpulse;

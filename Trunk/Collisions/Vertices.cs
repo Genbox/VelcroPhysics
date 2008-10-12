@@ -41,11 +41,20 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
+        /// <summary>
+        /// Gets an array of vertices.
+        /// </summary>
+        /// <returns></returns>
         public Vector2[] GetVerticesArray()
         {
             return ToArray();
         }
 
+        /// <summary>
+        /// Gets the next index.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns></returns>
         public int NextIndex(int index)
         {
             if (index == Count - 1)
@@ -55,6 +64,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return index + 1;
         }
 
+        /// <summary>
+        /// Gets the previous index.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns></returns>
         public int PreviousIndex(int index)
         {
             if (index == 0)
@@ -64,6 +78,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return index - 1;
         }
 
+        /// <summary>
+        /// Gets the edge.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns></returns>
         public Vector2 GetEdge(int index)
         {
             int nextIndex = NextIndex(index);
@@ -73,6 +92,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return _vectorTemp1;
         }
 
+        /// <summary>
+        /// Gets the edge.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <param name="edge">The edge.</param>
         public void GetEdge(int index, out Vector2 edge)
         {
             int nextIndex = NextIndex(index);
@@ -81,6 +105,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Vector2.Subtract(ref _vectorTemp2, ref _vectorTemp3, out edge);
         }
 
+        /// <summary>
+        /// Gets the edge mid point.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns></returns>
         public Vector2 GetEdgeMidPoint(int index)
         {
             GetEdge(index, out _vectorTemp1);
@@ -92,6 +121,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return _vectorTemp1;
         }
 
+        /// <summary>
+        /// Gets the edge mid point.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <param name="midPoint">The mid point.</param>
         public void GetEdgeMidPoint(int index, out Vector2 midPoint)
         {
             GetEdge(index, out _vectorTemp1);
@@ -100,6 +134,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Vector2.Add(ref _vectorTemp3, ref _vectorTemp2, out midPoint);
         }
 
+        /// <summary>
+        /// Gets the edge normal.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns></returns>
         public Vector2 GetEdgeNormal(int index)
         {
             GetEdge(index, out _vectorTemp1);
@@ -112,6 +151,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return _vectorTemp3;
         }
 
+        /// <summary>
+        /// Gets the edge normal.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <param name="edgeNormal">The edge normal.</param>
         public void GetEdgeNormal(int index, out Vector2 edgeNormal)
         {
             GetEdge(index, out _vectorTemp4);
@@ -120,6 +164,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Vector2.Normalize(ref _vectorTemp5, out edgeNormal);
         }
 
+        /// <summary>
+        /// Gets the vertex normal.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns></returns>
         public Vector2 GetVertexNormal(int index)
         {
             GetEdgeNormal(index, out _vectorTemp1);
@@ -134,6 +183,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return _vectorTemp1;
         }
 
+        /// <summary>
+        /// Gets the vertex normal.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <param name="vertexNormal">The vertex normal.</param>
         public void GetVertexNormal(int index, out Vector2 vertexNormal)
         {
             GetEdgeNormal(index, out _vectorTemp1);
@@ -197,6 +251,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
+        /// <summary>
+        /// Forces counter clock wise order.
+        /// </summary>
         public void ForceCounterClockWiseOrder()
         {
             // the sign of the 'area' of the polygon is all
@@ -208,6 +265,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
+        /// <summary>
+        /// Gets the signed area.
+        /// </summary>
+        /// <returns></returns>
         private float GetSignedArea()
         {
             int i;
@@ -223,6 +284,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return area;
         }
 
+        /// <summary>
+        /// Gets the area.
+        /// </summary>
+        /// <returns></returns>
         public float GetArea()
         {
             int i;
@@ -238,12 +303,21 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return (area < 0 ? -area : area);
         }
 
+        /// <summary>
+        /// Gets the centroid.
+        /// </summary>
+        /// <returns></returns>
         public Vector2 GetCentroid()
         {
             float area = GetArea();
             return GetCentroid(area);
         }
 
+        /// <summary>
+        /// Gets the centroid.
+        /// </summary>
+        /// <param name="area">The area.</param>
+        /// <returns></returns>
         public Vector2 GetCentroid(float area)
         {
             //calc centroid on counter clockwise verts.
@@ -317,6 +391,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return denom/(numer*6);
         }
 
+        /// <summary>
+        /// Projects to axis.
+        /// </summary>
+        /// <param name="axis">The axis.</param>
+        /// <param name="min">The min.</param>
+        /// <param name="max">The max.</param>
         public void ProjectToAxis(ref Vector2 axis, out float min, out float max)
         {
             // To project a point on an axis use the dot product
@@ -341,6 +421,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
+        /// <summary>
+        /// Translates the vertices with the specified vector.
+        /// </summary>
+        /// <param name="vector">The vector.</param>
         public void Translate(Vector2 vector)
         {
             for (int i = 0; i < Count; i++)
@@ -396,6 +480,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return vertices;
         }
 
+        /// <summary>
+        /// Scales the vertices with the specified vector.
+        /// </summary>
+        /// <param name="value">The value.</param>
         public void Scale(Vector2 value)
         {
             for (int i = Count - 1; i >= 0; i--)

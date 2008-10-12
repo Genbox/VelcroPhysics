@@ -19,18 +19,30 @@ namespace FarseerGames.FarseerPhysics.Collisions
             _geometryBIndex = geometryBIndex;
         }
 
+        /// <summary>
+        /// Gets or sets the index of geom1.
+        /// </summary>
+        /// <value>The index of the geom1.</value>
         public int Geom1Index
         {
             get { return _geometryAIndex; }
             set { _geometryAIndex = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the geom1 vertex.
+        /// </summary>
+        /// <value>The geom1 vertex.</value>
         public int Geom1Vertex
         {
             get { return _geometryAVertex; }
             set { _geometryAVertex = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the index of geom2.
+        /// </summary>
+        /// <value>The index of the geom2.</value>
         public int Geom2Index
         {
             get { return _geometryBIndex; }

@@ -11,6 +11,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private Geom _geometryA;
         private Geom _geometryB;
         private PhysicsSimulator _physicsSimulator;
+
+        /// <summary>
+        /// Fires when a broad phase collision occurs
+        /// </summary>
         public event BroadPhaseCollisionHandler OnBroadPhaseCollision;
 
         public BruteForceCollider(PhysicsSimulator physicsSimulator)
@@ -20,26 +24,34 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #region IBroadPhaseCollider Members
 
+        ///<summary>
+        /// Not required by brute force collider
+        ///</summary>
         public void ProcessRemovedGeoms()
         {
-            //not required by brute force collider
         }
 
+        ///<summary>
+        /// Not required by brute force collider
+        ///</summary>
         public void ProcessDisposedGeoms()
         {
-            //not required by brute force collider
         }
 
+        ///<summary>
+        /// Not required by brute force collider
+        ///</summary>
         public void Add(Geom geom)
         {
-            //not 
         }
 
+        /// <summary>
+        /// Updates this instance.
+        /// </summary>
         public void Update()
         {
             DoCollision();
         }
-
 
         #endregion
 

@@ -16,7 +16,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
     {
         #region Delegates
 
+        /// <summary>
+        /// This delegate is called when a collision between 2 geometries occurs
+        /// </summary>
         public delegate bool CollisionEventHandler(Geom geometry1, Geom geometry2, ContactList contactList);
+        
+        /// <summary>
+        /// This delegate is called when a separation between 2 geometries occurs
+        /// </summary>
         public delegate void SeparationEventHandler(Geom geometry1, Geom geometry2);
 
         #endregion
@@ -29,7 +36,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private Vector2 _position = new Vector2(0, 0);
         private float _rotation;
         private float _rotationOffset;
-        private Vector2 _vert;
+        private Vector2 _vector;
         private bool _isSensor;
 
         /// <summary>
@@ -38,7 +45,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public CollisionEventHandler OnCollision;
 
         /// <summary>
-        /// Fires when a seperation between this and another geom occurs
+        /// Fires when a separation between this and another geom occurs
         /// </summary>
         public SeparationEventHandler OnSeparation;
         public bool IsDisposed;
@@ -104,10 +111,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Gets or sets the size of the collison grid cells.
-        /// Be sure to run ComputeCollisionGrid() for any changes to take effect.
+        /// Gets or sets the size of the collision grid cells.
+        /// Be sure to run <see cref="ComputeCollisionGrid"/>() for any changes to take effect.
         /// </summary>
-        /// <value>The size of the collison grid cell.</value>
+        /// <value>The size of the collision grid cell.</value>
         public float CollisionGridCellSize
         {
             get { return _collisionGridCellSize; }
@@ -132,6 +139,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             get { return worldVertices; }
         }
 
+        /// <summary>
+        /// Gets or sets the matrix.
+        /// </summary>
+        /// <value>The matrix.</value>
         public Matrix Matrix
         {
             get { return _matrix; }
@@ -142,6 +153,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
+        /// <summary>
+        /// Gets the inverse matrix.
+        /// </summary>
+        /// <value>The matrix inverse.</value>
         public Matrix MatrixInverse
         {
             get
@@ -163,7 +178,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         /// <summary>
         /// Gets or sets the collision group.
-        /// If 2 geoms are in the same collisiongroup, they will not collide.
+        /// If 2 geoms are in the same collision group, they will not collide.
         /// </summary>
         /// <value>The collision group.</value>
         public int CollisionGroup
@@ -211,7 +226,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// Gets or sets a value indicating whether collision response is enabled.
         /// If 2 geoms collide and CollisionResponseEnabled is false, then impulses will not be calculated
         /// for the 2 colliding geoms. They will pass through each other, but will still be able to fire the
-        /// OnCollision event.
+        /// <see cref="OnCollision"/> event.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if collision response enabled; otherwise, <c>false</c>.
@@ -275,7 +290,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         /// <summary>
         /// Controls the amount of friction a geometry has when in contact with another geometry. A value of zero implies
-        /// no friction. When two geometries collide, the minimum friction coeficent between the two bodies is used.
+        /// no friction. When two geometries collide, the minimum friction coefficient between the two bodies is used.
         /// </summary>
         public float FrictionCoefficient
         {
@@ -324,7 +339,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #endregion
 
-        private void Construct(Body body, Vertices vertices, Vector2 offset, float rotationOffset,
+        private void Construct(Body bodyToSet, Vertices vertices, Vector2 offset, float rotationOffset,
                                float collisionGridCellSize)
         {
             Id = GetNextId();
@@ -334,10 +349,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             grid = new Grid();
             SetVertices(vertices);
             ComputeCollisionGrid();
-            SetBody(body);
+            SetBody(bodyToSet);
         }
 
-        private void ConstructClone(Body body, Geom geometry, Vector2 offset, float rotationOffset)
+        private void ConstructClone(Body bodyToSet, Geom geometry, Vector2 offset, float rotationOffset)
         {
             Id = GetNextId();
             _collisionGridCellSize = geometry._collisionGridCellSize;
@@ -353,7 +368,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             collisionCategories = geometry.collisionCategories;
             collidesWith = geometry.collidesWith;
             SetVertices(geometry.localVertices);
-            SetBody(body);
+            SetBody(bodyToSet);
         }
 
         /// <summary>
@@ -372,23 +387,23 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Sets the body.
         /// </summary>
-        /// <param name="body">The body.</param>
-        public void SetBody(Body body)
+        /// <param name="bodyToSet">The body.</param>
+        public void SetBody(Body bodyToSet)
         {
-            this.body = body;
+            body = bodyToSet;
 
             //NOTE: Changed this from:
             //_bodyUpdated = body_OnChange;
-            //body.Updated += _bodyUpdated;
+            //bodyToSet.Updated += _bodyUpdated;
 
             //_bodyDisposed = body_OnDisposed;
-            //body.Disposing += _bodyDisposed;
+            //bodyToSet.Disposing += _bodyDisposed;
             
             //TO:
-            body.Updated += BodyOnChange;
-            body.Disposed += BodyOnDisposed;
+            bodyToSet.Updated += BodyOnChange;
+            bodyToSet.Disposed += BodyOnDisposed;
 
-            Update(ref body.position, ref body.rotation);
+            Update(ref bodyToSet.position, ref bodyToSet.rotation);
         }
 
         /// <summary>
@@ -530,8 +545,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //Check each vertice (of self) against the provided geometry
             for (int i = 0; i < worldVertices.Count; i++)
             {
-                _vert = worldVertices[i];
-                if (geometry.Collide(_vert))
+                _vector = worldVertices[i];
+                if (geometry.Collide(_vector))
                 {
                     return true;
                 }
@@ -540,8 +555,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //Check each vertice of the provided geometry, against it self
             for (int i = 0; i < geometry.worldVertices.Count; i++)
             {
-                _vert = geometry.worldVertices[i];
-                if (Collide(_vert))
+                _vector = geometry.worldVertices[i];
+                if (Collide(_vector))
                 {
                     return true;
                 }

@@ -26,6 +26,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private ExtentList _yExtentList;
         private ExtentInfoList _yInfoList;
         public CollisionPairDictionary collisionPairs;
+
+        /// <summary>
+        /// Fires when a broad phase collision occurs
+        /// </summary>
         public event BroadPhaseCollisionHandler OnBroadPhaseCollision;
 
         public SweepAndPruneCollider(PhysicsSimulator physicsSimulator)
@@ -42,7 +46,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
 #if (!SILVERLIGHT)
         /// <summary>
-        /// Used by the PhysicsSimulator to remove geometry from Sweep and Prune once it
+        /// Used by the <see cref="PhysicsSimulator"/> to remove geometry from Sweep and Prune once it
         /// has been disposed.
         /// </summary>
         public void ProcessDisposedGeoms()
@@ -193,7 +197,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 #endif
 
         /// <summary>
-        /// This method is used by the PhysicsSimulator to notify Sweep and Prune that 
+        /// This method is used by the <see cref="PhysicsSimulator"/> to notify Sweep and Prune that 
         /// new geometry is to be tracked.
         /// </summary>
         /// <param name="geom">The geometry to be added</param>
@@ -281,7 +285,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Updates the values in the x and y extent lists by the changing aabb values.
+        /// Updates the values in the x and y extent lists by the changing AABB values.
         /// </summary>
         private void UpdateExtentValues()
         {
@@ -413,7 +417,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         /// <summary>
         /// Houses collision pairs as geom1 and geom2. The pairs are always ordered such
-        /// that the lower id geometry is first. This allows the CollisionPairDictionary
+        /// that the lower id geometry is first. This allows the <see cref="CollisionPairDictionary"/>
         /// to have a consistent key / hash code for a pair of geometry.
         /// </summary>
         public struct CollisionPair
@@ -452,6 +456,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 return Equals((CollisionPair)obj);
             }
 
+            /// <summary>
+            /// Checks to see if the specified <see cref="CollisionPair"/> equals this instance
+            /// </summary>
+            /// <param name="other">The other.</param>
+            /// <returns></returns>
             public bool Equals(CollisionPair other)
             {
                 if (geom1 == other.geom1)
@@ -485,6 +494,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public class CollisionPairDictionary : Dictionary<CollisionPair, bool>
         {
+            ///<summary>
+            ///Remove a pair of geoms
+            ///</summary>
+            ///<param name="g1"></param>
+            ///<param name="g2"></param>
             public void RemovePair(Geom g1, Geom g2)
             {
                 CollisionPair cp = new CollisionPair(g1, g2);
@@ -496,6 +510,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 // know to stop.
             }
 
+            /// <summary>
+            /// Adds the a pair of geoms.
+            /// </summary>
+            /// <param name="g1">The g1.</param>
+            /// <param name="g2">The g2.</param>
             public void AddPair(Geom g1, Geom g2)
             {
                 CollisionPair cp = new CollisionPair(g1, g2);
@@ -517,7 +536,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         /// <summary>
         /// This class represents a single extent of an AABB on a single axis. It has a
-        /// reference to ExtentInfo which has information about the geometry it belongs
+        /// reference to <see cref="ExtentInfo"/> which has information about the geometry it belongs
         /// to.
         /// </summary>
         public class Extent
@@ -541,7 +560,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// This class contains represents additional extent info for a particular axis
         /// It has a reference to the geometry whose extents are being tracked. It
-        /// also has a min and max extent reference into the ExtentList itself.
+        /// also has a min and max extent reference into the <see cref="ExtentList"/> itself.
         /// The class keeps track of overlaps with other geometries.
         /// </summary>
         public class ExtentInfo
@@ -638,7 +657,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             /// <summary>
-            /// Inserts a new Extent into the already sorted list. As the ExtentList
+            /// Inserts a new Extent into the already sorted list. As the <see cref="ExtentList"/>
             /// class is currently derived from the generic List class, insertions
             /// of new geometry (and extents) are going to be somewhat slow right
             /// off the bat. Additionally, this function currently performs 
@@ -680,9 +699,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             /// <summary>
-            /// Incrementally inserts the min/max extents into the ExtentList. As it
-            /// does so, the method ensures that overlap records, the collisionpair
-            /// map, and all other book-keeping is up todate.
+            /// Incrementally inserts the min/max extents into the <see cref="ExtentList"/>. As it
+            /// does so, the method ensures that overlap records, the <see cref="CollisionPair"/>
+            /// map, and all other book-keeping is up to date.
             /// </summary>
             /// <param name="ourInfo">The extent info for a give axis</param>
             public void IncrementalInsertExtent(ExtentInfo ourInfo)
@@ -764,7 +783,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             /// <summary>
-            /// Incrementally sorts ExtentList. It is assumed that there is a high level
+            /// Incrementally sorts <see cref="ExtentList"/>. It is assumed that there is a high level
             /// of frame coherence and that much of the list is already fairly well
             /// sorted. This algorithm makes use of "insert sort" which is notoriously
             /// slow - except for when a list is already almost sorted - which is the

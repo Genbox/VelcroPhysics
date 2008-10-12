@@ -163,7 +163,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 contact.MassTangent = 1f/_kTangent;
 
                 //calc velocity bias
-                _min = Math.Min(0, _physicsSimulator.allowedPenetration + contact.Seperation);
+                _min = Math.Min(0, _physicsSimulator.allowedPenetration + contact.Separation);
                 contact.NormalVelocityBias = -_physicsSimulator.biasFactor*inverseDt*_min;
 
                 //Compute the _restitution, we average the _restitution of the two bodies
@@ -529,12 +529,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         private static int CompareSeperation(Contact c1, Contact c2)
         {
-            if (c1.Seperation < c2.Seperation)
+            if (c1.Separation < c2.Separation)
             {
                 return -1;
             }
 
-            if (c1.Seperation == c2.Seperation)
+            if (c1.Separation == c2.Separation)
             {
                 return 0;
             }

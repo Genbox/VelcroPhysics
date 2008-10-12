@@ -20,11 +20,19 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private float[,] _nodes;
         private Vector2[] _points;
 
+        /// <summary>
+        /// Gets the points.
+        /// </summary>
+        /// <value>The points.</value>
         public Vector2[] Points
         {
             get { return _points; }
         }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
         public Grid Clone()
         {
             Grid grid = new Grid();
@@ -36,6 +44,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return grid;
         }
 
+        /// <summary>
+        /// Computes the grid.
+        /// </summary>
+        /// <param name="geometry">The geometry.</param>
+        /// <param name="gridCellSize">Size of the grid cell.</param>
         public void ComputeGrid(Geom geometry, float gridCellSize)
         {
             //Prepare the geometry.
@@ -73,6 +86,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
             geometry.Matrix = old;
         }
 
+        /// <summary>
+        /// Checks if the grid intersects with the specified vector.
+        /// </summary>
+        /// <param name="vector">The vector.</param>
+        /// <param name="feature">The feature.</param>
+        /// <returns></returns>
         public bool Intersect(ref Vector2 vector, out Feature feature)
         {
             //TODO: Keep and eye out for floating point accuracy issues here. Possibly some
