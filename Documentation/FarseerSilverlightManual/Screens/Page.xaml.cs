@@ -8,20 +8,19 @@ namespace FarseerSilverlightManual.Screens
     {
         public static GameLoop gameLoop;
         public int _demo;
-        public SimulatorView currentDemo;
 
         public Page(string demo)
         {
             // Required to initialize variables
             InitializeComponent();
 
-            Loaded += Page_Loaded;
+            Loaded += PageLoaded;
             SizeChanged += Page_SizeChanged;
 
             _demo = int.Parse(demo);
         }
 
-        public void Page_Loaded(object o, EventArgs e)
+        public void PageLoaded(object o, EventArgs e)
         {
             // Required to initialize variables
             Focus();
@@ -32,18 +31,20 @@ namespace FarseerSilverlightManual.Screens
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            float scaleY = (float) (ActualHeight/768);
-            float scaleX = (float) (ActualWidth/1024);
+            float scaleY = (float)(ActualHeight / 768);
+            float scaleX = (float)(ActualWidth / 1024);
             float scl = Math.Min(scaleX, scaleY);
             if (scl <= 0) return;
-            translate.X = ((ActualWidth) - 1024d*scl)/2d;
-            translate.Y = ((ActualHeight) - 768d*scl)/2d;
+            translate.X = ((ActualWidth) - 1024d * scl) / 2d;
+            translate.Y = ((ActualHeight) - 768d * scl) / 2d;
             scale.ScaleX = scl;
             scale.ScaleY = scl;
         }
 
         private void LoadDemo()
         {
+            SimulatorView currentDemo;
+
             switch (_demo)
             {
                 case 1:
@@ -63,6 +64,9 @@ namespace FarseerSilverlightManual.Screens
                     break;
                 case 6:
                     currentDemo = new AngleSpringDemo();
+                    break;
+                default:
+                    currentDemo = new RevoluteJointDemo();
                     break;
             }
 

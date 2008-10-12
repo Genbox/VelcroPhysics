@@ -4,7 +4,6 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
-using FarseerSilverlightManual.Objects;
 using FarseerSilverlightManual.Screens;
 
 namespace FarseerSilverlightManual.Demos.DemoShare
@@ -13,7 +12,6 @@ namespace FarseerSilverlightManual.Demos.DemoShare
     {
         private Body _borderBody;
         private Geom[] _borderGeom;
-
         private int _borderWidth;
         private int _height;
         private Vector2 _position;
@@ -34,31 +32,13 @@ namespace FarseerSilverlightManual.Demos.DemoShare
             _borderBody.IsStatic = true;
             _borderBody.Position = _position;
             LoadBorderGeom(physicsSimulator);
-            float left = (_position.X - _width/2f);
-            float top = (_position.Y - _height/2f);
-            float right = (_position.X + _width/2f);
-            float bottom = (_position.Y + _height/2f);
-            RectangleBrush r1 = view.AddRectangleToCanvas(null, Color.FromArgb(128, 255, 255, 255),
-                                                          new Vector2(_borderWidth*2, ScreenManager.ScreenHeight));
-            r1.Extender.Position = new Vector2(left, _position.Y);
-            RectangleBrush r2 = view.AddRectangleToCanvas(null, Color.FromArgb(128, 255, 255, 255),
-                                                          new Vector2(_borderWidth*2, ScreenManager.ScreenHeight));
-            r2.Extender.Position = new Vector2(right, _position.Y);
-            RectangleBrush r3 = view.AddRectangleToCanvas(null, Color.FromArgb(128, 255, 255, 255),
-                                                          new Vector2(ScreenManager.ScreenWidth, _borderWidth*2));
-            r3.Extender.Position = new Vector2(_position.X, top);
-            RectangleBrush r4 = view.AddRectangleToCanvas(null, Color.FromArgb(128, 255, 255, 255),
-                                                          new Vector2(ScreenManager.ScreenWidth, _borderWidth*2));
-            r4.Extender.Position = new Vector2(_position.X, bottom);
         }
 
         public void LoadBorderGeom(PhysicsSimulator physicsSimulator)
         {
-            Vector2 geometryOffset = Vector2.Zero;
-
             _borderGeom = new Geom[4];
             //left border
-            geometryOffset = new Vector2(-(_width*.5f - _borderWidth*.5f), 0);
+            Vector2 geometryOffset = new Vector2(-(_width*.5f - _borderWidth*.5f), 0);
             _borderGeom[0] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _borderBody, _borderWidth,
                                                                       _height,
                                                                       geometryOffset, 0);

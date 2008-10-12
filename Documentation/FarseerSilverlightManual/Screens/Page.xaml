@@ -11,7 +11,7 @@
             <Rectangle Canvas.Left="1024" Canvas.Top="0" Width="1000" Height="768" Canvas.ZIndex="5000" Fill="Black"/>
 
             <Button x:Name="startButton" Canvas.Top="384" Canvas.Left="480" Click="startButton_Click">
-                <TextBlock Text="Start Demo"></TextBlock>
+                <TextBlock FontSize="30" Text=" Start! "></TextBlock>
             </Button>
 
             <Canvas.RenderTransform>

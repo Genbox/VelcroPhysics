@@ -17,8 +17,6 @@ namespace FarseerSilverlightManual.Demos
         public override void Initialize()
         {
             //TODO: Add chain here
-            ClearCanvas();
-
             Body rectangleBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 128, 128, 1);
             rectangleBody.Position = new Vector2(ScreenManager.ScreenWidth / 2f, 200);
 
