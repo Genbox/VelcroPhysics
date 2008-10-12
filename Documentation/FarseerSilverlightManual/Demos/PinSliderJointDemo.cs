@@ -11,8 +11,6 @@ namespace FarseerSilverlightManual.Demos
 
         public override void Initialize()
         {
-            ClearCanvas();
-
             //Pin
             //Body rectangleBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 128, 128, 1);
             //rectangleBody.Position = new Vector2(100, 200);
