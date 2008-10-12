@@ -16,6 +16,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private List<Stub> _xStubs;
         private List<Stub> _yStubs;
         private LinkedList<Wrapper> _currentBodies = new LinkedList<Wrapper>();
+
+        /// <summary>
+        /// Fires when a broad phase collision occurs
+        /// </summary>
         public event BroadPhaseCollisionHandler OnBroadPhaseCollision;
 
         public SelectiveSweepCollider(PhysicsSimulator physicsSimulator)
@@ -28,6 +32,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #region IBroadPhaseCollider Members
 
+        /// <summary>
+        /// Adds the specified geom.
+        /// </summary>
+        /// <param name="geom">The geom.</param>
         public void Add(Geom geom)
         {
             Wrapper wrapper = new Wrapper(geom);
@@ -36,6 +44,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
 #if (!SILVERLIGHT)
+        /// <summary>
+        /// Processes the removed geoms.
+        /// </summary>
         public void ProcessRemovedGeoms()
         {
             if (_wrappers.RemoveAll(WrapperIsRemoved) > 0)
@@ -44,6 +55,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 _yStubs.RemoveAll(StubIsRemoved);
             }
         }
+        /// <summary>
+        /// Processes the disposed geoms.
+        /// </summary>
         public void ProcessDisposedGeoms()
         {
             if (_wrappers.RemoveAll(WrapperIsDisposed) > 0)
@@ -122,6 +136,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 #endif
 
+        /// <summary>
+        /// Updates this instance.
+        /// </summary>
         public void Update()
         {
             InternalUpdate();
@@ -130,6 +147,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #endregion
 
+        /// <summary>
+        /// Clears this instance.
+        /// </summary>
         public void Clear()
         {
             _wrappers.Clear();
@@ -177,27 +197,27 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private bool ShouldDoX()
         {
             int xCount = 0;
-            int xdepth = 0;
+            int xDepth = 0;
             int yCount = 0;
-            int ydepth = 0;
+            int yDepth = 0;
             for (int index = 0; index < _xStubs.Count; index++)
             {
                 if (_xStubs[index].begin)
                 {
-                    xCount += xdepth++;
+                    xCount += xDepth++;
                 }
                 else
                 {
-                    xdepth--;
+                    xDepth--;
                 }
 
                 if (_yStubs[index].begin)
                 {
-                    yCount += ydepth++;
+                    yCount += yDepth++;
                 }
                 else
                 {
-                    ydepth--;
+                    yDepth--;
                 }
             }
             return xCount < yCount;

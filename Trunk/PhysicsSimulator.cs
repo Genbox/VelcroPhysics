@@ -625,7 +625,7 @@ namespace FarseerGames.FarseerPhysics
 
         private void ProcessAddedItems()
         {
-            //add any new geometries
+            //Add any new geometries
             for (int i = 0; i < geomAddList.Count; i++)
             {
                 if (!geomList.Contains(geomAddList[i]))
@@ -633,12 +633,13 @@ namespace FarseerGames.FarseerPhysics
                     geomAddList[i].isRemoved = false;
                     geomList.Add(geomAddList[i]);
 
+                    //Add the new geometry to the broad phase collider.
                     _broadPhaseCollider.Add(geomAddList[i]);
                 }
             }
             geomAddList.Clear();
 
-            //add any new bodies
+            //Add any new bodies
             for (int i = 0; i < bodyAddList.Count; i++)
             {
                 if (!bodyList.Contains(bodyAddList[i]))
@@ -648,7 +649,7 @@ namespace FarseerGames.FarseerPhysics
             }
             bodyAddList.Clear();
 
-            //add any new controllers
+            //Add any new controllers
             for (int i = 0; i < controllerAddList.Count; i++)
             {
                 if (!controllerList.Contains(controllerAddList[i]))
@@ -658,7 +659,7 @@ namespace FarseerGames.FarseerPhysics
             }
             controllerAddList.Clear();
 
-            //add any new joints
+            //Add any new joints
             for (int i = 0; i < jointAddList.Count; i++)
             {
                 if (!jointList.Contains(jointAddList[i]))
@@ -668,7 +669,7 @@ namespace FarseerGames.FarseerPhysics
             }
             jointAddList.Clear();
 
-            //add any new springs
+            //Add any new springs
             for (int i = 0; i < springAddList.Count; i++)
             {
                 if (!springList.Contains(springAddList[i]))
@@ -681,13 +682,13 @@ namespace FarseerGames.FarseerPhysics
 
         private void ProcessRemovedItems()
         {
-            //remove any new geometries
+            //Remove any new geometries
             for (int i = 0; i < geomRemoveList.Count; i++)
             {
                 geomRemoveList[i].isRemoved = true;
                 geomList.Remove(geomRemoveList[i]);
 
-                //remove any arbiters associated with the geometries being removed
+                //Remove any arbiters associated with the geometries being removed
                 for (int j = arbiterList.Count; j > 0; j--)
                 {
                     if (arbiterList[j - 1].GeometryA == geomRemoveList[i] ||
@@ -705,28 +706,28 @@ namespace FarseerGames.FarseerPhysics
 
             geomRemoveList.Clear();
 
-            //remove any new bodies
+            //Remove any new bodies
             for (int i = 0; i < bodyRemoveList.Count; i++)
             {
                 bodyList.Remove(bodyRemoveList[i]);
             }
             bodyRemoveList.Clear();
 
-            //remove any new controllers
+            //Remove any new controllers
             for (int i = 0; i < controllerRemoveList.Count; i++)
             {
                 controllerList.Remove(controllerRemoveList[i]);
             }
             controllerRemoveList.Clear();
 
-            //remove any new joints
+            //Remove any new joints
             for (int i = 0; i < jointRemoveList.Count; i++)
             {
                 jointList.Remove(jointRemoveList[i]);
             }
             jointRemoveList.Clear();
 
-            //remove any new springs
+            //Remove any new springs
             for (int i = 0; i < springRemoveList.Count; i++)
             {
                 springList.Remove(springRemoveList[i]);
@@ -736,19 +737,19 @@ namespace FarseerGames.FarseerPhysics
 
         private void ProcessDisposedItems()
         {
-            //allow each controller to validate itself. this is where a controller can Dispose of itself if need be.
+            //Allow each controller to validate itself. this is where a controller can Dispose of itself if need be.
             for (int i = 0; i < controllerList.Count; i++)
             {
                 controllerList[i].Validate();
             }
 
-            //allow each joint to validate itself. this is where a joint can Dispose of itself if need be.
+            //Allow each joint to validate itself. this is where a joint can Dispose of itself if need be.
             for (int i = 0; i < jointList.Count; i++)
             {
                 jointList[i].Validate();
             }
 
-            //allow each spring to validate itself. this is where a joint can Dispose of itself if need be.
+            //Allow each spring to validate itself. this is where a joint can Dispose of itself if need be.
             for (int i = 0; i < springList.Count; i++)
             {
                 springList[i].Validate();
@@ -766,7 +767,7 @@ namespace FarseerGames.FarseerPhysics
             springList.RemoveDisposed();
             jointList.RemoveDisposed();
 
-            //remove all arbiters that contain 1 or more disposed rigid bodies.
+            //Remove all arbiters that contain 1 or more disposed rigid bodies.
             arbiterList.RemoveContainsDisposedBody(arbiterPool);
         }
 

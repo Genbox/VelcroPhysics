@@ -10,6 +10,10 @@ namespace FarseerGames.FarseerPhysics.Controllers
         public bool Enabled = true;
         public bool IsDisposed;
 
+        /// <summary>
+        /// Gets or sets the tag. The Tag can contain a custom object.
+        /// </summary>
+        /// <value>The tag.</value>
         public Object Tag { get; set; }
 
         #region IDisposable Members
@@ -22,7 +26,15 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         #endregion
 
+        /// <summary>
+        /// Validates this instance. 
+        /// </summary>
         public abstract void Validate();
+
+        /// <summary>
+        /// Updates this instance.
+        /// </summary>
+        /// <param name="dt">The dt.</param>
         public abstract void Update(float dt);
 
         protected virtual void Dispose(bool disposing)

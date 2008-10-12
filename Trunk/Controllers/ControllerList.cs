@@ -18,6 +18,10 @@ namespace FarseerGames.FarseerPhysics.Controllers
         public ContentsChangedEventHandler Added;
         public ContentsChangedEventHandler Removed;
 
+        /// <summary>
+        /// Adds the specified controller.
+        /// </summary>
+        /// <param name="controller">The controller.</param>
         public new void Add(Controller controller)
         {
             base.Add(controller);
@@ -27,6 +31,10 @@ namespace FarseerGames.FarseerPhysics.Controllers
             }
         }
 
+        /// <summary>
+        /// Removes the specified controller.
+        /// </summary>
+        /// <param name="controller">The controller.</param>
         public new void Remove(Controller controller)
         {
             base.Remove(controller);
@@ -36,6 +44,9 @@ namespace FarseerGames.FarseerPhysics.Controllers
             }
         }
 
+        /// <summary>
+        /// Removes the disposed controllers.
+        /// </summary>
         public void RemoveDisposed()
         {
             for (int i = 0; i < Count; i++)

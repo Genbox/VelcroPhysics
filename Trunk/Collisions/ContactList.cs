@@ -17,6 +17,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
         }
 
+        /// <summary>
+        /// A safe way of getting an index
+        /// </summary>
+        /// <param name="contact">The contact.</param>
+        /// <returns></returns>
         public int IndexOfSafe(Contact contact)
         {
             _index = -1;

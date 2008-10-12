@@ -44,8 +44,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         /// <summary>
         /// This method detects if two line segments (or lines) intersect,
-        /// and, if so, the point of intersection. Use the firstIsSegment and
-        /// secondIsSegment parameters to set whether the intersection point
+        /// and, if so, the point of intersection. Use the <paramref name="firstIsSegment"/> and
+        /// <paramref name="secondIsSegment"/> parameters to set whether the intersection point
         /// must be on the first and second line segments. Setting these
         /// both to true means you are doing a line-segment to line-segment
         /// intersection. Setting one of them to true means you are doing a
@@ -68,7 +68,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="floatTolerance">Some of the calculations require
         /// checking if a floating point value equals another. This is
         /// the tolerance that is used to determine this (ie value +
-        /// or - floatTolerance)</param>
+        /// or - <paramref name="floatTolerance"/>)</param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
         public static bool LineIntersect(ref Vector2 p1, ref Vector2 p2, ref Vector2 p3, ref Vector2 p4,
                                          bool firstIsSegment, bool secondIsSegment, float floatTolerance,
@@ -137,8 +137,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         /// <summary>
         /// This method detects if two line segments (or lines) intersect,
-        /// and, if so, the point of intersection. Use the firstIsSegment and
-        /// secondIsSegment parameters to set whether the intersection point
+        /// and, if so, the point of intersection. Use the <paramref name="firstIsSegment"/> and
+        /// <paramref name="secondIsSegment"/> parameters to set whether the intersection point
         /// must be on the first and second line segments. Setting these
         /// both to true means you are doing a line-segment to line-segment
         /// intersection. Setting one of them to true means you are doing a
@@ -161,7 +161,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="floatTolerance">Some of the calculations require
         /// checking if a floating point value equals another. This is
         /// the tolerance that is used to determine this (ie value +
-        /// or - floatTolerance)</param>
+        /// or - <paramref name="floatTolerance"/>)</param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
         public static bool LineIntersect(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, bool firstIsSegment,
                                          bool secondIsSegment, float floatTolerance, out Vector2 point)
@@ -210,24 +210,24 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Get all intersections between a line segment and a list of
-        /// vertices representing a polygon. The vertices reuse adjacent
-        /// points, so for example edges one and two are between the first
-        /// and second vertices and between the second and third vertices.
-        /// The last edge is between vertex vertsverts.Count - 1 and verts0.
-        /// (ie, vertices from a Geometry or AABB)
+        /// Get all intersections between a line segment and a list of vertices
+        /// representing a polygon. The vertices reuse adjacent points, so for example
+        /// edges one and two are between the first and second vertices and between the
+        /// second and third vertices. The last edge is between vertex vertices.Count - 1
+        /// and verts0. (ie, vertices from a Geometry or AABB)
         /// </summary>
         /// <param name="p1">The first point of the line segment to test</param>
         /// <param name="p2">The second point of the line segment to test.</param>
-        /// <param name="verts">The vertices, as described above</param>
-        /// <param name="points">An list of intersection points. Any intersection points found will be added to this list.</param>
-        public static void LineSegmentVerticiesIntersect(ref Vector2 p1, ref Vector2 p2, Vertices verts,
+        /// <param name="vertices">The vertices, as described above</param>
+        /// <param name="points">An list of intersection points. Any intersection points
+        /// found will be added to this list.</param>
+        public static void LineSegmentVerticesIntersect(ref Vector2 p1, ref Vector2 p2, Vertices vertices,
                                                          ref List<Vector2> points)
         {
-            for (int i = 0; i < verts.Count; i++)
+            for (int i = 0; i < vertices.Count; i++)
             {
                 Vector2 point;
-                if (LineIntersect(verts[i], verts[verts.NextIndex(i)],
+                if (LineIntersect(vertices[i], vertices[vertices.NextIndex(i)],
                                   p1, p2, true, true, _defaultFloatTolerance, out point))
                 {
                     points.Add(point);
@@ -244,9 +244,20 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="points">An list of intersection points. Any intersection points found will be added to this list.</param>
         public static void LineSegmentAABBIntersect(ref Vector2 p1, ref Vector2 p2, AABB aabb, ref List<Vector2> points)
         {
-            LineSegmentVerticiesIntersect(ref p1, ref p2, aabb.GetVertices(), ref points);
+            LineSegmentVerticesIntersect(ref p1, ref p2, aabb.GetVertices(), ref points);
         }
 
+        /// <summary>
+        /// Detects all collision points between a line and a Geom. If intersections exist
+        /// a LineIntersectionInfo  object is created and added to an existing list of such
+        /// objects. </summary>
+        /// <param name="p1">The first point of the line segment to test</param>
+        /// <param name="p2">The second point of the line segment to test</param>
+        /// <param name="geom">The geometry to test.</param>
+        /// <param name="detectUsingAABB">If true, intersection will be tested using the
+        /// Geom's AABB. If false, the Geom's vertices will be used.</param>
+        /// <param name="lineIntersectInfoList">An existing intersect info list to add to
+        /// </param>
         public static void LineSegmentGeomIntersect(Vector2 p1, Vector2 p2, Geom geom, bool detectUsingAABB,
                                                     ref List<LineIntersectInfo> lineIntersectInfoList)
         {
@@ -277,7 +288,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
             else
             {
-                LineSegmentVerticiesIntersect(ref p1, ref p2, geom.WorldVertices, ref points);
+                LineSegmentVerticesIntersect(ref p1, ref p2, geom.WorldVertices, ref points);
                 if (points.Count > 0)
                 {
                     lineIntersectInfoList.Add(new LineIntersectInfo(geom, points));

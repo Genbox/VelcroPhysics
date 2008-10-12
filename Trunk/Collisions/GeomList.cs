@@ -9,6 +9,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
     {
         #region Delegates
 
+        /// <summary>
+        /// Occurs when the content is changed of the list
+        /// </summary>
         public delegate void ContentsChangedEventHandler(Geom geom);
 
         #endregion
@@ -19,6 +22,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public ContentsChangedEventHandler Added;
         public ContentsChangedEventHandler Removed;
 
+        /// <summary>
+        /// Adds the specified geom.
+        /// </summary>
+        /// <param name="geom">The geom.</param>
         public new void Add(Geom geom)
         {
             base.Add(geom);
@@ -28,6 +35,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
+        /// <summary>
+        /// Removes the specified geom.
+        /// </summary>
+        /// <param name="geom">The geom.</param>
         public new void Remove(Geom geom)
         {
             base.Remove(geom);
@@ -37,6 +48,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
+        /// <summary>
+        /// Removes the disposed geoms
+        /// </summary>
+        /// <returns></returns>
         public int RemoveDisposed()
         {
             for (int i = 0; i < Count; i++)

@@ -113,6 +113,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _body2.GetLocalPosition(ref initialAnchor, out _localAnchor2);
         }
 
+        /// <summary>
+        /// Validates this instance.
+        /// </summary>
         public override void Validate()
         {
             if (_body1.IsDisposed || _body2.IsDisposed)
@@ -121,6 +124,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
         }
 
+        /// <summary>
+        /// Calculates all the work needed before updating the joint.
+        /// </summary>
+        /// <param name="inverseDt">The inverse dt.</param>
         public override void PreStep(float inverseDt)
         {
             if (IsDisposed)
@@ -193,6 +200,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             invertedMatrix = _b;
         }
 
+        /// <summary>
+        /// Updates this instance.
+        /// </summary>
         public override void Update()
         {
             base.Update();
