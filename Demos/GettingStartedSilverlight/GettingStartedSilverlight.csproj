@@ -162,7 +162,7 @@
     <Resource Include="logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\Silverlight Beta2\FarseerPhysics.csproj">
+    <ProjectReference Include="..\..\Branches\Silverlight\FarseerPhysics.csproj">
       <Project>{1D0B97EA-FE4A-498E-A21B-D0D476464925}</Project>
       <Name>FarseerPhysics</Name>
     </ProjectReference>
