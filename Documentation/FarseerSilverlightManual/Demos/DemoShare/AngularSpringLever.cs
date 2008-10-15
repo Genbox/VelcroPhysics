@@ -2,7 +2,6 @@ using System.Windows.Media;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 using FarseerSilverlightManual.Objects;
@@ -22,7 +21,6 @@ namespace FarseerSilverlightManual.Demos.DemoShare
         private int _rectangleHeight = 20;
         private int _rectangleWidth = 100;
 
-        private FixedRevoluteJoint _revoluteJoint;
         private float _springConstant = 1;
 
         public Vector2 Position
@@ -128,9 +126,8 @@ namespace FarseerSilverlightManual.Demos.DemoShare
             _circleGeom.FrictionCoefficient = .5f;
             _circleGeom.CollisionGroup = _collisionGroup;
 
-            _revoluteJoint = JointFactory.Instance.CreateFixedRevoluteJoint(physicsSimulator, _angleSpringleverBody,
-                                                                            _position);
-            physicsSimulator.Add(_revoluteJoint);
+            JointFactory.Instance.CreateFixedRevoluteJoint(physicsSimulator, _angleSpringleverBody,
+                                                           _position);
             SpringFactory.Instance.CreateFixedAngleSpring(physicsSimulator, _angleSpringleverBody,
                                                           _springConstant, _dampningConstant);
         }

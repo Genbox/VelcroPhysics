@@ -1,7 +1,9 @@
-﻿using FarseerGames.FarseerPhysics.Collisions;
+﻿using System.Windows.Media;
+using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
+using FarseerSilverlightManual.Objects;
 using FarseerSilverlightManual.Screens;
 
 namespace FarseerSilverlightManual.Demos
@@ -37,7 +39,8 @@ namespace FarseerSilverlightManual.Demos
 
             Geom rectangleGeom2 = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, rectangleBody2, 128, 128);
             rectangleGeom2.CollisionGroup = 3;
-            AddRectangleToCanvas(rectangleBody2, new Vector2(128, 128));
+            RectangleBrush brush = AddRectangleToCanvas(rectangleBody2, new Vector2(128, 128));
+            brush.Extender.Color = Color.FromArgb(255, 0, 255, 0);
 
             JointFactory.Instance.CreateFixedAngleLimitJoint(physicsSimulator, rectangleBody2, MathHelper.ToRadians(15),
                                                              MathHelper.ToRadians(50));

@@ -1,6 +1,3 @@
-using System;
-using System.Windows.Media;
-using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
@@ -20,18 +17,22 @@ namespace FarseerSilverlightManual.Demos
         public override void Initialize()
         {
             Body rectangleBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 128, 128, 1);
-            rectangleBody.Position = new Vector2(ScreenManager.ScreenWidth / 2f, 200);
+            rectangleBody.Position = new Vector2(ScreenManager.ScreenWidth/2f, 200);
 
             Geom rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, rectangleBody, 128, 128);
             rectangleGeom.CollisionGroup = 1;
             AddRectangleToCanvas(rectangleBody, new Vector2(128, 128));
 
-            Body rectangleBody1 = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 128, 128, 1);
-            rectangleBody1.Position = new Vector2(ScreenManager.ScreenWidth / 2f, 300);
+            AngularSpringLever springLever = new AngularSpringLever();
+            springLever.AttachPoint = 0;
+            springLever.RectangleWidth = 200;
+            springLever.RectangleHeight = 20;
+            springLever.SpringConstant = 1000000;
+            springLever.DampningConstant = 5000;
+            springLever.CollisionGroup = 100;
+            springLever.Position = ScreenManager.ScreenCenter;
 
-            Geom rectangleGeom1 = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, rectangleBody1, 128, 128);
-            rectangleGeom1.CollisionGroup = 2;
-            AddRectangleToCanvas(rectangleBody1, new Vector2(128, 128));
+            springLever.Load(this, physicsSimulator);
 
             base.Initialize();
         }

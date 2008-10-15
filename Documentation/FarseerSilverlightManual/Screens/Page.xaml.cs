@@ -31,12 +31,12 @@ namespace FarseerSilverlightManual.Screens
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            float scaleY = (float)(ActualHeight / 768);
-            float scaleX = (float)(ActualWidth / 1024);
+            float scaleY = (float) (ActualHeight/768);
+            float scaleX = (float) (ActualWidth/1024);
             float scl = Math.Min(scaleX, scaleY);
             if (scl <= 0) return;
-            translate.X = ((ActualWidth) - 1024d * scl) / 2d;
-            translate.Y = ((ActualHeight) - 768d * scl) / 2d;
+            translate.X = ((ActualWidth) - 1024d*scl)/2d;
+            translate.Y = ((ActualHeight) - 768d*scl)/2d;
             scale.ScaleX = scl;
             scale.ScaleY = scl;
         }
