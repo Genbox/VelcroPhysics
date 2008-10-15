@@ -74,14 +74,12 @@
     <Reference Include="mscorlib" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Controls, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Controls.Data">
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Browser" />
-    <Reference Include="System.Windows.Controls.Extended">
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -161,7 +159,7 @@
     <Resource Include="logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\Silverlight Beta2\FarseerPhysics.csproj">
+    <ProjectReference Include="..\..\Branches\Silverlight\FarseerPhysics.csproj">
       <Project>{1D0B97EA-FE4A-498E-A21B-D0D476464925}</Project>
       <Name>FarseerPhysics</Name>
     </ProjectReference>
