@@ -199,6 +199,9 @@
     <Compile Include="..\..\Trunk\Factories\BodyFactory.cs">
       <Link>Factories\BodyFactory.cs</Link>
     </Compile>
+    <Compile Include="..\..\Trunk\Factories\ComplexFactory.cs">
+      <Link>Factories\ComplexFactory.cs</Link>
+    </Compile>
     <Compile Include="..\..\Trunk\Factories\GeomFactory.cs">
       <Link>Factories\GeomFactory.cs</Link>
     </Compile>
