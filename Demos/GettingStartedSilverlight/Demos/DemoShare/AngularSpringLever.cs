@@ -2,7 +2,6 @@
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 using GettingStartedSilverlight.Objects;
@@ -21,7 +20,6 @@ namespace GettingStartedSilverlight.Demos.DemoShare
         private int _rectangleHeight = 20;
         private int _rectangleWidth = 100;
 
-        private FixedRevoluteJoint _revoluteJoint;
         private float _springConstant = 1;
 
         public Vector2 Position
@@ -85,7 +83,8 @@ namespace GettingStartedSilverlight.Demos.DemoShare
             }
 
             //body is created as rectangle so that it has the moment of inertia closer to the final shape of the object.
-            _angleSpringleverBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _rectangleWidth, _rectangleHeight, 1f);
+            _angleSpringleverBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _rectangleWidth,
+                                                                             _rectangleHeight, 1f);
             view.AddRectangleToCanvas(_angleSpringleverBody, Colors.White,
                                       new Vector2(_rectangleWidth, _rectangleHeight));
 
@@ -99,22 +98,22 @@ namespace GettingStartedSilverlight.Demos.DemoShare
             {
                 case 0:
                     {
-                        offset = new Vector2(-_rectangleWidth / 2f, 0); //offset to rectangle to left
+                        offset = new Vector2(-_rectangleWidth/2f, 0); //offset to rectangle to left
                         break;
                     }
                 case 1:
                     {
-                        offset = new Vector2(0, -_rectangleHeight / 2f); //offset to rectangle to top
+                        offset = new Vector2(0, -_rectangleHeight/2f); //offset to rectangle to top
                         break;
                     }
                 case 2:
                     {
-                        offset = new Vector2(_rectangleWidth / 2f, 0); //offset to rectangle to right
+                        offset = new Vector2(_rectangleWidth/2f, 0); //offset to rectangle to right
                         break;
                     }
                 case 3:
                     {
-                        offset = new Vector2(0, _rectangleHeight / 2f); //offset to rectangle to bottom
+                        offset = new Vector2(0, _rectangleHeight/2f); //offset to rectangle to bottom
                         break;
                     }
             }
@@ -127,11 +126,10 @@ namespace GettingStartedSilverlight.Demos.DemoShare
             _circleGeom.FrictionCoefficient = .5f;
             _circleGeom.CollisionGroup = _collisionGroup;
 
-            _revoluteJoint = JointFactory.Instance.CreateFixedRevoluteJoint(physicsSimulator, _angleSpringleverBody,
-                                                                            _position);
-            physicsSimulator.Add(_revoluteJoint);
+            JointFactory.Instance.CreateFixedRevoluteJoint(physicsSimulator, _angleSpringleverBody,
+                                                           _position);
             SpringFactory.Instance.CreateFixedAngleSpring(physicsSimulator, _angleSpringleverBody,
-                                                              _springConstant, _dampningConstant);
+                                                          _springConstant, _dampningConstant);
         }
     }
 }

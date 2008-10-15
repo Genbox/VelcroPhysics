@@ -124,8 +124,8 @@ namespace GettingStartedSilverlight
             if (_pickedGeom != null)
             {
                 _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(physicsSimulator, _pickedGeom.Body,
-                                                                                      _pickedGeom.Body.GetLocalPosition(
-                                                                                          point), point, 20, 10);
+                                                                                  _pickedGeom.Body.GetLocalPosition(
+                                                                                      point), point, 20, 10);
                 _mouseSpringBrush = AddFixedLinearSpringBrushToCanvas(_mousePickSpring);
             }
         }

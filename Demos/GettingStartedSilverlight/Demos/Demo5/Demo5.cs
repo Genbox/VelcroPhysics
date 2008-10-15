@@ -90,86 +90,84 @@ namespace GettingStartedSilverlight.Demos.Demo5
             //Cat1=Red, Cat2=Green, Cat3=Blue, Cat4=Black, Cat5=Agent
             Vector2 startPosition = new Vector2(100, 100);
             Vector2 endPosition = new Vector2(100, ScreenManager.ScreenHeight - 100);
-            _redCircles1 = new Circles(startPosition, endPosition, 15, 15, Color.FromArgb(175, 200, 0, 0), Colors.Black);
+            _redCircles1 = new Circles(startPosition, endPosition, 15, 15, Color.FromArgb(175, 200, 0, 0));
             _redCircles1.CollisionCategories = (CollisionCategory.Cat1);
             _redCircles1.CollidesWith = (CollisionCategory.Cat1 | CollisionCategory.Cat4 | CollisionCategory.Cat5);
             _redCircles1.Load(this, physicsSimulator);
 
             startPosition = new Vector2(200, 200);
             endPosition = new Vector2(200, ScreenManager.ScreenHeight - 200);
-            _redCircles2 = new Circles(startPosition, endPosition, 15, 12, Color.FromArgb(175, 200, 0, 0), Colors.Black);
+            _redCircles2 = new Circles(startPosition, endPosition, 15, 12, Color.FromArgb(175, 200, 0, 0));
             _redCircles2.CollisionCategories = (CollisionCategory.Cat1);
             _redCircles2.CollidesWith = (CollisionCategory.Cat1 | CollisionCategory.Cat4 | CollisionCategory.Cat5);
             _redCircles2.Load(this, physicsSimulator);
 
             startPosition = new Vector2(300, 300);
             endPosition = new Vector2(300, ScreenManager.ScreenHeight - 300);
-            _redCircles3 = new Circles(startPosition, endPosition, 10, 9, Color.FromArgb(175, 200, 0, 0), Colors.Black);
+            _redCircles3 = new Circles(startPosition, endPosition, 10, 9, Color.FromArgb(175, 200, 0, 0));
             _redCircles3.CollisionCategories = (CollisionCategory.Cat1);
             _redCircles3.CollidesWith = (CollisionCategory.Cat1 | CollisionCategory.Cat4 | CollisionCategory.Cat5);
             _redCircles3.Load(this, physicsSimulator);
 
             startPosition = new Vector2(200, 100);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 200, 100);
-            _greenCircles1 = new Circles(startPosition, endPosition, 15, 15, Color.FromArgb(175, 0, 200, 0),
-                                         Colors.Black);
+            _greenCircles1 = new Circles(startPosition, endPosition, 15, 15, Color.FromArgb(175, 0, 200, 0));
             _greenCircles1.CollisionCategories = (CollisionCategory.Cat2);
             _greenCircles1.CollidesWith = (CollisionCategory.Cat2 | CollisionCategory.Cat4 | CollisionCategory.Cat5);
             _greenCircles1.Load(this, physicsSimulator);
 
             startPosition = new Vector2(300, 200);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 300, 200);
-            _greenCircles2 = new Circles(startPosition, endPosition, 15, 12, Color.FromArgb(175, 0, 200, 0),
-                                         Colors.Black);
+            _greenCircles2 = new Circles(startPosition, endPosition, 15, 12, Color.FromArgb(175, 0, 200, 0));
             _greenCircles2.CollisionCategories = (CollisionCategory.Cat2);
             _greenCircles2.CollidesWith = (CollisionCategory.Cat2 | CollisionCategory.Cat4 | CollisionCategory.Cat5);
             _greenCircles2.Load(this, physicsSimulator);
 
             startPosition = new Vector2(400, 300);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 400, 300);
-            _greenCircles3 = new Circles(startPosition, endPosition, 10, 9, Color.FromArgb(175, 0, 200, 0), Colors.Black);
+            _greenCircles3 = new Circles(startPosition, endPosition, 10, 9, Color.FromArgb(175, 0, 200, 0));
             _greenCircles3.CollisionCategories = (CollisionCategory.Cat2);
             _greenCircles3.CollidesWith = (CollisionCategory.Cat2 | CollisionCategory.Cat4 | CollisionCategory.Cat5);
             _greenCircles3.Load(this, physicsSimulator);
 
             startPosition = new Vector2(ScreenManager.ScreenWidth - 100, 100);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 100, ScreenManager.ScreenHeight - 100);
-            _blueCircles1 = new Circles(startPosition, endPosition, 15, 15, Color.FromArgb(175, 0, 0, 200), Colors.Black);
+            _blueCircles1 = new Circles(startPosition, endPosition, 15, 15, Color.FromArgb(175, 0, 0, 200));
             _blueCircles1.CollisionCategories = (CollisionCategory.Cat3);
             _blueCircles1.CollidesWith = (CollisionCategory.Cat3 | CollisionCategory.Cat4 | CollisionCategory.Cat5);
             _blueCircles1.Load(this, physicsSimulator);
 
             startPosition = new Vector2(ScreenManager.ScreenWidth - 200, 200);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 200, ScreenManager.ScreenHeight - 200);
-            _blueCircles2 = new Circles(startPosition, endPosition, 15, 12, Color.FromArgb(175, 0, 0, 200), Colors.Black);
+            _blueCircles2 = new Circles(startPosition, endPosition, 15, 12, Color.FromArgb(175, 0, 0, 200));
             _blueCircles2.CollisionCategories = (CollisionCategory.Cat3);
             _blueCircles2.CollidesWith = (CollisionCategory.Cat3 | CollisionCategory.Cat4 | CollisionCategory.Cat5);
             _blueCircles2.Load(this, physicsSimulator);
 
             startPosition = new Vector2(ScreenManager.ScreenWidth - 300, 300);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 300, ScreenManager.ScreenHeight - 300);
-            _blueCircles3 = new Circles(startPosition, endPosition, 10, 9, Color.FromArgb(175, 0, 0, 200), Colors.Black);
+            _blueCircles3 = new Circles(startPosition, endPosition, 10, 9, Color.FromArgb(175, 0, 0, 200));
             _blueCircles3.CollisionCategories = (CollisionCategory.Cat3);
             _blueCircles3.CollidesWith = (CollisionCategory.Cat3 | CollisionCategory.Cat4 | CollisionCategory.Cat5);
             _blueCircles3.Load(this, physicsSimulator);
 
             startPosition = new Vector2(200, ScreenManager.ScreenHeight - 100);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 200, ScreenManager.ScreenHeight - 100);
-            _blackCircles1 = new Circles(startPosition, endPosition, 15, 15, Color.FromArgb(200, 0, 0, 0), Colors.Black);
+            _blackCircles1 = new Circles(startPosition, endPosition, 15, 15, Color.FromArgb(200, 0, 0, 0));
             _blackCircles1.CollisionCategories = CollisionCategory.Cat4;
             _blackCircles1.CollidesWith = CollisionCategory.All & ~CollisionCategory.Cat5; //Collide with all but Cat5
             _blackCircles1.Load(this, physicsSimulator);
 
             startPosition = new Vector2(300, ScreenManager.ScreenHeight - 200);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 300, ScreenManager.ScreenHeight - 200);
-            _blackCircles2 = new Circles(startPosition, endPosition, 15, 12, Color.FromArgb(200, 0, 0, 0), Colors.Black);
+            _blackCircles2 = new Circles(startPosition, endPosition, 15, 12, Color.FromArgb(200, 0, 0, 0));
             _blackCircles2.CollisionCategories = CollisionCategory.Cat4;
             _blackCircles2.CollidesWith = CollisionCategory.All & ~CollisionCategory.Cat5; //Collide with all but Cat5
             _blackCircles2.Load(this, physicsSimulator);
 
             startPosition = new Vector2(400, ScreenManager.ScreenHeight - 300);
             endPosition = new Vector2(ScreenManager.ScreenWidth - 400, ScreenManager.ScreenHeight - 300);
-            _blackCircles3 = new Circles(startPosition, endPosition, 10, 9, Color.FromArgb(200, 0, 0, 0), Colors.Black);
+            _blackCircles3 = new Circles(startPosition, endPosition, 10, 9, Color.FromArgb(200, 0, 0, 0));
             _blackCircles3.CollisionCategories = CollisionCategory.Cat4;
             _blackCircles3.CollidesWith = CollisionCategory.All & ~CollisionCategory.Cat5; //Collide with all but Cat5
             _blackCircles3.Load(this, physicsSimulator);

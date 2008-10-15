@@ -79,7 +79,6 @@ namespace GettingStartedSilverlight.Demos.DemoShare
             _spiderBody.ApplyTorque(torque);
         }
 
-
         public void Load(SimulatorView view, PhysicsSimulator physicsSimulator)
         {
             //Load bodies
