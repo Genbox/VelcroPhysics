@@ -30,7 +30,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>ClientBin\</OutputPath>
+    <OutputPath>..\Online Manual\SilverlightFiles\</OutputPath>
     <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -91,12 +91,9 @@
     <Compile Include="Demos\AngleLimitJointDemo.cs" />
     <Compile Include="Demos\PinSliderJointDemo.cs" />
     <Compile Include="Demos\AngleSpringDemo.cs" />
-    <Compile Include="Demos\DemoShare\Agent.cs" />
     <Compile Include="Demos\DemoShare\AngularSpringLever.cs" />
     <Compile Include="Demos\DemoShare\Border.cs" />
     <Compile Include="Demos\DemoShare\RectanglePlatform.cs" />
-    <Compile Include="Demos\DemoShare\Spider.cs" />
-    <Compile Include="Demos\DemoShare\SpringRectangleRope.cs" />
     <Compile Include="Drawing\BrushExtender.cs" />
     <Compile Include="Drawing\IDrawingBrush.cs" />
     <Compile Include="GameLoop.cs" />
