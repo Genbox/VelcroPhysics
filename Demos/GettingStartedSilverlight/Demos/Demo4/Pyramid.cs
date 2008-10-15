@@ -55,11 +55,11 @@ namespace GettingStartedSilverlight.Demos.Demo4
         {
             Vector2 rowOffset = new Vector2((_blockWidth/2) + (_horizontalSpacing/2), -(_blockHeight + _verticleSpacing));
             Vector2 colOffset = new Vector2(_horizontalSpacing + _blockWidth, 0);
-            Vector2 position = Vector2.Zero;
             int blockCounter = 0;
+
             for (int i = 0; i < _bottomRowBlockCount; i++)
             {
-                position = _bottomRightBlockPosition + rowOffset*i;
+                Vector2 position = _bottomRightBlockPosition + rowOffset*i;
                 for (int j = 0; j < _bottomRowBlockCount - i; j++)
                 {
                     Vector2 rowPosition = position + colOffset*j;

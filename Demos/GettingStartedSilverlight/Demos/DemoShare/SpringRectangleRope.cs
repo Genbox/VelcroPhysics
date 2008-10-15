@@ -23,7 +23,6 @@ namespace GettingStartedSilverlight.Demos.DemoShare
         private float _springConstant = 1;
         private float _springLength = 25;
 
-
         public Body FirstBody
         {
             get { return _rectangleBody[0]; }
@@ -115,9 +114,9 @@ namespace GettingStartedSilverlight.Demos.DemoShare
             for (int k = 0; k < _linearSpring.Length; k++)
             {
                 _linearSpring[k] = SpringFactory.Instance.CreateLinearSpring(physicsSimulator, _rectangleBody[k],
-                                                                                 Vector2.Zero, _rectangleBody[k + 1],
-                                                                                 Vector2.Zero, _springConstant,
-                                                                                 _dampningConstant);
+                                                                             Vector2.Zero, _rectangleBody[k + 1],
+                                                                             Vector2.Zero, _springConstant,
+                                                                             _dampningConstant);
             }
         }
     }

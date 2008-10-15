@@ -10,7 +10,6 @@ namespace GettingStartedSilverlight.Demos.Demo5
 {
     public class Circles
     {
-        private Color _borderColor = Colors.Black;
         private Body[] _circleBody;
         private Geom[] _circleGeom;
         private CollisionCategory _collidesWith = CollisionCategory.All;
@@ -23,7 +22,8 @@ namespace GettingStartedSilverlight.Demos.Demo5
         private int _radius = 100;
         private Vector2 _startPosition;
 
-        public Circles(Vector2 startPosition, Vector2 endPosition, int count, int radius, Color color, Color borderColor)
+        /// <exception cref="Exception">count must be 2 or greater</exception>
+        public Circles(Vector2 startPosition, Vector2 endPosition, int count, int radius, Color color)
         {
             if (count < 2)
             {
@@ -33,7 +33,6 @@ namespace GettingStartedSilverlight.Demos.Demo5
             _count = count;
             _radius = radius;
             _color = color;
-            _borderColor = borderColor;
             _startPosition = startPosition;
             _endPosition = endPosition;
         }

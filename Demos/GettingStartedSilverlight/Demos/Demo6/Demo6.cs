@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Windows.Media;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
@@ -100,7 +99,7 @@ namespace GettingStartedSilverlight.Demos.Demo6
             Vector2 position = new Vector2(-5 + width/2f, 5 + ScreenManager.ScreenHeight - height/2f);
             Vector2 springPosition = Vector2.Zero;
 
-            _platform1 = new RectanglePlatform(width, height, position, Colors.White, Colors.Black, 100);
+            _platform1 = new RectanglePlatform(width, height, position, 100);
             _platform1.Load(this, physicsSimulator);
 
             _angularSpringLever1 = new AngularSpringLever();
@@ -120,7 +119,7 @@ namespace GettingStartedSilverlight.Demos.Demo6
             height = Convert.ToInt32(ScreenManager.ScreenHeight*_platform2HeightRatio);
             position = new Vector2(ScreenManager.ScreenCenter.X, 5 + ScreenManager.ScreenHeight - height/2f);
 
-            _platform2 = new RectanglePlatform(width, height, position, Colors.White, Colors.Black, 100);
+            _platform2 = new RectanglePlatform(width, height, position, 100);
             _platform2.Load(this, physicsSimulator);
 
             _angularSpringLever2 = new AngularSpringLever();
@@ -158,16 +157,16 @@ namespace GettingStartedSilverlight.Demos.Demo6
             _springRectangleRope1.DampningConstant = 3f;
             _springRectangleRope1.Load(this, physicsSimulator);
             SpringFactory.Instance.CreateLinearSpring(physicsSimulator, _angularSpringLever3.Body,
-                                                          new Vector2(
-                                                              _angularSpringLever3.RectangleWidth/2f, 0),
-                                                          _springRectangleRope1.FirstBody, Vector2.Zero,
-                                                          400, 3);
+                                                      new Vector2(
+                                                          _angularSpringLever3.RectangleWidth/2f, 0),
+                                                      _springRectangleRope1.FirstBody, Vector2.Zero,
+                                                      400, 3);
 
             //platform 3
             width = Convert.ToInt32(ScreenManager.ScreenWidth*_platform3WidthRatio);
             height = Convert.ToInt32(ScreenManager.ScreenHeight*_platform3HeightRatio);
             position = new Vector2(ScreenManager.ScreenWidth + 5 - width/2f, 5 + ScreenManager.ScreenHeight - height/2f);
-            _platform3 = new RectanglePlatform(width, height, position, Colors.White, Colors.Black, 100);
+            _platform3 = new RectanglePlatform(width, height, position, 100);
             _platform3.Load(this, physicsSimulator);
 
             _hangingBody = BodyFactory.Instance.CreateCircleBody(physicsSimulator, 40, 1);
@@ -175,9 +174,9 @@ namespace GettingStartedSilverlight.Demos.Demo6
             _hangingBody.Position = new Vector2(position.X - 200, 200);
             GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _hangingBody, 40, 20);
             SpringFactory.Instance.CreateFixedLinearSpring(physicsSimulator, _hangingBody,
-                                                               new Vector2(0, -35),
-                                                               new Vector2(position.X - 200, 100),
-                                                               2, .1f);
+                                                           new Vector2(0, -35),
+                                                           new Vector2(position.X - 200, 100),
+                                                           2, .1f);
 
 
             _angularSpringLever4 = new AngularSpringLever();
@@ -195,8 +194,7 @@ namespace GettingStartedSilverlight.Demos.Demo6
             height = (int) (ScreenManager.ScreenHeight*.05f);
             _floor = new RectanglePlatform(ScreenManager.ScreenWidth + 10, height,
                                            new Vector2(ScreenManager.ScreenCenter.X,
-                                                       ScreenManager.ScreenHeight + 5 - height/2), Colors.Black,
-                                           Colors.Black, 0);
+                                                       ScreenManager.ScreenHeight + 5 - height/2), 0);
             _floor.Load(this, physicsSimulator);
 
             _springRectangleRope2 = new SpringRectangleRope();
@@ -211,8 +209,8 @@ namespace GettingStartedSilverlight.Demos.Demo6
             _springRectangleRope2.CollisionGroup = 1; //same as agent collision group
             _springRectangleRope2.Load(this, physicsSimulator);
             SpringFactory.Instance.CreateLinearSpring(physicsSimulator, _agent.Body, Vector2.Zero,
-                                                          _springRectangleRope2.FirstBody, Vector2.Zero,
-                                                          200, 2f);
+                                                      _springRectangleRope2.FirstBody, Vector2.Zero,
+                                                      200, 2f);
         }
     }
 }

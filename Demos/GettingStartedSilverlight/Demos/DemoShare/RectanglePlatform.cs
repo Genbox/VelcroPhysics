@@ -9,11 +9,7 @@ namespace GettingStartedSilverlight.Demos.DemoShare
 {
     public class RectanglePlatform
     {
-        //TODO: Implement
-        private Color _borderColor;
-
         private int _collisionGroup;
-        private Color _color;
         private int _height;
         private Body _platformBody;
         private Geom _platformGeom;
@@ -21,14 +17,11 @@ namespace GettingStartedSilverlight.Demos.DemoShare
         private Vector2 _position;
         private int _width;
 
-        public RectanglePlatform(int width, int height, Vector2 position, Color color, Color borderColor,
-                                 int collisionGroup)
+        public RectanglePlatform(int width, int height, Vector2 position, int collisionGroup)
         {
             _width = width;
             _height = height;
             _position = position;
-            _color = color;
-            _borderColor = borderColor;
             _collisionGroup = collisionGroup;
         }
 

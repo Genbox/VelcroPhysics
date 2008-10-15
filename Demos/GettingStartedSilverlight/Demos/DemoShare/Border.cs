@@ -12,7 +12,6 @@ namespace GettingStartedSilverlight.Demos.DemoShare
     {
         private Body _borderBody;
         private Geom[] _borderGeom;
-
         private int _borderWidth;
         private int _height;
         private Vector2 _position;
@@ -53,11 +52,9 @@ namespace GettingStartedSilverlight.Demos.DemoShare
 
         public void LoadBorderGeom(PhysicsSimulator physicsSimulator)
         {
-            Vector2 geometryOffset = Vector2.Zero;
-
             _borderGeom = new Geom[4];
             //left border
-            geometryOffset = new Vector2(-(_width*.5f - _borderWidth*.5f), 0);
+            Vector2 geometryOffset = new Vector2(-(_width*.5f - _borderWidth*.5f), 0);
             _borderGeom[0] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _borderBody, _borderWidth,
                                                                       _height,
                                                                       geometryOffset, 0);
