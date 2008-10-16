@@ -384,23 +384,23 @@ namespace FarseerGames.FarseerPhysics
 #endif
 
             #region Added by Daniel Pramel 08/24/08
-
-            dt = _scaling.GetUpdateInterval(dt);
-            if (dt == 0)
+            if (_scaling.Enabled)
             {
-                return;
-            }
+                dt = _scaling.GetUpdateInterval(dt);
+                if (dt == 0)
+                {
+                    return;
+                }
 
-
-            if (_scaling.UpdateInterval < dtReal)
-            {
-                _scaling.IncreaseUpdateInterval();
+                if (_scaling.UpdateInterval < dtReal)
+                {
+                    _scaling.IncreaseUpdateInterval();
+                }
+                else
+                {
+                    _scaling.DecreaseUpdateInterval();
+                }
             }
-            else
-            {
-                _scaling.DecreaseUpdateInterval();
-            }
-
             #endregion
 
             ProcessAddedItems();

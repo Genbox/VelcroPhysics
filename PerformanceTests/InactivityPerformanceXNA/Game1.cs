@@ -11,7 +11,6 @@ namespace InactivityPerformanceXNA
     {
         private List<Box> _boxes;
         private GraphicsDeviceManager _graphics;
-        private Ground _ground;
         private KeyboardState _oldKs;
         private MouseState _oldMs;
         private SpriteBatch _spriteBatch;
@@ -72,7 +71,7 @@ namespace InactivityPerformanceXNA
                 }
             }
 
-            _ground = new Ground(new Vector2(400, 600));
+            new Ground(new Vector2(400, 600));
         }
 
         protected override void Update(GameTime gameTime)
@@ -159,10 +158,8 @@ namespace InactivityPerformanceXNA
 
         private void RenderInfo()
         {
-            string info;
-
-            info = "Physics update interval: " + Math.Round(Globals.Physics.Scaling.UpdateInterval, 4) +
-                   Environment.NewLine;
+            string info = "Physics update interval: " + Math.Round(Globals.Physics.Scaling.UpdateInterval, 4) +
+                          Environment.NewLine;
             info += "Scaling: " + ((Globals.Physics.Scaling.Enabled) ? "enabled" : "disabled") +
                     " (press <F1> to toggle)" + Environment.NewLine;
             info += "InactivityController: " + ((Globals.Physics.InactivityController.Enabled) ? "enabled" : "disabled") +
