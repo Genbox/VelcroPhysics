@@ -37,7 +37,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
         public override void LoadContent()
         {
             //load texture that will visually represent the physics body
-            _polygonTexture = ScreenManager.ContentManager.Load<Texture2D>("Content/texture");
+            _polygonTexture = ScreenManager.ContentManager.Load<Texture2D>("Content/Texture");
 
             //Create an array to hold the data from the texture
             uint[] data = new uint[_polygonTexture.Width * _polygonTexture.Height];
