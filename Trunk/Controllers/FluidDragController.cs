@@ -46,6 +46,24 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private Vertices _vertices;
         public OnEntryHandler OnEntry;
 
+        public float Density
+        {
+            get { return _density; }
+            set { _density = value; }
+        }
+
+        public float LinearDragCoefficient
+        {
+            get { return _linearDragCoefficient; }
+            set { _linearDragCoefficient = value; }
+        }
+
+        public float RotationalDragCoefficient
+        {
+            get { return _rotationalDragCoeficient; }
+            set { _rotationalDragCoeficient = value; }
+        }        
+
         public FluidDragController()
         {
             _geomList = new List<Geom>();
