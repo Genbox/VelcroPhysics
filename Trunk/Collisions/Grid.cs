@@ -63,7 +63,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             _gridCellSize = gridCellSize;
             _gridCellSizeInv = 1/gridCellSize;
 
-            //NOTE: Useing double cast instead of converting.
+            //NOTE: Using double cast instead of converting.
             int xSize = (int) Math.Ceiling((double)(_aabb.Max.X - _aabb.Min.X)*_gridCellSizeInv) + 1;
             int ySize = (int) Math.Ceiling((double)(_aabb.Max.Y - _aabb.Min.Y)*_gridCellSizeInv) + 1;
 
