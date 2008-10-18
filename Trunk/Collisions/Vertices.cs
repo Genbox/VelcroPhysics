@@ -234,11 +234,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 verticesTemp.Add(vertA);
                 if (edgeLength > maxEdgeLength) //need to subdivide
                 {
-                    double edgeCount = Math.Ceiling(edgeLength/(double) maxEdgeLength);
+                    double edgeCount = Math.Ceiling(edgeLength / (double)maxEdgeLength);
 
                     for (int j = 0; j < edgeCount - 1; j++)
                     {
-                        Vector2 vert = Vector2.Lerp(vertA, vertB, (j + 1)/(float) edgeCount);
+                        Vector2 vert = Vector2.Lerp(vertA, vertB, (j + 1) / (float)edgeCount);
                         verticesTemp.Add(vert);
                     }
                 }
@@ -276,9 +276,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             for (i = 0; i < Count; i++)
             {
-                int j = (i + 1)%Count;
-                area += this[i].X*this[j].Y;
-                area -= this[i].Y*this[j].X;
+                int j = (i + 1) % Count;
+                area += this[i].X * this[j].Y;
+                area -= this[i].Y * this[j].X;
             }
             area /= 2.0f;
             return area;
@@ -295,9 +295,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             for (i = 0; i < Count; i++)
             {
-                int j = (i + 1)%Count;
-                area += this[i].X*this[j].Y;
-                area -= this[i].Y*this[j].X;
+                int j = (i + 1) % Count;
+                area += this[i].X * this[j].Y;
+                area -= this[i].Y * this[j].X;
             }
             area /= 2.0f;
             return (area < 0 ? -area : area);
@@ -331,15 +331,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //Debug.WriteLine(verts.ToString());
             for (i = 0; i < Count; i++)
             {
-                int j = (i + 1)%Count;
+                int j = (i + 1) % Count;
 
-                factor = -(verts[i].X*verts[j].Y - verts[j].X*verts[i].Y);
-                cx += (verts[i].X + verts[j].X)*factor;
-                cy += (verts[i].Y + verts[j].Y)*factor;
+                factor = -(verts[i].X * verts[j].Y - verts[j].X * verts[i].Y);
+                cx += (verts[i].X + verts[j].X) * factor;
+                cy += (verts[i].Y + verts[j].Y) * factor;
                 //Debug.WriteLine(i.ToString() + factor.ToString() + " -- " + verts[i].ToString());
             }
             area *= 6.0f;
-            factor = 1/area;
+            factor = 1 / area;
             cx *= factor;
             cy *= factor;
             _res.X = cx;
@@ -386,9 +386,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 Calculator.Cross(ref v1, ref v2, out d);
                 d = Math.Abs(d);
                 numer += d;
-                denom += (a + b + c)*d;
+                denom += (a + b + c) * d;
             }
-            return denom/(numer*6);
+            return denom / (numer * 6);
         }
 
         /// <summary>
@@ -442,22 +442,22 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public static Vertices CreateRectangle(float width, float height)
         {
             Vertices vertices = new Vertices();
-            vertices.Add(new Vector2(-width*.5f, -height*.5f));
-            vertices.Add(new Vector2(-width*.5f, -height*.25f));
-            vertices.Add(new Vector2(-width*.5f, 0));
-            vertices.Add(new Vector2(-width*.5f, height*.25f));
-            vertices.Add(new Vector2(-width*.5f, height*.5f));
-            vertices.Add(new Vector2(-width*.25f, height*.5f));
-            vertices.Add(new Vector2(0, height*.5f));
-            vertices.Add(new Vector2(width*.25f, height*.5f));
-            vertices.Add(new Vector2(width*.5f, height*.5f));
-            vertices.Add(new Vector2(width*.5f, height*.25f));
-            vertices.Add(new Vector2(width*.5f, 0));
-            vertices.Add(new Vector2(width*.5f, -height*.25f));
-            vertices.Add(new Vector2(width*.5f, -height*.5f));
-            vertices.Add(new Vector2(width*.25f, -height*.5f));
-            vertices.Add(new Vector2(0, -height*.5f));
-            vertices.Add(new Vector2(-width*.25f, -height*.5f));
+            vertices.Add(new Vector2(-width * .5f, -height * .5f));
+            vertices.Add(new Vector2(-width * .5f, -height * .25f));
+            vertices.Add(new Vector2(-width * .5f, 0));
+            vertices.Add(new Vector2(-width * .5f, height * .25f));
+            vertices.Add(new Vector2(-width * .5f, height * .5f));
+            vertices.Add(new Vector2(-width * .25f, height * .5f));
+            vertices.Add(new Vector2(0, height * .5f));
+            vertices.Add(new Vector2(width * .25f, height * .5f));
+            vertices.Add(new Vector2(width * .5f, height * .5f));
+            vertices.Add(new Vector2(width * .5f, height * .25f));
+            vertices.Add(new Vector2(width * .5f, 0));
+            vertices.Add(new Vector2(width * .5f, -height * .25f));
+            vertices.Add(new Vector2(width * .5f, -height * .5f));
+            vertices.Add(new Vector2(width * .25f, -height * .5f));
+            vertices.Add(new Vector2(0, -height * .5f));
+            vertices.Add(new Vector2(-width * .25f, -height * .5f));
             return vertices;
         }
 
@@ -471,11 +471,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             Vertices vertices = new Vertices();
 
-            float stepSize = MathHelper.TwoPi/numberOfEdges;
+            float stepSize = MathHelper.TwoPi / numberOfEdges;
             vertices.Add(new Vector2(radius, 0));
             for (int i = 1; i < numberOfEdges; i++)
             {
-                vertices.Add(new Vector2(radius*Calculator.Cos(stepSize*i), -radius*Calculator.Sin(stepSize*i)));
+                vertices.Add(new Vector2(radius * Calculator.Cos(stepSize * i), -radius * Calculator.Sin(stepSize * i)));
             }
             return vertices;
         }
@@ -494,7 +494,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public override string ToString()
         {
-            //Note: Converted to stringbuilder for Farseer 2.0
             StringBuilder toString = new StringBuilder();
             for (int i = 0; i < Count; i++)
             {
@@ -506,5 +505,318 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
             return toString.ToString();
         }
+
+        #region Sickbattery's Extension
+
+        private static readonly int[,] _closePixels = new int[8, 2] { { -1, -1 }, { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
+
+        /// <summary>
+        /// Creates a list of vertices from unsigned integer (32-Bit; 8 bit for each color) array.
+        /// </summary>
+        /// <param name="textureBits">Unsigned integer (32-Bit; 8 bit for each color) array.</param>
+        /// <param name="textureWidth">Width of texture.</param>
+        /// <param name="textureHeight">Height of texture.</param>
+        /// <returns>Returns Vertices a Vector2 list.</returns>
+        public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight)
+        {
+            return CreatePolygon(textureBits, textureWidth, textureHeight, Vector2.Zero, 10, 2f);
+        }
+
+        /// <summary>
+        /// Creates a list of vertices from unsigned integer (32-Bit; 8 bit for each color) array.
+        /// </summary>
+        /// <param name="textureBits">Unsigned integer (32-Bit; 8 bit for each color) array.</param>
+        /// <param name="textureWidth">Width of texture.</param>
+        /// <param name="textureHeight">Height of texture.</param>
+        /// <param name="textureOrigin">Center of texture.</param>
+        /// <returns>Returns Vertices a Vector2 list.</returns>
+        public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight, Vector2 textureOrigin)
+        {
+            return CreatePolygon(textureBits, textureWidth, textureHeight, textureOrigin, 10, 2f);
+        }
+
+        /// <summary>
+        /// Creates a list of vertices from unsigned integer (32-Bit; 8 bit for each color) array.
+        /// </summary>
+        /// <param name="textureBits">Unsigned integer (32-Bit; 8 bit for each color) array.</param>
+        /// <param name="textureWidth">Width of texture.</param>
+        /// <param name="textureHeight">Height of texture.</param>
+        /// <param name="textureOrigin">Center of texture.</param>
+        /// <param name="alphaTolerance">Every value above the specified counts as solid and will be added to the hull.</param>
+        /// <returns>Returns Vertices a Vector2 list.</returns>
+        public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight, Vector2 textureOrigin, byte alphaTolerance)
+        {
+            return CreatePolygon(textureBits, textureWidth, textureHeight, textureOrigin, alphaTolerance, 2f);
+        }
+
+        /// <summary>
+        /// Creates a list of vertices from unsigned integer (32-Bit; 8 bit for each color) array.
+        /// </summary>
+        /// <param name="textureBits">Unsigned integer (32-Bit; 8 bit for each color) array.</param>
+        /// <param name="textureWidth">Width of texture.</param>
+        /// <param name="textureHeight">Height of texture.</param>
+        /// <param name="textureOrigin">Center of texture.</param>
+        /// <param name="alphaTolerance">Every value above the specified counts as solid and will be added to the hull.</param>
+        /// <param name="hullTolerance">The polygon is a low detailed line around your shape on the texture and here you can specify how much less detailed. 1f is a good value.</param>
+        /// <returns>Returns Vertices a Vector2 list.</returns>
+        /// <exception cref="Exception">Sizes don't match: Color array must contain texture width * texture height elements.</exception>
+        public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight, Vector2 textureOrigin, byte alphaTolerance, float hullTolerance)
+        {
+            Vector2 entrance;
+            Vertices polygon = new Vertices();
+            Vertices hullArea = new Vertices();
+
+            // First of all: Check the array you just got.
+            if (textureBits.Length == textureWidth * textureHeight)
+            {
+
+                // Get the entrance point.
+                if (GetHullEntrance(ref textureBits, ref textureWidth, ref alphaTolerance, out entrance))
+                {
+                    // The current point has to be the one before entrance.
+                    // It will become last in the do..while loop in the first run.
+                    Vector2 current = new Vector2(entrance.X - 1f, entrance.Y);
+
+                    // next has to be set to entrance so it'll be added as the
+                    // first point in the list.
+                    Vector2 next = entrance;
+
+                    // Fast bugfix XD. The entrance point of course has to be added first to the polygon XD. Damn I forgot that!
+                    polygon.Add(entrance);
+
+                    do
+                    {
+                        Vector2 outstanding;
+
+                        // Add the vertex to a hull pre vision list.
+                        hullArea.Add(next);
+
+                        // Search in the pre vision list for an outstanding point.
+                        if (SearchForOutstandingVertex(ref hullArea, ref hullTolerance, out outstanding))
+                        {
+                            // Add it and remove all vertices that don't matter anymore
+                            // (all the vertices before the outstanding).
+                            polygon.Add(outstanding);
+                            hullArea.RemoveRange(0, hullArea.IndexOf(outstanding));
+                        }
+
+                        // Last point gets current and current gets next. Our little spider is moving forward on the hull ;).
+                        Vector2 last = current;
+                        current = next;
+
+                        // Get the next point on hull.
+                        if (!GetNextHullPoint(ref textureBits, ref textureWidth, ref textureHeight, ref alphaTolerance, ref last, ref current, out next))
+                        {
+                            next = entrance;
+                        }
+
+                    }      // Exit loop if next piont is the entrance point. The hull is complete now!
+                    while (next != entrance);
+
+                    // Center if requested by user.
+                    if (textureOrigin != Vector2.Zero)
+                    {
+                        for (int i = 0; i < polygon.Count; i++)
+                        {
+                            polygon[i] -= textureOrigin;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception("Sizes don't match: Color array must contain texture width * texture height elements.");
+            }
+
+            // Return the heavy compresed polygon ;D.
+            return polygon;
+        }
+
+        /// <summary>
+        /// This function search for the first hull point.
+        /// </summary>
+        /// <param name="textureBits">A reference to your texture's data.</param>
+        /// <param name="textureWidth">Width of your texture.</param>
+        /// <param name="alphaTolerance">Alpha tolerance :). Value of 10 will include points with alpha of 11 and greater.</param>
+        /// <param name="entrance">The entrance.</param>
+        /// <returns>First hull point.</returns>
+        private static bool GetHullEntrance(ref uint[] textureBits, ref int textureWidth, ref byte alphaTolerance, out Vector2 entrance)
+        {
+            // Search for first solid pixel.
+            for (int i = 0; i < textureBits.Length; i++)
+            {
+                // Move the alpha bits down and check if the pixel is solid.
+                if ((textureBits[i] & 0xFF000000) >> 24 > alphaTolerance)
+                {
+                    // Now calculate the coords and return'em.
+                    int x = i % textureWidth;
+                    int y = (i - x) / textureWidth;
+
+                    entrance = new Vector2(x, y);
+                    return true;
+                }
+            }
+
+            // If there are no solid pixels.
+            entrance = Vector2.Zero;
+            return false;
+        }
+
+        /// <summary>
+        /// Searches for the next hull point.
+        /// </summary>
+        /// <param name="textureBits">A reference to your texture's data.</param>
+        /// <param name="textureWidth">Width of your texture.</param>
+        /// <param name="textureHeight">Height of your texture.</param>
+        /// <param name="alphaTolerance">Alpha tolerance :). Value of 10 will include points with alpha of 10.</param>
+        /// <param name="last">Last hull point.</param>
+        /// <param name="current">Current hull point.</param>
+        /// <param name="next">The next point</param>
+        /// <returns>The next hull point.</returns>
+        private static bool GetNextHullPoint(ref uint[] textureBits, ref int textureWidth, ref int textureHeight, ref byte alphaTolerance, ref Vector2 last, ref Vector2 current, out Vector2 next)
+        {
+            // Depending on the direction the little spider comes from you have to tell her
+            // where to start the search again.
+            int indexOfFirstPixelToCheck = GetIndexOfFirstPixelToCheck(last, current);
+
+            const int pixelsToCheck = 8; //8 -> _closePixels.Length -> hardcoded to speed up
+
+            for (int i = 0; i < pixelsToCheck; i++)
+            {
+                // The little spider starts now to look around ;).
+                int indexOfPixelToCheck = (indexOfFirstPixelToCheck + i) % pixelsToCheck;
+
+                int x = (int)current.X + _closePixels[indexOfPixelToCheck, 0];
+                int y = (int)current.Y + _closePixels[indexOfPixelToCheck, 1];
+
+                // Check if the coords are in the texture coords.
+                if (x >= 0 && x < textureWidth && y >= 0 && y < textureHeight)
+                {
+                    // Uh! Something sold?
+                    if ((textureBits[x + y * textureWidth] & 0xFF000000) >> 24 > alphaTolerance)
+                    {
+                        // Yeah! Return and quit searching.
+                        next = new Vector2(x, y);
+                        return true;
+                    }
+                }
+            }
+
+            // Nothing found? Wow. I think that can't happen, ...but next must be set. C# screams for it.
+            next = Vector2.Zero;
+            return false;
+        }
+
+        /// <summary>
+        /// This function searches for an outstanding pixel. When found it searches on for the most outstanding.
+        /// </summary>
+        /// <param name="hullArea">Put a peace of the hull in here.</param>
+        /// <param name="hullTolerance">How much distance from the actual hull line is allowed? 1f to 2f are good Values (afaik^^).</param>
+        /// <param name="outstanding">This will give you the most outstanding point in the peace of hull you throwed in.</param>
+        /// <returns></returns>
+        private static bool SearchForOutstandingVertex(ref Vertices hullArea, ref float hullTolerance, out Vector2 outstanding)
+        {
+            int hullAreaLastPoint = hullArea.Count - 1;
+
+            float lastOutstandingDistance = 0f;
+            bool searchMostOutstanding = false;
+
+            Vector2 outstandingResult = Vector2.Zero;
+
+            // Search between the first and last hul point.
+            for (int i = 1; i < hullAreaLastPoint; i++)
+            {
+                // Get the distance of the outstanding point.
+                float outstandingDistance = Calculator.DistanceBetweenPointAndLineSegment(hullArea[i], hullArea[0], hullArea[hullAreaLastPoint]);
+
+                if (!searchMostOutstanding)
+                {
+                    // Check if the distance is over the one that's tolerable.
+                    if (outstandingDistance > hullTolerance)
+                    {
+                        // Ok, next time we search for the most outstanding.
+                        searchMostOutstanding = true;
+                        lastOutstandingDistance = outstandingDistance;
+                        outstandingResult = hullArea[i];
+                    }
+                }
+                else
+                {
+                    // Is it the most outstanding?
+                    if (outstandingDistance > lastOutstandingDistance)
+                    {
+                        // Indeed :). But lets search to the end.
+                        lastOutstandingDistance = outstandingDistance;
+                        outstandingResult = hullArea[i];
+                    }
+                }
+            }
+
+            // Return the stuff...
+            outstanding = outstandingResult;
+            return searchMostOutstanding;
+        }
+
+        /// <summary>
+        /// This function tells you where to start searching for the next hull point.
+        /// Important: Last and next hull points have to be right next to each other.
+        /// </summary>
+        private static int GetIndexOfFirstPixelToCheck(Vector2 last, Vector2 current)
+        {
+            /// .: pixel
+            /// l: last position
+            /// c: current position
+            /// f: first pixel for next search
+
+            /// f . .
+            /// l c .
+            /// . . .
+
+            //Calculate in which direction the last move went and decide over the next first pixel.
+            switch ((int)(current.X - last.X))
+            {
+                case 1:
+                    switch ((int)(current.Y - last.Y))
+                    {
+                        case 1:
+                            return 1;
+
+                        case 0:
+                            return 0;
+
+                        case -1:
+                            return 7;
+                    }
+                    break;
+
+                case 0:
+                    switch ((int)(current.Y - last.Y))
+                    {
+                        case 1:
+                            return 2;
+
+                        case -1:
+                            return 6;
+                    }
+                    break;
+
+                case -1:
+                    switch ((int)(current.Y - last.Y))
+                    {
+                        case 1:
+                            return 3;
+
+                        case 0:
+                            return 4;
+
+                        case -1:
+                            return 5;
+                    }
+                    break;
+            }
+
+            return 0;
+        }
+        #endregion
     }
 }
