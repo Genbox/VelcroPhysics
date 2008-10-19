@@ -494,16 +494,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public override string ToString()
         {
-            StringBuilder toString = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
             for (int i = 0; i < Count; i++)
             {
-                toString.Append(this[i].ToString());
+                builder.Append(this[i].ToString());
                 if (i < Count - 1)
                 {
-                    toString.Append(" ");
+                    builder.Append(" ");
                 }
             }
-            return toString.ToString();
+            return builder.ToString();
         }
 
         #region Sickbattery's Extension
@@ -519,7 +519,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns>Returns Vertices a Vector2 list.</returns>
         public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight)
         {
-            return CreatePolygon(textureBits, textureWidth, textureHeight, Vector2.Zero, 10, 2f);
+            return CreatePolygon(textureBits, textureWidth, textureHeight, Vector2.Zero, 127, 2f);
         }
 
         /// <summary>
@@ -532,7 +532,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns>Returns Vertices a Vector2 list.</returns>
         public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight, Vector2 textureOrigin)
         {
-            return CreatePolygon(textureBits, textureWidth, textureHeight, textureOrigin, 10, 2f);
+            return CreatePolygon(textureBits, textureWidth, textureHeight, textureOrigin, 127, 2f);
         }
 
         /// <summary>
@@ -566,12 +566,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Vertices polygon = new Vertices();
             Vertices hullArea = new Vertices();
 
+            // Precalculate alpha.
+            uint alphaToleranceRealValue = (uint)alphaTolerance << 24;
+
             // First of all: Check the array you just got.
             if (textureBits.Length == textureWidth * textureHeight)
             {
 
                 // Get the entrance point.
-                if (GetHullEntrance(ref textureBits, ref textureWidth, ref alphaTolerance, out entrance))
+                if (GetHullEntrance(ref textureBits, ref textureWidth, ref alphaToleranceRealValue, out entrance))
                 {
                     // The current point has to be the one before entrance.
                     // It will become last in the do..while loop in the first run.
@@ -605,7 +608,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         current = next;
 
                         // Get the next point on hull.
-                        if (!GetNextHullPoint(ref textureBits, ref textureWidth, ref textureHeight, ref alphaTolerance, ref last, ref current, out next))
+                        if (!GetNextHullPoint(ref textureBits, ref textureWidth, ref textureHeight, ref alphaToleranceRealValue, ref last, ref current, out next))
                         {
                             next = entrance;
                         }
@@ -640,13 +643,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="alphaTolerance">Alpha tolerance :). Value of 10 will include points with alpha of 11 and greater.</param>
         /// <param name="entrance">The entrance.</param>
         /// <returns>First hull point.</returns>
-        private static bool GetHullEntrance(ref uint[] textureBits, ref int textureWidth, ref byte alphaTolerance, out Vector2 entrance)
+        private static bool GetHullEntrance(ref uint[] textureBits, ref int textureWidth, ref uint alphaTolerance, out Vector2 entrance)
         {
             // Search for first solid pixel.
             for (int i = 0; i < textureBits.Length; i++)
             {
                 // Move the alpha bits down and check if the pixel is solid.
-                if ((textureBits[i] & 0xFF000000) >> 24 > alphaTolerance)
+                if ((textureBits[i] & 0xFF000000) >= alphaTolerance)
                 {
                     // Now calculate the coords and return'em.
                     int x = i % textureWidth;
@@ -673,7 +676,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="current">Current hull point.</param>
         /// <param name="next">The next point</param>
         /// <returns>The next hull point.</returns>
-        private static bool GetNextHullPoint(ref uint[] textureBits, ref int textureWidth, ref int textureHeight, ref byte alphaTolerance, ref Vector2 last, ref Vector2 current, out Vector2 next)
+        private static bool GetNextHullPoint(ref uint[] textureBits, ref int textureWidth, ref int textureHeight, ref uint alphaTolerance, ref Vector2 last, ref Vector2 current, out Vector2 next)
         {
             // Depending on the direction the little spider comes from you have to tell her
             // where to start the search again.
@@ -693,7 +696,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 if (x >= 0 && x < textureWidth && y >= 0 && y < textureHeight)
                 {
                     // Uh! Something sold?
-                    if ((textureBits[x + y * textureWidth] & 0xFF000000) >> 24 > alphaTolerance)
+                    if ((textureBits[x + y * textureWidth] & 0xFF000000) >= alphaTolerance)
                     {
                         // Yeah! Return and quit searching.
                         next = new Vector2(x, y);
@@ -723,7 +726,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             Vector2 outstandingResult = Vector2.Zero;
 
-            // Search between the first and last hul point.
+            // Search between the first and last hull point.
             for (int i = 1; i < hullAreaLastPoint; i++)
             {
                 // Get the distance of the outstanding point.
