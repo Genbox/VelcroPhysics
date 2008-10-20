@@ -829,6 +829,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         internal void IntegratePosition(float dt)
         {
+            //TODO: Should check if the position/rotation is the same as before and return?
             if (isStatic)
             {
                 return;
