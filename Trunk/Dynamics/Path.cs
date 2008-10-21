@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -22,7 +21,7 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
 {
-    class Path
+    public class Path
     {
         private bool _recalculate = true;          // will be set to true if path needs to be recalculated
         private GeomList _geoms;            // holds all geoms for this path
@@ -31,8 +30,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
         private Vertices _controlPoints;    // holds all control points for this path
         private bool _loop;                 // is this path a loop
         private float _controlPointSize = 6;     // size of control point used in PointInControlPoint
-        private float _precision = 0.0002f;         // a coeffient used to decide how precise to place bodies
-        private float _width, _height;      // width and height of bodies to create
+        private float _precision = 0.0005f;         // a coeffient used to decide how precise to place bodies
+        private float _width, _height, _mass;      // width and height of bodies to create
 
 
         /// <summary>
@@ -41,11 +40,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="endless">if set to <c>true</c> [endless].</param>
-        public Path(float width, float height, bool endless)
+        public Path(float width, float height, float mass, bool endless)
         {
             _width = width;
             _height = height;
             _loop = endless;
+            _mass = mass;
             _geoms = new GeomList();
             _bodies = new BodyList();
             _joints = new JointList();
@@ -60,7 +60,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
         /// </summary>
         public void LinkBodies()
         {
-            //RevoluteJoint r;
+            RevoluteJoint r;
             Vector2 midPoint = new Vector2();
             float midDeltaX = 0.0f;
             float midDeltaY = 0.0f;
@@ -88,7 +88,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
 
                     midPoint = new Vector2(_bodies[i].Position.X + midDeltaX, _bodies[i].Position.Y + midDeltaY);   // set midPoint
 
-                    _joints.Add(JointFactory.Instance.CreateRevoluteJoint(_bodies[i], _bodies[i + 1], midPoint));
+                    r = JointFactory.Instance.CreateRevoluteJoint(_bodies[i], _bodies[i + 1], midPoint);
+                    r.BiasFactor = 0.2f;
+                    r.Softness = 0.01f;
+                    _joints.Add(r);
                 }
                 else if (_loop)
                 {
@@ -111,7 +114,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
 
                     midPoint = new Vector2(_bodies[0].Position.X + midDeltaX, _bodies[0].Position.Y + midDeltaY);   // set midPoint
 
-                    _joints.Add(JointFactory.Instance.CreateRevoluteJoint(_bodies[0], _bodies[_bodies.Count - 1], midPoint));
+                    r = JointFactory.Instance.CreateRevoluteJoint(_bodies[0], _bodies[_bodies.Count - 1], midPoint);
+                    r.BiasFactor = 0.2f;
+                    r.Softness = 0.01f;
+                    _joints.Add(r);
                 }
             }
         }
@@ -212,6 +218,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
             get { return _geoms; }
         }
 
+        public Vertices ControlPoints
+        {
+            get { return _controlPoints; }
+        }
+
         /// <summary>
         /// Removes a control point from the path.
         /// </summary>
@@ -237,7 +248,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
         /// NOTE: should not be performed on a path
         /// in simulation.
         /// </summary>
-        public void Update(PhysicsSimulator ps)
+        public void Update()
         {
             float distance = 0.0f;
             float k = 0.0f;
@@ -248,21 +259,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
 
             if (_recalculate)   // only do the update if something has changed
             {
-                if (_bodies.Count != 0)         // if we have some bodies
-                {
-                    foreach (Body b in _bodies)
-                        ps.Remove(b);
-                    foreach (Geom b in _geoms)
-                        ps.Remove(b);
-                    foreach (Joint b in _joints)
-                        ps.Remove(b);
-
-                    _bodies.Clear();
-                    _geoms.Clear();
-                    _joints.Clear();
-                }
-
-
                 // first we get our curve ready
                 Curve xCurve = new Curve();
                 Curve yCurve = new Curve();
@@ -295,7 +291,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
                     distance = Vector2.Distance(_controlPoints[0], tempVectorC);      // get the distance
                 }
 
-                tempBody = BodyFactory.Instance.CreateRectangleBody(_width, _height, 1.0f);     // create the first body
+                tempBody = BodyFactory.Instance.CreateRectangleBody(_width, _height, _mass);     // create the first body
                 tempBody.Position = tempVectorA;
                 tempBody.Rotation = FindNormalAngle(FindVertexNormal(_controlPoints[0], tempVectorA, tempVectorC));   // set the angle
 
@@ -322,7 +318,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
                         tempVectorC = new Vector2(xCurve.Evaluate(k), yCurve.Evaluate(k));
                         distance = Vector2.Distance(tempVectorA, tempVectorC);      // get the distance
                     }
-                    tempBody = BodyFactory.Instance.CreateRectangleBody(_width, _height, 1.0f);     // create the first body
+                    tempBody = BodyFactory.Instance.CreateRectangleBody(_width, _height, _mass);     // create the first body
                     tempBody.Position = tempVectorA;
                     tempBody.Rotation = FindNormalAngle(FindVertexNormal(tempVectorB, tempVectorA, tempVectorC));   // set the angle
 
@@ -330,10 +326,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
 
                     tempVectorB = tempVectorA;
                 }
+                this.MoveControlPoint(tempVectorC, _controlPoints.Count - 1);
                 _recalculate = false;
-                this.CreateGeoms();
-                this.AddToPhysicsSimulator(ps);
-                this.LinkBodies(ps);
             }
         }
 
@@ -345,16 +339,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
         /// <param name="a">First Vector2.</param>
         /// <param name="b">Other Vector2.</param>
         /// <returns>Mid-point Vector2.</returns>
-        public Vector2 FindMidpoint(Vector2 a, Vector2 b)
+        static public Vector2 FindMidpoint(Vector2 a, Vector2 b)
         {
             float midDeltaX, midDeltaY;
 
             if (a.X < b.X)
-                midDeltaX = (a.X - b.X) * 0.5f;         // find x axis midpoint
+                midDeltaX = (float)Math.Abs((float)(a.X - b.X) * 0.5f);         // find x axis midpoint
             else
                 midDeltaX = (b.X - a.X) * 0.5f;         // find x axis midpoint
             if (a.Y < b.Y)
-                midDeltaY = (a.Y - b.Y) * 0.5f;         // find y axis midpoint
+                midDeltaY = (float)Math.Abs((float)(a.Y - b.Y) * 0.5f);         // find y axis midpoint
             else
                 midDeltaY = (b.Y - a.Y) * 0.5f;         // find y axis midpoint
 
