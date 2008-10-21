@@ -8,7 +8,7 @@ using FarseerGames.FarseerPhysics.Dynamics.PathGenerator;      // TODO need to w
 #else
 using FarseerGames.FarseerPhysics.Mathematics;
 #endif
-using FarseerGames.FarseerPhysics.Dynamics.PathGenerator;
+
 namespace FarseerGames.FarseerPhysics.Factories
 {
     /// <summary>
@@ -40,33 +40,37 @@ namespace FarseerGames.FarseerPhysics.Factories
 
         public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart, bool pinEnd)
         {
+            bool flip = true;
             Path p = new Path(width, height, mass, false);  // create the path
             p.Add(start);                                   // add starting point
-            p.Add(Path.FindMidPoint(start, end));           // add midpoint of line (must have this because my code needs at least 3 control points)
+            p.Add(Path.FindMidpoint(start, end));           // add midpoint of line (must have this because my code needs at least 3 control points)
             p.Add(end);                                     // add end point
 
             p.Update();                                     // call update to create all the bodies
 
             Geom g;
-            for (int i = 0; i < p.Bodies.Count() - 2; i++)        // we do 2 geometries at a time
+            for (int i = 0; i < (p.Bodies.Count - 1); i++)
             {
-                g = GeomFactory.Instance.CreateRectangleGeom(p.Bodies[i], width, height);
+                if (flip)
+                {
+                    g = GeomFactory.Instance.CreateRectangleGeom(p.Bodies[i], width, height);
+                    flip = !flip;
+                }
+                else
+                {
+                    g = GeomFactory.Instance.CreateRectangleGeom(p.Bodies[i], width, height * (1.0f / 3.0f));
+                    flip = !flip;
+                }
                 g.CollisionCategories = CollisionCategory.Cat2;     // currently seting up the collision so chain will not collide with itself
                 g.CollidesWith = CollisionCategory.Cat1;
                 p.Add(g);                                           // add a geom to the chain
-
-                g = GeomFactory.Instance.CreateRectangleGeom(p.Bodies[i+1], width, height * (1/3));
-                g.CollisionCategories = CollisionCategory.Cat2;     // currently seting up the collision so chain will not collide with itself
-                g.CollidesWith = CollisionCategory.Cat1;
-                p.Add(g);                                           // add a geom to the chain
-                i++;
             }
             p.LinkBodies();         // link bodies together with revolute joints
 
             if (pinStart)
                 p.Add(JointFactory.Instance.CreateFixedRevoluteJoint(p.Bodies[0], start));
             if (pinEnd)
-                p.Add(JointFactory.Instance.CreateFixedRevoluteJoint(p.Bodies.Last, end));
+                p.Add(JointFactory.Instance.CreateFixedRevoluteJoint(p.Bodies[p.Bodies.Count - 1], p.ControlPoints[2]));
 
             return (p);
         }
@@ -124,10 +128,10 @@ namespace FarseerGames.FarseerPhysics.Factories
             //Get the target length of the chain
             float length = (startPosition - endPosition).Length() * 1.4f;
             int numOfLinks = (int)((length / linkLength) * 1.0f);
-            
+
             //Find how many links we will make based on the target length and desired link length
             float sideLinkWidth = linkWidth * 0.33333f;
-            
+
             //Side link is 1/3 of flat link width NOTE: we may make this a static coefficient
             Vector2 deltaVec;
 
@@ -162,11 +166,11 @@ namespace FarseerGames.FarseerPhysics.Factories
                     b = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, linkLength, linkWidth, 0.5f);
                     b.Position = startPosition + (deltaVec * i);
                     b.Rotation = angle;
-                    
+
                     if (createGeometry)
                     {
                         g = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, b, linkLength, linkWidth);
-                        
+
                         if (chainCollidesWithSelf)
                         {
                             g.CollisionCategories = CollisionCategory.Cat10;
@@ -183,11 +187,11 @@ namespace FarseerGames.FarseerPhysics.Factories
                     b = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, linkLength, sideLinkWidth, 0.5f);
                     b.Position = startPosition + (deltaVec * i);
                     b.Rotation = angle;
-                    
+
                     if (createGeometry)
                     {
                         g = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, b, linkLength, sideLinkWidth);
-                        
+
                         if (chainCollidesWithSelf)
                         {
                             g.CollisionEnabled = false;
