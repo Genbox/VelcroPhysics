@@ -20,7 +20,7 @@ using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Interfaces;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace Path_Generator
+namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
 {
     class Path
     {
@@ -90,7 +90,7 @@ namespace Path_Generator
         /// <summary>
         /// Performs a complete update of the path.
         /// NOTE: should not be performed on a path
-        /// in simulation.
+        /// in simulation. This is not fast, yet ;)
         /// </summary>
         public void Update()
         {
