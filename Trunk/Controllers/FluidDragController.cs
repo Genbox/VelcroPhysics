@@ -11,53 +11,86 @@ using FarseerGames.FarseerPhysics.Mathematics;
 namespace FarseerGames.FarseerPhysics.Controllers
 {
     /// <summary>
-    /// TODO: Write documentation
+    /// FluidDragController applys fluid physics to the bodies within it.  Things like fluid drag and fluid density
+    /// can be adjusted to give semi-realistic motion for bodies in fluid.
+    /// 
+    /// The FluidDragController does nothing to define or control the MOTION of the fluid itself. It simply knows
+    /// how to apply fluid forces to the bodies it contains.
+    /// 
+    /// In order for the FluidDragController to know when to apply forces and when not to apply forces, it needs to know
+    /// when a body enters it.  This is done by supplying the FluidDragController with an IFluidContainer object.
+    /// 
+    /// IFluidContainer has two simple methods that need to be implemented. Intersect(AABB aabb), returns true if a given
+    /// AABB object intersects it, false otherwise.  Contains(ref Vector2 vector) returns true if a given point is inside the 
+    /// fluid container, false otherwise.
+    /// 
+    /// For a very simple example of a very simple fluid container. See the AABBFluidContainer.  This represents a fluid container
+    /// in the shape of an AABB.
+    /// 
+    /// More complex fluid containers are where things get interesting.  The WaveController object is an example of a complex
+    /// fluid container.  The WaveController simulates wave motion. It's driven by an algorithm (not physics) which dynamically 
+    /// alters a polygonal shape to mimic waves.  Where it gets interesting is the WaveController also implements IFluidContainer. This allows 
+    /// it to be used in conjunction with the FluidDragController.  Anything that falls into the dynamically changing fluid container
+    /// defined by the WaveController will have fluid physics applied to it.
+    /// 
     /// </summary>
     public class FluidDragController : Controller
     {
         #region Delegates
 
-        public delegate void OnEntryHandler(Geom geom);
+        public delegate void EntryEventHandler(Geom geom);
 
         #endregion
+        private float _density;
+        private float _linearDragCoefficient;
+        private float _rotationalDragCoeficient;
+        private Vector2 _gravity = Vector2.Zero;
 
         private float _area;
         private Vector2 _axis = Vector2.Zero;
         private Vector2 _buoyancyForce = Vector2.Zero;
         private Vector2 _centroid = Vector2.Zero;
         private Vector2 _centroidVelocity;
-        private float _density;
+
         private float _dragArea;
         private IFluidContainer _fluidContainer;
         private Dictionary<Geom, bool> _geomInFluidList;
-
         private List<Geom> _geomList;
-        private Vector2 _gravity = Vector2.Zero;
-        private float _linearDragCoefficient;
         private Vector2 _linearDragForce = Vector2.Zero;
         private float _max;
         private float _min;
         private float _partialMass;
-        private float _rotationalDragCoeficient;
         private float _rotationalDragTorque;
         private float _totalArea;
         private Vector2 _totalForce;
         private Vector2 _vert;
         private Vertices _vertices;
-        public OnEntryHandler OnEntry;
 
+        public EntryEventHandler Entry;
+
+        /// <summary>
+        /// Density of the fluid.  Higher values will make things more buoyant, lower values will cause things to sink.
+        /// </summary>
         public float Density
         {
             get { return _density; }
             set { _density = value; }
         }
 
+        /// <summary>
+        /// Controls the linear drag that the fluid exerts on the bodies within it.  Use higher values will simulate thick fluid, like honey, lower values to
+        /// simulate water-like fluids.
+        /// </summary>
         public float LinearDragCoefficient
         {
             get { return _linearDragCoefficient; }
             set { _linearDragCoefficient = value; }
         }
 
+        /// <summary>
+        /// Controls the rotational drag that the fluid exerts on the bodies within it. Use higher values will simulate thick fluid, like honey, lower values to
+        /// simulate water-like fluids. 
+        /// </summary>
         public float RotationalDragCoefficient
         {
             get { return _rotationalDragCoeficient; }
@@ -70,6 +103,14 @@ namespace FarseerGames.FarseerPhysics.Controllers
             _geomInFluidList = new Dictionary<Geom, bool>();
         }
 
+        /// <summary>
+        /// Initializes the fluid drag controller
+        /// </summary>
+        /// <param name="fluidContainer">An object that implements IFluidContainer</param>
+        /// <param name="density">Density of the fluid</param>
+        /// <param name="linearDragCoeficient">Linear drag coeficient of the fluid</param>
+        /// <param name="rotationalDragCoeficient">Rotational drag coeficient of the fluid</param>
+        /// <param name="gravity">The direction gravity acts. Buoyancy force will act in oppsite direction of gravity.</param>
         public void Initialize(IFluidContainer fluidContainer, float density, float linearDragCoeficient,
                                float rotationalDragCoeficient, Vector2 gravity)
         {
@@ -81,6 +122,12 @@ namespace FarseerGames.FarseerPhysics.Controllers
             _vertices = new Vertices();
         }
 
+        /// <summary>
+        /// Add a geom to be controlled by the fluid drag controller.  The geom does not need to already be in
+        /// the fluid to add it to the controller. By calling this method you are telling the fluid drag controller
+        /// to watch this geom and it if enters my fluid container, apply the fluid physics.
+        /// </summary>
+        /// <param name="geom">The geom to be added.</param>
         public void AddGeom(Geom geom)
         {
             _geomList.Add(geom);
@@ -127,9 +174,9 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 if (_geomInFluidList[_geomList[i]] == false)
                 {
                     _geomInFluidList[_geomList[i]] = true;
-                    if (OnEntry != null)
+                    if (Entry != null)
                     {
-                        OnEntry(_geomList[i]);
+                        Entry(_geomList[i]);
                     }
                 }
             }

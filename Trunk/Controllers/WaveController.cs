@@ -9,7 +9,33 @@ using Microsoft.Xna.Framework;
 namespace FarseerGames.FarseerPhysics.Controllers
 {
     /// <summary>
-    /// TODO: Create documentation
+    /// The WaveController simulates wave motion. It's driven by a mathematical algorithm (not physics) which dynamically 
+    /// alters a polygonal shape to mimic waves.
+    /// 
+    /// The WaveController can be viewed as a rectangle shape but with the top of the rectnagle broken into 
+    /// multiple segments defined by a set of vertices. When the algorithm is operating, any disturbance in 
+    /// the y-position of one of these vertices will cause a wave to ripple accross the other vertices.
+    /// 
+    /// The speed and shape of the wave depend on a number of paramters and on the number of vertices used
+    /// to define the surface of the water.
+    /// 
+    /// The WaveController can also (but does not have to) work in conjunction with the FluidDragController in
+    /// order to have fluid physics applied to any body that falls within the area defined by the WaveController.
+    /// 
+    /// The WaveController also implements some wave generator functionality. By default, the WaveController will
+    /// just sit still until one or more of its vertices are disturbed.  The wave generator is simply a controlled
+    /// means of disturbing the vertices of the WaveController.  The wave generator acts by moving the right-most 
+    /// vertice up and down at a rate defined by a combination of WaveGenertorMax, WaveGeneratorMin, and WaveGenertorStep.
+    /// 
+    /// You can visualize the wave generator by imagining a person holding a string that is attached to a wall. If 
+    /// the person were to move their arm holding the string up and down to create a wave like motion in the string, they
+    /// would be acting very similar to how the wave generator works.
+    ///  
+    /// 
+    /// If you want the details behind the wave algorithm see the following:
+    /// http://freespace.virgin.net/hugo.elias/graphics/x_water.htm
+    /// http://www.gamedev.net/reference/articles/article915.asp
+    ///  
     /// </summary>
     public class WaveController : Controller, IFluidContainer
     {
@@ -43,12 +69,18 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         #region properties
 
+        /// <summary>
+        /// The width of the wave area.
+        /// </summary>
         public float Width
         {
             get { return _width; }
             set { _width = value; }
         }
 
+        /// <summary>
+        /// The height of the wave area. Best thought of as the depth of the water.
+        /// </summary>
         public float Height
         {
             get { return _height; }
@@ -64,52 +96,85 @@ namespace FarseerGames.FarseerPhysics.Controllers
             set { _position = value; }
         }
 
+        /// <summary>
+        /// How many vertices to use for the surface of the water.  Determines, along with other parameters, the shape of the waves.
+        /// </summary>
         public int NodeCount
         {
             get { return _nodeCount; }
             set { _nodeCount = value; }
         }
 
+        /// <summary>
+        /// Determines how quickly the waves dissipate.  A value of zero will cause any disturbance in the water surface to ripple forever. 
+        /// Values closer to 1 will cause the waves to smooth out quickly.
+        /// </summary>
         public float DampningCoefficient
         {
             get { return _dampningCoefficient; }
             set { _dampningCoefficient = value; }
         }
 
+        /// <summary>
+        /// An array representing the current y-offset of each vertice from its rest position.  The "rest" position is the same as the
+        /// y-component of the "Position" property of the WaveController.  These value can be used to visually represent the wave.
+        /// </summary>
         public float[] CurrentWave
         {
             get { return _currentWave; }
         }
 
+        /// <summary>
+        /// Used by the algorithm but not really needed externally.
+        /// </summary>
         public float[] PreviousWave
         {
             get { return _previousWave; }
         }
 
+        /// <summary>
+        /// An array of x positions that represents the x position of the vertices that make up the wave.
+        /// This can be used to create the visuals for your wave.
+        /// </summary>
         public float[] XPosition
         {
             get { return _xPosition; }
             set { _xPosition = value; }
         }
 
+        /// <summary>
+        /// The max offset that you want the wave generator to move the control vertice
+        /// </summary>
         public float WaveGeneratorMax
         {
             get { return _waveGeneratorMax; }
             set { _waveGeneratorMax = value; }
         }
 
+        /// <summary>
+        /// The min offset that you want the wave generator to move the control vertice
+        /// </summary>
         public float WaveGeneratorMin
         {
             get { return _waveGeneratorMin; }
             set { _waveGeneratorMin = value; }
         }
 
+        /// <summary>
+        /// How many steps you want it to take for the wave generator to move the control vertices between the
+        /// min and max.  The vertice will be moved everytime Update(..) runs which in-turn is controlled by the 
+        /// Frequency property.
+        /// </summary>
         public float WaveGeneratorStep
         {
             get { return _waveGeneratorStep; }
             set { _waveGeneratorStep = value; }
         }
 
+        /// <summary>
+        /// Determines how fast the wave algorithm (NOT the wave generator) runs. The best way to understand this property 
+        /// is to try some different values and watch the affect.
+        /// </summary>
         public float Frequency
         {
             get { return _frequency; }
@@ -167,15 +232,21 @@ namespace FarseerGames.FarseerPhysics.Controllers
         #endregion
 
         /// <summary>
-        /// Create a disturbance in the water surface that will create waves.
+        /// Create a disturbance in the water surface that will create waves.  The disturbance created will "ripple" accross
+        /// the surface of the "water" based on the parameters that define the WaveController.
+        /// This could be used to create waves when something falls in the water. For this,though, you would need to determine what vertices
+        /// to move and how far.
         /// </summary>
-        /// <param name="node">Which node to change the hieght of</param>
+        /// <param name="node">The node to change the height of</param>
         /// <param name="offset">The amount to move the node up or down (negative values moves the node up, positive moves it down)</param>
         public void Disturb(int node, float offset)
         {
             _currentWave[node] = _currentWave[node] + offset;
         }
 
+        /// <summary>
+        /// Initialize the wave controller.
+        /// </summary>
         public void Initialize()
         {
             _xPosition = new float[_nodeCount];
@@ -195,6 +266,11 @@ namespace FarseerGames.FarseerPhysics.Controllers
             _singleWaveWidth = _width/(_nodeCount - 1);
         }
 
+        /// <summary>
+        /// Steps the wave algorithm.  The wave algorithm does not run at the same speed as the phyics simulator. It runs at its 
+        /// own frequency set by the Frequncy property.
+        /// </summary>
+        /// <param name="dt"></param>
         public override void Update(float dt)
         {
             if (_timePassed < _frequency)
