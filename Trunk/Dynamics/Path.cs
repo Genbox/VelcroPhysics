@@ -20,7 +20,7 @@ using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Interfaces;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerGames.FarseerPhysics.Dynamics.Path
+namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
 {
     class Path
     {
@@ -195,6 +195,21 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Path
         public void Add(Joint j)
         {
             _joints.Add(j);
+        }
+
+        public BodyList Bodies
+        {
+            get { return _bodies; }
+        }
+
+        public JointList Joints
+        {
+            get { return _joints; }
+        }
+
+        public GeomList Geoms
+        {
+            get { return _geoms; }
         }
 
         /// <summary>
