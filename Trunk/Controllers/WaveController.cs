@@ -12,20 +12,20 @@ namespace FarseerGames.FarseerPhysics.Controllers
     /// The WaveController simulates wave motion. It's driven by a mathematical algorithm (not physics) which dynamically 
     /// alters a polygonal shape to mimic waves.
     /// 
-    /// The WaveController can be viewed as a rectangle shape but with the top of the rectnagle broken into 
+    /// The WaveController can be viewed as a rectangle shape but with the top of the rectangle broken into 
     /// multiple segments defined by a set of vertices. When the algorithm is operating, any disturbance in 
-    /// the y-position of one of these vertices will cause a wave to ripple accross the other vertices.
+    /// the y-position of one of these vertices will cause a wave to ripple across the other vertices.
     /// 
-    /// The speed and shape of the wave depend on a number of paramters and on the number of vertices used
+    /// The speed and shape of the wave depend on a number of parameters and on the number of vertices used
     /// to define the surface of the water.
     /// 
-    /// The WaveController can also (but does not have to) work in conjunction with the FluidDragController in
+    /// The WaveController can also (but does not have to) work in conjunction with the <see cref="FluidDragController"/> in
     /// order to have fluid physics applied to any body that falls within the area defined by the WaveController.
     /// 
     /// The WaveController also implements some wave generator functionality. By default, the WaveController will
     /// just sit still until one or more of its vertices are disturbed.  The wave generator is simply a controlled
     /// means of disturbing the vertices of the WaveController.  The wave generator acts by moving the right-most 
-    /// vertice up and down at a rate defined by a combination of WaveGenertorMax, WaveGeneratorMin, and WaveGenertorStep.
+    /// vertice up and down at a rate defined by a combination of WaveGeneratorMax, WaveGeneratorMin, and WaveGeneratorStep.
     /// 
     /// You can visualize the wave generator by imagining a person holding a string that is attached to a wall. If 
     /// the person were to move their arm holding the string up and down to create a wave like motion in the string, they
@@ -88,7 +88,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
         }
 
         /// <summary>
-        /// Top left _position of wave area
+        /// Top left position of wave area
         /// </summary>
         public Vector2 Position
         {
@@ -97,7 +97,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
         }
 
         /// <summary>
-        /// How many vertices to use for the surface of the water.  Determines, along with other parameters, the shape of the waves.
+        /// How many vertices to use for the surface of the water. Determines, along with other parameters, the shape of the waves.
         /// </summary>
         public int NodeCount
         {
@@ -117,7 +117,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         /// <summary>
         /// An array representing the current y-offset of each vertice from its rest position.  The "rest" position is the same as the
-        /// y-component of the "Position" property of the WaveController.  These value can be used to visually represent the wave.
+        /// y-component of the "Position" property of the <see cref="WaveController"/>.  These value can be used to visually represent the wave.
         /// </summary>
         public float[] CurrentWave
         {
@@ -232,8 +232,8 @@ namespace FarseerGames.FarseerPhysics.Controllers
         #endregion
 
         /// <summary>
-        /// Create a disturbance in the water surface that will create waves.  The disturbance created will "ripple" accross
-        /// the surface of the "water" based on the parameters that define the WaveController.
+        /// Create a disturbance in the water surface that will create waves.  The disturbance created will "ripple" across
+        /// the surface of the "water" based on the parameters that define the <see cref="WaveController"/>.
         /// This could be used to create waves when something falls in the water. For this,though, you would need to determine what vertices
         /// to move and how far.
         /// </summary>
@@ -267,8 +267,8 @@ namespace FarseerGames.FarseerPhysics.Controllers
         }
 
         /// <summary>
-        /// Steps the wave algorithm.  The wave algorithm does not run at the same speed as the phyics simulator. It runs at its 
-        /// own frequency set by the Frequncy property.
+        /// Steps the wave algorithm.  The wave algorithm does not run at the same speed as the physics simulator. It runs at its 
+        /// own frequency set by the Frequency property.
         /// </summary>
         /// <param name="dt"></param>
         public override void Update(float dt)
