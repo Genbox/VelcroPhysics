@@ -4,10 +4,11 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 #if (XNA)
 using Microsoft.Xna.Framework;
+using FarseerGames.FarseerPhysics.Dynamics.PathGenerator;      // TODO need to write Curve class for silverlight so this is XNA only right now
 #else
 using FarseerGames.FarseerPhysics.Mathematics;
 #endif
-
+using FarseerGames.FarseerPhysics.Dynamics.PathGenerator;
 namespace FarseerGames.FarseerPhysics.Factories
 {
     /// <summary>
@@ -35,6 +36,37 @@ namespace FarseerGames.FarseerPhysics.Factories
                 }
                 return _instance;
             }
+        }
+
+        public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart, bool pinEnd)
+        {
+            Path p = new Path(width, height, mass, false);  // create the path
+            p.Add(start);                                   // add starting point
+            p.Add(Path.FindMidPoint(start, end));           // add midpoint of line (must have this because my code needs at least 3 control points)
+            p.Add(end);                                     // add end point
+
+            p.Update();                                     // call update to create all the bodies
+
+            Geom g;
+            for (int i = 0; i < p.Bodies.Count() - 2; i++)        // we do 2 geometries at a time
+            {
+                g = GeomFactory.Instance.CreateRectangleGeom(p.Bodies[i], width, height);
+                g.CollisionCategories = CollisionCategory.Cat2;     // currently seting up the collision so chain will not collide with itself
+                g.CollidesWith = CollisionCategory.Cat1;
+                p.Add(g);                                           // add a geom to the chain
+
+                g = GeomFactory.Instance.CreateRectangleGeom(p.Bodies[i+1], width, height * (1/3));
+                g.CollisionCategories = CollisionCategory.Cat2;     // currently seting up the collision so chain will not collide with itself
+                g.CollidesWith = CollisionCategory.Cat1;
+                p.Add(g);                                           // add a geom to the chain
+                i++;
+            }
+            p.LinkBodies();         // link bodies together with revolute joints
+
+            if (pinStart)
+                p.Add(JointFactory.Instance.CreateFixedRevoluteJoint(p.Bodies[0], start));
+            if (pinEnd)
+                p.Add(JointFactory.Instance.CreateFixedRevoluteJoint(p.Bodies.Last, end));
         }
 
         /// <summary>
