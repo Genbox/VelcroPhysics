@@ -11,27 +11,27 @@ using FarseerGames.FarseerPhysics.Mathematics;
 namespace FarseerGames.FarseerPhysics.Controllers
 {
     /// <summary>
-    /// FluidDragController applys fluid physics to the bodies within it.  Things like fluid drag and fluid density
+    /// FluidDragController applies fluid physics to the bodies within it.  Things like fluid drag and fluid density
     /// can be adjusted to give semi-realistic motion for bodies in fluid.
     /// 
     /// The FluidDragController does nothing to define or control the MOTION of the fluid itself. It simply knows
     /// how to apply fluid forces to the bodies it contains.
     /// 
     /// In order for the FluidDragController to know when to apply forces and when not to apply forces, it needs to know
-    /// when a body enters it.  This is done by supplying the FluidDragController with an IFluidContainer object.
+    /// when a body enters it.  This is done by supplying the FluidDragController with an <see cref="IFluidContainer"/> object.
     /// 
-    /// IFluidContainer has two simple methods that need to be implemented. Intersect(AABB aabb), returns true if a given
+    /// <see cref="IFluidContainer"/> has two simple methods that need to be implemented. Intersect(AABB aabb), returns true if a given
     /// AABB object intersects it, false otherwise.  Contains(ref Vector2 vector) returns true if a given point is inside the 
     /// fluid container, false otherwise.
     /// 
-    /// For a very simple example of a very simple fluid container. See the AABBFluidContainer.  This represents a fluid container
+    /// For a very simple example of a very simple fluid container. See the <see cref="AABBFluidContainer"/>.  This represents a fluid container
     /// in the shape of an AABB.
     /// 
-    /// More complex fluid containers are where things get interesting.  The WaveController object is an example of a complex
-    /// fluid container.  The WaveController simulates wave motion. It's driven by an algorithm (not physics) which dynamically 
-    /// alters a polygonal shape to mimic waves.  Where it gets interesting is the WaveController also implements IFluidContainer. This allows 
+    /// More complex fluid containers are where things get interesting.  The <see cref="WaveController"/> object is an example of a complex
+    /// fluid container.  The <see cref="WaveController"/> simulates wave motion. It's driven by an algorithm (not physics) which dynamically 
+    /// alters a polygonal shape to mimic waves.  Where it gets interesting is the <see cref="WaveController"/> also implements <see cref="IFluidContainer"/>. This allows 
     /// it to be used in conjunction with the FluidDragController.  Anything that falls into the dynamically changing fluid container
-    /// defined by the WaveController will have fluid physics applied to it.
+    /// defined by the <see cref="WaveController"/> will have fluid physics applied to it.
     /// 
     /// </summary>
     public class FluidDragController : Controller
@@ -106,11 +106,11 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// <summary>
         /// Initializes the fluid drag controller
         /// </summary>
-        /// <param name="fluidContainer">An object that implements IFluidContainer</param>
+        /// <param name="fluidContainer">An object that implements <see cref="IFluidContainer"/></param>
         /// <param name="density">Density of the fluid</param>
-        /// <param name="linearDragCoeficient">Linear drag coeficient of the fluid</param>
-        /// <param name="rotationalDragCoeficient">Rotational drag coeficient of the fluid</param>
-        /// <param name="gravity">The direction gravity acts. Buoyancy force will act in oppsite direction of gravity.</param>
+        /// <param name="linearDragCoeficient">Linear drag coefficient of the fluid</param>
+        /// <param name="rotationalDragCoeficient">Rotational drag coefficient of the fluid</param>
+        /// <param name="gravity">The direction gravity acts. Buoyancy force will act in opposite direction of gravity.</param>
         public void Initialize(IFluidContainer fluidContainer, float density, float linearDragCoeficient,
                                float rotationalDragCoeficient, Vector2 gravity)
         {
