@@ -9,11 +9,11 @@
 <head runat="server">
     <title>FarseerPhysicsWaterDemo</title>
 </head>
-<body style="height:100%;margin:auto;">
-    <form id="form1" runat="server" style="height:100%;">
+<body style="height:100%;margin:auto; background-color:Silver">
+    <form id="form1" runat="server" style="width:700px; height: 500px; margin:20px auto 0px auto; ">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-        <div  style="height:100%;">
-            <asp:Silverlight ID="Xaml1" runat="server" Source="~/ClientBin/FarseerPhysicsWaterDemo.xap" MinimumVersion="2.0.30923.0" Width="100%" Height="100%" />
+        <div  style="height:100%; margin:auto;">
+            <asp:Silverlight ID="Xaml1" runat="server" BackColor="Silver" Source="~/ClientBin/FarseerPhysicsWaterDemo.xap" MinimumVersion="2.0.30923.0" Width="700px" Height="500px" />
         </div>
     </form>
 </body>
