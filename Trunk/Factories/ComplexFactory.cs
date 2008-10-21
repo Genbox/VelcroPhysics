@@ -67,6 +67,8 @@ namespace FarseerGames.FarseerPhysics.Factories
                 p.Add(JointFactory.Instance.CreateFixedRevoluteJoint(p.Bodies[0], start));
             if (pinEnd)
                 p.Add(JointFactory.Instance.CreateFixedRevoluteJoint(p.Bodies.Last, end));
+
+            return (p);
         }
 
         /// <summary>
