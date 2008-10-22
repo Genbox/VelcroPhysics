@@ -1,37 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
-using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
-using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.FarseerPhysics.Interfaces;
-using FarseerGames.FarseerPhysics.Mathematics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
 {
     public class Path
     {
-        private bool _recalculate = true;          // will be set to true if path needs to be recalculated
-        private GeomList _geoms;            // holds all geoms for this path
-        private BodyList _bodies;           // holds all bodies for this path
-        private JointList _joints;          // holds all the joints for this path
-        private Vertices _controlPoints;    // holds all control points for this path
-        private bool _loop;                 // is this path a loop
-        private float _controlPointSize = 6;     // size of control point used in PointInControlPoint
-        private float _precision = 0.0005f;         // a coeffient used to decide how precise to place bodies
-        private float _width, _height, _mass;      // width and height of bodies to create
+        private BodyList _bodies; // holds all bodies for this path
+        private Vertices _controlPoints; // holds all control points for this path
+        private const float _controlPointSize = 6; // size of control point used in PointInControlPoint
+        private GeomList _geoms; // holds all geoms for this path
+        private float _height; // width and height of bodies to create
+        private JointList _joints; // holds all the joints for this path
+        private bool _loop; // is this path a loop
+        private float _mass; // width and height of bodies to create
+        private const float _precision = 0.0005f; // a coeffient used to decide how precise to place bodies
+        private bool _recalculate = true; // will be set to true if path needs to be recalculated
+        private float _width; // width and height of bodies to create
 
 
         /// <summary>
@@ -39,6 +26,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
         /// </summary>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
+        /// <param name="mass">The mass.</param>
         /// <param name="endless">if set to <c>true</c> [endless].</param>
         public Path(float width, float height, float mass, bool endless)
         {
@@ -51,6 +39,27 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
             _joints = new JointList();
             _controlPoints = new Vertices();
         }
+
+        public BodyList Bodies
+        {
+            get { return _bodies; }
+        }
+
+        public JointList Joints
+        {
+            get { return _joints; }
+        }
+
+        public GeomList Geoms
+        {
+            get { return _geoms; }
+        }
+
+        public Vertices ControlPoints
+        {
+            get { return _controlPoints; }
+        }
+
         // NOTE: I may add an enum here for joint type NEED TO ADD LOOP CODE AND NEEDS TO BE REWRITTEN CAUSE IT LOOKS WAY MORE 
         // COMPLICATED THEN IT IS
         // Type of joints I may include - Pin, Rev, Slider, and maybe linear spring
@@ -61,9 +70,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
         public void LinkBodies()
         {
             RevoluteJoint r;
-            Vector2 midPoint = new Vector2();
-            float midDeltaX = 0.0f;
-            float midDeltaY = 0.0f;
+            Vector2 midPoint;
+            float midDeltaX;
+            float midDeltaY;
 
             for (int i = 0; i < _bodies.Count; i++)
             {
@@ -71,22 +80,25 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
                 {
                     if (_bodies[i].Position.X < _bodies[i + 1].Position.X)
                     {
-                        midDeltaX = (float)Math.Abs((float)_bodies[i].Position.X - _bodies[i + 1].Position.X) * 0.5f;         // find x axis midpoint
+                        midDeltaX = Math.Abs(_bodies[i].Position.X - _bodies[i + 1].Position.X)*0.5f;
+                            // find x axis midpoint
                     }
                     else
                     {
-                        midDeltaX = (float)((float)_bodies[i + 1].Position.X - _bodies[i].Position.X) * 0.5f;         // find x axis midpoint
+                        midDeltaX = (_bodies[i + 1].Position.X - _bodies[i].Position.X)*0.5f; // find x axis midpoint
                     }
                     if (_bodies[i].Position.Y < _bodies[i + 1].Position.Y)
                     {
-                        midDeltaY = (float)Math.Abs((float)_bodies[i].Position.Y - _bodies[i + 1].Position.Y) * 0.5f;         // find x axis midpoint
+                        midDeltaY = Math.Abs(_bodies[i].Position.Y - _bodies[i + 1].Position.Y)*0.5f;
+                            // find x axis midpoint
                     }
                     else
                     {
-                        midDeltaY = (float)((float)_bodies[i + 1].Position.Y - _bodies[i].Position.Y) * 0.5f;         // find x axis midpoint
+                        midDeltaY = (_bodies[i + 1].Position.Y - _bodies[i].Position.Y)*0.5f; // find x axis midpoint
                     }
 
-                    midPoint = new Vector2(_bodies[i].Position.X + midDeltaX, _bodies[i].Position.Y + midDeltaY);   // set midPoint
+                    midPoint = new Vector2(_bodies[i].Position.X + midDeltaX, _bodies[i].Position.Y + midDeltaY);
+                        // set midPoint
 
                     r = JointFactory.Instance.CreateRevoluteJoint(_bodies[i], _bodies[i + 1], midPoint);
                     r.BiasFactor = 0.2f;
@@ -97,22 +109,27 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
                 {
                     if (_bodies[0].Position.X < _bodies[_bodies.Count - 1].Position.X)
                     {
-                        midDeltaX = (float)Math.Abs((float)_bodies[0].Position.X - _bodies[_bodies.Count - 1].Position.X) * 0.5f;         // find x axis midpoint
+                        midDeltaX = Math.Abs(_bodies[0].Position.X - _bodies[_bodies.Count - 1].Position.X)*0.5f;
+                            // find x axis midpoint
                     }
                     else
                     {
-                        midDeltaX = (float)((float)_bodies[_bodies.Count - 1].Position.X - _bodies[0].Position.X) * 0.5f;         // find x axis midpoint
+                        midDeltaX = (_bodies[_bodies.Count - 1].Position.X - _bodies[0].Position.X)*0.5f;
+                            // find x axis midpoint
                     }
                     if (_bodies[0].Position.Y < _bodies[_bodies.Count - 1].Position.Y)
                     {
-                        midDeltaY = (float)Math.Abs((float)_bodies[0].Position.Y - _bodies[_bodies.Count - 1].Position.Y) * 0.5f;         // find x axis midpoint
+                        midDeltaY = Math.Abs(_bodies[0].Position.Y - _bodies[_bodies.Count - 1].Position.Y)*0.5f;
+                            // find x axis midpoint
                     }
                     else
                     {
-                        midDeltaY = (float)((float)_bodies[_bodies.Count - 1].Position.Y - _bodies[0].Position.Y) * 0.5f;         // find x axis midpoint
+                        midDeltaY = (_bodies[_bodies.Count - 1].Position.Y - _bodies[0].Position.Y)*0.5f;
+                            // find x axis midpoint
                     }
 
-                    midPoint = new Vector2(_bodies[0].Position.X + midDeltaX, _bodies[0].Position.Y + midDeltaY);   // set midPoint
+                    midPoint = new Vector2(_bodies[0].Position.X + midDeltaX, _bodies[0].Position.Y + midDeltaY);
+                        // set midPoint
 
                     r = JointFactory.Instance.CreateRevoluteJoint(_bodies[0], _bodies[_bodies.Count - 1], midPoint);
                     r.BiasFactor = 0.2f;
@@ -125,7 +142,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
         /// <summary>
         /// Adds to physics simulator.
         /// </summary>
-        /// <param name="ps">The ps.</param>
+        /// <param name="ps">The physics simulator.</param>
         public void AddToPhysicsSimulator(PhysicsSimulator ps)
         {
             foreach (Body b in _bodies)
@@ -137,7 +154,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
         }
 
         /// <summary>
-        /// Creates rectanglar geoms that match the size of the bodies.
+        /// Creates rectangular geoms that match the size of the bodies.
         /// </summary>
         public void CreateGeoms()
         {
@@ -163,8 +180,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
 
             foreach (Vector2 v in _controlPoints)
             {
-                controlPointAABB = new AABB(new Vector2(v.X - (_controlPointSize / 2), v.Y - (_controlPointSize / 2)),
-                    new Vector2(v.X + (_controlPointSize / 2), v.Y + (_controlPointSize / 2)));
+                controlPointAABB = new AABB(new Vector2(v.X - (_controlPointSize/2), v.Y - (_controlPointSize/2)),
+                                            new Vector2(v.X + (_controlPointSize/2), v.Y + (_controlPointSize/2)));
 
                 if (controlPointAABB.Contains(ref point))
                     return _controlPoints.IndexOf(v);
@@ -184,8 +201,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
         /// <param name="controlPoint">Vector2 to add.</param>
         public void Add(Vector2 controlPoint)
         {
-            _controlPoints.Add(controlPoint);           // then add it
-            _recalculate = true;                        // be sure to recalculate the curve
+            _controlPoints.Add(controlPoint); // then add it
+            _recalculate = true; // be sure to recalculate the curve
         }
 
         public void Add(Body b)
@@ -203,26 +220,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
             _joints.Add(j);
         }
 
-        public BodyList Bodies
-        {
-            get { return _bodies; }
-        }
-
-        public JointList Joints
-        {
-            get { return _joints; }
-        }
-
-        public GeomList Geoms
-        {
-            get { return _geoms; }
-        }
-
-        public Vertices ControlPoints
-        {
-            get { return _controlPoints; }
-        }
-
         /// <summary>
         /// Removes a control point from the path.
         /// </summary>
@@ -230,17 +227,17 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
         public void Remove(Vector2 controlPoint)
         {
             _controlPoints.Remove(controlPoint);
-            _recalculate = true;                        // be sure to recalculate the curve
+            _recalculate = true; // be sure to recalculate the curve
         }
 
         /// <summary>
         /// Removes a control point from the path by index.
         /// </summary>
-        /// <param name="controlPoint">Index of Vector2 to remove.</param>
+        /// <param name="index">Index of Vector2 to remove.</param>
         public void Remove(int index)
         {
             _controlPoints.RemoveAt(index);
-            _recalculate = true;                        // be sure to recalculate the curve
+            _recalculate = true; // be sure to recalculate the curve
         }
 
         /// <summary>
@@ -251,51 +248,52 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
         public void Update()
         {
             float distance = 0.0f;
-            float k = 0.0f;
+            float k;
             Body tempBody;
             Vector2 tempVectorA = new Vector2();
-            Vector2 tempVectorB = new Vector2();
+            Vector2 tempVectorB;
             Vector2 tempVectorC = new Vector2();
 
-            if (_recalculate)   // only do the update if something has changed
+            if (_recalculate) // only do the update if something has changed
             {
                 // first we get our curve ready
                 Curve xCurve = new Curve();
                 Curve yCurve = new Curve();
-                float curveIncrement = 1.0f / (float)_controlPoints.Count;
+                float curveIncrement = 1.0f/_controlPoints.Count;
 
-                for (int i = 0; i < _controlPoints.Count; i++)       // for all the control points 
+                for (int i = 0; i < _controlPoints.Count; i++) // for all the control points 
                 {
-                    k = curveIncrement * (i + 1);
-                    xCurve.Keys.Add(new CurveKey(k, _controlPoints[i].X));     // set the keys for x and y
-                    yCurve.Keys.Add(new CurveKey(k, _controlPoints[i].Y));     // with a time from 0-1
+                    k = curveIncrement*(i + 1);
+                    xCurve.Keys.Add(new CurveKey(k, _controlPoints[i].X)); // set the keys for x and y
+                    yCurve.Keys.Add(new CurveKey(k, _controlPoints[i].Y)); // with a time from 0-1
                 }
 
                 k = 0.0f;
 
-                xCurve.ComputeTangents(CurveTangent.Smooth);        // compute x tangents
-                yCurve.ComputeTangents(CurveTangent.Smooth);        // compute y tangents
+                xCurve.ComputeTangents(CurveTangent.Smooth); // compute x tangents
+                yCurve.ComputeTangents(CurveTangent.Smooth); // compute y tangents
 
                 // next we find the first point at 1/2 the width because we are finding where the body's center will be placed
-                while (distance < (_width / 2.0f))      // while the distance along the curve is <= to width / 2  
+                while (distance < (_width/2.0f)) // while the distance along the curve is <= to width / 2  
                 {
-                    k += _precision;        // we increment along the line at this precision coeffient
+                    k += _precision; // we increment along the line at this precision coeffient
                     tempVectorA = new Vector2(xCurve.Evaluate(k), yCurve.Evaluate(k));
-                    distance = Vector2.Distance(_controlPoints[0], tempVectorA);      // get the distance
+                    distance = Vector2.Distance(_controlPoints[0], tempVectorA); // get the distance
                 }
 
-                while (distance < _width)      // while the distance along the curve is <= to width / 2  
+                while (distance < _width) // while the distance along the curve is <= to width / 2  
                 {
-                    k += _precision;        // we increment along the line at this precision coeffient
+                    k += _precision; // we increment along the line at this precision coeffient
                     tempVectorC = new Vector2(xCurve.Evaluate(k), yCurve.Evaluate(k));
-                    distance = Vector2.Distance(_controlPoints[0], tempVectorC);      // get the distance
+                    distance = Vector2.Distance(_controlPoints[0], tempVectorC); // get the distance
                 }
 
-                tempBody = BodyFactory.Instance.CreateRectangleBody(_width, _height, _mass);     // create the first body
+                tempBody = BodyFactory.Instance.CreateRectangleBody(_width, _height, _mass); // create the first body
                 tempBody.Position = tempVectorA;
-                tempBody.Rotation = FindNormalAngle(FindVertexNormal(_controlPoints[0], tempVectorA, tempVectorC));   // set the angle
+                tempBody.Rotation = FindNormalAngle(FindVertexNormal(_controlPoints[0], tempVectorA, tempVectorC));
+                    // set the angle
 
-                _bodies.Add(tempBody);          // add the first body
+                _bodies.Add(tempBody); // add the first body
 
                 tempVectorB = tempVectorA;
 
@@ -305,28 +303,30 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
                 {
                     distance = 0.0f;
                     // next we find the first point at the width because we are finding where the body's center will be placed
-                    while ((distance < _width) && (k < 1.0f))      // while the distance along the curve is <= to width
+                    while ((distance < _width) && (k < 1.0f)) // while the distance along the curve is <= to width
                     {
-                        k += _precision;        // we increment along the line at this precision coeffient
+                        k += _precision; // we increment along the line at this precision coeffient
                         tempVectorA = new Vector2(xCurve.Evaluate(k), yCurve.Evaluate(k));
-                        distance = Vector2.Distance(tempVectorA, tempVectorB);      // get the distance
+                        distance = Vector2.Distance(tempVectorA, tempVectorB); // get the distance
                     }
                     distance = 0.0f;
-                    while ((distance < _width) && (k < 1.0f))      // while the distance along the curve is <= to width
+                    while ((distance < _width) && (k < 1.0f)) // while the distance along the curve is <= to width
                     {
-                        k += _precision;        // we increment along the line at this precision coeffient
+                        k += _precision; // we increment along the line at this precision coeffient
                         tempVectorC = new Vector2(xCurve.Evaluate(k), yCurve.Evaluate(k));
-                        distance = Vector2.Distance(tempVectorA, tempVectorC);      // get the distance
+                        distance = Vector2.Distance(tempVectorA, tempVectorC); // get the distance
                     }
-                    tempBody = BodyFactory.Instance.CreateRectangleBody(_width, _height, _mass);     // create the first body
+                    tempBody = BodyFactory.Instance.CreateRectangleBody(_width, _height, _mass);
+                        // create the first body
                     tempBody.Position = tempVectorA;
-                    tempBody.Rotation = FindNormalAngle(FindVertexNormal(tempVectorB, tempVectorA, tempVectorC));   // set the angle
+                    tempBody.Rotation = FindNormalAngle(FindVertexNormal(tempVectorB, tempVectorA, tempVectorC));
+                        // set the angle
 
-                    _bodies.Add(tempBody);      // add all the rest of the bodies
+                    _bodies.Add(tempBody); // add all the rest of the bodies
 
                     tempVectorB = tempVectorA;
                 }
-                this.MoveControlPoint(tempVectorC, _controlPoints.Count - 1);
+                MoveControlPoint(tempVectorC, _controlPoints.Count - 1);
                 _recalculate = false;
             }
         }
@@ -339,20 +339,20 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
         /// <param name="a">First Vector2.</param>
         /// <param name="b">Other Vector2.</param>
         /// <returns>Mid-point Vector2.</returns>
-        static public Vector2 FindMidpoint(Vector2 a, Vector2 b)
+        public static Vector2 FindMidpoint(Vector2 a, Vector2 b)
         {
             float midDeltaX, midDeltaY;
 
             if (a.X < b.X)
-                midDeltaX = (float)Math.Abs((float)(a.X - b.X) * 0.5f);         // find x axis midpoint
+                midDeltaX = Math.Abs((a.X - b.X)*0.5f); // find x axis midpoint
             else
-                midDeltaX = (b.X - a.X) * 0.5f;         // find x axis midpoint
+                midDeltaX = (b.X - a.X)*0.5f; // find x axis midpoint
             if (a.Y < b.Y)
-                midDeltaY = (float)Math.Abs((float)(a.Y - b.Y) * 0.5f);         // find y axis midpoint
+                midDeltaY = Math.Abs((a.Y - b.Y)*0.5f); // find y axis midpoint
             else
-                midDeltaY = (b.Y - a.Y) * 0.5f;         // find y axis midpoint
+                midDeltaY = (b.Y - a.Y)*0.5f; // find y axis midpoint
 
-            return (new Vector2(a.X + midDeltaX, a.Y + midDeltaY));   // return mid point
+            return (new Vector2(a.X + midDeltaX, a.Y + midDeltaY)); // return mid point
         }
 
         /// <summary>
@@ -367,10 +367,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
 
             t = new Vector2(a.X - b.X, a.Y - b.Y);
 
-            n.X = -t.Y;     // get 2D normal
-            n.Y = t.X;      // works only on counter clockwise polygons
+            n.X = -t.Y; // get 2D normal
+            n.Y = t.X; // works only on counter clockwise polygons
 
-            return n;           // we don't bother normalizing because we do this when we find the vertex normal
+            return n; // we don't bother normalizing because we do this when we find the vertex normal
         }
 
         private Vector2 FindVertexNormal(Vector2 a, Vector2 b, Vector2 c)
@@ -385,13 +385,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
         private float FindNormalAngle(Vector2 n)
         {
             if ((n.Y > 0.0f) && (n.X > 0.0f))
-                return (float)Math.Atan((float)n.X / -n.Y);
-            else if ((n.Y < 0.0f) && (n.X > 0.0f))
-                return (float)Math.Atan((float)n.X / -n.Y);        // good
-            else if ((n.Y > 0.0f) && (n.X < 0.0f))
-                return (float)Math.Atan((float)-n.X / n.Y);
-            else if ((n.Y < 0.0f) && (n.X < 0.0f))
-                return (float)Math.Atan((float)-n.X / n.Y);        // good
+                return (float) Math.Atan(n.X/-n.Y);
+            
+            if ((n.Y < 0.0f) && (n.X > 0.0f))
+                return (float) Math.Atan(n.X/-n.Y); // good
+            
+            if ((n.Y > 0.0f) && (n.X < 0.0f))
+                return (float) Math.Atan(-n.X/n.Y);
+            
+            if ((n.Y < 0.0f) && (n.X < 0.0f))
+                return (float) Math.Atan(-n.X/n.Y); // good
 
             return 0.0f;
         }
