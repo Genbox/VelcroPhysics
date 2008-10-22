@@ -175,6 +175,9 @@
     <Compile Include="..\..\Trunk\Dynamics\Joints\SliderJoint.cs">
       <Link>Dynamics\Joints\SliderJoint.cs</Link>
     </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Path.cs">
+      <Link>Dynamics\Path.cs</Link>
+    </Compile>
     <Compile Include="..\..\Trunk\Dynamics\Springs\AngleSpring.cs">
       <Link>Dynamics\Springs\AngleSpring.cs</Link>
     </Compile>
