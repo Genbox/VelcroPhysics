@@ -26,7 +26,7 @@ namespace FarseerPhysicsWaterDemo.Views
 
         void SplashView_Loaded(object sender, RoutedEventArgs e)
         {
-            timer.Interval = new TimeSpan(0, 0, 0, 4);
+            timer.Interval = new TimeSpan(0, 0, 0, 2);
             timer.Tick += new EventHandler(timer_Tick);
         }
 
