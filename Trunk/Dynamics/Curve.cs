@@ -1,4 +1,37 @@
 ﻿#if(!XNA)
+
+#region License
+
+/*
+MIT License
+Copyright © 2006 The Mono.Xna Team
+
+All rights reserved.
+
+Authors:
+Olivier Dufour (Duff)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+#endregion License
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,13 +40,18 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 {
     public class Curve
     {
-        private CurveKeyCollection _keys = new CurveKeyCollection();
+        private CurveKeyCollection _keys;
         private CurveLoopType _postLoop;
         private CurveLoopType _preLoop;
 
+        public Curve()
+        {
+            _keys = new CurveKeyCollection();
+        }
+
         public bool IsConstant
         {
-            get { return (_keys.Count <= 1); }
+            get { return _keys.Count <= 1; }
         }
 
         public CurveKeyCollection Keys
@@ -33,23 +71,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             set { _preLoop = value; }
         }
 
-        private float CalcCycle(float t)
-        {
-            float num = (t - _keys[0].position) * _keys.InvTimeRange;
-            if (num < 0f)
-            {
-                num--;
-            }
-            int num2 = (int)num;
-            return num2;
-        }
-
         public Curve Clone()
         {
             Curve curve = new Curve();
+
+            curve._keys = _keys.Clone();
             curve._preLoop = _preLoop;
             curve._postLoop = _postLoop;
-            curve._keys = _keys.Clone();
+
             return curve;
         }
 
@@ -92,7 +121,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 }
                 else
                 {
-                    key.TangentIn = (num6 * Math.Abs((position - num8))) / num10;
+                    key.TangentIn = (num6*Math.Abs((position - num8)))/num10;
                 }
             }
             else if (tangentInType == CurveTangent.Linear)
@@ -113,7 +142,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 }
                 else
                 {
-                    key.TangentOut = (num5 * Math.Abs((num4 - num8))) / num9;
+                    key.TangentOut = (num5*Math.Abs((num4 - num8)))/num9;
                 }
             }
             else if (tangentOutType == CurveTangent.Linear)
@@ -141,203 +170,192 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public float Evaluate(float position)
         {
-            if (_keys.Count == 0)
+            CurveKey first = _keys[0];
+            CurveKey last = _keys[_keys.Count - 1];
+
+            if (position < first.Position)
             {
-                return 0f;
-            }
-            if (_keys.Count == 1)
-            {
-                return _keys[0].internalValue;
-            }
-            CurveKey key = _keys[0];
-            CurveKey key2 = _keys[_keys.Count - 1];
-            float t = position;
-            float num6 = 0f;
-            if (t < key.position)
-            {
-                if (_preLoop == CurveLoopType.Constant)
+                switch (PreLoop)
                 {
-                    return key.internalValue;
-                }
-                if (_preLoop == CurveLoopType.Linear)
-                {
-                    return (key.internalValue - (key.tangentIn * (key.position - t)));
-                }
-                if (!_keys.IsCacheAvailable)
-                {
-                    _keys.ComputeCacheValues();
-                }
-                float num5 = CalcCycle(t);
-                float num3 = t - (key.position + (num5 * _keys.TimeRange));
-                if (_preLoop == CurveLoopType.Cycle)
-                {
-                    t = key.position + num3;
-                }
-                else if (_preLoop == CurveLoopType.CycleOffset)
-                {
-                    t = key.position + num3;
-                    num6 = (key2.internalValue - key.internalValue) * num5;
-                }
-                else
-                {
-                    t = ((((int)num5) & 1) != 0) ? (key2.position - num3) : (key.position + num3);
+                    case CurveLoopType.Constant:
+                        //constant
+                        return first.Value;
+
+                    case CurveLoopType.Linear:
+                        // linear y = a*x +b with a tangeant of last point
+                        return first.Value - first.TangentIn*(first.Position - position);
+
+                    case CurveLoopType.Cycle:
+                        //start -> end / start -> end
+                        int cycle = GetNumberOfCycle(position);
+                        float virtualPos = position - (cycle*(last.Position - first.Position));
+                        return GetCurvePosition(virtualPos);
+
+                    case CurveLoopType.CycleOffset:
+                        //make the curve continue (with no step) so must up the curve each cycle of delta(value)
+                        cycle = GetNumberOfCycle(position);
+                        virtualPos = position - (cycle*(last.Position - first.Position));
+                        return (GetCurvePosition(virtualPos) + cycle*(last.Value - first.Value));
+
+                    case CurveLoopType.Oscillate:
+                        //go back on curve from end and target start
+                        // start-> end / end -> start
+                        cycle = GetNumberOfCycle(position);
+                        if (0 == cycle%2f) //if pair
+                            virtualPos = position - (cycle*(last.Position - first.Position));
+                        else
+                            virtualPos = last.Position - position + first.Position +
+                                         (cycle*(last.Position - first.Position));
+                        return GetCurvePosition(virtualPos);
                 }
             }
-            else if (key2.position < t)
+            else if (position > last.Position)
             {
-                if (_postLoop == CurveLoopType.Constant)
+                int cycle;
+                switch (PostLoop)
                 {
-                    return key2.internalValue;
-                }
-                if (_postLoop == CurveLoopType.Linear)
-                {
-                    return (key2.internalValue - (key2.tangentOut * (key2.position - t)));
-                }
-                if (!_keys.IsCacheAvailable)
-                {
-                    _keys.ComputeCacheValues();
-                }
-                float num4 = CalcCycle(t);
-                float num2 = t - (key.position + (num4 * _keys.TimeRange));
-                if (_postLoop == CurveLoopType.Cycle)
-                {
-                    t = key.position + num2;
-                }
-                else if (_postLoop == CurveLoopType.CycleOffset)
-                {
-                    t = key.position + num2;
-                    num6 = (key2.internalValue - key.internalValue) * num4;
-                }
-                else
-                {
-                    t = ((((int)num4) & 1) != 0) ? (key2.position - num2) : (key.position + num2);
+                    case CurveLoopType.Constant:
+                        //constant
+                        return last.Value;
+
+                    case CurveLoopType.Linear:
+                        // linear y = a*x +b with a tangeant of last point
+                        return last.Value + first.TangentOut*(position - last.Position);
+
+                    case CurveLoopType.Cycle:
+                        //start -> end / start -> end
+                        cycle = GetNumberOfCycle(position);
+                        float virtualPos = position - (cycle*(last.Position - first.Position));
+                        return GetCurvePosition(virtualPos);
+
+                    case CurveLoopType.CycleOffset:
+                        //make the curve continue (with no step) so must up the curve each cycle of delta(value)
+                        cycle = GetNumberOfCycle(position);
+                        virtualPos = position - (cycle*(last.Position - first.Position));
+                        return (GetCurvePosition(virtualPos) + cycle*(last.Value - first.Value));
+
+                    case CurveLoopType.Oscillate:
+                        //go back on curve from end and target start
+                        // start-> end / end -> start
+                        cycle = GetNumberOfCycle(position);
+                        //virtualPos = position - (cycle*(last.Position - first.Position));
+                        if (0 == cycle%2f) //if pair
+                            virtualPos = position - (cycle*(last.Position - first.Position));
+                        else
+                            virtualPos = last.Position - position + first.Position +
+                                         (cycle*(last.Position - first.Position));
+                        return GetCurvePosition(virtualPos);
                 }
             }
-            CurveKey key4 = null;
-            CurveKey key3 = null;
-            t = FindSegment(t, ref key4, ref key3);
-            return (num6 + Hermite(key4, key3, t));
+
+            //in curve
+            return GetCurvePosition(position);
         }
 
-        private float FindSegment(float t, ref CurveKey k0, ref CurveKey k1)
+        private int GetNumberOfCycle(float position)
         {
-            float num2 = t;
-            k0 = _keys[0];
+            float cycle = (position - _keys[0].Position)/(_keys[_keys.Count - 1].Position - _keys[0].Position);
+            if (cycle < 0f)
+                cycle--;
+            return (int) cycle;
+        }
+
+        private float GetCurvePosition(float position)
+        {
+            //only for position in curve
+            CurveKey prev = _keys[0];
+            CurveKey next;
             for (int i = 1; i < _keys.Count; i++)
             {
-                k1 = _keys[i];
-                if (k1.position >= t)
+                next = Keys[i];
+                if (next.Position >= position)
                 {
-                    double position = k0.position;
-                    double num6 = k1.position;
-                    double num5 = t;
-                    double num3 = num6 - position;
-                    num2 = 0f;
-                    if (num3 > 1E-10)
+                    if (prev.Continuity == CurveContinuity.Step)
                     {
-                        num2 = (float)((num5 - position) / num3);
+                        if (position >= 1f)
+                        {
+                            return next.Value;
+                        }
+                        return prev.Value;
                     }
-                    return num2;
+                    float t = (position - prev.Position)/(next.Position - prev.Position); //to have t in [0,1]
+                    float ts = t*t;
+                    float tss = ts*t;
+                    //After a lot of search on internet I have found all about spline function
+                    // and bezier (phi'sss ancien) but finaly use hermite curve
+                    //http://en.wikipedia.org/wiki/Cubic_Hermite_spline
+                    //P(t) = (2*t^3 - 3t^2 + 1)*P0 + (t^3 - 2t^2 + t)m0 + (-2t^3 + 3t^2)P1 + (t^3-t^2)m1
+                    //with P0.value = prev.value , m0 = prev.tangentOut, P1= next.value, m1 = next.TangentIn
+                    return (2*tss - 3*ts + 1f)*prev.Value + (tss - 2*ts + t)*prev.TangentOut + (3*ts - 2*tss)*next.Value +
+                           (tss - ts)*next.TangentIn;
                 }
-                k0 = k1;
+                prev = next;
             }
-            return num2;
-        }
-
-        private static float Hermite(CurveKey k0, CurveKey k1, float t)
-        {
-            if (k0.Continuity == CurveContinuity.Step)
-            {
-                if (t >= 1f)
-                {
-                    return k1.internalValue;
-                }
-                return k0.internalValue;
-            }
-            float num = t * t;
-            float num2 = num * t;
-            float internalValue = k0.internalValue;
-            float num5 = k1.internalValue;
-            float tangentOut = k0.tangentOut;
-            float tangentIn = k1.tangentIn;
-            return ((((internalValue * (((2f * num2) - (3f * num)) + 1f)) + (num5 * ((-2f * num2) + (3f * num)))) +
-                     (tangentOut * ((num2 - (2f * num)) + t))) + (tangentIn * (num2 - num)));
+            return 0f;
         }
     }
 
     public class CurveKey : IEquatable<CurveKey>, IComparable<CurveKey>
     {
-        internal CurveContinuity continuity;
-        internal float internalValue;
-        internal float position;
-        internal float tangentIn;
-        internal float tangentOut;
+        private CurveContinuity _continuity;
+        private float _position;
+        private float _tangentIn;
+        private float _tangentOut;
+        private float _value;
 
         public CurveKey(float position, float value)
+            : this(position, value, 0, 0, CurveContinuity.Smooth)
         {
-            this.position = position;
-            internalValue = value;
         }
 
         public CurveKey(float position, float value, float tangentIn, float tangentOut)
+            : this(position, value, tangentIn, tangentOut, CurveContinuity.Smooth)
         {
-            this.position = position;
-            internalValue = value;
-            this.tangentIn = tangentIn;
-            this.tangentOut = tangentOut;
         }
 
         public CurveKey(float position, float value, float tangentIn, float tangentOut, CurveContinuity continuity)
         {
-            this.position = position;
-            internalValue = value;
-            this.tangentIn = tangentIn;
-            this.tangentOut = tangentOut;
-            this.continuity = continuity;
+            _position = position;
+            _value = value;
+            _tangentIn = tangentIn;
+            _tangentOut = tangentOut;
+            _continuity = continuity;
         }
 
         public CurveContinuity Continuity
         {
-            get { return continuity; }
-            set { continuity = value; }
+            get { return _continuity; }
+            set { _continuity = value; }
         }
 
         public float Position
         {
-            get { return position; }
+            get { return _position; }
         }
 
         public float TangentIn
         {
-            get { return tangentIn; }
-            set { tangentIn = value; }
+            get { return _tangentIn; }
+            set { _tangentIn = value; }
         }
 
         public float TangentOut
         {
-            get { return tangentOut; }
-            set { tangentOut = value; }
+            get { return _tangentOut; }
+            set { _tangentOut = value; }
         }
 
         public float Value
         {
-            get { return internalValue; }
-            set { internalValue = value; }
+            get { return _value; }
+            set { _value = value; }
         }
 
         #region IComparable<CurveKey> Members
 
         public int CompareTo(CurveKey other)
         {
-            if (position == other.position)
-            {
-                return 0;
-            }
-            if (position >= other.position)
-            {
-                return 1;
-            }
-            return -1;
+            return _position.CompareTo(other._position);
         }
 
         #endregion
@@ -346,211 +364,166 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         public bool Equals(CurveKey other)
         {
-            return (((((other != null) && (other.position == position)) &&
-                      ((other.internalValue == internalValue) && (other.tangentIn == tangentIn))) &&
-                     (other.tangentOut == tangentOut)) && (other.continuity == continuity));
+            return (this == other);
         }
 
         #endregion
 
-        public CurveKey Clone()
+        public static bool operator !=(CurveKey a, CurveKey b)
         {
-            return new CurveKey(position, internalValue, tangentIn, tangentOut, continuity);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as CurveKey);
-        }
-
-        public override int GetHashCode()
-        {
-            return ((((position.GetHashCode() + internalValue.GetHashCode()) + tangentIn.GetHashCode()) +
-                     tangentOut.GetHashCode()) + continuity.GetHashCode());
+            return !(a == b);
         }
 
         public static bool operator ==(CurveKey a, CurveKey b)
         {
-            bool flag3 = null == a;
-            bool flag2 = null == b;
-            if (flag3 || flag2)
-            {
-                return (flag3 == flag2);
-            }
-            return a.Equals(b);
+            if (Equals(a, null))
+                return Equals(b, null);
+
+            if (Equals(b, null))
+                return Equals(a, null);
+
+            return (a._position == b._position)
+                   && (a._value == b._value)
+                   && (a._tangentIn == b._tangentIn)
+                   && (a._tangentOut == b._tangentOut)
+                   && (a._continuity == b._continuity);
         }
 
-        public static bool operator !=(CurveKey a, CurveKey b)
+        public CurveKey Clone()
         {
-            bool flag3 = a == null;
-            bool flag2 = b == null;
-            if (flag3 || flag2)
-            {
-                return (flag3 != flag2);
-            }
-            return ((((a.position != b.position) || (a.internalValue != b.internalValue)) ||
-                     ((a.tangentIn != b.tangentIn) || (a.tangentOut != b.tangentOut))) || (a.continuity != b.continuity));
+            return new CurveKey(_position, _value, _tangentIn, _tangentOut, _continuity);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return (obj is CurveKey) ? ((CurveKey) obj) == this : false;
+        }
+
+        public override int GetHashCode()
+        {
+            return _position.GetHashCode() ^ _value.GetHashCode() ^ _tangentIn.GetHashCode() ^
+                   _tangentOut.GetHashCode() ^ _continuity.GetHashCode();
         }
     }
 
-
     public class CurveKeyCollection : ICollection<CurveKey>
     {
-        internal float InvTimeRange;
-        internal bool IsCacheAvailable = true;
-        private List<CurveKey> _keys = new List<CurveKey>();
-        internal float TimeRange;
+        private List<CurveKey> _innerlist;
+        private const bool _isReadOnly = false;
+
+        public CurveKeyCollection()
+        {
+            _innerlist = new List<CurveKey>();
+        }
 
         /// <exception cref="ArgumentNullException"><c>value</c> is null.</exception>
+        /// <exception cref="IndexOutOfRangeException"><c>IndexOutOfRangeException</c>.</exception>
         public CurveKey this[int index]
         {
-            get { return _keys[index]; }
+            get { return _innerlist[index]; }
             set
             {
                 if (value == null)
-                {
                     throw new ArgumentNullException();
-                }
-                if (_keys[index].Position == value.Position)
-                {
-                    _keys[index] = value;
-                }
+
+                if (index >= _innerlist.Count)
+                    throw new IndexOutOfRangeException();
+
+                if (_innerlist[index].Position == value.Position)
+                    _innerlist[index] = value;
                 else
                 {
-                    _keys.RemoveAt(index);
-                    Add(value);
+                    _innerlist.RemoveAt(index);
+                    _innerlist.Add(value);
                 }
             }
         }
 
+        public CurveKeyCollection Clone()
+        {
+            CurveKeyCollection ckc = new CurveKeyCollection();
+            foreach (CurveKey key in _innerlist)
+                ckc.Add(key);
+            return ckc;
+        }
+
+        public int IndexOf(CurveKey item)
+        {
+            return _innerlist.IndexOf(item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            _innerlist.RemoveAt(index);
+        }
+
         #region ICollection<CurveKey> Members
+
+        public int Count
+        {
+            get { return _innerlist.Count; }
+        }
+
+        public bool IsReadOnly
+        {
+            get { return _isReadOnly; }
+        }
 
         /// <exception cref="ArgumentNullException"><c>item</c> is null.</exception>
         public void Add(CurveKey item)
         {
             if (item == null)
-            {
                 throw new ArgumentNullException();
-            }
-            int index = _keys.BinarySearch(item);
-            if (index >= 0)
+
+            if (_innerlist.Count == 0)
             {
-                while ((index < _keys.Count) && (item.Position == _keys[index].Position))
+                _innerlist.Add(item);
+                return;
+            }
+
+            for (int i = 0; i < _innerlist.Count; i++)
+            {
+                if (item.Position < _innerlist[i].Position)
                 {
-                    index++;
+                    _innerlist.Insert(i, item);
+                    return;
                 }
             }
-            else
-            {
-                index = ~index;
-            }
-            _keys.Insert(index, item);
-            IsCacheAvailable = false;
+
+            _innerlist.Add(item);
         }
 
         public void Clear()
         {
-            _keys.Clear();
-            TimeRange = InvTimeRange = 0f;
-            IsCacheAvailable = false;
+            _innerlist.Clear();
         }
 
         public bool Contains(CurveKey item)
         {
-            return _keys.Contains(item);
+            return _innerlist.Contains(item);
         }
 
         public void CopyTo(CurveKey[] array, int arrayIndex)
         {
-            _keys.CopyTo(array, arrayIndex);
-            IsCacheAvailable = false;
+            _innerlist.CopyTo(array, arrayIndex);
         }
 
         public IEnumerator<CurveKey> GetEnumerator()
         {
-            return _keys.GetEnumerator();
+            return _innerlist.GetEnumerator();
         }
 
         public bool Remove(CurveKey item)
         {
-            IsCacheAvailable = false;
-            return _keys.Remove(item);
+            return _innerlist.Remove(item);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _keys.GetEnumerator();
-        }
-
-        // Properties
-        public int Count
-        {
-            get { return _keys.Count; }
-        }
-
-        public bool IsReadOnly
-        {
-            get { return false; }
+            return _innerlist.GetEnumerator();
         }
 
         #endregion
-
-        public CurveKeyCollection Clone()
-        {
-            CurveKeyCollection keys = new CurveKeyCollection();
-            keys._keys = new List<CurveKey>(_keys);
-            keys.InvTimeRange = InvTimeRange;
-            keys.TimeRange = TimeRange;
-            keys.IsCacheAvailable = true;
-            return keys;
-        }
-
-        internal void ComputeCacheValues()
-        {
-            TimeRange = InvTimeRange = 0f;
-            if (_keys.Count > 1)
-            {
-                TimeRange = _keys[_keys.Count - 1].Position - _keys[0].Position;
-                if (TimeRange > float.Epsilon)
-                {
-                    InvTimeRange = 1f / TimeRange;
-                }
-            }
-            IsCacheAvailable = true;
-        }
-
-        public int IndexOf(CurveKey item)
-        {
-            return _keys.IndexOf(item);
-        }
-
-        public void RemoveAt(int index)
-        {
-            _keys.RemoveAt(index);
-            IsCacheAvailable = false;
-        }
-    }
-
-    public enum CurveLoopType
-    {
-        Constant,
-        Cycle,
-        CycleOffset,
-        Oscillate,
-        Linear
-    }
-
-    public enum CurveTangent
-    {
-        Flat,
-        Linear,
-        Smooth
-    }
-
-    public enum CurveContinuity
-    {
-        Smooth,
-        Step
     }
 }
 #endif
