@@ -43,7 +43,7 @@ namespace FarseerGames.GettingStarted.ScreenSystem
 
         /// <summary>
         /// Responds to user input, changing the selected entry and accepting
-        /// or cancelling the menu.
+        /// or canceling the menu.
         /// </summary>
         public override void HandleInput(InputState input)
         {
