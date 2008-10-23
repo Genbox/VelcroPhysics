@@ -2,7 +2,11 @@
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Factories;
+#if(XNA)
 using Microsoft.Xna.Framework;
+#else
+using FarseerGames.FarseerPhysics.Mathematics;
+#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
 {
