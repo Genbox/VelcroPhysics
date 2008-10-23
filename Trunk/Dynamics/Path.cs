@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using FarseerGames.FarseerPhysics.Mathematics;
 #endif
 
+#if(XNA)
 namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
 {
     public class Path
@@ -404,3 +405,4 @@ namespace FarseerGames.FarseerPhysics.Dynamics.PathGenerator
         }
     }
 }
+#endif

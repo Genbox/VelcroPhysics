@@ -37,7 +37,7 @@ namespace FarseerGames.FarseerPhysics.Factories
                 return _instance;
             }
         }
-
+#if (XNA)
         public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart, bool pinEnd)
         {
             bool flip = true;
@@ -231,5 +231,6 @@ namespace FarseerGames.FarseerPhysics.Factories
                 a = b;
             }
         }
+#endif
     }
 }
