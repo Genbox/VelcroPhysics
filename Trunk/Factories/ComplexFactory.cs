@@ -4,7 +4,6 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 #if (XNA)
 using Microsoft.Xna.Framework;
-using FarseerGames.FarseerPhysics.Dynamics.PathGenerator;      // TODO need to write Curve class for silverlight so this is XNA only right now
 #else
 using FarseerGames.FarseerPhysics.Mathematics;
 #endif
@@ -37,7 +36,7 @@ namespace FarseerGames.FarseerPhysics.Factories
                 return _instance;
             }
         }
-#if (XNA)
+
         public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart, bool pinEnd)
         {
             bool flip = true;
@@ -231,6 +230,5 @@ namespace FarseerGames.FarseerPhysics.Factories
                 a = b;
             }
         }
-#endif
     }
 }

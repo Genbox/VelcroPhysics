@@ -142,6 +142,9 @@
     <Compile Include="..\..\Trunk\Dynamics\BodyList.cs">
       <Link>Dynamics\BodyList.cs</Link>
     </Compile>
+    <Compile Include="..\..\Trunk\Dynamics\Curve.cs">
+      <Link>Dynamics\Curve.cs</Link>
+    </Compile>
     <Compile Include="..\..\Trunk\Dynamics\Joints\AngleJoint.cs">
       <Link>Dynamics\Joints\AngleJoint.cs</Link>
     </Compile>
