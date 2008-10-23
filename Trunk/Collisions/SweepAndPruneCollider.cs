@@ -289,20 +289,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         private void UpdateExtentValues()
         {
-            //NOTE: Comment.. No debug in release
-            //Debug.Assert(_xInfoList.Count == _yInfoList.Count);
             for (int i = 0; i < _xInfoList.Count; i++)
             {
                 ExtentInfo xInfo = _xInfoList[i];
                 ExtentInfo yInfo = _yInfoList[i];
-                //NOTE: Comment.. No debug in release
-                //Debug.Assert(xInfo.geometry == yInfo.geometry);
-                AABB aabb = xInfo.geometry.aabb;
 
-                /*xInfo.min.value = aabb.min.X;
-                xInfo.max.value = aabb.max.X;
-                yInfo.min.value = aabb.min.Y;
-                yInfo.max.value = aabb.max.Y;*/
+                AABB aabb = xInfo.geometry.aabb;
 
                 xInfo.min.value = aabb.min.X - fTol;
                 xInfo.max.value = aabb.max.X + fTol;
@@ -427,8 +419,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             public CollisionPair(Geom g1, Geom g2)
             {
-                Debug.Assert(g1 != g2);
-
                 if (g1 < g2)
                 {
                     geom1 = g1;
