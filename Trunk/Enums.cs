@@ -2,7 +2,8 @@ using System;
 
 namespace FarseerGames.FarseerPhysics
 {
-    public enum CurveLoopType
+#if(!XNA)
+   public enum CurveLoopType
     {
         Constant,
         Cycle,
@@ -23,6 +24,7 @@ namespace FarseerGames.FarseerPhysics
         Linear,
         Smooth
     }
+#endif
 
     [Flags]
     public enum CollisionCategory
