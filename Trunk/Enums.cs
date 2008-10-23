@@ -2,12 +2,26 @@ using System;
 
 namespace FarseerGames.FarseerPhysics
 {
-    public enum Bounciness
+    public enum CurveLoopType
     {
-        High,
-        Normal,
-        Low,
-        None
+        Constant,
+        Cycle,
+        CycleOffset,
+        Oscillate,
+        Linear
+    }
+
+    public enum CurveContinuity
+    {
+        Smooth,
+        Step
+    }
+
+    public enum CurveTangent
+    {
+        Flat,
+        Linear,
+        Smooth
     }
 
     [Flags]
