@@ -65,7 +65,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo2
         {
             _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
-            _panelTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 250, 100, new Color(0, 0, 0, 155));
+            _panelTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 290, 100, new Color(0, 0, 0, 155));
 
             base.LoadContent();
         }
@@ -157,7 +157,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo2
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, "Ticks per ball creation: " + _stopWatch.ElapsedTicks, _timerPosition, Color.White);
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, "Current number of balls: " + _ballsToDraw.Count, _ballCountPosition, Color.White);
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, "Using pool: " + _usePool, _poolEnabledPosition, Color.White);
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, "Using pool: " + _usePool + " (press R to toggle)", _poolEnabledPosition, Color.White);
 
             _border.Draw(ScreenManager.SpriteBatch);
 
