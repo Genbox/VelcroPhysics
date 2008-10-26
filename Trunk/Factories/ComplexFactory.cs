@@ -1,7 +1,5 @@
-using System;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Dynamics.Joints;
 #if (XNA)
 using Microsoft.Xna.Framework;
 #else
@@ -16,7 +14,7 @@ namespace FarseerGames.FarseerPhysics.Factories
     public class ComplexFactory
     {
         //TODO: list
-        // 1. Create chain object so that people can change the properties of the chain.
+        // 1. Done
         // 2. Remove ball at end of chain
 
         private static ComplexFactory _instance;
@@ -57,9 +55,7 @@ namespace FarseerGames.FarseerPhysics.Factories
 
         public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass)
         {
-            Path p;
-
-            p = CreateChain(start, end, width, height, mass, false, false);
+            Path p = CreateChain(start, end, width, height, mass, false, false);
 
             return p;
         }

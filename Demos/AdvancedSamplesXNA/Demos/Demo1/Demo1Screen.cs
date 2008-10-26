@@ -242,12 +242,12 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo1
                 _physicsProcessor.Iterate(gameTime, DebugViewEnabled);
         }
 
-        public string GetTitle()
+        public static string GetTitle()
         {
-            return "Multithreaded Stacked Objects";
+            return "Demo1: Multithreaded Stacked Objects";
         }
 
-        public string GetDetails()
+        public static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows the stacking stability of the engine.");

@@ -17,7 +17,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo2
     {
         private Border _border;
         private Pool<Ball> _pool;
-        private bool _usePool;
+        private static bool _usePool;
         private List<Ball> _ballsToDraw = new List<Ball>();
         private Stopwatch _stopWatch = new Stopwatch();
         private Vector2 _timerPosition = new Vector2(100, 150);
@@ -192,12 +192,12 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo2
             }
         }
 
-        public string GetTitle()
+        public static string GetTitle()
         {
-            return "Object pre-loading/caching";
+            return "Demo2: Object pre-loading/caching";
         }
 
-        public string GetDetails()
+        public static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Shows the performance improvement using pools.");

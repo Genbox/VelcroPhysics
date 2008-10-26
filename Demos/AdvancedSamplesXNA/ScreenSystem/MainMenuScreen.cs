@@ -4,6 +4,7 @@ using FarseerGames.AdvancedSamples.Demos.Demo3;
 using FarseerGames.AdvancedSamples.Demos.Demo4;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using FarseerGames.AdvancedSamples.Demos.Demo5;
 
 namespace FarseerGames.AdvancedSamples.ScreenSystem
 {
@@ -17,10 +18,11 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         /// </summary>
         public MainMenuScreen()
         {
-            MenuEntries.Add("Demo1: Multithreaded Stacked Objects");
-            MenuEntries.Add("Demo2: Object pre-loading/caching (Starts with pool disabled)");
-            MenuEntries.Add("Demo3: Inactivity Controller");
-            MenuEntries.Add("Demo4: Map vertices from textures");
+            MenuEntries.Add(Demo1Screen.GetTitle());
+            MenuEntries.Add(Demo2Screen.GetTitle());
+            MenuEntries.Add(Demo3Screen.GetTitle());
+            MenuEntries.Add(Demo4Screen.GetTitle());
+            MenuEntries.Add(Demo5Screen.GetTitle());
             MenuEntries.Add("Exit");
             LeftBorder = 100;
         }
@@ -45,7 +47,14 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
                     ScreenManager.AddScreen(new Demo4Screen());
                     break;
                 case 4:
+                    ScreenManager.AddScreen(new Demo5Screen());
+                    break;
+                case 5:
                     // Exit the sample.
+                    ScreenManager.Game.Exit();
+                    break;
+                default:
+                    // Default to exit
                     ScreenManager.Game.Exit();
                     break;
             }
