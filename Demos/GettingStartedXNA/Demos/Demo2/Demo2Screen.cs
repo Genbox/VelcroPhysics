@@ -166,12 +166,12 @@ namespace FarseerGames.GettingStarted.Demos.Demo2
             }
         }
 
-        public string GetTitle()
+        public static string GetTitle()
         {
-            return "Two Bodies With Geom";
+            return "Demo2: Two Bodies With Geom";
         }
 
-        public string GetDetails()
+        public static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows two bodies each with a single geometry");

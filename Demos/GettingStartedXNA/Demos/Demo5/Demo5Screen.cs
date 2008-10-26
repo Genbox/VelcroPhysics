@@ -287,12 +287,12 @@ namespace FarseerGames.GettingStarted.Demos.Demo5
             }
         }
 
-        public string GetTitle()
+        public static string GetTitle()
         {
-            return "Collision Categories";
+            return "Demo5: Collision Categories";
         }
 
-        public string GetDetails()
+        public static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows how to setup complex collision");
