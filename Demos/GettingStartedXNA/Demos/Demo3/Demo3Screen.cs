@@ -273,15 +273,12 @@ namespace FarseerGames.GettingStarted.Demos.Demo3
             }
         }
 
-        public string GetTitle()
+        public static string GetTitle()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Static Bodies And ");
-            sb.AppendLine("Offset Geometries");
-            return sb.ToString();
+            return "Demo3: Static Bodies";
         }
 
-        public string GetDetails()
+        public static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows a single body with multiple geometry");

@@ -252,12 +252,12 @@ namespace FarseerGames.GettingStarted.Demos.Demo8
             }
         }
 
-        public string GetTitle()
+        public static string GetTitle()
         {
-            return "Broad Phase Collision Stress Test";
+            return "Demo8: Broad Phase Collision Stress Test";
         }
 
-        public string GetDetails()
+        public static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo simply stress tests broad phase collision");

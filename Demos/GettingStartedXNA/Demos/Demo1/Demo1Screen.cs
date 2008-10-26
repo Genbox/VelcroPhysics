@@ -102,12 +102,12 @@ namespace FarseerGames.GettingStarted.Demos.Demo1
             _rectangleBody.ApplyTorque(torque);
         }
 
-        public string GetTitle()
+        public static string GetTitle()
         {
-            return "A Single Body";
+            return "Demo1: A Single Body";
         }
 
-        public string GetDetails()
+        public static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows a single body with no geometry");

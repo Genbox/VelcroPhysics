@@ -195,12 +195,12 @@ namespace FarseerGames.GettingStarted.Demos.Demo7
             }
         }
 
-        public string GetTitle()
+        public static string GetTitle()
         {
-            return "Dynamic Angle Joints";
+            return "Demo7: Dynamic Angle Joints";
         }
 
-        public string GetDetails()
+        public static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo demonstrates the use of revolute joints ");

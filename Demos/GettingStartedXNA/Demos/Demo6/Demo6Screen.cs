@@ -323,12 +323,12 @@ namespace FarseerGames.GettingStarted.Demos.Demo6
             }
         }
 
-        public string GetTitle()
+        public static string GetTitle()
         {
-            return "Linear and Angular Springs";
+            return "Demo6: Linear and Angular Springs";
         }
 
-        public string GetDetails()
+        public static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows the use of angular and linear");

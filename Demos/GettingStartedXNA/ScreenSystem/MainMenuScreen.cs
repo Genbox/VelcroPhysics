@@ -21,14 +21,14 @@ namespace FarseerGames.GettingStarted.ScreenSystem
         /// </summary>
         public MainMenuScreen()
         {
-            MenuEntries.Add("Demo1: A Single Body");
-            MenuEntries.Add("Demo2: Two Bodies With Geom");
-            MenuEntries.Add("Demo3: Static Bodies And Offset Geometries");
-            MenuEntries.Add("Demo4: Stacked Bodies");
-            MenuEntries.Add("Demo5: Collision Categories");
-            MenuEntries.Add("Demo6: Linear and Angular Spring Controllers");
-            MenuEntries.Add("Demo7: Dynamic Angle Joints");
-            MenuEntries.Add("Demo8: Broadphase Collision Stress Test");
+            MenuEntries.Add(Demo1Screen.GetTitle());
+            MenuEntries.Add(Demo2Screen.GetTitle());
+            MenuEntries.Add(Demo3Screen.GetTitle());
+            MenuEntries.Add(Demo4Screen.GetTitle());
+            MenuEntries.Add(Demo5Screen.GetTitle());
+            MenuEntries.Add(Demo6Screen.GetTitle());
+            MenuEntries.Add(Demo7Screen.GetTitle());
+            MenuEntries.Add(Demo8Screen.GetTitle());
             MenuEntries.Add("Exit");
             LeftBorder = 100;
         }

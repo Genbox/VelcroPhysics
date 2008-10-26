@@ -174,12 +174,12 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
             }
         }
 
-        public string GetTitle()
+        public static string GetTitle()
         {
-            return "Stacked Objects";
+            return "Demo4: Stacked Objects";
         }
 
-        public string GetDetails()
+        public static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows the stacking stability of the engine.");
