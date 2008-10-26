@@ -122,12 +122,12 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo3
             }
         }
 
-        public string GetTitle()
+        public static string GetTitle()
         {
-            return "Inactivity Controller";
+            return "Demo3: Inactivity Controller";
         }
 
-        public string GetDetails()
+        public static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Shows the usage of Inactivity Controller.");

@@ -76,7 +76,6 @@ namespace FarseerGames.AdvancedSamples.Demos.DemoShare
             _borderGeom[2].CollisionGroup = 100;
             _borderGeom[2].CollisionGridCellSize = 20;
             _borderGeom[2].ComputeCollisionGrid();
-            ;
 
             //bottom border (clone top border since geometry is same size)
             geometryOffset = new Vector2(0, _height*.5f - _borderWidth*.5f);
@@ -87,10 +86,9 @@ namespace FarseerGames.AdvancedSamples.Demos.DemoShare
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            Vector2 borderOrigin;
             for (int i = 0; i < 4; i++)
             {
-                borderOrigin = new Vector2(_borderTexture[i].Width/2f, _borderTexture[i].Height/2f);
+                Vector2 borderOrigin = new Vector2(_borderTexture[i].Width/2f, _borderTexture[i].Height/2f);
                 spriteBatch.Draw(_borderTexture[i], _borderGeom[i].Position, null, Color.White, _borderGeom[i].Rotation,
                                  borderOrigin, 1, SpriteEffects.None, 0f);
             }
