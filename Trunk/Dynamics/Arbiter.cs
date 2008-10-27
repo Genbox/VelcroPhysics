@@ -126,7 +126,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         internal void PreStepImpulse(float inverseDt)
         {
-            if (!GeometryA.CollisionResponseEnabled || !GeometryB.CollisionResponseEnabled)
+            if (!GeometryA.collisionResponseEnabled || !GeometryB.collisionResponseEnabled)
                 return;
 
             for (int i = 0; i < _contactList.Count; i++)
@@ -196,7 +196,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         internal void ApplyImpulse()
         {
-            if (!GeometryA.CollisionResponseEnabled || !GeometryB.CollisionResponseEnabled)
+            if (!GeometryA.collisionResponseEnabled || !GeometryB.collisionResponseEnabled)
                 return;
 
             for (int i = 0; i < _contactList.Count; i++)
