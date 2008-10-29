@@ -40,7 +40,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
             _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 25, ScreenManager.ScreenCenter);
             _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
-            _chain = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(100, 100), new Vector2(200, 200), 20, 20, 1, 2);
+            _chain = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(100, 100), new Vector2(200, 200), 20.0f, 10.0f, 1, 2);
             _chain.CreateGeoms();
 
             _lineBrush.Load(ScreenManager.GraphicsDevice);

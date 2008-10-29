@@ -125,7 +125,6 @@ namespace FarseerGames.FarseerPhysics.Factories
 
         public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart, bool pinEnd, int group)
         {
-            bool flip = true;
             Path p = new Path(width, height, mass, false);  // create the path
             p.Add(start);                                   // add starting point
             p.Add(Path.FindMidpoint(start, end));           // add midpoint of line (must have this because my code needs at least 3 control points)
@@ -134,18 +133,9 @@ namespace FarseerGames.FarseerPhysics.Factories
             p.Update();                                     // call update to create all the bodies
 
             Geom g;
-            for (int i = 0; i < (p.Bodies.Count - 1); i++)
+            for (int i = 0; i < p.Bodies.Count; i++)
             {
-                if (flip)
-                {
-                    g = GeomFactory.Instance.CreateRectangleGeom(p.Bodies[i], width, height);
-                    flip = !flip;
-                }
-                else
-                {
-                    g = GeomFactory.Instance.CreateRectangleGeom(p.Bodies[i], width, height * (1.0f / 3.0f));
-                    flip = !flip;
-                }
+                g = GeomFactory.Instance.CreateRectangleGeom(p.Bodies[i], width, height);
                 g.collisionGroup = group;
                 p.Add(g);                                           // add a geom to the chain
             }
