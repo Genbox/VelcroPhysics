@@ -1,0 +1,25 @@
+<UserControl x:Class="FarseerSilverlightManual.Screens.Page"
+        xmlns="http://schemas.microsoft.com/client/2007" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                >
+
+    <Canvas x:Name="parentCanvas" Background="#FF6495ED">
+        <Canvas x:Name="canvas" Background="#FF6495ED" Width="1024" Height="768">
+            <Rectangle Canvas.Left="-1000" Canvas.Top="-1000" Width="3000" Height="1000" Canvas.ZIndex="5000" Fill="Black"/>
+            <Rectangle Canvas.Left="-1000" Canvas.Top="1024" Width="3000" Height="1000" Canvas.ZIndex="5000" Fill="Black"/>
+            <Rectangle Canvas.Left="-1000" Canvas.Top="0" Width="1000" Height="768" Canvas.ZIndex="5000" Fill="Black"/>
+            <Rectangle Canvas.Left="1024" Canvas.Top="0" Width="1000" Height="768" Canvas.ZIndex="5000" Fill="Black"/>
+
+            <Button x:Name="startButton" Canvas.Top="384" Canvas.Left="480" Click="startButton_Click">
+                <TextBlock FontSize="30" Text=" Start! "></TextBlock>
+            </Button>
+
+            <Canvas.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform x:Name="scale" ScaleX=".75" ScaleY=".75"></ScaleTransform>
+                    <TranslateTransform x:Name="translate" X="0" Y="0"/>
+                </TransformGroup>
+            </Canvas.RenderTransform>
+        </Canvas>
+    </Canvas>
+</UserControl>

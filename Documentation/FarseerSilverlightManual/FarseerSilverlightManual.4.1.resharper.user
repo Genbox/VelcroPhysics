@@ -1,0 +1,152 @@
+<Configuration>
+  <SettingsComponent>
+    <string />
+    <integer>
+      <setting name="UsedSolutionBuilderID">0</setting>
+    </integer>
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">True</setting>
+    </boolean>
+  </SettingsComponent>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <RecentFiles>
+    <RecentFiles>
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Objects/f:CircleBrush.xaml.cs" caret="1065" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/f:GameLoop.cs" caret="0" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Objects/f:AgentBrush.xaml.cs" caret="423" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Objects/f:AgentBrush.xaml" caret="231" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Objects/f:LinearSpringBrush.xaml" caret="55" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Objects/f:LinearSpringBrush.xaml.cs" caret="1367" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Objects/f:FixedLinearSpringBrush.xaml.cs" caret="1696" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Demos/f:RevoluteJointDemo.cs" caret="2604" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/f:App.xaml" caret="0" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Drawing/f:BrushExtender.cs" caret="288" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Objects/f:RectangleBrush.xaml.cs" caret="313" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/f:ScreenManager.cs" caret="322" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Demos/d:DemoShare/f:Border.cs" caret="3399" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Demos/f:PinSliderJointDemo.cs" caret="2863" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Demos/f:LinearSpringDemo.cs" caret="1891" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Demos/f:AngleLimitJointDemo.cs" caret="2416" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/f:App.xaml.cs" caret="430" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Screens/f:Page.xaml" caret="1002" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Screens/f:Page.xaml.cs" caret="2446" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Demos/d:DemoShare/f:AngularSpringLever.cs" caret="5022" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Demos/f:AngleSpringDemo.cs" caret="1485" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Demos/f:AngleJointDemo.cs" caret="2309" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Screens/f:SimulatorView.cs" caret="6526" scrollPosition="0|0" />
+    </RecentFiles>
+    <RecentEdits>
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/f:App.xaml.cs" caret="430" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Screens/f:Page.xaml" caret="1002" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Screens/f:SimulatorView.cs" caret="7306" scrollPosition="0|49" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Demos/f:AngleSpringDemo.cs" caret="1485" scrollPosition="0|10" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Demos/f:AngleSpringDemo.cs" caret="1485" scrollPosition="0|13" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Demos/d:DemoShare/f:AngularSpringLever.cs" caret="5022" scrollPosition="0|10" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Demos/d:DemoShare/f:AngularSpringLever.cs" caret="5022" scrollPosition="0|0" />
+      <File id="CD4FB549-7AB3-453C-97AC-8CB23AAB7482/d:Demos/d:DemoShare/f:AngularSpringLever.cs" caret="5022" scrollPosition="0|102" />
+    </RecentEdits>
+  </RecentFiles>
+  <UnitTestRunner>
+    <CustomStartDirectory>
+    </CustomStartDirectory>
+    <UseShadowCopy>True</UseShadowCopy>
+    <UseCustomFolder>False</UseCustomFolder>
+    <EnableUnitTesting>True</EnableUnitTesting>
+    <Providers />
+  </UnitTestRunner>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Default">
+      <Item value="if" priority="1" />
+      <Item value="e" priority="0" />
+      <Item value="inputParm" priority="0" />
+      <Item value="abstract" priority="0" />
+      <Item value="PhysicsSimulator" priority="0" />
+      <Item value="new" priority="3" />
+      <Item value="Vector2" priority="3" />
+      <Item value="private" priority="0" />
+      <Item value="Border" priority="1" />
+      <Item value="physicsSimulator" priority="2" />
+      <Item value="_mousePickSpring" priority="6" />
+      <Item value="Collapsed" priority="0" />
+      <Item value="LoadDemo" priority="0" />
+      <Item value="Visibility" priority="1" />
+      <Item value="startButton" priority="1" />
+      <Item value="canvas" priority="3" />
+      <Item value="rectangleBody" priority="0" />
+      <Item value="rectangleBody1" priority="0" />
+      <Item value="linearSpring" priority="1" />
+      <Item value="_targetDistance" priority="0" />
+      <Item value="difference1" priority="0" />
+      <Item value="ScreenManager" priority="2" />
+      <Item value="ScreenHeight" priority="0" />
+      <Item value="ScreenWidth" priority="0" />
+      <Item value="DefaultStyleKey" priority="0" />
+      <Item value="currentDemo" priority="0" />
+      <Item value="break" priority="0" />
+      <Item value="RemoveFixedLinearSpringBrush" priority="0" />
+      <Item value="null" priority="1" />
+      <Item value="springLever" priority="2" />
+      <Item value="AngularSpringLever" priority="0" />
+      <Item value="this" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.StartupEventArgs">
+      <Item value="InitParams" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IDictionary`2">
+      <Item value="Contains" priority="0" />
+      <Item value="ContainsKey" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FarseerGames.FarseerPhysics.PhysicsSimulator">
+      <Item value="Remove" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Controls.Canvas">
+      <Item value="Visibility" priority="0" />
+      <Item value="Width" priority="1" />
+      <Item value="Height" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Windows.Visibility">
+      <Item value="Visible" priority="0" />
+      <Item value="Collapsed" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Controls.Button">
+      <Item value="Visibility" priority="0" />
+      <Item value="SetValue" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Windows.Controls.Canvas">
+      <Item value="LeftProperty" priority="1" />
+      <Item value="TopProperty" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@FarseerGames.FarseerPhysics.Factories.SpringFactory">
+      <Item value="Instance" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FarseerGames.FarseerPhysics.Factories.SpringFactory">
+      <Item value="CreateLinearSpring" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@FarseerGames.FarseerPhysics.Mathematics.Vector2">
+      <Item value="Zero" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FarseerGames.FarseerPhysics.Dynamics.Springs.LinearSpring">
+      <Item value="RestLength" priority="1" />
+      <Item value="AttachPoint2" priority="1" />
+      <Item value="AttachPoint1" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FarseerGames.FarseerPhysics.Mathematics.Vector2">
+      <Item value="Length" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@FarseerSilverlightManual.ScreenManager">
+      <Item value="ScreenHeight" priority="0" />
+      <Item value="ScreenWidth" priority="0" />
+      <Item value="ScreenCenter" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FarseerGames.FarseerPhysics.Dynamics.Springs.FixedLinearSpring">
+      <Item value="Dispose" priority="0" />
+      <Item value="SpringConstant" priority="0" />
+      <Item value="IsDisposed" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FarseerSilverlightManual.Demos.DemoShare.AngularSpringLever">
+      <Item value="Load" priority="0" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+</Configuration>
