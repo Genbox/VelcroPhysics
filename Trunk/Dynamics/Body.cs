@@ -1,5 +1,6 @@
 using System;
 #if (XNA)
+using FarseerGames.FarseerPhysics.Collisions;
 using Microsoft.Xna.Framework;
 #else
 using FarseerGames.FarseerPhysics.Mathematics;
@@ -178,15 +179,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         /// <summary>
         /// The moment of inertia of the body. 
-        /// <para>The moment of intertia of a body in 2d is a scalar value that represents how
+        /// <para>The moment of inertia of a body in 2D is a scalar value that represents how
         /// difficult (or not difficult) it is to rotate a body about the center of mass.</para>
-        /// <para>The moment of inertia is varies by the shape of the body.  For basic shapes like
-        /// circles and rectangles, forumulas exist for computing the moment of interia based on
+        /// <para>The moment of inertia varies by the shape of the body. For basic shapes like
+        /// circles and rectangles, formulas exist for computing the moment of inertia based on
         /// the shape properties (radius of the circle, or length and width of the rectangle)</para>
         /// <para>For bodies that are not basic, it is usually good enough to estimate the moment of
-        /// intertia by picking a basic shape that is close to the same shape. It is also possible
-        /// using more advance calculus techniques to compute the actual moment of intertia of 
+        /// inertia by picking a basic shape that is close to the same shape. It is also possible
+        /// using more advance calculus techniques to compute the actual moment of inertia of 
         /// non-basic shapes.</para>
+        /// The <see cref="Vertices"/> class has the ability of calculating the MOI (Moment of Inertia) from a polygon shape.
         /// </summary>
         /// <exception cref="ArgumentException">Moment of inertia cannot be 0 or less</exception>
         public float MomentOfInertia

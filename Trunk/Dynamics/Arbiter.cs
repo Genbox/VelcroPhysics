@@ -114,7 +114,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     _frictionCoefficientCombined = (GeometryA.frictionCoefficient + GeometryB.frictionCoefficient)/2f;
                     break;
                 case FrictionType.Minimum:
-                    _frictionCoefficientCombined = Math.Min(GeometryA.FrictionCoefficient, GeometryB.FrictionCoefficient);
+                    _frictionCoefficientCombined = Math.Min(GeometryA.frictionCoefficient, GeometryB.frictionCoefficient);
                     break;
                 default:
                     _frictionCoefficientCombined = (GeometryA.frictionCoefficient + GeometryB.frictionCoefficient)/2f;
