@@ -434,6 +434,18 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
+        /// Scales the vertices with the specified vector.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        public void Scale(Vector2 value)
+        {
+            for (int i = Count - 1; i >= 0; i--)
+            {
+                this[i] *= value;
+            }
+        }
+
+        /// <summary>
         /// Creates a rectangle with the specified width and height.
         /// </summary>
         /// <param name="width">The width.</param>
@@ -481,15 +493,27 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Scales the vertices with the specified vector.
+        /// Creates a ellipse with the specified width, height and number of edges.
         /// </summary>
-        /// <param name="value">The value.</param>
-        public void Scale(Vector2 value)
+        /// <param name="width">Width of the ellipse.</param>
+        /// <param name="height">Height of the ellipse.</param>
+        /// <param name="numberOfEdges">The number of edges. The more edges, the more it resembles an ellipse</param>
+        /// <returns></returns>
+        public static Vertices CreateEllipse(float width, float height, int numberOfEdges)
         {
-            for (int i = Count - 1; i >= 0; i--)
+            Vertices vertices = new Vertices();
+
+            float stepSize = MathHelper.TwoPi / numberOfEdges;
+
+            float halfWidth = width / 2f;
+            float halfHeight = height / 2f;
+
+            vertices.Add(new Vector2(halfWidth, 0));
+            for (int i = 1; i < numberOfEdges; i++)
             {
-                this[i] *= value;
+                vertices.Add(new Vector2(halfWidth * Calculator.Cos(stepSize * i), -halfHeight * Calculator.Sin(stepSize * i)));
             }
+            return vertices;
         }
 
         public override string ToString()

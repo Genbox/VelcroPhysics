@@ -58,11 +58,12 @@ namespace FarseerGames.GettingStarted.DrawingSystem
 
             for (int i = 0; i < colors.Length; i++)
             {
-                if (i%diameter == 0)
+                int x = i % diameter;
+
+                if (x == 0)
                 {
                     y += 1;
                 }
-                int x = i%diameter;
 
                 Vector2 diff = new Vector2(x, y) - center;
                 float length = diff.Length(); // distance.Length();

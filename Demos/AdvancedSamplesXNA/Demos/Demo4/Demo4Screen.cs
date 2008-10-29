@@ -36,7 +36,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
 
         public override void LoadContent()
         {
-            //load texture that will visually represent the physics body
+            //load texture that will represent the physics body
             _polygonTexture = ScreenManager.ContentManager.Load<Texture2D>("Content/Texture");
 
             //Create an array to hold the data from the texture
@@ -48,10 +48,10 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
             //Calculate the vertices from the array
             Vertices verts = Vertices.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height);
 
-            //Make sure that the origin of the texture is the centroid (REAL center of geometry)
+            //Make sure that the origin of the texture is the centroid (real center of geometry)
             _polygonOrigin = verts.GetCentroid();
 
-            //use the body factory to create the physics body
+            //Use the body factory to create the physics body
             _polygonBody = BodyFactory.Instance.CreatePolygonBody(PhysicsSimulator, verts, 5);
             _polygonBody.Position = new Vector2(500, 400);
 
