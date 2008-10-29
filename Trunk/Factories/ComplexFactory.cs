@@ -118,7 +118,7 @@ namespace FarseerGames.FarseerPhysics.Factories
 
         public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, int group)
         {
-            Path p = CreateChain(start, end, width, height, mass, false, false, );
+            Path p = CreateChain(start, end, width, height, mass, false, false, group);
 
             return p;
         }
