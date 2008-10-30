@@ -76,10 +76,6 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-      <Private>False</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\FramerateCounterComponent.cs" />
@@ -167,7 +163,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Branches\XNA3 Beta\FarseerPhysics.csproj">
       <Project>{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}</Project>
-      <Name>FarseerProject</Name>
+      <Name>FarseerPhysics</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

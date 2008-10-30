@@ -478,7 +478,7 @@ namespace FarseerGames.GettingStarted
             {
                 DrawPerformancePanel(spriteBatch);
             }
-            if (EnableSpingView)
+            if (EnableSpringView)
             {
                 DrawSprings(spriteBatch);
             }
