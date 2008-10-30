@@ -234,11 +234,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 verticesTemp.Add(vertA);
                 if (edgeLength > maxEdgeLength) //need to subdivide
                 {
-                    double edgeCount = Math.Ceiling(edgeLength / (double)maxEdgeLength);
+                    double edgeCount = Math.Ceiling(edgeLength/(double) maxEdgeLength);
 
                     for (int j = 0; j < edgeCount - 1; j++)
                     {
-                        Vector2 vert = Vector2.Lerp(vertA, vertB, (j + 1) / (float)edgeCount);
+                        Vector2 vert = Vector2.Lerp(vertA, vertB, (j + 1)/(float) edgeCount);
                         verticesTemp.Add(vert);
                     }
                 }
@@ -276,9 +276,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             for (i = 0; i < Count; i++)
             {
-                int j = (i + 1) % Count;
-                area += this[i].X * this[j].Y;
-                area -= this[i].Y * this[j].X;
+                int j = (i + 1)%Count;
+                area += this[i].X*this[j].Y;
+                area -= this[i].Y*this[j].X;
             }
             area /= 2.0f;
             return area;
@@ -295,9 +295,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             for (i = 0; i < Count; i++)
             {
-                int j = (i + 1) % Count;
-                area += this[i].X * this[j].Y;
-                area -= this[i].Y * this[j].X;
+                int j = (i + 1)%Count;
+                area += this[i].X*this[j].Y;
+                area -= this[i].Y*this[j].X;
             }
             area /= 2.0f;
             return (area < 0 ? -area : area);
@@ -331,15 +331,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //Debug.WriteLine(verts.ToString());
             for (i = 0; i < Count; i++)
             {
-                int j = (i + 1) % Count;
+                int j = (i + 1)%Count;
 
-                factor = -(verts[i].X * verts[j].Y - verts[j].X * verts[i].Y);
-                cx += (verts[i].X + verts[j].X) * factor;
-                cy += (verts[i].Y + verts[j].Y) * factor;
+                factor = -(verts[i].X*verts[j].Y - verts[j].X*verts[i].Y);
+                cx += (verts[i].X + verts[j].X)*factor;
+                cy += (verts[i].Y + verts[j].Y)*factor;
                 //Debug.WriteLine(i.ToString() + factor.ToString() + " -- " + verts[i].ToString());
             }
             area *= 6.0f;
-            factor = 1 / area;
+            factor = 1/area;
             cx *= factor;
             cy *= factor;
             _res.X = cx;
@@ -386,9 +386,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 Calculator.Cross(ref v1, ref v2, out d);
                 d = Math.Abs(d);
                 numer += d;
-                denom += (a + b + c) * d;
+                denom += (a + b + c)*d;
             }
-            return denom / (numer * 6);
+            return denom/(numer*6);
         }
 
         /// <summary>
@@ -454,22 +454,22 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public static Vertices CreateRectangle(float width, float height)
         {
             Vertices vertices = new Vertices();
-            vertices.Add(new Vector2(-width * .5f, -height * .5f));
-            vertices.Add(new Vector2(-width * .5f, -height * .25f));
-            vertices.Add(new Vector2(-width * .5f, 0));
-            vertices.Add(new Vector2(-width * .5f, height * .25f));
-            vertices.Add(new Vector2(-width * .5f, height * .5f));
-            vertices.Add(new Vector2(-width * .25f, height * .5f));
-            vertices.Add(new Vector2(0, height * .5f));
-            vertices.Add(new Vector2(width * .25f, height * .5f));
-            vertices.Add(new Vector2(width * .5f, height * .5f));
-            vertices.Add(new Vector2(width * .5f, height * .25f));
-            vertices.Add(new Vector2(width * .5f, 0));
-            vertices.Add(new Vector2(width * .5f, -height * .25f));
-            vertices.Add(new Vector2(width * .5f, -height * .5f));
-            vertices.Add(new Vector2(width * .25f, -height * .5f));
-            vertices.Add(new Vector2(0, -height * .5f));
-            vertices.Add(new Vector2(-width * .25f, -height * .5f));
+            vertices.Add(new Vector2(-width*.5f, -height*.5f));
+            vertices.Add(new Vector2(-width*.5f, -height*.25f));
+            vertices.Add(new Vector2(-width*.5f, 0));
+            vertices.Add(new Vector2(-width*.5f, height*.25f));
+            vertices.Add(new Vector2(-width*.5f, height*.5f));
+            vertices.Add(new Vector2(-width*.25f, height*.5f));
+            vertices.Add(new Vector2(0, height*.5f));
+            vertices.Add(new Vector2(width*.25f, height*.5f));
+            vertices.Add(new Vector2(width*.5f, height*.5f));
+            vertices.Add(new Vector2(width*.5f, height*.25f));
+            vertices.Add(new Vector2(width*.5f, 0));
+            vertices.Add(new Vector2(width*.5f, -height*.25f));
+            vertices.Add(new Vector2(width*.5f, -height*.5f));
+            vertices.Add(new Vector2(width*.25f, -height*.5f));
+            vertices.Add(new Vector2(0, -height*.5f));
+            vertices.Add(new Vector2(-width*.25f, -height*.5f));
             return vertices;
         }
 
@@ -483,11 +483,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             Vertices vertices = new Vertices();
 
-            float stepSize = MathHelper.TwoPi / numberOfEdges;
+            float stepSize = MathHelper.TwoPi/numberOfEdges;
             vertices.Add(new Vector2(radius, 0));
             for (int i = 1; i < numberOfEdges; i++)
             {
-                vertices.Add(new Vector2(radius * Calculator.Cos(stepSize * i), -radius * Calculator.Sin(stepSize * i)));
+                vertices.Add(new Vector2(radius*Calculator.Cos(stepSize*i), -radius*Calculator.Sin(stepSize*i)));
             }
             return vertices;
         }
@@ -503,15 +503,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             Vertices vertices = new Vertices();
 
-            float stepSize = MathHelper.TwoPi / numberOfEdges;
+            float stepSize = MathHelper.TwoPi/numberOfEdges;
 
-            float halfWidth = width / 2f;
-            float halfHeight = height / 2f;
+            float halfWidth = width/2f;
+            float halfHeight = height/2f;
 
             vertices.Add(new Vector2(halfWidth, 0));
             for (int i = 1; i < numberOfEdges; i++)
             {
-                vertices.Add(new Vector2(halfWidth * Calculator.Cos(stepSize * i), -halfHeight * Calculator.Sin(stepSize * i)));
+                vertices.Add(new Vector2(halfWidth*Calculator.Cos(stepSize*i), -halfHeight*Calculator.Sin(stepSize*i)));
             }
             return vertices;
         }
@@ -532,7 +532,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #region Sickbattery's Extension
 
-        private static readonly int[,] _closePixels = new int[8, 2] { { -1, -1 }, { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
+        private static readonly int[,] _closePixels = new int[8,2]
+                                                          {
+                                                              {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1},
+                                                              {-1, 0}
+                                                          };
 
         /// <summary>
         /// Creates a list of vertices from unsigned integer (32-Bit; 8 bit for each color) array.
@@ -554,7 +558,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="textureHeight">Height of texture.</param>
         /// <param name="textureOrigin">Center of texture.</param>
         /// <returns>Returns Vertices a Vector2 list.</returns>
-        public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight, Vector2 textureOrigin)
+        public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight,
+                                             Vector2 textureOrigin)
         {
             return CreatePolygon(textureBits, textureWidth, textureHeight, textureOrigin, 127, 2f);
         }
@@ -568,7 +573,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="textureOrigin">Center of texture.</param>
         /// <param name="alphaTolerance">Every Value above the specified counts as solid and will be added to the hull.</param>
         /// <returns>Returns Vertices a Vector2 list.</returns>
-        public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight, Vector2 textureOrigin, byte alphaTolerance)
+        public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight,
+                                             Vector2 textureOrigin, byte alphaTolerance)
         {
             return CreatePolygon(textureBits, textureWidth, textureHeight, textureOrigin, alphaTolerance, 2f);
         }
@@ -584,19 +590,19 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="hullTolerance">The polygon is a low detailed line around your shape on the texture and here you can specify how much less detailed. 1f is a good Value.</param>
         /// <returns>Returns Vertices a Vector2 list.</returns>
         /// <exception cref="Exception">Sizes don't match: Color array must contain texture width * texture height elements.</exception>
-        public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight, Vector2 textureOrigin, byte alphaTolerance, float hullTolerance)
+        public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight,
+                                             Vector2 textureOrigin, byte alphaTolerance, float hullTolerance)
         {
             Vector2 entrance;
             Vertices polygon = new Vertices();
             Vertices hullArea = new Vertices();
 
             // Precalculate alpha.
-            uint alphaToleranceRealValue = (uint)alphaTolerance << 24;
+            uint alphaToleranceRealValue = (uint) alphaTolerance << 24;
 
             // First of all: Check the array you just got.
-            if (textureBits.Length == textureWidth * textureHeight)
+            if (textureBits.Length == textureWidth*textureHeight)
             {
-
                 // Get the entrance point.
                 if (GetHullEntrance(ref textureBits, ref textureWidth, ref alphaToleranceRealValue, out entrance))
                 {
@@ -632,12 +638,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         current = next;
 
                         // Get the next point on hull.
-                        if (!GetNextHullPoint(ref textureBits, ref textureWidth, ref textureHeight, ref alphaToleranceRealValue, ref last, ref current, out next))
+                        if (
+                            !GetNextHullPoint(ref textureBits, ref textureWidth, ref textureHeight,
+                                              ref alphaToleranceRealValue, ref last, ref current, out next))
                         {
                             next = entrance;
                         }
-
-                    }      // Exit loop if next piont is the entrance point. The hull is complete now!
+                    } // Exit loop if next piont is the entrance point. The hull is complete now!
                     while (next != entrance);
 
                     // Center if requested by user.
@@ -652,7 +659,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
             else
             {
-                throw new Exception("Sizes don't match: Color array must contain texture width * texture height elements.");
+                throw new Exception(
+                    "Sizes don't match: Color array must contain texture width * texture height elements.");
             }
 
             // Return the heavy compresed polygon ;D.
@@ -667,7 +675,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="alphaTolerance">Alpha tolerance :). Value of 10 will include points with alpha of 11 and greater.</param>
         /// <param name="entrance">The entrance.</param>
         /// <returns>First hull point.</returns>
-        private static bool GetHullEntrance(ref uint[] textureBits, ref int textureWidth, ref uint alphaTolerance, out Vector2 entrance)
+        private static bool GetHullEntrance(ref uint[] textureBits, ref int textureWidth, ref uint alphaTolerance,
+                                            out Vector2 entrance)
         {
             // Search for first solid pixel.
             for (int i = 0; i < textureBits.Length; i++)
@@ -676,8 +685,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 if ((textureBits[i] & 0xFF000000) >= alphaTolerance)
                 {
                     // Now calculate the coords and return'em.
-                    int x = i % textureWidth;
-                    int y = (i - x) / textureWidth;
+                    int x = i%textureWidth;
+                    int y = (i - x)/textureWidth;
 
                     entrance = new Vector2(x, y);
                     return true;
@@ -700,7 +709,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="current">Current hull point.</param>
         /// <param name="next">The next point</param>
         /// <returns>The next hull point.</returns>
-        private static bool GetNextHullPoint(ref uint[] textureBits, ref int textureWidth, ref int textureHeight, ref uint alphaTolerance, ref Vector2 last, ref Vector2 current, out Vector2 next)
+        private static bool GetNextHullPoint(ref uint[] textureBits, ref int textureWidth, ref int textureHeight,
+                                             ref uint alphaTolerance, ref Vector2 last, ref Vector2 current,
+                                             out Vector2 next)
         {
             // Depending on the direction the little spider comes from you have to tell her
             // where to start the search again.
@@ -711,16 +722,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
             for (int i = 0; i < pixelsToCheck; i++)
             {
                 // The little spider starts now to look around ;).
-                int indexOfPixelToCheck = (indexOfFirstPixelToCheck + i) % pixelsToCheck;
+                int indexOfPixelToCheck = (indexOfFirstPixelToCheck + i)%pixelsToCheck;
 
-                int x = (int)current.X + _closePixels[indexOfPixelToCheck, 0];
-                int y = (int)current.Y + _closePixels[indexOfPixelToCheck, 1];
+                int x = (int) current.X + _closePixels[indexOfPixelToCheck, 0];
+                int y = (int) current.Y + _closePixels[indexOfPixelToCheck, 1];
 
                 // Check if the coords are in the texture coords.
                 if (x >= 0 && x < textureWidth && y >= 0 && y < textureHeight)
                 {
                     // Uh! Something sold?
-                    if ((textureBits[x + y * textureWidth] & 0xFF000000) >= alphaTolerance)
+                    if ((textureBits[x + y*textureWidth] & 0xFF000000) >= alphaTolerance)
                     {
                         // Yeah! Return and quit searching.
                         next = new Vector2(x, y);
@@ -741,7 +752,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="hullTolerance">How much distance from the actual hull line is allowed? 1f to 2f are good values.</param>
         /// <param name="outstanding">This will give you the most outstanding point in the piece of hull you gave it.</param>
         /// <returns></returns>
-        private static bool SearchForOutstandingVertex(ref Vertices hullArea, ref float hullTolerance, out Vector2 outstanding)
+        private static bool SearchForOutstandingVertex(ref Vertices hullArea, ref float hullTolerance,
+                                                       out Vector2 outstanding)
         {
             int hullAreaLastPoint = hullArea.Count - 1;
 
@@ -754,7 +766,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             for (int i = 1; i < hullAreaLastPoint; i++)
             {
                 // Get the distance of the outstanding point.
-                float outstandingDistance = Calculator.DistanceBetweenPointAndLineSegment(hullArea[i], hullArea[0], hullArea[hullAreaLastPoint]);
+                float outstandingDistance = Calculator.DistanceBetweenPointAndLineSegment(hullArea[i], hullArea[0],
+                                                                                          hullArea[hullAreaLastPoint]);
 
                 if (!searchMostOutstanding)
                 {
@@ -800,10 +813,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             /// . . .
 
             //Calculate in which direction the last move went and decide over the next first pixel.
-            switch ((int)(current.X - last.X))
+            switch ((int) (current.X - last.X))
             {
                 case 1:
-                    switch ((int)(current.Y - last.Y))
+                    switch ((int) (current.Y - last.Y))
                     {
                         case 1:
                             return 1;
@@ -817,7 +830,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     break;
 
                 case 0:
-                    switch ((int)(current.Y - last.Y))
+                    switch ((int) (current.Y - last.Y))
                     {
                         case 1:
                             return 2;
@@ -828,7 +841,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     break;
 
                 case -1:
-                    switch ((int)(current.Y - last.Y))
+                    switch ((int) (current.Y - last.Y))
                     {
                         case 1:
                             return 3;
@@ -844,6 +857,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             return 0;
         }
+
         #endregion
     }
 }

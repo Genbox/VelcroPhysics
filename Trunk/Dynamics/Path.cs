@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Factories;
+using FarseerGames.FarseerPhysics.Mathematics;
 #if(XNA)
 using Microsoft.Xna.Framework;
 #else
-using FarseerGames.FarseerPhysics.Mathematics;
+
 #endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics
@@ -15,15 +16,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     /// </summary>
     public class Path
     {
+        private const float _controlPointSize = 6; // size of control point used in PointInControlPoint
+        private const float _precision = 0.0005f; // a coeffient used to decide how precise to place bodies
         private BodyList _bodies; // holds all bodies for this path
         private Vertices _controlPoints; // holds all control points for this path
-        private const float _controlPointSize = 6; // size of control point used in PointInControlPoint
         private GeomList _geoms; // holds all geoms for this path
         private float _height; // width and height of bodies to create
         private JointList _joints; // holds all the joints for this path
         private bool _loop; // is this path a loop
         private float _mass; // width and height of bodies to create
-        private const float _precision = 0.0005f; // a coeffient used to decide how precise to place bodies
         private bool _recalculate = true; // will be set to true if path needs to be recalculated
         private float _width; // width and height of bodies to create
 
@@ -99,7 +100,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     if (_bodies[i].Position.X < _bodies[i + 1].Position.X)
                     {
                         midDeltaX = Math.Abs(_bodies[i].Position.X - _bodies[i + 1].Position.X)*0.5f;
-                            // find x axis midpoint
+                        // find x axis midpoint
                     }
                     else
                     {
@@ -108,7 +109,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     if (_bodies[i].Position.Y < _bodies[i + 1].Position.Y)
                     {
                         midDeltaY = Math.Abs(_bodies[i].Position.Y - _bodies[i + 1].Position.Y)*0.5f;
-                            // find x axis midpoint
+                        // find x axis midpoint
                     }
                     else
                     {
@@ -116,7 +117,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     }
 
                     midPoint = new Vector2(_bodies[i].Position.X + midDeltaX, _bodies[i].Position.Y + midDeltaY);
-                        // set midPoint
+                    // set midPoint
 
                     revoluteJoint = JointFactory.Instance.CreateRevoluteJoint(_bodies[i], _bodies[i + 1], midPoint);
                     revoluteJoint.BiasFactor = 0.2f;
@@ -129,28 +130,29 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 if (_bodies[0].Position.X < _bodies[_bodies.Count - 1].Position.X)
                 {
                     midDeltaX = Math.Abs(_bodies[0].Position.X - _bodies[_bodies.Count - 1].Position.X)*0.5f;
-                        // find x axis midpoint
+                    // find x axis midpoint
                 }
                 else
                 {
                     midDeltaX = (_bodies[_bodies.Count - 1].Position.X - _bodies[0].Position.X)*0.5f;
-                        // find x axis midpoint
+                    // find x axis midpoint
                 }
                 if (_bodies[0].Position.Y < _bodies[_bodies.Count - 1].Position.Y)
                 {
                     midDeltaY = Math.Abs(_bodies[0].Position.Y - _bodies[_bodies.Count - 1].Position.Y)*0.5f;
-                        // find x axis midpoint
+                    // find x axis midpoint
                 }
                 else
                 {
                     midDeltaY = (_bodies[_bodies.Count - 1].Position.Y - _bodies[0].Position.Y)*0.5f;
-                        // find x axis midpoint
+                    // find x axis midpoint
                 }
 
                 midPoint = new Vector2(_bodies[0].Position.X + midDeltaX, _bodies[0].Position.Y + midDeltaY);
-                    // set midPoint
+                // set midPoint
 
-                revoluteJoint = JointFactory.Instance.CreateRevoluteJoint(_bodies[0], _bodies[_bodies.Count - 1], midPoint);
+                revoluteJoint = JointFactory.Instance.CreateRevoluteJoint(_bodies[0], _bodies[_bodies.Count - 1],
+                                                                          midPoint);
                 revoluteJoint.BiasFactor = 0.2f;
                 revoluteJoint.Softness = 0.01f;
                 _joints.Add(revoluteJoint);
@@ -198,8 +200,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
             foreach (Vector2 controlPoint in _controlPoints)
             {
-                controlPointAABB = new AABB(new Vector2(controlPoint.X - (_controlPointSize/2), controlPoint.Y - (_controlPointSize/2)),
-                                            new Vector2(controlPoint.X + (_controlPointSize/2), controlPoint.Y + (_controlPointSize/2)));
+                controlPointAABB =
+                    new AABB(
+                        new Vector2(controlPoint.X - (_controlPointSize/2), controlPoint.Y - (_controlPointSize/2)),
+                        new Vector2(controlPoint.X + (_controlPointSize/2), controlPoint.Y + (_controlPointSize/2)));
 
                 if (controlPointAABB.Contains(ref point))
                     return _controlPoints.IndexOf(controlPoint);
@@ -326,7 +330,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 tempBody = BodyFactory.Instance.CreateRectangleBody(_width, _height, _mass); // create the first body
                 tempBody.Position = tempVectorA;
                 tempBody.Rotation = FindNormalAngle(FindVertexNormal(_controlPoints[0], tempVectorA, tempVectorC));
-                    // set the angle
+                // set the angle
 
                 _bodies.Add(tempBody); // add the first body
 
@@ -352,10 +356,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                         distance = Vector2.Distance(tempVectorA, tempVectorC); // get the distance
                     }
                     tempBody = BodyFactory.Instance.CreateRectangleBody(_width, _height, _mass);
-                        // create the first body
+                    // create the first body
                     tempBody.Position = tempVectorA;
                     tempBody.Rotation = FindNormalAngle(FindVertexNormal(tempVectorB, tempVectorA, tempVectorC));
-                        // set the angle
+                    // set the angle
 
                     _bodies.Add(tempBody); // add all the rest of the bodies
 
@@ -421,13 +425,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             if ((n.Y > 0.0f) && (n.X > 0.0f))
                 return (float) Math.Atan(n.X/-n.Y);
-            
+
             if ((n.Y < 0.0f) && (n.X > 0.0f))
                 return (float) Math.Atan(n.X/-n.Y); // good
-            
+
             if ((n.Y > 0.0f) && (n.X < 0.0f))
                 return (float) Math.Atan(-n.X/n.Y);
-            
+
             if ((n.Y < 0.0f) && (n.X < 0.0f))
                 return (float) Math.Atan(-n.X/n.Y); // good
 

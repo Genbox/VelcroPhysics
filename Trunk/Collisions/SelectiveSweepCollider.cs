@@ -10,17 +10,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
     public sealed class SelectiveSweepCollider : IBroadPhaseCollider
     {
         private static StubComparer _comparer = new StubComparer();
+        private LinkedList<Wrapper> _currentBodies = new LinkedList<Wrapper>();
 
         private PhysicsSimulator _physicsSimulator;
         private List<Wrapper> _wrappers;
         private List<Stub> _xStubs;
         private List<Stub> _yStubs;
-        private LinkedList<Wrapper> _currentBodies = new LinkedList<Wrapper>();
-
-        /// <summary>
-        /// Fires when a broad phase collision occurs
-        /// </summary>
-        public event BroadPhaseCollisionHandler OnBroadPhaseCollision;
 
         public SelectiveSweepCollider(PhysicsSimulator physicsSimulator)
         {
@@ -31,6 +26,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         #region IBroadPhaseCollider Members
+
+        /// <summary>
+        /// Fires when a broad phase collision occurs
+        /// </summary>
+        public event BroadPhaseCollisionHandler OnBroadPhaseCollision;
 
         /// <summary>
         /// Adds the specified geom.
@@ -55,6 +55,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 _yStubs.RemoveAll(StubIsRemoved);
             }
         }
+
         /// <summary>
         /// Processes the disposed geoms.
         /// </summary>
@@ -301,12 +302,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             if (((geom1.collisionCategories & geom2.collidesWith) ==
                  CollisionCategory.None) & ((geom2.collisionCategories &
-                                               geom1.collidesWith) == CollisionCategory.None))
+                                             geom1.collidesWith) == CollisionCategory.None))
                 return;
 
             Arbiter arbiter = _physicsSimulator.arbiterPool.Fetch();
             arbiter.ConstructArbiter(geom1, geom2, _physicsSimulator);
-            
+
             //TODO: Since we insert all arbiters that is already in the arbiterList into the pool
             //should we not restrict the size of the pool to a fixed number? A large simulation
             //that runs for some time might accumulate A LOT of arbiters in the pool.

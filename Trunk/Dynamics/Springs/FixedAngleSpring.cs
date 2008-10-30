@@ -76,10 +76,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         public override void Update(float dt)
         {
             base.Update(dt);
-            
+
             if (IsDisposed)
                 return;
-            
+
             //calculate and apply spring force
             float angleDifference = _targetAngle - _body.totalRotation;
             float springTorque = SpringConstant*angleDifference;

@@ -7,20 +7,17 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public abstract class Joint : IDisposable
     {
-        public bool Enabled = true;
-        public bool IsDisposed;
+        public float BiasFactor = .2f;
 
         /// <summary>
         /// The Breakpoint simply indicates the maximum Value the JointError can be before it breaks.
         /// </summary>
         public float Breakpoint = float.MaxValue;
-        public float Softness;
-        public float BiasFactor = .2f;
 
-        /// <summary>
-        /// Fires when the joint is broken.
-        /// </summary>
-        public event EventHandler<EventArgs> Broke;
+        public bool Enabled = true;
+        public bool IsDisposed;
+
+        public float Softness;
 
         public Object Tag { get; set; }
 
@@ -40,6 +37,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         }
 
         #endregion
+
+        /// <summary>
+        /// Fires when the joint is broken.
+        /// </summary>
+        public event EventHandler<EventArgs> Broke;
 
         public abstract void Validate();
         public abstract void PreStep(float inverseDt);

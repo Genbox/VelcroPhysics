@@ -3,7 +3,7 @@ using System;
 namespace FarseerGames.FarseerPhysics
 {
 #if(!XNA)
-   public enum CurveLoopType
+    public enum CurveLoopType
     {
         Constant,
         Cycle,

@@ -64,7 +64,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             if (!(obj is ContactId))
                 return false;
 
-            return Equals((ContactId)obj);
+            return Equals((ContactId) obj);
         }
 
         public static bool operator ==(ContactId contactId1, ContactId contactId2)

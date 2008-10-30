@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
 using Microsoft.Xna.Framework;
 #else
-using FarseerGames.FarseerPhysics.Mathematics;
+
 #endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
@@ -222,7 +223,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="points">An list of intersection points. Any intersection points
         /// found will be added to this list.</param>
         public static void LineSegmentVerticesIntersect(ref Vector2 p1, ref Vector2 p2, Vertices vertices,
-                                                         ref List<Vector2> points)
+                                                        ref List<Vector2> points)
         {
             for (int i = 0; i < vertices.Count; i++)
             {

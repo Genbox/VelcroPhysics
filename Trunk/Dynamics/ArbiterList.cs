@@ -53,7 +53,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 Remove(_markedForRemovalList[j]);
                 arbiterPool.Insert(_markedForRemovalList[j]);
-                
+
                 if (_markedForRemovalList[j].GeometryA.OnSeparation != null)
                 {
                     _markedForRemovalList[j].GeometryA.OnSeparation(_markedForRemovalList[j].GeometryA,
@@ -63,7 +63,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 if (_markedForRemovalList[j].GeometryB.OnSeparation != null)
                 {
                     _markedForRemovalList[j].GeometryB.OnSeparation(_markedForRemovalList[j].GeometryB,
-                                                _markedForRemovalList[j].GeometryA);
+                                                                    _markedForRemovalList[j].GeometryA);
                 }
             }
             _markedForRemovalList.Clear();

@@ -6,11 +6,12 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Interfaces;
+using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
 #else
-using FarseerGames.FarseerPhysics.Mathematics;
+
 #endif
 
 namespace FarseerGames.FarseerPhysics
@@ -59,13 +60,12 @@ namespace FarseerGames.FarseerPhysics
         internal JointList jointList;
         internal List<Joint> jointRemoveList;
 
-        internal List<Spring> springAddList;
-        internal SpringList springList;
-        internal List<Spring> springRemoveList;
-
         internal int maxContactsToDetect = 3;
         internal int maxContactsToResolve = 2;
         internal float narrowPhaseCollisionTime = -1;
+        internal List<Spring> springAddList;
+        internal SpringList springList;
+        internal List<Spring> springRemoveList;
         internal float updatePositionsTime = -1;
         internal float updateTime = -1;
 
@@ -387,6 +387,7 @@ namespace FarseerGames.FarseerPhysics
 #endif
 
             #region Added by Daniel Pramel 08/24/08
+
             if (_scaling.Enabled)
             {
                 dt = _scaling.GetUpdateInterval(dt);
@@ -404,6 +405,7 @@ namespace FarseerGames.FarseerPhysics
                     _scaling.DecreaseUpdateInterval();
                 }
             }
+
             #endregion
 
             ProcessAddedItems();
@@ -563,8 +565,8 @@ namespace FarseerGames.FarseerPhysics
 
                 if (!_body.IgnoreGravity)
                 {
-                    _gravityForce.X = _gravity.X * _body.mass;
-                    _gravityForce.Y = _gravity.Y * _body.mass;
+                    _gravityForce.X = _gravity.X*_body.mass;
+                    _gravityForce.Y = _gravity.Y*_body.mass;
 
                     #region INLINE: _body.ApplyForce(ref _gravityForce);
 
@@ -582,7 +584,7 @@ namespace FarseerGames.FarseerPhysics
 
         private void ApplyImpulses(float dt)
         {
-            float inverseDt = 1f / dt;
+            float inverseDt = 1f/dt;
 
             for (int i = 0; i < jointList.Count; i++)
             {

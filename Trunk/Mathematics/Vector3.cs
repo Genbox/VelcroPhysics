@@ -1,4 +1,5 @@
 #if (!XNA)
+
 namespace FarseerGames.FarseerPhysics.Mathematics
 {
     public struct Vector3
@@ -8,4 +9,5 @@ namespace FarseerGames.FarseerPhysics.Mathematics
         public float Z;
     }
 }
+
 #endif

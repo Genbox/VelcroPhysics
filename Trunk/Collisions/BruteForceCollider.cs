@@ -12,17 +12,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private Geom _geometryB;
         private PhysicsSimulator _physicsSimulator;
 
-        /// <summary>
-        /// Fires when a broad phase collision occurs
-        /// </summary>
-        public event BroadPhaseCollisionHandler OnBroadPhaseCollision;
-
         public BruteForceCollider(PhysicsSimulator physicsSimulator)
         {
             _physicsSimulator = physicsSimulator;
         }
 
         #region IBroadPhaseCollider Members
+
+        /// <summary>
+        /// Fires when a broad phase collision occurs
+        /// </summary>
+        public event BroadPhaseCollisionHandler OnBroadPhaseCollision;
 
         ///<summary>
         /// Not required by brute force collider
@@ -114,7 +114,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     //If the user aborted the intersection, continue to the next geometry.
                     if (!intersection)
                         continue;
-                   
+
                     //Note: Commented this out and copy-paste into from other colliders
                     //_arbiter = _physicsSimulator.arbiterPool.Fetch();
                     //_arbiter.ConstructArbiter(_geometryA, _geometryB, _physicsSimulator);

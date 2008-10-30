@@ -1,8 +1,9 @@
 using System;
+using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
 using Microsoft.Xna.Framework;
 #else
-using FarseerGames.FarseerPhysics.Mathematics;
+
 #endif
 
 namespace FarseerGames.FarseerPhysics.Collisions

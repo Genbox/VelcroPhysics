@@ -1,6 +1,7 @@
 using FarseerGames.FarseerPhysics.Mathematics;
+
 #if (XNA)
-using Microsoft.Xna.Framework; 
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
@@ -155,18 +156,18 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             JointError = distance - _targetDistance;
 
             //normalize the difference vector
-            Vector2.Multiply(ref _worldAnchorDifference, 1 / (distance != 0 ? distance : float.PositiveInfinity),
+            Vector2.Multiply(ref _worldAnchorDifference, 1/(distance != 0 ? distance : float.PositiveInfinity),
                              out _worldAnchorDifferenceNormalized); //distance = 0 --> error (fix) 
 
             //calc velocity bias
-            _velocityBias = -BiasFactor * inverseDt * (distance - _targetDistance);
+            _velocityBias = -BiasFactor*inverseDt*(distance - _targetDistance);
 
             //calc mass normal (effective mass in relation to constraint)
             Calculator.Cross(ref _r1, ref _worldAnchorDifferenceNormalized, out _r1cn);
             Calculator.Cross(ref _r2, ref _worldAnchorDifferenceNormalized, out _r2cn);
-            _kNormal = _body1.inverseMass + _body2.inverseMass + _body1.inverseMomentOfInertia * _r1cn * _r1cn +
-                       _body2.inverseMomentOfInertia * _r2cn * _r2cn;
-            _effectiveMass = 1 / (_kNormal + Softness);
+            _kNormal = _body1.inverseMass + _body2.inverseMass + _body1.inverseMomentOfInertia*_r1cn*_r1cn +
+                       _body2.inverseMomentOfInertia*_r2cn*_r2cn;
+            _effectiveMass = 1/(_kNormal + Softness);
 
             //convert scalar accumulated _impulse to vector
             Vector2.Multiply(ref _worldAnchorDifferenceNormalized, _accumulatedImpulse, out _accumulatedImpulseVector);
@@ -203,7 +204,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             Vector2.Dot(ref _dv, ref _worldAnchorDifferenceNormalized, out _dvNormal);
 
             //calc the _impulse magnitude
-            _impulseMagnitude = (_velocityBias - _dvNormal - Softness * _accumulatedImpulse) * _effectiveMass;
+            _impulseMagnitude = (_velocityBias - _dvNormal - Softness*_accumulatedImpulse)*_effectiveMass;
             //not sure if _softness is implemented correctly.
 
             //convert scalar _impulse to vector

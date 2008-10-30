@@ -1,10 +1,11 @@
 using System;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
-#if (XNA)
-using Microsoft.Xna.Framework; 
-#else
 using FarseerGames.FarseerPhysics.Mathematics;
+#if (XNA)
+using Microsoft.Xna.Framework;
+#else
+
 #endif
 
 namespace FarseerGames.FarseerPhysics.Factories
@@ -62,7 +63,7 @@ namespace FarseerGames.FarseerPhysics.Factories
             if (body.isStatic)
             {
                 //throw new InvalidOperationException("Fixed joints cannot be created on static bodies");
-                revoluteJoint.Enabled = false;      // if you create a joint of a static body it is created as disabled.
+                revoluteJoint.Enabled = false; // if you create a joint of a static body it is created as disabled.
             }
             return revoluteJoint;
         }
