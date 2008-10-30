@@ -1,22 +1,8 @@
 ﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-
 using FarseerPhysicsWaterDemo.Views;
 using FarseerPhysicsWaterDemo.Models;
 using FarseerPhysicsWaterDemo.RenderSystem;
-
 using FarseerGames.FarseerPhysics;
-using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
-using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerPhysicsWaterDemo.Controllers
@@ -45,7 +31,7 @@ namespace FarseerPhysicsWaterDemo.Controllers
         {
             _splashScreenView = new SplashScreenView();
             _pageView.Navigate(_splashScreenView);
-            _splashScreenView.Complete += new EventHandler(_splashView_Complete);
+            _splashScreenView.Complete += _splashView_Complete;
             _splashScreenView.Start();
         }
 
@@ -65,7 +51,7 @@ namespace FarseerPhysicsWaterDemo.Controllers
         {
             _renderLoop = new RenderLoop();
             _renderLoop.StepSize = 10;
-            _renderLoop.Update += new RenderLoop.StepEventHanlder(_renderLoop_Update);
+            _renderLoop.Update += _renderLoop_Update;
             _renderLoop.Initialize();
         }
 

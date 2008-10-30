@@ -1,18 +1,12 @@
-﻿using System;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Mathematics;
+using FarseerPhysicsWaterDemo.Models;
 
-namespace FarseerPhysicsWaterDemo
+namespace FarseerPhysicsWaterDemo.Views
 {
     public class WaterView
     {
@@ -24,8 +18,8 @@ namespace FarseerPhysicsWaterDemo
         #region public methods
         public WaterView(WaterModel waterModel, Canvas canvas)
         {
-            this.WaterModel = waterModel;
-            this._canvas = canvas;
+            WaterModel = waterModel;
+            _canvas = canvas;
         }
 
         public void Initialize(PhysicsSimulator physicsSimulator)
@@ -91,7 +85,7 @@ namespace FarseerPhysicsWaterDemo
         #region private variables
         private Color _gradientTopColor = Color.FromArgb(127, 7, 52, 96);
         private Color _gradientBottomColor = Color.FromArgb(150, 0, 0, 0);
-        private float _opacity = .7f;
+        private const float _opacity = .7f;
 
         private Canvas _canvas;
         private Polygon _wavePolygon;

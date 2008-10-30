@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 
 namespace FarseerPhysicsWaterDemo.RenderSystem
 {
@@ -26,7 +18,7 @@ namespace FarseerPhysicsWaterDemo.RenderSystem
         public void Initialize()
         {
             _updateTimeSpan = new TimeSpan(0, 0, 0, 0, StepSize);
-            _compositionTargetRendering = new EventHandler(CompositionTarget_Rendering);
+            _compositionTargetRendering = CompositionTarget_Rendering;
             CompositionTarget.Rendering += _compositionTargetRendering;
         }
 
@@ -84,9 +76,9 @@ namespace FarseerPhysicsWaterDemo.RenderSystem
         #endregion
 
         #region events
-        public delegate void StepEventHanlder(TimeSpan elapsedTime);
-        public event StepEventHanlder Update;
-        public event StepEventHanlder Draw;
+        public delegate void StepEventHandler(TimeSpan elapsedTime);
+        public event StepEventHandler Update;
+        public event StepEventHandler Draw;
         #endregion
 
         #region private variables
