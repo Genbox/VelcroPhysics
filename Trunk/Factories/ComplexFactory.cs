@@ -148,5 +148,35 @@ namespace FarseerGames.FarseerPhysics.Factories
 
             return (p);
         }
+
+        public Path CreateTrack(Vertices points, float width, float height, float mass, bool endless, int group)
+        {
+            Path p = new Path(width, height, mass, endless);    // create the path
+
+            foreach (Vector2 v in points)
+                p.Add(v);                   // add all the points to the path
+
+            p.Update();                     // update the path
+
+            Geom g;
+            for (int i = 0; i < p.Bodies.Count; i++)
+            {
+                g = GeomFactory.Instance.CreateRectangleGeom(p.Bodies[i], width, height);
+                g.collisionGroup = group;
+                p.Add(g);                                           // add a geom to the chain
+            }
+            p.LinkBodies();                 // link bodies together with revolute joints
+
+            return p;
+        }
+
+        public Path CreateTrack(PhysicsSimulator ps, Vertices points, float width, float height, float mass, bool endless, int group)
+        {
+            Path p = CreateTrack(points, width, height, mass, endless, group);
+
+            p.AddToPhysicsSimulator(ps);
+
+            return p;
+        }
     }
 }
