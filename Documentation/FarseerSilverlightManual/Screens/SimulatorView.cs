@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,7 +11,7 @@ using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 using FarseerSilverlightManual.Drawing;
 using FarseerSilverlightManual.Objects;
-using Border=FarseerSilverlightManual.Demos.DemoShare.Border;
+using Border = FarseerSilverlightManual.Demos.DemoShare.Border;
 using SWM = System.Windows.Media;
 
 namespace FarseerSilverlightManual.Screens
@@ -37,8 +37,8 @@ namespace FarseerSilverlightManual.Screens
             MouseMove += SimulatorView_MouseMove;
             IsHitTestVisible = true;
             Background = new SolidColorBrush(Color.FromArgb(255, 100, 149, 237));
-            int borderWidth = (int) (ScreenManager.ScreenHeight*.05f);
-            _border = new Border(ScreenManager.ScreenWidth + borderWidth*2, ScreenManager.ScreenHeight + borderWidth*2,
+            int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
+            _border = new Border(ScreenManager.ScreenWidth + borderWidth * 2, ScreenManager.ScreenHeight + borderWidth * 2,
                                  borderWidth, ScreenManager.ScreenCenter);
             _border.Load(this, physicsSimulator);
         }
@@ -48,7 +48,7 @@ namespace FarseerSilverlightManual.Screens
             if (_mousePickSpring == null)
                 return;
 
-            Vector2 point = new Vector2((float) (e.GetPosition(this).X), (float) (e.GetPosition(this).Y));
+            Vector2 point = new Vector2((float)(e.GetPosition(this).X), (float)(e.GetPosition(this).Y));
             _mousePickSpring.WorldAttachPoint = point;
         }
 
@@ -64,7 +64,7 @@ namespace FarseerSilverlightManual.Screens
 
         private void SimulatorView_MouseLeftButtonDown(object sender, MouseEventArgs e)
         {
-            Vector2 point = new Vector2((float) (e.GetPosition(this).X), (float) (e.GetPosition(this).Y));
+            Vector2 point = new Vector2((float)(e.GetPosition(this).X), (float)(e.GetPosition(this).Y));
             _pickedGeom = physicsSimulator.Collide(point);
 
             if (_pickedGeom == null)
