@@ -182,7 +182,7 @@ namespace FarseerGames.GettingStarted.ScreenSystem
 
         /// <summary>
         /// Allows the screen to run logic, such as updating the transition position.
-        /// Unlike HandleInput, this method is called regardless of whether the screen
+        /// Unlike <see cref="HandleInput"/>, this method is called regardless of whether the screen
         /// is active, hidden, or in the middle of a transition.
         /// </summary>
         public virtual void Update(GameTime gameTime, bool otherScreenHasFocus,
@@ -293,7 +293,7 @@ namespace FarseerGames.GettingStarted.ScreenSystem
         }
 
         /// <summary>
-        /// Tells the screen to go away. Unlike ScreenManager.RemoveScreen, which
+        /// Tells the screen to go away. Unlike <see cref="ScreenManager"/>.RemoveScreen, which
         /// instantly kills the screen, this method respects the transition timings
         /// and will give the screen a chance to gradually transition off.
         /// </summary>
