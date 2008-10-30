@@ -109,37 +109,37 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     r.Softness = 0.01f;
                     _joints.Add(r);
                 }
-                else if (_loop)
+            }
+            if (_loop)
+            {
+                if (_bodies[0].Position.X < _bodies[_bodies.Count - 1].Position.X)
                 {
-                    if (_bodies[0].Position.X < _bodies[_bodies.Count - 1].Position.X)
-                    {
-                        midDeltaX = Math.Abs(_bodies[0].Position.X - _bodies[_bodies.Count - 1].Position.X)*0.5f;
-                            // find x axis midpoint
-                    }
-                    else
-                    {
-                        midDeltaX = (_bodies[_bodies.Count - 1].Position.X - _bodies[0].Position.X)*0.5f;
-                            // find x axis midpoint
-                    }
-                    if (_bodies[0].Position.Y < _bodies[_bodies.Count - 1].Position.Y)
-                    {
-                        midDeltaY = Math.Abs(_bodies[0].Position.Y - _bodies[_bodies.Count - 1].Position.Y)*0.5f;
-                            // find x axis midpoint
-                    }
-                    else
-                    {
-                        midDeltaY = (_bodies[_bodies.Count - 1].Position.Y - _bodies[0].Position.Y)*0.5f;
-                            // find x axis midpoint
-                    }
-
-                    midPoint = new Vector2(_bodies[0].Position.X + midDeltaX, _bodies[0].Position.Y + midDeltaY);
-                        // set midPoint
-
-                    r = JointFactory.Instance.CreateRevoluteJoint(_bodies[0], _bodies[_bodies.Count - 1], midPoint);
-                    r.BiasFactor = 0.2f;
-                    r.Softness = 0.01f;
-                    _joints.Add(r);
+                    midDeltaX = Math.Abs(_bodies[0].Position.X - _bodies[_bodies.Count - 1].Position.X)*0.5f;
+                        // find x axis midpoint
                 }
+                else
+                {
+                    midDeltaX = (_bodies[_bodies.Count - 1].Position.X - _bodies[0].Position.X)*0.5f;
+                        // find x axis midpoint
+                }
+                if (_bodies[0].Position.Y < _bodies[_bodies.Count - 1].Position.Y)
+                {
+                    midDeltaY = Math.Abs(_bodies[0].Position.Y - _bodies[_bodies.Count - 1].Position.Y)*0.5f;
+                        // find x axis midpoint
+                }
+                else
+                {
+                    midDeltaY = (_bodies[_bodies.Count - 1].Position.Y - _bodies[0].Position.Y)*0.5f;
+                        // find x axis midpoint
+                }
+
+                midPoint = new Vector2(_bodies[0].Position.X + midDeltaX, _bodies[0].Position.Y + midDeltaY);
+                    // set midPoint
+
+                r = JointFactory.Instance.CreateRevoluteJoint(_bodies[0], _bodies[_bodies.Count - 1], midPoint);
+                r.BiasFactor = 0.2f;
+                r.Softness = 0.01f;
+                _joints.Add(r);
             }
         }
 
