@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FarseerProject</RootNamespace>
+    <RootNamespace>FarseerGames.FarseerPhysics</RootNamespace>
     <AssemblyName>FarseerProject</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
