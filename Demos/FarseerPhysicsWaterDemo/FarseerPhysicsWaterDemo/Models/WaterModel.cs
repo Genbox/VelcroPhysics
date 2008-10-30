@@ -1,25 +1,15 @@
 ﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-
 using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Mathematics;
 using FarseerGames.FarseerPhysics;
 
-namespace FarseerPhysicsWaterDemo
+namespace FarseerPhysicsWaterDemo.Models
 {
     /// <summary>
     ///The water model in this demo is made up of two parts.  
     ///
     ///The wave controller controls the motion of the wave. It can control
-    ///the size of the wave, the speed, the dampning, etc..
+    ///the size of the wave, the speed, the damping, etc..
     ///
     ///The fluid drag controller controls the forces that act upon 
     ///bodies that are IN the water.  It controls how thing float,
@@ -57,7 +47,7 @@ namespace FarseerPhysicsWaterDemo
             WaveController.Width = ConvertUnits.ToSimUnits(700);
             WaveController.Height = ConvertUnits.ToSimUnits(200);
             WaveController.NodeCount = 20; //how many vertices make up the surface of the wave
-            WaveController.DampningCoefficient = .95f; //determines how quickly the wave will disipate
+            WaveController.DampingCoefficient = .95f; //determines how quickly the wave will disipate
             WaveController.Frequency = .16f; //determines how fast the wave algorithm runs (seconds)
 
             //The wave generator parameters simply move an end-point of the wave up and down.

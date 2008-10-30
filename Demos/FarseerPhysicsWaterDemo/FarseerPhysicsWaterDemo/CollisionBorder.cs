@@ -1,14 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-
-using FarseerGames.FarseerPhysics;
+﻿using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Factories;
@@ -26,9 +16,9 @@ namespace FarseerPhysicsWaterDemo
 
         protected Body body;
         protected Vector2 position = Vector2.Zero;
-        protected float rotation = 0;
+        protected float rotation;
         protected float mass = 1;
-        protected bool isStatic = false;
+        protected bool isStatic;
 
         public float Width
         {
@@ -132,11 +122,9 @@ namespace FarseerPhysicsWaterDemo
 
         private void LoadPhysics(PhysicsSimulator physicsSimulator)
         {
-            Vector2 geomOffset = Vector2.Zero;
-
             geom = new Geom[4];
             //left border
-            geomOffset = new Vector2(-width * .5f - borderWidth * .5f, 0);
+            Vector2 geomOffset = new Vector2(-width * .5f - borderWidth * .5f, 0);
             geom[0] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, body, borderWidth, height + borderWidth, geomOffset, 0);
             geom[0].RestitutionCoefficient = .2f;
             geom[0].FrictionCoefficient = 0f;

@@ -1,20 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using System.Diagnostics;
-
 using FarseerPhysicsWaterDemo.Models;
-using FarseerPhysicsWaterDemo.Views;
 using FarseerPhysicsWaterDemo.RenderSystem;
-
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Mathematics;
 
@@ -38,7 +29,7 @@ namespace FarseerPhysicsWaterDemo.Views
             InitializeBoxViews(physicsSimulator);
             InitializeWater(physicsSimulator);
 
-            CollisionBorder collisionBorder = new CollisionBorder(ConvertUnits.ToSimUnits((float)this.Width), ConvertUnits.ToSimUnits((float)this.Height), ConvertUnits.ToSimUnits(100), ConvertUnits.ToSimUnits((float)this.Width / 2f, (float)this.Height / 2f));
+            CollisionBorder collisionBorder = new CollisionBorder(ConvertUnits.ToSimUnits((float)Width), ConvertUnits.ToSimUnits((float)Height), ConvertUnits.ToSimUnits(100), ConvertUnits.ToSimUnits((float)Width / 2f, (float)Height / 2f));
             collisionBorder.Initialize(physicsSimulator);
         }
 
@@ -60,7 +51,7 @@ namespace FarseerPhysicsWaterDemo.Views
         #region private methods
         private void InitializeWater(PhysicsSimulator physicsSimulator)
         { 
-            _waterView = new WaterView(_gameModel.WaterModel, this.LayoutRoot);            
+            _waterView = new WaterView(_gameModel.WaterModel, LayoutRoot);            
             _waterView.Initialize(physicsSimulator);
 
             WaveGenerator.Maximum = 20;
@@ -85,12 +76,12 @@ namespace FarseerPhysicsWaterDemo.Views
             _boxViews = new List<BoxView>();
             foreach (var boxModel in _gameModel.BoxModels)
             { 
-                _boxViews.Add(InitializeBoxView(physicsSimulator, boxModel, Colors.White, Colors.Black, 1));
+                _boxViews.Add(InitializeBoxView(boxModel, Colors.White, Colors.Black, 1));
             }
 
             foreach (var boxModel in _gameModel.PyramidBoxModels)
             {
-                _boxViews.Add(InitializeBoxView(physicsSimulator, boxModel, Colors.White, Colors.Black, 1));
+                _boxViews.Add(InitializeBoxView(boxModel, Colors.White, Colors.Black, 1));
             }            
            
             foreach (var boxView in _boxViews)
@@ -99,7 +90,7 @@ namespace FarseerPhysicsWaterDemo.Views
             }
         }
 
-        private BoxView InitializeBoxView(PhysicsSimulator physicsSimulator, BoxModel boxModel, Color fill, Color stroke, float strokeThickness)
+        private BoxView InitializeBoxView(BoxModel boxModel, Color fill, Color stroke, float strokeThickness)
         {
             Rectangle rectangle = ShapeFactory.CreateRectangle(ConvertUnits.ToDisplayUnits(boxModel.Width), ConvertUnits.ToDisplayUnits(boxModel.Height),fill, stroke, strokeThickness);
 

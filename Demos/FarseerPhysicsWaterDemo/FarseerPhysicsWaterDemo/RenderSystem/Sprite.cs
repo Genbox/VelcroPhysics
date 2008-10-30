@@ -1,14 +1,6 @@
-﻿using System;
-using System.Net;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-
 using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerPhysicsWaterDemo.RenderSystem
@@ -25,17 +17,17 @@ namespace FarseerPhysicsWaterDemo.RenderSystem
 
         public double Rotation
         {
-            get { return this.RotateTransform.Angle; }
-            set { this.RotateTransform.Angle = value; }
+            get { return RotateTransform.Angle; }
+            set { RotateTransform.Angle = value; }
         }
 
         public double Scale
         {
-            get { return this.ScaleTransform.ScaleX; }//proportional scales (x=y)
+            get { return ScaleTransform.ScaleX; }//proportional scales (x=y)
             set
             {
-                this.ScaleTransform.ScaleX = value;
-                this.ScaleTransform.ScaleY = value;
+                ScaleTransform.ScaleX = value;
+                ScaleTransform.ScaleY = value;
             }
         }
 
@@ -48,10 +40,10 @@ namespace FarseerPhysicsWaterDemo.RenderSystem
             set
             {
                 _origin = value;
-                this.RotateTransform.CenterX = Origin.X;
-                this.RotateTransform.CenterY = Origin.Y;
-                this.TranslateTransform.X = _position.X - Origin.X;
-                this.TranslateTransform.Y = _position.Y - Origin.Y;
+                RotateTransform.CenterX = Origin.X;
+                RotateTransform.CenterY = Origin.Y;
+                TranslateTransform.X = _position.X - Origin.X;
+                TranslateTransform.Y = _position.Y - Origin.Y;
             }
         }
 
@@ -64,7 +56,7 @@ namespace FarseerPhysicsWaterDemo.RenderSystem
             set
             {
                 _position.X = value;
-                this.TranslateTransform.X = value - Origin.X;
+                TranslateTransform.X = value - Origin.X;
                 //this.SetValue(Canvas.LeftProperty, (double)value);
             }
         }
@@ -78,7 +70,7 @@ namespace FarseerPhysicsWaterDemo.RenderSystem
             set
             {
                 _position.Y = value - Origin.Y;
-                this.TranslateTransform.Y = value - Origin.Y;
+                TranslateTransform.Y = value - Origin.Y;
                 //this.SetValue(Canvas.TopProperty, (double)value);
             }
         }
@@ -100,28 +92,28 @@ namespace FarseerPhysicsWaterDemo.RenderSystem
         #region public methods
         public Sprite(FrameworkElement content)
         {
-            this.Content = content;
-            this.Width = (float)content.Width;
-            this.Height = (float)content.Height;
+            Content = content;
+            Width = (float)content.Width;
+            Height = (float)content.Height;
 
-            this.TranslateTransform = new TranslateTransform();
-            this.TranslateTransform.X = 0;
-            this.TranslateTransform.Y = 0;
+            TranslateTransform = new TranslateTransform();
+            TranslateTransform.X = 0;
+            TranslateTransform.Y = 0;
 
-            this.RotateTransform = new RotateTransform();
-            this.RotateTransform.CenterX = Origin.X;
-            this.RotateTransform.CenterY = Origin.Y;
-            this.RotateTransform.Angle = 0;
+            RotateTransform = new RotateTransform();
+            RotateTransform.CenterX = Origin.X;
+            RotateTransform.CenterY = Origin.Y;
+            RotateTransform.Angle = 0;
 
-            this.ScaleTransform = new ScaleTransform();
-            this.ScaleTransform.ScaleX = 1;
-            this.ScaleTransform.ScaleY = 1;
+            ScaleTransform = new ScaleTransform();
+            ScaleTransform.ScaleX = 1;
+            ScaleTransform.ScaleY = 1;
 
             transformGroup = new TransformGroup();
             transformGroup.Children.Add(RotateTransform);
             transformGroup.Children.Add(TranslateTransform);
             transformGroup.Children.Add(ScaleTransform);
-            this.RenderTransform = transformGroup;
+            RenderTransform = transformGroup;
         }
 
         //public Sprite(FrameworkElement content, bool centerOrigin)

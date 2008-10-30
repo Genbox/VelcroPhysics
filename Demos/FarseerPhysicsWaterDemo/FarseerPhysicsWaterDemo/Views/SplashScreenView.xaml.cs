@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace FarseerPhysicsWaterDemo.Views
@@ -21,13 +13,13 @@ namespace FarseerPhysicsWaterDemo.Views
         public SplashScreenView()
         {
             InitializeComponent();
-            this.Loaded += new RoutedEventHandler(SplashView_Loaded);
+            Loaded += SplashView_Loaded;
         }
 
         void SplashView_Loaded(object sender, RoutedEventArgs e)
         {
             timer.Interval = new TimeSpan(0, 0, 0, 2);
-            timer.Tick += new EventHandler(timer_Tick);
+            timer.Tick += timer_Tick;
         }
 
         public void Start()
