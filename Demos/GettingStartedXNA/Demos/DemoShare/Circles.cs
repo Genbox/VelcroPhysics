@@ -25,6 +25,7 @@ namespace FarseerGames.GettingStarted.Demos.DemoShare
         private int _radius = 100;
         private Vector2 _startPosition;
 
+        /// <exception cref="ArgumentException">Count must be 2 or greater</exception>
         public Circles(Vector2 startPosition, Vector2 endPosition, int count, int radius, Color color, Color borderColor)
         {
             if (count < 2)

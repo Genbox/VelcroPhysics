@@ -32,7 +32,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo3
         private Vector2 _obstacleOrigin;
         private Texture2D _obstacleTexture;
         private Geom _pickedGeom;
-        public float simTime;
+        public float SimTime;
 
         public override void Initialize()
         {

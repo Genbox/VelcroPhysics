@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerGames.GettingStarted.Components
 {
+    /// <summary>
+    /// Displays the FPS
+    /// </summary>
     public class FrameRateCounter : DrawableGameComponent
     {
         private TimeSpan _elapsedTime = TimeSpan.Zero;

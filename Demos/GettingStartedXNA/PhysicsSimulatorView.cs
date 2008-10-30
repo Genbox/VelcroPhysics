@@ -19,12 +19,12 @@ namespace FarseerGames.GettingStarted
         private const string _applyImpulses = "Apply Impulses: {0}";
         private const string _arbiterCount = "Arbiters: {0}";
         private const string _bodyCount = "Bodies: {0}";
-        private const string _broadPhaseCollision = "Broad Phase Collsion: {0}";
+        private const string _broadPhaseCollision = "Broad Phase Collision: {0}";
         private const string _cleanUp = "Clean Up: {0}";
         private const string _controllerCount = "Controllers: {0}";
         private const string _geomCount = "Geoms: {0}";
         private const string _jointCount = "Joints: {0}";
-        private const string _narrowPhaseCollision = "Narrow Phase Collsion: {0}";
+        private const string _narrowPhaseCollision = "Narrow Phase Collision: {0}";
         private const string _springCount = "Springs: {0}";
         private const string _updatePosition = "Update Positions: {0}";
         private const string _updateTotal = "Update Total: {0}";
@@ -249,7 +249,7 @@ namespace FarseerGames.GettingStarted
             set { _springLineThickness = value; }
         }
 
-        public bool EnableSpingView
+        public bool EnableSpringView
         {
             get { return _enableSpringView; }
             set { _enableSpringView = value; }
