@@ -1,5 +1,3 @@
-using System;
-using FarseerGames.FarseerPhysics.Controllers;
 #if (XNA)
 using Microsoft.Xna.Framework;
 #else
@@ -38,14 +36,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         }
 
         public LinearSpring(Body body1, Vector2 attachPoint1, Body body2, Vector2 attachPoint2, float springConstant,
-                            float dampningConstant)
+                            float dampingConstant)
         {
             _body1 = body1;
             _body2 = body2;
             _attachPoint1 = attachPoint1;
             _attachPoint2 = attachPoint2;
             SpringConstant = springConstant;
-            DampningConstant = dampningConstant;
+            DampingConstant = dampingConstant;
             _difference = body2.GetWorldPosition(attachPoint2) - body1.GetWorldPosition(attachPoint1);
             _restLength = _difference.Length();
         }
@@ -53,7 +51,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// <summary>
         /// Gets or sets the fist body.
         /// </summary>
-        /// <value>The body1.</value>
+        /// <Value>The body1.</Value>
         public Body Body1
         {
             get { return _body1; }
@@ -63,7 +61,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// <summary>
         /// Gets or sets the second body.
         /// </summary>
-        /// <value>The body2.</value>
+        /// <Value>The body2.</Value>
         public Body Body2
         {
             get { return _body2; }
@@ -73,7 +71,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// <summary>
         /// Gets or sets the fist attach point.
         /// </summary>
-        /// <value>The attach point1.</value>
+        /// <Value>The attach point1.</Value>
         public Vector2 AttachPoint1
         {
             get { return _attachPoint1; }
@@ -83,7 +81,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// <summary>
         /// Gets or sets the second attach point.
         /// </summary>
-        /// <value>The attach point2.</value>
+        /// <Value>The attach point2.</Value>
         public Vector2 AttachPoint2
         {
             get { return _attachPoint2; }
@@ -93,7 +91,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// <summary>
         /// Gets or sets the length of the rest.
         /// </summary>
-        /// <value>The length of the rest.</value>
+        /// <Value>The length of the rest.</Value>
         public float RestLength
         {
             get { return _restLength; }
@@ -139,7 +137,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
             //calculate dampning _force
             Vector2.Dot(ref _relativeVelocity, ref _difference, out _temp);
-            _dampningForce = DampningConstant*_temp/differenceMagnitude; //bV     
+            _dampningForce = DampingConstant*_temp/differenceMagnitude; //bV     
 
             //calculate final _force (spring + dampning)
             Vector2.Multiply(ref _differenceNormalized, -(_springForce + _dampningForce), out _force);

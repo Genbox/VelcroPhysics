@@ -50,7 +50,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the first body.
         /// </summary>
-        /// <value>The body1.</value>
+        /// <Value>The body1.</Value>
         public Body Body1
         {
             get { return _body1; }
@@ -60,7 +60,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the second body.
         /// </summary>
-        /// <value>The body2.</value>
+        /// <Value>The body2.</Value>
         public Body Body2
         {
             get { return _body2; }
@@ -70,7 +70,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the target distance.
         /// </summary>
-        /// <value>The target distance.</value>
+        /// <Value>The target distance.</Value>
         public float TargetDistance
         {
             get { return _targetDistance; }
@@ -80,7 +80,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the fist anchor.
         /// </summary>
-        /// <value>The anchor1.</value>
+        /// <Value>The anchor1.</Value>
         public Vector2 Anchor1
         {
             get { return _anchor1; }
@@ -96,7 +96,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the second anchor.
         /// </summary>
-        /// <value>The anchor2.</value>
+        /// <Value>The anchor2.</Value>
         public Vector2 Anchor2
         {
             get { return _anchor2; }
@@ -112,7 +112,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets the first world anchor.
         /// </summary>
-        /// <value>The world anchor1.</value>
+        /// <Value>The world anchor1.</Value>
         public Vector2 WorldAnchor1
         {
             get { return _worldAnchor1; }
@@ -121,7 +121,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets the second world anchor.
         /// </summary>
-        /// <value>The world anchor2.</value>
+        /// <Value>The world anchor2.</Value>
         public Vector2 WorldAnchor2
         {
             get { return _worldAnchor2; }

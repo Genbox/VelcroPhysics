@@ -16,11 +16,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private const float _defaultFloatTolerance = .00001f;
 
         /// <summary>
-        /// Checks if a floating point value is equal to another,
+        /// Checks if a floating point Value is equal to another,
         /// within a certain tolerance.
         /// </summary>
-        /// <param name="a">The first floating point value.</param>
-        /// <param name="b">The second floating point value.</param>
+        /// <param name="a">The first floating point Value.</param>
+        /// <param name="b">The second floating point Value.</param>
         /// <param name="delta">The floating point tolerance.</param>
         /// <returns>True if the values are "equal", false otherwise.</returns>
         public static bool FloatEquals(float a, float b, float delta)
@@ -29,13 +29,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Checks if a floating point value is within a specified
+        /// Checks if a floating point Value is within a specified
         /// range of values (inclusive).
         /// </summary>
-        /// <param name="a">The value to check.</param>
-        /// <param name="min">The minimum value.</param>
-        /// <param name="max">The maximum value.</param>
-        /// <returns>True if the value is within the range specified,
+        /// <param name="a">The Value to check.</param>
+        /// <param name="min">The minimum Value.</param>
+        /// <param name="max">The maximum Value.</param>
+        /// <returns>True if the Value is within the range specified,
         /// false otherwise.</returns>
         public static bool FloatInRange(float a, float min, float max)
         {
@@ -66,8 +66,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="secondIsSegment">Set this to true to require that the
         /// intersection point be on the second line segment.</param>
         /// <param name="floatTolerance">Some of the calculations require
-        /// checking if a floating point value equals another. This is
-        /// the tolerance that is used to determine this (ie value +
+        /// checking if a floating point Value equals another. This is
+        /// the tolerance that is used to determine this (ie Value +
         /// or - <paramref name="floatTolerance"/>)</param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
         public static bool LineIntersect(ref Vector2 p1, ref Vector2 p2, ref Vector2 p3, ref Vector2 p4,
@@ -159,8 +159,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="secondIsSegment">Set this to true to require that the
         /// intersection point be on the second line segment.</param>
         /// <param name="floatTolerance">Some of the calculations require
-        /// checking if a floating point value equals another. This is
-        /// the tolerance that is used to determine this (ie value +
+        /// checking if a floating point Value equals another. This is
+        /// the tolerance that is used to determine this (ie Value +
         /// or - <paramref name="floatTolerance"/>)</param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
         public static bool LineIntersect(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, bool firstIsSegment,
@@ -255,7 +255,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="p2">The second point of the line segment to test</param>
         /// <param name="geom">The geometry to test.</param>
         /// <param name="detectUsingAABB">If true, intersection will be tested using the
-        /// Geom's AABB. If false, the Geom's vertices will be used.</param>
+        /// Geoms AABB. If false, the Geoms vertices will be used.</param>
         /// <param name="lineIntersectInfoList">An existing intersect info list to add to
         /// </param>
         public static void LineSegmentGeomIntersect(Vector2 p1, Vector2 p2, Geom geom, bool detectUsingAABB,
@@ -271,7 +271,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="p1">The first point of the line segment to test</param>
         /// <param name="p2">The second point of the line segment to test</param>
         /// <param name="geom">The geometry to test.</param>
-        /// <param name="detectUsingAABB">If true, intersection will be tested using the Geom's AABB. If false, the Geom's vertices will be used.</param>
+        /// <param name="detectUsingAABB">If true, intersection will be tested using the Geoms AABB. If false, the Geoms vertices will be used.</param>
         /// <param name="lineIntersectInfoList">An existing intersect info list to add to</param>
         public static void LineSegmentGeomIntersect(ref Vector2 p1, ref Vector2 p2, Geom geom, bool detectUsingAABB,
                                                     ref List<LineIntersectInfo> lineIntersectInfoList)

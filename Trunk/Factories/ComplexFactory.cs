@@ -38,19 +38,19 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <summary>
         /// Creates a chain from start to end points containing the specified number of links.
         /// </summary>
-        /// <param name="ps">PhysicsSimulator to add the chain too.</param>
+        /// <param name="physicsSimulator"><see cref="PhysicsSimulator"/> to add the chain to.</param>
         /// <param name="start">Starting point of the chain.</param>
         /// <param name="end">Ending point of the chain.</param>
         /// <param name="links">Number of links desired in the chain.</param>
         /// <param name="height">Height of each link.</param>
         /// <param name="mass">Mass of each link.</param>
-        /// <param name="group">Collision group for the chain.</param>
+        /// <param name="collisionGroup">Collision group for the chain.</param>
         /// <returns>Path</returns>
-        public Path CreateChain(PhysicsSimulator ps, Vector2 start, Vector2 end, int links, float height, float mass, int group)
+        public Path CreateChain(PhysicsSimulator physicsSimulator, Vector2 start, Vector2 end, int links, float height, float mass, int collisionGroup)
         {
-            Path p = CreateChain(start, end, (Vector2.Distance(start, end) / (float)links), height, mass, group);
+            Path p = CreateChain(start, end, (Vector2.Distance(start, end) / links), height, mass, collisionGroup);
 
-            p.AddToPhysicsSimulator(ps);
+            p.AddToPhysicsSimulator(physicsSimulator);
 
             return p;
         }
@@ -63,120 +63,228 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="links">Number of links desired in the chain.</param>
         /// <param name="height">Height of each link.</param>
         /// <param name="mass">Mass of each link.</param>
-        /// <param name="group">Collision group for the chain.</param>
+        /// <param name="collisionGroup">Collision group for the chain.</param>
         /// <returns>Path</returns>
-        public Path CreateChain(Vector2 start, Vector2 end, int links, float height, float mass, int group)
+        public Path CreateChain(Vector2 start, Vector2 end, int links, float height, float mass, int collisionGroup)
         {
-            Path p = CreateChain(start, end, (Vector2.Distance(start, end) / (float)links), height, mass, group);
-
-            return p;
+            return CreateChain(start, end, (Vector2.Distance(start, end) / links), height, mass, collisionGroup);
         }
 
         /// <summary>
         /// Creates a chain from start to end points containing the specified number of links.
         /// </summary>
-        /// <param name="ps">PhysicsSimulator to add the chain too.</param>
+        /// <param name="physicsSimulator"><see cref="PhysicsSimulator"/> to add the chain too.</param>
         /// <param name="start">Starting point of the chain.</param>
         /// <param name="end">Ending point of the chain.</param>
         /// <param name="links">Number of links desired in the chain.</param>
         /// <param name="mass">Mass of each link.</param>
-        /// <param name="group">Collision group for the chain.</param>
+        /// <param name="collisionGroup">Collision group for the chain.</param>
         /// <returns>Path</returns>
-        public Path CreateChain(PhysicsSimulator ps, Vector2 start, Vector2 end, int links, float mass, int group)
+        public Path CreateChain(PhysicsSimulator physicsSimulator, Vector2 start, Vector2 end, int links, float mass, int collisionGroup)
         {
-            Path p = CreateChain(start, end, (Vector2.Distance(start, end) / (float)links), (Vector2.Distance(start, end) / (float)links)*(1.0f/3.0f), mass, group);
+            Path path = CreateChain(start, end, (Vector2.Distance(start, end) / links), (Vector2.Distance(start, end) / links) * (1.0f / 3.0f), mass, collisionGroup);
 
-            p.AddToPhysicsSimulator(ps);
+            path.AddToPhysicsSimulator(physicsSimulator);
 
-            return p;
+            return path;
         }
 
-        public Path CreateChain(Vector2 start, Vector2 end, int links, float mass, int group)
+        /// <summary>
+        /// Creates a chain.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="links">The links.</param>
+        /// <param name="mass">The mass.</param>
+        /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <returns></returns>
+        public Path CreateChain(Vector2 start, Vector2 end, int links, float mass, int collisionGroup)
         {
-            Path p = CreateChain(start, end, (Vector2.Distance(start, end) / (float)links), (Vector2.Distance(start, end) / (float)links)*(1.0f/3.0f), mass, group);
-
-            return p;
+            return CreateChain(start, end, (Vector2.Distance(start, end) / links), (Vector2.Distance(start, end) / links) * (1.0f / 3.0f), mass, collisionGroup);
         }
 
-        public Path CreateChain(PhysicsSimulator ps, Vector2 start, Vector2 end, float width, float height, float mass, int group)
+        /// <summary>
+        /// Creates a chain.
+        /// </summary>
+        /// <param name="physicsSimulator"><see cref="PhysicsSimulator"/> to add the chain to.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="mass">The mass.</param>
+        /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <returns></returns>
+        public Path CreateChain(PhysicsSimulator physicsSimulator, Vector2 start, Vector2 end, float width, float height, float mass, int collisionGroup)
         {
-            Path p = CreateChain(start, end, width, height, mass, false, false, group);
+            Path path = CreateChain(start, end, width, height, mass, false, false, collisionGroup);
 
-            p.AddToPhysicsSimulator(ps);
+            path.AddToPhysicsSimulator(physicsSimulator);
 
-            return p;
+            return path;
         }
 
-        public Path CreateChain(PhysicsSimulator ps, Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart, bool pinEnd, int group)
+        /// <summary>
+        /// Creates a chain.
+        /// </summary>
+        /// <param name="physicsSimulator"><see cref="PhysicsSimulator"/> to add the chain to.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="mass">The mass.</param>
+        /// <param name="pinStart">if set to <c>true</c> [pin start].</param>
+        /// <param name="pinEnd">if set to <c>true</c> [pin end].</param>
+        /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <returns></returns>
+        public Path CreateChain(PhysicsSimulator physicsSimulator, Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart, bool pinEnd, int collisionGroup)
         {
-            Path p = CreateChain(start, end, width, height, mass, pinStart, pinEnd, group);
+            Path path = CreateChain(start, end, width, height, mass, pinStart, pinEnd, collisionGroup);
 
-            p.AddToPhysicsSimulator(ps);
+            path.AddToPhysicsSimulator(physicsSimulator);
 
-            return p;
+            return path;
         }
 
-        public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, int group)
+        /// <summary>
+        /// Creates a chain.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="mass">The mass.</param>
+        /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <returns></returns>
+        public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, int collisionGroup)
         {
-            Path p = CreateChain(start, end, width, height, mass, false, false, group);
-
-            return p;
+            return CreateChain(start, end, width, height, mass, false, false, collisionGroup);
         }
 
-        public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart, bool pinEnd, int group)
+        /// <summary>
+        /// Creates a chain.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="mass">The mass.</param>
+        /// <param name="pinStart">if set to <c>true</c> [pin start].</param>
+        /// <param name="pinEnd">if set to <c>true</c> [pin end].</param>
+        /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <returns></returns>
+        public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart, bool pinEnd, int collisionGroup)
         {
-            Path p = new Path(width, height, mass, false);  // create the path
-            p.Add(start);                                   // add starting point
-            p.Add(Path.FindMidpoint(start, end));           // add midpoint of line (must have this because my code needs at least 3 control points)
-            p.Add(end);                                     // add end point
+            Path path = new Path(width, height, mass, false);  // create the path
+            path.Add(start);                                   // add starting point
+            path.Add(Path.FindMidpoint(start, end));           // add midpoint of line (must have this because my code needs at least 3 control points)
+            path.Add(end);                                     // add end point
 
-            p.Update();                                     // call update to create all the bodies
+            path.Update();                                     // call update to create all the bodies
 
-            Geom g;
-            for (int i = 0; i < p.Bodies.Count; i++)
+            Geom geom;
+            for (int i = 0; i < path.Bodies.Count; i++)
             {
-                g = GeomFactory.Instance.CreateRectangleGeom(p.Bodies[i], width, height);
-                g.collisionGroup = group;
-                p.Add(g);                                           // add a geom to the chain
+                geom = GeomFactory.Instance.CreateRectangleGeom(path.Bodies[i], width, height);
+                geom.collisionGroup = collisionGroup;
+                path.Add(geom);                                           // add a geom to the chain
             }
-            p.LinkBodies();         // link bodies together with revolute joints
+            path.LinkBodies();         // link bodies together with revolute joints
 
             if (pinStart)
-                p.Add(JointFactory.Instance.CreateFixedRevoluteJoint(p.Bodies[0], start));
+                path.Add(JointFactory.Instance.CreateFixedRevoluteJoint(path.Bodies[0], start));
             if (pinEnd)
-                p.Add(JointFactory.Instance.CreateFixedRevoluteJoint(p.Bodies[p.Bodies.Count - 1], p.ControlPoints[2]));
+                path.Add(JointFactory.Instance.CreateFixedRevoluteJoint(path.Bodies[path.Bodies.Count - 1], path.ControlPoints[2]));
 
-            return (p);
+            return (path);
         }
 
-        public Path CreateTrack(Vertices points, float width, float height, float mass, bool endless, int group)
+        /// <summary>
+        /// Creates a rope.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="mass">The mass.</param>
+        /// <param name="pinStart">if set to <c>true</c> [pin start].</param>
+        /// <param name="pinEnd">if set to <c>true</c> [pin end].</param>
+        /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <returns></returns>
+        public Path CreateRope(Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart, bool pinEnd, int collisionGroup)
         {
-            Path p = new Path(width, height, mass, endless);    // create the path
+            Path path = new Path(width, height, mass, false);  // create the path
+            path.Add(start);                                   // add starting point
+            path.Add(Path.FindMidpoint(start, end));           // add midpoint of line (must have this because my code needs at least 3 control points)
+            path.Add(end);                                     // add end point
+
+            path.Update();                                     // call update to create all the bodies
+
+            Geom geom;
+            for (int i = 0; i < path.Bodies.Count; i++)
+            {
+                geom = GeomFactory.Instance.CreateRectangleGeom(path.Bodies[i], width, height);
+                geom.collisionGroup = collisionGroup;
+                path.Add(geom);                                           // add a geom to the chain
+            }
+            path.LinkBodies();         // link bodies together with revolute joints
+
+            if (pinStart)
+                path.Add(JointFactory.Instance.CreateFixedRevoluteJoint(path.Bodies[0], start));
+            if (pinEnd)
+                path.Add(JointFactory.Instance.CreateFixedRevoluteJoint(path.Bodies[path.Bodies.Count - 1], path.ControlPoints[2]));
+
+            return (path);
+        }
+
+        /// <summary>
+        /// Creates a track.
+        /// </summary>
+        /// <param name="points">The points.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="mass">The mass.</param>
+        /// <param name="endless">if set to <c>true</c> [endless].</param>
+        /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <returns></returns>
+        public Path CreateTrack(Vertices points, float width, float height, float mass, bool endless, int collisionGroup)
+        {
+            Path path = new Path(width, height, mass, endless);    // create the path
 
             foreach (Vector2 v in points)
-                p.Add(v);                   // add all the points to the path
+                path.Add(v);                   // add all the points to the path
 
-            p.Update();                     // update the path
+            path.Update();                     // update the path
 
-            Geom g;
-            for (int i = 0; i < p.Bodies.Count; i++)
+            Geom geom;
+            for (int i = 0; i < path.Bodies.Count; i++)
             {
-                g = GeomFactory.Instance.CreateRectangleGeom(p.Bodies[i], width, height);
-                g.collisionGroup = group;
-                p.Add(g);                                           // add a geom to the chain
+                geom = GeomFactory.Instance.CreateRectangleGeom(path.Bodies[i], width, height);
+                geom.collisionGroup = collisionGroup;
+                path.Add(geom);                                           // add a geom to the chain
             }
-            p.LinkBodies();                 // link bodies together with revolute joints
+            path.LinkBodies();                 // link bodies together with revolute joints
 
-            return p;
+            return path;
         }
 
-        public Path CreateTrack(PhysicsSimulator ps, Vertices points, float width, float height, float mass, bool endless, int group)
+        /// <summary>
+        /// Creates a track.
+        /// </summary>
+        /// <param name="physicsSimulator">The physics simulator.</param>
+        /// <param name="points">The points.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="mass">The mass.</param>
+        /// <param name="endless">if set to <c>true</c> [endless].</param>
+        /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <returns></returns>
+        public Path CreateTrack(PhysicsSimulator physicsSimulator, Vertices points, float width, float height, float mass, bool endless, int collisionGroup)
         {
-            Path p = CreateTrack(points, width, height, mass, endless, group);
+            Path path = CreateTrack(points, width, height, mass, endless, collisionGroup);
 
-            p.AddToPhysicsSimulator(ps);
+            path.AddToPhysicsSimulator(physicsSimulator);
 
-            return p;
+            return path;
         }
     }
 }

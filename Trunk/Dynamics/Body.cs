@@ -1,6 +1,7 @@
 using System;
 #if (XNA)
 using FarseerGames.FarseerPhysics.Collisions;
+using FarseerGames.FarseerPhysics.Controllers;
 using Microsoft.Xna.Framework;
 #else
 using FarseerGames.FarseerPhysics.Mathematics;
@@ -11,7 +12,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     /// <summary>
     /// The Body handles all the physics of motion: position, velocity, acceleration
     /// forces, torques, etc...</para>
-    /// <para>The Body is integrated every timestep (which should be fixed) by the <see cref="PhysicsSimulator">PhysicsSimulator</see> in the following manner:
+    /// <para>The Body is integrated every time step (which should be fixed) by the <see cref="PhysicsSimulator">PhysicsSimulator</see> in the following manner:
     /// Set forces and torques (gravity, springs, user input...)->Apply forces and torques (updating velocity only)->Update positions and Rotations</para>
     /// <para>In technical terms, this is known as Symplectic Euler Integration because
     /// velocity is updated prior to position (The reverse of simple Euler Integration)</para>
@@ -51,17 +52,17 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <summary>
         /// Gets or sets the quadratic drag coefficient.
         /// </summary>
-        /// <value>The quadratic drag coefficient.</value>
+        /// <Value>The quadratic drag coefficient.</Value>
         public float QuadraticDragCoefficient = .001f;
         /// <summary>
         /// The rate at which a body is rotating 
         /// </summary>
-        /// <value>The angular velocity.</value>
+        /// <Value>The angular velocity.</Value>
         public float AngularVelocity;
         /// <summary>
         /// Gets or sets the linear velocity.
         /// </summary>
-        /// <value>The linear velocity.</value>
+        /// <Value>The linear velocity.</Value>
         public Vector2 LinearVelocity = Vector2.Zero;
         /// <summary>
         ///Sets whether or not the body will take part in the simulation.
@@ -71,26 +72,30 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <summary>
         /// Gets or sets the rotational drag coefficient.
         /// </summary>
-        /// <value>The rotational drag coefficient.</value>
+        /// <Value>The rotational drag coefficient.</Value>
         public float RotationalDragCoefficient = .001f; //tuned for a 1.28m X 1.28m rectangle with mass = 1
         /// <summary>
-        /// Gets or sets a value indicating whether this body is quadratic drag enabled.
+        /// Gets or sets a Value indicating whether this body is quadratic drag enabled.
         /// </summary>
-        /// <value>
+        /// <Value>
         /// 	<c>true</c> if this body is quadratic drag enabled; otherwise, <c>false</c>.
-        /// </value>
+        /// </Value>
         public bool IsQuadraticDragEnabled;
+
+        //TODO: Document
         public float LinearDragCoefficient = .001f; //tuned for a body of mass 1
         /// <summary>
-        /// Gets or sets a value indicating whether this body ignores gravity.
+        /// Gets or sets a Value indicating whether this body ignores gravity.
         /// </summary>
-        /// <value><c>true</c> if it ignores gravity; otherwise, <c>false</c>.</value>
+        /// <Value><c>true</c> if it ignores gravity; otherwise, <c>false</c>.</Value>
         public bool IgnoreGravity;
+
+        //TODO: Document
         public bool IsDisposed;
         /// <summary>
         /// Gets or sets the tag. A tag is used to attach a custom object to the Body.
         /// </summary>
-        /// <value>The tag.</value>
+        /// <Value>The tag.</Value>
         public object Tag;
 
         /// <summary>
@@ -98,6 +103,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// </summary>
         public event EventHandler<EventArgs> Disposed;
 
+        //TODO: Document
         public UpdatedEventHandler Updated;
 
         public Body()
@@ -119,18 +125,18 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         #region Added by Daniel Pramel 08/17/08
 
         /// <summary>
-        /// Returns or sets how long (ms) the body is below the MinimumVelocity.
+        /// Returns or sets how long (ms) the body is below the <see cref="MinimumVelocity"/>.
         /// If this time is greater than the InactivityControllers "MaxIdleTime", it will be deactivated
         /// </summary>
         public float IdleTime;
 
         /// <summary>
-        /// Returns or sets whether the body can be deactivated by the InactivityController or not
+        /// Returns or sets whether the body can be deactivated by the <see cref="InactivityController"/> or not
         /// </summary>
         public bool IsAutoIdle;
 
         /// <summary>
-        /// Returns or sets the minimum velocity. If the bodys velocity is below this value, it can
+        /// Returns or sets the minimum velocity. If the body's velocity is below this Value, it can
         /// be deactivated
         /// </summary>
         public float MinimumVelocity = 55;
@@ -179,7 +185,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         /// <summary>
         /// The moment of inertia of the body. 
-        /// <para>The moment of inertia of a body in 2D is a scalar value that represents how
+        /// <para>The moment of inertia of a body in 2D is a scalar Value that represents how
         /// difficult (or not difficult) it is to rotate a body about the center of mass.</para>
         /// <para>The moment of inertia varies by the shape of the body. For basic shapes like
         /// circles and rectangles, formulas exist for computing the moment of inertia based on
@@ -213,7 +219,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// The inverse of the moment of inertia of the body (1/MomentOfInertia)
+        /// The inverse of the moment of inertia of the body (1/<see cref="MomentOfInertia"/>)
         /// </summary>
         public float InverseMomentOfInertia
         {
@@ -246,7 +252,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <summary>
         /// Gets or sets the position.
         /// </summary>
-        /// <value>The position.</value>
+        /// <Value>The position.</Value>
         public Vector2 Position
         {
             get { return position; }
@@ -263,7 +269,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <summary>
         /// Gets the revolutions relative to the original state of the body
         /// </summary>
-        /// <value>The revolutions.</value>
+        /// <Value>The revolutions.</Value>
         public int Revolutions
         {
             get { return _revolutions; }
@@ -272,7 +278,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <summary>
         /// Gets or sets the rotation.
         /// </summary>
-        /// <value>The rotation.</value>
+        /// <Value>The rotation.</Value>
         public float Rotation
         {
             get { return rotation; }
@@ -301,10 +307,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <summary>
         ///Returns the total rotation of a body.
         ///If a body spins around 10 times then TotalRotation wold return 2 * Pi * 10.
-        /// This property is mostly intended for internal use by the angle joints and springs but it could be useful in some situataions for game related things.
+        /// This property is mostly intended for internal use by the angle joints and springs but it could be useful in some situations for game related things.
         /// This property is read-only 
         /// </summary>
-        /// <value>The total rotation.</value>
+        /// <Value>The total rotation.</Value>
         public float TotalRotation
         {
             get { return totalRotation; }
@@ -312,10 +318,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         /// <summary>
         /// The total amount of force that will be applied to the body in the upcoming loop.
-        /// The Force is cleared at the end of every update call, so this value should only be called just prior to calling update.
+        /// The force is cleared at the end of every update call, so this Value should only be called just prior to calling update.
         /// This property is read-only. 
         /// </summary>
-        /// <value>The force.</value>
+        /// <Value>The force.</Value>
         public Vector2 Force
         {
             get { return force; }
@@ -323,11 +329,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         /// <summary>
         /// The total amount of torque that will be applied to the body in the upcoming loop.
-        /// The Torque is cleared at the end of every update call, so this value should only be called just prior to calling update.
+        /// The Torque is cleared at the end of every update call, so this Value should only be called just prior to calling update.
         /// Torque can be thought of as the rotational analog of a force.
         /// This property is read-only. 
         /// </summary>
-        /// <value>The torque.</value>
+        /// <Value>The torque.</Value>
         public float Torque
         {
             get { return _torque; }
@@ -337,7 +343,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// Returns a unit vector that represents the local X direction of a body converted to world coordinates.
         /// This property is read-only 
         /// </summary>
-        /// <value>The X vector in world coordinates.</value>
+        /// <Value>The X vector in world coordinates.</Value>
         public Vector2 XVectorInWorldCoordinates
         {
             get
@@ -352,7 +358,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// Returns a unit vector that represents the local Y direction of a body converted to world coordinates.
         /// This property is read-only 
         /// </summary>
-        /// <value>The Y vector in world coordinates.</value>
+        /// <Value>The Y vector in world coordinates.</Value>
         public Vector2 YVectorInWorldCoordinates
         {
             get
@@ -472,11 +478,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             GetVelocityAtWorldOffset(ref _r1, out velocity);
         }
 
-        public Vector2 GetVelocityAtWorldPoint(Vector2 worldPoint, Vector2 velocity)
-        {
-            GetVelocityAtWorldPoint(ref worldPoint, out velocity);
-            return velocity;
-        }
+        //Commented out. It's not the best practice to override a parameter and return it. Use the out keyword for this.
+        //public Vector2 GetVelocityAtWorldPoint(Vector2 worldPoint, Vector2 velocity)
+        //{
+        //    GetVelocityAtWorldPoint(ref worldPoint, out velocity);
+        //    return velocity;
+        //}
 
         public void GetVelocityAtWorldPoint(ref Vector2 worldPoint, out Vector2 velocity)
         {
@@ -648,7 +655,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         /// <summary>
         /// Stores all applied impulses so that they can be applied at the same time
-        /// by the PhysicsSimulator.
+        /// by the <see cref="PhysicsSimulator"/>.
         /// </summary>
         /// <param name="impulse"></param>
         public void ApplyImpulse(Vector2 impulse)
@@ -670,7 +677,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         /// <summary>
         /// Stores all applied impulses so that they can be applied at the same time
-        /// by the PhysicsSimulator.
+        /// by the <see cref="PhysicsSimulator"/>.
         /// </summary>
         /// <param name="impulse"></param>
         public void ApplyImpulse(ref Vector2 impulse)
@@ -691,7 +698,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Applys then clears all the external impulses that were accumulated
+        /// Applies then clears all the external impulses that were accumulated
         /// </summary>
         internal void ApplyImpulses()
         {

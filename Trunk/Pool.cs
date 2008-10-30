@@ -2,6 +2,10 @@ using System.Collections.Generic;
 
 namespace FarseerGames.FarseerPhysics
 {
+    /// <summary>
+    /// Pool used to cache objects.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class Pool<T> where T : new()
     {
         private Stack<T> _stack;

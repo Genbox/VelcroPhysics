@@ -159,22 +159,22 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private static bool WrapperIsDisposed(Wrapper wrapper)
         {
-            return wrapper.geom.IsDisposed;
+            return wrapper.Geom.IsDisposed;
         }
 
         private static bool StubIsDisposed(Stub stub)
         {
-            return stub.wrapper.geom.IsDisposed;
+            return stub.Wrapper.Geom.IsDisposed;
         }
 
         private static bool WrapperIsRemoved(Wrapper wrapper)
         {
-            return wrapper.geom.isRemoved;
+            return wrapper.Geom.isRemoved;
         }
 
         private static bool StubIsRemoved(Stub stub)
         {
-            return stub.wrapper.geom.isRemoved;
+            return stub.Wrapper.Geom.isRemoved;
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             int yDepth = 0;
             for (int index = 0; index < _xStubs.Count; index++)
             {
-                if (_xStubs[index].begin)
+                if (_xStubs[index].Begin)
                 {
                     xCount += xDepth++;
                 }
@@ -211,7 +211,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     xDepth--;
                 }
 
-                if (_yStubs[index].begin)
+                if (_yStubs[index].Begin)
                 {
                     yCount += yDepth++;
                 }
@@ -230,8 +230,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             for (int index = 0; index < stubs.Count; index++)
             {
                 Stub stub = stubs[index];
-                Wrapper wrapper1 = stub.wrapper;
-                if (stub.begin)
+                Wrapper wrapper1 = stub.Wrapper;
+                if (stub.Begin)
                 {
                     //set the min and max values
                     if (doX)
@@ -243,15 +243,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         wrapper1.SetX();
                     }
 
-                    Geom geom1 = wrapper1.geom;
+                    Geom geom1 = wrapper1.Geom;
                     for (LinkedListNode<Wrapper> node = _currentBodies.First;
                          node != null;
                          node = node.Next)
                     {
                         Wrapper wrapper2 = node.Value;
-                        Geom geom2 = wrapper2.geom;
-                        if (wrapper1.min <= wrapper2.max && //tests the other axis
-                            wrapper2.min <= wrapper1.max)
+                        Geom geom2 = wrapper2.Geom;
+                        if (wrapper1.Min <= wrapper2.Max && //tests the other axis
+                            wrapper2.Min <= wrapper1.Max)
                         {
                             //Call the OnBroadPhaseCollision event first. If the user aborts the collision
                             //it will not create an arbiter
@@ -266,16 +266,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
                             }
                         }
                     }
-                    if (wrapper1.shouldAddNode)
+                    if (wrapper1.ShouldAddNode)
                     {
-                        _currentBodies.AddLast(wrapper1.node);
+                        _currentBodies.AddLast(wrapper1.Node);
                     }
                 }
                 else
                 {
-                    if (wrapper1.shouldAddNode)
+                    if (wrapper1.ShouldAddNode)
                     {
-                        _currentBodies.Remove(wrapper1.node);
+                        _currentBodies.Remove(wrapper1.Node);
                     }
                 }
             }
@@ -320,14 +320,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private sealed class Stub
         {
-            public bool begin;
-            public float value;
-            public Wrapper wrapper;
+            public bool Begin;
+            public float Value;
+            public Wrapper Wrapper;
 
             public Stub(Wrapper wrapper, bool begin)
             {
-                this.wrapper = wrapper;
-                this.begin = begin;
+                Wrapper = wrapper;
+                Begin = begin;
             }
         }
 
@@ -341,15 +341,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             public int Compare(Stub left, Stub right)
             {
-                if (left.value < right.value)
+                if (left.Value < right.Value)
                 {
                     return -1;
                 }
-                if (left.value > right.value)
+                if (left.Value > right.Value)
                 {
                     return 1;
                 }
-                return ((left == right) ? (0) : ((left.begin) ? (-1) : (1)));
+                return ((left == right) ? (0) : ((left.Begin) ? (-1) : (1)));
             }
 
             #endregion
@@ -365,16 +365,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
             private Stub _xEnd;
             private Stub _yBegin;
             private Stub _yEnd;
-            public Geom geom;
-            public float max;
-            public float min;
-            public LinkedListNode<Wrapper> node;
-            public bool shouldAddNode;
+            public Geom Geom;
+            public float Max;
+            public float Min;
+            public LinkedListNode<Wrapper> Node;
+            public bool ShouldAddNode;
 
             public Wrapper(Geom body)
             {
-                geom = body;
-                node = new LinkedListNode<Wrapper>(this);
+                Geom = body;
+                Node = new LinkedListNode<Wrapper>(this);
                 _xBegin = new Stub(this, true);
                 _xEnd = new Stub(this, false);
                 _yBegin = new Stub(this, true);
@@ -392,28 +392,28 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             public void Update()
             {
-                AABB rect = geom.AABB;
+                AABB rect = Geom.AABB;
                 //if it is a single point in space
                 //then dont even add it to the link list.
-                shouldAddNode = rect.Min.X != rect.Max.X || rect.Min.Y != rect.Max.Y;
+                ShouldAddNode = rect.Min.X != rect.Max.X || rect.Min.Y != rect.Max.Y;
 
-                _xBegin.value = rect.Min.X;
-                _xEnd.value = rect.Max.X;
+                _xBegin.Value = rect.Min.X;
+                _xEnd.Value = rect.Max.X;
 
-                _yBegin.value = rect.Min.Y;
-                _yEnd.value = rect.Max.Y;
+                _yBegin.Value = rect.Min.Y;
+                _yEnd.Value = rect.Max.Y;
             }
 
             public void SetX()
             {
-                min = _xBegin.value;
-                max = _xEnd.value;
+                Min = _xBegin.Value;
+                Max = _xEnd.Value;
             }
 
             public void SetY()
             {
-                min = _yBegin.value;
-                max = _yEnd.value;
+                Min = _yBegin.Value;
+                Max = _yEnd.Value;
             }
         }
 

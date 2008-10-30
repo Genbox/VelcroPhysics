@@ -54,7 +54,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the first body.
         /// </summary>
-        /// <value>The body1.</value>
+        /// <Value>The body1.</Value>
         public Body Body1
         {
             get { return _body1; }
@@ -64,7 +64,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the second body.
         /// </summary>
-        /// <value>The body2.</value>
+        /// <Value>The body2.</Value>
         public Body Body2
         {
             get { return _body2; }
@@ -74,7 +74,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the slop.
         /// </summary>
-        /// <value>The slop.</value>
+        /// <Value>The slop.</Value>
         public float Slop
         {
             get { return _slop; }
@@ -84,7 +84,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the min.
         /// </summary>
-        /// <value>The min.</value>
+        /// <Value>The min.</Value>
         public float Min
         {
             get { return _min; }
@@ -94,7 +94,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the max.
         /// </summary>
-        /// <value>The max.</value>
+        /// <Value>The max.</Value>
         public float Max
         {
             get { return _max; }
@@ -104,7 +104,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the first anchor.
         /// </summary>
-        /// <value>The anchor1.</value>
+        /// <Value>The anchor1.</Value>
         public Vector2 Anchor1
         {
             get { return _anchor1; }
@@ -120,7 +120,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the second anchor.
         /// </summary>
-        /// <value>The anchor2.</value>
+        /// <Value>The anchor2.</Value>
         public Vector2 Anchor2
         {
             get { return _anchor2; }
@@ -136,7 +136,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets the first world anchor.
         /// </summary>
-        /// <value>The world anchor1.</value>
+        /// <Value>The world anchor1.</Value>
         public Vector2 WorldAnchor1
         {
             get { return _worldAnchor1; }
@@ -145,7 +145,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets the second world anchor.
         /// </summary>
-        /// <value>The world anchor2.</value>
+        /// <Value>The world anchor2.</Value>
         public Vector2 WorldAnchor2
         {
             get { return _worldAnchor2; }
@@ -154,7 +154,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets the current anchor position.
         /// </summary>
-        /// <value>The current anchor position.</value>
+        /// <Value>The current anchor position.</Value>
         public Vector2 CurrentAnchorPosition
         {
             get

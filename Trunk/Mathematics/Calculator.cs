@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Mathematics
 {
+    /// <summary>
+    /// A calculator with common math functions and constants.
+    /// </summary>
     public static class Calculator
     {
         public const float DegreesToRadiansRatio = 57.29577957855f;

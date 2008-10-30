@@ -41,7 +41,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the first body
         /// </summary>
-        /// <value>The body1.</value>
+        /// <Value>The body1.</Value>
         public Body Body1
         {
             get { return _body1; }
@@ -51,7 +51,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the second body.
         /// </summary>
-        /// <value>The body2.</value>
+        /// <Value>The body2.</Value>
         public Body Body2
         {
             get { return _body2; }
@@ -61,7 +61,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the slop.
         /// </summary>
-        /// <value>The slop.</value>
+        /// <Value>The slop.</Value>
         public float Slop
         {
             get { return _slop; }
@@ -71,7 +71,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the upper limit.
         /// </summary>
-        /// <value>The upper limit.</value>
+        /// <Value>The upper limit.</Value>
         public float UpperLimit
         {
             get { return _upperLimit; }
@@ -81,7 +81,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the lower limit.
         /// </summary>
-        /// <value>The lower limit.</value>
+        /// <Value>The lower limit.</Value>
         public float LowerLimit
         {
             get { return _lowerLimit; }

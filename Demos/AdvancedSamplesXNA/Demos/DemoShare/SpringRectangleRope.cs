@@ -73,7 +73,7 @@ namespace FarseerGames.AdvancedSamples.Demos.DemoShare
             set { _springConstant = value; }
         }
 
-        public float DampningConstant
+        public float DampingConstant
         {
             get { return _dampningConstant; }
             set { _dampningConstant = value; }

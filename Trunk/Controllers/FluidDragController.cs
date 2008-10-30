@@ -108,16 +108,16 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// </summary>
         /// <param name="fluidContainer">An object that implements <see cref="IFluidContainer"/></param>
         /// <param name="density">Density of the fluid</param>
-        /// <param name="linearDragCoeficient">Linear drag coefficient of the fluid</param>
-        /// <param name="rotationalDragCoeficient">Rotational drag coefficient of the fluid</param>
+        /// <param name="linearDragCoefficient">Linear drag coefficient of the fluid</param>
+        /// <param name="rotationalDragCoefficient">Rotational drag coefficient of the fluid</param>
         /// <param name="gravity">The direction gravity acts. Buoyancy force will act in opposite direction of gravity.</param>
-        public void Initialize(IFluidContainer fluidContainer, float density, float linearDragCoeficient,
-                               float rotationalDragCoeficient, Vector2 gravity)
+        public void Initialize(IFluidContainer fluidContainer, float density, float linearDragCoefficient,
+                               float rotationalDragCoefficient, Vector2 gravity)
         {
             _fluidContainer = fluidContainer;
             _density = density;
-            _linearDragCoefficient = linearDragCoeficient;
-            _rotationalDragCoeficient = rotationalDragCoeficient;
+            _linearDragCoefficient = linearDragCoefficient;
+            _rotationalDragCoeficient = rotationalDragCoefficient;
             _gravity = gravity;
             _vertices = new Vertices();
         }

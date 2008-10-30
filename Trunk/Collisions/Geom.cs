@@ -95,7 +95,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets the position.
         /// </summary>
-        /// <value>The position.</value>
+        /// <Value>The position.</Value>
         public Vector2 Position
         {
             get { return _position; }
@@ -104,7 +104,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets the rotation.
         /// </summary>
-        /// <value>The rotation.</value>
+        /// <Value>The rotation.</Value>
         public float Rotation
         {
             get { return _rotation; }
@@ -114,7 +114,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// Gets or sets the size of the collision grid cells.
         /// Be sure to run <see cref="ComputeCollisionGrid"/>() for any changes to take effect.
         /// </summary>
-        /// <value>The size of the collision grid cell.</value>
+        /// <Value>The size of the collision grid cell.</Value>
         public float CollisionGridCellSize
         {
             get { return _collisionGridCellSize; }
@@ -124,7 +124,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets the local vertices of the geom. Local vertices are relative to the center of the vertices.
         /// </summary>
-        /// <value>The local vertices.</value>
+        /// <Value>The local vertices.</Value>
         public Vertices LocalVertices
         {
             get { return localVertices; }
@@ -133,7 +133,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets the world vertices.
         /// </summary>
-        /// <value>The world vertices.</value>
+        /// <Value>The world vertices.</Value>
         public Vertices WorldVertices
         {
             get { return worldVertices; }
@@ -142,7 +142,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets or sets the matrix.
         /// </summary>
-        /// <value>The matrix.</value>
+        /// <Value>The matrix.</Value>
         public Matrix Matrix
         {
             get { return _matrix; }
@@ -156,7 +156,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets the inverse matrix.
         /// </summary>
-        /// <value>The matrix inverse.</value>
+        /// <Value>The matrix inverse.</Value>
         public Matrix MatrixInverse
         {
             get
@@ -169,7 +169,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets or sets the Axis Aligned Bounding Box of the geom.
         /// </summary>
-        /// <value>The AABB.</value>
+        /// <Value>The AABB.</Value>
         public AABB AABB
         {
             get { return aabb; }
@@ -180,7 +180,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// Gets or sets the collision group.
         /// If 2 geoms are in the same collision group, they will not collide.
         /// </summary>
-        /// <value>The collision group.</value>
+        /// <Value>The collision group.</Value>
         public int CollisionGroup
         {
             get { return collisionGroup; }
@@ -188,9 +188,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether collision is enabled.
+        /// Gets or sets a Value indicating whether collision is enabled.
         /// </summary>
-        /// <value><c>true</c> if collision is enabled; otherwise, <c>false</c>.</value>
+        /// <Value><c>true</c> if collision is enabled; otherwise, <c>false</c>.</Value>
         public bool CollisionEnabled
         {
             get { return collisionEnabled; }
@@ -198,11 +198,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is a sensor.
+        /// Gets or sets a Value indicating whether this instance is a sensor.
         /// A sensor does not calculate impulses and does not change position (it's static)
         /// i does however calculate collisions. Sensors can be used to sense other geoms.
         /// </summary>
-        /// <value><c>true</c> if this instance is sensor; otherwise, <c>false</c>.</value>
+        /// <Value><c>true</c> if this instance is sensor; otherwise, <c>false</c>.</Value>
         public bool IsSensor
         {
             get { return _isSensor; }
@@ -223,14 +223,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether collision response is enabled.
+        /// Gets or sets a Value indicating whether collision response is enabled.
         /// If 2 geoms collide and CollisionResponseEnabled is false, then impulses will not be calculated
         /// for the 2 colliding geoms. They will pass through each other, but will still be able to fire the
         /// <see cref="OnCollision"/> event.
         /// </summary>
-        /// <value>
+        /// <Value>
         /// 	<c>true</c> if collision response enabled; otherwise, <c>false</c>.
-        /// </value>
+        /// </Value>
         public bool CollisionResponseEnabled
         {
             get { return collisionResponseEnabled; }
@@ -240,7 +240,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets or sets the collision categories.
         /// </summary>
-        /// <value>The collision categories.</value>
+        /// <Value>The collision categories.</Value>
         public CollisionCategory CollisionCategories
         {
             get { return collisionCategories; }
@@ -250,7 +250,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets or sets the collision categories that this geom collides with.
         /// </summary>
-        /// <value>The collides with.</value>
+        /// <Value>The collides with.</Value>
         public CollisionCategory CollidesWith
         {
             get { return collidesWith; }
@@ -261,7 +261,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// Gets the grid from this geom.
         /// Grids are used to test for intersections.
         /// </summary>
-        /// <value>The grid.</value>
+        /// <Value>The grid.</Value>
         public Grid Grid
         {
             get { return grid; }
@@ -270,7 +270,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets the body attached to the geom.
         /// </summary>
-        /// <value>The body.</value>
+        /// <Value>The body.</Value>
         public Body Body
         {
             get { return body; }
@@ -289,7 +289,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Controls the amount of friction a geometry has when in contact with another geometry. A value of zero implies
+        /// Controls the amount of friction a geometry has when in contact with another geometry. A Value of zero implies
         /// no friction. When two geometries collide, the minimum friction coefficient between the two bodies is used.
         /// </summary>
         public float FrictionCoefficient
@@ -301,13 +301,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets or sets the tag. A tag is used to attach a custom object to the Geom.
         /// </summary>
-        /// <value>The tag.</value>
+        /// <Value>The tag.</Value>
         public Object Tag { get; set; }
 
         /// <summary>
         /// Gets the id of this geom.
         /// </summary>
-        /// <value>The id.</value>
+        /// <Value>The id.</Value>
         internal int Id { get; private set; }
 
         #region GetNextId variables

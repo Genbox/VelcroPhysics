@@ -34,8 +34,8 @@ namespace FarseerGames.FarseerPhysics.Factories
         }
 
         /// <summary>
-        ///used to calculate a cell size from the aabb whenever the collisionGridCellSize
-        ///is not set explicitly. The more sharp corners a body has, the smaller this value will 
+        ///used to calculate a cell size from the AABB whenever the collisionGridCellSize
+        ///is not set explicitly. The more sharp corners a body has, the smaller this Value will 
         ///need to be. 
         /// </summary>
         public float GridCellSizeAABBFactor

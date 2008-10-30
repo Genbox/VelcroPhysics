@@ -19,13 +19,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     public class SweepAndPruneCollider : IBroadPhaseCollider
     {
-        public const float fTol = 0.01f; //1.5f; //.01f;
+        private const float _floatTolerance = 0.01f; //1.5f; //.01f;
         private PhysicsSimulator _physicsSimulator;
         private ExtentList _xExtentList;
         private ExtentInfoList _xInfoList;
         private ExtentList _yExtentList;
         private ExtentInfoList _yInfoList;
-        public CollisionPairDictionary collisionPairs;
+        /// <summary>
+        /// The collision pairs
+        /// </summary>
+        public CollisionPairDictionary CollisionPairs;
 
         /// <summary>
         /// Fires when a broad phase collision occurs
@@ -39,7 +42,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             _yExtentList = new ExtentList(this);
             _xInfoList = new ExtentInfoList(this);
             _yInfoList = new ExtentInfoList(this);
-            collisionPairs = new CollisionPairDictionary();
+            CollisionPairs = new CollisionPairDictionary();
         }
 
         #region IBroadPhaseCollider Members
@@ -53,46 +56,46 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             //TODO: Could use lamda expressions. Need to test the performance first.
             if (_xInfoList.RemoveAll(delegate(ExtentInfo i)
-            { return i.geometry.IsDisposed; }) > 0)
+            { return i.Geometry.IsDisposed; }) > 0)
             {
                 _xExtentList.RemoveAll(delegate(Extent n)
-                { return n.info.geometry.IsDisposed; });
+                { return n.Info.Geometry.IsDisposed; });
             }
 
             if (_yInfoList.RemoveAll(delegate(ExtentInfo i)
-            { return i.geometry.IsDisposed; }) > 0)
+            { return i.Geometry.IsDisposed; }) > 0)
             {
                 _yExtentList.RemoveAll(delegate(Extent n)
-                { return n.info.geometry.IsDisposed; });
+                { return n.Info.Geometry.IsDisposed; });
             }
 
             // We force a non-incremental update because that will insure that the
-            // collisionPairs get recreated and that the geometry isn't being held
+            // CollisionPairs get recreated and that the geometry isn't being held
             // by overlaps, etc. Its just easier this way.
             ForceNonIncrementalUpdate();
         }
 
         /// <summary>
-        /// Used by the PhysicsSimulator to remove geometry from Sweep and Prune once it
+        /// Used by the <see cref="PhysicsSimulator"/> to remove geometry from Sweep and Prune once it
         /// has been removed.
         /// </summary>
         public void ProcessRemovedGeoms()
         {
             if (_xInfoList.RemoveAll(delegate(ExtentInfo i)
-            { return i.geometry.isRemoved; }) > 0)
+            { return i.Geometry.isRemoved; }) > 0)
             {
                 _xExtentList.RemoveAll(delegate(Extent n)
-                { return n.info.geometry.isRemoved; });
+                { return n.Info.Geometry.isRemoved; });
             }
             if (_yInfoList.RemoveAll(delegate(ExtentInfo i)
-            { return i.geometry.isRemoved; }) > 0)
+            { return i.Geometry.isRemoved; }) > 0)
             {
                 _yExtentList.RemoveAll(delegate(Extent n)
-                { return n.info.geometry.isRemoved; });
+                { return n.Info.Geometry.isRemoved; });
             }
 
             // We force a non-incremental update because that will insure that the
-            // collisionPairs get recreated and that the geometry isn't being held
+            // CollisionPairs get recreated and that the geometry isn't being held
             // by overlaps, etc. Its just easier this way.
             ForceNonIncrementalUpdate();
         }
@@ -174,7 +177,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
 
             // We force a non-incremental update because that will insure that the
-            // collisionPairs get recreated and that the geometry isn't being held
+            // CollisionPairs get recreated and that the geometry isn't being held
             // by overlaps, etc. Its just easier this way.
             ForceNonIncrementalUpdate();
         }
@@ -190,7 +193,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             // We force a non-incremental update because that will insure that the
-            // collisionPairs get recreated and that the geometry isn't being held
+            // CollisionPairs get recreated and that the geometry isn't being held
             // by overlaps, etc. Its just easier this way.
             ForceNonIncrementalUpdate();
         }
@@ -265,14 +268,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
             aabb1.max = g1.aabb.max;
             aabb2.min = g2.aabb.min;
             aabb2.max = g2.aabb.max;
-            aabb1.min.X -= fTol;
-            aabb1.min.Y -= fTol;
-            aabb1.max.X += fTol;
-            aabb1.max.Y += fTol;
-            aabb2.min.X -= fTol;
-            aabb2.min.Y -= fTol;
-            aabb2.max.X += fTol;
-            aabb2.max.Y += fTol;
+            aabb1.min.X -= _floatTolerance;
+            aabb1.min.Y -= _floatTolerance;
+            aabb1.max.X += _floatTolerance;
+            aabb1.max.Y += _floatTolerance;
+            aabb2.min.X -= _floatTolerance;
+            aabb2.min.Y -= _floatTolerance;
+            aabb2.max.X += _floatTolerance;
+            aabb2.max.Y += _floatTolerance;
 
             //NOTE: Changed from
             //            if (AABB.Intersect(g1.aabb, g2.aabb) == false)
@@ -294,12 +297,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 ExtentInfo xInfo = _xInfoList[i];
                 ExtentInfo yInfo = _yInfoList[i];
 
-                AABB aabb = xInfo.geometry.aabb;
+                AABB aabb = xInfo.Geometry.aabb;
 
-                xInfo.min.value = aabb.min.X - fTol;
-                xInfo.max.value = aabb.max.X + fTol;
-                yInfo.min.value = aabb.min.Y - fTol;
-                yInfo.max.value = aabb.max.Y + fTol;
+                xInfo.Min.Value = aabb.min.X - _floatTolerance;
+                xInfo.Max.Value = aabb.max.X + _floatTolerance;
+                yInfo.Min.Value = aabb.min.Y - _floatTolerance;
+                yInfo.Max.Value = aabb.max.Y + _floatTolerance;
             }
         }
 
@@ -308,13 +311,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         private void HandleCollisions()
         {
-            foreach (CollisionPair cp in collisionPairs.Keys)
+            foreach (CollisionPair cp in CollisionPairs.Keys)
             {
-                // Note: Possible optimization. Maybe arbiter can be cached into value of
-                // collisionPairs? Currently, the collisionPairs hash doesn't use its
-                // value parameter - its just an unused bool value.
+                // Note: Possible optimization. Maybe arbiter can be cached into Value of
+                // CollisionPairs? Currently, the CollisionPairs hash doesn't use its
+                // Value parameter - its just an unused bool Value.
                 Arbiter arbiter = _physicsSimulator.arbiterPool.Fetch();
-                arbiter.ConstructArbiter(cp.geom1, cp.geom2, _physicsSimulator);
+                arbiter.ConstructArbiter(cp.Geom1, cp.Geom2, _physicsSimulator);
 
                 if (!_physicsSimulator.arbiterList.Contains(arbiter))
                     _physicsSimulator.arbiterList.Add(arbiter);
@@ -348,21 +351,21 @@ namespace FarseerGames.FarseerPhysics.Collisions
             UpdateExtentValues();
 
             // First, wipe out the collision records
-            collisionPairs.Clear();
+            CollisionPairs.Clear();
 
             // And clear out all the overlap records
             Debug.Assert(_xInfoList.Count == _yInfoList.Count);
             for (int i = 0; i < _xInfoList.Count; i++)
             {
-                _xInfoList[i].overlaps.Clear();
-                _xInfoList[i].underConsideration.Clear();
-                _yInfoList[i].overlaps.Clear();
-                _yInfoList[i].underConsideration.Clear();
+                _xInfoList[i].Overlaps.Clear();
+                _xInfoList[i].UnderConsideration.Clear();
+                _yInfoList[i].Overlaps.Clear();
+                _yInfoList[i].UnderConsideration.Clear();
             }
 
             // Force sort
-            _xExtentList.Sort((l, r) => l.value.CompareTo(r.value));
-            _yExtentList.Sort((l, r) => l.value.CompareTo(r.value));
+            _xExtentList.Sort((l, r) => l.Value.CompareTo(r.Value));
+            _yExtentList.Sort((l, r) => l.Value.CompareTo(r.Value));
 
             // Rebuild overlap information
             List<Geom> overlaps = new List<Geom>();
@@ -374,22 +377,22 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                 foreach (Extent extent in extentList)
                 {
-                    if (extent.isMin)
+                    if (extent.IsMin)
                     {
                         // Add whatever is currently in overlaps to this
-                        extent.info.overlaps.InsertRange(0, overlaps);
+                        extent.Info.Overlaps.InsertRange(0, overlaps);
 
                         // Now add, this geom to overlaps
-                        overlaps.Add(extent.info.geometry);
+                        overlaps.Add(extent.Info.Geometry);
                     }
                     else
                     {
                         // remove this geom from overlaps
-                        overlaps.Remove(extent.info.geometry);
+                        overlaps.Remove(extent.Info.Geometry);
 
                         // Test this geom against its overlaps for collisionpairs
-                        Geom thisGeom = extent.info.geometry;
-                        foreach (Geom g in extent.info.overlaps)
+                        Geom thisGeom = extent.Info.Geometry;
+                        foreach (Geom g in extent.Info.Overlaps)
                         {
                             if (DoCollision(thisGeom, g) == false)
                                 continue;
@@ -397,7 +400,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                             //TODO: Should call OnBroadPhaseCollision event here. But not until
                             //the Run() method has been looked after
 
-                            collisionPairs.AddPair(thisGeom, g);
+                            CollisionPairs.AddPair(thisGeom, g);
                         }
                     }
                 }
@@ -414,20 +417,20 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public struct CollisionPair
         {
-            public Geom geom1;
-            public Geom geom2;
+            public Geom Geom1;
+            public Geom Geom2;
 
             public CollisionPair(Geom g1, Geom g2)
             {
                 if (g1 < g2)
                 {
-                    geom1 = g1;
-                    geom2 = g2;
+                    Geom1 = g1;
+                    Geom2 = g2;
                 }
                 else
                 {
-                    geom1 = g2;
-                    geom2 = g1;
+                    Geom1 = g2;
+                    Geom2 = g1;
                 }
             }
 
@@ -435,7 +438,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 // Arbitrarly choose 10000 as a number of colliders that we won't 
                 // approach any time soon.
-                return (geom1.Id * 10000 + geom2.Id);
+                return (Geom1.Id * 10000 + Geom2.Id);
             }
 
             public override bool Equals(object obj)
@@ -453,8 +456,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             /// <returns></returns>
             public bool Equals(CollisionPair other)
             {
-                if (geom1 == other.geom1)
-                    return (geom2 == other.geom2);
+                if (Geom1 == other.Geom1)
+                    return (Geom2 == other.Geom2);
 
                 return false;
             }
@@ -477,7 +480,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// This class is used to keep track of the pairs of geometry that need to be
         /// passed on to the narrow phase. The keys stored in the dictionary are
-        /// the actual geometry pairs (the boolean value is currently unused).
+        /// the actual geometry pairs (the boolean Value is currently unused).
         /// NOTE: May eventually want to add OnEnterCollisionState / 
         /// OnExitCollisionState callbacks which might be useful for debugging
         /// or possibly in user applications.
@@ -531,15 +534,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public class Extent
         {
-            public ExtentInfo info;
-            public bool isMin;
-            public float value;
+            public ExtentInfo Info;
+            public bool IsMin;
+            public float Value;
 
             public Extent(ExtentInfo info, float value, bool isMin)
             {
-                this.info = info;
-                this.value = value;
-                this.isMin = isMin;
+                Info = info;
+                Value = value;
+                IsMin = isMin;
             }
         }
 
@@ -555,19 +558,19 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public class ExtentInfo
         {
-            public Geom geometry; // Specific to Farseer
-            public Extent max;
-            public Extent min;
-            public List<Geom> overlaps;
-            public List<Geom> underConsideration;
+            public Geom Geometry; // Specific to Farseer
+            public Extent Max;
+            public Extent Min;
+            public List<Geom> Overlaps;
+            public List<Geom> UnderConsideration;
 
             public ExtentInfo(Geom g, float min, float max)
             {
-                geometry = g;
-                underConsideration = new List<Geom>();
-                overlaps = new List<Geom>();
-                this.min = new Extent(this, min, true);
-                this.max = new Extent(this, max, false);
+                Geometry = g;
+                UnderConsideration = new List<Geom>();
+                Overlaps = new List<Geom>();
+                Min = new Extent(this, min, true);
+                Max = new Extent(this, max, false);
             }
         }
 
@@ -580,31 +583,31 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         private class ExtentInfoList : List<ExtentInfo>
         {
-            public SweepAndPruneCollider owner;
+            public SweepAndPruneCollider Owner;
 
             public ExtentInfoList(SweepAndPruneCollider sap)
             {
-                owner = sap;
+                Owner = sap;
             }
 
             public void MoveUnderConsiderationToOverlaps()
             {
                 for (int i = 0; i < Count; i++)
                 {
-                    if (this[i].underConsideration.Count == 0)
+                    if (this[i].UnderConsideration.Count == 0)
                         continue;
 
-                    Geom g1 = this[i].geometry;
+                    Geom g1 = this[i].Geometry;
 
                     // First transfer those under consideration to overlaps,
                     // for, they have been considered...
-                    int startIndex = this[i].overlaps.Count;
-                    this[i].overlaps.AddRange(this[i].underConsideration);
-                    this[i].underConsideration.Clear();
+                    int startIndex = this[i].Overlaps.Count;
+                    this[i].Overlaps.AddRange(this[i].UnderConsideration);
+                    this[i].UnderConsideration.Clear();
 
-                    for (int j = startIndex; j < this[i].overlaps.Count; j++)
+                    for (int j = startIndex; j < this[i].Overlaps.Count; j++)
                     {
-                        Geom g2 = this[i].overlaps[j];
+                        Geom g2 = this[i].Overlaps[j];
 
                         // It is possible that we may test the same pair of geometries
                         // for both extents (x and y), however, I'm banking on that
@@ -615,14 +618,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                         //Call the OnBroadPhaseCollision event first. If the user aborts the collision
                         //it will not create an arbiter
-                        if (owner.OnBroadPhaseCollision != null)
+                        if (Owner.OnBroadPhaseCollision != null)
                         {
-                            if (owner.OnBroadPhaseCollision(g1, g2))
-                                owner.collisionPairs.AddPair(g1, g2);
+                            if (Owner.OnBroadPhaseCollision(g1, g2))
+                                Owner.CollisionPairs.AddPair(g1, g2);
                         }
                         else
                         {
-                            owner.collisionPairs.AddPair(g1, g2);
+                            Owner.CollisionPairs.AddPair(g1, g2);
                         }
                     }
                 }
@@ -639,11 +642,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public class ExtentList : List<Extent>
         {
-            public SweepAndPruneCollider owner;
+            public SweepAndPruneCollider Owner;
 
             public ExtentList(SweepAndPruneCollider sap)
             {
-                owner = sap;
+                Owner = sap;
             }
 
             /// <summary>
@@ -677,9 +680,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 }
 
                 while (insertAt < Count &&
-                       (this[insertAt].value < newExtent.value ||
-                        (this[insertAt].value == newExtent.value &&
-                         this[insertAt].isMin && !newExtent.isMin)))
+                       (this[insertAt].Value < newExtent.Value ||
+                        (this[insertAt].Value == newExtent.Value &&
+                         this[insertAt].IsMin && !newExtent.IsMin)))
                 {
                     insertAt++;
                 }
@@ -696,15 +699,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
             /// <param name="ourInfo">The extent info for a give axis</param>
             public void IncrementalInsertExtent(ExtentInfo ourInfo)
             {
-                Extent min = ourInfo.min;
-                Extent max = ourInfo.max;
+                Extent min = ourInfo.Min;
+                Extent max = ourInfo.Max;
 
-                Debug.Assert(min.value < max.value);
+                Debug.Assert(min.Value < max.Value);
 
                 int iMin = InsertIntoSortedList(min);
                 int iMax = InsertIntoSortedList(max);
 
-                Geom ourGeom = ourInfo.geometry;
+                Geom ourGeom = ourInfo.Geometry;
 
                 // As this is a newly inserted extent, we need to update the overlap 
                 // information.
@@ -714,8 +717,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 int iCurr = iMin + 1;
                 while (iCurr != iMax)
                 {
-                    if (this[iCurr].isMin)
-                        this[iCurr].info.underConsideration.Add(ourGeom);
+                    if (this[iCurr].IsMin)
+                        this[iCurr].Info.UnderConsideration.Add(ourGeom);
                     iCurr++;
                 }
 
@@ -724,21 +727,21 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 // to our underConsideration list and go to RULE 3, otherwise
                 // there is no more work to do and we can exit.
                 iCurr = iMin - 1;
-                while (iCurr >= 0 && this[iCurr].isMin == false)
+                while (iCurr >= 0 && this[iCurr].IsMin == false)
                     iCurr--;
 
                 if (iCurr < 0)
                     return;
 
-                List<Geom> ourUnderConsideration = ourInfo.underConsideration;
+                List<Geom> ourUnderConsideration = ourInfo.UnderConsideration;
                 Extent currExtent = this[iCurr];
 
-                ourUnderConsideration.Add(currExtent.info.geometry);
+                ourUnderConsideration.Add(currExtent.Info.Geometry);
 
                 // RULE 3: Now that we have found a "min" extent, we take
                 // its existing overlap list and copy it into our underConsideration
                 // list. All except for ourselves.
-                ourUnderConsideration.AddRange(currExtent.info.underConsideration);
+                ourUnderConsideration.AddRange(currExtent.Info.UnderConsideration);
                 ourUnderConsideration.Remove(ourGeom); // just in case
                 /*LinkedListNode<Geom> currGeomNode = 
                     currExtent.info.underConsideration.First;
@@ -758,14 +761,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 // from our extents list.
                 while (iCurr != iMin)
                 {
-                    if (currExtent.isMin == false)
+                    if (currExtent.IsMin == false)
                     {
-                        ourUnderConsideration.Remove(currExtent.info.geometry);
+                        ourUnderConsideration.Remove(currExtent.Info.Geometry);
 
-                        if (ourInfo.overlaps.Remove(currExtent.info.geometry))
+                        if (ourInfo.Overlaps.Remove(currExtent.Info.Geometry))
                         {
-                            owner.collisionPairs.RemovePair(ourGeom,
-                                                            currExtent.info.geometry);
+                            Owner.CollisionPairs.RemovePair(ourGeom,
+                                                            currExtent.Info.Geometry);
                         }
                     }
                     currExtent = this[++iCurr];
@@ -790,43 +793,43 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     Extent evalExtent = this[evalCnt];
                     Extent currExtent = this[i];
 
-                    if (currExtent.value <= evalExtent.value)
+                    if (currExtent.Value <= evalExtent.Value)
                         continue;
 
                     Extent savedExtent = evalExtent;
 
-                    if (evalExtent.isMin)
+                    if (evalExtent.IsMin)
                     {
-                        while (currExtent.value > evalExtent.value)
-                        //while (currExtent.value >= evalExtent.value)
+                        while (currExtent.Value > evalExtent.Value)
+                        //while (currExtent.Value >= evalExtent.Value)
                         {
-                            if (currExtent.isMin)
+                            if (currExtent.IsMin)
                             {
                                 // Begin extent is inserted before another begin extent.
                                 // So, Inserted extent's object looses reference to
                                 // non-inserted extent and Non-inserted extent gains 
                                 // reference to inserted extent's object.
-                                evalExtent.info.underConsideration.Remove(
-                                    currExtent.info.geometry);
+                                evalExtent.Info.UnderConsideration.Remove(
+                                    currExtent.Info.Geometry);
 
-                                if (evalExtent.info.overlaps.Remove(
-                                    currExtent.info.geometry))
+                                if (evalExtent.Info.Overlaps.Remove(
+                                    currExtent.Info.Geometry))
                                 {
-                                    owner.collisionPairs.RemovePair(
-                                        evalExtent.info.geometry,
-                                        currExtent.info.geometry);
+                                    Owner.CollisionPairs.RemovePair(
+                                        evalExtent.Info.Geometry,
+                                        currExtent.Info.Geometry);
                                 }
 
                                 // Add extent
-                                currExtent.info.underConsideration.Add(
-                                    evalExtent.info.geometry);
+                                currExtent.Info.UnderConsideration.Add(
+                                    evalExtent.Info.Geometry);
                             }
                             else
                             {
                                 // "min" extent inserted before the max extent.
                                 // Inserted extent gains reference to non-inserted extent.
-                                evalExtent.info.underConsideration.Add(
-                                    currExtent.info.geometry);
+                                evalExtent.Info.UnderConsideration.Add(
+                                    currExtent.Info.Geometry);
                             }
 
                             this[evalCnt--] = this[i--];
@@ -837,23 +840,23 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     }
                     else
                     {
-                        while (currExtent.value > evalExtent.value)
-                        //while (currExtent.value >= evalExtent.value)
+                        while (currExtent.Value > evalExtent.Value)
+                        //while (currExtent.Value >= evalExtent.Value)
                         {
-                            if (currExtent.isMin)
+                            if (currExtent.IsMin)
                             {
                                 // Ending extent inserted before a beginning extent
                                 // the non inserted extent looses a reference to the
                                 // inserted one
-                                currExtent.info.underConsideration.Remove(
-                                    evalExtent.info.geometry);
+                                currExtent.Info.UnderConsideration.Remove(
+                                    evalExtent.Info.Geometry);
 
-                                if (currExtent.info.overlaps.Remove(
-                                    evalExtent.info.geometry))
+                                if (currExtent.Info.Overlaps.Remove(
+                                    evalExtent.Info.Geometry))
                                 {
-                                    owner.collisionPairs.RemovePair(
-                                        evalExtent.info.geometry,
-                                        currExtent.info.geometry);
+                                    Owner.CollisionPairs.RemovePair(
+                                        evalExtent.Info.Geometry,
+                                        currExtent.Info.Geometry);
                                 }
                             }
                             this[evalCnt--] = this[i--];

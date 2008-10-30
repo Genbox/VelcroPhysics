@@ -23,7 +23,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace FarseerGames.AdvancedSamples.ScreenSystem
 {
     /// <summary>
-    /// The screen manager is a component which manages one or more GameScreen
+    /// The screen manager is a component which manages one or more <see cref="GameScreen"/>
     /// instances. It maintains a stack of _screens, calls their Update and Draw
     /// methods at the appropriate times, and automatically routes _input to the
     /// topmost active screen.
@@ -61,7 +61,7 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
 
         /// <summary>
         /// Expose access to our Game instance (this is protected in the
-        /// default GameComponent, but we want to make it public).
+        /// default <see cref="GameComponent"/>, but we want to make it public).
         /// </summary>
         public new Game Game
         {
@@ -70,7 +70,7 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
 
         /// <summary>
         /// Expose access to our graphics device (this is protected in the
-        /// default DrawableGameComponent, but we want to make it public).
+        /// default <see cref="DrawableGameComponent"/>, but we want to make it public).
         /// </summary>
         public new GraphicsDevice GraphicsDevice
         {
@@ -79,13 +79,13 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
 
         /// <summary>
         /// A content manager used to load data that is shared between multiple
-        /// _screens. This is never unloaded, so if a screen requires a large amount
+        /// screens. This is never unloaded, so if a screen requires a large amount
         /// of temporary data, it should create a local content manager instead.
         /// </summary>
         public ContentManager ContentManager { get; private set; }
 
         /// <summary>
-        /// A default SpriteBatch shared by all the _screens. This saves
+        /// A default SpriteBatch shared by all the screens. This saves
         /// each screen having to bother creating their own local instance.
         /// </summary>
         public SpriteBatch SpriteBatch { get; private set; }
@@ -110,7 +110,7 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         }
 
         /// <summary>
-        /// If true, the manager prints out a list of all the _screens
+        /// If true, the manager prints out a list of all the screens
         /// each time it is updated. This can be useful for making sure
         /// everything is being added and removed at the right times.
         /// </summary>
@@ -238,7 +238,7 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
 
 
         /// <summary>
-        /// Prints a list of all the _screens, for debugging.
+        /// Prints a list of all the screens, for debugging.
         /// </summary>
         private void TraceScreens()
         {
@@ -283,7 +283,7 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
 
         /// <summary>
         /// Removes a screen from the screen manager. You should normally
-        /// use GameScreen.ExitScreen instead of calling this directly, so
+        /// use <see cref="GameScreen"/>.ExitScreen instead of calling this directly, so
         /// the screen can gradually transition off rather than just being
         /// instantly removed.
         /// </summary>
@@ -303,8 +303,8 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         }
 
         /// <summary>
-        /// Helper draws a translucent black fullscreen sprite, used for fading
-        /// _screens in and out, and for darkening the background behind popups.
+        /// Helper draws a translucent black full screen sprite, used for fading
+        /// screens in and out, and for darkening the background behind popups.
         /// </summary>
         public void FadeBackBufferToBlack(int alpha)
         {

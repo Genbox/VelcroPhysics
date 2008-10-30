@@ -11,10 +11,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         public bool IsDisposed;
 
         /// <summary>
-        /// The Breakpoint simply indicates the maximum value the JointError can be before it breaks.
+        /// The Breakpoint simply indicates the maximum Value the JointError can be before it breaks.
         /// </summary>
         public float Breakpoint = float.MaxValue;
-        public float DampningConstant;
+        public float DampingConstant;
         public float SpringConstant;
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// Gets or sets the spring error. The SpringError is a measure of how "broken" a spring is.
         /// When the SpringError is greater than the Breakpoint, the spring is automatically disabled.
         /// </summary>
-        /// <value>The spring error.</value>
+        /// <Value>The spring error.</Value>
         public float SpringError { get; protected set; }
 
         #region IDisposable Members

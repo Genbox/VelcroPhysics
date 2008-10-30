@@ -15,6 +15,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics
 {
+    /// <summary>
+    /// Keeps track of bodies, geometries, joints, springs, controllers and other dynamics.
+    /// </summary>
     public class PhysicsSimulator : IDisposable
     {
         private const int _arbiterPoolSize = 10; //initial arbiter size.  will grow as needed
@@ -93,10 +96,10 @@ namespace FarseerGames.FarseerPhysics
 
         /// <summary>
         /// Gets or sets the broad phase collider.
-        /// Make sure that the engine does not contain any geom's when setting the broad phase collider.
+        /// Make sure that the engine does not contain any geoms when setting the broad phase collider.
         /// </summary>
         /// <value>The current broad phase collider.</value>
-        /// <exception cref="Exception">The GeomList must be empty when setting the broad phase collider type</exception>
+        /// <exception cref="Exception">The <see cref="GeomList"/> must be empty when setting the broad phase collider type</exception>
         public IBroadPhaseCollider BroadPhaseCollider
         {
             get { return _broadPhaseCollider; }
@@ -460,7 +463,7 @@ namespace FarseerGames.FarseerPhysics
         }
 
         /// <summary>
-        /// Checks if the physicssimulator geoms collide with the specified X and Y coordinates.
+        /// Checks if the <see cref="PhysicsSimulator"/> geoms collide with the specified X and Y coordinates.
         /// </summary>
         /// <param name="x">The x value</param>
         /// <param name="y">The y value</param>
@@ -471,7 +474,7 @@ namespace FarseerGames.FarseerPhysics
         }
 
         /// <summary>
-        /// Checks if the physicssimulator geoms collide with the specified point.
+        /// Checks if the <see cref="PhysicsSimulator"/> geoms collide with the specified point.
         /// </summary>
         /// <param name="point">The point to check against.</param>
         /// <returns>The first geom that collides with the specified point</returns>

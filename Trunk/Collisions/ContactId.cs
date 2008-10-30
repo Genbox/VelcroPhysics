@@ -22,7 +22,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets or sets the index of geom1.
         /// </summary>
-        /// <value>The index of the geom1.</value>
+        /// <Value>The index of the geom1.</Value>
         public int Geom1Index
         {
             get { return _geometryAIndex; }
@@ -32,7 +32,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets or sets the geom1 vertex.
         /// </summary>
-        /// <value>The geom1 vertex.</value>
+        /// <Value>The geom1 vertex.</Value>
         public int Geom1Vertex
         {
             get { return _geometryAVertex; }
@@ -42,7 +42,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets or sets the index of geom2.
         /// </summary>
-        /// <value>The index of the geom2.</value>
+        /// <Value>The index of the geom2.</Value>
         public int Geom2Index
         {
             get { return _geometryBIndex; }

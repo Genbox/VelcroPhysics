@@ -16,18 +16,18 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         {
         }
 
-        public FixedAngleSpring(Body body, float springConstant, float dampningConstant)
+        public FixedAngleSpring(Body body, float springConstant, float dampingConstant)
         {
             _body = body;
             SpringConstant = springConstant;
-            DampningConstant = dampningConstant;
+            DampingConstant = dampingConstant;
             _targetAngle = body.TotalRotation;
         }
 
         /// <summary>
         /// Gets or sets the body.
         /// </summary>
-        /// <value>The body.</value>
+        /// <Value>The body.</Value>
         public Body Body
         {
             get { return _body; }
@@ -37,7 +37,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// <summary>
         /// Gets or sets the target angle.
         /// </summary>
-        /// <value>The target angle.</value>
+        /// <Value>The target angle.</Value>
         public float TargetAngle
         {
             get { return _targetAngle; }
@@ -47,7 +47,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// <summary>
         /// Gets or sets the max torque.
         /// </summary>
-        /// <value>The max torque.</value>
+        /// <Value>The max torque.</Value>
         public float MaxTorque
         {
             get { return _maxTorque; }
@@ -55,8 +55,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         }
 
         /// <summary>
-        /// The resultant torque will be multiplied by this value prior to being applied to the bodies.
-        /// For normal spring behavior this value should be 1
+        /// The resultant torque will be multiplied by this Value prior to being applied to the bodies.
+        /// For normal spring behavior this Value should be 1
         /// </summary>
         public float TorqueMultiplier
         {
@@ -88,7 +88,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             //apply torque at anchor
             if (!_body.IsStatic)
             {
-                float torque1 = springTorque - DampningConstant*_body.AngularVelocity;
+                float torque1 = springTorque - DampingConstant*_body.AngularVelocity;
                 torque1 = Math.Min(Math.Abs(torque1*_torqueMultiplier), _maxTorque)*Math.Sign(torque1);
                 _body.ApplyTorque(torque1);
             }

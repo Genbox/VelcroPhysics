@@ -13,7 +13,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// <summary>
         /// Gets or sets the tag. The Tag can contain a custom object.
         /// </summary>
-        /// <value>The tag.</value>
+        /// <Value>The tag.</Value>
         public Object Tag { get; set; }
 
         #region IDisposable Members

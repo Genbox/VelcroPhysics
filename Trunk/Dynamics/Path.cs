@@ -10,6 +10,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
+    /// <summary>
+    /// Path Generator. Used to create dynamic paths along control points.
+    /// </summary>
     public class Path
     {
         private BodyList _bodies; // holds all bodies for this path
@@ -23,7 +26,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private const float _precision = 0.0005f; // a coeffient used to decide how precise to place bodies
         private bool _recalculate = true; // will be set to true if path needs to be recalculated
         private float _width; // width and height of bodies to create
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Path"/> class.
@@ -44,36 +46,48 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             _controlPoints = new Vertices();
         }
 
+        /// <summary>
+        /// Gets the bodies.
+        /// </summary>
+        /// <Value>The bodies.</Value>
         public BodyList Bodies
         {
             get { return _bodies; }
         }
 
+        /// <summary>
+        /// Gets the joints.
+        /// </summary>
+        /// <Value>The joints.</Value>
         public JointList Joints
         {
             get { return _joints; }
         }
 
+        /// <summary>
+        /// Gets the geoms.
+        /// </summary>
+        /// <Value>The geoms.</Value>
         public GeomList Geoms
         {
             get { return _geoms; }
         }
 
+        /// <summary>
+        /// Gets the control points.
+        /// </summary>
+        /// <Value>The control points.</Value>
         public Vertices ControlPoints
         {
             get { return _controlPoints; }
         }
-
-        // NOTE: I may add an enum here for joint type NEED TO ADD LOOP CODE AND NEEDS TO BE REWRITTEN CAUSE IT LOOKS WAY MORE 
-        // COMPLICATED THEN IT IS
-        // Type of joints I may include - Pin, Rev, Slider, and maybe linear spring
 
         /// <summary>
         /// Links the bodies.
         /// </summary>
         public void LinkBodies()
         {
-            RevoluteJoint r;
+            RevoluteJoint revoluteJoint;
             Vector2 midPoint;
             float midDeltaX;
             float midDeltaY;
@@ -104,10 +118,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     midPoint = new Vector2(_bodies[i].Position.X + midDeltaX, _bodies[i].Position.Y + midDeltaY);
                         // set midPoint
 
-                    r = JointFactory.Instance.CreateRevoluteJoint(_bodies[i], _bodies[i + 1], midPoint);
-                    r.BiasFactor = 0.2f;
-                    r.Softness = 0.01f;
-                    _joints.Add(r);
+                    revoluteJoint = JointFactory.Instance.CreateRevoluteJoint(_bodies[i], _bodies[i + 1], midPoint);
+                    revoluteJoint.BiasFactor = 0.2f;
+                    revoluteJoint.Softness = 0.01f;
+                    _joints.Add(revoluteJoint);
                 }
             }
             if (_loop)
@@ -136,25 +150,25 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 midPoint = new Vector2(_bodies[0].Position.X + midDeltaX, _bodies[0].Position.Y + midDeltaY);
                     // set midPoint
 
-                r = JointFactory.Instance.CreateRevoluteJoint(_bodies[0], _bodies[_bodies.Count - 1], midPoint);
-                r.BiasFactor = 0.2f;
-                r.Softness = 0.01f;
-                _joints.Add(r);
+                revoluteJoint = JointFactory.Instance.CreateRevoluteJoint(_bodies[0], _bodies[_bodies.Count - 1], midPoint);
+                revoluteJoint.BiasFactor = 0.2f;
+                revoluteJoint.Softness = 0.01f;
+                _joints.Add(revoluteJoint);
             }
         }
 
         /// <summary>
         /// Adds to physics simulator.
         /// </summary>
-        /// <param name="ps">The physics simulator.</param>
-        public void AddToPhysicsSimulator(PhysicsSimulator ps)
+        /// <param name="physicsSimulator">The physics simulator.</param>
+        public void AddToPhysicsSimulator(PhysicsSimulator physicsSimulator)
         {
-            foreach (Body b in _bodies)
-                ps.Add(b);
-            foreach (Geom g in _geoms)
-                ps.Add(g);
-            foreach (Joint j in _joints)
-                ps.Add(j);
+            foreach (Body body in _bodies)
+                physicsSimulator.Add(body);
+            foreach (Geom geom in _geoms)
+                physicsSimulator.Add(geom);
+            foreach (Joint joint in _joints)
+                physicsSimulator.Add(joint);
         }
 
         /// <summary>
@@ -162,13 +176,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// </summary>
         public void CreateGeoms()
         {
-            Geom g;
-            foreach (Body b in _bodies)
+            Geom geom;
+            foreach (Body body in _bodies)
             {
-                g = GeomFactory.Instance.CreateRectangleGeom(b, _width, _height);
-                g.CollisionCategories = CollisionCategory.Cat2;
-                g.CollidesWith = CollisionCategory.Cat1;
-                _geoms.Add(g);
+                geom = GeomFactory.Instance.CreateRectangleGeom(body, _width, _height);
+                geom.CollisionCategories = CollisionCategory.Cat2;
+                geom.CollidesWith = CollisionCategory.Cat1;
+                _geoms.Add(geom);
             }
         }
 
@@ -182,17 +196,22 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             AABB controlPointAABB;
 
-            foreach (Vector2 v in _controlPoints)
+            foreach (Vector2 controlPoint in _controlPoints)
             {
-                controlPointAABB = new AABB(new Vector2(v.X - (_controlPointSize/2), v.Y - (_controlPointSize/2)),
-                                            new Vector2(v.X + (_controlPointSize/2), v.Y + (_controlPointSize/2)));
+                controlPointAABB = new AABB(new Vector2(controlPoint.X - (_controlPointSize/2), controlPoint.Y - (_controlPointSize/2)),
+                                            new Vector2(controlPoint.X + (_controlPointSize/2), controlPoint.Y + (_controlPointSize/2)));
 
                 if (controlPointAABB.Contains(ref point))
-                    return _controlPoints.IndexOf(v);
+                    return _controlPoints.IndexOf(controlPoint);
             }
             return -1;
         }
 
+        /// <summary>
+        /// Moves a control point.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <param name="index">The index.</param>
         public void MoveControlPoint(Vector2 position, int index)
         {
             _controlPoints[index] = position;
@@ -209,19 +228,31 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             _recalculate = true; // be sure to recalculate the curve
         }
 
-        public void Add(Body b)
+        /// <summary>
+        /// Adds the specified body.
+        /// </summary>
+        /// <param name="body">The body.</param>
+        public void Add(Body body)
         {
-            _bodies.Add(b);
+            _bodies.Add(body);
         }
 
-        public void Add(Geom g)
+        /// <summary>
+        /// Adds the specified geom.
+        /// </summary>
+        /// <param name="geom">The geom.</param>
+        public void Add(Geom geom)
         {
-            _geoms.Add(g);
+            _geoms.Add(geom);
         }
 
-        public void Add(Joint j)
+        /// <summary>
+        /// Adds the specified joint.
+        /// </summary>
+        /// <param name="joint">The joint.</param>
+        public void Add(Joint joint)
         {
-            _joints.Add(j);
+            _joints.Add(joint);
         }
 
         /// <summary>
@@ -340,36 +371,36 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <summary>
         /// Finds the mid-point of two Vector2.
         /// </summary>
-        /// <param name="a">First Vector2.</param>
-        /// <param name="b">Other Vector2.</param>
+        /// <param name="firstVector">First Vector2.</param>
+        /// <param name="secondVector">Other Vector2.</param>
         /// <returns>Mid-point Vector2.</returns>
-        public static Vector2 FindMidpoint(Vector2 a, Vector2 b)
+        public static Vector2 FindMidpoint(Vector2 firstVector, Vector2 secondVector)
         {
             float midDeltaX, midDeltaY;
 
-            if (a.X < b.X)
-                midDeltaX = Math.Abs((a.X - b.X)*0.5f); // find x axis midpoint
+            if (firstVector.X < secondVector.X)
+                midDeltaX = Math.Abs((firstVector.X - secondVector.X)*0.5f); // find x axis midpoint
             else
-                midDeltaX = (b.X - a.X)*0.5f; // find x axis midpoint
-            if (a.Y < b.Y)
-                midDeltaY = Math.Abs((a.Y - b.Y)*0.5f); // find y axis midpoint
+                midDeltaX = (secondVector.X - firstVector.X)*0.5f; // find x axis midpoint
+            if (firstVector.Y < secondVector.Y)
+                midDeltaY = Math.Abs((firstVector.Y - secondVector.Y)*0.5f); // find y axis midpoint
             else
-                midDeltaY = (b.Y - a.Y)*0.5f; // find y axis midpoint
+                midDeltaY = (secondVector.Y - firstVector.Y)*0.5f; // find y axis midpoint
 
-            return (new Vector2(a.X + midDeltaX, a.Y + midDeltaY)); // return mid point
+            return (new Vector2(firstVector.X + midDeltaX, firstVector.Y + midDeltaY)); // return mid point
         }
 
         /// <summary>
         /// Finds the angle of an edge.
         /// </summary>
-        /// <param name="a">First Vector2.</param>
-        /// <param name="b">Other Vector2.</param>
+        /// <param name="firstVector">First Vector2.</param>
+        /// <param name="secondVector">Other Vector2.</param>
         /// <returns>Normal of the edge.</returns>
-        private Vector2 FindEdgeNormal(Vector2 a, Vector2 b)
+        private Vector2 FindEdgeNormal(Vector2 firstVector, Vector2 secondVector)
         {
-            Vector2 n, t;
+            Vector2 n;
 
-            t = new Vector2(a.X - b.X, a.Y - b.Y);
+            Vector2 t = new Vector2(firstVector.X - secondVector.X, firstVector.Y - secondVector.Y);
 
             n.X = -t.Y; // get 2D normal
             n.Y = t.X; // works only on counter clockwise polygons
@@ -377,9 +408,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             return n; // we don't bother normalizing because we do this when we find the vertex normal
         }
 
-        private Vector2 FindVertexNormal(Vector2 a, Vector2 b, Vector2 c)
+        private Vector2 FindVertexNormal(Vector2 firstVector, Vector2 secondVector, Vector2 c)
         {
-            Vector2 normal = FindEdgeNormal(a, b) + FindEdgeNormal(b, c);
+            Vector2 normal = FindEdgeNormal(firstVector, secondVector) + FindEdgeNormal(secondVector, c);
 
             normal.Normalize();
 
