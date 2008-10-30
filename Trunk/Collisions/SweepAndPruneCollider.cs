@@ -105,7 +105,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             int removed = 0;
             for (int i = 0; i < l.Count; i++)
             {
-                if (l[i].geometry.isRemoved)
+                if (l[i].Geometry.isRemoved)
                 {
                     removed++;
                     l.RemoveAt(i);
@@ -120,7 +120,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             int removed = 0;
             for (int i = 0; i < l.Count; i++)
             {
-                if (l[i].info.geometry.isRemoved)
+                if (l[i].Info.Geometry.isRemoved)
                 {
                     removed++;
                     l.RemoveAt(i);
@@ -135,7 +135,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             int removed = 0;
             for (int i = 0; i < l.Count; i++)
             {
-                if (l[i].geometry.IsDisposed)
+                if (l[i].Geometry.IsDisposed)
                 {
                     removed++;
                     l.RemoveAt(i);
@@ -150,7 +150,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             int removed = 0;
             for (int i = 0; i < l.Count; i++)
             {
-                if (l[i].info.geometry.IsDisposed)
+                if (l[i].Info.Geometry.IsDisposed)
                 {
                     removed++;
                     l.RemoveAt(i);
