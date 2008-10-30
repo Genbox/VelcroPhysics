@@ -6,8 +6,9 @@
 using System;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Mathematics;
+
 #if (XNA)
-using Microsoft.Xna.Framework; 
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics
@@ -229,6 +230,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 #endregion
 
                 //calc velocity difference along contact normal
+
                 #region INLINE: Vector2.Dot(ref _dv, ref _contact.Normal, out _vn);
 
                 _vn = (_dv.X*_contact.Normal.X) + (_dv.Y*_contact.Normal.Y);
@@ -243,6 +245,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 _normalImpulse = _contact.NormalImpulse - _oldNormalImpulse;
 
                 //apply contact impulse
+
                 #region INLINE: Vector2.Multiply(ref _contact.Normal, _normalImpulse, out _impulse);
 
                 _impulse.X = _contact.Normal.X*_normalImpulse;
@@ -273,6 +276,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 #endregion
 
                 //calc velocity bias along contact normal
+
                 #region INLINE: Vector2.Dot(ref _dv, ref _contact.Normal, out _normalVelocityBias);
 
                 _normalVelocityBias = (_dv.X*_contact.Normal.X) + (_dv.Y*_contact.Normal.Y);
@@ -344,6 +348,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 _tangentImpulse = _contact.TangentImpulse - _oldTangentImpulse;
 
                 //apply friction impulse
+
                 #region INLINE:Vector2.Multiply(ref _tangent, _tangentImpulse, out _impulse);
 
                 _impulse.X = _tangent.X*_tangentImpulse;
@@ -468,7 +473,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 if (contactList.Count == _physicsSimulator.maxContactsToDetect)
                     break;
 
-                    //grid can be null for "one-way" collision (points)
+                //grid can be null for "one-way" collision (points)
                 if (geometry2.grid == null)
                     break;
 

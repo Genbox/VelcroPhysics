@@ -100,7 +100,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         public override void Update(float dt)
         {
             base.Update(dt);
-            
+
             if (IsDisposed)
                 return;
 

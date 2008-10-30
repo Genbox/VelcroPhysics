@@ -1,5 +1,5 @@
 #if (XNA)
-using Microsoft.Xna.Framework; 
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerGames.FarseerPhysics.Mathematics

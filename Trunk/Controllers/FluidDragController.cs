@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Interfaces;
+using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
 using Microsoft.Xna.Framework;
 #else
-using FarseerGames.FarseerPhysics.Mathematics;
+
 #endif
 
 namespace FarseerGames.FarseerPhysics.Controllers
@@ -41,25 +42,25 @@ namespace FarseerGames.FarseerPhysics.Controllers
         public delegate void EntryEventHandler(Geom geom);
 
         #endregion
-        private float _density;
-        private float _linearDragCoefficient;
-        private float _rotationalDragCoeficient;
-        private Vector2 _gravity = Vector2.Zero;
 
         private float _area;
         private Vector2 _axis = Vector2.Zero;
         private Vector2 _buoyancyForce = Vector2.Zero;
         private Vector2 _centroid = Vector2.Zero;
         private Vector2 _centroidVelocity;
+        private float _density;
 
         private float _dragArea;
         private IFluidContainer _fluidContainer;
         private Dictionary<Geom, bool> _geomInFluidList;
         private List<Geom> _geomList;
+        private Vector2 _gravity = Vector2.Zero;
+        private float _linearDragCoefficient;
         private Vector2 _linearDragForce = Vector2.Zero;
         private float _max;
         private float _min;
         private float _partialMass;
+        private float _rotationalDragCoeficient;
         private float _rotationalDragTorque;
         private float _totalArea;
         private Vector2 _totalForce;
@@ -67,6 +68,12 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private Vertices _vertices;
 
         public EntryEventHandler Entry;
+
+        public FluidDragController()
+        {
+            _geomList = new List<Geom>();
+            _geomInFluidList = new Dictionary<Geom, bool>();
+        }
 
         /// <summary>
         /// Density of the fluid.  Higher values will make things more buoyant, lower values will cause things to sink.
@@ -95,12 +102,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
         {
             get { return _rotationalDragCoeficient; }
             set { _rotationalDragCoeficient = value; }
-        }        
-
-        public FluidDragController()
-        {
-            _geomList = new List<Geom>();
-            _geomInFluidList = new Dictionary<Geom, bool>();
         }
 
         /// <summary>
@@ -197,7 +198,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         private void CalculateBuoyancy()
         {
-            _buoyancyForce = -_gravity * _area * _density;
+            _buoyancyForce = -_gravity*_area*_density;
         }
 
 
@@ -218,11 +219,11 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
             _dragArea = Math.Abs(_max - _min);
 
-            _partialMass = geom.body.mass * (_area / _totalArea);
+            _partialMass = geom.body.mass*(_area/_totalArea);
 
-            _linearDragForce = -.5f * _density * _dragArea * _linearDragCoefficient * _partialMass * _centroidVelocity;
+            _linearDragForce = -.5f*_density*_dragArea*_linearDragCoefficient*_partialMass*_centroidVelocity;
 
-            _rotationalDragTorque = -geom.body.AngularVelocity * _rotationalDragCoeficient * _partialMass;
+            _rotationalDragTorque = -geom.body.AngularVelocity*_rotationalDragCoeficient*_partialMass;
         }
     }
 }

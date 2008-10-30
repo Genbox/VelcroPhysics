@@ -1,8 +1,9 @@
 using System;
+using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
 using Microsoft.Xna.Framework;
 #else
-using FarseerGames.FarseerPhysics.Mathematics;
+
 #endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
@@ -17,16 +18,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
         internal ContactId ContactId;
         internal float MassNormal;
         internal float MassTangent;
+        public Vector2 Normal;
         internal float NormalImpulse;
         internal float NormalImpulseBias;
         internal float NormalVelocityBias;
+        public Vector2 Position;
         internal Vector2 R1;
         internal Vector2 R2;
-        internal float TangentImpulse;
-
-        public Vector2 Normal;
-        public Vector2 Position;
         public float Separation;
+        internal float TangentImpulse;
 
         public Contact(Vector2 position, Vector2 normal, float separation, ContactId contactId)
         {

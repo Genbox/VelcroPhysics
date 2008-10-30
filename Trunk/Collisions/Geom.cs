@@ -1,9 +1,10 @@
 using System;
 using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
 using Microsoft.Xna.Framework;
 #else
-using FarseerGames.FarseerPhysics.Mathematics;
+
 #endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
@@ -20,7 +21,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// This delegate is called when a collision between 2 geometries occurs
         /// </summary>
         public delegate bool CollisionEventHandler(Geom geometry1, Geom geometry2, ContactList contactList);
-        
+
         /// <summary>
         /// This delegate is called when a separation between 2 geometries occurs
         /// </summary>
@@ -29,6 +30,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         #endregion
 
         private float _collisionGridCellSize;
+        private bool _isSensor;
         private Matrix _matrix = Matrix.Identity;
         private Matrix _matrixInverse = Matrix.Identity;
         private Matrix _matrixInverseTemp;
@@ -37,7 +39,19 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private float _rotation;
         private float _rotationOffset;
         private Vector2 _vector;
-        private bool _isSensor;
+        internal AABB aabb = new AABB();
+        internal Body body;
+        internal CollisionCategory collidesWith = CollisionCategory.All;
+        //member off all categories by default
+        internal CollisionCategory collisionCategories = CollisionCategory.All;
+        internal bool collisionEnabled = true;
+        internal int collisionGroup;
+        internal bool collisionResponseEnabled = true;
+        internal float frictionCoefficient;
+        internal Grid grid;
+        public bool IsDisposed;
+        internal bool isRemoved = true; //true=>geometry removed from simulation
+        internal Vertices localVertices;
 
         /// <summary>
         /// Fires when a collision occurs with the geom
@@ -48,21 +62,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// Fires when a separation between this and another geom occurs
         /// </summary>
         public SeparationEventHandler OnSeparation;
-        public bool IsDisposed;
 
-        //collides with all categories by default
-        internal CollisionCategory collidesWith = CollisionCategory.All;
-        //member off all categories by default
-        internal CollisionCategory collisionCategories = CollisionCategory.All;
-        internal AABB aabb = new AABB();
-        internal Body body;
-        internal bool collisionEnabled = true;
-        internal int collisionGroup;
-        internal bool collisionResponseEnabled = true;
-        internal float frictionCoefficient;
-        internal Grid grid;
-        internal bool isRemoved = true; //true=>geometry removed from simulation
-        internal Vertices localVertices;
         internal float restitutionCoefficient;
         internal Vertices worldVertices;
 
@@ -398,7 +398,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             //_bodyDisposed = body_OnDisposed;
             //bodyToSet.Disposing += _bodyDisposed;
-            
+
             //TO:
             bodyToSet.Updated += BodyOnChange;
             bodyToSet.Disposed += BodyOnDisposed;
@@ -631,7 +631,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 _vertice.X = num2;
                 _vertice.Y = num;
                 worldVertices[i] = _vertice;
-                
+
                 #endregion
             }
 

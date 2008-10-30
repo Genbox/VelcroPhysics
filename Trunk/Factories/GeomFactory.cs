@@ -1,9 +1,10 @@
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
 using Microsoft.Xna.Framework;
 #else
-using FarseerGames.FarseerPhysics.Mathematics;
+
 #endif
 
 namespace FarseerGames.FarseerPhysics.Factories
@@ -354,7 +355,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         public float CalculateGridCellSizeFromAABB(Vertices vertices)
         {
             AABB aabb = new AABB(vertices);
-            return aabb.GetShortestSide() * _gridCellSizeAABBFactor;
+            return aabb.GetShortestSide()*_gridCellSizeAABBFactor;
         }
 
         //ellipses
@@ -367,7 +368,8 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="height">The height.</param>
         /// <param name="numberOfEdges">The number of edges.</param>
         /// <returns></returns>
-        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height, int numberOfEdges)
+        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height,
+                                      int numberOfEdges)
         {
             return CreateEllipseGeom(physicsSimulator, body, width, height, numberOfEdges, Vector2.Zero, 0, 0);
         }
@@ -396,7 +398,8 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="offset">The offset.</param>
         /// <param name="rotationOffset">The rotation offset.</param>
         /// <returns></returns>
-        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height, int numberOfEdges,
+        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height,
+                                      int numberOfEdges,
                                       Vector2 offset, float rotationOffset)
         {
             return CreateEllipseGeom(physicsSimulator, body, width, height, numberOfEdges, offset, rotationOffset, 0);
@@ -412,7 +415,8 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="offset">The offset.</param>
         /// <param name="rotationOffset">The rotation offset.</param>
         /// <returns></returns>
-        public Geom CreateEllipseGeom(Body body, float width, float height, int numberOfEdges, Vector2 offset, float rotationOffset)
+        public Geom CreateEllipseGeom(Body body, float width, float height, int numberOfEdges, Vector2 offset,
+                                      float rotationOffset)
         {
             return CreateEllipseGeom(body, width, height, numberOfEdges, offset, rotationOffset, 0);
         }
@@ -427,7 +431,8 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="numberOfEdges">The number of edges.</param>
         /// <param name="collisionGridCellSize">Size of the collision grid cell.</param>
         /// <returns></returns>
-        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height, int numberOfEdges,
+        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height,
+                                      int numberOfEdges,
                                       float collisionGridCellSize)
         {
             return CreateEllipseGeom(physicsSimulator, body, width, height, numberOfEdges, Vector2.Zero, 0,
@@ -443,7 +448,8 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="numberOfEdges">The number of edges.</param>
         /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
         /// <returns></returns>
-        public Geom CreateEllipseGeom(Body body, float width, float height, int numberOfEdges, float collisionGridCellSize)
+        public Geom CreateEllipseGeom(Body body, float width, float height, int numberOfEdges,
+                                      float collisionGridCellSize)
         {
             return CreateEllipseGeom(body, width, height, numberOfEdges, Vector2.Zero, 0, collisionGridCellSize);
         }
@@ -460,10 +466,12 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="rotationOffset">The rotation offset.</param>
         /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
         /// <returns></returns>
-        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height, int numberOfEdges,
+        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height,
+                                      int numberOfEdges,
                                       Vector2 offset, float rotationOffset, float collisionGridCellSize)
         {
-            Geom geometry = CreateEllipseGeom(body, width, height, numberOfEdges, offset, rotationOffset, collisionGridCellSize);
+            Geom geometry = CreateEllipseGeom(body, width, height, numberOfEdges, offset, rotationOffset,
+                                              collisionGridCellSize);
             physicsSimulator.Add(geometry);
             return geometry;
         }
@@ -479,7 +487,8 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="rotationOffset"></param>
         /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
         /// <returns></returns>
-        public Geom CreateEllipseGeom(Body body, float width, float height, int numberOfEdges, Vector2 offset, float rotationOffset,
+        public Geom CreateEllipseGeom(Body body, float width, float height, int numberOfEdges, Vector2 offset,
+                                      float rotationOffset,
                                       float collisionGridCellSize)
         {
             Vertices vertices = Vertices.CreateEllipse(width, height, numberOfEdges);

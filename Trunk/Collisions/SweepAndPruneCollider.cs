@@ -25,15 +25,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private ExtentInfoList _xInfoList;
         private ExtentList _yExtentList;
         private ExtentInfoList _yInfoList;
+
         /// <summary>
         /// The collision pairs
         /// </summary>
         public CollisionPairDictionary CollisionPairs;
-
-        /// <summary>
-        /// Fires when a broad phase collision occurs
-        /// </summary>
-        public event BroadPhaseCollisionHandler OnBroadPhaseCollision;
 
         public SweepAndPruneCollider(PhysicsSimulator physicsSimulator)
         {
@@ -47,6 +43,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #region IBroadPhaseCollider Members
 
+        /// <summary>
+        /// Fires when a broad phase collision occurs
+        /// </summary>
+        public event BroadPhaseCollisionHandler OnBroadPhaseCollision;
+
 #if (!SILVERLIGHT)
         /// <summary>
         /// Used by the <see cref="PhysicsSimulator"/> to remove geometry from Sweep and Prune once it
@@ -55,18 +56,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public void ProcessDisposedGeoms()
         {
             //TODO: Could use lamda expressions. Need to test the performance first.
-            if (_xInfoList.RemoveAll(delegate(ExtentInfo i)
-            { return i.Geometry.IsDisposed; }) > 0)
+            if (_xInfoList.RemoveAll(delegate(ExtentInfo i) { return i.Geometry.IsDisposed; }) > 0)
             {
-                _xExtentList.RemoveAll(delegate(Extent n)
-                { return n.Info.Geometry.IsDisposed; });
+                _xExtentList.RemoveAll(delegate(Extent n) { return n.Info.Geometry.IsDisposed; });
             }
 
-            if (_yInfoList.RemoveAll(delegate(ExtentInfo i)
-            { return i.Geometry.IsDisposed; }) > 0)
+            if (_yInfoList.RemoveAll(delegate(ExtentInfo i) { return i.Geometry.IsDisposed; }) > 0)
             {
-                _yExtentList.RemoveAll(delegate(Extent n)
-                { return n.Info.Geometry.IsDisposed; });
+                _yExtentList.RemoveAll(delegate(Extent n) { return n.Info.Geometry.IsDisposed; });
             }
 
             // We force a non-incremental update because that will insure that the
@@ -81,17 +78,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void ProcessRemovedGeoms()
         {
-            if (_xInfoList.RemoveAll(delegate(ExtentInfo i)
-            { return i.Geometry.isRemoved; }) > 0)
+            if (_xInfoList.RemoveAll(delegate(ExtentInfo i) { return i.Geometry.isRemoved; }) > 0)
             {
-                _xExtentList.RemoveAll(delegate(Extent n)
-                { return n.Info.Geometry.isRemoved; });
+                _xExtentList.RemoveAll(delegate(Extent n) { return n.Info.Geometry.isRemoved; });
             }
-            if (_yInfoList.RemoveAll(delegate(ExtentInfo i)
-            { return i.Geometry.isRemoved; }) > 0)
+            if (_yInfoList.RemoveAll(delegate(ExtentInfo i) { return i.Geometry.isRemoved; }) > 0)
             {
-                _yExtentList.RemoveAll(delegate(Extent n)
-                { return n.Info.Geometry.isRemoved; });
+                _yExtentList.RemoveAll(delegate(Extent n) { return n.Info.Geometry.isRemoved; });
             }
 
             // We force a non-incremental update because that will insure that the
@@ -258,7 +251,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             if (((g1.collisionCategories & g2.collidesWith) ==
                  CollisionCategory.None) & ((g2.collisionCategories &
-                                               g1.collidesWith) == CollisionCategory.None))
+                                             g1.collidesWith) == CollisionCategory.None))
                 return false;
 
             //TMP
@@ -284,7 +277,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             //TO:
             return AABB.Intersect(aabb1, aabb2);
-
         }
 
         /// <summary>
@@ -438,7 +430,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 // Arbitrarly choose 10000 as a number of colliders that we won't 
                 // approach any time soon.
-                return (Geom1.Id * 10000 + Geom2.Id);
+                return (Geom1.Id*10000 + Geom2.Id);
             }
 
             public override bool Equals(object obj)
@@ -446,7 +438,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 if (!(obj is CollisionPair))
                     return false;
 
-                return Equals((CollisionPair)obj);
+                return Equals((CollisionPair) obj);
             }
 
             /// <summary>
@@ -801,7 +793,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     if (evalExtent.IsMin)
                     {
                         while (currExtent.Value > evalExtent.Value)
-                        //while (currExtent.Value >= evalExtent.Value)
+                            //while (currExtent.Value >= evalExtent.Value)
                         {
                             if (currExtent.IsMin)
                             {
@@ -841,7 +833,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     else
                     {
                         while (currExtent.Value > evalExtent.Value)
-                        //while (currExtent.Value >= evalExtent.Value)
+                            //while (currExtent.Value >= evalExtent.Value)
                         {
                             if (currExtent.IsMin)
                             {

@@ -1,13 +1,13 @@
 using System;
+using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
 using Microsoft.Xna.Framework;
 #else
-using FarseerGames.FarseerPhysics.Mathematics;
+
 #endif
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
-
     /// <summary>
     /// Grid is used to test for intersection.
     /// Computation of the grid may take a long time, depending on the grid cell size provided.
@@ -64,8 +64,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             _gridCellSizeInv = 1/gridCellSize;
 
             //NOTE: Using double cast instead of converting.
-            int xSize = (int) Math.Ceiling((double)(_aabb.Max.X - _aabb.Min.X)*_gridCellSizeInv) + 1;
-            int ySize = (int) Math.Ceiling((double)(_aabb.Max.Y - _aabb.Min.Y)*_gridCellSizeInv) + 1;
+            int xSize = (int) Math.Ceiling((double) (_aabb.Max.X - _aabb.Min.X)*_gridCellSizeInv) + 1;
+            int ySize = (int) Math.Ceiling((double) (_aabb.Max.Y - _aabb.Min.Y)*_gridCellSizeInv) + 1;
 
             //TODO: Possible optimization (normal)! If the shape is symmetric in X and Y axis, don't calculate the points, replicate them.
             _nodes = new float[xSize,ySize];

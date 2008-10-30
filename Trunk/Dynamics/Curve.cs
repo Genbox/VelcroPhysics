@@ -1,10 +1,10 @@
-﻿#if(!XNA)
+#if(!XNA)
 
 #region License
 
 /*
 MIT License
-Copyright © 2006 The Mono.Xna Team
+Copyright � 2006 The Mono.Xna Team
 
 All rights reserved.
 
@@ -408,8 +408,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
     public class CurveKeyCollection : ICollection<CurveKey>
     {
-        private List<CurveKey> _innerlist;
         private const bool _isReadOnly = false;
+        private List<CurveKey> _innerlist;
 
         public CurveKeyCollection()
         {
@@ -437,24 +437,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     _innerlist.Add(value);
                 }
             }
-        }
-
-        public CurveKeyCollection Clone()
-        {
-            CurveKeyCollection ckc = new CurveKeyCollection();
-            foreach (CurveKey key in _innerlist)
-                ckc.Add(key);
-            return ckc;
-        }
-
-        public int IndexOf(CurveKey item)
-        {
-            return _innerlist.IndexOf(item);
-        }
-
-        public void RemoveAt(int index)
-        {
-            _innerlist.RemoveAt(index);
         }
 
         #region ICollection<CurveKey> Members
@@ -524,6 +506,25 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
 
         #endregion
+
+        public CurveKeyCollection Clone()
+        {
+            CurveKeyCollection ckc = new CurveKeyCollection();
+            foreach (CurveKey key in _innerlist)
+                ckc.Add(key);
+            return ckc;
+        }
+
+        public int IndexOf(CurveKey item)
+        {
+            return _innerlist.IndexOf(item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            _innerlist.RemoveAt(index);
+        }
     }
 }
+
 #endif

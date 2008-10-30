@@ -7,20 +7,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
     /// </summary>
     public abstract class Spring : IDisposable
     {
-        public bool Enabled = true;
-        public bool IsDisposed;
-
         /// <summary>
         /// The Breakpoint simply indicates the maximum Value the JointError can be before it breaks.
         /// </summary>
         public float Breakpoint = float.MaxValue;
-        public float DampingConstant;
-        public float SpringConstant;
 
-        /// <summary>
-        /// Fires when the spring is broken.
-        /// </summary>
-        public event EventHandler<EventArgs> Broke;
+        public float DampingConstant;
+        public bool Enabled = true;
+        public bool IsDisposed;
+        public float SpringConstant;
 
         public Object Tag { get; set; }
 
@@ -41,6 +36,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         #endregion
 
+        /// <summary>
+        /// Fires when the spring is broken.
+        /// </summary>
+        public event EventHandler<EventArgs> Broke;
+
         public abstract void Validate();
 
         public virtual void Update(float dt)
@@ -52,7 +52,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             Enabled = false;
 
             if (Broke != null)
-                Broke(this,EventArgs.Empty);
+                Broke(this, EventArgs.Empty);
         }
 
 
