@@ -26,6 +26,29 @@ namespace FarseerGames.FarseerPhysics
     }
 #endif
 
+    /// <summary>
+    /// Determine the type of joint or spring used to link bodies, in the path generator.
+    /// </summary>
+    public enum LinkType
+    {
+        /// <summary>
+        /// Use a revolute point
+        /// </summary>
+        RevoluteJoint,
+        /// <summary>
+        /// Use a pin joint
+        /// </summary>
+        PinJoint,
+        /// <summary>
+        /// Use a slider joint
+        /// </summary>
+        SliderJoint,
+        /// <summary>
+        /// Use a linear spring
+        /// </summary>
+        LinearSpring
+    }
+
     [Flags]
     public enum CollisionCategory
     {
@@ -64,9 +87,18 @@ namespace FarseerGames.FarseerPhysics
         Cat31 = 1073741824
     }
 
+    /// <summary>
+    /// Used to determine the type of friction applied to geometries.
+    /// </summary>
     public enum FrictionType
     {
+        /// <summary>
+        /// Takes the average of the friction from the two geometries colliding.
+        /// </summary>
         Average = 0,
+        /// <summary>
+        /// Takes the minimum of the friction from the two geometries colliding.
+        /// </summary>
         Minimum = 1
     }
 }

@@ -67,7 +67,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// Creates a Body.  The moment of inertia of the body is calculated from the
         /// set of vertices passed in to this method. The vertices should represent a polygon
         /// </summary>
-        /// <param name="physicsSimulator">PhysicsSimulator to add this body to.</param>
+        /// <param name="physicsSimulator"><see cref="PhysicsSimulator"/> to add this body to.</param>
         /// <param name="vertices">Vertices representing some polygon</param>
         /// <param name="mass">Mass of the Body</param>
         /// <returns></returns>

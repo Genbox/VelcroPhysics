@@ -11,7 +11,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         public bool IsDisposed;
 
         /// <summary>
-        /// The Breakpoint simply indicates the maximum value the JointError can be before it breaks.
+        /// The Breakpoint simply indicates the maximum Value the JointError can be before it breaks.
         /// </summary>
         public float Breakpoint = float.MaxValue;
         public float Softness;
@@ -28,7 +28,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// Gets the joint error. The JointError is a measure of how "broken" a joint is.
         /// When the JointError is greater than the Breakpoint, the joint is automatically disabled.
         /// </summary>
-        /// <value>The joint error.</value>
+        /// <Value>The joint error.</Value>
         public float JointError { get; protected set; }
 
         #region IDisposable Members

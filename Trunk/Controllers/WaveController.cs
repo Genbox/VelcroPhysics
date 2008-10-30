@@ -63,9 +63,9 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private float _waveGeneratorStep;
         private float _width;
         private float[] _xPosition;
-        public Vector2 vectorFarWaveEdge;
-        public Vector2 vectorNearWaveEdge;
-        public Vector2 vectorPoint;
+        public Vector2 VectorFarWaveEdge;
+        public Vector2 VectorNearWaveEdge;
+        public Vector2 VectorPoint;
 
         #region properties
 
@@ -106,10 +106,10 @@ namespace FarseerGames.FarseerPhysics.Controllers
         }
 
         /// <summary>
-        /// Determines how quickly the waves dissipate.  A value of zero will cause any disturbance in the water surface to ripple forever. 
+        /// Determines how quickly the waves dissipate.  A Value of zero will cause any disturbance in the water surface to ripple forever. 
         /// Values closer to 1 will cause the waves to smooth out quickly.
         /// </summary>
-        public float DampningCoefficient
+        public float DampingCoefficient
         {
             get { return _dampningCoefficient; }
             set { _dampningCoefficient = value; }
@@ -117,7 +117,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         /// <summary>
         /// An array representing the current y-offset of each vertice from its rest position.  The "rest" position is the same as the
-        /// y-component of the "Position" property of the <see cref="WaveController"/>.  These value can be used to visually represent the wave.
+        /// y-component of the "Position" property of the <see cref="WaveController"/>.  These Value can be used to visually represent the wave.
         /// </summary>
         public float[] CurrentWave
         {
@@ -162,7 +162,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         /// <summary>
         /// How many steps you want it to take for the wave generator to move the control vertices between the
-        /// min and max.  The vertice will be moved everytime Update(..) runs which in-turn is controlled by the 
+        /// min and max.  The vertice will be moved every time Update(..) runs which in-turn is controlled by the 
         /// Frequency property.
         /// </summary>
         public float WaveGeneratorStep
@@ -200,13 +200,13 @@ namespace FarseerGames.FarseerPhysics.Controllers
             if (index > _nodeCount - 2) index = _nodeCount - 2;
             if (index < 0) index = 0;
 
-            vectorNearWaveEdge.X = _xPosition[index];
-            vectorNearWaveEdge.Y = _position.Y + _currentWave[index];
+            VectorNearWaveEdge.X = _xPosition[index];
+            VectorNearWaveEdge.Y = _position.Y + _currentWave[index];
 
-            vectorFarWaveEdge.X = _xPosition[index + 1];
-            vectorFarWaveEdge.Y = _position.Y + _currentWave[index + 1];
+            VectorFarWaveEdge.X = _xPosition[index + 1];
+            VectorFarWaveEdge.Y = _position.Y + _currentWave[index + 1];
 
-            vectorPoint = vector;
+            VectorPoint = vector;
 
             _waveEdgeVector.X = _xPosition[index + 1] - _xPosition[index];
             _waveEdgeVector.Y = _currentWave[index + 1] - _currentWave[index];
@@ -287,7 +287,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 _resultWave[i] = (_currentWave[i - 1] + _currentWave[i + 1]) - _previousWave[i];
                 _resultWave[i] = _resultWave[i]*_dampningCoefficient;
 
-                //keep track of _aabb min value                
+                //keep track of _aabb min Value                
                 if (_resultWave[i] + _position.Y < _aabbMin)
                 {
                     _aabbMin = _resultWave[i] + _position.Y;

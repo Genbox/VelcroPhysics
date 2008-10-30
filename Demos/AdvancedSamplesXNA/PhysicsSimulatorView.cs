@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerGames.AdvancedSamples
 {
+    /// <summary>
+    /// Draws the elements inside a <see cref="PhysicsSimulator"/>. Great for debugging physics related problems.
+    /// </summary>
     public class PhysicsSimulatorView
     {
         private PhysicsSimulator _physicsSimulator;
@@ -19,12 +22,12 @@ namespace FarseerGames.AdvancedSamples
         private const string _applyImpulses = "Apply Impulses: {0}";
         private const string _arbiterCount = "Arbiters: {0}";
         private const string _bodyCount = "Bodies: {0}";
-        private const string _broadPhaseCollision = "Broad Phase Collsion: {0}";
+        private const string _broadPhaseCollision = "Broad Phase Collision: {0}";
         private const string _cleanUp = "Clean Up: {0}";
         private const string _controllerCount = "Controllers: {0}";
         private const string _geomCount = "Geoms: {0}";
         private const string _jointCount = "Joints: {0}";
-        private const string _narrowPhaseCollision = "Narrow Phase Collsion: {0}";
+        private const string _narrowPhaseCollision = "Narrow Phase Collision: {0}";
         private const string _springCount = "Springs: {0}";
         private const string _updatePosition = "Update Positions: {0}";
         private const string _updateTotal = "Update Total: {0}";
@@ -249,7 +252,7 @@ namespace FarseerGames.AdvancedSamples
             set { _springLineThickness = value; }
         }
 
-        public bool EnableSpingView
+        public bool EnableSpringView
         {
             get { return _enableSpringView; }
             set { _enableSpringView = value; }
@@ -478,7 +481,7 @@ namespace FarseerGames.AdvancedSamples
             {
                 DrawPerformancePanel(spriteBatch);
             }
-            if (EnableSpingView)
+            if (EnableSpringView)
             {
                 DrawSprings(spriteBatch);
             }
@@ -548,7 +551,7 @@ namespace FarseerGames.AdvancedSamples
                                    new Vector2(340, 200), Color.White);
 
 
-            //spriteBatch.DrawString(_spriteFont, String.Format("Broadphase Pairs: {0}",this._physicsSimulator.sweepAndPrune.collisionPairs.Keys.Count), new Vector2(120, 215), Color.White);
+            //spriteBatch.DrawString(_spriteFont, String.Format("Broadphase Pairs: {0}",this._physicsSimulator.sweepAndPrune.CollisionPairs.Keys.Count), new Vector2(120, 215), Color.White);
         }
 
         private void DrawContacts(SpriteBatch spriteBatch)

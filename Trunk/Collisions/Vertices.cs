@@ -436,7 +436,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Scales the vertices with the specified vector.
         /// </summary>
-        /// <param name="value">The value.</param>
+        /// <param name="value">The Value.</param>
         public void Scale(Vector2 value)
         {
             for (int i = Count - 1; i >= 0; i--)
@@ -566,7 +566,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="textureWidth">Width of texture.</param>
         /// <param name="textureHeight">Height of texture.</param>
         /// <param name="textureOrigin">Center of texture.</param>
-        /// <param name="alphaTolerance">Every value above the specified counts as solid and will be added to the hull.</param>
+        /// <param name="alphaTolerance">Every Value above the specified counts as solid and will be added to the hull.</param>
         /// <returns>Returns Vertices a Vector2 list.</returns>
         public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight, Vector2 textureOrigin, byte alphaTolerance)
         {
@@ -580,8 +580,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="textureWidth">Width of texture.</param>
         /// <param name="textureHeight">Height of texture.</param>
         /// <param name="textureOrigin">Center of texture.</param>
-        /// <param name="alphaTolerance">Every value above the specified counts as solid and will be added to the hull.</param>
-        /// <param name="hullTolerance">The polygon is a low detailed line around your shape on the texture and here you can specify how much less detailed. 1f is a good value.</param>
+        /// <param name="alphaTolerance">Every Value above the specified counts as solid and will be added to the hull.</param>
+        /// <param name="hullTolerance">The polygon is a low detailed line around your shape on the texture and here you can specify how much less detailed. 1f is a good Value.</param>
         /// <returns>Returns Vertices a Vector2 list.</returns>
         /// <exception cref="Exception">Sizes don't match: Color array must contain texture width * texture height elements.</exception>
         public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight, Vector2 textureOrigin, byte alphaTolerance, float hullTolerance)
@@ -738,8 +738,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// This function searches for an outstanding pixel. When found it searches on for the most outstanding.
         /// </summary>
         /// <param name="hullArea">Put a peace of the hull in here.</param>
-        /// <param name="hullTolerance">How much distance from the actual hull line is allowed? 1f to 2f are good Values (afaik^^).</param>
-        /// <param name="outstanding">This will give you the most outstanding point in the peace of hull you throwed in.</param>
+        /// <param name="hullTolerance">How much distance from the actual hull line is allowed? 1f to 2f are good values.</param>
+        /// <param name="outstanding">This will give you the most outstanding point in the piece of hull you gave it.</param>
         /// <returns></returns>
         private static bool SearchForOutstandingVertex(ref Vertices hullArea, ref float hullTolerance, out Vector2 outstanding)
         {

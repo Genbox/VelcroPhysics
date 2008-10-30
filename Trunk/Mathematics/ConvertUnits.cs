@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Mathematics
 {
+    /// <summary>
+    /// Convert units between display and simulation units.
+    /// </summary>
     public static class ConvertUnits
     {
         private static float _displayUnitsToSimUnitsRatio = 50;

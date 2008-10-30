@@ -23,7 +23,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets the points.
         /// </summary>
-        /// <value>The points.</value>
+        /// <Value>The points.</Value>
         public Vector2[] Points
         {
             get { return _points; }

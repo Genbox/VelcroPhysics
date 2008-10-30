@@ -51,7 +51,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the first body.
         /// </summary>
-        /// <value>The body1.</value>
+        /// <Value>The body1.</Value>
         public Body Body1
         {
             get { return _body1; }
@@ -61,7 +61,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the second body.
         /// </summary>
-        /// <value>The body2.</value>
+        /// <Value>The body2.</Value>
         public Body Body2
         {
             get { return _body2; }
@@ -71,7 +71,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the anchor.
         /// </summary>
-        /// <value>The anchor.</value>
+        /// <Value>The anchor.</Value>
         public Vector2 Anchor
         {
             get { return _anchor; }
@@ -86,7 +86,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// This gives the anchor position after the simulation starts
         /// </summary>
-        /// <value>The current anchor.</value>
+        /// <Value>The current anchor.</Value>
         public Vector2 CurrentAnchor
         {
             get

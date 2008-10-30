@@ -34,7 +34,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the fist body.
         /// </summary>
-        /// <value>The body1.</value>
+        /// <Value>The body1.</Value>
         public Body Body1
         {
             get { return _body1; }
@@ -44,7 +44,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the second body.
         /// </summary>
-        /// <value>The body2.</value>
+        /// <Value>The body2.</Value>
         public Body Body2
         {
             get { return _body2; }
@@ -54,7 +54,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the target angle.
         /// </summary>
-        /// <value>The target angle.</value>
+        /// <Value>The target angle.</Value>
         public float TargetAngle
         {
             get { return _targetAngle; }
@@ -64,7 +64,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Gets or sets the max impulse.
         /// </summary>
-        /// <value>The max impulse.</value>
+        /// <Value>The max impulse.</Value>
         public float MaxImpulse
         {
             get { return _maxImpulse; }

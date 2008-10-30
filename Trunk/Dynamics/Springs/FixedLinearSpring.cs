@@ -23,13 +23,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         }
 
         public FixedLinearSpring(Body body, Vector2 bodyAttachPoint, Vector2 worldAttachPoint, float springConstant,
-                                 float dampningConstant)
+                                 float dampingConstant)
         {
             _body = body;
             _bodyAttachPoint = bodyAttachPoint;
             _worldAttachPoint = worldAttachPoint;
             SpringConstant = springConstant;
-            DampningConstant = dampningConstant;
+            DampingConstant = dampingConstant;
             _difference = worldAttachPoint - _body.GetWorldPosition(bodyAttachPoint);
             _restLength = _difference.Length();
         }
@@ -37,7 +37,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// <summary>
         /// Gets or sets the body.
         /// </summary>
-        /// <value>The body.</value>
+        /// <Value>The body.</Value>
         public Body Body
         {
             get { return _body; }
@@ -47,7 +47,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// <summary>
         /// Gets or sets the position.
         /// </summary>
-        /// <value>The position.</value>
+        /// <Value>The position.</Value>
         public Vector2 Position
         {
             get { return _worldAttachPoint; }
@@ -57,7 +57,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// <summary>
         /// Gets or sets the body attach point.
         /// </summary>
-        /// <value>The body attach point.</value>
+        /// <Value>The body attach point.</Value>
         public Vector2 BodyAttachPoint
         {
             get { return _bodyAttachPoint; }
@@ -67,7 +67,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// <summary>
         /// Gets or sets the world attach point.
         /// </summary>
-        /// <value>The world attach point.</value>
+        /// <Value>The world attach point.</Value>
         public Vector2 WorldAttachPoint
         {
             get { return _worldAttachPoint; }
@@ -77,7 +77,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// <summary>
         /// Gets or sets the length of the rest.
         /// </summary>
-        /// <value>The length of the rest.</value>
+        /// <Value>The length of the rest.</Value>
         public float RestLength
         {
             get { return _restLength; }
@@ -127,7 +127,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
             //calculate dampning _force (bV)
             Vector2.Dot(ref _bodyVelocity, ref _difference, out _temp);
-            _dampningForce = DampningConstant*_temp/differenceMagnitude; //bV     
+            _dampningForce = DampingConstant*_temp/differenceMagnitude; //bV     
 
             //calculate final _force (spring + dampning)
             Vector2.Multiply(ref _differenceNormalized, -(_springForce + _dampningForce), out _force);

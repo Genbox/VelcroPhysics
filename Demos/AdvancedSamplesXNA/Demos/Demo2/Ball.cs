@@ -15,7 +15,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo2
         private Vector2 _origin;
         private CollisionCategory _collidesWith = CollisionCategory.All;
         private CollisionCategory _collisionCategory = CollisionCategory.All;
-        private int _radius = 12;
+        private const int _radius = 12;
 
         public Body Body
         {

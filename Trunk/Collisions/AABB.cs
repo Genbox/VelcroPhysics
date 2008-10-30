@@ -8,7 +8,7 @@ using FarseerGames.FarseerPhysics.Mathematics;
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     /// <summary>
-    /// Axis Aligned Bounding Box. Can be used to check for intersections with other AABB's.
+    /// Axis Aligned Bounding Box. Can be used to check for intersections with other AABBs.
     /// Use AABB.Intersect() to check for intersections.
     /// </summary>
     public class AABB
@@ -42,7 +42,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets the min.
         /// </summary>
-        /// <value>The min.</value>
+        /// <Value>The min.</Value>
         public Vector2 Min
         {
             get { return min; }
@@ -51,7 +51,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets the max.
         /// </summary>
-        /// <value>The max.</value>
+        /// <Value>The max.</Value>
         public Vector2 Max
         {
             get { return max; }
@@ -60,7 +60,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets the width.
         /// </summary>
-        /// <value>The width.</value>
+        /// <Value>The width.</Value>
         public float Width
         {
             get { return max.X - min.X; }
@@ -69,7 +69,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets the height.
         /// </summary>
-        /// <value>The height.</value>
+        /// <Value>The height.</Value>
         public float Height
         {
             get { return max.Y - min.Y; }
