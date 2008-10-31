@@ -18,7 +18,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
         private Texture2D _chainTexture;
         private Vector2 _chainOrigin;
         private Path _chain;
-
         private Border _border;
         private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private FixedLinearSpring _mousePickSpring;
@@ -26,7 +25,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
 
         public override void Initialize()
         {
-            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
+            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 150));
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
 
             base.Initialize();
@@ -37,11 +36,14 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
             _chainTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 20, 20, Color.White,
                                                                  Color.Black);
             _chainOrigin = new Vector2(_chainTexture.Width / 2f, _chainTexture.Height / 2f);
-            _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 25, ScreenManager.ScreenCenter);
+            _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 30, ScreenManager.ScreenCenter);
             _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
-            _chain = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(100, 100), new Vector2(200, 200), 20.0f, 10.0f, 1, 2);
+            _chain = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(500, 300), new Vector2(500, 500), 20.0f, 10.0f, 1, 2);
             _chain.CreateGeoms();
+
+            //Pinning the chain to world.
+            JointFactory.Instance.CreateFixedRevoluteJoint(PhysicsSimulator, _chain.Bodies[0], _chain.Bodies[0].Position);
 
             _lineBrush.Load(ScreenManager.GraphicsDevice);
 
