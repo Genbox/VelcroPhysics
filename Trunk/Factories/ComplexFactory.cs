@@ -205,6 +205,12 @@ namespace FarseerGames.FarseerPhysics.Factories
                 path.Add(JointFactory.Instance.CreateFixedRevoluteJoint(path.Bodies[path.Bodies.Count - 1],
                                                                         path.ControlPoints[2]));
 
+            foreach (Joint j in _chain.Joints)      // chains need a little give ;)
+            {
+                j.BiasFactor = 0.01f;
+                j.Softness = 0.05f;
+            }
+
             return (path);
         }
 
