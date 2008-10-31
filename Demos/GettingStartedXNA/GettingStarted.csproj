@@ -161,7 +161,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\XNA3 Beta\FarseerPhysics.csproj">
+    <ProjectReference Include="..\..\Branches\XNA3\FarseerPhysics.csproj">
       <Project>{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}</Project>
       <Name>FarseerPhysics</Name>
     </ProjectReference>
