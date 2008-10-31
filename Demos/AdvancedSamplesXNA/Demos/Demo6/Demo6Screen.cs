@@ -78,9 +78,9 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
             foreach (Geom g in _track.Geoms)
                 g.FrictionCoefficient = 1.0f;
 
-            _wheel1 = BodyFactory.Instance.CreateCircleBody(PhysicsSimulator, 45, 15);
+            _wheel1 = BodyFactory.Instance.CreateCircleBody(PhysicsSimulator, 45, 30);
             _wheel1.Position = new Vector2(-50, 0) + _center;
-            _wheel2 = BodyFactory.Instance.CreateCircleBody(PhysicsSimulator, 45, 15);
+            _wheel2 = BodyFactory.Instance.CreateCircleBody(PhysicsSimulator, 45, 30);
             _wheel2.Position = new Vector2(50, 0) + _center;
 
             _wheelg = GeomFactory.Instance.CreateCircleGeom(PhysicsSimulator, _wheel1, 45, 36);
@@ -148,11 +148,11 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
             // do some keyboard torque stuff
             if (input.CurrentKeyboardState.IsKeyDown(Keys.Left))
             {
-                torque = -2500;
+                torque = -3500;
             }
             else if (input.CurrentKeyboardState.IsKeyDown(Keys.Right))
             {
-                torque = 2500;
+                torque = 3500;
             }
             else
             {
@@ -180,7 +180,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
                                                                                       _pickedGeom.Body,
                                                                                       _pickedGeom.Body.
                                                                                           GetLocalPosition(point),
-                                                                                      point, 20, 10);
+                                                                                      point, 150, 10);
                 }
                 else
                 {
