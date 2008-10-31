@@ -1,10 +1,11 @@
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Mathematics;
+using FarseerGames.FarseerPhysics.Dynamics.Joints;
+
 #if (XNA)
 using Microsoft.Xna.Framework;
 #else
-
+using FarseerGames.FarseerPhysics.Mathematics;
 #endif
 
 namespace FarseerGames.FarseerPhysics.Factories
@@ -205,7 +206,7 @@ namespace FarseerGames.FarseerPhysics.Factories
                 path.Add(JointFactory.Instance.CreateFixedRevoluteJoint(path.Bodies[path.Bodies.Count - 1],
                                                                         path.ControlPoints[2]));
 
-            foreach (Joint j in _chain.Joints)      // chains need a little give ;)
+            foreach (Joint j in path.Joints)      // chains need a little give ;)
             {
                 j.BiasFactor = 0.01f;
                 j.Softness = 0.05f;
