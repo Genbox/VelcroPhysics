@@ -36,10 +36,11 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
             _chainTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 20, 20, Color.White,
                                                                  Color.Black);
             _chainOrigin = new Vector2(_chainTexture.Width / 2f, _chainTexture.Height / 2f);
+
             _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 30, ScreenManager.ScreenCenter);
             _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
-            _chain = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(500, 300), new Vector2(500, 500), 20.0f, 10.0f, 1, 2);
+            _chain = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(150, 100), new Vector2(200, 300), 20.0f, 10.0f, 1, 2);
             _chain.CreateGeoms();
 
             //Pinning the chain to world.
