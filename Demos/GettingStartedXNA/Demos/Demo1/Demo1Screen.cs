@@ -19,6 +19,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo1
         public override void Initialize()
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
+            PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
 
             base.Initialize();
         }
