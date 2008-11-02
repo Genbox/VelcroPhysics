@@ -41,7 +41,7 @@ namespace FarseerGames.FarseerPhysics.Factories
             body.Mass = mass;
 
             //MOI for rectangles.
-            body.MomentOfInertia = mass*(width*width + height*height)/12;
+            body.MomentOfInertia = mass * (width * width + height * height) / 12;
             return body;
         }
 
@@ -59,7 +59,7 @@ namespace FarseerGames.FarseerPhysics.Factories
             body.Mass = mass;
 
             //MOI for circles
-            body.MomentOfInertia = .5f*mass*(float) Math.Pow(radius, 2f);
+            body.MomentOfInertia = .5f * mass * (float)Math.Pow(radius, 2f);
             return body;
         }
 
@@ -89,7 +89,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         {
             Body body = new Body();
             body.Mass = mass;
-            body.MomentOfInertia = mass*vertices.GetMomentOfInertia();
+            body.MomentOfInertia = mass * vertices.GetMomentOfInertia();
             body.position = vertices.GetCentroid();
             return body;
         }
@@ -128,13 +128,13 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// Creates a ellipse body.
         /// </summary>
         /// <param name="physicsSimulator">The physics simulator.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
+        /// <param name="xRadius">The width.</param>
+        /// <param name="yRadius">The height.</param>
         /// <param name="mass">The mass.</param>
         /// <returns></returns>
-        public Body CreateEllipseBody(PhysicsSimulator physicsSimulator, float width, float height, float mass)
+        public Body CreateEllipseBody(PhysicsSimulator physicsSimulator, float xRadius, float yRadius, float mass)
         {
-            Body body = CreateEllipseBody(width, height, mass);
+            Body body = CreateEllipseBody(xRadius, yRadius, mass);
             physicsSimulator.Add(body);
             return body;
         }
@@ -142,17 +142,20 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <summary>
         /// Creates a ellipse body.
         /// </summary>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
+        /// <param name="xRadius">The width.</param>
+        /// <param name="yRadius">The height.</param>
         /// <param name="mass">The mass.</param>
         /// <returns></returns>
-        public Body CreateEllipseBody(float width, float height, float mass)
+        public Body CreateEllipseBody(float xRadius, float yRadius, float mass)
         {
             Body body = new Body();
             body.Mass = mass;
 
-            //TODO: Replace with correct formula for ellipses.
-            body.MomentOfInertia = mass*(width*width + height*height)/12;
+            if (xRadius == yRadius)
+                body.MomentOfInertia = .5f * mass * (float)Math.Pow(xRadius, 2f);
+            else
+                //TODO: Replace with correct formula for ellipses.
+                body.MomentOfInertia = mass * (xRadius * xRadius + yRadius * yRadius) / 12;
 
             return body;
         }

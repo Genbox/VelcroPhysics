@@ -495,23 +495,20 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Creates a ellipse with the specified width, height and number of edges.
         /// </summary>
-        /// <param name="width">Width of the ellipse.</param>
-        /// <param name="height">Height of the ellipse.</param>
+        /// <param name="xRadius">Width of the ellipse.</param>
+        /// <param name="yRadius">Height of the ellipse.</param>
         /// <param name="numberOfEdges">The number of edges. The more edges, the more it resembles an ellipse</param>
         /// <returns></returns>
-        public static Vertices CreateEllipse(float width, float height, int numberOfEdges)
+        public static Vertices CreateEllipse(float xRadius, float yRadius, int numberOfEdges)
         {
             Vertices vertices = new Vertices();
 
             float stepSize = MathHelper.TwoPi/numberOfEdges;
 
-            float halfWidth = width/2f;
-            float halfHeight = height/2f;
-
-            vertices.Add(new Vector2(halfWidth, 0));
+            vertices.Add(new Vector2(xRadius, 0));
             for (int i = 1; i < numberOfEdges; i++)
             {
-                vertices.Add(new Vector2(halfWidth*Calculator.Cos(stepSize*i), -halfHeight*Calculator.Sin(stepSize*i)));
+                vertices.Add(new Vector2(xRadius * Calculator.Cos(stepSize * i), -yRadius * Calculator.Sin(stepSize * i)));
             }
             return vertices;
         }
