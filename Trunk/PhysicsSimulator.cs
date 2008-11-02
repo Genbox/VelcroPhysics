@@ -6,12 +6,12 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Interfaces;
-using FarseerGames.FarseerPhysics.Mathematics;
+
 #if (XNA)
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
 #else
-
+using FarseerGames.FarseerPhysics.Mathematics;
 #endif
 
 namespace FarseerGames.FarseerPhysics

@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Interfaces;
-using FarseerGames.FarseerPhysics.Mathematics;
+
 #if (XNA)
 using Microsoft.Xna.Framework;
 #else
-
+using FarseerGames.FarseerPhysics.Mathematics;
 #endif
 
 namespace FarseerGames.FarseerPhysics.Controllers
