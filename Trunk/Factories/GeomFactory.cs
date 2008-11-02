@@ -364,27 +364,27 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// </summary>
         /// <param name="physicsSimulator">The physics simulator.</param>
         /// <param name="body">The body.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
+        /// <param name="xRadius">The x radius.</param>
+        /// <param name="yRadius">The y radius.</param>
         /// <param name="numberOfEdges">The number of edges.</param>
         /// <returns></returns>
-        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height,
+        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float xRadius, float yRadius,
                                       int numberOfEdges)
         {
-            return CreateEllipseGeom(physicsSimulator, body, width, height, numberOfEdges, Vector2.Zero, 0, 0);
+            return CreateEllipseGeom(physicsSimulator, body, xRadius, yRadius, numberOfEdges, Vector2.Zero, 0, 0);
         }
 
         /// <summary>
         /// Creates a ellipse geom.
         /// </summary>
         /// <param name="body">The body.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
+        /// <param name="xRadius">The x radius.</param>
+        /// <param name="yRadius">The y radius.</param>
         /// <param name="numberOfEdges">The number of edges.</param>
         /// <returns></returns>
-        public Geom CreateEllipseGeom(Body body, float width, float height, int numberOfEdges)
+        public Geom CreateEllipseGeom(Body body, float xRadius, float yRadius, int numberOfEdges)
         {
-            return CreateEllipseGeom(body, width, height, numberOfEdges, Vector2.Zero, 0, 0);
+            return CreateEllipseGeom(body, xRadius, yRadius, numberOfEdges, Vector2.Zero, 0, 0);
         }
 
         /// <summary>
@@ -392,33 +392,33 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// </summary>
         /// <param name="physicsSimulator">The physics simulator.</param>
         /// <param name="body">The body.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
+        /// <param name="xRadius">The x radius.</param>
+        /// <param name="yRadius">The y radius.</param>
         /// <param name="numberOfEdges">The number of edges.</param>
         /// <param name="offset">The offset.</param>
         /// <param name="rotationOffset">The rotation offset.</param>
         /// <returns></returns>
-        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height,
+        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float xRadius, float yRadius,
                                       int numberOfEdges,
                                       Vector2 offset, float rotationOffset)
         {
-            return CreateEllipseGeom(physicsSimulator, body, width, height, numberOfEdges, offset, rotationOffset, 0);
+            return CreateEllipseGeom(physicsSimulator, body, xRadius, yRadius, numberOfEdges, offset, rotationOffset, 0);
         }
 
         /// <summary>
         /// Creates a ellipse geom.
         /// </summary>
         /// <param name="body">The body.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
+        /// <param name="xRadius">The x radius.</param>
+        /// <param name="yRadius">The y radius.</param>
         /// <param name="numberOfEdges">The number of edges.</param>
         /// <param name="offset">The offset.</param>
         /// <param name="rotationOffset">The rotation offset.</param>
         /// <returns></returns>
-        public Geom CreateEllipseGeom(Body body, float width, float height, int numberOfEdges, Vector2 offset,
+        public Geom CreateEllipseGeom(Body body, float xRadius, float yRadius, int numberOfEdges, Vector2 offset,
                                       float rotationOffset)
         {
-            return CreateEllipseGeom(body, width, height, numberOfEdges, offset, rotationOffset, 0);
+            return CreateEllipseGeom(body, xRadius, yRadius, numberOfEdges, offset, rotationOffset, 0);
         }
 
         /// <summary>
@@ -426,16 +426,16 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// </summary>
         /// <param name="physicsSimulator">The physics simulator.</param>
         /// <param name="body">The body.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
+        /// <param name="xRadius">The x radius.</param>
+        /// <param name="yRadius">The y radius.</param>
         /// <param name="numberOfEdges">The number of edges.</param>
         /// <param name="collisionGridCellSize">Size of the collision grid cell.</param>
         /// <returns></returns>
-        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height,
+        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float xRadius, float yRadius,
                                       int numberOfEdges,
                                       float collisionGridCellSize)
         {
-            return CreateEllipseGeom(physicsSimulator, body, width, height, numberOfEdges, Vector2.Zero, 0,
+            return CreateEllipseGeom(physicsSimulator, body, xRadius, yRadius, numberOfEdges, Vector2.Zero, 0,
                                      collisionGridCellSize);
         }
 
@@ -443,15 +443,15 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// Creates an ellipse geometry
         /// </summary>
         /// <param name="body">The body.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
+        /// <param name="xRadius">The x radius.</param>
+        /// <param name="yRadius">The y radius.</param>
         /// <param name="numberOfEdges">The number of edges.</param>
         /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
         /// <returns></returns>
-        public Geom CreateEllipseGeom(Body body, float width, float height, int numberOfEdges,
+        public Geom CreateEllipseGeom(Body body, float xRadius, float yRadius, int numberOfEdges,
                                       float collisionGridCellSize)
         {
-            return CreateEllipseGeom(body, width, height, numberOfEdges, Vector2.Zero, 0, collisionGridCellSize);
+            return CreateEllipseGeom(body, xRadius, yRadius, numberOfEdges, Vector2.Zero, 0, collisionGridCellSize);
         }
 
         /// <summary>
@@ -459,39 +459,39 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// </summary>
         /// <param name="physicsSimulator">The physics simulator.</param>
         /// <param name="body">The body.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
+        /// <param name="xRadius">The x radius.</param>
+        /// <param name="yRadius">The y radius.</param>
         /// <param name="numberOfEdges">The number of edges.</param>
         /// <param name="offset">The offset.</param>
         /// <param name="rotationOffset">The rotation offset.</param>
         /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
         /// <returns></returns>
-        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height,
+        public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float xRadius, float yRadius,
                                       int numberOfEdges,
                                       Vector2 offset, float rotationOffset, float collisionGridCellSize)
         {
-            Geom geometry = CreateEllipseGeom(body, width, height, numberOfEdges, offset, rotationOffset,
+            Geom geometry = CreateEllipseGeom(body, xRadius, yRadius, numberOfEdges, offset, rotationOffset,
                                               collisionGridCellSize);
             physicsSimulator.Add(geometry);
             return geometry;
         }
 
         /// <summary>
-        /// 
+        /// Creates the ellipse geom.
         /// </summary>
-        /// <param name="body"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="numberOfEdges"></param>
-        /// <param name="offset"></param>
-        /// <param name="rotationOffset"></param>
+        /// <param name="body">The body.</param>
+        /// <param name="xRadius">The x radius.</param>
+        /// <param name="yRadius">The y radius.</param>
+        /// <param name="numberOfEdges">The number of edges.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="rotationOffset">The rotation offset.</param>
         /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
         /// <returns></returns>
-        public Geom CreateEllipseGeom(Body body, float width, float height, int numberOfEdges, Vector2 offset,
+        public Geom CreateEllipseGeom(Body body, float xRadius, float yRadius, int numberOfEdges, Vector2 offset,
                                       float rotationOffset,
                                       float collisionGridCellSize)
         {
-            Vertices vertices = Vertices.CreateEllipse(width, height, numberOfEdges);
+            Vertices vertices = Vertices.CreateEllipse(xRadius, yRadius, numberOfEdges);
             if (collisionGridCellSize <= 0)
             {
                 collisionGridCellSize = CalculateGridCellSizeFromAABB(vertices);
