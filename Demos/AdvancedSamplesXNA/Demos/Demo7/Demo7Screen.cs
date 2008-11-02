@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.AdvancedSamples.ScreenSystem;
 using FarseerGames.FarseerPhysics;
@@ -19,7 +20,11 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo7
         private Texture2D _rectangleTexture;
         private Body _rectangleBody;
         private Geom _rectangleGeom;
-        private const int pyramidBaseBodyCount = 8;
+        private const int pyramidBaseBodyCount = 14;
+        private Texture2D _grenadeTexture;
+        private HairDryer _hairDryer;
+
+        private List<Grenade> _grenades = new List<Grenade>();
 
         public override void Initialize()
         {
@@ -31,6 +36,9 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo7
 
         public override void LoadContent()
         {
+            //We load the grenade texture here instead of inside Grenade class. Load once, use multiple times.
+            _grenadeTexture = ScreenManager.ContentManager.Load<Texture2D>("Content/Grenade");
+
             _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 25, ScreenManager.ScreenCenter);
             _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
@@ -48,7 +56,22 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo7
 
             _pyramid.Load(PhysicsSimulator);
 
+            _hairDryer = new HairDryer(new Vector2(100, 100), PhysicsSimulator);
+            _hairDryer.Load(ScreenManager.ContentManager.Load<Texture2D>("Content/HairDryer"));
+
             base.LoadContent();
+        }
+
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        {
+            for (int i = _grenades.Count - 1; i >= 0; i--)
+            {
+                _grenades[i].Update(gameTime);
+            }
+
+            _hairDryer.Update();
+
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
 
         public override void Draw(GameTime gameTime)
@@ -56,6 +79,12 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo7
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             _pyramid.Draw(ScreenManager.SpriteBatch, _rectangleTexture);
             _border.Draw(ScreenManager.SpriteBatch);
+            _hairDryer.Draw(ScreenManager.SpriteBatch);
+
+            for (int i = _grenades.Count - 1; i >= 0; i--)
+            {
+                _grenades[i].Draw(ScreenManager.SpriteBatch, ScreenManager.SpriteFonts.DetailsFont);
+            }
 
             ScreenManager.SpriteBatch.End();
 
@@ -86,28 +115,27 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo7
             if (input.LastMouseState.RightButton == ButtonState.Released && input.CurrentMouseState.RightButton == ButtonState.Pressed)
             {
                 Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
-                Explode(point);
+                Grenade grenade = new Grenade(point, PhysicsSimulator);
+                grenade.Load(_grenadeTexture);
+                grenade.OnTimeout += Grenade_OnTimeout;
+
+                _grenades.Add(grenade);
+            }
+
+            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed)
+            {
+                Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
+                _hairDryer.Position = point;
             }
         }
 
-        public void Explode(Vector2 position)
+        private void Grenade_OnTimeout(Grenade sender, Vector2 position)
         {
-            Vector2 min = Vector2.Subtract(position, new Vector2(100, 100));
-            Vector2 max = Vector2.Add(position, new Vector2(100, 100));
+            //Remember to remove event registations or the GC will not collect it.
+            sender.OnTimeout -= Grenade_OnTimeout;
 
-            AABB aabb = new AABB(min, max);
-
-            foreach (Body body in PhysicsSimulator.BodyList)
-            {
-                if (aabb.Contains(body.Position))
-                {
-                    Vector2 fv = body.Position;
-                    fv = Vector2.Subtract(fv, position);
-                    fv.Normalize();
-                    fv = Vector2.Multiply(fv, 50000);
-                    body.ApplyForce(fv);
-                }
-            }
+            //Remove from update/drawing list
+            _grenades.Remove(sender);
         }
 
         public static string GetTitle()
@@ -122,8 +150,8 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo7
             sb.AppendLine("explosions and wind.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Mouse:");
-            sb.AppendLine("Left click: Apply wind");
-            sb.AppendLine("Right click: Apply explosion");
+            sb.AppendLine("Left click to move hair dryer.");
+            sb.AppendLine("Right click to place grenade.");
             return sb.ToString();
         }
     }
