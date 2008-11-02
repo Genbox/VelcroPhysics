@@ -272,6 +272,14 @@ namespace FarseerGames.GettingStarted.ScreenSystem
         /// </summary>
         public virtual void HandleInput(InputState input)
         {
+            //Xbox
+            if (input.LastGamePadState.Buttons.Y != ButtonState.Pressed && input.CurrentGamePadState.Buttons.Y == ButtonState.Pressed)
+            {
+                _debugViewEnabled = !_debugViewEnabled;
+                _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
+            }
+
+            //Windows
             if (!input.LastKeyboardState.IsKeyDown(Keys.F1) && input.CurrentKeyboardState.IsKeyDown(Keys.F1))
             {
                 _debugViewEnabled = !_debugViewEnabled;

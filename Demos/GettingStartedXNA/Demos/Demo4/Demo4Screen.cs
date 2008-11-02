@@ -15,7 +15,11 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
 {
     public class Demo4Screen : GameScreen
     {
-        private const int pyramidBaseBodyCount = 16;
+#if XBOX
+        private const int _pyramidBaseBodyCount = 8;
+#else
+        private const int _pyramidBaseBodyCount = 16;
+#endif
         private Agent _agent;
         private Floor _floor;
         private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
@@ -50,8 +54,8 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
             _rectangleGeom.RestitutionCoefficient = 0f;
 
             //create the _pyramid near the bottom of the screen.
-            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f/3f, 32f/3f, 32, 32, pyramidBaseBodyCount,
-                                   new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount*.5f*(32 + 32/3),
+            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, _pyramidBaseBodyCount,
+                                   new Vector2(ScreenManager.ScreenCenter.X - _pyramidBaseBodyCount * .5f * (32 + 32 / 3),
                                                ScreenManager.ScreenHeight - 125));
 
             _pyramid.Load(PhysicsSimulator);
@@ -97,9 +101,32 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
 
-            HandleKeyboardInput(input);
-            HandleMouseInput(input);
+            if (input.CurrentGamePadState.IsConnected)
+            {
+                HandleGamePadInput(input);
+            }
+            else
+            {
+                HandleKeyboardInput(input);
+#if !XBOX
+                HandleMouseInput(input);
+#endif
+            }
+
             base.HandleInput(input);
+        }
+
+        private void HandleGamePadInput(InputState input)
+        {
+            Vector2 force = 1000 * input.CurrentGamePadState.ThumbSticks.Left;
+            force.Y = -force.Y;
+            _agent.ApplyForce(force);
+
+            float rotation = -14000 * input.CurrentGamePadState.Triggers.Left;
+            _agent.ApplyTorque(rotation);
+
+            rotation = 14000 * input.CurrentGamePadState.Triggers.Right;
+            _agent.ApplyTorque(rotation);
         }
 
         private void HandleKeyboardInput(InputState input)
@@ -107,38 +134,24 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
             const float forceAmount = 1000;
             Vector2 force = Vector2.Zero;
             force.Y = -force.Y;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.A))
-            {
-                force += new Vector2(-forceAmount, 0);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.S))
-            {
-                force += new Vector2(0, forceAmount);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.D))
-            {
-                force += new Vector2(forceAmount, 0);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.W))
-            {
-                force += new Vector2(0, -forceAmount);
-            }
+
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.A)) { force += new Vector2(-forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { force += new Vector2(0, forceAmount); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { force += new Vector2(forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, -forceAmount); }
 
             _agent.ApplyForce(force);
 
             const float torqueAmount = 14000;
             float torque = 0;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left))
-            {
-                torque -= torqueAmount;
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right))
-            {
-                torque += torqueAmount;
-            }
+
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque -= torqueAmount; }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque += torqueAmount; }
+
             _agent.ApplyTorque(torque);
         }
 
+#if !XBOX
         private void HandleMouseInput(InputState input)
         {
             Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
@@ -173,6 +186,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
                 _mousePickSpring.WorldAttachPoint = point;
             }
         }
+#endif
 
         public static string GetTitle()
         {
@@ -185,6 +199,10 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
             sb.AppendLine("This demo shows the stacking stability of the engine.");
             sb.AppendLine("It shows a stack of rectangular bodies stacked in");
             sb.AppendLine("the shape of a pyramid.");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  -Rotate : left and right triggers");
+            sb.AppendLine("  -Move : left thumbstick");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  -Rotate : left and right arrows");

@@ -40,11 +40,11 @@ namespace FarseerGames.GettingStarted.Demos.Demo2
 
             _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 128, Color.Gold,
                                                                      Color.Black);
-            _rectangleOrigin = new Vector2(_rectangleTexture.Width/2f, _rectangleTexture.Height/2f);
+            _rectangleOrigin = new Vector2(_rectangleTexture.Width / 2f, _rectangleTexture.Height / 2f);
 
             _circleTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 64, Color.White,
                                                                Color.Black);
-            _circleOrigin = new Vector2(_circleTexture.Width/2f, _circleTexture.Height/2f);
+            _circleOrigin = new Vector2(_circleTexture.Width / 2f, _circleTexture.Height / 2f);
 
             _rectangleBody = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 128, 128, 1);
             _rectangleBody.Position = new Vector2(256, 384);
@@ -89,10 +89,31 @@ namespace FarseerGames.GettingStarted.Demos.Demo2
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
 
-            HandleKeyboardInput(input);
-            HandleMouseInput(input);
-
+            if (input.CurrentGamePadState.IsConnected)
+            {
+                HandleGamePadInput(input);
+            }
+            else
+            {
+                HandleKeyboardInput(input);
+#if !XBOX
+                HandleMouseInput(input);
+#endif
+            }
             base.HandleInput(input);
+        }
+
+        private void HandleGamePadInput(InputState input)
+        {
+            Vector2 force = 50 * input.CurrentGamePadState.ThumbSticks.Left;
+            force.Y = -force.Y;
+            _rectangleBody.ApplyForce(force);
+
+            float rotation = -1000 * input.CurrentGamePadState.Triggers.Left;
+            _rectangleBody.ApplyTorque(rotation);
+
+            rotation = 1000 * input.CurrentGamePadState.Triggers.Right;
+            _rectangleBody.ApplyTorque(rotation);
         }
 
         private void HandleKeyboardInput(InputState input)
@@ -100,38 +121,24 @@ namespace FarseerGames.GettingStarted.Demos.Demo2
             const float forceAmount = 50;
             Vector2 force = Vector2.Zero;
             force.Y = -force.Y;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.A))
-            {
-                force += new Vector2(-forceAmount, 0);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.S))
-            {
-                force += new Vector2(0, forceAmount);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.D))
-            {
-                force += new Vector2(forceAmount, 0);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.W))
-            {
-                force += new Vector2(0, -forceAmount);
-            }
+
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.A)) { force += new Vector2(-forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { force += new Vector2(0, forceAmount); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { force += new Vector2(forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, -forceAmount); }
 
             _rectangleBody.ApplyForce(force);
 
             const float torqueAmount = 1000;
             float torque = 0;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left))
-            {
-                torque -= torqueAmount;
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right))
-            {
-                torque += torqueAmount;
-            }
+
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque -= torqueAmount; }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque += torqueAmount; }
+
             _rectangleBody.ApplyTorque(torque);
         }
 
+#if !XBOX
         private void HandleMouseInput(InputState input)
         {
             Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
@@ -166,6 +173,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo2
                 _mousePickSpring.WorldAttachPoint = point;
             }
         }
+#endif
 
         public static string GetTitle()
         {
@@ -177,6 +185,10 @@ namespace FarseerGames.GettingStarted.Demos.Demo2
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows two bodies each with a single geometry");
             sb.AppendLine("object attached.");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  -Rotate : left and right triggers");
+            sb.AppendLine("  -Move : left thumbstick");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  -Rotate : left and right arrows");

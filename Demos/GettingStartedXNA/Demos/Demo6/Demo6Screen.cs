@@ -60,8 +60,8 @@ namespace FarseerGames.GettingStarted.Demos.Demo6
         {
             _lineBrush.Load(ScreenManager.GraphicsDevice);
 
-            int borderWidth = (int) (ScreenManager.ScreenHeight*.05f);
-            _border = new Border(ScreenManager.ScreenWidth + borderWidth*2, ScreenManager.ScreenHeight + borderWidth*2,
+            int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
+            _border = new Border(ScreenManager.ScreenWidth + borderWidth * 2, ScreenManager.ScreenHeight + borderWidth * 2,
                                  borderWidth, ScreenManager.ScreenCenter);
             _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
@@ -79,9 +79,9 @@ namespace FarseerGames.GettingStarted.Demos.Demo6
         public void LoadPlatforms()
         {
             //_platform1
-            int width = Convert.ToInt32(ScreenManager.ScreenWidth*platform1WidthRatio);
-            int height = Convert.ToInt32(ScreenManager.ScreenHeight*platform1HeightRatio);
-            Vector2 position = new Vector2(-5 + width/2f, 5 + ScreenManager.ScreenHeight - height/2f);
+            int width = Convert.ToInt32(ScreenManager.ScreenWidth * platform1WidthRatio);
+            int height = Convert.ToInt32(ScreenManager.ScreenHeight * platform1HeightRatio);
+            Vector2 position = new Vector2(-5 + width / 2f, 5 + ScreenManager.ScreenHeight - height / 2f);
 
             _platform1 = new RectanglePlatform(width, height, position, Color.White, Color.Black, 100);
             _platform1.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
@@ -93,15 +93,15 @@ namespace FarseerGames.GettingStarted.Demos.Demo6
             _angularSpringLever1.SpringConstant = 1000000;
             _angularSpringLever1.DampingConstant = 5000;
             _angularSpringLever1.CollisionGroup = 100;
-            Vector2 springPosition = position + new Vector2(width/2f, -height/2f) +
-                                     new Vector2(-_angularSpringLever1.RectangleHeight - 5, .4f*height);
+            Vector2 springPosition = position + new Vector2(width / 2f, -height / 2f) +
+                                     new Vector2(-_angularSpringLever1.RectangleHeight - 5, .4f * height);
             _angularSpringLever1.Position = springPosition;
             _angularSpringLever1.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             //platform 2
-            width = Convert.ToInt32(ScreenManager.ScreenWidth*platform2WidthRatio);
-            height = Convert.ToInt32(ScreenManager.ScreenHeight*platform2HeightRatio);
-            position = new Vector2(ScreenManager.ScreenCenter.X, 5 + ScreenManager.ScreenHeight - height/2f);
+            width = Convert.ToInt32(ScreenManager.ScreenWidth * platform2WidthRatio);
+            height = Convert.ToInt32(ScreenManager.ScreenHeight * platform2HeightRatio);
+            position = new Vector2(ScreenManager.ScreenCenter.X, 5 + ScreenManager.ScreenHeight - height / 2f);
 
             _platform2 = new RectanglePlatform(width, height, position, Color.White, Color.Black, 100);
             _platform2.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
@@ -113,8 +113,8 @@ namespace FarseerGames.GettingStarted.Demos.Demo6
             _angularSpringLever2.SpringConstant = 1000000;
             _angularSpringLever2.DampingConstant = 5000;
             _angularSpringLever2.CollisionGroup = 100;
-            springPosition = position + new Vector2(-width/2f, -height/2f) +
-                             new Vector2(_angularSpringLever2.RectangleHeight + 5, .2f*height);
+            springPosition = position + new Vector2(-width / 2f, -height / 2f) +
+                             new Vector2(_angularSpringLever2.RectangleHeight + 5, .2f * height);
             _angularSpringLever2.Position = springPosition;
             _angularSpringLever2.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
@@ -125,8 +125,8 @@ namespace FarseerGames.GettingStarted.Demos.Demo6
             _angularSpringLever3.SpringConstant = 10000000;
             _angularSpringLever3.DampingConstant = 1000;
             _angularSpringLever3.CollisionGroup = 100;
-            springPosition = position + new Vector2(width/2f, -height/2f) +
-                             new Vector2(-_angularSpringLever3.RectangleHeight - 5, .1f*height);
+            springPosition = position + new Vector2(width / 2f, -height / 2f) +
+                             new Vector2(-_angularSpringLever3.RectangleHeight - 5, .1f * height);
             _angularSpringLever3.Position = springPosition;
             _angularSpringLever3.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
@@ -142,14 +142,14 @@ namespace FarseerGames.GettingStarted.Demos.Demo6
             _springRectangleRope1.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
             SpringFactory.Instance.CreateLinearSpring(PhysicsSimulator, _angularSpringLever3.Body,
                                                       new Vector2(
-                                                          _angularSpringLever3.RectangleWidth/2f, 0),
+                                                          _angularSpringLever3.RectangleWidth / 2f, 0),
                                                       _springRectangleRope1.FirstBody, Vector2.Zero,
                                                       400, 3);
 
             //platform 3
-            width = Convert.ToInt32(ScreenManager.ScreenWidth*platform3WidthRatio);
-            height = Convert.ToInt32(ScreenManager.ScreenHeight*platform3HeightRatio);
-            position = new Vector2(ScreenManager.ScreenWidth + 5 - width/2f, 5 + ScreenManager.ScreenHeight - height/2f);
+            width = Convert.ToInt32(ScreenManager.ScreenWidth * platform3WidthRatio);
+            height = Convert.ToInt32(ScreenManager.ScreenHeight * platform3HeightRatio);
+            position = new Vector2(ScreenManager.ScreenWidth + 5 - width / 2f, 5 + ScreenManager.ScreenHeight - height / 2f);
             _platform3 = new RectanglePlatform(width, height, position, Color.White, Color.Black, 100);
             _platform3.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
@@ -170,15 +170,15 @@ namespace FarseerGames.GettingStarted.Demos.Demo6
             _angularSpringLever4.SpringConstant = 1000000;
             _angularSpringLever4.DampingConstant = 1000;
             _angularSpringLever4.CollisionGroup = 100;
-            springPosition = position + new Vector2(-width/2f, -height/2f) +
-                             new Vector2(_angularSpringLever4.RectangleHeight + 5, .7f*height);
+            springPosition = position + new Vector2(-width / 2f, -height / 2f) +
+                             new Vector2(_angularSpringLever4.RectangleHeight + 5, .7f * height);
             _angularSpringLever4.Position = springPosition;
             _angularSpringLever4.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
-            height = (int) (ScreenManager.ScreenHeight*.05f);
+            height = (int)(ScreenManager.ScreenHeight * .05f);
             _floor = new RectanglePlatform(ScreenManager.ScreenWidth + 10, height,
                                            new Vector2(ScreenManager.ScreenCenter.X,
-                                                       ScreenManager.ScreenHeight + 5 - height/2), Color.White,
+                                                       ScreenManager.ScreenHeight + 5 - height / 2), Color.White,
                                            Color.Black, 0);
             _floor.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
@@ -216,7 +216,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo6
 
             ScreenManager.SpriteBatch.Draw(_hangingTexture, _hangingGeom.Position, null, Color.White,
                                            _hangingGeom.Rotation,
-                                           new Vector2(_hangingTexture.Width/2f, _hangingTexture.Height/2f), 1,
+                                           new Vector2(_hangingTexture.Width / 2f, _hangingTexture.Height / 2f), 1,
                                            SpriteEffects.None, 0);
 
             _border.Draw(ScreenManager.SpriteBatch);
@@ -246,9 +246,32 @@ namespace FarseerGames.GettingStarted.Demos.Demo6
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
 
-            HandleKeyboardInput(input);
-            HandleMouseInput(input);
+            if (input.CurrentGamePadState.IsConnected)
+            {
+                HandleGamePadInput(input);
+            }
+            else
+            {
+                HandleKeyboardInput(input);
+#if !XBOX
+                HandleMouseInput(input);
+#endif
+            }
+
             base.HandleInput(input);
+        }
+
+        private void HandleGamePadInput(InputState input)
+        {
+            Vector2 force = 3000 * input.CurrentGamePadState.ThumbSticks.Left;
+            force.Y = -force.Y;
+            _agent.ApplyForce(force);
+
+            float rotation = -14000 * input.CurrentGamePadState.Triggers.Left;
+            _agent.ApplyTorque(rotation);
+
+            rotation = 14000 * input.CurrentGamePadState.Triggers.Right;
+            _agent.ApplyTorque(rotation);
         }
 
         private void HandleKeyboardInput(InputState input)
@@ -256,38 +279,24 @@ namespace FarseerGames.GettingStarted.Demos.Demo6
             const float forceAmount = 3000;
             Vector2 force = Vector2.Zero;
             force.Y = -force.Y;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.A))
-            {
-                force += new Vector2(-forceAmount, 0);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.S))
-            {
-                force += new Vector2(0, forceAmount);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.D))
-            {
-                force += new Vector2(forceAmount, 0);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.W))
-            {
-                force += new Vector2(0, -forceAmount);
-            }
 
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.A)) { force += new Vector2(-forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { force += new Vector2(0, forceAmount); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { force += new Vector2(forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, -forceAmount); }
+            
             _agent.ApplyForce(force);
 
             const float torqueAmount = 14000;
             float torque = 0;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left))
-            {
-                torque -= torqueAmount;
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right))
-            {
-                torque += torqueAmount;
-            }
+
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque -= torqueAmount; }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque += torqueAmount; }
+
             _agent.ApplyTorque(torque);
         }
 
+#if !XBOX
         private void HandleMouseInput(InputState input)
         {
             Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
@@ -322,6 +331,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo6
                 _mousePickSpring.WorldAttachPoint = point;
             }
         }
+#endif
 
         public static string GetTitle()
         {
@@ -339,6 +349,10 @@ namespace FarseerGames.GettingStarted.Demos.Demo6
             sb.AppendLine("spring attached.");
             sb.AppendLine("The hanging squares are connected by linear");
             sb.AppendLine("springs.");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  -Rotate : left and right triggers");
+            sb.AppendLine("  -Move : left thumbstick");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  -Rotate : left and right arrows");
