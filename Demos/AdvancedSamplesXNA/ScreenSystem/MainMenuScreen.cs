@@ -2,6 +2,7 @@ using FarseerGames.AdvancedSamples.Demos.Demo1;
 using FarseerGames.AdvancedSamples.Demos.Demo2;
 using FarseerGames.AdvancedSamples.Demos.Demo3;
 using FarseerGames.AdvancedSamples.Demos.Demo4;
+using FarseerGames.AdvancedSamples.Demos.Demo7;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using FarseerGames.AdvancedSamples.Demos.Demo5;
@@ -25,6 +26,7 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
             MenuEntries.Add(Demo4Screen.GetTitle());
             MenuEntries.Add(Demo5Screen.GetTitle());
             MenuEntries.Add(Demo6Screen.GetTitle());
+            MenuEntries.Add(Demo7Screen.GetTitle());
             MenuEntries.Add("Exit");
             LeftBorder = 100;
         }
@@ -55,6 +57,9 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
                     ScreenManager.AddScreen(new Demo6Screen());
                     break;
                 case 6:
+                    ScreenManager.AddScreen(new Demo7Screen());
+                    break;
+                case 7:
                     // Exit the sample.
                     ScreenManager.Game.Exit();
                     break;

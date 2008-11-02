@@ -46,7 +46,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo5
         {
             _lineBrush.Load(ScreenManager.GraphicsDevice);
 
-            int borderWidth = (int) (ScreenManager.ScreenHeight*.05f);
+            int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
             _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, borderWidth,
                                  ScreenManager.ScreenCenter);
             _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
@@ -209,10 +209,31 @@ namespace FarseerGames.GettingStarted.Demos.Demo5
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
 
-            HandleKeyboardInput(input);
-            HandleMouseInput(input);
-
+            if (input.CurrentGamePadState.IsConnected)
+            {
+                HandleGamePadInput(input);
+            }
+            else
+            {
+                HandleKeyboardInput(input);
+#if !XBOX
+                HandleMouseInput(input);
+#endif
+            }
             base.HandleInput(input);
+        }
+
+        private void HandleGamePadInput(InputState input)
+        {
+            Vector2 force = 1000 * input.CurrentGamePadState.ThumbSticks.Left;
+            force.Y = -force.Y;
+            _agent.ApplyForce(force);
+
+            float rotation = -14000 * input.CurrentGamePadState.Triggers.Left;
+            _agent.ApplyTorque(rotation);
+
+            rotation = 14000 * input.CurrentGamePadState.Triggers.Right;
+            _agent.ApplyTorque(rotation);
         }
 
         private void HandleKeyboardInput(InputState input)
@@ -220,38 +241,24 @@ namespace FarseerGames.GettingStarted.Demos.Demo5
             const float forceAmount = 1000;
             Vector2 force = Vector2.Zero;
             force.Y = -force.Y;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.A))
-            {
-                force += new Vector2(-forceAmount, 0);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.S))
-            {
-                force += new Vector2(0, forceAmount);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.D))
-            {
-                force += new Vector2(forceAmount, 0);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.W))
-            {
-                force += new Vector2(0, -forceAmount);
-            }
+
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.A)) { force += new Vector2(-forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { force += new Vector2(0, forceAmount); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { force += new Vector2(forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, -forceAmount); }
 
             _agent.ApplyForce(force);
 
             const float torqueAmount = 14000;
             float torque = 0;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left))
-            {
-                torque -= torqueAmount;
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right))
-            {
-                torque += torqueAmount;
-            }
+
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque -= torqueAmount; }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque += torqueAmount; }
+
             _agent.ApplyTorque(torque);
         }
 
+#if !XBOX
         private void HandleMouseInput(InputState input)
         {
             Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
@@ -286,6 +293,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo5
                 _mousePickSpring.WorldAttachPoint = point;
             }
         }
+#endif
 
         public static string GetTitle()
         {
@@ -310,6 +318,9 @@ namespace FarseerGames.GettingStarted.Demos.Demo5
             sb.AppendLine("This is the case with Black vs. the Red, Green, ");
             sb.AppendLine("and Blue circles");
             sb.AppendLine(string.Empty);
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  -Rotate : left and right triggers");
+            sb.AppendLine("  -Move : left thumbstick");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  -Rotate : left and right arrows");

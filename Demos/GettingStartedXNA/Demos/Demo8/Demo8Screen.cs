@@ -38,7 +38,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo8
         {
             _lineBrush.Load(ScreenManager.GraphicsDevice);
 
-            int borderWidth = (int) (ScreenManager.ScreenHeight*.05f);
+            int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
             _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, borderWidth,
                                  ScreenManager.ScreenCenter);
             _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
@@ -65,7 +65,12 @@ namespace FarseerGames.GettingStarted.Demos.Demo8
             Vector2 startPosition = new Vector2(50, 50);
             Vector2 endPosition = new Vector2(ScreenManager.ScreenWidth - 50, 50);
 
+#if XBOX
+            const int balls = 20;
+#else
             const int balls = 40;
+#endif
+
             const float ySpacing = 12;
             for (int i = 0; i < _redCircles.Length; i++)
             {
@@ -78,8 +83,8 @@ namespace FarseerGames.GettingStarted.Demos.Demo8
                 endPosition.Y += ySpacing;
             }
 
-            startPosition.Y += 2*ySpacing;
-            endPosition.Y += 2*ySpacing;
+            startPosition.Y += 2 * ySpacing;
+            endPosition.Y += 2 * ySpacing;
 
             for (int i = 0; i < _blueCircles.Length; i++)
             {
@@ -92,8 +97,8 @@ namespace FarseerGames.GettingStarted.Demos.Demo8
                 endPosition.Y += ySpacing;
             }
 
-            startPosition.Y += 12*ySpacing;
-            endPosition.Y += 12*ySpacing;
+            startPosition.Y += 12 * ySpacing;
+            endPosition.Y += 12 * ySpacing;
 
             for (int i = 0; i < _greenCircles.Length; i++)
             {
@@ -106,8 +111,8 @@ namespace FarseerGames.GettingStarted.Demos.Demo8
                 endPosition.Y += ySpacing;
             }
 
-            startPosition.Y += 2*ySpacing;
-            endPosition.Y += 2*ySpacing;
+            startPosition.Y += 2 * ySpacing;
+            endPosition.Y += 2 * ySpacing;
 
             for (int i = 0; i < _blackCircles.Length; i++)
             {
@@ -174,10 +179,32 @@ namespace FarseerGames.GettingStarted.Demos.Demo8
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
 
+            if (input.CurrentGamePadState.IsConnected)
+            {
+                HandleGamePadInput(input);
+            }
+            else
+            {
+                HandleKeyboardInput(input);
+#if !XBOX
+                HandleMouseInput(input);
+#endif
+            }
 
-            HandleKeyboardInput(input);
-            HandleMouseInput(input);
             base.HandleInput(input);
+        }
+
+        private void HandleGamePadInput(InputState input)
+        {
+            Vector2 force = 1000 * input.CurrentGamePadState.ThumbSticks.Left;
+            force.Y = -force.Y;
+            _agent.ApplyForce(force);
+
+            float rotation = -14000 * input.CurrentGamePadState.Triggers.Left;
+            _agent.ApplyTorque(rotation);
+
+            rotation = 14000 * input.CurrentGamePadState.Triggers.Right;
+            _agent.ApplyTorque(rotation);
         }
 
         private void HandleKeyboardInput(InputState input)
@@ -185,38 +212,24 @@ namespace FarseerGames.GettingStarted.Demos.Demo8
             const float forceAmount = 1000;
             Vector2 force = Vector2.Zero;
             force.Y = -force.Y;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.A))
-            {
-                force += new Vector2(-forceAmount, 0);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.S))
-            {
-                force += new Vector2(0, forceAmount);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.D))
-            {
-                force += new Vector2(forceAmount, 0);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.W))
-            {
-                force += new Vector2(0, -forceAmount);
-            }
+
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.A)) { force += new Vector2(-forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { force += new Vector2(0, forceAmount); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { force += new Vector2(forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, -forceAmount); }
 
             _agent.ApplyForce(force);
 
             const float torqueAmount = 14000;
             float torque = 0;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left))
-            {
-                torque -= torqueAmount;
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right))
-            {
-                torque += torqueAmount;
-            }
+
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque -= torqueAmount; }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque += torqueAmount; }
+
             _agent.ApplyTorque(torque);
         }
 
+#if !XBOX
         private void HandleMouseInput(InputState input)
         {
             Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
@@ -251,6 +264,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo8
                 _mousePickSpring.WorldAttachPoint = point;
             }
         }
+#endif
 
         public static string GetTitle()
         {
@@ -265,6 +279,9 @@ namespace FarseerGames.GettingStarted.Demos.Demo8
             sb.AppendLine("Narrow phase collision is disabled between");
             sb.AppendLine(" all balls.");
             sb.AppendLine(string.Empty);
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  -Rotate : left and right triggers");
+            sb.AppendLine("  -Move : left thumbstick");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  -Rotate : left and right arrows");

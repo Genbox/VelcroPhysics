@@ -24,12 +24,15 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
     {
         public GamePadState CurrentGamePadState;
         public KeyboardState CurrentKeyboardState;
+#if !XBOX
         public MouseState CurrentMouseState;
+#endif
 
         public GamePadState LastGamePadState;
         public KeyboardState LastKeyboardState;
+#if !XBOX
         public MouseState LastMouseState;
-
+#endif
         /// <summary>
         /// Checks for a "menu up" input action (on either keyboard or gamepad).
         /// </summary>
@@ -117,10 +120,15 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         {
             LastKeyboardState = CurrentKeyboardState;
             LastGamePadState = CurrentGamePadState;
+#if !XBOX
             LastMouseState = CurrentMouseState;
+#endif
             CurrentKeyboardState = Keyboard.GetState();
             CurrentGamePadState = GamePad.GetState(PlayerIndex.One);
+
+#if !XBOX
             CurrentMouseState = Mouse.GetState();
+#endif
         }
 
         /// <summary>

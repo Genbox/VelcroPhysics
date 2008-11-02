@@ -56,11 +56,11 @@ namespace FarseerGames.GettingStarted.Demos.Demo3
         public void LoadAgent()
         {
             _agentTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 16, Color.Gold, Color.Black);
-            _agentOrigin = new Vector2(_agentTexture.Width/2f, _agentTexture.Height/2f);
+            _agentOrigin = new Vector2(_agentTexture.Width / 2f, _agentTexture.Height / 2f);
 
             _agentCrossBeamTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 16, 120,
                                                                           Color.DarkGray, Color.Black);
-            _agentCrossBeamOrigin = new Vector2(_agentCrossBeamTexture.Width/2f, _agentCrossBeamTexture.Height/2f);
+            _agentCrossBeamOrigin = new Vector2(_agentCrossBeamTexture.Width / 2f, _agentCrossBeamTexture.Height / 2f);
 
             _agentBody = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 80, 80, 5);
             _agentBody.Position = new Vector2(ScreenManager.ScreenCenter.X, 110);
@@ -94,7 +94,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo3
             //load texture that will visually represent the physics body
             _floorTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, ScreenManager.ScreenWidth,
                                                                  100, Color.White, Color.Black);
-            _floorOrigin = new Vector2(_floorTexture.Width/2f, _floorTexture.Height/2f);
+            _floorOrigin = new Vector2(_floorTexture.Width / 2f, _floorTexture.Height / 2f);
 
             //use the body factory to create the physics body
             _floorBody = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, ScreenManager.ScreenWidth, 100, 1);
@@ -111,7 +111,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo3
         {
             _obstacleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 32, Color.White,
                                                                     Color.Black);
-            _obstacleOrigin = new Vector2(_obstacleTexture.Width/2f, _obstacleTexture.Height/2f);
+            _obstacleOrigin = new Vector2(_obstacleTexture.Width / 2f, _obstacleTexture.Height / 2f);
 
             _obstacleBody = new Body[5];
             _obstacleGeom = new Geom[5];
@@ -196,9 +196,30 @@ namespace FarseerGames.GettingStarted.Demos.Demo3
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
 
-            HandleKeyboardInput(input);
-            HandleMouseInput(input);
-            base.HandleInput(input);
+            if (input.CurrentGamePadState.IsConnected)
+            {
+                HandleGamePadInput(input);
+            }
+            else
+            {
+                HandleKeyboardInput(input);
+#if !XBOX
+                HandleMouseInput(input);
+#endif
+            } base.HandleInput(input);
+        }
+
+        private void HandleGamePadInput(InputState input)
+        {
+            Vector2 force = 800 * input.CurrentGamePadState.ThumbSticks.Left;
+            force.Y = -force.Y;
+            _agentBody.ApplyForce(force);
+
+            float rotation = -8000 * input.CurrentGamePadState.Triggers.Left;
+            _agentBody.ApplyTorque(rotation);
+
+            rotation = 8000 * input.CurrentGamePadState.Triggers.Right;
+            _agentBody.ApplyTorque(rotation);
         }
 
         private void HandleKeyboardInput(InputState input)
@@ -206,38 +227,24 @@ namespace FarseerGames.GettingStarted.Demos.Demo3
             const float forceAmount = 800;
             Vector2 force = Vector2.Zero;
             force.Y = -force.Y;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.A))
-            {
-                force += new Vector2(-forceAmount, 0);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.S))
-            {
-                force += new Vector2(0, forceAmount);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.D))
-            {
-                force += new Vector2(forceAmount, 0);
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.W))
-            {
-                force += new Vector2(0, -forceAmount);
-            }
+
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.A)) { force += new Vector2(-forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { force += new Vector2(0, forceAmount); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { force += new Vector2(forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, -forceAmount); }
 
             _agentBody.ApplyForce(force);
 
             const float torqueAmount = 8000;
             float torque = 0;
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left))
-            {
-                torque -= torqueAmount;
-            }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right))
-            {
-                torque += torqueAmount;
-            }
+
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque -= torqueAmount; }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque += torqueAmount; }
+
             _agentBody.ApplyTorque(torque);
         }
 
+#if !XBOX
         private void HandleMouseInput(InputState input)
         {
             Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
@@ -272,6 +279,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo3
                 _mousePickSpring.WorldAttachPoint = point;
             }
         }
+#endif
 
         public static string GetTitle()
         {
@@ -288,6 +296,10 @@ namespace FarseerGames.GettingStarted.Demos.Demo3
             sb.AppendLine("inertia is that of a rectangle.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("This demo also shows the use of static bodies.");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  -Rotate : left and right triggers");
+            sb.AppendLine("  -Move : left thumbstick");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  -Rotate : left and right arrows");
