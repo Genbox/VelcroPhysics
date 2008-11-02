@@ -1,11 +1,11 @@
 using System;
 using System.Diagnostics;
 using FarseerGames.FarseerPhysics.Mathematics;
+
 #if (XNA)
-using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
 #else
-
+using FarseerGames.FarseerPhysics.Mathematics;
 #endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
