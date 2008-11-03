@@ -411,7 +411,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void ComputeCollisionGrid()
         {
-            //TODO: Don't compute grid if collision is disabled?
             if (localVertices.Count > 2)
             {
                 grid.ComputeGrid(this, _collisionGridCellSize);
