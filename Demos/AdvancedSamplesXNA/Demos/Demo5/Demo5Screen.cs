@@ -4,6 +4,7 @@ using FarseerGames.AdvancedSamples.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
@@ -18,6 +19,9 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
         private Texture2D _chainTexture;
         private Vector2 _chainOrigin;
         private Path _chain;
+        private Path _chainPin;
+        private Path _chainSpring;
+        private Path _chainSilde;
         private Border _border;
         private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private FixedLinearSpring _mousePickSpring;
@@ -40,11 +44,30 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
             _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 30, ScreenManager.ScreenCenter);
             _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
-            _chain = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(150, 100), new Vector2(200, 300), 20.0f, 10.0f, 1, 2);
+            _chain = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(150, 100), new Vector2(200, 300), 20.0f, 10.0f, 1, 2, LinkType.RevoluteJoint);
             _chain.CreateGeoms();
+
+            _chainPin = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(250, 100), new Vector2(400, 300), 20.0f, 10.0f, 1, 3, LinkType.PinJoint);
+            _chainPin.CreateGeoms();
+
+            ComplexFactory.SpringConstant = 150;        // values inside let us setup additional parameters
+            ComplexFactory.DampingConstant = 10;
+            _chainSpring = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(350, 100), new Vector2(500, 300), 20.0f, 10.0f, 1, 4, LinkType.LinearSpring);
+            _chainSpring.CreateGeoms();
+
+            ComplexFactory.Min = 0;
+            ComplexFactory.Max = 15;
+            _chainSilde = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(450, 100), new Vector2(600, 300), 20.0f, 10.0f, 1, 5, LinkType.SliderJoint);
+            _chainSilde.CreateGeoms();
 
             //Pinning the chain to world.
             JointFactory.Instance.CreateFixedRevoluteJoint(PhysicsSimulator, _chain.Bodies[0], _chain.Bodies[0].Position);
+            JointFactory.Instance.CreateFixedRevoluteJoint(PhysicsSimulator, _chainPin.Bodies[0], _chainPin.Bodies[0].Position);
+            JointFactory.Instance.CreateFixedRevoluteJoint(PhysicsSimulator, _chainSpring.Bodies[0], _chainSpring.Bodies[0].Position);
+            JointFactory.Instance.CreateFixedRevoluteJoint(PhysicsSimulator, _chainSilde.Bodies[0], _chainSilde.Bodies[0].Position);
+
+            
+
 
             _lineBrush.Load(ScreenManager.GraphicsDevice);
 
@@ -56,6 +79,21 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
 
             foreach (Body body in _chain.Bodies)
+            {
+                ScreenManager.SpriteBatch.Draw(_chainTexture, body.Position, null, Color.White, body.Rotation, _chainOrigin, 1, SpriteEffects.None, 1);
+            }
+
+            foreach (Body body in _chainPin.Bodies)
+            {
+                ScreenManager.SpriteBatch.Draw(_chainTexture, body.Position, null, Color.White, body.Rotation, _chainOrigin, 1, SpriteEffects.None, 1);
+            }
+
+            foreach (Body body in _chainSpring.Bodies)
+            {
+                ScreenManager.SpriteBatch.Draw(_chainTexture, body.Position, null, Color.White, body.Rotation, _chainOrigin, 1, SpriteEffects.None, 1);
+            }
+
+            foreach (Body body in _chainSilde.Bodies)
             {
                 ScreenManager.SpriteBatch.Draw(_chainTexture, body.Position, null, Color.White, body.Rotation, _chainOrigin, 1, SpriteEffects.None, 1);
             }
