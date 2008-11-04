@@ -1,6 +1,8 @@
 using System;
+using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
+using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 #if(XNA)
@@ -21,6 +23,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private BodyList _bodies; // holds all bodies for this path
         private Vertices _controlPoints; // holds all control points for this path
         private GeomList _geoms; // holds all geoms for this path
+        private SpringList _springs; // holds all springs for this path
         private float _height; // width and height of bodies to create
         private JointList _joints; // holds all the joints for this path
         private bool _loop; // is this path a loop
@@ -44,6 +47,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             _geoms = new GeomList();
             _bodies = new BodyList();
             _joints = new JointList();
+            _springs = new SpringList();
             _controlPoints = new Vertices();
         }
 
@@ -75,6 +79,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
 
         /// <summary>
+        /// Gets the springs.
+        /// </summary>
+        /// <Value>The springs.</Value>
+        public SpringList Springs
+        {
+            get { return _springs; }
+        }
+
+        /// <summary>
         /// Gets the control points.
         /// </summary>
         /// <Value>The control points.</Value>
@@ -86,9 +99,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <summary>
         /// Links the bodies.
         /// </summary>
-        public void LinkBodies()
+        /// <param name="type">The type of Joint to link with.</param>
+        public void LinkBodies(LinkType type, float min, float max, float springConstant, float dampingConstant)
         {
             RevoluteJoint revoluteJoint;
+            PinJoint pinJoint, d;
+            SliderJoint sliderJoint;
+            LinearSpring linearSpring, a;
             Vector2 midPoint;
             float midDeltaX;
             float midDeltaY;
@@ -118,11 +135,46 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                     midPoint = new Vector2(_bodies[i].Position.X + midDeltaX, _bodies[i].Position.Y + midDeltaY);
                     // set midPoint
+                    switch (type)
+                    {
+                        case LinkType.RevoluteJoint:
+                            revoluteJoint = JointFactory.Instance.CreateRevoluteJoint(_bodies[i], _bodies[i + 1], midPoint);
+                            revoluteJoint.BiasFactor = 0.2f;
+                            revoluteJoint.Softness = 0.01f;
+                            _joints.Add(revoluteJoint);
+                            break;
+                        case LinkType.LinearSpring:
+                            linearSpring = SpringFactory.Instance.CreateLinearSpring(_bodies[i], new Vector2(-_width/2.0f,0), _bodies[i + 1], 
+                                new Vector2(_width/2.0f,0), springConstant, dampingConstant);
+                            if (i >= 1)
+                            {
+                                a = (LinearSpring)_springs[i - 1];
+                                linearSpring.RestLength = Vector2.Distance(a.AttachPoint2, linearSpring.AttachPoint1);
+                            }
+                            _springs.Add(linearSpring);
+                            break;
+                        case LinkType.PinJoint:
+                            pinJoint = JointFactory.Instance.CreatePinJoint(_bodies[i], new Vector2(-_width / 2.0f, 0), _bodies[i + 1], new Vector2(_width/2.0f,0));
+                            pinJoint.BiasFactor = 0.2f;
+                            pinJoint.Softness = 0.01f;
+                            if (i >= 1)
+                            {
+                                d = (PinJoint)_joints[i - 1];
+                                pinJoint.TargetDistance = Vector2.Distance(d.Anchor2, pinJoint.Anchor1);
+                            }
+                            _joints.Add(pinJoint);
+                            break;
+                        case LinkType.SliderJoint:
+                            sliderJoint = JointFactory.Instance.CreateSliderJoint(_bodies[i], new Vector2(-_width / 2.0f, 0), _bodies[i + 1], new Vector2(_width / 2.0f, 0), min, max);
+                            sliderJoint.BiasFactor = 0.2f;
+                            sliderJoint.Softness = 0.01f;
+                            _joints.Add(sliderJoint);
+                            break;
+                        default:
+                            //should never get here
+                            break;
 
-                    revoluteJoint = JointFactory.Instance.CreateRevoluteJoint(_bodies[i], _bodies[i + 1], midPoint);
-                    revoluteJoint.BiasFactor = 0.2f;
-                    revoluteJoint.Softness = 0.01f;
-                    _joints.Add(revoluteJoint);
+                    }
                 }
             }
             if (_loop)
@@ -151,11 +203,38 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 midPoint = new Vector2(_bodies[0].Position.X + midDeltaX, _bodies[0].Position.Y + midDeltaY);
                 // set midPoint
 
-                revoluteJoint = JointFactory.Instance.CreateRevoluteJoint(_bodies[0], _bodies[_bodies.Count - 1],
-                                                                          midPoint);
-                revoluteJoint.BiasFactor = 0.2f;
-                revoluteJoint.Softness = 0.01f;
-                _joints.Add(revoluteJoint);
+                switch (type)
+                {
+                    case LinkType.RevoluteJoint:
+                        revoluteJoint = JointFactory.Instance.CreateRevoluteJoint(_bodies[0], _bodies[_bodies.Count - 1], midPoint);
+                        revoluteJoint.BiasFactor = 0.2f;
+                        revoluteJoint.Softness = 0.01f;
+                        _joints.Add(revoluteJoint);
+                        break;
+                    case LinkType.LinearSpring:
+                        linearSpring = SpringFactory.Instance.CreateLinearSpring(_bodies[0], new Vector2(-_width / 2.0f, 0), _bodies[_bodies.Count - 1], new Vector2(_width / 2.0f, 0),
+                            springConstant, dampingConstant);
+                        linearSpring.RestLength = _width;
+                        _springs.Add(linearSpring);
+                        break;
+                    case LinkType.PinJoint:
+                        pinJoint = JointFactory.Instance.CreatePinJoint(_bodies[0], new Vector2(-_width / 2.0f, 0), _bodies[_bodies.Count - 1], new Vector2(_width / 2.0f, 0));
+                        pinJoint.BiasFactor = 0.2f;
+                        pinJoint.Softness = 0.01f;
+                        pinJoint.TargetDistance = _width;
+                        _joints.Add(pinJoint);
+                        break;
+                    case LinkType.SliderJoint:
+                        sliderJoint = JointFactory.Instance.CreateSliderJoint(_bodies[0], new Vector2(-_width / 2.0f, 0), _bodies[_bodies.Count - 1], new Vector2(_width / 2.0f, 0), min, max);
+                        sliderJoint.BiasFactor = 0.2f;
+                        sliderJoint.Softness = 0.01f;
+                        _joints.Add(sliderJoint);
+                        break;
+                    default:
+                        //should never get here
+                        break;
+
+                }
             }
         }
 
@@ -171,6 +250,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 physicsSimulator.Add(geom);
             foreach (Joint joint in _joints)
                 physicsSimulator.Add(joint);
+            foreach (Spring spring in _springs)
+                physicsSimulator.Add(spring);
         }
 
         /// <summary>
@@ -257,6 +338,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         public void Add(Joint joint)
         {
             _joints.Add(joint);
+        }
+
+        /// <summary>
+        /// Adds the specified spring.
+        /// </summary>
+        /// <param name="spring">The spring.</param>
+        public void Add(Spring spring)
+        {
+            _springs.Add(spring);
         }
 
         /// <summary>
