@@ -4,7 +4,6 @@ using FarseerGames.AdvancedSamples.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
@@ -65,9 +64,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
             JointFactory.Instance.CreateFixedRevoluteJoint(PhysicsSimulator, _chainPin.Bodies[0], _chainPin.Bodies[0].Position);
             JointFactory.Instance.CreateFixedRevoluteJoint(PhysicsSimulator, _chainSpring.Bodies[0], _chainSpring.Bodies[0].Position);
             JointFactory.Instance.CreateFixedRevoluteJoint(PhysicsSimulator, _chainSilde.Bodies[0], _chainSilde.Bodies[0].Position);
-
-            
-
 
             _lineBrush.Load(ScreenManager.GraphicsDevice);
 
