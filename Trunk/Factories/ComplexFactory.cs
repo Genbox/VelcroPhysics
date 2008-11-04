@@ -1,8 +1,6 @@
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
-using FarseerGames.FarseerPhysics.Mathematics;
 #if (XNA)
 using Microsoft.Xna.Framework;
 #else
@@ -53,11 +51,12 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="height">Height of each link.</param>
         /// <param name="mass">Mass of each link.</param>
         /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <param name="type">The joint/spring type.</param>
         /// <returns>Path</returns>
         public Path CreateChain(PhysicsSimulator physicsSimulator, Vector2 start, Vector2 end, int links, float height,
                                 float mass, int collisionGroup, LinkType type)
         {
-            Path p = CreateChain(start, end, (Vector2.Distance(start, end)/links), height, mass, collisionGroup, type);
+            Path p = CreateChain(start, end, (Vector2.Distance(start, end) / links), height, mass, collisionGroup, type);
 
             p.AddToPhysicsSimulator(physicsSimulator);
 
@@ -72,11 +71,13 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="links">Number of links desired in the chain.</param>
         /// <param name="height">Height of each link.</param>
         /// <param name="mass">Mass of each link.</param>
-        /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <param name="collisionGroup">Collision group for the chain.</param>   
+        ///      /// <param name="type">The joint/spring type.</param>
+
         /// <returns>Path</returns>
         public Path CreateChain(Vector2 start, Vector2 end, int links, float height, float mass, int collisionGroup, LinkType type)
         {
-            return CreateChain(start, end, (Vector2.Distance(start, end)/links), height, mass, collisionGroup, type);
+            return CreateChain(start, end, (Vector2.Distance(start, end) / links), height, mass, collisionGroup, type);
         }
 
         /// <summary>
@@ -88,12 +89,13 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="links">Number of links desired in the chain.</param>
         /// <param name="mass">Mass of each link.</param>
         /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <param name="type">The joint/spring type.</param>
         /// <returns>Path</returns>
         public Path CreateChain(PhysicsSimulator physicsSimulator, Vector2 start, Vector2 end, int links, float mass,
                                 int collisionGroup, LinkType type)
         {
-            Path path = CreateChain(start, end, (Vector2.Distance(start, end)/links),
-                                    (Vector2.Distance(start, end)/links)*(1.0f/3.0f), mass, collisionGroup, type);
+            Path path = CreateChain(start, end, (Vector2.Distance(start, end) / links),
+                                    (Vector2.Distance(start, end) / links) * (1.0f / 3.0f), mass, collisionGroup, type);
 
             path.AddToPhysicsSimulator(physicsSimulator);
 
@@ -108,11 +110,12 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="links">The links.</param>
         /// <param name="mass">The mass.</param>
         /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <param name="type">The joint/spring type.</param>
         /// <returns></returns>
         public Path CreateChain(Vector2 start, Vector2 end, int links, float mass, int collisionGroup, LinkType type)
         {
-            return CreateChain(start, end, (Vector2.Distance(start, end)/links),
-                               (Vector2.Distance(start, end)/links)*(1.0f/3.0f), mass, collisionGroup, type);
+            return CreateChain(start, end, (Vector2.Distance(start, end) / links),
+                               (Vector2.Distance(start, end) / links) * (1.0f / 3.0f), mass, collisionGroup, type);
         }
 
         /// <summary>
@@ -125,6 +128,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="height">The height.</param>
         /// <param name="mass">The mass.</param>
         /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <param name="type">The joint/spring type.</param>
         /// <returns></returns>
         public Path CreateChain(PhysicsSimulator physicsSimulator, Vector2 start, Vector2 end, float width, float height,
                                 float mass, int collisionGroup, LinkType type)
@@ -148,6 +152,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="pinStart">if set to <c>true</c> [pin start].</param>
         /// <param name="pinEnd">if set to <c>true</c> [pin end].</param>
         /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <param name="type">The joint/spring type.</param>
         /// <returns></returns>
         public Path CreateChain(PhysicsSimulator physicsSimulator, Vector2 start, Vector2 end, float width, float height,
                                 float mass, bool pinStart, bool pinEnd, int collisionGroup, LinkType type)
@@ -168,6 +173,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="height">The height.</param>
         /// <param name="mass">The mass.</param>
         /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <param name="type">The joint/spring type.</param>
         /// <returns></returns>
         public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, int collisionGroup, LinkType type)
         {
@@ -185,6 +191,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="pinStart">if set to <c>true</c> [pin start].</param>
         /// <param name="pinEnd">if set to <c>true</c> [pin end].</param>
         /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <param name="type">The joint/spring type.</param>
         /// <returns></returns>
         public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart,
                                 bool pinEnd, int collisionGroup, LinkType type)
@@ -192,7 +199,7 @@ namespace FarseerGames.FarseerPhysics.Factories
             Path path = new Path(width, height, mass, false); // create the path
             path.Add(start); // add starting point
             path.Add(Path.FindMidpoint(start, end));
-                // add midpoint of line (must have this because my code needs at least 3 control points)
+            // add midpoint of line (must have this because my code needs at least 3 control points)
             path.Add(end); // add end point
 
             path.Update(); // call update to create all the bodies
@@ -232,6 +239,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="pinStart">if set to <c>true</c> [pin start].</param>
         /// <param name="pinEnd">if set to <c>true</c> [pin end].</param>
         /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <param name="type">The joint/spring type.</param>
         /// <returns></returns>
         public Path CreateRope(Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart,
                                bool pinEnd, int collisionGroup, LinkType type)
@@ -239,7 +247,7 @@ namespace FarseerGames.FarseerPhysics.Factories
             Path path = new Path(width, height, mass, false); // create the path
             path.Add(start); // add starting point
             path.Add(Path.FindMidpoint(start, end));
-                // add midpoint of line (must have this because my code needs at least 3 control points)
+            // add midpoint of line (must have this because my code needs at least 3 control points)
             path.Add(end); // add end point
 
             path.Update(); // call update to create all the bodies
@@ -277,6 +285,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="mass">The mass.</param>
         /// <param name="endless">if set to <c>true</c> [endless].</param>
         /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <param name="type">The joint/spring type.</param>
         /// <returns></returns>
         public Path CreateTrack(Vertices points, float width, float height, float mass, bool endless, int collisionGroup, LinkType type)
         {
@@ -309,6 +318,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="mass">The mass.</param>
         /// <param name="endless">if set to <c>true</c> [endless].</param>
         /// <param name="collisionGroup">Collision group for the chain.</param>
+        /// <param name="type">The joint/spring type.</param>
         /// <returns></returns>
         public Path CreateTrack(PhysicsSimulator physicsSimulator, Vertices points, float width, float height,
                                 float mass, bool endless, int collisionGroup, LinkType type)
