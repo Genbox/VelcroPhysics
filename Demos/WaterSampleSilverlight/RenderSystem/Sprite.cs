@@ -7,8 +7,6 @@ namespace FarseerGames.WaterSample.RenderSystem
 {
     public class Sprite : UserControl
     {
-        #region properties
-
         private TransformGroup _transformGroup;
         public TranslateTransform TranslateTransform { get; set; }
         public RotateTransform RotateTransform { get; set; }
@@ -16,6 +14,9 @@ namespace FarseerGames.WaterSample.RenderSystem
         public new float Width { get; set; }
         public new float Height { get; set; }
         private Vector2 _position;
+        private Vector2 _origin;
+
+        #region properties
 
         public double Rotation
         {
@@ -80,26 +81,7 @@ namespace FarseerGames.WaterSample.RenderSystem
 
         #endregion
 
-        #region public methods
-
-        private Vector2 _origin;
-
-        public
-
-            #endregion
-
-            #region private methods
-
-            #endregion
-
-            #region events
-
-            #endregion
-
-            #region private variables
-
-
-            public Sprite(FrameworkElement content)
+        public Sprite(FrameworkElement content)
         {
             Content = content;
             Width = (float)content.Width;
@@ -124,7 +106,5 @@ namespace FarseerGames.WaterSample.RenderSystem
             _transformGroup.Children.Add(ScaleTransform);
             RenderTransform = _transformGroup;
         }
-
-        #endregion
     }
 }
