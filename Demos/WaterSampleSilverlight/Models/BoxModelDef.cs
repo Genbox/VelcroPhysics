@@ -1,6 +1,6 @@
 ﻿using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerPhysicsWaterDemo.Models
+namespace FarseerGames.WaterSample.Models
 {
     public class BoxModelDef
     {

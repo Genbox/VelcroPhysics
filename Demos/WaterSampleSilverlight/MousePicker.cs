@@ -10,14 +10,16 @@ using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerPhysicsWaterDemo
+namespace FarseerGames.WaterSample
 {
     public class MousePicker
     {
         #region properties
+
         #endregion
 
         #region public methods
+
         public MousePicker(PhysicsSimulator physicsSimulator, Canvas canvas)
         {
             _canvas = canvas;
@@ -46,9 +48,11 @@ namespace FarseerPhysicsWaterDemo
                 _mousePickLine.Y2 = anchor.Y;
             }
         }
+
         #endregion
 
         #region private methods
+
         private void MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (_mousePickSpring != null && _mousePickSpring.IsDisposed == false)
@@ -62,37 +66,43 @@ namespace FarseerPhysicsWaterDemo
         private void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (_mousePickSpring != null) return;
-            Vector2 point = new Vector2((float)(e.GetPosition(_canvas).X), (float)(e.GetPosition(_canvas).Y));
+            Vector2 point = new Vector2((float) (e.GetPosition(_canvas).X), (float) (e.GetPosition(_canvas).Y));
             point = ConvertUnits.ToSimUnits(point);
             _pickedGeom = _physicsSimulator.Collide(point);
             if (_pickedGeom != null)
             {
-                _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(_physicsSimulator, _pickedGeom.Body, _pickedGeom.Body.GetLocalPosition(point), point, 20, 10);
+                _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(_physicsSimulator, _pickedGeom.Body,
+                                                                                  _pickedGeom.Body.GetLocalPosition(
+                                                                                      point), point, 20, 10);
                 _mousePickLine.Visibility = Visibility.Visible;
             }
         }
 
         private void MouseMove(object sender, MouseEventArgs e)
         {
-            _mousePosition = new Vector2((float)(e.GetPosition(_canvas).X), (float)(e.GetPosition(_canvas).Y));
+            _mousePosition = new Vector2((float) (e.GetPosition(_canvas).X), (float) (e.GetPosition(_canvas).Y));
             if (_mousePickSpring != null)
             {
                 Vector2 point = ConvertUnits.ToSimUnits(_mousePosition);
                 _mousePickSpring.WorldAttachPoint = point;
             }
         }
+
         #endregion
 
         #region events
+
         #endregion
 
         #region private variables
-        private FixedLinearSpring _mousePickSpring;
-        private Geom _pickedGeom;
-        private Line _mousePickLine;
+
         private Canvas _canvas;
-        private PhysicsSimulator _physicsSimulator;
+        private Line _mousePickLine;
+        private FixedLinearSpring _mousePickSpring;
         private Vector2 _mousePosition;
+        private PhysicsSimulator _physicsSimulator;
+        private Geom _pickedGeom;
+
         #endregion
     }
 }

@@ -3,17 +3,19 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerPhysicsWaterDemo.RenderSystem
+namespace FarseerGames.WaterSample.RenderSystem
 {
     public class Sprite : UserControl
     {
         #region properties
-        TransformGroup transformGroup;
+
+        private TransformGroup _transformGroup;
         public TranslateTransform TranslateTransform { get; set; }
         public RotateTransform RotateTransform { get; set; }
         public ScaleTransform ScaleTransform { get; set; }
-        public float Width { get; set; }
-        public float Height { get; set; }
+        public new float Width { get; set; }
+        public new float Height { get; set; }
+        private Vector2 _position;
 
         public double Rotation
         {
@@ -23,7 +25,7 @@ namespace FarseerPhysicsWaterDemo.RenderSystem
 
         public double Scale
         {
-            get { return ScaleTransform.ScaleX; }//proportional scales (x=y)
+            get { return ScaleTransform.ScaleX; } //proportional scales (x=y)
             set
             {
                 ScaleTransform.ScaleX = value;
@@ -33,10 +35,7 @@ namespace FarseerPhysicsWaterDemo.RenderSystem
 
         public Vector2 Origin
         {
-            get
-            {
-                return _origin;
-            }
+            get { return _origin; }
             set
             {
                 _origin = value;
@@ -49,10 +48,7 @@ namespace FarseerPhysicsWaterDemo.RenderSystem
 
         public float PositionX
         {
-            get
-            {
-                return _position.X;
-            }
+            get { return _position.X; }
             set
             {
                 _position.X = value;
@@ -63,10 +59,7 @@ namespace FarseerPhysicsWaterDemo.RenderSystem
 
         public float PositionY
         {
-            get
-            {
-                return _position.Y;
-            }
+            get { return _position.Y; }
             set
             {
                 _position.Y = value - Origin.Y;
@@ -77,20 +70,36 @@ namespace FarseerPhysicsWaterDemo.RenderSystem
 
         public Vector2 Position
         {
-            get
-            {
-                return _position;
-            }
+            get { return _position; }
             set
             {
                 PositionX = value.X;
                 PositionY = value.Y;
             }
         }
+
         #endregion
 
         #region public methods
-        public Sprite(FrameworkElement content)
+
+        private Vector2 _origin;
+
+        public
+
+            #endregion
+
+            #region private methods
+
+            #endregion
+
+            #region events
+
+            #endregion
+
+            #region private variables
+
+
+            public Sprite(FrameworkElement content)
         {
             Content = content;
             Width = (float)content.Width;
@@ -109,34 +118,13 @@ namespace FarseerPhysicsWaterDemo.RenderSystem
             ScaleTransform.ScaleX = 1;
             ScaleTransform.ScaleY = 1;
 
-            transformGroup = new TransformGroup();
-            transformGroup.Children.Add(RotateTransform);
-            transformGroup.Children.Add(TranslateTransform);
-            transformGroup.Children.Add(ScaleTransform);
-            RenderTransform = transformGroup;
+            _transformGroup = new TransformGroup();
+            _transformGroup.Children.Add(RotateTransform);
+            _transformGroup.Children.Add(TranslateTransform);
+            _transformGroup.Children.Add(ScaleTransform);
+            RenderTransform = _transformGroup;
         }
 
-        //public Sprite(FrameworkElement content, bool centerOrigin)
-        //{
-        //    if (centerOrigin)
-        //    {
-        //        Origin = new Vector2((float)content.Width / 2, (float)content.Height / 2);
-        //    }
-        //} 
-
-        public
-        #endregion
-
-        #region private methods
-        #endregion
-
-        #region events
-        #endregion
-
-        #region private variables
-        Vector2 _position;
-        Vector2 _origin;
         #endregion
     }
 }
-

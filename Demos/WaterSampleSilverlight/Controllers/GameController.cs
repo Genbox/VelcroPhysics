@@ -1,18 +1,20 @@
 ﻿using System;
-using FarseerPhysicsWaterDemo.Views;
-using FarseerPhysicsWaterDemo.Models;
-using FarseerPhysicsWaterDemo.RenderSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Mathematics;
+using FarseerGames.WaterSample.Models;
+using FarseerGames.WaterSample.RenderSystem;
+using FarseerGames.WaterSample.Views;
 
-namespace FarseerPhysicsWaterDemo.Controllers
+namespace FarseerGames.WaterSample.Controllers
 {
     public class GameController
     {
         #region properties
+
         #endregion
 
         #region public methods
+
         public GameController(Page pageView)
         {
             _pageView = pageView;
@@ -24,9 +26,11 @@ namespace FarseerPhysicsWaterDemo.Controllers
             InitializeRenderLoop();
             ShowSplashScreenView();
         }
+
         #endregion
 
         #region private methods
+
         private void ShowSplashScreenView()
         {
             _splashScreenView = new SplashScreenView();
@@ -60,15 +64,15 @@ namespace FarseerPhysicsWaterDemo.Controllers
             _mousePicker = new MousePicker(_physicsSimulator, _gameView.LayoutRoot);
         }
 
-        void _splashView_Complete(object sender, EventArgs e)
+        private void _splashView_Complete(object sender, EventArgs e)
         {
             ShowGameView();
-            _splashScreenView = null;            
+            _splashScreenView = null;
         }
 
-        void _renderLoop_Update(TimeSpan elapsedTime)
+        private void _renderLoop_Update(TimeSpan elapsedTime)
         {
-            _physicsSimulator.Update((float)elapsedTime.TotalSeconds);
+            _physicsSimulator.Update((float) elapsedTime.TotalSeconds);
         }
 
         private void InitializePhysicsSimulator()
@@ -76,18 +80,22 @@ namespace FarseerPhysicsWaterDemo.Controllers
             _physicsSimulator = new PhysicsSimulator(new Vector2(0, 4));
             ConvertUnits.SetDisplayUnitToSimUnitRatio(50); //50 pixels = 1 meter
         }
+
         #endregion
 
         #region events
+
         #endregion
 
         #region private variables
-        private Page _pageView;
-        private SplashScreenView _splashScreenView;
+
         private GameView _gameView;
-        private RenderLoop _renderLoop;
-        private PhysicsSimulator _physicsSimulator;
         private MousePicker _mousePicker;
+        private Page _pageView;
+        private PhysicsSimulator _physicsSimulator;
+        private RenderLoop _renderLoop;
+        private SplashScreenView _splashScreenView;
+
         #endregion
     }
 }
