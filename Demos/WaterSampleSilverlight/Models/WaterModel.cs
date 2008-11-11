@@ -1,9 +1,9 @@
 ﻿using System;
+using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Mathematics;
-using FarseerGames.FarseerPhysics;
 
-namespace FarseerPhysicsWaterDemo.Models
+namespace FarseerGames.WaterSample.Models
 {
     /// <summary>
     ///The water model in this demo is made up of two parts.  
@@ -21,15 +21,18 @@ namespace FarseerPhysicsWaterDemo.Models
     public class WaterModel
     {
         #region properties
+
         public WaveController WaveController { get; private set; }
         public FluidDragController FluidDragController { get; private set; }
 
         public float WaveGeneratorMax { get; set; }
         public float WaveGeneratorMin { get; set; }
         public float WaveGeneratorStep { get; set; }
+
         #endregion
 
         #region public methods
+
         public WaterModel()
         {
             WaveGeneratorMax = 6; //initial value
@@ -63,7 +66,8 @@ namespace FarseerPhysicsWaterDemo.Models
 
             //fluid drag controller controls how things move once IN the water.
             FluidDragController = new FluidDragController();
-            FluidDragController.Initialize(WaveController, 5f, 4f, 2f, physicsSimulator.Gravity); //init with default values.
+            FluidDragController.Initialize(WaveController, 5f, 4f, 2f, physicsSimulator.Gravity);
+            //init with default values.
             physicsSimulator.Add(FluidDragController);
         }
 
@@ -74,17 +78,21 @@ namespace FarseerPhysicsWaterDemo.Models
 
         public void Update(TimeSpan elapsedTime)
         {
-            WaveController.Update((float)elapsedTime.TotalSeconds);
+            WaveController.Update((float) elapsedTime.TotalSeconds);
         }
+
         #endregion
 
         #region private methods
+
         #endregion
 
         #region events
+
         #endregion
 
         #region private variables
+
         #endregion
     }
 }

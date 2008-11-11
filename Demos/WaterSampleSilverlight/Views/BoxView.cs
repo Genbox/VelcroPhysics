@@ -1,18 +1,21 @@
 ﻿using System.Windows.Controls;
-using FarseerPhysicsWaterDemo.Models;
-using FarseerPhysicsWaterDemo.RenderSystem;
-using FarseerGames.FarseerPhysics.Mathematics;
 using FarseerGames.FarseerPhysics;
+using FarseerGames.FarseerPhysics.Mathematics;
+using FarseerGames.WaterSample.Models;
+using FarseerGames.WaterSample.RenderSystem;
 
-namespace FarseerPhysicsWaterDemo.Views
+namespace FarseerGames.WaterSample.Views
 {
     public class BoxView
     {
         #region properties
+
         public BoxModel BoxModel { get; private set; }
+
         #endregion
 
         #region public methods
+
         public BoxView(BoxModel boxModel, Sprite sprite)
         {
             BoxModel = boxModel;
@@ -28,18 +31,23 @@ namespace FarseerPhysicsWaterDemo.Views
         {
             Vector2 position = ConvertUnits.ToDisplayUnits(BoxModel.Body.Position);
             _sprite.Position = position;
-            _sprite.Rotation = MathHelper.DegreesToRadiansRatio * BoxModel.Body.Rotation;
+            _sprite.Rotation = MathHelper.DegreesToRadiansRatio*BoxModel.Body.Rotation;
         }
+
         #endregion
 
         #region private methods
+
         #endregion
 
         #region events
+
         #endregion
 
         #region private variables
-        Sprite _sprite;        
+
+        private Sprite _sprite;
+
         #endregion
     }
 }

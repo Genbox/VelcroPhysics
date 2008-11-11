@@ -1,66 +1,49 @@
 ﻿using FarseerGames.FarseerPhysics;
-using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Collisions;
+using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerPhysicsWaterDemo
+namespace FarseerGames.WaterSample
 {
     public class CollisionBorder
     {
-        public Geom[] geom;
+        public Body Body;
+        public float BorderWidth;
+        public Geom[] Geom;
+        public float Height;
+        public float Width;
+        
+        private bool _isStatic;
+        private float _mass = 1;
+        private Vector2 _position = Vector2.Zero;
+        private float _rotation;
 
-        float width;
-        float height;
-        float borderWidth;
-
-        protected Body body;
-        protected Vector2 position = Vector2.Zero;
-        protected float rotation;
-        protected float mass = 1;
-        protected bool isStatic;
-
-        public float Width
+        public CollisionBorder(float width, float height, float borderWidth, Vector2 position)
         {
-            get { return width; }
-            set { width = value; }
-        }
-
-        public float Height
-        {
-            get { return height; }
-            set { height = value; }
-        }
-
-        public float BorderWidth
-        {
-            get { return borderWidth; }
-            set { borderWidth = value; }
-        }
-
-        public Geom[] Geom
-        {
-            get { return geom; }
-            set { geom = value; }
-        }
-
-        public Body Body
-        {
-            get { return body; }
-            set { body = value; }
+            Width = width;
+            Height = height;
+            BorderWidth = borderWidth;
+            _position = position;
         }
 
         public Vector2 Position
         {
             get
             {
-                if (body != null) { return body.Position; }
-                return position;
+                if (Body != null)
+                {
+                    return Body.Position;
+                }
+                return _position;
             }
             set
             {
-                if (body != null) { body.Position = value; }
-                position = value;
+                if (Body != null)
+                {
+                    Body.Position = value;
+                }
+                _position = value;
             }
         }
 
@@ -68,13 +51,19 @@ namespace FarseerPhysicsWaterDemo
         {
             get
             {
-                if (body != null) { return body.Rotation; }
-                return rotation;
+                if (Body != null)
+                {
+                    return Body.Rotation;
+                }
+                return _rotation;
             }
             set
             {
-                if (body != null) { body.Rotation = value; }
-                rotation = value;
+                if (Body != null)
+                {
+                    Body.Rotation = value;
+                }
+                _rotation = value;
             }
         }
 
@@ -82,71 +71,73 @@ namespace FarseerPhysicsWaterDemo
         {
             get
             {
-                if (body != null) { return body.Mass; }
-                return mass;
+                if (Body != null)
+                {
+                    return Body.Mass;
+                }
+                return _mass;
             }
             set
             {
-                if (body != null) { body.Mass = value; }
-                mass = value;
+                if (Body != null)
+                {
+                    Body.Mass = value;
+                }
+                _mass = value;
             }
         }
 
         public bool IsStatic
         {
-            get { return isStatic; }
+            get { return _isStatic; }
             set
             {
-                if (body != null) { body.IsStatic = isStatic; }
-                isStatic = value;
+                if (Body != null)
+                {
+                    Body.IsStatic = _isStatic;
+                }
+                _isStatic = value;
             }
-        }
-
-        public CollisionBorder(float width, float height, float borderWidth, Vector2 position)
-        {
-            this.width = width;
-            this.height = height;
-            this.borderWidth = borderWidth;
-            this.position = position;
         }
 
         public void Initialize(PhysicsSimulator physicsSimulator)
         {
             //use the body factory to create the physics body
-            body = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, width, height, 1);
-            body.IsStatic = true;
-            body.Position = position;
+            Body = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, Width, Height, 1);
+            Body.IsStatic = true;
+            Body.Position = _position;
 
             LoadPhysics(physicsSimulator);
         }
 
         private void LoadPhysics(PhysicsSimulator physicsSimulator)
         {
-            geom = new Geom[4];
+            Geom = new Geom[4];
             //left border
-            Vector2 geomOffset = new Vector2(-width * .5f - borderWidth * .5f, 0);
-            geom[0] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, body, borderWidth, height + borderWidth, geomOffset, 0);
-            geom[0].RestitutionCoefficient = .2f;
-            geom[0].FrictionCoefficient = 0f;
-            geom[0].CollisionGroup = 100;
+            Vector2 geomOffset = new Vector2(-Width * .5f - BorderWidth * .5f, 0);
+            Geom[0] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, Body, BorderWidth, Height + BorderWidth,
+                                                               geomOffset, 0);
+            Geom[0].RestitutionCoefficient = .2f;
+            Geom[0].FrictionCoefficient = 0f;
+            Geom[0].CollisionGroup = 100;
 
             //right border (clone left border since geom is same size)
-            geomOffset = new Vector2(width * .5f + borderWidth * .5f, 0);
-            geom[1] = GeomFactory.Instance.CreateGeom(physicsSimulator, body, geom[0], geomOffset, 0);
+            geomOffset = new Vector2(Width * .5f + BorderWidth * .5f, 0);
+            Geom[1] = GeomFactory.Instance.CreateGeom(physicsSimulator, Body, Geom[0], geomOffset, 0);
 
             //top border
-            geomOffset = new Vector2(0, -height * .5f - borderWidth * .5f);
-            geom[2] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, body, width + borderWidth, borderWidth, geomOffset, 0);
-            geom[2].RestitutionCoefficient = 0f;
-            geom[2].FrictionCoefficient = 1f;
-            geom[2].CollisionGroup = 100;
+            geomOffset = new Vector2(0, -Height * .5f - BorderWidth * .5f);
+            Geom[2] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, Body, Width + BorderWidth, BorderWidth,
+                                                               geomOffset, 0);
+            Geom[2].RestitutionCoefficient = 0f;
+            Geom[2].FrictionCoefficient = 1f;
+            Geom[2].CollisionGroup = 100;
             //borderGeom[2].CollisonGridCellSize = 20;
-            geom[2].ComputeCollisionGrid();
+            Geom[2].ComputeCollisionGrid();
 
             //bottom border (clone top border since geom is same size)
-            geomOffset = new Vector2(0, height * .5f + borderWidth * .5f);
-            geom[3] = GeomFactory.Instance.CreateGeom(physicsSimulator, body, geom[2], geomOffset, 0);
+            geomOffset = new Vector2(0, Height * .5f + BorderWidth * .5f);
+            Geom[3] = GeomFactory.Instance.CreateGeom(physicsSimulator, Body, Geom[2], geomOffset, 0);
         }
-
     }
 }

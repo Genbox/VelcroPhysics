@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FarseerPhysicsWaterDemo.Models;
-using FarseerPhysicsWaterDemo.RenderSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Mathematics;
+using FarseerGames.WaterSample.Models;
+using FarseerGames.WaterSample.RenderSystem;
 
-namespace FarseerPhysicsWaterDemo.Views
+namespace FarseerGames.WaterSample.Views
 {
-    public partial class GameView : UserControl
+    public partial class GameView
     {
         #region properties
+
         #endregion
 
         #region public methods
+
         public GameView(GameModel gameModel)
         {
             InitializeComponent();
@@ -29,13 +30,17 @@ namespace FarseerPhysicsWaterDemo.Views
             InitializeBoxViews(physicsSimulator);
             InitializeWater(physicsSimulator);
 
-            CollisionBorder collisionBorder = new CollisionBorder(ConvertUnits.ToSimUnits((float)Width), ConvertUnits.ToSimUnits((float)Height), ConvertUnits.ToSimUnits(100), ConvertUnits.ToSimUnits((float)Width / 2f, (float)Height / 2f));
+            CollisionBorder collisionBorder = new CollisionBorder(ConvertUnits.ToSimUnits((float) Width),
+                                                                  ConvertUnits.ToSimUnits((float) Height),
+                                                                  ConvertUnits.ToSimUnits(100),
+                                                                  ConvertUnits.ToSimUnits((float) Width/2f,
+                                                                                          (float) Height/2f));
             collisionBorder.Initialize(physicsSimulator);
         }
 
         public void Draw(TimeSpan elapsedTime)
         {
-            _waterView.Draw();           
+            _waterView.Draw();
             foreach (var boxView in _boxViews)
             {
                 boxView.Draw();
@@ -46,12 +51,14 @@ namespace FarseerPhysicsWaterDemo.Views
         {
             _waterView.WaterModel.Update(elapsedTime);
         }
+
         #endregion
 
         #region private methods
+
         private void InitializeWater(PhysicsSimulator physicsSimulator)
-        { 
-            _waterView = new WaterView(_gameModel.WaterModel, LayoutRoot);            
+        {
+            _waterView = new WaterView(_gameModel.WaterModel, LayoutRoot);
             _waterView.Initialize(physicsSimulator);
 
             WaveGenerator.Maximum = 20;
@@ -68,22 +75,22 @@ namespace FarseerPhysicsWaterDemo.Views
 
             RotationalDrag.Maximum = 3;
             RotationalDrag.Minimum = 0;
-            RotationalDrag.Value = 2f;        
+            RotationalDrag.Value = 2f;
         }
 
         private void InitializeBoxViews(PhysicsSimulator physicsSimulator)
         {
             _boxViews = new List<BoxView>();
             foreach (var boxModel in _gameModel.BoxModels)
-            { 
+            {
                 _boxViews.Add(InitializeBoxView(boxModel, Colors.White, Colors.Black, 1));
             }
 
             foreach (var boxModel in _gameModel.PyramidBoxModels)
             {
                 _boxViews.Add(InitializeBoxView(boxModel, Colors.White, Colors.Black, 1));
-            }            
-           
+            }
+
             foreach (var boxView in _boxViews)
             {
                 boxView.Initialize(physicsSimulator, LayoutRoot);
@@ -92,10 +99,12 @@ namespace FarseerPhysicsWaterDemo.Views
 
         private BoxView InitializeBoxView(BoxModel boxModel, Color fill, Color stroke, float strokeThickness)
         {
-            Rectangle rectangle = ShapeFactory.CreateRectangle(ConvertUnits.ToDisplayUnits(boxModel.Width), ConvertUnits.ToDisplayUnits(boxModel.Height),fill, stroke, strokeThickness);
+            Rectangle rectangle = ShapeFactory.CreateRectangle(ConvertUnits.ToDisplayUnits(boxModel.Width),
+                                                               ConvertUnits.ToDisplayUnits(boxModel.Height), fill,
+                                                               stroke, strokeThickness);
 
             Sprite sprite = new Sprite(rectangle);
-            sprite.Origin = new Vector2(sprite.Width / 2, sprite.Height / 2);
+            sprite.Origin = new Vector2(sprite.Width/2, sprite.Height/2);
 
             BoxView boxView = new BoxView(boxModel, sprite);
             return boxView;
@@ -103,39 +112,43 @@ namespace FarseerPhysicsWaterDemo.Views
 
         private void WaveGenerator_ValueChanged(object sender, RoutedEventArgs e)
         {
-            float sliderValue = (float)WaveGenerator.Value;
+            float sliderValue = (float) WaveGenerator.Value;
             _waterView.WaterModel.WaveController.WaveGeneratorMax = sliderValue;
             _waterView.WaterModel.WaveController.WaveGeneratorMin = -sliderValue;
-            _waterView.WaterModel.WaveController.WaveGeneratorStep = sliderValue / 4f;
+            _waterView.WaterModel.WaveController.WaveGeneratorStep = sliderValue/4f;
             WaveStrengthValue.Text = sliderValue.ToString("0.00");
         }
 
         private void Density_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            _waterView.WaterModel.FluidDragController.Density = (float)Density.Value;
+            _waterView.WaterModel.FluidDragController.Density = (float) Density.Value;
             FluidDensityValue.Text = Density.Value.ToString("0.00");
         }
 
         private void LinearDrag_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            _waterView.WaterModel.FluidDragController.LinearDragCoefficient = (float)LinearDrag.Value;
+            _waterView.WaterModel.FluidDragController.LinearDragCoefficient = (float) LinearDrag.Value;
             FluidLinearDragValue.Text = LinearDrag.Value.ToString("0.00");
         }
 
         private void RotationalDrag_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            _waterView.WaterModel.FluidDragController.RotationalDragCoefficient = (float)RotationalDrag.Value;
+            _waterView.WaterModel.FluidDragController.RotationalDragCoefficient = (float) RotationalDrag.Value;
             FluidRotationalDragValue.Text = RotationalDrag.Value.ToString("0.00");
         }
+
         #endregion
 
         #region events
+
         #endregion
 
         #region private variables
-        GameModel _gameModel;
-        WaterView _waterView;
-        List<BoxView> _boxViews;
+
+        private List<BoxView> _boxViews;
+        private GameModel _gameModel;
+        private WaterView _waterView;
+
         #endregion
     }
 }

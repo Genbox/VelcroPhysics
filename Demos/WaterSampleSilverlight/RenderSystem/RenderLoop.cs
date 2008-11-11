@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Windows.Media;
 
-namespace FarseerPhysicsWaterDemo.RenderSystem
+namespace FarseerGames.WaterSample.RenderSystem
 {
     public class RenderLoop
     {
         #region properties
+
         public int StepSize { get; set; }
+
         #endregion
 
         #region public methods
+
         public RenderLoop()
         {
-            StepSize = 10;//milliseconds
+            StepSize = 10; //milliseconds
         }
 
         public void Initialize()
@@ -39,14 +42,14 @@ namespace FarseerPhysicsWaterDemo.RenderSystem
             _elapsedTime = _currentTime - _previousTime;
             _previousTime = _currentTime;
 
-            accumulator += _elapsedTime.TotalMilliseconds;
+            _accumulator += _elapsedTime.TotalMilliseconds;
 
             if (Update != null)
             {
-                while (accumulator >= _updateTimeSpan.TotalMilliseconds)
+                while (_accumulator >= _updateTimeSpan.TotalMilliseconds)
                 {
                     Update(_updateTimeSpan);
-                    accumulator -= _updateTimeSpan.TotalMilliseconds;
+                    _accumulator -= _updateTimeSpan.TotalMilliseconds;
                 }
             }
 
@@ -70,29 +73,37 @@ namespace FarseerPhysicsWaterDemo.RenderSystem
                 CompositionTarget.Rendering -= _compositionTargetRendering;
             }
         }
+
         #endregion
 
         #region private methods
+
         #endregion
 
         #region events
+
+        #region Delegates
+
         public delegate void StepEventHandler(TimeSpan elapsedTime);
+
+        #endregion
+
         public event StepEventHandler Update;
         public event StepEventHandler Draw;
+
         #endregion
 
         #region private variables
-        private bool _firstRun = true;
-
-        private TimeSpan _updateTimeSpan;
-        private TimeSpan _elapsedTime;
-
-        private DateTime _currentTime;
-        private DateTime _previousTime;
-
-        double accumulator;
 
         private EventHandler _compositionTargetRendering;
+        private DateTime _currentTime;
+        private TimeSpan _elapsedTime;
+        private bool _firstRun = true;
+        private DateTime _previousTime;
+        private TimeSpan _updateTimeSpan;
+
+        private double _accumulator;
+
         #endregion
     }
 }
