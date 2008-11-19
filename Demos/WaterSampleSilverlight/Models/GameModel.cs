@@ -52,7 +52,7 @@ namespace FarseerGames.WaterSample.Models
         {
             BoxModels = new List<BoxModel>();
             BoxModels.Add(InitializeBox(350, 190, 200, 20, 1f));
-            InitializePyrmid(new Vector2(308, 170), 15, 15, 2, 2, 6);
+            InitializePyrmid(new Vector2(308, 170), 20, 20, 2, 2, 5);
 
             foreach (var boxModel in BoxModels)
             {
