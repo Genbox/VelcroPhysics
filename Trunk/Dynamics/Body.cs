@@ -890,6 +890,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             rotation = _previousRotation + _rotationChange;
 
             //clamp rotation to 0 <= rotation <2Pi
+            //TODO: This code returns 2xPI when the rotation is 0. Change it to return 0 instead.
             while (rotation > MathHelper.TwoPi)
             {
                 rotation -= MathHelper.TwoPi;
