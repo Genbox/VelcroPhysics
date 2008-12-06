@@ -492,7 +492,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <returns>Normal of the edge.</returns>
         private Vector2 FindEdgeNormal(Vector2 firstVector, Vector2 secondVector)
         {
-            Vector2 n;
+            //Xbox360 need this variable to be initialized to Vector2.Zero
+            Vector2 n = Vector2.Zero;
 
             Vector2 t = new Vector2(firstVector.X - secondVector.X, firstVector.Y - secondVector.Y);
 
