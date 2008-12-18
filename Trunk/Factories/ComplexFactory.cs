@@ -14,16 +14,12 @@ namespace FarseerGames.FarseerPhysics.Factories
     /// </summary>
     public class ComplexFactory
     {
-        //TODO: list
-        // 1. Done
-        // 2. Remove ball at end of chain
-
         private static ComplexFactory _instance;
 
-        public static float Min { get; set; }
-        public static float Max { get; set; }
-        public static float SpringConstant { get; set; }
-        public static float DampingConstant { get; set; }
+        public float Min { get; set; }
+        public float Max { get; set; }
+        public float SpringConstant { get; set; }
+        public float DampingConstant { get; set; }
 
         private ComplexFactory()
         {
