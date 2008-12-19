@@ -678,12 +678,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
             #endregion
 
-            #region INLINE: Vector2.Add(ref _dv, ref linearVelocity, out linearVelocity);
+            #region INLINE: Vector2.Add(ref _dv, ref impulse, out impulse);
 
-            impulse.X += _dv.X + LinearVelocity.X;
-            impulse.Y += _dv.Y + LinearVelocity.Y;
+            impulse.X += _dv.X;
+            impulse.Y += _dv.Y;
 
-            #endregion
+            #endregion 
         }
 
         /// <summary>
@@ -700,12 +700,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
             #endregion
 
-            #region INLINE: Vector2.Add(ref _dv, ref linearVelocity, out linearVelocity);
+            #region INLINE: Vector2.Add(ref _dv, ref impulse, out impulse);
 
-            impulse.X += _dv.X + LinearVelocity.X;
-            impulse.Y += _dv.Y + LinearVelocity.Y;
+            impulse.X += _dv.X;
+            impulse.Y += _dv.Y;
 
-            #endregion
+            #endregion 
         }
 
         /// <summary>
