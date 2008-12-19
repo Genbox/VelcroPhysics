@@ -17,7 +17,7 @@ namespace FarseerGames.GettingStarted.DrawingSystem
             colorArray[0] = Color.TransparentWhite;
             colorArray[1] = Color.TransparentWhite;
 
-            for (int i = 0; i < count; i++)
+            for (int i = 2; i < count - 2; i++) 
             {
                 colorArray[i] = color;
             }
