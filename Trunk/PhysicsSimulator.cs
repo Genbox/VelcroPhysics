@@ -60,8 +60,8 @@ namespace FarseerGames.FarseerPhysics
         internal JointList jointList;
         internal List<Joint> jointRemoveList;
 
-        internal int maxContactsToDetect = 3;
-        internal int maxContactsToResolve = 2;
+        internal int maxContactsToDetect = 10;
+        internal int maxContactsToResolve = 4;
         internal float narrowPhaseCollisionTime = -1;
         internal List<Spring> springAddList;
         internal SpringList springList;
