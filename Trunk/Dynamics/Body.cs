@@ -5,6 +5,8 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Controllers;
 using Microsoft.Xna.Framework;
 #else
+using FarseerGames.FarseerPhysics.Collisions;
+using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Mathematics;
 #endif
 
@@ -290,16 +292,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             set
             {
                 rotation = value;
-                while (rotation > MathHelper.TwoPi)
-                {
-                    rotation -= MathHelper.TwoPi;
-                    ++_revolutions;
-                }
-                while (rotation <= 0)
-                {
-                    rotation += MathHelper.TwoPi;
-                    --_revolutions;
-                }
+
+                // Calculate floating point remainder of rotation
+                int z = (int)(rotation / MathHelper.TwoPi);
+                if (rotation < 0)
+                    z--;
+                rotation = (rotation - z * MathHelper.TwoPi);
+
+                _revolutions += z;
                 totalRotation = rotation + _revolutions * MathHelper.TwoPi;
 
                 if (Updated != null)
@@ -679,11 +679,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             #endregion
 
             #region INLINE: Vector2.Add(ref _dv, ref impulse, out impulse);
-
+            
             impulse.X += _dv.X;
             impulse.Y += _dv.Y;
 
-            #endregion 
+            #endregion
         }
 
         /// <summary>
@@ -701,11 +701,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             #endregion
 
             #region INLINE: Vector2.Add(ref _dv, ref impulse, out impulse);
-
+            
             impulse.X += _dv.X;
             impulse.Y += _dv.Y;
 
-            #endregion 
+            #endregion
         }
 
         /// <summary>
@@ -889,18 +889,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             _previousRotation = rotation;
             rotation = _previousRotation + _rotationChange;
 
-            //clamp rotation to 0 <= rotation <2Pi
-            //TODO: This code returns 2xPI when the rotation is 0. Change it to return 0 instead.
-            while (rotation > MathHelper.TwoPi)
-            {
-                rotation -= MathHelper.TwoPi;
-                ++_revolutions;
-            }
-            while (rotation <= 0)
-            {
-                rotation += MathHelper.TwoPi;
-                --_revolutions;
-            }
+            // Calculate floating point remainder of rotation
+            int z = (int)(rotation / MathHelper.TwoPi);
+            if (rotation < 0)
+                z--;
+            rotation = (rotation - z * MathHelper.TwoPi);
+
+            _revolutions += z;
+
             totalRotation = rotation + _revolutions * MathHelper.TwoPi;
             angularVelocityBias = 0; //reset angVelBias to zero
 
