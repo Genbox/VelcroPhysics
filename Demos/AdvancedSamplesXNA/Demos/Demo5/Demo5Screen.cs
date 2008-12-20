@@ -49,13 +49,13 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
             _chainPin = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(250, 100), new Vector2(400, 300), 20.0f, 10.0f, 1, 3, LinkType.PinJoint);
             _chainPin.CreateGeoms();
 
-            ComplexFactory.SpringConstant = 150;        // values inside let us setup additional parameters
-            ComplexFactory.DampingConstant = 10;
+            ComplexFactory.Instance.SpringConstant = 150;        // values inside let us setup additional parameters
+            ComplexFactory.Instance.DampingConstant = 10;
             _chainSpring = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(350, 100), new Vector2(500, 300), 20.0f, 10.0f, 1, 4, LinkType.LinearSpring);
             _chainSpring.CreateGeoms();
 
-            ComplexFactory.Min = 0;
-            ComplexFactory.Max = 15;
+            ComplexFactory.Instance.Min = 0;
+            ComplexFactory.Instance.Max = 15;
             _chainSilde = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(450, 100), new Vector2(600, 300), 20.0f, 10.0f, 1, 5, LinkType.SliderJoint);
             _chainSilde.CreateGeoms();
 
