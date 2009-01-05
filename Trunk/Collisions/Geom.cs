@@ -222,6 +222,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
+        //TODO: Subject to conversion to field
         /// <summary>
         /// Gets or sets a Value indicating whether collision response is enabled.
         /// If 2 geoms collide and CollisionResponseEnabled is false, then impulses will not be calculated
@@ -237,6 +238,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             set { collisionResponseEnabled = value; }
         }
 
+        //TODO: Subject to conversion to field
         /// <summary>
         /// Gets or sets the collision categories.
         /// </summary>
@@ -247,6 +249,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             set { collisionCategories = value; }
         }
 
+        //TODO: Subject to conversion to field
         /// <summary>
         /// Gets or sets the collision categories that this geom collides with.
         /// </summary>
@@ -276,6 +279,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             get { return body; }
         }
 
+
+        //TODO: Subject to conversion to field
         /// <summary>
         /// The coefficient of restitution of the geometry.
         /// <para>This parameter controls how bouncy an object is when it collides with other
@@ -287,7 +292,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             get { return restitutionCoefficient; }
             set { restitutionCoefficient = value; }
         }
-
+        
+        //TODO: Subject to conversion to field
         /// <summary>
         /// Controls the amount of friction a geometry has when in contact with another geometry. A Value of zero implies
         /// no friction. When two geometries collide, the minimum friction coefficient between the two bodies is used.
