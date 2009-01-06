@@ -44,20 +44,16 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
             _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             _chain = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(150, 100), new Vector2(200, 300), 20.0f, 10.0f, 1, 2, LinkType.RevoluteJoint);
-            _chain.CreateGeoms();
 
             _chainPin = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(250, 100), new Vector2(400, 300), 20.0f, 10.0f, 1, 3, LinkType.PinJoint);
-            _chainPin.CreateGeoms();
 
             ComplexFactory.Instance.SpringConstant = 150;        // values inside let us setup additional parameters
             ComplexFactory.Instance.DampingConstant = 10;
             _chainSpring = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(350, 100), new Vector2(500, 300), 20.0f, 10.0f, 1, 4, LinkType.LinearSpring);
-            _chainSpring.CreateGeoms();
 
             ComplexFactory.Instance.Min = 0;
             ComplexFactory.Instance.Max = 15;
             _chainSilde = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(450, 100), new Vector2(600, 300), 20.0f, 10.0f, 1, 5, LinkType.SliderJoint);
-            _chainSilde.CreateGeoms();
 
             //Pinning the chain to world.
             JointFactory.Instance.CreateFixedRevoluteJoint(PhysicsSimulator, _chain.Bodies[0], _chain.Bodies[0].Position);
