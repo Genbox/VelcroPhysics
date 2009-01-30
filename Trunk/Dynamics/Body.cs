@@ -22,11 +22,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     /// </summary>
     public class Body : IDisposable
     {
-        #region Delegates
-
         public delegate void UpdatedEventHandler(ref Vector2 position, ref float rotation);
-
-        #endregion
 
         private float _momentOfInertia = 1; //1 unit square
         private float _previousAngularVelocity;
@@ -37,13 +33,23 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private Vector2 _tempVelocity = Vector2.Zero;
         private float _torque;
 
+        internal Vector2 impulse = Vector2.Zero;
+        internal float inverseMass = 1;
+        internal float inverseMomentOfInertia = 1;
+        internal float totalRotation;
+        internal float rotation;
+        internal Vector2 linearVelocityBias = Vector2.Zero;
+        internal float mass = 1;
+        internal Vector2 position = Vector2.Zero;
+        internal float angularVelocityBias;
+        internal Vector2 force = Vector2.Zero;
+        internal bool isStatic;
+
         /// <summary>
         /// The rate at which a body is rotating 
         /// </summary>
         /// <Value>The angular velocity.</Value>
         public float AngularVelocity;
-
-        internal float angularVelocityBias;
 
         /// <summary>
         ///Sets whether or not the body will take part in the simulation.
@@ -51,17 +57,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// </summary>
         public bool Enabled = true;
 
-        internal Vector2 force = Vector2.Zero;
-
         /// <summary>
         /// Gets or sets a Value indicating whether this body ignores gravity.
         /// </summary>
         /// <Value><c>true</c> if it ignores gravity; otherwise, <c>false</c>.</Value>
         public bool IgnoreGravity;
 
-        internal Vector2 impulse = Vector2.Zero;
-        internal float inverseMass = 1;
-        internal float inverseMomentOfInertia = 1;
+        /// <summary>
+        /// Returns true if the Body is disposed
+        /// </summary>
         public bool IsDisposed;
 
         /// <summary>
@@ -72,8 +76,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// </Value>
         public bool IsQuadraticDragEnabled;
 
-        internal bool isStatic;
-        public float LinearDragCoefficient = .001f; //tuned for a body of mass 1
+        /// <summary>
+        /// The linear drag coefficient is the amount of drag a body has.
+        /// Linear drag is the drag applied when the body travels in a straight line.
+        /// Default is 0.001f - tuned for a body of mass 1
+        /// </summary>
+        public float LinearDragCoefficient = .001f; 
 
         /// <summary>
         /// Gets or sets the linear velocity.
@@ -81,20 +89,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <Value>The linear velocity.</Value>
         public Vector2 LinearVelocity = Vector2.Zero;
 
-        internal Vector2 linearVelocityBias = Vector2.Zero;
-        internal float mass = 1;
-        internal Vector2 position = Vector2.Zero;
-
-        //shouldn't need this. commenting out but keeping incase needed in the future.
-        //private float linearDragVelocityThreshhold = .000001f;
-
         /// <summary>
         /// Gets or sets the quadratic drag coefficient.
         /// </summary>
         /// <Value>The quadratic drag coefficient.</Value>
         public float QuadraticDragCoefficient = .001f;
-
-        internal float rotation;
 
         /// <summary>
         /// Gets or sets the rotational drag coefficient.
@@ -108,10 +107,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <Value>The tag.</Value>
         public object Tag;
 
-        internal float totalRotation;
-
-        //TODO: Document
+        /// <summary>
+        /// If the position or rotation of the body changes, this event will be fired.
+        /// </summary>
         public UpdatedEventHandler Updated;
+
+        //NOTE: shouldn't need this. commenting out but keeping incase needed in the future.
+        //private float linearDragVelocityThreshhold = .000001f;
 
         public Body()
         {
@@ -849,14 +851,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         internal void IntegratePosition(float dt)
         {
-            //TODO: Should check if the position/rotation is the same as before and return?
             if (isStatic)
             {
                 return;
             }
 
             //linear
-
             #region INLINE: Vector2.Add(ref linearVelocity, ref linearVelocityBias, out _bodylinearVelocity);
 
             _bodylinearVelocity.X = LinearVelocity.X + linearVelocityBias.X;

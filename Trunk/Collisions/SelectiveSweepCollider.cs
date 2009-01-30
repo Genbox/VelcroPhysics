@@ -287,11 +287,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             if (!geom1.body.Enabled || !geom2.body.Enabled)
                 return;
 
-            if ((geom1.collisionGroup == geom2.collisionGroup) &&
-                geom1.collisionGroup != 0 && geom2.collisionGroup != 0)
+            if ((geom1.CollisionGroup == geom2.CollisionGroup) &&
+                geom1.CollisionGroup != 0 && geom2.CollisionGroup != 0)
                 return;
 
-            if (!geom1.collisionEnabled || !geom2.collisionEnabled)
+            if (!geom1.CollisionEnabled || !geom2.CollisionEnabled)
                 return;
 
             if (geom1.body.isStatic && geom2.body.isStatic)
@@ -300,9 +300,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             if (geom1.body == geom2.body)
                 return;
 
-            if (((geom1.collisionCategories & geom2.collidesWith) ==
-                 CollisionCategory.None) & ((geom2.collisionCategories &
-                                             geom1.collidesWith) == CollisionCategory.None))
+            if (((geom1.CollisionCategories & geom2.CollidesWith) ==
+                 CollisionCategory.None) & ((geom2.CollisionCategories &
+                                             geom1.CollidesWith) == CollisionCategory.None))
                 return;
 
             Arbiter arbiter = _physicsSimulator.arbiterPool.Fetch();

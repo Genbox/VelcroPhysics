@@ -45,7 +45,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public virtual void Update(float dt)
         {
-            //TODO: Ehhh, this makes no sense. Please test breakability!
             if (!Enabled || Math.Abs(SpringError) <= Breakpoint)
                 return;
 

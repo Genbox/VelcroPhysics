@@ -68,11 +68,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     if (!_geometryA.body.Enabled || !_geometryB.body.Enabled)
                         continue;
 
-                    if ((_geometryA.collisionGroup == _geometryB.collisionGroup) &&
-                        _geometryA.collisionGroup != 0 && _geometryB.collisionGroup != 0)
+                    if ((_geometryA.CollisionGroup == _geometryB.CollisionGroup) &&
+                        _geometryA.CollisionGroup != 0 && _geometryB.CollisionGroup != 0)
                         continue;
 
-                    if (!_geometryA.collisionEnabled || !_geometryB.collisionEnabled)
+                    if (!_geometryA.CollisionEnabled || !_geometryB.CollisionEnabled)
                         continue;
 
                     if (_geometryA.body.isStatic && _geometryB.body.isStatic)
@@ -81,8 +81,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     if (_geometryA.body == _geometryB.body)
                         continue;
 
-                    if (((_geometryA.collisionCategories & _geometryB.collidesWith) == CollisionCategory.None) &
-                        ((_geometryB.collisionCategories & _geometryA.collidesWith) == CollisionCategory.None))
+                    if (((_geometryA.CollisionCategories & _geometryB.CollidesWith) == CollisionCategory.None) &
+                        ((_geometryB.CollisionCategories & _geometryA.CollidesWith) == CollisionCategory.None))
                     {
                         continue;
                     }

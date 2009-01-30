@@ -263,8 +263,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             foreach (Body body in _bodies)
             {
                 geom = GeomFactory.Instance.CreateRectangleGeom(body, _width, _height);
-                geom.collisionCategories = CollisionCategory.Cat2;
-                geom.collidesWith = CollisionCategory.Cat1;
+                geom.CollisionCategories = CollisionCategory.Cat2;
+                geom.CollidesWith = CollisionCategory.Cat1;
                 _geoms.Add(geom);
             }
         }

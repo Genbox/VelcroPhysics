@@ -29,7 +29,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #endregion
 
-        private float _collisionGridCellSize;
         private bool _isSensor;
         private Matrix _matrix = Matrix.Identity;
         private Matrix _matrixInverse = Matrix.Identity;
@@ -39,32 +38,80 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private float _rotation;
         private float _rotationOffset;
         private Vector2 _vector;
-        internal AABB aabb = new AABB();
+        
         internal Body body;
-        internal CollisionCategory collidesWith = CollisionCategory.All;
-        //member off all categories by default
-        internal CollisionCategory collisionCategories = CollisionCategory.All;
-        internal bool collisionEnabled = true;
-        internal int collisionGroup;
-        internal bool collisionResponseEnabled = true;
-        internal float frictionCoefficient;
-        internal Grid grid;
-        public bool IsDisposed;
         internal bool isRemoved = true; //true=>geometry removed from simulation
         internal Vertices localVertices;
+        internal Grid grid;
+        internal Vertices worldVertices;
 
+        /// <summary>
+        /// Gets or sets the collision categories that this geom collides with.
+        /// </summary>
+        /// <Value>The collides with.</Value>
+        public CollisionCategory CollidesWith = CollisionCategory.All;
+        /// <summary>
+        /// Gets or sets the collision categories.
+        ///member off all categories by default
+        /// </summary>
+        /// <Value>The collision categories.</Value>
+        public CollisionCategory CollisionCategories = CollisionCategory.All;
+        /// <summary>
+        /// Gets or sets a Value indicating whether collision response is enabled.
+        /// If 2 geoms collide and CollisionResponseEnabled is false, then impulses will not be calculated
+        /// for the 2 colliding geoms. They will pass through each other, but will still be able to fire the
+        /// <see cref="OnCollision"/> event.
+        /// </summary>
+        /// <Value>
+        /// 	<c>true</c> if collision response enabled; otherwise, <c>false</c>.
+        /// </Value>
+        public bool CollisionResponseEnabled = true;
+        /// <summary>
+        /// Controls the amount of friction a geometry has when in contact with another geometry. A Value of zero implies
+        /// no friction. When two geometries collide, the minimum friction coefficient between the two bodies is used.
+        /// </summary>
+        public float FrictionCoefficient;
+        /// <summary>
+        /// Returns true if the Body is disposed
+        /// </summary>
+        public bool IsDisposed;
         /// <summary>
         /// Fires when a collision occurs with the geom
         /// </summary>
         public CollisionEventHandler OnCollision;
-
         /// <summary>
         /// Fires when a separation between this and another geom occurs
         /// </summary>
         public SeparationEventHandler OnSeparation;
-
-        internal float restitutionCoefficient;
-        internal Vertices worldVertices;
+        /// <summary>
+        /// The coefficient of restitution of the geometry.
+        /// <para>This parameter controls how bouncy an object is when it collides with other
+        /// geometries. Valid values range from 0 to 1 inclusive.  1 implies 100% restitution (perfect bounce)
+        /// 0 implies no restitution (think a ball of clay)</para>
+        /// </summary>
+        public float RestitutionCoefficient;
+        /// <summary>
+        /// Gets or sets the size of the collision grid cells.
+        /// Be sure to run <see cref="ComputeCollisionGrid"/>() for any changes to take effect.
+        /// </summary>
+        /// <Value>The size of the collision grid cell.</Value>
+        public float CollisionGridCellSize;
+        /// <summary>
+        /// Gets or sets the collision group.
+        /// If 2 geoms are in the same collision group, they will not collide.
+        /// </summary>
+        /// <Value>The collision group.</Value>
+        public int CollisionGroup;
+        /// <summary>
+        /// Gets or sets the Axis Aligned Bounding Box of the geom.
+        /// </summary>
+        /// <Value>The AABB.</Value>
+        public AABB AABB = new AABB();
+        /// <summary>
+        /// Gets or sets a Value indicating whether collision is enabled.
+        /// </summary>
+        /// <Value><c>true</c> if collision is enabled; otherwise, <c>false</c>.</Value>
+        public bool CollisionEnabled = true;
 
         public Geom()
         {
@@ -108,17 +155,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public float Rotation
         {
             get { return _rotation; }
-        }
-
-        /// <summary>
-        /// Gets or sets the size of the collision grid cells.
-        /// Be sure to run <see cref="ComputeCollisionGrid"/>() for any changes to take effect.
-        /// </summary>
-        /// <Value>The size of the collision grid cell.</Value>
-        public float CollisionGridCellSize
-        {
-            get { return _collisionGridCellSize; }
-            set { _collisionGridCellSize = value; }
         }
 
         /// <summary>
@@ -167,37 +203,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Gets or sets the Axis Aligned Bounding Box of the geom.
-        /// </summary>
-        /// <Value>The AABB.</Value>
-        public AABB AABB
-        {
-            get { return aabb; }
-            set { aabb = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the collision group.
-        /// If 2 geoms are in the same collision group, they will not collide.
-        /// </summary>
-        /// <Value>The collision group.</Value>
-        public int CollisionGroup
-        {
-            get { return collisionGroup; }
-            set { collisionGroup = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets a Value indicating whether collision is enabled.
-        /// </summary>
-        /// <Value><c>true</c> if collision is enabled; otherwise, <c>false</c>.</Value>
-        public bool CollisionEnabled
-        {
-            get { return collisionEnabled; }
-            set { collisionEnabled = value; }
-        }
-
-        /// <summary>
         /// Gets or sets a Value indicating whether this instance is a sensor.
         /// A sensor does not calculate impulses and does not change position (it's static)
         /// i does however calculate collisions. Sensors can be used to sense other geoms.
@@ -212,52 +217,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 if (_isSensor)
                 {
                     body.isStatic = true;
-                    collisionResponseEnabled = false;
+                    CollisionResponseEnabled = false;
                 }
                 else
                 {
                     body.isStatic = false;
-                    collisionResponseEnabled = true;
+                    CollisionResponseEnabled = true;
                 }
             }
-        }
-
-        //TODO: Subject to conversion to field
-        /// <summary>
-        /// Gets or sets a Value indicating whether collision response is enabled.
-        /// If 2 geoms collide and CollisionResponseEnabled is false, then impulses will not be calculated
-        /// for the 2 colliding geoms. They will pass through each other, but will still be able to fire the
-        /// <see cref="OnCollision"/> event.
-        /// </summary>
-        /// <Value>
-        /// 	<c>true</c> if collision response enabled; otherwise, <c>false</c>.
-        /// </Value>
-        public bool CollisionResponseEnabled
-        {
-            get { return collisionResponseEnabled; }
-            set { collisionResponseEnabled = value; }
-        }
-
-        //TODO: Subject to conversion to field
-        /// <summary>
-        /// Gets or sets the collision categories.
-        /// </summary>
-        /// <Value>The collision categories.</Value>
-        public CollisionCategory CollisionCategories
-        {
-            get { return collisionCategories; }
-            set { collisionCategories = value; }
-        }
-
-        //TODO: Subject to conversion to field
-        /// <summary>
-        /// Gets or sets the collision categories that this geom collides with.
-        /// </summary>
-        /// <Value>The collides with.</Value>
-        public CollisionCategory CollidesWith
-        {
-            get { return collidesWith; }
-            set { collidesWith = value; }
         }
 
         /// <summary>
@@ -277,31 +244,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public Body Body
         {
             get { return body; }
-        }
-
-
-        //TODO: Subject to conversion to field
-        /// <summary>
-        /// The coefficient of restitution of the geometry.
-        /// <para>This parameter controls how bouncy an object is when it collides with other
-        /// geometries. Valid values range from 0 to 1 inclusive.  1 implies 100% restitution (perfect bounce)
-        /// 0 implies no restitution (think a ball of clay)</para>
-        /// </summary>
-        public float RestitutionCoefficient
-        {
-            get { return restitutionCoefficient; }
-            set { restitutionCoefficient = value; }
-        }
-        
-        //TODO: Subject to conversion to field
-        /// <summary>
-        /// Controls the amount of friction a geometry has when in contact with another geometry. A Value of zero implies
-        /// no friction. When two geometries collide, the minimum friction coefficient between the two bodies is used.
-        /// </summary>
-        public float FrictionCoefficient
-        {
-            get { return frictionCoefficient; }
-            set { frictionCoefficient = value; }
         }
 
         /// <summary>
@@ -336,7 +278,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public bool Equals(Geom other)
         {
-            if ((object) other == null)
+            if ((object)other == null)
             {
                 return false;
             }
@@ -349,7 +291,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                                float collisionGridCellSize)
         {
             Id = GetNextId();
-            _collisionGridCellSize = collisionGridCellSize;
+            CollisionGridCellSize = collisionGridCellSize;
             _offset = offset;
             _rotationOffset = rotationOffset;
             grid = new Grid();
@@ -361,18 +303,18 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private void ConstructClone(Body bodyToSet, Geom geometry, Vector2 offset, float rotationOffset)
         {
             Id = GetNextId();
-            _collisionGridCellSize = geometry._collisionGridCellSize;
+            CollisionGridCellSize = geometry.CollisionGridCellSize;
             grid = geometry.grid.Clone();
-            restitutionCoefficient = geometry.restitutionCoefficient;
-            frictionCoefficient = geometry.frictionCoefficient;
-            collisionGroup = geometry.collisionGroup;
-            collisionEnabled = geometry.collisionEnabled;
-            collisionResponseEnabled = geometry.collisionResponseEnabled;
-            _collisionGridCellSize = geometry._collisionGridCellSize;
+            RestitutionCoefficient = geometry.RestitutionCoefficient;
+            FrictionCoefficient = geometry.FrictionCoefficient;
+            CollisionGroup = geometry.CollisionGroup;
+            CollisionEnabled = geometry.CollisionEnabled;
+            CollisionResponseEnabled = geometry.CollisionResponseEnabled;
+            CollisionGridCellSize = geometry.CollisionGridCellSize;
             _offset = offset;
             _rotationOffset = rotationOffset;
-            collisionCategories = geometry.collisionCategories;
-            collidesWith = geometry.collidesWith;
+            CollisionCategories = geometry.CollisionCategories;
+            CollidesWith = geometry.CollidesWith;
             SetVertices(geometry.localVertices);
             SetBody(bodyToSet);
         }
@@ -387,7 +329,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             localVertices = new Vertices(vertices);
             worldVertices = new Vertices(vertices);
 
-            aabb.Update(ref vertices);
+            AABB.Update(ref vertices);
         }
 
         /// <summary>
@@ -419,7 +361,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             if (localVertices.Count > 2)
             {
-                grid.ComputeGrid(this, _collisionGridCellSize);
+                grid.ComputeGrid(this, CollisionGridCellSize);
             }
             else
             {
@@ -482,21 +424,20 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public Feature GetNearestFeature(Vector2 point, int index)
         {
             Feature feature = new Feature();
-            //TODO: Name variables correctly
-            Vector2 v = localVertices.GetEdge(index);
-            Vector2 w = Vector2.Subtract(point, localVertices[index]);
+            Vector2 edge = localVertices.GetEdge(index);
+            Vector2 diff = Vector2.Subtract(point, localVertices[index]);
 
-            float c1 = Vector2.Dot(w, v);
+            float c1 = Vector2.Dot(diff, edge);
             if (c1 < 0)
             {
                 feature.Position = localVertices[index];
                 feature.Normal = localVertices.GetVertexNormal(index);
-                feature.Distance = Math.Abs(w.Length());
+                feature.Distance = Math.Abs(diff.Length());
 
                 return feature;
             }
 
-            float c2 = Vector2.Dot(v, v);
+            float c2 = Vector2.Dot(edge, edge);
             if (c2 <= c1)
             {
                 Vector2 d1 = Vector2.Subtract(point, localVertices[localVertices.NextIndex(index)]);
@@ -507,9 +448,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 return feature;
             }
 
-            float b = c1/c2;
-            v = Vector2.Multiply(v, b);
-            Vector2 pb = Vector2.Add(localVertices[index], v);
+            float b = c1 / c2;
+            edge = Vector2.Multiply(edge, b);
+            Vector2 pb = Vector2.Add(localVertices[index], edge);
             Vector2 d2 = Vector2.Subtract(point, pb);
             feature.Position = pb;
             feature.Normal = localVertices.GetEdgeNormal(index); // GetEdgeNormal(index);
@@ -524,7 +465,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns>true if colliding</returns>
         public bool Collide(Vector2 point)
         {
-            //TODO: Don't check collision if it's disabled?
             Feature feature;
             point = Vector2.Transform(point, MatrixInverse);
 
@@ -545,28 +485,30 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns></returns>
         public bool Collide(Geom geometry)
         {
-            //TODO: Check AABB collision first?
-            //NOTE: Could check arbiterlist to see if geom collide? (if arbiterlist contains geom) This prevents the use of the grid.
-            //TODO: Don't check collision if it's disabled?
-            //Check each vertice (of self) against the provided geometry
-            for (int i = 0; i < worldVertices.Count; i++)
+            //Note: Added in 2.1.
+            if (AABB.Intersect(AABB, geometry.AABB))
             {
-                _vector = worldVertices[i];
-                if (geometry.Collide(_vector))
+                //Check each vertice (of self) against the provided geometry
+                for (int i = 0; i < worldVertices.Count; i++)
                 {
-                    return true;
+                    _vector = worldVertices[i];
+                    if (geometry.Collide(_vector))
+                    {
+                        return true;
+                    }
+                }
+
+                //Check each vertice of the provided geometry, against it self
+                for (int i = 0; i < geometry.worldVertices.Count; i++)
+                {
+                    _vector = geometry.worldVertices[i];
+                    if (Collide(_vector))
+                    {
+                        return true;
+                    }
                 }
             }
 
-            //Check each vertice of the provided geometry, against it self
-            for (int i = 0; i < geometry.worldVertices.Count; i++)
-            {
-                _vector = geometry.worldVertices[i];
-                if (Collide(_vector))
-                {
-                    return true;
-                }
-            }
             return false;
         }
 
@@ -578,7 +520,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns></returns>
         public bool Intersect(ref Vector2 localVertex, out Feature feature)
         {
-            //TODO: Don't check collision if it's disabled?
             return grid.Intersect(ref localVertex, out feature);
         }
 
@@ -609,8 +550,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             #region INLINE: Vector2.Transform(ref _offset, ref _matrix, out _newPos);
 
-            float num2 = ((_offset.X*_matrix.M11) + (_offset.Y*_matrix.M21)) + _matrix.M41;
-            float num = ((_offset.X*_matrix.M12) + (_offset.Y*_matrix.M22)) + _matrix.M42;
+            float num2 = ((_offset.X * _matrix.M11) + (_offset.Y * _matrix.M21)) + _matrix.M41;
+            float num = ((_offset.X * _matrix.M12) + (_offset.Y * _matrix.M22)) + _matrix.M42;
             _newPos.X = num2;
             _newPos.Y = num;
 
@@ -632,8 +573,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 #region INLINE: worldVertices[i] = Vector2.Transform(localVertices[i], _matrix);
 
                 _localVertice = localVertices[i];
-                float num2 = ((_localVertice.X*_matrix.M11) + (_localVertice.Y*_matrix.M21)) + _matrix.M41;
-                float num = ((_localVertice.X*_matrix.M12) + (_localVertice.Y*_matrix.M22)) + _matrix.M42;
+                float num2 = ((_localVertice.X * _matrix.M11) + (_localVertice.Y * _matrix.M21)) + _matrix.M41;
+                float num = ((_localVertice.X * _matrix.M12) + (_localVertice.Y * _matrix.M22)) + _matrix.M42;
                 _vertice.X = num2;
                 _vertice.Y = num;
                 worldVertices[i] = _vertice;
@@ -641,7 +582,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 #endregion
             }
 
-            aabb.Update(ref worldVertices);
+            AABB.Update(ref worldVertices);
         }
 
         public override int GetHashCode()
@@ -652,7 +593,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public override bool Equals(object obj)
         {
             Geom g = obj as Geom;
-            if ((object) g == null)
+            if ((object)g == null)
             {
                 return false;
             }
@@ -668,7 +609,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             // If one is null, but not both, return false.
-            if (((object) geometry1 == null) || ((object) geometry2 == null))
+            if (((object)geometry1 == null) || ((object)geometry2 == null))
             {
                 return false;
             }
@@ -733,11 +674,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private Vector2 _localVertice;
         private Vector2 _vertice = Vector2.Zero;
-
-        #endregion
-
-        #region Update variables
-
         private Vector2 _newPos = Vector2.Zero;
 
         #endregion
