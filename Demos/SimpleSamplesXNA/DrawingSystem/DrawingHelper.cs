@@ -259,7 +259,7 @@ namespace FarseerGames.GettingStarted.DrawingSystem
                     float distanceFromCurToBoundary = (pointOnEllipse - curPoint).Length();
 
 
-                    // hack to find out whether the current point is inside the ellipse
+                    //NOTE: hack to find out whether the current point is inside the ellipse
 
                     // calculate angle of a straight line intersecting the center of the ellipse and the current point
                     Vector2 lineFromCurPointToCenter = curPoint - center;

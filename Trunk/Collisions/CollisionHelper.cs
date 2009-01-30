@@ -8,9 +8,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Collisions
 {
-    //TODO: This is not used, remove it or use it.
     /// <summary>
-    /// TODO: Write documentation
+    /// Collection of helper methods for misc collisions.
+    /// Does float tolerance and line collisions with lines and AABBs.
     /// </summary>
     public static class CollisionHelper
     {

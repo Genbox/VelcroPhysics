@@ -236,11 +236,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             if (!g1.body.Enabled || !g2.body.Enabled)
                 return false;
 
-            if ((g1.collisionGroup == g2.collisionGroup) &&
-                g1.collisionGroup != 0 && g2.collisionGroup != 0)
+            if ((g1.CollisionGroup == g2.CollisionGroup) &&
+                g1.CollisionGroup != 0 && g2.CollisionGroup != 0)
                 return false;
 
-            if (!g1.collisionEnabled || !g2.collisionEnabled)
+            if (!g1.CollisionEnabled || !g2.CollisionEnabled)
                 return false;
 
             if (g1.body.isStatic && g2.body.isStatic)
@@ -249,18 +249,18 @@ namespace FarseerGames.FarseerPhysics.Collisions
             if (g1.body == g2.body)
                 return false;
 
-            if (((g1.collisionCategories & g2.collidesWith) ==
-                 CollisionCategory.None) & ((g2.collisionCategories &
-                                             g1.collidesWith) == CollisionCategory.None))
+            if (((g1.CollisionCategories & g2.CollidesWith) ==
+                 CollisionCategory.None) & ((g2.CollisionCategories &
+                                             g1.CollidesWith) == CollisionCategory.None))
                 return false;
 
             //TMP
             AABB aabb1 = new AABB();
             AABB aabb2 = new AABB();
-            aabb1.min = g1.aabb.min;
-            aabb1.max = g1.aabb.max;
-            aabb2.min = g2.aabb.min;
-            aabb2.max = g2.aabb.max;
+            aabb1.min = g1.AABB.min;
+            aabb1.max = g1.AABB.max;
+            aabb2.min = g2.AABB.min;
+            aabb2.max = g2.AABB.max;
             aabb1.min.X -= _floatTolerance;
             aabb1.min.Y -= _floatTolerance;
             aabb1.max.X += _floatTolerance;
@@ -289,7 +289,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 ExtentInfo xInfo = _xInfoList[i];
                 ExtentInfo yInfo = _yInfoList[i];
 
-                AABB aabb = xInfo.Geometry.aabb;
+                AABB aabb = xInfo.Geometry.AABB;
 
                 xInfo.Min.Value = aabb.min.X - _floatTolerance;
                 xInfo.Max.Value = aabb.max.X + _floatTolerance;

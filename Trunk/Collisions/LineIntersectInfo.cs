@@ -6,9 +6,6 @@ using Microsoft.Xna.Framework;
 using FarseerGames.FarseerPhysics.Mathematics;
 #endif
 
-//TODO: This is only used by CollisionHelper, remove it or use it.
-//Could possibly be a struct
-
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     /// <summary>

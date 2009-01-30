@@ -154,7 +154,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
             for (int i = 0; i < _geomList.Count; i++)
             {
                 _totalArea = _geomList[i].localVertices.GetArea();
-                if (!_fluidContainer.Intersect(_geomList[i].aabb)) continue;
+                if (!_fluidContainer.Intersect(_geomList[i].AABB)) continue;
                 FindVerticesInFluid(_geomList[i]);
                 if (_vertices.Count < 3) continue;
 

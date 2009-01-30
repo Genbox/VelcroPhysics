@@ -54,9 +54,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //Prepare the geometry.
             Matrix old = geometry.Matrix;
 
-            //TODO: Assign geometry.Matrix to Matrix.Identity directly
-            Matrix identity = Matrix.Identity;
-            geometry.Matrix = identity;
+            //Note: Changed in 2.1
+            //Matrix identity = Matrix.Identity;
+            //geometry.Matrix = identity;
+            //to:
+
+            geometry.Matrix = Matrix.Identity;
 
             //Copy the AABB to the grid field
             _aabb = new AABB(geometry.AABB);
@@ -67,7 +70,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             int xSize = (int) Math.Ceiling((double) (_aabb.Max.X - _aabb.Min.X)*_gridCellSizeInv) + 1;
             int ySize = (int) Math.Ceiling((double) (_aabb.Max.Y - _aabb.Min.Y)*_gridCellSizeInv) + 1;
 
-            //TODO: Possible optimization (normal)! If the shape is symmetric in X and Y axis, don't calculate the points, replicate them.
             _nodes = new float[xSize,ySize];
             _points = new Vector2[xSize*ySize];
             int i = 0;

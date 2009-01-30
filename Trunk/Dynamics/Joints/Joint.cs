@@ -48,7 +48,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public virtual void Update()
         {
-            //TODO: Ehhh, this makes no sense. Please test breakability!
             if (!Enabled || Math.Abs(JointError) <= Breakpoint)
                 return;
 

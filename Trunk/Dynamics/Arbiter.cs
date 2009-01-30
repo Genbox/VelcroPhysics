@@ -112,13 +112,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             switch (physicsSimulator.frictionType)
             {
                 case FrictionType.Average:
-                    _frictionCoefficientCombined = (GeometryA.frictionCoefficient + GeometryB.frictionCoefficient)/2f;
+                    _frictionCoefficientCombined = (GeometryA.FrictionCoefficient + GeometryB.FrictionCoefficient)/2f;
                     break;
                 case FrictionType.Minimum:
-                    _frictionCoefficientCombined = Math.Min(GeometryA.frictionCoefficient, GeometryB.frictionCoefficient);
+                    _frictionCoefficientCombined = Math.Min(GeometryA.FrictionCoefficient, GeometryB.FrictionCoefficient);
                     break;
                 default:
-                    _frictionCoefficientCombined = (GeometryA.frictionCoefficient + GeometryB.frictionCoefficient)/2f;
+                    _frictionCoefficientCombined = (GeometryA.FrictionCoefficient + GeometryB.FrictionCoefficient)/2f;
                     break;
             }
 
@@ -127,7 +127,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         internal void PreStepImpulse(float inverseDt)
         {
-            if (!GeometryA.collisionResponseEnabled || !GeometryB.collisionResponseEnabled)
+            if (!GeometryA.CollisionResponseEnabled || !GeometryB.CollisionResponseEnabled)
                 return;
 
             for (int i = 0; i < _contactList.Count; i++)
@@ -169,7 +169,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 //Compute the _restitution, we average the _restitution of the two bodies
                 //_restitution = (2.0f + _geometryA.RestitutionCoefficient + _geometryB.RestitutionCoefficient) * 0.5f;
-                _restitution = (GeometryA.restitutionCoefficient + GeometryB.restitutionCoefficient)*.5f;
+                _restitution = (GeometryA.RestitutionCoefficient + GeometryB.RestitutionCoefficient)*.5f;
 
                 //calc bounce velocity
                 GeometryA.body.GetVelocityAtWorldOffset(ref _r1, out _vec1);
@@ -197,7 +197,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         internal void ApplyImpulse()
         {
-            if (!GeometryA.collisionResponseEnabled || !GeometryB.collisionResponseEnabled)
+            if (!GeometryA.CollisionResponseEnabled || !GeometryB.CollisionResponseEnabled)
                 return;
 
             for (int i = 0; i < _contactList.Count; i++)

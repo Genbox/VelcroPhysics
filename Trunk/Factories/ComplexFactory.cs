@@ -204,7 +204,7 @@ namespace FarseerGames.FarseerPhysics.Factories
             for (int i = 0; i < path.Bodies.Count; i++)
             {
                 geom = GeomFactory.Instance.CreateRectangleGeom(path.Bodies[i], width, height);
-                geom.collisionGroup = collisionGroup;
+                geom.CollisionGroup = collisionGroup;
                 path.Add(geom); // add a geom to the chain
             }
             path.LinkBodies(type, Min, Max, SpringConstant, DampingConstant); // link bodies together
@@ -252,7 +252,7 @@ namespace FarseerGames.FarseerPhysics.Factories
             for (int i = 0; i < path.Bodies.Count; i++)
             {
                 geom = GeomFactory.Instance.CreateRectangleGeom(path.Bodies[i], width, height);
-                geom.collisionGroup = collisionGroup;
+                geom.CollisionGroup = collisionGroup;
                 path.Add(geom); // add a geom to the chain
             }
             path.LinkBodies(type, Min, Max, SpringConstant, DampingConstant); // link bodies together
@@ -296,7 +296,7 @@ namespace FarseerGames.FarseerPhysics.Factories
             for (int i = 0; i < path.Bodies.Count; i++)
             {
                 geom = GeomFactory.Instance.CreateRectangleGeom(path.Bodies[i], width, height);
-                geom.collisionGroup = collisionGroup;
+                geom.CollisionGroup = collisionGroup;
                 path.Add(geom); // add a geom to the chain
             }
             path.LinkBodies(type, Min, Max, SpringConstant, DampingConstant); // link bodies together
