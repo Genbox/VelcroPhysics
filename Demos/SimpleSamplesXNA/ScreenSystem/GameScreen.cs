@@ -36,7 +36,7 @@ namespace FarseerGames.GettingStarted.ScreenSystem
         private TimeSpan _transitionOffTime = TimeSpan.Zero;
         private TimeSpan _transitionOnTime = TimeSpan.Zero;
         private float _transitionPosition = 1;
-        protected bool FirstRun = true;
+        protected bool firstRun = true;
 
         protected GameScreen()
         {
