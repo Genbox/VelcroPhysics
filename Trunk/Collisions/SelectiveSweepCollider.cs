@@ -244,27 +244,52 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         wrapper1.SetX();
                     }
 
-                    Geom geom1 = wrapper1.Geom;
-                    for (LinkedListNode<Wrapper> node = _currentBodies.First;
-                         node != null;
-                         node = node.Next)
+                    Geom geometryA = wrapper1.Geom;
+
+                    for (LinkedListNode<Wrapper> node = _currentBodies.First; node != null; node = node.Next)
                     {
                         Wrapper wrapper2 = node.Value;
-                        Geom geom2 = wrapper2.Geom;
-                        if (wrapper1.Min <= wrapper2.Max && //tests the other axis
-                            wrapper2.Min <= wrapper1.Max)
+                        Geom geometryB = wrapper2.Geom;
+
+                        if (wrapper1.Min <= wrapper2.Max && wrapper2.Min <= wrapper1.Max)
                         {
+                            if (!geometryA.body.Enabled || !geometryB.body.Enabled)
+                                continue;
+
+                            if ((geometryA.CollisionGroup == geometryB.CollisionGroup) &&
+                                geometryA.CollisionGroup != 0 && geometryB.CollisionGroup != 0)
+                                continue;
+
+                            if (!geometryA.CollisionEnabled || !geometryB.CollisionEnabled)
+                                continue;
+
+                            if (geometryA.body.isStatic && geometryB.body.isStatic)
+                                continue;
+
+                            if (geometryA.body == geometryB.body)
+                                continue;
+
+                            if (((geometryA.CollisionCategories & geometryB.CollidesWith) == CollisionCategory.None) &
+                                ((geometryB.CollisionCategories & geometryA.CollidesWith) == CollisionCategory.None))
+                                continue;
+
+                            bool intersection = true;
+
                             //Call the OnBroadPhaseCollision event first. If the user aborts the collision
                             //it will not create an arbiter
                             if (OnBroadPhaseCollision != null)
-                            {
-                                if (OnBroadPhaseCollision(geom1, geom2))
-                                    OnCollision(geom1, geom2);
-                            }
+                                intersection = OnBroadPhaseCollision(geometryA, geometryB);
+
+                            if (!intersection)
+                                continue;
+                            
+                            Arbiter arbiter = _physicsSimulator.arbiterPool.Fetch();
+                            arbiter.ConstructArbiter(geometryA, geometryB, _physicsSimulator);
+
+                            if (!_physicsSimulator.arbiterList.Contains(arbiter))
+                                _physicsSimulator.arbiterList.Add(arbiter);
                             else
-                            {
-                                OnCollision(geom1, geom2);
-                            }
+                                _physicsSimulator.arbiterPool.Insert(arbiter);
                         }
                     }
                     if (wrapper1.ShouldAddNode)
@@ -280,41 +305,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     }
                 }
             }
-        }
-
-        private void OnCollision(Geom geom1, Geom geom2)
-        {
-            if (!geom1.body.Enabled || !geom2.body.Enabled)
-                return;
-
-            if ((geom1.CollisionGroup == geom2.CollisionGroup) &&
-                geom1.CollisionGroup != 0 && geom2.CollisionGroup != 0)
-                return;
-
-            if (!geom1.CollisionEnabled || !geom2.CollisionEnabled)
-                return;
-
-            if (geom1.body.isStatic && geom2.body.isStatic)
-                return;
-
-            if (geom1.body == geom2.body)
-                return;
-
-            if (((geom1.CollisionCategories & geom2.CollidesWith) ==
-                 CollisionCategory.None) & ((geom2.CollisionCategories &
-                                             geom1.CollidesWith) == CollisionCategory.None))
-                return;
-
-            Arbiter arbiter = _physicsSimulator.arbiterPool.Fetch();
-            arbiter.ConstructArbiter(geom1, geom2, _physicsSimulator);
-
-            //TODO: Since we insert all arbiters that is already in the arbiterList into the pool
-            //should we not restrict the size of the pool to a fixed number? A large simulation
-            //that runs for some time might accumulate A LOT of arbiters in the pool.
-            if (!_physicsSimulator.arbiterList.Contains(arbiter))
-                _physicsSimulator.arbiterList.Add(arbiter);
-            else
-                _physicsSimulator.arbiterPool.Insert(arbiter);
         }
 
         #region Nested type: Stub

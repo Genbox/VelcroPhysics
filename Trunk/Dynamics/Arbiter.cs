@@ -13,6 +13,10 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
+    //TODO: Since we insert all arbiters that is already in the arbiterList into the pool
+    //should we not restrict the size of the pool to a fixed number? A large simulation
+    //that runs for some time might accumulate A LOT of arbiters in the pool.
+
     /// <summary>
     /// Used for collision detection.
     /// Constructed when 2 geoms collide. Applies impulses between the 2 geoms.

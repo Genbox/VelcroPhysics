@@ -50,10 +50,10 @@ namespace FarseerGames.GettingStarted.Demos.Demo1
 
         public override void HandleInput(InputState input)
         {
-            if (FirstRun)
+            if (firstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
-                FirstRun = false;
+                firstRun = false;
             }
 
             if (input.PauseGame)
