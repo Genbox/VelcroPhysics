@@ -37,7 +37,6 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
             //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
             PhysicsSimulator.MaxContactsToDetect = 2;
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
-
             base.Initialize();
         }
 
