@@ -18,16 +18,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private float _gridCellSize;
         private float _gridCellSizeInv;
         private float[,] _nodes;
-        private Vector2[] _points;
-
-        /// <summary>
-        /// Gets the points.
-        /// </summary>
-        /// <Value>The points.</Value>
-        public Vector2[] Points
-        {
-            get { return _points; }
-        }
 
         /// <summary>
         /// Clones this instance.
@@ -39,8 +29,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             grid._gridCellSize = _gridCellSize;
             grid._gridCellSizeInv = _gridCellSizeInv;
             grid._aabb = _aabb;
-            grid._nodes = (float[,]) _nodes.Clone();
-            grid._points = (Vector2[]) _points.Clone();
+            grid._nodes = (float[,])_nodes.Clone();
             return grid;
         }
 
@@ -49,8 +38,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         /// <param name="geometry">The geometry.</param>
         /// <param name="gridCellSize">Size of the grid cell.</param>
+        /// <exception cref="ArgumentNullException"><c>geometry</c> is null.</exception>
         public void ComputeGrid(Geom geometry, float gridCellSize)
         {
+            if (geometry == null)
+                throw new ArgumentNullException("geometry", "Geometry can't be null");
+
+            if (gridCellSize <= 0)
+                throw new ArgumentNullException("gridCellSize", "The grid cell size must be larger than 0");
+
             //Prepare the geometry.
             Matrix old = geometry.Matrix;
 
@@ -64,15 +60,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //Copy the AABB to the grid field
             _aabb = new AABB(geometry.AABB);
             _gridCellSize = gridCellSize;
-            _gridCellSizeInv = 1/gridCellSize;
+            _gridCellSizeInv = 1 / gridCellSize;
 
-            //NOTE: Using double cast instead of converting.
-            int xSize = (int) Math.Ceiling((double) (_aabb.Max.X - _aabb.Min.X)*_gridCellSizeInv) + 1;
-            int ySize = (int) Math.Ceiling((double) (_aabb.Max.Y - _aabb.Min.Y)*_gridCellSizeInv) + 1;
+            //Note: Physics2d have +2
+            int xSize = (int)Math.Ceiling((double)(_aabb.Max.X - _aabb.Min.X) * _gridCellSizeInv) + 1;
+            int ySize = (int)Math.Ceiling((double)(_aabb.Max.Y - _aabb.Min.Y) * _gridCellSizeInv) + 1;
 
-            _nodes = new float[xSize,ySize];
-            _points = new Vector2[xSize*ySize];
-            int i = 0;
+            _nodes = new float[xSize, ySize];
             Vector2 vector = _aabb.Min;
             for (int x = 0; x < xSize; ++x, vector.X += gridCellSize)
             {
@@ -80,8 +74,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 for (int y = 0; y < ySize; ++y, vector.Y += gridCellSize)
                 {
                     _nodes[x, y] = geometry.GetNearestDistance(vector); // shape.GetDistance(vector);
-                    _points[i] = vector;
-                    i += 1;
                 }
             }
             //restore the geometry
@@ -100,11 +92,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //VERY intermittent errors exist?
             if (_aabb.Contains(ref vector))
             {
-                int x = (int) Math.Floor((vector.X - _aabb.Min.X)*_gridCellSizeInv);
-                int y = (int) Math.Floor((vector.Y - _aabb.Min.Y)*_gridCellSizeInv);
-
-                float xPercent = (vector.X - (_gridCellSize*x + _aabb.Min.X))*_gridCellSizeInv;
-                float yPercent = (vector.Y - (_gridCellSize*y + _aabb.Min.Y))*_gridCellSizeInv;
+                int x = (int)Math.Floor((vector.X - _aabb.Min.X) * _gridCellSizeInv);
+                int y = (int)Math.Floor((vector.Y - _aabb.Min.Y) * _gridCellSizeInv);
 
                 float bottomLeft = _nodes[x, y];
                 float bottomRight = _nodes[x + 1, y];
@@ -116,6 +105,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     topLeft <= 0 ||
                     topRight <= 0)
                 {
+                    float xPercent = (vector.X - (_gridCellSize * x + _aabb.Min.X)) * _gridCellSizeInv;
+                    float yPercent = (vector.Y - (_gridCellSize * y + _aabb.Min.Y)) * _gridCellSizeInv;
+
                     float top = MathHelper.Lerp(topLeft, topRight, xPercent);
                     float bottom = MathHelper.Lerp(bottomLeft, bottomRight, xPercent);
                     float distance = MathHelper.Lerp(bottom, top, yPercent);
@@ -128,10 +120,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         Vector2 normal = Vector2.Zero;
                         normal.X = right - left;
                         normal.Y = top - bottom;
-                        //make sure the normal is not zero length.
 
                         #region Uncommented by Daniel Pramel 08/17/08
 
+                        //make sure the normal is not zero length.
                         if (normal.X != 0 || normal.Y != 0)
                         {
                             Vector2.Normalize(ref normal, out normal);
