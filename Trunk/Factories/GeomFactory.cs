@@ -162,12 +162,12 @@ namespace FarseerGames.FarseerPhysics.Factories
         }
 
         /// <summary>
-        /// 
+        /// Creates the circle geom.
         /// </summary>
-        /// <param name="body"></param>
-        /// <param name="radius"></param>
-        /// <param name="numberOfEdges"></param>
-        /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
+        /// <param name="body">The body.</param>
+        /// <param name="radius">The radius.</param>
+        /// <param name="numberOfEdges">The number of edges.</param>
+        /// <param name="data">The data.</param>
         /// <returns></returns>
         public Geom CreateCircleGeom(Body body, float radius, int numberOfEdges, ColliderData data)
         {
@@ -175,15 +175,15 @@ namespace FarseerGames.FarseerPhysics.Factories
         }
 
         /// <summary>
-        /// 
+        /// Creates the circle geom.
         /// </summary>
-        /// <param name="physicsSimulator"></param>
-        /// <param name="body"></param>
-        /// <param name="radius"></param>
-        /// <param name="numberOfEdges"></param>
-        /// <param name="offset"></param>
-        /// <param name="rotationOffset"></param>
-        /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
+        /// <param name="physicsSimulator">The physics simulator.</param>
+        /// <param name="body">The body.</param>
+        /// <param name="radius">The radius.</param>
+        /// <param name="numberOfEdges">The number of edges.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="rotationOffset">The rotation offset.</param>
+        /// <param name="data">The data.</param>
         /// <returns></returns>
         public Geom CreateCircleGeom(PhysicsSimulator physicsSimulator, Body body, float radius, int numberOfEdges,
                                      Vector2 offset, float rotationOffset, ColliderData data)
@@ -194,14 +194,14 @@ namespace FarseerGames.FarseerPhysics.Factories
         }
 
         /// <summary>
-        /// 
+        /// Creates the circle geom.
         /// </summary>
-        /// <param name="body"></param>
-        /// <param name="radius"></param>
-        /// <param name="numberOfEdges"></param>
-        /// <param name="offset"></param>
-        /// <param name="rotationOffset"></param>
-        /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
+        /// <param name="body">The body.</param>
+        /// <param name="radius">The radius.</param>
+        /// <param name="numberOfEdges">The number of edges.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="rotationOffset">The rotation offset.</param>
+        /// <param name="data">The data.</param>
         /// <returns></returns>
         public Geom CreateCircleGeom(Body body, float radius, int numberOfEdges, Vector2 offset, float rotationOffset,
                                      ColliderData data)
@@ -218,12 +218,12 @@ namespace FarseerGames.FarseerPhysics.Factories
 
         //polygons
         /// <summary>
-        /// 
+        /// Creates the polygon geom.
         /// </summary>
-        /// <param name="physicsSimulator"></param>
-        /// <param name="body"></param>
-        /// <param name="vertices"></param>
-        /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
+        /// <param name="physicsSimulator">The physics simulator.</param>
+        /// <param name="body">The body.</param>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="data">The data.</param>
         /// <returns></returns>
         public Geom CreatePolygonGeom(PhysicsSimulator physicsSimulator, Body body, Vertices vertices,
                                       ColliderData data)
@@ -232,26 +232,31 @@ namespace FarseerGames.FarseerPhysics.Factories
         }
 
         /// <summary>
-        /// 
+        /// Creates the polygon geom.
         /// </summary>
-        /// <param name="body"></param>
-        /// <param name="vertices"></param>
-        /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
+        /// <param name="body">The body.</param>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="data">The data.</param>
         /// <returns></returns>
         public Geom CreatePolygonGeom(Body body, Vertices vertices, ColliderData data)
         {
             return CreatePolygonGeom(body, vertices, Vector2.Zero, 0, data);
         }
 
+        public Geom CreatePolygonGeom(PhysicsSimulator physicsSimulator, Body body, Vertices verts)
+        {
+            return CreatePolygonGeom(physicsSimulator, body, verts, new ColliderData());
+        }
+
         /// <summary>
-        /// 
+        /// Creates the polygon geom.
         /// </summary>
-        /// <param name="physicsSimulator"></param>
-        /// <param name="body"></param>
-        /// <param name="vertices"></param>
-        /// <param name="offset"></param>
-        /// <param name="rotationOffset"></param>
-        /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
+        /// <param name="physicsSimulator">The physics simulator.</param>
+        /// <param name="body">The body.</param>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="rotationOffset">The rotation offset.</param>
+        /// <param name="data">The data.</param>
         /// <returns></returns>
         public Geom CreatePolygonGeom(PhysicsSimulator physicsSimulator, Body body, Vertices vertices, Vector2 offset,
                                       float rotationOffset, ColliderData data)
@@ -262,13 +267,13 @@ namespace FarseerGames.FarseerPhysics.Factories
         }
 
         /// <summary>
-        /// 
+        /// Creates the polygon geom.
         /// </summary>
-        /// <param name="body"></param>
-        /// <param name="vertices"></param>
-        /// <param name="offset"></param>
-        /// <param name="rotationOffset"></param>
-        /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
+        /// <param name="body">The body.</param>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="rotationOffset">The rotation offset.</param>
+        /// <param name="data">The data.</param>
         /// <returns></returns>
         public Geom CreatePolygonGeom(Body body, Vertices vertices, Vector2 offset, float rotationOffset,
                                       ColliderData data)
@@ -426,7 +431,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="xRadius">The x radius.</param>
         /// <param name="yRadius">The y radius.</param>
         /// <param name="numberOfEdges">The number of edges.</param>
-        /// <param name="collisionGridCellSize">Size of the collision grid cell.</param>
+        /// <param name="data">The data.</param>
         /// <returns></returns>
         public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float xRadius, float yRadius,
                                       int numberOfEdges,
@@ -443,7 +448,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="xRadius">The x radius.</param>
         /// <param name="yRadius">The y radius.</param>
         /// <param name="numberOfEdges">The number of edges.</param>
-        /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
+        /// <param name="data">The data.</param>
         /// <returns></returns>
         public Geom CreateEllipseGeom(Body body, float xRadius, float yRadius, int numberOfEdges,
                                       ColliderData data)
@@ -461,7 +466,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="numberOfEdges">The number of edges.</param>
         /// <param name="offset">The offset.</param>
         /// <param name="rotationOffset">The rotation offset.</param>
-        /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
+        /// <param name="data">The data.</param>
         /// <returns></returns>
         public Geom CreateEllipseGeom(PhysicsSimulator physicsSimulator, Body body, float xRadius, float yRadius,
                                       int numberOfEdges,
@@ -482,7 +487,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="numberOfEdges">The number of edges.</param>
         /// <param name="offset">The offset.</param>
         /// <param name="rotationOffset">The rotation offset.</param>
-        /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
+        /// <param name="data">The data.</param>
         /// <returns></returns>
         public Geom CreateEllipseGeom(Body body, float xRadius, float yRadius, int numberOfEdges, Vector2 offset,
                                       float rotationOffset,
