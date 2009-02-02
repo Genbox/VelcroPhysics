@@ -58,13 +58,6 @@ namespace FarseerGames.AdvancedSamples
         private int _coordinateAxisLineLength = 20;
         private int _coordinateAxisLineThickness = 1;
 
-        //Grid
-        private bool _enableGridView;
-        private bool _enablePinJointView = true;
-        private CircleBrush _gridCircleBrush;
-        private Color _gridColor = new Color(0, 0, 0, 150);
-        private int _gridRadius = 1;
-
         //Vertice
         private bool _enableVerticeView = true;
         private CircleBrush _verticeCircleBrush;
@@ -86,6 +79,7 @@ namespace FarseerGames.AdvancedSamples
         private RectangleBrush _revoluteJointRectangleBrush;
 
         //Pin joint
+        private bool _enablePinJointView = true;
         private Color _pinJointColor = new Color(0, 0, 0, 200);
         private LineBrush _pinJointLineBrush;
         private int _pinJointLineThickness = 1;
@@ -174,25 +168,6 @@ namespace FarseerGames.AdvancedSamples
         {
             get { return _enableEdgeView; }
             set { _enableEdgeView = value; }
-        }
-
-        //grid
-        public int GridRadius
-        {
-            get { return _gridRadius; }
-            set { _gridRadius = value; }
-        }
-
-        public Color GridColor
-        {
-            get { return _gridColor; }
-            set { _gridColor = value; }
-        }
-
-        public bool EnableGridView
-        {
-            get { return _enableGridView; }
-            set { _enableGridView = value; }
         }
 
         //coordinate axis
@@ -348,7 +323,6 @@ namespace FarseerGames.AdvancedSamples
         {
             LoadVerticeContent(graphicsDevice);
             LoadEdgeContent(graphicsDevice);
-            LoadGridContent(graphicsDevice);
             LoadAABBContent(graphicsDevice);
             LoadCoordinateAxisContent(graphicsDevice);
             LoadContactContent(graphicsDevice);
@@ -363,7 +337,6 @@ namespace FarseerGames.AdvancedSamples
         {
             //UnloadVerticeContent();
             //UnloadEdgeContent();
-            //UnloadGridContent();
             //UnloadAABBContent();
             //UnloadCoordinateAxisContent();
             //UnloadContactContent();
@@ -398,12 +371,6 @@ namespace FarseerGames.AdvancedSamples
         {
             _edgeLineBrush = new LineBrush(_edgeLineThickness, _edgeColor);
             _edgeLineBrush.Load(graphicsDevice);
-        }
-
-        private void LoadGridContent(GraphicsDevice graphicsDevice)
-        {
-            _gridCircleBrush = new CircleBrush(_gridRadius, _gridColor, _gridColor);
-            _gridCircleBrush.Load(graphicsDevice);
         }
 
         private void LoadAABBContent(GraphicsDevice graphicsDevice)
@@ -460,10 +427,6 @@ namespace FarseerGames.AdvancedSamples
             if (_enableVerticeView || _enableEdgeView)
             {
                 DrawVerticesAndEdges(spriteBatch);
-            }
-            if (_enableGridView)
-            {
-                DrawGrid(spriteBatch);
             }
             if (_enableAABBView)
             {
@@ -609,25 +572,6 @@ namespace FarseerGames.AdvancedSamples
                 _aabbLineBrush.Draw(spriteBatch, topRight, max);
                 _aabbLineBrush.Draw(spriteBatch, max, bottomLeft);
                 _aabbLineBrush.Draw(spriteBatch, bottomLeft, min);
-            }
-        }
-
-        private void DrawGrid(SpriteBatch spriteBatch)
-        {
-            //draw grid
-            for (int i = 0; i < _physicsSimulator.GeomList.Count; i++)
-            {
-                if (_physicsSimulator.GeomList[i].Grid == null)
-                {
-                    continue;
-                }
-                int count = _physicsSimulator.GeomList[i].Grid.Points.Length;
-                for (int j = 0; j < count; j++)
-                {
-                    Vector2 point =
-                        _physicsSimulator.GeomList[i].GetWorldPosition(_physicsSimulator.GeomList[i].Grid.Points[j]);
-                    _gridCircleBrush.Draw(spriteBatch, point);
-                }
             }
         }
 
