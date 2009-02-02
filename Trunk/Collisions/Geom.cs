@@ -2,6 +2,7 @@ using System;
 using FarseerGames.FarseerPhysics.Dynamics;
 
 #if (XNA)
+using FarseerGames.FarseerPhysics.Interfaces;
 using Microsoft.Xna.Framework;
 #else
 using FarseerGames.FarseerPhysics.Mathematics;
@@ -38,12 +39,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private float _rotation;
         private float _rotationOffset;
         private Vector2 _vector;
-        
+
         internal Body body;
         internal bool isRemoved = true; //true=>geometry removed from simulation
         internal Vertices localVertices;
-        internal Grid grid;
         internal Vertices worldVertices;
+        internal INarrowPhaseCollider narrowPhaseCollider;
 
         /// <summary>
         /// Gets or sets the collision categories that this geom collides with.
@@ -91,11 +92,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public float RestitutionCoefficient;
         /// <summary>
-        /// Gets or sets the size of the collision grid cells.
-        /// Be sure to run <see cref="ComputeCollisionGrid"/>() for any changes to take effect.
+        /// Gets or sets the narrow phase collider parameters.
+        /// Be sure to run <see cref="PrepareNarrowPhaseCollider"/>() for any changes to take effect.
         /// </summary>
-        /// <Value>The size of the collision grid cell.</Value>
-        public float CollisionGridCellSize;
+        public ColliderData ColliderData;
         /// <summary>
         /// Gets or sets the collision group.
         /// If 2 geoms are in the same collision group, they will not collide.
@@ -116,19 +116,25 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public Geom()
         {
             Id = GetNextId();
-            grid = new Grid();
+            narrowPhaseCollider = new Grid();
         }
 
-        public Geom(Body body, Vertices vertices, float collisionGridCellSize)
+        public Geom(Body body, Vertices vertices, ColliderData data)
         {
-            Construct(body, vertices, Vector2.Zero, 0, collisionGridCellSize);
+            
+            Construct(body, vertices, Vector2.Zero, 0, data);
         }
 
-        public Geom(Body body, Vertices vertices, Vector2 offset, float rotationOffset, float collisionGridCellSize)
+        public Geom(Body body, Vertices vertices, Vector2 offset, float rotationOffset, ColliderData data)
         {
-            Construct(body, vertices, offset, rotationOffset, collisionGridCellSize);
+            Construct(body, vertices, offset, rotationOffset, data);
         }
 
+        /// <summary>
+        /// Creates a clone of an already existing geometry
+        /// </summary>
+        /// <param name="body">The body</param>
+        /// <param name="geometry">The geometry to clone</param>
         public Geom(Body body, Geom geometry)
         {
             ConstructClone(body, geometry, geometry._offset, geometry._rotationOffset);
@@ -228,13 +234,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Gets the grid from this geom.
-        /// Grids are used to test for intersections.
+        /// Gets the narrow phase collider currently in use.
         /// </summary>
-        /// <Value>The grid.</Value>
-        public Grid Grid
+        /// <Value>The narrow phase collider.</Value>
+        public INarrowPhaseCollider NarrowPhaseCollider
         {
-            get { return grid; }
+            get { return narrowPhaseCollider; }
         }
 
         /// <summary>
@@ -288,29 +293,29 @@ namespace FarseerGames.FarseerPhysics.Collisions
         #endregion
 
         private void Construct(Body bodyToSet, Vertices vertices, Vector2 offset, float rotationOffset,
-                               float collisionGridCellSize)
+                               ColliderData data)
         {
             Id = GetNextId();
-            CollisionGridCellSize = collisionGridCellSize;
+            ColliderData = data;
             _offset = offset;
             _rotationOffset = rotationOffset;
-            grid = new Grid();
+            narrowPhaseCollider = new Grid();
             SetVertices(vertices);
-            ComputeCollisionGrid();
+            PrepareNarrowPhaseCollider();
             SetBody(bodyToSet);
         }
 
         private void ConstructClone(Body bodyToSet, Geom geometry, Vector2 offset, float rotationOffset)
         {
             Id = GetNextId();
-            CollisionGridCellSize = geometry.CollisionGridCellSize;
-            grid = geometry.grid.Clone();
+            ColliderData = geometry.ColliderData;
+            narrowPhaseCollider = geometry.NarrowPhaseCollider.Clone();
             RestitutionCoefficient = geometry.RestitutionCoefficient;
             FrictionCoefficient = geometry.FrictionCoefficient;
             CollisionGroup = geometry.CollisionGroup;
             CollisionEnabled = geometry.CollisionEnabled;
             CollisionResponseEnabled = geometry.CollisionResponseEnabled;
-            CollisionGridCellSize = geometry.CollisionGridCellSize;
+            ColliderData = geometry.ColliderData;
             _offset = offset;
             _rotationOffset = rotationOffset;
             CollisionCategories = geometry.CollisionCategories;
@@ -340,14 +345,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             body = bodyToSet;
 
-            //NOTE: Changed this from:
-            //_bodyUpdated = body_OnChange;
-            //bodyToSet.Updated += _bodyUpdated;
-
-            //_bodyDisposed = body_OnDisposed;
-            //bodyToSet.Disposing += _bodyDisposed;
-
-            //TO:
             bodyToSet.Updated += BodyOnChange;
             bodyToSet.Disposed += BodyOnDisposed;
 
@@ -355,17 +352,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Computes the collision grid.
+        /// Prepares the narrow phase collider
         /// </summary>
-        public void ComputeCollisionGrid()
+        public void PrepareNarrowPhaseCollider()
         {
             if (localVertices.Count > 2)
             {
-                grid.ComputeGrid(this, CollisionGridCellSize);
+                narrowPhaseCollider.Prepare(this, ColliderData);
             }
             else
             {
-                grid = null;
+                narrowPhaseCollider = null;
             }
         }
 
@@ -470,7 +467,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             //NOTE: Could use the boolean returned by the Intersect methods instead?
             // feature.Distance < 0, should this be <= 0?
-            grid.Intersect(ref point, out feature);
+            narrowPhaseCollider.Intersect(ref point, out feature);
             if (feature.Distance < 0)
             {
                 return true;
@@ -513,14 +510,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Wrapper for grid.Intersect()
+        /// Wrapper for <see cref="narrowPhaseCollider"/>.Intersect()
         /// </summary>
         /// <param name="localVertex">The vertex.</param>
         /// <param name="feature">A feature.</param>
         /// <returns></returns>
         public bool Intersect(ref Vector2 localVertex, out Feature feature)
         {
-            return grid.Intersect(ref localVertex, out feature);
+            return narrowPhaseCollider.Intersect(ref localVertex, out feature);
         }
 
         /// <summary>

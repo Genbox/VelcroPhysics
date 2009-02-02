@@ -24,6 +24,7 @@ namespace FarseerGames.FarseerPhysics
         private const int _arbiterPoolSize = 10; //initial arbiter size.  will grow as needed
         private Body _body;
         private IBroadPhaseCollider _broadPhaseCollider;
+        private INarrowPhaseCollider _narrowPhaseCollider;
         private bool _enabled = true;
         private Vector2 _gravity = Vector2.Zero;
         private Vector2 _gravityForce;
@@ -43,14 +44,12 @@ namespace FarseerGames.FarseerPhysics
         internal List<Body> bodyAddList;
         internal BodyList bodyList;
         internal List<Body> bodyRemoveList;
-        internal float broadPhaseCollisionTime = -1;
         internal float cleanUpTime = -1;
 
         internal List<Controller> controllerAddList;
         internal ControllerList controllerList;
         internal List<Controller> controllerRemoveList;
 
-        public bool EnableDiagnostics;
         internal FrictionType frictionType = FrictionType.Average;
         internal List<Geom> geomAddList;
         internal GeomList geomList;
@@ -60,14 +59,18 @@ namespace FarseerGames.FarseerPhysics
         internal JointList jointList;
         internal List<Joint> jointRemoveList;
 
-        internal int maxContactsToDetect = 10;
-        internal int maxContactsToResolve = 4;
-        internal float narrowPhaseCollisionTime = -1;
         internal List<Spring> springAddList;
         internal SpringList springList;
         internal List<Spring> springRemoveList;
+
+        internal int maxContactsToDetect = 10;
+        internal int maxContactsToResolve = 4;
+        internal float broadPhaseCollisionTime = -1;
+        internal float narrowPhaseCollisionTime = -1;
         internal float updatePositionsTime = -1;
         internal float updateTime = -1;
+
+        public bool EnableDiagnostics;
 
         #region Added by Daniel Pramel 08/17/08
 
@@ -109,6 +112,19 @@ namespace FarseerGames.FarseerPhysics
                     throw new Exception("The GeomList must be empty when setting the broad phase collider type");
 
                 _broadPhaseCollider = value;
+            }
+        }
+
+        /// <exception cref="Exception">The GeomList must be empty when setting the narrow phase collider type</exception>
+        public INarrowPhaseCollider NarrowPhaseCollider
+        {
+            get { return _narrowPhaseCollider; }
+            set
+            {
+                if (geomList.Count > 0)
+                    throw new Exception("The GeomList must be empty when setting the narrow phase collider type");
+
+                _narrowPhaseCollider = value;
             }
         }
 
@@ -288,7 +304,7 @@ namespace FarseerGames.FarseerPhysics
 
             _inactivityController = new InactivityController(this);
 
-            _scaling = new Scaling(0.001f, 0.01f);
+            Scaling = new Scaling(0.001f, 0.01f);
 
             #endregion
         }
@@ -388,21 +404,21 @@ namespace FarseerGames.FarseerPhysics
 
             #region Added by Daniel Pramel 08/24/08
 
-            if (_scaling.Enabled)
+            if (Scaling.Enabled)
             {
-                dt = _scaling.GetUpdateInterval(dt);
+                dt = Scaling.GetUpdateInterval(dt);
                 if (dt == 0)
                 {
                     return;
                 }
 
-                if (_scaling.UpdateInterval < dtReal)
+                if (Scaling.UpdateInterval < dtReal)
                 {
-                    _scaling.IncreaseUpdateInterval();
+                    Scaling.IncreaseUpdateInterval();
                 }
                 else
                 {
-                    _scaling.DecreaseUpdateInterval();
+                    Scaling.DecreaseUpdateInterval();
                 }
             }
 
@@ -778,13 +794,7 @@ namespace FarseerGames.FarseerPhysics
 
         #region Added by Daniel Pramel 08/24/08
 
-        private Scaling _scaling;
-
-        public Scaling Scaling
-        {
-            get { return _scaling; }
-            set { _scaling = value; }
-        }
+        public Scaling Scaling;
 
         #endregion
     }
