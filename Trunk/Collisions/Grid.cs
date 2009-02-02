@@ -1,6 +1,7 @@
 using System;
 
 #if (XNA)
+using FarseerGames.FarseerPhysics.Interfaces;
 using Microsoft.Xna.Framework;
 #else
 using FarseerGames.FarseerPhysics.Mathematics;
@@ -12,7 +13,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// Grid is used to test for intersection.
     /// Computation of the grid may take a long time, depending on the grid cell size provided.
     /// </summary>
-    public sealed class Grid
+    public sealed class Grid : INarrowPhaseCollider
     {
         private AABB _aabb;
         private float _gridCellSize;
@@ -23,7 +24,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// Clones this instance.
         /// </summary>
         /// <returns></returns>
-        public Grid Clone()
+        public INarrowPhaseCollider Clone()
         {
             Grid grid = new Grid();
             grid._gridCellSize = _gridCellSize;
@@ -37,15 +38,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// Computes the grid.
         /// </summary>
         /// <param name="geometry">The geometry.</param>
-        /// <param name="gridCellSize">Size of the grid cell.</param>
+        /// <param name="data"><see cref="ColliderData"/> that contains the size of the grid cell.</param>
         /// <exception cref="ArgumentNullException"><c>geometry</c> is null.</exception>
-        public void ComputeGrid(Geom geometry, float gridCellSize)
+        public void Prepare(Geom geometry, ColliderData data)
         {
+            float gridCellSize = data.GridCellSize;
+
             if (geometry == null)
                 throw new ArgumentNullException("geometry", "Geometry can't be null");
 
             if (gridCellSize <= 0)
-                throw new ArgumentNullException("gridCellSize", "The grid cell size must be larger than 0");
+                throw new ArgumentNullException("data", "The grid cell size must be larger than 0");
 
             //Prepare the geometry.
             Matrix old = geometry.Matrix;

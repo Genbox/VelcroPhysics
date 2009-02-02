@@ -49,18 +49,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             ConstructArbiter(geometry1, geometry2, physicsSimulator);
         }
 
-        public Geom GeomA
-        {
-            get { return GeometryA; }
-            set { GeometryA = value; }
-        }
-
-        public Geom GeomB
-        {
-            get { return GeometryB; }
-            set { GeometryB = value; }
-        }
-
         /// <summary>
         /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
@@ -401,7 +389,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
              */
             //NOTE: Arbiters should not be created in the broad phase if both bodies are disabled
             //is this redundant?
-            if (GeomA.body.Enabled == false && GeomB.body.Enabled == false)
+            if (GeometryA.body.Enabled == false && GeometryB.body.Enabled == false)
             {
                 _mergedContactList.Clear();
                 _contactList.Clear();
@@ -410,7 +398,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
             #endregion
 
-            Collide(GeomA, GeomB, _newContactList);
+            Collide(GeometryA, GeometryB, _newContactList);
             _mergedContactList.Clear();
 
             for (int i = 0; i < _newContactList.Count; i++)
@@ -447,8 +435,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 if (contactList.Count == _physicsSimulator.maxContactsToDetect)
                     break;
 
-                //grid can be null for "one-way" collision (points)
-                if (geometry1.grid == null)
+                //Can be null for "one-way" collision (points)
+                if (geometry1.narrowPhaseCollider == null)
                     break;
 
                 vertexIndex += 1;
@@ -477,8 +465,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 if (contactList.Count == _physicsSimulator.maxContactsToDetect)
                     break;
 
-                //grid can be null for "one-way" collision (points)
-                if (geometry2.grid == null)
+                //Can be null for "one-way" collision (points)
+                if (geometry2.narrowPhaseCollider == null)
                     break;
 
                 vertexIndex += 1;

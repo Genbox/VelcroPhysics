@@ -246,6 +246,8 @@
     <Compile Include="..\..\Trunk\Scaling.cs">
       <Link>Scaling.cs</Link>
     </Compile>
+    <Compile Include="Collisions\ColliderData.cs" />
+    <Compile Include="Interfaces\INarrowPhaseCollider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
