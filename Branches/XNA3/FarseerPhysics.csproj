@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FarseerGames.FarseerPhysics</RootNamespace>
-    <AssemblyName>FarseerProject</AssemblyName>
+    <AssemblyName>FarseerPhysics</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
