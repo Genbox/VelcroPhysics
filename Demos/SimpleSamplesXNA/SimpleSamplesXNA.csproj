@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FarseerGames.GettingStarted</RootNamespace>
-    <AssemblyName>GettingStarted</AssemblyName>
+    <RootNamespace>FarseerGames.SimpleSamples</RootNamespace>
+    <AssemblyName>SimpleSamples</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>

@@ -1,4 +1,4 @@
-namespace FarseerGames.GettingStarted
+namespace FarseerGames.SimpleSamples
 {
     internal static class Program
     {
