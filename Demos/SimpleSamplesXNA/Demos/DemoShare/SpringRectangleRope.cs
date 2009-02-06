@@ -3,11 +3,12 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.GettingStarted.DrawingSystem;
+using FarseerGames.SimpleSamples.DrawingSystem;
+using FarseerGames.SimpleSamples.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.GettingStarted.Demos.DemoShare
+namespace FarseerGames.SimpleSamples.Demos.DemoShare
 {
     public class SpringRectangleRope
     {

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.GettingStarted.ScreenSystem
+namespace FarseerGames.SimpleSamples.ScreenSystem
 {
     /// <summary>
     /// Enum describes the screen transition state.

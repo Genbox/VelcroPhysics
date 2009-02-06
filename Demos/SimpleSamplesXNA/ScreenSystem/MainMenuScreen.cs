@@ -1,15 +1,23 @@
-using FarseerGames.GettingStarted.Demos.Demo1;
-using FarseerGames.GettingStarted.Demos.Demo2;
-using FarseerGames.GettingStarted.Demos.Demo3;
-using FarseerGames.GettingStarted.Demos.Demo4;
-using FarseerGames.GettingStarted.Demos.Demo5;
-using FarseerGames.GettingStarted.Demos.Demo6;
-using FarseerGames.GettingStarted.Demos.Demo7;
-using FarseerGames.GettingStarted.Demos.Demo8;
+using FarseerGames.SimpleSamples.Demos.Demo1;
+using FarseerGames.SimpleSamples.Demos.Demo2;
+using FarseerGames.SimpleSamples.Demos.Demo3;
+using FarseerGames.SimpleSamples.Demos.Demo4;
+using FarseerGames.SimpleSamples.Demos.Demo5;
+using FarseerGames.SimpleSamples.Demos.Demo6;
+using FarseerGames.SimpleSamples.Demos.Demo7;
+using FarseerGames.SimpleSamples.Demos.Demo8;
+using FarseerGames.SimpleSamples.Demos.Demo1;
+using FarseerGames.SimpleSamples.Demos.Demo2;
+using FarseerGames.SimpleSamples.Demos.Demo3;
+using FarseerGames.SimpleSamples.Demos.Demo4;
+using FarseerGames.SimpleSamples.Demos.Demo5;
+using FarseerGames.SimpleSamples.Demos.Demo6;
+using FarseerGames.SimpleSamples.Demos.Demo7;
+using FarseerGames.SimpleSamples.Demos.Demo8;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.GettingStarted.ScreenSystem
+namespace FarseerGames.SimpleSamples.ScreenSystem
 {
     /// <summary>
     /// The main menu screen is the first thing displayed when the game starts up.

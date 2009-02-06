@@ -1,6 +1,6 @@
 using System;
-using FarseerGames.GettingStarted.Components;
-using FarseerGames.GettingStarted.ScreenSystem;
+using FarseerGames.SimpleSamples.Components;
+using FarseerGames.SimpleSamples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

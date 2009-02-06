@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.GettingStarted.ScreenSystem
+namespace FarseerGames.SimpleSamples.ScreenSystem
 {
     public class SpriteFonts
     {

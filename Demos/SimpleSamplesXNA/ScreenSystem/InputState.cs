@@ -12,7 +12,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.GettingStarted.ScreenSystem
+namespace FarseerGames.SimpleSamples.ScreenSystem
 {
     /// <summary>
     /// Helper for reading input from keyboard and gamepad. This class tracks both
