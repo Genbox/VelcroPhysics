@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.GettingStarted.DrawingSystem
+namespace FarseerGames.SimpleSamples.DrawingSystem
 {
     public class CircleBrush
     {
