@@ -6,8 +6,6 @@ using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.SimpleSamples.DrawingSystem;
 using FarseerGames.SimpleSamples.ScreenSystem;
-using FarseerGames.SimpleSamples.DrawingSystem;
-using FarseerGames.SimpleSamples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;

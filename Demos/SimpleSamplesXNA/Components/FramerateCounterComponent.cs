@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using FarseerGames.SimpleSamples.ScreenSystem;
-using FarseerGames.SimpleSamples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
