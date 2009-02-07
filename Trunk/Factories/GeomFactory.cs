@@ -292,7 +292,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         }
 
         /// <summary>
-        /// Creates a geom.
+        /// Creates a clone of a geometry.
         /// </summary>
         /// <param name="physicsSimulator">The physics simulator.</param>
         /// <param name="body">The body.</param>
@@ -306,7 +306,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         }
 
         /// <summary>
-        /// Creates a geom.
+        /// Creates a clone of a geometry.
         /// </summary>
         /// <param name="body">The body.</param>
         /// <param name="geometry">The geometry.</param>
@@ -318,7 +318,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         }
 
         /// <summary>
-        /// Creates a geom.
+        /// Creates a clone of a geometry.
         /// </summary>
         /// <param name="physicsSimulator">The physics simulator.</param>
         /// <param name="body">The body.</param>
@@ -335,7 +335,7 @@ namespace FarseerGames.FarseerPhysics.Factories
         }
 
         /// <summary>
-        /// Creates a geom.
+        /// Creates a clone of a geometry.
         /// </summary>
         /// <param name="body">The body.</param>
         /// <param name="geometry">The geometry.</param>
@@ -346,18 +346,6 @@ namespace FarseerGames.FarseerPhysics.Factories
         {
             Geom geometryClone = new Geom(body, geometry, offset, rotationOffset);
             return geometryClone;
-        }
-
-        //misc
-        /// <summary>
-        /// Calculates the grid cell size from AABB.
-        /// </summary>
-        /// <param name="vertices">The vertices.</param>
-        /// <returns></returns>
-        public float CalculateGridCellSizeFromAABB(Vertices vertices)
-        {
-            AABB aabb = new AABB(vertices);
-            return aabb.GetShortestSide() * GridCellSizeAABBFactor;
         }
 
         //ellipses
@@ -501,6 +489,18 @@ namespace FarseerGames.FarseerPhysics.Factories
 
             Geom geometry = new Geom(body, vertices, offset, rotationOffset, data);
             return geometry;
+        }
+
+        //misc
+        /// <summary>
+        /// Calculates the grid cell size from AABB.
+        /// </summary>
+        /// <param name="vertices">The vertices.</param>
+        /// <returns></returns>
+        public float CalculateGridCellSizeFromAABB(Vertices vertices)
+        {
+            AABB aabb = new AABB(vertices);
+            return aabb.GetShortestSide() * GridCellSizeAABBFactor;
         }
     }
 }
