@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.AdvancedSamples.ScreenSystem;
 using FarseerGames.FarseerPhysics;
@@ -90,10 +90,10 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
 
         public override void HandleInput(InputState input)
         {
-            if (FirstRun)
+            if (firstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
-                FirstRun = false;
+                firstRun = false;
             }
             if (input.PauseGame)
             {

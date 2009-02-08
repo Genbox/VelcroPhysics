@@ -1,4 +1,5 @@
 using System;
+using FarseerGames.AdvancedSamples.Demos.DemoShare;
 using FarseerGames.FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -36,7 +37,8 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         private TimeSpan _transitionOffTime = TimeSpan.Zero;
         private TimeSpan _transitionOnTime = TimeSpan.Zero;
         private float _transitionPosition = 1;
-        protected bool FirstRun = true;
+        protected bool firstRun = true;
+        private Border _border;
 
         protected GameScreen()
         {
@@ -109,7 +111,7 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         /// </summary>
         public byte TransitionAlpha
         {
-            get { return (byte) (255 - TransitionPosition*255); }
+            get { return (byte)(255 - TransitionPosition * 255); }
         }
 
         /// <summary>
@@ -171,6 +173,11 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         public virtual void LoadContent()
         {
             _physicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
+            int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
+
+            _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, borderWidth, ScreenManager.ScreenCenter);
+            _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
+
         }
 
         /// <summary>
@@ -237,7 +244,7 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         public virtual void UpdatePhysics(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             if (!coveredByOtherScreen && !otherScreenHasFocus)
-                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
+                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds * .001f);
         }
 
         /// <summary>
@@ -251,11 +258,11 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
             if (time == TimeSpan.Zero)
                 transitionDelta = 1;
             else
-                transitionDelta = (float) (gameTime.ElapsedGameTime.TotalMilliseconds/
+                transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
                                            time.TotalMilliseconds);
 
             // Update the transition position.
-            _transitionPosition += transitionDelta*direction;
+            _transitionPosition += transitionDelta * direction;
 
             // Did we reach the end of the transition?
             if ((_transitionPosition <= 0) || (_transitionPosition >= 1))
@@ -282,7 +289,7 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
             }
 
             //Windows
-            if (!input.LastKeyboardState.IsKeyDown(Keys.F1) && input.CurrentKeyboardState.IsKeyDown(Keys.F1))
+            if (input.IsNewKeyPress(Keys.F1))
             {
                 _debugViewEnabled = !_debugViewEnabled;
                 _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
@@ -294,12 +301,15 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         /// </summary>
         public virtual void Draw(GameTime gameTime)
         {
+            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+
             if (_debugViewEnabled)
             {
-                ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
                 _physicsSimulatorView.Draw(ScreenManager.SpriteBatch);
-                ScreenManager.SpriteBatch.End();
             }
+
+            _border.Draw(ScreenManager.SpriteBatch);
+            ScreenManager.SpriteBatch.End();
         }
 
         /// <summary>

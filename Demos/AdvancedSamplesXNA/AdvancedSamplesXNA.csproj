@@ -82,10 +82,9 @@
   <ItemGroup>
     <Compile Include="Components\FramerateCounterComponent.cs" />
     <Compile Include="Demos\Demo1\Demo1Screen.cs" />
-    <Compile Include="Demos\Demo1\Floor.cs" />
     <Compile Include="Demos\Demo1\ObjectLinker.cs" />
     <Compile Include="Demos\Demo1\PhysicsProcessor.cs" />
-    <Compile Include="Demos\Demo1\Pyramid.cs" />
+    <Compile Include="Demos\Demo1\MultithreadedPyramid.cs" />
     <Compile Include="Demos\Demo2\Demo2Screen.cs" />
     <Compile Include="Demos\Demo2\Ball.cs" />
     <Compile Include="Demos\Demo3\Box.cs" />

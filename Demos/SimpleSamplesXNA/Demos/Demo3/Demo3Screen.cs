@@ -20,10 +20,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo3
         private Geom[] _agentGeom;
         private Vector2 _agentOrigin;
         private Texture2D _agentTexture;
-        private Body _floorBody;
-        private Geom _floorGeom;
-        private Vector2 _floorOrigin;
-        private Texture2D _floorTexture;
         private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private FixedLinearSpring _mousePickSpring;
 
@@ -46,7 +42,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo3
         {
             _lineBrush.Load(ScreenManager.GraphicsDevice);
             LoadAgent();
-            LoadFloor();
             LoadObstacles();
 
             base.LoadContent();
@@ -88,24 +83,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo3
             _agentGeom[6].CollisionGroup = 1;
         }
 
-        public void LoadFloor()
-        {
-            //load texture that will visually represent the physics body
-            _floorTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, ScreenManager.ScreenWidth,
-                                                                 100, Color.White, Color.Black);
-            _floorOrigin = new Vector2(_floorTexture.Width / 2f, _floorTexture.Height / 2f);
-
-            //use the body factory to create the physics body
-            _floorBody = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, ScreenManager.ScreenWidth, 100, 1);
-            _floorBody.IsStatic = true;
-            _floorGeom = GeomFactory.Instance.CreateRectangleGeom(PhysicsSimulator, _floorBody,
-                                                                  ScreenManager.ScreenWidth,
-                                                                  100);
-            _floorGeom.RestitutionCoefficient = .2f;
-            _floorGeom.FrictionCoefficient = .2f;
-            _floorBody.Position = new Vector2(ScreenManager.ScreenCenter.X, ScreenManager.ScreenHeight - 50);
-        }
-
         public void LoadObstacles()
         {
             _obstacleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 32, Color.White,
@@ -143,8 +120,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo3
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            ScreenManager.SpriteBatch.Draw(_floorTexture, _floorBody.Position, null, Color.White, _floorBody.Rotation,
-                                           _floorOrigin, 1, SpriteEffects.None, 0f);
             DrawObstacles();
             DrawAgent();
 

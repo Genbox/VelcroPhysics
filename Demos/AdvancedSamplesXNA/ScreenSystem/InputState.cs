@@ -134,10 +134,23 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         /// <summary>
         /// Helper for checking if a key was newly pressed during this update.
         /// </summary>
-        private bool IsNewKeyPress(Keys key)
+        public bool IsNewKeyPress(Keys key)
         {
             return (CurrentKeyboardState.IsKeyDown(key) &&
-                    LastKeyboardState.IsKeyUp(key));
+                    !LastKeyboardState.IsKeyDown(key));
+        }
+
+        public bool OneOfKeysPressed(params Keys[] keys)
+        {
+            foreach (Keys key in keys)
+            {
+                if (IsNewKeyPress(key))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

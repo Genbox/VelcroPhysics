@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.AdvancedSamples.ScreenSystem;
 using FarseerGames.FarseerPhysics;
@@ -9,7 +9,6 @@ using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using FarseerGames.AdvancedSamples.Demos.DemoShare;
 
 namespace FarseerGames.AdvancedSamples.Demos.Demo5
 {
@@ -21,7 +20,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
         private Path _chainPin;
         private Path _chainSpring;
         private Path _chainSilde;
-        private Border _border;
         private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private FixedLinearSpring _mousePickSpring;
         private Geom _pickedGeom;
@@ -40,8 +38,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
                                                                  Color.Black);
             _chainOrigin = new Vector2(_chainTexture.Width / 2f, _chainTexture.Height / 2f);
 
-            _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 30, ScreenManager.ScreenCenter);
-            _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             _chain = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(150, 100), new Vector2(200, 300), 20.0f, 10.0f, 1, LinkType.RevoluteJoint);
 
@@ -90,7 +86,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
                 ScreenManager.SpriteBatch.Draw(_chainTexture, body.Position, null, Color.White, body.Rotation, _chainOrigin, 1, SpriteEffects.None, 1);
             }
 
-            _border.Draw(ScreenManager.SpriteBatch);
             if (_mousePickSpring != null)
             {
                 _lineBrush.Draw(ScreenManager.SpriteBatch,
@@ -105,10 +100,10 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
 
         public override void HandleInput(InputState input)
         {
-            if (FirstRun)
+            if (firstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
-                FirstRun = false;
+                firstRun = false;
             }
             if (input.PauseGame)
             {

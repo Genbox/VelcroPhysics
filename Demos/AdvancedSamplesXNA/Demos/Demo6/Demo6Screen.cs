@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.AdvancedSamples.ScreenSystem;
 using FarseerGames.FarseerPhysics;
@@ -9,7 +9,6 @@ using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using FarseerGames.AdvancedSamples.Demos.DemoShare;
 
 namespace FarseerGames.AdvancedSamples.Demos.Demo6
 {
@@ -31,7 +30,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
         private Texture2D _obstaclesTexture;
         private Vector2 _obstaclesOrigin;
 
-        private Border _border;
         private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private FixedLinearSpring _mousePickSpring;
         private Geom _pickedGeom;
@@ -57,8 +55,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
             _chainOrigin = new Vector2(_chainTexture.Width / 2f, _chainTexture.Height / 2f);
             _wheelOrigin = new Vector2(_wheelTexture.Width / 2f, _wheelTexture.Height / 2f);
             _obstaclesOrigin = new Vector2(_obstaclesTexture.Width / 2f, _obstaclesTexture.Height / 2f);
-            _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 25, ScreenManager.ScreenCenter);
-            _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
             Vector2 center = new Vector2(400, 500);
 
             _controlPoints = new Vertices();
@@ -114,7 +110,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
             foreach (Body b in _obstacles)
                 ScreenManager.SpriteBatch.Draw(_obstaclesTexture, b.Position, null, Color.White, b.Rotation, _obstaclesOrigin, 1, SpriteEffects.None, 1);
 
-            _border.Draw(ScreenManager.SpriteBatch);
             if (_mousePickSpring != null)
             {
                 _lineBrush.Draw(ScreenManager.SpriteBatch,
@@ -131,10 +126,10 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
 
         public override void HandleInput(InputState input)
         {
-            if (FirstRun)
+            if (firstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
-                FirstRun = false;
+                firstRun = false;
             }
             if (input.PauseGame)
             {

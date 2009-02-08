@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text;
 using FarseerGames.AdvancedSamples.ScreenSystem;
 using FarseerGames.FarseerPhysics;
@@ -59,19 +59,19 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
             for (int i = _messages.Count - 1; i >= 0; i--)
             {
                 ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, _messages[i].Text,
-                                       new Vector2(10, (_messages.Count - 1 - i) * ScreenManager.SpriteFonts.DetailsFont.LineSpacing), Color.Black);
+                                       new Vector2(50, 100 + (_messages.Count - 1 - i) * ScreenManager.SpriteFonts.DetailsFont.LineSpacing), Color.Black);
             }
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Backspace = Subtract",
-                                                 new Vector2(10, ScreenManager.ScreenHeight - 120), Color.Black);
+                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing), Color.Black);
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Space = Union",
-                                                 new Vector2(10, ScreenManager.ScreenHeight - 105), Color.Black);
+                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 2), Color.Black);
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Click to Drag polygons",
-                                                 new Vector2(10, ScreenManager.ScreenHeight - 90), Color.Black);
+                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 3), Color.Black);
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Q,W,E = Create Circle",
-                                                 new Vector2(10, ScreenManager.ScreenHeight - 75), Color.Black);
+                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 4), Color.Black);
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Create Rectangle",
-                                                 new Vector2(10, ScreenManager.ScreenHeight - 60), Color.Black);
+                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 5), Color.Black);
 
             ScreenManager.SpriteBatch.End();
 
@@ -80,10 +80,10 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
 
         public override void HandleInput(InputState input)
         {
-            if (FirstRun)
+            if (firstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
-                FirstRun = false;
+                firstRun = false;
             }
             if (input.PauseGame)
             {
@@ -219,9 +219,9 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
             body.Position = ScreenManager.ScreenCenter;
             body.IsStatic = true;
 
-            Geom g = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, product, ColliderData.DefaultSettings);
+            Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, product, ColliderData.DefaultSettings);
 
-            _leftGeom = g;
+            _leftGeom = geom;
         }
 
         private void AddCircle(int radius, int numSides)
@@ -265,86 +265,52 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
 
         private void HandKeyboardInput(InputState input)
         {
-            // Add Circles
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Q) && !input.LastKeyboardState.IsKeyDown(Keys.Q))
-            {
-                if (PhysicsSimulator.GeomList.Count > 1)
+            if (input.OneOfKeysPressed(Keys.Q, Keys.W, Keys.E, Keys.A, Keys.S, Keys.D))
+                if (PhysicsSimulator.GeomList.Count < 6)
                 {
-                    WriteMessage("Only 2 polygons allowed at a time.");
-                }
-                else
-                {
-                    AddCircle(50, 8);
-                }
-            }
+                    // Add Circles
+                    if (input.IsNewKeyPress(Keys.Q))
+                    {
+                        AddCircle(50, 8);
+                    }
 
-            // Add Circles
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.W) && !input.LastKeyboardState.IsKeyDown(Keys.W))
-            {
-                if (PhysicsSimulator.GeomList.Count > 1)
-                {
-                    WriteMessage("Only 2 polygons allowed at a time.");
-                }
-                else
-                {
-                    AddCircle(50, 16);
-                }
-            }
+                    // Add Circles
+                    if (input.IsNewKeyPress(Keys.W))
+                    {
+                        AddCircle(50, 16);
+                    }
 
-            // Add Circles
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.E) && !input.LastKeyboardState.IsKeyDown(Keys.E))
-            {
-                if (PhysicsSimulator.GeomList.Count > 1)
-                {
-                    WriteMessage("Only 2 polygons allowed at a time.");
-                }
-                else
-                {
-                    AddCircle(50, 32);
-                }
-            }
+                    // Add Circles
+                    if (input.IsNewKeyPress(Keys.E))
+                    {
+                        AddCircle(50, 32);
+                    }
 
-            // Add Rectangle
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.A) && !input.LastKeyboardState.IsKeyDown(Keys.A))
-            {
-                if (PhysicsSimulator.GeomList.Count > 1)
-                {
-                    WriteMessage("Only 2 polygons allowed at a time.");
-                }
-                else
-                {
-                    AddRectangle(100, 100);
-                }
-            }
+                    // Add Rectangle
+                    if (input.IsNewKeyPress(Keys.A))
+                    {
+                        AddRectangle(100, 100);
+                    }
 
-            // Add Rectangle
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.S) && !input.LastKeyboardState.IsKeyDown(Keys.S))
-            {
-                if (PhysicsSimulator.GeomList.Count > 1)
-                {
-                    WriteMessage("Only 2 polygons allowed at a time.");
-                }
-                else
-                {
-                    AddRectangle(100, 50);
-                }
-            }
+                    // Add Rectangle
+                    if (input.IsNewKeyPress(Keys.S))
+                    {
+                        AddRectangle(100, 50);
+                    }
 
-            // Add Rectangle
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.D) && !input.LastKeyboardState.IsKeyDown(Keys.D))
-            {
-                if (PhysicsSimulator.GeomList.Count > 1)
-                {
-                    WriteMessage("Only 2 polygons allowed at a time.");
+                    // Add Rectangle
+                    if (input.IsNewKeyPress(Keys.D))
+                    {
+                        AddRectangle(50, 100);
+                    }
                 }
                 else
                 {
-                    AddRectangle(50, 100);
+                    WriteMessage("Only 2 polygons allowed at a time.");
                 }
-            }
 
             // Perform a Union
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Space) && !input.LastKeyboardState.IsKeyDown(Keys.Space))
+            if (input.IsNewKeyPress(Keys.Space))
             {
                 if (_leftGeom != null && _rightGeom != null)
                 {
@@ -353,7 +319,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
             }
 
             // Perform a Subtraction
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Back) && !input.LastKeyboardState.IsKeyDown(Keys.Back))
+            if (input.IsNewKeyPress(Keys.Back))
             {
                 if (_leftGeom != null && _rightGeom != null)
                 {
@@ -362,7 +328,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
             }
 
             // Perform a Subtraction
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Enter) && !input.LastKeyboardState.IsKeyDown(Keys.Enter))
+            if (input.IsNewKeyPress(Keys.Enter))
             {
                 if (_leftGeom != null && _rightGeom != null)
                 {
@@ -371,7 +337,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
             }
 
             // Simplify
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Tab) && !input.LastKeyboardState.IsKeyDown(Keys.Tab))
+            if (input.IsNewKeyPress(Keys.Tab))
             {
                 if (_leftGeom != null && _rightGeom == null)
                 {
@@ -414,7 +380,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
                     _selectedGeom.Body.Position.Y + (newMouseState.Y - oldMouseState.Y));
             }
         }
-       
+
         public static string GetTitle()
         {
             return "Demo8: Polygon subtraction";

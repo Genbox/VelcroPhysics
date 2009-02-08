@@ -21,7 +21,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo5
         private Circles _blueCircles1;
         private Circles _blueCircles2;
         private Circles _blueCircles3;
-        private Border _border;
         private Circles _greenCircles1;
         private Circles _greenCircles2;
         private Circles _greenCircles3;
@@ -45,11 +44,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo5
         public override void LoadContent()
         {
             _lineBrush.Load(ScreenManager.GraphicsDevice);
-
-            int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
-            _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, borderWidth,
-                                 ScreenManager.ScreenCenter);
-            _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             _agent = new Agent(ScreenManager.ScreenCenter);
             _agent.CollisionCategory = CollisionCategory.Cat5;
@@ -165,7 +159,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo5
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            _border.Draw(ScreenManager.SpriteBatch);
             _agent.Draw(ScreenManager.SpriteBatch);
 
             _redCircles1.Draw(ScreenManager.SpriteBatch);

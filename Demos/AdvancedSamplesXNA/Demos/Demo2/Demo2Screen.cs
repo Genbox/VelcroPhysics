@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using FarseerGames.AdvancedSamples.Demos.DemoShare;
 using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.AdvancedSamples.ScreenSystem;
 using FarseerGames.FarseerPhysics;
@@ -15,7 +14,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo2
 {
     public class Demo2Screen : GameScreen
     {
-        private Border _border;
         private Pool<Ball> _pool;
         private static bool _usePool;
         private List<Ball> _ballsToDraw = new List<Ball>();
@@ -36,8 +34,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo2
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 150));
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
-
-            _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 25, ScreenManager.ScreenCenter);
 
             if (_usePool)
                 LoadPool();
@@ -63,8 +59,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo2
 
         public override void LoadContent()
         {
-            _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
-
             _panelTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 290, 100, new Color(0, 0, 0, 155));
 
             base.LoadContent();
@@ -159,8 +153,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo2
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, "Current number of balls: " + _ballsToDraw.Count, _ballCountPosition, Color.White);
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, "Using pool: " + _usePool + " (press R to toggle)", _poolEnabledPosition, Color.White);
 
-            _border.Draw(ScreenManager.SpriteBatch);
-
             ScreenManager.SpriteBatch.End();
 
             base.Draw(gameTime);
@@ -168,10 +160,10 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo2
 
         public override void HandleInput(InputState input)
         {
-            if (FirstRun)
+            if (firstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
-                FirstRun = false;
+                firstRun = false;
             }
 
             if (input.PauseGame)

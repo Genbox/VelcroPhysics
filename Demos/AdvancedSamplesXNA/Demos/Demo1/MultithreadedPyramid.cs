@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerGames.AdvancedSamples.Demos.Demo1
 {
-    internal class Pyramid
+    internal class MultithreadedPyramid
     {
         private Body[] _blockBody;
         private Geom[] _blockGeom;
@@ -21,7 +21,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo1
         private Geom _referenceGeom;
         private float _verticleSpacing;
 
-        public Pyramid(Body referenceBody, Geom referenceGeom, float horizontalSpacing, float verticleSpacing,
+        public MultithreadedPyramid(Body referenceBody, Geom referenceGeom, float horizontalSpacing, float verticleSpacing,
                        float blockWidth, float blockHeight, int bottomRowBlockCount, Vector2 bottomRightBlockPosition)
         {
             _referenceBody = referenceBody;
