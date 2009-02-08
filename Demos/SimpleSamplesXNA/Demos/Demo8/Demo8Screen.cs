@@ -17,7 +17,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo8
         private Agent _agent;
         private Circles[] _blackCircles;
         private Circles[] _blueCircles;
-        private Border _border;
         private Circles[] _greenCircles;
         private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private FixedLinearSpring _mousePickSpring;
@@ -37,11 +36,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo8
         public override void LoadContent()
         {
             _lineBrush.Load(ScreenManager.GraphicsDevice);
-
-            int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
-            _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, borderWidth,
-                                 ScreenManager.ScreenCenter);
-            _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             _agent = new Agent(ScreenManager.ScreenCenter);
             _agent.CollisionCategory = CollisionCategory.Cat5;
@@ -129,7 +123,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo8
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            _border.Draw(ScreenManager.SpriteBatch);
             _agent.Draw(ScreenManager.SpriteBatch);
 
             for (int i = 0; i < _redCircles.Length; i++)

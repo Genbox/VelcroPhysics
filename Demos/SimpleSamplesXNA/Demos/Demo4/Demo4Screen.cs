@@ -21,7 +21,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo4
         private const int _pyramidBaseBodyCount = 16;
 #endif
         private Agent _agent;
-        private Floor _floor;
         private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private FixedLinearSpring _mousePickSpring;
         private Geom _pickedGeom;
@@ -55,13 +54,9 @@ namespace FarseerGames.SimpleSamples.Demos.Demo4
             //create the _pyramid near the bottom of the screen.
             _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, _pyramidBaseBodyCount,
                                    new Vector2(ScreenManager.ScreenCenter.X - _pyramidBaseBodyCount * .5f * (32 + 32 / 3),
-                                               ScreenManager.ScreenHeight - 125));
+                                               ScreenManager.ScreenHeight - 80));
 
             _pyramid.Load(PhysicsSimulator);
-
-            _floor = new Floor(ScreenManager.ScreenWidth, 100,
-                               new Vector2(ScreenManager.ScreenCenter.X, ScreenManager.ScreenHeight - 50));
-            _floor.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             _agent = new Agent(ScreenManager.ScreenCenter - new Vector2(320, 300));
             _agent.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
@@ -73,7 +68,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo4
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             _pyramid.Draw(ScreenManager.SpriteBatch, _rectangleTexture);
-            _floor.Draw(ScreenManager.SpriteBatch);
             _agent.Draw(ScreenManager.SpriteBatch);
 
             if (_mousePickSpring != null)

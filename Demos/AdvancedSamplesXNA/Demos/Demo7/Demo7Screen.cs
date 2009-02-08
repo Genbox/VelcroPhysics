@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text;
 using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.AdvancedSamples.ScreenSystem;
@@ -9,13 +9,11 @@ using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using FarseerGames.AdvancedSamples.Demos.DemoShare;
 
 namespace FarseerGames.AdvancedSamples.Demos.Demo7
 {
     public class Demo7Screen : GameScreen
     {
-        private Border _border;
         private Pyramid _pyramid;
         private Texture2D _rectangleTexture;
         private Body _rectangleBody;
@@ -38,9 +36,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo7
         {
             //We load the grenade texture here instead of inside Grenade class. Load once, use multiple times.
             _grenadeTexture = ScreenManager.ContentManager.Load<Texture2D>("Content/Grenade");
-
-            _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 25, ScreenManager.ScreenCenter);
-            _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 32, 32, 2, 0, 0,
                                                          Color.White, Color.Black);
@@ -78,7 +73,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo7
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             _pyramid.Draw(ScreenManager.SpriteBatch, _rectangleTexture);
-            _border.Draw(ScreenManager.SpriteBatch);
             _hairDryer.Draw(ScreenManager.SpriteBatch);
 
             for (int i = _grenades.Count - 1; i >= 0; i--)
@@ -93,10 +87,10 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo7
 
         public override void HandleInput(InputState input)
         {
-            if (FirstRun)
+            if (firstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
-                FirstRun = false;
+                firstRun = false;
             }
             if (input.PauseGame)
             {

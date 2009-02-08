@@ -18,13 +18,12 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo1
     {
         private const int pyramidBaseBodyCount = 16;
         private Agent _agent;
-        private Floor _floor;
         private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private FixedLinearSpring _mousePickSpring;
         private PhysicsProcessor _physicsProcessor;
         private Thread _physicsThread;
         private Geom _pickedGeom;
-        private Pyramid _pyramid;
+        private MultithreadedPyramid _multithreadedPyramid;
         private Body _rectangleBody;
         private Geom _rectangleGeom;
         private Texture2D _rectangleTexture;
@@ -83,16 +82,12 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo1
             _rectangleGeom.RestitutionCoefficient = 0f;
 
             //create the _pyramid near the bottom of the screen.
-            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f/3f, 32f/3f, 32, 32, pyramidBaseBodyCount,
+            _multithreadedPyramid = new MultithreadedPyramid(_rectangleBody, _rectangleGeom, 32f/3f, 32f/3f, 32, 32, pyramidBaseBodyCount,
                                    new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount*.5f*(32 + 32/3),
-                                               ScreenManager.ScreenHeight - 125));
+                                               ScreenManager.ScreenHeight - 80));
             // POINT OF INTEREST
             // It needs the processor to register the links
-            _pyramid.Load(PhysicsSimulator, _physicsProcessor);
-
-            _floor = new Floor(ScreenManager.ScreenWidth, 100,
-                               new Vector2(ScreenManager.ScreenCenter.X, ScreenManager.ScreenHeight - 50));
-            _floor.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
+            _multithreadedPyramid.Load(PhysicsSimulator, _physicsProcessor);
 
             _agent = new Agent(ScreenManager.ScreenCenter - new Vector2(320, 300));
             _agent.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
@@ -106,8 +101,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo1
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            _pyramid.Draw(ScreenManager.SpriteBatch, _rectangleTexture);
-            _floor.Draw(ScreenManager.SpriteBatch);
+            _multithreadedPyramid.Draw(ScreenManager.SpriteBatch, _rectangleTexture);
             _agent.Draw(ScreenManager.SpriteBatch);
 
             if (_mousePickSpring != null)
@@ -123,10 +117,10 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo1
 
         public override void HandleInput(InputState input)
         {
-            if (FirstRun)
+            if (firstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
-                FirstRun = false;
+                firstRun = false;
             }
 
             if (input.PauseGame)
@@ -252,7 +246,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo1
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows the stacking stability of the engine.");
             sb.AppendLine("It shows a stack of rectangular bodies stacked in");
-            sb.AppendLine("the shape of a _pyramid.");
+            sb.AppendLine("the shape of a pyramid.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  -Rotate : left and right arrows");

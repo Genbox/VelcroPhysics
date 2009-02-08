@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text;
-using FarseerGames.AdvancedSamples.Demos.DemoShare;
 using FarseerGames.AdvancedSamples.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using Microsoft.Xna.Framework;
@@ -11,7 +10,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo3
 {
     public class Demo3Screen : GameScreen
     {
-        private Border _border;
         private List<Box> _boxes = new List<Box>();
         private Texture2D _texture;
 
@@ -30,16 +28,12 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo3
 
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
 
-            _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 25, ScreenManager.ScreenCenter);
-
             base.Initialize();
         }
 
         public override void LoadContent()
         {
             _texture = DrawingSystem.DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 25, 25, Color.White, Color.Black);
-
-            _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             //Create 5x13 boxes
             for (int y = 1; y < 6; y++)
@@ -58,8 +52,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo3
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-
-            _border.Draw(ScreenManager.SpriteBatch);
 
             //Draw explanation boxes
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, "Disabled", new Vector2(130, 150), Color.White);
@@ -97,10 +89,10 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo3
 
         public override void HandleInput(InputState input)
         {
-            if (FirstRun)
+            if (firstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
-                FirstRun = false;
+                firstRun = false;
             }
 
             if (input.PauseGame)

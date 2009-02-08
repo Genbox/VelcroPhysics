@@ -465,8 +465,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Feature feature;
             point = Vector2.Transform(point, MatrixInverse);
 
-            //NOTE: Could use the boolean returned by the Intersect methods instead?
-            // feature.Distance < 0, should this be <= 0?
             narrowPhaseCollider.Intersect(ref point, out feature);
             if (feature.Distance < 0)
             {
@@ -483,6 +481,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public bool Collide(Geom geometry)
         {
             //Note: Added in 2.1.
+            //Check first if the AABB intersects the other geometry's AABB. If they
+            //do not intersect, there can be no collision.
             if (AABB.Intersect(AABB, geometry.AABB))
             {
                 //Check each vertice (of self) against the provided geometry

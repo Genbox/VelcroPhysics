@@ -27,7 +27,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo6
         private AngularSpringLever _angularSpringLever2;
         private AngularSpringLever _angularSpringLever3;
         private AngularSpringLever _angularSpringLever4;
-        private Border _border;
         private RectanglePlatform _floor;
         private Body _hangingBody;
         private Geom _hangingGeom;
@@ -58,11 +57,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo6
         public override void LoadContent()
         {
             _lineBrush.Load(ScreenManager.GraphicsDevice);
-
-            int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
-            _border = new Border(ScreenManager.ScreenWidth + borderWidth * 2, ScreenManager.ScreenHeight + borderWidth * 2,
-                                 borderWidth, ScreenManager.ScreenCenter);
-            _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             _agent = new Agent(new Vector2(ScreenManager.ScreenCenter.X, 100));
             _agent.CollisionCategory = CollisionCategory.Cat5;
@@ -217,8 +211,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo6
                                            _hangingGeom.Rotation,
                                            new Vector2(_hangingTexture.Width / 2f, _hangingTexture.Height / 2f), 1,
                                            SpriteEffects.None, 0);
-
-            _border.Draw(ScreenManager.SpriteBatch);
 
             if (_mousePickSpring != null)
             {

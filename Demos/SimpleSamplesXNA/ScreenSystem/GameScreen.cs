@@ -1,5 +1,6 @@
 using System;
 using FarseerGames.FarseerPhysics;
+using FarseerGames.SimpleSamples.Demos.DemoShare;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -37,6 +38,7 @@ namespace FarseerGames.SimpleSamples.ScreenSystem
         private TimeSpan _transitionOnTime = TimeSpan.Zero;
         private float _transitionPosition = 1;
         protected bool firstRun = true;
+        private Border _border;
 
         protected GameScreen()
         {
@@ -170,6 +172,12 @@ namespace FarseerGames.SimpleSamples.ScreenSystem
         public virtual void LoadContent()
         {
             _physicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
+            int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
+           
+            _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, borderWidth,
+                     ScreenManager.ScreenCenter);
+            _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
+
         }
 
         /// <summary>
@@ -292,12 +300,15 @@ namespace FarseerGames.SimpleSamples.ScreenSystem
         /// </summary>
         public virtual void Draw(GameTime gameTime)
         {
+            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+
             if (_debugViewEnabled)
             {
-                ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
                 _physicsSimulatorView.Draw(ScreenManager.SpriteBatch);
-                ScreenManager.SpriteBatch.End();
             }
+
+            _border.Draw(ScreenManager.SpriteBatch);
+            ScreenManager.SpriteBatch.End();
         }
 
         /// <summary>
