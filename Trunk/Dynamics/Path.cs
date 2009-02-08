@@ -1,14 +1,12 @@
 using System;
-using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.FarseerPhysics.Mathematics;
 #if(XNA)
 using Microsoft.Xna.Framework;
 #else
-
+using FarseerGames.FarseerPhysics.Mathematics;
 #endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics
@@ -100,6 +98,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// Links the bodies.
         /// </summary>
         /// <param name="type">The type of Joint to link with.</param>
+        /// <param name="min">The min.</param>
+        /// <param name="max">The max.</param>
+        /// <param name="springConstant">The spring constant.</param>
+        /// <param name="dampingConstant">The damping constant.</param>
         public void LinkBodies(LinkType type, float min, float max, float springConstant, float dampingConstant)
         {
             RevoluteJoint revoluteJoint;
@@ -257,14 +259,29 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <summary>
         /// Creates rectangular geoms that match the size of the bodies.
         /// </summary>
-        public void CreateGeoms()
+        /// <param name="collisionGroup">The collision group.</param>
+        public void CreateGeoms(int collisionGroup)
         {
-            Geom geom;
             foreach (Body body in _bodies)
             {
-                geom = GeomFactory.Instance.CreateRectangleGeom(body, _width, _height);
-                geom.CollisionCategories = CollisionCategory.Cat2;
-                geom.CollidesWith = CollisionCategory.Cat1;
+                Geom geom = GeomFactory.Instance.CreateRectangleGeom(body, _width, _height);
+                geom.CollisionGroup = collisionGroup;
+                _geoms.Add(geom);
+            }
+        }
+
+        /// <summary>
+        /// Creates rectangular geoms that match the size of the bodies.
+        /// </summary>
+        /// <param name="collisionCategory">The collision category.</param>
+        /// <param name="collidesWith">What collision group geometries collides with.</param>
+        public void CreateGeoms(CollisionCategory collisionCategory, CollisionCategory collidesWith)
+        {
+            foreach (Body body in _bodies)
+            {
+                Geom geom = GeomFactory.Instance.CreateRectangleGeom(body, _width, _height);
+                geom.CollisionCategories = collisionCategory;
+                geom.CollidesWith = collidesWith;
                 _geoms.Add(geom);
             }
         }
@@ -377,14 +394,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         public void Update()
         {
             float distance = 0.0f;
-            float k;
             Body tempBody;
             Vector2 tempVectorA = new Vector2();
-            Vector2 tempVectorB;
             Vector2 tempVectorC = new Vector2();
 
             if (_recalculate) // only do the update if something has changed
             {
+                float k;
+
                 // first we get our curve ready
                 Curve xCurve = new Curve();
                 Curve yCurve = new Curve();
@@ -424,7 +441,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 _bodies.Add(tempBody); // add the first body
 
-                tempVectorB = tempVectorA;
+                Vector2 tempVectorB = tempVectorA;
 
                 // now that our first body is done we can start on all our other body's
                 // since the curve was created with a time of 0-1 we can just stop creating bodies when k is 1
