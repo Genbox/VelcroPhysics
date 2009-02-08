@@ -87,6 +87,9 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <returns></returns>
         public Body CreatePolygonBody(Vertices vertices, float mass)
         {
+            if (vertices == null)
+                throw new ArgumentNullException("vertices", "Vertices must not be null");
+
             Body body = new Body();
             body.Mass = mass;
             body.MomentOfInertia = mass * vertices.GetMomentOfInertia();

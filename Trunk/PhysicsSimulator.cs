@@ -311,6 +311,9 @@ namespace FarseerGames.FarseerPhysics
 
         public void Add(Geom geometry)
         {
+            if (geometry == null)
+                throw new ArgumentNullException("geometry", "Can't add null geometry");
+
             if (!geomAddList.Contains(geometry))
             {
                 geomAddList.Add(geometry);
@@ -319,11 +322,17 @@ namespace FarseerGames.FarseerPhysics
 
         public void Remove(Geom geometry)
         {
+            if (geometry == null)
+                throw new ArgumentNullException("geometry", "Can't remove null geometry");
+
             geomRemoveList.Add(geometry);
         }
 
         public void Add(Body body)
         {
+            if (body == null)
+                throw new ArgumentNullException("body", "Can't add null body");
+
             if (!bodyAddList.Contains(body))
             {
                 bodyAddList.Add(body);
@@ -332,11 +341,17 @@ namespace FarseerGames.FarseerPhysics
 
         public void Remove(Body body)
         {
+            if (body == null)
+                throw new ArgumentNullException("body", "Can't remove null body");
+
             bodyRemoveList.Add(body);
         }
 
         public void Add(Controller controller)
         {
+            if (controller == null)
+                throw new ArgumentNullException("controller", "Can't add null controller");
+
             if (!controllerAddList.Contains(controller))
             {
                 controllerAddList.Add(controller);
@@ -345,11 +360,17 @@ namespace FarseerGames.FarseerPhysics
 
         public void Remove(Controller controller)
         {
+            if (controller == null)
+                throw new ArgumentNullException("controller", "Can't remove null controller");
+
             controllerRemoveList.Add(controller);
         }
 
         public void Add(Joint joint)
         {
+            if (joint == null)
+                throw new ArgumentNullException("joint", "Can't add null joint");
+
             if (!jointAddList.Contains(joint))
             {
                 jointAddList.Add(joint);
@@ -358,11 +379,17 @@ namespace FarseerGames.FarseerPhysics
 
         public void Remove(Joint joint)
         {
+            if (joint == null)
+                throw new ArgumentNullException("joint", "Can't remove null joint");
+
             jointRemoveList.Add(joint);
         }
 
         public void Add(Spring spring)
         {
+            if (spring == null)
+                throw new ArgumentNullException("spring", "Can't add null spring");
+
             if (!springAddList.Contains(spring))
             {
                 springAddList.Add(spring);
@@ -371,18 +398,14 @@ namespace FarseerGames.FarseerPhysics
 
         public void Remove(Spring spring)
         {
+            if (spring == null)
+                throw new ArgumentNullException("spring", "Can't remove null spring");
+
             springRemoveList.Add(spring);
         }
 
         public void Clear()
         {
-            //arbiterList.Clear();
-            //geomList.Clear();
-            //bodyList.Clear();
-            //jointList.Clear();
-            //controllerList.Clear();
-            //arbiterPool = new Pool<Arbiter>(_arbiterPoolSize); 
-            //_broadPhaseCollider = new SelectiveSweepCollider(this);
             ConstructPhysicsSimulator(_gravity);
         }
 
