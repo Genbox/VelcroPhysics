@@ -891,18 +891,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns>The union of the two polygons, or null if there was an error.</returns>
         public static Vertices Union(Vertices polygon1, Vertices polygon2, out PolyUnionError error)
         {
-            error = PolyUnionError.None;
-
             Vertices poly1;
             Vertices poly2;
             List<EdgeIntersectInfo> intersections;
 
-            PolyUnionError gotError;
-            int startingIndex = PreparePolygons(polygon1, polygon2, out poly1, out poly2, out intersections, out gotError);
+            int startingIndex = PreparePolygons(polygon1, polygon2, out poly1, out poly2, out intersections, out error);
 
             if (startingIndex == -1)
             {
-                switch (gotError)
+                switch (error)
                 {
                     case PolyUnionError.NoIntersections:
                         return null;
@@ -979,21 +976,21 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         /// <param name="polygon1">The base polygon.</param>
         /// <param name="polygon2">The polygon to subtract from the base.</param>
-        /// <returns>The result of the polygon subtraction, or null if there was an error.</returns>
+        /// <param name="error">The error.</param>
+        /// <returns>
+        /// The result of the polygon subtraction, or null if there was an error.
+        /// </returns>
         public static Vertices Subtract(Vertices polygon1, Vertices polygon2, out PolyUnionError error)
         {
-            error = PolyUnionError.None;
-
             Vertices poly1;
             Vertices poly2;
             List<EdgeIntersectInfo> intersections;
 
-            PolyUnionError gotError;
-            int startingIndex = PreparePolygons(polygon1, polygon2, out poly1, out poly2, out intersections, out gotError);
+            int startingIndex = PreparePolygons(polygon1, polygon2, out poly1, out poly2, out intersections, out error);
 
             if (startingIndex == -1)
             {
-                switch (gotError)
+                switch (error)
                 {
                     case PolyUnionError.NoIntersections:
                         return null;
@@ -1413,7 +1410,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns>A simplified polygon.</returns>
         public static Vertices Simplify(Vertices polygon, int bias)
         {
-            if (polygon.Count < 3) return null;
+            //We cant simplify polygons under 3 vertices
+            if (polygon.Count < 3)
+                return polygon;
 
             Vertices simplified = new Vertices();
             Vertices roundPolygon = Round(polygon);

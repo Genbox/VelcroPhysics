@@ -13,8 +13,8 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
 {
     public class Demo8Screen : GameScreen
     {
-        private Geom _leftGeom;
         private List<TextMessage> _messages;
+        private Geom _leftGeom;
         private Geom _rightGeom;
         private Geom _selectedGeom;
 
@@ -41,6 +41,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
+            //If the message times out, remove it from the list.
             for (int i = _messages.Count - 1; i >= 0; i--)
             {
                 _messages[i].ElapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -59,20 +60,26 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
             for (int i = _messages.Count - 1; i >= 0; i--)
             {
                 ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, _messages[i].Text,
-                                       new Vector2(50, 100 + (_messages.Count - 1 - i) * ScreenManager.SpriteFonts.DetailsFont.LineSpacing), Color.Black);
+                                       new Vector2(50, 100 + (_messages.Count - 1 - i) * ScreenManager.SpriteFonts.DetailsFont.LineSpacing), Color.White);
             }
 
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Backspace = Subtract",
-                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing), Color.Black);
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Space = Union",
-                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 2), Color.Black);
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Click to Drag polygons",
-                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 3), Color.Black);
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Q,W,E = Create Circle",
-                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 4), Color.Black);
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Create Rectangle",
-                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 5), Color.Black);
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "A,S,D = Create Rectangle",
+                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 6), Color.White);
 
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Q,W,E = Create Circle",
+                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 5), Color.White);
+
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Click to Drag polygons",
+                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 4), Color.White);
+
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Space = Union",
+                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 3), Color.White);
+
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Backspace = Subtract",
+                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 2), Color.White);
+
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Tab = Simplify",
+                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing), Color.White);
             ScreenManager.SpriteBatch.End();
 
             base.Draw(gameTime);
@@ -98,175 +105,10 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
             base.HandleInput(input);
         }
 
-        private void DoUnion()
-        {
-            // Get the world coordinates for the left Geometry
-            Vertices poly1 = new Vertices(_leftGeom.WorldVertices);
-
-            // Get the world coordinates for the right Geometry
-            Vertices poly2 = new Vertices(_rightGeom.WorldVertices);
-
-            // Do the union
-            PolyUnionError error;
-            Vertices union = Vertices.Union(poly1, poly2, out error);
-
-            // Check for errors.
-            switch (error)
-            {
-                case PolyUnionError.NoIntersections:
-                    WriteMessage("ERROR: Polygons do not intersect!");
-                    return;
-                case PolyUnionError.Poly1InsidePoly2:
-                    WriteMessage("Polygon 1 completely inside polygon 2.");
-                    return;
-                case PolyUnionError.InfiniteLoop:
-                    WriteMessage("Infinite Loop detected.");
-                    break;
-                case PolyUnionError.None:
-                    WriteMessage("No errors with union.");
-                    break;
-            }
-
-            // No errors, set the product of the union.
-            SetProduct(union);
-        }
-
-        private void DoSubtract()
-        {
-            // Get the world coordinates for the left Geometry
-            Vertices poly1 = new Vertices(_leftGeom.WorldVertices);
-
-            // Get the world coordinates for the right Geometry
-            Vertices poly2 = new Vertices(_rightGeom.WorldVertices);
-
-            // Do the subtraction.
-            PolyUnionError error;
-            Vertices subtract = Vertices.Subtract(poly1, poly2, out error);
-
-            // Check for errors
-            switch (error)
-            {
-                case PolyUnionError.NoIntersections:
-                    WriteMessage("ERROR: Polygons do not intersect!");
-                    return;
-
-                case PolyUnionError.Poly1InsidePoly2:
-                    WriteMessage("Polygon 1 completely inside polygon 2.");
-                    return;
-
-                case PolyUnionError.InfiniteLoop:
-                    WriteMessage("Infinite Loop detected.");
-                    break;
-
-                case PolyUnionError.None:
-                    WriteMessage("No errors with subtraction.");
-                    break;
-            }
-
-            // No errors, set the product of the union.
-            SetProduct(subtract);
-        }
-
-        private void DoIntersect()
-        {
-            // Get the world coordinates for the left Geometry
-            Vertices poly1 = new Vertices(_leftGeom.WorldVertices);
-
-            // Get the world coordinates for the right Geometry
-            Vertices poly2 = new Vertices(_rightGeom.WorldVertices);
-
-            // Do the subtraction.
-            PolyUnionError error;
-            Vertices intersect = Vertices.Intersect(poly1, poly2, out error);
-
-            // Check for errors
-            switch (error)
-            {
-                case PolyUnionError.NoIntersections:
-                    WriteMessage("ERROR: Polygons do not intersect!");
-                    return;
-
-                case PolyUnionError.Poly1InsidePoly2:
-                    WriteMessage("Polygon 1 completely inside polygon 2.");
-                    return;
-
-                case PolyUnionError.InfiniteLoop:
-                    WriteMessage("Infinite Loop detected.");
-                    break;
-
-                case PolyUnionError.None:
-                    WriteMessage("No errors with intersection.");
-                    break;
-            }
-
-            // No errors, set the product of the union.
-            SetProduct(intersect);
-        }
-
-        /// <summary>
-        /// Removes the two original polygons and creates the new polygon body and geometry.
-        /// </summary>
-        /// <param name="product">Polygon to set as the product.</param>
-        private void SetProduct(Vertices product)
-        {
-            _rightGeom = null;
-            _leftGeom = null;
-
-            PhysicsSimulator.GeomList.Clear();
-            PhysicsSimulator.BodyList.Clear();
-
-            Body body = BodyFactory.Instance.CreatePolygonBody(PhysicsSimulator, product, 1);
-            body.Position = ScreenManager.ScreenCenter;
-            body.IsStatic = true;
-
-            Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, product, ColliderData.DefaultSettings);
-
-            _leftGeom = geom;
-        }
-
-        private void AddCircle(int radius, int numSides)
-        {
-            Vertices verts = Vertices.CreateCircle(radius, numSides);
-            Body body = BodyFactory.Instance.CreateCircleBody(PhysicsSimulator, radius, 1.0f);
-            body.Position = ScreenManager.ScreenCenter;
-            body.IsStatic = true;
-            Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, verts, ColliderData.DefaultSettings);
-
-            SetGeom(geom);
-        }
-
-        private void AddRectangle(int width, int height)
-        {
-            Vertices verts = Vertices.CreateRectangle(width, height);
-            Body body = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, width, height, 1.0f);
-            body.Position = ScreenManager.ScreenCenter;
-            body.IsStatic = true;
-            Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, verts, ColliderData.DefaultSettings);
-
-            SetGeom(geom);
-        }
-
-        private void SetGeom(Geom geom)
-        {
-            if (_leftGeom == null)
-            {
-                _leftGeom = geom;
-            }
-            else if (_rightGeom == null)
-            {
-                _rightGeom = geom;
-            }
-        }
-
-        private void WriteMessage(string message)
-        {
-            _messages.Add(new TextMessage(message));
-        }
-
         private void HandKeyboardInput(InputState input)
         {
             if (input.OneOfKeysPressed(Keys.Q, Keys.W, Keys.E, Keys.A, Keys.S, Keys.D))
-                if (PhysicsSimulator.GeomList.Count < 6)
+                if (_leftGeom == null || _rightGeom == null)
                 {
                     // Add Circles
                     if (input.IsNewKeyPress(Keys.Q))
@@ -379,6 +221,170 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
                     _selectedGeom.Body.Position.X + (newMouseState.X - oldMouseState.X),
                     _selectedGeom.Body.Position.Y + (newMouseState.Y - oldMouseState.Y));
             }
+        }
+
+        private void DoUnion()
+        {
+            // Get the world coordinates for the left Geometry
+            Vertices poly1 = new Vertices(_leftGeom.WorldVertices);
+
+            // Get the world coordinates for the right Geometry
+            Vertices poly2 = new Vertices(_rightGeom.WorldVertices);
+
+            // Do the union
+            PolyUnionError error;
+            Vertices union = Vertices.Union(poly1, poly2, out error);
+
+            // Check for errors.
+            switch (error)
+            {
+                case PolyUnionError.NoIntersections:
+                    WriteMessage("ERROR: Polygons do not intersect!");
+                    return;
+                case PolyUnionError.Poly1InsidePoly2:
+                    WriteMessage("Polygon 1 completely inside polygon 2.");
+                    return;
+                case PolyUnionError.InfiniteLoop:
+                    WriteMessage("Infinite Loop detected.");
+                    break;
+                case PolyUnionError.None:
+                    WriteMessage("No errors with union.");
+                    break;
+            }
+
+            // No errors, set the product of the union.
+            SetProduct(union);
+        }
+
+        private void DoSubtract()
+        {
+            // Get the world coordinates for the left Geometry
+            Vertices poly1 = new Vertices(_leftGeom.WorldVertices);
+
+            // Get the world coordinates for the right Geometry
+            Vertices poly2 = new Vertices(_rightGeom.WorldVertices);
+
+            // Do the subtraction.
+            PolyUnionError error;
+            Vertices subtract = Vertices.Subtract(poly1, poly2, out error);
+
+            // Check for errors
+            switch (error)
+            {
+                case PolyUnionError.NoIntersections:
+                    WriteMessage("ERROR: Polygons do not intersect!");
+                    return;
+
+                case PolyUnionError.Poly1InsidePoly2:
+                    WriteMessage("Polygon 1 completely inside polygon 2.");
+                    return;
+
+                case PolyUnionError.InfiniteLoop:
+                    WriteMessage("Infinite Loop detected.");
+                    break;
+
+                case PolyUnionError.None:
+                    WriteMessage("No errors with subtraction.");
+                    break;
+            }
+
+            // No errors, set the product of the union.
+            SetProduct(subtract);
+        }
+
+        private void DoIntersect()
+        {
+            // Get the world coordinates for the left Geometry
+            Vertices poly1 = new Vertices(_leftGeom.WorldVertices);
+
+            // Get the world coordinates for the right Geometry
+            Vertices poly2 = new Vertices(_rightGeom.WorldVertices);
+
+            // Do the subtraction.
+            PolyUnionError error;
+            Vertices intersect = Vertices.Intersect(poly1, poly2, out error);
+
+            // Check for errors
+            switch (error)
+            {
+                case PolyUnionError.NoIntersections:
+                    WriteMessage("ERROR: Polygons do not intersect!");
+                    return;
+
+                case PolyUnionError.Poly1InsidePoly2:
+                    WriteMessage("Polygon 1 completely inside polygon 2.");
+                    return;
+
+                case PolyUnionError.InfiniteLoop:
+                    WriteMessage("Infinite Loop detected.");
+                    break;
+
+                case PolyUnionError.None:
+                    WriteMessage("No errors with intersection.");
+                    break;
+            }
+
+            // No errors, set the product of the union.
+            SetProduct(intersect);
+        }
+
+        private void SetProduct(Vertices product)
+        {
+            if (_rightGeom != null)
+                PhysicsSimulator.Remove(_rightGeom);
+
+            if (_leftGeom != null)
+                PhysicsSimulator.Remove(_leftGeom);
+
+            _rightGeom = null;
+            _leftGeom = null;
+
+            Body body = BodyFactory.Instance.CreatePolygonBody(PhysicsSimulator, product, 1);
+            body.Position = ScreenManager.ScreenCenter;
+            body.IsStatic = true;
+
+            Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, product, ColliderData.DefaultSettings);
+
+            _leftGeom = geom;
+        }
+
+        private void AddCircle(int radius, int numSides)
+        {
+            Vertices verts = Vertices.CreateCircle(radius, numSides);
+            Body body = BodyFactory.Instance.CreateCircleBody(PhysicsSimulator, radius, 1.0f);
+            body.Position = ScreenManager.ScreenCenter;
+            body.IsStatic = true;
+            Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, verts, ColliderData.DefaultSettings);
+
+            SetGeom(geom);
+        }
+
+        private void AddRectangle(int width, int height)
+        {
+            Vertices verts = Vertices.CreateRectangle(width, height);
+            Body body = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, width, height, 1.0f);
+            body.Position = ScreenManager.ScreenCenter;
+            body.IsStatic = true;
+            Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, verts, ColliderData.DefaultSettings);
+
+            SetGeom(geom);
+        }
+
+        private void SetGeom(Geom geom)
+        {
+            if (_leftGeom == null)
+            {
+                _leftGeom = geom;
+            }
+            else if (_rightGeom == null)
+            {
+                _rightGeom = geom;
+            }
+        }
+
+        private void WriteMessage(string message)
+        {
+            _messages.Add(new TextMessage(message));
         }
 
         public static string GetTitle()

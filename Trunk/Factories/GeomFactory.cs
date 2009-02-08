@@ -1,3 +1,4 @@
+using System;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 
@@ -278,6 +279,12 @@ namespace FarseerGames.FarseerPhysics.Factories
         public Geom CreatePolygonGeom(Body body, Vertices vertices, Vector2 offset, float rotationOffset,
                                       ColliderData data)
         {
+            if (body == null)
+                throw new ArgumentNullException("body", "Body must not be null");
+
+            if (vertices == null)
+                throw new ArgumentNullException("vertices", "Vertices must not be null");
+
             //adjust the verts to be relative to 0,0
             Vector2 centroid = vertices.GetCentroid();
             vertices.Translate(-centroid);
