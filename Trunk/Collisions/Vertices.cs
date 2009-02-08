@@ -989,7 +989,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             List<EdgeIntersectInfo> intersections;
 
             PolyUnionError gotError;
-            int startingIndex = PreparePolygons(polygon1, polygon2, out poly1, out poly2, out intersections,out gotError);
+            int startingIndex = PreparePolygons(polygon1, polygon2, out poly1, out poly2, out intersections, out gotError);
 
             if (startingIndex == -1)
             {
@@ -1120,7 +1120,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         /// <param name="polygon1">The first polygon.</param>
         /// <param name="polygon2">The second polygon.</param>
-        /// <returns>The intersection of the two polygons, or null if there was an error.</returns>
+        /// <param name="error">The error.</param>
+        /// <returns>
+        /// The intersection of the two polygons, or null if there was an error.
+        /// </returns>
         public static Vertices Intersect(Vertices polygon1, Vertices polygon2, out PolyUnionError error)
         {
             error = PolyUnionError.None;
@@ -1208,13 +1211,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// 
+        /// Prepares the polygons.
         /// </summary>
-        /// <param name="polygon1"></param>
-        /// <param name="polygon2"></param>
-        /// <param name="poly1"></param>
-        /// <param name="poly2"></param>
-        /// <param name="intersections"></param>
+        /// <param name="polygon1">The polygon1.</param>
+        /// <param name="polygon2">The polygon2.</param>
+        /// <param name="poly1">The poly1.</param>
+        /// <param name="poly2">The poly2.</param>
+        /// <param name="intersections">The intersections.</param>
+        /// <param name="error">The error.</param>
         /// <returns></returns>
         private static int PreparePolygons(Vertices polygon1, Vertices polygon2, out Vertices poly1, out Vertices poly2,
                                     out List<EdgeIntersectInfo> intersections, out PolyUnionError error)
@@ -1362,11 +1366,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         private static double VectorAngle(Vector2 p1, Vector2 p2)
         {
-            double dtheta, theta1, theta2;
-
-            theta1 = Math.Atan2(p1.Y, p1.X);
-            theta2 = Math.Atan2(p2.Y, p2.X);
-            dtheta = theta2 - theta1;
+            double theta1 = Math.Atan2(p1.Y, p1.X);
+            double theta2 = Math.Atan2(p2.Y, p2.X);
+            double dtheta = theta2 - theta1;
             while (dtheta > Math.PI)
                 dtheta -= (2 * Math.PI);
             while (dtheta < -Math.PI)
@@ -1443,6 +1445,62 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return Simplify(polygon, 0);
         }
 
+        #endregion
+
+        #region Yobiv's Extension
+        /// <summary>
+        /// Creates an capsule with the specified total height, radius and number of edges.
+        /// A capsule has the same form as a pill capsule.
+        /// </summary>
+        /// <param name="totalHeight">Total height (inner height + 2 * radius) of the capsule.</param>
+        /// <param name="radius">Radius of the capsule ends.</param>
+        /// <param name="edges">The number of edges of the capsule ends. The more edges, the more it resembles an capsule</param>
+        /// <returns></returns>
+        public static Vertices CreateCapsule(float totalHeight, float radius, int edges)
+        {
+            return CreateCapsule(totalHeight, radius, edges, radius, edges);
+        }
+
+        /// <summary>
+        /// Creates an capsule with the specified total height, radius and number of edges.
+        /// A capsule has the same form as a pill capsule.
+        /// </summary>
+        /// <param name="totalHeight">Total height (inner height + radii) of the capsule.</param>
+        /// <param name="topRadius">Radius of the top.</param>
+        /// <param name="topEdges">The number of edges of the top. The more edges, the more it resembles an capsule</param>
+        /// <param name="bottomRadius">Radius of bottom.</param>
+        /// <param name="bottomEdges">The number of edges of the bottom. The more edges, the more it resembles an capsule</param>
+        /// <returns></returns>
+        public static Vertices CreateCapsule(float totalHeight, float topRadius, int topEdges, float bottomRadius, int bottomEdges)
+        {
+            Vertices vertices = new Vertices();
+
+            float height = (totalHeight - topRadius - bottomRadius) * 0.5f;
+
+            // top
+            vertices.Add(new Vector2(topRadius, height));
+
+            float stepSize = MathHelper.Pi / topEdges;
+            for (int i = 1; i < topEdges - 1; i++)
+            {
+                vertices.Add(new Vector2(topRadius * Calculator.Cos(stepSize * i), topRadius * Calculator.Sin(stepSize * i) + height));
+            }
+
+            vertices.Add(new Vector2(-topRadius, height));
+
+            // bottom
+            vertices.Add(new Vector2(-bottomRadius, -height));
+
+            stepSize = MathHelper.Pi / bottomEdges;
+            for (int i = 1; i < bottomEdges - 1; i++)
+            {
+                vertices.Add(new Vector2(-bottomRadius * Calculator.Cos(stepSize * i), -bottomRadius * Calculator.Sin(stepSize * i) - height));
+            }
+
+            vertices.Add(new Vector2(bottomRadius, -height));
+
+            return vertices;
+        }
         #endregion
     }
 
