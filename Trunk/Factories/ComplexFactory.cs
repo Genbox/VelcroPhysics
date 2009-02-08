@@ -46,13 +46,12 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="links">Number of links desired in the chain.</param>
         /// <param name="height">Height of each link.</param>
         /// <param name="mass">Mass of each link.</param>
-        /// <param name="collisionGroup">Collision group for the chain.</param>
         /// <param name="type">The joint/spring type.</param>
         /// <returns>Path</returns>
         public Path CreateChain(PhysicsSimulator physicsSimulator, Vector2 start, Vector2 end, int links, float height,
-                                float mass, int collisionGroup, LinkType type)
+                                float mass, LinkType type)
         {
-            Path p = CreateChain(start, end, (Vector2.Distance(start, end) / links), height, mass, collisionGroup, type);
+            Path p = CreateChain(start, end, (Vector2.Distance(start, end) / links), height, mass, type);
 
             p.AddToPhysicsSimulator(physicsSimulator);
 
@@ -67,13 +66,12 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="links">Number of links desired in the chain.</param>
         /// <param name="height">Height of each link.</param>
         /// <param name="mass">Mass of each link.</param>
-        /// <param name="collisionGroup">Collision group for the chain.</param>   
-        ///      /// <param name="type">The joint/spring type.</param>
+        /// <param name="type">The joint/spring type.</param>
 
         /// <returns>Path</returns>
-        public Path CreateChain(Vector2 start, Vector2 end, int links, float height, float mass, int collisionGroup, LinkType type)
+        public Path CreateChain(Vector2 start, Vector2 end, int links, float height, float mass, LinkType type)
         {
-            return CreateChain(start, end, (Vector2.Distance(start, end) / links), height, mass, collisionGroup, type);
+            return CreateChain(start, end, (Vector2.Distance(start, end) / links), height, mass, type);
         }
 
         /// <summary>
@@ -84,14 +82,13 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="end">Ending point of the chain.</param>
         /// <param name="links">Number of links desired in the chain.</param>
         /// <param name="mass">Mass of each link.</param>
-        /// <param name="collisionGroup">Collision group for the chain.</param>
         /// <param name="type">The joint/spring type.</param>
         /// <returns>Path</returns>
         public Path CreateChain(PhysicsSimulator physicsSimulator, Vector2 start, Vector2 end, int links, float mass,
-                                int collisionGroup, LinkType type)
+                                LinkType type)
         {
             Path path = CreateChain(start, end, (Vector2.Distance(start, end) / links),
-                                    (Vector2.Distance(start, end) / links) * (1.0f / 3.0f), mass, collisionGroup, type);
+                                    (Vector2.Distance(start, end) / links) * (1.0f / 3.0f), mass, type);
 
             path.AddToPhysicsSimulator(physicsSimulator);
 
@@ -105,13 +102,12 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="end">The end.</param>
         /// <param name="links">The links.</param>
         /// <param name="mass">The mass.</param>
-        /// <param name="collisionGroup">Collision group for the chain.</param>
         /// <param name="type">The joint/spring type.</param>
         /// <returns></returns>
-        public Path CreateChain(Vector2 start, Vector2 end, int links, float mass, int collisionGroup, LinkType type)
+        public Path CreateChain(Vector2 start, Vector2 end, int links, float mass, LinkType type)
         {
             return CreateChain(start, end, (Vector2.Distance(start, end) / links),
-                               (Vector2.Distance(start, end) / links) * (1.0f / 3.0f), mass, collisionGroup, type);
+                               (Vector2.Distance(start, end) / links) * (1.0f / 3.0f), mass, type);
         }
 
         /// <summary>
@@ -123,13 +119,12 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="mass">The mass.</param>
-        /// <param name="collisionGroup">Collision group for the chain.</param>
         /// <param name="type">The joint/spring type.</param>
         /// <returns></returns>
         public Path CreateChain(PhysicsSimulator physicsSimulator, Vector2 start, Vector2 end, float width, float height,
-                                float mass, int collisionGroup, LinkType type)
+                                float mass, LinkType type)
         {
-            Path path = CreateChain(start, end, width, height, mass, false, false, collisionGroup, type);
+            Path path = CreateChain(start, end, width, height, mass, false, false, type);
 
             path.AddToPhysicsSimulator(physicsSimulator);
 
@@ -147,13 +142,12 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="mass">The mass.</param>
         /// <param name="pinStart">if set to <c>true</c> [pin start].</param>
         /// <param name="pinEnd">if set to <c>true</c> [pin end].</param>
-        /// <param name="collisionGroup">Collision group for the chain.</param>
         /// <param name="type">The joint/spring type.</param>
         /// <returns></returns>
         public Path CreateChain(PhysicsSimulator physicsSimulator, Vector2 start, Vector2 end, float width, float height,
-                                float mass, bool pinStart, bool pinEnd, int collisionGroup, LinkType type)
+                                float mass, bool pinStart, bool pinEnd, LinkType type)
         {
-            Path path = CreateChain(start, end, width, height, mass, pinStart, pinEnd, collisionGroup, type);
+            Path path = CreateChain(start, end, width, height, mass, pinStart, pinEnd, type);
 
             path.AddToPhysicsSimulator(physicsSimulator);
 
@@ -168,12 +162,11 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="mass">The mass.</param>
-        /// <param name="collisionGroup">Collision group for the chain.</param>
         /// <param name="type">The joint/spring type.</param>
         /// <returns></returns>
-        public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, int collisionGroup, LinkType type)
+        public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, LinkType type)
         {
-            return CreateChain(start, end, width, height, mass, false, false, collisionGroup, type);
+            return CreateChain(start, end, width, height, mass, false, false, type);
         }
 
         /// <summary>
@@ -186,11 +179,10 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="mass">The mass.</param>
         /// <param name="pinStart">if set to <c>true</c> [pin start].</param>
         /// <param name="pinEnd">if set to <c>true</c> [pin end].</param>
-        /// <param name="collisionGroup">Collision group for the chain.</param>
         /// <param name="type">The joint/spring type.</param>
         /// <returns></returns>
         public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart,
-                                bool pinEnd, int collisionGroup, LinkType type)
+                                bool pinEnd, LinkType type)
         {
             Path path = new Path(width, height, mass, false); // create the path
             path.Add(start); // add starting point
@@ -200,13 +192,6 @@ namespace FarseerGames.FarseerPhysics.Factories
 
             path.Update(); // call update to create all the bodies
 
-            Geom geom;
-            for (int i = 0; i < path.Bodies.Count; i++)
-            {
-                geom = GeomFactory.Instance.CreateRectangleGeom(path.Bodies[i], width, height);
-                geom.CollisionGroup = collisionGroup;
-                path.Add(geom); // add a geom to the chain
-            }
             path.LinkBodies(type, Min, Max, SpringConstant, DampingConstant); // link bodies together
 
             if (pinStart)
@@ -234,11 +219,10 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="mass">The mass.</param>
         /// <param name="pinStart">if set to <c>true</c> [pin start].</param>
         /// <param name="pinEnd">if set to <c>true</c> [pin end].</param>
-        /// <param name="collisionGroup">Collision group for the chain.</param>
         /// <param name="type">The joint/spring type.</param>
         /// <returns></returns>
         public Path CreateRope(Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart,
-                               bool pinEnd, int collisionGroup, LinkType type)
+                               bool pinEnd, LinkType type)
         {
             Path path = new Path(width, height, mass, false); // create the path
             path.Add(start); // add starting point
@@ -248,13 +232,6 @@ namespace FarseerGames.FarseerPhysics.Factories
 
             path.Update(); // call update to create all the bodies
 
-            Geom geom;
-            for (int i = 0; i < path.Bodies.Count; i++)
-            {
-                geom = GeomFactory.Instance.CreateRectangleGeom(path.Bodies[i], width, height);
-                geom.CollisionGroup = collisionGroup;
-                path.Add(geom); // add a geom to the chain
-            }
             path.LinkBodies(type, Min, Max, SpringConstant, DampingConstant); // link bodies together
 
             if (pinStart)
