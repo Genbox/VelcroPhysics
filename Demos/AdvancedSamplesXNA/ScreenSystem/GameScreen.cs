@@ -59,6 +59,7 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         public bool DebugViewEnabled
         {
             get { return _debugViewEnabled; }
+            set { _debugViewEnabled = value; }
         }
 
         /// <summary>
