@@ -1,8 +1,8 @@
 using System;
 using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Interfaces;
 
 #if (XNA)
-using FarseerGames.FarseerPhysics.Interfaces;
 using Microsoft.Xna.Framework;
 #else
 using FarseerGames.FarseerPhysics.Mathematics;
