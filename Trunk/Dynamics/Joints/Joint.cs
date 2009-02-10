@@ -1,12 +1,14 @@
 using System;
+using FarseerGames.FarseerPhysics.Interfaces;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
     /// Provides common functionality for joints.
     /// </summary>
-    public abstract class Joint : IDisposable
+    public abstract class Joint : IIsDisposable
     {
+        private bool _isDisposed;
         public float BiasFactor = .2f;
 
         /// <summary>
@@ -15,8 +17,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         public float Breakpoint = float.MaxValue;
 
         public bool Enabled = true;
-        public bool IsDisposed;
-
         public float Softness;
 
         public Object Tag { get; set; }
@@ -72,5 +72,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
             IsDisposed = true;
         }
+
+        #region IIsDisposable Members
+
+        public bool IsDisposed
+        {
+            get { return _isDisposed; }
+            set { _isDisposed = value; }
+        }
+
+        #endregion
+
     }
 }

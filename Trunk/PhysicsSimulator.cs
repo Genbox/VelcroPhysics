@@ -42,25 +42,25 @@ namespace FarseerGames.FarseerPhysics
         internal float biasFactor = .8f;
 
         internal List<Body> bodyAddList;
-        internal BodyList bodyList;
+        internal GenericList<Body> bodyList;
         internal List<Body> bodyRemoveList;
         internal float cleanUpTime = -1;
 
         internal List<Controller> controllerAddList;
-        internal ControllerList controllerList;
+        internal GenericList<Controller> controllerList;
         internal List<Controller> controllerRemoveList;
 
         internal FrictionType frictionType = FrictionType.Average;
         internal List<Geom> geomAddList;
-        internal GeomList geomList;
+        internal GenericList<Geom> geomList;
         internal List<Geom> geomRemoveList;
 
         internal List<Joint> jointAddList;
-        internal JointList jointList;
+        internal GenericList<Joint> jointList;
         internal List<Joint> jointRemoveList;
 
         internal List<Spring> springAddList;
-        internal SpringList springList;
+        internal GenericList<Spring> springList;
         internal List<Spring> springRemoveList;
 
         internal int maxContactsToDetect = 10;
@@ -131,7 +131,7 @@ namespace FarseerGames.FarseerPhysics
         /// <summary>
         /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
-        public GeomList GeomList
+        public GenericList<Geom> GeomList
         {
             get { return geomList; }
         }
@@ -139,7 +139,7 @@ namespace FarseerGames.FarseerPhysics
         /// <summary>
         /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
-        public BodyList BodyList
+        public GenericList<Body> BodyList
         {
             get { return bodyList; }
         }
@@ -147,7 +147,7 @@ namespace FarseerGames.FarseerPhysics
         /// <summary>
         /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
-        public ControllerList ControllerList
+        public GenericList<Controller> ControllerList
         {
             get { return controllerList; }
         }
@@ -155,7 +155,7 @@ namespace FarseerGames.FarseerPhysics
         /// <summary>
         /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
-        public SpringList SpringList
+        public GenericList<Spring> SpringList
         {
             get { return springList; }
         }
@@ -163,7 +163,7 @@ namespace FarseerGames.FarseerPhysics
         /// <summary>
         /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
-        public JointList JointList
+        public GenericList<Joint> JointList
         {
             get { return jointList; }
         }
@@ -273,23 +273,23 @@ namespace FarseerGames.FarseerPhysics
 
         private void ConstructPhysicsSimulator(Vector2 gravity)
         {
-            geomList = new GeomList();
+            geomList = new GenericList<Geom>();
             geomAddList = new List<Geom>();
             geomRemoveList = new List<Geom>();
 
-            bodyList = new BodyList();
+            bodyList = new GenericList<Body>();
             bodyAddList = new List<Body>();
             bodyRemoveList = new List<Body>();
 
-            controllerList = new ControllerList();
+            controllerList = new GenericList<Controller>();
             controllerAddList = new List<Controller>();
             controllerRemoveList = new List<Controller>();
 
-            jointList = new JointList();
+            jointList = new GenericList<Joint>();
             jointAddList = new List<Joint>();
             jointRemoveList = new List<Joint>();
 
-            springList = new SpringList();
+            springList = new GenericList<Spring>();
             springAddList = new List<Spring>();
             springRemoveList = new List<Spring>();
 
@@ -604,8 +604,8 @@ namespace FarseerGames.FarseerPhysics
 
                 if (!_body.IgnoreGravity)
                 {
-                    _gravityForce.X = _gravity.X*_body.mass;
-                    _gravityForce.Y = _gravity.Y*_body.mass;
+                    _gravityForce.X = _gravity.X * _body.mass;
+                    _gravityForce.Y = _gravity.Y * _body.mass;
 
                     #region INLINE: _body.ApplyForce(ref _gravityForce);
 
@@ -623,7 +623,7 @@ namespace FarseerGames.FarseerPhysics
 
         private void ApplyImpulses(float dt)
         {
-            float inverseDt = 1f/dt;
+            float inverseDt = 1f / dt;
 
             for (int i = 0; i < jointList.Count; i++)
             {
@@ -680,7 +680,8 @@ namespace FarseerGames.FarseerPhysics
         private void ProcessAddedItems()
         {
             //Add any new geometries
-            for (int i = 0; i < geomAddList.Count; i++)
+            int geomAddCount = geomAddList.Count;
+            for (int i = 0; i < geomAddCount; i++)
             {
                 Geom geom = geomAddList[i];
                 if (!geomList.Contains(geom))
@@ -696,7 +697,8 @@ namespace FarseerGames.FarseerPhysics
             geomAddList.Clear();
 
             //Add any new bodies
-            for (int i = 0; i < bodyAddList.Count; i++)
+            int bodyAddCount = bodyAddList.Count;
+            for (int i = 0; i < bodyAddCount; i++)
             {
                 if (!bodyList.Contains(bodyAddList[i]))
                 {
@@ -706,7 +708,8 @@ namespace FarseerGames.FarseerPhysics
             bodyAddList.Clear();
 
             //Add any new controllers
-            for (int i = 0; i < controllerAddList.Count; i++)
+            int controllerAddCount = controllerAddList.Count;
+            for (int i = 0; i < controllerAddCount; i++)
             {
                 if (!controllerList.Contains(controllerAddList[i]))
                 {
@@ -716,7 +719,8 @@ namespace FarseerGames.FarseerPhysics
             controllerAddList.Clear();
 
             //Add any new joints
-            for (int i = 0; i < jointAddList.Count; i++)
+            int jointAddCount = jointAddList.Count;
+            for (int i = 0; i < jointAddCount; i++)
             {
                 if (!jointList.Contains(jointAddList[i]))
                 {
@@ -726,7 +730,8 @@ namespace FarseerGames.FarseerPhysics
             jointAddList.Clear();
 
             //Add any new springs
-            for (int i = 0; i < springAddList.Count; i++)
+            int springAddCount = springAddList.Count;
+            for (int i = 0; i < springAddCount; i++)
             {
                 if (!springList.Contains(springAddList[i]))
                 {
@@ -739,9 +744,11 @@ namespace FarseerGames.FarseerPhysics
         private void ProcessRemovedItems()
         {
             //Remove any new geometries
-            for (int i = 0; i < geomRemoveList.Count; i++)
+            int geomRemoveCount = geomRemoveList.Count;
+            for (int i = 0; i < geomRemoveCount; i++)
             {
                 geomRemoveList[i].isRemoved = true;
+                geomRemoveList[i].physicsSimulator = null;
                 geomList.Remove(geomRemoveList[i]);
 
                 //Remove any arbiters associated with the geometries being removed
@@ -750,6 +757,8 @@ namespace FarseerGames.FarseerPhysics
                     if (arbiterList[j - 1].GeometryA == geomRemoveList[i] ||
                         arbiterList[j - 1].GeometryB == geomRemoveList[i])
                     {
+                        //NOTE: Should we create a RemoveComplete method and remove all Contacts associated
+                        //with the arbiter?
                         arbiterList.Remove(arbiterList[j - 1]);
                     }
                 }
@@ -763,28 +772,32 @@ namespace FarseerGames.FarseerPhysics
             geomRemoveList.Clear();
 
             //Remove any new bodies
-            for (int i = 0; i < bodyRemoveList.Count; i++)
+            int bodyRemoveCount = bodyRemoveList.Count;
+            for (int i = 0; i < bodyRemoveCount; i++)
             {
                 bodyList.Remove(bodyRemoveList[i]);
             }
             bodyRemoveList.Clear();
 
             //Remove any new controllers
-            for (int i = 0; i < controllerRemoveList.Count; i++)
+            int controllerRemoveCount = controllerRemoveList.Count;
+            for (int i = 0; i < controllerRemoveCount; i++)
             {
                 controllerList.Remove(controllerRemoveList[i]);
             }
             controllerRemoveList.Clear();
 
             //Remove any new joints
-            for (int i = 0; i < jointRemoveList.Count; i++)
+            int jointRemoveCount = jointRemoveList.Count;
+            for (int i = 0; i < jointRemoveCount; i++)
             {
                 jointList.Remove(jointRemoveList[i]);
             }
             jointRemoveList.Clear();
 
             //Remove any new springs
-            for (int i = 0; i < springRemoveList.Count; i++)
+            int springRemoveCount = springRemoveList.Count;
+            for (int i = 0; i < springRemoveCount; i++)
             {
                 springList.Remove(springRemoveList[i]);
             }
@@ -805,7 +818,7 @@ namespace FarseerGames.FarseerPhysics
                 jointList[i].Validate();
             }
 
-            //Allow each spring to validate itself. this is where a joint can Dispose of itself if need be.
+            //Allow each spring to validate itself. this is where a spring can Dispose of itself if need be.
             for (int i = 0; i < springList.Count; i++)
             {
                 springList[i].Validate();
@@ -823,8 +836,8 @@ namespace FarseerGames.FarseerPhysics
             springList.RemoveDisposed();
             jointList.RemoveDisposed();
 
-            //Remove all arbiters that contain 1 or more disposed rigid bodies.
-            arbiterList.RemoveContainsDisposedBody(arbiterPool);
+            //Clean up the arbiterlist
+            arbiterList.CleanArbiterList(arbiterPool);
         }
 
         #region Added by Daniel Pramel 08/24/08

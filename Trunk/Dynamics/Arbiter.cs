@@ -366,11 +366,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             }
         }
 
-        internal bool ContainsDisposedGeom()
-        {
-            return GeometryA.IsDisposed || GeometryB.IsDisposed || (GeometryA.body.isStatic && GeometryB.body.isStatic);
-        }
-
         internal void Reset()
         {
             GeometryA = null;

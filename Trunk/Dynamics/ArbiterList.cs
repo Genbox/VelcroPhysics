@@ -44,16 +44,20 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             for (int i = 0; i < Count; i++)
             {
-                if (ContactCountEqualsZero(this[i]))
+                //If they don't have any contacts associated with them. Remove them.
+                if (this[i].ContactCount == 0)
                 {
                     _markedForRemovalList.Add(this[i]);
                 }
             }
-            for (int j = 0; j < _markedForRemovalList.Count; j++)
+
+            int count = _markedForRemovalList.Count;
+            for (int j = 0; j < count; j++)
             {
                 Remove(_markedForRemovalList[j]);
                 arbiterPool.Insert(_markedForRemovalList[j]);
 
+                //No contacts exist between the two geometries, fire the OnSeperation event.
                 if (_markedForRemovalList[j].GeometryA.OnSeparation != null)
                 {
                     _markedForRemovalList[j].GeometryA.OnSeparation(_markedForRemovalList[j].GeometryA,
@@ -69,31 +73,35 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             _markedForRemovalList.Clear();
         }
 
-        public void RemoveContainsDisposedBody(Pool<Arbiter> arbiterPool)
+        public void CleanArbiterList(Pool<Arbiter> arbiterPool)
         {
             for (int i = 0; i < Count; i++)
             {
-                if (ContainsDisposedBody(this[i]))
+                //Remove those arbiters that have disposed geometries
+                if (this[i].GeometryA.IsDisposed || this[i].GeometryB.IsDisposed)
+                {
+                    _markedForRemovalList.Add(this[i]);
+                }
+
+                //Remove the arbiter where both bodies are static
+                if (this[i].GeometryA.body.isStatic && this[i].GeometryB.body.isStatic)
                 {
                     _markedForRemovalList.Add(this[i]);
                 }
             }
-            for (int j = 0; j < _markedForRemovalList.Count; j++)
+
+            int count = _markedForRemovalList.Count;
+            for (int j = 0; j < count; j++)
             {
+                //Remove the arbiters from the list
                 Remove(_markedForRemovalList[j]);
+
+                //And insert them back into the pool
                 arbiterPool.Insert(_markedForRemovalList[j]);
             }
+
+            //Clear the temp arbiter removal list
             _markedForRemovalList.Clear();
-        }
-
-        internal static bool ContactCountEqualsZero(Arbiter a)
-        {
-            return a.ContactCount == 0;
-        }
-
-        internal static bool ContainsDisposedBody(Arbiter a)
-        {
-            return a.ContainsDisposedGeom();
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 #if (XNA)
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Controllers;
+using FarseerGames.FarseerPhysics.Interfaces;
 using Microsoft.Xna.Framework;
 #else
 using FarseerGames.FarseerPhysics.Collisions;
@@ -20,7 +21,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     /// <para>In technical terms, this is known as Symplectic Euler Integration because
     /// velocity is updated prior to position (The reverse of simple Euler Integration)</para>
     /// </summary>
-    public class Body : IDisposable
+    public class Body : IIsDisposable
     {
         public delegate void UpdatedEventHandler(ref Vector2 position, ref float rotation);
 
@@ -32,6 +33,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private int _revolutions;
         private Vector2 _tempVelocity = Vector2.Zero;
         private float _torque;
+        private bool _isDisposed;
 
         internal Vector2 impulse = Vector2.Zero;
         internal float inverseMass = 1;
@@ -64,11 +66,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         public bool IgnoreGravity;
 
         /// <summary>
-        /// Returns true if the Body is disposed
-        /// </summary>
-        public bool IsDisposed;
-
-        /// <summary>
         /// Gets or sets a Value indicating whether this body is quadratic drag enabled.
         /// </summary>
         /// <Value>
@@ -81,7 +78,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// Linear drag is the drag applied when the body travels in a straight line.
         /// Default is 0.001f - tuned for a body of mass 1
         /// </summary>
-        public float LinearDragCoefficient = .001f; 
+        public float LinearDragCoefficient = .001f;
 
         /// <summary>
         /// Gets or sets the linear velocity.
@@ -681,7 +678,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             #endregion
 
             #region INLINE: Vector2.Add(ref _dv, ref impulse, out impulse);
-            
+
             impulse.X += _dv.X;
             impulse.Y += _dv.Y;
 
@@ -703,7 +700,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             #endregion
 
             #region INLINE: Vector2.Add(ref _dv, ref impulse, out impulse);
-            
+
             impulse.X += _dv.X;
             impulse.Y += _dv.Y;
 
@@ -1025,6 +1022,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private Matrix _bodyMatrixTemp = Matrix.Identity;
         private Matrix _rotationMatrixTemp = Matrix.Identity;
         private Matrix _translationMatrixTemp = Matrix.Identity;
+
+        #endregion
+
+        #region IIsDisposable Members
+
+        public bool IsDisposed
+        {
+            get { return _isDisposed; }
+            set { _isDisposed = value; }
+        }
 
         #endregion
     }

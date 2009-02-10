@@ -1,14 +1,15 @@
 using System;
+using FarseerGames.FarseerPhysics.Interfaces;
 
 namespace FarseerGames.FarseerPhysics.Controllers
 {
     /// <summary>
     /// Provides common functionality for controllers.
     /// </summary>
-    public abstract class Controller : IDisposable
+    public abstract class Controller : IIsDisposable
     {
         public bool Enabled = true;
-        public bool IsDisposed;
+        private bool _isDisposed;
 
         /// <summary>
         /// Gets or sets the tag. The Tag can contain a custom object.
@@ -51,6 +52,12 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 //dispose unmanaged resources
             }
             IsDisposed = true;
+        }
+
+        public bool IsDisposed
+        {
+            get { return _isDisposed; }
+            set { _isDisposed = value; }
         }
     }
 }
