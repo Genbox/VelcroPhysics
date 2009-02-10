@@ -1,13 +1,11 @@
 using System;
+using FarseerGames.FarseerPhysics.Interfaces;
+using FarseerGames.FarseerPhysics.Collisions;
+using FarseerGames.FarseerPhysics.Controllers;
 
 #if (XNA)
-using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Controllers;
-using FarseerGames.FarseerPhysics.Interfaces;
 using Microsoft.Xna.Framework;
 #else
-using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Mathematics;
 #endif
 

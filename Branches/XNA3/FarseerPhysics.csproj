@@ -84,6 +84,9 @@
     <Compile Include="..\..\Trunk\Collisions\BruteForceCollider.cs">
       <Link>Collisions\BruteForceCollider.cs</Link>
     </Compile>
+    <Compile Include="..\..\Trunk\Collisions\ColliderData.cs">
+      <Link>Collisions\ColliderData.cs</Link>
+    </Compile>
     <Compile Include="..\..\Trunk\Collisions\CollisionHelper.cs">
       <Link>Collisions\CollisionHelper.cs</Link>
     </Compile>
@@ -204,11 +207,20 @@
     <Compile Include="..\..\Trunk\Factories\SpringFactory.cs">
       <Link>Factories\SpringFactory.cs</Link>
     </Compile>
+    <Compile Include="..\..\Trunk\GenericList.cs">
+      <Link>GenericList.cs</Link>
+    </Compile>
     <Compile Include="..\..\Trunk\Interfaces\IBroadPhaseCollider.cs">
       <Link>Interfaces\IBroadPhaseCollider.cs</Link>
     </Compile>
     <Compile Include="..\..\Trunk\Interfaces\IFluidContainer.cs">
       <Link>Interfaces\IFluidContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Interfaces\IIsDisposable.cs">
+      <Link>Interfaces\IIsDisposable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Interfaces\INarrowPhaseCollider.cs">
+      <Link>Interfaces\INarrowPhaseCollider.cs</Link>
     </Compile>
     <Compile Include="..\..\Trunk\Mathematics\BilinearInterpolator.cs">
       <Link>Mathematics\BilinearInterpolator.cs</Link>
@@ -231,10 +243,6 @@
     <Compile Include="..\..\Trunk\Scaling.cs">
       <Link>Scaling.cs</Link>
     </Compile>
-    <Compile Include="Collisions\ColliderData.cs" />
-    <Compile Include="GenericList.cs" />
-    <Compile Include="Interfaces\IIsDisposable.cs" />
-    <Compile Include="Interfaces\INarrowPhaseCollider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
