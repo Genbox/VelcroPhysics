@@ -1,13 +1,12 @@
-using System;
+﻿using System;
 
 namespace FarseerGames.FarseerPhysics.Interfaces
 {
     /// <summary>
-    /// Extends IDisposable to include the boolean check 'IsDisposed'.
-    /// <para><c>if(object.IsDisposed){return;}</c></para>
+    /// Interface used by the generic list
     /// </summary>
     public interface IIsDisposable : IDisposable
     {
-        bool IsDisposed { get; }
+        bool IsDisposed { get; set; }
     }
 }

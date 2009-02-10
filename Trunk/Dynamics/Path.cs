@@ -18,12 +18,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     {
         private const float _controlPointSize = 6; // size of control point used in PointInControlPoint
         private const float _precision = 0.0005f; // a coeffient used to decide how precise to place bodies
-        private BodyList _bodies; // holds all bodies for this path
+        private GenericList<Body> _bodies; // holds all bodies for this path
         private Vertices _controlPoints; // holds all control points for this path
-        private GeomList _geoms; // holds all geoms for this path
-        private SpringList _springs; // holds all springs for this path
+        private GenericList<Geom> _geoms; // holds all geoms for this path
+        private GenericList<Spring> _springs; // holds all springs for this path
         private float _height; // width and height of bodies to create
-        private JointList _joints; // holds all the joints for this path
+        private GenericList<Joint> _joints; // holds all the joints for this path
         private bool _loop; // is this path a loop
         private float _mass; // width and height of bodies to create
         private bool _recalculate = true; // will be set to true if path needs to be recalculated
@@ -42,10 +42,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             _height = height;
             _loop = endless;
             _mass = mass;
-            _geoms = new GeomList();
-            _bodies = new BodyList();
-            _joints = new JointList();
-            _springs = new SpringList();
+            _geoms = new GenericList<Geom>();
+            _bodies = new GenericList<Body>();
+            _joints = new GenericList<Joint>();
+            _springs = new GenericList<Spring>();
             _controlPoints = new Vertices();
         }
 
@@ -53,7 +53,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// Gets the bodies.
         /// </summary>
         /// <Value>The bodies.</Value>
-        public BodyList Bodies
+        public GenericList<Body> Bodies
         {
             get { return _bodies; }
         }
@@ -62,7 +62,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// Gets the joints.
         /// </summary>
         /// <Value>The joints.</Value>
-        public JointList Joints
+        public GenericList<Joint> Joints
         {
             get { return _joints; }
         }
@@ -71,7 +71,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// Gets the geoms.
         /// </summary>
         /// <Value>The geoms.</Value>
-        public GeomList Geoms
+        public GenericList<Geom> Geoms
         {
             get { return _geoms; }
         }
@@ -80,7 +80,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// Gets the springs.
         /// </summary>
         /// <Value>The springs.</Value>
-        public SpringList Springs
+        public GenericList<Spring> Springs
         {
             get { return _springs; }
         }

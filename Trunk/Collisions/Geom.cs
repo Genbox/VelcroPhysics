@@ -14,7 +14,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// The geometry class is the heart of collision detection.
     /// A Geom need a body and a set of vertices. The vertices should define the edge of the shape.
     /// </summary>
-    public class Geom : IEquatable<Geom>, IDisposable
+    public class Geom : IEquatable<Geom>, IIsDisposable
     {
         #region Delegates
 
@@ -38,6 +38,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private Vector2 _position = new Vector2(0, 0);
         private float _rotation;
         private float _rotationOffset;
+        private bool _isDisposed;
         internal Body body;
         internal bool isRemoved = true; //true=>geometry removed from simulation
         internal Vertices localVertices;
@@ -71,10 +72,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// no friction. When two geometries collide, the minimum friction coefficient between the two bodies is used.
         /// </summary>
         public float FrictionCoefficient;
-        /// <summary>
-        /// Returns true if the Body is disposed
-        /// </summary>
-        public bool IsDisposed;
         /// <summary>
         /// Fires when a collision occurs with the geom
         /// </summary>
@@ -680,6 +677,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private Vector2 _localVertice;
         private Vector2 _vertice = Vector2.Zero;
         private Vector2 _newPos = Vector2.Zero;
+
+        #endregion
+
+        #region IIsDisposable Members
+
+        public bool IsDisposed
+        {
+            get { return _isDisposed; }
+            set { _isDisposed = value; }
+        }
 
         #endregion
     }

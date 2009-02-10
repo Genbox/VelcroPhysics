@@ -102,9 +102,6 @@
     <Compile Include="..\..\Trunk\Collisions\Geom.cs">
       <Link>Collisions\Geom.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\GeomList.cs">
-      <Link>Collisions\GeomList.cs</Link>
-    </Compile>
     <Compile Include="..\..\Trunk\Collisions\Grid.cs">
       <Link>Collisions\Grid.cs</Link>
     </Compile>
@@ -126,9 +123,6 @@
     <Compile Include="..\..\Trunk\Controllers\Controller.cs">
       <Link>Controllers\Controller.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Controllers\ControllerList.cs">
-      <Link>Controllers\ControllerList.cs</Link>
-    </Compile>
     <Compile Include="..\..\Trunk\Controllers\FluidDragController.cs">
       <Link>Controllers\FluidDragController.cs</Link>
     </Compile>
@@ -147,9 +141,6 @@
     <Compile Include="..\..\Trunk\Dynamics\Body.cs">
       <Link>Dynamics\Body.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\BodyList.cs">
-      <Link>Dynamics\BodyList.cs</Link>
-    </Compile>
     <Compile Include="..\..\Trunk\Dynamics\Joints\AngleJoint.cs">
       <Link>Dynamics\Joints\AngleJoint.cs</Link>
     </Compile>
@@ -167,9 +158,6 @@
     </Compile>
     <Compile Include="..\..\Trunk\Dynamics\Joints\Joint.cs">
       <Link>Dynamics\Joints\Joint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Joints\JointList.cs">
-      <Link>Dynamics\Joints\JointList.cs</Link>
     </Compile>
     <Compile Include="..\..\Trunk\Dynamics\Joints\PinJoint.cs">
       <Link>Dynamics\Joints\PinJoint.cs</Link>
@@ -197,9 +185,6 @@
     </Compile>
     <Compile Include="..\..\Trunk\Dynamics\Springs\Spring.cs">
       <Link>Dynamics\Springs\Spring.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Springs\SpringList.cs">
-      <Link>Dynamics\Springs\SpringList.cs</Link>
     </Compile>
     <Compile Include="..\..\Trunk\Enums.cs">
       <Link>Enums.cs</Link>
@@ -247,6 +232,8 @@
       <Link>Scaling.cs</Link>
     </Compile>
     <Compile Include="Collisions\ColliderData.cs" />
+    <Compile Include="GenericList.cs" />
+    <Compile Include="Interfaces\IIsDisposable.cs" />
     <Compile Include="Interfaces\INarrowPhaseCollider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

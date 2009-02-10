@@ -1,12 +1,15 @@
 using System;
+using FarseerGames.FarseerPhysics.Interfaces;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
     /// <summary>
     /// Provides common functionality for springs.
     /// </summary>
-    public abstract class Spring : IDisposable
+    public abstract class Spring : IIsDisposable
     {
+        private bool _isDisposed;
+        
         /// <summary>
         /// The Breakpoint simply indicates the maximum Value the JointError can be before it breaks.
         /// </summary>
@@ -14,7 +17,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public float DampingConstant;
         public bool Enabled = true;
-        public bool IsDisposed;
         public float SpringConstant;
 
         public Object Tag { get; set; }
@@ -70,5 +72,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
             }
             IsDisposed = true;
         }
+
+        #region IIsDisposable Members
+
+        public bool IsDisposed
+        {
+            get { return _isDisposed; }
+            set { _isDisposed = value; }
+        }
+
+        #endregion
+
     }
 }
