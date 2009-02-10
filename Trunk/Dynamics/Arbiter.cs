@@ -13,10 +13,6 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
-    //TODO: Since we insert all arbiters that is already in the arbiterList into the pool
-    //should we not restrict the size of the pool to a fixed number? A large simulation
-    //that runs for some time might accumulate A LOT of arbiters in the pool.
-
     /// <summary>
     /// Used for collision detection.
     /// Constructed when 2 geoms collide. Applies impulses between the 2 geoms.
@@ -114,19 +110,28 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     break;
             }
 
-            InitializeContactLists(physicsSimulator.maxContactsToDetect);
+            //Initialize the contact lists
+            if (_contactList == null)
+            {
+                _contactList = new ContactList(physicsSimulator.maxContactsToDetect);
+            }
+            if (_newContactList == null)
+            {
+                _newContactList = new ContactList(physicsSimulator.maxContactsToDetect);
+            }
+            if (_mergedContactList == null)
+            {
+                _mergedContactList = new ContactList(physicsSimulator.maxContactsToDetect);
+            }
         }
 
         internal void PreStepImpulse(float inverseDt)
         {
-            if (!GeometryA.CollisionResponseEnabled || !GeometryB.CollisionResponseEnabled)
-                return;
-
             for (int i = 0; i < _contactList.Count; i++)
             {
                 Contact contact = _contactList[i];
 
-                //calculate _contact offset from body position
+                //calculate contact offset from body position
                 Vector2.Subtract(ref contact.Position, ref GeometryA.body.position, out _r1);
                 Vector2.Subtract(ref contact.Position, ref GeometryB.body.position, out _r2);
 
@@ -140,7 +145,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 Vector2.Dot(ref _r2, ref _r2, out _float2);
                 _kNormal = invMassSum + GeometryA.body.inverseMomentOfInertia*(_float1 - _rn1*_rn1) +
                            GeometryB.body.inverseMomentOfInertia*(_float2 - _rn2*_rn2);
-                contact.MassNormal = 1f/_kNormal;
+                contact.massNormal = 1f/_kNormal;
 
                 //calculate mass _tangent
                 _float1 = 1;
@@ -153,11 +158,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 Vector2.Dot(ref _r2, ref _r2, out _float2);
                 _kTangent += GeometryA.body.inverseMomentOfInertia*(_float1 - _rt1*_rt1) +
                              GeometryB.Body.InverseMomentOfInertia*(_float2 - _rt2*_rt2);
-                contact.MassTangent = 1f/_kTangent;
+                contact.massTangent = 1f/_kTangent;
 
                 //calc velocity bias
                 _min = Math.Min(0, _physicsSimulator.allowedPenetration + contact.Separation);
-                contact.NormalVelocityBias = -_physicsSimulator.biasFactor*inverseDt*_min;
+                contact.normalVelocityBias = -_physicsSimulator.biasFactor*inverseDt*_min;
 
                 //Compute the _restitution, we average the _restitution of the two bodies
                 //_restitution = (2.0f + _geometryA.RestitutionCoefficient + _geometryB.RestitutionCoefficient) * 0.5f;
@@ -170,11 +175,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 //calc velocity difference along _contact normal
                 Vector2.Dot(ref _dv, ref contact.Normal, out _vn);
-                contact.BounceVelocity = _vn*_restitution;
+                contact.bounceVelocity = _vn*_restitution;
 
                 //apply accumulated _impulse
-                Vector2.Multiply(ref contact.Normal, contact.NormalImpulse, out _vec1);
-                Vector2.Multiply(ref _tangent, contact.TangentImpulse, out _vec2);
+                Vector2.Multiply(ref contact.Normal, contact.normalImpulse, out _vec1);
+                Vector2.Multiply(ref _tangent, contact.tangentImpulse, out _vec2);
                 Vector2.Add(ref _vec1, ref _vec2, out _impulse);
 
                 GeometryB.body.ApplyImpulseAtWorldOffset(ref _impulse, ref _r2);
@@ -182,37 +187,34 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 Vector2.Multiply(ref _impulse, -1, out _impulse);
                 GeometryA.body.ApplyImpulseAtWorldOffset(ref _impulse, ref _r1);
 
-                contact.NormalImpulseBias = 0;
+                contact.normalImpulseBias = 0;
                 _contactList[i] = contact;
             }
         }
 
         internal void ApplyImpulse()
         {
-            if (!GeometryA.CollisionResponseEnabled || !GeometryB.CollisionResponseEnabled)
-                return;
-
             for (int i = 0; i < _contactList.Count; i++)
             {
                 _contact = _contactList[i];
 
                 #region INLINE: Vector2.Subtract(ref _contact.Position, ref geometryA.body.position, out _contact.R1);
 
-                _contact.R1.X = _contact.Position.X - GeometryA.body.position.X;
-                _contact.R1.Y = _contact.Position.Y - GeometryA.body.position.Y;
+                _contact.r1.X = _contact.Position.X - GeometryA.body.position.X;
+                _contact.r1.Y = _contact.Position.Y - GeometryA.body.position.Y;
 
                 #endregion
 
                 #region INLINE: Vector2.Subtract(ref _contact.Position, ref geometryB.body.position, out _contact.R2);
 
-                _contact.R2.X = _contact.Position.X - GeometryB.body.position.X;
-                _contact.R2.Y = _contact.Position.Y - GeometryB.body.position.Y;
+                _contact.r2.X = _contact.Position.X - GeometryB.body.position.X;
+                _contact.r2.Y = _contact.Position.Y - GeometryB.body.position.Y;
 
                 #endregion
 
                 //calc velocity difference
-                GeometryA.body.GetVelocityAtWorldOffset(ref _contact.R1, out _vec1);
-                GeometryB.body.GetVelocityAtWorldOffset(ref _contact.R2, out _vec2);
+                GeometryA.body.GetVelocityAtWorldOffset(ref _contact.r1, out _vec1);
+                GeometryB.body.GetVelocityAtWorldOffset(ref _contact.r2, out _vec2);
 
                 #region INLINE: Vector2.Subtract(ref _vec2, ref _vec1, out _dv);
 
@@ -229,12 +231,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 #endregion
 
-                _normalImpulse = _contact.MassNormal*-(_vn + _contact.BounceVelocity); //uncomment for preserve momentum
+                _normalImpulse = _contact.massNormal*-(_vn + _contact.bounceVelocity); //uncomment for preserve momentum
 
                 //clamp accumulated impulse
-                _oldNormalImpulse = _contact.NormalImpulse;
-                _contact.NormalImpulse = Math.Max(_oldNormalImpulse + _normalImpulse, 0);
-                _normalImpulse = _contact.NormalImpulse - _oldNormalImpulse;
+                _oldNormalImpulse = _contact.normalImpulse;
+                _contact.normalImpulse = Math.Max(_oldNormalImpulse + _normalImpulse, 0);
+                _normalImpulse = _contact.normalImpulse - _oldNormalImpulse;
 
                 //apply contact impulse
 
@@ -245,7 +247,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 #endregion
 
-                GeometryB.body.ApplyImpulseAtWorldOffset(ref _impulse, ref _contact.R2);
+                GeometryB.body.ApplyImpulseAtWorldOffset(ref _impulse, ref _contact.r2);
 
                 #region INLINE: Vector2.Multiply(ref _impulse, -1, out _impulse);
 
@@ -254,11 +256,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 #endregion
 
-                GeometryA.body.ApplyImpulseAtWorldOffset(ref _impulse, ref _contact.R1);
+                GeometryA.body.ApplyImpulseAtWorldOffset(ref _impulse, ref _contact.r1);
 
                 //calc velocity bias difference (bias preserves momentum)
-                GeometryA.body.GetVelocityBiasAtWorldOffset(ref _contact.R1, out _vec1);
-                GeometryB.body.GetVelocityBiasAtWorldOffset(ref _contact.R2, out _vec2);
+                GeometryA.body.GetVelocityBiasAtWorldOffset(ref _contact.r1, out _vec1);
+                GeometryB.body.GetVelocityBiasAtWorldOffset(ref _contact.r2, out _vec2);
 
                 #region INLINE: Vector2.Subtract(ref _vec2, ref _vec1, out _dv);
 
@@ -275,10 +277,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 #endregion
 
-                _normalImpulseBias = _contact.MassNormal*(-_normalVelocityBias + _contact.NormalVelocityBias);
-                _normalImpulseBiasOriginal = _contact.NormalImpulseBias;
-                _contact.NormalImpulseBias = Math.Max(_normalImpulseBiasOriginal + _normalImpulseBias, 0);
-                _normalImpulseBias = _contact.NormalImpulseBias - _normalImpulseBiasOriginal;
+                _normalImpulseBias = _contact.massNormal*(-_normalVelocityBias + _contact.normalVelocityBias);
+                _normalImpulseBiasOriginal = _contact.normalImpulseBias;
+                _contact.normalImpulseBias = Math.Max(_normalImpulseBiasOriginal + _normalImpulseBias, 0);
+                _normalImpulseBias = _contact.normalImpulseBias - _normalImpulseBiasOriginal;
 
                 #region INLINE: Vector2.Multiply(ref _contact.Normal, _normalImpulseBias, out _impulseBias);
 
@@ -288,7 +290,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 #endregion
 
                 //apply bias impulse
-                GeometryB.body.ApplyBiasImpulseAtWorldOffset(ref _impulseBias, ref _contact.R2);
+                GeometryB.body.ApplyBiasImpulseAtWorldOffset(ref _impulseBias, ref _contact.r2);
 
                 #region INLINE: Vector2.Multiply(ref _impulseBias, -1, out _impulseBias);
 
@@ -297,11 +299,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 #endregion
 
-                GeometryA.body.ApplyBiasImpulseAtWorldOffset(ref _impulseBias, ref _contact.R1);
+                GeometryA.body.ApplyBiasImpulseAtWorldOffset(ref _impulseBias, ref _contact.r1);
 
                 //calc relative velocity at contact.
-                GeometryA.body.GetVelocityAtWorldOffset(ref _contact.R1, out _vec1);
-                GeometryB.body.GetVelocityAtWorldOffset(ref _contact.R2, out _vec2);
+                GeometryA.body.GetVelocityAtWorldOffset(ref _contact.r1, out _vec1);
+                GeometryB.body.GetVelocityAtWorldOffset(ref _contact.r2, out _vec2);
 
                 #region INLINE: Vector2.Subtract(ref _vec2, ref _vec1, out _dv);
 
@@ -311,7 +313,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 #endregion
 
                 //compute friction impulse
-                _maxTangentImpulse = _frictionCoefficientCombined*_contact.NormalImpulse;
+                _maxTangentImpulse = _frictionCoefficientCombined*_contact.normalImpulse;
 
                 //Vector2 _tangent = Calculator.Cross(_contact.Normal, 1);
                 _float1 = 1;
@@ -331,13 +333,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 #endregion
 
-                _tangentImpulse = _contact.MassTangent*(-_vt);
+                _tangentImpulse = _contact.massTangent*(-_vt);
 
                 //clamp friction
-                _oldTangentImpulse = _contact.TangentImpulse;
-                _contact.TangentImpulse = Calculator.Clamp(_oldTangentImpulse + _tangentImpulse, -_maxTangentImpulse,
+                _oldTangentImpulse = _contact.tangentImpulse;
+                _contact.tangentImpulse = Calculator.Clamp(_oldTangentImpulse + _tangentImpulse, -_maxTangentImpulse,
                                                            _maxTangentImpulse);
-                _tangentImpulse = _contact.TangentImpulse - _oldTangentImpulse;
+                _tangentImpulse = _contact.tangentImpulse - _oldTangentImpulse;
 
                 //apply friction impulse
 
@@ -349,7 +351,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 #endregion
 
                 //apply impulse
-                GeometryB.body.ApplyImpulseAtWorldOffset(ref _impulse, ref _contact.R2);
+                GeometryB.body.ApplyImpulseAtWorldOffset(ref _impulse, ref _contact.r2);
 
                 #region INLINE: Vector2.Multiply(ref _impulse, -1, out _impulse);
 
@@ -358,7 +360,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 #endregion
 
-                GeometryA.body.ApplyImpulseAtWorldOffset(ref _impulse, ref _contact.R1);
+                GeometryA.body.ApplyImpulseAtWorldOffset(ref _impulse, ref _contact.r1);
 
                 _contactList[i] = _contact;
             }
@@ -408,8 +410,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 {
                     //continuation of collision
                     Contact contact = _newContactList[i];
-                    contact.NormalImpulse = _contactList[index].NormalImpulse;
-                    contact.TangentImpulse = _contactList[index].TangentImpulse;
+                    contact.normalImpulse = _contactList[index].normalImpulse;
+                    contact.tangentImpulse = _contactList[index].tangentImpulse;
                     _mergedContactList.Add(contact);
                 }
                 else
@@ -445,7 +447,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 //The geometry intersects when distance <= 0
                 //Continue in the list if the current vector does not intersect
-                if (!geometry1.Intersect(ref _localVertex, out _feature))
+                if (!geometry1.narrowPhaseCollider.Intersect(ref _localVertex, out _feature))
                     continue;
 
                 //If the second geometry's current vector intersects with the first geometry
@@ -473,7 +475,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 _vertRef = geometry1.WorldVertices[i];
                 geometry2.TransformToLocalCoordinates(ref _vertRef, out _localVertex);
 
-                if (!geometry2.Intersect(ref _localVertex, out _feature))
+                if (!geometry2.narrowPhaseCollider.Intersect(ref _localVertex, out _feature))
                     continue;
 
                 if (_feature.Distance < 0f)
@@ -536,22 +538,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 return 0;
             }
             return 1;
-        }
-
-        private void InitializeContactLists(int maxContactsToDetect)
-        {
-            if (_contactList == null)
-            {
-                _contactList = new ContactList(maxContactsToDetect);
-            }
-            if (_newContactList == null)
-            {
-                _newContactList = new ContactList(maxContactsToDetect);
-            }
-            if (_mergedContactList == null)
-            {
-                _mergedContactList = new ContactList(maxContactsToDetect);
-            }
         }
 
         public override bool Equals(object obj)
