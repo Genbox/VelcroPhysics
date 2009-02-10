@@ -38,13 +38,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private Vector2 _position = new Vector2(0, 0);
         private float _rotation;
         private float _rotationOffset;
-        private Vector2 _vector;
-
         internal Body body;
         internal bool isRemoved = true; //true=>geometry removed from simulation
         internal Vertices localVertices;
         internal Vertices worldVertices;
         internal INarrowPhaseCollider narrowPhaseCollider;
+        internal PhysicsSimulator physicsSimulator;
 
         /// <summary>
         /// Gets or sets the collision categories that this geom collides with.
@@ -121,7 +120,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public Geom(Body body, Vertices vertices, ColliderData data)
         {
-            
+
             Construct(body, vertices, Vector2.Zero, 0, data);
         }
 
@@ -462,6 +461,28 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns>true if colliding</returns>
         public bool Collide(Vector2 point)
         {
+            //Check first if the AABB contains the point
+            if (AABB.Contains(point))
+            {
+                Feature feature;
+                point = Vector2.Transform(point, MatrixInverse);
+
+                narrowPhaseCollider.Intersect(ref point, out feature);
+                if (feature.Distance < 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Exactly the same as Collide(), but does not do the AABB check because it was done elsewhere.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        private bool FastCollide(Vector2 point)
+        {
             Feature feature;
             point = Vector2.Transform(point, MatrixInverse);
 
@@ -470,6 +491,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return true;
             }
+
             return false;
         }
 
@@ -480,7 +502,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns></returns>
         public bool Collide(Geom geometry)
         {
-            //Note: Added in 2.1.
             //Check first if the AABB intersects the other geometry's AABB. If they
             //do not intersect, there can be no collision.
             if (AABB.Intersect(AABB, geometry.AABB))
@@ -488,18 +509,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 //Check each vertice (of self) against the provided geometry
                 for (int i = 0; i < worldVertices.Count; i++)
                 {
-                    _vector = worldVertices[i];
-                    if (geometry.Collide(_vector))
+                    if (geometry.FastCollide(worldVertices[i]))
                     {
                         return true;
                     }
                 }
 
-                //Check each vertice of the provided geometry, against it self
+                //Check each vertice of the provided geometry, against itself
                 for (int i = 0; i < geometry.worldVertices.Count; i++)
                 {
-                    _vector = geometry.worldVertices[i];
-                    if (Collide(_vector))
+                    if (FastCollide(geometry.worldVertices[i]))
                     {
                         return true;
                     }
@@ -507,17 +526,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Wrapper for <see cref="narrowPhaseCollider"/>.Intersect()
-        /// </summary>
-        /// <param name="localVertex">The vertex.</param>
-        /// <param name="feature">A feature.</param>
-        /// <returns></returns>
-        public bool Intersect(ref Vector2 localVertex, out Feature feature)
-        {
-            return narrowPhaseCollider.Intersect(ref localVertex, out feature);
         }
 
         /// <summary>

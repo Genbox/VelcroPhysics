@@ -14,42 +14,42 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     public struct Contact : IEquatable<Contact>
     {
-        internal float BounceVelocity;
-        internal ContactId ContactId;
-        internal float MassNormal;
-        internal float MassTangent;
+        internal float bounceVelocity;
+        internal ContactId contactId;
+        internal float massNormal;
+        internal float massTangent;
         public Vector2 Normal;
-        internal float NormalImpulse;
-        internal float NormalImpulseBias;
-        internal float NormalVelocityBias;
+        internal float normalImpulse;
+        internal float normalImpulseBias;
+        internal float normalVelocityBias;
         public Vector2 Position;
-        internal Vector2 R1;
-        internal Vector2 R2;
+        internal Vector2 r1;
+        internal Vector2 r2;
         public float Separation;
-        internal float TangentImpulse;
+        internal float tangentImpulse;
 
         public Contact(Vector2 position, Vector2 normal, float separation, ContactId contactId)
         {
-            ContactId = contactId;
+            this.contactId = contactId;
             Position = position;
             Normal = normal;
             Separation = separation;
-            NormalImpulse = 0;
-            TangentImpulse = 0;
-            MassNormal = 0;
-            MassTangent = 0;
-            NormalVelocityBias = 0;
-            NormalImpulseBias = 0;
-            R1 = Vector2.Zero;
-            R2 = Vector2.Zero;
-            BounceVelocity = 0;
+            normalImpulse = 0;
+            tangentImpulse = 0;
+            massNormal = 0;
+            massTangent = 0;
+            normalVelocityBias = 0;
+            normalImpulseBias = 0;
+            r1 = Vector2.Zero;
+            r2 = Vector2.Zero;
+            bounceVelocity = 0;
         }
 
         #region IEquatable<Contact> Members
 
         public bool Equals(Contact other)
         {
-            return (ContactId == other.ContactId);
+            return (contactId == other.contactId);
         }
 
         #endregion
@@ -57,19 +57,19 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Sets the mass normal.
         /// </summary>
-        /// <param name="massNormal">The mass normal.</param>
-        public void SetMassNormal(float massNormal)
+        /// <param name="value">The mass normal.</param>
+        public void SetMassNormal(float value)
         {
-            MassNormal = massNormal;
+            massNormal = value;
         }
 
         /// <summary>
         /// Sets the mass tangent.
         /// </summary>
-        /// <param name="massTangent">The mass tangent.</param>
-        public void SetMassTangent(float massTangent)
+        /// <param name="value">The mass tangent.</param>
+        public void SetMassTangent(float value)
         {
-            MassTangent = massTangent;
+            massTangent = value;
         }
 
         /// <summary>
@@ -78,25 +78,25 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="bias">The bias.</param>
         public void SetBias(float bias)
         {
-            NormalVelocityBias = bias;
+            normalVelocityBias = bias;
         }
 
         /// <summary>
         /// Sets the normal impulse.
         /// </summary>
-        /// <param name="normalImpulse">The normal impulse.</param>
-        public void SetNormalImpulse(float normalImpulse)
+        /// <param name="value">The normal impulse.</param>
+        public void SetNormalImpulse(float value)
         {
-            NormalImpulse = normalImpulse;
+            normalImpulse = value;
         }
 
         /// <summary>
         /// Sets the tangent impulse.
         /// </summary>
-        /// <param name="tangentImpulse">The tangent impulse.</param>
-        public void SetTangentImpulse(float tangentImpulse)
+        /// <param name="value">The tangent impulse.</param>
+        public void SetTangentImpulse(float value)
         {
-            TangentImpulse = tangentImpulse;
+            tangentImpulse = value;
         }
 
         public override bool Equals(object obj)

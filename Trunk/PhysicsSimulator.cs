@@ -635,7 +635,12 @@ namespace FarseerGames.FarseerPhysics
 
             for (int i = 0; i < arbiterList.Count; i++)
             {
-                arbiterList[i].PreStepImpulse(inverseDt);
+                Arbiter arbiter = arbiterList[i];
+
+                if (!arbiter.GeometryA.CollisionResponseEnabled || !arbiter.GeometryB.CollisionResponseEnabled)
+                    continue;
+
+                arbiter.PreStepImpulse(inverseDt);
             }
 
             for (int h = 0; h < _iterations; h++)
@@ -650,7 +655,12 @@ namespace FarseerGames.FarseerPhysics
 
                 for (int i = 0; i < arbiterList.Count; i++)
                 {
-                    arbiterList[i].ApplyImpulse();
+                    Arbiter arbiter = arbiterList[i];
+
+                    if (!arbiter.GeometryA.CollisionResponseEnabled || !arbiter.GeometryB.CollisionResponseEnabled)
+                        continue;
+
+                    arbiter.ApplyImpulse();
                 }
             }
         }
@@ -672,13 +682,15 @@ namespace FarseerGames.FarseerPhysics
             //Add any new geometries
             for (int i = 0; i < geomAddList.Count; i++)
             {
-                if (!geomList.Contains(geomAddList[i]))
+                Geom geom = geomAddList[i];
+                if (!geomList.Contains(geom))
                 {
-                    geomAddList[i].isRemoved = false;
-                    geomList.Add(geomAddList[i]);
+                    geom.physicsSimulator = this;
+                    geom.isRemoved = false;
+                    geomList.Add(geom);
 
                     //Add the new geometry to the broad phase collider.
-                    _broadPhaseCollider.Add(geomAddList[i]);
+                    _broadPhaseCollider.Add(geom);
                 }
             }
             geomAddList.Clear();
