@@ -1503,7 +1503,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         #endregion
     }
 
-    #region DeDeth's Extension
+    #region DrDeth's Extension
     /// <summary>
     /// Enumerator to specify errors with Polygon functions.
     /// </summary>
