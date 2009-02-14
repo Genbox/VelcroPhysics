@@ -129,6 +129,9 @@
     <Compile Include="..\..\Trunk\Controllers\FluidDragController.cs">
       <Link>Controllers\FluidDragController.cs</Link>
     </Compile>
+    <Compile Include="..\..\Trunk\Controllers\GravityController.cs">
+      <Link>Controllers\GravityController.cs</Link>
+    </Compile>
     <Compile Include="..\..\Trunk\Controllers\InactivityController.cs">
       <Link>Controllers\InactivityController.cs</Link>
     </Compile>

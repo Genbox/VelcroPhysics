@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
+using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 #if (XNA)
@@ -301,6 +303,68 @@ namespace FarseerGames.FarseerPhysics.Factories
             path.AddToPhysicsSimulator(physicsSimulator);
 
             return path;
+        }
+
+        /// <summary>
+        /// Creates a gravity controller and adds it to the physics simulator.
+        /// </summary>
+        /// <param name="simulator">the physicsSimulator used by this controller.</param>
+        /// <param name="bodies">The bodies you want to generate gravity.</param>
+        /// <param name="type">the type of gravity this uses.</param>
+        /// <param name="strength">the maximum strength of gravity (the gravity strength when two bodies are on the same spot)</param>
+        /// <param name="radius">the maximum distance that can be between 2 bodies before it will stop trying to apply gravity between them.</param>
+        public GravityController CreateGravityController(PhysicsSimulator simulator, List<Body> bodies, GravityType type, float strength, float radius)
+        {
+            GravityController gravityController = new GravityController(simulator, bodies, strength, radius);
+            gravityController.GravityType = type;
+            simulator.Add(gravityController);
+            return gravityController;
+        }
+
+        /// <summary>
+        /// Creates a gravity controller and adds it to the physics simulator.
+        /// </summary>
+        /// <param name="simulator">the physicsSimulator used by this controller.</param>
+        /// <param name="bodies">The bodies you want to generate gravity.</param>
+        /// <param name="strength">the maximum strength of gravity (the gravity strength when two bodies are on the same spot)</param>
+        /// <param name="radius">the maximum distance that can be between 2 bodies before it will stop trying to apply gravity between them.</param>
+        /// <returns></returns>
+        public GravityController CreateGravityController(PhysicsSimulator simulator, List<Body> bodies, float strength, float radius)
+        {
+            GravityController gravityController = new GravityController(simulator, bodies, strength, radius);
+            simulator.Add(gravityController);
+            return gravityController;
+        }
+
+        /// <summary>
+        /// Creates a gravity controller and adds it to the physics simulator.
+        /// </summary>
+        /// <param name="simulator">the physicsSimulator used by this controller.</param>
+        /// <param name="points">The points you want to generate gravity.</param>
+        /// <param name="type">the type of gravity this uses.</param>
+        /// <param name="strength">the maximum strength of gravity (the gravity strength when two bodies are on the same spot)</param>
+        /// <param name="radius">the maximum distance that can be between 2 bodies before it will stop trying to apply gravity between them.</param>
+        public GravityController CreateGravityController(PhysicsSimulator simulator, List<Vector2> points, GravityType type, float strength, float radius)
+        {
+            GravityController gravityController = new GravityController(simulator, points, strength, radius);
+            gravityController.GravityType = type;
+            simulator.Add(gravityController);
+            return gravityController;
+        }
+
+        /// <summary>
+        /// Creates a gravity controller and adds it to the physics simulator.
+        /// </summary>
+        /// <param name="simulator">the physicsSimulator used by this controller.</param>
+        /// <param name="points">The points you want to generate gravity.</param>
+        /// <param name="strength">the maximum strength of gravity (the gravity strength when two bodies are on the same spot)</param>
+        /// <param name="radius">the maximum distance that can be between 2 bodies before it will stop trying to apply gravity between them.</param>
+        /// <returns></returns>
+        public GravityController CreateGravityController(PhysicsSimulator simulator, List<Vector2> points, float strength, float radius)
+        {
+            GravityController gravityController = new GravityController(simulator, points, strength, radius);
+            simulator.Add(gravityController);
+            return gravityController;
         }
     }
 }
