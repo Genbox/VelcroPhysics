@@ -101,4 +101,19 @@ namespace FarseerGames.FarseerPhysics
         /// </summary>
         Minimum = 1
     }
+
+    /// <summary>
+    /// Defines the type of gravity.
+    /// </summary>
+    public enum GravityType
+    {
+        /// <summary>
+        /// Gives the most realistic gravity.
+        /// </summary>
+        DistanceSquared,
+        /// <summary>
+        /// Not as realistic as DistanceSquared, but performs better when controlling a lot of bodies.
+        /// </summary>
+        Linear
+    }
 }
