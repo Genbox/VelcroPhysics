@@ -25,8 +25,8 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
         private Geom _wheelg;
         private LinearSpring _spring;
 
-        private BodyList _obstacles;
-        private GeomList _obstaclesg;
+        private GenericList<Body> _obstacles;
+        private GenericList<Geom> _obstaclesg;
         private Texture2D _obstaclesTexture;
         private Vector2 _obstaclesOrigin;
 
@@ -89,8 +89,8 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
 
             _lineBrush.Load(ScreenManager.GraphicsDevice);
 
-            _obstacles = new BodyList();
-            _obstaclesg = new GeomList();
+            _obstacles = new GenericList<Body>();
+            _obstaclesg = new GenericList<Geom>();
 
             base.LoadContent();
         }
