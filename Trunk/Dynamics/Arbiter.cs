@@ -451,7 +451,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 {
                     geometry1.TransformNormalToWorld(ref _feature.Normal, out _feature.Normal);
                     Contact contact = new Contact(geometry2.WorldVertices[i], _feature.Normal, _feature.Distance,
-                                                  new ContactId(2, vertexIndex, 1));
+                                                  new ContactId(1, vertexIndex, 2));
                     contactList.Add(contact);
                 }
             }
