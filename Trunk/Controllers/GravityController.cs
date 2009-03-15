@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+using FarseerGames.FarseerPhysics.Mathematics;
 using FarseerGames.FarseerPhysics.Dynamics;
+#if (XNA)
+using Microsoft.Xna.Framework;
+#endif
 
 namespace FarseerGames.FarseerPhysics.Controllers
 {

@@ -133,7 +133,7 @@ namespace FarseerGames.WaterSample
             Geom[2].FrictionCoefficient = 1f;
             Geom[2].CollisionGroup = 100;
             //borderGeom[2].CollisonGridCellSize = 20;
-            Geom[2].ComputeCollisionGrid();
+            Geom[2].PrepareNarrowPhaseCollider();
 
             //bottom border (clone top border since geom is same size)
             geomOffset = new Vector2(0, Height * .5f + BorderWidth * .5f);
