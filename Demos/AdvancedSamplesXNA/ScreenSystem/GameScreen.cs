@@ -1,6 +1,10 @@
 using System;
 using FarseerGames.AdvancedSamples.Demos.DemoShare;
+using FarseerGames.AdvancedSamples.DrawingSystem;
 using FarseerGames.FarseerPhysics;
+using FarseerGames.FarseerPhysics.Collisions;
+using FarseerGames.FarseerPhysics.Dynamics.Springs;
+using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -39,6 +43,9 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         private float _transitionPosition = 1;
         protected bool firstRun = true;
         private Border _border;
+        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
+        private FixedLinearSpring _mousePickSpring;
+        private Geom _pickedGeom;
 
         protected GameScreen()
         {
@@ -172,6 +179,7 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         /// </summary>
         public virtual void LoadContent()
         {
+            _lineBrush.Load(ScreenManager.GraphicsDevice);
             _physicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
             int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
 
@@ -294,6 +302,44 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
                 _debugViewEnabled = !_debugViewEnabled;
                 _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
             }
+
+            HandleMouseInput(input);
+
+        }
+
+        private void HandleMouseInput(InputState input)
+        {
+            Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
+            if (input.LastMouseState.LeftButton == ButtonState.Released &&
+                input.CurrentMouseState.LeftButton == ButtonState.Pressed)
+            {
+                //create mouse spring
+                _pickedGeom = PhysicsSimulator.Collide(point);
+                if (_pickedGeom != null)
+                {
+                    _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
+                                                                                      _pickedGeom.Body,
+                                                                                      _pickedGeom.Body.
+                                                                                          GetLocalPosition(point),
+                                                                                      point, 20, 10);
+                }
+            }
+            else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&
+                     input.CurrentMouseState.LeftButton == ButtonState.Released)
+            {
+                //destroy mouse spring
+                if (_mousePickSpring != null && _mousePickSpring.IsDisposed == false)
+                {
+                    _mousePickSpring.Dispose();
+                    _mousePickSpring = null;
+                }
+            }
+
+            //move anchor point
+            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && _mousePickSpring != null)
+            {
+                _mousePickSpring.WorldAttachPoint = point;
+            }
         }
 
         /// <summary>
@@ -309,6 +355,14 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
             }
 
             _border.Draw(ScreenManager.SpriteBatch);
+
+            if (_mousePickSpring != null)
+            {
+                _lineBrush.Draw(ScreenManager.SpriteBatch,
+                                _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
+                                _mousePickSpring.WorldAttachPoint);
+            }
+
             ScreenManager.SpriteBatch.End();
         }
 

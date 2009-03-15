@@ -30,10 +30,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
         private Texture2D _obstaclesTexture;
         private Vector2 _obstaclesOrigin;
 
-        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
-        private FixedLinearSpring _mousePickSpring;
-        private Geom _pickedGeom;
-
         public override void Initialize()
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
@@ -87,8 +83,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
             _spring = SpringFactory.Instance.CreateLinearSpring(PhysicsSimulator, _wheel1, new Vector2(), _wheel2, new Vector2(), 1200, 250);
             _spring.RestLength += 20;
 
-            _lineBrush.Load(ScreenManager.GraphicsDevice);
-
             _obstacles = new GenericList<Body>();
             _obstaclesg = new GenericList<Geom>();
 
@@ -110,13 +104,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
             foreach (Body b in _obstacles)
                 ScreenManager.SpriteBatch.Draw(_obstaclesTexture, b.Position, null, Color.White, b.Rotation, _obstaclesOrigin, 1, SpriteEffects.None, 1);
 
-            if (_mousePickSpring != null)
-            {
-                _lineBrush.Draw(ScreenManager.SpriteBatch,
-                                _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
-                                _mousePickSpring.WorldAttachPoint);
-            }
-
             ScreenManager.SpriteBatch.End();
 
             base.Draw(gameTime);
@@ -134,10 +121,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
             if (input.PauseGame)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
-            }
-            else
-            {
-                HandleMouseInput(input);
             }
 
             // do some keyboard torque stuff
@@ -160,49 +143,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
             _wheel2.ApplyAngularImpulse(_torque);
             base.HandleInput(input);
         }
-
-        private void HandleMouseInput(InputState input)
-        {
-            Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
-            if (input.LastMouseState.LeftButton == ButtonState.Released &&
-                input.CurrentMouseState.LeftButton == ButtonState.Pressed)
-            {
-                //create mouse spring
-                _pickedGeom = PhysicsSimulator.Collide(point);
-                if (_pickedGeom != null)
-                {
-                    _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
-                                                                                      _pickedGeom.Body,
-                                                                                      _pickedGeom.Body.
-                                                                                          GetLocalPosition(point),
-                                                                                      point, 150, 10);
-                }
-                else
-                {
-                    _obstacles.Add(BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 40, 40, 25));
-                    _obstacles[_obstacles.Count - 1].Position = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
-                    _obstaclesg.Add(GeomFactory.Instance.CreateRectangleGeom(PhysicsSimulator, _obstacles[_obstacles.Count - 1], 40, 40));
-                    _obstaclesg[_obstaclesg.Count - 1].FrictionCoefficient = 1.0f;
-                }
-            }
-            else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&
-                     input.CurrentMouseState.LeftButton == ButtonState.Released)
-            {
-                //destroy mouse spring
-                if (_mousePickSpring != null && _mousePickSpring.IsDisposed == false)
-                {
-                    _mousePickSpring.Dispose();
-                    _mousePickSpring = null;
-                }
-            }
-
-            //move anchor point
-            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && _mousePickSpring != null)
-            {
-                _mousePickSpring.WorldAttachPoint = point;
-            }
-        }
-
 
         public static string GetTitle()
         {
