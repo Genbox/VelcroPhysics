@@ -118,21 +118,21 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 {
                     if (_bodies[i].Position.X < _bodies[i + 1].Position.X)
                     {
-                        midDeltaX = Math.Abs(_bodies[i].Position.X - _bodies[i + 1].Position.X)*0.5f;
+                        midDeltaX = Math.Abs(_bodies[i].Position.X - _bodies[i + 1].Position.X) * 0.5f;
                         // find x axis midpoint
                     }
                     else
                     {
-                        midDeltaX = (_bodies[i + 1].Position.X - _bodies[i].Position.X)*0.5f; // find x axis midpoint
+                        midDeltaX = (_bodies[i + 1].Position.X - _bodies[i].Position.X) * 0.5f; // find x axis midpoint
                     }
                     if (_bodies[i].Position.Y < _bodies[i + 1].Position.Y)
                     {
-                        midDeltaY = Math.Abs(_bodies[i].Position.Y - _bodies[i + 1].Position.Y)*0.5f;
+                        midDeltaY = Math.Abs(_bodies[i].Position.Y - _bodies[i + 1].Position.Y) * 0.5f;
                         // find x axis midpoint
                     }
                     else
                     {
-                        midDeltaY = (_bodies[i + 1].Position.Y - _bodies[i].Position.Y)*0.5f; // find x axis midpoint
+                        midDeltaY = (_bodies[i + 1].Position.Y - _bodies[i].Position.Y) * 0.5f; // find x axis midpoint
                     }
 
                     midPoint = new Vector2(_bodies[i].Position.X + midDeltaX, _bodies[i].Position.Y + midDeltaY);
@@ -146,8 +146,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                             _joints.Add(revoluteJoint);
                             break;
                         case LinkType.LinearSpring:
-                            linearSpring = SpringFactory.Instance.CreateLinearSpring(_bodies[i], new Vector2(-_width/2.0f,0), _bodies[i + 1], 
-                                new Vector2(_width/2.0f,0), springConstant, dampingConstant);
+                            linearSpring = SpringFactory.Instance.CreateLinearSpring(_bodies[i], new Vector2(-_width / 2.0f, 0), _bodies[i + 1],
+                                new Vector2(_width / 2.0f, 0), springConstant, dampingConstant);
                             if (i >= 1)
                             {
                                 a = (LinearSpring)_springs[i - 1];
@@ -156,7 +156,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                             _springs.Add(linearSpring);
                             break;
                         case LinkType.PinJoint:
-                            pinJoint = JointFactory.Instance.CreatePinJoint(_bodies[i], new Vector2(-_width / 2.0f, 0), _bodies[i + 1], new Vector2(_width/2.0f,0));
+                            pinJoint = JointFactory.Instance.CreatePinJoint(_bodies[i], new Vector2(-_width / 2.0f, 0), _bodies[i + 1], new Vector2(_width / 2.0f, 0));
                             pinJoint.BiasFactor = 0.2f;
                             pinJoint.Softness = 0.01f;
                             if (i >= 1)
@@ -183,22 +183,22 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 if (_bodies[0].Position.X < _bodies[_bodies.Count - 1].Position.X)
                 {
-                    midDeltaX = Math.Abs(_bodies[0].Position.X - _bodies[_bodies.Count - 1].Position.X)*0.5f;
+                    midDeltaX = Math.Abs(_bodies[0].Position.X - _bodies[_bodies.Count - 1].Position.X) * 0.5f;
                     // find x axis midpoint
                 }
                 else
                 {
-                    midDeltaX = (_bodies[_bodies.Count - 1].Position.X - _bodies[0].Position.X)*0.5f;
+                    midDeltaX = (_bodies[_bodies.Count - 1].Position.X - _bodies[0].Position.X) * 0.5f;
                     // find x axis midpoint
                 }
                 if (_bodies[0].Position.Y < _bodies[_bodies.Count - 1].Position.Y)
                 {
-                    midDeltaY = Math.Abs(_bodies[0].Position.Y - _bodies[_bodies.Count - 1].Position.Y)*0.5f;
+                    midDeltaY = Math.Abs(_bodies[0].Position.Y - _bodies[_bodies.Count - 1].Position.Y) * 0.5f;
                     // find x axis midpoint
                 }
                 else
                 {
-                    midDeltaY = (_bodies[_bodies.Count - 1].Position.Y - _bodies[0].Position.Y)*0.5f;
+                    midDeltaY = (_bodies[_bodies.Count - 1].Position.Y - _bodies[0].Position.Y) * 0.5f;
                     // find x axis midpoint
                 }
 
@@ -256,6 +256,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 physicsSimulator.Add(spring);
         }
 
+        public void CreateGeoms(PhysicsSimulator physicsSimulator, int collisionGroup)
+        {
+            CreateGeoms(collisionGroup);
+
+            foreach (Geom geom in _geoms)
+            {
+                physicsSimulator.Add(geom);
+            }
+        }
+
         /// <summary>
         /// Creates rectangular geoms that match the size of the bodies.
         /// </summary>
@@ -267,6 +277,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 Geom geom = GeomFactory.Instance.CreateRectangleGeom(body, _width, _height);
                 geom.CollisionGroup = collisionGroup;
                 _geoms.Add(geom);
+            }
+        }
+
+        public void CreateGeoms(CollisionCategory collisionCategory, CollisionCategory collidesWith, PhysicsSimulator physicsSimulator)
+        {
+            CreateGeoms(collisionCategory, collidesWith);
+            
+            foreach (Geom geom in _geoms)
+            {
+                physicsSimulator.Add(geom);
             }
         }
 
@@ -300,8 +320,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 controlPointAABB =
                     new AABB(
-                        new Vector2(controlPoint.X - (_controlPointSize/2), controlPoint.Y - (_controlPointSize/2)),
-                        new Vector2(controlPoint.X + (_controlPointSize/2), controlPoint.Y + (_controlPointSize/2)));
+                        new Vector2(controlPoint.X - (_controlPointSize / 2), controlPoint.Y - (_controlPointSize / 2)),
+                        new Vector2(controlPoint.X + (_controlPointSize / 2), controlPoint.Y + (_controlPointSize / 2)));
 
                 if (controlPointAABB.Contains(ref point))
                     return _controlPoints.IndexOf(controlPoint);
@@ -405,11 +425,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 // first we get our curve ready
                 Curve xCurve = new Curve();
                 Curve yCurve = new Curve();
-                float curveIncrement = 1.0f/_controlPoints.Count;
+                float curveIncrement = 1.0f / _controlPoints.Count;
 
                 for (int i = 0; i < _controlPoints.Count; i++) // for all the control points 
                 {
-                    k = curveIncrement*(i + 1);
+                    k = curveIncrement * (i + 1);
                     xCurve.Keys.Add(new CurveKey(k, _controlPoints[i].X)); // set the keys for x and y
                     yCurve.Keys.Add(new CurveKey(k, _controlPoints[i].Y)); // with a time from 0-1
                 }
@@ -420,7 +440,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 yCurve.ComputeTangents(CurveTangent.Smooth); // compute y tangents
 
                 // next we find the first point at 1/2 the width because we are finding where the body's center will be placed
-                while (distance < (_width/2.0f)) // while the distance along the curve is <= to width / 2  
+                while (distance < (_width / 2.0f)) // while the distance along the curve is <= to width / 2  
                 {
                     k += _precision; // we increment along the line at this precision coeffient
                     tempVectorA = new Vector2(xCurve.Evaluate(k), yCurve.Evaluate(k));
@@ -490,13 +510,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             float midDeltaX, midDeltaY;
 
             if (firstVector.X < secondVector.X)
-                midDeltaX = Math.Abs((firstVector.X - secondVector.X)*0.5f); // find x axis midpoint
+                midDeltaX = Math.Abs((firstVector.X - secondVector.X) * 0.5f); // find x axis midpoint
             else
-                midDeltaX = (secondVector.X - firstVector.X)*0.5f; // find x axis midpoint
+                midDeltaX = (secondVector.X - firstVector.X) * 0.5f; // find x axis midpoint
             if (firstVector.Y < secondVector.Y)
-                midDeltaY = Math.Abs((firstVector.Y - secondVector.Y)*0.5f); // find y axis midpoint
+                midDeltaY = Math.Abs((firstVector.Y - secondVector.Y) * 0.5f); // find y axis midpoint
             else
-                midDeltaY = (secondVector.Y - firstVector.Y)*0.5f; // find y axis midpoint
+                midDeltaY = (secondVector.Y - firstVector.Y) * 0.5f; // find y axis midpoint
 
             return (new Vector2(firstVector.X + midDeltaX, firstVector.Y + midDeltaY)); // return mid point
         }
@@ -532,16 +552,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private float FindNormalAngle(Vector2 n)
         {
             if ((n.Y > 0.0f) && (n.X > 0.0f))
-                return (float) Math.Atan(n.X/-n.Y);
+                return (float)Math.Atan(n.X / -n.Y);
 
             if ((n.Y < 0.0f) && (n.X > 0.0f))
-                return (float) Math.Atan(n.X/-n.Y); // good
+                return (float)Math.Atan(n.X / -n.Y); // good
 
             if ((n.Y > 0.0f) && (n.X < 0.0f))
-                return (float) Math.Atan(-n.X/n.Y);
+                return (float)Math.Atan(-n.X / n.Y);
 
             if ((n.Y < 0.0f) && (n.X < 0.0f))
-                return (float) Math.Atan(-n.X/n.Y); // good
+                return (float)Math.Atan(-n.X / n.Y); // good
 
             return 0.0f;
         }
