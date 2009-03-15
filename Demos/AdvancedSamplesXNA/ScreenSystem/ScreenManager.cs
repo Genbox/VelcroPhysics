@@ -48,7 +48,6 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
             _graphicsDeviceService = (IGraphicsDeviceService) game.Services.GetService(
                                                                   typeof (IGraphicsDeviceService));
             game.Exiting += Game_Exiting;
-            TraceEnabled = true;
 
             if (_graphicsDeviceService == null)
                 throw new InvalidOperationException("No graphics device service.");
