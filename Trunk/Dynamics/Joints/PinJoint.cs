@@ -35,12 +35,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _body1 = body1;
             _body2 = body2;
 
-            //From http://www.codeplex.com/Thread/View.aspx?ProjectName=FarseerPhysics&ThreadId=22839
-            //Vector2 difference = (body2.position + anchor2) - (body1.position + anchor1);
-            //_targetDistance = difference.Length(); //by default the target distance is the diff between anchors.
-
-            //Also take rotation into account
-            Vector2 difference = body2.GetWorldPosition(anchor2) - body1.GetWorldPosition(anchor1);
+            Vector2 difference = (body2.position + anchor2) - (body1.position + anchor1);
             _targetDistance = difference.Length(); //by default the target distance is the diff between anchors.
 
             //initialize the world anchors (only needed to give valid values to the WorldAnchor properties)
