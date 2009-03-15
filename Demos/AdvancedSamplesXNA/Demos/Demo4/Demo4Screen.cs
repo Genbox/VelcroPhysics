@@ -4,7 +4,6 @@ using FarseerGames.AdvancedSamples.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,10 +20,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
         private Texture2D _circleTexture;
         private Vector2 _circleOrigin;
         private Body _circleBody;
-
-        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
-        private FixedLinearSpring _mousePickSpring;
-        private Geom _pickedGeom;
 
         public override void Initialize()
         {
@@ -63,7 +58,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
             _circleBody.Position = new Vector2(300, 400);
 
             GeomFactory.Instance.CreateCircleGeom(PhysicsSimulator, _circleBody, 35, 20);
-            _lineBrush.Load(ScreenManager.GraphicsDevice);
 
             base.LoadContent();
         }
@@ -75,13 +69,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
                                            _polygonBody.Rotation, _polygonOrigin, 1, SpriteEffects.None, 0);
             ScreenManager.SpriteBatch.Draw(_circleTexture, _circleBody.Position, null, Color.White,
                                _circleBody.Rotation, _circleOrigin, 1, SpriteEffects.None, 0);
-
-            if (_mousePickSpring != null)
-            {
-                _lineBrush.Draw(ScreenManager.SpriteBatch,
-                                _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
-                                _mousePickSpring.WorldAttachPoint);
-            }
 
             ScreenManager.SpriteBatch.End();
 
@@ -102,7 +89,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
             else
             {
                 HandleKeyboardInput(input);
-                HandleMouseInput(input);
             }
             base.HandleInput(input);
         }
@@ -142,41 +128,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo4
                 torque += torqueAmount;
             }
             _polygonBody.ApplyTorque(torque);
-        }
-
-        private void HandleMouseInput(InputState input)
-        {
-            Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
-            if (input.LastMouseState.LeftButton == ButtonState.Released &&
-                input.CurrentMouseState.LeftButton == ButtonState.Pressed)
-            {
-                //create mouse spring
-                _pickedGeom = PhysicsSimulator.Collide(point);
-                if (_pickedGeom != null)
-                {
-                    _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
-                                                                                      _pickedGeom.Body,
-                                                                                      _pickedGeom.Body.
-                                                                                          GetLocalPosition(point),
-                                                                                      point, 20, 10);
-                }
-            }
-            else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&
-                     input.CurrentMouseState.LeftButton == ButtonState.Released)
-            {
-                //destroy mouse spring
-                if (_mousePickSpring != null && _mousePickSpring.IsDisposed == false)
-                {
-                    _mousePickSpring.Dispose();
-                    _mousePickSpring = null;
-                }
-            }
-
-            //move anchor point
-            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && _mousePickSpring != null)
-            {
-                _mousePickSpring.WorldAttachPoint = point;
-            }
         }
 
         public static string GetTitle()

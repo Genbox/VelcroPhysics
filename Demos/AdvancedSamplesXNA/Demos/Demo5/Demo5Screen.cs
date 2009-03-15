@@ -20,9 +20,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
         private Path _chainPin;
         private Path _chainSpring;
         private Path _chainSilde;
-        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
-        private FixedLinearSpring _mousePickSpring;
-        private Geom _pickedGeom;
 
         public override void Initialize()
         {
@@ -39,25 +36,22 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
             _chainOrigin = new Vector2(_chainTexture.Width / 2f, _chainTexture.Height / 2f);
 
 
-            _chain = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(150, 100), new Vector2(200, 300), 20.0f, 10.0f, 1, LinkType.RevoluteJoint);
+            _chain = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(150, 100), new Vector2(200, 300), 20.0f, 10.0f, 1, true, false, LinkType.RevoluteJoint);
+            _chain.CreateGeoms(PhysicsSimulator, 1);
 
-            _chainPin = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(250, 100), new Vector2(400, 300), 20.0f, 10.0f, 1, LinkType.PinJoint);
+            _chainPin = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(250, 100), new Vector2(400, 300), 20.0f, 10.0f, 1, true, false, LinkType.PinJoint);
+            _chainPin.CreateGeoms(PhysicsSimulator, 2);
 
             ComplexFactory.Instance.SpringConstant = 150;        // values inside let us setup additional parameters
             ComplexFactory.Instance.DampingConstant = 10;
-            _chainSpring = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(350, 100), new Vector2(500, 300), 20.0f, 10.0f, 1, LinkType.LinearSpring);
+            _chainSpring = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(350, 100), new Vector2(500, 300), 20.0f, 10.0f, 1, true, false, LinkType.LinearSpring);
+            _chainSpring.CreateGeoms(PhysicsSimulator, 3);
 
             ComplexFactory.Instance.Min = 0;
             ComplexFactory.Instance.Max = 15;
-            _chainSilde = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(450, 100), new Vector2(600, 300), 20.0f, 10.0f, 1, LinkType.SliderJoint);
+            _chainSilde = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(450, 100), new Vector2(600, 300), 20.0f, 10.0f, 1, true, false, LinkType.SliderJoint);
+            _chainSilde.CreateGeoms(PhysicsSimulator, 4);
 
-            //Pinning the chain to world.
-            JointFactory.Instance.CreateFixedRevoluteJoint(PhysicsSimulator, _chain.Bodies[0], _chain.Bodies[0].Position);
-            JointFactory.Instance.CreateFixedRevoluteJoint(PhysicsSimulator, _chainPin.Bodies[0], _chainPin.Bodies[0].Position);
-            JointFactory.Instance.CreateFixedRevoluteJoint(PhysicsSimulator, _chainSpring.Bodies[0], _chainSpring.Bodies[0].Position);
-            JointFactory.Instance.CreateFixedRevoluteJoint(PhysicsSimulator, _chainSilde.Bodies[0], _chainSilde.Bodies[0].Position);
-
-            _lineBrush.Load(ScreenManager.GraphicsDevice);
 
             base.LoadContent();
         }
@@ -86,13 +80,6 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
                 ScreenManager.SpriteBatch.Draw(_chainTexture, body.Position, null, Color.White, body.Rotation, _chainOrigin, 1, SpriteEffects.None, 1);
             }
 
-            if (_mousePickSpring != null)
-            {
-                _lineBrush.Draw(ScreenManager.SpriteBatch,
-                                _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
-                                _mousePickSpring.WorldAttachPoint);
-            }
-
             ScreenManager.SpriteBatch.End();
 
             base.Draw(gameTime);
@@ -109,48 +96,9 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo5
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
-            else
-            {
-                HandleMouseInput(input);
-            }
+
             base.HandleInput(input);
         }
-
-        private void HandleMouseInput(InputState input)
-        {
-            Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
-            if (input.LastMouseState.LeftButton == ButtonState.Released &&
-                input.CurrentMouseState.LeftButton == ButtonState.Pressed)
-            {
-                //create mouse spring
-                _pickedGeom = PhysicsSimulator.Collide(point);
-                if (_pickedGeom != null)
-                {
-                    _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
-                                                                                      _pickedGeom.Body,
-                                                                                      _pickedGeom.Body.
-                                                                                          GetLocalPosition(point),
-                                                                                      point, 20, 10);
-                }
-            }
-            else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&
-                     input.CurrentMouseState.LeftButton == ButtonState.Released)
-            {
-                //destroy mouse spring
-                if (_mousePickSpring != null && _mousePickSpring.IsDisposed == false)
-                {
-                    _mousePickSpring.Dispose();
-                    _mousePickSpring = null;
-                }
-            }
-
-            //move anchor point
-            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && _mousePickSpring != null)
-            {
-                _mousePickSpring.WorldAttachPoint = point;
-            }
-        }
-
 
         public static string GetTitle()
         {
