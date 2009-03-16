@@ -1,10 +1,6 @@
 using System.Text;
 using FarseerGames.FarseerPhysics;
-using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
-using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.SimpleSamples.Demos.DemoShare;
-using FarseerGames.SimpleSamples.DrawingSystem;
 using FarseerGames.SimpleSamples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,9 +14,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo8
         private Circles[] _blackCircles;
         private Circles[] _blueCircles;
         private Circles[] _greenCircles;
-        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
-        private FixedLinearSpring _mousePickSpring;
-        private Geom _pickedGeom;
         private Circles[] _redCircles;
 
         public override void Initialize()
@@ -35,8 +28,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo8
 
         public override void LoadContent()
         {
-            _lineBrush.Load(ScreenManager.GraphicsDevice);
-
             _agent = new Agent(ScreenManager.ScreenCenter);
             _agent.CollisionCategory = CollisionCategory.Cat5;
             _agent.CollidesWith = CollisionCategory.All & ~CollisionCategory.Cat4;
@@ -147,13 +138,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo8
                 _blackCircles[i].Draw(ScreenManager.SpriteBatch);
             }
 
-            if (_mousePickSpring != null)
-            {
-                _lineBrush.Draw(ScreenManager.SpriteBatch,
-                                _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
-                                _mousePickSpring.WorldAttachPoint);
-            }
-
             ScreenManager.SpriteBatch.End();
 
             base.Draw(gameTime);
@@ -179,9 +163,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo8
             else
             {
                 HandleKeyboardInput(input);
-#if !XBOX
-                HandleMouseInput(input);
-#endif
             }
 
             base.HandleInput(input);
@@ -221,43 +202,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo8
 
             _agent.ApplyTorque(torque);
         }
-
-#if !XBOX
-        private void HandleMouseInput(InputState input)
-        {
-            Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
-            if (input.LastMouseState.LeftButton == ButtonState.Released &&
-                input.CurrentMouseState.LeftButton == ButtonState.Pressed)
-            {
-                //create mouse spring
-                _pickedGeom = PhysicsSimulator.Collide(point);
-                if (_pickedGeom != null)
-                {
-                    _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
-                                                                                      _pickedGeom.Body,
-                                                                                      _pickedGeom.Body.
-                                                                                          GetLocalPosition(point),
-                                                                                      point, 20, 10);
-                }
-            }
-            else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&
-                     input.CurrentMouseState.LeftButton == ButtonState.Released)
-            {
-                //destroy mouse spring
-                if (_mousePickSpring != null && _mousePickSpring.IsDisposed == false)
-                {
-                    _mousePickSpring.Dispose();
-                    _mousePickSpring = null;
-                }
-            }
-
-            //move anchor point
-            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && _mousePickSpring != null)
-            {
-                _mousePickSpring.WorldAttachPoint = point;
-            }
-        }
-#endif
 
         public static string GetTitle()
         {
