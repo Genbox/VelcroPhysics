@@ -1,6 +1,10 @@
 using System;
 using FarseerGames.FarseerPhysics;
+using FarseerGames.FarseerPhysics.Collisions;
+using FarseerGames.FarseerPhysics.Dynamics.Springs;
+using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.SimpleSamples.Demos.DemoShare;
+using FarseerGames.SimpleSamples.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -39,6 +43,9 @@ namespace FarseerGames.SimpleSamples.ScreenSystem
         private float _transitionPosition = 1;
         protected bool firstRun = true;
         private Border _border;
+        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
+        private FixedLinearSpring _mousePickSpring;
+        private Geom _pickedGeom;
 
         protected GameScreen()
         {
@@ -110,7 +117,7 @@ namespace FarseerGames.SimpleSamples.ScreenSystem
         /// </summary>
         public byte TransitionAlpha
         {
-            get { return (byte) (255 - TransitionPosition*255); }
+            get { return (byte)(255 - TransitionPosition * 255); }
         }
 
         /// <summary>
@@ -171,9 +178,10 @@ namespace FarseerGames.SimpleSamples.ScreenSystem
         /// </summary>
         public virtual void LoadContent()
         {
+            _lineBrush.Load(ScreenManager.GraphicsDevice);
             _physicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
             int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
-           
+
             _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, borderWidth,
                      ScreenManager.ScreenCenter);
             _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
@@ -242,7 +250,7 @@ namespace FarseerGames.SimpleSamples.ScreenSystem
 
             if (!coveredByOtherScreen && !otherScreenHasFocus)
             {
-                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds*.001f);
+                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds * .001f);
             }
         }
 
@@ -257,11 +265,11 @@ namespace FarseerGames.SimpleSamples.ScreenSystem
             if (time == TimeSpan.Zero)
                 transitionDelta = 1;
             else
-                transitionDelta = (float) (gameTime.ElapsedGameTime.TotalMilliseconds/
+                transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
                                            time.TotalMilliseconds);
 
             // Update the transition position.
-            _transitionPosition += transitionDelta*direction;
+            _transitionPosition += transitionDelta * direction;
 
             // Did we reach the end of the transition?
             if ((_transitionPosition <= 0) || (_transitionPosition >= 1))
@@ -293,7 +301,48 @@ namespace FarseerGames.SimpleSamples.ScreenSystem
                 _debugViewEnabled = !_debugViewEnabled;
                 _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
             }
+
+#if !XBOX
+            HandleMouseInput(input);
+#endif
         }
+
+#if !XBOX
+        private void HandleMouseInput(InputState input)
+        {
+            Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
+            if (input.LastMouseState.LeftButton == ButtonState.Released &&
+                input.CurrentMouseState.LeftButton == ButtonState.Pressed)
+            {
+                //create mouse spring
+                _pickedGeom = PhysicsSimulator.Collide(point);
+                if (_pickedGeom != null)
+                {
+                    _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
+                                                                                      _pickedGeom.Body,
+                                                                                      _pickedGeom.Body.
+                                                                                          GetLocalPosition(point),
+                                                                                      point, 20, 10);
+                }
+            }
+            else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&
+                     input.CurrentMouseState.LeftButton == ButtonState.Released)
+            {
+                //destroy mouse spring
+                if (_mousePickSpring != null && _mousePickSpring.IsDisposed == false)
+                {
+                    _mousePickSpring.Dispose();
+                    _mousePickSpring = null;
+                }
+            }
+
+            //move anchor point
+            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && _mousePickSpring != null)
+            {
+                _mousePickSpring.WorldAttachPoint = point;
+            }
+        }
+#endif
 
         /// <summary>
         /// This is called when the screen should draw itself.
@@ -301,6 +350,13 @@ namespace FarseerGames.SimpleSamples.ScreenSystem
         public virtual void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+
+            if (_mousePickSpring != null)
+            {
+                _lineBrush.Draw(ScreenManager.SpriteBatch,
+                                _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
+                                _mousePickSpring.WorldAttachPoint);
+            }
 
             if (_debugViewEnabled)
             {
