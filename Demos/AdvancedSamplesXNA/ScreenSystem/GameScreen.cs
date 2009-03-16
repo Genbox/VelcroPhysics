@@ -303,10 +303,12 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
                 _physicsSimulator.EnableDiagnostics = _debugViewEnabled;
             }
 
+#if !XBOX
             HandleMouseInput(input);
-
+#endif
         }
 
+#if !XBOX
         private void HandleMouseInput(InputState input)
         {
             Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
@@ -341,6 +343,7 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
                 _mousePickSpring.WorldAttachPoint = point;
             }
         }
+#endif
 
         /// <summary>
         /// This is called when the screen should draw itself.
