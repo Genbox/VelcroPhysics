@@ -66,10 +66,10 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
                 case 7:
                     ScreenManager.AddScreen(new Demo8Screen());
                     break;
-                case 9:
+                case 8:
                     ScreenManager.AddScreen(new Demo9Screen());
                     break;
-                case 10:
+                case 9:
                     // Exit the sample.
                     ScreenManager.Game.Exit();
                     break;
