@@ -6,7 +6,7 @@ namespace FarseerGames.SimpleSamples.DrawingSystem
 {
     public static class DrawingHelper
     {
-        public static Texture2D CreateLineTexture(GraphicsDevice graphicsDevice, int lineThickness, Color color)
+        public static Texture2D CreateLineTexture(GraphicsDevice graphicsDevice, int lineThickness)
         {
             Texture2D texture2D = new Texture2D(graphicsDevice, 2, lineThickness + 2, 1, TextureUsage.None,
                                                 SurfaceFormat.Color);
@@ -19,7 +19,7 @@ namespace FarseerGames.SimpleSamples.DrawingSystem
 
             for (int i = 2; i < count - 2; i++) 
             {
-                colorArray[i] = color;
+                colorArray[i] = Color.White;
             }
 
             colorArray[count - 2] = Color.TransparentWhite;

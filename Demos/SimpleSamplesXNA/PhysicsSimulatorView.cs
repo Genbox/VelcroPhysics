@@ -9,7 +9,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerGames.SimpleSamples
 {
-    public class PhysicsSimulatorView
+    /// <summary>
+    /// Draws the elements inside a <see cref="PhysicsSimulator"/>. Great for debugging physics related problems.
+    /// </summary>
+    public sealed class PhysicsSimulatorView
     {
         private PhysicsSimulator _physicsSimulator;
 
@@ -316,7 +319,7 @@ namespace FarseerGames.SimpleSamples
             }
         }
 
-        public virtual void LoadContent(GraphicsDevice graphicsDevice, ContentManager content)
+        public void LoadContent(GraphicsDevice graphicsDevice, ContentManager content)
         {
             LoadVerticeContent(graphicsDevice);
             LoadEdgeContent(graphicsDevice);
@@ -330,7 +333,7 @@ namespace FarseerGames.SimpleSamples
             LoadSliderJointContent(graphicsDevice);
         }
 
-        public virtual void UnloadContent(GraphicsDevice graphicsDevice, ContentManager content)
+        public void UnloadContent(GraphicsDevice graphicsDevice, ContentManager content)
         {
             //UnloadVerticeContent();
             //UnloadEdgeContent();
@@ -653,13 +656,13 @@ namespace FarseerGames.SimpleSamples
                 if (_physicsSimulator.JointList[i] is FixedRevoluteJoint)
                 {
                     FixedRevoluteJoint fixedRevoluteJoint = (FixedRevoluteJoint)_physicsSimulator.JointList[i];
-                    _revoluteJointRectangleBrush.Draw(spriteBatch, fixedRevoluteJoint.Anchor);
+                    _revoluteJointRectangleBrush.Draw(spriteBatch, fixedRevoluteJoint.Anchor, 0);
                 }
 
                 if (!(_physicsSimulator.JointList[i] is RevoluteJoint)) continue;
 
                 RevoluteJoint revoluteJoint = (RevoluteJoint)_physicsSimulator.JointList[i];
-                _revoluteJointRectangleBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor);
+                _revoluteJointRectangleBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor, 0);
                 _revoluteJointLineBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor, revoluteJoint.Body1.Position);
                 _revoluteJointLineBrush.Draw(spriteBatch, revoluteJoint.CurrentAnchor, revoluteJoint.Body2.Position);
             }
@@ -673,8 +676,8 @@ namespace FarseerGames.SimpleSamples
                     continue;
 
                 PinJoint pinJoint = (PinJoint)_physicsSimulator.JointList[i];
-                _pinJointRectangleBrush.Draw(spriteBatch, pinJoint.WorldAnchor1);
-                _pinJointRectangleBrush.Draw(spriteBatch, pinJoint.WorldAnchor2);
+                _pinJointRectangleBrush.Draw(spriteBatch, pinJoint.WorldAnchor1, 0);
+                _pinJointRectangleBrush.Draw(spriteBatch, pinJoint.WorldAnchor2, 0);
                 _pinJointLineBrush.Draw(spriteBatch, pinJoint.WorldAnchor1, pinJoint.WorldAnchor2);
             }
         }
@@ -687,8 +690,8 @@ namespace FarseerGames.SimpleSamples
                     continue;
 
                 SliderJoint sliderJoint = (SliderJoint)_physicsSimulator.JointList[i];
-                _sliderJointRectangleBrush.Draw(spriteBatch, sliderJoint.WorldAnchor1);
-                _sliderJointRectangleBrush.Draw(spriteBatch, sliderJoint.WorldAnchor2);
+                _sliderJointRectangleBrush.Draw(spriteBatch, sliderJoint.WorldAnchor1, 0);
+                _sliderJointRectangleBrush.Draw(spriteBatch, sliderJoint.WorldAnchor2, 0);
                 _sliderJointLineBrush.Draw(spriteBatch, sliderJoint.WorldAnchor1, sliderJoint.WorldAnchor2);
             }
         }

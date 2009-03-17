@@ -1,3 +1,4 @@
+using System;
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -6,7 +7,7 @@ namespace FarseerGames.SimpleSamples.DrawingSystem
 {
     public class LineBrush
     {
-        private Color _color = Color.Black;
+        private Color _color;
         private Vector2 _difference;
         private float _layer;
         private Texture2D _lineTexture;
@@ -15,11 +16,12 @@ namespace FarseerGames.SimpleSamples.DrawingSystem
         private float _rotation;
         private Vector2 _scale;
         private float _theta;
-        private int _thickness = 1;
+        private int _thickness;
         private Vector2 _xVector = new Vector2(1, 0);
 
         public LineBrush()
         {
+            _color = Color.Black;
         }
 
         public LineBrush(int thickness, Color color)
@@ -48,20 +50,25 @@ namespace FarseerGames.SimpleSamples.DrawingSystem
 
         public void Load(GraphicsDevice graphicsDevice)
         {
-            _lineTexture = DrawingHelper.CreateLineTexture(graphicsDevice, _thickness, _color);
-            _origin = new Vector2(0, _thickness/2f + 1);
+            if (_thickness == 0)
+                throw new ArgumentException("You need to set a thickness before you can load the brush.", "thickness");
+
+            _lineTexture = DrawingHelper.CreateLineTexture(graphicsDevice, _thickness);
+            _origin = new Vector2(0, _thickness / 2f + 1);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 startPoint, Vector2 endPoint)
         {
             Vector2.Subtract(ref endPoint, ref startPoint, out _difference);
-            CalculateRotation(_difference);
-            CalculateScale(_difference);
+            CalculateRotation(ref _difference);
+            CalculateScale(ref _difference);
+
+            //Note: Scale is used to create the thickness
             spriteBatch.Draw(_lineTexture, startPoint, null, _color, _rotation, _origin, _scale, SpriteEffects.None,
                              _layer);
         }
 
-        private void CalculateRotation(Vector2 difference)
+        private void CalculateRotation(ref Vector2 difference)
         {
             Vector2.Normalize(ref difference, out _normalizedDifference);
             Vector2.Dot(ref _xVector, ref _normalizedDifference, out _theta);
@@ -74,10 +81,10 @@ namespace FarseerGames.SimpleSamples.DrawingSystem
             _rotation = _theta;
         }
 
-        private void CalculateScale(Vector2 difference)
+        private void CalculateScale(ref Vector2 difference)
         {
             float desiredLength = difference.Length();
-            _scale.X = desiredLength/_lineTexture.Width;
+            _scale.X = desiredLength / _lineTexture.Width;
             _scale.Y = 1;
         }
     }

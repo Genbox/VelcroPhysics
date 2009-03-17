@@ -11,16 +11,14 @@ namespace FarseerGames.SimpleSamples.Demos.DemoShare
     public class RectanglePlatform
     {
         private Color _borderColor;
-        private int _collisionGroup;
         private Color _color;
+        private int _width;
         private int _height;
         private Body _platformBody;
         private Geom _platformGeom;
-
-        private Vector2 _platformOrigin;
-        private Texture2D _platformTexture;
+        private int _collisionGroup;
+        private RectangleBrush _platformBrush;
         private Vector2 _position;
-        private int _width;
 
         public RectanglePlatform(int width, int height, Vector2 position, Color color, Color borderColor,
                                  int collisionGroup)
@@ -35,9 +33,9 @@ namespace FarseerGames.SimpleSamples.Demos.DemoShare
 
         public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
-            _platformTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, _width, _height, 2, 0, 0, _color,
-                                                                    _borderColor);
-            _platformOrigin = new Vector2(_platformTexture.Width/2f, _platformTexture.Height/2f);
+            _platformBrush = new RectangleBrush(_width, _height, _color, _borderColor);
+            _platformBrush.Load(graphicsDevice);
+
             //use the body factory to create the physics body
             _platformBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _width, _height, 1);
             _platformBody.IsStatic = true;
@@ -53,8 +51,7 @@ namespace FarseerGames.SimpleSamples.Demos.DemoShare
         {
             for (int i = 0; i < 4; i++)
             {
-                spriteBatch.Draw(_platformTexture, _platformGeom.Position, null, Color.White, _platformGeom.Rotation,
-                                 _platformOrigin, 1, SpriteEffects.None, 0f);
+                _platformBrush.Draw(spriteBatch, _platformBody.Position, _platformBody.Rotation);
             }
         }
     }

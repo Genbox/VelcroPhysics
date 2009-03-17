@@ -26,7 +26,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo6
         private AngularSpringLever _angularSpringLever2;
         private AngularSpringLever _angularSpringLever3;
         private AngularSpringLever _angularSpringLever4;
-        private RectanglePlatform _floor;
         private Body _hangingBody;
         private Geom _hangingGeom;
         private Texture2D _hangingTexture;
@@ -163,13 +162,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo6
             _angularSpringLever4.Position = springPosition;
             _angularSpringLever4.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
-            height = (int)(ScreenManager.ScreenHeight * .05f);
-            _floor = new RectanglePlatform(ScreenManager.ScreenWidth + 10, height,
-                                           new Vector2(ScreenManager.ScreenCenter.X,
-                                                       ScreenManager.ScreenHeight + 5 - height / 2), Color.White,
-                                           Color.Black, 0);
-            _floor.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
-
             _springRectangleRope2 = new SpringRectangleRope();
             _springRectangleRope2.Position = new Vector2(ScreenManager.ScreenCenter.X, 100);
             _springRectangleRope2.RectangleCount = 20;
@@ -196,7 +188,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo6
             _platform1.Draw(ScreenManager.SpriteBatch);
             _platform2.Draw(ScreenManager.SpriteBatch);
             _platform3.Draw(ScreenManager.SpriteBatch);
-            _floor.Draw(ScreenManager.SpriteBatch);
             _angularSpringLever1.Draw(ScreenManager.SpriteBatch);
             _angularSpringLever2.Draw(ScreenManager.SpriteBatch);
             _angularSpringLever3.Draw(ScreenManager.SpriteBatch);
@@ -290,12 +281,12 @@ namespace FarseerGames.SimpleSamples.Demos.Demo6
             sb.AppendLine("springs.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("GamePad:");
-            sb.AppendLine("  -Rotate : left and right triggers");
-            sb.AppendLine("  -Move : left thumbstick");
+            sb.AppendLine("  -Rotate: left and right triggers");
+            sb.AppendLine("  -Move: left thumbstick");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
-            sb.AppendLine("  -Rotate : left and right arrows");
-            sb.AppendLine("  -Move : A,S,D,W");
+            sb.AppendLine("  -Rotate: left and right arrows");
+            sb.AppendLine("  -Move: A,S,D,W");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Mouse");
             sb.AppendLine("  -Hold down left button and drag");

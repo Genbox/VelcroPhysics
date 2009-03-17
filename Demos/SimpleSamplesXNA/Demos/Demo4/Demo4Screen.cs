@@ -20,7 +20,7 @@ namespace FarseerGames.SimpleSamples.Demos.Demo4
         private const int _pyramidBaseBodyCount = 16;
 #endif
         private Agent _agent;
-         private Pyramid _pyramid;
+        private Pyramid _pyramid;
         private Body _rectangleBody;
         private Geom _rectangleGeom;
         private Texture2D _rectangleTexture;
@@ -142,12 +142,12 @@ namespace FarseerGames.SimpleSamples.Demos.Demo4
             sb.AppendLine("the shape of a pyramid.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("GamePad:");
-            sb.AppendLine("  -Rotate : left and right triggers");
-            sb.AppendLine("  -Move : left thumbstick");
+            sb.AppendLine("  -Rotate: left and right triggers");
+            sb.AppendLine("  -Move: left thumbstick");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
-            sb.AppendLine("  -Rotate : left and right arrows");
-            sb.AppendLine("  -Move : A,S,D,W");
+            sb.AppendLine("  -Rotate: left and right arrows");
+            sb.AppendLine("  -Move: A,S,D,W");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Mouse");
             sb.AppendLine("  -Hold down left button and drag");
