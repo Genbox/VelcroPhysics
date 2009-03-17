@@ -12,8 +12,7 @@ namespace FarseerGames.SimpleSamples.Demos.Demo1
 {
     public class Demo1Screen : GameScreen
     {
-        private Texture2D _bodyTexture;
-        private Vector2 _origin;
+        private RectangleBrush _rectangleBrush;
         private Body _rectangleBody;
 
         public override void Initialize()
@@ -27,9 +26,8 @@ namespace FarseerGames.SimpleSamples.Demos.Demo1
         public override void LoadContent()
         {
             //load texture that will visually represent the physics body
-            _bodyTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 128, 128, Color.Gold,
-                                                                Color.Black);
-            _origin = new Vector2(_bodyTexture.Width/2f, _bodyTexture.Height/2f);
+            _rectangleBrush = new RectangleBrush(128, 128, Color.Gold, Color.Black);
+            _rectangleBrush.Load(ScreenManager.GraphicsDevice);
 
             //use the body factory to create the physics body
             _rectangleBody = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 128, 128, 1);
@@ -41,8 +39,7 @@ namespace FarseerGames.SimpleSamples.Demos.Demo1
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            ScreenManager.SpriteBatch.Draw(_bodyTexture, _rectangleBody.Position, null, Color.White,
-                                           _rectangleBody.Rotation, _origin, 1, SpriteEffects.None, 0);
+            _rectangleBrush.Draw(ScreenManager.SpriteBatch, _rectangleBody.Position, _rectangleBody.Rotation);
             ScreenManager.SpriteBatch.End();
 
             base.Draw(gameTime);
@@ -117,15 +114,15 @@ namespace FarseerGames.SimpleSamples.Demos.Demo1
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows a single body with no geometry");
-            sb.AppendLine("attached.");
+            sb.AppendLine("attached. Note that it does not collide with the borders.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("GamePad:");
-            sb.AppendLine("  -Rotate : left and right triggers");
-            sb.AppendLine("  -Move : left thumbstick");
+            sb.AppendLine("  -Rotate: left and right triggers");
+            sb.AppendLine("  -Move: left thumbstick");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
-            sb.AppendLine("  -Rotate : left and right arrows");
-            sb.AppendLine("  -Move : A,S,D,W");
+            sb.AppendLine("  -Rotate: left and right arrows");
+            sb.AppendLine("  -Move: A,S,D,W");
             return sb.ToString();
         }
     }
