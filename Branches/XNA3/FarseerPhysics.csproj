@@ -108,9 +108,6 @@
     <Compile Include="..\..\Trunk\Collisions\Grid.cs">
       <Link>Collisions\Grid.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\LineIntersectInfo.cs">
-      <Link>Collisions\LineIntersectInfo.cs</Link>
-    </Compile>
     <Compile Include="..\..\Trunk\Collisions\SelectiveSweepCollider.cs">
       <Link>Collisions\SelectiveSweepCollider.cs</Link>
     </Compile>
