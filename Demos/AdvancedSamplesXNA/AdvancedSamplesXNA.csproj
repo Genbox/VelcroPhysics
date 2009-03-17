@@ -98,13 +98,10 @@
     <Compile Include="Demos\Demo7\Pyramid.cs" />
     <Compile Include="Demos\Demo8\Demo8Screen.cs" />
     <Compile Include="Demos\Demo8\TextMessage.cs" />
+    <Compile Include="Demos\Demo9\Demo9Screen.cs" />
     <Compile Include="Demos\DemoShare\Agent.cs" />
-    <Compile Include="Demos\DemoShare\AngularSpringLever.cs" />
     <Compile Include="Demos\DemoShare\Border.cs" />
     <Compile Include="Demos\DemoShare\Circles.cs" />
-    <Compile Include="Demos\DemoShare\RectanglePlatform.cs" />
-    <Compile Include="Demos\DemoShare\Spider.cs" />
-    <Compile Include="Demos\DemoShare\SpringRectangleRope.cs" />
     <Compile Include="DrawingSystem\CircleBrush.cs" />
     <Compile Include="DrawingSystem\DrawingHelper.cs" />
     <Compile Include="DrawingSystem\LineBrush.cs" />
