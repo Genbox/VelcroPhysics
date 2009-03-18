@@ -36,7 +36,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             int vertexIndex = -1;
 
-            //Lookup distancegrid data from list
+            //Lookup distancegrid A data from list
             DistanceGridData geomAGridData = _distanceGrids[geomA.Id];
 
             //Iterate the second geometry vertices
@@ -44,10 +44,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 if (contactList.Count == _physicsSimulator.maxContactsToDetect)
                     break;
-
-                //Can be null for "one-way" collision (points)
-                //if (geometry1.narrowPhaseCollider == null)
-                //    break;
 
                 vertexIndex += 1;
                 _vertRef = geomB.WorldVertices[i];
@@ -69,18 +65,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 }
             }
 
-            //Lookup distancegrid data from list
-            DistanceGridData geomBGridData = _distanceGrids[geomA.Id];
+            //Lookup distancegrid B data from list
+            DistanceGridData geomBGridData = _distanceGrids[geomB.Id];
 
             //Iterate the first geometry vertices
             for (int i = 0; i < geomA.WorldVertices.Count; i++)
             {
                 if (contactList.Count == _physicsSimulator.maxContactsToDetect)
                     break;
-
-                //Can be null for "one-way" collision (points)
-                //if (geomB.narrowPhaseCollider == null)
-                //    break;
 
                 vertexIndex += 1;
                 _vertRef = geomA.WorldVertices[i];
