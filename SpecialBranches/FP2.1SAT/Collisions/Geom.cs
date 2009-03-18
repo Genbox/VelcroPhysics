@@ -89,7 +89,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public float RestitutionCoefficient;
         /// <summary>
         /// Gets or sets the narrow phase collider parameters.
-        /// Be sure to run <see cref="PrepareNarrowPhaseCollider"/>() for any changes to take effect.
         /// </summary>
         public ColliderData ColliderData;
         /// <summary>
@@ -112,7 +111,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public Geom()
         {
             Id = GetNextId();
-            narrowPhaseCollider = new Grid();
         }
 
         public Geom(Body body, Vertices vertices, ColliderData data)
@@ -295,9 +293,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             ColliderData = data;
             _offset = offset;
             _rotationOffset = rotationOffset;
-            narrowPhaseCollider = new Grid();
             SetVertices(vertices);
-            PrepareNarrowPhaseCollider();
             SetBody(bodyToSet);
         }
 
@@ -305,7 +301,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             Id = GetNextId();
             ColliderData = geometry.ColliderData;
-            narrowPhaseCollider = geometry.NarrowPhaseCollider.Clone();
             RestitutionCoefficient = geometry.RestitutionCoefficient;
             FrictionCoefficient = geometry.FrictionCoefficient;
             CollisionGroup = geometry.CollisionGroup;
@@ -345,21 +340,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             bodyToSet.Disposed += BodyOnDisposed;
 
             Update(ref bodyToSet.position, ref bodyToSet.rotation);
-        }
-
-        /// <summary>
-        /// Prepares the narrow phase collider
-        /// </summary>
-        public void PrepareNarrowPhaseCollider()
-        {
-            if (localVertices.Count > 2)
-            {
-                narrowPhaseCollider.Prepare(this, ColliderData);
-            }
-            else
-            {
-                narrowPhaseCollider = null;
-            }
         }
 
         /// <summary>
@@ -459,17 +439,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public bool Collide(Vector2 point)
         {
             //Check first if the AABB contains the point
-            if (AABB.Contains(point))
-            {
-                Feature feature;
-                point = Vector2.Transform(point, MatrixInverse);
+            //if (AABB.Contains(point))
+            //{
+            //    Feature feature;
+            //    point = Vector2.Transform(point, MatrixInverse);
 
-                narrowPhaseCollider.Intersect(ref point, out feature);
-                if (feature.Distance < 0)
-                {
-                    return true;
-                }
-            }
+            //    narrowPhaseCollider.Intersect(ref point, out feature);
+            //    if (feature.Distance < 0)
+            //    {
+            //        return true;
+            //    }
+            //}
             return false;
         }
 
@@ -480,14 +460,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns></returns>
         private bool FastCollide(Vector2 point)
         {
-            Feature feature;
-            point = Vector2.Transform(point, MatrixInverse);
+            //Feature feature;
+            //point = Vector2.Transform(point, MatrixInverse);
 
-            narrowPhaseCollider.Intersect(ref point, out feature);
-            if (feature.Distance < 0)
-            {
-                return true;
-            }
+            //narrowPhaseCollider.Intersect(ref point, out feature);
+            //if (feature.Distance < 0)
+            //{
+            //    return true;
+            //}
 
             return false;
         }
@@ -689,5 +669,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         #endregion
+
     }
 }
