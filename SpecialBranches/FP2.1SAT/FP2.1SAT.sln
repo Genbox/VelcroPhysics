@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FP2.1SAT", "FP2.1SAT.csproj", "{C57F946E-3640-4158-9232-6B08E6FCCEF8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C57F946E-3640-4158-9232-6B08E6FCCEF8}.Debug|x86.ActiveCfg = Debug|x86
+		{C57F946E-3640-4158-9232-6B08E6FCCEF8}.Debug|x86.Build.0 = Debug|x86
+		{C57F946E-3640-4158-9232-6B08E6FCCEF8}.Release|x86.ActiveCfg = Release|x86
+		{C57F946E-3640-4158-9232-6B08E6FCCEF8}.Release|x86.Build.0 = Release|x86
+		{8DE7C6AA-98BA-40CC-9C3C-C8A6FC77D3F6}.Debug|x86.ActiveCfg = Debug|x86
+		{8DE7C6AA-98BA-40CC-9C3C-C8A6FC77D3F6}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
