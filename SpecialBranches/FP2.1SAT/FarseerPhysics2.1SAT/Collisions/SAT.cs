@@ -11,6 +11,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
 {
     public class SAT : INarrowPhaseCollider
     {
+        private PhysicsSimulator _physicsSimulator;
+
+        public SAT(PhysicsSimulator physicsSimulator)
+        {
+            _physicsSimulator = physicsSimulator;
+        }
+
         public void Collide(Geom geomA, Geom geomB, ContactList contactList)
         {
             Vector2 m_ncoll = new Vector2(0, 0);
