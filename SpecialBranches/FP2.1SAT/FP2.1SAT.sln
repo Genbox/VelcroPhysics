@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FP2.1SAT", "FarseerPhysics2.1SAT\FP2.1SAT.csproj", "{C57F946E-3640-4158-9232-6B08E6FCCEF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSamplesXNA", "SimpleSamplesXNA\SimpleSamplesXNA.csproj", "{F7E1D8C1-5AB0-42A9-9AFE-8F3EEEBF1307}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs01.codeplex.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = FarseerPhysics2.1SAT\\FP2.1SAT.csproj
+		SccProjectName1 = FarseerPhysics2.1SAT
+		SccLocalPath1 = FarseerPhysics2.1SAT
+		SccProjectUniqueName2 = FarseerPhysics2.1SAT\\Content\\Content.contentproj
+		SccProjectTopLevelParentUniqueName2 = FarseerPhysics2.1SAT\\FP2.1SAT.csproj
+		SccProjectName2 = FarseerPhysics2.1SAT/Content
+		SccLocalPath2 = FarseerPhysics2.1SAT\\Content
+		SccProjectUniqueName3 = SimpleSamplesXNA\\Content\\Content.contentproj
+		SccProjectTopLevelParentUniqueName3 = SimpleSamplesXNA\\SimpleSamplesXNA.csproj
+		SccProjectName3 = SimpleSamplesXNA/Content
+		SccLocalPath3 = SimpleSamplesXNA\\Content
+		SccProjectUniqueName4 = SimpleSamplesXNA\\SimpleSamplesXNA.csproj
+		SccProjectName4 = SimpleSamplesXNA
+		SccLocalPath4 = SimpleSamplesXNA
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C57F946E-3640-4158-9232-6B08E6FCCEF8}.Debug|x86.ActiveCfg = Debug|x86
+		{C57F946E-3640-4158-9232-6B08E6FCCEF8}.Debug|x86.Build.0 = Debug|x86
+		{C57F946E-3640-4158-9232-6B08E6FCCEF8}.Release|x86.ActiveCfg = Release|x86
+		{C57F946E-3640-4158-9232-6B08E6FCCEF8}.Release|x86.Build.0 = Release|x86
+		{8DE7C6AA-98BA-40CC-9C3C-C8A6FC77D3F6}.Debug|x86.ActiveCfg = Debug|x86
+		{8DE7C6AA-98BA-40CC-9C3C-C8A6FC77D3F6}.Release|x86.ActiveCfg = Release|x86
+		{F7E1D8C1-5AB0-42A9-9AFE-8F3EEEBF1307}.Debug|x86.ActiveCfg = Debug|x86
+		{F7E1D8C1-5AB0-42A9-9AFE-8F3EEEBF1307}.Debug|x86.Build.0 = Debug|x86
+		{F7E1D8C1-5AB0-42A9-9AFE-8F3EEEBF1307}.Release|x86.ActiveCfg = Release|x86
+		{F7E1D8C1-5AB0-42A9-9AFE-8F3EEEBF1307}.Release|x86.Build.0 = Release|x86
+		{D02CA378-A184-49AD-91D5-C017D1559CAC}.Debug|x86.ActiveCfg = Debug|x86
+		{D02CA378-A184-49AD-91D5-C017D1559CAC}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
