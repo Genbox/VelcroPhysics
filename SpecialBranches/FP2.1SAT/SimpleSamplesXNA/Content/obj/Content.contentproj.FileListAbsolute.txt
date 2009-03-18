@@ -1,2 +1,0 @@
-D:\Projects\Private Farseer\Farseer Physics 2.0.1\FarseerPhysics2.0.1SimpleSamplesForXNA\SimpleSamplesXNA\Content\obj\x86\Debug\ResolveAssemblyReference.cache
-D:\Projects\Private Farseer\Farseer Physics 2.0.1\Zips\FarseerPhysics2.0.1SimpleSamplesForXNA\SimpleSamplesXNA\Content\obj\x86\Debug\ResolveAssemblyReference.cache

@@ -161,9 +161,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FarseerPhysics2.0.1OnlyForXNA\FarseerPhysics.csproj">
-      <Project>{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}</Project>
-      <Name>FarseerPhysics</Name>
+    <ProjectReference Include="..\FarseerPhysics2.1SAT\FP2.1SAT.csproj">
+      <Project>{C57F946E-3640-4158-9232-6B08E6FCCEF8}</Project>
+      <Name>FP2.1SAT</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
