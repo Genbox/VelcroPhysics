@@ -38,7 +38,6 @@ namespace FarseerGames.GettingStarted.Demos.Demo3
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
-            PhysicsSimulatorView.EnableGridView = false;
 
             base.Initialize();
         }
