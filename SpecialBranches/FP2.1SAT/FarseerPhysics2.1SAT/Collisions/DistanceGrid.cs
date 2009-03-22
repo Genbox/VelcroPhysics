@@ -51,8 +51,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                 //The geometry intersects when distance <= 0
                 //Continue in the list if the current vector does not intersect
-                if (!geomAGridData.Intersect(ref _localVertex, out _feature))
-                    continue;
+                //if (!geomAGridData.Intersect(ref _localVertex, out _feature))
+                //    continue;
 
                 //If the second geometry's current vector intersects with the first geometry
                 //create a new contact and add it to the contact list.
@@ -78,8 +78,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 _vertRef = geomA.WorldVertices[i];
                 geomB.TransformToLocalCoordinates(ref _vertRef, out _localVertex);
 
-                if (!geomBGridData.Intersect(ref _localVertex, out _feature))
-                    continue;
+                //if (!geomBGridData.Intersect(ref _localVertex, out _feature))
+                 //   continue;
 
                 if (_feature.Distance < 0f)
                 {
@@ -158,6 +158,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return aabb.GetShortestSide() * _gridCellSizeAABBFactor;
         }
 
+        public bool Intersect(Geom g, Vector2 v)
+        {
+            return true;
+        }
+
         #region Collide variables
 
         private Feature _feature;
@@ -188,13 +193,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return grid;
         }
 
+        
+
         /// <summary>
         /// Checks if the grid intersects with the specified vector.
         /// </summary>
         /// <param name="vector">The vector.</param>
         /// <param name="feature">The feature.</param>
         /// <returns></returns>
-        public bool Intersect(ref Vector2 vector, out Feature feature)
+       /* public bool Intersect(ref Vector2 vector, out Feature feature)
         {
             //TODO: Keep and eye out for floating point accuracy issues here. Possibly some
             //VERY intermittent errors exist?
@@ -243,6 +250,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
             feature = new Feature();
             return false;
-        }
+        }*/
     }
 }
