@@ -86,10 +86,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns></returns>
         public Vector2 GetEdge(int index)
         {
-            if (index >= Count)
-                index -= Count - 1;
-            else if (index < 0)
-                index += Count;
             int nextIndex = NextIndex(index);
             _vectorTemp2 = this[nextIndex];
             _vectorTemp3 = this[index];
