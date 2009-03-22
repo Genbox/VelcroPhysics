@@ -21,14 +21,14 @@ namespace FarseerGames.AdvancedSamples
 
             _graphics.SynchronizeWithVerticalRetrace = false;
 
-            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 10);
+            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 18);
             IsFixedTimeStep = true;
 
 #if !XBOX
             //windowed
-            _graphics.PreferredBackBufferWidth = 1024;
-            _graphics.PreferredBackBufferHeight = 768;
-            _graphics.IsFullScreen = false;
+            _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.PreferredBackBufferHeight = 1200;
+            _graphics.IsFullScreen = true;
 
             //fullscreen
             //_graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;

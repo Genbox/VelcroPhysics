@@ -43,7 +43,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
             _chainTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 20, 10, Color.White,
                                                                  Color.Black);
 
-            _obstaclesTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 40, 40, Color.Brown,
+            _obstaclesTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 25, 25, Color.Brown,
                                                                  Color.Black);
 
             _wheelTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 45, 2, Color.White, Color.Black);
@@ -85,6 +85,8 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
 
             _obstacles = new GenericList<Body>();
             _obstaclesg = new GenericList<Geom>();
+
+            PhysicsSimulator.BroadPhaseCollider = new SelectiveSweepCollider(PhysicsSimulator);
 
             base.LoadContent();
         }
@@ -137,6 +139,14 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo6
                 _torque = 0;
                 _wheel1.ClearTorque();
                 _wheel2.ClearTorque();
+            }
+
+            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed)
+            {
+                _obstacles.Add(BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 25, 25, 10));
+                _obstaclesg.Add(GeomFactory.Instance.CreateRectangleGeom(PhysicsSimulator, _obstacles[_obstacles.Count - 1], 25, 25));
+                //_obstaclesg[_obstaclesg.Count - 1].CollisionGroup = 1;
+                _obstacles[_obstacles.Count - 1].Position = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
             }
 
             _wheel1.ApplyAngularImpulse(_torque);

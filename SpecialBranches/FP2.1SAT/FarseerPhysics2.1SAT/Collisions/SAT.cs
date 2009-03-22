@@ -34,42 +34,54 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             PolygonCollisionResult r = PolygonCollision(geomA.WorldVertices, geomB.WorldVertices, geomB.body.LinearVelocity - geomA.body.LinearVelocity);
             float distance = r.MinimumTranslationVector.Length() / 15.0f;
+            int contactsDetected = 0;
+            Vector2 normal = Vector2.Normalize(-r.MinimumTranslationVector);
 
             if (r.Intersect)
             {
                 for (int i =0; i < geomA.WorldVertices.Count; i++)
                 {
-                    if (InsidePolygon(geomB.WorldVertices, geomA.WorldVertices[i]))
+                    if (contactsDetected <= _physicsSimulator.MaxContactsToDetect)
                     {
-                        if (!geomA.Body.IsStatic)
+                        if (InsidePolygon(geomB.WorldVertices, geomA.WorldVertices[i]))
                         {
-                            if (distance > _physicsSimulator.AllowedPenetration)
+                            if (!geomA.Body.IsStatic)
                             {
-                                geomA.Body.Position += r.MinimumTranslationVector * 0.2f;
-                            }
-                            if (distance > 0.001f)
-                            {
-                                Contact c = new Contact(geomA.WorldVertices[i], -Vector2.Normalize(r.MinimumTranslationVector), distance, new ContactId(geomA.Id, i, geomB.Id));
-                                contactList.Add(c);
+                                if (distance > _physicsSimulator.AllowedPenetration)
+                                {
+                                    geomA.Body.Position += r.MinimumTranslationVector * 0.3f;
+                                }
+                                if (distance > 0.001f)
+                                {
+                                    Contact c = new Contact(geomA.WorldVertices[i], normal, distance, new ContactId(geomA.Id, i, geomB.Id));
+                                    contactList.Add(c);
+                                    contactsDetected++;
+                                }
                             }
                         }
                     }
                 }
 
+                contactsDetected = 0;
+
                 for (int i = 0; i < geomB.WorldVertices.Count; i++)
                 {
-                    if (InsidePolygon(geomA.WorldVertices, geomB.WorldVertices[i]))
+                    if (contactsDetected <= _physicsSimulator.MaxContactsToDetect)
                     {
-                        if (!geomB.Body.IsStatic)
+                        if (InsidePolygon(geomA.WorldVertices, geomB.WorldVertices[i]))
                         {
-                            if (distance > _physicsSimulator.AllowedPenetration)
+                            if (!geomB.Body.IsStatic)
                             {
-                                geomB.Body.Position -= r.MinimumTranslationVector * 0.2f;
-                            }
-                            if (distance > 0.001f)
-                            {
-                                Contact c = new Contact(geomB.WorldVertices[i], -Vector2.Normalize(r.MinimumTranslationVector), distance, new ContactId(geomB.Id, i, geomA.Id));
-                                contactList.Add(c);
+                                if (distance > _physicsSimulator.AllowedPenetration)
+                                {
+                                    geomB.Body.Position -= r.MinimumTranslationVector * 0.3f;
+                                }
+                                if (distance > 0.001f)
+                                {
+                                    Contact c = new Contact(geomB.WorldVertices[i], normal, distance, new ContactId(geomB.Id, i, geomA.Id));
+                                    contactList.Add(c);
+                                    contactsDetected++;
+                                }
                             }
                         }
                     }
