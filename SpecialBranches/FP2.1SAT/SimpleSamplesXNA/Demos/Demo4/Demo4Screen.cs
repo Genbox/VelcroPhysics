@@ -18,7 +18,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
 #if XBOX
         private const int _pyramidBaseBodyCount = 8;
 #else
-        private const int _pyramidBaseBodyCount = 8;
+        private const int _pyramidBaseBodyCount = 16;
 #endif
         private Agent _agent;
         private Floor _floor;
@@ -48,13 +48,13 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
             _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 32, 32, 2, 0, 0,
                                                                      Color.White, Color.Black);
 
-            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(64, 64, 1f); //template              
-            _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_rectangleBody, 64, 64); //template
-            _rectangleGeom.FrictionCoefficient = .1f;
-            _rectangleGeom.RestitutionCoefficient = 0f;
+            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 1f); //template              
+            _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_rectangleBody, 32, 32); //template
+            _rectangleGeom.FrictionCoefficient = .8f;
+            _rectangleGeom.RestitutionCoefficient = .0f;
 
             //create the _pyramid near the bottom of the screen.
-            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 64f / 3f, 64f / 3f, 64, 64, _pyramidBaseBodyCount,
+            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, _pyramidBaseBodyCount,
                                    new Vector2(ScreenManager.ScreenCenter.X - _pyramidBaseBodyCount * .5f * (32 + 32 / 3),
                                                ScreenManager.ScreenHeight - 125));
 

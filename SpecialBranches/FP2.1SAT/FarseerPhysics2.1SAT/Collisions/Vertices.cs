@@ -457,19 +457,19 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Vertices vertices = new Vertices();
             vertices.Add(new Vector2(-width * .5f, -height * .5f));
             //vertices.Add(new Vector2(-width * .5f, -height * .25f));
-            vertices.Add(new Vector2(-width * .5f, 0));
+            //vertices.Add(new Vector2(-width * .5f, 0));
             //vertices.Add(new Vector2(-width * .5f, height * .25f));
             vertices.Add(new Vector2(-width * .5f, height * .5f));
             //vertices.Add(new Vector2(-width * .25f, height * .5f));
-            vertices.Add(new Vector2(0, height * .5f));
+            //vertices.Add(new Vector2(0, height * .5f));
             //vertices.Add(new Vector2(width * .25f, height * .5f));
             vertices.Add(new Vector2(width * .5f, height * .5f));
             //vertices.Add(new Vector2(width * .5f, height * .25f));
-            vertices.Add(new Vector2(width * .5f, 0));
+            //vertices.Add(new Vector2(width * .5f, 0));
             //vertices.Add(new Vector2(width * .5f, -height * .25f));
             vertices.Add(new Vector2(width * .5f, -height * .5f));
             //vertices.Add(new Vector2(width * .25f, -height * .5f));
-            vertices.Add(new Vector2(0, -height * .5f));
+            //vertices.Add(new Vector2(0, -height * .5f));
             //vertices.Add(new Vector2(-width * .25f, -height * .5f));
             return vertices;
         }

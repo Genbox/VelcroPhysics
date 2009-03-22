@@ -34,7 +34,7 @@ namespace FarseerGames.FarseerPhysics
 #if (XNA)
         private Stopwatch _sw = new Stopwatch();
 #endif
-        internal float allowedPenetration = .05f;
+        internal float allowedPenetration = 0.05f;
         internal float applyForcesTime = -1;
         internal float applyImpulsesTime = -1;
         internal ArbiterList arbiterList;
@@ -63,7 +63,7 @@ namespace FarseerGames.FarseerPhysics
         internal GenericList<Spring> springList;
         internal List<Spring> springRemoveList;
 
-        internal int maxContactsToDetect = 10;
+        internal int maxContactsToDetect = 4;
         internal int maxContactsToResolve = 4;
         internal float broadPhaseCollisionTime = -1;
         internal float narrowPhaseCollisionTime = -1;

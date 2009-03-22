@@ -295,6 +295,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             _rotationOffset = rotationOffset;
             SetVertices(vertices);
             SetBody(bodyToSet);
+            narrowPhaseCollider = new SAT(physicsSimulator);
         }
 
         private void ConstructClone(Body bodyToSet, Geom geometry, Vector2 offset, float rotationOffset)
@@ -313,6 +314,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             CollidesWith = geometry.CollidesWith;
             SetVertices(geometry.localVertices);
             SetBody(bodyToSet);
+            narrowPhaseCollider = new SAT(physicsSimulator);
         }
 
         /// <summary>
@@ -439,17 +441,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public bool Collide(Vector2 point)
         {
             //Check first if the AABB contains the point
-            //if (AABB.Contains(point))
-            //{
-            //    Feature feature;
-            //    point = Vector2.Transform(point, MatrixInverse);
+            if (AABB.Contains(point))
+            {
+                //point = Vector2.Transform(point, MatrixInverse);
 
-            //    narrowPhaseCollider.Intersect(ref point, out feature);
-            //    if (feature.Distance < 0)
-            //    {
-            //        return true;
-            //    }
-            //}
+                if (narrowPhaseCollider.Intersect(this, point))
+                    return true;
+            }
             return false;
         }
 
@@ -468,6 +466,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //{
             //    return true;
             //}
+
+            if (narrowPhaseCollider.Intersect(this, point))
+                return true;
 
             return false;
         }

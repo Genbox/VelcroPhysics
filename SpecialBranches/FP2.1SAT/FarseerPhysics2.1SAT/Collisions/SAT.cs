@@ -33,6 +33,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
 
             PolygonCollisionResult r = PolygonCollision(geomA.WorldVertices, geomB.WorldVertices, geomB.body.LinearVelocity - geomA.body.LinearVelocity);
+            float distance = r.MinimumTranslationVector.Length() / 15.0f;
 
             if (r.Intersect)
             {
@@ -40,8 +41,18 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 {
                     if (InsidePolygon(geomB.WorldVertices, geomA.WorldVertices[i]))
                     {
-                        Contact c = new Contact(geomA.WorldVertices[i], -Vector2.Normalize(r.MinimumTranslationVector), r.MinimumTranslationVector.Length(), new ContactId(geomA.Id, i, geomB.Id));
-                        contactList.Add(c);
+                        if (!geomA.Body.IsStatic)
+                        {
+                            if (distance > _physicsSimulator.AllowedPenetration)
+                            {
+                                geomA.Body.Position += r.MinimumTranslationVector * 0.2f;
+                            }
+                            if (distance > 0.001f)
+                            {
+                                Contact c = new Contact(geomA.WorldVertices[i], -Vector2.Normalize(r.MinimumTranslationVector), distance, new ContactId(geomA.Id, i, geomB.Id));
+                                contactList.Add(c);
+                            }
+                        }
                     }
                 }
 
@@ -49,13 +60,26 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 {
                     if (InsidePolygon(geomA.WorldVertices, geomB.WorldVertices[i]))
                     {
-                        Contact c = new Contact(geomB.WorldVertices[i], -Vector2.Normalize(r.MinimumTranslationVector), r.MinimumTranslationVector.Length(), new ContactId(geomB.Id, i, geomA.Id));
-                        contactList.Add(c);
+                        if (!geomB.Body.IsStatic)
+                        {
+                            if (distance > _physicsSimulator.AllowedPenetration)
+                            {
+                                geomB.Body.Position -= r.MinimumTranslationVector * 0.2f;
+                            }
+                            if (distance > 0.001f)
+                            {
+                                Contact c = new Contact(geomB.WorldVertices[i], -Vector2.Normalize(r.MinimumTranslationVector), distance, new ContactId(geomB.Id, i, geomA.Id));
+                                contactList.Add(c);
+                            }
+                        }
                     }
                 }
-
-
             }
+        }
+
+        public bool Intersect(Geom g, Vector2 v)
+        {
+            return InsidePolygon(g.WorldVertices, v);
         }
 
         private bool InsidePolygon(Vertices polygon, Vector2 p)
@@ -185,15 +209,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                 // Project the velocity on the current axis
 
-                float velocityProjection = Vector2.Dot(axis, velocity);
+                //float velocityProjection = Vector2.Dot(axis, velocity);
 
                 // Get the projection of polygon A during the movement
 
-                if (velocityProjection < 0) {
-                    minA += velocityProjection;
-                } else {
-                    maxA += velocityProjection;
-                }
+                //if (velocityProjection < 0) {
+                //    minA += velocityProjection;
+                //} else {
+                //    maxA += velocityProjection;
+                //}
 
                 // Do the same test as above for the new projection
 
@@ -207,7 +231,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 // Check if the current interval distance is the minimum one. If so store
 
                 // the interval distance and the current distance.
-
+                
                 // This will be used to calculate the minimum translation vector
 
                 intervalDistance = Math.Abs(intervalDistance);
