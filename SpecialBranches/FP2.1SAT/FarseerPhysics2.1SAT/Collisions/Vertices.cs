@@ -21,6 +21,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private Vector2 _vectorTemp4 = Vector2.Zero;
         private Vector2 _vectorTemp5 = Vector2.Zero;
 
+
         public Vertices()
         {
         }
@@ -85,6 +86,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns></returns>
         public Vector2 GetEdge(int index)
         {
+            if (index >= Count)
+                index -= Count - 1;
+            else if (index < 0)
+                index += Count;
             int nextIndex = NextIndex(index);
             _vectorTemp2 = this[nextIndex];
             _vectorTemp3 = this[index];
@@ -455,21 +460,21 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             Vertices vertices = new Vertices();
             vertices.Add(new Vector2(-width * .5f, -height * .5f));
-            vertices.Add(new Vector2(-width * .5f, -height * .25f));
+            //vertices.Add(new Vector2(-width * .5f, -height * .25f));
             vertices.Add(new Vector2(-width * .5f, 0));
-            vertices.Add(new Vector2(-width * .5f, height * .25f));
+            //vertices.Add(new Vector2(-width * .5f, height * .25f));
             vertices.Add(new Vector2(-width * .5f, height * .5f));
-            vertices.Add(new Vector2(-width * .25f, height * .5f));
+            //vertices.Add(new Vector2(-width * .25f, height * .5f));
             vertices.Add(new Vector2(0, height * .5f));
-            vertices.Add(new Vector2(width * .25f, height * .5f));
+            //vertices.Add(new Vector2(width * .25f, height * .5f));
             vertices.Add(new Vector2(width * .5f, height * .5f));
-            vertices.Add(new Vector2(width * .5f, height * .25f));
+            //vertices.Add(new Vector2(width * .5f, height * .25f));
             vertices.Add(new Vector2(width * .5f, 0));
-            vertices.Add(new Vector2(width * .5f, -height * .25f));
+            //vertices.Add(new Vector2(width * .5f, -height * .25f));
             vertices.Add(new Vector2(width * .5f, -height * .5f));
-            vertices.Add(new Vector2(width * .25f, -height * .5f));
+            //vertices.Add(new Vector2(width * .25f, -height * .5f));
             vertices.Add(new Vector2(0, -height * .5f));
-            vertices.Add(new Vector2(-width * .25f, -height * .5f));
+            //vertices.Add(new Vector2(-width * .25f, -height * .5f));
             return vertices;
         }
 
@@ -1501,6 +1506,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return vertices;
         }
         #endregion
+
+        #region Matt Bettcher's Extension
+
+        #endregion
     }
 
     #region DrDeth's Extension
@@ -1540,5 +1549,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public Edge EdgeTwo { get; private set; }
         public Vector2 IntersectionPoint { get; private set; }
     }
+    #endregion
+
+    #region Matt Bettcher's Extension Class's
+
+
     #endregion
 }
