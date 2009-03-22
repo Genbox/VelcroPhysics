@@ -108,6 +108,7 @@ namespace FarseerGames.AdvancedSamples
         public PhysicsSimulatorView(PhysicsSimulator physicsSimulator)
         {
             _physicsSimulator = physicsSimulator;
+            EnableAABBView = false;
 
             if (_performancePanelCount)
                 _performancePanelWidth = 360;
@@ -321,6 +322,7 @@ namespace FarseerGames.AdvancedSamples
 
         public void LoadContent(GraphicsDevice graphicsDevice, ContentManager content)
         {
+
             LoadVerticeContent(graphicsDevice);
             LoadEdgeContent(graphicsDevice);
             LoadAABBContent(graphicsDevice);

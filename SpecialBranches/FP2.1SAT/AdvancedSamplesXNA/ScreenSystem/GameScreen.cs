@@ -252,7 +252,7 @@ namespace FarseerGames.AdvancedSamples.ScreenSystem
         public virtual void UpdatePhysics(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             if (!coveredByOtherScreen && !otherScreenHasFocus)
-                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds * .001f);
+                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds * 0.001f);
         }
 
         /// <summary>

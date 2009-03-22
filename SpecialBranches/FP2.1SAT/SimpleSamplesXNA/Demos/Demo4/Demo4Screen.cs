@@ -18,7 +18,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
 #if XBOX
         private const int _pyramidBaseBodyCount = 8;
 #else
-        private const int _pyramidBaseBodyCount = 16;
+        private const int _pyramidBaseBodyCount = 12;
 #endif
         private Agent _agent;
         private Floor _floor;
@@ -48,8 +48,11 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
             _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 32, 32, 2, 0, 0,
                                                                      Color.White, Color.Black);
 
-            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 1f); //template              
+            //_rectangleTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 16, Color.White, Color.Black);
+
+            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(32, 32,1f); //template              
             _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_rectangleBody, 32, 32); //template
+            //_rectangleGeom = GeomFactory.Instance.CreateCircleGeom(_rectangleBody, 16, 8);
             _rectangleGeom.FrictionCoefficient = .8f;
             _rectangleGeom.RestitutionCoefficient = .0f;
 
