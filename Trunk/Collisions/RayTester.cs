@@ -87,24 +87,24 @@ namespace FarseerGames.FarseerPhysics.Collisions
             float d = point2.Y - point1.Y;
 
             // denominator to solution of linear system
-            float denom = (a*b) - (c*d);
+            float denom = (a * b) - (c * d);
 
             // if denominator is 0, then lines are parallel
             if (!FloatEquals(denom, 0f, floatTolerance))
             {
                 float e = point1.Y - point3.Y;
                 float f = point1.X - point3.X;
-                float oneOverDenom = 1.0f/denom;
+                float oneOverDenom = 1.0f / denom;
 
                 // numerator of first equation
-                float ua = (c*e) - (a*f);
+                float ua = (c * e) - (a * f);
                 ua *= oneOverDenom;
 
                 // check if intersection point of the two lines is on line segment 1
                 if (!firstIsSegment || FloatInRange(ua, 0f, 1f))
                 {
                     // numerator of second equation
-                   float ub = (b*e) - (d*f);
+                    float ub = (b * e) - (d * f);
                     ub *= oneOverDenom;
 
                     // check if intersection point of the two lines is on line segment 2
@@ -119,8 +119,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                             //There is an intersection
                             ret = true;
 
-                            point.X = point1.X + ua*b;
-                            point.Y = point1.Y + ua*d;
+                            point.X = point1.X + ua * b;
+                            point.Y = point1.Y + ua * d;
                         }
                     }
                 }
@@ -278,6 +278,33 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 LineSegmentVerticesIntersect(ref point1, ref point2, geom.WorldVertices, ref intersectionPoints);
             }
+        }
+
+        public static List<Geom> LineSegmentAllGeomsIntersect(ref Vector2 point1, ref Vector2 point2, PhysicsSimulator simulator, bool detectUsingAABB, ref List<Vector2> intersectionPoints)
+        {
+            List<Vector2> intSecPoints = new List<Vector2>();
+            List<Geom> geoms = new List<Geom>();
+
+            foreach (Geom geom in simulator.GeomList)
+            {
+                intSecPoints.Clear();
+
+                if (detectUsingAABB)
+                {
+                    LineSegmentAABBIntersect(ref point1, ref point2, geom.AABB, ref intSecPoints);
+                }
+                else
+                {
+                    LineSegmentVerticesIntersect(ref point1, ref point2, geom.WorldVertices, ref intSecPoints);
+                }
+
+                if (intSecPoints.Count > 0)
+                    geoms.Add(geom);
+
+                intersectionPoints.AddRange(intSecPoints);
+            }
+
+            return geoms;
         }
     }
 }

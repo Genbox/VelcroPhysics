@@ -106,7 +106,7 @@
       <Link>Collisions\Grid.cs</Link>
     </Compile>
     <Compile Include="..\..\Trunk\Collisions\RayTester.cs">
-      <Link>RayTester.cs</Link>
+      <Link>Collisions\RayTester.cs</Link>
     </Compile>
     <Compile Include="..\..\Trunk\Collisions\SelectiveSweepCollider.cs">
       <Link>Collisions\SelectiveSweepCollider.cs</Link>

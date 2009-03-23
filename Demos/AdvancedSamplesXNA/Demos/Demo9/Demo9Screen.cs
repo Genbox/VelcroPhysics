@@ -27,7 +27,8 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo9
         private CircleBrush _marker;
 
         private LineBrush _lineBrush;
-        private List<Vector2> _points = new List<Vector2>();
+        private List<Geom> _intersectingGeoms = new List<Geom>();
+        private List<Vector2> _intersectingPoints = new List<Vector2>();
 
         public override void Initialize()
         {
@@ -73,10 +74,12 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo9
             _rectangleBrush.Draw(ScreenManager.SpriteBatch, _rectangleBody.Position, _rectangleBody.Rotation);
             _lineBrush.Draw(ScreenManager.SpriteBatch, _p1, _p2);
 
-            foreach (Vector2 point in _points)
+            foreach (Vector2 point in _intersectingPoints)
             {
                 _marker.Draw(ScreenManager.SpriteBatch, point);
             }
+
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, string.Format("Colliding with {0} geometries", _intersectingGeoms.Count), new Vector2(50, ScreenManager.ScreenHeight - 70), Color.White);
 
             ScreenManager.SpriteBatch.End();
 
@@ -85,12 +88,12 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo9
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            _points.Clear();
+            _intersectingPoints.Clear();
+            _intersectingGeoms.Clear();
 
-            CollisionHelper.LineSegmentGeomIntersect(ref _p1, ref _p2, _circleGeom, false, ref _points);
-            CollisionHelper.LineSegmentGeomIntersect(ref _p1, ref _p2, _rectangleGeom, false, ref _points);
+            _intersectingGeoms = CollisionHelper.LineSegmentAllGeomsIntersect(ref _p1, ref _p2, PhysicsSimulator, false, ref  _intersectingPoints);
 
-            if (_points.Count > 0)
+            if (_intersectingPoints.Count > 0)
                 _lineBrush.Color = Color.Yellow;
             else
                 _lineBrush.Color = Color.Black;
