@@ -89,6 +89,7 @@
     <Compile Include="Demos\Demo6\Demo6Screen.cs" />
     <Compile Include="Demos\Demo7\Demo7Screen.cs" />
     <Compile Include="Demos\Demo8\Demo8Screen.cs" />
+    <Compile Include="Demos\Demo9\Demo9Screen.cs" />
     <Compile Include="Demos\DemoShare\Agent.cs" />
     <Compile Include="Demos\DemoShare\AngularSpringLever.cs" />
     <Compile Include="Demos\DemoShare\Border.cs" />

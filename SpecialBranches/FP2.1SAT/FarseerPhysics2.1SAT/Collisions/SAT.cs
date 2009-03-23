@@ -49,7 +49,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                             {
                                 if (distance > _physicsSimulator.AllowedPenetration)
                                 {
-                                    geomA.Body.Position += r.MinimumTranslationVector * 0.3f;
+                                    geomA.Body.Position += r.MinimumTranslationVector * 0.2f;
                                 }
                                 if (distance > 0.001f)
                                 {
@@ -74,7 +74,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                             {
                                 if (distance > _physicsSimulator.AllowedPenetration)
                                 {
-                                    geomB.Body.Position -= r.MinimumTranslationVector * 0.3f;
+                                    geomB.Body.Position -= r.MinimumTranslationVector * 0.2f;
                                 }
                                 if (distance > 0.001f)
                                 {
