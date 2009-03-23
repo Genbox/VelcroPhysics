@@ -87,9 +87,6 @@
     <Compile Include="..\..\Trunk\Collisions\ColliderData.cs">
       <Link>Collisions\ColliderData.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\CollisionHelper.cs">
-      <Link>Collisions\CollisionHelper.cs</Link>
-    </Compile>
     <Compile Include="..\..\Trunk\Collisions\Contact.cs">
       <Link>Collisions\Contact.cs</Link>
     </Compile>
@@ -107,6 +104,9 @@
     </Compile>
     <Compile Include="..\..\Trunk\Collisions\Grid.cs">
       <Link>Collisions\Grid.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Collisions\RayTester.cs">
+      <Link>RayTester.cs</Link>
     </Compile>
     <Compile Include="..\..\Trunk\Collisions\SelectiveSweepCollider.cs">
       <Link>Collisions\SelectiveSweepCollider.cs</Link>
