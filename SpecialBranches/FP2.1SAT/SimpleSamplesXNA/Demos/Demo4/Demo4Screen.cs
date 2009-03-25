@@ -1,6 +1,7 @@
 using System.Text;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
+using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
@@ -18,7 +19,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
 #if XBOX
         private const int _pyramidBaseBodyCount = 8;
 #else
-        private const int _pyramidBaseBodyCount = 12;
+        private const int _pyramidBaseBodyCount = 20;
 #endif
         private Agent _agent;
         private Floor _floor;
@@ -33,11 +34,14 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
         public override void Initialize()
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 50));
-            PhysicsSimulator.BiasFactor = .4f;
+            PhysicsSimulator.BiasFactor = .2f;
             //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
-            PhysicsSimulator.MaxContactsToDetect = 2;
+            PhysicsSimulator.MaxContactsToDetect = 5;
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
+            PhysicsSimulator.BroadPhaseCollider = new SweepAndPruneCollider(PhysicsSimulator);
             //PhysicsSimulator.NarrowPhaseCollider = new DistanceGrid(PhysicsSimulator);
+
+
             base.Initialize();
         }
 
@@ -45,21 +49,21 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
         {
             _lineBrush.Load(ScreenManager.GraphicsDevice);
 
-            _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 32, 32, 2, 0, 0,
+            _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 64, 16, 2, 0, 0,
                                                                      Color.White, Color.Black);
 
             //_rectangleTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 16, Color.White, Color.Black);
 
-            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(32, 32,1f); //template              
-            _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_rectangleBody, 32, 32); //template
+            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(64, 16,1); //template   
+            _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_rectangleBody, 64, 16); //template
             //_rectangleGeom = GeomFactory.Instance.CreateCircleGeom(_rectangleBody, 16, 8);
-            _rectangleGeom.FrictionCoefficient = .8f;
+            _rectangleGeom.FrictionCoefficient = .99f;
             _rectangleGeom.RestitutionCoefficient = .0f;
 
             //create the _pyramid near the bottom of the screen.
-            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, _pyramidBaseBodyCount,
-                                   new Vector2(ScreenManager.ScreenCenter.X - _pyramidBaseBodyCount * .5f * (32 + 32 / 3),
-                                               ScreenManager.ScreenHeight - 125));
+            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 64f / 16f, 16f / 3f, 64, 16, _pyramidBaseBodyCount,
+                                   new Vector2(ScreenManager.ScreenCenter.X - 400,
+                                               ScreenManager.ScreenHeight - 90));
 
             _pyramid.Load(PhysicsSimulator);
 
@@ -75,6 +79,7 @@ namespace FarseerGames.GettingStarted.Demos.Demo4
 
         public override void Draw(GameTime gameTime)
         {
+            
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             _pyramid.Draw(ScreenManager.SpriteBatch, _rectangleTexture);
             _floor.Draw(ScreenManager.SpriteBatch);
