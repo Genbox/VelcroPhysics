@@ -21,7 +21,7 @@ namespace FarseerGames.GettingStarted
 
             _graphics.SynchronizeWithVerticalRetrace = false;
 
-            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 10);
+            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 25);
             IsFixedTimeStep = true;
 
 #if !XBOX
