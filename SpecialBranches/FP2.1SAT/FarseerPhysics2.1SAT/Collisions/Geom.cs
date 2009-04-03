@@ -443,8 +443,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //Check first if the AABB contains the point
             if (AABB.Contains(point))
             {
-                //point = Vector2.Transform(point, MatrixInverse);
-
                 if (narrowPhaseCollider.Intersect(this, point))
                     return true;
             }
@@ -458,15 +456,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns></returns>
         private bool FastCollide(Vector2 point)
         {
-            //Feature feature;
-            //point = Vector2.Transform(point, MatrixInverse);
-
-            //narrowPhaseCollider.Intersect(ref point, out feature);
-            //if (feature.Distance < 0)
-            //{
-            //    return true;
-            //}
-
             if (narrowPhaseCollider.Intersect(this, point))
                 return true;
 

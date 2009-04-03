@@ -12,6 +12,6 @@ namespace FarseerGames.FarseerPhysics.Interfaces
     {
         void Collide(Geom geomA, Geom geomB, ContactList contactList);
 
-        bool Intersect(Geom g, Vector2 v);
+        bool Intersect(Geom geom, Vector2 point);
     }
 }
