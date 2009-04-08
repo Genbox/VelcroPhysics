@@ -1,6 +1,6 @@
 // provided by http://SilverlightRocks.com and http://SilverlightGames101.net
 // free for any use, personal or commercial
-namespace GettingStartedSilverlight
+namespace FarseerGames.SimpleSamplesSilverlight
 {
     public enum Key
     {

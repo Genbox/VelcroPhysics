@@ -2,7 +2,7 @@ using System;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace GettingStartedSilverlight
+namespace FarseerGames.SimpleSamplesSilverlight
 {
     public class KeyHandler
     {

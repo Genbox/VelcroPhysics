@@ -1,7 +1,6 @@
 using System;
-using GettingStartedSilverlight.Screens;
 
-namespace GettingStartedSilverlight.Components
+namespace FarseerGames.SimpleSamplesSilverlight.Components
 {
     public partial class Fps
     {

@@ -4,9 +4,9 @@ using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
-using GettingStartedSilverlight.Demos.DemoShare;
+using FarseerGames.SimpleSamplesSilverlight.Demos.DemoShare;
 
-namespace GettingStartedSilverlight.Demos.Demo6
+namespace FarseerGames.SimpleSamplesSilverlight.Demos.Demo6
 {
     public class Demo6 : SimulatorView
     {

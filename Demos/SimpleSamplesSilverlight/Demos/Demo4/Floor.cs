@@ -5,7 +5,7 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace GettingStartedSilverlight.Demos.Demo4
+namespace FarseerGames.SimpleSamplesSilverlight.Demos.Demo4
 {
     public class Floor
     {

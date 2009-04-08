@@ -8,7 +8,7 @@ using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 using SM = System.Windows.Media;
 
-namespace GettingStartedSilverlight.Demos.DemoShare
+namespace FarseerGames.SimpleSamplesSilverlight.Demos.DemoShare
 {
     public class Spider
     {

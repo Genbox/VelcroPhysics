@@ -1,4 +1,4 @@
-namespace GettingStartedSilverlight.Screens
+namespace FarseerGames.SimpleSamplesSilverlight.Screens
 {
     public partial class Splash
     {

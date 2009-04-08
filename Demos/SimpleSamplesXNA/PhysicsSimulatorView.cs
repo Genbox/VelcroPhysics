@@ -2,12 +2,12 @@ using System;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
-using FarseerGames.SimpleSamples.DrawingSystem;
+using FarseerGames.SimpleSamplesXNA.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.SimpleSamples
+namespace FarseerGames.SimpleSamplesXNA
 {
     /// <summary>
     /// Draws the elements inside a <see cref="PhysicsSimulator"/>. Great for debugging physics related problems.

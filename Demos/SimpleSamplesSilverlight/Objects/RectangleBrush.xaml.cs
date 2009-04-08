@@ -1,7 +1,7 @@
 using FarseerGames.FarseerPhysics.Mathematics;
-using GettingStartedSilverlight.Drawing;
+using FarseerGames.SimpleSamplesSilverlight.Drawing;
 
-namespace GettingStartedSilverlight.Objects
+namespace FarseerGames.SimpleSamplesSilverlight.Objects
 {
     public partial class RectangleBrush : IDrawingBrush
     {

@@ -1,6 +1,6 @@
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace GettingStartedSilverlight
+namespace FarseerGames.SimpleSamplesSilverlight
 {
     public class ScreenManager
     {

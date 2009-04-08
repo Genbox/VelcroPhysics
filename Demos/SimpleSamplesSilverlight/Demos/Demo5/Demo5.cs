@@ -2,9 +2,9 @@
 using System.Windows.Media;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Mathematics;
-using GettingStartedSilverlight.Demos.DemoShare;
+using FarseerGames.SimpleSamplesSilverlight.Demos.DemoShare;
 
-namespace GettingStartedSilverlight.Demos.Demo5
+namespace FarseerGames.SimpleSamplesSilverlight.Demos.Demo5
 {
     public class Demo5 : SimulatorView
     {

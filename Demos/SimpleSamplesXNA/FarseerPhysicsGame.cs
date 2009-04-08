@@ -1,10 +1,10 @@
 using System;
-using FarseerGames.SimpleSamples.Components;
-using FarseerGames.SimpleSamples.ScreenSystem;
+using FarseerGames.SimpleSamplesXNA.Components;
+using FarseerGames.SimpleSamplesXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.SimpleSamples
+namespace FarseerGames.SimpleSamplesXNAXNA
 {
     /// <summary>
     /// This is the main type for your game

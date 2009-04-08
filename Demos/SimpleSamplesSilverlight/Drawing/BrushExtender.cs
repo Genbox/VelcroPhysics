@@ -6,7 +6,7 @@ using System.Windows.Shapes;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace GettingStartedSilverlight.Drawing
+namespace FarseerGames.SimpleSamplesSilverlight.Drawing
 {
     public class BrushExtender
     {

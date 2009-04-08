@@ -1,4 +1,6 @@
-namespace FarseerGames.SimpleSamples
+using FarseerGames.SimpleSamplesXNAXNA;
+
+namespace FarseerGames.SimpleSamplesXNA
 {
     internal static class Program
     {
