@@ -1,6 +1,6 @@
 using System;
 
-namespace WaterSampleXNA
+namespace FarseerGames.WaterSampleXNA
 {
     static class Program
     {

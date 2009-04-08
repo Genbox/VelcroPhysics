@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.AdvancedSamples.ScreenSystem
+namespace FarseerGames.AdvancedSamplesXNA.ScreenSystem
 {
     /// <summary>
     /// The background screen sits behind all the other menu screens.

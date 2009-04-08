@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerGames.WaterSample.RenderSystem
+namespace FarseerGames.WaterSampleSilverlight.RenderSystem
 {
     public class Sprite : UserControl
     {

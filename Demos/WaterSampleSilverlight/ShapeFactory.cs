@@ -1,7 +1,7 @@
 ﻿using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace FarseerGames.WaterSample
+namespace FarseerGames.WaterSampleSilverlight
 {
     /// <summary>
     /// Consolidates creation of shapes.

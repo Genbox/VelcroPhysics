@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Threading;
 
-namespace FarseerGames.WaterSample.Views
+namespace FarseerGames.WaterSampleSilverlight.Views
 {
     public partial class SplashScreenView
     {

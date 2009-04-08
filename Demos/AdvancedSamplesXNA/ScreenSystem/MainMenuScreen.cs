@@ -1,16 +1,16 @@
-using FarseerGames.AdvancedSamples.Demos.Demo1;
-using FarseerGames.AdvancedSamples.Demos.Demo2;
-using FarseerGames.AdvancedSamples.Demos.Demo3;
-using FarseerGames.AdvancedSamples.Demos.Demo4;
-using FarseerGames.AdvancedSamples.Demos.Demo7;
-using FarseerGames.AdvancedSamples.Demos.Demo8;
-using FarseerGames.AdvancedSamples.Demos.Demo9;
+using FarseerGames.AdvancedSamplesXNA.Demos.Demo1;
+using FarseerGames.AdvancedSamplesXNA.Demos.Demo2;
+using FarseerGames.AdvancedSamplesXNA.Demos.Demo3;
+using FarseerGames.AdvancedSamplesXNA.Demos.Demo4;
+using FarseerGames.AdvancedSamplesXNA.Demos.Demo5;
+using FarseerGames.AdvancedSamplesXNA.Demos.Demo6;
+using FarseerGames.AdvancedSamplesXNA.Demos.Demo7;
+using FarseerGames.AdvancedSamplesXNA.Demos.Demo8;
+using FarseerGames.AdvancedSamplesXNA.Demos.Demo9;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using FarseerGames.AdvancedSamples.Demos.Demo5;
-using FarseerGames.AdvancedSamples.Demos.Demo6;
 
-namespace FarseerGames.AdvancedSamples.ScreenSystem
+namespace FarseerGames.AdvancedSamplesXNA.ScreenSystem
 {
     /// <summary>
     /// The main menu screen is the first thing displayed when the game starts up.

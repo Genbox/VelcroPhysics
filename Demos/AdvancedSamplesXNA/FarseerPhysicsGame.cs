@@ -1,10 +1,10 @@
 using System;
-using FarseerGames.AdvancedSamples.Components;
-using FarseerGames.AdvancedSamples.ScreenSystem;
+using FarseerGames.AdvancedSamplesXNA.Components;
+using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.AdvancedSamples
+namespace FarseerGames.AdvancedSamplesXNA
 {
     /// <summary>
     /// This is the main type for your game

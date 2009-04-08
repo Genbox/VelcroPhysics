@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedSamplesXNA", "AdvancedSamplesXNA.csproj", "{AB4B1555-A983-405D-B0FA-569F55D12F0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerPhysics", "..\..\Branches\XNA3\FarseerPhysics.csproj", "{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerPhysicsXNA", "..\..\Branches\XNA3\FarseerPhysicsXNA.csproj", "{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -11,19 +11,19 @@ Global
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs01.codeplex.com/
 		SccLocalPath0 = .
-		SccProjectUniqueName1 = ..\\..\\Branches\\XNA3\\FarseerPhysics.csproj
-		SccProjectName1 = ../../Branches/XNA3
-		SccLocalPath1 = ..\\..\\Branches\\XNA3
-		SccProjectUniqueName2 = ..\\..\\Branches\\XNA3\\Content\\Content.contentproj
-		SccProjectTopLevelParentUniqueName2 = ..\\..\\Branches\\XNA3\\FarseerPhysics.csproj
-		SccProjectName2 = ../../Branches/XNA3/Content
-		SccLocalPath2 = ..\\..\\Branches\\XNA3\\Content
-		SccProjectUniqueName3 = AdvancedSamplesXNA.csproj
-		SccLocalPath3 = .
-		SccProjectUniqueName4 = Content\\Content.contentproj
-		SccProjectTopLevelParentUniqueName4 = AdvancedSamplesXNA.csproj
-		SccProjectName4 = Content
-		SccLocalPath4 = Content
+		SccProjectUniqueName1 = ..\\..\\Branches\\XNA3\\Content\\Content.contentproj
+		SccProjectTopLevelParentUniqueName1 = ..\\..\\Branches\\XNA3\\FarseerPhysics.csproj
+		SccProjectName1 = ../../Branches/XNA3/Content
+		SccLocalPath1 = ..\\..\\Branches\\XNA3\\Content
+		SccProjectUniqueName2 = AdvancedSamplesXNA.csproj
+		SccLocalPath2 = .
+		SccProjectUniqueName3 = Content\\Content.contentproj
+		SccProjectTopLevelParentUniqueName3 = AdvancedSamplesXNA.csproj
+		SccProjectName3 = Content
+		SccLocalPath3 = Content
+		SccProjectUniqueName4 = ..\\..\\Branches\\XNA3\\FarseerPhysicsXNA.csproj
+		SccProjectName4 = ../../Branches/XNA3
+		SccLocalPath4 = ..\\..\\Branches\\XNA3
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86

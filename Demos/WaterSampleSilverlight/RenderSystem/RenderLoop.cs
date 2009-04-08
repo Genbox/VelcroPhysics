@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Media;
 
-namespace FarseerGames.WaterSample.RenderSystem
+namespace FarseerGames.WaterSampleSilverlight.RenderSystem
 {
     public class RenderLoop
     {

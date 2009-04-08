@@ -1,9 +1,9 @@
 using System;
-using FarseerGames.AdvancedSamples.DrawingSystem;
+using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.AdvancedSamples.ScreenSystem
+namespace FarseerGames.AdvancedSamplesXNA.ScreenSystem
 {
     public class PauseScreen : MenuScreen
     {

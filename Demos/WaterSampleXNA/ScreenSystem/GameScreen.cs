@@ -3,13 +3,13 @@ using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.SimpleSamples.Demos.DemoShare;
-using FarseerGames.SimpleSamples.DrawingSystem;
+using FarseerGames.WaterSampleXNA.Demos.DemoShare;
+using FarseerGames.WaterSampleXNA.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.SimpleSamples.ScreenSystem
+namespace FarseerGames.WaterSampleXNA.ScreenSystem
 {
     /// <summary>
     /// Enum describes the screen transition state.
@@ -183,7 +183,7 @@ namespace FarseerGames.SimpleSamples.ScreenSystem
             int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
 
             _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, borderWidth,
-                     ScreenManager.ScreenCenter);
+                                 ScreenManager.ScreenCenter);
             _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
         }
@@ -266,7 +266,7 @@ namespace FarseerGames.SimpleSamples.ScreenSystem
                 transitionDelta = 1;
             else
                 transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
-                                           time.TotalMilliseconds);
+                                          time.TotalMilliseconds);
 
             // Update the transition position.
             _transitionPosition += transitionDelta * direction;

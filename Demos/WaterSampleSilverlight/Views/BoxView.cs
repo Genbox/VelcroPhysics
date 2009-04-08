@@ -1,10 +1,10 @@
 ﻿using System.Windows.Controls;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Mathematics;
-using FarseerGames.WaterSample.Models;
-using FarseerGames.WaterSample.RenderSystem;
+using FarseerGames.WaterSampleSilverlight.Models;
+using FarseerGames.WaterSampleSilverlight.RenderSystem;
 
-namespace FarseerGames.WaterSample.Views
+namespace FarseerGames.WaterSampleSilverlight.Views
 {
     public class BoxView
     {

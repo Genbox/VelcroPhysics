@@ -3,7 +3,7 @@ using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerGames.WaterSample.Models
+namespace FarseerGames.WaterSampleSilverlight.Models
 {
     /// <summary>
     ///The water model in this demo is made up of two parts.  

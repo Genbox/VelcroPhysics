@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using FarseerGames.WaterSample.Controllers;
+using FarseerGames.WaterSampleSilverlight.Controllers;
 
-namespace FarseerGames.WaterSample
+namespace FarseerGames.WaterSampleSilverlight
 {
     public partial class Page
     {

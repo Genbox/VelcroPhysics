@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Browser;
 
-namespace FarseerGames.WaterSample
+namespace FarseerGames.WaterSampleSilverlight
 {
     public partial class App
     {

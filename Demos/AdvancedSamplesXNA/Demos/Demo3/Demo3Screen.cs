@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Text;
-using FarseerGames.AdvancedSamples.ScreenSystem;
+using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.AdvancedSamples.Demos.Demo3
+namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo3
 {
     public class Demo3Screen : GameScreen
     {

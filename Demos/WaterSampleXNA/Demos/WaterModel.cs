@@ -4,7 +4,7 @@ using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
 
-namespace WaterSampleXNA.Demos
+namespace FarseerGames.WaterSampleXNA.Demos
 {
     /// <summary>
     ///The water model in this demo is made up of two parts.  

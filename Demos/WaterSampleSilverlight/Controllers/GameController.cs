@@ -1,11 +1,11 @@
 ﻿using System;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Mathematics;
-using FarseerGames.WaterSample.Models;
-using FarseerGames.WaterSample.RenderSystem;
-using FarseerGames.WaterSample.Views;
+using FarseerGames.WaterSampleSilverlight.Models;
+using FarseerGames.WaterSampleSilverlight.RenderSystem;
+using FarseerGames.WaterSampleSilverlight.Views;
 
-namespace FarseerGames.WaterSample.Controllers
+namespace FarseerGames.WaterSampleSilverlight.Controllers
 {
     public class GameController
     {

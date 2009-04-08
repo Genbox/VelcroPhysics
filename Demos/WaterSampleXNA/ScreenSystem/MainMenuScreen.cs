@@ -1,8 +1,8 @@
-using FarseerGames.SimpleSamples.Demos.Demo1;
+using FarseerGames.WaterSampleXNA.Demos;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.SimpleSamples.ScreenSystem
+namespace FarseerGames.WaterSampleXNA.ScreenSystem
 {
     /// <summary>
     /// The main menu screen is the first thing displayed when the game starts up.
@@ -36,27 +36,27 @@ namespace FarseerGames.SimpleSamples.ScreenSystem
                 case 0:
                     ScreenManager.AddScreen(new Demo1Screen());
                     break;
-                //case 1:
-                //    ScreenManager.AddScreen(new Demo2Screen());
-                //    break;
-                //case 2:
-                //    ScreenManager.AddScreen(new Demo3Screen());
-                //    break;
-                //case 3:
-                //    ScreenManager.AddScreen(new Demo4Screen());
-                //    break;
-                //case 4:
-                //    ScreenManager.AddScreen(new Demo5Screen());
-                //    break;
-                //case 5:
-                //    ScreenManager.AddScreen(new Demo6Screen());
-                //    break;
-                //case 6:
-                //    ScreenManager.AddScreen(new Demo7Screen());
-                //    break;
-                //case 7:
-                //    ScreenManager.AddScreen(new Demo8Screen());
-                //    break;
+                    //case 1:
+                    //    ScreenManager.AddScreen(new Demo2Screen());
+                    //    break;
+                    //case 2:
+                    //    ScreenManager.AddScreen(new Demo3Screen());
+                    //    break;
+                    //case 3:
+                    //    ScreenManager.AddScreen(new Demo4Screen());
+                    //    break;
+                    //case 4:
+                    //    ScreenManager.AddScreen(new Demo5Screen());
+                    //    break;
+                    //case 5:
+                    //    ScreenManager.AddScreen(new Demo6Screen());
+                    //    break;
+                    //case 6:
+                    //    ScreenManager.AddScreen(new Demo7Screen());
+                    //    break;
+                    //case 7:
+                    //    ScreenManager.AddScreen(new Demo8Screen());
+                    //    break;
                 case 8:
                     // Exit the sample.
                     ScreenManager.Game.Exit();

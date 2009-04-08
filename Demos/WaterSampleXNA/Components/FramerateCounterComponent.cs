@@ -1,10 +1,10 @@
 using System;
 using System.Globalization;
-using FarseerGames.SimpleSamples.ScreenSystem;
+using FarseerGames.WaterSampleXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.SimpleSamples.Components
+namespace FarseerGames.WaterSampleXNA.Components
 {
     /// <summary>
     /// Displays the FPS
