@@ -48,9 +48,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo2
 
             //NOTICE how the grid cell size is 0.5f, this causes the physics engine to take a long time
             //to calculate the collision grid. This is only a demonstration!
-            ColliderData data = new ColliderData();
-            data.GridCellSize = 0.5f;
-            _geom = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _body, _radius, 10, data);
+            _geom = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _body, _radius, 10, 0.5f);
             _geom.CollisionGroup = 1;
             _geom.CollidesWith = _collidesWith;
             _geom.CollisionCategories = _collisionCategory;
