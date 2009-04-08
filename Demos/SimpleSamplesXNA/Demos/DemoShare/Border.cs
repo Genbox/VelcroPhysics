@@ -68,12 +68,11 @@ namespace FarseerGames.SimpleSamples.Demos.DemoShare
 
             //top border
             geometryOffset = new Vector2(0, -(_height * .5f - _borderWidth * .5f));
-            ColliderData data = new ColliderData();
-            data.GridCellSize = 20;
+            
 
             _borderGeom[2] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _borderBody, _width,
                                                                       _borderWidth,
-                                                                      geometryOffset, 0, data);
+                                                                      geometryOffset, 0, 20);
             _borderGeom[2].RestitutionCoefficient = .2f;
             _borderGeom[2].FrictionCoefficient = .2f;
             _borderGeom[2].CollisionGroup = 100;

@@ -84,9 +84,6 @@
     <Compile Include="..\..\Trunk\Collisions\BruteForceCollider.cs">
       <Link>Collisions\BruteForceCollider.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\ColliderData.cs">
-      <Link>Collisions\ColliderData.cs</Link>
-    </Compile>
     <Compile Include="..\..\Trunk\Collisions\Contact.cs">
       <Link>Collisions\Contact.cs</Link>
     </Compile>

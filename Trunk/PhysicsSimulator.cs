@@ -686,7 +686,6 @@ namespace FarseerGames.FarseerPhysics
                 Geom geom = geomAddList[i];
                 if (!geomList.Contains(geom))
                 {
-                    geom.physicsSimulator = this;
                     geom.isRemoved = false;
                     geomList.Add(geom);
 
@@ -748,7 +747,6 @@ namespace FarseerGames.FarseerPhysics
             for (int i = 0; i < geomRemoveCount; i++)
             {
                 geomRemoveList[i].isRemoved = true;
-                geomRemoveList[i].physicsSimulator = null;
                 geomList.Remove(geomRemoveList[i]);
 
                 //Remove any arbiters associated with the geometries being removed
