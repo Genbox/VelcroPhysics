@@ -35,7 +35,7 @@ namespace FarseerGames.WaterSample.Models
 
         public WaterModel()
         {
-            WaveGeneratorMax = 6; //initial value
+            WaveGeneratorMax = 0.20f; //initial value
             WaveGeneratorMin = 1.5f; //initial value
             WaveGeneratorStep = 0f;
         }
