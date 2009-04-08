@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Browser;
 using System.Windows.Input;
 
-namespace GettingStartedSilverlight.Screens
+namespace FarseerGames.SimpleSamplesSilverlight.Screens
 {
     public partial class MainMenu
     {

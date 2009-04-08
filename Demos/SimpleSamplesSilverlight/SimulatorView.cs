@@ -10,12 +10,12 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
-using GettingStartedSilverlight.Drawing;
-using GettingStartedSilverlight.Objects;
-using GettingStartedSilverlight.Screens;
+using FarseerGames.SimpleSamplesSilverlight.Objects;
+using FarseerGames.SimpleSamplesSilverlight.Screens;
+using FarseerGames.SimpleSamplesSilverlight.Drawing;
 using SWM = System.Windows.Media;
 
-namespace GettingStartedSilverlight
+namespace FarseerGames.SimpleSamplesSilverlight
 {
     public class SimulatorView : Canvas
     {

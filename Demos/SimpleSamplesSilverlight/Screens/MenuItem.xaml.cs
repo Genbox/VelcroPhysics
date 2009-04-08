@@ -1,6 +1,6 @@
 using System.Windows.Media;
 
-namespace GettingStartedSilverlight.Screens
+namespace FarseerGames.SimpleSamplesSilverlight.Screens
 {
     public delegate void MenuItemSelectedEvent(int index);
 

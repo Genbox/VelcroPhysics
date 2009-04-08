@@ -6,7 +6,7 @@ using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace GettingStartedSilverlight.Demos.DemoShare
+namespace FarseerGames.SimpleSamplesSilverlight.Demos.DemoShare
 {
     public class SpringRectangleRope
     {

@@ -1,12 +1,12 @@
 using System.Text;
 using FarseerGames.FarseerPhysics;
-using FarseerGames.SimpleSamples.Demos.DemoShare;
-using FarseerGames.SimpleSamples.ScreenSystem;
+using FarseerGames.SimpleSamplesXNA.Demos.DemoShare;
+using FarseerGames.SimpleSamplesXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.SimpleSamples.Demos.Demo8
+namespace FarseerGames.SimpleSamplesXNA.Demos.Demo8
 {
     public class Demo8Screen : GameScreen
     {

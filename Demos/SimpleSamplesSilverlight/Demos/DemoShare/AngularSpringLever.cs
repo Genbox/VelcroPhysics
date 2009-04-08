@@ -4,9 +4,9 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
-using GettingStartedSilverlight.Objects;
+using FarseerGames.SimpleSamplesSilverlight.Objects;
 
-namespace GettingStartedSilverlight.Demos.DemoShare
+namespace FarseerGames.SimpleSamplesSilverlight.Demos.DemoShare
 {
     public class AngularSpringLever
     {

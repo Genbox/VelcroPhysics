@@ -6,7 +6,7 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace GettingStartedSilverlight.Demos.Demo5
+namespace FarseerGames.SimpleSamplesSilverlight.Demos.Demo5
 {
     public class Circles
     {

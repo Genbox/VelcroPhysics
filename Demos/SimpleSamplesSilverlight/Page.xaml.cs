@@ -1,16 +1,17 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using GettingStartedSilverlight.Components;
-using GettingStartedSilverlight.Demos.Demo1;
-using GettingStartedSilverlight.Demos.Demo2;
-using GettingStartedSilverlight.Demos.Demo3;
-using GettingStartedSilverlight.Demos.Demo4;
-using GettingStartedSilverlight.Demos.Demo5;
-using GettingStartedSilverlight.Demos.Demo6;
-using GettingStartedSilverlight.Demos.Demo7;
+using FarseerGames.SimpleSamplesSilverlight.Components;
+using FarseerGames.SimpleSamplesSilverlight.Demos.Demo1;
+using FarseerGames.SimpleSamplesSilverlight.Demos.Demo2;
+using FarseerGames.SimpleSamplesSilverlight.Demos.Demo3;
+using FarseerGames.SimpleSamplesSilverlight.Demos.Demo4;
+using FarseerGames.SimpleSamplesSilverlight.Demos.Demo5;
+using FarseerGames.SimpleSamplesSilverlight.Demos.Demo6;
+using FarseerGames.SimpleSamplesSilverlight.Demos.Demo7;
+using FarseerGames.SimpleSamplesSilverlight.Screens;
 
-namespace GettingStartedSilverlight.Screens
+namespace FarseerGames.SimpleSamplesSilverlight
 {
     public partial class Page
     {

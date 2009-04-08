@@ -1,4 +1,4 @@
-namespace GettingStartedSilverlight.Drawing
+namespace FarseerGames.SimpleSamplesSilverlight.Drawing
 {
     public interface IDrawingBrush
     {
