@@ -61,9 +61,9 @@ namespace FarseerGames.WaterSample.Views
             _waterView = new WaterView(_gameModel.WaterModel, LayoutRoot);
             _waterView.Initialize(physicsSimulator);
 
-            WaveGenerator.Maximum = 20;
+            WaveGenerator.Maximum = 2;
             WaveGenerator.Minimum = 0;
-            WaveGenerator.Value = 6;
+            WaveGenerator.Value = 0.20f;
 
             Density.Maximum = 10;
             Density.Minimum = 0;

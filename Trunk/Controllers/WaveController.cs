@@ -320,7 +320,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
                     _waveGeneratorCount -= _waveGeneratorStep;
                 }
             }
-            _currentWave[_currentWave.Length - 1] = ConvertUnits.ToSimUnits(_waveGeneratorCount);
+            _currentWave[_currentWave.Length - 1] = _waveGeneratorCount;
         }
 
         public override void Validate()
