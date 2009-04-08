@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FarseerGames.AdvancedSamples</RootNamespace>
-    <AssemblyName>AdvancedSamples</AssemblyName>
+    <RootNamespace>FarseerGames.AdvancedSamplesXNA</RootNamespace>
+    <AssemblyName>AdvancedSamplesXNA</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
@@ -167,9 +167,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\XNA3\FarseerPhysics.csproj">
+    <ProjectReference Include="..\..\Branches\XNA3\FarseerPhysicsXNA.csproj">
       <Project>{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}</Project>
-      <Name>FarseerPhysics</Name>
+      <Name>FarseerPhysicsXNA</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -4,9 +4,9 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Mathematics;
-using FarseerGames.WaterSample.Models;
+using FarseerGames.WaterSampleSilverlight.Models;
 
-namespace FarseerGames.WaterSample.Views
+namespace FarseerGames.WaterSampleSilverlight.Views
 {
     public class WaterView
     {

@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.SimpleSamples.DrawingSystem
+namespace FarseerGames.WaterSampleXNA.DrawingSystem
 {
     public class RectangleBrush
     {

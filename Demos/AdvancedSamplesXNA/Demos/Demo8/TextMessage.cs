@@ -1,4 +1,4 @@
-﻿namespace FarseerGames.AdvancedSamples.Demos.Demo8
+﻿namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
 {
     public class TextMessage
     {

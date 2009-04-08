@@ -4,7 +4,7 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.AdvancedSamples.Demos.Demo7
+namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo7
 {
     public class Grenade
     {

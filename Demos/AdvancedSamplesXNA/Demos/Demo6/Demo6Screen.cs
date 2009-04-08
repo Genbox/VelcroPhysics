@@ -1,6 +1,6 @@
 using System.Text;
-using FarseerGames.AdvancedSamples.DrawingSystem;
-using FarseerGames.AdvancedSamples.ScreenSystem;
+using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
+using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.AdvancedSamples.Demos.Demo6
+namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo6
 {
     public class Demo6Screen : GameScreen
     {

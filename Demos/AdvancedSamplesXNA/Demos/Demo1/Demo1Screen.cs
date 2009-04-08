@@ -1,8 +1,8 @@
 using System.Text;
 using System.Threading;
-using FarseerGames.AdvancedSamples.Demos.DemoShare;
-using FarseerGames.AdvancedSamples.DrawingSystem;
-using FarseerGames.AdvancedSamples.ScreenSystem;
+using FarseerGames.AdvancedSamplesXNA.Demos.DemoShare;
+using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
+using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.AdvancedSamples.Demos.Demo1
+namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo1
 {
     public class Demo1Screen : GameScreen
     {

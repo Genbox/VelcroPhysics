@@ -10,7 +10,7 @@ using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerGames.WaterSample
+namespace FarseerGames.WaterSampleSilverlight
 {
     public class MousePicker
     {

@@ -3,15 +3,13 @@ using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.SimpleSamples.Demos.Demo4;
-using FarseerGames.SimpleSamples.Demos.DemoShare;
-using FarseerGames.SimpleSamples.DrawingSystem;
-using FarseerGames.SimpleSamples.ScreenSystem;
+using FarseerGames.WaterSampleXNA.Demos.DemoShare;
+using FarseerGames.WaterSampleXNA.DrawingSystem;
+using FarseerGames.WaterSampleXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using WaterSampleXNA.Demos;
 
-namespace FarseerGames.SimpleSamples.Demos.Demo1
+namespace FarseerGames.WaterSampleXNA.Demos
 {
     public class Demo1Screen : GameScreen
     {
@@ -48,7 +46,7 @@ namespace FarseerGames.SimpleSamples.Demos.Demo1
             _platform.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             _refTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 32, 32, 2, 0, 0,
-                                                         Color.White, Color.Black);
+                                                               Color.White, Color.Black);
 
             _refBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 1);
             _refGeom = GeomFactory.Instance.CreateRectangleGeom(_refBody, 32, 32);
@@ -94,7 +92,7 @@ namespace FarseerGames.SimpleSamples.Demos.Demo1
 
             // set the devices vertex declaration
             ScreenManager.GraphicsDevice.VertexDeclaration = new VertexDeclaration(ScreenManager.GraphicsDevice,
-                                                                              VertexPositionColor.VertexElements);
+                                                                                   VertexPositionColor.VertexElements);
 
             // create a basic effect with no pool
             BasicEffect effect = new BasicEffect(ScreenManager.GraphicsDevice, null);
@@ -113,7 +111,7 @@ namespace FarseerGames.SimpleSamples.Demos.Demo1
             {
                 pass.Begin();
                 ScreenManager.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, _vertices, 0,
-                                                           _waterModel.WaveController.NodeCount);
+                                                                _waterModel.WaveController.NodeCount);
                 pass.End();
             }
 

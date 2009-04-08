@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace FarseerGames.WaterSample.Models
+namespace FarseerGames.WaterSampleSilverlight.Models
 {
     public class GameModel
     {

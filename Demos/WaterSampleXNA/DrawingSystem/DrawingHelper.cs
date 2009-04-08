@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.SimpleSamples.DrawingSystem
+namespace FarseerGames.WaterSampleXNA.DrawingSystem
 {
     public static class DrawingHelper
     {
@@ -108,7 +108,7 @@ namespace FarseerGames.SimpleSamples.DrawingSystem
         }
 
         public static Texture2D CreateRectangleTexture(GraphicsDevice graphicsDevice, int width, int height, Color color,
-                                                      Color borderColor)
+                                                       Color borderColor)
         {
             return CreateRectangleTexture(graphicsDevice, width, height, 1, 1, 2, color, borderColor);
         }
@@ -203,8 +203,8 @@ namespace FarseerGames.SimpleSamples.DrawingSystem
 
 
         public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius, int borderWidth,
-                                                    int borderInnerTransitionWidth, int borderOuterTransitionWidth,
-                                                    Color color, Color borderColor)
+                                                     int borderInnerTransitionWidth, int borderOuterTransitionWidth,
+                                                     Color color, Color borderColor)
         {
             //Is it a circle?
             if (xRadius == yRadius)

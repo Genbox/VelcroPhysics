@@ -1,4 +1,4 @@
-namespace FarseerGames.AdvancedSamples
+namespace FarseerGames.AdvancedSamplesXNA
 {
     internal static class Program
     {

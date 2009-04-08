@@ -2,7 +2,7 @@
 using FarseerGames.FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
-namespace FarseerGames.AdvancedSamples.Demos.Demo1
+namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo1
 {
     public class ObjectLinker
     {

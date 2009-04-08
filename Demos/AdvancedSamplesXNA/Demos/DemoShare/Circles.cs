@@ -1,5 +1,5 @@
 using System;
-using FarseerGames.AdvancedSamples.DrawingSystem;
+using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
@@ -7,7 +7,7 @@ using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.AdvancedSamples.Demos.DemoShare
+namespace FarseerGames.AdvancedSamplesXNA.Demos.DemoShare
 {
     public class Circles
     {

@@ -1,10 +1,10 @@
 using System;
-using FarseerGames.SimpleSamples.Components;
-using FarseerGames.SimpleSamples.ScreenSystem;
+using FarseerGames.WaterSampleXNA.Components;
+using FarseerGames.WaterSampleXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace WaterSampleXNA
+namespace FarseerGames.WaterSampleXNA
 {
     /// <summary>
     /// This is the main type for your game

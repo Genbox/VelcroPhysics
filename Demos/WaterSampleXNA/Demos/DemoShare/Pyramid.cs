@@ -5,7 +5,7 @@ using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.SimpleSamples.Demos.Demo4
+namespace FarseerGames.WaterSampleXNA.Demos.DemoShare
 {
     internal class Pyramid
     {

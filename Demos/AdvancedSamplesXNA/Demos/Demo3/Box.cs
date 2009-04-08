@@ -5,7 +5,7 @@ using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.AdvancedSamples.Demos.Demo3
+namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo3
 {
     public class Box
     {

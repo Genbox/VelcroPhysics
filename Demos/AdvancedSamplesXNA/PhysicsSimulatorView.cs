@@ -1,5 +1,5 @@
 using System;
-using FarseerGames.AdvancedSamples.DrawingSystem;
+using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.AdvancedSamples
+namespace FarseerGames.AdvancedSamplesXNA
 {
     /// <summary>
     /// Draws the elements inside a <see cref="PhysicsSimulator"/>. Great for debugging physics related problems.

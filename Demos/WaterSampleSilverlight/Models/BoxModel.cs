@@ -3,7 +3,7 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 
-namespace FarseerGames.WaterSample.Models
+namespace FarseerGames.WaterSampleSilverlight.Models
 {
     public class BoxModel
     {

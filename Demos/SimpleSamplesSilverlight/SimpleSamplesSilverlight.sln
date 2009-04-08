@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSamplesSilverlight", "SimpleSamplesSilverlight.csproj", "{36DB21B1-C018-4A02-AE19-138461A11ABB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerPhysics", "..\..\Branches\Silverlight\FarseerPhysics.csproj", "{1D0B97EA-FE4A-498E-A21B-D0D476464925}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerPhysicsSilverlight", "..\..\Branches\Silverlight\FarseerPhysicsSilverlight.csproj", "{1D0B97EA-FE4A-498E-A21B-D0D476464925}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 3
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs01.codeplex.com/
-		SccProjectUniqueName0 = ..\\..\\Branches\\Silverlight\\FarseerPhysics.csproj
-		SccProjectName0 = ../../Branches/Silverlight
-		SccLocalPath0 = ..\\..\\Branches\\Silverlight
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = SimpleSamplesSilverlight.csproj
 		SccLocalPath1 = .
-		SccProjectUniqueName2 = SimpleSamplesSilverlight.csproj
-		SccLocalPath2 = .
+		SccProjectUniqueName2 = ..\\..\\Branches\\Silverlight\\FarseerPhysicsSilverlight.csproj
+		SccProjectName2 = ../../Branches/Silverlight
+		SccLocalPath2 = ..\\..\\Branches\\Silverlight
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

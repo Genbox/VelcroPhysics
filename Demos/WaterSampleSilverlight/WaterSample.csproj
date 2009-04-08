@@ -8,17 +8,17 @@
     <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FarseerGames.WaterSample</RootNamespace>
-    <AssemblyName>WaterSample</AssemblyName>
+    <RootNamespace>FarseerGames.WaterSampleSilverlight</RootNamespace>
+    <AssemblyName>WaterSampleSilverlight</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <SilverlightApplication>true</SilverlightApplication>
     <SupportedCultures>
     </SupportedCultures>
     <XapOutputs>true</XapOutputs>
     <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
-    <XapFilename>WaterSample.xap</XapFilename>
+    <XapFilename>WaterSampleSilverlight.xap</XapFilename>
     <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
-    <SilverlightAppEntry>FarseerGames.WaterSample.App</SilverlightAppEntry>
+    <SilverlightAppEntry>FarseerGames.WaterSampleSilverlight.App</SilverlightAppEntry>
     <TestPageFileName>TestPage.html</TestPageFileName>
     <CreateTestPage>true</CreateTestPage>
     <ValidateXaml>true</ValidateXaml>
@@ -112,7 +112,7 @@
     <Resource Include="Content\PPG_100X210BoxOnly.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\Silverlight\FarseerPhysics.csproj">
+    <ProjectReference Include="..\..\Branches\Silverlight\FarseerPhysicsSilverlight.csproj">
       <Project>{1D0B97EA-FE4A-498E-A21B-D0D476464925}</Project>
       <Name>FarseerPhysics</Name>
     </ProjectReference>

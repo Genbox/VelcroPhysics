@@ -1,6 +1,6 @@
 using System;
-using FarseerGames.AdvancedSamples.Demos.DemoShare;
-using FarseerGames.AdvancedSamples.DrawingSystem;
+using FarseerGames.AdvancedSamplesXNA.Demos.DemoShare;
+using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.AdvancedSamples.ScreenSystem
+namespace FarseerGames.AdvancedSamplesXNA.ScreenSystem
 {
     /// <summary>
     /// Enum describes the screen transition state.

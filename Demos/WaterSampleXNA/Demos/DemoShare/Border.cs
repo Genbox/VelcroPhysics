@@ -2,11 +2,11 @@ using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.SimpleSamples.DrawingSystem;
+using FarseerGames.WaterSampleXNA.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.SimpleSamples.Demos.DemoShare
+namespace FarseerGames.WaterSampleXNA.Demos.DemoShare
 {
     public class Border
     {

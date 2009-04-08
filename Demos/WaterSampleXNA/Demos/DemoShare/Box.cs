@@ -2,11 +2,11 @@ using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.SimpleSamples.DrawingSystem;
+using FarseerGames.WaterSampleXNA.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.SimpleSamples.Demos.DemoShare
+namespace FarseerGames.WaterSampleXNA.Demos.DemoShare
 {
     public class Box
     {
@@ -22,7 +22,7 @@ namespace FarseerGames.SimpleSamples.Demos.DemoShare
         private float _mass;
 
         public Box(int width, int height, float mass, Vector2 position, Color color, Color borderColor,
-                                 int collisionGroup)
+                   int collisionGroup)
         {
             _width = width;
             _height = height;
