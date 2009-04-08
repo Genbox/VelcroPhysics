@@ -38,11 +38,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// Computes the grid.
         /// </summary>
         /// <param name="geometry">The geometry.</param>
-        /// <param name="data"><see cref="ColliderData"/> that contains the size of the grid cell.</param>
+        /// <param name="data">Contains the size of the grid cell.</param>
         /// <exception cref="ArgumentNullException"><c>geometry</c> is null.</exception>
-        public void Prepare(Geom geometry, ColliderData data)
+        public void Prepare(Geom geometry, object data)
         {
-            float gridCellSize = data.GridCellSize;
+            float gridCellSize = (float)data;
 
             if (geometry == null)
                 throw new ArgumentNullException("geometry", "Geometry can't be null");

@@ -12,6 +12,6 @@ namespace FarseerGames.FarseerPhysics.Interfaces
     {
         bool Intersect(ref Vector2 vector, out Feature feature);
         INarrowPhaseCollider Clone();
-        void Prepare(Geom geometry, ColliderData data);
+        void Prepare(Geom geometry, object data);
     }
 }
