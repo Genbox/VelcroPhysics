@@ -343,7 +343,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
             body.Position = ScreenManager.ScreenCenter;
             body.IsStatic = true;
 
-            Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, product, ColliderData.DefaultSettings);
+            Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, product, 0);
 
             _leftGeom = geom;
         }
@@ -354,7 +354,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
             Body body = BodyFactory.Instance.CreateCircleBody(PhysicsSimulator, radius, 1.0f);
             body.Position = ScreenManager.ScreenCenter;
             body.IsStatic = true;
-            Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, verts, ColliderData.DefaultSettings);
+            Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, verts, 0);
 
             SetGeom(geom);
         }
@@ -365,7 +365,7 @@ namespace FarseerGames.AdvancedSamples.Demos.Demo8
             Body body = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, width, height, 1.0f);
             body.Position = ScreenManager.ScreenCenter;
             body.IsStatic = true;
-            Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, verts, ColliderData.DefaultSettings);
+            Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, verts, 0);
 
             SetGeom(geom);
         }

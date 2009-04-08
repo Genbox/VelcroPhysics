@@ -73,12 +73,10 @@ namespace GettingStartedSilverlight.Demos.DemoShare
             geometryOffset = new Vector2(0, -(_height*.5f - _borderWidth*.5f));
             _borderGeom[2] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _borderBody, _width,
                                                                       _borderWidth,
-                                                                      geometryOffset, 0);
+                                                                      geometryOffset,20);
             _borderGeom[2].RestitutionCoefficient = .2f;
             _borderGeom[2].FrictionCoefficient = .2f;
             _borderGeom[2].CollisionGroup = 100;
-            _borderGeom[2].CollisionGridCellSize = 20;
-            _borderGeom[2].ComputeCollisionGrid();
 
             //bottom border (clone top border since geometry is same size)
             geometryOffset = new Vector2(0, _height*.5f - _borderWidth*.5f);
