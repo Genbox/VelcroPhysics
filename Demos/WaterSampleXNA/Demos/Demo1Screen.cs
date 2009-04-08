@@ -3,7 +3,6 @@ using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.FarseerPhysics.Mathematics;
 using FarseerGames.SimpleSamples.Demos.Demo4;
 using FarseerGames.SimpleSamples.Demos.DemoShare;
 using FarseerGames.SimpleSamples.DrawingSystem;
@@ -33,9 +32,9 @@ namespace FarseerGames.SimpleSamples.Demos.Demo1
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 150));
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
 
-            //_cameraMatrix = Matrix.Identity;
-            //_projectionMatrix = Matrix.CreateOrthographicOffCenter(0, 800, 600, 0, -100, 100);
-            //_worldMatrix = Matrix.Identity;
+            _cameraMatrix = Matrix.Identity;
+            _projectionMatrix = Matrix.CreateOrthographicOffCenter(0, 800, 600, 0, -100, 100);
+            _worldMatrix = Matrix.Identity;
 
             _waterModel = new WaterModel();
             _waterModel.Initialize(PhysicsSimulator);
@@ -76,9 +75,6 @@ namespace FarseerGames.SimpleSamples.Demos.Demo1
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             _waterModel.Update(gameTime.ElapsedGameTime);
-
-            //_gameModel.Update(gameTime.ElapsedGameTime);
-            //_waterModel.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
@@ -126,7 +122,7 @@ namespace FarseerGames.SimpleSamples.Demos.Demo1
 
         public void CreateWaterVertexBuffer()
         {
-            _vertices = new VertexPositionColor[22];
+            _vertices = new VertexPositionColor[502];
 
             // start at bottom left
             Vector3 position = new Vector3(0, 600, 0);
