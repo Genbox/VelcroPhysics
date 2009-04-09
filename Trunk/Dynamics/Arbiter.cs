@@ -147,25 +147,24 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                            GeometryB.body.inverseMomentOfInertia*(_float2 - _rn2*_rn2);
                 contact.massNormal = 1f/_kNormal;
 
-                //calculate mass _tangent
+                //calculate mass tangent
                 _float1 = 1;
                 Calculator.Cross(ref contact.Normal, ref _float1, out _tangent);
                 Vector2.Dot(ref _r1, ref _tangent, out _rt1);
                 Vector2.Dot(ref _r2, ref _tangent, out _rt2);
-                _kTangent = GeometryA.Body.InverseMass + GeometryB.Body.InverseMass;
+                _kTangent = GeometryA.body.InverseMass + GeometryB.body.InverseMass;
 
                 Vector2.Dot(ref _r1, ref _r1, out _float1);
                 Vector2.Dot(ref _r2, ref _r2, out _float2);
                 _kTangent += GeometryA.body.inverseMomentOfInertia*(_float1 - _rt1*_rt1) +
-                             GeometryB.Body.InverseMomentOfInertia*(_float2 - _rt2*_rt2);
+                             GeometryB.body.InverseMomentOfInertia*(_float2 - _rt2*_rt2);
                 contact.massTangent = 1f/_kTangent;
 
                 //calc velocity bias
                 _min = Math.Min(0, _physicsSimulator.allowedPenetration + contact.Separation);
                 contact.normalVelocityBias = -_physicsSimulator.biasFactor*inverseDt*_min;
 
-                //Compute the _restitution, we average the _restitution of the two bodies
-                //_restitution = (2.0f + _geometryA.RestitutionCoefficient + _geometryB.RestitutionCoefficient) * 0.5f;
+                //Compute the restitution, we average the restitution of the two bodies
                 _restitution = (GeometryA.RestitutionCoefficient + GeometryB.RestitutionCoefficient)*.5f;
 
                 //calc bounce velocity
@@ -173,11 +172,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 GeometryB.body.GetVelocityAtWorldOffset(ref _r2, out _vec2);
                 Vector2.Subtract(ref _vec2, ref _vec1, out _dv);
 
-                //calc velocity difference along _contact normal
+                //calc velocity difference along contact normal
                 Vector2.Dot(ref _dv, ref contact.Normal, out _vn);
                 contact.bounceVelocity = _vn*_restitution;
 
-                //apply accumulated _impulse
+                //apply accumulated impulse
                 Vector2.Multiply(ref contact.Normal, contact.normalImpulse, out _vec1);
                 Vector2.Multiply(ref _tangent, contact.tangentImpulse, out _vec2);
                 Vector2.Add(ref _vec1, ref _vec2, out _impulse);
@@ -224,7 +223,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 #endregion
 
                 //calc velocity difference along contact normal
-
                 #region INLINE: Vector2.Dot(ref _dv, ref _contact.Normal, out _vn);
 
                 _vn = (_dv.X*_contact.Normal.X) + (_dv.Y*_contact.Normal.Y);
@@ -239,7 +237,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 _normalImpulse = _contact.normalImpulse - _oldNormalImpulse;
 
                 //apply contact impulse
-
                 #region INLINE: Vector2.Multiply(ref _contact.Normal, _normalImpulse, out _impulse);
 
                 _impulse.X = _contact.Normal.X*_normalImpulse;
@@ -270,7 +267,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 #endregion
 
                 //calc velocity bias along contact normal
-
                 #region INLINE: Vector2.Dot(ref _dv, ref _contact.Normal, out _normalVelocityBias);
 
                 _normalVelocityBias = (_dv.X*_contact.Normal.X) + (_dv.Y*_contact.Normal.Y);
@@ -314,8 +310,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 //compute friction impulse
                 _maxTangentImpulse = _frictionCoefficientCombined*_contact.normalImpulse;
-
-                //Vector2 _tangent = Calculator.Cross(_contact.Normal, 1);
                 _float1 = 1;
 
                 #region INLINE: Calculator.Cross(ref _contact.Normal, ref _float1, out _tangent);
@@ -324,8 +318,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 _tangent.Y = -_float1*_contact.Normal.X;
 
                 #endregion
-
-                //float _vt = Vector2.Dot(_dv, _tangent);
 
                 #region INLINE: Vector2.Dot(ref _dv, ref _tangent, out _vt);
 
@@ -342,7 +334,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 _tangentImpulse = _contact.tangentImpulse - _oldTangentImpulse;
 
                 //apply friction impulse
-
                 #region INLINE:Vector2.Multiply(ref _tangent, _tangentImpulse, out _impulse);
 
                 _impulse.X = _tangent.X*_tangentImpulse;
