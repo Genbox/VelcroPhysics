@@ -34,7 +34,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// Spartial hashing stores all the geometries that can collide in a list.
     /// Using this algorithm, you can quickly tell what objects might collide in a certain area.
     /// </summary>
-    public class SpartialHashCollider : IBroadPhaseCollider
+    public class SpatialHashCollider : IBroadPhaseCollider
     {
         private PhysicsSimulator _physicsSimulator;
         private Dictionary<long, List<Geom>> _hash;
@@ -43,13 +43,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private float _cellSizeInv;
         public bool AutoAdjustCellSize = true;
 
-        public SpartialHashCollider(PhysicsSimulator physicsSimulator)
+        public SpatialHashCollider(PhysicsSimulator physicsSimulator)
             : this(physicsSimulator, 50, 2048)
         {
             _physicsSimulator = physicsSimulator;
         }
 
-        public SpartialHashCollider(PhysicsSimulator physicsSimulator, float cellSize, int hashCapacity)
+        public SpatialHashCollider(PhysicsSimulator physicsSimulator, float cellSize, int hashCapacity)
         {
             _physicsSimulator = physicsSimulator;
             _hash = new Dictionary<long, List<Geom>>(hashCapacity);
