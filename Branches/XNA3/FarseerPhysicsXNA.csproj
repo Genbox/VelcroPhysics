@@ -108,6 +108,9 @@
     <Compile Include="..\..\Trunk\Collisions\SelectiveSweepCollider.cs">
       <Link>Collisions\SelectiveSweepCollider.cs</Link>
     </Compile>
+    <Compile Include="..\..\Trunk\Collisions\SpartialHashCollider.cs">
+      <Link>Collisions\SpartialHashCollider.cs</Link>
+    </Compile>
     <Compile Include="..\..\Trunk\Collisions\SweepAndPruneCollider.cs">
       <Link>Collisions\SweepAndPruneCollider.cs</Link>
     </Compile>
