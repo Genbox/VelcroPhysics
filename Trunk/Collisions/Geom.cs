@@ -379,18 +379,21 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns>The distance</returns>
         public float GetNearestDistance(Vector2 point)
         {
-            float distance;
-            Feature nearestFeature = new Feature(point);
-            nearestFeature.Distance = float.MaxValue;
+            float distance = float.MaxValue;
+            int nearestIndex = 0;
 
             for (int i = 0; i < localVertices.Count; i++)
             {
-                Feature feature = GetNearestFeature(point, i);
-                if (feature.Distance < nearestFeature.Distance)
+                float pointDistance = GetDistanceToEdge(ref point, i);
+
+                if (pointDistance < distance)
                 {
-                    nearestFeature = feature;
+                    distance = pointDistance;
+                    nearestIndex = i;
                 }
             }
+
+            Feature nearestFeature = GetNearestFeature(point, nearestIndex);
 
             //Determine if inside or outside of geometry.
             Vector2 diff = Vector2.Subtract(point, nearestFeature.Position);
@@ -405,6 +408,30 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 distance = nearestFeature.Distance;
             }
             return distance;
+        }
+
+        private float GetDistanceToEdge(ref Vector2 point, int index)
+        {
+            Vector2 edge = localVertices.GetEdge(index);
+            Vector2 diff = Vector2.Subtract(point, localVertices[index]);
+
+            float c1 = Vector2.Dot(diff, edge);
+            if (c1 < 0)
+            {
+                return Math.Abs(diff.Length());
+            }
+
+            float c2 = Vector2.Dot(edge, edge);
+            if (c2 <= c1)
+            {
+                return Vector2.Distance(point, localVertices[localVertices.NextIndex(index)]);
+            }
+
+            float b = c1 / c2;
+            edge = Vector2.Multiply(edge, b);
+            Vector2 pb = Vector2.Add(localVertices[index], edge);
+
+            return Vector2.Distance(point, pb);
         }
 
         /// <summary>
