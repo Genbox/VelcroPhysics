@@ -15,6 +15,11 @@ namespace FarseerGames.FarseerPhysics
             _stack = new Stack<T>();
         }
 
+        public int Count
+        {
+            get { return _stack.Count; }
+        }
+
         public Pool(int size)
         {
             _stack = new Stack<T>(size);
