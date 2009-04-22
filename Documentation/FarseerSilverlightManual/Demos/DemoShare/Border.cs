@@ -37,7 +37,7 @@ namespace FarseerSilverlightManual.Demos.DemoShare
         {
             _borderGeom = new Geom[4];
             //left border
-            Vector2 geometryOffset = new Vector2(-(_width*.5f - _borderWidth*.5f), 0);
+            Vector2 geometryOffset = new Vector2(-(_width * .5f - _borderWidth * .5f), 0);
             _borderGeom[0] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _borderBody, _borderWidth,
                                                                       _height,
                                                                       geometryOffset, 0);
@@ -46,25 +46,23 @@ namespace FarseerSilverlightManual.Demos.DemoShare
             _borderGeom[0].CollisionGroup = 100;
 
             //right border (clone left border since geometry is same size)
-            geometryOffset = new Vector2(_width*.5f - _borderWidth*.5f, 0);
+            geometryOffset = new Vector2(_width * .5f - _borderWidth * .5f, 0);
             _borderGeom[1] = GeomFactory.Instance.CreateGeom(physicsSimulator, _borderBody, _borderGeom[0],
                                                              geometryOffset,
                                                              0);
 
 
             //top border
-            geometryOffset = new Vector2(0, -(_height*.5f - _borderWidth*.5f));
+            geometryOffset = new Vector2(0, -(_height * .5f - _borderWidth * .5f));
             _borderGeom[2] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _borderBody, _width,
                                                                       _borderWidth,
-                                                                      geometryOffset, 0);
+                                                                      geometryOffset, 20);
             _borderGeom[2].RestitutionCoefficient = .2f;
             _borderGeom[2].FrictionCoefficient = .2f;
             _borderGeom[2].CollisionGroup = 100;
-            _borderGeom[2].CollisionGridCellSize = 20;
-            _borderGeom[2].ComputeCollisionGrid();
 
             //bottom border (clone top border since geometry is same size)
-            geometryOffset = new Vector2(0, _height*.5f - _borderWidth*.5f);
+            geometryOffset = new Vector2(0, _height * .5f - _borderWidth * .5f);
             _borderGeom[3] = GeomFactory.Instance.CreateGeom(physicsSimulator, _borderBody, _borderGeom[2],
                                                              geometryOffset,
                                                              0);
