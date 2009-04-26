@@ -157,8 +157,9 @@ namespace FarseerGames.FarseerPhysics.Factories
             if (xRadius == yRadius)
                 body.MomentOfInertia = .5f * mass * (float)Math.Pow(xRadius, 2f);
             else
-                //Note: This formular is for rectangles and not ellipses.
-                body.MomentOfInertia = mass * (xRadius * xRadius + yRadius * yRadius) / 12;
+                //TODO: Check if this formular is correct
+                body.MomentOfInertia = .25f * mass * (xRadius * xRadius + yRadius * yRadius);
+            //body.MomentOfInertia = mass * (xRadius * xRadius + yRadius * yRadius) / 12;
 
             return body;
         }
