@@ -414,6 +414,18 @@ namespace FarseerGames.FarseerPhysics
             Update(dt, 0);
         }
 
+        /// <summary>
+        /// Add new bodies and geometries to the engine without doing an update.
+        /// Also removes bodies and geometries. If there is any disposed items, those will get
+        /// removed too.
+        /// </summary>
+        public void ProcessAddedAndRemoved()
+        {
+            ProcessAddedItems();
+            ProcessRemovedItems();
+            ProcessDisposedItems();
+        }
+
         public void Update(float dt, float dtReal)
         {
             if (dt == 0)
