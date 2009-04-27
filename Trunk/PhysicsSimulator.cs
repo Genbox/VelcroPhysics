@@ -72,11 +72,19 @@ namespace FarseerGames.FarseerPhysics
 
         public bool EnableDiagnostics;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PhysicsSimulator"/> class.
+        /// Gravity is set to zero.
+        /// </summary>
         public PhysicsSimulator()
         {
             ConstructPhysicsSimulator(Vector2.Zero);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PhysicsSimulator"/> class.
+        /// </summary>
+        /// <param name="gravity">The gravity.</param>
         public PhysicsSimulator(Vector2 gravity)
         {
             ConstructPhysicsSimulator(gravity);
@@ -275,12 +283,6 @@ namespace FarseerGames.FarseerPhysics
             _gravity = gravity;
 
             arbiterPool = new Pool<Arbiter>(_arbiterPoolSize);
-
-            #region Added by Daniel Pramel 08/17/08
-
-            Scaling = new Scaling(0.001f, 0.01f);
-
-            #endregion
         }
 
         public void Add(Geom geometry)
@@ -378,6 +380,9 @@ namespace FarseerGames.FarseerPhysics
             springRemoveList.Add(spring);
         }
 
+        /// <summary>
+        /// Resets the physics simulator back to it's original state. Only gravity is persisted.
+        /// </summary>
         public void Clear()
         {
             ConstructPhysicsSimulator(_gravity);
@@ -410,28 +415,6 @@ namespace FarseerGames.FarseerPhysics
 #if (XNA)
             if (EnableDiagnostics) _sw.Start();
 #endif
-
-            #region Added by Daniel Pramel 08/24/08
-
-            if (Scaling.Enabled)
-            {
-                dt = Scaling.GetUpdateInterval(dt);
-                if (dt == 0)
-                {
-                    return;
-                }
-
-                if (Scaling.UpdateInterval < dtReal)
-                {
-                    Scaling.IncreaseUpdateInterval();
-                }
-                else
-                {
-                    Scaling.DecreaseUpdateInterval();
-                }
-            }
-
-            #endregion
 
             ProcessAddedItems();
             //moved to before 'removeitems' to avoid confusion when calling add/remove without calling update.
@@ -823,11 +806,5 @@ namespace FarseerGames.FarseerPhysics
             //Clean up the arbiterlist
             arbiterList.CleanArbiterList(arbiterPool);
         }
-
-        #region Added by Daniel Pramel 08/24/08
-
-        public Scaling Scaling;
-
-        #endregion
     }
 }

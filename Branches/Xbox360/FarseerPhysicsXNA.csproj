@@ -29,6 +29,10 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
     <OutputPath>bin\Xbox 360\Debug</OutputPath>
@@ -109,6 +113,9 @@
     </Compile>
     <Compile Include="..\..\Trunk\Controllers\InactivityController.cs">
       <Link>Controllers\InactivityController.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Controllers\ScalingController.cs">
+      <Link>Controllers\ScalingController.cs</Link>
     </Compile>
     <Compile Include="..\..\Trunk\Controllers\WaveController.cs">
       <Link>Controllers\WaveController.cs</Link>
@@ -217,9 +224,6 @@
     </Compile>
     <Compile Include="..\..\Trunk\Pool.cs">
       <Link>Pool.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Trunk\Scaling.cs">
-      <Link>Scaling.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

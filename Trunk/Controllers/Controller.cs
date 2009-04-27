@@ -38,6 +38,11 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// <param name="dt">The dt.</param>
         public abstract void Update(float dt);
 
+        public virtual void Update(float dt, float dtReal)
+        {
+            Update(dt);
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             //subclasses can override incase they need to dispose of resources
