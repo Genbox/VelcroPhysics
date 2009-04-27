@@ -13,18 +13,23 @@ namespace FarseerGames.FarseerPhysics.Controllers
     /// </summary>
     public class InactivityController : Controller
     {
-        private float _activationDistance = 100;
+        /// <summary>
+        /// Returns or sets the distance in which deactivated bodies can be reactivated by an active body
+        /// </summary>
+        public float ActivationDistance = 100;
         private int _bodiesEnabled;
 
         private Vector2 _difference = Vector2.Zero;
-        private float _maxIdleTime = 1000;
+    
+        /// <summary>
+        /// Returns or sets the idle time in ms before a body will be deactivated
+        /// </summary>
+        public float MaxIdleTime = 1000;
         private PhysicsSimulator _physicsSimulator;
 
         public InactivityController(PhysicsSimulator physicsSimulator)
         {
             _physicsSimulator = physicsSimulator;
-            _physicsSimulator.Add(this);
-            Enabled = false; // disable by default
         }
 
         /// <summary>
@@ -33,24 +38,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
         public int BodiesEnabled
         {
             get { return _bodiesEnabled; }
-        }
-
-        /// <summary>
-        /// Returns or sets the distance in which deactivated bodies can be reactivated by an active body
-        /// </summary>
-        public float ActivationDistance
-        {
-            get { return _activationDistance; }
-            set { _activationDistance = value; }
-        }
-
-        /// <summary>
-        /// Returns or sets the idle time in ms before a body will be deactivated
-        /// </summary>
-        public float MaxIdleTime
-        {
-            get { return _maxIdleTime; }
-            set { _maxIdleTime = value; }
         }
 
         public override void Validate()
@@ -78,7 +65,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 {
                     // body doesn't move -> increment idle time
                     body.IdleTime += ms;
-                    if (body.IdleTime >= _maxIdleTime) body.Enabled = false;
+                    if (body.IdleTime >= MaxIdleTime) body.Enabled = false;
                 }
                 else
                 {
@@ -110,7 +97,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 _difference *= -1;
             }
 
-            return distance <= _activationDistance;
+            return distance <= ActivationDistance;
         }
     }
 }

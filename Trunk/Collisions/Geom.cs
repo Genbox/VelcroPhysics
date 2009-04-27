@@ -35,7 +35,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private Matrix _matrixInverse = Matrix.Identity;
         private Matrix _matrixInverseTemp;
         private Vector2 _offset = Vector2.Zero;
-        private Vector2 _position = new Vector2(0, 0);
+        private Vector2 _position = Vector2.Zero;
         private float _rotation;
         private float _rotationOffset;
         private bool _isDisposed;
@@ -277,6 +277,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #region IEquatable<Geom> Members
 
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <returns>
+        /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+        /// </returns>
+        /// <param name="other">An object to compare with this object.
+        ///                 </param>
         public bool Equals(Geom other)
         {
             if ((object)other == null)
@@ -340,7 +348,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             body = bodyToSet;
 
-            bodyToSet.Updated += BodyOnChange;
+            bodyToSet.Updated += Update;
             bodyToSet.Disposed += BodyOnDisposed;
 
             Update(ref bodyToSet.position, ref bodyToSet.rotation);
@@ -485,12 +493,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public bool Collide(Vector2 point)
         {
             //Check first if the AABB contains the point
-            if (AABB.Contains(point))
+            if (AABB.Contains(ref point))
             {
-                Feature feature;
-                point = Vector2.Transform(point, MatrixInverse);
+                Matrix matrixInverse = MatrixInverse;
+                Vector2.Transform(ref point, ref matrixInverse, out point);
 
+                Feature feature;
                 narrowPhaseCollider.Intersect(ref point, out feature);
+
                 if (feature.Distance < 0)
                 {
                     return true;
@@ -506,9 +516,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns></returns>
         private bool FastCollide(Vector2 point)
         {
-            Feature feature;
-            point = Vector2.Transform(point, MatrixInverse);
+            Matrix matrixInverse = MatrixInverse;
+            Vector2.Transform(ref point, ref matrixInverse, out point);
 
+            Feature feature;
             narrowPhaseCollider.Intersect(ref point, out feature);
             if (feature.Distance < 0)
             {
@@ -530,7 +541,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             if (AABB.Intersect(AABB, geometry.AABB))
             {
                 //Check each vertice (of self) against the provided geometry
-                for (int i = 0; i < worldVertices.Count; i++)
+                int count = worldVertices.Count;
+                for (int i = 0; i < count; i++)
                 {
                     if (geometry.FastCollide(worldVertices[i]))
                     {
@@ -539,7 +551,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 }
 
                 //Check each vertice of the provided geometry, against itself
-                for (int i = 0; i < geometry.worldVertices.Count; i++)
+                count = geometry.worldVertices.Count;
+                for (int i = 0; i < count; i++)
                 {
                     if (FastCollide(geometry.worldVertices[i]))
                     {
@@ -594,6 +607,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Update();
         }
 
+        /// <summary>
+        /// Transform the local vertices to world vertices.
+        /// Also updates the AABB of the geometry to the new values.
+        /// </summary>
         private void Update()
         {
             for (int i = 0; i < localVertices.Count; i++)
@@ -613,11 +630,27 @@ namespace FarseerGames.FarseerPhysics.Collisions
             AABB.Update(ref worldVertices);
         }
 
+        /// <summary>
+        /// Serves as a hash function for a particular type. 
+        /// </summary>
+        /// <returns>
+        /// A hash code for the current <see cref="T:System.Object"/>.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+        /// </summary>
+        /// <returns>
+        /// true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
+        /// </returns>
+        /// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>. 
+        ///                 </param><exception cref="T:System.NullReferenceException">The <paramref name="obj"/> parameter is null.
+        ///                 </exception><filterpriority>2</filterpriority>
         public override bool Equals(object obj)
         {
             Geom g = obj as Geom;
@@ -666,11 +699,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return _newId;
         }
 
-        private void BodyOnChange(ref Vector2 position, ref float rotation)
-        {
-            Update(ref position, ref rotation);
-        }
-
         private void BodyOnDisposed(object sender, EventArgs e)
         {
             Dispose();
@@ -688,7 +716,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     if (body != null)
                     {
                         //Release event subscriptions
-                        body.Updated -= BodyOnChange;
+                        body.Updated -= Update;
                         body.Disposed -= BodyOnDisposed;
                     }
                 }

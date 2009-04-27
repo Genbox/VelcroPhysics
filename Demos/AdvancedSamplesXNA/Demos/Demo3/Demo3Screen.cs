@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
+using FarseerGames.FarseerPhysics.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -20,12 +21,14 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo3
             // This distance has to be big enough to make sure all objects are reactivated 
             // before they could collide with an currently active object
             // our biggest object is 25*25 -> 120 would be big enough
-            PhysicsSimulator.InactivityController.ActivationDistance = 120;
+            InactivityController controller = new InactivityController(PhysicsSimulator);
+            controller.ActivationDistance = 120;
 
             // Deactivate the object after 2 seconds of idle time
-            PhysicsSimulator.InactivityController.MaxIdleTime = 2000;
-            PhysicsSimulator.InactivityController.Enabled = true;
+            controller.MaxIdleTime = 2000;
+            controller.Enabled = true;
 
+            PhysicsSimulator.Add(controller);
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
 
             base.Initialize();

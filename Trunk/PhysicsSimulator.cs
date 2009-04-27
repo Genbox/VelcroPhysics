@@ -19,7 +19,7 @@ namespace FarseerGames.FarseerPhysics
     /// <summary>
     /// Keeps track of bodies, geometries, joints, springs, controllers and other dynamics.
     /// </summary>
-    public class PhysicsSimulator : IDisposable
+    public class PhysicsSimulator
     {
         private const int _arbiterPoolSize = 10; //initial arbiter size.  will grow as needed
         private Body _body;
@@ -71,21 +71,6 @@ namespace FarseerGames.FarseerPhysics
         internal float updateTime = -1;
 
         public bool EnableDiagnostics;
-
-        #region Added by Daniel Pramel 08/17/08
-
-        private InactivityController _inactivityController;
-
-        /// <summary>
-        /// Returns the InactivityController to automatically disable not used bodies.
-        /// It is disabled by default!
-        /// </summary>
-        public InactivityController InactivityController
-        {
-            get { return _inactivityController; }
-        }
-
-        #endregion
 
         public PhysicsSimulator()
         {
@@ -262,15 +247,6 @@ namespace FarseerGames.FarseerPhysics
             set { _enabled = value; }
         }
 
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            _inactivityController.Dispose();
-        }
-
-        #endregion
-
         private void ConstructPhysicsSimulator(Vector2 gravity)
         {
             geomList = new GenericList<Geom>();
@@ -301,8 +277,6 @@ namespace FarseerGames.FarseerPhysics
             arbiterPool = new Pool<Arbiter>(_arbiterPoolSize);
 
             #region Added by Daniel Pramel 08/17/08
-
-            _inactivityController = new InactivityController(this);
 
             Scaling = new Scaling(0.001f, 0.01f);
 
