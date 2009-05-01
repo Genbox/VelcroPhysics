@@ -668,17 +668,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <param name="amount"></param>
         public void ApplyImpulse(Vector2 amount)
         {
-            #region INLINE: Vector2.Multiply(ref impulse, inverseMass, out _dv);
+            //Applying second fix from: http://www.codeplex.com/FarseerPhysics/WorkItem/View.aspx?WorkItemId=20155
+            //#region INLINE: Vector2.Multiply(ref impulse, inverseMass, out _dv);
+            //_dv.X = amount.X * inverseMass;
+            //_dv.Y = amount.Y * inverseMass;
+            //#endregion
 
-            _dv.X = amount.X * inverseMass;
-            _dv.Y = amount.Y * inverseMass;
+            #region INLINE: Vector2.Add(ref amount, ref impulse, out impulse);
 
-            #endregion
-
-            #region INLINE: Vector2.Add(ref _dv, ref impulse, out impulse);
-
-            impulse.X += _dv.X;
-            impulse.Y += _dv.Y;
+            impulse.X += amount.X;
+            impulse.Y += amount.Y;
 
             #endregion
         }
@@ -690,17 +689,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <param name="amount"></param>
         public void ApplyImpulse(ref Vector2 amount)
         {
-            #region INLINE: Vector2.Multiply(ref impulse, inverseMass, out _dv);
+            //Applying second fix from: http://www.codeplex.com/FarseerPhysics/WorkItem/View.aspx?WorkItemId=20155
+            //#region INLINE: Vector2.Multiply(ref impulse, inverseMass, out _dv);
+            //_dv.X = amount.X * inverseMass;
+            //_dv.Y = amount.Y * inverseMass;
+            //#endregion
 
-            _dv.X = amount.X * inverseMass;
-            _dv.Y = amount.Y * inverseMass;
+            #region INLINE: Vector2.Add(ref amount, ref impulse, out impulse);
 
-            #endregion
-
-            #region INLINE: Vector2.Add(ref _dv, ref impulse, out impulse);
-
-            impulse.X += _dv.X;
-            impulse.Y += _dv.Y;
+            impulse.X += amount.X;
+            impulse.Y += amount.Y;
 
             #endregion
         }
