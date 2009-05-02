@@ -152,7 +152,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 Calculator.Cross(ref contact.Normal, ref _float1, out _tangent);
                 Vector2.Dot(ref _r1, ref _tangent, out _rt1);
                 Vector2.Dot(ref _r2, ref _tangent, out _rt2);
-                _kTangent = GeometryA.body.InverseMass + GeometryB.body.InverseMass;
+                _kTangent = GeometryA.body.inverseMass + GeometryB.body.inverseMass;
 
                 Vector2.Dot(ref _r1, ref _r1, out _float1);
                 Vector2.Dot(ref _r2, ref _r2, out _float2);
