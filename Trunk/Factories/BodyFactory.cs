@@ -37,6 +37,15 @@ namespace FarseerGames.FarseerPhysics.Factories
 
         public Body CreateRectangleBody(float width, float height, float mass)
         {
+            if (width <= 0)
+                throw new ArgumentOutOfRangeException("width", "Width must be more than 0");
+
+            if (height <= 0)
+                throw new ArgumentOutOfRangeException("height", "Height must be more than 0");
+
+            if (mass <= 0)
+                throw new ArgumentOutOfRangeException("mass", "Mass must be more than 0");
+
             Body body = new Body();
             body.Mass = mass;
 
@@ -55,6 +64,12 @@ namespace FarseerGames.FarseerPhysics.Factories
 
         public Body CreateCircleBody(float radius, float mass)
         {
+            if (radius <= 0)
+                throw new ArgumentOutOfRangeException("radius", "Radius must be more than 0");
+
+            if (mass <= 0)
+                throw new ArgumentOutOfRangeException("mass", "Mass must be more than 0");
+
             Body body = new Body();
             body.Mass = mass;
 
@@ -90,6 +105,9 @@ namespace FarseerGames.FarseerPhysics.Factories
             if (vertices == null)
                 throw new ArgumentNullException("vertices", "Vertices must not be null");
 
+            if (mass <= 0)
+                throw new ArgumentOutOfRangeException("mass", "Mass must be more than 0");
+
             Body body = new Body();
             body.Mass = mass;
             body.MomentOfInertia = mass * vertices.GetMomentOfInertia();
@@ -107,6 +125,12 @@ namespace FarseerGames.FarseerPhysics.Factories
 
         public Body CreateBody(float mass, float momentOfInertia)
         {
+            if (mass <= 0)
+                throw new ArgumentOutOfRangeException("mass", "Mass must be more than 0");
+
+            if (momentOfInertia <= 0)
+                throw new ArgumentOutOfRangeException("momentOfInertia", "MOI must be more than 0");
+
             Body body = new Body();
             body.Mass = mass;
             body.MomentOfInertia = momentOfInertia;
@@ -151,15 +175,26 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <returns></returns>
         public Body CreateEllipseBody(float xRadius, float yRadius, float mass)
         {
+            if (xRadius <= 0)
+                throw new ArgumentOutOfRangeException("xRadius", "xRadius must be more than 0");
+
+            if (yRadius <= 0)
+                throw new ArgumentOutOfRangeException("yRadius", "yRadius must be more than 0");
+
+            if (mass <= 0)
+                throw new ArgumentOutOfRangeException("mass", "Mass must be more than 0");
+
+            if (xRadius == yRadius)
+            {
+                return CreateCircleBody(xRadius, mass);
+            }
+
             Body body = new Body();
             body.Mass = mass;
 
-            if (xRadius == yRadius)
-                body.MomentOfInertia = .5f * mass * (float)Math.Pow(xRadius, 2f);
-            else
-                //TODO: Check if this formular is correct
-                body.MomentOfInertia = .25f * mass * (xRadius * xRadius + yRadius * yRadius);
+            //TODO: Check if this formular is correct
             //body.MomentOfInertia = mass * (xRadius * xRadius + yRadius * yRadius) / 12;
+            body.MomentOfInertia = .25f * mass * (xRadius * xRadius + yRadius * yRadius);
 
             return body;
         }
