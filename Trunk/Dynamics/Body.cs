@@ -519,18 +519,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// </summary>
         /// <param name="worldPoint">The world point.</param>
         /// <param name="velocity">The velocity.</param>
-        /// <returns>The velocity at the point</returns>
-        public Vector2 GetVelocityAtWorldPoint(Vector2 worldPoint, Vector2 velocity)
-        {
-            GetVelocityAtWorldPoint(ref worldPoint, out velocity);
-            return velocity;
-        }
-
-        /// <summary>
-        /// Gets the velocity at a world point.
-        /// </summary>
-        /// <param name="worldPoint">The world point.</param>
-        /// <param name="velocity">The velocity.</param>
         public void GetVelocityAtWorldPoint(ref Vector2 worldPoint, out Vector2 velocity)
         {
             Vector2.Subtract(ref worldPoint, ref position, out _r1);

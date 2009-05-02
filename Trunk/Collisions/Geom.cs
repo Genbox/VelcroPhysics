@@ -50,14 +50,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         /// <Value>The collides with.</Value>
         public CollisionCategory CollidesWith = CollisionCategory.All;
+
         /// <summary>
         /// Gets or sets the collision categories.
         ///member off all categories by default
         /// </summary>
         /// <Value>The collision categories.</Value>
         public CollisionCategory CollisionCategories = CollisionCategory.All;
+
         /// <summary>
-        /// Gets or sets a Value indicating whether collision response is enabled.
+        /// Gets or sets a value indicating whether collision response is enabled.
         /// If 2 geoms collide and CollisionResponseEnabled is false, then impulses will not be calculated
         /// for the 2 colliding geoms. They will pass through each other, but will still be able to fire the
         /// <see cref="OnCollision"/> event.
@@ -66,19 +68,23 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// 	<c>true</c> if collision response enabled; otherwise, <c>false</c>.
         /// </Value>
         public bool CollisionResponseEnabled = true;
+
         /// <summary>
         /// Controls the amount of friction a geometry has when in contact with another geometry. A Value of zero implies
         /// no friction. When two geometries collide, the minimum friction coefficient between the two bodies is used.
         /// </summary>
         public float FrictionCoefficient;
+
         /// <summary>
         /// Fires when a collision occurs with the geom
         /// </summary>
         public CollisionEventHandler OnCollision;
+
         /// <summary>
         /// Fires when a separation between this and another geom occurs
         /// </summary>
         public SeparationEventHandler OnSeparation;
+
         /// <summary>
         /// The coefficient of restitution of the geometry.
         /// <para>This parameter controls how bouncy an object is when it collides with other
@@ -86,23 +92,27 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// 0 implies no restitution (think a ball of clay)</para>
         /// </summary>
         public float RestitutionCoefficient;
+
         /// <summary>
         /// Gets or sets the distance grid collision grid size.
         /// ONLY used when the distance grid narrow phase collider is used.
         /// Be sure to run <see cref="PrepareNarrowPhaseCollider"/>() if you change this for changes to take effect.
         /// </summary>
         public float CollisionGridSize;
+
         /// <summary>
         /// Gets or sets the collision group.
         /// If 2 geoms are in the same collision group, they will not collide.
         /// </summary>
         /// <Value>The collision group.</Value>
         public int CollisionGroup;
+
         /// <summary>
         /// Gets or sets the Axis Aligned Bounding Box of the geom.
         /// </summary>
         /// <Value>The AABB.</Value>
         public AABB AABB = new AABB();
+
         /// <summary>
         /// Gets or sets a Value indicating whether collision is enabled.
         /// </summary>
@@ -117,7 +127,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public Geom(Body body, Vertices vertices, float collisionGridSize)
         {
-
             Construct(body, vertices, Vector2.Zero, 0, collisionGridSize);
         }
 
@@ -136,6 +145,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
             ConstructClone(body, geometry, geometry._offset, geometry._rotationOffset);
         }
 
+        /// <summary>
+        /// Creates a clone of an already existing geometry
+        /// </summary>
+        /// <param name="body">The body</param>
+        /// <param name="geometry">The geometry to clone</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="rotationOffset">The rotation offset.</param>
         public Geom(Body body, Geom geometry, Vector2 offset, float rotationOffset)
         {
             ConstructClone(body, geometry, offset, rotationOffset);
@@ -207,7 +223,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets or sets a Value indicating whether this instance is a sensor.
         /// A sensor does not calculate impulses and does not change position (it's static)
-        /// i does however calculate collisions. Sensors can be used to sense other geoms.
+        /// it does however detect collisions. Sensors can be used to sense other geoms.
         /// </summary>
         /// <Value><c>true</c> if this instance is sensor; otherwise, <c>false</c>.</Value>
         public bool IsSensor
@@ -250,7 +266,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Gets or sets the tag. A tag is used to attach a custom object to the Geom.
         /// </summary>
-        /// <Value>The tag.</Value>
+        /// <Value>The custom object.</Value>
         public Object Tag { get; set; }
 
         /// <summary>
@@ -258,43 +274,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         /// <Value>The id.</Value>
         internal int Id { get; private set; }
-
-        #region GetNextId variables
-
-        private static int _newId = -1;
-
-        #endregion
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
-
-        #region IEquatable<Geom> Members
-
-        /// <summary>
-        /// Indicates whether the current object is equal to another object of the same type.
-        /// </summary>
-        /// <returns>
-        /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
-        /// </returns>
-        /// <param name="other">An object to compare with this object.
-        ///                 </param>
-        public bool Equals(Geom other)
-        {
-            if ((object)other == null)
-            {
-                return false;
-            }
-            return Id == other.Id;
-        }
-
-        #endregion
 
         private void Construct(Body bodyToSet, Vertices vertices, Vector2 offset, float rotationOffset,
                                float collisionGridSize)
@@ -418,6 +397,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return distance;
         }
 
+        /// <summary>
+        /// Gets the distance to edge.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="index">The index.</param>
+        /// <returns></returns>
         private float GetDistanceToEdge(ref Vector2 point, int index)
         {
             Vector2 edge = localVertices.GetEdge(index);
@@ -521,6 +506,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             Feature feature;
             narrowPhaseCollider.Intersect(ref point, out feature);
+
             if (feature.Distance < 0)
             {
                 return true;
@@ -725,6 +711,43 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
             IsDisposed = true;
         }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
+
+        #region IEquatable<Geom> Members
+
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <returns>
+        /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+        /// </returns>
+        /// <param name="other">An object to compare with this object.
+        ///                 </param>
+        public bool Equals(Geom other)
+        {
+            if ((object)other == null)
+            {
+                return false;
+            }
+            return Id == other.Id;
+        }
+
+        #endregion
+
+        #region GetNextId variables
+
+        private static int _newId = -1;
+
+        #endregion
 
         #region Update variables
 
