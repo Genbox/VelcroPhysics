@@ -63,12 +63,12 @@ namespace FarseerGames.FarseerPhysics.Factories
         }
 
         /// <summary>
-        /// 
+        /// Creates the rectangle geom.
         /// </summary>
-        /// <param name="physicsSimulator"></param>
-        /// <param name="body"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
+        /// <param name="physicsSimulator">The physics simulator.</param>
+        /// <param name="body">The body.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
         /// <param name="collisionGridCellSize">Pass in 0 or less to make Farseer calculate the grid cell size</param>
         /// <returns></returns>
         public Geom CreateRectangleGeom(PhysicsSimulator physicsSimulator, Body body, float width, float height,
@@ -122,6 +122,12 @@ namespace FarseerGames.FarseerPhysics.Factories
         public Geom CreateRectangleGeom(Body body, float width, float height, Vector2 offset, float rotationOffset,
                                         float collisionGridSize)
         {
+            if (width <= 0)
+                throw new ArgumentOutOfRangeException("width", "Width must be more than 0");
+
+            if (height <= 0)
+                throw new ArgumentOutOfRangeException("height", "Height must be more than 0");
+
             Vertices vertices = Vertices.CreateRectangle(width, height);
 
             if (collisionGridSize <= 0)
@@ -207,6 +213,9 @@ namespace FarseerGames.FarseerPhysics.Factories
         public Geom CreateCircleGeom(Body body, float radius, int numberOfEdges, Vector2 offset, float rotationOffset,
                                      float collisionGridSize)
         {
+            if (radius <= 0)
+                throw new ArgumentOutOfRangeException("radius", "Radius must be more than 0");
+
             Vertices vertices = Vertices.CreateCircle(radius, numberOfEdges);
             if (collisionGridSize  <= 0)
             {
@@ -488,6 +497,12 @@ namespace FarseerGames.FarseerPhysics.Factories
                                       float rotationOffset,
                                       float collisionGridSize)
         {
+            if (xRadius <= 0)
+                throw new ArgumentOutOfRangeException("xRadius", "xRadius must be more than 0");
+
+            if (yRadius <= 0)
+                throw new ArgumentOutOfRangeException("yRadius", "yRadius must be more than 0");
+
             Vertices vertices = Vertices.CreateEllipse(xRadius, yRadius, numberOfEdges);
             if (collisionGridSize <= 0)
             {
