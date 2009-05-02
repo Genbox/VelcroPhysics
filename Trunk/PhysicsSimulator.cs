@@ -564,10 +564,11 @@ namespace FarseerGames.FarseerPhysics
             for (int i = 0; i < bodyList.Count; i++)
             {
                 _body = bodyList[i];
-                if (!_body.Enabled)
+                if (!_body.Enabled || _body.isStatic)
                 {
                     continue;
                 }
+
                 //apply accumulated external impules
                 _body.ApplyImpulses();
 
@@ -638,10 +639,9 @@ namespace FarseerGames.FarseerPhysics
         {
             for (int i = 0; i < bodyList.Count; i++)
             {
-                if (!bodyList[i].Enabled)
-                {
+                if (!bodyList[i].Enabled || bodyList[i].isStatic)
                     continue;
-                }
+
                 bodyList[i].IntegratePosition(dt);
             }
         }

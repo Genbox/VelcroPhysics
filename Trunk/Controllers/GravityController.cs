@@ -141,8 +141,8 @@ namespace FarseerGames.FarseerPhysics.Controllers
                         {
                             force = Vector2.Divide(force, distance);
                         }
-                        body.ApplyForce(force);
-                        body2.ApplyForce(force);
+                        body.ApplyForce(ref force);
+                        body2.ApplyForce(ref force);
                     }
 
                 if (_pointList != null)
@@ -166,7 +166,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
                             force = Vector2.Divide(force, distance);
                         }
 
-                        body.ApplyForce(force);
+                        body.ApplyForce(ref force);
                     }
             }
         }
