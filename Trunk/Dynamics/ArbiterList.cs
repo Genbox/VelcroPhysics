@@ -88,6 +88,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 {
                     _markedForRemovalList.Add(this[i]);
                 }
+
+                //Remove the arbiter if one of the geometries are not collision enabled
+                if (!this[i].GeometryA.CollisionEnabled || !this[i].GeometryB.CollisionEnabled)
+                {
+                    _markedForRemovalList.Add(this[i]);
+                }
             }
 
             int count = _markedForRemovalList.Count;
