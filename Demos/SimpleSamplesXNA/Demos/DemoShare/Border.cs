@@ -55,7 +55,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.DemoShare
             _borderGeom[0] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _borderBody, _borderWidth,
                                                                       _height,
                                                                       geometryOffset, 0);
-            _borderGeom[0].RestitutionCoefficient = .2f;
+            _borderGeom[0].RestitutionCoefficient = .0001f;
             _borderGeom[0].FrictionCoefficient = .5f;
             _borderGeom[0].CollisionGroup = 100;
 

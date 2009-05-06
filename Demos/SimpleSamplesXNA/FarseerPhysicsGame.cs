@@ -19,10 +19,10 @@ namespace FarseerGames.SimpleSamplesXNAXNA
             Window.Title = "Farseer Physics Engine Samples Framework";
             _graphics = new GraphicsDeviceManager(this);
 
-            _graphics.SynchronizeWithVerticalRetrace = false;
+            _graphics.SynchronizeWithVerticalRetrace = true;
 
-            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 10);
-            IsFixedTimeStep = true;
+            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 16);
+            IsFixedTimeStep = false;
 
 #if !XBOX
             //windowed

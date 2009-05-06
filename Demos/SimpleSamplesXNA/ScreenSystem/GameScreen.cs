@@ -322,7 +322,7 @@ namespace FarseerGames.SimpleSamplesXNA.ScreenSystem
                                                                                       _pickedGeom.Body,
                                                                                       _pickedGeom.Body.
                                                                                           GetLocalPosition(point),
-                                                                                      point, 20, 10);
+                                                                                      point, 100, 50);
                 }
             }
             else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&
