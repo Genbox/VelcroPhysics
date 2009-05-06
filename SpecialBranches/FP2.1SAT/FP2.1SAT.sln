@@ -52,12 +52,12 @@ Global
 		{0686AF40-D209-4CE9-8C27-5B2E9BF17C00}.Debug|x86.Build.0 = Debug|x86
 		{0686AF40-D209-4CE9-8C27-5B2E9BF17C00}.Release|x86.ActiveCfg = Release|x86
 		{0686AF40-D209-4CE9-8C27-5B2E9BF17C00}.Release|x86.Build.0 = Release|x86
-		{D02CA378-A184-49AD-91D5-C017D1559CAC}.Debug|x86.ActiveCfg = Debug|x86
-		{D02CA378-A184-49AD-91D5-C017D1559CAC}.Release|x86.ActiveCfg = Release|x86
 		{8DE7C6AA-98BA-40CC-9C3C-C8A6FC77D3F6}.Debug|x86.ActiveCfg = Debug|x86
 		{8DE7C6AA-98BA-40CC-9C3C-C8A6FC77D3F6}.Release|x86.ActiveCfg = Release|x86
-		{FBBF43D1-95A3-411F-9E55-A67B93EB0D3E}.Debug|x86.ActiveCfg = Debug|x86
-		{FBBF43D1-95A3-411F-9E55-A67B93EB0D3E}.Release|x86.ActiveCfg = Release|x86
+		{D02CA378-A184-49AD-91D5-C017D1559CAC}.Debug|x86.ActiveCfg = Debug|x86
+		{D02CA378-A184-49AD-91D5-C017D1559CAC}.Release|x86.ActiveCfg = Release|x86
+		{B7024EA0-0D44-469A-BBA9-666834AC0D6B}.Debug|x86.ActiveCfg = Debug|x86
+		{B7024EA0-0D44-469A-BBA9-666834AC0D6B}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
