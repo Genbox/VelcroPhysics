@@ -30,9 +30,9 @@ namespace FarseerGames.WaterSampleXNA.Demos
 
         public WaterModel()
         {
-            WaveGeneratorMax = 0.20f; //initial value
-            WaveGeneratorMin = 0.05f; //initial value
-            WaveGeneratorStep = 0f;
+            WaveGeneratorMax = 50.0f; //initial value
+            WaveGeneratorMin = 0.0f; //initial value
+            WaveGeneratorStep = 5.0f;
         }
 
         public void Initialize(PhysicsSimulator physicsSimulator)
@@ -41,12 +41,12 @@ namespace FarseerGames.WaterSampleXNA.Demos
             //The wave controller is represented as set of points equally
             //spaced horizontally along the width of the wave.
             WaveController = new WaveController();
-            WaveController.Position = new Vector2(0, 500);
-            WaveController.Width = 900;
-            WaveController.Height = 100;
-            WaveController.NodeCount = 20; //how many vertices make up the surface of the wave
-            WaveController.DampingCoefficient = .95f; //determines how quickly the wave will disipate
-            WaveController.Frequency = .16f; //determines how fast the wave algorithm runs (seconds)
+            WaveController.Position = new Vector2(35, 500);
+            WaveController.Width = 950;
+            WaveController.Height = 230;
+            WaveController.NodeCount = 50; //how many vertices make up the surface of the wave
+            WaveController.DampingCoefficient = .99f; //determines how quickly the wave will disipate
+            WaveController.Frequency = .001f; //determines how fast the wave algorithm runs (seconds)
 
             //The wave generator parameters simply move an end-point of the wave up and down.
             //Think of a string attached to a wall on one end and held by a person on the other.
