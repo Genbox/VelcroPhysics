@@ -158,6 +158,14 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 FindVerticesInFluid(_geomList[i]);
                 if (_vertices.Count < 3) continue;
 
+                foreach (Vector2 v in _vertices)
+                {
+                    float disturb = _geomList[i].Body.LinearVelocity.Y;
+
+                    if (disturb > 100.0f)
+                        _fluidContainer.Disturb(v.X, (disturb * (float)Math.Sqrt(_geomList[i].Body.Mass)) / 5000.0f);
+                }
+
                 _area = _vertices.GetArea();
                 if (_area < .000001) continue;
 

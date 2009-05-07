@@ -29,7 +29,7 @@ namespace FarseerGames.WaterSampleXNA.Demos
 
         public override void Initialize()
         {
-            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 150));
+            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 250));
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
 
             _cameraMatrix = Matrix.Identity;
@@ -45,13 +45,13 @@ namespace FarseerGames.WaterSampleXNA.Demos
 
         public override void LoadContent()
         {
-            _platform = new Box(300, 20, 10, new Vector2(ScreenManager.ScreenWidth / 2f, 500), Color.White, Color.Black, 1);
+            _platform = new Box(300, 20, 5, new Vector2(ScreenManager.ScreenWidth / 2f, 500), Color.White, Color.Black, 1);
             _platform.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             _refTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 32, 32, 2, 0, 0,
                                                                Color.White, Color.Black);
 
-            _refBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 2);
+            _refBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 1f);
             _refGeom = GeomFactory.Instance.CreateRectangleGeom(_refBody, 32, 32);
             _refGeom.FrictionCoefficient = .2f;
 
@@ -77,10 +77,6 @@ namespace FarseerGames.WaterSampleXNA.Demos
         {
             _waterModel.Update(gameTime.ElapsedGameTime);
 
-            MouseState ms = Mouse.GetState();
-
-            //_waterModel.WaveController.Disturb(10, ms.Y / 10.0f);
-            _waterModel.WaveController.Enabled = true;
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
@@ -128,7 +124,7 @@ namespace FarseerGames.WaterSampleXNA.Demos
 
         public void CreateWaterVertexBuffer()
         {
-            _vertices = new VertexPositionColor[502];
+            _vertices = new VertexPositionColor[_waterModel.WaveController.NodeCount * 2];
 
             // start at bottom left
             Vector3 position = new Vector3(_waterModel.WaveController.Position.X, _waterModel.WaveController.Position.Y + _waterModel.WaveController.Height, 0);

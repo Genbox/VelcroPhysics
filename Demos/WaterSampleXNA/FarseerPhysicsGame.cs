@@ -19,7 +19,7 @@ namespace FarseerGames.WaterSampleXNA
             Window.Title = "Farseer Physics Engine Samples Framework";
             _graphics = new GraphicsDeviceManager(this);
 
-            _graphics.SynchronizeWithVerticalRetrace = false;
+            _graphics.SynchronizeWithVerticalRetrace = true;
 
             TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 10);
             IsFixedTimeStep = true;
