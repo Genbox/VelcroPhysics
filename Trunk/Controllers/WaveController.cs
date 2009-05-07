@@ -240,9 +240,15 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// </summary>
         /// <param name="node">The node to change the height of</param>
         /// <param name="offset">The amount to move the node up or down (negative values moves the node up, positive moves it down)</param>
-        public void Disturb(int node, float offset)
+        public void Disturb(float x, float offset)
         {
-            _currentWave[node] = _currentWave[node] + offset;
+            int i = 0;
+            
+            for (i = 0; i < _nodeCount - 1; i++)
+            {
+                if (x >= _xPosition[i] && x <= _xPosition[i+1])
+                    _currentWave[i] = _currentWave[i] + offset;
+            }  
         }
 
         /// <summary>

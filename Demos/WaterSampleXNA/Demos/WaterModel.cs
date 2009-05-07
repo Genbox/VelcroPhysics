@@ -30,9 +30,9 @@ namespace FarseerGames.WaterSampleXNA.Demos
 
         public WaterModel()
         {
-            WaveGeneratorMax = 50.0f; //initial value
+            WaveGeneratorMax = 0.0f; //initial value
             WaveGeneratorMin = 0.0f; //initial value
-            WaveGeneratorStep = 5.0f;
+            WaveGeneratorStep = 0.0f;
         }
 
         public void Initialize(PhysicsSimulator physicsSimulator)
@@ -44,9 +44,9 @@ namespace FarseerGames.WaterSampleXNA.Demos
             WaveController.Position = new Vector2(35, 500);
             WaveController.Width = 950;
             WaveController.Height = 230;
-            WaveController.NodeCount = 50; //how many vertices make up the surface of the wave
-            WaveController.DampingCoefficient = .99f; //determines how quickly the wave will disipate
-            WaveController.Frequency = .001f; //determines how fast the wave algorithm runs (seconds)
+            WaveController.NodeCount = 200; //how many vertices make up the surface of the wave
+            WaveController.DampingCoefficient = .995f; //determines how quickly the wave will disipate
+            WaveController.Frequency = .008f; //determines how fast the wave algorithm runs (seconds)
 
             //The wave generator parameters simply move an end-point of the wave up and down.
             //Think of a string attached to a wall on one end and held by a person on the other.
@@ -61,7 +61,7 @@ namespace FarseerGames.WaterSampleXNA.Demos
 
             //fluid drag controller controls how things move once IN the water.
             FluidDragController = new FluidDragController();
-            FluidDragController.Initialize(WaveController, 0.005f, 0.004f, 0.002f, physicsSimulator.Gravity);
+            FluidDragController.Initialize(WaveController, 0.0040f, 0.98f, 0.002f, physicsSimulator.Gravity);
             //init with default values.
             physicsSimulator.Add(FluidDragController);
         }
