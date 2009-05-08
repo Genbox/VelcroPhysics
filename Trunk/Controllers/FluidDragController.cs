@@ -39,7 +39,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
     {
         #region Delegates
 
-        public delegate void EntryEventHandler(Geom geom);
+        public delegate void EntryEventHandler(Geom geom, Vertices verts);
 
         #endregion
 
@@ -156,14 +156,9 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 _totalArea = _geomList[i].localVertices.GetArea();
                 if (!_fluidContainer.Intersect(_geomList[i].AABB)) continue;
                 FindVerticesInFluid(_geomList[i]);
-                if (_vertices.Count < 3) continue;
-
-                foreach (Vector2 v in _vertices)
+                if (_vertices.Count < _geomList[i].LocalVertices.Count * 0.15f)
                 {
-                    float disturb = _geomList[i].Body.LinearVelocity.Y;
-
-                    if (disturb > 100.0f)
-                        _fluidContainer.Disturb(v.X, (disturb * (float)Math.Sqrt(_geomList[i].Body.Mass)) / 5000.0f);
+                    _geomInFluidList[_geomList[i]] = false;
                 }
 
                 _area = _vertices.GetArea();
@@ -185,7 +180,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
                     _geomInFluidList[_geomList[i]] = true;
                     if (Entry != null)
                     {
-                        Entry(_geomList[i]);
+                        Entry(_geomList[i], _vertices);
                     }
                 }
             }

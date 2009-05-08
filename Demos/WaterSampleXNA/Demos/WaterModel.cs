@@ -1,5 +1,6 @@
 ﻿using System;
 using FarseerGames.FarseerPhysics;
+using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
@@ -44,9 +45,9 @@ namespace FarseerGames.WaterSampleXNA.Demos
             WaveController.Position = new Vector2(35, 500);
             WaveController.Width = 950;
             WaveController.Height = 230;
-            WaveController.NodeCount = 200; //how many vertices make up the surface of the wave
-            WaveController.DampingCoefficient = .995f; //determines how quickly the wave will disipate
-            WaveController.Frequency = .008f; //determines how fast the wave algorithm runs (seconds)
+            WaveController.NodeCount = 100; //how many vertices make up the surface of the wave
+            WaveController.DampingCoefficient = .99f; //determines how quickly the wave will disipate
+            WaveController.Frequency = .0001f; //determines how fast the wave algorithm runs (seconds)
 
             //The wave generator parameters simply move an end-point of the wave up and down.
             //Think of a string attached to a wall on one end and held by a person on the other.
@@ -61,7 +62,8 @@ namespace FarseerGames.WaterSampleXNA.Demos
 
             //fluid drag controller controls how things move once IN the water.
             FluidDragController = new FluidDragController();
-            FluidDragController.Initialize(WaveController, 0.0040f, 0.98f, 0.002f, physicsSimulator.Gravity);
+            FluidDragController.Initialize(WaveController, 0.0030f, 0.98f, 0.002f, physicsSimulator.Gravity);
+            FluidDragController.Entry += EntryEventHandler;
             //init with default values.
             physicsSimulator.Add(FluidDragController);
         }
@@ -74,6 +76,16 @@ namespace FarseerGames.WaterSampleXNA.Demos
         public void Update(TimeSpan elapsedTime)
         {
             WaveController.Update((float)elapsedTime.TotalSeconds);
+        }
+
+        public void EntryEventHandler(Geom geom, Vertices verts)
+        {
+            for (int i = 0; i < verts.Count; i++)
+            {
+                Vector2 vel, point = verts[i];
+                geom.Body.GetVelocityAtWorldPoint(ref point, out vel);
+                WaveController.Disturb(verts[i].X, (vel.Y * geom.Body.Mass) / (100.0f * geom.Body.Mass));
+            }
         }
     }
 }

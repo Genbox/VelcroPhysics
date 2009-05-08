@@ -43,11 +43,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
             return _aabb.Contains(vector);
         }
 
-        public void Disturb(float a, float b)
-        {
-            
-        }
-
         #endregion
     }
 }
