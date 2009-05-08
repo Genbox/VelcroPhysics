@@ -30,7 +30,7 @@ namespace FarseerGames.WaterSampleXNA.Demos
 
         public WaterModel()
         {
-            WaveGeneratorMax = 0.0f; //initial value
+            WaveGeneratorMax = 20.0f; //initial value
             WaveGeneratorMin = 0.0f; //initial value
             WaveGeneratorStep = 0.0f;
         }
