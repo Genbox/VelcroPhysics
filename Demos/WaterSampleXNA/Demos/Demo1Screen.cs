@@ -52,7 +52,7 @@ namespace FarseerGames.WaterSampleXNA.Demos
             _refTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 32, 32, 2, 0, 0,
                                                                Color.White, Color.Black);
 
-            _refBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 2.025f);
+            _refBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 3f);
             _refGeom = GeomFactory.Instance.CreateRectangleGeom(_refBody, 32, 32);
             _refGeom.FrictionCoefficient = .2f;
 
@@ -163,7 +163,8 @@ namespace FarseerGames.WaterSampleXNA.Demos
 
             ScreenManager.SpriteBatch.End();
 
-            ScreenManager.GraphicsDevice.RenderState.CullMode = CullMode.None;
+            ScreenManager.GraphicsDevice.RenderState.CullMode = CullMode.CullCounterClockwiseFace;
+            //ScreenManager.GraphicsDevice.RenderState.FillMode = FillMode.WireFrame;
 
             // create the triangle strip
             CreateWaterVertexBuffer();

@@ -12,6 +12,5 @@ namespace FarseerGames.FarseerPhysics.Interfaces
     {
         bool Intersect(AABB aabb);
         bool Contains(ref Vector2 vector);
-        void Disturb(float x, float offset);
     }
 }
