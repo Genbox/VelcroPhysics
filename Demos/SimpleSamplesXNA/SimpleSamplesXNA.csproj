@@ -101,6 +101,7 @@
     <Compile Include="DrawingSystem\EllipseBrush.cs" />
     <Compile Include="DrawingSystem\DrawingHelper.cs" />
     <Compile Include="DrawingSystem\LineBrush.cs" />
+    <Compile Include="DrawingSystem\PolygonBrush.cs" />
     <Compile Include="DrawingSystem\RectangleBrush.cs" />
     <Compile Include="FarseerPhysicsGame.cs" />
     <Compile Include="PhysicsSimulatorView.cs" />
