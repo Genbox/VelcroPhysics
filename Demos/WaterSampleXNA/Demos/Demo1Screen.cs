@@ -20,12 +20,13 @@ namespace FarseerGames.WaterSampleXNA.Demos
         private Geom _refGeom;
         private Pyramid _pyramid;
         private Texture2D _refTexture;
-        private const int _pyramidBaseBodyCount = 6;
+        private const int _pyramidBaseBodyCount = 4;
         private Matrix _cameraMatrix;
         private Matrix _projectionMatrix;
         private Matrix _worldMatrix;
         private VertexPositionColor[] _vertices; // an array of vertices with position and color
         private WaterModel _waterModel;
+        private SpriteFont _font;
 
         public override void Initialize()
         {
@@ -38,20 +39,20 @@ namespace FarseerGames.WaterSampleXNA.Demos
 
             _waterModel = new WaterModel();
             _waterModel.Initialize(PhysicsSimulator);
-            _waterModel.WaveController.Enabled = true;
+            _waterModel.WaveController.Enabled = true;  // if false waves will not be created
 
             base.Initialize();
         }
 
         public override void LoadContent()
         {
-            _platform = new Box(300, 20, 5, new Vector2(ScreenManager.ScreenWidth / 2f, 500), Color.White, Color.Black, 1);
+            _platform = new Box(300, 20, 10, new Vector2(ScreenManager.ScreenWidth / 2f, 500), Color.White, Color.Black, 1);
             _platform.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             _refTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 32, 32, 2, 0, 0,
                                                                Color.White, Color.Black);
 
-            _refBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 1f);
+            _refBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 2.025f);
             _refGeom = GeomFactory.Instance.CreateRectangleGeom(_refBody, 32, 32);
             _refGeom.FrictionCoefficient = .2f;
 
@@ -70,6 +71,9 @@ namespace FarseerGames.WaterSampleXNA.Demos
                 _waterModel.FluidDragController.AddGeom(geom);
             }
 
+            // load a font
+            _font = ScreenManager.ContentManager.Load<SpriteFont>("Content/Fonts/detailsfont");
+
             base.LoadContent();
         }
 
@@ -77,8 +81,67 @@ namespace FarseerGames.WaterSampleXNA.Demos
         {
             _waterModel.Update(gameTime.ElapsedGameTime);
 
-
+           
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+        }
+
+        public override void HandleInput(InputState input)
+        {
+            if (firstRun)
+            {
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                firstRun = false;
+            }
+
+            if (input.PauseGame)
+            {
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+            }
+
+            if (input.CurrentGamePadState.IsConnected)
+            {
+                HandleGamePadInput(input);
+            }
+            else
+            {
+                HandleKeyboardInput(input);
+            }
+
+            base.HandleInput(input);
+        }
+
+        private void HandleGamePadInput(InputState input)
+        {
+            // TODO - add simple property control through gamepad
+        }
+
+        int count = 0;
+
+        private void HandleKeyboardInput(InputState input)
+        {
+            if (count > 5)      // this is used to slow down the input a little
+            {
+                if (input.CurrentKeyboardState.IsKeyDown(Keys.Z)) { _waterModel.WaveController.WaveGeneratorMax -= 0.1f; }
+                if (input.CurrentKeyboardState.IsKeyDown(Keys.X)) { _waterModel.WaveController.WaveGeneratorMax += 0.1f; }
+
+                if (input.CurrentKeyboardState.IsKeyDown(Keys.C)) { _waterModel.WaveController.WaveGeneratorMin -= 0.1f; }
+                if (input.CurrentKeyboardState.IsKeyDown(Keys.V)) { _waterModel.WaveController.WaveGeneratorMin += 0.1f; }
+
+                if (input.CurrentKeyboardState.IsKeyDown(Keys.B)) { _waterModel.WaveController.WaveGeneratorStep -= 0.1f; }
+                if (input.CurrentKeyboardState.IsKeyDown(Keys.N)) { _waterModel.WaveController.WaveGeneratorStep += 0.1f; }
+
+                if (input.CurrentKeyboardState.IsKeyDown(Keys.A)) { _waterModel.FluidDragController.Density -= 0.0001f; }
+                if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { _waterModel.FluidDragController.Density += 0.0001f; }
+
+                if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { _waterModel.FluidDragController.LinearDragCoefficient -= 0.1f; }
+                if (input.CurrentKeyboardState.IsKeyDown(Keys.F)) { _waterModel.FluidDragController.LinearDragCoefficient += 0.1f; }
+
+                if (input.CurrentKeyboardState.IsKeyDown(Keys.G)) { _waterModel.FluidDragController.RotationalDragCoefficient -= 0.1f; }
+                if (input.CurrentKeyboardState.IsKeyDown(Keys.H)) { _waterModel.FluidDragController.RotationalDragCoefficient += 0.1f; }
+
+                count = 0;
+            }
+            count++;
         }
 
 
@@ -87,6 +150,17 @@ namespace FarseerGames.WaterSampleXNA.Demos
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             _pyramid.Draw(ScreenManager.SpriteBatch, _refTexture);
             _platform.Draw(ScreenManager.SpriteBatch);
+
+            // draw text for properties
+            ScreenManager.SpriteBatch.DrawString(_font, "Properties:", new Vector2(ScreenManager.ScreenWidth - 210, 50), Color.White);
+            ScreenManager.SpriteBatch.DrawString(_font, "Wave Max: " + Convert.ToString(_waterModel.WaveController.WaveGeneratorMax), new Vector2(ScreenManager.ScreenWidth - 200, 65), Color.White);
+            ScreenManager.SpriteBatch.DrawString(_font, "Wave Min: " + Convert.ToString(_waterModel.WaveController.WaveGeneratorMin), new Vector2(ScreenManager.ScreenWidth - 200, 80), Color.White);
+            ScreenManager.SpriteBatch.DrawString(_font, "Wave Step: " + Convert.ToString(_waterModel.WaveController.WaveGeneratorStep), new Vector2(ScreenManager.ScreenWidth - 200, 95), Color.White);
+
+            ScreenManager.SpriteBatch.DrawString(_font, "Density: " + Convert.ToString(_waterModel.FluidDragController.Density), new Vector2(ScreenManager.ScreenWidth - 200, 110), Color.White);
+            ScreenManager.SpriteBatch.DrawString(_font, "Linear Drag: " + Convert.ToString(_waterModel.FluidDragController.LinearDragCoefficient), new Vector2(ScreenManager.ScreenWidth - 200, 125), Color.White);
+            ScreenManager.SpriteBatch.DrawString(_font, "Angular Drag: " + Convert.ToString(_waterModel.FluidDragController.RotationalDragCoefficient), new Vector2(ScreenManager.ScreenWidth - 200, 140), Color.White);
+
             ScreenManager.SpriteBatch.End();
 
             ScreenManager.GraphicsDevice.RenderState.CullMode = CullMode.None;
@@ -94,7 +168,7 @@ namespace FarseerGames.WaterSampleXNA.Demos
             // create the triangle strip
             CreateWaterVertexBuffer();
 
-            // set the devices vertex declaration
+            // set the devices vertex declaration NOTICE - the vertex type is the same as we use when we create the vertex buffer
             ScreenManager.GraphicsDevice.VertexDeclaration = new VertexDeclaration(ScreenManager.GraphicsDevice,
                                                                                    VertexPositionColor.VertexElements);
 
@@ -106,9 +180,9 @@ namespace FarseerGames.WaterSampleXNA.Demos
             effect.View = _cameraMatrix;
             effect.Projection = _projectionMatrix;
 
-            effect.Alpha = 0.5f;
+            effect.Alpha = 0.5f;    // this effect supports a blending mode
 
-            effect.VertexColorEnabled = true;
+            effect.VertexColorEnabled = true;   // we must enable vertex coloring with this effect
             effect.Begin();
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
@@ -124,13 +198,14 @@ namespace FarseerGames.WaterSampleXNA.Demos
 
         public void CreateWaterVertexBuffer()
         {
+            // here we create a vertex buffer to hold position and color...this could be changed to hold many other elements for special effects that use a custom shader
             _vertices = new VertexPositionColor[_waterModel.WaveController.NodeCount * 2];
 
-            // start at bottom left
+            // start at bottom left... this just sets the first corner of the triangle strip to the bottom left
             Vector3 position = new Vector3(_waterModel.WaveController.Position.X, _waterModel.WaveController.Position.Y + _waterModel.WaveController.Height, 0);
             _vertices[0] = new VertexPositionColor(position, Color.Aquamarine); // save it to the buffer
 
-            // for each point on the wave
+            // for each point on the wave   
             for (int i = 0; i < _waterModel.WaveController.NodeCount; i += 2)
             {
                 position = new Vector3(_waterModel.WaveController.XPosition[i],
