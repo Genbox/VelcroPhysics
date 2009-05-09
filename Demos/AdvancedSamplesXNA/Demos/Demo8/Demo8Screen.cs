@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
+using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
 using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
@@ -17,6 +18,8 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
         private Geom _leftGeom;
         private Geom _rightGeom;
         private Geom _selectedGeom;
+        private PolygonBrush _leftPolyBrush;
+        private PolygonBrush _rightPolyBrush;
 
         public override void Initialize()
         {
@@ -26,7 +29,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
             PhysicsSimulatorView.EnableEdgeView = true;
             PhysicsSimulatorView.EnableContactView = false;
             PhysicsSimulatorView.EnableAABBView = false;
-            PhysicsSimulatorView.EnablePerformancePanelView = false;
+            PhysicsSimulatorView.EnablePerformancePanelView = true;
             PhysicsSimulatorView.EnableCoordinateAxisView = false;
             PhysicsSimulatorView.EdgeColor = Color.Red;
             PhysicsSimulatorView.EdgeLineThickness = 2;
@@ -80,7 +83,14 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Tab = Simplify",
                                                  new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing), Color.White);
+
             ScreenManager.SpriteBatch.End();
+
+            if (_leftGeom != null)
+                _leftPolyBrush.Draw(_leftGeom.Position, _leftGeom.Rotation);
+
+            if (_rightGeom != null)
+                _rightPolyBrush.Draw(_rightGeom.Position, _rightGeom.Rotation);
 
             base.Draw(gameTime);
         }
@@ -338,6 +348,8 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
 
             _rightGeom = null;
             _leftGeom = null;
+            _leftPolyBrush = null;
+            _rightPolyBrush = null;
 
             Body body = BodyFactory.Instance.CreatePolygonBody(PhysicsSimulator, product, 1);
             body.Position = ScreenManager.ScreenCenter;
@@ -346,6 +358,8 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
             Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, product, 0);
 
             _leftGeom = geom;
+            _leftPolyBrush = new PolygonBrush(product, Color.White, Color.Black, 1);
+            _leftPolyBrush.Load(ScreenManager.GraphicsDevice);
         }
 
         private void AddCircle(int radius, int numSides)
@@ -356,7 +370,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
             body.IsStatic = true;
             Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, verts, 0);
 
-            SetGeom(geom);
+            SetGeom(geom, verts);
         }
 
         private void AddRectangle(int width, int height)
@@ -367,18 +381,22 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
             body.IsStatic = true;
             Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, verts, 0);
 
-            SetGeom(geom);
+            SetGeom(geom, verts);
         }
 
-        private void SetGeom(Geom geom)
+        private void SetGeom(Geom geom, Vertices vertices)
         {
             if (_leftGeom == null)
             {
                 _leftGeom = geom;
+                _leftPolyBrush = new PolygonBrush(vertices, Color.White, Color.Black, 1);
+                _leftPolyBrush.Load(ScreenManager.GraphicsDevice);
             }
             else if (_rightGeom == null)
             {
                 _rightGeom = geom;
+                _rightPolyBrush = new PolygonBrush(vertices, Color.White, Color.Black, 1);
+                _rightPolyBrush.Load(ScreenManager.GraphicsDevice);
             }
         }
 
