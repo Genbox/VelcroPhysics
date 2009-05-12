@@ -20,10 +20,12 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
         private Geom _selectedGeom;
         private PolygonBrush _leftPolyBrush;
         private PolygonBrush _rightPolyBrush;
+        private List<Body> _simulatedPolyBodies;
+        private List<PolygonBrush> _simulatedPolyBrushes;
 
         public override void Initialize()
         {
-            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
+            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 250));
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
             PhysicsSimulatorView.EnableVerticeView = true;
             PhysicsSimulatorView.EnableEdgeView = true;
@@ -38,6 +40,8 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
             DebugViewEnabled = true;
 
             _messages = new List<TextMessage>();
+            _simulatedPolyBrushes = new List<PolygonBrush>();
+            _simulatedPolyBodies = new List<Body>();
 
             base.Initialize();
         }
@@ -54,11 +58,28 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
                 }
             }
 
+            if (_leftGeom != null)
+                _leftGeom.CollisionEnabled = false;
+
+            if (_rightGeom != null)
+                _rightGeom.CollisionEnabled = false;
+
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
 
         public override void Draw(GameTime gameTime)
         {
+            if (_leftGeom != null)
+                _leftPolyBrush.Draw(_leftGeom.Position, _leftGeom.Rotation);
+
+            if (_rightGeom != null)
+                _rightPolyBrush.Draw(_rightGeom.Position, _rightGeom.Rotation);
+
+            for (int i = 0; i < _simulatedPolyBodies.Count; i++)
+            {
+                _simulatedPolyBrushes[i].Draw(_simulatedPolyBodies[i].Position, _simulatedPolyBodies[i].Rotation);
+            }
+            
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             for (int i = _messages.Count - 1; i >= 0; i--)
             {
@@ -67,30 +88,27 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
             }
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "A,S,D = Create Rectangle",
-                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 6), Color.White);
+                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 7), Color.White);
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Q,W,E = Create Circle",
-                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 5), Color.White);
+                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 6), Color.White);
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Click to Drag polygons",
-                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 4), Color.White);
+                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 5), Color.White);
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Space = Union",
-                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 3), Color.White);
+                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 4), Color.White);
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Backspace = Subtract",
-                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 2), Color.White);
+                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 3), Color.White);
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Tab = Simplify",
-                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing), Color.White);
+                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 2), Color.White);
+
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Enter = Add to Simulation",
+                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing), Color.White);
 
             ScreenManager.SpriteBatch.End();
-
-            if (_leftGeom != null)
-                _leftPolyBrush.Draw(_leftGeom.Position, _leftGeom.Rotation);
-
-            if (_rightGeom != null)
-                _rightPolyBrush.Draw(_rightGeom.Position, _rightGeom.Rotation);
 
             base.Draw(gameTime);
         }
@@ -197,6 +215,25 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
                     simple = Vertices.Simplify(simple);
 
                     SetProduct(simple);
+                }
+            }
+
+            // Add to Simulation
+            if (input.IsNewKeyPress(Keys.Enter))
+            {
+                if (_leftGeom != null)
+                {
+                    Body b = BodyFactory.Instance.CreatePolygonBody(_leftGeom.LocalVertices, 1.0f);
+                    b.Position = _leftGeom.Position;
+                    Geom g = GeomFactory.Instance.CreateGeom(b, _leftGeom);
+                    g.CollisionEnabled = true;
+                    
+                    PhysicsSimulator.Add(b);
+                    PhysicsSimulator.Add(g);
+
+                    _simulatedPolyBodies.Add(b);
+                    _simulatedPolyBrushes.Add(new PolygonBrush(g.LocalVertices, Color.Red, Color.Green, 0.2f));
+                    _simulatedPolyBrushes[_simulatedPolyBrushes.Count - 1].Load(ScreenManager.GraphicsDevice);
                 }
             }
         }
