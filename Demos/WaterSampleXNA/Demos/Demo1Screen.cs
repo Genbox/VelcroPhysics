@@ -139,6 +139,9 @@ namespace FarseerGames.WaterSampleXNA.Demos
                 if (input.CurrentKeyboardState.IsKeyDown(Keys.G)) { _waterModel.FluidDragController.RotationalDragCoefficient -= 0.1f; }
                 if (input.CurrentKeyboardState.IsKeyDown(Keys.H)) { _waterModel.FluidDragController.RotationalDragCoefficient += 0.1f; }
 
+                if (input.CurrentKeyboardState.IsKeyDown(Keys.Q)) { _waterModel.WaveController.DampingCoefficient -= 0.001f; }
+                if (input.CurrentKeyboardState.IsKeyDown(Keys.E)) { _waterModel.WaveController.DampingCoefficient += 0.001f; }
+
                 count = 0;
             }
             count++;
@@ -152,14 +155,15 @@ namespace FarseerGames.WaterSampleXNA.Demos
             _platform.Draw(ScreenManager.SpriteBatch);
 
             // draw text for properties
-            ScreenManager.SpriteBatch.DrawString(_font, "Properties:", new Vector2(ScreenManager.ScreenWidth - 210, 50), Color.White);
-            ScreenManager.SpriteBatch.DrawString(_font, "Wave Max: " + Convert.ToString(_waterModel.WaveController.WaveGeneratorMax), new Vector2(ScreenManager.ScreenWidth - 200, 65), Color.White);
-            ScreenManager.SpriteBatch.DrawString(_font, "Wave Min: " + Convert.ToString(_waterModel.WaveController.WaveGeneratorMin), new Vector2(ScreenManager.ScreenWidth - 200, 80), Color.White);
-            ScreenManager.SpriteBatch.DrawString(_font, "Wave Step: " + Convert.ToString(_waterModel.WaveController.WaveGeneratorStep), new Vector2(ScreenManager.ScreenWidth - 200, 95), Color.White);
+            ScreenManager.SpriteBatch.DrawString(_font, "Properties:", new Vector2(ScreenManager.ScreenWidth - 240, 50), Color.White);
+            ScreenManager.SpriteBatch.DrawString(_font, "+Z -X Wave Max: " + Convert.ToString(_waterModel.WaveController.WaveGeneratorMax), new Vector2(ScreenManager.ScreenWidth - 230, 65), Color.White);
+            ScreenManager.SpriteBatch.DrawString(_font, "+C -V Wave Min: " + Convert.ToString(_waterModel.WaveController.WaveGeneratorMin), new Vector2(ScreenManager.ScreenWidth - 230, 80), Color.White);
+            ScreenManager.SpriteBatch.DrawString(_font, "+B -N Wave Step: " + Convert.ToString(_waterModel.WaveController.WaveGeneratorStep), new Vector2(ScreenManager.ScreenWidth - 230, 95), Color.White);
+            ScreenManager.SpriteBatch.DrawString(_font, "+Q -E Damping: " + Convert.ToString(_waterModel.WaveController.DampingCoefficient), new Vector2(ScreenManager.ScreenWidth - 230, 110), Color.White);
 
-            ScreenManager.SpriteBatch.DrawString(_font, "Density: " + Convert.ToString(_waterModel.FluidDragController.Density), new Vector2(ScreenManager.ScreenWidth - 200, 110), Color.White);
-            ScreenManager.SpriteBatch.DrawString(_font, "Linear Drag: " + Convert.ToString(_waterModel.FluidDragController.LinearDragCoefficient), new Vector2(ScreenManager.ScreenWidth - 200, 125), Color.White);
-            ScreenManager.SpriteBatch.DrawString(_font, "Angular Drag: " + Convert.ToString(_waterModel.FluidDragController.RotationalDragCoefficient), new Vector2(ScreenManager.ScreenWidth - 200, 140), Color.White);
+            ScreenManager.SpriteBatch.DrawString(_font, "+A -S Density: " + Convert.ToString(_waterModel.FluidDragController.Density), new Vector2(ScreenManager.ScreenWidth - 230, 125), Color.White);
+            ScreenManager.SpriteBatch.DrawString(_font, "+D -F Linear Drag: " + Convert.ToString(_waterModel.FluidDragController.LinearDragCoefficient), new Vector2(ScreenManager.ScreenWidth - 230, 140), Color.White);
+            ScreenManager.SpriteBatch.DrawString(_font, "+G -H Angular Drag: " + Convert.ToString(_waterModel.FluidDragController.RotationalDragCoefficient), new Vector2(ScreenManager.ScreenWidth - 230, 155), Color.White);
 
             ScreenManager.SpriteBatch.End();
 
@@ -232,7 +236,8 @@ namespace FarseerGames.WaterSampleXNA.Demos
         public static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows how to do water in XNA");
+            sb.AppendLine("This demo shows how to do water in XNA.");
+            sb.AppendLine("Keys are listed next to their values.");
             sb.AppendLine(string.Empty);
             return sb.ToString();
         }
