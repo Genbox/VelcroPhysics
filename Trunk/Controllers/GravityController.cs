@@ -124,7 +124,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
                         if (body == body2 || (body.isStatic && body2.isStatic) || body2.IsDisposed || !body2.Enabled)
                             continue;
 
-                        Vector2 difference = body2.Position - body.Position;
+                        Vector2 difference = body2.position - body.position;
                         Vector2 differenceNormal = difference;
                         differenceNormal.Normalize();
 
@@ -148,7 +148,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 if (_pointList != null)
                     foreach (Vector2 anchor in _pointList)
                     {
-                        Vector2 difference = anchor - body.Position;
+                        Vector2 difference = anchor - body.position;
                         Vector2 differenceNormal = difference;
                         differenceNormal.Normalize();
 

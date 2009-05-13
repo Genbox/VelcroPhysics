@@ -116,26 +116,26 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             {
                 if (i < _bodies.Count - 1)
                 {
-                    if (_bodies[i].Position.X < _bodies[i + 1].Position.X)
+                    if (_bodies[i].position.X < _bodies[i + 1].position.X)
                     {
-                        midDeltaX = Math.Abs(_bodies[i].Position.X - _bodies[i + 1].Position.X) * 0.5f;
+                        midDeltaX = Math.Abs(_bodies[i].position.X - _bodies[i + 1].position.X) * 0.5f;
                         // find x axis midpoint
                     }
                     else
                     {
-                        midDeltaX = (_bodies[i + 1].Position.X - _bodies[i].Position.X) * 0.5f; // find x axis midpoint
+                        midDeltaX = (_bodies[i + 1].position.X - _bodies[i].position.X) * 0.5f; // find x axis midpoint
                     }
-                    if (_bodies[i].Position.Y < _bodies[i + 1].Position.Y)
+                    if (_bodies[i].position.Y < _bodies[i + 1].position.Y)
                     {
-                        midDeltaY = Math.Abs(_bodies[i].Position.Y - _bodies[i + 1].Position.Y) * 0.5f;
+                        midDeltaY = Math.Abs(_bodies[i].position.Y - _bodies[i + 1].position.Y) * 0.5f;
                         // find x axis midpoint
                     }
                     else
                     {
-                        midDeltaY = (_bodies[i + 1].Position.Y - _bodies[i].Position.Y) * 0.5f; // find x axis midpoint
+                        midDeltaY = (_bodies[i + 1].position.Y - _bodies[i].position.Y) * 0.5f; // find x axis midpoint
                     }
 
-                    midPoint = new Vector2(_bodies[i].Position.X + midDeltaX, _bodies[i].Position.Y + midDeltaY);
+                    midPoint = new Vector2(_bodies[i].position.X + midDeltaX, _bodies[i].position.Y + midDeltaY);
                     // set midPoint
                     switch (type)
                     {
@@ -181,28 +181,28 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             }
             if (_loop)
             {
-                if (_bodies[0].Position.X < _bodies[_bodies.Count - 1].Position.X)
+                if (_bodies[0].position.X < _bodies[_bodies.Count - 1].position.X)
                 {
-                    midDeltaX = Math.Abs(_bodies[0].Position.X - _bodies[_bodies.Count - 1].Position.X) * 0.5f;
+                    midDeltaX = Math.Abs(_bodies[0].position.X - _bodies[_bodies.Count - 1].position.X) * 0.5f;
                     // find x axis midpoint
                 }
                 else
                 {
-                    midDeltaX = (_bodies[_bodies.Count - 1].Position.X - _bodies[0].Position.X) * 0.5f;
+                    midDeltaX = (_bodies[_bodies.Count - 1].position.X - _bodies[0].position.X) * 0.5f;
                     // find x axis midpoint
                 }
-                if (_bodies[0].Position.Y < _bodies[_bodies.Count - 1].Position.Y)
+                if (_bodies[0].position.Y < _bodies[_bodies.Count - 1].position.Y)
                 {
-                    midDeltaY = Math.Abs(_bodies[0].Position.Y - _bodies[_bodies.Count - 1].Position.Y) * 0.5f;
+                    midDeltaY = Math.Abs(_bodies[0].position.Y - _bodies[_bodies.Count - 1].position.Y) * 0.5f;
                     // find x axis midpoint
                 }
                 else
                 {
-                    midDeltaY = (_bodies[_bodies.Count - 1].Position.Y - _bodies[0].Position.Y) * 0.5f;
+                    midDeltaY = (_bodies[_bodies.Count - 1].position.Y - _bodies[0].position.Y) * 0.5f;
                     // find x axis midpoint
                 }
 
-                midPoint = new Vector2(_bodies[0].Position.X + midDeltaX, _bodies[0].Position.Y + midDeltaY);
+                midPoint = new Vector2(_bodies[0].position.X + midDeltaX, _bodies[0].position.Y + midDeltaY);
                 // set midPoint
 
                 switch (type)
