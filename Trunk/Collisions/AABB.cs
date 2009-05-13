@@ -12,7 +12,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// Axis Aligned Bounding Box. Can be used to check for intersections with other AABBs.
     /// Use AABB.Intersect() to check for intersections.
     /// </summary>
-    public class AABB
+    public class AABB : IEquatable<AABB>
     {
         private const float _epsilon = .00001f;
         private Vector2 _vector;
@@ -77,9 +77,29 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Gets the vertices.
+        /// Gets or sets the position of the AABB
         /// </summary>
-        /// <returns></returns>
+        /// <value>The position.</value>
+        public Vector2 Position
+        {
+            get
+            {
+                return new Vector2((min.X + max.X) / 2f, (min.Y + max.Y) / 2f);
+            }
+            set
+            {
+                Vector2 newMin = new Vector2(value.X - (Width / 2f), value.Y - (Height / 2f));
+                Vector2 newMax = new Vector2(value.X + (Width / 2f), value.Y + (Height / 2f));
+
+                min = newMin;
+                max = newMax;
+            }
+        }
+
+        /// <summary>
+        /// Gets the vertices of the AABB.
+        /// </summary>
+        /// <returns>The corners of the AABB</returns>
         public Vertices GetVertices()
         {
             Vertices vertices = new Vertices();
@@ -96,7 +116,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns></returns>
         public Vector2 GetCenter()
         {
-            return new Vector2(Min.X + (Max.X - Min.X)/2, Min.Y + (Max.Y - Min.Y)/2);
+            return new Vector2(Min.X + (Max.X - Min.X) / 2, Min.Y + (Max.Y - Min.Y) / 2);
         }
 
         /// <summary>
@@ -111,10 +131,42 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
+        /// Gets the distance to the specified point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <returns>The distance</returns>
+        public float GetDistance(Vector2 point)
+        {
+            float result;
+            GetDistance(ref point, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the distance to the specified point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="distance">The distance.</param>
+        public void GetDistance(ref Vector2 point, out float distance)
+        {
+            float xDistance = Math.Abs(point.X - ((max.X + min.X) * .5f)) - (max.X - min.X) * .5f;
+            float yDistance = Math.Abs(point.Y - ((max.Y + min.Y) * .5f)) - (max.Y - min.Y) * .5f;
+
+            if (xDistance > 0 && yDistance > 0)
+            {
+                distance = (float)Math.Sqrt(xDistance * xDistance + yDistance * yDistance);
+            }
+            else
+            {
+                distance = Math.Max(xDistance, yDistance);
+            }
+        }
+
+        /// <summary>
         /// Updates the AABB with the specified vertices.
         /// </summary>
         /// <param name="vertices">The vertices.</param>
-        public void Update(ref Vertices vertices)
+        internal void Update(ref Vertices vertices)
         {
             min = vertices[0];
             max = min;
@@ -137,7 +189,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </returns>
         public bool Contains(Vector2 point)
         {
-            //using _epsilon to try and gaurd against float rounding errors.
+            //Using epsilon to try and gaurd against float rounding errors.
             if ((point.X > (min.X + _epsilon) && point.X < (max.X - _epsilon) &&
                  (point.Y > (min.Y + _epsilon) && point.Y < (max.Y - _epsilon))))
             {
@@ -155,7 +207,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </returns>
         public bool Contains(ref Vector2 point)
         {
-            //using _epsilon to try and gaurd against float rounding errors.
+            //using epsilon to try and gaurd against float rounding errors.
             if ((point.X > (min.X + _epsilon) && point.X < (max.X - _epsilon) &&
                  (point.Y > (min.Y + _epsilon) && point.Y < (max.Y - _epsilon))))
             {
@@ -165,10 +217,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Check if 2 AABB's intersects
+        /// Check if 2 AABBs intersects
         /// </summary>
-        /// <param name="aabb1">The aabb1.</param>
-        /// <param name="aabb2">The aabb2.</param>
+        /// <param name="aabb1">The first AABB.</param>
+        /// <param name="aabb2">The second AABB</param>
         /// <returns></returns>
         public static bool Intersect(AABB aabb1, AABB aabb2)
         {
@@ -180,6 +232,43 @@ namespace FarseerGames.FarseerPhysics.Collisions
             if (aabb1.min.Y > aabb2.Max.Y || aabb2.min.Y > aabb1.Max.Y)
             {
                 return false;
+            }
+            return true;
+        }
+
+        #region IEquatable<AABB> Members
+
+        public bool Equals(AABB other)
+        {
+            return ((this.min == other.min) && (this.max == other.max));
+        }
+
+        #endregion
+
+        public override bool Equals(object obj)
+        {
+            if (obj is AABB)
+            {
+                return this.Equals((AABB)obj);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.Min.GetHashCode() + this.Max.GetHashCode());
+        }
+
+        public static bool operator ==(AABB a, AABB b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(AABB a, AABB b)
+        {
+            if (!(a.Min != b.Min))
+            {
+                return (a.Max != b.Max);
             }
             return true;
         }
