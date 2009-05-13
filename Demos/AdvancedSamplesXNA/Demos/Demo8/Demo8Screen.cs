@@ -28,10 +28,10 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 250));
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
             PhysicsSimulatorView.EnableVerticeView = true;
-            PhysicsSimulatorView.EnableEdgeView = true;
+            PhysicsSimulatorView.EnableEdgeView = false;
             PhysicsSimulatorView.EnableContactView = false;
             PhysicsSimulatorView.EnableAABBView = false;
-            PhysicsSimulatorView.EnablePerformancePanelView = true;
+            PhysicsSimulatorView.EnablePerformancePanelView = false;
             PhysicsSimulatorView.EnableCoordinateAxisView = false;
             PhysicsSimulatorView.EdgeColor = Color.Red;
             PhysicsSimulatorView.EdgeLineThickness = 2;
