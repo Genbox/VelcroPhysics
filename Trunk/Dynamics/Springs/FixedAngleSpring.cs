@@ -7,6 +7,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
     /// </summary>
     public class FixedAngleSpring : Spring
     {
+        public event OneBodyDelegate SpringUpdated;
+
         private Body _body;
         private float _maxTorque = float.MaxValue;
         private float _targetAngle;
@@ -66,7 +68,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public override void Validate()
         {
-            //if _body is disposed then dispose the joint.
+            //if body is disposed then dispose the spring.
             if (_body.IsDisposed)
             {
                 Dispose();
@@ -77,20 +79,27 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         {
             base.Update(dt);
 
-            if (IsDisposed)
+            if (_body.isStatic)
                 return;
 
-            //calculate and apply spring force
+            if (!_body.Enabled)
+                return;
+
+            //Calculate and apply spring force
             float angleDifference = _targetAngle - _body.totalRotation;
-            float springTorque = SpringConstant*angleDifference;
+            float springTorque = SpringConstant * angleDifference;
             SpringError = angleDifference;
 
             //apply torque at anchor
-            if (!_body.IsStatic)
+            float torque1 = springTorque - DampingConstant * _body.AngularVelocity;
+            torque1 = Math.Min(Math.Abs(torque1 * _torqueMultiplier), _maxTorque) * Math.Sign(torque1);
+
+            if (torque1 != 0f)
             {
-                float torque1 = springTorque - DampingConstant*_body.AngularVelocity;
-                torque1 = Math.Min(Math.Abs(torque1*_torqueMultiplier), _maxTorque)*Math.Sign(torque1);
                 _body.ApplyTorque(torque1);
+
+                if (SpringUpdated != null)
+                    SpringUpdated(this, _body);
             }
         }
     }

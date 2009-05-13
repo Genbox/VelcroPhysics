@@ -7,6 +7,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
     /// </summary>
     public class AngleSpring : Spring
     {
+        public event TwoBodyDelegate SpringUpdated;
+
         private Body _body1;
         private Body _body2;
         private float _maxTorque = float.MaxValue;
@@ -90,7 +92,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public override void Validate()
         {
-            //if either of the springs connected bodies are disposed then dispose the joint.
+            //if either of the springs connected bodies are disposed then dispose the spring.
             if (_body1.IsDisposed || _body2.IsDisposed)
             {
                 Dispose();
@@ -101,27 +103,48 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         {
             base.Update(dt);
 
-            if (IsDisposed)
+            if (_body1.isStatic && _body2.isStatic)
                 return;
 
-            //calculate and apply spring force
-            float angleDifference = _body2.totalRotation - (_body1.totalRotation + _targetAngle);
-            float springTorque = SpringConstant*angleDifference;
-            SpringError = angleDifference; //keep track of '_springError' for breaking joint
+            if (!_body1.Enabled && !_body2.Enabled)
+                return;
 
-            //apply torque at anchor
+            //Calculate and apply spring force
+            float angleDifference = _body2.totalRotation - (_body1.totalRotation + _targetAngle);
+            float springTorque = SpringConstant * angleDifference;
+            SpringError = angleDifference;
+
+            bool changed = false;
+
+            //Apply torque at anchor
             if (!_body1.IsStatic)
             {
-                float torque1 = springTorque - DampingConstant*_body1.AngularVelocity;
-                torque1 = Math.Min(Math.Abs(torque1*_torqueMultiplier), _maxTorque)*Math.Sign(torque1);
-                _body1.ApplyTorque(torque1);
+                float torque1 = springTorque - DampingConstant * _body1.AngularVelocity;
+                torque1 = Math.Min(Math.Abs(torque1 * _torqueMultiplier), _maxTorque) * Math.Sign(torque1);
+
+                if (torque1 != 0f)
+                {
+                    _body1.ApplyTorque(torque1);
+                    changed = true;
+                }
             }
 
             if (!_body2.IsStatic)
             {
-                float torque2 = -springTorque - DampingConstant*_body2.AngularVelocity;
-                torque2 = Math.Min(Math.Abs(torque2*_torqueMultiplier), _maxTorque)*Math.Sign(torque2);
-                _body2.ApplyTorque(torque2);
+                float torque2 = -springTorque - DampingConstant * _body2.AngularVelocity;
+                torque2 = Math.Min(Math.Abs(torque2 * _torqueMultiplier), _maxTorque) * Math.Sign(torque2);
+
+                if (torque2 != 0f)
+                {
+                    _body2.ApplyTorque(torque2);
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                if (SpringUpdated != null)
+                    SpringUpdated(this, _body1, _body2);
             }
         }
     }

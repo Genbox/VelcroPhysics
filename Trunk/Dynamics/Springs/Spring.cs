@@ -3,22 +3,46 @@ using FarseerGames.FarseerPhysics.Interfaces;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
+    //public class OneBodyEventArgs : EventArgs
+    //{
+    //    public OneBodyEventArgs(Body body)
+    //    {
+            
+    //    }
+    //}
+
+    public delegate bool OneBodyDelegate(object sender, Body body);
+    public delegate bool TwoBodyDelegate(object sender, Body body1, Body body2);
+
     /// <summary>
     /// Provides common functionality for springs.
     /// </summary>
     public abstract class Spring : IIsDisposable
     {
-        private bool _isDisposed;
-        
         /// <summary>
         /// The Breakpoint simply indicates the maximum Value the JointError can be before it breaks.
+        /// The default value is float.MaxValue
         /// </summary>
         public float Breakpoint = float.MaxValue;
 
+        /// <summary>
+        /// The amount of spring damping to be applied.
+        /// </summary>
         public float DampingConstant;
+
+        /// <summary>
+        /// Determines if the spring is enabled or not.
+        /// </summary>
         public bool Enabled = true;
+
+        /// <summary>
+        /// The amount of spring force to be applied.
+        /// </summary>
         public float SpringConstant;
 
+        /// <summary>
+        /// Tag that can contain a user specified object.
+        /// </summary>
         public Object Tag { get; set; }
 
         /// <summary>
@@ -27,16 +51,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         /// </summary>
         /// <Value>The spring error.</Value>
         public float SpringError { get; protected set; }
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
 
         /// <summary>
         /// Fires when the spring is broken.
@@ -56,24 +70,24 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
                 Broke(this, EventArgs.Empty);
         }
 
-
         protected virtual void Dispose(bool disposing)
         {
-            //subclasses can override incase they need to dispose of resources
-            //otherwise do nothing.
-            if (!IsDisposed)
-            {
-                if (disposing)
-                {
-                    //dispose managed resources 
-                }
-
-                //dispose unmanaged resources
-            }
             IsDisposed = true;
         }
 
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
+
         #region IIsDisposable Members
+
+        private bool _isDisposed;
 
         public bool IsDisposed
         {
@@ -82,6 +96,5 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         }
 
         #endregion
-
     }
 }
