@@ -7,6 +7,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class AngleJoint : Joint
     {
+        public event TwoBodyDelegate JointUpdated;
+
         private Body _body1;
         private Body _body2;
         private float _massFactor;
@@ -81,29 +83,35 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (IsDisposed)
-                return;
-
             JointError = (_body2.totalRotation - _body1.totalRotation) - _targetAngle;
 
-            _velocityBias = -BiasFactor*inverseDt*JointError;
+            _velocityBias = -BiasFactor * inverseDt * JointError;
 
-            _massFactor = (1 - Softness)/(_body1.inverseMomentOfInertia + _body2.inverseMomentOfInertia);
+            _massFactor = (1 - Softness) / (_body1.inverseMomentOfInertia + _body2.inverseMomentOfInertia);
         }
 
         public override void Update()
         {
             base.Update();
 
-            if (IsDisposed)
+            if (_body1.isStatic && _body2.isStatic)
+                return;
+          
+            if (!_body1.Enabled && !_body2.Enabled)
                 return;
 
-            float angularImpulse = (_velocityBias - _body2.AngularVelocity + _body1.AngularVelocity)*_massFactor;
+            float angularImpulse = (_velocityBias - _body2.AngularVelocity + _body1.AngularVelocity) * _massFactor;
 
-            _body1.AngularVelocity -= _body1.inverseMomentOfInertia*Math.Sign(angularImpulse)*
-                                      Math.Min(Math.Abs(angularImpulse), _maxImpulse);
-            _body2.AngularVelocity += _body2.inverseMomentOfInertia*Math.Sign(angularImpulse)*
-                                      Math.Min(Math.Abs(angularImpulse), _maxImpulse);
+            if (angularImpulse != 0f)
+            {
+                _body1.AngularVelocity -= _body1.inverseMomentOfInertia * Math.Sign(angularImpulse) *
+                                          Math.Min(Math.Abs(angularImpulse), _maxImpulse);
+                _body2.AngularVelocity += _body2.inverseMomentOfInertia * Math.Sign(angularImpulse) *
+                                          Math.Min(Math.Abs(angularImpulse), _maxImpulse);
+
+                if (JointUpdated != null)
+                    JointUpdated(this, _body1, _body2);
+            }
         }
     }
 }

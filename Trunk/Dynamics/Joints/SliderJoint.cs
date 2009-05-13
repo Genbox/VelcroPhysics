@@ -13,6 +13,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class SliderJoint : Joint
     {
+        public event TwoBodyDelegate JointUpdated;
+
         private float _accumulatedImpulse;
         private Vector2 _anchor;
         private Vector2 _anchor1;
@@ -175,9 +177,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (IsDisposed)
-                return;
-
             //calc _r1 and _r2 from the anchors
             _body1.GetBodyMatrix(out _body1MatrixTemp);
             _body2.GetBodyMatrix(out _body2MatrixTemp);
@@ -266,7 +265,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         {
             base.Update();
 
-            if (IsDisposed)
+            if (_body1.isStatic && _body2.isStatic)
+                return;
+
+            if (!_body1.Enabled && !_body2.Enabled)
                 return;
 
             if (!_upperLimitViolated && !_lowerLimitViolated)

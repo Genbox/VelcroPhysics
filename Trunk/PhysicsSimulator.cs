@@ -557,7 +557,7 @@ namespace FarseerGames.FarseerPhysics
             {
                 if (!springList[i].Enabled || springList[i].IsDisposed)
                     continue;
-                
+
                 springList[i].Update(dt);
             }
 
@@ -591,10 +591,10 @@ namespace FarseerGames.FarseerPhysics
 
             for (int i = 0; i < jointList.Count; i++)
             {
-                if (jointList[i].Enabled)
-                {
-                    jointList[i].PreStep(inverseDt);
-                }
+                if (!jointList[i].Enabled || jointList[i].IsDisposed)
+                    continue;
+
+                jointList[i].PreStep(inverseDt);
             }
 
             for (int i = 0; i < arbiterList.Count; i++)
@@ -611,10 +611,10 @@ namespace FarseerGames.FarseerPhysics
             {
                 for (int i = 0; i < jointList.Count; i++)
                 {
-                    if (jointList[i].Enabled)
-                    {
-                        jointList[i].Update();
-                    }
+                    if (!jointList[i].Enabled || jointList[i].IsDisposed)
+                        continue;
+
+                    jointList[i].Update();
                 }
 
                 for (int i = 0; i < arbiterList.Count; i++)

@@ -3,17 +3,6 @@ using FarseerGames.FarseerPhysics.Interfaces;
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 {
-    //public class OneBodyEventArgs : EventArgs
-    //{
-    //    public OneBodyEventArgs(Body body)
-    //    {
-            
-    //    }
-    //}
-
-    public delegate bool OneBodyDelegate(object sender, Body body);
-    public delegate bool TwoBodyDelegate(object sender, Body body1, Body body2);
-
     /// <summary>
     /// Provides common functionality for springs.
     /// </summary>

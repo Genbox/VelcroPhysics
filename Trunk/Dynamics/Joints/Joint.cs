@@ -8,17 +8,21 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public abstract class Joint : IIsDisposable
     {
-        private bool _isDisposed;
         public float BiasFactor = .2f;
 
         /// <summary>
         /// The Breakpoint simply indicates the maximum Value the JointError can be before it breaks.
+        /// The default value is float.MaxValue
         /// </summary>
         public float Breakpoint = float.MaxValue;
 
         public bool Enabled = true;
+
         public float Softness;
 
+        /// <summary>
+        /// Tag that can contain a user specified object.
+        /// </summary>
         public Object Tag { get; set; }
 
         /// <summary>
@@ -27,16 +31,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// </summary>
         /// <Value>The joint error.</Value>
         public float JointError { get; protected set; }
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
 
         /// <summary>
         /// Fires when the joint is broken.
@@ -59,19 +53,20 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         protected virtual void Dispose(bool disposing)
         {
-            //subclasses can override incase they need to dispose of resources
-            //otherwise do nothing.
-            if (!IsDisposed)
-            {
-                if (disposing)
-                {
-                    //dispose managed resources 
-                }
-
-                //dispose unmanaged resources
-            }
             IsDisposed = true;
         }
+
+        #region IDisposable Members
+
+        private bool _isDisposed;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
 
         #region IIsDisposable Members
 
@@ -82,6 +77,5 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         }
 
         #endregion
-
     }
 }
