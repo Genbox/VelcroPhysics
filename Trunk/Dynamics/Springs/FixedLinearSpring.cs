@@ -12,11 +12,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
     /// </summary>
     public class FixedLinearSpring : Spring
     {
+        public event OneBodyDelegate SpringUpdated;
+
         private Body _body;
         private Vector2 _bodyAttachPoint;
-        private Vector2 _difference = Vector2.Zero;
-        private float _restLength;
         private Vector2 _worldAttachPoint;
+        private float _restLength;
 
         public FixedLinearSpring()
         {
@@ -42,16 +43,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         {
             get { return _body; }
             set { _body = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the position.
-        /// </summary>
-        /// <Value>The position.</Value>
-        public Vector2 Position
-        {
-            get { return _worldAttachPoint; }
-            set { _worldAttachPoint = value; }
         }
 
         /// <summary>
@@ -86,7 +77,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
 
         public override void Validate()
         {
-            //if either of the joint's connected bodies are disposed then dispose the joint.
+            //If connected body is disposed then dispose the spring.
             if (_body.IsDisposed)
             {
                 Dispose();
@@ -97,42 +88,50 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         {
             base.Update(dt);
 
-            if (IsDisposed)
-            {
-                return;
-            }
-
+            //If the body cant be moved, dont update the body.
             if (_body.isStatic)
-            {
                 return;
-            }
 
-            //calculate and apply spring _force
-            //F = -{s(L-r) + d[(v1-v2).L]/l}L/l   : s=spring const, d = dampning const, L=_difference vector (p1-p2), l = _difference magnitude, r = rest length,            
+            if (!_body.Enabled)
+                return;
+
+            //F = -{s(L-r) + d[(v1-v2).L]/l}L/l   : s=spring const, d = dampning const, L=difference vector (p1-p2), l = difference magnitude, r = rest length,            
             _body.GetWorldPosition(ref _bodyAttachPoint, out _bodyWorldPoint);
+
+            //Get the difference between the two attachpoints
             Vector2.Subtract(ref _bodyWorldPoint, ref _worldAttachPoint, out _difference);
             float differenceMagnitude = _difference.Length();
+
+            //If already close to rest length then return
             if (differenceMagnitude < _epsilon)
-            {
                 return;
-            } //if already close to rest length then return
 
-            //calculate spring _force (kX)
-            SpringError = differenceMagnitude - _restLength;
             Vector2.Normalize(ref _difference, out _differenceNormalized);
-            _springForce = SpringConstant*SpringError; //kX
 
-            //calculate relative velocity 
+            //Calculate the spring error
+            SpringError = differenceMagnitude - _restLength;
+
+            //Calculate spring force (kX)
+            _springForce = SpringConstant * SpringError; //kX
+
+            //Calculate relative velocity 
             _body.GetVelocityAtLocalPoint(ref _bodyAttachPoint, out _bodyVelocity);
 
-            //calculate dampning _force (bV)
+            //Calculate dampning force (bV)
             Vector2.Dot(ref _bodyVelocity, ref _difference, out _temp);
-            _dampningForce = DampingConstant*_temp/differenceMagnitude; //bV     
+            _dampningForce = DampingConstant * _temp / differenceMagnitude; //bV     
 
-            //calculate final _force (spring + dampning)
+            //calculate final force (spring + dampning)
             Vector2.Multiply(ref _differenceNormalized, -(_springForce + _dampningForce), out _force);
 
-            _body.ApplyForceAtLocalPoint(ref _force, ref _bodyAttachPoint);
+            if (_force != Vector2.Zero)
+            {
+                //Apply the force to the body
+                _body.ApplyForceAtLocalPoint(ref _force, ref _bodyAttachPoint);
+
+                if (SpringUpdated != null)
+                    SpringUpdated(this, _body);
+            }
         }
 
         #region ApplyForce variables
@@ -145,6 +144,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
         private Vector2 _force;
         private float _springForce;
         private float _temp;
+        private Vector2 _difference = Vector2.Zero;
 
         #endregion
     }

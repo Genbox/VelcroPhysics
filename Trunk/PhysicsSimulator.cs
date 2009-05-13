@@ -547,29 +547,27 @@ namespace FarseerGames.FarseerPhysics
         {
             for (int i = 0; i < controllerList.Count; i++)
             {
-                if (controllerList[i].Enabled)
-                {
-                    controllerList[i].Update(dt);
-                }
+                if (!controllerList[i].Enabled || controllerList[i].IsDisposed)
+                    continue;
+
+                controllerList[i].Update(dt);
             }
 
             for (int i = 0; i < springList.Count; i++)
             {
-                if (springList[i].Enabled)
-                {
-                    springList[i].Update(dt);
-                }
+                if (!springList[i].Enabled || springList[i].IsDisposed)
+                    continue;
+                
+                springList[i].Update(dt);
             }
 
             for (int i = 0; i < bodyList.Count; i++)
             {
                 _body = bodyList[i];
-                if (!_body.Enabled || _body.isStatic)
-                {
+                if (!_body.Enabled || _body.isStatic || _body.IsDisposed)
                     continue;
-                }
 
-                //apply accumulated external impules
+                //Apply accumulated external impules
                 _body.ApplyImpulses();
 
                 if (!_body.IgnoreGravity)
@@ -577,12 +575,8 @@ namespace FarseerGames.FarseerPhysics
                     _gravityForce.X = _gravity.X * _body.mass;
                     _gravityForce.Y = _gravity.Y * _body.mass;
 
-                    #region INLINE: _body.ApplyForce(ref _gravityForce);
-
                     _body.force.X = _body.force.X + _gravityForce.X;
                     _body.force.Y = _body.force.Y + _gravityForce.Y;
-
-                    #endregion
                 }
 
                 _body.IntegrateVelocity(dt);
