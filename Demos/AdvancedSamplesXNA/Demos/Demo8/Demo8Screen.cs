@@ -232,8 +232,8 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
                     PhysicsSimulator.Add(g);
 
                     _simulatedPolyBodies.Add(b);
-                    _simulatedPolyBrushes.Add(new PolygonBrush(g.LocalVertices, Color.Red, Color.Green, 0.2f));
-                    _simulatedPolyBrushes[_simulatedPolyBrushes.Count - 1].Load(ScreenManager.GraphicsDevice);
+                    _simulatedPolyBrushes.Add(new PolygonBrush(g.LocalVertices, Color.Red, Color.DarkRed, 1.5f, 0.2f));
+                    _simulatedPolyBrushes[_simulatedPolyBrushes.Count - 1].Load(ScreenManager.SpriteBatch, ScreenManager.GraphicsDevice);
                 }
             }
         }
@@ -395,8 +395,8 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
             Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, product, 0);
 
             _leftGeom = geom;
-            _leftPolyBrush = new PolygonBrush(product, Color.White, Color.Black, 1);
-            _leftPolyBrush.Load(ScreenManager.GraphicsDevice);
+            _leftPolyBrush = new PolygonBrush(product, Color.White, Color.Black, 1.5f, 1);
+            _leftPolyBrush.Load(ScreenManager.SpriteBatch, ScreenManager.GraphicsDevice);
         }
 
         private void AddCircle(int radius, int numSides)
@@ -426,14 +426,14 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
             if (_leftGeom == null)
             {
                 _leftGeom = geom;
-                _leftPolyBrush = new PolygonBrush(vertices, Color.White, Color.Black, 1);
-                _leftPolyBrush.Load(ScreenManager.GraphicsDevice);
+                _leftPolyBrush = new PolygonBrush(vertices, Color.White, Color.Black, 1.5f, 1);
+                _leftPolyBrush.Load(ScreenManager.SpriteBatch, ScreenManager.GraphicsDevice);
             }
             else if (_rightGeom == null)
             {
                 _rightGeom = geom;
-                _rightPolyBrush = new PolygonBrush(vertices, Color.White, Color.Black, 1);
-                _rightPolyBrush.Load(ScreenManager.GraphicsDevice);
+                _rightPolyBrush = new PolygonBrush(vertices, Color.White, Color.Black, 1.5f, 1);
+                _rightPolyBrush.Load(ScreenManager.SpriteBatch, ScreenManager.GraphicsDevice);
             }
         }
 
