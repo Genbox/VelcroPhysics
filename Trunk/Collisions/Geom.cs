@@ -571,9 +571,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Vector2.TransformNormal(ref localNormal, ref _matrix, out worldNormal);
         }
 
-        private void Update(ref Vector2 position, ref float orientation)
+        private void Update(ref Vector2 position, ref float rotation)
         {
-            Matrix.CreateRotationZ(orientation + _rotationOffset, out _matrix);
+            Matrix.CreateRotationZ(rotation + _rotationOffset, out _matrix);
 
             #region INLINE: Vector2.Transform(ref _offset, ref _matrix, out _newPos);
 

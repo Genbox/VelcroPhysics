@@ -212,7 +212,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     throw new ArgumentException("Moment of inertia cannot be 0 or less", "value");
 
                 _momentOfInertia = value;
-        
+
                 if (isStatic)
                     inverseMomentOfInertia = 0;
                 else
@@ -690,7 +690,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             force.X += amount.X;
             force.Y += amount.Y;
         }
-        
+
         /// <summary>
         /// Clears the force of the body.
         /// This method gets called after each update.
@@ -898,59 +898,80 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             AngularVelocity = _previousAngularVelocity + _dw;
         }
 
+        private bool _changed;
+
         /// <summary>
         /// Use internally by the engine to integrate the position.
         /// </summary>
         /// <param name="dt">The delta time.</param>
         internal void IntegratePosition(float dt)
         {
+            //
             //Linear
-            #region INLINE: Vector2.Add(ref linearVelocity, ref linearVelocityBias, out _bodylinearVelocity);
+            //
 
-            _bodylinearVelocity.X = LinearVelocity.X + linearVelocityBias.X;
-            _bodylinearVelocity.Y = LinearVelocity.Y + linearVelocityBias.Y;
+            //Linear velocity
+            _tempLinearVelocity.X = LinearVelocity.X + linearVelocityBias.X;
+            _tempLinearVelocity.Y = LinearVelocity.Y + linearVelocityBias.Y;
 
-            #endregion
+            //Position change
+            _tempDeltaPosition.X = _tempLinearVelocity.X * dt;
+            _tempDeltaPosition.Y = _tempLinearVelocity.Y * dt;
 
-            #region INLINE: Vector2.Multiply(ref _bodylinearVelocity, dt, out _dp);
+            if (_tempDeltaPosition != Vector2.Zero)
+            {
+                //Save old position
+                _previousPosition = position;
 
-            _dp.X = _bodylinearVelocity.X * dt;
-            _dp.Y = _bodylinearVelocity.Y * dt;
+                //Apply position change
+                position.X = _previousPosition.X + _tempDeltaPosition.X;
+                position.Y = _previousPosition.Y + _tempDeltaPosition.Y;
+                _changed = true;
+            }
 
-            #endregion
-
-            _previousPosition = position;
-
-            #region INLINE: Vector2.Add(ref _previousPosition, ref _dp, out position);
-
-            position.X = _previousPosition.X + _dp.X;
-            position.Y = _previousPosition.Y + _dp.Y;
-
-            #endregion
-
+            //Reset linear velocity bias
             linearVelocityBias.X = 0;
             linearVelocityBias.Y = 0;
 
+            //
             //Angular
-            _bodyAngularVelocity = AngularVelocity + angularVelocityBias;
-            _rotationChange = _bodyAngularVelocity * dt;
-            _previousRotation = rotation;
-            rotation = _previousRotation + _rotationChange;
+            //
 
-            //Calculate floating point remainder of rotation
-            int z = (int)(rotation / MathHelper.TwoPi);
-            if (rotation < 0)
-                z--;
-            rotation = (rotation - z * MathHelper.TwoPi);
+            //Angular velocity
+            _tempAngularVelocity = AngularVelocity + angularVelocityBias;
 
-            _revolutions += z;
+            //Rotation change
+            _tempDeltaRotation = _tempAngularVelocity * dt;
 
-            totalRotation = rotation + _revolutions * MathHelper.TwoPi;
-            angularVelocityBias = 0; //reset angVelBias to zero
-
-            if (Updated != null)
+            if (_tempDeltaRotation != 0f)
             {
-                Updated(ref position, ref rotation);
+                //Save old rotation
+                _previousRotation = rotation;
+
+                //Apply rotation change
+                rotation = _previousRotation + _tempDeltaRotation;
+                _changed = true;
+
+                //Calculate floating point remainder of rotation
+                int z = (int)(rotation / MathHelper.TwoPi);
+                if (rotation < 0)
+                    z--;
+                rotation = (rotation - z * MathHelper.TwoPi);
+
+                _revolutions += z;
+
+                totalRotation = rotation + _revolutions * MathHelper.TwoPi;
+            }
+
+            //Reset angular velocity bias
+            angularVelocityBias = 0;
+
+            if (_changed)
+            {
+                if (Updated != null)
+                {
+                    Updated(ref position, ref rotation);
+                }
             }
         }
 
@@ -1040,10 +1061,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         #region IntegeratePosition variables
 
-        private float _bodyAngularVelocity;
-        private Vector2 _bodylinearVelocity;
-        private Vector2 _dp;
-        private float _rotationChange;
+        private float _tempAngularVelocity;
+        private Vector2 _tempLinearVelocity;
+        private Vector2 _tempDeltaPosition;
+        private float _tempDeltaRotation;
 
         #endregion
 
