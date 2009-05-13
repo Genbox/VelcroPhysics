@@ -14,6 +14,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class FixedRevoluteJoint : Joint
     {
+        public event OneBodyDelegate JointUpdated;
+
         private Vector2 _accumulatedImpulse;
         private Vector2 _anchor;
         private Matrix _b;
@@ -101,7 +103,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (IsDisposed)
+            if (_body.isStatic)
+                return;
+
+            if (!_body.Enabled)
                 return;
 
             _bodyInverseMass = _body.inverseMass;
@@ -163,7 +168,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         {
             base.Update();
 
-            if (IsDisposed)
+            if (_body.isStatic)
+                return;
+
+            if (!_body.Enabled)
                 return;
 
             Calculator.Cross(ref _body.AngularVelocity, ref _r1, out _vectorTemp1);

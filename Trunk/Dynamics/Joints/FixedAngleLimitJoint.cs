@@ -11,6 +11,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class FixedAngleLimitJoint : Joint
     {
+        public event OneBodyDelegate JointUpdated;
+
         private float _accumlatedAngularImpulseOld;
         private float _accumulatedAngularImpulse;
         private float _angularImpulse;
@@ -85,7 +87,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (IsDisposed)
+            if (_body.isStatic)
+                return;
+
+            if (!_body.Enabled)
                 return;
 
             _difference = _body.totalRotation;
@@ -141,7 +146,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         {
             base.Update();
 
-            if (IsDisposed)
+            if (_body.isStatic)
+                return;
+
+            if (!_body.Enabled)
                 return;
 
             if (!_upperLimitViolated && !_lowerLimitViolated)

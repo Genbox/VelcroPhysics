@@ -11,6 +11,9 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
+    public delegate bool OneBodyDelegate(object sender, Body body);
+    public delegate bool TwoBodyDelegate(object sender, Body body1, Body body2);
+
     /// <summary>
     /// The Body handles all the physics of motion: position, velocity, acceleration
     /// forces, torques, etc...</para>

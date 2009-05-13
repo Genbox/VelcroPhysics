@@ -12,6 +12,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class PinJoint : Joint
     {
+        public event TwoBodyDelegate JointUpdated;
+
         private float _accumulatedImpulse;
         private Vector2 _anchor1;
         private Vector2 _anchor2;
@@ -138,10 +140,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (IsDisposed)
+            //TODO: Take a look at pre-checks and updated event 
+            if (_body1.isStatic && _body2.isStatic)
                 return;
 
-            //calc _r1 and _r2 from the anchors
+            if (!_body1.Enabled && !_body2.Enabled)
+                return;
+
+            //calc r1 and r2 from the anchors
             _body1.GetBodyMatrix(out _body1MatrixTemp);
             _body2.GetBodyMatrix(out _body2MatrixTemp);
             Vector2.TransformNormal(ref _anchor1, ref _body1MatrixTemp, out _r1);
@@ -169,7 +175,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                        _body2.inverseMomentOfInertia*_r2cn*_r2cn;
             _effectiveMass = 1/(_kNormal + Softness);
 
-            //convert scalar accumulated _impulse to vector
+            //convert scalar accumulated impulse to vector
             Vector2.Multiply(ref _worldAnchorDifferenceNormalized, _accumulatedImpulse, out _accumulatedImpulseVector);
 
             //apply accumulated impulses (warm starting)
@@ -187,7 +193,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         {
             base.Update();
 
-            if (IsDisposed)
+            if (_body1.isStatic && _body2.isStatic)
+                return;
+
+            if (!_body1.Enabled && !_body2.Enabled)
                 return;
 
             //calc velocity anchor points (angular component + linear)

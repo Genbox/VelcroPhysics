@@ -7,6 +7,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class FixedAngleJoint : Joint
     {
+        public event OneBodyDelegate JointUpdated;
+
         private Body _body;
         private float _massFactor;
         private float _maxImpulse = float.MaxValue;
@@ -68,7 +70,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            if (IsDisposed)
+            if (_body.isStatic)
+                return;
+
+            if (!_body.Enabled)
                 return;
 
             JointError = _body.totalRotation - _targetAngle;
@@ -81,7 +86,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         {
             base.Update();
 
-            if (IsDisposed)
+            if (_body.isStatic)
+                return;
+
+            if (!_body.Enabled)
                 return;
 
             float angularImpulse = (_velocityBias - _body.AngularVelocity)*_massFactor;

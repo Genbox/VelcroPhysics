@@ -131,9 +131,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// <param name="inverseDt">The inverse dt.</param>
         public override void PreStep(float inverseDt)
         {
-            if (IsDisposed)
-                return;
-
             _body1InverseMass = _body1.inverseMass;
             _body1InverseMomentOfInertia = _body1.inverseMomentOfInertia;
 
@@ -207,9 +204,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         public override void Update()
         {
             base.Update();
-
-            if (IsDisposed)
-                return;
 
             #region INLINE: Calculator.Cross(ref _body2.AngularVelocity, ref _r2, out _vectorTemp1);
 
