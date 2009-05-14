@@ -20,6 +20,7 @@ namespace FarseerGames.SimpleSamplesXNA.DrawingSystem
         private short[] _indices;
         private List<VertexPositionColor> _lineStrip;
         private int _triangleCount;
+        private VertexDeclaration _vertexDeclaration;
 
         public PolygonBrush()
         {
@@ -94,6 +95,7 @@ namespace FarseerGames.SimpleSamplesXNA.DrawingSystem
         {
             _effect = new BasicEffect(graphicsDevice, null);        // create a new basic effect for this polygon
             _graphicsDevice = graphicsDevice;
+            _vertexDeclaration = new VertexDeclaration(_graphicsDevice, VertexPositionColor.VertexElements);
         }
 
         public void Draw(Vector2 position, float rotation)
@@ -103,7 +105,7 @@ namespace FarseerGames.SimpleSamplesXNA.DrawingSystem
             Matrix worldMatrix = Matrix.CreateRotationZ(rotation);
             worldMatrix *= Matrix.CreateTranslation(new Vector3(position, 0));
 
-            _graphicsDevice.VertexDeclaration = new VertexDeclaration(_graphicsDevice, VertexPositionColor.VertexElements);
+            _graphicsDevice.VertexDeclaration = _vertexDeclaration;
 
             // set the effects matrix's
             _effect.World = worldMatrix;
