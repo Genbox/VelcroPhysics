@@ -20,7 +20,6 @@ namespace FarseerGames.AdvancedSamplesXNA.DrawingSystem
         private int[] _indices;
         private List<VertexPositionColor> _lineStrip;
         private int _triangleCount;
-            
 
         public PolygonBrush()
         {
@@ -126,11 +125,7 @@ namespace FarseerGames.AdvancedSamplesXNA.DrawingSystem
             }
 
             _effect.End();
-
-            
         }
-
-
 
         private List<VertexPositionColor> GetTriangleStrip(Vector3[] points, float thickness)
         {

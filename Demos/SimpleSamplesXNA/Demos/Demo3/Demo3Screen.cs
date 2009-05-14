@@ -30,7 +30,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo3
 
         public override void LoadContent()
         {
-            _agent = new Agent(new Vector2(ScreenManager.ScreenCenter.X, 110));
+            _agent = new Agent(new Vector2(ScreenManager.ScreenCenter.X, 100));
             _agent.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             LoadObstacles();
@@ -40,7 +40,6 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo3
 
         public void LoadObstacles()
         {
-
             _obstacleBrush = new RectangleBrush(128, 32, Color.White, Color.Black);
             _obstacleBrush.Load(ScreenManager.GraphicsDevice);
 

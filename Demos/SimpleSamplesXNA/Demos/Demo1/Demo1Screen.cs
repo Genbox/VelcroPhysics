@@ -15,7 +15,6 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo1
     {
         private RectangleBrush _rectangleBrush;
         private Body _rectangleBody;
-        private PolygonBrush _polyBrush;
 
         public override void Initialize()
         {
@@ -35,23 +34,6 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo1
             _rectangleBody = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 128, 128, 1);
             _rectangleBody.Position = ScreenManager.ScreenCenter;
 
-            Vertices vertices = new Vertices();
-
-            vertices.Add(new Vector2(100, 100));
-            vertices.Add(new Vector2(150, 110));
-            vertices.Add(new Vector2(200, 80));
-            vertices.Add(new Vector2(150, 200));
-            vertices.Add(new Vector2(100, 210));
-            vertices.Add(new Vector2(50, 50));
-            vertices.Add(new Vector2(100, 50));
-            vertices.Add(new Vector2(100, 100));
-
-            vertices.ForceCounterClockWiseOrder();
-
-            _polyBrush = new PolygonBrush(vertices, Color.Green, Color.Red, 0.0f);
-
-            _polyBrush.Load(ScreenManager.GraphicsDevice);
-
             base.LoadContent();
         }
 
@@ -60,8 +42,6 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo1
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             _rectangleBrush.Draw(ScreenManager.SpriteBatch, _rectangleBody.Position, _rectangleBody.Rotation);
             ScreenManager.SpriteBatch.End();
-
-            _polyBrush.Draw(new Vector2(), 0.0f);
 
             base.Draw(gameTime);
         }
