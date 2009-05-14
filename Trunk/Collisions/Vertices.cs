@@ -1518,9 +1518,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
         struct Vertex
         {
             public readonly Vector2 Position;
-            public readonly int Index;
+            public readonly short Index;
 
-            public Vertex(Vector2 position, int index)
+            public Vertex(Vector2 position, short index)
             {
                 Position = position;
                 Index = index;
@@ -1809,7 +1809,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 			Vector2[] inputVertices,
 			WindingOrder desiredWindingOrder,
 			out Vector2[] outputVertices,
-			out int[] indices)
+			out short[] indices)
 		{
 			//Log("\nBeginning triangulation...");
 
@@ -1829,7 +1829,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
 			//generate the cyclical list of vertices in the polygon
 			for (int i = 0; i < outputVertices.Length; i++)
-				polygonVertices.AddLast(new Vertex(outputVertices[i], i));
+				polygonVertices.AddLast(new Vertex(outputVertices[i], (short)i));
 
 			//categorize all of the vertices as convex, reflex, and ear
 			FindConvexAndReflexVertices();
@@ -1847,7 +1847,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 					polygonVertices[2].Value));
 
 			//add all of the triangle indices to the output array
-			indices = new int[triangles.Count * 3];
+			indices = new short[triangles.Count * 3];
 
 			//move the if statement out of the loop to prevent all the
 			//redundant comparisons
@@ -1897,11 +1897,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
 			//generate the cyclical list of vertices in the polygon
 			for (int i = 0; i < shapeVerts.Length; i++)
-				polygonVertices.AddLast(new Vertex(shapeVerts[i], i));
+				polygonVertices.AddLast(new Vertex(shapeVerts[i], (short)i));
 
 			CyclicalList<Vertex> holePolygon = new CyclicalList<Vertex>();
 			for (int i = 0; i < holeVerts.Length; i++)
-				holePolygon.Add(new Vertex(holeVerts[i], i + polygonVertices.Count));
+                holePolygon.Add(new Vertex(holeVerts[i], (short)(i + polygonVertices.Count)));
 
 #if DEBUG
 			StringBuilder vString = new StringBuilder();
