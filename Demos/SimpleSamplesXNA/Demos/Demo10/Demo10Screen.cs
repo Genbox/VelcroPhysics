@@ -42,11 +42,13 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
 
             weldJoint = new WeldJoint(bodyA, bodyB, new Vector2(300, 300));
 
+            weldJoint.Breakpoint = 2.0f;
+
             PhysicsSimulator.Add(bodyA);
             PhysicsSimulator.Add(bodyB);
             PhysicsSimulator.Add(geomA);
             PhysicsSimulator.Add(geomB);
-            weldJoint.Add(PhysicsSimulator);
+            PhysicsSimulator.Add(weldJoint);
 
             brush = new PolygonBrush(Vertices.CreateRectangle(100, 25), Color.White, Color.Black, 2.0f, 0.5f);
 
