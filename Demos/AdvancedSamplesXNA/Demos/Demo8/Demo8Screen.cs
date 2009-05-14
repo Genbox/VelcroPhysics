@@ -233,7 +233,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
 
                     _simulatedPolyBodies.Add(b);
                     _simulatedPolyBrushes.Add(new PolygonBrush(g.LocalVertices, Color.Red, Color.DarkRed, 1.5f, 0.2f));
-                    _simulatedPolyBrushes[_simulatedPolyBrushes.Count - 1].Load(ScreenManager.SpriteBatch, ScreenManager.GraphicsDevice);
+                    _simulatedPolyBrushes[_simulatedPolyBrushes.Count - 1].Load(ScreenManager.GraphicsDevice);
                 }
             }
         }
@@ -396,7 +396,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
 
             _leftGeom = geom;
             _leftPolyBrush = new PolygonBrush(product, Color.White, Color.Black, 1.5f, 1);
-            _leftPolyBrush.Load(ScreenManager.SpriteBatch, ScreenManager.GraphicsDevice);
+            _leftPolyBrush.Load(ScreenManager.GraphicsDevice);
         }
 
         private void AddCircle(int radius, int numSides)
@@ -427,13 +427,13 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
             {
                 _leftGeom = geom;
                 _leftPolyBrush = new PolygonBrush(vertices, Color.White, Color.Black, 1.5f, 1);
-                _leftPolyBrush.Load(ScreenManager.SpriteBatch, ScreenManager.GraphicsDevice);
+                _leftPolyBrush.Load(ScreenManager.GraphicsDevice);
             }
             else if (_rightGeom == null)
             {
                 _rightGeom = geom;
                 _rightPolyBrush = new PolygonBrush(vertices, Color.White, Color.Black, 1.5f, 1);
-                _rightPolyBrush.Load(ScreenManager.SpriteBatch, ScreenManager.GraphicsDevice);
+                _rightPolyBrush.Load(ScreenManager.GraphicsDevice);
             }
         }
 
