@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\FramerateCounterComponent.cs" />
+    <Compile Include="Demos\Demo10\Demo10Screen.cs" />
     <Compile Include="Demos\Demo1\Demo1Screen.cs" />
     <Compile Include="Demos\Demo2\Demo2Screen.cs" />
     <Compile Include="Demos\Demo3\Demo3Screen.cs" />
