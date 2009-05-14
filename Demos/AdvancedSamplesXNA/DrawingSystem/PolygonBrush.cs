@@ -17,7 +17,7 @@ namespace FarseerGames.AdvancedSamplesXNA.DrawingSystem
         private GraphicsDevice _graphicsDevice;
         private Vector2[] _triangulatedVertices;
         private VertexPositionColor[] _shaderVertices;
-        private int[] _indices;
+        private short[] _indices;
         private List<VertexPositionColor> _lineStrip;
         private int _triangleCount;
 
@@ -103,6 +103,7 @@ namespace FarseerGames.AdvancedSamplesXNA.DrawingSystem
             Matrix worldMatrix = Matrix.CreateRotationZ(rotation);
             worldMatrix *= Matrix.CreateTranslation(new Vector3(position, 0));
 
+            _graphicsDevice.VertexDeclaration = new VertexDeclaration(_graphicsDevice, VertexPositionColor.VertexElements);
 
             // set the effects matrix's
             _effect.World = worldMatrix;
