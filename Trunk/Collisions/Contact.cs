@@ -14,18 +14,30 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     public struct Contact : IEquatable<Contact>
     {
+        /// <summary>
+        /// Position of the contact
+        /// </summary>
+        public Vector2 Position;
+
+        /// <summary>
+        /// Normal of the contact
+        /// </summary>
+        public Vector2 Normal;
+
+        /// <summary>
+        /// The amount of penetration
+        /// </summary>
+        public float Separation;
+
         internal float bounceVelocity;
         internal ContactId contactId;
         internal float massNormal;
         internal float massTangent;
-        public Vector2 Normal;
         internal float normalImpulse;
         internal float normalImpulseBias;
         internal float normalVelocityBias;
-        public Vector2 Position;
         internal Vector2 r1;
         internal Vector2 r2;
-        public float Separation;
         internal float tangentImpulse;
 
         public Contact(Vector2 position, Vector2 normal, float separation, ContactId contactId)

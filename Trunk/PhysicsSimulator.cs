@@ -599,12 +599,10 @@ namespace FarseerGames.FarseerPhysics
 
             for (int i = 0; i < arbiterList.Count; i++)
             {
-                Arbiter arbiter = arbiterList[i];
-
-                if (!arbiter.GeometryA.CollisionResponseEnabled || !arbiter.GeometryB.CollisionResponseEnabled)
+                if (!arbiterList[i].GeometryA.CollisionResponseEnabled || !arbiterList[i].GeometryB.CollisionResponseEnabled)
                     continue;
 
-                arbiter.PreStepImpulse(inverseDt);
+                arbiterList[i].PreStepImpulse(inverseDt);
             }
 
             for (int h = 0; h < _iterations; h++)
@@ -619,12 +617,10 @@ namespace FarseerGames.FarseerPhysics
 
                 for (int i = 0; i < arbiterList.Count; i++)
                 {
-                    Arbiter arbiter = arbiterList[i];
-
-                    if (!arbiter.GeometryA.CollisionResponseEnabled || !arbiter.GeometryB.CollisionResponseEnabled)
+                    if (!arbiterList[i].GeometryA.CollisionResponseEnabled || !arbiterList[i].GeometryB.CollisionResponseEnabled)
                         continue;
 
-                    arbiter.ApplyImpulse();
+                    arbiterList[i].ApplyImpulse();
                 }
             }
         }
@@ -646,14 +642,13 @@ namespace FarseerGames.FarseerPhysics
             int geomAddCount = geomAddList.Count;
             for (int i = 0; i < geomAddCount; i++)
             {
-                Geom geom = geomAddList[i];
-                if (!geomList.Contains(geom))
+                if (!geomList.Contains(geomAddList[i]))
                 {
-                    geom.isRemoved = false;
-                    geomList.Add(geom);
+                    geomAddList[i].InSimulation = true;
+                    geomList.Add(geomAddList[i]);
 
                     //Add the new geometry to the broad phase collider.
-                    _broadPhaseCollider.Add(geom);
+                    _broadPhaseCollider.Add(geomAddList[i]);
                 }
             }
             geomAddList.Clear();
@@ -709,7 +704,7 @@ namespace FarseerGames.FarseerPhysics
             int geomRemoveCount = geomRemoveList.Count;
             for (int i = 0; i < geomRemoveCount; i++)
             {
-                geomRemoveList[i].isRemoved = true;
+                geomRemoveList[i].InSimulation = false;
                 geomList.Remove(geomRemoveList[i]);
 
                 //Remove any arbiters associated with the geometries being removed
@@ -718,7 +713,7 @@ namespace FarseerGames.FarseerPhysics
                     if (arbiterList[j - 1].GeometryA == geomRemoveList[i] ||
                         arbiterList[j - 1].GeometryB == geomRemoveList[i])
                     {
-                        //NOTE: Should we create a RemoveComplete method and remove all Contacts associated
+                        //TODO: Should we create a RemoveComplete method and remove all Contacts associated
                         //with the arbiter?
                         arbiterList.Remove(arbiterList[j - 1]);
                     }

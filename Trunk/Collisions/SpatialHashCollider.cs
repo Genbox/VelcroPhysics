@@ -199,13 +199,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
                                 ((geometryB.CollisionCategories & geometryA.CollidesWith) == CollisionCategory.None))
                                 continue;
 
-                            //Check if there is intersection
-                            bool intersection = AABB.Intersect(geometryA.AABB, geometryB.AABB);
-
                             long key = PairID.GetId(geometryA.Id, geometryB.Id);
                             if (!_filter.ContainsKey(key))
                             {
                                 _filter.Add(key, null);
+
+                                //Check if there is intersection
+                                bool intersection = AABB.Intersect(geometryA.AABB, geometryB.AABB);
 
                                 //User can cancel collision
                                 if (OnBroadPhaseCollision != null)

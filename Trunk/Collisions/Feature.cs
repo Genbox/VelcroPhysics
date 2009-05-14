@@ -14,14 +14,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     public struct Feature
     {
-        public float Distance; // = float.MaxValue;
-        public Vector2 Normal; // = Vector2.Zero;
-        public Vector2 Position; // = Vector2.Zero;
+        public float Distance;
+        public Vector2 Normal;
+        public Vector2 Position;
 
         public Feature(Vector2 position)
         {
             Position = position;
-            Normal = new Vector2(0, 0);
+            Normal = Vector2.Zero;
             Distance = float.MaxValue;
         }
 
