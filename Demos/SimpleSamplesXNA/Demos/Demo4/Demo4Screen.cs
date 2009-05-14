@@ -17,7 +17,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo4
 #if XBOX
         private const int _pyramidBaseBodyCount = 8;
 #else
-        private const int _pyramidBaseBodyCount = 16;
+        private const int _pyramidBaseBodyCount = 15;
 #endif
         private Agent _agent;
         private Pyramid _pyramid;
@@ -48,11 +48,11 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo4
             //create the _pyramid near the bottom of the screen.
             _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, _pyramidBaseBodyCount,
                                    new Vector2(ScreenManager.ScreenCenter.X - _pyramidBaseBodyCount * .5f * (32 + 32 / 3),
-                                               ScreenManager.ScreenHeight - 80));
+                                               ScreenManager.ScreenHeight - 60));
 
             _pyramid.Load(PhysicsSimulator);
 
-            _agent = new Agent(ScreenManager.ScreenCenter - new Vector2(320, 300));
+            _agent = new Agent(ScreenManager.ScreenCenter - new Vector2(320, 200));
             _agent.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             base.LoadContent();
