@@ -7,7 +7,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
     /// </summary>
     public class FixedAngleSpring : Spring
     {
-        public event OneBodyDelegate SpringUpdated;
+        public event FixedSpringDelegate SpringUpdated;
 
         private Body _body;
         private float _maxTorque = float.MaxValue;

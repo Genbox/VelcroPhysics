@@ -7,7 +7,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class FixedAngleJoint : Joint
     {
-        public event OneBodyDelegate JointUpdated;
+        public event FixedJointDelegate JointUpdated;
 
         private Body _body;
         private float _massFactor;
@@ -93,8 +93,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
                 return;
 
             float angularImpulse = (_velocityBias - _body.AngularVelocity)*_massFactor;
-            _body.AngularVelocity += _body.inverseMomentOfInertia*Math.Sign(angularImpulse)*
-                                     Math.Min(Math.Abs(angularImpulse), _maxImpulse);
+
+            if (angularImpulse != 0f)
+            {
+                _body.AngularVelocity += _body.inverseMomentOfInertia * Math.Sign(angularImpulse) *
+                         Math.Min(Math.Abs(angularImpulse), _maxImpulse);
+
+                if (JointUpdated != null)
+                    JointUpdated(this, _body);
+            }
         }
     }
 }

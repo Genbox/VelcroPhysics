@@ -11,7 +11,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class FixedAngleLimitJoint : Joint
     {
-        public event OneBodyDelegate JointUpdated;
+        public event FixedJointDelegate JointUpdated;
 
         private float _accumlatedAngularImpulseOld;
         private float _accumulatedAngularImpulse;
@@ -171,7 +171,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             _angularImpulse = _accumulatedAngularImpulse - _accumlatedAngularImpulseOld;
 
-            _body.AngularVelocity += _body.inverseMomentOfInertia*_angularImpulse;
+            if (_angularImpulse != 0f)
+            {
+                _body.AngularVelocity += _body.inverseMomentOfInertia * _angularImpulse;
+
+                if (JointUpdated != null)
+                    JointUpdated(this, _body);
+            }
         }
     }
 }

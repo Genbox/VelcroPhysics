@@ -7,7 +7,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
     /// </summary>
     public class AngleSpring : Spring
     {
-        public event TwoBodyDelegate SpringUpdated;
+        public event SpringDelegate SpringUpdated;
 
         private Body _body1;
         private Body _body2;

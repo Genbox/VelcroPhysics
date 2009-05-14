@@ -7,7 +7,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class AngleJoint : Joint
     {
-        public event TwoBodyDelegate JointUpdated;
+        public event JointDelegate JointUpdated;
 
         private Body _body1;
         private Body _body2;
@@ -83,6 +83,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
+            if (_body1.isStatic && _body2.isStatic)
+                return;
+
+            if (!_body1.Enabled && !_body2.Enabled)
+                return;
+
             JointError = (_body2.totalRotation - _body1.totalRotation) - _targetAngle;
 
             _velocityBias = -BiasFactor * inverseDt * JointError;

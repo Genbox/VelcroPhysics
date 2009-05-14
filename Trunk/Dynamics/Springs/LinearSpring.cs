@@ -11,7 +11,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
     /// </summary>
     public class LinearSpring : Spring
     {
-        public event TwoBodyDelegate SpringUpdated;
+        public event SpringDelegate SpringUpdated;
 
         private Vector2 _attachPoint1;
         private Vector2 _attachPoint2;
