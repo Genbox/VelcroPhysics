@@ -40,7 +40,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private float _rotationOffset;
         private bool _isDisposed;
         internal Body body;
-        internal bool isRemoved = true; //true=>geometry removed from simulation
+        public bool InSimulation = true; //true=>geometry removed from simulation
         internal Vertices localVertices;
         internal Vertices worldVertices;
         internal INarrowPhaseCollider narrowPhaseCollider;
@@ -119,17 +119,40 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <Value><c>true</c> if collision is enabled; otherwise, <c>false</c>.</Value>
         public bool CollisionEnabled = true;
 
+        /// <summary>
+        /// Gets or sets the tag. A tag is used to attach a custom object to the Geom.
+        /// </summary>
+        /// <Value>The custom object.</Value>
+        public Object Tag;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Geom"/> class.
+        /// </summary>
         public Geom()
         {
             Id = GetNextId();
             narrowPhaseCollider = new Grid();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Geom"/> class.
+        /// </summary>
+        /// <param name="body">The body.</param>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="collisionGridSize">Size of the collision grid.</param>
         public Geom(Body body, Vertices vertices, float collisionGridSize)
         {
             Construct(body, vertices, Vector2.Zero, 0, collisionGridSize);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Geom"/> class.
+        /// </summary>
+        /// <param name="body">The body.</param>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="rotationOffset">The rotation offset.</param>
+        /// <param name="collisionGridSize">Size of the collision grid.</param>
         public Geom(Body body, Vertices vertices, Vector2 offset, float rotationOffset, float collisionGridSize)
         {
             Construct(body, vertices, offset, rotationOffset, collisionGridSize);
@@ -262,12 +285,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             get { return body; }
         }
-
-        /// <summary>
-        /// Gets or sets the tag. A tag is used to attach a custom object to the Geom.
-        /// </summary>
-        /// <Value>The custom object.</Value>
-        public Object Tag { get; set; }
 
         /// <summary>
         /// Gets the id of this geom.
@@ -487,9 +504,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 narrowPhaseCollider.Intersect(ref point, out feature);
 
                 if (feature.Distance < 0)
-                {
                     return true;
-                }
             }
             return false;
         }
@@ -508,9 +523,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             narrowPhaseCollider.Intersect(ref point, out feature);
 
             if (feature.Distance < 0)
-            {
                 return true;
-            }
 
             return false;
         }
@@ -531,9 +544,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 for (int i = 0; i < count; i++)
                 {
                     if (geometry.FastCollide(worldVertices[i]))
-                    {
                         return true;
-                    }
                 }
 
                 //Check each vertice of the provided geometry, against itself
@@ -541,9 +552,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 for (int i = 0; i < count; i++)
                 {
                     if (FastCollide(geometry.worldVertices[i]))
-                    {
                         return true;
-                    }
                 }
             }
 
@@ -679,7 +688,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return geometry1.Id > geometry2.Id;
         }
 
-        public static int GetNextId()
+        private static int GetNextId()
         {
             _newId += 1;
             return _newId;
@@ -690,10 +699,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Dispose();
         }
 
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources
+        /// Subclasses can override incase they need to dispose of resources otherwise do nothing.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
-            //subclasses can override incase they need to dispose of resources
-            //otherwise do nothing.
             if (!IsDisposed)
             {
                 if (disposing)
@@ -706,8 +718,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         body.Disposed -= BodyOnDisposed;
                     }
                 }
-
-                //dispose unmanaged resources
             }
             IsDisposed = true;
         }

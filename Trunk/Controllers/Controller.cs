@@ -8,8 +8,10 @@ namespace FarseerGames.FarseerPhysics.Controllers
     /// </summary>
     public abstract class Controller : IIsDisposable
     {
+        /// <summary>
+        /// If false, this controller will not be processed/updated.
+        /// </summary>
         public bool Enabled = true;
-        private bool _isDisposed;
 
         /// <summary>
         /// Gets or sets the tag. The Tag can contain a custom object.
@@ -18,6 +20,19 @@ namespace FarseerGames.FarseerPhysics.Controllers
         public Object Tag { get; set; }
 
         #region IDisposable Members
+
+        private bool _isDisposed;
+
+        public bool IsDisposed
+        {
+            get { return _isDisposed; }
+            set { _isDisposed = value; }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            IsDisposed = true;
+        }
 
         public void Dispose()
         {
@@ -41,28 +56,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
         public virtual void Update(float dt, float dtReal)
         {
             Update(dt);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            //subclasses can override incase they need to dispose of resources
-            //otherwise do nothing.
-            if (!IsDisposed)
-            {
-                if (disposing)
-                {
-                    //dispose managed resources 
-                }
-
-                //dispose unmanaged resources
-            }
-            IsDisposed = true;
-        }
-
-        public bool IsDisposed
-        {
-            get { return _isDisposed; }
-            set { _isDisposed = value; }
         }
     }
 }

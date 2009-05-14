@@ -74,13 +74,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void ProcessRemovedGeoms()
         {
-            if (_xInfoList.RemoveAll(i => i.Geometry.isRemoved) > 0)
+            if (_xInfoList.RemoveAll(i => !i.Geometry.InSimulation) > 0)
             {
-                _xExtentList.RemoveAll(n => n.Info.Geometry.isRemoved);
+                _xExtentList.RemoveAll(n => !n.Info.Geometry.InSimulation);
             }
-            if (_yInfoList.RemoveAll(i => i.Geometry.isRemoved) > 0)
+            if (_yInfoList.RemoveAll(i => !i.Geometry.InSimulation) > 0)
             {
-                _yExtentList.RemoveAll(n => n.Info.Geometry.isRemoved);
+                _yExtentList.RemoveAll(n => !n.Info.Geometry.InSimulation);
             }
 
             CollisionPairs.Clear();

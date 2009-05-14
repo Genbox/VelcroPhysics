@@ -170,12 +170,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private static bool WrapperIsRemoved(Wrapper wrapper)
         {
-            return wrapper.Geom.isRemoved;
+            return !wrapper.Geom.InSimulation;
         }
 
         private static bool StubIsRemoved(Stub stub)
         {
-            return stub.Wrapper.Geom.isRemoved;
+            return !stub.Wrapper.Geom.InSimulation;
         }
 
         /// <summary>
