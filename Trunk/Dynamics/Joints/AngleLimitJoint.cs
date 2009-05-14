@@ -11,7 +11,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class AngleLimitJoint : Joint
     {
-        public event TwoBodyDelegate JointUpdated;
+        public event JointDelegate JointUpdated;
 
         private float _accumlatedAngularImpulseOld;
         private float _accumulatedAngularImpulse;
@@ -100,7 +100,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public override void PreStep(float inverseDt)
         {
-            //TODO: Take a look at pre-checks and updated event 
             if (_body1.isStatic && _body2.isStatic)
                 return;
 

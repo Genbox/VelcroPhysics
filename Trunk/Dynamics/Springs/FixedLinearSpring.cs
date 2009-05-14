@@ -12,7 +12,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Springs
     /// </summary>
     public class FixedLinearSpring : Spring
     {
-        public event OneBodyDelegate SpringUpdated;
+        public event FixedSpringDelegate SpringUpdated;
 
         private Body _body;
         private Vector2 _bodyAttachPoint;

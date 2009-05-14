@@ -1,4 +1,6 @@
 using System;
+using FarseerGames.FarseerPhysics.Dynamics.Joints;
+using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Interfaces;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Controllers;
@@ -11,8 +13,10 @@ using FarseerGames.FarseerPhysics.Mathematics;
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
-    public delegate bool OneBodyDelegate(object sender, Body body);
-    public delegate bool TwoBodyDelegate(object sender, Body body1, Body body2);
+    public delegate bool FixedJointDelegate(Joint sender, Body body);
+    public delegate bool JointDelegate(Joint sender, Body body1, Body body2);
+    public delegate bool FixedSpringDelegate(Spring sender, Body body);
+    public delegate bool SpringDelegate(Spring sender, Body body1, Body body2);
 
     /// <summary>
     /// The Body handles all the physics of motion: position, velocity, acceleration
