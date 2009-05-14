@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using FarseerGames.FarseerPhysics.Collisions;
 
-namespace FarseerGames.AdvancedSamplesXNA.DrawingSystem
+namespace FarseerGames.SimpleSamplesXNA.DrawingSystem
 {
     public class PolygonBrush
     {
@@ -20,6 +20,7 @@ namespace FarseerGames.AdvancedSamplesXNA.DrawingSystem
         private short[] _indices;
         private List<VertexPositionColor> _lineStrip;
         private int _triangleCount;
+        private VertexDeclaration _vertexDeclaration;
 
         public PolygonBrush()
         {
@@ -90,10 +91,11 @@ namespace FarseerGames.AdvancedSamplesXNA.DrawingSystem
             }
         }
 
-        public void Load(SpriteBatch sb, GraphicsDevice graphicsDevice)
+        public void Load(GraphicsDevice graphicsDevice)
         {
             _effect = new BasicEffect(graphicsDevice, null);        // create a new basic effect for this polygon
             _graphicsDevice = graphicsDevice;
+            _vertexDeclaration = new VertexDeclaration(_graphicsDevice, VertexPositionColor.VertexElements);
         }
 
         public void Draw(Vector2 position, float rotation)
@@ -103,7 +105,7 @@ namespace FarseerGames.AdvancedSamplesXNA.DrawingSystem
             Matrix worldMatrix = Matrix.CreateRotationZ(rotation);
             worldMatrix *= Matrix.CreateTranslation(new Vector3(position, 0));
 
-            _graphicsDevice.VertexDeclaration = new VertexDeclaration(_graphicsDevice, VertexPositionColor.VertexElements);
+            _graphicsDevice.VertexDeclaration = _vertexDeclaration;
 
             // set the effects matrix's
             _effect.World = worldMatrix;
@@ -120,8 +122,8 @@ namespace FarseerGames.AdvancedSamplesXNA.DrawingSystem
             foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
             {
                 pass.Begin();
-                    _graphicsDevice.DrawUserIndexedPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, _shaderVertices, 0, _triangulatedVertices.Length, _indices, 0, _indices.Length / 3);
-                    _graphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleStrip, _lineStrip.ToArray(), 0, _triangleCount);
+                _graphicsDevice.DrawUserIndexedPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, _shaderVertices, 0, _triangulatedVertices.Length, _indices, 0, _indices.Length / 3);
+                _graphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleStrip, _lineStrip.ToArray(), 0, _triangleCount);
                 pass.End();
             }
 
@@ -134,7 +136,7 @@ namespace FarseerGames.AdvancedSamplesXNA.DrawingSystem
             List<VertexPositionColor> list = new List<VertexPositionColor>();
             _triangleCount = -2;
 
-            for (int i=0;i<points.Length;i++)
+            for (int i = 0; i < points.Length; i++)
             {
                 if (i == 0) { lastPoint = points[0]; continue; }
                 //the direction of the current line

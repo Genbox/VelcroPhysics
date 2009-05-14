@@ -43,7 +43,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
 
             weldJoint = new WeldJoint(bodyA, bodyB, new Vector2(300, 300));
             weldJoint.Broke += new System.EventHandler<System.EventArgs>(weldJoint_Broke);
-            weldJoint.Breakpoint = 1.0f;
+            weldJoint.Breakpoint = 5.0f;
 
             PhysicsSimulator.Add(bodyA);
             PhysicsSimulator.Add(bodyB);
