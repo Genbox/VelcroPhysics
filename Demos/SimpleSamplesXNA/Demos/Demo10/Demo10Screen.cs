@@ -18,6 +18,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
         private Body bodyA, bodyB;
         private Geom geomA, geomB;
         private WeldJoint weldJoint;
+        private bool broke = false;
 
         private PolygonBrush brush;
 
@@ -41,8 +42,8 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
             geomB = GeomFactory.Instance.CreateRectangleGeom(bodyB, 100, 25);
 
             weldJoint = new WeldJoint(bodyA, bodyB, new Vector2(300, 300));
-
-            weldJoint.Breakpoint = 2.0f;
+            weldJoint.Broke += new System.EventHandler<System.EventArgs>(weldJoint_Broke);
+            weldJoint.Breakpoint = 1.0f;
 
             PhysicsSimulator.Add(bodyA);
             PhysicsSimulator.Add(bodyB);
@@ -57,6 +58,13 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
             base.LoadContent();
         }
 
+        void weldJoint_Broke(object sender, System.EventArgs e)
+        {
+            broke = true;
+            PhysicsSimulator.Remove(weldJoint);
+            weldJoint.Dispose();
+        }
+
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
@@ -69,6 +77,8 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
             base.Draw(gameTime);
         }
 
+        int count = 0;
+
         public override void HandleInput(InputState input)
         {
             if (firstRun)
@@ -80,6 +90,20 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
+
+            if (input.CurrentMouseState.RightButton == ButtonState.Pressed && broke == true && count > 10)
+            {
+                broke = false;
+
+                weldJoint = new WeldJoint(bodyA, bodyB, new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y));
+
+                weldJoint.Breakpoint = 5.0f;
+                weldJoint.Broke += new System.EventHandler<System.EventArgs>(weldJoint_Broke);
+
+                PhysicsSimulator.Add(weldJoint);
+                count = 0;
+            }
+            count++;
 
             base.HandleInput(input);
         }

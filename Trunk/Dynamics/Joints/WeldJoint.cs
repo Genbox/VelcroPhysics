@@ -24,6 +24,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         private Body _body1;
         private Body _body2;
+        private float _targetAngle;
         private float _massFactor;
         private float _maxImpulse = float.MaxValue;
         private float _velocityBias;
@@ -52,6 +53,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _body2 = body2;
 
             _anchor = anchor;
+            _targetAngle = _body2.totalRotation - _body1.totalRotation;
 
             body1.GetLocalPosition(ref anchor, out _localAnchor1);
             body2.GetLocalPosition(ref anchor, out _localAnchor2);
@@ -150,7 +152,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             if (!_body1.Enabled && !_body2.Enabled)
                 return;
 
-            JointError = _body2.totalRotation - _body1.totalRotation;
+            JointError = (_body2.totalRotation - _body1.totalRotation) - _targetAngle;
 
             _velocityBias = -BiasFactor * inverseDt * JointError;
 
@@ -368,7 +370,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
                 #region INLINE: _body1.ApplyAngularImpulse(ref _floatTemp1);
 
-                _body1.AngularVelocity += _floatTemp1 * _body1.inverseMomentOfInertia;
+                //_body1.AngularVelocity += _floatTemp1 * _body1.inverseMomentOfInertia;
 
                 #endregion
 
