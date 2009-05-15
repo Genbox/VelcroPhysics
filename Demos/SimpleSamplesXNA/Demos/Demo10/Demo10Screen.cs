@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
+using System.Collections.Generic;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
@@ -27,6 +29,8 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
         private PolygonBrush gearBrushA;
         private PolygonBrush gearBrushB;
 
+        private List<Table> table;
+
         public override void Initialize()
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
@@ -34,6 +38,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
 
             PhysicsSimulatorView.EnableEdgeView = true;
             PhysicsSimulatorView.EnableCoordinateAxisView = true;
+            PhysicsSimulatorView.EnableAABBView = false;
 
             base.Initialize();
         }
@@ -64,12 +69,12 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
             brush.Load(ScreenManager.GraphicsDevice);
 
             bodyC = BodyFactory.Instance.CreatePolygonBody(Vertices.CreateGear(50, 20, .50f, 10), 10);
-            bodyC.Position = new Vector2(500,400);
+            bodyC.Position = new Vector2(500,200);
 
             geomC = GeomFactory.Instance.CreatePolygonGeom(bodyC, Vertices.CreateGear(50, 20, .50f, 10), 1.5f);
 
             bodyD = BodyFactory.Instance.CreatePolygonBody(Vertices.CreateGear(50, 20, .50f, 10), 10);
-            bodyD.Position = new Vector2(613, 400);
+            bodyD.Position = new Vector2(613, 200);
 
             geomD = GeomFactory.Instance.CreatePolygonGeom(bodyD, Vertices.CreateGear(50, 20, .50f, 10), 1.5f);
 
@@ -100,6 +105,12 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
             PhysicsSimulator.Add(revJointA);
             PhysicsSimulator.Add(revJointB);
 
+            table = new List<Table>();
+
+            table.Add(new Table(new Vector2(200, 450), 200, 50));
+
+            table[0].Load(PhysicsSimulator, ScreenManager.GraphicsDevice);
+
             base.LoadContent();
         }
 
@@ -112,7 +123,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
 
         public override void Draw(GameTime gameTime)
         {
-            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+            //ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
 
             brush.Draw(bodyA.Position, bodyA.Rotation);
             brush.Draw(bodyB.Position, bodyB.Rotation);
@@ -120,7 +131,10 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
             gearBrushA.Draw(bodyC.Position, bodyC.Rotation);
             gearBrushB.Draw(bodyD.Position, bodyD.Rotation);
 
-            ScreenManager.SpriteBatch.End();
+            foreach (Table t in table)
+                t.Draw();
+
+            //ScreenManager.SpriteBatch.End();
 
             base.Draw(gameTime);
         }
@@ -129,6 +143,8 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
 
         public override void HandleInput(InputState input)
         {
+            Random rand = new Random();
+            
             if (firstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
@@ -151,6 +167,12 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
                 PhysicsSimulator.Add(weldJoint);
                 count = 0;
             }
+            else if (input.CurrentMouseState.MiddleButton == ButtonState.Pressed && count > 10)
+            {
+                table.Add(new Table(new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y), rand.Next(100,300), rand.Next(20,50)));
+                table[table.Count - 1].Load(PhysicsSimulator, ScreenManager.GraphicsDevice);
+                count = 0;
+            }
             count++;
 
             base.HandleInput(input);
@@ -170,6 +192,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
             sb.AppendLine("Mouse");
             sb.AppendLine("  -Hold down left button and drag");
             sb.AppendLine("  -Click right button to reweld bodies");
+            sb.AppendLine("  -Click middle button to add tables");
             return sb.ToString();
         }
     }
