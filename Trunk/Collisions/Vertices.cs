@@ -513,6 +513,38 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return vertices;
         }
 
+        public static Vertices CreateGear(float radius, int numberOfTeeth, float tipPercentage, float toothHeight)
+        {
+            Vertices vertices = new Vertices();
+
+            float stepSize = MathHelper.TwoPi / numberOfTeeth;
+
+            float toothTipStepSize = (stepSize / 2f) * tipPercentage;
+
+            float toothAngleStepSize = (stepSize - (toothTipStepSize * 2f)) / 2f;
+
+            for (int i = 0; i < numberOfTeeth; i++)
+            {
+                vertices.Add(new Vector2((radius) * Calculator.Cos(stepSize * i),
+                    -(radius) * Calculator.Sin(stepSize * i)));
+
+                vertices.Add(new Vector2((radius + toothHeight) * Calculator.Cos((stepSize * i) + toothAngleStepSize),
+                    -(radius + toothHeight) * Calculator.Sin((stepSize * i) + toothAngleStepSize)));
+
+                vertices.Add(new Vector2((radius + toothHeight) * Calculator.Cos((stepSize * i) + toothAngleStepSize + toothTipStepSize),
+                    -(radius + toothHeight) * Calculator.Sin((stepSize * i) + toothAngleStepSize + toothTipStepSize)));
+
+                vertices.Add(new Vector2((radius) * Calculator.Cos((stepSize * i) + (toothAngleStepSize *2f) + toothTipStepSize),
+                    -(radius) * Calculator.Sin((stepSize * i) + (toothAngleStepSize * 2f) + toothTipStepSize)));
+
+                //vertices.Add(new Vector2((radius) * Calculator.Cos((stepSize * i) + (toothAngleStepSize + toothTipStepSize) * 2f),
+                //    -(radius) * Calculator.Sin((stepSize * i) + (toothAngleStepSize + toothTipStepSize) * 2f)));
+                
+            }
+
+            return vertices;
+        }
+
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();

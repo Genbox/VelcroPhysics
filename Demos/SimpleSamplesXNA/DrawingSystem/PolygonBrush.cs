@@ -76,7 +76,7 @@ namespace FarseerGames.SimpleSamplesXNA.DrawingSystem
                 _shaderVertices = new VertexPositionColor[value.Count];
                 Vector3[] tempVerts = new Vector3[value.Count];
 
-                Vertices.Triangulate(_vertices.GetVerticesArray(), Vertices.WindingOrder.CounterClockwise, out _triangulatedVertices, out _indices);
+                Vertices.Triangulate(_vertices.GetVerticesArray(), Vertices.WindingOrder.Clockwise, out _triangulatedVertices, out _indices);
 
                 for (int i = 0; i < _vertices.Count; i++)
                 {
@@ -115,7 +115,7 @@ namespace FarseerGames.SimpleSamplesXNA.DrawingSystem
             _effect.Alpha = _alpha;    // this effect supports a blending mode
 
             _effect.VertexColorEnabled = true;   // we must enable vertex coloring with this effect
-            _effect.GraphicsDevice.RenderState.CullMode = CullMode.CullCounterClockwiseFace;
+            _effect.GraphicsDevice.RenderState.CullMode = CullMode.None;
 
             _effect.Begin();
 
