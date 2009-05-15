@@ -15,17 +15,25 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
 {
     public class Demo10Screen : GameScreen
     {
-        private Body bodyA, bodyB;
-        private Geom geomA, geomB;
+        private Body bodyA, bodyB, bodyC, bodyD;
+        private Geom geomA, geomB, geomC, geomD;
         private WeldJoint weldJoint;
         private bool broke = false;
+        private GearJoint gearJoint;
+        private FixedRevoluteJoint revJointA;
+        private FixedRevoluteJoint revJointB;
 
         private PolygonBrush brush;
+        private PolygonBrush gearBrushA;
+        private PolygonBrush gearBrushB;
 
         public override void Initialize()
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
+
+            PhysicsSimulatorView.EnableEdgeView = true;
+            PhysicsSimulatorView.EnableCoordinateAxisView = true;
 
             base.Initialize();
         }
@@ -55,6 +63,43 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
 
             brush.Load(ScreenManager.GraphicsDevice);
 
+            bodyC = BodyFactory.Instance.CreatePolygonBody(Vertices.CreateGear(50, 20, .50f, 10), 10);
+            bodyC.Position = new Vector2(500,400);
+
+            geomC = GeomFactory.Instance.CreatePolygonGeom(bodyC, Vertices.CreateGear(50, 20, .50f, 10), 1.5f);
+
+            bodyD = BodyFactory.Instance.CreatePolygonBody(Vertices.CreateGear(50, 20, .50f, 10), 10);
+            bodyD.Position = new Vector2(613, 400);
+
+            geomD = GeomFactory.Instance.CreatePolygonGeom(bodyD, Vertices.CreateGear(50, 20, .50f, 10), 1.5f);
+
+            geomC.CollisionGroup = 2;
+            geomD.CollisionGroup = 3;
+            geomC.FrictionCoefficient = 0f;
+            geomD.FrictionCoefficient = 0f;
+
+            PhysicsSimulator.Add(bodyC);
+            PhysicsSimulator.Add(geomC);
+            PhysicsSimulator.Add(bodyD);
+            PhysicsSimulator.Add(geomD);
+
+            gearBrushA = new PolygonBrush(Vertices.CreateGear(50, 20, .50f, 10), Color.White, Color.Black, 0.5f, 0.5f);
+
+            gearBrushA.Load(ScreenManager.GraphicsDevice);
+
+            gearBrushB = new PolygonBrush(Vertices.CreateGear(50, 20, .50f, 10), Color.White, Color.Black, 0.5f, 0.5f);
+
+            gearBrushB.Load(ScreenManager.GraphicsDevice);
+
+            gearJoint = new GearJoint(bodyD, bodyC, 1f);
+
+            revJointA = JointFactory.Instance.CreateFixedRevoluteJoint(bodyC, bodyC.Position);
+            revJointB = JointFactory.Instance.CreateFixedRevoluteJoint(bodyD, bodyD.Position);
+
+            //PhysicsSimulator.Add(gearJoint);
+            PhysicsSimulator.Add(revJointA);
+            PhysicsSimulator.Add(revJointB);
+
             base.LoadContent();
         }
 
@@ -71,6 +116,9 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
 
             brush.Draw(bodyA.Position, bodyA.Rotation);
             brush.Draw(bodyB.Position, bodyB.Rotation);
+
+            gearBrushA.Draw(bodyC.Position, bodyC.Rotation);
+            gearBrushB.Draw(bodyD.Position, bodyD.Rotation);
 
             ScreenManager.SpriteBatch.End();
 
@@ -121,6 +169,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
             sb.AppendLine(string.Empty);
             sb.AppendLine("Mouse");
             sb.AppendLine("  -Hold down left button and drag");
+            sb.AppendLine("  -Click right button to reweld bodies");
             return sb.ToString();
         }
     }
