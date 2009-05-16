@@ -629,7 +629,7 @@ namespace FarseerGames.FarseerPhysics
         {
             for (int i = 0; i < bodyList.Count; i++)
             {
-                if (!bodyList[i].Enabled || bodyList[i].isStatic)
+                if (!bodyList[i].Enabled || bodyList[i].isStatic || _body.IsDisposed)
                     continue;
 
                 bodyList[i].IntegratePosition(dt);
