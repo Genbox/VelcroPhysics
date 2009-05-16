@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using FarseerGames.FarseerPhysics.Collisions;
 
-namespace FarseerGames.SimpleSamplesXNA.DrawingSystem
+namespace FarseerGames.AdvancedSamplesXNA.DrawingSystem
 {
     public class PolygonBrush
     {
