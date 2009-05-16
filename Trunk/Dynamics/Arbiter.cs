@@ -97,7 +97,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 GeometryB = geometry1;
             }
 
-            switch (physicsSimulator.frictionType)
+            switch (physicsSimulator.FrictionType)
             {
                 case FrictionType.Average:
                     _frictionCoefficientCombined = (GeometryA.FrictionCoefficient + GeometryB.FrictionCoefficient)/2f;
@@ -113,15 +113,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             //Initialize the contact lists
             if (_contactList == null)
             {
-                _contactList = new ContactList(physicsSimulator.maxContactsToDetect);
+                _contactList = new ContactList(physicsSimulator.MaxContactsToDetect);
             }
             if (_newContactList == null)
             {
-                _newContactList = new ContactList(physicsSimulator.maxContactsToDetect);
+                _newContactList = new ContactList(physicsSimulator.MaxContactsToDetect);
             }
             if (_mergedContactList == null)
             {
-                _mergedContactList = new ContactList(physicsSimulator.maxContactsToDetect);
+                _mergedContactList = new ContactList(physicsSimulator.MaxContactsToDetect);
             }
         }
 
@@ -161,8 +161,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 contact.massTangent = 1f/_kTangent;
 
                 //calc velocity bias
-                _min = Math.Min(0, _physicsSimulator.allowedPenetration + contact.Separation);
-                contact.normalVelocityBias = -_physicsSimulator.biasFactor*inverseDt*_min;
+                _min = Math.Min(0, _physicsSimulator.AllowedPenetration + contact.Separation);
+                contact.normalVelocityBias = -_physicsSimulator.BiasFactor*inverseDt*_min;
 
                 //Compute the restitution, we average the restitution of the two bodies
                 _restitution = (GeometryA.RestitutionCoefficient + GeometryB.RestitutionCoefficient)*.5f;
@@ -420,7 +420,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             //Iterate the second geometry vertices
             for (int i = 0; i < geometry2.worldVertices.Count; i++)
             {
-                if (contactList.Count == _physicsSimulator.maxContactsToDetect)
+                if (contactList.Count == _physicsSimulator.MaxContactsToDetect)
                     break;
 
                 //Can be null for "one-way" collision (points)
@@ -450,7 +450,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             //Iterate the first geometry vertices
             for (int i = 0; i < geometry1.WorldVertices.Count; i++)
             {
-                if (contactList.Count == _physicsSimulator.maxContactsToDetect)
+                if (contactList.Count == _physicsSimulator.MaxContactsToDetect)
                     break;
 
                 //Can be null for "one-way" collision (points)
@@ -479,10 +479,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
             //resolve deepest contacts first
             int contactCount = contactList.Count;
-            if (contactCount > _physicsSimulator.maxContactsToResolve)
+            if (contactCount > _physicsSimulator.MaxContactsToResolve)
             {
-                contactList.RemoveRange(_physicsSimulator.maxContactsToResolve,
-                                        contactCount - _physicsSimulator.maxContactsToResolve);
+                contactList.RemoveRange(_physicsSimulator.MaxContactsToResolve,
+                                        contactCount - _physicsSimulator.MaxContactsToResolve);
             }
 
             //allow user to cancel collision if desired
