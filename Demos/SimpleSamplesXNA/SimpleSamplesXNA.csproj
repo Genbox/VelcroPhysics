@@ -11,7 +11,7 @@
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaCrossPlatformGroupID>d85ac275-347b-4cc4-9543-6f1a7d01772c</XnaCrossPlatformGroupID>
+    <XnaCrossPlatformGroupID>d85ac275-347b-4cc4-9543-7f1a7d01772c</XnaCrossPlatformGroupID>
     <ApplicationIcon>Game.ico</ApplicationIcon>
     <Thumbnail>GameThumbnail.png</Thumbnail>
     <PublishUrl>publish\</PublishUrl>
