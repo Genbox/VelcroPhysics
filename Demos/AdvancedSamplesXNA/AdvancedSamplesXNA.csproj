@@ -127,7 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content\Content.contentproj">
-      <Project>5b17d1ff-b5f3-405f-8d24-1feed62b45a8</Project>
+      <Project>5b17d1ff-b5f3-405f-8d24-1feed62b55a8</Project>
       <Visible>False</Visible>
     </NestedContentProject>
   </ItemGroup>

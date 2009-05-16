@@ -91,7 +91,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             int removed = 0;
             for (int i = 0; i < l.Count; i++)
             {
-                if (l[i].Geometry.isRemoved)
+                if (!l[i].Geometry.InSimulation)
                 {
                     removed++;
                     l.RemoveAt(i);
@@ -106,7 +106,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             int removed = 0;
             for (int i = 0; i < l.Count; i++)
             {
-                if (l[i].Info.Geometry.isRemoved)
+                if (!l[i].Info.Geometry.InSimulation)
                 {
                     removed++;
                     l.RemoveAt(i);

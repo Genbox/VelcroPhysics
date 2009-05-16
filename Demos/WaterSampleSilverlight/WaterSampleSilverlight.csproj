@@ -114,7 +114,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Branches\Silverlight\FarseerPhysicsSilverlight.csproj">
       <Project>{1D0B97EA-FE4A-498E-A21B-D0D476464925}</Project>
-      <Name>FarseerPhysics</Name>
+      <Name>FarseerPhysicsSilverlight</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\v2.0\Microsoft.Silverlight.CSharp.targets" />
