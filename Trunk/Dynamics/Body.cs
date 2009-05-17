@@ -36,7 +36,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private Vector2 _previousPosition = Vector2.Zero;
         private float _previousRotation;
         private int _revolutions;
-        private Vector2 _tempVelocity = Vector2.Zero;
         private float _torque;
         private bool _isDisposed;
 
@@ -911,8 +910,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             AngularVelocity = _previousAngularVelocity + _dw;
         }
 
-        private bool _changed;
-
         /// <summary>
         /// Use internally by the engine to integrate the position.
         /// </summary>
@@ -1078,6 +1075,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private Vector2 _tempLinearVelocity;
         private Vector2 _tempDeltaPosition;
         private float _tempDeltaRotation;
+        private bool _changed;
 
         #endregion
 
@@ -1103,6 +1101,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         #region ApplyForceAtLocalPoint variables
 
         private Vector2 _diff;
+        private Vector2 _tempVelocity = Vector2.Zero;
 
         #endregion
 

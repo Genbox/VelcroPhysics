@@ -33,17 +33,23 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private bool _isSensor;
         private Matrix _matrix = Matrix.Identity;
         private Matrix _matrixInverse = Matrix.Identity;
-        private Matrix _matrixInverseTemp;
-        private Vector2 _offset = Vector2.Zero;
-        private Vector2 _position = Vector2.Zero;
+        private Vector2 _position = Vector2.Zero;  
+        private Vector2 _positionOffset = Vector2.Zero;
         private float _rotation;
         private float _rotationOffset;
         private bool _isDisposed;
+
         internal Body body;
-        public bool InSimulation = true; //true=>geometry removed from simulation
         internal Vertices localVertices;
         internal Vertices worldVertices;
         internal INarrowPhaseCollider narrowPhaseCollider;
+        internal int id;
+
+        /// <summary>
+        /// Returns true if the geometry is added to the simulation.
+        /// Returns false if the geometriy is not.
+        /// </summary>
+        public bool InSimulation = true;
 
         /// <summary>
         /// Gets or sets the collision categories that this geom collides with.
@@ -53,7 +59,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         /// <summary>
         /// Gets or sets the collision categories.
-        ///member off all categories by default
+        /// Member off all categories by default
         /// </summary>
         /// <Value>The collision categories.</Value>
         public CollisionCategory CollisionCategories = CollisionCategory.All;
@@ -71,7 +77,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         /// <summary>
         /// Controls the amount of friction a geometry has when in contact with another geometry. A Value of zero implies
-        /// no friction. When two geometries collide, the minimum friction coefficient between the two bodies is used.
+        /// no friction. When two geometries collide, (by default) the average friction coefficient between the two bodies is used.
+        /// This is controlled using the PhysicsSimulator.FrictionType
         /// </summary>
         public float FrictionCoefficient;
 
@@ -130,7 +137,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public Geom()
         {
-            Id = GetNextId();
+            id = GetNextId();
             narrowPhaseCollider = new Grid();
         }
 
@@ -165,7 +172,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="geometry">The geometry to clone</param>
         public Geom(Body body, Geom geometry)
         {
-            ConstructClone(body, geometry, geometry._offset, geometry._rotationOffset);
+            ConstructClone(body, geometry, geometry._positionOffset, geometry._rotationOffset);
         }
 
         /// <summary>
@@ -181,7 +188,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Gets the position.
+        /// Gets the position. Compared to Body.Position, this property takes position offset of the geometry into account.
         /// </summary>
         /// <Value>The position.</Value>
         public Vector2 Position
@@ -190,7 +197,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Gets the rotation.
+        /// Gets the rotation. Compared to Body.Rotation, this property takes rotation offset of the geometry into account.
         /// </summary>
         /// <Value>The rotation.</Value>
         public float Rotation
@@ -208,7 +215,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Gets the world vertices.
+        /// Gets the world vertices. World vertices are the vertices relative to the center of the geometry, plus the position in world space.
         /// </summary>
         /// <Value>The world vertices.</Value>
         public Vertices WorldVertices
@@ -286,18 +293,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
             get { return body; }
         }
 
-        /// <summary>
-        /// Gets the id of this geom.
-        /// </summary>
-        /// <Value>The id.</Value>
-        internal int Id { get; private set; }
-
-        private void Construct(Body bodyToSet, Vertices vertices, Vector2 offset, float rotationOffset,
+        private void Construct(Body bodyToSet, Vertices vertices, Vector2 positionOffset, float rotationOffset,
                                float collisionGridSize)
         {
-            Id = GetNextId();
+            id = GetNextId();
             CollisionGridSize = collisionGridSize;
-            _offset = offset;
+            _positionOffset = positionOffset;
             _rotationOffset = rotationOffset;
             narrowPhaseCollider = new Grid();
             SetVertices(vertices);
@@ -305,9 +306,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
             SetBody(bodyToSet);
         }
 
-        private void ConstructClone(Body bodyToSet, Geom geometry, Vector2 offset, float rotationOffset)
+        private void ConstructClone(Body bodyToSet, Geom geometry, Vector2 positionOffset, float rotationOffset)
         {
-            Id = GetNextId();
+            id = GetNextId();
+            _positionOffset = positionOffset;
+            _rotationOffset = rotationOffset;
             narrowPhaseCollider = geometry.NarrowPhaseCollider.Clone();
             RestitutionCoefficient = geometry.RestitutionCoefficient;
             FrictionCoefficient = geometry.FrictionCoefficient;
@@ -315,10 +318,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             CollisionEnabled = geometry.CollisionEnabled;
             CollisionResponseEnabled = geometry.CollisionResponseEnabled;
             CollisionGridSize = geometry.CollisionGridSize;
-            _offset = offset;
-            _rotationOffset = rotationOffset;
             CollisionCategories = geometry.CollisionCategories;
             CollidesWith = geometry.CollidesWith;
+            IsSensor = geometry.IsSensor;
             SetVertices(geometry.localVertices);
             SetBody(bodyToSet);
         }
@@ -381,7 +383,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         /// <param name="point">The point that should be calculated against.</param>
         /// <returns>The distance</returns>
-        public float GetNearestDistance(Vector2 point)
+        public float GetNearestDistance(ref Vector2 point)
         {
             float distance = float.MaxValue;
             int nearestIndex = 0;
@@ -397,7 +399,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 }
             }
 
-            Feature nearestFeature = GetNearestFeature(point, nearestIndex);
+            Feature nearestFeature = GetNearestFeature(ref point, nearestIndex);
 
             //Determine if inside or outside of geometry.
             Vector2 diff = Vector2.Subtract(point, nearestFeature.Position);
@@ -450,7 +452,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="point">The point.</param>
         /// <param name="index">The index of a vector in the vertices.</param>
         /// <returns></returns>
-        public Feature GetNearestFeature(Vector2 point, int index)
+        public Feature GetNearestFeature(ref Vector2 point, int index)
         {
             Feature feature = new Feature();
             Vector2 edge = localVertices.GetEdge(index);
@@ -514,7 +516,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        private bool FastCollide(Vector2 point)
+        private bool FastCollide(ref Vector2 point)
         {
             Matrix matrixInverse = MatrixInverse;
             Vector2.Transform(ref point, ref matrixInverse, out point);
@@ -543,7 +545,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 int count = worldVertices.Count;
                 for (int i = 0; i < count; i++)
                 {
-                    if (geometry.FastCollide(worldVertices[i]))
+                    _tempVector = worldVertices[i];
+
+                    if (geometry.FastCollide(ref _tempVector))
                         return true;
                 }
 
@@ -551,7 +555,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 count = geometry.worldVertices.Count;
                 for (int i = 0; i < count; i++)
                 {
-                    if (FastCollide(geometry.worldVertices[i]))
+                    _tempVector = geometry.worldVertices[i];
+
+                    if (FastCollide(ref _tempVector))
                         return true;
                 }
             }
@@ -582,23 +588,30 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private void Update(ref Vector2 position, ref float rotation)
         {
+            //Create rotation matrix with the rotation offset applied.
             Matrix.CreateRotationZ(rotation + _rotationOffset, out _matrix);
 
             #region INLINE: Vector2.Transform(ref _offset, ref _matrix, out _newPos);
 
-            float num2 = ((_offset.X * _matrix.M11) + (_offset.Y * _matrix.M21)) + _matrix.M41;
-            float num = ((_offset.X * _matrix.M12) + (_offset.Y * _matrix.M22)) + _matrix.M42;
-            _newPos.X = num2;
-            _newPos.Y = num;
+            //Transform the matrix with the position offset
+            float num2 = ((_positionOffset.X * _matrix.M11) + (_positionOffset.Y * _matrix.M21)) + _matrix.M41;
+            float num = ((_positionOffset.X * _matrix.M12) + (_positionOffset.Y * _matrix.M22)) + _matrix.M42;
 
             #endregion
 
-            _matrix.M41 = position.X + _newPos.X;
-            _matrix.M42 = position.Y + _newPos.Y;
+            // Save the position (with offset) into the matrix
+            _matrix.M41 = position.X + num2;
+            _matrix.M42 = position.Y + num;
             _matrix.M44 = 1;
+
+            //Update position
             _position.X = _matrix.M41;
             _position.Y = _matrix.M42;
+
+            //Update rotation
             _rotation = body.rotation + _rotationOffset;
+
+            //Convert all the local vertices to world vertices (using the new matrix)
             Update();
         }
 
@@ -680,12 +693,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public static bool operator <(Geom geometry1, Geom geometry2)
         {
-            return geometry1.Id < geometry2.Id;
+            return geometry1.id < geometry2.id;
         }
 
         public static bool operator >(Geom geometry1, Geom geometry2)
         {
-            return geometry1.Id > geometry2.Id;
+            return geometry1.id > geometry2.id;
         }
 
         private static int GetNextId()
@@ -748,7 +761,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return false;
             }
-            return Id == other.Id;
+            return id == other.id;
+        }
+
+        #endregion
+
+        #region IIsDisposable Members
+
+        public bool IsDisposed
+        {
+            get { return _isDisposed; }
+            set { _isDisposed = value; }
         }
 
         #endregion
@@ -763,17 +786,18 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private Vector2 _localVertice;
         private Vector2 _vertice = Vector2.Zero;
-        private Vector2 _newPos = Vector2.Zero;
 
         #endregion
 
-        #region IIsDisposable Members
+        #region Collide variables
 
-        public bool IsDisposed
-        {
-            get { return _isDisposed; }
-            set { _isDisposed = value; }
-        }
+        private Vector2 _tempVector;
+
+        #endregion
+
+        #region TransformToLocalCoordinates variables
+
+        private Matrix _matrixInverseTemp;
 
         #endregion
     }

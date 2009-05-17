@@ -281,7 +281,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 // Arbitrarly choose 10000 as a number of colliders that we won't 
                 // approach any time soon.
-                return (Geom1.Id*10000 + Geom2.Id);
+                return (Geom1.id*10000 + Geom2.id);
             }
 
             public override bool Equals(object obj)
