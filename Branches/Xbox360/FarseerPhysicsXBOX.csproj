@@ -75,17 +75,20 @@
     <Compile Include="..\..\Trunk\Collisions\ContactList.cs">
       <Link>Collisions\ContactList.cs</Link>
     </Compile>
+    <Compile Include="..\..\Trunk\Collisions\DistanceGrid.cs">
+      <Link>Collisions\DistanceGrid.cs</Link>
+    </Compile>
     <Compile Include="..\..\Trunk\Collisions\Feature.cs">
       <Link>Collisions\Feature.cs</Link>
     </Compile>
     <Compile Include="..\..\Trunk\Collisions\Geom.cs">
       <Link>Collisions\Geom.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\Grid.cs">
-      <Link>Collisions\Grid.cs</Link>
-    </Compile>
     <Compile Include="..\..\Trunk\Collisions\RayTester.cs">
       <Link>Collisions\RayTester.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Trunk\Collisions\SAT.cs">
+      <Link>Collisions\SAT.cs</Link>
     </Compile>
     <Compile Include="..\..\Trunk\Collisions\SelectiveSweepCollider.cs">
       <Link>Collisions\SelectiveSweepCollider.cs</Link>
