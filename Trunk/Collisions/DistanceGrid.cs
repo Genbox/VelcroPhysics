@@ -161,8 +161,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //Lookup the geometry's distancegrid
             DistanceGridData gridData = _distanceGrids[geom.id];
 
-            point = Vector2.Transform(point, geom.MatrixInverse);
-
             Feature feature;
             return gridData.Intersect(ref point, out feature);
         }
