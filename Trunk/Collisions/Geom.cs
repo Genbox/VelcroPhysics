@@ -138,7 +138,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public Geom()
         {
             id = GetNextId();
-            narrowPhaseCollider = new Grid();
         }
 
         /// <summary>
@@ -300,9 +299,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             CollisionGridSize = collisionGridSize;
             _positionOffset = positionOffset;
             _rotationOffset = rotationOffset;
-            narrowPhaseCollider = new Grid();
             SetVertices(vertices);
-            PrepareNarrowPhaseCollider();
             SetBody(bodyToSet);
         }
 
@@ -311,16 +308,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
             id = GetNextId();
             _positionOffset = positionOffset;
             _rotationOffset = rotationOffset;
-            narrowPhaseCollider = geometry.NarrowPhaseCollider.Clone();
             RestitutionCoefficient = geometry.RestitutionCoefficient;
             FrictionCoefficient = geometry.FrictionCoefficient;
+            
+            //IsSensor = geometry.IsSensor;
             CollisionGroup = geometry.CollisionGroup;
             CollisionEnabled = geometry.CollisionEnabled;
             CollisionResponseEnabled = geometry.CollisionResponseEnabled;
             CollisionGridSize = geometry.CollisionGridSize;
             CollisionCategories = geometry.CollisionCategories;
             CollidesWith = geometry.CollidesWith;
-            IsSensor = geometry.IsSensor;
             SetVertices(geometry.localVertices);
             SetBody(bodyToSet);
         }
@@ -350,21 +347,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             bodyToSet.Disposed += BodyOnDisposed;
 
             Update(ref bodyToSet.position, ref bodyToSet.rotation);
-        }
-
-        /// <summary>
-        /// Prepares the narrow phase collider
-        /// </summary>
-        public void PrepareNarrowPhaseCollider()
-        {
-            if (localVertices.Count > 2)
-            {
-                narrowPhaseCollider.Prepare(this, CollisionGridSize);
-            }
-            else
-            {
-                narrowPhaseCollider = null;
-            }
         }
 
         /// <summary>
@@ -502,10 +484,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 Matrix matrixInverse = MatrixInverse;
                 Vector2.Transform(ref point, ref matrixInverse, out point);
 
-                Feature feature;
-                narrowPhaseCollider.Intersect(ref point, out feature);
-
-                if (feature.Distance < 0)
+                if (narrowPhaseCollider.Intersect(this, ref point))
                     return true;
             }
             return false;
@@ -521,10 +500,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Matrix matrixInverse = MatrixInverse;
             Vector2.Transform(ref point, ref matrixInverse, out point);
 
-            Feature feature;
-            narrowPhaseCollider.Intersect(ref point, out feature);
-
-            if (feature.Distance < 0)
+            if (narrowPhaseCollider.Intersect(this, ref point))
                 return true;
 
             return false;

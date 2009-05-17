@@ -13,7 +13,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
     {
         private PhysicsSimulator _physicsSimulator;
 
-        // 
         public SAT(PhysicsSimulator physicsSimulator)
         {
             _physicsSimulator = physicsSimulator;
@@ -30,8 +29,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// NOTE- this will be empty if no contacts are present.</param>
         public void Collide(Geom geomA, Geom geomB, ContactList contactList)
         {
-
-
             PolygonCollisionResult r = PolygonCollision(geomA.WorldVertices, geomB.WorldVertices, geomB.body.LinearVelocity - geomA.body.LinearVelocity);
             float distance = r.MinimumTranslationVector.Length() / 15.0f;
             int contactsDetected = 0;
@@ -39,7 +36,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             if (r.Intersect)
             {
-                for (int i =0; i < geomA.WorldVertices.Count; i++)
+                for (int i = 0; i < geomA.WorldVertices.Count; i++)
                 {
                     if (contactsDetected <= _physicsSimulator.MaxContactsToDetect)
                     {
@@ -53,7 +50,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                                 }
                                 if (distance > 0.001f)
                                 {
-                                    Contact c = new Contact(geomA.WorldVertices[i], normal, distance, new ContactId(geomA.Id, i, geomB.Id));
+                                    Contact c = new Contact(geomA.WorldVertices[i], normal, distance, new ContactId(geomA.id, i, geomB.id));
                                     contactList.Add(c);
                                     contactsDetected++;
                                 }
@@ -78,7 +75,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                                 }
                                 if (distance > 0.001f)
                                 {
-                                    Contact c = new Contact(geomB.WorldVertices[i], normal, distance, new ContactId(geomB.Id, i, geomA.Id));
+                                    Contact c = new Contact(geomB.WorldVertices[i], normal, distance, new ContactId(geomB.id, i, geomA.id));
                                     contactList.Add(c);
                                     contactsDetected++;
                                 }
@@ -89,7 +86,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
-        public bool Intersect(Geom g, Vector2 v)
+        public bool Intersect(Geom g, ref Vector2 v)
         {
             return InsidePolygon(g.WorldVertices, v);
         }
@@ -129,8 +126,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 return true;
         }
 
-        private void ProjectPolygon(Vector2 axis, Vertices polygon,
-                           ref float min, ref float max)
+        private void ProjectPolygon(Vector2 axis, Vertices polygon, ref float min, ref float max)
         {
             // To project a point on an axis use the dot product
 
@@ -176,7 +172,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         // of the polygons (i.e. velocityA - velocityB)
 
-        public PolygonCollisionResult PolygonCollision(Vertices polygonA, Vertices polygonB, Vector2 velocity) 
+        public PolygonCollisionResult PolygonCollision(Vertices polygonA, Vertices polygonB, Vector2 velocity)
         {
             PolygonCollisionResult result = new PolygonCollisionResult();
             result.Intersect = true;
@@ -190,10 +186,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             // Loop through all the edges of both polygons
 
-            for (int edgeIndex = 0; edgeIndex < edgeCountA + edgeCountB; edgeIndex++) {
-                if (edgeIndex < edgeCountA) {
+            for (int edgeIndex = 0; edgeIndex < edgeCountA + edgeCountB; edgeIndex++)
+            {
+                if (edgeIndex < edgeCountA)
+                {
                     edge = polygonA.GetEdge(edgeIndex);
-                } else {
+                }
+                else
+                {
                     edge = polygonB.GetEdge(edgeIndex - edgeCountA);
                 }
 
@@ -213,7 +213,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                 // Check if the polygon projections are currentlty intersecting
 
-                if (IntervalDistance(minA, maxA, minB, maxB) > 0) 
+                if (IntervalDistance(minA, maxA, minB, maxB) > 0)
                     result.Intersect = false;
 
                 // ===== 2. Now find if the polygons *will* intersect =====
@@ -243,11 +243,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 // Check if the current interval distance is the minimum one. If so store
 
                 // the interval distance and the current distance.
-                
+
                 // This will be used to calculate the minimum translation vector
 
                 intervalDistance = Math.Abs(intervalDistance);
-                if (intervalDistance < minIntervalDistance) {
+                if (intervalDistance < minIntervalDistance)
+                {
                     minIntervalDistance = intervalDistance;
                     translationAxis = axis;
 
@@ -262,16 +263,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
             // can be used to push the polygons appart.
 
             if (result.WillIntersect)
-                result.MinimumTranslationVector = 
+                result.MinimumTranslationVector =
                        translationAxis * minIntervalDistance;
-            
+
             return result;
         }
     }
 
     // Structure that stores the results of the PolygonCollision function
 
-    public struct PolygonCollisionResult {
+    public struct PolygonCollisionResult
+    {
         // Are the polygons going to intersect forward in time?
 
         public bool WillIntersect;

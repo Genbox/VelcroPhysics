@@ -13,7 +13,7 @@ namespace FarseerGames.WaterSampleSilverlight
         public Geom[] Geom;
         public float Height;
         public float Width;
-        
+
         private bool _isStatic;
         private float _mass = 1;
         private Vector2 _position = Vector2.Zero;
@@ -128,12 +128,10 @@ namespace FarseerGames.WaterSampleSilverlight
             //top border
             geomOffset = new Vector2(0, -Height * .5f - BorderWidth * .5f);
             Geom[2] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, Body, Width + BorderWidth, BorderWidth,
-                                                               geomOffset, 0);
+                                                               geomOffset, 0, 20);
             Geom[2].RestitutionCoefficient = 0f;
             Geom[2].FrictionCoefficient = 1f;
             Geom[2].CollisionGroup = 100;
-            //borderGeom[2].CollisonGridCellSize = 20;
-            Geom[2].PrepareNarrowPhaseCollider();
 
             //bottom border (clone top border since geom is same size)
             geomOffset = new Vector2(0, Height * .5f + BorderWidth * .5f);
