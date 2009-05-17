@@ -257,12 +257,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 _isSensor = value;
                 if (_isSensor)
                 {
-                    body.isStatic = true;
+                    body.IsStatic = true;
                     CollisionResponseEnabled = false;
                 }
                 else
                 {
-                    body.isStatic = false;
+                    body.IsStatic = false;
                     CollisionResponseEnabled = true;
                 }
             }

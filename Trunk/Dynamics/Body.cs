@@ -136,6 +136,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             MomentOfInertia = body.MomentOfInertia;
             LinearDragCoefficient = body.LinearDragCoefficient;
             RotationalDragCoefficient = body.RotationalDragCoefficient;
+            IsQuadraticDragEnabled = body.IsQuadraticDragEnabled;
+            QuadraticDragCoefficient = body.QuadraticDragCoefficient;
+            Enabled = body.Enabled;
+            Tag = body.Tag;
+            IgnoreGravity = body.IgnoreGravity;
+            IsStatic = body.isStatic;
         }
 
         #region Added by Daniel Pramel 08/17/08
