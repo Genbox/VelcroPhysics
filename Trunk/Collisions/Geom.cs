@@ -101,13 +101,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public float RestitutionCoefficient;
 
         /// <summary>
-        /// Gets or sets the distance grid collision grid size.
-        /// ONLY used when the distance grid narrow phase collider is used.
-        /// Be sure to run <see cref="PrepareNarrowPhaseCollider"/>() if you change this for changes to take effect.
-        /// </summary>
-        public float CollisionGridSize;
-
-        /// <summary>
         /// Gets or sets the collision group.
         /// If 2 geoms are in the same collision group, they will not collide.
         /// </summary>
@@ -296,7 +289,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
                                float collisionGridSize)
         {
             id = GetNextId();
-            CollisionGridSize = collisionGridSize;
             _positionOffset = positionOffset;
             _rotationOffset = rotationOffset;
             SetVertices(vertices);
@@ -315,7 +307,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             CollisionGroup = geometry.CollisionGroup;
             CollisionEnabled = geometry.CollisionEnabled;
             CollisionResponseEnabled = geometry.CollisionResponseEnabled;
-            CollisionGridSize = geometry.CollisionGridSize;
             CollisionCategories = geometry.CollisionCategories;
             CollidesWith = geometry.CollidesWith;
             SetVertices(geometry.localVertices);
@@ -474,17 +465,28 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Checks to see if the geom collides with the specified point.
         /// </summary>
-        /// <param name="point">The point.</param>
+        /// <param name="position">The point.</param>
         /// <returns>true if colliding</returns>
-        public bool Collide(Vector2 point)
+        public bool Collide(Vector2 position)
+        {
+            return Collide(ref position);
+        }
+
+        /// <summary>
+        /// Checks to see if the geom collides with the specified point.
+        /// </summary>
+        /// <param name="position">The point.</param>
+        /// <returns>true if colliding</returns>
+        public bool Collide(ref Vector2 position)
         {
             //Check first if the AABB contains the point
-            if (AABB.Contains(ref point))
+            if (AABB.Contains(ref position))
             {
+                //Make sure the point is relative to the local vertices. (convert world point to local point)
                 Matrix matrixInverse = MatrixInverse;
-                Vector2.Transform(ref point, ref matrixInverse, out point);
+                Vector2.Transform(ref position, ref matrixInverse, out position);
 
-                if (narrowPhaseCollider.Intersect(this, ref point))
+                if (narrowPhaseCollider.Intersect(this, ref position))
                     return true;
             }
             return false;

@@ -266,7 +266,7 @@ namespace FarseerGames.FarseerPhysics
             springRemoveList = new List<Spring>();
 
             _broadPhaseCollider = new SelectiveSweepCollider(this);
-            _narrowPhaseCollider = new DistanceGrid(this);
+            _narrowPhaseCollider = new SAT(this);
 
             arbiterList = new ArbiterList();
             Gravity = gravity;
@@ -282,20 +282,6 @@ namespace FarseerGames.FarseerPhysics
 
             if (!geomAddList.Contains(geometry))
             {
-                //Make sure to create distancegrid when adding geometry
-                DistanceGrid grid = _narrowPhaseCollider as DistanceGrid;
-                if (grid != null)
-                {
-                    grid.CreateDistanceGrid(geometry);
-                    geometry.narrowPhaseCollider = grid;
-                }
-
-                SAT sat = _narrowPhaseCollider as SAT;
-                if (sat != null)
-                {
-                    geometry.narrowPhaseCollider = sat;
-                }
-
                 geomAddList.Add(geometry);
             }
         }
@@ -304,13 +290,6 @@ namespace FarseerGames.FarseerPhysics
         {
             if (geometry == null)
                 throw new ArgumentNullException("geometry", "Can't remove null geometry");
-
-            //Make sure to remove the distancegrid when removing a geometry
-            DistanceGrid grid = _narrowPhaseCollider as DistanceGrid;
-            if (grid != null)
-                grid.RemoveDistanceGrid(geometry);
-
-            geometry.narrowPhaseCollider = null;
 
             geomRemoveList.Add(geometry);
         }
@@ -682,6 +661,19 @@ namespace FarseerGames.FarseerPhysics
                     geomAddList[i].InSimulation = true;
                     geomList.Add(geomAddList[i]);
 
+                    //Make sure to create distancegrid when adding geometry
+                    DistanceGrid grid = _narrowPhaseCollider as DistanceGrid;
+                    if (grid != null)
+                    {
+                        grid.CreateDistanceGrid(geomAddList[i]);
+                        geomAddList[i].narrowPhaseCollider = grid;
+                    }
+
+                    //Or use SAT if that is the one chosen.
+                    SAT sat = _narrowPhaseCollider as SAT;
+                    if (sat != null)
+                        geomAddList[i].narrowPhaseCollider = sat;
+
                     //Add the new geometry to the broad phase collider.
                     _broadPhaseCollider.Add(geomAddList[i]);
                 }
@@ -744,6 +736,13 @@ namespace FarseerGames.FarseerPhysics
             {
                 geomRemoveList[i].InSimulation = false;
                 geomList.Remove(geomRemoveList[i]);
+
+                //Make sure to remove the distancegrid when removing a geometry
+                DistanceGrid grid = _narrowPhaseCollider as DistanceGrid;
+                if (grid != null)
+                    grid.RemoveDistanceGrid(geomRemoveList[i]);
+
+                geomRemoveList[i].narrowPhaseCollider = null;
 
                 //Remove any arbiters associated with the geometries being removed
                 for (int j = arbiterList.Count; j > 0; j--)

@@ -29,12 +29,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// NOTE- this will be empty if no contacts are present.</param>
         public void Collide(Geom geomA, Geom geomB, ContactList contactList)
         {
-            PolygonCollisionResult r = PolygonCollision(geomA.WorldVertices, geomB.WorldVertices, geomB.body.LinearVelocity - geomA.body.LinearVelocity);
-            float distance = r.MinimumTranslationVector.Length() / 15.0f;
+            PolygonCollisionResult result = PolygonCollision(geomA.WorldVertices, geomB.WorldVertices, geomB.body.LinearVelocity - geomA.body.LinearVelocity);
+            float distance = result.MinimumTranslationVector.Length() / 15.0f;
             int contactsDetected = 0;
-            Vector2 normal = Vector2.Normalize(-r.MinimumTranslationVector);
+            Vector2 normal = Vector2.Normalize(-result.MinimumTranslationVector);
 
-            if (r.Intersect)
+            if (result.Intersect)
             {
                 for (int i = 0; i < geomA.WorldVertices.Count; i++)
                 {
@@ -46,7 +46,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                             {
                                 if (distance > _physicsSimulator.AllowedPenetration)
                                 {
-                                    geomA.Body.Position += r.MinimumTranslationVector * 0.2f;
+                                    geomA.Body.Position += result.MinimumTranslationVector * 0.2f;
                                 }
                                 if (distance > 0.001f)
                                 {
@@ -71,7 +71,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                             {
                                 if (distance > _physicsSimulator.AllowedPenetration)
                                 {
-                                    geomB.Body.Position -= r.MinimumTranslationVector * 0.2f;
+                                    geomB.Body.Position -= result.MinimumTranslationVector * 0.2f;
                                 }
                                 if (distance > 0.001f)
                                 {
@@ -86,32 +86,30 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
-        public bool Intersect(Geom g, ref Vector2 v)
+        public bool Intersect(Geom geom, ref Vector2 position)
         {
-            return InsidePolygon(g.WorldVertices, v);
+            return InsidePolygon(geom.LocalVertices, position);
         }
 
-        private bool InsidePolygon(Vertices polygon, Vector2 p)
+        private bool InsidePolygon(Vertices polygon, Vector2 position)
         {
             int counter = 0;
             int i;
-            double xinters;
-            Vector2 p1, p2;
 
-            p1 = polygon[0];
+            Vector2 p1 = polygon[0];
             for (i = 1; i <= polygon.Count; i++)
             {
-                p2 = polygon[i % polygon.Count];
-                if (p.Y > Math.Min(p1.Y, p2.Y))
+                Vector2 p2 = polygon[i % polygon.Count];
+                if (position.Y > Math.Min(p1.Y, p2.Y))
                 {
-                    if (p.Y <= Math.Max(p1.Y, p2.Y))
+                    if (position.Y <= Math.Max(p1.Y, p2.Y))
                     {
-                        if (p.X <= Math.Max(p1.X, p2.X))
+                        if (position.X <= Math.Max(p1.X, p2.X))
                         {
                             if (p1.Y != p2.Y)
                             {
-                                xinters = (p.Y - p1.Y) * (p2.X - p1.X) / (p2.Y - p1.Y) + p1.X;
-                                if (p1.X == p2.X || p.X <= xinters)
+                                double xinters = (position.Y - p1.Y) * (p2.X - p1.X) / (p2.Y - p1.Y) + p1.X;
+                                if (p1.X == p2.X || position.X <= xinters)
                                     counter++;
                             }
                         }
@@ -122,8 +120,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             if (counter % 2 == 0)
                 return false;
-            else
-                return true;
+
+            return true;
         }
 
         private void ProjectPolygon(Vector2 axis, Vertices polygon, ref float min, ref float max)
@@ -150,29 +148,35 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
-        // Calculate the distance between [minA, maxA] and [minB, maxB]
-
-        // The distance will be negative if the intervals overlap
-
+        /// <summary>
+        /// Calculate the distance between [minA, maxA] and [minB, maxB]
+        /// The distance will be negative if the intervals overlap
+        /// </summary>
+        /// <param name="minA">The min A.</param>
+        /// <param name="maxA">The max A.</param>
+        /// <param name="minB">The min B.</param>
+        /// <param name="maxB">The max B.</param>
+        /// <returns></returns>
         public float IntervalDistance(float minA, float maxA, float minB, float maxB)
         {
             if (minA < minB)
             {
                 return minB - maxA;
             }
-            else
-            {
-                return minA - maxB;
-            }
+             
+            return minA - maxB;
         }
 
-        // Check if polygon A is going to collide with polygon B.
-
-        // The last parameter is the *relative* velocity 
-
-        // of the polygons (i.e. velocityA - velocityB)
-
-        public PolygonCollisionResult PolygonCollision(Vertices polygonA, Vertices polygonB, Vector2 velocity)
+        /// <summary>
+        /// Check if polygon A is going to collide with polygon B.
+        /// The last parameter is the *relative* velocity 
+        /// of the polygons (i.e. velocityA - velocityB)
+        /// </summary>
+        /// <param name="polygonA">The polygon A.</param>
+        /// <param name="polygonB">The polygon B.</param>
+        /// <param name="velocity">The velocity.</param>
+        /// <returns></returns>
+        internal PolygonCollisionResult PolygonCollision(Vertices polygonA, Vertices polygonB, Vector2 velocity)
         {
             PolygonCollisionResult result = new PolygonCollisionResult();
             result.Intersect = true;
@@ -185,7 +189,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Vector2 edge;
 
             // Loop through all the edges of both polygons
-
             for (int edgeIndex = 0; edgeIndex < edgeCountA + edgeCountB; edgeIndex++)
             {
                 if (edgeIndex < edgeCountA)
@@ -199,20 +202,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                 // ===== 1. Find if the polygons are currently intersecting =====
 
-
                 // Find the axis perpendicular to the current edge
-
                 Vector2 axis = new Vector2(-edge.Y, edge.X);
                 axis.Normalize();
 
                 // Find the projection of the polygon on the current axis
-
                 float minA = 0; float minB = 0; float maxA = 0; float maxB = 0;
                 ProjectPolygon(axis, polygonA, ref minA, ref maxA);
                 ProjectPolygon(axis, polygonB, ref minB, ref maxB);
 
                 // Check if the polygon projections are currentlty intersecting
-
                 if (IntervalDistance(minA, maxA, minB, maxB) > 0)
                     result.Intersect = false;
 
@@ -232,20 +231,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 //}
 
                 // Do the same test as above for the new projection
-
                 float intervalDistance = IntervalDistance(minA, maxA, minB, maxB);
                 if (intervalDistance > 0) result.WillIntersect = false;
 
                 // If the polygons are not intersecting and won't intersect, exit the loop
-
                 if (!result.Intersect && !result.WillIntersect) break;
 
                 // Check if the current interval distance is the minimum one. If so store
-
                 // the interval distance and the current distance.
-
                 // This will be used to calculate the minimum translation vector
-
                 intervalDistance = Math.Abs(intervalDistance);
                 if (intervalDistance < minIntervalDistance)
                 {
@@ -259,9 +253,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             // The minimum translation vector
-
             // can be used to push the polygons appart.
-
             if (result.WillIntersect)
                 result.MinimumTranslationVector =
                        translationAxis * minIntervalDistance;
@@ -270,18 +262,18 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
     }
 
-    // Structure that stores the results of the PolygonCollision function
-
-    public struct PolygonCollisionResult
+    /// <summary>
+    /// Structure that stores the results of the PolygonCollision function
+    /// </summary>
+    internal struct PolygonCollisionResult
     {
         // Are the polygons going to intersect forward in time?
-
         public bool WillIntersect;
+
         // Are the polygons currently intersecting?
-
         public bool Intersect;
-        // The translation to apply to the first polygon to push the polygons apart.
 
+        // The translation to apply to the first polygon to push the polygons apart.
         public Vector2 MinimumTranslationVector;
     }
 }
