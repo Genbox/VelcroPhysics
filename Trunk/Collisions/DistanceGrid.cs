@@ -36,12 +36,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
             int vertexIndex = -1;
 
             //Lookup distancegrid A data from list
-            DistanceGridData geomAGridData = _distanceGrids[geomA.Id];
+            DistanceGridData geomAGridData = _distanceGrids[geomA.id];
 
             //Iterate the second geometry vertices
             for (int i = 0; i < geomB.worldVertices.Count; i++)
             {
-                if (contactList.Count == _physicsSimulator.maxContactsToDetect)
+                if (contactList.Count == _physicsSimulator.MaxContactsToDetect)
                     break;
 
                 vertexIndex += 1;
@@ -64,12 +64,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             //Lookup distancegrid B data from list
-            DistanceGridData geomBGridData = _distanceGrids[geomB.Id];
+            DistanceGridData geomBGridData = _distanceGrids[geomB.id];
 
             //Iterate the first geometry vertices
             for (int i = 0; i < geomA.WorldVertices.Count; i++)
             {
-                if (contactList.Count == _physicsSimulator.maxContactsToDetect)
+                if (contactList.Count == _physicsSimulator.MaxContactsToDetect)
                     break;
 
                 vertexIndex += 1;
@@ -101,7 +101,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 throw new ArgumentNullException("geom", "Geometry can't be null");
 
             //Don't create distancegrid for geometry that already have one.
-            if (_distanceGrids.ContainsKey(geom.Id))
+            if (_distanceGrids.ContainsKey(geom.id))
                 return;
 
             //By default, calculate the gridcellsize from the AABB
@@ -126,7 +126,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 vector.Y = aabb.Min.Y;
                 for (int y = 0; y < ySize; ++y, vector.Y += gridCellSize)
                 {
-                    nodes[x, y] = geom.GetNearestDistance(vector); // shape.GetDistance(vector);
+                    nodes[x, y] = geom.GetNearestDistance(ref vector); // shape.GetDistance(vector);
                 }
             }
             //restore the geometry
@@ -138,12 +138,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
             distanceGridData.GridCellSizeInv = gridCellSizeInv;
             distanceGridData.Nodes = nodes;
 
-            _distanceGrids.Add(geom.Id, distanceGridData);
+            _distanceGrids.Add(geom.id, distanceGridData);
         }
 
         public void RemoveDistanceGrid(Geom geom)
         {
-            _distanceGrids.Remove(geom.Id);
+            _distanceGrids.Remove(geom.id);
         }
 
         /// <summary>
@@ -156,10 +156,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return aabb.GetShortestSide() * _gridCellSizeAABBFactor;
         }
 
-        public bool Intersect(Geom geom, Vector2 point)
+        public bool Intersect(Geom geom, ref Vector2 point)
         {
             //Lookup the geometry's distancegrid
-            DistanceGridData gridData = _distanceGrids[geom.Id];
+            DistanceGridData gridData = _distanceGrids[geom.id];
 
             point = Vector2.Transform(point, geom.MatrixInverse);
 

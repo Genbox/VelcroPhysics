@@ -415,64 +415,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         private void Collide(Geom geometry1, Geom geometry2, ContactList contactList)
         {
-            int vertexIndex = -1;
-
-            //Iterate the second geometry vertices
-            for (int i = 0; i < geometry2.worldVertices.Count; i++)
-            {
-                if (contactList.Count == _physicsSimulator.MaxContactsToDetect)
-                    break;
-
-                //Can be null for "one-way" collision (points)
-                if (geometry1.narrowPhaseCollider == null)
-                    break;
-
-                vertexIndex += 1;
-                _vertRef = geometry2.WorldVertices[i];
-                geometry1.TransformToLocalCoordinates(ref _vertRef, out _localVertex);
-
-                //The geometry intersects when distance <= 0
-                //Continue in the list if the current vector does not intersect
-                if (!geometry1.narrowPhaseCollider.Intersect(ref _localVertex, out _feature))
-                    continue;
-
-                //If the second geometry's current vector intersects with the first geometry
-                //create a new contact and add it to the contact list.
-                if (_feature.Distance < 0f)
-                {
-                    geometry1.TransformNormalToWorld(ref _feature.Normal, out _feature.Normal);
-                    Contact contact = new Contact(geometry2.WorldVertices[i], _feature.Normal, _feature.Distance,
-                                                  new ContactId(1, vertexIndex, 2));
-                    contactList.Add(contact);
-                }
-            }
-
-            //Iterate the first geometry vertices
-            for (int i = 0; i < geometry1.WorldVertices.Count; i++)
-            {
-                if (contactList.Count == _physicsSimulator.MaxContactsToDetect)
-                    break;
-
-                //Can be null for "one-way" collision (points)
-                if (geometry2.narrowPhaseCollider == null)
-                    break;
-
-                vertexIndex += 1;
-                _vertRef = geometry1.WorldVertices[i];
-                geometry2.TransformToLocalCoordinates(ref _vertRef, out _localVertex);
-
-                if (!geometry2.narrowPhaseCollider.Intersect(ref _localVertex, out _feature))
-                    continue;
-
-                if (_feature.Distance < 0f)
-                {
-                    geometry2.TransformNormalToWorld(ref _feature.Normal, out _feature.Normal);
-                    _feature.Normal = -_feature.Normal;
-                    Contact contact = new Contact(geometry1.WorldVertices[i], _feature.Normal, _feature.Distance,
-                                                  new ContactId(2, vertexIndex, 1));
-                    contactList.Add(contact);
-                }
-            }
+            //Call the narrow phase collider and get back the contacts
+            _physicsSimulator.NarrowPhaseCollider.Collide(geometry1, geometry2, contactList);
 
             //sort contact list by seperation (amount of penetration)
             contactList.Sort(_contactComparer);
