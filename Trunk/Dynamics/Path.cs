@@ -256,6 +256,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 physicsSimulator.Add(spring);
         }
 
+        /// <summary>
+        /// Creates rectangular geoms that match the size of the bodies.
+        /// Then adds the geometries to the given physics simulator.
+        /// </summary>
+        /// <param name="physicsSimulator">The physics simulator.</param>
+        /// <param name="collisionGroup">The collision group.</param>
         public void CreateGeoms(PhysicsSimulator physicsSimulator, int collisionGroup)
         {
             CreateGeoms(collisionGroup);
@@ -280,6 +286,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
+        /// Creates rectangular geoms that match the size of the bodies.
+        /// Then adds the geometries to the given physics simulator.
+        /// </summary>
+        /// <param name="collisionCategory">The collision category of the geometries.</param>
+        /// <param name="collidesWith">The collisioncategory the geometries should collide with..</param>
+        /// <param name="physicsSimulator">The physics simulator.</param>
         public void CreateGeoms(CollisionCategory collisionCategory, CollisionCategory collidesWith, PhysicsSimulator physicsSimulator)
         {
             CreateGeoms(collisionCategory, collidesWith);

@@ -2341,7 +2341,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         //[Conditional("DEBUG")]
         private static void Log(string format, params object[] parameters)
         {
-            System.Console.WriteLine(format, parameters);
+            Console.WriteLine(format, parameters);
         }
 
         #endregion

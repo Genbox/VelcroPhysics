@@ -76,7 +76,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 vector.Y = _aabb.Min.Y;
                 for (int y = 0; y < ySize; ++y, vector.Y += gridCellSize)
                 {
-                    _nodes[x, y] = geometry.GetNearestDistance(vector); // shape.GetDistance(vector);
+                    _nodes[x, y] = geometry.GetNearestDistance(ref vector);
                 }
             }
             //restore the geometry
