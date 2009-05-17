@@ -1,17 +1,17 @@
-﻿using FarseerGames.FarseerPhysics.Collisions;
-
-#if (XNA)
+﻿#if (XNA)
 using Microsoft.Xna.Framework;
 #else
 using FarseerGames.FarseerPhysics.Mathematics;
 #endif
 
+using FarseerGames.FarseerPhysics.Collisions;
+
 namespace FarseerGames.FarseerPhysics.Interfaces
 {
     public interface INarrowPhaseCollider
     {
-        bool Intersect(ref Vector2 vector, out Feature feature);
-        INarrowPhaseCollider Clone();
-        void Prepare(Geom geometry, object data);
+        void Collide(Geom geomA, Geom geomB, ContactList contactList);
+
+        bool Intersect(Geom geom, Vector2 point);
     }
 }
