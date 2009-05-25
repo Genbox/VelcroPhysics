@@ -107,7 +107,27 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.DemoShare
             _rightUpperArmBrush = new EllipseBrush(rightUpperArmWidth, rightUpperArmHeight, Color.White, Color.Black);
             _rightUpperArmBrush.Load(graphicsDevice);
 
+            int leftArmHight = 10;
+            int leftArmWidth = 6;
 
+            //Left arm
+            _leftArmBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, leftArmWidth, leftArmHight, 1);
+            _leftArmBody.Position = _leftUpperArmBody.Position + new Vector2(0, leftArmHight + (leftArmHight / 2));
+            _leftArmGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _leftArmBody, leftArmWidth, leftArmHight, 8, 0);
+            _leftArmBrush = new EllipseBrush(leftArmWidth, leftArmHight, Color.White, Color.Black);
+            _leftArmBrush.Load(graphicsDevice);
+
+            int rightArmHight = 10;
+            int rightArmWidth = 6;
+
+            //Left arm
+            _rightArmBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, rightArmWidth, rightArmHight, 1);
+            _rightArmBody.Position = _rightUpperArmBody.Position + new Vector2(0, rightArmHight + (rightArmHight / 2));
+            _rightArmGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _rightArmBody, rightArmWidth, rightArmHight, 8, 0);
+            _rightArmBrush = new EllipseBrush(rightArmWidth, rightArmHight, Color.White, Color.Black);
+            _rightArmBrush.Load(graphicsDevice);
+
+            
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -115,10 +135,10 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.DemoShare
             _headBrush.Draw(spriteBatch, _headBody.Position, _headBody.Rotation);
             _bodyBrush.Draw(spriteBatch, _bodyBody.Position, _bodyBody.Rotation);
             _leftUpperArmBrush.Draw(spriteBatch, _leftUpperArmBody.Position, _leftUpperArmBody.Rotation);
-            _rightUpperArmBrush.Draw(spriteBatch, _rightUpperArmBody.Position,_rightUpperArmBody.Rotation);
+            _rightUpperArmBrush.Draw(spriteBatch, _rightUpperArmBody.Position, _rightUpperArmBody.Rotation);
+            _leftArmBrush.Draw(spriteBatch, _leftArmBody.Position, _leftArmBody.Rotation);
+            _rightArmBrush.Draw(spriteBatch, _rightArmBody.Position, _rightArmBody.Rotation);
 
-            //_rightArmBrush.Draw(spriteBatch, _rightArmBody.Position);
-            //_leftArmBrush.Draw(spriteBatch, _leftArmBody.Position);
             //_rightThighBrush.Draw(spriteBatch, _rightThighBody.Position);
             //_leftThighBrush.Draw(spriteBatch, _leftThighBody.Position);
             //_rightCalfBrush.Draw(spriteBatch, _rightCalfBody.Position);
