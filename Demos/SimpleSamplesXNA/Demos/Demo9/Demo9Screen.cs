@@ -8,7 +8,6 @@ using FarseerGames.SimpleSamplesXNA.DrawingSystem;
 using FarseerGames.SimpleSamplesXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace FarseerGames.SimpleSamplesXNA.Demos.Demo9
 {

@@ -1,6 +1,7 @@
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
+using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.SimpleSamplesXNA.DrawingSystem;
 using Microsoft.Xna.Framework;
@@ -8,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerGames.SimpleSamplesXNA.Demos.DemoShare
 {
-    public class Ragdoll
+    public sealed class Ragdoll
     {
         private Body _headBody;
         private Geom _headGeom;
@@ -34,13 +35,13 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.DemoShare
         private Geom _rightArmGeom;
         private EllipseBrush _rightArmBrush;
 
-        private Body _rightThighBody;
-        private Geom _rightThighGeom;
-        private EllipseBrush _rightThighBrush;
-
         private Body _leftThighBody;
         private Geom _leftThighGeom;
         private EllipseBrush _leftThighBrush;
+
+        private Body _rightThighBody;
+        private Geom _rightThighGeom;
+        private EllipseBrush _rightThighBrush;
 
         private Body _rightCalfBody;
         private Geom _rightCalfGeom;
@@ -49,14 +50,6 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.DemoShare
         private Body _leftCalfBody;
         private Geom _leftCalfGeom;
         private EllipseBrush _leftCalfBrush;
-
-        private Body _rightFootBody;
-        private Geom _rightFootGeom;
-        private EllipseBrush _rightFootBrush;
-
-        private Body _leftFootBody;
-        private Geom _leftFootGeom;
-        private EllipseBrush _leftFootBrush;
 
         private Vector2 _position;
 
@@ -67,84 +60,153 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.DemoShare
 
         public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
-            int headHeight = 14;
-            int headWidth = 10;
-
-            //Head
-            _headBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, headWidth, headHeight, 1);
-            _headBody.Position = _position;
-            _headGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _headBody, headWidth, headHeight, 10);
-            _headBrush = new EllipseBrush(headWidth, headHeight, Color.White, Color.Black);
-            _headBrush.Load(graphicsDevice);
-
-            int bodyHeight = 24;
-            int bodyWidth = 18;
+            const int offset = 2;
 
             //Body
-            _bodyBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, bodyWidth, bodyHeight, 1);
-            _bodyBody.Position = _headBody.Position + new Vector2(0, bodyHeight + headHeight / 2);
-            _bodyGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _bodyBody, bodyWidth, bodyHeight, 14, 0);
-            _bodyBrush = new EllipseBrush(bodyWidth, bodyHeight, Color.White, Color.Black);
+            const int bodyYRadius = 34;
+            const int bodyXRadius = 18;
+
+            _bodyBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, bodyXRadius, bodyYRadius, 1);
+            _bodyBody.Position = _position;
+            _bodyGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _bodyBody, bodyXRadius, bodyYRadius, 14, 0);
+            _bodyBrush = new EllipseBrush(bodyXRadius, bodyYRadius, Color.White, Color.Black);
             _bodyBrush.Load(graphicsDevice);
 
-            int leftUpperArmHeight = 10;
-            int leftUpperArmWidth = 6;
+            //Head
+            const int headYRadius = 14;
+            const int headXRadius = 10;
+
+            _headBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, headXRadius, headYRadius, 1);
+            _headBody.Position = _position - new Vector2(0, bodyYRadius + headYRadius + offset);
+            _headGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _headBody, headXRadius, headYRadius, 10);
+            _headBrush = new EllipseBrush(headXRadius, headYRadius, Color.White, Color.Black);
+            _headBrush.Load(graphicsDevice);
 
             //Left upper arm
-            _leftUpperArmBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, leftUpperArmWidth, leftUpperArmHeight, 1);
-            _leftUpperArmBody.Position = _bodyBody.Position + new Vector2(-bodyWidth, -bodyHeight / 2f);
-            _leftUpperArmGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _leftUpperArmBody, leftUpperArmWidth, leftUpperArmHeight, 8, 0);
-            _leftUpperArmBrush = new EllipseBrush(leftUpperArmWidth, leftUpperArmHeight, Color.White, Color.Black);
+            const int leftUpperArmYRadius = 10;
+            const int leftUpperArmXRadius = 6;
+
+            _leftUpperArmBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, leftUpperArmXRadius, leftUpperArmYRadius, 1);
+            _leftUpperArmBody.Position = _bodyBody.Position - new Vector2(bodyXRadius + leftUpperArmXRadius + offset, bodyYRadius / 2f);
+            _leftUpperArmGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _leftUpperArmBody, leftUpperArmXRadius, leftUpperArmYRadius, 8, 0);
+            _leftUpperArmBrush = new EllipseBrush(leftUpperArmXRadius, leftUpperArmYRadius, Color.White, Color.Black);
             _leftUpperArmBrush.Load(graphicsDevice);
 
-            int rightUpperArmHeight = 10;
-            int rightUpperArmWidth = 6;
-
             //Right upper arm
-            _rightUpperArmBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, rightUpperArmWidth, rightUpperArmHeight, 1);
-            _rightUpperArmBody.Position = _bodyBody.Position + new Vector2(bodyWidth, -bodyHeight / 2f);
-            _rightUpperArmGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _rightUpperArmBody, rightUpperArmWidth, rightUpperArmHeight, 8, 0);
-            _rightUpperArmBrush = new EllipseBrush(rightUpperArmWidth, rightUpperArmHeight, Color.White, Color.Black);
+            const int rightUpperArmYRadius = 10;
+            const int rightUpperArmXRadius = 6;
+
+            _rightUpperArmBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, rightUpperArmXRadius, rightUpperArmYRadius, 1);
+            _rightUpperArmBody.Position = _bodyBody.Position + new Vector2(bodyXRadius + rightUpperArmXRadius + offset, -bodyYRadius / 2f);
+            _rightUpperArmGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _rightUpperArmBody, rightUpperArmXRadius, rightUpperArmYRadius, 8, 0);
+            _rightUpperArmBrush = new EllipseBrush(rightUpperArmXRadius, rightUpperArmYRadius, Color.White, Color.Black);
             _rightUpperArmBrush.Load(graphicsDevice);
 
-            int leftArmHight = 10;
-            int leftArmWidth = 6;
-
             //Left arm
-            _leftArmBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, leftArmWidth, leftArmHight, 1);
-            _leftArmBody.Position = _leftUpperArmBody.Position + new Vector2(0, leftArmHight + (leftArmHight / 2));
-            _leftArmGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _leftArmBody, leftArmWidth, leftArmHight, 8, 0);
-            _leftArmBrush = new EllipseBrush(leftArmWidth, leftArmHight, Color.White, Color.Black);
+            const int leftArmYRadius = 12;
+            const int leftArmXRadius = 6;
+
+            _leftArmBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, leftArmXRadius, leftArmYRadius, 1);
+            _leftArmBody.Position = _leftUpperArmBody.Position + new Vector2(0, leftArmYRadius + leftArmYRadius);
+            _leftArmGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _leftArmBody, leftArmXRadius, leftArmYRadius, 8, 0);
+            _leftArmBrush = new EllipseBrush(leftArmXRadius, leftArmYRadius, Color.White, Color.Black);
             _leftArmBrush.Load(graphicsDevice);
 
-            int rightArmHight = 10;
-            int rightArmWidth = 6;
+            //Right arm
+            const int rightArmYRadius = 12;
+            const int rightArmXRadius = 6;
 
-            //Left arm
-            _rightArmBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, rightArmWidth, rightArmHight, 1);
-            _rightArmBody.Position = _rightUpperArmBody.Position + new Vector2(0, rightArmHight + (rightArmHight / 2));
-            _rightArmGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _rightArmBody, rightArmWidth, rightArmHight, 8, 0);
-            _rightArmBrush = new EllipseBrush(rightArmWidth, rightArmHight, Color.White, Color.Black);
+            _rightArmBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, rightArmXRadius, rightArmYRadius, 1);
+            _rightArmBody.Position = _rightUpperArmBody.Position + new Vector2(0, rightArmYRadius + rightArmYRadius);
+            _rightArmGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _rightArmBody, rightArmXRadius, rightArmYRadius, 8, 0);
+            _rightArmBrush = new EllipseBrush(rightArmXRadius, rightArmYRadius, Color.White, Color.Black);
             _rightArmBrush.Load(graphicsDevice);
 
-            
+            //Left thigh
+            const int leftThighYRadius = 12;
+            const int leftThighXRadius = 6;
+
+            _leftThighBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, leftThighXRadius, leftThighYRadius, 1);
+            _leftThighBody.Position = _bodyBody.Position + new Vector2(bodyXRadius, bodyYRadius + leftThighYRadius);
+            _leftThighGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _leftThighBody, leftThighXRadius, leftThighYRadius, 8, 0);
+            _leftThighBrush = new EllipseBrush(leftThighXRadius, leftThighYRadius, Color.White, Color.Black);
+            _leftThighBrush.Load(graphicsDevice);
+
+            //right thigh
+            const int rightThighYRadius = 12;
+            const int rightThighXRadius = 6;
+
+            _rightThighBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, rightThighXRadius, rightThighYRadius, 1);
+            _rightThighBody.Position = _bodyBody.Position + new Vector2(-bodyXRadius, bodyYRadius + rightThighYRadius);
+            _rightThighGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _rightThighBody, rightThighXRadius, rightThighYRadius, 8, 0);
+            _rightThighBrush = new EllipseBrush(rightThighXRadius, rightThighYRadius, Color.White, Color.Black);
+            _rightThighBrush.Load(graphicsDevice);
+
+            //Left calf
+            const int leftCalfHight = 12;
+            const int leftCalfXRadius = 6;
+
+            _leftCalfBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, leftCalfXRadius, leftCalfHight, 1);
+            _leftCalfBody.Position = _leftThighBody.Position + new Vector2(0, leftThighYRadius + leftCalfHight);
+            _leftCalfGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _leftCalfBody, leftCalfXRadius, leftCalfHight, 8, 0);
+            _leftCalfBrush = new EllipseBrush(leftCalfXRadius, leftCalfHight, Color.White, Color.Black);
+            _leftCalfBrush.Load(graphicsDevice);
+
+            //Right calf
+            const int rightCalfYRadius = 12;
+            const int rightCalfXRadius = 6;
+
+            _rightCalfBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, rightCalfXRadius, rightCalfYRadius, 1);
+            _rightCalfBody.Position = _rightThighBody.Position + new Vector2(0, rightThighYRadius + rightCalfYRadius);
+            _rightCalfGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _rightCalfBody, rightCalfXRadius, rightCalfYRadius, 8, 0);
+            _rightCalfBrush = new EllipseBrush(rightCalfXRadius, rightCalfYRadius, Color.White, Color.Black);
+            _rightCalfBrush.Load(graphicsDevice);
+
+            //Create joints
+            //Head -> body
+            JointFactory.Instance.CreatePinJoint(physicsSimulator, _headBody, new Vector2(0, headYRadius), _bodyBody, new Vector2(0, -bodyYRadius));
+
+            //Left upper arm -> body
+            PinJoint p = JointFactory.Instance.CreatePinJoint(physicsSimulator, _leftUpperArmBody, new Vector2(0, -leftUpperArmYRadius), _bodyBody, new Vector2(-bodyXRadius / 2f, -bodyYRadius + bodyXRadius / 2));
+            p.TargetDistance = 3;
+
+            //Right upper arm -> body
+            p = JointFactory.Instance.CreatePinJoint(physicsSimulator, _rightUpperArmBody, new Vector2(0, -rightUpperArmYRadius), _bodyBody, new Vector2(bodyXRadius / 2f, -bodyYRadius + bodyXRadius / 2));
+            p.TargetDistance = 3;
+
+            //Left arm -> left upper arm
+            JointFactory.Instance.CreatePinJoint(physicsSimulator, _leftArmBody, new Vector2(0, -leftArmYRadius), _leftUpperArmBody, new Vector2(0, leftUpperArmYRadius));
+
+            //Right arm -> right upper arm
+            JointFactory.Instance.CreatePinJoint(physicsSimulator, _rightArmBody, new Vector2(0, -rightArmYRadius), _rightUpperArmBody, new Vector2(0, rightUpperArmYRadius));
+
+            //Left thigh -> body
+            p = JointFactory.Instance.CreatePinJoint(physicsSimulator, _leftThighBody, new Vector2(0, -leftThighYRadius), _bodyBody, new Vector2(bodyXRadius / 2f, bodyYRadius - bodyXRadius / 2));
+            p.TargetDistance = 3;
+
+            //Right thigh -> body
+            p = JointFactory.Instance.CreatePinJoint(physicsSimulator, _rightThighBody, new Vector2(0, -rightThighYRadius), _bodyBody, new Vector2(-bodyXRadius / 2f, bodyYRadius - bodyXRadius / 2));
+            p.TargetDistance = 3;
+
+            //Left calf -> left thigh
+            JointFactory.Instance.CreatePinJoint(physicsSimulator, _leftCalfBody, new Vector2(0, -leftCalfHight), _leftThighBody, new Vector2(0, leftThighYRadius));
+
+            //Right calf -> right thigh
+            JointFactory.Instance.CreatePinJoint(physicsSimulator, _rightCalfBody, new Vector2(0, -rightCalfYRadius), _rightThighBody, new Vector2(0, rightThighYRadius));
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            _headBrush.Draw(spriteBatch, _headBody.Position, _headBody.Rotation);
-            _bodyBrush.Draw(spriteBatch, _bodyBody.Position, _bodyBody.Rotation);
-            _leftUpperArmBrush.Draw(spriteBatch, _leftUpperArmBody.Position, _leftUpperArmBody.Rotation);
-            _rightUpperArmBrush.Draw(spriteBatch, _rightUpperArmBody.Position, _rightUpperArmBody.Rotation);
-            _leftArmBrush.Draw(spriteBatch, _leftArmBody.Position, _leftArmBody.Rotation);
-            _rightArmBrush.Draw(spriteBatch, _rightArmBody.Position, _rightArmBody.Rotation);
-
-            //_rightThighBrush.Draw(spriteBatch, _rightThighBody.Position);
-            //_leftThighBrush.Draw(spriteBatch, _leftThighBody.Position);
-            //_rightCalfBrush.Draw(spriteBatch, _rightCalfBody.Position);
-            //_leftCalfBrush.Draw(spriteBatch, _leftCalfBody.Position);
-            //_rightFootBrush.Draw(spriteBatch, _rightFootBody.Position);
-            //_leftFootBrush.Draw(spriteBatch, _leftFootBody.Position);
+            _headBrush.Draw(spriteBatch, _headGeom.Position, _headGeom.Rotation);
+            _bodyBrush.Draw(spriteBatch, _bodyGeom.Position, _bodyGeom.Rotation);
+            _leftUpperArmBrush.Draw(spriteBatch, _leftUpperArmGeom.Position, _leftUpperArmGeom.Rotation);
+            _rightUpperArmBrush.Draw(spriteBatch, _rightUpperArmGeom.Position, _rightUpperArmGeom.Rotation);
+            _leftArmBrush.Draw(spriteBatch, _leftArmGeom.Position, _leftArmGeom.Rotation);
+            _rightArmBrush.Draw(spriteBatch, _rightArmGeom.Position, _rightArmGeom.Rotation);
+            _leftThighBrush.Draw(spriteBatch, _leftThighGeom.Position, _leftThighGeom.Rotation);
+            _rightThighBrush.Draw(spriteBatch, _rightThighGeom.Position, _rightThighGeom.Rotation);
+            _leftCalfBrush.Draw(spriteBatch, _leftCalfGeom.Position, _leftCalfGeom.Rotation);
+            _rightCalfBrush.Draw(spriteBatch, _rightCalfGeom.Position, _rightCalfGeom.Rotation);
         }
     }
 }
