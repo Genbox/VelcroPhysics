@@ -266,7 +266,7 @@ namespace FarseerGames.FarseerPhysics
             springRemoveList = new List<Spring>();
 
             _broadPhaseCollider = new SelectiveSweepCollider(this);
-            _narrowPhaseCollider = new SAT(this);
+            _narrowPhaseCollider = new DistanceGrid(this);
 
             arbiterList = new ArbiterList();
             Gravity = gravity;
