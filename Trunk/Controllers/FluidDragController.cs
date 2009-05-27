@@ -35,7 +35,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
     /// defined by the <see cref="WaveController"/> will have fluid physics applied to it.
     /// 
     /// </summary>
-    public class FluidDragController : Controller
+    public sealed class FluidDragController : Controller
     {
         #region Delegates
 
@@ -48,19 +48,16 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private Vector2 _buoyancyForce = Vector2.Zero;
         private Vector2 _centroid = Vector2.Zero;
         private Vector2 _centroidVelocity;
-        private float _density;
 
         private float _dragArea;
         private IFluidContainer _fluidContainer;
         private Dictionary<Geom, bool> _geomInFluidList;
         private List<Geom> _geomList;
         private Vector2 _gravity = Vector2.Zero;
-        private float _linearDragCoefficient;
         private Vector2 _linearDragForce = Vector2.Zero;
         private float _max;
         private float _min;
         private float _partialMass;
-        private float _rotationalDragCoeficient;
         private float _rotationalDragTorque;
         private float _totalArea;
         private Vector2 _totalForce;
@@ -78,31 +75,19 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// <summary>
         /// Density of the fluid.  Higher values will make things more buoyant, lower values will cause things to sink.
         /// </summary>
-        public float Density
-        {
-            get { return _density; }
-            set { _density = value; }
-        }
+        public float Density { get; set; }
 
         /// <summary>
         /// Controls the linear drag that the fluid exerts on the bodies within it.  Use higher values will simulate thick fluid, like honey, lower values to
         /// simulate water-like fluids.
         /// </summary>
-        public float LinearDragCoefficient
-        {
-            get { return _linearDragCoefficient; }
-            set { _linearDragCoefficient = value; }
-        }
+        public float LinearDragCoefficient { get; set; }
 
         /// <summary>
         /// Controls the rotational drag that the fluid exerts on the bodies within it. Use higher values will simulate thick fluid, like honey, lower values to
         /// simulate water-like fluids. 
         /// </summary>
-        public float RotationalDragCoefficient
-        {
-            get { return _rotationalDragCoeficient; }
-            set { _rotationalDragCoeficient = value; }
-        }
+        public float RotationalDragCoefficient { get; set; }
 
         /// <summary>
         /// Initializes the fluid drag controller
@@ -116,9 +101,9 @@ namespace FarseerGames.FarseerPhysics.Controllers
                                float rotationalDragCoefficient, Vector2 gravity)
         {
             _fluidContainer = fluidContainer;
-            _density = density;
-            _linearDragCoefficient = linearDragCoefficient;
-            _rotationalDragCoeficient = rotationalDragCoefficient;
+            Density = density;
+            LinearDragCoefficient = linearDragCoefficient;
+            RotationalDragCoefficient = rotationalDragCoefficient;
             _gravity = gravity;
             _vertices = new Vertices();
         }
@@ -135,11 +120,24 @@ namespace FarseerGames.FarseerPhysics.Controllers
             _geomInFluidList.Add(geom, false);
         }
 
+        /// <summary>
+        /// Removes a geometry from the fluid drag controller.
+        /// </summary>
+        /// <param name="geom">The geom.</param>
+        public void RemoveGeom(Geom geom)
+        {
+            _geomList.Remove(geom);
+            _geomInFluidList.Remove(geom);
+        }
+
         public override void Validate()
         {
             //do nothing
         }
 
+        /// <summary>
+        /// Resets the fluid drag controller
+        /// </summary>
         public void Reset()
         {
             _geomInFluidList.Clear();
@@ -154,29 +152,44 @@ namespace FarseerGames.FarseerPhysics.Controllers
             for (int i = 0; i < _geomList.Count; i++)
             {
                 _totalArea = _geomList[i].localVertices.GetArea();
-                if (!_fluidContainer.Intersect(_geomList[i].AABB)) continue;
+
+                //If the AABB of the geometry does not intersect the fluidcontainer
+                //continue to the next geometry
+                if (!_fluidContainer.Intersect(_geomList[i].AABB))
+                    continue;
+
+                //Find the vertices contained in the fluidcontainer
                 FindVerticesInFluid(_geomList[i]);
+
+                //The geometry is not in the fluid, up til a certain point.
                 if (_vertices.Count < _geomList[i].LocalVertices.Count * 0.15f)
-                {
                     _geomInFluidList[_geomList[i]] = false;
-                }
 
                 _area = _vertices.GetArea();
-                if (_area < .000001) continue;
+
+                if (_area < .000001)
+                    continue;
 
                 _centroid = _vertices.GetCentroid(_area);
 
-                CalculateBuoyancy();
+                //Calculate buoyancy force
+                _buoyancyForce = -_gravity * _area * Density;
 
+                //Calculate linear and rotational drag
                 CalculateDrag(_geomList[i]);
 
+                //Add the buoyancy force and lienar drag force
                 Vector2.Add(ref _buoyancyForce, ref _linearDragForce, out _totalForce);
+                
+                //Apply total force to the body
                 _geomList[i].body.ApplyForceAtWorldPoint(ref _totalForce, ref _centroid);
 
+                //Apply rotational drag
                 _geomList[i].body.ApplyTorque(_rotationalDragTorque);
 
                 if (_geomInFluidList[_geomList[i]] == false)
                 {
+                    //The geometry is now in the water. Fire the Entry event
                     _geomInFluidList[_geomList[i]] = true;
                     if (Entry != null)
                     {
@@ -186,6 +199,10 @@ namespace FarseerGames.FarseerPhysics.Controllers
             }
         }
 
+        /// <summary>
+        /// Finds what vertices of the geometry that is inside the fluidcontainer
+        /// </summary>
+        /// <param name="geom">The geometry to check against</param>
         private void FindVerticesInFluid(Geom geom)
         {
             _vertices.Clear();
@@ -199,12 +216,10 @@ namespace FarseerGames.FarseerPhysics.Controllers
             }
         }
 
-        private void CalculateBuoyancy()
-        {
-            _buoyancyForce = -_gravity*_area*_density;
-        }
-
-
+        /// <summary>
+        /// Calculates the linear and rotational drag of the geometry
+        /// </summary>
+        /// <param name="geom">The geometry</param>
         private void CalculateDrag(Geom geom)
         {
             //localCentroid = geom.body.GetLocalPosition(_centroid);
@@ -212,21 +227,20 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
             _axis.X = -_centroidVelocity.Y;
             _axis.Y = _centroidVelocity.X;
+
             //can't normalize a zero length vector
             if (_axis.X != 0 || _axis.Y != 0)
-            {
                 _axis.Normalize();
-            }
 
             _vertices.ProjectToAxis(ref _axis, out _min, out _max);
 
             _dragArea = Math.Abs(_max - _min);
 
-            _partialMass = geom.body.mass*(_area/_totalArea);
+            _partialMass = geom.body.mass * (_area / _totalArea);
 
-            _linearDragForce = -.5f*_density*_dragArea*_linearDragCoefficient*_partialMass*_centroidVelocity;
+            _linearDragForce = -.5f * Density * _dragArea * LinearDragCoefficient * _partialMass * _centroidVelocity;
 
-            _rotationalDragTorque = -geom.body.AngularVelocity*_rotationalDragCoeficient*_partialMass;
+            _rotationalDragTorque = -geom.body.AngularVelocity * RotationalDragCoefficient * _partialMass;
         }
     }
 }
