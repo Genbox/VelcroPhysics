@@ -8,53 +8,37 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     public struct ContactId : IEquatable<ContactId>
     {
-        private int _geometryAIndex;
-        private int _geometryAVertex;
-        private int _geometryBIndex;
-
-        public ContactId(int geometryAIndex, int geometryAVertex, int geometryBIndex)
+        public ContactId(int geometryAIndex, int geometryAVertex, int geometryBIndex) : this()
         {
-            _geometryAIndex = geometryAIndex;
-            _geometryAVertex = geometryAVertex;
-            _geometryBIndex = geometryBIndex;
+            Geom1Index = geometryAIndex;
+            Geom1Vertex = geometryAVertex;
+            Geom2Index = geometryBIndex;
         }
 
         /// <summary>
         /// Gets or sets the index of geom1.
         /// </summary>
         /// <Value>The index of the geom1.</Value>
-        public int Geom1Index
-        {
-            get { return _geometryAIndex; }
-            set { _geometryAIndex = value; }
-        }
+        public int Geom1Index { get; set; }
 
         /// <summary>
         /// Gets or sets the geom1 vertex.
         /// </summary>
         /// <Value>The geom1 vertex.</Value>
-        public int Geom1Vertex
-        {
-            get { return _geometryAVertex; }
-            set { _geometryAVertex = value; }
-        }
+        public int Geom1Vertex { get; set; }
 
         /// <summary>
         /// Gets or sets the index of geom2.
         /// </summary>
         /// <Value>The index of the geom2.</Value>
-        public int Geom2Index
-        {
-            get { return _geometryBIndex; }
-            set { _geometryBIndex = value; }
-        }
+        public int Geom2Index { get; set; }
 
         #region IEquatable<ContactId> Members
 
         public bool Equals(ContactId other)
         {
-            return (_geometryAIndex == other._geometryAIndex) && (_geometryAVertex == other._geometryAVertex) &&
-                   (_geometryBIndex == other._geometryBIndex);
+            return (Geom1Index == other.Geom1Index) && (Geom1Vertex == other.Geom1Vertex) &&
+                   (Geom2Index == other.Geom2Index);
         }
 
         #endregion
@@ -79,7 +63,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public override int GetHashCode()
         {
-            return _geometryAIndex + _geometryAVertex + _geometryBIndex;
+            return Geom1Index + Geom1Vertex + Geom2Index;
         }
     }
 }

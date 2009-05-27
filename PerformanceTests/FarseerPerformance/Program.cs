@@ -15,23 +15,22 @@ namespace FarseerPerformance
             Console.WriteLine("Please wait for the results to come in...");
             Stopwatch watch = new Stopwatch();
 
+            const int screenWidth = 768;
+            const int screenHight = 1024;
+            const int pyramidBaseBodyCount = 18;
+            const int runs = 5;
+            long totalTicks = 0;
+
             for (int k = 0; k < 3; k++)
             {
-                const int pyramidBaseBodyCount = 40;
-                const int baseWidth = 1600;
-                const int baseHeight = 100;
-
-                const int startIterations = 50;
-                const int runs = 5;
-                int totalIterations = 0;
-                long totalTime = 0;
+                long ticks = 0;
 
                 for (int j = 1; j <= runs; j++)
                 {
-                    PhysicsSimulator simulator = new PhysicsSimulator(new Vector2(0, 150));
-                    Body body1 = BodyFactory.Instance.CreateRectangleBody(simulator, baseWidth, baseHeight, 1);
-                    body1.Position = new Vector2(1600 / 2f, 768);
-                    GeomFactory.Instance.CreateRectangleGeom(simulator, body1, baseWidth, baseHeight, 0);
+                    PhysicsSimulator simulator = new PhysicsSimulator(new Vector2(0, 0));
+
+                    Border border = new Border(screenWidth, screenHight, 10, new Vector2(screenWidth / 2f, screenHight / 2f));
+                    border.Load(simulator);
 
                     Body rectangleBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 1f); //template              
                     Geom rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(rectangleBody, 32, 32); //template
@@ -39,27 +38,26 @@ namespace FarseerPerformance
                     rectangleGeom.RestitutionCoefficient = 0f;
 
                     Pyramid pyramid = new Pyramid(rectangleBody, rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, pyramidBaseBodyCount,
-                                           new Vector2(baseWidth / 2f - pyramidBaseBodyCount * .5f * (32 + 32 / 3), 600));
-                    pyramid.Load(simulator);
+                                           new Vector2(screenWidth / 2f - pyramidBaseBodyCount * .5f * (32 + 32 / 3),
+                                                       screenHight - 60)); pyramid.Load(simulator);
 
-                    int currentIterations = startIterations * j;
-                    totalIterations += currentIterations;
-                    long runTime = 0;
+                    watch.Start();
 
-                    for (int i = 0; i < currentIterations; i++)
+                    for (int i = 0; i < 1000; i++)
                     {
-                        watch.Start();
-                        simulator.Update(16.6f);
-                        watch.Stop();
-                        runTime += watch.ElapsedMilliseconds;
-                        watch.Reset();
+                        simulator.Update(0.01f);
                     }
-                    totalTime += runTime;
 
-                    Console.WriteLine("Run {0} took {1} ms with {2} simulation iterations", j, runTime, currentIterations);
+                    watch.Stop();
+                    ticks += watch.ElapsedTicks;
+                    watch.Reset();
+                    Console.WriteLine("1000 iterations took: {0} ticks", ticks);
+                    totalTicks += ticks;
                 }
                 Console.WriteLine();
-                Console.WriteLine("It took on average {0} ms for each iteration for {1} simulation iterations in {2} runs. Average: {3} ms", totalTime / totalIterations, totalIterations, runs, totalTime / runs);
+                Console.WriteLine("Took {0} ticks on average.", totalTicks / runs);
+                Console.WriteLine();
+                totalTicks = 0;
             }
             Console.ReadLine();
         }

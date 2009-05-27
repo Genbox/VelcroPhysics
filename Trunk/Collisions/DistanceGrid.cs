@@ -31,6 +31,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
             _physicsSimulator = physicsSimulator;
         }
 
+        /// <summary>
+        /// Finds the contactpoints between the two geometries.
+        /// </summary>
+        /// <param name="geomA">The first geom.</param>
+        /// <param name="geomB">The second geom.</param>
+        /// <param name="contactList">The contact list.</param>
         public void Collide(Geom geomA, Geom geomB, ContactList contactList)
         {
             int vertexIndex = -1;
@@ -141,6 +147,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             _distanceGrids.Add(geom.id, distanceGridData);
         }
 
+        /// <summary>
+        /// Removes a distance grid from the cache.
+        /// </summary>
+        /// <param name="geom">The geom.</param>
         public void RemoveDistanceGrid(Geom geom)
         {
             _distanceGrids.Remove(geom.id);
@@ -156,6 +166,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return aabb.GetShortestSide() * _gridCellSizeAABBFactor;
         }
 
+        /// <summary>
+        /// Checks if the specified geom intersect the specified point.
+        /// </summary>
+        /// <param name="geom">The geom.</param>
+        /// <param name="point">The point.</param>
+        /// <returns></returns>
         public bool Intersect(Geom geom, ref Vector2 point)
         {
             //Lookup the geometry's distancegrid
@@ -174,6 +190,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
         #endregion
     }
 
+    /// <summary>
+    /// Class that holds the distancegrid data
+    /// </summary>
     public sealed class DistanceGridData
     {
         public AABB AABB;
