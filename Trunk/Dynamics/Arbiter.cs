@@ -370,25 +370,29 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             _newContactList.Clear();
 
-            #region Added by Daniel Pramel 08/17/08
+            //Call the narrow phase collider and get back the contacts
+            _physicsSimulator.NarrowPhaseCollider.Collide(GeometryA, GeometryB, _newContactList);
 
-            /*
-             * we don't want to check for a collision, if both bodies are disabled...
-             */
-            //NOTE: Arbiters should not be created in the broad phase if both bodies are disabled
-            //is this redundant?
-            if (GeometryA.body.Enabled == false && GeometryB.body.Enabled == false)
-            {
-                _mergedContactList.Clear();
-                _contactList.Clear();
-                return;
-            }
+            //sort contact list by seperation (amount of penetration)
+            _newContactList.Sort(_contactComparer);
 
-            #endregion
+            //resolve deepest contacts first
+            int contactCount = _newContactList.Count;
+            if (contactCount > _physicsSimulator.MaxContactsToResolve)
+                _newContactList.RemoveRange(_physicsSimulator.MaxContactsToResolve, contactCount - _physicsSimulator.MaxContactsToResolve);
 
-            Collide(GeometryA, GeometryB, _newContactList);
-            _mergedContactList.Clear();
+            //allow user to cancel collision if desired
+            if (GeometryA.OnCollision != null)
+                if (_newContactList.Count > 0)
+                    if (!GeometryA.OnCollision(GeometryA, GeometryB, _newContactList))
+                        _newContactList.Clear();
 
+            if (GeometryB.OnCollision != null)
+                if (_newContactList.Count > 0)
+                    if (!GeometryB.OnCollision(GeometryB, GeometryA, _newContactList))
+                        _newContactList.Clear(); _mergedContactList.Clear();
+
+            //Calculate on the new contacts gathered (Warm starting is done here)
             for (int i = 0; i < _newContactList.Count; i++)
             {
                 int index = _contactList.IndexOfSafe(_newContactList[i]);
@@ -406,67 +410,20 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     _mergedContactList.Add(_newContactList[i]);
                 }
             }
+
             _contactList.Clear();
             for (int i = 0; i < _mergedContactList.Count; i++)
-            {
                 _contactList.Add(_mergedContactList[i]);
-            }
-        }
-
-        private void Collide(Geom geometry1, Geom geometry2, ContactList contactList)
-        {
-            //Call the narrow phase collider and get back the contacts
-            _physicsSimulator.NarrowPhaseCollider.Collide(geometry1, geometry2, contactList);
-
-            //sort contact list by seperation (amount of penetration)
-            contactList.Sort(_contactComparer);
-
-            //resolve deepest contacts first
-            int contactCount = contactList.Count;
-            if (contactCount > _physicsSimulator.MaxContactsToResolve)
-            {
-                contactList.RemoveRange(_physicsSimulator.MaxContactsToResolve,
-                                        contactCount - _physicsSimulator.MaxContactsToResolve);
-            }
-
-            //allow user to cancel collision if desired
-            if (geometry1.OnCollision != null)
-            {
-                //If the contactlist is populated, this means that there is an collision.
-                if (contactList.Count > 0)
-                {
-                    if (!geometry1.OnCollision(geometry1, geometry2, contactList))
-                    {
-                        //The user aborted the collision. Clear the contact list as we don't need it anymore.
-                        contactList.Clear();
-                    }
-                }
-            }
-
-            //allow user to cancel collision if desired
-            if (geometry2.OnCollision != null)
-            {
-                if (contactList.Count > 0)
-                {
-                    if (!geometry2.OnCollision(geometry2, geometry1, contactList))
-                    {
-                        contactList.Clear();
-                    }
-                }
-            }
         }
 
         private static int CompareSeperation(Contact c1, Contact c2)
         {
             if (c1.Separation < c2.Separation)
-            {
                 return -1;
-            }
 
             if (c1.Separation == c2.Separation)
-            {
                 return 0;
-            }
+            
             return 1;
         }
 
@@ -492,14 +449,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             return !arbiter1.Equals(arbiter2);
         }
-
-        #region Collide variables
-
-        private Feature _feature;
-        private Vector2 _localVertex;
-        private Vector2 _vertRef;
-
-        #endregion
 
         #region Variables for ApplyImpulse
 
