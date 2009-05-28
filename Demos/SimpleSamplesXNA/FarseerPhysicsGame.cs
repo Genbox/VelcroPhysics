@@ -4,7 +4,7 @@ using FarseerGames.SimpleSamplesXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.SimpleSamplesXNAXNA
+namespace FarseerGames.SimpleSamplesXNA
 {
     /// <summary>
     /// This is the main type for your game
