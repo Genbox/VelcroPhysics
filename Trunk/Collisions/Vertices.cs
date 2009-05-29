@@ -21,6 +21,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private Vector2 _vectorTemp4 = Vector2.Zero;
         private Vector2 _vectorTemp5 = Vector2.Zero;
 
+
         public Vertices()
         {
         }
@@ -470,21 +471,22 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             Vertices vertices = new Vertices();
             vertices.Add(new Vector2(-width * .5f, -height * .5f));
-            vertices.Add(new Vector2(-width * .5f, -height * .25f));
-            vertices.Add(new Vector2(-width * .5f, 0));
-            vertices.Add(new Vector2(-width * .5f, height * .25f));
+            //vertices.Add(new Vector2(-width * .5f, -height * .25f));
+            //vertices.Add(new Vector2(-width * .5f, 0));
+            //vertices.Add(new Vector2(-width * .5f, height * .25f));
             vertices.Add(new Vector2(-width * .5f, height * .5f));
-            vertices.Add(new Vector2(-width * .25f, height * .5f));
-            vertices.Add(new Vector2(0, height * .5f));
-            vertices.Add(new Vector2(width * .25f, height * .5f));
+            //vertices.Add(new Vector2(-width * .25f, height * .5f));
+            //vertices.Add(new Vector2(0, height * .5f));
+            //vertices.Add(new Vector2(width * .25f, height * .5f));
             vertices.Add(new Vector2(width * .5f, height * .5f));
-            vertices.Add(new Vector2(width * .5f, height * .25f));
-            vertices.Add(new Vector2(width * .5f, 0));
-            vertices.Add(new Vector2(width * .5f, -height * .25f));
+            //vertices.Add(new Vector2(width * .5f, height * .25f));
+            //vertices.Add(new Vector2(width * .5f, 0));
+            //vertices.Add(new Vector2(width * .5f, -height * .25f));
             vertices.Add(new Vector2(width * .5f, -height * .5f));
-            vertices.Add(new Vector2(width * .25f, -height * .5f));
-            vertices.Add(new Vector2(0, -height * .5f));
-            vertices.Add(new Vector2(-width * .25f, -height * .5f));
+            //vertices.Add(new Vector2(width * .25f, -height * .5f));
+            //vertices.Add(new Vector2(0, -height * .5f));
+            //vertices.Add(new Vector2(-width * .25f, -height * .5f));
+
             return vertices;
         }
 
@@ -2401,7 +2403,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
         #endregion
 
         #endregion
+
+        #region SAT Extensions
+
+        
+
+        #endregion
     }
+
+    #region SAT Extensions
+
+    #endregion
 
     #region DrDeth's Extension
     /// <summary>

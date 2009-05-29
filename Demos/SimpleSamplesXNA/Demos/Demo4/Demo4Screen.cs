@@ -17,7 +17,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo4
 #if XBOX
         private const int _pyramidBaseBodyCount = 8;
 #else
-        private const int _pyramidBaseBodyCount = 15;
+        private const int _pyramidBaseBodyCount = 20;
 #endif
         private Agent _agent;
         private Pyramid _pyramid;
@@ -28,7 +28,8 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo4
         public override void Initialize()
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 50));
-            PhysicsSimulator.BiasFactor = .4f;
+            //PhysicsSimulator.NarrowPhaseCollider = new SAT(PhysicsSimulator);
+            PhysicsSimulator.BiasFactor = .2f;
             //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
             PhysicsSimulator.MaxContactsToDetect = 2;
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
