@@ -5,9 +5,9 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
-using SimpleSamplesWpf.Demos;
+using SimpleSamplesWPF.Demos;
 
-namespace SimpleSamplesWpf.SharedDemoObjects
+namespace SimpleSamplesWPF.SharedDemoObjects
 {
     public class AngularSpringLever
     {

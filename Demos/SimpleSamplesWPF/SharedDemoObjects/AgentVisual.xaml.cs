@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace SimpleSamplesWpf.SharedDemoObjects
+namespace SimpleSamplesWPF.SharedDemoObjects
 {
     /// <summary>
     /// Interaction logic for AgentVisual.xaml

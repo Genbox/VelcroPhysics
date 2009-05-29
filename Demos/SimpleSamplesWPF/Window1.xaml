@@ -1,8 +1,8 @@
-﻿<Window x:Class="SimpleSamplesWpf.Window1"
+﻿<Window x:Class="SimpleSamplesWPF.Window1"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:SimpleSamplesWpf="clr-namespace:SimpleSamplesWpf"
-    xmlns:Screens="clr-namespace:SimpleSamplesWpf.Screens"
+    xmlns:SimpleSamplesWpf="clr-namespace:SimpleSamplesWPF"
+    xmlns:Screens="clr-namespace:SimpleSamplesWPF.Screens"
     Title="farseer physics simple samples (WPF)" Width="800" Height="600" Background="Black">
     <Grid>
         <!--viewbox scales view, but keeps view from scaling non-uniformly-->

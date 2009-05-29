@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace SimpleSamplesWpf
+namespace SimpleSamplesWPF
 {
     /// <summary>
     /// Interaction logic for App.xaml

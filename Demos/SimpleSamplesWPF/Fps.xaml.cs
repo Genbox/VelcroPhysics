@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
 
-namespace SimpleSamplesWpf
+namespace SimpleSamplesWPF
 {
     /// <summary>
     /// Interaction logic for Fps.xaml

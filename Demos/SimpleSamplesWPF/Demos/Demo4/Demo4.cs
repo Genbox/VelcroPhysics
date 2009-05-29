@@ -4,9 +4,9 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
-using SimpleSamplesWpf.SharedDemoObjects;
+using SimpleSamplesWPF.SharedDemoObjects;
 
-namespace SimpleSamplesWpf.Demos.Demo4
+namespace SimpleSamplesWPF.Demos.Demo4
 {
     class Demo4 : Demo
     {

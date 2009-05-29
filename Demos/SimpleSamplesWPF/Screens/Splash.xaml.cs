@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace SimpleSamplesWpf.Screens
+namespace SimpleSamplesWPF.Screens
 {
     /// <summary>
     /// Interaction logic for Splash.xaml

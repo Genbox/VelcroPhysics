@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Media;
 
-namespace SimpleSamplesWpf
+namespace SimpleSamplesWPF
 {
     public class GameLoop : IDisposable
     {

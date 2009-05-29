@@ -1,6 +1,6 @@
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace SimpleSamplesWpf
+namespace SimpleSamplesWPF
 {
     public interface ILinearSpringVisual
     {

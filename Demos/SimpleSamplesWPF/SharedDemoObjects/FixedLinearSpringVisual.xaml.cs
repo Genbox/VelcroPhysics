@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace SimpleSamplesWpf.SharedDemoObjects
+namespace SimpleSamplesWPF.SharedDemoObjects
 {
     /// <summary>
     /// Interaction logic for FixedLinearSpringVisual.xaml
