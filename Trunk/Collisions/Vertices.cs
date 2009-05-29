@@ -446,6 +446,21 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
+        /// Rotate the vertices with the defined value in radians.
+        /// </summary>
+        /// <param name="value">The amount to rotate by in radians.</param>
+        public void Rotate(float value)
+        {
+            Matrix rotationMatrix;
+            Matrix.CreateRotationZ(value, out rotationMatrix);
+
+            for (int i = 0; i < Count; i++)
+            {
+                this[i] = Vector2.Transform(this[i], rotationMatrix);
+            }
+        }
+
+        /// <summary>
         /// Creates a rectangle with the specified width and height.
         /// </summary>
         /// <param name="width">The width.</param>
@@ -534,12 +549,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 vertices.Add(new Vector2((radius + toothHeight) * Calculator.Cos((stepSize * i) + toothAngleStepSize + toothTipStepSize),
                     -(radius + toothHeight) * Calculator.Sin((stepSize * i) + toothAngleStepSize + toothTipStepSize)));
 
-                vertices.Add(new Vector2((radius) * Calculator.Cos((stepSize * i) + (toothAngleStepSize *2f) + toothTipStepSize),
+                vertices.Add(new Vector2((radius) * Calculator.Cos((stepSize * i) + (toothAngleStepSize * 2f) + toothTipStepSize),
                     -(radius) * Calculator.Sin((stepSize * i) + (toothAngleStepSize * 2f) + toothTipStepSize)));
 
                 //vertices.Add(new Vector2((radius) * Calculator.Cos((stepSize * i) + (toothAngleStepSize + toothTipStepSize) * 2f),
                 //    -(radius) * Calculator.Sin((stepSize * i) + (toothAngleStepSize + toothTipStepSize) * 2f)));
-                
+
             }
 
             return vertices;
@@ -1489,6 +1504,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns></returns>
         public static Vertices CreateCapsule(float height, float endRadius, int edges)
         {
+            if (endRadius >= height / 2)
+                throw new ArgumentException("The radius must be lower than height / 2. Higher values of radius would create a circle, and not a half circle.", "endRadius");
+
             return CreateCapsule(height, endRadius, edges, endRadius, edges);
         }
 
@@ -1497,27 +1515,48 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// A capsule has the same form as a pill capsule.
         /// </summary>
         /// <param name="height">Height (inner height + radii) of the capsule.</param>
-        /// <param name="endRadius">Radius of the top.</param>
+        /// <param name="topRadius">Radius of the top.</param>
         /// <param name="topEdges">The number of edges of the top. The more edges, the more it resembles an capsule</param>
         /// <param name="bottomRadius">Radius of bottom.</param>
         /// <param name="bottomEdges">The number of edges of the bottom. The more edges, the more it resembles an capsule</param>
         /// <returns></returns>
-        public static Vertices CreateCapsule(float height, float endRadius, int topEdges, float bottomRadius, int bottomEdges)
+        public static Vertices CreateCapsule(float height, float topRadius, int topEdges, float bottomRadius, int bottomEdges)
         {
+            if (height <= 0)
+                throw new ArgumentException("Height must be longer than 0", "height");
+
+            if (topRadius <= 0)
+                throw new ArgumentException("The top radius must be more than 0", "topRadius");
+
+            if (topEdges <= 0)
+                throw new ArgumentException("Top edges must be more than 0", "topEdges");
+
+            if (bottomRadius <= 0)
+                throw new ArgumentException("The bottom radius must be more than 0", "bottomRadius");
+
+            if (bottomEdges <= 0)
+                throw new ArgumentException("Bottom edges must be more than 0", "bottomEdges");
+
+            if (topRadius >= height / 2)
+                throw new ArgumentException("The top radius must be lower than height / 2. Higher values of top radius would create a circle, and not a half circle.", "topRadius");
+
+            if (bottomRadius >= height / 2)
+                throw new ArgumentException("The bottom radius must be lower than height / 2. Higher values of bottom radius would create a circle, and not a half circle.", "bottomRadius");
+
             Vertices vertices = new Vertices();
 
-            float newHeight = (height - endRadius - bottomRadius) * 0.5f;
+            float newHeight = (height - topRadius - bottomRadius) * 0.5f;
 
             // top
-            vertices.Add(new Vector2(endRadius, newHeight));
+            vertices.Add(new Vector2(topRadius, newHeight));
 
             float stepSize = MathHelper.Pi / topEdges;
             for (int i = 1; i < topEdges - 1; i++)
             {
-                vertices.Add(new Vector2(endRadius * Calculator.Cos(stepSize * i), endRadius * Calculator.Sin(stepSize * i) + newHeight));
+                vertices.Add(new Vector2(topRadius * Calculator.Cos(stepSize * i), topRadius * Calculator.Sin(stepSize * i) + newHeight));
             }
 
-            vertices.Add(new Vector2(-endRadius, newHeight));
+            vertices.Add(new Vector2(-topRadius, newHeight));
 
             // bottom
             vertices.Add(new Vector2(-bottomRadius, -newHeight));
@@ -1638,7 +1677,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
-#endregion
+        #endregion
 
         #region Triangle
 
@@ -1828,335 +1867,335 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #region Public Methods
 
-		#region Triangulate
+        #region Triangulate
 
-		/// <summary>
-		/// Triangulates a 2D polygon produced the indexes required to render the points as a triangle list.
-		/// </summary>
-		/// <param name="inputVertices">The polygon vertices in counter-clockwise winding order.</param>
-		/// <param name="desiredWindingOrder">The desired output winding order.</param>
-		/// <param name="outputVertices">The resulting vertices that include any reversals of winding order and holes.</param>
-		/// <param name="indices">The resulting indices for rendering the shape as a triangle list.</param>
-		public static void Triangulate(
-			Vector2[] inputVertices,
-			WindingOrder desiredWindingOrder,
-			out Vector2[] outputVertices,
-			out short[] indices)
-		{
-			//Log("\nBeginning triangulation...");
+        /// <summary>
+        /// Triangulates a 2D polygon produced the indexes required to render the points as a triangle list.
+        /// </summary>
+        /// <param name="inputVertices">The polygon vertices in counter-clockwise winding order.</param>
+        /// <param name="desiredWindingOrder">The desired output winding order.</param>
+        /// <param name="outputVertices">The resulting vertices that include any reversals of winding order and holes.</param>
+        /// <param name="indices">The resulting indices for rendering the shape as a triangle list.</param>
+        public static void Triangulate(
+            Vector2[] inputVertices,
+            WindingOrder desiredWindingOrder,
+            out Vector2[] outputVertices,
+            out short[] indices)
+        {
+            //Log("\nBeginning triangulation...");
 
-			List<Triangle> triangles = new List<Triangle>();
+            List<Triangle> triangles = new List<Triangle>();
 
-			//make sure we have our vertices wound properly
-			if (DetermineWindingOrder(inputVertices) == WindingOrder.Clockwise)
-				outputVertices = ReverseWindingOrder(inputVertices);
-			else
-				outputVertices = (Vector2[])inputVertices.Clone();
+            //make sure we have our vertices wound properly
+            if (DetermineWindingOrder(inputVertices) == WindingOrder.Clockwise)
+                outputVertices = ReverseWindingOrder(inputVertices);
+            else
+                outputVertices = (Vector2[])inputVertices.Clone();
 
-			//clear all of the lists
-			polygonVertices.Clear();
-			earVertices.Clear();
-			convexVertices.Clear();
-			reflexVertices.Clear();
+            //clear all of the lists
+            polygonVertices.Clear();
+            earVertices.Clear();
+            convexVertices.Clear();
+            reflexVertices.Clear();
 
-			//generate the cyclical list of vertices in the polygon
-			for (int i = 0; i < outputVertices.Length; i++)
-				polygonVertices.AddLast(new Vertex(outputVertices[i], (short)i));
+            //generate the cyclical list of vertices in the polygon
+            for (int i = 0; i < outputVertices.Length; i++)
+                polygonVertices.AddLast(new Vertex(outputVertices[i], (short)i));
 
-			//categorize all of the vertices as convex, reflex, and ear
-			FindConvexAndReflexVertices();
-			FindEarVertices();
+            //categorize all of the vertices as convex, reflex, and ear
+            FindConvexAndReflexVertices();
+            FindEarVertices();
 
-			//clip all the ear vertices
-			while (polygonVertices.Count > 3 && earVertices.Count > 0)
-				ClipNextEar(triangles);
+            //clip all the ear vertices
+            while (polygonVertices.Count > 3 && earVertices.Count > 0)
+                ClipNextEar(triangles);
 
-			//if there are still three points, use that for the last triangle
-			if (polygonVertices.Count == 3)
-				triangles.Add(new Triangle(
-					polygonVertices[0].Value,
-					polygonVertices[1].Value,
-					polygonVertices[2].Value));
+            //if there are still three points, use that for the last triangle
+            if (polygonVertices.Count == 3)
+                triangles.Add(new Triangle(
+                    polygonVertices[0].Value,
+                    polygonVertices[1].Value,
+                    polygonVertices[2].Value));
 
-			//add all of the triangle indices to the output array
-			indices = new short[triangles.Count * 3];
+            //add all of the triangle indices to the output array
+            indices = new short[triangles.Count * 3];
 
-			//move the if statement out of the loop to prevent all the
-			//redundant comparisons
-			if (desiredWindingOrder == WindingOrder.CounterClockwise)
-			{
-				for (int i = 0; i < triangles.Count; i++)
-				{
-					indices[(i * 3)] = triangles[i].A.Index;
-					indices[(i * 3) + 1] = triangles[i].B.Index;
-					indices[(i * 3) + 2] = triangles[i].C.Index;
-				}
-			}
-			else
-			{
-				for (int i = 0; i < triangles.Count; i++)
-				{
-					indices[(i * 3)] = triangles[i].C.Index;
-					indices[(i * 3) + 1] = triangles[i].B.Index;
-					indices[(i * 3) + 2] = triangles[i].A.Index;
-				}
-			}
-		}
+            //move the if statement out of the loop to prevent all the
+            //redundant comparisons
+            if (desiredWindingOrder == WindingOrder.CounterClockwise)
+            {
+                for (int i = 0; i < triangles.Count; i++)
+                {
+                    indices[(i * 3)] = triangles[i].A.Index;
+                    indices[(i * 3) + 1] = triangles[i].B.Index;
+                    indices[(i * 3) + 2] = triangles[i].C.Index;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < triangles.Count; i++)
+                {
+                    indices[(i * 3)] = triangles[i].C.Index;
+                    indices[(i * 3) + 1] = triangles[i].B.Index;
+                    indices[(i * 3) + 2] = triangles[i].A.Index;
+                }
+            }
+        }
 
-		#endregion
+        #endregion
 
-		#region CutHoleInShape
+        #region CutHoleInShape
 
-		/// <summary>
-		/// Cuts a hole into a shape.
-		/// </summary>
-		/// <param name="shapeVerts">An array of vertices for the primary shape.</param>
-		/// <param name="holeVerts">An array of vertices for the hole to be cut. It is assumed that these vertices lie completely within the shape verts.</param>
-		/// <returns>The new array of vertices that can be passed to Triangulate to properly triangulate the shape with the hole.</returns>
-		public static Vector2[] CutHoleInShape(Vector2[] shapeVerts, Vector2[] holeVerts)
-		{
-			Log("\nCutting hole into shape...");
+        /// <summary>
+        /// Cuts a hole into a shape.
+        /// </summary>
+        /// <param name="shapeVerts">An array of vertices for the primary shape.</param>
+        /// <param name="holeVerts">An array of vertices for the hole to be cut. It is assumed that these vertices lie completely within the shape verts.</param>
+        /// <returns>The new array of vertices that can be passed to Triangulate to properly triangulate the shape with the hole.</returns>
+        public static Vector2[] CutHoleInShape(Vector2[] shapeVerts, Vector2[] holeVerts)
+        {
+            Log("\nCutting hole into shape...");
 
-			//make sure the shape vertices are wound counter clockwise and the hole vertices clockwise
-			shapeVerts = EnsureWindingOrder(shapeVerts, WindingOrder.CounterClockwise);
-			holeVerts = EnsureWindingOrder(holeVerts, WindingOrder.Clockwise);
+            //make sure the shape vertices are wound counter clockwise and the hole vertices clockwise
+            shapeVerts = EnsureWindingOrder(shapeVerts, WindingOrder.CounterClockwise);
+            holeVerts = EnsureWindingOrder(holeVerts, WindingOrder.Clockwise);
 
-			//clear all of the lists
-			polygonVertices.Clear();
-			earVertices.Clear();
-			convexVertices.Clear();
-			reflexVertices.Clear();
+            //clear all of the lists
+            polygonVertices.Clear();
+            earVertices.Clear();
+            convexVertices.Clear();
+            reflexVertices.Clear();
 
-			//generate the cyclical list of vertices in the polygon
-			for (int i = 0; i < shapeVerts.Length; i++)
-				polygonVertices.AddLast(new Vertex(shapeVerts[i], (short)i));
+            //generate the cyclical list of vertices in the polygon
+            for (int i = 0; i < shapeVerts.Length; i++)
+                polygonVertices.AddLast(new Vertex(shapeVerts[i], (short)i));
 
-			CyclicalList<Vertex> holePolygon = new CyclicalList<Vertex>();
-			for (int i = 0; i < holeVerts.Length; i++)
+            CyclicalList<Vertex> holePolygon = new CyclicalList<Vertex>();
+            for (int i = 0; i < holeVerts.Length; i++)
                 holePolygon.Add(new Vertex(holeVerts[i], (short)(i + polygonVertices.Count)));
 
 #if DEBUG
-			StringBuilder vString = new StringBuilder();
-			foreach (Vertex v in polygonVertices)
-				vString.Append(string.Format("{0}, ", v));
-			Log("Shape Vertices: {0}", vString);
+            StringBuilder vString = new StringBuilder();
+            foreach (Vertex v in polygonVertices)
+                vString.Append(string.Format("{0}, ", v));
+            Log("Shape Vertices: {0}", vString);
 
-			vString = new StringBuilder();
-			foreach (Vertex v in holePolygon)
-				vString.Append(string.Format("{0}, ", v));
-			Log("Hole Vertices: {0}", vString);
+            vString = new StringBuilder();
+            foreach (Vertex v in holePolygon)
+                vString.Append(string.Format("{0}, ", v));
+            Log("Hole Vertices: {0}", vString);
 #endif
 
-			FindConvexAndReflexVertices();
-			FindEarVertices();
+            FindConvexAndReflexVertices();
+            FindEarVertices();
 
-			//find the hole vertex with the largest X value
-			Vertex rightMostHoleVertex = holePolygon[0];
-			foreach (Vertex v in holePolygon)
-				if (v.Position.X > rightMostHoleVertex.Position.X)
-					rightMostHoleVertex = v;
+            //find the hole vertex with the largest X value
+            Vertex rightMostHoleVertex = holePolygon[0];
+            foreach (Vertex v in holePolygon)
+                if (v.Position.X > rightMostHoleVertex.Position.X)
+                    rightMostHoleVertex = v;
 
-			//construct a list of all line segments where at least one vertex
-			//is to the right of the rightmost hole vertex with one vertex
-			//above the hole vertex and one below
-			List<LineSegment> segmentsToTest = new List<LineSegment>();
-			for (int i = 0; i < polygonVertices.Count; i++)
-			{
-				Vertex a = polygonVertices[i].Value;
-				Vertex b = polygonVertices[i + 1].Value;
+            //construct a list of all line segments where at least one vertex
+            //is to the right of the rightmost hole vertex with one vertex
+            //above the hole vertex and one below
+            List<LineSegment> segmentsToTest = new List<LineSegment>();
+            for (int i = 0; i < polygonVertices.Count; i++)
+            {
+                Vertex a = polygonVertices[i].Value;
+                Vertex b = polygonVertices[i + 1].Value;
 
-				if ((a.Position.X > rightMostHoleVertex.Position.X || b.Position.X > rightMostHoleVertex.Position.X) &&
-					((a.Position.Y >= rightMostHoleVertex.Position.Y && b.Position.Y <= rightMostHoleVertex.Position.Y) ||
-					(a.Position.Y <= rightMostHoleVertex.Position.Y && b.Position.Y >= rightMostHoleVertex.Position.Y)))
-					segmentsToTest.Add(new LineSegment(a, b));
-			}
+                if ((a.Position.X > rightMostHoleVertex.Position.X || b.Position.X > rightMostHoleVertex.Position.X) &&
+                    ((a.Position.Y >= rightMostHoleVertex.Position.Y && b.Position.Y <= rightMostHoleVertex.Position.Y) ||
+                    (a.Position.Y <= rightMostHoleVertex.Position.Y && b.Position.Y >= rightMostHoleVertex.Position.Y)))
+                    segmentsToTest.Add(new LineSegment(a, b));
+            }
 
-			//now we try to find the closest intersection point heading to the right from
-			//our hole vertex.
-			float? closestPoint = null;
-			LineSegment closestSegment = new LineSegment();
-			foreach (LineSegment segment in segmentsToTest)
-			{
-				float? intersection = segment.IntersectsWithRay(rightMostHoleVertex.Position, Vector2.UnitX);
-				if (intersection != null)
-				{
-					if (closestPoint == null || closestPoint.Value > intersection.Value)
-					{
-						closestPoint = intersection;
-						closestSegment = segment;
-					}
-				}
-			}
+            //now we try to find the closest intersection point heading to the right from
+            //our hole vertex.
+            float? closestPoint = null;
+            LineSegment closestSegment = new LineSegment();
+            foreach (LineSegment segment in segmentsToTest)
+            {
+                float? intersection = segment.IntersectsWithRay(rightMostHoleVertex.Position, Vector2.UnitX);
+                if (intersection != null)
+                {
+                    if (closestPoint == null || closestPoint.Value > intersection.Value)
+                    {
+                        closestPoint = intersection;
+                        closestSegment = segment;
+                    }
+                }
+            }
 
-			//if closestPoint is null, there were no collisions (likely from improper input data),
-			//but we'll just return without doing anything else
-			if (closestPoint == null)
-				return shapeVerts;
+            //if closestPoint is null, there were no collisions (likely from improper input data),
+            //but we'll just return without doing anything else
+            if (closestPoint == null)
+                return shapeVerts;
 
-			//otherwise we can find our mutually visible vertex to split the polygon
-			Vector2 I = rightMostHoleVertex.Position + Vector2.UnitX * closestPoint.Value;
-			Vertex P = (closestSegment.A.Position.X > closestSegment.B.Position.X) 
-				? closestSegment.A 
-				: closestSegment.B;
+            //otherwise we can find our mutually visible vertex to split the polygon
+            Vector2 I = rightMostHoleVertex.Position + Vector2.UnitX * closestPoint.Value;
+            Vertex P = (closestSegment.A.Position.X > closestSegment.B.Position.X)
+                ? closestSegment.A
+                : closestSegment.B;
 
-			//construct triangle MIP
-			Triangle mip = new Triangle(rightMostHoleVertex, new Vertex(I, 1), P);
+            //construct triangle MIP
+            Triangle mip = new Triangle(rightMostHoleVertex, new Vertex(I, 1), P);
 
-			//see if any of the reflex vertices lie inside of the MIP triangle
-			List<Vertex> interiorReflexVertices = new List<Vertex>();
-			foreach (Vertex v in reflexVertices)
-				if (mip.ContainsPoint(v))
-					interiorReflexVertices.Add(v);
+            //see if any of the reflex vertices lie inside of the MIP triangle
+            List<Vertex> interiorReflexVertices = new List<Vertex>();
+            foreach (Vertex v in reflexVertices)
+                if (mip.ContainsPoint(v))
+                    interiorReflexVertices.Add(v);
 
-			//if there are any interior reflex vertices, find the one that, when connected
-			//to our rightMostHoleVertex, forms the line closest to Vector2.UnitX
-			if (interiorReflexVertices.Count > 0)
-			{
-				float closestDot = -1f;
-				foreach (Vertex v in interiorReflexVertices)
-				{
-					//compute the dot product of the vector against the UnitX
-					Vector2 d = Vector2.Normalize(v.Position - rightMostHoleVertex.Position);
-					float dot = Vector2.Dot(Vector2.UnitX, d);
+            //if there are any interior reflex vertices, find the one that, when connected
+            //to our rightMostHoleVertex, forms the line closest to Vector2.UnitX
+            if (interiorReflexVertices.Count > 0)
+            {
+                float closestDot = -1f;
+                foreach (Vertex v in interiorReflexVertices)
+                {
+                    //compute the dot product of the vector against the UnitX
+                    Vector2 d = Vector2.Normalize(v.Position - rightMostHoleVertex.Position);
+                    float dot = Vector2.Dot(Vector2.UnitX, d);
 
-					//if this line is the closest we've found
-					if (dot > closestDot)
-					{
-						//save the value and save the vertex as P
-						closestDot = dot;
-						P = v;
-					}
-				}
-			}
-            
-			//now we just form our output array by injecting the hole vertices into place
-			//we know we have to inject the hole into the main array after point P going from
-			//rightMostHoleVertex around and then back to P.
-			int mIndex = holePolygon.IndexOf(rightMostHoleVertex);
-			int injectPoint = polygonVertices.IndexOf(P);
+                    //if this line is the closest we've found
+                    if (dot > closestDot)
+                    {
+                        //save the value and save the vertex as P
+                        closestDot = dot;
+                        P = v;
+                    }
+                }
+            }
 
-			Log("Inserting hole at injection point {0} starting at hole vertex {1}.", 
-				P,
-				rightMostHoleVertex);
-			for (int i = mIndex; i <= mIndex + holePolygon.Count; i++)
-			{
-				Log("Inserting vertex {0} after vertex {1}.", holePolygon[i], polygonVertices[injectPoint].Value);
-				polygonVertices.AddAfter(polygonVertices[injectPoint++], holePolygon[i]);
-			}
-			polygonVertices.AddAfter(polygonVertices[injectPoint], P);
+            //now we just form our output array by injecting the hole vertices into place
+            //we know we have to inject the hole into the main array after point P going from
+            //rightMostHoleVertex around and then back to P.
+            int mIndex = holePolygon.IndexOf(rightMostHoleVertex);
+            int injectPoint = polygonVertices.IndexOf(P);
+
+            Log("Inserting hole at injection point {0} starting at hole vertex {1}.",
+                P,
+                rightMostHoleVertex);
+            for (int i = mIndex; i <= mIndex + holePolygon.Count; i++)
+            {
+                Log("Inserting vertex {0} after vertex {1}.", holePolygon[i], polygonVertices[injectPoint].Value);
+                polygonVertices.AddAfter(polygonVertices[injectPoint++], holePolygon[i]);
+            }
+            polygonVertices.AddAfter(polygonVertices[injectPoint], P);
 
 #if DEBUG
-			vString = new StringBuilder();
-			foreach (Vertex v in polygonVertices)
-				vString.Append(string.Format("{0}, ", v));
-			Log("New Shape Vertices: {0}\n", vString);
+            vString = new StringBuilder();
+            foreach (Vertex v in polygonVertices)
+                vString.Append(string.Format("{0}, ", v));
+            Log("New Shape Vertices: {0}\n", vString);
 #endif
 
-			//finally we write out the new polygon vertices and return them out
-			Vector2[] newShapeVerts = new Vector2[polygonVertices.Count];
-			for (int i = 0; i < polygonVertices.Count; i++)
-				newShapeVerts[i] = polygonVertices[i].Value.Position;
+            //finally we write out the new polygon vertices and return them out
+            Vector2[] newShapeVerts = new Vector2[polygonVertices.Count];
+            for (int i = 0; i < polygonVertices.Count; i++)
+                newShapeVerts[i] = polygonVertices[i].Value.Position;
 
-			return newShapeVerts;
-		}
+            return newShapeVerts;
+        }
 
-		#endregion
+        #endregion
 
-		#region EnsureWindingOrder
+        #region EnsureWindingOrder
 
-		/// <summary>
-		/// Ensures that a set of vertices are wound in a particular order, reversing them if necessary.
-		/// </summary>
-		/// <param name="vertices">The vertices of the polygon.</param>
-		/// <param name="windingOrder">The desired winding order.</param>
-		/// <returns>A new set of vertices if the winding order didn't match; otherwise the original set.</returns>
-		public static Vector2[] EnsureWindingOrder(Vector2[] vertices, WindingOrder windingOrder)
-		{
-			//Log("\nEnsuring winding order of {0}...", windingOrder);
-			if (DetermineWindingOrder(vertices) != windingOrder)
-			{
-				//Log("Reversing vertices...");
-				return ReverseWindingOrder(vertices);
-			}
+        /// <summary>
+        /// Ensures that a set of vertices are wound in a particular order, reversing them if necessary.
+        /// </summary>
+        /// <param name="vertices">The vertices of the polygon.</param>
+        /// <param name="windingOrder">The desired winding order.</param>
+        /// <returns>A new set of vertices if the winding order didn't match; otherwise the original set.</returns>
+        public static Vector2[] EnsureWindingOrder(Vector2[] vertices, WindingOrder windingOrder)
+        {
+            //Log("\nEnsuring winding order of {0}...", windingOrder);
+            if (DetermineWindingOrder(vertices) != windingOrder)
+            {
+                //Log("Reversing vertices...");
+                return ReverseWindingOrder(vertices);
+            }
 
-			//Log("No reversal needed.");
-			return vertices;
-		}
+            //Log("No reversal needed.");
+            return vertices;
+        }
 
-		#endregion
+        #endregion
 
-		#region ReverseWindingOrder
+        #region ReverseWindingOrder
 
-		/// <summary>
-		/// Reverses the winding order for a set of vertices.
-		/// </summary>
-		/// <param name="vertices">The vertices of the polygon.</param>
-		/// <returns>The new vertices for the polygon with the opposite winding order.</returns>
-		public static Vector2[] ReverseWindingOrder(Vector2[] vertices)
-		{
-			//Log("\nReversing winding order...");
-			Vector2[] newVerts = new Vector2[vertices.Length];
+        /// <summary>
+        /// Reverses the winding order for a set of vertices.
+        /// </summary>
+        /// <param name="vertices">The vertices of the polygon.</param>
+        /// <returns>The new vertices for the polygon with the opposite winding order.</returns>
+        public static Vector2[] ReverseWindingOrder(Vector2[] vertices)
+        {
+            //Log("\nReversing winding order...");
+            Vector2[] newVerts = new Vector2[vertices.Length];
 
 #if DEBUG
-			//StringBuilder vString = new StringBuilder();
-			//foreach (Vector2 v in vertices)
-			//	vString.Append(string.Format("{0}, ", v));
-			//Log("Original Vertices: {0}", vString);
+            //StringBuilder vString = new StringBuilder();
+            //foreach (Vector2 v in vertices)
+            //	vString.Append(string.Format("{0}, ", v));
+            //Log("Original Vertices: {0}", vString);
 #endif
 
-			newVerts[0] = vertices[0];
-			for (int i = 1; i < newVerts.Length; i++)
-				newVerts[i] = vertices[vertices.Length - i];
+            newVerts[0] = vertices[0];
+            for (int i = 1; i < newVerts.Length; i++)
+                newVerts[i] = vertices[vertices.Length - i];
 
 #if DEBUG
-			//vString = new StringBuilder();
-			//foreach (Vector2 v in newVerts)
-			//	vString.Append(string.Format("{0}, ", v));
-			//Log("New Vertices After Reversal: {0}\n", vString);
+            //vString = new StringBuilder();
+            //foreach (Vector2 v in newVerts)
+            //	vString.Append(string.Format("{0}, ", v));
+            //Log("New Vertices After Reversal: {0}\n", vString);
 #endif
 
-			return newVerts;
-		}
+            return newVerts;
+        }
 
-		#endregion
+        #endregion
 
-		#region DetermineWindingOrder
+        #region DetermineWindingOrder
 
-		/// <summary>
-		/// Determines the winding order of a polygon given a set of vertices.
-		/// </summary>
-		/// <param name="vertices">The vertices of the polygon.</param>
-		/// <returns>The calculated winding order of the polygon.</returns>
-		public static WindingOrder DetermineWindingOrder(Vector2[] vertices)
-		{
-			int clockWiseCount = 0;
-			int counterClockWiseCount = 0;
-			Vector2 p1 = vertices[0];
+        /// <summary>
+        /// Determines the winding order of a polygon given a set of vertices.
+        /// </summary>
+        /// <param name="vertices">The vertices of the polygon.</param>
+        /// <returns>The calculated winding order of the polygon.</returns>
+        public static WindingOrder DetermineWindingOrder(Vector2[] vertices)
+        {
+            int clockWiseCount = 0;
+            int counterClockWiseCount = 0;
+            Vector2 p1 = vertices[0];
 
-			for (int i = 1; i < vertices.Length; i++)
-			{
-				Vector2 p2 = vertices[i];
-				Vector2 p3 = vertices[(i + 1) % vertices.Length];
+            for (int i = 1; i < vertices.Length; i++)
+            {
+                Vector2 p2 = vertices[i];
+                Vector2 p3 = vertices[(i + 1) % vertices.Length];
 
-				Vector2 e1 = p1 - p2;
-				Vector2 e2 = p3 - p2;
+                Vector2 e1 = p1 - p2;
+                Vector2 e2 = p3 - p2;
 
-				if (e1.X * e2.Y - e1.Y * e2.X >= 0)
-					clockWiseCount++;
-				else
-					counterClockWiseCount++;
+                if (e1.X * e2.Y - e1.Y * e2.X >= 0)
+                    clockWiseCount++;
+                else
+                    counterClockWiseCount++;
 
-				p1 = p2;
-			}
+                p1 = p2;
+            }
 
-			return (clockWiseCount > counterClockWiseCount)
-				? WindingOrder.Clockwise
-				: WindingOrder.CounterClockwise;
-		}
+            return (clockWiseCount > counterClockWiseCount)
+                ? WindingOrder.Clockwise
+                : WindingOrder.CounterClockwise;
+        }
 
-		#endregion
+        #endregion
 
-		#endregion
+        #endregion
 
         #region Private Methods
 
