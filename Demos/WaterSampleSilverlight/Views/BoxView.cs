@@ -31,7 +31,7 @@ namespace FarseerGames.WaterSampleSilverlight.Views
         {
             Vector2 position = ConvertUnits.ToDisplayUnits(BoxModel.Body.Position);
             _sprite.Position = position;
-            _sprite.Rotation = MathHelper.DegreesToRadiansRatio*BoxModel.Body.Rotation;
+            _sprite.Rotation = MathHelper.ToDegrees(BoxModel.Body.Rotation);
         }
 
         #endregion
