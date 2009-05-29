@@ -1480,55 +1480,55 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #region Yobiv's Extension
         /// <summary>
-        /// Creates an capsule with the specified total height, radius and number of edges.
+        /// Creates an capsule with the specified height, radius and number of edges.
         /// A capsule has the same form as a pill capsule.
         /// </summary>
-        /// <param name="totalHeight">Total height (inner height + 2 * radius) of the capsule.</param>
-        /// <param name="radius">Radius of the capsule ends.</param>
+        /// <param name="height">Height (inner height + 2 * radius) of the capsule.</param>
+        /// <param name="endRadius">Radius of the capsule ends.</param>
         /// <param name="edges">The number of edges of the capsule ends. The more edges, the more it resembles an capsule</param>
         /// <returns></returns>
-        public static Vertices CreateCapsule(float totalHeight, float radius, int edges)
+        public static Vertices CreateCapsule(float height, float endRadius, int edges)
         {
-            return CreateCapsule(totalHeight, radius, edges, radius, edges);
+            return CreateCapsule(height, endRadius, edges, endRadius, edges);
         }
 
         /// <summary>
-        /// Creates an capsule with the specified total height, radius and number of edges.
+        /// Creates an capsule with the specified  height, radius and number of edges.
         /// A capsule has the same form as a pill capsule.
         /// </summary>
-        /// <param name="totalHeight">Total height (inner height + radii) of the capsule.</param>
-        /// <param name="topRadius">Radius of the top.</param>
+        /// <param name="height">Height (inner height + radii) of the capsule.</param>
+        /// <param name="endRadius">Radius of the top.</param>
         /// <param name="topEdges">The number of edges of the top. The more edges, the more it resembles an capsule</param>
         /// <param name="bottomRadius">Radius of bottom.</param>
         /// <param name="bottomEdges">The number of edges of the bottom. The more edges, the more it resembles an capsule</param>
         /// <returns></returns>
-        public static Vertices CreateCapsule(float totalHeight, float topRadius, int topEdges, float bottomRadius, int bottomEdges)
+        public static Vertices CreateCapsule(float height, float endRadius, int topEdges, float bottomRadius, int bottomEdges)
         {
             Vertices vertices = new Vertices();
 
-            float height = (totalHeight - topRadius - bottomRadius) * 0.5f;
+            float newHeight = (height - endRadius - bottomRadius) * 0.5f;
 
             // top
-            vertices.Add(new Vector2(topRadius, height));
+            vertices.Add(new Vector2(endRadius, newHeight));
 
             float stepSize = MathHelper.Pi / topEdges;
             for (int i = 1; i < topEdges - 1; i++)
             {
-                vertices.Add(new Vector2(topRadius * Calculator.Cos(stepSize * i), topRadius * Calculator.Sin(stepSize * i) + height));
+                vertices.Add(new Vector2(endRadius * Calculator.Cos(stepSize * i), endRadius * Calculator.Sin(stepSize * i) + newHeight));
             }
 
-            vertices.Add(new Vector2(-topRadius, height));
+            vertices.Add(new Vector2(-endRadius, newHeight));
 
             // bottom
-            vertices.Add(new Vector2(-bottomRadius, -height));
+            vertices.Add(new Vector2(-bottomRadius, -newHeight));
 
             stepSize = MathHelper.Pi / bottomEdges;
             for (int i = 1; i < bottomEdges - 1; i++)
             {
-                vertices.Add(new Vector2(-bottomRadius * Calculator.Cos(stepSize * i), -bottomRadius * Calculator.Sin(stepSize * i) - height));
+                vertices.Add(new Vector2(-bottomRadius * Calculator.Cos(stepSize * i), -bottomRadius * Calculator.Sin(stepSize * i) - newHeight));
             }
 
-            vertices.Add(new Vector2(bottomRadius, -height));
+            vertices.Add(new Vector2(bottomRadius, -newHeight));
 
             return vertices;
         }
