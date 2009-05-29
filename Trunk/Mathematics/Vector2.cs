@@ -35,7 +35,6 @@ using System.Runtime.InteropServices;
 
 namespace FarseerGames.FarseerPhysics.Mathematics
 {
-    [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector2 : IEquatable<Vector2>
     {
