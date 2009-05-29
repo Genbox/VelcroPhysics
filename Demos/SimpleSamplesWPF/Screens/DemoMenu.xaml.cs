@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Controls;
-using SimpleSamplesWpf.Demos;
+using SimpleSamplesWPF.Demos;
 
-namespace SimpleSamplesWpf.Screens
+namespace SimpleSamplesWPF.Screens
 {
     /// <summary>
     /// Interaction logic for DemoMenu.xaml

@@ -6,7 +6,7 @@ using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace SimpleSamplesWpf.Demos.Demo8
+namespace SimpleSamplesWPF.Demos.Demo8
 {
     public sealed class Ragdoll
     {

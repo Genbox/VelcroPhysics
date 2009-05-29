@@ -2,9 +2,9 @@
 using System.Windows.Media;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Mathematics;
-using SimpleSamplesWpf.SharedDemoObjects;
+using SimpleSamplesWPF.SharedDemoObjects;
 
-namespace SimpleSamplesWpf.Demos.Demo5
+namespace SimpleSamplesWPF.Demos.Demo5
 {
     public class Demo5 : Demo
     {

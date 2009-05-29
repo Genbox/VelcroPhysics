@@ -6,7 +6,7 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace SimpleSamplesWpf.Demos.Demo5
+namespace SimpleSamplesWPF.Demos.Demo5
 {
     public class Circles
     {

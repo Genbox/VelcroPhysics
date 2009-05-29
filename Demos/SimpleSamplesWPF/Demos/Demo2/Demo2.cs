@@ -5,7 +5,7 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace SimpleSamplesWpf.Demos.Demo2
+namespace SimpleSamplesWPF.Demos.Demo2
 {
     public class Demo2 : Demo
     {

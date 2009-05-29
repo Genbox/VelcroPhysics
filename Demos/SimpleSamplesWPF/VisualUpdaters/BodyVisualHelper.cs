@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using FarseerGames.FarseerPhysics.Dynamics;
-using SimpleSamplesWpf.Demos;
+using SimpleSamplesWPF.Demos;
 
-namespace SimpleSamplesWpf.VisualUpdaters
+namespace SimpleSamplesWPF.VisualUpdaters
 {
     public class BodyVisualHelper
     {

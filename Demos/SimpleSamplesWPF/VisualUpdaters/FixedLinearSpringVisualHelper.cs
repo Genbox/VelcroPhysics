@@ -1,6 +1,6 @@
 ﻿using FarseerGames.FarseerPhysics.Dynamics.Springs;
 
-namespace SimpleSamplesWpf.VisualUpdaters
+namespace SimpleSamplesWPF.VisualUpdaters
 {
     public class FixedLinearSpringVisualHelper
     {

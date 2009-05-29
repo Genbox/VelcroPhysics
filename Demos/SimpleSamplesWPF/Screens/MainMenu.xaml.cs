@@ -2,17 +2,17 @@
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Diagnostics;
-using SimpleSamplesWpf.Demos;
-using SimpleSamplesWpf.Demos.Demo1;
-using SimpleSamplesWpf.Demos.Demo2;
-using SimpleSamplesWpf.Demos.Demo3;
-using SimpleSamplesWpf.Demos.Demo4;
-using SimpleSamplesWpf.Demos.Demo5;
-using SimpleSamplesWpf.Demos.Demo6;
-using SimpleSamplesWpf.Demos.Demo7;
-using SimpleSamplesWpf.Demos.Demo8;
+using SimpleSamplesWPF.Demos;
+using SimpleSamplesWPF.Demos.Demo1;
+using SimpleSamplesWPF.Demos.Demo2;
+using SimpleSamplesWPF.Demos.Demo3;
+using SimpleSamplesWPF.Demos.Demo4;
+using SimpleSamplesWPF.Demos.Demo5;
+using SimpleSamplesWPF.Demos.Demo6;
+using SimpleSamplesWPF.Demos.Demo7;
+using SimpleSamplesWPF.Demos.Demo8;
 
-namespace SimpleSamplesWpf.Screens
+namespace SimpleSamplesWPF.Screens
 {
     /// <summary>
     /// Interaction logic for MainMenu.xaml

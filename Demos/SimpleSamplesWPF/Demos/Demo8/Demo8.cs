@@ -6,11 +6,10 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 
-namespace SimpleSamplesWpf.Demos.Demo8
+namespace SimpleSamplesWPF.Demos.Demo8
 {
     public class Demo8 : Demo
     {
-
         private Ragdoll _ragdoll;
 
         private Body[] obstacleBodies;

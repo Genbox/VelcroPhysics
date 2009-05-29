@@ -6,9 +6,9 @@ using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
-using SimpleSamplesWpf.Demos;
+using SimpleSamplesWPF.Demos;
 
-namespace SimpleSamplesWpf.SharedDemoObjects
+namespace SimpleSamplesWPF.SharedDemoObjects
 {
     public class Spider
     {

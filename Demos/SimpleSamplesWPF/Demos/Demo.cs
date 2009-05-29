@@ -11,12 +11,12 @@ using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Mathematics;
 using System.Windows.Shapes;
 using System.Windows.Input;
-using SimpleSamplesWpf.SharedDemoObjects;
+using SimpleSamplesWPF.SharedDemoObjects;
 using System.Diagnostics;
-using SimpleSamplesWpf.VisualUpdaters;
-using Border=SimpleSamplesWpf.SharedDemoObjects.Border;
+using SimpleSamplesWPF.VisualUpdaters;
+using Border=SimpleSamplesWPF.SharedDemoObjects.Border;
 
-namespace SimpleSamplesWpf.Demos
+namespace SimpleSamplesWPF.Demos
 {
     public abstract class Demo : Canvas
     {

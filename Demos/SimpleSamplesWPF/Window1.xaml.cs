@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows;
-using SimpleSamplesWpf.Demos;
-using SimpleSamplesWpf.Screens;
+using SimpleSamplesWPF.Demos;
+using SimpleSamplesWPF.Screens;
 
-namespace SimpleSamplesWpf
+namespace SimpleSamplesWPF
 {
     /// <summary>
     /// Interaction logic for Window1.xaml

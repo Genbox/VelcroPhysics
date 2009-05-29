@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 
-namespace SimpleSamplesWpf.Screens
+namespace SimpleSamplesWPF.Screens
 {
     /// <summary>
     /// Interaction logic for MenuItem.xaml
