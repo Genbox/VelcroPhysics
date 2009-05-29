@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSamplesWpf", "SimpleSamplesWpf.csproj", "{EDC63D9D-EED8-43F4-8599-29F1F04DF352}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerPhysics", "..\..\Branches\Class\FarseerPhysics.csproj", "{95B40504-C1C2-4FCD-98B3-B63AD35D6336}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EDC63D9D-EED8-43F4-8599-29F1F04DF352}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDC63D9D-EED8-43F4-8599-29F1F04DF352}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDC63D9D-EED8-43F4-8599-29F1F04DF352}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EDC63D9D-EED8-43F4-8599-29F1F04DF352}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDC63D9D-EED8-43F4-8599-29F1F04DF352}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDC63D9D-EED8-43F4-8599-29F1F04DF352}.Release|x86.ActiveCfg = Release|Any CPU
+		{95B40504-C1C2-4FCD-98B3-B63AD35D6336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95B40504-C1C2-4FCD-98B3-B63AD35D6336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95B40504-C1C2-4FCD-98B3-B63AD35D6336}.Debug|x86.ActiveCfg = Debug|x86
+		{95B40504-C1C2-4FCD-98B3-B63AD35D6336}.Debug|x86.Build.0 = Debug|x86
+		{95B40504-C1C2-4FCD-98B3-B63AD35D6336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95B40504-C1C2-4FCD-98B3-B63AD35D6336}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95B40504-C1C2-4FCD-98B3-B63AD35D6336}.Release|x86.ActiveCfg = Release|x86
+		{95B40504-C1C2-4FCD-98B3-B63AD35D6336}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
