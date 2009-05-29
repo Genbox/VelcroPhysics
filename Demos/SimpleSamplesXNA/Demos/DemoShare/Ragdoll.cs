@@ -143,13 +143,13 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.DemoShare
             _rightThighBrush.Load(graphicsDevice);
 
             //Left calf
-            const int leftCalfHight = 12;
+            const int leftCalfYRadius = 12;
             const int leftCalfXRadius = 6;
 
-            _leftCalfBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, leftCalfXRadius, leftCalfHight, 1);
-            _leftCalfBody.Position = _leftThighBody.Position + new Vector2(0, leftThighYRadius + leftCalfHight);
-            _leftCalfGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _leftCalfBody, leftCalfXRadius, leftCalfHight, 8, 0);
-            _leftCalfBrush = new EllipseBrush(leftCalfXRadius, leftCalfHight, Color.White, Color.Black);
+            _leftCalfBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, leftCalfXRadius, leftCalfYRadius, 1);
+            _leftCalfBody.Position = _leftThighBody.Position + new Vector2(0, leftThighYRadius + leftCalfYRadius);
+            _leftCalfGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _leftCalfBody, leftCalfXRadius, leftCalfYRadius, 8, 0);
+            _leftCalfBrush = new EllipseBrush(leftCalfXRadius, leftCalfYRadius, Color.White, Color.Black);
             _leftCalfBrush.Load(graphicsDevice);
 
             //Right calf
@@ -189,7 +189,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.DemoShare
             p.TargetDistance = 3;
 
             //Left calf -> left thigh
-            JointFactory.Instance.CreatePinJoint(physicsSimulator, _leftCalfBody, new Vector2(0, -leftCalfHight), _leftThighBody, new Vector2(0, leftThighYRadius));
+            JointFactory.Instance.CreatePinJoint(physicsSimulator, _leftCalfBody, new Vector2(0, -leftCalfYRadius), _leftThighBody, new Vector2(0, leftThighYRadius));
 
             //Right calf -> right thigh
             JointFactory.Instance.CreatePinJoint(physicsSimulator, _rightCalfBody, new Vector2(0, -rightCalfYRadius), _rightThighBody, new Vector2(0, rightThighYRadius));
