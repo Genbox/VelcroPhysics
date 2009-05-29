@@ -45,7 +45,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         {
                             if (!geomA.Body.IsStatic)
                             {
-                                if (distance > 0.0001f)
+                                if (distance > 0.001f)
                                 {
                                     Contact c = new Contact(geomA.WorldVertices[i], normal, -distance, new ContactId(geomA.id, i, geomB.id));
                                     contactList.Add(c);
@@ -67,7 +67,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         {
                             if (!geomB.Body.IsStatic)
                             {
-                                if (distance > 0.0001f)
+                                if (distance > 0.001f)
                                 {
                                     Contact c = new Contact(geomB.WorldVertices[i], normal, -distance, new ContactId(geomB.id, i, geomA.id));
                                     contactList.Add(c);
