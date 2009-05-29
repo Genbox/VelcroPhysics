@@ -272,7 +272,7 @@ namespace FarseerGames.FarseerPhysics
             Gravity = gravity;
 
             //Poolsize of 10, will grow as needed.
-            arbiterPool = new Pool<Arbiter>(10);
+            arbiterPool = new Pool<Arbiter>(100);
         }
 
         public void Add(Geom geometry)

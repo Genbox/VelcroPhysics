@@ -15,7 +15,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo1
 {
     public class Demo1Screen : GameScreen
     {
-        private const int pyramidBaseBodyCount = 16;
+        private const int pyramidBaseBodyCount = 30;
         private Agent _agent;
         private PhysicsProcessor _physicsProcessor;
         private Thread _physicsThread;
@@ -43,9 +43,13 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo1
         public override void Initialize()
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 50));
-            PhysicsSimulator.BiasFactor = .4f;
+            PhysicsSimulator.BiasFactor = .3f;
             //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
-            PhysicsSimulator.MaxContactsToDetect = 2;
+            PhysicsSimulator.MaxContactsToDetect = 1;
+
+            //PhysicsSimulator.BroadPhaseCollider = new BruteForceCollider(PhysicsSimulator);
+            //PhysicsSimulator.NarrowPhaseCollider = new DistanceGrid(PhysicsSimulator);
+            //PhysicsSimulator.NarrowPhaseCollider = new SAT(PhysicsSimulator);
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
 
             // POINT OF INTEREST
@@ -67,17 +71,17 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo1
 
         public override void LoadContent()
         {
-            _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 32, 32, 2, 0, 0,
+            _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 25, 25, 2, 0, 0,
                                                                      Color.White, Color.Black);
 
-            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 1f); //template              
-            _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_rectangleBody, 32, 32); //template
-            _rectangleGeom.FrictionCoefficient = .4f;
+            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(25, 25, 1f); //template              
+            _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_rectangleBody, 25, 25); //template
+            _rectangleGeom.FrictionCoefficient = .9f;
             _rectangleGeom.RestitutionCoefficient = 0f;
 
             //create the _pyramid near the bottom of the screen.
-            _multithreadedPyramid = new MultithreadedPyramid(_rectangleBody, _rectangleGeom, 32f/3f, 32f/3f, 32, 32, pyramidBaseBodyCount,
-                                   new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount*.5f*(32 + 32/3),
+            _multithreadedPyramid = new MultithreadedPyramid(_rectangleBody, _rectangleGeom, 25f/8f, 25f/8f, 25, 25, pyramidBaseBodyCount,
+                                   new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount*.5f*(25 + 25/3),
                                                ScreenManager.ScreenHeight - 80));
             // POINT OF INTEREST
             // It needs the processor to register the links
