@@ -15,7 +15,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo1
 {
     public class Demo1Screen : GameScreen
     {
-        private const int pyramidBaseBodyCount = 30;
+        private const int pyramidBaseBodyCount = 20;
         private Agent _agent;
         private PhysicsProcessor _physicsProcessor;
         private Thread _physicsThread;
@@ -47,9 +47,6 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo1
             //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
             PhysicsSimulator.MaxContactsToDetect = 1;
 
-            //PhysicsSimulator.BroadPhaseCollider = new BruteForceCollider(PhysicsSimulator);
-            //PhysicsSimulator.NarrowPhaseCollider = new DistanceGrid(PhysicsSimulator);
-            //PhysicsSimulator.NarrowPhaseCollider = new SAT(PhysicsSimulator);
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
 
             // POINT OF INTEREST
@@ -76,7 +73,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo1
 
             _rectangleBody = BodyFactory.Instance.CreateRectangleBody(25, 25, 1f); //template              
             _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_rectangleBody, 25, 25); //template
-            _rectangleGeom.FrictionCoefficient = .9f;
+            _rectangleGeom.FrictionCoefficient = .4f;
             _rectangleGeom.RestitutionCoefficient = 0f;
 
             //create the _pyramid near the bottom of the screen.
