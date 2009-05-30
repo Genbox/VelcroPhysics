@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using System.Collections.Generic;
 using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
@@ -10,25 +11,36 @@ using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
 
 namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
 {
     public class Demo10Screen : GameScreen
     {
-        private Geom _floor;        // high detail floor geom with 500+ vertices
-        private List<Geom> _splitGeoms;  // floor geom split up
+        private List<Splat> splats;
         
         public override void Initialize()
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
+            PhysicsSimulatorView.EnableEdgeView = true;
+            PhysicsSimulatorView.EnableAABBView = false;
+
+            Splat.Load(ScreenManager.ContentManager);
+
+            splats = new List<Splat>();
 
             base.Initialize();
         }
 
         public override void LoadContent()
         {
-            
+            Random rand = new Random();
+
+            for (int i = 0; i < 10; i++)
+            {
+                splats.Add(new Splat(PhysicsSimulator, new Vector2(rand.Next(150, 950), rand.Next(150, 500))));
+            }
 
             base.LoadContent();
         }
@@ -37,6 +49,10 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
 
+            foreach (Splat s in splats)
+            {
+                s.Draw(ScreenManager.SpriteBatch);
+            }
             
             ScreenManager.SpriteBatch.End();
 
