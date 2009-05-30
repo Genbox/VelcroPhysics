@@ -16,6 +16,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     public static class AutoDivide
     {
+        /// <summary>
+        /// Creates a list of vertices, each of which are a
+        /// triangle, from a set of vertices.
+        /// </summary>
+        /// <param name="v">The set of vertices. Must be a closed set.</param>
+        /// <param name="createTriangles">Create only triangles. (Must be true for now)</param>
+        /// <returns></returns>
         public static List<Vertices> DivideVertices(Vertices v, bool createTriangles)
         {
             List<Vertices> split = new List<Vertices>();   // a list holding all vertices as they're split
@@ -47,6 +54,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return split;
         }
 
+        /// <summary>
+        /// Creates a list of geoms, each of which are a
+        /// triangle, from a set of vertices.
+        /// </summary>
+        /// <param name="vertices">The set of vertices. Must be a closed set.</param>
+        /// <param name="body">The body you want the geoms to belong too.</param>
+        /// <returns></returns>
         public static List<Geom> DivideGeom(Vertices vertices, Body body)
         {
             List<Geom> geomsList = new List<Geom>();

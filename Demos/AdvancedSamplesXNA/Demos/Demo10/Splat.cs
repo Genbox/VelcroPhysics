@@ -33,7 +33,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
             //Transfer the texture data to the array
             _splatTexture.GetData(data);
 
-            _splatTextureVertices = Vertices.CreatePolygon(data, _splatTexture.Width, _splatTexture.Height, new Vector2(), 128, 2.0f);
+            _splatTextureVertices = Vertices.CreatePolygon(data, _splatTexture.Width, _splatTexture.Height, new Vector2(), 128, 5.0f);
         }
 
         public Splat(PhysicsSimulator ps, Vector2 position)
