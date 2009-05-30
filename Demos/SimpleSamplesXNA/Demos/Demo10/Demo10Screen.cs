@@ -18,7 +18,9 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
     public class Demo10Screen : GameScreen
     {
         private Body bodyA, bodyB, bodyC, bodyD;
-        private Geom geomA, geomB, geomC, geomD;
+        private Geom geomA, geomB;
+        private List<Geom> geomC, geomD;
+
         private WeldJoint weldJoint;
         private bool broke = false;
         private GearJoint gearJoint;
@@ -71,28 +73,38 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
             bodyC = BodyFactory.Instance.CreatePolygonBody(Vertices.CreateGear(50, 20, .50f, 10), 10);
             bodyC.Position = new Vector2(500,200);
 
-            geomC = GeomFactory.Instance.CreatePolygonGeom(bodyC, Vertices.CreateGear(50, 20, .50f, 10), 1.5f);
+            geomC = AutoDivide.DivideGeom(Vertices.CreateGear(50, 20, .50f, 10), bodyC);
 
             bodyD = BodyFactory.Instance.CreatePolygonBody(Vertices.CreateGear(50, 20, .50f, 10), 10);
-            bodyD.Position = new Vector2(613, 200);
+            bodyD.Position = new Vector2(587, 200);
 
-            geomD = GeomFactory.Instance.CreatePolygonGeom(bodyD, Vertices.CreateGear(50, 20, .50f, 10), 1.5f);
-
-            geomC.CollisionGroup = 2;
-            geomD.CollisionGroup = 3;
-            geomC.FrictionCoefficient = 0f;
-            geomD.FrictionCoefficient = 0f;
+            geomD = AutoDivide.DivideGeom(Vertices.CreateGear(25, 10, .50f, 10), bodyD);
 
             PhysicsSimulator.Add(bodyC);
-            PhysicsSimulator.Add(geomC);
             PhysicsSimulator.Add(bodyD);
-            PhysicsSimulator.Add(geomD);
+
+            for (int i = 0; i < geomC.Count; i++)
+            {
+                geomC[i].CollisionGroup = 2;
+                geomC[i].FrictionCoefficient = 0f;
+
+
+                PhysicsSimulator.Add(geomC[i]);
+            }
+
+            for (int i = 0; i < geomD.Count; i++)
+            {
+                geomD[i].CollisionGroup = 3;
+                geomD[i].FrictionCoefficient = 0f;
+
+                PhysicsSimulator.Add(geomD[i]);
+            }
 
             gearBrushA = new PolygonBrush(Vertices.CreateGear(50, 20, .50f, 10), Color.White, Color.Black, 0.5f, 0.5f);
 
             gearBrushA.Load(ScreenManager.GraphicsDevice);
 
-            gearBrushB = new PolygonBrush(Vertices.CreateGear(50, 20, .50f, 10), Color.White, Color.Black, 0.5f, 0.5f);
+            gearBrushB = new PolygonBrush(Vertices.CreateGear(25, 10, .50f, 10), Color.White, Color.Black, 0.5f, 0.5f);
 
             gearBrushB.Load(ScreenManager.GraphicsDevice);
 
