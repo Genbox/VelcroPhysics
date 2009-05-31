@@ -100,8 +100,6 @@
     <Compile Include="FarseerPhysicsGame.cs" />
     <Compile Include="ScreenSystem\GameScreen.cs" />
     <Compile Include="ScreenSystem\InputState.cs" />
-    <Compile Include="ScreenSystem\LogoScreen.cs" />
-    <Compile Include="ScreenSystem\MainMenuScreen.cs" />
     <Compile Include="ScreenSystem\MenuScreen.cs" />
     <Compile Include="ScreenSystem\PauseScreen.cs" />
     <Compile Include="ScreenSystem\ScreenManager.cs" />

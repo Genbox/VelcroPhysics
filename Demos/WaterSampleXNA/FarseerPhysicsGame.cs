@@ -1,5 +1,6 @@
 using System;
 using FarseerGames.WaterSampleXNA.Components;
+using FarseerGames.WaterSampleXNA.Demos;
 using FarseerGames.WaterSampleXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -54,7 +55,7 @@ namespace FarseerGames.WaterSampleXNA
             frameRateCounter.DrawOrder = 101;
             Components.Add(frameRateCounter);
 
-            _screenManager.AddScreen(new MainMenuScreen());
+            _screenManager.AddScreen(new Demo1Screen());
         }
 
         public ScreenManager ScreenManager
