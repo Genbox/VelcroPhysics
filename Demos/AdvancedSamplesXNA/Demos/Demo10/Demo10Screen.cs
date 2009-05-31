@@ -16,7 +16,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
-            //PhysicsSimulatorView.EnableEdgeView = true;
+            PhysicsSimulatorView.EnableEdgeView = true;
             PhysicsSimulatorView.EnableAABBView = false;
 
             splats = new List<Splat>();
@@ -28,7 +28,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
         {
             Random rand = new Random();
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 6; i++)
             {
                 Splat splat = new Splat(PhysicsSimulator, new Vector2(rand.Next(150, 950), rand.Next(150, 500)));
                 splat.Load(ScreenManager.ContentManager);
