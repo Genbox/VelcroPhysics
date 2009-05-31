@@ -15,7 +15,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo1
 {
     public class Demo1Screen : GameScreen
     {
-        private const int pyramidBaseBodyCount = 20;
+        private const int pyramidBaseBodyCount = 16;
         private Agent _agent;
         private PhysicsProcessor _physicsProcessor;
         private Thread _physicsThread;
