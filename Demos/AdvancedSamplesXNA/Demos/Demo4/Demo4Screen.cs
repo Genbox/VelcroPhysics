@@ -26,6 +26,8 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo4
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
+            PhysicsSimulatorView.EnableAABBView = false;
+            PhysicsSimulatorView.EnableEdgeView = true;
 
             base.Initialize();
         }
@@ -43,12 +45,14 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo4
 
             //Calculate the vertices from the array
             PolygonCreationAssistance pca = new PolygonCreationAssistance(data, _polygonTexture.Width, _polygonTexture.Height);
-            pca.HullTolerance = 0.9f;
-            pca.HoleDetection = true;
-            pca.MultipartDetection = true;
+            pca.HullTolerance = 1.2f;
+            pca.HoleDetection = false;
+            pca.MultipartDetection = false;
             pca.AlphaTolerance = 20;
 
             List<Vertices> verts = Vertices.CreatePolygon(ref pca);
+
+            verts[0].Reverse();
 
             //Make sure that the origin of the texture is the centroid (real center of geometry)
             _polygonOrigin = verts[0].GetCentroid();
@@ -57,7 +61,14 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo4
             _polygonBody = BodyFactory.Instance.CreatePolygonBody(PhysicsSimulator, verts[0], 5);
             _polygonBody.Position = new Vector2(500, 400);
 
-            GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, _polygonBody, verts[0]);
+            List<Geom> geoms = AutoDivide.DivideGeom(verts[0], _polygonBody);
+
+            foreach (Geom g in geoms)
+            {
+                PhysicsSimulator.Add(g);
+            }
+
+            //GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, _polygonBody, verts[0]);
 
             _circleTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 35, Color.Gold, Color.Black);
             _circleOrigin = new Vector2(_circleTexture.Width / 2f, _circleTexture.Height / 2f);
