@@ -25,7 +25,6 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
         private PolygonBrush _topBrush;
         private PolygonBrush _leftBrush;
         private PolygonBrush _rightBrush;
-        
 
         public Table(Vector2 position, float width, float height)
         {
@@ -70,30 +69,30 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
 
             _leftWeldJoint = new WeldJoint(_leftLegBody, _topBody, _leftLegBody.Position - new Vector2(-5, _height / 2));
             _leftWeldJoint.Breakpoint = (float)rand.NextDouble() * 3f + 1f;
-            _leftWeldJoint.Broke += new System.EventHandler<System.EventArgs>(_leftWeldJoint_Broke);
+            _leftWeldJoint.Broke += _leftWeldJoint_Broke;
             physicsSimulator.Add(_leftWeldJoint);
 
             _rightWeldJoint = new WeldJoint(_rightLegBody, _topBody, _rightLegBody.Position - new Vector2(5, _height / 2));
             _rightWeldJoint.Breakpoint = (float)rand.NextDouble() * 3f + 1f;
-            _rightWeldJoint.Broke += new System.EventHandler<System.EventArgs>(_rightWeldJoint_Broke);
+            _rightWeldJoint.Broke += _rightWeldJoint_Broke;
             physicsSimulator.Add(_rightWeldJoint);
 
-            _topBrush = new PolygonBrush(_topGeom.LocalVertices, Color.BurlyWood, Color.Brown, 2.0f, 0.5f);
-            _leftBrush = new PolygonBrush(_leftLegGeom.LocalVertices, Color.BurlyWood, Color.Brown, 2.0f, 0.5f);
-            _rightBrush = new PolygonBrush(_rightLegGeom.LocalVertices, Color.BurlyWood, Color.Brown, 2.0f, 0.5f);
+            _topBrush = new PolygonBrush(_topGeom.LocalVertices, Color.BurlyWood, Color.Black, 1.0f, 0.5f);
+            _leftBrush = new PolygonBrush(_leftLegGeom.LocalVertices, Color.BurlyWood, Color.Black, 1.0f, 0.5f);
+            _rightBrush = new PolygonBrush(_rightLegGeom.LocalVertices, Color.BurlyWood, Color.Black, 1.0f, 0.5f);
 
             _topBrush.Load(device);
             _leftBrush.Load(device);
             _rightBrush.Load(device);
         }
 
-        void _rightWeldJoint_Broke(object sender, System.EventArgs e)
+        void _rightWeldJoint_Broke(object sender, EventArgs e)
         {
             _rightLegGeom.CollisionGroup = 0;
             _topGeom.CollisionGroup = 0;
         }
 
-        void _leftWeldJoint_Broke(object sender, System.EventArgs e)
+        void _leftWeldJoint_Broke(object sender, EventArgs e)
         {
             _leftLegGeom.CollisionGroup = 0;
             _topGeom.CollisionGroup = 0;
