@@ -68,17 +68,17 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo1
 
         public override void LoadContent()
         {
-            _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 25, 25, 2, 0, 0,
+            _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 32, 32, 2, 0, 0,
                                                                      Color.White, Color.Black);
 
-            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(25, 25, 1f); //template              
-            _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_rectangleBody, 25, 25); //template
+            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 1f); //template              
+            _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_rectangleBody, 32, 32); //template
             _rectangleGeom.FrictionCoefficient = .4f;
             _rectangleGeom.RestitutionCoefficient = 0f;
 
-            //create the _pyramid near the bottom of the screen.
-            _multithreadedPyramid = new MultithreadedPyramid(_rectangleBody, _rectangleGeom, 25f/8f, 25f/8f, 25, 25, pyramidBaseBodyCount,
-                                   new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount*.5f*(25 + 25/3),
+            //create the pyramid near the bottom of the screen.
+            _multithreadedPyramid = new MultithreadedPyramid(_rectangleBody, _rectangleGeom, 32f / 8f, 32f / 8f, 32, 32, pyramidBaseBodyCount,
+                                   new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount * .5f * (32 + 32 / 3),
                                                ScreenManager.ScreenHeight - 80));
             // POINT OF INTEREST
             // It needs the processor to register the links
