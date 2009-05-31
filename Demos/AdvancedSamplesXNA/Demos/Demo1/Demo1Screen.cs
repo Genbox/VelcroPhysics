@@ -48,6 +48,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo1
             PhysicsSimulator.MaxContactsToDetect = 1;
 
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
+            PhysicsSimulatorView.EnableEdgeView = false;
 
             // POINT OF INTEREST
             // Create a physics processor based on the physics processor
