@@ -25,7 +25,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
 
         public override void Initialize()
         {
-            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 250));
+            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 150));
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
             PhysicsSimulatorView.EnableVerticeView = true;
             PhysicsSimulatorView.EnableEdgeView = false;
@@ -225,15 +225,20 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
                 {
                     Body b = BodyFactory.Instance.CreatePolygonBody(_leftGeom.LocalVertices, 1.0f);
                     b.Position = _leftGeom.Position;
-                    Geom g = GeomFactory.Instance.CreateGeom(b, _leftGeom);
-                    g.CollisionEnabled = true;
+                    List<Geom> geoms = AutoDivide.DivideGeom(_leftGeom.LocalVertices, b);
+
+                    foreach (Geom g in geoms)
+                    {
+                        PhysicsSimulator.Add(g);
+                    }
+                    
                     
                     PhysicsSimulator.Add(b);
-                    PhysicsSimulator.Add(g);
 
-                    _simulatedPolyBodies.Add(b);
-                    _simulatedPolyBrushes.Add(new PolygonBrush(g.LocalVertices, Color.Red, Color.DarkRed, 1.5f, 0.2f));
+                    _simulatedPolyBrushes.Add(new PolygonBrush(_leftGeom.LocalVertices, Color.Red, Color.DarkRed, 1.5f, 0.2f));
                     _simulatedPolyBrushes[_simulatedPolyBrushes.Count - 1].Load(ScreenManager.GraphicsDevice);
+                    _simulatedPolyBodies.Add(b);
+                    
                 }
             }
         }
@@ -377,6 +382,9 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
 
         private void SetProduct(Vertices product)
         {
+            if (product == null)
+                return;
+            
             if (_rightGeom != null)
                 PhysicsSimulator.Remove(_rightGeom);
 
