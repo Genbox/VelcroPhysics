@@ -66,7 +66,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.DemoShare
             const int bodyYRadius = 34;
             const int bodyXRadius = 18;
 
-            _bodyBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, bodyXRadius, bodyYRadius, 1);
+            _bodyBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, bodyXRadius, bodyYRadius, 6);
             _bodyBody.Position = _position;
             _bodyGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _bodyBody, bodyXRadius, bodyYRadius, 14, 0);
             _bodyBrush = new EllipseBrush(bodyXRadius, bodyYRadius, Color.White, Color.Black);
@@ -76,7 +76,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.DemoShare
             const int headYRadius = 14;
             const int headXRadius = 10;
 
-            _headBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, headXRadius, headYRadius, 1);
+            _headBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, headXRadius, headYRadius, 2);
             _headBody.Position = _position - new Vector2(0, bodyYRadius + headYRadius + offset);
             _headGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _headBody, headXRadius, headYRadius, 10);
             _headBrush = new EllipseBrush(headXRadius, headYRadius, Color.White, Color.Black);
@@ -126,7 +126,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.DemoShare
             const int leftThighYRadius = 12;
             const int leftThighXRadius = 6;
 
-            _leftThighBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, leftThighXRadius, leftThighYRadius, 1);
+            _leftThighBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, leftThighXRadius, leftThighYRadius, 2);
             _leftThighBody.Position = _bodyBody.Position + new Vector2(bodyXRadius, bodyYRadius + leftThighYRadius);
             _leftThighGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _leftThighBody, leftThighXRadius, leftThighYRadius, 8, 0);
             _leftThighBrush = new EllipseBrush(leftThighXRadius, leftThighYRadius, Color.White, Color.Black);
@@ -136,7 +136,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.DemoShare
             const int rightThighYRadius = 12;
             const int rightThighXRadius = 6;
 
-            _rightThighBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, rightThighXRadius, rightThighYRadius, 1);
+            _rightThighBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, rightThighXRadius, rightThighYRadius, 2);
             _rightThighBody.Position = _bodyBody.Position + new Vector2(-bodyXRadius, bodyYRadius + rightThighYRadius);
             _rightThighGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _rightThighBody, rightThighXRadius, rightThighYRadius, 8, 0);
             _rightThighBrush = new EllipseBrush(rightThighXRadius, rightThighYRadius, Color.White, Color.Black);
@@ -146,7 +146,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.DemoShare
             const int leftCalfYRadius = 12;
             const int leftCalfXRadius = 6;
 
-            _leftCalfBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, leftCalfXRadius, leftCalfYRadius, 1);
+            _leftCalfBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, leftCalfXRadius, leftCalfYRadius, 2);
             _leftCalfBody.Position = _leftThighBody.Position + new Vector2(0, leftThighYRadius + leftCalfYRadius);
             _leftCalfGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _leftCalfBody, leftCalfXRadius, leftCalfYRadius, 8, 0);
             _leftCalfBrush = new EllipseBrush(leftCalfXRadius, leftCalfYRadius, Color.White, Color.Black);
@@ -156,7 +156,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.DemoShare
             const int rightCalfYRadius = 12;
             const int rightCalfXRadius = 6;
 
-            _rightCalfBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, rightCalfXRadius, rightCalfYRadius, 1);
+            _rightCalfBody = BodyFactory.Instance.CreateEllipseBody(physicsSimulator, rightCalfXRadius, rightCalfYRadius, 2);
             _rightCalfBody.Position = _rightThighBody.Position + new Vector2(0, rightThighYRadius + rightCalfYRadius);
             _rightCalfGeom = GeomFactory.Instance.CreateEllipseGeom(physicsSimulator, _rightCalfBody, rightCalfXRadius, rightCalfYRadius, 8, 0);
             _rightCalfBrush = new EllipseBrush(rightCalfXRadius, rightCalfYRadius, Color.White, Color.Black);
