@@ -1,11 +1,8 @@
 ﻿namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
-
     /// Angle joint joins together 2 bodies at an angle
-
     /// </summary>
-
     public class GearJoint : Joint
     {
         public event JointDelegate JointUpdated;
@@ -35,13 +32,9 @@
         }
 
         /// <summary>
-
         /// Gets or sets the fist body.
-
         /// </summary>
-
         /// <Value>The body1.</Value>
-
         public Body Body1
         {
             get { return _body1; }
@@ -49,13 +42,9 @@
         }
 
         /// <summary>
-
         /// Gets or sets the second body.
-
         /// </summary>
-
         /// <Value>The body2.</Value>
-
         public Body Body2
         {
             get { return _body2; }
@@ -63,13 +52,9 @@
         }
 
         /// <summary>
-
         /// Gets or sets the ratio.
-
         /// </summary>
-
         /// <Value>The ratio.</Value>
-
         public float Ratio
         {
             get { return _ratio; }
@@ -77,13 +62,9 @@
         }
 
         /// <summary>
-
         /// Gets or sets the max impulse.
-
         /// </summary>
-
         /// <Value>The max impulse.</Value>
-
         public float MaxImpulse
         {
             get { return _maxImpulse; }

@@ -6,7 +6,6 @@ using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.SimpleSamplesXNA.Demos.DemoShare;
 using FarseerGames.SimpleSamplesXNA.DrawingSystem;
 using FarseerGames.SimpleSamplesXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
@@ -22,8 +21,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
         private List<Geom> geomC, geomD;
 
         private WeldJoint weldJoint;
-        private bool broke = false;
-        private GearJoint gearJoint;
+        private bool broke;
         private FixedRevoluteJoint revJointA;
         private FixedRevoluteJoint revJointB;
 
@@ -57,7 +55,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
             geomB = GeomFactory.Instance.CreateRectangleGeom(bodyB, 100, 25);
 
             weldJoint = new WeldJoint(bodyA, bodyB, new Vector2(300, 300));
-            weldJoint.Broke += new System.EventHandler<System.EventArgs>(weldJoint_Broke);
+            weldJoint.Broke += weldJoint_Broke;
             weldJoint.Breakpoint = 5.0f;
 
             PhysicsSimulator.Add(bodyA);
@@ -71,7 +69,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
             brush.Load(ScreenManager.GraphicsDevice);
 
             bodyC = BodyFactory.Instance.CreatePolygonBody(Vertices.CreateGear(50, 20, .50f, 10), 10);
-            bodyC.Position = new Vector2(500,200);
+            bodyC.Position = new Vector2(500, 200);
 
             geomC = AutoDivide.DivideGeom(Vertices.CreateGear(50, 20, .50f, 10), bodyC);
 
@@ -108,12 +106,9 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
 
             gearBrushB.Load(ScreenManager.GraphicsDevice);
 
-            gearJoint = new GearJoint(bodyD, bodyC, 1f);
-
             revJointA = JointFactory.Instance.CreateFixedRevoluteJoint(bodyC, bodyC.Position);
             revJointB = JointFactory.Instance.CreateFixedRevoluteJoint(bodyD, bodyD.Position);
 
-            //PhysicsSimulator.Add(gearJoint);
             PhysicsSimulator.Add(revJointA);
             PhysicsSimulator.Add(revJointB);
 
@@ -126,7 +121,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
             base.LoadContent();
         }
 
-        void weldJoint_Broke(object sender, System.EventArgs e)
+        private void weldJoint_Broke(object sender, EventArgs e)
         {
             broke = true;
             PhysicsSimulator.Remove(weldJoint);
@@ -135,8 +130,6 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
 
         public override void Draw(GameTime gameTime)
         {
-            //ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-
             brush.Draw(bodyA.Position, bodyA.Rotation);
             brush.Draw(bodyB.Position, bodyB.Rotation);
 
@@ -146,17 +139,15 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
             foreach (Table t in table)
                 t.Draw();
 
-            //ScreenManager.SpriteBatch.End();
-
             base.Draw(gameTime);
         }
 
-        int count = 0;
+        int count;
 
         public override void HandleInput(InputState input)
         {
             Random rand = new Random();
-            
+
             if (firstRun)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
@@ -167,21 +158,21 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
             }
 
-            if (input.CurrentMouseState.RightButton == ButtonState.Pressed && broke == true && count > 10)
+            if (input.CurrentMouseState.RightButton == ButtonState.Pressed && broke && count > 10)
             {
                 broke = false;
 
                 weldJoint = new WeldJoint(bodyA, bodyB, new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y));
 
                 weldJoint.Breakpoint = 5.0f;
-                weldJoint.Broke += new System.EventHandler<System.EventArgs>(weldJoint_Broke);
+                weldJoint.Broke += weldJoint_Broke;
 
                 PhysicsSimulator.Add(weldJoint);
                 count = 0;
             }
-            else if (input.CurrentMouseState.MiddleButton == ButtonState.Pressed && count > 10)
+            else if (input.CurrentMouseState.MiddleButton == ButtonState.Pressed && input.LastMouseState.MiddleButton == ButtonState.Released && count > 10)
             {
-                table.Add(new Table(new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y), rand.Next(100,300), rand.Next(20,50)));
+                table.Add(new Table(new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y), rand.Next(100, 300), rand.Next(20, 50)));
                 table[table.Count - 1].Load(PhysicsSimulator, ScreenManager.GraphicsDevice);
                 count = 0;
             }
@@ -192,14 +183,14 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
 
         public static string GetTitle()
         {
-            return "Demo10: WeldJoint and GearJoint";
+            return "Demo10: WeldJoint and gears";
         }
 
         public static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows how to use the WeldJoint");
-            sb.AppendLine("and the GearJoint.");
+            sb.AppendLine("and how to create gears");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Mouse");
             sb.AppendLine("  -Hold down left button and drag");
