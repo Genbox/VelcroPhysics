@@ -1,32 +1,23 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
-using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
 using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
-using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
-using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Content;
 
 namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
 {
     public class Demo10Screen : GameScreen
     {
         private List<Splat> splats;
-        
+
         public override void Initialize()
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
-            PhysicsSimulatorView.EnableEdgeView = true;
+            //PhysicsSimulatorView.EnableEdgeView = true;
             PhysicsSimulatorView.EnableAABBView = false;
-
-            Splat.Load(ScreenManager.ContentManager);
 
             splats = new List<Splat>();
 
@@ -39,7 +30,9 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
 
             for (int i = 0; i < 10; i++)
             {
-                splats.Add(new Splat(PhysicsSimulator, new Vector2(rand.Next(150, 950), rand.Next(150, 500))));
+                Splat splat = new Splat(PhysicsSimulator, new Vector2(rand.Next(150, 950), rand.Next(150, 500)));
+                splat.Load(ScreenManager.ContentManager);
+                splats.Add(splat);
             }
 
             base.LoadContent();
@@ -53,7 +46,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
             {
                 s.Draw(ScreenManager.SpriteBatch);
             }
-            
+
             ScreenManager.SpriteBatch.End();
 
             base.Draw(gameTime);
