@@ -17,7 +17,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo4
 #if XBOX
         private const int _pyramidBaseBodyCount = 8;
 #else
-        private const int _pyramidBaseBodyCount = 20;
+        private const int _pyramidBaseBodyCount = 16;
 #endif
         private Agent _agent;
         private Pyramid _pyramid;
