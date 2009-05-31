@@ -578,165 +578,657 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #region Sickbattery's Extension
 
-        private static readonly int[,] _closePixels = new int[8, 2]
-                                                          {
-                                                              {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1},
-                                                              {-1, 1},
-                                                              {-1, 0}
-                                                          };
-
         /// <summary>
-        /// Creates a list of vertices from unsigned integer (32-Bit; 8 bit for each color) array.
+        /// TODO:
+        /// 1.) Das Array welches ich bekomme am besten in einen bool array verwandeln. Würde die Geschwindigkeit verbessern
         /// </summary>
-        /// <param name="textureBits">Unsigned integer (32-Bit; 8 bit for each color) array.</param>
-        /// <param name="textureWidth">Width of texture.</param>
-        /// <param name="textureHeight">Height of texture.</param>
-        /// <returns>Returns Vertices a Vector2 list.</returns>
-        public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight)
-        {
-            return CreatePolygon(textureBits, textureWidth, textureHeight, Vector2.Zero, 127, 2f);
-        }
+        private static readonly int[,] _closePixels = new int[8, 2] { { -1, -1 }, { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
 
-        /// <summary>
-        /// Creates a list of vertices from unsigned integer (32-Bit; 8 bit for each color) array.
-        /// </summary>
-        /// <param name="textureBits">Unsigned integer (32-Bit; 8 bit for each color) array.</param>
-        /// <param name="textureWidth">Width of texture.</param>
-        /// <param name="textureHeight">Height of texture.</param>
-        /// <param name="textureOrigin">Center of texture.</param>
-        /// <returns>Returns Vertices a Vector2 list.</returns>
-        public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight,
-                                             Vector2 textureOrigin)
+        public static List<Vertices> CreatePolygon(ref PolygonCreationAssistance pca)
         {
-            return CreatePolygon(textureBits, textureWidth, textureHeight, textureOrigin, 127, 2f);
-        }
+            List<Vertices> polygons = new List<Vertices>();
 
-        /// <summary>
-        /// Creates a list of vertices from unsigned integer (32-Bit; 8 bit for each color) array.
-        /// </summary>
-        /// <param name="textureBits">Unsigned integer (32-Bit; 8 bit for each color) array.</param>
-        /// <param name="textureWidth">Width of texture.</param>
-        /// <param name="textureHeight">Height of texture.</param>
-        /// <param name="textureOrigin">Center of texture.</param>
-        /// <param name="alphaTolerance">Every Value above the specified counts as solid and will be added to the hull.</param>
-        /// <returns>Returns Vertices a Vector2 list.</returns>
-        public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight,
-                                             Vector2 textureOrigin, byte alphaTolerance)
-        {
-            return CreatePolygon(textureBits, textureWidth, textureHeight, textureOrigin, alphaTolerance, 2f);
-        }
+            Vertices polygon;
+            Vertices holePolygon;
 
-        /// <summary>
-        /// Creates a list of vertices from unsigned integer (32-Bit; 8 bit for each color) array.
-        /// </summary>
-        /// <param name="textureBits">Unsigned integer (32-Bit; 8 bit for each color) array.</param>
-        /// <param name="textureWidth">Width of texture.</param>
-        /// <param name="textureHeight">Height of texture.</param>
-        /// <param name="textureOrigin">Center of texture.</param>
-        /// <param name="alphaTolerance">Every Value above the specified counts as solid and will be added to the hull.</param>
-        /// <param name="hullTolerance">The polygon is a low detailed line around your shape on the texture and here you can specify how much less detailed. 1f is a good Value.</param>
-        /// <returns>Returns Vertices a Vector2 list.</returns>
-        /// <exception cref="Exception">Sizes don't match: Color array must contain texture width * texture height elements.</exception>
-        public static Vertices CreatePolygon(uint[] textureBits, int textureWidth, int textureHeight,
-                                             Vector2 textureOrigin, byte alphaTolerance, float hullTolerance)
-        {
-            Vector2 entrance;
-            Vertices polygon = new Vertices();
-            Vertices hullArea = new Vertices();
+            int vertex1Index = 0;
+            int vertex2Index = 0;
 
-            // Precalculate alpha.
-            uint alphaToleranceRealValue = (uint)alphaTolerance << 24;
+            Vector2? holeEntrance = null;
+            Vector2? polygonEntrance = null;
+
+            List<Vector2> blackList = new List<Vector2>();
+
+            bool inPolygon = false;
+            bool searchOn = false;
 
             // First of all: Check the array you just got.
-            if (textureBits.Length == textureWidth * textureHeight)
+            if (pca.IsValid())
             {
-                // Get the entrance point.
-                if (GetHullEntrance(ref textureBits, ref textureWidth, ref alphaToleranceRealValue, out entrance))
+                do
                 {
-                    // The current point has to be the one before entrance.
-                    // It will become last in the do..while loop in the first run.
-                    Vector2 current = new Vector2(entrance.X - 1f, entrance.Y);
-
-                    // next has to be set to entrance so it'll be added as the
-                    // first point in the list.
-                    Vector2 next = entrance;
-
-                    // Fast bugfix XD. The entrance point of course has to be added first to the polygon XD. Damn I forgot that!
-                    polygon.Add(entrance);
-
-                    do
+                    if (polygons.Count == 0)
                     {
-                        Vector2 outstanding;
+                        polygon = CreateSimplePolygon(ref pca, Vector2.Zero, Vector2.Zero);
 
-                        // Add the vertex to a hull pre vision list.
-                        hullArea.Add(next);
-
-                        // Search in the pre vision list for an outstanding point.
-                        if (SearchForOutstandingVertex(ref hullArea, ref hullTolerance, out outstanding))
+                        if (polygon != null && polygon.Count > 2)
                         {
-                            // Add it and remove all vertices that don't matter anymore
-                            // (all the vertices before the outstanding).
-                            polygon.Add(outstanding);
-                            hullArea.RemoveRange(0, hullArea.IndexOf(outstanding));
+                            polygonEntrance = GetTopMostVertex(ref polygon);
+                        }
+                    }
+                    else if (polygonEntrance.HasValue)
+                    {
+                        polygon = CreateSimplePolygon(ref pca, polygonEntrance.Value, new Vector2(polygonEntrance.Value.X - 1f, polygonEntrance.Value.Y));
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                    searchOn = false;
+
+                    if (polygon != null && polygon.Count > 2)
+                    {
+                        if (pca.HoleDetection)
+                        {
+                            do
+                            {
+                                holeEntrance = GetHoleHullEntrance(ref pca, ref polygon, holeEntrance);
+
+                                if (holeEntrance.HasValue)
+                                {
+                                    if (!blackList.Contains(holeEntrance.Value))
+                                    {
+                                        blackList.Add(holeEntrance.Value);
+                                        holePolygon = CreateSimplePolygon(ref pca, holeEntrance.Value, new Vector2(holeEntrance.Value.X + 1, holeEntrance.Value.Y));
+
+                                        if (holePolygon != null && holePolygon.Count > 2)
+                                        {
+                                            holePolygon.Add(holePolygon[0]);
+
+                                            if (SplitPolygonEdge(ref polygon, EdgeAlignment.Vertical, holeEntrance.Value, out vertex1Index, out vertex2Index))
+                                            {
+                                                polygon.InsertRange(vertex2Index, holePolygon);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    break;
+                                }
+
+                            } while (true);
                         }
 
-                        // Last point gets current and current gets next. Our little spider is moving forward on the hull ;).
-                        Vector2 last = current;
-                        current = next;
+                        polygons.Add(polygon);
 
-                        // Get the next point on hull.
-                        if (
-                            !GetNextHullPoint(ref textureBits, ref textureWidth, ref textureHeight,
-                                              ref alphaToleranceRealValue, ref last, ref current, out next))
+                        if (pca.MultipartDetection)
                         {
-                            next = entrance;
+                            /// 1:  95 / 151
+                            /// 2: 232 / 252
+                            /// 
+                            while (GetNextHullEntrance(ref pca, polygonEntrance.Value, out polygonEntrance))
+                            {
+                                inPolygon = false;
+
+                                for (int i = 0; i < polygons.Count; i++)
+                                {
+                                    polygon = polygons[i];
+
+                                    if (InPolygon(ref pca, ref polygon, polygonEntrance.Value))
+                                    {
+                                        inPolygon = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!inPolygon)
+                                {
+                                    searchOn = true;
+                                    break;
+                                }
+                            }
                         }
-                    } // Exit loop if next piont is the entrance point. The hull is complete now!
-                    while (next != entrance);
+                    }
 
-                    // Center if requested by user.
-                    if (textureOrigin != Vector2.Zero)
+                } while (searchOn);
+            }
+            else
+            {
+                throw new Exception("Sizes don't match: Color array must contain texture width * texture height elements.");
+            }
+
+            return polygons;
+        }
+
+        private static Vector2? GetHoleHullEntrance(ref PolygonCreationAssistance pca, ref Vertices polygon, Vector2? startVertex)
+        {
+            List<CrossingEdgeInfo> edges = new List<CrossingEdgeInfo>();
+            Vector2? entrance;
+
+            int startLine;
+            int endLine;
+
+            int lastSolid = 0;
+            bool foundSolid;
+            bool foundTransparent;
+
+            if (polygon != null && polygon.Count > 0)
+            {
+                if (startVertex.HasValue)
+                {
+                    startLine = (int)startVertex.Value.Y;
+                }
+                else
+                {
+                    startLine = (int)GetTopMostCoord(ref polygon);
+                }
+                endLine = (int)GetBottomMostCoord(ref polygon);
+
+                if (startLine > 0 && startLine < pca.Height && endLine > 0 && endLine < pca.Height)
+                {
+                    // go from top to bottom of the polygon
+                    for (int y = startLine; y <= endLine; y += pca.HoleDetectionLineStepSize)
                     {
-                        for (int i = 0; i < polygon.Count; i++)
+                        // get x-coord of every polygon edge which crosses y
+                        edges = GetCrossingEdges(ref polygon, EdgeAlignment.Vertical, y);
+
+                        // we need an even number of crossing edges
+                        if (edges.Count > 1 && edges.Count % 2 == 0)
                         {
-                            polygon[i] -= textureOrigin;
+                            for (int i = 0; i < edges.Count; i += 2)
+                            {
+                                foundSolid = false;
+                                foundTransparent = false;
+
+                                for (int x = (int)edges[i].CrossingPoint.X; x <= (int)edges[i + 1].CrossingPoint.X; x++)
+                                {
+                                    if (pca.IsSolid(x, y))
+                                    {
+                                        if (!foundTransparent)
+                                        {
+                                            foundSolid = true;
+                                            lastSolid = x;
+                                        }
+
+                                        if (foundSolid && foundTransparent)
+                                        {
+                                            entrance = new Vector2(lastSolid, y);
+
+                                            if (DistanceToHullAcceptable(ref pca, ref polygon, entrance.Value, true))
+                                            {
+                                                return entrance;
+                                            }
+                                            entrance = null;
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (foundSolid)
+                                        {
+                                            foundTransparent = true;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
-            else
+
+            return null;
+        }
+
+        private static bool DistanceToHullAcceptable(ref PolygonCreationAssistance pca, ref Vertices polygon, Vector2 point, bool higherDetail)
+        {
+            Vector2 edgeVertex1;
+            Vector2 edgeVertex2;
+
+            if (polygon != null && polygon.Count > 2)
             {
-                throw new Exception(
-                    "Sizes don't match: Color array must contain texture width * texture height elements.");
+                edgeVertex2 = polygon[polygon.Count - 1];
+
+                if (higherDetail)
+                {
+                    for (int i = 0; i < polygon.Count; i++)
+                    {
+                        edgeVertex1 = polygon[i];
+
+                        if (Calculator.DistanceBetweenPointAndLineSegment(point, edgeVertex1, edgeVertex2) <= pca.HullTolerance ||
+                            Calculator.DistanceBetweenPointAndPoint(ref point, ref edgeVertex1) <= pca.HullTolerance)
+                        {
+                            return false;
+                        }
+
+                        edgeVertex2 = polygon[i];
+                    }
+
+                    return true;
+                }
+                else
+                {
+                    for (int i = 0; i < polygon.Count; i++)
+                    {
+                        edgeVertex1 = polygon[i];
+
+                        if (Calculator.DistanceBetweenPointAndLineSegment(point, edgeVertex1, edgeVertex2) <= pca.HullTolerance)
+                        {
+                            return false;
+                        }
+
+                        edgeVertex2 = polygon[i];
+                    }
+
+                    return true;
+                }
             }
 
-            // Return the heavy compresed polygon ;D.
+            return false;
+        }
+
+        private static bool InPolygon(ref PolygonCreationAssistance pca, ref Vertices polygon, Vector2 point)
+        {
+            bool inPolygon = !DistanceToHullAcceptable(ref pca, ref polygon, point, true);
+
+            if (!inPolygon)
+            {
+                List<CrossingEdgeInfo> edges = GetCrossingEdges(ref polygon, EdgeAlignment.Vertical, (int)point.Y);
+
+                if (edges.Count > 0 && edges.Count % 2 == 0)
+                {
+                    for (int i = 0; i < edges.Count; i += 2)
+                    {
+                        if (edges[i].CrossingPoint.X <= point.X && edges[i + 1].CrossingPoint.X >= point.X)
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+                return false;
+            }
+
+            return inPolygon;
+        }
+
+        #region Functions to get top and bottom most vertex of a polygon.
+        private static Vector2? GetTopMostVertex(ref Vertices vertices)
+        {
+            float topMostValue = float.MaxValue;
+            Vector2? topMost = null;
+
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                if (topMostValue > vertices[i].Y)
+                {
+                    topMostValue = vertices[i].Y;
+                    topMost = vertices[i];
+                }
+            }
+
+            return topMost;
+        }
+
+        private static Vector2? GetBottomMostVertex(ref Vertices vertices)
+        {
+            float bottomMostValue = float.MinValue;
+            Vector2? bottomMost = null;
+
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                if (bottomMostValue < vertices[i].Y)
+                {
+                    bottomMostValue = vertices[i].Y;
+                    bottomMost = vertices[i];
+                }
+            }
+
+            return bottomMost;
+        }
+
+        private static float GetTopMostCoord(ref Vertices vertices)
+        {
+            float returnValue = float.MaxValue;
+
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                if (returnValue > vertices[i].Y)
+                {
+                    returnValue = vertices[i].Y;
+                }
+            }
+
+            return returnValue;
+        }
+
+        private static float GetBottomMostCoord(ref Vertices vertices)
+        {
+            float returnValue = float.MinValue;
+
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                if (returnValue < vertices[i].Y)
+                {
+                    returnValue = vertices[i].Y;
+                }
+            }
+
+            return returnValue;
+        }
+        #endregion
+
+        public static List<CrossingEdgeInfo> GetCrossingEdges(ref Vertices polygon, EdgeAlignment edgeAlign, int checkLine)
+        {
+            List<CrossingEdgeInfo> edges = new List<CrossingEdgeInfo>();
+
+            Vector2 slope;
+            Vector2 edgeVertex1;
+            Vector2 edgeVertex2;
+
+            Vector2 slopePreview;
+            Vector2 edgeVertexPreview;
+
+            Vector2 crossingPoint;
+            bool addCrossingPoint;
+
+            if (polygon.Count > 1)
+            {
+                edgeVertex2 = polygon[polygon.Count - 1];
+
+                switch (edgeAlign)
+                {
+                    case EdgeAlignment.Vertical:
+                        for (int i = 0; i < polygon.Count; i++)
+                        {
+                            edgeVertex1 = polygon[i];
+
+                            if ((edgeVertex1.Y >= checkLine && edgeVertex2.Y <= checkLine) || (edgeVertex1.Y <= checkLine && edgeVertex2.Y >= checkLine))
+                            {
+                                if (edgeVertex1.Y != edgeVertex2.Y)
+                                {
+                                    addCrossingPoint = true;
+                                    slope = edgeVertex2 - edgeVertex1;
+
+                                    if (edgeVertex1.Y == checkLine)
+                                    {
+                                        edgeVertexPreview = polygon[(i + 1) % polygon.Count];
+                                        slopePreview = edgeVertex1 - edgeVertexPreview;
+
+                                        if (slope.Y > 0)
+                                        {
+                                            addCrossingPoint = (slopePreview.Y <= 0);
+                                        }
+                                        else
+                                        {
+                                            addCrossingPoint = (slopePreview.Y >= 0);
+                                        }
+                                    }
+
+                                    if (addCrossingPoint)
+                                    {
+                                        crossingPoint = new Vector2((checkLine - edgeVertex1.Y) / slope.Y * slope.X + edgeVertex1.X, (float)checkLine);
+                                        edges.Add(new CrossingEdgeInfo(edgeVertex1, edgeVertex2, crossingPoint, edgeAlign));
+                                    }
+                                }
+                            }
+                            edgeVertex2 = edgeVertex1;
+                        }
+                        break;
+
+                    case EdgeAlignment.Horizontal:
+                        throw new Exception("EdgeAlignment.Horizontal isn't implemented yet. Sorry.");
+                }
+            }
+
+            edges.Sort();
+            return edges;
+        }
+
+        private static bool SplitPolygonEdge(ref Vertices polygon, EdgeAlignment edgeAlign, Vector2 coordInsideThePolygon, out int vertex1Index, out int vertex2Index)
+        {
+            List<CrossingEdgeInfo> edges = new List<CrossingEdgeInfo>();
+
+            Vector2 slope;
+            int edgeVertex1Index;
+            int edgeVertex2Index;
+            int nearestEdgeVertex1Index = 0;
+            int nearestEdgeVertex2Index = 0;
+            bool edgeFound = false;
+
+            float distance;
+            float shortestDistance = float.MaxValue;
+
+            bool edgeCoordFound = false;
+            Vector2 foundEdgeCoord = Vector2.Zero;
+
+            vertex1Index = 0;
+            vertex2Index = 0;
+
+            switch (edgeAlign)
+            {
+                case EdgeAlignment.Vertical:
+                    edges = GetCrossingEdges(ref polygon, EdgeAlignment.Vertical, (int)coordInsideThePolygon.Y);
+
+                    foundEdgeCoord.Y = coordInsideThePolygon.Y;
+
+                    if (edges != null && edges.Count > 1 && edges.Count % 2 == 0)
+                    {
+                        for (int i = 0; i < edges.Count; i++)
+                        {
+                            if (edges[i].CrossingPoint.X < coordInsideThePolygon.X)
+                            {
+                                distance = coordInsideThePolygon.X - edges[i].CrossingPoint.X;
+
+                                if (distance < shortestDistance)
+                                {
+                                    shortestDistance = distance;
+                                    foundEdgeCoord.X = edges[i].CrossingPoint.X;
+
+                                    edgeCoordFound = true;
+                                }
+                            }
+                        }
+
+                        if (edgeCoordFound)
+                        {
+                            shortestDistance = float.MaxValue;
+
+                            edgeVertex2Index = polygon.Count - 1;
+
+                            for (edgeVertex1Index = 0; edgeVertex1Index < polygon.Count; edgeVertex1Index++)
+                            {
+                                distance = Calculator.DistanceBetweenPointAndLineSegment(foundEdgeCoord,
+                                                                                         polygon[edgeVertex1Index],
+                                                                                         polygon[edgeVertex2Index]);
+                                if (distance < shortestDistance)
+                                {
+                                    shortestDistance = distance;
+
+                                    nearestEdgeVertex1Index = edgeVertex1Index;
+                                    nearestEdgeVertex2Index = edgeVertex2Index;
+
+                                    edgeFound = true;
+                                }
+
+                                edgeVertex2Index = edgeVertex1Index;
+                            }
+
+                            if (edgeFound)
+                            {
+                                slope = polygon[nearestEdgeVertex2Index] - polygon[nearestEdgeVertex1Index];
+                                slope.Normalize();
+
+                                distance = Calculator.DistanceBetweenPointAndPoint(polygon[nearestEdgeVertex1Index],
+                                                                                   foundEdgeCoord);
+
+                                vertex1Index = nearestEdgeVertex1Index;
+                                vertex2Index = nearestEdgeVertex1Index + 1;
+
+                                polygon.Insert(nearestEdgeVertex1Index, distance * slope + polygon[vertex1Index]);
+                                polygon.Insert(nearestEdgeVertex1Index, distance * slope + polygon[vertex2Index]);
+
+                                return true;
+                            }
+                        }
+                    }
+                    break;
+
+                case EdgeAlignment.Horizontal:
+                    throw new Exception("EdgeAlignment.Horizontal isn't implemented yet. Sorry.");
+            }
+
+            return false;
+        }
+
+        private static Vertices CreateSimplePolygon(ref PolygonCreationAssistance pca, Vector2 entrance, Vector2 last)
+        {
+            bool entranceFound = false;
+
+            Vertices polygon = new Vertices();
+            Vertices hullArea = new Vertices();
+
+            Vector2 current = Vector2.Zero;
+            Vector2 next;
+
+            #region Entrance check
+            // Get the entrance point. //todo: alle möglichkeiten testen
+            if (entrance == Vector2.Zero || !pca.InBounds(entrance))
+            {
+                entranceFound = GetHullEntrance(ref pca, out entrance);
+
+                if (entranceFound)
+                {
+                    current = new Vector2(entrance.X - 1f, entrance.Y);
+                }
+            }
+            else
+            {
+                if (pca.IsSolid(entrance))
+                {
+                    if (IsNearPixel(ref pca, entrance, last))
+                    {
+                        current = last;
+                        entranceFound = true;
+                    }
+                    else
+                    {
+                        Vector2 temp;
+                        if (SearchNearPixels(ref pca, false, entrance, out temp))
+                        {
+                            current = temp;
+                            entranceFound = true;
+                        }
+                        else
+                        {
+                            entranceFound = false;
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            if (entranceFound)
+            {
+
+                // next has to be set to entrance so it'll be added as the
+                // first point in the list.
+                next = entrance;
+
+                // Fast bugfix XD. The entrance point of course has to be added first to the polygon XD. Damn I forgot that!
+                polygon.Add(entrance);
+
+                do
+                {
+                    Vector2 outstanding;
+
+                    // Add the vertex to a hull pre vision list.
+                    hullArea.Add(next);
+
+                    // Search in the pre vision list for an outstanding point.
+                    if (SearchForOutstandingVertex(ref hullArea, pca.HullTolerance, out outstanding))
+                    {
+                        // Add it and remove all vertices that don't matter anymore
+                        // (all the vertices before the outstanding).
+                        polygon.Add(outstanding);
+                        hullArea.RemoveRange(0, hullArea.IndexOf(outstanding));
+                    }
+
+                    // Last point gets current and current gets next. Our little spider is moving forward on the hull ;).
+                    last = current;
+                    current = next;
+
+                    // Get the next point on hull.
+                    if (!GetNextHullPoint(ref pca, ref last, ref current, out next))
+                    {
+                        next = entrance;
+                    }
+                } // Exit loop if next piont is the entrance point. The hull is complete now!
+                while (next != entrance);
+            }
+
             return polygon;
         }
 
-        /// <summary>
-        /// This function search for the first hull point.
-        /// </summary>
-        /// <param name="textureBits">A reference to your texture's data.</param>
-        /// <param name="textureWidth">Width of your texture.</param>
-        /// <param name="alphaTolerance">Alpha tolerance :). Value of 10 will include points with alpha of 11 and greater.</param>
-        /// <param name="entrance">The entrance.</param>
-        /// <returns>First hull point.</returns>
-        private static bool GetHullEntrance(ref uint[] textureBits, ref int textureWidth, ref uint alphaTolerance,
-                                            out Vector2 entrance)
+        private static bool SearchNearPixels(ref PolygonCreationAssistance pca, bool searchingForSolidPixel, Vector2 current, out Vector2 foundPixel)
+        {
+            int x;
+            int y;
+
+            for (int i = 0; i < 8; i++)
+            {
+                x = (int)current.X + _closePixels[i, 0];
+                y = (int)current.Y + _closePixels[i, 1];
+
+                if (!searchingForSolidPixel ^ pca.IsSolid(x, y))
+                {
+                    foundPixel = new Vector2(x, y);
+                    return true;
+                }
+            }
+
+            // Nothing found.
+            foundPixel = Vector2.Zero;
+            return false;
+        }
+
+        private static bool IsNearPixel(ref PolygonCreationAssistance pca, Vector2 current, Vector2 near)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                int x = (int)current.X + _closePixels[i, 0];
+                int y = (int)current.Y + _closePixels[i, 1];
+
+                if (x >= 0 && x <= pca.Width && y >= 0 && y <= pca.Height)
+                {
+                    if (x == (int)near.X && y == (int)near.Y)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private static bool GetHullEntrance(ref PolygonCreationAssistance pca, out Vector2 entrance)
         {
             // Search for first solid pixel.
-            for (int i = 0; i < textureBits.Length; i++)
+            for (int y = 0; y <= pca.Height; y++)
             {
-                // Move the alpha bits down and check if the pixel is solid.
-                if ((textureBits[i] & 0xFF000000) >= alphaTolerance)
+                for (int x = 0; x <= pca.Width; x++)
                 {
-                    // Now calculate the coords and return'em.
-                    int x = i % textureWidth;
-                    int y = (i - x) / textureWidth;
-
-                    entrance = new Vector2(x, y);
-                    return true;
+                    if (pca.IsSolid(x, y))
+                    {
+                        entrance = new Vector2(x, y);
+                        return true;
+                    }
                 }
             }
 
@@ -745,109 +1237,91 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return false;
         }
 
-        /// <summary>
-        /// Searches for the next hull point.
-        /// </summary>
-        /// <param name="textureBits">A reference to your texture's data.</param>
-        /// <param name="textureWidth">Width of your texture.</param>
-        /// <param name="textureHeight">Height of your texture.</param>
-        /// <param name="alphaTolerance">Alpha tolerance :). Value of 10 will include points with alpha of 10.</param>
-        /// <param name="last">Last hull point.</param>
-        /// <param name="current">Current hull point.</param>
-        /// <param name="next">The next point</param>
-        /// <returns>The next hull point.</returns>
-        private static bool GetNextHullPoint(ref uint[] textureBits, ref int textureWidth, ref int textureHeight,
-                                             ref uint alphaTolerance, ref Vector2 last, ref Vector2 current,
-                                             out Vector2 next)
+        private static bool GetNextHullEntrance(ref PolygonCreationAssistance pca, Vector2 start, out Vector2? entrance)
         {
-            // Depending on the direction the little spider comes from you have to tell her
-            // where to start the search again.
-            int indexOfFirstPixelToCheck = GetIndexOfFirstPixelToCheck(last, current);
+            // Search for first solid pixel.
+            int size = pca.Height * pca.Width;
+            int x;
 
-            const int pixelsToCheck = 8; //8 -> _closePixels.Length -> hardcoded to speed up
+            bool foundTransparent = false;
+
+            for (int i = (int)start.X + (int)start.Y * pca.Width; i <= size; i++)
+            {
+                if (pca.IsSolid(i))
+                {
+                    if (foundTransparent)
+                    {
+                        x = i % pca.Width;
+
+                        entrance = new Vector2(x, (i - x) / pca.Width);
+                        return true;
+                    }
+                }
+                else
+                {
+                    foundTransparent = true;
+                }
+            }
+
+            // If there are no solid pixels.
+            entrance = null;
+            return false;
+        }
+
+        private static bool GetNextHullPoint(ref PolygonCreationAssistance pca, ref Vector2 last, ref Vector2 current, out Vector2 next)
+        {
+            int x;
+            int y;
+
+            int indexOfFirstPixelToCheck = GetIndexOfFirstPixelToCheck(last, current);
+            int indexOfPixelToCheck;
+
+            const int pixelsToCheck = 8;// _closePixels.Length;
 
             for (int i = 0; i < pixelsToCheck; i++)
             {
-                // The little spider starts now to look around ;).
-                int indexOfPixelToCheck = (indexOfFirstPixelToCheck + i) % pixelsToCheck;
+                indexOfPixelToCheck = (indexOfFirstPixelToCheck + i) % pixelsToCheck;
 
-                int x = (int)current.X + _closePixels[indexOfPixelToCheck, 0];
-                int y = (int)current.Y + _closePixels[indexOfPixelToCheck, 1];
+                x = (int)current.X + _closePixels[indexOfPixelToCheck, 0];
+                y = (int)current.Y + _closePixels[indexOfPixelToCheck, 1];
 
-                // Check if the coords are in the texture coords.
-                if (x >= 0 && x < textureWidth && y >= 0 && y < textureHeight)
+                if (x >= 0 && x < pca.Width && y >= 0 && y <= pca.Height)
                 {
-                    // Uh! Something sold?
-                    if ((textureBits[x + y * textureWidth] & 0xFF000000) >= alphaTolerance)
+                    if (pca.IsSolid(x, y)) //todo
                     {
-                        // Yeah! Return and quit searching.
                         next = new Vector2(x, y);
                         return true;
                     }
                 }
             }
 
-            // Nothing found? Wow. I think that can't happen, ...but next must be set. C# screams for it.
             next = Vector2.Zero;
             return false;
         }
 
-        /// <summary>
-        /// This function searches for an outstanding pixel. When found it searches on for the most outstanding.
-        /// </summary>
-        /// <param name="hullArea">Put a peace of the hull in here.</param>
-        /// <param name="hullTolerance">How much distance from the actual hull line is allowed? 1f to 2f are good values.</param>
-        /// <param name="outstanding">This will give you the most outstanding point in the piece of hull you gave it.</param>
-        /// <returns></returns>
-        private static bool SearchForOutstandingVertex(ref Vertices hullArea, ref float hullTolerance,
-                                                       out Vector2 outstanding)
+        private static bool SearchForOutstandingVertex(ref Vertices hullArea, float hullTolerance, out Vector2 outstanding)
         {
             int hullAreaLastPoint = hullArea.Count - 1;
 
-            float lastOutstandingDistance = 0f;
-            bool searchMostOutstanding = false;
-
             Vector2 outstandingResult = Vector2.Zero;
+            bool found = false;
 
             // Search between the first and last hull point.
             for (int i = 1; i < hullAreaLastPoint; i++)
             {
-                // Get the distance of the outstanding point.
-                float outstandingDistance = Calculator.DistanceBetweenPointAndLineSegment(hullArea[i], hullArea[0],
-                                                                                          hullArea[hullAreaLastPoint]);
-
-                if (!searchMostOutstanding)
+                // Check if the distance is over the one that's tolerable.
+                if (Calculator.DistanceBetweenPointAndLineSegment(hullArea[i], hullArea[0], hullArea[hullAreaLastPoint]) >= hullTolerance)
                 {
-                    // Check if the distance is over the one that's tolerable.
-                    if (outstandingDistance > hullTolerance)
-                    {
-                        // Ok, next time we search for the most outstanding.
-                        searchMostOutstanding = true;
-                        lastOutstandingDistance = outstandingDistance;
-                        outstandingResult = hullArea[i];
-                    }
-                }
-                else
-                {
-                    // Is it the most outstanding?
-                    if (outstandingDistance > lastOutstandingDistance)
-                    {
-                        // Indeed :). But lets search to the end.
-                        lastOutstandingDistance = outstandingDistance;
-                        outstandingResult = hullArea[i];
-                    }
+                    outstandingResult = hullArea[i];
+                    found = true;
+                    break;
                 }
             }
 
-            // Return the stuff...
             outstanding = outstandingResult;
-            return searchMostOutstanding;
+            return found;
         }
 
-        /// <summary>
-        /// This function tells you where to start searching for the next hull point.
-        /// Important: Last and next hull points have to be right next to each other.
-        /// </summary>
         private static int GetIndexOfFirstPixelToCheck(Vector2 last, Vector2 current)
         {
             /// .: pixel
@@ -904,7 +1378,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             return 0;
         }
-
         #endregion
 
         #region DrDeth's Extension
@@ -2410,6 +2883,260 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #endregion
     }
+
+    #region Sickbattery's Extension - Enums & Classes
+    public enum EdgeAlignment
+    {
+        Vertical = 0,
+        Horizontal = 1
+    }
+
+    public class CrossingEdgeInfo : IComparable
+    {
+        #region Attributes
+        private Vector2 _egdeVertex1;
+        private Vector2 _edgeVertex2;
+
+        private EdgeAlignment _alignment;
+        private Vector2 _crossingPoint;
+        #endregion
+
+        #region Properties
+        public Vector2 EdgeVertex1
+        {
+            get { return _egdeVertex1; }
+            set { _egdeVertex1 = value; }
+        }
+
+        public Vector2 EdgeVertex2
+        {
+            get { return _edgeVertex2; }
+            set { _edgeVertex2 = value; }
+        }
+
+        public EdgeAlignment CheckLineAlignment
+        {
+            get { return _alignment; }
+            set { _alignment = value; }
+        }
+
+        public Vector2 CrossingPoint
+        {
+            get { return _crossingPoint; }
+            set { _crossingPoint = value; }
+        }
+        #endregion
+
+        #region Constructor
+        public CrossingEdgeInfo(Vector2 edgeVertex1, Vector2 edgeVertex2, Vector2 crossingPoint, EdgeAlignment checkLineAlignment)
+        {
+            _egdeVertex1 = edgeVertex1;
+            _edgeVertex2 = edgeVertex2;
+
+            _alignment = checkLineAlignment;
+            _crossingPoint = crossingPoint;
+        }
+        #endregion
+
+        #region IComparable Member
+        public int CompareTo(object obj)
+        {
+            CrossingEdgeInfo cei = (CrossingEdgeInfo)obj;
+            int result = 0;
+
+            switch (_alignment)
+            {
+                case EdgeAlignment.Vertical:
+                    if (_crossingPoint.X < cei.CrossingPoint.X)
+                    {
+                        result = -1;
+                    }
+                    else if (_crossingPoint.X > cei.CrossingPoint.X)
+                    {
+                        result = 1;
+                    }
+                    break;
+
+                case EdgeAlignment.Horizontal:
+                    if (_crossingPoint.Y < cei.CrossingPoint.Y)
+                    {
+                        result = -1;
+                    }
+                    else if (_crossingPoint.Y > cei.CrossingPoint.Y)
+                    {
+                        result = 1;
+                    }
+                    break;
+            }
+
+            return result;
+        }
+        #endregion
+    }
+
+    public class PolygonCreationAssistance
+    {
+        private uint[] _data;
+        private int _width;
+        private int _height;
+        private byte _alphaTolerance;
+        private uint _alphaToleranceRealValue;
+        private float _hullTolerance;
+        private int _holeDetectionLineStepSize;
+        private bool _holeDetection;
+        private bool _multipartDetection;
+
+        public uint[] Data
+        {
+            get { return _data; }
+        }
+
+        public int Width
+        {
+            get { return _width; }
+        }
+
+        public int Height
+        {
+            get { return _height; }
+        }
+
+        public byte AlphaTolerance
+        {
+            get { return _alphaTolerance; }
+            set
+            {
+                _alphaTolerance = value;
+                _alphaToleranceRealValue = (uint)value << 24;
+            }
+        }
+
+        public uint AlphaToleranceRealValue
+        {
+            get { return _alphaToleranceRealValue; }
+            set
+            {
+                _alphaTolerance = (byte)(value >> 24);
+                _alphaToleranceRealValue = value;
+            }
+        }
+
+        public float HullTolerance
+        {
+            get { return _hullTolerance; }
+            set
+            {
+                float hullTolerance = value;
+
+                if (hullTolerance > 4f) hullTolerance = 4f;
+                if (hullTolerance < 0.9f) hullTolerance = 0.9f;
+
+                _hullTolerance = hullTolerance;
+            }
+        }
+
+        public int HoleDetectionLineStepSize
+        {
+            get { return _holeDetectionLineStepSize; }
+            set
+            {
+                if (value < 1)
+                {
+                    _holeDetectionLineStepSize = 1;
+                }
+                else
+                {
+                    if (value > 10)
+                    {
+                        _holeDetectionLineStepSize = 10;
+                    }
+                    else
+                    {
+                        _holeDetectionLineStepSize = value;
+                    }
+                }
+            }
+        }
+
+        public bool HoleDetection
+        {
+            get { return _holeDetection; }
+            set { _holeDetection = value; }
+        }
+
+        public bool MultipartDetection
+        {
+            get { return _multipartDetection; }
+            set { _multipartDetection = value; }
+        }
+
+        public PolygonCreationAssistance(uint[] data, int width, int height)
+        {
+            _data = data;
+            _width = width;
+            _height = height;
+
+            AlphaTolerance = 20;
+            HullTolerance = 1.5f;
+
+            HoleDetectionLineStepSize = 1;
+
+            _holeDetection = false;
+            _multipartDetection = false;
+        }
+
+        public bool IsSolid(Vector2 pixel)
+        {
+            return IsSolid((int)pixel.X, (int)pixel.Y);
+        }
+
+        public bool IsSolid(int x, int y)
+        {
+            if (x >= 0 && x < _width && y >= 0 && y < _height)
+            {
+                return ((_data[x + y * _width] & 0xFF000000) >= _alphaToleranceRealValue);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool IsSolid(int index)
+        {
+            if (index >= 0 && index < _width * _height)
+            {
+                return ((_data[index] & 0xFF000000) >= _alphaToleranceRealValue);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool InBounds(Vector2 coord)
+        {
+            return (coord.X >= 0f && coord.X < _width && coord.Y >= 0f && coord.Y < _height);
+        }
+
+        public bool IsValid()
+        {
+            if (_data != null && _data.Length > 0)
+            {
+                return _data.Length == _width * _height;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        ~PolygonCreationAssistance()
+        {
+            _data = null;
+        }
+    }
+    #endregion
 
     #region SAT Extensions
 

@@ -3,27 +3,28 @@ using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
-using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
 namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
 {
-    internal class Splat
+    public class Splat
     {
-        private List<Geom> _splatGeomList;
         private Body _splatBody;
+        private List<Geom> _splatGeomList;
+        private Texture2D _splatTexture;
+        private Vertices _splatTextureVertices;
+        private PhysicsSimulator _physicsSimulator;
+        private Vector2 _position;
 
-        private static Texture2D _splatTexture;
-        private static Vertices _splatTextureVertices;
+        public Splat(PhysicsSimulator physicsSimulator, Vector2 position)
+        {
+            _position = position;
+            _physicsSimulator = physicsSimulator;
+        }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="content"></param>
-        public static void Load(ContentManager content)
+        public void Load(ContentManager content)
         {
             _splatTexture = content.Load<Texture2D>("Content/Terrain");
 
@@ -33,24 +34,26 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
             //Transfer the texture data to the array
             _splatTexture.GetData(data);
 
-            _splatTextureVertices = Vertices.CreatePolygon(data, _splatTexture.Width, _splatTexture.Height, new Vector2(), 128, 5.0f);
-        }
+            PolygonCreationAssistance pca = new PolygonCreationAssistance(data, _splatTexture.Width, _splatTexture.Height);
+            pca.HullTolerance = 6f;
+            pca.HoleDetection = false;
+            pca.MultipartDetection = false;
+            pca.AlphaTolerance = 20;
 
-        public Splat(PhysicsSimulator ps, Vector2 position)
-        {
-            _splatGeomList = new List<Geom>();
-            
+            _splatTextureVertices = Vertices.CreatePolygon(ref pca)[0];
+
             _splatBody = BodyFactory.Instance.CreatePolygonBody(_splatTextureVertices, 1);
-            _splatBody.Position = position;
+            _splatBody.Position = _position;
 
             _splatGeomList = AutoDivide.DivideGeom(_splatTextureVertices, _splatBody);
 
-            ps.Add(_splatBody);
+            _physicsSimulator.Add(_splatBody);
 
-            foreach (Geom g in _splatGeomList)
+            foreach (Geom geom in _splatGeomList)
             {
-                ps.Add(g);
+                _physicsSimulator.Add(geom);
             }
+
         }
 
         public void Draw(SpriteBatch sb)

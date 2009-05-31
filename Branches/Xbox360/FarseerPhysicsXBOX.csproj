@@ -229,7 +229,7 @@
       <Link>Pool.cs</Link>
     </Compile>
     <Compile Include="..\XNA3\Collisions\Auto-Divide.cs">
-      <Link>Auto-Divide.cs</Link>
+      <Link>Collisions\Auto-Divide.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -20,10 +20,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// Creates a list of vertices, each of which are a
         /// triangle, from a set of vertices.
         /// </summary>
-        /// <param name="v">The set of vertices. Must be a closed set.</param>
+        /// <param name="vertices">The set of vertices. Must be a closed set.</param>
         /// <param name="createTriangles">Create only triangles. (Must be true for now)</param>
-        /// <returns></returns>
-        public static List<Vertices> DivideVertices(Vertices v, bool createTriangles)
+        /// <returns>A list of divided vertices</returns>
+        public static List<Vertices> DivideVertices(Vertices vertices, bool createTriangles)
         {
             List<Vertices> split = new List<Vertices>();   // a list holding all vertices as they're split
             Vector2[] triangles;
@@ -32,7 +32,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Vertices temp = new Vertices();
 
             // split the vertices up into a set of triangles
-            Vertices.Triangulate(v.ToArray(), Vertices.WindingOrder.CounterClockwise, out triangles, out indices);
+            Vertices.Triangulate(vertices.ToArray(), Vertices.WindingOrder.CounterClockwise, out triangles, out indices);
 
             if (createTriangles)
             {
@@ -60,12 +60,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         /// <param name="vertices">The set of vertices. Must be a closed set.</param>
         /// <param name="body">The body you want the geoms to belong too.</param>
-        /// <returns></returns>
+        /// <returns>A list of divided geometries</returns>
         public static List<Geom> DivideGeom(Vertices vertices, Body body)
         {
             List<Geom> geomsList = new List<Geom>();
 
-            List<Vertices> verts = AutoDivide.DivideVertices(vertices, true);
+            List<Vertices> verts = DivideVertices(vertices, true);
 
             Vector2 a = vertices.GetCentroid();
 
