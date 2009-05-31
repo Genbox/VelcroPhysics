@@ -27,6 +27,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo7
         public override void Initialize()
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
+            PhysicsSimulator.BiasFactor = 0.3f;
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
 
             base.Initialize();
@@ -43,9 +44,9 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo7
             _rectangleBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 1f);
             _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_rectangleBody, 32, 32);
             _rectangleGeom.FrictionCoefficient = .4f;
-            _rectangleGeom.RestitutionCoefficient = 0.3f;
+            _rectangleGeom.RestitutionCoefficient = 0.0f;
 
-            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, pyramidBaseBodyCount,
+            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 5f, 32f / 5f, 32, 32, pyramidBaseBodyCount,
                        new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount * .5f * (32 + 32 / 3),
                                    ScreenManager.ScreenHeight - 125));
 
