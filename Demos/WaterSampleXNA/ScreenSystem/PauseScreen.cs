@@ -52,7 +52,7 @@ namespace FarseerGames.WaterSampleXNA.ScreenSystem
                     //also remove the screen that called this pausescreen
                     ScreenManager.RemoveScreen(_caller);
                     ExitScreen();
-                    ScreenManager.AddScreen(new MainMenuScreen());
+                    ScreenManager.Game.Exit();
                     break;
             }
         }
