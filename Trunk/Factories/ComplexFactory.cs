@@ -69,7 +69,6 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="height">Height of each link.</param>
         /// <param name="mass">Mass of each link.</param>
         /// <param name="type">The joint/spring type.</param>
-
         /// <returns>Path</returns>
         public Path CreateChain(Vector2 start, Vector2 end, int links, float height, float mass, LinkType type)
         {

@@ -108,6 +108,5 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         #endregion
-
     }
 }

@@ -33,7 +33,7 @@ namespace FarseerGames.FarseerPhysics.Factories
             }
         }
 
-        //revolute joint
+        #region Revolute joint
         public RevoluteJoint CreateRevoluteJoint(PhysicsSimulator physicsSimulator, Body body1, Body body2,
                                                  Vector2 initialAnchorPosition)
         {
@@ -47,8 +47,9 @@ namespace FarseerGames.FarseerPhysics.Factories
             RevoluteJoint revoluteJoint = new RevoluteJoint(body1, body2, initialAnchorPosition);
             return revoluteJoint;
         }
+        #endregion
 
-        //fixed revolute joint
+        #region Fixed revolute joint
         public FixedRevoluteJoint CreateFixedRevoluteJoint(PhysicsSimulator physicsSimulator, Body body, Vector2 anchor)
         {
             FixedRevoluteJoint revoluteJoint = CreateFixedRevoluteJoint(body, anchor);
@@ -67,8 +68,9 @@ namespace FarseerGames.FarseerPhysics.Factories
             }
             return revoluteJoint;
         }
+        #endregion
 
-        //pin joint
+        #region Pin joint
         public PinJoint CreatePinJoint(PhysicsSimulator physicsSimulator, Body body1, Vector2 anchor1, Body body2,
                                        Vector2 anchor2)
         {
@@ -82,8 +84,9 @@ namespace FarseerGames.FarseerPhysics.Factories
             PinJoint pinJoint = new PinJoint(body1, anchor1, body2, anchor2);
             return pinJoint;
         }
+        #endregion
 
-        //slider joint
+        #region Slider joint
         public SliderJoint CreateSliderJoint(PhysicsSimulator physicsSimulator, Body body1, Vector2 anchor1, Body body2,
                                              Vector2 anchor2, float min, float max)
         {
@@ -98,8 +101,9 @@ namespace FarseerGames.FarseerPhysics.Factories
             SliderJoint sliderJoint = new SliderJoint(body1, anchor1, body2, anchor2, min, max);
             return sliderJoint;
         }
+        #endregion
 
-        //angle joint
+        #region Angle joint
         public AngleJoint CreateAngleJoint(PhysicsSimulator physicsSimulator, Body body1, Body body2)
         {
             AngleJoint angleJoint = CreateAngleJoint(body1, body2);
@@ -128,8 +132,9 @@ namespace FarseerGames.FarseerPhysics.Factories
             angleJoint.BiasFactor = biasFactor;
             return angleJoint;
         }
+        #endregion
 
-        //fixed angle joint
+        #region Fixed angle joint
         public FixedAngleJoint CreateFixedAngleJoint(PhysicsSimulator physicsSimulator, Body body)
         {
             FixedAngleJoint fixedAngleJoint = CreateFixedAngleJoint(body);
@@ -142,8 +147,9 @@ namespace FarseerGames.FarseerPhysics.Factories
             FixedAngleJoint fixedAngleJoint = new FixedAngleJoint(body);
             return fixedAngleJoint;
         }
+        #endregion
 
-        //angle limit joint
+        #region Angle limit joint
         public AngleLimitJoint CreateAngleLimitJoint(PhysicsSimulator physicsSimulator, Body body1, Body body2,
                                                      float min, float max)
         {
@@ -157,8 +163,9 @@ namespace FarseerGames.FarseerPhysics.Factories
             AngleLimitJoint angleLimitJoint = new AngleLimitJoint(body1, body2, min, max);
             return angleLimitJoint;
         }
+        #endregion
 
-        //fixed angle limit joint
+        #region Fixed angle limit joint
         public FixedAngleLimitJoint CreateFixedAngleLimitJoint(PhysicsSimulator physicsSimulator, Body body,
                                                                float min, float max)
         {
@@ -172,5 +179,6 @@ namespace FarseerGames.FarseerPhysics.Factories
             FixedAngleLimitJoint fixedAngleLimitJoint = new FixedAngleLimitJoint(body, min, max);
             return fixedAngleLimitJoint;
         }
+        #endregion
     }
 }
