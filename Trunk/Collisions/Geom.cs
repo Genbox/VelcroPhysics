@@ -285,9 +285,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
             get { return body; }
         }
 
+        /// <summary>
+        /// The size of the grid cells used in the distance grid narrow phase collider.
+        /// </summary>
+        public float GridCellSize { get; internal set; }
+
         private void Construct(Body bodyToSet, Vertices vertices, Vector2 positionOffset, float rotationOffset,
                                float collisionGridSize)
         {
+            GridCellSize = collisionGridSize;
             id = GetNextId();
             _positionOffset = positionOffset;
             _rotationOffset = rotationOffset;
@@ -302,7 +308,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
             _rotationOffset = rotationOffset;
             RestitutionCoefficient = geometry.RestitutionCoefficient;
             FrictionCoefficient = geometry.FrictionCoefficient;
-            
+            GridCellSize = geometry.GridCellSize;
+
             //IsSensor = geometry.IsSensor;
             CollisionGroup = geometry.CollisionGroup;
             CollisionEnabled = geometry.CollisionEnabled;

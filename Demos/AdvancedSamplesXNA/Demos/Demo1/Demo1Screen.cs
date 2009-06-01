@@ -17,15 +17,15 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo1
     {
         private const int pyramidBaseBodyCount = 16;
         private Agent _agent;
+
+        // POINT OF INTEREST
+        // This is the processor used to communicate with the physics thread
         private PhysicsProcessor _physicsProcessor;
         private Thread _physicsThread;
         private MultithreadedPyramid _multithreadedPyramid;
         private Body _rectangleBody;
         private Geom _rectangleGeom;
         private Texture2D _rectangleTexture;
-
-        // POINT OF INTEREST
-        // This is the processor used to communicate with the physics thread
 
         public override void Dispose()
         {

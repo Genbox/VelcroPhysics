@@ -32,6 +32,7 @@ namespace FarseerGames.FarseerPhysics.Factories
             }
         }
 
+        #region Linear spring
         public LinearSpring CreateLinearSpring(PhysicsSimulator physicsSimulator, Body body1, Vector2 attachPoint1,
                                                Body body2, Vector2 attachPoint2, float springConstant,
                                                float dampingConstant)
@@ -49,7 +50,9 @@ namespace FarseerGames.FarseerPhysics.Factories
                                                          dampingConstant);
             return linearSpring;
         }
+        #endregion
 
+        #region Fixed linear spring
         public FixedLinearSpring CreateFixedLinearSpring(PhysicsSimulator physicsSimulator, Body body,
                                                          Vector2 bodyAttachPoint, Vector2 worldAttachPoint,
                                                          float springConstant, float dampingConstant)
@@ -67,7 +70,9 @@ namespace FarseerGames.FarseerPhysics.Factories
                                                                   springConstant, dampingConstant);
             return fixedSpring;
         }
+        #endregion
 
+        #region Angle spring
         public AngleSpring CreateAngleSpring(PhysicsSimulator physicsSimulator, Body body1, Body body2,
                                              float springConstant, float dampingConstant)
         {
@@ -81,7 +86,9 @@ namespace FarseerGames.FarseerPhysics.Factories
             AngleSpring angleSpring = new AngleSpring(body1, body2, springConstant, dampingConstant);
             return angleSpring;
         }
+        #endregion
 
+        #region Fixed angle spring
         public FixedAngleSpring CreateFixedAngleSpring(PhysicsSimulator physicsSimulator, Body body,
                                                        float springConstant, float dampingConstant)
         {
@@ -95,5 +102,6 @@ namespace FarseerGames.FarseerPhysics.Factories
             FixedAngleSpring fixedAngleSpring = new FixedAngleSpring(body, springConstant, dampingConstant);
             return fixedAngleSpring;
         }
+        #endregion
     }
 }

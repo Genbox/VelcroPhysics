@@ -107,11 +107,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 throw new ArgumentNullException("geom", "Geometry can't be null");
 
             //Don't create distancegrid for geometry that already have one.
+            //NOTE: This should be used to -update- the geometry's distance grid (if grid cell size has changed).
             if (_distanceGrids.ContainsKey(geom.id))
                 return;
 
             //By default, calculate the gridcellsize from the AABB
-            float gridCellSize = CalculateGridCellSizeFromAABB(geom.AABB);
+            if (geom.GridCellSize <= 0)
+                geom.GridCellSize = CalculateGridCellSizeFromAABB(geom.AABB);
 
             //Prepare the geometry. Reset the geometry matrix
             Matrix old = geom.Matrix;
@@ -119,7 +121,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             //Create data needed for gridcalculations
             AABB aabb = new AABB(geom.AABB);
-            float gridCellSizeInv = 1 / gridCellSize;
+            float gridCellSizeInv = 1 / geom.GridCellSize;
 
             //Note: Physics2d have +2
             int xSize = (int)Math.Ceiling((double)(aabb.Max.X - aabb.Min.X) * gridCellSizeInv) + 1;
@@ -127,10 +129,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             float[,] nodes = new float[xSize, ySize];
             Vector2 vector = aabb.Min;
-            for (int x = 0; x < xSize; ++x, vector.X += gridCellSize)
+            for (int x = 0; x < xSize; ++x, vector.X += geom.GridCellSize)
             {
                 vector.Y = aabb.Min.Y;
-                for (int y = 0; y < ySize; ++y, vector.Y += gridCellSize)
+                for (int y = 0; y < ySize; ++y, vector.Y += geom.GridCellSize)
                 {
                     nodes[x, y] = geom.GetNearestDistance(ref vector); // shape.GetDistance(vector);
                 }
@@ -140,7 +142,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             DistanceGridData distanceGridData = new DistanceGridData();
             distanceGridData.AABB = aabb;
-            distanceGridData.GridCellSize = gridCellSize;
+            distanceGridData.GridCellSize = geom.GridCellSize;
             distanceGridData.GridCellSizeInv = gridCellSizeInv;
             distanceGridData.Nodes = nodes;
 
