@@ -493,8 +493,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 Matrix matrixInverse = MatrixInverse;
                 Vector2.Transform(ref position, ref matrixInverse, out position);
 
-                if (narrowPhaseCollider.Intersect(this, ref position))
-                    return true;
+                return narrowPhaseCollider.Intersect(this, ref position);
             }
             return false;
         }

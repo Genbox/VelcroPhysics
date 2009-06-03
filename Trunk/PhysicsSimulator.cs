@@ -266,7 +266,7 @@ namespace FarseerGames.FarseerPhysics
             springRemoveList = new List<Spring>();
 
             _broadPhaseCollider = new SelectiveSweepCollider(this);
-            _narrowPhaseCollider = new SAT(this);
+            _narrowPhaseCollider = new DistanceGrid(this);
 
             arbiterList = new ArbiterList();
             Gravity = gravity;
@@ -283,6 +283,19 @@ namespace FarseerGames.FarseerPhysics
             if (!geomAddList.Contains(geometry))
             {
                 geomAddList.Add(geometry);
+
+                //Make sure to create distancegrid when adding geometry
+                DistanceGrid grid = _narrowPhaseCollider as DistanceGrid;
+                if (grid != null)
+                {
+                    grid.CreateDistanceGrid(geometry);
+                    geometry.narrowPhaseCollider = grid;
+                }
+
+                //Or use SAT if that is the one chosen.
+                SAT sat = _narrowPhaseCollider as SAT;
+                if (sat != null)
+                    geometry.narrowPhaseCollider = sat;
             }
         }
 
@@ -660,19 +673,6 @@ namespace FarseerGames.FarseerPhysics
                 {
                     geomAddList[i].InSimulation = true;
                     geomList.Add(geomAddList[i]);
-
-                    //Make sure to create distancegrid when adding geometry
-                    DistanceGrid grid = _narrowPhaseCollider as DistanceGrid;
-                    if (grid != null)
-                    {
-                        grid.CreateDistanceGrid(geomAddList[i]);
-                        geomAddList[i].narrowPhaseCollider = grid;
-                    }
-
-                    //Or use SAT if that is the one chosen.
-                    SAT sat = _narrowPhaseCollider as SAT;
-                    if (sat != null)
-                        geomAddList[i].narrowPhaseCollider = sat;
 
                     //Add the new geometry to the broad phase collider.
                     _broadPhaseCollider.Add(geomAddList[i]);
