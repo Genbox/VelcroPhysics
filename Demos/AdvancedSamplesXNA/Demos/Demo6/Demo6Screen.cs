@@ -80,7 +80,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo6
             _wheelg = GeomFactory.Instance.CreateCircleGeom(PhysicsSimulator, _wheel2, 45, 36);
             _wheelg.FrictionCoefficient = 1.0f;
 
-            _spring = SpringFactory.Instance.CreateLinearSpring(PhysicsSimulator, _wheel1, new Vector2(), _wheel2, new Vector2(), 1200, 250);
+            _spring = SpringFactory.Instance.CreateLinearSpring(PhysicsSimulator, _wheel1, new Vector2(), _wheel2, new Vector2(), 5200, 3050);
             _spring.RestLength += 20;
 
             _obstacles = new GenericList<Body>();

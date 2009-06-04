@@ -25,9 +25,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         private float _height; // width and height of bodies to create
         private GenericList<Joint> _joints; // holds all the joints for this path
         private bool _loop; // is this path a loop
-        private float _mass; // width and height of bodies to create
+        private float _mass; // mass of bodies to create
         private bool _recalculate = true; // will be set to true if path needs to be recalculated
         private float _width; // width and height of bodies to create
+        private float _linkWidth; // distance between links. Decoupled from body width.
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Path"/> class.
@@ -37,8 +38,22 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <param name="mass">The mass.</param>
         /// <param name="endless">if set to <c>true</c> [endless].</param>
         public Path(float width, float height, float mass, bool endless)
+            : this(width, height, width, mass, endless)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Path"/> class.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="linkWidth">The distance between links.</param> 
+        /// <param name="mass">The mass.</param>
+        /// <param name="endless">if set to <c>true</c> [endless].</param>
+        public Path(float width, float height, float linkWidth, float mass, bool endless)
         {
             _width = width;
+            _linkWidth = linkWidth;
             _height = height;
             _loop = endless;
             _mass = mass;
@@ -104,6 +119,20 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <param name="dampingConstant">The damping constant.</param>
         public void LinkBodies(LinkType type, float min, float max, float springConstant, float dampingConstant)
         {
+            LinkBodies(type, min, max, springConstant, dampingConstant, 1f);
+        }
+
+        /// <summary>
+        /// Links the bodies.
+        /// </summary>
+        /// <param name="type">The type of Joint to link with.</param>
+        /// <param name="min">The min.</param>
+        /// <param name="max">The max.</param>
+        /// <param name="springConstant">The spring constant.</param>
+        /// <param name="dampingConstant">The damping constant.</param>
+        /// <param name="springRestLengthFactor">The spring rest length factor</param>
+        public void LinkBodies(LinkType type, float min, float max, float springConstant, float dampingConstant, float springRestLengthFactor)
+        {
             RevoluteJoint revoluteJoint;
             PinJoint pinJoint, d;
             SliderJoint sliderJoint;
@@ -146,17 +175,32 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                             _joints.Add(revoluteJoint);
                             break;
                         case LinkType.LinearSpring:
-                            linearSpring = SpringFactory.Instance.CreateLinearSpring(_bodies[i], new Vector2(-_width / 2.0f, 0), _bodies[i + 1],
-                                new Vector2(_width / 2.0f, 0), springConstant, dampingConstant);
+                            if (_bodies[i].Position.X < _bodies[i + 1].Position.X)
+                            {
+                                linearSpring = SpringFactory.Instance.CreateLinearSpring(_bodies[i], new Vector2(_width / 2.0f, 0), _bodies[i + 1],
+                                    new Vector2(-_width / 2.0f, 0), springConstant, dampingConstant);
+                            }
+                            else
+                            {
+                                linearSpring = SpringFactory.Instance.CreateLinearSpring(_bodies[i], new Vector2(-_width / 2.0f, 0), _bodies[i + 1],
+                                    new Vector2(_width / 2.0f, 0), springConstant, dampingConstant);
+                            }
                             if (i >= 1)
                             {
                                 a = (LinearSpring)_springs[i - 1];
-                                linearSpring.RestLength = Vector2.Distance(a.AttachPoint2, linearSpring.AttachPoint1);
+                                linearSpring.RestLength = Vector2.Distance(a.AttachPoint2, linearSpring.AttachPoint1) * springRestLengthFactor;
                             }
                             _springs.Add(linearSpring);
                             break;
                         case LinkType.PinJoint:
-                            pinJoint = JointFactory.Instance.CreatePinJoint(_bodies[i], new Vector2(-_width / 2.0f, 0), _bodies[i + 1], new Vector2(_width / 2.0f, 0));
+                            if (_bodies[i].Position.X < _bodies[i + 1].Position.X)
+                            {
+                                pinJoint = JointFactory.Instance.CreatePinJoint(_bodies[i], new Vector2(_width / 2.0f, 0), _bodies[i + 1], new Vector2(-_width / 2.0f, 0));
+                            }
+                            else
+                            {
+                                pinJoint = JointFactory.Instance.CreatePinJoint(_bodies[i], new Vector2(-_width / 2.0f, 0), _bodies[i + 1], new Vector2(_width / 2.0f, 0));
+                            }
                             pinJoint.BiasFactor = 0.2f;
                             pinJoint.Softness = 0.01f;
                             if (i >= 1)
@@ -167,7 +211,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                             _joints.Add(pinJoint);
                             break;
                         case LinkType.SliderJoint:
-                            sliderJoint = JointFactory.Instance.CreateSliderJoint(_bodies[i], new Vector2(-_width / 2.0f, 0), _bodies[i + 1], new Vector2(_width / 2.0f, 0), min, max);
+                            if (_bodies[i].Position.X < _bodies[i + 1].Position.X)
+                            {
+                                sliderJoint = JointFactory.Instance.CreateSliderJoint(_bodies[i], new Vector2(_width / 2.0f, 0), _bodies[i + 1], new Vector2(-_width / 2.0f, 0), min, max);
+                            }
+                            else
+                            {
+                                sliderJoint = JointFactory.Instance.CreateSliderJoint(_bodies[i], new Vector2(-_width / 2.0f, 0), _bodies[i + 1], new Vector2(_width / 2.0f, 0), min, max);
+                            }
                             sliderJoint.BiasFactor = 0.2f;
                             sliderJoint.Softness = 0.01f;
                             _joints.Add(sliderJoint);
@@ -296,7 +347,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         public void CreateGeoms(CollisionCategory collisionCategory, CollisionCategory collidesWith, PhysicsSimulator physicsSimulator)
         {
             CreateGeoms(collisionCategory, collidesWith);
-            
+
             foreach (Geom geom in _geoms)
             {
                 physicsSimulator.Add(geom);
@@ -453,14 +504,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 yCurve.ComputeTangents(CurveTangent.Smooth); // compute y tangents
 
                 // next we find the first point at 1/2 the width because we are finding where the body's center will be placed
-                while (distance < (_width / 2.0f)) // while the distance along the curve is <= to width / 2  
+                while (distance < (_linkWidth / 2.0f)) // while the distance along the curve is <= to width / 2  
                 {
                     k += _precision; // we increment along the line at this precision coeffient
                     tempVectorA = new Vector2(xCurve.Evaluate(k), yCurve.Evaluate(k));
                     distance = Vector2.Distance(_controlPoints[0], tempVectorA); // get the distance
                 }
 
-                while (distance < _width) // while the distance along the curve is <= to width / 2  
+                while (distance < _linkWidth) // while the distance along the curve is <= to width / 2  
                 {
                     k += _precision; // we increment along the line at this precision coeffient
                     tempVectorC = new Vector2(xCurve.Evaluate(k), yCurve.Evaluate(k));
@@ -482,14 +533,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 {
                     distance = 0.0f;
                     // next we find the first point at the width because we are finding where the body's center will be placed
-                    while ((distance < _width) && (k < 1.0f)) // while the distance along the curve is <= to width
+                    while ((distance < _linkWidth) && (k < 1.0f)) // while the distance along the curve is <= to width
                     {
                         k += _precision; // we increment along the line at this precision coeffient
                         tempVectorA = new Vector2(xCurve.Evaluate(k), yCurve.Evaluate(k));
                         distance = Vector2.Distance(tempVectorA, tempVectorB); // get the distance
                     }
                     distance = 0.0f;
-                    while ((distance < _width) && (k < 1.0f)) // while the distance along the curve is <= to width
+                    while ((distance < _linkWidth) && (k < 1.0f)) // while the distance along the curve is <= to width
                     {
                         k += _precision; // we increment along the line at this precision coeffient
                         tempVectorC = new Vector2(xCurve.Evaluate(k), yCurve.Evaluate(k));
