@@ -45,7 +45,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo1
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 50));
             PhysicsSimulator.BiasFactor = .3f;
             //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
-            PhysicsSimulator.MaxContactsToDetect = 1;
+            PhysicsSimulator.MaxContactsToDetect = 2;
 
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
             PhysicsSimulatorView.EnableEdgeView = false;

@@ -79,7 +79,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
             {
                 _simulatedPolyBrushes[i].Draw(_simulatedPolyBodies[i].Position, _simulatedPolyBodies[i].Rotation);
             }
-            
+
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             for (int i = _messages.Count - 1; i >= 0; i--)
             {
@@ -214,15 +214,18 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
             {
                 if (_leftGeom != null)
                 {
-                    Body b = BodyFactory.Instance.CreatePolygonBody(_leftGeom.LocalVertices, 1.0f);
-                    b.Position = _leftGeom.Position;
-                    
-                    PhysicsSimulator.Add(b);
+                    Body body = BodyFactory.Instance.CreatePolygonBody(_leftGeom.LocalVertices, 1.0f);
+                    body.Position = _leftGeom.Position;
+
+                    Geom geom = GeomFactory.Instance.CreatePolygonGeom(body, _leftGeom.LocalVertices, 0);
+
+                    PhysicsSimulator.Add(body);
+                    PhysicsSimulator.Add(geom);
 
                     _simulatedPolyBrushes.Add(new PolygonBrush(_leftGeom.LocalVertices, Color.Red, Color.DarkRed, 1.5f, 0.2f));
                     _simulatedPolyBrushes[_simulatedPolyBrushes.Count - 1].Load(ScreenManager.GraphicsDevice);
-                    _simulatedPolyBodies.Add(b);
-                    
+                    _simulatedPolyBodies.Add(body);
+
                 }
             }
         }
@@ -368,7 +371,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
         {
             if (product == null)
                 return;
-            
+
             if (_rightGeom != null)
                 PhysicsSimulator.Remove(_rightGeom);
 
