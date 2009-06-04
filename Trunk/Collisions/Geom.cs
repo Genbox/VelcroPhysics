@@ -33,7 +33,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private bool _isSensor;
         private Matrix _matrix = Matrix.Identity;
         private Matrix _matrixInverse = Matrix.Identity;
-        private Vector2 _position = Vector2.Zero;  
+        private Vector2 _position = Vector2.Zero;
         private Vector2 _positionOffset = Vector2.Zero;
         private float _rotation;
         private float _rotationOffset;
@@ -304,6 +304,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private void ConstructClone(Body bodyToSet, Geom geometry, Vector2 positionOffset, float rotationOffset)
         {
             id = GetNextId();
+
+            //Make sure that the clone also gets the associated distance grid
+            DistanceGrid grid = geometry.narrowPhaseCollider as DistanceGrid;
+            if (grid != null)
+                grid.Copy(geometry.id, id);
+
+            //Note: Only grids needs to be copied
+            //SAT sat = geometry.narrowPhaseCollider as SAT;
+            //if (sat != null)
+            //    narrowPhaseCollider = sat;
+
             _positionOffset = positionOffset;
             _rotationOffset = rotationOffset;
             RestitutionCoefficient = geometry.RestitutionCoefficient;

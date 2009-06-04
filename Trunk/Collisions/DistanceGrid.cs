@@ -159,6 +159,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
+        /// Copies the distance grid from one id to another. This is used in cloning of geometries.
+        /// </summary>
+        /// <param name="fromId">From id.</param>
+        /// <param name="toId">To id.</param>
+        public void Copy(int fromId, int toId)
+        {
+            _distanceGrids.Add(toId, _distanceGrids[fromId]);
+        }
+
+        /// <summary>
         /// Calculates the grid cell size from AABB.
         /// </summary>
         /// <param name="aabb">The AABB.</param>
