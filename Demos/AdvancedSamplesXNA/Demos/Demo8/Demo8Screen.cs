@@ -197,15 +197,6 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
                 }
             }
 
-            // Perform a Subtraction
-            if (input.IsNewKeyPress(Keys.Enter))
-            {
-                if (_leftGeom != null && _rightGeom != null)
-                {
-                    DoIntersect();
-                }
-            }
-
             // Simplify
             if (input.IsNewKeyPress(Keys.Tab))
             {
