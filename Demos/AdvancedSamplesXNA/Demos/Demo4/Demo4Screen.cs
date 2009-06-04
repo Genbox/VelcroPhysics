@@ -61,13 +61,6 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo4
             _polygonBody = BodyFactory.Instance.CreatePolygonBody(PhysicsSimulator, verts[0], 5);
             _polygonBody.Position = new Vector2(500, 400);
 
-            List<Geom> geoms = AutoDivide.DivideGeom(verts[0], _polygonBody);
-
-            foreach (Geom geom in geoms)
-            {
-                PhysicsSimulator.Add(geom);
-            }
-
             _circleTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 35, Color.Gold, Color.Black);
             _circleOrigin = new Vector2(_circleTexture.Width / 2f, _circleTexture.Height / 2f);
             _circleBody = BodyFactory.Instance.CreateCircleBody(PhysicsSimulator, 35, 1);
