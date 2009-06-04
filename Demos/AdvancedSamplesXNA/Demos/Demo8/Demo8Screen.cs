@@ -216,13 +216,6 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
                 {
                     Body b = BodyFactory.Instance.CreatePolygonBody(_leftGeom.LocalVertices, 1.0f);
                     b.Position = _leftGeom.Position;
-                    List<Geom> geoms = AutoDivide.DivideGeom(_leftGeom.LocalVertices, b);
-
-                    foreach (Geom g in geoms)
-                    {
-                        PhysicsSimulator.Add(g);
-                    }
-                    
                     
                     PhysicsSimulator.Add(b);
 

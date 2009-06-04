@@ -49,7 +49,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo4
             _rectangleGeom.FrictionCoefficient = .4f;
             _rectangleGeom.RestitutionCoefficient = 0f;
 
-            //create the _pyramid near the bottom of the screen.
+            //create the pyramid near the bottom of the screen.
             _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, _pyramidBaseBodyCount,
                                    new Vector2(ScreenManager.ScreenCenter.X - _pyramidBaseBodyCount * .5f * (32 + 32 / 3),
                                                ScreenManager.ScreenHeight - 60));

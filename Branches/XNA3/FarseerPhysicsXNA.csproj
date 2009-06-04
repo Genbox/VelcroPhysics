@@ -165,9 +165,6 @@
     <Compile Include="..\..\Trunk\Dynamics\Joints\FixedRevoluteJoint.cs">
       <Link>Dynamics\Joints\FixedRevoluteJoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Joints\GearJoint.cs">
-      <Link>Dynamics\Joints\GearJoint.cs</Link>
-    </Compile>
     <Compile Include="..\..\Trunk\Dynamics\Joints\Joint.cs">
       <Link>Dynamics\Joints\Joint.cs</Link>
     </Compile>
