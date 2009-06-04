@@ -22,9 +22,11 @@ namespace FarseerGames.FarseerPhysics.Factories
         public float Max { get; set; }
         public float SpringConstant { get; set; }
         public float DampingConstant { get; set; }
+        public float SpringRestLengthFactor { get; set; }
 
         private ComplexFactory()
         {
+            SpringRestLengthFactor = 1f;
         }
 
         public static ComplexFactory Instance
@@ -158,6 +160,30 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <summary>
         /// Creates a chain.
         /// </summary>
+        /// <param name="physicsSimulator"><see cref="PhysicsSimulator"/> to add the chain to.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="linkWidth">The distance between links.</param> 
+        /// <param name="mass">The mass.</param>
+        /// <param name="pinStart">if set to <c>true</c> [pin start].</param>
+        /// <param name="pinEnd">if set to <c>true</c> [pin end].</param>
+        /// <param name="type">The joint/spring type.</param>
+        /// <returns></returns>
+        public Path CreateChain(PhysicsSimulator physicsSimulator, Vector2 start, Vector2 end, float width, float height, float linkWidth,
+                                float mass, bool pinStart, bool pinEnd, LinkType type)
+        {
+            Path path = CreateChain(start, end, width, height, linkWidth, mass, pinStart, pinEnd, type);
+
+            path.AddToPhysicsSimulator(physicsSimulator);
+
+            return path;
+        }
+
+        /// <summary>
+        /// Creates a chain.
+        /// </summary>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         /// <param name="width">The width.</param>
@@ -185,7 +211,26 @@ namespace FarseerGames.FarseerPhysics.Factories
         public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart,
                                 bool pinEnd, LinkType type)
         {
-            Path path = new Path(width, height, mass, false); // create the path
+            return CreateChain(start, end, width, height, width, mass, pinStart, pinEnd, type);
+        }
+
+        /// <summary>
+        /// Creates a chain.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="linkWidth">The distance between links.</param> 
+        /// <param name="mass">The mass.</param>
+        /// <param name="pinStart">if set to <c>true</c> [pin start].</param>
+        /// <param name="pinEnd">if set to <c>true</c> [pin end].</param>
+        /// <param name="type">The joint/spring type.</param>
+        /// <returns></returns>
+        public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float linkWidth, float mass, bool pinStart,
+                                bool pinEnd, LinkType type)
+        {
+            Path path = new Path(width, height, linkWidth, mass, false); // create the path
             path.Add(start); // add starting point
             path.Add(Path.FindMidpoint(start, end));
             // add midpoint of line (must have this because my code needs at least 3 control points)
@@ -193,7 +238,7 @@ namespace FarseerGames.FarseerPhysics.Factories
 
             path.Update(); // call update to create all the bodies
 
-            path.LinkBodies(type, Min, Max, SpringConstant, DampingConstant); // link bodies together
+            path.LinkBodies(type, Min, Max, SpringConstant, DampingConstant, SpringRestLengthFactor); // link bodies together
 
             if (pinStart)
                 path.Add(JointFactory.Instance.CreateFixedRevoluteJoint(path.Bodies[0], start));
@@ -233,7 +278,7 @@ namespace FarseerGames.FarseerPhysics.Factories
 
             path.Update(); // call update to create all the bodies
 
-            path.LinkBodies(type, Min, Max, SpringConstant, DampingConstant); // link bodies together
+            path.LinkBodies(type, Min, Max, SpringConstant, DampingConstant, SpringRestLengthFactor); // link bodies together
 
             if (pinStart)
                 path.Add(JointFactory.Instance.CreateFixedRevoluteJoint(path.Bodies[0], start));

@@ -16,7 +16,8 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo5
         private Path _chain;
         private Path _chainPin;
         private Path _chainSpring;
-        private Path _chainSilde;
+        private Path _chainSpring2;
+        private Path _chainSlide;
 
         public override void Initialize()
         {
@@ -36,19 +37,26 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo5
             _chain = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(150, 100), new Vector2(200, 300), 20.0f, 10.0f, 1, true, false, LinkType.RevoluteJoint);
             _chain.CreateGeoms(PhysicsSimulator, 1);
 
-            _chainPin = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(250, 100), new Vector2(400, 300), 20.0f, 10.0f, 1, true, false, LinkType.PinJoint);
+            _chainPin = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(250, 100), new Vector2(300, 300), 20.0f, 10.0f, 1, true, false, LinkType.PinJoint);
             _chainPin.CreateGeoms(PhysicsSimulator, 2);
 
             ComplexFactory.Instance.SpringConstant = 150;        // values inside let us setup additional parameters
             ComplexFactory.Instance.DampingConstant = 10;
-            _chainSpring = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(350, 100), new Vector2(500, 300), 20.0f, 10.0f, 1, true, false, LinkType.LinearSpring);
+            ComplexFactory.Instance.SpringRestLengthFactor = 1f;
+            _chainSpring = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(350, 100), new Vector2(400, 300), 20.0f, 10.0f, 1, true, false, LinkType.LinearSpring);
             _chainSpring.CreateGeoms(PhysicsSimulator, 3);
 
             ComplexFactory.Instance.Min = 0;
             ComplexFactory.Instance.Max = 15;
-            _chainSilde = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(450, 100), new Vector2(600, 300), 20.0f, 10.0f, 1, true, false, LinkType.SliderJoint);
-            _chainSilde.CreateGeoms(PhysicsSimulator, 4);
+            _chainSlide = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(450, 100), new Vector2(500, 300), 20.0f, 10.0f, 1, true, false, LinkType.SliderJoint);
+            _chainSlide.CreateGeoms(PhysicsSimulator, 4);
 
+
+            ComplexFactory.Instance.SpringConstant = 300;        // values inside let us setup additional parameters
+            ComplexFactory.Instance.DampingConstant = 10;
+            ComplexFactory.Instance.SpringRestLengthFactor = 0.1f;
+            _chainSpring2 = ComplexFactory.Instance.CreateChain(PhysicsSimulator, new Vector2(650, 100), new Vector2(600, 600), 20.0f, 10.0f, 40.0f, 1, true, false, LinkType.LinearSpring);
+            _chainSpring2.CreateGeoms(PhysicsSimulator, 5);
 
             base.LoadContent();
         }
@@ -72,7 +80,12 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo5
                 ScreenManager.SpriteBatch.Draw(_chainTexture, body.Position, null, Color.White, body.Rotation, _chainOrigin, 1, SpriteEffects.None, 1);
             }
 
-            foreach (Body body in _chainSilde.Bodies)
+            foreach (Body body in _chainSpring2.Bodies)
+            {
+                ScreenManager.SpriteBatch.Draw(_chainTexture, body.Position, null, Color.White, body.Rotation, _chainOrigin, 1, SpriteEffects.None, 1);
+            }
+
+            foreach (Body body in _chainSlide.Bodies)
             {
                 ScreenManager.SpriteBatch.Draw(_chainTexture, body.Position, null, Color.White, body.Rotation, _chainOrigin, 1, SpriteEffects.None, 1);
             }
