@@ -1,5 +1,8 @@
+using System.Xml.Serialization;
+
 #if (XNA)
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 #else
 using FarseerGames.FarseerPhysics.Mathematics;
 #endif
@@ -37,6 +40,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _upperLimit = upperLimit;
         }
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Gets or sets the body.
         /// </summary>

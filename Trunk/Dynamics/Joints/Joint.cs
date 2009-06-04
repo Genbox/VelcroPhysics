@@ -1,5 +1,10 @@
 using System;
+using System.Xml.Serialization;
 using FarseerGames.FarseerPhysics.Interfaces;
+
+#if(XNA)
+using Microsoft.Xna.Framework.Content;
+#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
@@ -20,6 +25,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         public float Softness;
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Tag that can contain a user specified object.
         /// </summary>
@@ -70,6 +79,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
         #region IIsDisposable Members
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         public bool IsDisposed
         {
             get { return _isDisposed; }

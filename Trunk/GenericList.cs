@@ -1,5 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 using FarseerGames.FarseerPhysics.Interfaces;
+
+#if(XNA)
+using Microsoft.Xna.Framework.Content;
+#endif
 
 namespace FarseerGames.FarseerPhysics
 {
@@ -9,7 +14,17 @@ namespace FarseerGames.FarseerPhysics
         private List<T> _markedForRemovalList = new List<T>();
         private int _numberDisposed;
         private int _count;
+
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         public ContentsChangedEventHandler Added;
+
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         public ContentsChangedEventHandler Removed;
 
         public new void Add(T element)

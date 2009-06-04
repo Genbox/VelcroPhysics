@@ -1,4 +1,9 @@
 using System;
+using System.Xml.Serialization;
+
+#if(XNA)
+using Microsoft.Xna.Framework.Content;
+#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
@@ -33,6 +38,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _targetAngle = targetAngle;
         }
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Gets or sets the fist body.
         /// </summary>
@@ -43,6 +52,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             set { _body1 = value; }
         }
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Gets or sets the second body.
         /// </summary>
@@ -102,7 +115,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             if (_body1.isStatic && _body2.isStatic)
                 return;
-          
+
             if (!_body1.Enabled && !_body2.Enabled)
                 return;
 

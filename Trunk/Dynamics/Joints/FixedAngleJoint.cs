@@ -1,4 +1,9 @@
 using System;
+using System.Xml.Serialization;
+
+#if(XNA)
+using Microsoft.Xna.Framework.Content;
+#endif
 
 namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 {
@@ -30,6 +35,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             _targetAngle = targetAngle;
         }
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Gets or sets the body.
         /// </summary>
@@ -78,8 +87,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             JointError = _body.totalRotation - _targetAngle;
 
-            _velocityBias = -BiasFactor*inverseDt*JointError;
-            _massFactor = (1 - Softness)/(_body.inverseMomentOfInertia);
+            _velocityBias = -BiasFactor * inverseDt * JointError;
+            _massFactor = (1 - Softness) / (_body.inverseMomentOfInertia);
         }
 
         public override void Update()
@@ -92,7 +101,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             if (!_body.Enabled)
                 return;
 
-            float angularImpulse = (_velocityBias - _body.AngularVelocity)*_massFactor;
+            float angularImpulse = (_velocityBias - _body.AngularVelocity) * _massFactor;
 
             if (angularImpulse != 0f)
             {
