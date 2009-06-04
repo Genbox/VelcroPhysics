@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Controllers;
 using FarseerGames.FarseerPhysics.Dynamics;
@@ -10,6 +11,8 @@ using FarseerGames.FarseerPhysics.Interfaces;
 #if (XNA)
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using Microsoft.Xna.Framework.Content;
+
 #else
 using FarseerGames.FarseerPhysics.Mathematics;
 #endif
@@ -160,6 +163,10 @@ namespace FarseerGames.FarseerPhysics
             }
         }
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
@@ -168,6 +175,10 @@ namespace FarseerGames.FarseerPhysics
             get { return geomList; }
         }
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
@@ -176,6 +187,10 @@ namespace FarseerGames.FarseerPhysics
             get { return bodyList; }
         }
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
@@ -184,6 +199,10 @@ namespace FarseerGames.FarseerPhysics
             get { return controllerList; }
         }
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
@@ -192,6 +211,10 @@ namespace FarseerGames.FarseerPhysics
             get { return springList; }
         }
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
@@ -200,6 +223,10 @@ namespace FarseerGames.FarseerPhysics
             get { return jointList; }
         }
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>

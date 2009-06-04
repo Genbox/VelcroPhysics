@@ -1,4 +1,5 @@
 using System;
+using System.Xml.Serialization;
 using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Interfaces;
@@ -7,6 +8,7 @@ using FarseerGames.FarseerPhysics.Controllers;
 
 #if (XNA)
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 #else
 using FarseerGames.FarseerPhysics.Mathematics;
 #endif
@@ -17,6 +19,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     public delegate bool JointDelegate(Joint sender, Body body1, Body body2);
     public delegate bool FixedSpringDelegate(Spring sender, Body body);
     public delegate bool SpringDelegate(Spring sender, Body body1, Body body2);
+ 
+    public delegate void UpdatedEventHandler(ref Vector2 position, ref float rotation);
 
     /// <summary>
     /// The Body handles all the physics of motion: position, velocity, acceleration
@@ -28,8 +32,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     /// </summary>
     public sealed class Body : IIsDisposable
     {
-        public delegate void UpdatedEventHandler(ref Vector2 position, ref float rotation);
-
         private float _momentOfInertia = 1; //1 unit square
         private float _previousAngularVelocity;
         private Vector2 _previousLinearVelocity = Vector2.Zero;
@@ -102,12 +104,20 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         /// <Value>The rotational drag coefficient.</Value>
         public float RotationalDragCoefficient = .001f; //tuned for a 1.28m X 1.28m rectangle with mass = 1
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Gets or sets the tag. A tag is used to attach a custom object to the Body.
         /// </summary>
         /// <Value>The custom object</Value>
         public object Tag;
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// If the position or rotation of the body changes, this event will be fired.
         /// </summary>
@@ -1127,6 +1137,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         #region IIsDisposable Members
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         public bool IsDisposed
         {
             get { return _isDisposed; }

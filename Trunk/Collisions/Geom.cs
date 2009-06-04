@@ -1,9 +1,11 @@
 using System;
+using System.Xml.Serialization;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Interfaces;
 
 #if (XNA)
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 #else
 using FarseerGames.FarseerPhysics.Mathematics;
 #endif
@@ -11,25 +13,21 @@ using FarseerGames.FarseerPhysics.Mathematics;
 namespace FarseerGames.FarseerPhysics.Collisions
 {
     /// <summary>
+    /// This delegate is called when a collision between 2 geometries occurs
+    /// </summary>
+    public delegate bool CollisionEventHandler(Geom geometry1, Geom geometry2, ContactList contactList);
+
+    /// <summary>
+    /// This delegate is called when a separation between 2 geometries occurs
+    /// </summary>
+    public delegate void SeparationEventHandler(Geom geometry1, Geom geometry2);
+
+    /// <summary>
     /// The geometry class is the heart of collision detection.
     /// A Geom need a body and a set of vertices. The vertices should define the edge of the shape.
     /// </summary>
     public class Geom : IEquatable<Geom>, IIsDisposable
     {
-        #region Delegates
-
-        /// <summary>
-        /// This delegate is called when a collision between 2 geometries occurs
-        /// </summary>
-        public delegate bool CollisionEventHandler(Geom geometry1, Geom geometry2, ContactList contactList);
-
-        /// <summary>
-        /// This delegate is called when a separation between 2 geometries occurs
-        /// </summary>
-        public delegate void SeparationEventHandler(Geom geometry1, Geom geometry2);
-
-        #endregion
-
         private bool _isSensor;
         private Matrix _matrix = Matrix.Identity;
         private Matrix _matrixInverse = Matrix.Identity;
@@ -82,11 +80,19 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public float FrictionCoefficient;
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Fires when a collision occurs with the geom
         /// </summary>
         public CollisionEventHandler OnCollision;
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Fires when a separation between this and another geom occurs
         /// </summary>
@@ -107,6 +113,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <Value>The collision group.</Value>
         public int CollisionGroup;
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Gets or sets the Axis Aligned Bounding Box of the geom.
         /// </summary>
@@ -119,6 +129,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <Value><c>true</c> if collision is enabled; otherwise, <c>false</c>.</Value>
         public bool CollisionEnabled = true;
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Gets or sets the tag. A tag is used to attach a custom object to the Geom.
         /// </summary>
@@ -197,6 +211,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             get { return _rotation; }
         }
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Gets the local vertices of the geom. Local vertices are relative to the center of the vertices.
         /// </summary>
@@ -206,6 +224,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             get { return localVertices; }
         }
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Gets the world vertices. World vertices are the vertices relative to the center of the geometry, plus the position in world space.
         /// </summary>
@@ -215,6 +237,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             get { return worldVertices; }
         }
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Gets or sets the matrix.
         /// </summary>
@@ -276,6 +302,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             get { return narrowPhaseCollider; }
         }
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         /// <summary>
         /// Gets the body attached to the geom.
         /// </summary>
@@ -763,6 +793,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #region IIsDisposable Members
 
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
         public bool IsDisposed
         {
             get { return _isDisposed; }
