@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
+using FarseerGames.FarseerPhysics.Collisions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -15,6 +16,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
         public override void Initialize()
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
+            PhysicsSimulator.NarrowPhaseCollider = new SAT(PhysicsSimulator);
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
             PhysicsSimulatorView.EnableEdgeView = true;
             PhysicsSimulatorView.EnableAABBView = false;
