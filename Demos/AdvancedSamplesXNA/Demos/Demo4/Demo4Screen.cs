@@ -42,22 +42,16 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo4
             _polygonTexture.GetData(data);
 
             //Calculate the vertices from the array
-            PolygonCreationAssistance pca = new PolygonCreationAssistance(data, _polygonTexture.Width, _polygonTexture.Height);
-            pca.HullTolerance = 1.2f;
-            pca.HoleDetection = true;
-            pca.MultipartDetection = false;
-            pca.AlphaTolerance = 20;
-
-            List<Vertices> verts = Vertices.CreatePolygon(ref pca);
+            Vertices verts = Vertices.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height);
 
             //Make sure that the origin of the texture is the centroid (real center of geometry)
-            _polygonOrigin = verts[0].GetCentroid();
+            _polygonOrigin = verts.GetCentroid();
 
             //Use the body factory to create the physics body
-            _polygonBody = BodyFactory.Instance.CreatePolygonBody(PhysicsSimulator, verts[0], 5);
+            _polygonBody = BodyFactory.Instance.CreatePolygonBody(PhysicsSimulator, verts, 5);
             _polygonBody.Position = new Vector2(500, 400);
 
-            GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, _polygonBody, verts[0]);
+            GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, _polygonBody, verts);
 
             _circleTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 35, Color.Gold, Color.Black);
             _circleOrigin = new Vector2(_circleTexture.Width / 2f, _circleTexture.Height / 2f);
