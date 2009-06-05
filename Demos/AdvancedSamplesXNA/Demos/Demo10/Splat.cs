@@ -44,7 +44,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
             _splatTextureVertices = Vertices.CreatePolygon(ref pca)[0];
 
             // create a body 
-            _splatBody = BodyFactory.Instance.CreatePolygonBody(_splatTextureVertices, 1);
+            _splatBody = BodyFactory.Instance.CreatePolygonBody(_physicsSimulator, _splatTextureVertices, 1);
             _splatBody.Position = _position;
 
             // use AutoDivide to find up to 25 convex geoms from a set of vertices
