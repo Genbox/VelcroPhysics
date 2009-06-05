@@ -51,7 +51,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo4
             _polygonBody = BodyFactory.Instance.CreatePolygonBody(PhysicsSimulator, verts, 5);
             _polygonBody.Position = new Vector2(500, 400);
 
-            GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, _polygonBody, verts);
+            GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, _polygonBody, verts, 0);
 
             _circleTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 35, Color.Gold, Color.Black);
             _circleOrigin = new Vector2(_circleTexture.Width / 2f, _circleTexture.Height / 2f);

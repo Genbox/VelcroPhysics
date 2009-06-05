@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 
@@ -427,7 +428,8 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="physicsSimulator">The physics simulator.</param>
         /// <param name="body">The body.</param>
         /// <param name="vertices">The vertices.</param>
-        /// <param name="collisionGridSize">Size of the collision grid. - not used with SAT</param>
+        /// <param name="collisionGridSize">Size of the collision grid. - not used with SAT
+        /// Put in 0 or less to make the engine calculate a grid cell size.</param>
         /// <returns></returns>
         public Geom CreatePolygonGeom(PhysicsSimulator physicsSimulator, Body body, Vertices vertices, float collisionGridSize)
         {
@@ -439,7 +441,8 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// </summary>
         /// <param name="body">The body.</param>
         /// <param name="vertices">The vertices.</param>
-        /// <param name="collisionGridSize">Size of the collision grid. - not used with SAT</param>
+        /// <param name="collisionGridSize">Size of the collision grid. - not used with SAT
+        /// Put in 0 or less to make the engine calculate a grid cell size.</param>
         /// <returns></returns>
         public Geom CreatePolygonGeom(Body body, Vertices vertices, float collisionGridSize)
         {
@@ -451,22 +454,11 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// </summary>
         /// <param name="physicsSimulator">The physics simulator.</param>
         /// <param name="body">The body.</param>
-        /// <param name="verts">The verts.</param>
-        /// <returns></returns>
-        public Geom CreatePolygonGeom(PhysicsSimulator physicsSimulator, Body body, Vertices verts)
-        {
-            return CreatePolygonGeom(physicsSimulator, body, verts, 0);
-        }
-
-        /// <summary>
-        /// Creates a polygon geom.
-        /// </summary>
-        /// <param name="physicsSimulator">The physics simulator.</param>
-        /// <param name="body">The body.</param>
         /// <param name="vertices">The vertices.</param>
         /// <param name="positionOffset">The offset.</param>
         /// <param name="rotationOffset">The rotation offset.</param>
-        /// <param name="collisionGridSize">Size of the collision grid. - not used with SAT</param>
+        /// <param name="collisionGridSize">Size of the collision grid. - not used with SAT
+        /// Put in 0 or less to make the engine calculate a grid cell size.</param>
         /// <returns></returns>
         public Geom CreatePolygonGeom(PhysicsSimulator physicsSimulator, Body body, Vertices vertices, Vector2 positionOffset, float rotationOffset, float collisionGridSize)
         {
@@ -482,7 +474,8 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="vertices">The vertices.</param>
         /// <param name="positionOffset">The offset.</param>
         /// <param name="rotationOffset">The rotation offset.</param>
-        /// <param name="collisionGridSize">Size of the collision grid. - not used with SAT</param>
+        /// <param name="collisionGridSize">Size of the collision grid. - not used with SAT
+        /// Put in 0 or less to make the engine calculate a grid cell size.</param>
         /// <returns></returns>
         public Geom CreatePolygonGeom(Body body, Vertices vertices, Vector2 positionOffset, float rotationOffset, float collisionGridSize)
         {
@@ -491,8 +484,8 @@ namespace FarseerGames.FarseerPhysics.Factories
 
             if (vertices == null)
                 throw new ArgumentNullException("vertices", "Vertices must not be null");
-
-            //adjust the verts to be relative to the centroid.
+            
+            //Adjust the verts to be relative to the centroid.
             Vector2 centroid = vertices.GetCentroid();
 
             Vector2.Multiply(ref centroid, -1, out centroid);
@@ -502,6 +495,54 @@ namespace FarseerGames.FarseerPhysics.Factories
             Geom geometry = new Geom(body, vertices, positionOffset, rotationOffset, collisionGridSize);
             return geometry;
         }
+
+        /// <summary>
+        /// Creates a polygon geometry.
+        /// Use this if you use the SAT narrow phase collider. It will automatically decompose concave geometries using auto-divide.
+        /// </summary>
+        /// <param name="physicsSimulator">The physics simulator.</param>
+        /// <param name="body">The body.</param>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="numberOfGeoms">The number of geoms.</param>
+        /// <returns></returns>
+        public List<Geom> CreateSATPolygonGeom(PhysicsSimulator physicsSimulator, Body body, Vertices vertices, int numberOfGeoms)
+        {
+            List<Geom> geometries = CreateSATPolygonGeom(body, vertices, numberOfGeoms);
+            foreach (Geom geom in geometries)
+            {
+                physicsSimulator.Add(geom);
+            }
+
+            return geometries;
+        }
+
+        /// <summary>
+        /// Creates a polygon geometry.
+        /// Use this if you use the SAT narrow phase collider. It will automatically decompose concave geometries using auto-divide.
+        /// </summary>
+        /// <param name="body">The body.</param>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="numberOfGeoms">The number of geoms.</param>
+        /// <returns></returns>
+        public List<Geom> CreateSATPolygonGeom(Body body, Vertices vertices, int numberOfGeoms)
+        {
+            if (body == null)
+                throw new ArgumentNullException("body", "Body must not be null");
+
+            if (vertices == null)
+                throw new ArgumentNullException("vertices", "Vertices must not be null");
+
+            //Adjust the verts to be relative to the centroid.
+            Vector2 centroid = vertices.GetCentroid();
+
+            Vector2.Multiply(ref centroid, -1, out centroid);
+
+            vertices.Translate(ref centroid);
+            List<Geom> geometries = Vertices.DecomposeGeom(vertices, body, numberOfGeoms);
+
+            return geometries;
+        }
+
         #endregion
 
         #region Clones
