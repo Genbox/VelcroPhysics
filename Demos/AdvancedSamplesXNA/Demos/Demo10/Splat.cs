@@ -12,7 +12,6 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
     public class Splat
     {
         private Body _splatBody;
-        private List<Geom> _splatGeomList;
         private Texture2D _splatTexture;
         private Vertices _splatTextureVertices;
         private PhysicsSimulator _physicsSimulator;
@@ -49,16 +48,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
             _splatBody.Position = _position;
 
             // use AutoDivide to find up to 25 convex geoms from a set of vertices
-            // NOTE - larger shapes need more geoms
-            _splatGeomList = Vertices.DecomposeGeom(_splatTextureVertices, _splatBody, 25);
-
-            _physicsSimulator.Add(_splatBody);
-
-            foreach (Geom geom in _splatGeomList)
-            {
-                _physicsSimulator.Add(geom);
-            }
-
+            GeomFactory.Instance.CreateSATPolygonGeom(_physicsSimulator, _splatBody, _splatTextureVertices, 25);
         }
 
         public void Draw(SpriteBatch sb)

@@ -459,6 +459,42 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
+        /// Determines whether this instance is convex.
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if this instance is convex; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsConvex()
+        {
+            bool isPositive = false;
+            for (int i = 0; i < Count; ++i)
+            {
+                int lower = (i == 0) ? (Count - 1) : (i - 1);
+                int middle = i;
+                int upper = (i == Count - 1) ? (0) : (i + 1);
+
+                float dx0 = this[middle].X - this[lower].X;
+                float dy0 = this[middle].Y - this[lower].Y;
+                float dx1 = this[upper].X - this[middle].X;
+                float dy1 = this[upper].Y - this[middle].Y;
+
+                float cross = dx0 * dy1 - dx1 * dy0;
+                // Cross product should have same sign
+                // for each vertex if poly is convex.
+                bool newIsP = (cross >= 0) ? true : false;
+                if (i == 0)
+                {
+                    isPositive = newIsP;
+                }
+                else if (isPositive != newIsP)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Creates a rectangle with the specified width and height.
         /// </summary>
         /// <param name="width">The width.</param>
