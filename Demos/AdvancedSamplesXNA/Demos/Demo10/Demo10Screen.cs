@@ -16,11 +16,16 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
         public override void Initialize()
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
+
+            // Use the SAT narrow phase collider
             PhysicsSimulator.NarrowPhaseCollider = new SAT(PhysicsSimulator);
+
+            // setup our debug view
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
             PhysicsSimulatorView.EnableEdgeView = true;
             PhysicsSimulatorView.EnableAABBView = false;
 
+            // initalize a list of splats
             splats = new List<Splat>();
 
             base.Initialize();
@@ -79,6 +84,10 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows how to use the");
             sb.AppendLine("Auto-divide geometry generator.");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("It is important to note that");
+            sb.AppendLine("decomposing geometry is only");
+            sb.AppendLine("nessary with SAT narrow phase.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  -Move : left and right arrows");

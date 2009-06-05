@@ -34,29 +34,22 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
             //Transfer the texture data to the array
             _splatTexture.GetData(data);
 
+            // get a set of vertices from a texture
             PolygonCreationAssistance pca = new PolygonCreationAssistance(data, _splatTexture.Width, _splatTexture.Height);
             pca.HullTolerance = 6f;
             pca.HoleDetection = false;
             pca.MultipartDetection = false;
             pca.AlphaTolerance = 20;
 
+            // extract those vertices into a Vertices structure
             _splatTextureVertices = Vertices.CreatePolygon(ref pca)[0];
 
+            // create a body 
             _splatBody = BodyFactory.Instance.CreatePolygonBody(_splatTextureVertices, 1);
             _splatBody.Position = _position;
 
-            Vertices[] verts = Polygon.DecomposeVertices(_splatTextureVertices, 30);
-
-            _splatGeomList = new List<Geom>();
-
-            Vector2 mainCentroid = _splatTextureVertices.GetCentroid();
-
-            foreach (Vertices  v in verts)
-            {
-                Vector2 subCentroid = v.GetCentroid();
-                _splatGeomList.Add(new Geom(_splatBody, v, -mainCentroid, 0, 1.0f));
-            }
-            //_splatGeomList = AutoDivide.DivideGeom(_splatTextureVertices, _splatBody);
+            // use AutoDivide to find up to 25 convex geoms from a set of vertices NOTE - larger shapes need more geoms
+            _splatGeomList = AutoDivide.DecomposeGeom(_splatTextureVertices, _splatBody, 25);
 
             _physicsSimulator.Add(_splatBody);
 

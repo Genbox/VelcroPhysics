@@ -3241,7 +3241,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
     {
         public static int maxVerticesPerPolygon = 32;
         public static readonly float LinearSlop = 0.005f;	// 0.5 cm
-        public static readonly float AngularSlop = 2.0f / 180.0f * (float)Math.PI; // 2 degrees
+        public static readonly float AngularSlop = 1.0f / 180.0f * (float)Math.PI; // 2 degrees
 
         public float[] x; //vertex arrays
         public float[] y;
@@ -3832,7 +3832,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public static int TriangulatePolygon(float[] xv, float[] yv, int vNum, out Triangle[] results) 
         {
-            results = new Triangle[75];
+            results = new Triangle[175];
             
             if (vNum < 3)
                     return 0;
