@@ -45,7 +45,15 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
             _splatBody = BodyFactory.Instance.CreatePolygonBody(_splatTextureVertices, 1);
             _splatBody.Position = _position;
 
-            _splatGeomList = AutoDivide.DivideGeom(_splatTextureVertices, _splatBody);
+            Vertices[] verts = Polygon.DecomposeVertices(_splatTextureVertices, 20);
+
+            _splatGeomList = new List<Geom>();
+
+            foreach (Vertices  v in verts)
+            {
+                _splatGeomList.Add(GeomFactory.Instance.CreatePolygonGeom(_splatBody, v, 10.0f));
+            }
+            //_splatGeomList = AutoDivide.DivideGeom(_splatTextureVertices, _splatBody);
 
             _physicsSimulator.Add(_splatBody);
 

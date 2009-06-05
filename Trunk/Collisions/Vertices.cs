@@ -3751,7 +3751,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 	         *
 	         * Mostly for internal use.
 	         */
-        private bool ResolvePinchPoint(Polygon pin, out Polygon poutA, out Polygon poutB)
+        private static bool ResolvePinchPoint(Polygon pin, out Polygon poutA, out Polygon poutB)
         {
             poutA = new Polygon();
             poutB = new Polygon();
@@ -3783,7 +3783,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 		        float[] xA = new float[sizeA];
 		        float[] yA = new float[sizeA];
 		        for (int i=0; i < sizeA; ++i){
-			        int ind = (int)Math.IEEERemainder(pinchIndexA+i,pin.nVertices);             // is this right
+                    int ind = remainder(pinchIndexA + i, pin.nVertices);             // is this right
 			        xA[i] = pin.x[ind];
 			        yA[i] = pin.y[ind];
 		        }
@@ -3794,7 +3794,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 		        float[] xB = new float[sizeB];
 		        float[] yB = new float[sizeB];
 		        for (int i=0; i<sizeB; ++i){
-                    int ind = (int)Math.IEEERemainder(pinchIndexB + i, pin.nVertices);          // is this right    
+                    int ind = remainder(pinchIndexB + i, pin.nVertices);          // is this right    
 			        xB[i] = pin.x[ind];
 			        yB[i] = pin.y[ind];
 		        }
@@ -3829,10 +3829,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
              * or fewer (due to pinch point polygon snipping), so allocate an array of
 	         * this size.
              */
-        	
-        public int TriangulatePolygon(float[] xv, float[] yv, int vNum, out Triangle[] results) 
+
+        public static int TriangulatePolygon(float[] xv, float[] yv, int vNum, out Triangle[] results) 
         {
-            results = new Triangle[1];
+            results = new Triangle[75];
             
             if (vNum < 3)
                     return 0;
@@ -3875,8 +3875,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
 			        float earMaxMinCross = -10.0f;
                     for (int i = 0; i < vNum; ++i) {
                         if (IsEar(i, xrem, yrem, vNum)) {
-					        int lower = (int)Math.IEEERemainder(i-1,vNum);
-					        int upper = (int)Math.IEEERemainder(i+1,vNum);
+                            int lower = remainder(i - 1, vNum);
+                            int upper = remainder(i + 1, vNum);
 					        Vector2 d1 = new Vector2(xrem[upper]-xrem[i],yrem[upper]-yrem[i]);
 					        Vector2 d2 = new Vector2(xrem[i]-xrem[lower],yrem[i]-yrem[lower]);
 					        Vector2 d3 = new Vector2(xrem[lower]-xrem[upper],yrem[lower]-yrem[upper]);
@@ -3962,6 +3962,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 return bufferSize;
         }
 
+        //Fix for obnoxious behavior for the % operator for negative numbers...
+        private static int remainder(int x, int modulus)
+        {
+            int rem = x % modulus;
+            while (rem < 0)
+            {
+                rem += modulus;
+            }
+            return rem;
+        }
+
         
             /**
 	         * Turns a list of triangles into a list of convex polygons. Very simple
@@ -3978,9 +3989,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
              * The final polygon list will not necessarily be minimal, though in
              * practice it works fairly well.
              */
-        public int PolygonizeTriangles(Triangle[] triangulated, int triangulatedLength, Polygon[] polys, int polysLength) 
+        public static int PolygonizeTriangles(Triangle[] triangulated, int triangulatedLength, out Polygon[] polys, int polysLength) 
         {
                 int polyIndex = 0;
+                polys = new Polygon[50];
         		
                 if (triangulatedLength <= 0) {
                     return 0;
@@ -4019,7 +4031,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                                     continue;
 						        }
                                 Polygon newP = poly.Add(triangulated[index]);
-                                if (newP != null) {                                 // is this right
+                                if (newP == null) {                                 // is this right
                                     continue;
 						        }
 						        if (newP.nVertices > maxVerticesPerPolygon) {
@@ -4039,7 +4051,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 						        //If identical points are present, a triangle gets
 						        //borked by the MergeParallelEdges function, hence
 						        //the vertex number check
-						        if (poly.nVertices >= 3) polys[polyIndex].Set(poly);
+						        if (poly.nVertices >= 3) polys[polyIndex] = new Polygon(poly);
 						        //else printf("Skipping corrupt poly\n");
 					        }
                             if (poly.nVertices >= 3) polyIndex++; //Must be outside (polyIndex < polysLength) test
@@ -4056,7 +4068,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 	         *
 	         * Assumes clockwise orientation of polygon...ick
              */
-        public bool IsEar(int i, float[] xv, float[] yv, int xvLength) 
+        public static bool IsEar(int i, float[] xv, float[] yv, int xvLength) 
         {
                 float dx0, dy0, dx1, dy1;
                 dx0 = 0; dy0 = 0; dx1 = 0; dy1 = 0;
@@ -4099,12 +4111,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 return true;
         }
 
-        public void ReversePolygon(Polygon p)
+        public static void ReversePolygon(Polygon p)
         {
 	        ReversePolygon(p.x,p.y,p.nVertices);
         }
-        	
-        public void ReversePolygon(float[] x, float[] y, int n) {
+
+        public static void ReversePolygon(float[] x, float[] y, int n)
+        {
                 if (n == 1)
                     return;
                 int low = 0;
@@ -4133,7 +4146,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
          * Returns -1 if operation fails (usually due to self-intersection of
          * polygon).
          */
-            public int DecomposeConvex(Polygon p, out Polygon[] results, int maxPolys)
+            public static int DecomposeConvex(Polygon p, out Polygon[] results, int maxPolys)
             {
                 results = new Polygon[1];
                 
@@ -4159,8 +4172,42 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     //Still no luck?  Oh well...
                     return -1;
                 }
-                int nPolys = PolygonizeTriangles(triangulated, nTri, results, maxPolys);
+                int nPolys = PolygonizeTriangles(triangulated, nTri, out results, maxPolys);
                 return nPolys;
+            }
+
+            public static Vertices[] DecomposeVertices(Vertices v, int max)
+            {
+                Polygon p = new Polygon(v.ToArray(), v.Count);      // convert the vertices to a polygon
+
+                Polygon[] output;
+
+                DecomposeConvex(p, out output, max);
+
+                Vertices[] verticesOut = new Vertices[output.Length];
+
+                int i = 0;
+
+                for (i = 0; i < output.Length; i++)
+                {
+                    if (output[i] != null)
+                    {
+                        verticesOut[i] = new Vertices();
+
+                        for (int j = 0; j < output[i].nVertices; j++)
+                            verticesOut[i].Add(new Vector2(output[i].x[j], output[i].y[j]));
+                    }
+                    else
+                        break;
+                }
+
+                Vertices[] verts = new Vertices[i];
+                for (int k = 0; k < i; k++)
+                {
+                    verts[k] = new Vertices(verticesOut[k]);
+                }
+                
+                return verts;
             }
 
     }
