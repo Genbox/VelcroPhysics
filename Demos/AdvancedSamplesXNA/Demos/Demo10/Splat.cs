@@ -45,13 +45,16 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
             _splatBody = BodyFactory.Instance.CreatePolygonBody(_splatTextureVertices, 1);
             _splatBody.Position = _position;
 
-            Vertices[] verts = Polygon.DecomposeVertices(_splatTextureVertices, 20);
+            Vertices[] verts = Polygon.DecomposeVertices(_splatTextureVertices, 30);
 
             _splatGeomList = new List<Geom>();
 
+            Vector2 mainCentroid = _splatTextureVertices.GetCentroid();
+
             foreach (Vertices  v in verts)
             {
-                _splatGeomList.Add(GeomFactory.Instance.CreatePolygonGeom(_splatBody, v, 10.0f));
+                Vector2 subCentroid = v.GetCentroid();
+                _splatGeomList.Add(new Geom(_splatBody, v, -mainCentroid, 0, 1.0f));
             }
             //_splatGeomList = AutoDivide.DivideGeom(_splatTextureVertices, _splatBody);
 
