@@ -49,7 +49,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
             _splatBody.Position = _position;
 
             // use AutoDivide to find up to 25 convex geoms from a set of vertices NOTE - larger shapes need more geoms
-            _splatGeomList = AutoDivide.DecomposeGeom(_splatTextureVertices, _splatBody, 25);
+            _splatGeomList = Vertices.DecomposeGeom(_splatTextureVertices, _splatBody, 25);
 
             _physicsSimulator.Add(_splatBody);
 
