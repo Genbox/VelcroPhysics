@@ -71,7 +71,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
 
         public static string GetTitle()
         {
-            return "Demo10: Auto-divide geometry";
+            return "Demo10: Auto-divide geometry with SAT";
         }
 
         public static string GetDetails()

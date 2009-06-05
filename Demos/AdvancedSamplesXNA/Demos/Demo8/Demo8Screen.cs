@@ -451,8 +451,8 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
             sb.AppendLine("on the fly.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Mouse:");
-            sb.AppendLine("x");
-            sb.AppendLine("x");
+            sb.AppendLine("Move the polygons by holding down the left");
+            sb.AppendLine("mouse button.");
             return sb.ToString();
         }
     }
