@@ -492,9 +492,12 @@ namespace FarseerGames.FarseerPhysics.Factories
             if (vertices == null)
                 throw new ArgumentNullException("vertices", "Vertices must not be null");
 
-            //adjust the verts to be relative to 0,0
+            //adjust the verts to be relative to the centroid.
             Vector2 centroid = vertices.GetCentroid();
-            vertices.Translate(-centroid);
+
+            Vector2.Multiply(ref centroid, -1, out centroid);
+
+            vertices.Translate(ref centroid);
 
             Geom geometry = new Geom(body, vertices, positionOffset, rotationOffset, collisionGridSize);
             return geometry;
