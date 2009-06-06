@@ -495,7 +495,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Creates a rectangle with the specified width and height.
+        /// Creates a rectangle with the specified width and height
+        /// with automatic subdivsion.
         /// </summary>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
@@ -520,6 +521,24 @@ namespace FarseerGames.FarseerPhysics.Collisions
             vertices.Add(new Vector2(width * .25f, -height * .5f));
             vertices.Add(new Vector2(0, -height * .5f));
             vertices.Add(new Vector2(-width * .25f, -height * .5f));
+
+            return vertices;
+        }
+
+        /// <summary>
+        /// Creates a rectangle with the specified width and height
+        /// with no subdivision.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <returns>The vertices that define a rectangle</returns>
+        public static Vertices CreateSimpleRectangle(float width, float height)
+        {
+            Vertices vertices = new Vertices();
+            vertices.Add(new Vector2(-width * .5f, -height * .5f));
+            vertices.Add(new Vector2(-width * .5f, height * .5f));
+            vertices.Add(new Vector2(width * .5f, height * .5f));
+            vertices.Add(new Vector2(width * .5f, -height * .5f));
 
             return vertices;
         }
