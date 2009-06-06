@@ -130,6 +130,37 @@ namespace FarseerGames.SimpleSamplesXNA.DrawingSystem
             _effect.End();
         }
 
+        public void Draw(Matrix matrix)
+        {
+            Matrix cameraMatrix = Matrix.Identity;
+            Matrix projectionMatrix = Matrix.CreateOrthographicOffCenter(0, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, -100, 100);
+            Matrix worldMatrix = matrix;
+
+            _graphicsDevice.VertexDeclaration = _vertexDeclaration;
+
+            // set the effects matrix's
+            _effect.World = worldMatrix;
+            _effect.View = cameraMatrix;
+            _effect.Projection = projectionMatrix;
+
+            _effect.Alpha = _alpha;    // this effect supports a blending mode
+
+            _effect.VertexColorEnabled = true;   // we must enable vertex coloring with this effect
+            _effect.GraphicsDevice.RenderState.CullMode = CullMode.None;
+
+            _effect.Begin();
+
+            foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
+            {
+                pass.Begin();
+                _graphicsDevice.DrawUserIndexedPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, _shaderVertices, 0, _triangulatedVertices.Length, _indices, 0, _indices.Length / 3);
+                _graphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleStrip, _lineStrip.ToArray(), 0, _triangleCount);
+                pass.End();
+            }
+
+            _effect.End();
+        }
+
         private List<VertexPositionColor> GetTriangleStrip(Vector3[] points, float thickness)
         {
             Vector3 lastPoint = Vector3.Zero;
