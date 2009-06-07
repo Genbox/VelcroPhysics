@@ -19,8 +19,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     /// </summary>
     public class Arbiter : IEquatable<Arbiter>
     {
-        //To prevent garbage build up the contact comparer is pre-initialized and held in memory
-        private static Comparison<Contact> _contactComparer = CompareSeperation;
         private ContactList _contactList;
         private float _float1;
         private float _float2;
@@ -100,13 +98,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             switch (physicsSimulator.FrictionType)
             {
                 case FrictionType.Average:
-                    _frictionCoefficientCombined = (GeometryA.FrictionCoefficient + GeometryB.FrictionCoefficient)/2f;
+                    _frictionCoefficientCombined = (GeometryA.FrictionCoefficient + GeometryB.FrictionCoefficient) / 2f;
                     break;
                 case FrictionType.Minimum:
                     _frictionCoefficientCombined = Math.Min(GeometryA.FrictionCoefficient, GeometryB.FrictionCoefficient);
                     break;
                 default:
-                    _frictionCoefficientCombined = (GeometryA.FrictionCoefficient + GeometryB.FrictionCoefficient)/2f;
+                    _frictionCoefficientCombined = (GeometryA.FrictionCoefficient + GeometryB.FrictionCoefficient) / 2f;
                     break;
             }
 
@@ -143,9 +141,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 float invMassSum = GeometryA.body.inverseMass + GeometryB.body.inverseMass;
                 Vector2.Dot(ref _r1, ref _r1, out _float1);
                 Vector2.Dot(ref _r2, ref _r2, out _float2);
-                _kNormal = invMassSum + GeometryA.body.inverseMomentOfInertia*(_float1 - _rn1*_rn1) +
-                           GeometryB.body.inverseMomentOfInertia*(_float2 - _rn2*_rn2);
-                contact.massNormal = 1f/_kNormal;
+                _kNormal = invMassSum + GeometryA.body.inverseMomentOfInertia * (_float1 - _rn1 * _rn1) +
+                           GeometryB.body.inverseMomentOfInertia * (_float2 - _rn2 * _rn2);
+                contact.massNormal = 1f / _kNormal;
 
                 //calculate mass tangent
                 _float1 = 1;
@@ -156,16 +154,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 Vector2.Dot(ref _r1, ref _r1, out _float1);
                 Vector2.Dot(ref _r2, ref _r2, out _float2);
-                _kTangent += GeometryA.body.inverseMomentOfInertia*(_float1 - _rt1*_rt1) +
-                             GeometryB.body.InverseMomentOfInertia*(_float2 - _rt2*_rt2);
-                contact.massTangent = 1f/_kTangent;
+                _kTangent += GeometryA.body.inverseMomentOfInertia * (_float1 - _rt1 * _rt1) +
+                             GeometryB.body.InverseMomentOfInertia * (_float2 - _rt2 * _rt2);
+                contact.massTangent = 1f / _kTangent;
 
                 //calc velocity bias
                 _min = Math.Min(0, _physicsSimulator.AllowedPenetration + contact.Separation);
-                contact.normalVelocityBias = -_physicsSimulator.BiasFactor*inverseDt*_min;
+                contact.normalVelocityBias = -_physicsSimulator.BiasFactor * inverseDt * _min;
 
                 //Compute the restitution, we average the restitution of the two bodies
-                _restitution = (GeometryA.RestitutionCoefficient + GeometryB.RestitutionCoefficient)*.5f;
+                _restitution = (GeometryA.RestitutionCoefficient + GeometryB.RestitutionCoefficient) * .5f;
 
                 //calc bounce velocity
                 GeometryA.body.GetVelocityAtWorldOffset(ref _r1, out _vec1);
@@ -174,7 +172,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 //calc velocity difference along contact normal
                 Vector2.Dot(ref _dv, ref contact.Normal, out _vn);
-                contact.bounceVelocity = _vn*_restitution;
+                contact.bounceVelocity = _vn * _restitution;
 
                 //apply accumulated impulse
                 Vector2.Multiply(ref contact.Normal, contact.normalImpulse, out _vec1);
@@ -225,11 +223,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 //calc velocity difference along contact normal
                 #region INLINE: Vector2.Dot(ref _dv, ref _contact.Normal, out _vn);
 
-                _vn = (_dv.X*_contact.Normal.X) + (_dv.Y*_contact.Normal.Y);
+                _vn = (_dv.X * _contact.Normal.X) + (_dv.Y * _contact.Normal.Y);
 
                 #endregion
 
-                _normalImpulse = _contact.massNormal*-(_vn + _contact.bounceVelocity); //uncomment for preserve momentum
+                _normalImpulse = _contact.massNormal * -(_vn + _contact.bounceVelocity); //uncomment for preserve momentum
 
                 //clamp accumulated impulse
                 _oldNormalImpulse = _contact.normalImpulse;
@@ -239,8 +237,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 //apply contact impulse
                 #region INLINE: Vector2.Multiply(ref _contact.Normal, _normalImpulse, out _impulse);
 
-                _impulse.X = _contact.Normal.X*_normalImpulse;
-                _impulse.Y = _contact.Normal.Y*_normalImpulse;
+                _impulse.X = _contact.Normal.X * _normalImpulse;
+                _impulse.Y = _contact.Normal.Y * _normalImpulse;
 
                 #endregion
 
@@ -248,8 +246,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 #region INLINE: Vector2.Multiply(ref _impulse, -1, out _impulse);
 
-                _impulse.X = _impulse.X*-1;
-                _impulse.Y = _impulse.Y*-1;
+                _impulse.X = _impulse.X * -1;
+                _impulse.Y = _impulse.Y * -1;
 
                 #endregion
 
@@ -269,19 +267,19 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 //calc velocity bias along contact normal
                 #region INLINE: Vector2.Dot(ref _dv, ref _contact.Normal, out _normalVelocityBias);
 
-                _normalVelocityBias = (_dv.X*_contact.Normal.X) + (_dv.Y*_contact.Normal.Y);
+                _normalVelocityBias = (_dv.X * _contact.Normal.X) + (_dv.Y * _contact.Normal.Y);
 
                 #endregion
 
-                _normalImpulseBias = _contact.massNormal*(-_normalVelocityBias + _contact.normalVelocityBias);
+                _normalImpulseBias = _contact.massNormal * (-_normalVelocityBias + _contact.normalVelocityBias);
                 _normalImpulseBiasOriginal = _contact.normalImpulseBias;
                 _contact.normalImpulseBias = Math.Max(_normalImpulseBiasOriginal + _normalImpulseBias, 0);
                 _normalImpulseBias = _contact.normalImpulseBias - _normalImpulseBiasOriginal;
 
                 #region INLINE: Vector2.Multiply(ref _contact.Normal, _normalImpulseBias, out _impulseBias);
 
-                _impulseBias.X = _contact.Normal.X*_normalImpulseBias;
-                _impulseBias.Y = _contact.Normal.Y*_normalImpulseBias;
+                _impulseBias.X = _contact.Normal.X * _normalImpulseBias;
+                _impulseBias.Y = _contact.Normal.Y * _normalImpulseBias;
 
                 #endregion
 
@@ -290,8 +288,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 #region INLINE: Vector2.Multiply(ref _impulseBias, -1, out _impulseBias);
 
-                _impulseBias.X = _impulseBias.X*-1;
-                _impulseBias.Y = _impulseBias.Y*-1;
+                _impulseBias.X = _impulseBias.X * -1;
+                _impulseBias.Y = _impulseBias.Y * -1;
 
                 #endregion
 
@@ -309,23 +307,23 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 #endregion
 
                 //compute friction impulse
-                _maxTangentImpulse = _frictionCoefficientCombined*_contact.normalImpulse;
+                _maxTangentImpulse = _frictionCoefficientCombined * _contact.normalImpulse;
                 _float1 = 1;
 
                 #region INLINE: Calculator.Cross(ref _contact.Normal, ref _float1, out _tangent);
 
-                _tangent.X = _float1*_contact.Normal.Y;
-                _tangent.Y = -_float1*_contact.Normal.X;
+                _tangent.X = _float1 * _contact.Normal.Y;
+                _tangent.Y = -_float1 * _contact.Normal.X;
 
                 #endregion
 
                 #region INLINE: Vector2.Dot(ref _dv, ref _tangent, out _vt);
 
-                _vt = (_dv.X*_tangent.X) + (_dv.Y*_tangent.Y);
+                _vt = (_dv.X * _tangent.X) + (_dv.Y * _tangent.Y);
 
                 #endregion
 
-                _tangentImpulse = _contact.massTangent*(-_vt);
+                _tangentImpulse = _contact.massTangent * (-_vt);
 
                 //clamp friction
                 _oldTangentImpulse = _contact.tangentImpulse;
@@ -336,8 +334,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 //apply friction impulse
                 #region INLINE:Vector2.Multiply(ref _tangent, _tangentImpulse, out _impulse);
 
-                _impulse.X = _tangent.X*_tangentImpulse;
-                _impulse.Y = _tangent.Y*_tangentImpulse;
+                _impulse.X = _tangent.X * _tangentImpulse;
+                _impulse.Y = _tangent.Y * _tangentImpulse;
 
                 #endregion
 
@@ -346,8 +344,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 #region INLINE: Vector2.Multiply(ref _impulse, -1, out _impulse);
 
-                _impulse.X = _impulse.X*-1;
-                _impulse.Y = _impulse.Y*-1;
+                _impulse.X = _impulse.X * -1;
+                _impulse.Y = _impulse.Y * -1;
 
                 #endregion
 
@@ -366,6 +364,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             _mergedContactList.Clear();
         }
 
+        #region Variables for Collide
+        int i;
+        int j;
+        Contact indexContact;
+        int contactCount;
+        #endregion
+
         internal void Collide()
         {
             _newContactList.Clear();
@@ -373,11 +378,26 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             //Call the narrow phase collider and get back the contacts
             _physicsSimulator.NarrowPhaseCollider.Collide(GeometryA, GeometryB, _newContactList);
 
-            //sort contact list by seperation (amount of penetration)
-            _newContactList.Sort(_contactComparer);
+            contactCount = _newContactList.Count;
+
+            //Sort contact list by seperation (amount of penetration)
+            //Insertion sort
+            for (i = 1; i < contactCount; i++)
+            {
+
+                indexContact = _newContactList[i];
+                j = i;
+
+                while ((j > 0) && (_newContactList[j - 1].Separation > indexContact.Separation))
+                {
+                    _newContactList[j] = _newContactList[j - 1];
+                    j = j - 1;
+                }
+
+                _newContactList[j] = indexContact;
+            }
 
             //resolve deepest contacts first
-            int contactCount = _newContactList.Count;
             if (contactCount > _physicsSimulator.MaxContactsToResolve)
                 _newContactList.RemoveRange(_physicsSimulator.MaxContactsToResolve, contactCount - _physicsSimulator.MaxContactsToResolve);
 
@@ -421,10 +441,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             if (c1.Separation < c2.Separation)
                 return -1;
 
-            if (c1.Separation == c2.Separation)
-                return 0;
-            
-            return 1;
+            if (c1.Separation > c2.Separation)
+                return 1;
+
+            return 0;
         }
 
         public override bool Equals(object obj)
@@ -432,7 +452,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             if (!(obj is Arbiter))
                 return false;
 
-            return Equals((Arbiter) obj);
+            return Equals((Arbiter)obj);
         }
 
         public override int GetHashCode()
