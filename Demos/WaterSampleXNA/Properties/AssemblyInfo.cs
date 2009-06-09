@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WaterSampleXNA")]
-[assembly: AssemblyProduct("WaterSampleXNA")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("Microsoft")]
-
-[assembly: AssemblyCopyright("Copyright © Microsoft 2009")]
+[assembly: AssemblyTitle("Farseer Physics XNA water sample")]
+[assembly: AssemblyDescription("2D Physics Engine demos")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Farseer Games")]
+[assembly: AssemblyCopyright("Copyright © 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -30,4 +30,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("2.1.0.0")]
