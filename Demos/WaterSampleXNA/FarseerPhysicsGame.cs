@@ -27,14 +27,14 @@ namespace FarseerGames.WaterSampleXNA
 
 #if !XBOX
             //windowed
-            _graphics.PreferredBackBufferWidth = 1024;
-            _graphics.PreferredBackBufferHeight = 768;
-            _graphics.IsFullScreen = false;
+            //_graphics.PreferredBackBufferWidth = 1024;
+            //_graphics.PreferredBackBufferHeight = 768;
+            //_graphics.IsFullScreen = false;
 
             //fullscreen
-            //_graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            //_graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            //_graphics.IsFullScreen = true;
+            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            _graphics.IsFullScreen = true;
 
             IsMouseVisible = true;
 #else

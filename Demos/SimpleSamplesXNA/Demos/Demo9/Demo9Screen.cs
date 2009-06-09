@@ -29,7 +29,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo9
 
         public override void LoadContent()
         {
-            _ragdoll = new Ragdoll(new Vector2(ScreenManager.ScreenCenter.X, 110));
+            _ragdoll = new Ragdoll(new Vector2(ScreenManager.ScreenCenter.X + 100, 110));
             _ragdoll.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             LoadObstacles();
