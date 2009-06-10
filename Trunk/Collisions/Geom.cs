@@ -43,6 +43,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         internal INarrowPhaseCollider narrowPhaseCollider;
         internal int id;
 
+        public int Id { get{ return id;} }
+
         /// <summary>
         /// Returns true if the geometry is added to the simulation.
         /// Returns false if the geometriy is not.
