@@ -84,6 +84,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             _physicsSimulator = physicsSimulator;
 
+            //If geometry1 is newer (Id is smaller) than geometry2, insert them. If not, switch them.
             if (geometry1 < geometry2)
             {
                 GeometryA = geometry1;
@@ -384,7 +385,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             //Insertion sort
             for (i = 1; i < contactCount; i++)
             {
-
                 indexContact = _newContactList[i];
                 j = i;
 
@@ -413,7 +413,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                         _newContactList.Clear(); _mergedContactList.Clear();
 
             //Calculate on the new contacts gathered (Warm starting is done here)
-            for (int i = 0; i < _newContactList.Count; i++)
+            for (i = 0; i < _newContactList.Count; i++)
             {
                 int index = _contactList.IndexOfSafe(_newContactList[i]);
                 if (index > -1)
@@ -432,19 +432,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             }
 
             _contactList.Clear();
-            for (int i = 0; i < _mergedContactList.Count; i++)
+            for (i = 0; i < _mergedContactList.Count; i++)
                 _contactList.Add(_mergedContactList[i]);
-        }
-
-        private static int CompareSeperation(Contact c1, Contact c2)
-        {
-            if (c1.Separation < c2.Separation)
-                return -1;
-
-            if (c1.Separation > c2.Separation)
-                return 1;
-
-            return 0;
         }
 
         public override bool Equals(object obj)
