@@ -503,11 +503,11 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <param name="physicsSimulator">The physics simulator.</param>
         /// <param name="body">The body.</param>
         /// <param name="vertices">The vertices.</param>
-        /// <param name="numberOfGeoms">The number of geoms.</param>
+        /// <param name="maxGeoms">The number of geometries to split the geometry into. It is needed to make SAT support concave polygons. The engine will try to reach the desired number of geometries.</param>
         /// <returns></returns>
-        public List<Geom> CreateSATPolygonGeom(PhysicsSimulator physicsSimulator, Body body, Vertices vertices, int numberOfGeoms)
+        public List<Geom> CreateSATPolygonGeom(PhysicsSimulator physicsSimulator, Body body, Vertices vertices, int maxGeoms)
         {
-            List<Geom> geometries = CreateSATPolygonGeom(body, vertices, numberOfGeoms);
+            List<Geom> geometries = CreateSATPolygonGeom(body, vertices, maxGeoms);
             foreach (Geom geom in geometries)
             {
                 physicsSimulator.Add(geom);
