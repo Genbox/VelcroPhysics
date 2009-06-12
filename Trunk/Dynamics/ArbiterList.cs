@@ -77,44 +77,16 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             for (int i = 0; i < Count; i++)
             {
-                //Remove those arbiters that have disposed geometries
-                if (this[i].GeometryA.IsDisposed || this[i].GeometryB.IsDisposed)
+                if (this[i].ContainsInvalidGeom())
+                {
                     _markedForRemovalList.Add(this[i]);
-
-                //Remove the arbiter where both bodies are static
-                if (this[i].GeometryA.body.isStatic && this[i].GeometryB.body.isStatic)
-                    _markedForRemovalList.Add(this[i]);
-
-                //Remove the arbiter if one of the geometries are not collision enabled
-                if (!this[i].GeometryA.CollisionEnabled || !this[i].GeometryB.CollisionEnabled)
-                    _markedForRemovalList.Add(this[i]);
-
-                //Remove arbiters where the bodies have been disabled
-                if (!this[i].GeometryA.body.Enabled || !this[i].GeometryB.body.Enabled)
-                    _markedForRemovalList.Add(this[i]);
-
-                //Remove arbiters where the geometries are in different collision groups.
-                if ((this[i].GeometryA.CollisionGroup == this[i].GeometryB.CollisionGroup) &&
-                    this[i].GeometryA.CollisionGroup != 0 && this[i].GeometryB.CollisionGroup != 0)
-                    _markedForRemovalList.Add(this[i]);
-
-                //Remove arbiters where the geometries are in different collision categories.
-                if (((this[i].GeometryA.CollisionCategories & this[i].GeometryB.CollidesWith) == CollisionCategory.None) &
-                    ((this[i].GeometryB.CollisionCategories & this[i].GeometryA.CollidesWith) == CollisionCategory.None))
-                    _markedForRemovalList.Add(this[i]);
+                }
             }
-
-            int count = _markedForRemovalList.Count;
-            for (int j = 0; j < count; j++)
+            for (int j = 0; j < _markedForRemovalList.Count; j++)
             {
-                //Remove the arbiters from the list
                 Remove(_markedForRemovalList[j]);
-
-                //And insert them back into the pool
                 arbiterPool.Insert(_markedForRemovalList[j]);
             }
-
-            //Clear the temp arbiter removal list
             _markedForRemovalList.Clear();
         }
     }
