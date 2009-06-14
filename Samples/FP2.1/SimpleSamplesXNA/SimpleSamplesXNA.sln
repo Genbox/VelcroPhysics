@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSamplesXNA", "SimpleSamplesXNA.csproj", "{F7E1D8C1-5AB0-42A9-9AFE-8F3EEEBF1307}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerPhysicsXNA", "..\..\Branches\XNA3\FarseerPhysicsXNA.csproj", "{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs01.codeplex.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = ..\\..\\Branches\\XNA3\\Content\\Content.contentproj
+		SccProjectTopLevelParentUniqueName1 = ..\\..\\Branches\\XNA3\\FarseerPhysics.csproj
+		SccProjectName1 = ../../Branches/XNA3/Content
+		SccLocalPath1 = ..\\..\\Branches\\XNA3\\Content
+		SccProjectUniqueName2 = SimpleSamplesXNA.csproj
+		SccLocalPath2 = .
+		SccProjectUniqueName3 = Content\\Content.contentproj
+		SccProjectTopLevelParentUniqueName3 = SimpleSamplesXNA.csproj
+		SccProjectName3 = Content
+		SccLocalPath3 = Content
+		SccProjectUniqueName4 = ..\\..\\Branches\\XNA3\\FarseerPhysicsXNA.csproj
+		SccProjectName4 = ../../Branches/XNA3
+		SccLocalPath4 = ..\\..\\Branches\\XNA3
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7E1D8C1-5AB0-42A9-9AFE-8F3EEEBF1307}.Debug|x86.ActiveCfg = Debug|x86
+		{F7E1D8C1-5AB0-42A9-9AFE-8F3EEEBF1307}.Debug|x86.Build.0 = Debug|x86
+		{F7E1D8C1-5AB0-42A9-9AFE-8F3EEEBF1307}.Release|x86.ActiveCfg = Release|x86
+		{F7E1D8C1-5AB0-42A9-9AFE-8F3EEEBF1307}.Release|x86.Build.0 = Release|x86
+		{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}.Debug|x86.ActiveCfg = Debug|x86
+		{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}.Debug|x86.Build.0 = Debug|x86
+		{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}.Release|x86.ActiveCfg = Release|x86
+		{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}.Release|x86.Build.0 = Release|x86
+		{D02CA378-A184-49AD-91D5-C017D1559CAC}.Debug|x86.ActiveCfg = Debug|x86
+		{D02CA378-A184-49AD-91D5-C017D1559CAC}.Release|x86.ActiveCfg = Release|x86
+		{5DB75E98-A054-4091-AB49-F5DB0F17F771}.Debug|x86.ActiveCfg = Debug|x86
+		{5DB75E98-A054-4091-AB49-F5DB0F17F771}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

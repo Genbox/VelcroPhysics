@@ -1,0 +1,23 @@
+<UserControl x:Class="FarseerGames.SimpleSamplesSilverlight.Screens.MenuItem" xmlns="http://schemas.microsoft.com/client/2007" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        Width="700"
+        Height="40">
+        <Canvas>
+  <Canvas.Resources>
+    <Storyboard x:Name="selectedStoryboard" Duration="00:00:01.0000" RepeatBehavior="Forever" AutoReverse="True">
+      <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Duration="0:0:1" Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX">
+        <SplineDoubleKeyFrame KeyTime="0:0:0" Value="1"/>
+        <SplineDoubleKeyFrame KeyTime="0:0:1" Value="1.1"/>
+      </DoubleAnimationUsingKeyFrames>
+      <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Duration="0:0:1" Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY">
+        <SplineDoubleKeyFrame KeyTime="0:0:0" Value="1"/>
+        <SplineDoubleKeyFrame KeyTime="0:0:1" Value="1.1"/>
+      </DoubleAnimationUsingKeyFrames>
+    </Storyboard>
+  </Canvas.Resources>
+  <Canvas.RenderTransform >
+    <ScaleTransform x:Name="scale" CenterX=".5" CenterY=".5" ScaleX="1" ScaleY="1"/>
+  </Canvas.RenderTransform>
+  <TextBlock x:Name="text" Text="MenuItem" FontFamily="Comic Sans MS" FontSize="30" Foreground="Black" TextAlignment="Left"/>
+</Canvas>
+</UserControl>

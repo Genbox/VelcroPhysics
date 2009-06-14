@@ -1,0 +1,6 @@
+﻿<UserControl x:Class="SimpleSamplesWPF.Screens.Splash"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="White">
+    <Image Source="/logo.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None"  />
+</UserControl>

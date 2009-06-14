@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="SimpleSamplesWPF.Screens.DemoMenu"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Margin="50">
+    <Grid
+        Background="#11000000"
+        >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="225"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Rectangle Grid.Column="0" Fill="#66000000"/>
+        <StackPanel x:Name="menuStack" Grid.Column="0" VerticalAlignment="Center" />
+        
+        <Rectangle Grid.Column="1" Fill="#AA000000"/>
+        <TextBlock x:Name="title" Grid.Column="1" Margin="25" FontFamily="Comic Sans MS" FontSize="30" Foreground="White"/>
+        <TextBlock x:Name="details" Grid.Column="1" Margin="25,100,25,25" FontFamily="Courier New" FontSize="15" Foreground="White" TextWrapping="Wrap"/>
+    </Grid>
+</UserControl>

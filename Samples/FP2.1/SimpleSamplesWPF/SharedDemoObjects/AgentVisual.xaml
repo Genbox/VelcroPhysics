@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="SimpleSamplesWPF.SharedDemoObjects.AgentVisual"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        <Canvas x:Name="agent" Width="90" Height="90" IsHitTestVisible="False">
+            <Path Data="M0,10 L 10,0 45,40 80,0 90,10 50,45 90,80 80,90 45,50 10,90 0,80, 40,45z" Stroke="Black" Fill="Gray" StrokeThickness="2"/>
+            <Ellipse Width="34" Height="34" Canvas.Left="-12" Canvas.Top="-12" Fill="#FFFFCC00" Stroke="Black" StrokeThickness="2"/>
+            <Ellipse Width="34" Height="34" Canvas.Left="67" Canvas.Top="-12" Fill="#FFFFCC00" Stroke="Black" StrokeThickness="2"/>
+            <Ellipse Width="34" Height="34" Canvas.Left="-12" Canvas.Top="67" Fill="#FFFFCC00" Stroke="Black" StrokeThickness="2"/>
+            <Ellipse Width="34" Height="34" Canvas.Left="67" Canvas.Top="67" Fill="#FFFFCC00" Stroke="Black" StrokeThickness="2"/>
+            <Ellipse Width="34" Height="34" Canvas.Left="27" Canvas.Top="27" Fill="#FFFFCC00" Stroke="Black" StrokeThickness="2"/>
+        </Canvas>
+</UserControl>
