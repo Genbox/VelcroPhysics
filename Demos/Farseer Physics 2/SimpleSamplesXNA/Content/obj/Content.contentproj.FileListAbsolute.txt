@@ -1,0 +1,1 @@
+D:\Projects\TFS\FarseerPhysics\Demos\SimpleSamplesXNA\Content\obj\x86\Debug\ResolveAssemblyReference.cache

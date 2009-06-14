@@ -1,0 +1,40 @@
+<Configuration>
+  <SettingsComponent>
+    <string />
+    <integer />
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">True</setting>
+    </boolean>
+  </SettingsComponent>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Default">
+      <Item value="public" priority="0" />
+      <Item value="int" priority="0" />
+      <Item value="return" priority="0" />
+      <Item value="id" priority="0" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+  <RecentFiles>
+    <RecentFiles>
+      <File id="3CA74E02-3210-4BF8-85E9-024E9AD6F18D/d:Collisions/f:BruteForceCollider.cs" caret="0" fromTop="0" />
+      <File id="3CA74E02-3210-4BF8-85E9-024E9AD6F18D/d:Collisions/f:Geom.cs" caret="1599" fromTop="23" />
+      <File id="3CA74E02-3210-4BF8-85E9-024E9AD6F18D/d:Collisions/f:DistanceGrid.cs" caret="1668" fromTop="13" />
+      <File id="3CA74E02-3210-4BF8-85E9-024E9AD6F18D/d:Dynamics/f:Arbiter.cs" caret="2527" fromTop="38" />
+      <File id="F7E1D8C1-5AB0-42A9-9AFE-8F3EEEBF1307/f:PhysicsSimulatorView.cs" caret="16615" fromTop="16" />
+      <File id="F7E1D8C1-5AB0-42A9-9AFE-8F3EEEBF1307/d:ScreenSystem/f:GameScreen.cs" caret="9139" fromTop="16" />
+    </RecentFiles>
+    <RecentEdits>
+      <File id="3CA74E02-3210-4BF8-85E9-024E9AD6F18D/d:Collisions/f:Geom.cs" caret="29490" fromTop="13" />
+      <File id="3CA74E02-3210-4BF8-85E9-024E9AD6F18D/d:Collisions/f:Geom.cs" caret="1640" fromTop="15" />
+    </RecentEdits>
+  </RecentFiles>
+  <UnitTestRunner>
+    <Providers />
+  </UnitTestRunner>
+  <UnitTestRunnerMSTest>
+    <UseTestRunConfigFromMetadataFile>False</UseTestRunConfigFromMetadataFile>
+  </UnitTestRunnerMSTest>
+</Configuration>
