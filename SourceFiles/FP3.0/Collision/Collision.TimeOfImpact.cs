@@ -87,7 +87,7 @@ namespace FarseerPhysics.Collision
                     }
                     else
                     {
-                        targetDistance = MathHelper.Max(0.05f * Settings.ToiSlop, distance - 0.5f * Settings.ToiSlop);
+                        targetDistance = Math.CommonMath.Max(0.05f * Settings.ToiSlop, distance - 0.5f * Settings.ToiSlop);
                     }
                 }
 
@@ -101,8 +101,8 @@ namespace FarseerPhysics.Collision
 
                 // Compute upper bound on remaining movement.
                 float approachVelocityBound = Vector2.Dot(normal, v1 - v2) +
-                                              MathHelper.Abs(omega1) * r1 + MathHelper.Abs(omega2) * r2;
-                if (MathHelper.Abs(approachVelocityBound) < Settings.FLT_EPSILON)
+                                              Math.CommonMath.Abs(omega1) * r1 + Math.CommonMath.Abs(omega2) * r2;
+                if (Math.CommonMath.Abs(approachVelocityBound) < Settings.FLT_EPSILON)
                 {
                     alpha = 1.0f;
                     break;

@@ -138,11 +138,11 @@ namespace FarseerPhysics.Dynamics
 
                         ccp.LocalAnchor1 = cp.LocalPoint1;
                         ccp.LocalAnchor2 = cp.LocalPoint2;
-                        ccp.R1 = MathHelper.Mul(b1.GetXForm().R, cp.LocalPoint1 - b1.GetLocalCenter());
-                        ccp.R2 = MathHelper.Mul(b2.GetXForm().R, cp.LocalPoint2 - b2.GetLocalCenter());
+                        ccp.R1 = Math.CommonMath.Mul(b1.GetXForm().R, cp.LocalPoint1 - b1.GetLocalCenter());
+                        ccp.R2 = Math.CommonMath.Mul(b2.GetXForm().R, cp.LocalPoint2 - b2.GetLocalCenter());
 
-                        float rn1 = MathHelper.Cross(ref ccp.R1, ref normal);
-                        float rn2 = MathHelper.Cross(ref ccp.R2, ref normal);
+                        float rn1 = Math.CommonMath.Cross(ref ccp.R1, ref normal);
+                        float rn2 = Math.CommonMath.Cross(ref ccp.R2, ref normal);
                         rn1 *= rn1;
                         rn2 *= rn2;
 
@@ -157,10 +157,10 @@ namespace FarseerPhysics.Dynamics
                         //Box2DXDebug.Assert(kEqualized > Common.Settings.FLT_EPSILON);
                         ccp.EqualizedMass = 1.0f/kEqualized;
 
-                        Vector2 tangent = MathHelper.Cross(normal, 1.0f);
+                        Vector2 tangent = Math.CommonMath.Cross(normal, 1.0f);
 
-                        float rt1 = MathHelper.Cross(ref ccp.R1, ref tangent);
-                        float rt2 = MathHelper.Cross(ref ccp.R2, ref tangent);
+                        float rt1 = Math.CommonMath.Cross(ref ccp.R1, ref tangent);
+                        float rt2 = Math.CommonMath.Cross(ref ccp.R2, ref tangent);
                         rt1 *= rt1;
                         rt2 *= rt2;
 
@@ -178,7 +178,7 @@ namespace FarseerPhysics.Dynamics
                         else
                         {
                             float vRel = Vector2.Dot(cc.Normal,
-                                                     v2 + MathHelper.Cross(w2, ccp.R2) - v1 - MathHelper.Cross(w1, ccp.R1));
+                                                     v2 + Math.CommonMath.Cross(w2, ccp.R2) - v1 - Math.CommonMath.Cross(w1, ccp.R1));
                             if (vRel < -Settings.VelocityThreshold)
                             {
                                 ccp.VelocityBias = -cc.Restitution*vRel;
@@ -197,10 +197,10 @@ namespace FarseerPhysics.Dynamics
                         float invMass2 = b2._invMass;
                         float invI2 = b2._invI;
 
-                        float rn11 = MathHelper.Cross(ref ccp1.R1, ref normal);
-                        float rn12 = MathHelper.Cross(ref ccp1.R2, ref normal);
-                        float rn21 = MathHelper.Cross(ref ccp2.R1, ref normal);
-                        float rn22 = MathHelper.Cross(ref ccp2.R2, ref normal);
+                        float rn11 = Math.CommonMath.Cross(ref ccp1.R1, ref normal);
+                        float rn12 = Math.CommonMath.Cross(ref ccp1.R2, ref normal);
+                        float rn21 = Math.CommonMath.Cross(ref ccp2.R1, ref normal);
+                        float rn22 = Math.CommonMath.Cross(ref ccp2.R2, ref normal);
 
                         float k11 = invMass1 + invMass2 + invI1*rn11*rn11 + invI2*rn12*rn12;
                         float k22 = invMass1 + invMass2 + invI1*rn21*rn21 + invI2*rn22*rn22;
@@ -249,7 +249,7 @@ namespace FarseerPhysics.Dynamics
                 float invMass2 = b2._invMass;
                 float invI2 = b2._invI;
                 Vector2 normal = c.Normal;
-                Vector2 tangent = MathHelper.Cross(normal, 1.0f);
+                Vector2 tangent = Math.CommonMath.Cross(normal, 1.0f);
 
                 if (step.WarmStarting)
                 {
@@ -259,9 +259,9 @@ namespace FarseerPhysics.Dynamics
                         ccp.NormalImpulse *= step.DtRatio;
                         ccp.TangentImpulse *= step.DtRatio;
                         Vector2 P = ccp.NormalImpulse*normal + ccp.TangentImpulse*tangent;
-                        b1._angularVelocity -= invI1*MathHelper.Cross(ref ccp.R1, ref P);
+                        b1._angularVelocity -= invI1*Math.CommonMath.Cross(ref ccp.R1, ref P);
                         b1._linearVelocity -= invMass1*P;
-                        b2._angularVelocity += invI2*MathHelper.Cross(ref ccp.R2, ref P);
+                        b2._angularVelocity += invI2*Math.CommonMath.Cross(ref ccp.R2, ref P);
                         b2._linearVelocity += invMass2*P;
                     }
                 }
@@ -293,7 +293,7 @@ namespace FarseerPhysics.Dynamics
                 float invMass2 = b2._invMass;
                 float invI2 = b2._invI;
                 Vector2 normal = c.Normal;
-                Vector2 tangent = MathHelper.Cross(normal, 1.0f);
+                Vector2 tangent = Math.CommonMath.Cross(normal, 1.0f);
                 float friction = c.Friction;
 
                 //Box2DXDebug.Assert(c.PointCount == 1 || c.PointCount == 2);
@@ -304,24 +304,24 @@ namespace FarseerPhysics.Dynamics
                     ContactConstraintPoint ccp = c.Points[0];
 
                     // Relative velocity at contact
-                    Vector2 dv = v2 + MathHelper.Cross(w2, ccp.R2) - v1 - MathHelper.Cross(w1, ccp.R1);
+                    Vector2 dv = v2 + Math.CommonMath.Cross(w2, ccp.R2) - v1 - Math.CommonMath.Cross(w1, ccp.R1);
 
                     // Compute normal impulse
                     float vn = Vector2.Dot(dv, normal);
                     float lambda = -ccp.NormalMass*(vn - ccp.VelocityBias);
 
                     // Clamp the accumulated impulse
-                    float newImpulse = MathHelper.Max(ccp.NormalImpulse + lambda, 0.0f);
+                    float newImpulse = Math.CommonMath.Max(ccp.NormalImpulse + lambda, 0.0f);
                     lambda = newImpulse - ccp.NormalImpulse;
 
                     // Apply contact impulse
                     Vector2 P = lambda*normal;
 
                     v1 -= invMass1*P;
-                    w1 -= invI1*MathHelper.Cross(ref ccp.R1, ref P);
+                    w1 -= invI1*Math.CommonMath.Cross(ref ccp.R1, ref P);
 
                     v2 += invMass2*P;
-                    w2 += invI2*MathHelper.Cross(ref ccp.R2, ref P);
+                    w2 += invI2*Math.CommonMath.Cross(ref ccp.R2, ref P);
 
                     ccp.NormalImpulse = newImpulse;
                 }
@@ -362,8 +362,8 @@ namespace FarseerPhysics.Dynamics
                     //Box2DXDebug.Assert(a.X >= 0.0f && a.Y >= 0.0f);
 
                     // Relative velocity at contact
-                    Vector2 dv1 = v2 + MathHelper.Cross(w2, cp1.R2) - v1 - MathHelper.Cross(w1, cp1.R1);
-                    Vector2 dv2 = v2 + MathHelper.Cross(w2, cp2.R2) - v1 - MathHelper.Cross(w1, cp2.R1);
+                    Vector2 dv1 = v2 + Math.CommonMath.Cross(w2, cp1.R2) - v1 - Math.CommonMath.Cross(w1, cp1.R1);
+                    Vector2 dv2 = v2 + Math.CommonMath.Cross(w2, cp2.R2) - v1 - Math.CommonMath.Cross(w1, cp2.R1);
 
                     // Compute normal velocity
                     float vn1 = Vector2.Dot(dv1, normal);
@@ -372,7 +372,7 @@ namespace FarseerPhysics.Dynamics
                     Vector2 b = new Vector2();
                     b.X = vn1 - cp1.VelocityBias;
                     b.Y = vn2 - cp2.VelocityBias;
-                    b -= MathHelper.Mul(c.K, a);
+                    b -= Math.CommonMath.Mul(c.K, a);
 
                     for (;;)
                     {
@@ -385,7 +385,7 @@ namespace FarseerPhysics.Dynamics
                         //
                         // x' = - inv(A) * b'
                         //
-                        Vector2 x = -MathHelper.Mul(c.NormalMass, b);
+                        Vector2 x = -Math.CommonMath.Mul(c.NormalMass, b);
 
                         if (x.X >= 0.0f && x.Y >= 0.0f)
                         {
@@ -396,10 +396,10 @@ namespace FarseerPhysics.Dynamics
                             Vector2 P1 = d.X*normal;
                             Vector2 P2 = d.Y*normal;
                             v1 -= invMass1*(P1 + P2);
-                            w1 -= invI1*(MathHelper.Cross(ref cp1.R1, ref P1) + MathHelper.Cross(ref cp2.R1, ref P2));
+                            w1 -= invI1*(Math.CommonMath.Cross(ref cp1.R1, ref P1) + Math.CommonMath.Cross(ref cp2.R1, ref P2));
 
                             v2 += invMass2*(P1 + P2);
-                            w2 += invI2*(MathHelper.Cross(ref cp1.R2, ref P1) + MathHelper.Cross(ref cp2.R2, ref P2));
+                            w2 += invI2*(Math.CommonMath.Cross(ref cp1.R2, ref P1) + Math.CommonMath.Cross(ref cp2.R2, ref P2));
 
                             // Accumulate
                             cp1.NormalImpulse = x.X;
@@ -440,10 +440,10 @@ namespace FarseerPhysics.Dynamics
                             Vector2 P1 = d.X*normal;
                             Vector2 P2 = d.Y*normal;
                             v1 -= invMass1*(P1 + P2);
-                            w1 -= invI1*(MathHelper.Cross(ref cp1.R1, ref P1) + MathHelper.Cross(ref cp2.R1, ref P2));
+                            w1 -= invI1*(Math.CommonMath.Cross(ref cp1.R1, ref P1) + Math.CommonMath.Cross(ref cp2.R1, ref P2));
 
                             v2 += invMass2*(P1 + P2);
-                            w2 += invI2*(MathHelper.Cross(ref cp1.R2, ref P1) + MathHelper.Cross(ref cp2.R2, ref P2));
+                            w2 += invI2*(Math.CommonMath.Cross(ref cp1.R2, ref P1) + Math.CommonMath.Cross(ref cp2.R2, ref P2));
 
                             // Accumulate
                             cp1.NormalImpulse = x.X;
@@ -482,10 +482,10 @@ namespace FarseerPhysics.Dynamics
                             Vector2 P1 = d.X*normal;
                             Vector2 P2 = d.Y*normal;
                             v1 -= invMass1*(P1 + P2);
-                            w1 -= invI1*(MathHelper.Cross(ref cp1.R1, ref P1) + MathHelper.Cross(ref cp2.R1, ref P2));
+                            w1 -= invI1*(Math.CommonMath.Cross(ref cp1.R1, ref P1) + Math.CommonMath.Cross(ref cp2.R1, ref P2));
 
                             v2 += invMass2*(P1 + P2);
-                            w2 += invI2*(MathHelper.Cross(ref cp1.R2, ref P1) + MathHelper.Cross(ref cp2.R2, ref P2));
+                            w2 += invI2*(Math.CommonMath.Cross(ref cp1.R2, ref P1) + Math.CommonMath.Cross(ref cp2.R2, ref P2));
 
                             // Accumulate
                             cp1.NormalImpulse = x.X;
@@ -522,10 +522,10 @@ namespace FarseerPhysics.Dynamics
                             Vector2 P1 = d.X*normal;
                             Vector2 P2 = d.Y*normal;
                             v1 -= invMass1*(P1 + P2);
-                            w1 -= invI1*(MathHelper.Cross(ref cp1.R1, ref P1) + MathHelper.Cross(ref cp2.R1, ref P2));
+                            w1 -= invI1*(Math.CommonMath.Cross(ref cp1.R1, ref P1) + Math.CommonMath.Cross(ref cp2.R1, ref P2));
 
                             v2 += invMass2*(P1 + P2);
-                            w2 += invI2*(MathHelper.Cross(ref cp1.R2, ref P1) + MathHelper.Cross(ref cp2.R2, ref P2));
+                            w2 += invI2*(Math.CommonMath.Cross(ref cp1.R2, ref P1) + Math.CommonMath.Cross(ref cp2.R2, ref P2));
 
                             // Accumulate
                             cp1.NormalImpulse = x.X;
@@ -545,7 +545,7 @@ namespace FarseerPhysics.Dynamics
                     ContactConstraintPoint ccp = c.Points[j];
 
                     // Relative velocity at contact
-                    Vector2 dv = v2 + MathHelper.Cross(w2, ccp.R2) - v1 - MathHelper.Cross(w1, ccp.R1);
+                    Vector2 dv = v2 + Math.CommonMath.Cross(w2, ccp.R2) - v1 - Math.CommonMath.Cross(w1, ccp.R1);
 
                     // Compute tangent force
                     float vt = Vector2.Dot(dv, tangent);
@@ -553,17 +553,17 @@ namespace FarseerPhysics.Dynamics
 
                     // Clamp the accumulated force
                     float maxFriction = friction*ccp.NormalImpulse;
-                    float newImpulse = MathHelper.Clamp(ccp.TangentImpulse + lambda, -maxFriction, maxFriction);
+                    float newImpulse = Math.CommonMath.Clamp(ccp.TangentImpulse + lambda, -maxFriction, maxFriction);
                     lambda = newImpulse - ccp.TangentImpulse;
 
                     // Apply contact impulse
                     Vector2 P = lambda*tangent;
 
                     v1 -= invMass1*P;
-                    w1 -= invI1*MathHelper.Cross(ref ccp.R1, ref P);
+                    w1 -= invI1*Math.CommonMath.Cross(ref ccp.R1, ref P);
 
                     v2 += invMass2*P;
-                    w2 += invI2*MathHelper.Cross(ref ccp.R2, ref P);
+                    w2 += invI2*Math.CommonMath.Cross(ref ccp.R2, ref P);
 
                     ccp.TangentImpulse = newImpulse;
                 }
@@ -612,8 +612,8 @@ namespace FarseerPhysics.Dynamics
                 {
                     ContactConstraintPoint ccp = c.Points[j];
 
-                    Vector2 r1 = MathHelper.Mul(b1.GetXForm().R, ccp.LocalAnchor1 - b1.GetLocalCenter());
-                    Vector2 r2 = MathHelper.Mul(b2.GetXForm().R, ccp.LocalAnchor2 - b2.GetLocalCenter());
+                    Vector2 r1 = Math.CommonMath.Mul(b1.GetXForm().R, ccp.LocalAnchor1 - b1.GetLocalCenter());
+                    Vector2 r2 = Math.CommonMath.Mul(b2.GetXForm().R, ccp.LocalAnchor2 - b2.GetLocalCenter());
 
                     Vector2 p1 = b1._sweep.C + r1;
                     Vector2 p2 = b2._sweep.C + r2;
@@ -623,11 +623,11 @@ namespace FarseerPhysics.Dynamics
                     float separation = Vector2.Dot(dp, normal) + ccp.Separation;
 
                     // Track max constraint error.
-                    minSeparation = MathHelper.Min(minSeparation, separation);
+                    minSeparation = Math.CommonMath.Min(minSeparation, separation);
 
                     // Prevent large corrections and allow slop.
                     float C = baumgarte*
-                              MathHelper.Clamp(separation + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
+                              Math.CommonMath.Clamp(separation + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
 
                     // Compute normal impulse
                     float impulse = -ccp.EqualizedMass*C;
@@ -635,11 +635,11 @@ namespace FarseerPhysics.Dynamics
                     Vector2 P = impulse*normal;
 
                     b1._sweep.C -= invMass1*P;
-                    b1._sweep.A -= invI1*MathHelper.Cross(ref r1, ref P);
+                    b1._sweep.A -= invI1*Math.CommonMath.Cross(ref r1, ref P);
                     b1.SynchronizeTransform();
 
                     b2._sweep.C += invMass2*P;
-                    b2._sweep.A += invI2*MathHelper.Cross(ref r2, ref P);
+                    b2._sweep.A += invI2*Math.CommonMath.Cross(ref r2, ref P);
                     b2.SynchronizeTransform();
                 }
             }

@@ -48,7 +48,7 @@ namespace FarseerPhysics.Math
             xf = new XForm();
 
             // center = p + R * LocalCenter
-            if (1.0f - T0 > MathHelper.FLOAT32_EPSILON)
+            if (1.0f - T0 > CommonMath.FLOAT32_EPSILON)
             {
                 float alpha = (t - T0)/(1.0f - T0);
                 xf.Position = (1.0f - alpha)*C0 + alpha*C;
@@ -62,7 +62,7 @@ namespace FarseerPhysics.Math
             }
 
             // Shift to origin
-            xf.Position -= MathHelper.Mul(xf.R, LocalCenter);
+            xf.Position -= Math.CommonMath.Mul(xf.R, LocalCenter);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace FarseerPhysics.Math
         /// <param name="t">The new initial time.</param>
         public void Advance(float t)
         {
-            if (T0 < t && 1.0f - T0 > MathHelper.FLOAT32_EPSILON)
+            if (T0 < t && 1.0f - T0 > CommonMath.FLOAT32_EPSILON)
             {
                 float alpha = (t - T0)/(1.0f - T0);
                 C0 = (1.0f - alpha)*C0 + alpha*C;

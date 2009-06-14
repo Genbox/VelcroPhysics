@@ -109,7 +109,7 @@ namespace FarseerPhysics.Collision
 #if TARGET_FLOAT32_IS_FIXED
 		public static readonly ushort BROADPHASE_MAX = (Common.Math.USHRT_MAX/2);
 #else
-        public static readonly ushort BROADPHASE_MAX = Math.MathHelper.USHRT_MAX;
+        public static readonly ushort BROADPHASE_MAX = Math.CommonMath.USHRT_MAX;
 #endif
 
         public static readonly ushort Invalid = BROADPHASE_MAX;
@@ -180,8 +180,8 @@ namespace FarseerPhysics.Collision
         // is the number of proxies that are out of range.
         public bool InRange(AABB aabb)
         {
-            Vector2 d = Math.MathHelper.Max(aabb.LowerBound - _worldAABB.UpperBound, _worldAABB.LowerBound - aabb.UpperBound);
-            return Math.MathHelper.Max(d.X, d.Y) < 0.0f;
+            Vector2 d = Math.CommonMath.Max(aabb.LowerBound - _worldAABB.UpperBound, _worldAABB.LowerBound - aabb.UpperBound);
+            return Math.CommonMath.Max(d.X, d.Y) < 0.0f;
         }
 
         // Create and destroy proxies. These call Flush first.
@@ -470,7 +470,7 @@ namespace FarseerPhysics.Collision
                         }
 
                         --proxy.LowerBounds[axis];
-                        MathHelper.Swap<Bound>(ref bounds[index], ref bounds[index - 1]);
+                        Math.CommonMath.Swap<Bound>(ref bounds[index], ref bounds[index - 1]);
                         --index;
                     }
                 }
@@ -505,7 +505,7 @@ namespace FarseerPhysics.Collision
                         }
 
                         ++proxy.UpperBounds[axis];
-                        MathHelper.Swap<Bound>(ref bounds[index], ref bounds[index + 1]);
+                        Math.CommonMath.Swap<Bound>(ref bounds[index], ref bounds[index + 1]);
                         ++index;
                     }
                 }
@@ -545,7 +545,7 @@ namespace FarseerPhysics.Collision
                         }
 
                         ++proxy.LowerBounds[axis];
-                        MathHelper.Swap<Bound>(ref bounds[index], ref bounds[index + 1]);
+                        Math.CommonMath.Swap<Bound>(ref bounds[index], ref bounds[index + 1]);
                         ++index;
                     }
                 }
@@ -581,7 +581,7 @@ namespace FarseerPhysics.Collision
                         }
 
                         --proxy.UpperBounds[axis];
-                        MathHelper.Swap<Bound>(ref bounds[index], ref bounds[index - 1]);
+                        Math.CommonMath.Swap<Bound>(ref bounds[index], ref bounds[index - 1]);
                         --index;
                     }
                 }
@@ -968,8 +968,8 @@ namespace FarseerPhysics.Collision
             //Box2DXDebug.Assert(aabb.UpperBound.X >= aabb.LowerBound.X);
             //Box2DXDebug.Assert(aabb.UpperBound.Y >= aabb.LowerBound.Y);
 
-            Vector2 minVertex = MathHelper.Clamp(aabb.LowerBound, _worldAABB.LowerBound, _worldAABB.UpperBound);
-            Vector2 maxVertex = MathHelper.Clamp(aabb.UpperBound, _worldAABB.LowerBound, _worldAABB.UpperBound);
+            Vector2 minVertex = FarseerPhysics.Math.CommonMath.Clamp(aabb.LowerBound, _worldAABB.LowerBound, _worldAABB.UpperBound);
+            Vector2 maxVertex = FarseerPhysics.Math.CommonMath.Clamp(aabb.UpperBound, _worldAABB.LowerBound, _worldAABB.UpperBound);
 
             // Bump lower bounds downs and upper bounds up. This ensures correct sorting of
             // lower/upper bounds that would have equal values.

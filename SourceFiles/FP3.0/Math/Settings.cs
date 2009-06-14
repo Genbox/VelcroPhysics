@@ -151,7 +151,7 @@ namespace FarseerPhysics.Math
         /// </summary>
         public static float MixFriction(float friction1, float friction2)
         {
-            //return (float)System.MathHelper.Sqrt(friction1 * friction2);
+            //return (float)System.CommonMath.Sqrt(friction1 * friction2);
             return (friction1 + friction2)/2.0f;
         }
 

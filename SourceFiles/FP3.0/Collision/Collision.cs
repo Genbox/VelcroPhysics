@@ -34,7 +34,7 @@ namespace FarseerPhysics.Collision
 
     public partial class Collision
     {
-        public static readonly byte NullFeature = MathHelper.UCHAR_MAX;
+        public static readonly byte NullFeature = Math.CommonMath.UCHAR_MAX;
 
         public static bool TestOverlap(AABB a, AABB b)
         {
@@ -233,7 +233,7 @@ namespace FarseerPhysics.Collision
             Vector2 s = segment.P1;
             Vector2 r = segment.P2 - s;
             Vector2 d = P2 - P1;
-            Vector2 n = MathHelper.Cross(d, 1.0f);
+            Vector2 n = Math.CommonMath.Cross(d, 1.0f);
 
             float k_slop = 100.0f*Settings.FLT_EPSILON;
             float denom = -Vector2.Dot(r, n);
@@ -287,7 +287,7 @@ namespace FarseerPhysics.Collision
             {
                 Vector2 d = UpperBound - LowerBound;
                 bool valid = d.X >= 0.0f && d.Y >= 0.0f;
-                // TODO - add IsValid to MathHelper
+                // TODO - add IsValid to CommonMath
                 //valid = valid && LowerBound.IsValid && UpperBound.IsValid;
                 return valid;
             }

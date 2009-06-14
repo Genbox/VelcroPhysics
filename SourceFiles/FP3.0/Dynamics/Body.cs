@@ -215,7 +215,7 @@ namespace FarseerPhysics.Dynamics
             _sweep.LocalCenter = bd.MassData.Center;
             _sweep.T0 = 1.0f;
             _sweep.A0 = _sweep.A = bd.Angle;
-            _sweep.C0 = _sweep.C = MathHelper.Mul(_xf, _sweep.LocalCenter);
+            _sweep.C0 = _sweep.C = Math.CommonMath.Mul(_xf, _sweep.LocalCenter);
 
             _jointList = null;
             _contactList = null;
@@ -392,7 +392,7 @@ namespace FarseerPhysics.Dynamics
 
             // Move center of mass.
             _sweep.LocalCenter = massData.Center;
-            _sweep.C0 = _sweep.C = MathHelper.Mul(_xf, _sweep.LocalCenter);
+            _sweep.C0 = _sweep.C = Math.CommonMath.Mul(_xf, _sweep.LocalCenter);
 
             // Update the sweep radii of all child shapes.
             for (Shape s = _shapeList; s != null; s = s._next)
@@ -472,7 +472,7 @@ namespace FarseerPhysics.Dynamics
 
             // Move center of mass.
             _sweep.LocalCenter = center;
-            _sweep.C0 = _sweep.C = MathHelper.Mul(_xf, _sweep.LocalCenter);
+            _sweep.C0 = _sweep.C = Math.CommonMath.Mul(_xf, _sweep.LocalCenter);
 
             // Update the sweep radii of all child shapes.
             for (Shape s = _shapeList; s != null; s = s._next)
@@ -525,7 +525,7 @@ namespace FarseerPhysics.Dynamics
             _xf.R.Set(angle);
             _xf.Position = position;
 
-            _sweep.C0 = _sweep.C = MathHelper.Mul(_xf, _sweep.LocalCenter);
+            _sweep.C0 = _sweep.C = Math.CommonMath.Mul(_xf, _sweep.LocalCenter);
             _sweep.A0 = _sweep.A = angle;
 
             bool freeze = false;
@@ -655,7 +655,7 @@ namespace FarseerPhysics.Dynamics
             }
             _force += force;
             Vector2 temp = point - _sweep.C;
-            _torque += MathHelper.Cross(ref temp, ref force);
+            _torque += Math.CommonMath.Cross(ref temp, ref force);
         }
 
         /// <summary>
@@ -688,7 +688,7 @@ namespace FarseerPhysics.Dynamics
             }
             _linearVelocity += _invMass*impulse;
             Vector2 temp = point - _sweep.C;
-            _angularVelocity += _invI*MathHelper.Cross(ref temp, ref impulse);
+            _angularVelocity += _invI*Math.CommonMath.Cross(ref temp, ref impulse);
         }
 
         /// <summary>
@@ -716,7 +716,7 @@ namespace FarseerPhysics.Dynamics
         /// <returns>Return the same point expressed in world coordinates.</returns>
         public Vector2 GetWorldPoint(Vector2 localPoint)
         {
-            return MathHelper.Mul(_xf, localPoint);
+            return Math.CommonMath.Mul(_xf, localPoint);
         }
 
         /// <summary>
@@ -726,7 +726,7 @@ namespace FarseerPhysics.Dynamics
         /// <returns>Return the same vector expressed in world coordinates.</returns>
         public Vector2 GetWorldVector(Vector2 localVector)
         {
-            return MathHelper.Mul(_xf.R, localVector);
+            return Math.CommonMath.Mul(_xf.R, localVector);
         }
 
         /// <summary>
@@ -736,7 +736,7 @@ namespace FarseerPhysics.Dynamics
         /// <returns>Return the corresponding local point relative to the body's origin.</returns>
         public Vector2 GetLocalPoint(Vector2 worldPoint)
         {
-            return MathHelper.MulT(_xf, worldPoint);
+            return Math.CommonMath.MulT(_xf, worldPoint);
         }
 
         /// <summary>
@@ -746,7 +746,7 @@ namespace FarseerPhysics.Dynamics
         /// <returns>Return the corresponding local vector.</returns>
         public Vector2 GetLocalVector(Vector2 worldVector)
         {
-            return MathHelper.MulT(_xf.R, worldVector);
+            return Math.CommonMath.MulT(_xf.R, worldVector);
         }
 
         /// <summary>
@@ -756,7 +756,7 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The world velocity of a point.</returns>
         public Vector2 GetLinearVelocityFromWorldPoint(Vector2 worldPoint)
         {
-            return _linearVelocity + MathHelper.Cross(_angularVelocity, worldPoint - _sweep.C);
+            return _linearVelocity + Math.CommonMath.Cross(_angularVelocity, worldPoint - _sweep.C);
         }
 
         /// <summary>
@@ -929,7 +929,7 @@ namespace FarseerPhysics.Dynamics
         {
             XForm xf1 = new XForm();
             xf1.R.Set(_sweep.A0);
-            xf1.Position = _sweep.C0 - MathHelper.Mul(xf1.R, _sweep.LocalCenter);
+            xf1.Position = _sweep.C0 - Math.CommonMath.Mul(xf1.R, _sweep.LocalCenter);
 
             bool inRange = true;
             for (Shape s = _shapeList; s != null; s = s._next)
@@ -962,7 +962,7 @@ namespace FarseerPhysics.Dynamics
         internal void SynchronizeTransform()
         {
             _xf.R.Set(_sweep.A);
-            _xf.Position = _sweep.C - MathHelper.Mul(_xf.R, _sweep.LocalCenter);
+            _xf.Position = _sweep.C - Math.CommonMath.Mul(_xf.R, _sweep.LocalCenter);
         }
 
         // This is used to prevent connected bodies from colliding.

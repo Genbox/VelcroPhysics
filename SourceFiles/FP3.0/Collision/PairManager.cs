@@ -115,8 +115,8 @@ namespace FarseerPhysics.Collision
 
     public class PairManager
     {
-        public static readonly ushort NullPair = MathHelper.USHRT_MAX;
-        public static readonly ushort NullProxy = MathHelper.USHRT_MAX;
+        public static readonly ushort NullPair = Math.CommonMath.USHRT_MAX;
+        public static readonly ushort NullProxy = Math.CommonMath.USHRT_MAX;
         public static readonly int TableCapacity = Settings.MaxPairs; // must be a power of two
         public static readonly int TableMask = TableCapacity - 1;
 
@@ -132,7 +132,7 @@ namespace FarseerPhysics.Collision
 
         public PairManager()
         {
-            //Box2DXDebug.Assert(Common.MathHelper.IsPowerOfTwo((uint)PairManager.TableCapacity) == true);
+            //Box2DXDebug.Assert(Common.CommonMath.IsPowerOfTwo((uint)PairManager.TableCapacity) == true);
             //Box2DXDebug.Assert(PairManager.TableCapacity >= Settings.MaxPairs);
             for (int i = 0; i < TableCapacity; ++i)
             {
@@ -306,7 +306,7 @@ namespace FarseerPhysics.Collision
         private Pair Find(int proxyId1, int proxyId2)
         {
             if (proxyId1 > proxyId2)
-                MathHelper.Swap(ref proxyId1, ref proxyId2);
+                Math.CommonMath.Swap(ref proxyId1, ref proxyId2);
 
             uint hash = (uint) (Hash((uint) proxyId1, (uint) proxyId2) & TableMask);
 
@@ -336,7 +336,7 @@ namespace FarseerPhysics.Collision
         private Pair AddPair(int proxyId1, int proxyId2)
         {
             if (proxyId1 > proxyId2)
-                MathHelper.Swap(ref proxyId1, ref proxyId2);
+                Math.CommonMath.Swap(ref proxyId1, ref proxyId2);
 
             int hash = (int) (Hash((uint) proxyId1, (uint) proxyId2) & TableMask);
 
@@ -371,7 +371,7 @@ namespace FarseerPhysics.Collision
             //Box2DXDebug.Assert(_pairCount > 0);
 
             if (proxyId1 > proxyId2)
-                MathHelper.Swap(ref proxyId1, ref proxyId2);
+                Math.CommonMath.Swap(ref proxyId1, ref proxyId2);
 
             int hash = (int) (Hash((uint) proxyId1, (uint) proxyId2) & TableMask);
 
