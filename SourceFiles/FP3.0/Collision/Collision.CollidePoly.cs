@@ -20,9 +20,10 @@
 */
 
 using FarseerPhysics.Math;
+using Microsoft.Xna.Framework;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
-using Microsoft.Xna.Framework;
+
 #else
 #endif
 
@@ -92,8 +93,8 @@ namespace FarseerPhysics.Collision
             //Box2DXDebug.Assert(0 <= edge1 && edge1 < count1);
 
             // Convert normal from poly1's frame into poly2's frame.
-            Vector2 normal1World = Math.CommonMath.Mul(xf1.R, normals1[edge1]);
-            Vector2 normal1 = Math.CommonMath.MulT(xf2.R, normal1World);
+            Vector2 normal1World = CommonMath.Mul(xf1.R, normals1[edge1]);
+            Vector2 normal1 = CommonMath.MulT(xf2.R, normal1World);
 
             // Find support vertex on poly2 for -normal.
             int index = 0;
@@ -108,8 +109,8 @@ namespace FarseerPhysics.Collision
                 }
             }
 
-            Vector2 v1 = Math.CommonMath.Mul(xf1, vertices1[edge1]);
-            Vector2 v2 = Math.CommonMath.Mul(xf2, vertices2[index]);
+            Vector2 v1 = CommonMath.Mul(xf1, vertices1[edge1]);
+            Vector2 v2 = CommonMath.Mul(xf2, vertices2[index]);
             float separation = Vector2.Dot(v2 - v1, normal1World);
             return separation;
         }
@@ -130,8 +131,8 @@ namespace FarseerPhysics.Collision
             Vector2[] normals1 = poly1.Normals;
 
             // Vector pointing from the centroid of poly1 to the centroid of poly2.
-            Vector2 d = Math.CommonMath.Mul(xf2, poly2.GetCentroid()) - Math.CommonMath.Mul(xf1, poly1.GetCentroid());
-            Vector2 dLocal1 = Math.CommonMath.MulT(xf1.R, d);
+            Vector2 d = CommonMath.Mul(xf2, poly2.GetCentroid()) - CommonMath.Mul(xf1, poly1.GetCentroid());
+            Vector2 dLocal1 = CommonMath.MulT(xf1.R, d);
 
             // Find edge normal on poly1 that has the largest projection onto d.
             int edge = 0;
@@ -233,7 +234,7 @@ namespace FarseerPhysics.Collision
             //Box2DXDebug.Assert(0 <= edge1 && edge1 < count1);
 
             // Get the normal of the reference edge in poly2's frame.
-            Vector2 normal1 = Math.CommonMath.MulT(xf2.R, Math.CommonMath.Mul(xf1.R, normals1[edge1]));
+            Vector2 normal1 = CommonMath.MulT(xf2.R, CommonMath.Mul(xf1.R, normals1[edge1]));
 
             // Find the incident edge on poly2.
             int index = 0;
@@ -254,12 +255,12 @@ namespace FarseerPhysics.Collision
 
             c = new ClipVertex[2];
 
-            c[0].V = Math.CommonMath.Mul(xf2, vertices2[i1]);
+            c[0].V = CommonMath.Mul(xf2, vertices2[i1]);
             c[0].ID.Features.ReferenceEdge = (byte) edge1;
             c[0].ID.Features.IncidentEdge = (byte) i1;
             c[0].ID.Features.IncidentVertex = 0;
 
-            c[1].V = Math.CommonMath.Mul(xf2, vertices2[i2]);
+            c[1].V = CommonMath.Mul(xf2, vertices2[i2]);
             c[1].ID.Features.ReferenceEdge = (byte) edge1;
             c[1].ID.Features.IncidentEdge = (byte) i2;
             c[1].ID.Features.IncidentVertex = 1;
@@ -324,12 +325,12 @@ namespace FarseerPhysics.Collision
             Vector2 v12 = edge1 + 1 < count1 ? vertices1[edge1 + 1] : vertices1[0];
 
             Vector2 dv = v12 - v11;
-            Vector2 sideNormal = Math.CommonMath.Mul(xf1.R, v12 - v11);
+            Vector2 sideNormal = CommonMath.Mul(xf1.R, v12 - v11);
             sideNormal.Normalize();
-            Vector2 frontNormal = Math.CommonMath.Cross(sideNormal, 1.0f);
+            Vector2 frontNormal = CommonMath.Cross(sideNormal, 1.0f);
 
-            v11 = Math.CommonMath.Mul(xf1, v11);
-            v12 = Math.CommonMath.Mul(xf1, v12);
+            v11 = CommonMath.Mul(xf1, v11);
+            v12 = CommonMath.Mul(xf1, v12);
 
             float frontOffset = Vector2.Dot(frontNormal, v11);
             float sideOffset1 = -Vector2.Dot(sideNormal, v11);
@@ -364,8 +365,8 @@ namespace FarseerPhysics.Collision
                 {
                     ManifoldPoint cp = manifold.Points[pointCount];
                     cp.Separation = separation;
-                    cp.LocalPoint1 = Math.CommonMath.MulT(xfA, clipPoints2[i].V);
-                    cp.LocalPoint2 = Math.CommonMath.MulT(xfB, clipPoints2[i].V);
+                    cp.LocalPoint1 = CommonMath.MulT(xfA, clipPoints2[i].V);
+                    cp.LocalPoint2 = CommonMath.MulT(xfB, clipPoints2[i].V);
                     cp.ID = clipPoints2[i].ID;
                     cp.ID.Features.Flip = flip;
                     ++pointCount;

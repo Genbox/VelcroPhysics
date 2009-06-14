@@ -140,10 +140,10 @@ However, we can compute sin+cos of the same angle fast.
 using System;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Math;
-
+using Microsoft.Xna.Framework;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
-using Microsoft.Xna.Framework;
+
 #endif
 
 namespace FarseerPhysics.Dynamics
@@ -245,8 +245,8 @@ namespace FarseerPhysics.Dynamics
                 // v2 = exp(-c * dt) * v1
                 // Taylor expansion:
                 // v2 = (1.0f - c * dt) * v1
-                b._linearVelocity *= Math.CommonMath.Clamp(1.0f - step.Dt * b._linearDamping, 0.0f, 1.0f);
-                b._angularVelocity *= Math.CommonMath.Clamp(1.0f - step.Dt * b._angularDamping, 0.0f, 1.0f);
+                b._linearVelocity *= CommonMath.Clamp(1.0f - step.Dt*b._linearDamping, 0.0f, 1.0f);
+                b._angularVelocity *= CommonMath.Clamp(1.0f - step.Dt*b._angularDamping, 0.0f, 1.0f);
 
                 // Check for large velocities.
 #if TARGET_FLOAT32_IS_FIXED
@@ -386,7 +386,7 @@ namespace FarseerPhysics.Dynamics
                     else
                     {
                         b._sleepTime += step.Dt;
-                        minSleepTime = Math.CommonMath.Min(minSleepTime, b._sleepTime);
+                        minSleepTime = CommonMath.Min(minSleepTime, b._sleepTime);
                     }
                 }
 

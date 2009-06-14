@@ -42,9 +42,10 @@ Bullet (http:/www.bulletphysics.com).
 //#define TARGET_FLOAT32_IS_FIXED
 
 using FarseerPhysics.Math;
+using Microsoft.Xna.Framework;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
-using Microsoft.Xna.Framework;
+
 #else
 #endif
 
@@ -66,12 +67,12 @@ namespace FarseerPhysics.Collision
 
         public bool IsLower
         {
-            get { return (Value & (ushort) 1) == (ushort) 0; }
+            get { return (Value & 1) == 0; }
         }
 
         public bool IsUpper
         {
-            get { return (Value & (ushort) 1) == (ushort) 1; }
+            get { return (Value & 1) == 1; }
         }
 
         public Bound Clone()
@@ -109,7 +110,7 @@ namespace FarseerPhysics.Collision
 #if TARGET_FLOAT32_IS_FIXED
 		public static readonly ushort BROADPHASE_MAX = (Common.Math.USHRT_MAX/2);
 #else
-        public static readonly ushort BROADPHASE_MAX = Math.CommonMath.USHRT_MAX;
+        public static readonly ushort BROADPHASE_MAX = CommonMath.USHRT_MAX;
 #endif
 
         public static readonly ushort Invalid = BROADPHASE_MAX;
@@ -131,7 +132,7 @@ namespace FarseerPhysics.Collision
         public int _proxyCount;
         public int _timeStamp;
 
-        public static bool IsValidate = false;
+        public static bool IsValidate;
 
         public BroadPhase(AABB worldAABB, PairCallback callback)
         {
@@ -143,8 +144,8 @@ namespace FarseerPhysics.Collision
             _proxyCount = 0;
 
             Vector2 d = worldAABB.UpperBound - worldAABB.LowerBound;
-            _quantizationFactor.X = (float) BROADPHASE_MAX/d.X;
-            _quantizationFactor.Y = (float) BROADPHASE_MAX/d.Y;
+            _quantizationFactor.X = BROADPHASE_MAX/d.X;
+            _quantizationFactor.Y = BROADPHASE_MAX/d.Y;
 
             for (int i = 0; i < Settings.MaxProxies - 1; ++i)
             {
@@ -180,8 +181,8 @@ namespace FarseerPhysics.Collision
         // is the number of proxies that are out of range.
         public bool InRange(AABB aabb)
         {
-            Vector2 d = Math.CommonMath.Max(aabb.LowerBound - _worldAABB.UpperBound, _worldAABB.LowerBound - aabb.UpperBound);
-            return Math.CommonMath.Max(d.X, d.Y) < 0.0f;
+            Vector2 d = CommonMath.Max(aabb.LowerBound - _worldAABB.UpperBound, _worldAABB.LowerBound - aabb.UpperBound);
+            return CommonMath.Max(d.X, d.Y) < 0.0f;
         }
 
         // Create and destroy proxies. These call Flush first.
@@ -240,7 +241,7 @@ namespace FarseerPhysics.Collision
                 bounds[upperIndex].Value = upperValues[axis];
                 bounds[upperIndex].ProxyId = proxyId;
 
-                bounds[lowerIndex].StabbingCount = lowerIndex == 0 ? (ushort) 0 : bounds[lowerIndex - 1].StabbingCount;
+                bounds[lowerIndex].StabbingCount = lowerIndex == 0 ? 0 : bounds[lowerIndex - 1].StabbingCount;
                 bounds[upperIndex].StabbingCount = bounds[upperIndex - 1].StabbingCount;
 
                 // Adjust the stabbing count between the new bounds.
@@ -453,7 +454,7 @@ namespace FarseerPhysics.Collision
 
                         ++prevBound.StabbingCount;
 
-                        if (prevBound.IsUpper == true)
+                        if (prevBound.IsUpper)
                         {
                             if (TestOverlap(newValues, prevProxy))
                             {
@@ -470,7 +471,7 @@ namespace FarseerPhysics.Collision
                         }
 
                         --proxy.LowerBounds[axis];
-                        Math.CommonMath.Swap<Bound>(ref bounds[index], ref bounds[index - 1]);
+                        CommonMath.Swap(ref bounds[index], ref bounds[index - 1]);
                         --index;
                     }
                 }
@@ -488,7 +489,7 @@ namespace FarseerPhysics.Collision
 
                         ++nextBound.StabbingCount;
 
-                        if (nextBound.IsLower == true)
+                        if (nextBound.IsLower)
                         {
                             if (TestOverlap(newValues, nextProxy))
                             {
@@ -505,7 +506,7 @@ namespace FarseerPhysics.Collision
                         }
 
                         ++proxy.UpperBounds[axis];
-                        Math.CommonMath.Swap<Bound>(ref bounds[index], ref bounds[index + 1]);
+                        CommonMath.Swap(ref bounds[index], ref bounds[index + 1]);
                         ++index;
                     }
                 }
@@ -545,7 +546,7 @@ namespace FarseerPhysics.Collision
                         }
 
                         ++proxy.LowerBounds[axis];
-                        Math.CommonMath.Swap<Bound>(ref bounds[index], ref bounds[index + 1]);
+                        CommonMath.Swap(ref bounds[index], ref bounds[index + 1]);
                         ++index;
                     }
                 }
@@ -564,7 +565,7 @@ namespace FarseerPhysics.Collision
 
                         --prevBound.StabbingCount;
 
-                        if (prevBound.IsLower == true)
+                        if (prevBound.IsLower)
                         {
                             if (TestOverlap(oldValues, prevProxy))
                             {
@@ -581,7 +582,7 @@ namespace FarseerPhysics.Collision
                         }
 
                         --proxy.UpperBounds[axis];
-                        Math.CommonMath.Swap<Bound>(ref bounds[index], ref bounds[index - 1]);
+                        CommonMath.Swap(ref bounds[index], ref bounds[index - 1]);
                         --index;
                     }
                 }
@@ -944,7 +945,7 @@ namespace FarseerPhysics.Collision
                     //Box2DXDebug.Assert(bound.ProxyId != PairManager.NullProxy);
                     //Box2DXDebug.Assert(_proxyPool[bound.ProxyId].IsValid);
 
-                    if (bound.IsLower == true)
+                    if (bound.IsLower)
                     {
                         //Box2DXDebug.Assert(_proxyPool[bound.ProxyId].LowerBounds[axis] == i);
                         ++stabbingCount;
@@ -968,19 +969,19 @@ namespace FarseerPhysics.Collision
             //Box2DXDebug.Assert(aabb.UpperBound.X >= aabb.LowerBound.X);
             //Box2DXDebug.Assert(aabb.UpperBound.Y >= aabb.LowerBound.Y);
 
-            Vector2 minVertex = FarseerPhysics.Math.CommonMath.Clamp(aabb.LowerBound, _worldAABB.LowerBound, _worldAABB.UpperBound);
-            Vector2 maxVertex = FarseerPhysics.Math.CommonMath.Clamp(aabb.UpperBound, _worldAABB.LowerBound, _worldAABB.UpperBound);
+            Vector2 minVertex = CommonMath.Clamp(aabb.LowerBound, _worldAABB.LowerBound, _worldAABB.UpperBound);
+            Vector2 maxVertex = CommonMath.Clamp(aabb.UpperBound, _worldAABB.LowerBound, _worldAABB.UpperBound);
 
             // Bump lower bounds downs and upper bounds up. This ensures correct sorting of
             // lower/upper bounds that would have equal values.
             // TODO_ERIN implement fast float to uint16 conversion.
             lowerValues[0] =
-                (int) ((int) (_quantizationFactor.X*(minVertex.X - _worldAABB.LowerBound.X)) & (BROADPHASE_MAX - 1));
-            upperValues[0] = (int) ((int) (_quantizationFactor.X*(maxVertex.X - _worldAABB.LowerBound.X)) | 1);
+                ((int) (_quantizationFactor.X*(minVertex.X - _worldAABB.LowerBound.X)) & (BROADPHASE_MAX - 1));
+            upperValues[0] = ((int) (_quantizationFactor.X*(maxVertex.X - _worldAABB.LowerBound.X)) | 1);
 
             lowerValues[1] =
-                (int) ((int) (_quantizationFactor.Y*(minVertex.Y - _worldAABB.LowerBound.Y)) & (BROADPHASE_MAX - 1));
-            upperValues[1] = (int) ((int) (_quantizationFactor.Y*(maxVertex.Y - _worldAABB.LowerBound.Y)) | 1);
+                ((int) (_quantizationFactor.Y*(minVertex.Y - _worldAABB.LowerBound.Y)) & (BROADPHASE_MAX - 1));
+            upperValues[1] = ((int) (_quantizationFactor.Y*(maxVertex.Y - _worldAABB.LowerBound.Y)) | 1);
         }
 
         // This one is only used for validation.
@@ -1070,8 +1071,8 @@ namespace FarseerPhysics.Collision
             upperQueryOut = upperQuery;
         }
 
-        private int qi1 = 0;
-        private int qi2 = 0;
+        private int qi1;
+        private int qi2;
 
         private void IncrementOverlapCount(int proxyId)
         {

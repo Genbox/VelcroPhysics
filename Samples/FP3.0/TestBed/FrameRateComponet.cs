@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.Components
 {
@@ -11,13 +11,13 @@ namespace FarseerPhysics.Components
     /// </summary>
     public class FrameRateCounter : DrawableGameComponent
     {
+        private ContentManager _content;
         private TimeSpan _elapsedTime = TimeSpan.Zero;
+        private SpriteFont _font;
         private NumberFormatInfo _format;
         private int _frameCounter;
         private int _frameRate;
         private SpriteBatch _sb;
-        private SpriteFont _font;
-        ContentManager _content;
 
         public FrameRateCounter(Game game, GraphicsDevice device, ContentManager content)
             : base(game)

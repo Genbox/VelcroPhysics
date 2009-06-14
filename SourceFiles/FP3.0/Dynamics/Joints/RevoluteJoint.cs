@@ -33,10 +33,10 @@
 // K = invI1 + invI2
 
 using FarseerPhysics.Math;
-using Math=System.Math;
+using Microsoft.Xna.Framework;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
-using Microsoft.Xna.Framework;
+
 #endif
 
 namespace FarseerPhysics.Dynamics
@@ -334,8 +334,8 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Compute the effective mass matrix.
-            Vector2 r1 = Math.CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-            Vector2 r2 = Math.CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+            Vector2 r1 = CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+            Vector2 r2 = CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
 
             // J = [-I -r1_skew I r2_skew]
             //     [ 0       -1 0       1]
@@ -369,7 +369,7 @@ namespace FarseerPhysics.Dynamics
             if (_enableLimit)
             {
                 float jointAngle = b2._sweep.A - b1._sweep.A - _referenceAngle;
-                if (Math.CommonMath.Abs(_upperAngle - _lowerAngle) < 2.0f*Settings.AngularSlop)
+                if (CommonMath.Abs(_upperAngle - _lowerAngle) < 2.0f*Settings.AngularSlop)
                 {
                     _limitState = LimitState.EqualLimits;
                 }
@@ -409,10 +409,10 @@ namespace FarseerPhysics.Dynamics
                 Vector2 P = new Vector2(_impulse.X, _impulse.Y);
 
                 b1._linearVelocity -= m1*P;
-                b1._angularVelocity -= i1*(Math.CommonMath.Cross(ref r1, ref P) + _motorImpulse + _impulse.Z);
+                b1._angularVelocity -= i1*(CommonMath.Cross(ref r1, ref P) + _motorImpulse + _impulse.Z);
 
                 b2._linearVelocity += m2*P;
-                b2._angularVelocity += i2*(Math.CommonMath.Cross(ref r2, ref P) + _motorImpulse + _impulse.Z);
+                b2._angularVelocity += i2*(CommonMath.Cross(ref r2, ref P) + _motorImpulse + _impulse.Z);
             }
             else
             {
@@ -441,7 +441,7 @@ namespace FarseerPhysics.Dynamics
                 float impulse = _motorMass*(-Cdot);
                 float oldImpulse = _motorImpulse;
                 float maxImpulse = step.Dt*_maxMotorTorque;
-                _motorImpulse = Math.CommonMath.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
+                _motorImpulse = CommonMath.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = _motorImpulse - oldImpulse;
 
                 w1 -= i1*impulse;
@@ -451,11 +451,11 @@ namespace FarseerPhysics.Dynamics
             //Solve limit constraint.
             if (_enableLimit && _limitState != LimitState.InactiveLimit)
             {
-                Vector2 r1 = Math.CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-                Vector2 r2 = Math.CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+                Vector2 r1 = CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+                Vector2 r2 = CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
 
                 // Solve point-to-point constraint
-                Vector2 Cdot1 = v2 + Math.CommonMath.Cross(w2, r2) - v1 - Math.CommonMath.Cross(w1, r1);
+                Vector2 Cdot1 = v2 + CommonMath.Cross(w2, r2) - v1 - CommonMath.Cross(w1, r1);
                 float Cdot2 = w2 - w1;
                 Vector3 Cdot = new Vector3(Cdot1.X, Cdot1.Y, Cdot2);
 
@@ -497,28 +497,28 @@ namespace FarseerPhysics.Dynamics
                 Vector2 P = new Vector2(impulse.X, impulse.Y);
 
                 v1 -= m1*P;
-                w1 -= i1*(Math.CommonMath.Cross(ref r1, ref P) + impulse.Z);
+                w1 -= i1*(CommonMath.Cross(ref r1, ref P) + impulse.Z);
 
                 v2 += m2*P;
-                w2 += i2*(Math.CommonMath.Cross(ref r2, ref P) + impulse.Z);
+                w2 += i2*(CommonMath.Cross(ref r2, ref P) + impulse.Z);
             }
             else
             {
-                Vector2 r1 = Math.CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-                Vector2 r2 = Math.CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+                Vector2 r1 = CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+                Vector2 r2 = CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
 
                 // Solve point-to-point constraint
-                Vector2 Cdot = v2 + Math.CommonMath.Cross(w2, r2) - v1 - Math.CommonMath.Cross(w1, r1);
+                Vector2 Cdot = v2 + CommonMath.Cross(w2, r2) - v1 - CommonMath.Cross(w1, r1);
                 Vector2 impulse = _mass.Solve22(-Cdot);
 
                 _impulse.X += impulse.X;
                 _impulse.Y += impulse.Y;
 
                 v1 -= m1*impulse;
-                w1 -= i1*Math.CommonMath.Cross(ref r1, ref impulse);
+                w1 -= i1*CommonMath.Cross(ref r1, ref impulse);
 
                 v2 += m2*impulse;
-                w2 += i2*Math.CommonMath.Cross(ref r2, ref impulse);
+                w2 += i2*CommonMath.Cross(ref r2, ref impulse);
             }
 
             b1._linearVelocity = v1;
@@ -546,9 +546,9 @@ namespace FarseerPhysics.Dynamics
                 if (_limitState == LimitState.EqualLimits)
                 {
                     // Prevent large angular corrections
-                    float C = Math.CommonMath.Clamp(angle, -Settings.MaxAngularCorrection, Settings.MaxAngularCorrection);
+                    float C = CommonMath.Clamp(angle, -Settings.MaxAngularCorrection, Settings.MaxAngularCorrection);
                     limitImpulse = -_motorMass*C;
-                    angularError = Math.CommonMath.Abs(C);
+                    angularError = CommonMath.Abs(C);
                 }
                 else if (_limitState == LimitState.AtLowerLimit)
                 {
@@ -556,7 +556,7 @@ namespace FarseerPhysics.Dynamics
                     angularError = -C;
 
                     // Prevent large angular corrections and allow some slop.
-                    C = Math.CommonMath.Clamp(C + Settings.AngularSlop, -Settings.MaxAngularCorrection, 0.0f);
+                    C = CommonMath.Clamp(C + Settings.AngularSlop, -Settings.MaxAngularCorrection, 0.0f);
                     limitImpulse = -_motorMass*C;
                 }
                 else if (_limitState == LimitState.AtUpperLimit)
@@ -565,7 +565,7 @@ namespace FarseerPhysics.Dynamics
                     angularError = C;
 
                     // Prevent large angular corrections and allow some slop.
-                    C = Math.CommonMath.Clamp(C - Settings.AngularSlop, 0.0f, Settings.MaxAngularCorrection);
+                    C = CommonMath.Clamp(C - Settings.AngularSlop, 0.0f, Settings.MaxAngularCorrection);
                     limitImpulse = -_motorMass*C;
                 }
 
@@ -578,8 +578,8 @@ namespace FarseerPhysics.Dynamics
 
             // Solve point-to-point constraint.
             {
-                Vector2 r1 = Math.CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-                Vector2 r2 = Math.CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+                Vector2 r1 = CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+                Vector2 r2 = CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
 
                 Vector2 C = b2._sweep.C + r2 - b1._sweep.C - r1;
                 positionError = C.Length();
@@ -627,10 +627,10 @@ namespace FarseerPhysics.Dynamics
                 Vector2 impulse_ = K.Solve(-C);
 
                 b1._sweep.C -= b1._invMass*impulse_;
-                b1._sweep.A -= b1._invI*Math.CommonMath.Cross(ref r1, ref impulse_);
+                b1._sweep.A -= b1._invI*CommonMath.Cross(ref r1, ref impulse_);
 
                 b2._sweep.C += b2._invMass*impulse_;
-                b2._sweep.A += b2._invI*Math.CommonMath.Cross(ref r2, ref impulse_);
+                b2._sweep.A += b2._invI*CommonMath.Cross(ref r2, ref impulse_);
 
                 b1.SynchronizeTransform();
                 b2.SynchronizeTransform();

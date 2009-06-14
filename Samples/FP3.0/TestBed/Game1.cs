@@ -1,43 +1,31 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Components;
+using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
-
-// Include the FarseerPhysics 3 namespaces
-using FarseerPhysics;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Controllers;
-using FarseerPhysics.Components;
-
-
-
 
 namespace Farseer3TestBed
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Microsoft.Xna.Framework.Game
+    public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        PhysicsSimulator world;
-        XNADebugRenderer debugView;
-        Body groundBody;
-        Body body;
-        SpriteFont font;
-        Vector2 xboxMouse;
-        Texture2D cursorTex;
+        private Body body;
+        private int count = 0;
+        private Texture2D cursorTex;
+        private float cyclesLeftOver = 0.0f;
+        private XNADebugRenderer debugView;
+        private bool everyOther = true;
+        private SpriteFont font;
+        private GraphicsDeviceManager graphics;
+        private Body groundBody;
+        private float lastFrameTime = 0.0f;
+        private SpriteBatch spriteBatch;
+        private PhysicsSimulator world;
+        private Vector2 xboxMouse;
 
         public Game1()
         {
@@ -62,7 +50,6 @@ namespace Farseer3TestBed
         /// </summary>
         protected override void Initialize()
         {
-            
             // TODO: Add your initialization logic here
             // Define the size of the world. Simulation will still work
             // if bodies reach the end of the world, but it will be slower.
@@ -78,7 +65,7 @@ namespace Farseer3TestBed
 
             debugView = new XNADebugRenderer(GraphicsDevice);
             uint flags = 0;
-            flags += (uint)1 * (uint)DebugDraw.DrawFlags.Shape;             // works
+            flags += (uint) 1*(uint) DebugDraw.DrawFlags.Shape; // works
             //flags += (uint)1 * (uint)DebugDraw.DrawFlags.Joint;           
             //flags += (uint)1 * (uint)DebugDraw.DrawFlags.CoreShape;
             //flags += (uint)1 * (uint)DebugDraw.DrawFlags.Aabb;            // works
@@ -86,7 +73,7 @@ namespace Farseer3TestBed
             //flags += (uint)1 * (uint)DebugDraw.DrawFlags.Pair;            // works
             //flags += (uint)1 * (uint)DebugDraw.DrawFlags.CenterOfMass;    // works
             //flags += (uint)1 * (uint)DebugDraw.DrawFlags.Controller;
-            debugView.Flags = (DebugDraw.DrawFlags)flags;
+            debugView.Flags = (DebugDraw.DrawFlags) flags;
 
             world.SetDebugDraw(debugView);
 
@@ -153,7 +140,6 @@ namespace Farseer3TestBed
         }
 
 
-        bool everyOther = true;
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// all content.
@@ -162,9 +148,7 @@ namespace Farseer3TestBed
         {
             // TODO: Unload any non ContentManager content here
         }
-        int count = 0;
-        float lastFrameTime = 0.0f;
-        float cyclesLeftOver = 0.0f;
+
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -173,11 +157,11 @@ namespace Farseer3TestBed
         protected override void Update(GameTime gameTime)
         {
             KeyboardState keys = Keyboard.GetState();
-            
+
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
                 || keys.IsKeyDown(Keys.Escape))
-                this.Exit();
+                Exit();
 
             Random rand = new Random();
 #if !XBOX
@@ -198,7 +182,7 @@ namespace Farseer3TestBed
                     if (everyOther)
                     {
                         CircleDef shapeDef = new CircleDef();
-                        shapeDef.Radius = (float)rand.NextDouble() + 0.5f;
+                        shapeDef.Radius = (float) rand.NextDouble() + 0.5f;
                         // Set the box density to be non-zero, so it will be dynamic.
                         shapeDef.Density = 8.0f;
 
@@ -221,7 +205,7 @@ namespace Farseer3TestBed
                         PolygonDef shapeDef = new PolygonDef();
 
                         shapeDef.SetAsBox(0.5f, 1.0f);
-                        
+
                         // Set the box density to be non-zero, so it will be dynamic.
                         shapeDef.Density = 10f;
 
@@ -240,7 +224,7 @@ namespace Farseer3TestBed
                         everyOther = !everyOther;
                     }
                 }
-                
+
                 count = 0;
             }
             count++;
@@ -308,8 +292,8 @@ namespace Farseer3TestBed
             }
             count++;
 #endif
-            world.Step(gameTime.ElapsedGameTime.Ticks * 0.0000001f, 8, 3);
-            
+            world.Step(gameTime.ElapsedGameTime.Ticks*0.0000001f, 8, 3);
+
             base.Update(gameTime);
         }
 

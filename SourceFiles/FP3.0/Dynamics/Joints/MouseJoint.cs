@@ -28,9 +28,10 @@
 // w k % (rx i + ry j) = w * (-ry i + rx j)
 
 using FarseerPhysics.Math;
+using Microsoft.Xna.Framework;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
-using Microsoft.Xna.Framework;
+
 #endif
 
 namespace FarseerPhysics.Dynamics
@@ -97,7 +98,7 @@ namespace FarseerPhysics.Dynamics
             : base(def)
         {
             _target = def.Target;
-            _localAnchor = Math.CommonMath.MulT(_body2.GetXForm(), _target);
+            _localAnchor = CommonMath.MulT(_body2.GetXForm(), _target);
 
             _maxForce = def.MaxForce;
             _impulse = Vector2.Zero;
@@ -164,7 +165,7 @@ namespace FarseerPhysics.Dynamics
             _beta = step.Dt*k*_gamma;
 
             // Compute the effective mass matrix.
-            Vector2 r = Math.CommonMath.Mul(b.GetXForm().R, _localAnchor - b.GetLocalCenter());
+            Vector2 r = CommonMath.Mul(b.GetXForm().R, _localAnchor - b.GetLocalCenter());
 
             // K    = [(1/m1 + 1/m2) * eye(2) - skew(r1) * invI1 * skew(r1) - skew(r2) * invI2 * skew(r2)]
             //      = [1/m1+1/m2     0    ] + invI1 * [r1.y*r1.y -r1.x*r1.y] + invI2 * [r1.y*r1.y -r1.x*r1.y]
@@ -198,18 +199,18 @@ namespace FarseerPhysics.Dynamics
             // Warm starting.
             _impulse *= step.DtRatio;
             b._linearVelocity += invMass*_impulse;
-            b._angularVelocity += invI*Math.CommonMath.Cross(ref r, ref _impulse);
+            b._angularVelocity += invI*CommonMath.Cross(ref r, ref _impulse);
         }
 
         internal override void SolveVelocityConstraints(TimeStep step)
         {
             Body b = _body2;
 
-            Vector2 r = Math.CommonMath.Mul(b.GetXForm().R, _localAnchor - b.GetLocalCenter());
+            Vector2 r = CommonMath.Mul(b.GetXForm().R, _localAnchor - b.GetLocalCenter());
 
             // Cdot = v + cross(w, r)
-            Vector2 Cdot = b._linearVelocity + Math.CommonMath.Cross(b._angularVelocity, r);
-            Vector2 impulse = Math.CommonMath.Mul(_mass, -(Cdot + _beta*_C + _gamma*_impulse));
+            Vector2 Cdot = b._linearVelocity + CommonMath.Cross(b._angularVelocity, r);
+            Vector2 impulse = CommonMath.Mul(_mass, -(Cdot + _beta*_C + _gamma*_impulse));
 
             Vector2 oldImpulse = _impulse;
             _impulse += impulse;
@@ -221,7 +222,7 @@ namespace FarseerPhysics.Dynamics
             impulse = _impulse - oldImpulse;
 
             b._linearVelocity += b._invMass*impulse;
-            b._angularVelocity += b._invI*Math.CommonMath.Cross(ref r, ref impulse);
+            b._angularVelocity += b._invI*CommonMath.Cross(ref r, ref impulse);
         }
 
         internal override bool SolvePositionConstraints(float baumgarte)

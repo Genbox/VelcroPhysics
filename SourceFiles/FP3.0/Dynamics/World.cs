@@ -21,13 +21,13 @@
 
 using System;
 using FarseerPhysics.Collision;
-using FarseerPhysics.Math;
 using FarseerPhysics.Dynamics.Controllers;
-
-// If this is an XNA project then we use math from the XNA framework.
-#if XNA
+using FarseerPhysics.Math;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+// If this is an XNA project then we use math from the XNA framework.
+#if XNA
+
 #endif
 
 namespace FarseerPhysics.Dynamics
@@ -974,7 +974,7 @@ namespace FarseerPhysics.Dynamics
 
                         if (toi > 0.0f && toi < 1.0f)
                         {
-                            toi = Math.CommonMath.Min((1.0f - toi)*t0 + toi, 1.0f);
+                            toi = CommonMath.Min((1.0f - toi)*t0 + toi, 1.0f);
                         }
 
 
@@ -1252,7 +1252,7 @@ namespace FarseerPhysics.Dynamics
                     {
                         CircleShape circle = (CircleShape) shape;
 
-                        Vector2 center = Math.CommonMath.Mul(xf, circle.GetLocalPosition());
+                        Vector2 center = CommonMath.Mul(xf, circle.GetLocalPosition());
                         float radius = circle.GetRadius();
                         Vector2 axis = xf.R.Col1;
 
@@ -1276,7 +1276,7 @@ namespace FarseerPhysics.Dynamics
 
                         for (int i = 0; i < vertexCount; ++i)
                         {
-                            vertices[i] = Math.CommonMath.Mul(xf, localVertices[i]);
+                            vertices[i] = CommonMath.Mul(xf, localVertices[i]);
                         }
 
                         _debugDraw.DrawSolidPolygon(vertices, vertexCount, color);
@@ -1286,7 +1286,7 @@ namespace FarseerPhysics.Dynamics
                             Vector2[] localCoreVertices = poly.GetCoreVertices();
                             for (int i = 0; i < vertexCount; ++i)
                             {
-                                vertices[i] = Math.CommonMath.Mul(xf, localCoreVertices[i]);
+                                vertices[i] = CommonMath.Mul(xf, localCoreVertices[i]);
                             }
                             _debugDraw.DrawPolygon(vertices, vertexCount, coreColor);
                         }
@@ -1447,8 +1447,8 @@ namespace FarseerPhysics.Dynamics
 
                         for (int i = 0; i < 4; ++i)
                         {
-                            vs[i] = obb.Center + Math.CommonMath.Mul(obb.R, vs[i]);
-                            vs[i] = Math.CommonMath.Mul(xf, vs[i]);
+                            vs[i] = obb.Center + CommonMath.Mul(obb.R, vs[i]);
+                            vs[i] = CommonMath.Mul(xf, vs[i]);
                         }
 
                         _debugDraw.DrawPolygon(vs, 4, color);

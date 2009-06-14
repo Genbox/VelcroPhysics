@@ -20,9 +20,9 @@
 */
 
 using FarseerPhysics.Math;
-
-#if XNA
 using Microsoft.Xna.Framework;
+#if XNA
+
 #endif
 
 namespace FarseerPhysics.Collision
@@ -74,7 +74,7 @@ namespace FarseerPhysics.Collision
 
         public override bool TestPoint(XForm transform, Vector2 p)
         {
-            Vector2 center = transform.Position + Math.CommonMath.Mul(transform.R, _localPosition);
+            Vector2 center = transform.Position + CommonMath.Mul(transform.R, _localPosition);
             Vector2 d = p - center;
             return Vector2.Dot(d, d) <= _radius*_radius;
         }
@@ -89,7 +89,7 @@ namespace FarseerPhysics.Collision
             lambda = 0f;
             normal = Vector2.Zero;
 
-            Vector2 position = transform.Position + Math.CommonMath.Mul(transform.R, _localPosition);
+            Vector2 position = transform.Position + CommonMath.Mul(transform.R, _localPosition);
             Vector2 s = segment.P1 - position;
             float b = Vector2.Dot(s, s) - _radius*_radius;
 
@@ -113,7 +113,7 @@ namespace FarseerPhysics.Collision
             }
 
             // Find the point of intersection of the line with the circle.
-            float a = -(c + Math.CommonMath.Sqrt(sigma));
+            float a = -(c + CommonMath.Sqrt(sigma));
 
             // Is the intersection point on the segment?
             if (0.0f <= a && a <= maxLambda*rr)
@@ -132,7 +132,7 @@ namespace FarseerPhysics.Collision
         {
             aabb = new AABB();
 
-            Vector2 p = transform.Position + Math.CommonMath.Mul(transform.R, _localPosition);
+            Vector2 p = transform.Position + CommonMath.Mul(transform.R, _localPosition);
             aabb.LowerBound = new Vector2(p.X - _radius, p.Y - _radius);
             aabb.UpperBound = new Vector2(p.X + _radius, p.Y + _radius);
         }
@@ -141,10 +141,10 @@ namespace FarseerPhysics.Collision
         {
             aabb = new AABB();
 
-            Vector2 p1 = transform1.Position + Math.CommonMath.Mul(transform1.R, _localPosition);
-            Vector2 p2 = transform2.Position + Math.CommonMath.Mul(transform2.R, _localPosition);
-            Vector2 lower = Math.CommonMath.Min(p1, p2);
-            Vector2 upper = Math.CommonMath.Max(p1, p2);
+            Vector2 p1 = transform1.Position + CommonMath.Mul(transform1.R, _localPosition);
+            Vector2 p2 = transform2.Position + CommonMath.Mul(transform2.R, _localPosition);
+            Vector2 lower = CommonMath.Min(p1, p2);
+            Vector2 upper = CommonMath.Max(p1, p2);
 
             aabb.LowerBound = new Vector2(lower.X - _radius, lower.Y - _radius);
             aabb.UpperBound = new Vector2(upper.X + _radius, upper.Y + _radius);
@@ -164,7 +164,7 @@ namespace FarseerPhysics.Collision
         public override float ComputeSubmergedArea(Vector2 normal, float offset, XForm xf, out Vector2 c)
         {
             c = new Vector2();
-            Vector2 p = Math.CommonMath.Mul(xf, _localPosition);
+            Vector2 p = CommonMath.Mul(xf, _localPosition);
             float l = -(Vector2.Dot(normal, p) - offset);
             if (l < -_radius + Settings.FLT_EPSILON)
             {
@@ -183,7 +183,7 @@ namespace FarseerPhysics.Collision
             float r2 = _radius*_radius;
             float l2 = l*l;
             float area = r2*((float) System.Math.Asin(l/_radius) + Settings.Pi/2) +
-                         l * Math.CommonMath.Sqrt(r2 - l2);
+                         l*CommonMath.Sqrt(r2 - l2);
             float com = -2.0f/3.0f*(float) System.Math.Pow(r2 - l2, 1.5f)/area;
 
             c.X = p.X + normal.X*com;

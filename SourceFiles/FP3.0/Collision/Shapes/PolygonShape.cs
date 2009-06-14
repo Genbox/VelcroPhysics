@@ -20,9 +20,10 @@
 */
 
 using FarseerPhysics.Math;
+using Microsoft.Xna.Framework;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
-using Microsoft.Xna.Framework;
+
 #endif
 
 namespace FarseerPhysics.Collision
@@ -80,7 +81,7 @@ namespace FarseerPhysics.Collision
 
             for (int i = 0; i < VertexCount; ++i)
             {
-                Vertices[i] = Math.CommonMath.Mul(xf, Vertices[i]);
+                Vertices[i] = CommonMath.Mul(xf, Vertices[i]);
             }
         }
     }
@@ -125,12 +126,12 @@ namespace FarseerPhysics.Collision
                 int i2 = i + 1 < _vertexCount ? i + 1 : 0;
                 Vector2 edge = _vertices[i2] - _vertices[i1];
                 //Box2DXDebug.Assert(edge.LengthSquared() > Common.Settings.FLT_EPSILON * Common.Settings.FLT_EPSILON);
-                _normals[i] = Math.CommonMath.Cross(edge, 1.0f);
+                _normals[i] = CommonMath.Cross(edge, 1.0f);
                 _normals[i].Normalize();
             }
 
 #if DEBUG
-            // Ensure the polygon is convex.
+    // Ensure the polygon is convex.
             for (int i = 0; i < _vertexCount; ++i)
             {
                 for (int j = 0; j < _vertexCount; ++j)
@@ -225,7 +226,7 @@ namespace FarseerPhysics.Collision
         /// </summary>
         public Vector2 GetFirstVertex(XForm xf)
         {
-            return Math.CommonMath.Mul(xf, _coreVertices[0]);
+            return CommonMath.Mul(xf, _coreVertices[0]);
         }
 
         /// <summary>
@@ -234,7 +235,7 @@ namespace FarseerPhysics.Collision
         /// </summary>
         public Vector2 Support(XForm xf, Vector2 d)
         {
-            Vector2 dLocal = Math.CommonMath.MulT(xf.R, d);
+            Vector2 dLocal = CommonMath.MulT(xf.R, d);
 
             int bestIndex = 0;
             float bestValue = Vector2.Dot(_coreVertices[0], dLocal);
@@ -248,7 +249,7 @@ namespace FarseerPhysics.Collision
                 }
             }
 
-            return Math.CommonMath.Mul(xf, _coreVertices[bestIndex]);
+            return CommonMath.Mul(xf, _coreVertices[bestIndex]);
         }
 
         #endregion
@@ -293,7 +294,7 @@ namespace FarseerPhysics.Collision
         /// </summary>
         public Vector2 Centroid(XForm xf)
         {
-            return Math.CommonMath.Mul(xf, _centroid);
+            return CommonMath.Mul(xf, _centroid);
         }
 
         internal override void UpdateSweepRadius(Vector2 center)
@@ -304,13 +305,13 @@ namespace FarseerPhysics.Collision
             for (int i = 0; i < _vertexCount; ++i)
             {
                 Vector2 d = _coreVertices[i] - center;
-                _sweepRadius = Math.CommonMath.Max(_sweepRadius, d.Length());
+                _sweepRadius = CommonMath.Max(_sweepRadius, d.Length());
             }
         }
 
         public override bool TestPoint(XForm xf, Vector2 p)
         {
-            Vector2 pLocal = Math.CommonMath.MulT(xf.R, p - xf.Position);
+            Vector2 pLocal = CommonMath.MulT(xf.R, p - xf.Position);
 
             for (int i = 0; i < _vertexCount; ++i)
             {
@@ -332,8 +333,8 @@ namespace FarseerPhysics.Collision
 
             float lower = 0.0f, upper = maxLambda;
 
-            Vector2 p1 = Math.CommonMath.MulT(xf.R, segment.P1 - xf.Position);
-            Vector2 p2 = Math.CommonMath.MulT(xf.R, segment.P2 - xf.Position);
+            Vector2 p1 = CommonMath.MulT(xf.R, segment.P1 - xf.Position);
+            Vector2 p2 = CommonMath.MulT(xf.R, segment.P2 - xf.Position);
             Vector2 d = p2 - p1;
             int index = -1;
 
@@ -384,7 +385,7 @@ namespace FarseerPhysics.Collision
             if (index >= 0)
             {
                 lambda = lower;
-                normal = Math.CommonMath.Mul(xf.R, _normals[index]);
+                normal = CommonMath.Mul(xf.R, _normals[index]);
                 return SegmentCollide.HitCollide;
             }
 
@@ -395,10 +396,10 @@ namespace FarseerPhysics.Collision
         public override void ComputeAABB(out AABB aabb, XForm xf)
         {
             // TODO- replace with Matrix
-            Mat22 R = Math.CommonMath.Mul(xf.R, _obb.R);
-            Mat22 absR = Math.CommonMath.Abs(R);
-            Vector2 h = Math.CommonMath.Mul(absR, _obb.Extents);
-            Vector2 position = xf.Position + Math.CommonMath.Mul(xf.R, _obb.Center);
+            Mat22 R = CommonMath.Mul(xf.R, _obb.R);
+            Mat22 absR = CommonMath.Abs(R);
+            Vector2 h = CommonMath.Mul(absR, _obb.Extents);
+            Vector2 position = xf.Position + CommonMath.Mul(xf.R, _obb.Center);
             aabb.LowerBound = position - h;
             aabb.UpperBound = position + h;
         }
@@ -408,8 +409,8 @@ namespace FarseerPhysics.Collision
             AABB aabb1, aabb2;
             ComputeAABB(out aabb1, transform1);
             ComputeAABB(out aabb2, transform2);
-            aabb.LowerBound = Math.CommonMath.Min(aabb1.LowerBound, aabb2.LowerBound);
-            aabb.UpperBound = Math.CommonMath.Max(aabb1.UpperBound, aabb2.UpperBound);
+            aabb.LowerBound = CommonMath.Min(aabb1.LowerBound, aabb2.LowerBound);
+            aabb.UpperBound = CommonMath.Max(aabb1.UpperBound, aabb2.UpperBound);
         }
 
         public override void ComputeMass(out MassData massData)
@@ -470,7 +471,7 @@ namespace FarseerPhysics.Collision
                 Vector2 e1 = p2 - p1;
                 Vector2 e2 = p3 - p1;
 
-                float D = Math.CommonMath.Cross(ref e1, ref e2);
+                float D = CommonMath.Cross(ref e1, ref e2);
 
                 float triangleArea = 0.5f*D;
                 area += triangleArea;
@@ -504,7 +505,7 @@ namespace FarseerPhysics.Collision
         {
             //Transform plane into shape co-ordinates
             c = new Vector2();
-            Vector2 normalL = Math.CommonMath.MulT(xf.R, normal);
+            Vector2 normalL = CommonMath.MulT(xf.R, normal);
             float offsetL = offset - Vector2.Dot(normal, xf.Position);
 
             float[] depths = new float[Settings.MaxPolygonVertices];
@@ -547,7 +548,7 @@ namespace FarseerPhysics.Collision
                         //Completely submerged
                         MassData md;
                         ComputeMass(out md);
-                        c = Math.CommonMath.Mul(xf, md.Center);
+                        c = CommonMath.Mul(xf, md.Center);
                         return md.Mass/_density;
                     }
                     else
@@ -601,7 +602,7 @@ namespace FarseerPhysics.Collision
                     Vector2 e1 = p2 - intoVec;
                     Vector2 e2 = p3 - intoVec;
 
-                    float D = Math.CommonMath.Cross(ref e1, ref e2);
+                    float D = CommonMath.Cross(ref e1, ref e2);
 
                     float triangleArea = 0.5f*D;
 
@@ -617,7 +618,7 @@ namespace FarseerPhysics.Collision
             //Normalize and transform centroid
             center *= 1.0f/area;
 
-            c = Math.CommonMath.Mul(xf, center);
+            c = CommonMath.Mul(xf, center);
 
             return area;
         }
@@ -653,7 +654,7 @@ namespace FarseerPhysics.Collision
                 Vector2 e1 = p2 - p1;
                 Vector2 e2 = p3 - p1;
 
-                float D = Math.CommonMath.Cross(ref e1, ref e2);
+                float D = CommonMath.Cross(ref e1, ref e2);
 
                 float triangleArea = 0.5f*D;
                 area += triangleArea;
@@ -687,7 +688,7 @@ namespace FarseerPhysics.Collision
             {
                 Vector2 root = p[i - 1];
                 Vector2 ux = p[i] - root;
-                float length = Math.CommonMath.Normalize(ref ux);
+                float length = CommonMath.Normalize(ref ux);
                 //Box2DXDebug.Assert(length > Common.Settings.FLT_EPSILON);
                 Vector2 uy = new Vector2(-ux.Y, ux.X);
                 Vector2 lower = new Vector2(Settings.FLT_MAX, Settings.FLT_MAX);
@@ -699,8 +700,8 @@ namespace FarseerPhysics.Collision
                     Vector2 r = new Vector2();
                     r.X = Vector2.Dot(ux, d);
                     r.Y = Vector2.Dot(uy, d);
-                    lower = Math.CommonMath.Min(lower, r);
-                    upper = Math.CommonMath.Max(upper, r);
+                    lower = CommonMath.Min(lower, r);
+                    upper = CommonMath.Max(upper, r);
                 }
 
                 float area = (upper.X - lower.X)*(upper.Y - lower.Y);
@@ -710,7 +711,7 @@ namespace FarseerPhysics.Collision
                     obb.R.Col1 = ux;
                     obb.R.Col2 = uy;
                     Vector2 center = 0.5f*(lower + upper);
-                    obb.Center = root + Math.CommonMath.Mul(obb.R, center);
+                    obb.Center = root + CommonMath.Mul(obb.R, center);
                     obb.Extents = 0.5f*(upper - lower);
                 }
             }
