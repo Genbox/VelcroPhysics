@@ -173,7 +173,7 @@
     <Resource Include="logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\Class\FarseerPhysics.csproj">
+    <ProjectReference Include="..\..\..\Branches\FP2.1\Class\FarseerPhysics.csproj">
       <Project>{95B40504-C1C2-4FCD-98B3-B63AD35D6336}</Project>
       <Name>FarseerPhysics</Name>
     </ProjectReference>
