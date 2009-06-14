@@ -1,10 +1,10 @@
-﻿using System;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Dynamics;
+﻿using FarseerPhysics.Dynamics;
 
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
 using Microsoft.Xna.Framework;
+#else
+using FarseerPhysics.Math;
 #endif
 
 namespace FarseerPhysics.Factories

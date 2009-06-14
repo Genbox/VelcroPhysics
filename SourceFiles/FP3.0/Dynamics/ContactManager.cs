@@ -19,253 +19,245 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+using FarseerPhysics.Collision;
+using FarseerPhysics.Math;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
 using Microsoft.Xna.Framework;
+#else
 #endif
-
-using FarseerPhysics.Common;
-using FarseerPhysics.Collision;
 
 namespace FarseerPhysics.Dynamics
 {
-	/// <summary>
-	// Delegate of World.
-	/// </summary>
-	public class ContactManager : PairCallback
-	{
-		public PhysicsSimulator _world;
+    /// <summary>
+    // Delegate of World.
+    /// </summary>
+    public class ContactManager : PairCallback
+    {
+        public bool _destroyImmediate;
+        public NullContact _nullContact;
+        public PhysicsSimulator _world;
 
-		// This lets us provide broadphase proxy pair user data for
-		// contacts that shouldn't exist.
-		public NullContact _nullContact;
+        public ContactManager()
+        {
+            _world = null;
+            _destroyImmediate = false;
+        }
 
-		public bool _destroyImmediate;
+        // This is a callback from the broadphase when two AABB proxies begin
+        // to overlap. We create a Contact to manage the narrow phase.
+        public override object PairAdded(object proxyUserData1, object proxyUserData2)
+        {
+            Shape shape1 = proxyUserData1 as Shape;
+            Shape shape2 = proxyUserData2 as Shape;
 
-		public ContactManager()
-		{
-			_world = null;
-			_destroyImmediate = false;
-		}
+            Body body1 = shape1.GetBody();
+            Body body2 = shape2.GetBody();
 
-		// This is a callback from the broadphase when two AABB proxies begin
-		// to overlap. We create a Contact to manage the narrow phase.
-		public override object PairAdded(object proxyUserData1, object proxyUserData2)
-		{
-			Shape shape1 = proxyUserData1 as Shape;
-			Shape shape2 = proxyUserData2 as Shape;
+            if (body1.IsStatic() && body2.IsStatic())
+            {
+                return _nullContact;
+            }
 
-			Body body1 = shape1.GetBody();
-			Body body2 = shape2.GetBody();
+            if (shape1.GetBody() == shape2.GetBody())
+            {
+                return _nullContact;
+            }
 
-			if (body1.IsStatic() && body2.IsStatic())
-			{
-				return _nullContact;
-			}
+            if (body2.IsConnected(body1))
+            {
+                return _nullContact;
+            }
 
-			if (shape1.GetBody() == shape2.GetBody())
-			{
-				return _nullContact;
-			}
+            if (_world._contactFilter != null && _world._contactFilter.ShouldCollide(shape1, shape2) == false)
+            {
+                return _nullContact;
+            }
 
-			if (body2.IsConnected(body1))
-			{
-				return _nullContact;
-			}
+            // Call the factory.
+            Contact c = Contact.Create(shape1, shape2);
 
-			if (_world._contactFilter != null && _world._contactFilter.ShouldCollide(shape1, shape2) == false)
-			{
-				return _nullContact;
-			}
+            if (c == null)
+            {
+                return _nullContact;
+            }
 
-			// Call the factory.
-			Contact c = Contact.Create(shape1, shape2);
+            // Contact creation may swap shapes.
+            shape1 = c.GetShape1();
+            shape2 = c.GetShape2();
+            body1 = shape1.GetBody();
+            body2 = shape2.GetBody();
 
-			if (c == null)
-			{
-				return _nullContact;
-			}
+            // Insert into the world.
+            c._prev = null;
+            c._next = _world._contactList;
+            if (_world._contactList != null)
+            {
+                _world._contactList._prev = c;
+            }
+            _world._contactList = c;
 
-			// Contact creation may swap shapes.
-			shape1 = c.GetShape1();
-			shape2 = c.GetShape2();
-			body1 = shape1.GetBody();
-			body2 = shape2.GetBody();
+            // Connect to island graph.
 
-			// Insert into the world.
-			c._prev = null;
-			c._next = _world._contactList;
-			if (_world._contactList != null)
-			{
-				_world._contactList._prev = c;
-			}
-			_world._contactList = c;
+            // Connect to body 1
+            c._node1.Contact = c;
+            c._node1.Other = body2;
 
-			// Connect to island graph.
+            c._node1.Prev = null;
+            c._node1.Next = body1._contactList;
+            if (body1._contactList != null)
+            {
+                body1._contactList.Prev = c._node1;
+            }
+            body1._contactList = c._node1;
 
-			// Connect to body 1
-			c._node1.Contact = c;
-			c._node1.Other = body2;
+            // Connect to body 2
+            c._node2.Contact = c;
+            c._node2.Other = body1;
 
-			c._node1.Prev = null;
-			c._node1.Next = body1._contactList;
-			if (body1._contactList != null)
-			{
-				body1._contactList.Prev = c._node1;
-			}
-			body1._contactList = c._node1;
+            c._node2.Prev = null;
+            c._node2.Next = body2._contactList;
+            if (body2._contactList != null)
+            {
+                body2._contactList.Prev = c._node2;
+            }
+            body2._contactList = c._node2;
 
-			// Connect to body 2
-			c._node2.Contact = c;
-			c._node2.Other = body1;
+            ++_world._contactCount;
+            return c;
+        }
 
-			c._node2.Prev = null;
-			c._node2.Next = body2._contactList;
-			if (body2._contactList != null)
-			{
-				body2._contactList.Prev = c._node2;
-			}
-			body2._contactList = c._node2;
+        // This is a callback from the broadphase when two AABB proxies cease
+        // to overlap. We retire the Contact.
+        public override void PairRemoved(object proxyUserData1, object proxyUserData2, object pairUserData)
+        {
+            //B2_NOT_USED(proxyUserData1);
+            //B2_NOT_USED(proxyUserData2);
 
-			++_world._contactCount;
-			return c;
-		}
+            if (pairUserData == null)
+            {
+                return;
+            }
 
-		// This is a callback from the broadphase when two AABB proxies cease
-		// to overlap. We retire the Contact.
-		public override void PairRemoved(object proxyUserData1, object proxyUserData2, object pairUserData)
-		{
-			//B2_NOT_USED(proxyUserData1);
-			//B2_NOT_USED(proxyUserData2);
+            Contact c = pairUserData as Contact;
+            if (c == _nullContact)
+            {
+                return;
+            }
 
-			if (pairUserData == null)
-			{
-				return;
-			}
+            // An attached body is being destroyed, we must destroy this contact
+            // immediately to avoid orphaned shape pointers.
+            Destroy(c);
+        }
 
-			Contact c = pairUserData as Contact;
-			if (c == _nullContact)
-			{
-				return;
-			}
+        public void Destroy(Contact c)
+        {
+            Shape shape1 = c.GetShape1();
+            Shape shape2 = c.GetShape2();
+            Body body1 = shape1.GetBody();
+            Body body2 = shape2.GetBody();
 
-			// An attached body is being destroyed, we must destroy this contact
-			// immediately to avoid orphaned shape pointers.
-			Destroy(c);
-		}
+            ContactPoint cp = new ContactPoint();
+            cp.Shape1 = shape1;
+            cp.Shape2 = shape2;
+            cp.Friction = Settings.MixFriction(shape1.Friction, shape2.Friction);
+            cp.Restitution = Settings.MixRestitution(shape1.Restitution, shape2.Restitution);
 
-		public void Destroy(Contact c)
-		{
-			Shape shape1 = c.GetShape1();
-			Shape shape2 = c.GetShape2();
-			Body body1 = shape1.GetBody();
-			Body body2 = shape2.GetBody();
+            // Inform the user that this contact is ending.
+            int manifoldCount = c.GetManifoldCount();
+            if (manifoldCount > 0 && _world._contactListener != null)
+            {
+                Manifold[] manifolds = c.GetManifolds();
 
-			ContactPoint cp = new ContactPoint();
-			cp.Shape1 = shape1;
-			cp.Shape2 = shape2;
-			cp.Friction = Settings.MixFriction(shape1.Friction, shape2.Friction);
-			cp.Restitution = Settings.MixRestitution(shape1.Restitution, shape2.Restitution);
+                for (int i = 0; i < manifoldCount; ++i)
+                {
+                    Manifold manifold = manifolds[i];
+                    cp.Normal = manifold.Normal;
 
-			// Inform the user that this contact is ending.
-			int manifoldCount = c.GetManifoldCount();
-			if (manifoldCount > 0 && _world._contactListener!=null)
-			{
-				Manifold[] manifolds = c.GetManifolds();
+                    for (int j = 0; j < manifold.PointCount; ++j)
+                    {
+                        ManifoldPoint mp = manifold.Points[j];
+                        cp.Position = body1.GetWorldPoint(mp.LocalPoint1);
+                        Vector2 v1 = body1.GetLinearVelocityFromLocalPoint(mp.LocalPoint1);
+                        Vector2 v2 = body2.GetLinearVelocityFromLocalPoint(mp.LocalPoint2);
+                        cp.Velocity = v2 - v1;
+                        cp.Separation = mp.Separation;
+                        cp.ID = mp.ID;
+                        _world._contactListener.Remove(cp);
+                    }
+                }
+            }
 
-				for (int i = 0; i < manifoldCount; ++i)
-				{
-					Manifold manifold = manifolds[i];
-					cp.Normal = manifold.Normal;
+            // Remove from the world.
+            if (c._prev != null)
+            {
+                c._prev._next = c._next;
+            }
 
-					for (int j = 0; j < manifold.PointCount; ++j)
-					{
-						ManifoldPoint mp = manifold.Points[j];
-						cp.Position = body1.GetWorldPoint(mp.LocalPoint1);
-						Vector2 v1 = body1.GetLinearVelocityFromLocalPoint(mp.LocalPoint1);
-						Vector2 v2 = body2.GetLinearVelocityFromLocalPoint(mp.LocalPoint2);
-						cp.Velocity = v2 - v1;
-						cp.Separation = mp.Separation;
-						cp.ID = mp.ID;
-						_world._contactListener.Remove(cp);
-					}
-				}
-			}
+            if (c._next != null)
+            {
+                c._next._prev = c._prev;
+            }
 
-			// Remove from the world.
-			if (c._prev != null)
-			{
-				c._prev._next = c._next;
-			}
+            if (c == _world._contactList)
+            {
+                _world._contactList = c._next;
+            }
 
-			if (c._next != null)
-			{
-				c._next._prev = c._prev;
-			}
+            // Remove from body 1
+            if (c._node1.Prev != null)
+            {
+                c._node1.Prev.Next = c._node1.Next;
+            }
 
-			if (c == _world._contactList)
-			{
-				_world._contactList = c._next;
-			}
+            if (c._node1.Next != null)
+            {
+                c._node1.Next.Prev = c._node1.Prev;
+            }
 
-			// Remove from body 1
-			if (c._node1.Prev != null)
-			{
-				c._node1.Prev.Next = c._node1.Next;
-			}
+            if (c._node1 == body1._contactList)
+            {
+                body1._contactList = c._node1.Next;
+            }
 
-			if (c._node1.Next != null)
-			{
-				c._node1.Next.Prev = c._node1.Prev;
-			}
+            // Remove from body 2
+            if (c._node2.Prev != null)
+            {
+                c._node2.Prev.Next = c._node2.Next;
+            }
 
-			if (c._node1 == body1._contactList)
-			{
-				body1._contactList = c._node1.Next;
-			}
+            if (c._node2.Next != null)
+            {
+                c._node2.Next.Prev = c._node2.Prev;
+            }
 
-			// Remove from body 2
-			if (c._node2.Prev != null)
-			{
-				c._node2.Prev.Next = c._node2.Next;
-			}
+            if (c._node2 == body2._contactList)
+            {
+                body2._contactList = c._node2.Next;
+            }
 
-			if (c._node2.Next != null)
-			{
-				c._node2.Next.Prev = c._node2.Prev;
-			}
+            // Call the factory.
+            Contact.Destroy(c);
+            --_world._contactCount;
+        }
 
-			if (c._node2 == body2._contactList)
-			{
-				body2._contactList = c._node2.Next;
-			}
+        // This is the top level collision call for the time step. Here
+        // all the narrow phase collision is processed for the world
+        // contact list.
+        public void Collide()
+        {
+            // Update awake contacts.
+            for (Contact c = _world._contactList; c != null; c = c.GetNext())
+            {
+                Body body1 = c.GetShape1().GetBody();
+                Body body2 = c.GetShape2().GetBody();
+                if (body1.IsSleeping() && body2.IsSleeping())
+                {
+                    continue;
+                }
 
-			// Call the factory.
-			Contact.Destroy(c);
-			--_world._contactCount;
-		}
-
-		// This is the top level collision call for the time step. Here
-		// all the narrow phase collision is processed for the world
-		// contact list.
-		public void Collide()
-		{
-			// Update awake contacts.
-			for (Contact c = _world._contactList; c != null; c = c.GetNext())
-			{
-				Body body1 = c.GetShape1().GetBody();
-				Body body2 = c.GetShape2().GetBody();
-				if (body1.IsSleeping() && body2.IsSleeping())
-				{
-					continue;
-				}
-
-				c.Update(_world._contactListener);
-			}
-		}
-	}
+                c.Update(_world._contactListener);
+            }
+        }
+    }
 }

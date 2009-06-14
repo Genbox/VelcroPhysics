@@ -20,33 +20,23 @@
 */
 
 using System;
-using System.Threading;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Math
 {
-
     public delegate void ForDelegate(int i);
 
     public delegate void ThreadDelegate();
 
 
-
     public class Parallel
     {
-
         /// <summary>
-
         /// Parallel for loop. Invokes given action, passing arguments
-
         /// fromInclusive - toExclusive on multiple threads.
-
         /// Returns when loop finished.
-
         /// </summary>
-
         public static void For(int fromInclusive, int toExclusive, ForDelegate action)
         {
-
             // ChunkSize = 1 makes items to be processed in order.
 
             // Bigger chunk size should reduce lock waiting time and thus
@@ -56,7 +46,6 @@ namespace FarseerPhysics
             int chunkSize = 4;
 
 
-
             // number of process() threads
 
             int threadCount = Environment.ProcessorCount;
@@ -64,47 +53,37 @@ namespace FarseerPhysics
             int cnt = fromInclusive - chunkSize;
 
 
-
             // processing function
 
             // takes next chunk and processes it using action
 
-            ThreadDelegate process = delegate()
-            {
+            ThreadDelegate process = delegate
+                                         {
+                                             while (true)
+                                             {
+                                                 int cntMem = 0;
 
-                while (true)
-                {
+                                                 lock (typeof (Parallel))
+                                                 {
+                                                     // take next chunk
 
-                    int cntMem = 0;
+                                                     cnt += chunkSize;
 
-                    lock (typeof(Parallel))
-                    {
+                                                     cntMem = cnt;
+                                                 }
 
-                        // take next chunk
+                                                 // process chunk
 
-                        cnt += chunkSize;
+                                                 // here items can come out of order if chunkSize > 1
 
-                        cntMem = cnt;
+                                                 for (int i = cntMem; i < cntMem + chunkSize; ++i)
+                                                 {
+                                                     if (i >= toExclusive) return;
 
-                    }
-
-                    // process chunk
-
-                    // here items can come out of order if chunkSize > 1
-
-                    for (int i = cntMem; i < cntMem + chunkSize; ++i)
-                    {
-
-                        if (i >= toExclusive) return;
-
-                        action(i);
-
-                    }
-
-                }
-
-            };
-
+                                                     action(i);
+                                                 }
+                                             }
+                                         };
 
 
             // launch process() threads
@@ -113,20 +92,15 @@ namespace FarseerPhysics
 
             for (int i = 0; i < threadCount; ++i)
             {
-
                 asyncResults[i] = process.BeginInvoke(null, null);
-
             }
 
             // wait for all threads to complete
 
             for (int i = 0; i < threadCount; ++i)
             {
-
                 process.EndInvoke(asyncResults[i]);
-
             }
-
         }
     }
 }

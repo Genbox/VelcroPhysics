@@ -19,24 +19,23 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+using FarseerPhysics.Collision;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
 using Microsoft.Xna.Framework;
 #endif
 
-using FarseerPhysics.Collision;
-using FarseerPhysics.Common;
-
 namespace FarseerPhysics.Dynamics
 {
-	public class NullContact : Contact
-	{
-		public NullContact() { }
-		public override void Evaluate(ContactListener listener) { }
-		public override Manifold[] GetManifolds() { return null; }
-	}
+    public class NullContact : Contact
+    {
+        public override void Evaluate(ContactListener listener)
+        {
+        }
+
+        public override Manifold[] GetManifolds()
+        {
+            return null;
+        }
+    }
 }

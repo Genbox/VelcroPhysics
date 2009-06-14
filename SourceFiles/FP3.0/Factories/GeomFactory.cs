@@ -1,6 +1,6 @@
-﻿using System;
-using FarseerPhysics.Collision;
+﻿using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Math;
 
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
@@ -44,7 +44,7 @@ namespace FarseerPhysics.Factories
             PolygonDef geomDef = new PolygonDef();
 
             // we divide by 2 here because SetAsBox takes half sizes
-            geomDef.SetAsBox(width / 2.0f, height / 2.0f);
+            geomDef.SetAsBox(width/2.0f, height/2.0f);
 
             // add the shape to the body
             Shape geom = body.CreateShape(geomDef);
@@ -132,7 +132,7 @@ namespace FarseerPhysics.Factories
         /// <returns></returns>
         //public Shape[] CreateComplexPolygonGeom(Body body, Vector2[] vertices, int numOfVertices)
         //{
-            // 
+        // 
         //}
     }
 }
