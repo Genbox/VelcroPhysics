@@ -78,175 +78,199 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Trunk\Collisions\AABB.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\AABB.cs">
       <Link>Collisions\AABB.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\BruteForceCollider.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\BruteForceCollider.cs">
       <Link>Collisions\BruteForceCollider.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\Contact.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\Contact.cs">
       <Link>Collisions\Contact.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\ContactId.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\ContactId.cs">
       <Link>Collisions\ContactId.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\ContactList.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\ContactList.cs">
       <Link>Collisions\ContactList.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\DistanceGrid.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\DistanceGrid.cs">
       <Link>Collisions\DistanceGrid.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\Feature.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\Feature.cs">
       <Link>Collisions\Feature.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\Geom.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\Geom.cs">
       <Link>Collisions\Geom.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\RayTester.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\GeomList.cs">
+      <Link>Collisions\GeomList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\LineIntersectInfo.cs">
+      <Link>Collisions\LineIntersectInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\RayTester.cs">
       <Link>Collisions\RayTester.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\SAT.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\SAT.cs">
       <Link>Collisions\SAT.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\SelectiveSweepCollider.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\SelectiveSweepCollider.cs">
       <Link>Collisions\SelectiveSweepCollider.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\SpatialHashCollider.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\SpatialHashCollider.cs">
       <Link>Collisions\SpatialHashCollider.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\SweepAndPruneCollider.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\SweepAndPruneCollider.cs">
       <Link>Collisions\SweepAndPruneCollider.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Collisions\Vertices.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\Vertices.cs">
       <Link>Collisions\Vertices.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Controllers\AABBFluidContainer.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Controllers\AABBFluidContainer.cs">
       <Link>Controllers\AABBFluidContainer.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Controllers\Controller.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Controllers\Controller.cs">
       <Link>Controllers\Controller.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Controllers\FluidDragController.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Controllers\ControllerList.cs">
+      <Link>Controllers\ControllerList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Controllers\FluidDragController.cs">
       <Link>Controllers\FluidDragController.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Controllers\GravityController.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Controllers\GravityController.cs">
       <Link>Controllers\GravityController.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Controllers\InactivityController.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Controllers\InactivityController.cs">
       <Link>Controllers\InactivityController.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Controllers\ScalingController.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Controllers\ScalingController.cs">
       <Link>Controllers\ScalingController.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Controllers\WaveController.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Controllers\WaveController.cs">
       <Link>Controllers\WaveController.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Arbiter.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Arbiter.cs">
       <Link>Dynamics\Arbiter.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\ArbiterList.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\ArbiterList.cs">
       <Link>Dynamics\ArbiterList.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Body.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Body.cs">
       <Link>Dynamics\Body.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Joints\AngleJoint.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\BodyList.cs">
+      <Link>Dynamics\BodyList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Curve.cs">
+      <Link>Dynamics\Curve.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Joints\AngleJoint.cs">
       <Link>Dynamics\Joints\AngleJoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Joints\AngleLimitJoint.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Joints\AngleLimitJoint.cs">
       <Link>Dynamics\Joints\AngleLimitJoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Joints\FixedAngleJoint.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Joints\FixedAngleJoint.cs">
       <Link>Dynamics\Joints\FixedAngleJoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Joints\FixedAngleLimitJoint.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Joints\FixedAngleLimitJoint.cs">
       <Link>Dynamics\Joints\FixedAngleLimitJoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Joints\FixedRevoluteJoint.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Joints\FixedRevoluteJoint.cs">
       <Link>Dynamics\Joints\FixedRevoluteJoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Joints\Joint.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Joints\Joint.cs">
       <Link>Dynamics\Joints\Joint.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Joints\PinJoint.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Joints\JointList.cs">
+      <Link>Dynamics\Joints\JointList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Joints\PinJoint.cs">
       <Link>Dynamics\Joints\PinJoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Joints\RevoluteJoint.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Joints\RevoluteJoint.cs">
       <Link>Dynamics\Joints\RevoluteJoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Joints\SliderJoint.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Joints\SliderJoint.cs">
       <Link>Dynamics\Joints\SliderJoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Joints\WeldJoint.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Joints\WeldJoint.cs">
       <Link>Dynamics\Joints\WeldJoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Path.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Path.cs">
       <Link>Dynamics\Path.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Springs\AngleSpring.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Springs\AngleSpring.cs">
       <Link>Dynamics\Springs\AngleSpring.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Springs\FixedAngleSpring.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Springs\FixedAngleSpring.cs">
       <Link>Dynamics\Springs\FixedAngleSpring.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Springs\FixedLinearSpring.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Springs\FixedLinearSpring.cs">
       <Link>Dynamics\Springs\FixedLinearSpring.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Springs\LinearSpring.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Springs\LinearSpring.cs">
       <Link>Dynamics\Springs\LinearSpring.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Dynamics\Springs\Spring.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Springs\Spring.cs">
       <Link>Dynamics\Springs\Spring.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Enums.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Springs\SpringList.cs">
+      <Link>Dynamics\Springs\SpringList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Enums.cs">
       <Link>Enums.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Factories\BodyFactory.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Factories\BodyFactory.cs">
       <Link>Factories\BodyFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Factories\ComplexFactory.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Factories\ComplexFactory.cs">
       <Link>Factories\ComplexFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Factories\GeomFactory.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Factories\ControllerFactory.cs">
+      <Link>Factories\ControllerFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Factories\GeomFactory.cs">
       <Link>Factories\GeomFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Factories\JointFactory.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Factories\JointFactory.cs">
       <Link>Factories\JointFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Factories\SpringFactory.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Factories\SpringFactory.cs">
       <Link>Factories\SpringFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\GenericList.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\GenericList.cs">
       <Link>GenericList.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Interfaces\IBroadPhaseCollider.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Interfaces\IBroadPhaseCollider.cs">
       <Link>Interfaces\IBroadPhaseCollider.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Interfaces\IFluidContainer.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Interfaces\IFluidContainer.cs">
       <Link>Interfaces\IFluidContainer.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Interfaces\IIsDisposable.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Interfaces\IIsDisposable.cs">
       <Link>Interfaces\IIsDisposable.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Interfaces\INarrowPhaseCollider.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Interfaces\INarrowPhaseCollider.cs">
       <Link>Interfaces\INarrowPhaseCollider.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Mathematics\BilinearInterpolator.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Mathematics\BilinearInterpolator.cs">
       <Link>Mathematics\BilinearInterpolator.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Mathematics\Calculator.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Mathematics\Calculator.cs">
       <Link>Mathematics\Calculator.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Mathematics\CircularInterpolator.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Mathematics\CircularInterpolator.cs">
       <Link>Mathematics\CircularInterpolator.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Mathematics\ConvertUnits.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Mathematics\ConvertUnits.cs">
       <Link>Mathematics\ConvertUnits.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\PhysicsSimulator.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\PhysicsSimulator.cs">
       <Link>PhysicsSimulator.cs</Link>
     </Compile>
-    <Compile Include="..\..\Trunk\Pool.cs">
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Pool.cs">
       <Link>Pool.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
