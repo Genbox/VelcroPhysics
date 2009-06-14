@@ -20,25 +20,23 @@
 */
 
 using FarseerPhysics.Math;
-using Microsoft.Xna.Framework;
-// If this is an XNA project then we use math from the XNA framework.
-#if XNA
 
+#if XNA
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerPhysics.Collision
 {
-    public partial class Collision
+    public static partial class Collision
     {
-        public static int GJKIterations;
+        //public static int GJKIterations;
 
         // GJK using Voronoi regions (Christer Ericson) and region selection
         // optimizations (Casey Muratori).
 
         // The origin is either in the region of points[1] or in the edge region. The origin is
         // not in region of points[0] because that is the old point.
-        public static int ProcessTwo(out Vector2 x1, out Vector2 x2, ref Vector2[] p1s, ref Vector2[] p2s,
-                                     ref Vector2[] points)
+        public static int ProcessTwo(out Vector2 x1, out Vector2 x2, ref Vector2[] p1s, ref Vector2[] p2s, ref Vector2[] points)
         {
             // If in point[1] region
             Vector2 r = -points[1];
@@ -58,8 +56,8 @@ namespace FarseerPhysics.Collision
 
             // Else in edge region
             lambda /= length;
-            x1 = p1s[1] + lambda*(p1s[0] - p1s[1]);
-            x2 = p2s[1] + lambda*(p2s[0] - p2s[1]);
+            x1 = p1s[1] + lambda * (p1s[0] - p1s[1]);
+            x2 = p2s[1] + lambda * (p2s[0] - p2s[1]);
             return 2;
         }
 
@@ -68,8 +66,7 @@ namespace FarseerPhysics.Collision
         // - edge points[0]-points[2]
         // - edge points[1]-points[2]
         // - inside the triangle
-        public static int ProcessThree(out Vector2 x1, out Vector2 x2, ref Vector2[] p1s, ref Vector2[] p2s,
-                                       ref Vector2[] points)
+        public static int ProcessThree(out Vector2 x1, out Vector2 x2, ref Vector2[] p1s, ref Vector2[] p2s, ref Vector2[] points)
         {
             Vector2 a = points[0];
             Vector2 b = points[1];
@@ -109,17 +106,17 @@ namespace FarseerPhysics.Collision
 #endif
 
             // Should not be in edge ab region.
-            float vc = n*CommonMath.Cross(ref a, ref b);
+            float vc = n * CommonMath.Cross(ref a, ref b);
             //Box2DXDebug.Assert(vc > 0.0f || sn > 0.0f || sd > 0.0f);
 
             // In edge bc region?
-            float va = n*CommonMath.Cross(ref b, ref c);
+            float va = n * CommonMath.Cross(ref b, ref c);
             if (va <= 0.0f && un >= 0.0f && ud >= 0.0f && (un + ud) > 0.0f)
             {
                 //Box2DXDebug.Assert(un + ud > 0.0f);
-                float lambda = un/(un + ud);
-                x1 = p1s[1] + lambda*(p1s[2] - p1s[1]);
-                x2 = p2s[1] + lambda*(p2s[2] - p2s[1]);
+                float lambda = un / (un + ud);
+                x1 = p1s[1] + lambda * (p1s[2] - p1s[1]);
+                x2 = p2s[1] + lambda * (p2s[2] - p2s[1]);
                 p1s[0] = p1s[2];
                 p2s[0] = p2s[2];
                 points[0] = points[2];
@@ -127,13 +124,13 @@ namespace FarseerPhysics.Collision
             }
 
             // In edge ac region?
-            float vb = n*CommonMath.Cross(ref c, ref a);
+            float vb = n * CommonMath.Cross(ref c, ref a);
             if (vb <= 0.0f && tn >= 0.0f && td >= 0.0f && (tn + td) > 0.0f)
             {
                 //Box2DXDebug.Assert(tn + td > 0.0f);
-                float lambda = tn/(tn + td);
-                x1 = p1s[0] + lambda*(p1s[2] - p1s[0]);
-                x2 = p2s[0] + lambda*(p2s[2] - p2s[0]);
+                float lambda = tn / (tn + td);
+                x1 = p1s[0] + lambda * (p1s[2] - p1s[0]);
+                x2 = p2s[0] + lambda * (p2s[2] - p2s[0]);
                 p1s[1] = p1s[2];
                 p2s[1] = p2s[2];
                 points[1] = points[2];
@@ -143,30 +140,30 @@ namespace FarseerPhysics.Collision
             // Inside the triangle, compute barycentric coordinates
             float denom = va + vb + vc;
             //Box2DXDebug.Assert(denom > 0.0f);
-            denom = 1.0f/denom;
+            denom = 1.0f / denom;
 #if TARGET_FLOAT32_IS_FIXED
 			x1 = denom * (va * p1s[0] + vb * p1s[1] + vc * p1s[2]);
 			x2 = denom * (va * p2s[0] + vb * p2s[1] + vc * p2s[2]);
 #else
-            float u = va*denom;
-            float v = vb*denom;
+            float u = va * denom;
+            float v = vb * denom;
             float w = 1.0f - u - v;
-            x1 = u*p1s[0] + v*p1s[1] + w*p1s[2];
-            x2 = u*p2s[0] + v*p2s[1] + w*p2s[2];
+            x1 = u * p1s[0] + v * p1s[1] + w * p1s[2];
+            x2 = u * p2s[0] + v * p2s[1] + w * p2s[2];
 #endif
             return 3;
         }
 
         public static bool InPoints(Vector2 w, Vector2[] points, int pointCount)
         {
-            float k_tolerance = 100.0f*Settings.FLT_EPSILON;
+            float k_tolerance = 100.0f * Settings.FLT_EPSILON;
             for (int i = 0; i < pointCount; ++i)
             {
                 Vector2 d = CommonMath.Abs(w - points[i]);
                 Vector2 m = CommonMath.Max(CommonMath.Abs(w), CommonMath.Abs(points[i]));
 
-                if (d.X < k_tolerance*(m.X + 1.0f) &&
-                    d.Y < k_tolerance*(m.Y + 1.0f))
+                if (d.X < k_tolerance * (m.X + 1.0f) &&
+                    d.Y < k_tolerance * (m.Y + 1.0f))
                 {
                     return true;
                 }
@@ -175,8 +172,7 @@ namespace FarseerPhysics.Collision
             return false;
         }
 
-        public static float DistanceGeneric<T1, T2>(out Vector2 x1, out Vector2 x2,
-                                                    T1 shape1_, XForm xf1, T2 shape2_, XForm xf2)
+        public static float DistanceGeneric<T1, T2>(out Vector2 x1, out Vector2 x2, T1 shape1_, XForm xf1, T2 shape2_, XForm xf2)
         {
             IGenericShape shape1 = shape1_ as IGenericShape;
             IGenericShape shape2 = shape2_ as IGenericShape;
@@ -205,14 +201,14 @@ namespace FarseerPhysics.Collision
                 vSqr = Vector2.Dot(v, v);
                 Vector2 w = w2 - w1;
                 float vw = Vector2.Dot(v, w);
-                if (vSqr - vw <= 0.01f*vSqr || InPoints(w, points, pointCount)) // or w in points
+                if (vSqr - vw <= 0.01f * vSqr || InPoints(w, points, pointCount)) // or w in points
                 {
                     if (pointCount == 0)
                     {
                         x1 = w1;
                         x2 = w2;
                     }
-                    GJKIterations = iter;
+                    //GJKIterations = iter;
                     return CommonMath.Sqrt(vSqr);
                 }
 
@@ -245,7 +241,7 @@ namespace FarseerPhysics.Collision
                 // If we have three points, then the origin is in the corresponding triangle.
                 if (pointCount == 3)
                 {
-                    GJKIterations = iter;
+                    //GJKIterations = iter;
                     return 0.0f;
                 }
 
@@ -258,10 +254,10 @@ namespace FarseerPhysics.Collision
 #if TARGET_FLOAT32_IS_FIXED
 				if (pointCount == 3 || vSqr <= 5.0*Common.Settings.FLT_EPSILON * maxSqr)
 #else
-                if (vSqr <= 100.0f*Settings.FLT_EPSILON*maxSqr)
+                if (vSqr <= 100.0f * Settings.FLT_EPSILON * maxSqr)
 #endif
                 {
-                    GJKIterations = iter;
+                    //GJKIterations = iter;
                     v = x2 - x1;
                     vSqr = Vector2.Dot(v, v);
 
@@ -269,12 +265,11 @@ namespace FarseerPhysics.Collision
                 }
             }
 
-            GJKIterations = maxIterations;
+            //GJKIterations = maxIterations;
             return CommonMath.Sqrt(vSqr);
         }
 
-        public static float DistanceCC(out Vector2 x1, out Vector2 x2,
-                                       CircleShape circle1, XForm xf1, CircleShape circle2, XForm xf2)
+        public static float DistanceCC(out Vector2 x1, out Vector2 x2, CircleShape circle1, XForm xf1, CircleShape circle2, XForm xf2)
         {
             Vector2 p1 = CommonMath.Mul(xf1, circle1.GetLocalPosition());
             Vector2 p2 = CommonMath.Mul(xf2, circle2.GetLocalPosition());
@@ -284,18 +279,18 @@ namespace FarseerPhysics.Collision
             float r1 = circle1.GetRadius() - Settings.ToiSlop;
             float r2 = circle2.GetRadius() - Settings.ToiSlop;
             float r = r1 + r2;
-            if (dSqr > r*r)
+            if (dSqr > r * r)
             {
                 float dLen = CommonMath.Normalize(ref d);
                 float distance = dLen - r;
-                x1 = p1 + r1*d;
-                x2 = p2 - r2*d;
+                x1 = p1 + r1 * d;
+                x2 = p2 - r2 * d;
                 return distance;
             }
-            else if (dSqr > Settings.FLT_EPSILON*Settings.FLT_EPSILON)
+            else if (dSqr > Settings.FLT_EPSILON * Settings.FLT_EPSILON)
             {
                 d.Normalize();
-                x1 = p1 + r1*d;
+                x1 = p1 + r1 * d;
                 x2 = x1;
                 return 0.0f;
             }
@@ -309,8 +304,7 @@ namespace FarseerPhysics.Collision
 
         // GJK is more robust with polygon-vs-point than polygon-vs-circle.
         // So we convert polygon-vs-circle to polygon-vs-point.
-        public static float DistancePC(out Vector2 x1, out Vector2 x2,
-                                       PolygonShape polygon, XForm xf1, CircleShape circle, XForm xf2)
+        public static float DistancePC(out Vector2 x1, out Vector2 x2, PolygonShape polygon, XForm xf1, CircleShape circle, XForm xf2)
         {
             Point point = new Point();
             point.p = CommonMath.Mul(xf2, circle.GetLocalPosition());
@@ -324,7 +318,7 @@ namespace FarseerPhysics.Collision
                 distance -= r;
                 Vector2 d = x2 - x1;
                 d.Normalize();
-                x2 -= r*d;
+                x2 -= r * d;
             }
             else
             {
@@ -335,8 +329,7 @@ namespace FarseerPhysics.Collision
             return distance;
         }
 
-        public static float Distance(out Vector2 x1, out Vector2 x2,
-                                     Shape shape1, XForm xf1, Shape shape2, XForm xf2)
+        public static float Distance(out Vector2 x1, out Vector2 x2, Shape shape1, XForm xf1, Shape shape2, XForm xf2)
         {
             x1 = new Vector2();
             x2 = new Vector2();
@@ -346,22 +339,22 @@ namespace FarseerPhysics.Collision
 
             if (type1 == ShapeType.CircleShape && type2 == ShapeType.CircleShape)
             {
-                return DistanceCC(out x1, out x2, (CircleShape) shape1, xf1, (CircleShape) shape2, xf2);
+                return DistanceCC(out x1, out x2, (CircleShape)shape1, xf1, (CircleShape)shape2, xf2);
             }
 
             if (type1 == ShapeType.PolygonShape && type2 == ShapeType.CircleShape)
             {
-                return DistancePC(out x1, out x2, (PolygonShape) shape1, xf1, (CircleShape) shape2, xf2);
+                return DistancePC(out x1, out x2, (PolygonShape)shape1, xf1, (CircleShape)shape2, xf2);
             }
 
             if (type1 == ShapeType.CircleShape && type2 == ShapeType.PolygonShape)
             {
-                return DistancePC(out x2, out x1, (PolygonShape) shape2, xf2, (CircleShape) shape1, xf1);
+                return DistancePC(out x2, out x1, (PolygonShape)shape2, xf2, (CircleShape)shape1, xf1);
             }
 
             if (type1 == ShapeType.PolygonShape && type2 == ShapeType.PolygonShape)
             {
-                return DistanceGeneric(out x1, out x2, (PolygonShape) shape1, xf1, (PolygonShape) shape2, xf2);
+                return DistanceGeneric(out x1, out x2, (PolygonShape)shape1, xf1, (PolygonShape)shape2, xf2);
             }
 
             return 0.0f;

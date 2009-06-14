@@ -20,19 +20,16 @@
 */
 
 using FarseerPhysics.Math;
-using Microsoft.Xna.Framework;
-// If this is an XNA project then we use math from the XNA framework.
-#if XNA
 
-#else
+#if XNA
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerPhysics.Collision
 {
     public partial class Collision
     {
-        public static void CollideCircles(ref Manifold manifold,
-                                          CircleShape circle1, XForm xf1, CircleShape circle2, XForm xf2)
+        public static void CollideCircles(ref Manifold manifold, CircleShape circle1, XForm xf1, CircleShape circle2, XForm xf2)
         {
             manifold.PointCount = 0;
 
@@ -44,7 +41,7 @@ namespace FarseerPhysics.Collision
             float r1 = circle1.GetRadius();
             float r2 = circle2.GetRadius();
             float radiusSum = r1 + r2;
-            if (distSqr > radiusSum*radiusSum)
+            if (distSqr > radiusSum * radiusSum)
             {
                 return;
             }
@@ -59,26 +56,25 @@ namespace FarseerPhysics.Collision
             {
                 float dist = CommonMath.Sqrt(distSqr);
                 separation = dist - radiusSum;
-                float a = 1.0f/dist;
-                manifold.Normal.X = a*d.X;
-                manifold.Normal.Y = a*d.Y;
+                float a = 1.0f / dist;
+                manifold.Normal.X = a * d.X;
+                manifold.Normal.Y = a * d.Y;
             }
 
             manifold.PointCount = 1;
             manifold.Points[0].ID.Key = 0;
             manifold.Points[0].Separation = separation;
 
-            p1 += r1*manifold.Normal;
-            p2 -= r2*manifold.Normal;
+            p1 += r1 * manifold.Normal;
+            p2 -= r2 * manifold.Normal;
 
-            Vector2 p = 0.5f*(p1 + p2);
+            Vector2 p = 0.5f * (p1 + p2);
 
             manifold.Points[0].LocalPoint1 = CommonMath.MulT(xf1, p);
             manifold.Points[0].LocalPoint2 = CommonMath.MulT(xf2, p);
         }
 
-        public static void CollidePolygonAndCircle(ref Manifold manifold,
-                                                   PolygonShape polygon, XForm xf1, CircleShape circle, XForm xf2)
+        public static void CollidePolygonAndCircle(ref Manifold manifold, PolygonShape polygon, XForm xf1, CircleShape circle, XForm xf2)
         {
             manifold.PointCount = 0;
 
@@ -115,11 +111,11 @@ namespace FarseerPhysics.Collision
             {
                 manifold.PointCount = 1;
                 manifold.Normal = CommonMath.Mul(xf1.R, normals[normalIndex]);
-                manifold.Points[0].ID.Features.IncidentEdge = (byte) normalIndex;
+                manifold.Points[0].ID.Features.IncidentEdge = (byte)normalIndex;
                 manifold.Points[0].ID.Features.IncidentVertex = NullFeature;
                 manifold.Points[0].ID.Features.ReferenceEdge = 0;
                 manifold.Points[0].ID.Features.Flip = 0;
-                Vector2 position = c - radius*manifold.Normal;
+                Vector2 position = c - radius * manifold.Normal;
                 manifold.Points[0].LocalPoint1 = CommonMath.MulT(xf1, position);
                 manifold.Points[0].LocalPoint2 = CommonMath.MulT(xf2, position);
                 manifold.Points[0].Separation = separation - radius;
@@ -141,18 +137,18 @@ namespace FarseerPhysics.Collision
             {
                 p = vertices[vertIndex1];
                 manifold.Points[0].ID.Features.IncidentEdge = NullFeature;
-                manifold.Points[0].ID.Features.IncidentVertex = (byte) vertIndex1;
+                manifold.Points[0].ID.Features.IncidentVertex = (byte)vertIndex1;
             }
             else if (u >= length)
             {
                 p = vertices[vertIndex2];
                 manifold.Points[0].ID.Features.IncidentEdge = NullFeature;
-                manifold.Points[0].ID.Features.IncidentVertex = (byte) vertIndex2;
+                manifold.Points[0].ID.Features.IncidentVertex = (byte)vertIndex2;
             }
             else
             {
-                p = vertices[vertIndex1] + u*e;
-                manifold.Points[0].ID.Features.IncidentEdge = (byte) normalIndex;
+                p = vertices[vertIndex1] + u * e;
+                manifold.Points[0].ID.Features.IncidentEdge = (byte)normalIndex;
                 manifold.Points[0].ID.Features.IncidentVertex = NullFeature;
             }
 
@@ -165,7 +161,7 @@ namespace FarseerPhysics.Collision
 
             manifold.PointCount = 1;
             manifold.Normal = CommonMath.Mul(xf1.R, d);
-            Vector2 position_ = c - radius*manifold.Normal;
+            Vector2 position_ = c - radius * manifold.Normal;
             manifold.Points[0].LocalPoint1 = CommonMath.MulT(xf1, position_);
             manifold.Points[0].LocalPoint2 = CommonMath.MulT(xf2, position_);
             manifold.Points[0].Separation = dist - radius;

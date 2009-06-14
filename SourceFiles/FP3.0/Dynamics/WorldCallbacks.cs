@@ -22,11 +22,9 @@
 using System;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Math;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-// If this is an XNA project then we use math from the XNA framework.
-#if XNA
 
+#if XNA
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerPhysics.Dynamics
@@ -229,36 +227,5 @@ namespace FarseerPhysics.Dynamics
         {
             _drawFlags &= ~flags;
         }
-
-        /// <summary>
-        /// Draw a closed polygon provided in CCW order.
-        /// </summary>
-        public abstract void DrawPolygon(Vector2[] vertices, int vertexCount, Color color);
-
-        /// <summary>
-        /// Draw a solid closed polygon provided in CCW order.
-        /// </summary>
-        public abstract void DrawSolidPolygon(Vector2[] vertices, int vertexCount, Color color);
-
-        /// <summary>
-        /// Draw a circle.
-        /// </summary>
-        public abstract void DrawCircle(Vector2 center, float radius, Color color);
-
-        /// <summary>
-        /// Draw a solid circle.
-        /// </summary>
-        public abstract void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, Color color);
-
-        /// <summary>
-        /// Draw a line segment.
-        /// </summary>
-        public abstract void DrawSegment(Vector2 p1, Vector2 p2, Color color);
-
-        /// <summary>
-        /// Draw a transform. Choose your own length scale.
-        /// </summary>
-        /// <param name="xf">A transform.</param>
-        public abstract void DrawXForm(XForm xf);
     }
 }

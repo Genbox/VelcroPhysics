@@ -140,10 +140,9 @@ However, we can compute sin+cos of the same angle fast.
 using System;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Math;
-using Microsoft.Xna.Framework;
-// If this is an XNA project then we use math from the XNA framework.
-#if XNA
 
+#if XNA
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerPhysics.Dynamics

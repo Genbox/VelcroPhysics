@@ -20,9 +20,9 @@
 */
 
 using FarseerPhysics.Math;
-using Microsoft.Xna.Framework;
-#if XNA
 
+#if XNA
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerPhysics.Collision
@@ -57,7 +57,7 @@ namespace FarseerPhysics.Collision
             : base(def)
         {
             //Box2DXDebug.Assert(def.Type == ShapeType.CircleShape);
-            CircleDef circleDef = (CircleDef) def;
+            CircleDef circleDef = (CircleDef)def;
 
             _type = ShapeType.CircleShape;
             _localPosition = circleDef.LocalPosition;
@@ -76,22 +76,21 @@ namespace FarseerPhysics.Collision
         {
             Vector2 center = transform.Position + CommonMath.Mul(transform.R, _localPosition);
             Vector2 d = p - center;
-            return Vector2.Dot(d, d) <= _radius*_radius;
+            return Vector2.Dot(d, d) <= _radius * _radius;
         }
 
         // Collision Detection in Interactive 3D Environments by Gino van den Bergen
         // From Section 3.1.2
         // x = s + a * r
         // norm(x) = radius
-        public override SegmentCollide TestSegment(XForm transform, out float lambda, out Vector2 normal,
-                                                   Segment segment, float maxLambda)
+        public override SegmentCollide TestSegment(XForm transform, out float lambda, out Vector2 normal, Segment segment, float maxLambda)
         {
             lambda = 0f;
             normal = Vector2.Zero;
 
             Vector2 position = transform.Position + CommonMath.Mul(transform.R, _localPosition);
             Vector2 s = segment.P1 - position;
-            float b = Vector2.Dot(s, s) - _radius*_radius;
+            float b = Vector2.Dot(s, s) - _radius * _radius;
 
             // Does the segment start inside the circle?
             if (b < 0.0f)
@@ -104,7 +103,7 @@ namespace FarseerPhysics.Collision
             Vector2 r = segment.P2 - segment.P1;
             float c = Vector2.Dot(s, r);
             float rr = Vector2.Dot(r, r);
-            float sigma = c*c - rr*b;
+            float sigma = c * c - rr * b;
 
             // Check for negative discriminant and short segment.
             if (sigma < 0.0f || rr < Settings.FLT_EPSILON)
@@ -116,11 +115,11 @@ namespace FarseerPhysics.Collision
             float a = -(c + CommonMath.Sqrt(sigma));
 
             // Is the intersection point on the segment?
-            if (0.0f <= a && a <= maxLambda*rr)
+            if (0.0f <= a && a <= maxLambda * rr)
             {
                 a /= rr;
                 lambda = a;
-                normal = s + a*r;
+                normal = s + a * r;
                 normal.Normalize();
                 return SegmentCollide.HitCollide;
             }
@@ -154,11 +153,11 @@ namespace FarseerPhysics.Collision
         {
             massData = new MassData();
 
-            massData.Mass = _density*Settings.Pi*_radius*_radius;
+            massData.Mass = _density * Settings.Pi * _radius * _radius;
             massData.Center = _localPosition;
 
             // inertia about the local origin
-            massData.Inertia = massData.Mass*(0.5f*_radius*_radius + Vector2.Dot(_localPosition, _localPosition));
+            massData.Inertia = massData.Mass * (0.5f * _radius * _radius + Vector2.Dot(_localPosition, _localPosition));
         }
 
         public override float ComputeSubmergedArea(Vector2 normal, float offset, XForm xf, out Vector2 c)
@@ -176,18 +175,18 @@ namespace FarseerPhysics.Collision
             {
                 //Completely wet
                 c = p;
-                return Settings.Pi*_radius*_radius;
+                return Settings.Pi * _radius * _radius;
             }
 
             //Magic
-            float r2 = _radius*_radius;
-            float l2 = l*l;
-            float area = r2*((float) System.Math.Asin(l/_radius) + Settings.Pi/2) +
-                         l*CommonMath.Sqrt(r2 - l2);
-            float com = -2.0f/3.0f*(float) System.Math.Pow(r2 - l2, 1.5f)/area;
+            float r2 = _radius * _radius;
+            float l2 = l * l;
+            float area = r2 * ((float)System.Math.Asin(l / _radius) + Settings.Pi / 2) +
+                         l * CommonMath.Sqrt(r2 - l2);
+            float com = -2.0f / 3.0f * (float)System.Math.Pow(r2 - l2, 1.5f) / area;
 
-            c.X = p.X + normal.X*com;
-            c.Y = p.Y + normal.Y*com;
+            c.X = p.X + normal.X * com;
+            c.Y = p.Y + normal.Y * com;
 
             return area;
         }

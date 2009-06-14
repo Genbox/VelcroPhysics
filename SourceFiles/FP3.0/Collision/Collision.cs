@@ -21,11 +21,9 @@
 
 using System.Runtime.InteropServices;
 using FarseerPhysics.Math;
-using Microsoft.Xna.Framework;
-// If this is an XNA project then we use math from the XNA framework.
-#if XNA
 
-#else
+#if XNA
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerPhysics.Collision
@@ -33,7 +31,7 @@ namespace FarseerPhysics.Collision
     // Structures and functions used for computing contact points, distance
     // queries, and TOI queries.
 
-    public partial class Collision
+    public static partial class Collision
     {
         public static readonly byte NullFeature = CommonMath.UCHAR_MAX;
 
@@ -163,7 +161,7 @@ namespace FarseerPhysics.Collision
         /// <summary>
         /// The points of contact.
         /// </summary>
-        public ManifoldPoint[ /*Settings.MaxManifoldPoints*/] Points = new ManifoldPoint[Settings.MaxManifoldPoints];
+        public ManifoldPoint[] Points = new ManifoldPoint[Settings.MaxManifoldPoints];
 
         public Manifold()
         {

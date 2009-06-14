@@ -21,9 +21,9 @@
 
 using System;
 using FarseerPhysics.Collision;
-using Microsoft.Xna.Framework;
-#if XNA
 
+#if XNA
+using Microsoft.Xna.Framework;
 #else
 using FarseerPhysics.Math;
 #endif
