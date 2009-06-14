@@ -20,19 +20,16 @@
 */
 
 using FarseerPhysics.Math;
-using Microsoft.Xna.Framework;
-// If this is an XNA project then we use math from the XNA framework.
-#if XNA
 
-#else
+#if XNA
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerPhysics.Collision
 {
-    public partial class Collision
+    public static partial class Collision
     {
-        public static int ClipSegmentToLine(out ClipVertex[] vOut, ClipVertex[] vIn,
-                                            Vector2 normal, float offset)
+        public static int ClipSegmentToLine(out ClipVertex[] vOut, ClipVertex[] vIn, Vector2 normal, float offset)
         {
             if (vIn.Length != 2)
             {
@@ -52,11 +49,11 @@ namespace FarseerPhysics.Collision
             if (distance1 <= 0.0f) vOut[numOut++] = vIn[1];
 
             // If the points are on different sides of the plane
-            if (distance0*distance1 < 0.0f)
+            if (distance0 * distance1 < 0.0f)
             {
                 // Find intersection point of edge and plane
-                float interp = distance0/(distance0 - distance1);
-                vOut[numOut].V = vIn[0].V + interp*(vIn[1].V - vIn[0].V);
+                float interp = distance0 / (distance0 - distance1);
+                vOut[numOut].V = vIn[0].V + interp * (vIn[1].V - vIn[0].V);
                 if (distance0 > 0.0f)
                 {
                     vOut[numOut].ID = vIn[0].ID;
@@ -80,8 +77,7 @@ namespace FarseerPhysics.Collision
         /// <param name="poly2"></param>
         /// <param name="xf2"></param>
         /// <returns></returns>
-        public static float EdgeSeparation(PolygonShape poly1, XForm xf1, int edge1,
-                                           PolygonShape poly2, XForm xf2)
+        public static float EdgeSeparation(PolygonShape poly1, XForm xf1, int edge1, PolygonShape poly2, XForm xf2)
         {
             int count1 = poly1.VertexCount;
             Vector2[] vertices1 = poly1.GetVertices();
@@ -124,8 +120,7 @@ namespace FarseerPhysics.Collision
         /// <param name="poly2"></param>
         /// <param name="xf2"></param>
         /// <returns></returns>
-        public static float FindMaxSeparation(ref int edgeIndex,
-                                              PolygonShape poly1, XForm xf1, PolygonShape poly2, XForm xf2)
+        public static float FindMaxSeparation(ref int edgeIndex, PolygonShape poly1, XForm xf1, PolygonShape poly2, XForm xf2)
         {
             int count1 = poly1.VertexCount;
             Vector2[] normals1 = poly1.Normals;
@@ -193,7 +188,7 @@ namespace FarseerPhysics.Collision
             }
 
             // Perform a local search for the best edge normal.
-            for (;;)
+            for (; ; )
             {
                 if (increment == -1)
                     edge = bestEdge - 1 >= 0 ? bestEdge - 1 : count1 - 1;
@@ -221,8 +216,7 @@ namespace FarseerPhysics.Collision
             return bestSeparation;
         }
 
-        public static void FindIncidentEdge(out ClipVertex[] c,
-                                            PolygonShape poly1, XForm xf1, int edge1, PolygonShape poly2, XForm xf2)
+        public static void FindIncidentEdge(out ClipVertex[] c, PolygonShape poly1, XForm xf1, int edge1, PolygonShape poly2, XForm xf2)
         {
             int count1 = poly1.VertexCount;
             Vector2[] normals1 = poly1.Normals;
@@ -256,13 +250,13 @@ namespace FarseerPhysics.Collision
             c = new ClipVertex[2];
 
             c[0].V = CommonMath.Mul(xf2, vertices2[i1]);
-            c[0].ID.Features.ReferenceEdge = (byte) edge1;
-            c[0].ID.Features.IncidentEdge = (byte) i1;
+            c[0].ID.Features.ReferenceEdge = (byte)edge1;
+            c[0].ID.Features.IncidentEdge = (byte)i1;
             c[0].ID.Features.IncidentVertex = 0;
 
             c[1].V = CommonMath.Mul(xf2, vertices2[i2]);
-            c[1].ID.Features.ReferenceEdge = (byte) edge1;
-            c[1].ID.Features.IncidentEdge = (byte) i2;
+            c[1].ID.Features.ReferenceEdge = (byte)edge1;
+            c[1].ID.Features.IncidentEdge = (byte)i2;
             c[1].ID.Features.IncidentVertex = 1;
         }
 
@@ -272,8 +266,7 @@ namespace FarseerPhysics.Collision
         // Find incident edge
         // Clip
         // The normal points from 1 to 2
-        public static void CollidePolygons(ref Manifold manifold,
-                                           PolygonShape polyA, XForm xfA, PolygonShape polyB, XForm xfB)
+        public static void CollidePolygons(ref Manifold manifold, PolygonShape polyA, XForm xfA, PolygonShape polyB, XForm xfB)
         {
             manifold.PointCount = 0;
 
@@ -296,7 +289,7 @@ namespace FarseerPhysics.Collision
             float k_absoluteTol = 0.001f;
 
             // TODO_ERIN use "radius" of poly for absolute tolerance.
-            if (separationB > k_relativeTol*separationA + k_absoluteTol)
+            if (separationB > k_relativeTol * separationA + k_absoluteTol)
             {
                 poly1 = polyB;
                 poly2 = polyA;

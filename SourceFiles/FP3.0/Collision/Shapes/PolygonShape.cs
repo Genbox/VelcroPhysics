@@ -20,10 +20,9 @@
 */
 
 using FarseerPhysics.Math;
-using Microsoft.Xna.Framework;
-// If this is an XNA project then we use math from the XNA framework.
-#if XNA
 
+#if XNA
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerPhysics.Collision
@@ -325,8 +324,7 @@ namespace FarseerPhysics.Collision
             return true;
         }
 
-        public override SegmentCollide TestSegment(XForm xf, out float lambda, out Vector2 normal, Segment segment,
-                                                   float maxLambda)
+        public override SegmentCollide TestSegment(XForm xf, out float lambda, out Vector2 normal, Segment segment, float maxLambda)
         {
             lambda = 0f;
             normal = Vector2.Zero;

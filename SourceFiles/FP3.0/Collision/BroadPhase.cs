@@ -42,11 +42,9 @@ Bullet (http:/www.bulletphysics.com).
 //#define TARGET_FLOAT32_IS_FIXED
 
 using FarseerPhysics.Math;
-using Microsoft.Xna.Framework;
-// If this is an XNA project then we use math from the XNA framework.
-#if XNA
 
-#else
+#if XNA
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerPhysics.Collision
@@ -55,8 +53,8 @@ namespace FarseerPhysics.Collision
 
     public class BoundValues
     {
-        public int[ /*2*/] LowerValues = new int[2];
-        public int[ /*2*/] UpperValues = new int[2];
+        public int[] LowerValues = new int[2];
+        public int[] UpperValues = new int[2];
     }
 
     public class Bound
@@ -87,10 +85,10 @@ namespace FarseerPhysics.Collision
 
     public class Proxy
     {
-        public int[ /*2*/] LowerBounds = new int[2];
+        public int[] LowerBounds = new int[2];
         public int OverlapCount;
         public int TimeStamp;
-        public int[ /*2*/] UpperBounds = new int[2];
+        public int[] UpperBounds = new int[2];
         public object UserData;
 
         public int Next
@@ -144,13 +142,13 @@ namespace FarseerPhysics.Collision
             _proxyCount = 0;
 
             Vector2 d = worldAABB.UpperBound - worldAABB.LowerBound;
-            _quantizationFactor.X = BROADPHASE_MAX/d.X;
-            _quantizationFactor.Y = BROADPHASE_MAX/d.Y;
+            _quantizationFactor.X = BROADPHASE_MAX / d.X;
+            _quantizationFactor.Y = BROADPHASE_MAX / d.Y;
 
             for (int i = 0; i < Settings.MaxProxies - 1; ++i)
             {
                 _proxyPool[i] = new Proxy();
-                _proxyPool[i].Next = (ushort) (i + 1);
+                _proxyPool[i].Next = (ushort)(i + 1);
                 _proxyPool[i].TimeStamp = 0;
                 _proxyPool[i].OverlapCount = Invalid;
                 _proxyPool[i].UserData = null;
@@ -167,10 +165,10 @@ namespace FarseerPhysics.Collision
 
             for (int i = 0; i < 2; i++)
             {
-                _bounds[i] = new Bound[(2*Settings.MaxProxies)];
+                _bounds[i] = new Bound[(2 * Settings.MaxProxies)];
             }
 
-            int bCount = 2*Settings.MaxProxies;
+            int bCount = 2 * Settings.MaxProxies;
             for (int j = 0; j < 2; j++)
                 for (int k = 0; k < bCount; k++)
                     _bounds[j][k] = new Bound();
@@ -199,7 +197,7 @@ namespace FarseerPhysics.Collision
             proxy.OverlapCount = 0;
             proxy.UserData = userData;
 
-            int boundCount = 2*_proxyCount;
+            int boundCount = 2 * _proxyCount;
 
             int[] lowerValues = new int[2], upperValues = new int[2];
             ComputeBounds(out lowerValues, out upperValues, aabb);
@@ -256,11 +254,11 @@ namespace FarseerPhysics.Collision
                     Proxy proxy_ = _proxyPool[bounds[index].ProxyId];
                     if (bounds[index].IsLower)
                     {
-                        proxy_.LowerBounds[axis] = (ushort) index;
+                        proxy_.LowerBounds[axis] = (ushort)index;
                     }
                     else
                     {
-                        proxy_.UpperBounds[axis] = (ushort) index;
+                        proxy_.UpperBounds[axis] = (ushort)index;
                     }
                 }
             }
@@ -298,7 +296,7 @@ namespace FarseerPhysics.Collision
             Proxy proxy = _proxyPool[proxyId];
             //Box2DXDebug.Assert(proxy.IsValid);
 
-            int boundCount = 2*_proxyCount;
+            int boundCount = 2 * _proxyCount;
 
             for (int axis = 0; axis < 2; ++axis)
             {
@@ -337,11 +335,11 @@ namespace FarseerPhysics.Collision
                     Proxy proxy_ = _proxyPool[bounds[index].ProxyId];
                     if (bounds[index].IsLower)
                     {
-                        proxy_.LowerBounds[axis] = (ushort) index;
+                        proxy_.LowerBounds[axis] = (ushort)index;
                     }
                     else
                     {
-                        proxy_.UpperBounds[axis] = (ushort) index;
+                        proxy_.UpperBounds[axis] = (ushort)index;
                     }
                 }
 
@@ -378,7 +376,7 @@ namespace FarseerPhysics.Collision
             proxy.UpperBounds[1] = Invalid;
 
             proxy.Next = _freeProxy;
-            _freeProxy = (ushort) proxyId;
+            _freeProxy = (ushort)proxyId;
             --_proxyCount;
 
             if (IsValidate)
@@ -403,7 +401,7 @@ namespace FarseerPhysics.Collision
                 return;
             }
 
-            int boundCount = 2*_proxyCount;
+            int boundCount = 2 * _proxyCount;
 
             Proxy proxy = _proxyPool[proxyId];
 
@@ -620,8 +618,8 @@ namespace FarseerPhysics.Collision
 
             int lowerIndex, upperIndex;
 
-            Query(out lowerIndex, out upperIndex, lowerValues[0], upperValues[0], _bounds[0], 2*_proxyCount, 0);
-            Query(out lowerIndex, out upperIndex, lowerValues[1], upperValues[1], _bounds[1], 2*_proxyCount, 1);
+            Query(out lowerIndex, out upperIndex, lowerValues[0], upperValues[0], _bounds[0], 2 * _proxyCount, 0);
+            Query(out lowerIndex, out upperIndex, lowerValues[1], upperValues[1], _bounds[1], 2 * _proxyCount, 1);
 
             //Box2DXDebug.Assert(_queryResultCount < Settings.MaxProxies);
 
@@ -652,21 +650,21 @@ namespace FarseerPhysics.Collision
         public
 #if ALLOWUNSAFE
 		unsafe
-#endif //#if ALLOWUNSAFE
-            int QuerySegment(Segment segment, object[] userData, int maxCount, SortKeyFunc sortKey)
+#endif
+ int QuerySegment(Segment segment, object[] userData, int maxCount, SortKeyFunc sortKey)
         {
             float maxLambda = 1;
 
-            float dx = (segment.P2.X - segment.P1.X)*_quantizationFactor.X;
-            float dy = (segment.P2.Y - segment.P1.Y)*_quantizationFactor.Y;
+            float dx = (segment.P2.X - segment.P1.X) * _quantizationFactor.X;
+            float dy = (segment.P2.Y - segment.P1.Y) * _quantizationFactor.Y;
 
             int sx = dx < -Settings.FLT_EPSILON ? -1 : (dx > Settings.FLT_EPSILON ? 1 : 0);
             int sy = dy < -Settings.FLT_EPSILON ? -1 : (dy > Settings.FLT_EPSILON ? 1 : 0);
 
             //Box2DXDebug.Assert(sx != 0 || sy != 0);
 
-            float p1x = (segment.P1.X - _worldAABB.LowerBound.X)*_quantizationFactor.X;
-            float p1y = (segment.P1.Y - _worldAABB.LowerBound.Y)*_quantizationFactor.Y;
+            float p1x = (segment.P1.X - _worldAABB.LowerBound.X) * _quantizationFactor.X;
+            float p1y = (segment.P1.Y - _worldAABB.LowerBound.Y) * _quantizationFactor.Y;
 #if ALLOWUNSAFE
 			ushort* startValues = stackalloc ushort[2];
 			ushort* startValues2 = stackalloc ushort[2];
@@ -682,19 +680,19 @@ namespace FarseerPhysics.Collision
             Proxy proxy;
 
             // TODO_ERIN implement fast float to ushort conversion.
-            startValues[0] = (ushort) ((ushort) (p1x) & (BROADPHASE_MAX - 1));
-            startValues2[0] = (ushort) ((ushort) (p1x) | 1);
+            startValues[0] = (ushort)((ushort)(p1x) & (BROADPHASE_MAX - 1));
+            startValues2[0] = (ushort)((ushort)(p1x) | 1);
 
-            startValues[1] = (ushort) ((ushort) (p1y) & (BROADPHASE_MAX - 1));
-            startValues2[1] = (ushort) ((ushort) (p1y) | 1);
+            startValues[1] = (ushort)((ushort)(p1y) & (BROADPHASE_MAX - 1));
+            startValues2[1] = (ushort)((ushort)(p1y) | 1);
 
             //First deal with all the proxies that contain segment.p1
             int lowerIndex;
             int upperIndex;
-            Query(out lowerIndex, out upperIndex, startValues[0], startValues2[0], _bounds[0], 2*_proxyCount, 0);
+            Query(out lowerIndex, out upperIndex, startValues[0], startValues2[0], _bounds[0], 2 * _proxyCount, 0);
             if (sx >= 0) xIndex = upperIndex - 1;
             else xIndex = lowerIndex;
-            Query(out lowerIndex, out upperIndex, startValues[1], startValues2[1], _bounds[1], 2*_proxyCount, 1);
+            Query(out lowerIndex, out upperIndex, startValues[1], startValues2[1], _bounds[1], 2 * _proxyCount, 1);
             if (sy >= 0) yIndex = upperIndex - 1;
             else yIndex = lowerIndex;
 
@@ -734,13 +732,13 @@ namespace FarseerPhysics.Collision
             }
 
             //Now work through the rest of the segment
-            for (;;)
+            for (; ; )
             {
                 float xProgress = 0;
                 float yProgress = 0;
-                if (xIndex < 0 || xIndex >= _proxyCount*2)
+                if (xIndex < 0 || xIndex >= _proxyCount * 2)
                     break;
-                if (yIndex < 0 || yIndex >= _proxyCount*2)
+                if (yIndex < 0 || yIndex >= _proxyCount * 2)
                     break;
                 if (sx != 0)
                 {
@@ -748,7 +746,7 @@ namespace FarseerPhysics.Collision
                     if (sx > 0)
                     {
                         xIndex++;
-                        if (xIndex == _proxyCount*2)
+                        if (xIndex == _proxyCount * 2)
                             break;
                     }
                     else
@@ -757,7 +755,7 @@ namespace FarseerPhysics.Collision
                         if (xIndex < 0)
                             break;
                     }
-                    xProgress = (_bounds[0][xIndex].Value - p1x)/dx;
+                    xProgress = (_bounds[0][xIndex].Value - p1x) / dx;
                 }
                 if (sy != 0)
                 {
@@ -765,7 +763,7 @@ namespace FarseerPhysics.Collision
                     if (sy > 0)
                     {
                         yIndex++;
-                        if (yIndex == _proxyCount*2)
+                        if (yIndex == _proxyCount * 2)
                             break;
                     }
                     else
@@ -774,9 +772,9 @@ namespace FarseerPhysics.Collision
                         if (yIndex < 0)
                             break;
                     }
-                    yProgress = (_bounds[1][yIndex].Value - p1y)/dy;
+                    yProgress = (_bounds[1][yIndex].Value - p1y) / dy;
                 }
-                for (;;)
+                for (; ; )
                 {
                     if (sy == 0 || (sx != 0 && xProgress < yProgress))
                     {
@@ -832,7 +830,7 @@ namespace FarseerPhysics.Collision
                         if (sx > 0)
                         {
                             xIndex++;
-                            if (xIndex == _proxyCount*2)
+                            if (xIndex == _proxyCount * 2)
                                 break;
                         }
                         else
@@ -841,7 +839,7 @@ namespace FarseerPhysics.Collision
                             if (xIndex < 0)
                                 break;
                         }
-                        xProgress = (_bounds[0][xIndex].Value - p1x)/dx;
+                        xProgress = (_bounds[0][xIndex].Value - p1x) / dx;
                     }
                     else
                     {
@@ -897,7 +895,7 @@ namespace FarseerPhysics.Collision
                         if (sy > 0)
                         {
                             yIndex++;
-                            if (yIndex == _proxyCount*2)
+                            if (yIndex == _proxyCount * 2)
                                 break;
                         }
                         else
@@ -906,7 +904,7 @@ namespace FarseerPhysics.Collision
                             if (yIndex < 0)
                                 break;
                         }
-                        yProgress = (_bounds[1][yIndex].Value - p1y)/dy;
+                        yProgress = (_bounds[1][yIndex].Value - p1y) / dy;
                     }
                 }
 
@@ -935,7 +933,7 @@ namespace FarseerPhysics.Collision
             {
                 Bound[] bounds = _bounds[axis];
 
-                int boundCount = 2*_proxyCount;
+                int boundCount = 2 * _proxyCount;
                 int stabbingCount = 0;
 
                 for (int i = 0; i < boundCount; ++i)
@@ -976,12 +974,12 @@ namespace FarseerPhysics.Collision
             // lower/upper bounds that would have equal values.
             // TODO_ERIN implement fast float to uint16 conversion.
             lowerValues[0] =
-                ((int) (_quantizationFactor.X*(minVertex.X - _worldAABB.LowerBound.X)) & (BROADPHASE_MAX - 1));
-            upperValues[0] = ((int) (_quantizationFactor.X*(maxVertex.X - _worldAABB.LowerBound.X)) | 1);
+                ((int)(_quantizationFactor.X * (minVertex.X - _worldAABB.LowerBound.X)) & (BROADPHASE_MAX - 1));
+            upperValues[0] = ((int)(_quantizationFactor.X * (maxVertex.X - _worldAABB.LowerBound.X)) | 1);
 
             lowerValues[1] =
-                ((int) (_quantizationFactor.Y*(minVertex.Y - _worldAABB.LowerBound.Y)) & (BROADPHASE_MAX - 1));
-            upperValues[1] = ((int) (_quantizationFactor.Y*(maxVertex.Y - _worldAABB.LowerBound.Y)) | 1);
+                ((int)(_quantizationFactor.Y * (minVertex.Y - _worldAABB.LowerBound.Y)) & (BROADPHASE_MAX - 1));
+            upperValues[1] = ((int)(_quantizationFactor.Y * (maxVertex.Y - _worldAABB.LowerBound.Y)) | 1);
         }
 
         // This one is only used for validation.
@@ -1025,9 +1023,7 @@ namespace FarseerPhysics.Collision
             return true;
         }
 
-        private void Query(out int lowerQueryOut, out int upperQueryOut,
-                           int lowerValue, int upperValue,
-                           Bound[] bounds, int boundCount, int axis)
+        private void Query(out int lowerQueryOut, out int upperQueryOut, int lowerValue, int upperValue, Bound[] bounds, int boundCount, int axis)
         {
             int lowerQuery = BinarySearch(bounds, boundCount, lowerValue);
             int upperQuery = BinarySearch(bounds, boundCount, upperValue);
@@ -1087,7 +1083,7 @@ namespace FarseerPhysics.Collision
             {
                 proxy.OverlapCount = 2;
                 //Box2DXDebug.Assert(_queryResultCount < Settings.MaxProxies);
-                _queryResults[_queryResultCount] = (ushort) proxyId;
+                _queryResults[_queryResultCount] = (ushort)proxyId;
                 ++_queryResultCount;
                 qi2++;
             }
@@ -1191,7 +1187,7 @@ namespace FarseerPhysics.Collision
                 }
                 else
                 {
-                    return (ushort) mid;
+                    return (ushort)mid;
                 }
             }
 

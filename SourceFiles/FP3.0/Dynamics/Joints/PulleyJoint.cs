@@ -39,10 +39,9 @@
 // 0 <= impulse
 
 using FarseerPhysics.Math;
-using Microsoft.Xna.Framework;
-// If this is an XNA project then we use math from the XNA framework.
-#if XNA
 
+#if XNA
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerPhysics.Dynamics

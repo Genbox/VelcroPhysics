@@ -21,17 +21,14 @@
 
 using System;
 using System.Runtime.InteropServices;
-using Microsoft.Xna.Framework;
-// If this is an XNA project then we use math from the XNA framework.
+
 #if XNA
-
-#else
-
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerPhysics.Math
 {
-    public class CommonMath
+    public static class CommonMath
     {
         //public static float FLT_EPSILON = 1.192092896e-07f; //smallest such that 1.0f+FLT_EPSILON != 1.0f
         public static readonly float FLOAT32_EPSILON = 1.192092896e-07f;

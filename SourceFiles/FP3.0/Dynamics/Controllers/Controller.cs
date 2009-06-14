@@ -64,13 +64,6 @@ namespace FarseerPhysics.Dynamics.Controllers
         public abstract void Step(TimeStep step);
 
         /// <summary>
-        /// Controllers override this to provide debug drawing.
-        /// </summary>
-        public virtual void Draw(DebugDraw debugDraw)
-        {
-        }
-
-        /// <summary>
         /// Adds a body to the controller list.
         /// </summary>
         public void AddBody(Body body)

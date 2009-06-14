@@ -23,14 +23,10 @@
 // of overlapping proxies. It is based closely on code provided by Pierre Terdiman.
 // http://www.codercorner.com/IncrementalSAP.txt
 
-#define DEBUG
+//#define DEBUG
 
 using System;
 using FarseerPhysics.Math;
-// If this is an XNA project then we use math from the XNA framework.
-#if XNA
-
-#endif
 
 namespace FarseerPhysics.Collision
 {

@@ -22,10 +22,9 @@
 using System;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Math;
-using Microsoft.Xna.Framework;
-// If this is an XNA project then we use math from the XNA framework.
-#if XNA
 
+#if XNA
+using Microsoft.Xna.Framework;
 #endif
 
 namespace FarseerPhysics.Collision
@@ -304,8 +303,7 @@ namespace FarseerPhysics.Collision
         /// the normal is not set.</param>
         /// <param name="segment">Defines the begin and end point of the ray cast.</param>
         /// <param name="maxLambda">A number typically in the range [0,1].</param>
-        public abstract SegmentCollide TestSegment(XForm xf, out float lambda, out Vector2 normal, Segment segment,
-                                                   float maxLambda);
+        public abstract SegmentCollide TestSegment(XForm xf, out float lambda, out Vector2 normal, Segment segment, float maxLambda);
 
         /// <summary>
         /// Given a transform, compute the associated axis aligned bounding box for this shape.

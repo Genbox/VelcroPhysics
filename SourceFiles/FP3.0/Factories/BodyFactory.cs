@@ -1,8 +1,7 @@
 ﻿using FarseerPhysics.Dynamics;
-using Microsoft.Xna.Framework;
-// If this is an XNA project then we use math from the XNA framework.
-#if XNA
 
+#if XNA
+using Microsoft.Xna.Framework;
 #else
 using FarseerPhysics.Math;
 #endif

@@ -113,16 +113,5 @@ namespace FarseerPhysics.Dynamics.Controllers
                 body.ApplyTorque(-body.GetInertia()/body.GetMass()*area*body.GetAngularVelocity()*angularDrag);
             }
         }
-
-        public override void Draw(DebugDraw debugDraw)
-        {
-            float r = 1000;
-            Vector2 p1 = offset*normal + CommonMath.Cross(normal, r);
-            Vector2 p2 = offset*normal - CommonMath.Cross(normal, r);
-
-            Color color = new Color(0, 0, 0.8f);
-
-            debugDraw.DrawSegment(p1, p2, color);
-        }
     }
 }
