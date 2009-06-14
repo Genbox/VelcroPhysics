@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaterSampleXNA", "WaterSampleXNA.csproj", "{46BEFCDB-48C4-476B-BD9C-FF5BAC11D40D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerPhysicsXNA", "..\..\Branches\XNA3\FarseerPhysicsXNA.csproj", "{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerPhysicsXNA", "..\..\..\Branches\FP2.1\XNA3\FarseerPhysicsXNA.csproj", "{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -17,13 +17,13 @@ Global
 		SccProjectTopLevelParentUniqueName2 = WaterSampleXNA.csproj
 		SccProjectName2 = Content
 		SccLocalPath2 = Content
-		SccProjectUniqueName3 = ..\\..\\Branches\\XNA3\\FarseerPhysicsXNA.csproj
-		SccProjectName3 = ../../Branches/XNA3
-		SccLocalPath3 = ..\\..\\Branches\\XNA3
-		SccProjectUniqueName4 = ..\\..\\Branches\\XNA3\\Content\\Content.contentproj
-		SccProjectTopLevelParentUniqueName4 = ..\\..\\Branches\\XNA3\\FarseerPhysicsXNA.csproj
-		SccProjectName4 = ../../Branches/XNA3/Content
-		SccLocalPath4 = ..\\..\\Branches\\XNA3\\Content
+		SccProjectUniqueName3 = ..\\..\\..\\Branches\\FP2.1\\XNA3\\FarseerPhysicsXNA.csproj
+		SccProjectName3 = ../../../Branches/FP2.1/XNA3
+		SccLocalPath3 = ..\\..\\..\\Branches\\FP2.1\\XNA3
+		SccProjectUniqueName4 = ..\\..\\..\\Branches\\FP2.1\\XNA3\\Content\\Content.contentproj
+		SccProjectTopLevelParentUniqueName4 = ..\\..\\..\\Branches\\FP2.1\\XNA3\\FarseerPhysicsXNA.csproj
+		SccProjectName4 = ../../../Branches/FP2.1/XNA3/Content
+		SccLocalPath4 = ..\\..\\..\\Branches\\FP2.1\\XNA3\\Content
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

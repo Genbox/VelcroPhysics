@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSamplesWPF", "SimpleSamplesWPF.csproj", "{EDC63D9D-EED8-43F4-8599-29F1F04DF352}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerPhysics", "..\..\Branches\Class\FarseerPhysics.csproj", "{95B40504-C1C2-4FCD-98B3-B63AD35D6336}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerPhysics", "..\..\..\Branches\FP2.1\Class\FarseerPhysics.csproj", "{95B40504-C1C2-4FCD-98B3-B63AD35D6336}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 3
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs01.codeplex.com/
-		SccProjectUniqueName0 = SimpleSamplesWPF.csproj
 		SccLocalPath0 = .
-		SccProjectUniqueName1 = ..\\..\\Branches\\Class\\FarseerPhysics.csproj
-		SccProjectName1 = ../../Branches/Class
-		SccLocalPath1 = ..\\..\\Branches\\Class
-		SccLocalPath2 = .
+		SccProjectUniqueName1 = SimpleSamplesWPF.csproj
+		SccLocalPath1 = .
+		SccProjectUniqueName2 = ..\\..\\..\\Branches\\FP2.1\\Class\\FarseerPhysics.csproj
+		SccProjectName2 = ../../../Branches/FP2.1/Class
+		SccLocalPath2 = ..\\..\\..\\Branches\\FP2.1\\Class
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

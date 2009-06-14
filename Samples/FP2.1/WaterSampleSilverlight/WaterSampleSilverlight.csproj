@@ -109,7 +109,7 @@
     <Resource Include="Content\PPG_100X210BoxOnly.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\Silverlight\FarseerPhysicsSilverlight.csproj">
+    <ProjectReference Include="..\..\..\Branches\FP2.1\Silverlight\FarseerPhysicsSilverlight.csproj">
       <Project>{1D0B97EA-FE4A-498E-A21B-D0D476464925}</Project>
       <Name>FarseerPhysicsSilverlight</Name>
     </ProjectReference>
