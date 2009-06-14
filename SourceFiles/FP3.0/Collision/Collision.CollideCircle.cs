@@ -19,161 +19,157 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+using FarseerPhysics.Math;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
 using Microsoft.Xna.Framework;
+#else
 #endif
-
-using FarseerPhysics.Common;
 
 namespace FarseerPhysics.Collision
 {
-	public partial class Collision
-	{
-		public static void CollideCircles(ref Manifold manifold,
-			CircleShape circle1, XForm xf1, CircleShape circle2, XForm xf2)
-		{
-			manifold.PointCount = 0;
+    public partial class Collision
+    {
+        public static void CollideCircles(ref Manifold manifold,
+                                          CircleShape circle1, XForm xf1, CircleShape circle2, XForm xf2)
+        {
+            manifold.PointCount = 0;
 
-			Vector2 p1 = Common.Math.Mul(xf1, circle1.GetLocalPosition());
-			Vector2 p2 = Common.Math.Mul(xf2, circle2.GetLocalPosition());
+            Vector2 p1 = MathHelper.Mul(xf1, circle1.GetLocalPosition());
+            Vector2 p2 = MathHelper.Mul(xf2, circle2.GetLocalPosition());
 
             Vector2 d = p2 - p1;
             float distSqr = Vector2.Dot(d, d);
-			float r1 = circle1.GetRadius();
-			float r2 = circle2.GetRadius();
-			float radiusSum = r1 + r2;
-			if (distSqr > radiusSum * radiusSum)
-			{
-				return;
-			}
+            float r1 = circle1.GetRadius();
+            float r2 = circle2.GetRadius();
+            float radiusSum = r1 + r2;
+            if (distSqr > radiusSum*radiusSum)
+            {
+                return;
+            }
 
-			float separation;
-			if (distSqr < Common.Settings.FLT_EPSILON)
-			{
-				separation = -radiusSum;
+            float separation;
+            if (distSqr < Settings.FLT_EPSILON)
+            {
+                separation = -radiusSum;
                 manifold.Normal = new Vector2(0.0f, 1.0f);
-			}
-			else
-			{
-				float dist = Common.Math.Sqrt(distSqr);
-				separation = dist - radiusSum;
-				float a = 1.0f / dist;
-				manifold.Normal.X = a * d.X;
-				manifold.Normal.Y = a * d.Y;
-			}
+            }
+            else
+            {
+                float dist = MathHelper.Sqrt(distSqr);
+                separation = dist - radiusSum;
+                float a = 1.0f/dist;
+                manifold.Normal.X = a*d.X;
+                manifold.Normal.Y = a*d.Y;
+            }
 
-			manifold.PointCount = 1;
-			manifold.Points[0].ID.Key = 0;
-			manifold.Points[0].Separation = separation;
+            manifold.PointCount = 1;
+            manifold.Points[0].ID.Key = 0;
+            manifold.Points[0].Separation = separation;
 
-			p1 += r1 * manifold.Normal;
-			p2 -= r2 * manifold.Normal;
+            p1 += r1*manifold.Normal;
+            p2 -= r2*manifold.Normal;
 
-            Vector2 p = 0.5f * (p1 + p2);
+            Vector2 p = 0.5f*(p1 + p2);
 
-			manifold.Points[0].LocalPoint1 = Common.Math.MulT(xf1, p);
-			manifold.Points[0].LocalPoint2 = Common.Math.MulT(xf2, p);
-		}
+            manifold.Points[0].LocalPoint1 = MathHelper.MulT(xf1, p);
+            manifold.Points[0].LocalPoint2 = MathHelper.MulT(xf2, p);
+        }
 
-		public static void CollidePolygonAndCircle(ref Manifold manifold,
-			PolygonShape polygon, XForm xf1, CircleShape circle, XForm xf2)
-		{
-			manifold.PointCount = 0;
+        public static void CollidePolygonAndCircle(ref Manifold manifold,
+                                                   PolygonShape polygon, XForm xf1, CircleShape circle, XForm xf2)
+        {
+            manifold.PointCount = 0;
 
-			// Compute circle position in the frame of the polygon.
-            Vector2 c = Common.Math.Mul(xf2, circle.GetLocalPosition());
-            Vector2 cLocal = Common.Math.MulT(xf1, c);
+            // Compute circle position in the frame of the polygon.
+            Vector2 c = MathHelper.Mul(xf2, circle.GetLocalPosition());
+            Vector2 cLocal = MathHelper.MulT(xf1, c);
 
-			// Find the min separating edge.
-			int normalIndex = 0;
-			float separation = -Settings.FLT_MAX;
-			float radius = circle.GetRadius();
-			int vertexCount = polygon.VertexCount;
+            // Find the min separating edge.
+            int normalIndex = 0;
+            float separation = -Settings.FLT_MAX;
+            float radius = circle.GetRadius();
+            int vertexCount = polygon.VertexCount;
             Vector2[] vertices = polygon.GetVertices();
             Vector2[] normals = polygon.Normals;
 
-			for (int i = 0; i < vertexCount; ++i)
-			{
+            for (int i = 0; i < vertexCount; ++i)
+            {
                 float s = Vector2.Dot(normals[i], cLocal - vertices[i]);
-				if (s > radius)
-				{
-					// Early out.
-					return;
-				}
+                if (s > radius)
+                {
+                    // Early out.
+                    return;
+                }
 
-				if (s > separation)
-				{
-					separation = s;
-					normalIndex = i;
-				}
-			}
+                if (s > separation)
+                {
+                    separation = s;
+                    normalIndex = i;
+                }
+            }
 
-			// If the center is inside the polygon ...
-			if (separation < Common.Settings.FLT_EPSILON)
-			{
-				manifold.PointCount = 1;
-				manifold.Normal = Common.Math.Mul(xf1.R, normals[normalIndex]);
-				manifold.Points[0].ID.Features.IncidentEdge = (byte)normalIndex;
-				manifold.Points[0].ID.Features.IncidentVertex = Collision.NullFeature;
-				manifold.Points[0].ID.Features.ReferenceEdge = 0;
-				manifold.Points[0].ID.Features.Flip = 0;
-                Vector2 position = c - radius * manifold.Normal;
-				manifold.Points[0].LocalPoint1 = Common.Math.MulT(xf1, position);
-				manifold.Points[0].LocalPoint2 = Common.Math.MulT(xf2, position);
-				manifold.Points[0].Separation = separation - radius;
-				return;
-			}
+            // If the center is inside the polygon ...
+            if (separation < Settings.FLT_EPSILON)
+            {
+                manifold.PointCount = 1;
+                manifold.Normal = MathHelper.Mul(xf1.R, normals[normalIndex]);
+                manifold.Points[0].ID.Features.IncidentEdge = (byte) normalIndex;
+                manifold.Points[0].ID.Features.IncidentVertex = NullFeature;
+                manifold.Points[0].ID.Features.ReferenceEdge = 0;
+                manifold.Points[0].ID.Features.Flip = 0;
+                Vector2 position = c - radius*manifold.Normal;
+                manifold.Points[0].LocalPoint1 = MathHelper.MulT(xf1, position);
+                manifold.Points[0].LocalPoint2 = MathHelper.MulT(xf2, position);
+                manifold.Points[0].Separation = separation - radius;
+                return;
+            }
 
-			// Project the circle center onto the edge segment.
-			int vertIndex1 = normalIndex;
-			int vertIndex2 = vertIndex1 + 1 < vertexCount ? vertIndex1 + 1 : 0;
+            // Project the circle center onto the edge segment.
+            int vertIndex1 = normalIndex;
+            int vertIndex2 = vertIndex1 + 1 < vertexCount ? vertIndex1 + 1 : 0;
             Vector2 e = vertices[vertIndex2] - vertices[vertIndex1];
 
-            float length = FarseerPhysics.Common.Math.Normalize(ref e);
-			//Box2DXDebug.Assert(length > Settings.FLT_EPSILON);
+            float length = MathHelper.Normalize(ref e);
+            //Box2DXDebug.Assert(length > Settings.FLT_EPSILON);
 
-			// Project the center onto the edge.
+            // Project the center onto the edge.
             float u = Vector2.Dot(cLocal - vertices[vertIndex1], e);
             Vector2 p;
-			if (u <= 0.0f)
-			{
-				p = vertices[vertIndex1];
-				manifold.Points[0].ID.Features.IncidentEdge = Collision.NullFeature;
-				manifold.Points[0].ID.Features.IncidentVertex = (byte)vertIndex1;
-			}
-			else if (u >= length)
-			{
-				p = vertices[vertIndex2];
-				manifold.Points[0].ID.Features.IncidentEdge = Collision.NullFeature;
-				manifold.Points[0].ID.Features.IncidentVertex = (byte)vertIndex2;
-			}
-			else
-			{
-				p = vertices[vertIndex1] + u * e;
-				manifold.Points[0].ID.Features.IncidentEdge = (byte)normalIndex;
-				manifold.Points[0].ID.Features.IncidentVertex = Collision.NullFeature;
-			}
+            if (u <= 0.0f)
+            {
+                p = vertices[vertIndex1];
+                manifold.Points[0].ID.Features.IncidentEdge = NullFeature;
+                manifold.Points[0].ID.Features.IncidentVertex = (byte) vertIndex1;
+            }
+            else if (u >= length)
+            {
+                p = vertices[vertIndex2];
+                manifold.Points[0].ID.Features.IncidentEdge = NullFeature;
+                manifold.Points[0].ID.Features.IncidentVertex = (byte) vertIndex2;
+            }
+            else
+            {
+                p = vertices[vertIndex1] + u*e;
+                manifold.Points[0].ID.Features.IncidentEdge = (byte) normalIndex;
+                manifold.Points[0].ID.Features.IncidentVertex = NullFeature;
+            }
 
             Vector2 d = cLocal - p;
-            float dist = FarseerPhysics.Common.Math.Normalize(ref d);
-			if (dist > radius)
-			{
-				return;
-			}
+            float dist = MathHelper.Normalize(ref d);
+            if (dist > radius)
+            {
+                return;
+            }
 
-			manifold.PointCount = 1;
-			manifold.Normal = Common.Math.Mul(xf1.R, d);
-            Vector2 position_ = c - radius * manifold.Normal;
-			manifold.Points[0].LocalPoint1 = Common.Math.MulT(xf1, position_);
-			manifold.Points[0].LocalPoint2 = Common.Math.MulT(xf2, position_);
-			manifold.Points[0].Separation = dist - radius;
-			manifold.Points[0].ID.Features.ReferenceEdge = 0;
-			manifold.Points[0].ID.Features.Flip = 0;
-		}
-	}
+            manifold.PointCount = 1;
+            manifold.Normal = MathHelper.Mul(xf1.R, d);
+            Vector2 position_ = c - radius*manifold.Normal;
+            manifold.Points[0].LocalPoint1 = MathHelper.MulT(xf1, position_);
+            manifold.Points[0].LocalPoint2 = MathHelper.MulT(xf2, position_);
+            manifold.Points[0].Separation = dist - radius;
+            manifold.Points[0].ID.Features.ReferenceEdge = 0;
+            manifold.Points[0].ID.Features.Flip = 0;
+        }
+    }
 }

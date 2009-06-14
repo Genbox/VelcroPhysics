@@ -20,223 +20,244 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-
+using FarseerPhysics.Collision;
+using FarseerPhysics.Math;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endif
 
-using FarseerPhysics.Common;
-using FarseerPhysics.Collision;
-
 namespace FarseerPhysics.Dynamics
 {
-	/// <summary>
-	/// Joints and shapes are destroyed when their associated
-	/// body is destroyed. Implement this listener so that you
-	/// may nullify references to these joints and shapes.
-	/// </summary>
-	public abstract class DestructionListener
-	{
-		/// <summary>
-		/// Called when any joint is about to be destroyed due
-		/// to the destruction of one of its attached bodies.
-		/// </summary>
-		public abstract void SayGoodbye(Joint joint);
+    /// <summary>
+    /// Joints and shapes are destroyed when their associated
+    /// body is destroyed. Implement this listener so that you
+    /// may nullify references to these joints and shapes.
+    /// </summary>
+    public abstract class DestructionListener
+    {
+        /// <summary>
+        /// Called when any joint is about to be destroyed due
+        /// to the destruction of one of its attached bodies.
+        /// </summary>
+        public abstract void SayGoodbye(Joint joint);
 
-		/// <summary>
-		/// Called when any shape is about to be destroyed due
-		/// to the destruction of its parent body.
-		/// </summary>
-		public abstract void SayGoodbye(Shape shape);
-	}
+        /// <summary>
+        /// Called when any shape is about to be destroyed due
+        /// to the destruction of its parent body.
+        /// </summary>
+        public abstract void SayGoodbye(Shape shape);
+    }
 
-	/// <summary>
-	/// This is called when a body's shape passes outside of the world boundary.
-	/// </summary>
-	public abstract class BoundaryListener
-	{
-		/// <summary>
-		/// This is called for each body that leaves the world boundary.
-		/// @warning you can't modify the world inside this callback.
-		/// </summary>
-		public abstract void Violation(Body body);
-	}
+    /// <summary>
+    /// This is called when a body's shape passes outside of the world boundary.
+    /// </summary>
+    public abstract class BoundaryListener
+    {
+        /// <summary>
+        /// This is called for each body that leaves the world boundary.
+        /// @warning you can't modify the world inside this callback.
+        /// </summary>
+        public abstract void Violation(Body body);
+    }
 
-	/// <summary>
-	/// Implement this class to provide collision filtering. In other words, you can implement
-	/// this class if you want finer control over contact creation.
-	/// </summary>
-	public class ContactFilter
-	{
-		/// <summary>
-		/// Return true if contact calculations should be performed between these two shapes.
-		/// If you implement your own collision filter you may want to build from this implementation.
-		/// @warning for performance reasons this is only called when the AABBs begin to overlap.
-		/// </summary>
-		public virtual bool ShouldCollide(Shape shape1, Shape shape2)
-		{
-			FilterData filter1 = shape1.FilterData;
-			FilterData filter2 = shape2.FilterData;
+    /// <summary>
+    /// Implement this class to provide collision filtering. In other words, you can implement
+    /// this class if you want finer control over contact creation.
+    /// </summary>
+    public class ContactFilter
+    {
+        /// <summary>
+        /// Return true if contact calculations should be performed between these two shapes.
+        /// If you implement your own collision filter you may want to build from this implementation.
+        /// @warning for performance reasons this is only called when the AABBs begin to overlap.
+        /// </summary>
+        public virtual bool ShouldCollide(Shape shape1, Shape shape2)
+        {
+            FilterData filter1 = shape1.FilterData;
+            FilterData filter2 = shape2.FilterData;
 
-			if (filter1.GroupIndex == filter2.GroupIndex && filter1.GroupIndex != 0)
-			{
-				return filter1.GroupIndex > 0;
-			}
+            if (filter1.GroupIndex == filter2.GroupIndex && filter1.GroupIndex != 0)
+            {
+                return filter1.GroupIndex > 0;
+            }
 
-			bool collide = (filter1.MaskBits & filter2.CategoryBits) != 0 && (filter1.CategoryBits & filter2.MaskBits) != 0;
-			return collide;
-		}
+            bool collide = (filter1.MaskBits & filter2.CategoryBits) != 0 &&
+                           (filter1.CategoryBits & filter2.MaskBits) != 0;
+            return collide;
+        }
 
-		/// <summary>
-		/// Return true if the given shape should be considered for ray intersection.
-		/// </summary>
-		public bool RayCollide(object userData, Shape shape)
-		{
-			//By default, cast userData as a shape, and then collide if the shapes would collide
-			if (userData == null)
-				return true;
-			return ShouldCollide((Shape)userData, shape);
-		}
-	}
+        /// <summary>
+        /// Return true if the given shape should be considered for ray intersection.
+        /// </summary>
+        public bool RayCollide(object userData, Shape shape)
+        {
+            //By default, cast userData as a shape, and then collide if the shapes would collide
+            if (userData == null)
+                return true;
+            return ShouldCollide((Shape) userData, shape);
+        }
+    }
 
-	public class WorldCallback
-	{
-		/// <summary>
-		/// The default contact filter.
-		/// </summary>
-		public static ContactFilter DefaultFilter = new ContactFilter();
-	}
+    public class WorldCallback
+    {
+        /// <summary>
+        /// The default contact filter.
+        /// </summary>
+        public static ContactFilter DefaultFilter = new ContactFilter();
+    }
 
-	/// <summary>
-	/// Implement this class to get collision results. You can use these results for
-	/// things like sounds and game logic. You can also get contact results by
-	/// traversing the contact lists after the time step. However, you might miss
-	/// some contacts because continuous physics leads to sub-stepping.
-	/// Additionally you may receive multiple callbacks for the same contact in a
-	/// single time step.
-	/// You should strive to make your callbacks efficient because there may be
-	/// many callbacks per time step.
-	/// @warning The contact separation is the last computed value.
-	/// @warning You cannot create/destroy Box2D entities inside these callbacks.
-	/// </summary>
-	public abstract class ContactListener
-	{
-		/// <summary>
-		/// Called when a contact point is added. This includes the geometry
-		/// and the forces.
-		/// </summary>
-		public virtual void Add(ContactPoint point) { return; }
+    /// <summary>
+    /// Implement this class to get collision results. You can use these results for
+    /// things like sounds and game logic. You can also get contact results by
+    /// traversing the contact lists after the time step. However, you might miss
+    /// some contacts because continuous physics leads to sub-stepping.
+    /// Additionally you may receive multiple callbacks for the same contact in a
+    /// single time step.
+    /// You should strive to make your callbacks efficient because there may be
+    /// many callbacks per time step.
+    /// @warning The contact separation is the last computed value.
+    /// @warning You cannot create/destroy Box2D entities inside these callbacks.
+    /// </summary>
+    public abstract class ContactListener
+    {
+        /// <summary>
+        /// Called when a contact point is added. This includes the geometry
+        /// and the forces.
+        /// </summary>
+        public virtual void Add(ContactPoint point)
+        {
+            return;
+        }
 
-		/// <summary>
-		/// Called when a contact point persists. This includes the geometry
-		/// and the forces.
-		/// </summary>
-		public virtual void Persist(ContactPoint point) { return; }
+        /// <summary>
+        /// Called when a contact point persists. This includes the geometry
+        /// and the forces.
+        /// </summary>
+        public virtual void Persist(ContactPoint point)
+        {
+            return;
+        }
 
-		/// <summary>
-		/// Called when a contact point is removed. This includes the last
-		/// computed geometry and forces.
-		/// </summary>
-		public virtual void Remove(ContactPoint point) { return; }
+        /// <summary>
+        /// Called when a contact point is removed. This includes the last
+        /// computed geometry and forces.
+        /// </summary>
+        public virtual void Remove(ContactPoint point)
+        {
+            return;
+        }
 
-		/// <summary>
-		/// Called after a contact point is solved.
-		/// </summary>
-		public virtual void Result(ContactResult point) { return; }
-	}
+        /// <summary>
+        /// Called after a contact point is solved.
+        /// </summary>
+        public virtual void Result(ContactResult point)
+        {
+            return;
+        }
+    }
 
 #if !XNA
-	/// <summary>
-	/// Color for debug drawing. Each value has the range [0,1].
-	/// </summary>
-	public struct Color
-	{
-		public float R, G, B;
+    /// <summary>
+    /// Color for debug drawing. Each value has the range [0,1].
+    /// </summary>
+    public struct Color
+    {
+        public float B;
+        public float G;
+        public float R;
 
-		public Color(float r, float g, float b)
-		{
-			R = r; G = g; B = b;
-		}
-	}
+        public Color(float r, float g, float b)
+        {
+            R = r;
+            G = g;
+            B = b;
+        }
+    }
 #endif
 
-	/// <summary>
-	/// Implement and register this class with a b2World to provide debug drawing of physics
-	/// entities in your game.
-	/// </summary>
-	public abstract class DebugDraw
-	{
-		[Flags]
-		public enum DrawFlags
-		{
-			Shape = 0x0001, // draw shapes
-			Joint = 0x0002, // draw joint connections
-			CoreShape = 0x0004, // draw core (TOI) shapes
-			Aabb = 0x0008, // draw axis aligned bounding boxes
-			Obb = 0x0010, // draw oriented bounding boxes
-			Pair = 0x0020, // draw broad-phase pairs
-			CenterOfMass = 0x0040, // draw center of mass frame
-			Controller = 0x0080 // draw center of mass frame
-		}
+    /// <summary>
+    /// Implement and register this class with a b2World to provide debug drawing of physics
+    /// entities in your game.
+    /// </summary>
+    public abstract class DebugDraw
+    {
+        #region DrawFlags enum
 
-		protected DrawFlags _drawFlags;
+        [Flags]
+        public enum DrawFlags
+        {
+            Shape = 0x0001, // draw shapes
+            Joint = 0x0002, // draw joint connections
+            CoreShape = 0x0004, // draw core (TOI) shapes
+            Aabb = 0x0008, // draw axis aligned bounding boxes
+            Obb = 0x0010, // draw oriented bounding boxes
+            Pair = 0x0020, // draw broad-phase pairs
+            CenterOfMass = 0x0040, // draw center of mass frame
+            Controller = 0x0080 // draw center of mass frame
+        }
 
-		public DebugDraw()
-		{
-			_drawFlags = 0;
-		}
+        #endregion
 
-		public DrawFlags Flags { get { return _drawFlags; } set { _drawFlags = value; } }
+        protected DrawFlags _drawFlags;
 
-		/// <summary>
-		/// Append flags to the current flags.
-		/// </summary>
-		public void AppendFlags(DrawFlags flags)
-		{
-			_drawFlags |= flags;
-		}
+        public DebugDraw()
+        {
+            _drawFlags = 0;
+        }
 
-		/// <summary>
-		/// Clear flags from the current flags.
-		/// </summary>
-		public void ClearFlags(DrawFlags flags)
-		{
-			_drawFlags &= ~flags;
-		}
+        public DrawFlags Flags
+        {
+            get { return _drawFlags; }
+            set { _drawFlags = value; }
+        }
 
-		/// <summary>
-		/// Draw a closed polygon provided in CCW order.
-		/// </summary>
-		public abstract void DrawPolygon(Vector2[] vertices, int vertexCount, Color color);
+        /// <summary>
+        /// Append flags to the current flags.
+        /// </summary>
+        public void AppendFlags(DrawFlags flags)
+        {
+            _drawFlags |= flags;
+        }
 
-		/// <summary>
-		/// Draw a solid closed polygon provided in CCW order.
-		/// </summary>
-		public abstract void DrawSolidPolygon(Vector2[] vertices, int vertexCount, Color color);
+        /// <summary>
+        /// Clear flags from the current flags.
+        /// </summary>
+        public void ClearFlags(DrawFlags flags)
+        {
+            _drawFlags &= ~flags;
+        }
 
-		/// <summary>
-		/// Draw a circle.
-		/// </summary>
-		public abstract void DrawCircle(Vector2 center, float radius, Color color);
+        /// <summary>
+        /// Draw a closed polygon provided in CCW order.
+        /// </summary>
+        public abstract void DrawPolygon(Vector2[] vertices, int vertexCount, Color color);
 
-		/// <summary>
-		/// Draw a solid circle.
-		/// </summary>
-		public abstract void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, Color color);
+        /// <summary>
+        /// Draw a solid closed polygon provided in CCW order.
+        /// </summary>
+        public abstract void DrawSolidPolygon(Vector2[] vertices, int vertexCount, Color color);
 
-		/// <summary>
-		/// Draw a line segment.
-		/// </summary>
-		public abstract void DrawSegment(Vector2 p1, Vector2 p2, Color color);
+        /// <summary>
+        /// Draw a circle.
+        /// </summary>
+        public abstract void DrawCircle(Vector2 center, float radius, Color color);
 
-		/// <summary>
-		/// Draw a transform. Choose your own length scale.
-		/// </summary>
-		/// <param name="xf">A transform.</param>
-		public abstract void DrawXForm(XForm xf);
-	}
+        /// <summary>
+        /// Draw a solid circle.
+        /// </summary>
+        public abstract void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, Color color);
+
+        /// <summary>
+        /// Draw a line segment.
+        /// </summary>
+        public abstract void DrawSegment(Vector2 p1, Vector2 p2, Color color);
+
+        /// <summary>
+        /// Draw a transform. Choose your own length scale.
+        /// </summary>
+        /// <param name="xf">A transform.</param>
+        public abstract void DrawXForm(XForm xf);
+    }
 }

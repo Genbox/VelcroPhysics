@@ -19,301 +19,300 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+using FarseerPhysics.Math;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
 using Microsoft.Xna.Framework;
 #endif
 
-using FarseerPhysics.Common;
-
 namespace FarseerPhysics.Dynamics
 {
-	public enum JointType
-	{
-		UnknownJoint,
-		RevoluteJoint,
-		PrismaticJoint,
-		DistanceJoint,
-		PulleyJoint,
-		MouseJoint,
-		GearJoint,
-		LineJoint
-	}
+    public enum JointType
+    {
+        UnknownJoint,
+        RevoluteJoint,
+        PrismaticJoint,
+        DistanceJoint,
+        PulleyJoint,
+        MouseJoint,
+        GearJoint,
+        LineJoint
+    }
 
-	public enum LimitState
-	{
-		InactiveLimit,
-		AtLowerLimit,
-		AtUpperLimit,
-		EqualLimits
-	}
+    public enum LimitState
+    {
+        InactiveLimit,
+        AtLowerLimit,
+        AtUpperLimit,
+        EqualLimits
+    }
 
-	public struct Jacobian
-	{
-		public Vector2 Linear1;
-		public float Angular1;
-		public Vector2 Linear2;
-		public float Angular2;
+    public struct Jacobian
+    {
+        public float Angular1;
+        public float Angular2;
+        public Vector2 Linear1;
+        public Vector2 Linear2;
 
-		public void SetZero()
-		{
-			Linear1 = Vector2.Zero; Angular1 = 0.0f;
-            Linear2 = Vector2.Zero; Angular2 = 0.0f;
-		}
+        public void SetZero()
+        {
+            Linear1 = Vector2.Zero;
+            Angular1 = 0.0f;
+            Linear2 = Vector2.Zero;
+            Angular2 = 0.0f;
+        }
 
-		public void Set(Vector2 x1, float a1, Vector2 x2, float a2)
-		{
-			Linear1 = x1; Angular1 = a1;
-			Linear2 = x2; Angular2 = a2;
-		}
+        public void Set(Vector2 x1, float a1, Vector2 x2, float a2)
+        {
+            Linear1 = x1;
+            Angular1 = a1;
+            Linear2 = x2;
+            Angular2 = a2;
+        }
 
-		public float Compute(Vector2 x1, float a1, Vector2 x2, float a2)
-		{
-            return Vector2.Dot(Linear1, x1) + Angular1 * a1 + Vector2.Dot(Linear2, x2) + Angular2 * a2;
-		}
-	}
+        public float Compute(Vector2 x1, float a1, Vector2 x2, float a2)
+        {
+            return Vector2.Dot(Linear1, x1) + Angular1*a1 + Vector2.Dot(Linear2, x2) + Angular2*a2;
+        }
+    }
 
-	/// <summary>
-	/// A joint edge is used to connect bodies and joints together
-	/// in a joint graph where each body is a node and each joint
-	/// is an edge. A joint edge belongs to a doubly linked list
-	/// maintained in each attached body. Each joint has two joint
-	/// nodes, one for each attached body.
-	/// </summary>
-	public class JointEdge
-	{
-		/// <summary>
-		/// Provides quick access to the other body attached.
-		/// </summary>
-		public Body Other;
+    /// <summary>
+    /// A joint edge is used to connect bodies and joints together
+    /// in a joint graph where each body is a node and each joint
+    /// is an edge. A joint edge belongs to a doubly linked list
+    /// maintained in each attached body. Each joint has two joint
+    /// nodes, one for each attached body.
+    /// </summary>
+    public class JointEdge
+    {
+        /// <summary>
+        /// The joint.
+        /// </summary>
+        public Joint Joint;
 
-		/// <summary>
-		/// The joint.
-		/// </summary>
-		public Joint Joint;
+        /// <summary>
+        /// The next joint edge in the body's joint list.
+        /// </summary>
+        public JointEdge Next;
 
-		/// <summary>
-		/// The previous joint edge in the body's joint list.
-		/// </summary>
-		public JointEdge Prev;
+        /// <summary>
+        /// Provides quick access to the other body attached.
+        /// </summary>
+        public Body Other;
 
-		/// <summary>
-		/// The next joint edge in the body's joint list.
-		/// </summary>
-		public JointEdge Next;
-	}
+        /// <summary>
+        /// The previous joint edge in the body's joint list.
+        /// </summary>
+        public JointEdge Prev;
+    }
 
-	/// <summary>
-	/// Joint definitions are used to construct joints.
-	/// </summary>
-	public class JointDef
-	{
-		public JointDef()
-		{
-			Type = JointType.UnknownJoint;
-			UserData = null;
-			Body1 = null;
-			Body2 = null;
-			CollideConnected = false;
-		}
+    /// <summary>
+    /// Joint definitions are used to construct joints.
+    /// </summary>
+    public class JointDef
+    {
+        /// <summary>
+        /// The first attached body.
+        /// </summary>
+        public Body Body1;
 
-		/// <summary>
-		/// The joint type is set automatically for concrete joint types.
-		/// </summary>
-		public JointType Type;
+        /// <summary>
+        /// The second attached body.
+        /// </summary>
+        public Body Body2;
 
-		/// <summary>
-		/// Use this to attach application specific data to your joints.
-		/// </summary>
-		public object UserData;
+        /// <summary>
+        /// Set this flag to true if the attached bodies should collide.
+        /// </summary>
+        public bool CollideConnected;
 
-		/// <summary>
-		/// The first attached body.
-		/// </summary>
-		public Body Body1;
+        /// <summary>
+        /// The joint type is set automatically for concrete joint types.
+        /// </summary>
+        public JointType Type;
 
-		/// <summary>
-		/// The second attached body.
-		/// </summary>
-		public Body Body2;
+        /// <summary>
+        /// Use this to attach application specific data to your joints.
+        /// </summary>
+        public object UserData;
 
-		/// <summary>
-		/// Set this flag to true if the attached bodies should collide.
-		/// </summary>
-		public bool CollideConnected;
-	}
+        public JointDef()
+        {
+            Type = JointType.UnknownJoint;
+            UserData = null;
+            Body1 = null;
+            Body2 = null;
+            CollideConnected = false;
+        }
+    }
 
-	/// <summary>
-	/// The base joint class. Joints are used to constraint two bodies together in
-	/// various fashions. Some joints also feature limits and motors.
-	/// </summary>
-	public abstract class Joint
-	{
-		protected JointType _type;
-		internal Joint _prev;
-		internal Joint _next;
-		internal JointEdge _node1 = new JointEdge();
-		internal JointEdge _node2 = new JointEdge();
-		internal Body _body1;
-		internal Body _body2;
+    /// <summary>
+    /// The base joint class. Joints are used to constraint two bodies together in
+    /// various fashions. Some joints also feature limits and motors.
+    /// </summary>
+    public abstract class Joint
+    {
+        internal Body _body1;
+        internal Body _body2;
 
-		internal bool _islandFlag;
-		internal bool _collideConnected;
+        internal bool _collideConnected;
 
-		protected object _userData;
+        protected float _invI1;
+        protected float _invI2;
+        protected float _invMass1;
+        protected float _invMass2;
+        internal bool _islandFlag;
+        protected Vector2 _localCenter1, _localCenter2;
+        internal Joint _next;
+        internal JointEdge _node1 = new JointEdge();
+        internal JointEdge _node2 = new JointEdge();
+        internal Joint _prev;
+        protected JointType _type;
+        protected object _userData;
 
-		// Cache here per time step to reduce cache misses.
-		protected Vector2 _localCenter1, _localCenter2;
-		protected float _invMass1, _invI1;
-		protected float _invMass2, _invI2;
+        protected Joint(JointDef def)
+        {
+            _type = def.Type;
+            _prev = null;
+            _next = null;
+            _body1 = def.Body1;
+            _body2 = def.Body2;
+            _collideConnected = def.CollideConnected;
+            _islandFlag = false;
+            _userData = def.UserData;
+        }
 
-		/// <summary>
-		/// Get the type of the concrete joint.
-		/// </summary>
-		public new JointType GetType()
-		{
-			return _type;
-		}
-
-		/// <summary>
-		/// Get the first body attached to this joint.
-		/// </summary>
-		/// <returns></returns>
-		public Body GetBody1()
-		{
-			return _body1;
-		}
-
-		/// <summary>
-		/// Get the second body attached to this joint.
-		/// </summary>
-		/// <returns></returns>
-		public Body GetBody2()
-		{
-			return _body2;
-		}
-
-		/// <summary>
-		/// Get the anchor point on body1 in world coordinates.
-		/// </summary>
-		/// <returns></returns>
+        /// <summary>
+        /// Get the anchor point on body1 in world coordinates.
+        /// </summary>
+        /// <returns></returns>
         public abstract Vector2 Anchor1 { get; }
 
-		/// <summary>
-		/// Get the anchor point on body2 in world coordinates.
-		/// </summary>
-		/// <returns></returns>
+        /// <summary>
+        /// Get the anchor point on body2 in world coordinates.
+        /// </summary>
+        /// <returns></returns>
         public abstract Vector2 Anchor2 { get; }
 
-		/// <summary>
-		/// Get the reaction force on body2 at the joint anchor.
-		/// </summary>		
+        /// <summary>
+        /// Get/Set the user data pointer.
+        /// </summary>
+        /// <returns></returns>
+        public object UserData
+        {
+            get { return _userData; }
+            set { _userData = value; }
+        }
+
+        /// <summary>
+        /// Get the type of the concrete joint.
+        /// </summary>
+        public new JointType GetType()
+        {
+            return _type;
+        }
+
+        /// <summary>
+        /// Get the first body attached to this joint.
+        /// </summary>
+        /// <returns></returns>
+        public Body GetBody1()
+        {
+            return _body1;
+        }
+
+        /// <summary>
+        /// Get the second body attached to this joint.
+        /// </summary>
+        /// <returns></returns>
+        public Body GetBody2()
+        {
+            return _body2;
+        }
+
+        /// <summary>
+        /// Get the reaction force on body2 at the joint anchor.
+        /// </summary>		
         public abstract Vector2 GetReactionForce(float inv_dt);
 
-		/// <summary>
-		/// Get the reaction torque on body2.
-		/// </summary>		
-		public abstract float GetReactionTorque(float inv_dt);
+        /// <summary>
+        /// Get the reaction torque on body2.
+        /// </summary>		
+        public abstract float GetReactionTorque(float inv_dt);
 
-		/// <summary>
-		/// Get the next joint the world joint list.
-		/// </summary>
-		/// <returns></returns>
-		public Joint GetNext()
-		{
-			return _next;
-		}
+        /// <summary>
+        /// Get the next joint the world joint list.
+        /// </summary>
+        /// <returns></returns>
+        public Joint GetNext()
+        {
+            return _next;
+        }
 
-		/// <summary>
-		/// Get/Set the user data pointer.
-		/// </summary>
-		/// <returns></returns>
-		public object UserData
-		{
-			get { return _userData; }
-			set { _userData = value; }
-		}
+        internal static Joint Create(JointDef def)
+        {
+            Joint joint = null;
 
-		protected Joint(JointDef def)
-		{
-			_type = def.Type;
-			_prev = null;
-			_next = null;
-			_body1 = def.Body1;
-			_body2 = def.Body2;
-			_collideConnected = def.CollideConnected;
-			_islandFlag = false;
-			_userData = def.UserData;
-		}
+            switch (def.Type)
+            {
+                case JointType.DistanceJoint:
+                    {
+                        joint = new DistanceJoint((DistanceJointDef) def);
+                    }
+                    break;
+                case JointType.MouseJoint:
+                    {
+                        joint = new MouseJoint((MouseJointDef) def);
+                    }
+                    break;
+                case JointType.PrismaticJoint:
+                    {
+                        joint = new PrismaticJoint((PrismaticJointDef) def);
+                    }
+                    break;
+                case JointType.RevoluteJoint:
+                    {
+                        joint = new RevoluteJoint((RevoluteJointDef) def);
+                    }
+                    break;
+                case JointType.PulleyJoint:
+                    {
+                        joint = new PulleyJoint((PulleyJointDef) def);
+                    }
+                    break;
+                case JointType.GearJoint:
+                    {
+                        joint = new GearJoint((GearJointDef) def);
+                    }
+                    break;
+                case JointType.LineJoint:
+                    {
+                        joint = new LineJoint((LineJointDef) def);
+                    }
+                    break;
+                default:
+                    //Box2DXDebug.Assert(false);
+                    break;
+            }
 
-		internal static Joint Create(JointDef def)
-		{
-			Joint joint = null;
+            return joint;
+        }
 
-			switch (def.Type)
-			{
-				case JointType.DistanceJoint:
-					{
-						joint = new DistanceJoint((DistanceJointDef)def);
-					}
-					break;
-				case JointType.MouseJoint:
-					{
-						joint = new MouseJoint((MouseJointDef)def);
-					}
-					break;
-				case JointType.PrismaticJoint:
-					{
-						joint = new PrismaticJoint((PrismaticJointDef)def);
-					}
-					break;
-				case JointType.RevoluteJoint:
-					{
-						joint = new RevoluteJoint((RevoluteJointDef)def);
-					}
-					break;
-				case JointType.PulleyJoint:
-					{
-						joint = new PulleyJoint((PulleyJointDef)def);
-					}
-					break;
-				case JointType.GearJoint:
-					{
-						joint = new GearJoint((GearJointDef)def);
-					}
-					break;
-				case JointType.LineJoint:
-					{
-						joint = new LineJoint((LineJointDef)def);
-					}
-					break;
-				default:
-					//Box2DXDebug.Assert(false);
-					break;
-			}
+        internal static void Destroy(Joint joint)
+        {
+            joint = null;
+        }
 
-			return joint;
-		}
+        internal abstract void InitVelocityConstraints(TimeStep step);
+        internal abstract void SolveVelocityConstraints(TimeStep step);
 
-		internal static void Destroy(Joint joint)
-		{
-			joint = null;
-		}
-
-		internal abstract void InitVelocityConstraints(TimeStep step);
-		internal abstract void SolveVelocityConstraints(TimeStep step);
-
-		// This returns true if the position errors are within tolerance.
-		internal abstract bool SolvePositionConstraints(float baumgarte);
+        // This returns true if the position errors are within tolerance.
+        internal abstract bool SolvePositionConstraints(float baumgarte);
 
         internal void ComputeXForm(ref XForm xf, Vector2 center, Vector2 localCenter, float angle)
-		{
-			xf.R.Set(angle);
-			xf.Position = center - FarseerPhysics.Common.Math.Mul(xf.R, localCenter);
-		}
-	}
+        {
+            xf.R.Set(angle);
+            xf.Position = center - MathHelper.Mul(xf.R, localCenter);
+        }
+    }
 }

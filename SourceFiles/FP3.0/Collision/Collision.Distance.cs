@@ -19,62 +19,57 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+using FarseerPhysics.Math;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
 using Microsoft.Xna.Framework;
 #endif
 
-using FarseerPhysics.Common;
-
 namespace FarseerPhysics.Collision
 {
-	public partial class Collision
-	{
-		public static int GJKIterations = 0;
+    public partial class Collision
+    {
+        public static int GJKIterations;
 
-		// GJK using Voronoi regions (Christer Ericson) and region selection
-		// optimizations (Casey Muratori).
+        // GJK using Voronoi regions (Christer Ericson) and region selection
+        // optimizations (Casey Muratori).
 
-		// The origin is either in the region of points[1] or in the edge region. The origin is
-		// not in region of points[0] because that is the old point.
+        // The origin is either in the region of points[1] or in the edge region. The origin is
+        // not in region of points[0] because that is the old point.
         public static int ProcessTwo(out Vector2 x1, out Vector2 x2, ref Vector2[] p1s, ref Vector2[] p2s,
-            ref Vector2[] points)
-		{
-			// If in point[1] region
+                                     ref Vector2[] points)
+        {
+            // If in point[1] region
             Vector2 r = -points[1];
             Vector2 d = points[0] - points[1];
-            float length = FarseerPhysics.Common.Math.Normalize(ref d);
+            float length = MathHelper.Normalize(ref d);
             float lambda = Vector2.Dot(r, d);
-			if (lambda <= 0.0f || length < Common.Settings.FLT_EPSILON)
-			{
-				// The simplex is reduced to a point.
-				x1 = p1s[1];
-				x2 = p2s[1];
-				p1s[0] = p1s[1];
-				p2s[0] = p2s[1];
-				points[0] = points[1];
-				return 1;
-			}
+            if (lambda <= 0.0f || length < Settings.FLT_EPSILON)
+            {
+                // The simplex is reduced to a point.
+                x1 = p1s[1];
+                x2 = p2s[1];
+                p1s[0] = p1s[1];
+                p2s[0] = p2s[1];
+                points[0] = points[1];
+                return 1;
+            }
 
-			// Else in edge region
-			lambda /= length;
-			x1 = p1s[1] + lambda * (p1s[0] - p1s[1]);
-			x2 = p2s[1] + lambda * (p2s[0] - p2s[1]);
-			return 2;
-		}
+            // Else in edge region
+            lambda /= length;
+            x1 = p1s[1] + lambda*(p1s[0] - p1s[1]);
+            x2 = p2s[1] + lambda*(p2s[0] - p2s[1]);
+            return 2;
+        }
 
-		// Possible regions:
-		// - points[2]
-		// - edge points[0]-points[2]
-		// - edge points[1]-points[2]
-		// - inside the triangle
+        // Possible regions:
+        // - points[2]
+        // - edge points[0]-points[2]
+        // - edge points[1]-points[2]
+        // - inside the triangle
         public static int ProcessThree(out Vector2 x1, out Vector2 x2, ref Vector2[] p1s, ref Vector2[] p2s,
-            ref Vector2[] points)
-		{
+                                       ref Vector2[] points)
+        {
             Vector2 a = points[0];
             Vector2 b = points[1];
             Vector2 c = points[2];
@@ -87,308 +82,321 @@ namespace FarseerPhysics.Collision
             float tn = -Vector2.Dot(a, ac), td = Vector2.Dot(c, ac);
             float un = -Vector2.Dot(b, bc), ud = Vector2.Dot(c, bc);
 
-			// In vertex c region?
-			if (td <= 0.0f && ud <= 0.0f)
-			{
-				// Single point
-				x1 = p1s[2];
-				x2 = p2s[2];
-				p1s[0] = p1s[2];
-				p2s[0] = p2s[2];
-				points[0] = points[2];
-				return 1;
-			}
+            // In vertex c region?
+            if (td <= 0.0f && ud <= 0.0f)
+            {
+                // Single point
+                x1 = p1s[2];
+                x2 = p2s[2];
+                p1s[0] = p1s[2];
+                p2s[0] = p2s[2];
+                points[0] = points[2];
+                return 1;
+            }
 
-			// Should not be in vertex a or b region.
+            // Should not be in vertex a or b region.
 
-			//B2_NOT_USED(sd);
-			//B2_NOT_USED(sn);			
-			//Box2DXDebug.Assert(sn > 0.0f || tn > 0.0f);
-			//Box2DXDebug.Assert(sd > 0.0f || un > 0.0f);
+            //B2_NOT_USED(sd);
+            //B2_NOT_USED(sn);			
+            //Box2DXDebug.Assert(sn > 0.0f || tn > 0.0f);
+            //Box2DXDebug.Assert(sd > 0.0f || un > 0.0f);
 
-			float n = FarseerPhysics.Common.Math.Cross(ref ab, ref ac);
+            float n = MathHelper.Cross(ref ab, ref ac);
 
 #if TARGET_FLOAT32_IS_FIXED
 				n = (n < 0.0f) ? -1.0f : ((n > 0.0f) ? 1.0f : 0.0f);
 #endif
 
-			// Should not be in edge ab region.
-            float vc = n * FarseerPhysics.Common.Math.Cross(ref a, ref b);
-			//Box2DXDebug.Assert(vc > 0.0f || sn > 0.0f || sd > 0.0f);
+            // Should not be in edge ab region.
+            float vc = n * MathHelper.Cross(ref a, ref b);
+            //Box2DXDebug.Assert(vc > 0.0f || sn > 0.0f || sd > 0.0f);
 
-			// In edge bc region?
-            float va = n * FarseerPhysics.Common.Math.Cross(ref b, ref c);
-			if (va <= 0.0f && un >= 0.0f && ud >= 0.0f && (un + ud) > 0.0f)
-			{
-				//Box2DXDebug.Assert(un + ud > 0.0f);
-				float lambda = un / (un + ud);
-				x1 = p1s[1] + lambda * (p1s[2] - p1s[1]);
-				x2 = p2s[1] + lambda * (p2s[2] - p2s[1]);
-				p1s[0] = p1s[2];
-				p2s[0] = p2s[2];
-				points[0] = points[2];
-				return 2;
-			}
+            // In edge bc region?
+            float va = n * MathHelper.Cross(ref b, ref c);
+            if (va <= 0.0f && un >= 0.0f && ud >= 0.0f && (un + ud) > 0.0f)
+            {
+                //Box2DXDebug.Assert(un + ud > 0.0f);
+                float lambda = un/(un + ud);
+                x1 = p1s[1] + lambda*(p1s[2] - p1s[1]);
+                x2 = p2s[1] + lambda*(p2s[2] - p2s[1]);
+                p1s[0] = p1s[2];
+                p2s[0] = p2s[2];
+                points[0] = points[2];
+                return 2;
+            }
 
-			// In edge ac region?
-            float vb = n * FarseerPhysics.Common.Math.Cross(ref c, ref a);
-			if (vb <= 0.0f && tn >= 0.0f && td >= 0.0f && (tn + td) > 0.0f)
-			{
-				//Box2DXDebug.Assert(tn + td > 0.0f);
-				float lambda = tn / (tn + td);
-				x1 = p1s[0] + lambda * (p1s[2] - p1s[0]);
-				x2 = p2s[0] + lambda * (p2s[2] - p2s[0]);
-				p1s[1] = p1s[2];
-				p2s[1] = p2s[2];
-				points[1] = points[2];
-				return 2;
-			}
+            // In edge ac region?
+            float vb = n * MathHelper.Cross(ref c, ref a);
+            if (vb <= 0.0f && tn >= 0.0f && td >= 0.0f && (tn + td) > 0.0f)
+            {
+                //Box2DXDebug.Assert(tn + td > 0.0f);
+                float lambda = tn/(tn + td);
+                x1 = p1s[0] + lambda*(p1s[2] - p1s[0]);
+                x2 = p2s[0] + lambda*(p2s[2] - p2s[0]);
+                p1s[1] = p1s[2];
+                p2s[1] = p2s[2];
+                points[1] = points[2];
+                return 2;
+            }
 
-			// Inside the triangle, compute barycentric coordinates
-			float denom = va + vb + vc;
-			//Box2DXDebug.Assert(denom > 0.0f);
-			denom = 1.0f / denom;
+            // Inside the triangle, compute barycentric coordinates
+            float denom = va + vb + vc;
+            //Box2DXDebug.Assert(denom > 0.0f);
+            denom = 1.0f/denom;
 #if TARGET_FLOAT32_IS_FIXED
 			x1 = denom * (va * p1s[0] + vb * p1s[1] + vc * p1s[2]);
 			x2 = denom * (va * p2s[0] + vb * p2s[1] + vc * p2s[2]);
 #else
-			float u = va * denom;
-			float v = vb * denom;
-			float w = 1.0f - u - v;
-			x1 = u * p1s[0] + v * p1s[1] + w * p1s[2];
-			x2 = u * p2s[0] + v * p2s[1] + w * p2s[2];
+            float u = va*denom;
+            float v = vb*denom;
+            float w = 1.0f - u - v;
+            x1 = u*p1s[0] + v*p1s[1] + w*p1s[2];
+            x2 = u*p2s[0] + v*p2s[1] + w*p2s[2];
 #endif
-			return 3;
-		}
+            return 3;
+        }
 
-		public static bool InPoints(Vector2 w, Vector2[] points, int pointCount)
-		{
-			float k_tolerance = 100.0f * Common.Settings.FLT_EPSILON;
-			for (int i = 0; i < pointCount; ++i)
-			{
-				Vector2 d = Common.Math.Abs(w - points[i]);
-				Vector2 m = Common.Math.Max(Common.Math.Abs(w), Common.Math.Abs(points[i]));
+        public static bool InPoints(Vector2 w, Vector2[] points, int pointCount)
+        {
+            float k_tolerance = 100.0f*Settings.FLT_EPSILON;
+            for (int i = 0; i < pointCount; ++i)
+            {
+                Vector2 d = MathHelper.Abs(w - points[i]);
+                Vector2 m = MathHelper.Max(MathHelper.Abs(w), MathHelper.Abs(points[i]));
 
-				if (d.X < k_tolerance * (m.X + 1.0f) &&
-					d.Y < k_tolerance * (m.Y + 1.0f))
-				{
-					return true;
-				}
-			}
+                if (d.X < k_tolerance*(m.X + 1.0f) &&
+                    d.Y < k_tolerance*(m.Y + 1.0f))
+                {
+                    return true;
+                }
+            }
 
-			return false;
-		}
+            return false;
+        }
 
-		public interface IGenericShape
-		{
-			Vector2 Support(XForm xf, Vector2 v);
-			Vector2 GetFirstVertex(XForm xf);
-		}
-
-		public static float DistanceGeneric<T1, T2>(out Vector2 x1, out Vector2 x2,
-						   T1 shape1_, XForm xf1, T2 shape2_, XForm xf2)
-		{
-			IGenericShape shape1 = shape1_ as IGenericShape;
-			IGenericShape shape2 = shape2_ as IGenericShape;
+        public static float DistanceGeneric<T1, T2>(out Vector2 x1, out Vector2 x2,
+                                                    T1 shape1_, XForm xf1, T2 shape2_, XForm xf2)
+        {
+            IGenericShape shape1 = shape1_ as IGenericShape;
+            IGenericShape shape2 = shape2_ as IGenericShape;
 
             if (shape1 == null || shape2 == null)
             {
                 //Box2DXDebug.Assert(false, "Can not cast some parameters to IGenericShape");
             }
 
-			Vector2[] p1s = new Vector2[3], p2s = new Vector2[3];
-			Vector2[] points = new Vector2[3];
-			int pointCount = 0;
+            Vector2[] p1s = new Vector2[3], p2s = new Vector2[3];
+            Vector2[] points = new Vector2[3];
+            int pointCount = 0;
 
-			x1 = shape1.GetFirstVertex(xf1);
-			x2 = shape2.GetFirstVertex(xf2);
+            x1 = shape1.GetFirstVertex(xf1);
+            x2 = shape2.GetFirstVertex(xf2);
 
-			float vSqr = 0.0f;
-			int maxIterations = 20;
+            float vSqr = 0.0f;
+            int maxIterations = 20;
 
-			for (int iter = 0; iter < maxIterations; ++iter)
-			{
-				Vector2 v = x2 - x1;
-				Vector2 w1 = shape1.Support(xf1, v);
-				Vector2 w2 = shape2.Support(xf2, -v);
+            for (int iter = 0; iter < maxIterations; ++iter)
+            {
+                Vector2 v = x2 - x1;
+                Vector2 w1 = shape1.Support(xf1, v);
+                Vector2 w2 = shape2.Support(xf2, -v);
 
-				vSqr = Vector2.Dot(v, v);
-				Vector2 w = w2 - w1;
-				float vw = Vector2.Dot(v, w);
-				if (vSqr - vw <= 0.01f * vSqr || Collision.InPoints(w, points, pointCount)) // or w in points
-				{
-					if (pointCount == 0)
-					{
-						x1 = w1;
-						x2 = w2;
-					}
-					Collision.GJKIterations = iter;
-					return Common.Math.Sqrt(vSqr);
-				}
+                vSqr = Vector2.Dot(v, v);
+                Vector2 w = w2 - w1;
+                float vw = Vector2.Dot(v, w);
+                if (vSqr - vw <= 0.01f*vSqr || InPoints(w, points, pointCount)) // or w in points
+                {
+                    if (pointCount == 0)
+                    {
+                        x1 = w1;
+                        x2 = w2;
+                    }
+                    GJKIterations = iter;
+                    return MathHelper.Sqrt(vSqr);
+                }
 
-				switch (pointCount)
-				{
-					case 0:
-						p1s[0] = w1;
-						p2s[0] = w2;
-						points[0] = w;
-						x1 = p1s[0];
-						x2 = p2s[0];
-						++pointCount;
-						break;
+                switch (pointCount)
+                {
+                    case 0:
+                        p1s[0] = w1;
+                        p2s[0] = w2;
+                        points[0] = w;
+                        x1 = p1s[0];
+                        x2 = p2s[0];
+                        ++pointCount;
+                        break;
 
-					case 1:
-						p1s[1] = w1;
-						p2s[1] = w2;
-						points[1] = w;
-						pointCount = Collision.ProcessTwo(out x1, out x2, ref p1s, ref p2s, ref points);
-						break;
+                    case 1:
+                        p1s[1] = w1;
+                        p2s[1] = w2;
+                        points[1] = w;
+                        pointCount = ProcessTwo(out x1, out x2, ref p1s, ref p2s, ref points);
+                        break;
 
-					case 2:
-						p1s[2] = w1;
-						p2s[2] = w2;
-						points[2] = w;
-						pointCount = Collision.ProcessThree(out x1, out x2, ref p1s, ref p2s, ref points);
-						break;
-				}
+                    case 2:
+                        p1s[2] = w1;
+                        p2s[2] = w2;
+                        points[2] = w;
+                        pointCount = ProcessThree(out x1, out x2, ref p1s, ref p2s, ref points);
+                        break;
+                }
 
-				// If we have three points, then the origin is in the corresponding triangle.
-				if (pointCount == 3)
-				{
-					Collision.GJKIterations = iter;
-					return 0.0f;
-				}
+                // If we have three points, then the origin is in the corresponding triangle.
+                if (pointCount == 3)
+                {
+                    GJKIterations = iter;
+                    return 0.0f;
+                }
 
-				float maxSqr = -Common.Settings.FLT_MAX;
-				for (int i = 0; i < pointCount; ++i)
-				{
-					maxSqr = Common.Math.Max(maxSqr, Vector2.Dot(points[i], points[i]));
-				}
+                float maxSqr = -Settings.FLT_MAX;
+                for (int i = 0; i < pointCount; ++i)
+                {
+                    maxSqr = MathHelper.Max(maxSqr, Vector2.Dot(points[i], points[i]));
+                }
 
 #if TARGET_FLOAT32_IS_FIXED
 				if (pointCount == 3 || vSqr <= 5.0*Common.Settings.FLT_EPSILON * maxSqr)
 #else
-				if (vSqr <= 100.0f * Common.Settings.FLT_EPSILON * maxSqr)
+                if (vSqr <= 100.0f*Settings.FLT_EPSILON*maxSqr)
 #endif
-				{
-					Collision.GJKIterations = iter;
-					v = x2 - x1;
-					vSqr = Vector2.Dot(v, v);
+                {
+                    GJKIterations = iter;
+                    v = x2 - x1;
+                    vSqr = Vector2.Dot(v, v);
 
-					return Common.Math.Sqrt(vSqr);
-				}
-			}
+                    return MathHelper.Sqrt(vSqr);
+                }
+            }
 
-			Collision.GJKIterations = maxIterations;
-			return Common.Math.Sqrt(vSqr);
-		}
+            GJKIterations = maxIterations;
+            return MathHelper.Sqrt(vSqr);
+        }
 
-		public static float DistanceCC(out Vector2 x1, out Vector2 x2,
-			CircleShape circle1, XForm xf1, CircleShape circle2, XForm xf2)
-		{
-			Vector2 p1 = Common.Math.Mul(xf1, circle1.GetLocalPosition());
-			Vector2 p2 = Common.Math.Mul(xf2, circle2.GetLocalPosition());
+        public static float DistanceCC(out Vector2 x1, out Vector2 x2,
+                                       CircleShape circle1, XForm xf1, CircleShape circle2, XForm xf2)
+        {
+            Vector2 p1 = MathHelper.Mul(xf1, circle1.GetLocalPosition());
+            Vector2 p2 = MathHelper.Mul(xf2, circle2.GetLocalPosition());
 
-			Vector2 d = p2 - p1;
-			float dSqr = Vector2.Dot(d, d);
-			float r1 = circle1.GetRadius() - Settings.ToiSlop;
-			float r2 = circle2.GetRadius() - Settings.ToiSlop;
-			float r = r1 + r2;
-			if (dSqr > r * r)
-			{
-                float dLen = FarseerPhysics.Common.Math.Normalize(ref d);
-				float distance = dLen - r;
-				x1 = p1 + r1 * d;
-				x2 = p2 - r2 * d;
-				return distance;
-			}
-			else if (dSqr > Common.Settings.FLT_EPSILON * Common.Settings.FLT_EPSILON)
-			{
-				d.Normalize();
-				x1 = p1 + r1 * d;
-				x2 = x1;
-				return 0.0f;
-			}
+            Vector2 d = p2 - p1;
+            float dSqr = Vector2.Dot(d, d);
+            float r1 = circle1.GetRadius() - Settings.ToiSlop;
+            float r2 = circle2.GetRadius() - Settings.ToiSlop;
+            float r = r1 + r2;
+            if (dSqr > r*r)
+            {
+                float dLen = MathHelper.Normalize(ref d);
+                float distance = dLen - r;
+                x1 = p1 + r1*d;
+                x2 = p2 - r2*d;
+                return distance;
+            }
+            else if (dSqr > Settings.FLT_EPSILON*Settings.FLT_EPSILON)
+            {
+                d.Normalize();
+                x1 = p1 + r1*d;
+                x2 = x1;
+                return 0.0f;
+            }
 
-			x1 = p1;
-			x2 = x1;
-			return 0.0f;
-		}
+            x1 = p1;
+            x2 = x1;
+            return 0.0f;
+        }
 
-		// This is used for polygon-vs-circle distance.
-		public class Point : Collision.IGenericShape
-		{
-			public Vector2 p;
+        // This is used for polygon-vs-circle distance.
 
-			public Vector2 Support(XForm xf, Vector2 v)
-			{
-				return p;
-			}
+        // GJK is more robust with polygon-vs-point than polygon-vs-circle.
+        // So we convert polygon-vs-circle to polygon-vs-point.
+        public static float DistancePC(out Vector2 x1, out Vector2 x2,
+                                       PolygonShape polygon, XForm xf1, CircleShape circle, XForm xf2)
+        {
+            Point point = new Point();
+            point.p = MathHelper.Mul(xf2, circle.GetLocalPosition());
 
-			public Vector2 GetFirstVertex(XForm xf)
-			{
-				return p;
-			}
-		}
+            float distance = DistanceGeneric(out x1, out x2, polygon, xf1, point, XForm.Identity);
 
-		// GJK is more robust with polygon-vs-point than polygon-vs-circle.
-		// So we convert polygon-vs-circle to polygon-vs-point.
-		public static float DistancePC(out Vector2 x1, out Vector2 x2,
-			PolygonShape polygon, XForm xf1, CircleShape circle, XForm xf2)
-		{
-			Point point = new Point();
-			point.p = Common.Math.Mul(xf2, circle.GetLocalPosition());
+            float r = circle.GetRadius() - Settings.ToiSlop;
 
-			float distance = DistanceGeneric<PolygonShape, Point>(out x1, out x2, polygon, xf1, point, XForm.Identity);
+            if (distance > r)
+            {
+                distance -= r;
+                Vector2 d = x2 - x1;
+                d.Normalize();
+                x2 -= r*d;
+            }
+            else
+            {
+                distance = 0.0f;
+                x2 = x1;
+            }
 
-			float r = circle.GetRadius() - Settings.ToiSlop;
+            return distance;
+        }
 
-			if (distance > r)
-			{
-				distance -= r;
-				Vector2 d = x2 - x1;
-				d.Normalize();
-				x2 -= r * d;
-			}
-			else
-			{
-				distance = 0.0f;
-				x2 = x1;
-			}
+        public static float Distance(out Vector2 x1, out Vector2 x2,
+                                     Shape shape1, XForm xf1, Shape shape2, XForm xf2)
+        {
+            x1 = new Vector2();
+            x2 = new Vector2();
 
-			return distance;
-		}
+            ShapeType type1 = shape1.GetType();
+            ShapeType type2 = shape2.GetType();
 
-		public static float Distance(out Vector2 x1, out Vector2 x2,
-			Shape shape1, XForm xf1, Shape shape2, XForm xf2)
-		{
-			x1 = new Vector2();
-			x2 = new Vector2();
+            if (type1 == ShapeType.CircleShape && type2 == ShapeType.CircleShape)
+            {
+                return DistanceCC(out x1, out x2, (CircleShape) shape1, xf1, (CircleShape) shape2, xf2);
+            }
 
-			ShapeType type1 = shape1.GetType();
-			ShapeType type2 = shape2.GetType();
+            if (type1 == ShapeType.PolygonShape && type2 == ShapeType.CircleShape)
+            {
+                return DistancePC(out x1, out x2, (PolygonShape) shape1, xf1, (CircleShape) shape2, xf2);
+            }
 
-			if (type1 == ShapeType.CircleShape && type2 == ShapeType.CircleShape)
-			{
-				return DistanceCC(out x1, out x2, (CircleShape)shape1, xf1, (CircleShape)shape2, xf2);
-			}
+            if (type1 == ShapeType.CircleShape && type2 == ShapeType.PolygonShape)
+            {
+                return DistancePC(out x2, out x1, (PolygonShape) shape2, xf2, (CircleShape) shape1, xf1);
+            }
 
-			if (type1 == ShapeType.PolygonShape && type2 == ShapeType.CircleShape)
-			{
-				return DistancePC(out x1, out x2, (PolygonShape)shape1, xf1, (CircleShape)shape2, xf2);
-			}
+            if (type1 == ShapeType.PolygonShape && type2 == ShapeType.PolygonShape)
+            {
+                return DistanceGeneric(out x1, out x2, (PolygonShape) shape1, xf1, (PolygonShape) shape2, xf2);
+            }
 
-			if (type1 == ShapeType.CircleShape && type2 == ShapeType.PolygonShape)
-			{
-				return DistancePC(out x2, out x1, (PolygonShape)shape2, xf2, (CircleShape)shape1, xf1);
-			}
+            return 0.0f;
+        }
 
-			if (type1 == ShapeType.PolygonShape && type2 == ShapeType.PolygonShape)
-			{
-				return DistanceGeneric(out x1, out x2, (PolygonShape)shape1, xf1, (PolygonShape)shape2, xf2);
-			}
+        #region Nested type: IGenericShape
 
-			return 0.0f;
-		}
-	}
+        public interface IGenericShape
+        {
+            Vector2 Support(XForm xf, Vector2 v);
+            Vector2 GetFirstVertex(XForm xf);
+        }
+
+        #endregion
+
+        #region Nested type: Point
+
+        public class Point : IGenericShape
+        {
+            public Vector2 p;
+
+            #region IGenericShape Members
+
+            public Vector2 Support(XForm xf, Vector2 v)
+            {
+                return p;
+            }
+
+            public Vector2 GetFirstVertex(XForm xf)
+            {
+                return p;
+            }
+
+            #endregion
+        }
+
+        #endregion
+    }
 }

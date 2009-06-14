@@ -20,375 +20,397 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
+using FarseerPhysics.Collision;
 
-// If this is an XNA project then we use math from the XNA framework.
 #if XNA
 using Microsoft.Xna.Framework;
+#else
+using FarseerPhysics.Math;
 #endif
-
-using FarseerPhysics.Collision;
-using FarseerPhysics.Common;
 
 namespace FarseerPhysics.Dynamics
 {
-	public delegate Contact ContactCreateFcn(Shape shape1, Shape shape2);
-	public delegate void ContactDestroyFcn(Contact contact);
+    public delegate Contact ContactCreateFcn(Shape shape1, Shape shape2);
 
-	public struct ContactRegister
-	{
-		public ContactCreateFcn CreateFcn;
-		public ContactDestroyFcn DestroyFcn;
-		public bool Primary;
-	}
+    public delegate void ContactDestroyFcn(Contact contact);
 
-	/// <summary>
-	/// A contact edge is used to connect bodies and contacts together
-	/// in a contact graph where each body is a node and each contact
-	/// is an edge. A contact edge belongs to a doubly linked list
-	/// maintained in each attached body. Each contact has two contact
-	/// nodes, one for each attached body.
-	/// </summary>
-	public class ContactEdge
-	{
-		/// <summary>
-		/// Provides quick access to the other body attached.
-		/// </summary>
-		public Body Other;
-		/// <summary>
-		/// The contact.
-		/// </summary>
-		public Contact Contact;
-		/// <summary>
-		/// The previous contact edge in the body's contact list.
-		/// </summary>
-		public ContactEdge Prev;
-		/// <summary>
-		/// The next contact edge in the body's contact list.
-		/// </summary>
-		public ContactEdge Next;
-	}
+    public struct ContactRegister
+    {
+        public ContactCreateFcn CreateFcn;
+        public ContactDestroyFcn DestroyFcn;
+        public bool Primary;
+    }
 
-	/// <summary>
-	/// This structure is used to report contact points.
-	/// </summary>
-	public class ContactPoint
-	{
-		/// <summary>
-		/// The first shape.
-		/// </summary>
-		public Shape Shape1;
-		/// <summary>
-		/// The second shape.
-		/// </summary>
-		public Shape Shape2;
-		/// <summary>
-		/// Position in world coordinates.
-		/// </summary>
-		public Vector2 Position;
-		/// <summary>
-		/// Velocity of point on body2 relative to point on body1 (pre-solver).
-		/// </summary>
-		public Vector2 Velocity;
-		/// <summary>
-		/// Points from shape1 to shape2.
-		/// </summary>
-		public Vector2 Normal;
-		/// <summary>
-		/// The separation is negative when shapes are touching.
-		/// </summary>
-		public float Separation;
-		/// <summary>
-		/// The combined friction coefficient.
-		/// </summary>
-		public float Friction;
-		/// <summary>
-		/// The combined restitution coefficient.
-		/// </summary>
-		public float Restitution;
-		/// <summary>
-		/// The contact id identifies the features in contact.
-		/// </summary>
-		public ContactID ID;
-	}
+    /// <summary>
+    /// A contact edge is used to connect bodies and contacts together
+    /// in a contact graph where each body is a node and each contact
+    /// is an edge. A contact edge belongs to a doubly linked list
+    /// maintained in each attached body. Each contact has two contact
+    /// nodes, one for each attached body.
+    /// </summary>
+    public class ContactEdge
+    {
+        /// <summary>
+        /// The contact.
+        /// </summary>
+        public Contact Contact;
 
-	/// <summary>
-	/// This structure is used to report contact point results.
-	/// </summary>
-	public class ContactResult
-	{
-		/// <summary>
-		/// The first shape.
-		/// </summary>
-		public Shape Shape1;
-		/// <summary>
-		/// The second shape.
-		/// </summary>
-		public Shape Shape2;
-		/// <summary>
-		/// Position in world coordinates.
-		/// </summary>
-		public Vector2 Position;
-		/// <summary>
-		/// Points from shape1 to shape2.
-		/// </summary>
-		public Vector2 Normal;
-		/// <summary>
-		/// The normal impulse applied to body2.
-		/// </summary>
-		public float NormalImpulse;
-		/// <summary>
-		/// The tangent impulse applied to body2.
-		/// </summary>
-		public float TangentImpulse;
-		/// <summary>
-		/// The contact id identifies the features in contact.
-		/// </summary>
-		public ContactID ID;
-	}
+        /// <summary>
+        /// The next contact edge in the body's contact list.
+        /// </summary>
+        public ContactEdge Next;
 
-	/// <summary>
-	/// The class manages contact between two shapes. A contact exists for each overlapping
-	/// AABB in the broad-phase (except if filtered). Therefore a contact object may exist
-	/// that has no contact points.
-	/// </summary>
-	public abstract class Contact
-	{
-		[Flags]
-		public enum CollisionFlags
-		{
-			NonSolid = 0x0001,
-			Slow = 0x0002,
-			Island = 0x0004,
-			Toi = 0x0008
-		}
+        /// <summary>
+        /// Provides quick access to the other body attached.
+        /// </summary>
+        public Body Other;
 
-		public static ContactRegister[][] s_registers =
-			new ContactRegister[(int)ShapeType.ShapeTypeCount][/*(int)ShapeType.ShapeTypeCount*/];
-		public static bool s_initialized = false;
+        /// <summary>
+        /// The previous contact edge in the body's contact list.
+        /// </summary>
+        public ContactEdge Prev;
+    }
 
-		public CollisionFlags _flags;
-		public int _manifoldCount;
+    /// <summary>
+    /// This structure is used to report contact points.
+    /// </summary>
+    public class ContactPoint
+    {
+        /// <summary>
+        /// The combined friction coefficient.
+        /// </summary>
+        public float Friction;
 
-		// World pool and list pointers.
-		public Contact _prev;
-		public Contact _next;
+        /// <summary>
+        /// The contact id identifies the features in contact.
+        /// </summary>
+        public ContactID ID;
 
-		// Nodes for connecting bodies.
-		public ContactEdge _node1;
-		public ContactEdge _node2;
+        /// <summary>
+        /// Points from shape1 to shape2.
+        /// </summary>
+        public Vector2 Normal;
 
-		public Shape _shape1;
-		public Shape _shape2;
+        /// <summary>
+        /// Position in world coordinates.
+        /// </summary>
+        public Vector2 Position;
 
-		public float _toi;
+        /// <summary>
+        /// The combined restitution coefficient.
+        /// </summary>
+        public float Restitution;
 
-		public Contact()
-		{
-			_shape1 = null; _shape2 = null;
-		}
+        /// <summary>
+        /// The separation is negative when shapes are touching.
+        /// </summary>
+        public float Separation;
 
-		public Contact(Shape s1, Shape s2)
-		{
-			_flags = 0;
+        /// <summary>
+        /// The first shape.
+        /// </summary>
+        public Shape Shape1;
 
-			if (s1.IsSensor || s2.IsSensor)
-			{
-				_flags |= CollisionFlags.NonSolid;
-			}
+        /// <summary>
+        /// The second shape.
+        /// </summary>
+        public Shape Shape2;
 
-			_shape1 = s1;
-			_shape2 = s2;
+        /// <summary>
+        /// Velocity of point on body2 relative to point on body1 (pre-solver).
+        /// </summary>
+        public Vector2 Velocity;
+    }
 
-			_manifoldCount = 0;
+    /// <summary>
+    /// This structure is used to report contact point results.
+    /// </summary>
+    public class ContactResult
+    {
+        /// <summary>
+        /// The contact id identifies the features in contact.
+        /// </summary>
+        public ContactID ID;
 
-			_prev = null;
-			_next = null;
+        /// <summary>
+        /// Points from shape1 to shape2.
+        /// </summary>
+        public Vector2 Normal;
 
-			_node1 = new ContactEdge();
-			_node1.Contact = null;
-			_node1.Prev = null;
-			_node1.Next = null;
-			_node1.Other = null;
+        /// <summary>
+        /// The normal impulse applied to body2.
+        /// </summary>
+        public float NormalImpulse;
 
-			_node2 = new ContactEdge();
-			_node2.Contact = null;
-			_node2.Prev = null;
-			_node2.Next = null;
-			_node2.Other = null;
-		}
+        /// <summary>
+        /// Position in world coordinates.
+        /// </summary>
+        public Vector2 Position;
 
-		public static void AddType(ContactCreateFcn createFcn, ContactDestroyFcn destoryFcn,
-					  ShapeType type1, ShapeType type2)
-		{
-			//Box2DXDebug.Assert(ShapeType.UnknownShape < type1 && type1 < ShapeType.ShapeTypeCount);
-			//Box2DXDebug.Assert(ShapeType.UnknownShape < type2 && type2 < ShapeType.ShapeTypeCount);
+        /// <summary>
+        /// The first shape.
+        /// </summary>
+        public Shape Shape1;
 
-			if (s_registers[(int)type1] == null)
-				s_registers[(int)type1] = new ContactRegister[(int)ShapeType.ShapeTypeCount];
+        /// <summary>
+        /// The second shape.
+        /// </summary>
+        public Shape Shape2;
 
-			s_registers[(int)type1][(int)type2].CreateFcn = createFcn;
-			s_registers[(int)type1][(int)type2].DestroyFcn = destoryFcn;
-			s_registers[(int)type1][(int)type2].Primary = true;
+        /// <summary>
+        /// The tangent impulse applied to body2.
+        /// </summary>
+        public float TangentImpulse;
+    }
 
-			if (type1 != type2)
-			{
-				//if (_registers[(int)type2] == null)
-				//	_registers[(int)type2] = new ContactRegister[(int)ShapeType.ShapeTypeCount];
+    /// <summary>
+    /// The class manages contact between two shapes. A contact exists for each overlapping
+    /// AABB in the broad-phase (except if filtered). Therefore a contact object may exist
+    /// that has no contact points.
+    /// </summary>
+    public abstract class Contact
+    {
+        #region CollisionFlags enum
 
-				s_registers[(int)type2][(int)type1].CreateFcn = createFcn;
-				s_registers[(int)type2][(int)type1].DestroyFcn = destoryFcn;
-				s_registers[(int)type2][(int)type1].Primary = false;
-			}
-		}
+        [Flags]
+        public enum CollisionFlags
+        {
+            NonSolid = 0x0001,
+            Slow = 0x0002,
+            Island = 0x0004,
+            Toi = 0x0008
+        }
 
-		public static void InitializeRegisters()
-		{
-			AddType(CircleContact.Create, CircleContact.Destroy, ShapeType.CircleShape, ShapeType.CircleShape);
-			AddType(PolyAndCircleContact.Create, PolyAndCircleContact.Destroy, ShapeType.PolygonShape, ShapeType.CircleShape);
-			AddType(PolygonContact.Create, PolygonContact.Destroy, ShapeType.PolygonShape, ShapeType.PolygonShape);
-		}
+        #endregion
 
-		public static Contact Create(Shape shape1, Shape shape2)
-		{
-			if (s_initialized == false)
-			{
-				InitializeRegisters();
-				s_initialized = true;
-			}
+        public static bool s_initialized;
 
-			ShapeType type1 = shape1.GetType();
-			ShapeType type2 = shape2.GetType();
+        public static ContactRegister[][] s_registers =
+            new ContactRegister[(int) ShapeType.ShapeTypeCount][ /*(int)ShapeType.ShapeTypeCount*/];
 
-			//Box2DXDebug.Assert(ShapeType.UnknownShape < type1 && type1 < ShapeType.ShapeTypeCount);
-			//Box2DXDebug.Assert(ShapeType.UnknownShape < type2 && type2 < ShapeType.ShapeTypeCount);
+        public CollisionFlags _flags;
+        public int _manifoldCount;
 
-			ContactCreateFcn createFcn = s_registers[(int)type1][(int)type2].CreateFcn;
-			if (createFcn != null)
-			{
-				if (s_registers[(int)type1][(int)type2].Primary)
-				{
-					return createFcn(shape1, shape2);
-				}
-				else
-				{
-					Contact c = createFcn(shape2, shape1);
-					for (int i = 0; i < c.GetManifoldCount(); ++i)
-					{
-						Manifold m = c.GetManifolds()[i];
-						m.Normal = -m.Normal;
-					}
-					return c;
-				}
-			}
-			else
-			{
-				return null;
-			}
-		}
+        // World pool and list pointers.
+        public Contact _next;
 
-		public static void Destroy(Contact contact)
-		{
-			//Box2DXDebug.Assert(s_initialized == true);
+        // Nodes for connecting bodies.
+        public ContactEdge _node1;
+        public ContactEdge _node2;
+        public Contact _prev;
 
-			if (contact.GetManifoldCount() > 0)
-			{
-				contact.GetShape1().GetBody().WakeUp();
-				contact.GetShape2().GetBody().WakeUp();
-			}
+        public Shape _shape1;
+        public Shape _shape2;
 
-			ShapeType type1 = contact.GetShape1().GetType();
-			ShapeType type2 = contact.GetShape2().GetType();
+        public float _toi;
 
-			//Box2DXDebug.Assert(ShapeType.UnknownShape < type1 && type1 < ShapeType.ShapeTypeCount);
-			//Box2DXDebug.Assert(ShapeType.UnknownShape < type2 && type2 < ShapeType.ShapeTypeCount);
+        public Contact()
+        {
+            _shape1 = null;
+            _shape2 = null;
+        }
 
-			ContactDestroyFcn destroyFcn = s_registers[(int)type1][(int)type2].DestroyFcn;
-			destroyFcn(contact);
-		}
+        public Contact(Shape s1, Shape s2)
+        {
+            _flags = 0;
 
-		/// <summary>
-		/// Get the manifold array.
-		/// </summary>
-		/// <returns></returns>
-		public abstract Manifold[] GetManifolds();
+            if (s1.IsSensor || s2.IsSensor)
+            {
+                _flags |= CollisionFlags.NonSolid;
+            }
 
-		/// <summary>
-		/// Get the number of manifolds. This is 0 or 1 between convex shapes.
-		/// This may be greater than 1 for convex-vs-concave shapes. Each
-		/// manifold holds up to two contact points with a shared contact normal.
-		/// </summary>
-		/// <returns></returns>
-		public int GetManifoldCount()
-		{
-			return _manifoldCount;
-		}
+            _shape1 = s1;
+            _shape2 = s2;
 
-		/// <summary>
-		/// Is this contact solid?
-		/// </summary>
-		/// <returns>True if this contact should generate a response.</returns>
-		public bool IsSolid()
-		{
-			return (_flags & CollisionFlags.NonSolid) == 0;
-		}
+            _manifoldCount = 0;
 
-		/// <summary>
-		/// Get the next contact in the world's contact list.
-		/// </summary>
-		/// <returns></returns>
-		public Contact GetNext()
-		{
-			return _next;
-		}
+            _prev = null;
+            _next = null;
 
-		/// <summary>
-		/// Get the first shape in this contact.
-		/// </summary>
-		/// <returns></returns>
-		public Shape GetShape1()
-		{
-			return _shape1;
-		}
+            _node1 = new ContactEdge();
+            _node1.Contact = null;
+            _node1.Prev = null;
+            _node1.Next = null;
+            _node1.Other = null;
 
-		/// <summary>
-		/// Get the second shape in this contact.
-		/// </summary>
-		/// <returns></returns>
-		public Shape GetShape2()
-		{
-			return _shape2;
-		}
+            _node2 = new ContactEdge();
+            _node2.Contact = null;
+            _node2.Prev = null;
+            _node2.Next = null;
+            _node2.Other = null;
+        }
 
-		public void Update(ContactListener listener)
-		{
-			int oldCount = GetManifoldCount();
+        public static void AddType(ContactCreateFcn createFcn, ContactDestroyFcn destoryFcn,
+                                   ShapeType type1, ShapeType type2)
+        {
+            //Box2DXDebug.Assert(ShapeType.UnknownShape < type1 && type1 < ShapeType.ShapeTypeCount);
+            //Box2DXDebug.Assert(ShapeType.UnknownShape < type2 && type2 < ShapeType.ShapeTypeCount);
 
-			Evaluate(listener);
+            if (s_registers[(int) type1] == null)
+                s_registers[(int) type1] = new ContactRegister[(int) ShapeType.ShapeTypeCount];
 
-			int newCount = GetManifoldCount();
+            s_registers[(int) type1][(int) type2].CreateFcn = createFcn;
+            s_registers[(int) type1][(int) type2].DestroyFcn = destoryFcn;
+            s_registers[(int) type1][(int) type2].Primary = true;
 
-			Body body1 = _shape1.GetBody();
-			Body body2 = _shape2.GetBody();
+            if (type1 != type2)
+            {
+                //if (_registers[(int)type2] == null)
+                //	_registers[(int)type2] = new ContactRegister[(int)ShapeType.ShapeTypeCount];
 
-			if (newCount == 0 && oldCount > 0)
-			{
-				body1.WakeUp();
-				body2.WakeUp();
-			}
+                s_registers[(int) type2][(int) type1].CreateFcn = createFcn;
+                s_registers[(int) type2][(int) type1].DestroyFcn = destoryFcn;
+                s_registers[(int) type2][(int) type1].Primary = false;
+            }
+        }
 
-			// Slow contacts don't generate TOI events.
-			if (body1.IsStatic() || body1.IsBullet() || body2.IsStatic() || body2.IsBullet())
-			{
-				_flags &= ~CollisionFlags.Slow;
-			}
-			else
-			{
-				_flags |= CollisionFlags.Slow;
-			}
-		}
+        public static void InitializeRegisters()
+        {
+            AddType(CircleContact.Create, CircleContact.Destroy, ShapeType.CircleShape, ShapeType.CircleShape);
+            AddType(PolyAndCircleContact.Create, PolyAndCircleContact.Destroy, ShapeType.PolygonShape,
+                    ShapeType.CircleShape);
+            AddType(PolygonContact.Create, PolygonContact.Destroy, ShapeType.PolygonShape, ShapeType.PolygonShape);
+        }
 
-		public abstract void Evaluate(ContactListener listener);
-	}
+        public static Contact Create(Shape shape1, Shape shape2)
+        {
+            if (s_initialized == false)
+            {
+                InitializeRegisters();
+                s_initialized = true;
+            }
+
+            ShapeType type1 = shape1.GetType();
+            ShapeType type2 = shape2.GetType();
+
+            //Box2DXDebug.Assert(ShapeType.UnknownShape < type1 && type1 < ShapeType.ShapeTypeCount);
+            //Box2DXDebug.Assert(ShapeType.UnknownShape < type2 && type2 < ShapeType.ShapeTypeCount);
+
+            ContactCreateFcn createFcn = s_registers[(int) type1][(int) type2].CreateFcn;
+            if (createFcn != null)
+            {
+                if (s_registers[(int) type1][(int) type2].Primary)
+                {
+                    return createFcn(shape1, shape2);
+                }
+                else
+                {
+                    Contact c = createFcn(shape2, shape1);
+                    for (int i = 0; i < c.GetManifoldCount(); ++i)
+                    {
+                        Manifold m = c.GetManifolds()[i];
+                        m.Normal = -m.Normal;
+                    }
+                    return c;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static void Destroy(Contact contact)
+        {
+            //Box2DXDebug.Assert(s_initialized == true);
+
+            if (contact.GetManifoldCount() > 0)
+            {
+                contact.GetShape1().GetBody().WakeUp();
+                contact.GetShape2().GetBody().WakeUp();
+            }
+
+            ShapeType type1 = contact.GetShape1().GetType();
+            ShapeType type2 = contact.GetShape2().GetType();
+
+            //Box2DXDebug.Assert(ShapeType.UnknownShape < type1 && type1 < ShapeType.ShapeTypeCount);
+            //Box2DXDebug.Assert(ShapeType.UnknownShape < type2 && type2 < ShapeType.ShapeTypeCount);
+
+            ContactDestroyFcn destroyFcn = s_registers[(int) type1][(int) type2].DestroyFcn;
+            destroyFcn(contact);
+        }
+
+        /// <summary>
+        /// Get the manifold array.
+        /// </summary>
+        /// <returns></returns>
+        public abstract Manifold[] GetManifolds();
+
+        /// <summary>
+        /// Get the number of manifolds. This is 0 or 1 between convex shapes.
+        /// This may be greater than 1 for convex-vs-concave shapes. Each
+        /// manifold holds up to two contact points with a shared contact normal.
+        /// </summary>
+        /// <returns></returns>
+        public int GetManifoldCount()
+        {
+            return _manifoldCount;
+        }
+
+        /// <summary>
+        /// Is this contact solid?
+        /// </summary>
+        /// <returns>True if this contact should generate a response.</returns>
+        public bool IsSolid()
+        {
+            return (_flags & CollisionFlags.NonSolid) == 0;
+        }
+
+        /// <summary>
+        /// Get the next contact in the world's contact list.
+        /// </summary>
+        /// <returns></returns>
+        public Contact GetNext()
+        {
+            return _next;
+        }
+
+        /// <summary>
+        /// Get the first shape in this contact.
+        /// </summary>
+        /// <returns></returns>
+        public Shape GetShape1()
+        {
+            return _shape1;
+        }
+
+        /// <summary>
+        /// Get the second shape in this contact.
+        /// </summary>
+        /// <returns></returns>
+        public Shape GetShape2()
+        {
+            return _shape2;
+        }
+
+        public void Update(ContactListener listener)
+        {
+            int oldCount = GetManifoldCount();
+
+            Evaluate(listener);
+
+            int newCount = GetManifoldCount();
+
+            Body body1 = _shape1.GetBody();
+            Body body2 = _shape2.GetBody();
+
+            if (newCount == 0 && oldCount > 0)
+            {
+                body1.WakeUp();
+                body2.WakeUp();
+            }
+
+            // Slow contacts don't generate TOI events.
+            if (body1.IsStatic() || body1.IsBullet() || body2.IsStatic() || body2.IsBullet())
+            {
+                _flags &= ~CollisionFlags.Slow;
+            }
+            else
+            {
+                _flags |= CollisionFlags.Slow;
+            }
+        }
+
+        public abstract void Evaluate(ContactListener listener);
+    }
 }
