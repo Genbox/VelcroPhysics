@@ -312,7 +312,7 @@ namespace FarseerPhysics.Dynamics
         internal void ComputeXForm(ref XForm xf, Vector2 center, Vector2 localCenter, float angle)
         {
             xf.R.Set(angle);
-            xf.Position = center - MathHelper.Mul(xf.R, localCenter);
+            xf.Position = center - Math.CommonMath.Mul(xf.R, localCenter);
         }
     }
 }

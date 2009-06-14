@@ -245,8 +245,8 @@ namespace FarseerPhysics.Dynamics
                 // v2 = exp(-c * dt) * v1
                 // Taylor expansion:
                 // v2 = (1.0f - c * dt) * v1
-                b._linearVelocity *= MathHelper.Clamp(1.0f - step.Dt*b._linearDamping, 0.0f, 1.0f);
-                b._angularVelocity *= MathHelper.Clamp(1.0f - step.Dt*b._angularDamping, 0.0f, 1.0f);
+                b._linearVelocity *= Math.CommonMath.Clamp(1.0f - step.Dt * b._linearDamping, 0.0f, 1.0f);
+                b._angularVelocity *= Math.CommonMath.Clamp(1.0f - step.Dt * b._angularDamping, 0.0f, 1.0f);
 
                 // Check for large velocities.
 #if TARGET_FLOAT32_IS_FIXED
@@ -386,7 +386,7 @@ namespace FarseerPhysics.Dynamics
                     else
                     {
                         b._sleepTime += step.Dt;
-                        minSleepTime = MathHelper.Min(minSleepTime, b._sleepTime);
+                        minSleepTime = Math.CommonMath.Min(minSleepTime, b._sleepTime);
                     }
                 }
 

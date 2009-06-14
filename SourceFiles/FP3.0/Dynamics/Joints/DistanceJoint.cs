@@ -158,8 +158,8 @@ namespace FarseerPhysics.Dynamics
             Body b2 = _body2;
 
             // Compute the effective mass matrix.
-            Vector2 r1 = MathHelper.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-            Vector2 r2 = MathHelper.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+            Vector2 r1 = Math.CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+            Vector2 r2 = Math.CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
             _u = b2._sweep.C + r2 - b1._sweep.C - r1;
 
             // Handle singularity.
@@ -173,8 +173,8 @@ namespace FarseerPhysics.Dynamics
                 _u = Vector2.Zero;
             }
 
-            float cr1u = MathHelper.Cross(ref r1, ref _u);
-            float cr2u = MathHelper.Cross(ref r2, ref _u);
+            float cr1u = Math.CommonMath.Cross(ref r1, ref _u);
+            float cr2u = Math.CommonMath.Cross(ref r2, ref _u);
             float invMass = b1._invMass + b1._invI*cr1u*cr1u + b2._invMass + b2._invI*cr2u*cr2u;
             //Box2DXDebug.Assert(invMass > Settings.FLT_EPSILON);
             _mass = 1.0f/invMass;
@@ -205,9 +205,9 @@ namespace FarseerPhysics.Dynamics
                 _impulse *= step.DtRatio;
                 Vector2 P = _impulse*_u;
                 b1._linearVelocity -= b1._invMass*P;
-                b1._angularVelocity -= b1._invI*MathHelper.Cross(ref r1, ref P);
+                b1._angularVelocity -= b1._invI*Math.CommonMath.Cross(ref r1, ref P);
                 b2._linearVelocity += b2._invMass*P;
-                b2._angularVelocity += b2._invI*MathHelper.Cross(ref r2, ref P);
+                b2._angularVelocity += b2._invI*Math.CommonMath.Cross(ref r2, ref P);
             }
             else
             {
@@ -226,28 +226,28 @@ namespace FarseerPhysics.Dynamics
             Body b1 = _body1;
             Body b2 = _body2;
 
-            Vector2 r1 = MathHelper.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-            Vector2 r2 = MathHelper.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+            Vector2 r1 = Math.CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+            Vector2 r2 = Math.CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
 
             Vector2 d = b2._sweep.C + r2 - b1._sweep.C - r1;
 
-            float length = MathHelper.Normalize(ref d);
+            float length = Math.CommonMath.Normalize(ref d);
             float C = length - _length;
-            C = MathHelper.Clamp(C, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
+            C = Math.CommonMath.Clamp(C, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
 
             float impulse = -_mass*C;
             _u = d;
             Vector2 P = impulse*_u;
 
             b1._sweep.C -= b1._invMass*P;
-            b1._sweep.A -= b1._invI*MathHelper.Cross(ref r1, ref P);
+            b1._sweep.A -= b1._invI*Math.CommonMath.Cross(ref r1, ref P);
             b2._sweep.C += b2._invMass*P;
-            b2._sweep.A += b2._invI*MathHelper.Cross(ref r2, ref P);
+            b2._sweep.A += b2._invI*Math.CommonMath.Cross(ref r2, ref P);
 
             b1.SynchronizeTransform();
             b2.SynchronizeTransform();
 
-            return MathHelper.Abs(C) < Settings.LinearSlop;
+            return Math.CommonMath.Abs(C) < Settings.LinearSlop;
         }
 
         internal override void SolveVelocityConstraints(TimeStep step)
@@ -257,21 +257,21 @@ namespace FarseerPhysics.Dynamics
             Body b1 = _body1;
             Body b2 = _body2;
 
-            Vector2 r1 = MathHelper.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-            Vector2 r2 = MathHelper.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+            Vector2 r1 = Math.CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+            Vector2 r2 = Math.CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
 
             // Cdot = dot(u, v + cross(w, r))
-            Vector2 v1 = b1._linearVelocity + MathHelper.Cross(b1._angularVelocity, r1);
-            Vector2 v2 = b2._linearVelocity + MathHelper.Cross(b2._angularVelocity, r2);
+            Vector2 v1 = b1._linearVelocity + Math.CommonMath.Cross(b1._angularVelocity, r1);
+            Vector2 v2 = b2._linearVelocity + Math.CommonMath.Cross(b2._angularVelocity, r2);
             float Cdot = Vector2.Dot(_u, v2 - v1);
             float impulse = -_mass*(Cdot + _bias + _gamma*_impulse);
             _impulse += impulse;
 
             Vector2 P = impulse*_u;
             b1._linearVelocity -= b1._invMass*P;
-            b1._angularVelocity -= b1._invI*MathHelper.Cross(ref r1, ref P);
+            b1._angularVelocity -= b1._invI*Math.CommonMath.Cross(ref r1, ref P);
             b2._linearVelocity += b2._invMass*P;
-            b2._angularVelocity += b2._invI*MathHelper.Cross(ref r2, ref P);
+            b2._angularVelocity += b2._invI*Math.CommonMath.Cross(ref r2, ref P);
         }
     }
 }

@@ -191,8 +191,8 @@ namespace FarseerPhysics.Dynamics
 
             _constant = def.Length1 + _ratio*def.Length2;
 
-            _maxLength1 = Math.MathHelper.Min(def.MaxLength1, _constant - _ratio*MinPulleyLength);
-            _maxLength2 = Math.MathHelper.Min(def.MaxLength2, (_constant - MinPulleyLength)/_ratio);
+            _maxLength1 = Math.CommonMath.Min(def.MaxLength1, _constant - _ratio*MinPulleyLength);
+            _maxLength2 = Math.CommonMath.Min(def.MaxLength2, (_constant - MinPulleyLength)/_ratio);
 
             _impulse = 0.0f;
             _limitImpulse1 = 0.0f;
@@ -277,8 +277,8 @@ namespace FarseerPhysics.Dynamics
             Body b1 = _body1;
             Body b2 = _body2;
 
-            Vector2 r1 = Math.MathHelper.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-            Vector2 r2 = Math.MathHelper.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+            Vector2 r1 = Math.CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+            Vector2 r2 = Math.CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
 
             Vector2 p1 = b1._sweep.C + r1;
             Vector2 p2 = b2._sweep.C + r2;
@@ -343,8 +343,8 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Compute effective mass.
-            float cr1u1 = Math.MathHelper.Cross(ref r1, ref _u1);
-            float cr2u2 = Math.MathHelper.Cross(ref r2, ref _u2);
+            float cr1u1 = Math.CommonMath.Cross(ref r1, ref _u1);
+            float cr2u2 = Math.CommonMath.Cross(ref r2, ref _u2);
 
             _limitMass1 = b1._invMass + b1._invI*cr1u1*cr1u1;
             _limitMass2 = b2._invMass + b2._invI*cr2u2*cr2u2;
@@ -367,9 +367,9 @@ namespace FarseerPhysics.Dynamics
                 Vector2 P1 = -(_impulse + _limitImpulse1)*_u1;
                 Vector2 P2 = (-_ratio*_impulse - _limitImpulse2)*_u2;
                 b1._linearVelocity += b1._invMass*P1;
-                b1._angularVelocity += b1._invI*Math.MathHelper.Cross(ref r1, ref P1);
+                b1._angularVelocity += b1._invI*Math.CommonMath.Cross(ref r1, ref P1);
                 b2._linearVelocity += b2._invMass*P2;
-                b2._angularVelocity += b2._invI*Math.MathHelper.Cross(ref r2, ref P2);
+                b2._angularVelocity += b2._invI*Math.CommonMath.Cross(ref r2, ref P2);
             }
             else
             {
@@ -384,56 +384,56 @@ namespace FarseerPhysics.Dynamics
             Body b1 = _body1;
             Body b2 = _body2;
 
-            Vector2 r1 = Math.MathHelper.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-            Vector2 r2 = Math.MathHelper.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+            Vector2 r1 = Math.CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+            Vector2 r2 = Math.CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
 
             if (_state == LimitState.AtUpperLimit)
             {
-                Vector2 v1 = b1._linearVelocity + Math.MathHelper.Cross(b1._angularVelocity, r1);
-                Vector2 v2 = b2._linearVelocity + Math.MathHelper.Cross(b2._angularVelocity, r2);
+                Vector2 v1 = b1._linearVelocity + Math.CommonMath.Cross(b1._angularVelocity, r1);
+                Vector2 v2 = b2._linearVelocity + Math.CommonMath.Cross(b2._angularVelocity, r2);
 
                 float Cdot = -Vector2.Dot(_u1, v1) - _ratio*Vector2.Dot(_u2, v2);
                 float impulse = _pulleyMass*(-Cdot);
                 float oldImpulse = _impulse;
-                _impulse = Math.MathHelper.Max(0.0f, _impulse + impulse);
+                _impulse = Math.CommonMath.Max(0.0f, _impulse + impulse);
                 impulse = _impulse - oldImpulse;
 
                 Vector2 P1 = -impulse*_u1;
                 Vector2 P2 = -_ratio*impulse*_u2;
                 b1._linearVelocity += b1._invMass*P1;
-                b1._angularVelocity += b1._invI*Math.MathHelper.Cross(ref r1, ref P1);
+                b1._angularVelocity += b1._invI*Math.CommonMath.Cross(ref r1, ref P1);
                 b2._linearVelocity += b2._invMass*P2;
-                b2._angularVelocity += b2._invI*Math.MathHelper.Cross(ref r2, ref P2);
+                b2._angularVelocity += b2._invI*Math.CommonMath.Cross(ref r2, ref P2);
             }
 
             if (_limitState1 == LimitState.AtUpperLimit)
             {
-                Vector2 v1 = b1._linearVelocity + Math.MathHelper.Cross(b1._angularVelocity, r1);
+                Vector2 v1 = b1._linearVelocity + Math.CommonMath.Cross(b1._angularVelocity, r1);
 
                 float Cdot = -Vector2.Dot(_u1, v1);
                 float impulse = -_limitMass1*Cdot;
                 float oldImpulse = _limitImpulse1;
-                _limitImpulse1 = Math.MathHelper.Max(0.0f, _limitImpulse1 + impulse);
+                _limitImpulse1 = Math.CommonMath.Max(0.0f, _limitImpulse1 + impulse);
                 impulse = _limitImpulse1 - oldImpulse;
 
                 Vector2 P1 = -impulse*_u1;
                 b1._linearVelocity += b1._invMass*P1;
-                b1._angularVelocity += b1._invI*Math.MathHelper.Cross(ref r1, ref P1);
+                b1._angularVelocity += b1._invI*Math.CommonMath.Cross(ref r1, ref P1);
             }
 
             if (_limitState2 == LimitState.AtUpperLimit)
             {
-                Vector2 v2 = b2._linearVelocity + Math.MathHelper.Cross(b2._angularVelocity, r2);
+                Vector2 v2 = b2._linearVelocity + Math.CommonMath.Cross(b2._angularVelocity, r2);
 
                 float Cdot = -Vector2.Dot(_u2, v2);
                 float impulse = -_limitMass2*Cdot;
                 float oldImpulse = _limitImpulse2;
-                _limitImpulse2 = Math.MathHelper.Max(0.0f, _limitImpulse2 + impulse);
+                _limitImpulse2 = Math.CommonMath.Max(0.0f, _limitImpulse2 + impulse);
                 impulse = _limitImpulse2 - oldImpulse;
 
                 Vector2 P2 = -impulse*_u2;
                 b2._linearVelocity += b2._invMass*P2;
-                b2._angularVelocity += b2._invI*Math.MathHelper.Cross(ref r2, ref P2);
+                b2._angularVelocity += b2._invI*Math.CommonMath.Cross(ref r2, ref P2);
             }
         }
 
@@ -449,8 +449,8 @@ namespace FarseerPhysics.Dynamics
 
             if (_state == LimitState.AtUpperLimit)
             {
-                Vector2 r1 = Math.MathHelper.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-                Vector2 r2 = Math.MathHelper.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+                Vector2 r1 = Math.CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+                Vector2 r2 = Math.CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
 
                 Vector2 p1 = b1._sweep.C + r1;
                 Vector2 p2 = b2._sweep.C + r2;
@@ -481,18 +481,18 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 float C = _constant - length1 - _ratio*length2;
-                linearError = Math.MathHelper.Max(linearError, -C);
+                linearError = Math.CommonMath.Max(linearError, -C);
 
-                C = Math.MathHelper.Clamp(C + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
+                C = Math.CommonMath.Clamp(C + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
                 float impulse = -_pulleyMass*C;
 
                 Vector2 P1 = -impulse*_u1;
                 Vector2 P2 = -_ratio*impulse*_u2;
 
                 b1._sweep.C += b1._invMass*P1;
-                b1._sweep.A += b1._invI*Math.MathHelper.Cross(ref r1, ref P1);
+                b1._sweep.A += b1._invI*Math.CommonMath.Cross(ref r1, ref P1);
                 b2._sweep.C += b2._invMass*P2;
-                b2._sweep.A += b2._invI*Math.MathHelper.Cross(ref r2, ref P2);
+                b2._sweep.A += b2._invI*Math.CommonMath.Cross(ref r2, ref P2);
 
                 b1.SynchronizeTransform();
                 b2.SynchronizeTransform();
@@ -500,7 +500,7 @@ namespace FarseerPhysics.Dynamics
 
             if (_limitState1 == LimitState.AtUpperLimit)
             {
-                Vector2 r1 = Math.MathHelper.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+                Vector2 r1 = Math.CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
                 Vector2 p1 = b1._sweep.C + r1;
 
                 _u1 = p1 - s1;
@@ -516,20 +516,20 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 float C = _maxLength1 - length1;
-                linearError = Math.MathHelper.Max(linearError, -C);
-                C = Math.MathHelper.Clamp(C + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
+                linearError = Math.CommonMath.Max(linearError, -C);
+                C = Math.CommonMath.Clamp(C + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
                 float impulse = -_limitMass1*C;
 
                 Vector2 P1 = -impulse*_u1;
                 b1._sweep.C += b1._invMass*P1;
-                b1._sweep.A += b1._invI*Math.MathHelper.Cross(ref r1, ref P1);
+                b1._sweep.A += b1._invI*Math.CommonMath.Cross(ref r1, ref P1);
 
                 b1.SynchronizeTransform();
             }
 
             if (_limitState2 == LimitState.AtUpperLimit)
             {
-                Vector2 r2 = Math.MathHelper.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+                Vector2 r2 = Math.CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
                 Vector2 p2 = b2._sweep.C + r2;
 
                 _u2 = p2 - s2;
@@ -545,13 +545,13 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 float C = _maxLength2 - length2;
-                linearError = Math.MathHelper.Max(linearError, -C);
-                C = Math.MathHelper.Clamp(C + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
+                linearError = Math.CommonMath.Max(linearError, -C);
+                C = Math.CommonMath.Clamp(C + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
                 float impulse = -_limitMass2*C;
 
                 Vector2 P2 = -impulse*_u2;
                 b2._sweep.C += b2._invMass*P2;
-                b2._sweep.A += b2._invI*Math.MathHelper.Cross(ref r2, ref P2);
+                b2._sweep.A += b2._invI*Math.CommonMath.Cross(ref r2, ref P2);
 
                 b2.SynchronizeTransform();
             }
