@@ -1,0 +1,8 @@
+<UserControl x:Class="FarseerGames.SimpleSamplesSilverlight.Components.Fps" 
+		xmlns="http://schemas.microsoft.com/client/2007" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        
+         Canvas.Left="45" Canvas.Top="45" 
+        >
+  <TextBlock x:Name="text" Text="" FontFamily="Courier New" Foreground="White"  FontSize="20"/>
+</UserControl>

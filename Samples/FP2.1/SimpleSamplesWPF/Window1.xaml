@@ -1,0 +1,34 @@
+﻿<Window x:Class="SimpleSamplesWPF.Window1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:SimpleSamplesWpf="clr-namespace:SimpleSamplesWPF"
+    xmlns:Screens="clr-namespace:SimpleSamplesWPF.Screens"
+    Title="farseer physics simple samples (WPF)" Width="800" Height="600" Background="Black">
+    <Grid>
+        <!--viewbox scales view, but keeps view from scaling non-uniformly-->
+        <Viewbox Stretch="Uniform">
+            <Grid Background="#FF6495ED" Width="1024" Height="768" ClipToBounds="True">
+                <ContentControl x:Name="demoContainer"/>
+
+                <SimpleSamplesWpf:Fps x:Name="fps"/>
+                <!--foreground view is where menus or other things that need to go infront of everything are placed-->
+                <ContentControl x:Name="foregroundViewContainer"/>
+            </Grid>
+        </Viewbox>
+        <Screens:Splash x:Name="splash" />
+    </Grid>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <EventTrigger.Actions>
+                <BeginStoryboard>
+                    <!--hide splash screen after some time-->
+                    <Storyboard TargetName="splash" TargetProperty="Visibility">
+                        <ObjectAnimationUsingKeyFrames>
+                            <DiscreteObjectKeyFrame KeyTime="0:00:02" Value="{x:Static Visibility.Hidden}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger.Actions>
+        </EventTrigger>
+    </Window.Triggers>
+</Window>

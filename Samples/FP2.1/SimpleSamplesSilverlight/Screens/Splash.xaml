@@ -1,0 +1,13 @@
+<UserControl x:Class="FarseerGames.SimpleSamplesSilverlight.Screens.Splash"
+        xmlns="http://schemas.microsoft.com/client/2007" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        Width="1024"
+        Height="768"
+        >
+	<Canvas 
+        Background="White"
+        >
+		<Image Source="../logo.png" Canvas.Left="297" Canvas.Top="254"></Image>
+		<Rectangle Stroke="Gray" Width="1024" Height="768"/>
+	</Canvas>
+</UserControl>

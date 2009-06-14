@@ -1,0 +1,14 @@
+<UserControl x:Class="FarseerGames.SimpleSamplesSilverlight.Screens.DemoMenu"
+		xmlns="http://schemas.microsoft.com/client/2007" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        Width="1024"
+        Height="768">
+	<Canvas x:Name="ir"
+        Background="#11000000"
+        >
+  <Rectangle Canvas.Left="150" Canvas.Top="100" Width="724" Height="568" Fill="#66000000"/>
+  <Rectangle Canvas.Left="425" Canvas.Top="100" Width="449" Height="568" Fill="#AA000000"/>
+  <TextBlock x:Name="title" Canvas.Left="450" Canvas.Top="125" FontFamily="Comic Sans MS" FontSize="30" Foreground="White"/>
+  <TextBlock x:Name="details" Canvas.Left="450" Canvas.Top="225" Width="414" Height="400" FontFamily="Courier New" FontSize="15" Foreground="White" TextWrapping="Wrap"/>
+</Canvas>
+</UserControl>

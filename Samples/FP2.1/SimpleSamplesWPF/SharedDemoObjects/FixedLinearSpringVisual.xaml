@@ -1,0 +1,5 @@
+﻿<UserControl x:Class="SimpleSamplesWPF.SharedDemoObjects.FixedLinearSpringVisual"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Line x:Name="line" Stroke="Black" StrokeThickness="3" />
+</UserControl>
