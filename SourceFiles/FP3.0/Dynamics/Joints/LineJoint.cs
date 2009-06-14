@@ -80,9 +80,10 @@
 // df = f2 - f1
 
 using FarseerPhysics.Math;
+using Microsoft.Xna.Framework;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
-using Microsoft.Xna.Framework;
+
 #endif
 
 namespace FarseerPhysics.Dynamics
@@ -205,7 +206,7 @@ namespace FarseerPhysics.Dynamics
             _localAnchor1 = def.localAnchor1;
             _localAnchor2 = def.localAnchor2;
             _localXAxis1 = def.localAxis1;
-            _localYAxis1 = Math.CommonMath.Cross(1.0f, _localXAxis1);
+            _localYAxis1 = CommonMath.Cross(1.0f, _localXAxis1);
 
             _impulse = Vector2.Zero;
             _motorMass = 0.0f;
@@ -268,8 +269,8 @@ namespace FarseerPhysics.Dynamics
             Body b1 = _body1;
             Body b2 = _body2;
 
-            Vector2 r1 = Math.CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-            Vector2 r2 = Math.CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+            Vector2 r1 = CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+            Vector2 r2 = CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
             Vector2 p1 = b1._sweep.C + r1;
             Vector2 p2 = b2._sweep.C + r2;
             Vector2 d = p2 - p1;
@@ -280,8 +281,8 @@ namespace FarseerPhysics.Dynamics
             float w1 = b1._angularVelocity;
             float w2 = b2._angularVelocity;
 
-            float speed = Vector2.Dot(d, Math.CommonMath.Cross(w1, axis)) +
-                          Vector2.Dot(axis, v2 + Math.CommonMath.Cross(w2, r2) - v1 - Math.CommonMath.Cross(w1, r1));
+            float speed = Vector2.Dot(d, CommonMath.Cross(w1, axis)) +
+                          Vector2.Dot(axis, v2 + CommonMath.Cross(w2, r2) - v1 - CommonMath.Cross(w1, r1));
             return speed;
         }
 
@@ -397,8 +398,8 @@ namespace FarseerPhysics.Dynamics
             XForm xf2 = b2.GetXForm();
 
             // Compute the effective masses.
-            Vector2 r1 = Math.CommonMath.Mul(xf1.R, _localAnchor1 - _localCenter1);
-            Vector2 r2 = Math.CommonMath.Mul(xf2.R, _localAnchor2 - _localCenter2);
+            Vector2 r1 = CommonMath.Mul(xf1.R, _localAnchor1 - _localCenter1);
+            Vector2 r2 = CommonMath.Mul(xf2.R, _localAnchor2 - _localCenter2);
             Vector2 d = b2._sweep.C + r2 - b1._sweep.C - r1;
 
             _invMass1 = b1._invMass;
@@ -408,10 +409,10 @@ namespace FarseerPhysics.Dynamics
 
             // Compute motor Jacobian and effective mass.
             {
-                _axis = Math.CommonMath.Mul(xf1.R, _localXAxis1);
+                _axis = CommonMath.Mul(xf1.R, _localXAxis1);
                 Vector2 temp = d + r1;
-                _a1 = Math.CommonMath.Cross(ref temp, ref _axis);
-                _a2 = Math.CommonMath.Cross(ref r2, ref _axis);
+                _a1 = CommonMath.Cross(ref temp, ref _axis);
+                _a2 = CommonMath.Cross(ref r2, ref _axis);
 
                 _motorMass = _invMass1 + _invMass2 + _invI1*_a1*_a1 + _invI2*_a2*_a2;
                 //Box2DXDebug.Assert(_motorMass > Settings.FLT_EPSILON);
@@ -420,10 +421,10 @@ namespace FarseerPhysics.Dynamics
 
             // Prismatic constraint.
             {
-                _perp = Math.CommonMath.Mul(xf1.R, _localYAxis1);
+                _perp = CommonMath.Mul(xf1.R, _localYAxis1);
                 Vector2 temp2 = d + r1;
-                _s1 = Math.CommonMath.Cross(ref temp2, ref _perp);
-                _s2 = Math.CommonMath.Cross(ref r2, ref _perp);
+                _s1 = CommonMath.Cross(ref temp2, ref _perp);
+                _s2 = CommonMath.Cross(ref r2, ref _perp);
 
                 float m1 = _invMass1, m2 = _invMass2;
                 float i1 = _invI1, i2 = _invI2;
@@ -440,7 +441,7 @@ namespace FarseerPhysics.Dynamics
             if (_enableLimit)
             {
                 float jointTranslation = Vector2.Dot(_axis, d);
-                if (Math.CommonMath.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
+                if (CommonMath.Abs(_upperTranslation - _lowerTranslation) < 2.0f*Settings.LinearSlop)
                 {
                     _limitState = LimitState.EqualLimits;
                 }
@@ -516,7 +517,7 @@ namespace FarseerPhysics.Dynamics
                 float impulse = _motorMass*(_motorSpeed - Cdot);
                 float oldImpulse = _motorImpulse;
                 float maxImpulse = step.Dt*_maxMotorForce;
-                _motorImpulse = Math.CommonMath.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
+                _motorImpulse = CommonMath.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = _motorImpulse - oldImpulse;
 
                 Vector2 P = impulse*_axis;
@@ -544,11 +545,11 @@ namespace FarseerPhysics.Dynamics
 
                 if (_limitState == LimitState.AtLowerLimit)
                 {
-                    _impulse.Y = Math.CommonMath.Max(_impulse.Y, 0.0f);
+                    _impulse.Y = CommonMath.Max(_impulse.Y, 0.0f);
                 }
                 else if (_limitState == LimitState.AtUpperLimit)
                 {
-                    _impulse.Y = Math.CommonMath.Min(_impulse.Y, 0.0f);
+                    _impulse.Y = CommonMath.Min(_impulse.Y, 0.0f);
                 }
 
                 // f2(1) = invK(1,1) * (-Cdot(1) - K(1,2) * (f2(2) - f1(2))) + f1(1)
@@ -609,53 +610,54 @@ namespace FarseerPhysics.Dynamics
 
             Mat22 R1 = new Mat22(a1), R2 = new Mat22(a2);
 
-            Vector2 r1 = Math.CommonMath.Mul(R1, _localAnchor1 - _localCenter1);
-            Vector2 r2 = Math.CommonMath.Mul(R2, _localAnchor2 - _localCenter2);
+            Vector2 r1 = CommonMath.Mul(R1, _localAnchor1 - _localCenter1);
+            Vector2 r2 = CommonMath.Mul(R2, _localAnchor2 - _localCenter2);
             Vector2 d = c2 + r2 - c1 - r1;
 
             if (_enableLimit)
             {
-                _axis = Math.CommonMath.Mul(R1, _localXAxis1);
+                _axis = CommonMath.Mul(R1, _localXAxis1);
                 Vector2 temp = d + r1;
-                _a1 = Math.CommonMath.Cross(ref temp, ref _axis);
-                _a2 = Math.CommonMath.Cross(ref r2, ref _axis);
+                _a1 = CommonMath.Cross(ref temp, ref _axis);
+                _a2 = CommonMath.Cross(ref r2, ref _axis);
 
                 float translation = Vector2.Dot(_axis, d);
-                if (Math.CommonMath.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
+                if (CommonMath.Abs(_upperTranslation - _lowerTranslation) < 2.0f*Settings.LinearSlop)
                 {
                     // Prevent large angular corrections
-                    C2 = Math.CommonMath.Clamp(translation, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
-                    linearError = Math.CommonMath.Abs(translation);
+                    C2 = CommonMath.Clamp(translation, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
+                    linearError = CommonMath.Abs(translation);
                     active = true;
                 }
                 else if (translation <= _lowerTranslation)
                 {
                     // Prevent large linear corrections and allow some slop.
-                    C2 = Math.CommonMath.Clamp(translation - _lowerTranslation + Settings.LinearSlop, -Settings.MaxLinearCorrection,
-                                    0.0f);
+                    C2 = CommonMath.Clamp(translation - _lowerTranslation + Settings.LinearSlop,
+                                          -Settings.MaxLinearCorrection,
+                                          0.0f);
                     linearError = _lowerTranslation - translation;
                     active = true;
                 }
                 else if (translation >= _upperTranslation)
                 {
                     // Prevent large linear corrections and allow some slop.
-                    C2 = Math.CommonMath.Clamp(translation - _upperTranslation - Settings.LinearSlop, 0.0f,
-                                    Settings.MaxLinearCorrection);
+                    C2 = CommonMath.Clamp(translation - _upperTranslation - Settings.LinearSlop, 0.0f,
+                                          Settings.MaxLinearCorrection);
                     linearError = translation - _upperTranslation;
                     active = true;
                 }
             }
 
-            _perp = Math.CommonMath.Mul(R1, _localYAxis1);
+            _perp = CommonMath.Mul(R1, _localYAxis1);
             Vector2 temp2 = d + r1;
-            _s1 = Math.CommonMath.Cross(ref temp2, ref _perp);
-            _s2 = Math.CommonMath.Cross(ref r2, ref _perp);
+            _s1 = CommonMath.Cross(ref temp2, ref _perp);
+            _s2 = CommonMath.Cross(ref r2, ref _perp);
 
             Vector2 impulse;
             float C1;
             C1 = Vector2.Dot(_perp, d);
 
-            linearError = Math.CommonMath.Max(linearError, Math.CommonMath.Abs(C1));
+            linearError = CommonMath.Max(linearError, CommonMath.Abs(C1));
             angularError = 0.0f;
 
             if (active)

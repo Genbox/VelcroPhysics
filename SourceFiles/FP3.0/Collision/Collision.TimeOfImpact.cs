@@ -20,9 +20,10 @@
 */
 
 using FarseerPhysics.Math;
+using Microsoft.Xna.Framework;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
-using Microsoft.Xna.Framework;
+
 #endif
 
 namespace FarseerPhysics.Collision
@@ -87,7 +88,7 @@ namespace FarseerPhysics.Collision
                     }
                     else
                     {
-                        targetDistance = Math.CommonMath.Max(0.05f * Settings.ToiSlop, distance - 0.5f * Settings.ToiSlop);
+                        targetDistance = CommonMath.Max(0.05f*Settings.ToiSlop, distance - 0.5f*Settings.ToiSlop);
                     }
                 }
 
@@ -101,8 +102,8 @@ namespace FarseerPhysics.Collision
 
                 // Compute upper bound on remaining movement.
                 float approachVelocityBound = Vector2.Dot(normal, v1 - v2) +
-                                              Math.CommonMath.Abs(omega1) * r1 + Math.CommonMath.Abs(omega2) * r2;
-                if (Math.CommonMath.Abs(approachVelocityBound) < Settings.FLT_EPSILON)
+                                              CommonMath.Abs(omega1)*r1 + CommonMath.Abs(omega2)*r2;
+                if (CommonMath.Abs(approachVelocityBound) < Settings.FLT_EPSILON)
                 {
                     alpha = 1.0f;
                     break;

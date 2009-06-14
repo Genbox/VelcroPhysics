@@ -20,9 +20,10 @@
 */
 
 using FarseerPhysics.Math;
+using Microsoft.Xna.Framework;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
-using Microsoft.Xna.Framework;
+
 #else
 #endif
 
@@ -35,8 +36,8 @@ namespace FarseerPhysics.Collision
         {
             manifold.PointCount = 0;
 
-            Vector2 p1 = Math.CommonMath.Mul(xf1, circle1.GetLocalPosition());
-            Vector2 p2 = Math.CommonMath.Mul(xf2, circle2.GetLocalPosition());
+            Vector2 p1 = CommonMath.Mul(xf1, circle1.GetLocalPosition());
+            Vector2 p2 = CommonMath.Mul(xf2, circle2.GetLocalPosition());
 
             Vector2 d = p2 - p1;
             float distSqr = Vector2.Dot(d, d);
@@ -56,7 +57,7 @@ namespace FarseerPhysics.Collision
             }
             else
             {
-                float dist = Math.CommonMath.Sqrt(distSqr);
+                float dist = CommonMath.Sqrt(distSqr);
                 separation = dist - radiusSum;
                 float a = 1.0f/dist;
                 manifold.Normal.X = a*d.X;
@@ -72,8 +73,8 @@ namespace FarseerPhysics.Collision
 
             Vector2 p = 0.5f*(p1 + p2);
 
-            manifold.Points[0].LocalPoint1 = Math.CommonMath.MulT(xf1, p);
-            manifold.Points[0].LocalPoint2 = Math.CommonMath.MulT(xf2, p);
+            manifold.Points[0].LocalPoint1 = CommonMath.MulT(xf1, p);
+            manifold.Points[0].LocalPoint2 = CommonMath.MulT(xf2, p);
         }
 
         public static void CollidePolygonAndCircle(ref Manifold manifold,
@@ -82,8 +83,8 @@ namespace FarseerPhysics.Collision
             manifold.PointCount = 0;
 
             // Compute circle position in the frame of the polygon.
-            Vector2 c = Math.CommonMath.Mul(xf2, circle.GetLocalPosition());
-            Vector2 cLocal = Math.CommonMath.MulT(xf1, c);
+            Vector2 c = CommonMath.Mul(xf2, circle.GetLocalPosition());
+            Vector2 cLocal = CommonMath.MulT(xf1, c);
 
             // Find the min separating edge.
             int normalIndex = 0;
@@ -113,14 +114,14 @@ namespace FarseerPhysics.Collision
             if (separation < Settings.FLT_EPSILON)
             {
                 manifold.PointCount = 1;
-                manifold.Normal = Math.CommonMath.Mul(xf1.R, normals[normalIndex]);
+                manifold.Normal = CommonMath.Mul(xf1.R, normals[normalIndex]);
                 manifold.Points[0].ID.Features.IncidentEdge = (byte) normalIndex;
                 manifold.Points[0].ID.Features.IncidentVertex = NullFeature;
                 manifold.Points[0].ID.Features.ReferenceEdge = 0;
                 manifold.Points[0].ID.Features.Flip = 0;
                 Vector2 position = c - radius*manifold.Normal;
-                manifold.Points[0].LocalPoint1 = Math.CommonMath.MulT(xf1, position);
-                manifold.Points[0].LocalPoint2 = Math.CommonMath.MulT(xf2, position);
+                manifold.Points[0].LocalPoint1 = CommonMath.MulT(xf1, position);
+                manifold.Points[0].LocalPoint2 = CommonMath.MulT(xf2, position);
                 manifold.Points[0].Separation = separation - radius;
                 return;
             }
@@ -130,7 +131,7 @@ namespace FarseerPhysics.Collision
             int vertIndex2 = vertIndex1 + 1 < vertexCount ? vertIndex1 + 1 : 0;
             Vector2 e = vertices[vertIndex2] - vertices[vertIndex1];
 
-            float length = Math.CommonMath.Normalize(ref e);
+            float length = CommonMath.Normalize(ref e);
             //Box2DXDebug.Assert(length > Settings.FLT_EPSILON);
 
             // Project the center onto the edge.
@@ -156,17 +157,17 @@ namespace FarseerPhysics.Collision
             }
 
             Vector2 d = cLocal - p;
-            float dist = Math.CommonMath.Normalize(ref d);
+            float dist = CommonMath.Normalize(ref d);
             if (dist > radius)
             {
                 return;
             }
 
             manifold.PointCount = 1;
-            manifold.Normal = Math.CommonMath.Mul(xf1.R, d);
+            manifold.Normal = CommonMath.Mul(xf1.R, d);
             Vector2 position_ = c - radius*manifold.Normal;
-            manifold.Points[0].LocalPoint1 = Math.CommonMath.MulT(xf1, position_);
-            manifold.Points[0].LocalPoint2 = Math.CommonMath.MulT(xf2, position_);
+            manifold.Points[0].LocalPoint1 = CommonMath.MulT(xf1, position_);
+            manifold.Points[0].LocalPoint2 = CommonMath.MulT(xf2, position_);
             manifold.Points[0].Separation = dist - radius;
             manifold.Points[0].ID.Features.ReferenceEdge = 0;
             manifold.Points[0].ID.Features.Flip = 0;

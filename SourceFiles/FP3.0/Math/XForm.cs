@@ -22,6 +22,7 @@
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
 using Microsoft.Xna.Framework;
+
 #else
 
 #endif

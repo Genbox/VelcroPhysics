@@ -20,9 +20,10 @@
 */
 
 using FarseerPhysics.Math;
+using Microsoft.Xna.Framework;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
-using Microsoft.Xna.Framework;
+
 #endif
 
 namespace FarseerPhysics.Dynamics
@@ -312,7 +313,7 @@ namespace FarseerPhysics.Dynamics
         internal void ComputeXForm(ref XForm xf, Vector2 center, Vector2 localCenter, float angle)
         {
             xf.R.Set(angle);
-            xf.Position = center - Math.CommonMath.Mul(xf.R, localCenter);
+            xf.Position = center - CommonMath.Mul(xf.R, localCenter);
         }
     }
 }

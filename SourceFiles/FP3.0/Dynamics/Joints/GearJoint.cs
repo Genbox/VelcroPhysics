@@ -40,9 +40,10 @@
 // K = J * invM * JT = invMass + invI * cross(r, ug)^2
 
 using FarseerPhysics.Math;
+using Microsoft.Xna.Framework;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
-using Microsoft.Xna.Framework;
+
 #endif
 
 namespace FarseerPhysics.Dynamics
@@ -203,9 +204,9 @@ namespace FarseerPhysics.Dynamics
         public override float GetReactionTorque(float inv_dt)
         {
             // TODO_ERIN not tested
-            Vector2 r = Math.CommonMath.Mul(_body2.GetXForm().R, _localAnchor2 - _body2.GetLocalCenter());
+            Vector2 r = CommonMath.Mul(_body2.GetXForm().R, _localAnchor2 - _body2.GetLocalCenter());
             Vector2 P = _impulse*_J.Linear2;
-            float L = _impulse*_J.Angular2 - Math.CommonMath.Cross(ref r, ref P);
+            float L = _impulse*_J.Angular2 - CommonMath.Cross(ref r, ref P);
             return inv_dt*L;
         }
 
@@ -226,9 +227,9 @@ namespace FarseerPhysics.Dynamics
             }
             else
             {
-                Vector2 ug = Math.CommonMath.Mul(g1.GetXForm().R, _prismatic1._localXAxis1);
-                Vector2 r = Math.CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-                float crug = Math.CommonMath.Cross(ref r, ref ug);
+                Vector2 ug = CommonMath.Mul(g1.GetXForm().R, _prismatic1._localXAxis1);
+                Vector2 r = CommonMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+                float crug = CommonMath.Cross(ref r, ref ug);
                 _J.Linear1 = -ug;
                 _J.Angular1 = -crug;
                 K += b1._invMass + b1._invI*crug*crug;
@@ -241,9 +242,9 @@ namespace FarseerPhysics.Dynamics
             }
             else
             {
-                Vector2 ug = Math.CommonMath.Mul(g2.GetXForm().R, _prismatic2._localXAxis1);
-                Vector2 r = Math.CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
-                float crug = Math.CommonMath.Cross(ref r, ref ug);
+                Vector2 ug = CommonMath.Mul(g2.GetXForm().R, _prismatic2._localXAxis1);
+                Vector2 r = CommonMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+                float crug = CommonMath.Cross(ref r, ref ug);
                 _J.Linear2 = -_ratio*ug;
                 _J.Angular2 = -_ratio*crug;
                 K += _ratio*_ratio*(b2._invMass + b2._invI*crug*crug);

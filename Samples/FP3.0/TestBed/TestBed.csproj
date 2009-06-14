@@ -9,7 +9,7 @@
     <RootNamespace>Farseer3TestBed</RootNamespace>
     <AssemblyName>Farseer3TestBed</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
+    <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
     <XnaCrossPlatformGroupID>ebf6ab6e-6a46-4837-885f-a73b5049ecd7</XnaCrossPlatformGroupID>
     <ApplicationIcon>Game.ico</ApplicationIcon>
@@ -19,6 +19,10 @@
     <ManifestKeyFile>Farseer3TestBed_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>true</GenerateManifests>
     <SignManifests>false</SignManifests>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -34,10 +38,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -65,14 +65,8 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Xna.Framework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
-      <Private>False</Private>
-      <SpecificVersion>True</SpecificVersion>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
-      <Private>False</Private>
-      <SpecificVersion>True</SpecificVersion>
-    </Reference>
+    <Reference Include="Microsoft.Xna.Framework, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d" />
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d" />
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
@@ -110,12 +104,6 @@
     </NestedContentProject>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FarseerPhysics3\Farseer Physics 3.0 XNA.csproj">
-      <Project>{97B7A247-D32D-4751-B2F4-13D352B7EBA2}</Project>
-      <Name>Farseer Physics 3.0 XNA</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework Client Profile</ProductName>
@@ -146,11 +134,17 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Xna.Framework.3.0">
+    <BootstrapperPackage Include="Microsoft.Xna.Framework.3.1">
       <Visible>False</Visible>
-      <ProductName>Microsoft XNA Framework Redistributable 3.0</ProductName>
+      <ProductName>Microsoft XNA Framework Redistributable 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Branches\FP3.0\XNA 3.1\FarseerPhysicsXNA.csproj">
+      <Project>{83D253AD-9D62-4317-BB22-90FBE6E04FF4}</Project>
+      <Name>FarseerPhysicsXNA</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

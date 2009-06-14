@@ -22,7 +22,7 @@
 using FarseerPhysics.Collision;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
-using Microsoft.Xna.Framework;
+
 #endif
 
 namespace FarseerPhysics.Dynamics

@@ -21,9 +21,10 @@
 
 using System.Runtime.InteropServices;
 using FarseerPhysics.Math;
+using Microsoft.Xna.Framework;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
-using Microsoft.Xna.Framework;
+
 #else
 #endif
 
@@ -34,7 +35,7 @@ namespace FarseerPhysics.Collision
 
     public partial class Collision
     {
-        public static readonly byte NullFeature = Math.CommonMath.UCHAR_MAX;
+        public static readonly byte NullFeature = CommonMath.UCHAR_MAX;
 
         public static bool TestOverlap(AABB a, AABB b)
         {
@@ -233,7 +234,7 @@ namespace FarseerPhysics.Collision
             Vector2 s = segment.P1;
             Vector2 r = segment.P2 - s;
             Vector2 d = P2 - P1;
-            Vector2 n = Math.CommonMath.Cross(d, 1.0f);
+            Vector2 n = CommonMath.Cross(d, 1.0f);
 
             float k_slop = 100.0f*Settings.FLT_EPSILON;
             float denom = -Vector2.Dot(r, n);

@@ -20,9 +20,10 @@
 */
 
 using FarseerPhysics.Math;
+using Microsoft.Xna.Framework;
 // If this is an XNA project then we use math from the XNA framework.
 #if XNA
-using Microsoft.Xna.Framework;
+
 #endif
 
 namespace FarseerPhysics.Collision
@@ -42,7 +43,7 @@ namespace FarseerPhysics.Collision
             // If in point[1] region
             Vector2 r = -points[1];
             Vector2 d = points[0] - points[1];
-            float length = Math.CommonMath.Normalize(ref d);
+            float length = CommonMath.Normalize(ref d);
             float lambda = Vector2.Dot(r, d);
             if (lambda <= 0.0f || length < Settings.FLT_EPSILON)
             {
@@ -101,18 +102,18 @@ namespace FarseerPhysics.Collision
             //Box2DXDebug.Assert(sn > 0.0f || tn > 0.0f);
             //Box2DXDebug.Assert(sd > 0.0f || un > 0.0f);
 
-            float n = Math.CommonMath.Cross(ref ab, ref ac);
+            float n = CommonMath.Cross(ref ab, ref ac);
 
 #if TARGET_FLOAT32_IS_FIXED
 				n = (n < 0.0f) ? -1.0f : ((n > 0.0f) ? 1.0f : 0.0f);
 #endif
 
             // Should not be in edge ab region.
-            float vc = n * Math.CommonMath.Cross(ref a, ref b);
+            float vc = n*CommonMath.Cross(ref a, ref b);
             //Box2DXDebug.Assert(vc > 0.0f || sn > 0.0f || sd > 0.0f);
 
             // In edge bc region?
-            float va = n * Math.CommonMath.Cross(ref b, ref c);
+            float va = n*CommonMath.Cross(ref b, ref c);
             if (va <= 0.0f && un >= 0.0f && ud >= 0.0f && (un + ud) > 0.0f)
             {
                 //Box2DXDebug.Assert(un + ud > 0.0f);
@@ -126,7 +127,7 @@ namespace FarseerPhysics.Collision
             }
 
             // In edge ac region?
-            float vb = n * Math.CommonMath.Cross(ref c, ref a);
+            float vb = n*CommonMath.Cross(ref c, ref a);
             if (vb <= 0.0f && tn >= 0.0f && td >= 0.0f && (tn + td) > 0.0f)
             {
                 //Box2DXDebug.Assert(tn + td > 0.0f);
@@ -161,8 +162,8 @@ namespace FarseerPhysics.Collision
             float k_tolerance = 100.0f*Settings.FLT_EPSILON;
             for (int i = 0; i < pointCount; ++i)
             {
-                Vector2 d = Math.CommonMath.Abs(w - points[i]);
-                Vector2 m = Math.CommonMath.Max(Math.CommonMath.Abs(w), Math.CommonMath.Abs(points[i]));
+                Vector2 d = CommonMath.Abs(w - points[i]);
+                Vector2 m = CommonMath.Max(CommonMath.Abs(w), CommonMath.Abs(points[i]));
 
                 if (d.X < k_tolerance*(m.X + 1.0f) &&
                     d.Y < k_tolerance*(m.Y + 1.0f))
@@ -212,7 +213,7 @@ namespace FarseerPhysics.Collision
                         x2 = w2;
                     }
                     GJKIterations = iter;
-                    return Math.CommonMath.Sqrt(vSqr);
+                    return CommonMath.Sqrt(vSqr);
                 }
 
                 switch (pointCount)
@@ -251,7 +252,7 @@ namespace FarseerPhysics.Collision
                 float maxSqr = -Settings.FLT_MAX;
                 for (int i = 0; i < pointCount; ++i)
                 {
-                    maxSqr = Math.CommonMath.Max(maxSqr, Vector2.Dot(points[i], points[i]));
+                    maxSqr = CommonMath.Max(maxSqr, Vector2.Dot(points[i], points[i]));
                 }
 
 #if TARGET_FLOAT32_IS_FIXED
@@ -264,19 +265,19 @@ namespace FarseerPhysics.Collision
                     v = x2 - x1;
                     vSqr = Vector2.Dot(v, v);
 
-                    return Math.CommonMath.Sqrt(vSqr);
+                    return CommonMath.Sqrt(vSqr);
                 }
             }
 
             GJKIterations = maxIterations;
-            return Math.CommonMath.Sqrt(vSqr);
+            return CommonMath.Sqrt(vSqr);
         }
 
         public static float DistanceCC(out Vector2 x1, out Vector2 x2,
                                        CircleShape circle1, XForm xf1, CircleShape circle2, XForm xf2)
         {
-            Vector2 p1 = Math.CommonMath.Mul(xf1, circle1.GetLocalPosition());
-            Vector2 p2 = Math.CommonMath.Mul(xf2, circle2.GetLocalPosition());
+            Vector2 p1 = CommonMath.Mul(xf1, circle1.GetLocalPosition());
+            Vector2 p2 = CommonMath.Mul(xf2, circle2.GetLocalPosition());
 
             Vector2 d = p2 - p1;
             float dSqr = Vector2.Dot(d, d);
@@ -285,7 +286,7 @@ namespace FarseerPhysics.Collision
             float r = r1 + r2;
             if (dSqr > r*r)
             {
-                float dLen = Math.CommonMath.Normalize(ref d);
+                float dLen = CommonMath.Normalize(ref d);
                 float distance = dLen - r;
                 x1 = p1 + r1*d;
                 x2 = p2 - r2*d;
@@ -312,7 +313,7 @@ namespace FarseerPhysics.Collision
                                        PolygonShape polygon, XForm xf1, CircleShape circle, XForm xf2)
         {
             Point point = new Point();
-            point.p = Math.CommonMath.Mul(xf2, circle.GetLocalPosition());
+            point.p = CommonMath.Mul(xf2, circle.GetLocalPosition());
 
             float distance = DistanceGeneric(out x1, out x2, polygon, xf1, point, XForm.Identity);
 

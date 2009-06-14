@@ -3,7 +3,6 @@ using FarseerPhysics.Collision;
 using FarseerPhysics.Math;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MathHelper=Microsoft.Xna.Framework.MathHelper;
 
 #else
 using FarseerPhysics.Collision;
@@ -118,8 +117,8 @@ namespace FarseerPhysics.Dynamics.Controllers
         public override void Draw(DebugDraw debugDraw)
         {
             float r = 1000;
-            Vector2 p1 = offset*normal + Math.CommonMath.Cross(normal, r);
-            Vector2 p2 = offset*normal - Math.CommonMath.Cross(normal, r);
+            Vector2 p1 = offset*normal + CommonMath.Cross(normal, r);
+            Vector2 p2 = offset*normal - CommonMath.Cross(normal, r);
 
             Color color = new Color(0, 0, 0.8f);
 
