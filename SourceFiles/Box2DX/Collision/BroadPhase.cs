@@ -38,7 +38,7 @@ Bullet (http:/www.bulletphysics.com).
 // - no broadphase is perfect and neither is this one: it is not great for huge
 //   worlds (use a multi-SAP instead), it is not great for large objects.
 
-#define ALLOWUNSAFE
+//#define ALLOWUNSAFE
 //#define TARGET_FLOAT32_IS_FIXED
 
 using System;
@@ -726,44 +726,17 @@ namespace Box2DX.Collision
 			{
 				float xProgress = 0;
 				float yProgress = 0;
-				if (xIndex < 0 || xIndex >= _proxyCount * 2)
+                //Move on to the next bound
+                xIndex += sx >= 0 ? 1 : -1;
+                if (xIndex < 0 || xIndex >= _proxyCount * 2)
 					break;
+                if (sx != 0)
+                    xProgress = (_bounds[0][xIndex].Value - p1x) / dx;
 				if (yIndex < 0 || yIndex >= _proxyCount * 2)
 					break;
-				if (sx != 0)
-				{
-					//Move on to the next bound
-					if (sx > 0)
-					{
-						xIndex++;
-						if (xIndex == _proxyCount * 2)
-							break;
-					}
-					else
-					{
-						xIndex--;
-						if (xIndex < 0)
-							break;
-					}
-					xProgress = (_bounds[0][xIndex].Value - p1x) / dx;
-				}
+                yIndex += sy >= 0 ? 1 : -1;
 				if (sy != 0)
-				{
-					//Move on to the next bound
-					if (sy > 0)
-					{
-						yIndex++;
-						if (yIndex == _proxyCount * 2)
-							break;
-					}
-					else
-					{
-						yIndex--;
-						if (yIndex < 0)
-							break;
-					}
 					yProgress = (_bounds[1][yIndex].Value - p1y) / dy;
-				}
 				for (; ; )
 				{
 					if (sy == 0 || (sx != 0 && xProgress < yProgress))

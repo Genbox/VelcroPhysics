@@ -103,7 +103,7 @@ namespace Box2DX.Collision
 
 			float n = Vec2.Cross(ab, ac);
 
-#if TARGET_FLOAT32_IS_FIXED
+#if TARGET_float_IS_FIXED
 				n = (n < 0.0f) ? -1.0f : ((n > 0.0f) ? 1.0f : 0.0f);
 #endif
 
@@ -143,7 +143,7 @@ namespace Box2DX.Collision
 			float denom = va + vb + vc;
 			Box2DXDebug.Assert(denom > 0.0f);
 			denom = 1.0f / denom;
-#if TARGET_FLOAT32_IS_FIXED
+#if TARGET_float_IS_FIXED
 			x1 = denom * (va * p1s[0] + vb * p1s[1] + vc * p1s[2]);
 			x2 = denom * (va * p2s[0] + vb * p2s[1] + vc * p2s[2]);
 #else
@@ -258,7 +258,7 @@ namespace Box2DX.Collision
 					maxSqr = Common.Math.Max(maxSqr, Vec2.Dot(points[i], points[i]));
 				}
 
-#if TARGET_FLOAT32_IS_FIXED
+#if TARGET_float_IS_FIXED
 				if (pointCount == 3 || vSqr <= 5.0*Common.Settings.FLT_EPSILON * maxSqr)
 #else
 				if (vSqr <= 100.0f * Common.Settings.FLT_EPSILON * maxSqr)
@@ -307,6 +307,58 @@ namespace Box2DX.Collision
 			x2 = x1;
 			return 0.0f;
 		}
+
+        public static float DistanceEdgeCircle(
+	        out Vec2 x1, out Vec2 x2,
+	        EdgeShape edge, XForm xf1,
+	        CircleShape circle, XForm xf2)
+        {
+	        Vec2 vWorld;
+	        Vec2 d;
+	        float dSqr;
+	        float dLen;
+	        float r = circle.GetRadius() - Settings.ToiSlop;
+	        Vec2 cWorld = Box2DX.Common.Math.Mul(xf2, circle.GetLocalPosition());
+	        Vec2 cLocal = Box2DX.Common.Math.MulT(xf1, cWorld);
+	        float dirDist = Box2DX.Common.Vec2.Dot(cLocal - edge.GetCoreVertex1(), edge.GetDirectionVector());
+	        if (dirDist <= 0.0f) {
+		        vWorld = Box2DX.Common.Math.Mul(xf1, edge.GetCoreVertex1());
+	        } else if (dirDist >= edge.GetLength()) {
+		        vWorld = Box2DX.Common.Math.Mul(xf1, edge.GetCoreVertex2());
+	        } else {
+		        x1 = Box2DX.Common.Math.Mul(xf1, edge.GetCoreVertex1() + dirDist * edge.GetDirectionVector());
+		        dLen = Box2DX.Common.Vec2.Dot(cLocal - edge.GetCoreVertex1(), edge.GetNormalVector());
+		        if (dLen < 0.0f) {
+			        if (dLen < -r) {
+				        x2 = Box2DX.Common.Math.Mul(xf1, cLocal + r * edge.GetNormalVector());
+				        return -dLen - r;
+			        } else {
+				        x2 = x1;
+				        return 0.0f;
+			        }
+		        } else {
+			        if (dLen > r) {
+				        x2 = Box2DX.Common.Math.Mul(xf1, cLocal  - r * edge.GetNormalVector());
+				        return dLen - r;
+			        } else {
+				        x2 = x1;
+				        return 0.0f;
+			        }
+		        }
+	        }
+        	
+	        x1 = vWorld;
+	        d = cWorld - vWorld;
+	        dSqr = Box2DX.Common.Vec2.Dot(d, d);
+	        if (dSqr > r * r) {
+		        dLen = d.Normalize();
+		        x2 = cWorld - r * d;
+		        return dLen - r;
+	        } else {
+		        x2 = vWorld;
+		        return 0.0f;
+	        }
+        }
 
 #warning "CAS"
 		// This is used for polygon-vs-circle distance.
@@ -381,7 +433,25 @@ namespace Box2DX.Collision
 			{
 				return DistanceGeneric(out x1, out x2, (PolygonShape)shape1, xf1, (PolygonShape)shape2, xf2);
 			}
+            if (type1 == ShapeType.EdgeShape && type2 == ShapeType.CircleShape)
+            {
+                return DistanceEdgeCircle(out x1, out x2, (EdgeShape)shape1, xf1, (CircleShape)shape2, xf2);
+            }
 
+            if (type1 == ShapeType.CircleShape && type2 == ShapeType.EdgeShape)
+            {
+                return DistanceEdgeCircle(out x2, out x1, (EdgeShape)shape2, xf2, (CircleShape)shape1, xf1);
+            }
+
+            if (type1 == ShapeType.PolygonShape && type2 == ShapeType.EdgeShape)
+            {
+                return DistanceGeneric(out x2, out x1, (EdgeShape)shape2, xf2, (PolygonShape)shape1, xf1);
+            }
+
+            if (type1 == ShapeType.EdgeShape && type2 == ShapeType.PolygonShape)
+            {
+                return DistanceGeneric(out x1, out x2, (EdgeShape)shape1, xf1, (PolygonShape)shape2, xf2);
+            }
 			return 0.0f;
 		}
 	}

@@ -240,12 +240,9 @@ namespace Box2DX.Dynamics
 				_invMass = 1.0f / _mass;
 			}
 
-			if ((_flags & BodyFlags.FixedRotation) == 0)
-			{
 				_I = bd.MassData.I;
-			}
 
-			if (_I > 0.0f)
+			if (_I > 0.0f && ((_flags & BodyFlags.FixedRotation) == 0))
 			{
 				_invI = 1.0f / _I;
 			}
@@ -271,6 +268,19 @@ namespace Box2DX.Dynamics
 			// shapes and joints are destroyed in World.Destroy
 		}
 
+        public float ConnectEdges(EdgeShape s1, EdgeShape s2, float angle1)
+        {
+            float angle2 = (float)System.Math.Atan2(s2.GetDirectionVector().Y, s2.GetDirectionVector().X);
+            Vec2 core = (float)System.Math.Tan((angle2 - angle1) * 0.5f) * s2.GetDirectionVector();
+            core = Common.Settings.ToiSlop * (core - s2.GetNormalVector()) + s2.GetVertex1();
+            Vec2 cornerDir = s1.GetDirectionVector() + s2.GetDirectionVector();
+            cornerDir.Normalize();
+            bool convex = Vec2.Dot(s1.GetDirectionVector(), s2.GetNormalVector()) > 0.0f;
+            s1.SetNextEdge(s2, core, cornerDir, convex);
+            s2.SetPrevEdge(s1, core, cornerDir, convex);
+            return angle2;
+        }
+
 		/// <summary>
 		/// Creates a shape and attach it to this body.
 		/// @warning This function is locked during callbacks.
@@ -284,6 +294,50 @@ namespace Box2DX.Dynamics
 			{
 				return null;
 			}
+
+            // TODO: Decide on a better place to initialize edgeShapes. (b2Shape::Create() can't
+	        //		 return more than one shape to add to parent body... maybe it should add
+	        //		 shapes directly to the body instead of returning them?)
+	        if (shapeDef.Type == ShapeType.EdgeShape) {
+		        EdgeChainDef edgeDef = (EdgeChainDef)shapeDef;
+		        Vec2 v1;
+		        Vec2 v2;
+		        int i;
+        		
+		        if (edgeDef.IsALoop) {
+			        v1 = edgeDef.Vertices[edgeDef.VertexCount-1];
+			        i = 0;
+		        } else {
+			        v1 = edgeDef.Vertices[0];
+			        i = 1;
+		        }
+        		
+		        EdgeShape s0 = null;
+		        EdgeShape s1 = null;
+		        float angle = 0.0f;
+		        for (; i < edgeDef.VertexCount; i++) {
+			        v2 = edgeDef.Vertices[i];
+        			
+			        EdgeShape s2 = new EdgeShape(v1, v2, shapeDef);
+			        s2._next = _shapeList;
+			        _shapeList = s2;
+			        ++_shapeCount;
+			        s2._body = this;
+			        s2.CreateProxy(_world._broadPhase, _xf);
+			        s2.UpdateSweepRadius(_sweep.LocalCenter);
+        			
+			        if (s1 == null) {
+				        s0 = s2;
+				        angle = (float)System.Math.Atan2(s2.GetDirectionVector().Y, s2.GetDirectionVector().X);
+			        } else {
+				        angle = ConnectEdges(s1, s2, angle);
+			        }
+			        s1 = s2;
+			        v1 = v2;
+		        }
+		        if (edgeDef.IsALoop) ConnectEdges(s1, s0, angle);
+		        return s0;
+	        }
 
 			Shape s = Shape.Create(shapeDef);
 
@@ -309,7 +363,7 @@ namespace Box2DX.Dynamics
 		/// @warning This function is locked during callbacks.
 		/// </summary>
 		/// <param name="shape">The shape to be removed.</param>
-		public void DestroyShape(Shape shape)
+		public void DestroyShape(ref Shape shape)
 		{
 			Box2DXDebug.Assert(_world._lock == false);
 			if (_world._lock == true)
@@ -343,7 +397,7 @@ namespace Box2DX.Dynamics
 
 			--_shapeCount;
 
-			Shape.Destroy(shape);
+			Shape.Destroy(ref shape);
 		}
 
 		// TODO_ERIN adjust linear velocity and torque to account for movement of center.
@@ -373,12 +427,9 @@ namespace Box2DX.Dynamics
 				_invMass = 1.0f / _mass;
 			}
 
-			if ((_flags & BodyFlags.FixedRotation) == 0)
-			{
-				_I = massData.I;
-			}
+			_I = massData.I;
 
-			if (_I > 0.0f)
+            if (_I > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
 			{
 				_invI = 1.0f /_I;
 			}
@@ -552,6 +603,21 @@ namespace Box2DX.Dynamics
 			return true;
 		}
 
+        public bool SetXForm(XForm xf)
+        {
+	        return SetXForm(xf.Position, xf.GetAngle());
+        }
+
+        public void SetPosition(Vec2 position)
+        {
+	        SetXForm(position, GetAngle());
+        }
+
+        public void SetAngle(float angle)
+        {
+	        SetXForm(GetPosition(), angle);
+        }
+
 		/// <summary>
 		/// Get the body transform for the body's origin.
 		/// </summary>
@@ -700,6 +766,15 @@ namespace Box2DX.Dynamics
 			return _I;
 		}
 
+        public MassData GetMassData()
+        {
+            MassData massData = new MassData();
+            massData.Mass = _mass;
+            massData.I = _I;
+            massData.Center = GetWorldCenter();
+            return massData;
+        }
+
 		/// <summary>
 		/// Get the world coordinates of a point given the local coordinates.
 		/// </summary>
@@ -760,6 +835,26 @@ namespace Box2DX.Dynamics
 			return GetLinearVelocityFromWorldPoint(GetWorldPoint(localPoint));
 		}
 
+        public float GetLinearDamping()
+        {
+	        return _linearDamping;
+        }
+
+        public void SetLinearDamping(float linearDamping)
+        {
+	        _linearDamping = linearDamping;
+        }
+
+        public float GetAngularDamping()
+        {
+	        return _angularDamping;
+        }
+
+        public void SetAngularDamping(float angularDamping)
+        {
+	        _angularDamping = angularDamping;
+        }
+
 		/// <summary>
 		/// Is this body treated like a bullet for continuous collision detection?
 		/// </summary>
@@ -785,6 +880,31 @@ namespace Box2DX.Dynamics
 			}
 		}
 
+        public bool IsFixedRotation()
+        {
+	        return (_flags & BodyFlags.FixedRotation) == BodyFlags.FixedRotation;
+        }
+
+        public void SetFixedRotation(bool fixedr)
+        {
+	        if(fixedr)
+	        {
+		        _angularVelocity = 0.0f;
+		        _invI = 0.0f;
+                _flags |= BodyFlags.FixedRotation;
+	        }
+	        else
+	        {
+		        if(_I > 0.0f)
+		        {
+			        // Recover _invI from _I.
+			        _invI = 1.0f / _I;
+                    _flags &= BodyFlags.FixedRotation;
+		        }
+		        // TODO: Else what?
+	        }
+        }
+
 		/// <summary>
 		/// Is this body static (immovable)?
 		/// </summary>
@@ -793,6 +913,21 @@ namespace Box2DX.Dynamics
 		{
 			return _type == BodyType.Static;
 		}
+
+        public void SetStatic()
+        {
+	        if(_type == BodyType.Static)
+		        return;
+	        _mass = 0.0f;
+	        _invMass = 0.0f;
+	        _I = 0.0f;
+	        _invI = 0.0f;
+            _type = BodyType.Static;
+	        for (Shape s = _shapeList; s != null; s = s._next)
+	        {
+		        s.RefilterProxy(_world._broadPhase, _xf);
+	        }
+        }
 
 		/// <summary>
 		/// Is this body dynamic (movable)?
@@ -820,6 +955,11 @@ namespace Box2DX.Dynamics
 		{
 			return (_flags & BodyFlags.Sleep) == BodyFlags.Sleep;
 		}
+
+        public bool IsAllowSleeping()
+        {
+            return (_flags & BodyFlags.AllowSleep) == BodyFlags.AllowSleep;
+        }
 
 		/// <summary>
 		/// You can disable sleeping on this body.
@@ -879,7 +1019,11 @@ namespace Box2DX.Dynamics
 			return _jointList;
 		}
 
-
+        public Dynamics.Controllers.ControllerEdge GetControllerList()
+        {
+	        return _controllerList;
+        }
+    
 		/// <summary>
 		/// Get the next body in the world's body list.
 		/// </summary>

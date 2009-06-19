@@ -53,6 +53,13 @@ namespace Box2DX.Common
 			Position.SetZero();
 			R.SetIdentity();
 		}
+        /// <summary>
+        /// Calculate the angle that the rotation matrix represents.
+        /// </summary>
+        public float GetAngle()
+        {
+            return (float)System.Math.Atan2(R.Col1.Y, R.Col1.X);
+        }
 
 		public static XForm Identity { get { return new XForm(Vec2.Zero, Mat22.Identity); } }
 	}

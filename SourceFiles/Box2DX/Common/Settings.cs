@@ -48,6 +48,8 @@ namespace Box2DX.Common
 		public static readonly int MaxPolygonVertices = 8;
 		public static readonly int MaxProxies = 512; // this must be a power of two
 		public static readonly int MaxPairs = 8 * MaxProxies; // this must be a power of two
+        public static readonly int NodePoolSize = 50;  //Inital pool size for dynamic tree
+        public static readonly float FatAABBFactor = 1.5f; //How much to fatten AABBs in dynamic tree
 
 		// Dynamics
 

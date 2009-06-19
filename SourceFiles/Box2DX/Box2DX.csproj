@@ -49,12 +49,14 @@
     <Compile Include="Box2DXDebug.cs" />
     <Compile Include="Collision\BroadPhase.cs" />
     <Compile Include="Collision\Collision.CollideCircle.cs" />
+    <Compile Include="Collision\Collision.CollideEdge.cs" />
     <Compile Include="Collision\Collision.CollidePoly.cs" />
     <Compile Include="Collision\Collision.cs" />
     <Compile Include="Collision\Collision.Distance.cs" />
     <Compile Include="Collision\Collision.TimeOfImpact.cs" />
     <Compile Include="Collision\PairManager.cs" />
     <Compile Include="Collision\Shapes\CircleShape.cs" />
+    <Compile Include="Collision\Shapes\EdgeShape.cs" />
     <Compile Include="Collision\Shapes\PolygonShape.cs" />
     <Compile Include="Collision\Shapes\Shape.cs" />
     <Compile Include="Common\Mat22.cs" />
@@ -70,8 +72,10 @@
     <Compile Include="Dynamics\Contacts\CircleContact.cs" />
     <Compile Include="Dynamics\Contacts\Contact.cs" />
     <Compile Include="Dynamics\Contacts\ContactSolver.cs" />
+    <Compile Include="Dynamics\Contacts\EdgeAndCircleContact.cs" />
     <Compile Include="Dynamics\Contacts\NullContact.cs" />
     <Compile Include="Dynamics\Contacts\PolyAndCircleContact.cs" />
+    <Compile Include="Dynamics\Contacts\PolyAndEdgeContact.cs" />
     <Compile Include="Dynamics\Contacts\PolyContact.cs" />
     <Compile Include="Dynamics\Controllers\BuoyancyController.cs" />
     <Compile Include="Dynamics\Controllers\Controller.cs" />

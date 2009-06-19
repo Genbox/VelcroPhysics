@@ -547,7 +547,7 @@ namespace Box2DX.Dynamics
 				if (_limitState == LimitState.EqualLimits)
 				{
 					// Prevent large angular corrections
-					float C = Box2DXMath.Clamp(angle, -Settings.MaxAngularCorrection, Settings.MaxAngularCorrection);
+					float C = Box2DXMath.Clamp(angle - _lowerAngle, -Settings.MaxAngularCorrection, Settings.MaxAngularCorrection);
 					limitImpulse = -_motorMass * C;
 					angularError = Box2DXMath.Abs(C);
 				}
