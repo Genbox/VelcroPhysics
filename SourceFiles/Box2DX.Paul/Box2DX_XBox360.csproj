@@ -1,0 +1,129 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{831D7A22-C6AE-4928-AFBA-1123F5774FDF}</ProjectGuid>
+    <ProjectTypeGuids>{2DF5C3F4-5A5F-47a9-8E94-23B4456F55E2};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
+	  <BaseIntermediateOutputPath>..\Build\VCS\Box2DX\XBox360\obj\</BaseIntermediateOutputPath>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Box2DX_XBox360</RootNamespace>
+    <AssemblyName>Box2DX_XBox360</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
+    <XnaPlatform>Xbox 360</XnaPlatform>
+    <XnaCrossPlatformGroupID>63bcee16-ff4f-4894-85c7-9fe6c129e51f</XnaCrossPlatformGroupID>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
+	  <BaseIntermediateOutputPath>..\Build\VCS\Box2DX\XBox360\obj\</BaseIntermediateOutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+	<OutputPath>..\Output\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;XBOX;XBOX360</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Xbox 360' ">
+	  <BaseIntermediateOutputPath>..\Build\VCS\Box2DX\XBox360\obj\</BaseIntermediateOutputPath>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+	<OutputPath>..\Output\</OutputPath>
+    <DefineConstants>TRACE;XBOX;XBOX360</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo_XBox360.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <NestedContentProject Include="Content\Content.contentproj">
+      <Project>7114ed6d-5327-4132-a422-110e2f780447</Project>
+      <Visible>False</Visible>
+    </NestedContentProject>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Box2DXDebug.cs" />
+    <Compile Include="Collision\BroadPhase.cs" />
+    <Compile Include="Collision\Collision.CollideCircle.cs" />
+    <Compile Include="Collision\Collision.CollidePoly.cs" />
+    <Compile Include="Collision\Collision.cs" />
+    <Compile Include="Collision\Collision.Distance.cs" />
+    <Compile Include="Collision\Collision.TimeOfImpact.cs" />
+    <Compile Include="Collision\PairManager.cs" />
+    <Compile Include="Collision\Shapes\CircleShape.cs" />
+    <Compile Include="Collision\Shapes\PolygonShape.cs" />
+    <Compile Include="Collision\Shapes\Shape.cs" />
+    <Compile Include="Common\Mat22.cs" />
+    <Compile Include="Common\Mat33.cs" />
+    <Compile Include="Common\Math.cs" />
+    <Compile Include="Common\Settings.cs" />
+    <Compile Include="Common\Sweep.cs" />
+    <Compile Include="Common\Vec2.cs" />
+    <Compile Include="Common\Vec3.cs" />
+    <Compile Include="Common\XForm.cs" />
+    <Compile Include="Dynamics\Body.cs" />
+    <Compile Include="Dynamics\ContactManager.cs" />
+    <Compile Include="Dynamics\Contacts\CircleContact.cs" />
+    <Compile Include="Dynamics\Contacts\Contact.cs" />
+    <Compile Include="Dynamics\Contacts\ContactSolver.cs" />
+    <Compile Include="Dynamics\Contacts\NullContact.cs" />
+    <Compile Include="Dynamics\Contacts\PolyAndCircleContact.cs" />
+    <Compile Include="Dynamics\Contacts\PolyContact.cs" />
+    <Compile Include="Dynamics\Controllers\BuoyancyController.cs" />
+    <Compile Include="Dynamics\Controllers\Controller.cs" />
+    <Compile Include="Dynamics\Island.cs" />
+    <Compile Include="Dynamics\Joints\DistanceJoint.cs" />
+    <Compile Include="Dynamics\Joints\GearJoint.cs" />
+    <Compile Include="Dynamics\Joints\Joint.cs" />
+    <Compile Include="Dynamics\Joints\LineJoint.cs" />
+    <Compile Include="Dynamics\Joints\MouseJoint.cs" />
+    <Compile Include="Dynamics\Joints\PrismaticJoint.cs" />
+    <Compile Include="Dynamics\Joints\PulleyJoint.cs" />
+    <Compile Include="Dynamics\Joints\RevoluteJoint.cs" />
+    <Compile Include="Dynamics\World.cs" />
+    <Compile Include="Dynamics\WorldCallbacks.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
