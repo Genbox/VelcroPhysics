@@ -255,6 +255,16 @@ namespace Box2DX.Dynamics
 				DestroyJoint(jn0.Joint);
 			}
 
+            //Detach controllers attached to this body
+            Controllers.ControllerEdge ce = b._controllerList;
+            while (ce != null)
+            {
+                Controllers.ControllerEdge ce0 = ce;
+                ce = ce.nextController;
+
+                ce0.controller.RemoveBody(b);
+            }
+
 			// Delete the attached shapes. This destroys broad-phase
 			// proxies and pairs, leading to the destruction of contacts.
 			Shape s = null;
@@ -271,7 +281,7 @@ namespace Box2DX.Dynamics
 				}
 
 				s0.DestroyProxy(_broadPhase);
-				Shape.Destroy(s0);
+				Shape.Destroy(ref s0);
 			}
 
 			// Remove world body list.
@@ -495,6 +505,16 @@ namespace Box2DX.Dynamics
 		{
 			return _jointList;
 		}
+
+        public Controllers.Controller GetControllerList()
+        {
+            return _controllerList;
+        }
+
+        public int GetControllerCount()
+        {
+            return _controllerCount;
+        }
 
 		/// <summary>
 		/// Re-filter a shape. This re-runs contact filtering on a shape.
@@ -1261,7 +1281,20 @@ namespace Box2DX.Dynamics
 							_debugDraw.DrawPolygon(vertices, vertexCount, coreColor);
 						}
 					}
-					break;
+                    break;
+
+                case ShapeType.EdgeShape:
+                    {
+                        EdgeShape edge = (EdgeShape)shape;
+
+                        _debugDraw.DrawSegment(Common.Math.Mul(xf, edge.GetVertex1()), Common.Math.Mul(xf, edge.GetVertex2()), color);
+
+                        if (core)
+                        {
+                            _debugDraw.DrawSegment(Common.Math.Mul(xf, edge.GetCoreVertex1()), Common.Math.Mul(xf, edge.GetCoreVertex2()), coreColor);
+                        }
+                    }
+                    break;
 			}
 		}
 

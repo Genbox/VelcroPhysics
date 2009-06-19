@@ -81,6 +81,7 @@ namespace Box2DX.Collision
 		UnknownShape = -1,
 		CircleShape,
 		PolygonShape,
+        EdgeShape,
 		ShapeTypeCount,
 	}
 
@@ -320,8 +321,9 @@ namespace Box2DX.Collision
 			}
 		}
 
-		internal static void Destroy(Shape s)
+		internal static void Destroy(ref Shape s)
 		{
+            EdgeShape edge;
 			switch (s.GetType())
 			{
 				case ShapeType.CircleShape:
@@ -335,6 +337,15 @@ namespace Box2DX.Collision
 						(s as IDisposable).Dispose();
 					s = null;
 					break;
+
+                case ShapeType.EdgeShape:
+                    edge = (EdgeShape)s;
+                    if (edge._nextEdge != null) edge._nextEdge._prevEdge = null;
+                    if (edge._prevEdge != null) edge._prevEdge._nextEdge = null;
+                    if (s is IDisposable)
+                        (s as IDisposable).Dispose();
+                    s = null;
+                    break;
 
 				default:
 					Box2DXDebug.Assert(false);

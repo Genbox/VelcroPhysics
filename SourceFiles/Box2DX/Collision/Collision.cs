@@ -283,6 +283,35 @@ namespace Box2DX.Collision
 			}
 		}
 
+        /// <summary>
+        /// Get the center of the AABB.
+        /// </summary>
+        public Vec2 GetCenter()
+        {
+            return 0.5f * (LowerBound + UpperBound);
+        }
+
+        /// <summary>
+        /// Combine two AABBs into this one.
+        /// </summary>
+        public void Combine(AABB aabb1, AABB aabb2)
+        {
+            LowerBound = Box2DX.Common.Math.Min(aabb1.LowerBound, aabb2.LowerBound);
+            UpperBound = Box2DX.Common.Math.Max(aabb1.UpperBound, aabb2.UpperBound);
+        }
+
+        /// <summary>
+        /// Does this aabb contain the provided AABB
+        /// </summary>
+        public bool Contains(AABB aabb)
+        {
+            bool result = true;
+            result = result && LowerBound.X <= aabb.LowerBound.X;
+            result = result && LowerBound.Y <= aabb.LowerBound.Y;
+            result = result && aabb.UpperBound.X <= UpperBound.X;
+            result = result && aabb.UpperBound.Y <= UpperBound.Y;
+            return result;
+        }
 
 		/// <summary>
 		/// The lower vertex.
