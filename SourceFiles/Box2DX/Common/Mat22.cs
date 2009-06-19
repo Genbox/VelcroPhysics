@@ -19,10 +19,6 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Box2DX.Common
 {
 	/// <summary>
@@ -56,6 +52,7 @@ namespace Box2DX.Common
 		/// </summary>
 		public Mat22(float angle)
 		{
+            // TODO_ERIN compute sin+cos together.
 			float c = (float)System.Math.Cos(angle), s = (float)System.Math.Sin(angle);
 			Col1.X = c; Col2.X = -s;
 			Col1.Y = s; Col2.Y = c;
@@ -142,9 +139,7 @@ namespace Box2DX.Common
 
 		public static Mat22 operator +(Mat22 A, Mat22 B)
 		{
-			Mat22 C = new Mat22();
-			C.Set(A.Col1 + B.Col1, A.Col2 + B.Col2);
-			return C;
+			return new Mat22(A.Col1 + B.Col1, A.Col2 + B.Col2);
 		}
 	}
 }

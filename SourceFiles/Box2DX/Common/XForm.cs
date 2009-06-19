@@ -19,10 +19,6 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Box2DX.Common
 {
 	/// <summary>
@@ -38,7 +34,7 @@ namespace Box2DX.Common
 		/// Initialize using a position vector and a rotation matrix.
 		/// </summary>
 		/// <param name="position"></param>
-		/// <param name="R"></param>
+        /// <param name="rotation"></param>
 		public XForm(Vec2 position, Mat22 rotation)
 		{
 			Position = position;
