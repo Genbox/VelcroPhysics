@@ -257,6 +257,7 @@ namespace Box2DX.Dynamics
 					-Settings.MaxAngularVelocity, Settings.MaxAngularVelocity);
 
 #else
+                /* This is not present
 				if (Vec2.Dot(b._linearVelocity, b._linearVelocity) > Settings.MaxLinearVelocitySquared)
 				{
 					b._linearVelocity.Normalize();
@@ -273,7 +274,7 @@ namespace Box2DX.Dynamics
 					{
 						b._angularVelocity = Settings.MaxAngularVelocity;
 					}
-				}
+				}*/
 #endif
 			}
 
@@ -307,6 +308,27 @@ namespace Box2DX.Dynamics
 
 				if (b.IsStatic())
 					continue;
+
+                // Check for large velocities.
+                Vec2 translation = step.Dt * b._linearVelocity;
+                if (Common.Vec2.Dot(translation, translation) > Settings.MaxTranslationSquared)
+                {
+                    translation.Normalize();
+                    b._linearVelocity = (Settings.MaxTranslation * step.Inv_Dt) * translation;
+                }
+
+                float rotation = step.Dt * b._angularVelocity;
+                if (rotation * rotation > Settings.MaxRotationSquared)
+                {
+                    if (rotation < 0.0)
+                    {
+                        b._angularVelocity = -step.Inv_Dt * Settings.MaxRotation;
+                    }
+                    else
+                    {
+                        b._angularVelocity = step.Inv_Dt * Settings.MaxRotation;
+                    }
+                }
 
 				// Store positions for continuous collision.
 				b._sweep.C0 = b._sweep.C;
@@ -433,6 +455,27 @@ namespace Box2DX.Dynamics
 				if (b.IsStatic())
 					continue;
 
+                // Check for large velocities.
+                Vec2 translation = subStep.Dt * b._linearVelocity;
+                if (Vec2.Dot(translation, translation) > Settings.MaxTranslationSquared)
+                {
+                    translation.Normalize();
+                    b._linearVelocity = (Settings.MaxTranslation * subStep.Inv_Dt) * translation;
+                }
+
+                float rotation = subStep.Dt * b._angularVelocity;
+                if (rotation * rotation > Settings.MaxRotationSquared)
+                {
+                    if (rotation < 0.0)
+                    {
+                        b._angularVelocity = -subStep.Inv_Dt * Settings.MaxRotation;
+                    }
+                    else
+                    {
+                        b._angularVelocity = subStep.Inv_Dt * Settings.MaxRotation;
+                    }
+                }
+
 				// Store positions for continuous collision.
 				b._sweep.C0 = b._sweep.C;
 				b._sweep.A0 = b._sweep.A;
@@ -495,36 +538,21 @@ namespace Box2DX.Dynamics
 				return;
 			}
 
-			for (int i = 0; i < _contactCount; ++i)
-			{
-				Contact c = _contacts[i];
-				ContactConstraint cc = constraints[i];
-				ContactResult cr = new ContactResult();
-				cr.Shape1 = c.GetShape1();
-				cr.Shape2 = c.GetShape2();
-				Body b1 = cr.Shape1.GetBody();
-				int manifoldCount = c.GetManifoldCount();
-				Manifold[] manifolds = c.GetManifolds();
-				for (int j = 0; j < manifoldCount; ++j)
-				{
-					Manifold manifold = manifolds[j];
-					cr.Normal = manifold.Normal;
-					for (int k = 0; k < manifold.PointCount; ++k)
-					{
-						ManifoldPoint point = manifold.Points[k];
-						ContactConstraintPoint ccp = cc.Points[k];
-						cr.Position = b1.GetWorldPoint(point.LocalPoint1);
+            for (int i = 0; i < _contactCount; ++i)
+            {
+                Contact c = _contacts[i];
 
-						// TOI constraint results are not stored, so get
-						// the result from the constraint.
-						cr.NormalImpulse = ccp.NormalImpulse;
-						cr.TangentImpulse = ccp.TangentImpulse;
-						cr.ID = point.ID;
+                ContactConstraint cc = constraints[i];
 
-						_listener.Result(cr);
-					}
-				}
-			}
+                ContactImpulse impulse;
+                for (int j = 0; j < cc.PointCount; ++j)
+                {
+                    impulse.normalImpulses[j] = cc.Points[j].NormalImpulse;
+                    impulse.tangentImpulses[j] = cc.Points[j].TangentImpulse;
+                }
+
+                _listener.PostSolve(c, impulse);
+            }
 		}
 	}
 }
