@@ -51,6 +51,7 @@ namespace Box2DX.Dynamics
 
 		private Body _bodyList;
 		private Joint _jointList;
+        private Controllers.Controller _controllerList;
 
 		private Vec2 _raycastNormal;
 		private object _raycastUserData;
@@ -63,8 +64,6 @@ namespace Box2DX.Dynamics
 		private int _bodyCount;
 		internal int _contactCount;
 		private int _jointCount;
-
-		private Controllers.Controller _controllerList;
 		private int _controllerCount;
 
 		private Vec2 _gravity;
@@ -265,24 +264,21 @@ namespace Box2DX.Dynamics
                 ce0.controller.RemoveBody(b);
             }
 
-			// Delete the attached shapes. This destroys broad-phase
-			// proxies and pairs, leading to the destruction of contacts.
-			Shape s = null;
-			if (b._shapeList != null)
-				s = b._shapeList;
-			while (s != null)
-			{
-				Shape s0 = s;
-				s = s._next;
+			// Delete the attached fixtures. This destroys broad-phase
+	        // proxies and pairs, leading to the destruction of contacts.
+	        Fixture f = b._fixtureList;
+	        while (f != null)
+	        {
+		        Fixture f0 = f;
+		        f = f.Next;
 
-				if (_destructionListener != null)
-				{
-					_destructionListener.SayGoodbye(s0);
-				}
+		        if (_destructionListener != null)
+		        {
+			        _destructionListener.SayGoodbye(f0);
+		        }
 
-				s0.DestroyProxy(_broadPhase);
-				Shape.Destroy(ref s0);
-			}
+		        f0.Destroy(_broadPhase);
+	        }
 
 			// Remove world body list.
 			if (b._prev != null)
@@ -350,10 +346,10 @@ namespace Box2DX.Dynamics
 			if (def.CollideConnected == false)
 			{
 				// Reset the proxies on the body with the minimum number of shapes.
-				Body b = def.Body1._shapeCount < def.Body2._shapeCount ? def.Body1 : def.Body2;
-				for (Shape s = b._shapeList; s != null; s = s._next)
+                Body b = def.Body1._fixtureCount < def.Body2._fixtureCount ? def.Body1 : def.Body2;
+				for (Fixture f = b._fixtureList; f != null; f = f.Next)
 				{
-					s.RefilterProxy(_broadPhase, b.GetXForm());
+					f.RefilterProxy(_broadPhase, b.GetXForm());
 				}
 			}
 
@@ -442,10 +438,10 @@ namespace Box2DX.Dynamics
 			if (collideConnected == false)
 			{
 				// Reset the proxies on the body with the minimum number of shapes.
-				Body b = body1._shapeCount < body2._shapeCount ? body1 : body2;
-				for (Shape s = b._shapeList; s != null; s = s._next)
+                Body b = body1._fixtureCount < body2._fixtureCount ? body1 : body2;
+                for (Fixture f = b._fixtureList; f != null; f = f.Next)
 				{
-					s.RefilterProxy(_broadPhase, b.GetXForm());
+					f.RefilterProxy(_broadPhase, b.GetXForm());
 				}
 			}
 		}
@@ -517,12 +513,12 @@ namespace Box2DX.Dynamics
         }
 
 		/// <summary>
-		/// Re-filter a shape. This re-runs contact filtering on a shape.
+		/// Re-filter a fixture. This re-runs contact filtering on a fixture.
 		/// </summary>		
-		public void Refilter(Shape shape)
+		public void Refilter(Fixture fixture)
 		{
 			Box2DXDebug.Assert(_lock == false);
-			shape.RefilterProxy(_broadPhase, shape.GetBody().GetXForm());
+            fixture.RefilterProxy(_broadPhase, fixture.GetBody().GetXForm());
 		}
 
 		/// <summary>
@@ -860,7 +856,7 @@ namespace Box2DX.Dynamics
 				// Update shapes (for broad-phase). If the shapes go out of
 				// the world AABB then shapes and contacts may be destroyed,
 				// including contacts that are
-				bool inRange = b.SynchronizeShapes();
+				bool inRange = b.SynchronizeFixtures();
 
 				// Did the body's shapes leave the world?
 				if (inRange == false && _boundaryListener != null)
@@ -934,8 +930,8 @@ namespace Box2DX.Dynamics
 					else
 					{
 						// Compute the TOI for this contact.
-						Shape s1_ = c.GetShape1();
-						Shape s2_ = c.GetShape2();
+						Fixture s1_ = c.GetFixtureA();
+						Fixture s2_ = c.GetFixtureB();
 						Body b1_ = s1_.GetBody();
 						Body b2_ = s2_.GetBody();
 
@@ -989,8 +985,8 @@ namespace Box2DX.Dynamics
 				}
 
 				// Advance the bodies to the TOI.
-				Shape s1 = minContact.GetShape1();
-				Shape s2 = minContact.GetShape2();
+				Fixture s1 = minContact.GetFixtureA();
+				Fixture s2 = minContact.GetFixtureB();
 				Body b1 = s1.GetBody();
 				Body b2 = s2.GetBody();
 				b1.Advance(minTOI);
@@ -1152,7 +1148,7 @@ namespace Box2DX.Dynamics
 					// Update shapes (for broad-phase). If the shapes go out of
 					// the world AABB then shapes and contacts may be destroyed,
 					// including contacts that are
-					bool inRange = b.SynchronizeShapes();
+					bool inRange = b.SynchronizeFixtures();
 
 					// Did the body's shapes leave the world?
 					if (inRange == false && _boundaryListener != null)
@@ -1232,34 +1228,29 @@ namespace Box2DX.Dynamics
 			}
 		}
 
-		private void DrawShape(Shape shape, XForm xf, Color color, bool core)
+		private void DrawFixture(Fixture fixture, XForm xf, Color color, bool core)
 		{
 			Color coreColor = new Color(0.9f, 0.6f, 0.6f);
 
-			switch (shape.GetType())
+			switch (fixture.GetType())
 			{
 				case ShapeType.CircleShape:
 					{
-						CircleShape circle = (CircleShape)shape;
+						CircleShape circle = (CircleShape)fixture.GetShape();
 
 						Vec2 center = Common.Math.Mul(xf, circle.GetLocalPosition());
 						float radius = circle.GetRadius();
 						Vec2 axis = xf.R.Col1;
 
 						_debugDraw.DrawSolidCircle(center, radius, axis, color);
-
-						if (core)
-						{
-							_debugDraw.DrawCircle(center, radius - Settings.ToiSlop, coreColor);
-						}
 					}
 					break;
 
 				case ShapeType.PolygonShape:
 					{
-						PolygonShape poly = (PolygonShape)shape;
+						PolygonShape poly = (PolygonShape)fixture.GetShape();
 						int vertexCount = poly.VertexCount;
-						Vec2[] localVertices = poly.GetVertices();
+                        Vec2[] localVertices = poly.Vertices;
 
 						Box2DXDebug.Assert(vertexCount <= Settings.MaxPolygonVertices);
 						Vec2[] vertices = new Vec2[Settings.MaxPolygonVertices];
@@ -1270,29 +1261,14 @@ namespace Box2DX.Dynamics
 						}
 
 						_debugDraw.DrawSolidPolygon(vertices, vertexCount, color);
-
-						if (core)
-						{
-							Vec2[] localCoreVertices = poly.GetCoreVertices();
-							for (int i = 0; i < vertexCount; ++i)
-							{
-								vertices[i] = Common.Math.Mul(xf, localCoreVertices[i]);
-							}
-							_debugDraw.DrawPolygon(vertices, vertexCount, coreColor);
-						}
 					}
                     break;
 
                 case ShapeType.EdgeShape:
                     {
-                        EdgeShape edge = (EdgeShape)shape;
+                        EdgeShape edge = (EdgeShape)fixture.GetShape();
 
                         _debugDraw.DrawSegment(Common.Math.Mul(xf, edge.GetVertex1()), Common.Math.Mul(xf, edge.GetVertex2()), color);
-
-                        if (core)
-                        {
-                            _debugDraw.DrawSegment(Common.Math.Mul(xf, edge.GetCoreVertex1()), Common.Math.Mul(xf, edge.GetCoreVertex2()), coreColor);
-                        }
                     }
                     break;
 			}
@@ -1314,19 +1290,19 @@ namespace Box2DX.Dynamics
 				for (Body b = _bodyList; b != null; b = b.GetNext())
 				{
 					XForm xf = b.GetXForm();
-					for (Shape s = b.GetShapeList(); s != null; s = s.GetNext())
+					for (Fixture f = b.GetFixtureList(); f != null; f = f.GetNext())
 					{
 						if (b.IsStatic())
 						{
-							DrawShape(s, xf, new Color(0.5f, 0.9f, 0.5f), core);
+							DrawFixture(f, xf, new Color(0.5f, 0.9f, 0.5f), core);
 						}
 						else if (b.IsSleeping())
 						{
-							DrawShape(s, xf, new Color(0.5f, 0.5f, 0.9f), core);
+							DrawFixture(f, xf, new Color(0.5f, 0.5f, 0.9f), core);
 						}
 						else
 						{
-							DrawShape(s, xf, new Color(0.9f, 0.9f, 0.9f), core);
+							DrawFixture(f, xf, new Color(0.9f, 0.9f, 0.9f), core);
 						}
 					}
 				}
@@ -1427,40 +1403,6 @@ namespace Box2DX.Dynamics
 				_debugDraw.DrawPolygon(vs, 4, new Color(0.3f, 0.9f, 0.9f));
 			}
 
-			if ((flags & DebugDraw.DrawFlags.Obb) != 0)
-			{
-				Color color = new Color(0.5f, 0.3f, 0.5f);
-
-				for (Body b = _bodyList; b != null; b = b.GetNext())
-				{
-					XForm xf = b.GetXForm();
-					for (Shape s = b.GetShapeList(); s != null; s = s.GetNext())
-					{
-						if (s.GetType() != ShapeType.PolygonShape)
-						{
-							continue;
-						}
-
-						PolygonShape poly = (PolygonShape)s;
-						OBB obb = poly.GetOBB();
-						Vec2 h = obb.Extents;
-						Vec2[] vs = new Vec2[4];
-						vs[0].Set(-h.X, -h.Y);
-						vs[1].Set(h.X, -h.Y);
-						vs[2].Set(h.X, h.Y);
-						vs[3].Set(-h.X, h.Y);
-
-						for (int i = 0; i < 4; ++i)
-						{
-							vs[i] = obb.Center + Common.Math.Mul(obb.R, vs[i]);
-							vs[i] = Common.Math.Mul(xf, vs[i]);
-						}
-
-						_debugDraw.DrawPolygon(vs, 4, color);
-					}
-				}
-			}
-
 			if ((flags & DebugDraw.DrawFlags.CenterOfMass) != 0)
 			{
 				for (Body b = _bodyList; b != null; b = b.GetNext())
@@ -1475,17 +1417,17 @@ namespace Box2DX.Dynamics
 		//Is it safe to pass private static function pointers?
 		private static float RaycastSortKey(object data)
 		{
-			Shape shape = data as Shape;
-			Box2DXDebug.Assert(shape != null);
-			Body body = shape.GetBody();
+			Fixture fixture = data as Fixture;
+			Box2DXDebug.Assert(fixture != null);
+			Body body = fixture.GetBody();
 			World world = body.GetWorld();
-			XForm xf = body.GetXForm();
 
-			if (world._contactFilter != null && !world._contactFilter.RayCollide(world._raycastUserData, shape))
+			if (world._contactFilter != null && !world._contactFilter.RayCollide(world._raycastUserData, fixture))
 				return -1;
 
 			float lambda;
-			SegmentCollide collide = shape.TestSegment(xf, out lambda, out world._raycastNormal, world._raycastSegment, 1);
+            
+			SegmentCollide collide = fixture.TestSegment(out lambda, out world._raycastNormal, world._raycastSegment, 1);
 
 			if (world._raycastSolidShape && collide == SegmentCollide.MissCollide)
 				return -1;
