@@ -25,12 +25,12 @@ namespace Box2DX.Collision
 {
     public class EdgeShape : Shape
     {
-        private Vec2 _v1;
-        private Vec2 _v2;
+        public Vec2 V1;
+        public Vec2 V2;
 
         private float _length;
 
-        private Vec2 _normal;
+        public Vec2 Normal;
 
         private Vec2 _direction;
 
@@ -67,17 +67,17 @@ namespace Box2DX.Collision
 
         public Vec2 GetVertex1()
         {
-            return _v1;
+            return V1;
         }
 
         public Vec2 GetVertex2()
         {
-            return _v2;
+            return V2;
         }
 
         public Vec2 GetNormalVector()
         {
-            return _normal;
+            return Normal;
         }
 
         public Vec2 GetDirectionVector()
@@ -117,25 +117,25 @@ namespace Box2DX.Collision
 
         public int GetSupport(Vec2 d)
         {
-            return Vec2.Dot(_v1, d) > Vec2.Dot(_v2, d) ? 0 : 1;
+            return Vec2.Dot(V1, d) > Vec2.Dot(V2, d) ? 0 : 1;
         }
 
         public Vec2 GetSupportVertex(Vec2 d)
         {
-            return Vec2.Dot(_v1, d) > Vec2.Dot(_v2, d) ? _v1 : _v2;
+            return Vec2.Dot(V1, d) > Vec2.Dot(V2, d) ? V1 : V2;
         }
 
         public void Set(Vec2 v1, Vec2 v2)
         {
-            _v1 = v1;
-            _v2 = v2;
+            V1 = v1;
+            V2 = v2;
 
-            _direction = _v2 - _v1;
+            _direction = V2 - V1;
             _length = _direction.Normalize();
-            _normal = Vec2.Cross(_direction, 1.0f);
+            Normal = Vec2.Cross(_direction, 1.0f);
 
-            _cornerDir1 = _normal;
-            _cornerDir2 = -1.0f * _normal;
+            _cornerDir1 = Normal;
+            _cornerDir2 = -1.0f * Normal;
         }
 
         public override SegmentCollide TestSegment(XForm transform,
@@ -145,8 +145,8 @@ namespace Box2DX.Collision
                                         float maxLambda)
         {
             Vec2 r = segment.P2 - segment.P1;
-            Vec2 v1 = Math.Mul(transform, _v1);
-            Vec2 d = Math.Mul(transform, _v2) - v1;
+            Vec2 v1 = Math.Mul(transform, V1);
+            Vec2 d = Math.Mul(transform, V2) - v1;
             Vec2 n = Vec2.Cross(d, 1.0f);
 
             lambda = 0f;
@@ -183,8 +183,8 @@ namespace Box2DX.Collision
 
         public override void ComputeAABB(out AABB aabb, XForm transform)
         {
-            Vec2 v1 = Math.Mul(transform, _v1);
-            Vec2 v2 = Math.Mul(transform, _v2);
+            Vec2 v1 = Math.Mul(transform, V1);
+            Vec2 v2 = Math.Mul(transform, V2);
             aabb.LowerBound = Math.Min(v1, v2);
             aabb.UpperBound = Math.Max(v1, v2);
         }
@@ -194,7 +194,7 @@ namespace Box2DX.Collision
             //B2_NOT_USED(density);
 
             massData.Mass = 0;
-            massData.Center = _v1;
+            massData.Center = V1;
             massData.I = 0;
         }
 
@@ -222,8 +222,8 @@ namespace Box2DX.Collision
             Vec2 v0 = offset * normal;
             //Vec2 v0 = xf.position + (offset - Vec2.Dot(normal, xf.position)) * normal;
 
-            Vec2 v1 = Math.Mul(xf, _v1);
-            Vec2 v2 = Math.Mul(xf, _v2);
+            Vec2 v1 = Math.Mul(xf, V1);
+            Vec2 v2 = Math.Mul(xf, V2);
 
             float d1 = Vec2.Dot(normal, v1) - offset;
             float d2 = Vec2.Dot(normal, v2) - offset;
@@ -266,8 +266,8 @@ namespace Box2DX.Collision
 
         public override float ComputeSweepRadius(Vec2 pivot)
         {
-            float ds1 = Vec2.DistanceSquared(_v1, pivot);
-            float ds2 = Vec2.DistanceSquared(_v2, pivot);
+            float ds1 = Vec2.DistanceSquared(V1, pivot);
+            float ds2 = Vec2.DistanceSquared(V2, pivot);
             return (float)System.Math.Sqrt(Math.Max(ds1, ds2));
         }
 
