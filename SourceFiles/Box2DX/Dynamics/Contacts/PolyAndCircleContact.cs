@@ -59,8 +59,8 @@ namespace Box2DX.Dynamics
 			bool[] persisted = new bool[] { false, false };
 
 			ContactPoint cp = new ContactPoint();
-			cp.Shape1 = _shape1;
-			cp.Shape2 = _shape2;
+			cp.FixtureA = _shape1;
+			cp.FixtureB = _shape2;
 			cp.Friction = Settings.MixFriction(_shape1.Friction, _shape2.Friction);
 			cp.Restitution = Settings.MixRestitution(_shape1.Restitution, _shape2.Restitution);
 
