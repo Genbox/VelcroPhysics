@@ -173,98 +173,128 @@ namespace Box2DX.Dynamics
     /// @warning you cannot reuse fixtures.
     public class Fixture
     {
-	    private ShapeType m_type;
-        private Fixture m_next;
-        private Body m_body;
+	    public ShapeType Type;
+        public Fixture Next;
+        public Body Body;
 
-        private Shape m_shape;
+        public Shape Shape;
 
-        private float m_density;
-        private float m_friction;
-        private float m_restitution;
+        public float Density;
+        public float Friction;
+        public float Restitution;
 
-        private UInt16 m_proxyId;
-        private FilterData m_filter;
+        public UInt16 ProxyId;
+        public FilterData Filter;
 
-        private bool m_isSensor;
+        public bool IsSensor;
 
-        private object m_userData;
+        public object UserData;
 
         public Fixture()
         {
-            m_userData = null;
-	        m_body = null;
-	        m_next = null;
-	        m_proxyId = UInt16.MaxValue; //b2_nullProxy;
-	        m_shape = null;
+            UserData = null;
+	        Body = null;
+	        Next = null;
+	        ProxyId = UInt16.MaxValue; //b2_nullProxy;
+	        Shape = null;
+        }
+
+        public void Destroy(BroadPhase broadPhase)
+        {
+	        // Remove proxy from the broad-phase.
+	        if (ProxyId != UInt16.MaxValue)
+	        {
+		        broadPhase.DestroyProxy(ProxyId);
+		        ProxyId = UInt16.MaxValue;
+	        }
+
+	        // Free the child shape.
+	        switch (Type)
+	        {
+	        case ShapeType.CircleShape:
+		        {
+			        //CircleShape s = (CircleShape)Shape;
+			        //s->~b2CircleShape();
+			        //allocator->Free(s, sizeof(b2CircleShape));
+		        }
+		        break;
+
+	        case ShapeType.PolygonShape:
+		        {
+			        //b2PolygonShape* s = (b2PolygonShape*)m_shape;
+			        //s->~b2PolygonShape();
+			        //allocator->Free(s, sizeof(b2PolygonShape));
+		        }
+		        break;
+
+	        case ShapeType.EdgeShape:
+		        {
+			        //b2EdgeShape* s = (b2EdgeShape*)m_shape;
+			        //s->~b2EdgeShape();
+			        //allocator->Free(s, sizeof(b2EdgeShape));
+		        }
+		        break;
+
+	        default:
+		        Box2DXDebug.Assert(false);
+		        break;
+	        }
+
+	        Shape = null;
         }
         
         /// Get the type of the child shape. You can use this to down cast to the concrete shape.
 	    /// @return the shape type.
 	    public ShapeType GetType()
         {
-            return m_type;
+            return Type;
         }
 
 	    /// Get the child shape. You can modify the child shape, however you should not change the
 	    /// number of vertices because this will crash some collision caching mechanisms.
 	    public Shape GetShape()
         {
-            return m_shape;
-        }
-
-	    /// Is this fixture a sensor (non-solid)?
-	    /// @return the true if the shape is a sensor.
-	    public bool IsSensor()
-        {
-            return m_isSensor;
-        }
-
-	    /// Set if this fixture is a sensor.
-	    /// You must call b2World::Refilter to update existing contacts.
-	    public void SetSensor(bool sensor)
-        {
-            m_isSensor = sensor;
+            return Shape;
         }
 
 	    /// Set the contact filtering data. You must call b2World::Refilter to correct
 	    /// existing contacts/non-contacts.
 	    public void SetFilterData(FilterData filter)
         {
-            m_filter = filter;
+            Filter = filter;
         }
 
 	    /// Get the contact filtering data.
 	    public FilterData GetFilterData()
         {
-            return m_filter;
+            return Filter;
         }
 
 	    /// Get the parent body of this fixture. This is NULL if the fixture is not attached.
 	    /// @return the parent body.
 	    public Body GetBody()
         {
-            return m_body;
+            return Body;
         }
 
 	    /// Get the next fixture in the parent body's fixture list.
 	    /// @return the next shape.
 	    public Fixture GetNext()
         {
-            return m_next;
+            return Next;
         }
 
 	    /// Get the user data that was assigned in the fixture definition. Use this to
 	    /// store your application specific data.
 	    public object GetUserData()
         {
-            return m_userData;
+            return UserData;
         }
 
 	    /// Set the user data. Use this to store your application specific data.
 	    public void SetUserData(object data)
         {
-            m_userData = data;
+            UserData = data;
         }
 
 	    /// Test a point for containment in this fixture. This only works for convex shapes.
@@ -272,7 +302,7 @@ namespace Box2DX.Dynamics
 	    /// @param p a point in world coordinates.
 	    public bool TestPoint(Vec2 p)
         {
-            return m_shape.TestPoint(m_body.GetXForm(), p);
+            return Shape.TestPoint(Body.GetXForm(), p);
         }
 
 	    /// Perform a ray cast against this shape.
@@ -285,7 +315,7 @@ namespace Box2DX.Dynamics
 	    /// @param maxLambda a number typically in the range [0,1].
 	    public SegmentCollide TestSegment(out float lambda, out Vec2 normal, Segment segment, float maxLambda)
         {
-            return m_shape.TestSegment(m_body.GetXForm(), out lambda, out normal, segment, maxLambda);
+            return Shape.TestSegment(Body.GetXForm(), out lambda, out normal, segment, maxLambda);
         }
 
 	    /// Compute the mass properties of this shape using its dimensions and density.
@@ -293,7 +323,7 @@ namespace Box2DX.Dynamics
 	    /// @param massData returns the mass data for this shape.
 	    public void ComputeMass(out MassData massData)
         {
-            m_shape.ComputeMass(out massData);
+            Shape.ComputeMass(out massData);
         }
 
 	    /// Compute the volume and centroid of this fixture intersected with a half plane
@@ -303,72 +333,72 @@ namespace Box2DX.Dynamics
 	    /// @return the total volume less than offset along normal
 	    public float ComputeSubmergedArea(Vec2 normal, float offset, Vec2 c)
         {
-            return m_shape.ComputeSubmergedArea(normal, offset, m_body.GetXForm(), out c);
+            return Shape.ComputeSubmergedArea(normal, offset, Body.GetXForm(), out c);
         }
 
 	    /// Get the maximum radius about the parent body's center of mass.
 	    public float ComputeSweepRadius(Vec2 pivot)
         {
-            return m_shape.ComputeSweepRadius(pivot);
+            return Shape.ComputeSweepRadius(pivot);
         }
 
 	    /// Get the coefficient of friction.
 	    public float GetFriction()
         {
-            return m_friction;
+            return Friction;
         }
 
 	    /// Set the coefficient of friction.
 	    public void SetFriction(float friction)
         {
-            m_friction = friction;
+            Friction = friction;
         }
 
 	    /// Get the coefficient of restitution.
 	    public float GetRestitution()
         {
-            return m_restitution;
+            return Restitution;
         }
 
 	    /// Set the coefficient of restitution.
 	    public void SetRestitution(float restitution)
         {
-            m_restitution = restitution;
+            Restitution = restitution;
         }
 
 	    /// Get the density.
 	    public float GetDensity()
         {
-            return m_density;
+            return Density;
         }
 
 	    /// Set the density.
 	    /// @warning this does not automatically update the mass of the parent body.
 	    public void SetDensity(float density)
         {
-            m_density = density;
+            Density = density;
         }
 
 	    // We need separation create/destroy functions from the constructor/destructor because
 	    // the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
         public void Create(BroadPhase broadPhase, Body body, XForm xf, FixtureDef def)
         {
-            m_userData = def.UserData;
-	        m_friction = def.Friction;
-	        m_restitution = def.Restitution;
-	        m_density = def.Density;
+            UserData = def.UserData;
+	        Friction = def.Friction;
+	        Restitution = def.Restitution;
+	        Density = def.Density;
 
-	        m_body = body;
-	        m_next = null;
+	        Body = body;
+	        Next = null;
 
-	        m_filter = def.Filter;
+	        Filter = def.Filter;
 
-	        m_isSensor = def.IsSensor;
+	        IsSensor = def.IsSensor;
 
-	        m_type = def.Type;
+	        Type = def.Type;
 
 	        // Allocate and initialize the child shape.
-	        switch (m_type)
+	        switch (Type)
 	        {
 	        case ShapeType.CircleShape:
                 {
@@ -376,7 +406,7 @@ namespace Box2DX.Dynamics
 			        CircleDef circleDef = (CircleDef)def;
 			        circle.m_p = circleDef.LocalPosition;
 			        circle.m_radius = circleDef.Radius;
-			        m_shape = circle;
+			        Shape = circle;
 		        }
 		        break;
 
@@ -385,7 +415,7 @@ namespace Box2DX.Dynamics
 			        PolygonShape polygon = new PolygonShape();
 			        PolygonDef polygonDef = (PolygonDef)def;
 			        polygon.Set(polygonDef.Vertices, polygonDef.VertexCount);
-			        m_shape = polygon;
+			        Shape = polygon;
 		        }
 		        break;
 
@@ -394,7 +424,7 @@ namespace Box2DX.Dynamics
 			        EdgeShape edge = new EdgeShape();
 			        EdgeDef edgeDef = (EdgeDef)def;
 			        edge.Set(edgeDef.Vertex1, edgeDef.Vertex2);
-			        m_shape = edge;
+			        Shape = edge;
 		        }
 		        break;
 
@@ -405,7 +435,7 @@ namespace Box2DX.Dynamics
 
 	        // Create proxy in the broad-phase.
 	        AABB aabb;
-	        m_shape.ComputeAABB(out aabb, xf);
+	        Shape.ComputeAABB(out aabb, xf);
 
 	        bool inRange = broadPhase.InRange(aabb);
 
@@ -414,11 +444,11 @@ namespace Box2DX.Dynamics
 
 	        if (inRange)
 	        {
-		        m_proxyId = broadPhase.CreateProxy(aabb, this);
+		        ProxyId = broadPhase.CreateProxy(aabb, this);
 	        }
 	        else
 	        {
-                m_proxyId = UInt16.MaxValue; //b2_nullProxy;
+                ProxyId = UInt16.MaxValue; //b2_nullProxy;
 	        }
         }
 
@@ -427,22 +457,22 @@ namespace Box2DX.Dynamics
 
         public bool Synchronize(BroadPhase broadPhase, XForm xf1, XForm xf2)
         {
-            if (m_proxyId == UInt16.MaxValue) //b2_nullProxy;
+            if (ProxyId == UInt16.MaxValue) //b2_nullProxy;
             {
                 return false;
             }
 
             // Compute an AABB that covers the swept shape (may miss some rotation effect).
             AABB aabb1, aabb2;
-            m_shape.ComputeAABB(out aabb1, xf1);
-            m_shape.ComputeAABB(out aabb2, xf2);
+            Shape.ComputeAABB(out aabb1, xf1);
+            Shape.ComputeAABB(out aabb2, xf2);
 
             AABB aabb = new AABB();
             aabb.Combine(aabb1, aabb2);
 
             if (broadPhase.InRange(aabb))
             {
-                broadPhase.MoveProxy(m_proxyId, aabb);
+                broadPhase.MoveProxy(ProxyId, aabb);
                 return true;
             }
             else
@@ -453,25 +483,25 @@ namespace Box2DX.Dynamics
 
         public void RefilterProxy(BroadPhase broadPhase, XForm xf)
         {
-            if (m_proxyId == UInt16.MaxValue)
+            if (ProxyId == UInt16.MaxValue)
             {
                 return;
             }
 
-            broadPhase.DestroyProxy(m_proxyId);
+            broadPhase.DestroyProxy(ProxyId);
 
             AABB aabb;
-            m_shape.ComputeAABB(out aabb, xf);
+            Shape.ComputeAABB(out aabb, xf);
 
             bool inRange = broadPhase.InRange(aabb);
 
             if (inRange)
             {
-                m_proxyId = broadPhase.CreateProxy(aabb, this);
+                ProxyId = broadPhase.CreateProxy(aabb, this);
             }
             else
             {
-                m_proxyId = UInt16.MaxValue;
+                ProxyId = UInt16.MaxValue;
             }
         }
     }

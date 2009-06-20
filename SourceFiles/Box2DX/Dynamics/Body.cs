@@ -122,7 +122,6 @@ namespace Box2DX.Dynamics
 	/// </summary>
 	public class Body : IDisposable
 	{
-
 		[Flags]
 		public enum BodyFlags
 		{
@@ -160,8 +159,8 @@ namespace Box2DX.Dynamics
 		internal Body _prev;
 		internal Body _next;
 
-		internal Shape _shapeList;
-		internal int _shapeCount;
+        internal Fixture _fixtureList;
+        internal int _fixtureCount;
 
 		internal JointEdge _jointList;
 		internal ContactEdge _contactList;
@@ -258,8 +257,8 @@ namespace Box2DX.Dynamics
 
 			_userData = bd.UserData;
 
-			_shapeList = null;
-			_shapeCount = 0;
+            _fixtureList = null;
+            _fixtureCount = 0;
 		}
 
 		public void Dispose()
@@ -268,137 +267,73 @@ namespace Box2DX.Dynamics
 			// shapes and joints are destroyed in World.Destroy
 		}
 
-        public float ConnectEdges(EdgeShape s1, EdgeShape s2, float angle1)
+        /// Creates a fixture and attach it to this body.
+	    /// @param def the fixture definition.
+	    /// @warning This function is locked during callbacks.
+        public Fixture CreateFixture(FixtureDef def)
         {
-            float angle2 = (float)System.Math.Atan2(s2.GetDirectionVector().Y, s2.GetDirectionVector().X);
-            Vec2 core = (float)System.Math.Tan((angle2 - angle1) * 0.5f) * s2.GetDirectionVector();
-            core = Common.Settings.ToiSlop * (core - s2.GetNormalVector()) + s2.GetVertex1();
-            Vec2 cornerDir = s1.GetDirectionVector() + s2.GetDirectionVector();
-            cornerDir.Normalize();
-            bool convex = Vec2.Dot(s1.GetDirectionVector(), s2.GetNormalVector()) > 0.0f;
-            s1.SetNextEdge(s2, core, cornerDir, convex);
-            s2.SetPrevEdge(s1, core, cornerDir, convex);
-            return angle2;
-        }
-
-		/// <summary>
-		/// Creates a shape and attach it to this body.
-		/// @warning This function is locked during callbacks.
-		/// </summary>
-		/// <param name="shapeDef">The shape definition.</param>
-		/// <returns></returns>
-		public Shape CreateShape(ShapeDef shapeDef)
-		{
-			Box2DXDebug.Assert(_world._lock == false);
-			if (_world._lock == true)
-			{
-				return null;
-			}
-
-            // TODO: Decide on a better place to initialize edgeShapes. (b2Shape::Create() can't
-	        //		 return more than one shape to add to parent body... maybe it should add
-	        //		 shapes directly to the body instead of returning them?)
-	        if (shapeDef.Type == ShapeType.EdgeShape) {
-		        EdgeChainDef edgeDef = (EdgeChainDef)shapeDef;
-		        Vec2 v1;
-		        Vec2 v2;
-		        int i;
-        		
-		        if (edgeDef.IsALoop) {
-			        v1 = edgeDef.Vertices[edgeDef.VertexCount-1];
-			        i = 0;
-		        } else {
-			        v1 = edgeDef.Vertices[0];
-			        i = 1;
-		        }
-        		
-		        EdgeShape s0 = null;
-		        EdgeShape s1 = null;
-		        float angle = 0.0f;
-		        for (; i < edgeDef.VertexCount; i++) {
-			        v2 = edgeDef.Vertices[i];
-        			
-			        EdgeShape s2 = new EdgeShape(v1, v2, shapeDef);
-			        s2._next = _shapeList;
-			        _shapeList = s2;
-			        ++_shapeCount;
-			        s2._body = this;
-			        s2.CreateProxy(_world._broadPhase, _xf);
-			        s2.UpdateSweepRadius(_sweep.LocalCenter);
-        			
-			        if (s1 == null) {
-				        s0 = s2;
-				        angle = (float)System.Math.Atan2(s2.GetDirectionVector().Y, s2.GetDirectionVector().X);
-			        } else {
-				        angle = ConnectEdges(s1, s2, angle);
-			        }
-			        s1 = s2;
-			        v1 = v2;
-		        }
-		        if (edgeDef.IsALoop) ConnectEdges(s1, s0, angle);
-		        return s0;
+            Box2DXDebug.Assert(_world._lock == false);
+	        if (_world._lock == true)
+	        {
+		        return null;
 	        }
 
-			Shape s = Shape.Create(shapeDef);
+	        BroadPhase broadPhase = _world._broadPhase;
 
-			s._next = _shapeList;
-			_shapeList = s;
-			++_shapeCount;
+	        Fixture fixture = new Fixture();
+	        fixture.Create(broadPhase, this, _xf, def);
 
-			s._body = this;
+	        fixture.Next = _fixtureList;
+	        _fixtureList = fixture;
+	        ++_fixtureCount;
 
-			// Add the shape to the world's broad-phase.
-			s.CreateProxy(_world._broadPhase, _xf);
+	        fixture.Body = this;
 
-			// Compute the sweep radius for CCD.
-			s.UpdateSweepRadius(_sweep.LocalCenter);
+	        return fixture;
+        }
 
-			return s;
-		}
+        /// Destroy a fixture. This removes the fixture from the broad-phase and
+        /// therefore destroys any contacts associated with this fixture. All fixtures
+        /// attached to a body are implicitly destroyed when the body is destroyed.
+        /// @param fixture the fixture to be removed.
+        /// @warning This function is locked during callbacks.
+        public void DestroyFixture(Fixture fixture)
+        {
+            Box2DXDebug.Assert(_world._lock == false);
+	        if (_world._lock == true)
+	        {
+		        return;
+	        }
 
-		/// <summary>
-		/// Destroy a shape. This removes the shape from the broad-phase and
-		/// therefore destroys any contacts associated with this shape. All shapes
-		/// attached to a body are implicitly destroyed when the body is destroyed.
-		/// @warning This function is locked during callbacks.
-		/// </summary>
-		/// <param name="shape">The shape to be removed.</param>
-		public void DestroyShape(ref Shape shape)
-		{
-			Box2DXDebug.Assert(_world._lock == false);
-			if (_world._lock == true)
-			{
-				return;
-			}
+	        Box2DXDebug.Assert(fixture.Body == this);
 
-			Box2DXDebug.Assert(shape.GetBody() == this);
-			shape.DestroyProxy(_world._broadPhase);
+	        // Remove the fixture from this body's singly linked list.
+	        Box2DXDebug.Assert(_fixtureCount > 0);
+	        Fixture node = _fixtureList;
+	        bool found = false;
+	        while (node != null)
+	        {
+		        if (node == fixture)
+		        {
+			        node = fixture.Next;
+			        found = true;
+			        break;
+		        }
 
-			Box2DXDebug.Assert(_shapeCount > 0);
-			Shape node = _shapeList;
-			bool found = false;
-			while (node != null)
-			{
-				if (node == shape)
-				{
-					_shapeList = shape._next;
-					found = true;
-					break;
-				}
+		        node = node.Next;
+	        }
 
-				node = node._next;
-			}
+	        // You tried to remove a shape that is not attached to this body.
+	        Box2DXDebug.Assert(found);
 
-			// You tried to remove a shape that is not attached to this body.
-			Box2DXDebug.Assert(found);
+	        BroadPhase broadPhase = _world._broadPhase;
 
-			shape._body = null;
-			shape._next = null;
+	        fixture.Destroy(broadPhase);
+	        fixture.Body = null;
+	        fixture.Next = null;
 
-			--_shapeCount;
-
-			Shape.Destroy(ref shape);
-		}
+	        --_fixtureCount;
+        }
 
 		// TODO_ERIN adjust linear velocity and torque to account for movement of center.
 		/// <summary>
@@ -411,57 +346,51 @@ namespace Box2DX.Dynamics
 		public void SetMass(MassData massData)
 		{
 			Box2DXDebug.Assert(_world._lock == false);
-			if (_world._lock == true)
-			{
-				return;
-			}
+	        if (_world._lock == true)
+	        {
+		        return;
+	        }
 
-			_invMass = 0.0f;
-			_I = 0.0f;
-			_invI = 0.0f;
+	        _invMass = 0.0f;
+	        _I = 0.0f;
+	        _invI = 0.0f;
 
-			_mass = massData.Mass;
+	        _mass = massData.Mass;
 
-			if (_mass > 0.0f)
-			{
-				_invMass = 1.0f / _mass;
-			}
+	        if (_mass > 0.0f)
+	        {
+		        _invMass = 1.0f / _mass;
+	        }
 
-			_I = massData.I;
+	        _I = massData.I;
 
-            if (_I > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
-			{
-				_invI = 1.0f /_I;
-			}
+	        if (_I > 0.0f && (_flags & Body.BodyFlags.FixedRotation) == 0)
+	        {
+		        _invI = 1.0f / _I;
+	        }
 
-			// Move center of mass.
-			_sweep.LocalCenter = massData.Center;
-			_sweep.C0 = _sweep.C = Common.Math.Mul(_xf, _sweep.LocalCenter);
+	        // Move center of mass.
+	        _sweep.LocalCenter = massData.Center;
+	        _sweep.C0 = _sweep.C = Common.Math.Mul(_xf, _sweep.LocalCenter);
 
-			// Update the sweep radii of all child shapes.
-			for (Shape s = _shapeList; s != null; s = s._next)
-			{
-				s.UpdateSweepRadius(_sweep.LocalCenter);
-			}
+	        BodyType oldType = _type;
+	        if (_invMass == 0.0f && _invI == 0.0f)
+	        {
+		        _type = BodyType.Static;
+	        }
+	        else
+	        {
+		        _type = BodyType.Dynamic;
+	        }
 
-			BodyType oldType = _type;
-			if (_invMass == 0.0f && _invI == 0.0f)
-			{
-				_type = BodyType.Static;
-			}
-			else
-			{
-				_type = BodyType.Dynamic;
-			}
-
-			// If the body type changed, we need to refilter the broad-phase proxies.
-			if (oldType != _type)
-			{
-				for (Shape s = _shapeList; s!=null; s = s._next)
-				{
-					s.RefilterProxy(_world._broadPhase, _xf);
-				}
-			}
+	        // If the body type changed, we need to refilter the broad-phase proxies.
+	        if (oldType != _type)
+	        {
+		        for (Fixture f = _fixtureList; f; f = f.Next)
+		        {
+			        f.RefilterProxy(_world._broadPhase, _xf);
+		        }
+	        }
 		}
 
 		// TODO_ERIN adjust linear velocity and torque to account for movement of center.
@@ -472,76 +401,70 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void SetMassFromShapes()
 		{
-			Box2DXDebug.Assert(_world._lock == false);
-			if (_world._lock == true)
-			{
-				return;
-			}
+            Box2DXDebug.Assert(_world._lock == false);
+            if (_world._lock == true)
+            {
+                return;
+            }
 
-			// Compute mass data from shapes. Each shape has its own density.
-			_mass = 0.0f;
-			_invMass = 0.0f;
-			_I = 0.0f;
-			_invI = 0.0f;
+            // Compute mass data from shapes. Each shape has its own density.
+            _mass = 0.0f;
+            _invMass = 0.0f;
+            _I = 0.0f;
+            _invI = 0.0f;
 
-			Vec2 center = Vec2.Zero;
-			for (Shape s = _shapeList; s!=null; s = s._next)
-			{
-				MassData massData;
-				s.ComputeMass(out massData);
-				_mass += massData.Mass;
-				center += massData.Mass * massData.Center;
-				_I += massData.I;
-			}
+            Vec2 center = Vec2.Zero;
+            for (Fixture f = _fixtureList; f != null; f = f.Next)
+            {
+                MassData massData;
+                f.ComputeMass(out massData);
+                _mass += massData.Mass;
+                center += massData.Mass * massData.Center;
+                _I += massData.I;
+            }
 
-			// Compute center of mass, and shift the origin to the COM.
-			if (_mass > 0.0f)
-			{
-				_invMass = 1.0f / _mass;
-				center *= _invMass;
-			}
+            // Compute center of mass, and shift the origin to the COM.
+            if (_mass > 0.0f)
+            {
+                _invMass = 1.0f / _mass;
+                center *= _invMass;
+            }
 
-			if (_I > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
-			{
-				// Center the inertia about the center of mass.
-				_I -= _mass * Vec2.Dot(center, center);
-				Box2DXDebug.Assert(_I > 0.0f);
-				_invI = 1.0f / _I;
-			}
-			else
-			{
-				_I = 0.0f;
-				_invI = 0.0f;
-			}
+            if (_I > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
+            {
+                // Center the inertia about the center of mass.
+                _I -= _mass * Vec2.Dot(center, center);
+                Box2DXDebug.Assert(_I > 0.0f);
+                _invI = 1.0f / _I;
+            }
+            else
+            {
+                _I = 0.0f;
+                _invI = 0.0f;
+            }
 
-			// Move center of mass.
-			_sweep.LocalCenter = center;
-			_sweep.C0 = _sweep.C = Common.Math.Mul(_xf, _sweep.LocalCenter);
+            // Move center of mass.
+            _sweep.LocalCenter = center;
+            _sweep.C0 = _sweep.C = Common.Math.Mul(_xf, _sweep.LocalCenter);
 
-			// Update the sweep radii of all child shapes.
-			for (Shape s = _shapeList; s != null; s = s._next)
-			{
-				s.UpdateSweepRadius(_sweep.LocalCenter);
-			}
+            BodyType oldType = _type;
+            if (_invMass == 0.0f && _invI == 0.0f)
+            {
+                _type = BodyType.Static;
+            }
+            else
+            {
+                _type = BodyType.Dynamic;
+            }
 
-			BodyType oldType = _type;
-			if (_invMass == 0.0f && _invI == 0.0f)
-			{
-				_type = BodyType.Static;
-			}
-			else
-			{
-				_type = BodyType.Dynamic;
-			}
-
-			// If the body type changed, we need to refilter the broad-phase proxies.
-			if (oldType != _type)
-			{
-				for (Shape s = _shapeList; s!=null; s = s._next)
-				{
-					s.RefilterProxy(_world._broadPhase, _xf);
-				}
-			}
+            // If the body type changed, we need to refilter the broad-phase proxies.
+            if (oldType != _type)
+            {
+                for (Fixture f = _fixtureList; f != null; f = f.Next)
+                {
+                    f.RefilterProxy(_world._broadPhase, _xf);
+                }
+            }
 		}
 
 		/// <summary>
@@ -573,9 +496,9 @@ namespace Box2DX.Dynamics
 			_sweep.A0 = _sweep.A = angle;
 
 			bool freeze = false;
-			for (Shape s = _shapeList; s != null; s = s._next)
+			for (Fixture f = _fixtureList; f != null; f = f.Next)
 			{
-				bool inRange = s.Synchronize(_world._broadPhase, _xf, _xf);
+				bool inRange = f.Synchronize(_world._broadPhase, _xf, _xf);
 
 				if (inRange == false)
 				{
@@ -589,10 +512,6 @@ namespace Box2DX.Dynamics
 				_flags |= BodyFlags.Frozen;
 				_linearVelocity.SetZero();
 				_angularVelocity = 0.0f;
-				for (Shape s = _shapeList; s != null; s = s._next)
-				{
-					s.DestroyProxy(_world._broadPhase);
-				}
 
 				// Failure
 				return false;
@@ -923,10 +842,11 @@ namespace Box2DX.Dynamics
 	        _I = 0.0f;
 	        _invI = 0.0f;
             _type = BodyType.Static;
-	        for (Shape s = _shapeList; s != null; s = s._next)
-	        {
-		        s.RefilterProxy(_world._broadPhase, _xf);
-	        }
+
+            for (Fixture f = _fixtureList; f != null; f = f.Next)
+            {
+                f.RefilterProxy(_world._broadPhase, _xf);
+            }
         }
 
 		/// <summary>
@@ -1002,14 +922,14 @@ namespace Box2DX.Dynamics
 		}
 
 		/// <summary>
-		/// Get the list of all shapes attached to this body.
+		/// Get the list of all fixtures attached to this body.
 		/// </summary>
 		/// <returns></returns>
-		public Shape GetShapeList()
+		public Fixture GetFixtureList()
 		{
-			return _shapeList;
+			return _fixtureList;
 		}
-
+        
 		/// <summary>
 		/// Get the list of all joints attached to this body.
 		/// </summary>
@@ -1054,16 +974,16 @@ namespace Box2DX.Dynamics
 		/// <returns></returns>
 		public World GetWorld() { return _world; }
 
-		internal bool SynchronizeShapes()
+		internal bool SynchronizeFixtures()
 		{
 			XForm xf1 = new XForm();
 			xf1.R.Set(_sweep.A0);
 			xf1.Position = _sweep.C0 - Common.Math.Mul(xf1.R, _sweep.LocalCenter);
 
 			bool inRange = true;
-			for (Shape s = _shapeList; s != null; s = s._next)
+			for (Fixture f = _fixtureList; f != null; f = f.Next)
 			{
-				inRange = s.Synchronize(_world._broadPhase, xf1, _xf);
+				inRange = f.Synchronize(_world._broadPhase, xf1, _xf);
 				if (inRange == false)
 				{
 					break;
@@ -1075,10 +995,6 @@ namespace Box2DX.Dynamics
 				_flags |= BodyFlags.Frozen;
 				_linearVelocity.SetZero();
 				_angularVelocity = 0.0f;
-				for (Shape s = _shapeList; s != null; s = s._next)
-				{
-					s.DestroyProxy(_world._broadPhase);
-				}
 
 				// Failure
 				return false;
