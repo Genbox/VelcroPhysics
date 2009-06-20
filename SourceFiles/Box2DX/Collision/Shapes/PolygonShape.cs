@@ -88,7 +88,7 @@ namespace Box2DX.Collision
         /// </summary>
         public Vec2 GetVertex(int index)
         {
-            Box2DXDebug.Assert(0 <= index && index < _vertexCount);
+            Box2DXDebug.Assert(0 <= index && index < VertexCount);
             return Vertices[index];
         }
 
@@ -100,7 +100,7 @@ namespace Box2DX.Collision
 
         public void SetAsBox(float hx, float hy)
         {
-            _vertexCount = 4;
+            VertexCount = 4;
             Vertices[0].Set(-hx, -hy);
             Vertices[1].Set(hx, -hy);
             Vertices[2].Set(hx, hy);
@@ -114,7 +114,7 @@ namespace Box2DX.Collision
 
         public void SetAsBox(float hx, float hy, Vec2 center, float angle)
         {
-            _vertexCount = 4;
+            VertexCount = 4;
             Vertices[0].Set(-hx, -hy);
             Vertices[1].Set(hx, -hy);
             Vertices[2].Set(hx, hy);
@@ -139,7 +139,7 @@ namespace Box2DX.Collision
 
         public void SetAsEdge(Vec2 v1, Vec2 v2)
         {
-            _vertexCount = 2;
+            VertexCount = 2;
             Vertices[0] = v1;
             Vertices[1] = v2;
             Centroid = 0.5f * (v1 + v2);
@@ -349,7 +349,7 @@ namespace Box2DX.Collision
 
             float k_inv3 = 1.0f / 3.0f;
 
-            for (int i = 0; i < _vertexCount; ++i)
+            for (int i = 0; i < VertexCount; ++i)
             {
                 // Triangle vertices.
                 Vec2 p1 = pRef;
