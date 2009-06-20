@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+
 using Box2DX.Common;
 using Box2DX.Dynamics;
 using Box2DX.Collision;
@@ -29,16 +30,16 @@ namespace Box2DX.Dynamics
     public class FilterData
     {
         /// The collision category bits. Normally you would just set one bit.
-        public UInt16 categoryBits;
+        public UInt16 CategoryBits;
 
         /// The collision mask bits. This states the categories that this
         /// shape would accept for collision.
-        public UInt16 maskBits;
+        public UInt16 MaskBits;
 
         /// Collision groups allow a certain group of objects to never collide (negative)
         /// or always collide (positive). Zero means no collision group. Non-zero group
         /// filtering always wins against the mask bits.
-        public UInt16 groupIndex;
+        public UInt16 GroupIndex;
     }
 
     /// A fixture definition is used to create a fixture. This class defines an
@@ -46,39 +47,39 @@ namespace Box2DX.Dynamics
     public class FixtureDef
     {
         /// Holds the shape type for down-casting.
-        public ShapeType type;
+        public ShapeType Type;
 
         /// Use this to store application specific fixture data.
-        public object userData;
+        public object UserData;
 
         /// The friction coefficient, usually in the range [0,1].
-        public float friction;
+        public float Friction;
 
         /// The restitution (elasticity) usually in the range [0,1].
-        public float restitution;
+        public float Restitution;
 
         /// The density, usually in kg/m^2.
-        public float density;
+        public float Density;
 
         /// A sensor shape collects contact information but never generates a collision
         /// response.
-        public bool isSensor;
+        public bool IsSensor;
 
         /// Contact filtering data.
-        public FilterData filter;
+        public FilterData Filter;
 
         /// The constructor sets the default fixture definition values.
         public FixtureDef()
         {
-            type = ShapeType.UnknownShape;
-            userData = null;
-            friction = 0.2f;
-            restitution = 0.0f;
-            density = 0.0f;
-            filter.categoryBits = 0x0001;
-            filter.maskBits = 0xFFFF;
-            filter.groupIndex = 0;
-            isSensor = false;
+            Type = ShapeType.UnknownShape;
+            UserData = null;
+            Friction = 0.2f;
+            Restitution = 0.0f;
+            Density = 0.0f;
+            Filter.CategoryBits = 0x0001;
+            Filter.MaskBits = 0xFFFF;
+            Filter.GroupIndex = 0;
+            IsSensor = false;
         }
     }
 
@@ -86,14 +87,14 @@ namespace Box2DX.Dynamics
     public class CircleDef : FixtureDef
     {
         
-        public Vec2 localPosition;
-        public float radius;
+        public Vec2 LocalPosition;
+        public float Radius;
 
         public CircleDef()
         {
-            type = ShapeType.CircleShape;
-            localPosition.SetZero();
-            radius = 1.0f;
+            Type = ShapeType.CircleShape;
+            LocalPosition.SetZero();
+            Radius = 1.0f;
         }
     }
 
@@ -103,15 +104,15 @@ namespace Box2DX.Dynamics
     public class PolygonDef : FixtureDef
     {
         /// The polygon vertices in local coordinates.
-        public Vec2[] vertices = new Vec2[Settings.MaxPolygonVertices];
+        public Vec2[] Vertices = new Vec2[Settings.MaxPolygonVertices];
 
         /// The number of polygon vertices.
-        public int vertexCount;
+        public int VertexCount;
         
         public PolygonDef()
 	    {
-		    type = ShapeType.PolygonShape;
-		    vertexCount = 0;
+		    Type = ShapeType.PolygonShape;
+		    VertexCount = 0;
 	    }
 
 	    /// Build vertices to represent an axis-aligned box.
@@ -119,11 +120,11 @@ namespace Box2DX.Dynamics
 	    /// @param hy the half-height.
 	    public void SetAsBox(float hx, float hy)
         {
-            vertexCount = 4;
-            vertices[0].Set(-hx, -hy);
-            vertices[1].Set(hx, -hy);
-            vertices[2].Set(hx, hy);
-            vertices[3].Set(-hx, hy);
+            VertexCount = 4;
+            Vertices[0].Set(-hx, -hy);
+            Vertices[1].Set(hx, -hy);
+            Vertices[2].Set(hx, hy);
+            Vertices[3].Set(-hx, hy);
         }
 
 	    /// Build vertices to represent an oriented box.
@@ -133,20 +134,20 @@ namespace Box2DX.Dynamics
 	    /// @param angle the rotation of the box in local coordinates.
 	    public void SetAsBox(float hx, float hy, Vec2 center, float angle)
         {
-            vertexCount = 4;
-            vertices[0].Set(-hx, -hy);
-            vertices[1].Set(hx, -hy);
-            vertices[2].Set(hx, hy);
-            vertices[3].Set(-hx, hy);
+            VertexCount = 4;
+            Vertices[0].Set(-hx, -hy);
+            Vertices[1].Set(hx, -hy);
+            Vertices[2].Set(hx, hy);
+            Vertices[3].Set(-hx, hy);
 
             XForm xf;
             xf.Position = center;
             xf.R.Set(angle);
 
-            vertices[0] = Common.Math.Mul(xf, vertices[0]);
-            vertices[1] = Common.Math.Mul(xf, vertices[1]);
-            vertices[2] = Common.Math.Mul(xf, vertices[2]);
-            vertices[3] = Common.Math.Mul(xf, vertices[3]);
+            Vertices[0] = Common.Math.Mul(xf, Vertices[0]);
+            Vertices[1] = Common.Math.Mul(xf, Vertices[1]);
+            Vertices[2] = Common.Math.Mul(xf, Vertices[2]);
+            Vertices[3] = Common.Math.Mul(xf, Vertices[3]);
         }
     }
 
@@ -154,14 +155,14 @@ namespace Box2DX.Dynamics
     class EdgeDef : FixtureDef
     {
 	    /// The start vertex.
-	    public Vec2 vertex1;
+	    public Vec2 Vertex1;
 
 	    /// The end vertex.
-	    public Vec2 vertex2;
+	    public Vec2 Vertex2;
 
         public EdgeDef()
         {
-            type = ShapeType.EdgeShape;
+            Type = ShapeType.EdgeShape;
         }
     }
 
@@ -172,29 +173,29 @@ namespace Box2DX.Dynamics
     /// @warning you cannot reuse fixtures.
     public class Fixture
     {
-	    ShapeType m_type;
-	    Fixture m_next;
-	    Body m_body;
+	    private ShapeType m_type;
+        private Fixture m_next;
+        private Body m_body;
 
-	    Shape m_shape;
+        private Shape m_shape;
 
-	    float m_density;
-	    float m_friction;
-	    float m_restitution;
+        private float m_density;
+        private float m_friction;
+        private float m_restitution;
 
-	    UInt16 m_proxyId;
-	    FilterData m_filter;
+        private UInt16 m_proxyId;
+        private FilterData m_filter;
 
-	    bool m_isSensor;
+        private bool m_isSensor;
 
-	    object m_userData;
+        private object m_userData;
 
         public Fixture()
         {
             m_userData = null;
 	        m_body = null;
 	        m_next = null;
-	        m_proxyId = 0; //b2_nullProxy;
+	        m_proxyId = UInt16.MaxValue; //b2_nullProxy;
 	        m_shape = null;
         }
         
@@ -290,9 +291,9 @@ namespace Box2DX.Dynamics
 	    /// Compute the mass properties of this shape using its dimensions and density.
 	    /// The inertia tensor is computed about the local origin, not the centroid.
 	    /// @param massData returns the mass data for this shape.
-	    public void ComputeMass(MassData massData)
+	    public void ComputeMass(out MassData massData)
         {
-            //m_shape->ComputeMass(massData, m_density);
+            m_shape.ComputeMass(out massData);
         }
 
 	    /// Compute the volume and centroid of this fixture intersected with a half plane
@@ -350,21 +351,21 @@ namespace Box2DX.Dynamics
 
 	    // We need separation create/destroy functions from the constructor/destructor because
 	    // the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
-        public void Create(BlockAllocator allocator, BroadPhase broadPhase, Body body, XForm xf, FixtureDef def)
+        public void Create(BroadPhase broadPhase, Body body, XForm xf, FixtureDef def)
         {
-            m_userData = def.userData;
-	        m_friction = def.friction;
-	        m_restitution = def.restitution;
-	        m_density = def.density;
+            m_userData = def.UserData;
+	        m_friction = def.Friction;
+	        m_restitution = def.Restitution;
+	        m_density = def.Density;
 
 	        m_body = body;
 	        m_next = null;
 
-	        m_filter = def.filter;
+	        m_filter = def.Filter;
 
-	        m_isSensor = def.isSensor;
+	        m_isSensor = def.IsSensor;
 
-	        m_type = def.type;
+	        m_type = def.Type;
 
 	        // Allocate and initialize the child shape.
 	        switch (m_type)
@@ -373,8 +374,8 @@ namespace Box2DX.Dynamics
                 {
 			        CircleShape circle = new CircleShape();
 			        CircleDef circleDef = (CircleDef)def;
-			        circle.m_p = circleDef.localPosition;
-			        circle.m_radius = circleDef.radius;
+			        circle.m_p = circleDef.LocalPosition;
+			        circle.m_radius = circleDef.Radius;
 			        m_shape = circle;
 		        }
 		        break;
@@ -383,7 +384,7 @@ namespace Box2DX.Dynamics
 		        {
 			        PolygonShape polygon = new PolygonShape();
 			        PolygonDef polygonDef = (PolygonDef)def;
-			        polygon.Set(polygonDef.vertices, polygonDef.vertexCount);
+			        polygon.Set(polygonDef.Vertices, polygonDef.VertexCount);
 			        m_shape = polygon;
 		        }
 		        break;
@@ -392,7 +393,7 @@ namespace Box2DX.Dynamics
 		        {
 			        EdgeShape edge = new EdgeShape();
 			        EdgeDef edgeDef = (EdgeDef)def;
-			        edge.Set(edgeDef.vertex1, edgeDef.vertex2);
+			        edge.Set(edgeDef.Vertex1, edgeDef.Vertex2);
 			        m_shape = edge;
 		        }
 		        break;
