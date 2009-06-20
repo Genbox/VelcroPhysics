@@ -51,18 +51,18 @@ namespace Box2DX.Dynamics
 		// to overlap. We create a Contact to manage the narrow phase.
 		public override object PairAdded(object proxyUserData1, object proxyUserData2)
 		{
-			Shape shape1 = proxyUserData1 as Shape;
-			Shape shape2 = proxyUserData2 as Shape;
+			Fixture fixtureA = proxyUserData1 as Fixture;
+			Fixture fixtureB = proxyUserData2 as Fixture;
 
-			Body body1 = shape1.GetBody();
-			Body body2 = shape2.GetBody();
+			Body body1 = fixtureA.GetBody();
+			Body body2 = fixtureB.GetBody();
 
 			if (body1.IsStatic() && body2.IsStatic())
 			{
 				return _nullContact;
 			}
 
-			if (shape1.GetBody() == shape2.GetBody())
+			if (fixtureA.GetBody() == fixtureB.GetBody())
 			{
 				return _nullContact;
 			}
@@ -72,13 +72,13 @@ namespace Box2DX.Dynamics
 				return _nullContact;
 			}
 
-			if (_world._contactFilter != null && _world._contactFilter.ShouldCollide(shape1, shape2) == false)
+			if (_world._contactFilter != null && _world._contactFilter.ShouldCollide(fixtureA, fixtureB) == false)
 			{
 				return _nullContact;
 			}
 
 			// Call the factory.
-			Contact c = Contact.Create(shape1, shape2);
+			Contact c = Contact.Create(fixtureA, fixtureB);
 
 			if (c == null)
 			{
@@ -86,10 +86,10 @@ namespace Box2DX.Dynamics
 			}
 
 			// Contact creation may swap shapes.
-			shape1 = c.GetShape1();
-			shape2 = c.GetShape2();
-			body1 = shape1.GetBody();
-			body2 = shape2.GetBody();
+			fixtureA = c.GetShape1();
+			fixtureB = c.GetShape2();
+			body1 = fixtureA.GetBody();
+			body2 = fixtureB.GetBody();
 
 			// Insert into the world.
 			c._prev = null;
@@ -155,41 +155,15 @@ namespace Box2DX.Dynamics
 
 		public void Destroy(Contact c)
 		{
-			Shape shape1 = c.GetShape1();
-			Shape shape2 = c.GetShape2();
-			Body body1 = shape1.GetBody();
-			Body body2 = shape2.GetBody();
+			Fixture fixtureA = c.GetShape1();
+			Fixture fixtureB = c.GetShape2();
+			Body body1 = fixtureA.GetBody();
+			Body body2 = fixtureB.GetBody();
 
-			ContactPoint cp = new ContactPoint();
-			cp.Shape1 = shape1;
-			cp.Shape2 = shape2;
-			cp.Friction = Settings.MixFriction(shape1.Friction, shape2.Friction);
-			cp.Restitution = Settings.MixRestitution(shape1.Restitution, shape2.Restitution);
-
-			// Inform the user that this contact is ending.
-			int manifoldCount = c.GetManifoldCount();
-			if (manifoldCount > 0 && _world._contactListener!=null)
-			{
-				Manifold[] manifolds = c.GetManifolds();
-
-				for (int i = 0; i < manifoldCount; ++i)
-				{
-					Manifold manifold = manifolds[i];
-					cp.Normal = manifold.Normal;
-
-					for (int j = 0; j < manifold.PointCount; ++j)
-					{
-						ManifoldPoint mp = manifold.Points[j];
-						cp.Position = body1.GetWorldPoint(mp.LocalPoint1);
-						Vec2 v1 = body1.GetLinearVelocityFromLocalPoint(mp.LocalPoint1);
-						Vec2 v2 = body2.GetLinearVelocityFromLocalPoint(mp.LocalPoint2);
-						cp.Velocity = v2 - v1;
-						cp.Separation = mp.Separation;
-						cp.ID = mp.ID;
-						_world._contactListener.Remove(cp);
-					}
-				}
-			}
+            if (c._manifold._pointCount > 0)
+            {
+                _world._contactListener.EndContact(c);
+            }
 
 			// Remove from the world.
 			if (c._prev != null)
