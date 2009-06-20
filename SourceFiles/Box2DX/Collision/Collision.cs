@@ -88,6 +88,51 @@ namespace Box2DX.Collision
                 }
             }
         }
+
+        public struct ClipVertex
+        {
+            public Vec2 V;
+            public ContactID ID;
+        }
+
+        // Sutherland-Hodgman clipping.
+        public static int ClipSegmentToLine(out ClipVertex[] vOut, ClipVertex[] vIn,
+            Vec2 normal, float offset)
+        {
+            if (vIn.Length != 2)
+                Box2DXDebug.ThrowBox2DXException("vIn should contain 2 element, but contains " + vIn.Length);
+            vOut = new ClipVertex[2];
+
+            // Start with no output points
+            int numOut = 0;
+
+            // Calculate the distance of end points to the line
+            float distance0 = Vec2.Dot(normal, vIn[0].V) - offset;
+            float distance1 = Vec2.Dot(normal, vIn[1].V) - offset;
+
+            // If the points are behind the plane
+            if (distance0 <= 0.0f) vOut[numOut++] = vIn[0];
+            if (distance1 <= 0.0f) vOut[numOut++] = vIn[1];
+
+            // If the points are on different sides of the plane
+            if (distance0 * distance1 < 0.0f)
+            {
+                // Find intersection point of edge and plane
+                float interp = distance0 / (distance0 - distance1);
+                vOut[numOut].V = vIn[0].V + interp * (vIn[1].V - vIn[0].V);
+                if (distance0 > 0.0f)
+                {
+                    vOut[numOut].ID = vIn[0].ID;
+                }
+                else
+                {
+                    vOut[numOut].ID = vIn[1].ID;
+                }
+                ++numOut;
+            }
+
+            return numOut;
+        }
     }
 
     /// <summary>
@@ -227,21 +272,6 @@ namespace Box2DX.Collision
         {
             for (int i = 0; i < Settings.MaxManifoldPoints; i++)
                 Points[i] = new ManifoldPoint();
-        }
-
-        public Manifold Clone()
-        {
-            Manifold newManifold = new Manifold();
-            newManifold.Normal = this.Normal;
-            newManifold.PointCount = this.PointCount;
-            int pointCount = this.Points.Length;
-            ManifoldPoint[] tmp = new ManifoldPoint[pointCount];
-            for (int i = 0; i < pointCount; i++)
-            {
-                tmp[i] = this.Points[i].Clone();
-            }
-            newManifold.Points = tmp;
-            return newManifold;
         }
     }
 
