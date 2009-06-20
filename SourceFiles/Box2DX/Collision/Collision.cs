@@ -503,62 +503,99 @@ namespace Box2DX.Collision
             Vec2 d = input.P2 - input.P1;
             Vec2 absD = Math.Abs(d);
 
-            Vec2 normal;
+            Vec2 normal = new Vec2();
 
-            //for (int i = 0; i < 2; ++i)
-            //{
-            //    if (absD(i) < Settings.FLT_EPSILON)
-            //    {
-            //        // Parallel.
-            //        if (p(i) < lowerBound(i) || upperBound(i) < p(i))
-            //        {
-            //            return;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        float32 inv_d = 1.0f / d(i);
-            //        float32 t1 = (lowerBound(i) - p(i)) * inv_d;
-            //        float32 t2 = (upperBound(i) - p(i)) * inv_d;
+            if (absD.X < Settings.FLT_EPSILON)
+            {
+                // Parallel.
+                if (p.X < LowerBound.X || UpperBound.X < p.X)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                float inv_d = 1.0f / d.X;
+                float t1 = (LowerBound.X - p.X) * inv_d;
+                float t2 = (UpperBound.X - p.X) * inv_d;
 
-            //        // Sign of the normal vector.
-            //        float32 s = -1.0f;
+                // Sign of the normal vector.
+                float s = -1.0f;
 
-            //        if (t1 > t2)
-            //        {
-            //            b2Swap(t1, t2);
-            //            s = 1.0f;
-            //        }
+                if (t1 > t2)
+                {
+                    Common.Math.Swap(ref t1, ref t2);
+                    s = 1.0f;
+                }
 
-            //        // Push the min up
-            //        if (t1 > tmin)
-            //        {
-            //            normal.SetZero();
-            //            normal(i) = s;
-            //            tmin = t1;
-            //        }
+                // Push the min up
+                if (t1 > tmin)
+                {
+                    normal.SetZero();
+                    normal.X = s;
+                    tmin = t1;
+                }
 
-            //        // Pull the max down
-            //        tmax = b2Min(tmax, t2);
+                // Pull the max down
+                tmax = Common.Math.Min(tmax, t2);
 
-            //        if (tmin > tmax)
-            //        {
-            //            return;
-            //        }
-            //    }
-            //}
+                if (tmin > tmax)
+                {
+                    return;
+                }
+            }
+
+            if (absD.Y < Settings.FLT_EPSILON)
+            {
+                // Parallel.
+                if (p.Y < LowerBound.Y || UpperBound.Y < p.Y)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                float inv_d = 1.0f / d.Y;
+                float t1 = (LowerBound.Y - p.Y) * inv_d;
+                float t2 = (UpperBound.Y - p.Y) * inv_d;
+
+                // Sign of the normal vector.
+                float s = -1.0f;
+
+                if (t1 > t2)
+                {
+                    Common.Math.Swap(ref t1, ref t2);
+                    s = 1.0f;
+                }
+
+                // Push the min up
+                if (t1 > tmin)
+                {
+                    normal.SetZero();
+                    normal.Y = s;
+                    tmin = t1;
+                }
+
+                // Pull the max down
+                tmax = Common.Math.Min(tmax, t2);
+
+                if (tmin > tmax)
+                {
+                    return;
+                }
+            }
 
             //// Does the ray start inside the box?
             //// Does the ray intersect beyond the max fraction?
-            //if (tmin < 0.0f || input.maxFraction < tmin)
-            //{
-            //    return;
-            //}
+            if (tmin < 0.0f || input.MaxFraction < tmin)
+            {
+                return;
+            }
 
             //// Intersection.
-            //output->fraction = tmin;
-            //output->normal = normal;
-            //output->hit = true;
+            output.Fraction = tmin;
+            output.Normal = normal;
+            output.Hit = true;
         }
 
         /// <summary>

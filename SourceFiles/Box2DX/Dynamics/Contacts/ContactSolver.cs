@@ -76,157 +76,139 @@ namespace Box2DX.Dynamics
 
 		public ContactSolver(TimeStep step, Contact[] contacts, int contactCount)
 		{
-			_step = step;
+            _step = step;
 
-			_constraintCount = 0;
-			for (int i = 0; i < contactCount; ++i)
-			{
-				Box2DXDebug.Assert(contacts[i].IsSolid());
-				_constraintCount += contacts[i].GetManifoldCount();
-			}
+            _constraintCount = contactCount;
+            _constraints = (ContactConstraint)m_allocator->Allocate(m_constraintCount * sizeof(b2ContactConstraint));
 
-			_constraints = new ContactConstraint[_constraintCount];
-			for (int i = 0; i < _constraintCount; i++)
-				_constraints[i] = new ContactConstraint();
+            for (int i = 0; i < _constraintCount; ++i)
+            {
+                Contact contact = contacts[i];
 
-			int count = 0;
-			for (int i = 0; i < contactCount; ++i)
-			{
-				Contact contact = contacts[i];
+                Fixture fixtureA = contact._fixtureA;
+                Fixture fixtureB = contact._fixtureB;
+                Shape shapeA = fixtureA.GetShape();
+                Shape shapeB = fixtureB.GetShape();
+                float radiusA = shapeA.Radius;
+                float radiusB = shapeB.Radius;
+                Body bodyA = fixtureA.GetBody();
+                Body bodyB = fixtureB.GetBody();
+                Manifold manifold = contact.GetManifold();
 
-				Shape shape1 = contact._shape1;
-				Shape shape2 = contact._shape2;
-				Body b1 = shape1.GetBody();
-				Body b2 = shape2.GetBody();
-				int manifoldCount = contact.GetManifoldCount();
-				Manifold[] manifolds = contact.GetManifolds();
+                float friction = Settings.MixFriction(fixtureA.GetFriction(), fixtureB.GetFriction());
+                float restitution = Settings.MixRestitution(fixtureA.GetRestitution(), fixtureB.GetRestitution());
 
-				float friction = Settings.MixFriction(shape1.Friction, shape2.Friction);
-				float restitution = Settings.MixRestitution(shape1.Restitution, shape2.Restitution);
+                Vec2 vA = bodyA._linearVelocity;
+                Vec2 vB = bodyB._linearVelocity;
+                float wA = bodyA._angularVelocity;
+                float wB = bodyB._angularVelocity;
 
-				Vec2 v1 = b1._linearVelocity;
-				Vec2 v2 = b2._linearVelocity;
-				float w1 = b1._angularVelocity;
-				float w2 = b2._angularVelocity;
+                Box2DXDebug.Assert(manifold.m_pointCount > 0);
 
-				for (int j = 0; j < manifoldCount; ++j)
-				{
-					Manifold manifold = manifolds[j];
+                WorldManifold worldManifold;
+                worldManifold.Initialize(manifold, bodyA._xf, radiusA, bodyB._xf, radiusB);
 
-					Box2DXDebug.Assert(manifold.PointCount > 0);
+                ContactConstraint cc = _constraints[i];
+                cc.Body1 = bodyA;
+                cc.Body2 = bodyB;
+                cc.Manifold = manifold;
+                cc.Normal = worldManifold.m_normal;
+                cc.PointCount = manifold.m_pointCount;
+                cc.Friction = friction;
+                cc.Restitution = restitution;
 
-					Vec2 normal = manifold.Normal;
+                cc.localPlaneNormal = manifold.m_localPlaneNormal;
+                cc.LocalPoint = manifold.m_localPoint;
+                cc.Radius = radiusA + radiusB;
+                cc.Type = manifold.m_type;
 
-					Box2DXDebug.Assert(count < _constraintCount);
-					ContactConstraint cc = _constraints[count];
-					cc.Body1 = b1;
-					cc.Body2 = b2;
-					cc.Manifold = manifold;
-					cc.Normal = normal;
-					cc.PointCount = manifold.PointCount;
-					cc.Friction = friction;
-					cc.Restitution = restitution;
+                for (int j = 0; j < cc.PointCount; ++j)
+                {
+                    ManifoldPoint cp = manifold.m_points + j;
+                    ContactConstraintPoint ccp = cc.points + j;
 
-					for (int k = 0; k < cc.PointCount; ++k)
-					{
-						ManifoldPoint cp = manifold.Points[k];
-						ContactConstraintPoint ccp = cc.Points[k];
+                    ccp.NormalImpulse = cp.m_normalImpulse;
+                    ccp.TangentImpulse = cp.m_tangentImpulse;
 
-						ccp.NormalImpulse = cp.NormalImpulse;
-						ccp.TangentImpulse = cp.TangentImpulse;
-						ccp.Separation = cp.Separation;
+                    ccp.localPoint = cp.m_localPoint;
 
-						ccp.LocalAnchor1 = cp.LocalPoint1;
-						ccp.LocalAnchor2 = cp.LocalPoint2;
-						ccp.R1 = Common.Math.Mul(b1.GetXForm().R, cp.LocalPoint1 - b1.GetLocalCenter());
-						ccp.R2 = Common.Math.Mul(b2.GetXForm().R, cp.LocalPoint2 - b2.GetLocalCenter());
+                    ccp.R1 = worldManifold.m_points[j] - bodyA._sweep.C;
+                    ccp.R2 = worldManifold.m_points[j] - bodyB._sweep.C;
 
-						float rn1 = Vec2.Cross(ccp.R1, normal);
-						float rn2 = Vec2.Cross(ccp.R2, normal);
-						rn1 *= rn1;
-						rn2 *= rn2;
+                    float rnA = Vec2.Cross(ccp.R1, cc.Normal);
+                    float rnB = Vec2.Cross(ccp.R2, cc.Normal);
+                    rnA *= rnA;
+                    rnB *= rnB;
 
-						float kNormal = b1._invMass + b2._invMass + b1._invI * rn1 + b2._invI * rn2;
+                    float kNormal = bodyA._invMass + bodyB._invMass + bodyA._invI * rnA + bodyB._invI * rnB;
 
-						Box2DXDebug.Assert(kNormal > Common.Settings.FLT_EPSILON);
-						ccp.NormalMass = 1.0f / kNormal;
+                    Box2DXDebug.Assert(kNormal > Settings.FLT_EPSILON);
+                    ccp.NormalMass = 1.0f / kNormal;
 
-						float kEqualized = b1._mass * b1._invMass + b2._mass * b2._invMass;
-						kEqualized += b1._mass * b1._invI * rn1 + b2._mass * b2._invI * rn2;
+                    float kEqualized = bodyA._mass * bodyA._invMass + bodyB._mass * bodyB._invMass;
+                    kEqualized += bodyA._mass * bodyA._invI * rnA + bodyB._mass * bodyB._invI * rnB;
 
-						Box2DXDebug.Assert(kEqualized > Common.Settings.FLT_EPSILON);
-						ccp.EqualizedMass = 1.0f / kEqualized;
+                    Box2DXDebug.Assert(kEqualized > Settings.FLT_EPSILON);
+                    ccp.EqualizedMass = 1.0f / kEqualized;
 
-						Vec2 tangent = Vec2.Cross(normal, 1.0f);
+                    Vec2 tangent = Vec2.Cross(cc.Normal, 1.0f);
 
-						float rt1 = Vec2.Cross(ccp.R1, tangent);
-						float rt2 = Vec2.Cross(ccp.R2, tangent);
-						rt1 *= rt1;
-						rt2 *= rt2;
+                    float rtA = Vec2.Cross(ccp.R1, tangent);
+                    float rtB = Vec2.Cross(ccp.R2, tangent);
+                    rtA *= rtA;
+                    rtB *= rtB;
 
-						float kTangent = b1._invMass + b2._invMass + b1._invI * rt1 + b2._invI * rt2;
+                    float kTangent = bodyA._invMass + bodyB._invMass + bodyA._invI * rtA + bodyB._invI * rtB;
 
-						Box2DXDebug.Assert(kTangent > Common.Settings.FLT_EPSILON);
-						ccp.TangentMass = 1.0f / kTangent;
+                    Box2DXDebug.Assert(kTangent > Settings.FLT_EPSILON);
+                    ccp->tangentMass = 1.0f / kTangent;
 
-						// Setup a velocity bias for restitution.
-						ccp.VelocityBias = 0.0f;
-						if (ccp.Separation > 0.0f)
-						{
-							ccp.VelocityBias = -step.Inv_Dt * ccp.Separation; // TODO_ERIN b2TimeStep
-						}
-						else
-						{
-							float vRel = Vec2.Dot(cc.Normal, v2 + Vec2.Cross(w2, ccp.R2) - v1 - Vec2.Cross(w1, ccp.R1));
-							if (vRel < -Settings.VelocityThreshold)
-							{
-								ccp.VelocityBias = -cc.Restitution * vRel;
-							}
-						}
-					}
+                    // Setup a velocity bias for restitution.
+                    ccp->velocityBias = 0.0f;
+                    float32 vRel = b2Dot(cc->normal, vB + b2Cross(wB, ccp->rB) - vA - b2Cross(wA, ccp->rA));
+                    if (vRel < -b2_velocityThreshold)
+                    {
+                        ccp->velocityBias = -cc->restitution * vRel;
+                    }
+                }
 
-					// If we have two points, then prepare the block solver.
-					if (cc.PointCount == 2)
-					{
-						ContactConstraintPoint ccp1 = cc.Points[0];
-						ContactConstraintPoint ccp2 = cc.Points[1];
+                // If we have two points, then prepare the block solver.
+                if (cc->pointCount == 2)
+                {
+                    b2ContactConstraintPoint* ccp1 = cc->points + 0;
+                    b2ContactConstraintPoint* ccp2 = cc->points + 1;
 
-						float invMass1 = b1._invMass;
-						float invI1 = b1._invI;
-						float invMass2 = b2._invMass;
-						float invI2 = b2._invI;
+                    float32 invMassA = bodyA->m_invMass;
+                    float32 invIA = bodyA->m_invI;
+                    float32 invMassB = bodyB->m_invMass;
+                    float32 invIB = bodyB->m_invI;
 
-						float rn11 = Vec2.Cross(ccp1.R1, normal);
-						float rn12 = Vec2.Cross(ccp1.R2, normal);
-						float rn21 = Vec2.Cross(ccp2.R1, normal);
-						float rn22 = Vec2.Cross(ccp2.R2, normal);
+                    float32 rn1A = b2Cross(ccp1->rA, cc->normal);
+                    float32 rn1B = b2Cross(ccp1->rB, cc->normal);
+                    float32 rn2A = b2Cross(ccp2->rA, cc->normal);
+                    float32 rn2B = b2Cross(ccp2->rB, cc->normal);
 
-						float k11 = invMass1 + invMass2 + invI1 * rn11 * rn11 + invI2 * rn12 * rn12;
-						float k22 = invMass1 + invMass2 + invI1 * rn21 * rn21 + invI2 * rn22 * rn22;
-						float k12 = invMass1 + invMass2 + invI1 * rn11 * rn21 + invI2 * rn12 * rn22;
+                    float32 k11 = invMassA + invMassB + invIA * rn1A * rn1A + invIB * rn1B * rn1B;
+                    float32 k22 = invMassA + invMassB + invIA * rn2A * rn2A + invIB * rn2B * rn2B;
+                    float32 k12 = invMassA + invMassB + invIA * rn1A * rn2A + invIB * rn1B * rn2B;
 
-						// Ensure a reasonable condition number.
-						const float k_maxConditionNumber = 100.0f;
-						if (k11 * k11 < k_maxConditionNumber * (k11 * k22 - k12 * k12))
-						{
-							// K is safe to invert.
-							cc.K.Col1.Set(k11, k12);
-							cc.K.Col2.Set(k12, k22);
-							cc.NormalMass = cc.K.Invert();
-						}
-						else
-						{
-							// The constraints are redundant, just use one.
-							// TODO_ERIN use deepest?
-							cc.PointCount = 1;
-						}
-					}
-
-					++count;
-				}
-			}
-
-			Box2DXDebug.Assert(count == _constraintCount);
+                    // Ensure a reasonable condition number.
+                    const float32 k_maxConditionNumber = 100.0f;
+                    if (k11 * k11 < k_maxConditionNumber * (k11 * k22 - k12 * k12))
+                    {
+                        // K is safe to invert.
+                        cc->K.col1.Set(k11, k12);
+                        cc->K.col2.Set(k12, k22);
+                        cc->normalMass = cc->K.GetInverse();
+                    }
+                    else
+                    {
+                        // The constraints are redundant, just use one.
+                        // TODO_ERIN use deepest?
+                        cc->pointCount = 1;
+                    }
+                }
+            }
 		}
 
 		public void Dispose()
