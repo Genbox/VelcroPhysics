@@ -19,47 +19,14 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-#define DEBUG
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Box2DX.Common;
 
 namespace Box2DX.Collision
 {
-    public class EdgeChainDef : ShapeDef
-    {
-        public int VertexCount;
-
-        public Vec2[] Vertices;
-
-        public bool IsALoop;
-
-        public EdgeChainDef()
-        {
-            Type = ShapeType.EdgeShape;
-            VertexCount = 0;
-            IsALoop = true;
-        }
-
-        public EdgeChainDef(Vec2[] vertices)
-        {
-            Type = ShapeType.EdgeShape;
-            VertexCount = vertices.Length;
-            Vertices = vertices;
-            IsALoop = true;
-        }
-    }
-
-    public class EdgeShape : Shape, Collision.IGenericShape
+    public class EdgeShape : Shape
     {
         private Vec2 _v1;
         private Vec2 _v2;
-
-        private Vec2 _coreV1;
-        private Vec2 _coreV2;
 
         private float _length;
 
@@ -83,260 +50,225 @@ namespace Box2DX.Collision
         public EdgeShape _nextEdge;
         public EdgeShape _prevEdge;
 
+        public EdgeShape()
+        {
+            Type = ShapeType.EdgeShape;
+
+            Radius = Settings.PolygonRadius;
+
+            _prevEdge = null;
+            _nextEdge = null;
+        }
+
         public float GetLength()
         {
-	        return _length;
+            return _length;
         }
-        
+
         public Vec2 GetVertex1()
         {
-	        return _v1;
+            return _v1;
         }
 
         public Vec2 GetVertex2()
         {
-	        return _v2;
-        }
-
-        public Vec2 GetCoreVertex1()
-        {
-	        return _coreV1;
-        }
-
-        public Vec2 GetCoreVertex2()
-        {
-	        return _coreV2;
+            return _v2;
         }
 
         public Vec2 GetNormalVector()
         {
-	        return _normal;
+            return _normal;
         }
 
         public Vec2 GetDirectionVector()
         {
-	        return _direction;
+            return _direction;
         }
 
         public Vec2 GetCorner1Vector()
         {
-	        return _cornerDir1;
+            return _cornerDir1;
         }
 
         public Vec2 GetCorner2Vector()
         {
-	        return _cornerDir2;
+            return _cornerDir2;
         }
 
         public EdgeShape GetNextEdge()
         {
-	        return _nextEdge;
+            return _nextEdge;
         }
 
         public EdgeShape GetPrevEdge()
         {
-	        return _prevEdge;
-        }
-
-        public Vec2 GetFirstVertex(XForm xf)
-        {
-	        return Common.Math.Mul(xf, _coreV1);
+            return _prevEdge;
         }
 
         public bool Corner1IsConvex()
         {
-	        return _cornerConvex1;
+            return _cornerConvex1;
         }
 
         public bool Corner2IsConvex()
         {
-	        return _cornerConvex2;
+            return _cornerConvex2;
         }
 
-        internal EdgeShape(Vec2 v1, Vec2 v2, ShapeDef def) : base(def)
+        public int GetSupport(Vec2 d)
         {
-	        Box2DXDebug.Assert(def.Type == ShapeType.EdgeShape);
-
-	        _type = ShapeType.EdgeShape;
-        	
-	        _prevEdge = null;
-	        _nextEdge = null;
-        	
-	        _v1 = v1;
-	        _v2 = v2;
-        	
-	        _direction = _v2 - _v1;
-	        _length = _direction.Normalize();
-	        _normal.Set(_direction.Y, -_direction.X);
-        	
-	        _coreV1 = -Settings.ToiSlop * (_normal - _direction) + _v1;
-	        _coreV2 = -Settings.ToiSlop * (_normal + _direction) + _v2;
-        	
-	        _cornerDir1 = _normal;
-	        _cornerDir2 = -1.0f * _normal;
+            return Vec2.Dot(_v1, d) > Vec2.Dot(_v2, d) ? 0 : 1;
         }
 
-        internal override void UpdateSweepRadius(Vec2 center)
+        public Vec2 GetSupportVertex(Vec2 d)
         {
-	        // Update the sweep radius (maximum radius) as measured from
-	        // a local center point.
-	        Vec2 d = _coreV1 - center;
-	        float d1 = Vec2.Dot(d,d);
-	        d = _coreV2 - center;
-	        float d2 = Vec2.Dot(d,d);
-	        _sweepRadius = Common.Math.Sqrt(d1 > d2 ? d1 : d2);
+            return Vec2.Dot(_v1, d) > Vec2.Dot(_v2, d) ? _v1 : _v2;
         }
-        /*
-        bool b2EdgeShape::TestPoint(const XForm& transform, const Vec2& p) const
+
+        public void Set(Vec2 v1, Vec2 v2)
         {
-	        B2_NOT_USED(transform);
-	        B2_NOT_USED(p);
-	        return false;
+            _v1 = v1;
+            _v2 = v2;
+
+            _direction = _v2 - _v1;
+            _length = _direction.Normalize();
+            _normal = Vec2.Cross(_direction, 1.0f);
+
+            _cornerDir1 = _normal;
+            _cornerDir2 = -1.0f * _normal;
         }
-        */
+
         public override SegmentCollide TestSegment(XForm transform,
-								        out float lambda,
-								        out Vec2 normal,
-								        Segment segment,
-								        float maxLambda)
+                                        out float lambda,
+                                        out Vec2 normal,
+                                        Segment segment,
+                                        float maxLambda)
         {
-	        Vec2 r = segment.P2 - segment.P1;
-	        Vec2 v1 = Common.Math.Mul(transform, _v1);
-	        Vec2 d = Common.Math.Mul(transform, _v2) - v1;
-	        Vec2 n = Vec2.Cross(d, 1.0f);
+            Vec2 r = segment.P2 - segment.P1;
+            Vec2 v1 = Math.Mul(transform, _v1);
+            Vec2 d = Math.Mul(transform, _v2) - v1;
+            Vec2 n = Vec2.Cross(d, 1.0f);
 
             lambda = 0f;
             normal = Vec2.Zero;
 
-	        float k_slop = 100.0f * Common.Settings.FLT_EPSILON;
-	        float denom = -Vec2.Dot(r, n);
+            float k_slop = 100.0f * Settings.FLT_EPSILON;
+            float denom = -Vec2.Dot(r, n);
 
-	        // Cull back facing collision and ignore parallel segments.
-	        if (denom > k_slop)
-	        {
-		        // Does the segment intersect the infinite line associated with this segment?
-		        Vec2 b = segment.P1 - v1;
-		        float a = Vec2.Dot(b, n);
+            // Cull back facing collision and ignore parallel segments.
+            if (denom > k_slop)
+            {
+                // Does the segment intersect the infinite line associated with this segment?
+                Vec2 b = segment.P1 - v1;
+                float a = Vec2.Dot(b, n);
 
-		        if (0.0f <= a && a <= maxLambda * denom)
-		        {
-			        float mu2 = -r.X * b.Y + r.Y * b.X;
+                if (0.0f <= a && a <= maxLambda * denom)
+                {
+                    float mu2 = -r.X * b.Y + r.Y * b.X;
 
-			        // Does the segment intersect this segment?
-			        if (-k_slop * denom <= mu2 && mu2 <= denom * (1.0f + k_slop))
-			        {
-				        a /= denom;
-				        n.Normalize();
-				        lambda = a;
-				        normal = n;
-				        return SegmentCollide.HitCollide;
-			        }
-		        }
-	        }
+                    // Does the segment intersect this segment?
+                    if (-k_slop * denom <= mu2 && mu2 <= denom * (1.0f + k_slop))
+                    {
+                        a /= denom;
+                        n.Normalize();
+                        lambda = a;
+                        normal = n;
+                        return SegmentCollide.HitCollide;
+                    }
+                }
+            }
 
-	        return SegmentCollide.MissCollide;
+            return SegmentCollide.MissCollide;
         }
 
         public override void ComputeAABB(out AABB aabb, XForm transform)
         {
-	        Vec2 v1 = Common.Math.Mul(transform, _v1);
-	        Vec2 v2 = Common.Math.Mul(transform, _v2);
-	        aabb.LowerBound = Common.Math.Min(v1, v2);
-	        aabb.UpperBound = Common.Math.Max(v1, v2);
+            Vec2 v1 = Math.Mul(transform, _v1);
+            Vec2 v2 = Math.Mul(transform, _v2);
+            aabb.LowerBound = Math.Min(v1, v2);
+            aabb.UpperBound = Math.Max(v1, v2);
         }
 
-        public override void ComputeSweptAABB(out AABB aabb, XForm transform1, XForm transform2)
+        public override void ComputeMass(out MassData massData, float density)
         {
-	        Vec2 v1 = Common.Math.Mul(transform1, _v1);
-	        Vec2 v2 = Common.Math.Mul(transform1, _v2);
-	        Vec2 v3 = Common.Math.Mul(transform2, _v1);
-	        Vec2 v4 = Common.Math.Mul(transform2, _v2);
-	        aabb.LowerBound = Common.Math.Min(Common.Math.Min(Common.Math.Min(v1, v2), v3), v4);
-	        aabb.UpperBound = Common.Math.Max(Common.Math.Max(Common.Math.Max(v1, v2), v3), v4);
+            //B2_NOT_USED(density);
+
+            massData.Mass = 0;
+            massData.Center = _v1;
+            massData.I = 0;
         }
 
-        public override void ComputeMass(out MassData massData)
+        public void SetPrevEdge(EdgeShape edge, Vec2 cornerDir, bool convex)
         {
-	        massData.Mass = 0;
-	        massData.Center = _v1;
-
-	        // inertia about the local origin
-	        massData.I = 0;
+            _prevEdge = edge;
+            _cornerDir1 = cornerDir;
+            _cornerConvex1 = convex;
         }
 
-        public Vec2 Support(XForm xf, Vec2 d)
+        public void SetNextEdge(EdgeShape edge, Vec2 cornerDir, bool convex)
         {
-	        Vec2 v1 = Common.Math.Mul(xf, _coreV1);
-	        Vec2 v2 = Common.Math.Mul(xf, _coreV2);
-	        return Vec2.Dot(v1, d) > Vec2.Dot(v2, d) ? v1 : v2;
+            _nextEdge = edge;
+            _cornerDir2 = cornerDir;
+            _cornerConvex2 = convex;
         }
 
-        public void SetPrevEdge(EdgeShape edge, Vec2 core, Vec2 cornerDir, bool convex)
+        public override float ComputeSubmergedArea(Vec2 normal,
+                                                        float offset,
+                                                        XForm xf,
+                                                        out Vec2 c)
         {
-	        _prevEdge = edge;
-	        _coreV1 = core;
-	        _cornerDir1 = cornerDir;
-	        _cornerConvex1 = convex;
-        }
+            //Note that v0 is independant of any details of the specific edge
+            //We are relying on v0 being consistent between multiple edges of the same body
+            Vec2 v0 = offset * normal;
+            //Vec2 v0 = xf.position + (offset - Vec2.Dot(normal, xf.position)) * normal;
 
-        public void SetNextEdge(EdgeShape edge, Vec2 core, Vec2 cornerDir, bool convex)
-        {
-	        _nextEdge = edge;
-	        _coreV2 = core;
-	        _cornerDir2 = cornerDir;
-	        _cornerConvex2 = convex;
-        }
+            Vec2 v1 = Math.Mul(xf, _v1);
+            Vec2 v2 = Math.Mul(xf, _v2);
 
-        public override float ComputeSubmergedArea(	Vec2 normal,
-												        float offset,
-												        XForm xf, 
-												        out Vec2 c)
-        {
-	        //Note that v0 is independant of any details of the specific edge
-	        //We are relying on v0 being consistent between multiple edges of the same body
-	        Vec2 v0 = offset * normal;
-	        //Vec2 v0 = xf.position + (offset - Vec2.Dot(normal, xf.position)) * normal;
+            float d1 = Vec2.Dot(normal, v1) - offset;
+            float d2 = Vec2.Dot(normal, v2) - offset;
 
-	        Vec2 v1 = Common.Math.Mul(xf, _v1);
-	        Vec2 v2 = Common.Math.Mul(xf, _v2);
-
-	        float d1 = Vec2.Dot(normal, v1) - offset;
-	        float d2 = Vec2.Dot(normal, v2) - offset;
-
-	        if(d1>0)
-	        {
-		        if(d2>0)
-		        {
+            if (d1 > 0)
+            {
+                if (d2 > 0)
+                {
                     c = new Vec2();
-			        return 0;
-		        }
-		        else
-		        {
-			        v1 = -d2 / (d1 - d2) * v1 + d1 / (d1 - d2) * v2;
-		        }
-	        }
-	        else
-	        {
-		        if(d2>0)
-		        {
-			        v2 = -d2 / (d1 - d2) * v1 + d1 / (d1 - d2) * v2;
-		        }
-		        else
-		        {
-			        //Nothing
-		        }
-	        }
+                    return 0;
+                }
+                else
+                {
+                    v1 = -d2 / (d1 - d2) * v1 + d1 / (d1 - d2) * v2;
+                }
+            }
+            else
+            {
+                if (d2 > 0)
+                {
+                    v2 = -d2 / (d1 - d2) * v1 + d1 / (d1 - d2) * v2;
+                }
+                else
+                {
+                    //Nothing
+                }
+            }
 
-	        // v0,v1,v2 represents a fully submerged triangle
-	        float k_inv3 = 1.0f / 3.0f;
+            // v0,v1,v2 represents a fully submerged triangle
+            float k_inv3 = 1.0f / 3.0f;
 
-	        // Area weighted centroid
-	        c = k_inv3 * (v0 + v1 + v2);
+            // Area weighted centroid
+            c = k_inv3 * (v0 + v1 + v2);
 
-	        Vec2 e1 = v1 - v0;
-	        Vec2 e2 = v2 - v0;
+            Vec2 e1 = v1 - v0;
+            Vec2 e2 = v2 - v0;
 
-	        return 0.5f * Vec2.Cross(e1, e2);
+            return 0.5f * Vec2.Cross(e1, e2);
+        }
+
+        public override float ComputeSweepRadius(Vec2 pivot)
+        {
+            float ds1 = Vec2.DistanceSquared(_v1, pivot);
+            float ds2 = Vec2.DistanceSquared(_v2, pivot);
+            return (float)System.Math.Sqrt(Math.Max(ds1, ds2));
         }
 
         /// <summary>

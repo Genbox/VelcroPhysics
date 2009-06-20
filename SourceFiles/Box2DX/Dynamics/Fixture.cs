@@ -17,11 +17,8 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 using Box2DX.Common;
-using Box2DX.Dynamics;
 using Box2DX.Collision;
 
 namespace Box2DX.Dynamics
@@ -86,7 +83,7 @@ namespace Box2DX.Dynamics
     /// This structure is used to build a fixture with a circle shape.
     public class CircleDef : FixtureDef
     {
-        
+
         public Vec2 LocalPosition;
         public float Radius;
 
@@ -108,17 +105,17 @@ namespace Box2DX.Dynamics
 
         /// The number of polygon vertices.
         public int VertexCount;
-        
-        public PolygonDef()
-	    {
-		    Type = ShapeType.PolygonShape;
-		    VertexCount = 0;
-	    }
 
-	    /// Build vertices to represent an axis-aligned box.
-	    /// @param hx the half-width.
-	    /// @param hy the half-height.
-	    public void SetAsBox(float hx, float hy)
+        public PolygonDef()
+        {
+            Type = ShapeType.PolygonShape;
+            VertexCount = 0;
+        }
+
+        /// Build vertices to represent an axis-aligned box.
+        /// @param hx the half-width.
+        /// @param hy the half-height.
+        public void SetAsBox(float hx, float hy)
         {
             VertexCount = 4;
             Vertices[0].Set(-hx, -hy);
@@ -127,12 +124,12 @@ namespace Box2DX.Dynamics
             Vertices[3].Set(-hx, hy);
         }
 
-	    /// Build vertices to represent an oriented box.
-	    /// @param hx the half-width.
-	    /// @param hy the half-height.
-	    /// @param center the center of the box in local coordinates.
-	    /// @param angle the rotation of the box in local coordinates.
-	    public void SetAsBox(float hx, float hy, Vec2 center, float angle)
+        /// Build vertices to represent an oriented box.
+        /// @param hx the half-width.
+        /// @param hy the half-height.
+        /// @param center the center of the box in local coordinates.
+        /// @param angle the rotation of the box in local coordinates.
+        public void SetAsBox(float hx, float hy, Vec2 center, float angle)
         {
             VertexCount = 4;
             Vertices[0].Set(-hx, -hy);
@@ -140,7 +137,7 @@ namespace Box2DX.Dynamics
             Vertices[2].Set(hx, hy);
             Vertices[3].Set(-hx, hy);
 
-            XForm xf;
+            XForm xf = new XForm();
             xf.Position = center;
             xf.R.Set(angle);
 
@@ -154,11 +151,11 @@ namespace Box2DX.Dynamics
     /// This structure is used to build a chain of edges.
     class EdgeDef : FixtureDef
     {
-	    /// The start vertex.
-	    public Vec2 Vertex1;
+        /// The start vertex.
+        public Vec2 Vertex1;
 
-	    /// The end vertex.
-	    public Vec2 Vertex2;
+        /// The end vertex.
+        public Vec2 Vertex2;
 
         public EdgeDef()
         {
@@ -173,7 +170,7 @@ namespace Box2DX.Dynamics
     /// @warning you cannot reuse fixtures.
     public class Fixture
     {
-	    public ShapeType Type;
+        public ShapeType Type;
         public Fixture Next;
         public Body Body;
 
@@ -193,267 +190,267 @@ namespace Box2DX.Dynamics
         public Fixture()
         {
             UserData = null;
-	        Body = null;
-	        Next = null;
-	        ProxyId = UInt16.MaxValue; //b2_nullProxy;
-	        Shape = null;
+            Body = null;
+            Next = null;
+            ProxyId = UInt16.MaxValue; //b2_nullProxy;
+            Shape = null;
         }
 
         public void Destroy(BroadPhase broadPhase)
         {
-	        // Remove proxy from the broad-phase.
-	        if (ProxyId != UInt16.MaxValue)
-	        {
-		        broadPhase.DestroyProxy(ProxyId);
-		        ProxyId = UInt16.MaxValue;
-	        }
+            // Remove proxy from the broad-phase.
+            if (ProxyId != UInt16.MaxValue)
+            {
+                broadPhase.DestroyProxy(ProxyId);
+                ProxyId = UInt16.MaxValue;
+            }
 
-	        // Free the child shape.
-	        switch (Type)
-	        {
-	        case ShapeType.CircleShape:
-		        {
-			        //CircleShape s = (CircleShape)Shape;
-			        //s->~b2CircleShape();
-			        //allocator->Free(s, sizeof(b2CircleShape));
-		        }
-		        break;
+            // Free the child shape.
+            switch (Type)
+            {
+                case ShapeType.CircleShape:
+                    {
+                        //CircleShape s = (CircleShape)Shape;
+                        //s->~b2CircleShape();
+                        //allocator->Free(s, sizeof(b2CircleShape));
+                    }
+                    break;
 
-	        case ShapeType.PolygonShape:
-		        {
-			        //b2PolygonShape* s = (b2PolygonShape*)m_shape;
-			        //s->~b2PolygonShape();
-			        //allocator->Free(s, sizeof(b2PolygonShape));
-		        }
-		        break;
+                case ShapeType.PolygonShape:
+                    {
+                        //b2PolygonShape* s = (b2PolygonShape*)m_shape;
+                        //s->~b2PolygonShape();
+                        //allocator->Free(s, sizeof(b2PolygonShape));
+                    }
+                    break;
 
-	        case ShapeType.EdgeShape:
-		        {
-			        //b2EdgeShape* s = (b2EdgeShape*)m_shape;
-			        //s->~b2EdgeShape();
-			        //allocator->Free(s, sizeof(b2EdgeShape));
-		        }
-		        break;
+                case ShapeType.EdgeShape:
+                    {
+                        //b2EdgeShape* s = (b2EdgeShape*)m_shape;
+                        //s->~b2EdgeShape();
+                        //allocator->Free(s, sizeof(b2EdgeShape));
+                    }
+                    break;
 
-	        default:
-		        Box2DXDebug.Assert(false);
-		        break;
-	        }
+                default:
+                    Box2DXDebug.Assert(false);
+                    break;
+            }
 
-	        Shape = null;
+            Shape = null;
         }
-        
+
         /// Get the type of the child shape. You can use this to down cast to the concrete shape.
-	    /// @return the shape type.
-	    public ShapeType GetType()
+        /// @return the shape type.
+        public ShapeType GetType()
         {
             return Type;
         }
 
-	    /// Get the child shape. You can modify the child shape, however you should not change the
-	    /// number of vertices because this will crash some collision caching mechanisms.
-	    public Shape GetShape()
+        /// Get the child shape. You can modify the child shape, however you should not change the
+        /// number of vertices because this will crash some collision caching mechanisms.
+        public Shape GetShape()
         {
             return Shape;
         }
 
-	    /// Set the contact filtering data. You must call b2World::Refilter to correct
-	    /// existing contacts/non-contacts.
-	    public void SetFilterData(FilterData filter)
+        /// Set the contact filtering data. You must call b2World::Refilter to correct
+        /// existing contacts/non-contacts.
+        public void SetFilterData(FilterData filter)
         {
             Filter = filter;
         }
 
-	    /// Get the contact filtering data.
-	    public FilterData GetFilterData()
+        /// Get the contact filtering data.
+        public FilterData GetFilterData()
         {
             return Filter;
         }
 
-	    /// Get the parent body of this fixture. This is NULL if the fixture is not attached.
-	    /// @return the parent body.
-	    public Body GetBody()
+        /// Get the parent body of this fixture. This is NULL if the fixture is not attached.
+        /// @return the parent body.
+        public Body GetBody()
         {
             return Body;
         }
 
-	    /// Get the next fixture in the parent body's fixture list.
-	    /// @return the next shape.
-	    public Fixture GetNext()
+        /// Get the next fixture in the parent body's fixture list.
+        /// @return the next shape.
+        public Fixture GetNext()
         {
             return Next;
         }
 
-	    /// Get the user data that was assigned in the fixture definition. Use this to
-	    /// store your application specific data.
-	    public object GetUserData()
+        /// Get the user data that was assigned in the fixture definition. Use this to
+        /// store your application specific data.
+        public object GetUserData()
         {
             return UserData;
         }
 
-	    /// Set the user data. Use this to store your application specific data.
-	    public void SetUserData(object data)
+        /// Set the user data. Use this to store your application specific data.
+        public void SetUserData(object data)
         {
             UserData = data;
         }
 
-	    /// Test a point for containment in this fixture. This only works for convex shapes.
-	    /// @param xf the shape world transform.
-	    /// @param p a point in world coordinates.
-	    public bool TestPoint(Vec2 p)
+        /// Test a point for containment in this fixture. This only works for convex shapes.
+        /// @param xf the shape world transform.
+        /// @param p a point in world coordinates.
+        public bool TestPoint(Vec2 p)
         {
             return Shape.TestPoint(Body.GetXForm(), p);
         }
 
-	    /// Perform a ray cast against this shape.
-	    /// @param xf the shape world transform.
-	    /// @param lambda returns the hit fraction. You can use this to compute the contact point
-	    /// p = (1 - lambda) * segment.p1 + lambda * segment.p2.
-	    /// @param normal returns the normal at the contact point. If there is no intersection, the normal
-	    /// is not set.
-	    /// @param segment defines the begin and end point of the ray cast.
-	    /// @param maxLambda a number typically in the range [0,1].
-	    public SegmentCollide TestSegment(out float lambda, out Vec2 normal, Segment segment, float maxLambda)
+        /// Perform a ray cast against this shape.
+        /// @param xf the shape world transform.
+        /// @param lambda returns the hit fraction. You can use this to compute the contact point
+        /// p = (1 - lambda) * segment.p1 + lambda * segment.p2.
+        /// @param normal returns the normal at the contact point. If there is no intersection, the normal
+        /// is not set.
+        /// @param segment defines the begin and end point of the ray cast.
+        /// @param maxLambda a number typically in the range [0,1].
+        public SegmentCollide TestSegment(out float lambda, out Vec2 normal, Segment segment, float maxLambda)
         {
             return Shape.TestSegment(Body.GetXForm(), out lambda, out normal, segment, maxLambda);
         }
 
-	    /// Compute the mass properties of this shape using its dimensions and density.
-	    /// The inertia tensor is computed about the local origin, not the centroid.
-	    /// @param massData returns the mass data for this shape.
-	    public void ComputeMass(out MassData massData)
+        /// Compute the mass properties of this shape using its dimensions and density.
+        /// The inertia tensor is computed about the local origin, not the centroid.
+        /// @param massData returns the mass data for this shape.
+        public void ComputeMass(out MassData massData)
         {
-            Shape.ComputeMass(out massData);
+            Shape.ComputeMass(out massData, Density);
         }
 
-	    /// Compute the volume and centroid of this fixture intersected with a half plane
-	    /// @param normal the surface normal
-	    /// @param offset the surface offset along normal
-	    /// @param c returns the centroid
-	    /// @return the total volume less than offset along normal
-	    public float ComputeSubmergedArea(Vec2 normal, float offset, Vec2 c)
+        /// Compute the volume and centroid of this fixture intersected with a half plane
+        /// @param normal the surface normal
+        /// @param offset the surface offset along normal
+        /// @param c returns the centroid
+        /// @return the total volume less than offset along normal
+        public float ComputeSubmergedArea(Vec2 normal, float offset, Vec2 c)
         {
             return Shape.ComputeSubmergedArea(normal, offset, Body.GetXForm(), out c);
         }
 
-	    /// Get the maximum radius about the parent body's center of mass.
-	    public float ComputeSweepRadius(Vec2 pivot)
+        /// Get the maximum radius about the parent body's center of mass.
+        public float ComputeSweepRadius(Vec2 pivot)
         {
             return Shape.ComputeSweepRadius(pivot);
         }
 
-	    /// Get the coefficient of friction.
-	    public float GetFriction()
+        /// Get the coefficient of friction.
+        public float GetFriction()
         {
             return Friction;
         }
 
-	    /// Set the coefficient of friction.
-	    public void SetFriction(float friction)
+        /// Set the coefficient of friction.
+        public void SetFriction(float friction)
         {
             Friction = friction;
         }
 
-	    /// Get the coefficient of restitution.
-	    public float GetRestitution()
+        /// Get the coefficient of restitution.
+        public float GetRestitution()
         {
             return Restitution;
         }
 
-	    /// Set the coefficient of restitution.
-	    public void SetRestitution(float restitution)
+        /// Set the coefficient of restitution.
+        public void SetRestitution(float restitution)
         {
             Restitution = restitution;
         }
 
-	    /// Get the density.
-	    public float GetDensity()
+        /// Get the density.
+        public float GetDensity()
         {
             return Density;
         }
 
-	    /// Set the density.
-	    /// @warning this does not automatically update the mass of the parent body.
-	    public void SetDensity(float density)
+        /// Set the density.
+        /// @warning this does not automatically update the mass of the parent body.
+        public void SetDensity(float density)
         {
             Density = density;
         }
 
-	    // We need separation create/destroy functions from the constructor/destructor because
-	    // the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
+        // We need separation create/destroy functions from the constructor/destructor because
+        // the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
         public void Create(BroadPhase broadPhase, Body body, XForm xf, FixtureDef def)
         {
             UserData = def.UserData;
-	        Friction = def.Friction;
-	        Restitution = def.Restitution;
-	        Density = def.Density;
+            Friction = def.Friction;
+            Restitution = def.Restitution;
+            Density = def.Density;
 
-	        Body = body;
-	        Next = null;
+            Body = body;
+            Next = null;
 
-	        Filter = def.Filter;
+            Filter = def.Filter;
 
-	        IsSensor = def.IsSensor;
+            IsSensor = def.IsSensor;
 
-	        Type = def.Type;
+            Type = def.Type;
 
-	        // Allocate and initialize the child shape.
-	        switch (Type)
-	        {
-	        case ShapeType.CircleShape:
-                {
-			        CircleShape circle = new CircleShape();
-			        CircleDef circleDef = (CircleDef)def;
-			        circle.m_p = circleDef.LocalPosition;
-			        circle.m_radius = circleDef.Radius;
-			        Shape = circle;
-		        }
-		        break;
+            // Allocate and initialize the child shape.
+            switch (Type)
+            {
+                case ShapeType.CircleShape:
+                    {
+                        CircleShape circle = new CircleShape();
+                        CircleDef circleDef = (CircleDef)def;
+                        circle.LocalPosition = circleDef.LocalPosition;
+                        circle.Radius = circleDef.Radius;
+                        Shape = circle;
+                    }
+                    break;
 
-	        case ShapeType.PolygonShape:
-		        {
-			        PolygonShape polygon = new PolygonShape();
-			        PolygonDef polygonDef = (PolygonDef)def;
-			        polygon.Set(polygonDef.Vertices, polygonDef.VertexCount);
-			        Shape = polygon;
-		        }
-		        break;
+                case ShapeType.PolygonShape:
+                    {
+                        PolygonShape polygon = new PolygonShape();
+                        PolygonDef polygonDef = (PolygonDef)def;
+                        polygon.Set(polygonDef.Vertices, polygonDef.VertexCount);
+                        Shape = polygon;
+                    }
+                    break;
 
-	        case ShapeType.EdgeShape:
-		        {
-			        EdgeShape edge = new EdgeShape();
-			        EdgeDef edgeDef = (EdgeDef)def;
-			        edge.Set(edgeDef.Vertex1, edgeDef.Vertex2);
-			        Shape = edge;
-		        }
-		        break;
+                case ShapeType.EdgeShape:
+                    {
+                        EdgeShape edge = new EdgeShape();
+                        EdgeDef edgeDef = (EdgeDef)def;
+                        edge.Set(edgeDef.Vertex1, edgeDef.Vertex2);
+                        Shape = edge;
+                    }
+                    break;
 
-	        default:
-                Box2DXDebug.Assert(false);
-		        break;
-	        }
+                default:
+                    Box2DXDebug.Assert(false);
+                    break;
+            }
 
-	        // Create proxy in the broad-phase.
-	        AABB aabb;
-	        Shape.ComputeAABB(out aabb, xf);
+            // Create proxy in the broad-phase.
+            AABB aabb;
+            Shape.ComputeAABB(out aabb, xf);
 
-	        bool inRange = broadPhase.InRange(aabb);
+            bool inRange = broadPhase.InRange(aabb);
 
-	        // You are creating a shape outside the world box.
+            // You are creating a shape outside the world box.
             Box2DXDebug.Assert(inRange);
 
-	        if (inRange)
-	        {
-		        ProxyId = broadPhase.CreateProxy(aabb, this);
-	        }
-	        else
-	        {
+            if (inRange)
+            {
+                ProxyId = broadPhase.CreateProxy(aabb, this);
+            }
+            else
+            {
                 ProxyId = UInt16.MaxValue; //b2_nullProxy;
-	        }
+            }
         }
 
         // Do we need a destroy method?
-	    //public void Destroy(BlockAllocator allocator, BroadPhase broadPhase);
+        //public void Destroy(BlockAllocator allocator, BroadPhase broadPhase);
 
         public bool Synchronize(BroadPhase broadPhase, XForm xf1, XForm xf2)
         {
