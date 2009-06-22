@@ -107,7 +107,7 @@ namespace Box2DX.Dynamics
 
                 Box2DXDebug.Assert(manifold.PointCount > 0);
 
-                WorldManifold worldManifold;
+                WorldManifold worldManifold = new WorldManifold();
                 worldManifold.Initialize(manifold, bodyA.GetXForm(), radiusA, bodyB.GetXForm(), radiusB);
 
                 ContactConstraint cc = _constraints[i];

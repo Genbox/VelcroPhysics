@@ -94,12 +94,12 @@ namespace Box2DX.Dynamics
 	    ContactEdge _nodeA;
 	    ContactEdge _nodeB;
 
-	    Fixture _fixtureA;
-	    Fixture _fixtureB;
+	    protected Fixture _fixtureA;
+        protected Fixture _fixtureB;
 
-	    Manifold _manifold;
+        protected Manifold _manifold;
 
-	    float _toi;
+        protected float _toi;
 
         /// Get the contact manifold.
 	    public Manifold GetManifold() { return _manifold; }
