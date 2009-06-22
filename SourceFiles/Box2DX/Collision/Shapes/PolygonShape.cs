@@ -19,6 +19,7 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
+using System;
 using Box2DX.Common;
 using Math = Box2DX.Common.Math;
 
@@ -40,7 +41,7 @@ namespace Box2DX.Collision
         /// Get the support point in the given world direction.
         /// Use the supplied transform.
         /// </summary>
-        public int GetSupport(XForm xf, Vec2 d)
+        public override int GetSupport(XForm xf, Vec2 d)
         {
             int bestIndex = 0;
             float bestValue = Vec2.Dot(Vertices[0], d);
@@ -57,7 +58,12 @@ namespace Box2DX.Collision
             return bestIndex;
         }
 
-        public Vec2 GetSupportVertex(Vec2 d)
+        public override int GetSupport(Vec2 d)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Vec2 GetSupportVertex(Vec2 d)
         {
             int bestIndex = 0;
             float bestValue = Vec2.Dot(Vertices[0], d);
@@ -86,7 +92,7 @@ namespace Box2DX.Collision
         /// <summary>
         /// Get a vertex by index.
         /// </summary>
-        public Vec2 GetVertex(int index)
+        public override Vec2 GetVertex(int index)
         {
             Box2DXDebug.Assert(0 <= index && index < VertexCount);
             return Vertices[index];

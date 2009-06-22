@@ -38,7 +38,7 @@ namespace Box2DX.Collision
             public float tolerance;
         };
 
-        public struct b2SeparationFunction
+        public struct SeparationFunction
         {
             public enum Type
             {
@@ -47,44 +47,44 @@ namespace Box2DX.Collision
                 FaceB
             };
 
-            public void Initialize<TA, TB>(SimplexCache cache,
-                TA shapeA, XForm transformA,
-                TB shapeB, XForm transformB)
+            public void Initialize(SimplexCache cache,
+                Shape shapeA, XForm transformA,
+                Shape shapeB, XForm transformB)
             {
-                m_shapeA = shapeA;
-                m_shapeB = shapeB;
+                ShapeA = shapeA;
+                ShapeB = shapeB;
                 int count = cache.count;
                 Box2DXDebug.Assert(0 < count && count < 3);
 
                 if (count == 1)
                 {
                     m_type = Type.Points;
-                    Vec2 localPointA = m_shapeA.GetVertex(cache.indexA[0]);
-                    Vec2 localPointB = m_shapeB.GetVertex(cache.indexB[0]);
+                    Vec2 localPointA = ShapeA.GetVertex(cache.indexA[0]);
+                    Vec2 localPointB = ShapeB.GetVertex(cache.indexB[0]);
                     Vec2 pointA = Math.Mul(transformA, localPointA);
                     Vec2 pointB = Math.Mul(transformB, localPointB);
-                    m_axis = pointB - pointA;
-                    m_axis.Normalize();
+                    Axis = pointB - pointA;
+                    Axis.Normalize();
                 }
                 else if (cache.indexB[0] == cache.indexB[1])
                 {
                     // Two points on A and one on B
                     m_type = Type.FaceA;
-                    Vec2 localPointA1 = m_shapeA.GetVertex(cache.indexA[0]);
-                    Vec2 localPointA2 = m_shapeA.GetVertex(cache.indexA[1]);
-                    Vec2 localPointB = m_shapeB.GetVertex(cache.indexB[0]);
-                    m_localPoint = 0.5f * (localPointA1 + localPointA2);
-                    m_axis = Vec2.Cross(localPointA2 - localPointA1, 1.0f);
-                    m_axis.Normalize();
+                    Vec2 localPointA1 = ShapeA.GetVertex(cache.indexA[0]);
+                    Vec2 localPointA2 = ShapeA.GetVertex(cache.indexA[1]);
+                    Vec2 localPointB = ShapeB.GetVertex(cache.indexB[0]);
+                    LocalPoint = 0.5f * (localPointA1 + localPointA2);
+                    Axis = Vec2.Cross(localPointA2 - localPointA1, 1.0f);
+                    Axis.Normalize();
 
-                    Vec2 normal = Math.Mul(transformA.R, m_axis);
-                    Vec2 pointA = Math.Mul(transformA, m_localPoint);
+                    Vec2 normal = Math.Mul(transformA.R, Axis);
+                    Vec2 pointA = Math.Mul(transformA, LocalPoint);
                     Vec2 pointB = Math.Mul(transformB, localPointB);
 
                     float s = Vec2.Dot(pointB - pointA, normal);
                     if (s < 0.0f)
                     {
-                        m_axis = -m_axis;
+                        Axis = -Axis;
                     }
                 }
                 else
@@ -95,18 +95,18 @@ namespace Box2DX.Collision
                     Vec2 localPointA = shapeA.GetVertex(cache.indexA[0]);
                     Vec2 localPointB1 = shapeB.GetVertex(cache.indexB[0]);
                     Vec2 localPointB2 = shapeB.GetVertex(cache.indexB[1]);
-                    m_localPoint = 0.5f * (localPointB1 + localPointB2);
-                    m_axis = Vec2.Cross(localPointB2 - localPointB1, 1.0f);
-                    m_axis.Normalize();
+                    LocalPoint = 0.5f * (localPointB1 + localPointB2);
+                    Axis = Vec2.Cross(localPointB2 - localPointB1, 1.0f);
+                    Axis.Normalize();
 
-                    Vec2 normal = Math.Mul(transformB.R, m_axis);
-                    Vec2 pointB = Math.Mul(transformB, m_localPoint);
+                    Vec2 normal = Math.Mul(transformB.R, Axis);
+                    Vec2 pointB = Math.Mul(transformB, LocalPoint);
                     Vec2 pointA = Math.Mul(transformA, localPointA);
 
                     float s = Vec2.Dot(pointA - pointB, normal);
                     if (s < 0.0f)
                     {
-                        m_axis = -m_axis;
+                        Axis = -Axis;
                     }
                 }
             }
@@ -117,24 +117,24 @@ namespace Box2DX.Collision
                 {
                     case Type.Points:
                         {
-                            Vec2 axisA = Math.MulT(transformA.R, m_axis);
-                            Vec2 axisB = Math.MulT(transformB.R, -m_axis);
-                            Vec2 localPointA = m_shapeA.GetSupportVertex(axisA);
-                            Vec2 localPointB = m_shapeB.GetSupportVertex(axisB);
+                            Vec2 axisA = Math.MulT(transformA.R, Axis);
+                            Vec2 axisB = Math.MulT(transformB.R, -Axis);
+                            Vec2 localPointA = ShapeA.GetSupportVertex(axisA);
+                            Vec2 localPointB = ShapeB.GetSupportVertex(axisB);
                             Vec2 pointA = Math.Mul(transformA, localPointA);
                             Vec2 pointB = Math.Mul(transformB, localPointB);
-                            float separation = Vec2.Dot(pointB - pointA, m_axis);
+                            float separation = Vec2.Dot(pointB - pointA, Axis);
                             return separation;
                         }
 
                     case Type.FaceA:
                         {
-                            Vec2 normal = Math.Mul(transformA.R, m_axis);
-                            Vec2 pointA = Math.Mul(transformA, m_localPoint);
+                            Vec2 normal = Math.Mul(transformA.R, Axis);
+                            Vec2 pointA = Math.Mul(transformA, LocalPoint);
 
                             Vec2 axisB = Math.MulT(transformB.R, -normal);
 
-                            Vec2 localPointB = m_shapeB.GetSupportVertex(axisB);
+                            Vec2 localPointB = ShapeB.GetSupportVertex(axisB);
                             Vec2 pointB = Math.Mul(transformB, localPointB);
 
                             float separation = Vec2.Dot(pointB - pointA, normal);
@@ -143,12 +143,12 @@ namespace Box2DX.Collision
 
                     case Type.FaceB:
                         {
-                            Vec2 normal = Math.Mul(transformB.R, m_axis);
-                            Vec2 pointB = Math.Mul(transformB, m_localPoint);
+                            Vec2 normal = Math.Mul(transformB.R, Axis);
+                            Vec2 pointB = Math.Mul(transformB, LocalPoint);
 
                             Vec2 axisA = Math.MulT(transformA.R, -normal);
 
-                            Vec2 localPointA = m_shapeA.GetSupportVertex(axisA);
+                            Vec2 localPointA = ShapeA.GetSupportVertex(axisA);
                             Vec2 pointA = Math.Mul(transformA, localPointA);
 
                             float separation = Vec2.Dot(pointA - pointB, normal);
@@ -161,11 +161,11 @@ namespace Box2DX.Collision
                 }
             }
 
-            TA m_shapeA;
-            TB m_shapeB;
-            Type m_type;
-            Vec2 m_localPoint;
-            Vec2 m_axis;
+            public Shape ShapeA;
+            public Shape ShapeB;
+            public Type m_type;
+            public Vec2 LocalPoint;
+            public Vec2 Axis;
         };
 
 
@@ -184,7 +184,7 @@ namespace Box2DX.Collision
         /// <param name="shapeA">The shape A.</param>
         /// <param name="shapeB">The shape B.</param>
         /// <returns>fraction between [0,1] in which the shapes first touch.</returns>
-        public float TimeOfImpact<TA, TB>(b2TOIInput input, TA shapeA, TB shapeB)
+        public float TimeOfImpact(b2TOIInput input, Shape shapeA, Shape shapeB)
         {
             Sweep sweepA = input.sweepA;
             Sweep sweepB = input.sweepB;
@@ -192,7 +192,7 @@ namespace Box2DX.Collision
             Box2DXDebug.Assert(sweepA.T0 == sweepB.T0);
             Box2DXDebug.Assert(1.0f - sweepA.T0 > Settings.FLT_EPSILON);
 
-            float radius = shapeA.m_radius + shapeB.m_radius;
+            float radius = shapeA.Radius + shapeB.Radius;
             float tolerance = input.tolerance;
 
             float alpha = 0.0f;
@@ -225,8 +225,8 @@ namespace Box2DX.Collision
                     break;
                 }
 
-                SeparationFunction<TA, TB> fcn;
-                fcn.Initialize(&cache, shapeA, xfA, shapeB, xfB);
+                SeparationFunction fcn = new SeparationFunction();
+                fcn.Initialize(cache, shapeA, xfA, shapeB, xfB);
 
                 float separation = fcn.Evaluate(xfA, xfB);
                 if (separation <= 0.0f)
@@ -289,69 +289,69 @@ namespace Box2DX.Collision
 
                 // Compute 1D root of: f(x) - target = 0
                 float newAlpha = alpha;
+
+                float x1 = alpha, x2 = 1.0f;
+
+                float f1 = separation;
+
+                sweepA.GetTransform(out xfA, x2);
+                sweepB.GetTransform(out xfB, x2);
+                float f2 = fcn.Evaluate(xfA, xfB);
+
+                // If intervals don't overlap at t2, then we are done.
+                if (f2 >= target)
                 {
-                    float x1 = alpha, x2 = 1.0f;
+                    alpha = 1.0f;
+                    break;
+                }
 
-                    float f1 = separation;
-
-                    sweepA.GetTransform(&xfA, x2);
-                    sweepB.GetTransform(&xfB, x2);
-                    float f2 = fcn.Evaluate(xfA, xfB);
-
-                    // If intervals don't overlap at t2, then we are done.
-                    if (f2 >= target)
+                // Determine when intervals intersect.
+                int rootIterCount = 0;
+                for (; ; )
+                {
+                    // Use a mix of the secant rule and bisection.
+                    float x;
+                    if (rootIterCount & 1)
                     {
-                        alpha = 1.0f;
+                        // Secant rule to improve convergence.
+                        x = x1 + (target - f1) * (x2 - x1) / (f2 - f1);
+                    }
+                    else
+                    {
+                        // Bisection to guarantee progress.
+                        x = 0.5f * (x1 + x2);
+                    }
+
+                    sweepA.GetTransform(out xfA, x);
+                    sweepB.GetTransform(out xfB, x);
+
+                    float f = fcn.Evaluate(xfA, xfB);
+
+                    if (Math.Abs(f - target) < 0.025f * tolerance)
+                    {
+                        newAlpha = x;
                         break;
                     }
 
-                    // Determine when intervals intersect.
-                    int rootIterCount = 0;
-                    for (; ; )
+                    // Ensure we continue to bracket the root.
+                    if (f > target)
                     {
-                        // Use a mix of the secant rule and bisection.
-                        float x;
-                        if (rootIterCount & 1)
-                        {
-                            // Secant rule to improve convergence.
-                            x = x1 + (target - f1) * (x2 - x1) / (f2 - f1);
-                        }
-                        else
-                        {
-                            // Bisection to guarantee progress.
-                            x = 0.5f * (x1 + x2);
-                        }
-
-                        sweepA.GetTransform(out xfA, x);
-                        sweepB.GetTransform(out xfB, x);
-
-                        float f = fcn.Evaluate(xfA, xfB);
-
-                        if (Math.Abs(f - target) < 0.025f * tolerance)
-                        {
-                            newAlpha = x;
-                            break;
-                        }
-
-                        // Ensure we continue to bracket the root.
-                        if (f > target)
-                        {
-                            x1 = x;
-                            f1 = f;
-                        }
-                        else
-                        {
-                            x2 = x;
-                            f2 = f;
-                        }
-
-                        ++rootIterCount;
-
-                        Box2DXDebug.Assert(rootIterCount < 50);
+                        x1 = x;
+                        f1 = f;
+                    }
+                    else
+                    {
+                        x2 = x;
+                        f2 = f;
                     }
 
-                    maxToiRootIters = Math.Max(maxToiRootIters, rootIterCount);
+                    ++rootIterCount;
+
+                    Box2DXDebug.Assert(rootIterCount < 50);
                 }
+
+                maxToiRootIters = Math.Max(maxToiRootIters, rootIterCount);
+
 
                 // Ensure significant advancement.
                 if (newAlpha < (1.0f + 100.0f * Settings.FLT_EPSILON) * alpha)

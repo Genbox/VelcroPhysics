@@ -73,10 +73,9 @@ namespace Box2DX.Collision
 
         public struct Simplex
         {
-#warning "Generics in C# only support one baseclass."
-            public void ReadCache<TA,TB>(SimplexCache cache,
-                            TA shapeA, XForm transformA,
-                            TB shapeB, XForm transformB)
+            public void ReadCache(SimplexCache cache,
+                            Shape shapeA, XForm transformA,
+                            Shape shapeB, XForm transformB)
             {
                 Box2DXDebug.Assert(0 <= cache.count && cache.count <= 3);
 
@@ -401,11 +400,11 @@ namespace Box2DX.Collision
         /// b2CircleShape, b2PolygonShape, b2EdgeShape. The simplex cache is input/output.
         /// On the first call set b2SimplexCache.count to zero.
         /// </summary>
-        public void Distance<T1, T2>(out DistanceOutput output,
+        public void Distance(out DistanceOutput output,
                         SimplexCache cache,
                         DistanceInput input,
-                        T1 shapeA,
-                        T2 shapeB)
+                        Shape shapeA,
+                        Shape shapeB)
         {
             XForm transformA = input.transformA;
             XForm transformB = input.transformB;
@@ -452,6 +451,7 @@ namespace Box2DX.Collision
 
                     default:
                         Box2DXDebug.Assert(false);
+                        break;
                 }
 
                 // If we have 3 points, then the origin is in the corresponding triangle.
