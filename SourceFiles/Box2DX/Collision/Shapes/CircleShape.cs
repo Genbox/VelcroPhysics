@@ -19,7 +19,9 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
+using System;
 using Box2DX.Common;
+using Math=Box2DX.Common.Math;
 
 namespace Box2DX.Collision
 {
@@ -160,19 +162,24 @@ namespace Box2DX.Collision
             return Radius;
         }
 
-        public int GetSupport(Vec2 d)
+        public override int GetSupport(XForm xf, Vec2 d)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetSupport(Vec2 d)
         {
             //B2_NOT_USED(d);
             return 0;
         }
 
-        public Vec2 GetSupportVertex(Vec2 d)
+        public override Vec2 GetSupportVertex(Vec2 d)
         {
             //B2_NOT_USED(d);
             return LocalPosition;
         }
 
-        public Vec2 GetVertex(int index)
+        public override Vec2 GetVertex(int index)
         {
             //B2_NOT_USED(index);
             //b2Assert(index == 0);

@@ -19,7 +19,9 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
+using System;
 using Box2DX.Common;
+using Math=Box2DX.Common.Math;
 
 namespace Box2DX.Collision
 {
@@ -115,12 +117,22 @@ namespace Box2DX.Collision
             return _cornerConvex2;
         }
 
-        public int GetSupport(Vec2 d)
+        public override int GetSupport(XForm xf, Vec2 d)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetSupport(Vec2 d)
         {
             return Vec2.Dot(V1, d) > Vec2.Dot(V2, d) ? 0 : 1;
         }
 
-        public Vec2 GetSupportVertex(Vec2 d)
+        public override Vec2 GetVertex(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Vec2 GetSupportVertex(Vec2 d)
         {
             return Vec2.Dot(V1, d) > Vec2.Dot(V2, d) ? V1 : V2;
         }
