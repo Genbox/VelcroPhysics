@@ -19,120 +19,359 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Box2DX.Common;
 
 namespace Box2DX.Collision
 {
-	public partial class Collision
-	{
-		// This algorithm uses conservative advancement to compute the time of
-		// impact (TOI) of two shapes.
-		// Refs: Bullet, Young Kim
-		/// <summary>
-		/// Compute the time when two shapes begin to touch or touch at a closer distance.
-		/// warning the sweeps must have the same time interval.
-		/// </summary>
-		/// <param name="shape1"></param>
-		/// <param name="sweep1"></param>
-		/// <param name="shape2"></param>
-		/// <param name="sweep2"></param>
-		/// <returns>
-		/// The fraction between [0,1] in which the shapes first touch.
-		/// fraction=0 means the shapes begin touching/overlapped, and fraction=1 means the shapes don't touch.
-		/// </returns>
-#warning: "check params"
-		public static float TimeOfImpact(Shape shape1, Sweep sweep1, Shape shape2, Sweep sweep2)
-		{
-			float r1 = shape1.GetSweepRadius();
-			float r2 = shape2.GetSweepRadius();
+    public partial class Collision
+    {
+        int maxToiIters = 0;
+        int maxToiRootIters = 0;
 
-			Box2DXDebug.Assert(sweep1.T0 == sweep2.T0);
-			Box2DXDebug.Assert(1.0f - sweep1.T0 > Common.Settings.FLT_EPSILON);
+        /// Inpute parameters for b2TimeOfImpact
+        public struct b2TOIInput
+        {
+            public Sweep sweepA;
+            public Sweep sweepB;
+            public float sweepRadiusA;
+            public float sweepRadiusB;
+            public float tolerance;
+        };
 
-			float t0 = sweep1.T0;
-			Vec2 v1 = sweep1.C - sweep1.C0;
-			Vec2 v2 = sweep2.C - sweep2.C0;
-			float omega1 = sweep1.A - sweep1.A0;
-			float omega2 = sweep2.A - sweep2.A0;
+        public struct b2SeparationFunction
+        {
+            public enum Type
+            {
+                Points,
+                FaceA,
+                FaceB
+            };
 
-			float alpha = 0.0f;
+            public void Initialize<TA, TB>(SimplexCache cache,
+                TA shapeA, XForm transformA,
+                TB shapeB, XForm transformB)
+            {
+                m_shapeA = shapeA;
+                m_shapeB = shapeB;
+                int count = cache.count;
+                Box2DXDebug.Assert(0 < count && count < 3);
 
-			Vec2 p1, p2;
-			int k_maxIterations = 20;	// TODO_ERIN b2Settings
-			int iter = 0;
-			Vec2 normal = Vec2.Zero;
-			float distance = 0.0f;
-			float targetDistance = 0.0f;
+                if (count == 1)
+                {
+                    m_type = Type.Points;
+                    Vec2 localPointA = m_shapeA.GetVertex(cache.indexA[0]);
+                    Vec2 localPointB = m_shapeB.GetVertex(cache.indexB[0]);
+                    Vec2 pointA = Math.Mul(transformA, localPointA);
+                    Vec2 pointB = Math.Mul(transformB, localPointB);
+                    m_axis = pointB - pointA;
+                    m_axis.Normalize();
+                }
+                else if (cache.indexB[0] == cache.indexB[1])
+                {
+                    // Two points on A and one on B
+                    m_type = Type.FaceA;
+                    Vec2 localPointA1 = m_shapeA.GetVertex(cache.indexA[0]);
+                    Vec2 localPointA2 = m_shapeA.GetVertex(cache.indexA[1]);
+                    Vec2 localPointB = m_shapeB.GetVertex(cache.indexB[0]);
+                    m_localPoint = 0.5f * (localPointA1 + localPointA2);
+                    m_axis = Vec2.Cross(localPointA2 - localPointA1, 1.0f);
+                    m_axis.Normalize();
 
-			for (; ; )
-			{
-				float t = (1.0f - alpha) * t0 + alpha;
-				XForm xf1, xf2;
-				sweep1.GetXForm(out xf1, t);
-				sweep2.GetXForm(out xf2, t);
+                    Vec2 normal = Math.Mul(transformA.R, m_axis);
+                    Vec2 pointA = Math.Mul(transformA, m_localPoint);
+                    Vec2 pointB = Math.Mul(transformB, localPointB);
 
-				// Get the distance between shapes.
-				distance = Collision.Distance(out p1, out p2, shape1, xf1, shape2, xf2);
+                    float s = Vec2.Dot(pointB - pointA, normal);
+                    if (s < 0.0f)
+                    {
+                        m_axis = -m_axis;
+                    }
+                }
+                else
+                {
+                    // Two points on B and one or two points on A.
+                    // We ignore the second point on A.
+                    m_type = Type.FaceB;
+                    Vec2 localPointA = shapeA.GetVertex(cache.indexA[0]);
+                    Vec2 localPointB1 = shapeB.GetVertex(cache.indexB[0]);
+                    Vec2 localPointB2 = shapeB.GetVertex(cache.indexB[1]);
+                    m_localPoint = 0.5f * (localPointB1 + localPointB2);
+                    m_axis = Vec2.Cross(localPointB2 - localPointB1, 1.0f);
+                    m_axis.Normalize();
 
-				if (iter == 0)
-				{
-					// Compute a reasonable target distance to give some breathing room
-					// for conservative advancement.
-					if (distance > 2.0f * Settings.ToiSlop)
-					{
-						targetDistance = 1.5f * Settings.ToiSlop;
-					}
-					else
-					{
-						targetDistance = Common.Math.Max(0.05f * Settings.ToiSlop, distance - 0.5f * Settings.ToiSlop);
-					}
-				}
+                    Vec2 normal = Math.Mul(transformB.R, m_axis);
+                    Vec2 pointB = Math.Mul(transformB, m_localPoint);
+                    Vec2 pointA = Math.Mul(transformA, localPointA);
 
-				if (distance - targetDistance < 0.05f * Settings.ToiSlop || iter == k_maxIterations)
-				{
-					break;
-				}
+                    float s = Vec2.Dot(pointA - pointB, normal);
+                    if (s < 0.0f)
+                    {
+                        m_axis = -m_axis;
+                    }
+                }
+            }
 
-				normal = p2 - p1;
-				normal.Normalize();
+            public float Evaluate(XForm transformA, XForm transformB)
+            {
+                switch (m_type)
+                {
+                    case Type.Points:
+                        {
+                            Vec2 axisA = Math.MulT(transformA.R, m_axis);
+                            Vec2 axisB = Math.MulT(transformB.R, -m_axis);
+                            Vec2 localPointA = m_shapeA.GetSupportVertex(axisA);
+                            Vec2 localPointB = m_shapeB.GetSupportVertex(axisB);
+                            Vec2 pointA = Math.Mul(transformA, localPointA);
+                            Vec2 pointB = Math.Mul(transformB, localPointB);
+                            float separation = Vec2.Dot(pointB - pointA, m_axis);
+                            return separation;
+                        }
 
-				// Compute upper bound on remaining movement.
-				float approachVelocityBound = Vec2.Dot(normal, v1 - v2) +
-					Common.Math.Abs(omega1) * r1 + Common.Math.Abs(omega2) * r2;
-				if (Common.Math.Abs(approachVelocityBound) < Common.Settings.FLT_EPSILON)
-				{
-					alpha = 1.0f;
-					break;
-				}
+                    case Type.FaceA:
+                        {
+                            Vec2 normal = Math.Mul(transformA.R, m_axis);
+                            Vec2 pointA = Math.Mul(transformA, m_localPoint);
 
-				// Get the conservative time increment. Don't advance all the way.
-				float dAlpha = (distance - targetDistance) / approachVelocityBound;
-				//float dt = (distance - 0.5f * Settings.LinearSlop) / approachVelocityBound;
-				float newAlpha = alpha + dAlpha;
+                            Vec2 axisB = Math.MulT(transformB.R, -normal);
 
-				// The shapes may be moving apart or a safe distance apart.
-				if (newAlpha < 0.0f || 1.0f < newAlpha)
-				{
-					alpha = 1.0f;
-					break;
-				}
+                            Vec2 localPointB = m_shapeB.GetSupportVertex(axisB);
+                            Vec2 pointB = Math.Mul(transformB, localPointB);
 
-				// Ensure significant advancement.
-				if (newAlpha < (1.0f + 100.0f * Common.Settings.FLT_EPSILON) * alpha)
-				{
-					break;
-				}
+                            float separation = Vec2.Dot(pointB - pointA, normal);
+                            return separation;
+                        }
 
-				alpha = newAlpha;
+                    case Type.FaceB:
+                        {
+                            Vec2 normal = Math.Mul(transformB.R, m_axis);
+                            Vec2 pointB = Math.Mul(transformB, m_localPoint);
 
-				++iter;
-			}
+                            Vec2 axisA = Math.MulT(transformA.R, -normal);
 
-			return alpha;
-		}
-	}
+                            Vec2 localPointA = m_shapeA.GetSupportVertex(axisA);
+                            Vec2 pointA = Math.Mul(transformA, localPointA);
+
+                            float separation = Vec2.Dot(pointA - pointB, normal);
+                            return separation;
+                        }
+
+                    default:
+                        Box2DXDebug.Assert(false);
+                        return 0.0f;
+                }
+            }
+
+            TA m_shapeA;
+            TB m_shapeB;
+            Type m_type;
+            Vec2 m_localPoint;
+            Vec2 m_axis;
+        };
+
+
+        /// <summary>
+        /// CCD via the secant method.
+        /// Compute the time when two shapes begin to touch or touch at a closer distance.
+        /// TOI considers the shape radii. It attempts to have the radii overlap by the tolerance.
+        /// Iterations terminate with the overlap is within 0.5 * tolerance. The tolerance should be
+        /// smaller than sum of the shape radii.
+        /// @warning the sweeps must have the same time interval.
+        /// fraction=0 means the shapes begin touching/overlapped, and fraction=1 means the shapes don't touch.
+        /// </summary>
+        /// <typeparam name="TA">The type of the A.</typeparam>
+        /// <typeparam name="TB">The type of the B.</typeparam>
+        /// <param name="input">The input.</param>
+        /// <param name="shapeA">The shape A.</param>
+        /// <param name="shapeB">The shape B.</param>
+        /// <returns>fraction between [0,1] in which the shapes first touch.</returns>
+        public float TimeOfImpact<TA, TB>(b2TOIInput input, TA shapeA, TB shapeB)
+        {
+            Sweep sweepA = input.sweepA;
+            Sweep sweepB = input.sweepB;
+
+            Box2DXDebug.Assert(sweepA.T0 == sweepB.T0);
+            Box2DXDebug.Assert(1.0f - sweepA.T0 > Settings.FLT_EPSILON);
+
+            float radius = shapeA.m_radius + shapeB.m_radius;
+            float tolerance = input.tolerance;
+
+            float alpha = 0.0f;
+
+            int k_maxIterations = 1000;	// TODO_ERIN b2Settings
+            int iter = 0;
+            float target = 0.0f;
+
+            // Prepare input for distance query.
+            SimplexCache cache = new SimplexCache();
+            cache.count = 0;
+            DistanceInput distanceInput;
+            distanceInput.useRadii = false;
+
+            for (; ; )
+            {
+                XForm xfA, xfB;
+                sweepA.GetTransform(out xfA, alpha);
+                sweepB.GetTransform(out xfB, alpha);
+
+                // Get the distance between shapes.
+                distanceInput.transformA = xfA;
+                distanceInput.transformB = xfB;
+                DistanceOutput distanceOutput;
+                Distance(out distanceOutput, cache, distanceInput, shapeA, shapeB);
+
+                if (distanceOutput.distance <= 0.0f)
+                {
+                    alpha = 1.0f;
+                    break;
+                }
+
+                SeparationFunction<TA, TB> fcn;
+                fcn.Initialize(&cache, shapeA, xfA, shapeB, xfB);
+
+                float separation = fcn.Evaluate(xfA, xfB);
+                if (separation <= 0.0f)
+                {
+                    alpha = 1.0f;
+                    break;
+                }
+
+                if (iter == 0)
+                {
+                    // Compute a reasonable target distance to give some breathing room
+                    // for conservative advancement. We take advantage of the shape radii
+                    // to create additional clearance.
+                    if (separation > radius)
+                    {
+                        target = Math.Max(radius - tolerance, 0.75f * radius);
+                    }
+                    else
+                    {
+                        target = Math.Max(separation - tolerance, 0.02f * radius);
+                    }
+                }
+
+                if (separation - target < 0.5f * tolerance)
+                {
+                    if (iter == 0)
+                    {
+                        alpha = 1.0f;
+                        break;
+                    }
+
+                    break;
+                }
+
+                //#if 0
+                //        // Dump the curve seen by the root finder
+                //        {
+                //            const int32 N = 100;
+                //            float32 dx = 1.0f / N;
+                //            float32 xs[N+1];
+                //            float32 fs[N+1];
+
+                //            float32 x = 0.0f;
+
+                //            for (int32 i = 0; i <= N; ++i)
+                //            {
+                //                sweepA.GetTransform(&xfA, x);
+                //                sweepB.GetTransform(&xfB, x);
+                //                float32 f = fcn.Evaluate(xfA, xfB) - target;
+
+                //                printf("%g %g\n", x, f);
+
+                //                xs[i] = x;
+                //                fs[i] = f;
+
+                //                x += dx;
+                //            }
+                //        }
+                //#endif
+
+                // Compute 1D root of: f(x) - target = 0
+                float newAlpha = alpha;
+                {
+                    float x1 = alpha, x2 = 1.0f;
+
+                    float f1 = separation;
+
+                    sweepA.GetTransform(&xfA, x2);
+                    sweepB.GetTransform(&xfB, x2);
+                    float f2 = fcn.Evaluate(xfA, xfB);
+
+                    // If intervals don't overlap at t2, then we are done.
+                    if (f2 >= target)
+                    {
+                        alpha = 1.0f;
+                        break;
+                    }
+
+                    // Determine when intervals intersect.
+                    int rootIterCount = 0;
+                    for (; ; )
+                    {
+                        // Use a mix of the secant rule and bisection.
+                        float x;
+                        if (rootIterCount & 1)
+                        {
+                            // Secant rule to improve convergence.
+                            x = x1 + (target - f1) * (x2 - x1) / (f2 - f1);
+                        }
+                        else
+                        {
+                            // Bisection to guarantee progress.
+                            x = 0.5f * (x1 + x2);
+                        }
+
+                        sweepA.GetTransform(out xfA, x);
+                        sweepB.GetTransform(out xfB, x);
+
+                        float f = fcn.Evaluate(xfA, xfB);
+
+                        if (Math.Abs(f - target) < 0.025f * tolerance)
+                        {
+                            newAlpha = x;
+                            break;
+                        }
+
+                        // Ensure we continue to bracket the root.
+                        if (f > target)
+                        {
+                            x1 = x;
+                            f1 = f;
+                        }
+                        else
+                        {
+                            x2 = x;
+                            f2 = f;
+                        }
+
+                        ++rootIterCount;
+
+                        Box2DXDebug.Assert(rootIterCount < 50);
+                    }
+
+                    maxToiRootIters = Math.Max(maxToiRootIters, rootIterCount);
+                }
+
+                // Ensure significant advancement.
+                if (newAlpha < (1.0f + 100.0f * Settings.FLT_EPSILON) * alpha)
+                {
+                    break;
+                }
+
+                alpha = newAlpha;
+
+                ++iter;
+
+                if (iter == k_maxIterations)
+                {
+                    break;
+                }
+            }
+
+            maxToiIters = Math.Max(maxToiIters, iter);
+
+            return alpha;
+        }
+    }
 }
