@@ -19,440 +19,542 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Box2DX.Common;
 
 namespace Box2DX.Collision
 {
-	public partial class Collision
-	{
-		public static int GJKIterations = 0;
-
-		// GJK using Voronoi regions (Christer Ericson) and region selection
-		// optimizations (Casey Muratori).
-
-		// The origin is either in the region of points[1] or in the edge region. The origin is
-		// not in region of points[0] because that is the old point.
-		public static int ProcessTwo(out Vec2 x1, out Vec2 x2, ref Vec2[] p1s, ref Vec2[] p2s,
-			ref Vec2[] points)
-		{
-			// If in point[1] region
-			Vec2 r = -points[1];
-			Vec2 d = points[0] - points[1];
-			float length = d.Normalize();
-			float lambda = Vec2.Dot(r, d);
-			if (lambda <= 0.0f || length < Common.Settings.FLT_EPSILON)
-			{
-				// The simplex is reduced to a point.
-				x1 = p1s[1];
-				x2 = p2s[1];
-				p1s[0] = p1s[1];
-				p2s[0] = p2s[1];
-				points[0] = points[1];
-				return 1;
-			}
-
-			// Else in edge region
-			lambda /= length;
-			x1 = p1s[1] + lambda * (p1s[0] - p1s[1]);
-			x2 = p2s[1] + lambda * (p2s[0] - p2s[1]);
-			return 2;
-		}
-
-		// Possible regions:
-		// - points[2]
-		// - edge points[0]-points[2]
-		// - edge points[1]-points[2]
-		// - inside the triangle
-		public static int ProcessThree(out Vec2 x1, out Vec2 x2, ref Vec2[] p1s, ref Vec2[] p2s,
-			ref Vec2[] points)
-		{
-			Vec2 a = points[0];
-			Vec2 b = points[1];
-			Vec2 c = points[2];
-
-			Vec2 ab = b - a;
-			Vec2 ac = c - a;
-			Vec2 bc = c - b;
-
-			float sn = -Vec2.Dot(a, ab), sd = Vec2.Dot(b, ab);
-			float tn = -Vec2.Dot(a, ac), td = Vec2.Dot(c, ac);
-			float un = -Vec2.Dot(b, bc), ud = Vec2.Dot(c, bc);
-
-			// In vertex c region?
-			if (td <= 0.0f && ud <= 0.0f)
-			{
-				// Single point
-				x1 = p1s[2];
-				x2 = p2s[2];
-				p1s[0] = p1s[2];
-				p2s[0] = p2s[2];
-				points[0] = points[2];
-				return 1;
-			}
-
-			// Should not be in vertex a or b region.
-
-			//B2_NOT_USED(sd);
-			//B2_NOT_USED(sn);			
-			Box2DXDebug.Assert(sn > 0.0f || tn > 0.0f);
-			Box2DXDebug.Assert(sd > 0.0f || un > 0.0f);
-
-			float n = Vec2.Cross(ab, ac);
-
-#if TARGET_float_IS_FIXED
-				n = (n < 0.0f) ? -1.0f : ((n > 0.0f) ? 1.0f : 0.0f);
-#endif
-
-			// Should not be in edge ab region.
-			float vc = n * Vec2.Cross(a, b);
-			Box2DXDebug.Assert(vc > 0.0f || sn > 0.0f || sd > 0.0f);
-
-			// In edge bc region?
-			float va = n * Vec2.Cross(b, c);
-			if (va <= 0.0f && un >= 0.0f && ud >= 0.0f && (un + ud) > 0.0f)
-			{
-				Box2DXDebug.Assert(un + ud > 0.0f);
-				float lambda = un / (un + ud);
-				x1 = p1s[1] + lambda * (p1s[2] - p1s[1]);
-				x2 = p2s[1] + lambda * (p2s[2] - p2s[1]);
-				p1s[0] = p1s[2];
-				p2s[0] = p2s[2];
-				points[0] = points[2];
-				return 2;
-			}
-
-			// In edge ac region?
-			float vb = n * Vec2.Cross(c, a);
-			if (vb <= 0.0f && tn >= 0.0f && td >= 0.0f && (tn + td) > 0.0f)
-			{
-				Box2DXDebug.Assert(tn + td > 0.0f);
-				float lambda = tn / (tn + td);
-				x1 = p1s[0] + lambda * (p1s[2] - p1s[0]);
-				x2 = p2s[0] + lambda * (p2s[2] - p2s[0]);
-				p1s[1] = p1s[2];
-				p2s[1] = p2s[2];
-				points[1] = points[2];
-				return 2;
-			}
-
-			// Inside the triangle, compute barycentric coordinates
-			float denom = va + vb + vc;
-			Box2DXDebug.Assert(denom > 0.0f);
-			denom = 1.0f / denom;
-#if TARGET_float_IS_FIXED
-			x1 = denom * (va * p1s[0] + vb * p1s[1] + vc * p1s[2]);
-			x2 = denom * (va * p2s[0] + vb * p2s[1] + vc * p2s[2]);
-#else
-			float u = va * denom;
-			float v = vb * denom;
-			float w = 1.0f - u - v;
-			x1 = u * p1s[0] + v * p1s[1] + w * p1s[2];
-			x2 = u * p2s[0] + v * p2s[1] + w * p2s[2];
-#endif
-			return 3;
-		}
-
-		public static bool InPoints(Vec2 w, Vec2[] points, int pointCount)
-		{
-			float k_tolerance = 100.0f * Common.Settings.FLT_EPSILON;
-			for (int i = 0; i < pointCount; ++i)
-			{
-				Vec2 d = Common.Math.Abs(w - points[i]);
-				Vec2 m = Common.Math.Max(Common.Math.Abs(w), Common.Math.Abs(points[i]));
-
-				if (d.X < k_tolerance * (m.X + 1.0f) &&
-					d.Y < k_tolerance * (m.Y + 1.0f))
-				{
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		public interface IGenericShape
-		{
-			Vec2 Support(XForm xf, Vec2 v);
-			Vec2 GetFirstVertex(XForm xf);
-		}
-
-		public static float DistanceGeneric<T1, T2>(out Vec2 x1, out Vec2 x2,
-						   T1 shape1_, XForm xf1, T2 shape2_, XForm xf2)
-		{
-			IGenericShape shape1 = shape1_ as IGenericShape;
-			IGenericShape shape2 = shape2_ as IGenericShape;
-
-			if (shape1 == null || shape2 == null)
-				Box2DXDebug.Assert(false, "Can not cast some parameters to IGenericShape");
-
-			Vec2[] p1s = new Vec2[3], p2s = new Vec2[3];
-			Vec2[] points = new Vec2[3];
-			int pointCount = 0;
-
-			x1 = shape1.GetFirstVertex(xf1);
-			x2 = shape2.GetFirstVertex(xf2);
-
-			float vSqr = 0.0f;
-			int maxIterations = 20;
-
-			for (int iter = 0; iter < maxIterations; ++iter)
-			{
-				Vec2 v = x2 - x1;
-				Vec2 w1 = shape1.Support(xf1, v);
-				Vec2 w2 = shape2.Support(xf2, -v);
-
-				vSqr = Vec2.Dot(v, v);
-				Vec2 w = w2 - w1;
-				float vw = Vec2.Dot(v, w);
-				if (vSqr - vw <= 0.01f * vSqr || Collision.InPoints(w, points, pointCount)) // or w in points
-				{
-					if (pointCount == 0)
-					{
-						x1 = w1;
-						x2 = w2;
-					}
-					Collision.GJKIterations = iter;
-					return Common.Math.Sqrt(vSqr);
-				}
-
-				switch (pointCount)
-				{
-					case 0:
-						p1s[0] = w1;
-						p2s[0] = w2;
-						points[0] = w;
-						x1 = p1s[0];
-						x2 = p2s[0];
-						++pointCount;
-						break;
-
-					case 1:
-						p1s[1] = w1;
-						p2s[1] = w2;
-						points[1] = w;
-						pointCount = Collision.ProcessTwo(out x1, out x2, ref p1s, ref p2s, ref points);
-						break;
-
-					case 2:
-						p1s[2] = w1;
-						p2s[2] = w2;
-						points[2] = w;
-						pointCount = Collision.ProcessThree(out x1, out x2, ref p1s, ref p2s, ref points);
-						break;
-				}
-
-				// If we have three points, then the origin is in the corresponding triangle.
-				if (pointCount == 3)
-				{
-					Collision.GJKIterations = iter;
-					return 0.0f;
-				}
-
-				float maxSqr = -Common.Settings.FLT_MAX;
-				for (int i = 0; i < pointCount; ++i)
-				{
-					maxSqr = Common.Math.Max(maxSqr, Vec2.Dot(points[i], points[i]));
-				}
-
-#if TARGET_float_IS_FIXED
-				if (pointCount == 3 || vSqr <= 5.0*Common.Settings.FLT_EPSILON * maxSqr)
-#else
-				if (vSqr <= 100.0f * Common.Settings.FLT_EPSILON * maxSqr)
-#endif
-				{
-					Collision.GJKIterations = iter;
-					v = x2 - x1;
-					vSqr = Vec2.Dot(v, v);
-
-					return Common.Math.Sqrt(vSqr);
-				}
-			}
-
-			Collision.GJKIterations = maxIterations;
-			return Common.Math.Sqrt(vSqr);
-		}
-
-		public static float DistanceCC(out Vec2 x1, out Vec2 x2,
-			CircleShape circle1, XForm xf1, CircleShape circle2, XForm xf2)
-		{
-			Vec2 p1 = Common.Math.Mul(xf1, circle1.GetLocalPosition());
-			Vec2 p2 = Common.Math.Mul(xf2, circle2.GetLocalPosition());
-
-			Vec2 d = p2 - p1;
-			float dSqr = Vec2.Dot(d, d);
-			float r1 = circle1.GetRadius() - Settings.ToiSlop;
-			float r2 = circle2.GetRadius() - Settings.ToiSlop;
-			float r = r1 + r2;
-			if (dSqr > r * r)
-			{
-				float dLen = d.Normalize();
-				float distance = dLen - r;
-				x1 = p1 + r1 * d;
-				x2 = p2 - r2 * d;
-				return distance;
-			}
-			else if (dSqr > Common.Settings.FLT_EPSILON * Common.Settings.FLT_EPSILON)
-			{
-				d.Normalize();
-				x1 = p1 + r1 * d;
-				x2 = x1;
-				return 0.0f;
-			}
-
-			x1 = p1;
-			x2 = x1;
-			return 0.0f;
-		}
-
-        public static float DistanceEdgeCircle(
-	        out Vec2 x1, out Vec2 x2,
-	        EdgeShape edge, XForm xf1,
-	        CircleShape circle, XForm xf2)
+    public partial class Collision
+    {
+        /// <summary>
+        /// Used to warm start b2Distance.
+        /// Set count to zero on first call.
+        /// </summary>
+        public struct SimplexCache
         {
-	        Vec2 vWorld;
-	        Vec2 d;
-	        float dSqr;
-	        float dLen;
-	        float r = circle.GetRadius() - Settings.ToiSlop;
-	        Vec2 cWorld = Box2DX.Common.Math.Mul(xf2, circle.GetLocalPosition());
-	        Vec2 cLocal = Box2DX.Common.Math.MulT(xf1, cWorld);
-	        float dirDist = Box2DX.Common.Vec2.Dot(cLocal - edge.GetCoreVertex1(), edge.GetDirectionVector());
-	        if (dirDist <= 0.0f) {
-		        vWorld = Box2DX.Common.Math.Mul(xf1, edge.GetCoreVertex1());
-	        } else if (dirDist >= edge.GetLength()) {
-		        vWorld = Box2DX.Common.Math.Mul(xf1, edge.GetCoreVertex2());
-	        } else {
-		        x1 = Box2DX.Common.Math.Mul(xf1, edge.GetCoreVertex1() + dirDist * edge.GetDirectionVector());
-		        dLen = Box2DX.Common.Vec2.Dot(cLocal - edge.GetCoreVertex1(), edge.GetNormalVector());
-		        if (dLen < 0.0f) {
-			        if (dLen < -r) {
-				        x2 = Box2DX.Common.Math.Mul(xf1, cLocal + r * edge.GetNormalVector());
-				        return -dLen - r;
-			        } else {
-				        x2 = x1;
-				        return 0.0f;
-			        }
-		        } else {
-			        if (dLen > r) {
-				        x2 = Box2DX.Common.Math.Mul(xf1, cLocal  - r * edge.GetNormalVector());
-				        return dLen - r;
-			        } else {
-				        x2 = x1;
-				        return 0.0f;
-			        }
-		        }
-	        }
-        	
-	        x1 = vWorld;
-	        d = cWorld - vWorld;
-	        dSqr = Box2DX.Common.Vec2.Dot(d, d);
-	        if (dSqr > r * r) {
-		        dLen = d.Normalize();
-		        x2 = cWorld - r * d;
-		        return dLen - r;
-	        } else {
-		        x2 = vWorld;
-		        return 0.0f;
-	        }
+            public float metric;	// length or area
+            public ushort count;
+#warning "Following two fields must be initialized with size of 3"
+            public byte[] indexA;	// vertices on shape A
+            public byte[] indexB;	// vertices on shape B
+        };
+
+        /// <summary>
+        /// Input for b2Distance.
+        /// You have to option to use the shape radii
+        /// in the computation. Even 
+        /// </summary>
+        public struct DistanceInput
+        {
+            public XForm transformA;
+            public XForm transformB;
+            public bool useRadii;
+        };
+
+        /// <summary>
+        /// Output for b2Distance.
+        /// </summary>
+        public struct DistanceOutput
+        {
+            public Vec2 pointA;		// closest point on shapeA
+            public Vec2 pointB;		// closest point on shapeB
+            public float distance;
+            public int iterations;	// number of GJK iterations used
+        };
+
+        public struct SimplexVertex
+        {
+            public Vec2 wA;		// support point in shapeA
+            public Vec2 wB;		// support point in shapeB
+            public Vec2 w;		// wB - wA
+            public float a;		// barycentric coordinate for closest point
+            public int indexA;	// wA index
+            public int indexB;	// wB index
+        };
+
+        public struct Simplex
+        {
+#warning "Generics in C# only support one baseclass."
+            public void ReadCache<TA,TB>(SimplexCache cache,
+                            TA shapeA, XForm transformA,
+                            TB shapeB, XForm transformB)
+            {
+                Box2DXDebug.Assert(0 <= cache.count && cache.count <= 3);
+
+                // Copy data from cache.
+                m_count = cache.count;
+
+#warning "Fail. vertices needs to be an array and SimplexVertex at the same time."
+                SimplexVertex[] vertices = m_v1;
+                for (int i = 0; i < m_count; ++i)
+                {
+                    SimplexVertex v = vertices[i + 1];
+                    v.indexA = cache.indexA[i];
+                    v.indexB = cache.indexB[i];
+                    Vec2 wALocal = shapeA.GetVertex(v.indexA);
+                    Vec2 wBLocal = shapeB.GetVertex(v.indexB);
+                    v.wA = Math.Mul(transformA, wALocal);
+                    v.wB = Math.Mul(transformB, wBLocal);
+                    v.w = v.wB - v.wA;
+                    v.a = 0.0f;
+                }
+
+                // Compute the new simplex metric, if it is substantially different than
+                // old metric then flush the simplex.
+                if (m_count > 1)
+                {
+                    float metric1 = cache.metric;
+                    float metric2 = GetMetric();
+                    if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < Settings.FLT_EPSILON)
+                    {
+                        // Reset the simplex.
+                        m_count = 0;
+                    }
+                }
+
+                // If the cache is empty or invalid ...
+                if (m_count == 0)
+                {
+                    SimplexVertex v = vertices[0];
+                    v.indexA = 0;
+                    v.indexB = 0;
+                    Vec2 wALocal = shapeA.GetVertex(0);
+                    Vec2 wBLocal = shapeB.GetVertex(0);
+                    v.wA = Math.Mul(transformA, wALocal);
+                    v.wB = Math.Mul(transformB, wBLocal);
+                    v.w = v.wB - v.wA;
+                    m_count = 1;
+                }
+            }
+
+            public void WriteCache(SimplexCache cache)
+            {
+                cache.metric = GetMetric();
+                cache.count = (ushort)m_count;
+#warning "Fail. vertices needs to be an array and SimplexVertex at the same time."
+                SimplexVertex[] vertices = m_v1;
+                for (int i = 0; i < m_count; ++i)
+                {
+                    cache.indexA[i] = (byte)vertices[i].indexA;
+                    cache.indexB[i] = (byte)vertices[i].indexB;
+                }
+            }
+
+            public Vec2 GetClosestPoint()
+            {
+                switch (m_count)
+                {
+                    case 0:
+                        Box2DXDebug.Assert(false);
+                        return Vec2.Zero;
+
+                    case 1:
+                        return m_v1.w;
+
+                    case 2:
+                        return m_v1.a * m_v1.w + m_v2.a * m_v2.w;
+
+                    case 3:
+                        return Vec2.Zero;
+
+                    default:
+                        Box2DXDebug.Assert(false);
+                        return Vec2.Zero;
+                }
+            }
+
+            public void GetWitnessPoints(out Vec2 pA, out Vec2 pB)
+            {
+                pA = Vec2.Zero;
+                pB = Vec2.Zero;
+
+                switch (m_count)
+                {
+                    case 0:
+                        Box2DXDebug.Assert(false);
+                        break;
+
+                    case 1:
+                        pA = m_v1.wA;
+                        pB = m_v1.wB;
+                        break;
+
+                    case 2:
+                        pA = m_v1.a * m_v1.wA + m_v2.a * m_v2.wA;
+                        pB = m_v1.a * m_v1.wB + m_v2.a * m_v2.wB;
+                        break;
+
+                    case 3:
+                        pA = m_v1.a * m_v1.wA + m_v2.a * m_v2.wA + m_v3.a * m_v3.wA;
+                        pB = pA;
+                        break;
+
+                    default:
+                        Box2DXDebug.Assert(false);
+                        break;
+                }
+            }
+
+            public float GetMetric()
+            {
+                switch (m_count)
+                {
+                    case 0:
+                        Box2DXDebug.Assert(false);
+                        return 0.0f;
+
+                    case 1:
+                        return 0.0f;
+
+                    case 2:
+                        return Vec2.Distance(m_v1.w, m_v2.w);
+
+                    case 3:
+                        return Vec2.Cross(m_v2.w - m_v1.w, m_v3.w - m_v1.w);
+
+                    default:
+                        Box2DXDebug.Assert(false);
+                        return 0.0f;
+                }
+            }
+
+            /// <summary>
+            /// Solve a line segment using barycentric coordinates.
+            ///
+            /// p = a1 * w1 + a2 * w2
+            /// a1 + a2 = 1
+            ///
+            /// The vector from the origin to the closest point on the line is
+            /// perpendicular to the line.
+            /// e12 = w2 - w1
+            /// dot(p, e) = 0
+            /// a1 * dot(w1, e) + a2 * dot(w2, e) = 0
+            ///
+            /// 2-by-2 linear system
+            /// [1      1     ][a1] = [1]
+            /// [w1.e12 w2.e12][a2] = [0]
+            ///
+            /// Define
+            /// d12_1 =  dot(w2, e12)
+            /// d12_2 = -dot(w1, e12)
+            /// d12 = d12_1 + d12_2
+            ///
+            /// Solution
+            /// a1 = d12_1 / d12
+            ///  a2 = d12_2 / d12
+            /// </summary>
+            public void Solve2()
+            {
+                Vec2 w1 = m_v1.w;
+                Vec2 w2 = m_v2.w;
+                Vec2 e12 = w2 - w1;
+
+                // w1 region
+                float d12_2 = -Vec2.Dot(w1, e12);
+                if (d12_2 <= 0.0f)
+                {
+                    // a2 <= 0, so we clamp it to 0
+                    m_v1.a = 1.0f;
+                    m_count = 1;
+                    return;
+                }
+
+                // w2 region
+                float d12_1 = Vec2.Dot(w2, e12);
+                if (d12_1 <= 0.0f)
+                {
+                    // a1 <= 0, so we clamp it to 0
+                    m_v2.a = 1.0f;
+                    m_count = 1;
+                    m_v1 = m_v2;
+                    return;
+                }
+
+                // Must be in e12 region.
+                float inv_d12 = 1.0f / (d12_1 + d12_2);
+                m_v1.a = d12_1 * inv_d12;
+                m_v2.a = d12_2 * inv_d12;
+                m_count = 2;
+            }
+
+            /// <summary>
+            /// Possible regions:
+            /// - points[2]
+            /// - edge points[0]-points[2]
+            /// - edge points[1]-points[2]
+            /// - inside the triangle
+            /// </summary>
+            public void Solve3()
+            {
+                Vec2 w1 = m_v1.w;
+                Vec2 w2 = m_v2.w;
+                Vec2 w3 = m_v3.w;
+
+                // Edge12
+                // [1      1     ][a1] = [1]
+                // [w1.e12 w2.e12][a2] = [0]
+                // a3 = 0
+                Vec2 e12 = w2 - w1;
+                float w1e12 = Vec2.Dot(w1, e12);
+                float w2e12 = Vec2.Dot(w2, e12);
+                float d12_1 = w2e12;
+                float d12_2 = -w1e12;
+
+                // Edge13
+                // [1      1     ][a1] = [1]
+                // [w1.e13 w3.e13][a3] = [0]
+                // a2 = 0
+                Vec2 e13 = w3 - w1;
+                float w1e13 = Vec2.Dot(w1, e13);
+                float w3e13 = Vec2.Dot(w3, e13);
+                float d13_1 = w3e13;
+                float d13_2 = -w1e13;
+
+                // Edge23
+                // [1      1     ][a2] = [1]
+                // [w2.e23 w3.e23][a3] = [0]
+                // a1 = 0
+                Vec2 e23 = w3 - w2;
+                float w2e23 = Vec2.Dot(w2, e23);
+                float w3e23 = Vec2.Dot(w3, e23);
+                float d23_1 = w3e23;
+                float d23_2 = -w2e23;
+
+                // Triangle123
+                float n123 = Vec2.Cross(e12, e13);
+
+                float d123_1 = n123 * Vec2.Cross(w2, w3);
+                float d123_2 = n123 * Vec2.Cross(w3, w1);
+                float d123_3 = n123 * Vec2.Cross(w1, w2);
+
+                // w1 region
+                if (d12_2 <= 0.0f && d13_2 <= 0.0f)
+                {
+                    m_v1.a = 1.0f;
+                    m_count = 1;
+                    return;
+                }
+
+                // e12
+                if (d12_1 > 0.0f && d12_2 > 0.0f && d123_3 <= 0.0f)
+                {
+                    float inv_d12 = 1.0f / (d12_1 + d12_2);
+                    m_v1.a = d12_1 * inv_d12;
+                    m_v2.a = d12_1 * inv_d12;
+                    m_count = 2;
+                    return;
+                }
+
+                // e13
+                if (d13_1 > 0.0f && d13_2 > 0.0f && d123_2 <= 0.0f)
+                {
+                    float inv_d13 = 1.0f / (d13_1 + d13_2);
+                    m_v1.a = d13_1 * inv_d13;
+                    m_v3.a = d13_2 * inv_d13;
+                    m_count = 2;
+                    m_v2 = m_v3;
+                    return;
+                }
+
+                // w2 region
+                if (d12_1 <= 0.0f && d23_2 <= 0.0f)
+                {
+                    m_v2.a = 1.0f;
+                    m_count = 1;
+                    m_v1 = m_v2;
+                    return;
+                }
+
+                // w3 region
+                if (d13_1 <= 0.0f && d23_1 <= 0.0f)
+                {
+                    m_v3.a = 1.0f;
+                    m_count = 1;
+                    m_v1 = m_v3;
+                    return;
+                }
+
+                // e23
+                if (d23_1 > 0.0f && d23_2 > 0.0f && d123_1 <= 0.0f)
+                {
+                    float inv_d23 = 1.0f / (d23_1 + d23_2);
+                    m_v2.a = d23_1 * inv_d23;
+                    m_v3.a = d23_2 * inv_d23;
+                    m_count = 2;
+                    m_v1 = m_v3;
+                    return;
+                }
+
+                // Must be in triangle123
+                float inv_d123 = 1.0f / (d123_1 + d123_2 + d123_3);
+                m_v1.a = d123_1 * inv_d123;
+                m_v2.a = d123_2 * inv_d123;
+                m_v3.a = d123_3 * inv_d123;
+                m_count = 3;
+            }
+
+            public SimplexVertex m_v1, m_v2, m_v3;
+            public int m_count;
+        };
+
+        /// <summary>
+        /// Compute the closest points between two shapes. Supports any combination of:
+        /// b2CircleShape, b2PolygonShape, b2EdgeShape. The simplex cache is input/output.
+        /// On the first call set b2SimplexCache.count to zero.
+        /// </summary>
+        public void Distance<T1, T2>(out DistanceOutput output,
+                        SimplexCache cache,
+                        DistanceInput input,
+                        T1 shapeA,
+                        T2 shapeB)
+        {
+            XForm transformA = input.transformA;
+            XForm transformB = input.transformB;
+
+            // Initialize the simplex.
+            Simplex simplex = new Simplex();
+            simplex.ReadCache(cache, shapeA, transformA, shapeB, transformB);
+
+            // Get simplex vertices as an array.
+#warning "Fail. vertices needs to be an array and SimplexVertex at the same time."
+            SimplexVertex vertices = simplex.m_v1;
+
+            // These store the vertices of the last simplex so that we
+            // can check for duplicates and prevent cycling.
+            int[] lastA = new int[4];
+            int[] lastB = new int[4];
+            int lastCount;
+
+            // Main iteration loop.
+            int iter = 0;
+            const int k_maxIterationCount = 20;
+            while (iter < k_maxIterationCount)
+            {
+                // Copy simplex so we can identify duplicates.
+                lastCount = simplex.m_count;
+                for (int i = 0; i < lastCount; ++i)
+                {
+                    lastA[i] = vertices[i].indexA;
+                    lastB[i] = vertices[i].indexB;
+                }
+
+                switch (simplex.m_count)
+                {
+                    case 1:
+                        break;
+
+                    case 2:
+                        simplex.Solve2();
+                        break;
+
+                    case 3:
+                        simplex.Solve3();
+                        break;
+
+                    default:
+                        Box2DXDebug.Assert(false);
+                }
+
+                // If we have 3 points, then the origin is in the corresponding triangle.
+                if (simplex.m_count == 3)
+                {
+                    break;
+                }
+
+                // Compute closest point.
+                Vec2 p = simplex.GetClosestPoint();
+                float distanceSqr = p.LengthSquared();
+
+                // Ensure the search direction is numerically fit.
+                if (distanceSqr < Settings.FLT_EPSILON * Settings.FLT_EPSILON)
+                {
+                    // The origin is probably contained by a line segment
+                    // or triangle. Thus the shapes are overlapped.
+
+                    // We can't return zero here even though there may be overlap.
+                    // In case the simplex is a point, segment, or triangle it is difficult
+                    // to determine if the origin is contained in the CSO or very close to it.
+                    break;
+                }
+
+                // Compute a tentative new simplex vertex using support points.
+#warning "Convert array the right way"
+                SimplexVertex vertex = vertices + simplex.m_count;
+                vertex.indexA = shapeA.GetSupport(Math.MulT(transformA.R, p));
+                vertex.wA = Math.Mul(transformA, shapeA.GetVertex(vertex.indexA));
+                Vec2 wBLocal;
+                vertex.indexB = shapeB.GetSupport(Math.MulT(transformB.R, -p));
+                vertex.wB = Math.Mul(transformB, shapeB.GetVertex(vertex.indexB));
+                vertex.w = vertex.wB - vertex.wA;
+
+                // Iteration count is equated to the number of support point calls.
+                ++iter;
+
+                // Check for convergence.
+                float lowerBound = Vec2.Dot(p, vertex.w);
+                float upperBound = distanceSqr;
+                const float k_relativeTolSqr = 0.01f * 0.01f;	// 1:100
+                if (upperBound - lowerBound <= k_relativeTolSqr * upperBound)
+                {
+                    // Converged!
+                    break;
+                }
+
+                // Check for duplicate support points.
+                bool duplicate = false;
+                for (int i = 0; i < lastCount; ++i)
+                {
+                    if (vertex.indexA == lastA[i] && vertex.indexB == lastB[i])
+                    {
+                        duplicate = true;
+                        break;
+                    }
+                }
+
+                // If we found a duplicate support point we must exit to avoid cycling.
+                if (duplicate)
+                {
+                    break;
+                }
+
+                // New vertex is ok and needed.
+                ++simplex.m_count;
+            }
+
+            // Prepare output.
+#warning "Check if pointer is converted correctly"
+            simplex.GetWitnessPoints(out output.pointA, out output.pointB);
+            output.distance = Vec2.Distance(output.pointA, output.pointB);
+            output.iterations = iter;
+
+            // Cache the simplex.
+            simplex.WriteCache(cache);
+
+            // Apply radii if requested.
+            if (input.useRadii)
+            {
+                float rA = shapeA.Radius;
+                float rB = shapeB.Radius;
+
+                if (output.distance > rA + rB && output.distance > Settings.FLT_EPSILON)
+                {
+                    // Shapes are still no overlapped.
+                    // Move the witness points to the outer surface.
+                    output.distance -= rA + rB;
+                    Vec2 normal = output.pointB - output.pointA;
+                    normal.Normalize();
+                    output.pointA += rA * normal;
+                    output.pointB -= rB * normal;
+                }
+                else
+                {
+                    // Shapes are overlapped when radii are considered.
+                    // Move the witness points to the middle.
+                    Vec2 p = 0.5f * (output.pointA + output.pointB);
+                    output.pointA = p;
+                    output.pointB = p;
+                    output.distance = 0.0f;
+                }
+            }
         }
-
-#warning "CAS"
-		// This is used for polygon-vs-circle distance.
-		public class Point : Collision.IGenericShape
-		{
-			public Vec2 p;
-
-			public Vec2 Support(XForm xf, Vec2 v)
-			{
-				return p;
-			}
-
-			public Vec2 GetFirstVertex(XForm xf)
-			{
-				return p;
-			}
-		}
-
-		// GJK is more robust with polygon-vs-point than polygon-vs-circle.
-		// So we convert polygon-vs-circle to polygon-vs-point.
-		public static float DistancePC(out Vec2 x1, out Vec2 x2,
-			PolygonShape polygon, XForm xf1, CircleShape circle, XForm xf2)
-		{
-			Point point = new Point();
-			point.p = Common.Math.Mul(xf2, circle.GetLocalPosition());
-
-			float distance = DistanceGeneric<PolygonShape, Point>(out x1, out x2, polygon, xf1, point, XForm.Identity);
-
-			float r = circle.GetRadius() - Settings.ToiSlop;
-
-			if (distance > r)
-			{
-				distance -= r;
-				Vec2 d = x2 - x1;
-				d.Normalize();
-				x2 -= r * d;
-			}
-			else
-			{
-				distance = 0.0f;
-				x2 = x1;
-			}
-
-			return distance;
-		}
-
-		public static float Distance(out Vec2 x1, out Vec2 x2,
-			Shape shape1, XForm xf1, Shape shape2, XForm xf2)
-		{
-			x1 = new Vec2();
-			x2 = new Vec2();
-
-			ShapeType type1 = shape1.GetType();
-			ShapeType type2 = shape2.GetType();
-
-			if (type1 == ShapeType.CircleShape && type2 == ShapeType.CircleShape)
-			{
-				return DistanceCC(out x1, out x2, (CircleShape)shape1, xf1, (CircleShape)shape2, xf2);
-			}
-
-			if (type1 == ShapeType.PolygonShape && type2 == ShapeType.CircleShape)
-			{
-				return DistancePC(out x1, out x2, (PolygonShape)shape1, xf1, (CircleShape)shape2, xf2);
-			}
-
-			if (type1 == ShapeType.CircleShape && type2 == ShapeType.PolygonShape)
-			{
-				return DistancePC(out x2, out x1, (PolygonShape)shape2, xf2, (CircleShape)shape1, xf1);
-			}
-
-			if (type1 == ShapeType.PolygonShape && type2 == ShapeType.PolygonShape)
-			{
-				return DistanceGeneric(out x1, out x2, (PolygonShape)shape1, xf1, (PolygonShape)shape2, xf2);
-			}
-            if (type1 == ShapeType.EdgeShape && type2 == ShapeType.CircleShape)
-            {
-                return DistanceEdgeCircle(out x1, out x2, (EdgeShape)shape1, xf1, (CircleShape)shape2, xf2);
-            }
-
-            if (type1 == ShapeType.CircleShape && type2 == ShapeType.EdgeShape)
-            {
-                return DistanceEdgeCircle(out x2, out x1, (EdgeShape)shape2, xf2, (CircleShape)shape1, xf1);
-            }
-
-            if (type1 == ShapeType.PolygonShape && type2 == ShapeType.EdgeShape)
-            {
-                return DistanceGeneric(out x2, out x1, (EdgeShape)shape2, xf2, (PolygonShape)shape1, xf1);
-            }
-
-            if (type1 == ShapeType.EdgeShape && type2 == ShapeType.PolygonShape)
-            {
-                return DistanceGeneric(out x1, out x2, (EdgeShape)shape1, xf1, (PolygonShape)shape2, xf2);
-            }
-			return 0.0f;
-		}
-	}
+    }
 }
