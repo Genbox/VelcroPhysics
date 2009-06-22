@@ -328,7 +328,7 @@ namespace Box2DX.Dynamics
         /// @param offset the surface offset along normal
         /// @param c returns the centroid
         /// @return the total volume less than offset along normal
-        public float ComputeSubmergedArea(Vec2 normal, float offset, Vec2 c)
+        public float ComputeSubmergedArea(Vec2 normal, float offset, out Vec2 c)
         {
             return Shape.ComputeSubmergedArea(normal, offset, Body.GetXForm(), out c);
         }
