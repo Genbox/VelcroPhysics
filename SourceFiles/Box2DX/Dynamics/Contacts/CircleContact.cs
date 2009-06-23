@@ -42,14 +42,14 @@ namespace Box2DX.Dynamics
             Body bodyA = _fixtureA.GetBody();
             Body bodyB = _fixtureB.GetBody();
 
-           Collision.Collision.CollideCircles(ref _manifold,
+           Collision.Collision.CollideCircles(ref Manifold,
                                 (CircleShape)_fixtureA.GetShape(), bodyA.GetXForm(),
                                 (CircleShape)_fixtureB.GetShape(), bodyB.GetXForm());
 		}
 
         public float ComputeTOI(Sweep sweepA, Sweep sweepB)
         {
-	        TOIInput input;
+	        b2TOIInput input;
 	        input.sweepA = sweepA;
 	        input.sweepB = sweepB;
 	        input.sweepRadiusA = _fixtureA.ComputeSweepRadius(sweepA.LocalCenter);
@@ -59,7 +59,7 @@ namespace Box2DX.Dynamics
 	        return TimeOfImpact(input, (CircleShape)_fixtureA.GetShape(), (CircleShape)_fixtureB.GetShape());
         }
 
-		new public static Contact Create(Fixture fixtureA, Fixture fixtureB,)
+		new public static Contact Create(Fixture fixtureA, Fixture fixtureB)
 		{
 			return new CircleContact(fixtureA, fixtureB);
 		}
