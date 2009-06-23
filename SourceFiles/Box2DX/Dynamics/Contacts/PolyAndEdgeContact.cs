@@ -32,13 +32,13 @@ namespace Box2DX.Dynamics
                 (EdgeShape)_fixtureB.GetShape(), bodyB.GetXForm());
         }
 
-        public override float ComputeTOI(Sweep SweepA, Sweep SweepB)
+        public override float ComputeTOI(Sweep sweepA, Sweep sweepB)
         {
            Box2DX.Collision.Collision.TOIInput input = new Box2DX.Collision.Collision.TOIInput();
-	       input.SweepA = SweepA;
-	       input.SweepA = SweepB;
-	       input.SweepRadiusA = _fixtureA.ComputeSweepRadius(SweepA.localCenter);
-	       input.SweepRadiusB = _fixtureB.ComputeSweepRadius(SweepB.localCenter);
+	       input.SweepA = sweepA;
+	       input.SweepA = sweepB;
+	       input.SweepRadiusA = _fixtureA.ComputeSweepRadius(sweepA.LocalCenter);
+	       input.SweepRadiusB = _fixtureB.ComputeSweepRadius(sweepB.LocalCenter);
 	       input.Tolerance = Settings.LinearSlop;
 
 	       return Box2DX.Collision.Collision.TimeOfImpact(input, _fixtureA.GetShape(), _fixtureB.GetShape());

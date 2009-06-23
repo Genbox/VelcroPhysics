@@ -15,7 +15,7 @@ namespace Box2DX.Dynamics
             Manifold.Points[0].TangentImpulse = 0.0f;
         }
 
-        public override void Evaluate(ContactListener listener)
+        public override void Evaluate()
         {
             Body bodyA = _fixtureA.GetBody();
             Body bodyB = _fixtureB.GetBody();
