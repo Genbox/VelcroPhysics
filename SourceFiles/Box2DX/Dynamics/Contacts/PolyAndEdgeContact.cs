@@ -11,7 +11,7 @@ namespace Box2DX.Dynamics
     {
         public Manifold _manifold = new Manifold();
 
-        public override Manifold[] GetManifolds()
+        public Manifold[] GetManifolds()
         {
             return new Manifold[] { _manifold };
         }

@@ -88,7 +88,7 @@ namespace Box2DX.Collision
             }
         }
 
-#if 1
+#if true
         public static void CollidePolyAndEdge(ref Manifold manifold,
             PolygonShape polygon, XForm xf1, EdgeShape edge, XForm xf2)
         {
