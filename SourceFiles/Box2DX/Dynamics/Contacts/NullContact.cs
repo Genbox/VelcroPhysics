@@ -19,19 +19,17 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Box2DX.Collision;
 using Box2DX.Common;
 
 namespace Box2DX.Dynamics
 {
 	public class NullContact : Contact
 	{
-		public NullContact() { }
-		public override void Evaluate(ContactListener listener) { }
-		public override Manifold[] GetManifolds() { return null; }
+        public override void Evaluate() {}
+
+	    public override float ComputeTOI(Sweep sweepA, Sweep sweepB)
+	    {
+	        return 1.0f;
+	    }
 	}
 }
