@@ -25,17 +25,17 @@ namespace Box2DX.Collision
 {
     public partial class Collision
     {
-        int maxToiIters = 0;
-        int maxToiRootIters = 0;
+        public static int MaxToiIters = 0;
+        public static int MaxToiRootIters = 0;
 
         /// Inpute parameters for b2TimeOfImpact
-        public struct b2TOIInput
+        public struct TOIInput
         {
-            public Sweep sweepA;
-            public Sweep sweepB;
-            public float sweepRadiusA;
-            public float sweepRadiusB;
-            public float tolerance;
+            public Sweep SweepA;
+            public Sweep SweepB;
+            public float SweepRadiusA;
+            public float SweepRadiusB;
+            public float Tolerance;
         };
 
         public struct SeparationFunction
@@ -58,7 +58,7 @@ namespace Box2DX.Collision
 
                 if (count == 1)
                 {
-                    m_type = Type.Points;
+                    FaceType = Type.Points;
                     Vec2 localPointA = ShapeA.GetVertex(cache.indexA[0]);
                     Vec2 localPointB = ShapeB.GetVertex(cache.indexB[0]);
                     Vec2 pointA = Math.Mul(transformA, localPointA);
@@ -69,7 +69,7 @@ namespace Box2DX.Collision
                 else if (cache.indexB[0] == cache.indexB[1])
                 {
                     // Two points on A and one on B
-                    m_type = Type.FaceA;
+                    FaceType = Type.FaceA;
                     Vec2 localPointA1 = ShapeA.GetVertex(cache.indexA[0]);
                     Vec2 localPointA2 = ShapeA.GetVertex(cache.indexA[1]);
                     Vec2 localPointB = ShapeB.GetVertex(cache.indexB[0]);
@@ -91,7 +91,7 @@ namespace Box2DX.Collision
                 {
                     // Two points on B and one or two points on A.
                     // We ignore the second point on A.
-                    m_type = Type.FaceB;
+                    FaceType = Type.FaceB;
                     Vec2 localPointA = shapeA.GetVertex(cache.indexA[0]);
                     Vec2 localPointB1 = shapeB.GetVertex(cache.indexB[0]);
                     Vec2 localPointB2 = shapeB.GetVertex(cache.indexB[1]);
@@ -113,7 +113,7 @@ namespace Box2DX.Collision
 
             public float Evaluate(XForm transformA, XForm transformB)
             {
-                switch (m_type)
+                switch (FaceType)
                 {
                     case Type.Points:
                         {
@@ -163,11 +163,10 @@ namespace Box2DX.Collision
 
             public Shape ShapeA;
             public Shape ShapeB;
-            public Type m_type;
+            public Type FaceType;
             public Vec2 LocalPoint;
             public Vec2 Axis;
         };
-
 
         /// <summary>
         /// CCD via the secant method.
@@ -184,16 +183,16 @@ namespace Box2DX.Collision
         /// <param name="shapeA">The shape A.</param>
         /// <param name="shapeB">The shape B.</param>
         /// <returns>fraction between [0,1] in which the shapes first touch.</returns>
-        public float TimeOfImpact(b2TOIInput input, Shape shapeA, Shape shapeB)
+        public static float TimeOfImpact(TOIInput input, Shape shapeA, Shape shapeB)
         {
-            Sweep sweepA = input.sweepA;
-            Sweep sweepB = input.sweepB;
+            Sweep sweepA = input.SweepA;
+            Sweep sweepB = input.SweepB;
 
             Box2DXDebug.Assert(sweepA.T0 == sweepB.T0);
             Box2DXDebug.Assert(1.0f - sweepA.T0 > Settings.FLT_EPSILON);
 
             float radius = shapeA.Radius + shapeB.Radius;
-            float tolerance = input.tolerance;
+            float tolerance = input.Tolerance;
 
             float alpha = 0.0f;
 
@@ -350,7 +349,7 @@ namespace Box2DX.Collision
                     Box2DXDebug.Assert(rootIterCount < 50);
                 }
 
-                maxToiRootIters = Math.Max(maxToiRootIters, rootIterCount);
+                MaxToiRootIters = Math.Max(MaxToiRootIters, rootIterCount);
 
 
                 // Ensure significant advancement.
@@ -369,7 +368,7 @@ namespace Box2DX.Collision
                 }
             }
 
-            maxToiIters = Math.Max(maxToiIters, iter);
+            MaxToiIters = Math.Max(MaxToiIters, iter);
 
             return alpha;
         }
