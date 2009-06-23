@@ -82,11 +82,9 @@ namespace Box2DX.Collision
                 // Copy data from cache.
                 m_count = cache.count;
 
-#warning "Fail. vertices needs to be an array and SimplexVertex at the same time."
-                SimplexVertex[] vertices = m_v1;
                 for (int i = 0; i < m_count; ++i)
                 {
-                    SimplexVertex v = vertices[i + 1];
+                    SimplexVertex v = m_list[i + 1];
                     v.indexA = cache.indexA[i];
                     v.indexB = cache.indexB[i];
                     Vec2 wALocal = shapeA.GetVertex(v.indexA);
@@ -113,7 +111,7 @@ namespace Box2DX.Collision
                 // If the cache is empty or invalid ...
                 if (m_count == 0)
                 {
-                    SimplexVertex v = vertices[0];
+                    SimplexVertex v = m_list[0];
                     v.indexA = 0;
                     v.indexB = 0;
                     Vec2 wALocal = shapeA.GetVertex(0);
@@ -125,16 +123,14 @@ namespace Box2DX.Collision
                 }
             }
 
-            public void WriteCache(SimplexCache cache)
+            public void WriteCache(ref SimplexCache cache)
             {
                 cache.metric = GetMetric();
                 cache.count = (ushort)m_count;
-#warning "Fail. vertices needs to be an array and SimplexVertex at the same time."
-                SimplexVertex[] vertices = m_v1;
                 for (int i = 0; i < m_count; ++i)
                 {
-                    cache.indexA[i] = (byte)vertices[i].indexA;
-                    cache.indexB[i] = (byte)vertices[i].indexB;
+                    cache.indexA[i] = (byte)m_list[i].indexA;
+                    cache.indexB[i] = (byte)m_list[i].indexB;
                 }
             }
 
@@ -147,10 +143,10 @@ namespace Box2DX.Collision
                         return Vec2.Zero;
 
                     case 1:
-                        return m_v1.w;
+                        return m_list[0].w;
 
                     case 2:
-                        return m_v1.a * m_v1.w + m_v2.a * m_v2.w;
+                        return m_list[0].a * m_list[0].w + m_list[1].a * m_list[1].w;
 
                     case 3:
                         return Vec2.Zero;
@@ -173,17 +169,17 @@ namespace Box2DX.Collision
                         break;
 
                     case 1:
-                        pA = m_v1.wA;
-                        pB = m_v1.wB;
+                        pA = m_list[0].wA;
+                        pB = m_list[0].wB;
                         break;
 
                     case 2:
-                        pA = m_v1.a * m_v1.wA + m_v2.a * m_v2.wA;
-                        pB = m_v1.a * m_v1.wB + m_v2.a * m_v2.wB;
+                        pA = m_list[0].a * m_list[0].wA + m_list[1].a * m_list[1].wA;
+                        pB = m_list[0].a * m_list[0].wB + m_list[1].a * m_list[1].wB;
                         break;
 
                     case 3:
-                        pA = m_v1.a * m_v1.wA + m_v2.a * m_v2.wA + m_v3.a * m_v3.wA;
+                        pA = m_list[0].a * m_list[0].wA + m_list[1].a * m_list[1].wA + m_list[2].a * m_list[2].wA;
                         pB = pA;
                         break;
 
@@ -205,10 +201,10 @@ namespace Box2DX.Collision
                         return 0.0f;
 
                     case 2:
-                        return Vec2.Distance(m_v1.w, m_v2.w);
+                        return Vec2.Distance(m_list[0].w, m_list[1].w);
 
                     case 3:
-                        return Vec2.Cross(m_v2.w - m_v1.w, m_v3.w - m_v1.w);
+                        return Vec2.Cross(m_list[1].w - m_list[0].w, m_list[2].w - m_list[0].w);
 
                     default:
                         Box2DXDebug.Assert(false);
@@ -243,8 +239,8 @@ namespace Box2DX.Collision
             /// </summary>
             public void Solve2()
             {
-                Vec2 w1 = m_v1.w;
-                Vec2 w2 = m_v2.w;
+                Vec2 w1 = m_list[0].w;
+                Vec2 w2 = m_list[1].w;
                 Vec2 e12 = w2 - w1;
 
                 // w1 region
@@ -252,7 +248,7 @@ namespace Box2DX.Collision
                 if (d12_2 <= 0.0f)
                 {
                     // a2 <= 0, so we clamp it to 0
-                    m_v1.a = 1.0f;
+                    m_list[0].a = 1.0f;
                     m_count = 1;
                     return;
                 }
@@ -262,16 +258,16 @@ namespace Box2DX.Collision
                 if (d12_1 <= 0.0f)
                 {
                     // a1 <= 0, so we clamp it to 0
-                    m_v2.a = 1.0f;
+                    m_list[1].a = 1.0f;
                     m_count = 1;
-                    m_v1 = m_v2;
+                    m_list[0] = m_list[1];
                     return;
                 }
 
                 // Must be in e12 region.
                 float inv_d12 = 1.0f / (d12_1 + d12_2);
-                m_v1.a = d12_1 * inv_d12;
-                m_v2.a = d12_2 * inv_d12;
+                m_list[0].a = d12_1 * inv_d12;
+                m_list[1].a = d12_2 * inv_d12;
                 m_count = 2;
             }
 
@@ -284,9 +280,9 @@ namespace Box2DX.Collision
             /// </summary>
             public void Solve3()
             {
-                Vec2 w1 = m_v1.w;
-                Vec2 w2 = m_v2.w;
-                Vec2 w3 = m_v3.w;
+                Vec2 w1 = m_list[0].w;
+                Vec2 w2 = m_list[1].w;
+                Vec2 w3 = m_list[2].w;
 
                 // Edge12
                 // [1      1     ][a1] = [1]
@@ -328,7 +324,7 @@ namespace Box2DX.Collision
                 // w1 region
                 if (d12_2 <= 0.0f && d13_2 <= 0.0f)
                 {
-                    m_v1.a = 1.0f;
+                    m_list[0].a = 1.0f;
                     m_count = 1;
                     return;
                 }
@@ -337,8 +333,8 @@ namespace Box2DX.Collision
                 if (d12_1 > 0.0f && d12_2 > 0.0f && d123_3 <= 0.0f)
                 {
                     float inv_d12 = 1.0f / (d12_1 + d12_2);
-                    m_v1.a = d12_1 * inv_d12;
-                    m_v2.a = d12_1 * inv_d12;
+                    m_list[0].a = d12_1 * inv_d12;
+                    m_list[1].a = d12_1 * inv_d12;
                     m_count = 2;
                     return;
                 }
@@ -357,18 +353,18 @@ namespace Box2DX.Collision
                 // w2 region
                 if (d12_1 <= 0.0f && d23_2 <= 0.0f)
                 {
-                    m_v2.a = 1.0f;
+                    m_list[1].a = 1.0f;
                     m_count = 1;
-                    m_v1 = m_v2;
+                    m_list[0] = m_list[1];
                     return;
                 }
 
                 // w3 region
                 if (d13_1 <= 0.0f && d23_1 <= 0.0f)
                 {
-                    m_v3.a = 1.0f;
+                    m_list[2].a = 1.0f;
                     m_count = 1;
-                    m_v1 = m_v3;
+                    m_list[0] = m_list[2];
                     return;
                 }
 
@@ -376,22 +372,22 @@ namespace Box2DX.Collision
                 if (d23_1 > 0.0f && d23_2 > 0.0f && d123_1 <= 0.0f)
                 {
                     float inv_d23 = 1.0f / (d23_1 + d23_2);
-                    m_v2.a = d23_1 * inv_d23;
-                    m_v3.a = d23_2 * inv_d23;
+                    m_list[1].a = d23_1 * inv_d23;
+                    m_list[2].a = d23_2 * inv_d23;
                     m_count = 2;
-                    m_v1 = m_v3;
+                    m_list[0] = m_list[2];
                     return;
                 }
 
                 // Must be in triangle123
                 float inv_d123 = 1.0f / (d123_1 + d123_2 + d123_3);
-                m_v1.a = d123_1 * inv_d123;
-                m_v2.a = d123_2 * inv_d123;
-                m_v3.a = d123_3 * inv_d123;
+                m_list[0].a = d123_1 * inv_d123;
+                m_list[1].a = d123_2 * inv_d123;
+                m_list[2].a = d123_3 * inv_d123;
                 m_count = 3;
             }
-
-            public SimplexVertex m_v1, m_v2, m_v3;
+#warning "Must be initialized to a size of 3"
+            public SimplexVertex[] m_vlist;
             public int m_count;
         };
 
@@ -413,10 +409,6 @@ namespace Box2DX.Collision
             Simplex simplex = new Simplex();
             simplex.ReadCache(cache, shapeA, transformA, shapeB, transformB);
 
-            // Get simplex vertices as an array.
-#warning "Fail. vertices needs to be an array and SimplexVertex at the same time."
-            SimplexVertex vertices = simplex.m_v1;
-
             // These store the vertices of the last simplex so that we
             // can check for duplicates and prevent cycling.
             int[] lastA = new int[4];
@@ -432,8 +424,8 @@ namespace Box2DX.Collision
                 lastCount = simplex.m_count;
                 for (int i = 0; i < lastCount; ++i)
                 {
-                    lastA[i] = vertices[i].indexA;
-                    lastB[i] = vertices[i].indexB;
+                    lastA[i] = simplex.m_list[i].indexA;
+                    lastB[i] = simplex.m_list[i].indexB;
                 }
 
                 switch (simplex.m_count)
@@ -477,14 +469,14 @@ namespace Box2DX.Collision
                 }
 
                 // Compute a tentative new simplex vertex using support points.
-#warning "Convert array the right way"
-                SimplexVertex vertex = vertices + simplex.m_count;
+                SimplexVertex vertex = new SimplexVertex();
                 vertex.indexA = shapeA.GetSupport(Math.MulT(transformA.R, p));
                 vertex.wA = Math.Mul(transformA, shapeA.GetVertex(vertex.indexA));
                 Vec2 wBLocal;
                 vertex.indexB = shapeB.GetSupport(Math.MulT(transformB.R, -p));
                 vertex.wB = Math.Mul(transformB, shapeB.GetVertex(vertex.indexB));
                 vertex.w = vertex.wB - vertex.wA;
+                simplex.m_list[simplex.m_count + 1] = vertex;
 
                 // Iteration count is equated to the number of support point calls.
                 ++iter;
@@ -527,7 +519,7 @@ namespace Box2DX.Collision
             output.iterations = iter;
 
             // Cache the simplex.
-            simplex.WriteCache(cache);
+            simplex.WriteCache(ref cache);
 
             // Apply radii if requested.
             if (input.useRadii)
