@@ -34,12 +34,12 @@ namespace Box2DX.Dynamics
 
         public override float ComputeTOI(Sweep sweepA, Sweep sweepB)
         {
-           Box2DX.Collision.Collision.TOIInput input;
-	       input.sweepA = sweepA;
-	       input.sweepB = sweepB;
-	       input.sweepRadiusA = _fixtureA.ComputeSweepRadius(sweepA.localCenter);
-	       input.sweepRadiusB = _fixtureB.ComputeSweepRadius(sweepB.localCenter);
-	       input.tolerance = Settings.LinearSlop;
+           Box2DX.Collision.Collision.TOIInput input = new Box2DX.Collision.Collision.TOIInput;
+	       input.SweepA = sweepA;
+	       input.SweepA = sweepB;
+	       input.SweepRadiusA = _fixtureA.ComputeSweepRadius(sweepA.localCenter);
+	       input.SweepRadiusB = _fixtureB.ComputeSweepRadius(sweepB.localCenter);
+	       input.Tolerance = Settings.LinearSlop;
 
 	       return Box2DX.Collision.Collision.TimeOfImpact(input, _fixtureA.GetShape(), _fixtureB.GetShape());
         }
