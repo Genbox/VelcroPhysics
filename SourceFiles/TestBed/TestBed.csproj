@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5F8CEECC-CF73-4057-9DC8-8001BECE71E2}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TestBed</RootNamespace>
+    <AssemblyName>TestBed</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <BaseIntermediateOutputPath>..\..\Build\VCS\TestBed\obj\</BaseIntermediateOutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Output\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <BaseIntermediateOutputPath>..\..\Build\VCS\TestBed\obj\</BaseIntermediateOutputPath>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Output\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Tao.FreeGlut, Version=2.4.0.1, Culture=neutral, PublicKeyToken=6e602a6ad6c0d06d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\Tao.FreeGlut.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.FreeType, Version=2.3.5.0, Culture=neutral, PublicKeyToken=e499629dc69cd531, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\Tao.FreeType.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.OpenGl, Version=2.1.0.4, Culture=neutral, PublicKeyToken=1ca010269a4501ef, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\Tao.OpenGl.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Platform.Windows, Version=1.0.0.4, Culture=neutral, PublicKeyToken=701104b2da67a104, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\Tao.Platform.Windows.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OpenGL Render\FTclass.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Render.cs" />
+    <Compile Include="Test.cs" />
+    <Compile Include="Tests\ApplyForce.cs" />
+    <Compile Include="Tests\Biped.cs" />
+    <Compile Include="Tests\BipedDef.cs" />
+    <Compile Include="Tests\BipedTest.cs" />
+    <Compile Include="Tests\Bridge.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\BroadPhaseTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Buoyancy.cs" />
+    <Compile Include="Tests\Car.cs" />
+    <Compile Include="Tests\CCDTest.cs" />
+    <Compile Include="Tests\Chain.cs" />
+    <Compile Include="Tests\CollisionFiltering.cs" />
+    <Compile Include="Tests\CollisionProcessing.cs" />
+    <Compile Include="Tests\CompoundShapes.cs" />
+    <Compile Include="Tests\ContactCallbackTest.cs" />
+    <Compile Include="Tests\DistanceTest.cs" />
+    <Compile Include="Tests\Dominos.cs" />
+    <Compile Include="Tests\ElasticBody.cs" />
+    <Compile Include="Tests\Gears.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\LineJoint.cs" />
+    <Compile Include="Tests\MotorsAndLimits.cs" />
+    <Compile Include="Tests\PolyCollision.cs" />
+    <Compile Include="Tests\PolyShapes.cs" />
+    <Compile Include="Tests\Prismatic.cs" />
+    <Compile Include="Tests\Pulleys.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Pyramid.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\RaycastTest.cs" />
+    <Compile Include="Tests\Revolute.cs" />
+    <Compile Include="Tests\SensorTest.cs" />
+    <Compile Include="Tests\ShapeEditing.cs" />
+    <Compile Include="Tests\SimpleTest.cs" />
+    <Compile Include="Tests\SliderCrank.cs" />
+    <Compile Include="Tests\TheoJansen.cs" />
+    <Compile Include="Tests\TimeOfImpact.cs" />
+    <Compile Include="Tests\VaryingFriction.cs" />
+    <Compile Include="Tests\VaryingRestitution.cs" />
+    <Compile Include="Tests\VerticalStack.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Web.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Box2DX.csproj">
+      <Project>{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}</Project>
+      <Name>Box2DX</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
