@@ -30,12 +30,12 @@ namespace Box2DX.Dynamics
 {
 	public class PolygonContact : Contact
 	{
-		public Contact Create(Fixture fixtureA, Fixture fixtureB)
+		public static Contact Create(Fixture fixtureA, Fixture fixtureB)
         {
 	        return new PolygonContact(fixtureA, fixtureB);
         }
 
-        public void Destroy(Contact contact)
+        public static void Destroy(Contact contact)
         {
             contact = null;
         }
@@ -47,7 +47,7 @@ namespace Box2DX.Dynamics
 	        Box2DXDebug.Assert(_fixtureB.GetType() == ShapeType.PolygonShape);
         }
 
-        public void Evaluate()
+        public override void Evaluate()
         {
 	        Body bodyA = _fixtureA.GetBody();
 	        Body bodyB = _fixtureB.GetBody();
@@ -57,7 +57,7 @@ namespace Box2DX.Dynamics
 						        (PolygonShape)_fixtureB.GetShape(), bodyB.GetXForm());
         }
 
-        public float ComputeTOI(Sweep sweepA, Sweep sweepB)
+        public override float ComputeTOI(Sweep sweepA, Sweep sweepB)
         {
             Collision.Collision.TOIInput input;
 	        input.SweepA = sweepA;
