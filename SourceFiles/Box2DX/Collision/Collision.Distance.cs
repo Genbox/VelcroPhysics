@@ -396,7 +396,7 @@ namespace Box2DX.Collision
         /// b2CircleShape, b2PolygonShape, b2EdgeShape. The simplex cache is input/output.
         /// On the first call set b2SimplexCache.count to zero.
         /// </summary>
-        public void Distance(out DistanceOutput output,
+        public static void Distance(out DistanceOutput output,
                         SimplexCache cache,
                         DistanceInput input,
                         Shape shapeA,

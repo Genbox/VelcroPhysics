@@ -47,16 +47,16 @@ namespace Box2DX.Dynamics
                                 (CircleShape)_fixtureB.GetShape(), bodyB.GetXForm());
 		}
 
-        public float ComputeTOI(Sweep sweepA, Sweep sweepB)
+        public override float ComputeTOI(Sweep sweepA, Sweep sweepB)
         {
-	        b2TOIInput input;
-	        input.sweepA = sweepA;
-	        input.sweepB = sweepB;
-	        input.sweepRadiusA = _fixtureA.ComputeSweepRadius(sweepA.LocalCenter);
-	        input.sweepRadiusB = _fixtureB.ComputeSweepRadius(sweepB.LocalCenter);
-	        input.tolerance = Settings.LinearSlop;
+	        Collision.Collision.TOIInput input;
+	        input.SweepA = sweepA;
+	        input.SweepB = sweepB;
+	        input.SweepRadiusA = _fixtureA.ComputeSweepRadius(sweepA.LocalCenter);
+	        input.SweepRadiusB = _fixtureB.ComputeSweepRadius(sweepB.LocalCenter);
+	        input.Tolerance = Settings.LinearSlop;
 
-	        return TimeOfImpact(input, (CircleShape)_fixtureA.GetShape(), (CircleShape)_fixtureB.GetShape());
+	        return Collision.Collision.TimeOfImpact(input, _fixtureA.GetShape(), _fixtureB.GetShape());
         }
 
 		new public static Contact Create(Fixture fixtureA, Fixture fixtureB)
