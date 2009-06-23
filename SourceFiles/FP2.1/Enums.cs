@@ -26,6 +26,12 @@ namespace FarseerGames.FarseerPhysics
     }
 #endif
 
+    public enum NarrowPhaseCollider
+    {
+        DistanceGrid,
+        SAT
+    }
+
     /// <summary>
     /// Determine the type of joint or spring used to link bodies, in the path generator.
     /// </summary>

@@ -40,10 +40,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
         internal Body body;
         internal Vertices localVertices;
         internal Vertices worldVertices;
-        internal INarrowPhaseCollider narrowPhaseCollider;
         internal int id;
 
-        public int Id { get{ return id;} }
+        public int Id { get { return id; } }
 
         /// <summary>
         /// Returns true if the geometry is added to the simulation.
@@ -295,15 +294,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
-        /// <summary>
-        /// Gets the narrow phase collider currently in use.
-        /// </summary>
-        /// <Value>The narrow phase collider.</Value>
-        public INarrowPhaseCollider NarrowPhaseCollider
-        {
-            get { return narrowPhaseCollider; }
-        }
-
 #if(XNA)
         [ContentSerializerIgnore]
 #endif
@@ -327,26 +317,20 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             GridCellSize = collisionGridSize;
             id = GetNextId();
+
             _positionOffset = positionOffset;
             _rotationOffset = rotationOffset;
             SetVertices(vertices);
             SetBody(bodyToSet);
+
+            //Distancegrid needs to be precomputed
+            if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.DistanceGrid)
+                DistanceGrid.Instance.CreateDistanceGrid(this);
         }
 
         private void ConstructClone(Body bodyToSet, Geom geometry, Vector2 positionOffset, float rotationOffset)
         {
             id = GetNextId();
-
-            //Make sure that the clone also gets the associated distance grid
-            DistanceGrid grid = geometry.narrowPhaseCollider as DistanceGrid;
-            if (grid != null)
-                grid.Copy(geometry.id, id);
-
-            //Note: Only grids needs to be copied
-            //SAT sat = geometry.narrowPhaseCollider as SAT;
-            //if (sat != null)
-            //    narrowPhaseCollider = sat;
-
             _positionOffset = positionOffset;
             _rotationOffset = rotationOffset;
             RestitutionCoefficient = geometry.RestitutionCoefficient;
@@ -361,6 +345,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             CollidesWith = geometry.CollidesWith;
             SetVertices(geometry.localVertices);
             SetBody(bodyToSet);
+
+            //Make sure that the clone also gets the associated distance grid
+            if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.DistanceGrid)
+                DistanceGrid.Instance.Copy(geometry.id, id);
         }
 
         /// <summary>
@@ -536,7 +524,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 Matrix matrixInverse = MatrixInverse;
                 Vector2.Transform(ref position, ref matrixInverse, out position);
 
-                return narrowPhaseCollider.Intersect(this, ref position);
+                if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.DistanceGrid)
+                    return DistanceGrid.Instance.Intersect(this, ref position);
+                if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.SAT)
+                    return SAT.Instance.Intersect(this, ref position);
             }
             return false;
         }
@@ -546,13 +537,15 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        private bool FastCollide(ref Vector2 point)
+        private bool FastCollide(ref Vector2 position)
         {
             Matrix matrixInverse = MatrixInverse;
-            Vector2.Transform(ref point, ref matrixInverse, out point);
+            Vector2.Transform(ref position, ref matrixInverse, out position);
 
-            if (narrowPhaseCollider.Intersect(this, ref point))
-                return true;
+            if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.DistanceGrid)
+                return DistanceGrid.Instance.Intersect(this, ref position);
+            if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.SAT)
+                return SAT.Instance.Intersect(this, ref position);
 
             return false;
         }
@@ -750,6 +743,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 if (disposing)
                 {
+                    //Make sure to remove the distancegrid when removing this geometry
+                    if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.DistanceGrid)
+                        DistanceGrid.Instance.RemoveDistanceGrid(this);
+
                     //dispose managed resources 
                     if (body != null)
                     {

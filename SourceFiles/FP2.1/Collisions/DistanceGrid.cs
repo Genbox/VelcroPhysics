@@ -16,6 +16,24 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     public class DistanceGrid : INarrowPhaseCollider
     {
+        private static DistanceGrid _instance;
+
+        private DistanceGrid()
+        {
+        }
+
+        public static DistanceGrid Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new DistanceGrid();
+                }
+                return _instance;
+            }
+        }
+
         private Dictionary<int, DistanceGridData> _distanceGrids = new Dictionary<int, DistanceGridData>();
 
         /// <summary>
@@ -24,12 +42,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         ///need to be. 
         /// </summary>
         private const float _gridCellSizeAABBFactor = .1f;
-        private PhysicsSimulator _physicsSimulator;
-
-        public DistanceGrid(PhysicsSimulator physicsSimulator)
-        {
-            _physicsSimulator = physicsSimulator;
-        }
 
         /// <summary>
         /// Finds the contactpoints between the two geometries.
@@ -47,7 +59,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //Iterate the second geometry vertices
             for (int i = 0; i < geomB.worldVertices.Count; i++)
             {
-                if (contactList.Count == _physicsSimulator.MaxContactsToDetect)
+                if (contactList.Count == PhysicsSimulator.MaxContactsToDetect)
                     break;
 
                 vertexIndex += 1;
@@ -75,7 +87,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //Iterate the first geometry vertices
             for (int i = 0; i < geomA.WorldVertices.Count; i++)
             {
-                if (contactList.Count == _physicsSimulator.MaxContactsToDetect)
+                if (contactList.Count == PhysicsSimulator.MaxContactsToDetect)
                     break;
 
                 vertexIndex += 1;

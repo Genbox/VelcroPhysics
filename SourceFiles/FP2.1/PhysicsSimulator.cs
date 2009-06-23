@@ -25,7 +25,7 @@ namespace FarseerGames.FarseerPhysics
     public class PhysicsSimulator
     {
         private IBroadPhaseCollider _broadPhaseCollider;
-        private INarrowPhaseCollider _narrowPhaseCollider;
+        public static NarrowPhaseCollider NarrowPhaseCollider = NarrowPhaseCollider.DistanceGrid;
 
         internal ArbiterList arbiterList;
         internal Pool<Arbiter> arbiterPool;
@@ -72,7 +72,7 @@ namespace FarseerGames.FarseerPhysics
         /// The maximum number of contacts to detect in the narrow phase.
         /// Default is 10.
         /// </summary>
-        public int MaxContactsToDetect = 10;
+        public static int MaxContactsToDetect = 10;
 
         /// <summary>
         /// The maximum number of contacts to resolve in the narrow phase.
@@ -85,7 +85,7 @@ namespace FarseerGames.FarseerPhysics
         /// Default is FrictionType.Average.
         /// </summary>
         public FrictionType FrictionType = FrictionType.Average;
-        
+
         /// <summary>
         /// The amount of allowed penetration
         /// Default is .05
@@ -143,23 +143,6 @@ namespace FarseerGames.FarseerPhysics
                     throw new Exception("The GeomList must be empty when setting the broad phase collider type");
 
                 _broadPhaseCollider = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the narrow phase collider.
-        /// </summary>
-        /// <value>The narrow phase collider.</value>
-        /// <exception cref="Exception">The GeomList must be empty when setting the narrow phase collider type</exception>
-        public INarrowPhaseCollider NarrowPhaseCollider
-        {
-            get { return _narrowPhaseCollider; }
-            set
-            {
-                if (geomList.Count > 0)
-                    throw new Exception("The GeomList must be empty when setting the narrow phase collider type");
-
-                _narrowPhaseCollider = value;
             }
         }
 
@@ -293,7 +276,6 @@ namespace FarseerGames.FarseerPhysics
             springRemoveList = new List<Spring>();
 
             _broadPhaseCollider = new SelectiveSweepCollider(this);
-            _narrowPhaseCollider = new DistanceGrid(this);
 
             arbiterList = new ArbiterList();
             Gravity = gravity;
@@ -310,19 +292,6 @@ namespace FarseerGames.FarseerPhysics
             if (!geomAddList.Contains(geometry))
             {
                 geomAddList.Add(geometry);
-
-                //Make sure to create distancegrid when adding geometry
-                DistanceGrid grid = _narrowPhaseCollider as DistanceGrid;
-                if (grid != null)
-                {
-                    grid.CreateDistanceGrid(geometry);
-                    geometry.narrowPhaseCollider = grid;
-                }
-
-                //Or use SAT if that is the one chosen.
-                SAT sat = _narrowPhaseCollider as SAT;
-                if (sat != null)
-                    geometry.narrowPhaseCollider = sat;
             }
         }
 
@@ -763,13 +732,6 @@ namespace FarseerGames.FarseerPhysics
             {
                 geomRemoveList[i].InSimulation = false;
                 geomList.Remove(geomRemoveList[i]);
-
-                //Make sure to remove the distancegrid when removing a geometry
-                DistanceGrid grid = _narrowPhaseCollider as DistanceGrid;
-                if (grid != null)
-                    grid.RemoveDistanceGrid(geomRemoveList[i]);
-
-                geomRemoveList[i].narrowPhaseCollider = null;
 
                 //Remove any arbiters associated with the geometries being removed
                 for (int j = arbiterList.Count; j > 0; j--)

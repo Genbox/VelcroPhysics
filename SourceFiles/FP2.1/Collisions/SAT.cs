@@ -11,12 +11,22 @@ namespace FarseerGames.FarseerPhysics.Collisions
 {
     public class SAT : INarrowPhaseCollider
     {
-        private PhysicsSimulator _physicsSimulator;
-        private const float ERROR = 0.0001f;
+        private static SAT _instance;
 
-        public SAT(PhysicsSimulator physicsSimulator)
+        private SAT()
         {
-            _physicsSimulator = physicsSimulator;
+        }
+
+        public static SAT Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new SAT();
+                }
+                return _instance;
+            }
         }
 
         /// <summary>
@@ -39,7 +49,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 for (int i = 0; i < geomA.WorldVertices.Count; i++)
                 {
-                    if (contactsDetected <= _physicsSimulator.MaxContactsToDetect)
+                    if (contactsDetected <= PhysicsSimulator.MaxContactsToDetect)
                     {
                         if (InsidePolygon(geomB.WorldVertices, geomA.WorldVertices[i]))
                         {
@@ -61,7 +71,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                 for (int i = 0; i < geomB.WorldVertices.Count; i++)
                 {
-                    if (contactsDetected <= _physicsSimulator.MaxContactsToDetect)
+                    if (contactsDetected <= PhysicsSimulator.MaxContactsToDetect)
                     {
                         if (InsidePolygon(geomA.WorldVertices, geomB.WorldVertices[i]))
                         {
@@ -118,7 +128,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             return true;
         }
-        
+
         private void ProjectPolygon(Vector2 axis, Vertices polygon, ref float min, ref float max)
         {
             // To project a point on an axis use the dot product
@@ -158,7 +168,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 return minB - maxA;
             }
-             
+
             return minA - maxB;
         }
 
@@ -259,7 +269,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return result;
         }
 
-        
+
         private int GetMiddleIndex(int i0, int i1, int N)
         {
             if (i0 < i1)

@@ -41,7 +41,7 @@ namespace FarseerGames.SimpleSamplesSilverlight.Demos.Demo7
         public override void Initialize()
         {
             physicsSimulator = new PhysicsSimulator(new Vector2(0, 150));
-            physicsSimulator.MaxContactsToDetect = 5;
+            PhysicsSimulator.MaxContactsToDetect = 5;
             physicsSimulator.MaxContactsToResolve = 2;
             physicsSimulator.Iterations = 10;
             physicsSimulator.BiasFactor = .4f;
