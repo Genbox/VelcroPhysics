@@ -309,7 +309,7 @@ namespace Box2DX.Dynamics
 	        }
         }
 
-	    public abstract void Evaluate();
+        public abstract void Evaluate(ContactListener listener);
 
         public abstract float ComputeTOI(Sweep sweepA, Sweep sweepB);
 	}
