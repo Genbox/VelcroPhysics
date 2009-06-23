@@ -84,7 +84,7 @@ namespace Box2DX.Collision
 
                 for (int i = 0; i < m_count; ++i)
                 {
-                    SimplexVertex v = m_list[i + 1];
+                    SimplexVertex v = m_vlist[i + 1];
                     v.indexA = cache.indexA[i];
                     v.indexB = cache.indexB[i];
                     Vec2 wALocal = shapeA.GetVertex(v.indexA);
@@ -111,7 +111,7 @@ namespace Box2DX.Collision
                 // If the cache is empty or invalid ...
                 if (m_count == 0)
                 {
-                    SimplexVertex v = m_list[0];
+                    SimplexVertex v = m_vlist[0];
                     v.indexA = 0;
                     v.indexB = 0;
                     Vec2 wALocal = shapeA.GetVertex(0);
@@ -129,8 +129,8 @@ namespace Box2DX.Collision
                 cache.count = (ushort)m_count;
                 for (int i = 0; i < m_count; ++i)
                 {
-                    cache.indexA[i] = (byte)m_list[i].indexA;
-                    cache.indexB[i] = (byte)m_list[i].indexB;
+                    cache.indexA[i] = (byte)m_vlist[i].indexA;
+                    cache.indexB[i] = (byte)m_vlist[i].indexB;
                 }
             }
 
@@ -143,10 +143,10 @@ namespace Box2DX.Collision
                         return Vec2.Zero;
 
                     case 1:
-                        return m_list[0].w;
+                        return m_vlist[0].w;
 
                     case 2:
-                        return m_list[0].a * m_list[0].w + m_list[1].a * m_list[1].w;
+                        return m_vlist[0].a * m_vlist[0].w + m_vlist[1].a * m_vlist[1].w;
 
                     case 3:
                         return Vec2.Zero;
@@ -169,17 +169,17 @@ namespace Box2DX.Collision
                         break;
 
                     case 1:
-                        pA = m_list[0].wA;
-                        pB = m_list[0].wB;
+                        pA = m_vlist[0].wA;
+                        pB = m_vlist[0].wB;
                         break;
 
                     case 2:
-                        pA = m_list[0].a * m_list[0].wA + m_list[1].a * m_list[1].wA;
-                        pB = m_list[0].a * m_list[0].wB + m_list[1].a * m_list[1].wB;
+                        pA = m_vlist[0].a * m_vlist[0].wA + m_vlist[1].a * m_vlist[1].wA;
+                        pB = m_vlist[0].a * m_vlist[0].wB + m_vlist[1].a * m_vlist[1].wB;
                         break;
 
                     case 3:
-                        pA = m_list[0].a * m_list[0].wA + m_list[1].a * m_list[1].wA + m_list[2].a * m_list[2].wA;
+                        pA = m_vlist[0].a * m_vlist[0].wA + m_vlist[1].a * m_vlist[1].wA + m_vlist[2].a * m_vlist[2].wA;
                         pB = pA;
                         break;
 
@@ -201,10 +201,10 @@ namespace Box2DX.Collision
                         return 0.0f;
 
                     case 2:
-                        return Vec2.Distance(m_list[0].w, m_list[1].w);
+                        return Vec2.Distance(m_vlist[0].w, m_vlist[1].w);
 
                     case 3:
-                        return Vec2.Cross(m_list[1].w - m_list[0].w, m_list[2].w - m_list[0].w);
+                        return Vec2.Cross(m_vlist[1].w - m_vlist[0].w, m_vlist[2].w - m_vlist[0].w);
 
                     default:
                         Box2DXDebug.Assert(false);
@@ -239,8 +239,8 @@ namespace Box2DX.Collision
             /// </summary>
             public void Solve2()
             {
-                Vec2 w1 = m_list[0].w;
-                Vec2 w2 = m_list[1].w;
+                Vec2 w1 = m_vlist[0].w;
+                Vec2 w2 = m_vlist[1].w;
                 Vec2 e12 = w2 - w1;
 
                 // w1 region
@@ -248,7 +248,7 @@ namespace Box2DX.Collision
                 if (d12_2 <= 0.0f)
                 {
                     // a2 <= 0, so we clamp it to 0
-                    m_list[0].a = 1.0f;
+                    m_vlist[0].a = 1.0f;
                     m_count = 1;
                     return;
                 }
@@ -258,16 +258,16 @@ namespace Box2DX.Collision
                 if (d12_1 <= 0.0f)
                 {
                     // a1 <= 0, so we clamp it to 0
-                    m_list[1].a = 1.0f;
+                    m_vlist[1].a = 1.0f;
                     m_count = 1;
-                    m_list[0] = m_list[1];
+                    m_vlist[0] = m_vlist[1];
                     return;
                 }
 
                 // Must be in e12 region.
                 float inv_d12 = 1.0f / (d12_1 + d12_2);
-                m_list[0].a = d12_1 * inv_d12;
-                m_list[1].a = d12_2 * inv_d12;
+                m_vlist[0].a = d12_1 * inv_d12;
+                m_vlist[1].a = d12_2 * inv_d12;
                 m_count = 2;
             }
 
@@ -280,9 +280,9 @@ namespace Box2DX.Collision
             /// </summary>
             public void Solve3()
             {
-                Vec2 w1 = m_list[0].w;
-                Vec2 w2 = m_list[1].w;
-                Vec2 w3 = m_list[2].w;
+                Vec2 w1 = m_vlist[0].w;
+                Vec2 w2 = m_vlist[1].w;
+                Vec2 w3 = m_vlist[2].w;
 
                 // Edge12
                 // [1      1     ][a1] = [1]
@@ -324,7 +324,7 @@ namespace Box2DX.Collision
                 // w1 region
                 if (d12_2 <= 0.0f && d13_2 <= 0.0f)
                 {
-                    m_list[0].a = 1.0f;
+                    m_vlist[0].a = 1.0f;
                     m_count = 1;
                     return;
                 }
@@ -333,8 +333,8 @@ namespace Box2DX.Collision
                 if (d12_1 > 0.0f && d12_2 > 0.0f && d123_3 <= 0.0f)
                 {
                     float inv_d12 = 1.0f / (d12_1 + d12_2);
-                    m_list[0].a = d12_1 * inv_d12;
-                    m_list[1].a = d12_1 * inv_d12;
+                    m_vlist[0].a = d12_1 * inv_d12;
+                    m_vlist[1].a = d12_1 * inv_d12;
                     m_count = 2;
                     return;
                 }
@@ -343,28 +343,28 @@ namespace Box2DX.Collision
                 if (d13_1 > 0.0f && d13_2 > 0.0f && d123_2 <= 0.0f)
                 {
                     float inv_d13 = 1.0f / (d13_1 + d13_2);
-                    m_v1.a = d13_1 * inv_d13;
-                    m_v3.a = d13_2 * inv_d13;
+                    m_vlist[0].a = d13_1 * inv_d13;
+                    m_vlist[2].a = d13_2 * inv_d13;
                     m_count = 2;
-                    m_v2 = m_v3;
+                    m_vlist[1] = m_vlist[2];
                     return;
                 }
 
                 // w2 region
                 if (d12_1 <= 0.0f && d23_2 <= 0.0f)
                 {
-                    m_list[1].a = 1.0f;
+                    m_vlist[1].a = 1.0f;
                     m_count = 1;
-                    m_list[0] = m_list[1];
+                    m_vlist[0] = m_vlist[1];
                     return;
                 }
 
                 // w3 region
                 if (d13_1 <= 0.0f && d23_1 <= 0.0f)
                 {
-                    m_list[2].a = 1.0f;
+                    m_vlist[2].a = 1.0f;
                     m_count = 1;
-                    m_list[0] = m_list[2];
+                    m_vlist[0] = m_vlist[2];
                     return;
                 }
 
@@ -372,18 +372,18 @@ namespace Box2DX.Collision
                 if (d23_1 > 0.0f && d23_2 > 0.0f && d123_1 <= 0.0f)
                 {
                     float inv_d23 = 1.0f / (d23_1 + d23_2);
-                    m_list[1].a = d23_1 * inv_d23;
-                    m_list[2].a = d23_2 * inv_d23;
+                    m_vlist[1].a = d23_1 * inv_d23;
+                    m_vlist[2].a = d23_2 * inv_d23;
                     m_count = 2;
-                    m_list[0] = m_list[2];
+                    m_vlist[0] = m_vlist[2];
                     return;
                 }
 
                 // Must be in triangle123
                 float inv_d123 = 1.0f / (d123_1 + d123_2 + d123_3);
-                m_list[0].a = d123_1 * inv_d123;
-                m_list[1].a = d123_2 * inv_d123;
-                m_list[2].a = d123_3 * inv_d123;
+                m_vlist[0].a = d123_1 * inv_d123;
+                m_vlist[1].a = d123_2 * inv_d123;
+                m_vlist[2].a = d123_3 * inv_d123;
                 m_count = 3;
             }
 #warning "Must be initialized to a size of 3"
@@ -424,8 +424,8 @@ namespace Box2DX.Collision
                 lastCount = simplex.m_count;
                 for (int i = 0; i < lastCount; ++i)
                 {
-                    lastA[i] = simplex.m_list[i].indexA;
-                    lastB[i] = simplex.m_list[i].indexB;
+                    lastA[i] = simplex.m_vlist[i].indexA;
+                    lastB[i] = simplex.m_vlist[i].indexB;
                 }
 
                 switch (simplex.m_count)
@@ -476,7 +476,7 @@ namespace Box2DX.Collision
                 vertex.indexB = shapeB.GetSupport(Math.MulT(transformB.R, -p));
                 vertex.wB = Math.Mul(transformB, shapeB.GetVertex(vertex.indexB));
                 vertex.w = vertex.wB - vertex.wA;
-                simplex.m_list[simplex.m_count + 1] = vertex;
+                simplex.m_vlist[simplex.m_count + 1] = vertex;
 
                 // Iteration count is equated to the number of support point calls.
                 ++iter;
