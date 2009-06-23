@@ -92,55 +92,9 @@
     </Compile>
     <Compile Include="Render.cs" />
     <Compile Include="Test.cs" />
-    <Compile Include="Tests\ApplyForce.cs" />
-    <Compile Include="Tests\Biped.cs" />
-    <Compile Include="Tests\BipedDef.cs" />
-    <Compile Include="Tests\BipedTest.cs" />
-    <Compile Include="Tests\Bridge.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\BroadPhaseTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\Buoyancy.cs" />
-    <Compile Include="Tests\Car.cs" />
-    <Compile Include="Tests\CCDTest.cs" />
-    <Compile Include="Tests\Chain.cs" />
-    <Compile Include="Tests\CollisionFiltering.cs" />
-    <Compile Include="Tests\CollisionProcessing.cs" />
-    <Compile Include="Tests\CompoundShapes.cs" />
-    <Compile Include="Tests\ContactCallbackTest.cs" />
-    <Compile Include="Tests\DistanceTest.cs" />
-    <Compile Include="Tests\Dominos.cs" />
-    <Compile Include="Tests\ElasticBody.cs" />
-    <Compile Include="Tests\Gears.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\LineJoint.cs" />
-    <Compile Include="Tests\MotorsAndLimits.cs" />
-    <Compile Include="Tests\PolyCollision.cs" />
-    <Compile Include="Tests\PolyShapes.cs" />
-    <Compile Include="Tests\Prismatic.cs" />
-    <Compile Include="Tests\Pulleys.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Tests\Pyramid.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\RaycastTest.cs" />
-    <Compile Include="Tests\Revolute.cs" />
-    <Compile Include="Tests\SensorTest.cs" />
-    <Compile Include="Tests\ShapeEditing.cs" />
-    <Compile Include="Tests\SimpleTest.cs" />
-    <Compile Include="Tests\SliderCrank.cs" />
-    <Compile Include="Tests\TheoJansen.cs" />
-    <Compile Include="Tests\TimeOfImpact.cs" />
-    <Compile Include="Tests\VaryingFriction.cs" />
-    <Compile Include="Tests\VaryingRestitution.cs" />
-    <Compile Include="Tests\VerticalStack.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\Web.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Box2DX\Box2DX.csproj">
