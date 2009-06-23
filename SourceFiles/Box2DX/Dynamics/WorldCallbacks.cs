@@ -20,8 +20,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 using Box2DX.Common;
 using Box2DX.Collision;
@@ -123,13 +121,13 @@ namespace Box2DX.Dynamics
     /// You should strive to make your callbacks efficient because there may be
     /// many callbacks per time step.
     /// @warning You cannot create/destroy Box2D entities inside these callbacks.
-    public class ContactListener
+    public abstract class ContactListener
     {
         /// Called when two fixtures begin to touch.
-	    public virtual void BeginContact(Contact contact);
+	    public abstract void BeginContact(Contact contact);
 
 	    /// Called when two fixtures cease to touch.
-	    public virtual void EndContact(Contact contact);
+        public abstract void EndContact(Contact contact);
 
 	    /// This is called after a contact is updated. This allows you to inspect a
 	    /// contact before it goes to the solver. If you are careful, you can modify the
@@ -141,7 +139,7 @@ namespace Box2DX.Dynamics
 	    /// Note: if you set the number of contact points to zero, you will not
 	    /// get an EndContact callback. However, you may get a BeginContact callback
 	    /// the next step.
-	    public virtual void PreSolve(Contact contact, Manifold oldManifold);
+        public abstract void PreSolve(Contact contact, Manifold oldManifold);
 
 	    /// This lets you inspect a contact after the solver is finished. This is useful
 	    /// for inspecting impulses.
@@ -149,7 +147,7 @@ namespace Box2DX.Dynamics
 	    /// arbitrarily large if the sub-step is small. Hence the impulse is provided explicitly
 	    /// in a separate data structure.
 	    /// Note: this is only called for contacts that are touching, solid, and awake.
-        public virtual void PostSolve(Contact contact, ContactImpulse impulse);
+        public abstract void PostSolve(Contact contact, ContactImpulse impulse);
     }
 
 	/// <summary>
