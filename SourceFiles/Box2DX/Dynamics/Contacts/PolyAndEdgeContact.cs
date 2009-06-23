@@ -23,7 +23,7 @@ namespace Box2DX.Dynamics
             Box2DXDebug.Assert(_fixtureB.GetType() == ShapeType.EdgeShape);
         }
 
-        public override void Evaluate(ContactListener listener)
+        public override void Evaluate()
         {
             Body bodyA = _fixtureA.GetBody();
             Body bodyB = _fixtureB.GetBody();
