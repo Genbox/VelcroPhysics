@@ -84,25 +84,25 @@ namespace Box2DX.Dynamics
 		static ContactRegister[,] _registers = new ContactRegister[(int)ShapeType.ShapeTypeCount, (int)ShapeType.ShapeTypeCount];
 	    static bool _initialized;
 
-	    ContactFlag _flags;
+	    public ContactFlag Flags;
 
 	    // World pool and list pointers.
-	    Contact _prev;
-	    Contact _next;
+	    public Contact Prev;
+	    public Contact Next;
 
 	    // Nodes for connecting bodies.
-	    ContactEdge _nodeA;
-	    ContactEdge _nodeB;
+	    public ContactEdge NodeA;
+	    public ContactEdge NodeB;
 
 	    protected Fixture _fixtureA;
         protected Fixture _fixtureB;
 
-        protected Manifold _manifold;
+	    public Manifold Manifold;
 
-        protected float _toi;
+	    public float Toi;
 
         /// Get the contact manifold.
-	    public Manifold GetManifold() { return _manifold; }
+	    public Manifold GetManifold() { return Manifold; }
 
 	    /// Get the world manifold.
 	    public void GetWorldManifold(WorldManifold worldManifold)
@@ -112,13 +112,13 @@ namespace Box2DX.Dynamics
 
 	    /// Is this contact solid?
 	    /// @return true if this contact should generate a response.
-	    public bool IsSolid() { return (_flags & ContactFlag.NonSolidFlag) == 0; }
+	    public bool IsSolid() { return (Flags & ContactFlag.NonSolidFlag) == 0; }
 
 	    /// Are fixtures touching?
-	    public bool AreTouching() { return (_flags & ContactFlag.TouchFlag) == 0; }
+	    public bool AreTouching() { return (Flags & ContactFlag.TouchFlag) == 0; }
 
 	    /// Get the next contact in the world's contact list.
-	    public Contact GetNext() { return _next; }
+	    public Contact GetNext() { return Next; }
 
 	    /// Get the first fixture in this contact.
 	    public Fixture GetFixtureA() { return _fixtureA; }
@@ -190,7 +190,7 @@ namespace Box2DX.Dynamics
         {
             Box2DXDebug.Assert(_initialized == true);
 
-	        if (contact._manifold._pointCount > 0)
+	        if (contact.Manifold.PointCount > 0)
 	        {
 		        contact.GetFixtureA().GetBody().WakeUp();
 		        contact.GetFixtureB().GetBody().WakeUp();
@@ -210,43 +210,43 @@ namespace Box2DX.Dynamics
 
 	    public Contact(Fixture fixtureA, Fixture fixtureB)
         {
-            _flags = 0;
+            Flags = 0;
 
 	        if (fixtureA.IsSensor || fixtureB.IsSensor)
 	        {
-		        _flags |= ContactFlag.NonSolidFlag;
+		        Flags |= ContactFlag.NonSolidFlag;
 	        }
 
 	        _fixtureA = fixtureA;
 	        _fixtureB = fixtureB;
 
-	        _manifold.m_pointCount = 0;
+	        Manifold.PointCount = 0;
 
-	        _prev = null;
-	        _next = null;
+	        Prev = null;
+	        Next = null;
 
-	        _nodeA.Contact = null;
-	        _nodeA.Prev = null;
-	        _nodeA.Next = null;
-	        _nodeA.Other = null;
+	        NodeA.Contact = null;
+	        NodeA.Prev = null;
+	        NodeA.Next = null;
+	        NodeA.Other = null;
 
-	        _nodeB.Contact = null;
-	        _nodeB.Prev = null;
-	        _nodeB.Next = null;
-	        _nodeB.Other = null;
+	        NodeB.Contact = null;
+	        NodeB.Prev = null;
+	        NodeB.Next = null;
+	        NodeB.Other = null;
         }
 
 	    public void Update(ContactListener listener)
         {
-            Manifold oldManifold = _manifold;
+            Manifold oldManifold = Manifold;
 
 	        Evaluate();
 
 	        Body bodyA = _fixtureA.GetBody();
 	        Body bodyB = _fixtureB.GetBody();
 
-	        int oldCount = oldManifold.m_pointCount;
-	        int newCount = _manifold.m_pointCount;
+	        int oldCount = oldManifold.PointCount;
+	        int newCount = Manifold.PointCount;
 
 	        if (newCount == 0 && oldCount > 0)
 	        {
@@ -257,30 +257,30 @@ namespace Box2DX.Dynamics
 	        // Slow contacts don't generate TOI events.
 	        if (bodyA.IsStatic() || bodyA.IsBullet() || bodyB.IsStatic() || bodyB.IsBullet())
 	        {
-		        _flags &= ContactFlag.SlowFlag;
+		        Flags &= ContactFlag.SlowFlag;
 	        }
 	        else
 	        {
-		        _flags |= ContactFlag.SlowFlag;
+		        Flags |= ContactFlag.SlowFlag;
 	        }
 
 	        // Match old contact ids to new contact ids and copy the
 	        // stored impulses to warm start the solver.
-	        for (int i = 0; i < _manifold.m_pointCount; ++i)
+	        for (int i = 0; i < Manifold.PointCount; ++i)
 	        {
-		        ManifoldPoint mp2 = _manifold.m_points + i;
-		        mp2.m_normalImpulse = 0.0f;
-		        mp2.m_tangentImpulse = 0.0f;
-		        ContactID id2 = mp2.m_id;
+		        ManifoldPoint mp2 = Manifold.Points[i];
+		        mp2.NormalImpulse = 0.0f;
+		        mp2.TangentImpulse = 0.0f;
+		        ContactID id2 = mp2.ID;
 
-		        for (int j = 0; j < oldManifold.m_pointCount; ++j)
+		        for (int j = 0; j < oldManifold.PointCount; ++j)
 		        {
-			        ManifoldPoint mp1 = oldManifold.m_points + j;
+			        ManifoldPoint mp1 = oldManifold.Points[j];
 
-			        if (mp1.m_id.key == id2.Key)
+			        if (mp1.ID.Key == id2.Key)
 			        {
-				        mp2.m_normalImpulse = mp1.m_normalImpulse;
-				        mp2.m_tangentImpulse = mp1.m_tangentImpulse;
+				        mp2.NormalImpulse = mp1.NormalImpulse;
+				        mp2.TangentImpulse = mp1.TangentImpulse;
 				        break;
 			        }
 		        }
@@ -288,24 +288,24 @@ namespace Box2DX.Dynamics
 
 	        if (oldCount == 0 && newCount > 0)
 	        {
-		        _flags |= ContactFlag.TouchFlag;
+		        Flags |= ContactFlag.TouchFlag;
 		        listener.BeginContact(this);
 	        }
 
 	        if (oldCount > 0 && newCount == 0)
 	        {
-		        _flags &= ContactFlag.TouchFlag;
+		        Flags &= ContactFlag.TouchFlag;
 		        listener.EndContact(this);
 	        }
 
-	        if ((_flags & ContactFlag.NonSolidFlag) == 0)
+	        if ((Flags & ContactFlag.NonSolidFlag) == 0)
 	        {
 		        listener.PreSolve(this, oldManifold);
 
 		        // The user may have disabled contact.
-		        if (_manifold.m_pointCount == 0)
+		        if (Manifold.PointCount == 0)
 		        {
-			        _flags &= ContactFlag.TouchFlag;
+			        Flags &= ContactFlag.TouchFlag;
 		        }
 	        }
         }

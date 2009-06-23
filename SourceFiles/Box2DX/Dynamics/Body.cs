@@ -386,7 +386,7 @@ namespace Box2DX.Dynamics
 	        // If the body type changed, we need to refilter the broad-phase proxies.
 	        if (oldType != _type)
 	        {
-		        for (Fixture f = _fixtureList; f; f = f.Next)
+		        for (Fixture f = _fixtureList; f != null; f = f.Next)
 		        {
 			        f.RefilterProxy(_world._broadPhase, _xf);
 		        }
