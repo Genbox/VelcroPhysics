@@ -19,10 +19,6 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Box2DX.Common;
 
 namespace Box2DX.Dynamics
@@ -310,7 +306,7 @@ namespace Box2DX.Dynamics
 		internal void ComputeXForm(ref XForm xf, Vec2 center, Vec2 localCenter, float angle)
 		{
 			xf.R.Set(angle);
-			xf.Position = center - Box2DX.Common.Math.Mul(xf.R, localCenter);
+			xf.Position = center - Math.Mul(xf.R, localCenter);
 		}
 	}
 }
