@@ -34,10 +34,6 @@
 // K = J * invM * JT
 //   = invMass1 + invI1 * cross(r1, u)^2 + invMass2 + invI2 * cross(r2, u)^2
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Box2DX.Common;
 
 namespace Box2DX.Dynamics
@@ -136,6 +132,7 @@ namespace Box2DX.Dynamics
 
 		public override float GetReactionTorque(float inv_dt)
 		{
+            //B2_NOT_USED(inv_dt);
 			return 0.0f;
 		}
 
@@ -158,8 +155,8 @@ namespace Box2DX.Dynamics
 			Body b2 = _body2;
 
 			// Compute the effective mass matrix.
-			Vec2 r1 = Common.Math.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-			Vec2 r2 = Common.Math.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+			Vec2 r1 = Math.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+			Vec2 r2 = Math.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
 			_u = b2._sweep.C + r2 - b1._sweep.C - r1;
 
 			// Handle singularity.
@@ -203,6 +200,7 @@ namespace Box2DX.Dynamics
 			{
 				//Scale the inpulse to support a variable timestep.
 				_impulse *= step.DtRatio;
+
 				Vec2 P = _impulse * _u;
 				b1._linearVelocity -= b1._invMass * P;
 				b1._angularVelocity -= b1._invI * Vec2.Cross(r1, P);
@@ -217,6 +215,8 @@ namespace Box2DX.Dynamics
 
 		internal override bool SolvePositionConstraints(float baumgarte)
 		{
+            //B2_NOT_USED(baumgarte);
+
 			if (_frequencyHz > 0.0f)
 			{
 				//There is no possition correction for soft distace constraint.
@@ -226,14 +226,14 @@ namespace Box2DX.Dynamics
 			Body b1 = _body1;
 			Body b2 = _body2;
 
-			Vec2 r1 = Common.Math.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-			Vec2 r2 = Common.Math.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+			Vec2 r1 = Math.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+			Vec2 r2 = Math.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
 
 			Vec2 d = b2._sweep.C + r2 - b1._sweep.C - r1;
 
 			float length = d.Normalize();
 			float C = length - _length;
-			C = Common.Math.Clamp(C, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
+			C = Math.Clamp(C, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
 
 			float impulse = -_mass * C;
 			_u = d;
@@ -257,13 +257,14 @@ namespace Box2DX.Dynamics
 			Body b1 = _body1;
 			Body b2 = _body2;
 
-			Vec2 r1 = Common.Math.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-			Vec2 r2 = Common.Math.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+			Vec2 r1 = Math.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+			Vec2 r2 = Math.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
 
 			// Cdot = dot(u, v + cross(w, r))
 			Vec2 v1 = b1._linearVelocity + Vec2.Cross(b1._angularVelocity, r1);
 			Vec2 v2 = b2._linearVelocity + Vec2.Cross(b2._angularVelocity, r2);
 			float Cdot = Vec2.Dot(_u, v2 - v1);
+
 			float impulse = -_mass * (Cdot + _bias + _gamma * _impulse);
 			_impulse += impulse;
 

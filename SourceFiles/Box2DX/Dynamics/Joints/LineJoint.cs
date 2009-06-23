@@ -79,10 +79,6 @@
 // Now compute impulse to be applied:
 // df = f2 - f1
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Box2DX.Common;
 
 namespace Box2DX.Dynamics
@@ -399,8 +395,8 @@ namespace Box2DX.Dynamics
 			XForm xf2 = b2.GetXForm();
 
 			// Compute the effective masses.
-			Vec2 r1 = Box2DX.Common.Math.Mul(xf1.R, _localAnchor1 - _localCenter1);
-			Vec2 r2 = Box2DX.Common.Math.Mul(xf2.R, _localAnchor2 - _localCenter2);
+			Vec2 r1 = Math.Mul(xf1.R, _localAnchor1 - _localCenter1);
+			Vec2 r2 = Math.Mul(xf2.R, _localAnchor2 - _localCenter2);
 			Vec2 d = b2._sweep.C + r2 - b1._sweep.C - r1;
 
 			_invMass1 = b1._invMass;
@@ -410,7 +406,7 @@ namespace Box2DX.Dynamics
 
 			// Compute motor Jacobian and effective mass.
 			{
-				_axis = Box2DX.Common.Math.Mul(xf1.R, _localXAxis1);
+				_axis = Math.Mul(xf1.R, _localXAxis1);
 				_a1 = Vec2.Cross(d + r1, _axis);
 				_a2 = Vec2.Cross(r2, _axis);
 
@@ -421,7 +417,7 @@ namespace Box2DX.Dynamics
 
 			// Prismatic constraint.
 			{
-				_perp = Box2DX.Common.Math.Mul(xf1.R, _localYAxis1);
+				_perp = Math.Mul(xf1.R, _localYAxis1);
 
 				_s1 = Vec2.Cross(d + r1, _perp);
 				_s2 = Vec2.Cross(r2, _perp);
@@ -441,7 +437,7 @@ namespace Box2DX.Dynamics
 			if (_enableLimit)
 			{
 				float jointTranslation = Vec2.Dot(_axis, d);
-				if (Box2DX.Common.Math.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
+				if (Math.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
 				{
 					_limitState = LimitState.EqualLimits;
 				}
@@ -517,7 +513,7 @@ namespace Box2DX.Dynamics
 				float impulse = _motorMass * (_motorSpeed - Cdot);
 				float oldImpulse = _motorImpulse;
 				float maxImpulse = step.Dt * _maxMotorForce;
-				_motorImpulse = Box2DX.Common.Math.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
+				_motorImpulse = Math.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
 				impulse = _motorImpulse - oldImpulse;
 
 				Vec2 P = impulse * _axis;
@@ -545,11 +541,11 @@ namespace Box2DX.Dynamics
 
 				if (_limitState == LimitState.AtLowerLimit)
 				{
-					_impulse.Y = Box2DX.Common.Math.Max(_impulse.Y, 0.0f);
+					_impulse.Y = Math.Max(_impulse.Y, 0.0f);
 				}
 				else if (_limitState == LimitState.AtUpperLimit)
 				{
-					_impulse.Y = Box2DX.Common.Math.Min(_impulse.Y, 0.0f);
+					_impulse.Y = Math.Min(_impulse.Y, 0.0f);
 				}
 
 				// f2(1) = invK(1,1) * (-Cdot(1) - K(1,2) * (f2(2) - f1(2))) + f1(1)
@@ -610,42 +606,42 @@ namespace Box2DX.Dynamics
 
 			Mat22 R1 = new Mat22(a1), R2 = new Mat22(a2);
 
-			Vec2 r1 = Box2DX.Common.Math.Mul(R1, _localAnchor1 - _localCenter1);
-			Vec2 r2 = Box2DX.Common.Math.Mul(R2, _localAnchor2 - _localCenter2);
+			Vec2 r1 = Math.Mul(R1, _localAnchor1 - _localCenter1);
+			Vec2 r2 = Math.Mul(R2, _localAnchor2 - _localCenter2);
 			Vec2 d = c2 + r2 - c1 - r1;
 
 			if (_enableLimit)
 			{
-				_axis = Box2DX.Common.Math.Mul(R1, _localXAxis1);
+				_axis = Math.Mul(R1, _localXAxis1);
 
 				_a1 = Vec2.Cross(d + r1, _axis);
 				_a2 = Vec2.Cross(r2, _axis);
 
 				float translation = Vec2.Dot(_axis, d);
-				if (Box2DX.Common.Math.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
+				if (Math.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
 				{
 					// Prevent large angular corrections
-					C2 = Box2DX.Common.Math.Clamp(translation, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
-					linearError = Box2DX.Common.Math.Abs(translation);
+					C2 = Math.Clamp(translation, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
+					linearError = Math.Abs(translation);
 					active = true;
 				}
 				else if (translation <= _lowerTranslation)
 				{
 					// Prevent large linear corrections and allow some slop.
-					C2 = Box2DX.Common.Math.Clamp(translation - _lowerTranslation + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
+					C2 = Math.Clamp(translation - _lowerTranslation + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
 					linearError = _lowerTranslation - translation;
 					active = true;
 				}
 				else if (translation >= _upperTranslation)
 				{
 					// Prevent large linear corrections and allow some slop.
-					C2 = Box2DX.Common.Math.Clamp(translation - _upperTranslation - Settings.LinearSlop, 0.0f, Settings.MaxLinearCorrection);
+					C2 = Math.Clamp(translation - _upperTranslation - Settings.LinearSlop, 0.0f, Settings.MaxLinearCorrection);
 					linearError = translation - _upperTranslation;
 					active = true;
 				}
 			}
 
-			_perp = Box2DX.Common.Math.Mul(R1, _localYAxis1);
+			_perp = Math.Mul(R1, _localYAxis1);
 
 			_s1 = Vec2.Cross(d + r1, _perp);
 			_s2 = Vec2.Cross(r2, _perp);
@@ -654,7 +650,7 @@ namespace Box2DX.Dynamics
 			float C1;
 			C1 = Vec2.Dot(_perp, d);
 
-			linearError = Box2DX.Common.Math.Max(linearError, Box2DX.Common.Math.Abs(C1));
+			linearError = Math.Max(linearError, Math.Abs(C1));
 			angularError = 0.0f;
 
 			if (active)
