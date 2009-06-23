@@ -652,21 +652,23 @@ namespace Box2DX.Dynamics
 		/// <param name="solidShapes">Determines if shapes that the ray starts in are counted as hits.</param>
 		/// <param name="userData">Passed through the worlds contact filter, with method RayCollide. This can be used to filter valid shapes.</param>
 		/// <returns>The number of shapes found</returns>
-		public int Raycast(Segment segment, Shape[] shapes, int maxCount, bool solidShapes, object userData)
+		public int Raycast(Segment segment, out Fixture[] fixtures, int maxCount, bool solidShapes, object userData)
 		{
 #warning "PTR"
-			_raycastSegment = segment;
-			_raycastUserData = userData;
-			_raycastSolidShape = solidShapes;
+            _raycastSegment = segment;
+            _raycastUserData = userData;
+            _raycastSolidShape = solidShapes;
 
-			object[] results = new object[maxCount];
-			int count = _broadPhase.QuerySegment(segment, results, maxCount, RaycastSortKey);
-			for (int i = 0; i < count; ++i)
-			{
-				shapes[i] = (Shape)results[i];
-			}
-			results = null;
-			return count;
+            object[] results = new object[maxCount];
+            fixtures = new Fixture[maxCount];
+            int count = _broadPhase.QuerySegment(segment, results, maxCount, RaycastSortKey);
+
+            for (int i = 0; i < count; ++i)
+            {
+                fixtures[i] = (Fixture)results[i];
+            }
+
+            return count;
 		}
 
 		/// <summary>
@@ -680,27 +682,25 @@ namespace Box2DX.Dynamics
 		/// <param name="solidShapes">Determines if shapes that the ray starts in are counted as hits.</param>
 		/// <param name="userData"></param>
 		/// <returns>Returns the colliding shape shape, or null if not found.</returns>
-		public Shape RaycastOne(Segment segment, out float lambda, out Vec2 normal, bool solidShapes, object userData)
+		public Fixture RaycastOne(Segment segment, out float lambda, out Vec2 normal, bool solidShapes, object userData)
 		{
-			lambda = 0;
-			normal = new Vec2(0, 0);
+            int maxCount = 1;
+            Fixture[] fixture;
+            lambda = 0.0f;
+            normal = new Vec2();
 
-			int maxCount = 1;
-			Shape[] shape = new Shape[maxCount];
+            int count = Raycast(segment, out fixture, maxCount, solidShapes, userData);
 
-			int count = Raycast(segment, shape, maxCount, solidShapes, userData);
+            if (count == 0)
+                return null;
 
-			if (count == 0)
-				return null;
+            Box2DXDebug.Assert(count == 1);
 
-			Box2DXDebug.Assert(count == 1);
+            //Redundantly do TestSegment a second time, as the previous one's results are inaccessible
 
-			//Redundantly do TestSegment a second time, as the previous one's results are inaccessible
-
-			XForm xf = shape[0].GetBody().GetXForm();
-			shape[0].TestSegment(xf, out lambda, out normal, segment, 1);
-			//We already know it returns true
-			return shape[0];
+            fixture[0].TestSegment(out lambda, out normal, segment, 1);
+            //We already know it returns true
+            return fixture[0];
 		}
 
 		// Find islands, integrate and solve constraints, solve position constraints
@@ -718,11 +718,11 @@ namespace Box2DX.Dynamics
 			// Clear all the island flags.
 			for (Body b = _bodyList; b != null; b = b._next)
 			{
-				b._flags &= ~Body.BodyFlags.Island;
+				b._flags &= Body.BodyFlags.Island;
 			}
-			for (Contact c = _contactList; c != null; c = c._next)
+			for (Contact c = _contactList; c != null; c = c.Next)
 			{
-				c._flags &= ~Contact.CollisionFlags.Island;
+                c.Flags &= ContactFlag.IslandFlag;
 			}
 			for (Joint j = _jointList; j != null; j = j._next)
 			{
@@ -773,19 +773,19 @@ namespace Box2DX.Dynamics
 						for (ContactEdge cn = b._contactList; cn != null; cn = cn.Next)
 						{
 							// Has this contact already been added to an island?
-							if ((cn.Contact._flags & (Contact.CollisionFlags.Island | Contact.CollisionFlags.NonSolid)) != 0)
+                            if ((cn.Contact.Flags & (ContactFlag.IslandFlag | ContactFlag.NonSolidFlag)) != 0)
 							{
 								continue;
 							}
 
 							// Is this contact touching?
-							if (cn.Contact.GetManifoldCount() == 0)
+							if ((cn.Contact.Flags & ContactFlag.TouchFlag) == (ContactFlag)0)
 							{
 								continue;
 							}
 
 							island.Add(cn.Contact);
-							cn.Contact._flags |= Contact.CollisionFlags.Island;
+							cn.Contact.Flags |= ContactFlag.IslandFlag;
 
 							Body other = cn.Other;
 
@@ -874,316 +874,320 @@ namespace Box2DX.Dynamics
 		private void SolveTOI(TimeStep step)
 		{
 			// Reserve an island and a queue for TOI island solution.
-			Island island = new Island(_bodyCount, Settings.MaxTOIContactsPerIsland, Settings.MaxTOIJointsPerIsland, _contactListener);
+	        Island island = new Island(_bodyCount, Settings.MaxTOIContactsPerIsland, Settings.MaxTOIJointsPerIsland, _contactListener);
+        	
+	        //Simple one pass queue
+	        //Relies on the fact that we're only making one pass
+	        //through and each body can only be pushed/popped once.
+	        //To push: 
+	        //  queue[queueStart+queueSize++] = newElement;
+	        //To pop: 
+	        //	poppedElement = queue[queueStart++];
+	        //  --queueSize;
+	        int queueCapacity = _bodyCount;
+	        Body[] queue = new Body[queueCapacity];
 
-			//Simple one pass queue
-			//Relies on the fact that we're only making one pass
-			//through and each body can only be pushed/popped once.
-			//To push: 
-			//  queue[queueStart+queueSize++] = newElement;
-			//To pop: 
-			//	poppedElement = queue[queueStart++];
-			//  --queueSize;
-			int queueCapacity = _bodyCount;
-			Body[] queue = new Body[queueCapacity];
-			for (Body b = _bodyList; b != null; b = b._next)
-			{
-				b._flags &= ~Body.BodyFlags.Island;
-				b._sweep.T0 = 0.0f;
-			}
+	        for (Body b = _bodyList; b != null; b = b._next)
+	        {
+		        b._flags &= Body.BodyFlags.Island;
+		        b._sweep.T0 = 0.0f;
+	        }
 
-			for (Contact c = _contactList; c != null; c = c._next)
-			{
-				// Invalidate TOI
-				c._flags &= ~(Contact.CollisionFlags.Toi | Contact.CollisionFlags.Island);
-			}
+	        for (Contact c = _contactList; c != null; c = c.Next)
+	        {
+		        // Invalidate TOI
+		        c.Flags &= (ContactFlag.ToiFlag | ContactFlag.IslandFlag);
+	        }
 
-#if B2_TOI_JOINTS
-			for (Joint j = _jointList; j!=null; j = j._next)
-			{
-					j._islandFlag = false;
-			}
-#endif
+	        for (Joint j = _jointList; j != null; j = j._next)
+	        {
+                    j._islandFlag = false;
+	        }
 
-			// Find TOI events and solve them.
-			for (; ; )
-			{
-				// Find the first TOI.
-				Contact minContact = null;
-				float minTOI = 1.0f;
+	        // Find TOI events and solve them.
+	        for (;;)
+	        {
+		        // Find the first TOI.
+		        Contact minContact = null;
+		        float minTOI = 1.0f;
 
-				for (Contact c = _contactList; c != null; c = c._next)
-				{
-					if ((c._flags & (Contact.CollisionFlags.Slow | Contact.CollisionFlags.NonSolid)) != 0)
-					{
-						continue;
-					}
+		        for (Contact c = _contactList; c != null; c = c.Next)
+		        {
+			        if ((int)(c.Flags & (ContactFlag.SlowFlag | ContactFlag.NonSolidFlag)) == 1)
+			        {
+				        continue;
+			        }
 
-					// TODO_ERIN keep a counter on the contact, only respond to M TOIs per contact.
+			        // TODO_ERIN keep a counter on the contact, only respond to M TOIs per contact.
 
-					float toi = 1.0f;
-					if ((c._flags & Contact.CollisionFlags.Toi) != 0)
-					{
-						// This contact has a valid cached TOI.
-						toi = c._toi;
-					}
-					else
-					{
-						// Compute the TOI for this contact.
-						Fixture s1_ = c.GetFixtureA();
-						Fixture s2_ = c.GetFixtureB();
-						Body b1_ = s1_.GetBody();
-						Body b2_ = s2_.GetBody();
+			        float toi = 1.0f;
+			        if ((int)(c.Flags & ContactFlag.ToiFlag) == 1)
+			        {
+				        // This contact has a valid cached TOI.
+				        toi = c.Toi;
+			        }
+			        else
+			        {
+				        // Compute the TOI for this contact.
+				        Fixture s1 = c.GetFixtureA();
+				        Fixture s2 = c.GetFixtureB();
+				        Body b1 = s1.GetBody();
+				        Body b2 = s2.GetBody();
 
-						if ((b1_.IsStatic() || b1_.IsSleeping()) && (b2_.IsStatic() || b2_.IsSleeping()))
-						{
-							continue;
-						}
+				        if ((b1.IsStatic() || b1.IsSleeping()) && (b2.IsStatic() || b2.IsSleeping()))
+				        {
+					        continue;
+				        }
 
-						// Put the sweeps onto the same time interval.
-						float t0 = b1_._sweep.T0;
+				        // Put the sweeps onto the same time interval.
+				        float t0 = b1._sweep.T0;
+        				
+				        if (b1._sweep.T0 < b2._sweep.T0)
+				        {
+					        t0 = b2._sweep.T0;
+					        b1._sweep.Advance(t0);
+				        }
+				        else if (b2._sweep.T0 < b1._sweep.T0)
+				        {
+					        t0 = b1._sweep.T0;
+					        b2._sweep.Advance(t0);
+				        }
 
-						if (b1_._sweep.T0 < b2_._sweep.T0)
-						{
-							t0 = b2_._sweep.T0;
-							b1_._sweep.Advance(t0);
-						}
-						else if (b2_._sweep.T0 < b1_._sweep.T0)
-						{
-							t0 = b1_._sweep.T0;
-							b2_._sweep.Advance(t0);
-						}
+				        Box2DXDebug.Assert(t0 < 1.0f);
 
-						Box2DXDebug.Assert(t0 < 1.0f);
+				        // Compute the time of impact.
+				        toi = c.ComputeTOI(b1._sweep, b2._sweep);
+				        //b2TimeOfImpact(c->m_fixtureA->GetShape(), b1->m_sweep, c->m_fixtureB->GetShape(), b2->m_sweep);
 
-						// Compute the time of impact.
-						toi = Collision.Collision.TimeOfImpact(c._shape1, b1_._sweep, c._shape2, b2_._sweep);
-						Box2DXDebug.Assert(0.0f <= toi && toi <= 1.0f);
+				        Box2DXDebug.Assert(0.0f <= toi && toi <= 1.0f);
 
-						if (toi > 0.0f && toi < 1.0f)
-						{
-							toi = Common.Math.Min((1.0f - toi) * t0 + toi, 1.0f);
-						}
+				        // If the TOI is in range ...
+				        if (0.0f < toi && toi < 1.0f)
+				        {
+					        // Interpolate on the actual range.
+					        toi = Common.Math.Min((1.0f - toi) * t0 + toi, 1.0f);
+				        }
 
 
-						c._toi = toi;
-						c._flags |= Contact.CollisionFlags.Toi;
-					}
+				        c.Toi = toi;
+				        c.Flags |= ContactFlag.ToiFlag;
+			        }
 
-					if (Common.Settings.FLT_EPSILON < toi && toi < minTOI)
-					{
-						// This is the minimum TOI found so far.
-						minContact = c;
-						minTOI = toi;
-					}
-				}
+			        if (Settings.FLT_EPSILON < toi && toi < minTOI)
+			        {
+				        // This is the minimum TOI found so far.
+				        minContact = c;
+				        minTOI = toi;
+			        }
+		        }
 
-				if (minContact == null || 1.0f - 100.0f * Common.Settings.FLT_EPSILON < minTOI)
-				{
-					// No more TOI events. Done!
-					break;
-				}
+		        if (minContact == null || 1.0f - 100.0f * Settings.FLT_EPSILON < minTOI)
+		        {
+			        // No more TOI events. Done!
+			        break;
+		        }
 
-				// Advance the bodies to the TOI.
-				Fixture s1 = minContact.GetFixtureA();
-				Fixture s2 = minContact.GetFixtureB();
-				Body b1 = s1.GetBody();
-				Body b2 = s2.GetBody();
-				b1.Advance(minTOI);
-				b2.Advance(minTOI);
+		        // Advance the bodies to the TOI.
+		        Fixture f1 = minContact.GetFixtureA();
+		        Fixture f2 = minContact.GetFixtureB();
+		        Body b3 = f1.GetBody();
+		        Body b4 = f2.GetBody();
+		        b3.Advance(minTOI);
+		        b4.Advance(minTOI);
 
-				// The TOI contact likely has some new contact points.
-				minContact.Update(_contactListener);
-				minContact._flags &= ~Contact.CollisionFlags.Toi;
+		        // The TOI contact likely has some new contact points.
+		        minContact.Update(_contactListener);
+		        minContact.Flags &= ContactFlag.ToiFlag;
 
-				if (minContact.GetManifoldCount() == 0)
-				{
-					// This shouldn't happen. Numerical error?
-					//b2Assert(false);
-					continue;
-				}
+		        if ((minContact.Flags & ContactFlag.TouchFlag) == 0)
+		        {
+			        // This shouldn't happen. Numerical error?
+			        //b2Assert(false);
+			        continue;
+		        }
 
-				// Build the TOI island. We need a dynamic seed.
-				Body seed = b1;
-				if (seed.IsStatic())
-				{
-					seed = b2;
-				}
+		        // Build the TOI island. We need a dynamic seed.
+		        Body seed = b3;
+		        if (seed.IsStatic())
+		        {
+			        seed = b4;
+		        }
 
-				// Reset island and queue.
-				island.Clear();
+		        // Reset island and queue.
+		        island.Clear();
+        		
+		        int queueStart = 0; // starting index for queue
+		        int queueSize = 0;  // elements in queue
+		        queue[queueStart + queueSize++] = seed;
+		        seed._flags |= Body.BodyFlags.Island;
 
-				int queueStart = 0; //starting index for queue
-				int queueSize = 0;  //elements in queue
-				queue[queueStart + queueSize++] = seed;
-				seed._flags |= Body.BodyFlags.Island;
+		        // Perform a breadth first search (BFS) on the contact/joint graph.
+		        while (queueSize > 0)
+		        {
+			        // Grab the next body off the stack and add it to the island.
+			        Body b = queue[queueStart++];
+			        --queueSize;
+        			
+			        island.Add(b);
 
-				// Perform a breadth first search (BFS) on the contact/joint graph.
-				while (queueSize > 0)
-				{
-					// Grab the next body off the stack and add it to the island.
-					Body b = queue[queueStart++];
-					--queueSize;
-					island.Add(b);
+			        // Make sure the body is awake.
+			        b._flags &= Body.BodyFlags.Sleep;
 
-					// Make sure the body is awake.
-					b._flags &= ~Body.BodyFlags.Sleep;
+			        // To keep islands as small as possible, we don't
+			        // propagate islands across static bodies.
+			        if (b.IsStatic())
+			        {
+				        continue;
+			        }
 
-					// To keep islands as small as possible, we don't
-					// propagate islands across static bodies.
-					if (b.IsStatic())
-					{
-						continue;
-					}
+			        // Search all contacts connected to this body.
+			        for (ContactEdge cEdge = b._contactList; cEdge != null; cEdge = cEdge.Next)
+			        {
+				        // Does the TOI island still have space for contacts?
+				        if (island._contactCount == island._contactCapacity)
+				        {
+					        continue;
+				        }
 
-					// Search all contacts connected to this body.
-					for (ContactEdge cn = b._contactList; cn != null; cn = cn.Next)
-					{
-						// Does the TOI island still have space for contacts?
-						if (island._contactCount == island._contactCapacity)
-						{
-							continue;
-						}
+				        // Has this contact already been added to an island? Skip slow or non-solid contacts.
+				        if ((int)(cEdge.Contact.Flags & (ContactFlag.IslandFlag | ContactFlag.SlowFlag | ContactFlag.NonSolidFlag)) == 1)
+				        {
+					        continue;
+				        }
 
-						// Has this contact already been added to an island? Skip slow or non-solid contacts.
-						if ((cn.Contact._flags & (Contact.CollisionFlags.Island | Contact.CollisionFlags.Slow | Contact.CollisionFlags.NonSolid)) != 0)
-						{
-							continue;
-						}
+				        // Is this contact touching? For performance we are not updating this contact.
+				        if ((cEdge.Contact.Flags & ContactFlag.TouchFlag) == 0)
+				        {
+					        continue;
+				        }
 
-						// Is this contact touching? For performance we are not updating this contact.
-						if (cn.Contact.GetManifoldCount() == 0)
-						{
-							continue;
-						}
+				        island.Add(cEdge.Contact);
+				        cEdge.Contact.Flags |= ContactFlag.IslandFlag;
 
-						island.Add(cn.Contact);
-						cn.Contact._flags |= Contact.CollisionFlags.Island;
+				        // Update other body.
+				        Body other = cEdge.Other;
 
-						// Update other body.
-						Body other = cn.Other;
+				        // Was the other body already added to this island?
+				        if ((int)(other._flags & Body.BodyFlags.Island) == 1)
+				        {
+					        continue;
+				        }
 
-						// Was the other body already added to this island?
-						if ((other._flags & Body.BodyFlags.Island) != 0)
-						{
-							continue;
-						}
+				        // March forward, this can do no harm since this is the min TOI.
+				        if (other.IsStatic() == false)
+				        {
+					        other.Advance(minTOI);
+					        other.WakeUp();
+				        }
 
-						// March forward, this can do no harm since this is the min TOI.
-						if (other.IsStatic() == false)
-						{
-							other.Advance(minTOI);
-							other.WakeUp();
-						}
+				        Box2DXDebug.Assert(queueStart + queueSize < queueCapacity);
+				        queue[queueStart + queueSize] = other;
+				        ++queueSize;
+				        other._flags |= Body.BodyFlags.Island;
+			        }
+        			
+			        for (JointEdge jEdge = b._jointList; jEdge != null; jEdge = jEdge.Next)
+			        {
+				        if (island._jointCount == island._jointCapacity)
+				        {
+					        continue;
+				        }
+        				
+				        if (jEdge.Joint._islandFlag == true)
+				        {
+					        continue;
+				        }
+        				
+				        island.Add(jEdge.Joint);
+        				
+				        jEdge.Joint._islandFlag = true;
+        				
+				        Body other = jEdge.Other;
+        				
+				        if ((int)(other._flags & Body.BodyFlags.Island) == 1)
+				        {
+					        continue;
+				        }
+        				
+				        if (!other.IsStatic())
+				        {
+					        other.Advance(minTOI);
+					        other.WakeUp();
+				        }
+        				
+				        Box2DXDebug.Assert(queueStart + queueSize < queueCapacity);
+				        queue[queueStart + queueSize] = other;
+				        ++queueSize;
+				        other._flags |= Body.BodyFlags.Island;
+			        }
+		        }
 
-						Box2DXDebug.Assert(queueStart + queueSize < queueCapacity);
-						queue[queueStart + queueSize++] = other;
-						other._flags |= Body.BodyFlags.Island;
-					}
+		        TimeStep subStep;
+		        subStep.WarmStarting = false;
+		        subStep.Dt = (1.0f - minTOI) * step.Dt;
+		        subStep.Inv_Dt = 1.0f / subStep.Dt;
+		        subStep.DtRatio = 0.0f;
+		        subStep.VelocityIterations = step.VelocityIterations;
+		        subStep.PositionIterations = step.PositionIterations;
 
-#if B2_TOI_JOINTS
-					for (JointEdge jn = b._jointList; jn!=null; jn = jn.Next)
-					{
-						if (island._jointCount == island._jointCapacity)
-						{
-							continue;
-						}
-						
-						if (jn.Joint._islandFlag == true)
-						{
-							continue;
-						}
-						
-						island.Add(jn.Joint);
-						
-						jn.Joint._islandFlag = true;
-						
-						Body other = jn.Other;
-						
-						if (other._flags & Body.BodyFlags.Island)
-						{
-							continue;
-						}
-						
-						if (!other.IsStatic())
-						{
-							other.Advance(minTOI);
-							other.WakeUp();
-						}
-						
-						Box2DXDebug.Assert(queueStart + queueSize < queueCapacity);
-						queue[queueStart + queueSize++] = other;
-						other._flags |= Body.BodyFlags.Island; 
-					}
-#endif
-				}
+		        island.SolveTOI(ref subStep);
 
-				TimeStep subStep = new TimeStep();
-				subStep.WarmStarting = false;
-				subStep.Dt = (1.0f - minTOI) * step.Dt;
-				Box2DXDebug.Assert(subStep.Dt > Common.Settings.FLT_EPSILON);
-				subStep.Inv_Dt = 1.0f / subStep.Dt;
-				subStep.VelocityIterations = step.VelocityIterations;
-				subStep.PositionIterations = step.PositionIterations;
+		        // Post solve cleanup.
+		        for (int i = 0; i < island._bodyCount; ++i)
+		        {
+			        // Allow bodies to participate in future TOI islands.
+			        Body b = island._bodies[i];
+			        b._flags &= Body.BodyFlags.Island;
 
-				island.SolveTOI(ref subStep);
+			        if ((int)(b._flags & (Body.BodyFlags.Sleep | Body.BodyFlags.Frozen)) == 1)
+			        {
+				        continue;
+			        }
 
-				// Post solve cleanup.
-				for (int i = 0; i < island._bodyCount; ++i)
-				{
-					// Allow bodies to participate in future TOI islands.
-					Body b = island._bodies[i];
-					b._flags &= ~Body.BodyFlags.Island;
+			        if (b.IsStatic())
+			        {
+				        continue;
+			        }
 
-					if ((b._flags & (Body.BodyFlags.Sleep | Body.BodyFlags.Frozen)) != 0)
-					{
-						continue;
-					}
+			        // Update fixtures (for broad-phase). If the fixtures go out of
+			        // the world AABB then fixtures and contacts may be destroyed,
+			        // including contacts that are
+			        bool inRange = b.SynchronizeFixtures();
 
-					if (b.IsStatic())
-					{
-						continue;
-					}
+			        // Did the body's fixtures leave the world?
+			        if (inRange == false && _boundaryListener != null)
+			        {
+				        _boundaryListener.Violation(b);
+			        }
 
-					// Update shapes (for broad-phase). If the shapes go out of
-					// the world AABB then shapes and contacts may be destroyed,
-					// including contacts that are
-					bool inRange = b.SynchronizeFixtures();
+			        // Invalidate all contact TOIs associated with this body. Some of these
+			        // may not be in the island because they were not touching.
+			        for (ContactEdge cn = b._contactList; cn != null; cn = cn.Next)
+			        {
+				        cn.Contact.Flags &= ContactFlag.ToiFlag;
+			        }
+		        }
 
-					// Did the body's shapes leave the world?
-					if (inRange == false && _boundaryListener != null)
-					{
-						_boundaryListener.Violation(b);
-					}
+		        for (int i = 0; i < island._contactCount; ++i)
+		        {
+			        // Allow contacts to participate in future TOI islands.
+			        Contact c = island._contacts[i];
+			        c.Flags &= ~(ContactFlag.ToiFlag | ContactFlag.IslandFlag);
+		        }
 
-					// Invalidate all contact TOIs associated with this body. Some of these
-					// may not be in the island because they were not touching.
-					for (ContactEdge cn = b._contactList; cn != null; cn = cn.Next)
-					{
-						cn.Contact._flags &= ~Contact.CollisionFlags.Toi;
-					}
-				}
+		        for (int i = 0; i < island._jointCount; ++i)
+		        {
+			        // Allow joints to participate in future TOI islands.
+			        Joint j = island._joints[i];
+			        j._islandFlag = false;
+		        }
+        		
+		        // Commit fixture proxy movements to the broad-phase so that new contacts are created.
+		        // Also, some contacts can be destroyed.
+		        _broadPhase.Commit();
+	        }
 
-				for (int i = 0; i < island._contactCount; ++i)
-				{
-					// Allow contacts to participate in future TOI islands.
-					Contact c = island._contacts[i];
-					c._flags &= ~(Contact.CollisionFlags.Toi | Contact.CollisionFlags.Island);
-				}
-
-				for (int i = 0; i < island._jointCount; ++i)
-				{
-					// Allow joints to participate in future TOI islands.
-					Joint j = island._joints[i];
-					j._islandFlag = false;
-				}
-
-				// Commit shape proxy movements to the broad-phase so that new contacts are created.
-				// Also, some contacts can be destroyed.
-				_broadPhase.Commit();
-			}
-
-			queue = null;
+            queue = null;
 		}
 
 		private void DrawJoint(Joint joint)

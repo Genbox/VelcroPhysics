@@ -544,7 +544,7 @@ namespace Box2DX.Dynamics
 
                 ContactConstraint cc = constraints[i];
 
-                ContactImpulse impulse;
+                ContactImpulse impulse = new ContactImpulse();
                 for (int j = 0; j < cc.PointCount; ++j)
                 {
                     impulse.normalImpulses[j] = cc.Points[j].NormalImpulse;

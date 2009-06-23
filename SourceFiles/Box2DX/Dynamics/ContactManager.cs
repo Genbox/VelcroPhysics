@@ -86,45 +86,45 @@ namespace Box2DX.Dynamics
 			}
 
 			// Contact creation may swap shapes.
-			fixtureA = c.GetShape1();
-			fixtureB = c.GetShape2();
+			fixtureA = c.GetFixtureA();
+			fixtureB = c.GetFixtureB();
 			body1 = fixtureA.GetBody();
 			body2 = fixtureB.GetBody();
 
 			// Insert into the world.
-			c._prev = null;
-			c._next = _world._contactList;
+			c.Prev = null;
+			c.Next = _world._contactList;
 			if (_world._contactList != null)
 			{
-				_world._contactList._prev = c;
+				_world._contactList.Prev = c;
 			}
 			_world._contactList = c;
 
 			// Connect to island graph.
 
 			// Connect to body 1
-			c._node1.Contact = c;
-			c._node1.Other = body2;
+			c.NodeA.Contact = c;
+			c.NodeA.Other = body2;
 
-			c._node1.Prev = null;
-			c._node1.Next = body1._contactList;
+            c.NodeA.Prev = null;
+            c.NodeA.Next = body1._contactList;
 			if (body1._contactList != null)
 			{
-				body1._contactList.Prev = c._node1;
+                body1._contactList.Prev = c.NodeA;
 			}
-			body1._contactList = c._node1;
+            body1._contactList = c.NodeA;
 
 			// Connect to body 2
-			c._node2.Contact = c;
-			c._node2.Other = body1;
+            c.NodeB.Contact = c;
+            c.NodeB.Other = body1;
 
-			c._node2.Prev = null;
-			c._node2.Next = body2._contactList;
+            c.NodeB.Prev = null;
+            c.NodeB.Next = body2._contactList;
 			if (body2._contactList != null)
 			{
-				body2._contactList.Prev = c._node2;
+                body2._contactList.Prev = c.NodeB;
 			}
-			body2._contactList = c._node2;
+            body2._contactList = c.NodeB;
 
 			++_world._contactCount;
 			return c;
@@ -155,62 +155,62 @@ namespace Box2DX.Dynamics
 
 		public void Destroy(Contact c)
 		{
-			Fixture fixtureA = c.GetShape1();
-			Fixture fixtureB = c.GetShape2();
+			Fixture fixtureA = c.GetFixtureA();
+			Fixture fixtureB = c.GetFixtureB();
 			Body body1 = fixtureA.GetBody();
 			Body body2 = fixtureB.GetBody();
 
-            if (c._manifold._pointCount > 0)
+            if (c.Manifold.PointCount > 0)
             {
                 _world._contactListener.EndContact(c);
             }
 
 			// Remove from the world.
-			if (c._prev != null)
+			if (c.Prev != null)
 			{
-				c._prev._next = c._next;
+				c.Prev.Next = c.Next;
 			}
 
-			if (c._next != null)
+			if (c.Next != null)
 			{
-				c._next._prev = c._prev;
+				c.Next.Prev = c.Prev;
 			}
 
 			if (c == _world._contactList)
 			{
-				_world._contactList = c._next;
+				_world._contactList = c.Next;
 			}
 
 			// Remove from body 1
-			if (c._node1.Prev != null)
+            if (c.NodeA.Prev != null)
 			{
-				c._node1.Prev.Next = c._node1.Next;
+                c.NodeA.Prev.Next = c.NodeA.Next;
 			}
 
-			if (c._node1.Next != null)
+            if (c.NodeA.Next != null)
 			{
-				c._node1.Next.Prev = c._node1.Prev;
+                c.NodeA.Next.Prev = c.NodeA.Prev;
 			}
 
-			if (c._node1 == body1._contactList)
+            if (c.NodeA == body1._contactList)
 			{
-				body1._contactList = c._node1.Next;
+                body1._contactList = c.NodeA.Next;
 			}
 
 			// Remove from body 2
-			if (c._node2.Prev != null)
+            if (c.NodeB.Prev != null)
 			{
-				c._node2.Prev.Next = c._node2.Next;
+                c.NodeB.Prev.Next = c.NodeB.Next;
 			}
 
-			if (c._node2.Next != null)
+            if (c.NodeB.Next != null)
 			{
-				c._node2.Next.Prev = c._node2.Prev;
+                c.NodeB.Next.Prev = c.NodeB.Prev;
 			}
 
-			if (c._node2 == body2._contactList)
+            if (c.NodeB == body2._contactList)
 			{
-				body2._contactList = c._node2.Next;
+                body2._contactList = c.NodeB.Next;
 			}
 
 			// Call the factory.
@@ -226,8 +226,8 @@ namespace Box2DX.Dynamics
 			// Update awake contacts.
 			for (Contact c = _world._contactList; c != null; c = c.GetNext())
 			{
-				Body body1 = c.GetShape1().GetBody();
-				Body body2 = c.GetShape2().GetBody();
+				Body body1 = c.GetFixtureA().GetBody();
+				Body body2 = c.GetFixtureB().GetBody();
 				if (body1.IsSleeping() && body2.IsSleeping())
 				{
 					continue;
