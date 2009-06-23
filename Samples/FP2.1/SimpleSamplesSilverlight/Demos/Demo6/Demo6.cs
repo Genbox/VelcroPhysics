@@ -74,7 +74,7 @@ namespace FarseerGames.SimpleSamplesSilverlight.Demos.Demo6
         public override void Initialize()
         {
             physicsSimulator = new PhysicsSimulator(new Vector2(0, 200));
-            physicsSimulator.MaxContactsToDetect = 2;
+            PhysicsSimulator.MaxContactsToDetect = 2;
             //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
             int borderWidth = (int) (ScreenManager.ScreenHeight*.05f);
             _border = new Border(ScreenManager.ScreenWidth + borderWidth*2, ScreenManager.ScreenHeight + borderWidth*2,

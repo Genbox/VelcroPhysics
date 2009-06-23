@@ -112,15 +112,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             //Initialize the contact lists
             if (_contactList == null)
             {
-                _contactList = new ContactList(physicsSimulator.MaxContactsToDetect);
+                _contactList = new ContactList(PhysicsSimulator.MaxContactsToDetect);
             }
             if (_newContactList == null)
             {
-                _newContactList = new ContactList(physicsSimulator.MaxContactsToDetect);
+                _newContactList = new ContactList(PhysicsSimulator.MaxContactsToDetect);
             }
             if (_mergedContactList == null)
             {
-                _mergedContactList = new ContactList(physicsSimulator.MaxContactsToDetect);
+                _mergedContactList = new ContactList(PhysicsSimulator.MaxContactsToDetect);
             }
         }
 
@@ -377,7 +377,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             _newContactList.Clear();
 
             //Call the narrow phase collider and get back the contacts
-            _physicsSimulator.NarrowPhaseCollider.Collide(GeometryA, GeometryB, _newContactList);
+            if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.DistanceGrid)
+                DistanceGrid.Instance.Collide(GeometryA, GeometryB, _newContactList);
+            if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.SAT)
+                SAT.Instance.Collide(GeometryA, GeometryB, _newContactList);
 
             contactCount = _newContactList.Count;
 

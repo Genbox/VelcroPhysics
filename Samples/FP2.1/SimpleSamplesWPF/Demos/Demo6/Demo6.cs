@@ -72,7 +72,7 @@ namespace SimpleSamplesWPF.Demos.Demo6
         protected override void Initialize()
         {
             physicsSimulator = new PhysicsSimulator(new Vector2(0, 200));
-            physicsSimulator.MaxContactsToDetect = 2;
+            PhysicsSimulator.MaxContactsToDetect = 2;
             //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
 
             _agent = new Agent(new Vector2(ScreenCenter.X, 100));
