@@ -20,8 +20,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 using Box2DX.Collision;
 using Box2DX.Common;
@@ -66,7 +64,8 @@ namespace Box2DX.Dynamics
 		public ContactEdge Next;
 	}
 
-    enum ContactFlag
+    [Flags]
+    public enum ContactFlag
 	{
 		    NonSolidFlag	= 0x0001,
 		    SlowFlag		= 0x0002,
@@ -79,7 +78,7 @@ namespace Box2DX.Dynamics
 	/// <summary>
 	/// This structure is used to report contact points.
 	/// </summary>
-	public class Contact
+	public abstract class Contact
 	{
 		static ContactRegister[,] _registers = new ContactRegister[(int)ShapeType.ShapeTypeCount, (int)ShapeType.ShapeTypeCount];
 	    static bool _initialized;
@@ -310,8 +309,8 @@ namespace Box2DX.Dynamics
 	        }
         }
 
-	    public virtual void Evaluate();
+	    public abstract void Evaluate();
 
-        public virtual float ComputeTOI(Sweep sweepA, Sweep sweepB);
+        public abstract float ComputeTOI(Sweep sweepA, Sweep sweepB);
 	}
 }
