@@ -407,7 +407,7 @@ namespace Box2DX.Collision
             Proxy proxy = _proxyPool[proxyId];
 
             // Get new bound values
-            BoundValues newValues = new BoundValues(); ;
+            BoundValues newValues = new BoundValues();
             ComputeBounds(out newValues.LowerValues, out newValues.UpperValues, aabb);
 
             // Get old bound values
