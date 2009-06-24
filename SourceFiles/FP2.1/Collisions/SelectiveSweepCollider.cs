@@ -273,6 +273,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
                                 ((geometryB.CollisionCategories & geometryA.CollidesWith) == CollisionCategory.None))
                                 continue;
 
+                            if (geometryA.FindDNC(geometryB) || geometryB.FindDNC(geometryA))
+                            {
+                                continue;
+                            }
+
                             bool intersection = true;
 
                             //Call the OnBroadPhaseCollision event first. If the user aborts the collision

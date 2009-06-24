@@ -199,6 +199,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
                                 ((geometryB.CollisionCategories & geometryA.CollidesWith) == CollisionCategory.None))
                                 continue;
 
+                            if (geometryA.FindDNC(geometryB) || geometryB.FindDNC(geometryA))
+                            {
+                                continue;
+                            }
+
                             long key = PairID.GetId(geometryA.id, geometryB.id);
                             if (!_filter.ContainsKey(key))
                             {

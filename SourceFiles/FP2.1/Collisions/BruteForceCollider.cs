@@ -78,6 +78,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         ((_geometryB.CollisionCategories & _geometryA.CollidesWith) == CollisionCategory.None))
                         continue;
 
+                    if (_geometryA.FindDNC(_geometryB) || _geometryB.FindDNC(_geometryA))
+                    {
+                        continue;
+                    }
+
                     //Assume intersection
                     bool intersection = true;
 
