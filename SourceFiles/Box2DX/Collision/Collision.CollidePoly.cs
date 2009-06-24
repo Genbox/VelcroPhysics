@@ -214,6 +214,7 @@ namespace Box2DX.Collision
         public static void CollidePolygons(ref Manifold manifold,
             PolygonShape polyA, XForm xfA, PolygonShape polyB, XForm xfB)
         {
+            manifold = new Manifold();
             manifold.PointCount = 0;
             float totalRadius = polyA.Radius + polyB.Radius;
 

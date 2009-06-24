@@ -218,7 +218,8 @@ namespace Box2DX.Dynamics
 
 	        _fixtureA = fixtureA;
 	        _fixtureB = fixtureB;
-            Manifold Manifold = new Manifold();
+            Manifold = new Manifold();
+
 	        Manifold.PointCount = 0;
 
 	        Prev = null;

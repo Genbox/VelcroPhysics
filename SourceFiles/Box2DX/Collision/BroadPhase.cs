@@ -469,7 +469,8 @@ namespace Box2DX.Collision
                         }
 
                         --proxy.LowerBounds[axis];
-                        Math.Swap(ref bounds[index], ref bounds[index - 1]);
+                        bounds[index] = prevBound;
+                        bounds[index - 1] = bound;
                         --index;
                     }
                 }
@@ -504,7 +505,8 @@ namespace Box2DX.Collision
                         }
 
                         ++proxy.UpperBounds[axis];
-                        Math.Swap(ref bounds[index], ref bounds[index + 1]);
+                        bounds[index] = nextBound;
+                        bounds[index + 1] = bound;
                         ++index;
                     }
                 }
