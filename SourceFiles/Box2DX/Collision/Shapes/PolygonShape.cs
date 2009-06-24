@@ -60,7 +60,19 @@ namespace Box2DX.Collision
 
         public override int GetSupport(Vec2 d)
         {
-            throw new NotImplementedException();
+            int bestIndex = 0;
+            float bestValue = Vec2.Dot(Vertices[0], d);
+            for (int i = 1; i < VertexCount; ++i)
+            {
+                float value = Vec2.Dot(Vertices[i], d);
+                if (value > bestValue)
+                {
+                    bestIndex = i;
+                    bestValue = value;
+                }
+            }
+
+            return bestIndex;
         }
 
         public override Vec2 GetSupportVertex(Vec2 d)
