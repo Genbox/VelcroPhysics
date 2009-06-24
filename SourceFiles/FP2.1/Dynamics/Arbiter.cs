@@ -464,7 +464,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         internal bool ContainsInvalidGeom()
         {
-            return GeometryA.IsDisposed || GeometryB.IsDisposed || (GeometryA.body.isStatic && GeometryB.body.isStatic) || (!GeometryA.body.Enabled || !GeometryB.body.Enabled) || (GeometryA.CollisionGroup == GeometryB.CollisionGroup) || (GeometryA.CollisionGroup != 0 && GeometryB.CollisionGroup != 0) || (((GeometryA.CollisionCategories & GeometryB.CollidesWith) == CollisionCategory.None) & ((GeometryB.CollisionCategories & GeometryA.CollidesWith) == CollisionCategory.None));
+            return GeometryA.IsDisposed || GeometryB.IsDisposed || (GeometryA.body.isStatic && GeometryB.body.isStatic) || (!GeometryA.body.Enabled || !GeometryB.body.Enabled) || (GeometryA.CollisionGroup == GeometryB.CollisionGroup) && (GeometryA.CollisionGroup != 0 && GeometryB.CollisionGroup != 0) || (((GeometryA.CollisionCategories & GeometryB.CollidesWith) == CollisionCategory.None) & ((GeometryB.CollisionCategories & GeometryA.CollidesWith) == CollisionCategory.None));
         }
 
         #region Variables for ApplyImpulse
