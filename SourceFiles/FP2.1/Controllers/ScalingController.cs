@@ -87,33 +87,23 @@ namespace FarseerGames.FarseerPhysics
             //Do nothing
         }
 
-        public override void Update(float dt)
-        {
-            //Do nothing. Update(float dt, float dtReal) will take care of the updating.
-        }
-
         public override void Update(float dt, float dtReal)
         {
-            if (Enabled)
+            dt = GetUpdateInterval(dt);
+
+            if (dt == 0)
             {
-                dt = GetUpdateInterval(dt);
-
-                if (dt == 0)
-                {
-                    return;
-                }
-
-                if (UpdateInterval < dtReal)
-                {
-                    IncreaseUpdateInterval();
-                }
-                else
-                {
-                    DecreaseUpdateInterval();
-                }
+                return;
             }
 
-            base.Update(dt, dtReal);
+            if (UpdateInterval < dtReal)
+            {
+                IncreaseUpdateInterval();
+            }
+            else
+            {
+                DecreaseUpdateInterval();
+            }
         }
     }
 }

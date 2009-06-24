@@ -45,7 +45,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
             // this controller is always active
         }
 
-        public override void Update(float dt)
+        public override void Update(float dt, float dtReal)
         {
             if (IsDisposed)
                 return;

@@ -147,7 +147,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
             }
         }
 
-        public override void Update(float dt)
+        public override void Update(float dt, float dtReal)
         {
             for (int i = 0; i < _geomList.Count; i++)
             {

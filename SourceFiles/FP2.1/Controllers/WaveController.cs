@@ -274,11 +274,12 @@ namespace FarseerGames.FarseerPhysics.Controllers
         }
 
         /// <summary>
-        /// Steps the wave algorithm.  The wave algorithm does not run at the same speed as the physics simulator. It runs at its 
+        /// Steps the wave algorithm.  The wave algorithm does not run at the same speed as the physics simulator. It runs at its
         /// own frequency set by the Frequency property.
         /// </summary>
-        /// <param name="dt"></param>
-        public override void Update(float dt)
+        /// <param name="dt">The time since last update.</param>
+        /// <param name="dtReal">The real time since last update.</param>
+        public override void Update(float dt, float dtReal)
         {
             if (_timePassed < _frequency)
             {
