@@ -111,7 +111,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
             //Do nothing
         }
 
-        public override void Update(float dt)
+        public override void Update(float dt, float dtReal)
         {
             foreach (Body body in _simulator.BodyList)
             {

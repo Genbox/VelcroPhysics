@@ -438,7 +438,7 @@ namespace FarseerGames.FarseerPhysics
             if (EnableDiagnostics)
                 narrowPhaseCollisionTime = _sw.ElapsedTicks - broadPhaseCollisionTime - cleanUpTime;
 #endif
-            ApplyForces(dt);
+            ApplyForces(dt , dtReal);
 #if (XNA)
             if (EnableDiagnostics)
                 applyForcesTime = _sw.ElapsedTicks - narrowPhaseCollisionTime - broadPhaseCollisionTime - cleanUpTime;
@@ -556,17 +556,18 @@ namespace FarseerGames.FarseerPhysics
 
         /// <summary>
         /// Applies the forces to all controllers, springs, joints and bodies.
-        /// This step also 
+        /// This step also
         /// </summary>
         /// <param name="dt">The delta time.</param>
-        private void ApplyForces(float dt)
+        /// <param name="dtReal">The real delta time.</param>
+        private void ApplyForces(float dt, float dtReal)
         {
             for (int i = 0; i < controllerList.Count; i++)
             {
                 if (!controllerList[i].Enabled || controllerList[i].IsDisposed)
                     continue;
 
-                controllerList[i].Update(dt);
+                controllerList[i].Update(dt, dtReal);
             }
 
             for (int i = 0; i < springList.Count; i++)

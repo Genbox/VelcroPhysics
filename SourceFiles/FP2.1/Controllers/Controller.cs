@@ -50,12 +50,8 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// <summary>
         /// Updates this instance.
         /// </summary>
-        /// <param name="dt">The dt.</param>
-        public abstract void Update(float dt);
-
-        public virtual void Update(float dt, float dtReal)
-        {
-            Update(dt);
-        }
+        /// <param name="dt">The time since last update.</param>
+        /// <param name="dtReal">The real time since last update.</param>
+        public abstract void Update(float dt, float dtReal);
     }
 }
