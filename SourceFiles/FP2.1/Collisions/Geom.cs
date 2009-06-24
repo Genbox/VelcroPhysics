@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Interfaces;
@@ -656,6 +657,25 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             AABB.Update(ref worldVertices);
+        }
+
+        private List<Geom> _collisionIgnores = new List<Geom>();
+
+        public void IgnoreCollisionWith(Geom geometry)
+        {
+            _collisionIgnores.Add(geometry);
+        }
+
+        public bool FindDNC(Geom geometry)
+        {
+            foreach (Geom geom in _collisionIgnores)
+            {
+                if (geometry.Equals(geom))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>

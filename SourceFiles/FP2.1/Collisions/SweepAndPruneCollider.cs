@@ -477,6 +477,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
                             ((geometryB.CollisionCategories & geometryA.CollidesWith) == CollisionCategory.None))
                             continue;
 
+                        if (geometryA.FindDNC(geometryB) || geometryB.FindDNC(geometryA))
+                        {
+                            continue;
+                        }
+
                         //TMP
                         AABB aabb1 = new AABB();
                         AABB aabb2 = new AABB();

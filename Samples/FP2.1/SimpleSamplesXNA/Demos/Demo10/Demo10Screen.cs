@@ -51,6 +51,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo10
 
             geomA = GeomFactory.Instance.CreateRectangleGeom(bodyA, 100, 25);
             geomB = GeomFactory.Instance.CreateRectangleGeom(bodyB, 100, 25);
+            geomA.IgnoreCollisionWith(geomB);
 
             weldJoint = new WeldJoint(bodyA, bodyB, new Vector2(300, 300));
             weldJoint.Broke += weldJoint_Broke;
