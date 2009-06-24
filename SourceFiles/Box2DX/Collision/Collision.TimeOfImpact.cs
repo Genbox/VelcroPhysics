@@ -202,6 +202,8 @@ namespace Box2DX.Collision
 
             // Prepare input for distance query.
             SimplexCache cache = new SimplexCache();
+            cache.indexA = new byte[3];
+            cache.indexB = new byte[3];
             cache.count = 0;
             DistanceInput distanceInput;
             distanceInput.useRadii = false;

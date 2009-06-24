@@ -469,8 +469,7 @@ namespace Box2DX.Collision
                         }
 
                         --proxy.LowerBounds[axis];
-#warning "Check if reference gets swaped correctly"
-                        Math.Swap(ref bound, ref prevBound);
+                        Math.Swap(ref bounds[index], ref bounds[index - 1]);
                         --index;
                     }
                 }
@@ -505,8 +504,7 @@ namespace Box2DX.Collision
                         }
 
                         ++proxy.UpperBounds[axis];
-#warning "Check if reference get swaped correctly"
-                        Math.Swap(ref bound, ref nextBound);
+                        Math.Swap(ref bounds[index], ref bounds[index + 1]);
                         ++index;
                     }
                 }
