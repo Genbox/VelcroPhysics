@@ -76,6 +76,7 @@ namespace TestBed
 			drawFrictionForces = 0;
 			drawCOMs = 0;
 			enableWarmStarting = 1;
+            enableContinuous = 1;
 			enableTOI = 1;
 			pause = 0;
 			singleStep = 0;

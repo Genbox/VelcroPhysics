@@ -718,11 +718,11 @@ namespace Box2DX.Dynamics
 			// Clear all the island flags.
 			for (Body b = _bodyList; b != null; b = b._next)
 			{
-				b._flags &= Body.BodyFlags.Island;
+				b._flags &= ~Body.BodyFlags.Island;
 			}
 			for (Contact c = _contactList; c != null; c = c.Next)
 			{
-                c.Flags &= ContactFlag.IslandFlag;
+                c.Flags &= ~ContactFlag.IslandFlag;
 			}
 			for (Joint j = _jointList; j != null; j = j._next)
 			{
