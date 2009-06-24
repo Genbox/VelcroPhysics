@@ -889,14 +889,14 @@ namespace Box2DX.Dynamics
 
 	        for (Body b = _bodyList; b != null; b = b._next)
 	        {
-		        b._flags &= Body.BodyFlags.Island;
+		        b._flags &= ~Body.BodyFlags.Island;
 		        b._sweep.T0 = 0.0f;
 	        }
 
 	        for (Contact c = _contactList; c != null; c = c.Next)
 	        {
 		        // Invalidate TOI
-		        c.Flags &= (ContactFlag.ToiFlag | ContactFlag.IslandFlag);
+		        c.Flags &= ~(ContactFlag.ToiFlag | ContactFlag.IslandFlag);
 	        }
 
 	        for (Joint j = _jointList; j != null; j = j._next)
@@ -997,7 +997,7 @@ namespace Box2DX.Dynamics
 
 		        // The TOI contact likely has some new contact points.
 		        minContact.Update(_contactListener);
-		        minContact.Flags &= ContactFlag.ToiFlag;
+		        minContact.Flags &= ~ContactFlag.ToiFlag;
 
 		        if ((minContact.Flags & ContactFlag.TouchFlag) == 0)
 		        {
@@ -1031,7 +1031,7 @@ namespace Box2DX.Dynamics
 			        island.Add(b);
 
 			        // Make sure the body is awake.
-			        b._flags &= Body.BodyFlags.Sleep;
+			        b._flags &= ~Body.BodyFlags.Sleep;
 
 			        // To keep islands as small as possible, we don't
 			        // propagate islands across static bodies.
@@ -1050,7 +1050,7 @@ namespace Box2DX.Dynamics
 				        }
 
 				        // Has this contact already been added to an island? Skip slow or non-solid contacts.
-				        if ((int)(cEdge.Contact.Flags & (ContactFlag.IslandFlag | ContactFlag.SlowFlag | ContactFlag.NonSolidFlag)) == 1)
+				        if ((int)(cEdge.Contact.Flags & (ContactFlag.IslandFlag | ContactFlag.SlowFlag | ContactFlag.NonSolidFlag)) != 0)
 				        {
 					        continue;
 				        }
@@ -1137,7 +1137,7 @@ namespace Box2DX.Dynamics
 		        {
 			        // Allow bodies to participate in future TOI islands.
 			        Body b = island._bodies[i];
-			        b._flags &= Body.BodyFlags.Island;
+			        b._flags &= ~Body.BodyFlags.Island;
 
 			        if ((int)(b._flags & (Body.BodyFlags.Sleep | Body.BodyFlags.Frozen)) == 1)
 			        {
@@ -1164,7 +1164,7 @@ namespace Box2DX.Dynamics
 			        // may not be in the island because they were not touching.
 			        for (ContactEdge cn = b._contactList; cn != null; cn = cn.Next)
 			        {
-				        cn.Contact.Flags &= ContactFlag.ToiFlag;
+				        cn.Contact.Flags &= ~ContactFlag.ToiFlag;
 			        }
 		        }
 

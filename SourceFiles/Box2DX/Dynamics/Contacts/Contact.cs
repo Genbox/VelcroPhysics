@@ -256,7 +256,7 @@ namespace Box2DX.Dynamics
 	        // Slow contacts don't generate TOI events.
 	        if (bodyA.IsStatic() || bodyA.IsBullet() || bodyB.IsStatic() || bodyB.IsBullet())
 	        {
-		        Flags &= ContactFlag.SlowFlag;
+		        Flags &= ~ContactFlag.SlowFlag;
 	        }
 	        else
 	        {
@@ -293,7 +293,7 @@ namespace Box2DX.Dynamics
 
 	        if (oldCount > 0 && newCount == 0)
 	        {
-		        Flags &= ContactFlag.TouchFlag;
+		        Flags &= ~ContactFlag.TouchFlag;
 		        listener.EndContact(this);
 	        }
 
@@ -304,7 +304,7 @@ namespace Box2DX.Dynamics
 		        // The user may have disabled contact.
 		        if (Manifold.PointCount == 0)
 		        {
-			        Flags &= ContactFlag.TouchFlag;
+			        Flags &= ~ContactFlag.TouchFlag;
 		        }
 	        }
         }
