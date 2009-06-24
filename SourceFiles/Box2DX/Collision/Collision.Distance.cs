@@ -111,14 +111,14 @@ namespace Box2DX.Collision
                 // If the cache is empty or invalid ...
                 if (m_count == 0)
                 {
-                    SimplexVertex v = m_vlist[0];
-                    v.indexA = 0;
-                    v.indexB = 0;
+                    m_vlist[0] = new SimplexVertex();
+                    m_vlist[0].indexA = 0;
+                    m_vlist[0].indexB = 0;
                     Vec2 wALocal = shapeA.GetVertex(0);
                     Vec2 wBLocal = shapeB.GetVertex(0);
-                    v.wA = Math.Mul(transformA, wALocal);
-                    v.wB = Math.Mul(transformB, wBLocal);
-                    v.w = v.wB - v.wA;
+                    m_vlist[0].wA = Math.Mul(transformA, wALocal);
+                    m_vlist[0].wB = Math.Mul(transformB, wBLocal);
+                    m_vlist[0].w = m_vlist[0].wB - m_vlist[0].wA;
                     m_count = 1;
                 }
             }
@@ -407,6 +407,7 @@ namespace Box2DX.Collision
 
             // Initialize the simplex.
             Simplex simplex = new Simplex();
+            simplex.m_vlist = new SimplexVertex[3];
             simplex.ReadCache(cache, shapeA, transformA, shapeB, transformB);
 
             // These store the vertices of the last simplex so that we

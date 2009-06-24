@@ -218,17 +218,17 @@ namespace Box2DX.Dynamics
 
 	        _fixtureA = fixtureA;
 	        _fixtureB = fixtureB;
-
+            Manifold Manifold = new Manifold();
 	        Manifold.PointCount = 0;
 
 	        Prev = null;
 	        Next = null;
-
+            NodeA = new ContactEdge();
 	        NodeA.Contact = null;
 	        NodeA.Prev = null;
 	        NodeA.Next = null;
 	        NodeA.Other = null;
-
+            NodeB = new ContactEdge();
 	        NodeB.Contact = null;
 	        NodeB.Prev = null;
 	        NodeB.Next = null;
