@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed", "TestBed.csproj", "{5F8CEECC-CF73-4057-9DC8-8001BECE71E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Box2DX", "..\..\Box2DX\Box2DX.csproj", "{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs01.codeplex.com/
+		SccProjectUniqueName0 = TestBed.csproj
+		SccProjectName0 = .
+		SccAuxPath0 = https://tfs01.codeplex.com
+		SccLocalPath0 = .
+		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName1 = ..\\..\\Box2DX\\Box2DX.csproj
+		SccProjectName1 = ../../Box2DX
+		SccAuxPath1 = https://tfs01.codeplex.com
+		SccLocalPath1 = ..\\..\\Box2DX
+		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5F8CEECC-CF73-4057-9DC8-8001BECE71E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F8CEECC-CF73-4057-9DC8-8001BECE71E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F8CEECC-CF73-4057-9DC8-8001BECE71E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F8CEECC-CF73-4057-9DC8-8001BECE71E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
