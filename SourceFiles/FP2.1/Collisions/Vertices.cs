@@ -2071,7 +2071,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             vertices.Add(new Vector2(topRadius, newHeight));
 
             float stepSize = MathHelper.Pi / topEdges;
-            for (int i = 1; i < topEdges - 1; i++)
+            for (int i = 1; i < topEdges; i++)
             {
                 vertices.Add(new Vector2(topRadius * Calculator.Cos(stepSize * i), topRadius * Calculator.Sin(stepSize * i) + newHeight));
             }
@@ -2082,7 +2082,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             vertices.Add(new Vector2(-bottomRadius, -newHeight));
 
             stepSize = MathHelper.Pi / bottomEdges;
-            for (int i = 1; i < bottomEdges - 1; i++)
+            for (int i = 1; i < bottomEdges; i++)
             {
                 vertices.Add(new Vector2(-bottomRadius * Calculator.Cos(stepSize * i), -bottomRadius * Calculator.Sin(stepSize * i) - newHeight));
             }
