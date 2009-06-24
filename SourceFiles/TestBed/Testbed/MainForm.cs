@@ -199,10 +199,12 @@ namespace TestBed
 
 		private void openGlControl_MouseUp(object sender, MouseEventArgs e)
 		{
-			if(e.Button == MouseButtons.Left)
-				CurrentTest.MouseUp();
-			else if (e.Button == MouseButtons.Right)
-				rMouseDown = false;
+            Vec2 temp = new Vec2(e.X, e.Y);
+            
+            if (e.Button == MouseButtons.Left)
+                CurrentTest.MouseUp(temp);
+            else if (e.Button == MouseButtons.Right)
+                rMouseDown = false;
 		}
 
 		private void openGlControl_MouseDown(object sender, MouseEventArgs e)
@@ -235,7 +237,7 @@ namespace TestBed
 					CurrentTest = testEntry.CreateFcn();
 					break;
 				case Keys.Space:
-					CurrentTest.LaunchBomb();
+					CurrentTest.LaunchBomb(new Vec2(0,0), new Vec2(0,100));
 					break;
 				case Keys.Left:
 					viewCenter.X -= 0.5f;
