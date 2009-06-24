@@ -622,7 +622,7 @@ namespace Box2DX.Dynamics
 		/// @param shapes a user allocated shape pointer array of size maxCount (or greater).
 		/// @param maxCount the capacity of the shapes array.
 		/// @return the number of shapes found in aabb.
-		public int Query(AABB aabb, Shape[] shapes, int maxCount)
+		public int Query(AABB aabb, Fixture[] fixtures, int maxCount)
 		{
 			//using (object[] results = new object[maxCount])
 			{
@@ -632,7 +632,7 @@ namespace Box2DX.Dynamics
 
 				for (int i = 0; i < count; ++i)
 				{
-					shapes[i] = (Shape)results[i];
+					fixtures[i] = (Fixture)results[i];
 				}
 
 				results = null;

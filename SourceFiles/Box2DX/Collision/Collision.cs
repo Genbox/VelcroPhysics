@@ -46,7 +46,7 @@ namespace Box2DX.Collision
             return true;
         }
 
-        public void GetPointStates(PointState[] state1, PointState[] state2, Manifold manifold1, Manifold manifold2)
+        public static void GetPointStates(PointState[] state1, PointState[] state2, Manifold manifold1, Manifold manifold2)
         {
             for (int i = 0; i < Settings.MaxManifoldPoints; ++i)
             {

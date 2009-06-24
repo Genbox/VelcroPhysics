@@ -53,6 +53,7 @@ namespace TestBed
 		public int drawCOMs;
 		public int drawStats;
 		public int enableWarmStarting;
+        public int enableContinuous;
 		public int enableTOI;
 		public int pause;
 		public int singleStep;		
@@ -106,23 +107,12 @@ namespace TestBed
 		ContactRemoved
 	}
 
-	public struct MyContactPoint
-	{
-		public Shape shape1;
-		public Shape shape2;
-		public Vec2 normal;
-		public Vec2 position;
-		public Vec2 velocity;
-		public ContactID id;
-		public ContactState state;
-	}
-
 	// This is called when a joint in the world is implicitly destroyed
 	// because an attached body is destroyed. This gives us a chance to
 	// nullify the mouse joint.
 	public class MyDestructionListener : DestructionListener
 	{
-		public override void SayGoodbye(Shape shape) { ; }
+		public override void SayGoodbye(Fixture fixture) { ; }
 		public override void SayGoodbye(Joint joint)
 		{
 			if (test._mouseJoint == joint)
@@ -151,119 +141,72 @@ namespace TestBed
 		public Test test;
 	}
 
-	public class MyContactListener : ContactListener
-	{
-		public override void Add(ContactPoint point)
-		{
-			if (test._pointCount == Test.k_maxContactPoints)
-			{
-				return;
-			}
+    public struct ContactPoint
+    {
+        public Fixture fixtureA;
+        public Fixture fixtureB;
+        public Vec2 normal;
+        public Vec2 position;
+        public PointState state;
+    }
 
-			MyContactPoint cp = new MyContactPoint();
-			cp.shape1 = point.Shape1;
-			cp.shape2 = point.Shape2;
-			cp.position = point.Position;
-			cp.normal = point.Normal;
-			cp.id = point.ID;
-			cp.state = ContactState.ContactAdded;
-			test._points[test._pointCount] = cp;
-			++test._pointCount;
-		}
-
-		public override void Persist(ContactPoint point)
-		{
-			if (test._pointCount == Test.k_maxContactPoints)
-			{
-				return;
-			}
-
-			MyContactPoint cp = new MyContactPoint();
-			cp.shape1 = point.Shape1;
-			cp.shape2 = point.Shape2;
-			cp.position = point.Position;
-			cp.normal = point.Normal;
-			cp.id = point.ID;
-			cp.state = ContactState.ContactPersisted;
-			test._points[test._pointCount] = cp;
-			++test._pointCount;
-		}
-
-		public override void Remove(ContactPoint point)
-		{
-			if (test._pointCount == Test.k_maxContactPoints)
-			{
-				return;
-			}
-
-			MyContactPoint cp = new MyContactPoint();
-			cp.shape1 = point.Shape1;
-			cp.shape2 = point.Shape2;
-			cp.position = point.Position;
-			cp.normal = point.Normal;
-			cp.id = point.ID;
-			cp.state = ContactState.ContactRemoved;
-			test._points[test._pointCount] = cp;
-			++test._pointCount;
-		}
-
-		public Test test;
-	}
-
-	public class Test : IDisposable
+	public class Test : ContactListener
 	{
 		public static TestEntry[] g_testEntries = new TestEntry[]
 		{			
-			new TestEntry("Simple Test", SimpleTest.Create),
-			new TestEntry("Line Joint Test", LineJoint.Create),
+			//new TestEntry("Simple Test", SimpleTest.Create),
+			//new TestEntry("Line Joint Test", LineJoint.Create),
 			new TestEntry("Pyramid", Pyramid.Create),
-			new TestEntry("Prismatic", Prismatic.Create),
-			new TestEntry("Revolute", Revolute.Create),
-			new TestEntry("Theo Jansen's Walker", TheoJansen.Create),
+			//new TestEntry("Prismatic", Prismatic.Create),
+			//new TestEntry("Revolute", Revolute.Create),
+			//new TestEntry("Theo Jansen's Walker", TheoJansen.Create),
 			//new TestEntry("Contact Callback Test", ContactCB.Create),
-			new TestEntry("Polygon Shapes", PolyShapes.Create),
-			new TestEntry("Web", Web.Create),
-			new TestEntry("Vertical Stack", VerticalStack.Create),
-			new TestEntry("Varying Friction", VaryingFriction.Create),
-			new TestEntry("Varying Restitution", VaryingRestitution.Create),
-			new TestEntry("Bridge", Bridge.Create),
-			new TestEntry("Dominos", Dominos.Create),
-			new TestEntry("CCD Test", CCDTest.Create),
-			new TestEntry("Biped Test", BipedTest.Create),
-			new TestEntry("Sensor Test", SensorTest.Create),
-			new TestEntry("Car", Car.Create),
-			new TestEntry("Gears", Gears.Create),
-			new TestEntry("Slider Crank", SliderCrank.Create),
-			new TestEntry("Compound Shapes", CompoundShapes.Create),
-			new TestEntry("Chain", Chain.Create),
-			new TestEntry("Collision Processing", CollisionProcessing.Create),
-			new TestEntry("Collision Filtering", CollisionFiltering.Create),
-			new TestEntry("Motors and Limits", MotorsAndLimits.Create),
-			new TestEntry("Apply Force", ApplyForce.Create),
-			new TestEntry("Pulleys", Pulleys.Create),
-			new TestEntry("Shape Editing", ShapeEditing.Create),
-			new TestEntry("Time of Impact", TimeOfImpact.Create),
-			new TestEntry("Distance Test", DistanceTest.Create),
-			new TestEntry("Broad Phase", BroadPhaseTest.Create),
-			new TestEntry("PolyCollision", PolyCollision.Create),
-			new TestEntry("Elastic Body", ElasticBody.Create),
-			new TestEntry("Raycast Test", RaycastTest.Create),
-			new TestEntry("Buoyancy", Buoyancy.Create)
+			//new TestEntry("Polygon Shapes", PolyShapes.Create),
+			//new TestEntry("Web", Web.Create),
+			//new TestEntry("Vertical Stack", VerticalStack.Create),
+			//new TestEntry("Varying Friction", VaryingFriction.Create),
+			//new TestEntry("Varying Restitution", VaryingRestitution.Create),
+			//new TestEntry("Bridge", Bridge.Create),
+			//new TestEntry("Dominos", Dominos.Create),
+			//new TestEntry("CCD Test", CCDTest.Create),
+			//new TestEntry("Biped Test", BipedTest.Create),
+			//new TestEntry("Sensor Test", SensorTest.Create),
+			//new TestEntry("Car", Car.Create),
+			//new TestEntry("Gears", Gears.Create),
+			//new TestEntry("Slider Crank", SliderCrank.Create),
+			//new TestEntry("Compound Shapes", CompoundShapes.Create),
+			//new TestEntry("Chain", Chain.Create),
+			//new TestEntry("Collision Processing", CollisionProcessing.Create),
+			//new TestEntry("Collision Filtering", CollisionFiltering.Create),
+			//new TestEntry("Motors and Limits", MotorsAndLimits.Create),
+			//new TestEntry("Apply Force", ApplyForce.Create),
+			//new TestEntry("Pulleys", Pulleys.Create),
+			//new TestEntry("Shape Editing", ShapeEditing.Create),
+			//new TestEntry("Time of Impact", TimeOfImpact.Create),
+			//new TestEntry("Distance Test", DistanceTest.Create),
+			//new TestEntry("Broad Phase", BroadPhaseTest.Create),
+			//new TestEntry("PolyCollision", PolyCollision.Create),
+			//new TestEntry("Elastic Body", ElasticBody.Create),
+			//new TestEntry("Raycast Test", RaycastTest.Create),
+			//new TestEntry("Buoyancy", Buoyancy.Create)
 		};
 
 		public static int k_maxContactPoints = 2048;
 
 		protected AABB _worldAABB;
-		internal MyContactPoint[] _points = new MyContactPoint[k_maxContactPoints];
+		internal ContactPoint[] _points = new ContactPoint[k_maxContactPoints];
 		internal int _pointCount;
 		protected MyDestructionListener _destructionListener = new MyDestructionListener();
 		protected MyBoundaryListener _boundaryListener = new MyBoundaryListener();
-		protected MyContactListener _contactListener = new MyContactListener();
 		internal DebugDraw _debugDraw = new OpenGLDebugDraw();
 		protected int _textLine;
 		internal World _world;
 		internal Body _bomb;
 		internal MouseJoint _mouseJoint;
+        internal bool _bombSpawning;
+        internal Vec2 _bombSpawnPoint;
+        internal Vec2 _mouseWorld;
+        internal int _stepCount;
 
 		public Test()
 		{
@@ -281,12 +224,66 @@ namespace TestBed
 
 			_destructionListener.test = this;
 			_boundaryListener.test = this;
-			_contactListener.test = this;
 			_world.SetDestructionListener(_destructionListener);
 			_world.SetBoundaryListener(_boundaryListener);
-			_world.SetContactListener(_contactListener);
+			_world.SetContactListener(this);
 			_world.SetDebugDraw(_debugDraw);
+            _bombSpawning = false;
+
+            _stepCount = 0;
 		}
+
+        public override void BeginContact(Contact contact)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public override void EndContact(Contact contact)
+        {
+            //throw new NotImplementedException();
+        }
+
+       public override void PreSolve(Contact contact, Manifold oldManifold)
+        {
+	        Manifold manifold = contact.GetManifold();
+
+	        if (manifold.PointCount == 0)
+	        {
+		        return;
+	        }
+
+	        Fixture fixtureA = contact.GetFixtureA();
+	        Fixture fixtureB = contact.GetFixtureB();
+
+	        PointState[] state1 = new PointState[Box2DX.Common.Settings.MaxManifoldPoints];
+            PointState[] state2 = new PointState[Box2DX.Common.Settings.MaxManifoldPoints]; 
+
+	        Collision.GetPointStates(state1, state2, oldManifold, manifold);
+
+	        WorldManifold worldManifold = new WorldManifold();
+	        contact.GetWorldManifold(worldManifold);
+
+	        for (int i = 0; i < manifold.PointCount && _pointCount < k_maxContactPoints; ++i)
+	        {
+		        ContactPoint cp = _points[_pointCount];
+		        cp.fixtureA = fixtureA;
+		        cp.fixtureB = fixtureB;
+		        cp.position = WorldManifold.Points[i];
+		        cp.normal = worldManifold.Normal;
+		        cp.state = state2[i];
+		        ++_pointCount;
+	        }
+        }
+
+       public override void PostSolve(Contact contact, ContactImpulse impulse)
+       {
+           //throw new NotImplementedException();
+       }
+
+        public void DrawTitle(int x, int y, string text)
+        {
+            //_debugDraw.DrawString(x, y, text);
+        }
 
 		public void Dispose()
 		{
@@ -310,62 +307,101 @@ namespace TestBed
 		public virtual void BoundaryViolated(Body body) { ; }
 
 		public void MouseDown(Vec2 p)
+        {
+	        _mouseWorld = p;
+        	
+	        if (_mouseJoint != null)
+	        {
+		        return;
+	        }
+
+	        // Make a small box.
+	        AABB aabb = new AABB();
+	        Vec2 d = new Vec2();
+	        d.Set(0.001f, 0.001f);
+	        aabb.LowerBound = p - d;
+	        aabb.UpperBound = p + d;
+
+	        // Query the world for overlapping shapes.
+	        int k_maxCount = 10;
+	        Fixture[] fixtures = new Fixture[k_maxCount];
+	        int count = _world.Query(aabb, fixtures, k_maxCount);
+	        Body body = null;
+	        for (int i = 0; i < count; ++i)
+	        {
+		        Body b = fixtures[i].GetBody();
+		        if (b.IsStatic() == false && b.GetMass() > 0.0f)
+		        {
+			        bool inside = fixtures[i].TestPoint(p);
+			        if (inside)
+			        {
+				        body = b;
+				        break;
+			        }
+		        }
+	        }
+
+	        if (body != null)
+	        {
+		        MouseJointDef md = new MouseJointDef();
+		        md.Body1 = _world.GetGroundBody();
+		        md.Body2 = body;
+		        md.Target = p;
+        #if TARGET_FLOAT32_IS_FIXED
+		        md.maxForce = (body->GetMass() < 16.0)? 
+			        (1000.0f * body->GetMass()) : float32(16000.0);
+        #else
+		        md.MaxForce = 1000.0f * body.GetMass();
+        #endif
+		        _mouseJoint = (MouseJoint)_world.CreateJoint(md);
+		        body.WakeUp();
+	        }
+        }
+
+        public void SpawnBomb(Vec2 worldPt)
+        {
+	        _bombSpawnPoint = worldPt;
+	        _bombSpawning = true;
+        }
+            
+        public void CompleteBombSpawn(Vec2 p)
+        {
+	        if (_bombSpawning == false)
+	        {
+		        return;
+	        }
+
+	        float multiplier = 30.0f;
+	        Vec2 vel = _bombSpawnPoint - p;
+	        vel *= multiplier;
+	        LaunchBomb(_bombSpawnPoint, vel);
+	        _bombSpawning = false;
+        }
+
+        public void ShiftMouseDown(Vec2 p)
+        {
+	        _mouseWorld = p;
+        	
+	        if (_mouseJoint != null)
+	        {
+		        return;
+	        }
+
+	        SpawnBomb(p);
+        }
+
+		public void MouseUp(Vec2 p)
 		{
-			if (_mouseJoint != null)
-			{
-				return;
-			}
+            if (_mouseJoint != null)
+            {
+                _world.DestroyJoint(_mouseJoint);
+                _mouseJoint = null;
+            }
 
-			// Make a small box.
-			AABB aabb = new AABB();
-			Vec2 d = new Vec2();
-			d.Set(0.001f, 0.001f);
-			aabb.LowerBound = p - d;
-			aabb.UpperBound = p + d;
-
-			// Query the world for overlapping shapes.
-			int k_maxCount = 10;
-			Shape[] shapes = new Shape[k_maxCount];
-			int count = _world.Query(aabb, shapes, k_maxCount);
-			Body body = null;
-			for (int i = 0; i < count; ++i)
-			{
-				Body shapeBody = shapes[i].GetBody();
-				if (shapeBody.IsStatic() == false && shapeBody.GetMass() > 0.0f)
-				{
-					bool inside = shapes[i].TestPoint(shapeBody.GetXForm(), p);
-					if (inside)
-					{
-						body = shapes[i].GetBody();
-						break;
-					}
-				}
-			}
-
-			if (body != null)
-			{
-				MouseJointDef md = new MouseJointDef();
-				md.Body1 = _world.GetGroundBody();
-				md.Body2 = body;
-				md.Target = p;
-#if TARGET_FLOAT32_IS_FIXED
-				md.MaxForce = (body.GetMass() < 16.0f)? 
-					(1000.0f * body.GetMass()) : 16000.0f;
-#else
-				md.MaxForce = 1000.0f * body.GetMass();
-#endif
-				_mouseJoint = (MouseJoint)_world.CreateJoint(md);
-				body.WakeUp();
-			}
-		}
-
-		public void MouseUp()
-		{
-			if (_mouseJoint != null)
-			{
-				_world.DestroyJoint(_mouseJoint);
-				_mouseJoint = null;
-			}
+            if (_bombSpawning != null)
+            {
+                CompleteBombSpawn(p);
+            }
 		}
 
 		public void MouseMove(Vec2 p)
@@ -376,156 +412,188 @@ namespace TestBed
 			}
 		}
 
-		public void LaunchBomb()
-		{
-			if (_bomb != null)
-			{
-				_world.DestroyBody(_bomb);
-				_bomb = null;
-			}
+		public void LaunchBomb(Vec2 position, Vec2 velocity)
+        {
+	        if (_bomb != null)
+	        {
+		        _world.DestroyBody(_bomb);
+		        _bomb = null;
+	        }
 
-			BodyDef bd = new BodyDef();
-			bd.AllowSleep = true;
-			bd.Position.Set(Box2DX.Common.Math.Random(-15.0f, 15.0f), 30.0f);
-			bd.IsBullet = true;
-			_bomb = _world.CreateBody(bd);
-			_bomb.SetLinearVelocity(-5.0f * bd.Position);
+	        BodyDef bd = new BodyDef();
+	        bd.AllowSleep = true;
+	        bd.Position = position;
+        	
+	        bd.IsBullet = true;
+	        _bomb = _world.CreateBody(bd);
+	        _bomb.SetLinearVelocity(velocity);
+        	
+	        CircleDef sd = new CircleDef();
+	        sd.Radius = 0.3f;
+	        sd.Density = 20.0f;
+	        sd.Restitution = 0.1f;
+        	
+	        Vec2 minV = position - new Vec2(0.3f,0.3f);
+	        Vec2 maxV = position + new Vec2(0.3f,0.3f);
+        	
+	        AABB aabb = new AABB();
+	        aabb.LowerBound = minV;
+	        aabb.UpperBound = maxV;
+        	
+	        bool inRange = _world.InRange(aabb);
 
-			CircleDef sd = new CircleDef();
-			sd.Radius = 0.3f;
-			sd.Density = 20.0f;
-			sd.Restitution = 0.1f;
-			_bomb.CreateShape(sd);
-
-			_bomb.SetMassFromShapes();
-		}
+	        if (inRange)
+	        {
+		        _bomb.CreateFixture(sd);
+		        _bomb.SetMassFromShapes();
+	        }
+        }
 
 		public virtual void Step(Settings settings)
 		{
 			float timeStep = settings.hz > 0.0f ? 1.0f / settings.hz : 0.0f;
 
-			if (settings.pause != 0)
-			{
-				if (settings.singleStep != 0)
-				{
-					settings.singleStep = 0;
-				}
-				else
-				{
-					timeStep = 0.0f;
-				}
+	        if (settings.pause == 1)
+	        {
+		        if (settings.singleStep > 1)
+		        {
+			        settings.singleStep = 0;
+		        }
+		        else
+		        {
+			        timeStep = 0.0f;
+		        }
 
-				OpenGLDebugDraw.DrawString(5, _textLine, "****PAUSED****");
-				_textLine += 15;
-			}
+		        //_debugDraw.DrawString(5, m_textLine, "****PAUSED****");
+		        _textLine += 15;
+	        }
 
-			uint flags = 0;
-			flags += (uint)settings.drawShapes * (uint)DebugDraw.DrawFlags.Shape;
-			flags += (uint)settings.drawJoints * (uint)DebugDraw.DrawFlags.Joint;
-			flags += (uint)settings.drawCoreShapes * (uint)DebugDraw.DrawFlags.CoreShape;
-			flags += (uint)settings.drawAABBs * (uint)DebugDraw.DrawFlags.Aabb;
-			flags += (uint)settings.drawOBBs * (uint)DebugDraw.DrawFlags.Obb;
-			flags += (uint)settings.drawPairs * (uint)DebugDraw.DrawFlags.Pair;
-			flags += (uint)settings.drawCOMs * (uint)DebugDraw.DrawFlags.CenterOfMass;
-			flags += (uint)settings.drawController * (uint)DebugDraw.DrawFlags.Controller;
-			_debugDraw.Flags = (DebugDraw.DrawFlags)flags;
+	        int flags = 0;
+	        flags += settings.drawShapes			* (int)DebugDraw.DrawFlags.Shape;
+	        flags += settings.drawJoints			* (int)DebugDraw.DrawFlags.Joint;
+	        flags += settings.drawController		* (int)DebugDraw.DrawFlags.Controller;
+	        flags += settings.drawCoreShapes		* (int)DebugDraw.DrawFlags.CoreShape;
+	        flags += settings.drawAABBs			    * (int)DebugDraw.DrawFlags.Aabb;
+	        flags += settings.drawOBBs				* (int)DebugDraw.DrawFlags.Obb;
+	        flags += settings.drawPairs			    * (int)DebugDraw.DrawFlags.Pair;
+            flags += settings.drawCOMs              * (int)DebugDraw.DrawFlags.CenterOfMass;
+	        _debugDraw.Flags = (DebugDraw.DrawFlags)flags;
 
-			_world.SetWarmStarting(settings.enableWarmStarting > 0);
-			_world.SetContinuousPhysics(settings.enableTOI > 0);
+	        _world.SetWarmStarting(settings.enableWarmStarting > 0);
+	        _world.SetContinuousPhysics(settings.enableContinuous > 0);
 
-			_pointCount = 0;
+	        _pointCount = 0;
 
-			_world.Step(timeStep, settings.velocityIterations, settings.positionIterations);
+	        _world.Step(timeStep, settings.velocityIterations, settings.positionIterations);
 
-			_world.Validate();
+	        if (timeStep > 0.0f)
+	        {
+		        ++_stepCount;
+	        }
 
-			if (_bomb != null && _bomb.IsFrozen())
-			{
-				_world.DestroyBody(_bomb);
-				_bomb = null;
-			}
+	        _world.Validate();
 
-			if (settings.drawStats != 0)
-			{
-				OpenGLDebugDraw.DrawString(5, _textLine, String.Format("proxies(max) = {0}({1}), pairs(max) = {2}({3})",
-					new object[]{_world.GetProxyCount(), Box2DX.Common.Settings.MaxProxies,
-						_world.GetPairCount(), Box2DX.Common.Settings.MaxProxies}));
-				_textLine += 15;
+	        if (_bomb != null && _bomb.IsFrozen())
+	        {
+		        _world.DestroyBody(_bomb);
+		        _bomb = null;
+	        }
 
-				OpenGLDebugDraw.DrawString(5, _textLine, String.Format("bodies/contacts/joints = {0}/{1}/{2}",
-					new object[] { _world.GetBodyCount(), _world.GetContactCount(), _world.GetJointCount() }));
-				_textLine += 15;
-			}
+	        if (settings.drawStats == 1)
+	        {
+                //OpenGLDebugDraw.DrawString(5, _textLine, "proxies(max) = %d(%d), pairs(max) = %d(%d)",
+			    //    _world.GetProxyCount(), Box2DX.Common.Settings.MaxProxies,
+                //    _world.GetPairCount(), Box2DX.Common.Settings.MaxPairs);
+		        _textLine += 15;
 
-			if (_mouseJoint != null)
-			{
-				Body body = _mouseJoint.GetBody2();
-				Vec2 p1 = body.GetWorldPoint(_mouseJoint._localAnchor);
-				Vec2 p2 = _mouseJoint._target;
+                //OpenGLDebugDraw.DrawString(5, m_textLine, "bodies/contacts/joints = %d/%d/%d",
+			    //    m_world.GetBodyCount(), m_world->GetContactCount(), m_world.GetJointCount());
+		        _textLine += 15;
 
-				Gl.glPointSize(4.0f);
-				Gl.glColor3f(0.0f, 1.0f, 0.0f);
-				Gl.glBegin(Gl.GL_POINTS);
-				Gl.glVertex2f(p1.X, p1.Y);
-				Gl.glVertex2f(p2.X, p2.Y);
-				Gl.glEnd();
-				Gl.glPointSize(1.0f);
+                //OpenGLDebugDraw.DrawString(5, m_textLine, "heap bytes = %d", b2_byteCount);
+		        _textLine += 15;
+	        }
 
-				Gl.glColor3f(0.8f, 0.8f, 0.8f);
-				Gl.glBegin(Gl.GL_LINES);
-				Gl.glVertex2f(p1.X, p1.Y);
-				Gl.glVertex2f(p2.X, p2.Y);
-				Gl.glEnd();
-			}
+	        if (_mouseJoint != null)
+	        {
+		        Body body = _mouseJoint.GetBody2();
+		        Vec2 p1 = body.GetWorldPoint(_mouseJoint._localAnchor);
+		        Vec2 p2 = _mouseJoint._target;
 
-			if (settings.drawContactPoints != 0)
-			{
-				//float k_forceScale = 0.01f;
-				float k_axisScale = 0.3f;
+		        Gl.glPointSize(4.0f);
+                Gl.glColor3f(0.0f, 1.0f, 0.0f);
+                Gl.glBegin(Gl.GL_POINTS);
+                Gl.glVertex2f(p1.X, p1.Y);
+                Gl.glVertex2f(p2.X, p2.Y);
+                Gl.glEnd();
+                Gl.glPointSize(1.0f);
 
-				for (int i = 0; i < _pointCount; ++i)
-				{
-					MyContactPoint point = _points[i];
+                Gl.glColor3f(0.8f, 0.8f, 0.8f);
+                Gl.glBegin(Gl.GL_LINES);
+                Gl.glVertex2f(p1.X, p1.Y);
+                Gl.glVertex2f(p2.X, p2.Y);
+                Gl.glEnd();
+	        }
+        	
+	        if (_bombSpawning)
+	        {
+                Gl.glPointSize(4.0f);
+                Gl.glColor3f(0.0f, 0.0f, 1.0f);
+                Gl.glBegin(Gl.GL_POINTS);
+                Gl.glColor3f(0.0f, 0.0f, 1.0f);
+                Gl.glVertex2f(_bombSpawnPoint.X, _bombSpawnPoint.Y);
+                Gl.glEnd();
 
-					if (point.state == ContactState.ContactAdded)
-					{
-						// Add
-						OpenGLDebugDraw.DrawPoint(point.position, 10.0f, new Color(0.3f, 0.95f, 0.3f));
-					}
-					else if (point.state == ContactState.ContactPersisted)
-					{
-						// Persist
-						OpenGLDebugDraw.DrawPoint(point.position, 5.0f, new Color(0.3f, 0.3f, 0.95f));
-					}
-					else
-					{
-						// Remove
-						OpenGLDebugDraw.DrawPoint(point.position, 10.0f, new Color(0.95f, 0.3f, 0.3f));
-					}
+                Gl.glColor3f(0.8f, 0.8f, 0.8f);
+                Gl.glBegin(Gl.GL_LINES);
+                Gl.glVertex2f(_mouseWorld.X, _mouseWorld.Y);
+                Gl.glVertex2f(_bombSpawnPoint.X, _bombSpawnPoint.Y);
+                Gl.glEnd();
+	        }
 
-					if (settings.drawContactNormals == 1)
-					{
-						Vec2 p1 = point.position;
-						Vec2 p2 = p1 + k_axisScale * point.normal;
-						OpenGLDebugDraw.DrawSegment(p1, p2, new Color(0.4f, 0.9f, 0.4f));
-					}
-					else if (settings.drawContactForces == 1)
-					{
-						/*Vector2 p1 = point.position;
-						Vector2 p2 = p1 + k_forceScale * point.normalForce * point.normal;
-						OpenGLDebugDraw.DrawSegment(p1, p2, new Color(0.9f, 0.9f, 0.3f));*/
-					}
+	        if (settings.drawContactPoints == 1)
+	        {
+		        //const float32 k_impulseScale = 0.1f;
+		        float k_axisScale = 0.3f;
 
-					if (settings.drawFrictionForces == 1)
-					{
-						/*Vector2 tangent = Vector2.Cross(point.normal, 1.0f);
-						Vector2 p1 = point.position;
-						Vector2 p2 = p1 + k_forceScale * point.tangentForce * tangent;
-						OpenGLDebugDraw.DrawSegment(p1, p2, new Color(0.9f, 0.9f, 0.3f));*/
-					}
-				}
-			}
-		}
+		        for (int i = 0; i < _pointCount; ++i)
+		        {
+			        ContactPoint point = _points[i];
+
+			        if (point.state == PointState.AddState)
+			        {
+				        // Add
+				        OpenGLDebugDraw.DrawPoint(point.position, 10.0f, new Color(0.3f, 0.95f, 0.3f));
+			        }
+			        else if (point.state == PointState.PersistState)
+			        {
+				        // Persist
+                        OpenGLDebugDraw.DrawPoint(point.position, 5.0f, new Color(0.3f, 0.3f, 0.95f));
+			        }
+
+			        if (settings.drawContactNormals == 1)
+			        {
+				        Vec2 p1 = point.position;
+				        Vec2 p2 = p1 + k_axisScale * point.normal;
+				        _debugDraw.DrawSegment(p1, p2, new Color(0.4f, 0.9f, 0.4f));
+			        }
+			        else if (settings.drawContactForces == 1)
+			        {
+				        //b2Vec2 p1 = point->position;
+				        //b2Vec2 p2 = p1 + k_forceScale * point->normalForce * point->normal;
+				        //DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
+			        }
+
+			        if (settings.drawFrictionForces == 1)
+			        {
+				        //b2Vec2 tangent = b2Cross(point->normal, 1.0f);
+				        //b2Vec2 p1 = point->position;
+				        //b2Vec2 p2 = p1 + k_forceScale * point->tangentForce * tangent;
+				        //DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
+			        }
+		        }
+	        }
+        }
 
 		public override string ToString()
 		{

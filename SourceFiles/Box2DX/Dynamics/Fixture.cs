@@ -68,6 +68,8 @@ namespace Box2DX.Dynamics
         /// The constructor sets the default fixture definition values.
         public FixtureDef()
         {
+            Filter = new FilterData();
+            
             Type = ShapeType.UnknownShape;
             UserData = null;
             Friction = 0.2f;
