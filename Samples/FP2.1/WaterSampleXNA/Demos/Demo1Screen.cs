@@ -33,19 +33,19 @@ namespace FarseerGames.WaterSampleXNA.Demos
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 250));
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
 
-            _cameraMatrix = Matrix.Identity;
-            _projectionMatrix = Matrix.CreateOrthographicOffCenter(0, 1024, 768, 0, -100, 100);
-            _worldMatrix = Matrix.Identity;
-
-            _waterModel = new WaterModel();
-            _waterModel.Initialize(PhysicsSimulator);
-            _waterModel.WaveController.Enabled = true;  // if false waves will not be created
-
             base.Initialize();
         }
 
         public override void LoadContent()
         {
+            _cameraMatrix = Matrix.Identity;
+            _projectionMatrix = Matrix.CreateOrthographicOffCenter(0, ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 0, -100, 100);
+            _worldMatrix = Matrix.Identity;
+
+            _waterModel = new WaterModel();
+            _waterModel.Initialize(PhysicsSimulator, new Vector2(ScreenManager.ScreenHeight * .05f, 500), new Vector2(ScreenManager.ScreenWidth - ((ScreenManager.ScreenHeight * .05f) * 2.0f), ScreenManager.ScreenHeight - 500));
+            _waterModel.WaveController.Enabled = true;  // if false waves will not be created
+
             _platform = new Box(300, 20, 10, new Vector2(ScreenManager.ScreenWidth / 2f, 500), Color.White, Color.Black, 1);
             _platform.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
