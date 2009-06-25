@@ -51,7 +51,7 @@ namespace TestBed
 
 				Vec2 x = new Vec2(-10.0f, 0.75f);
 				Vec2 y;
-				Vec2 deltaX = new Vec2(0.5625f, 2.0f);
+				Vec2 deltaX = new Vec2(0.5625f, 1.25f);
 				Vec2 deltaY = new Vec2(1.125f, 0.0f);
 
 				for (int i = 0; i < 25; ++i)
