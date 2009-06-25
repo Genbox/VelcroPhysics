@@ -47,7 +47,7 @@ namespace Box2DX.Collision
                 FaceB
             };
 
-            public void Initialize(SimplexCache cache,
+            public void Initialize(ref SimplexCache cache,
                 Shape shapeA, XForm transformA,
                 Shape shapeB, XForm transformB)
             {
@@ -218,7 +218,7 @@ namespace Box2DX.Collision
                 distanceInput.transformA = xfA;
                 distanceInput.transformB = xfB;
                 DistanceOutput distanceOutput;
-                Distance(out distanceOutput, cache, distanceInput, shapeA, shapeB);
+                Distance(out distanceOutput, ref cache, distanceInput, shapeA, shapeB);
 
                 if (distanceOutput.distance <= 0.0f)
                 {
@@ -227,7 +227,7 @@ namespace Box2DX.Collision
                 }
 
                 SeparationFunction fcn = new SeparationFunction();
-                fcn.Initialize(cache, shapeA, xfA, shapeB, xfB);
+                fcn.Initialize(ref cache, shapeA, xfA, shapeB, xfB);
 
                 float separation = fcn.Evaluate(xfA, xfB);
                 if (separation <= 0.0f)

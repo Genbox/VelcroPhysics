@@ -397,7 +397,7 @@ namespace Box2DX.Collision
         /// On the first call set b2SimplexCache.count to zero.
         /// </summary>
         public static void Distance(out DistanceOutput output,
-                        SimplexCache cache,
+                        ref SimplexCache cache,
                         DistanceInput input,
                         Shape shapeA,
                         Shape shapeB)
