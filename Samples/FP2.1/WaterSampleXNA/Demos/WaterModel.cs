@@ -36,15 +36,15 @@ namespace FarseerGames.WaterSampleXNA.Demos
             WaveGeneratorStep = 0.0f;
         }
 
-        public void Initialize(PhysicsSimulator physicsSimulator)
+        public void Initialize(PhysicsSimulator physicsSimulator, Vector2 position, Vector2 size)
         {
             //The wave controller controls how the waves move.. how big, how fast, etc..
             //The wave controller is represented as set of points equally
             //spaced horizontally along the width of the wave.
             WaveController = new WaveController();
-            WaveController.Position = new Vector2(35, 500);
-            WaveController.Width = 950;
-            WaveController.Height = 230;
+            WaveController.Position = position;
+            WaveController.Width = size.X;
+            WaveController.Height = size.Y;
             WaveController.NodeCount = 100; //how many vertices make up the surface of the wave
             WaveController.DampingCoefficient = .98f; //determines how quickly the wave will disipate
             WaveController.Frequency = .001f; //determines how fast the wave algorithm runs (seconds)
@@ -75,7 +75,7 @@ namespace FarseerGames.WaterSampleXNA.Demos
 
         public void Update(TimeSpan elapsedTime)
         {
-            WaveController.Update((float)elapsedTime.TotalSeconds);
+            WaveController.Update((float)elapsedTime.TotalSeconds, (float)elapsedTime.TotalSeconds);
         }
 
         public void EntryEventHandler(Geom geom, Vertices verts)
