@@ -55,6 +55,7 @@
     <Compile Include="Collision\Collision.CollidePoly.cs" />
     <Compile Include="Collision\Collision.cs" />
     <Compile Include="Collision\Collision.Distance.cs" />
+    <Compile Include="Collision\DynamicTree.cs" />
     <Compile Include="Collision\Collision.TimeOfImpact.cs" />
     <Compile Include="Collision\PairManager.cs" />
     <Compile Include="Collision\Shapes\CircleShape.cs" />
