@@ -44,7 +44,7 @@ namespace FarseerGames.WaterSampleXNA
 #endif
 
             //Set window defaults. Parent game can override in constructor
-            Window.AllowUserResizing = true;
+            Window.AllowUserResizing = false;
             Window.ClientSizeChanged += Window_ClientSizeChanged;
 
             //new-up components and add to Game.Components
