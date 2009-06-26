@@ -21,8 +21,24 @@
 
 namespace Box2DX.Common
 {
+    /// Version numbering scheme.
+    /// See http://en.wikipedia.org/wiki/Software_versioning
+    public struct Version
+    {
+        public int major;		//< significant changes
+        public int minor;		//< incremental changes
+        public int revision;	//< bug fixes
+    }
+
     public class Settings
     {
+        public Settings()
+        {
+            Version.major = 2;
+            Version.minor = 0;
+            Version.revision = 2;
+        }
+
 #if TARGET_FLOAT32_IS_FIXED
 		public static readonly float FLT_EPSILON = FIXED_EPSILON;
 		public static readonly float FLT_MAX = FIXED_MAX;
@@ -112,7 +128,6 @@ namespace Box2DX.Common
         /// to prevent numerical problems. You shouldn't need to adjust this.
         /// </summary>
         public static readonly float MaxTranslation = 2.0f;
-
         public static readonly float MaxTranslationSquared = (MaxTranslation * MaxTranslation);
 
         /// <summary>
@@ -144,19 +159,10 @@ namespace Box2DX.Common
         /// <summary>
         /// A body cannot sleep if its angular velocity is above this tolerance.
         /// </summary>
-        public static readonly float AngularSleepTolerance = 2.0f / 180.0f; // 2 degrees/s
-
-        /// Version numbering scheme.
-        /// See http://en.wikipedia.org/wiki/Software_versioning
-        public struct b2Version
-        {
-            int major;		//< significant changes
-            int minor;		//< incremental changes
-            int revision;	//< bug fixes
-        };
+        public static readonly float AngularSleepTolerance = 2.0f / 180.0f * Pi; // 2 degrees/s
 
         /// Current version.
-        public static b2Version Version;
+        public static Version Version;
         
         /// <summary>
         /// Friction mixing law. Feel free to customize this.
