@@ -78,7 +78,7 @@ namespace FarseerGames.WaterSampleSilverlight.Models
 
         public void Update(TimeSpan elapsedTime)
         {
-            WaveController.Update((float) elapsedTime.TotalSeconds);
+            WaveController.Update((float)elapsedTime.TotalSeconds, 0);
         }
 
         #endregion
