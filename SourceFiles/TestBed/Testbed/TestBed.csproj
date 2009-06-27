@@ -95,6 +95,8 @@
     <Compile Include="Tests\Pyramid.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\VaryingFriction.cs" />
+    <Compile Include="Tests\VaryingRestitution.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Box2DX\Box2DX.csproj">

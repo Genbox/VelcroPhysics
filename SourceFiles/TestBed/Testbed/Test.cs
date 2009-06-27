@@ -157,6 +157,7 @@ namespace TestBed
 		{			
 			//new TestEntry("Simple Test", SimpleTest.Create),
 			//new TestEntry("Line Joint Test", LineJoint.Create),
+            new TestEntry("Varying Friction", VaryingFriction.Create),
 			new TestEntry("Pyramid", Pyramid.Create),
 			//new TestEntry("Prismatic", Prismatic.Create),
 			//new TestEntry("Revolute", Revolute.Create),
@@ -165,8 +166,8 @@ namespace TestBed
 			//new TestEntry("Polygon Shapes", PolyShapes.Create),
 			//new TestEntry("Web", Web.Create),
 			//new TestEntry("Vertical Stack", VerticalStack.Create),
-			//new TestEntry("Varying Friction", VaryingFriction.Create),
-			//new TestEntry("Varying Restitution", VaryingRestitution.Create),
+			
+			new TestEntry("Varying Restitution", VaryingRestitution.Create),
 			//new TestEntry("Bridge", Bridge.Create),
 			//new TestEntry("Dominos", Dominos.Create),
 			//new TestEntry("CCD Test", CCDTest.Create),

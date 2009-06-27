@@ -41,7 +41,7 @@ namespace TestBed
 				bd.Position.Set(0.0f, -10.0f);
 
 				Body ground = _world.CreateBody(bd);
-				ground.CreateShape(sd);
+				ground.CreateFixture(sd);
 			}
 
 			{
@@ -59,7 +59,7 @@ namespace TestBed
 					Body body = _world.CreateBody(bd);
 
 					sd.Restitution = restitution[i];
-					body.CreateShape(sd);
+                    body.CreateFixture(sd);
 					body.SetMassFromShapes();
 				}
 			}
