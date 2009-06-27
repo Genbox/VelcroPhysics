@@ -41,7 +41,7 @@ namespace TestBed
 
 				PolygonDef sd = new PolygonDef();
 				sd.SetAsBox(50.0f, 10.0f);
-				ground.CreateShape(sd);
+				ground.CreateFixture(sd);
 			}
 
 			{
@@ -60,7 +60,7 @@ namespace TestBed
 					BodyDef bd = new BodyDef();
 					bd.Position.Set(0.5f + i, y);
 					Body body = _world.CreateBody(bd);
-					body.CreateShape(sd);
+                    body.CreateFixture(sd);
 					body.SetMassFromShapes();
 
 					Vec2 anchor = new Vec2(i, y);

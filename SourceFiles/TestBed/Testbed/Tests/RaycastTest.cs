@@ -43,7 +43,7 @@ namespace TestBed
 
 				PolygonDef sd = new PolygonDef();
 				sd.SetAsBox(50.0f, 10.0f);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 			}
 
 			{
@@ -54,7 +54,7 @@ namespace TestBed
 				PolygonDef sd = new PolygonDef();
 				sd.SetAsBox(5.0f, 1.0f);
 				sd.Density = 4.0f;
-				laserBody.CreateShape(sd);
+                laserBody.CreateFixture(sd);
 				laserBody.SetMassFromShapes();
 
 				Body body;
@@ -64,12 +64,12 @@ namespace TestBed
 
 				CircleDef cd = new CircleDef();
 				cd.Radius = 3;
-				body.CreateShape(cd);
+                body.CreateFixture(cd);
 
 				bd.Position.Set(5.0f, 10.0f);
 				body = _world.CreateBody(bd);
 
-				body.CreateShape(cd);
+                body.CreateFixture(cd);
 			}
 		}
 
@@ -96,11 +96,11 @@ namespace TestBed
 
 				float lambda = 1;
 				Vec2 normal;
-				Shape shape = _world.RaycastOne(segment, out lambda, out normal, false, null);
+				Fixture fixture = _world.RaycastOne(segment, out lambda, out normal, false, null);
 
 				Color laserColor = new Color(255, 0, 0);
 
-				if (shape != null)
+				if (fixture != null)
 				{
 					_debugDraw.DrawSegment(segment.P1, (1 - lambda) * segment.P1 + lambda * segment.P2, laserColor);
 				}

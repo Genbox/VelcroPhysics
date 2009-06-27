@@ -92,9 +92,16 @@
     </Compile>
     <Compile Include="Render.cs" />
     <Compile Include="Test.cs" />
+    <Compile Include="Tests\Bridge.cs" />
+    <Compile Include="Tests\BroadPhaseTest.cs" />
+    <Compile Include="Tests\Buoyancy.cs" />
+    <Compile Include="Tests\CCDTest.cs" />
+    <Compile Include="Tests\Chain.cs" />
     <Compile Include="Tests\Pyramid.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\RaycastTest.cs" />
+    <Compile Include="Tests\TheoJansen.cs" />
     <Compile Include="Tests\VaryingFriction.cs" />
     <Compile Include="Tests\VaryingRestitution.cs" />
   </ItemGroup>

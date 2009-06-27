@@ -55,13 +55,13 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(0.0f, -10.0f);
 				Body ground = _world.CreateBody(bd);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 
 				sd.SetAsBox(0.5f, 5.0f, new Vec2(-50.0f, 15.0f), 0.0f);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 
 				sd.SetAsBox(0.5f, 5.0f, new Vec2(50.0f, 15.0f), 0.0f);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 			}
 
 			for (int i = 0; i < 40; ++i)
@@ -74,7 +74,7 @@ namespace TestBed
 				bd.Position.Set(-40.0f + 2.0f * i, 0.5f);
 
 				Body body = _world.CreateBody(bd);
-				body.CreateShape(sd);
+                body.CreateFixture(sd);
 				body.SetMassFromShapes();
 			}
 
@@ -82,11 +82,11 @@ namespace TestBed
 				PolygonDef sd = new PolygonDef();
 				sd.Density = 1.0f;
 				sd.SetAsBox(2.5f, 1.0f);
-				sd.Filter.GroupIndex = -1;
+				sd.Filter.GroupIndex = 2;
 				BodyDef bd = new BodyDef();
 				bd.Position = pivot + _offset;
 				_chassis = _world.CreateBody(bd);
-				_chassis.CreateShape(sd);
+                _chassis.CreateFixture(sd);
 				_chassis.SetMassFromShapes();
 			}
 
@@ -94,11 +94,11 @@ namespace TestBed
 				CircleDef sd = new CircleDef();
 				sd.Density = 1.0f;
 				sd.Radius = 1.6f;
-				sd.Filter.GroupIndex = -1;
+				sd.Filter.GroupIndex = 2;
 				BodyDef bd = new BodyDef();
 				bd.Position = pivot + _offset;
 				_wheel = _world.CreateBody(bd);
-				_wheel.CreateShape(sd);
+                _wheel.CreateFixture(sd);
 				_wheel.SetMassFromShapes();
 			}
 
@@ -140,8 +140,8 @@ namespace TestBed
 			PolygonDef sd1 = new PolygonDef(), sd2 = new PolygonDef();
 			sd1.VertexCount = 3;
 			sd2.VertexCount = 3;
-			sd1.Filter.GroupIndex = -1;
-			sd2.Filter.GroupIndex = -1;
+			sd1.Filter.GroupIndex = 2;
+			sd2.Filter.GroupIndex = 2;
 			sd1.Density = 1.0f;
 			sd2.Density = 1.0f;
 
@@ -176,8 +176,8 @@ namespace TestBed
 			Body body1 = _world.CreateBody(bd1);
 			Body body2 = _world.CreateBody(bd2);
 
-			body1.CreateShape(sd1);
-			body2.CreateShape(sd2);
+            body1.CreateFixture(sd1);
+            body2.CreateFixture(sd2);
 
 			body1.SetMassFromShapes();
 			body2.SetMassFromShapes();

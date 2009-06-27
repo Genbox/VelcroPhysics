@@ -32,18 +32,20 @@ namespace TestBed
 {
 	public class Buoyancy : Test
 	{
-		private BuoyancyController _bc = new BuoyancyController();
+        private BuoyancyController _bc;
 
 		public Buoyancy()
 		{
-			BuoyancyController bc = _bc;
-			_world.AddController(bc);
+            BuoyancyControllerDef bcd = new BuoyancyControllerDef();
 
-			bc.offset = 15;
-			bc.normal.Set(0, 1);
-			bc.density = 2;
-			bc.linearDrag = 2;
-			bc.angularDrag = 1;
+            bcd.Offset = 15;
+            bcd.Normal.Set(0, 1);
+            bcd.Density = 2;
+            bcd.LinearDrag = 2;
+            bcd.AngularDrag = 1;
+            
+            BuoyancyController _bc = new BuoyancyController(bcd);
+			_world.AddController(_bc);
 
 			for (int i = 0; i < 2; ++i)
 			{
@@ -57,10 +59,10 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(-8.0f + 8.0f * i, 12.0f);
 				Body body = _world.CreateBody(bd);
-				body.CreateShape(sd);
+                body.CreateFixture(sd);
 				body.SetMassFromShapes();
 
-				bc.AddBody(body);
+				_bc.AddBody(body);
 			}
 
 			for (int i = 0; i < 3; ++i)
@@ -72,10 +74,10 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(-6.0f + 6.0f * i, 10.0f);
 				Body body = _world.CreateBody(bd);
-				body.CreateShape(sd);
+                body.CreateFixture(sd);
 				body.SetMassFromShapes();
 
-				bc.AddBody(body);
+				_bc.AddBody(body);
 			}
 		}
 
