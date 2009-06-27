@@ -41,7 +41,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(0.0f, -10.0f);
 				ground = _world.CreateBody(bd);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 			}
 
 			{
@@ -59,7 +59,7 @@ namespace TestBed
 					BodyDef bd = new BodyDef();
 					bd.Position.Set(-14.5f + 1.0f * i, 5.0f);
 					Body body = _world.CreateBody(bd);
-					body.CreateShape(sd);
+                    body.CreateFixture(sd);
 					body.SetMassFromShapes();
 
 					Vec2 anchor = new Vec2(-15.0f + 1.0f * i, 5.0f);

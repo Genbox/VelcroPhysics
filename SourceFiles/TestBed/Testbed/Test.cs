@@ -162,23 +162,23 @@ namespace TestBed
 			new TestEntry("Pyramid", Pyramid.Create),
 			//new TestEntry("Prismatic", Prismatic.Create),
 			//new TestEntry("Revolute", Revolute.Create),
-			//new TestEntry("Theo Jansen's Walker", TheoJansen.Create),
+			new TestEntry("Theo Jansen's Walker", TheoJansen.Create),
 			//new TestEntry("Contact Callback Test", ContactCB.Create),
 			//new TestEntry("Polygon Shapes", PolyShapes.Create),
 			//new TestEntry("Web", Web.Create),
 			//new TestEntry("Vertical Stack", VerticalStack.Create),
 			
 			
-			//new TestEntry("Bridge", Bridge.Create),
+			new TestEntry("Bridge", Bridge.Create),
 			//new TestEntry("Dominos", Dominos.Create),
-			//new TestEntry("CCD Test", CCDTest.Create),
+			new TestEntry("CCD Test", CCDTest.Create),
 			//new TestEntry("Biped Test", BipedTest.Create),
 			//new TestEntry("Sensor Test", SensorTest.Create),
 			//new TestEntry("Car", Car.Create),
 			//new TestEntry("Gears", Gears.Create),
 			//new TestEntry("Slider Crank", SliderCrank.Create),
 			//new TestEntry("Compound Shapes", CompoundShapes.Create),
-			//new TestEntry("Chain", Chain.Create),
+			new TestEntry("Chain", Chain.Create),
 			//new TestEntry("Collision Processing", CollisionProcessing.Create),
 			//new TestEntry("Collision Filtering", CollisionFiltering.Create),
 			//new TestEntry("Motors and Limits", MotorsAndLimits.Create),
@@ -187,11 +187,11 @@ namespace TestBed
 			//new TestEntry("Shape Editing", ShapeEditing.Create),
 			//new TestEntry("Time of Impact", TimeOfImpact.Create),
 			//new TestEntry("Distance Test", DistanceTest.Create),
-			//new TestEntry("Broad Phase", BroadPhaseTest.Create),
+			new TestEntry("Broad Phase", BroadPhaseTest.Create),
 			//new TestEntry("PolyCollision", PolyCollision.Create),
 			//new TestEntry("Elastic Body", ElasticBody.Create),
-			//new TestEntry("Raycast Test", RaycastTest.Create),
-			//new TestEntry("Buoyancy", Buoyancy.Create)
+			new TestEntry("Raycast Test", RaycastTest.Create),
+			new TestEntry("Buoyancy", Buoyancy.Create)
 		};
 
 		public static int k_maxContactPoints = 2048;

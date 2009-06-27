@@ -48,7 +48,7 @@ namespace TestBed
 				bd.Position.Set(0.0f, 20.0f);
 				bd.Angle = 0.0f;
 				_body1 = _world.CreateBody(bd);
-				_shape1 = _body1.CreateShape(sd);
+                _shape1 = _body1.CreateFixture(sd);
 			}
 
 			{
@@ -60,7 +60,7 @@ namespace TestBed
 				bd.Position.Set(9.6363468f, 28.050615f);
 				bd.Angle = 1.6408679f;
 				_body2 = _world.CreateBody(bd);
-				_shape2 = (PolygonShape)_body2.CreateShape(sd);
+                _shape2 = (PolygonShape)_body2.CreateFixture(sd);
 				_body2.SetMassFromShapes();
 			}
 		}

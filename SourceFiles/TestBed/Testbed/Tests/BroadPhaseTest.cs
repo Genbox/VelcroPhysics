@@ -184,7 +184,7 @@ namespace TestBed
 				if (actor.proxyId == PairManager.NullProxy)
 					continue;
 
-				Color c = new Color();
+				Color c = new Color(0,0,0);
 				switch (actor.overlapCount)
 				{
 					case 0:
