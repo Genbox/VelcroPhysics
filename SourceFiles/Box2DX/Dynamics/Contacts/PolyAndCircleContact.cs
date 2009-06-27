@@ -26,11 +26,21 @@ namespace Box2DX.Dynamics
 {
     public class PolyAndCircleContact : Contact
     {
-        PolyAndCircleContact(Fixture fixtureA, Fixture fixtureB)
+        public PolyAndCircleContact(Fixture fixtureA, Fixture fixtureB)
             : base(fixtureA, fixtureB)
         {
             Box2DXDebug.Assert(_fixtureA.GetType() == ShapeType.PolygonShape);
             Box2DXDebug.Assert(_fixtureB.GetType() == ShapeType.CircleShape);
+        }
+
+        public static Contact Create(Fixture fixtureA, Fixture fixtureB)
+        {
+            return new PolyAndCircleContact(fixtureA, fixtureB);
+        }
+
+        public static void Destroy(Contact contact)
+        {
+            contact = null;
         }
 
         public override void Evaluate()

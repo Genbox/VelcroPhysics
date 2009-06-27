@@ -157,6 +157,7 @@ namespace TestBed
 		{			
 			//new TestEntry("Simple Test", SimpleTest.Create),
 			//new TestEntry("Line Joint Test", LineJoint.Create),
+            new TestEntry("Varying Restitution", VaryingRestitution.Create),
             new TestEntry("Varying Friction", VaryingFriction.Create),
 			new TestEntry("Pyramid", Pyramid.Create),
 			//new TestEntry("Prismatic", Prismatic.Create),
@@ -167,7 +168,7 @@ namespace TestBed
 			//new TestEntry("Web", Web.Create),
 			//new TestEntry("Vertical Stack", VerticalStack.Create),
 			
-			new TestEntry("Varying Restitution", VaryingRestitution.Create),
+			
 			//new TestEntry("Bridge", Bridge.Create),
 			//new TestEntry("Dominos", Dominos.Create),
 			//new TestEntry("CCD Test", CCDTest.Create),
@@ -284,7 +285,7 @@ namespace TestBed
 
         public void DrawTitle(int x, int y, string text)
         {
-            //_debugDraw.DrawString(x, y, text);
+            OpenGLDebugDraw.DrawString(x, y, text);
         }
 
 		public void Dispose()
@@ -466,7 +467,7 @@ namespace TestBed
 			        timeStep = 0.0f;
 		        }
 
-		        //_debugDraw.DrawString(5, m_textLine, "****PAUSED****");
+		        OpenGLDebugDraw.DrawString(5, _textLine, "****PAUSED****");
 		        _textLine += 15;
 	        }
 
@@ -555,7 +556,6 @@ namespace TestBed
 
 	        if (settings.drawContactPoints == 1)
 	        {
-		        //const float32 k_impulseScale = 0.1f;
 		        float k_axisScale = 0.3f;
 
 		        for (int i = 0; i < _pointCount; ++i)
@@ -567,11 +567,11 @@ namespace TestBed
 				        // Add
 				        OpenGLDebugDraw.DrawPoint(point.position, 10.0f, new Color(0.3f, 0.95f, 0.3f));
 			        }
-			        else if (point.state == PointState.PersistState)
-			        {
-				        // Persist
+                    else if (point.state == PointState.PersistState)
+                    {
+                        // Persist
                         OpenGLDebugDraw.DrawPoint(point.position, 5.0f, new Color(0.3f, 0.3f, 0.95f));
-			        }
+                    }
 
 			        if (settings.drawContactNormals == 1)
 			        {
@@ -581,17 +581,17 @@ namespace TestBed
 			        }
 			        else if (settings.drawContactForces == 1)
 			        {
-				        //b2Vec2 p1 = point->position;
-				        //b2Vec2 p2 = p1 + k_forceScale * point->normalForce * point->normal;
+				        //Vec2 p1 = point.position;
+				        //Vec2 p2 = p1 + k_forceScale * point.normalForce * point.normal;
 				        //DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
 			        }
 
 			        if (settings.drawFrictionForces == 1)
 			        {
-				        //b2Vec2 tangent = b2Cross(point->normal, 1.0f);
-				        //b2Vec2 p1 = point->position;
-				        //b2Vec2 p2 = p1 + k_forceScale * point->tangentForce * tangent;
-				        //DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
+				        //Vec2 tangent = Vec2.Cross(point.normal, 1.0f);
+				        //Vec2 p1 = point.position;
+				        //Vec2 p2 = p1 + k_forceScale * point.tangentForce * tangent;
+				        //DrawSegment(p1, p2, Color(0.9f, 0.9f, 0.3f));
 			        }
 		        }
 	        }
