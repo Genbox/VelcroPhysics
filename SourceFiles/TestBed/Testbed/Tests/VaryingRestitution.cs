@@ -58,7 +58,7 @@ namespace TestBed
 
 					Body body = _world.CreateBody(bd);
 
-					sd.Restitution = restitution[i];
+                    sd.Restitution = restitution[i];
                     body.CreateFixture(sd);
 					body.SetMassFromShapes();
 				}

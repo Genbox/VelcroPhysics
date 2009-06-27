@@ -36,7 +36,7 @@ namespace TestBed
 			{
 				PolygonDef sd = new PolygonDef();
 				sd.SetAsBox(50.0f, 10.0f);
-                sd.Friction = 0.9f;
+                sd.Friction = 0.0f;
 
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(0.0f, -10.0f);
@@ -49,18 +49,18 @@ namespace TestBed
 				float a = 0.5f;
 				sd.SetAsBox(a, a);
 				sd.Density = 5.0f;
-                sd.Friction = 0.9f;
+                sd.Friction = 0.0f;
 
 				Vec2 x = new Vec2(-10.0f, 0.75f);
 				Vec2 y;
 				Vec2 deltaX = new Vec2(0.5625f, 1.25f);
 				Vec2 deltaY = new Vec2(1.125f, 0.0f);
 
-				for (int i = 0; i < 25; ++i)
+				for (int i = 0; i < 15; ++i)
 				{
 					y = x;
 
-					for (int j = i; j < 25; ++j)
+					for (int j = i; j < 15; ++j)
 					{
 						BodyDef bd = new BodyDef();
 						bd.Position = y;

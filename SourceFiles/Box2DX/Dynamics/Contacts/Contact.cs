@@ -172,7 +172,7 @@ namespace Box2DX.Dynamics
 	        {
 		        if (_registers[(int)type1, (int)type2].Primary)
 		        {
-			        return createFcn(fixtureA, fixtureB);
+                    return createFcn(fixtureA, fixtureB);
 		        }
 		        else
 		        {
