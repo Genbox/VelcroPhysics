@@ -447,7 +447,7 @@ namespace TestBed
 
 			CurrentTest.SetTextLine(30);
 			CurrentTest.Step(settings);
-			OpenGLDebugDraw.DrawString(5, 15, testEntry.Name);
+            //_debugDraw.DrawString(5, 15, testEntry.Name);
 
 			openGlControl.Draw();
 

@@ -210,7 +210,7 @@ namespace TestBed
 
 		public override void Step(Settings settings)
 		{
-			OpenGLDebugDraw.DrawString(5, _textLine, "Keys: left = a, brake = s, right = d, toggle motor = m");
+            OpenGLDebugDraw.DrawString(5, _textLine, "Keys: left = a, brake = s, right = d, toggle motor = m");
 			_textLine += 15;
 
 			base.Step(settings);

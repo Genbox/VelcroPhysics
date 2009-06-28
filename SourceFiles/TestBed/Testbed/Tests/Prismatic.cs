@@ -81,10 +81,10 @@ namespace TestBed
 		public override void Step(Settings settings)
 		{
 			base.Step(settings);
-			OpenGLDebugDraw.DrawString(5, _textLine, "Keys: (l) limits, (m) motors, (p) speed");
+            OpenGLDebugDraw.DrawString(5, _textLine, "Keys: (l) limits, (m) motors, (p) speed");
 			_textLine += 15;
 			float force = _joint.MotorForce;
-			OpenGLDebugDraw.DrawString(5, _textLine, String.Format("Motor Force = {0}", force));
+            OpenGLDebugDraw.DrawString(5, _textLine, String.Format("Motor Force = {0}", force));
 			_textLine += 15;
 			
 		}

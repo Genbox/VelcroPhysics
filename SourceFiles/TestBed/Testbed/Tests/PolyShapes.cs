@@ -157,7 +157,7 @@ namespace TestBed
 		public override void Step(Settings settings)
 		{
 			base.Step(settings);
-			OpenGLDebugDraw.DrawString(5, _textLine, "Press 1-5 to drop stuff");
+            OpenGLDebugDraw.DrawString(5, _textLine, "Press 1-5 to drop stuff");
 			_textLine += 15;
 		}
 
