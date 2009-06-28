@@ -67,13 +67,15 @@ namespace Box2DX.Collision
     }
 
     /// <summary>
-    /// A shape is used for collision detection. Shapes are created in World.
-    /// You can use shape for collision detection before they are attached to the world.
-    /// Warning: you cannot reuse shapes.
+    /// A shape is used for collision detection. You can create a shape however you like.
+    /// Shapes used for simulation in b2World are created automatically when a b2Fixture
+    /// is created.
     /// </summary>
     public abstract class Shape
     {
         public ShapeType Type;
+
+        //NOTE: This was moved here in C# port to circumvent C++ generics
         public float Radius;
 
         public Shape()
@@ -82,12 +84,21 @@ namespace Box2DX.Collision
         }
 
         /// <summary>
+        /// Get the type of this shape. You can use this to down cast to the concrete shape.
+        /// </summary>
+        /// <returns>the shape type.</returns>
+        public new ShapeType GetType()
+        {
+            return Type;
+        }
+
+        /// <summary>
         /// Test a point for containment in this shape. This only works for convex shapes.
         /// </summary>
         /// <param name="xf">The shape world transform.</param>
         /// <param name="p">A point in world coordinates.</param>
         /// <returns></returns>
-        public abstract bool TestPoint(XForm xf, Vec2 p);
+        public abstract bool TestPoint(ref XForm xf, ref Vec2 p);
 
         /// <summary>
         /// Perform a ray cast against this shape.
@@ -99,14 +110,14 @@ namespace Box2DX.Collision
         /// the normal is not set.</param>
         /// <param name="segment">Defines the begin and end point of the ray cast.</param>
         /// <param name="maxLambda">A number typically in the range [0,1].</param>
-        public abstract SegmentCollide TestSegment(XForm xf, out float lambda, out Vec2 normal, Segment segment, float maxLambda);
+        public abstract SegmentCollide TestSegment(ref XForm xf, out float lambda, out Vec2 normal, ref Segment segment, float maxLambda);
 
         /// <summary>
         /// Given a transform, compute the associated axis aligned bounding box for this shape.
         /// </summary>
         /// <param name="aabb">Returns the axis aligned box.</param>
         /// <param name="xf">The world transform of the shape.</param>
-        public abstract void ComputeAABB(out AABB aabb, XForm xf);
+        public abstract void ComputeAABB(out AABB aabb, ref XForm xf);
 
         /// <summary>
         /// Compute the mass properties of this shape using its dimensions and density.
@@ -124,7 +135,7 @@ namespace Box2DX.Collision
         /// <param name="xf">The shape transform.</param>
         /// <param name="c">Returns the centroid.</param>
         /// <returns>The total volume less than offset along normal.</returns>
-        public abstract float ComputeSubmergedArea(Vec2 normal, float offset, XForm xf, out Vec2 c);
+        public abstract float ComputeSubmergedArea(ref Vec2 normal, float offset, ref XForm xf, out Vec2 c);
 
         /// <summary>
         /// Compute the sweep radius. This is used for conservative advancement (continuous
@@ -132,14 +143,15 @@ namespace Box2DX.Collision
         /// </summary>
         /// <param name="pivot">Pivot is the pivot point for rotation.</param>
         /// <returns>The distance of the furthest point from the pivot.</returns>
-        public abstract float ComputeSweepRadius(Vec2 pivot);
+        public abstract float ComputeSweepRadius(ref Vec2 pivot);
 
+        //NOTE: This was moved here in C# port to circumvent C++ generics
         public abstract Vec2 GetVertex(int index);
 
-        public abstract Vec2 GetSupportVertex(Vec2 d);
+        public abstract Vec2 GetSupportVertex(ref Vec2 d);
 
-        public abstract int GetSupport(XForm xf, Vec2 d);
+        public abstract int GetSupport(ref XForm xf, ref Vec2 d);
 
-        public abstract int GetSupport(Vec2 d);
+        public abstract int GetSupport(ref Vec2 d);
     }
 }

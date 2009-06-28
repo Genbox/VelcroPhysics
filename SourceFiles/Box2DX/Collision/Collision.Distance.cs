@@ -31,11 +31,11 @@ namespace Box2DX.Collision
         /// </summary>
         public struct SimplexCache
         {
-            public float metric;	// length or area
-            public ushort count;
+            public float Metric;	// length or area
+            public ushort Count;
 #warning "Following two fields must be initialized with size of 3"
-            public byte[] indexA;	// vertices on shape A
-            public byte[] indexB;	// vertices on shape B
+            public byte[] IndexA;	// vertices on shape A
+            public byte[] IndexB;	// vertices on shape B
         };
 
         /// <summary>
@@ -45,9 +45,9 @@ namespace Box2DX.Collision
         /// </summary>
         public struct DistanceInput
         {
-            public XForm transformA;
-            public XForm transformB;
-            public bool useRadii;
+            public XForm TransformA;
+            public XForm TransformB;
+            public bool UseRadii;
         };
 
         /// <summary>
@@ -55,98 +55,98 @@ namespace Box2DX.Collision
         /// </summary>
         public struct DistanceOutput
         {
-            public Vec2 pointA;		// closest point on shapeA
-            public Vec2 pointB;		// closest point on shapeB
-            public float distance;
-            public int iterations;	// number of GJK iterations used
+            public Vec2 PointA;		// closest point on shapeA
+            public Vec2 PointB;		// closest point on shapeB
+            public float Distance;
+            public int Iterations;	// number of GJK iterations used
         };
 
         public struct SimplexVertex
         {
-            public Vec2 wA;		// support point in shapeA
-            public Vec2 wB;		// support point in shapeB
-            public Vec2 w;		// wB - wA
-            public float a;		// barycentric coordinate for closest point
-            public int indexA;	// wA index
-            public int indexB;	// wB index
+            public Vec2 WA;		// support point in shapeA
+            public Vec2 WB;		// support point in shapeB
+            public Vec2 W;		// wB - wA
+            public float A;		// barycentric coordinate for closest point
+            public int IndexA;	// wA index
+            public int IndexB;	// wB index
         };
 
         public struct Simplex
         {
             public void ReadCache(SimplexCache cache,
-                            Shape shapeA, XForm transformA,
-                            Shape shapeB, XForm transformB)
+                            Shape shapeA, ref XForm transformA,
+                            Shape shapeB, ref XForm transformB)
             {
-                Box2DXDebug.Assert(0 <= cache.count && cache.count <= 3);
+                Box2DXDebug.Assert(0 <= cache.Count && cache.Count <= 3);
 
                 // Copy data from cache.
-                m_count = cache.count;
+                Count = cache.Count;
 
-                for (int i = 0; i < m_count; ++i)
+                for (int i = 0; i < Count; ++i)
                 {
-                    SimplexVertex v = m_vlist[i + 1];
-                    v.indexA = cache.indexA[i];
-                    v.indexB = cache.indexB[i];
-                    Vec2 wALocal = shapeA.GetVertex(v.indexA);
-                    Vec2 wBLocal = shapeB.GetVertex(v.indexB);
-                    v.wA = Math.Mul(transformA, wALocal);
-                    v.wB = Math.Mul(transformB, wBLocal);
-                    v.w = v.wB - v.wA;
-                    v.a = 0.0f;
+                    SimplexVertex v = Vertices[i + 1];
+                    v.IndexA = cache.IndexA[i];
+                    v.IndexB = cache.IndexB[i];
+                    Vec2 wALocal = shapeA.GetVertex(v.IndexA);
+                    Vec2 wBLocal = shapeB.GetVertex(v.IndexB);
+                    v.WA = Math.Mul(transformA, wALocal);
+                    v.WB = Math.Mul(transformB, wBLocal);
+                    v.W = v.WB - v.WA;
+                    v.A = 0.0f;
                 }
 
                 // Compute the new simplex metric, if it is substantially different than
                 // old metric then flush the simplex.
-                if (m_count > 1)
+                if (Count > 1)
                 {
-                    float metric1 = cache.metric;
+                    float metric1 = cache.Metric;
                     float metric2 = GetMetric();
                     if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < Settings.FLT_EPSILON)
                     {
                         // Reset the simplex.
-                        m_count = 0;
+                        Count = 0;
                     }
                 }
 
                 // If the cache is empty or invalid ...
-                if (m_count == 0)
+                if (Count == 0)
                 {
-                    m_vlist[0] = new SimplexVertex();
-                    m_vlist[0].indexA = 0;
-                    m_vlist[0].indexB = 0;
+                    Vertices[0] = new SimplexVertex();
+                    Vertices[0].IndexA = 0;
+                    Vertices[0].IndexB = 0;
                     Vec2 wALocal = shapeA.GetVertex(0);
                     Vec2 wBLocal = shapeB.GetVertex(0);
-                    m_vlist[0].wA = Math.Mul(transformA, wALocal);
-                    m_vlist[0].wB = Math.Mul(transformB, wBLocal);
-                    m_vlist[0].w = m_vlist[0].wB - m_vlist[0].wA;
-                    m_count = 1;
+                    Vertices[0].WA = Math.Mul(transformA, wALocal);
+                    Vertices[0].WB = Math.Mul(transformB, wBLocal);
+                    Vertices[0].W = Vertices[0].WB - Vertices[0].WA;
+                    Count = 1;
                 }
             }
 
             public void WriteCache(ref SimplexCache cache)
             {
-                cache.metric = GetMetric();
-                cache.count = (ushort)m_count;
-                for (int i = 0; i < m_count; ++i)
+                cache.Metric = GetMetric();
+                cache.Count = (ushort)Count;
+                for (int i = 0; i < Count; ++i)
                 {
-                    cache.indexA[i] = (byte)m_vlist[i].indexA;
-                    cache.indexB[i] = (byte)m_vlist[i].indexB;
+                    cache.IndexA[i] = (byte)Vertices[i].IndexA;
+                    cache.IndexB[i] = (byte)Vertices[i].IndexB;
                 }
             }
 
             public Vec2 GetClosestPoint()
             {
-                switch (m_count)
+                switch (Count)
                 {
                     case 0:
                         Box2DXDebug.Assert(false);
                         return Vec2.Zero;
 
                     case 1:
-                        return m_vlist[0].w;
+                        return Vertices[0].W;
 
                     case 2:
-                        return m_vlist[0].a * m_vlist[0].w + m_vlist[1].a * m_vlist[1].w;
+                        return Vertices[0].A * Vertices[0].W + Vertices[1].A * Vertices[1].W;
 
                     case 3:
                         return Vec2.Zero;
@@ -162,24 +162,24 @@ namespace Box2DX.Collision
                 pA = Vec2.Zero;
                 pB = Vec2.Zero;
 
-                switch (m_count)
+                switch (Count)
                 {
                     case 0:
                         Box2DXDebug.Assert(false);
                         break;
 
                     case 1:
-                        pA = m_vlist[0].wA;
-                        pB = m_vlist[0].wB;
+                        pA = Vertices[0].WA;
+                        pB = Vertices[0].WB;
                         break;
 
                     case 2:
-                        pA = m_vlist[0].a * m_vlist[0].wA + m_vlist[1].a * m_vlist[1].wA;
-                        pB = m_vlist[0].a * m_vlist[0].wB + m_vlist[1].a * m_vlist[1].wB;
+                        pA = Vertices[0].A * Vertices[0].WA + Vertices[1].A * Vertices[1].WA;
+                        pB = Vertices[0].A * Vertices[0].WB + Vertices[1].A * Vertices[1].WB;
                         break;
 
                     case 3:
-                        pA = m_vlist[0].a * m_vlist[0].wA + m_vlist[1].a * m_vlist[1].wA + m_vlist[2].a * m_vlist[2].wA;
+                        pA = Vertices[0].A * Vertices[0].WA + Vertices[1].A * Vertices[1].WA + Vertices[2].A * Vertices[2].WA;
                         pB = pA;
                         break;
 
@@ -191,7 +191,7 @@ namespace Box2DX.Collision
 
             public float GetMetric()
             {
-                switch (m_count)
+                switch (Count)
                 {
                     case 0:
                         Box2DXDebug.Assert(false);
@@ -201,10 +201,10 @@ namespace Box2DX.Collision
                         return 0.0f;
 
                     case 2:
-                        return Vec2.Distance(m_vlist[0].w, m_vlist[1].w);
+                        return Vec2.Distance(Vertices[0].W, Vertices[1].W);
 
                     case 3:
-                        return Vec2.Cross(m_vlist[1].w - m_vlist[0].w, m_vlist[2].w - m_vlist[0].w);
+                        return Vec2.Cross(Vertices[1].W - Vertices[0].W, Vertices[2].W - Vertices[0].W);
 
                     default:
                         Box2DXDebug.Assert(false);
@@ -239,8 +239,8 @@ namespace Box2DX.Collision
             /// </summary>
             public void Solve2()
             {
-                Vec2 w1 = m_vlist[0].w;
-                Vec2 w2 = m_vlist[1].w;
+                Vec2 w1 = Vertices[0].W;
+                Vec2 w2 = Vertices[1].W;
                 Vec2 e12 = w2 - w1;
 
                 // w1 region
@@ -248,8 +248,8 @@ namespace Box2DX.Collision
                 if (d12_2 <= 0.0f)
                 {
                     // a2 <= 0, so we clamp it to 0
-                    m_vlist[0].a = 1.0f;
-                    m_count = 1;
+                    Vertices[0].A = 1.0f;
+                    Count = 1;
                     return;
                 }
 
@@ -258,17 +258,17 @@ namespace Box2DX.Collision
                 if (d12_1 <= 0.0f)
                 {
                     // a1 <= 0, so we clamp it to 0
-                    m_vlist[1].a = 1.0f;
-                    m_count = 1;
-                    m_vlist[0] = m_vlist[1];
+                    Vertices[1].A = 1.0f;
+                    Count = 1;
+                    Vertices[0] = Vertices[1];
                     return;
                 }
 
                 // Must be in e12 region.
                 float inv_d12 = 1.0f / (d12_1 + d12_2);
-                m_vlist[0].a = d12_1 * inv_d12;
-                m_vlist[1].a = d12_2 * inv_d12;
-                m_count = 2;
+                Vertices[0].A = d12_1 * inv_d12;
+                Vertices[1].A = d12_2 * inv_d12;
+                Count = 2;
             }
 
             /// <summary>
@@ -280,9 +280,9 @@ namespace Box2DX.Collision
             /// </summary>
             public void Solve3()
             {
-                Vec2 w1 = m_vlist[0].w;
-                Vec2 w2 = m_vlist[1].w;
-                Vec2 w3 = m_vlist[2].w;
+                Vec2 w1 = Vertices[0].W;
+                Vec2 w2 = Vertices[1].W;
+                Vec2 w3 = Vertices[2].W;
 
                 // Edge12
                 // [1      1     ][a1] = [1]
@@ -324,8 +324,8 @@ namespace Box2DX.Collision
                 // w1 region
                 if (d12_2 <= 0.0f && d13_2 <= 0.0f)
                 {
-                    m_vlist[0].a = 1.0f;
-                    m_count = 1;
+                    Vertices[0].A = 1.0f;
+                    Count = 1;
                     return;
                 }
 
@@ -333,9 +333,9 @@ namespace Box2DX.Collision
                 if (d12_1 > 0.0f && d12_2 > 0.0f && d123_3 <= 0.0f)
                 {
                     float inv_d12 = 1.0f / (d12_1 + d12_2);
-                    m_vlist[0].a = d12_1 * inv_d12;
-                    m_vlist[1].a = d12_1 * inv_d12;
-                    m_count = 2;
+                    Vertices[0].A = d12_1 * inv_d12;
+                    Vertices[1].A = d12_1 * inv_d12;
+                    Count = 2;
                     return;
                 }
 
@@ -343,28 +343,28 @@ namespace Box2DX.Collision
                 if (d13_1 > 0.0f && d13_2 > 0.0f && d123_2 <= 0.0f)
                 {
                     float inv_d13 = 1.0f / (d13_1 + d13_2);
-                    m_vlist[0].a = d13_1 * inv_d13;
-                    m_vlist[2].a = d13_2 * inv_d13;
-                    m_count = 2;
-                    m_vlist[1] = m_vlist[2];
+                    Vertices[0].A = d13_1 * inv_d13;
+                    Vertices[2].A = d13_2 * inv_d13;
+                    Count = 2;
+                    Vertices[1] = Vertices[2];
                     return;
                 }
 
                 // w2 region
                 if (d12_1 <= 0.0f && d23_2 <= 0.0f)
                 {
-                    m_vlist[1].a = 1.0f;
-                    m_count = 1;
-                    m_vlist[0] = m_vlist[1];
+                    Vertices[1].A = 1.0f;
+                    Count = 1;
+                    Vertices[0] = Vertices[1];
                     return;
                 }
 
                 // w3 region
                 if (d13_1 <= 0.0f && d23_1 <= 0.0f)
                 {
-                    m_vlist[2].a = 1.0f;
-                    m_count = 1;
-                    m_vlist[0] = m_vlist[2];
+                    Vertices[2].A = 1.0f;
+                    Count = 1;
+                    Vertices[0] = Vertices[2];
                     return;
                 }
 
@@ -372,23 +372,23 @@ namespace Box2DX.Collision
                 if (d23_1 > 0.0f && d23_2 > 0.0f && d123_1 <= 0.0f)
                 {
                     float inv_d23 = 1.0f / (d23_1 + d23_2);
-                    m_vlist[1].a = d23_1 * inv_d23;
-                    m_vlist[2].a = d23_2 * inv_d23;
-                    m_count = 2;
-                    m_vlist[0] = m_vlist[2];
+                    Vertices[1].A = d23_1 * inv_d23;
+                    Vertices[2].A = d23_2 * inv_d23;
+                    Count = 2;
+                    Vertices[0] = Vertices[2];
                     return;
                 }
 
                 // Must be in triangle123
                 float inv_d123 = 1.0f / (d123_1 + d123_2 + d123_3);
-                m_vlist[0].a = d123_1 * inv_d123;
-                m_vlist[1].a = d123_2 * inv_d123;
-                m_vlist[2].a = d123_3 * inv_d123;
-                m_count = 3;
+                Vertices[0].A = d123_1 * inv_d123;
+                Vertices[1].A = d123_2 * inv_d123;
+                Vertices[2].A = d123_3 * inv_d123;
+                Count = 3;
             }
 #warning "Must be initialized to a size of 3"
-            public SimplexVertex[] m_vlist;
-            public int m_count;
+            public SimplexVertex[] Vertices;
+            public int Count;
         };
 
         /// <summary>
@@ -402,13 +402,13 @@ namespace Box2DX.Collision
                         Shape shapeA,
                         Shape shapeB)
         {
-            XForm transformA = input.transformA;
-            XForm transformB = input.transformB;
+            XForm transformA = input.TransformA;
+            XForm transformB = input.TransformB;
 
             // Initialize the simplex.
             Simplex simplex = new Simplex();
-            simplex.m_vlist = new SimplexVertex[3];
-            simplex.ReadCache(cache, shapeA, transformA, shapeB, transformB);
+            simplex.Vertices = new SimplexVertex[3];
+            simplex.ReadCache(cache, shapeA, ref  transformA, shapeB, ref transformB);
 
             // These store the vertices of the last simplex so that we
             // can check for duplicates and prevent cycling.
@@ -422,14 +422,14 @@ namespace Box2DX.Collision
             while (iter < k_maxIterationCount)
             {
                 // Copy simplex so we can identify duplicates.
-                lastCount = simplex.m_count;
+                lastCount = simplex.Count;
                 for (int i = 0; i < lastCount; ++i)
                 {
-                    lastA[i] = simplex.m_vlist[i].indexA;
-                    lastB[i] = simplex.m_vlist[i].indexB;
+                    lastA[i] = simplex.Vertices[i].IndexA;
+                    lastB[i] = simplex.Vertices[i].IndexB;
                 }
 
-                switch (simplex.m_count)
+                switch (simplex.Count)
                 {
                     case 1:
                         break;
@@ -448,7 +448,7 @@ namespace Box2DX.Collision
                 }
 
                 // If we have 3 points, then the origin is in the corresponding triangle.
-                if (simplex.m_count == 3)
+                if (simplex.Count == 3)
                 {
                     break;
                 }
@@ -470,20 +470,23 @@ namespace Box2DX.Collision
                 }
 
                 // Compute a tentative new simplex vertex using support points.
+#warning "is this right?"
                 SimplexVertex vertex = new SimplexVertex();
-                vertex.indexA = shapeA.GetSupport(Math.MulT(transformA.R, p));
-                vertex.wA = Math.Mul(transformA, shapeA.GetVertex(vertex.indexA));
+                Vec2 tempVec = Math.MulT(transformA.R, p);
+                vertex.IndexA = shapeA.GetSupport(ref tempVec);
+                vertex.WA = Math.Mul(transformA, shapeA.GetVertex(vertex.IndexA));
                 Vec2 wBLocal;
-                vertex.indexB = shapeB.GetSupport(Math.MulT(transformB.R, -p));
-                vertex.wB = Math.Mul(transformB, shapeB.GetVertex(vertex.indexB));
-                vertex.w = vertex.wB - vertex.wA;
-                simplex.m_vlist[simplex.m_count + 1] = vertex;
+                tempVec = Math.MulT(transformB.R, -p);
+                vertex.IndexB = shapeB.GetSupport(ref tempVec);
+                vertex.WB = Math.Mul(transformB, shapeB.GetVertex(vertex.IndexB));
+                vertex.W = vertex.WB - vertex.WA;
+                simplex.Vertices[simplex.Count + 1] = vertex;
 
                 // Iteration count is equated to the number of support point calls.
                 ++iter;
 
                 // Check for convergence.
-                float lowerBound = Vec2.Dot(p, vertex.w);
+                float lowerBound = Vec2.Dot(p, vertex.W);
                 float upperBound = distanceSqr;
                 const float k_relativeTolSqr = 0.01f * 0.01f;	// 1:100
                 if (upperBound - lowerBound <= k_relativeTolSqr * upperBound)
@@ -496,7 +499,7 @@ namespace Box2DX.Collision
                 bool duplicate = false;
                 for (int i = 0; i < lastCount; ++i)
                 {
-                    if (vertex.indexA == lastA[i] && vertex.indexB == lastB[i])
+                    if (vertex.IndexA == lastA[i] && vertex.IndexB == lastB[i])
                     {
                         duplicate = true;
                         break;
@@ -510,42 +513,42 @@ namespace Box2DX.Collision
                 }
 
                 // New vertex is ok and needed.
-                ++simplex.m_count;
+                ++simplex.Count;
             }
 
             // Prepare output.
 #warning "Check if pointer is converted correctly"
-            simplex.GetWitnessPoints(out output.pointA, out output.pointB);
-            output.distance = Vec2.Distance(output.pointA, output.pointB);
-            output.iterations = iter;
+            simplex.GetWitnessPoints(out output.PointA, out output.PointB);
+            output.Distance = Vec2.Distance(output.PointA, output.PointB);
+            output.Iterations = iter;
 
             // Cache the simplex.
             simplex.WriteCache(ref cache);
 
             // Apply radii if requested.
-            if (input.useRadii)
+            if (input.UseRadii)
             {
                 float rA = shapeA.Radius;
                 float rB = shapeB.Radius;
 
-                if (output.distance > rA + rB && output.distance > Settings.FLT_EPSILON)
+                if (output.Distance > rA + rB && output.Distance > Settings.FLT_EPSILON)
                 {
                     // Shapes are still no overlapped.
                     // Move the witness points to the outer surface.
-                    output.distance -= rA + rB;
-                    Vec2 normal = output.pointB - output.pointA;
+                    output.Distance -= rA + rB;
+                    Vec2 normal = output.PointB - output.PointA;
                     normal.Normalize();
-                    output.pointA += rA * normal;
-                    output.pointB -= rB * normal;
+                    output.PointA += rA * normal;
+                    output.PointB -= rB * normal;
                 }
                 else
                 {
                     // Shapes are overlapped when radii are considered.
                     // Move the witness points to the middle.
-                    Vec2 p = 0.5f * (output.pointA + output.pointB);
-                    output.pointA = p;
-                    output.pointB = p;
-                    output.distance = 0.0f;
+                    Vec2 p = 0.5f * (output.PointA + output.PointB);
+                    output.PointA = p;
+                    output.PointB = p;
+                    output.Distance = 0.0f;
                 }
             }
         }

@@ -28,20 +28,20 @@ namespace Box2DX.Dynamics
             Body bodyA = _fixtureA.GetBody();
             Body bodyB = _fixtureB.GetBody();
 
-            Collision.Collision.CollidePolyAndEdge(ref _manifold, (PolygonShape)_fixtureA.GetShape(), bodyA.GetXForm(),
+            Collision.Collision.CollidePolyAndEdge(out _manifold, (PolygonShape)_fixtureA.GetShape(), bodyA.GetXForm(),
                 (EdgeShape)_fixtureB.GetShape(), bodyB.GetXForm());
         }
 
         public override float ComputeTOI(Sweep sweepA, Sweep sweepB)
         {
-           Box2DX.Collision.Collision.TOIInput input = new Box2DX.Collision.Collision.TOIInput();
+           Collision.Collision.TOIInput input = new Collision.Collision.TOIInput();
 	       input.SweepA = sweepA;
 	       input.SweepA = sweepB;
 	       input.SweepRadiusA = _fixtureA.ComputeSweepRadius(sweepA.LocalCenter);
 	       input.SweepRadiusB = _fixtureB.ComputeSweepRadius(sweepB.LocalCenter);
 	       input.Tolerance = Settings.LinearSlop;
 
-	       return Box2DX.Collision.Collision.TimeOfImpact(input, _fixtureA.GetShape(), _fixtureB.GetShape());
+	       return Collision.Collision.TimeOfImpact(input, _fixtureA.GetShape(), _fixtureB.GetShape());
         }
 
         new public static PolyAndEdgeContact Create(Fixture fixture1, Fixture fixture2)

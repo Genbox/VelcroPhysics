@@ -69,7 +69,7 @@ namespace Box2DX.Dynamics
         public FixtureDef()
         {
             Filter = new FilterData();
-            
+
             Type = ShapeType.UnknownShape;
             UserData = null;
             Friction = 0.2f;
@@ -244,7 +244,7 @@ namespace Box2DX.Dynamics
 
         /// Get the type of the child shape. You can use this to down cast to the concrete shape.
         /// @return the shape type.
-        public ShapeType GetType()
+        public new ShapeType GetType()
         {
             return Type;
         }
@@ -301,7 +301,9 @@ namespace Box2DX.Dynamics
         /// @param p a point in world coordinates.
         public bool TestPoint(Vec2 p)
         {
-            return Shape.TestPoint(Body.GetXForm(), p);
+            //Note: Added the following line
+            XForm xForm = Body.GetXForm();
+            return Shape.TestPoint(ref xForm, ref p);
         }
 
         /// Perform a ray cast against this shape.
@@ -314,7 +316,9 @@ namespace Box2DX.Dynamics
         /// @param maxLambda a number typically in the range [0,1].
         public SegmentCollide TestSegment(out float lambda, out Vec2 normal, Segment segment, float maxLambda)
         {
-            return Shape.TestSegment(Body.GetXForm(), out lambda, out normal, segment, maxLambda);
+            //Note: Added the following line
+            XForm xForm = Body.GetXForm();
+            return Shape.TestSegment(ref xForm, out lambda, out normal, ref segment, maxLambda);
         }
 
         /// Compute the mass properties of this shape using its dimensions and density.
@@ -332,13 +336,14 @@ namespace Box2DX.Dynamics
         /// @return the total volume less than offset along normal
         public float ComputeSubmergedArea(Vec2 normal, float offset, out Vec2 c)
         {
-            return Shape.ComputeSubmergedArea(normal, offset, Body.GetXForm(), out c);
+            XForm xForm = Body.GetXForm();
+            return Shape.ComputeSubmergedArea(ref normal, offset, ref xForm, out c);
         }
 
         /// Get the maximum radius about the parent body's center of mass.
         public float ComputeSweepRadius(Vec2 pivot)
         {
-            return Shape.ComputeSweepRadius(pivot);
+            return Shape.ComputeSweepRadius(ref pivot);
         }
 
         /// Get the coefficient of friction.
@@ -422,7 +427,7 @@ namespace Box2DX.Dynamics
                     {
                         EdgeShape edge = new EdgeShape();
                         EdgeDef edgeDef = (EdgeDef)def;
-                        edge.Set(edgeDef.Vertex1, edgeDef.Vertex2);
+                        edge.Set(ref edgeDef.Vertex1, ref edgeDef.Vertex2);
                         Shape = edge;
                     }
                     break;
@@ -434,7 +439,7 @@ namespace Box2DX.Dynamics
 
             // Create proxy in the broad-phase.
             AABB aabb;
-            Shape.ComputeAABB(out aabb, xf);
+            Shape.ComputeAABB(out aabb, ref xf);
 
             bool inRange = broadPhase.InRange(aabb);
 
@@ -463,8 +468,8 @@ namespace Box2DX.Dynamics
 
             // Compute an AABB that covers the swept shape (may miss some rotation effect).
             AABB aabb1, aabb2;
-            Shape.ComputeAABB(out aabb1, xf1);
-            Shape.ComputeAABB(out aabb2, xf2);
+            Shape.ComputeAABB(out aabb1, ref xf1);
+            Shape.ComputeAABB(out aabb2, ref xf2);
 
             AABB aabb = new AABB();
             aabb.Combine(aabb1, aabb2);
@@ -490,7 +495,7 @@ namespace Box2DX.Dynamics
             broadPhase.DestroyProxy(ProxyId);
 
             AABB aabb;
-            Shape.ComputeAABB(out aabb, xf);
+            Shape.ComputeAABB(out aabb, ref xf);
 
             bool inRange = broadPhase.InRange(aabb);
 

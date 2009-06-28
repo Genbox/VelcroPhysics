@@ -53,26 +53,26 @@ namespace Box2DX.Collision
             {
                 ShapeA = shapeA;
                 ShapeB = shapeB;
-                int count = cache.count;
+                int count = cache.Count;
                 Box2DXDebug.Assert(0 < count && count < 3);
 
                 if (count == 1)
                 {
                     FaceType = Type.Points;
-                    Vec2 localPointA = ShapeA.GetVertex(cache.indexA[0]);
-                    Vec2 localPointB = ShapeB.GetVertex(cache.indexB[0]);
+                    Vec2 localPointA = ShapeA.GetVertex(cache.IndexA[0]);
+                    Vec2 localPointB = ShapeB.GetVertex(cache.IndexB[0]);
                     Vec2 pointA = Math.Mul(transformA, localPointA);
                     Vec2 pointB = Math.Mul(transformB, localPointB);
                     Axis = pointB - pointA;
                     Axis.Normalize();
                 }
-                else if (cache.indexB[0] == cache.indexB[1])
+                else if (cache.IndexB[0] == cache.IndexB[1])
                 {
                     // Two points on A and one on B
                     FaceType = Type.FaceA;
-                    Vec2 localPointA1 = ShapeA.GetVertex(cache.indexA[0]);
-                    Vec2 localPointA2 = ShapeA.GetVertex(cache.indexA[1]);
-                    Vec2 localPointB = ShapeB.GetVertex(cache.indexB[0]);
+                    Vec2 localPointA1 = ShapeA.GetVertex(cache.IndexA[0]);
+                    Vec2 localPointA2 = ShapeA.GetVertex(cache.IndexA[1]);
+                    Vec2 localPointB = ShapeB.GetVertex(cache.IndexB[0]);
                     LocalPoint = 0.5f * (localPointA1 + localPointA2);
                     Axis = Vec2.Cross(localPointA2 - localPointA1, 1.0f);
                     Axis.Normalize();
@@ -92,9 +92,9 @@ namespace Box2DX.Collision
                     // Two points on B and one or two points on A.
                     // We ignore the second point on A.
                     FaceType = Type.FaceB;
-                    Vec2 localPointA = shapeA.GetVertex(cache.indexA[0]);
-                    Vec2 localPointB1 = shapeB.GetVertex(cache.indexB[0]);
-                    Vec2 localPointB2 = shapeB.GetVertex(cache.indexB[1]);
+                    Vec2 localPointA = shapeA.GetVertex(cache.IndexA[0]);
+                    Vec2 localPointB1 = shapeB.GetVertex(cache.IndexB[0]);
+                    Vec2 localPointB2 = shapeB.GetVertex(cache.IndexB[1]);
                     LocalPoint = 0.5f * (localPointB1 + localPointB2);
                     Axis = Vec2.Cross(localPointB2 - localPointB1, 1.0f);
                     Axis.Normalize();
@@ -119,8 +119,8 @@ namespace Box2DX.Collision
                         {
                             Vec2 axisA = Math.MulT(transformA.R, Axis);
                             Vec2 axisB = Math.MulT(transformB.R, -Axis);
-                            Vec2 localPointA = ShapeA.GetSupportVertex(axisA);
-                            Vec2 localPointB = ShapeB.GetSupportVertex(axisB);
+                            Vec2 localPointA = ShapeA.GetSupportVertex(ref axisA);
+                            Vec2 localPointB = ShapeB.GetSupportVertex(ref axisB);
                             Vec2 pointA = Math.Mul(transformA, localPointA);
                             Vec2 pointB = Math.Mul(transformB, localPointB);
                             float separation = Vec2.Dot(pointB - pointA, Axis);
@@ -134,7 +134,7 @@ namespace Box2DX.Collision
 
                             Vec2 axisB = Math.MulT(transformB.R, -normal);
 
-                            Vec2 localPointB = ShapeB.GetSupportVertex(axisB);
+                            Vec2 localPointB = ShapeB.GetSupportVertex(ref axisB);
                             Vec2 pointB = Math.Mul(transformB, localPointB);
 
                             float separation = Vec2.Dot(pointB - pointA, normal);
@@ -148,7 +148,7 @@ namespace Box2DX.Collision
 
                             Vec2 axisA = Math.MulT(transformA.R, -normal);
 
-                            Vec2 localPointA = ShapeA.GetSupportVertex(axisA);
+                            Vec2 localPointA = ShapeA.GetSupportVertex(ref axisA);
                             Vec2 pointA = Math.Mul(transformA, localPointA);
 
                             float separation = Vec2.Dot(pointA - pointB, normal);
@@ -202,11 +202,11 @@ namespace Box2DX.Collision
 
             // Prepare input for distance query.
             SimplexCache cache = new SimplexCache();
-            cache.indexA = new byte[3];
-            cache.indexB = new byte[3];
-            cache.count = 0;
+            cache.IndexA = new byte[3];
+            cache.IndexB = new byte[3];
+            cache.Count = 0;
             DistanceInput distanceInput;
-            distanceInput.useRadii = false;
+            distanceInput.UseRadii = false;
 
             for (; ; )
             {
@@ -215,12 +215,12 @@ namespace Box2DX.Collision
                 sweepB.GetTransform(out xfB, alpha);
 
                 // Get the distance between shapes.
-                distanceInput.transformA = xfA;
-                distanceInput.transformB = xfB;
+                distanceInput.TransformA = xfA;
+                distanceInput.TransformB = xfB;
                 DistanceOutput distanceOutput;
                 Distance(out distanceOutput, ref cache, distanceInput, shapeA, shapeB);
 
-                if (distanceOutput.distance <= 0.0f)
+                if (distanceOutput.Distance <= 0.0f)
                 {
                     alpha = 1.0f;
                     break;

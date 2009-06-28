@@ -19,9 +19,7 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
 using Box2DX.Common;
-using Math = Box2DX.Common.Math;
 
 namespace Box2DX.Collision
 {
@@ -37,135 +35,18 @@ namespace Box2DX.Collision
         public Vec2[] Normals = new Vec2[Settings.MaxPolygonVertices];
         public int VertexCount;
 
-        /// <summary>
-        /// Get the support point in the given world direction.
-        /// Use the supplied transform.
-        /// </summary>
-        public override int GetSupport(XForm xf, Vec2 d)
-        {
-            int bestIndex = 0;
-            float bestValue = Vec2.Dot(Vertices[0], d);
-            for (int i = 1; i < VertexCount; ++i)
-            {
-                float value = Vec2.Dot(Vertices[i], d);
-                if (value > bestValue)
-                {
-                    bestIndex = i;
-                    bestValue = value;
-                }
-            }
-
-            return bestIndex;
-        }
-
-        public override int GetSupport(Vec2 d)
-        {
-            int bestIndex = 0;
-            float bestValue = Vec2.Dot(Vertices[0], d);
-            for (int i = 1; i < VertexCount; ++i)
-            {
-                float value = Vec2.Dot(Vertices[i], d);
-                if (value > bestValue)
-                {
-                    bestIndex = i;
-                    bestValue = value;
-                }
-            }
-
-            return bestIndex;
-        }
-
-        public override Vec2 GetSupportVertex(Vec2 d)
-        {
-            int bestIndex = 0;
-            float bestValue = Vec2.Dot(Vertices[0], d);
-            for (int i = 1; i < VertexCount; ++i)
-            {
-                float value = Vec2.Dot(Vertices[i], d);
-                if (value > bestValue)
-                {
-                    bestIndex = i;
-                    bestValue = value;
-                }
-            }
-
-            return Vertices[bestIndex];
-        }
-
-        /// <summary>
-        /// Get the vertex count.
-        /// </summary>
-        /// <returns></returns>
-        public int GetVertexCount()
-        {
-            return VertexCount;
-        }
-
-        /// <summary>
-        /// Get a vertex by index.
-        /// </summary>
-        public override Vec2 GetVertex(int index)
-        {
-            Box2DXDebug.Assert(0 <= index && index < VertexCount);
-            return Vertices[index];
-        }
-
         public PolygonShape()
         {
             Type = ShapeType.PolygonShape;
             Radius = Settings.PolygonRadius;
         }
 
-        public void SetAsBox(float hx, float hy)
-        {
-            VertexCount = 4;
-            Vertices[0].Set(-hx, -hy);
-            Vertices[1].Set(hx, -hy);
-            Vertices[2].Set(hx, hy);
-            Vertices[3].Set(-hx, hy);
-            Normals[0].Set(0.0f, -1.0f);
-            Normals[1].Set(1.0f, 0.0f);
-            Normals[2].Set(0.0f, 1.0f);
-            Normals[3].Set(-1.0f, 0.0f);
-            Centroid.SetZero();
-        }
-
-        public void SetAsBox(float hx, float hy, Vec2 center, float angle)
-        {
-            VertexCount = 4;
-            Vertices[0].Set(-hx, -hy);
-            Vertices[1].Set(hx, -hy);
-            Vertices[2].Set(hx, hy);
-            Vertices[3].Set(-hx, hy);
-            Normals[0].Set(0.0f, -1.0f);
-            Normals[1].Set(1.0f, 0.0f);
-            Normals[2].Set(0.0f, 1.0f);
-            Normals[3].Set(-1.0f, 0.0f);
-            Centroid = center;
-
-            XForm xf = new XForm();
-            xf.Position = center;
-            xf.R.Set(angle);
-
-            // Transform vertices and normals.
-            for (int i = 0; i < VertexCount; ++i)
-            {
-                Vertices[i] = Math.Mul(xf, Vertices[i]);
-                Normals[i] = Math.Mul(xf.R, Normals[i]);
-            }
-        }
-
-        public void SetAsEdge(Vec2 v1, Vec2 v2)
-        {
-            VertexCount = 2;
-            Vertices[0] = v1;
-            Vertices[1] = v2;
-            Centroid = 0.5f * (v1 + v2);
-            Normals[0] = Vec2.Cross(v2 - v1, 1.0f);
-            Normals[0].Normalize();
-            Normals[1] = -Normals[0];
-        }
-
+        /// <summary>
+        /// Copy vertices. This assumes the vertices define a convex polygon.
+        /// It is assumed that the exterior is the the right of each edge.
+        /// </summary>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="count">The count.</param>
         public void Set(Vec2[] vertices, int count)
         {
             Box2DXDebug.Assert(3 <= count && count <= Settings.MaxPolygonVertices);
@@ -219,7 +100,57 @@ namespace Box2DX.Collision
             Centroid = ComputeCentroid(Vertices, VertexCount);
         }
 
-        public override bool TestPoint(XForm xf, Vec2 p)
+        public void SetAsBox(float hx, float hy)
+        {
+            VertexCount = 4;
+            Vertices[0].Set(-hx, -hy);
+            Vertices[1].Set(hx, -hy);
+            Vertices[2].Set(hx, hy);
+            Vertices[3].Set(-hx, hy);
+            Normals[0].Set(0.0f, -1.0f);
+            Normals[1].Set(1.0f, 0.0f);
+            Normals[2].Set(0.0f, 1.0f);
+            Normals[3].Set(-1.0f, 0.0f);
+            Centroid.SetZero();
+        }
+
+        public void SetAsBox(float hx, float hy, Vec2 center, float angle)
+        {
+            VertexCount = 4;
+            Vertices[0].Set(-hx, -hy);
+            Vertices[1].Set(hx, -hy);
+            Vertices[2].Set(hx, hy);
+            Vertices[3].Set(-hx, hy);
+            Normals[0].Set(0.0f, -1.0f);
+            Normals[1].Set(1.0f, 0.0f);
+            Normals[2].Set(0.0f, 1.0f);
+            Normals[3].Set(-1.0f, 0.0f);
+            Centroid = center;
+
+            XForm xf = new XForm();
+            xf.Position = center;
+            xf.R.Set(angle);
+
+            // Transform vertices and normals.
+            for (int i = 0; i < VertexCount; ++i)
+            {
+                Vertices[i] = Math.Mul(xf, Vertices[i]);
+                Normals[i] = Math.Mul(xf.R, Normals[i]);
+            }
+        }
+
+        public void SetAsEdge(Vec2 v1, Vec2 v2)
+        {
+            VertexCount = 2;
+            Vertices[0] = v1;
+            Vertices[1] = v2;
+            Centroid = 0.5f * (v1 + v2);
+            Normals[0] = Vec2.Cross(v2 - v1, 1.0f);
+            Normals[0].Normalize();
+            Normals[1] = -Normals[0];
+        }
+
+        public override bool TestPoint(ref XForm xf, ref  Vec2 p)
         {
             Vec2 pLocal = Math.MulT(xf.R, p - xf.Position);
 
@@ -235,7 +166,7 @@ namespace Box2DX.Collision
             return true;
         }
 
-        public override SegmentCollide TestSegment(XForm xf, out float lambda, out Vec2 normal, Segment segment, float maxLambda)
+        public override SegmentCollide TestSegment(ref XForm xf, out float lambda, out Vec2 normal, ref  Segment segment, float maxLambda)
         {
             lambda = 0f;
             normal = Vec2.Zero;
@@ -302,7 +233,7 @@ namespace Box2DX.Collision
             return SegmentCollide.StartInsideCollide;
         }
 
-        public override void ComputeAABB(out AABB aabb, XForm xf)
+        public override void ComputeAABB(out AABB aabb, ref XForm xf)
         {
             Vec2 lower = Math.Mul(xf, Vertices[0]);
             Vec2 upper = lower;
@@ -365,7 +296,7 @@ namespace Box2DX.Collision
 			pRef *= 1.0f / count;
 #endif
 
-            float k_inv3 = 1.0f / 3.0f;
+            const float k_inv3 = 1.0f / 3.0f;
 
             for (int i = 0; i < VertexCount; ++i)
             {
@@ -407,7 +338,7 @@ namespace Box2DX.Collision
             massData.I = density * I;
         }
 
-        public override float ComputeSubmergedArea(Vec2 normal, float offset, XForm xf, out Vec2 c)
+        public override float ComputeSubmergedArea(ref Vec2 normal, float offset, ref XForm xf, out Vec2 c)
         {
             //Transform plane into shape co-ordinates
             Vec2 normalL = Math.MulT(xf.R, normal);
@@ -474,6 +405,7 @@ namespace Box2DX.Collision
                     }
                     break;
             }
+
             int intoIndex2 = (intoIndex + 1) % VertexCount;
             int outoIndex2 = (outoIndex + 1) % VertexCount;
 
@@ -481,9 +413,9 @@ namespace Box2DX.Collision
             float outoLambda = (0 - depths[outoIndex]) / (depths[outoIndex2] - depths[outoIndex]);
 
             Vec2 intoVec = new Vec2(Vertices[intoIndex].X * (1 - intoLambda) + Vertices[intoIndex2].X * intoLambda,
-                            Vertices[intoIndex].Y * (1 - intoLambda) + Vertices[intoIndex2].Y * intoLambda);
+                                    Vertices[intoIndex].Y * (1 - intoLambda) + Vertices[intoIndex2].Y * intoLambda);
             Vec2 outoVec = new Vec2(Vertices[outoIndex].X * (1 - outoLambda) + Vertices[outoIndex2].X * outoLambda,
-                            Vertices[outoIndex].Y * (1 - outoLambda) + Vertices[outoIndex2].Y * outoLambda);
+                                    Vertices[outoIndex].Y * (1 - outoLambda) + Vertices[outoIndex2].Y * outoLambda);
 
             //Initialize accumulator
             float area = 0;
@@ -502,6 +434,7 @@ namespace Box2DX.Collision
                     p3 = outoVec;
                 else
                     p3 = Vertices[i];
+
                 //Add the triangle formed by intoVec,p2,p3
                 {
                     Vec2 e1 = p2 - intoVec;
@@ -517,6 +450,7 @@ namespace Box2DX.Collision
                     center += triangleArea * k_inv3 * (intoVec + p2 + p3);
 
                 }
+#warning "hahaha, what is up with the empty comment?"
                 //
                 p2 = p3;
             }
@@ -529,7 +463,7 @@ namespace Box2DX.Collision
             return area;
         }
 
-        public override float ComputeSweepRadius(Vec2 pivot)
+        public override float ComputeSweepRadius(ref Vec2 pivot)
         {
             Box2DXDebug.Assert(VertexCount > 0);
             float sr = Vec2.DistanceSquared(Vertices[0], pivot);
@@ -539,6 +473,76 @@ namespace Box2DX.Collision
             }
 
             return Math.Sqrt(sr);
+        }
+
+#warning "xf argument is not used, perhaps we can remove GetSupport (XForm, Vec2) to get around our hack?"
+        public override int GetSupport(ref XForm xf, ref Vec2 d)
+        {
+            int bestIndex = 0;
+            float bestValue = Vec2.Dot(Vertices[0], d);
+            for (int i = 1; i < VertexCount; ++i)
+            {
+                float value = Vec2.Dot(Vertices[i], d);
+                if (value > bestValue)
+                {
+                    bestIndex = i;
+                    bestValue = value;
+                }
+            }
+
+            return bestIndex;
+        }
+
+        public override int GetSupport(ref Vec2 d)
+        {
+            int bestIndex = 0;
+            float bestValue = Vec2.Dot(Vertices[0], d);
+            for (int i = 1; i < VertexCount; ++i)
+            {
+                float value = Vec2.Dot(Vertices[i], d);
+                if (value > bestValue)
+                {
+                    bestIndex = i;
+                    bestValue = value;
+                }
+            }
+
+            return bestIndex;
+        }
+
+        public override Vec2 GetSupportVertex(ref Vec2 d)
+        {
+            int bestIndex = 0;
+            float bestValue = Vec2.Dot(Vertices[0], d);
+            for (int i = 1; i < VertexCount; ++i)
+            {
+                float value = Vec2.Dot(Vertices[i], d);
+                if (value > bestValue)
+                {
+                    bestIndex = i;
+                    bestValue = value;
+                }
+            }
+
+            return Vertices[bestIndex];
+        }
+
+        /// <summary>
+        /// Get the vertex count.
+        /// </summary>
+        /// <returns></returns>
+        public int GetVertexCount()
+        {
+            return VertexCount;
+        }
+
+        /// <summary>
+        /// Get a vertex by index.
+        /// </summary>
+        public override Vec2 GetVertex(int index)
+        {
+            Box2DXDebug.Assert(0 <= index && index < VertexCount);
+            return Vertices[index];
         }
 
         public static Vec2 ComputeCentroid(Vec2[] vs, int count)

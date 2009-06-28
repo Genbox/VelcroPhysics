@@ -362,7 +362,7 @@ namespace Box2DX.Dynamics
 				}
 			}
 
-			Report(contactSolver._constraints);
+			Report(contactSolver.Constraints);
 
 			if (allowSleep)
 			{
@@ -509,7 +509,7 @@ namespace Box2DX.Dynamics
 				}
 			}
 
-			Report(contactSolver._constraints);
+			Report(contactSolver.Constraints);
 		}
 
 		public void Add(Body body)
