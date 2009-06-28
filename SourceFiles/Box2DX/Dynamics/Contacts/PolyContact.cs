@@ -26,12 +26,12 @@ namespace Box2DX.Dynamics
 {
 	public class PolygonContact : Contact
 	{
-		public new static Contact Create(Fixture fixtureA, Fixture fixtureB)
+		new public static Contact Create(Fixture fixtureA, Fixture fixtureB)
         {
 	        return new PolygonContact(fixtureA, fixtureB);
         }
 
-        public new static void Destroy(Contact contact)
+        new public static void Destroy(Contact contact)
         {
             contact = null;
         }
