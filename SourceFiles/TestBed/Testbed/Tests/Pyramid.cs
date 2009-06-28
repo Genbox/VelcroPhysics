@@ -36,7 +36,6 @@ namespace TestBed
 			{
 				PolygonDef sd = new PolygonDef();
 				sd.SetAsBox(50.0f, 10.0f);
-                sd.Friction = 0.9f;
 
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(0.0f, -10.0f);
@@ -49,7 +48,6 @@ namespace TestBed
 				float a = 0.5f;
 				sd.SetAsBox(a, a);
 				sd.Density = 5.0f;
-                sd.Friction = 0.9f;
 
 				Vec2 x = new Vec2(-10.0f, 0.75f);
 				Vec2 y;
