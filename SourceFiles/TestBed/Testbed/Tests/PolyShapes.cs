@@ -50,7 +50,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(0.0f, -10.0f);
 				Body ground = _world.CreateBody(bd);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 			}
 
 			for (int i = 0; i < 4; i++)
@@ -130,11 +130,11 @@ namespace TestBed
 
 			if (index < 4)
 			{
-				bodies[bodyIndex].CreateShape(sds[index]);
+                bodies[bodyIndex].CreateFixture(sds[index]);
 			}
 			else
 			{
-				bodies[bodyIndex].CreateShape(circleDef);
+                bodies[bodyIndex].CreateFixture(circleDef);
 			}
 			bodies[bodyIndex].SetMassFromShapes();
 

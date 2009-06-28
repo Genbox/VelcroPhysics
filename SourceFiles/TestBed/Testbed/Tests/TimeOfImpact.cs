@@ -31,85 +31,88 @@ namespace TestBed
 {
 	public class TimeOfImpact : Test
 	{
-		Body _body1;
-		Body _body2;
-		Shape _shape1;
-		PolygonShape _shape2;
+        PolygonShape _shapeA;
+        PolygonShape _shapeB;
 
 		public TimeOfImpact()
 		{
 			{
-				PolygonDef sd = new PolygonDef();
-				sd.Density = 0.0f;
+			    _shapeA = new PolygonShape();
+                _shapeA.SetAsBox(10.0f, 0.2f);
+		    }
 
-				sd.SetAsBox(0.1f, 10.0f, new Vec2(10.0f, 0.0f), 0.0f);
-
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, 20.0f);
-				bd.Angle = 0.0f;
-				_body1 = _world.CreateBody(bd);
-                _shape1 = _body1.CreateFixture(sd);
-			}
-
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(0.25f, 0.25f);
-				sd.Density = 1.0f;
-
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(9.6363468f, 28.050615f);
-				bd.Angle = 1.6408679f;
-				_body2 = _world.CreateBody(bd);
-                _shape2 = (PolygonShape)_body2.CreateFixture(sd);
-				_body2.SetMassFromShapes();
-			}
+		    {
+                _shapeB = new PolygonShape();
+			    _shapeB.SetAsBox(2.0f, 0.1f);
+		    }
 		}
 
 		public override void Step(Settings settings)
-		{			
-			settings.pause = 1;
-			base.Step(settings);
-			settings.pause = 0;
+	    {
+            Sweep sweepA = new Sweep();
+		    sweepA.C0.Set(0.0f, -0.2f);
+		    sweepA.A0 = 0.0f;
+		    sweepA.C = sweepA.C0;
+		    sweepA.A = sweepA.A0;
+		    sweepA.T0 = 0.0f;
+		    sweepA.LocalCenter.SetZero();
 
-			Sweep sweep1 = new Sweep();
-			sweep1.C0.Set(0.0f, 20.0f);
-			sweep1.A0 = 0.0f;
-			sweep1.C = sweep1.C0;
-			sweep1.A = sweep1.A0;
-			sweep1.T0 = 0.0f;
-			sweep1.LocalCenter = _body1.GetLocalCenter();
+		    Sweep sweepB = new Sweep();
+		    sweepB.C0.Set(-0.076157160f, 0.16447277f);
+		    sweepB.A0 = -9.4497271f;
+		    sweepB.C.Set(-0.25650328f, -0.63657403f);
+		    sweepB.A = -9.0383911f;
+		    sweepB.T0 = 0.0f;
+		    sweepB.LocalCenter.SetZero();
 
-			Sweep sweep2 = new Sweep();
-			sweep2.C0.Set(9.6363468f, 28.050615f);
-			sweep2.A0 = 1.6408679f;
-			sweep2.C = sweep2.C0 + new Vec2(-0.075121880f, 0.27358246f);
-			sweep2.A = sweep2.A0 - 10.434675f;
-			sweep2.T0 = 0.0f;
-			sweep2.LocalCenter = _body2.GetLocalCenter();
+		    Collision.TOIInput input = new Collision.TOIInput();
+		    input.SweepA = sweepA;
+		    input.SweepB = sweepB;
+		    input.SweepRadiusA = _shapeA.ComputeSweepRadius(ref sweepA.LocalCenter);
+		    input.SweepRadiusB = _shapeB.ComputeSweepRadius(ref sweepB.LocalCenter);
+            input.Tolerance = Box2DX.Common.Settings.LinearSlop;
 
-			float toi = Collision.TimeOfImpact(_shape1, sweep1, _shape2, sweep2);
-			
-			OpenGLDebugDraw.DrawString(5, _textLine, "toi = " + toi.ToString());
-			_textLine += 15;
+		    float toi = Collision.TimeOfImpact(input, _shapeA, _shapeB);
 
-			XForm xf2 = new XForm();
-			sweep2.GetXForm(out xf2, toi);
-			int vertexCount = _shape2.VertexCount;
-			Vec2[] vertices = new Vec2[Box2DX.Common.Settings.MaxPolygonVertices];
-			Vec2[] localVertices = _shape2.GetVertices();
-			for (int i = 0; i < vertexCount; ++i)
-			{
-				vertices[i] = Box2DX.Common.Math.Mul(xf2, localVertices[i]);
-			}
-			_debugDraw.DrawPolygon(vertices, vertexCount, new Color(0.5f, 0.7f, 0.9f));
+		    //OpenGLDebugDraw.DrawString(5, _textLine, "toi = %g", (float) toi);
+		    _textLine += 15;
 
-			localVertices = _shape2.GetCoreVertices();
-			for (int i = 0; i < vertexCount; ++i)
-			{
-				vertices[i] = Box2DX.Common.Math.Mul(xf2, localVertices[i]);
-			}
-			_debugDraw.DrawPolygon(vertices, vertexCount, new Color(0.5f, 0.7f, 0.9f));
-		}
+		    //extern int32 b2_maxToiIters, b2_maxToiRootIters;
+		    //m_debugDraw.DrawString(5, m_textLine, "max toi iters = %d, max root iters = %d", b2_maxToiIters, b2_maxToiRootIters);
+		    _textLine += 15;
+
+		    Vec2[] vertices = new Vec2[Box2DX.Common.Settings.MaxPolygonVertices];
+
+		    XForm transformA;
+		    sweepA.GetTransform(out transformA, 0.0f);
+		    for (int i = 0; i < _shapeA.VertexCount; ++i)
+		    {
+                vertices[i] = Box2DX.Common.Math.Mul(transformA, _shapeA.Vertices[i]);
+		    }
+		    _debugDraw.DrawPolygon(vertices, _shapeA.VertexCount, new Color(0.9f, 0.9f, 0.9f));
+
+		    XForm transformB;
+		    sweepB.GetTransform(out transformB, 0.0f);
+		    for (int i = 0; i < _shapeB.VertexCount; ++i)
+		    {
+                vertices[i] = Box2DX.Common.Math.Mul(transformB, _shapeB.Vertices[i]);
+		    }
+		    _debugDraw.DrawPolygon(vertices, _shapeB.VertexCount, new Color(0.5f, 0.9f, 0.5f));
+
+		    sweepB.GetTransform(out transformB, toi);
+		    for (int i = 0; i < _shapeB.VertexCount; ++i)
+		    {
+                vertices[i] = Box2DX.Common.Math.Mul(transformB, _shapeB.Vertices[i]);
+		    }
+		    _debugDraw.DrawPolygon(vertices, _shapeB.VertexCount, new Color(0.5f, 0.7f, 0.9f));
+
+		    sweepB.GetTransform(out transformB, 1.0f);
+		    for (int i = 0; i < _shapeB.VertexCount; ++i)
+		    {
+                vertices[i] = Box2DX.Common.Math.Mul(transformB, _shapeB.Vertices[i]);
+		    }
+		    _debugDraw.DrawPolygon(vertices, _shapeB.VertexCount, new Color(0.9f, 0.5f, 0.5f));
+	    }
 
 		public static Test Create()
 		{

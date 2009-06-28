@@ -1,6 +1,6 @@
 ﻿/*
   Box2DX Copyright (c) 2008 Ihar Kalasouski http://code.google.com/p/box2dx
-  Box2D original C++ version Copyright (c) 2006-2007 Erin Catto http://www.gphysics.com
+  Box2D original C++ version Copyright (c) 2006-2009 Erin Catto http://www.gphysics.com
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -51,6 +51,7 @@ namespace Box2DX.Collision
         // norm(x) = radius
         public override SegmentCollide TestSegment(ref XForm transform, out float lambda, out Vec2 normal, ref Segment segment, float maxLambda)
         {
+            // Needed in the C# version as all variables marked "out" must be inialized
             lambda = 0f;
             normal = Vec2.Zero;
 
@@ -115,6 +116,7 @@ namespace Box2DX.Collision
 
         public override float ComputeSubmergedArea(ref Vec2 normal, float offset, ref XForm xf, out Vec2 c)
         {
+            // Needed in the C# version as all variables marked "out" must be inialized
             c = new Vec2();
 
             Vec2 p = Math.Mul(xf, LocalPosition);

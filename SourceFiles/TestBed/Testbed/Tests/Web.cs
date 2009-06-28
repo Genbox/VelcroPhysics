@@ -42,7 +42,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(0.0f, -10.0f);
 				ground = _world.CreateBody(bd);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 			}
 
 			{
@@ -55,22 +55,22 @@ namespace TestBed
 
 				bd.Position.Set(-5.0f, 5.0f);
 				_bodies[0] = _world.CreateBody(bd);
-				_bodies[0].CreateShape(sd);
+                _bodies[0].CreateFixture(sd);
 				_bodies[0].SetMassFromShapes();
 
 				bd.Position.Set(5.0f, 5.0f);
 				_bodies[1] = _world.CreateBody(bd);
-				_bodies[1].CreateShape(sd);
+                _bodies[1].CreateFixture(sd);
 				_bodies[1].SetMassFromShapes();
 
 				bd.Position.Set(5.0f, 15.0f);
 				_bodies[2] = _world.CreateBody(bd);
-				_bodies[2].CreateShape(sd);
+                _bodies[2].CreateFixture(sd);
 				_bodies[2].SetMassFromShapes();
 
 				bd.Position.Set(-5.0f, 15.0f);
 				_bodies[3] = _world.CreateBody(bd);
-				_bodies[3].CreateShape(sd);
+                _bodies[3].CreateFixture(sd);
 				_bodies[3].SetMassFromShapes();
 
 				DistanceJointDef jd = new DistanceJointDef();
