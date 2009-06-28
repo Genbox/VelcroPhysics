@@ -97,6 +97,7 @@
     <Compile Include="Tests\Buoyancy.cs" />
     <Compile Include="Tests\CCDTest.cs" />
     <Compile Include="Tests\Chain.cs" />
+    <Compile Include="Tests\Dominos.cs" />
     <Compile Include="Tests\Pyramid.cs">
       <SubType>Code</SubType>
     </Compile>

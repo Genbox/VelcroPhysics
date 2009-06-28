@@ -170,7 +170,7 @@ namespace TestBed
 			
 			
 			new TestEntry("Bridge", Bridge.Create),
-			//new TestEntry("Dominos", Dominos.Create),
+			new TestEntry("Dominos", Dominos.Create),
 			new TestEntry("CCD Test", CCDTest.Create),
 			//new TestEntry("Biped Test", BipedTest.Create),
 			//new TestEntry("Sensor Test", SensorTest.Create),
