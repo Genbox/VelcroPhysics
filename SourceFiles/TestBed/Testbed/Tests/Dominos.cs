@@ -41,7 +41,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(0.0f, -10.0f);
 				b1 = _world.CreateBody(bd);
-				b1.CreateShape(sd);
+				b1.CreateFixture(sd);
 			}
 
 			{
@@ -51,7 +51,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(-1.5f, 10.0f);
 				Body ground = _world.CreateBody(bd);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 			}
 
 			{
@@ -65,7 +65,7 @@ namespace TestBed
 					BodyDef bd = new BodyDef();
 					bd.Position.Set(-6.0f + 1.0f * i, 11.25f);
 					Body body = _world.CreateBody(bd);
-					body.CreateShape(sd);
+                    body.CreateFixture(sd);
 					body.SetMassFromShapes();
 				}
 			}
@@ -77,7 +77,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(1.0f, 6.0f);
 				Body ground = _world.CreateBody(bd);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 			}
 
 			Body b2;
@@ -88,7 +88,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(-7.0f, 4.0f);
 				b2 = _world.CreateBody(bd);
-				b2.CreateShape(sd);
+                b2.CreateFixture(sd);
 			}
 
 			Body b3;
@@ -102,7 +102,7 @@ namespace TestBed
 				bd.Angle = -0.15f;
 
 				b3 = _world.CreateBody(bd);
-				b3.CreateShape(sd);
+                b3.CreateFixture(sd);
 				b3.SetMassFromShapes();
 			}
 
@@ -123,7 +123,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(-10.0f, 15.0f);
 				b4 = _world.CreateBody(bd);
-				b4.CreateShape(sd);
+                b4.CreateFixture(sd);
 				b4.SetMassFromShapes();
 			}
 
@@ -142,13 +142,13 @@ namespace TestBed
 				sd.Friction = 0.1f;
 
 				sd.SetAsBox(1.0f, 0.1f, new Vec2(0.0f, -0.9f), 0.0f);
-				b5.CreateShape(sd);
+                b5.CreateFixture(sd);
 
 				sd.SetAsBox(0.1f, 1.0f, new Vec2(-0.9f, 0.0f), 0.0f);
-				b5.CreateShape(sd);
+                b5.CreateFixture(sd);
 
 				sd.SetAsBox(0.1f, 1.0f, new Vec2(0.9f, 0.0f), 0.0f);
-				b5.CreateShape(sd);
+                b5.CreateFixture(sd);
 
 				b5.SetMassFromShapes();
 			}
@@ -167,7 +167,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(6.5f, 4.1f);
 				b6 = _world.CreateBody(bd);
-				b6.CreateShape(sd);
+                b6.CreateFixture(sd);
 				b6.SetMassFromShapes();
 			}
 
@@ -185,7 +185,7 @@ namespace TestBed
 				bd.Position.Set(7.4f, 1.0f);
 
 				b7 = _world.CreateBody(bd);
-				b7.CreateShape(sd);
+                b7.CreateFixture(sd);
 				b7.SetMassFromShapes();
 			}
 
@@ -208,7 +208,7 @@ namespace TestBed
 					BodyDef bd = new BodyDef();
 					bd.Position.Set(5.9f + 2.0f * sd.Radius * i, 2.4f);
 					Body body = _world.CreateBody(bd);
-					body.CreateShape(sd);
+                    body.CreateFixture(sd);
 					body.SetMassFromShapes();
 				}
 			}
