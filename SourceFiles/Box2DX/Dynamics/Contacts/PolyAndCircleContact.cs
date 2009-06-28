@@ -33,12 +33,12 @@ namespace Box2DX.Dynamics
             Box2DXDebug.Assert(_fixtureB.GetType() == ShapeType.CircleShape);
         }
 
-        public static Contact Create(Fixture fixtureA, Fixture fixtureB)
+        new public static Contact Create(Fixture fixtureA, Fixture fixtureB)
         {
             return new PolyAndCircleContact(fixtureA, fixtureB);
         }
 
-        public static void Destroy(Contact contact)
+        new public static void Destroy(Contact contact)
         {
             contact = null;
         }
