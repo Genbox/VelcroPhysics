@@ -90,7 +90,10 @@ namespace Box2DX.Dynamics
 		{
 			//By default, cast userData as a shape, and then collide if the shapes would collide
 			if (userData == null)
+            {
 				return true;
+            }
+
 			return ShouldCollide((Fixture)userData, fixture);
 		}
 	}
@@ -121,13 +124,19 @@ namespace Box2DX.Dynamics
     /// You should strive to make your callbacks efficient because there may be
     /// many callbacks per time step.
     /// @warning You cannot create/destroy Box2D entities inside these callbacks.
-    public abstract class ContactListener
+    public class ContactListener
     {
         /// Called when two fixtures begin to touch.
-	    public abstract void BeginContact(Contact contact);
+	    public virtual void BeginContact(Contact contact)
+        {
+            //B2_NOT_USED(contact);
+        }
 
 	    /// Called when two fixtures cease to touch.
-        public abstract void EndContact(Contact contact);
+        public virtual void EndContact(Contact contact)
+	    {
+            //B2_NOT_USED(contact);
+	    }
 
 	    /// This is called after a contact is updated. This allows you to inspect a
 	    /// contact before it goes to the solver. If you are careful, you can modify the
@@ -139,7 +148,11 @@ namespace Box2DX.Dynamics
 	    /// Note: if you set the number of contact points to zero, you will not
 	    /// get an EndContact callback. However, you may get a BeginContact callback
 	    /// the next step.
-        public abstract void PreSolve(Contact contact, Manifold oldManifold);
+        public virtual void PreSolve(Contact contact, Manifold oldManifold)
+	    {
+            //B2_NOT_USED(contact);
+            //B2_NOT_USED(oldManifold);
+	    }
 
 	    /// This lets you inspect a contact after the solver is finished. This is useful
 	    /// for inspecting impulses.
@@ -147,21 +160,24 @@ namespace Box2DX.Dynamics
 	    /// arbitrarily large if the sub-step is small. Hence the impulse is provided explicitly
 	    /// in a separate data structure.
 	    /// Note: this is only called for contacts that are touching, solid, and awake.
-        public abstract void PostSolve(Contact contact, ContactImpulse impulse);
+        public virtual void PostSolve(Contact contact, ContactImpulse impulse)
+	    {
+            //B2_NOT_USED(contact);
+            //B2_NOT_USED(impulse);
+	    }
     }
 
 	/// <summary>
 	/// Color for debug drawing. Each value has the range [0,1].
 	/// </summary>
-	public class Color
+	public struct Color
 	{
 		public float R, G, B;
 
-		public Color(float r, float g, float b)
+        public Color(float r, float g, float b)
 		{
 			R = r; G = g; B = b;
 		}
-
         public void Set(float r, float g, float b)
         {
             R = r; G = g; B = b;
@@ -174,18 +190,18 @@ namespace Box2DX.Dynamics
 	/// </summary>
 	public abstract class DebugDraw
 	{
-		[Flags]
-		public enum DrawFlags
-		{
-			Shape = 0x0001, // draw shapes
-			Joint = 0x0002, // draw joint connections
-			CoreShape = 0x0004, // draw core (TOI) shapes       // should be removed in this revision?
-			Aabb = 0x0008, // draw axis aligned bounding boxes
-			Obb = 0x0010, // draw oriented bounding boxes       // should be removed in this revision?
-			Pair = 0x0020, // draw broad-phase pairs
-			CenterOfMass = 0x0040, // draw center of mass frame
-			Controller = 0x0080 // draw center of mass frame
-		}
+	    [Flags]
+	    public enum DrawFlags
+	    {
+	        Shape = 0x0001, // draw shapes
+	        Joint = 0x0002, // draw joint connections
+	        CoreShape = 0x0004, // draw core (TOI) shapes       // should be removed in this revision?
+	        Aabb = 0x0008, // draw axis aligned bounding boxes
+	        Obb = 0x0010, // draw oriented bounding boxes       // should be removed in this revision?
+	        Pair = 0x0020, // draw broad-phase pairs
+	        CenterOfMass = 0x0040, // draw center of mass frame
+	        Controller = 0x0080 // draw center of mass frame
+	    };
 
 		protected DrawFlags _drawFlags;
 
