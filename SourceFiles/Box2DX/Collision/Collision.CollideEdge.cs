@@ -89,12 +89,13 @@ namespace Box2DX.Collision
         }
 
 #if true
-        public static void CollidePolyAndEdge(ref Manifold manifold,
+        public static void CollidePolyAndEdge(out Manifold manifold,
             PolygonShape polygon, XForm transformA, EdgeShape edge, XForm transformB)
         {
             PolygonShape polygonB = new PolygonShape();
             polygonB.SetAsEdge(edge.V1, edge.V2);
-            CollidePolygons(ref manifold, polygon, transformA, polygonB, transformB);
+
+            CollidePolygons(out manifold, polygon, transformA, polygonB, transformB);
         }
 
 #else

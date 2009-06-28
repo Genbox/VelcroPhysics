@@ -21,7 +21,7 @@
 
 using System;
 using Box2DX.Common;
-using Math=Box2DX.Common.Math;
+using Math = Box2DX.Common.Math;
 
 namespace Box2DX.Collision
 {
@@ -38,7 +38,7 @@ namespace Box2DX.Collision
             Type = ShapeType.CircleShape;
         }
 
-        public override bool TestPoint(XForm transform, Vec2 p)
+        public override bool TestPoint(ref XForm transform, ref Vec2 p)
         {
             Vec2 center = transform.Position + Math.Mul(transform.R, LocalPosition);
             Vec2 d = p - center;
@@ -49,7 +49,7 @@ namespace Box2DX.Collision
         // From Section 3.1.2
         // x = s + a * r
         // norm(x) = radius
-        public override SegmentCollide TestSegment(XForm transform, out float lambda, out Vec2 normal, Segment segment, float maxLambda)
+        public override SegmentCollide TestSegment(ref XForm transform, out float lambda, out Vec2 normal, ref Segment segment, float maxLambda)
         {
             lambda = 0f;
             normal = Vec2.Zero;
@@ -93,7 +93,7 @@ namespace Box2DX.Collision
             return SegmentCollide.MissCollide;
         }
 
-        public override void ComputeAABB(out AABB aabb, XForm transform)
+        public override void ComputeAABB(out AABB aabb, ref XForm transform)
         {
             aabb = new AABB();
 
@@ -113,7 +113,7 @@ namespace Box2DX.Collision
             massData.I = massData.Mass * (0.5f * Radius * Radius + Vec2.Dot(LocalPosition, LocalPosition));
         }
 
-        public override float ComputeSubmergedArea(Vec2 normal, float offset, XForm xf, out Vec2 c)
+        public override float ComputeSubmergedArea(ref Vec2 normal, float offset, ref XForm xf, out Vec2 c)
         {
             c = new Vec2();
 
@@ -144,36 +144,19 @@ namespace Box2DX.Collision
             return area;
         }
 
-        /// <summary>
-        /// Get the local position of this circle in its parent body.
-        /// </summary>
-        /// <returns></returns>
-        public Vec2 GetLocalPosition()
-        {
-            return LocalPosition;
-        }
-
-        /// <summary>
-        /// Get the radius of this circle.
-        /// </summary>
-        /// <returns></returns>
-        public float GetRadius()
-        {
-            return Radius;
-        }
-
-        public override int GetSupport(XForm xf, Vec2 d)
+        //Note: Not needed by CircleShape. It is a leftover from hacking C++ generics into C#
+        public override int GetSupport(ref XForm xf, ref Vec2 d)
         {
             throw new NotImplementedException();
         }
 
-        public override int GetSupport(Vec2 d)
+        public override int GetSupport(ref Vec2 d)
         {
             //B2_NOT_USED(d);
             return 0;
         }
 
-        public override Vec2 GetSupportVertex(Vec2 d)
+        public override Vec2 GetSupportVertex(ref Vec2 d)
         {
             //B2_NOT_USED(d);
             return LocalPosition;
@@ -182,11 +165,11 @@ namespace Box2DX.Collision
         public override Vec2 GetVertex(int index)
         {
             //B2_NOT_USED(index);
-            //b2Assert(index == 0);
+            Box2DXDebug.Assert(index == 0);
             return LocalPosition;
         }
 
-        public override float ComputeSweepRadius(Vec2 pivot)
+        public override float ComputeSweepRadius(ref Vec2 pivot)
         {
             return Vec2.Distance(LocalPosition, pivot);
         }

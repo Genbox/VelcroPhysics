@@ -19,10 +19,6 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Box2DX.Collision;
 using Box2DX.Common;
 
@@ -30,12 +26,12 @@ namespace Box2DX.Dynamics
 {
 	public class PolygonContact : Contact
 	{
-		public static Contact Create(Fixture fixtureA, Fixture fixtureB)
+		public new static Contact Create(Fixture fixtureA, Fixture fixtureB)
         {
 	        return new PolygonContact(fixtureA, fixtureB);
         }
 
-        public static void Destroy(Contact contact)
+        public new static void Destroy(Contact contact)
         {
             contact = null;
         }
@@ -52,14 +48,14 @@ namespace Box2DX.Dynamics
 	        Body bodyA = _fixtureA.GetBody();
 	        Body bodyB = _fixtureB.GetBody();
 
-            Collision.Collision.CollidePolygons(ref Manifold,
+            Collision.Collision.CollidePolygons(out Manifold,
 						        (PolygonShape)_fixtureA.GetShape(), bodyA.GetXForm(),
 						        (PolygonShape)_fixtureB.GetShape(), bodyB.GetXForm());
         }
 
         public override float ComputeTOI(Sweep sweepA, Sweep sweepB)
         {
-            Collision.Collision.TOIInput input;
+            Collision.Collision.TOIInput input = new Collision.Collision.TOIInput();
 	        input.SweepA = sweepA;
 	        input.SweepB = sweepB;
 	        input.SweepRadiusA = _fixtureA.ComputeSweepRadius(sweepA.LocalCenter);

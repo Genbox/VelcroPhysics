@@ -80,8 +80,8 @@ namespace Box2DX.Dynamics
 	/// </summary>
 	public abstract class Contact
 	{
-		static ContactRegister[,] _registers = new ContactRegister[(int)ShapeType.ShapeTypeCount, (int)ShapeType.ShapeTypeCount];
-	    static bool _initialized;
+		public static ContactRegister[,] Registers = new ContactRegister[(int)ShapeType.ShapeTypeCount, (int)ShapeType.ShapeTypeCount];
+	    public static bool Initialized;
 
 	    public ContactFlag Flags;
 
@@ -93,8 +93,8 @@ namespace Box2DX.Dynamics
 	    public ContactEdge NodeA;
 	    public ContactEdge NodeB;
 
-	    protected Fixture _fixtureA;
-        protected Fixture _fixtureB;
+        public Fixture _fixtureA;
+        public Fixture _fixtureB;
 
 	    public Manifold Manifold;
 
@@ -106,7 +106,12 @@ namespace Box2DX.Dynamics
 	    /// Get the world manifold.
 	    public void GetWorldManifold(WorldManifold worldManifold)
         {
+            Body bodyA = _fixtureA.GetBody();
+            Body bodyB = _fixtureB.GetBody();
+            Shape shapeA = _fixtureA.GetShape();
+            Shape shapeB = _fixtureB.GetShape();
 
+            worldManifold.Initialize(Manifold, bodyA.GetXForm(), shapeA.Radius, bodyB.GetXForm(), shapeB.Radius);
         }
 
 	    /// Is this contact solid?
@@ -131,15 +136,15 @@ namespace Box2DX.Dynamics
 	        Box2DXDebug.Assert(ShapeType.UnknownShape < typeA && typeA < ShapeType.ShapeTypeCount);
 	        Box2DXDebug.Assert(ShapeType.UnknownShape < typeB && typeB < ShapeType.ShapeTypeCount);
         	
-	        _registers[(int)typeA, (int)typeB].CreateFcn = createFcn;
-	        _registers[(int)typeA, (int)typeB].DestroyFcn = destroyFcn;
-	        _registers[(int)typeA, (int)typeB].Primary = true;
+	        Registers[(int)typeA, (int)typeB].CreateFcn = createFcn;
+	        Registers[(int)typeA, (int)typeB].DestroyFcn = destroyFcn;
+	        Registers[(int)typeA, (int)typeB].Primary = true;
 
 	        if (typeA != typeB)
 	        {
-		        _registers[(int)typeB, (int)typeA].CreateFcn = createFcn;
-		        _registers[(int)typeB, (int)typeA].DestroyFcn = destroyFcn;
-		        _registers[(int)typeB, (int)typeA].Primary = false;
+		        Registers[(int)typeB, (int)typeA].CreateFcn = createFcn;
+		        Registers[(int)typeB, (int)typeA].DestroyFcn = destroyFcn;
+		        Registers[(int)typeB, (int)typeA].Primary = false;
 	        }
         }
 
@@ -155,10 +160,10 @@ namespace Box2DX.Dynamics
 
 	    public static Contact Create(Fixture fixtureA, Fixture fixtureB)
         {
-            if (_initialized == false)
+            if (Initialized == false)
 	        {
 		        InitializeRegisters();
-		        _initialized = true;
+		        Initialized = true;
 	        }
 
 	        ShapeType type1 = fixtureA.GetType();
@@ -167,12 +172,12 @@ namespace Box2DX.Dynamics
 	        Box2DXDebug.Assert(ShapeType.UnknownShape < type1 && type1 < ShapeType.ShapeTypeCount);
 	        Box2DXDebug.Assert(ShapeType.UnknownShape < type2 && type2 < ShapeType.ShapeTypeCount);
         	
-	        ContactCreateFcn createFcn = _registers[(int)type1, (int)type2].CreateFcn;
+	        ContactCreateFcn createFcn = Registers[(int)type1, (int)type2].CreateFcn;
 	        if (createFcn != null)
 	        {
-		        if (_registers[(int)type1, (int)type2].Primary)
+		        if (Registers[(int)type1, (int)type2].Primary)
 		        {
-                    return createFcn(fixtureA, fixtureB);
+			        return createFcn(fixtureA, fixtureB);
 		        }
 		        else
 		        {
@@ -187,7 +192,7 @@ namespace Box2DX.Dynamics
 
 	    public static void Destroy(Contact contact)
         {
-            Box2DXDebug.Assert(_initialized == true);
+            Box2DXDebug.Assert(Initialized == true);
 
 	        if (contact.Manifold.PointCount > 0)
 	        {
@@ -201,7 +206,7 @@ namespace Box2DX.Dynamics
 	        Box2DXDebug.Assert(ShapeType.UnknownShape < typeA && typeB < ShapeType.ShapeTypeCount);
 	        Box2DXDebug.Assert(ShapeType.UnknownShape < typeA && typeB < ShapeType.ShapeTypeCount);
 
-	        ContactDestroyFcn destroyFcn = _registers[(int)typeA, (int)typeB].DestroyFcn;
+	        ContactDestroyFcn destroyFcn = Registers[(int)typeA, (int)typeB].DestroyFcn;
 	        destroyFcn(contact);
         }
 
@@ -218,17 +223,19 @@ namespace Box2DX.Dynamics
 
 	        _fixtureA = fixtureA;
 	        _fixtureB = fixtureB;
-            Manifold = new Manifold();
 
-	        Manifold.PointCount = 0;
+            Manifold = new Manifold();
+            Manifold.PointCount = 0;
 
 	        Prev = null;
 	        Next = null;
+
             NodeA = new ContactEdge();
 	        NodeA.Contact = null;
 	        NodeA.Prev = null;
 	        NodeA.Next = null;
 	        NodeA.Other = null;
+
             NodeB = new ContactEdge();
 	        NodeB.Contact = null;
 	        NodeB.Prev = null;

@@ -20,8 +20,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 using Box2DX.Common;
 using Box2DX.Collision;
@@ -1234,6 +1232,7 @@ namespace Box2DX.Dynamics
 
 		private void DrawFixture(Fixture fixture, XForm xf, Color color, bool core)
 		{
+#warning "the core argument is not used, the coreColor variable is also not used"
 			Color coreColor = new Color(0.9f, 0.6f, 0.6f);
 
 			switch (fixture.GetType())
@@ -1242,8 +1241,8 @@ namespace Box2DX.Dynamics
 					{
 						CircleShape circle = (CircleShape)fixture.GetShape();
 
-						Vec2 center = Common.Math.Mul(xf, circle.GetLocalPosition());
-						float radius = circle.GetRadius();
+						Vec2 center = Common.Math.Mul(xf, circle.LocalPosition);
+						float radius = circle.Radius;
 						Vec2 axis = xf.R.Col1;
 
 						_debugDraw.DrawSolidCircle(center, radius, axis, color);

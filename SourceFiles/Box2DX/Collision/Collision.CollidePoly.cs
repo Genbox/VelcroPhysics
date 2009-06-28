@@ -79,7 +79,7 @@ namespace Box2DX.Collision
         /// <param name="poly2"></param>
         /// <param name="xf2"></param>
         /// <returns></returns>
-        public static float FindMaxSeparation(ref int edgeIndex,
+        public static float FindMaxSeparation(out int edgeIndex,
             PolygonShape poly1, XForm xf1, PolygonShape poly2, XForm xf2)
         {
             int count1 = poly1.VertexCount;
@@ -211,7 +211,7 @@ namespace Box2DX.Collision
         // Find incident edge
         // Clip
         // The normal points from 1 to 2
-        public static void CollidePolygons(ref Manifold manifold,
+        public static void CollidePolygons(out Manifold manifold,
             PolygonShape polyA, XForm xfA, PolygonShape polyB, XForm xfB)
         {
             manifold = new Manifold();
@@ -219,12 +219,12 @@ namespace Box2DX.Collision
             float totalRadius = polyA.Radius + polyB.Radius;
 
             int edgeA = 0;
-            float separationA = FindMaxSeparation(ref edgeA, polyA, xfA, polyB, xfB);
+            float separationA = FindMaxSeparation(out edgeA, polyA, xfA, polyB, xfB);
             if (separationA > totalRadius)
                 return;
 
             int edgeB = 0;
-            float separationB = FindMaxSeparation(ref edgeB, polyB, xfB, polyA, xfA);
+            float separationB = FindMaxSeparation(out edgeB, polyB, xfB, polyA, xfA);
             if (separationB > totalRadius)
                 return;
 
@@ -233,8 +233,8 @@ namespace Box2DX.Collision
             XForm xf1, xf2;
             int edge1;		// reference edge
             byte flip;
-            float k_relativeTol = 0.98f;
-            float k_absoluteTol = 0.001f;
+            const float k_relativeTol = 0.98f;
+            const float k_absoluteTol = 0.001f;
 
             if (separationB > k_relativeTol * separationA + k_absoluteTol)
             {
