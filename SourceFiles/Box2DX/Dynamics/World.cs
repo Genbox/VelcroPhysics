@@ -824,10 +824,10 @@ namespace Box2DX.Dynamics
 					island.Solve(step, _gravity, _allowSleep);
 
 					// Post solve cleanup.
-					for (int i = 0; i < island._bodyCount; ++i)
+					for (int i = 0; i < island.BodyCount; ++i)
 					{
 						// Allow static bodies to participate in other islands.
-						Body b = island._bodies[i];
+						Body b = island.Bodies[i];
 						if (b.IsStatic())
 						{
 							b._flags &= ~Body.BodyFlags.Island;
@@ -1042,7 +1042,7 @@ namespace Box2DX.Dynamics
 			        for (ContactEdge cEdge = b._contactList; cEdge != null; cEdge = cEdge.Next)
 			        {
 				        // Does the TOI island still have space for contacts?
-				        if (island._contactCount == island._contactCapacity)
+				        if (island.ContactCount == island.ContactCapacity)
 				        {
 					        continue;
 				        }
@@ -1086,7 +1086,7 @@ namespace Box2DX.Dynamics
         			
 			        for (JointEdge jEdge = b._jointList; jEdge != null; jEdge = jEdge.Next)
 			        {
-				        if (island._jointCount == island._jointCapacity)
+				        if (island.JointCount == island.JointCapacity)
 				        {
 					        continue;
 				        }
@@ -1131,10 +1131,10 @@ namespace Box2DX.Dynamics
 		        island.SolveTOI(ref subStep);
 
 		        // Post solve cleanup.
-		        for (int i = 0; i < island._bodyCount; ++i)
+		        for (int i = 0; i < island.BodyCount; ++i)
 		        {
 			        // Allow bodies to participate in future TOI islands.
-			        Body b = island._bodies[i];
+			        Body b = island.Bodies[i];
 			        b._flags &= ~Body.BodyFlags.Island;
 
 			        if ((int)(b._flags & (Body.BodyFlags.Sleep | Body.BodyFlags.Frozen)) == 1)
@@ -1166,17 +1166,17 @@ namespace Box2DX.Dynamics
 			        }
 		        }
 
-		        for (int i = 0; i < island._contactCount; ++i)
+		        for (int i = 0; i < island.ContactCount; ++i)
 		        {
 			        // Allow contacts to participate in future TOI islands.
-			        Contact c = island._contacts[i];
+			        Contact c = island.Contacts[i];
 			        c.Flags &= ~(ContactFlag.ToiFlag | ContactFlag.IslandFlag);
 		        }
 
-		        for (int i = 0; i < island._jointCount; ++i)
+		        for (int i = 0; i < island.JointCount; ++i)
 		        {
 			        // Allow joints to participate in future TOI islands.
-			        Joint j = island._joints[i];
+			        Joint j = island.Joints[i];
 			        j._islandFlag = false;
 		        }
         		
