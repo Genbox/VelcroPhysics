@@ -155,18 +155,18 @@ namespace TestBed
 	{
 		public static TestEntry[] g_testEntries = new TestEntry[]
 		{			
-			//new TestEntry("Simple Test", SimpleTest.Create),
-			//new TestEntry("Line Joint Test", LineJoint.Create),
+			new TestEntry("Simple Test", SimpleTest.Create),
+			new TestEntry("Line Joint Test", LineJoint.Create),
             new TestEntry("Varying Restitution", VaryingRestitution.Create),
             new TestEntry("Varying Friction", VaryingFriction.Create),
 			new TestEntry("Pyramid", Pyramid.Create),
-			//new TestEntry("Prismatic", Prismatic.Create),
-			//new TestEntry("Revolute", Revolute.Create),
+			new TestEntry("Prismatic", Prismatic.Create),
+			new TestEntry("Revolute", Revolute.Create),
 			new TestEntry("Theo Jansen's Walker", TheoJansen.Create),
 			//new TestEntry("Contact Callback Test", ContactCB.Create),
-			//new TestEntry("Polygon Shapes", PolyShapes.Create),
-			//new TestEntry("Web", Web.Create),
-			//new TestEntry("Vertical Stack", VerticalStack.Create),
+			new TestEntry("Polygon Shapes", PolyShapes.Create),
+			new TestEntry("Web", Web.Create),
+			new TestEntry("Vertical Stack", VerticalStack.Create),
 			
 			
 			new TestEntry("Bridge", Bridge.Create),
@@ -185,7 +185,7 @@ namespace TestBed
 			//new TestEntry("Apply Force", ApplyForce.Create),
 			//new TestEntry("Pulleys", Pulleys.Create),
 			//new TestEntry("Shape Editing", ShapeEditing.Create),
-			//new TestEntry("Time of Impact", TimeOfImpact.Create),
+			new TestEntry("Time of Impact", TimeOfImpact.Create),
 			//new TestEntry("Distance Test", DistanceTest.Create),
 			new TestEntry("Broad Phase", BroadPhaseTest.Create),
 			//new TestEntry("PolyCollision", PolyCollision.Create),

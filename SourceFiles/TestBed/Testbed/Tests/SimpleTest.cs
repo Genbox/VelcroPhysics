@@ -48,7 +48,7 @@ namespace TestBed
 			groundShapeDef.SetAsBox(50.0f, 10.0f);
 
 			// Add the ground shape to the ground body.
-			groundBody.CreateShape(groundShapeDef);
+            groundBody.CreateFixture(groundShapeDef);
 
 			for (int i = 0; i < 1; i++)
 			{
@@ -68,7 +68,7 @@ namespace TestBed
 				shapeDef.Friction = 0.3f;
 
 				// Add the shape to the body.
-				body.CreateShape(shapeDef);
+                body.CreateFixture(shapeDef);
 
 				// Now tell the dynamic body to compute it's mass properties base
 				// on its shape.

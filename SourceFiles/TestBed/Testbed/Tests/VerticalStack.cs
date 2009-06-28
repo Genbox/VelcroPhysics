@@ -42,10 +42,10 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(0.0f, 0.0f);
 				Body ground = _world.CreateBody(bd);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 
 				sd.SetAsBox(0.1f, 10.0f, new Vec2(20.0f, 10.0f), 0.0f);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 			}
 
 			float[] xs = new float[5] { 0.0f, -10.0f, -5.0f, 5.0f, 10.0f };
@@ -68,7 +68,7 @@ namespace TestBed
 					bd.Position.Set(xs[j], 0.752f + 1.54f * i);
 					Body body = _world.CreateBody(bd);
 
-					body.CreateShape(sd);
+                    body.CreateFixture(sd);
 					body.SetMassFromShapes();
 				}
 			}
@@ -103,7 +103,7 @@ namespace TestBed
 						bd.Position.Set(-31.0f, 5.0f);
 
 						_bullet = _world.CreateBody(bd);
-						_bullet.CreateShape(sd);
+                        _bullet.CreateFixture(sd);
 						_bullet.SetMassFromShapes();
 
 						_bullet.SetLinearVelocity(new Vec2(400.0f, 0.0f));

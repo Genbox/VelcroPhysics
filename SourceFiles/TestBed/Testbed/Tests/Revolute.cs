@@ -43,7 +43,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(0.0f, -10.0f);
 				ground = _world.CreateBody(bd);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 			}
 
 			{
@@ -57,7 +57,7 @@ namespace TestBed
 
 				bd.Position.Set(0.0f, 20.0f);
 				Body body = _world.CreateBody(bd);
-				body.CreateShape(sd);
+                body.CreateFixture(sd);
 				body.SetMassFromShapes();
 
 				float w = 100.0f;
