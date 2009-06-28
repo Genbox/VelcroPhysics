@@ -263,8 +263,8 @@ namespace TestBed
 
 	        Collision.GetPointStates(state1, state2, oldManifold, manifold);
 
-	        WorldManifold worldManifold = new WorldManifold();
-	        contact.GetWorldManifold(worldManifold);
+	        WorldManifold worldManifold;
+	        contact.GetWorldManifold(out worldManifold);
 
 	        for (int i = 0; i < manifold.PointCount && _pointCount < k_maxContactPoints; ++i)
 	        {
@@ -467,7 +467,7 @@ namespace TestBed
 			        timeStep = 0.0f;
 		        }
 
-		        OpenGLDebugDraw.DrawString(5, _textLine, "****PAUSED****");
+                OpenGLDebugDraw.DrawString(5, _textLine, "****PAUSED****");
 		        _textLine += 15;
 	        }
 

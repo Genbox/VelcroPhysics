@@ -206,7 +206,7 @@ namespace TestBed
 			StringBuilder strBld = new StringBuilder();
 			strBld.AppendFormat("overlaps = {0}, exact = {1}, diff = {2}",
 				new object[] { _overlapCount, _overlapCountExact, _overlapCount - _overlapCountExact });
-			OpenGLDebugDraw.DrawString(5, 30, strBld.ToString());
+            OpenGLDebugDraw.DrawString(5, 30, strBld.ToString());
 			Validate();
 
 			++_stepCount;

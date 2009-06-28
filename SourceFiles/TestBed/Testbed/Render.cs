@@ -172,6 +172,40 @@ namespace TestBed
 			Gl.glPointSize(1.0f);
 		}
 
+        public static void DrawString(int x, int y, string str)
+        {
+            if (sIsTextRendererInitialized)
+            {
+                Gl.glMatrixMode(Gl.GL_PROJECTION);
+                Gl.glPushMatrix();
+                Gl.glLoadIdentity();
+
+                Gl.glMatrixMode(Gl.GL_MODELVIEW);
+                Gl.glPushMatrix();
+                Gl.glLoadIdentity();
+
+                float xOffset = -0.95f + (float)x / ((float)openGlControl.Width / 2f);
+                float yOffset = 0.95f - (float)y / ((float)openGlControl.Height / 2f);
+                // Offset the font on the screen
+                Gl.glTranslatef(xOffset, yOffset, 0);
+
+                Gl.glColor3f(0.9f, 0.6f, 0.6f);
+                // Scale the font
+                Gl.glScalef(0.0035f, 0.0035f, 0.0035f);
+
+                // Begin writing the font
+                sysfont.ftBeginFont();
+                sysfont.ftWrite(str);
+                // Stop writing the font and restore old OpenGL parameters
+                sysfont.ftEndFont();
+
+                Gl.glPopMatrix();
+                Gl.glMatrixMode(Gl.GL_PROJECTION);
+                Gl.glPopMatrix();
+                Gl.glMatrixMode(Gl.GL_MODELVIEW);
+            }
+        }
+
 		static FTFont sysfont;
 
 		static Tao.Platform.Windows.SimpleOpenGlControl openGlControl;
@@ -194,40 +228,6 @@ namespace TestBed
 			catch (Exception)
 			{
 				sIsTextRendererInitialized = false;
-			}
-		}
-
-		public static void DrawString(int x, int y, string str)
-		{
-			if (sIsTextRendererInitialized)
-			{
-				Gl.glMatrixMode(Gl.GL_PROJECTION);
-				Gl.glPushMatrix();
-				Gl.glLoadIdentity();
-
-				Gl.glMatrixMode(Gl.GL_MODELVIEW);
-				Gl.glPushMatrix();
-				Gl.glLoadIdentity();
-
-				float xOffset = -0.95f + (float)x / ((float)openGlControl.Width / 2f);
-				float yOffset = 0.95f - (float)y / ((float)openGlControl.Height / 2f);
-				// Offset the font on the screen
-				Gl.glTranslatef(xOffset, yOffset, 0);
-
-				Gl.glColor3f(0.9f, 0.6f, 0.6f);
-				// Scale the font
-				Gl.glScalef(0.0035f, 0.0035f, 0.0035f);
-
-				// Begin writing the font
-				sysfont.ftBeginFont();
-				sysfont.ftWrite(str);
-				// Stop writing the font and restore old OpenGL parameters
-				sysfont.ftEndFont();
-
-				Gl.glPopMatrix();
-				Gl.glMatrixMode(Gl.GL_PROJECTION);
-				Gl.glPopMatrix();
-				Gl.glMatrixMode(Gl.GL_MODELVIEW);
 			}
 		}
 

@@ -80,7 +80,7 @@ namespace TestBed
 		public override void Step(Settings settings)
 		{
 			base.Step(settings);
-			OpenGLDebugDraw.DrawString(5, _textLine, "Keys: (l) limits, (s) motor");
+            OpenGLDebugDraw.DrawString(5, _textLine, "Keys: (l) limits, (s) motor");
 			_textLine += 15;
 
 		}

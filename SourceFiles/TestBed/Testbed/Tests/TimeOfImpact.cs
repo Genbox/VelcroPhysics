@@ -33,6 +33,7 @@ namespace TestBed
 	{
         PolygonShape _shapeA;
         PolygonShape _shapeB;
+        bool _oneStep = false;
 
 		public TimeOfImpact()
 		{
@@ -49,6 +50,8 @@ namespace TestBed
 
 		public override void Step(Settings settings)
 	    {
+            base.Step(settings);
+
             Sweep sweepA = new Sweep();
 		    sweepA.C0.Set(0.0f, -0.2f);
 		    sweepA.A0 = 0.0f;

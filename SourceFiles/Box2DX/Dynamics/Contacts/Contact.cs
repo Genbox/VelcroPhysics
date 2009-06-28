@@ -104,8 +104,10 @@ namespace Box2DX.Dynamics
 	    public Manifold GetManifold() { return Manifold; }
 
 	    /// Get the world manifold.
-	    public void GetWorldManifold(WorldManifold worldManifold)
+	    public void GetWorldManifold(out WorldManifold worldManifold)
         {
+            worldManifold = new WorldManifold();
+
             Body bodyA = _fixtureA.GetBody();
             Body bodyB = _fixtureB.GetBody();
             Shape shapeA = _fixtureA.GetShape();
