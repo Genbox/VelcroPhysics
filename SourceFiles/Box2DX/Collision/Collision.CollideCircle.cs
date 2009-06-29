@@ -25,9 +25,10 @@ namespace Box2DX.Collision
 {
     public partial class Collision
     {
-        public static void CollideCircles(ref Manifold manifold,
+        public static void CollideCircles(out Manifold manifold,
             CircleShape circle1, XForm xf1, CircleShape circle2, XForm xf2)
         {
+            manifold = new Manifold();
             manifold.PointCount = 0;
 
             Vec2 p1 = Math.Mul(xf1, circle1.LocalPosition);
@@ -52,8 +53,9 @@ namespace Box2DX.Collision
             manifold.Points[0].ID.Key = 0;
         }
 
-        public static void CollidePolygonAndCircle(ref Manifold manifold, PolygonShape polygon, XForm xf1, CircleShape circle, XForm xf2)
+        public static void CollidePolygonAndCircle(out Manifold manifold, PolygonShape polygon, XForm xf1, CircleShape circle, XForm xf2)
         {
+            manifold = new Manifold();
             manifold.PointCount = 0;
 
             // Compute circle position in the frame of the polygon.
