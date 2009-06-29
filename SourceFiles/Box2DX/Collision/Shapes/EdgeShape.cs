@@ -110,7 +110,7 @@ namespace Box2DX.Collision
             throw new NotImplementedException();
         }
 
-        public override int GetSupport(ref Vec2 d)
+        public override int GetSupport(Vec2 d)
         {
             return Vec2.Dot(V1, d) > Vec2.Dot(V2, d) ? 0 : 1;
         }

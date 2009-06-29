@@ -152,7 +152,7 @@ namespace Box2DX.Collision
             throw new NotImplementedException();
         }
 
-        public override int GetSupport(ref Vec2 d)
+        public override int GetSupport(Vec2 d)
         {
             //B2_NOT_USED(d);
             return 0;

@@ -202,8 +202,6 @@ namespace Box2DX.Collision
 
             // Prepare input for distance query.
             SimplexCache cache = new SimplexCache();
-            cache.IndexA = new byte[3];
-            cache.IndexB = new byte[3];
             cache.Count = 0;
             DistanceInput distanceInput;
             distanceInput.UseRadii = false;
@@ -218,7 +216,7 @@ namespace Box2DX.Collision
                 distanceInput.TransformA = xfA;
                 distanceInput.TransformB = xfB;
                 DistanceOutput distanceOutput;
-                Distance(out distanceOutput, ref cache, distanceInput, shapeA, shapeB);
+                Distance(out distanceOutput, cache, ref distanceInput, shapeA, shapeB);
 
                 if (distanceOutput.Distance <= 0.0f)
                 {
