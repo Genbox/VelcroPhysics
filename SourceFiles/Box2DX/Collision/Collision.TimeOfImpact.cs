@@ -47,7 +47,7 @@ namespace Box2DX.Collision
                 FaceB
             };
 
-            public void Initialize(ref SimplexCache cache,
+            public void Initialize(SimplexCache cache,
                 Shape shapeA, XForm transformA,
                 Shape shapeB, XForm transformB)
             {
@@ -177,12 +177,12 @@ namespace Box2DX.Collision
         /// @warning the sweeps must have the same time interval.
         /// fraction=0 means the shapes begin touching/overlapped, and fraction=1 means the shapes don't touch.
         /// </summary>
-        /// <typeparam name="TA">The type of the A.</typeparam>
-        /// <typeparam name="TB">The type of the B.</typeparam>
         /// <param name="input">The input.</param>
         /// <param name="shapeA">The shape A.</param>
         /// <param name="shapeB">The shape B.</param>
-        /// <returns>fraction between [0,1] in which the shapes first touch.</returns>
+        /// <returns>
+        /// fraction between [0,1] in which the shapes first touch.
+        /// </returns>
         public static float TimeOfImpact(TOIInput input, Shape shapeA, Shape shapeB)
         {
             Sweep sweepA = input.SweepA;
@@ -196,7 +196,7 @@ namespace Box2DX.Collision
 
             float alpha = 0.0f;
 
-            int k_maxIterations = 1000;	// TODO_ERIN b2Settings
+            const int k_maxIterations = 1000;
             int iter = 0;
             float target = 0.0f;
 
@@ -227,7 +227,7 @@ namespace Box2DX.Collision
                 }
 
                 SeparationFunction fcn = new SeparationFunction();
-                fcn.Initialize(ref cache, shapeA, xfA, shapeB, xfB);
+                fcn.Initialize(cache, shapeA, xfA, shapeB, xfB);
 
                 float separation = fcn.Evaluate(xfA, xfB);
                 if (separation <= 0.0f)

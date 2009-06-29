@@ -84,7 +84,7 @@ namespace Box2DX.Collision
 
                 for (int i = 0; i < Count; ++i)
                 {
-                    SimplexVertex v = Vertices[i + 1];
+                    SimplexVertex v = Vertices[i];  
                     v.IndexA = cache.IndexA[i];
                     v.IndexB = cache.IndexB[i];
                     Vec2 wALocal = shapeA.GetVertex(v.IndexA);
@@ -93,6 +93,7 @@ namespace Box2DX.Collision
                     v.WB = Math.Mul(transformB, wBLocal);
                     v.W = v.WB - v.WA;
                     v.A = 0.0f;
+                    Vertices[i] = v;
                 }
 
                 // Compute the new simplex metric, if it is substantially different than
@@ -386,6 +387,7 @@ namespace Box2DX.Collision
                 Vertices[2].A = d123_3 * inv_d123;
                 Count = 3;
             }
+
 #warning "Must be initialized to a size of 3"
             public SimplexVertex[] Vertices;
             public int Count;
