@@ -1078,7 +1078,7 @@ namespace Box2DX.Dynamics
 					        other.WakeUp();
 				        }
 
-				        Box2DXDebug.Assert(queueStart + queueSize < queueCapacity);
+				        //Box2DXDebug.Assert(queueStart + queueSize < queueCapacity);
 				        queue[queueStart + queueSize] = other;
 				        ++queueSize;
 				        other._flags |= Body.BodyFlags.Island;
@@ -1113,7 +1113,7 @@ namespace Box2DX.Dynamics
 					        other.WakeUp();
 				        }
         				
-				        Box2DXDebug.Assert(queueStart + queueSize < queueCapacity);
+				        //Box2DXDebug.Assert(queueStart + queueSize < queueCapacity);
 				        queue[queueStart + queueSize] = other;
 				        ++queueSize;
 				        other._flags |= Body.BodyFlags.Island;
