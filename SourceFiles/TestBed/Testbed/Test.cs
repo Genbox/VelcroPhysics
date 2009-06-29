@@ -155,11 +155,12 @@ namespace TestBed
 	{
 		public static TestEntry[] g_testEntries = new TestEntry[]
 		{			
-			new TestEntry("Simple Test", SimpleTest.Create),
+			new TestEntry("Pyramid", Pyramid.Create),
+            new TestEntry("Simple Test", SimpleTest.Create),
 			new TestEntry("Line Joint Test", LineJoint.Create),
             new TestEntry("Varying Restitution", VaryingRestitution.Create),
             new TestEntry("Varying Friction", VaryingFriction.Create),
-			new TestEntry("Pyramid", Pyramid.Create),
+			
 			new TestEntry("Prismatic", Prismatic.Create),
 			new TestEntry("Revolute", Revolute.Create),
 			new TestEntry("Theo Jansen's Walker", TheoJansen.Create),
@@ -236,17 +237,7 @@ namespace TestBed
             _stepCount = 0;
 		}
 
-        public override void BeginContact(Contact contact)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public override void EndContact(Contact contact)
-        {
-            //throw new NotImplementedException();
-        }
-
-       public override void PreSolve(Contact contact, Manifold oldManifold)
+        public override void PreSolve(Contact contact, Manifold oldManifold)
         {
 	        Manifold manifold = contact.GetManifold();
 
@@ -274,14 +265,10 @@ namespace TestBed
 		        cp.position = WorldManifold.Points[i];
 		        cp.normal = worldManifold.Normal;
 		        cp.state = state2[i];
+                _points[_pointCount] = cp;
 		        ++_pointCount;
 	        }
         }
-
-       public override void PostSolve(Contact contact, ContactImpulse impulse)
-       {
-           //throw new NotImplementedException();
-       }
 
         public void DrawTitle(int x, int y, string text)
         {
