@@ -493,7 +493,7 @@ namespace Box2DX.Collision
             return bestIndex;
         }
 
-        public override int GetSupport(ref Vec2 d)
+        public override int GetSupport(Vec2 d)
         {
             int bestIndex = 0;
             float bestValue = Vec2.Dot(Vertices[0], d);

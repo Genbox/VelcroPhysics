@@ -29,13 +29,13 @@ namespace Box2DX.Collision
         /// Used to warm start b2Distance.
         /// Set count to zero on first call.
         /// </summary>
-        public struct SimplexCache
+#warning "Following class was originally a struct"
+        public class SimplexCache
         {
             public float Metric;	// length or area
             public ushort Count;
-#warning "Following two fields must be initialized with size of 3"
-            public byte[] IndexA;	// vertices on shape A
-            public byte[] IndexB;	// vertices on shape B
+            public byte[] IndexA = new byte[3];	// vertices on shape A
+            public byte[] IndexB = new byte[3];	// vertices on shape B
         };
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Box2DX.Collision
 
                 for (int i = 0; i < Count; ++i)
                 {
-                    SimplexVertex v = Vertices[i];  
+                    SimplexVertex v = Vertices[i];
                     v.IndexA = cache.IndexA[i];
                     v.IndexB = cache.IndexB[i];
                     Vec2 wALocal = shapeA.GetVertex(v.IndexA);
@@ -93,7 +93,6 @@ namespace Box2DX.Collision
                     v.WB = Math.Mul(transformB, wBLocal);
                     v.W = v.WB - v.WA;
                     v.A = 0.0f;
-                    Vertices[i] = v;
                 }
 
                 // Compute the new simplex metric, if it is substantially different than
@@ -388,7 +387,6 @@ namespace Box2DX.Collision
                 Count = 3;
             }
 
-#warning "Must be initialized to a size of 3"
             public SimplexVertex[] Vertices;
             public int Count;
         };
@@ -399,8 +397,8 @@ namespace Box2DX.Collision
         /// On the first call set b2SimplexCache.count to zero.
         /// </summary>
         public static void Distance(out DistanceOutput output,
-                        ref SimplexCache cache,
-                        DistanceInput input,
+                        SimplexCache cache,
+                        ref DistanceInput input,
                         Shape shapeA,
                         Shape shapeB)
         {
@@ -410,7 +408,11 @@ namespace Box2DX.Collision
             // Initialize the simplex.
             Simplex simplex = new Simplex();
             simplex.Vertices = new SimplexVertex[3];
+
             simplex.ReadCache(cache, shapeA, ref  transformA, shapeB, ref transformB);
+
+        	// Get simplex vertices as an array.
+            SimplexVertex[] vertices = simplex.Vertices;
 
             // These store the vertices of the last simplex so that we
             // can check for duplicates and prevent cycling.
@@ -472,17 +474,14 @@ namespace Box2DX.Collision
                 }
 
                 // Compute a tentative new simplex vertex using support points.
-#warning "is this right?"
-                SimplexVertex vertex = new SimplexVertex();
-                Vec2 tempVec = Math.MulT(transformA.R, p);
-                vertex.IndexA = shapeA.GetSupport(ref tempVec);
+                SimplexVertex vertex = vertices[simplex.Count];
+                vertex.IndexA = shapeA.GetSupport(Math.MulT(transformA.R, p));
                 vertex.WA = Math.Mul(transformA, shapeA.GetVertex(vertex.IndexA));
                 Vec2 wBLocal;
-                tempVec = Math.MulT(transformB.R, -p);
-                vertex.IndexB = shapeB.GetSupport(ref tempVec);
+                vertex.IndexB = shapeB.GetSupport(Math.MulT(transformB.R, -p));
                 vertex.WB = Math.Mul(transformB, shapeB.GetVertex(vertex.IndexB));
                 vertex.W = vertex.WB - vertex.WA;
-                simplex.Vertices[simplex.Count + 1] = vertex;
+                vertices[simplex.Count] = vertex;
 
                 // Iteration count is equated to the number of support point calls.
                 ++iter;
