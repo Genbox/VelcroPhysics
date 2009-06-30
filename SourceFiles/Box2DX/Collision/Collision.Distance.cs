@@ -477,12 +477,13 @@ namespace Box2DX.Collision
 
                 // Compute a tentative new simplex vertex using support points.
                 SimplexVertex vertex = simplex.Vertices[simplex.Count];
-                simplex.Vertices[simplex.Count].IndexA = shapeA.GetSupport(Math.MulT(transformA.R, p));
-                simplex.Vertices[simplex.Count].WA = Math.Mul(transformA, shapeA.GetVertex(vertex.IndexA));
+                vertex.IndexA = shapeA.GetSupport(Math.MulT(transformA.R, p));
+                vertex.WA = Math.Mul(transformA, shapeA.GetVertex(vertex.IndexA));
                 Vec2 wBLocal;
-                simplex.Vertices[simplex.Count].IndexB = shapeB.GetSupport(Math.MulT(transformB.R, -p));
-                simplex.Vertices[simplex.Count].WB = Math.Mul(transformB, shapeB.GetVertex(vertex.IndexB));
-                simplex.Vertices[simplex.Count].W = vertex.WB - vertex.WA;
+                vertex.IndexB = shapeB.GetSupport(Math.MulT(transformB.R, -p));
+                vertex.WB = Math.Mul(transformB, shapeB.GetVertex(vertex.IndexB));
+                vertex.W = vertex.WB - vertex.WA;
+                simplex.Vertices[simplex.Count] = vertex;
 
                 // Iteration count is equated to the number of support point calls.
                 ++iter;
