@@ -73,7 +73,7 @@ namespace Box2DX.Collision
 
         public struct Simplex
         {
-            public void ReadCache(SimplexCache cache,
+            public void ReadCache(ref SimplexCache cache,
                             Shape shapeA, ref XForm transformA,
                             Shape shapeB, ref XForm transformB)
             {
@@ -84,15 +84,14 @@ namespace Box2DX.Collision
 
                 for (int i = 0; i < Count; ++i)
                 {
-                    SimplexVertex v = Vertices[i];
-                    v.IndexA = cache.IndexA[i];
-                    v.IndexB = cache.IndexB[i];
-                    Vec2 wALocal = shapeA.GetVertex(v.IndexA);
-                    Vec2 wBLocal = shapeB.GetVertex(v.IndexB);
-                    v.WA = Math.Mul(transformA, wALocal);
-                    v.WB = Math.Mul(transformB, wBLocal);
-                    v.W = v.WB - v.WA;
-                    v.A = 0.0f;
+                    Vertices[i].IndexA = cache.IndexA[i];
+                    Vertices[i].IndexB = cache.IndexB[i];
+                    Vec2 wALocal = shapeA.GetVertex(Vertices[i].IndexA);
+                    Vec2 wBLocal = shapeB.GetVertex(Vertices[i].IndexB);
+                    Vertices[i].WA = Math.Mul(transformA, wALocal);
+                    Vertices[i].WB = Math.Mul(transformB, wBLocal);
+                    Vertices[i].W = Vertices[i].WB - Vertices[i].WA;
+                    Vertices[i].A = 0.0f;
                 }
 
                 // Compute the new simplex metric, if it is substantially different than
@@ -411,7 +410,7 @@ namespace Box2DX.Collision
             Simplex simplex = new Simplex();
             simplex.Vertices = new SimplexVertex[3];
 
-            simplex.ReadCache(cache, shapeA, ref  transformA, shapeB, ref transformB);
+            simplex.ReadCache(ref cache, shapeA, ref  transformA, shapeB, ref transformB);
 
         	// Get simplex vertices as an array.
             //SimplexVertex[] vertices = simplex.Vertices;
