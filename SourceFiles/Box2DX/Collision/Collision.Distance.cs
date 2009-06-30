@@ -30,12 +30,12 @@ namespace Box2DX.Collision
         /// Set count to zero on first call.
         /// </summary>
 #warning "Following class was originally a struct"
-        public class SimplexCache
+        public struct SimplexCache
         {
             public float Metric;	// length or area
             public ushort Count;
-            public byte[] IndexA = new byte[3];	// vertices on shape A
-            public byte[] IndexB = new byte[3];	// vertices on shape B
+            public byte[] IndexA;	// vertices on shape A
+            public byte[] IndexB;	// vertices on shape B
         };
 
         /// <summary>
@@ -127,6 +127,8 @@ namespace Box2DX.Collision
             {
                 cache.Metric = GetMetric();
                 cache.Count = (ushort)Count;
+                cache.IndexA = new byte[3];
+                cache.IndexB = new byte[3];
                 for (int i = 0; i < Count; ++i)
                 {
                     cache.IndexA[i] = (byte)Vertices[i].IndexA;
@@ -397,7 +399,7 @@ namespace Box2DX.Collision
         /// On the first call set b2SimplexCache.count to zero.
         /// </summary>
         public static void Distance(out DistanceOutput output,
-                        SimplexCache cache,
+                        ref SimplexCache cache,
                         ref DistanceInput input,
                         Shape shapeA,
                         Shape shapeB)
@@ -412,7 +414,7 @@ namespace Box2DX.Collision
             simplex.ReadCache(cache, shapeA, ref  transformA, shapeB, ref transformB);
 
         	// Get simplex vertices as an array.
-            SimplexVertex[] vertices = simplex.Vertices;
+            //SimplexVertex[] vertices = simplex.Vertices;
 
             // These store the vertices of the last simplex so that we
             // can check for duplicates and prevent cycling.
@@ -474,7 +476,7 @@ namespace Box2DX.Collision
                 }
 
                 // Compute a tentative new simplex vertex using support points.
-                SimplexVertex vertex = vertices[simplex.Count];
+                SimplexVertex vertex = simplex.Vertices[simplex.Count];
                 simplex.Vertices[simplex.Count].IndexA = shapeA.GetSupport(Math.MulT(transformA.R, p));
                 simplex.Vertices[simplex.Count].WA = Math.Mul(transformA, shapeA.GetVertex(vertex.IndexA));
                 Vec2 wBLocal;

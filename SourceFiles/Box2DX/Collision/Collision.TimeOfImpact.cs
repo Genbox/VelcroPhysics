@@ -216,7 +216,7 @@ namespace Box2DX.Collision
                 distanceInput.TransformA = xfA;
                 distanceInput.TransformB = xfB;
                 DistanceOutput distanceOutput;
-                Distance(out distanceOutput, cache, ref distanceInput, shapeA, shapeB);
+                Distance(out distanceOutput, ref cache, ref distanceInput, shapeA, shapeB);
 
                 if (distanceOutput.Distance <= 0.0f)
                 {
