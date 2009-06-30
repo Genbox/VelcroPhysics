@@ -54,7 +54,6 @@ namespace TestBed
 		public int drawStats;
 		public int enableWarmStarting;
         public int enableContinuous;
-		public int enableTOI;
 		public int pause;
 		public int singleStep;		
 
@@ -77,7 +76,6 @@ namespace TestBed
 			drawCOMs = 0;
 			enableWarmStarting = 1;
             enableContinuous = 1;
-			enableTOI = 1;
 			pause = 0;
 			singleStep = 0;
 			drawController = 1;
