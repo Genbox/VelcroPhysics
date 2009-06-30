@@ -83,7 +83,7 @@ namespace TestBed
 			chkbShapes.Checked = settings.drawShapes == 1 ? true : false;
 			chkbStatistics.Checked = settings.drawStats == 1 ? true : false;
 
-			chkbToi.Checked = settings.enableTOI == 1 ? true : false;
+			chkbToi.Checked = settings.enableContinuous == 1 ? true : false;
 			chkbWarmStart.Checked = settings.enableWarmStarting == 1 ? true : false;
 
 			nudVelIters.Value = settings.velocityIterations;
@@ -298,7 +298,7 @@ namespace TestBed
 
 		private void chkbToi_CheckedChanged(object sender, EventArgs e)
 		{
-			settings.enableTOI = chkbToi.Checked ? 1 : 0;
+			settings.enableContinuous = chkbToi.Checked ? 1 : 0;
 		}
 
 		private void chkbShapes_CheckedChanged(object sender, EventArgs e)
