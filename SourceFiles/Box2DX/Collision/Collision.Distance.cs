@@ -475,20 +475,18 @@ namespace Box2DX.Collision
                 }
 
                 // Compute a tentative new simplex vertex using support points.
-                SimplexVertex vertex = simplex.Vertices[simplex.Count];
-                vertex.IndexA = shapeA.GetSupport(Math.MulT(transformA.R, p));
-                vertex.WA = Math.Mul(transformA, shapeA.GetVertex(vertex.IndexA));
+                simplex.Vertices[simplex.Count].IndexA = shapeA.GetSupport(Math.MulT(transformA.R, p));
+                simplex.Vertices[simplex.Count].WA = Math.Mul(transformA, shapeA.GetVertex(simplex.Vertices[simplex.Count].IndexA));
                 Vec2 wBLocal;
-                vertex.IndexB = shapeB.GetSupport(Math.MulT(transformB.R, -p));
-                vertex.WB = Math.Mul(transformB, shapeB.GetVertex(vertex.IndexB));
-                vertex.W = vertex.WB - vertex.WA;
-                simplex.Vertices[simplex.Count] = vertex;
+                simplex.Vertices[simplex.Count].IndexB = shapeB.GetSupport(Math.MulT(transformB.R, -p));
+                simplex.Vertices[simplex.Count].WB = Math.Mul(transformB, shapeB.GetVertex(simplex.Vertices[simplex.Count].IndexB));
+                simplex.Vertices[simplex.Count].W = simplex.Vertices[simplex.Count].WB - simplex.Vertices[simplex.Count].WA;
 
                 // Iteration count is equated to the number of support point calls.
                 ++iter;
 
                 // Check for convergence.
-                float lowerBound = Vec2.Dot(p, vertex.W);
+                float lowerBound = Vec2.Dot(p, simplex.Vertices[simplex.Count].W);
                 float upperBound = distanceSqr;
                 const float k_relativeTolSqr = 0.01f * 0.01f;	// 1:100
                 if (upperBound - lowerBound <= k_relativeTolSqr * upperBound)
@@ -501,7 +499,7 @@ namespace Box2DX.Collision
                 bool duplicate = false;
                 for (int i = 0; i < lastCount; ++i)
                 {
-                    if (vertex.IndexA == lastA[i] && vertex.IndexB == lastB[i])
+                    if (simplex.Vertices[simplex.Count].IndexA == lastA[i] && simplex.Vertices[simplex.Count].IndexB == lastB[i])
                     {
                         duplicate = true;
                         break;
@@ -514,12 +512,11 @@ namespace Box2DX.Collision
                     break;
                 }
 
-                // New vertex is ok and needed.
+                // New simplex.Vertices[simplex.Count] is ok and needed.
                 ++simplex.Count;
             }
 
             // Prepare output.
-#warning "Check if pointer is converted correctly"
             simplex.GetWitnessPoints(out output.PointA, out output.PointB);
             output.Distance = Vec2.Distance(output.PointA, output.PointB);
             output.Iterations = iter;
