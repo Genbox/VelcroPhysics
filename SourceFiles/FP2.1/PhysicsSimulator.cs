@@ -742,6 +742,7 @@ namespace FarseerGames.FarseerPhysics
                     {
                         //TODO: Should we create a RemoveComplete method and remove all Contacts associated
                         //with the arbiter?
+                        arbiterPool.Insert(arbiterList[j - 1]);
                         arbiterList.Remove(arbiterList[j - 1]);
                     }
                 }
