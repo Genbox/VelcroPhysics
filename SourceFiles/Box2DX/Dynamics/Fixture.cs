@@ -151,7 +151,7 @@ namespace Box2DX.Dynamics
     }
 
     /// This structure is used to build a chain of edges.
-    class EdgeDef : FixtureDef
+    public class EdgeDef : FixtureDef
     {
         /// The start vertex.
         public Vec2 Vertex1;

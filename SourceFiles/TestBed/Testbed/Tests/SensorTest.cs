@@ -31,7 +31,8 @@ namespace TestBed
 {
 	public class SensorTest : Test
 	{
-		Shape _sensor;
+		Fixture _sensor;
+        Body[] _bodies = new Body[7];
 
 		public SensorTest()
 		{
@@ -43,13 +44,13 @@ namespace TestBed
 
 				PolygonDef sd = new PolygonDef();
 				sd.SetAsBox(50.0f, 10.0f);
-				ground.CreateShape(sd);
+				ground.CreateFixture(sd);
 
 				CircleDef cd = new CircleDef();
 				cd.IsSensor = true;
 				cd.Radius = 5.0f;
 				cd.LocalPosition.Set(0.0f, 20.0f);
-				_sensor = ground.CreateShape(cd);
+				_sensor = ground.CreateFixture(cd);
 			}
 
 			{
@@ -61,52 +62,73 @@ namespace TestBed
 				{
 					BodyDef bd = new BodyDef();
 					bd.Position.Set(-10.0f + 3.0f * i, 20.0f);
+                    bd.UserData = false;
 
-					Body body = _world.CreateBody(bd);
+				    _bodies[i] = _world.CreateBody(bd);
 
-					body.CreateShape(sd);
-					body.SetMassFromShapes();
+                    _bodies[i].CreateFixture(sd);
+                    _bodies[i].SetMassFromShapes();
 				}
 			}
 		}
+
+        // Implement contact listener.
+        new void BeginContact(Contact contact)
+        {
+            Fixture fixtureA = contact.GetFixtureA();
+            Fixture fixtureB = contact.GetFixtureB();
+
+            if (fixtureA == _sensor)
+            {
+                bool data = (bool)fixtureB.GetBody().GetUserData();
+                data = true;
+            }
+
+            if (fixtureB == _sensor)
+            {
+                bool data = (bool)fixtureA.GetBody().GetUserData();
+                data = true;
+            }
+        }
+
+        // Implement contact listener.
+        new void EndContact(Contact contact)
+        {
+            Fixture fixtureA = contact.GetFixtureA();
+            Fixture fixtureB = contact.GetFixtureB();
+
+            if (fixtureA == _sensor)
+            {
+                bool data = (bool)fixtureB.GetBody().GetUserData();
+                data = true;
+            }
+
+            if (fixtureB == _sensor)
+            {
+                bool data = (bool)fixtureA.GetBody().GetUserData();
+                data = true;
+            }
+        }
+
 
 		public override void Step(Settings settings)
 		{
 			base.Step(settings);
 			// Traverse the contact results. Apply a force on shapes
 			// that overlap the sensor.
-			for (int i = 0; i < _pointCount; ++i)
+			for (int i = 0; i < 7; ++i)
 			{
-				MyContactPoint point = _points[i];
-
-				if ((int)point.state == 2)
-				{
-					continue;
-				}
-
-				Shape shape1 = point.shape1;
-				Shape shape2 = point.shape2;
-				Body other;
-
-				if (shape1 == _sensor)
-				{
-					other = shape2.GetBody();
-				}
-				else if (shape2 == _sensor)
-				{
-					other = shape1.GetBody();
-				}
-				else
+				if ((bool)_bodies[i].GetUserData() == false)
 				{
 					continue;
 				}
 
 				Body ground = _sensor.GetBody();
 
-				CircleShape circle = (CircleShape)_sensor;
-				Vec2 center = ground.GetWorldPoint(circle.GetLocalPosition());
+                CircleShape circle = (CircleShape)_sensor.GetShape();
+				Vec2 center = ground.GetWorldPoint(circle.LocalPosition);
 
-				Vec2 d = center - point.position;
+				Vec2 d = center - _bodies[i].GetPosition();
 				if (d.LengthSquared() < Box2DX.Common.Settings.FLT_EPSILON * Box2DX.Common.Settings.FLT_EPSILON)
 				{
 					continue;
@@ -114,7 +136,7 @@ namespace TestBed
 
 				d.Normalize();
 				Vec2 F = 100.0f * d;
-				other.ApplyForce(F, point.position);
+                _bodies[i].ApplyForce(F, _bodies[i].GetPosition());
 			}
 		}
 
