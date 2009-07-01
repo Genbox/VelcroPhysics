@@ -20,7 +20,7 @@ namespace Box2DX.Dynamics
             Body bodyA = _fixtureA.GetBody();
             Body bodyB = _fixtureB.GetBody();
 
-            Collision.Collision.CollideEdgeAndCircle(ref Manifold,
+            Collision.Collision.CollideEdgeAndCircle(out Manifold,
                                     (EdgeShape)_fixtureA.GetShape(), bodyA.GetXForm(),
                                     (CircleShape)_fixtureB.GetShape(), bodyB.GetXForm());
 
@@ -36,6 +36,16 @@ namespace Box2DX.Dynamics
             input.Tolerance = Settings.LinearSlop;
 
             return Collision.Collision.TimeOfImpact(input, (EdgeShape)_fixtureA.GetShape(), (CircleShape)_fixtureB.GetShape());
+        }
+
+        new public static Contact Create(Fixture fixtureA, Fixture fixtureB)
+        {
+            return new EdgeAndCircleContact(fixtureA, fixtureB);
+        }
+
+        new public static void Destroy(Contact contact)
+        {
+            contact = null;
         }
     }
 }

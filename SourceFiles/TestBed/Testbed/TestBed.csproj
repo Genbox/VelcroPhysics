@@ -106,7 +106,9 @@
     </Compile>
     <Compile Include="Tests\RaycastTest.cs" />
     <Compile Include="Tests\Revolute.cs" />
+    <Compile Include="Tests\SensorTest.cs" />
     <Compile Include="Tests\SimpleTest.cs" />
+    <Compile Include="Tests\SphereStack.cs" />
     <Compile Include="Tests\TheoJansen.cs" />
     <Compile Include="Tests\TimeOfImpact.cs" />
     <Compile Include="Tests\VaryingFriction.cs" />
