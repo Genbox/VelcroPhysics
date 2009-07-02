@@ -17,6 +17,7 @@
 */
 
 #define TestOne
+//#define TestTwo
 
 using System;
 using System.Collections.Generic;
@@ -68,79 +69,78 @@ namespace TestBed
             }
 #elif TestTwo
 		{
-			b2PolygonDef sd;
+			PolygonDef sd = new PolygonDef();
 			sd.SetAsBox(10.0f, 0.1f);
-			sd.density = 0.0f;
+			sd.Density = 0.0f;
 
-			b2BodyDef bd;
-			bd.type = b2BodyDef::e_static;
-			bd.position.Set(0.0f, -0.2f);
-			b2Body* ground = m_world->CreateBody(&bd);
-			ground->CreateFixture(&sd);
+			BodyDef bd = new BodyDef();
+			bd.Position.Set(0.0f, -0.2f);
+			Body ground = _world.CreateBody(bd);
+			ground.CreateFixture(sd);
 		}
 
 		{
-			b2PolygonDef sd;
+			PolygonDef sd = new PolygonDef();
 			sd.SetAsBox(2.0f, 0.1f);
-			sd.density = 1.0f;
-			sd.restitution = 0.0f;
+			sd.Density = 1.0f;
+			sd.Restitution = 0.0f;
 
-			b2BodyDef bd1;
-			bd1.type = b2BodyDef::e_dynamic;
-			bd1.isBullet = true;
-			bd1.allowSleep = false;
-			bd1.position.Set(0.0f, 20.0f);
-			b2Body* b1 = m_world->Create(&bd1);
-			b1->CreateFixture(&sd);
-			b1->SetMassFromShapes();
-			b1->SetLinearVelocity(b2Vec2(0.0f, -100.0f));
+			BodyDef bd1 = new BodyDef();
+			//bd1.type = BodyDef::e_dynamic;
+			bd1.IsBullet = true;
+			bd1.AllowSleep = false;
+			bd1.Position.Set(0.0f, 20.0f);
+			Body b1 = _world.CreateBody(bd1);
+			b1.CreateFixture(sd);
+			b1.SetMassFromShapes();
+			b1.SetLinearVelocity(new Vec2(0.0f, -100.0f));
 
 			sd.SetAsBox(1.0f, 0.1f);
-			b2BodyDef bd2;
-			bd2.type = b2BodyDef::e_dynamic;
-			bd2.isBullet = true;
-			bd2.allowSleep = false;
-			bd2.position.Set(0.0f, 20.2f);
-			b2Body* b2 = m_world->Create(&bd2);
-			b2->CreateFixture(&sd);
-			b2->SetMassFromShapes();
-			b2->SetLinearVelocity(b2Vec2(0.0f, -100.0f));
+			BodyDef bd2 = new BodyDef();
+			//bd2.type = b2BodyDef::e_dynamic;
+			bd2.IsBullet = true;
+			bd2.AllowSleep = false;
+			bd2.Position.Set(0.0f, 20.2f);
+			Body b2 = _world.CreateBody(bd2);
+			b2.CreateFixture(sd);
+			b2.SetMassFromShapes();
+			b2.SetLinearVelocity(new Vec2(0.0f, -100.0f));
 
 			sd.SetAsBox(0.25f, 0.25f);
-			sd.density = 10.0f;
-			b2BodyDef bd3;
-			bd3.type = b2BodyDef::e_dynamic;
-			bd3.isBullet = true;
-			bd3.allowSleep = false;
-			bd3.position.Set(0.0f, 100.0f);
-			b2Body* b3 = m_world->Create(&bd3);
-			b3->CreateFixture(&sd);
-			b3->SetMassFromShapes();
-			b3->SetLinearVelocity(b2Vec2(0.0f, -150.0f));
+			sd.Density = 10.0f;
+			BodyDef bd3 = new BodyDef();
+			//bd3.type = b2BodyDef::e_dynamic;
+			bd3.IsBullet = true;
+			bd3.AllowSleep = false;
+			bd3.Position.Set(0.0f, 100.0f);
+			Body b3 = _world.CreateBody(bd3);
+			b3.CreateFixture(sd);
+			b3.SetMassFromShapes();
+			b3.SetLinearVelocity(new Vec2(0.0f, -150.0f));
 		}
 #else
-		const float32 k_restitution = 1.4f;
+		const float k_restitution = 1.4f;
 
 		{
-			b2BodyDef bd;
-			bd.position.Set(0.0f, 20.0f);
-			b2Body* body = m_world->CreateBody(&bd);
+			BodyDef bd = new BodyDef();
+			bd.Position.Set(0.0f, 20.0f);
+			Body body = _world.CreateBody(bd);
 
-			b2PolygonDef sd;
-			sd.density = 0.0f;
-			sd.restitution = k_restitution;
+			PolygonDef sd = new PolygonDef();
+			sd.Density = 0.0f;
+			sd.Restitution = k_restitution;
 
-			sd.SetAsBox(0.1f, 10.0f, b2Vec2(-10.0f, 0.0f), 0.0f);
-			body->CreateFixture(&sd);
+			sd.SetAsBox(0.1f, 10.0f, new Vec2(-10.0f, 0.0f), 0.0f);
+			body.CreateFixture(sd);
 
-			sd.SetAsBox(0.1f, 10.0f, b2Vec2(10.0f, 0.0f), 0.0f);
-			body->CreateFixture(&sd);
+			sd.SetAsBox(0.1f, 10.0f, new Vec2(10.0f, 0.0f), 0.0f);
+			body.CreateFixture(sd);
 
-			sd.SetAsBox(0.1f, 10.0f, b2Vec2(0.0f, -10.0f), 0.5f * b2_pi);
-			body->CreateFixture(&sd);
+			sd.SetAsBox(0.1f, 10.0f, new Vec2(0.0f, -10.0f), 0.5f * Box2DX.Common.Settings.Pi);
+			body.CreateFixture(sd);
 
-			sd.SetAsBox(0.1f, 10.0f, b2Vec2(0.0f, 10.0f), -0.5f * b2_pi);
-			body->CreateFixture(&sd);
+            sd.SetAsBox(0.1f, 10.0f, new Vec2(0.0f, 10.0f), -0.5f * Box2DX.Common.Settings.Pi);
+			body.CreateFixture(sd);
 		}
 
 #if TestOne
@@ -195,35 +195,35 @@ namespace TestBed
 		}
 #else
 		{
-			b2BodyDef bd;
-			bd.position.Set(-5.0f, 20.0f);
-			bd.isBullet = true;
-			b2Body* body = m_world->CreateBody(&bd);
-			body->SetAngularVelocity(RandomFloat(-50.0f, 50.0f));
+			BodyDef bd = new BodyDef();
+			bd.Position.Set(-5.0f, 20.0f);
+			bd.IsBullet = true;
+			Body body = _world.CreateBody(bd);
+			body.SetAngularVelocity(Box2DX.Common.Math.Random(-50.0f, 50.0f));
 
-			b2PolygonDef sd;
+			PolygonDef sd = new PolygonDef();
 			sd.SetAsBox(0.1f, 4.0f);
-			sd.density = 1.0f;
-			sd.restitution = 0.0f;
-			body->CreateFixture(&sd);
-			body->SetMassFromShapes();
+			sd.Density = 1.0f;
+			sd.Restitution = 0.0f;
+			body.CreateFixture(sd);
+			body.SetMassFromShapes();
 		}
 #endif
 
-		for (int32 i = 0; i < 0; ++i)
+		for (int i = 0; i < 0; ++i)
 		{
-			b2BodyDef bd;
-			bd.position.Set(0.0f, 15.0f + i);
-			bd.isBullet = true;
-			b2Body* body = m_world->CreateBody(&bd);
-			body->SetAngularVelocity(RandomFloat(-50.0f, 50.0f));
+			BodyDef bd = new BodyDef();
+			bd.Position.Set(0.0f, 15.0f + i);
+			bd.IsBullet = true;
+			Body body = _world.CreateBody(bd);
+            body.SetAngularVelocity(Box2DX.Common.Math.Random(-50.0f, 50.0f));
 
-			b2CircleDef sd;
-			sd.radius = 0.25f;
-			sd.density = 1.0f;
-			sd.restitution = 0.0f;
-			body->CreateFixture(&sd);
-			body->SetMassFromShapes();
+			CircleDef sd = new CircleDef();
+			sd.Radius = 0.25f;
+			sd.Density = 1.0f;
+			sd.Restitution = 0.0f;
+			body.CreateFixture(sd);
+			body.SetMassFromShapes();
 		}
 #endif
         }
