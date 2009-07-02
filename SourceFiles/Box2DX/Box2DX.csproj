@@ -86,6 +86,7 @@
     <Compile Include="Dynamics\Controllers\Controller.cs" />
     <Compile Include="Dynamics\Controllers\GravityController.cs" />
     <Compile Include="Dynamics\Controllers\TensorDampingController.cs" />
+    <Compile Include="Dynamics\EdgeChain.cs" />
     <Compile Include="Dynamics\Fixture.cs" />
     <Compile Include="Dynamics\Island.cs" />
     <Compile Include="Dynamics\Joints\DistanceJoint.cs" />

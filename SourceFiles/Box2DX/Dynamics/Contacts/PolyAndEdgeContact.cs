@@ -9,13 +9,6 @@ namespace Box2DX.Dynamics
 {
     class PolyAndEdgeContact : Contact
     {
-        public Manifold _manifold = new Manifold();
-
-        public Manifold[] GetManifolds()
-        {
-            return new Manifold[] { _manifold };
-        }
-
         public PolyAndEdgeContact(Fixture fixtureA, Fixture fixtureB)
             : base(fixtureA, fixtureB)
         {
@@ -28,7 +21,8 @@ namespace Box2DX.Dynamics
             Body bodyA = _fixtureA.GetBody();
             Body bodyB = _fixtureB.GetBody();
 
-            Collision.Collision.CollidePolyAndEdge(out _manifold, (PolygonShape)_fixtureA.GetShape(), bodyA.GetXForm(),
+            Collision.Collision.CollidePolyAndEdge(out Manifold, 
+                (PolygonShape)_fixtureA.GetShape(), bodyA.GetXForm(),
                 (EdgeShape)_fixtureB.GetShape(), bodyB.GetXForm());
         }
 
@@ -41,15 +35,15 @@ namespace Box2DX.Dynamics
 	       input.SweepRadiusB = _fixtureB.ComputeSweepRadius(sweepB.LocalCenter);
 	       input.Tolerance = Settings.LinearSlop;
 
-	       return Collision.Collision.TimeOfImpact(input, _fixtureA.GetShape(), _fixtureB.GetShape());
+           return Collision.Collision.TimeOfImpact(input, (PolygonShape)_fixtureA.GetShape(), (EdgeShape)_fixtureB.GetShape());
         }
 
-        new public static PolyAndEdgeContact Create(Fixture fixture1, Fixture fixture2)
+        new public static Contact Create(Fixture fixtureA, Fixture fixtureB)
         {
-            return new PolyAndEdgeContact(fixture1, fixture2);
+            return new PolyAndEdgeContact(fixtureA, fixtureB);
         }
 
-        new public static void Destroy(ref PolyAndEdgeContact contact)
+        new public static void Destroy(Contact contact)
         {
             contact = null;
         }
