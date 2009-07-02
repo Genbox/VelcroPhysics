@@ -49,16 +49,16 @@ namespace TestBed
 				sd.Restitution = k_restitution;
 
 				sd.SetAsBox(0.2f, 20.0f, new Vec2(-20.0f, 0.0f), 0.0f);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 
 				sd.SetAsBox(0.2f, 20.0f, new Vec2(20.0f, 0.0f), 0.0f);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 
 				sd.SetAsBox(0.2f, 20.0f, new Vec2(0.0f, -20.0f), 0.5f * Box2DX.Common.Settings.Pi);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 
 				sd.SetAsBox(0.2f, 20.0f, new Vec2(0.0f, 20.0f), -0.5f * Box2DX.Common.Settings.Pi);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 			}
 
 			{
@@ -91,8 +91,8 @@ namespace TestBed
 				bd.Position.Set(0.0f, 1.05f);
 				bd.Angle = Box2DX.Common.Settings.Pi;
 				_body = _world.CreateBody(bd);
-				_body.CreateShape(sd1);
-				_body.CreateShape(sd2);
+                _body.CreateFixture(sd1);
+                _body.CreateFixture(sd2);
 				_body.SetMassFromShapes();
 			}
 		}

@@ -71,8 +71,8 @@ namespace TestBed
 				bd.Position.Set(-35.0f, 2.8f);
 
 				_vehicle = _world.CreateBody(bd);
-				_vehicle.CreateShape(poly1);
-				_vehicle.CreateShape(poly2);
+                _vehicle.CreateFixture(poly1);
+                _vehicle.CreateFixture(poly2);
 				_vehicle.SetMassFromShapes();
 			}
 
@@ -88,12 +88,12 @@ namespace TestBed
 				bd.Position.Set(-33.8f, 2.0f);
 
 				_rightWheel = _world.CreateBody(bd);
-				_rightWheel.CreateShape(circ);
+                _rightWheel.CreateFixture(circ);
 				_rightWheel.SetMassFromShapes();
 
 				bd.Position.Set(-36.2f, 2.0f);
 				_leftWheel = _world.CreateBody(bd);
-				_leftWheel.CreateShape(circ);
+                _leftWheel.CreateFixture(circ);
 				_leftWheel.SetMassFromShapes();
 			}
 
@@ -121,7 +121,7 @@ namespace TestBed
 				bd.Position.Set(-25.0f, 1.0f);
 
 				Body ground = _world.CreateBody(bd);
-				ground.CreateShape(box);
+                ground.CreateFixture(box);
 			}
 
 			{	// more ground
@@ -133,7 +133,7 @@ namespace TestBed
 				bd.Position.Set(27.0f - 30.0f, 3.1f);
 
 				Body ground = _world.CreateBody(bd);
-				ground.CreateShape(box);
+                ground.CreateFixture(box);
 			}
 
 			{	// more ground
@@ -145,7 +145,7 @@ namespace TestBed
 				bd.Position.Set(55.0f - 30.0f, 3.1f);
 
 				Body ground = _world.CreateBody(bd);
-				ground.CreateShape(box);
+                ground.CreateFixture(box);
 			}
 
 			{	// more ground
@@ -157,7 +157,7 @@ namespace TestBed
 				bd.Position.Set(41.0f, 2.0f);
 
 				Body ground = _world.CreateBody(bd);
-				ground.CreateShape(box);
+                ground.CreateFixture(box);
 			}
 
 			{	// more ground
@@ -169,7 +169,7 @@ namespace TestBed
 				bd.Position.Set(50.0f, 4.0f);
 
 				Body ground = _world.CreateBody(bd);
-				ground.CreateShape(box);
+                ground.CreateFixture(box);
 			}
 
 			{	// more ground
@@ -181,7 +181,7 @@ namespace TestBed
 				bd.Position.Set(85.0f, 2.0f);
 
 				Body ground = _world.CreateBody(bd);
-				ground.CreateShape(box);
+                ground.CreateFixture(box);
 			}
 		}
 

@@ -47,7 +47,7 @@ namespace TestBed
 
 				PolygonDef sd = new PolygonDef();
 				sd.SetAsBox(50.0f, 10.0f);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 			}
 
 			{
@@ -66,7 +66,7 @@ namespace TestBed
 				BodyDef bd1 = new BodyDef();
 				bd1.Position.Set(-3.0f, 12.0f);
 				Body body1 = _world.CreateBody(bd1);
-				body1.CreateShape(circle1);
+                body1.CreateFixture(circle1);
 				body1.SetMassFromShapes();
 
 				RevoluteJointDef jd1 = new RevoluteJointDef();
@@ -80,7 +80,7 @@ namespace TestBed
 				BodyDef bd2 = new BodyDef();
 				bd2.Position.Set(0.0f, 12.0f);
 				Body body2 = _world.CreateBody(bd2);
-				body2.CreateShape(circle2);
+                body2.CreateFixture(circle2);
 				body2.SetMassFromShapes();
 
 				RevoluteJointDef jd2 = new RevoluteJointDef();
@@ -90,7 +90,7 @@ namespace TestBed
 				BodyDef bd3 = new BodyDef();
 				bd3.Position.Set(2.5f, 12.0f);
 				Body body3 = _world.CreateBody(bd3);
-				body3.CreateShape(box);
+                body3.CreateFixture(box);
 				body3.SetMassFromShapes();
 
 				PrismaticJointDef jd3 = new PrismaticJointDef();

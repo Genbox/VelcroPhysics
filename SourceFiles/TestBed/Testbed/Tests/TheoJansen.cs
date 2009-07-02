@@ -41,6 +41,86 @@ namespace TestBed
 		bool _motorOn;
 		float _motorSpeed;
 
+        private void CreateLeg(float s, Vec2 wheelAnchor)
+	    {
+		    Vec2 p1 = new Vec2(5.4f * s, -6.1f);
+		    Vec2 p2 = new Vec2(7.2f * s, -1.2f);
+		    Vec2 p3 = new Vec2(4.3f * s, -1.9f);
+		    Vec2 p4 = new Vec2(3.1f * s, 0.8f);
+		    Vec2 p5 = new Vec2(6.0f * s, 1.5f);
+		    Vec2 p6 = new Vec2(2.5f * s, 3.7f);
+
+		    PolygonDef sd1 = new PolygonDef(), sd2 = new PolygonDef();
+		    sd1.VertexCount = 3;
+		    sd2.VertexCount = 3;
+		    sd1.Filter.GroupIndex = -1;
+		    sd2.Filter.GroupIndex = -1;
+		    sd1.Density = 1.0f;
+		    sd2.Density = 1.0f;
+
+		    if (s > 0.0f)
+		    {
+			    sd1.Vertices[0] = p1;
+			    sd1.Vertices[1] = p2;
+			    sd1.Vertices[2] = p3;
+
+			    sd2.Vertices[0] = Vec2.Zero;
+			    sd2.Vertices[1] = p5 - p4;
+			    sd2.Vertices[2] = p6 - p4;
+		    }
+		    else
+		    {
+			    sd1.Vertices[0] = p1;
+			    sd1.Vertices[1] = p3;
+			    sd1.Vertices[2] = p2;
+
+			    sd2.Vertices[0] = Vec2.Zero;
+			    sd2.Vertices[1] = p6 - p4;
+			    sd2.Vertices[2] = p5 - p4;
+		    }
+
+		    BodyDef bd1 = new BodyDef(), bd2 = new BodyDef();
+		    bd1.Position = _offset;
+		    bd2.Position = p4 + _offset;
+
+		    bd1.AngularDamping = 10.0f;
+		    bd2.AngularDamping = 10.0f;
+
+		    Body body1 = _world.CreateBody(bd1);
+		    Body body2 = _world.CreateBody(bd2);
+
+		    body1.CreateFixture(sd1);
+		    body2.CreateFixture(sd2);
+
+		    body1.SetMassFromShapes();
+		    body2.SetMassFromShapes();
+
+		    DistanceJointDef djd = new DistanceJointDef();
+
+		    // Using a soft distance constraint can reduce some jitter.
+		    // It also makes the structure seem a bit more fluid by
+		    // acting like a suspension system.
+		    djd.DampingRatio = 0.5f;
+		    djd.FrequencyHz = 10.0f;
+
+		    djd.Initialize(body1, body2, p2 + _offset, p5 + _offset);
+		    _world.CreateJoint(djd);
+
+		    djd.Initialize(body1, body2, p3 + _offset, p4 + _offset);
+		    _world.CreateJoint(djd);
+
+		    djd.Initialize(body1, _wheel, p3 + _offset, wheelAnchor + _offset);
+		    _world.CreateJoint(djd);
+
+		    djd.Initialize(body2, _wheel, p6 + _offset, wheelAnchor + _offset);
+		    _world.CreateJoint(djd);
+
+		    RevoluteJointDef rjd = new RevoluteJointDef();
+
+		    rjd.Initialize(body2, _chassis, p4 + _offset);
+		    _world.CreateJoint(rjd);
+	    }
+
 		public TheoJansen()
 		{
 			_offset.Set(0.0f, 8.0f);
@@ -126,86 +206,6 @@ namespace TestBed
 			_wheel.SetXForm(_wheel.GetPosition(), -120.0f * Box2DX.Common.Settings.Pi / 180.0f);
 			CreateLeg(-1.0f, wheelAnchor);
 			CreateLeg(1.0f, wheelAnchor);
-		}
-
-		public void CreateLeg(float s, Vec2 wheelAnchor)
-		{
-			Vec2 p1 = new Vec2(5.4f * s, -6.1f);
-			Vec2 p2 = new Vec2(7.2f * s, -1.2f);
-			Vec2 p3 = new Vec2(4.3f * s, -1.9f);
-			Vec2 p4 = new Vec2(3.1f * s, 0.8f);
-			Vec2 p5 = new Vec2(6.0f * s, 1.5f);
-			Vec2 p6 = new Vec2(2.5f * s, 3.7f);
-
-			PolygonDef sd1 = new PolygonDef(), sd2 = new PolygonDef();
-			sd1.VertexCount = 3;
-			sd2.VertexCount = 3;
-			sd1.Filter.GroupIndex = 2;
-			sd2.Filter.GroupIndex = 2;
-			sd1.Density = 1.0f;
-			sd2.Density = 1.0f;
-
-			if (s > 0.0f)
-			{
-				sd1.Vertices[0] = p1;
-				sd1.Vertices[1] = p2;
-				sd1.Vertices[2] = p3;
-
-				sd2.Vertices[0] = Vec2.Zero;
-				sd2.Vertices[1] = p5 - p4;
-				sd2.Vertices[2] = p6 - p4;
-			}
-			else
-			{
-				sd1.Vertices[0] = p1;
-				sd1.Vertices[1] = p3;
-				sd1.Vertices[2] = p2;
-
-				sd2.Vertices[0] = Vec2.Zero;
-				sd2.Vertices[1] = p6 - p4;
-				sd2.Vertices[2] = p5 - p4;
-			}
-
-			BodyDef bd1 = new BodyDef(), bd2 = new BodyDef();
-			bd1.Position = _offset;
-			bd2.Position = p4 + _offset;
-
-			bd1.AngularDamping = 10.0f;
-			bd2.AngularDamping = 10.0f;
-
-			Body body1 = _world.CreateBody(bd1);
-			Body body2 = _world.CreateBody(bd2);
-
-            body1.CreateFixture(sd1);
-            body2.CreateFixture(sd2);
-
-			body1.SetMassFromShapes();
-			body2.SetMassFromShapes();
-
-			DistanceJointDef djd = new DistanceJointDef();
-
-			// Using a soft distance constraint can reduce some jitter.
-			// It also makes the structure seem a bit more fluid by
-			// acting like a suspension system.
-			djd.DampingRatio = 0.5f;
-			djd.FrequencyHz = 10.0f;
-
-			djd.Initialize(body1, body2, p2 + _offset, p5 + _offset);
-			_world.CreateJoint(djd);
-
-			djd.Initialize(body1, body2, p3 + _offset, p4 + _offset);
-			_world.CreateJoint(djd);
-
-			djd.Initialize(body1, _wheel, p3 + _offset, wheelAnchor + _offset);
-			_world.CreateJoint(djd);
-
-			djd.Initialize(body2, _wheel, p6 + _offset, wheelAnchor + _offset);
-			_world.CreateJoint(djd);
-
-			RevoluteJointDef rjd = new RevoluteJointDef();
-
-			rjd.Initialize(body2, _chassis, p4 + _offset);
-			_world.CreateJoint(rjd);
 		}
 
 		public override void Step(Settings settings)

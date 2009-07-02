@@ -36,7 +36,7 @@ namespace Box2DX.Dynamics
         /// Collision groups allow a certain group of objects to never collide (negative)
         /// or always collide (positive). Zero means no collision group. Non-zero group
         /// filtering always wins against the mask bits.
-        public UInt16 GroupIndex;
+        public Int16 GroupIndex;
     }
 
     /// A fixture definition is used to create a fixture. This class defines an

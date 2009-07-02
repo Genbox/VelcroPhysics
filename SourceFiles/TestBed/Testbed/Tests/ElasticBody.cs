@@ -48,7 +48,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(-1.0f, -7.5f);
 				_ground = _world.CreateBody(bd);
-				_ground.CreateShape(sd);
+				_ground.CreateFixture(sd);
 			}
 			// Upper static body
 			{
@@ -59,12 +59,12 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(-20.0f, 93.0f);
 				Body g = _world.CreateBody(bd);
-				g.CreateShape(sd);
+				g.CreateFixture(sd);
 				sd.SetAsBox(15.0f, 0.50f, new Vec2(-15.0f, 12.5f), 0.0f);
-				g.CreateShape(sd);
+				g.CreateFixture(sd);
 
 				sd.SetAsBox(20.0f, 0.5f, new Vec2(0.0f, -25.0f), -0.5f);
-				g.CreateShape(sd);
+				g.CreateFixture(sd);
 			}
 			// Left channel left wall
 			{
@@ -75,7 +75,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(-49.3f, 50.0f);
 				Body g = _world.CreateBody(bd);
-				g.CreateShape(sd);
+				g.CreateFixture(sd);
 			}
 			// Right wall
 			{
@@ -86,7 +86,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(45.0f, 50.0f);
 				Body g = _world.CreateBody(bd);
-				g.CreateShape(sd);
+				g.CreateFixture(sd);
 			}
 			// Left channel right upper wall  
 			{
@@ -98,7 +98,7 @@ namespace TestBed
 				bd.Position.Set(-42.0f, 70.0f);
 				bd.Angle = -0.03f * Box2DX.Common.Settings.Pi;
 				Body g = _world.CreateBody(bd);
-				g.CreateShape(sd);
+				g.CreateFixture(sd);
 			}
 			// Left channel right lower wall
 			{
@@ -109,7 +109,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(-44.0f, 27.0f);
 				Body g = _world.CreateBody(bd);
-				g.CreateShape(sd);
+				g.CreateFixture(sd);
 				// Bottom motors
 				CircleDef cd = new CircleDef();
 				cd.Radius = 3.0f;
@@ -119,7 +119,7 @@ namespace TestBed
 				// 1. 
 				bd.Position.Set(-40.0f, 2.5f);
 				Body body = _world.CreateBody(bd);
-				body.CreateShape(cd);
+				body.CreateFixture(cd);
 				body.SetMassFromShapes();
 				RevoluteJointDef jr = new RevoluteJointDef();
 				jr.Initialize(g, body, body.GetWorldCenter() + new Vec2(0.0f, 1.0f));
@@ -131,9 +131,9 @@ namespace TestBed
 				bd.Position.Set(-46.0f, -2.5f);
 				cd.Radius = 1.5f; jr.MotorSpeed = -20.0f;
 				body = _world.CreateBody(bd);
-				body.CreateShape(cd);
+				body.CreateFixture(cd);
 				sd.SetAsBox(2.0f, 0.50f);
-				body.CreateShape(sd);
+				body.CreateFixture(sd);
 				body.SetMassFromShapes();
 				jr.Initialize(g, body, body.GetWorldCenter());
 				_world.CreateJoint(jr);
@@ -141,7 +141,7 @@ namespace TestBed
 				cd.Radius = 3.0f; jr.MotorSpeed = 20.0f;
 				bd.Position.Set(-32.0f, 2.5f);
 				body = _world.CreateBody(bd);
-				body.CreateShape(cd);
+				body.CreateFixture(cd);
 				body.SetMassFromShapes();
 				jr.Initialize(g, body, body.GetWorldCenter() + new Vec2(0.0f, 1.0f));
 				_world.CreateJoint(jr);
@@ -149,37 +149,37 @@ namespace TestBed
 				jr.MotorSpeed = 20.0f;
 				bd.Position.Set(-24.0f, 1.5f);
 				body = _world.CreateBody(bd);
-				body.CreateShape(cd);
+				body.CreateFixture(cd);
 				body.SetMassFromShapes();
 				jr.Initialize(g, body, body.GetWorldCenter() + new Vec2(0.0f, 1.0f));
 				_world.CreateJoint(jr);
 				// 4.
 				bd.Position.Set(-16.0f, 0.8f);
 				body = _world.CreateBody(bd);
-				body.CreateShape(cd);
+				body.CreateFixture(cd);
 				body.SetMassFromShapes();
 				jr.Initialize(g, body, body.GetWorldCenter() + new Vec2(0.0f, 1.0f));
 				_world.CreateJoint(jr);
 				// 5.
 				bd.Position.Set(-8.0f, 0.5f);
 				body = _world.CreateBody(bd);
-				body.CreateShape(cd);
+				body.CreateFixture(cd);
 				body.SetMassFromShapes();
 				jr.Initialize(g, body, body.GetWorldCenter() + new Vec2(0.0f, 1.0f));
 				_world.CreateJoint(jr);
 				// 6.
 				bd.Position.Set(0.0f, 0.1f);
 				body = _world.CreateBody(bd);
-				body.CreateShape(cd);
+				body.CreateFixture(cd);
 				body.SetMassFromShapes();
 				jr.Initialize(g, body, body.GetWorldCenter() + new Vec2(0.0f, 1.0f));
 				_world.CreateJoint(jr);
 				// 7.
 				bd.Position.Set(8.0f, -0.5f);
 				body = _world.CreateBody(bd);
-				body.CreateShape(cd);
+				body.CreateFixture(cd);
 				sd.SetAsBox(3.7f, 0.5f);
-				body.CreateShape(sd);
+				body.CreateFixture(sd);
 				body.SetMassFromShapes();
 				jr.Initialize(g, body, body.GetWorldCenter() + new Vec2(0.0f, 1.0f));
 				_world.CreateJoint(jr);
@@ -188,13 +188,13 @@ namespace TestBed
 				sd.Density = 2.0f;
 				bd.Position.Set(18.0f, 1.0f);
 				Body rightmotor = _world.CreateBody(bd);
-				rightmotor.CreateShape(sd);
+				rightmotor.CreateFixture(sd);
 				sd.SetAsBox(4.5f, 0.5f, new Vec2(0.0f, 0.0f), Box2DX.Common.Settings.Pi / 3.0f);
-				rightmotor.CreateShape(sd);
+				rightmotor.CreateFixture(sd);
 				sd.SetAsBox(4.5f, 0.5f, new Vec2(0.0f, 0.0f), Box2DX.Common.Settings.Pi * 2.0f / 3.0f);
-				rightmotor.CreateShape(sd);
+				rightmotor.CreateFixture(sd);
 				cd.Radius = 4.2f;
-				rightmotor.CreateShape(cd);
+				rightmotor.CreateFixture(cd);
 				rightmotor.SetMassFromShapes();
 				jr.Initialize(g, rightmotor, rightmotor.GetWorldCenter());
 				jr.MaxMotorTorque = 70000.0f;
@@ -205,12 +205,12 @@ namespace TestBed
 				sd.Density = 2.0f;
 				bd.Position.Set(-34.0f, 17.0f);
 				body = _world.CreateBody(bd);
-				body.CreateShape(sd);
+				body.CreateFixture(sd);
 				sd.SetAsBox(8.5f, 0.5f, new Vec2(0.0f, 0.0f), Box2DX.Common.Settings.Pi * .5f);
-				body.CreateShape(sd);
+				body.CreateFixture(sd);
 				cd.Radius = 7.0f;
 				cd.Friction = 0.9f;
-				body.CreateShape(cd);
+				body.CreateFixture(cd);
 				body.SetMassFromShapes();
 				jr.Initialize(g, body, body.GetWorldCenter());
 				jr.MaxMotorTorque = 100000.0f;
@@ -221,7 +221,7 @@ namespace TestBed
 				sd.Density = 10.0f;
 				bd.Position.Set(-16.0f, 17.0f);
 				Body hammerleft = _world.CreateBody(bd);
-				hammerleft.CreateShape(sd);
+				hammerleft.CreateFixture(sd);
 				hammerleft.SetMassFromShapes();
 				DistanceJointDef jd = new DistanceJointDef();
 				jd.Initialize(body, hammerleft, body.GetWorldCenter() + new Vec2(0.0f, 6.0f), hammerleft.GetWorldCenter());
@@ -229,7 +229,7 @@ namespace TestBed
 
 				bd.Position.Set(4.0f, 17.0f);
 				Body hammerright = _world.CreateBody(bd);
-				hammerright.CreateShape(sd);
+				hammerright.CreateFixture(sd);
 				hammerright.SetMassFromShapes();
 				jd.Initialize(body, hammerright, body.GetWorldCenter() - new Vec2(0.0f, 6.0f), hammerright.GetWorldCenter());
 				_world.CreateJoint(jd);
@@ -237,10 +237,10 @@ namespace TestBed
 				sd.SetAsBox(6.0f, 0.75f);
 				bd.Position.Set(-21.0f, 9.0f);
 				Body pusher = _world.CreateBody(bd);
-				pusher.CreateShape(sd);
+				pusher.CreateFixture(sd);
 				sd.SetAsBox(2.0f, 1.5f, new Vec2(-5.0f, 0.0f), 0.0f);
 				pusher.SetMassFromShapes();
-				pusher.CreateShape(sd);
+				pusher.CreateFixture(sd);
 				jd.Initialize(rightmotor, pusher, rightmotor.GetWorldCenter() + new Vec2(-8.0f, 0.0f),
 							  pusher.GetWorldCenter() + new Vec2(5.0f, 0.0f));
 				_world.CreateJoint(jd);
@@ -256,29 +256,29 @@ namespace TestBed
 				bd.Position.Set(-15.5f, 12.0f);
 				bd.Angle = 0.0f;
 				Body g = _world.CreateBody(bd);
-				g.CreateShape(sd);
+				g.CreateFixture(sd);
 
 				sd.SetAsBox(8.0f, 0.5f, new Vec2(23.0f, 0.0f), 0.0f);
-				g.CreateShape(sd);
+				g.CreateFixture(sd);
 				// compressor statics  
 				sd.SetAsBox(7.0f, 0.5f, new Vec2(-2.0f, 9.0f), 0.0f);
-				g.CreateShape(sd);
+				g.CreateFixture(sd);
 				sd.SetAsBox(9.0f, 0.5f, new Vec2(22.0f, 9.0f), 0.0f);
-				g.CreateShape(sd);
+				g.CreateFixture(sd);
 
 				sd.SetAsBox(19.0f, 0.5f, new Vec2(-9.0f, 15.0f), -0.05f);
-				g.CreateShape(sd);
+				g.CreateFixture(sd);
 				sd.SetAsBox(4.7f, 0.5f, new Vec2(15.0f, 11.5f), -0.5f);
-				g.CreateShape(sd);
+				g.CreateFixture(sd);
 				// below compressor
 				sd.SetAsBox(26.0f, 0.3f, new Vec2(17.0f, -4.4f), -0.02f);
-				g.CreateShape(sd);
+				g.CreateFixture(sd);
 				cd.Radius = 1.0f; cd.Friction = 1.0f;
 				cd.LocalPosition = new Vec2(29.0f, -6.0f);
-				g.CreateShape(cd);
+				g.CreateFixture(cd);
 				cd.Radius = 0.7f;
 				cd.LocalPosition = new Vec2(-2.0f, -4.5f);
-				g.CreateShape(cd);
+				g.CreateFixture(cd);
 			}
 			// Elevator
 			{
@@ -292,11 +292,11 @@ namespace TestBed
 				sd.SetAsBox(0.5f, 2.5f, new Vec2(3.0f, -3.0f), 0.0f);
 				sd.Density = 1.0f;
 				sd.Friction = 0.01f;
-				_elev.CreateShape(sd);
+				_elev.CreateFixture(sd);
 				sd.SetAsBox(7.0f, 0.5f, new Vec2(-3.5f, -5.5f), 0.0f);
-				_elev.CreateShape(sd);
+				_elev.CreateFixture(sd);
 				sd.SetAsBox(0.5f, 2.5f, new Vec2(-11.0f, -3.5f), 0.0f);
-				_elev.CreateShape(sd);
+				_elev.CreateFixture(sd);
 				_elev.SetMassFromShapes();
 
 				PrismaticJointDef jp = new PrismaticJointDef();
@@ -314,20 +314,20 @@ namespace TestBed
 				sd.Density = 0.5f;
 				bd.Position.Set(29.0f, 6.5f);
 				Body body = _world.CreateBody(bd);
-				body.CreateShape(sd);
+				body.CreateFixture(sd);
 				sd.SetAsBox(2.5f, 0.5f, new Vec2(3.0f, -2.0f), Box2DX.Common.Settings.Pi / 2.0f);
-				body.CreateShape(sd);
+				body.CreateFixture(sd);
 				sd.SetAsBox(4.6f, 0.5f, new Vec2(7.8f, -4.0f), 0.0f);
-				body.CreateShape(sd);
+				body.CreateFixture(sd);
 				sd.SetAsBox(0.5f, 4.5f, new Vec2(12.0f, 0.0f), 0.0f);
-				body.CreateShape(sd);
+				body.CreateFixture(sd);
 
 				sd.SetAsBox(0.5f, 0.5f, new Vec2(13.0f, 4.0f), 0.0f);
-				body.CreateShape(sd);
+				body.CreateFixture(sd);
 
 				cd.Radius = 0.7f; cd.Density = 1.0f; cd.Friction = 0.01f;
 				cd.LocalPosition = new Vec2(0.0f, 0.0f);
-				body.CreateShape(cd);
+				body.CreateFixture(cd);
 				body.SetMassFromShapes();
 
 				RevoluteJointDef jr = new RevoluteJointDef();
@@ -341,7 +341,7 @@ namespace TestBed
 				sd.SetAsBox(14.0f, 0.5f, new Vec2(-3.5f, -10.0f), 0.0f);
 				bd.Position.Set(17.5f, 96.0f);
 				body = _world.CreateBody(bd);
-				body.CreateShape(sd);
+				body.CreateFixture(sd);
 			}
 			// "Elastic body" 64 bodies - something like a lin. elastic compound
 			// connected via dynamic forces (springs) 
@@ -363,7 +363,7 @@ namespace TestBed
 						bd.Position += startpoint;
 						Body body = _world.CreateBody(bd);
 						bodies[8 * i + j] = body;
-						body.CreateShape(sd);
+						body.CreateFixture(sd);
 						body.SetMassFromShapes();
 					}
 				}
