@@ -32,8 +32,8 @@ namespace TestBed
 	public class ShapeEditing : Test
 	{
 		Body _body;
-		Shape _shape1;
-		Shape _shape2;
+		Fixture _fixture1;
+        Fixture _fixture2;
 
 		public ShapeEditing()
 		{
@@ -45,7 +45,7 @@ namespace TestBed
 				bd.Position.Set(0.0f, -10.0f);
 
 				Body ground = _world.CreateBody(bd);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 			}
 
 			BodyDef bodydef = new BodyDef();
@@ -55,10 +55,10 @@ namespace TestBed
 			PolygonDef sd_ = new PolygonDef();
 			sd_.SetAsBox(4.0f, 4.0f, new Vec2(0.0f, 0.0f), 0.0f);
 			sd_.Density = 10.0f;
-			_shape1 = _body.CreateShape(sd_);
+            _fixture1 = _body.CreateFixture(sd_);
 			_body.SetMassFromShapes();
 
-			_shape2 = null;
+			_fixture2 = null;
 		}
 
 		public override void Keyboard(System.Windows.Forms.Keys key)
@@ -66,23 +66,23 @@ namespace TestBed
 			switch (key)
 			{
 				case System.Windows.Forms.Keys.C:
-					if (_shape2 == null)
+					if (_fixture2 == null)
 					{
 						CircleDef sd = new CircleDef();
 						sd.Radius = 3.0f;
 						sd.Density = 10.0f;
 						sd.LocalPosition.Set(0.5f, -4.0f);
-						_shape2 = _body.CreateShape(sd);
+						_fixture2 = _body.CreateFixture(sd);
 						_body.SetMassFromShapes();
 						_body.WakeUp();
 					}
 					break;
 
 				case System.Windows.Forms.Keys.D:
-					if (_shape2 != null)
+					if (_fixture2 != null)
 					{
-						_body.DestroyShape(_shape2);
-						_shape2 = null;
+                        _body.DestroyFixture(_fixture2);
+						_fixture2 = null;
 						_body.SetMassFromShapes();
 						_body.WakeUp();
 					}

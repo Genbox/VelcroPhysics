@@ -42,7 +42,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(0.0f, -10.0f);
 				ground = _world.CreateBody(bd);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 			}
 
 			{
@@ -58,7 +58,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(0.0f, 7.0f);
 				Body body = _world.CreateBody(bd);
-				body.CreateShape(sd);
+                body.CreateFixture(sd);
 				body.SetMassFromShapes();
 
 				rjd.Initialize(prevBody, body, new Vec2(0.0f, 5.0f));
@@ -73,7 +73,7 @@ namespace TestBed
 				sd.SetAsBox(0.5f, 4.0f);
 				bd.Position.Set(0.0f, 13.0f);
 				body = _world.CreateBody(bd);
-				body.CreateShape(sd);
+                body.CreateFixture(sd);
 				body.SetMassFromShapes();
 
 				rjd.Initialize(prevBody, body, new Vec2(0.0f, 9.0f));
@@ -86,7 +86,7 @@ namespace TestBed
 				sd.SetAsBox(1.5f, 1.5f);
 				bd.Position.Set(0.0f, 17.0f);
 				body = _world.CreateBody(bd);
-				body.CreateShape(sd);
+                body.CreateFixture(sd);
 				body.SetMassFromShapes();
 
 				rjd.Initialize(prevBody, body, new Vec2(0.0f, 17.0f));
@@ -104,7 +104,7 @@ namespace TestBed
 				sd.Density = 2.0f;
 				bd.Position.Set(0.0f, 23.0f);
 				body = _world.CreateBody(bd);
-				body.CreateShape(sd);
+                body.CreateFixture(sd);
 				body.SetMassFromShapes();
 			}
 		}

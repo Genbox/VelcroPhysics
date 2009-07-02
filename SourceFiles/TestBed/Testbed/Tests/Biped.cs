@@ -43,103 +43,103 @@ namespace TestBed
 			bd = def.LFootDef;
 			bd.Position += position;
 			LFoot = w.CreateBody(bd);
-			LFoot.CreateShape(def.LFootPoly);
+            LFoot.CreateFixture(def.LFootPoly);
 			LFoot.SetMassFromShapes();
 
 			bd = def.RFootDef;
 			bd.Position += position;
 			RFoot = w.CreateBody(bd);
-			RFoot.CreateShape(def.RFootPoly);
+            RFoot.CreateFixture(def.RFootPoly);
 			RFoot.SetMassFromShapes();
 
 			bd = def.LCalfDef;
 			bd.Position += position;
 			LCalf = w.CreateBody(bd);
-			LCalf.CreateShape(def.LCalfPoly);
+            LCalf.CreateFixture(def.LCalfPoly);
 			LCalf.SetMassFromShapes();
 
 			bd = def.RCalfDef;
 			bd.Position += position;
 			RCalf = w.CreateBody(bd);
-			RCalf.CreateShape(def.RCalfPoly);
+            RCalf.CreateFixture(def.RCalfPoly);
 			RCalf.SetMassFromShapes();
 
 			bd = def.LThighDef;
 			bd.Position += position;
 			LThigh = w.CreateBody(bd);
-			LThigh.CreateShape(def.LThighPoly);
+            LThigh.CreateFixture(def.LThighPoly);
 			LThigh.SetMassFromShapes();
 
 			bd = def.RThighDef;
 			bd.Position += position;
 			RThigh = w.CreateBody(bd);
-			RThigh.CreateShape(def.RThighPoly);
+            RThigh.CreateFixture(def.RThighPoly);
 			RThigh.SetMassFromShapes();
 
 			bd = def.PelvisDef0;
 			bd.Position += position;
 			Pelvis = w.CreateBody(bd);
-			Pelvis.CreateShape(def.PelvisPoly);
+            Pelvis.CreateFixture(def.PelvisPoly);
 			Pelvis.SetMassFromShapes();
 
 			bd = def.PelvisDef;
 			bd.Position += position;
 			Stomach = w.CreateBody(bd);
-			Stomach.CreateShape(def.StomachPoly);
+            Stomach.CreateFixture(def.StomachPoly);
 			Stomach.SetMassFromShapes();
 
 			bd = def.ChestDef;
 			bd.Position += position;
 			Chest = w.CreateBody(bd);
-			Chest.CreateShape(def.ChestPoly);
+            Chest.CreateFixture(def.ChestPoly);
 			Chest.SetMassFromShapes();
 
 			bd = def.NeckDef;
 			bd.Position += position;
 			Neck = w.CreateBody(bd);
-			Neck.CreateShape(def.NeckPoly);
+            Neck.CreateFixture(def.NeckPoly);
 			Neck.SetMassFromShapes();
 
 			bd = def.HeadDef;
 			bd.Position += position;
 			Head = w.CreateBody(bd);
-			Head.CreateShape(def.HeadCirc);
+            Head.CreateFixture(def.HeadCirc);
 			Head.SetMassFromShapes();
 
 			bd = def.LUpperArmDef;
 			bd.Position += position;
 			LUpperArm = w.CreateBody(bd);
-			LUpperArm.CreateShape(def.LUpperArmPoly);
+            LUpperArm.CreateFixture(def.LUpperArmPoly);
 			LUpperArm.SetMassFromShapes();
 
 			bd = def.RUpperArmDef;
 			bd.Position += position;
 			RUpperArm = w.CreateBody(bd);
-			RUpperArm.CreateShape(def.RUpperArmPoly);
+            RUpperArm.CreateFixture(def.RUpperArmPoly);
 			RUpperArm.SetMassFromShapes();
 
 			bd = def.LForearmDef;
 			bd.Position += position;
 			LForearm = w.CreateBody(bd);
-			LForearm.CreateShape(def.LForearmPoly);
+            LForearm.CreateFixture(def.LForearmPoly);
 			LForearm.SetMassFromShapes();
 
 			bd = def.RForearmDef;
 			bd.Position += position;
 			RForearm = w.CreateBody(bd);
-			RForearm.CreateShape(def.RForearmPoly);
+            RForearm.CreateFixture(def.RForearmPoly);
 			RForearm.SetMassFromShapes();
 
 			bd = def.LHandDef;
 			bd.Position += position;
 			LHand = w.CreateBody(bd);
-			LHand.CreateShape(def.LHandPoly);
+            LHand.CreateFixture(def.LHandPoly);
 			LHand.SetMassFromShapes();
 
 			bd = def.RHandDef;
 			bd.Position += position;
 			RHand = w.CreateBody(bd);
-			RHand.CreateShape(def.RHandPoly);
+            RHand.CreateFixture(def.RHandPoly);
 			RHand.SetMassFromShapes();
 			
 			// link body parts

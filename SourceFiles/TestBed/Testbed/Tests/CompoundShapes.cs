@@ -40,7 +40,7 @@ namespace TestBed
 
 				PolygonDef sd = new PolygonDef();
 				sd.SetAsBox(50.0f, 10.0f);
-				body.CreateShape(sd);
+                body.CreateFixture(sd);
 			}
 
 			{
@@ -61,8 +61,8 @@ namespace TestBed
 					bd.Position.Set(x + 5.0f, 1.05f + 2.5f * i);
 					bd.Angle = Box2DX.Common.Math.Random(-Box2DX.Common.Settings.Pi, Box2DX.Common.Settings.Pi);
 					Body body = _world.CreateBody(bd);
-					body.CreateShape(sd1);
-					body.CreateShape(sd2);
+                    body.CreateFixture(sd1);
+                    body.CreateFixture(sd2);
 					body.SetMassFromShapes();
 				}
 			}
@@ -83,8 +83,8 @@ namespace TestBed
 					bd.Position.Set(x - 5.0f, 1.05f + 2.5f * i);
 					bd.Angle = Box2DX.Common.Math.Random(-Box2DX.Common.Settings.Pi, Box2DX.Common.Settings.Pi);
 					Body body = _world.CreateBody(bd);
-					body.CreateShape(sd1);
-					body.CreateShape(sd2);
+                    body.CreateFixture(sd1);
+                    body.CreateFixture(sd2);
 					body.SetMassFromShapes();
 				}
 			}
@@ -119,8 +119,8 @@ namespace TestBed
 					bd.Position.Set(x, 2.05f + 2.5f * i);
 					bd.Angle = 0.0f;
 					Body body = _world.CreateBody(bd);
-					body.CreateShape(sd1);
-					body.CreateShape(sd2);
+                    body.CreateFixture(sd1);
+                    body.CreateFixture(sd2);
 					body.SetMassFromShapes();
 				}
 			}
@@ -141,9 +141,9 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(0.0f, 2.0f);
 				Body body = _world.CreateBody(bd);
-				body.CreateShape(sd_bottom);
-				body.CreateShape(sd_left);
-				body.CreateShape(sd_right);
+                body.CreateFixture(sd_bottom);
+                body.CreateFixture(sd_left);
+                body.CreateFixture(sd_right);
 				body.SetMassFromShapes();
 			}
 		}

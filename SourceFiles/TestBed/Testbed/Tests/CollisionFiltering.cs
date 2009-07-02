@@ -61,7 +61,7 @@ namespace TestBed
 				bd.Position.Set(0.0f, -10.0f);
 
 				Body ground = _world.CreateBody(bd);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 			}
 
 			// Small triangle
@@ -80,7 +80,7 @@ namespace TestBed
 			triangleBodyDef.Position.Set(-5.0f, 2.0f);
 
 			Body body1 = _world.CreateBody(triangleBodyDef);
-			body1.CreateShape(triangleShapeDef);
+            body1.CreateFixture(triangleShapeDef);
 			body1.SetMassFromShapes();
 
 			// Large triangle (recycle definitions)
@@ -92,7 +92,7 @@ namespace TestBed
 			triangleBodyDef.FixedRotation = true; // look at me!
 
 			Body body2 = _world.CreateBody(triangleBodyDef);
-			body2.CreateShape(triangleShapeDef);
+            body2.CreateFixture(triangleShapeDef);
 			body2.SetMassFromShapes();
 
 			// Small box
@@ -108,7 +108,7 @@ namespace TestBed
 			boxBodyDef.Position.Set(0.0f, 2.0f);
 
 			Body body3 = _world.CreateBody(boxBodyDef);
-			body3.CreateShape(boxShapeDef);
+            body3.CreateFixture(boxShapeDef);
 			body3.SetMassFromShapes();
 
 			// Large box (recycle definitions)
@@ -117,7 +117,7 @@ namespace TestBed
 			boxBodyDef.Position.Set(0.0f, 6.0f);
 
 			Body body4 = _world.CreateBody(boxBodyDef);
-			body4.CreateShape(boxShapeDef);
+            body4.CreateFixture(boxShapeDef);
 			body4.SetMassFromShapes();
 
 			// Small circle
@@ -133,7 +133,7 @@ namespace TestBed
 			circleBodyDef.Position.Set(5.0f, 2.0f);
 
 			Body body5 = _world.CreateBody(circleBodyDef);
-			body5.CreateShape(circleShapeDef);
+            body5.CreateFixture(circleShapeDef);
 			body5.SetMassFromShapes();
 
 			// Large circle
@@ -142,7 +142,7 @@ namespace TestBed
 			circleBodyDef.Position.Set(5.0f, 6.0f);
 
 			Body body6 = _world.CreateBody(circleBodyDef);
-			body6.CreateShape(circleShapeDef);
+            body6.CreateFixture(circleShapeDef);
 			body6.SetMassFromShapes();
 		}
 

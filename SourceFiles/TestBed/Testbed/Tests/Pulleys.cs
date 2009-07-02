@@ -43,7 +43,7 @@ namespace TestBed
 				BodyDef bd = new BodyDef();
 				bd.Position.Set(0.0f, -10.0f);
 				ground = _world.CreateBody(bd);
-				ground.CreateShape(sd);
+                ground.CreateFixture(sd);
 			}
 
 			{
@@ -60,12 +60,12 @@ namespace TestBed
 
 				bd.Position.Set(-10.0f, y);
 				Body body1 = _world.CreateBody(bd);
-				body1.CreateShape(sd);
+                body1.CreateFixture(sd);
 				body1.SetMassFromShapes();
 
 				bd.Position.Set(10.0f, y);
 				Body body2 = _world.CreateBody(bd);
-				body2.CreateShape(sd);
+                body2.CreateFixture(sd);
 				body2.SetMassFromShapes();
 
 				PulleyJointDef pulleyDef = new PulleyJointDef();

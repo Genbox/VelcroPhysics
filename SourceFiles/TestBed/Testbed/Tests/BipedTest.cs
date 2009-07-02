@@ -45,16 +45,16 @@ namespace TestBed
 				sd.Restitution = k_restitution;
 
 				sd.SetAsBox(0.1f, 10.0f, new Vec2(-10.0f, 0.0f), 0.0f);
-				body.CreateShape(sd);
+				body.CreateFixture(sd);
 
 				sd.SetAsBox(0.1f, 10.0f, new Vec2(10.0f, 0.0f), 0.0f);
-				body.CreateShape(sd);
+                body.CreateFixture(sd);
 
 				sd.SetAsBox(0.1f, 10.0f, new Vec2(0.0f, -10.0f), 0.5f * Box2DX.Common.Settings.Pi);
-				body.CreateShape(sd);
+                body.CreateFixture(sd);
 
 				sd.SetAsBox(0.1f, 10.0f, new Vec2(0.0f, 10.0f), -0.5f * Box2DX.Common.Settings.Pi);
-				body.CreateShape(sd);
+                body.CreateFixture(sd);
 			}
 
 			_biped = new Biped(_world, new Vec2(0.0f, 20.0f));
@@ -72,7 +72,7 @@ namespace TestBed
 				sd.Radius = 0.25f;
 				sd.Density = 15.0f;
 				sd.Restitution = k_restitution;
-				body.CreateShape(sd);
+                body.CreateFixture(sd);
 				body.SetMassFromShapes();
 			}
 		}
