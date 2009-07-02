@@ -159,11 +159,11 @@ namespace TestBed
 	        new TestEntry("Vertical Stack", VerticalStack.Create),
 	        new TestEntry("Time of Impact", TimeOfImpact.Create),
 	        new TestEntry("Distance Test", DistanceTest.Create),
-	        //new TestEntry("Static Edges", StaticEdges.Create),            // TODO - Finish porting Edges
-	        //new TestEntry("Pyramid And Static Edges", PyramidStaticEdges.Create),
+	        new TestEntry("Static Edges", StaticEdges.Create),            
+	        new TestEntry("Pyramid And Static Edges", PyramidStaticEdges.Create),
 	        new TestEntry("PolyCollision", PolyCollision.Create),
 	        //new TestEntry("Dynamic Tree", DynamicTreeTest.Create),        // TODO - Finish porting DynamicTree
-	        //new TestEntry("Dynamic Edges", DynamicEdges.Create),          // TODO - Finish porting Edges
+	        new TestEntry("Dynamic Edges", DynamicEdges.Create),
 	        new TestEntry("Line Joint", LineJoint.Create),
 	        new TestEntry("Pyramid", Pyramid.Create),
 	        new TestEntry("Prismatic", Prismatic.Create),

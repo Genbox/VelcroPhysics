@@ -44,7 +44,7 @@ namespace TestBed
             bcd.LinearDrag = 2;
             bcd.AngularDrag = 1;
             
-            BuoyancyController _bc = new BuoyancyController(bcd);
+            _bc = new BuoyancyController(bcd);
 			_world.AddController(_bc);
 
             Body ground = null;
@@ -125,7 +125,7 @@ namespace TestBed
 			}
 
             //Static shapes work too:
-            /*{
+            {
                 float[] loop1 = 
                 {
                     0.063134534f,8.3695248f,
@@ -255,7 +255,7 @@ namespace TestBed
                 EdgeChainDef edgeDef = new EdgeChainDef();
                 edgeDef.vertexCount = 6;
                 edgeDef.vertices = b2Loop2;
-                body.CreateFixture(edgeDef);
+                edgeDef.CreateEdgeChain(body, edgeDef);
 			
                 body.SetMassFromShapes();
 
@@ -272,12 +272,12 @@ namespace TestBed
 			
                 edgeDef.vertexCount = 87;
                 edgeDef.vertices = b2Loop1;
-                body.CreateFixture(&edgeDef);
+                edgeDef.CreateEdgeChain(body, edgeDef);
 			
                 body.SetMassFromShapes();
 
                 _bc.AddBody(body);
-            }*/
+            }
 		}
 
 		public static Test Create()

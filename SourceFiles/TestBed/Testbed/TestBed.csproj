@@ -107,6 +107,7 @@
     <Compile Include="Tests\CompoundShapes.cs" />
     <Compile Include="Tests\DistanceTest.cs" />
     <Compile Include="Tests\Dominos.cs" />
+    <Compile Include="Tests\DynamicEdges.cs" />
     <Compile Include="Tests\ElasticBody.cs" />
     <Compile Include="Tests\Gears.cs" />
     <Compile Include="Tests\LineJoint.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="Tests\Pyramid.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\PyramidStaticEdges.cs" />
     <Compile Include="Tests\RaycastTest.cs" />
     <Compile Include="Tests\Revolute.cs" />
     <Compile Include="Tests\SensorTest.cs" />
@@ -124,6 +126,7 @@
     <Compile Include="Tests\SimpleTest.cs" />
     <Compile Include="Tests\SliderCrank.cs" />
     <Compile Include="Tests\SphereStack.cs" />
+    <Compile Include="Tests\StaticEdges.cs" />
     <Compile Include="Tests\TheoJansen.cs" />
     <Compile Include="Tests\TimeOfImpact.cs" />
     <Compile Include="Tests\VaryingFriction.cs" />
