@@ -97,8 +97,10 @@
     <Compile Include="Tests\Buoyancy.cs" />
     <Compile Include="Tests\CCDTest.cs" />
     <Compile Include="Tests\Chain.cs" />
+    <Compile Include="Tests\DistanceTest.cs" />
     <Compile Include="Tests\Dominos.cs" />
     <Compile Include="Tests\LineJoint.cs" />
+    <Compile Include="Tests\PolyCollision.cs" />
     <Compile Include="Tests\PolyShapes.cs" />
     <Compile Include="Tests\Prismatic.cs" />
     <Compile Include="Tests\Pyramid.cs">

@@ -31,44 +31,33 @@ namespace TestBed
 {
 	public class PolyCollision : Test
 	{
-		MyContactPoint[] _localPoints = new MyContactPoint[2];
+        PolygonShape _polygonA = new PolygonShape();
+        PolygonShape _polygonB = new PolygonShape();
 
-		Body _body1;
-		Body _body2;
+        XForm _transformA;
+        XForm _transformB;
+
+        Vec2 _positionB;
+        float _angleB;
 
 		public PolyCollision()
 		{
-			_localPoints[0].state = ContactState.ContactRemoved;
-			_localPoints[1].state = ContactState.ContactRemoved;
+            {
+			    Vec2[] vertices = new Vec2[4];
+			    vertices[0].Set(-9.0f, -1.1f);
+			    vertices[1].Set(7.0f, -1.1f);
+			    vertices[2].Set(5.0f, -0.9f);
+			    vertices[3].Set(-11.0f, -0.9f);
+			    _polygonA.Set(vertices, 4);
+                _transformA = new XForm(new Vec2(0.0f, 10.0f), new Mat22(0.0f));
+            }
 
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.Vertices[0].Set(-9.0f, -1.1f);
-				sd.Vertices[1].Set(7.0f, -1.1f);
-				sd.Vertices[2].Set(5.0f, -0.9f);
-				sd.Vertices[3].Set(-11.0f, -0.9f);
-				sd.VertexCount = 4;
-				sd.Density = 0.0f;
-
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, 10.0f);
-				_body1 = _world.CreateBody(bd);
-				_body1.CreateShape(sd);
-			}
-
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(0.5f, 0.5f);
-				sd.Density = 1.0f;
-
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, 10.0f);
-				_body2 = _world.CreateBody(bd);
-				_body2.CreateShape(sd);
-				_body2.SetMassFromShapes();
-			}
-
-			_world.Gravity = Vec2.Zero;
+		    {
+			    _polygonB.SetAsBox(0.5f, 0.5f);
+			    _positionB.SetZero();
+			    _angleB = 0.0f;
+                _transformB = new XForm(_positionB, new Mat22(_angleB));
+		    }
 		}
 
 		public override void Step(Settings settings)
@@ -76,41 +65,71 @@ namespace TestBed
 			settings.pause = 1;
 			base.Step(settings);
 			settings.pause = 0;
+
+            //B2_NOT_USED(settings);
+
+		    Manifold manifold = new Manifold();
+		    Collision.CollidePolygons(out manifold, _polygonA, _transformA, _polygonB, _transformB);
+
+		    WorldManifold worldManifold = new WorldManifold();
+		    worldManifold.Initialize(manifold, _transformA, _polygonA.Radius, _transformB, _polygonB.Radius);
+
+		    //_debugDraw.DrawString(5, m_textLine, "point count = %d", manifold.m_pointCount);
+		    _textLine += 15;
+
+		    {
+			    Color color = new Color(0.9f, 0.9f, 0.9f);
+			    Vec2[] v = new Vec2[Box2DX.Common.Settings.MaxPolygonVertices];
+			    for (int i = 0; i < _polygonA.VertexCount; ++i)
+			    {
+                    v[i] = Box2DX.Common.Math.Mul(_transformA, _polygonA.Vertices[i]);
+			    }
+			    _debugDraw.DrawPolygon(v, _polygonA.VertexCount, color);
+
+			    for (int i = 0; i < _polygonB.VertexCount; ++i)
+			    {
+                    v[i] = Box2DX.Common.Math.Mul(_transformB, _polygonB.Vertices[i]);
+			    }
+			    _debugDraw.DrawPolygon(v, _polygonB.VertexCount, color);
+		    }
+
+		    for (int i = 0; i < manifold.PointCount; ++i)
+		    {
+			    OpenGLDebugDraw.DrawPoint(WorldManifold.Points[i], 4.0f, new Color(0.9f, 0.3f, 0.3f));
+		    }
 		}
 
 		public override void Keyboard(System.Windows.Forms.Keys key)
 		{
-			Vec2 p = _body2.GetPosition();
-			float a = _body2.GetAngle();
 
 			switch (key)
 			{
 				case System.Windows.Forms.Keys.A:
-					p.X -= 0.1f;
+                    _positionB.X -= 0.1f;
 					break;
 
 				case System.Windows.Forms.Keys.D:
-					p.X += 0.1f;
+                    _positionB.X += 0.1f;
 					break;
 
 				case System.Windows.Forms.Keys.S:
-					p.Y -= 0.1f;
+                    _positionB.Y -= 0.1f;
 					break;
 
 				case System.Windows.Forms.Keys.W:
-					p.Y += 0.1f;
+                    _positionB.Y += 0.1f;
 					break;
 
 				case System.Windows.Forms.Keys.Q:
-					a += 0.1f * Box2DX.Common.Settings.Pi;
+                    _angleB += 0.1f * Box2DX.Common.Settings.Pi;
 					break;
 
 				case System.Windows.Forms.Keys.E:
-					a -= 0.1f * Box2DX.Common.Settings.Pi;
+                    _angleB -= 0.1f * Box2DX.Common.Settings.Pi;
 					break;
 			}
 
-			_body2.SetXForm(p, a);
+            _transformB = new XForm(_positionB, new Mat22(_angleB));
 		}
 
 		public static Test Create()

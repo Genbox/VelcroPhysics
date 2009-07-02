@@ -57,7 +57,7 @@ namespace TestBed
 				sd.Density = 1.0f;
 				sd.Friction = 0.3f;
 
-				for (int i = 0; i < 12; ++i)
+				for (int i = 0; i < 16; ++i)
 				{
 					BodyDef bd = new BodyDef();
 
@@ -65,6 +65,7 @@ namespace TestBed
 					// This is a stress test, you normally wouldn't do this for
 					// performance reasons.
 					bd.AllowSleep = true;
+                    bd.IsBullet = true;
 					bd.Position.Set(xs[j], 0.752f + 1.54f * i);
 					Body body = _world.CreateBody(bd);
 
