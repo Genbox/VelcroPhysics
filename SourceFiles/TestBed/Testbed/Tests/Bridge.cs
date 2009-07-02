@@ -73,6 +73,35 @@ namespace TestBed
 				jd.Initialize(prevBody, ground, anchor_);
 				_world.CreateJoint(jd);
 			}
+
+            for (int i = 0; i < 2; ++i)
+            {
+                PolygonDef sd = new PolygonDef();
+                sd.VertexCount = 3;
+                sd.Vertices[0].Set(-0.5f, 0.0f);
+                sd.Vertices[1].Set(0.5f, 0.0f);
+                sd.Vertices[2].Set(0.0f, 1.5f);
+                sd.Density = 1.0f;
+
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(-8.0f + 8.0f * i, 12.0f);
+                Body body = _world.CreateBody(bd);
+                body.CreateFixture(sd);
+                body.SetMassFromShapes();
+            }
+
+            for (int i = 0; i < 3; ++i)
+            {
+                CircleDef sd = new CircleDef();
+                sd.Radius = 0.5f;
+                sd.Density = 1.0f;
+
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(-6.0f + 6.0f * i, 10.0f);
+                Body body = _world.CreateBody(bd);
+                body.CreateFixture(sd);
+                body.SetMassFromShapes();
+            }
 		}
 
 		public static Test Create()
