@@ -190,8 +190,9 @@ namespace TestBed
 	        new TestEntry("Broad Phase", BroadPhaseTest.Create),
 	        new TestEntry("Elastic Body", ElasticBody.Create),
 	        new TestEntry("Raycast Test", RaycastTest.Create),
-	        new TestEntry("Buoyancy", Buoyancy.Create)
-             
+	        new TestEntry("Buoyancy", Buoyancy.Create),
+            new TestEntry("DominoTower", DominoTower.Create),
+            new TestEntry("Washing Machine", WashingMachine.Create)
 		};
 
 		public static int k_maxContactPoints = 2048;
