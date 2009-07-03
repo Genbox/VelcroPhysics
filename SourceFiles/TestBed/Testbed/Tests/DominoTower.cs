@@ -35,11 +35,11 @@ namespace TestBed
     public class DominoTower : Test
     {
 
-        float dwidth = .40f;
-        float dheight = 2.0f;
+        float dwidth = 0.3f;
+        float dheight = 1.5f;
         float ddensity;// = 10f;
-        float dfriction = 0.8f;
-        int baseCount = 10;
+        float dfriction = 0.5f;
+        int baseCount = 12;
 
         public DominoTower()
         {
@@ -65,19 +65,19 @@ namespace TestBed
 
                 BodyDef bd = new BodyDef();
                 bd.Position = new Vec2(30f, 50f);
-                bd.LinearVelocity = new Vec2(-25f, -25f);
-                bd.AngularVelocity = 6.7f;
 
                 Body body = _world.CreateBody(bd);
+                body.SetLinearVelocity(new Vec2(-25f, -25f));
+                body.SetAngularVelocity(6.7f);
                 body.CreateFixture(sd);
                 body.SetMassFromShapes();
 
                 sd.Density = 25f;
                 bd.Position = new Vec2(-30, 25f);
-                bd.LinearVelocity = new Vec2(35f, -10f);
-                bd.AngularVelocity = -8.3f;
 
                 body = _world.CreateBody(bd);
+                body.SetLinearVelocity(new Vec2(35f, -10f));
+                body.SetAngularVelocity(-8.3f);
                 body.CreateFixture(sd);
                 body.SetMassFromShapes();
             }
