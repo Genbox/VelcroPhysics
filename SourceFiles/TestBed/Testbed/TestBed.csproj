@@ -107,6 +107,7 @@
     <Compile Include="Tests\CompoundShapes.cs" />
     <Compile Include="Tests\DistanceTest.cs" />
     <Compile Include="Tests\Dominos.cs" />
+    <Compile Include="Tests\DominoTower.cs" />
     <Compile Include="Tests\DynamicEdges.cs" />
     <Compile Include="Tests\ElasticBody.cs" />
     <Compile Include="Tests\Gears.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Tests\VaryingFriction.cs" />
     <Compile Include="Tests\VaryingRestitution.cs" />
     <Compile Include="Tests\VerticalStack.cs" />
+    <Compile Include="Tests\WashingMachine.cs" />
     <Compile Include="Tests\Web.cs" />
   </ItemGroup>
   <ItemGroup>
