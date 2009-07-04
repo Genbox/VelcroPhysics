@@ -755,7 +755,7 @@ namespace Box2DX.Dynamics
 					{
 						// Grab the next body off the stack and add it to the island.
 						Body b = stack[--stackCount];
-						island.Add(b);
+						island.Add(ref b);
 
 						// Make sure the body is awake.
 						b._flags &= ~Body.BodyFlags.Sleep;
@@ -782,7 +782,7 @@ namespace Box2DX.Dynamics
 								continue;
 							}
 
-							island.Add(cn.Contact);
+							island.Add(ref cn.Contact);
 							cn.Contact.Flags |= ContactFlag.IslandFlag;
 
 							Body other = cn.Other;
@@ -919,7 +919,7 @@ namespace Box2DX.Dynamics
 			        // TODO_ERIN keep a counter on the contact, only respond to M TOIs per contact.
 
 			        float toi = 1.0f;
-			        if ((int)(c.Flags & ContactFlag.ToiFlag) == 1)
+			        if ((int)(c.Flags & ContactFlag.ToiFlag) == 8)
 			        {
 				        // This contact has a valid cached TOI.
 				        toi = c.Toi;
@@ -1025,15 +1025,15 @@ namespace Box2DX.Dynamics
 			        // Grab the next body off the stack and add it to the island.
 			        Body b = queue[queueStart++];
 			        --queueSize;
-        			
-			        island.Add(b);
+
+                    island.Add(ref b);
 
 			        // Make sure the body is awake.
-			        b._flags &= ~Body.BodyFlags.Sleep;
+                    b._flags &= ~Body.BodyFlags.Sleep;
 
 			        // To keep islands as small as possible, we don't
 			        // propagate islands across static bodies.
-			        if (b.IsStatic())
+                    if (b.IsStatic())
 			        {
 				        continue;
 			        }
@@ -1059,7 +1059,7 @@ namespace Box2DX.Dynamics
 					        continue;
 				        }
 
-				        island.Add(cEdge.Contact);
+				        island.Add(ref cEdge.Contact);
 				        cEdge.Contact.Flags |= ContactFlag.IslandFlag;
 
 				        // Update other body.
