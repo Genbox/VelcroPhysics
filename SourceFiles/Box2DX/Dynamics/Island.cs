@@ -217,18 +217,16 @@ namespace Box2DX.Dynamics
 			// Integrate velocities and apply damping.
 			for (int i = 0; i < BodyCount; ++i)
 			{
-				Body b = Bodies[i];
-
-				if (b.IsStatic())
+				if (Bodies[i].IsStatic())
 					continue;
 
 				// Integrate velocities.
-				b._linearVelocity += step.Dt * (gravity + b._invMass * b._force);
-				b._angularVelocity += step.Dt * b._invI * b._torque;
+				Bodies[i]._linearVelocity += step.Dt * (gravity + Bodies[i]._invMass * Bodies[i]._force);
+				Bodies[i]._angularVelocity += step.Dt * Bodies[i]._invI * Bodies[i]._torque;
 
 				// Reset forces.
-				b._force.Set(0.0f, 0.0f);
-				b._torque = 0.0f;
+				Bodies[i]._force.Set(0.0f, 0.0f);
+				Bodies[i]._torque = 0.0f;
 
 				// Apply damping.
 				// ODE: dv/dt + c * v = 0
@@ -237,8 +235,8 @@ namespace Box2DX.Dynamics
 				// v2 = exp(-c * dt) * v1
 				// Taylor expansion:
 				// v2 = (1.0f - c * dt) * v1
-				b._linearVelocity *= Common.Math.Clamp(1.0f - step.Dt * b._linearDamping, 0.0f, 1.0f);
-				b._angularVelocity *= Common.Math.Clamp(1.0f - step.Dt * b._angularDamping, 0.0f, 1.0f);
+				Bodies[i]._linearVelocity *= Common.Math.Clamp(1.0f - step.Dt * Bodies[i]._linearDamping, 0.0f, 1.0f);
+				Bodies[i]._angularVelocity *= Common.Math.Clamp(1.0f - step.Dt * Bodies[i]._angularDamping, 0.0f, 1.0f);
 			}
 
 			ContactSolver contactSolver = new ContactSolver(step, Contacts, ContactCount);
@@ -267,42 +265,40 @@ namespace Box2DX.Dynamics
 			// Integrate positions.
 			for (int i = 0; i < BodyCount; ++i)
 			{
-				Body b = Bodies[i];
-
-				if (b.IsStatic())
+				if (Bodies[i].IsStatic())
 					continue;
 
                 // Check for large velocities.
-                Vec2 translation = step.Dt * b._linearVelocity;
+                Vec2 translation = step.Dt * Bodies[i]._linearVelocity;
                 if (Common.Vec2.Dot(translation, translation) > Settings.MaxTranslationSquared)
                 {
                     translation.Normalize();
-                    b._linearVelocity = (Settings.MaxTranslation * step.Inv_Dt) * translation;
+                    Bodies[i]._linearVelocity = (Settings.MaxTranslation * step.Inv_Dt) * translation;
                 }
 
-                float rotation = step.Dt * b._angularVelocity;
+                float rotation = step.Dt * Bodies[i]._angularVelocity;
                 if (rotation * rotation > Settings.MaxRotationSquared)
                 {
                     if (rotation < 0.0)
                     {
-                        b._angularVelocity = -step.Inv_Dt * Settings.MaxRotation;
+                        Bodies[i]._angularVelocity = -step.Inv_Dt * Settings.MaxRotation;
                     }
                     else
                     {
-                        b._angularVelocity = step.Inv_Dt * Settings.MaxRotation;
+                        Bodies[i]._angularVelocity = step.Inv_Dt * Settings.MaxRotation;
                     }
                 }
 
 				// Store positions for continuous collision.
-				b._sweep.C0 = b._sweep.C;
-				b._sweep.A0 = b._sweep.A;
+                Bodies[i]._sweep.C0 = Bodies[i]._sweep.C;
+                Bodies[i]._sweep.A0 = Bodies[i]._sweep.A;
 
 				// Integrate
-				b._sweep.C += step.Dt * b._linearVelocity;
-				b._sweep.A += step.Dt * b._angularVelocity;
+                Bodies[i]._sweep.C += step.Dt * Bodies[i]._linearVelocity;
+                Bodies[i]._sweep.A += step.Dt * Bodies[i]._angularVelocity;
 
 				// Compute new transform
-				b.SynchronizeTransform();
+                Bodies[i].SynchronizeTransform();
 
 				// Note: shapes are synchronized later.
 			}
@@ -339,35 +335,34 @@ namespace Box2DX.Dynamics
 
 				for (int i = 0; i < BodyCount; ++i)
 				{
-					Body b = Bodies[i];
-					if (b._invMass == 0.0f)
+					if (Bodies[i]._invMass == 0.0f)
 					{
 						continue;
 					}
 
-					if ((b._flags & Body.BodyFlags.AllowSleep) == 0)
+					if ((Bodies[i]._flags & Body.BodyFlags.AllowSleep) == 0)
 					{
-						b._sleepTime = 0.0f;
+						Bodies[i]._sleepTime = 0.0f;
 						minSleepTime = 0.0f;
 					}
 
-					if ((b._flags & Body.BodyFlags.AllowSleep) == 0 ||
+                    if ((Bodies[i]._flags & Body.BodyFlags.AllowSleep) == 0 ||
 #if TARGET_FLOAT32_IS_FIXED
 						Common.Math.Abs(b._angularVelocity) > Settings.AngularSleepTolerance ||
 						Common.Math.Abs(b._linearVelocity.X) > Settings.LinearSleepTolerance ||
 						Common.Math.Abs(b._linearVelocity.Y) > Settings.LinearSleepTolerance)
 #else
-						b._angularVelocity * b._angularVelocity > angTolSqr ||
-						Vec2.Dot(b._linearVelocity, b._linearVelocity) > linTolSqr)
+						Bodies[i]._angularVelocity * Bodies[i]._angularVelocity > angTolSqr ||
+						Vec2.Dot(Bodies[i]._linearVelocity, Bodies[i]._linearVelocity) > linTolSqr)
 #endif
 					{
-						b._sleepTime = 0.0f;
+						Bodies[i]._sleepTime = 0.0f;
 						minSleepTime = 0.0f;
 					}
 					else
 					{
-						b._sleepTime += step.Dt;
-						minSleepTime = Common.Math.Min(minSleepTime, b._sleepTime);
+						Bodies[i]._sleepTime += step.Dt;
+                        minSleepTime = Common.Math.Min(minSleepTime, Bodies[i]._sleepTime);
 					}
 				}
 
@@ -375,10 +370,9 @@ namespace Box2DX.Dynamics
 				{
 					for (int i = 0; i < BodyCount; ++i)
 					{
-						Body b = Bodies[i];
-						b._flags |= Body.BodyFlags.Sleep;
-						b._linearVelocity = Vec2.Zero;
-						b._angularVelocity = 0.0f;
+						Bodies[i]._flags |= Body.BodyFlags.Sleep;
+						Bodies[i]._linearVelocity = Vec2.Zero;
+						Bodies[i]._angularVelocity = 0.0f;
 					}
 				}
 			}
@@ -414,42 +408,40 @@ namespace Box2DX.Dynamics
 			// Integrate positions.
 			for (int i = 0; i < BodyCount; ++i)
 			{
-				Body b = Bodies[i];
-
-				if (b.IsStatic())
+                if (Bodies[i].IsStatic())
 					continue;
 
                 // Check for large velocities.
-                Vec2 translation = subStep.Dt * b._linearVelocity;
+                Vec2 translation = subStep.Dt * Bodies[i]._linearVelocity;
                 if (Vec2.Dot(translation, translation) > Settings.MaxTranslationSquared)
                 {
                     translation.Normalize();
-                    b._linearVelocity = (Settings.MaxTranslation * subStep.Inv_Dt) * translation;
+                    Bodies[i]._linearVelocity = (Settings.MaxTranslation * subStep.Inv_Dt) * translation;
                 }
 
-                float rotation = subStep.Dt * b._angularVelocity;
+                float rotation = subStep.Dt * Bodies[i]._angularVelocity;
                 if (rotation * rotation > Settings.MaxRotationSquared)
                 {
                     if (rotation < 0.0)
                     {
-                        b._angularVelocity = -subStep.Inv_Dt * Settings.MaxRotation;
+                        Bodies[i]._angularVelocity = -subStep.Inv_Dt * Settings.MaxRotation;
                     }
                     else
                     {
-                        b._angularVelocity = subStep.Inv_Dt * Settings.MaxRotation;
+                        Bodies[i]._angularVelocity = subStep.Inv_Dt * Settings.MaxRotation;
                     }
                 }
 
 				// Store positions for continuous collision.
-				b._sweep.C0 = b._sweep.C;
-				b._sweep.A0 = b._sweep.A;
+                Bodies[i]._sweep.C0 = Bodies[i]._sweep.C;
+                Bodies[i]._sweep.A0 = Bodies[i]._sweep.A;
 
 				// Integrate
-				b._sweep.C += subStep.Dt * b._linearVelocity;
-				b._sweep.A += subStep.Dt * b._angularVelocity;
+                Bodies[i]._sweep.C += subStep.Dt * Bodies[i]._linearVelocity;
+                Bodies[i]._sweep.A += subStep.Dt * Bodies[i]._angularVelocity;
 
 				// Compute new transform
-				b.SynchronizeTransform();
+                Bodies[i].SynchronizeTransform();
 
 				// Note: shapes are synchronized later.
 			}
@@ -475,14 +467,14 @@ namespace Box2DX.Dynamics
 			Report(contactSolver.Constraints);
 		}
 
-		public void Add(Body body)
+		public void Add(ref Body body)
 		{
 			Box2DXDebug.Assert(BodyCount < BodyCapacity);
 			body._islandIndex = BodyCount;
 			Bodies[BodyCount++] = body;
 		}
 
-		public void Add(Contact contact)
+		public void Add(ref Contact contact)
 		{
 			Box2DXDebug.Assert(ContactCount < ContactCapacity);
 			Contacts[ContactCount++] = contact;
