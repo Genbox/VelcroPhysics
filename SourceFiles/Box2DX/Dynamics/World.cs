@@ -911,7 +911,7 @@ namespace Box2DX.Dynamics
 
 		        for (Contact c = _contactList; c != null; c = c.Next)
 		        {
-			        if ((int)(c.Flags & (ContactFlag.SlowFlag | ContactFlag.NonSolidFlag)) == 1)
+			        if ((int)(c.Flags & (ContactFlag.SlowFlag | ContactFlag.NonSolidFlag)) != 0)
 			        {
 				        continue;
 			        }
@@ -919,7 +919,7 @@ namespace Box2DX.Dynamics
 			        // TODO_ERIN keep a counter on the contact, only respond to M TOIs per contact.
 
 			        float toi = 1.0f;
-			        if ((int)(c.Flags & ContactFlag.ToiFlag) == 8)
+			        if ((int)(c.Flags & ContactFlag.ToiFlag) != 0)
 			        {
 				        // This contact has a valid cached TOI.
 				        toi = c.Toi;
