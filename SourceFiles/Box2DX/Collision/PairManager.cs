@@ -51,7 +51,7 @@ namespace Box2DX.Collision
         public bool IsRemoved() { return (Status & PairStatus.PairRemoved) == PairStatus.PairRemoved; }
 
         public void SetFinal() { Status |= PairStatus.PairFinal; }
-        public bool IsFinal() { return (Status & PairStatus.PairFinal) == PairStatus.PairFinal; }
+        public bool IsFinal() { return (int)(Status & PairStatus.PairFinal) != 0; }
 
         public object UserData;
         public ushort ProxyId1;
