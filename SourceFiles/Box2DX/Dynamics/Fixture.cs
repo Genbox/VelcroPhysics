@@ -394,8 +394,11 @@ namespace Box2DX.Dynamics
 
             Body = body;
             Next = null;
-
-            Filter = def.Filter;
+            //Copy filter data
+            Filter = new FilterData();
+            Filter.CategoryBits = def.Filter.CategoryBits;
+            Filter.GroupIndex = def.Filter.GroupIndex;
+            Filter.MaskBits = def.Filter.MaskBits;
 
             IsSensor = def.IsSensor;
 
