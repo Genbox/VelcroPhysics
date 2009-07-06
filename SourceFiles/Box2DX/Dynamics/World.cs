@@ -1066,7 +1066,7 @@ namespace Box2DX.Dynamics
 				        Body other = cEdge.Other;
 
 				        // Was the other body already added to this island?
-				        if ((int)(other._flags & Body.BodyFlags.Island) == 1)
+				        if ((int)(other._flags & Body.BodyFlags.Island) != 0)
 				        {
 					        continue;
 				        }
@@ -1102,7 +1102,7 @@ namespace Box2DX.Dynamics
         				
 				        Body other = jEdge.Other;
         				
-				        if ((int)(other._flags & Body.BodyFlags.Island) == 1)
+				        if ((int)(other._flags & Body.BodyFlags.Island) != 0)
 				        {
 					        continue;
 				        }
@@ -1137,7 +1137,7 @@ namespace Box2DX.Dynamics
 			        Body b = island.Bodies[i];
 			        b._flags &= ~Body.BodyFlags.Island;
 
-			        if ((int)(b._flags & (Body.BodyFlags.Sleep | Body.BodyFlags.Frozen)) == 1)
+			        if ((int)(b._flags & (Body.BodyFlags.Sleep | Body.BodyFlags.Frozen)) != 0)
 			        {
 				        continue;
 			        }
