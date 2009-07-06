@@ -771,13 +771,13 @@ namespace Box2DX.Dynamics
 						for (ContactEdge cn = b._contactList; cn != null; cn = cn.Next)
 						{
 							// Has this contact already been added to an island?
-                            if ((cn.Contact.Flags & (ContactFlag.IslandFlag | ContactFlag.NonSolidFlag)) != 0)
+                            if ((int)(cn.Contact.Flags & (ContactFlag.IslandFlag | ContactFlag.NonSolidFlag)) != 0)
 							{
 								continue;
 							}
 
 							// Is this contact touching?
-							if ((cn.Contact.Flags & ContactFlag.TouchFlag) == (ContactFlag)0)
+							if ((cn.Contact.Flags & ContactFlag.TouchFlag) == 0)
 							{
 								continue;
 							}
@@ -997,7 +997,7 @@ namespace Box2DX.Dynamics
 		        minContact.Update(_contactListener);
 		        minContact.Flags &= ~ContactFlag.ToiFlag;
 
-		        if ((minContact.Flags & ContactFlag.TouchFlag) == 0)
+		        if ((int)(minContact.Flags & ContactFlag.TouchFlag) == 0)
 		        {
 			        // This shouldn't happen. Numerical error?
 			        //b2Assert(false);
@@ -1054,7 +1054,7 @@ namespace Box2DX.Dynamics
 				        }
 
 				        // Is this contact touching? For performance we are not updating this contact.
-				        if ((cEdge.Contact.Flags & ContactFlag.TouchFlag) == 0)
+				        if ((int)(cEdge.Contact.Flags & ContactFlag.TouchFlag) == 0)
 				        {
 					        continue;
 				        }
