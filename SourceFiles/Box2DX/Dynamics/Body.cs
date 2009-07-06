@@ -251,7 +251,6 @@ namespace Box2DX.Dynamics
 
             _I = bd.MassData.I;
 
-#warning "removed ( ) - should work without right?"
             if (_I > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
             {
                 _invI = 1.0f / _I;

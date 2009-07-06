@@ -115,7 +115,6 @@ namespace Box2DX.Collision
             return Vec2.Dot(V1, d) > Vec2.Dot(V2, d) ? 0 : 1;
         }
 
-#warning "This method has been changed to fit C# implementation. Check it"
         public override Vec2 GetVertex(int index)
         {
             Box2DXDebug.Assert(0 <= index && index < 2);
