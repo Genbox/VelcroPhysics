@@ -42,7 +42,6 @@ namespace Box2DX.Collision
             PairFinal = 0x0004
         }
 
-#warning "flags ported correctly?"
         public void SetBuffered() { Status |= PairStatus.PairBuffered; }
         public void ClearBuffered() { Status &= ~PairStatus.PairBuffered; }
         public bool IsBuffered() { return (Status & PairStatus.PairBuffered) == PairStatus.PairBuffered; }
