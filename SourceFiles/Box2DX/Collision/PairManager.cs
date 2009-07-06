@@ -42,6 +42,7 @@ namespace Box2DX.Collision
             PairFinal = 0x0004
         }
 
+#warning "flags ported correctly?"
         public void SetBuffered() { Status |= PairStatus.PairBuffered; }
         public void ClearBuffered() { Status &= ~PairStatus.PairBuffered; }
         public bool IsBuffered() { return (Status & PairStatus.PairBuffered) == PairStatus.PairBuffered; }
@@ -392,6 +393,7 @@ namespace Box2DX.Collision
             Box2DXDebug.Assert(_pairBufferCount <= _pairCount);
 
             //std::sort(m_pairBuffer, m_pairBuffer + m_pairBufferCount);
+#warning "Why all this copying?"
             BufferedPair[] tmp = new BufferedPair[_pairBufferCount];
             Array.Copy(_pairBuffer, 0, tmp, 0, _pairBufferCount);
             Array.Sort<BufferedPair>(tmp, BufferedPairSortPredicate);
