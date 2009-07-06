@@ -28,7 +28,7 @@ namespace Box2DX.Dynamics
 
         public override float ComputeTOI(Sweep sweepA, Sweep sweepB)
         {
-            Collision.Collision.TOIInput input;
+            Collision.Collision.TOIInput input = new Collision.Collision.TOIInput();
             input.SweepA = sweepA;
             input.SweepB = sweepB;
             input.SweepRadiusA = _fixtureA.ComputeSweepRadius(sweepA.LocalCenter);
