@@ -53,7 +53,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     {
                         if (InsidePolygon(geomB.WorldVertices, geomA.WorldVertices[i]))
                         {
-                            if (!geomA.Body.IsStatic)
+                            //if (!geomA.Body.IsStatic)
                             {
                                 if (distance > 0.001f)
                                 {
@@ -75,7 +75,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     {
                         if (InsidePolygon(geomA.WorldVertices, geomB.WorldVertices[i]))
                         {
-                            if (!geomB.Body.IsStatic)
+                            //if (!geomB.Body.IsStatic)
                             {
                                 if (distance > 0.001f)
                                 {
