@@ -168,8 +168,8 @@ namespace Box2DX.Dynamics
 		        Initialized = true;
 	        }
 
-	        ShapeType type1 = fixtureA.GetType();
-	        ShapeType type2 = fixtureB.GetType();
+	        ShapeType type1 = fixtureA.GetShapeType();
+	        ShapeType type2 = fixtureB.GetShapeType();
 
 	        Box2DXDebug.Assert(ShapeType.UnknownShape < type1 && type1 < ShapeType.ShapeTypeCount);
 	        Box2DXDebug.Assert(ShapeType.UnknownShape < type2 && type2 < ShapeType.ShapeTypeCount);
@@ -202,8 +202,8 @@ namespace Box2DX.Dynamics
 		        contact.GetFixtureB().GetBody().WakeUp();
 	        }
 
-	        ShapeType typeA = contact.GetFixtureA().GetType();
-	        ShapeType typeB = contact.GetFixtureB().GetType();
+	        ShapeType typeA = contact.GetFixtureA().GetShapeType();
+	        ShapeType typeB = contact.GetFixtureB().GetShapeType();
 
 	        Box2DXDebug.Assert(ShapeType.UnknownShape < typeA && typeB < ShapeType.ShapeTypeCount);
 	        Box2DXDebug.Assert(ShapeType.UnknownShape < typeA && typeB < ShapeType.ShapeTypeCount);

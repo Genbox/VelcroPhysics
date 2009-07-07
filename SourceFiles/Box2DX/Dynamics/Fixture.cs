@@ -16,27 +16,25 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-
 using Box2DX.Common;
 using Box2DX.Collision;
 
 namespace Box2DX.Dynamics
 {
     /// This holds contact filtering data.
-    public class FilterData
+    public struct FilterData
     {
         /// The collision category bits. Normally you would just set one bit.
-        public UInt16 CategoryBits;
+        public ushort CategoryBits;
 
         /// The collision mask bits. This states the categories that this
         /// shape would accept for collision.
-        public UInt16 MaskBits;
+        public ushort MaskBits;
 
         /// Collision groups allow a certain group of objects to never collide (negative)
         /// or always collide (positive). Zero means no collision group. Non-zero group
         /// filtering always wins against the mask bits.
-        public Int16 GroupIndex;
+        public short GroupIndex;
     }
 
     /// A fixture definition is used to create a fixture. This class defines an
@@ -68,8 +66,6 @@ namespace Box2DX.Dynamics
         /// The constructor sets the default fixture definition values.
         public FixtureDef()
         {
-            Filter = new FilterData();
-
             Type = ShapeType.UnknownShape;
             UserData = null;
             Friction = 0.2f;
@@ -182,7 +178,7 @@ namespace Box2DX.Dynamics
         public float Friction;
         public float Restitution;
 
-        public UInt16 ProxyId;
+        public ushort ProxyId;
         public FilterData Filter;
 
         public bool IsSensor;
@@ -194,17 +190,17 @@ namespace Box2DX.Dynamics
             UserData = null;
             Body = null;
             Next = null;
-            ProxyId = UInt16.MaxValue; //b2_nullProxy;
+            ProxyId = PairManager.NullProxy;
             Shape = null;
         }
 
         public void Destroy(BroadPhase broadPhase)
         {
             // Remove proxy from the broad-phase.
-            if (ProxyId != UInt16.MaxValue)
+            if (ProxyId != PairManager.NullProxy)
             {
                 broadPhase.DestroyProxy(ProxyId);
-                ProxyId = UInt16.MaxValue;
+                ProxyId = PairManager.NullProxy;
             }
 
             // Free the child shape.
@@ -244,7 +240,8 @@ namespace Box2DX.Dynamics
 
         /// Get the type of the child shape. You can use this to down cast to the concrete shape.
         /// @return the shape type.
-        public new ShapeType GetType()
+#warning "changed from GetType() to GetShapeType() to get around confusion in C#"
+        public ShapeType GetShapeType()
         {
             return Type;
         }
@@ -314,7 +311,7 @@ namespace Box2DX.Dynamics
         /// is not set.
         /// @param segment defines the begin and end point of the ray cast.
         /// @param maxLambda a number typically in the range [0,1].
-        public SegmentCollide TestSegment(out float lambda, out Vec2 normal, Segment segment, float maxLambda)
+        public SegmentCollide TestSegment(out float lambda, out Vec2 normal, ref Segment segment, float maxLambda)
         {
             //Note: Added the following line
             XForm xForm = Body.GetXForm();
@@ -394,11 +391,8 @@ namespace Box2DX.Dynamics
 
             Body = body;
             Next = null;
-            //Copy filter data
-            Filter = new FilterData();
-            Filter.CategoryBits = def.Filter.CategoryBits;
-            Filter.GroupIndex = def.Filter.GroupIndex;
-            Filter.MaskBits = def.Filter.MaskBits;
+
+            Filter = def.Filter;
 
             IsSensor = def.IsSensor;
 
@@ -455,7 +449,7 @@ namespace Box2DX.Dynamics
             }
             else
             {
-                ProxyId = UInt16.MaxValue; //b2_nullProxy;
+                ProxyId = PairManager.NullProxy;
             }
         }
 
@@ -464,7 +458,7 @@ namespace Box2DX.Dynamics
 
         public bool Synchronize(BroadPhase broadPhase, XForm xf1, XForm xf2)
         {
-            if (ProxyId == UInt16.MaxValue) //b2_nullProxy;
+            if (ProxyId == PairManager.NullProxy)
             {
                 return false;
             }
@@ -490,7 +484,7 @@ namespace Box2DX.Dynamics
 
         public void RefilterProxy(BroadPhase broadPhase, XForm xf)
         {
-            if (ProxyId == UInt16.MaxValue)
+            if (ProxyId == PairManager.NullProxy)
             {
                 return;
             }
@@ -508,7 +502,7 @@ namespace Box2DX.Dynamics
             }
             else
             {
-                ProxyId = UInt16.MaxValue;
+                ProxyId = PairManager.NullProxy;
             }
         }
     }

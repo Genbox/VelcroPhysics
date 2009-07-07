@@ -8,8 +8,8 @@ namespace Box2DX.Dynamics
         public EdgeAndCircleContact(Fixture fixtureA, Fixture fixtureB)
             : base(fixtureA, fixtureB)
         {
-            Box2DXDebug.Assert(fixtureA.GetType() == ShapeType.EdgeShape);
-            Box2DXDebug.Assert(fixtureB.GetType() == ShapeType.CircleShape);
+            Box2DXDebug.Assert(fixtureA.GetShapeType() == ShapeType.EdgeShape);
+            Box2DXDebug.Assert(fixtureB.GetShapeType() == ShapeType.CircleShape);
             Manifold.PointCount = 0;
             Manifold.Points[0].NormalImpulse = 0.0f;
             Manifold.Points[0].TangentImpulse = 0.0f;

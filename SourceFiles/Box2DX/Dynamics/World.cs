@@ -696,7 +696,7 @@ namespace Box2DX.Dynamics
 
             //Redundantly do TestSegment a second time, as the previous one's results are inaccessible
 
-            fixture[0].TestSegment(out lambda, out normal, segment, 1);
+            fixture[0].TestSegment(out lambda, out normal, ref segment, 1);
             //We already know it returns true
             return fixture[0];
 		}
@@ -1235,7 +1235,7 @@ namespace Box2DX.Dynamics
 #warning "the core argument is not used, the coreColor variable is also not used"
 			Color coreColor = new Color(0.9f, 0.6f, 0.6f);
 
-			switch (fixture.GetType())
+			switch (fixture.GetShapeType())
 			{
 				case ShapeType.CircleShape:
 					{
@@ -1430,7 +1430,7 @@ namespace Box2DX.Dynamics
 
 			float lambda;
             
-			SegmentCollide collide = fixture.TestSegment(out lambda, out world._raycastNormal, world._raycastSegment, 1);
+			SegmentCollide collide = fixture.TestSegment(out lambda, out world._raycastNormal, ref world._raycastSegment, 1);
 
 			if (world._raycastSolidShape && collide == SegmentCollide.MissCollide)
 				return -1;

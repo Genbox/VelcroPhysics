@@ -29,8 +29,8 @@ namespace Box2DX.Dynamics
         public PolyAndCircleContact(Fixture fixtureA, Fixture fixtureB)
             : base(fixtureA, fixtureB)
         {
-            Box2DXDebug.Assert(_fixtureA.GetType() == ShapeType.PolygonShape);
-            Box2DXDebug.Assert(_fixtureB.GetType() == ShapeType.CircleShape);
+            Box2DXDebug.Assert(_fixtureA.GetShapeType() == ShapeType.PolygonShape);
+            Box2DXDebug.Assert(_fixtureB.GetShapeType() == ShapeType.CircleShape);
         }
 
         new public static Contact Create(Fixture fixtureA, Fixture fixtureB)
