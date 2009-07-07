@@ -39,8 +39,8 @@ namespace Box2DX.Dynamics
         public PolygonContact(Fixture fixtureA, Fixture fixtureB)
 	        : base(fixtureA, fixtureB)
         {
-	        Box2DXDebug.Assert(_fixtureA.GetType() == ShapeType.PolygonShape);
-	        Box2DXDebug.Assert(_fixtureB.GetType() == ShapeType.PolygonShape);
+	        Box2DXDebug.Assert(_fixtureA.GetShapeType() == ShapeType.PolygonShape);
+	        Box2DXDebug.Assert(_fixtureB.GetShapeType() == ShapeType.PolygonShape);
         }
 
         public override void Evaluate()

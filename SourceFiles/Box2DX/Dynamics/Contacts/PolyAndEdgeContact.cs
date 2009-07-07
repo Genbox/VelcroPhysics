@@ -12,8 +12,8 @@ namespace Box2DX.Dynamics
         public PolyAndEdgeContact(Fixture fixtureA, Fixture fixtureB)
             : base(fixtureA, fixtureB)
         {
-            Box2DXDebug.Assert(_fixtureA.GetType() == ShapeType.PolygonShape);
-            Box2DXDebug.Assert(_fixtureB.GetType() == ShapeType.EdgeShape);
+            Box2DXDebug.Assert(_fixtureA.GetShapeType() == ShapeType.PolygonShape);
+            Box2DXDebug.Assert(_fixtureB.GetShapeType() == ShapeType.EdgeShape);
         }
 
         public override void Evaluate()
