@@ -19,130 +19,129 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Box2DX.Common;
 using Box2DX.Collision;
 using Box2DX.Dynamics;
 
 namespace TestBed
 {
-	public class SensorTest : Test
-	{
-		Fixture _sensor;
+    public class SensorTest : Test
+    {
+        Fixture _sensor;
         Body[] _bodies = new Body[7];
 
-		public SensorTest()
-		{
-			{
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, -10.0f);
+        public SensorTest()
+        {
+            {
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(0.0f, -10.0f);
 
-				Body ground = _world.CreateBody(bd);
+                Body ground = _world.CreateBody(bd);
 
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(50.0f, 10.0f);
-				ground.CreateFixture(sd);
+                {
+                    PolygonDef sd = new PolygonDef();
+                    sd.SetAsBox(50.0f, 10.0f);
+                    ground.CreateFixture(sd);
+                }
 
-				CircleDef cd = new CircleDef();
-				cd.IsSensor = true;
-				cd.Radius = 5.0f;
-				cd.LocalPosition.Set(0.0f, 20.0f);
-				_sensor = ground.CreateFixture(cd);
-			}
+                {
+                    CircleDef cd = new CircleDef();
+                    cd.IsSensor = true;
+                    cd.Radius = 5.0f;
+                    cd.LocalPosition.Set(0.0f, 20.0f);
+                    _sensor = ground.CreateFixture(cd);
+                }
+            }
 
-			{
-				CircleDef sd = new CircleDef();
-				sd.Radius = 1.0f;
-				sd.Density = 1.0f;
+            {
+                CircleDef sd = new CircleDef();
+                sd.Radius = 1.0f;
+                sd.Density = 1.0f;
 
-				for (int i = 0; i < 7; ++i)
-				{
-					BodyDef bd = new BodyDef();
-					bd.Position.Set(-10.0f + 3.0f * i, 20.0f);
+                for (int i = 0; i < 7; ++i)
+                {
+                    BodyDef bd = new BodyDef();
+                    bd.Position.Set(-10.0f + 3.0f * i, 20.0f);
                     bd.UserData = false;
 
-				    _bodies[i] = _world.CreateBody(bd);
+                    _bodies[i] = _world.CreateBody(bd);
 
                     _bodies[i].CreateFixture(sd);
                     _bodies[i].SetMassFromShapes();
-				}
-			}
-		}
+                }
+            }
+        }
 
         // Implement contact listener.
-        new void BeginContact(Contact contact)
+        public override void BeginContact(Contact contact)
         {
             Fixture fixtureA = contact.GetFixtureA();
             Fixture fixtureB = contact.GetFixtureB();
 
             if (fixtureA == _sensor)
             {
-                bool data = (bool)fixtureB.GetBody().GetUserData();
-                data = true;
+                fixtureB.GetBody().SetUserData(true);
             }
 
             if (fixtureB == _sensor)
             {
-                bool data = (bool)fixtureA.GetBody().GetUserData();
-                data = true;
+                fixtureA.GetBody().SetUserData(true);
             }
         }
 
         // Implement contact listener.
-        new void EndContact(Contact contact)
+        public override void EndContact(Contact contact)
         {
             Fixture fixtureA = contact.GetFixtureA();
             Fixture fixtureB = contact.GetFixtureB();
 
             if (fixtureA == _sensor)
             {
-                bool data = (bool)fixtureB.GetBody().GetUserData();
-                data = true;
+                fixtureB.GetBody().SetUserData(false);
             }
 
             if (fixtureB == _sensor)
             {
-                bool data = (bool)fixtureA.GetBody().GetUserData();
-                data = true;
+                fixtureA.GetBody().SetUserData(false);
             }
         }
 
 
-		public override void Step(Settings settings)
-		{
-			base.Step(settings);
-			// Traverse the contact results. Apply a force on shapes
-			// that overlap the sensor.
-			for (int i = 0; i < 7; ++i)
-			{
-				if ((bool)_bodies[i].GetUserData() == false)
-				{
-					continue;
-				}
+        public override void Step(Settings settings)
+        {
+            base.Step(settings);
+            // Traverse the contact results. Apply a force on shapes
+            // that overlap the sensor.
+            for (int i = 0; i < 7; ++i)
+            {
+                if ((bool)_bodies[i].GetUserData() == false)
+                {
+                    continue;
+                }
 
-				Body ground = _sensor.GetBody();
+                Body body = _bodies[i];
+                Body ground = _sensor.GetBody();
 
                 CircleShape circle = (CircleShape)_sensor.GetShape();
-				Vec2 center = ground.GetWorldPoint(circle.LocalPosition);
+                Vec2 center = ground.GetWorldPoint(circle.LocalPosition);
 
-				Vec2 d = center - _bodies[i].GetPosition();
-				if (d.LengthSquared() < Box2DX.Common.Settings.FLT_EPSILON * Box2DX.Common.Settings.FLT_EPSILON)
-				{
-					continue;
-				}
+                Vec2 position = body.GetPosition();
 
-				d.Normalize();
-				Vec2 F = 100.0f * d;
-                _bodies[i].ApplyForce(F, _bodies[i].GetPosition());
-			}
-		}
+                Vec2 d = center - position;
+                if (d.LengthSquared() < Box2DX.Common.Settings.FLT_EPSILON * Box2DX.Common.Settings.FLT_EPSILON)
+                {
+                    continue;
+                }
 
-		public static Test Create()
-		{
-			return new SensorTest();
-		}
-	}
+                d.Normalize();
+                Vec2 F = 100.0f * d;
+                _bodies[i].ApplyForce(F, position);
+            }
+        }
+
+        public static Test Create()
+        {
+            return new SensorTest();
+        }
+    }
 }
