@@ -21,21 +21,11 @@
 #define GLRender
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using System.Reflection;
-using System.Threading;
 
 using Tao.OpenGl;
-using Tao.FreeGlut;
 
 using Box2DX.Common;
-using Box2DX.Dynamics;
-using Box2DX.Collision;
 
 namespace TestBed
 {
@@ -52,7 +42,7 @@ namespace TestBed
 		private float viewZoom = 1f;
 		private Vec2 viewCenter = new Vec2(0.0f, 20.0f);
 		private TestEntry testEntry;
-		private bool rMouseDown = false;
+		private bool rMouseDown;
 		private Vec2 lastp;		
 
 		public MainForm()
@@ -62,9 +52,9 @@ namespace TestBed
 #if GLRender
 			openGlControl.InitializeContexts();
 			OpenGLDebugDraw.InitTextRenderer(openGlControl);
-#endif //GLRender
-
-			Init();
+#endif 
+            //GLRender
+            Init();
 			SetView();
 		}		
 
@@ -237,7 +227,7 @@ namespace TestBed
 					CurrentTest = testEntry.CreateFcn();
 					break;
 				case Keys.Space:
-					CurrentTest.LaunchBomb(new Vec2(0,0), new Vec2(0,100));
+					CurrentTest.LaunchBomb();
 					break;
 				case Keys.Left:
 					viewCenter.X -= 0.5f;
@@ -445,9 +435,13 @@ namespace TestBed
 #if GLRender
 			Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
 
+            Gl.glMatrixMode(Gl.GL_MODELVIEW);
+            Gl.glLoadIdentity();
+            
 			CurrentTest.SetTextLine(30);
-			CurrentTest.Step(settings);
-            //_debugDraw.DrawString(5, 15, testEntry.Name);
+            CurrentTest.Step(settings);
+
+            CurrentTest.DrawTitle(5, 15, testEntry.Name);
 
 			openGlControl.Draw();
 
@@ -459,6 +453,6 @@ namespace TestBed
 #endif
 		}
 
-		#endregion Render		
+		#endregion Render
 	}
 }
