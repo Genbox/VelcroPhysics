@@ -452,12 +452,12 @@ namespace Box2DX.Collision
                             }
 
                             ++_proxyPool[prevProxyId].UpperBounds[axis];
-                            ++bound.StabbingCount;
+                            ++bounds[index].StabbingCount;
                         }
                         else
                         {
                             ++_proxyPool[prevProxyId].LowerBounds[axis];
-                            --bound.StabbingCount;
+                            --bounds[index].StabbingCount;
                         }
 
                         --_proxyPool[proxyId].LowerBounds[axis];
@@ -486,12 +486,12 @@ namespace Box2DX.Collision
                             }
 
                             --_proxyPool[nextProxyId].LowerBounds[axis];
-                            ++bound.StabbingCount;
+                            ++bounds[index].StabbingCount;
                         }
                         else
                         {
                             --_proxyPool[nextProxyId].UpperBounds[axis];
-                            --bound.StabbingCount;
+                            --bounds[index].StabbingCount;
                         }
 
                         ++_proxyPool[proxyId].UpperBounds[axis];
@@ -525,12 +525,12 @@ namespace Box2DX.Collision
                             }
 
                             --_proxyPool[nextProxyId].UpperBounds[axis];
-                            --bound.StabbingCount;
+                            --bounds[index].StabbingCount;
                         }
                         else
                         {
                             --_proxyPool[nextProxyId].LowerBounds[axis];
-                            ++bound.StabbingCount;
+                            ++bounds[index].StabbingCount;
                         }
 
                         ++_proxyPool[proxyId].LowerBounds[axis];
@@ -560,12 +560,12 @@ namespace Box2DX.Collision
                             }
 
                             ++_proxyPool[prevProxyId].LowerBounds[axis];
-                            --bound.StabbingCount;
+                            --bounds[index].StabbingCount;
                         }
                         else
                         {
                             ++_proxyPool[prevProxyId].UpperBounds[axis];
-                            ++bound.StabbingCount;
+                            ++bounds[index].StabbingCount;
                         }
 
                         --_proxyPool[proxyId].UpperBounds[axis];
