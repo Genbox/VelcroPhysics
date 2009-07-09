@@ -30,52 +30,52 @@ using Box2DX.Common;
 namespace Box2DX.Dynamics
 {
 #warning "CAS"
-	public class ContactConstraintPoint
-	{
+    public class ContactConstraintPoint
+    {
         public Vec2 LocalPoint;
-		public Vec2 RA;
-		public Vec2 RB;
-		public float NormalImpulse;
-		public float TangentImpulse;
-		public float NormalMass;
-		public float TangentMass;
-		public float EqualizedMass;
-		public float VelocityBias;
-	}
+        public Vec2 RA;
+        public Vec2 RB;
+        public float NormalImpulse;
+        public float TangentImpulse;
+        public float NormalMass;
+        public float TangentMass;
+        public float EqualizedMass;
+        public float VelocityBias;
+    }
 
 #warning "CAS"
-	public class ContactConstraint
-	{
-		public ContactConstraintPoint[] Points = new ContactConstraintPoint[Settings.MaxManifoldPoints];
+    public class ContactConstraint
+    {
+        public ContactConstraintPoint[] Points = new ContactConstraintPoint[Settings.MaxManifoldPoints];
         public Vec2 LocalPlaneNormal;
         public Vec2 LocalPoint;
-		public Vec2 Normal;
-		public Mat22 NormalMass;
-		public Mat22 K;
-		public Body BodyA;
-		public Body BodyB;
+        public Vec2 Normal;
+        public Mat22 NormalMass;
+        public Mat22 K;
+        public Body BodyA;
+        public Body BodyB;
         public Manifold.ManifoldType Type;
         public float Radius;
-		public float Friction;
-		public float Restitution;
-		public int PointCount;
+        public float Friction;
+        public float Restitution;
+        public int PointCount;
         public Manifold Manifold;
 
-		public ContactConstraint()
-		{
-			for (int i = 0; i < Settings.MaxManifoldPoints; i++)
-				Points[i] = new ContactConstraintPoint();
-		}
-	}
+        public ContactConstraint()
+        {
+            for (int i = 0; i < Settings.MaxManifoldPoints; i++)
+                Points[i] = new ContactConstraintPoint();
+        }
+    }
 
-	public class ContactSolver : IDisposable
-	{
-		public TimeStep Step;
-		public ContactConstraint[] Constraints;
-		public int ConstraintCount;
+    public class ContactSolver : IDisposable
+    {
+        public TimeStep Step;
+        public ContactConstraint[] Constraints;
+        public int ConstraintCount;
 
-		public ContactSolver(TimeStep step, Contact[] contacts, int contactCount)
-		{
+        public ContactSolver(TimeStep step, Contact[] contacts, int contactCount)
+        {
             Step = step;
 
             ConstraintCount = contactCount;
@@ -108,84 +108,86 @@ namespace Box2DX.Dynamics
                 WorldManifold worldManifold = new WorldManifold();
                 worldManifold.Initialize(manifold, bodyA.GetXForm(), radiusA, bodyB.GetXForm(), radiusB);
 
-                Constraints[i] = new ContactConstraint();
-                Constraints[i].BodyA = bodyA;
-                Constraints[i].BodyB = bodyB;
-                Constraints[i].Manifold = manifold;
-                Constraints[i].Normal = worldManifold.Normal;
-                Constraints[i].PointCount = manifold.PointCount;
-                Constraints[i].Friction = friction;
-                Constraints[i].Restitution = restitution;
+                ContactConstraint cc = new ContactConstraint();
+                Constraints[i] = cc;
+                cc.BodyA = bodyA;
+                cc.BodyB = bodyB;
+                cc.Manifold = manifold;
+                cc.Normal = worldManifold.Normal;
+                cc.PointCount = manifold.PointCount;
+                cc.Friction = friction;
+                cc.Restitution = restitution;
 
-                Constraints[i].LocalPlaneNormal = manifold.LocalPlaneNormal;
-                Constraints[i].LocalPoint = manifold.LocalPoint;
-                Constraints[i].Radius = radiusA + radiusB;
-                Constraints[i].Type = manifold.Type;
+                cc.LocalPlaneNormal = manifold.LocalPlaneNormal;
+                cc.LocalPoint = manifold.LocalPoint;
+                cc.Radius = radiusA + radiusB;
+                cc.Type = manifold.Type;
 
-                for (int j = 0; j < Constraints[i].PointCount; ++j)
+                for (int j = 0; j < cc.PointCount; ++j)
                 {
                     ManifoldPoint cp = manifold.Points[j];
+                    ContactConstraintPoint ccp = cc.Points[j];
 
-                    Constraints[i].Points[j].NormalImpulse = cp.NormalImpulse;
-                    Constraints[i].Points[j].TangentImpulse = cp.TangentImpulse;
+                    ccp.NormalImpulse = cp.NormalImpulse;
+                    ccp.TangentImpulse = cp.TangentImpulse;
 
-                    Constraints[i].Points[j].LocalPoint = cp.LocalPoint;
+                    ccp.LocalPoint = cp.LocalPoint;
 
-                    Constraints[i].Points[j].RA = WorldManifold.Points[j] - bodyA._sweep.C;
-                    Constraints[i].Points[j].RB = WorldManifold.Points[j] - bodyB._sweep.C;
+                    ccp.RA = WorldManifold.Points[j] - bodyA._sweep.C;
+                    ccp.RB = WorldManifold.Points[j] - bodyB._sweep.C;
 
-                    float rnA = Vec2.Cross(Constraints[i].Points[j].RA, Constraints[i].Normal);
-                    float rnB = Vec2.Cross(Constraints[i].Points[j].RB, Constraints[i].Normal);
+                    float rnA = Vec2.Cross(ccp.RA, cc.Normal);
+                    float rnB = Vec2.Cross(ccp.RB, cc.Normal);
                     rnA *= rnA;
                     rnB *= rnB;
 
                     float kNormal = bodyA._invMass + bodyB._invMass + bodyA._invI * rnA + bodyB._invI * rnB;
 
                     Box2DXDebug.Assert(kNormal > Settings.FLT_EPSILON);
-                    Constraints[i].Points[j].NormalMass = 1.0f / kNormal;
+                    ccp.NormalMass = 1.0f / kNormal;
 
                     float kEqualized = bodyA._mass * bodyA._invMass + bodyB._mass * bodyB._invMass;
                     kEqualized += bodyA._mass * bodyA._invI * rnA + bodyB._mass * bodyB._invI * rnB;
 
                     Box2DXDebug.Assert(kEqualized > Settings.FLT_EPSILON);
-                    Constraints[i].Points[j].EqualizedMass = 1.0f / kEqualized;
+                    ccp.EqualizedMass = 1.0f / kEqualized;
 
-                    Vec2 tangent = Vec2.Cross(Constraints[i].Normal, 1.0f);
+                    Vec2 tangent = Vec2.Cross(cc.Normal, 1.0f);
 
-                    float rtA = Vec2.Cross(Constraints[i].Points[j].RA, tangent);
-                    float rtB = Vec2.Cross(Constraints[i].Points[j].RB, tangent);
+                    float rtA = Vec2.Cross(ccp.RA, tangent);
+                    float rtB = Vec2.Cross(ccp.RB, tangent);
                     rtA *= rtA;
                     rtB *= rtB;
 
                     float kTangent = bodyA._invMass + bodyB._invMass + bodyA._invI * rtA + bodyB._invI * rtB;
 
                     Box2DXDebug.Assert(kTangent > Settings.FLT_EPSILON);
-                    Constraints[i].Points[j].TangentMass = 1.0f / kTangent;
+                    ccp.TangentMass = 1.0f / kTangent;
 
                     // Setup a velocity bias for restitution.
-                    Constraints[i].Points[j].VelocityBias = 0.0f;
-                    float vRel = Vec2.Dot(Constraints[i].Normal, vB + Vec2.Cross(wB, Constraints[i].Points[j].RB) - vA - Vec2.Cross(wA, Constraints[i].Points[j].RA));
+                    ccp.VelocityBias = 0.0f;
+                    float vRel = Vec2.Dot(cc.Normal, vB + Vec2.Cross(wB, ccp.RB) - vA - Vec2.Cross(wA, ccp.RA));
                     if (vRel < -Settings.VelocityThreshold)
                     {
-                        Constraints[i].Points[j].VelocityBias = -Constraints[i].Restitution * vRel;
+                        ccp.VelocityBias = -cc.Restitution * vRel;
                     }
                 }
 
                 // If we have two points, then prepare the block solver.
-                if (Constraints[i].PointCount == 2)
+                if (cc.PointCount == 2)
                 {
-                    ContactConstraintPoint ccp1 = Constraints[i].Points[0];
-                    ContactConstraintPoint ccp2 = Constraints[i].Points[1];
+                    ContactConstraintPoint ccp1 = cc.Points[0];
+                    ContactConstraintPoint ccp2 = cc.Points[1];
 
                     float invMassA = bodyA._invMass;
                     float invIA = bodyA._invI;
                     float invMassB = bodyB._invMass;
                     float invIB = bodyB._invI;
 
-                    float rn1A = Vec2.Cross(ccp1.RA, Constraints[i].Normal);
-                    float rn1B = Vec2.Cross(ccp1.RB, Constraints[i].Normal);
-                    float rn2A = Vec2.Cross(ccp2.RA, Constraints[i].Normal);
-                    float rn2B = Vec2.Cross(ccp2.RB, Constraints[i].Normal);
+                    float rn1A = Vec2.Cross(ccp1.RA, cc.Normal);
+                    float rn1B = Vec2.Cross(ccp1.RB, cc.Normal);
+                    float rn2A = Vec2.Cross(ccp2.RA, cc.Normal);
+                    float rn2B = Vec2.Cross(ccp2.RB, cc.Normal);
 
                     float k11 = invMassA + invMassB + invIA * rn1A * rn1A + invIB * rn1B * rn1B;
                     float k22 = invMassA + invMassB + invIA * rn2A * rn2A + invIB * rn2B * rn2B;
@@ -196,81 +198,88 @@ namespace Box2DX.Dynamics
                     if (k11 * k11 < k_maxConditionNumber * (k11 * k22 - k12 * k12))
                     {
                         // K is safe to invert.
-                        Constraints[i].K.Col1.Set(k11, k12);
-                        Constraints[i].K.Col2.Set(k12, k22);
-                        Constraints[i].NormalMass = Constraints[i].K.Invert();
+                        cc.K.Col1.Set(k11, k12);
+                        cc.K.Col2.Set(k12, k22);
+                        cc.NormalMass = cc.K.Invert();
                     }
                     else
                     {
                         // The constraints are redundant, just use one.
                         // TODO_ERIN use deepest?
-                        Constraints[i].PointCount = 1;
+                        cc.PointCount = 1;
                     }
                 }
             }
-		}
+        }
 
-		public void Dispose()
-		{
-			Constraints = null;
-		}
+        public void Dispose()
+        {
+            Constraints = null;
+        }
 
-		public void InitVelocityConstraints(TimeStep step)
-		{
-			// Warm start.
-			for (int i = 0; i < ConstraintCount; ++i)
-			{
-                float invMassA = Constraints[i].BodyA._invMass;
-                float invIA = Constraints[i].BodyA._invI;
-                float invMassB = Constraints[i].BodyB._invMass;
-                float invIB = Constraints[i].BodyB._invI;
-                Vec2 normal = Constraints[i].Normal;
-				Vec2 tangent = Vec2.Cross(normal, 1.0f);
+        public void InitVelocityConstraints(TimeStep step)
+        {
+            // Warm start.
+            for (int i = 0; i < ConstraintCount; ++i)
+            {
+                ContactConstraint c = Constraints[i];
 
-				if (step.WarmStarting)
-				{
-                    for (int j = 0; j < Constraints[i].PointCount; ++j)
-					{
-                        Constraints[i].Points[j].NormalImpulse *= step.DtRatio;
-                        Constraints[i].Points[j].TangentImpulse *= step.DtRatio;
-                        Vec2 P = Constraints[i].Points[j].NormalImpulse * normal + Constraints[i].Points[j].TangentImpulse * tangent;
-                        Constraints[i].BodyA._angularVelocity -= invIA * Vec2.Cross(Constraints[i].Points[j].RA, P);
-                        Constraints[i].BodyA._linearVelocity -= invMassA * P;
-                        Constraints[i].BodyB._angularVelocity += invIB * Vec2.Cross(Constraints[i].Points[j].RB, P);
-                        Constraints[i].BodyB._linearVelocity += invMassB * P;
-					}
-				}
-				else
-				{
-                    for (int j = 0; j < Constraints[i].PointCount; ++j)
-					{
-                        Constraints[i].Points[j].NormalImpulse = 0.0f;
-                        Constraints[i].Points[j].TangentImpulse = 0.0f;
-					}
-				}
-			}
-		}
+                Body bodyA = c.BodyA;
+                Body bodyB = c.BodyB;
+                float invMassA = c.BodyA._invMass;
+                float invIA = c.BodyA._invI;
+                float invMassB = c.BodyB._invMass;
+                float invIB = c.BodyB._invI;
+                Vec2 normal = c.Normal;
+                Vec2 tangent = Vec2.Cross(normal, 1.0f);
 
-		public void SolveVelocityConstraints()
-		{
-			for (int i = 0; i < ConstraintCount; ++i)
-			{
-				ContactConstraint c = Constraints[i];
-				Body bodyA = c.BodyA;
-				Body bodyB = c.BodyB;
-				float wA = bodyA._angularVelocity;
-				float wB = bodyB._angularVelocity;
-				Vec2 vA = bodyA._linearVelocity;
-				Vec2 vB = bodyB._linearVelocity;
-				float invMassA = bodyA._invMass;
-				float invIA = bodyA._invI;
-				float invMassB = bodyB._invMass;
-				float invIB = bodyB._invI;
-				Vec2 normal = c.Normal;
-				Vec2 tangent = Vec2.Cross(normal, 1.0f);
-				float friction = c.Friction;
+                if (step.WarmStarting)
+                {
+                    for (int j = 0; j < c.PointCount; ++j)
+                    {
+                        ContactConstraintPoint ccp = c.Points[j];
 
-				Box2DXDebug.Assert(c.PointCount == 1 || c.PointCount == 2);
+                        ccp.NormalImpulse *= step.DtRatio;
+                        ccp.TangentImpulse *= step.DtRatio;
+                        Vec2 P = ccp.NormalImpulse * normal + ccp.TangentImpulse * tangent;
+                        bodyA._angularVelocity -= invIA * Vec2.Cross(ccp.RA, P);
+                        bodyA._linearVelocity -= invMassA * P;
+                        bodyB._angularVelocity += invIB * Vec2.Cross(ccp.RB, P);
+                        bodyB._linearVelocity += invMassB * P;
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < c.PointCount; ++j)
+                    {
+                        ContactConstraintPoint ccp = c.Points[j];
+                        ccp.NormalImpulse = 0.0f;
+                        ccp.TangentImpulse = 0.0f;
+                    }
+                }
+            }
+        }
+
+        public void SolveVelocityConstraints()
+        {
+            for (int i = 0; i < ConstraintCount; ++i)
+            {
+                ContactConstraint c = Constraints[i];
+                Body bodyA = c.BodyA;
+                Body bodyB = c.BodyB;
+                float wA = bodyA._angularVelocity;
+                float wB = bodyB._angularVelocity;
+                Vec2 vA = bodyA._linearVelocity;
+                Vec2 vB = bodyB._linearVelocity;
+                float invMassA = bodyA._invMass;
+                float invIA = bodyA._invI;
+                float invMassB = bodyB._invMass;
+                float invIB = bodyB._invI;
+                Vec2 normal = c.Normal;
+                Vec2 tangent = Vec2.Cross(normal, 1.0f);
+                float friction = c.Friction;
+
+                Box2DXDebug.Assert(c.PointCount == 1 || c.PointCount == 2);
 
                 // Solve tangent constraints
                 for (int j = 0; j < c.PointCount; ++j)
@@ -301,7 +310,7 @@ namespace Box2DX.Dynamics
                     ccp.TangentImpulse = newImpulse;
                 }
 
-				// Solve normal constraints
+                // Solve normal constraints
                 if (c.PointCount == 1)
                 {
                     ContactConstraintPoint ccp = c.Points[0];
@@ -389,7 +398,7 @@ namespace Box2DX.Dynamics
                         //
                         // x' = - inv(A) * b'
                         //
-                        Vec2 x = -Common.Math.Mul(c.NormalMass, b);
+                        Vec2 x = - Common.Math.Mul(c.NormalMass, b);
 
                         if (x.X >= 0.0f && x.Y >= 0.0f)
                         {
@@ -410,16 +419,16 @@ namespace Box2DX.Dynamics
                             cp2.NormalImpulse = x.Y;
 
 #if DEBUG_SOLVER
-							// Postconditions
+                            // Postconditions
                             dv1 = vB + Vec2.Cross(wB, cp1.RB) - vA - Vec2.Cross(wA, cp1.RA);
                             dv2 = vB + Vec2.Cross(wB, cp2.RB) - vA - Vec2.Cross(wA, cp2.RA);
 
-							// Compute normal velocity
+                            // Compute normal velocity
                             vn1 = Vec2.Dot(dv1, normal);
                             vn2 = Vec2.Dot(dv2, normal);
 
-							Box2DXDebug.Assert(Common.Math.Abs(vn1 - cp1.VelocityBias) < k_errorTol);
-							Box2DXDebug.Assert(Common.Math.Abs(vn2 - cp2.VelocityBias) < k_errorTol);
+                            Box2DXDebug.Assert(Common.Math.Abs(vn1 - cp1.VelocityBias) < k_errorTol);
+                            Box2DXDebug.Assert(Common.Math.Abs(vn2 - cp2.VelocityBias) < k_errorTol);
 #endif
                             break;
                         }
@@ -430,7 +439,7 @@ namespace Box2DX.Dynamics
                         //   0 = a11 * x1' + a12 * 0 + b1' 
                         // vn2 = a21 * x1' + a22 * 0 + b2'
                         //
-                        x.X = -cp1.NormalMass * b.X;
+                        x.X = - cp1.NormalMass * b.X;
                         x.Y = 0.0f;
                         vn1 = 0.0f;
                         vn2 = c.K.Col1.Y * x.X + b.Y;
@@ -454,13 +463,13 @@ namespace Box2DX.Dynamics
                             cp2.NormalImpulse = x.Y;
 
 #if DEBUG_SOLVER
-							// Postconditions
+                            // Postconditions
                             dv1 = vB + Vec2.Cross(wB, cp1.RB) - vA - Vec2.Cross(wA, cp1.RA);
 
-							// Compute normal velocity
+                            // Compute normal velocity
                             vn1 = Vec2.Dot(dv1, normal);
 
-							Box2DXDebug.Assert(Common.Math.Abs(vn1 - cp1.VelocityBias) < k_errorTol);
+                            Box2DXDebug.Assert(Common.Math.Abs(vn1 - cp1.VelocityBias) < k_errorTol);
 #endif
                             break;
                         }
@@ -496,13 +505,13 @@ namespace Box2DX.Dynamics
                             cp2.NormalImpulse = x.Y;
 
 #if DEBUG_SOLVER
-							// Postconditions
+                            // Postconditions
                             dv2 = vB + Vec2.Cross(wB, cp2.RB) - vA - Vec2.Cross(wA, cp2.RA);
 
-							// Compute normal velocity
+                            // Compute normal velocity
                             vn2 = Vec2.Dot(dv2, normal);
 
-							Box2DXDebug.Assert(Common.Math.Abs(vn2 - cp2.VelocityBias) < k_errorTol);
+                            Box2DXDebug.Assert(Common.Math.Abs(vn2 - cp2.VelocityBias) < k_errorTol);
 #endif
                             break;
                         }
@@ -543,148 +552,148 @@ namespace Box2DX.Dynamics
                     }
                 }
 
-                Constraints[i].BodyA._linearVelocity = vA;
-                Constraints[i].BodyA._angularVelocity = wA;
-                Constraints[i].BodyB._linearVelocity = vB;
-                Constraints[i].BodyB._angularVelocity = wB;
-			}
-		}
+                bodyA._linearVelocity = vA;
+                bodyA._angularVelocity = wA;
+                bodyB._linearVelocity = vB;
+                bodyB._angularVelocity = wB;
+            }
+        }
 
-		public void FinalizeVelocityConstraints()
-		{
-			for (int i = 0; i < ConstraintCount; ++i)
-			{
-				ContactConstraint c = Constraints[i];
+        public void FinalizeVelocityConstraints()
+        {
+            for (int i = 0; i < ConstraintCount; ++i)
+            {
+                ContactConstraint c = Constraints[i];
+                Manifold m = c.Manifold;
 
-				for (int j = 0; j < c.PointCount; ++j)
-				{
-                    c.Manifold.Points[j].NormalImpulse = c.Points[j].NormalImpulse;
-                    c.Manifold.Points[j].TangentImpulse = c.Points[j].TangentImpulse;
-				}
-			}
-		}
+                for (int j = 0; j < c.PointCount; ++j)
+                {
+                    m.Points[j].NormalImpulse = c.Points[j].NormalImpulse;
+                    m.Points[j].TangentImpulse = c.Points[j].TangentImpulse;
+                }
+            }
+        }
 
         // Sequential solver.
         public bool SolvePositionConstraints(float baumgarte)
         {
-	        float minSeparation = 0.0f;
+            float minSeparation = 0.0f;
 
-	        for (int i = 0; i < ConstraintCount; ++i)
-	        {
-		        ContactConstraint c = Constraints[i];
-		        Body bodyA = c.BodyA;
-		        Body bodyB = c.BodyB;
+            for (int i = 0; i < ConstraintCount; ++i)
+            {
+                ContactConstraint c = Constraints[i];
+                Body bodyA = c.BodyA;
+                Body bodyB = c.BodyB;
 
-		        float invMassA = bodyA._mass * bodyA._invMass;
-		        float invIA = bodyA._mass * bodyA._invI;
-		        float invMassB = bodyB._mass * bodyB._invMass;
-		        float invIB = bodyB._mass * bodyB._invI;
+                float invMassA = bodyA._mass * bodyA._invMass;
+                float invIA = bodyA._mass * bodyA._invI;
+                float invMassB = bodyB._mass * bodyB._invMass;
+                float invIB = bodyB._mass * bodyB._invI;
 
-		        PositionSolverManifold psm = new PositionSolverManifold();
-		        psm.Initialize(c);
-		        Vec2 normal = psm.Normal;
+                PositionSolverManifold psm = new PositionSolverManifold();
+                psm.Initialize(c);
+                Vec2 normal = psm.Normal;
 
-		        // Solve normal constraints
-		        for (int j = 0; j < c.PointCount; ++j)
-		        {
-			        ContactConstraintPoint ccp = c.Points[j];
+                // Solve normal constraints
+                for (int j = 0; j < c.PointCount; ++j)
+                {
+                    ContactConstraintPoint ccp = c.Points[j];
 
-			        Vec2 point = psm.Points[j];
-			        float separation = psm.Separations[j];
+                    Vec2 point = psm.Points[j];
+                    float separation = psm.Separations[j];
 
-			        Vec2 rA = point - bodyA._sweep.C;
-			        Vec2 rB = point - bodyB._sweep.C;
+                    Vec2 rA = point - bodyA._sweep.C;
+                    Vec2 rB = point - bodyB._sweep.C;
 
-			        // Track max constraint error.
-			        minSeparation = Common.Math.Min(minSeparation, separation);
+                    // Track max constraint error.
+                    minSeparation = Common.Math.Min(minSeparation, separation);
 
-			        // Prevent large corrections and allow slop.
-			        float C = baumgarte * Common.Math.Clamp(separation + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
+                    // Prevent large corrections and allow slop.
+                    float C = baumgarte * Common.Math.Clamp(separation + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
 
-			        // Compute normal impulse
-			        float impulse = -ccp.EqualizedMass * C;
+                    // Compute normal impulse
+                    float impulse = -ccp.EqualizedMass * C;
 
-			        Vec2 P = impulse * normal;
+                    Vec2 P = impulse * normal;
 
-                    Constraints[i].BodyA._sweep.C -= invMassA * P;
-                    Constraints[i].BodyA._sweep.A -= invIA * Vec2.Cross(rA, P);
-                    Constraints[i].BodyA.SynchronizeTransform();
+                    bodyA._sweep.C -= invMassA * P;
+                    bodyA._sweep.A -= invIA * Vec2.Cross(rA, P);
+                    bodyA.SynchronizeTransform();
 
-                    Constraints[i].BodyB._sweep.C += invMassB * P;
-                    Constraints[i].BodyB._sweep.A += invIB * Vec2.Cross(rB, P);
-                    Constraints[i].BodyB.SynchronizeTransform();
-		        }
-	        }
+                    bodyB._sweep.C += invMassB * P;
+                    bodyB._sweep.A += invIB * Vec2.Cross(rB, P);
+                    bodyB.SynchronizeTransform();
+                }
+            }
 
-	        // We can't expect minSpeparation >= -b2_linearSlop because we don't
-	        // push the separation above -b2_linearSlop.
-	        return minSeparation >= -1.5f * Settings.LinearSlop;
+            // We can't expect minSpeparation >= -b2_linearSlop because we don't
+            // push the separation above -b2_linearSlop.
+            return minSeparation >= -1.5f * Settings.LinearSlop;
         }
-	}
+    }
 
-#warning "this is actually a stuct in box2d"
     public class PositionSolverManifold
     {
-	    public void Initialize(ContactConstraint cc)
-	    {
-		    Box2DXDebug.Assert(cc.PointCount > 0);
+        public void Initialize(ContactConstraint cc)
+        {
+            Box2DXDebug.Assert(cc.PointCount > 0);
 
-		    switch (cc.Type)
-		    {
-		    case Manifold.ManifoldType.Circles:
-			    {
-				    Vec2 pointA = cc.BodyA.GetWorldPoint(cc.LocalPoint);
-				    Vec2 pointB = cc.BodyB.GetWorldPoint(cc.Points[0].LocalPoint);
-				    if (Vec2.DistanceSquared(pointA, pointB) > Settings.FLT_EPSILON * Settings.FLT_EPSILON)
-				    {
-					    Normal = pointB - pointA;
-					    Normal.Normalize();
-				    }
-				    else
-				    {
-					    Normal.Set(1.0f, 0.0f);
-				    }
+            switch (cc.Type)
+            {
+                case Manifold.ManifoldType.Circles:
+                    {
+                        Vec2 pointA = cc.BodyA.GetWorldPoint(cc.LocalPoint);
+                        Vec2 pointB = cc.BodyB.GetWorldPoint(cc.Points[0].LocalPoint);
+                        if (Vec2.DistanceSquared(pointA, pointB) > Settings.FLT_EPSILON * Settings.FLT_EPSILON)
+                        {
+                            Normal = pointB - pointA;
+                            Normal.Normalize();
+                        }
+                        else
+                        {
+                            Normal.Set(1.0f, 0.0f);
+                        }
 
-				    Points[0] = 0.5f * (pointA + pointB);
-				    Separations[0] = Vec2.Dot(pointB - pointA, Normal) - cc.Radius;
-			    }
-			    break;
+                        Points[0] = 0.5f * (pointA + pointB);
+                        Separations[0] = Vec2.Dot(pointB - pointA, Normal) - cc.Radius;
+                    }
+                    break;
 
-		    case Manifold.ManifoldType.FaceA:
-			    {
-				    Normal = cc.BodyA.GetWorldVector(cc.LocalPlaneNormal);
-				    Vec2 planePoint = cc.BodyA.GetWorldPoint(cc.LocalPoint);
+                case Manifold.ManifoldType.FaceA:
+                    {
+                        Normal = cc.BodyA.GetWorldVector(cc.LocalPlaneNormal);
+                        Vec2 planePoint = cc.BodyA.GetWorldPoint(cc.LocalPoint);
 
-				    for (int i = 0; i < cc.PointCount; ++i)
-				    {
-					    Vec2 clipPoint = cc.BodyB.GetWorldPoint(cc.Points[i].LocalPoint);
-					    Separations[i] = Vec2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
-					    Points[i] = clipPoint;
-				    }
-			    }
-			    break;
+                        for (int i = 0; i < cc.PointCount; ++i)
+                        {
+                            Vec2 clipPoint = cc.BodyB.GetWorldPoint(cc.Points[i].LocalPoint);
+                            Separations[i] = Vec2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
+                            Points[i] = clipPoint;
+                        }
+                    }
+                    break;
 
-		    case Manifold.ManifoldType.FaceB:
-			    {
-				    Normal = cc.BodyB.GetWorldVector(cc.LocalPlaneNormal);
-				    Vec2 planePoint = cc.BodyB.GetWorldPoint(cc.LocalPoint);
+                case Manifold.ManifoldType.FaceB:
+                    {
+                        Normal = cc.BodyB.GetWorldVector(cc.LocalPlaneNormal);
+                        Vec2 planePoint = cc.BodyB.GetWorldPoint(cc.LocalPoint);
 
-				    for (int i = 0; i < cc.PointCount; ++i)
-				    {
-					    Vec2 clipPoint = cc.BodyA.GetWorldPoint(cc.Points[i].LocalPoint);
-					    Separations[i] = Vec2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
-					    Points[i] = clipPoint;
-				    }
+                        for (int i = 0; i < cc.PointCount; ++i)
+                        {
+                            Vec2 clipPoint = cc.BodyA.GetWorldPoint(cc.Points[i].LocalPoint);
+                            Separations[i] = Vec2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
+                            Points[i] = clipPoint;
+                        }
 
-				    // Ensure normal points from A to B
-				    Normal = -Normal;
-			    }
-			    break;
-		    }
-	    }
+                        // Ensure normal points from A to B
+                        Normal = -Normal;
+                    }
+                    break;
+            }
+        }
 
-	    public Vec2 Normal;
-	    public Vec2[] Points = new Vec2[Settings.MaxManifoldPoints];
+        public Vec2 Normal;
+        public Vec2[] Points = new Vec2[Settings.MaxManifoldPoints];
         public float[] Separations = new float[Settings.MaxManifoldPoints];
     }
 }
