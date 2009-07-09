@@ -442,7 +442,7 @@ namespace TestBed
 
             if (settings.pause == 1)
             {
-                if (settings.singleStep > 1)
+                if (settings.singleStep == 1)
                 {
                     settings.singleStep = 0;
                 }
