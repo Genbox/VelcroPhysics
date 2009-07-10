@@ -307,7 +307,7 @@ namespace Box2DX.Dynamics
         /// attached to a body are implicitly destroyed when the body is destroyed.
         /// @param fixture the fixture to be removed.
         /// @warning This function is locked during callbacks.
-        public void DestroyFixture(Fixture fixture)
+        public void DestroyFixture(ref Fixture fixture)
         {
             Box2DXDebug.Assert(_world._lock == false);
             if (_world._lock == true)
@@ -325,7 +325,7 @@ namespace Box2DX.Dynamics
             {
                 if (node == fixture)
                 {
-                    node = fixture.Next;
+                    _fixtureList = fixture.Next;
                     found = true;
                     break;
                 }
