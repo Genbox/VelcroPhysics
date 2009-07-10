@@ -81,7 +81,7 @@ namespace TestBed
 				case System.Windows.Forms.Keys.D:
 					if (_fixture2 != null)
 					{
-                        _body.DestroyFixture(_fixture2);
+                        _body.DestroyFixture(ref _fixture2);
 						_fixture2 = null;
 						_body.SetMassFromShapes();
 						_body.WakeUp();
