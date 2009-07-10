@@ -454,5 +454,10 @@ namespace TestBed
 		}
 
 		#endregion Render
+
+        private void btnRestart_Click(object sender, EventArgs e)
+        {
+            CurrentTest = testEntry.CreateFcn();
+        }
 	}
 }

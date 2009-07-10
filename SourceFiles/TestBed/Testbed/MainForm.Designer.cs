@@ -79,6 +79,7 @@ namespace TestBed
             this.lblTests = new System.Windows.Forms.Label();
             this.cmbbTests = new System.Windows.Forms.ComboBox();
             this.redrawTimer = new System.Windows.Forms.Timer(this.components);
+            this.btnRestart = new System.Windows.Forms.Button();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
@@ -103,6 +104,7 @@ namespace TestBed
             // 
             // splitContainer.Panel2
             // 
+            this.splitContainer.Panel2.Controls.Add(this.btnRestart);
             this.splitContainer.Panel2.Controls.Add(this.nudHz);
             this.splitContainer.Panel2.Controls.Add(this.nudPosIters);
             this.splitContainer.Panel2.Controls.Add(this.nudVelIters);
@@ -117,8 +119,8 @@ namespace TestBed
             this.splitContainer.Panel2.Controls.Add(this.lblVelIters);
             this.splitContainer.Panel2.Controls.Add(this.lblTests);
             this.splitContainer.Panel2.Controls.Add(this.cmbbTests);
-            this.splitContainer.Size = new System.Drawing.Size(692, 443);
-            this.splitContainer.SplitterDistance = 445;
+            this.splitContainer.Size = new System.Drawing.Size(725, 482);
+            this.splitContainer.SplitterDistance = 478;
             this.splitContainer.TabIndex = 0;
             // 
             // openGlControl
@@ -134,7 +136,7 @@ namespace TestBed
             this.openGlControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.openGlControl.Location = new System.Drawing.Point(0, 0);
             this.openGlControl.Name = "openGlControl";
-            this.openGlControl.Size = new System.Drawing.Size(445, 443);
+            this.openGlControl.Size = new System.Drawing.Size(478, 482);
             this.openGlControl.StencilBits = ((byte)(0));
             this.openGlControl.TabIndex = 0;
             this.openGlControl.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.openGlControl_PreviewKeyDown);
@@ -212,7 +214,7 @@ namespace TestBed
             // 
             this.btnQuit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnQuit.Location = new System.Drawing.Point(9, 408);
+            this.btnQuit.Location = new System.Drawing.Point(7, 447);
             this.btnQuit.Name = "btnQuit";
             this.btnQuit.Size = new System.Drawing.Size(222, 23);
             this.btnQuit.TabIndex = 5;
@@ -224,7 +226,7 @@ namespace TestBed
             // 
             this.btnSingleStep.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSingleStep.Location = new System.Drawing.Point(9, 382);
+            this.btnSingleStep.Location = new System.Drawing.Point(7, 389);
             this.btnSingleStep.Name = "btnSingleStep";
             this.btnSingleStep.Size = new System.Drawing.Size(222, 23);
             this.btnSingleStep.TabIndex = 5;
@@ -236,7 +238,7 @@ namespace TestBed
             // 
             this.btnPause.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnPause.Location = new System.Drawing.Point(9, 353);
+            this.btnPause.Location = new System.Drawing.Point(7, 360);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(222, 23);
             this.btnPause.TabIndex = 5;
@@ -253,7 +255,7 @@ namespace TestBed
             this.gbDraw.Controls.Add(this.flpDraw);
             this.gbDraw.Location = new System.Drawing.Point(6, 160);
             this.gbDraw.Name = "gbDraw";
-            this.gbDraw.Size = new System.Drawing.Size(225, 187);
+            this.gbDraw.Size = new System.Drawing.Size(225, 194);
             this.gbDraw.TabIndex = 4;
             this.gbDraw.TabStop = false;
             this.gbDraw.Text = "Draw";
@@ -278,7 +280,7 @@ namespace TestBed
             this.flpDraw.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpDraw.Location = new System.Drawing.Point(3, 16);
             this.flpDraw.Name = "flpDraw";
-            this.flpDraw.Size = new System.Drawing.Size(219, 168);
+            this.flpDraw.Size = new System.Drawing.Size(219, 175);
             this.flpDraw.TabIndex = 0;
             // 
             // chkbShapes
@@ -488,11 +490,23 @@ namespace TestBed
             this.redrawTimer.Interval = 16;
             this.redrawTimer.Tick += new System.EventHandler(this.redrawTimer_Tick);
             // 
+            // btnRestart
+            // 
+            this.btnRestart.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRestart.Location = new System.Drawing.Point(7, 418);
+            this.btnRestart.Name = "btnRestart";
+            this.btnRestart.Size = new System.Drawing.Size(222, 23);
+            this.btnRestart.TabIndex = 8;
+            this.btnRestart.Text = "Restart";
+            this.btnRestart.UseVisualStyleBackColor = true;
+            this.btnRestart.Click += new System.EventHandler(this.btnRestart_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(692, 443);
+            this.ClientSize = new System.Drawing.Size(725, 482);
             this.Controls.Add(this.splitContainer);
             this.MinimumSize = new System.Drawing.Size(700, 470);
             this.Name = "MainForm";
@@ -544,6 +558,7 @@ namespace TestBed
 		private System.Windows.Forms.NumericUpDown nudVelIters;
 		private System.Windows.Forms.Label lblPosIters;
 		private System.Windows.Forms.NumericUpDown nudPosIters;
+        private System.Windows.Forms.Button btnRestart;
 	}
 }
 
