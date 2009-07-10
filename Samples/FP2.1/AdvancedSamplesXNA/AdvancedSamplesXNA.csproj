@@ -83,6 +83,7 @@
     <Compile Include="Components\FramerateCounterComponent.cs" />
     <Compile Include="Demos\Demo10\Demo10Screen.cs" />
     <Compile Include="Demos\Demo10\Splat.cs" />
+    <Compile Include="Demos\Demo11\Demo11Screen.cs" />
     <Compile Include="Demos\Demo1\Demo1Screen.cs" />
     <Compile Include="Demos\Demo1\ObjectLinker.cs" />
     <Compile Include="Demos\Demo1\PhysicsProcessor.cs" />

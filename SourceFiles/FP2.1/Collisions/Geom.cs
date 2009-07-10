@@ -41,6 +41,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
         internal Body body;
         internal Vertices localVertices;
         internal Vertices worldVertices;
+        // Added for SAT
+        internal Vertices edgeNormals;
+        // Added for SAT
         internal int id;
 
         public int Id { get { return id; } }
@@ -238,6 +241,21 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             get { return worldVertices; }
         }
+
+        // Added for SAT
+#if(XNA)
+        [ContentSerializerIgnore]
+#endif
+        [XmlIgnore]
+        /// <summary>
+        /// Gets the edge normals.
+        /// </summary>
+        /// <Value>The edge normals.</Value>
+        public Vertices EdgeNormals
+        {
+            get { return edgeNormals; }
+        }
+        // Added for SAT
 
 #if(XNA)
         [ContentSerializerIgnore]
