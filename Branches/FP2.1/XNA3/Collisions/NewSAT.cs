@@ -67,7 +67,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             Vector2 normalA = -Vector2.Normalize(translationAxis * minIntervalDistance);
             float distanceA = (translationAxis * minIntervalDistance).Length();
-
+            
             // For each axis check if separation occurs
             for (int i = 0; i < geomB.WorldVertices.Count; i++)
             {
@@ -95,11 +95,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         translationAxis = -translationAxis;
                 }
             }
-
+            
             // here we separate the polygons
             //minIntervalDistance -= 0.2f;
 
-            if (minIntervalDistance > 5f)
+            if (minIntervalDistance > 15f)
             {
                 // if A is static and B is not
 
@@ -121,20 +121,23 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
             // now find vertices still in contact with other poly and create contacts
 
-            Vector2 normalB = -Vector2.Normalize(translationAxis * minIntervalDistance);
+            //Vector2 normalB = Vector2.Normalize(translationAxis * minIntervalDistance);
             float distanceB = (translationAxis * minIntervalDistance).Length();
+
+            if (distanceA < distanceB)
+                distanceB = distanceA;
 
             for (int i = 0; i < geomA.WorldVertices.Count; i++)
             {
-                if (contactsDetected <= PhysicsSimulator.MaxContactsToDetect)
+                if (contactsDetected < PhysicsSimulator.MaxContactsToDetect)
                 {
                     if (InsidePolygon(geomB.WorldVertices, geomA.WorldVertices[i]))
                     {
-                        if (!geomA.Body.IsStatic)
+                        //if (!geomA.Body.IsStatic)
                         {
                             if (distanceA > 0.001f)
                             {
-                                Contact c = new Contact(geomA.WorldVertices[i], normalB, distanceB, new ContactId(geomA.id, i, geomB.id));
+                                Contact c = new Contact(geomA.WorldVertices[i], normalA, -distanceB, new ContactId(geomA.id, i, geomB.id));
                                 contactList.Add(c);
                                 contactsDetected++;
                             }
@@ -145,18 +148,18 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             contactsDetected = 0;
-
+          
             for (int i = 0; i < geomB.WorldVertices.Count; i++)
             {
-                if (contactsDetected <= PhysicsSimulator.MaxContactsToDetect)
+                if (contactsDetected < PhysicsSimulator.MaxContactsToDetect)
                 {
                     if (InsidePolygon(geomA.WorldVertices, geomB.WorldVertices[i]))
                     {
-                        if (!geomB.Body.IsStatic)
+                        //if (!geomB.Body.IsStatic)
                         {
                             if (distanceB > 0.001f)
                             {
-                                Contact c = new Contact(geomB.WorldVertices[i], normalA, distanceA, new ContactId(geomB.id, i, geomA.id));
+                                Contact c = new Contact(geomB.WorldVertices[i], normalA, -distanceB, new ContactId(geomA.id, i, geomB.id));
                                 contactList.Add(c);
                                 contactsDetected++;
                             }
