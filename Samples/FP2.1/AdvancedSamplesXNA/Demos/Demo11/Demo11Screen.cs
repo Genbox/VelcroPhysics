@@ -18,7 +18,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo11
 
         public override void Initialize()
         {
-            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
+            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 150));
 
             // Use the SAT narrow phase collider
             PhysicsSimulator.NarrowPhaseCollider = NarrowPhaseCollider.SAT;
@@ -28,18 +28,32 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo11
             PhysicsSimulatorView.EnableEdgeView = true;
             PhysicsSimulatorView.EnableAABBView = false;
 
-            bodyA = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 10, 10, 1);
-            bodyB = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 10, 10, 1);
+            Vertices polygon = new Vertices();
+
+            polygon.Add(new Vector2(-50, -50));
+            polygon.Add(new Vector2(0, -75));
+            polygon.Add(new Vector2(50, -50));
+            polygon.Add(new Vector2(25, 50));
+            polygon.Add(new Vector2(-25, 50));
+
+            bodyA = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 10, 10, 10);
+            bodyB = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 10, 10, 10);
 
             geomA = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, bodyA,
-                Vertices.CreateSimpleRectangle(100, 100), 1);
+                polygon, 1);
+            geomA.FrictionCoefficient = 1f;
+            geomA.RestitutionCoefficient = 0f;
 
             geomB = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, bodyB,
                 Vertices.CreateSimpleRectangle(100, 100), 1);
+            geomB.FrictionCoefficient = 0f;
+            geomB.RestitutionCoefficient = 0.9f;
 
             bodyA.Position = new Vector2(400, 300);
-            bodyA.Rotation = 45;
-            bodyB.Position = new Vector2(450, 300);
+            bodyA.Rotation = 0;
+            bodyA.MomentOfInertia = 5000;
+            bodyB.Position = new Vector2(400, 300);
+            bodyB.MomentOfInertia = 5000;
 
             base.Initialize();
         }
