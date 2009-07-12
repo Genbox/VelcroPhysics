@@ -31,7 +31,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo4
             PhysicsSimulator.NarrowPhaseCollider = NarrowPhaseCollider.SAT;
             PhysicsSimulator.BiasFactor = .3f;
             //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
-            PhysicsSimulator.MaxContactsToDetect = 2;
+            PhysicsSimulator.MaxContactsToDetect = 4;
 
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
             PhysicsSimulatorView.EnableEdgeView = false;

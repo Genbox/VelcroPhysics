@@ -99,33 +99,30 @@ namespace FarseerGames.FarseerPhysics.Collisions
             // here we separate the polygons
             //minIntervalDistance -= 0.2f;
 
-            if (minIntervalDistance > 15f)
+            if (minIntervalDistance > 1f)
             {
                 // if A is static and B is not
 
                 if (geomA.Body.IsStatic && !geomB.Body.IsStatic)
                 {
-                    geomB.Body.Position += translationAxis * minIntervalDistance;
+                    //geomB.Body.Position += translationAxis * minIntervalDistance;
                 }
                 // if B is static and A is not
                 if (geomB.Body.IsStatic && !geomA.Body.IsStatic)
                 {
-                    geomA.Body.Position += translationAxis * minIntervalDistance;
+                    //geomA.Body.Position += translationAxis * minIntervalDistance;
                 }
                 // if both are not static, then move both bodies by half
                 if (!geomB.Body.IsStatic && !geomA.Body.IsStatic)
                 {
-                    geomA.Body.Position += (translationAxis * minIntervalDistance) / 2.0f;
-                    geomB.Body.Position -= (translationAxis * minIntervalDistance) / 2.0f;
+                    ////geomA.Body.Position += (translationAxis * minIntervalDistance) / 2.0f;
+                    //geomB.Body.Position -= (translationAxis * minIntervalDistance) / 2.0f;
                 }
             }
             // now find vertices still in contact with other poly and create contacts
 
-            //Vector2 normalB = Vector2.Normalize(translationAxis * minIntervalDistance);
+            Vector2 normalB = -Vector2.Normalize(translationAxis * minIntervalDistance);
             float distanceB = (translationAxis * minIntervalDistance).Length();
-
-            if (distanceA < distanceB)
-                distanceB = distanceA;
 
             for (int i = 0; i < geomA.WorldVertices.Count; i++)
             {
@@ -157,9 +154,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     {
                         //if (!geomB.Body.IsStatic)
                         {
-                            if (distanceB > 0.001f)
+                            if (distanceA > 0.001f)
                             {
-                                Contact c = new Contact(geomB.WorldVertices[i], normalA, -distanceB, new ContactId(geomA.id, i, geomB.id));
+                                Contact c = new Contact(geomB.WorldVertices[i], normalA, -distanceB, new ContactId(geomB.id, i, geomA.id));
                                 contactList.Add(c);
                                 contactsDetected++;
                             }
