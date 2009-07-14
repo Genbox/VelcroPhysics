@@ -67,11 +67,26 @@ namespace Box2DX.Dynamics
     [Flags]
     public enum ContactFlag
     {
+        // This contact should not participate in Solve
+        // The contact equivalent of sensors
         NonSolidFlag = 0x0001,
+        // Do not use TOI solve.
         SlowFlag = 0x0002,
+        // Used when crawling contact graph when forming islands.
         IslandFlag = 0x0004,
+        // Used in SolveTOI to indicate the cached toi value is still valid.
         ToiFlag = 0x0008,
+        // TODO: Doc
         TouchFlag = 0x0010,
+        // Contacts are invalid if they have been created or modified inside a step
+        // and remain invalid until the next step.
+        InvalidFlag = 0x0020,
+        // Marked for deferred destruction.
+        DestroyFlag = 0x0040,
+        // This marks if contact is currently being evaluated.
+        // Meaning it should be deferred instead of destroyed.
+        // This is essntially a poor mans recursive lock.
+        LockedFlag = 0x0080,
     }
 
 #warning "CAS"
@@ -100,6 +115,8 @@ namespace Box2DX.Dynamics
 
         public float Toi;
 
+        public object UserData;
+
         /// Get the contact manifold.
         public Manifold GetManifold() { return Manifold; }
 
@@ -120,6 +137,16 @@ namespace Box2DX.Dynamics
         /// @return true if this contact should generate a response.
         public bool IsSolid() { return (Flags & ContactFlag.NonSolidFlag) == 0; }
 
+        public bool IsInvalid()
+        {
+	        return (Flags & ContactFlag.InvalidFlag) != 0;
+        }
+
+        public bool IsDestroyed()
+        {
+            return (Flags & ContactFlag.DestroyFlag) != 0;
+        }
+
         /// Are fixtures touching?
         public bool AreTouching() { return (Flags & ContactFlag.TouchFlag) == ContactFlag.TouchFlag; }
 
@@ -131,6 +158,21 @@ namespace Box2DX.Dynamics
 
         /// Get the second fixture in this contact.
         public Fixture GetFixtureB() { return _fixtureB; }
+
+        //public void b2Contact::DisableCollisionResponses()
+        //{
+        //	m_flags |= e_nonSolidFlag;
+        //}
+
+        public object GetUserData()
+        {
+	        return UserData;
+        }
+
+        public void SetUserData(object data)
+        {
+	        UserData = data;
+        }
 
         public static void AddType(ContactCreateFcn createFcn, ContactDestroyFcn destroyFcn,
                             ShapeType typeA, ShapeType typeB)
@@ -199,6 +241,11 @@ namespace Box2DX.Dynamics
 
         public static void Destroy(Contact contact)
         {
+            Destroy(contact, contact.GetFixtureA().GetShapeType(), contact.GetFixtureB().GetShapeType());
+        }
+
+        public static void Destroy(Contact contact, ShapeType typeA, ShapeType typeB)
+        {
             Box2DXDebug.Assert(Initialized == true);
 
             if (contact.Manifold.PointCount > 0)
@@ -206,9 +253,6 @@ namespace Box2DX.Dynamics
                 contact.GetFixtureA().GetBody().WakeUp();
                 contact.GetFixtureB().GetBody().WakeUp();
             }
-
-            ShapeType typeA = contact.GetFixtureA().GetShapeType();
-            ShapeType typeB = contact.GetFixtureB().GetShapeType();
 
             Box2DXDebug.Assert(ShapeType.UnknownShape < typeA && typeB < ShapeType.ShapeTypeCount);
             Box2DXDebug.Assert(ShapeType.UnknownShape < typeA && typeB < ShapeType.ShapeTypeCount);
@@ -248,80 +292,6 @@ namespace Box2DX.Dynamics
             NodeB.Prev = null;
             NodeB.Next = null;
             NodeB.Other = null;
-        }
-
-        public void Update(ContactListener listener)
-        {
-            Manifold oldManifold = Manifold;
-
-            Evaluate();
-
-            Body bodyA = _fixtureA.GetBody();
-            Body bodyB = _fixtureB.GetBody();
-
-            int oldCount = oldManifold.PointCount;
-            int newCount = Manifold.PointCount;
-
-            if (newCount == 0 && oldCount > 0)
-            {
-                bodyA.WakeUp();
-                bodyB.WakeUp();
-            }
-
-            // Slow contacts don't generate TOI events.
-            if (bodyA.IsStatic() || bodyA.IsBullet() || bodyB.IsStatic() || bodyB.IsBullet())
-            {
-                Flags &= ~ContactFlag.SlowFlag;
-            }
-            else
-            {
-                Flags |= ContactFlag.SlowFlag;
-            }
-
-            // Match old contact ids to new contact ids and copy the
-            // stored impulses to warm start the solver.
-            for (int i = 0; i < Manifold.PointCount; ++i)
-            {
-                ManifoldPoint mp2 = Manifold.Points[i];
-                mp2.NormalImpulse = 0.0f;
-                mp2.TangentImpulse = 0.0f;
-                ContactID id2 = mp2.ID;
-
-                for (int j = 0; j < oldManifold.PointCount; ++j)
-                {
-                    ManifoldPoint mp1 = oldManifold.Points[j];
-
-                    if (mp1.ID.Key == id2.Key)
-                    {
-                        mp2.NormalImpulse = mp1.NormalImpulse;
-                        mp2.TangentImpulse = mp1.TangentImpulse;
-                        break;
-                    }
-                }
-            }
-
-            if (oldCount == 0 && newCount > 0)
-            {
-                Flags |= ContactFlag.TouchFlag;
-                listener.BeginContact(this);
-            }
-
-            if (oldCount > 0 && newCount == 0)
-            {
-                Flags &= ~ContactFlag.TouchFlag;
-                listener.EndContact(this);
-            }
-
-            if ((Flags & ContactFlag.NonSolidFlag) == 0)
-            {
-                listener.PreSolve(this, oldManifold);
-
-                // The user may have disabled contact.
-                if (Manifold.PointCount == 0)
-                {
-                    Flags &= ~ContactFlag.TouchFlag;
-                }
-            }
         }
 
         public abstract void Evaluate();

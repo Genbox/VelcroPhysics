@@ -198,12 +198,6 @@ namespace Box2DX.Dynamics
 		/// <returns></returns>
 		public Body CreateBody(BodyDef def)
 		{
-			Box2DXDebug.Assert(_lock == false);
-			if (_lock == true)
-			{
-				return null;
-			}
-
 			Body b = new Body(def, this);
 
 			// Add to world doubly linked list.
@@ -229,13 +223,8 @@ namespace Box2DX.Dynamics
 		public void DestroyBody(Body b)
 		{
 			Box2DXDebug.Assert(_bodyCount > 0);
-			Box2DXDebug.Assert(_lock == false);
-			if (_lock == true)
-			{
-				return;
-			}
-
-			// Delete the attached joints.
+			
+            // Delete the attached joints.
 			JointEdge jn = null;
 			if (b._jointList != null)
 				jn = b._jointList;
@@ -309,8 +298,6 @@ namespace Box2DX.Dynamics
 		/// <returns></returns>
 		public Joint CreateJoint(JointDef def)
 		{
-			Box2DXDebug.Assert(_lock == false);
-
 			Joint j = Joint.Create(def);
 
 			// Connect to the world list.
@@ -361,8 +348,6 @@ namespace Box2DX.Dynamics
 		/// <param name="j"></param>
 		public void DestroyJoint(Joint j)
 		{
-			Box2DXDebug.Assert(_lock == false);
-
 			bool collideConnected = j._collideConnected;
 
 			// Remove from the doubly linked list.
@@ -515,7 +500,6 @@ namespace Box2DX.Dynamics
 		/// </summary>		
 		public void Refilter(Fixture fixture)
 		{
-			Box2DXDebug.Assert(_lock == false);
             fixture.RefilterProxy(_broadPhase, fixture.GetBody().GetXForm());
 		}
 
@@ -771,7 +755,7 @@ namespace Box2DX.Dynamics
 						for (ContactEdge cn = b._contactList; cn != null; cn = cn.Next)
 						{
 							// Has this contact already been added to an island?
-                            if ((int)(cn.Contact.Flags & (ContactFlag.IslandFlag | ContactFlag.NonSolidFlag)) != 0)
+                            if ((int)(cn.Contact.Flags & (ContactFlag.IslandFlag | ContactFlag.NonSolidFlag | ContactFlag.InvalidFlag | ContactFlag.DestroyFlag)) != 0)
 							{
 								continue;
 							}
@@ -911,7 +895,7 @@ namespace Box2DX.Dynamics
 
 		        for (Contact c = _contactList; c != null; c = c.Next)
 		        {
-			        if ((int)(c.Flags & (ContactFlag.SlowFlag | ContactFlag.NonSolidFlag)) != 0)
+                    if ((int)(c.Flags & (ContactFlag.SlowFlag | ContactFlag.NonSolidFlag | ContactFlag.InvalidFlag | ContactFlag.DestroyFlag)) != 0)
 			        {
 				        continue;
 			        }
@@ -994,8 +978,18 @@ namespace Box2DX.Dynamics
 		        b4.Advance(minTOI);
 
 		        // The TOI contact likely has some new contact points.
-		        minContact.Update(_contactListener);
+		        bool destroyed = _contactManager.Update(minContact);
+                if (destroyed)
+                    continue;
+
 		        minContact.Flags &= ~ContactFlag.ToiFlag;
+
+                // Check if some flags have changed in the user callback
+		        // Any of these mean we should now ignore the collision
+		        if ((minContact.Flags & (ContactFlag.SlowFlag | ContactFlag.NonSolidFlag | ContactFlag.InvalidFlag | ContactFlag.DestroyFlag)) != 0)
+		        {
+			        continue;
+		        }
 
 		        if ((int)(minContact.Flags & ContactFlag.TouchFlag) == 0)
 		        {
@@ -1010,6 +1004,10 @@ namespace Box2DX.Dynamics
 		        {
 			        seed = b4;
 		        }
+                if (seed.IsStatic())
+                {
+                    continue;
+                }
 
 		        // Reset island and queue.
 		        island.Clear();
@@ -1217,6 +1215,12 @@ namespace Box2DX.Dynamics
 						_debugDraw.DrawSegment(s1, s2, color);
 					}
 					break;
+
+                case JointType.FixedJoint:
+                    {
+                        _debugDraw.DrawSegment(p1, p2, color);
+                    }
+                    break;
 
 				case JointType.MouseJoint:
 					// don't draw this

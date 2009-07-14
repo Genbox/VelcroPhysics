@@ -90,6 +90,7 @@
     <Compile Include="Dynamics\Fixture.cs" />
     <Compile Include="Dynamics\Island.cs" />
     <Compile Include="Dynamics\Joints\DistanceJoint.cs" />
+    <Compile Include="Dynamics\Joints\FixedJoint.cs" />
     <Compile Include="Dynamics\Joints\GearJoint.cs" />
     <Compile Include="Dynamics\Joints\Joint.cs" />
     <Compile Include="Dynamics\Joints\LineJoint.cs" />

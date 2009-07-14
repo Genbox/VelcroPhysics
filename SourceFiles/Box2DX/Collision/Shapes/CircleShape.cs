@@ -136,7 +136,6 @@ namespace Box2DX.Collision
             //Magic
             float r2 = Radius * Radius;
             float l2 = l * l;
-            //TODO: write b2Sqrt to handle fixed point case.
             float area = r2 * ((float)System.Math.Asin(l / Radius) + Settings.Pi / 2) + l * Math.Sqrt(r2 - l2);
             float com = -2.0f / 3.0f * (float)System.Math.Pow(r2 - l2, 1.5f) / area;
 
