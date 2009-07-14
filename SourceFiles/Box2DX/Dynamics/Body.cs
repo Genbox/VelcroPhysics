@@ -187,8 +187,6 @@ namespace Box2DX.Dynamics
 
         internal Body(BodyDef bd, World world)
         {
-            Box2DXDebug.Assert(world._lock == false);
-
             _flags = 0;
 
             if (bd.IsBullet)
@@ -273,7 +271,6 @@ namespace Box2DX.Dynamics
 
         public void Dispose()
         {
-            Box2DXDebug.Assert(_world._lock == false);
             // shapes and joints are destroyed in World.Destroy
         }
 
@@ -282,12 +279,6 @@ namespace Box2DX.Dynamics
         /// @warning This function is locked during callbacks.
         public Fixture CreateFixture(FixtureDef def)
         {
-            Box2DXDebug.Assert(_world._lock == false);
-            if (_world._lock == true)
-            {
-                return null;
-            }
-
             BroadPhase broadPhase = _world._broadPhase;
 
             Fixture fixture = new Fixture();
@@ -309,12 +300,6 @@ namespace Box2DX.Dynamics
         /// @warning This function is locked during callbacks.
         public void DestroyFixture(ref Fixture fixture)
         {
-            Box2DXDebug.Assert(_world._lock == false);
-            if (_world._lock == true)
-            {
-                return;
-            }
-
             Box2DXDebug.Assert(fixture.Body == this);
 
             // Remove the fixture from this body's singly linked list.
@@ -355,12 +340,6 @@ namespace Box2DX.Dynamics
         /// <param name="massData"></param>
         public void SetMass(MassData massData)
         {
-            Box2DXDebug.Assert(_world._lock == false);
-            if (_world._lock == true)
-            {
-                return;
-            }
-
             _invMass = 0.0f;
             _I = 0.0f;
             _invI = 0.0f;
@@ -411,12 +390,6 @@ namespace Box2DX.Dynamics
         /// </summary>
         public void SetMassFromShapes()
         {
-            Box2DXDebug.Assert(_world._lock == false);
-            if (_world._lock == true)
-            {
-                return;
-            }
-
             // Compute mass data from shapes. Each shape has its own density.
             _mass = 0.0f;
             _invMass = 0.0f;
@@ -488,12 +461,6 @@ namespace Box2DX.Dynamics
         /// body is automatically frozen.</returns>
         public bool SetXForm(Vec2 position, float angle)
         {
-            Box2DXDebug.Assert(_world._lock == false);
-            if (_world._lock == true)
-            {
-                return true;
-            }
-
             if (IsFrozen())
             {
                 return false;

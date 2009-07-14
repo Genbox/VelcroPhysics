@@ -32,7 +32,8 @@ namespace Box2DX.Dynamics
 		PulleyJoint,
 		MouseJoint,
 		GearJoint,
-		LineJoint
+		LineJoint,
+        FixedJoint
 	}
 
 	public enum LimitState
@@ -284,6 +285,11 @@ namespace Box2DX.Dynamics
 						joint = new LineJoint((LineJointDef)def);
 					}
 					break;
+                case JointType.FixedJoint:
+                    {
+                        joint = new FixedJoint((FixedJointDef)def);
+                    }
+                    break;
 				default:
 					Box2DXDebug.Assert(false);
 					break;

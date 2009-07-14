@@ -39,6 +39,8 @@ namespace Box2DX.Dynamics
 		// contacts that shouldn't exist.
 		public NullContact _nullContact;
 
+        public Contact _nextContact;
+
 		public bool _destroyImmediate;
 
 		public ContactManager()
@@ -213,8 +215,27 @@ namespace Box2DX.Dynamics
                 body2._contactList = c.NodeB.Next;
 			}
 
+            if (_nextContact == c)
+            {
+                _nextContact = c.GetNext();
+            }
 			// Call the factory.
-			Contact.Destroy(c);
+            if ((c.Flags & ContactFlag.LockedFlag) != 0)
+	        {
+		        // We cannot destroy the current contact - it's being worked on.
+		        // Instead mark it for deferred destruction.
+		        // Collide() will handle calling Destroy slightly later
+		        c.Flags |= ContactFlag.DestroyFlag;
+
+		        // Also do some cleaning up so that people don't accidentally do stupid things.
+                // TODO: Is this necessary or wise?
+		        //c->m_fixtureA = NULL;
+		        //c->m_fixtureB = NULL;
+		        c.Next = null;
+		        c.Prev = null;
+	        } else {
+			    Contact.Destroy(c);
+            }
 			--_world._contactCount;
 		}
 
@@ -224,8 +245,13 @@ namespace Box2DX.Dynamics
 		public void Collide()
 		{
 			// Update awake contacts.
-			for (Contact c = _world._contactList; c != null; c = c.GetNext())
+            // Note the use of a accessible iterator, m_nextContact, this can be updated elsewhere
+            // should that contact get deleted inside the call to m_nextContact
+            _nextContact = _world._contactList;
+			while(_nextContact != null)
 			{
+                Contact c = _nextContact;
+                _nextContact = _nextContact.Next;
 				Body body1 = c.GetFixtureA().GetBody();
 				Body body2 = c.GetFixtureB().GetBody();
 				if (body1.IsSleeping() && body2.IsSleeping())
@@ -233,8 +259,104 @@ namespace Box2DX.Dynamics
 					continue;
 				}
 
-				c.Update(_world._contactListener);
+				Update(c);
 			}
+            _nextContact = null;
 		}
+
+        public bool Update(Contact contact)
+        {
+            ContactListener listener = _world._contactListener;
+
+            Body bodyA = contact._fixtureA.GetBody();
+            Body bodyB = contact._fixtureB.GetBody();
+
+            ShapeType shapeAType = contact._fixtureA.GetShapeType();
+            ShapeType shapeBType = contact._fixtureB.GetShapeType();
+
+            Manifold oldManifold = contact.Manifold;
+
+            uint oldLock = (uint)(contact.Flags & ContactFlag.LockedFlag);
+
+            contact.Flags |= ContactFlag.LockedFlag;
+
+            contact.Evaluate();
+
+            contact.Flags &= ~ContactFlag.LockedFlag;
+
+            if ((contact.Flags & ContactFlag.DestroyFlag) != 0)
+            {
+                Contact.Destroy(contact, shapeAType, shapeBType);
+                return true;
+            }
+
+            if (!(oldLock > 0))
+                contact.Flags &= ~ContactFlag.LockedFlag;
+
+            int oldCount = oldManifold.PointCount;
+            int newCount = contact.Manifold.PointCount;
+
+            if (newCount == 0 && oldCount > 0)
+            {
+                bodyA.WakeUp();
+                bodyB.WakeUp();
+            }
+
+            // Slow contacts don't generate TOI events.
+            if (bodyA.IsStatic() || bodyA.IsBullet() || bodyB.IsStatic() || bodyB.IsBullet())
+            {
+                contact.Flags &= ~ContactFlag.SlowFlag;
+            }
+            else
+            {
+                contact.Flags |= ContactFlag.SlowFlag;
+            }
+
+            // Match old contact ids to new contact ids and copy the
+            // stored impulses to warm start the solver.
+            for (int i = 0; i < contact.Manifold.PointCount; ++i)
+            {
+                ManifoldPoint mp2 = contact.Manifold.Points[i];
+                mp2.NormalImpulse = 0.0f;
+                mp2.TangentImpulse = 0.0f;
+                ContactID id2 = mp2.ID;
+
+                for (int j = 0; j < oldManifold.PointCount; ++j)
+                {
+                    ManifoldPoint mp1 = oldManifold.Points[j];
+
+                    if (mp1.ID.Key == id2.Key)
+                    {
+                        mp2.NormalImpulse = mp1.NormalImpulse;
+                        mp2.TangentImpulse = mp1.TangentImpulse;
+                        break;
+                    }
+                }
+            }
+
+            if (oldCount == 0 && newCount > 0)
+            {
+                contact.Flags |= ContactFlag.TouchFlag;
+                listener.BeginContact(contact);
+            }
+
+            if (oldCount > 0 && newCount == 0)
+            {
+                contact.Flags &= ~ContactFlag.TouchFlag;
+                listener.EndContact(contact);
+            }
+
+            if ((contact.Flags & ContactFlag.NonSolidFlag) == 0)
+            {
+                listener.PreSolve(contact, oldManifold);
+
+                // The user may have disabled contact.
+                if (contact.Manifold.PointCount == 0)
+                {
+                    contact.Flags &= ~ContactFlag.TouchFlag;
+                }
+            }
+            return false;
+        }
 	}
 }
