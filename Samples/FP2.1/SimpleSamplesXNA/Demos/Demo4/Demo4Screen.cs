@@ -17,7 +17,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo4
 #if XBOX
         private const int _pyramidBaseBodyCount = 8;
 #else
-        private const int _pyramidBaseBodyCount = 10;
+        private const int _pyramidBaseBodyCount = 16;
 #endif
         private Agent _agent;
         private Pyramid _pyramid;
@@ -28,10 +28,9 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo4
         public override void Initialize()
         {
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 50));
-            PhysicsSimulator.NarrowPhaseCollider = NarrowPhaseCollider.SAT;
-            PhysicsSimulator.BiasFactor = .3f;
+            PhysicsSimulator.BiasFactor = .2f;
             //for stacked objects, simultaneous collision are the bottlenecks so limit them to 2 per geometric pair.
-            PhysicsSimulator.MaxContactsToDetect = 4;
+            PhysicsSimulator.MaxContactsToDetect = 2;
 
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
             PhysicsSimulatorView.EnableEdgeView = false;
@@ -41,24 +40,24 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo4
 
         public override void LoadContent()
         {
-            _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 50, 50, 2, 0, 0,
+            _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 32, 32, 2, 0, 0,
                                                                      Color.White, Color.Black);
 
-            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(50, 50, 1.0f); //template  
-            _rectangleGeom = GeomFactory.Instance.CreatePolygonGeom(_rectangleBody, Vertices.CreateSimpleRectangle(50, 50), 1);
-            //_rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_rectangleBody, 32, 32); //template
-            _rectangleGeom.FrictionCoefficient = 0.5f;
-            _rectangleGeom.RestitutionCoefficient = 0.0f;
+            _rectangleBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 1f); //template              
+            _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_rectangleBody, 32, 32); //template
+            _rectangleGeom.FrictionCoefficient = .4f;
+            _rectangleGeom.RestitutionCoefficient = 0f;
+
 
             //create the pyramid near the bottom of the screen.
-            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 50f / 10f, 50f / 10f, 50, 50, _pyramidBaseBodyCount,
-                                   new Vector2(ScreenManager.ScreenCenter.X - _pyramidBaseBodyCount * .5f * (50 + 50 / 3),
+            _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 3f, 32f / 3f, 32, 32, _pyramidBaseBodyCount,
+                                   new Vector2(ScreenManager.ScreenCenter.X - _pyramidBaseBodyCount * .5f * (32 + 32 / 3),
                                                ScreenManager.ScreenHeight - 60));
 
             _pyramid.Load(PhysicsSimulator);
 
-            //_agent = new Agent(ScreenManager.ScreenCenter - new Vector2(320, 200));
-            ////_agent.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
+            _agent = new Agent(ScreenManager.ScreenCenter - new Vector2(320, 200));
+            _agent.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             base.LoadContent();
         }
@@ -67,7 +66,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo4
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             _pyramid.Draw(ScreenManager.SpriteBatch, _rectangleTexture);
-            //_agent.Draw(ScreenManager.SpriteBatch);
+            _agent.Draw(ScreenManager.SpriteBatch);
 
             ScreenManager.SpriteBatch.End();
 
@@ -103,13 +102,13 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo4
         {
             Vector2 force = 1000 * input.CurrentGamePadState.ThumbSticks.Left;
             force.Y = -force.Y;
-            //_agent.ApplyForce(force);
+            _agent.ApplyForce(force);
 
             float rotation = -14000 * input.CurrentGamePadState.Triggers.Left;
-            //_agent.ApplyTorque(rotation);
+            _agent.ApplyTorque(rotation);
 
             rotation = 14000 * input.CurrentGamePadState.Triggers.Right;
-            //_agent.ApplyTorque(rotation);
+            _agent.ApplyTorque(rotation);
         }
 
         private void HandleKeyboardInput(InputState input)
@@ -123,7 +122,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo4
             if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { force += new Vector2(forceAmount, 0); }
             if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, -forceAmount); }
 
-            //_agent.ApplyForce(force);
+            _agent.ApplyForce(force);
 
             const float torqueAmount = 14000;
             float torque = 0;
@@ -131,7 +130,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo4
             if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque -= torqueAmount; }
             if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque += torqueAmount; }
 
-            //_agent.ApplyTorque(torque);
+            _agent.ApplyTorque(torque);
         }
 
         public static string GetTitle()
