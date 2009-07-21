@@ -1,21 +1,23 @@
-using System;
-using System.Text;
-using System.Collections.Generic;
-using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
+﻿using System.Text;
+using DemoBaseXNA;
+using DemoBaseXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
+using FarseerGames.FarseerPhysics.Factories;
+using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Collisions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
+namespace FarseerGames.AdvancedSamplesXNA.Demo10
 {
     public class Demo10Screen : GameScreen
     {
-        private List<Splat> splats;
+        Body bodyA, bodyB;
+        Geom geomA, geomB;
 
         public override void Initialize()
         {
-            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
+            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 150));
 
             // Use the SAT narrow phase collider
             PhysicsSimulator.NarrowPhaseCollider = NarrowPhaseCollider.SAT;
@@ -25,34 +27,39 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
             PhysicsSimulatorView.EnableEdgeView = true;
             PhysicsSimulatorView.EnableAABBView = false;
 
-            // initalize a list of splats
-            splats = new List<Splat>();
+            Vertices polygon = new Vertices();
+
+            polygon.Add(new Vector2(-50, -50));
+            polygon.Add(new Vector2(0, -75));
+            polygon.Add(new Vector2(50, -50));
+            polygon.Add(new Vector2(25, 50));
+            polygon.Add(new Vector2(-25, 50));
+
+            bodyA = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 10, 10, 10);
+            bodyB = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 10, 10, 10);
+
+            geomA = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, bodyA,
+                                                           polygon, 1);
+            geomA.FrictionCoefficient = 1f;
+            geomA.RestitutionCoefficient = 0f;
+
+            geomB = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, bodyB,
+                                                           Vertices.CreateSimpleRectangle(100, 100), 1);
+            geomB.FrictionCoefficient = 0f;
+            geomB.RestitutionCoefficient = 0.9f;
+
+            bodyA.Position = new Vector2(400, 300);
+            bodyA.Rotation = 0;
+            bodyA.MomentOfInertia = 5000;
+            bodyB.Position = new Vector2(400, 300);
+            bodyB.MomentOfInertia = 5000;
 
             base.Initialize();
-        }
-
-        public override void LoadContent()
-        {
-            Random rand = new Random();
-
-            for (int i = 0; i < 6; i++)
-            {
-                Splat splat = new Splat(PhysicsSimulator, new Vector2(rand.Next(150, 950), rand.Next(150, 500)));
-                splat.Load(ScreenManager.ContentManager);
-                splats.Add(splat);
-            }
-
-            base.LoadContent();
         }
 
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-
-            foreach (Splat s in splats)
-            {
-                s.Draw(ScreenManager.SpriteBatch);
-            }
 
             ScreenManager.SpriteBatch.End();
 
@@ -64,12 +71,12 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
         {
             if (firstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
                 firstRun = false;
             }
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
             }
             base.HandleInput(input);
         }
@@ -79,7 +86,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo10
             return "Demo10: Auto-divide geometry with SAT";
         }
 
-        public static string GetDetails()
+        private static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows how to use the");

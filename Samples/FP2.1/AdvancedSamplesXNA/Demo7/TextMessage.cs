@@ -1,4 +1,4 @@
-﻿namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
+﻿namespace FarseerGames.AdvancedSamplesXNA.Demo7
 {
     public class TextMessage
     {
@@ -10,12 +10,5 @@
             Text = text;
             ElapsedTime = 0;
         }
-
-        public TextMessage(string text, float time)
-        {
-            Text = text;
-            ElapsedTime = time;
-        }
     }
-
 }

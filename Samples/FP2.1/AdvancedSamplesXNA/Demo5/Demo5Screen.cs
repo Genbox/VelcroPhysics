@@ -1,6 +1,7 @@
 using System.Text;
-using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
-using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
+using DemoBaseXNA;
+using DemoBaseXNA.DrawingSystem;
+using DemoBaseXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
@@ -10,9 +11,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo6
+namespace FarseerGames.AdvancedSamplesXNA.Demo5
 {
-    public class Demo6Screen : GameScreen
+    public class Demo5Screen : GameScreen
     {
         private Texture2D _chainTexture;
         private Texture2D _wheelTexture;
@@ -26,7 +27,6 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo6
         private LinearSpring _spring;
 
         private GenericList<Body> _obstacles;
-        private GenericList<Geom> _obstaclesg;
         private Texture2D _obstaclesTexture;
         private Vector2 _obstaclesOrigin;
 
@@ -44,7 +44,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo6
                                                                  Color.Black);
 
             _obstaclesTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 40, 40, Color.Brown,
-                                                                 Color.Black);
+                                                                     Color.Black);
 
             _wheelTexture = DrawingHelper.CreateCircleTexture(ScreenManager.GraphicsDevice, 45, 2, Color.White, Color.Black);
 
@@ -84,7 +84,6 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo6
             _spring.RestLength += 20;
 
             _obstacles = new GenericList<Body>();
-            _obstaclesg = new GenericList<Geom>();
 
             base.LoadContent();
         }
@@ -115,12 +114,12 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo6
         {
             if (firstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
                 firstRun = false;
             }
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
             }
 
             // do some keyboard torque stuff
@@ -146,10 +145,10 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo6
 
         public static string GetTitle()
         {
-            return "Demo6: Path factory";
+            return "Demo5: Path factory";
         }
 
-        public static string GetDetails()
+        private static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows how to use the Path");

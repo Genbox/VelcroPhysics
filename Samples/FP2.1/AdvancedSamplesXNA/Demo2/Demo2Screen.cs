@@ -1,15 +1,18 @@
 using System.Collections.Generic;
 using System.Text;
-using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
+using DemoBaseXNA;
+using DemoBaseXNA.DemoShare;
+using DemoBaseXNA.DrawingSystem;
+using DemoBaseXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo3
+namespace FarseerGames.AdvancedSamplesXNA.Demo2
 {
-    public class Demo3Screen : GameScreen
+    public class Demo2Screen : GameScreen
     {
         private List<Box> _boxes = new List<Box>();
         private Texture2D _texture;
@@ -36,7 +39,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo3
 
         public override void LoadContent()
         {
-            _texture = DrawingSystem.DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 25, 25, Color.White, Color.Black);
+            _texture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 25, 25, Color.White, Color.Black);
 
             //Create 5x13 boxes
             for (int y = 1; y < 6; y++)
@@ -94,13 +97,13 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo3
         {
             if (firstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
                 firstRun = false;
             }
 
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
             }
 
             HandleMouseInput(input);
@@ -119,10 +122,10 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo3
 
         public static string GetTitle()
         {
-            return "Demo3: Inactivity Controller";
+            return "Demo2: Inactivity Controller";
         }
 
-        public static string GetDetails()
+        private static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Shows the usage of Inactivity Controller.");

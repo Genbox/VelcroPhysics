@@ -5,7 +5,7 @@ using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo2
+namespace DemoBaseXNA.DemoShare
 {
     public class Ball
     {

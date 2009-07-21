@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using System.Text;
-using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
-using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
+using DemoBaseXNA;
+using DemoBaseXNA.DemoShare;
+using DemoBaseXNA.DrawingSystem;
+using DemoBaseXNA.ScreenSystem;
+using FarseerGames.AdvancedSamplesXNA.Demos.Demo7;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
@@ -10,9 +13,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo7
+namespace FarseerGames.AdvancedSamplesXNA.Demo6
 {
-    public class Demo7Screen : GameScreen
+    public class Demo6Screen : GameScreen
     {
         private Pyramid _pyramid;
         private Texture2D _rectangleTexture;
@@ -39,7 +42,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo7
             _grenadeTexture = ScreenManager.ContentManager.Load<Texture2D>("Content/Grenade");
 
             _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 32, 32, 2, 0, 0,
-                                                         Color.White, Color.Black);
+                                                                     Color.White, Color.Black);
 
             _rectangleBody = BodyFactory.Instance.CreateRectangleBody(32, 32, 1f);
             _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(_rectangleBody, 32, 32);
@@ -47,8 +50,8 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo7
             _rectangleGeom.RestitutionCoefficient = 0.0f;
 
             _pyramid = new Pyramid(_rectangleBody, _rectangleGeom, 32f / 5f, 32f / 5f, 32, 32, pyramidBaseBodyCount,
-                       new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount * .5f * (32 + 32 / 3),
-                                   ScreenManager.ScreenHeight - 125));
+                                   new Vector2(ScreenManager.ScreenCenter.X - pyramidBaseBodyCount * .5f * (32 + 32 / 3),
+                                               ScreenManager.ScreenHeight - 125));
 
             _pyramid.Load(PhysicsSimulator);
 
@@ -90,12 +93,12 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo7
         {
             if (firstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
                 firstRun = false;
             }
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
             }
             else
             {
@@ -135,10 +138,10 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo7
 
         public static string GetTitle()
         {
-            return "Demo7: Wind and explosions";
+            return "Demo6: Wind and explosions";
         }
 
-        public static string GetDetails()
+        private static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Demonstrates forces like");

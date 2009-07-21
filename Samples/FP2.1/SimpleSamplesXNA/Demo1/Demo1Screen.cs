@@ -1,15 +1,15 @@
 using System.Text;
+using DemoBaseXNA;
+using DemoBaseXNA.DrawingSystem;
+using DemoBaseXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
-using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.SimpleSamplesXNA.DrawingSystem;
-using FarseerGames.SimpleSamplesXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.SimpleSamplesXNA.Demos.Demo1
+namespace FarseerGames.SimpleSamplesXNA.Demo1
 {
     public class Demo1Screen : GameScreen
     {
@@ -50,13 +50,13 @@ namespace FarseerGames.SimpleSamplesXNA.Demos.Demo1
         {
             if (firstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
                 firstRun = false;
             }
 
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
             }
 
             if (input.CurrentGamePadState.IsConnected)

@@ -1,7 +1,7 @@
-using System.Collections.Generic;
 using System.Text;
-using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
-using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
+using DemoBaseXNA;
+using DemoBaseXNA.DrawingSystem;
+using DemoBaseXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
@@ -10,9 +10,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo4
+namespace FarseerGames.AdvancedSamplesXNA.Demo3
 {
-    public class Demo4Screen : GameScreen
+    public class Demo3Screen : GameScreen
     {
         private Texture2D _polygonTexture;
         private Vector2 _polygonOrigin;
@@ -69,7 +69,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo4
             ScreenManager.SpriteBatch.Draw(_polygonTexture, _polygonBody.Position, null, Color.White,
                                            _polygonBody.Rotation, _polygonOrigin, 1, SpriteEffects.None, 0);
             ScreenManager.SpriteBatch.Draw(_circleTexture, _circleBody.Position, null, Color.White,
-                               _circleBody.Rotation, _circleOrigin, 1, SpriteEffects.None, 0);
+                                           _circleBody.Rotation, _circleOrigin, 1, SpriteEffects.None, 0);
 
             ScreenManager.SpriteBatch.End();
 
@@ -80,12 +80,12 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo4
         {
             if (firstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
                 firstRun = false;
             }
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
             }
             else
             {
@@ -133,10 +133,10 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo4
 
         public static string GetTitle()
         {
-            return "Demo4: Map vertices from textures";
+            return "Demo3: Map vertices from textures";
         }
 
-        public static string GetDetails()
+        private static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows how to map vertices from a texture");

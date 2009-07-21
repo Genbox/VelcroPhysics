@@ -53,7 +53,7 @@ namespace DemoBaseXNA.ScreenSystem
 
         public PhysicsSimulatorView PhysicsSimulatorView { get; set; }
 
-        public bool DebugViewEnabled { get; private set; }
+        public bool DebugViewEnabled { get; set; }
 
         /// <summary>
         /// Normally when one screen is brought up over the top of another,
