@@ -1,15 +1,16 @@
 using System.Text;
-using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
-using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
+using DemoBaseXNA;
+using DemoBaseXNA.DrawingSystem;
+using DemoBaseXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo5
+namespace FarseerGames.AdvancedSamplesXNA.Demo4
 {
-    public class Demo5Screen : GameScreen
+    public class Demo4Screen : GameScreen
     {
         private Texture2D _chainTexture;
         private Vector2 _chainOrigin;
@@ -99,12 +100,12 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo5
         {
             if (firstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
                 firstRun = false;
             }
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
             }
 
             base.HandleInput(input);
@@ -112,10 +113,10 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo5
 
         public static string GetTitle()
         {
-            return "Demo5: Chains factory";
+            return "Demo4: Chains factory";
         }
 
-        public static string GetDetails()
+        private static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows how to use the chain");

@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
-using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
+using DemoBaseXNA;
+using DemoBaseXNA.DemoShare;
+using DemoBaseXNA.DrawingSystem;
+using DemoBaseXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Mathematics;
@@ -10,9 +12,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo2
+namespace FarseerGames.AdvancedSamplesXNA.Demo1
 {
-    public class Demo2Screen : GameScreen
+    public class Demo1Screen : GameScreen
     {
         private Pool<Ball> _pool;
         private static bool _usePool;
@@ -25,7 +27,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo2
         private Vector2 _panelPosition = new Vector2(80, 130);
         private const int _maxBalls = 120;
 
-        public Demo2Screen(bool usePool)
+        public Demo1Screen(bool usePool)
         {
             _usePool = usePool;
         }
@@ -41,7 +43,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo2
             base.Initialize();
         }
 
-        public void LoadPool()
+        private void LoadPool()
         {
             //Create the empty pool
             _pool = new Pool<Ball>();
@@ -96,7 +98,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo2
                         Ball ball = new Ball();
                         ball.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
                         ball.Body.Position = new Vector2(Calculator.RandomNumber(50, ScreenManager.ScreenWidth - 50),
-                                     Calculator.RandomNumber(50, ScreenManager.ScreenHeight - 50));
+                                                         Calculator.RandomNumber(50, ScreenManager.ScreenHeight - 50));
                         ball.Geom.OnCollision += OnCollision;
                         ball.Geom.Tag = ball;
                         _ballsToDraw.Add(ball);
@@ -162,13 +164,13 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo2
         {
             if (firstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
                 firstRun = false;
             }
 
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
             }
 
             HandleKeyboardInput(input);
@@ -180,16 +182,16 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo2
             if (input.LastKeyboardState.IsKeyUp(Keys.R) && input.CurrentKeyboardState.IsKeyDown(Keys.R))
             {
                 ExitScreen();
-                ScreenManager.AddScreen(new Demo2Screen(!_usePool));
+                ScreenManager.AddScreen(new Demo1Screen(!_usePool));
             }
         }
 
         public static string GetTitle()
         {
-            return "Demo2: Object pre-loading/caching";
+            return "Demo1: Object pre-loading/caching";
         }
 
-        public static string GetDetails()
+        private static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Shows the performance improvement using pools.");

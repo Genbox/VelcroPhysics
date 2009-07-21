@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Text;
-using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
-using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
+using DemoBaseXNA;
+using DemoBaseXNA.DrawingSystem;
+using DemoBaseXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
@@ -10,9 +11,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
+namespace FarseerGames.AdvancedSamplesXNA.Demo7
 {
-    public class Demo8Screen : GameScreen
+    public class Demo7Screen : GameScreen
     {
         private List<TextMessage> _messages;
         private Geom _leftGeom;
@@ -84,29 +85,29 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
             for (int i = _messages.Count - 1; i >= 0; i--)
             {
                 ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, _messages[i].Text,
-                                       new Vector2(50, 100 + (_messages.Count - 1 - i) * ScreenManager.SpriteFonts.DetailsFont.LineSpacing), Color.White);
+                                                     new Vector2(50, 100 + (_messages.Count - 1 - i) * ScreenManager.SpriteFonts.DetailsFont.LineSpacing), Color.White);
             }
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "A,S,D = Create Rectangle",
-                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 7), Color.White);
+                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 7), Color.White);
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Q,W,E = Create Circle",
-                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 6), Color.White);
+                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 6), Color.White);
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Click to Drag polygons",
-                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 5), Color.White);
+                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 5), Color.White);
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Space = Union",
-                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 4), Color.White);
+                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 4), Color.White);
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Backspace = Subtract",
-                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 3), Color.White);
+                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 3), Color.White);
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Tab = Simplify",
-                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 2), Color.White);
+                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing * 2), Color.White);
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, "Enter = Add to Simulation",
-                                     new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing), Color.White);
+                                                 new Vector2(50, ScreenManager.ScreenHeight - 50 - ScreenManager.SpriteFonts.DetailsFont.LineSpacing), Color.White);
 
             ScreenManager.SpriteBatch.End();
 
@@ -117,12 +118,12 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
         {
             if (firstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
                 firstRun = false;
             }
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
             }
             else
             {
@@ -439,10 +440,10 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo8
 
         public static string GetTitle()
         {
-            return "Demo8: Polygon subtraction";
+            return "Demo7: Polygon subtraction";
         }
 
-        public static string GetDetails()
+        private static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Shows how you can use the");

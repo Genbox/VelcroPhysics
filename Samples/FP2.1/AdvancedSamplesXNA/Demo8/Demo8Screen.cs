@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using FarseerGames.AdvancedSamplesXNA.DrawingSystem;
-using FarseerGames.AdvancedSamplesXNA.ScreenSystem;
+using DemoBaseXNA;
+using DemoBaseXNA.DrawingSystem;
+using DemoBaseXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
@@ -9,16 +10,15 @@ using FarseerGames.FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo9
+namespace FarseerGames.AdvancedSamplesXNA.Demo8
 {
-    public class Demo9Screen : GameScreen
+    public class Demo8Screen : GameScreen
     {
         private Body _circleBody;
         private Geom _circleGeom;
         private CircleBrush _circleBrush;
 
         private Body _rectangleBody;
-        private Geom _rectangleGeom;
         private RectangleBrush _rectangleBrush;
 
         private Vector2 _p1;
@@ -49,7 +49,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo9
 
             _rectangleBody = BodyFactory.Instance.CreateRectangleBody(PhysicsSimulator, 128, 128, 1);
             _rectangleBody.Position = new Vector2(256, 384);
-            _rectangleGeom = GeomFactory.Instance.CreateRectangleGeom(PhysicsSimulator, _rectangleBody, 128, 128);
+            GeomFactory.Instance.CreateRectangleGeom(PhysicsSimulator, _rectangleBody, 128, 128);
 
             _rectangleBrush = new RectangleBrush(128, 128, Color.Gold, Color.Black);
             _rectangleBrush.Load(ScreenManager.GraphicsDevice);
@@ -105,13 +105,13 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo9
         {
             if (firstRun)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
                 firstRun = false;
             }
 
             if (input.PauseGame)
             {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
             }
 
             if (input.CurrentGamePadState.IsConnected)
@@ -138,10 +138,10 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo9
 
         public static string GetTitle()
         {
-            return "Demo9: Line intersections";
+            return "Demo8: Line intersections";
         }
 
-        public static string GetDetails()
+        private static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows two bodies and how they");
