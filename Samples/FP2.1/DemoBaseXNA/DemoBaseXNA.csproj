@@ -1,26 +1,21 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
-    <ProjectGuid>{F7E1D8C1-5AB0-42A9-9AFE-8F3EEEBF1307}</ProjectGuid>
+    <ProjectGuid>{747459A4-53B2-494E-AE37-94D1A3F10669}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FarseerGames.SimpleSamplesXNA</RootNamespace>
-    <AssemblyName>SimpleSamplesXNA</AssemblyName>
+    <RootNamespace>DemoBaseXNA</RootNamespace>
+    <AssemblyName>DemoBaseXNA</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaCrossPlatformGroupID>d85ac275-347b-4cc4-9543-7f1a7d01772c</XnaCrossPlatformGroupID>
-    <ApplicationIcon>Game.ico</ApplicationIcon>
-    <Thumbnail>GameThumbnail.png</Thumbnail>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <XnaCrossPlatformGroupID>06dd4ebe-5869-4f53-aa8c-225842d42609</XnaCrossPlatformGroupID>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
-    <TargetFrameworkSubset>
-    </TargetFrameworkSubset>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -33,8 +28,11 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkSubset>
+    </TargetFrameworkSubset>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -62,37 +60,58 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Xna.Framework, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d" />
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d" />
+    <Reference Include="Microsoft.Xna.Framework, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
+      <Private>False</Private>
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Demo10\Demo10Screen.cs" />
-    <Compile Include="Demo1\Demo1Screen.cs" />
-    <Compile Include="Demo2\Demo2Screen.cs" />
-    <Compile Include="Demo3\Demo3Screen.cs" />
-    <Compile Include="Demo4\Demo4Screen.cs" />
-    <Compile Include="Demo5\Demo5Screen.cs" />
-    <Compile Include="Demo6\Demo6Screen.cs" />
-    <Compile Include="Demo7\Demo7Screen.cs" />
-    <Compile Include="Demo8\Demo8Screen.cs" />
-    <Compile Include="Demo9\Demo9Screen.cs" />
-    <Compile Include="FarseerPhysicsGame.cs" />
+    <Compile Include="Components\FramerateCounterComponent.cs" />
+    <Compile Include="DemoShare\Agent.cs" />
+    <Compile Include="DemoShare\AngularSpringLever.cs" />
+    <Compile Include="DemoShare\Border.cs" />
+    <Compile Include="DemoShare\Circles.cs" />
+    <Compile Include="DemoShare\Pyramid.cs" />
+    <Compile Include="DemoShare\Ragdoll.cs" />
+    <Compile Include="DemoShare\RectanglePlatform.cs" />
+    <Compile Include="DemoShare\Spider.cs" />
+    <Compile Include="DemoShare\SpringRectangleRope.cs" />
+    <Compile Include="DemoShare\Table.cs" />
+    <Compile Include="DrawingSystem\CircleBrush.cs" />
+    <Compile Include="DrawingSystem\DrawingHelper.cs" />
+    <Compile Include="DrawingSystem\EllipseBrush.cs" />
+    <Compile Include="DrawingSystem\LineBrush.cs" />
+    <Compile Include="DrawingSystem\PolygonBrush.cs" />
+    <Compile Include="DrawingSystem\RectangleBrush.cs" />
+    <Compile Include="PhysicsSimulatorView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Program.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Game.ico" />
-    <Content Include="GameThumbnail.png" />
+    <Compile Include="ScreenSystem\GameScreen.cs" />
+    <Compile Include="ScreenSystem\InputState.cs" />
+    <Compile Include="ScreenSystem\LogoScreen.cs" />
+    <Compile Include="ScreenSystem\MainMenuScreen.cs" />
+    <Compile Include="ScreenSystem\MenuItem.cs" />
+    <Compile Include="ScreenSystem\MenuScreen.cs" />
+    <Compile Include="ScreenSystem\PauseScreen.cs" />
+    <Compile Include="ScreenSystem\ScreenManager.cs" />
+    <Compile Include="ScreenSystem\SpriteFonts.cs" />
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content\Content.contentproj">
-      <Project>5b17d1ff-b5f3-405f-8d24-1feed62b45a8</Project>
+      <Project>6872e11c-00e7-42f9-8297-07b7d05788f7</Project>
       <Visible>False</Visible>
     </NestedContentProject>
   </ItemGroup>
@@ -137,10 +156,6 @@
     <ProjectReference Include="..\..\..\Branches\FP2.1\XNA3\FarseerPhysicsXNA.csproj">
       <Project>{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}</Project>
       <Name>FarseerPhysicsXNA</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DemoBaseXNA\DemoBaseXNA.csproj">
-      <Project>{747459A4-53B2-494E-AE37-94D1A3F10669}</Project>
-      <Name>DemoBaseXNA</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

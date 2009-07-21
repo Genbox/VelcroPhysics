@@ -34,15 +34,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         public Geom GeometryA;
         public Geom GeometryB;
 
-        public Arbiter()
-        {
-        }
-
-        internal Arbiter(Geom geometry1, Geom geometry2, PhysicsSimulator physicsSimulator)
-        {
-            ConstructArbiter(geometry1, geometry2, physicsSimulator);
-        }
-
         /// <summary>
         /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
