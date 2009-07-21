@@ -46,7 +46,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demo2
             {
                 for (int x = 1; x < 14; x++)
                 {
-                    Box box = new Box(new Vector2(300 + x * 28, 300 + y * 28));
+                    Box box = new Box(25, 25, new Vector2(300 + x * 28, 300 + y * 28));
                     box.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
                     _boxes.Add(box);
                 }
@@ -114,7 +114,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demo2
         {
             if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && input.LastMouseState.LeftButton == ButtonState.Released)
             {
-                Box box = new Box(new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y));
+                Box box = new Box(25, 25, new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y));
                 box.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
                 _boxes.Add(box);
             }

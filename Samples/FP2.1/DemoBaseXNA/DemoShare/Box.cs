@@ -9,66 +9,64 @@ namespace DemoBaseXNA.DemoShare
 {
     public class Box
     {
-        private Body _body;
-        private Geom _geom;
         private Texture2D _texture;
         private Vector2 _origin;
-        private CollisionCategory _collidesWith = CollisionCategory.All;
-        private CollisionCategory _collisionCategory = CollisionCategory.All;
         private Vector2 _position;
-        private const int _width = 25;
-        private const int _height = 25;
+        private int _mass;
 
-        public Box(Vector2 position)
+        public Box(int width, int height, Vector2 position)
         {
+            Width = width;
+            Height = height;
+            CollidesWith = CollisionCategory.All;
+            CollisionCategory = CollisionCategory.All;
             _position = position;
         }
 
-        public Body Body
+        public Box(int width, int height, Vector2 position, int mass)
         {
-            get { return _body; }
+            Width = width;
+            Height = height;
+            CollidesWith = CollisionCategory.All;
+            CollisionCategory = CollisionCategory.All;
+            _position = position;
+            _mass = mass;
         }
 
-        public Geom Geom
-        {
-            get { return _geom; }
-        }
+        public Body Body { get; private set; }
 
-        public CollisionCategory CollisionCategory
-        {
-            get { return _collisionCategory; }
-            set { _collisionCategory = value; }
-        }
+        public Geom Geom { get; private set; }
 
-        public CollisionCategory CollidesWith
-        {
-            get { return _collidesWith; }
-            set { _collidesWith = value; }
-        }
+        public CollisionCategory CollisionCategory { get; set; }
+
+        public CollisionCategory CollidesWith { get; set; }
+
+        public int Width { get; set; }
+
+        public int Height { get; set; }
 
         public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
-            _texture = DrawingSystem.DrawingHelper.CreateRectangleTexture(graphicsDevice, _width, _height, Color.White, Color.Black);
+            _texture = DrawingSystem.DrawingHelper.CreateRectangleTexture(graphicsDevice, Width, Height, Color.White, Color.Black);
             _origin = new Vector2(_texture.Width / 2f, _texture.Height / 2f);
 
-            _body = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, _width, _height, 1);
-            _body.Position = _position;
+            Body = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, Width, Height, 1);
+            Body.Position = _position;
 
             // Enable so that the can idle
             // and set the minimum velocity is 25
-            _body.IsAutoIdle = true;
-            _body.MinimumVelocity = 25;
+            Body.IsAutoIdle = true;
+            Body.MinimumVelocity = 25;
 
-            _geom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _body, _width, _height);
-            //_geom.CollisionGroup = 1;
-            _geom.CollidesWith = _collidesWith;
-            _geom.CollisionCategories = _collisionCategory;
-            _geom.FrictionCoefficient = 1;
+            Geom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, Body, Width, Height);
+            Geom.CollidesWith = CollidesWith;
+            Geom.CollisionCategories = CollisionCategory;
+            Geom.FrictionCoefficient = 1;
         }
 
         public void Draw(SpriteBatch spriteBatch, Color color)
         {
-            spriteBatch.Draw(_texture, _body.Position, null, color, _body.Rotation, _origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(_texture, Body.Position, null, color, Body.Rotation, _origin, 1f, SpriteEffects.None, 0f);
         }
     }
 }
