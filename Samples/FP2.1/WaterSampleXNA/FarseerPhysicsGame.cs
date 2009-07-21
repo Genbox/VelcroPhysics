@@ -1,7 +1,7 @@
 using System;
-using FarseerGames.WaterSampleXNA.Components;
-using FarseerGames.WaterSampleXNA.Demos;
-using FarseerGames.WaterSampleXNA.ScreenSystem;
+using DemoBaseXNA.Components;
+using DemoBaseXNA.ScreenSystem;
+using FarseerGames.WaterSampleXNA.Demo1;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -13,7 +13,6 @@ namespace FarseerGames.WaterSampleXNA
     public class FarseerPhysicsGame : Game
     {
         private GraphicsDeviceManager _graphics;
-        private ScreenManager _screenManager;
 
         public FarseerPhysicsGame()
         {
@@ -48,21 +47,22 @@ namespace FarseerGames.WaterSampleXNA
             Window.ClientSizeChanged += Window_ClientSizeChanged;
 
             //new-up components and add to Game.Components
-            _screenManager = new ScreenManager(this);
-            Components.Add(_screenManager);
+            ScreenManager = new ScreenManager(this);
+            Components.Add(ScreenManager);
 
-            FrameRateCounter frameRateCounter = new FrameRateCounter(_screenManager);
+            FrameRateCounter frameRateCounter = new FrameRateCounter(ScreenManager);
             frameRateCounter.DrawOrder = 101;
             Components.Add(frameRateCounter);
 
-            _screenManager.AddScreen(new Demo1Screen());
+            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo1Screen.GetTitle(), new Demo1Screen());
+            //ScreenManager.MainMenuScreen.AddMainMenuItem("Exit", null, true);
+
+            //ScreenManager.GoToMainMenu();
+
+            ScreenManager.AddScreen(new Demo1Screen());
         }
 
-        public ScreenManager ScreenManager
-        {
-            get { return _screenManager; }
-            set { _screenManager = value; }
-        }
+        public ScreenManager ScreenManager { get; set; }
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.

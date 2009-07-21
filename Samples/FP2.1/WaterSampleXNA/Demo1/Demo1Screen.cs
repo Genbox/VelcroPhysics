@@ -1,17 +1,18 @@
 using System;
 using System.Text;
+using DemoBaseXNA;
+using DemoBaseXNA.DemoShare;
+using DemoBaseXNA.DrawingSystem;
+using DemoBaseXNA.ScreenSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Dynamics;
 using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.WaterSampleXNA.Demos.DemoShare;
-using FarseerGames.WaterSampleXNA.DrawingSystem;
-using FarseerGames.WaterSampleXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.WaterSampleXNA.Demos
+namespace FarseerGames.WaterSampleXNA.Demo1
 {
     public class Demo1Screen : GameScreen
     {
@@ -46,7 +47,7 @@ namespace FarseerGames.WaterSampleXNA.Demos
             _waterModel.Initialize(PhysicsSimulator, new Vector2(ScreenManager.ScreenHeight * .05f, 500), new Vector2(ScreenManager.ScreenWidth - ((ScreenManager.ScreenHeight * .05f) * 2.0f), ScreenManager.ScreenHeight - 500));
             _waterModel.WaveController.Enabled = true;  // if false waves will not be created
 
-            _platform = new Box(300, 20, 10, new Vector2(ScreenManager.ScreenWidth / 2f, 500), Color.White, Color.Black, 1);
+            _platform = new Box(300, 20, new Vector2(ScreenManager.ScreenWidth / 2f, 500));
             _platform.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
             _refTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 32, 32, 2, 0, 0,
@@ -81,23 +82,12 @@ namespace FarseerGames.WaterSampleXNA.Demos
         {
             _waterModel.Update(gameTime.ElapsedGameTime);
 
-           
+
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
 
         public override void HandleInput(InputState input)
         {
-            if (firstRun)
-            {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
-                firstRun = false;
-            }
-
-            if (input.PauseGame)
-            {
-                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails(), this));
-            }
-
             if (input.CurrentGamePadState.IsConnected)
             {
                 HandleGamePadInput(input);
@@ -152,7 +142,7 @@ namespace FarseerGames.WaterSampleXNA.Demos
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             _pyramid.Draw(ScreenManager.SpriteBatch, _refTexture);
-            _platform.Draw(ScreenManager.SpriteBatch);
+            _platform.Draw(ScreenManager.SpriteBatch, Color.White);
 
             // draw text for properties
             ScreenManager.SpriteBatch.DrawString(_font, "Properties:", new Vector2(ScreenManager.ScreenWidth - 240, 50), Color.White);
@@ -223,7 +213,7 @@ namespace FarseerGames.WaterSampleXNA.Demos
             }
 
             // start at bottom left
-            position = new Vector3(_waterModel.WaveController.XPosition[_waterModel.WaveController.NodeCount-1], _waterModel.WaveController.Position.Y, 0); // assumes bottom of screen is 600
+            position = new Vector3(_waterModel.WaveController.XPosition[_waterModel.WaveController.NodeCount - 1], _waterModel.WaveController.Position.Y, 0); // assumes bottom of screen is 600
             _vertices[_waterModel.WaveController.NodeCount + 1] = new VertexPositionColor(position, Color.Aquamarine);
             // save it to the buffer
         }

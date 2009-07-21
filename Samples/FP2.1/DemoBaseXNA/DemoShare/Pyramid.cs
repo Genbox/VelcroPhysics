@@ -33,6 +33,11 @@ namespace DemoBaseXNA.DemoShare
             _bottomRightBlockPosition = bottomRightBlockPosition;
         }
 
+        public Geom[] Geoms
+        {
+            get { return _blockGeom; }
+        }
+
         public void Load(PhysicsSimulator physicsSimulator)
         {
             int count = _bottomRowBlockCount*(1 + _bottomRowBlockCount)/2;
