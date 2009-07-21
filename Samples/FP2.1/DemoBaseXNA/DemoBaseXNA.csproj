@@ -83,8 +83,12 @@
     <Compile Include="Components\FramerateCounterComponent.cs" />
     <Compile Include="DemoShare\Agent.cs" />
     <Compile Include="DemoShare\AngularSpringLever.cs" />
+    <Compile Include="DemoShare\Ball.cs" />
     <Compile Include="DemoShare\Border.cs" />
+    <Compile Include="DemoShare\Box.cs" />
     <Compile Include="DemoShare\Circles.cs" />
+    <Compile Include="DemoShare\Grenade.cs" />
+    <Compile Include="DemoShare\HairDryer.cs" />
     <Compile Include="DemoShare\Pyramid.cs" />
     <Compile Include="DemoShare\Ragdoll.cs" />
     <Compile Include="DemoShare\RectanglePlatform.cs" />
