@@ -1,6 +1,16 @@
 using System;
-using FarseerGames.SimpleSamplesXNA.Components;
-using FarseerGames.SimpleSamplesXNA.ScreenSystem;
+using DemoBaseXNA.Components;
+using DemoBaseXNA.ScreenSystem;
+using FarseerGames.SimpleSamplesXNA.Demo1;
+using FarseerGames.SimpleSamplesXNA.Demo10;
+using FarseerGames.SimpleSamplesXNA.Demo2;
+using FarseerGames.SimpleSamplesXNA.Demo3;
+using FarseerGames.SimpleSamplesXNA.Demo4;
+using FarseerGames.SimpleSamplesXNA.Demo5;
+using FarseerGames.SimpleSamplesXNA.Demo6;
+using FarseerGames.SimpleSamplesXNA.Demo7;
+using FarseerGames.SimpleSamplesXNA.Demo8;
+using FarseerGames.SimpleSamplesXNA.Demo9;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -12,7 +22,6 @@ namespace FarseerGames.SimpleSamplesXNA
     public class FarseerPhysicsGame : Game
     {
         private GraphicsDeviceManager _graphics;
-        private ScreenManager _screenManager;
 
         public FarseerPhysicsGame()
         {
@@ -47,21 +56,29 @@ namespace FarseerGames.SimpleSamplesXNA
             Window.ClientSizeChanged += Window_ClientSizeChanged;
 
             //new-up components and add to Game.Components
-            _screenManager = new ScreenManager(this);
-            Components.Add(_screenManager);
+            ScreenManager = new ScreenManager(this);
+            Components.Add(ScreenManager);
 
-            FrameRateCounter frameRateCounter = new FrameRateCounter(_screenManager);
+            FrameRateCounter frameRateCounter = new FrameRateCounter(ScreenManager);
             frameRateCounter.DrawOrder = 101;
             Components.Add(frameRateCounter);
 
-            _screenManager.AddScreen(new MainMenuScreen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo1Screen.GetTitle(), new Demo1Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo2Screen.GetTitle(), new Demo2Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo3Screen.GetTitle(), new Demo3Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo4Screen.GetTitle(), new Demo4Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo5Screen.GetTitle(), new Demo5Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo6Screen.GetTitle(), new Demo6Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo7Screen.GetTitle(), new Demo7Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo8Screen.GetTitle(), new Demo8Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo9Screen.GetTitle(), new Demo9Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo10Screen.GetTitle(), new Demo10Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem("Exit", null, true);
+
+            ScreenManager.GoToMainMenu();
         }
 
-        public ScreenManager ScreenManager
-        {
-            get { return _screenManager; }
-            set { _screenManager = value; }
-        }
+        public ScreenManager ScreenManager { get; set; }
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
