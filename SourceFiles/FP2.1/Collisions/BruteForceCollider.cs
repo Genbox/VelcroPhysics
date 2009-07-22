@@ -51,12 +51,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public void Update()
         {
             //Iterate all the geoms and check against the next
-            for (int i = 0; i < _physicsSimulator.geomList.Count - 1; i++)
+            for (int i = 0; i < _physicsSimulator.GeomList.Count - 1; i++)
             {
-                for (int j = i + 1; j < _physicsSimulator.geomList.Count; j++)
+                for (int j = i + 1; j < _physicsSimulator.GeomList.Count; j++)
                 {
-                    _geometryA = _physicsSimulator.geomList[i];
-                    _geometryB = _physicsSimulator.geomList[j];
+                    _geometryA = _physicsSimulator.GeomList[i];
+                    _geometryB = _physicsSimulator.GeomList[j];
 
                     if (!_geometryA.body.Enabled || !_geometryB.body.Enabled)
                         continue;
@@ -104,8 +104,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     Arbiter arbiter = _physicsSimulator.arbiterPool.Fetch();
                     arbiter.ConstructArbiter(_geometryA, _geometryB, _physicsSimulator);
 
-                    if (!_physicsSimulator.arbiterList.Contains(arbiter))
-                        _physicsSimulator.arbiterList.Add(arbiter);
+                    if (!_physicsSimulator.ArbiterList.Contains(arbiter))
+                        _physicsSimulator.ArbiterList.Add(arbiter);
                     else
                         _physicsSimulator.arbiterPool.Insert(arbiter);
                 }

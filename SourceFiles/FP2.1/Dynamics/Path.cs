@@ -57,10 +57,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             _height = height;
             _loop = endless;
             _mass = mass;
-            _geoms = new GenericList<Geom>();
-            _bodies = new GenericList<Body>();
-            _joints = new GenericList<Joint>();
-            _springs = new GenericList<Spring>();
+            _geoms = new GenericList<Geom>(8);
+            _bodies = new GenericList<Body>(8);
+            _joints = new GenericList<Joint>(8);
+            _springs = new GenericList<Spring>(8);
             _controlPoints = new Vertices();
         }
 

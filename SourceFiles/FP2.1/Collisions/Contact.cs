@@ -15,6 +15,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
     public struct Contact : IEquatable<Contact>
     {
         /// <summary>
+        /// Id of the contact
+        /// </summary>
+        public ContactId ContactId;
+
+        /// <summary>
         /// Position of the contact
         /// </summary>
         public Vector2 Position;
@@ -30,7 +35,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public float Separation;
 
         internal float bounceVelocity;
-        internal ContactId contactId;
         internal float massNormal;
         internal float massTangent;
         internal float normalImpulse;
@@ -40,9 +44,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
         internal Vector2 r2;
         internal float tangentImpulse;
 
-        public Contact(Vector2 position, Vector2 normal, float separation, ContactId contactId)
+        public Contact(ref Vector2 position, ref Vector2 normal, float separation, ref ContactId contactId)
         {
-            this.contactId = contactId;
+            ContactId = contactId;
             Position = position;
             Normal = normal;
             Separation = separation;
@@ -61,54 +65,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public bool Equals(Contact other)
         {
-            return (contactId == other.contactId);
+            return (ContactId.Equals(ref other.ContactId));
         }
 
         #endregion
 
-        /// <summary>
-        /// Sets the mass normal.
-        /// </summary>
-        /// <param name="value">The mass normal.</param>
-        public void SetMassNormal(float value)
+        public bool Equals(ref Contact other)
         {
-            massNormal = value;
-        }
-
-        /// <summary>
-        /// Sets the mass tangent.
-        /// </summary>
-        /// <param name="value">The mass tangent.</param>
-        public void SetMassTangent(float value)
-        {
-            massTangent = value;
-        }
-
-        /// <summary>
-        /// Sets the bias.
-        /// </summary>
-        /// <param name="bias">The bias.</param>
-        public void SetBias(float bias)
-        {
-            normalVelocityBias = bias;
-        }
-
-        /// <summary>
-        /// Sets the normal impulse.
-        /// </summary>
-        /// <param name="value">The normal impulse.</param>
-        public void SetNormalImpulse(float value)
-        {
-            normalImpulse = value;
-        }
-
-        /// <summary>
-        /// Sets the tangent impulse.
-        /// </summary>
-        /// <param name="value">The tangent impulse.</param>
-        public void SetTangentImpulse(float value)
-        {
-            tangentImpulse = value;
+            return (ContactId.Equals(ref other.ContactId));
         }
 
         public override bool Equals(object obj)
@@ -116,17 +80,17 @@ namespace FarseerGames.FarseerPhysics.Collisions
             if (!(obj is Contact))
                 return false;
 
-            return Equals((Contact) obj);
+            return Equals((Contact)obj);
         }
 
         public static bool operator ==(Contact contact1, Contact contact2)
         {
-            return contact1.Equals(contact2);
+            return contact1.Equals(ref contact2);
         }
 
         public static bool operator !=(Contact contact1, Contact contact2)
         {
-            return !contact1.Equals(contact2);
+            return !contact1.Equals(ref contact2);
         }
 
         public override int GetHashCode()

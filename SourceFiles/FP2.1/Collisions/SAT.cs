@@ -29,6 +29,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
+        private Vector2 _tempVector;
+        private ContactId _tempContactId;
+
         /// <summary>
         /// Returns the contact list from two possibly intersecting Geom's. 
         /// This is the stationary version of this function. It doesn't 
@@ -57,7 +60,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
                             {
                                 if (distance > 0.001f)
                                 {
-                                    Contact c = new Contact(geomA.WorldVertices[i], normal, -distance, new ContactId(geomA.id, i, geomB.id));
+                                    _tempVector = geomA.WorldVertices[i];
+                                    _tempContactId = new ContactId(geomA.id, i, geomB.id);
+
+                                    Contact c = new Contact(ref _tempVector, ref normal, -distance, ref _tempContactId);
                                     contactList.Add(c);
                                     contactsDetected++;
                                 }
@@ -79,7 +85,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
                             {
                                 if (distance > 0.001f)
                                 {
-                                    Contact c = new Contact(geomB.WorldVertices[i], normal, -distance, new ContactId(geomB.id, i, geomA.id));
+                                    _tempVector = geomB.WorldVertices[i];
+                                    _tempContactId = new ContactId(geomB.id, i, geomA.id);
+
+                                    Contact c = new Contact(ref _tempVector, ref normal, -distance, ref _tempContactId);
                                     contactList.Add(c);
                                     contactsDetected++;
                                 }

@@ -83,7 +83,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demo5
             _spring = SpringFactory.Instance.CreateLinearSpring(PhysicsSimulator, _wheel1, new Vector2(), _wheel2, new Vector2(), 5200, 3050);
             _spring.RestLength += 20;
 
-            _obstacles = new GenericList<Body>();
+            _obstacles = new GenericList<Body>(8);
 
             base.LoadContent();
         }

@@ -8,7 +8,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     public struct ContactId : IEquatable<ContactId>
     {
-        public ContactId(int geometryAIndex, int geometryAVertex, int geometryBIndex) : this()
+        public ContactId(int geometryAIndex, int geometryAVertex, int geometryBIndex)
+            : this()
         {
             Geom1Index = geometryAIndex;
             Geom1Vertex = geometryAVertex;
@@ -43,22 +44,28 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         #endregion
 
+        public bool Equals(ref ContactId other)
+        {
+            return (Geom1Index == other.Geom1Index) && (Geom1Vertex == other.Geom1Vertex) &&
+                   (Geom2Index == other.Geom2Index);
+        }
+
         public override bool Equals(object obj)
         {
             if (!(obj is ContactId))
                 return false;
 
-            return Equals((ContactId) obj);
+            return Equals((ContactId)obj);
         }
 
         public static bool operator ==(ContactId contactId1, ContactId contactId2)
         {
-            return contactId1.Equals(contactId2);
+            return contactId1.Equals(ref contactId2);
         }
 
         public static bool operator !=(ContactId contactId1, ContactId contactId2)
         {
-            return !contactId1.Equals(contactId2);
+            return !contactId1.Equals(ref contactId2);
         }
 
         public override int GetHashCode()

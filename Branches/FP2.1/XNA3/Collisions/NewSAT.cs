@@ -29,6 +29,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
+        private Vector2 _tempVector;
+        private ContactId _tempContactId;
+
         public void Collide(Geom geomA, Geom geomB, ContactList contactList)
         {
             float minA, maxA;
@@ -36,7 +39,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             float intervalDistance, minIntervalDistance = float.MaxValue;
             Vector2 translationAxis = new Vector2();
             int contactsDetected = 0;
-            
+
             // For each axis check if separation occurs
             for (int i = 0; i < geomA.WorldVertices.Count; i++)
             {
@@ -67,7 +70,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             Vector2 normalA = -Vector2.Normalize(translationAxis * minIntervalDistance);
             float distanceA = (translationAxis * minIntervalDistance).Length();
-            
+
             // For each axis check if separation occurs
             for (int i = 0; i < geomB.WorldVertices.Count; i++)
             {
@@ -95,7 +98,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         translationAxis = -translationAxis;
                 }
             }
-            
+
             // here we separate the polygons
             //minIntervalDistance -= 0.2f;
 
@@ -134,7 +137,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         {
                             if (distanceA > 0.001f)
                             {
-                                Contact c = new Contact(geomA.WorldVertices[i], normalA, -distanceB, new ContactId(geomA.id, i, geomB.id));
+                                _tempVector = geomA.WorldVertices[i];
+                                _tempContactId = new ContactId(geomA.id, i, geomB.id);
+                                Contact c = new Contact(ref _tempVector, ref normalA, -distanceB, ref _tempContactId);
                                 contactList.Add(c);
                                 contactsDetected++;
                             }
@@ -145,7 +150,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             contactsDetected = 0;
-          
+
             for (int i = 0; i < geomB.WorldVertices.Count; i++)
             {
                 if (contactsDetected < PhysicsSimulator.MaxContactsToDetect)
@@ -156,7 +161,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         {
                             if (distanceA > 0.001f)
                             {
-                                Contact c = new Contact(geomB.WorldVertices[i], normalA, -distanceB, new ContactId(geomB.id, i, geomA.id));
+                                _tempVector = geomB.WorldVertices[i];
+                                _tempContactId = new ContactId(geomB.id, i, geomA.id);
+
+                                Contact c = new Contact(ref _tempVector, ref normalA, -distanceB, ref _tempContactId);
                                 contactList.Add(c);
                                 contactsDetected++;
                             }

@@ -13,10 +13,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
         }
 
-        public ContactList(ContactList contactList) : base(contactList)
-        {
-        }
-
         /// <summary>
         /// A safe way of getting an index
         /// </summary>

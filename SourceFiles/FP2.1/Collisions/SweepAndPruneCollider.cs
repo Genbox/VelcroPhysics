@@ -244,8 +244,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 Arbiter arbiter = _physicsSimulator.arbiterPool.Fetch();
                 arbiter.ConstructArbiter(cp.Geom1, cp.Geom2, _physicsSimulator);
 
-                if (!_physicsSimulator.arbiterList.Contains(arbiter))
-                    _physicsSimulator.arbiterList.Add(arbiter);
+                if (!_physicsSimulator.ArbiterList.Contains(arbiter))
+                    _physicsSimulator.ArbiterList.Add(arbiter);
                 else
                     _physicsSimulator.arbiterPool.Insert(arbiter);
             }
