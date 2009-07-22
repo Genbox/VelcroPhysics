@@ -1,5 +1,3 @@
-#if(!XNA)
-
 #region License
 
 /*
@@ -526,5 +524,3 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
     }
 }
-
-#endif

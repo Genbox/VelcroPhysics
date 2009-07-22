@@ -186,16 +186,16 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         #region IFluidContainer Members
 
-        public bool Intersect(AABB aabb)
+        public bool Intersect(ref AABB aabb)
         {
-            return AABB.Intersect(aabb, _aabb);
+            return AABB.Intersect(ref aabb, ref  _aabb);
         }
 
         public bool Contains(ref Vector2 vector)
         {
             //try
             //{
-            int index = (int) Math.Floor((vector.X - _xPosition[0])/_singleWaveWidth);
+            int index = (int)Math.Floor((vector.X - _xPosition[0]) / _singleWaveWidth);
 
             //handle the boundry conditions
             if (index > _nodeCount - 2) index = _nodeCount - 2;
@@ -238,17 +238,17 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// This could be used to create waves when something falls in the water. For this,though, you would need to determine what vertices
         /// to move and how far.
         /// </summary>
-        /// <param name="node">The node to change the height of</param>
+        /// <param name="x">The node to change the height of</param>
         /// <param name="offset">The amount to move the node up or down (negative values moves the node up, positive moves it down)</param>
         public void Disturb(float x, float offset)
         {
             int i = 0;
-            
+
             for (i = 0; i < _nodeCount - 1; i++)
             {
-                if (x >= _xPosition[i] && x <= _xPosition[i+1])
+                if (x >= _xPosition[i] && x <= _xPosition[i + 1])
                     _currentWave[i] = _currentWave[i] + offset;
-            }  
+            }
         }
 
         /// <summary>
@@ -263,14 +263,15 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
             for (int i = 0; i < _nodeCount; i++)
             {
-                _xPosition[i] = MathHelper.Lerp(_position.X, _position.X + _width, (float) i/(_nodeCount - 1));
+                _xPosition[i] = MathHelper.Lerp(_position.X, _position.X + _width, (float)i / (_nodeCount - 1));
                 _currentWave[i] = 0;
                 _previousWave[i] = 0;
                 _resultWave[i] = 0;
             }
 
-            _aabb = new AABB(_position, new Vector2(_position.X + _width, _position.Y + _height));
-            _singleWaveWidth = _width/(_nodeCount - 1);
+            Vector2 max = new Vector2(_position.X + _width, _position.Y + _height);
+            _aabb = new AABB(ref _position, ref max);
+            _singleWaveWidth = _width / (_nodeCount - 1);
         }
 
         /// <summary>
@@ -293,7 +294,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
             for (int i = 1; i < _nodeCount - 1; i++)
             {
                 _resultWave[i] = (_currentWave[i - 1] + _currentWave[i + 1]) - _previousWave[i];
-                _resultWave[i] = _resultWave[i]*_dampningCoefficient;
+                _resultWave[i] = _resultWave[i] * _dampningCoefficient;
 
                 //keep track of _aabb min Value                
                 if (_resultWave[i] + _position.Y < _aabbMin)

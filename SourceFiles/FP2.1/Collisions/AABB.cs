@@ -12,32 +12,25 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// Axis Aligned Bounding Box. Can be used to check for intersections with other AABBs.
     /// Use AABB.Intersect() to check for intersections.
     /// </summary>
-    public class AABB : IEquatable<AABB>
+    public struct AABB : IEquatable<AABB>
     {
         private const float _epsilon = .00001f;
         private Vector2 _vector;
-        internal Vector2 max = Vector2.Zero;
-        internal Vector2 min = Vector2.Zero;
+        internal Vector2 max;
+        internal Vector2 min;
 
-        public AABB()
-        {
-        }
-
-        public AABB(AABB aabb)
+        public AABB(ref AABB aabb)
         {
             min = aabb.Min;
             max = aabb.Max;
+            _vector = Vector2.Zero;
         }
 
-        public AABB(Vector2 min, Vector2 max)
+        public AABB(ref Vector2 min, ref Vector2 max)
         {
             this.min = min;
             this.max = max;
-        }
-
-        public AABB(Vertices vertices)
-        {
-            Update(ref vertices);
+            _vector = Vector2.Zero;
         }
 
         /// <summary>
@@ -135,7 +128,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns>The distance</returns>
-        public float GetDistance(Vector2 point)
+        public float GetDistance(ref Vector2 point)
         {
             float result;
             GetDistance(ref point, out result);
@@ -222,7 +215,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="aabb1">The first AABB.</param>
         /// <param name="aabb2">The second AABB</param>
         /// <returns></returns>
-        public static bool Intersect(AABB aabb1, AABB aabb2)
+        public static bool Intersect(ref AABB aabb1, ref  AABB aabb2)
         {
             if (aabb1.min.X > aabb2.max.X || aabb2.min.X > aabb1.max.X)
             {
@@ -240,7 +233,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         public bool Equals(AABB other)
         {
-            return ((this.min == other.min) && (this.max == other.max));
+            return ((min == other.min) && (max == other.max));
         }
 
         #endregion
@@ -248,29 +241,29 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public override bool Equals(object obj)
         {
             if (obj is AABB)
-            {
-                return this.Equals((AABB)obj);
-            }
+                return Equals((AABB)obj);
+
             return false;
+        }
+
+        public bool Equals(ref AABB other)
+        {
+            return ((min == other.min) && (max == other.max));
         }
 
         public override int GetHashCode()
         {
-            return (this.Min.GetHashCode() + this.Max.GetHashCode());
+            return (Min.GetHashCode() + Max.GetHashCode());
         }
 
         public static bool operator ==(AABB a, AABB b)
         {
-            return a.Equals(b);
+            return a.Equals(ref b);
         }
 
         public static bool operator !=(AABB a, AABB b)
         {
-            if (!(a.Min != b.Min))
-            {
-                return (a.Max != b.Max);
-            }
-            return true;
+            return !a.Equals(ref b);
         }
     }
 }

@@ -91,12 +91,6 @@
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\Geom.cs">
       <Link>Collisions\Geom.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\GeomList.cs">
-      <Link>Collisions\GeomList.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\LineIntersectInfo.cs">
-      <Link>Collisions\LineIntersectInfo.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\RayTester.cs">
       <Link>Collisions\RayTester.cs</Link>
     </Compile>

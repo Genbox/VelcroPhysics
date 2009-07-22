@@ -10,7 +10,7 @@ namespace FarseerGames.FarseerPhysics.Interfaces
 {
     public interface IFluidContainer
     {
-        bool Intersect(AABB aabb);
+        bool Intersect(ref AABB aabb);
         bool Contains(ref Vector2 vector);
     }
 }

@@ -39,6 +39,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private PhysicsSimulator _physicsSimulator;
         private Dictionary<long, List<Geom>> _hash;
         private Dictionary<long, object> _filter;
+        private List<long> _keysToRemove;
+
         private float _cellSize;
         private float _cellSizeInv;
         public bool AutoAdjustCellSize = true;
@@ -53,6 +55,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             _physicsSimulator = physicsSimulator;
             _hash = new Dictionary<long, List<Geom>>(hashCapacity);
+            _keysToRemove = new List<long>(hashCapacity);
             _filter = new Dictionary<long, object>();
             _cellSize = cellSize;
             _cellSizeInv = 1 / cellSize;
@@ -160,7 +163,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private void RunHash()
         {
-            List<long> keysToRemove = new List<long>(_hash.Count);
+            _keysToRemove.Clear();
             foreach (KeyValuePair<long, List<Geom>> pair in _hash)
             {
                 // If there are no geometries in the list. Remove it.
@@ -168,7 +171,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 List<Geom> list = pair.Value;
                 if (list.Count == 0)
                 {
-                    keysToRemove.Add(pair.Key);
+                    _keysToRemove.Add(pair.Key);
                 }
                 else
                 {
@@ -210,7 +213,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                                 _filter.Add(key, null);
 
                                 //Check if there is intersection
-                                bool intersection = AABB.Intersect(geometryA.AABB, geometryB.AABB);
+                                bool intersection = AABB.Intersect(ref geometryA.AABB, ref  geometryB.AABB);
 
                                 //User can cancel collision
                                 if (OnBroadPhaseCollision != null)
@@ -235,9 +238,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             _filter.Clear();
 
             //Remove all the empty lists from the hash
-            for (int index = 0; index < keysToRemove.Count; ++index)
+            for (int index = 0; index < _keysToRemove.Count; ++index)
             {
-                _hash.Remove(keysToRemove[index]);
+                _hash.Remove(_keysToRemove[index]);
             }
         }
     }

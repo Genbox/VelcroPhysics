@@ -109,13 +109,6 @@ namespace FarseerGames.FarseerPhysics
         /// </summary>
         public PhysicsSimulator()
         {
-            UpdateTime = -1;
-            UpdatePositionsTime = -1;
-            ApplyImpulsesTime = -1;
-            ApplyForcesTime = -1;
-            NarrowPhaseCollisionTime = -1;
-            BroadPhaseCollisionTime = -1;
-            CleanUpTime = -1;
             ConstructPhysicsSimulator(Vector2.Zero);
         }
 
@@ -547,21 +540,22 @@ namespace FarseerGames.FarseerPhysics
 
             for (int i = 0; i < BodyList.Count; i++)
             {
-                if (!BodyList[i].Enabled || BodyList[i].isStatic || BodyList[i].IsDisposed)
+                Body body = BodyList[i];
+                if (!body.Enabled || body.isStatic || body.IsDisposed)
                     continue;
 
                 //Apply accumulated external impules
-                BodyList[i].ApplyImpulses();
+                body.ApplyImpulses();
 
-                if (!BodyList[i].IgnoreGravity)
+                if (!body.IgnoreGravity)
                 {
-                    BodyList[i].force.X = BodyList[i].force.X + (Gravity.X * BodyList[i].mass);
-                    BodyList[i].force.Y = BodyList[i].force.Y + (Gravity.Y * BodyList[i].mass);
+                    body.force.X = body.force.X + (Gravity.X * body.mass);
+                    body.force.Y = body.force.Y + (Gravity.Y * body.mass);
                 }
 
-                BodyList[i].IntegrateVelocity(dt);
-                BodyList[i].ClearForce();
-                BodyList[i].ClearTorque();
+                body.IntegrateVelocity(dt);
+                body.ClearForce();
+                body.ClearTorque();
             }
         }
 

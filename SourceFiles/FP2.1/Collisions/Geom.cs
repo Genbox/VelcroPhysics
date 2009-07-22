@@ -560,7 +560,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             //Check first if the AABB intersects the other geometry's AABB. If they
             //do not intersect, there can be no collision.
-            if (AABB.Intersect(AABB, geometry.AABB))
+            if (AABB.Intersect(ref AABB, ref geometry.AABB))
             {
                 //Check each vertice (of self) against the provided geometry
                 int count = worldVertices.Count;
