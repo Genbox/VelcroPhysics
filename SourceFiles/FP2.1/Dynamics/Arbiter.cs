@@ -19,13 +19,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     /// </summary>
     public class Arbiter : IEquatable<Arbiter>
     {
-        private ContactList _contactList;
-        private float _float1;
-        private float _float2;
         private float _frictionCoefficientCombined;
-
-        private ContactList _mergedContactList;
         private ContactList _newContactList;
+        private ContactList _mergedContactList;
+
         private PhysicsSimulator _physicsSimulator;
 
         //used for ref/out methods
@@ -34,48 +31,23 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         public Geom GeometryA;
         public Geom GeometryB;
 
+        public Arbiter()
+        {
+            ContactList = new ContactList(PhysicsSimulator.MaxContactsToDetect);
+            _newContactList = new ContactList(PhysicsSimulator.MaxContactsToDetect);
+            _mergedContactList = new ContactList(PhysicsSimulator.MaxContactsToDetect);
+        }
+
         /// <summary>
         /// Fully exposed for convenience. Should be treated as. Do not add or remove directly from this list.
         /// </summary>
-        public ContactList ContactList
-        {
-            get { return _contactList; }
-        }
-
-        internal int ContactCount
-        {
-            get { return _contactList.Count; }
-        }
-
-        #region PreStepImpulse variables
-
-        private float _kNormal;
-        private float _kTangent;
-        private float _min;
-        private Vector2 _r1;
-        private Vector2 _r2;
-        private float _restitution;
-        private float _rn1;
-        private float _rn2;
-        private float _rt1;
-        private float _rt2;
-
-        #endregion
-
-        #region IEquatable<Arbiter> Members
-
-        public bool Equals(Arbiter other)
-        {
-            return (GeometryA == other.GeometryA) && (GeometryB == other.GeometryB);
-        }
-
-        #endregion
+        public ContactList ContactList { get; private set; }
 
         internal void ConstructArbiter(Geom geometry1, Geom geometry2, PhysicsSimulator physicsSimulator)
         {
             _physicsSimulator = physicsSimulator;
 
-            //If geometry1 is newer (Id is smaller) than geometry2, insert them. If not, switch them.
+            //Sort the geometries by creational order (id)
             if (geometry1 < geometry2)
             {
                 GeometryA = geometry1;
@@ -87,7 +59,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 GeometryB = geometry1;
             }
 
-            switch (physicsSimulator.FrictionType)
+            switch (_physicsSimulator.FrictionType)
             {
                 case FrictionType.Average:
                     _frictionCoefficientCombined = (GeometryA.FrictionCoefficient + GeometryB.FrictionCoefficient) / 2f;
@@ -99,27 +71,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     _frictionCoefficientCombined = (GeometryA.FrictionCoefficient + GeometryB.FrictionCoefficient) / 2f;
                     break;
             }
-
-            //Initialize the contact lists
-            if (_contactList == null)
-            {
-                _contactList = new ContactList(PhysicsSimulator.MaxContactsToDetect);
-            }
-            if (_newContactList == null)
-            {
-                _newContactList = new ContactList(PhysicsSimulator.MaxContactsToDetect);
-            }
-            if (_mergedContactList == null)
-            {
-                _mergedContactList = new ContactList(PhysicsSimulator.MaxContactsToDetect);
-            }
         }
 
-        internal void PreStepImpulse(float inverseDt)
+        internal void PreStepImpulse(ref float inverseDt)
         {
-            for (int i = 0; i < _contactList.Count; i++)
+            for (i = 0; i < ContactList.Count; i++)
             {
-                Contact contact = _contactList[i];
+                Contact contact = ContactList[i];
 
                 //calculate contact offset from body position
                 Vector2.Subtract(ref contact.Position, ref GeometryA.body.position, out _r1);
@@ -177,15 +135,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 GeometryA.body.ApplyImpulseAtWorldOffset(ref _impulse, ref _r1);
 
                 contact.normalImpulseBias = 0;
-                _contactList[i] = contact;
+                ContactList[i] = contact;
             }
         }
 
         internal void ApplyImpulse()
         {
-            for (int i = 0; i < _contactList.Count; i++)
+            for (i = 0; i < ContactList.Count; i++)
             {
-                _contact = _contactList[i];
+                _contact = ContactList[i];
 
                 #region INLINE: Vector2.Subtract(ref _contact.Position, ref geometryA.body.position, out _contact.R1);
 
@@ -343,7 +301,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 GeometryA.body.ApplyImpulseAtWorldOffset(ref _impulse, ref _contact.r1);
 
-                _contactList[i] = _contact;
+                ContactList[i] = _contact;
             }
         }
 
@@ -351,17 +309,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             GeometryA = null;
             GeometryB = null;
-            _contactList.Clear();
+            ContactList.Clear();
             _newContactList.Clear();
             _mergedContactList.Clear();
         }
-
-        #region Variables for Collide
-        int i;
-        int j;
-        Contact indexContact;
-        int contactCount;
-        #endregion
 
         internal void Collide()
         {
@@ -409,13 +360,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             //Calculate on the new contacts gathered (Warm starting is done here)
             for (i = 0; i < _newContactList.Count; i++)
             {
-                int index = _contactList.IndexOfSafe(_newContactList[i]);
+                int index = ContactList.IndexOfSafe(_newContactList[i]);
                 if (index > -1)
                 {
                     //continuation of collision
                     Contact contact = _newContactList[i];
-                    contact.normalImpulse = _contactList[index].normalImpulse;
-                    contact.tangentImpulse = _contactList[index].tangentImpulse;
+                    contact.normalImpulse = ContactList[index].normalImpulse;
+                    contact.tangentImpulse = ContactList[index].tangentImpulse;
                     _mergedContactList.Add(contact);
                 }
                 else
@@ -425,9 +376,14 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 }
             }
 
-            _contactList.Clear();
+            ContactList.Clear();
             for (i = 0; i < _mergedContactList.Count; i++)
-                _contactList.Add(_mergedContactList[i]);
+                ContactList.Add(_mergedContactList[i]);
+        }
+
+        internal bool ContainsInvalidGeom()
+        {
+            return GeometryA.IsDisposed || GeometryB.IsDisposed || (GeometryA.body.isStatic && GeometryB.body.isStatic) || (!GeometryA.body.Enabled || !GeometryB.body.Enabled) || (GeometryA.CollisionGroup == GeometryB.CollisionGroup) && (GeometryA.CollisionGroup != 0 && GeometryB.CollisionGroup != 0) || (((GeometryA.CollisionCategories & GeometryB.CollidesWith) == CollisionCategory.None) & ((GeometryB.CollisionCategories & GeometryA.CollidesWith) == CollisionCategory.None));
         }
 
         public override bool Equals(object obj)
@@ -438,6 +394,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             return Equals((Arbiter)obj);
         }
 
+        //TODO: Implement hash
         public override int GetHashCode()
         {
             return base.GetHashCode();
@@ -452,11 +409,39 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         {
             return !arbiter1.Equals(arbiter2);
         }
+     
+        #region IEquatable<Arbiter> Members
 
-        internal bool ContainsInvalidGeom()
+        public bool Equals(Arbiter other)
         {
-            return GeometryA.IsDisposed || GeometryB.IsDisposed || (GeometryA.body.isStatic && GeometryB.body.isStatic) || (!GeometryA.body.Enabled || !GeometryB.body.Enabled) || (GeometryA.CollisionGroup == GeometryB.CollisionGroup) && (GeometryA.CollisionGroup != 0 && GeometryB.CollisionGroup != 0) || (((GeometryA.CollisionCategories & GeometryB.CollidesWith) == CollisionCategory.None) & ((GeometryB.CollisionCategories & GeometryA.CollidesWith) == CollisionCategory.None));
+            return (GeometryA == other.GeometryA) && (GeometryB == other.GeometryB);
         }
+
+        #endregion
+
+        #region Variables for Collide
+        int i;
+        int j;
+        Contact indexContact;
+        int contactCount;
+        #endregion
+
+        #region PreStepImpulse variables
+
+        private float _float1;
+        private float _float2;
+        private float _kNormal;
+        private float _kTangent;
+        private float _min;
+        private Vector2 _r1;
+        private Vector2 _r2;
+        private float _restitution;
+        private float _rn1;
+        private float _rn2;
+        private float _rt1;
+        private float _rt2;
+
+        #endregion
 
         #region Variables for ApplyImpulse
 

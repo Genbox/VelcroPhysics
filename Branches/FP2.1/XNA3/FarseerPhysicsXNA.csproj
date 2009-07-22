@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectGuid>{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -149,9 +149,6 @@
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Body.cs">
       <Link>Dynamics\Body.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\BodyList.cs">
-      <Link>Dynamics\BodyList.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Curve.cs">
       <Link>Dynamics\Curve.cs</Link>

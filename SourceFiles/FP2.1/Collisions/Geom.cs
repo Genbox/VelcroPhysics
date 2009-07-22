@@ -536,7 +536,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Exactly the same as Collide(), but does not do the AABB check because it was done elsewhere.
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="position"></param>
         /// <returns></returns>
         private bool FastCollide(ref Vector2 position)
         {

@@ -27,6 +27,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
         }
 
+        public Vertices(int capacity)
+        {
+            Capacity = capacity;
+        }
+
         public Vertices(Vector2[] vector2)
         {
             for (int i = 0; i < vector2.Length; i++)

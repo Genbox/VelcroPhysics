@@ -73,7 +73,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
                     body.IdleTime = 0;
 
                     // ... and check if this body can enable disabled bodies
-                    foreach (Body body2 in _physicsSimulator.bodyList)
+                    foreach (Body body2 in _physicsSimulator.BodyList)
                     {
                         if (body2.Enabled == false && body2.IsAutoIdle)
                         {

@@ -91,7 +91,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         public void Update()
         {
-            if (_physicsSimulator.geomList.Count == 0)
+            if (_physicsSimulator.GeomList.Count == 0)
             {
                 return;
             }
@@ -120,9 +120,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //Average used to optimize cell size if AutoAdjustCellSize = true.
             float average = 0;
 
-            for (int i = 0; i < _physicsSimulator.geomList.Count; i++)
+            for (int i = 0; i < _physicsSimulator.GeomList.Count; i++)
             {
-                Geom geom = _physicsSimulator.geomList[i];
+                Geom geom = _physicsSimulator.GeomList[i];
 
                 //Note: Could do some checking here for geometries that should not be included in the hashmap
 
@@ -154,7 +154,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             if (AutoAdjustCellSize)
             {
-                CellSize = 2 * average / (_physicsSimulator.geomList.Count);
+                CellSize = 2 * average / (_physicsSimulator.GeomList.Count);
             }
         }
 
@@ -222,8 +222,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                                 Arbiter arbiter = _physicsSimulator.arbiterPool.Fetch();
                                 arbiter.ConstructArbiter(geometryA, geometryB, _physicsSimulator);
 
-                                if (!_physicsSimulator.arbiterList.Contains(arbiter))
-                                    _physicsSimulator.arbiterList.Add(arbiter);
+                                if (!_physicsSimulator.ArbiterList.Contains(arbiter))
+                                    _physicsSimulator.ArbiterList.Add(arbiter);
                                 else
                                     _physicsSimulator.arbiterPool.Insert(arbiter);
                             }

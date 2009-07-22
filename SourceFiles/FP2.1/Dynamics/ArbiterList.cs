@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace FarseerGames.FarseerPhysics.Dynamics
@@ -10,34 +9,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     {
         private List<Arbiter> _markedForRemovalList;
 
-        public ArbiterList()
+        public ArbiterList(int capacity)
         {
-            _markedForRemovalList = new List<Arbiter>();
-        }
-
-        public void ForEachSafe(Action<Arbiter> action)
-        {
-            for (int i = 0; i < Count; i++)
-            {
-                action(this[i]);
-            }
-        }
-
-        public void RemoveAllSafe(Predicate<Arbiter> match)
-        {
-            for (int i = 0; i < Count; i++)
-            {
-                if (match(this[i]))
-                {
-                    _markedForRemovalList.Add(this[i]);
-                }
-            }
-            for (int j = 0; j < _markedForRemovalList.Count; j++)
-            {
-                Remove(_markedForRemovalList[j]);
-                _markedForRemovalList[j].Reset();
-            }
-            _markedForRemovalList.Clear();
+            Capacity = capacity;
+            _markedForRemovalList = new List<Arbiter>(capacity / 2);
         }
 
         public void RemoveContactCountEqualsZero(Pool<Arbiter> arbiterPool)
@@ -45,7 +20,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             for (int i = 0; i < Count; i++)
             {
                 //If they don't have any contacts associated with them. Remove them.
-                if (this[i].ContactCount == 0)
+                if (this[i].ContactList.Count == 0)
                 {
                     _markedForRemovalList.Add(this[i]);
                 }

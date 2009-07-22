@@ -15,6 +15,11 @@ namespace FarseerGames.FarseerPhysics
         private int _numberDisposed;
         private int _count;
 
+        public GenericList(int capacity)
+        {
+            Capacity = capacity;
+        }
+
 #if(XNA)
         [ContentSerializerIgnore]
 #endif
@@ -45,6 +50,12 @@ namespace FarseerGames.FarseerPhysics
             }
         }
 
+        /// <summary>
+        /// Removes the disposed items
+        /// It determines if it is disposed by checking the
+        /// IsDisposed property on the item.
+        /// </summary>
+        /// <returns>The number of items that was removed</returns>
         public int RemoveDisposed()
         {
             for (int i = 0; i < Count; i++)
