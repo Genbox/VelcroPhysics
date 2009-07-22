@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
-using FarseerGames.FarseerPhysics.Mathematics;
 using FarseerGames.FarseerPhysics.Dynamics;
 #if (XNA)
 using Microsoft.Xna.Framework;
+#else
+using FarseerGames.FarseerPhysics.Mathematics;
 #endif
 
 namespace FarseerGames.FarseerPhysics.Controllers
@@ -16,11 +17,8 @@ namespace FarseerGames.FarseerPhysics.Controllers
     /// </summary>
     public class GravityController : Controller
     {
-        private GravityType _gravityType = GravityType.Linear;
         private float _strength;
         private PhysicsSimulator _simulator;
-        private List<Vector2> _pointList;
-        private List<Body> _bodyList;
         private float _radius;
 
         /// <summary>
@@ -33,15 +31,16 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// <param name="radius">the maximum distance that can be between 2 bodies before it will stop trying to apply gravity between them.</param>
         public GravityController(PhysicsSimulator simulator, List<Body> bodies, List<Vector2> points, float strength, float radius)
         {
+            GravityType = GravityType.Linear;
             _simulator = simulator;
             _strength = strength;
 
-            if (_gravityType == GravityType.DistanceSquared)
+            if (GravityType == GravityType.DistanceSquared)
                 _strength *= 100;
 
             _radius = radius;
-            _pointList = points;
-            _bodyList = bodies;
+            PointList = points;
+            BodyList = bodies;
         }
 
         /// <summary>
@@ -53,14 +52,15 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// <param name="radius">the maximum distance that can be between 2 bodies before it will stop trying to apply gravity between them.</param>
         public GravityController(PhysicsSimulator simulator, List<Body> bodies, float strength, float radius)
         {
+            GravityType = GravityType.Linear;
             _simulator = simulator;
             _strength = strength;
 
-            if (_gravityType == GravityType.DistanceSquared)
+            if (GravityType == GravityType.DistanceSquared)
                 _strength *= 100;
 
             _radius = radius;
-            _bodyList = bodies;
+            BodyList = bodies;
         }
 
         /// <summary>
@@ -72,39 +72,28 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// <param name="radius">the maximum distance that can be between 2 bodies before it will stop trying to apply gravity between them.</param>
         public GravityController(PhysicsSimulator simulator, List<Vector2> points, float strength, float radius)
         {
+            GravityType = GravityType.Linear;
             _simulator = simulator;
             _strength = strength;
 
-            if (_gravityType == GravityType.DistanceSquared)
+            if (GravityType == GravityType.DistanceSquared)
                 _strength *= 100;
 
             _radius = radius;
-            _pointList = points;
+            PointList = points;
         }
 
-        public GravityType GravityType
-        {
-            get { return _gravityType; }
-            set { _gravityType = value; }
-        }
+        public GravityType GravityType { get; set; }
 
         /// <summary>
         /// The list of points that act as gravity generators.
         /// </summary>
-        public List<Vector2> PointList
-        {
-            get { return _pointList; }
-            set { _pointList = value; }
-        }
+        public List<Vector2> PointList { get; set; }
 
         /// <summary>
         /// The list of bodies that act as gravity generators.
         /// </summary>
-        public List<Body> BodyList
-        {
-            get { return _bodyList; }
-            set { _bodyList = value; }
-        }
+        public List<Body> BodyList { get; set; }
 
         public override void Validate()
         {
@@ -115,11 +104,11 @@ namespace FarseerGames.FarseerPhysics.Controllers
         {
             foreach (Body body in _simulator.BodyList)
             {
-                if (body.IsDisposed || !body.Enabled)
+                if (body.IsDisposed || !body.Enabled || body.IgnoreGravity)
                     continue;
 
-                if (_bodyList != null)
-                    foreach (Body body2 in _bodyList)
+                if (BodyList != null)
+                    foreach (Body body2 in BodyList)
                     {
                         if (body == body2 || (body.isStatic && body2.isStatic) || body2.IsDisposed || !body2.Enabled)
                             continue;
@@ -132,20 +121,21 @@ namespace FarseerGames.FarseerPhysics.Controllers
                         if (distance > _radius)
                             continue;
 
-                        Vector2 force = Vector2.Multiply(differenceNormal, _strength);
-                        if (_gravityType == GravityType.DistanceSquared)
+                        Vector2 acceleration = Vector2.Multiply(differenceNormal, _strength);
+                        if (GravityType == GravityType.DistanceSquared)
                         {
-                            force = Vector2.Divide(force, distance * distance);
+                            acceleration = Vector2.Divide(acceleration, distance * distance);
                         }
-                        else if (_gravityType == GravityType.Linear)
+                        else if (GravityType == GravityType.Linear)
                         {
-                            force = Vector2.Divide(force, distance);
+                            acceleration = Vector2.Divide(acceleration, distance);
                         }
+                        Vector2 force = body.mass * acceleration;
                         body.ApplyForce(ref force);
                     }
 
-                if (_pointList != null)
-                    foreach (Vector2 anchor in _pointList)
+                if (PointList != null)
+                    foreach (Vector2 anchor in PointList)
                     {
                         Vector2 difference = anchor - body.position;
                         Vector2 differenceNormal = difference;
@@ -155,16 +145,16 @@ namespace FarseerGames.FarseerPhysics.Controllers
                         if (distance > _radius)
                             continue;
 
-                        Vector2 force = Vector2.Multiply(differenceNormal, _strength);
-                        if (_gravityType == GravityType.DistanceSquared)
+                        Vector2 acceleration = Vector2.Multiply(differenceNormal, _strength);
+                        if (GravityType == GravityType.DistanceSquared)
                         {
-                            force = Vector2.Divide(force, distance * distance);
+                            acceleration = Vector2.Divide(acceleration, distance * distance);
                         }
-                        else if (_gravityType == GravityType.Linear)
+                        else if (GravityType == GravityType.Linear)
                         {
-                            force = Vector2.Divide(force, distance);
+                            acceleration = Vector2.Divide(acceleration, distance);
                         }
-
+                        Vector2 force = body.mass * acceleration;
                         body.ApplyForce(ref force);
                     }
             }
