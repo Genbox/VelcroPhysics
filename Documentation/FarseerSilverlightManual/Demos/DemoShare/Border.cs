@@ -56,7 +56,7 @@ namespace FarseerSilverlightManual.Demos.DemoShare
             geometryOffset = new Vector2(0, -(_height * .5f - _borderWidth * .5f));
             _borderGeom[2] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _borderBody, _width,
                                                                       _borderWidth,
-                                                                      geometryOffset, 20);
+                                                                      geometryOffset, 0, 0);
             _borderGeom[2].RestitutionCoefficient = .2f;
             _borderGeom[2].FrictionCoefficient = .2f;
             _borderGeom[2].CollisionGroup = 100;

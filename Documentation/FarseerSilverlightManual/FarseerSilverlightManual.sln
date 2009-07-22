@@ -3,23 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerSilverlightManual", "FarseerSilverlightManual.csproj", "{CD4FB549-7AB3-453C-97AC-8CB23AAB7482}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerPhysics", "..\..\Branches\Silverlight\FarseerPhysics.csproj", "{1D0B97EA-FE4A-498E-A21B-D0D476464925}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerPhysicsSilverlight", "..\..\Branches\FP2.1\Silverlight\FarseerPhysicsSilverlight.csproj", "{1D0B97EA-FE4A-498E-A21B-D0D476464925}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 2
+		SccNumberOfProjects = 3
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs01.codeplex.com/
 		SccProjectUniqueName0 = FarseerSilverlightManual.csproj
-		SccProjectName0 = .
-		SccAuxPath0 = https://tfs01.codeplex.com
 		SccLocalPath0 = .
-		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName1 = ..\\..\\Branches\\Silverlight\\FarseerPhysics.csproj
-		SccProjectName1 = ../../Branches/Silverlight
-		SccAuxPath1 = https://tfs01.codeplex.com
-		SccLocalPath1 = ..\\..\\Branches\\Silverlight
-		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName1 = ..\\..\\Branches\\FP2.1\\Silverlight\\FarseerPhysicsSilverlight.csproj
+		SccProjectName1 = ../../Branches/FP2.1/Silverlight
+		SccLocalPath1 = ..\\..\\Branches\\FP2.1\\Silverlight
+		SccLocalPath2 = .
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
