@@ -379,13 +379,15 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         public int PointInControlPoint(Vector2 point)
         {
             AABB controlPointAABB;
+            Vector2 temp1;
+            Vector2 temp2;
 
             foreach (Vector2 controlPoint in _controlPoints)
             {
-                controlPointAABB =
-                    new AABB(
-                        new Vector2(controlPoint.X - (_controlPointSize / 2), controlPoint.Y - (_controlPointSize / 2)),
-                        new Vector2(controlPoint.X + (_controlPointSize / 2), controlPoint.Y + (_controlPointSize / 2)));
+                temp1 = new Vector2(controlPoint.X - (_controlPointSize / 2), controlPoint.Y - (_controlPointSize / 2));
+                temp2 = new Vector2(controlPoint.X + (_controlPointSize / 2), controlPoint.Y + (_controlPointSize / 2));
+
+                controlPointAABB = new AABB(ref temp1, ref temp2);
 
                 if (controlPointAABB.Contains(ref point))
                     return _controlPoints.IndexOf(controlPoint);

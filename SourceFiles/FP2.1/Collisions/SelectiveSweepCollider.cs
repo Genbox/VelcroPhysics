@@ -181,7 +181,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <summary>
         /// Updates all the nodes to their new values and sorts the lists
         /// </summary>
-        public void InternalUpdate()
+        private void InternalUpdate()
         {
             for (int index = 0; index < _wrappers.Count; ++index)
             {

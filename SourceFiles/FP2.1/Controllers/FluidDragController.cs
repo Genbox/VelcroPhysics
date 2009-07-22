@@ -155,7 +155,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
                 //If the AABB of the geometry does not intersect the fluidcontainer
                 //continue to the next geometry
-                if (!_fluidContainer.Intersect(_geomList[i].AABB))
+                if (!_fluidContainer.Intersect(ref _geomList[i].AABB))
                     continue;
 
                 //Find the vertices contained in the fluidcontainer

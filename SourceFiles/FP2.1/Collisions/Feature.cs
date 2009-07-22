@@ -1,5 +1,3 @@
-using System;
-
 #if (XNA)
 using Microsoft.Xna.Framework;
 #else
@@ -18,14 +16,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         public Vector2 Normal;
         public Vector2 Position;
 
-        public Feature(Vector2 position)
-        {
-            Position = position;
-            Normal = Vector2.Zero;
-            Distance = float.MaxValue;
-        }
-
-        public Feature(Vector2 position, Vector2 normal, Single distance)
+        public Feature(ref Vector2 position, ref  Vector2 normal, float distance)
         {
             Position = position;
             Normal = normal;
@@ -35,7 +26,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         //NOTE: There might be a better way to generate the hashcode
         public override int GetHashCode()
         {
-            return (int) (Normal.X + Normal.Y + Position.X + Position.Y + Distance);
+            return (int)(Normal.X + Normal.Y + Position.X + Position.Y + Distance);
         }
 
         public override bool Equals(object obj)
@@ -43,7 +34,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             if (!(obj is Feature))
                 return false;
 
-            return Equals((Feature) obj);
+            return Equals((Feature)obj);
         }
 
         /// <summary>
@@ -56,14 +47,19 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return ((Normal == other.Normal) && (Position == other.Position) && (Distance == other.Distance));
         }
 
+        public bool Equals(ref Feature other)
+        {
+            return ((Normal == other.Normal) && (Position == other.Position) && (Distance == other.Distance));
+        }
+
         public static bool operator ==(Feature first, Feature second)
         {
-            return first.Equals(second);
+            return first.Equals(ref second);
         }
 
         public static bool operator !=(Feature first, Feature second)
         {
-            return !first.Equals(second);
+            return !first.Equals(ref second);
         }
     }
 }

@@ -84,7 +84,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
 
             CollisionPairs.Clear();
-         }
+        }
 #else
         private int ExtentInfoListRemoveAllRemoved(ExtentInfoList l)
         {
@@ -281,7 +281,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             {
                 // Arbitrarly choose 10000 as a number of colliders that we won't 
                 // approach any time soon.
-                return (Geom1.id*10000 + Geom2.id);
+                return (Geom1.id * 10000 + Geom2.id);
             }
 
             public override bool Equals(object obj)
@@ -289,7 +289,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 if (!(obj is CollisionPair))
                     return false;
 
-                return Equals((CollisionPair) obj);
+                return Equals((CollisionPair)obj);
             }
 
             /// <summary>
@@ -305,14 +305,22 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 return false;
             }
 
+            public bool Equals(ref CollisionPair other)
+            {
+                if (Geom1 == other.Geom1)
+                    return (Geom2 == other.Geom2);
+
+                return false;
+            }
+
             public static bool operator ==(CollisionPair first, CollisionPair second)
             {
-                return first.Equals(second);
+                return first.Equals(ref second);
             }
 
             public static bool operator !=(CollisionPair first, CollisionPair second)
             {
-                return !first.Equals(second);
+                return !first.Equals(ref second);
             }
         }
 
@@ -498,9 +506,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         aabb2.max.X += _floatTolerance;
                         aabb2.max.Y += _floatTolerance;
 
-                        if(!AABB.Intersect(aabb1, aabb2))
+                        if (!AABB.Intersect(ref aabb1, ref aabb2))
                             continue;
-                        
+
                         //Call the OnBroadPhaseCollision event first. If the user aborts the collision
                         //it will not create an arbiter
                         if (Owner.OnBroadPhaseCollision != null)
@@ -686,7 +694,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     if (evalExtent.IsMin)
                     {
                         while (currExtent.Value > evalExtent.Value)
-                            //while (currExtent.Value >= evalExtent.Value)
+                        //while (currExtent.Value >= evalExtent.Value)
                         {
                             if (currExtent.IsMin)
                             {
@@ -726,7 +734,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     else
                     {
                         while (currExtent.Value > evalExtent.Value)
-                            //while (currExtent.Value >= evalExtent.Value)
+                        //while (currExtent.Value >= evalExtent.Value)
                         {
                             if (currExtent.IsMin)
                             {

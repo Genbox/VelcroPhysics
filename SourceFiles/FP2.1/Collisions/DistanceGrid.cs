@@ -134,14 +134,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             //By default, calculate the gridcellsize from the AABB
             if (geom.GridCellSize <= 0)
-                geom.GridCellSize = CalculateGridCellSizeFromAABB(geom.AABB);
+                geom.GridCellSize = CalculateGridCellSizeFromAABB(ref geom.AABB);
 
             //Prepare the geometry. Reset the geometry matrix
             Matrix old = geom.Matrix;
             geom.Matrix = Matrix.Identity;
 
             //Create data needed for gridcalculations
-            AABB aabb = new AABB(geom.AABB);
+            AABB aabb = new AABB(ref geom.AABB);
             float gridCellSizeInv = 1 / geom.GridCellSize;
 
             //Note: Physics2d have +2
@@ -194,7 +194,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         /// <param name="aabb">The AABB.</param>
         /// <returns></returns>
-        private float CalculateGridCellSizeFromAABB(AABB aabb)
+        private float CalculateGridCellSizeFromAABB(ref AABB aabb)
         {
             return aabb.GetShortestSide() * _gridCellSizeAABBFactor;
         }
@@ -226,26 +226,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// <summary>
     /// Class that holds the distancegrid data
     /// </summary>
-    public sealed class DistanceGridData
+    public struct DistanceGridData
     {
         public AABB AABB;
         public float GridCellSize;
         public float GridCellSizeInv;
         public float[,] Nodes;
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        public DistanceGridData Clone()
-        {
-            DistanceGridData grid = new DistanceGridData();
-            grid.GridCellSize = GridCellSize;
-            grid.GridCellSizeInv = GridCellSizeInv;
-            grid.AABB = AABB;
-            grid.Nodes = (float[,])Nodes.Clone();
-            return grid;
-        }
 
         /// <summary>
         /// Checks if the grid intersects with the specified vector.
@@ -293,7 +279,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         if (normal.X != 0 || normal.Y != 0)
                         {
                             Vector2.Normalize(ref normal, out normal);
-                            feature = new Feature(vector, normal, distance);
+                            feature = new Feature(ref vector, ref normal, distance);
                             return true;
                         }
                     }

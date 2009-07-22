@@ -45,7 +45,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demos.Demo7
             Vector2 min = Vector2.Subtract(position, new Vector2(0, 100));
             Vector2 max = Vector2.Add(position, new Vector2(300, 100));
 
-            AABB aabb = new AABB(min, max);
+            AABB aabb = new AABB(ref min, ref max);
 
             foreach (Body body in _physicsSimulator.BodyList)
             {

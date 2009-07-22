@@ -20,7 +20,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
         {
         }
 
-        public AABBFluidContainer(AABB aabb)
+        public AABBFluidContainer(ref AABB aabb)
         {
             _aabb = aabb;
         }
@@ -33,9 +33,9 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         #region IFluidContainer Members
 
-        public bool Intersect(AABB aabb)
+        public bool Intersect(ref AABB aabb)
         {
-            return AABB.Intersect(aabb, _aabb);
+            return AABB.Intersect(ref aabb, ref _aabb);
         }
 
         public bool Contains(ref Vector2 vector)

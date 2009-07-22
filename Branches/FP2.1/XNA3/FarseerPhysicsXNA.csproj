@@ -96,12 +96,6 @@
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\Geom.cs">
       <Link>Collisions\Geom.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\GeomList.cs">
-      <Link>Collisions\GeomList.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\LineIntersectInfo.cs">
-      <Link>Collisions\LineIntersectInfo.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\RayTester.cs">
       <Link>Collisions\RayTester.cs</Link>
     </Compile>
@@ -149,9 +143,6 @@
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Body.cs">
       <Link>Dynamics\Body.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Curve.cs">
-      <Link>Dynamics\Curve.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Joints\AngleJoint.cs">
       <Link>Dynamics\Joints\AngleJoint.cs</Link>

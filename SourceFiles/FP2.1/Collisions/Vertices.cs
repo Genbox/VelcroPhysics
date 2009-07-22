@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using FarseerGames.FarseerPhysics.Mathematics;
-using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.FarseerPhysics.Dynamics;
 
 #if (XNA)
@@ -32,7 +31,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Capacity = capacity;
         }
 
-        public Vertices(Vector2[] vector2)
+        public Vertices(ref Vector2[] vector2)
         {
             for (int i = 0; i < vector2.Length; i++)
             {
@@ -327,28 +326,47 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <returns></returns>
         public Vector2 GetCentroid(float area)
         {
-            //calc centroid on counter clockwise verts.
-            Vertices verts = new Vertices(this);
-            verts.ForceCounterClockWiseOrder();
+            Vertices verts = this;
 
             float cx = 0, cy = 0;
             int i;
 
+            float signedarea = GetSignedArea();
             float factor;
-            for (i = 0; i < Count; i++)
-            {
-                int j = (i + 1) % Count;
 
-                factor = -(verts[i].X * verts[j].Y - verts[j].X * verts[i].Y);
-                cx += (verts[i].X + verts[j].X) * factor;
-                cy += (verts[i].Y + verts[j].Y) * factor;
+            if (signedarea > 0)	//if it's meant to be reversed, go through the vertices backwards
+            {
+                for (i = Count - 1; i >= 0; i--)
+                {
+                    int j = (i - 1) % Count;
+
+                    if (j < 0) { j += Count; }
+
+                    factor = -(verts[i].X * verts[j].Y - verts[j].X * verts[i].Y);
+                    cx += (verts[i].X + verts[j].X) * factor;
+                    cy += (verts[i].Y + verts[j].Y) * factor;
+                }
+
             }
+            else
+            {
+                for (i = 0; i < Count; i++)
+                {
+                    int j = (i + 1) % Count;
+
+                    factor = -(verts[i].X * verts[j].Y - verts[j].X * verts[i].Y);
+                    cx += (verts[i].X + verts[j].X) * factor;
+                    cy += (verts[i].Y + verts[j].Y) * factor;
+                }
+            }
+
             area *= 6.0f;
             factor = 1 / area;
             cx *= factor;
             cy *= factor;
             _res.X = cx;
             _res.Y = cy;
+
             return _res;
         }
 
@@ -894,7 +912,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     {
                         edgeVertex1 = polygon[i];
 
-                        if (Calculator.DistanceBetweenPointAndLineSegment(point, edgeVertex1, edgeVertex2) <= pca.HullTolerance ||
+                        if (Calculator.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <= pca.HullTolerance ||
                             Calculator.DistanceBetweenPointAndPoint(ref point, ref edgeVertex1) <= pca.HullTolerance)
                         {
                             return false;
@@ -911,7 +929,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     {
                         edgeVertex1 = polygon[i];
 
-                        if (Calculator.DistanceBetweenPointAndLineSegment(point, edgeVertex1, edgeVertex2) <= pca.HullTolerance)
+                        if (Calculator.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <= pca.HullTolerance)
                         {
                             return false;
                         }
@@ -1117,11 +1135,14 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                             edgeVertex2Index = polygon.Count - 1;
 
+                            Vector2 tempVector1;
+                            Vector2 tempVector2;
+
                             for (edgeVertex1Index = 0; edgeVertex1Index < polygon.Count; edgeVertex1Index++)
                             {
-                                distance = Calculator.DistanceBetweenPointAndLineSegment(foundEdgeCoord,
-                                                                                         polygon[edgeVertex1Index],
-                                                                                         polygon[edgeVertex2Index]);
+                                tempVector1 = polygon[edgeVertex1Index];
+                                tempVector2 = polygon[edgeVertex2Index];
+                                distance = Calculator.DistanceBetweenPointAndLineSegment(ref foundEdgeCoord, ref tempVector1, ref tempVector2);
                                 if (distance < shortestDistance)
                                 {
                                     shortestDistance = distance;
@@ -1140,8 +1161,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
                                 slope = polygon[nearestEdgeVertex2Index] - polygon[nearestEdgeVertex1Index];
                                 slope.Normalize();
 
-                                distance = Calculator.DistanceBetweenPointAndPoint(polygon[nearestEdgeVertex1Index],
-                                                                                   foundEdgeCoord);
+                                Vector2 tempVector = polygon[nearestEdgeVertex1Index];
+                                distance = Calculator.DistanceBetweenPointAndPoint(ref tempVector, ref foundEdgeCoord);
 
                                 vertex1Index = nearestEdgeVertex1Index;
                                 vertex2Index = nearestEdgeVertex1Index + 1;
@@ -1381,11 +1402,18 @@ namespace FarseerGames.FarseerPhysics.Collisions
             Vector2 outstandingResult = Vector2.Zero;
             bool found = false;
 
+            Vector2 tempVector1;
+            Vector2 tempVector2;
+            Vector2 tempVector3;
+
             // Search between the first and last hull point.
             for (int i = 1; i < hullAreaLastPoint; i++)
             {
+                tempVector1 = hullArea[i];
+                tempVector2 = hullArea[0];
+                tempVector3 = hullArea[hullAreaLastPoint];
                 // Check if the distance is over the one that's tolerable.
-                if (Calculator.DistanceBetweenPointAndLineSegment(hullArea[i], hullArea[0], hullArea[hullAreaLastPoint]) >= hullTolerance)
+                if (Calculator.DistanceBetweenPointAndLineSegment(ref tempVector1, ref  tempVector2, ref tempVector3) >= hullTolerance)
                 {
                     outstandingResult = hullArea[i];
                     found = true;
@@ -4017,9 +4045,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         d1.Normalize();
                         d2.Normalize();
                         d3.Normalize();
-                        float cross12 = Math.Abs(Calculator.Cross(d1, d2));
-                        float cross23 = Math.Abs(Calculator.Cross(d2, d3));
-                        float cross31 = Math.Abs(Calculator.Cross(d3, d1));
+                        float cross12 = Math.Abs(Calculator.Cross(ref d1, ref d2));
+                        float cross23 = Math.Abs(Calculator.Cross(ref d2, ref d3));
+                        float cross31 = Math.Abs(Calculator.Cross(ref d3, ref d1));
                         //Find the maximum minimum angle
                         float minCross = Math.Min(cross12, Math.Min(cross23, cross31));
                         if (minCross > earMaxMinCross)
@@ -4050,7 +4078,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                     if (bufferSize > 0)
                         return bufferSize;
-                    
+
                     return -1;
                 }
 
