@@ -19,7 +19,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     public delegate bool JointDelegate(Joint sender, Body body1, Body body2);
     public delegate bool FixedSpringDelegate(Spring sender, Body body);
     public delegate bool SpringDelegate(Spring sender, Body body1, Body body2);
- 
+
     public delegate void UpdatedEventHandler(ref Vector2 position, ref float rotation);
 
     /// <summary>
@@ -864,26 +864,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 float num = (LinearVelocity.X * LinearVelocity.X) + (LinearVelocity.Y * LinearVelocity.Y);
                 _speed = (float)Math.Sqrt(num);
 
-                #region INLINE: Vector2.Multiply(ref linearVelocity, -_quadraticDragCoefficient * _speed, out _quadraticDrag);
-
-                _quadraticDrag.X = -QuadraticDragCoefficient * _speed * LinearVelocity.X;
-                _quadraticDrag.Y = -QuadraticDragCoefficient * _speed * LinearVelocity.Y;
-
-                #endregion
-
-                #region INLINE: Vector2.Add(ref _linearDrag, ref _quadraticDrag, out _totalDrag);
-
-                _totalDrag.X = _linearDrag.X + _quadraticDrag.X;
-                _totalDrag.Y = _linearDrag.Y + _quadraticDrag.Y;
-
-                #endregion
-
-                ApplyForce(ref _totalDrag);
+                _linearDrag.X = _linearDrag.X + (-_speed * QuadraticDragCoefficient * Math.Sign(LinearVelocity.X));
+                _linearDrag.Y = _linearDrag.Y + (-_speed * QuadraticDragCoefficient * Math.Sign(LinearVelocity.Y));
             }
-            else
-            {
-                ApplyForce(ref _linearDrag);
-            }
+
+            ApplyForce(ref _linearDrag);
 
             //Calculate rotational drag and apply it as torque
             _rotationalDrag = AngularVelocity * AngularVelocity * Math.Sign(AngularVelocity);
@@ -1099,12 +1084,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
         #region ApplyDrag variables
 
-        //private Vector2 dragDirection = Vector2.Zero;
         private Vector2 _linearDrag = Vector2.Zero;
-        private Vector2 _quadraticDrag = Vector2.Zero;
         private float _rotationalDrag;
         private float _speed;
-        private Vector2 _totalDrag = Vector2.Zero;
 
         #endregion
 
