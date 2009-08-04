@@ -666,7 +666,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             _collisionIgnores.Add(geometry);
         }
 
-        public bool FindDNC(Geom geometry)
+        public bool IsGeometryIgnored(Geom geometry)
         {
             foreach (Geom geom in _collisionIgnores)
             {
