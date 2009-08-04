@@ -78,7 +78,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                         ((_geometryB.CollisionCategories & _geometryA.CollidesWith) == CollisionCategory.None))
                         continue;
 
-                    if (_geometryA.FindDNC(_geometryB) || _geometryB.FindDNC(_geometryA))
+                    if (_geometryA.IsGeometryIgnored(_geometryB) || _geometryB.IsGeometryIgnored(_geometryA))
                     {
                         continue;
                     }
