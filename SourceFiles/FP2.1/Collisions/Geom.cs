@@ -659,22 +659,27 @@ namespace FarseerGames.FarseerPhysics.Collisions
             AABB.Update(ref worldVertices);
         }
 
-        private List<Geom> _collisionIgnores = new List<Geom>();
+        private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
+
+        public void RestoreCollisionWith(Geom geometry)
+        {
+            if (_collisionIgnores.ContainsKey(geometry.id))
+                _collisionIgnores[geometry.id] = false;
+        }
 
         public void IgnoreCollisionWith(Geom geometry)
         {
-            _collisionIgnores.Add(geometry);
+            if (_collisionIgnores.ContainsKey(geometry.id))
+                _collisionIgnores[geometry.id] = true;
+            else
+                _collisionIgnores.Add(geometry.id, true);
         }
 
         public bool IsGeometryIgnored(Geom geometry)
         {
-            foreach (Geom geom in _collisionIgnores)
-            {
-                if (geometry.Equals(geom))
-                {
-                    return true;
-                }
-            }
+            if (_collisionIgnores.ContainsKey(geometry.id))
+                return _collisionIgnores[geometry.id];
+
             return false;
         }
 
