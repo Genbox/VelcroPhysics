@@ -78,15 +78,9 @@ namespace Box2DX.Dynamics
         ToiFlag = 0x0008,
         // TODO: Doc
         TouchFlag = 0x0010,
-        // Contacts are invalid if they have been created or modified inside a step
-        // and remain invalid until the next step.
-        InvalidFlag = 0x0020,
-        // Marked for deferred destruction.
-        DestroyFlag = 0x0040,
-        // This marks if contact is currently being evaluated.
-        // Meaning it should be deferred instead of destroyed.
-        // This is essntially a poor mans recursive lock.
-        LockedFlag = 0x0080,
+        
+        // This contact needs filtering because a fixture filter was changed.
+        FilterFlag = 0x0020,
     }
 
 #warning "CAS"

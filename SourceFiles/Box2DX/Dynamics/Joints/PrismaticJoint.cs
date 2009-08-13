@@ -420,8 +420,8 @@ namespace Box2DX.Dynamics
 			_localCenter1 = b1.GetLocalCenter();
 			_localCenter2 = b2.GetLocalCenter();
 
-			XForm xf1 = b1.GetXForm();
-			XForm xf2 = b2.GetXForm();
+			Transform xf1 = b1.GetXForm();
+			Transform xf2 = b2.GetXForm();
 
 			// Compute the effective masses.
 			Vec2 r1 = Box2DX.Common.Math.Mul(xf1.R, _localAnchor1 - _localCenter1);

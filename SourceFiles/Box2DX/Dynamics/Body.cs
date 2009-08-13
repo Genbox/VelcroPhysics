@@ -151,7 +151,7 @@ namespace Box2DX.Dynamics
 
         internal int _islandIndex;
 
-        private XForm _xf;		// the body origin transform
+        private Transform _xf;		// the body origin transform
 
         internal Sweep _sweep;	// the swept motion for CCD
 
@@ -338,7 +338,7 @@ namespace Box2DX.Dynamics
         /// @param massData the mass properties.
         /// </summary>
         /// <param name="massData"></param>
-        public void SetMass(MassData massData)
+        public void SetMassData(MassData massData)
         {
             _invMass = 0.0f;
             _I = 0.0f;
@@ -499,7 +499,7 @@ namespace Box2DX.Dynamics
             return true;
         }
 
-        public bool SetXForm(XForm xf)
+        public bool SetXForm(Transform xf)
         {
             return SetXForm(xf.Position, xf.GetAngle());
         }
@@ -518,7 +518,7 @@ namespace Box2DX.Dynamics
         /// Get the body transform for the body's origin.
         /// </summary>
         /// <returns>Return the world transform of the body's origin.</returns>
-        public XForm GetXForm()
+        public Transform GetXForm()
         {
             return _xf;
         }
@@ -953,7 +953,7 @@ namespace Box2DX.Dynamics
 
         internal bool SynchronizeFixtures()
         {
-            XForm xf1 = new XForm();
+            Transform xf1 = new Transform();
             xf1.R.Set(_sweep.A0);
             xf1.Position = _sweep.C0 - Common.Math.Mul(xf1.R, _sweep.LocalCenter);
 

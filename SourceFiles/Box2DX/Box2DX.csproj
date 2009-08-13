@@ -51,15 +51,12 @@
     <Compile Include="Box2DXDebug.cs" />
     <Compile Include="Collision\BroadPhase.cs" />
     <Compile Include="Collision\Collision.CollideCircle.cs" />
-    <Compile Include="Collision\Collision.CollideEdge.cs" />
     <Compile Include="Collision\Collision.CollidePoly.cs" />
     <Compile Include="Collision\Collision.cs" />
     <Compile Include="Collision\Collision.Distance.cs" />
     <Compile Include="Collision\DynamicTree.cs" />
     <Compile Include="Collision\Collision.TimeOfImpact.cs" />
-    <Compile Include="Collision\PairManager.cs" />
     <Compile Include="Collision\Shapes\CircleShape.cs" />
-    <Compile Include="Collision\Shapes\EdgeShape.cs" />
     <Compile Include="Collision\Shapes\PolygonShape.cs" />
     <Compile Include="Collision\Shapes\Shape.cs" />
     <Compile Include="Common\Mat22.cs" />
@@ -69,7 +66,7 @@
     <Compile Include="Common\Sweep.cs" />
     <Compile Include="Common\Vec2.cs" />
     <Compile Include="Common\Vec3.cs" />
-    <Compile Include="Common\XForm.cs" />
+    <Compile Include="Common\Transform.cs" />
     <Compile Include="Dynamics\Body.cs" />
     <Compile Include="Dynamics\ContactManager.cs" />
     <Compile Include="Dynamics\Contacts\CircleContact.cs" />

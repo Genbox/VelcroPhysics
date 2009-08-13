@@ -63,18 +63,9 @@ namespace Box2DX.Common
         // The maximum number of vertices on a convex polygon.
         public static readonly int MaxPolygonVertices = 8;
 
-        // Factor used to fatten AABBs in DynamicTree. This allows client
-        // objects to move a small amount without needing to adjust the tree.
-        public static readonly float FatAABBFactor = 1.5f;
-
-        // The initial pool size for the dynamic tree.
-        public static readonly int NodePoolSize = 50;
-
-        // This must be a power of two
-        public static readonly int MaxProxies = 512;
-
-        // This must be a power of two
-        public static readonly int MaxPairs = 8 * MaxProxies;
+        /// This is used to fatten AABBs in the dynamic tree. This allows proxies
+        /// to move by a small amount without triggering a tree adjustment.
+        public static readonly float AABBExtension = 0.1f;
 
         /// <summary>
         /// A small length used as a collision and constraint tolerance. Usually it is

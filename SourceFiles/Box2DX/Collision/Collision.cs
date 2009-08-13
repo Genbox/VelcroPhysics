@@ -19,14 +19,12 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-
 using Box2DX.Common;
 
 namespace Box2DX.Collision
 {
     // Structures and functions used for computing contact points, distance
     // queries, and TOI queries.
-
     public partial class Collision
     {
         public static readonly byte NullFeature = Math.UCHAR_MAX;
@@ -89,18 +87,11 @@ namespace Box2DX.Collision
             }
         }
 
-        public struct ClipVertex
-        {
-            public Vec2 V;
-            public ContactID ID;
-        }
-
         // Sutherland-Hodgman clipping.
-        public static int ClipSegmentToLine(out ClipVertex[] vOut, ClipVertex[] vIn,
+        public static int ClipSegmentToLine(out ClipVertex[] vOut, out ClipVertex[] vIn,
             Vec2 normal, float offset)
         {
-            if (vIn.Length != 2)
-                Box2DXDebug.ThrowBox2DXException("vIn should contain 2 element, but contains " + vIn.Length);
+            vIn = new ClipVertex[2];
             vOut = new ClipVertex[2];
 
             // Start with no output points
@@ -133,6 +124,15 @@ namespace Box2DX.Collision
 
             return numOut;
         }
+    }
+
+    /// <summary>
+    /// Used for computing contact manifolds.
+    /// </summary>
+    public struct ClipVertex
+    {
+        public Vec2 V;
+        public ContactID ID;
     }
 
     /// <summary>
@@ -209,16 +209,6 @@ namespace Box2DX.Collision
         /// Uniquely identifies a contact point between two shapes.
         /// </summary>
         public ContactID ID;
-
-        public ManifoldPoint Clone()
-        {
-            ManifoldPoint newPoint = new ManifoldPoint();
-            newPoint.LocalPoint = LocalPoint;
-            newPoint.NormalImpulse = NormalImpulse;
-            newPoint.TangentImpulse = TangentImpulse;
-            newPoint.ID = ID;
-            return newPoint;
-        }
     }
 
 #warning "CAS"
@@ -275,13 +265,13 @@ namespace Box2DX.Collision
         }
     }
 
-    public struct WorldManifold
+    public class WorldManifold
     {
         /// Evaluate the manifold with supplied transforms. This assumes
         /// modest motion from the original state. This does not change the
         /// point count, impulses, etc. The radii must come from the shapes
         /// that generated the manifold.
-        public void Initialize(Manifold manifold, XForm xfA, float radiusA, XForm xfB, float radiusB)
+        public void Initialize(Manifold manifold, Transform xfA, float radiusA, Transform xfB, float radiusB)
         {
             if (manifold.PointCount == 0)
             {
@@ -355,16 +345,30 @@ namespace Box2DX.Collision
         /// <summary>
         ///world contact point (point of intersection)
         /// </summary>
-#warning "Check if it should be static"
-        public static Vec2[] Points = new Vec2[Settings.MaxManifoldPoints];
+        public Vec2[] Points = new Vec2[Settings.MaxManifoldPoints];
     };
 
+    /// <summary>
+    /// This is used for determining the state of contact points.
+    /// </summary>
     public enum PointState
     {
-        NullState,		// Point does not exist
-        AddState,		// Point was added in the update
-        PersistState,	// Point persisted across the update
-        RemoveState		// Point was removed in the update
+        /// <summary>
+        /// Point does not exist
+        /// </summary>
+        NullState,
+        /// <summary>
+        /// Point was added in the update
+        /// </summary>
+        AddState,
+        /// <summary>
+        /// Point persisted across the update
+        /// </summary>
+        PersistState,
+        /// <summary>
+        /// Point was removed in the update
+        /// </summary>
+        RemoveState
     };
 
     /// <summary>

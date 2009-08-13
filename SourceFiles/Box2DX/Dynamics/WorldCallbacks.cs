@@ -257,6 +257,6 @@ namespace Box2DX.Dynamics
 		/// Draw a transform. Choose your own length scale.
 		/// </summary>
 		/// <param name="xf">A transform.</param>
-		public abstract void DrawXForm(XForm xf);
+		public abstract void DrawXForm(Transform xf);
 	}
 }
