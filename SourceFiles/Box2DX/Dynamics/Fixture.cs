@@ -135,7 +135,7 @@ namespace Box2DX.Dynamics
             Vertices[2].Set(hx, hy);
             Vertices[3].Set(-hx, hy);
 
-            XForm xf = new XForm();
+            Transform xf = new Transform();
             xf.Position = center;
             xf.R.Set(angle);
 
@@ -299,8 +299,8 @@ namespace Box2DX.Dynamics
         public bool TestPoint(Vec2 p)
         {
             //Note: Added the following line
-            XForm xForm = Body.GetXForm();
-            return Shape.TestPoint(ref xForm, ref p);
+            Transform transform = Body.GetXForm();
+            return Shape.TestPoint(ref transform, ref p);
         }
 
         /// Perform a ray cast against this shape.
@@ -314,8 +314,8 @@ namespace Box2DX.Dynamics
         public SegmentCollide TestSegment(out float lambda, out Vec2 normal, ref Segment segment, float maxLambda)
         {
             //Note: Added the following line
-            XForm xForm = Body.GetXForm();
-            return Shape.TestSegment(ref xForm, out lambda, out normal, ref segment, maxLambda);
+            Transform transform = Body.GetXForm();
+            return Shape.TestSegment(ref transform, out lambda, out normal, ref segment, maxLambda);
         }
 
         /// Compute the mass properties of this shape using its dimensions and density.
@@ -333,8 +333,8 @@ namespace Box2DX.Dynamics
         /// @return the total volume less than offset along normal
         public float ComputeSubmergedArea(Vec2 normal, float offset, out Vec2 c)
         {
-            XForm xForm = Body.GetXForm();
-            return Shape.ComputeSubmergedArea(ref normal, offset, ref xForm, out c);
+            Transform transform = Body.GetXForm();
+            return Shape.ComputeSubmergedArea(ref normal, offset, ref transform, out c);
         }
 
         /// Get the maximum radius about the parent body's center of mass.
@@ -382,7 +382,7 @@ namespace Box2DX.Dynamics
 
         // We need separation create/destroy functions from the constructor/destructor because
         // the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
-        public void Create(BroadPhase broadPhase, Body body, XForm xf, FixtureDef def)
+        public void Create(BroadPhase broadPhase, Body body, Transform xf, FixtureDef def)
         {
             UserData = def.UserData;
             Friction = def.Friction;
@@ -456,7 +456,7 @@ namespace Box2DX.Dynamics
         // Do we need a destroy method?
         //public void Destroy(BlockAllocator allocator, BroadPhase broadPhase);
 
-        public bool Synchronize(BroadPhase broadPhase, XForm xf1, XForm xf2)
+        public bool Synchronize(BroadPhase broadPhase, Transform xf1, Transform xf2)
         {
             if (ProxyId == PairManager.NullProxy)
             {
@@ -482,7 +482,7 @@ namespace Box2DX.Dynamics
             }
         }
 
-        public void RefilterProxy(BroadPhase broadPhase, XForm xf)
+        public void RefilterProxy(BroadPhase broadPhase, Transform xf)
         {
             if (ProxyId == PairManager.NullProxy)
             {

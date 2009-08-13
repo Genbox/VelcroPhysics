@@ -25,7 +25,7 @@ namespace Box2DX.Common
 	/// A transform contains translation and rotation.
 	/// It is used to represent the position and orientation of rigid frames.
 	/// </summary>
-	public struct XForm
+	public struct Transform
 	{
 		public Vec2 Position;
 		public Mat22 R;
@@ -35,7 +35,7 @@ namespace Box2DX.Common
 		/// </summary>
 		/// <param name="position"></param>
         /// <param name="rotation"></param>
-		public XForm(Vec2 position, Mat22 rotation)
+		public Transform(Vec2 position, Mat22 rotation)
 		{
 			Position = position;
 			R = rotation;
@@ -57,6 +57,6 @@ namespace Box2DX.Common
             return (float)System.Math.Atan2(R.Col1.Y, R.Col1.X);
         }
 
-		public static XForm Identity { get { return new XForm(Vec2.Zero, Mat22.Identity); } }
+		public static Transform Identity { get { return new Transform(Vec2.Zero, Mat22.Identity); } }
 	}
 }

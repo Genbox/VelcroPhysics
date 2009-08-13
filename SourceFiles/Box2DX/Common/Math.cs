@@ -39,8 +39,15 @@ namespace Box2DX.Common
         /// </summary>
         public static bool IsValid(float x)
         {
-            //Not Used
-            //return !(float.IsNaN(x) || float.IsNegativeInfinity(x) || float.IsPositiveInfinity(x));
+            //if (x != x)
+            //{
+            // NaN.
+            //return false;
+            //}
+
+            //float32 infinity = std::numeric_limits<float32>::infinity();
+            //return -infinity < x && x < infinity;
+
             return true;
         }
 
@@ -229,12 +236,12 @@ namespace Box2DX.Common
             return new Mat22(c1, c2);
         }
 
-        public static Vec2 Mul(XForm T, Vec2 v)
+        public static Vec2 Mul(Transform T, Vec2 v)
         {
             return T.Position + Mul(T.R, v);
         }
 
-        public static Vec2 MulT(XForm T, Vec2 v)
+        public static Vec2 MulT(Transform T, Vec2 v)
         {
             return MulT(T.R, v - T.Position);
         }

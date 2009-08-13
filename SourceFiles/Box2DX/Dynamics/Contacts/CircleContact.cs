@@ -52,8 +52,6 @@ namespace Box2DX.Dynamics
 	        Collision.Collision.TOIInput input;
 	        input.SweepA = sweepA;
 	        input.SweepB = sweepB;
-	        input.SweepRadiusA = _fixtureA.ComputeSweepRadius(sweepA.LocalCenter);
-	        input.SweepRadiusB = _fixtureB.ComputeSweepRadius(sweepB.LocalCenter);
 	        input.Tolerance = Settings.LinearSlop;
 
 	        return Collision.Collision.TimeOfImpact(input, _fixtureA.GetShape(), _fixtureB.GetShape());

@@ -34,8 +34,8 @@ namespace Box2DX.Collision
         /// <param name="poly2"></param>
         /// <param name="xf2"></param>
         /// <returns></returns>
-        public static float EdgeSeparation(PolygonShape poly1, XForm xf1, int edge1,
-            PolygonShape poly2, XForm xf2)
+        public static float EdgeSeparation(PolygonShape poly1, Transform xf1, int edge1,
+            PolygonShape poly2, Transform xf2)
         {
             int count1 = poly1.VertexCount;
             Vec2[] vertices1 = poly1.Vertices;
@@ -80,7 +80,8 @@ namespace Box2DX.Collision
         /// <param name="xf2"></param>
         /// <returns></returns>
         public static float FindMaxSeparation(out int edgeIndex,
-            PolygonShape poly1, XForm xf1, PolygonShape poly2, XForm xf2)
+            PolygonShape poly1, Transform xf1,
+            PolygonShape poly2, Transform xf2)
         {
             int count1 = poly1.VertexCount;
             Vec2[] normals1 = poly1.Normals;
@@ -161,7 +162,8 @@ namespace Box2DX.Collision
         }
 
         public static void FindIncidentEdge(out ClipVertex[] c,
-            PolygonShape poly1, XForm xf1, int edge1, PolygonShape poly2, XForm xf2)
+            PolygonShape poly1, Transform xf1, int edge1,
+            PolygonShape poly2, Transform xf2)
         {
             int count1 = poly1.VertexCount;
             Vec2[] normals1 = poly1.Normals;
@@ -212,7 +214,8 @@ namespace Box2DX.Collision
         // Clip
         // The normal points from 1 to 2
         public static void CollidePolygons(out Manifold manifold,
-            PolygonShape polyA, XForm xfA, PolygonShape polyB, XForm xfB)
+            PolygonShape polyA, Transform xfA,
+            PolygonShape polyB, Transform xfB)
         {
             manifold = new Manifold();
             manifold.PointCount = 0;
@@ -230,7 +233,7 @@ namespace Box2DX.Collision
 
             PolygonShape poly1;	// reference poly
             PolygonShape poly2;	// incident poly
-            XForm xf1, xf2;
+            Transform xf1, xf2;
             int edge1;		// reference edge
             byte flip;
             const float k_relativeTol = 0.98f;
@@ -289,13 +292,13 @@ namespace Box2DX.Collision
             int np;
 
             // Clip to box side 1
-            np = ClipSegmentToLine(out clipPoints1, incidentEdge, -sideNormal, sideOffset1);
+            np = ClipSegmentToLine(out clipPoints1, out incidentEdge, -sideNormal, sideOffset1);
 
             if (np < 2)
                 return;
 
             // Clip to negative box side 1
-            np = ClipSegmentToLine(out clipPoints2, clipPoints1, sideNormal, sideOffset2);
+            np = ClipSegmentToLine(out clipPoints2, out clipPoints1, sideNormal, sideOffset2);
 
             if (np < 2)
                 return;

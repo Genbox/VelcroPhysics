@@ -26,7 +26,8 @@ namespace Box2DX.Collision
     public partial class Collision
     {
         public static void CollideCircles(out Manifold manifold,
-            CircleShape circle1, XForm xf1, CircleShape circle2, XForm xf2)
+            CircleShape circle1, Transform xf1,
+            CircleShape circle2, Transform xf2)
         {
             manifold = new Manifold();
             manifold.PointCount = 0;
@@ -36,10 +37,8 @@ namespace Box2DX.Collision
 
             Vec2 d = p2 - p1;
             float distSqr = Vec2.Dot(d, d);
-            float r1 = circle1.Radius;
-            float r2 = circle2.Radius;
-            float radiusSum = r1 + r2;
-            if (distSqr > radiusSum * radiusSum)
+            float radius = circle1.Radius + circle2.Radius;
+            if (distSqr > radius * radius)
             {
                 return;
             }
@@ -53,7 +52,10 @@ namespace Box2DX.Collision
             manifold.Points[0].ID.Key = 0;
         }
 
-        public static void CollidePolygonAndCircle(out Manifold manifold, PolygonShape polygon, XForm xf1, CircleShape circle, XForm xf2)
+        public static void CollidePolygonAndCircle(
+            out Manifold manifold,
+            PolygonShape polygon, Transform xf1,
+            CircleShape circle, Transform xf2)
         {
             manifold = new Manifold();
             manifold.PointCount = 0;

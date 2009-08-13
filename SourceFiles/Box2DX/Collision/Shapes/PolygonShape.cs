@@ -41,6 +41,18 @@ namespace Box2DX.Collision
             Radius = Settings.PolygonRadius;
         }
 
+        public Shape Clone()
+        {
+            PolygonShape polygonShape = new PolygonShape();
+            polygonShape.Centroid = Centroid;
+            polygonShape.Normals = Normals;
+            polygonShape.Radius = Radius;
+            polygonShape.Type = Type;
+            polygonShape.VertexCount = VertexCount;
+            polygonShape.Vertices = Vertices;
+            return polygonShape;
+        }
+
         /// <summary>
         /// Copy vertices. This assumes the vertices define a convex polygon.
         /// It is assumed that the exterior is the the right of each edge.
@@ -49,7 +61,7 @@ namespace Box2DX.Collision
         /// <param name="count">The count.</param>
         public void Set(Vec2[] vertices, int count)
         {
-            Box2DXDebug.Assert(3 <= count && count <= Settings.MaxPolygonVertices);
+            Box2DXDebug.Assert(2 <= count && count <= Settings.MaxPolygonVertices);
             VertexCount = count;
 
             // Copy vertices.
@@ -127,7 +139,7 @@ namespace Box2DX.Collision
             Normals[3].Set(-1.0f, 0.0f);
             Centroid = center;
 
-            XForm xf = new XForm();
+            Transform xf = new Transform();
             xf.Position = center;
             xf.R.Set(angle);
 
@@ -150,7 +162,7 @@ namespace Box2DX.Collision
             Normals[1] = -Normals[0];
         }
 
-        public override bool TestPoint(ref XForm xf, ref  Vec2 p)
+        public override bool TestPoint(ref Transform xf, ref  Vec2 p)
         {
             Vec2 pLocal = Math.MulT(xf.R, p - xf.Position);
 
@@ -166,7 +178,7 @@ namespace Box2DX.Collision
             return true;
         }
 
-        public override SegmentCollide TestSegment(ref XForm xf, out float lambda, out Vec2 normal, ref  Segment segment, float maxLambda)
+        public override SegmentCollide TestSegment(ref Transform xf, out float lambda, out Vec2 normal, ref  Segment segment, float maxLambda)
         {
             lambda = 0f;
             normal = Vec2.Zero;
@@ -233,7 +245,7 @@ namespace Box2DX.Collision
             return SegmentCollide.StartInsideCollide;
         }
 
-        public override void ComputeAABB(out AABB aabb, ref XForm xf)
+        public override void ComputeAABB(out AABB aabb, ref Transform xf)
         {
             Vec2 lower = Math.Mul(xf, Vertices[0]);
             Vec2 upper = lower;
@@ -276,17 +288,24 @@ namespace Box2DX.Collision
             //
             // The rest of the derivation is handled by computer algebra.
 
-            Box2DXDebug.Assert(VertexCount >= 3);
+            Box2DXDebug.Assert(VertexCount >= 2);
 
-            Vec2 center = new Vec2();
-            center.Set(0.0f, 0.0f);
+            // A line segment has zero mass.
+            if (VertexCount == 2)
+            {
+                massData.Center = 0.5f * (Vertices[0] + Vertices[1]);
+                massData.Mass = 0.0f;
+                massData.I = 0.0f;
+                return;
+            }
+
+            Vec2 center = new Vec2(); center.Set(0.0f, 0.0f);
             float area = 0.0f;
             float I = 0.0f;
 
             // pRef is the reference point for forming triangles.
             // It's location doesn't change the result (except for rounding error).
             Vec2 pRef = new Vec2(0.0f, 0.0f);
-
 #if O
 			// This code would put the reference point inside the polygon.
 			for (int i = 0; i < _vertexCount; ++i)
@@ -338,145 +357,8 @@ namespace Box2DX.Collision
             massData.I = density * I;
         }
 
-        public override float ComputeSubmergedArea(ref Vec2 normal, float offset, ref XForm xf, out Vec2 c)
-        {
-            //Transform plane into shape co-ordinates
-            Vec2 normalL = Math.MulT(xf.R, normal);
-            float offsetL = offset - Vec2.Dot(normal, xf.Position);
-
-            float[] depths = new float[Settings.MaxPolygonVertices];
-            int diveCount = 0;
-            int intoIndex = -1;
-            int outoIndex = -1;
-
-            bool lastSubmerged = false;
-            int i;
-            for (i = 0; i < VertexCount; i++)
-            {
-                depths[i] = Vec2.Dot(normalL, Vertices[i]) - offsetL;
-                bool isSubmerged = depths[i] < -Settings.FLT_EPSILON;
-                if (i > 0)
-                {
-                    if (isSubmerged)
-                    {
-                        if (!lastSubmerged)
-                        {
-                            intoIndex = i - 1;
-                            diveCount++;
-                        }
-                    }
-                    else
-                    {
-                        if (lastSubmerged)
-                        {
-                            outoIndex = i - 1;
-                            diveCount++;
-                        }
-                    }
-                }
-                lastSubmerged = isSubmerged;
-            }
-            switch (diveCount)
-            {
-                case 0:
-                    if (lastSubmerged)
-                    {
-                        //Completely submerged
-                        MassData md;
-                        ComputeMass(out md, 1.0f);
-                        c = Math.Mul(xf, md.Center);
-                        return md.Mass;
-                    }
-                    else
-                    {
-                        //Completely dry
-                        c = new Vec2();
-                        return 0;
-                    }
-                    break;
-                case 1:
-                    if (intoIndex == -1)
-                    {
-                        intoIndex = VertexCount - 1;
-                    }
-                    else
-                    {
-                        outoIndex = VertexCount - 1;
-                    }
-                    break;
-            }
-
-            int intoIndex2 = (intoIndex + 1) % VertexCount;
-            int outoIndex2 = (outoIndex + 1) % VertexCount;
-
-            float intoLambda = (0 - depths[intoIndex]) / (depths[intoIndex2] - depths[intoIndex]);
-            float outoLambda = (0 - depths[outoIndex]) / (depths[outoIndex2] - depths[outoIndex]);
-
-            Vec2 intoVec = new Vec2(Vertices[intoIndex].X * (1 - intoLambda) + Vertices[intoIndex2].X * intoLambda,
-                                    Vertices[intoIndex].Y * (1 - intoLambda) + Vertices[intoIndex2].Y * intoLambda);
-            Vec2 outoVec = new Vec2(Vertices[outoIndex].X * (1 - outoLambda) + Vertices[outoIndex2].X * outoLambda,
-                                    Vertices[outoIndex].Y * (1 - outoLambda) + Vertices[outoIndex2].Y * outoLambda);
-
-            //Initialize accumulator
-            float area = 0;
-            Vec2 center = new Vec2(0, 0);
-            Vec2 p2 = Vertices[intoIndex2];
-            Vec2 p3;
-
-            float k_inv3 = 1.0f / 3.0f;
-
-            //An awkward loop from intoIndex2+1 to outIndex2
-            i = intoIndex2;
-            while (i != outoIndex2)
-            {
-                i = (i + 1) % VertexCount;
-                if (i == outoIndex2)
-                    p3 = outoVec;
-                else
-                    p3 = Vertices[i];
-
-                //Add the triangle formed by intoVec,p2,p3
-                {
-                    Vec2 e1 = p2 - intoVec;
-                    Vec2 e2 = p3 - intoVec;
-
-                    float D = Vec2.Cross(e1, e2);
-
-                    float triangleArea = 0.5f * D;
-
-                    area += triangleArea;
-
-                    // Area weighted centroid
-                    center += triangleArea * k_inv3 * (intoVec + p2 + p3);
-
-                }
-#warning "hahaha, what is up with the empty comment?"
-                //
-                p2 = p3;
-            }
-
-            //Normalize and transform centroid
-            center *= 1.0f / area;
-
-            c = Math.Mul(xf, center);
-
-            return area;
-        }
-
-        public override float ComputeSweepRadius(ref Vec2 pivot)
-        {
-            Box2DXDebug.Assert(VertexCount > 0);
-            float sr = Vec2.DistanceSquared(Vertices[0], pivot);
-            for (int i = 1; i < VertexCount; ++i)
-            {
-                sr = Math.Max(sr, Vec2.DistanceSquared(Vertices[i], pivot));
-            }
-
-            return Math.Sqrt(sr);
-        }
-
 #warning "xf argument is not used, perhaps we can remove GetSupport (XForm, Vec2) to get around our hack?"
-        public override int GetSupport(ref XForm xf, ref Vec2 d)
+        public override int GetSupport(ref Transform xf, ref Vec2 d)
         {
             int bestIndex = 0;
             float bestValue = Vec2.Dot(Vertices[0], d);
@@ -547,7 +429,7 @@ namespace Box2DX.Collision
 
         public static Vec2 ComputeCentroid(Vec2[] vs, int count)
         {
-            Box2DXDebug.Assert(count >= 3);
+            Box2DXDebug.Assert(count >= 2);
 
             Vec2 c = new Vec2(); c.Set(0.0f, 0.0f);
             float area = 0.0f;
@@ -564,7 +446,7 @@ namespace Box2DX.Collision
 			pRef *= 1.0f / count;
 #endif
 
-            float inv3 = 1.0f / 3.0f;
+            const float inv3 = 1.0f / 3.0f;
 
             for (int i = 0; i < count; ++i)
             {

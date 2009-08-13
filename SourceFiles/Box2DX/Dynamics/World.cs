@@ -1190,8 +1190,8 @@ namespace Box2DX.Dynamics
 		{
 			Body b1 = joint.GetBody1();
 			Body b2 = joint.GetBody2();
-			XForm xf1 = b1.GetXForm();
-			XForm xf2 = b2.GetXForm();
+			Transform xf1 = b1.GetXForm();
+			Transform xf2 = b2.GetXForm();
 			Vec2 x1 = xf1.Position;
 			Vec2 x2 = xf2.Position;
 			Vec2 p1 = joint.Anchor1;
@@ -1234,7 +1234,7 @@ namespace Box2DX.Dynamics
 			}
 		}
 
-		private void DrawFixture(Fixture fixture, XForm xf, Color color, bool core)
+		private void DrawFixture(Fixture fixture, Transform xf, Color color, bool core)
 		{
 #warning "the core argument is not used, the coreColor variable is also not used"
 			Color coreColor = new Color(0.9f, 0.6f, 0.6f);
@@ -1296,7 +1296,7 @@ namespace Box2DX.Dynamics
 
 				for (Body b = _bodyList; b != null; b = b.GetNext())
 				{
-					XForm xf = b.GetXForm();
+					Transform xf = b.GetXForm();
 					for (Fixture f = b.GetFixtureList(); f != null; f = f.GetNext())
 					{
 						if (b.IsStatic())
@@ -1414,7 +1414,7 @@ namespace Box2DX.Dynamics
 			{
 				for (Body b = _bodyList; b != null; b = b.GetNext())
 				{
-					XForm xf = b.GetXForm();
+					Transform xf = b.GetXForm();
 					xf.Position = b.GetWorldCenter();
 					_debugDraw.DrawXForm(xf);
 				}

@@ -52,7 +52,6 @@ namespace Box2DX.Collision
         UnknownShape = -1,
         CircleShape,
         PolygonShape,
-        EdgeShape,
         ShapeTypeCount,
     }
 
@@ -74,8 +73,6 @@ namespace Box2DX.Collision
     public abstract class Shape
     {
         public ShapeType Type;
-
-        //NOTE: This was moved here in C# port to circumvent C++ generics
         public float Radius;
 
         public Shape()
@@ -83,11 +80,13 @@ namespace Box2DX.Collision
             Type = ShapeType.UnknownShape;
         }
 
+        public abstract Shape Clone();
+
         /// <summary>
         /// Get the type of this shape. You can use this to down cast to the concrete shape.
         /// </summary>
         /// <returns>the shape type.</returns>
-        public new ShapeType GetType()
+        public ShapeType GetShapeType()
         {
             return Type;
         }
@@ -98,7 +97,7 @@ namespace Box2DX.Collision
         /// <param name="xf">The shape world transform.</param>
         /// <param name="p">A point in world coordinates.</param>
         /// <returns></returns>
-        public abstract bool TestPoint(ref XForm xf, ref Vec2 p);
+        public abstract bool TestPoint(ref Transform xf, ref Vec2 p);
 
         /// <summary>
         /// Perform a ray cast against this shape.
@@ -110,14 +109,14 @@ namespace Box2DX.Collision
         /// the normal is not set.</param>
         /// <param name="segment">Defines the begin and end point of the ray cast.</param>
         /// <param name="maxLambda">A number typically in the range [0,1].</param>
-        public abstract SegmentCollide TestSegment(ref XForm xf, out float lambda, out Vec2 normal, ref Segment segment, float maxLambda);
+        public abstract SegmentCollide TestSegment(ref Transform xf, out float lambda, out Vec2 normal, ref Segment segment, float maxLambda);
 
         /// <summary>
         /// Given a transform, compute the associated axis aligned bounding box for this shape.
         /// </summary>
         /// <param name="aabb">Returns the axis aligned box.</param>
         /// <param name="xf">The world transform of the shape.</param>
-        public abstract void ComputeAABB(out AABB aabb, ref XForm xf);
+        public abstract void ComputeAABB(out AABB aabb, ref Transform xf);
 
         /// <summary>
         /// Compute the mass properties of this shape using its dimensions and density.
@@ -127,30 +126,12 @@ namespace Box2DX.Collision
         /// <param name="density">The density in kilograms per meter squared.</param>
         public abstract void ComputeMass(out MassData massData, float density);
 
-        /// <summary>
-        /// Compute the volume and centroid of this shape intersected with a half plane.
-        /// </summary>
-        /// <param name="normal">Normal the surface normal.</param>
-        /// <param name="offset">Offset the surface offset along normal.</param>
-        /// <param name="xf">The shape transform.</param>
-        /// <param name="c">Returns the centroid.</param>
-        /// <returns>The total volume less than offset along normal.</returns>
-        public abstract float ComputeSubmergedArea(ref Vec2 normal, float offset, ref XForm xf, out Vec2 c);
-
-        /// <summary>
-        /// Compute the sweep radius. This is used for conservative advancement (continuous
-        /// collision detection).
-        /// </summary>
-        /// <param name="pivot">Pivot is the pivot point for rotation.</param>
-        /// <returns>The distance of the furthest point from the pivot.</returns>
-        public abstract float ComputeSweepRadius(ref Vec2 pivot);
-
         //NOTE: This was moved here in C# port to circumvent C++ generics
         public abstract Vec2 GetVertex(int index);
 
         public abstract Vec2 GetSupportVertex(ref Vec2 d);
 
-        public abstract int GetSupport(ref XForm xf, ref Vec2 d);
+        public abstract int GetSupport(ref Transform xf, ref Vec2 d);
 
         public abstract int GetSupport(Vec2 d);
     }

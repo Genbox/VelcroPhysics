@@ -36,9 +36,20 @@ namespace Box2DX.Collision
         public CircleShape()
         {
             Type = ShapeType.CircleShape;
+            Radius = 0.0f;
+            LocalPosition.SetZero();
         }
 
-        public override bool TestPoint(ref XForm transform, ref Vec2 p)
+        public Shape Clone()
+        {
+            CircleShape shape = new CircleShape();
+            shape.LocalPosition = this.LocalPosition;
+            shape.Type = this.Type;
+            shape.Radius = this.Radius;
+            return shape;
+        }
+
+        public override bool TestPoint(ref Transform transform, ref Vec2 p)
         {
             Vec2 center = transform.Position + Math.Mul(transform.R, LocalPosition);
             Vec2 d = p - center;
@@ -49,7 +60,7 @@ namespace Box2DX.Collision
         // From Section 3.1.2
         // x = s + a * r
         // norm(x) = radius
-        public override SegmentCollide TestSegment(ref XForm transform, out float lambda, out Vec2 normal, ref Segment segment, float maxLambda)
+        public override SegmentCollide TestSegment(ref Transform transform, out float lambda, out Vec2 normal, ref Segment segment, float maxLambda)
         {
             // Needed in the C# version as all variables marked "out" must be inialized
             lambda = 0f;
@@ -94,7 +105,7 @@ namespace Box2DX.Collision
             return SegmentCollide.MissCollide;
         }
 
-        public override void ComputeAABB(out AABB aabb, ref XForm transform)
+        public override void ComputeAABB(out AABB aabb, ref Transform transform)
         {
             aabb = new AABB();
 
@@ -114,39 +125,8 @@ namespace Box2DX.Collision
             massData.I = massData.Mass * (0.5f * Radius * Radius + Vec2.Dot(LocalPosition, LocalPosition));
         }
 
-        public override float ComputeSubmergedArea(ref Vec2 normal, float offset, ref XForm xf, out Vec2 c)
-        {
-            // Needed in the C# version as all variables marked "out" must be inialized
-            c = new Vec2();
-
-            Vec2 p = Math.Mul(xf, LocalPosition);
-            float l = -(Vec2.Dot(normal, p) - offset);
-            if (l < -Radius + Settings.FLT_EPSILON)
-            {
-                //Completely dry
-                return 0;
-            }
-            if (l > Radius)
-            {
-                //Completely wet
-                c = p;
-                return Settings.Pi * Radius * Radius;
-            }
-
-            //Magic
-            float r2 = Radius * Radius;
-            float l2 = l * l;
-            float area = r2 * ((float)System.Math.Asin(l / Radius) + Settings.Pi / 2) + l * Math.Sqrt(r2 - l2);
-            float com = -2.0f / 3.0f * (float)System.Math.Pow(r2 - l2, 1.5f) / area;
-
-            c.X = p.X + normal.X * com;
-            c.Y = p.Y + normal.Y * com;
-
-            return area;
-        }
-
         //Note: Not needed by CircleShape. It is a leftover from hacking C++ generics into C#
-        public override int GetSupport(ref XForm xf, ref Vec2 d)
+        public override int GetSupport(ref Transform xf, ref Vec2 d)
         {
             throw new NotImplementedException();
         }
@@ -163,16 +143,17 @@ namespace Box2DX.Collision
             return LocalPosition;
         }
 
+        /// Get the vertex count.
+        public int GetVertexCount()
+        {
+            return 1;
+        }
+
         public override Vec2 GetVertex(int index)
         {
             //B2_NOT_USED(index);
             Box2DXDebug.Assert(index == 0);
             return LocalPosition;
-        }
-
-        public override float ComputeSweepRadius(ref Vec2 pivot)
-        {
-            return Vec2.Distance(LocalPosition, pivot);
         }
     }
 }

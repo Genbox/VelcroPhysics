@@ -32,9 +32,9 @@ namespace Box2DX.Common
 		/// Get the interpolated transform at a specific time.
 		/// </summary>
         /// <param name="alpha">alpha is a factor in [0,1], where 0 indicates t0.</param>
-        public void GetTransform(out XForm xf, float alpha)
+        public void GetTransform(out Transform xf, float alpha)
 		{
-            xf = new XForm();
+            xf = new Transform();
 
             xf.Position = (1.0f - alpha) * C0 + alpha * C;
             float angle = (1.0f - alpha) * A0 + alpha * A;
