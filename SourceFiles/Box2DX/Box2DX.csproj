@@ -74,17 +74,10 @@
     <Compile Include="Dynamics\Contacts\ContactSolver.cs" />
     <Compile Include="Dynamics\Contacts\PolygonAndCircleContact.cs" />
     <Compile Include="Dynamics\Contacts\PolygonContact.cs" />
-    <Compile Include="Dynamics\Controllers\BuoyancyController.cs" />
-    <Compile Include="Dynamics\Controllers\ConstantAccelController.cs" />
-    <Compile Include="Dynamics\Controllers\ConstantForceController.cs" />
-    <Compile Include="Dynamics\Controllers\Controller.cs" />
-    <Compile Include="Dynamics\Controllers\GravityController.cs" />
-    <Compile Include="Dynamics\Controllers\TensorDampingController.cs" />
     <Compile Include="Dynamics\EdgeChain.cs" />
     <Compile Include="Dynamics\Fixture.cs" />
     <Compile Include="Dynamics\Island.cs" />
     <Compile Include="Dynamics\Joints\DistanceJoint.cs" />
-    <Compile Include="Dynamics\Joints\FixedJoint.cs" />
     <Compile Include="Dynamics\Joints\GearJoint.cs" />
     <Compile Include="Dynamics\Joints\Joint.cs" />
     <Compile Include="Dynamics\Joints\LineJoint.cs" />

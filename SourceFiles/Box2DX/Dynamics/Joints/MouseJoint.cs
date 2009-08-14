@@ -27,10 +27,6 @@
 // Identity used:
 // w k % (rx i + ry j) = w * (-ry i + rx j)
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Box2DX.Common;
 
 namespace Box2DX.Dynamics
@@ -101,7 +97,7 @@ namespace Box2DX.Dynamics
 
 		public override Vec2 Anchor2
 		{
-			get { return _body2.GetWorldPoint(_localAnchor); }
+			get { return _bodyB.GetWorldPoint(_localAnchor); }
 		}
 
 		public override Vec2 GetReactionForce(float inv_dt)
@@ -119,9 +115,9 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void SetTarget(Vec2 target)
 		{
-			if (_body2.IsSleeping())
+			if (_bodyB.IsSleeping())
 			{
-				_body2.WakeUp();
+				_bodyB.WakeUp();
 			}
 			_target = target;
 		}
@@ -130,7 +126,7 @@ namespace Box2DX.Dynamics
 			: base(def)
 		{
 			_target = def.Target;
-			_localAnchor = Common.Math.MulT(_body2.GetTransform(), _target);
+			_localAnchor = Common.Math.MulT(_bodyB.GetTransform(), _target);
 
 			_maxForce = def.MaxForce;
 			_impulse.SetZero();
@@ -144,7 +140,7 @@ namespace Box2DX.Dynamics
 
 		internal override void InitVelocityConstraints(TimeStep step)
 		{
-			Body b = _body2;
+			Body b = _bodyB;
 
 			float mass = b.GetMass();
 
@@ -200,7 +196,7 @@ namespace Box2DX.Dynamics
 
 		internal override void SolveVelocityConstraints(TimeStep step)
 		{
-			Body b = _body2;
+			Body b = _bodyB;
 
 			Vec2 r = Common.Math.Mul(b.GetTransform().R, _localAnchor - b.GetLocalCenter());
 
