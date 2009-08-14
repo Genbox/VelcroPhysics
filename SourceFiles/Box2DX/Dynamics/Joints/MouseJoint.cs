@@ -130,7 +130,7 @@ namespace Box2DX.Dynamics
 			: base(def)
 		{
 			_target = def.Target;
-			_localAnchor = Common.Math.MulT(_body2.GetXForm(), _target);
+			_localAnchor = Common.Math.MulT(_body2.GetTransform(), _target);
 
 			_maxForce = def.MaxForce;
 			_impulse.SetZero();
@@ -165,7 +165,7 @@ namespace Box2DX.Dynamics
 			_beta = step.Dt * k * _gamma;
 
 			// Compute the effective mass matrix.
-			Vec2 r = Common.Math.Mul(b.GetXForm().R, _localAnchor - b.GetLocalCenter());
+			Vec2 r = Common.Math.Mul(b.GetTransform().R, _localAnchor - b.GetLocalCenter());
 
 			// K    = [(1/m1 + 1/m2) * eye(2) - skew(r1) * invI1 * skew(r1) - skew(r2) * invI2 * skew(r2)]
 			//      = [1/m1+1/m2     0    ] + invI1 * [r1.y*r1.y -r1.x*r1.y] + invI2 * [r1.y*r1.y -r1.x*r1.y]
@@ -202,7 +202,7 @@ namespace Box2DX.Dynamics
 		{
 			Body b = _body2;
 
-			Vec2 r = Common.Math.Mul(b.GetXForm().R, _localAnchor - b.GetLocalCenter());
+			Vec2 r = Common.Math.Mul(b.GetTransform().R, _localAnchor - b.GetLocalCenter());
 
 			// Cdot = v + cross(w, r)
 			Vec2 Cdot = b._linearVelocity + Vec2.Cross(b._angularVelocity, r);

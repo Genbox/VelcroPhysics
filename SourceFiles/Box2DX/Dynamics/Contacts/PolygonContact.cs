@@ -19,17 +19,37 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using Box2DX.Common;
+using Box2DX.Collision;
 
 namespace Box2DX.Dynamics
 {
-	public class NullContact : Contact
+	public class PolygonContact : Contact
 	{
-        public override void Evaluate() {}
+		new public static Contact Create(Fixture fixtureA, Fixture fixtureB)
+        {
+	        return new PolygonContact(fixtureA, fixtureB);
+        }
 
-	    public override float ComputeTOI(Sweep sweepA, Sweep sweepB)
-	    {
-	        return 1.0f;
-	    }
+        new public static void Destroy(Contact contact)
+        {
+            contact = null;
+        }
+
+        public PolygonContact(Fixture fixtureA, Fixture fixtureB)
+	        : base(fixtureA, fixtureB)
+        {
+	        Box2DXDebug.Assert(_fixtureA.GetShapeType() == ShapeType.PolygonShape);
+	        Box2DXDebug.Assert(_fixtureB.GetShapeType() == ShapeType.PolygonShape);
+        }
+
+        public override void Evaluate()
+        {
+	        Body bodyA = _fixtureA.GetBody();
+	        Body bodyB = _fixtureB.GetBody();
+
+            Collision.Collision.CollidePolygons(out Manifold,
+						        (PolygonShape)_fixtureA.GetShape(), bodyA.GetTransform(),
+						        (PolygonShape)_fixtureB.GetShape(), bodyB.GetTransform());
+        }
 	}
 }

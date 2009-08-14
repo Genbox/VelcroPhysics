@@ -129,7 +129,7 @@ namespace Box2DX.Dynamics
 		public override float GetReactionTorque(float inv_dt)
 		{
 			// TODO_ERIN not tested
-			Vec2 r = Math.Mul(_body2.GetXForm().R, _localAnchor2 - _body2.GetLocalCenter());
+			Vec2 r = Math.Mul(_body2.GetTransform().R, _localAnchor2 - _body2.GetLocalCenter());
 			Vec2 P = _impulse * _J.Linear2;
 			float L = _impulse * _J.Angular2 - Vec2.Cross(r, P);
 			return inv_dt * L;
@@ -216,8 +216,8 @@ namespace Box2DX.Dynamics
 			}
 			else
 			{
-				Vec2 ug = Math.Mul(g1.GetXForm().R, _prismatic1._localXAxis1);
-				Vec2 r = Math.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+				Vec2 ug = Math.Mul(g1.GetTransform().R, _prismatic1._localXAxis1);
+				Vec2 r = Math.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
 				float crug = Vec2.Cross(r, ug);
 				_J.Linear1 = -ug;
 				_J.Angular1 = -crug;
@@ -231,8 +231,8 @@ namespace Box2DX.Dynamics
 			}
 			else
 			{
-				Vec2 ug = Math.Mul(g2.GetXForm().R, _prismatic2._localXAxis1);
-				Vec2 r = Math.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+				Vec2 ug = Math.Mul(g2.GetTransform().R, _prismatic2._localXAxis1);
+				Vec2 r = Math.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
 				float crug = Vec2.Cross(r, ug);
 				_J.Linear2 = -_ratio * ug;
 				_J.Angular2 = -_ratio * crug;

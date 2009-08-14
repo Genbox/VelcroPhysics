@@ -155,8 +155,8 @@ namespace Box2DX.Dynamics
 			Body b2 = _body2;
 
 			// Compute the effective mass matrix.
-			Vec2 r1 = Math.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-			Vec2 r2 = Math.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+			Vec2 r1 = Math.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
+			Vec2 r2 = Math.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
 			_u = b2._sweep.C + r2 - b1._sweep.C - r1;
 
 			// Handle singularity.
@@ -226,8 +226,8 @@ namespace Box2DX.Dynamics
 			Body b1 = _body1;
 			Body b2 = _body2;
 
-			Vec2 r1 = Math.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-			Vec2 r2 = Math.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+			Vec2 r1 = Math.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
+			Vec2 r2 = Math.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
 
 			Vec2 d = b2._sweep.C + r2 - b1._sweep.C - r1;
 
@@ -257,8 +257,8 @@ namespace Box2DX.Dynamics
 			Body b1 = _body1;
 			Body b2 = _body2;
 
-			Vec2 r1 = Math.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-			Vec2 r2 = Math.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+			Vec2 r1 = Math.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
+			Vec2 r2 = Math.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
 
 			// Cdot = dot(u, v + cross(w, r))
 			Vec2 v1 = b1._linearVelocity + Vec2.Cross(b1._angularVelocity, r1);

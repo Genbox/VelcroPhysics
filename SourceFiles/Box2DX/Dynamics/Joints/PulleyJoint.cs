@@ -207,7 +207,7 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public Vec2 GroundAnchor1
 		{
-			get { return _ground.GetXForm().Position + _groundAnchor1; }
+			get { return _ground.GetTransform().Position + _groundAnchor1; }
 		}
 
 		/// <summary>
@@ -215,7 +215,7 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public Vec2 GroundAnchor2
 		{
-			get { return _ground.GetXForm().Position + _groundAnchor2; }
+			get { return _ground.GetTransform().Position + _groundAnchor2; }
 		}
 
 		/// <summary>
@@ -226,7 +226,7 @@ namespace Box2DX.Dynamics
 			get
 			{
 				Vec2 p = _body1.GetWorldPoint(_localAnchor1);
-				Vec2 s = _ground.GetXForm().Position + _groundAnchor1;
+				Vec2 s = _ground.GetTransform().Position + _groundAnchor1;
 				Vec2 d = p - s;
 				return d.Length();
 			}
@@ -240,7 +240,7 @@ namespace Box2DX.Dynamics
 			get
 			{
 				Vec2 p = _body2.GetWorldPoint(_localAnchor2);
-				Vec2 s = _ground.GetXForm().Position + _groundAnchor2;
+				Vec2 s = _ground.GetTransform().Position + _groundAnchor2;
 				Vec2 d = p - s;
 				return d.Length();
 			}
@@ -258,8 +258,8 @@ namespace Box2DX.Dynamics
 			: base(def)
 		{
 			_ground = _body1.GetWorld().GetGroundBody();
-			_groundAnchor1 = def.GroundAnchor1 - _ground.GetXForm().Position;
-			_groundAnchor2 = def.GroundAnchor2 - _ground.GetXForm().Position;
+			_groundAnchor1 = def.GroundAnchor1 - _ground.GetTransform().Position;
+			_groundAnchor2 = def.GroundAnchor2 - _ground.GetTransform().Position;
 			_localAnchor1 = def.LocalAnchor1;
 			_localAnchor2 = def.LocalAnchor2;
 
@@ -281,14 +281,14 @@ namespace Box2DX.Dynamics
 			Body b1 = _body1;
 			Body b2 = _body2;
 
-			Vec2 r1 = Box2DXMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-			Vec2 r2 = Box2DXMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+			Vec2 r1 = Box2DXMath.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
+			Vec2 r2 = Box2DXMath.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
 
 			Vec2 p1 = b1._sweep.C + r1;
 			Vec2 p2 = b2._sweep.C + r2;
 
-			Vec2 s1 = _ground.GetXForm().Position + _groundAnchor1;
-			Vec2 s2 = _ground.GetXForm().Position + _groundAnchor2;
+			Vec2 s1 = _ground.GetTransform().Position + _groundAnchor1;
+			Vec2 s2 = _ground.GetTransform().Position + _groundAnchor2;
 
 			// Get the pulley axes.
 			_u1 = p1 - s1;
@@ -388,8 +388,8 @@ namespace Box2DX.Dynamics
 			Body b1 = _body1;
 			Body b2 = _body2;
 
-			Vec2 r1 = Box2DXMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-			Vec2 r2 = Box2DXMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+			Vec2 r1 = Box2DXMath.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
+			Vec2 r2 = Box2DXMath.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
 
 			if (_state == LimitState.AtUpperLimit)
 			{
@@ -446,15 +446,15 @@ namespace Box2DX.Dynamics
 			Body b1 = _body1;
 			Body b2 = _body2;
 
-			Vec2 s1 = _ground.GetXForm().Position + _groundAnchor1;
-			Vec2 s2 = _ground.GetXForm().Position + _groundAnchor2;
+			Vec2 s1 = _ground.GetTransform().Position + _groundAnchor1;
+			Vec2 s2 = _ground.GetTransform().Position + _groundAnchor2;
 
 			float linearError = 0.0f;
 
 			if (_state == LimitState.AtUpperLimit)
 			{
-				Vec2 r1 = Box2DXMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-				Vec2 r2 = Box2DXMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+				Vec2 r1 = Box2DXMath.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
+				Vec2 r2 = Box2DXMath.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
 
 				Vec2 p1 = b1._sweep.C + r1;
 				Vec2 p2 = b2._sweep.C + r2;
@@ -504,7 +504,7 @@ namespace Box2DX.Dynamics
 
 			if (_limitState1 == LimitState.AtUpperLimit)
 			{
-				Vec2 r1 = Box2DXMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
+				Vec2 r1 = Box2DXMath.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
 				Vec2 p1 = b1._sweep.C + r1;
 
 				_u1 = p1 - s1;
@@ -533,7 +533,7 @@ namespace Box2DX.Dynamics
 
 			if (_limitState2 == LimitState.AtUpperLimit)
 			{
-				Vec2 r2 = Box2DXMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+				Vec2 r2 = Box2DXMath.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
 				Vec2 p2 = b2._sweep.C + r2;
 
 				_u2 = p2 - s2;
