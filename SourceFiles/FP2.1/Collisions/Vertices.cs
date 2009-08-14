@@ -1908,10 +1908,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     Vector2 p3 = polygon2[j];
                     Vector2 p4 = polygon2[polygon2.NextIndex(j)];
 
-                    // _defaultFloatTolerance = .00001f (Perhaps this should be made available publically from CollisionHelper?
+                    // _defaultFloatTolerance = .00001f (Perhaps this should be made available publically from RayHelper?
 
                     // Check if the edges intersect
-                    if (CollisionHelper.LineIntersect(p1, p2, p3, p4, true, true, 0.00001f, out point))
+                    if (RayHelper.LineIntersect(p1, p2, p3, p4, true, true, 0.00001f, out point))
                     {
                         // Here, we round the returned intersection point to its nearest whole number.
                         // This prevents floating point anomolies where 99.9999-> is returned instead of 100.

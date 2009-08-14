@@ -91,7 +91,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demo8
             _intersectingPoints.Clear();
             _intersectingGeoms.Clear();
 
-            _intersectingGeoms = CollisionHelper.LineSegmentAllGeomsIntersect(ref _p1, ref _p2, PhysicsSimulator, false, ref  _intersectingPoints);
+            _intersectingGeoms = RayHelper.LineSegmentAllGeomsIntersect(ref _p1, ref _p2, PhysicsSimulator, false, ref  _intersectingPoints);
 
             if (_intersectingPoints.Count > 0)
                 _lineBrush.Color = Color.Yellow;
