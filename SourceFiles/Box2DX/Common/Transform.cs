@@ -41,6 +41,12 @@ namespace Box2DX.Common
 			R = rotation;
 		}
 
+        public void Set(Vec2 position, Mat22 rotation)
+        {
+            Position = position;
+            R = rotation;
+        }
+
 		/// <summary>
 		/// Set this to the identity transform.
 		/// </summary>

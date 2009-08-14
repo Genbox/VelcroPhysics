@@ -39,19 +39,9 @@ namespace Box2DX.Common
             Version.revision = 2;
         }
 
-#if TARGET_FLOAT32_IS_FIXED
-		public static readonly float FLT_EPSILON = FIXED_EPSILON;
-		public static readonly float FLT_MAX = FIXED_MAX;
-		public static float	FORCE_SCALE2(x){ return x<<7;}
-		public static float FORCE_INV_SCALE2(x)	{return x>>7;}
-#else
         public static readonly float FLT_EPSILON = 1.192092896e-07F;
         public static readonly float FLT_MAX = 3.402823466e+38F;
-        public static float FORCE_SCALE(float x) { return x; }
-        public static float FORCE_INV_SCALE(float x) { return x; }
-#endif
-
-        public static readonly float Pi = 3.14159265359f;
+        public static readonly float PI = 3.14159265359f;
 
         // Global tuning constants based on meters-kilograms-seconds (MKS) units.
 
@@ -77,7 +67,7 @@ namespace Box2DX.Common
         /// A small angle used as a collision and constraint tolerance. Usually it is
         /// chosen to be numerically significant, but visually insignificant.
         /// </summary>
-        public static readonly float AngularSlop = 2.0f / 180.0f * Pi; // 2 degrees
+        public static readonly float AngularSlop = 2.0f / 180.0f * PI; // 2 degrees
 
         /// The radius of the polygon/edge shape skin. This should not be modified. Making
         /// this smaller means polygons will have and insufficient for continuous collision.
@@ -112,7 +102,7 @@ namespace Box2DX.Common
         /// The maximum angular position correction used when solving constraints.
         /// This helps to prevent overshoot.
         /// </summary>
-        public static readonly float MaxAngularCorrection = 8.0f / 180.0f * Pi; // 8 degrees
+        public static readonly float MaxAngularCorrection = 8.0f / 180.0f * PI; // 8 degrees
 
         /// <summary>
         /// The maximum linear velocity of a body. This limit is very large and is used
@@ -125,7 +115,7 @@ namespace Box2DX.Common
         /// The maximum angular velocity of a body. This limit is very large and is used
         /// to prevent numerical problems. You shouldn't need to adjust this.
         /// </summary>
-        public static readonly float MaxRotation = (0.5f * Pi);
+        public static readonly float MaxRotation = (0.5f * PI);
         public static readonly float MaxRotationSquared = (MaxRotation * MaxRotation);
 
         /// <summary>
@@ -150,7 +140,7 @@ namespace Box2DX.Common
         /// <summary>
         /// A body cannot sleep if its angular velocity is above this tolerance.
         /// </summary>
-        public static readonly float AngularSleepTolerance = 2.0f / 180.0f * Pi; // 2 degrees/s
+        public static readonly float AngularSleepTolerance = 2.0f / 180.0f * PI; // 2 degrees/s
 
         /// Current version.
         public static Version Version;

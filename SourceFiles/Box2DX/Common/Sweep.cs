@@ -31,6 +31,7 @@ namespace Box2DX.Common
 		/// <summary>
 		/// Get the interpolated transform at a specific time.
 		/// </summary>
+        /// <param name="xf">The transform</param>
         /// <param name="alpha">alpha is a factor in [0,1], where 0 indicates t0.</param>
         public void GetTransform(out Transform xf, float alpha)
 		{

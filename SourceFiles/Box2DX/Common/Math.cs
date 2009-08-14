@@ -238,7 +238,10 @@ namespace Box2DX.Common
 
         public static Vec2 Mul(Transform T, Vec2 v)
         {
-            return T.Position + Mul(T.R, v);
+            float x = T.Position.X + T.R.Col1.X * v.X + T.R.Col2.X * v.Y;
+            float y = T.Position.Y + T.R.Col1.Y * v.X + T.R.Col2.Y * v.Y;
+
+            return new Vec2(x, y);
         }
 
         public static Vec2 MulT(Transform T, Vec2 v)
