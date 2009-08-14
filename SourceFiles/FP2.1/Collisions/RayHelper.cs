@@ -12,7 +12,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// Collection of helper methods for misc collisions.
     /// Does float tolerance and line collisions with lines and AABBs.
     /// </summary>
-    public static class CollisionHelper
+    public static class RayHelper
     {
         private const float _epsilon = .00001f;
 

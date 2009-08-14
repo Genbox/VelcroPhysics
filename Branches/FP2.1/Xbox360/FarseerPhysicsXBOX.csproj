@@ -12,6 +12,13 @@
     <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
     <XnaPlatform>Xbox 360</XnaPlatform>
     <XnaCrossPlatformGroupID>c20e817a-60ed-45ea-ac76-ef138fe98420</XnaCrossPlatformGroupID>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkSubset>
+    </TargetFrameworkSubset>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,15 +31,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkSubset>
-    </TargetFrameworkSubset>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
     <OutputPath>bin\Xbox 360\Debug</OutputPath>
@@ -84,8 +84,8 @@
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\Geom.cs">
       <Link>Collisions\Geom.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\RayTester.cs">
-      <Link>Collisions\RayTester.cs</Link>
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\RayHelper.cs">
+      <Link>RayHelper.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\SAT.cs">
       <Link>Collisions\SAT.cs</Link>
