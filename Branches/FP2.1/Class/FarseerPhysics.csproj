@@ -107,7 +107,7 @@
       <Link>Collisions\Geom.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\RayHelper.cs">
-      <Link>RayHelper.cs</Link>
+      <Link>Collisions\RayHelper.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\SAT.cs">
       <Link>Collisions\SAT.cs</Link>
