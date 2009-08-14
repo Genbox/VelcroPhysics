@@ -40,7 +40,7 @@ namespace Box2DX.Collision
             LocalPosition.SetZero();
         }
 
-        public Shape Clone()
+        public override Shape Clone()
         {
             CircleShape shape = new CircleShape();
             shape.LocalPosition = this.LocalPosition;
@@ -118,7 +118,7 @@ namespace Box2DX.Collision
         {
             massData = new MassData();
 
-            massData.Mass = density * Settings.Pi * Radius * Radius;
+            massData.Mass = density * Settings.PI * Radius * Radius;
             massData.Center = LocalPosition;
 
             // inertia about the local origin

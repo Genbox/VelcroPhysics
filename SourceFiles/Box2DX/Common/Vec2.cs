@@ -140,7 +140,7 @@ namespace Box2DX.Common
         public static Vec2 Zero { get { return new Vec2(0, 0); } }
 
         /// <summary>
-        /// Peform the dot product on two vectors.
+        /// Perform the dot product on two vectors.
         /// </summary>
         public static float Dot(Vec2 a, Vec2 b)
         {

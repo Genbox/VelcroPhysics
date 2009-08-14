@@ -41,7 +41,7 @@ namespace Box2DX.Collision
             Radius = Settings.PolygonRadius;
         }
 
-        public Shape Clone()
+        public override Shape Clone()
         {
             PolygonShape polygonShape = new PolygonShape();
             polygonShape.Centroid = Centroid;

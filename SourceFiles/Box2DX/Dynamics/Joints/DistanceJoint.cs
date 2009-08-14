@@ -181,7 +181,7 @@ namespace Box2DX.Dynamics
 				float C = length - _length;
 
 				// Frequency
-				float omega = 2.0f * Settings.Pi * _frequencyHz;
+				float omega = 2.0f * Settings.PI * _frequencyHz;
 
 				// Damping coefficient
 				float d = 2.0f * _mass * _dampingRatio * omega;

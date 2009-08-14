@@ -149,7 +149,7 @@ namespace Box2DX.Dynamics
 			float mass = b.GetMass();
 
 			// Frequency
-			float omega = 2.0f * Settings.Pi * _frequencyHz;
+			float omega = 2.0f * Settings.PI * _frequencyHz;
 
 			// Damping coefficient
 			float d = 2.0f * mass * _dampingRatio * omega;
