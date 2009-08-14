@@ -299,7 +299,7 @@ namespace Box2DX.Dynamics
         public bool TestPoint(Vec2 p)
         {
             //Note: Added the following line
-            Transform transform = Body.GetXForm();
+            Transform transform = Body.GetTransform();
             return Shape.TestPoint(ref transform, ref p);
         }
 
@@ -314,7 +314,7 @@ namespace Box2DX.Dynamics
         public SegmentCollide TestSegment(out float lambda, out Vec2 normal, ref Segment segment, float maxLambda)
         {
             //Note: Added the following line
-            Transform transform = Body.GetXForm();
+            Transform transform = Body.GetTransform();
             return Shape.TestSegment(ref transform, out lambda, out normal, ref segment, maxLambda);
         }
 
@@ -333,7 +333,7 @@ namespace Box2DX.Dynamics
         /// @return the total volume less than offset along normal
         public float ComputeSubmergedArea(Vec2 normal, float offset, out Vec2 c)
         {
-            Transform transform = Body.GetXForm();
+            Transform transform = Body.GetTransform();
             return Shape.ComputeSubmergedArea(ref normal, offset, ref transform, out c);
         }
 

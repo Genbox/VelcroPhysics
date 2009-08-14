@@ -267,8 +267,8 @@ namespace Box2DX.Dynamics
 			Body b1 = _body1;
 			Body b2 = _body2;
 
-			Vec2 r1 = Box2DX.Common.Math.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-			Vec2 r2 = Box2DX.Common.Math.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+			Vec2 r1 = Box2DX.Common.Math.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
+			Vec2 r2 = Box2DX.Common.Math.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
 			Vec2 p1 = b1._sweep.C + r1;
 			Vec2 p2 = b2._sweep.C + r2;
 			Vec2 d = p2 - p1;
@@ -391,8 +391,8 @@ namespace Box2DX.Dynamics
 			_localCenter1 = b1.GetLocalCenter();
 			_localCenter2 = b2.GetLocalCenter();
 
-			Transform xf1 = b1.GetXForm();
-			Transform xf2 = b2.GetXForm();
+			Transform xf1 = b1.GetTransform();
+			Transform xf2 = b2.GetTransform();
 
 			// Compute the effective masses.
 			Vec2 r1 = Math.Mul(xf1.R, _localAnchor1 - _localCenter1);

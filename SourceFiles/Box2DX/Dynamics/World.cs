@@ -334,7 +334,7 @@ namespace Box2DX.Dynamics
                 Body b = def.Body1._fixtureCount < def.Body2._fixtureCount ? def.Body1 : def.Body2;
 				for (Fixture f = b._fixtureList; f != null; f = f.Next)
 				{
-					f.RefilterProxy(_broadPhase, b.GetXForm());
+					f.RefilterProxy(_broadPhase, b.GetTransform());
 				}
 			}
 
@@ -424,7 +424,7 @@ namespace Box2DX.Dynamics
                 Body b = body1._fixtureCount < body2._fixtureCount ? body1 : body2;
                 for (Fixture f = b._fixtureList; f != null; f = f.Next)
 				{
-					f.RefilterProxy(_broadPhase, b.GetXForm());
+					f.RefilterProxy(_broadPhase, b.GetTransform());
 				}
 			}
 		}
@@ -500,7 +500,7 @@ namespace Box2DX.Dynamics
 		/// </summary>		
 		public void Refilter(Fixture fixture)
 		{
-            fixture.RefilterProxy(_broadPhase, fixture.GetBody().GetXForm());
+            fixture.RefilterProxy(_broadPhase, fixture.GetBody().GetTransform());
 		}
 
 		/// <summary>
@@ -1190,8 +1190,8 @@ namespace Box2DX.Dynamics
 		{
 			Body b1 = joint.GetBody1();
 			Body b2 = joint.GetBody2();
-			Transform xf1 = b1.GetXForm();
-			Transform xf2 = b2.GetXForm();
+			Transform xf1 = b1.GetTransform();
+			Transform xf2 = b2.GetTransform();
 			Vec2 x1 = xf1.Position;
 			Vec2 x2 = xf2.Position;
 			Vec2 p1 = joint.Anchor1;
@@ -1296,7 +1296,7 @@ namespace Box2DX.Dynamics
 
 				for (Body b = _bodyList; b != null; b = b.GetNext())
 				{
-					Transform xf = b.GetXForm();
+					Transform xf = b.GetTransform();
 					for (Fixture f = b.GetFixtureList(); f != null; f = f.GetNext())
 					{
 						if (b.IsStatic())
@@ -1414,7 +1414,7 @@ namespace Box2DX.Dynamics
 			{
 				for (Body b = _bodyList; b != null; b = b.GetNext())
 				{
-					Transform xf = b.GetXForm();
+					Transform xf = b.GetTransform();
 					xf.Position = b.GetWorldCenter();
 					_debugDraw.DrawXForm(xf);
 				}

@@ -335,8 +335,8 @@ namespace Box2DX.Dynamics
 			}
 
 			// Compute the effective mass matrix.
-			Vec2 r1 = Box2DXMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-			Vec2 r2 = Box2DXMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+			Vec2 r1 = Box2DXMath.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
+			Vec2 r2 = Box2DXMath.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
 
 			// J = [-I -r1_skew I r2_skew]
 			//     [ 0       -1 0       1]
@@ -452,8 +452,8 @@ namespace Box2DX.Dynamics
 			//Solve limit constraint.
 			if (_enableLimit && _limitState != LimitState.InactiveLimit)
 			{
-				Vec2 r1 = Box2DXMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-				Vec2 r2 = Box2DXMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+				Vec2 r1 = Box2DXMath.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
+				Vec2 r2 = Box2DXMath.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
 
 				// Solve point-to-point constraint
 				Vec2 Cdot1 = v2 + Vec2.Cross(w2, r2) - v1 - Vec2.Cross(w1, r1);
@@ -505,8 +505,8 @@ namespace Box2DX.Dynamics
 			}
 			else
 			{
-				Vec2 r1 = Box2DXMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-				Vec2 r2 = Box2DXMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+				Vec2 r1 = Box2DXMath.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
+				Vec2 r2 = Box2DXMath.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
 
 				// Solve point-to-point constraint
 				Vec2 Cdot = v2 + Vec2.Cross(w2, r2) - v1 - Vec2.Cross(w1, r1);
@@ -579,8 +579,8 @@ namespace Box2DX.Dynamics
 
 			// Solve point-to-point constraint.
 			{
-				Vec2 r1 = Box2DXMath.Mul(b1.GetXForm().R, _localAnchor1 - b1.GetLocalCenter());
-				Vec2 r2 = Box2DXMath.Mul(b2.GetXForm().R, _localAnchor2 - b2.GetLocalCenter());
+				Vec2 r1 = Box2DXMath.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
+				Vec2 r2 = Box2DXMath.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
 
 				Vec2 C = b2._sweep.C + r2 - b1._sweep.C - r1;
 				positionError = C.Length();

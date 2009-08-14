@@ -19,12 +19,7 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Box2DX.Collision;
-using Box2DX.Common;
 
 namespace Box2DX.Dynamics
 {
@@ -43,19 +38,9 @@ namespace Box2DX.Dynamics
             Body bodyB = _fixtureB.GetBody();
 
            Collision.Collision.CollideCircles(out Manifold,
-                                (CircleShape)_fixtureA.GetShape(), bodyA.GetXForm(),
-                                (CircleShape)_fixtureB.GetShape(), bodyB.GetXForm());
+                                (CircleShape)_fixtureA.GetShape(), bodyA.GetTransform(),
+                                (CircleShape)_fixtureB.GetShape(), bodyB.GetTransform());
 		}
-
-        public override float ComputeTOI(Sweep sweepA, Sweep sweepB)
-        {
-	        Collision.Collision.TOIInput input;
-	        input.SweepA = sweepA;
-	        input.SweepB = sweepB;
-	        input.Tolerance = Settings.LinearSlop;
-
-	        return Collision.Collision.TimeOfImpact(input, _fixtureA.GetShape(), _fixtureB.GetShape());
-        }
 
 		new public static Contact Create(Fixture fixtureA, Fixture fixtureB)
 		{

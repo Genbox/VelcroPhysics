@@ -106,7 +106,7 @@ namespace Box2DX.Dynamics
                 Box2DXDebug.Assert(manifold.PointCount > 0);
 
                 WorldManifold worldManifold = new WorldManifold();
-                worldManifold.Initialize(manifold, bodyA.GetXForm(), radiusA, bodyB.GetXForm(), radiusB);
+                worldManifold.Initialize(manifold, bodyA.Transform, radiusA, bodyB.Transform, radiusB);
 
                 ContactConstraint cc = new ContactConstraint();
                 Constraints[i] = cc;
@@ -133,8 +133,8 @@ namespace Box2DX.Dynamics
 
                     ccp.LocalPoint = cp.LocalPoint;
 
-                    ccp.RA = WorldManifold.Points[j] - bodyA._sweep.C;
-                    ccp.RB = WorldManifold.Points[j] - bodyB._sweep.C;
+                    ccp.RA = worldManifold.Points[j] - bodyA._sweep.C;
+                    ccp.RB = worldManifold.Points[j] - bodyB._sweep.C;
 
                     float rnA = Vec2.Cross(ccp.RA, cc.Normal);
                     float rnB = Vec2.Cross(ccp.RB, cc.Normal);

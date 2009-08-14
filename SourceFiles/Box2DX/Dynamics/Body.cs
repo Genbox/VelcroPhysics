@@ -518,7 +518,7 @@ namespace Box2DX.Dynamics
         /// Get the body transform for the body's origin.
         /// </summary>
         /// <returns>Return the world transform of the body's origin.</returns>
-        public Transform GetXForm()
+        public Transform GetTransform()
         {
             return _xf;
         }

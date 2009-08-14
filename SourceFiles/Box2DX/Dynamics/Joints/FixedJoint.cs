@@ -29,7 +29,7 @@ namespace Box2DX.Dynamics
     /// See: www.jrouwe.nl/fixedjoint/ for more info
     class FixedJoint : Joint
     {
-        private Vec2 _dp;	//< Distance between body.GetXForm().Position between the two bodies at rest in the reference frame of body1
+        private Vec2 _dp;	//< Distance between body.GetTransform().Position between the two bodies at rest in the reference frame of body1
         private float _a;	//< Angle between the bodies at rest
         private Mat22 _R0;	//< Rotation matrix of _a
 
@@ -54,9 +54,9 @@ namespace Box2DX.Dynamics
 	        Body b2 = _body2;
 
 	        // Get initial delta Position and angle
-	        _dp = Box2DXMath.MulT(b1.GetXForm().R, b2.GetXForm().Position - b1.GetXForm().Position);
+	        _dp = Box2DXMath.MulT(b1.GetTransform().R, b2.GetTransform().Position - b1.GetTransform().Position);
 	        _a = b2.GetAngle() - b1.GetAngle();
-	        _R0 = Box2DXMath.MulT(b1.GetXForm().R, b2.GetXForm().R);
+	        _R0 = Box2DXMath.MulT(b1.GetTransform().R, b2.GetTransform().R);
 
 	        // Reset accumulators
 	        _lambda_a = 0.0f;

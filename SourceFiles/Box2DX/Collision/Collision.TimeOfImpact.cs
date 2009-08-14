@@ -25,8 +25,9 @@ namespace Box2DX.Collision
 {
     public partial class Collision
     {
-        private int ToiCalls, ToiIters, ToiMaxIters;
-        private int ToiRootIters, ToiMaxRootIters;
+#warning "The following counter variables are static. They should be reset at some point?"
+        private static int ToiCalls, ToiIters, ToiMaxIters;
+        private static int ToiRootIters, ToiMaxRootIters;
 
         /// Inpute parameters for b2TimeOfImpact
         public class TOIInput
@@ -264,7 +265,7 @@ namespace Box2DX.Collision
         /// <returns>
         /// fraction between [0,1] in which the shapes first touch.
         /// </returns>
-        public float TimeOfImpact(TOIInput input)
+        public static float TimeOfImpact(TOIInput input)
         {
             ++ToiCalls;
 

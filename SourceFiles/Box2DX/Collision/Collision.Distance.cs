@@ -25,8 +25,9 @@ namespace Box2DX.Collision
 {
     public partial class Collision
     {
+#warning "The following counter variables are static. They should be reset at some point?"
         // GJK using Voronoi regions (Christer Ericson) and Barycentric coordinates.
-        int gjkCalls, gjkIters, gjkMaxIters;
+        private static int gjkCalls, gjkIters, gjkMaxIters;
 
         /// A distance proxy is used by the GJK algorithm.
         /// It encapsulates any shape.
@@ -495,7 +496,7 @@ namespace Box2DX.Collision
         /// b2CircleShape, b2PolygonShape, b2EdgeShape. The simplex cache is input/output.
         /// On the first call set b2SimplexCache.count to zero.
         /// </summary>
-        public void Distance(out DistanceOutput output,
+        public static void Distance(out DistanceOutput output,
                         SimplexCache cache,
                         DistanceInput input)
         {
