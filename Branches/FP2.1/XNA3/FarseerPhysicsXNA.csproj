@@ -96,6 +96,9 @@
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\Geom.cs">
       <Link>Collisions\Geom.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\RayHelper.cs">
+      <Link>Collisions\RayHelper.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\SelectiveSweepCollider.cs">
       <Link>Collisions\SelectiveSweepCollider.cs</Link>
     </Compile>
