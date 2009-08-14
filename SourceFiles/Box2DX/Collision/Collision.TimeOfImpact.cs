@@ -399,7 +399,8 @@ namespace Box2DX.Collision
                     {
                         // Use a mix of the secant rule and bisection.
                         float x;
-                        if (rootIterCount & 1)
+#warning "flag check is correct right?"
+                        if ((rootIterCount & 1) != 0)
                         {
                             // Secant rule to improve convergence.
                             x = x1 + (target - f1)*(x2 - x1)/(f2 - f1);

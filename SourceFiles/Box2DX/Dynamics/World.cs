@@ -26,16 +26,6 @@ using Box2DX.Collision;
 
 namespace Box2DX.Dynamics
 {
-	public struct TimeStep
-	{
-		public float Dt; // time step
-		public float Inv_Dt; // inverse time step (0 if dt == 0).
-		public float DtRatio;	// dt * inv_dt0
-		public int VelocityIterations;
-		public int PositionIterations;
-		public bool WarmStarting;
-	}
-
 	/// <summary>
 	/// The world class manages all physics entities, dynamic simulation,
 	/// and asynchronous queries.

@@ -23,6 +23,7 @@ using System;
 
 using Box2DX.Common;
 using Box2DX.Collision;
+using Math=Box2DX.Common.Math;
 
 namespace Box2DX.Dynamics
 {
@@ -131,12 +132,11 @@ namespace Box2DX.Dynamics
         [Flags]
         public enum BodyFlags
         {
-            Frozen = 0x0002,
-            Island = 0x0004,
-            Sleep = 0x0008,
-            AllowSleep = 0x0010,
-            Bullet = 0x0020,
-            FixedRotation = 0x0040
+            Island = 0x0001,
+            Sleep = 0x0002,
+            AllowSleep = 0x004,
+            Bullet = 0x008,
+            FixedRotation = 0x0010
         }
 
         public enum BodyType
@@ -152,7 +152,6 @@ namespace Box2DX.Dynamics
         internal int _islandIndex;
 
         private Transform _xf;		// the body origin transform
-
         internal Sweep _sweep;	// the swept motion for CCD
 
         internal Vec2 _linearVelocity;
@@ -171,12 +170,8 @@ namespace Box2DX.Dynamics
         internal JointEdge _jointList;
         internal ContactEdge _contactList;
 
-        internal Controllers.ControllerEdge _controllerList;
-
-        internal float _mass;
-        internal float _invMass;
-        internal float _I;
-        internal float _invI;
+        internal float _mass, _invMass;
+        internal float _I, _invI;
 
         internal float _linearDamping;
         internal float _angularDamping;
@@ -218,7 +213,6 @@ namespace Box2DX.Dynamics
 
             _jointList = null;
             _contactList = null;
-            _controllerList = null;
             _prev = null;
             _next = null;
 
@@ -279,7 +273,13 @@ namespace Box2DX.Dynamics
         /// @warning This function is locked during callbacks.
         public Fixture CreateFixture(FixtureDef def)
         {
-            BroadPhase broadPhase = _world._broadPhase;
+            Box2DXDebug.Assert(_world.IsLocked() == false);
+            if (_world.IsLocked() == true)
+            {
+                return null;
+            }
+
+            BroadPhase broadPhase = _world._contactManager._broadPhase;
 
             Fixture fixture = new Fixture();
             fixture.Create(broadPhase, this, _xf, def);
@@ -289,6 +289,38 @@ namespace Box2DX.Dynamics
             ++_fixtureCount;
 
             fixture.Body = this;
+
+            // Let the world know we have a new fixture.
+            _world.Flags |= WorldFlags.NewFixture;
+
+            return fixture;
+        }
+
+        public Fixture CreateFixture(Shape shape, float density)
+        {
+            Box2DXDebug.Assert(_world.IsLocked() == false);
+            if (_world.IsLocked() == true)
+            {
+                return null;
+            }
+
+            BroadPhase broadPhase = _world._contactManager._broadPhase;
+
+            FixtureDef def = new FixtureDef();
+            def.Shape = shape;
+            def.Density = density;
+
+            Fixture fixture = new Fixture();
+            fixture.Create(broadPhase, this, _xf, def);
+
+            fixture.Next = _fixtureList;
+            _fixtureList = fixture;
+            ++_fixtureCount;
+
+            fixture.Body = this;
+
+            // Let the world know we have a new fixture.
+            _world.Flags |= WorldFlags.NewFixture;
 
             return fixture;
         }
@@ -300,6 +332,12 @@ namespace Box2DX.Dynamics
         /// @warning This function is locked during callbacks.
         public void DestroyFixture(ref Fixture fixture)
         {
+            Box2DXDebug.Assert(_world->IsLocked() == false);
+            if (_world->IsLocked() == true)
+            {
+                return;
+            }
+
             Box2DXDebug.Assert(fixture.Body == this);
 
             // Remove the fixture from this body's singly linked list.
@@ -321,7 +359,25 @@ namespace Box2DX.Dynamics
             // You tried to remove a shape that is not attached to this body.
             Box2DXDebug.Assert(found);
 
-            BroadPhase broadPhase = _world._broadPhase;
+            // Destroy any contacts associated with the fixture.
+            ContactEdge edge = _contactList;
+            while (edge != null)
+            {
+                Contact c = edge.Contact;
+                edge = edge.Next;
+
+                Fixture fixtureA = c.GetFixtureA();
+                Fixture fixtureB = c.GetFixtureB();
+
+                if (fixture == fixtureA || fixture == fixtureB)
+                {
+                    // This destroys the contact and removes it from
+                    // this body's contact list.
+                    _world._contactManager.Destroy(c);
+                }
+            }
+
+            BroadPhase broadPhase = _world._contactManager._broadPhase;
 
             fixture.Destroy(broadPhase);
             fixture.Body = null;
@@ -340,6 +396,12 @@ namespace Box2DX.Dynamics
         /// <param name="massData"></param>
         public void SetMassData(MassData massData)
         {
+            Box2DXDebug.Assert(_world->IsLocked() == false);
+            if (_world->IsLocked() == true)
+            {
+                return;
+            }
+
             _invMass = 0.0f;
             _I = 0.0f;
             _invI = 0.0f;
@@ -375,9 +437,9 @@ namespace Box2DX.Dynamics
             // If the body type changed, we need to refilter the broad-phase proxies.
             if (oldType != _type)
             {
-                for (Fixture f = _fixtureList; f != null; f = f.Next)
+                for (ContactEdge ce = _contactList; ce != null; ce = ce.Next)
                 {
-                    f.RefilterProxy(_world._broadPhase, _xf);
+                    ce.Contact.FlagForFiltering();
                 }
             }
         }
@@ -390,6 +452,12 @@ namespace Box2DX.Dynamics
         /// </summary>
         public void SetMassFromShapes()
         {
+            Box2DXDebug.Assert(_world->IsLocked() == false);
+            if (_world->IsLocked() == true)
+            {
+                return;
+            }
+
             // Compute mass data from shapes. Each shape has its own density.
             _mass = 0.0f;
             _invMass = 0.0f;
@@ -443,9 +511,9 @@ namespace Box2DX.Dynamics
             // If the body type changed, we need to refilter the broad-phase proxies.
             if (oldType != _type)
             {
-                for (Fixture f = _fixtureList; f != null; f = f.Next)
+                for (ContactEdge ce = _contactList; ce != null; ce = ce.Next)
                 {
-                    f.RefilterProxy(_world._broadPhase, _xf);
+                    ce.Contact.FlagForFiltering();
                 }
             }
         }
@@ -521,6 +589,30 @@ namespace Box2DX.Dynamics
         public Transform GetTransform()
         {
             return _xf;
+        }
+
+        public void SetTransform(Vec2 position, float angle)
+        {
+            Box2DXDebug.Assert(_world.IsLocked() == false);
+            if (_world.IsLocked() == true)
+            {
+                return;
+            }
+
+            _xf.R.Set(angle);
+            _xf.Position = position;
+
+            _sweep.C0 = _sweep.C = Math.Mul(_xf, _sweep.LocalCenter);
+            _sweep.A0 = _sweep.A = angle;
+
+            BroadPhase broadPhase = _world._contactManager._broadPhase;
+            for (Fixture f = _fixtureList; f != null; f = f.m_next)
+            {
+                f.Synchronize(broadPhase, _xf, _xf);
+            }
+
+            _world._contactManager.FindNewContacts();
+
         }
 
         /// <summary>
@@ -667,7 +759,7 @@ namespace Box2DX.Dynamics
             MassData massData = new MassData();
             massData.Mass = _mass;
             massData.I = _I;
-            massData.Center = GetWorldCenter();
+            massData.Center = _sweep.LocalCenter;
             return massData;
         }
 
@@ -810,22 +902,6 @@ namespace Box2DX.Dynamics
             return _type == BodyType.Static;
         }
 
-        public void SetStatic()
-        {
-            if (_type == BodyType.Static)
-                return;
-            _mass = 0.0f;
-            _invMass = 0.0f;
-            _I = 0.0f;
-            _invI = 0.0f;
-            _type = BodyType.Static;
-
-            for (Fixture f = _fixtureList; f != null; f = f.Next)
-            {
-                f.RefilterProxy(_world._broadPhase, _xf);
-            }
-        }
-
         /// <summary>
         /// Is this body dynamic (movable)?
         /// </summary>
@@ -833,15 +909,6 @@ namespace Box2DX.Dynamics
         public bool IsDynamic()
         {
             return _type == BodyType.Dynamic;
-        }
-
-        /// <summary>
-        /// Is this body frozen?
-        /// </summary>
-        /// <returns></returns>
-        public bool IsFrozen()
-        {
-            return (_flags & BodyFlags.Frozen) == BodyFlags.Frozen;
         }
 
         /// <summary>
@@ -916,9 +983,9 @@ namespace Box2DX.Dynamics
             return _jointList;
         }
 
-        public Controllers.ControllerEdge GetControllerList()
+        public ContactEdge GetContactList()
         {
-            return _controllerList;
+            return _contactList;
         }
 
         /// <summary>
@@ -951,40 +1018,23 @@ namespace Box2DX.Dynamics
         /// <returns></returns>
         public World GetWorld() { return _world; }
 
-        internal bool SynchronizeFixtures()
+        internal void SynchronizeFixtures()
         {
             Transform xf1 = new Transform();
             xf1.R.Set(_sweep.A0);
-            xf1.Position = _sweep.C0 - Common.Math.Mul(xf1.R, _sweep.LocalCenter);
+            xf1.Position = _sweep.C0 - Math.Mul(xf1.R, _sweep.LocalCenter);
 
-            bool inRange = true;
+            BroadPhase broadPhase = _world._contactManager._broadPhase;
             for (Fixture f = _fixtureList; f != null; f = f.Next)
             {
-                inRange = f.Synchronize(_world._broadPhase, xf1, _xf);
-                if (inRange == false)
-                {
-                    break;
-                }
+                f.Synchronize(broadPhase, xf1, _xf);
             }
-
-            if (inRange == false)
-            {
-                _flags |= BodyFlags.Frozen;
-                _linearVelocity.SetZero();
-                _angularVelocity = 0.0f;
-
-                // Failure
-                return false;
-            }
-
-            // Success
-            return true;
         }
 
         internal void SynchronizeTransform()
         {
             _xf.R.Set(_sweep.A);
-            _xf.Position = _sweep.C - Common.Math.Mul(_xf.R, _sweep.LocalCenter);
+            _xf.Position = _sweep.C - Math.Mul(_xf.R, _sweep.LocalCenter);
         }
 
         // This is used to prevent connected bodies from colliding.
@@ -994,7 +1044,9 @@ namespace Box2DX.Dynamics
             for (JointEdge jn = _jointList; jn != null; jn = jn.Next)
             {
                 if (jn.Other == other)
+                {
                     return jn.Joint._collideConnected == false;
+                }
             }
 
             return false;

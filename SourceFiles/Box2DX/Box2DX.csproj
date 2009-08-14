@@ -74,7 +74,6 @@
     <Compile Include="Dynamics\Contacts\ContactSolver.cs" />
     <Compile Include="Dynamics\Contacts\PolygonAndCircleContact.cs" />
     <Compile Include="Dynamics\Contacts\PolygonContact.cs" />
-    <Compile Include="Dynamics\EdgeChain.cs" />
     <Compile Include="Dynamics\Fixture.cs" />
     <Compile Include="Dynamics\Island.cs" />
     <Compile Include="Dynamics\Joints\DistanceJoint.cs" />
@@ -85,6 +84,7 @@
     <Compile Include="Dynamics\Joints\PrismaticJoint.cs" />
     <Compile Include="Dynamics\Joints\PulleyJoint.cs" />
     <Compile Include="Dynamics\Joints\RevoluteJoint.cs" />
+    <Compile Include="Dynamics\TimeStep.cs" />
     <Compile Include="Dynamics\World.cs" />
     <Compile Include="Dynamics\WorldCallbacks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -97,7 +97,7 @@ namespace Box2DX.Collision
         /// <param name="xf">The shape world transform.</param>
         /// <param name="p">A point in world coordinates.</param>
         /// <returns></returns>
-        public abstract bool TestPoint(ref Transform xf, ref Vec2 p);
+        public abstract bool TestPoint(Transform xf, Vec2 p);
 
         /// <summary>
         /// Perform a ray cast against this shape.

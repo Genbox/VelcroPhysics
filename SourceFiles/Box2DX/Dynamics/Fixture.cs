@@ -22,7 +22,7 @@ using Box2DX.Collision;
 namespace Box2DX.Dynamics
 {
     /// This holds contact filtering data.
-    public struct FilterData
+    public struct Filter
     {
         /// The collision category bits. Normally you would just set one bit.
         public ushort CategoryBits;
@@ -41,8 +41,9 @@ namespace Box2DX.Dynamics
     /// abstract fixture definition. You can reuse fixture definitions safely.
     public class FixtureDef
     {
-        /// Holds the shape type for down-casting.
-        public ShapeType Type;
+        /// The shape, this must be set. The shape will be cloned, so you
+        /// can create the shape on the stack.
+        public Shape Shape;
 
         /// Use this to store application specific fixture data.
         public object UserData;
@@ -61,7 +62,7 @@ namespace Box2DX.Dynamics
         public bool IsSensor;
 
         /// Contact filtering data.
-        public FilterData Filter;
+        public Filter Filter;
 
         /// The constructor sets the default fixture definition values.
         public FixtureDef()
@@ -78,89 +79,6 @@ namespace Box2DX.Dynamics
         }
     }
 
-    /// This structure is used to build a fixture with a circle shape.
-    public class CircleDef : FixtureDef
-    {
-
-        public Vec2 LocalPosition;
-        public float Radius;
-
-        public CircleDef()
-        {
-            Type = ShapeType.CircleShape;
-            LocalPosition.SetZero();
-            Radius = 1.0f;
-        }
-    }
-
-    /// Convex polygon. The vertices must be ordered so that the outside of
-    /// the polygon is on the right side of the edges (looking along the edge
-    /// from start to end).
-    public class PolygonDef : FixtureDef
-    {
-        /// The polygon vertices in local coordinates.
-        public Vec2[] Vertices = new Vec2[Settings.MaxPolygonVertices];
-
-        /// The number of polygon vertices.
-        public int VertexCount;
-
-        public PolygonDef()
-        {
-            Type = ShapeType.PolygonShape;
-            VertexCount = 0;
-        }
-
-        /// Build vertices to represent an axis-aligned box.
-        /// @param hx the half-width.
-        /// @param hy the half-height.
-        public void SetAsBox(float hx, float hy)
-        {
-            VertexCount = 4;
-            Vertices[0].Set(-hx, -hy);
-            Vertices[1].Set(hx, -hy);
-            Vertices[2].Set(hx, hy);
-            Vertices[3].Set(-hx, hy);
-        }
-
-        /// Build vertices to represent an oriented box.
-        /// @param hx the half-width.
-        /// @param hy the half-height.
-        /// @param center the center of the box in local coordinates.
-        /// @param angle the rotation of the box in local coordinates.
-        public void SetAsBox(float hx, float hy, Vec2 center, float angle)
-        {
-            VertexCount = 4;
-            Vertices[0].Set(-hx, -hy);
-            Vertices[1].Set(hx, -hy);
-            Vertices[2].Set(hx, hy);
-            Vertices[3].Set(-hx, hy);
-
-            Transform xf = new Transform();
-            xf.Position = center;
-            xf.R.Set(angle);
-
-            Vertices[0] = Common.Math.Mul(xf, Vertices[0]);
-            Vertices[1] = Common.Math.Mul(xf, Vertices[1]);
-            Vertices[2] = Common.Math.Mul(xf, Vertices[2]);
-            Vertices[3] = Common.Math.Mul(xf, Vertices[3]);
-        }
-    }
-
-    /// This structure is used to build a chain of edges.
-    public class EdgeDef : FixtureDef
-    {
-        /// The start vertex.
-        public Vec2 Vertex1;
-
-        /// The end vertex.
-        public Vec2 Vertex2;
-
-        public EdgeDef()
-        {
-            Type = ShapeType.EdgeShape;
-        }
-    }
-
     /// A fixture is used to attach a shape to a body for collision detection. A fixture
     /// inherits its transform from its parent. Fixtures hold additional non-geometric data
     /// such as friction, collision filters, etc.
@@ -168,7 +86,8 @@ namespace Box2DX.Dynamics
     /// @warning you cannot reuse fixtures.
     public class Fixture
     {
-        public ShapeType Type;
+        public AABB Aabb;
+
         public Fixture Next;
         public Body Body;
 
@@ -179,7 +98,7 @@ namespace Box2DX.Dynamics
         public float Restitution;
 
         public ushort ProxyId;
-        public FilterData Filter;
+        public Filter Filter;
 
         public bool IsSensor;
 
@@ -190,21 +109,21 @@ namespace Box2DX.Dynamics
             UserData = null;
             Body = null;
             Next = null;
-            ProxyId = PairManager.NullProxy;
+            ProxyId = BroadPhase.NullProxy;
             Shape = null;
         }
 
         public void Destroy(BroadPhase broadPhase)
         {
             // Remove proxy from the broad-phase.
-            if (ProxyId != PairManager.NullProxy)
+            if (ProxyId != BroadPhase.NullProxy)
             {
                 broadPhase.DestroyProxy(ProxyId);
-                ProxyId = PairManager.NullProxy;
+                ProxyId = BroadPhase.NullProxy;
             }
 
             // Free the child shape.
-            switch (Type)
+            switch (Shape.Type)
             {
                 case ShapeType.CircleShape:
                     {
@@ -221,15 +140,6 @@ namespace Box2DX.Dynamics
                         //allocator->Free(s, sizeof(b2PolygonShape));
                     }
                     break;
-
-                case ShapeType.EdgeShape:
-                    {
-                        //b2EdgeShape* s = (b2EdgeShape*)m_shape;
-                        //s->~b2EdgeShape();
-                        //allocator->Free(s, sizeof(b2EdgeShape));
-                    }
-                    break;
-
                 default:
                     Box2DXDebug.Assert(false);
                     break;
@@ -240,8 +150,7 @@ namespace Box2DX.Dynamics
 
         /// Get the type of the child shape. You can use this to down cast to the concrete shape.
         /// @return the shape type.
-#warning "changed from GetType() to GetShapeType() to get around confusion in C#"
-        public ShapeType GetShapeType()
+        public new ShapeType GetType()
         {
             return Type;
         }
@@ -253,15 +162,8 @@ namespace Box2DX.Dynamics
             return Shape;
         }
 
-        /// Set the contact filtering data. You must call b2World::Refilter to correct
-        /// existing contacts/non-contacts.
-        public void SetFilterData(FilterData filter)
-        {
-            Filter = filter;
-        }
-
         /// Get the contact filtering data.
-        public FilterData GetFilterData()
+        public Filter GetFilterData()
         {
             return Filter;
         }
@@ -298,9 +200,7 @@ namespace Box2DX.Dynamics
         /// @param p a point in world coordinates.
         public bool TestPoint(Vec2 p)
         {
-            //Note: Added the following line
-            Transform transform = Body.GetTransform();
-            return Shape.TestPoint(ref transform, ref p);
+            return Shape.TestPoint(Body.GetTransform(), p);
         }
 
         /// Perform a ray cast against this shape.
@@ -313,7 +213,6 @@ namespace Box2DX.Dynamics
         /// @param maxLambda a number typically in the range [0,1].
         public SegmentCollide TestSegment(out float lambda, out Vec2 normal, ref Segment segment, float maxLambda)
         {
-            //Note: Added the following line
             Transform transform = Body.GetTransform();
             return Shape.TestSegment(ref transform, out lambda, out normal, ref segment, maxLambda);
         }
@@ -324,23 +223,6 @@ namespace Box2DX.Dynamics
         public void ComputeMass(out MassData massData)
         {
             Shape.ComputeMass(out massData, Density);
-        }
-
-        /// Compute the volume and centroid of this fixture intersected with a half plane
-        /// @param normal the surface normal
-        /// @param offset the surface offset along normal
-        /// @param c returns the centroid
-        /// @return the total volume less than offset along normal
-        public float ComputeSubmergedArea(Vec2 normal, float offset, out Vec2 c)
-        {
-            Transform transform = Body.GetTransform();
-            return Shape.ComputeSubmergedArea(ref normal, offset, ref transform, out c);
-        }
-
-        /// Get the maximum radius about the parent body's center of mass.
-        public float ComputeSweepRadius(Vec2 pivot)
-        {
-            return Shape.ComputeSweepRadius(ref pivot);
         }
 
         /// Get the coefficient of friction.
@@ -396,113 +278,78 @@ namespace Box2DX.Dynamics
 
             IsSensor = def.IsSensor;
 
-            Type = def.Type;
-
-            // Allocate and initialize the child shape.
-            switch (Type)
-            {
-                case ShapeType.CircleShape:
-                    {
-                        CircleShape circle = new CircleShape();
-                        CircleDef circleDef = (CircleDef)def;
-                        circle.LocalPosition = circleDef.LocalPosition;
-                        circle.Radius = circleDef.Radius;
-                        Shape = circle;
-                    }
-                    break;
-
-                case ShapeType.PolygonShape:
-                    {
-                        PolygonShape polygon = new PolygonShape();
-                        PolygonDef polygonDef = (PolygonDef)def;
-                        polygon.Set(polygonDef.Vertices, polygonDef.VertexCount);
-                        Shape = polygon;
-                    }
-                    break;
-
-                case ShapeType.EdgeShape:
-                    {
-                        EdgeShape edge = new EdgeShape();
-                        EdgeDef edgeDef = (EdgeDef)def;
-                        edge.Set(ref edgeDef.Vertex1, ref edgeDef.Vertex2);
-                        Shape = edge;
-                    }
-                    break;
-
-                default:
-                    Box2DXDebug.Assert(false);
-                    break;
-            }
+            Shape = def.Shape.Clone();
 
             // Create proxy in the broad-phase.
-            AABB aabb;
-            Shape.ComputeAABB(out aabb, ref xf);
+            Shape.ComputeAABB(out Aabb, ref xf);
 
-            bool inRange = broadPhase.InRange(aabb);
-
-            // You are creating a shape outside the world box.
-            Box2DXDebug.Assert(inRange);
-
-            if (inRange)
-            {
-                ProxyId = broadPhase.CreateProxy(aabb, this);
-            }
-            else
-            {
-                ProxyId = PairManager.NullProxy;
-            }
+            ProxyId = broadPhase.CreateProxy(Aabb, this);
         }
 
-        // Do we need a destroy method?
-        //public void Destroy(BlockAllocator allocator, BroadPhase broadPhase);
-
-        public bool Synchronize(BroadPhase broadPhase, Transform xf1, Transform xf2)
+        public void Synchronize(BroadPhase broadPhase, Transform transform1, Transform transform2)
         {
-            if (ProxyId == PairManager.NullProxy)
+            if (ProxyId == BroadPhase.NullProxy)
             {
                 return false;
             }
 
             // Compute an AABB that covers the swept shape (may miss some rotation effect).
             AABB aabb1, aabb2;
-            Shape.ComputeAABB(out aabb1, ref xf1);
-            Shape.ComputeAABB(out aabb2, ref xf2);
+            Shape.ComputeAABB(out aabb1, ref transform1);
+            Shape.ComputeAABB(out aabb2, ref transform2);
 
-            AABB aabb = new AABB();
-            aabb.Combine(aabb1, aabb2);
-
-            if (broadPhase.InRange(aabb))
-            {
-                broadPhase.MoveProxy(ProxyId, aabb);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            Aabb.Combine(aabb1, aabb2);
+            broadPhase.MoveProxy(ProxyId, Aabb);
         }
 
-        public void RefilterProxy(BroadPhase broadPhase, Transform xf)
+        public void SetFilterData(Filter filter)
         {
-            if (ProxyId == PairManager.NullProxy)
+            Filter = filter;
+
+            if (Body == null)
             {
                 return;
             }
 
-            broadPhase.DestroyProxy(ProxyId);
-
-            AABB aabb;
-            Shape.ComputeAABB(out aabb, ref xf);
-
-            bool inRange = broadPhase.InRange(aabb);
-
-            if (inRange)
+            // Flag associated contacts for filtering.
+            ContactEdge edge = Body.GetContactList();
+            while (edge != null)
             {
-                ProxyId = broadPhase.CreateProxy(aabb, this);
+                Contact contact = edge.Contact;
+                Fixture fixtureA = contact.GetFixtureA();
+                Fixture fixtureB = contact.GetFixtureB();
+                if (fixtureA == this || fixtureB == this)
+                {
+                    contact.FlagForFiltering();
+                }
             }
-            else
+        }
+
+        public void SetSensor(bool sensor)
+        {
+            if (IsSensor == sensor)
             {
-                ProxyId = PairManager.NullProxy;
+                return;
+            }
+
+            IsSensor = sensor;
+
+            if (Body == null)
+            {
+                return;
+            }
+
+            // Flag associated contacts for filtering.
+            ContactEdge edge = Body.GetContactList();
+            while (edge != null)
+            {
+                Contact contact = edge.Contact;
+                Fixture fixtureA = contact.GetFixtureA();
+                Fixture fixtureB = contact.GetFixtureB();
+                if (fixtureA == this || fixtureB == this)
+                {
+                    contact.SetAsSensor(IsSensor);
+                }
             }
         }
     }
