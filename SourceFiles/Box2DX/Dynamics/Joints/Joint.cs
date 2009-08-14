@@ -150,10 +150,10 @@ namespace Box2DX.Dynamics
 		protected JointType _type;
 		internal Joint _prev;
 		internal Joint _next;
-		internal JointEdge _node1 = new JointEdge();
-		internal JointEdge _node2 = new JointEdge();
-		internal Body _body1;
-		internal Body _body2;
+		internal JointEdge _edgeA = new JointEdge();
+		internal JointEdge _edgeB = new JointEdge();
+		internal Body _bodyA;
+		internal Body _bodyB;
 
 		internal bool _islandFlag;
 		internal bool _collideConnected;
@@ -179,7 +179,7 @@ namespace Box2DX.Dynamics
 		/// <returns></returns>
 		public Body GetBody1()
 		{
-			return _body1;
+			return _bodyA;
 		}
 
 		/// <summary>
@@ -188,7 +188,7 @@ namespace Box2DX.Dynamics
 		/// <returns></returns>
 		public Body GetBody2()
 		{
-			return _body2;
+			return _bodyB;
 		}
 
 		/// <summary>
@@ -237,11 +237,21 @@ namespace Box2DX.Dynamics
 			_type = def.Type;
 			_prev = null;
 			_next = null;
-			_body1 = def.Body1;
-			_body2 = def.Body2;
+			_bodyA = def.Body1;
+			_bodyB = def.Body2;
 			_collideConnected = def.CollideConnected;
 			_islandFlag = false;
 			_userData = def.UserData;
+
+            _edgeA.Joint = null;
+            _edgeA.Other = null;
+            _edgeA.Prev = null;
+            _edgeA.Next = null;
+
+            _edgeB.Joint = null;
+            _edgeB.Other = null;
+            _edgeB.Prev = null;
+            _edgeB.Next = null;
 		}
 
 		internal static Joint Create(JointDef def)
@@ -285,11 +295,6 @@ namespace Box2DX.Dynamics
 						joint = new LineJoint((LineJointDef)def);
 					}
 					break;
-                case JointType.FixedJoint:
-                    {
-                        joint = new FixedJoint((FixedJointDef)def);
-                    }
-                    break;
 				default:
 					Box2DXDebug.Assert(false);
 					break;

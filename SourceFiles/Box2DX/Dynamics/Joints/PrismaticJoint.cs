@@ -86,10 +86,6 @@
 // Now compute impulse to be applied:
 // df = f2 - f1
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Box2DX.Common;
 
 namespace Box2DX.Dynamics
@@ -222,12 +218,12 @@ namespace Box2DX.Dynamics
 
 		public override Vec2 Anchor1
 		{
-			get { return _body1.GetWorldPoint(_localAnchor1); }
+			get { return _bodyA.GetWorldPoint(_localAnchor1); }
 		}
 
 		public override Vec2 Anchor2
 		{
-			get { return _body2.GetWorldPoint(_localAnchor2); }
+			get { return _bodyB.GetWorldPoint(_localAnchor2); }
 		}
 
 		public override Vec2 GetReactionForce(float inv_dt)
@@ -247,8 +243,8 @@ namespace Box2DX.Dynamics
 		{
 			get
 			{
-				Body b1 = _body1;
-				Body b2 = _body2;
+				Body b1 = _bodyA;
+				Body b2 = _bodyB;
 
 				Vec2 p1 = b1.GetWorldPoint(_localAnchor1);
 				Vec2 p2 = b2.GetWorldPoint(_localAnchor2);
@@ -267,8 +263,8 @@ namespace Box2DX.Dynamics
 		{
 			get
 			{
-				Body b1 = _body1;
-				Body b2 = _body2;
+				Body b1 = _bodyA;
+				Body b2 = _bodyB;
 
 				Vec2 r1 = Common.Math.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
 				Vec2 r2 = Common.Math.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
@@ -300,8 +296,8 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void EnableLimit(bool flag)
 		{
-			_body1.WakeUp();
-			_body2.WakeUp();
+			_bodyA.WakeUp();
+			_bodyB.WakeUp();
 			_enableLimit = flag;
 		}
 
@@ -327,8 +323,8 @@ namespace Box2DX.Dynamics
 		public void SetLimits(float lower, float upper)
 		{
 			Box2DXDebug.Assert(lower <= upper);
-			_body1.WakeUp();
-			_body2.WakeUp();
+			_bodyA.WakeUp();
+			_bodyB.WakeUp();
 			_lowerTranslation = lower;
 			_upperTranslation = upper;
 		}
@@ -346,8 +342,8 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void EnableMotor(bool flag)
 		{
-			_body1.WakeUp();
-			_body2.WakeUp();
+			_bodyA.WakeUp();
+			_bodyB.WakeUp();
 			_enableMotor = flag;
 		}
 
@@ -359,8 +355,8 @@ namespace Box2DX.Dynamics
 			get { return _motorSpeed; }
 			set
 			{
-				_body1.WakeUp();
-				_body2.WakeUp();
+				_bodyA.WakeUp();
+				_bodyB.WakeUp();
 				_motorSpeed = value;
 			}
 		}
@@ -370,9 +366,9 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void SetMaxMotorForce(float force)
 		{
-			_body1.WakeUp();
-			_body2.WakeUp();
-			_maxMotorForce = Settings.FORCE_SCALE(1.0f) * force;
+			_bodyA.WakeUp();
+			_bodyB.WakeUp();
+			_maxMotorForce = force;
 		}
 
 		/// <summary>
@@ -398,7 +394,7 @@ namespace Box2DX.Dynamics
 
 			_lowerTranslation = def.LowerTranslation;
 			_upperTranslation = def.UpperTranslation;
-			_maxMotorForce = Settings.FORCE_INV_SCALE(def.MaxMotorForce);
+			_maxMotorForce = def.MaxMotorForce;
 			_motorSpeed = def.MotorSpeed;
 			_enableLimit = def.EnableLimit;
 			_enableMotor = def.EnableMotor;
@@ -410,8 +406,8 @@ namespace Box2DX.Dynamics
 
 		internal override void InitVelocityConstraints(TimeStep step)
 		{
-			Body b1 = _body1;
-			Body b2 = _body2;
+			Body b1 = _bodyA;
+			Body b2 = _bodyB;
 
 			// You cannot create a prismatic joint between bodies that
 			// both have fixed rotation.
@@ -531,8 +527,8 @@ namespace Box2DX.Dynamics
 
 		internal override void SolveVelocityConstraints(TimeStep step)
 		{
-			Body b1 = _body1;
-			Body b2  = _body2;
+			Body b1 = _bodyA;
+			Body b2  = _bodyB;
 
 			Vec2 v1 = b1._linearVelocity;
 			float w1 = b1._angularVelocity;
@@ -628,8 +624,8 @@ namespace Box2DX.Dynamics
 
 		internal override bool SolvePositionConstraints(float baumgarte)
 		{
-			Body b1 = _body1;
-			Body b2 = _body2;
+			Body b1 = _bodyA;
+			Body b2 = _bodyB;
 
 			Vec2 c1 = b1._sweep.C;
 			float a1 = b1._sweep.A;

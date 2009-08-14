@@ -117,12 +117,12 @@ namespace Box2DX.Dynamics
 
 		public override Vec2 Anchor1
 		{
-			get { return _body1.GetWorldPoint(_localAnchor1);}
+			get { return _bodyA.GetWorldPoint(_localAnchor1);}
 		}
 
 		public override Vec2 Anchor2
 		{
-			get { return _body2.GetWorldPoint(_localAnchor2);}
+			get { return _bodyB.GetWorldPoint(_localAnchor2);}
 		}
 
 		public override Vec2 GetReactionForce(float inv_dt)
@@ -151,8 +151,8 @@ namespace Box2DX.Dynamics
 
 		internal override void InitVelocityConstraints(TimeStep step)
 		{
-			Body b1 = _body1;
-			Body b2 = _body2;
+			Body b1 = _bodyA;
+			Body b2 = _bodyB;
 
 			// Compute the effective mass matrix.
 			Vec2 r1 = Math.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
@@ -223,8 +223,8 @@ namespace Box2DX.Dynamics
 				return true;
 			}
 
-			Body b1 = _body1;
-			Body b2 = _body2;
+			Body b1 = _bodyA;
+			Body b2 = _bodyB;
 
 			Vec2 r1 = Math.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
 			Vec2 r2 = Math.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
@@ -254,8 +254,8 @@ namespace Box2DX.Dynamics
 		{
 			//B2_NOT_USED(step);
 
-			Body b1 = _body1;
-			Body b2 = _body2;
+			Body b1 = _bodyA;
+			Body b2 = _bodyB;
 
 			Vec2 r1 = Math.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
 			Vec2 r2 = Math.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());

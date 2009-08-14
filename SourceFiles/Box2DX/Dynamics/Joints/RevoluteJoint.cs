@@ -32,10 +32,6 @@
 // J = [0 0 -1 0 0 1]
 // K = invI1 + invI2
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Box2DX.Common;
 
 namespace Box2DX.Dynamics
@@ -161,12 +157,12 @@ namespace Box2DX.Dynamics
 
 		public override Vec2 Anchor1
 		{
-			get { return _body1.GetWorldPoint(_localAnchor1); }
+			get { return _bodyA.GetWorldPoint(_localAnchor1); }
 		}
 
 		public override Vec2 Anchor2
 		{
-			get { return _body2.GetWorldPoint(_localAnchor2); }
+			get { return _bodyB.GetWorldPoint(_localAnchor2); }
 		}
 
 		public override Vec2 GetReactionForce(float inv_dt)
@@ -187,8 +183,8 @@ namespace Box2DX.Dynamics
 		{
 			get
 			{
-				Body b1 = _body1;
-				Body b2 = _body2;
+				Body b1 = _bodyA;
+				Body b2 = _bodyB;
 				return b2._sweep.A - b1._sweep.A - _referenceAngle;
 			}
 		}
@@ -201,8 +197,8 @@ namespace Box2DX.Dynamics
 		{
 			get
 			{
-				Body b1 = _body1;
-				Body b2 = _body2;
+				Body b1 = _bodyA;
+				Body b2 = _bodyB;
 				return b2._angularVelocity - b1._angularVelocity;
 			}
 		}
@@ -220,8 +216,8 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void EnableLimit(bool flag)
 		{
-			_body1.WakeUp();
-			_body2.WakeUp();
+			_bodyA.WakeUp();
+			_bodyB.WakeUp();
 			_enableLimit = flag;
 		}
 
@@ -247,8 +243,8 @@ namespace Box2DX.Dynamics
 		public void SetLimits(float lower, float upper)
 		{
 			Box2DXDebug.Assert(lower <= upper);
-			_body1.WakeUp();
-			_body2.WakeUp();
+			_bodyA.WakeUp();
+			_bodyB.WakeUp();
 			_lowerAngle = lower;
 			_upperAngle = upper;
 		}
@@ -266,8 +262,8 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void EnableMotor(bool flag)
 		{
-			_body1.WakeUp();
-			_body2.WakeUp();
+			_bodyA.WakeUp();
+			_bodyB.WakeUp();
 			_enableMotor = flag;
 		}
 
@@ -279,8 +275,8 @@ namespace Box2DX.Dynamics
 			get { return _motorSpeed; }
 			set
 			{
-				_body1.WakeUp();
-				_body2.WakeUp();
+				_bodyA.WakeUp();
+				_bodyB.WakeUp();
 				_motorSpeed = value;
 			}
 		}
@@ -290,8 +286,8 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void SetMaxMotorTorque(float torque)
 		{
-			_body1.WakeUp();
-			_body2.WakeUp();
+			_bodyA.WakeUp();
+			_bodyB.WakeUp();
 			_maxMotorTorque = torque;
 		}
 
@@ -324,8 +320,8 @@ namespace Box2DX.Dynamics
 
 		internal override void InitVelocityConstraints(TimeStep step)
 		{
-			Body b1 = _body1;
-			Body b2 = _body2;
+			Body b1 = _bodyA;
+			Body b2 = _bodyB;
 
 			if (_enableMotor || _enableLimit)
 			{
@@ -424,8 +420,8 @@ namespace Box2DX.Dynamics
 
 		internal override void SolveVelocityConstraints(TimeStep step)
 		{
-			Body b1 = _body1;
-			Body b2 = _body2;
+			Body b1 = _bodyA;
+			Body b2 = _bodyB;
 
 			Vec2 v1 = b1._linearVelocity;
 			float w1 = b1._angularVelocity;
@@ -532,8 +528,8 @@ namespace Box2DX.Dynamics
 		{
 			// TODO_ERIN block solve with limit.
 
-			Body b1 = _body1;
-			Body b2 = _body2;
+			Body b1 = _bodyA;
+			Body b2 = _bodyB;
 
 			float angularError = 0.0f;
 			float positionError = 0.0f;

@@ -38,10 +38,6 @@
 // K = invMass + invI * cross(r, u)^2
 // 0 <= impulse
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Box2DX.Common;
 
 namespace Box2DX.Dynamics
@@ -152,7 +148,6 @@ namespace Box2DX.Dynamics
 	{
 		public static readonly float MinPulleyLength = 2.0f;
 
-		public Body _ground;
 		public Vec2 _groundAnchor1;
 		public Vec2 _groundAnchor2;
 		public Vec2 _localAnchor1;
@@ -183,12 +178,12 @@ namespace Box2DX.Dynamics
 
 		public override Vec2 Anchor1
 		{
-			get { return _body1.GetWorldPoint(_localAnchor1); }
+			get { return _bodyA.GetWorldPoint(_localAnchor1); }
 		}
 
 		public override Vec2 Anchor2
 		{
-			get { return _body2.GetWorldPoint(_localAnchor2); }
+			get { return _bodyB.GetWorldPoint(_localAnchor2); }
 		}
 
 		public override Vec2 GetReactionForce(float inv_dt)
@@ -207,7 +202,7 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public Vec2 GroundAnchor1
 		{
-			get { return _ground.GetTransform().Position + _groundAnchor1; }
+			get { return _groundAnchor1; }
 		}
 
 		/// <summary>
@@ -215,7 +210,7 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public Vec2 GroundAnchor2
 		{
-			get { return _ground.GetTransform().Position + _groundAnchor2; }
+			get { return _groundAnchor2; }
 		}
 
 		/// <summary>
@@ -225,8 +220,8 @@ namespace Box2DX.Dynamics
 		{
 			get
 			{
-				Vec2 p = _body1.GetWorldPoint(_localAnchor1);
-				Vec2 s = _ground.GetTransform().Position + _groundAnchor1;
+				Vec2 p = _bodyA.GetWorldPoint(_localAnchor1);
+				Vec2 s = _groundAnchor1;
 				Vec2 d = p - s;
 				return d.Length();
 			}
@@ -239,8 +234,8 @@ namespace Box2DX.Dynamics
 		{
 			get
 			{
-				Vec2 p = _body2.GetWorldPoint(_localAnchor2);
-				Vec2 s = _ground.GetTransform().Position + _groundAnchor2;
+				Vec2 p = _bodyB.GetWorldPoint(_localAnchor2);
+				Vec2 s = _groundAnchor2;
 				Vec2 d = p - s;
 				return d.Length();
 			}
@@ -257,9 +252,8 @@ namespace Box2DX.Dynamics
 		public PulleyJoint(PulleyJointDef def)
 			: base(def)
 		{
-			_ground = _body1.GetWorld().GetGroundBody();
-			_groundAnchor1 = def.GroundAnchor1 - _ground.GetTransform().Position;
-			_groundAnchor2 = def.GroundAnchor2 - _ground.GetTransform().Position;
+			_groundAnchor1 = def.GroundAnchor1;
+			_groundAnchor2 = def.GroundAnchor2;
 			_localAnchor1 = def.LocalAnchor1;
 			_localAnchor2 = def.LocalAnchor2;
 
@@ -278,8 +272,8 @@ namespace Box2DX.Dynamics
 
 		internal override void InitVelocityConstraints(TimeStep step)
 		{
-			Body b1 = _body1;
-			Body b2 = _body2;
+			Body b1 = _bodyA;
+			Body b2 = _bodyB;
 
 			Vec2 r1 = Box2DXMath.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
 			Vec2 r2 = Box2DXMath.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
@@ -287,8 +281,8 @@ namespace Box2DX.Dynamics
 			Vec2 p1 = b1._sweep.C + r1;
 			Vec2 p2 = b2._sweep.C + r2;
 
-			Vec2 s1 = _ground.GetTransform().Position + _groundAnchor1;
-			Vec2 s2 = _ground.GetTransform().Position + _groundAnchor2;
+			Vec2 s1 = _groundAnchor1;
+			Vec2 s2 = _groundAnchor2;
 
 			// Get the pulley axes.
 			_u1 = p1 - s1;
@@ -385,8 +379,8 @@ namespace Box2DX.Dynamics
 
 		internal override void SolveVelocityConstraints(TimeStep step)
 		{
-			Body b1 = _body1;
-			Body b2 = _body2;
+			Body b1 = _bodyA;
+			Body b2 = _bodyB;
 
 			Vec2 r1 = Box2DXMath.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
 			Vec2 r2 = Box2DXMath.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
@@ -443,11 +437,11 @@ namespace Box2DX.Dynamics
 
 		internal override bool SolvePositionConstraints(float baumgarte)
 		{
-			Body b1 = _body1;
-			Body b2 = _body2;
+			Body b1 = _bodyA;
+			Body b2 = _bodyB;
 
-			Vec2 s1 = _ground.GetTransform().Position + _groundAnchor1;
-			Vec2 s2 = _ground.GetTransform().Position + _groundAnchor2;
+			Vec2 s1 = _groundAnchor1;
+			Vec2 s2 = _groundAnchor2;
 
 			float linearError = 0.0f;
 

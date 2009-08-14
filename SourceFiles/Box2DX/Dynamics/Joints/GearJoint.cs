@@ -116,8 +116,8 @@ namespace Box2DX.Dynamics
 		// Impulse for accumulation/warm starting.
 		public float _impulse;
 
-		public override Vec2 Anchor1 { get { return _body1.GetWorldPoint(_localAnchor1); } }
-		public override Vec2 Anchor2 { get { return _body2.GetWorldPoint(_localAnchor2); } }
+		public override Vec2 Anchor1 { get { return _bodyA.GetWorldPoint(_localAnchor1); } }
+		public override Vec2 Anchor2 { get { return _bodyB.GetWorldPoint(_localAnchor2); } }
 
 		public override Vec2 GetReactionForce(float inv_dt)
 		{
@@ -129,7 +129,7 @@ namespace Box2DX.Dynamics
 		public override float GetReactionTorque(float inv_dt)
 		{
 			// TODO_ERIN not tested
-			Vec2 r = Math.Mul(_body2.GetTransform().R, _localAnchor2 - _body2.GetLocalCenter());
+			Vec2 r = Math.Mul(_bodyB.GetTransform().R, _localAnchor2 - _bodyB.GetLocalCenter());
 			Vec2 P = _impulse * _J.Linear2;
 			float L = _impulse * _J.Angular2 - Vec2.Cross(r, P);
 			return inv_dt * L;
@@ -159,7 +159,7 @@ namespace Box2DX.Dynamics
 			float coordinate1, coordinate2;
 
 			_ground1 = def.Joint1.GetBody1();
-			_body1 = def.Joint1.GetBody2();
+			_bodyA = def.Joint1.GetBody2();
 			if (type1 == JointType.RevoluteJoint)
 			{
 				_revolute1 = (RevoluteJoint)def.Joint1;
@@ -176,7 +176,7 @@ namespace Box2DX.Dynamics
 			}
 
 			_ground2 = def.Joint2.GetBody1();
-			_body2 = def.Joint2.GetBody2();
+			_bodyB = def.Joint2.GetBody2();
 			if (type2 == JointType.RevoluteJoint)
 			{
 				_revolute2 = (RevoluteJoint)def.Joint2;
@@ -203,8 +203,8 @@ namespace Box2DX.Dynamics
 		{
 			Body g1 = _ground1;
 			Body g2 = _ground2;
-			Body b1 = _body1;
-			Body b2 = _body2;
+			Body b1 = _bodyA;
+			Body b2 = _bodyB;
 
 			float K = 0.0f;
 			_J.SetZero();
@@ -261,8 +261,8 @@ namespace Box2DX.Dynamics
 		{
             //B2_NOT_USED(step);
 
-			Body b1 = _body1;
-			Body b2 = _body2;
+			Body b1 = _bodyA;
+			Body b2 = _bodyB;
 
 			float Cdot = _J.Compute(b1._linearVelocity, b1._angularVelocity, b2._linearVelocity, b2._angularVelocity);
 
@@ -281,8 +281,8 @@ namespace Box2DX.Dynamics
 
 			float linearError = 0.0f;
 
-			Body b1 = _body1;
-			Body b2 = _body2;
+			Body b1 = _bodyA;
+			Body b2 = _bodyB;
 
 			float coordinate1, coordinate2;
 			if (_revolute1 != null)
