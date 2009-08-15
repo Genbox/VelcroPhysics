@@ -291,7 +291,7 @@ namespace Box2DX.Dynamics
             fixture.Body = this;
 
             // Let the world know we have a new fixture.
-            _world.Flags |= WorldFlags.NewFixture;
+            _world._flags |= World.WorldFlags.NewFixture;
 
             return fixture;
         }
@@ -320,7 +320,7 @@ namespace Box2DX.Dynamics
             fixture.Body = this;
 
             // Let the world know we have a new fixture.
-            _world.Flags |= WorldFlags.NewFixture;
+            _world._flags |= World.WorldFlags.NewFixture;
 
             return fixture;
         }
@@ -332,8 +332,8 @@ namespace Box2DX.Dynamics
         /// @warning This function is locked during callbacks.
         public void DestroyFixture(ref Fixture fixture)
         {
-            Box2DXDebug.Assert(_world->IsLocked() == false);
-            if (_world->IsLocked() == true)
+            Box2DXDebug.Assert(_world.IsLocked() == false);
+            if (_world.IsLocked() == true)
             {
                 return;
             }
@@ -396,8 +396,8 @@ namespace Box2DX.Dynamics
         /// <param name="massData"></param>
         public void SetMassData(MassData massData)
         {
-            Box2DXDebug.Assert(_world->IsLocked() == false);
-            if (_world->IsLocked() == true)
+            Box2DXDebug.Assert(_world.IsLocked() == false);
+            if (_world.IsLocked() == true)
             {
                 return;
             }
@@ -452,8 +452,8 @@ namespace Box2DX.Dynamics
         /// </summary>
         public void SetMassFromShapes()
         {
-            Box2DXDebug.Assert(_world->IsLocked() == false);
-            if (_world->IsLocked() == true)
+            Box2DXDebug.Assert(_world.IsLocked() == false);
+            if (_world.IsLocked() == true)
             {
                 return;
             }
@@ -518,71 +518,6 @@ namespace Box2DX.Dynamics
             }
         }
 
-        /// <summary>
-        /// Set the position of the body's origin and rotation (radians).
-        /// This breaks any contacts and wakes the other bodies.
-        /// </summary>
-        /// <param name="position">The new world position of the body's origin (not necessarily
-        /// the center of mass).</param>
-        /// <param name="angle">The new world rotation angle of the body in radians.</param>
-        /// <returns>Return false if the movement put a shape outside the world. In this case the
-        /// body is automatically frozen.</returns>
-        public bool SetXForm(Vec2 position, float angle)
-        {
-            if (IsFrozen())
-            {
-                return false;
-            }
-
-            _xf.R.Set(angle);
-            _xf.Position = position;
-
-            _sweep.C0 = _sweep.C = Common.Math.Mul(_xf, _sweep.LocalCenter);
-            _sweep.A0 = _sweep.A = angle;
-
-            bool freeze = false;
-            for (Fixture f = _fixtureList; f != null; f = f.Next)
-            {
-                bool inRange = f.Synchronize(_world._broadPhase, _xf, _xf);
-
-                if (inRange == false)
-                {
-                    freeze = true;
-                    break;
-                }
-            }
-
-            if (freeze == true)
-            {
-                _flags |= BodyFlags.Frozen;
-                _linearVelocity.SetZero();
-                _angularVelocity = 0.0f;
-
-                // Failure
-                return false;
-            }
-
-            // Success
-            _world._broadPhase.Commit();
-            return true;
-        }
-
-        public bool SetXForm(Transform xf)
-        {
-            return SetXForm(xf.Position, xf.GetAngle());
-        }
-
-        public void SetPosition(Vec2 position)
-        {
-            SetXForm(position, GetAngle());
-        }
-
-        public void SetAngle(float angle)
-        {
-            SetXForm(GetPosition(), angle);
-        }
-
-        /// <summary>
         /// Get the body transform for the body's origin.
         /// </summary>
         /// <returns>Return the world transform of the body's origin.</returns>
@@ -606,7 +541,7 @@ namespace Box2DX.Dynamics
             _sweep.A0 = _sweep.A = angle;
 
             BroadPhase broadPhase = _world._contactManager._broadPhase;
-            for (Fixture f = _fixtureList; f != null; f = f.m_next)
+            for (Fixture f = _fixtureList; f != null; f = f.Next)
             {
                 f.Synchronize(broadPhase, _xf, _xf);
             }

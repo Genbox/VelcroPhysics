@@ -34,15 +34,15 @@ namespace Box2DX.Dynamics
     public class World : IDisposable
     {
         [Flags]
-        enum WorldFlags
+        public enum WorldFlags
         {
             NewFixture = 0x0001,
             Locked = 0x0002,
         };
 
-        private WorldFlags _flags;
+        public WorldFlags _flags;
 
-        private ContactManager _contactManager;
+        public ContactManager _contactManager;
 
         private Body _bodyList;
         private Joint _jointList;
@@ -439,7 +439,7 @@ namespace Box2DX.Dynamics
                 _flags &= ~WorldFlags.NewFixture;
             }
 
-            _flags |= _locked;
+            _flags |= WorldFlags.Locked;
 
             TimeStep step = new TimeStep();
             step.Dt = dt;
@@ -636,11 +636,6 @@ namespace Box2DX.Dynamics
         /// <returns></returns>
         public int GetContactCount() { return _contactManager._contactCount; }
 
-        public int GetControllerCount()
-        {
-            return _controllerCount;
-        }
-
         /// <summary>
         /// Get\Set global gravity vector.
         /// </summary>
@@ -648,7 +643,7 @@ namespace Box2DX.Dynamics
 
         public bool IsLocked()
         {
-            return (_flags & WorldFlags.Locked) == WorldFlags.Locked
+            return (_flags & WorldFlags.Locked) == WorldFlags.Locked;
         }
 
         /// <summary>

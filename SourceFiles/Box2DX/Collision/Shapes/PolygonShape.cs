@@ -162,7 +162,7 @@ namespace Box2DX.Collision
             Normals[1] = -Normals[0];
         }
 
-        public override bool TestPoint(ref Transform xf, ref  Vec2 p)
+        public override bool TestPoint(Transform xf, Vec2 p)
         {
             Vec2 pLocal = Math.MulT(xf.R, p - xf.Position);
 

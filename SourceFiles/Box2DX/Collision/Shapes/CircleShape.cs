@@ -49,7 +49,7 @@ namespace Box2DX.Collision
             return shape;
         }
 
-        public override bool TestPoint(ref Transform transform, ref Vec2 p)
+        public override bool TestPoint(Transform transform, Vec2 p)
         {
             Vec2 center = transform.Position + Math.Mul(transform.R, LocalPosition);
             Vec2 d = p - center;

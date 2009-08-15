@@ -86,7 +86,7 @@ namespace Box2DX.Collision
         /// Get the type of this shape. You can use this to down cast to the concrete shape.
         /// </summary>
         /// <returns>the shape type.</returns>
-        public ShapeType GetShapeType()
+        public new ShapeType GetType()
         {
             return Type;
         }

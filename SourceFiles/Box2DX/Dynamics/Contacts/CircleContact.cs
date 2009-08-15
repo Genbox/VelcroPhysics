@@ -28,8 +28,8 @@ namespace Box2DX.Dynamics
         public CircleContact(Fixture fixtureA, Fixture fixtureB)
             : base(fixtureA, fixtureB)
 		{
-            Box2DXDebug.Assert(fixtureA.GetShapeType() == ShapeType.CircleShape);
-            Box2DXDebug.Assert(fixtureB.GetShapeType() == ShapeType.CircleShape);
+            Box2DXDebug.Assert(fixtureA.GetType() == ShapeType.CircleShape);
+            Box2DXDebug.Assert(fixtureB.GetType() == ShapeType.CircleShape);
 		}
 
 		public override void Evaluate()

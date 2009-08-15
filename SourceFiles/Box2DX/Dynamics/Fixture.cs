@@ -67,7 +67,7 @@ namespace Box2DX.Dynamics
         /// The constructor sets the default fixture definition values.
         public FixtureDef()
         {
-            Type = ShapeType.UnknownShape;
+            Shape = null;
             UserData = null;
             Friction = 0.2f;
             Restitution = 0.0f;
@@ -152,7 +152,7 @@ namespace Box2DX.Dynamics
         /// @return the shape type.
         public new ShapeType GetType()
         {
-            return Type;
+            return Shape.GetType();
         }
 
         /// Get the child shape. You can modify the child shape, however you should not change the
@@ -290,7 +290,7 @@ namespace Box2DX.Dynamics
         {
             if (ProxyId == BroadPhase.NullProxy)
             {
-                return false;
+                return;
             }
 
             // Compute an AABB that covers the swept shape (may miss some rotation effect).
