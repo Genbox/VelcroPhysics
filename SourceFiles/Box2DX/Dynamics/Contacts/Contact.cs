@@ -249,8 +249,8 @@ namespace Box2DX.Dynamics
                 Initialized = true;
             }
 
-            ShapeType type1 = fixtureA.GetShapeType();
-            ShapeType type2 = fixtureB.GetShapeType();
+            ShapeType type1 = fixtureA.GetType();
+            ShapeType type2 = fixtureB.GetType();
 
             Box2DXDebug.Assert(ShapeType.UnknownShape < type1 && type1 < ShapeType.ShapeTypeCount);
             Box2DXDebug.Assert(ShapeType.UnknownShape < type2 && type2 < ShapeType.ShapeTypeCount);
@@ -275,7 +275,7 @@ namespace Box2DX.Dynamics
 
         public static void Destroy(Contact contact)
         {
-            Destroy(contact, contact.GetFixtureA().GetShapeType(), contact.GetFixtureB().GetShapeType());
+            Destroy(contact, contact.GetFixtureA().GetType(), contact.GetFixtureB().GetType());
         }
 
         public static void Destroy(Contact contact, ShapeType typeA, ShapeType typeB)
@@ -305,7 +305,7 @@ namespace Box2DX.Dynamics
             // Re-enable this contact.
             Flags &= ~ContactFlag.DisabledFlag;
 
-            if (Collision.Collision.TestOverlap((_fixtureA.aabb, _fixtureB.aabb))
+            if (Collision.Collision.TestOverlap(_fixtureA.Aabb, _fixtureB.Aabb))
             {
                 Evaluate();
             }
