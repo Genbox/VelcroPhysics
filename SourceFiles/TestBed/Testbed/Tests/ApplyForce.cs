@@ -19,113 +19,126 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-using Box2DX.Common;
 using Box2DX.Collision;
+using Box2DX.Common;
 using Box2DX.Dynamics;
 
 namespace TestBed
 {
-	public class ApplyForce : Test
-	{
-		Body _body;
+    public class ApplyForce : Test
+    {
+        Body _body;
 
-		public ApplyForce()
-		{
-			_world.Gravity = new Vec2(0.0f, 0.0f);
+        public ApplyForce()
+        {
+            _world.Gravity = new Vec2(0.0f, 0.0f);
 
-			const float k_restitution = 0.4f;
+            const float k_restitution = 0.4f;
 
-			{
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, 20.0f);
-				Body ground = _world.CreateBody(bd);
+            {
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(0.0f, 20.0f);
+                Body ground = _world.CreateBody(bd);
 
-				PolygonDef sd = new PolygonDef();
-				sd.Density = 0.0f;
-				sd.Restitution = k_restitution;
+                PolygonShape shape = new PolygonShape();
 
-				sd.SetAsBox(0.2f, 20.0f, new Vec2(-20.0f, 0.0f), 0.0f);
+                FixtureDef sd = new FixtureDef();
+                sd.Shape = shape;
+                sd.Density = 0.0f;
+                sd.Restitution = k_restitution;
+
+                // Left vertical
+                shape.SetAsEdge(new Vec2(-20.0f, -20.0f), new Vec2(-20.0f, 20.0f));
                 ground.CreateFixture(sd);
 
-				sd.SetAsBox(0.2f, 20.0f, new Vec2(20.0f, 0.0f), 0.0f);
+                // Right vertical
+                shape.SetAsEdge(new Vec2(20.0f, -20.0f), new Vec2(20.0f, 20.0f));
                 ground.CreateFixture(sd);
 
-				sd.SetAsBox(0.2f, 20.0f, new Vec2(0.0f, -20.0f), 0.5f * Box2DX.Common.Settings.Pi);
+                // Top horizontal
+                shape.SetAsEdge(new Vec2(-20.0f, 20.0f), new Vec2(20.0f, 20.0f));
                 ground.CreateFixture(sd);
 
-				sd.SetAsBox(0.2f, 20.0f, new Vec2(0.0f, 20.0f), -0.5f * Box2DX.Common.Settings.Pi);
+                // Bottom horizontal
+                shape.SetAsEdge(new Vec2(-20.0f, -20.0f), new Vec2(20.0f, -20.0f));
                 ground.CreateFixture(sd);
-			}
+            }
 
-			{
-				XForm xf1 = new XForm();
-				xf1.R.Set(0.3524f * Box2DX.Common.Settings.Pi);
-				xf1.Position = Box2DX.Common.Math.Mul(xf1.R, new Vec2(1.0f, 0.0f));
+            {
+                Transform xf1 = new Transform();
+                xf1.R.Set(0.3524f * Box2DX.Common.Settings.PI);
+                xf1.Position = Math.Mul(xf1.R, new Vec2(1.0f, 0.0f));
 
-				PolygonDef sd1 = new PolygonDef();
-				sd1.VertexCount = 3;
-				sd1.Vertices[0] = Box2DX.Common.Math.Mul(xf1, new Vec2(-1.0f, 0.0f));
-				sd1.Vertices[1] = Box2DX.Common.Math.Mul(xf1, new Vec2(1.0f, 0.0f));
-				sd1.Vertices[2] = Box2DX.Common.Math.Mul(xf1, new Vec2(0.0f, 0.5f));
-				sd1.Density = 2.0f;
+                Vec2[] vertices = new Vec2[3];
+                vertices[0] = Math.Mul(xf1, new Vec2(-1.0f, 0.0f));
+                vertices[1] = Math.Mul(xf1, new Vec2(1.0f, 0.0f));
+                vertices[2] = Math.Mul(xf1, new Vec2(0.0f, 0.5f));
 
-				XForm xf2 = new XForm();
-				xf2.R.Set(-0.3524f * Box2DX.Common.Settings.Pi);
-				xf2.Position = Box2DX.Common.Math.Mul(xf2.R, new Vec2(-1.0f, 0.0f));
+                PolygonShape poly1 = new PolygonShape();
+                poly1.Set(vertices, 3);
 
-				PolygonDef sd2 = new PolygonDef();
-				sd2.VertexCount = 3;
-				sd2.Vertices[0] = Box2DX.Common.Math.Mul(xf2, new Vec2(-1.0f, 0.0f));
-				sd2.Vertices[1] = Box2DX.Common.Math.Mul(xf2, new Vec2(1.0f, 0.0f));
-				sd2.Vertices[2] = Box2DX.Common.Math.Mul(xf2, new Vec2(0.0f, 0.5f));
-				sd2.Density = 2.0f;
+                FixtureDef sd1 = new FixtureDef();
+                sd1.Shape = poly1;
+                sd1.Density = 2.0f;
 
-				BodyDef bd = new BodyDef();
-				bd.AngularDamping = 2.0f;
-				bd.LinearDamping = 0.1f;
+                Transform xf2 = new Transform();
+                xf2.R.Set(-0.3524f * Box2DX.Common.Settings.PI);
+                xf2.Position = Math.Mul(xf2.R, new Vec2(-1.0f, 0.0f));
 
-				bd.Position.Set(0.0f, 1.05f);
-				bd.Angle = Box2DX.Common.Settings.Pi;
-				_body = _world.CreateBody(bd);
+                vertices[0] = Math.Mul(xf2, new Vec2(-1.0f, 0.0f));
+                vertices[1] = Math.Mul(xf2, new Vec2(1.0f, 0.0f));
+                vertices[2] = Math.Mul(xf2, new Vec2(0.0f, 0.5f));
+
+                PolygonShape poly2 = new PolygonShape();
+                poly2.Set(vertices, 3);
+
+                FixtureDef sd2 = new FixtureDef();
+                sd2.Shape = poly2;
+                sd2.Density = 2.0f;
+
+                BodyDef bd = new BodyDef();
+                bd.AngularDamping = 2.0f;
+                bd.LinearDamping = 0.1f;
+
+                bd.Position.Set(0.0f, 2.0f);
+                bd.Angle = Box2DX.Common.Settings.PI;
+                _body = _world.CreateBody(bd);
                 _body.CreateFixture(sd1);
                 _body.CreateFixture(sd2);
-				_body.SetMassFromShapes();
-			}
-		}
+                _body.SetMassFromShapes();
+            }
+        }
 
-		public override void Keyboard(System.Windows.Forms.Keys key)
-		{
-			switch (key)
-			{
-				case System.Windows.Forms.Keys.W:
-					{
-						Vec2 f = _body.GetWorldVector(new Vec2(0.0f, -200.0f));
-						Vec2 p = _body.GetWorldPoint(new Vec2(0.0f, 2.0f));
-						_body.ApplyForce(f, p);
-					}
-					break;
+        public override void Keyboard(System.Windows.Forms.Keys key)
+        {
+            switch (key)
+            {
+                case System.Windows.Forms.Keys.W:
+                    {
+                        Vec2 f = _body.GetWorldVector(new Vec2(0.0f, -200.0f));
+                        Vec2 p = _body.GetWorldPoint(new Vec2(0.0f, 2.0f));
+                        _body.ApplyForce(f, p);
+                    }
+                    break;
 
-				case System.Windows.Forms.Keys.A:
-					{
-						_body.ApplyTorque(20.0f);
-					}
-					break;
+                case System.Windows.Forms.Keys.A:
+                    {
+                        _body.ApplyTorque(20.0f);
+                    }
+                    break;
 
-				case System.Windows.Forms.Keys.D:
-					{
-						_body.ApplyTorque(-20.0f);
-					}
-					break;
-			}
-		}
+                case System.Windows.Forms.Keys.D:
+                    {
+                        _body.ApplyTorque(-20.0f);
+                    }
+                    break;
+            }
+        }
 
-		public static Test Create()
-		{
-			return new ApplyForce();
-		}
-	}
+        public static Test Create()
+        {
+            return new ApplyForce();
+        }
+    }
 }

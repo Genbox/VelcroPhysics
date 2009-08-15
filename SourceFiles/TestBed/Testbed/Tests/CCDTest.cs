@@ -16,16 +16,10 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-#define TestOne
-//#define TestTwo
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Box2DX.Common;
 using Box2DX.Collision;
+using Box2DX.Common;
 using Box2DX.Dynamics;
+using Math=Box2DX.Common.Math;
 
 namespace TestBed
 {
@@ -34,211 +28,238 @@ namespace TestBed
         float _angularVelocity;
 
         public CCDTest()
-        {
-#if TestOne
-            {
-                PolygonDef sd = new PolygonDef();
-                sd.SetAsBox(10.0f, 0.2f);
-                sd.Density = 0.0f;
-
-                BodyDef bd = new BodyDef();
-                bd.Position.Set(0.0f, -0.2f);
-                Body body = _world.CreateBody(bd);
-                body.CreateFixture(sd);
-
-                sd.SetAsBox(0.2f, 1.0f, new Vec2(0.5f, 1.2f), 0.0f);
-                body.CreateFixture(sd);
-            }
-
-            {
-                PolygonDef sd = new PolygonDef();
-                sd.SetAsBox(2.0f, 0.1f);
-                sd.Density = 1.0f;
-                sd.Restitution = 0.0f;
-
-                //_angularVelocity = RandomFloat(-50.0f, 50.0f);
-                _angularVelocity = 32.284004f;
-
-                BodyDef bd = new BodyDef();
-                bd.Position.Set(00.0f, 20.0f);
-                Body body = _world.CreateBody(bd);
-                body.CreateFixture(sd);
-                body.SetMassFromShapes();
-                body.SetLinearVelocity(new Vec2(0.0f, -100.0f));
-                body.SetAngularVelocity(_angularVelocity);
-            }
-#elif TestTwo
+	{
+#if true
 		{
-			PolygonDef sd = new PolygonDef();
-			sd.SetAsBox(10.0f, 0.1f);
-			sd.Density = 0.0f;
+			PolygonShape shape = new PolygonShape();
+			shape.SetAsBox(10.0f, 0.2f);
+
+			FixtureDef fd = new FixtureDef();
+			fd.Shape = shape;
+			fd.Density = 0.0f;
 
 			BodyDef bd = new BodyDef();
 			bd.Position.Set(0.0f, -0.2f);
-			Body ground = _world.CreateBody(bd);
-			ground.CreateFixture(sd);
+			Body body = _world.CreateBody(bd);
+			body.CreateFixture(fd);
+
+			shape.SetAsBox(0.2f, 1.0f, new Vec2(0.5f, 1.2f), 0.0f);
+			body.CreateFixture(fd);
 		}
 
 		{
-			PolygonDef sd = new PolygonDef();
-			sd.SetAsBox(2.0f, 0.1f);
-			sd.Density = 1.0f;
-			sd.Restitution = 0.0f;
+			PolygonShape shape = new PolygonShape();
+			shape.SetAsBox(2.0f, 0.1f);
 
-			BodyDef bd1 = new BodyDef();
-			//bd1.type = BodyDef::e_dynamic;
-			bd1.IsBullet = true;
-			bd1.AllowSleep = false;
-			bd1.Position.Set(0.0f, 20.0f);
-			Body b1 = _world.CreateBody(bd1);
-			b1.CreateFixture(sd);
-			b1.SetMassFromShapes();
-			b1.SetLinearVelocity(new Vec2(0.0f, -100.0f));
+			FixtureDef fd = new FixtureDef();
+			fd.Shape = shape;
+			fd.Density = 1.0f;
+			fd.Restitution = 0.0f;
 
-			sd.SetAsBox(1.0f, 0.1f);
-			BodyDef bd2 = new BodyDef();
-			//bd2.type = b2BodyDef::e_dynamic;
-			bd2.IsBullet = true;
-			bd2.AllowSleep = false;
-			bd2.Position.Set(0.0f, 20.2f);
-			Body b2 = _world.CreateBody(bd2);
-			b2.CreateFixture(sd);
-			b2.SetMassFromShapes();
-			b2.SetLinearVelocity(new Vec2(0.0f, -100.0f));
+		    _angularVelocity = Math.Random(-50.0f, 50.0f);
+			_angularVelocity = -30.669577f;
 
-			sd.SetAsBox(0.25f, 0.25f);
-			sd.Density = 10.0f;
-			BodyDef bd3 = new BodyDef();
-			//bd3.type = b2BodyDef::e_dynamic;
-			bd3.IsBullet = true;
-			bd3.AllowSleep = false;
-			bd3.Position.Set(0.0f, 100.0f);
-			Body b3 = _world.CreateBody(bd3);
-			b3.CreateFixture(sd);
-			b3.SetMassFromShapes();
-			b3.SetLinearVelocity(new Vec2(0.0f, -150.0f));
-		}
-#else
-		const float k_restitution = 1.4f;
-
-		{
 			BodyDef bd = new BodyDef();
 			bd.Position.Set(0.0f, 20.0f);
 			Body body = _world.CreateBody(bd);
+			body.CreateFixture(fd);
+			body.SetMassFromShapes();
+			body.SetLinearVelocity(new Vec2(0.0f, -100.0f));
+			body.SetAngularVelocity(_angularVelocity);
+		}
+#elif false
+		{
+			FixtureDef fd;
+			fd.SetAsBox(10.0f, 0.1f);
+			fd.density = 0.0f;
 
-			PolygonDef sd = new PolygonDef();
-			sd.Density = 0.0f;
-			sd.Restitution = k_restitution;
-
-			sd.SetAsBox(0.1f, 10.0f, new Vec2(-10.0f, 0.0f), 0.0f);
-			body.CreateFixture(sd);
-
-			sd.SetAsBox(0.1f, 10.0f, new Vec2(10.0f, 0.0f), 0.0f);
-			body.CreateFixture(sd);
-
-			sd.SetAsBox(0.1f, 10.0f, new Vec2(0.0f, -10.0f), 0.5f * Box2DX.Common.Settings.Pi);
-			body.CreateFixture(sd);
-
-            sd.SetAsBox(0.1f, 10.0f, new Vec2(0.0f, 10.0f), -0.5f * Box2DX.Common.Settings.Pi);
-			body.CreateFixture(sd);
+			BodyDef bd;
+			bd.type = BodyDef::e_static;
+			bd.position.Set(0.0f, -0.2f);
+			Body* ground = m_world.CreateBody(&bd);
+			ground.CreateFixture(&fd);
 		}
 
-#if TestOne
 		{
-			b2PolygonDef sd_bottom;
-			sd_bottom.SetAsBox(1.0f, 0.1f, b2Vec2(0.0f, -1.0f), 0.0f);
+			FixtureDef fd;
+			fd.SetAsBox(2.0f, 0.1f);
+			fd.density = 1.0f;
+			fd.restitution = 0.0f;
+
+			BodyDef bd1;
+			bd1.type = BodyDef::e_dynamic;
+			bd1.isBullet = true;
+			bd1.allowSleep = false;
+			bd1.position.Set(0.0f, 20.0f);
+			Body* b1 = m_world.Create(&bd1);
+			b1.CreateFixture(&fd);
+			b1.SetMassFromShapes();
+			b1.SetLinearVelocity(Vec2(0.0f, -100.0f));
+
+			fd.SetAsBox(1.0f, 0.1f);
+			BodyDef bd2;
+			bd2.type = BodyDef::e_dynamic;
+			bd2.isBullet = true;
+			bd2.allowSleep = false;
+			bd2.position.Set(0.0f, 20.2f);
+			Body*  = m_world.Create(&bd2);
+			.CreateFixture(&fd);
+			.SetMassFromShapes();
+			.SetLinearVelocity(Vec2(0.0f, -100.0f));
+
+			fd.SetAsBox(0.25f, 0.25f);
+			fd.density = 10.0f;
+			BodyDef bd3;
+			bd3.type = BodyDef::e_dynamic;
+			bd3.isBullet = true;
+			bd3.allowSleep = false;
+			bd3.position.Set(0.0f, 100.0f);
+			Body* b3 = m_world.Create(&bd3);
+			b3.CreateFixture(&fd);
+			b3.SetMassFromShapes();
+			b3.SetLinearVelocity(Vec2(0.0f, -150.0f));
+		}
+#else
+		const float32 k_restitution = 1.4f;
+
+		{
+			BodyDef bd;
+			bd.position.Set(0.0f, 20.0f);
+			Body* body = m_world.CreateBody(&bd);
+
+			FixtureDef fd;
+			fd.density = 0.0f;
+			fd.restitution = k_restitution;
+
+			fd.SetAsBox(0.1f, 10.0f, Vec2(-10.0f, 0.0f), 0.0f);
+			body.CreateFixture(&fd);
+
+			fd.SetAsBox(0.1f, 10.0f, Vec2(10.0f, 0.0f), 0.0f);
+			body.CreateFixture(&fd);
+
+			fd.SetAsBox(0.1f, 10.0f, Vec2(0.0f, -10.0f), 0.5f * _pi);
+			body.CreateFixture(&fd);
+
+			fd.SetAsBox(0.1f, 10.0f, Vec2(0.0f, 10.0f), -0.5f * _pi);
+			body.CreateFixture(&fd);
+		}
+
+#if false
+		{
+			FixtureDef sd_bottom;
+			sd_bottom.SetAsBox(1.0f, 0.1f, Vec2(0.0f, -1.0f), 0.0f);
 			sd_bottom.density = 4.0f;
 
-			b2PolygonDef sd_top;
-			sd_top.SetAsBox(1.0f, 0.1f, b2Vec2(0.0f,  1.0f), 0.0f);
+			FixtureDef sd_top;
+			sd_top.SetAsBox(1.0f, 0.1f, Vec2(0.0f,  1.0f), 0.0f);
 			sd_top.density = 4.0f;
 
-			b2PolygonDef sd_left;
-			sd_left.SetAsBox(0.1f, 1.0f, b2Vec2(-1.0f, 0.0f), 0.0f);
+			FixtureDef sd_left;
+			sd_left.SetAsBox(0.1f, 1.0f, Vec2(-1.0f, 0.0f), 0.0f);
 			sd_left.density = 4.0f;
 
-			b2PolygonDef sd_right;
-			sd_right.SetAsBox(0.1f, 1.0f, b2Vec2(1.0f, 0.0f), 0.0f);
+			FixtureDef sd_right;
+			sd_right.SetAsBox(0.1f, 1.0f, Vec2(1.0f, 0.0f), 0.0f);
 			sd_right.density = 4.0f;
 
-			b2BodyDef bd;
-			bd.type = b2BodyDef::e_dynamicBody;
+			BodyDef bd;
+			bd.type = BodyDef::e_dynamicBody;
 			bd.position.Set(0.0f, 15.0f);
-			b2Body* body = m_world->CreateBody(&bd);
-			body->CreateFixture(&sd_bottom);
-			body->CreateFixture(&sd_top);
-			body->CreateFixture(&sd_left);
-			body->CreateFixture(&sd_right);
-			body->SetMassFromShapes();
+			Body* body = m_world.CreateBody(&bd);
+			body.CreateFixture(&sd_bottom);
+			body.CreateFixture(&sd_top);
+			body.CreateFixture(&sd_left);
+			body.CreateFixture(&sd_right);
+			body.SetMassFromShapes();
 		}
-#elif TestTwo
+#elif false
 		{
-			b2PolygonDef sd_bottom;
+			FixtureDef sd_bottom;
 			sd_bottom.SetAsBox( 1.5f, 0.15f );
 			sd_bottom.density = 4.0f;
 
-			b2PolygonDef sd_left;
-			sd_left.SetAsBox(0.15f, 2.7f, b2Vec2(-1.45f, 2.35f), 0.2f);
+			FixtureDef sd_left;
+			sd_left.SetAsBox(0.15f, 2.7f, Vec2(-1.45f, 2.35f), 0.2f);
 			sd_left.density = 4.0f;
 
-			b2PolygonDef sd_right;
-			sd_right.SetAsBox(0.15f, 2.7f, b2Vec2(1.45f, 2.35f), -0.2f);
+			FixtureDef sd_right;
+			sd_right.SetAsBox(0.15f, 2.7f, Vec2(1.45f, 2.35f), -0.2f);
 			sd_right.density = 4.0f;
 
-			b2BodyDef bd;
+			BodyDef bd;
 			bd.position.Set( 0.0f, 15.0f );
-			b2Body* body = m_world->CreateBody(&bd);
-			body->CreateFixture(&sd_bottom);
-			body->CreateFixture(&sd_left);
-			body->CreateFixture(&sd_right);
-			body->SetMassFromShapes();
+			Body* body = m_world.CreateBody(&bd);
+			body.CreateFixture(&sd_bottom);
+			body.CreateFixture(&sd_left);
+			body.CreateFixture(&sd_right);
+			body.SetMassFromShapes();
 		}
 #else
 		{
-			BodyDef bd = new BodyDef();
-			bd.Position.Set(-5.0f, 20.0f);
-			bd.IsBullet = true;
-			Body body = _world.CreateBody(bd);
-			body.SetAngularVelocity(Box2DX.Common.Math.Random(-50.0f, 50.0f));
+			BodyDef bd;
+			bd.position.Set(-5.0f, 20.0f);
+			bd.isBullet = true;
+			Body* body = m_world.CreateBody(&bd);
+			body.SetAngularVelocity(RandomFloat(-50.0f, 50.0f));
 
-			PolygonDef sd = new PolygonDef();
-			sd.SetAsBox(0.1f, 4.0f);
-			sd.Density = 1.0f;
-			sd.Restitution = 0.0f;
-			body.CreateFixture(sd);
+			FixtureDef fd;
+			fd.SetAsBox(0.1f, 4.0f);
+			fd.density = 1.0f;
+			fd.restitution = 0.0f;
+			body.CreateFixture(&fd);
 			body.SetMassFromShapes();
 		}
 #endif
 
-		for (int i = 0; i < 0; ++i)
+		for (int32 i = 0; i < 0; ++i)
 		{
-			BodyDef bd = new BodyDef();
-			bd.Position.Set(0.0f, 15.0f + i);
-			bd.IsBullet = true;
-			Body body = _world.CreateBody(bd);
-            body.SetAngularVelocity(Box2DX.Common.Math.Random(-50.0f, 50.0f));
+			BodyDef bd;
+			bd.position.Set(0.0f, 15.0f + i);
+			bd.isBullet = true;
+			Body* body = m_world.CreateBody(&bd);
+			body.SetAngularVelocity(RandomFloat(-50.0f, 50.0f));
 
-			CircleDef sd = new CircleDef();
-			sd.Radius = 0.25f;
-			sd.Density = 1.0f;
-			sd.Restitution = 0.0f;
-			body.CreateFixture(sd);
+			FixtureDef fd;
+			fd.radius = 0.25f;
+			fd.density = 1.0f;
+			fd.restitution = 0.0f;
+			body.CreateFixture(&fd);
 			body.SetMassFromShapes();
 		}
 #endif
-        }
+	}
 
-        void Step(Settings settings)
-        {
-            if (_stepCount == 10)
-            {
-                _stepCount += 0;
-            }
+	    public override void Step(Settings settings)
+	    {
+		    if (_stepCount	== 10)
+		    {
+			    _stepCount += 0;
+		    }
 
-            //extern int32 b2_maxToiIters, b2_maxToiRootIters;
-            //m_debugDraw.DrawString(5, m_textLine, "max toi iters = %d, max root iters = %d", b2_maxToiIters, b2_maxToiRootIters);
-            //m_textLine += 15;
-        }
+		     Step(settings);
+
+		    int _gjkCalls = 0, _gjkIters = 0, _gjkMaxIters = 0;
+
+		    if (_gjkCalls > 0)
+		    {
+			    OpenGLDebugDraw.DrawString(5, _textLine, string.Format("gjk calls = {0}, ave gjk iters = {1}, max gjk iters = {2}",
+				    _gjkCalls, _gjkIters / _gjkCalls, _gjkMaxIters));
+			    _textLine += 15;
+		    }
+
+		    int _toiCalls = 0, _toiIters = 0, _toiMaxIters = 0;
+		    int _toiRootIters = 0, _toiMaxRootIters = 0;
+
+		    if (_toiCalls > 0)
+		    {
+			    OpenGLDebugDraw.DrawString(5, _textLine, string.Format("toi calls = {0}, ave toi iters = {1}, max toi iters = {2}",
+								    _toiCalls, _toiIters / _toiCalls, _toiMaxRootIters));
+			    _textLine += 15;
+			    OpenGLDebugDraw.DrawString(5, _textLine, string.Format("ave toi root iters = {0}, max toi root iters = {1}",
+				    _toiRootIters / _toiCalls, _toiMaxRootIters));
+			    _textLine += 15;
+		    }
+	    }
 
         public static Test Create()
         {

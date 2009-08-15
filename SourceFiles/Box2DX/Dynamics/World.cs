@@ -491,7 +491,7 @@ namespace Box2DX.Dynamics
             public QueryCallback Callback;
         };
 
-        private void DrawDebugData()
+        public void DrawDebugData()
         {
             if (_debugDraw == null)
             {

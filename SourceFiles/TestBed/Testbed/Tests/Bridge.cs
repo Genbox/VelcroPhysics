@@ -19,94 +19,100 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Box2DX.Common;
 using Box2DX.Collision;
+using Box2DX.Common;
 using Box2DX.Dynamics;
 
 namespace TestBed
 {
-	public class Bridge : Test
-	{
-		public Bridge()
-		{
-			Body ground = null;
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(50.0f, 10.0f);
+    public class Bridge : Test
+    {
+        public Bridge()
+        {
+            Body ground = null;
+            {
+                BodyDef bd = new BodyDef();
+                ground = _world.CreateBody(bd);
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, -10.0f);
-				ground = _world.CreateBody(bd);
-                ground.CreateFixture(sd);
-			}
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vec2(-40.0f, 0.0f), new Vec2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0);
+            }
 
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(0.5f, 0.125f);
-				sd.Density = 20.0f;
-				sd.Friction = 0.2f;
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.5f, 0.125f);
 
-				RevoluteJointDef jd = new RevoluteJointDef();
-				const int numPlanks = 30;
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Density = 20.0f;
+                fd.Friction = 0.2f;
 
-				Body prevBody = ground;
-				for (int i = 0; i < numPlanks; ++i)
-				{
-					BodyDef bd = new BodyDef();
-					bd.Position.Set(-14.5f + 1.0f * i, 5.0f);
-					Body body = _world.CreateBody(bd);
-                    body.CreateFixture(sd);
-					body.SetMassFromShapes();
+                RevoluteJointDef jd = new RevoluteJointDef();
+                const int numPlanks = 30;
 
-					Vec2 anchor = new Vec2(-15.0f + 1.0f * i, 5.0f);
-					jd.Initialize(prevBody, body, anchor);
-					_world.CreateJoint(jd);
+                Body prevBody = ground;
+                for (int i = 0; i < numPlanks; ++i)
+                {
+                    BodyDef bd = new BodyDef();
+                    bd.Position.Set(-14.5f + 1.0f * i, 5.0f);
+                    Body body = _world.CreateBody(bd);
+                    body.CreateFixture(fd);
+                    body.SetMassFromShapes();
 
-					prevBody = body;
-				}
+                    Vec2 anchor = new Vec2(-15.0f + 1.0f * i, 5.0f);
+                    jd.Initialize(prevBody, body, anchor);
+                    _world.CreateJoint(jd);
 
-				Vec2 anchor_ = new Vec2(-15.0f + 1.0f * numPlanks, 5.0f);
-				jd.Initialize(prevBody, ground, anchor_);
-				_world.CreateJoint(jd);
-			}
+                    prevBody = body;
+                }
+
+                Vec2 anchor2 = new Vec2(-15.0f + 1.0f * numPlanks, 5.0f);
+                jd.Initialize(prevBody, ground, anchor2);
+                _world.CreateJoint(jd);
+            }
 
             for (int i = 0; i < 2; ++i)
             {
-                PolygonDef sd = new PolygonDef();
-                sd.VertexCount = 3;
-                sd.Vertices[0].Set(-0.5f, 0.0f);
-                sd.Vertices[1].Set(0.5f, 0.0f);
-                sd.Vertices[2].Set(0.0f, 1.5f);
-                sd.Density = 1.0f;
+                Vec2[] vertices = new Vec2[3];
+                vertices[0].Set(-0.5f, 0.0f);
+                vertices[1].Set(0.5f, 0.0f);
+                vertices[2].Set(0.0f, 1.5f);
+
+                PolygonShape shape = new PolygonShape();
+                shape.Set(vertices, 3);
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Density = 1.0f;
 
                 BodyDef bd = new BodyDef();
                 bd.Position.Set(-8.0f + 8.0f * i, 12.0f);
                 Body body = _world.CreateBody(bd);
-                body.CreateFixture(sd);
+                body.CreateFixture(fd);
                 body.SetMassFromShapes();
             }
 
             for (int i = 0; i < 3; ++i)
             {
-                CircleDef sd = new CircleDef();
-                sd.Radius = 0.5f;
-                sd.Density = 1.0f;
+                CircleShape shape = new CircleShape();
+                shape.Radius = 0.5f;
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Density = 1.0f;
 
                 BodyDef bd = new BodyDef();
                 bd.Position.Set(-6.0f + 6.0f * i, 10.0f);
                 Body body = _world.CreateBody(bd);
-                body.CreateFixture(sd);
+                body.CreateFixture(fd);
                 body.SetMassFromShapes();
             }
-		}
+        }
 
-		public static Test Create()
-		{
-			return new Bridge();
-		}
-	}
+        public static Test Create()
+        {
+            return new Bridge();
+        }
+    }
 }
