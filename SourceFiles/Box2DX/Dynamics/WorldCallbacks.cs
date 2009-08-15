@@ -47,18 +47,6 @@ namespace Box2DX.Dynamics
 	}
 
 	/// <summary>
-	/// This is called when a body's shape passes outside of the world boundary.
-	/// </summary>
-	public abstract class BoundaryListener
-	{
-		/// <summary>
-		/// This is called for each body that leaves the world boundary.
-		/// @warning you can't modify the world inside this callback.
-		/// </summary>
-		public abstract void Violation(Body body);
-	}
-
-	/// <summary>
 	/// Implement this class to provide collision filtering. In other words, you can implement
 	/// this class if you want finer control over contact creation.
 	/// </summary>
@@ -71,8 +59,8 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public virtual bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)
 		{
-			FilterData filter1 = fixtureA.GetFilterData();
-			FilterData filter2 = fixtureB.GetFilterData();
+			Filter filter1 = fixtureA.GetFilterData();
+			Filter filter2 = fixtureB.GetFilterData();
 
 			if (filter1.GroupIndex == filter2.GroupIndex && filter1.GroupIndex != 0)
 			{
@@ -107,12 +95,9 @@ namespace Box2DX.Dynamics
         public float[] tangentImpulses = new float[Settings.MaxManifoldPoints];
     }
 
-	public class WorldCallback
+	public abstract class QueryCallback
 	{
-		/// <summary>
-		/// The default contact filter.
-		/// </summary>
-		public static ContactFilter DefaultFilter = new ContactFilter();
+        public abstract ContactFilter ReportFixture(Fixture fixture);
 	}
 
 	/// Implement this class to get contact information. You can use these results for
@@ -195,12 +180,9 @@ namespace Box2DX.Dynamics
 	    {
 	        Shape = 0x0001, // draw shapes
 	        Joint = 0x0002, // draw joint connections
-	        CoreShape = 0x0004, // draw core (TOI) shapes       // should be removed in this revision?
-	        Aabb = 0x0008, // draw axis aligned bounding boxes
-	        Obb = 0x0010, // draw oriented bounding boxes       // should be removed in this revision?
-	        Pair = 0x0020, // draw broad-phase pairs
-	        CenterOfMass = 0x0040, // draw center of mass frame
-	        Controller = 0x0080 // draw center of mass frame
+	        Aabb = 0x0004, // draw axis aligned bounding boxes
+	        Pair = 0x0008, // draw broad-phase pairs
+	        CenterOfMass = 0x0010, // draw center of mass frame
 	    };
 
 		protected DrawFlags _drawFlags;
