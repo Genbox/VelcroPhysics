@@ -1,6 +1,7 @@
 // New upgrades
-Box2D: Revision: 222 - Date: 09:11:30, 27. juli 2009
+Box2D: Revision: 6 - Date: 2:36:51 AM, Monday, August 10, 2009
 
 // Old upgrades
+Box2D: Revision: 222 - Date: 09:11:30, 27. juli 2009
 Box2DX: Revision: 57 - Date: 11:59:49, 20. marts 2009
 Box2D: Revision: 218 - Date: 09:17:49, 12. juni 2009
