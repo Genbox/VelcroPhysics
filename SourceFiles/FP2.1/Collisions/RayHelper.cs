@@ -281,18 +281,30 @@ namespace FarseerGames.FarseerPhysics.Collisions
         }
 
         /// <summary>
-        /// Gets a list of geometries that the line intersects.
+        /// Gets a list of geometries and their intersectionpoints that the line intersects.
         /// </summary>
         /// <param name="point1">The point1.</param>
         /// <param name="point2">The point2.</param>
         /// <param name="simulator">The simulator.</param>
         /// <param name="detectUsingAABB">if set to <c>true</c> [detect using AABB].</param>
-        /// <param name="intersectionPoints">The intersection points.</param>
         /// <returns></returns>
-        public static List<Geom> LineSegmentAllGeomsIntersect(ref Vector2 point1, ref Vector2 point2, PhysicsSimulator simulator, bool detectUsingAABB, ref List<Vector2> intersectionPoints)
+        public static List<GeomPointPair> LineSegmentAllGeomsIntersect(Vector2 point1, Vector2 point2, PhysicsSimulator simulator, bool detectUsingAABB)
+        {
+            return LineSegmentAllGeomsIntersect(ref point1, ref point2, simulator, detectUsingAABB);
+        }
+
+        /// <summary>
+        /// Gets a list of geometries and their intersectionpoints that the line intersects.
+        /// </summary>
+        /// <param name="point1">The point1.</param>
+        /// <param name="point2">The point2.</param>
+        /// <param name="simulator">The simulator.</param>
+        /// <param name="detectUsingAABB">if set to <c>true</c> [detect using AABB].</param>
+        /// <returns></returns>
+        public static List<GeomPointPair> LineSegmentAllGeomsIntersect(ref Vector2 point1, ref Vector2 point2, PhysicsSimulator simulator, bool detectUsingAABB)
         {
             List<Vector2> intSecPoints = new List<Vector2>();
-            List<Geom> geoms = new List<Geom>();
+            List<GeomPointPair> geoms = new List<GeomPointPair>();
 
             foreach (Geom geom in simulator.GeomList)
             {
@@ -308,12 +320,23 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 }
 
                 if (intSecPoints.Count > 0)
-                    geoms.Add(geom);
-
-                intersectionPoints.AddRange(intSecPoints);
+                {
+                    _tempPair = new GeomPointPair();
+                    _tempPair.Geom = geom;
+                    _tempPair.Points = new List<Vector2>(intSecPoints);
+                    geoms.Add(_tempPair);
+                }
             }
 
             return geoms;
         }
+
+        private static GeomPointPair _tempPair;
+    }
+
+    public struct GeomPointPair
+    {
+        public Geom Geom;
+        public List<Vector2> Points;
     }
 }
