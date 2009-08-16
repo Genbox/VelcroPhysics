@@ -60,25 +60,16 @@ namespace Box2DX.Collision
         // From Section 3.1.2
         // x = s + a * r
         // norm(x) = radius
-        public override SegmentCollide TestSegment(ref Transform transform, out float lambda, out Vec2 normal, ref Segment segment, float maxLambda)
+        public override void RayCast(out RayCastOutput output, ref RayCastInput input, Transform transform)
         {
-            // Needed in the C# version as all variables marked "out" must be inialized
-            lambda = 0f;
-            normal = Vec2.Zero;
+            output = new RayCastOutput();
 
             Vec2 position = transform.Position + Math.Mul(transform.R, LocalPosition);
-            Vec2 s = segment.P1 - position;
+            Vec2 s = input.P1 - position;
             float b = Vec2.Dot(s, s) - Radius * Radius;
 
-            // Does the segment start inside the circle?
-            if (b < 0.0f)
-            {
-                lambda = 0f;
-                return SegmentCollide.StartInsideCollide;
-            }
-
             // Solve quadratic equation.
-            Vec2 r = segment.P2 - segment.P1;
+            Vec2 r = input.P2 - input.P1;
             float c = Vec2.Dot(s, r);
             float rr = Vec2.Dot(r, r);
             float sigma = c * c - rr * b;
@@ -86,23 +77,26 @@ namespace Box2DX.Collision
             // Check for negative discriminant and short segment.
             if (sigma < 0.0f || rr < Settings.FLT_EPSILON)
             {
-                return SegmentCollide.MissCollide;
+                output.Hit = false;
+                return;
             }
 
             // Find the point of intersection of the line with the circle.
             float a = -(c + Math.Sqrt(sigma));
 
             // Is the intersection point on the segment?
-            if (0.0f <= a && a <= maxLambda * rr)
+            if (0.0f <= a && a <= input.MaxFraction * rr)
             {
                 a /= rr;
-                lambda = a;
-                normal = s + a * r;
-                normal.Normalize();
-                return SegmentCollide.HitCollide;
+                output.Hit = true;
+                output.Fraction = a;
+                output.Normal = s + a*r;
+                output.Normal.Normalize();
+                return;
             }
 
-            return SegmentCollide.MissCollide;
+            output.Hit = false;
+            return;
         }
 
         public override void ComputeAABB(out AABB aabb, ref Transform transform)

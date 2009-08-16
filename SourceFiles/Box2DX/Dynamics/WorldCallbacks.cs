@@ -95,10 +95,32 @@ namespace Box2DX.Dynamics
         public float[] tangentImpulses = new float[Settings.MaxManifoldPoints];
     }
 
+    /// Callback class for AABB queries.
+    /// See b2World::Query
     public abstract class QueryCallback
     {
+        /// Called for each fixture found in the query AABB.
+        /// @return false to terminate the query.
         public abstract bool ReportFixture(Fixture fixture);
     }
+
+    /// Callback class for ray casts.
+    /// See b2World::RayCast
+    public abstract class RayCastCallback
+    {
+        /// Called for each fixture found in the query. You control how the ray proceeds
+        /// by returning a float that indicates the fractional length of the ray. By returning
+        /// 0, you set the ray length to zero. By returning the current fraction, you proceed
+        /// to find the closest point. By returning 1, you continue with the original ray
+        /// clipping.
+        /// @param fixture the fixture hit by the ray
+        /// @param point the point of initial intersection
+        /// @param normal the normal vector at the point of intersection
+        /// @return 0 to terminate, fraction to clip the ray for
+        /// closest hit, 1 to continue
+        public abstract float ReportFixture(Fixture fixture, Vec2 point, Vec2 normal, float fraction);
+    };
+
 
     /// Implement this class to get contact information. You can use these results for
     /// things like sounds and game logic. You can also get contact results by
