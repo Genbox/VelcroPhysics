@@ -56,16 +56,6 @@ namespace Box2DX.Collision
     }
 
     /// <summary>
-    /// Returns code from TestSegment
-    /// </summary>
-    public enum SegmentCollide
-    {
-        StartInsideCollide = -1,
-        MissCollide = 0,
-        HitCollide = 1
-    }
-
-    /// <summary>
     /// A shape is used for collision detection. You can create a shape however you like.
     /// Shapes used for simulation in b2World are created automatically when a b2Fixture
     /// is created.
@@ -99,17 +89,11 @@ namespace Box2DX.Collision
         /// <returns></returns>
         public abstract bool TestPoint(Transform xf, Vec2 p);
 
-        /// <summary>
-        /// Perform a ray cast against this shape.
-        /// </summary>
-        /// <param name="xf">The shape world transform.</param>
-        /// <param name="lambda">Returns the hit fraction. You can use this to compute the contact point
-        /// p = (1 - lambda) * segment.P1 + lambda * segment.P2.</param>
-        /// <param name="normal"> Returns the normal at the contact point. If there is no intersection, 
-        /// the normal is not set.</param>
-        /// <param name="segment">Defines the begin and end point of the ray cast.</param>
-        /// <param name="maxLambda">A number typically in the range [0,1].</param>
-        public abstract SegmentCollide TestSegment(ref Transform xf, out float lambda, out Vec2 normal, ref Segment segment, float maxLambda);
+        /// Cast a ray against this shape.
+        /// @param output the ray-cast results.
+        /// @param input the ray-cast input parameters.
+        /// @param transform the transform to be applied to the shape.
+        public abstract void RayCast(out RayCastOutput output, ref RayCastInput input, Transform transform);
 
         /// <summary>
         /// Given a transform, compute the associated axis aligned bounding box for this shape.

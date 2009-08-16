@@ -19,7 +19,9 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
+using System;
 using Box2DX.Common;
+using Math=Box2DX.Common.Math;
 
 namespace Box2DX.Collision
 {
@@ -178,17 +180,19 @@ namespace Box2DX.Collision
             return true;
         }
 
-        public override SegmentCollide TestSegment(ref Transform xf, out float lambda, out Vec2 normal, ref  Segment segment, float maxLambda)
+        public override void RayCast(out RayCastOutput output, ref RayCastInput input, Transform xf)
         {
-            lambda = 0f;
-            normal = Vec2.Zero;
+            output = new RayCastOutput();
 
-            float lower = 0.0f, upper = maxLambda;
+            float lower = 0.0f, upper = input.MaxFraction;
 
-            Vec2 p1 = Math.MulT(xf.R, segment.P1 - xf.Position);
-            Vec2 p2 = Math.MulT(xf.R, segment.P2 - xf.Position);
+            // Put the ray into the polygon's frame of reference.
+            Vec2 p1 = Math.MulT(xf.R, input.P1 - xf.Position);
+            Vec2 p2 = Math.MulT(xf.R, input.P2 - xf.Position);
             Vec2 d = p2 - p1;
             int index = -1;
+
+            output.Hit = false;
 
             for (int i = 0; i < VertexCount; ++i)
             {
@@ -202,7 +206,7 @@ namespace Box2DX.Collision
                 {
                     if (numerator < 0.0f)
                     {
-                        return SegmentCollide.MissCollide;
+                        return;
                     }
                 }
                 else
@@ -228,21 +232,19 @@ namespace Box2DX.Collision
 
                 if (upper < lower)
                 {
-                    return SegmentCollide.MissCollide;
+                    return;
                 }
             }
 
-            Box2DXDebug.Assert(0.0f <= lower && lower <= maxLambda);
+            Box2DXDebug.Assert(0.0f <= lower && lower <= input.MaxFraction);
 
             if (index >= 0)
             {
-                lambda = lower;
-                normal = Math.Mul(xf.R, Normals[index]);
-                return SegmentCollide.HitCollide;
+                output.Hit = true;
+                output.Fraction = lower;
+                output.Normal = Math.Mul(xf.R, Normals[index]);
+                return;
             }
-
-            lambda = 0f;
-            return SegmentCollide.StartInsideCollide;
         }
 
         public override void ComputeAABB(out AABB aabb, ref Transform xf)

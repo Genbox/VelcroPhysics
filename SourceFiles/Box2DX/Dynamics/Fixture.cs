@@ -203,18 +203,12 @@ namespace Box2DX.Dynamics
             return Shape.TestPoint(Body.GetTransform(), p);
         }
 
-        /// Perform a ray cast against this shape.
-        /// @param xf the shape world transform.
-        /// @param lambda returns the hit fraction. You can use this to compute the contact point
-        /// p = (1 - lambda) * segment.p1 + lambda * segment.p2.
-        /// @param normal returns the normal at the contact point. If there is no intersection, the normal
-        /// is not set.
-        /// @param segment defines the begin and end point of the ray cast.
-        /// @param maxLambda a number typically in the range [0,1].
-        public SegmentCollide TestSegment(out float lambda, out Vec2 normal, ref Segment segment, float maxLambda)
+        /// Cast a ray against this shape.
+        /// @param output the ray-cast results.
+        /// @param input the ray-cast input parameters.
+        public void RayCast(out RayCastOutput output, ref RayCastInput input)
         {
-            Transform transform = Body.GetTransform();
-            return Shape.TestSegment(ref transform, out lambda, out normal, ref segment, maxLambda);
+            Shape.RayCast(out output, ref input, Body.GetTransform());
         }
 
         /// Compute the mass properties of this shape using its dimensions and density.

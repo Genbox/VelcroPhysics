@@ -483,11 +483,13 @@ namespace Box2DX.Dynamics
 
         struct WorldQueryWrapper
         {
-            void QueryCallback(object userData)
+            void QueryCallback(int proxyId)
             {
-                Callback.ReportFixture((Fixture)userData);
+                Fixture fixture = (Fixture)BroadPhase.GetUserData(proxyId);
+                Callback.ReportFixture(fixture);
             }
 
+            public BroadPhase BroadPhase;
             public QueryCallback Callback;
         };
 
@@ -571,11 +573,53 @@ namespace Box2DX.Dynamics
             }
         }
 
-        public void Query(QueryCallback callback, AABB aabb)
+        public void QueryAABB(QueryCallback callback, AABB aabb)
         {
             WorldQueryWrapper wrapper;
+            wrapper.BroadPhase = _contactManager._broadPhase;
             wrapper.Callback = callback;
             _contactManager._broadPhase.Query(wrapper, aabb);
+        }
+
+        struct WorldRayCastWrapper
+        {
+            public float RayCastCallback(RayCastInput input, int proxyId)
+            {
+                object userData = broadPhase.GetUserData(proxyId);
+                Fixture fixture = (Fixture)userData;
+                RayCastOutput output;
+                fixture.RayCast(out output, ref input);
+
+                if (output.Hit)
+                {
+                    float fraction = output.Fraction;
+                    Vec2 point = (1.0f - fraction) * input.P1 + fraction * input.P2;
+                    return callback.ReportFixture(fixture, point, output.Normal, fraction);
+                }
+
+                return input.MaxFraction;
+            }
+
+            public BroadPhase broadPhase;
+            public RayCastCallback callback;
+        };
+
+        /// Ray-cast the world for all fixtures in the path of the ray. Your callback
+        /// controls whether you get the closest point, any point, or n-points.
+        /// The ray-cast ignores shapes that contain the starting point.
+        /// @param callback a user implemented callback class.
+        /// @param point1 the ray starting point
+        /// @param point2 the ray ending point
+        public void RayCast(RayCastCallback callback, Vec2 point1, Vec2 point2)
+        {
+            WorldRayCastWrapper wrapper = new WorldRayCastWrapper();
+            wrapper.broadPhase = _contactManager._broadPhase;
+            wrapper.callback = callback;
+            RayCastInput input = new RayCastInput();
+            input.MaxFraction = 1.0f;
+            input.P1 = point1;
+            input.P2 = point2;
+            _contactManager._broadPhase.RayCast(wrapper, input);
         }
 
         /// <summary>

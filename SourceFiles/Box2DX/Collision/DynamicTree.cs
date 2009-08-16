@@ -428,26 +428,18 @@ namespace Box2DX.Collision
                     subInput.P2 = input.P2;
                     subInput.MaxFraction = maxFraction;
 
-                    RayCastOutput output;
+                    maxFraction = callback(subInput, nodeId);
 
-                    callback(out output, subInput, nodeId);
-
-                    if (output.Hit)
+                    if (maxFraction == 0.0f)
                     {
-                        // Early exit.
-                        if (output.Fraction == 0.0f)
-                        {
-                            return;
-                        }
+                        return;
+                    }
 
-                        maxFraction = output.Fraction;
-
-                        // Update segment bounding box.
-                        {
-                            Vec2 t = p1 + maxFraction * (p2 - p1);
-                            segmentAABB.LowerBound = Math.Min(p1, t);
-                            segmentAABB.UpperBound = Math.Max(p1, t);
-                        }
+                    // Update segment bounding box.
+                    {
+                        Vec2 t = p1 + maxFraction * (p2 - p1);
+                        segmentAABB.LowerBound = Math.Min(p1, t);
+                        segmentAABB.UpperBound = Math.Max(p1, t);
                     }
                 }
                 else
