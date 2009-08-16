@@ -19,176 +19,173 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
 using System.Collections.Generic;
-using System.Text;
-
-using Box2DX.Common;
 using Box2DX.Collision;
+using Box2DX.Common;
 using Box2DX.Dynamics;
 
 namespace TestBed
 {
-	// This test shows collision processing and tests
-	// deferred body destruction.
-	public class CollisionProcessing : Test
-	{
-		public CollisionProcessing()
-		{
-			// Ground body
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(50.0f, 10.0f);
-				sd.Friction = 0.3f;
+    // This test shows collision processing and tests
+    // deferred body destruction.
+    public class CollisionProcessing : Test
+    {
+        public CollisionProcessing()
+        {
+            // Ground body
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vec2(-50.0f, 0.0f), new Vec2(50.0f, 0.0f));
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, -10.0f);
+                FixtureDef sd = new FixtureDef();
+                sd.Shape = shape; ;
 
-				Body ground = _world.CreateBody(bd);
+                BodyDef bd = new BodyDef();
+                Body ground = _world.CreateBody(bd);
                 ground.CreateFixture(sd);
-			}
+            }
 
-			float xLo = -5.0f, xHi = 5.0f;
-			float yLo = 2.0f, yHi = 35.0f;
+            float xLo = -5.0f, xHi = 5.0f;
+            float yLo = 2.0f, yHi = 35.0f;
 
-			// Small triangle
-			PolygonDef triangleShapeDef = new PolygonDef();
-			triangleShapeDef.VertexCount = 3;
-			triangleShapeDef.Vertices[0].Set(-1.0f, 0.0f);
-			triangleShapeDef.Vertices[1].Set(1.0f, 0.0f);
-			triangleShapeDef.Vertices[2].Set(0.0f, 2.0f);
-			triangleShapeDef.Density = 1.0f;
+            // Small triangle
+            Vec2[] vertices = new Vec2[3];
+            vertices[0].Set(-1.0f, 0.0f);
+            vertices[1].Set(1.0f, 0.0f);
+            vertices[2].Set(0.0f, 2.0f);
 
-			BodyDef triangleBodyDef = new BodyDef();
-			triangleBodyDef.Position.Set(Box2DX.Common.Math.Random(xLo, xHi), Box2DX.Common.Math.Random(yLo, yHi));
-			//triangleBodyDef.Position.Set(Box2DX.Common.Math.Random(xLo, xHi), 35f);
+            PolygonShape polygon = new PolygonShape();
+            polygon.Set(vertices, 3);
 
-			Body body1 = _world.CreateBody(triangleBodyDef);
+            FixtureDef triangleShapeDef = new FixtureDef();
+            triangleShapeDef.Shape = polygon;
+            triangleShapeDef.Density = 1.0f;
+
+            BodyDef triangleBodyDef = new BodyDef();
+            triangleBodyDef.Position.Set(Math.Random(xLo, xHi), Math.Random(yLo, yHi));
+
+            Body body1 = _world.CreateBody(triangleBodyDef);
             body1.CreateFixture(triangleShapeDef);
-			body1.SetMassFromShapes();
+            body1.SetMassFromShapes();
 
-			// Large triangle (recycle definitions)
-			triangleShapeDef.Vertices[0] *= 2.0f;
-			triangleShapeDef.Vertices[1] *= 2.0f;
-			triangleShapeDef.Vertices[2] *= 2.0f;
-			triangleBodyDef.Position.Set(Box2DX.Common.Math.Random(xLo, xHi), Box2DX.Common.Math.Random(yLo, yHi));
-			//triangleBodyDef.Position.Set(Box2DX.Common.Math.Random(xLo, xHi), 30f);
+            // Large triangle (recycle definitions)
+            vertices[0] *= 2.0f;
+            vertices[1] *= 2.0f;
+            vertices[2] *= 2.0f;
+            polygon.Set(vertices, 3);
 
-			Body body2 = _world.CreateBody(triangleBodyDef);
+            triangleBodyDef.Position.Set(Math.Random(xLo, xHi), Math.Random(yLo, yHi));
+
+            Body body2 = _world.CreateBody(triangleBodyDef);
             body2.CreateFixture(triangleShapeDef);
-			body2.SetMassFromShapes();
+            body2.SetMassFromShapes();
 
-			// Small box
-			PolygonDef boxShapeDef = new PolygonDef();
-			boxShapeDef.SetAsBox(1.0f, 0.5f);
-			boxShapeDef.Density = 1.0f;
+            // Small box
+            polygon.SetAsBox(1.0f, 0.5f);
 
-			BodyDef boxBodyDef = new BodyDef();
-			boxBodyDef.Position.Set(Box2DX.Common.Math.Random(xLo, xHi), Box2DX.Common.Math.Random(yLo, yHi));
-			//boxBodyDef.Position.Set(Box2DX.Common.Math.Random(xLo, xHi), 25f);
+            FixtureDef boxShapeDef = new FixtureDef();
+            boxShapeDef.Shape = polygon;
+            boxShapeDef.Density = 1.0f;
 
-			Body body3 = _world.CreateBody(boxBodyDef);
+            BodyDef boxBodyDef = new BodyDef();
+            boxBodyDef.Position.Set(Math.Random(xLo, xHi), Math.Random(yLo, yHi));
+
+            Body body3 = _world.CreateBody(boxBodyDef);
             body3.CreateFixture(boxShapeDef);
-			body3.SetMassFromShapes();
+            body3.SetMassFromShapes();
 
-			// Large box (recycle definitions)
-			boxShapeDef.SetAsBox(2.0f, 1.0f);
-			boxBodyDef.Position.Set(Box2DX.Common.Math.Random(xLo, xHi), Box2DX.Common.Math.Random(yLo, yHi));
-			//boxBodyDef.Position.Set(Box2DX.Common.Math.Random(xLo, xHi), 15f);
+            // Large box (recycle definitions)
+            polygon.SetAsBox(2.0f, 1.0f);
+            boxBodyDef.Position.Set(Math.Random(xLo, xHi), Math.Random(yLo, yHi));
 
-			Body body4 = _world.CreateBody(boxBodyDef);
+            Body body4 = _world.CreateBody(boxBodyDef);
             body4.CreateFixture(boxShapeDef);
-			body4.SetMassFromShapes();
+            body4.SetMassFromShapes();
 
-			// Small circle
-			CircleDef circleShapeDef = new CircleDef();
-			circleShapeDef.Radius = 1.0f;
-			circleShapeDef.Density = 1.0f;
+            // Small circle
+            CircleShape circle = new CircleShape();
+            circle.Radius = 1.0f;
 
-			BodyDef circleBodyDef = new BodyDef();
-			circleBodyDef.Position.Set(Box2DX.Common.Math.Random(xLo, xHi), Box2DX.Common.Math.Random(yLo, yHi));
-			//circleBodyDef.Position.Set(Box2DX.Common.Math.Random(xLo, xHi), 10f);
+            FixtureDef circleShapeDef = new FixtureDef();
+            circleShapeDef.Shape = circle;
+            circleShapeDef.Density = 1.0f;
 
-			Body body5 = _world.CreateBody(circleBodyDef);
+            BodyDef circleBodyDef = new BodyDef();
+            circleBodyDef.Position.Set(Math.Random(xLo, xHi), Math.Random(yLo, yHi));
+
+            Body body5 = _world.CreateBody(circleBodyDef);
             body5.CreateFixture(circleShapeDef);
-			body5.SetMassFromShapes();
+            body5.SetMassFromShapes();
 
-			// Large circle
-			circleShapeDef.Radius *= 2.0f;
-			circleBodyDef.Position.Set(Box2DX.Common.Math.Random(xLo, xHi), Box2DX.Common.Math.Random(yLo, yHi));
-			//circleBodyDef.Position.Set(Box2DX.Common.Math.Random(xLo, xHi), 5f);
+            // Large circle
+            circle.Radius *= 2.0f;
+            circleBodyDef.Position.Set(Math.Random(xLo, xHi), Math.Random(yLo, yHi));
 
-			Body body6 = _world.CreateBody(circleBodyDef);
+            Body body6 = _world.CreateBody(circleBodyDef);
             body6.CreateFixture(circleShapeDef);
-			body6.SetMassFromShapes();
-		}
+            body6.SetMassFromShapes();
+        }
 
-		public override void Step(Settings settings)
-		{
-			base.Step(settings);
-			// We are going to destroy some bodies according to contact
-			// points. We must buffer the bodies that should be destroyed
-			// because they may belong to multiple contact points.
-			const int k_maxNuke = 6;
-			Dictionary<int, Body> nuke = new Dictionary<int, Body>(k_maxNuke);
-			int nukeCount = 0;
+        public override void Step(Settings settings)
+        {
+            Step(settings);
 
-			// Traverse the contact results. Destroy bodies that
-			// are touching heavier bodies.
-			for (int i = 0; i < _pointCount; ++i)
-			{
-				ContactPoint point = _points[i];
+            // We are going to destroy some bodies according to contact
+            // points. We must buffer the bodies that should be destroyed
+            // because they may belong to multiple contact points.
+            const int k_maxNuke = 6;
+            Body[] nuke = new Body[k_maxNuke];
+            int nukeCount = 0;
 
-				Body body1 = point.fixtureA.GetBody();
-				Body body2 = point.fixtureB.GetBody();
-				float mass1 = body1.GetMass();
-				float mass2 = body2.GetMass();
+            // Traverse the contact results. Destroy bodies that
+            // are touching heavier bodies.
+            for (int i = 0; i < _pointCount; ++i)
+            {
+                ContactPoint point = _points[i];
 
-				if (mass1 > 0.0f && mass2 > 0.0f)
-				{
-					if (mass2 > mass1)
-					{
-						int hc = body1.GetHashCode();
-						if (!nuke.ContainsKey(hc))
-							nuke.Add(hc, body1);//nuke[nukeCount++] = body1;
-					}
-					else
-					{
-						int hc = body2.GetHashCode();
-						if (!nuke.ContainsKey(hc))
-							nuke.Add(hc, body2);//nuke[nukeCount++] = body2;
-					}
+                Body body1 = point.fixtureA.GetBody();
+                Body body2 = point.fixtureB.GetBody();
+                float mass1 = body1.GetMass();
+                float mass2 = body2.GetMass();
 
-					if (nukeCount == k_maxNuke)
-					{
-						break;
-					}
-				}
-			}
+                if (mass1 > 0.0f && mass2 > 0.0f)
+                {
+                    if (mass2 > mass1)
+                    {
+                        nuke[nukeCount++] = body1;
+                    }
+                    else
+                    {
+                        nuke[nukeCount++] = body2;
+                    }
 
-			// Sort the nuke array to group duplicates.
-			//Array.Sort(nuke);
+                    if (nukeCount == k_maxNuke)
+                    {
+                        break;
+                    }
+                }
+            }
 
-			// Destroy the bodies, skipping duplicates.
-			/*int i_ = 0;
-			while (i_ < nukeCount)
-			{
-				Body b = nuke[i_++];
-				while (i_ < nukeCount && nuke[i_] == b)
-				{
-					++i_;
-				}
+            // Sort the nuke array to group duplicates.
+            System.Array.Sort(nuke);
 
-				_world.DestroyBody(b);
-			}*/
+            // Destroy the bodies, skipping duplicates.
+            int j = 0;
+            while (j < nukeCount)
+            {
+                Body b = nuke[j++];
+                while (j < nukeCount && nuke[j] == b)
+                {
+                    ++j;
+                }
 
-			foreach (KeyValuePair<int, Body> kvp in nuke)
-				_world.DestroyBody(nuke[kvp.Key]);
-		}
+                _world.DestroyBody(b);
+            }
+        }
 
-		public static Test Create()
-		{
-			return new CollisionProcessing();
-		}
-	}
+        public static Test Create()
+        {
+            return new CollisionProcessing();
+        }
+    }
 }

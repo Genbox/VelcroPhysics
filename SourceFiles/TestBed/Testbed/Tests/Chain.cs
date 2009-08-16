@@ -19,61 +19,60 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Box2DX.Common;
 using Box2DX.Collision;
+using Box2DX.Common;
 using Box2DX.Dynamics;
 
 namespace TestBed
 {
-	public class Chain : Test
-	{
-		public Chain()
-		{
-			Body ground = null;
-			{
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, -10.0f);
-				ground = _world.CreateBody(bd);
+    public class Chain : Test
+    {
+        public Chain()
+        {
+            Body ground = null;
+            {
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(0.0f, -10.0f);
+                ground = _world.CreateBody(bd);
 
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(50.0f, 10.0f);
-				ground.CreateFixture(sd);
-			}
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vec2(-40.0f, 0.0f), new Vec2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0);
+            }
 
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(0.6f, 0.125f);
-				sd.Density = 20.0f;
-				sd.Friction = 0.2f;
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.6f, 0.125f);
 
-				RevoluteJointDef jd = new RevoluteJointDef();
-				jd.CollideConnected = false;
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Density = 20.0f;
+                fd.Friction = 0.2f;
 
-				const float y = 25.0f;
-				Body prevBody = ground;
-				for (int i = 0; i < 30; ++i)
-				{
-					BodyDef bd = new BodyDef();
-					bd.Position.Set(0.5f + i, y);
-					Body body = _world.CreateBody(bd);
-                    body.CreateFixture(sd);
-					body.SetMassFromShapes();
+                RevoluteJointDef jd = new RevoluteJointDef();
+                jd.CollideConnected = false;
 
-					Vec2 anchor = new Vec2(i, y);
-					jd.Initialize(prevBody, body, anchor);
-					_world.CreateJoint(jd);
+                const float y = 25.0f;
+                Body prevBody = ground;
+                for (int i = 0; i < 30; ++i)
+                {
+                    BodyDef bd = new BodyDef();
+                    bd.Position.Set(0.5f + i, y);
+                    Body body = _world.CreateBody(bd);
+                    body.CreateFixture(fd);
+                    body.SetMassFromShapes();
 
-					prevBody = body;
-				}
-			}
-		}
-		public static Test Create()
-		{
-			return new Chain();
-		}
-	}
+                    Vec2 anchor = new Vec2(i, y);
+                    jd.Initialize(prevBody, body, anchor);
+                    _world.CreateJoint(jd);
+
+                    prevBody = body;
+                }
+            }
+        }
+        public static Test Create()
+        {
+            return new Chain();
+        }
+    }
 }
