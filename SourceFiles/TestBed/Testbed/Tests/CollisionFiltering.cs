@@ -19,136 +19,143 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Box2DX.Common;
 using Box2DX.Collision;
+using Box2DX.Common;
 using Box2DX.Dynamics;
 
 namespace TestBed
 {
-	public class CollisionFiltering : Test
-	{
-		// This is a test of collision filtering.
-		// There is a triangle, a box, and a circle.
-		// There are 6 shapes. 3 large and 3 small.
-		// The 3 small ones always collide.
-		// The 3 large ones never collide.
-		// The boxes don't collide with triangles (except if both are small).
-		const short k_smallGroup = 1;
-		const short k_largeGroup = -1;
+    public class CollisionFiltering : Test
+    {
+        // This is a test of collision filtering.
+        // There is a triangle, a box, and a circle.
+        // There are 6 shapes. 3 large and 3 small.
+        // The 3 small ones always collide.
+        // The 3 large ones never collide.
+        // The boxes don't collide with triangles (except if both are small).
+        const short k_smallGroup = 1;
+        const short k_largeGroup = -1;
 
-		const ushort k_defaultCategory = 0x0001;
-		const ushort k_triangleCategory = 0x0002;
-		const ushort k_boxCategory = 0x0004;
-		const ushort k_circleCategory = 0x0008;
+        const ushort k_defaultCategory = 0x0001;
+        const ushort k_triangleCategory = 0x0002;
+        const ushort k_boxCategory = 0x0004;
+        const ushort k_circleCategory = 0x0008;
 
-		const ushort k_triangleMask = 0xFFFF;
-		readonly ushort k_boxMask = 0xFFFF ^ k_triangleCategory;
-		const ushort k_circleMask = 0xFFFF;
+        const ushort k_triangleMask = 0xFFFF;
+        const ushort k_boxMask = 0xFFFF ^ k_triangleCategory;
+        const ushort k_circleMask = 0xFFFF;
 
-		public CollisionFiltering()
-		{
-			// Ground body
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(50.0f, 10.0f);
-				sd.Friction = 0.3f;
+        public CollisionFiltering()
+        {
+            // Ground body
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vec2(-40.0f, 0.0f), new Vec2(40.0f, 0.0f));
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, -10.0f);
+                FixtureDef sd = new FixtureDef();
+                sd.Shape = shape;
+                sd.Friction = 0.3f;
 
-				Body ground = _world.CreateBody(bd);
+                BodyDef bd = new BodyDef();
+                Body ground = _world.CreateBody(bd);
                 ground.CreateFixture(sd);
-			}
+            }
 
-			// Small triangle
-			PolygonDef triangleShapeDef = new PolygonDef();
-			triangleShapeDef.VertexCount = 3;
-			triangleShapeDef.Vertices[0].Set(-1.0f, 0.0f);
-			triangleShapeDef.Vertices[1].Set(1.0f, 0.0f);
-			triangleShapeDef.Vertices[2].Set(0.0f, 2.0f);
-			triangleShapeDef.Density = 1.0f;
+            // Small triangle
+            Vec2[] vertices = new Vec2[3];
+            vertices[0].Set(-1.0f, 0.0f);
+            vertices[1].Set(1.0f, 0.0f);
+            vertices[2].Set(0.0f, 2.0f);
+            PolygonShape polygon = new PolygonShape();
+            polygon.Set(vertices, 3);
 
-			triangleShapeDef.Filter.GroupIndex = k_smallGroup;
-			triangleShapeDef.Filter.CategoryBits = k_triangleCategory;
-			triangleShapeDef.Filter.MaskBits = k_triangleMask;
+            FixtureDef triangleShapeDef = new FixtureDef();
+            triangleShapeDef.Shape = polygon;
+            triangleShapeDef.Density = 1.0f;
 
-			BodyDef triangleBodyDef = new BodyDef();
-			triangleBodyDef.Position.Set(-5.0f, 2.0f);
+            triangleShapeDef.Filter.GroupIndex = k_smallGroup;
+            triangleShapeDef.Filter.CategoryBits = k_triangleCategory;
+            triangleShapeDef.Filter.MaskBits = k_triangleMask;
 
-			Body body1 = _world.CreateBody(triangleBodyDef);
+            BodyDef triangleBodyDef = new BodyDef();
+            triangleBodyDef.Position.Set(-5.0f, 2.0f);
+
+            Body body1 = _world.CreateBody(triangleBodyDef);
             body1.CreateFixture(triangleShapeDef);
-			body1.SetMassFromShapes();
+            body1.SetMassFromShapes();
 
-			// Large triangle (recycle definitions)
-			triangleShapeDef.Vertices[0] *= 2.0f;
-			triangleShapeDef.Vertices[1] *= 2.0f;
-			triangleShapeDef.Vertices[2] *= 2.0f;
-			triangleShapeDef.Filter.GroupIndex = k_largeGroup;
-			triangleBodyDef.Position.Set(-5.0f, 6.0f);
-			triangleBodyDef.FixedRotation = true; // look at me!
+            // Large triangle (recycle definitions)
+            vertices[0] *= 2.0f;
+            vertices[1] *= 2.0f;
+            vertices[2] *= 2.0f;
+            polygon.Set(vertices, 3);
+            triangleShapeDef.Filter.GroupIndex = k_largeGroup;
+            triangleBodyDef.Position.Set(-5.0f, 6.0f);
+            triangleBodyDef.FixedRotation = true; // look at me!
 
-			Body body2 = _world.CreateBody(triangleBodyDef);
+            Body body2 = _world.CreateBody(triangleBodyDef);
             body2.CreateFixture(triangleShapeDef);
-			body2.SetMassFromShapes();
+            body2.SetMassFromShapes();
 
-			// Small box
-			PolygonDef boxShapeDef = new PolygonDef();
-			boxShapeDef.SetAsBox(1.0f, 0.5f);
-			boxShapeDef.Density = 1.0f;
+            // Small box
+            polygon.SetAsBox(1.0f, 0.5f);
+            FixtureDef boxShapeDef = new FixtureDef();
+            boxShapeDef.Shape = polygon;
+            boxShapeDef.Density = 1.0f;
+            boxShapeDef.Restitution = 0.1f;
 
-			boxShapeDef.Filter.GroupIndex = k_smallGroup;
-			boxShapeDef.Filter.CategoryBits = k_boxCategory;
-			boxShapeDef.Filter.MaskBits = k_boxMask;
+            boxShapeDef.Filter.GroupIndex = k_smallGroup;
+            boxShapeDef.Filter.CategoryBits = k_boxCategory;
+            boxShapeDef.Filter.MaskBits = k_boxMask;
 
-			BodyDef boxBodyDef = new BodyDef();
-			boxBodyDef.Position.Set(0.0f, 2.0f);
+            BodyDef boxBodyDef = new BodyDef();
+            boxBodyDef.Position.Set(0.0f, 2.0f);
 
-			Body body3 = _world.CreateBody(boxBodyDef);
+            Body body3 = _world.CreateBody(boxBodyDef);
             body3.CreateFixture(boxShapeDef);
-			body3.SetMassFromShapes();
+            body3.SetMassFromShapes();
 
-			// Large box (recycle definitions)
-			boxShapeDef.SetAsBox(2.0f, 1.0f);
-			boxShapeDef.Filter.GroupIndex = k_largeGroup;
-			boxBodyDef.Position.Set(0.0f, 6.0f);
+            // Large box (recycle definitions)
+            polygon.SetAsBox(2.0f, 1.0f);
+            boxShapeDef.Filter.GroupIndex = k_largeGroup;
+            boxBodyDef.Position.Set(0.0f, 6.0f);
 
-			Body body4 = _world.CreateBody(boxBodyDef);
+            Body body4 = _world.CreateBody(boxBodyDef);
             body4.CreateFixture(boxShapeDef);
-			body4.SetMassFromShapes();
+            body4.SetMassFromShapes();
 
-			// Small circle
-			CircleDef circleShapeDef = new CircleDef();
-			circleShapeDef.Radius = 1.0f;
-			circleShapeDef.Density = 1.0f;
+            // Small circle
+            CircleShape circle = new CircleShape();
+            circle.Radius = 1.0f;
 
-			circleShapeDef.Filter.GroupIndex = k_smallGroup;
-			circleShapeDef.Filter.CategoryBits = k_circleCategory;
-			circleShapeDef.Filter.MaskBits = k_circleMask;
+            FixtureDef circleShapeDef = new FixtureDef();
+            circleShapeDef.Shape = circle;
+            circleShapeDef.Density = 1.0f;
 
-			BodyDef circleBodyDef = new BodyDef();
-			circleBodyDef.Position.Set(5.0f, 2.0f);
+            circleShapeDef.Filter.GroupIndex = k_smallGroup;
+            circleShapeDef.Filter.CategoryBits = k_circleCategory;
+            circleShapeDef.Filter.MaskBits = k_circleMask;
 
-			Body body5 = _world.CreateBody(circleBodyDef);
+            BodyDef circleBodyDef = new BodyDef();
+            circleBodyDef.Position.Set(5.0f, 2.0f);
+
+            Body body5 = _world.CreateBody(circleBodyDef);
             body5.CreateFixture(circleShapeDef);
-			body5.SetMassFromShapes();
+            body5.SetMassFromShapes();
 
-			// Large circle
-			circleShapeDef.Radius *= 2.0f;
-			circleShapeDef.Filter.GroupIndex = k_largeGroup;
-			circleBodyDef.Position.Set(5.0f, 6.0f);
+            // Large circle
+            circle.Radius *= 2.0f;
+            circleShapeDef.Filter.GroupIndex = k_largeGroup;
+            circleBodyDef.Position.Set(5.0f, 6.0f);
 
-			Body body6 = _world.CreateBody(circleBodyDef);
+            Body body6 = _world.CreateBody(circleBodyDef);
             body6.CreateFixture(circleShapeDef);
-			body6.SetMassFromShapes();
-		}
+            body6.SetMassFromShapes();
+        }
 
-		public static Test Create()
-		{
-			return new CollisionFiltering();
-		}
-	}
+        public static Test Create()
+        {
+            return new CollisionFiltering();
+        }
+    }
 }

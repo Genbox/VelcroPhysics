@@ -41,10 +41,10 @@ namespace Box2DX.Common
 			R = rotation;
 		}
 
-        public void Set(Vec2 position, Mat22 rotation)
+        public void Set(Vec2 position, float rotation)
         {
             Position = position;
-            R = rotation;
+            R.Set(rotation);
         }
 
 		/// <summary>

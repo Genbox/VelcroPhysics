@@ -64,11 +64,9 @@ namespace TestBed
 			chkbCF.Checked = settings.drawContactForces == 1 ? true : false;
 			chkbCN.Checked = settings.drawContactNormals == 1 ? true : false;
 			chkbCom.Checked = settings.drawCOMs == 1 ? true : false;
-			chkbCoreShapes.Checked = settings.drawCoreShapes == 1 ? true : false;
 			chkbCP.Checked = settings.drawContactPoints == 1 ? true : false;
 			chkbFF.Checked = settings.drawFrictionForces == 1 ? true : false;
 			chkbJoints.Checked = settings.drawJoints == 1 ? true : false;
-			chkbObbs.Checked = settings.drawOBBs == 1 ? true : false;
 			chkbPairs.Checked = settings.drawPairs == 1 ? true : false;
 			chkbShapes.Checked = settings.drawShapes == 1 ? true : false;
 			chkbStatistics.Checked = settings.drawStats == 1 ? true : false;
@@ -301,19 +299,9 @@ namespace TestBed
 			settings.drawJoints = chkbJoints.Checked ? 1 : 0;
 		}
 
-		private void chkbCoreShapes_CheckedChanged(object sender, EventArgs e)
-		{
-			settings.drawCoreShapes = chkbCoreShapes.Checked ? 1 : 0;
-		}
-
 		private void chkbAabbs_CheckedChanged(object sender, EventArgs e)
 		{
 			settings.drawAABBs = chkbAabbs.Checked ? 1 : 0;
-		}
-
-		private void chkbObbs_CheckedChanged(object sender, EventArgs e)
-		{
-			settings.drawOBBs = chkbObbs.Checked ? 1 : 0;
 		}
 
 		private void chkbPairs_CheckedChanged(object sender, EventArgs e)

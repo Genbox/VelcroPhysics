@@ -19,138 +19,128 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Box2DX.Common;
 using Box2DX.Collision;
+using Box2DX.Common;
 using Box2DX.Dynamics;
 
 namespace TestBed
 {
-	public class CompoundShapes : Test
-	{
-		public CompoundShapes()
-		{
-			{
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, -10.0f);
-				Body body = _world.CreateBody(bd);
+    public class CompoundShapes : Test
+    {
+        public CompoundShapes()
+        {
+            {
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(0.0f, 0.0f);
+                Body body = _world.CreateBody(bd);
 
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(50.0f, 10.0f);
-                body.CreateFixture(sd);
-			}
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vec2(50.0f, 0.0f), new Vec2(-50.0f, 0.0f));
 
-			{
-				CircleDef sd1 = new CircleDef();
-				sd1.Radius = 0.5f;
-				sd1.LocalPosition.Set(-0.5f, 0.5f);
-				sd1.Density = 2.0f;
+                body.CreateFixture(shape, 0);
+            }
 
-				CircleDef sd2 = new CircleDef();
-				sd2.Radius = 0.5f;
-				sd2.LocalPosition.Set(0.5f, 0.5f);
-				sd2.Density = 0.0f; // massless
+            {
+                CircleShape circle1 = new CircleShape();
+                circle1.Radius = 0.5f;
+                circle1.LocalPosition.Set(-0.5f, 0.5f);
 
-				for (int i = 0; i < 10; ++i)
-				{
-					float x = Box2DX.Common.Math.Random(-0.1f, 0.1f);
-					BodyDef bd = new BodyDef();
-					bd.Position.Set(x + 5.0f, 1.05f + 2.5f * i);
-					bd.Angle = Box2DX.Common.Math.Random(-Box2DX.Common.Settings.Pi, Box2DX.Common.Settings.Pi);
-					Body body = _world.CreateBody(bd);
-                    body.CreateFixture(sd1);
-                    body.CreateFixture(sd2);
-					body.SetMassFromShapes();
-				}
-			}
+                CircleShape circle2 = new CircleShape();
+                circle2.Radius = 0.5f;
+                circle2.LocalPosition.Set(0.5f, 0.5f);
 
-			{
-				PolygonDef sd1 = new PolygonDef();
-				sd1.SetAsBox(0.25f, 0.5f);
-				sd1.Density = 2.0f;
+                for (int i = 0; i < 10; ++i)
+                {
+                    float x = Math.Random(-0.1f, 0.1f);
+                    BodyDef bd = new BodyDef();
+                    bd.Position.Set(x + 5.0f, 1.05f + 2.5f * i);
+                    bd.Angle = Math.Random(-Box2DX.Common.Settings.PI, Box2DX.Common.Settings.PI);
+                    Body body = _world.CreateBody(bd);
+                    body.CreateFixture(circle1, 2.0f);
+                    body.CreateFixture(circle2, 0);
+                    body.SetMassFromShapes();
+                }
+            }
 
-				PolygonDef sd2 = new PolygonDef();
-				sd2.SetAsBox(0.25f, 0.5f, new Vec2(0.0f, -0.5f), 0.5f * Box2DX.Common.Settings.Pi);
-				sd2.Density = 2.0f;
+            {
+                PolygonShape polygon1 = new PolygonShape();
+                polygon1.SetAsBox(0.25f, 0.5f);
 
-				for (int i = 0; i < 10; ++i)
-				{
-					float x = Box2DX.Common.Math.Random(-0.1f, 0.1f);
-					BodyDef bd = new BodyDef();
-					bd.Position.Set(x - 5.0f, 1.05f + 2.5f * i);
-					bd.Angle = Box2DX.Common.Math.Random(-Box2DX.Common.Settings.Pi, Box2DX.Common.Settings.Pi);
-					Body body = _world.CreateBody(bd);
-                    body.CreateFixture(sd1);
-                    body.CreateFixture(sd2);
-					body.SetMassFromShapes();
-				}
-			}
+                PolygonShape polygon2 = new PolygonShape();
+                polygon2.SetAsBox(0.25f, 0.5f, new Vec2(0.0f, -0.5f), 0.5f * Box2DX.Common.Settings.PI);
 
-			{
-				XForm xf1 = new XForm();
-				xf1.R.Set(0.3524f * Box2DX.Common.Settings.Pi);
-				xf1.Position = Box2DX.Common.Math.Mul(xf1.R, new Vec2(1.0f, 0.0f));
+                for (int i = 0; i < 10; ++i)
+                {
+                    float x = Math.Random(-0.1f, 0.1f);
+                    BodyDef bd = new BodyDef();
+                    bd.Position.Set(x - 5.0f, 1.05f + 2.5f * i);
+                    bd.Angle = Math.Random(-Box2DX.Common.Settings.PI, Box2DX.Common.Settings.PI);
+                    Body body = _world.CreateBody(bd);
+                    body.CreateFixture(polygon1, 2.0f);
+                    body.CreateFixture(polygon2, 2.0f);
+                    body.SetMassFromShapes();
+                }
+            }
 
-				PolygonDef sd1 = new PolygonDef();
-				sd1.VertexCount = 3;
-				sd1.Vertices[0] = Box2DX.Common.Math.Mul(xf1, new Vec2(-1.0f, 0.0f));
-				sd1.Vertices[1] = Box2DX.Common.Math.Mul(xf1, new Vec2(1.0f, 0.0f));
-				sd1.Vertices[2] = Box2DX.Common.Math.Mul(xf1, new Vec2(0.0f, 0.5f));
-				sd1.Density = 2.0f;
+            {
+                Transform xf1 = new Transform();
+                xf1.R.Set(0.3524f * Box2DX.Common.Settings.PI);
+                xf1.Position = Math.Mul(xf1.R, new Vec2(1.0f, 0.0f));
 
-				XForm xf2 = new XForm();
-				xf2.R.Set(-0.3524f * Box2DX.Common.Settings.Pi);
-				xf2.Position = Box2DX.Common.Math.Mul(xf2.R, new Vec2(-1.0f, 0.0f));
+                Vec2[] vertices = new Vec2[3];
 
-				PolygonDef sd2 = new PolygonDef();
-				sd2.VertexCount = 3;
-				sd2.Vertices[0] = Box2DX.Common.Math.Mul(xf2, new Vec2(-1.0f, 0.0f));
-				sd2.Vertices[1] = Box2DX.Common.Math.Mul(xf2, new Vec2(1.0f, 0.0f));
-				sd2.Vertices[2] = Box2DX.Common.Math.Mul(xf2, new Vec2(0.0f, 0.5f));
-				sd2.Density = 2.0f;
+                PolygonShape triangle1 = new PolygonShape();
+                vertices[0] = Math.Mul(xf1, new Vec2(-1.0f, 0.0f));
+                vertices[1] = Math.Mul(xf1, new Vec2(1.0f, 0.0f));
+                vertices[2] = Math.Mul(xf1, new Vec2(0.0f, 0.5f));
+                triangle1.Set(vertices, 3);
 
-				for (int i = 0; i < 10; ++i)
-				{
-					float x = Box2DX.Common.Math.Random(-0.1f, 0.1f);
-					BodyDef bd = new BodyDef();
-					bd.Position.Set(x, 2.05f + 2.5f * i);
-					bd.Angle = 0.0f;
-					Body body = _world.CreateBody(bd);
-                    body.CreateFixture(sd1);
-                    body.CreateFixture(sd2);
-					body.SetMassFromShapes();
-				}
-			}
+                Transform xf2 = new Transform();
+                xf2.R.Set(-0.3524f * Box2DX.Common.Settings.PI);
+                xf2.Position = Math.Mul(xf2.R, new Vec2(-1.0f, 0.0f));
 
-			{
-				PolygonDef sd_bottom = new PolygonDef();
-				sd_bottom.SetAsBox(1.5f, 0.15f);
-				sd_bottom.Density = 4.0f;
+                PolygonShape triangle2 = new PolygonShape();
+                vertices[0] = Math.Mul(xf2, new Vec2(-1.0f, 0.0f));
+                vertices[1] = Math.Mul(xf2, new Vec2(1.0f, 0.0f));
+                vertices[2] = Math.Mul(xf2, new Vec2(0.0f, 0.5f));
+                triangle2.Set(vertices, 3);
 
-				PolygonDef sd_left = new PolygonDef();
-				sd_left.SetAsBox(0.15f, 2.7f, new Vec2(-1.45f, 2.35f), 0.2f);
-				sd_left.Density = 4.0f;
+                for (int i = 0; i < 10; ++i)
+                {
+                    float x = Math.Random(-0.1f, 0.1f);
+                    BodyDef bd = new BodyDef();
+                    bd.Position.Set(x, 2.05f + 2.5f * i);
+                    bd.Angle = 0.0f;
+                    Body body = _world.CreateBody(bd);
+                    body.CreateFixture(triangle1, 2.0f);
+                    body.CreateFixture(triangle2, 2.0f);
+                    body.SetMassFromShapes();
+                }
+            }
 
-				PolygonDef sd_right = new PolygonDef();
-				sd_right.SetAsBox(0.15f, 2.7f, new Vec2(1.45f, 2.35f), -0.2f);
-				sd_right.Density = 4.0f;
+            {
+                PolygonShape bottom = new PolygonShape();
+                bottom.SetAsBox(1.5f, 0.15f);
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, 2.0f);
-				Body body = _world.CreateBody(bd);
-                body.CreateFixture(sd_bottom);
-                body.CreateFixture(sd_left);
-                body.CreateFixture(sd_right);
-				body.SetMassFromShapes();
-			}
-		}
+                PolygonShape left = new PolygonShape();
+                left.SetAsBox(0.15f, 2.7f, new Vec2(-1.45f, 2.35f), 0.2f);
 
-		public static Test Create()
-		{
-			return new CompoundShapes();
-		}
-	}
+                PolygonShape right = new PolygonShape();
+                right.SetAsBox(0.15f, 2.7f, new Vec2(1.45f, 2.35f), -0.2f);
+
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(0.0f, 2.0f);
+                Body body = _world.CreateBody(bd);
+                body.CreateFixture(bottom, 4.0f);
+                body.CreateFixture(left, 4.0f);
+                body.CreateFixture(right, 4.0f);
+                body.SetMassFromShapes();
+            }
+        }
+
+        public static Test Create()
+        {
+            return new CompoundShapes();
+        }
+    }
 }

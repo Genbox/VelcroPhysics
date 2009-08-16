@@ -51,6 +51,7 @@ namespace TestBed
             this.components = new System.ComponentModel.Container();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.openGlControl = new Tao.Platform.Windows.SimpleOpenGlControl();
+            this.btnRestart = new System.Windows.Forms.Button();
             this.nudHz = new System.Windows.Forms.NumericUpDown();
             this.nudPosIters = new System.Windows.Forms.NumericUpDown();
             this.nudVelIters = new System.Windows.Forms.NumericUpDown();
@@ -61,9 +62,7 @@ namespace TestBed
             this.flpDraw = new System.Windows.Forms.FlowLayoutPanel();
             this.chkbShapes = new System.Windows.Forms.CheckBox();
             this.chkbJoints = new System.Windows.Forms.CheckBox();
-            this.chkbCoreShapes = new System.Windows.Forms.CheckBox();
             this.chkbAabbs = new System.Windows.Forms.CheckBox();
-            this.chkbObbs = new System.Windows.Forms.CheckBox();
             this.chkbPairs = new System.Windows.Forms.CheckBox();
             this.chkbCP = new System.Windows.Forms.CheckBox();
             this.chkbCN = new System.Windows.Forms.CheckBox();
@@ -79,7 +78,6 @@ namespace TestBed
             this.lblTests = new System.Windows.Forms.Label();
             this.cmbbTests = new System.Windows.Forms.ComboBox();
             this.redrawTimer = new System.Windows.Forms.Timer(this.components);
-            this.btnRestart = new System.Windows.Forms.Button();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
@@ -143,6 +141,18 @@ namespace TestBed
             this.openGlControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.openGlControl_MouseMove);
             this.openGlControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.openGlControl_MouseDown);
             this.openGlControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.openGlControl_MouseUp);
+            // 
+            // btnRestart
+            // 
+            this.btnRestart.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRestart.Location = new System.Drawing.Point(7, 418);
+            this.btnRestart.Name = "btnRestart";
+            this.btnRestart.Size = new System.Drawing.Size(222, 23);
+            this.btnRestart.TabIndex = 8;
+            this.btnRestart.Text = "Restart";
+            this.btnRestart.UseVisualStyleBackColor = true;
+            this.btnRestart.Click += new System.EventHandler(this.btnRestart_Click);
             // 
             // nudHz
             // 
@@ -266,9 +276,7 @@ namespace TestBed
             this.flpDraw.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flpDraw.Controls.Add(this.chkbShapes);
             this.flpDraw.Controls.Add(this.chkbJoints);
-            this.flpDraw.Controls.Add(this.chkbCoreShapes);
             this.flpDraw.Controls.Add(this.chkbAabbs);
-            this.flpDraw.Controls.Add(this.chkbObbs);
             this.flpDraw.Controls.Add(this.chkbPairs);
             this.flpDraw.Controls.Add(this.chkbCP);
             this.flpDraw.Controls.Add(this.chkbCN);
@@ -305,21 +313,10 @@ namespace TestBed
             this.chkbJoints.UseVisualStyleBackColor = true;
             this.chkbJoints.CheckedChanged += new System.EventHandler(this.chkbJoints_CheckedChanged);
             // 
-            // chkbCoreShapes
-            // 
-            this.chkbCoreShapes.AutoSize = true;
-            this.chkbCoreShapes.Location = new System.Drawing.Point(3, 49);
-            this.chkbCoreShapes.Name = "chkbCoreShapes";
-            this.chkbCoreShapes.Size = new System.Drawing.Size(87, 17);
-            this.chkbCoreShapes.TabIndex = 2;
-            this.chkbCoreShapes.Text = "Core Shapes";
-            this.chkbCoreShapes.UseVisualStyleBackColor = true;
-            this.chkbCoreShapes.CheckedChanged += new System.EventHandler(this.chkbCoreShapes_CheckedChanged);
-            // 
             // chkbAabbs
             // 
             this.chkbAabbs.AutoSize = true;
-            this.chkbAabbs.Location = new System.Drawing.Point(3, 72);
+            this.chkbAabbs.Location = new System.Drawing.Point(3, 49);
             this.chkbAabbs.Name = "chkbAabbs";
             this.chkbAabbs.Size = new System.Drawing.Size(59, 17);
             this.chkbAabbs.TabIndex = 3;
@@ -327,21 +324,10 @@ namespace TestBed
             this.chkbAabbs.UseVisualStyleBackColor = true;
             this.chkbAabbs.CheckedChanged += new System.EventHandler(this.chkbAabbs_CheckedChanged);
             // 
-            // chkbObbs
-            // 
-            this.chkbObbs.AutoSize = true;
-            this.chkbObbs.Location = new System.Drawing.Point(3, 95);
-            this.chkbObbs.Name = "chkbObbs";
-            this.chkbObbs.Size = new System.Drawing.Size(53, 17);
-            this.chkbObbs.TabIndex = 4;
-            this.chkbObbs.Text = "OBBs";
-            this.chkbObbs.UseVisualStyleBackColor = true;
-            this.chkbObbs.CheckedChanged += new System.EventHandler(this.chkbObbs_CheckedChanged);
-            // 
             // chkbPairs
             // 
             this.chkbPairs.AutoSize = true;
-            this.chkbPairs.Location = new System.Drawing.Point(3, 118);
+            this.chkbPairs.Location = new System.Drawing.Point(3, 72);
             this.chkbPairs.Name = "chkbPairs";
             this.chkbPairs.Size = new System.Drawing.Size(49, 17);
             this.chkbPairs.TabIndex = 5;
@@ -352,7 +338,7 @@ namespace TestBed
             // chkbCP
             // 
             this.chkbCP.AutoSize = true;
-            this.chkbCP.Location = new System.Drawing.Point(3, 141);
+            this.chkbCP.Location = new System.Drawing.Point(3, 95);
             this.chkbCP.Name = "chkbCP";
             this.chkbCP.Size = new System.Drawing.Size(95, 17);
             this.chkbCP.TabIndex = 6;
@@ -363,7 +349,7 @@ namespace TestBed
             // chkbCN
             // 
             this.chkbCN.AutoSize = true;
-            this.chkbCN.Location = new System.Drawing.Point(104, 3);
+            this.chkbCN.Location = new System.Drawing.Point(3, 118);
             this.chkbCN.Name = "chkbCN";
             this.chkbCN.Size = new System.Drawing.Size(104, 17);
             this.chkbCN.TabIndex = 7;
@@ -374,7 +360,7 @@ namespace TestBed
             // chkbCF
             // 
             this.chkbCF.AutoSize = true;
-            this.chkbCF.Location = new System.Drawing.Point(104, 26);
+            this.chkbCF.Location = new System.Drawing.Point(3, 141);
             this.chkbCF.Name = "chkbCF";
             this.chkbCF.Size = new System.Drawing.Size(98, 17);
             this.chkbCF.TabIndex = 9;
@@ -385,7 +371,7 @@ namespace TestBed
             // chkbFF
             // 
             this.chkbFF.AutoSize = true;
-            this.chkbFF.Location = new System.Drawing.Point(104, 49);
+            this.chkbFF.Location = new System.Drawing.Point(113, 3);
             this.chkbFF.Name = "chkbFF";
             this.chkbFF.Size = new System.Drawing.Size(95, 17);
             this.chkbFF.TabIndex = 8;
@@ -396,7 +382,7 @@ namespace TestBed
             // chkbCom
             // 
             this.chkbCom.AutoSize = true;
-            this.chkbCom.Location = new System.Drawing.Point(104, 72);
+            this.chkbCom.Location = new System.Drawing.Point(113, 26);
             this.chkbCom.Name = "chkbCom";
             this.chkbCom.Size = new System.Drawing.Size(108, 17);
             this.chkbCom.TabIndex = 10;
@@ -407,7 +393,7 @@ namespace TestBed
             // chkbStatistics
             // 
             this.chkbStatistics.AutoSize = true;
-            this.chkbStatistics.Location = new System.Drawing.Point(104, 95);
+            this.chkbStatistics.Location = new System.Drawing.Point(113, 49);
             this.chkbStatistics.Name = "chkbStatistics";
             this.chkbStatistics.Size = new System.Drawing.Size(68, 17);
             this.chkbStatistics.TabIndex = 11;
@@ -490,18 +476,6 @@ namespace TestBed
             this.redrawTimer.Interval = 16;
             this.redrawTimer.Tick += new System.EventHandler(this.redrawTimer_Tick);
             // 
-            // btnRestart
-            // 
-            this.btnRestart.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRestart.Location = new System.Drawing.Point(7, 418);
-            this.btnRestart.Name = "btnRestart";
-            this.btnRestart.Size = new System.Drawing.Size(222, 23);
-            this.btnRestart.TabIndex = 8;
-            this.btnRestart.Text = "Restart";
-            this.btnRestart.UseVisualStyleBackColor = true;
-            this.btnRestart.Click += new System.EventHandler(this.btnRestart_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -538,10 +512,8 @@ namespace TestBed
 		private System.Windows.Forms.Label lblVelIters;
 		private System.Windows.Forms.FlowLayoutPanel flpDraw;
 		private System.Windows.Forms.CheckBox chkbShapes;
-		private System.Windows.Forms.CheckBox chkbJoints;
-		private System.Windows.Forms.CheckBox chkbCoreShapes;
-		private System.Windows.Forms.CheckBox chkbAabbs;
-		private System.Windows.Forms.CheckBox chkbObbs;
+        private System.Windows.Forms.CheckBox chkbJoints;
+        private System.Windows.Forms.CheckBox chkbAabbs;
 		private System.Windows.Forms.CheckBox chkbPairs;
 		private System.Windows.Forms.CheckBox chkbCP;
 		private System.Windows.Forms.CheckBox chkbCN;

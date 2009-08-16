@@ -19,204 +19,201 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Box2DX.Common;
 using Box2DX.Collision;
+using Box2DX.Common;
 using Box2DX.Dynamics;
 
 namespace TestBed
 {
-	public class Dominos : Test
-	{
-		public Dominos()
+    public class Dominos : Test
+    {
+        public Dominos()
 		{
-			Body b1;
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(50.0f, 10.0f);
+            Body b1;
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vec2(-40.0f, 0.0f), new Vec2(40.0f, 0.0f));
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, -10.0f);
-				b1 = _world.CreateBody(bd);
-				b1.CreateFixture(sd);
-			}
+                BodyDef bd = new BodyDef();
+                b1 = _world.CreateBody(bd);
+                b1.CreateFixture(shape,0);
+            }
 
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(6.0f, 0.25f);
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(6.0f, 0.25f);
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(-1.5f, 10.0f);
-				Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(sd);
-			}
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(-1.5f, 10.0f);
+                Body ground = _world.CreateBody(bd);
+                ground.CreateFixture(shape,0);
+            }
 
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(0.1f, 1.0f);
-				sd.Density = 20.0f;
-				sd.Friction = 0.1f;
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.1f, 1.0f);
 
-				for (int i = 0; i < 10; ++i)
-				{
-					BodyDef bd = new BodyDef();
-					bd.Position.Set(-6.0f + 1.0f * i, 11.25f);
-					Body body = _world.CreateBody(bd);
-                    body.CreateFixture(sd);
-					body.SetMassFromShapes();
-				}
-			}
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Density = 20.0f;
+                fd.Friction = 0.1f;
 
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(7.0f, 0.25f, Vec2.Zero, 0.3f);
+                for (int i = 0; i < 10; ++i)
+                {
+                    BodyDef bd = new BodyDef();
+                    bd.Position.Set(-6.0f + 1.0f * i, 11.25f);
+                    Body body = _world.CreateBody(bd);
+                    body.CreateFixture(fd);
+                    body.SetMassFromShapes();
+                }
+            }
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(1.0f, 6.0f);
-				Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(sd);
-			}
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(7.0f, 0.25f, Vec2.Zero, 0.3f);
 
-			Body b2;
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(0.25f, 1.5f);
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(1.0f, 6.0f);
+                Body ground = _world.CreateBody(bd);
+                ground.CreateFixture(shape,0);
+            }
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(-7.0f, 4.0f);
-				b2 = _world.CreateBody(bd);
-                b2.CreateFixture(sd);
-			}
+            Body b2;
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.25f, 1.5f);
 
-			Body b3;
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(6.0f, 0.125f);
-				sd.Density = 10.0f;
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(-7.0f, 4.0f);
+                 b2 = _world.CreateBody(bd);
+                b2.CreateFixture(shape,0);
+            }
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(-0.9f, 1.0f);
-				bd.Angle = -0.15f;
+            Body b3;
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(6.0f, 0.125f);
 
-				b3 = _world.CreateBody(bd);
-                b3.CreateFixture(sd);
-				b3.SetMassFromShapes();
-			}
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(-0.9f, 1.0f);
+                bd.Angle = -0.15f;
 
-			RevoluteJointDef jd = new RevoluteJointDef();
-			Vec2 anchor = new Vec2();
+                b3 = _world.CreateBody(bd);
+                b3.CreateFixture(shape, 10.0f);
+                b3.SetMassFromShapes();
+            }
 
-			anchor.Set(-2.0f, 1.0f);
-			jd.Initialize(b1, b3, anchor);
-			jd.CollideConnected = true;
-			_world.CreateJoint(jd);
+            RevoluteJointDef jd = new RevoluteJointDef();
+            Vec2 anchor = new Vec2();
 
-			Body b4;
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(0.25f, 0.25f);
-				sd.Density = 10.0f;
+            anchor.Set(-2.0f, 1.0f);
+            jd.Initialize(b1, b3, anchor);
+            jd.CollideConnected = true;
+            _world.CreateJoint(jd);
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(-10.0f, 15.0f);
-				b4 = _world.CreateBody(bd);
-                b4.CreateFixture(sd);
-				b4.SetMassFromShapes();
-			}
+            Body b4;
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.25f, 0.25f);
 
-			anchor.Set(-7.0f, 15.0f);
-			jd.Initialize(b2, b4, anchor);
-			_world.CreateJoint(jd);
+                BodyDef bd  = new BodyDef();
+                bd.Position.Set(-10.0f, 15.0f);
+                b4 = _world.CreateBody(bd);
+                b4.CreateFixture(shape, 10.0f);
+                b4.SetMassFromShapes();
+            }
 
-			Body b5;
-			{
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(6.5f, 3.0f);
-				b5 = _world.CreateBody(bd);
+            anchor.Set(-7.0f, 15.0f);
+            jd.Initialize(b2, b4, anchor);
+            _world.CreateJoint(jd);
 
-				PolygonDef sd = new PolygonDef();
-				sd.Density = 10.0f;
-				sd.Friction = 0.1f;
+            Body b5;
+            {
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(6.5f, 3.0f);
+                b5 = _world.CreateBody(bd);
 
-				sd.SetAsBox(1.0f, 0.1f, new Vec2(0.0f, -0.9f), 0.0f);
-                b5.CreateFixture(sd);
+                PolygonShape shape = new PolygonShape();
+                FixtureDef fd = new FixtureDef();
 
-				sd.SetAsBox(0.1f, 1.0f, new Vec2(-0.9f, 0.0f), 0.0f);
-                b5.CreateFixture(sd);
+                fd.Shape = shape;
+                fd.Density  = 10.0f;
+                fd.Friction = 0.1f;
 
-				sd.SetAsBox(0.1f, 1.0f, new Vec2(0.9f, 0.0f), 0.0f);
-                b5.CreateFixture(sd);
+                shape.SetAsBox(1.0f, 0.1f,new Vec2(0.0f, -0.9f), 0.0f);
+                b5.CreateFixture(fd);
 
-				b5.SetMassFromShapes();
-			}
+                shape.SetAsBox(0.1f, 1.0f, new Vec2(-0.9f, 0.0f), 0.0f);
+                b5.CreateFixture(fd);
 
-			anchor.Set(6.0f, 2.0f);
-			jd.Initialize(b1, b5, anchor);
-			_world.CreateJoint(jd);
+                shape.SetAsBox(0.1f, 1.0f,new Vec2(0.9f, 0.0f), 0.0f);
+                b5.CreateFixture(fd);
 
-			Body b6;
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(1.0f, 0.1f);
-				sd.Density = 30.0f;
-				sd.Friction = 0.2f;
+                b5.SetMassFromShapes();
+            }
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(6.5f, 4.1f);
-				b6 = _world.CreateBody(bd);
-                b6.CreateFixture(sd);
-				b6.SetMassFromShapes();
-			}
+            anchor.Set(6.0f, 2.0f);
+            jd.Initialize(b1, b5, anchor);
+            _world.CreateJoint(jd);
 
-			anchor.Set(7.5f, 4.0f);
-			jd.Initialize(b5, b6, anchor);
-			_world.CreateJoint(jd);
+            Body b6;
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(1.0f, 0.1f);
 
-			Body b7;
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(0.1f, 1.0f);
-				sd.Density = 10.0f;
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(6.5f, 4.1f);
+                b6 = _world.CreateBody(bd);
+                b6.CreateFixture(shape, 30.0f);
+                b6.SetMassFromShapes();
+            }
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(7.4f, 1.0f);
+            anchor.Set(7.5f, 4.0f);
+            jd.Initialize(b5, b6, anchor);
+            _world.CreateJoint(jd);
 
-				b7 = _world.CreateBody(bd);
-                b7.CreateFixture(sd);
-				b7.SetMassFromShapes();
-			}
+            Body b7;
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.1f, 1.0f);
 
-			DistanceJointDef djd = new DistanceJointDef();
-			djd.Body1 = b3;
-			djd.Body2 = b7;
-			djd.LocalAnchor1.Set(6.0f, 0.0f);
-			djd.LocalAnchor2.Set(0.0f, -1.0f);
-			Vec2 d = djd.Body2.GetWorldPoint(djd.LocalAnchor2) - djd.Body1.GetWorldPoint(djd.LocalAnchor1);
-			djd.Length = d.Length();
-			_world.CreateJoint(djd);
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(7.4f, 1.0f);
 
-			{
-				CircleDef sd = new CircleDef();
-				sd.Radius = 0.2f;
-				sd.Density = 10.0f;
+                b7 = _world.CreateBody(bd);
+                b7.CreateFixture(shape, 10.0f);
+                b7.SetMassFromShapes();
+            }
 
-				for (int i = 0; i < 4; ++i)
-				{
-					BodyDef bd = new BodyDef();
-					bd.Position.Set(5.9f + 2.0f * sd.Radius * i, 2.4f);
-					Body body = _world.CreateBody(bd);
-                    body.CreateFixture(sd);
-					body.SetMassFromShapes();
-				}
-			}
+            DistanceJointDef djd  =new DistanceJointDef();
+            djd.Body1 = b3;
+            djd.Body2 = b7;
+            djd.LocalAnchor1.Set(6.0f, 0.0f);
+            djd.LocalAnchor2.Set(0.0f, -1.0f);
+            Vec2 d = djd.Body2.GetWorldPoint(djd.LocalAnchor2) - djd.Body1.GetWorldPoint(djd.LocalAnchor1);
+            djd.Length = d.Length();
+            _world.CreateJoint(djd);
+
+            {
+                float radius = 0.2f;
+
+                CircleShape shape = new CircleShape();
+                shape.Radius = radius;
+
+                for (int i = 0; i < 4; ++i)
+                {
+                    BodyDef bd = new BodyDef();
+                    bd.Position.Set(5.9f + 2.0f * radius * i, 2.4f);
+                    Body body = _world.CreateBody(bd);
+                    body.CreateFixture(shape, 10.0f);
+                    body.SetMassFromShapes();
+                }
+            }
 		}
 
-		public static Test Create()
-		{
-			return new Dominos();
-		}
-	}
+        public static Test Create()
+        {
+            return new Dominos();
+        }
+    }
 }

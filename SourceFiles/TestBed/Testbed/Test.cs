@@ -53,8 +53,8 @@ namespace TestBed
         public Settings()
         {
             hz = 60.0f;
-            velocityIterations = 10;
-            positionIterations = 4;
+            velocityIterations = 8;
+            positionIterations = 3;
             drawStats = 0;
             drawShapes = 1;
             drawJoints = 1;
