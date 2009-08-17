@@ -194,7 +194,7 @@ namespace Box2DX.Dynamics
             _broadPhase.UpdatePairs(this);
         }
 
-        void AddPair(object proxyUserDataA, object proxyUserDataB)
+        public void AddPair(object proxyUserDataA, object proxyUserDataB)
         {
             Fixture fixtureA = (Fixture)proxyUserDataA;
             Fixture fixtureB = (Fixture)proxyUserDataB;

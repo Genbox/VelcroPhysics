@@ -481,7 +481,7 @@ namespace Box2DX.Dynamics
             _flags &= ~WorldFlags.Locked;
         }
 
-        struct WorldQueryWrapper
+        public class WorldQueryWrapper
         {
             void QueryCallback(int proxyId)
             {
@@ -575,13 +575,13 @@ namespace Box2DX.Dynamics
 
         public void QueryAABB(QueryCallback callback, AABB aabb)
         {
-            WorldQueryWrapper wrapper;
+            WorldQueryWrapper wrapper = new WorldQueryWrapper();
             wrapper.BroadPhase = _contactManager._broadPhase;
             wrapper.Callback = callback;
             _contactManager._broadPhase.Query(wrapper, aabb);
         }
 
-        struct WorldRayCastWrapper
+        public class WorldRayCastWrapper
         {
             public float RayCastCallback(RayCastInput input, int proxyId)
             {

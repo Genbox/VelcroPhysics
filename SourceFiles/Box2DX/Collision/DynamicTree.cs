@@ -90,7 +90,7 @@ namespace Box2DX.Collision
         /// Move a proxy. If the proxy has moved outside of its fattened AABB,
         /// then the proxy is removed from the tree and re-inserted. Otherwise
         /// the function returns immediately.
-        public bool MoveProxy(ushort proxyId, AABB aabb)
+        public bool MoveProxy(int proxyId, AABB aabb)
         {
             Box2DXDebug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
 
