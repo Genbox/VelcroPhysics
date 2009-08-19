@@ -172,25 +172,25 @@ namespace Box2DX.Collision
             Array.Sort(_pairBuffer, PairLessThan);
 
             // Send the pairs back to the client.
-            int i = 0;
-            while (i < _pairCount)
+            int j = 0;
+            while (j < _pairCount)
             {
-                Pair primaryPair = _pairBuffer[i];
+                Pair primaryPair = _pairBuffer[j];
                 object userDataA = _tree.GetUserData(primaryPair.proxyIdA);
                 object userDataB = _tree.GetUserData(primaryPair.proxyIdB);
 
                 callback.AddPair(userDataA, userDataB);
-                ++i;
+                ++j;
 
                 // Skip any duplicate pairs.
-                while (i < _pairCount)
+                while (j < _pairCount)
                 {
-                    Pair pair = _pairBuffer[i];
+                    Pair pair = _pairBuffer[j];
                     if (pair.proxyIdA != primaryPair.proxyIdA || pair.proxyIdB != primaryPair.proxyIdB)
                     {
                         break;
                     }
-                    ++i;
+                    ++j;
                 }
             }
         }

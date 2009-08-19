@@ -97,7 +97,7 @@ namespace Box2DX.Dynamics
         public float Friction;
         public float Restitution;
 
-        public ushort ProxyId;
+        public int ProxyId;
         public Filter Filter;
 
         public bool IsSensor;
