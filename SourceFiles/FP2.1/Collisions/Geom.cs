@@ -43,6 +43,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         internal Vertices worldVertices;
         internal int id;
 
+        private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
+
         public int Id { get { return id; } }
 
         /// <summary>
@@ -658,8 +660,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             AABB.Update(ref worldVertices);
         }
-
-        private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
 
         public void RestoreCollisionWith(Geom geometry)
         {
