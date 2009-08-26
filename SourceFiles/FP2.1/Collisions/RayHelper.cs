@@ -72,10 +72,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// or - <paramref name="floatTolerance"/>)</param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
         public static bool LineIntersect(ref Vector2 point1, ref Vector2 point2, ref Vector2 point3, ref Vector2 point4,
-                                         bool firstIsSegment, bool secondIsSegment, float floatTolerance,
-                                         out Vector2 point)
+                                 bool firstIsSegment, bool secondIsSegment, float floatTolerance,
+                                 out Vector2 point)
         {
-            bool ret = false;
             point = new Vector2();
 
             // these are reused later.
@@ -90,7 +89,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             float denom = (a * b) - (c * d);
 
             // if denominator is 0, then lines are parallel
-            if (!FloatEquals(denom, 0f, floatTolerance))
+            if (!(denom >= -_epsilon && denom <= _epsilon))
             {
                 float e = point1.Y - point3.Y;
                 float f = point1.X - point3.X;
@@ -101,7 +100,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 ua *= oneOverDenom;
 
                 // check if intersection point of the two lines is on line segment 1
-                if (!firstIsSegment || FloatInRange(ua, 0f, 1f))
+                if (!firstIsSegment || ua >= 0.0f && ua <= 1.0f)
                 {
                     // numerator of second equation
                     float ub = (b * e) - (d * f);
@@ -110,23 +109,21 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     // check if intersection point of the two lines is on line segment 2
                     // means the line segments intersect, since we know it is on
                     // segment 1 as well.
-                    if (!secondIsSegment || FloatInRange(ub, 0f, 1f))
+                    if (!secondIsSegment || ub >= 0.0f && ub <= 1.0f)
                     {
                         // check if they are coincident (no collision in this case)
-                        if (!(FloatEquals(ua, 0f, floatTolerance) &&
-                              FloatEquals(ub, 0f, floatTolerance)))
+                        if (ua != 0f && ub != 0f)
                         {
                             //There is an intersection
-                            ret = true;
-
                             point.X = point1.X + ua * b;
                             point.Y = point1.Y + ua * d;
+                            return true;
                         }
                     }
                 }
             }
 
-            return ret;
+            return false;
         }
 
         /// <summary>
