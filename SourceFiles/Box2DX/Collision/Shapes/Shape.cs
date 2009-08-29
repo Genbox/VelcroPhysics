@@ -62,6 +62,7 @@ namespace Box2DX.Collision
     /// </summary>
     public abstract class Shape
     {
+#warning "Should perhaps follow naming convention?"
         public ShapeType Type;
         public float Radius;
 

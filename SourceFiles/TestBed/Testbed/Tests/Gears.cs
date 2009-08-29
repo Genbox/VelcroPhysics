@@ -19,7 +19,7 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System.Text;
+using System.Windows.Forms;
 using Box2DX.Collision;
 using Box2DX.Common;
 using Box2DX.Dynamics;
@@ -73,7 +73,7 @@ namespace TestBed
                 BodyDef bd2 = new BodyDef();
                 bd2.Position.Set(0.0f, 12.0f);
                 Body body2 = _world.CreateBody(bd2);
-                body2.CreateFixture(circle2, 0);
+                body2.CreateFixture(circle2, 5.0f);
                 body2.SetMassFromShapes();
 
                 RevoluteJointDef jd2 = new RevoluteJointDef();
@@ -83,7 +83,7 @@ namespace TestBed
                 BodyDef bd3 = new BodyDef();
                 bd3.Position.Set(2.5f, 12.0f);
                 Body body3 = _world.CreateBody(bd3);
-                body3.CreateFixture(box, 0);
+                body3.CreateFixture(box, 5.0f);
                 body3.SetMassFromShapes();
 
                 PrismaticJointDef jd3 = new PrismaticJointDef();
@@ -112,9 +112,13 @@ namespace TestBed
             }
         }
 
-        public static Test Create()
+        public override void Keyboard(Keys key)
         {
-            return new Gears();
+            switch (key)
+            {
+                case 0:
+                    break;
+            }
         }
 
         public override void Step(Settings settings)
@@ -125,17 +129,18 @@ namespace TestBed
 
             ratio = _joint4.Ratio;
             value = _joint1.JointAngle + ratio * _joint2.JointAngle;
-            StringBuilder strBld = new StringBuilder();
-            strBld.AppendFormat("theta1 + {0} * theta2 = {1}", new object[] { ratio, value });
-            OpenGLDebugDraw.DrawString(5, _textLine, strBld.ToString());
+            OpenGLDebugDraw.DrawString(5, _textLine, string.Format("theta1 + {0} * theta2 = {1}", ratio, value));
             _textLine += 15;
 
             ratio = _joint5.Ratio;
             value = _joint2.JointAngle + ratio * _joint3.JointTranslation;
-            strBld = new StringBuilder();
-            strBld.AppendFormat("theta2 + {0} * delta = {1}", new object[] { ratio, value });
-            OpenGLDebugDraw.DrawString(5, _textLine, strBld.ToString());
+            OpenGLDebugDraw.DrawString(5, _textLine, string.Format("theta2 + {0} * delta = {1}", ratio, value));
             _textLine += 15;
+        }
+
+        public static Test Create()
+        {
+            return new Gears();
         }
     }
 }

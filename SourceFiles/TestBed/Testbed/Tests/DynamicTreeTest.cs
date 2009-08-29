@@ -1,4 +1,5 @@
-﻿using Box2DX.Collision;
+﻿using System.Windows.Forms;
+using Box2DX.Collision;
 using Box2DX.Common;
 using Box2DX.Dynamics;
 
@@ -14,10 +15,10 @@ namespace TestBed.Tests
         private RayCastInput _rayCastInput;
         private RayCastOutput _rayCastOutput;
         private Actor _rayActor;
-        private Actor[] _actors = new Actor[e_actorCount];
+        private Actor[] _actors = new Actor[_actorCount];
         private int _stepCount;
         private bool _automated;
-        private const int e_actorCount = 128;
+        private const int _actorCount = 128;
 
         public class Actor
         {
@@ -34,7 +35,7 @@ namespace TestBed.Tests
 
             //srand(888);
 
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < _actorCount; ++i)
             {
                 Actor actor = _actors[i];
                 GetRandomAABB(actor.aabb);
@@ -66,7 +67,7 @@ namespace TestBed.Tests
             //B2_NOT_USED(settings);
 
             _rayActor = null;
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < _actorCount; ++i)
             {
                 _actors[i].fraction = 1.0f;
                 _actors[i].overlap = false;
@@ -74,7 +75,7 @@ namespace TestBed.Tests
 
             if (_automated == true)
             {
-                int actionCount = Math.Max(1, e_actorCount >> 2);
+                int actionCount = Math.Max(1, _actorCount >> 2);
 
                 for (int i = 0; i < actionCount; ++i)
                 {
@@ -85,7 +86,7 @@ namespace TestBed.Tests
             Query();
             RayCast();
 
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < _actorCount; ++i)
             {
                 Actor actor = _actors[i];
                 if (actor.proxyId == DynamicTree.NullNode)
@@ -128,23 +129,23 @@ namespace TestBed.Tests
             ++_stepCount;
         }
 
-        public void Keyboard(char key)
+        public override void Keyboard(Keys key)
         {
             switch (key)
             {
-                case 'a':
+                case Keys.A:
                     _automated = !_automated;
                     break;
 
-                case 'c':
+                case Keys.C:
                     CreateProxy();
                     break;
 
-                case 'd':
+                case Keys.D:
                     DestroyProxy();
                     break;
 
-                case 'm':
+                case Keys.M:
                     MoveProxy();
                     break;
             }
@@ -205,9 +206,9 @@ namespace TestBed.Tests
 
         private void CreateProxy()
         {
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < _actorCount; ++i)
             {
-                int j = rand() % e_actorCount;
+                int j =  (int)Math.Random() % _actorCount;
                 Actor actor = _actors[j];
                 if (actor.proxyId == DynamicTree.NullNode)
                 {
@@ -220,9 +221,9 @@ namespace TestBed.Tests
 
         private void DestroyProxy()
         {
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < _actorCount; ++i)
             {
-                int j = rand() % e_actorCount;
+                int j = (int)Math.Random() % _actorCount;
                 Actor actor = _actors[j];
                 if (actor.proxyId != DynamicTree.NullNode)
                 {
@@ -235,24 +236,26 @@ namespace TestBed.Tests
 
         private void MoveProxy()
         {
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < _actorCount; ++i)
             {
-                int j = rand() % e_actorCount;
+                int j = (int)Math.Random() % _actorCount;
                 Actor actor = _actors[j];
                 if (actor.proxyId == DynamicTree.NullNode)
                 {
                     continue;
                 }
 
+                AABB aabb0 = actor.aabb;
                 MoveAABB(actor.aabb);
-                _tree.MoveProxy(actor.proxyId, actor.aabb);
+                Vec2 displacement = actor.aabb.GetCenter() - aabb0.GetCenter();
+                _tree.MoveProxy(actor.proxyId, actor.aabb, displacement);
                 return;
             }
         }
 
         private void Action()
         {
-            int choice = rand() % 20;
+            int choice = (int)Math.Random() % 20;
 
             switch (choice)
             {
@@ -266,6 +269,7 @@ namespace TestBed.Tests
 
                 default:
                     MoveProxy();
+                    break;
             }
         }
 
@@ -273,7 +277,7 @@ namespace TestBed.Tests
         {
             _tree.Query(this, _queryAABB);
 
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < _actorCount; ++i)
             {
                 if (_actors[i].proxyId == DynamicTree.NullNode)
                 {
@@ -298,7 +302,7 @@ namespace TestBed.Tests
             // Brute force ray cast.
             Actor bruteActor = null;
             RayCastOutput bruteOutput = new RayCastOutput();
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < _actorCount; ++i)
             {
                 if (_actors[i].proxyId == DynamicTree.NullNode)
                 {
@@ -320,7 +324,5 @@ namespace TestBed.Tests
                 Box2DX.Box2DXDebug.Assert(bruteOutput.Fraction == _rayCastOutput.Fraction);
             }
         }
-
-
     }
 }

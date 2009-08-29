@@ -32,7 +32,6 @@ namespace TestBed
             Body ground = null;
             {
                 BodyDef bd = new BodyDef();
-                bd.Position.Set(0.0f, -10.0f);
                 ground = _world.CreateBody(bd);
 
                 PolygonShape shape = new PolygonShape();

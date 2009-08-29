@@ -19,181 +19,175 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Box2DX.Common;
 using Box2DX.Collision;
+using Box2DX.Common;
 using Box2DX.Dynamics;
 
 namespace TestBed
 {
-	public class PolyShapes : Test
-	{
-		const int k_maxBodies = 256;
+    public class PolyShapes : Test
+    {
+        const int _maxBodies = 256;
 
-		int bodyIndex;
-		Body[] bodies = new Body[k_maxBodies];
-		PolygonDef[] sds = new PolygonDef[4];
-		CircleDef circleDef = new CircleDef();
+        int bodyIndex;
+        Body[] bodies = new Body[_maxBodies];
+        PolygonShape[] polygons = new PolygonShape[4];
+        CircleShape circle;
 
-		public PolyShapes()
-		{
-			// Ground body
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(50.0f, 10.0f);
-				sd.Friction = 0.3f;
-				sd.Filter.CategoryBits = 0x0001;
+        public PolyShapes()
+        {
+            // Ground body
+            {
+                BodyDef bd;
+                Body ground = _world.CreateBody(bd);
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, -10.0f);
-				Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(sd);
-			}
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vec2(-40.0f, 0.0f), new Vec2(40.0f, 0.0f));
+                ground.CreateFixture(shape);
+            }
 
-			for (int i = 0; i < 4; i++)
-			{
-				sds[i] = new PolygonDef();
-			}
+            {
+                Vec2[] vertices = new Vec2[3];
+                vertices[0].Set(-0.5f, 0.0f);
+                vertices[1].Set(0.5f, 0.0f);
+                vertices[2].Set(0.0f, 1.5f);
+                polygons[0].Set(vertices, 3);
+            }
 
-			sds[0].VertexCount = 3;
-			sds[0].Vertices[0].Set(-0.5f, 0.0f);
-			sds[0].Vertices[1].Set(0.5f, 0.0f);
-			sds[0].Vertices[2].Set(0.0f, 1.5f);
-			sds[0].Density = 1.0f;
-			sds[0].Friction = 0.3f;
-			sds[0].Filter.CategoryBits = 0x0002;
-			//sds[0].MaskBits = 0x0003;
+            {
+                Vec2[] vertices = new Vec2[3];
+                vertices[0].Set(-0.1f, 0.0f);
+                vertices[1].Set(0.1f, 0.0f);
+                vertices[2].Set(0.0f, 1.5f);
+                polygons[1].Set(vertices, 3);
+            }
 
-			sds[1].VertexCount = 3;
-			sds[1].Vertices[0].Set(-0.1f, 0.0f);
-			sds[1].Vertices[1].Set(0.1f, 0.0f);
-			sds[1].Vertices[2].Set(0.0f, 1.5f);
-			sds[1].Density = 1.0f;
-			sds[1].Friction = 0.3f;
-			sds[1].Filter.CategoryBits = 0x0004;
+            {
+                float w = 1.0f;
+                float b = w / (2.0f + Math.Sqrt(2.0f));
+                float s = Math.Sqrt(2.0f) * b;
 
-			sds[2].VertexCount = 8;
-			float w = 1.0f;
-			float b = w / (2.0f + (float)System.Math.Sqrt(2.0f));
-			float s = (float)System.Math.Sqrt(2.0f) * b;
-			sds[2].Vertices[0].Set(0.5f * s, 0.0f);
-			sds[2].Vertices[1].Set(0.5f * w, b);
-			sds[2].Vertices[2].Set(0.5f * w, b + s);
-			sds[2].Vertices[3].Set(0.5f * s, w);
-			sds[2].Vertices[4].Set(-0.5f * s, w);
-			sds[2].Vertices[5].Set(-0.5f * w, b + s);
-			sds[2].Vertices[6].Set(-0.5f * w, b);
-			sds[2].Vertices[7].Set(-0.5f * s, 0.0f);
-			sds[2].Density = 1.0f;
-			sds[2].Friction = 0.3f;
-			sds[2].Filter.CategoryBits = 0x0004;
+                Vec2[] vertices = new Vec2[8];
+                vertices[0].Set(0.5f * s, 0.0f);
+                vertices[1].Set(0.5f * w, b);
+                vertices[2].Set(0.5f * w, b + s);
+                vertices[3].Set(0.5f * s, w);
+                vertices[4].Set(-0.5f * s, w);
+                vertices[5].Set(-0.5f * w, b + s);
+                vertices[6].Set(-0.5f * w, b);
+                vertices[7].Set(-0.5f * s, 0.0f);
 
-			sds[3].VertexCount = 4;
-			sds[3].Vertices[0].Set(-0.5f, 0.0f);
-			sds[3].Vertices[1].Set(0.5f, 0.0f);
-			sds[3].Vertices[2].Set(0.5f, 1.0f);
-			sds[3].Vertices[3].Set(-0.5f, 1.0f);
-			sds[3].Density = 1.0f;
-			sds[3].Friction = 0.3f;
-			sds[3].Filter.CategoryBits = 0x0004;
+                polygons[2].Set(vertices, 8);
+            }
 
-			circleDef.Radius = 0.5f;
-			circleDef.Density = 1.0f;
+            {
+                polygons[3].SetAsBox(0.5f, 0.5f);
+            }
 
-			bodyIndex = 0;
-			//memset(bodies, 0, sizeof(bodies));
-		}
+            {
+                circle.Radius = 0.5f;
+            }
 
-		public void Create(int index)
-		{
-			if (bodies[bodyIndex] != null)
-			{
-				_world.DestroyBody(bodies[bodyIndex]);
-				bodies[bodyIndex] = null;
-			}
+            bodyIndex = 0;
+            //memset(bodies, 0, sizeof(bodies));
+        }
 
-			BodyDef bd = new BodyDef();
+        public void Create(int index)
+        {
+            if (bodies[bodyIndex] != null)
+            {
+                _world.DestroyBody(bodies[bodyIndex]);
+                bodies[bodyIndex] = null;
+            }
 
-			float x = Box2DX.Common.Math.Random(-2.0f, 2.0f);
-			bd.Position.Set(x, 10.0f);
-			bd.Angle = Box2DX.Common.Math.Random(-Box2DX.Common.Settings.Pi, Box2DX.Common.Settings.Pi);
+            BodyDef bd = new BodyDef();
 
-			if (index == 4)
-			{
-				bd.AngularDamping = 0.02f;
-			}
+            float x = Math.Random(-2.0f, 2.0f);
+            bd.Position.Set(x, 10.0f);
+            bd.Angle = Math.Random(-Box2DX.Common.Settings.PI, Box2DX.Common.Settings.PI);
 
-			bodies[bodyIndex] = _world.CreateBody(bd);
+            if (index == 4)
+            {
+                bd.AngularDamping = 0.02f;
+            }
 
-			if (index < 4)
-			{
-                bodies[bodyIndex].CreateFixture(sds[index]);
-			}
-			else
-			{
-                bodies[bodyIndex].CreateFixture(circleDef);
-			}
-			bodies[bodyIndex].SetMassFromShapes();
+            bodies[bodyIndex] = _world.CreateBody(bd);
 
-			bodyIndex = (bodyIndex + 1) % k_maxBodies;
-		}
+            if (index < 4)
+            {
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = polygons[index];
+                fd.Density = 1.0f;
+                fd.Friction = 0.3f;
+                bodies[bodyIndex].CreateFixture(fd);
+            }
+            else
+            {
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = circle;
+                fd.Density = 1.0f;
+                fd.Friction = 0.3f;
 
-		public void DestroyBody()
-		{
-			for (int i = 0; i < k_maxBodies; ++i)
-			{
-				if (bodies[i] != null)
-				{
-					_world.DestroyBody(bodies[i]);
-					bodies[i] = null;
-					return;
-				}
-			}
-		}
+                bodies[bodyIndex].CreateFixture(fd);
+            }
+            bodies[bodyIndex].SetMassFromShapes();
 
-		public override void Step(Settings settings)
-		{
-			base.Step(settings);
+            bodyIndex = (bodyIndex + 1) % _maxBodies;
+        }
+
+        public void DestroyBody()
+        {
+            for (int i = 0; i < _maxBodies; ++i)
+            {
+                if (bodies[i] != null)
+                {
+                    _world.DestroyBody(bodies[i]);
+                    bodies[i] = null;
+                    return;
+                }
+            }
+        }
+
+        public override void Keyboard(System.Windows.Forms.Keys key)
+        {
+            int keyKode = 0;
+            switch (key)
+            {
+                case System.Windows.Forms.Keys.D1:
+                    keyKode = 1;
+                    break;
+                case System.Windows.Forms.Keys.D2:
+                    keyKode = 2;
+                    break;
+                case System.Windows.Forms.Keys.D3:
+                    keyKode = 3;
+                    break;
+                case System.Windows.Forms.Keys.D4:
+                    keyKode = 4;
+                    break;
+                case System.Windows.Forms.Keys.D5:
+                    keyKode = 5;
+                    break;
+                case System.Windows.Forms.Keys.D:
+                    DestroyBody();
+                    return;
+                default:
+                    return;
+            }
+            Create(keyKode - 1);
+            return;
+        }
+
+        public override void Step(Settings settings)
+        {
+            base.Step(settings);
             OpenGLDebugDraw.DrawString(5, _textLine, "Press 1-5 to drop stuff");
-			_textLine += 15;
-		}
+            _textLine += 15;
+        }
 
-		public override void Keyboard(System.Windows.Forms.Keys key)
-		{
-			int keyKode = 0;
-			switch (key)
-			{
-				case System.Windows.Forms.Keys.D1:
-					keyKode = 1;
-					break;
-				case System.Windows.Forms.Keys.D2:
-					keyKode = 2;
-					break;
-				case System.Windows.Forms.Keys.D3:
-					keyKode = 3;
-					break;
-				case System.Windows.Forms.Keys.D4:
-					keyKode = 4;
-					break;
-				case System.Windows.Forms.Keys.D5:
-					keyKode = 5;					
-					break;
-				case System.Windows.Forms.Keys.D:
-					DestroyBody();
-					return;
-				default:
-					return;
-			}
-			Create(keyKode - 1);
-			return;
-		}
-
-		public static Test Create()
-		{
-			return new PolyShapes();
-		}
-	}
+        public static Test Create()
+        {
+            return new PolyShapes();
+        }
+    }
 }
