@@ -293,7 +293,10 @@ namespace Box2DX.Dynamics
             Shape.ComputeAABB(out aabb2, ref transform2);
 
             Aabb.Combine(aabb1, aabb2);
-            broadPhase.MoveProxy(ProxyId, Aabb);
+
+            Vec2 displacement = transform2.Position - transform1.Position;
+
+            broadPhase.MoveProxy(ProxyId, Aabb, displacement);
         }
 
         public void SetFilterData(Filter filter)

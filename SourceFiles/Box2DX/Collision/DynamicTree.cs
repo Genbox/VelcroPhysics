@@ -59,6 +59,7 @@ namespace Box2DX.Collision
             _freeList = 0;
 
             _path = 0;
+            _insertionCount = 0;
         }
 
         /// Create a proxy. Provide a tight fitting AABB and a userData pointer.
@@ -87,10 +88,11 @@ namespace Box2DX.Collision
             FreeNode(proxyId);
         }
 
-        /// Move a proxy. If the proxy has moved outside of its fattened AABB,
+        /// Move a proxy with a swepted AABB. If the proxy has moved outside of its fattened AABB,
         /// then the proxy is removed from the tree and re-inserted. Otherwise
         /// the function returns immediately.
-        public bool MoveProxy(int proxyId, AABB aabb)
+        /// @return true if the proxy was re-inserted.
+        public bool MoveProxy(int proxyId, AABB aabb, Vec2 displacement)
         {
             Box2DXDebug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
 
@@ -103,9 +105,34 @@ namespace Box2DX.Collision
 
             RemoveLeaf(proxyId);
 
+            // Extend AABB.
+            AABB b = aabb;
             Vec2 r = new Vec2(Settings.AABBExtension, Settings.AABBExtension);
-            _nodes[proxyId].Aabb.LowerBound = aabb.LowerBound - r;
-            _nodes[proxyId].Aabb.UpperBound = aabb.UpperBound + r;
+            b.LowerBound = b.LowerBound - r;
+            b.UpperBound = b.UpperBound + r;
+
+            // Predict AABB displacement.
+            Vec2 d = Settings.AABBMultiplier * displacement;
+
+            if (d.X < 0.0f)
+            {
+                b.LowerBound.X += d.X;
+            }
+            else
+            {
+                b.UpperBound.X += d.X;
+            }
+
+            if (d.Y < 0.0f)
+            {
+                b.LowerBound.Y += d.Y;
+            }
+            else
+            {
+                b.UpperBound.Y += d.Y;
+            }
+
+            _nodes[proxyId].Aabb = b;
 
             InsertLeaf(proxyId);
             return true;
@@ -139,6 +166,8 @@ namespace Box2DX.Collision
 
         public void InsertLeaf(int leaf)
         {
+            ++_insertionCount;
+
             if (_root == NullNode)
             {
                 _root = leaf;
@@ -498,6 +527,8 @@ namespace Box2DX.Collision
 
         /// This is used incrementally traverse the tree for re-balancing.
         private int _path;
+
+        private int _insertionCount;
 
         #region IDisposable Members
 

@@ -17,6 +17,7 @@
 */
 
 using System;
+using Box2DX.Common;
 using Box2DX.Dynamics;
 
 namespace Box2DX.Collision
@@ -83,9 +84,9 @@ namespace Box2DX.Collision
 
         /// Call MoveProxy as many times as you like, then when you are done
         /// call UpdatePairs to finalized the proxy pairs (for your time step).
-        public void MoveProxy(int proxyId, AABB aabb)
+        public void MoveProxy(int proxyId, AABB aabb, Vec2 displacement)
         {
-            bool buffer = _tree.MoveProxy(proxyId, aabb);
+            bool buffer = _tree.MoveProxy(proxyId, aabb, displacement);
             if (buffer)
             {
                 BufferMove(proxyId);
