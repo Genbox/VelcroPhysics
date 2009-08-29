@@ -6,10 +6,10 @@ namespace TestBed.Tests
 {
     public class OneSidedPlatform : Test
     {
-        float m_radius, m_top, m_bottom;
-        State m_state;
-        Fixture m_platform;
-        Fixture m_character;
+        private float _radius, _top, _bottom;
+        private State _state;
+        private Fixture _platform;
+        private Fixture _character;
 
         public enum State
         {
@@ -38,10 +38,10 @@ namespace TestBed.Tests
 
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(3.0f, 0.5f);
-                m_platform = body.CreateFixture(shape, 0);
+                _platform = body.CreateFixture(shape, 0);
 
-                m_bottom = 10.0f - 0.5f;
-                m_top = 10.0f + 0.5f;
+                _bottom = 10.0f - 0.5f;
+                _top = 10.0f + 0.5f;
             }
 
             // Actor
@@ -50,38 +50,38 @@ namespace TestBed.Tests
                 bd.Position.Set(0.0f, 12.0f);
                 Body body = _world.CreateBody(bd);
 
-                m_radius = 0.5f;
+                _radius = 0.5f;
                 CircleShape shape = new CircleShape();
-                shape.Radius = m_radius;
-                m_character = body.CreateFixture(shape, 1.0f);
+                shape.Radius = _radius;
+                _character = body.CreateFixture(shape, 1.0f);
                 body.SetMassFromShapes();
 
                 body.SetLinearVelocity(new Vec2(0.0f, -50.0f));
 
-                m_state = State.e_unknown;
+                _state = State.e_unknown;
             }
         }
 
         public override void PreSolve(Contact contact, Manifold oldManifold)
         {
-            PreSolve(contact, oldManifold);
+            base.PreSolve(contact, oldManifold);
 
             Fixture fixtureA = contact.GetFixtureA();
             Fixture fixtureB = contact.GetFixtureB();
 
-            if (fixtureA != m_platform && fixtureA != m_character)
+            if (fixtureA != _platform && fixtureA != _character)
             {
                 return;
             }
 
-            if (fixtureB != m_character && fixtureB != m_character)
+            if (fixtureB != _character && fixtureB != _character)
             {
                 return;
             }
 
-            Vec2 position = m_character.GetBody().GetPosition();
+            Vec2 position = _character.GetBody().GetPosition();
 
-            if (position.Y < m_top)
+            if (position.Y < _top)
             {
                 contact.Disable();
             }
@@ -89,7 +89,7 @@ namespace TestBed.Tests
 
         public override void Step(Settings settings)
         {
-            Step(settings);
+            base.Step(settings);
             OpenGLDebugDraw.DrawString(5, _textLine, "Press: (c) create a shape, (d) destroy a shape.");
             _textLine += 15;
         }

@@ -56,7 +56,7 @@ namespace TestBed
 
         public override void Step(Settings settings)
         {
-            Step(settings);
+            base.Step(settings);
 
             Collision.DistanceInput input = new Collision.DistanceInput();
             input.proxyA.Set(_polygonA);

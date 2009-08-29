@@ -115,6 +115,7 @@
     <Compile Include="Tests\Pyramid.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\RayCast.cs" />
     <Compile Include="Tests\Revolute.cs" />
     <Compile Include="Tests\SensorTest.cs" />
     <Compile Include="Tests\ShapeEditing.cs" />

@@ -1,7 +1,25 @@
 // New upgrades
-Box2D: Revision: 6 - Date: 2:36:51 AM, Monday, August 10, 2009
+Box2D: Revision: 10 Date: 10:13:55 AM, Monday, August 24, 2009
+
+Library files that needs to be updated:
+Broadphase.cs
+All wrappers related to raycast
+
+Testbed files that needs to be updated:
+Revolute.cs
+SensorTest.cs
+ShapeEditing.cs
+SliderCrank.cs
+SphereStack.cs
+TheoJansen.cs
+TimeOfImpact.cs
+VaryingFriction.cs
+VaryingRestitution.cs
+VerticalStack.cs
+Web.cs
 
 // Old upgrades
+Box2D: Revision: 6 - Date: 2:36:51 AM, Monday, August 10, 2009
 Box2D: Revision: 222 - Date: 09:11:30, 27. juli 2009
 Box2DX: Revision: 57 - Date: 11:59:49, 20. marts 2009
 Box2D: Revision: 218 - Date: 09:17:49, 12. juni 2009

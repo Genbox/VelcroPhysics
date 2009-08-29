@@ -19,64 +19,58 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Box2DX.Common;
 using Box2DX.Collision;
+using Box2DX.Common;
 using Box2DX.Dynamics;
 
 namespace TestBed
 {
-	public class Pyramid : Test
-	{
-		public Pyramid()
-		{
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(50.0f, 10.0f);
+    public class Pyramid : Test
+    {
+        public Pyramid()
+        {
+            {
+                BodyDef bd = new BodyDef();
+                Body ground = _world.CreateBody(bd);
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, -10.0f);
-				Body ground = _world.CreateBody(bd);
-				ground.CreateFixture(sd);
-			}
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vec2(-40.0f, 0.0f), new Vec2(40.0f, 0.0f));
+                ground.CreateFixture(shape);
+            }
 
-			{
-				PolygonDef sd = new PolygonDef();
-				float a = 0.5f;
-				sd.SetAsBox(a, a);
-				sd.Density = 5.0f;
+            {
+                float a = 0.5f;
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(a, a);
 
-				Vec2 x = new Vec2(-10.0f, 0.75f);
-				Vec2 y;
-				Vec2 deltaX = new Vec2(0.5625f, 1.25f);
-				Vec2 deltaY = new Vec2(1.125f, 0.0f);
+                Vec2 x = new Vec2(-7.0f, 0.75f);
+                Vec2 y;
+                Vec2 deltaX = new Vec2(0.5625f, 1.25f);
+                Vec2 deltaY = new Vec2(1.125f, 0.0f);
 
-				for (int i = 0; i < 25; ++i)
-				{
-					y = x;
+                for (int i = 0; i < 25; ++i)
+                {
+                    y = x;
 
-					for (int j = i; j < 25; ++j)
-					{
-						BodyDef bd = new BodyDef();
-						bd.Position = y;
-						Body body = _world.CreateBody(bd);
-						body.CreateFixture(sd);
-						body.SetMassFromShapes();
+                    for (int j = i; j < 25; ++j)
+                    {
+                        BodyDef bd = new BodyDef();
+                        bd.Position = y;
+                        Body body = _world.CreateBody(bd);
+                        body.CreateFixture(shape, 5.0f);
+                        body.SetMassFromShapes();
 
-						y += deltaY;
-					}
+                        y += deltaY;
+                    }
 
-					x += deltaX;
-				}
-			}
-		}
+                    x += deltaX;
+                }
+            }
+        }
 
-		public static Test Create()
-		{
-			return new Pyramid();
-		}
-	}
+        public static Test Create()
+        {
+            return new Pyramid();
+        }
+    }
 }
