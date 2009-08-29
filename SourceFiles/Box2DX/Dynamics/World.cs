@@ -987,13 +987,20 @@ namespace Box2DX.Dynamics
                 minContact.Flags &= ~ContactFlag.ToiFlag;
 
                 // Is the contact solid?
-                if (minContact.IsSolid() == false || minContact.IsTouching() == false)
+                if (minContact.IsSolid() == false)
                 {
                     // Restore the sweeps.
                     b3._sweep = backup1;
                     b4._sweep = backup2;
                     b3.SynchronizeTransform();
                     b4.SynchronizeTransform();
+                    continue;
+                }
+
+                // Did numerical issues prevent a contact point from being generated?
+                if (minContact.IsTouching() == false)
+                {
+                    // Give up on this TOI.
                     continue;
                 }
 

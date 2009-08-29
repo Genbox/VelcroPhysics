@@ -269,22 +269,24 @@ namespace Box2DX.Collision
             Vec2 v11 = vertices1[edge1];
             Vec2 v12 = edge1 + 1 < count1 ? vertices1[edge1 + 1] : vertices1[0];
 
-            Vec2 dv = v12 - v11;
+            Vec2 localTangent = v12 - v11;
+            localTangent.Normalize();
 
-            Vec2 localNormal = Vec2.Cross(dv, 1.0f);
-            localNormal.Normalize();
+            Vec2 localNormal = Vec2.Cross(localTangent, 1.0f);
             Vec2 planePoint = 0.5f * (v11 + v12);
 
-            Vec2 sideNormal = Math.Mul(xf1.R, v12 - v11);
-            sideNormal.Normalize();
-            Vec2 frontNormal = Vec2.Cross(sideNormal, 1.0f);
+            Vec2 tangent = Math.Mul(xf1.R, localTangent);
+            Vec2 normal = Vec2.Cross(tangent, 1.0f);
 
             v11 = Math.Mul(xf1, v11);
             v12 = Math.Mul(xf1, v12);
 
-            float frontOffset = Vec2.Dot(frontNormal, v11);
-            float sideOffset1 = -Vec2.Dot(sideNormal, v11);
-            float sideOffset2 = Vec2.Dot(sideNormal, v12);
+            // Face offset.
+            float frontOffset = Vec2.Dot(normal, v11);
+
+            // Side offsets, extended by polytope skin thickness.
+            float sideOffset1 = -Vec2.Dot(tangent, v11);
+            float sideOffset2 = Vec2.Dot(tangent, v12);
 
             // Clip incident edge against extruded edge1 side edges.
             ClipVertex[] clipPoints1;
@@ -292,13 +294,13 @@ namespace Box2DX.Collision
             int np;
 
             // Clip to box side 1
-            np = ClipSegmentToLine(out clipPoints1, out incidentEdge, -sideNormal, sideOffset1);
+            np = ClipSegmentToLine(out clipPoints1, out incidentEdge, -tangent, sideOffset1);
 
             if (np < 2)
                 return;
 
             // Clip to negative box side 1
-            np = ClipSegmentToLine(out clipPoints2, out clipPoints1, sideNormal, sideOffset2);
+            np = ClipSegmentToLine(out clipPoints2, out clipPoints1, tangent, sideOffset2);
 
             if (np < 2)
                 return;
@@ -310,7 +312,7 @@ namespace Box2DX.Collision
             int pointCount = 0;
             for (int i = 0; i < Settings.MaxManifoldPoints; ++i)
             {
-                float separation = Vec2.Dot(frontNormal, clipPoints2[i].V) - frontOffset;
+                float separation = Vec2.Dot(normal, clipPoints2[i].V) - frontOffset;
 
                 if (separation <= totalRadius)
                 {

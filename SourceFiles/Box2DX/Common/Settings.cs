@@ -35,8 +35,8 @@ namespace Box2DX.Common
         public Settings()
         {
             Version.major = 2;
-            Version.minor = 0;
-            Version.revision = 2;
+            Version.minor = 1;
+            Version.revision = 0;
         }
 
         public static readonly float FLT_EPSILON = 1.192092896e-07F;
@@ -56,6 +56,12 @@ namespace Box2DX.Common
         /// This is used to fatten AABBs in the dynamic tree. This allows proxies
         /// to move by a small amount without triggering a tree adjustment.
         public static readonly float AABBExtension = 0.1f;
+
+        /// This is used to fatten AABBs in the dynamic tree. This is used to predict
+        /// the future position based on the current displacement.
+        /// This is a dimensionless multiplier.
+        public static readonly float AABBMultiplier = 2.0f;
+
 
         /// <summary>
         /// A small length used as a collision and constraint tolerance. Usually it is
