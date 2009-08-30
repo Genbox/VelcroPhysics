@@ -168,7 +168,7 @@ namespace Box2DX.Dynamics
             Shape shapeA = _fixtureA.GetShape();
             Shape shapeB = _fixtureB.GetShape();
 
-            worldManifold.Initialize(Manifold, bodyA.GetTransform(), shapeA.Radius, bodyB.GetTransform(), shapeB.Radius);
+            worldManifold.Initialize(Manifold, bodyA.GetTransform(), shapeA._radius, bodyB.GetTransform(), shapeB._radius);
         }
 
         public bool IsSolid()
@@ -299,7 +299,7 @@ namespace Box2DX.Dynamics
 
         public void Update(ContactListener listener)
         {
-#error "Manifold is a class, not a struct. It will reference the old manifest, not copy it"
+#warning "Manifold is a class, not a struct. It will reference the old manifest, not copy it"
             Manifold oldManifold = Manifold;
 
             // Re-enable this contact.

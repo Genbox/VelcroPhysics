@@ -126,7 +126,7 @@ namespace TestBed
 
             // Small circle
             CircleShape circle = new CircleShape();
-            circle.Radius = 1.0f;
+            circle._radius = 1.0f;
 
             FixtureDef circleShapeDef = new FixtureDef();
             circleShapeDef.Shape = circle;
@@ -144,7 +144,7 @@ namespace TestBed
             body5.SetMassFromShapes();
 
             // Large circle
-            circle.Radius *= 2.0f;
+            circle._radius *= 2.0f;
             circleShapeDef.Filter.GroupIndex = k_largeGroup;
             circleBodyDef.Position.Set(5.0f, 6.0f);
 

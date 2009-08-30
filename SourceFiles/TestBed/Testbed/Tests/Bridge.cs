@@ -96,7 +96,7 @@ namespace TestBed
             for (int i = 0; i < 3; ++i)
             {
                 CircleShape shape = new CircleShape();
-                shape.Radius = 0.5f;
+                shape._radius = 0.5f;
 
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = shape;

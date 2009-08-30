@@ -76,7 +76,7 @@ namespace TestBed
         public override void DrawCircle(Vec2 center, float radius, Color color)
         {
             float k_segments = 16.0f;
-            float k_increment = 2.0f * Box2DX.Common.Settings.Pi / k_segments;
+            float k_increment = 2.0f * Box2DX.Common.Settings.PI / k_segments;
             float theta = 0.0f;
             Gl.glColor3f(color.R, color.G, color.B);
             Gl.glBegin(Gl.GL_LINE_LOOP);
@@ -92,7 +92,7 @@ namespace TestBed
         public override void DrawSolidCircle(Vec2 center, float radius, Vec2 axis, Color color)
         {
             float k_segments = 16.0f;
-            float k_increment = 2.0f * Box2DX.Common.Settings.Pi / k_segments;
+            float k_increment = 2.0f * Box2DX.Common.Settings.PI / k_segments;
             float theta = 0.0f;
             Gl.glEnable(Gl.GL_BLEND);
             Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA);

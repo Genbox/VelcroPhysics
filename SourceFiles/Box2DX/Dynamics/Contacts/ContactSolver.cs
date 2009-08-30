@@ -89,8 +89,8 @@ namespace Box2DX.Dynamics
                 Fixture fixtureB = contact.GetFixtureB();
                 Shape shapeA = fixtureA.GetShape();
                 Shape shapeB = fixtureB.GetShape();
-                float radiusA = shapeA.Radius;
-                float radiusB = shapeB.Radius;
+                float radiusA = shapeA._radius;
+                float radiusB = shapeB._radius;
                 Body bodyA = fixtureA.GetBody();
                 Body bodyB = fixtureB.GetBody();
                 Manifold manifold = contact.GetManifold();

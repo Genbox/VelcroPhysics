@@ -38,12 +38,12 @@ namespace TestBed
         {
             // Ground body
             {
-                BodyDef bd;
+                BodyDef bd = new BodyDef();
                 Body ground = _world.CreateBody(bd);
 
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsEdge(new Vec2(-40.0f, 0.0f), new Vec2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.CreateFixture(shape, 0);
             }
 
             {
@@ -85,7 +85,7 @@ namespace TestBed
             }
 
             {
-                circle.Radius = 0.5f;
+                circle._radius = 0.5f;
             }
 
             bodyIndex = 0;

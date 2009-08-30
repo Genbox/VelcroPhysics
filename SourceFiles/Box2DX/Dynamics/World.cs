@@ -610,7 +610,7 @@ namespace Box2DX.Dynamics
         /// @param callback a user implemented callback class.
         /// @param point1 the ray starting point
         /// @param point2 the ray ending point
-        public void RayCast(RayCastCallback callback, Vec2 point1, Vec2 point2)
+        public void RayCast(T callback, Vec2 point1, Vec2 point2)
         {
             WorldRayCastWrapper wrapper = new WorldRayCastWrapper();
             wrapper.broadPhase = _contactManager._broadPhase;
@@ -1231,8 +1231,8 @@ namespace Box2DX.Dynamics
                     {
                         CircleShape circle = (CircleShape)fixture.GetShape();
 
-                        Vec2 center = Math.Mul(xf, circle.LocalPosition);
-                        float radius = circle.Radius;
+                        Vec2 center = Math.Mul(xf, circle._p);
+                        float radius = circle._radius;
                         Vec2 axis = xf.R.Col1;
 
                         _debugDraw.DrawSolidCircle(center, radius, axis, color);

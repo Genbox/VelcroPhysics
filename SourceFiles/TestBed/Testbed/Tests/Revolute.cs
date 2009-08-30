@@ -19,85 +19,86 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
+using Box2DX.Collision;
 using Box2DX.Common;
 using Box2DX.Dynamics;
 
 namespace TestBed
 {
-	public class Revolute : Test
-	{
-		private RevoluteJoint _joint;
+    public class Revolute : Test
+    {
+        private RevoluteJoint _joint;
 
-		public Revolute()
-		{
-			Body ground = null;
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(50.0f, 10.0f);
+        public Revolute()
+        {
+            Body ground = null;
+            {
+                BodyDef bd = new BodyDef();
+                ground = _world.CreateBody(bd);
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, -10.0f);
-				ground = _world.CreateBody(bd);
-                ground.CreateFixture(sd);
-			}
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vec2(-40.0f, 0.0f), new Vec2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0);
+            }
 
-			{
-				CircleDef sd = new CircleDef();
-				sd.Radius = 0.5f;
-				sd.Density = 5.0f;
+            {
+                CircleShape shape = new CircleShape();
+                shape._radius = 0.5f;
 
-				BodyDef bd = new BodyDef();
+                BodyDef bd = new BodyDef();
 
-				RevoluteJointDef rjd = new RevoluteJointDef();
+                RevoluteJointDef rjd = new RevoluteJointDef();
 
-				bd.Position.Set(0.0f, 20.0f);
-				Body body = _world.CreateBody(bd);
-                body.CreateFixture(sd);
-				body.SetMassFromShapes();
+                bd.Position.Set(0.0f, 20.0f);
+                Body body = _world.CreateBody(bd);
+                body.CreateFixture(shape, 5.0f);
+                body.SetMassFromShapes();
 
-				float w = 100.0f;
-				body.SetAngularVelocity(w);
-				body.SetLinearVelocity(new Vec2(-8.0f * w, 0.0f));
+                float w = 100.0f;
+                body.SetAngularVelocity(w);
+                body.SetLinearVelocity(new Vec2(-8.0f * w, 0.0f));
 
-				rjd.Initialize(ground, body, new Vec2(0.0f, 12.0f));
-				rjd.MotorSpeed = 1.0f * Box2DX.Common.Settings.Pi;
-				rjd.MaxMotorTorque = 10000.0f;
-				rjd.EnableMotor = false;
-				rjd.LowerAngle = -0.25f * Box2DX.Common.Settings.Pi;
-				rjd.UpperAngle = 0.5f * Box2DX.Common.Settings.Pi;
-				rjd.EnableLimit = true;
-				rjd.CollideConnected = true;
+                rjd.Initialize(ground, body, new Vec2(0.0f, 12.0f));
+                rjd.MotorSpeed = 1.0f * Box2DX.Common.Settings.PI;
+                rjd.MaxMotorTorque = 10000.0f;
+                rjd.EnableMotor = false;
+                rjd.LowerAngle = -0.25f * Box2DX.Common.Settings.PI;
+                rjd.UpperAngle = 0.5f * Box2DX.Common.Settings.PI;
+                rjd.EnableLimit = true;
+                rjd.CollideConnected = true;
 
-				_joint = (RevoluteJoint)_world.CreateJoint(rjd);
-			}
-		}
+                _joint = (RevoluteJoint)_world.CreateJoint(rjd);
+            }
+        }
 
-		public override void Step(Settings settings)
-		{
-			base.Step(settings);
+        public override void Keyboard(System.Windows.Forms.Keys key)
+        {
+            switch (key)
+            {
+                case System.Windows.Forms.Keys.L:
+                    _joint.EnableLimit(_joint.IsLimitEnabled);
+                    break;
+                case System.Windows.Forms.Keys.S:
+                    _joint.EnableMotor(false);
+                    break;
+                default:
+                    return;
+            }
+        }
+
+        public override void Step(Settings settings)
+        {
+            base.Step(settings);
             OpenGLDebugDraw.DrawString(5, _textLine, "Keys: (l) limits, (s) motor");
-			_textLine += 15;
+            _textLine += 15;
+            //float32 torque1 = m_joint1->GetMotorTorque();
+            //m_debugDraw.DrawString(5, m_textLine, "Motor Torque = %4.0f, %4.0f : Motor Force = %4.0f", (float) torque1, (float) torque2, (float) force3);
+            //m_textLine += 15;
+        }
 
-		}
-
-		public override void Keyboard(System.Windows.Forms.Keys key)
-		{
-			switch (key)
-			{
-				case System.Windows.Forms.Keys.L:
-					_joint.EnableLimit(!_joint.IsLimitEnabled);
-					break;
-				case System.Windows.Forms.Keys.S:
-					_joint.EnableMotor(!_joint.IsMotorEnabled);
-					break;
-				default:
-					return;
-			}
-		}
-
-		public static Test Create()
-		{
-			return new Revolute();
-		}
-	}
+        public static Test Create()
+        {
+            return new Revolute();
+        }
+    }
 }

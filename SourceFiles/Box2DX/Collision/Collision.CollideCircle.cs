@@ -32,23 +32,23 @@ namespace Box2DX.Collision
             manifold = new Manifold();
             manifold.PointCount = 0;
 
-            Vec2 p1 = Math.Mul(xf1, circle1.LocalPosition);
-            Vec2 p2 = Math.Mul(xf2, circle2.LocalPosition);
+            Vec2 p1 = Math.Mul(xf1, circle1._p);
+            Vec2 p2 = Math.Mul(xf2, circle2._p);
 
             Vec2 d = p2 - p1;
             float distSqr = Vec2.Dot(d, d);
-            float radius = circle1.Radius + circle2.Radius;
+            float radius = circle1._radius + circle2._radius;
             if (distSqr > radius * radius)
             {
                 return;
             }
 
             manifold.Type = Manifold.ManifoldType.Circles;
-            manifold.LocalPoint = circle1.LocalPosition;
+            manifold.LocalPoint = circle1._p;
             manifold.LocalPlaneNormal.SetZero();
             manifold.PointCount = 1;
 
-            manifold.Points[0].LocalPoint = circle2.LocalPosition;
+            manifold.Points[0].LocalPoint = circle2._p;
             manifold.Points[0].ID.Key = 0;
         }
 
@@ -61,13 +61,13 @@ namespace Box2DX.Collision
             manifold.PointCount = 0;
 
             // Compute circle position in the frame of the polygon.
-            Vec2 c = Math.Mul(xf2, circle.LocalPosition);
+            Vec2 c = Math.Mul(xf2, circle._p);
             Vec2 cLocal = Math.MulT(xf1, c);
 
             // Find the min separating edge.
             int normalIndex = 0;
             float separation = -Settings.FLT_MAX;
-            float radius = polygon.Radius + circle.Radius;
+            float radius = polygon._radius + circle._radius;
             int vertexCount = polygon.VertexCount;
             Vec2[] vertices = polygon.Vertices;
             Vec2[] normals = polygon.Normals;
@@ -102,7 +102,7 @@ namespace Box2DX.Collision
                 manifold.Type = Manifold.ManifoldType.FaceA;
                 manifold.LocalPlaneNormal = normals[normalIndex];
                 manifold.LocalPoint = 0.5f * (v1 + v2);
-                manifold.Points[0].LocalPoint = circle.LocalPosition;
+                manifold.Points[0].LocalPoint = circle._p;
                 manifold.Points[0].ID.Key = 0;
                 return;
             }
@@ -122,7 +122,7 @@ namespace Box2DX.Collision
                 manifold.LocalPlaneNormal = cLocal - v1;
                 manifold.LocalPlaneNormal.Normalize();
                 manifold.LocalPoint = v1;
-                manifold.Points[0].LocalPoint = circle.LocalPosition;
+                manifold.Points[0].LocalPoint = circle._p;
                 manifold.Points[0].ID.Key = 0;
             }
             else if (u2 <= 0.0f)
@@ -137,7 +137,7 @@ namespace Box2DX.Collision
                 manifold.LocalPlaneNormal = cLocal - v2;
                 manifold.LocalPlaneNormal.Normalize();
                 manifold.LocalPoint = v2;
-                manifold.Points[0].LocalPoint = circle.LocalPosition;
+                manifold.Points[0].LocalPoint = circle._p;
                 manifold.Points[0].ID.Key = 0;
             }
             else
@@ -153,7 +153,7 @@ namespace Box2DX.Collision
                 manifold.Type = Manifold.ManifoldType.FaceA;
                 manifold.LocalPlaneNormal = normals[vertIndex1];
                 manifold.LocalPoint = faceCenter;
-                manifold.Points[0].LocalPoint = circle.LocalPosition;
+                manifold.Points[0].LocalPoint = circle._p;
                 manifold.Points[0].ID.Key = 0;
             }
         }
