@@ -1,5 +1,6 @@
 ﻿using System;
 using Box2DX.Common;
+using Box2DX.Dynamics;
 using Math = Box2DX.Common.Math;
 
 namespace Box2DX.Collision
@@ -34,9 +35,6 @@ namespace Box2DX.Collision
     /// </summary>
     public class DynamicTree : IDisposable
     {
-        public delegate float QueryCallback(int nodeId);
-        public delegate float RayCastCallback(out RayCastOutput output, RayCastInput input, int nodeId);
-
         public static readonly int NullNode = (-1);
 
         /// Constructing the tree initializes the node pool.
@@ -306,30 +304,31 @@ namespace Box2DX.Collision
             }
         }
 
-        public void Rebalance(int iterations)
-        {
-            if (_root == NullNode)
-            {
-                return;
-            }
+#warning "uncomment"
+        //public void Rebalance(int iterations)
+        //{
+        //    if (_root == NullNode)
+        //    {
+        //        return;
+        //    }
 
-            for (int i = 0; i < iterations; ++i)
-            {
-                int node = _root;
+        //    for (int i = 0; i < iterations; ++i)
+        //    {
+        //        int node = _root;
 
-                uint bit = 0;
-                while (_nodes[node].IsLeaf() == false)
-                {
-                    int children = _nodes[node].Child1;
-                    node = children[(_path >> bit) & 1];
-                    bit = (bit + 1) & (8 * sizeof(uint) - 1);
-                }
-                ++_path;
+        //        uint bit = 0;
+        //        while (_nodes[node].IsLeaf() == false)
+        //        {
+        //            int children = _nodes[node].Child1;
+        //            node = children[(_path >> bit) & 1];
+        //            bit = (bit + 1) & (8 * sizeof(uint) - 1);
+        //        }
+        //        ++_path;
 
-                RemoveLeaf(node);
-                InsertLeaf(node);
-            }
-        }
+        //        RemoveLeaf(node);
+        //        InsertLeaf(node);
+        //    }
+        //}
 
         // Compute the height of a sub-tree.
         public int ComputeHeight(int nodeId)
@@ -353,7 +352,7 @@ namespace Box2DX.Collision
 
         /// Query an AABB for overlapping proxies. The callback class
         /// is called for each proxy that overlaps the supplied AABB.
-        public void Query(QueryCallback callback, AABB aabb)
+        public void Query(T callback, AABB aabb)
         {
             const int k_stackSize = 128;
             int[] stack = new int[k_stackSize];
@@ -375,7 +374,7 @@ namespace Box2DX.Collision
                 {
                     if (node.IsLeaf())
                     {
-                        callback(nodeId);
+                        callback.QueryCallback(nodeId);
                     }
                     else
                     {
@@ -394,7 +393,7 @@ namespace Box2DX.Collision
         /// number of proxies in the tree.
         /// @param input the ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).
         /// @param callback a callback class that is called for each proxy that is hit by the ray.
-        public void RayCast(RayCastCallback callback, RayCastInput input)
+        public void RayCast(T callback, RayCastInput input)
         {
             Vec2 p1 = input.P1;
             Vec2 p2 = input.P2;
@@ -457,7 +456,7 @@ namespace Box2DX.Collision
                     subInput.P2 = input.P2;
                     subInput.MaxFraction = maxFraction;
 
-                    maxFraction = callback(subInput, nodeId);
+                    maxFraction = callback.RayCastCallback(subInput, nodeId);
 
                     if (maxFraction == 0.0f)
                     {

@@ -219,7 +219,7 @@ namespace Box2DX.Collision
         {
             manifold = new Manifold();
             manifold.PointCount = 0;
-            float totalRadius = polyA.Radius + polyB.Radius;
+            float totalRadius = polyA._radius + polyB._radius;
 
             int edgeA = 0;
             float separationA = FindMaxSeparation(out edgeA, polyA, xfA, polyB, xfB);

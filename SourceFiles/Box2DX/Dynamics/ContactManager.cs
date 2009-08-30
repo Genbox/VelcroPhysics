@@ -34,9 +34,8 @@ namespace Box2DX.Dynamics
         public ContactFilter _contactFilter;
         public ContactListener _contactListener;
 
-#error "not initialized"
-        public ContactFilter _defaultFilter;
-        public ContactListener _defaultListener;
+        public ContactFilter _defaultFilter =new ContactFilter();
+        public ContactListener _defaultListener = new ContactListener();
 
         public ContactManager()
         {
@@ -138,7 +137,7 @@ namespace Box2DX.Dynamics
                     // Are both bodies static?
                     if (bodyA.IsStatic() && bodyB.IsStatic())
                     {
-#error "Copy by value and not ref?"
+#warning "Copy by value and not ref?"
                         Contact cNuke = c;
                         c = cNuke.GetNext();
                         Destroy(cNuke);
@@ -148,7 +147,7 @@ namespace Box2DX.Dynamics
                     // Does a joint override collision?
                     if (bodyB.IsConnected(bodyA))
                     {
-#error "Copy by value and not ref?"
+#warning "Copy by value and not ref?"
                         Contact cNuke = c;
                         c = cNuke.GetNext();
                         Destroy(cNuke);
@@ -158,7 +157,7 @@ namespace Box2DX.Dynamics
                     // Check user filtering.
                     if (_contactFilter.ShouldCollide(fixtureA, fixtureB) == false)
                     {
-#error "Copy by value and not ref?"
+#warning "Copy by value and not ref?"
                         Contact cNuke = c;
                         c = cNuke.GetNext();
                         Destroy(cNuke);
@@ -176,7 +175,7 @@ namespace Box2DX.Dynamics
                 // Here we destroy contacts that cease to overlap in the broad-phase.
                 if (overlap == false)
                 {
-#error "Copy by value and not ref?"
+#warning "Copy by value and not ref?"
                     Contact cNuke = c;
                     c = cNuke.GetNext();
                     Destroy(cNuke);

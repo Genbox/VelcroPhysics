@@ -123,8 +123,9 @@ namespace TestBed
     {
         public static TestEntry[] g_testEntries = new TestEntry[]
 		{			
-            new TestEntry("PolyCollision", PolyCollision.Create),
+            new TestEntry("Ray-Cast", RayCast.Create),
 	        new TestEntry("Pyramid", Pyramid.Create),
+            new TestEntry("PolyCollision", PolyCollision.Create),
         	new TestEntry("One-Sided Platform", OneSidedPlatform.Create),
 	        new TestEntry("Apply Force", ApplyForce.Create),
 	        new TestEntry("Bridge", Bridge.Create),
@@ -164,7 +165,7 @@ namespace TestBed
         protected int _textLine;
         protected World _world;
         protected Body _bomb;
-        protected MouseJoint _mouseJoint;
+        public MouseJoint _mouseJoint;
         protected Vec2 _bombSpawnPoint;
         protected bool _bombSpawning;
         protected Vec2 _mouseWorld;
@@ -348,7 +349,7 @@ namespace TestBed
             SpawnBomb(p);
         }
 
-        public class MyQueryCallback : QueryCallback
+        public class MyQueryCallback
         {
             public MyQueryCallback(Vec2 point)
             {
@@ -356,27 +357,9 @@ namespace TestBed
                 _fixture = null;
             }
 
-            public override bool ReportFixture(Fixture fixture)
-            {
-                Body body = fixture.GetBody();
-                if (body.IsStatic() == false)
-                {
-                    bool inside = fixture.TestPoint(_point);
-                    if (inside)
-                    {
-                        _fixture = fixture;
-
-                        // We are done, terminate the query.
-                        return false;
-                    }
-                }
-
-                // Continue the query.
-                return true;
-            }
-
             public Vec2 _point;
             public Fixture _fixture;
+            public QueryCallback _queryCallback;
         };
 
         public void MouseDown(Vec2 p)
@@ -397,7 +380,7 @@ namespace TestBed
 
             // Query the world for overlapping shapes.
             MyQueryCallback callback = new MyQueryCallback(p);
-            _world.Query(callback, aabb);
+            _world.QueryAABB(callback._queryCallback, aabb);
 
             if (callback._fixture != null)
             {
@@ -465,7 +448,7 @@ namespace TestBed
             _bomb.SetLinearVelocity(velocity);
 
             CircleShape circle = new CircleShape();
-            circle.Radius = 0.3f;
+            circle._radius = 0.3f;
 
             FixtureDef fd = new FixtureDef();
             fd.Shape = circle;

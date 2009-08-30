@@ -16,13 +16,9 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Box2DX.Common;
 using Box2DX.Collision;
 using Box2DX.Dynamics;
+using Box2DX.Common;
 
 namespace TestBed
 {
@@ -32,77 +28,79 @@ namespace TestBed
         public VaryingFriction()
         {
             {
-                PolygonDef sd = new PolygonDef();
-                sd.SetAsBox(50.0f, 20.0f);
-
                 BodyDef bd = new BodyDef();
-                bd.Position.Set(0.0f, -20.0f);
                 Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(sd);
+
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vec2(-40.0f, 0.0f), new Vec2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0);
             }
 
             {
-                PolygonDef sd = new PolygonDef();
-                sd.SetAsBox(13.0f, 0.25f);
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(13.0f, 0.25f);
 
                 BodyDef bd = new BodyDef();
                 bd.Position.Set(-4.0f, 22.0f);
                 bd.Angle = -0.25f;
 
                 Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(sd);
+                ground.CreateFixture(shape, 0);
             }
 
             {
-                PolygonDef sd = new PolygonDef();
-                sd.SetAsBox(0.25f, 1.0f);
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.25f, 1.0f);
 
                 BodyDef bd = new BodyDef();
                 bd.Position.Set(10.5f, 19.0f);
 
                 Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(sd);
+                ground.CreateFixture(shape, 0);
             }
 
             {
-                PolygonDef sd = new PolygonDef();
-                sd.SetAsBox(13.0f, 0.25f);
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(13.0f, 0.25f);
 
                 BodyDef bd = new BodyDef();
                 bd.Position.Set(4.0f, 14.0f);
                 bd.Angle = 0.25f;
 
                 Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(sd);
+                ground.CreateFixture(shape, 0);
             }
 
             {
-                PolygonDef sd = new PolygonDef();
-                sd.SetAsBox(0.25f, 1.0f);
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.25f, 1.0f);
 
                 BodyDef bd = new BodyDef();
                 bd.Position.Set(-10.5f, 11.0f);
 
                 Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(sd);
+                ground.CreateFixture(shape, 0);
             }
 
             {
-                PolygonDef sd = new PolygonDef();
-                sd.SetAsBox(13.0f, 0.25f);
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(13.0f, 0.25f);
 
                 BodyDef bd = new BodyDef();
                 bd.Position.Set(-4.0f, 6.0f);
                 bd.Angle = -0.25f;
 
                 Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(sd);
+                ground.CreateFixture(shape, 0);
             }
 
             {
-                PolygonDef sd = new PolygonDef();
-                sd.SetAsBox(0.5f, 0.5f);
-                sd.Density = 25.0f;
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.5f, 0.5f);
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Density = 25.0f;
 
                 float[] friction = { 0.75f, 0.5f, 0.35f, 0.1f, 0.0f };
 
@@ -112,8 +110,8 @@ namespace TestBed
                     bd.Position.Set(-15.0f + 4.0f * i, 28.0f);
                     Body body = _world.CreateBody(bd);
 
-                    sd.Friction = friction[i];
-                    body.CreateFixture(sd);
+                    fd.Friction = friction[i];
+                    body.CreateFixture(fd);
                     body.SetMassFromShapes();
                 }
             }

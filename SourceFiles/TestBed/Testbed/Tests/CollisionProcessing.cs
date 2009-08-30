@@ -103,7 +103,7 @@ namespace TestBed
 
             // Small circle
             CircleShape circle = new CircleShape();
-            circle.Radius = 1.0f;
+            circle._radius = 1.0f;
 
             FixtureDef circleShapeDef = new FixtureDef();
             circleShapeDef.Shape = circle;
@@ -117,7 +117,7 @@ namespace TestBed
             body5.SetMassFromShapes();
 
             // Large circle
-            circle.Radius *= 2.0f;
+            circle._radius *= 2.0f;
             circleBodyDef.Position.Set(Math.Random(xLo, xHi), Math.Random(yLo, yHi));
 
             Body body6 = _world.CreateBody(circleBodyDef);

@@ -60,7 +60,7 @@ namespace TestBed
             Collision.CollidePolygons(out manifold, _polygonA, _transformA, _polygonB, _transformB);
 
             WorldManifold worldManifold = new WorldManifold();
-            worldManifold.Initialize(manifold, _transformA, _polygonA.Radius, _transformB, _polygonB.Radius);
+            worldManifold.Initialize(manifold, _transformA, _polygonA._radius, _transformB, _polygonB._radius);
 
             OpenGLDebugDraw.DrawString(5, _textLine, string.Format("point count = {0}", manifold.PointCount));
             _textLine += 15;

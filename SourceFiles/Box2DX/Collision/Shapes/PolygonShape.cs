@@ -40,7 +40,7 @@ namespace Box2DX.Collision
         public PolygonShape()
         {
             Type = ShapeType.PolygonShape;
-            Radius = Settings.PolygonRadius;
+            _radius = Settings.PolygonRadius;
         }
 
         public override Shape Clone()
@@ -48,7 +48,7 @@ namespace Box2DX.Collision
             PolygonShape polygonShape = new PolygonShape();
             polygonShape.Centroid = Centroid;
             polygonShape.Normals = Normals;
-            polygonShape.Radius = Radius;
+            polygonShape._radius = _radius;
             polygonShape.Type = Type;
             polygonShape.VertexCount = VertexCount;
             polygonShape.Vertices = Vertices;
@@ -259,7 +259,7 @@ namespace Box2DX.Collision
                 upper = Math.Max(upper, v);
             }
 
-            Vec2 r = new Vec2(Radius, Radius);
+            Vec2 r = new Vec2(_radius, _radius);
             aabb.LowerBound = lower - r;
             aabb.UpperBound = upper + r;
         }

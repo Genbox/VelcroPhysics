@@ -35,7 +35,7 @@ namespace TestBed
 
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsEdge(new Vec2(-40.0f, 0.0f), new Vec2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.CreateFixture(shape, 0);
             }
 
             {

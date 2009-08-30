@@ -16,76 +16,67 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Box2DX.Common;
 using Box2DX.Collision;
+using Box2DX.Common;
 using Box2DX.Dynamics;
 
 namespace TestBed
 {
     public class SphereStack : Test
     {
-        Body[] _bodies = new Body[10];
+        const int _count = 10;
+        Body[] _bodies = new Body[_count];
 
         public SphereStack()
         {
             {
-                //b2PolygonDef sd;
-                //sd.SetAsBox(50.0f, 10.0f);
-
-                EdgeDef sd = new EdgeDef();
-                sd.Vertex1.Set(-20.0f, 0.0f);
-                sd.Vertex2.Set(20.0f, 0.0f);
-
                 BodyDef bd = new BodyDef();
-                //bd.position.Set(0.0f, -10.0f);
-
                 Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(sd);
+
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vec2(-40.0f, 0.0f), new Vec2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0);
             }
 
             {
-                CircleDef sd = new CircleDef();
-                sd.Radius = 1.0f;
-                sd.Density = 1.0f;
+                CircleShape shape = new CircleShape();
+                shape._radius = 1.0f;
 
-                for (int i = 0; i < 10; ++i)
+                for (int i = 0; i < _count; ++i)
                 {
                     BodyDef bd = new BodyDef();
                     bd.Position.Set(0.0f, 4.0f + 3.0f * i);
 
                     _bodies[i] = _world.CreateBody(bd);
-
-                    _bodies[i].CreateFixture(sd);
+                    
+                    _bodies[i].CreateFixture(shape, 1.0f);
                     _bodies[i].SetMassFromShapes();
 
-                    //_bodies[i].SetLinearVelocity(new Vec2(0.0f, -100.0f));
+                    //m_bodies[i]->SetLinearVelocity(b2Vec2(0.0f, -100.0f));
                 }
             }
         }
 
-        new public void Step(Settings settings)
-	    {
+        override public void Step(Settings settings)
+        {
+            base.Step(settings);
 
-		    //for (int32 i = 0; i < e_count; ++i)
-		    //{
-		    //	printf("%g ", m_bodies[i]->GetWorldCenter().y);
-		    //}
+            //for (int32 i = 0; i < e_count; ++i)
+            //{
+            //	printf("%g ", m_bodies[i]->GetWorldCenter().y);
+            //}
 
-		    //for (int32 i = 0; i < e_count; ++i)
-		    //{
-		    //	printf("%g ", m_bodies[i]->GetLinearVelocity().y);
-		    //}
+            //for (int32 i = 0; i < e_count; ++i)
+            //{
+            //	printf("%g ", m_bodies[i]->GetLinearVelocity().y);
+            //}
 
-		    //printf("\n");
-	    }
+            //printf("\n");
+        }
 
         public static Test Create()
-	    {
-		    return new SphereStack();
-	    }
+        {
+            return new SphereStack();
+        }
     }
 }

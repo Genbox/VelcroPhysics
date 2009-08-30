@@ -52,7 +52,7 @@ namespace TestBed.Tests
 
                 _radius = 0.5f;
                 CircleShape shape = new CircleShape();
-                shape.Radius = _radius;
+                shape._radius = _radius;
                 _character = body.CreateFixture(shape, 1.0f);
                 body.SetMassFromShapes();
 
@@ -92,6 +92,11 @@ namespace TestBed.Tests
             base.Step(settings);
             OpenGLDebugDraw.DrawString(5, _textLine, "Press: (c) create a shape, (d) destroy a shape.");
             _textLine += 15;
+        }
+
+        public static Test Create()
+        {
+            return new OneSidedPlatform();
         }
     }
 }

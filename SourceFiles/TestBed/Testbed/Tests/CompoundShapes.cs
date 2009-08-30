@@ -42,12 +42,12 @@ namespace TestBed
 
             {
                 CircleShape circle1 = new CircleShape();
-                circle1.Radius = 0.5f;
-                circle1.LocalPosition.Set(-0.5f, 0.5f);
+                circle1._radius = 0.5f;
+                circle1._p.Set(-0.5f, 0.5f);
 
                 CircleShape circle2 = new CircleShape();
-                circle2.Radius = 0.5f;
-                circle2.LocalPosition.Set(0.5f, 0.5f);
+                circle2._radius = 0.5f;
+                circle2._p.Set(0.5f, 0.5f);
 
                 for (int i = 0; i < 10; ++i)
                 {

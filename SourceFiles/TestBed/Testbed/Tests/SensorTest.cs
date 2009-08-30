@@ -27,38 +27,48 @@ namespace TestBed
 {
     public class SensorTest : Test
     {
+        const int _count = 7;
         Fixture _sensor;
-        Body[] _bodies = new Body[7];
+        Body[] _bodies = new Body[_count];
 
         public SensorTest()
         {
             {
                 BodyDef bd = new BodyDef();
-                bd.Position.Set(0.0f, -10.0f);
-
                 Body ground = _world.CreateBody(bd);
 
                 {
-                    PolygonDef sd = new PolygonDef();
-                    sd.SetAsBox(50.0f, 10.0f);
-                    ground.CreateFixture(sd);
+                    PolygonShape shape = new PolygonShape();
+                    shape.SetAsEdge(new Vec2(-40.0f, 0.0f), new Vec2(40.0f, 0.0f));
+                    ground.CreateFixture(shape, 0);
                 }
 
+#if false
+			{
+				b2FixtureDef sd;
+				sd.SetAsBox(10.0f, 2.0f, b2Vec2(0.0f, 20.0f), 0.0f);
+				sd.isSensor = true;
+				m_sensor = ground->CreateFixture(&sd);
+			}
+#else
                 {
-                    CircleDef cd = new CircleDef();
-                    cd.IsSensor = true;
-                    cd.Radius = 5.0f;
-                    cd.LocalPosition.Set(0.0f, 20.0f);
-                    _sensor = ground.CreateFixture(cd);
+                    CircleShape shape = new CircleShape();
+                    shape._radius = 5.0f;
+                    shape._p.Set(0.0f, 10.0f);
+
+                    FixtureDef fd = new FixtureDef();
+                    fd.Shape = shape;
+                    fd.IsSensor = true;
+                    _sensor = ground.CreateFixture(fd);
                 }
+#endif
             }
 
             {
-                CircleDef sd = new CircleDef();
-                sd.Radius = 1.0f;
-                sd.Density = 1.0f;
+                CircleShape shape = new CircleShape();
+                shape._radius = 1.0f;
 
-                for (int i = 0; i < 7; ++i)
+                for (int i = 0; i < _count; ++i)
                 {
                     BodyDef bd = new BodyDef();
                     bd.Position.Set(-10.0f + 3.0f * i, 20.0f);
@@ -66,7 +76,7 @@ namespace TestBed
 
                     _bodies[i] = _world.CreateBody(bd);
 
-                    _bodies[i].CreateFixture(sd);
+                    _bodies[i].CreateFixture(shape, 1.0f);
                     _bodies[i].SetMassFromShapes();
                 }
             }
@@ -123,7 +133,7 @@ namespace TestBed
                 Body ground = _sensor.GetBody();
 
                 CircleShape circle = (CircleShape)_sensor.GetShape();
-                Vec2 center = ground.GetWorldPoint(circle.LocalPosition);
+                Vec2 center = ground.GetWorldPoint(circle._p);
 
                 Vec2 position = body.GetPosition();
 

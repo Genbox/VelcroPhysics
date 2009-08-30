@@ -48,10 +48,10 @@ namespace TestBed
 
             {
                 CircleShape circle1 = new CircleShape();
-                circle1.Radius = 1.0f;
+                circle1._radius = 1.0f;
 
                 CircleShape circle2 = new CircleShape();
-                circle2.Radius = 2.0f;
+                circle2._radius = 2.0f;
 
                 PolygonShape box = new PolygonShape();
                 box.SetAsBox(0.5f, 5.0f);
@@ -99,7 +99,7 @@ namespace TestBed
                 jd4.Body2 = body2;
                 jd4.Joint1 = _joint1;
                 jd4.Joint2 = _joint2;
-                jd4.Ratio = circle2.Radius / circle1.Radius;
+                jd4.Ratio = circle2._radius / circle1._radius;
                 _joint4 = (GearJoint)_world.CreateJoint(jd4);
 
                 GearJointDef jd5 = new GearJointDef();
@@ -107,7 +107,7 @@ namespace TestBed
                 jd5.Body2 = body3;
                 jd5.Joint1 = _joint2;
                 jd5.Joint2 = _joint3;
-                jd5.Ratio = -1.0f / circle2.Radius;
+                jd5.Ratio = -1.0f / circle2._radius;
                 _joint5 = (GearJoint)_world.CreateJoint(jd5);
             }
         }

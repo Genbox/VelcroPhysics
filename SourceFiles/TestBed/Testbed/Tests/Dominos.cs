@@ -198,7 +198,7 @@ namespace TestBed
                 float radius = 0.2f;
 
                 CircleShape shape = new CircleShape();
-                shape.Radius = radius;
+                shape._radius = radius;
 
                 for (int i = 0; i < 4; ++i)
                 {

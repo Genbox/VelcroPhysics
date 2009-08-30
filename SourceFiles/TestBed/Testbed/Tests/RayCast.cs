@@ -23,14 +23,14 @@ using Box2DX.Dynamics;
 namespace TestBed
 {
 
-public class RayCastCallback
+public class MyRayCastCallback : RayCastCallback
 {
-	RayCastCallback()
+	public MyRayCastCallback()
 	{
 		_fixture = null;
 	}
 
-	public float ReportFixture(	Fixture fixture, Vec2 point,Vec2 normal, float fraction)
+	public override float ReportFixture(Fixture fixture, Vec2 point,Vec2 normal, float fraction)
 	{
 		_fixture = fixture;
 		_point = point;
@@ -39,9 +39,9 @@ public class RayCastCallback
 		return fraction;
 	}
 
-	Fixture _fixture;
-	Vec2 _point;
-	Vec2 _normal;
+	public Fixture _fixture;
+	public Vec2 _point;
+	public Vec2 _normal;
 };
 
 public class RayCast : Test
@@ -99,7 +99,7 @@ public class RayCast : Test
 		}
 
 		{
-			_circle.Radius = 0.5f;
+			_circle._radius = 0.5f;
 		}
 
 		_bodyIndex = 0;
@@ -205,22 +205,22 @@ public class RayCast : Test
 		Vec2 d = new Vec2(L * (float)System.Math.Cos(_angle), L * (float)System.Math.Sin(_angle));
 		Vec2 point2 = point1 + d;
 
-		RayCastCallback callback;
+        MyRayCastCallback callback = new MyRayCastCallback();
 
 		_world.RayCast(callback, point1, point2);
 
-		if (callback._fixture)
+		if (callback._fixture != null)
 		{
 			OpenGLDebugDraw.DrawPoint(callback._point, 5.0f, new Color(0.4f, 0.9f, 0.4f));
-
-			OpenGLDebugDraw.DrawSegment(point1, callback._point, new Color(0.8f, 0.8f, 0.8f));
+           
+			 _debugDraw.DrawSegment(point1, callback._point, new Color(0.8f, 0.8f, 0.8f));
 
 			Vec2 head = callback._point + 0.5f * callback._normal;
-			OpenGLDebugDraw.DrawSegment(callback._point, head, new Color(0.9f, 0.9f, 0.4f));
+			_debugDraw.DrawSegment(callback._point, head, new Color(0.9f, 0.9f, 0.4f));
 		}
 		else
 		{
-			OpenGLDebugDraw.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
+			_debugDraw.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
 		}
 
 		_angle += 0.25f * Box2DX.Common.Settings.PI / 180.0f;

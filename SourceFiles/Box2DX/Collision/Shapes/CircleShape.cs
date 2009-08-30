@@ -31,29 +31,29 @@ namespace Box2DX.Collision
     public class CircleShape : Shape
     {
         // Local position in parent body
-        public Vec2 LocalPosition;
+        public Vec2 _p;
 
         public CircleShape()
         {
             Type = ShapeType.CircleShape;
-            Radius = 0.0f;
-            LocalPosition.SetZero();
+            _radius = 0.0f;
+            _p.SetZero();
         }
 
         public override Shape Clone()
         {
             CircleShape shape = new CircleShape();
-            shape.LocalPosition = this.LocalPosition;
+            shape._p = this._p;
             shape.Type = this.Type;
-            shape.Radius = this.Radius;
+            shape._radius = this._radius;
             return shape;
         }
 
         public override bool TestPoint(Transform transform, Vec2 p)
         {
-            Vec2 center = transform.Position + Math.Mul(transform.R, LocalPosition);
+            Vec2 center = transform.Position + Math.Mul(transform.R, _p);
             Vec2 d = p - center;
-            return Vec2.Dot(d, d) <= Radius * Radius;
+            return Vec2.Dot(d, d) <= _radius * _radius;
         }
 
         // Collision Detection in Interactive 3D Environments by Gino van den Bergen
@@ -64,9 +64,9 @@ namespace Box2DX.Collision
         {
             output = new RayCastOutput();
 
-            Vec2 position = transform.Position + Math.Mul(transform.R, LocalPosition);
+            Vec2 position = transform.Position + Math.Mul(transform.R, _p);
             Vec2 s = input.P1 - position;
-            float b = Vec2.Dot(s, s) - Radius * Radius;
+            float b = Vec2.Dot(s, s) - _radius * _radius;
 
             // Solve quadratic equation.
             Vec2 r = input.P2 - input.P1;
@@ -103,20 +103,20 @@ namespace Box2DX.Collision
         {
             aabb = new AABB();
 
-            Vec2 p = transform.Position + Math.Mul(transform.R, LocalPosition);
-            aabb.LowerBound.Set(p.X - Radius, p.Y - Radius);
-            aabb.UpperBound.Set(p.X + Radius, p.Y + Radius);
+            Vec2 p = transform.Position + Math.Mul(transform.R, _p);
+            aabb.LowerBound.Set(p.X - _radius, p.Y - _radius);
+            aabb.UpperBound.Set(p.X + _radius, p.Y + _radius);
         }
 
         public override void ComputeMass(out MassData massData, float density)
         {
             massData = new MassData();
 
-            massData.Mass = density * Settings.PI * Radius * Radius;
-            massData.Center = LocalPosition;
+            massData.Mass = density * Settings.PI * _radius * _radius;
+            massData.Center = _p;
 
             // inertia about the local origin
-            massData.I = massData.Mass * (0.5f * Radius * Radius + Vec2.Dot(LocalPosition, LocalPosition));
+            massData.I = massData.Mass * (0.5f * _radius * _radius + Vec2.Dot(_p, _p));
         }
 
         //Note: Not needed by CircleShape. It is a leftover from hacking C++ generics into C#
@@ -134,7 +134,7 @@ namespace Box2DX.Collision
         public override Vec2 GetSupportVertex(ref Vec2 d)
         {
             //B2_NOT_USED(d);
-            return LocalPosition;
+            return _p;
         }
 
         /// Get the vertex count.
@@ -147,7 +147,7 @@ namespace Box2DX.Collision
         {
             //B2_NOT_USED(index);
             Box2DXDebug.Assert(index == 0);
-            return LocalPosition;
+            return _p;
         }
     }
 }

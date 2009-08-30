@@ -19,98 +19,105 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Box2DX.Common;
 using Box2DX.Collision;
+using Box2DX.Common;
 using Box2DX.Dynamics;
 
 namespace TestBed
 {
-	public class VerticalStack : Test
-	{
-		Body _bullet;
+    public class VerticalStack : Test
+    {
+        Body _bullet;
+        const int _columCount = 5;
+        const int _rowCount = 16;
 
-		public VerticalStack()
-		{
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(50.0f, 10.0f, new Vec2(0.0f, -10.0f), 0.0f);
+        public VerticalStack()
+        {
+            {
+                BodyDef bd = new BodyDef();
+                Body ground = _world.CreateBody(bd);
 
-				BodyDef bd = new BodyDef();
-				bd.Position.Set(0.0f, 0.0f);
-				Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(sd);
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vec2(-40.0f, 0.0f), new Vec2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0);
 
-				sd.SetAsBox(0.1f, 10.0f, new Vec2(20.0f, 10.0f), 0.0f);
-                ground.CreateFixture(sd);
-			}
+                shape.SetAsEdge(new Vec2(20.0f, 0.0f), new Vec2(20.0f, 20.0f));
+                ground.CreateFixture(shape, 0);
+            }
 
-			float[] xs = new float[5] { 0.0f, -10.0f, -5.0f, 5.0f, 10.0f };
+            float[] xs = { 0.0f, -10.0f, -5.0f, 5.0f, 10.0f };
 
-			for (int j = 0; j < 5; ++j)
-			{
-				PolygonDef sd = new PolygonDef();
-				sd.SetAsBox(0.5f, 0.5f);
-				sd.Density = 1.0f;
-				sd.Friction = 0.3f;
+            for (int j = 0; j < _columCount; ++j)
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.5f, 0.5f);
 
-				for (int i = 0; i < 16; ++i)
-				{
-					BodyDef bd = new BodyDef();
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Density = 1.0f;
+                fd.Friction = 0.3f;
 
-					// For this test we are using continuous physics for all boxes.
-					// This is a stress test, you normally wouldn't do this for
-					// performance reasons.
-					bd.AllowSleep = true;
-                    bd.IsBullet = true;
-					bd.Position.Set(xs[j], 0.752f + 1.54f * i);
-					Body body = _world.CreateBody(bd);
+                for (int i = 0; i < _rowCount; ++i)
+                {
+                    BodyDef bd = new BodyDef();
 
-                    body.CreateFixture(sd);
-					body.SetMassFromShapes();
-				}
-			}
+                    float x = 0.0f;
+                    //float32 x = RandomFloat(-0.02f, 0.02f);
+                    //float32 x = i % 2 == 0 ? -0.025f : 0.025f;
+                    bd.Position.Set(xs[j] + x, 0.752f + 1.54f * i);
+                    Body body = _world.CreateBody(bd);
 
-			_bullet = null;
-		}
+                    body.CreateFixture(fd);
+                    body.SetMassFromShapes();
+                }
+            }
 
-		public static Test Create()
-		{
-			return new VerticalStack();
-		}
+            _bullet = null;
+        }
 
-		public override void Keyboard(System.Windows.Forms.Keys key)
-		{
-			switch (key)
-			{
-				case System.Windows.Forms.Keys.S:
-					if (_bullet != null)
-					{
-						_world.DestroyBody(_bullet);
-						_bullet = null;
-					}
-					{
-						CircleDef sd = new CircleDef();
-						sd.Density = 20.0f;
-						sd.Radius = 0.25f;
-						sd.Restitution = 0.05f;
+        public override void Keyboard(System.Windows.Forms.Keys key)
+        {
+            switch (key)
+            {
+                case System.Windows.Forms.Keys.S:
+                    if (_bullet != null)
+                    {
+                        _world.DestroyBody(_bullet);
+                        _bullet = null;
+                    }
+                    {
+                        CircleShape shape = new CircleShape();
+                        shape._radius = 0.25f;
 
-						BodyDef bd = new BodyDef();
-						bd.IsBullet = true;
-						bd.AllowSleep = false;
-						bd.Position.Set(-31.0f, 5.0f);
+                        FixtureDef fd = new FixtureDef();
+                        fd.Shape = shape;
+                        fd.Density = 20.0f;
+                        fd.Restitution = 0.05f;
 
-						_bullet = _world.CreateBody(bd);
-                        _bullet.CreateFixture(sd);
-						_bullet.SetMassFromShapes();
+                        BodyDef bd = new BodyDef();
+                        bd.IsBullet = true;
+                        bd.Position.Set(-31.0f, 5.0f);
 
-						_bullet.SetLinearVelocity(new Vec2(400.0f, 0.0f));
-					}
-					break;
-			}
-		}
-	}
+                        _bullet = _world.CreateBody(bd);
+                        _bullet.CreateFixture(fd);
+                        _bullet.SetMassFromShapes();
+
+                        _bullet.SetLinearVelocity(new Vec2(400.0f, 0.0f));
+                    }
+                    break;
+            }
+        }
+
+        public override void Step(Settings settings)
+        {
+            base.Step(settings);
+            OpenGLDebugDraw.DrawString(5, _textLine, "Press: (,) to launch a bullet.");
+            _textLine += 15;
+        }
+
+        public static Test Create()
+        {
+            return new VerticalStack();
+        }
+    }
 }
