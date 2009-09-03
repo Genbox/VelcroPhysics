@@ -25,7 +25,7 @@ namespace Box2DX.Collision
 {
     public partial class Collision
     {
-#warning "The following counter variables are static. They should be reset at some point?"
+//TODO: "The following counter variables are static. They should be reset at some point?"
         // GJK using Voronoi regions (Christer Ericson) and Barycentric coordinates.
         private static int gjkCalls, gjkIters, gjkMaxIters;
 

@@ -2,10 +2,11 @@
 using Box2DX.Collision;
 using Box2DX.Common;
 using Box2DX.Dynamics;
+using Box2DX.Stuff;
 
 namespace TestBed.Tests
 {
-    public class DynamicTreeTest : Test
+    public class DynamicTreeTest : Test, IRayCastEnabled, IQueryEnabled
     {
         private float _worldExtent;
         private float _proxyExtent;
@@ -208,7 +209,7 @@ namespace TestBed.Tests
         {
             for (int i = 0; i < _actorCount; ++i)
             {
-                int j =  (int)Math.Random() % _actorCount;
+                int j = (int)Math.Random() % _actorCount;
                 Actor actor = _actors[j];
                 if (actor.proxyId == DynamicTree.NullNode)
                 {

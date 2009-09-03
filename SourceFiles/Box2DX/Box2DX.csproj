@@ -4,7 +4,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <BaseIntermediateOutputPath>..\Build\VCS\Box2DX\obj\</BaseIntermediateOutputPath>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -88,6 +88,8 @@
     <Compile Include="Dynamics\World.cs" />
     <Compile Include="Dynamics\WorldCallbacks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stuff\IQueryEnabled.cs" />
+    <Compile Include="Stuff\IRayCastEnabled.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

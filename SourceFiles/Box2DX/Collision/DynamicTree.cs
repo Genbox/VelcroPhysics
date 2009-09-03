@@ -1,6 +1,7 @@
 ﻿using System;
 using Box2DX.Common;
 using Box2DX.Dynamics;
+using Box2DX.Stuff;
 using Math = Box2DX.Common.Math;
 
 namespace Box2DX.Collision
@@ -304,7 +305,7 @@ namespace Box2DX.Collision
             }
         }
 
-#warning "uncomment"
+        //TODO: uncomment
         //public void Rebalance(int iterations)
         //{
         //    if (_root == NullNode)
@@ -352,7 +353,7 @@ namespace Box2DX.Collision
 
         /// Query an AABB for overlapping proxies. The callback class
         /// is called for each proxy that overlaps the supplied AABB.
-        public void Query(T callback, AABB aabb)
+        public void Query<T>(T callback, AABB aabb) where T : IQueryEnabled
         {
             const int k_stackSize = 128;
             int[] stack = new int[k_stackSize];
@@ -393,7 +394,7 @@ namespace Box2DX.Collision
         /// number of proxies in the tree.
         /// @param input the ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).
         /// @param callback a callback class that is called for each proxy that is hit by the ray.
-        public void RayCast(T callback, RayCastInput input)
+        public void RayCast<T>(T callback, RayCastInput input) where T : IRayCastEnabled
         {
             Vec2 p1 = input.P1;
             Vec2 p2 = input.P2;

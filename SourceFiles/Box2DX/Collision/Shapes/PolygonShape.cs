@@ -19,7 +19,6 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
 using Box2DX.Common;
 using Math=Box2DX.Common.Math;
 
@@ -357,24 +356,6 @@ namespace Box2DX.Collision
 
             // Inertia tensor relative to the local origin.
             massData.I = density * I;
-        }
-
-#warning "xf argument is not used, perhaps we can remove GetSupport (XForm, Vec2) to get around our hack?"
-        public override int GetSupport(ref Transform xf, ref Vec2 d)
-        {
-            int bestIndex = 0;
-            float bestValue = Vec2.Dot(Vertices[0], d);
-            for (int i = 1; i < VertexCount; ++i)
-            {
-                float value = Vec2.Dot(Vertices[i], d);
-                if (value > bestValue)
-                {
-                    bestIndex = i;
-                    bestValue = value;
-                }
-            }
-
-            return bestIndex;
         }
 
         public override int GetSupport(Vec2 d)

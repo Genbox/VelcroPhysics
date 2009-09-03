@@ -34,7 +34,7 @@ namespace Box2DX.Dynamics
         public ContactFilter _contactFilter;
         public ContactListener _contactListener;
 
-        public ContactFilter _defaultFilter =new ContactFilter();
+        public ContactFilter _defaultFilter = new ContactFilter();
         public ContactListener _defaultListener = new ContactListener();
 
         public ContactManager()
@@ -131,13 +131,12 @@ namespace Box2DX.Dynamics
                 }
 
                 // Is this contact flagged for filtering?
-#warning "This flag check is correct right?"
-                if ((c.Flags & ContactFlag.FilterFlag) != 0)
+                if ((c.Flags & ContactFlag.FilterFlag) == ContactFlag.FilterFlag)
                 {
+                    //TODO: The following code (next 4 if blocks) use a class and thus copy by ref. It might expect to copy by value
                     // Are both bodies static?
                     if (bodyA.IsStatic() && bodyB.IsStatic())
                     {
-#warning "Copy by value and not ref?"
                         Contact cNuke = c;
                         c = cNuke.GetNext();
                         Destroy(cNuke);
@@ -147,7 +146,6 @@ namespace Box2DX.Dynamics
                     // Does a joint override collision?
                     if (bodyB.IsConnected(bodyA))
                     {
-#warning "Copy by value and not ref?"
                         Contact cNuke = c;
                         c = cNuke.GetNext();
                         Destroy(cNuke);
@@ -157,7 +155,6 @@ namespace Box2DX.Dynamics
                     // Check user filtering.
                     if (_contactFilter.ShouldCollide(fixtureA, fixtureB) == false)
                     {
-#warning "Copy by value and not ref?"
                         Contact cNuke = c;
                         c = cNuke.GetNext();
                         Destroy(cNuke);
@@ -175,7 +172,6 @@ namespace Box2DX.Dynamics
                 // Here we destroy contacts that cease to overlap in the broad-phase.
                 if (overlap == false)
                 {
-#warning "Copy by value and not ref?"
                     Contact cNuke = c;
                     c = cNuke.GetNext();
                     Destroy(cNuke);

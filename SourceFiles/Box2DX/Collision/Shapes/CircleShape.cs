@@ -119,12 +119,6 @@ namespace Box2DX.Collision
             massData.I = massData.Mass * (0.5f * _radius * _radius + Vec2.Dot(_p, _p));
         }
 
-        //Note: Not needed by CircleShape. It is a leftover from hacking C++ generics into C#
-        public override int GetSupport(ref Transform xf, ref Vec2 d)
-        {
-            throw new NotImplementedException();
-        }
-
         public override int GetSupport(Vec2 d)
         {
             //B2_NOT_USED(d);

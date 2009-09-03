@@ -29,7 +29,6 @@ using Box2DX.Common;
 
 namespace Box2DX.Dynamics
 {
-#warning "CAS"
     public class ContactConstraintPoint
     {
         public Vec2 LocalPoint;
@@ -43,7 +42,6 @@ namespace Box2DX.Dynamics
         public float VelocityBias;
     }
 
-#warning "CAS"
     public class ContactConstraint
     {
         public ContactConstraintPoint[] Points = new ContactConstraintPoint[Settings.MaxManifoldPoints];

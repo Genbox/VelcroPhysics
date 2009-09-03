@@ -23,6 +23,7 @@ using System;
 
 using Box2DX.Common;
 using Box2DX.Collision;
+using Box2DX.Stuff;
 using Math = Box2DX.Common.Math;
 
 namespace Box2DX.Dynamics
@@ -71,7 +72,6 @@ namespace Box2DX.Dynamics
         /// <summary>
         /// Construct a world object.
         /// </summary>
-        /// <param name="worldAABB">A bounding box that completely encompasses all your shapes.</param>
         /// <param name="gravity">The world gravity vector.</param>
         /// <param name="doSleep">Improve performance by not simulating inactive bodies.</param>
         public World(Vec2 gravity, bool doSleep)
@@ -481,9 +481,9 @@ namespace Box2DX.Dynamics
             _flags &= ~WorldFlags.Locked;
         }
 
-        public class WorldQueryWrapper
+        public class WorldQueryWrapper : IQueryEnabled
         {
-            void QueryCallback(int proxyId)
+            public void QueryCallback(int proxyId)
             {
                 Fixture fixture = (Fixture)BroadPhase.GetUserData(proxyId);
                 Callback.ReportFixture(fixture);
@@ -581,7 +581,7 @@ namespace Box2DX.Dynamics
             _contactManager._broadPhase.Query(wrapper, aabb);
         }
 
-        public class WorldRayCastWrapper
+        public class WorldRayCastWrapper : IRayCastEnabled
         {
             public float RayCastCallback(RayCastInput input, int proxyId)
             {
@@ -610,7 +610,7 @@ namespace Box2DX.Dynamics
         /// @param callback a user implemented callback class.
         /// @param point1 the ray starting point
         /// @param point2 the ray ending point
-        public void RayCast(T callback, Vec2 point1, Vec2 point2)
+        public void RayCast(RayCastCallback callback, Vec2 point1, Vec2 point2)
         {
             WorldRayCastWrapper wrapper = new WorldRayCastWrapper();
             wrapper.broadPhase = _contactManager._broadPhase;
