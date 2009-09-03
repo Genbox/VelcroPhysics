@@ -19,6 +19,7 @@
 using System;
 using Box2DX.Common;
 using Box2DX.Dynamics;
+using Box2DX.Stuff;
 
 namespace Box2DX.Collision
 {
@@ -32,7 +33,7 @@ namespace Box2DX.Collision
     /// The broad-phase is used for computing pairs and performing volume queries and ray casts.
     /// This broad-phase does not persist pairs. Instead, this reports potentially new pairs.
     /// It is up to the client to consume the new pairs and to track subsequent overlap.
-    public class BroadPhase
+    public class BroadPhase : IQueryEnabled
     {
         public const int NullProxy = -1;
 
@@ -93,7 +94,7 @@ namespace Box2DX.Collision
             }
         }
 
-#warning "This might not be implemented correctly"
+        //TODO This might not be implemented correctly
         public int PairLessThan(Pair pair1, Pair pair2)
         {
             if (pair1.proxyIdA < pair2.proxyIdB)
@@ -141,6 +142,8 @@ namespace Box2DX.Collision
         {
             return _tree.ComputeHeight();
         }
+
+
 
         /// Update the pairs. This results in pair callbacks. This can only add pairs.
         public void UpdatePairs(ContactManager callback)
@@ -198,7 +201,7 @@ namespace Box2DX.Collision
 
         /// Query an AABB for overlapping proxies. The callback class
         /// is called for each proxy that overlaps the supplied AABB.
-        public void Query(T callback, AABB aabb)
+        public void Query(World.WorldQueryWrapper callback, AABB aabb)
         {
             _tree.Query(callback, aabb);
         }
@@ -210,7 +213,7 @@ namespace Box2DX.Collision
         /// number of proxies in the tree.
         /// @param input the ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).
         /// @param callback a callback class that is called for each proxy that is hit by the ray.
-        public void RayCast(T callback, RayCastInput input)
+        public void RayCast(World.WorldRayCastWrapper callback, RayCastInput input)
         {
             _tree.RayCast(callback, input);
         }
@@ -227,6 +230,7 @@ namespace Box2DX.Collision
             ++_moveCount;
 
         }
+
         private void UnBufferMove(int proxyId)
         {
             for (int i = 0; i < _moveCount; ++i)
@@ -240,7 +244,7 @@ namespace Box2DX.Collision
         }
 
         // This is called from DynamicTree::Query when we are gathering pairs.
-        private void QueryCallback(int proxyId)
+        public void QueryCallback(int proxyId)
         {
             // A proxy cannot form a pair with itself.
             if (proxyId == _queryProxyId)

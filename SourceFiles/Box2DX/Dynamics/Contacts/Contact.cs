@@ -36,7 +36,7 @@ namespace Box2DX.Dynamics
         public bool Primary;
     }
 
-#warning "CAS"
+
     /// <summary>
     /// A contact edge is used to connect bodies and contacts together
     /// in a contact graph where each body is a node and each contact
@@ -84,7 +84,7 @@ namespace Box2DX.Dynamics
         FilterFlag = 0x0040,
     }
 
-#warning "CAS"
+
     /// <summary>
     /// This structure is used to report contact points.
     /// </summary>
@@ -299,7 +299,7 @@ namespace Box2DX.Dynamics
 
         public void Update(ContactListener listener)
         {
-#warning "Manifold is a class, not a struct. It will reference the old manifest, not copy it"
+            //TODO: "Manifold is a class, not a struct. It will reference the old manifest, not copy it"
             Manifold oldManifold = Manifold;
 
             // Re-enable this contact.

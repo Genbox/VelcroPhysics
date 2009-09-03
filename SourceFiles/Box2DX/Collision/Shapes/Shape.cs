@@ -116,8 +116,6 @@ namespace Box2DX.Collision
 
         public abstract Vec2 GetSupportVertex(ref Vec2 d);
 
-        public abstract int GetSupport(ref Transform xf, ref Vec2 d);
-
         public abstract int GetSupport(Vec2 d);
     }
 }

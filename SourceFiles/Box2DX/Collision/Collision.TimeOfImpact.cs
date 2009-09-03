@@ -25,7 +25,7 @@ namespace Box2DX.Collision
 {
     public partial class Collision
     {
-#warning "The following counter variables are static. They should be reset at some point?"
+//TODO: The following counter variables are static. They should be reset at some point?
         private static int ToiCalls, ToiIters, ToiMaxIters;
         private static int ToiRootIters, ToiMaxRootIters;
 
@@ -349,7 +349,7 @@ namespace Box2DX.Collision
                     break;
                 }
 
-#if 0
+#if false
 		// Dump the curve seen by the root finder
 		{
 			const int N = 100;
