@@ -373,6 +373,13 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="bodyToSet">The body.</param>
         public void SetBody(Body bodyToSet)
         {
+            //If the body is exchanged, remove the subscriptions
+            if (body != null)
+            {
+                body.Updated -= Update;
+                body.Disposed -= BodyOnDisposed;
+            }
+
             body = bodyToSet;
 
             bodyToSet.Updated += Update;
