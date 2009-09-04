@@ -183,13 +183,13 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             if (!_body1.Enabled && !_body2.Enabled)
                 return;
 
-            //calc _r1 and _r2 from the anchors
+            //calc r1 and r2 from the anchors
             _body1.GetBodyMatrix(out _body1MatrixTemp);
             _body2.GetBodyMatrix(out _body2MatrixTemp);
             Vector2.TransformNormal(ref _anchor1, ref _body1MatrixTemp, out _r1);
             Vector2.TransformNormal(ref _anchor2, ref _body2MatrixTemp, out _r2);
 
-            //calc the diff between _anchor positions
+            //calc the diff between anchor positions
             Vector2.Add(ref _body1.position, ref _r1, out _worldAnchor1);
             Vector2.Add(ref _body2.position, ref _r2, out _worldAnchor2);
             Vector2.Subtract(ref _worldAnchor2, ref _worldAnchor1, out _worldAnchorDifference);
@@ -241,7 +241,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             //normalize the difference vector
             Vector2.Multiply(ref _worldAnchorDifference, 1 / (_distance != 0 ? _distance : float.PositiveInfinity),
-                             out _worldAnchorDifferenceNormalized); //_distance = 0 --> error (fix) 
+                             out _worldAnchorDifferenceNormalized); //distance = 0 --> error (fix) 
 
             //calc velocity bias
             _velocityBias = BiasFactor * inverseDt * (JointError);
@@ -251,9 +251,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             Calculator.Cross(ref _r2, ref _worldAnchorDifferenceNormalized, out _r2cn);
             _kNormal = _body1.inverseMass + _body2.inverseMass + _body1.inverseMomentOfInertia * _r1cn * _r1cn +
                        _body2.inverseMomentOfInertia * _r2cn * _r2cn;
-            _effectiveMass = (1) / (_kNormal + Softness);
+            _effectiveMass = 1 / (_kNormal + Softness);
 
-            //convert scalar accumulated _impulse to vector
+            //convert scalar accumulated impulse to vector
             Vector2.Multiply(ref _worldAnchorDifferenceNormalized, _accumulatedImpulse, out _accumulatedImpulseVector);
 
             //apply accumulated impulses (warm starting)
@@ -295,7 +295,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             //calc the impulse magnitude
             _impulseMagnitude = (-_velocityBias - _dvNormal - Softness * _accumulatedImpulse) * _effectiveMass;
-            //Note: softness not implemented correctly yet
+            //Note: Not sure if softness is implemented correctly.
 
             float oldAccumulatedImpulse = _accumulatedImpulse;
 
