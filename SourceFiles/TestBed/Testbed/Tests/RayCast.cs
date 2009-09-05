@@ -60,6 +60,12 @@ namespace TestBed
                 ground.CreateFixture(shape, 0);
             }
 
+            //Fill array with polygons:
+            for (int i = 0; i < 4; i++)
+            {
+                _polygons[i] = new PolygonShape();
+            }
+
             {
                 Vec2[] vertices = new Vec2[3];
                 vertices[0].Set(-0.5f, 0.0f);
@@ -234,7 +240,7 @@ namespace TestBed
         int _bodyIndex;
         Body[] _bodies = new Body[_maxBodies];
         PolygonShape[] _polygons = new PolygonShape[4];
-        CircleShape _circle;
+        CircleShape _circle = new CircleShape();
 
         float _angle;
     }

@@ -19,11 +19,7 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
-
-using Tao.OpenGl;
-using Tao.FreeGlut;
 
 namespace TestBed
 {

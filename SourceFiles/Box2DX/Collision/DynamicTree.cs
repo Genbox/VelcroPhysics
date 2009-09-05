@@ -1,6 +1,5 @@
 ﻿using System;
 using Box2DX.Common;
-using Box2DX.Dynamics;
 using Box2DX.Stuff;
 using Math = Box2DX.Common.Math;
 
@@ -42,11 +41,19 @@ namespace Box2DX.Collision
         public DynamicTree()
         {
             _root = NullNode;
+
+            _nodeCapacity = 16;
             _nodeCount = 0;
             _nodes = new DynamicTreeNode[_nodeCapacity];
 
             //m_nodes = (b2DynamicTreeNode*)b2Alloc(m_nodeCapacity * sizeof(b2DynamicTreeNode));
             //memset(m_nodes, 0, m_nodeCapacity * sizeof(b2DynamicTreeNode));
+
+            //Fill the array with nodes:
+            for (int i = 0; i < _nodeCapacity; ++i)
+            {
+                _nodes[i] = new DynamicTreeNode();
+            }
 
             // Build a linked list for the free list. The parent
             // pointer becomes the "next" pointer.
@@ -54,6 +61,7 @@ namespace Box2DX.Collision
             {
                 _nodes[i].Next = i + 1;
             }
+            
             _nodes[_nodeCapacity - 1].Next = NullNode;
             _freeList = 0;
 

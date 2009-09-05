@@ -53,11 +53,19 @@ namespace Box2DX.Collision
 
         public BroadPhase()
         {
+            _tree = new DynamicTree();
+
             _proxyCount = 0;
 
             _pairCapacity = 16;
             _pairCount = 0;
             _pairBuffer = new Pair[_pairCapacity];
+
+            //Fill array with items
+            for (int i = 0; i < _pairCapacity; i++)
+            {
+                _pairBuffer[i] = new Pair();
+            }
 
             _moveCapacity = 16;
             _moveCount = 0;
