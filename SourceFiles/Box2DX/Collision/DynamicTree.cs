@@ -61,7 +61,7 @@ namespace Box2DX.Collision
             {
                 _nodes[i].Next = i + 1;
             }
-            
+
             _nodes[_nodeCapacity - 1].Next = NullNode;
             _freeList = 0;
 
@@ -361,7 +361,7 @@ namespace Box2DX.Collision
 
         /// Query an AABB for overlapping proxies. The callback class
         /// is called for each proxy that overlaps the supplied AABB.
-        public void Query<T>(T callback, AABB aabb) where T : IQueryEnabled
+        public void Query(IQueryEnabled callback, AABB aabb)
         {
             const int k_stackSize = 128;
             int[] stack = new int[k_stackSize];
@@ -402,7 +402,7 @@ namespace Box2DX.Collision
         /// number of proxies in the tree.
         /// @param input the ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).
         /// @param callback a callback class that is called for each proxy that is hit by the ray.
-        public void RayCast<T>(T callback, RayCastInput input) where T : IRayCastEnabled
+        public void RayCast(IRayCastEnabled callback, RayCastInput input)
         {
             Vec2 p1 = input.P1;
             Vec2 p2 = input.P2;
@@ -498,6 +498,12 @@ namespace Box2DX.Collision
                 // The free list is empty. Rebuild a bigger pool.
                 _nodeCapacity *= 2;
                 _nodes = new DynamicTreeNode[_nodeCapacity];
+
+                //Fill array with nodes
+                for (int i = 0; i < _nodeCapacity; i++)
+                {
+                    _nodes[i] = new DynamicTreeNode();
+                }
 
                 // Build a linked list for the free list. The parent
                 // pointer becomes the "next" pointer.

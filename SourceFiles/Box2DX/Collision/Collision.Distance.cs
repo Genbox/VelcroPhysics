@@ -25,7 +25,7 @@ namespace Box2DX.Collision
 {
     public partial class Collision
     {
-//TODO: "The following counter variables are static. They should be reset at some point?"
+        //TODO: "The following counter variables are static. They should be reset at some point?"
         // GJK using Voronoi regions (Christer Ericson) and Barycentric coordinates.
         private static int gjkCalls, gjkIters, gjkMaxIters;
 
@@ -33,24 +33,49 @@ namespace Box2DX.Collision
         /// It encapsulates any shape.
         public class DistanceProxy
         {
-            DistanceProxy()
+            public DistanceProxy()
             {
-
             }
 
             /// Initialize the proxy using the given shape. The shape
             /// must remain in scope while the proxy is in use.
             public void Set(Shape shape)
-            { }
+            {
+                switch (shape.GetType())
+                {
+                    case ShapeType.CircleShape:
+                        {
+                            CircleShape circle = (CircleShape)shape;
+                            _vertices = new Vec2[1];
+                            _vertices[0] = circle._p;
+                            _count = 1;
+                            _radius = circle._radius;
+                        }
+                        break;
+
+                    case ShapeType.PolygonShape:
+                        {
+                            PolygonShape polygon = (PolygonShape)shape;
+                            _vertices = polygon.Vertices;
+                            _count = polygon.VertexCount;
+                            _radius = polygon._radius;
+                        }
+                        break;
+
+                    default:
+                        Box2DXDebug.Assert(false);
+                        break;
+                }
+            }
 
             /// Get the supporting vertex index in the given direction.
             public int GetSupport(Vec2 d)
             {
                 int bestIndex = 0;
-                float bestValue = Vec2.Dot(Vertices[0], d);
-                for (int i = 1; i < Count; ++i)
+                float bestValue = Vec2.Dot(_vertices[0], d);
+                for (int i = 1; i < _count; ++i)
                 {
-                    float value = Vec2.Dot(Vertices[i], d);
+                    float value = Vec2.Dot(_vertices[i], d);
                     if (value > bestValue)
                     {
                         bestIndex = i;
@@ -65,10 +90,10 @@ namespace Box2DX.Collision
             public Vec2 GetSupportVertex(Vec2 d)
             {
                 int bestIndex = 0;
-                float bestValue = Vec2.Dot(Vertices[0], d);
-                for (int i = 1; i < Count; ++i)
+                float bestValue = Vec2.Dot(_vertices[0], d);
+                for (int i = 1; i < _count; ++i)
                 {
-                    float value = Vec2.Dot(Vertices[i], d);
+                    float value = Vec2.Dot(_vertices[i], d);
                     if (value > bestValue)
                     {
                         bestIndex = i;
@@ -76,25 +101,25 @@ namespace Box2DX.Collision
                     }
                 }
 
-                return Vertices[bestIndex];
+                return _vertices[bestIndex];
             }
 
             /// Get the vertex count.
             public int GetVertexCount()
             {
-                return Count;
+                return _count;
             }
 
             /// Get a vertex by index. Used by b2Distance.
             public Vec2 GetVertex(int index)
             {
-                Box2DXDebug.Assert(0 <= index && index < Count);
-                return Vertices[index];
+                Box2DXDebug.Assert(0 <= index && index < _count);
+                return _vertices[index];
             }
 
-            public Vec2[] Vertices;
-            public int Count;
-            public float Radius;
+            public Vec2[] _vertices;
+            public int _count;
+            public float _radius;
         };
 
         /// <summary>
@@ -146,6 +171,14 @@ namespace Box2DX.Collision
 
         public class Simplex
         {
+            public Simplex()
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    Vertices[i] = new SimplexVertex();
+                }
+            }
+
             public void ReadCache(SimplexCache cache,
                             DistanceProxy shapeA, ref Transform transformA,
                             DistanceProxy shapeB, ref Transform transformB)
@@ -633,8 +666,8 @@ namespace Box2DX.Collision
             // Apply radii if requested.
             if (input.UseRadii)
             {
-                float rA = proxyA.Radius;
-                float rB = proxyB.Radius;
+                float rA = proxyA._radius;
+                float rB = proxyB._radius;
 
                 if (output.Distance > rA + rB && output.Distance > Settings.FLT_EPSILON)
                 {

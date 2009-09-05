@@ -65,8 +65,8 @@ namespace TestBed
             drawContactForces = 0;
             drawFrictionForces = 0;
             drawCOMs = 0;
-            enableWarmStarting = 1;
-            enableContinuous = 1;
+            enableWarmStarting = 0;
+            enableContinuous = 0;
             pause = 0;
             singleStep = 0;
         }
@@ -123,8 +123,8 @@ namespace TestBed
     {
         public static TestEntry[] g_testEntries = new TestEntry[]
 		{			
+	        new TestEntry("Pyramid", Pyramid.Create),           
             new TestEntry("Ray-Cast", RayCast.Create),
-	        new TestEntry("Pyramid", Pyramid.Create),
             new TestEntry("PolyCollision", PolyCollision.Create),
         	new TestEntry("One-Sided Platform", OneSidedPlatform.Create),
 	        new TestEntry("Apply Force", ApplyForce.Create),

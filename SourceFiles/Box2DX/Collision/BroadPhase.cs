@@ -103,16 +103,29 @@ namespace Box2DX.Collision
         }
 
         //TODO This might not be implemented correctly
-        public int PairLessThan(Pair pair1, Pair pair2)
+        private int PairLessThan(Pair pair1, Pair pair2)
         {
-            if (pair1.proxyIdA < pair2.proxyIdB)
+            if (pair1.proxyIdA < pair2.proxyIdA)
             {
                 return -1;
             }
 
-            if (pair1.proxyIdA > pair2.proxyIdB)
+            if (pair1.proxyIdA > pair2.proxyIdA)
             {
                 return 1;
+            }
+
+            if (pair1.proxyIdA == pair2.proxyIdA)
+            {
+                if (pair1.proxyIdB < pair2.proxyIdB)
+                {
+                    return -1;
+                }
+
+                if (pair1.proxyIdB > pair2.proxyIdB)
+                {
+                    return 1;
+                }
             }
 
             return 0;
@@ -181,6 +194,22 @@ namespace Box2DX.Collision
 
             // Sort the pair buffer to expose duplicates.
             //std::sort(_pairBuffer, _pairBuffer + _pairCount, PairLessThan);
+
+            //int j;
+            //for (int i = 1; i < _pairBuffer.Length; i++)
+            //{
+            //    Pair indexContact = _pairBuffer[i];
+            //    j = i;
+
+            //    while ((j > 0) && (_pairBuffer[j - 1].proxyIdA > indexContact.Separation))
+            //    {
+            //        _pairBuffer[j] = _pairBuffer[j - 1];
+            //        j = j - 1;
+            //    }
+
+            //    _pairBuffer[j] = indexContact;
+            //}
+
             Array.Sort(_pairBuffer, PairLessThan);
 
             // Send the pairs back to the client.
