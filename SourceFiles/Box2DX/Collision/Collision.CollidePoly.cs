@@ -294,16 +294,20 @@ namespace Box2DX.Collision
             int np;
 
             // Clip to box side 1
-            np = ClipSegmentToLine(out clipPoints1, out incidentEdge, -tangent, sideOffset1);
+            np = ClipSegmentToLine(out clipPoints1, ref incidentEdge, -tangent, sideOffset1);
 
             if (np < 2)
+            {
                 return;
+            }
 
             // Clip to negative box side 1
-            np = ClipSegmentToLine(out clipPoints2, out clipPoints1, tangent, sideOffset2);
+            np = ClipSegmentToLine(out clipPoints2, ref clipPoints1, tangent, sideOffset2);
 
             if (np < 2)
+            {
                 return;
+            }
 
             // Now clipPoints2 contains the clipped points.
             manifold.LocalPlaneNormal = localNormal;

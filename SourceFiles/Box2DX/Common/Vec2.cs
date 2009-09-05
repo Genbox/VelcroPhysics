@@ -19,11 +19,14 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
+using System.Diagnostics;
+
 namespace Box2DX.Common
 {
     /// <summary>
     /// A 2D column vector.
     /// </summary>
+    [DebuggerDisplay("X={X} , Y={Y}")]
     public struct Vec2
     {
         public float X, Y;
