@@ -34,11 +34,15 @@ namespace Box2DX.Dynamics
         public ContactFilter _contactFilter;
         public ContactListener _contactListener;
 
-        public ContactFilter _defaultFilter = new ContactFilter();
-        public ContactListener _defaultListener = new ContactListener();
+        public ContactFilter _defaultFilter;
+        public ContactListener _defaultListener;
 
         public ContactManager()
         {
+            _broadPhase = new BroadPhase();
+            _defaultFilter = new ContactFilter();
+            _defaultListener = new ContactListener();
+
             _contactList = null;
             _contactCount = 0;
             _contactFilter = _defaultFilter;
