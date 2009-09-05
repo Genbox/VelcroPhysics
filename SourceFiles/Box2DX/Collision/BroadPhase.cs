@@ -146,7 +146,6 @@ namespace Box2DX.Collision
         }
 
         /// Get the fat AABB for a proxy.
-
         public AABB GetFatAABB(int proxyId)
         {
             return _tree.GetFatAABB(proxyId);
@@ -163,8 +162,6 @@ namespace Box2DX.Collision
         {
             return _tree.ComputeHeight();
         }
-
-
 
         /// Update the pairs. This results in pair callbacks. This can only add pairs.
         public void UpdatePairs(ContactManager callback)

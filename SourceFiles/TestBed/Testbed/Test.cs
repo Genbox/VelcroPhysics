@@ -123,9 +123,9 @@ namespace TestBed
     {
         public static TestEntry[] g_testEntries = new TestEntry[]
 		{			
+            new TestEntry("PolyCollision", PolyCollision.Create),
 	        new TestEntry("Pyramid", Pyramid.Create),           
             new TestEntry("Ray-Cast", RayCast.Create),
-            new TestEntry("PolyCollision", PolyCollision.Create),
         	new TestEntry("One-Sided Platform", OneSidedPlatform.Create),
 	        new TestEntry("Apply Force", ApplyForce.Create),
 	        new TestEntry("Bridge", Bridge.Create),

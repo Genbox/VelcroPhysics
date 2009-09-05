@@ -56,7 +56,7 @@ namespace TestBed
         {
             //B2_NOT_USED(settings);
 
-            Manifold manifold = new Manifold();
+            Manifold manifold;
             Collision.CollidePolygons(out manifold, _polygonA, _transformA, _polygonB, _transformB);
 
             WorldManifold worldManifold = new WorldManifold();
@@ -85,6 +85,8 @@ namespace TestBed
             {
                 OpenGLDebugDraw.DrawPoint(worldManifold.Points[i], 4.0f, new Color(0.9f, 0.3f, 0.3f));
             }
+
+            base.Step(settings);
         }
 
         public override void Keyboard(System.Windows.Forms.Keys key)
