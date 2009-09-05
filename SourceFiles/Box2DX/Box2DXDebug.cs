@@ -20,9 +20,7 @@
 */
 
 using System;
-using System.Text;
 using System.Diagnostics;
-using System.Collections.Generic;
 
 namespace Box2DX
 {

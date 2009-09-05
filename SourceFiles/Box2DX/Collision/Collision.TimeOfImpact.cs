@@ -32,8 +32,8 @@ namespace Box2DX.Collision
         /// Inpute parameters for b2TimeOfImpact
         public class TOIInput
         {
-            public DistanceProxy ProxyA;
-            public DistanceProxy ProxyB;
+            public DistanceProxy ProxyA = new DistanceProxy();
+            public DistanceProxy ProxyB = new DistanceProxy();
             public Sweep SweepA;
             public Sweep SweepB;
             public float Tolerance;
@@ -278,7 +278,7 @@ namespace Box2DX.Collision
             Box2DXDebug.Assert(sweepA.T0 == sweepB.T0);
             Box2DXDebug.Assert(1.0f - sweepA.T0 > Settings.FLT_EPSILON);
 
-            float radius = proxyA.Radius + proxyB.Radius;
+            float radius = proxyA._radius + proxyB._radius;
             float tolerance = input.Tolerance;
 
             float alpha = 0.0f;
