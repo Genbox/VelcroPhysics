@@ -17,6 +17,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using Box2DX.Common;
 using Box2DX.Dynamics;
 using Box2DX.Stuff;
@@ -50,6 +51,8 @@ namespace Box2DX.Collision
         private int _pairCount;
 
         private int _queryProxyId;
+
+        private PairComparer _comparer = new PairComparer();
 
         public BroadPhase()
         {
@@ -102,33 +105,36 @@ namespace Box2DX.Collision
             }
         }
 
-        //TODO This might not be implemented correctly
-        private int PairLessThan(Pair pair1, Pair pair2)
+        public class PairComparer : IComparer<Pair>
         {
-            if (pair1.proxyIdA < pair2.proxyIdA)
+            public int Compare(Pair pair1, Pair pair2)
             {
-                return -1;
-            }
+                if (pair1.proxyIdA < pair2.proxyIdA)
+                {
+                    return 1;
+                }
 
-            if (pair1.proxyIdA > pair2.proxyIdA)
-            {
-                return 1;
-            }
-
-            if (pair1.proxyIdA == pair2.proxyIdA)
-            {
-                if (pair1.proxyIdB < pair2.proxyIdB)
+                if (pair1.proxyIdA > pair2.proxyIdA)
                 {
                     return -1;
                 }
 
-                if (pair1.proxyIdB > pair2.proxyIdB)
+                if (pair1.proxyIdA == pair2.proxyIdA)
                 {
-                    return 1;
-                }
-            }
+                    if (pair1.proxyIdB < pair2.proxyIdB)
+                    {
+                        return 1;
+                    }
 
-            return 0;
+                    if (pair1.proxyIdB > pair2.proxyIdB)
+                    {
+                        return -1;
+                    }
+                }
+
+                return 0;
+
+            }
         }
 
         /// Get user data from a proxy. Returns NULL if the id is invalid.
@@ -192,22 +198,7 @@ namespace Box2DX.Collision
             // Sort the pair buffer to expose duplicates.
             //std::sort(_pairBuffer, _pairBuffer + _pairCount, PairLessThan);
 
-            //int j;
-            //for (int i = 1; i < _pairBuffer.Length; i++)
-            //{
-            //    Pair indexContact = _pairBuffer[i];
-            //    j = i;
-
-            //    while ((j > 0) && (_pairBuffer[j - 1].proxyIdA > indexContact.Separation))
-            //    {
-            //        _pairBuffer[j] = _pairBuffer[j - 1];
-            //        j = j - 1;
-            //    }
-
-            //    _pairBuffer[j] = indexContact;
-            //}
-
-            Array.Sort(_pairBuffer, PairLessThan);
+            Array.Sort(_pairBuffer, 0, _pairCount, _comparer);
 
             // Send the pairs back to the client.
             int j = 0;
