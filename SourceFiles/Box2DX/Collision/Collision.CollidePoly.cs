@@ -285,8 +285,8 @@ namespace Box2DX.Collision
             float frontOffset = Vec2.Dot(normal, v11);
 
             // Side offsets, extended by polytope skin thickness.
-            float sideOffset1 = -Vec2.Dot(tangent, v11);
-            float sideOffset2 = Vec2.Dot(tangent, v12);
+            float sideOffset1 = -Vec2.Dot(tangent, v11) + totalRadius;
+            float sideOffset2 = Vec2.Dot(tangent, v12) + totalRadius;
 
             // Clip incident edge against extruded edge1 side edges.
             ClipVertex[] clipPoints1;
