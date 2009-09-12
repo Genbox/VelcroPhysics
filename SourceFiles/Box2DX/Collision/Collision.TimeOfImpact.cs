@@ -25,9 +25,8 @@ namespace Box2DX.Collision
 {
     public partial class Collision
     {
-//TODO: The following counter variables are static. They should be reset at some point?
-        private static int ToiCalls, ToiIters, ToiMaxIters;
-        private static int ToiRootIters, ToiMaxRootIters;
+        public static int ToiCalls, ToiIters, ToiMaxIters;
+        public static int ToiRootIters, ToiMaxRootIters;
 
         /// Inpute parameters for b2TimeOfImpact
         public class TOIInput

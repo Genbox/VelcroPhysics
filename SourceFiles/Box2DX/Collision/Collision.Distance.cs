@@ -25,9 +25,8 @@ namespace Box2DX.Collision
 {
     public partial class Collision
     {
-        //TODO: "The following counter variables are static. They should be reset at some point?"
         // GJK using Voronoi regions (Christer Ericson) and Barycentric coordinates.
-        private static int gjkCalls, gjkIters, gjkMaxIters;
+        public static int GjkCalls, GjkIters, GjkMaxIters;
 
         /// A distance proxy is used by the GJK algorithm.
         /// It encapsulates any shape.
@@ -533,7 +532,7 @@ namespace Box2DX.Collision
                         SimplexCache cache,
                         DistanceInput input)
         {
-            ++gjkCalls;
+            ++GjkCalls;
 
             DistanceProxy proxyA = input.proxyA;
             DistanceProxy proxyB = input.proxyB;
@@ -630,7 +629,7 @@ namespace Box2DX.Collision
 
                 // Iteration count is equated to the number of support point calls.
                 ++iter;
-                ++gjkIters;
+                ++GjkIters;
 
                 // Check for duplicate support points. This is the main termination criteria.
                 bool duplicate = false;
@@ -653,7 +652,7 @@ namespace Box2DX.Collision
                 ++simplex.Count;
             }
 
-            gjkMaxIters = Math.Max(gjkMaxIters, iter);
+            GjkMaxIters = Math.Max(GjkMaxIters, iter);
 
             // Prepare output.
             simplex.GetWitnessPoints(out output.PointA, out output.PointB);
