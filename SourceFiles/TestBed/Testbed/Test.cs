@@ -349,7 +349,7 @@ namespace TestBed
             SpawnBomb(p);
         }
 
-        public class MyQueryCallback
+        public class MyQueryCallback : QueryCallback
         {
             public MyQueryCallback(Vec2 point)
             {
@@ -359,8 +359,18 @@ namespace TestBed
 
             public Vec2 _point;
             public Fixture _fixture;
-            public QueryCallback _queryCallback;
-        };
+
+            public override bool ReportFixture(Fixture fixture)
+            {
+                if (fixture != null)
+                {
+                    _fixture = fixture;
+                    return true;
+                }
+
+                return false;
+            }
+        }
 
         public void MouseDown(Vec2 p)
         {
@@ -380,7 +390,7 @@ namespace TestBed
 
             // Query the world for overlapping shapes.
             MyQueryCallback callback = new MyQueryCallback(p);
-            _world.QueryAABB(callback._queryCallback, aabb);
+            _world.QueryAABB(callback, aabb);
 
             if (callback._fixture != null)
             {

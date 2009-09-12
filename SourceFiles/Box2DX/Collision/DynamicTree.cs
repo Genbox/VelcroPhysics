@@ -497,10 +497,10 @@ namespace Box2DX.Collision
 
                 // The free list is empty. Rebuild a bigger pool.
                 _nodeCapacity *= 2;
-                _nodes = new DynamicTreeNode[_nodeCapacity];
+                Array.Resize(ref _nodes, _nodeCapacity);
 
                 //Fill array with nodes
-                for (int i = 0; i < _nodeCapacity; i++)
+                for (int i = _nodeCount; i < _nodeCapacity; i++)
                 {
                     _nodes[i] = new DynamicTreeNode();
                 }
