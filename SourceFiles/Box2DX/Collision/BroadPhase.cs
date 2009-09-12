@@ -282,6 +282,12 @@ namespace Box2DX.Collision
             {
                 _pairCapacity *= 2;
                 Array.Resize(ref _pairBuffer, _pairCapacity);
+
+                //Fill the array with items
+                for (int i = _pairCount; i < _pairCapacity; i++)
+                {
+                    _pairBuffer[i] = new Pair();
+                }
             }
 
             _pairBuffer[_pairCount].proxyIdA = Common.Math.Min(proxyId, _queryProxyId);
