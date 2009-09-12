@@ -31,6 +31,8 @@ namespace TestBed
         {
 #if true
             {
+                //TODO: only one shape is created here instead of two. That is because
+                //they are reference types and when shape is changed, it changes the original instead of a new copy.
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(10.0f, 0.2f);
 
