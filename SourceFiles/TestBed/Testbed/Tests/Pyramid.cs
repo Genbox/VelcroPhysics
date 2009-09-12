@@ -27,6 +27,8 @@ namespace TestBed
 {
     public class Pyramid : Test
     {
+        public const int _count = 20;
+
         public Pyramid()
         {
             {
@@ -48,11 +50,11 @@ namespace TestBed
                 Vec2 deltaX = new Vec2(0.5625f, 1.25f);
                 Vec2 deltaY = new Vec2(1.125f, 0.0f);
 
-                for (int i = 0; i < 3; ++i)
+                for (int i = 0; i < _count; ++i)
                 {
                     y = x;
 
-                    for (int j = i; j < 3; ++j)
+                    for (int j = i; j < _count; ++j)
                     {
                         BodyDef bd = new BodyDef();
                         bd.Position = y;
