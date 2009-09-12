@@ -19,7 +19,7 @@
 using Box2DX.Collision;
 using Box2DX.Common;
 using Box2DX.Dynamics;
-using Math=Box2DX.Common.Math;
+using Math = Box2DX.Common.Math;
 
 namespace TestBed
 {
@@ -28,45 +28,45 @@ namespace TestBed
         float _angularVelocity;
 
         public CCDTest()
-	{
+        {
 #if true
-		{
-			PolygonShape shape = new PolygonShape();
-			shape.SetAsBox(10.0f, 0.2f);
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(10.0f, 0.2f);
 
-			FixtureDef fd = new FixtureDef();
-			fd.Shape = shape;
-			fd.Density = 0.0f;
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Density = 0.0f;
 
-			BodyDef bd = new BodyDef();
-			bd.Position.Set(0.0f, -0.2f);
-			Body body = _world.CreateBody(bd);
-			body.CreateFixture(fd);
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(0.0f, -0.2f);
+                Body body = _world.CreateBody(bd);
+                body.CreateFixture(fd);
 
-			shape.SetAsBox(0.2f, 1.0f, new Vec2(0.5f, 1.2f), 0.0f);
-			body.CreateFixture(fd);
-		}
+                shape.SetAsBox(0.2f, 1.0f, new Vec2(0.5f, 1.2f), 0.0f);
+                body.CreateFixture(fd);
+            }
 
-		{
-			PolygonShape shape = new PolygonShape();
-			shape.SetAsBox(2.0f, 0.1f);
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(2.0f, 0.1f);
 
-			FixtureDef fd = new FixtureDef();
-			fd.Shape = shape;
-			fd.Density = 1.0f;
-			fd.Restitution = 0.0f;
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Density = 1.0f;
+                fd.Restitution = 0.0f;
 
-		    _angularVelocity = Math.Random(-50.0f, 50.0f);
-			_angularVelocity = -30.669577f;
+                _angularVelocity = Math.Random(-50.0f, 50.0f);
+                _angularVelocity = -30.669577f;
 
-			BodyDef bd = new BodyDef();
-			bd.Position.Set(0.0f, 20.0f);
-			Body body = _world.CreateBody(bd);
-			body.CreateFixture(fd);
-			body.SetMassFromShapes();
-			body.SetLinearVelocity(new Vec2(0.0f, -100.0f));
-			body.SetAngularVelocity(_angularVelocity);
-		}
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(0.0f, 20.0f);
+                Body body = _world.CreateBody(bd);
+                body.CreateFixture(fd);
+                body.SetMassFromShapes();
+                body.SetLinearVelocity(new Vec2(0.0f, -100.0f));
+                body.SetAngularVelocity(_angularVelocity);
+            }
 #elif false
 		{
 			FixtureDef fd;
@@ -227,39 +227,35 @@ namespace TestBed
 			body.SetMassFromShapes();
 		}
 #endif
-	}
+        }
 
-	    public override void Step(Settings settings)
-	    {
-		    if (_stepCount	== 10)
-		    {
-			    _stepCount += 0;
-		    }
+        public override void Step(Settings settings)
+        {
+            if (_stepCount == 10)
+            {
+                _stepCount += 0;
+            }
 
-		     Step(settings);
+            base.Step(settings);
 
-		    int _gjkCalls = 0, _gjkIters = 0, _gjkMaxIters = 0;
 
-		    if (_gjkCalls > 0)
-		    {
-			    OpenGLDebugDraw.DrawString(5, _textLine, string.Format("gjk calls = {0}, ave gjk iters = {1}, max gjk iters = {2}",
-				    _gjkCalls, _gjkIters / _gjkCalls, _gjkMaxIters));
-			    _textLine += 15;
-		    }
+            if (Collision.GjkCalls > 0)
+            {
+                OpenGLDebugDraw.DrawString(5, _textLine, string.Format("gjk calls = {0}, ave gjk iters = {1}, max gjk iters = {2}",
+                    Collision.GjkCalls, Collision.GjkIters / Collision.GjkCalls, Collision.GjkMaxIters));
+                _textLine += 15;
+            }
 
-		    int _toiCalls = 0, _toiIters = 0, _toiMaxIters = 0;
-		    int _toiRootIters = 0, _toiMaxRootIters = 0;
-
-		    if (_toiCalls > 0)
-		    {
-			    OpenGLDebugDraw.DrawString(5, _textLine, string.Format("toi calls = {0}, ave toi iters = {1}, max toi iters = {2}",
-								    _toiCalls, _toiIters / _toiCalls, _toiMaxRootIters));
-			    _textLine += 15;
-			    OpenGLDebugDraw.DrawString(5, _textLine, string.Format("ave toi root iters = {0}, max toi root iters = {1}",
-				    _toiRootIters / _toiCalls, _toiMaxRootIters));
-			    _textLine += 15;
-		    }
-	    }
+            if (Collision.ToiCalls > 0)
+            {
+                OpenGLDebugDraw.DrawString(5, _textLine, string.Format("toi calls = {0}, ave toi iters = {1}, max toi iters = {2}",
+                                    Collision.ToiCalls, Collision.ToiIters / Collision.ToiCalls, Collision.ToiMaxRootIters));
+                _textLine += 15;
+                OpenGLDebugDraw.DrawString(5, _textLine, string.Format("ave toi root iters = {0}, max toi root iters = {1}",
+                    Collision.ToiRootIters / Collision.ToiCalls, Collision.ToiMaxRootIters));
+                _textLine += 15;
+            }
+        }
 
         public static Test Create()
         {
