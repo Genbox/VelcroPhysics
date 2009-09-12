@@ -65,8 +65,8 @@ namespace TestBed
             drawContactForces = 0;
             drawFrictionForces = 0;
             drawCOMs = 0;
-            enableWarmStarting = 0;
-            enableContinuous = 0;
+            enableWarmStarting = 1;
+            enableContinuous = 1;
             pause = 0;
             singleStep = 0;
         }
