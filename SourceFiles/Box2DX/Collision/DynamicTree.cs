@@ -35,7 +35,7 @@ namespace Box2DX.Collision
     /// </summary>
     public class DynamicTree : IDisposable
     {
-        public static readonly int NullNode = (-1);
+        public const int NullNode = (-1);
 
         /// Constructing the tree initializes the node pool.
         public DynamicTree()
@@ -45,9 +45,6 @@ namespace Box2DX.Collision
             _nodeCapacity = 16;
             _nodeCount = 0;
             _nodes = new DynamicTreeNode[_nodeCapacity];
-
-            //m_nodes = (b2DynamicTreeNode*)b2Alloc(m_nodeCapacity * sizeof(b2DynamicTreeNode));
-            //memset(m_nodes, 0, m_nodeCapacity * sizeof(b2DynamicTreeNode));
 
             //Fill the array with nodes:
             for (int i = 0; i < _nodeCapacity; ++i)
@@ -66,6 +63,7 @@ namespace Box2DX.Collision
             _freeList = 0;
 
             _path = 0;
+
             _insertionCount = 0;
         }
 
@@ -531,6 +529,7 @@ namespace Box2DX.Collision
             Box2DXDebug.Assert(0 < _nodeCount);
             _nodes[nodeId].Parent = _freeList;
             _freeList = nodeId;
+            --_nodeCount;
         }
 
         private int _root;

@@ -123,6 +123,7 @@ namespace TestBed
     {
         public static TestEntry[] g_testEntries = new TestEntry[]
 		{			
+	        new TestEntry("Polygon Shapes", PolyShapes.Create),
 	        new TestEntry("Distance Test", DistanceTest.Create),
 	        new TestEntry("Collision Processing", CollisionProcessing.Create),
             new TestEntry("PolyCollision", PolyCollision.Create),
@@ -139,7 +140,6 @@ namespace TestBed
 	        new TestEntry("Dynamic Tree", DynamicTreeTest.Create),
 	        new TestEntry("Gears", Gears.Create),
 	        new TestEntry("Line Joint", LineJoint.Create),
-	        new TestEntry("Polygon Shapes", PolyShapes.Create),
 	        new TestEntry("Prismatic", Prismatic.Create),
 	        new TestEntry("Pulleys", Pulleys.Create),
 	        new TestEntry("Revolute", Revolute.Create),

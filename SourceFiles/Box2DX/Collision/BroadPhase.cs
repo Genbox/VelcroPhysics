@@ -91,7 +91,6 @@ namespace Box2DX.Collision
             UnBufferMove(proxyId);
             --_proxyCount;
             _tree.DestroyProxy(proxyId);
-
         }
 
         /// Call MoveProxy as many times as you like, then when you are done
@@ -196,8 +195,6 @@ namespace Box2DX.Collision
             _moveCount = 0;
 
             // Sort the pair buffer to expose duplicates.
-            //std::sort(_pairBuffer, _pairBuffer + _pairCount, PairLessThan);
-
             Array.Sort(_pairBuffer, 0, _pairCount, _comparer);
 
             // Send the pairs back to the client.
@@ -253,7 +250,6 @@ namespace Box2DX.Collision
 
             _moveBuffer[_moveCount] = proxyId;
             ++_moveCount;
-
         }
 
         private void UnBufferMove(int proxyId)
