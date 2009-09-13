@@ -42,6 +42,7 @@ namespace TestBed
             {
                 _transformA.SetIdentity();
                 _transformA.Position.Set(0.0f, -0.2f);
+                _polygonA = new PolygonShape();
                 _polygonA.SetAsBox(10.0f, 0.2f);
             }
 
@@ -50,6 +51,7 @@ namespace TestBed
                 _angleB = -0.0109265f;
                 _transformB.Set(_positionB, _angleB);
 
+                _polygonB = new PolygonShape();
                 _polygonB.SetAsBox(2.0f, 0.1f);
             }
         }

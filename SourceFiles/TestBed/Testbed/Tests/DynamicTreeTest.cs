@@ -11,7 +11,7 @@ namespace TestBed.Tests
         private float _worldExtent;
         private float _proxyExtent;
 
-        private DynamicTree _tree;
+        private DynamicTree _tree = new DynamicTree();
         private AABB _queryAABB;
         private RayCastInput _rayCastInput;
         private RayCastOutput _rayCastOutput;
@@ -38,6 +38,7 @@ namespace TestBed.Tests
 
             for (int i = 0; i < _actorCount; ++i)
             {
+                _actors[i] = new Actor();
                 Actor actor = _actors[i];
                 GetRandomAABB(actor.aabb);
                 actor.proxyId = _tree.CreateProxy(actor.aabb, actor);
