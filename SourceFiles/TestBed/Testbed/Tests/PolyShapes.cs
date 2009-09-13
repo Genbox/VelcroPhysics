@@ -46,6 +46,11 @@ namespace TestBed
                 ground.CreateFixture(shape, 0);
             }
 
+            for (int i = 0; i < 4; i++)
+            {
+                polygons[i] = new PolygonShape();
+            }
+
             {
                 Vec2[] vertices = new Vec2[3];
                 vertices[0].Set(-0.5f, 0.0f);
@@ -85,6 +90,7 @@ namespace TestBed
             }
 
             {
+                circle = new CircleShape();
                 circle._radius = 0.5f;
             }
 
@@ -130,6 +136,7 @@ namespace TestBed
 
                 bodies[bodyIndex].CreateFixture(fd);
             }
+
             bodies[bodyIndex].SetMassFromShapes();
 
             bodyIndex = (bodyIndex + 1) % _maxBodies;
