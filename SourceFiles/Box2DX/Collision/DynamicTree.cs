@@ -527,7 +527,7 @@ namespace Box2DX.Collision
         {
             Box2DXDebug.Assert(0 <= nodeId && nodeId < _nodeCapacity);
             Box2DXDebug.Assert(0 < _nodeCount);
-            _nodes[nodeId].Parent = _freeList;
+            _nodes[nodeId].Next = _freeList;
             _freeList = nodeId;
             --_nodeCount;
         }
