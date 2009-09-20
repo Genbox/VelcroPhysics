@@ -39,7 +39,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
-        public Vertices(Vertices vertices)
+        public Vertices(IList<Vector2> vertices)
         {
             for (int i = 0; i < vertices.Count; i++)
             {
