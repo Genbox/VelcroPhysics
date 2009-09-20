@@ -338,10 +338,16 @@ namespace FarseerGames.AdvancedSamplesXNA.Demo7
                 return;
 
             if (_rightGeom != null)
+            {
                 PhysicsSimulator.Remove(_rightGeom);
+                PhysicsSimulator.Remove(_rightGeom.Body);
+            }
 
             if (_leftGeom != null)
+            {
                 PhysicsSimulator.Remove(_leftGeom);
+                PhysicsSimulator.Remove(_leftGeom.Body);
+            }
 
             _rightGeom = null;
             _leftGeom = null;
