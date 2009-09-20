@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Collections.Generic;
-using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Dynamics.Joints;
-using FarseerGames.FarseerPhysics.Collisions;
 using FarseerGames.FarseerPhysics.Mathematics;
 
 #if (XNA)
