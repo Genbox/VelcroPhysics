@@ -123,6 +123,8 @@ namespace TestBed
     {
         public static TestEntry[] g_testEntries = new TestEntry[]
 		{			
+	        new TestEntry("Breakable", Breakable.Create),
+	        new TestEntry("Varying Restitution", VaryingRestitution.Create),
 	        new TestEntry("Polygon Shapes", PolyShapes.Create),
 	        new TestEntry("Distance Test", DistanceTest.Create),
 	        new TestEntry("Collision Processing", CollisionProcessing.Create),
@@ -150,7 +152,6 @@ namespace TestBed
 	        new TestEntry("Theo Jansen's Walker", TheoJansen.Create),
 	        new TestEntry("Time of Impact", TimeOfImpact.Create),
 	        new TestEntry("Varying Friction", VaryingFriction.Create),
-	        new TestEntry("Varying Restitution", VaryingRestitution.Create),
             new TestEntry("Vertical Stack", VerticalStack.Create),
 	        new TestEntry("Web", Web.Create),
 		};
