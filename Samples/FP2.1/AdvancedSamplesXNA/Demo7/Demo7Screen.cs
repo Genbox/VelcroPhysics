@@ -385,7 +385,6 @@ namespace FarseerGames.AdvancedSamplesXNA.Demo7
             _rightPolyBrush = null;
 
             Body body = BodyFactory.Instance.CreatePolygonBody(PhysicsSimulator, product, 1);
-            body.Position = ScreenManager.ScreenCenter;
             body.IsStatic = true;
 
             Geom geom = GeomFactory.Instance.CreatePolygonGeom(PhysicsSimulator, body, product, 0);
