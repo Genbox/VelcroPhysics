@@ -58,7 +58,6 @@ namespace TestBed
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(circle1, 2.0f);
                     body.CreateFixture(circle2, 0);
-                    body.SetMassFromShapes();
                 }
             }
 
@@ -78,7 +77,6 @@ namespace TestBed
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(polygon1, 2.0f);
                     body.CreateFixture(polygon2, 2.0f);
-                    body.SetMassFromShapes();
                 }
             }
 
@@ -114,7 +112,6 @@ namespace TestBed
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(triangle1, 2.0f);
                     body.CreateFixture(triangle2, 2.0f);
-                    body.SetMassFromShapes();
                 }
             }
 
@@ -134,7 +131,6 @@ namespace TestBed
                 body.CreateFixture(bottom, 4.0f);
                 body.CreateFixture(left, 4.0f);
                 body.CreateFixture(right, 4.0f);
-                body.SetMassFromShapes();
             }
         }
 

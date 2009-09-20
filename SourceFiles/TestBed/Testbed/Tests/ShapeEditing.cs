@@ -50,7 +50,6 @@ namespace TestBed
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(4.0f, 4.0f, new Vec2(0.0f, 0.0f), 0.0f);
                 _fixture1 = _body.CreateFixture(shape, 10.0f);
-                _body.SetMassFromShapes();
 
                 _fixture2 = null;
             }
@@ -67,7 +66,6 @@ namespace TestBed
                         shape._radius = 3.0f;
                         shape._p.Set(0.5f, -4.0f);
                         _fixture2 = _body.CreateFixture(shape, 10.0f);
-                        _body.SetMassFromShapes();
                         _body.WakeUp();
                     }
                     break;
@@ -77,7 +75,6 @@ namespace TestBed
                     {
                         _body.DestroyFixture(ref _fixture2);
                         _fixture2 = null;
-                        _body.SetMassFromShapes();
                         _body.WakeUp();
                     }
                     break;

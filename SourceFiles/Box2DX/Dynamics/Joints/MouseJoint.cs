@@ -34,6 +34,9 @@ namespace Box2DX.Dynamics
 	/// <summary>
 	/// Mouse joint definition. This requires a world target point,
 	/// tuning parameters, and the time step.
+    /// NOTE: this joint is not documented in the manual because it was
+    /// developed to be used in the testbed. If you want to learn how to
+    /// use the mouse joint, look at the testbed.
 	/// </summary>
 	public class MouseJointDef : JointDef
 	{
@@ -126,7 +129,7 @@ namespace Box2DX.Dynamics
 			: base(def)
 		{
 			_target = def.Target;
-			_localAnchor = Common.Math.MulT(_bodyB.GetTransform(), _target);
+			_localAnchor = Math.MulT(_bodyB.GetTransform(), _target);
 
 			_maxForce = def.MaxForce;
 			_impulse.SetZero();
@@ -157,11 +160,15 @@ namespace Box2DX.Dynamics
 			// gamma has units of inverse mass.
 			// beta has units of inverse time.
 			Box2DXDebug.Assert(d + step.Dt * k > Settings.FLT_EPSILON);
-			_gamma = 1.0f / (step.Dt * (d + step.Dt * k));
-			_beta = step.Dt * k * _gamma;
+            _gamma = step.Dt * (d + step.Dt * k);
+            if (_gamma != 0.0f)
+            {
+                _gamma = 1.0f / _gamma;
+            }
+            _beta = step.Dt * k * _gamma;
 
 			// Compute the effective mass matrix.
-			Vec2 r = Common.Math.Mul(b.GetTransform().R, _localAnchor - b.GetLocalCenter());
+			Vec2 r = Math.Mul(b.GetTransform().R, _localAnchor - b.GetLocalCenter());
 
 			// K    = [(1/m1 + 1/m2) * eye(2) - skew(r1) * invI1 * skew(r1) - skew(r2) * invI2 * skew(r2)]
 			//      = [1/m1+1/m2     0    ] + invI1 * [r1.y*r1.y -r1.x*r1.y] + invI2 * [r1.y*r1.y -r1.x*r1.y]

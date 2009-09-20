@@ -137,8 +137,6 @@ namespace TestBed
                 bodies[bodyIndex].CreateFixture(fd);
             }
 
-            bodies[bodyIndex].SetMassFromShapes();
-
             bodyIndex = (bodyIndex + 1) % _maxBodies;
         }
 

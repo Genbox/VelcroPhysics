@@ -58,7 +58,6 @@ namespace TestBed
                     bd.Position.Set(-14.5f + 1.0f * i, 5.0f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(fd);
-                    body.SetMassFromShapes();
 
                     Vec2 anchor = new Vec2(-15.0f + 1.0f * i, 5.0f);
                     jd.Initialize(prevBody, body, anchor);
@@ -90,7 +89,6 @@ namespace TestBed
                 bd.Position.Set(-8.0f + 8.0f * i, 12.0f);
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(fd);
-                body.SetMassFromShapes();
             }
 
             for (int i = 0; i < 3; ++i)
@@ -106,7 +104,6 @@ namespace TestBed
                 bd.Position.Set(-6.0f + 6.0f * i, 10.0f);
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(fd);
-                body.SetMassFromShapes();
             }
         }
 

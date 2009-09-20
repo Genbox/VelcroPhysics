@@ -39,7 +39,7 @@ namespace TestBed
             // Breakable dynamic body
             {
                 BodyDef bd = new BodyDef();
-                bd.Position.Set(0.0f, 5.0f);
+                bd.Position.Set(0.0f, 40.0f);
                 bd.Angle = 0.25f * Box2DX.Common.Settings.PI;
                 _body1 = _world.CreateBody(bd);
 
@@ -48,8 +48,6 @@ namespace TestBed
 
                 _shape2.SetAsBox(0.5f, 0.5f, new Vec2(0.5f, 0.0f), 0.0f);
                 _piece2 = _body1.CreateFixture(_shape2, 1.0f);
-
-                _body1.SetMassFromShapes();
             }
 
             _break = false;
@@ -88,7 +86,6 @@ namespace TestBed
 
             body1.DestroyFixture(ref _piece2);
             _piece2 = null;
-            body1.SetMassFromShapes();
 
             BodyDef bd = new BodyDef();
             bd.Position = body1.GetPosition();
@@ -96,7 +93,6 @@ namespace TestBed
 
             Body body2 = _world.CreateBody(bd);
             _piece2 = body2.CreateFixture(_shape2, 1.0f);
-            body2.SetMassFromShapes();
 
             // Compute consistent velocities for new bodies based on
             // cached velocity.

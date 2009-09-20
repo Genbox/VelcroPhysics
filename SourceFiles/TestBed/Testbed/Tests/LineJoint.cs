@@ -48,7 +48,6 @@ namespace TestBed
                 bd.Position.Set(0.0f, 7.0f);
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(shape, 1.0f);
-                body.SetMassFromShapes();
 
                 LineJointDef jd = new LineJointDef();
                 Vec2 axis = new Vec2(2.0f, 1.0f);

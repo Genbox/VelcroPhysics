@@ -68,7 +68,6 @@ namespace TestBed
                     Body body = _world.CreateBody(bd);
 
                     body.CreateFixture(fd);
-                    body.SetMassFromShapes();
                 }
             }
 
@@ -100,7 +99,6 @@ namespace TestBed
 
                         _bullet = _world.CreateBody(bd);
                         _bullet.CreateFixture(fd);
-                        _bullet.SetMassFromShapes();
 
                         _bullet.SetLinearVelocity(new Vec2(400.0f, 0.0f));
                     }

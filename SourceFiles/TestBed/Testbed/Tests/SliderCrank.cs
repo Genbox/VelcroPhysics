@@ -53,7 +53,6 @@ namespace TestBed
                     bd.Position.Set(0.0f, 7.0f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(shape, 2.0f);
-                    body.SetMassFromShapes();
 
                     RevoluteJointDef rjd = new RevoluteJointDef();
                     rjd.Initialize(prevBody, body, new Vec2(0.0f, 5.0f));
@@ -74,7 +73,6 @@ namespace TestBed
                     bd.Position.Set(0.0f, 13.0f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(shape, 2.0f);
-                    body.SetMassFromShapes();
 
                     RevoluteJointDef rjd = new RevoluteJointDef();
                     rjd.Initialize(prevBody, body, new Vec2(0.0f, 9.0f));
@@ -93,7 +91,6 @@ namespace TestBed
                     bd.Position.Set(0.0f, 17.0f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(shape, 2.0f);
-                    body.SetMassFromShapes();
 
                     RevoluteJointDef rjd = new RevoluteJointDef();
                     rjd.Initialize(prevBody, body, new Vec2(0.0f, 17.0f));
@@ -117,7 +114,6 @@ namespace TestBed
                     bd.Position.Set(0.0f, 23.0f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(shape, 2.0f);
-                    body.SetMassFromShapes();
                 }
             }
         }

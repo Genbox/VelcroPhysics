@@ -90,7 +90,7 @@ using Box2DX.Common;
 
 namespace Box2DX.Dynamics
 {
-	using Box2DXMath = Box2DX.Common.Math;
+	using Box2DXMath = moMath;
 	using SystemMath = System.Math;
 
 	/// <summary>
@@ -431,18 +431,20 @@ namespace Box2DX.Dynamics
 
 			// Compute motor Jacobian and effective mass.
 			{
-				_axis = Box2DX.Common.Math.Mul(xf1.R, _localXAxis1);
+				_axis = Math.Mul(xf1.R, _localXAxis1);
 				_a1 = Vec2.Cross(d + r1, _axis);
 				_a2 = Vec2.Cross(r2, _axis);
 
 				_motorMass = _invMass1 + _invMass2 + _invI1 * _a1 * _a1 + _invI2 * _a2 * _a2;
-				Box2DXDebug.Assert(_motorMass > Settings.FLT_EPSILON);
-				_motorMass = 1.0f / _motorMass;
-			}
+                if (_motorMass > Settings.FLT_EPSILON)
+                {
+                    _motorMass = 1.0f / _motorMass;
+                }
+            }
 
 			// Prismatic constraint.
 			{
-				_perp = Box2DX.Common.Math.Mul(xf1.R, _localYAxis1);
+				_perp = Math.Mul(xf1.R, _localYAxis1);
 
 				_s1 = Vec2.Cross(d + r1, _perp);
 				_s2 = Vec2.Cross(r2, _perp);

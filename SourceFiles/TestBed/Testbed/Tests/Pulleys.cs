@@ -55,12 +55,10 @@ namespace TestBed
                 bd.Position.Set(-10.0f, y);
                 Body body1 = _world.CreateBody(bd);
                 body1.CreateFixture(shape, 5.0f);
-                body1.SetMassFromShapes();
 
                 bd.Position.Set(10.0f, y);
                 Body body2 = _world.CreateBody(bd);
                 body2.CreateFixture(shape, 5.0f);
-                body2.SetMassFromShapes();
 
                 PulleyJointDef pulleyDef = new PulleyJointDef();
                 Vec2 anchor1 = new Vec2(-10.0f, y + b);

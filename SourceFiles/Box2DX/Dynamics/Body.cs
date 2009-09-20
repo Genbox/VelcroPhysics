@@ -23,7 +23,7 @@ using System;
 
 using Box2DX.Common;
 using Box2DX.Collision;
-using Math=Box2DX.Common.Math;
+using Math = Box2DX.Common.Math;
 
 namespace Box2DX.Dynamics
 {
@@ -38,10 +38,6 @@ namespace Box2DX.Dynamics
         /// </summary>
         public BodyDef()
         {
-            MassData = new MassData();
-            MassData.Center.SetZero();
-            MassData.Mass = 0.0f;
-            MassData.I = 0.0f;
             UserData = null;
             Position = new Vec2();
             Position.Set(0.0f, 0.0f);
@@ -55,13 +51,6 @@ namespace Box2DX.Dynamics
             FixedRotation = false;
             IsBullet = false;
         }
-
-        /// <summary>
-        /// You can use this to initialized the mass properties of the body.
-        /// If you prefer, you can set the mass properties after the shapes
-        /// have been added using Body.SetMassFromShapes.
-        /// </summary>
-        public MassData MassData;
 
         /// <summary>
         /// Use this to store application specific body data.
@@ -206,10 +195,10 @@ namespace Box2DX.Dynamics
             _xf.Position = bd.Position;
             _xf.R.Set(bd.Angle);
 
-            _sweep.LocalCenter = bd.MassData.Center;
+            _sweep.LocalCenter.SetZero();
             _sweep.T0 = 1.0f;
             _sweep.A0 = _sweep.A = bd.Angle;
-            _sweep.C0 = _sweep.C = Common.Math.Mul(_xf, _sweep.LocalCenter);
+            _sweep.C0 = _sweep.C = Math.Mul(_xf, _sweep.LocalCenter);
 
             _jointList = null;
             _contactList = null;
@@ -225,37 +214,14 @@ namespace Box2DX.Dynamics
             _force.Set(0.0f, 0.0f);
             _torque = 0.0f;
 
-            _linearVelocity.SetZero();
-            _angularVelocity = 0.0f;
-
             _sleepTime = 0.0f;
 
+            _mass = 0;
             _invMass = 0.0f;
             _I = 0.0f;
             _invI = 0.0f;
 
-            _mass = bd.MassData.Mass;
-
-            if (_mass > 0.0f)
-            {
-                _invMass = 1.0f / _mass;
-            }
-
-            _I = bd.MassData.I;
-
-            if (_I > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
-            {
-                _invI = 1.0f / _I;
-            }
-
-            if (_invMass == 0.0f && _invI == 0.0f)
-            {
-                _type = BodyType.Static;
-            }
-            else
-            {
-                _type = BodyType.Dynamic;
-            }
+            _type = BodyType.Static;
 
             _userData = bd.UserData;
 
@@ -268,7 +234,10 @@ namespace Box2DX.Dynamics
             // shapes and joints are destroyed in World.Destroy
         }
 
-        /// Creates a fixture and attach it to this body.
+        /// Creates a fixture and attach it to this body. Use this function if you need
+        /// to set some fixture parameters, like friction. Otherwise you can create the
+        /// fixture directly from a shape.
+        /// This function automatically updates the mass of the body.
         /// @param def the fixture definition.
         /// @warning This function is locked during callbacks.
         public Fixture CreateFixture(FixtureDef def)
@@ -284,45 +253,41 @@ namespace Box2DX.Dynamics
             Fixture fixture = new Fixture();
             fixture.Create(broadPhase, this, _xf, def);
 
-            fixture.Next = _fixtureList;
+            fixture._next = _fixtureList;
             _fixtureList = fixture;
             ++_fixtureCount;
 
             fixture.Body = this;
 
-            // Let the world know we have a new fixture.
+            bool needMassUpdate = fixture._massData.Mass > 0.0f || fixture._massData.I > 0.0f;
+
+            // Adjust mass properties if needed.
+            if (needMassUpdate)
+            {
+                ResetMass();
+            }
+
+            // Let the world know we have a new fixture. This will cause new contacts
+            // to be created at the beginning of the next time step.
             _world._flags |= World.WorldFlags.NewFixture;
 
             return fixture;
         }
 
+        /// Creates a fixture from a shape and attach it to this body.
+        /// This is a convenience function. Use b2FixtureDef if you need to set parameters
+        /// like friction, restitution, user data, or filtering.
+        /// This function automatically updates the mass of the body.
+        /// @param shape the shape to be cloned.
+        /// @param density the shape density (set to zero for static bodies).
+        /// @warning This function is locked during callbacks.
         public Fixture CreateFixture(Shape shape, float density)
         {
-            Box2DXDebug.Assert(_world.IsLocked() == false);
-            if (_world.IsLocked() == true)
-            {
-                return null;
-            }
-
-            BroadPhase broadPhase = _world._contactManager._broadPhase;
-
             FixtureDef def = new FixtureDef();
             def.Shape = shape;
             def.Density = density;
 
-            Fixture fixture = new Fixture();
-            fixture.Create(broadPhase, this, _xf, def);
-
-            fixture.Next = _fixtureList;
-            _fixtureList = fixture;
-            ++_fixtureCount;
-
-            fixture.Body = this;
-
-            // Let the world know we have a new fixture.
-            _world._flags |= World.WorldFlags.NewFixture;
-
-            return fixture;
+            return CreateFixture(def);
         }
 
         /// Destroy a fixture. This removes the fixture from the broad-phase and
@@ -348,12 +313,12 @@ namespace Box2DX.Dynamics
             {
                 if (node == fixture)
                 {
-                    _fixtureList = fixture.Next;
+                    _fixtureList = fixture._next;
                     found = true;
                     break;
                 }
 
-                node = node.Next;
+                node = node._next;
             }
 
             // You tried to remove a shape that is not attached to this body.
@@ -377,144 +342,20 @@ namespace Box2DX.Dynamics
                 }
             }
 
+            bool needMassUpdate = fixture._massData.Mass > 0.0f || fixture._massData.I > 0.0f;
+
             BroadPhase broadPhase = _world._contactManager._broadPhase;
 
             fixture.Destroy(broadPhase);
             fixture.Body = null;
-            fixture.Next = null;
+            fixture._next = null;
 
             --_fixtureCount;
-        }
 
-        // TODO_ERIN adjust linear velocity and torque to account for movement of center.
-        /// <summary>
-        /// Set the mass properties. Note that this changes the center of mass position.
-        /// If you are not sure how to compute mass properties, use SetMassFromShapes.
-        /// The inertia tensor is assumed to be relative to the center of mass.
-        /// @param massData the mass properties.
-        /// </summary>
-        /// <param name="massData"></param>
-        public void SetMassData(MassData massData)
-        {
-            Box2DXDebug.Assert(_world.IsLocked() == false);
-            if (_world.IsLocked() == true)
+            // Adjust mass properties if needed.
+            if (needMassUpdate)
             {
-                return;
-            }
-
-            _invMass = 0.0f;
-            _I = 0.0f;
-            _invI = 0.0f;
-
-            _mass = massData.Mass;
-
-            if (_mass > 0.0f)
-            {
-                _invMass = 1.0f / _mass;
-            }
-
-            _I = massData.I;
-
-            if (_I > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
-            {
-                _invI = 1.0f / _I;
-            }
-
-            // Move center of mass.
-            _sweep.LocalCenter = massData.Center;
-            _sweep.C0 = _sweep.C = Common.Math.Mul(_xf, _sweep.LocalCenter);
-
-            BodyType oldType = _type;
-            if (_invMass == 0.0f && _invI == 0.0f)
-            {
-                _type = BodyType.Static;
-            }
-            else
-            {
-                _type = BodyType.Dynamic;
-            }
-
-            // If the body type changed, we need to refilter the broad-phase proxies.
-            if (oldType != _type)
-            {
-                for (ContactEdge ce = _contactList; ce != null; ce = ce.Next)
-                {
-                    ce.Contact.FlagForFiltering();
-                }
-            }
-        }
-
-        // TODO_ERIN adjust linear velocity and torque to account for movement of center.
-        /// <summary>
-        /// Compute the mass properties from the attached shapes. You typically call this
-        /// after adding all the shapes. If you add or remove shapes later, you may want
-        /// to call this again. Note that this changes the center of mass position.
-        /// </summary>
-        public void SetMassFromShapes()
-        {
-            Box2DXDebug.Assert(_world.IsLocked() == false);
-            if (_world.IsLocked() == true)
-            {
-                return;
-            }
-
-            // Compute mass data from shapes. Each shape has its own density.
-            _mass = 0.0f;
-            _invMass = 0.0f;
-            _I = 0.0f;
-            _invI = 0.0f;
-
-            Vec2 center = Vec2.Zero;
-            for (Fixture f = _fixtureList; f != null; f = f.Next)
-            {
-                MassData massData;
-                f.ComputeMass(out massData);
-                _mass += massData.Mass;
-                center += massData.Mass * massData.Center;
-                _I += massData.I;
-            }
-
-            // Compute center of mass, and shift the origin to the COM.
-            if (_mass > 0.0f)
-            {
-                _invMass = 1.0f / _mass;
-                center *= _invMass;
-            }
-
-            if (_I > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
-            {
-                // Center the inertia about the center of mass.
-                _I -= _mass * Vec2.Dot(center, center);
-                Box2DXDebug.Assert(_I > 0.0f);
-                _invI = 1.0f / _I;
-            }
-            else
-            {
-                _I = 0.0f;
-                _invI = 0.0f;
-            }
-
-            // Move center of mass.
-            _sweep.LocalCenter = center;
-            _sweep.C0 = _sweep.C = Common.Math.Mul(_xf, _sweep.LocalCenter);
-
-            BodyType oldType = _type;
-            if (_invMass == 0.0f && _invI == 0.0f)
-            {
-                _type = BodyType.Static;
-            }
-            else
-            {
-                _type = BodyType.Dynamic;
-            }
-
-            // If the body type changed, we need to refilter the broad-phase proxies.
-            if (oldType != _type)
-            {
-                for (ContactEdge ce = _contactList; ce != null; ce = ce.Next)
-                {
-                    ce.Contact.FlagForFiltering();
-                }
+                ResetMass();
             }
         }
 
@@ -541,7 +382,7 @@ namespace Box2DX.Dynamics
             _sweep.A0 = _sweep.A = angle;
 
             BroadPhase broadPhase = _world._contactManager._broadPhase;
-            for (Fixture f = _fixtureList; f != null; f = f.Next)
+            for (Fixture f = _fixtureList; f != null; f = f._next)
             {
                 f.Synchronize(broadPhase, _xf, _xf);
             }
@@ -689,13 +530,200 @@ namespace Box2DX.Dynamics
             return _I;
         }
 
-        public MassData GetMassData()
+        /// Get the mass data of the body. The rotational inertia is relative
+        /// to the center of mass.
+        /// @return a struct containing the mass, inertia and center of the body.
+        public void GetMassData(out MassData data)
         {
-            MassData massData = new MassData();
-            massData.Mass = _mass;
-            massData.I = _I;
-            massData.Center = _sweep.LocalCenter;
-            return massData;
+            data = new MassData();
+            data.Mass = _mass;
+            data.I = _I;
+
+            Vec2 center = Vec2.Zero;
+            for (Fixture f = _fixtureList; f != null; f = f._next)
+            {
+                MassData massData = f.GetMassData();
+                _mass += massData.Mass;
+                center += massData.Mass * massData.Center;
+                _I += massData.I;
+            }
+
+            // Compute center of mass.
+            if (_mass > 0.0f)
+            {
+                _invMass = 1.0f / _mass;
+                center *= _invMass;
+            }
+
+            if (_I > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
+            {
+                // Center the inertia about the center of mass.
+                _I -= _mass * Vec2.Dot(center, center);
+                Box2DXDebug.Assert(_I > 0.0f);
+                _invI = 1.0f / _I;
+            }
+            else
+            {
+                _I = 0.0f;
+                _invI = 0.0f;
+            }
+
+            // Move center of mass.
+            Vec2 oldCenter = _sweep.C;
+            _sweep.LocalCenter = center;
+            _sweep.C0 = _sweep.C = Math.Mul(_xf, _sweep.LocalCenter);
+
+            // Update center of mass velocity.
+            _linearVelocity += Vec2.Cross(_angularVelocity, _sweep.C - oldCenter);
+
+            // Determine the new body type.
+            BodyType oldType = _type;
+            if (_invMass == 0.0f && _invI == 0.0f)
+            {
+                _type = BodyType.Static;
+            }
+            else
+            {
+                _type = BodyType.Dynamic;
+            }
+
+            // If the body type changed, we need to flag contacts for filtering.
+            if (oldType != _type)
+            {
+                for (ContactEdge ce = _contactList; ce != null; ce = ce.Next)
+                {
+                    ce.Contact.FlagForFiltering();
+                }
+            }
+        }
+
+        /// Set the mass properties to override the mass properties of the fixtures.
+        /// Note that this changes the center of mass position. You can make the body
+        /// static by using zero mass.
+        /// Note that creating or destroying fixtures can also alter the mass.
+        /// @warning The supplied rotational inertia is assumed to be relative to the center of mass.
+        /// @param massData the mass properties.
+        // TODO ERIN adjust linear velocity and torque to account for movement of center.
+        public void SetMassData(MassData massData)
+        {
+            Box2DXDebug.Assert(_world.IsLocked() == false);
+            if (_world.IsLocked() == true)
+            {
+                return;
+            }
+
+            _invMass = 0.0f;
+            _I = 0.0f;
+            _invI = 0.0f;
+
+            _mass = massData.Mass;
+
+            if (_mass > 0.0f)
+            {
+                _invMass = 1.0f / _mass;
+            }
+
+            if (massData.I > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
+            {
+                _I = massData.I - _mass * Vec2.Dot(massData.Center, massData.Center);
+                _invI = 1.0f / _I;
+            }
+
+            // Move center of mass.
+            Vec2 oldCenter = _sweep.C;
+            _sweep.LocalCenter = massData.Center;
+            _sweep.C0 = _sweep.C = Math.Mul(_xf, _sweep.LocalCenter);
+
+            // Update center of mass velocity.
+            _linearVelocity += Vec2.Cross(_angularVelocity, _sweep.C - oldCenter);
+
+            BodyType oldType = _type;
+            if (_invMass == 0.0f && _invI == 0.0f)
+            {
+                _type = BodyType.Static;
+            }
+            else
+            {
+                _type = BodyType.Dynamic;
+            }
+
+            // If the body type changed, we need to flag contacts for filtering.
+            if (oldType != _type)
+            {
+                for (ContactEdge ce = _contactList; ce != null; ce = ce.Next)
+                {
+                    ce.Contact.FlagForFiltering();
+                }
+            }
+        }
+
+        /// This resets the mass properties to the sum of the mass properties of the fixtures.
+        /// This normally does not need to be called unless you called SetMassData to override
+        /// the mass and you later want to reset the mass.
+        public void ResetMass()
+        {
+            // Compute mass data from shapes. Each shape has its own density.
+            _mass = 0.0f;
+            _invMass = 0.0f;
+            _I = 0.0f;
+            _invI = 0.0f;
+
+            Vec2 center = Vec2.Zero;
+            for (Fixture f = _fixtureList; f != null; f = f._next)
+            {
+                MassData massData = f.GetMassData();
+                _mass += massData.Mass;
+                center += massData.Mass * massData.Center;
+                _I += massData.I;
+            }
+
+            // Compute center of mass.
+            if (_mass > 0.0f)
+            {
+                _invMass = 1.0f / _mass;
+                center *= _invMass;
+            }
+
+            if (_I > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
+            {
+                // Center the inertia about the center of mass.
+                _I -= _mass * Vec2.Dot(center, center);
+                Box2DXDebug.Assert(_I > 0.0f);
+                _invI = 1.0f / _I;
+            }
+            else
+            {
+                _I = 0.0f;
+                _invI = 0.0f;
+            }
+
+            // Move center of mass.
+            Vec2 oldCenter = _sweep.C;
+            _sweep.LocalCenter = center;
+            _sweep.C0 = _sweep.C = Math.Mul(_xf, _sweep.LocalCenter);
+
+            // Update center of mass velocity.
+            _linearVelocity += Vec2.Cross(_angularVelocity, _sweep.C - oldCenter);
+
+            // Determine the new body type.
+            BodyType oldType = _type;
+            if (_invMass == 0.0f && _invI == 0.0f)
+            {
+                _type = BodyType.Static;
+            }
+            else
+            {
+                _type = BodyType.Dynamic;
+            }
+
+            // If the body type changed, we need to flag contacts for filtering.
+            if (oldType != _type)
+            {
+                for (ContactEdge ce = _contactList; ce != null; ce = ce.Next)
+                {
+                    ce.Contact.FlagForFiltering();
+                }
+            }
         }
 
         /// <summary>
@@ -960,7 +988,7 @@ namespace Box2DX.Dynamics
             xf1.Position = _sweep.C0 - Math.Mul(xf1.R, _sweep.LocalCenter);
 
             BroadPhase broadPhase = _world._contactManager._broadPhase;
-            for (Fixture f = _fixtureList; f != null; f = f.Next)
+            for (Fixture f = _fixtureList; f != null; f = f._next)
             {
                 f.Synchronize(broadPhase, xf1, _xf);
             }

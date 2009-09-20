@@ -106,7 +106,6 @@ namespace TestBed
                 _body = _world.CreateBody(bd);
                 _body.CreateFixture(sd1);
                 _body.CreateFixture(sd2);
-                _body.SetMassFromShapes();
             }
         }
 

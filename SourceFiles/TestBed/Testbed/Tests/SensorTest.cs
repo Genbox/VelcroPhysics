@@ -77,7 +77,6 @@ namespace TestBed
                     _bodies[i] = _world.CreateBody(bd);
 
                     _bodies[i].CreateFixture(shape, 1.0f);
-                    _bodies[i].SetMassFromShapes();
                 }
             }
         }

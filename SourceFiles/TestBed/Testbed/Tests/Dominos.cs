@@ -64,7 +64,6 @@ namespace TestBed
                     bd.Position.Set(-6.0f + 1.0f * i, 11.25f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(fd);
-                    body.SetMassFromShapes();
                 }
             }
 
@@ -100,7 +99,6 @@ namespace TestBed
 
                 b3 = _world.CreateBody(bd);
                 b3.CreateFixture(shape, 10.0f);
-                b3.SetMassFromShapes();
             }
 
             RevoluteJointDef jd = new RevoluteJointDef();
@@ -120,7 +118,6 @@ namespace TestBed
                 bd.Position.Set(-10.0f, 15.0f);
                 b4 = _world.CreateBody(bd);
                 b4.CreateFixture(shape, 10.0f);
-                b4.SetMassFromShapes();
             }
 
             anchor.Set(-7.0f, 15.0f);
@@ -149,7 +146,6 @@ namespace TestBed
                 shape.SetAsBox(0.1f, 1.0f,new Vec2(0.9f, 0.0f), 0.0f);
                 b5.CreateFixture(fd);
 
-                b5.SetMassFromShapes();
             }
 
             anchor.Set(6.0f, 2.0f);
@@ -165,7 +161,6 @@ namespace TestBed
                 bd.Position.Set(6.5f, 4.1f);
                 b6 = _world.CreateBody(bd);
                 b6.CreateFixture(shape, 30.0f);
-                b6.SetMassFromShapes();
             }
 
             anchor.Set(7.5f, 4.0f);
@@ -182,7 +177,6 @@ namespace TestBed
 
                 b7 = _world.CreateBody(bd);
                 b7.CreateFixture(shape, 10.0f);
-                b7.SetMassFromShapes();
             }
 
             DistanceJointDef djd  =new DistanceJointDef();
@@ -206,7 +200,6 @@ namespace TestBed
                     bd.Position.Set(5.9f + 2.0f * radius * i, 2.4f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(shape, 10.0f);
-                    body.SetMassFromShapes();
                 }
             }
 		}

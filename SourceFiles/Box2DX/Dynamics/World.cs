@@ -207,7 +207,7 @@ namespace Box2DX.Dynamics
             while (f != null)
             {
                 Fixture f0 = f;
-                f = f.Next;
+                f = f._next;
 
                 if (_destructionListener != null)
                 {
@@ -1044,7 +1044,7 @@ namespace Box2DX.Dynamics
                         // Does the TOI island still have space for contacts?
                         if (island.ContactCount == island.ContactCapacity)
                         {
-                            continue;
+                            break;
                         }
 
                         // Has this contact already been added to an island? Skip slow or non-solid contacts.
