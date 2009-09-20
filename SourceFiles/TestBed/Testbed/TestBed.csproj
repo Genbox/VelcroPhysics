@@ -102,6 +102,7 @@
     <Compile Include="Tests\CollisionFiltering.cs" />
     <Compile Include="Tests\CollisionProcessing.cs" />
     <Compile Include="Tests\CompoundShapes.cs" />
+    <Compile Include="Tests\Breakable.cs" />
     <Compile Include="Tests\DistanceTest.cs" />
     <Compile Include="Tests\Dominos.cs" />
     <Compile Include="Tests\DynamicTreeTest.cs" />
