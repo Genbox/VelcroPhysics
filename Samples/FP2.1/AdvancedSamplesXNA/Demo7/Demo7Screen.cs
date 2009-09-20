@@ -332,42 +332,6 @@ namespace FarseerGames.AdvancedSamplesXNA.Demo7
             SetProduct(subtract);
         }
 
-        private void DoIntersect()
-        {
-            // Get the world coordinates for the left Geometry
-            Vertices poly1 = new Vertices(_leftGeom.WorldVertices);
-
-            // Get the world coordinates for the right Geometry
-            Vertices poly2 = new Vertices(_rightGeom.WorldVertices);
-
-            // Do the subtraction.
-            PolyUnionError error;
-            Vertices intersect = Vertices.Intersect(poly1, poly2, out error);
-
-            // Check for errors
-            switch (error)
-            {
-                case PolyUnionError.NoIntersections:
-                    WriteMessage("ERROR: Polygons do not intersect!");
-                    return;
-
-                case PolyUnionError.Poly1InsidePoly2:
-                    WriteMessage("Polygon 1 completely inside polygon 2.");
-                    return;
-
-                case PolyUnionError.InfiniteLoop:
-                    WriteMessage("Infinite Loop detected.");
-                    break;
-
-                case PolyUnionError.None:
-                    WriteMessage("No errors with intersection.");
-                    break;
-            }
-
-            // No errors, set the product of the union.
-            SetProduct(intersect);
-        }
-
         private void SetProduct(Vertices product)
         {
             if (product == null)
