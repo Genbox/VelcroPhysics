@@ -52,7 +52,6 @@ namespace TestBed
                 bd.Position.Set(0.0f, 20.0f);
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(shape, 5.0f);
-                body.SetMassFromShapes();
 
                 float w = 100.0f;
                 body.SetAngularVelocity(w);

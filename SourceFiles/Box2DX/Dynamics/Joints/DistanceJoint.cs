@@ -173,8 +173,8 @@ namespace Box2DX.Dynamics
 			float cr1u = Vec2.Cross(r1, _u);
 			float cr2u = Vec2.Cross(r2, _u);
 			float invMass = b1._invMass + b1._invI * cr1u * cr1u + b2._invMass + b2._invI * cr2u * cr2u;
-			Box2DXDebug.Assert(invMass > Settings.FLT_EPSILON);
-			_mass = 1.0f / invMass;
+            
+            _mass = invMass != 0.0f ? 1.0f / invMass : 0.0f;
 
 			if (_frequencyHz > 0.0f)
 			{
@@ -190,11 +190,13 @@ namespace Box2DX.Dynamics
 				float k = _mass * omega * omega;
 
 				// magic formulas
-				_gamma = 1.0f / (step.Dt * (d + step.Dt * k));
-				_bias = C * step.Dt * k * _gamma;
+                _gamma = step.Dt * (d + step.Dt * k);
+                _gamma = _gamma != 0.0f ? 1.0f / _gamma : 0.0f;
+                _bias = C * step.Dt * k * _gamma;
 
-				_mass = 1.0f / (invMass + _gamma);
-			}
+                _mass = invMass + _gamma;
+                _mass = _mass != 0.0f ? 1.0f / _mass : 0.0f;
+            }
 
 			if (step.WarmStarting)
 			{

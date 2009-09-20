@@ -54,7 +54,6 @@ namespace TestBed.Tests
                 CircleShape shape = new CircleShape();
                 shape._radius = _radius;
                 _character = body.CreateFixture(shape, 1.0f);
-                body.SetMassFromShapes();
 
                 body.SetLinearVelocity(new Vec2(0.0f, -50.0f));
 

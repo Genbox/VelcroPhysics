@@ -59,7 +59,6 @@ namespace TestBed
                     bd.Position.Set(0.5f + i, y);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(fd);
-                    body.SetMassFromShapes();
 
                     Vec2 anchor = new Vec2(i, y);
                     jd.Initialize(prevBody, body, anchor);

@@ -112,7 +112,6 @@ namespace TestBed
 
                     fd.Friction = friction[i];
                     body.CreateFixture(fd);
-                    body.SetMassFromShapes();
                 }
             }
         }

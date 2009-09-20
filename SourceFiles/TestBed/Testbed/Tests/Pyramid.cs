@@ -60,7 +60,6 @@ namespace TestBed
                         bd.Position = y;
                         Body body = _world.CreateBody(bd);
                         body.CreateFixture(shape, 5.0f);
-                        body.SetMassFromShapes();
 
                         y += deltaY;
                     }

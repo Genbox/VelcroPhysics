@@ -57,7 +57,6 @@ namespace TestBed
 
                     fd.Restitution = restitution[i];
                     body.CreateFixture(fd);
-                    body.SetMassFromShapes();
                 }
             }
         }

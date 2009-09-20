@@ -88,12 +88,12 @@ namespace Box2DX.Dynamics
     {
         public AABB Aabb;
 
-        public Fixture Next;
+        public Fixture _next;
         public Body Body;
 
         public Shape Shape;
 
-        public float Density;
+        public MassData _massData;
         public float Friction;
         public float Restitution;
 
@@ -108,7 +108,7 @@ namespace Box2DX.Dynamics
         {
             UserData = null;
             Body = null;
-            Next = null;
+            _next = null;
             ProxyId = BroadPhase.NullProxy;
             Shape = null;
         }
@@ -179,7 +179,7 @@ namespace Box2DX.Dynamics
         /// @return the next shape.
         public Fixture GetNext()
         {
-            return Next;
+            return _next;
         }
 
         /// Get the user data that was assigned in the fixture definition. Use this to
@@ -211,12 +211,11 @@ namespace Box2DX.Dynamics
             Shape.RayCast(out output, ref input, Body.GetTransform());
         }
 
-        /// Compute the mass properties of this shape using its dimensions and density.
-        /// The inertia tensor is computed about the local origin, not the centroid.
-        /// @param massData returns the mass data for this shape.
-        public void ComputeMass(out MassData massData)
+        /// Get the mass data for this fixture. The mass data is based on the density and
+        /// the shape. The rotational inertia is about the shape's origin.
+        public MassData GetMassData()
         {
-            Shape.ComputeMass(out massData, Density);
+            return _massData;
         }
 
         /// Get the coefficient of friction.
@@ -243,19 +242,6 @@ namespace Box2DX.Dynamics
             Restitution = restitution;
         }
 
-        /// Get the density.
-        public float GetDensity()
-        {
-            return Density;
-        }
-
-        /// Set the density.
-        /// @warning this does not automatically update the mass of the parent body.
-        public void SetDensity(float density)
-        {
-            Density = density;
-        }
-
         // We need separation create/destroy functions from the constructor/destructor because
         // the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
         public void Create(BroadPhase broadPhase, Body body, Transform xf, FixtureDef def)
@@ -263,16 +249,17 @@ namespace Box2DX.Dynamics
             UserData = def.UserData;
             Friction = def.Friction;
             Restitution = def.Restitution;
-            Density = def.Density;
 
             Body = body;
-            Next = null;
+            _next = null;
 
             Filter = def.Filter;
 
             IsSensor = def.IsSensor;
 
             Shape = def.Shape.Clone();
+
+            Shape.ComputeMass(out _massData, def.Density);
 
             // Create proxy in the broad-phase.
             Shape.ComputeAABB(out Aabb, ref xf);

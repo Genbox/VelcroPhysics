@@ -51,7 +51,6 @@ namespace TestBed
                 bd.Angle = 0.5f * Box2DX.Common.Settings.PI;
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(shape, 5.0f);
-                body.SetMassFromShapes();
 
                 PrismaticJointDef pjd = new PrismaticJointDef();
 

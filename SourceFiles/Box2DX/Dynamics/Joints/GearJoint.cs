@@ -239,11 +239,10 @@ namespace Box2DX.Dynamics
 				K += _ratio * _ratio * (b2._invMass + b2._invI * crug * crug);
 			}
 
-			// Compute effective mass.
-			Box2DXDebug.Assert(K > 0.0f);
-			_mass = 1.0f / K;
-
-			if (step.WarmStarting)
+            // Compute effective mass.
+            _mass = K > 0.0f ? 1.0f / K : 0.0f;
+            
+            if (step.WarmStarting)
 			{
 				// Warm starting.
 				b1._linearVelocity += b1._invMass * _impulse * _J.Linear1;

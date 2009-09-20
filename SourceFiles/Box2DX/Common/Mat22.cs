@@ -112,9 +112,11 @@ namespace Box2DX.Common
 			float a = Col1.X, b = Col2.X, c = Col1.Y, d = Col2.Y;
 			Mat22 B = new Mat22();
 			float det = a * d - b * c;
-			Box2DXDebug.Assert(det != 0.0f);
-			det = 1.0f / det;
-			B.Col1.X = det * d; B.Col2.X = -det * b;
+            if (det != 0.0f)
+            {
+                det = 1.0f / det;
+            }
+            B.Col1.X = det * d; B.Col2.X = -det * b;
 			B.Col1.Y = -det * c; B.Col2.Y = det * a;
 			return B;
 		}
@@ -127,9 +129,11 @@ namespace Box2DX.Common
 		{
 			float a11 = Col1.X, a12 = Col2.X, a21 = Col1.Y, a22 = Col2.Y;
 			float det = a11 * a22 - a12 * a21;
-			Box2DXDebug.Assert(det != 0.0f);
-			det = 1.0f / det;
-			Vec2 x = new Vec2();
+            if (det != 0.0f)
+            {
+                det = 1.0f / det;
+            }
+            Vec2 x = new Vec2();
 			x.X = det * (a22 * b.X - a12 * b.Y);
 			x.Y = det * (a11 * b.Y - a21 * b.X);
 			return x;

@@ -51,22 +51,18 @@ namespace TestBed
                 bd.Position.Set(-5.0f, 5.0f);
                 _bodies[0] = _world.CreateBody(bd);
                 _bodies[0].CreateFixture(shape, 0);
-                _bodies[0].SetMassFromShapes();
 
                 bd.Position.Set(5.0f, 5.0f);
                 _bodies[1] = _world.CreateBody(bd);
                 _bodies[1].CreateFixture(shape, 0);
-                _bodies[1].SetMassFromShapes();
 
                 bd.Position.Set(5.0f, 15.0f);
                 _bodies[2] = _world.CreateBody(bd);
                 _bodies[2].CreateFixture(shape, 0);
-                _bodies[2].SetMassFromShapes();
 
                 bd.Position.Set(-5.0f, 15.0f);
                 _bodies[3] = _world.CreateBody(bd);
                 _bodies[3].CreateFixture(shape, 0);
-                _bodies[3].SetMassFromShapes();
 
                 DistanceJointDef jd = new DistanceJointDef();
                 Vec2 p1, p2, d;

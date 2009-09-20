@@ -39,7 +39,8 @@ namespace Box2DX.Collision
         public Vec2 Center;
 
         /// <summary>
-        /// The rotational inertia of the shape.
+        /// The rotational inertia of the shape. This may be about the center or local
+        /// origin, depending on usage.
         /// </summary>
         public float I;
     }

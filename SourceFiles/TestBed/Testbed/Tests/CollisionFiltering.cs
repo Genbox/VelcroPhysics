@@ -82,7 +82,6 @@ namespace TestBed
 
             Body body1 = _world.CreateBody(triangleBodyDef);
             body1.CreateFixture(triangleShapeDef);
-            body1.SetMassFromShapes();
 
             // Large triangle (recycle definitions)
             vertices[0] *= 2.0f;
@@ -95,7 +94,6 @@ namespace TestBed
 
             Body body2 = _world.CreateBody(triangleBodyDef);
             body2.CreateFixture(triangleShapeDef);
-            body2.SetMassFromShapes();
 
             // Small box
             polygon.SetAsBox(1.0f, 0.5f);
@@ -113,7 +111,6 @@ namespace TestBed
 
             Body body3 = _world.CreateBody(boxBodyDef);
             body3.CreateFixture(boxShapeDef);
-            body3.SetMassFromShapes();
 
             // Large box (recycle definitions)
             polygon.SetAsBox(2.0f, 1.0f);
@@ -122,7 +119,6 @@ namespace TestBed
 
             Body body4 = _world.CreateBody(boxBodyDef);
             body4.CreateFixture(boxShapeDef);
-            body4.SetMassFromShapes();
 
             // Small circle
             CircleShape circle = new CircleShape();
@@ -141,7 +137,6 @@ namespace TestBed
 
             Body body5 = _world.CreateBody(circleBodyDef);
             body5.CreateFixture(circleShapeDef);
-            body5.SetMassFromShapes();
 
             // Large circle
             circle._radius *= 2.0f;
@@ -150,7 +145,6 @@ namespace TestBed
 
             Body body6 = _world.CreateBody(circleBodyDef);
             body6.CreateFixture(circleShapeDef);
-            body6.SetMassFromShapes();
         }
 
         public static Test Create()

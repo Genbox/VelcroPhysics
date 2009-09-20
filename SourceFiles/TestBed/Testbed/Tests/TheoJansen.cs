@@ -102,9 +102,6 @@ namespace TestBed
             body1.CreateFixture(fd1);
             body2.CreateFixture(fd2);
 
-            body1.SetMassFromShapes();
-            body2.SetMassFromShapes();
-
             DistanceJointDef djd = new DistanceJointDef();
 
             // Using a soft distance constraint can reduce some jitter.
@@ -165,7 +162,6 @@ namespace TestBed
 
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(shape, 1.0f);
-                body.SetMassFromShapes();
             }
 
             // Chassis
@@ -181,7 +177,6 @@ namespace TestBed
                 bd.Position = pivot + _offset;
                 _chassis = _world.CreateBody(bd);
                 _chassis.CreateFixture(sd);
-                _chassis.SetMassFromShapes();
             }
 
             {
@@ -196,7 +191,6 @@ namespace TestBed
                 bd.Position = pivot + _offset;
                 _wheel = _world.CreateBody(bd);
                 _wheel.CreateFixture(sd);
-                _wheel.SetMassFromShapes();
             }
 
             {

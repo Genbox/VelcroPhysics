@@ -411,9 +411,15 @@ namespace Box2DX.Dynamics
 				_a2 = Vec2.Cross(r2, _axis);
 
 				_motorMass = _invMass1 + _invMass2 + _invI1 * _a1 * _a1 + _invI2 * _a2 * _a2;
-				Box2DXDebug.Assert(_motorMass > Settings.FLT_EPSILON);
-				_motorMass = 1.0f / _motorMass;
-			}
+                if (_motorMass > Settings.FLT_EPSILON)
+                {
+                    _motorMass = 1.0f / _motorMass;
+                }
+                else
+                {
+                    _motorMass = 0.0f;
+                }
+            }
 
 			// Prismatic constraint.
 			{
@@ -550,8 +556,17 @@ namespace Box2DX.Dynamics
 
 				// f2(1) = invK(1,1) * (-Cdot(1) - K(1,2) * (f2(2) - f1(2))) + f1(1)
 				float b = -Cdot1 - (_impulse.Y - f1.Y) * _K.Col2.X;
-				float f2r = b / _K.Col1.X + f1.X;
-				_impulse.X = f2r;
+                float f2r;
+                if (_K.Col1.X != 0.0f)
+                {
+                    f2r = b / _K.Col1.X + f1.X;
+                }
+                else
+                {
+                    f2r = f1.X;
+                }
+
+                _impulse.X = f2r;
 
 				df = _impulse - f1;
 
@@ -568,8 +583,16 @@ namespace Box2DX.Dynamics
 			else
 			{
 				// Limit is inactive, just solve the prismatic constraint in block form.
-				float df = (-Cdot1) / _K.Col1.X;
-				_impulse.X += df;
+                float df;
+                if (_K.Col1.X != 0.0f)
+                {
+                    df = -Cdot1 / _K.Col1.X;
+                }
+                else
+                {
+                    df = 0.0f;
+                }
+                _impulse.X += df;
 
 				Vec2 P = df * _perp;
 				float L1 = df * _s1;
@@ -678,8 +701,17 @@ namespace Box2DX.Dynamics
 
 				float k11 = m1 + m2 + i1 * _s1 * _s1 + i2 * _s2 * _s2;
 
-				float impulse1 = (-C1) / k11;
-				impulse.X = impulse1;
+                float impulse1;
+                if (k11 != 0.0f)
+                {
+                    impulse1 = -C1 / k11;
+                }
+                else
+                {
+                    impulse1 = 0.0f;
+                }
+
+                impulse.X = impulse1;
 				impulse.Y = 0.0f;
 			}
 

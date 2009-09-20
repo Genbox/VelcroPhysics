@@ -53,9 +53,11 @@ namespace Box2DX.Common
 		public Vec3 Solve33(Vec3 b)
 		{
 			float det = Vec3.Dot(Col1, Vec3.Cross(Col2, Col3));
-			Box2DXDebug.Assert(det != 0.0f);
-			det = 1.0f / det;
-			Vec3 x = new Vec3();
+            if (det != 0.0f)
+            {
+                det = 1.0f / det;
+            }
+            Vec3 x = new Vec3();
 			x.X = det * Vec3.Dot(b, Vec3.Cross(Col2, Col3));
 			x.Y = det * Vec3.Dot(Col1, Vec3.Cross(b, Col3));
 			x.Z = det * Vec3.Dot(Col1, Vec3.Cross(Col2, b));
@@ -71,8 +73,10 @@ namespace Box2DX.Common
 		{
 			float a11 = Col1.X, a12 = Col2.X, a21 = Col1.Y, a22 = Col2.Y;
 			float det = a11 * a22 - a12 * a21;
-			Box2DXDebug.Assert(det != 0.0f);
-			det = 1.0f / det;
+			if (det != 0.0f)
+			{
+                det = 1.0f / det;
+			}
 			Vec2 x = new Vec2();
 			x.X = det * (a22 * b.X - a12 * b.Y);
 			x.Y = det * (a11 * b.Y - a21 * b.X);

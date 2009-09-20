@@ -450,7 +450,6 @@ namespace TestBed
             }
 
             BodyDef bd = new BodyDef();
-            bd.MassData.Mass = 1.0f;
             bd.AllowSleep = true;
             bd.Position = position;
 
@@ -474,7 +473,6 @@ namespace TestBed
             aabb.UpperBound = maxV;
 
             _bomb.CreateFixture(fd);
-            _bomb.SetMassFromShapes();
         }
 
         public void SpawnBomb(Vec2 worldPt)

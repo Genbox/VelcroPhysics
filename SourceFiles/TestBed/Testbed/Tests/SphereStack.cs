@@ -50,7 +50,6 @@ namespace TestBed
                     _bodies[i] = _world.CreateBody(bd);
                     
                     _bodies[i].CreateFixture(shape, 1.0f);
-                    _bodies[i].SetMassFromShapes();
 
                     //m_bodies[i]->SetLinearVelocity(b2Vec2(0.0f, -100.0f));
                 }
