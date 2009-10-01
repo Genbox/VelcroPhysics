@@ -299,9 +299,14 @@ namespace Box2DX.Dynamics
 
         public void Update(ContactListener listener)
         {
-            //TODO: "Manifold is a class, not a struct. It will reference the old manifest, not copy it"
-            Manifold oldManifold = Manifold;
-
+            //Note: Manifold is a class, not a struct. It will reference the old manifest, not copy it - DONE
+            Manifold oldManifold = new Manifold();
+            oldManifold.LocalPlaneNormal = Manifold.LocalPlaneNormal;
+            oldManifold.LocalPoint = Manifold.LocalPoint;
+            oldManifold.PointCount = Manifold.PointCount;
+            oldManifold.Points = Manifold.Points;
+            oldManifold.Type = Manifold.Type;
+            
             // Re-enable this contact.
             Flags &= ~ContactFlag.DisabledFlag;
 
