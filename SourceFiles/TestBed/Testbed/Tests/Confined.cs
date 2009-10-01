@@ -26,8 +26,8 @@ namespace TestBed.Tests
 
     public class Confined : Test
     {
-        private static int _columnCount = 0;
-        private static int _rowCount = 0;
+        private const int _columnCount = 0;
+        private const int _rowCount = 0;
 
         public Confined()
         {
