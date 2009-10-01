@@ -123,6 +123,8 @@ namespace TestBed
     {
         public static TestEntry[] g_testEntries = new TestEntry[]
 		{			
+	        new TestEntry("Confined", Confined.Create),
+	        new TestEntry("Bridge", Bridge.Create),
 	        new TestEntry("Breakable", Breakable.Create),
 	        new TestEntry("Varying Restitution", VaryingRestitution.Create),
 	        new TestEntry("Polygon Shapes", PolyShapes.Create),
@@ -133,7 +135,6 @@ namespace TestBed
             new TestEntry("Ray-Cast", RayCast.Create),
         	new TestEntry("One-Sided Platform", OneSidedPlatform.Create),
 	        new TestEntry("Apply Force", ApplyForce.Create),
-	        new TestEntry("Bridge", Bridge.Create),
             new TestEntry("CCD Test", CCDTest.Create),
 	        new TestEntry("Chain", Chain.Create),
 	        new TestEntry("Collision Filtering", CollisionFiltering.Create),

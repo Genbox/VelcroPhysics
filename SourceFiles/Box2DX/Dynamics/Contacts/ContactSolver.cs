@@ -396,7 +396,7 @@ namespace Box2DX.Dynamics
                         //
                         // x' = - inv(A) * b'
                         //
-                        Vec2 x = - Common.Math.Mul(c.NormalMass, b);
+                        Vec2 x = -Common.Math.Mul(c.NormalMass, b);
 
                         if (x.X >= 0.0f && x.Y >= 0.0f)
                         {
@@ -437,7 +437,7 @@ namespace Box2DX.Dynamics
                         //   0 = a11 * x1' + a12 * 0 + b1' 
                         // vn2 = a21 * x1' + a22 * 0 + b2'
                         //
-                        x.X = - cp1.NormalMass * b.X;
+                        x.X = -cp1.NormalMass * b.X;
                         x.Y = 0.0f;
                         vn1 = 0.0f;
                         vn2 = c.K.Col1.Y * x.X + b.Y;
@@ -607,7 +607,7 @@ namespace Box2DX.Dynamics
                     minSeparation = Common.Math.Min(minSeparation, separation);
 
                     // Prevent large corrections and allow slop.
-                    float C = baumgarte * Common.Math.Clamp(separation + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
+                    float C = Common.Math.Clamp(baumgarte * (separation + Settings.LinearSlop), -Settings.MaxLinearCorrection, 0.0f);
 
                     // Compute normal impulse
                     float impulse = -ccp.EqualizedMass * C;
