@@ -153,10 +153,11 @@ namespace TestBed.Tests
             }
         }
 
-        public void QueryCallback(int proxyId)
+        public bool QueryCallback(int proxyId)
         {
             Actor actor = (Actor)_tree.GetUserData(proxyId);
             actor.overlap = Collision.TestOverlap(_queryAABB, actor.aabb);
+            return true;
         }
 
         public float RayCastCallback(RayCastInput input, int proxyId)
