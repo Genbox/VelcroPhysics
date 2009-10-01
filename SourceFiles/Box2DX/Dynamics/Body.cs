@@ -576,11 +576,12 @@ namespace Box2DX.Dynamics
             // Update center of mass velocity.
             _linearVelocity += Vec2.Cross(_angularVelocity, _sweep.C - oldCenter);
 
-            // Determine the new body type.
             BodyType oldType = _type;
             if (_invMass == 0.0f && _invI == 0.0f)
             {
                 _type = BodyType.Static;
+                _angularVelocity = 0.0f;
+                _linearVelocity.SetZero();
             }
             else
             {
