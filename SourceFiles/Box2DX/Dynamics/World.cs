@@ -483,10 +483,10 @@ namespace Box2DX.Dynamics
 
         public class WorldQueryWrapper : IQueryEnabled
         {
-            public void QueryCallback(int proxyId)
+            public bool QueryCallback(int proxyId)
             {
                 Fixture fixture = (Fixture)BroadPhase.GetUserData(proxyId);
-                Callback.ReportFixture(fixture);
+                return Callback.ReportFixture(fixture);
             }
 
             public BroadPhase BroadPhase;

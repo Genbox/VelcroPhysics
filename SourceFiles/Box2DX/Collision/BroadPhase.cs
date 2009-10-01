@@ -265,12 +265,12 @@ namespace Box2DX.Collision
         }
 
         // This is called from DynamicTree::Query when we are gathering pairs.
-        public void QueryCallback(int proxyId)
+        public bool QueryCallback(int proxyId)
         {
             // A proxy cannot form a pair with itself.
             if (proxyId == _queryProxyId)
             {
-                return;
+                return true;
             }
 
             // Grow the pair buffer as needed.
@@ -289,6 +289,8 @@ namespace Box2DX.Collision
             _pairBuffer[_pairCount].proxyIdA = Common.Math.Min(proxyId, _queryProxyId);
             _pairBuffer[_pairCount].proxyIdB = Common.Math.Max(proxyId, _queryProxyId);
             ++_pairCount;
+
+            return true;
         }
     }
 }

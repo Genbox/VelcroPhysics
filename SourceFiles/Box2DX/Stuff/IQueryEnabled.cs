@@ -2,6 +2,6 @@
 {
     public interface IQueryEnabled
     {
-        void QueryCallback(int proxyId);
+        bool QueryCallback(int proxyId);
     }
 }

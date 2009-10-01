@@ -381,7 +381,11 @@ namespace Box2DX.Collision
                 {
                     if (node.IsLeaf())
                     {
-                        callback.QueryCallback(nodeId);
+                        bool proceed = callback.QueryCallback(nodeId);
+                        if (proceed == false)
+                        {
+                            return;
+                        }
                     }
                     else
                     {

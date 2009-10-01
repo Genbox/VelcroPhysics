@@ -90,7 +90,7 @@ using Box2DX.Common;
 
 namespace Box2DX.Dynamics
 {
-	using Box2DXMath = moMath;
+	using Box2DXMath = Math;
 	using SystemMath = System.Math;
 
 	/// <summary>
