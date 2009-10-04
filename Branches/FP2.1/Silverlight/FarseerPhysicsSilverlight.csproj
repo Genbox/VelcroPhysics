@@ -96,6 +96,9 @@
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\BruteForceCollider.cs">
       <Link>Collisions\BruteForceCollider.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\CollisionIdGenerator.cs">
+      <Link>Collisions\CollisionIdGenerator.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\Contact.cs">
       <Link>Collisions\Contact.cs</Link>
     </Compile>
@@ -113,6 +116,9 @@
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\Geom.cs">
       <Link>Collisions\Geom.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\GeomPairBitmap.cs">
+      <Link>Collisions\GeomPairBitmap.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\RayHelper.cs">
       <Link>Collisions\RayHelper.cs</Link>
