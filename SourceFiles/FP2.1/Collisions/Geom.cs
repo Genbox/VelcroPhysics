@@ -128,7 +128,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// Gets or sets the Axis Aligned Bounding Box of the geom.
         /// </summary>
         /// <Value>The AABB.</Value>
-        public AABB AABB = new AABB();
+        public AABB AABB;
 
         /// <summary>
         /// Gets or sets a Value indicating whether collision is enabled.

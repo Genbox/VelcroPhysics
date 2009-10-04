@@ -4,7 +4,7 @@
     {
         private int _currentId;
 
-        public int nextCollisionId()
+        public int NextCollisionId()
         {
             return _currentId++;
         }

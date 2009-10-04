@@ -8,7 +8,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     /// </summary>
     public class ArbiterList : List<Arbiter>
     {
-        GeomPairBitmap _geomPairBitmap;
+        private GeomPairBitmap _geomPairBitmap;
 
         public ArbiterList(int capacity)
         {
@@ -31,23 +31,19 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             CollisionIdGenerator collisionIdGenerator = new CollisionIdGenerator();
             foreach (Geom geom in geomList)
             {
-                geom.CollisionId = collisionIdGenerator.nextCollisionId();
+                geom.CollisionId = collisionIdGenerator.NextCollisionId();
             }
         }
 
-        public void addArbiterForGeomPair(
-            PhysicsSimulator physicsSimulator,
-            Pool<Arbiter> arbiterPool,
-            Geom geom1, Geom geom2)
+        public void AddArbiterForGeomPair(PhysicsSimulator physicsSimulator, Geom geom1, Geom geom2)
         {
-            if (!_geomPairBitmap.testAndSet(geom1, geom2))
+            if (!_geomPairBitmap.TestAndSet(geom1, geom2))
             {
                 Arbiter arbiter = physicsSimulator.arbiterPool.Fetch();
                 arbiter.ConstructArbiter(geom1, geom2, physicsSimulator);
                 Add(arbiter);
             }
         }
-
 
         public void RemoveContactCountEqualsZero(Pool<Arbiter> arbiterPool)
         {
@@ -70,10 +66,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 if (this[i].ContainsInvalidGeom())
                 {
                     Arbiter current = this[i];
-
                     RemoveAt(i);
                     arbiterPool.Insert(current);
-
                 }
             }
         }

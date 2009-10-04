@@ -222,7 +222,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                                 if (!intersection)
                                     continue;
 
-                                _physicsSimulator.ArbiterList.addArbiterForGeomPair(_physicsSimulator, _physicsSimulator.arbiterPool, geometryA, geometryB);
+                                _physicsSimulator.ArbiterList.AddArbiterForGeomPair(_physicsSimulator, geometryA, geometryB);
                             }
                         }
                     }
