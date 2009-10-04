@@ -8,7 +8,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private int _geomCount = -1;
         private bool[] _bitmap;
 
-        public GeomPairBitmap(int geomCount, ArbiterList arbiterList) {
+        public GeomPairBitmap(int geomCount, ArbiterList arbiterList)
+        {
             Clear(geomCount, arbiterList);
         }
 
@@ -21,39 +22,41 @@ namespace FarseerGames.FarseerPhysics.Collisions
             else
             {
                 _geomCount = newGeomCount;
-                _bitmap = new bool[calculateSize(newGeomCount)];
+                _bitmap = new bool[CalculateSize(newGeomCount)];
             }
 
             if (arbiterList != null)
             {
                 foreach (Arbiter arbiter in arbiterList)
                 {
-                    testAndSet(arbiter.GeometryA, arbiter.GeometryB);
+                    TestAndSet(arbiter.GeometryA, arbiter.GeometryB);
                 }
             }
         }
 
-        public bool testAndSet(Geom geom1, Geom geom2)
+        public bool TestAndSet(Geom geom1, Geom geom2)
         {
-            int index = calculateIndex(geom1, geom2);
+            int index = CalculateIndex(geom1, geom2);
 
             bool result = _bitmap[index];
             _bitmap[index] = true;
             return result;
         }
 
-        private int calculateSize(int geomCount) {
-            if ((geomCount % 2) == 0) {
+        private int CalculateSize(int geomCount)
+        {
+            if ((geomCount % 2) == 0)
+            {
                 return (geomCount * (geomCount - 1)) - ((geomCount * ((geomCount - 1) / 2)) + (geomCount / 2));
-            } else {
-                return (geomCount * (geomCount - 1)) - (geomCount * (geomCount / 2));
             }
+
+            return (geomCount * (geomCount - 1)) - (geomCount * (geomCount / 2));
         }
 
-        private int calculateIndex(Geom geom1, Geom geom2)
+        private int CalculateIndex(Geom geom1, Geom geom2)
         {
-            int x = 0;
-            int y = 0;
+            int x;
+            int y;
             if (geom1.CollisionId < geom2.CollisionId)
             {
                 x = geom1.CollisionId;

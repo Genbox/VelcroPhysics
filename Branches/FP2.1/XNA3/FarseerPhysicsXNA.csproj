@@ -258,7 +258,7 @@
     <Compile Include="..\..\..\SourceFiles\FP2.1\Pool.cs">
       <Link>Pool.cs</Link>
     </Compile>
-    <Compile Include="Collisions\NewSAT.cs" />
+    <Compile Include="Collisions\SAT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

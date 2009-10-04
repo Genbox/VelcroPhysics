@@ -238,7 +238,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             foreach (CollisionPair cp in CollisionPairs.Keys)
             {
-                _physicsSimulator.ArbiterList.addArbiterForGeomPair(_physicsSimulator, _physicsSimulator.arbiterPool, cp.Geom1, cp.Geom2);
+                _physicsSimulator.ArbiterList.AddArbiterForGeomPair(_physicsSimulator, cp.Geom1, cp.Geom2);
             }
         }
 
