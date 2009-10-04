@@ -238,16 +238,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             foreach (CollisionPair cp in CollisionPairs.Keys)
             {
-                // Note: Possible optimization. Maybe arbiter can be cached into Value of
-                // CollisionPairs? Currently, the CollisionPairs hash doesn't use its
-                // Value parameter - its just an unused bool Value.
-                Arbiter arbiter = _physicsSimulator.arbiterPool.Fetch();
-                arbiter.ConstructArbiter(cp.Geom1, cp.Geom2, _physicsSimulator);
-
-                if (!_physicsSimulator.ArbiterList.Contains(arbiter))
-                    _physicsSimulator.ArbiterList.Add(arbiter);
-                else
-                    _physicsSimulator.arbiterPool.Insert(arbiter);
+                _physicsSimulator.ArbiterList.addArbiterForGeomPair(_physicsSimulator, _physicsSimulator.arbiterPool, cp.Geom1, cp.Geom2);
             }
         }
 

@@ -379,6 +379,8 @@ namespace FarseerGames.FarseerPhysics
             ProcessRemovedItems();
             ProcessDisposedItems();
 
+            ArbiterList.PrepareForBroadphaseCollision(GeomList);
+
 #if (XNA)
             if (EnableDiagnostics)
                 CleanUpTime = _sw.ElapsedTicks;

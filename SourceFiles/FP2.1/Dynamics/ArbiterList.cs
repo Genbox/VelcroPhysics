@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FarseerGames.FarseerPhysics.Collisions;
 
 namespace FarseerGames.FarseerPhysics.Dynamics
 {
@@ -7,62 +8,74 @@ namespace FarseerGames.FarseerPhysics.Dynamics
     /// </summary>
     public class ArbiterList : List<Arbiter>
     {
-        private List<Arbiter> _markedForRemovalList;
+        GeomPairBitmap _geomPairBitmap;
 
         public ArbiterList(int capacity)
         {
             Capacity = capacity;
-            _markedForRemovalList = new List<Arbiter>(capacity / 2);
         }
+
+        public void PrepareForBroadphaseCollision(List<Geom> geomList)
+        {
+            if (_geomPairBitmap == null)
+            {
+                _geomPairBitmap = new GeomPairBitmap(geomList.Count, this);
+            }
+            else
+            {
+                _geomPairBitmap.Clear(geomList.Count, this);
+            }
+
+            // at this point the Geomlist should be complete, and we can generate new collision ids
+            // for the next run of the broadphasecollider
+            CollisionIdGenerator collisionIdGenerator = new CollisionIdGenerator();
+            foreach (Geom geom in geomList)
+            {
+                geom.CollisionId = collisionIdGenerator.nextCollisionId();
+            }
+        }
+
+        public void addArbiterForGeomPair(
+            PhysicsSimulator physicsSimulator,
+            Pool<Arbiter> arbiterPool,
+            Geom geom1, Geom geom2)
+        {
+            if (!_geomPairBitmap.testAndSet(geom1, geom2))
+            {
+                Arbiter arbiter = physicsSimulator.arbiterPool.Fetch();
+                arbiter.ConstructArbiter(geom1, geom2, physicsSimulator);
+                Add(arbiter);
+            }
+        }
+
 
         public void RemoveContactCountEqualsZero(Pool<Arbiter> arbiterPool)
         {
-            for (int i = 0; i < Count; i++)
+            for (int i = Count - 1; i >= 0; i--)
             {
                 //If they don't have any contacts associated with them. Remove them.
                 if (this[i].ContactList.Count == 0)
                 {
-                    _markedForRemovalList.Add(this[i]);
+                    Arbiter current = this[i];
+                    RemoveAt(i);
+                    arbiterPool.Insert(current);
                 }
             }
-
-            int count = _markedForRemovalList.Count;
-            for (int j = 0; j < count; j++)
-            {
-                Remove(_markedForRemovalList[j]);
-                arbiterPool.Insert(_markedForRemovalList[j]);
-
-                //No contacts exist between the two geometries, fire the OnSeperation event.
-                if (_markedForRemovalList[j].GeometryA.OnSeparation != null)
-                {
-                    _markedForRemovalList[j].GeometryA.OnSeparation(_markedForRemovalList[j].GeometryA,
-                                                                    _markedForRemovalList[j].GeometryB);
-                }
-
-                if (_markedForRemovalList[j].GeometryB.OnSeparation != null)
-                {
-                    _markedForRemovalList[j].GeometryB.OnSeparation(_markedForRemovalList[j].GeometryB,
-                                                                    _markedForRemovalList[j].GeometryA);
-                }
-            }
-            _markedForRemovalList.Clear();
         }
 
         public void CleanArbiterList(Pool<Arbiter> arbiterPool)
         {
-            for (int i = 0; i < Count; i++)
+            for (int i = Count - 1; i >= 0; i--)
             {
                 if (this[i].ContainsInvalidGeom())
                 {
-                    _markedForRemovalList.Add(this[i]);
+                    Arbiter current = this[i];
+
+                    RemoveAt(i);
+                    arbiterPool.Insert(current);
+
                 }
             }
-            for (int j = 0; j < _markedForRemovalList.Count; j++)
-            {
-                Remove(_markedForRemovalList[j]);
-                arbiterPool.Insert(_markedForRemovalList[j]);
-            }
-            _markedForRemovalList.Clear();
         }
     }
 }

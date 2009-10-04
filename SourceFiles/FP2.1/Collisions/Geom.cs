@@ -32,6 +32,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private bool _isSensor;
         private Matrix _matrix = Matrix.Identity;
         private Matrix _matrixInverse = Matrix.Identity;
+        private bool _matrixInverseCached = true;
+
         private Vector2 _position = Vector2.Zero;
         private Vector2 _positionOffset = Vector2.Zero;
         private float _rotation;
@@ -46,6 +48,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
 
         public int Id { get { return id; } }
+        public int CollisionId { get; set; }
 
         /// <summary>
         /// Returns true if the geometry is added to the simulation.
@@ -255,6 +258,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
             set
             {
                 _matrix = value;
+                _matrixInverseCached = false;
                 Update();
             }
         }
@@ -267,7 +271,11 @@ namespace FarseerGames.FarseerPhysics.Collisions
         {
             get
             {
-                Matrix.Invert(ref _matrix, out _matrixInverse);
+                if (!_matrixInverseCached)
+                {
+                    Matrix.Invert(ref _matrix, out _matrixInverse);
+                    _matrixInverseCached = true;
+                }
                 return _matrixInverse;
             }
         }
@@ -640,6 +648,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             //Update rotation
             _rotation = body.rotation + _rotationOffset;
+            _matrixInverseCached = false;
 
             //Convert all the local vertices to world vertices (using the new matrix)
             Update();
