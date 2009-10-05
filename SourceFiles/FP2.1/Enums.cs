@@ -29,7 +29,8 @@ namespace FarseerGames.FarseerPhysics
     public enum NarrowPhaseCollider
     {
         DistanceGrid,
-        SAT
+        SAT,
+        NewSAT
     }
 
     /// <summary>

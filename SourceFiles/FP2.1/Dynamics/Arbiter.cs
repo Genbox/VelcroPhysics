@@ -321,8 +321,10 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             //Call the narrow phase collider and get back the contacts
             if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.DistanceGrid)
                 DistanceGrid.Instance.Collide(GeometryA, GeometryB, _newContactList);
-            if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.SAT)
+            else if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.SAT)
                 SAT.Instance.Collide(GeometryA, GeometryB, _newContactList);
+            else if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.NewSAT)
+                NewSAT.Instance.Collide(GeometryA, GeometryB, _newContactList);
 
             contactCount = _newContactList.Count;
 

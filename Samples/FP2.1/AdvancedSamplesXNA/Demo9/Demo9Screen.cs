@@ -18,7 +18,7 @@ namespace FarseerGames.AdvancedSamplesXNA.Demo9
             PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 100));
 
             // Use the SAT narrow phase collider
-            PhysicsSimulator.NarrowPhaseCollider = NarrowPhaseCollider.SAT;
+            PhysicsSimulator.NarrowPhaseCollider = NarrowPhaseCollider.NewSAT;
 
             // setup our debug view
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
