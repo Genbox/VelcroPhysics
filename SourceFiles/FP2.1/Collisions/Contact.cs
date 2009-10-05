@@ -44,7 +44,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         internal Vector2 r2;
         internal float tangentImpulse;
 
-        public Contact(ref Vector2 position, ref Vector2 normal, float separation, ref ContactId contactId)
+        public Contact(Vector2 position, Vector2 normal, float separation, ContactId contactId)
         {
             ContactId = contactId;
             Position = position;

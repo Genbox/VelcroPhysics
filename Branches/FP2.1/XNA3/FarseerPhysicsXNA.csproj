@@ -105,6 +105,9 @@
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\RayHelper.cs">
       <Link>Collisions\RayHelper.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\SAT.cs">
+      <Link>Collisions\SAT.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Collisions\SelectiveSweepCollider.cs">
       <Link>Collisions\SelectiveSweepCollider.cs</Link>
     </Compile>
@@ -258,7 +261,6 @@
     <Compile Include="..\..\..\SourceFiles\FP2.1\Pool.cs">
       <Link>Pool.cs</Link>
     </Compile>
-    <Compile Include="Collisions\SAT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

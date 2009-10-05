@@ -29,9 +29,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             }
         }
 
-        private Vector2 _tempVector;
-        private ContactId _tempContactId;
-
         /// <summary>
         /// Returns the contact list from two possibly intersecting Geom's. 
         /// This is the stationary version of this function. It doesn't 
@@ -47,8 +44,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             float distance = result.MinimumTranslationVector.Length();
             int contactsDetected = 0;
             Vector2 normal = Vector2.Normalize(-result.MinimumTranslationVector);
+            int contactsHandled = 0;
 
-            if (result.Intersect)
+            if (result.Intersect && distance > 0.001f)
             {
                 for (int i = 0; i < geomA.WorldVertices.Count; i++)
                 {
@@ -56,18 +54,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     {
                         if (InsidePolygon(geomB.WorldVertices, geomA.WorldVertices[i]))
                         {
-                            //if (!geomA.Body.IsStatic)
-                            {
-                                if (distance > 0.001f)
-                                {
-                                    _tempVector = geomA.WorldVertices[i];
-                                    _tempContactId = new ContactId(geomA.id, i, geomB.id);
-
-                                    Contact c = new Contact(ref _tempVector, ref normal, -distance, ref _tempContactId);
-                                    contactList.Add(c);
-                                    contactsDetected++;
-                                }
-                            }
+                            Contact c = new Contact(geomA.WorldVertices[i], normal, -distance, new ContactId(geomA.id, i, geomB.id));
+                            contactList.Add(c);
+                            contactsDetected++;
+                            contactsHandled++;
                         }
                     }
                     else break;
@@ -81,21 +71,51 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     {
                         if (InsidePolygon(geomA.WorldVertices, geomB.WorldVertices[i]))
                         {
-                            //if (!geomB.Body.IsStatic)
-                            {
-                                if (distance > 0.001f)
-                                {
-                                    _tempVector = geomB.WorldVertices[i];
-                                    _tempContactId = new ContactId(geomB.id, i, geomA.id);
-
-                                    Contact c = new Contact(ref _tempVector, ref normal, -distance, ref _tempContactId);
-                                    contactList.Add(c);
-                                    contactsDetected++;
-                                }
-                            }
+                            Contact c = new Contact(geomB.WorldVertices[i], normal, -distance, new ContactId(geomB.id, i, geomA.id));
+                            contactList.Add(c);
+                            contactsDetected++;
+                            contactsHandled++;
                         }
                     }
                     else break;
+                }
+
+                // No vertices of either polygon are inside the other, despite their intersection.
+                // (Think of an X made of two rectangles of four vertices each.)
+                // So select the vertex that is furthest past the edge forming the 
+                // separating axis as the contact point.
+                //   - Andrew Russell
+                if (contactsHandled == 0)
+                {
+                    int edgeIndex = result.bestEdgeIndex;
+                    Geom separatingEdgeOn = geomA;
+                    Geom otherPolygon = geomB;
+                    if (result.bestEdgeIndex >= geomA.WorldVertices.Count)
+                    {
+                        edgeIndex -= geomA.WorldVertices.Count;
+                        separatingEdgeOn = geomB;
+                        otherPolygon = geomA;
+                    }
+
+                    Vector2 edge = separatingEdgeOn.WorldVertices.GetEdge(edgeIndex);
+                    Vector2 axis = new Vector2(-edge.Y, edge.X);
+                    axis.Normalize();
+
+                    int mostPenetrationIndex = 0;
+                    float mostPenetration = Vector2.Dot(axis, otherPolygon.WorldVertices[0]);
+                    for (int i = 1; i < otherPolygon.WorldVertices.Count; i++)
+                    {
+                        float penetration = Vector2.Dot(axis, otherPolygon.WorldVertices[i]);
+                        if (penetration < mostPenetration)
+                        {
+                            mostPenetration = penetration;
+                            mostPenetrationIndex = i;
+                        }
+                    }
+
+                    Contact c = new Contact(otherPolygon.WorldVertices[mostPenetrationIndex], normal, -distance,
+                            new ContactId(otherPolygon.id, mostPenetrationIndex, separatingEdgeOn.id));
+                    contactList.Add(c);
                 }
             }
         }
@@ -266,27 +286,18 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     Vector2 d = polygonA.GetCentroid() - polygonB.GetCentroid();
                     if (Vector2.Dot(d, translationAxis) < 0)
                         translationAxis = -translationAxis;
+
+                    result.bestEdgeIndex = edgeIndex;
                 }
             }
 
             // The minimum translation vector
             // can be used to push the polygons appart.
             if (result.WillIntersect)
-                result.MinimumTranslationVector =
-                       translationAxis * minIntervalDistance;
+                result.MinimumTranslationVector = translationAxis * minIntervalDistance;
 
             return result;
         }
-
-
-        private int GetMiddleIndex(int i0, int i1, int N)
-        {
-            if (i0 < i1)
-                return (i0 + i1) / 2;
-            else
-                return ((i0 + i1 + N) / 2) % N;
-        }
-
     }
 
     /// <summary>
@@ -302,5 +313,8 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         // The translation to apply to the first polygon to push the polygons apart.
         public Vector2 MinimumTranslationVector;
+
+        // The edge that the separation occurs across (indices of polygonA then polygonB)
+        public int bestEdgeIndex;
     }
 }
