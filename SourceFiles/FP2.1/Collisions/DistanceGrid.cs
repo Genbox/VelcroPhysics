@@ -43,9 +43,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// </summary>
         private const float _gridCellSizeAABBFactor = .1f;
 
-        private Vector2 _tempVector;
-        private ContactId _tempContactId;
-
         /// <summary>
         /// Finds the contactpoints between the two geometries.
         /// </summary>
@@ -79,10 +76,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 {
                     geomA.TransformNormalToWorld(ref _feature.Normal, out _feature.Normal);
 
-                    _tempVector = geomB.WorldVertices[i];
-                    _tempContactId = new ContactId(geomB.id, vertexIndex, geomA.id);
-
-                    Contact contact = new Contact(ref _tempVector, ref _feature.Normal, _feature.Distance, ref _tempContactId);
+                    Contact contact = new Contact(geomB.WorldVertices[i], _feature.Normal, _feature.Distance, new ContactId(geomB.id, vertexIndex, geomA.id));
                     contactList.Add(contact);
                 }
             }
@@ -108,10 +102,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     geomB.TransformNormalToWorld(ref _feature.Normal, out _feature.Normal);
                     _feature.Normal = -_feature.Normal;
 
-                    _tempVector = geomA.WorldVertices[i];
-                    _tempContactId = new ContactId(geomA.id, vertexIndex, geomB.id);
-
-                    Contact contact = new Contact(ref _tempVector, ref _feature.Normal, _feature.Distance, ref _tempContactId);
+                    Contact contact = new Contact( geomA.WorldVertices[i], _feature.Normal, _feature.Distance, new ContactId(geomA.id, vertexIndex, geomB.id));
                     contactList.Add(contact);
                 }
             }
