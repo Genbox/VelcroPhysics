@@ -40,7 +40,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// NOTE- this will be empty if no contacts are present.</param>
         public void Collide(Geom geomA, Geom geomB, ContactList contactList)
         {
-            PolygonCollisionResult result = PolygonCollision(geomA.WorldVertices, geomB.WorldVertices, geomB.body.LinearVelocity - geomA.body.LinearVelocity);
+            PolygonCollisionResult result = PolygonCollision(geomA.WorldVertices, geomB.WorldVertices);
             float distance = result.MinimumTranslationVector.Length();
             int contactsDetected = 0;
             Vector2 normal = Vector2.Normalize(-result.MinimumTranslationVector);
@@ -158,10 +158,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return true;
         }
 
-        private void ProjectPolygon(Vector2 axis, Vertices polygon, ref float min, ref float max)
+        private void ProjectPolygon(Vector2 axis, Vertices polygon, out float min, out float max)
         {
             // To project a point on an axis use the dot product
-
             float dotProduct = Vector2.Dot(axis, polygon[0]);
             min = dotProduct;
             max = dotProduct;
@@ -191,7 +190,7 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="minB">The min B.</param>
         /// <param name="maxB">The max B.</param>
         /// <returns></returns>
-        public float IntervalDistance(float minA, float maxA, float minB, float maxB)
+        private float IntervalDistance(float minA, float maxA, float minB, float maxB)
         {
             if (minA < minB)
             {
@@ -210,11 +209,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
         /// <param name="polygonB">The polygon B.</param>
         /// <param name="velocity">The velocity.</param>
         /// <returns></returns>
-        internal PolygonCollisionResult PolygonCollision(Vertices polygonA, Vertices polygonB, Vector2 velocity)
+        private PolygonCollisionResult PolygonCollision(Vertices polygonA, Vertices polygonB)
         {
             PolygonCollisionResult result = new PolygonCollisionResult();
             result.Intersect = true;
-            result.WillIntersect = true;
 
             int edgeCountA = polygonA.Count;
             int edgeCountB = polygonB.Count;
@@ -241,9 +239,9 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 axis.Normalize();
 
                 // Find the projection of the polygon on the current axis
-                float minA = 0; float minB = 0; float maxA = 0; float maxB = 0;
-                ProjectPolygon(axis, polygonA, ref minA, ref maxA);
-                ProjectPolygon(axis, polygonB, ref minB, ref maxB);
+                float minA; float minB; float maxA; float maxB;
+                ProjectPolygon(axis, polygonA, out minA, out maxA);
+                ProjectPolygon(axis, polygonB, out minB, out maxB);
 
                 // Check if the polygon projections are currentlty intersecting
                 float intervalDistance = IntervalDistance(minA, maxA, minB, maxB);
@@ -293,7 +291,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             // The minimum translation vector
             // can be used to push the polygons appart.
-            if (result.WillIntersect)
                 result.MinimumTranslationVector = translationAxis * minIntervalDistance;
 
             return result;
@@ -305,9 +302,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
     /// </summary>
     internal struct PolygonCollisionResult
     {
-        // Are the polygons going to intersect forward in time?
-        public bool WillIntersect;
-
         // Are the polygons currently intersecting?
         public bool Intersect;
 
