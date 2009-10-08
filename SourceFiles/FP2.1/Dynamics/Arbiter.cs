@@ -323,8 +323,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 DistanceGrid.Instance.Collide(GeometryA, GeometryB, _newContactList);
             else if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.SAT)
                 SAT.Instance.Collide(GeometryA, GeometryB, _newContactList);
-            else if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.NewSAT)
-                NewSAT.Instance.Collide(GeometryA, GeometryB, _newContactList);
 
             contactCount = _newContactList.Count;
 
