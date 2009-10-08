@@ -417,6 +417,12 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             _linearDrag.X = 0;
             _linearDrag.Y = 0;
             _rotationalDrag = 0;
+
+            //Update the geometry with the new values (reset values)
+            if (Updated != null)
+            {
+                Updated(ref position, ref rotation);
+            }
         }
 
         /// <summary>

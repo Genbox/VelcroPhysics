@@ -546,9 +546,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     return DistanceGrid.Instance.Intersect(this, ref position);
                 if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.SAT)
                     return SAT.Instance.Intersect(this, ref position);
-                if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.NewSAT)
-                    return NewSAT.Instance.Intersect(this, ref position);
-
             }
             return false;
         }
@@ -567,8 +564,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 return DistanceGrid.Instance.Intersect(this, ref position);
             if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.SAT)
                 return SAT.Instance.Intersect(this, ref position);
-            if (PhysicsSimulator.NarrowPhaseCollider == NarrowPhaseCollider.NewSAT)
-                return NewSAT.Instance.Intersect(this, ref position);
 
             return false;
         }
