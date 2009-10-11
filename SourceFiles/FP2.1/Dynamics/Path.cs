@@ -292,7 +292,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Adds to physics simulator.
+        /// Adds the path to the physics simulator.
         /// </summary>
         /// <param name="physicsSimulator">The physics simulator.</param>
         public void AddToPhysicsSimulator(PhysicsSimulator physicsSimulator)
@@ -306,6 +306,22 @@ namespace FarseerGames.FarseerPhysics.Dynamics
             foreach (Spring spring in _springs)
                 physicsSimulator.Add(spring);
         }
+
+        /// <summary>
+        /// Remove all the elements of a path from the physics simulator.
+        /// </summary>
+        /// <param name="physicsSimulator"></param>
+        public void RemoveFromPhysicsSimulator(PhysicsSimulator physicsSimulator)
+        {
+            foreach (Body body in _bodies)
+                physicsSimulator.Remove(body);
+            foreach (Geom geom in _geoms)
+                physicsSimulator.Remove(geom);
+            foreach (Joint joint in _joints)
+                physicsSimulator.Remove(joint);
+            foreach (Spring spring in _springs)
+                physicsSimulator.Remove(spring);
+        }    
 
         /// <summary>
         /// Creates rectangular geoms that match the size of the bodies.
@@ -522,7 +538,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
                 tempBody = BodyFactory.Instance.CreateRectangleBody(_width, _height, _mass); // create the first body
                 tempBody.Position = tempVectorA;
-                tempBody.Rotation = FindNormalAngle(FindVertexNormal(_controlPoints[0], tempVectorA, tempVectorC));
+                tempBody.Rotation = Vertices.FindNormalAngle(Vertices.FindVertexNormal(_controlPoints[0], tempVectorA, tempVectorC));
                 // set the angle
 
                 _bodies.Add(tempBody); // add the first body
@@ -551,7 +567,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     tempBody = BodyFactory.Instance.CreateRectangleBody(_width, _height, _mass);
                     // create the first body
                     tempBody.Position = tempVectorA;
-                    tempBody.Rotation = FindNormalAngle(FindVertexNormal(tempVectorB, tempVectorA, tempVectorC));
+                    tempBody.Rotation = Vertices.FindNormalAngle(Vertices.FindVertexNormal(tempVectorB, tempVectorA, tempVectorC));
                     // set the angle
 
                     _bodies.Add(tempBody); // add all the rest of the bodies
@@ -561,75 +577,6 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                 MoveControlPoint(tempVectorC, _controlPoints.Count - 1);
                 _recalculate = false;
             }
-        }
-
-        // NOTE: Below are some internal functions to find things like normals and angles.
-
-        /// <summary>
-        /// Finds the mid-point of two Vector2.
-        /// </summary>
-        /// <param name="firstVector">First Vector2.</param>
-        /// <param name="secondVector">Other Vector2.</param>
-        /// <returns>Mid-point Vector2.</returns>
-        public static Vector2 FindMidpoint(Vector2 firstVector, Vector2 secondVector)
-        {
-            float midDeltaX, midDeltaY;
-
-            if (firstVector.X < secondVector.X)
-                midDeltaX = Math.Abs((firstVector.X - secondVector.X) * 0.5f); // find x axis midpoint
-            else
-                midDeltaX = (secondVector.X - firstVector.X) * 0.5f; // find x axis midpoint
-            if (firstVector.Y < secondVector.Y)
-                midDeltaY = Math.Abs((firstVector.Y - secondVector.Y) * 0.5f); // find y axis midpoint
-            else
-                midDeltaY = (secondVector.Y - firstVector.Y) * 0.5f; // find y axis midpoint
-
-            return (new Vector2(firstVector.X + midDeltaX, firstVector.Y + midDeltaY)); // return mid point
-        }
-
-        /// <summary>
-        /// Finds the angle of an edge.
-        /// </summary>
-        /// <param name="firstVector">First Vector2.</param>
-        /// <param name="secondVector">Other Vector2.</param>
-        /// <returns>Normal of the edge.</returns>
-        private Vector2 FindEdgeNormal(Vector2 firstVector, Vector2 secondVector)
-        {
-            //Xbox360 need this variable to be initialized to Vector2.Zero
-            Vector2 n = Vector2.Zero;
-
-            Vector2 t = new Vector2(firstVector.X - secondVector.X, firstVector.Y - secondVector.Y);
-
-            n.X = -t.Y; // get 2D normal
-            n.Y = t.X; // works only on counter clockwise polygons
-
-            return n; // we don't bother normalizing because we do this when we find the vertex normal
-        }
-
-        private Vector2 FindVertexNormal(Vector2 firstVector, Vector2 secondVector, Vector2 c)
-        {
-            Vector2 normal = FindEdgeNormal(firstVector, secondVector) + FindEdgeNormal(secondVector, c);
-
-            normal.Normalize();
-
-            return normal;
-        }
-
-        private float FindNormalAngle(Vector2 n)
-        {
-            if ((n.Y > 0.0f) && (n.X > 0.0f))
-                return (float)Math.Atan(n.X / -n.Y);
-
-            if ((n.Y < 0.0f) && (n.X > 0.0f))
-                return (float)Math.Atan(n.X / -n.Y); // good
-
-            if ((n.Y > 0.0f) && (n.X < 0.0f))
-                return (float)Math.Atan(-n.X / n.Y);
-
-            if ((n.Y < 0.0f) && (n.X < 0.0f))
-                return (float)Math.Atan(-n.X / n.Y); // good
-
-            return 0.0f;
         }
     }
 }

@@ -647,6 +647,83 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return builder.ToString();
         }
 
+        #region General purpose static tools
+        /// <summary>
+        /// Finds the mid-point of two Vector2.
+        /// </summary>
+        /// <param name="firstVector">First Vector2.</param>
+        /// <param name="secondVector">Other Vector2.</param>
+        /// <returns>Mid-point Vector2.</returns>
+        public static Vector2 FindMidpoint(Vector2 firstVector, Vector2 secondVector)
+        {
+            float midDeltaX, midDeltaY;
+
+            if (firstVector.X < secondVector.X)
+                midDeltaX = Math.Abs((firstVector.X - secondVector.X) * 0.5f); // find x axis midpoint
+            else
+                midDeltaX = (secondVector.X - firstVector.X) * 0.5f; // find x axis midpoint
+            if (firstVector.Y < secondVector.Y)
+                midDeltaY = Math.Abs((firstVector.Y - secondVector.Y) * 0.5f); // find y axis midpoint
+            else
+                midDeltaY = (secondVector.Y - firstVector.Y) * 0.5f; // find y axis midpoint
+
+            return (new Vector2(firstVector.X + midDeltaX, firstVector.Y + midDeltaY)); // return mid point
+        }
+
+        /// <summary>
+        /// Finds the normal from two vectors
+        /// </summary>
+        /// <param name="first">The first vector</param>
+        /// <param name="second">The second vector</param>
+        /// <returns></returns>
+        public static Vector2 FindEdgeNormal(Vector2 first, Vector2 second)
+        {
+            //Xbox360 need this variable to be initialized to Vector2.Zero
+            Vector2 normal = Vector2.Zero;
+
+            Vector2 temp = new Vector2(first.X - second.X, first.Y - second.Y);
+
+            normal.X = -temp.Y; // get 2D normal
+            normal.Y = temp.X; // works only on counter clockwise polygons
+
+            normal.Normalize();
+
+            return normal;
+        }
+
+        public static Vector2 FindVertexNormal(Vector2 first, Vector2 second, Vector2 c)
+        {
+            Vector2 temp;
+            Vector2 one = FindEdgeNormal(first, second);
+            Vector2 two = FindEdgeNormal(second, c);
+
+            Vector2.Add(ref one, ref two, out temp);
+            return temp;
+        }
+
+        /// <summary>
+        /// Finds the angle of the vector.
+        /// </summary>
+        /// <returns>Angle of the vector.</returns>
+        public static float FindNormalAngle(Vector2 n)
+        {
+            if ((n.Y > 0.0f) && (n.X > 0.0f))
+                return (float)Math.Atan(n.X / -n.Y);
+
+            if ((n.Y < 0.0f) && (n.X > 0.0f))
+                return (float)Math.Atan(n.X / -n.Y); // good
+
+            if ((n.Y > 0.0f) && (n.X < 0.0f))
+                return (float)Math.Atan(-n.X / n.Y);
+
+            if ((n.Y < 0.0f) && (n.X < 0.0f))
+                return (float)Math.Atan(-n.X / n.Y); // good
+
+            return 0.0f;
+        }
+
+        #endregion
+
         #region Sickbattery's Extension
 
         /// <summary>
@@ -2335,28 +2412,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
                     return base[index];
                 }
-                set
-                {
-                    //perform the index wrapping
-                    while (index < 0)
-                        index = Count + index;
-                    if (index >= Count)
-                        index %= Count;
-
-                    base[index] = value;
-                }
-            }
-
-            public CyclicalList() { }
-
-            public CyclicalList(IEnumerable<T> collection)
-                : base(collection)
-            {
-            }
-
-            public new void RemoveAt(int index)
-            {
-                Remove(this[index]);
             }
         }
         #endregion
@@ -3447,78 +3502,12 @@ namespace FarseerGames.FarseerPhysics.Collisions
     internal class Polygon
     {
         private const int maxVerticesPerPolygon = 32;
-        //private static readonly float linearSlop = 0.005f;	// 0.5 cm
         private const float angularSlop = 1.0f / 180.0f * (float)Math.PI; // 1 degrees
 
         private float[] x; //vertex arrays
         private float[] y;
         private int nVertices;
-        private bool areaIsSet;
         private float area;
-
-        /// <summary>
-        /// Check if the lines a0->a1 and b0->b1 cross.
-        /// If they do, intersectionPoint will be filled
-        /// with the point of crossing.
-        ///
-        /// Grazing lines should not return true.
-        /// </summary>
-        /// <param name="a0">The a0.</param>
-        /// <param name="a1">The a1.</param>
-        /// <param name="b0">The b0.</param>
-        /// <param name="b1">The b1.</param>
-        /// <param name="intersectionPoint">The intersection point.</param>
-        /// <returns></returns>
-        //private bool Intersect(Vector2 a0, Vector2 a1, Vector2 b0, Vector2 b1, out Vector2 intersectionPoint)
-        //{
-        //    intersectionPoint = Vector2.Zero;
-
-        //    if (a0 == b0 || a0 == b1 || a1 == b0 || a1 == b1)
-        //        return false;
-
-        //    float x1 = a0.X; float y1 = a0.Y;
-        //    float x2 = a1.X; float y2 = a1.Y;
-        //    float x3 = b0.X; float y3 = b0.Y;
-        //    float x4 = b1.X; float y4 = b1.Y;
-
-        //    //AABB early exit
-        //    if (Math.Max(x1, x2) < Math.Min(x3, x4) || Math.Max(x3, x4) < Math.Min(x1, x2)) return false;
-        //    if (Math.Max(y1, y2) < Math.Min(y3, y4) || Math.Max(y3, y4) < Math.Min(y1, y2)) return false;
-
-        //    float ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3));
-        //    float ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3));
-        //    float denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
-        //    if (Math.Abs(denom) < float.Epsilon)
-        //    {
-        //        //Lines are too close to parallel to call
-        //        return false;
-        //    }
-        //    ua /= denom;
-        //    ub /= denom;
-
-        //    if ((0 < ua) && (ua < 1) && (0 < ub) && (ub < 1))
-        //    {
-        //        intersectionPoint.X = (x1 + ua * (x2 - x1));
-        //        intersectionPoint.Y = (y1 + ua * (y2 - y1));
-        //        return true;
-        //    }
-
-        //    return false;
-        //}
-
-        /// <summary>
-        /// True if line from a0->a1 intersects b0->b1
-        /// </summary>
-        /// <param name="a0">The a0.</param>
-        /// <param name="a1">The a1.</param>
-        /// <param name="b0">The b0.</param>
-        /// <param name="b1">The b1.</param>
-        /// <returns></returns>
-        //private bool Intersect(Vector2 a0, Vector2 a1, Vector2 b0, Vector2 b1)
-        //{
-        //    Vector2 temp;
-        //    return Intersect(a0, a1, b0, b1, out temp);
-        //}
 
         private Polygon(float[] _x, float[] _y, int nVert)
         {
@@ -3530,7 +3519,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 x[i] = _x[i];
                 y[i] = _y[i];
             }
-            areaIsSet = false;
         }
 
         private Polygon(Vector2[] v, int nVert)
@@ -3544,7 +3532,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 y[i] = v[i].Y;
 
             }
-            areaIsSet = false;
         }
 
         private Polygon()
@@ -3552,13 +3539,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             x = null;
             y = null;
             nVertices = 0;
-            areaIsSet = false;
         }
 
         private float GetArea()
         {
-            // TODO: fix up the areaIsSet caching so that it can be used
-            //if (areaIsSet) return area;
             area = 0.0f;
 
             //First do wraparound
@@ -3568,7 +3552,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 area += x[i] * y[i + 1] - x[i + 1] * y[i];
             }
             area *= .5f;
-            areaIsSet = true;
             return area;
         }
 
@@ -3636,21 +3619,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
             //	printf("%d \n", newNVertices);
         }
 
-        /// <summary>
-        /// Allocates and returns pointer to vector vertex array.
-        /// Length of array is nVertices.
-        /// </summary>
-        /// <returns></returns>
-        //public Vector2[] GetVertexVecs()
-        //{
-        //    Vector2[] output = new Vector2[nVertices];
-        //    for (int i = 0; i < nVertices; ++i)
-        //    {
-        //        output[i] = new Vector2(x[i], y[i]);
-        //    }
-        //    return output;
-        //}
-
         private Polygon(Triangle t)
         {
             nVertices = 3;
@@ -3690,7 +3658,6 @@ namespace FarseerGames.FarseerPhysics.Collisions
                 x[i] = p.x[i];
                 y[i] = p.y[i];
             }
-            areaIsSet = false;
         }
 
         /// <summary>
@@ -3727,195 +3694,10 @@ namespace FarseerGames.FarseerPhysics.Collisions
             return true;
         }
 
-        // Pulled from b2Shape.cpp, assertions removed
-        //private static Vector2 PolyCentroid(Vector2[] vs, int count)
-        //{
-        //    Vector2 c = new Vector2(0.0f, 0.0f);
-        //    float area = 0.0f;
-
-        //    float inv3 = 1.0f / 3.0f;
-        //    Vector2 pRef = new Vector2(0.0f, 0.0f);
-        //    for (int i = 0; i < count; ++i)
-        //    {
-        //        // Triangle vertices.
-        //        Vector2 p1 = pRef;
-        //        Vector2 p2 = vs[i];
-        //        Vector2 p3 = i + 1 < count ? vs[i + 1] : vs[0];
-
-        //        Vector2 e1 = p2 - p1;
-        //        Vector2 e2 = p3 - p1;
-
-        //        float D = Calculator.Cross(e1, e2);
-
-        //        float triangleArea = 0.5f * D;
-        //        area += triangleArea;
-
-        //        // Area weighted centroid
-        //        c += triangleArea * inv3 * (p1 + p2 + p3);
-        //    }
-
-        //    // Centroid
-        //    c *= 1.0f / area;
-        //    return c;
-        //}
-
-        /// <summary>
-        /// Checks if polygon is valid for use in Box2d engine.
-        /// Last ditch effort to ensure no invalid polygons are
-        /// added to world geometry.
-        ///
-        /// Performs a full check, for simplicity, convexity,
-        /// orientation, minimum angle, and volume.  This won't
-        /// be very efficient, and a lot of it is redundant when
-        /// other tools in this section are used.
-        /// </summary>
-        /// <param name="printErrors">if set to <c>true</c> [print errors].</param>
-        /// <returns>
-        /// 	<c>true</c> if the specified print errors is usable; otherwise, <c>false</c>.
-        /// </returns>
-        //private bool IsUsable(bool printErrors)
-        //{
-        //    int error = -1;
-        //    bool noError = true;
-        //    if (nVertices < 3 || nVertices > maxVerticesPerPolygon) { noError = false; error = 0; }
-        //    if (!IsConvex()) { noError = false; error = 1; }
-        //    if (!IsSimple()) { noError = false; error = 2; }
-        //    if (GetArea() < float.Epsilon) { noError = false; error = 3; }
-
-        //    //Compute normals
-        //    Vector2[] normals = new Vector2[nVertices];
-        //    Vector2[] vertices = new Vector2[nVertices];
-        //    for (int i = 0; i < nVertices; ++i)
-        //    {
-        //        vertices[i] = new Vector2(x[i], y[i]);
-        //        int i1 = i;
-        //        int i2 = i + 1 < nVertices ? i + 1 : 0;
-        //        Vector2 edge = new Vector2(x[i2] - x[i1], y[i2] - y[i1]);
-        //        normals[i] = Calculator.Cross(edge, 1.0f);
-        //        normals[i].Normalize();
-        //    }
-
-        //    //Required side checks
-        //    for (int i = 0; i < nVertices; ++i)
-        //    {
-        //        int iminus = (i == 0) ? nVertices - 1 : i - 1;
-        //        //int32 iplus = (i==nVertices-1)?0:i+1;
-
-        //        //Parallel sides check
-        //        float cross = Calculator.Cross(normals[iminus], normals[i]);
-        //        cross = Calculator.Clamp(cross, -1.0f, 1.0f);
-        //        float angle = (float)Math.Asin(cross);
-        //        if (angle <= angularSlop)
-        //        {
-        //            noError = false;
-        //            error = 4;
-        //            break;
-        //        }
-
-        //        //Too skinny check
-        //        for (int j = 0; j < nVertices; ++j)
-        //        {
-        //            if (j == i || j == (i + 1) % nVertices)
-        //            {
-        //                continue;
-        //            }
-        //            float s = Vector2.Dot(normals[i], vertices[j] - vertices[i]);
-        //            if (s >= -linearSlop)
-        //            {
-        //                noError = false;
-        //                error = 5;
-        //            }
-        //        }
-
-
-        //        Vector2 centroid = PolyCentroid(vertices, nVertices);
-        //        Vector2 n1 = normals[iminus];
-        //        Vector2 n2 = normals[i];
-        //        Vector2 v = vertices[i] - centroid; ;
-
-        //        Vector2 d;
-        //        d.X = Vector2.Dot(n1, v) - 0.0f;
-        //        d.Y = Vector2.Dot(n2, v) - 0.0f;
-
-        //        // Shifting the edge inward by b2_0.0f should
-        //        // not cause the plane to pass the centroid.
-        //        if ((d.X < 0.0f) || (d.Y < 0.0f))
-        //        {
-        //            noError = false;
-        //            error = 6;
-        //        }
-
-        //    }
-
-        //    if (!noError && printErrors)
-        //    {
-        //        //printf("Found invalid polygon, ");
-        //        switch (error)
-        //        {
-        //            case 0:
-        //                //printf("must have between 3 and %d vertices.\n",b2_maxPolygonVertices);
-        //                break;
-        //            case 1:
-        //                //printf("must be convex.\n");
-        //                break;
-        //            case 2:
-        //                //printf("must be simple (cannot intersect itself).\n");
-        //                break;
-        //            case 3:
-        //                //printf("area is too small.\n");
-        //                break;
-        //            case 4:
-        //                //printf("sides are too close to parallel.\n");
-        //                break;
-        //            case 5:
-        //                //printf("polygon is too thin.\n");
-        //                break;
-        //            case 6:
-        //                //printf("core shape generation would move edge past centroid (too thin).\n");
-        //                break;
-        //            default:
-        //                //printf("don't know why.\n");
-        //                break;
-        //        }
-        //    }
-        //    return noError;
-        //}
-
-        //public bool IsUsable()
-        //{
-        //    return IsUsable(false);
-        //}
-
-        //Check for edge crossings
-        //private bool IsSimple()
-        //{
-        //    for (int i = 0; i < nVertices; ++i)
-        //    {
-        //        int iplus = (i + 1 > nVertices - 1) ? 0 : i + 1;
-        //        Vector2 a1 = new Vector2(x[i], y[i]);
-        //        Vector2 a2 = new Vector2(x[iplus], y[iplus]);
-        //        for (int j = i + 1; j < nVertices; ++j)
-        //        {
-        //            int jplus = (j + 1 > nVertices - 1) ? 0 : j + 1;
-        //            Vector2 b1 = new Vector2(x[j], y[j]);
-        //            Vector2 b2 = new Vector2(x[jplus], y[jplus]);
-        //            if (Intersect(a1, a2, b1, b2))
-        //            {
-        //                return false;
-        //            }
-        //        }
-        //    }
-        //    return true;
-        //}
-
         /// <summary>
         /// Tries to add a triangle to the polygon. Returns null if it can't connect
         /// properly, otherwise returns a pointer to the new Polygon. Assumes bitwise
         /// equality of joined vertex positions.
-        ///
-        /// Remember to delete the pointer afterwards.
-        /// Todo: Make this return a b2Polygon instead
-        /// of a pointer to a heap-allocated one.
         ///
         /// For internal use.
         /// </summary>
