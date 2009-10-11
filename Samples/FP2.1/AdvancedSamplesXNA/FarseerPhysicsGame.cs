@@ -2,7 +2,6 @@ using System;
 using DemoBaseXNA.Components;
 using DemoBaseXNA.ScreenSystem;
 using FarseerGames.AdvancedSamplesXNA.Demo1;
-using FarseerGames.AdvancedSamplesXNA.Demo10;
 using FarseerGames.AdvancedSamplesXNA.Demo2;
 using FarseerGames.AdvancedSamplesXNA.Demo3;
 using FarseerGames.AdvancedSamplesXNA.Demo4;
@@ -72,7 +71,6 @@ namespace FarseerGames.AdvancedSamplesXNA
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo7Screen.GetTitle(), new Demo7Screen());
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo8Screen.GetTitle(), new Demo8Screen());
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo9Screen.GetTitle(), new Demo9Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo10Screen.GetTitle(), new Demo10Screen());
             ScreenManager.MainMenuScreen.AddMainMenuItem("Exit", null, true);
 
             ScreenManager.GoToMainMenu();

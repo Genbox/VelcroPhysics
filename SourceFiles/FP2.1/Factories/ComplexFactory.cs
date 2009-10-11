@@ -230,15 +230,19 @@ namespace FarseerGames.FarseerPhysics.Factories
         public Path CreateChain(Vector2 start, Vector2 end, float width, float height, float linkWidth, float mass, bool pinStart,
                                 bool pinEnd, LinkType type)
         {
-            Path path = new Path(width, height, linkWidth, mass, false); // create the path
-            path.Add(start); // add starting point
-            path.Add(Path.FindMidpoint(start, end));
+            Path path = new Path(width, height, linkWidth, mass, false);
+            path.Add(start);
+            
             // add midpoint of line (must have this because my code needs at least 3 control points)
-            path.Add(end); // add end point
+            path.Add(Vertices.FindMidpoint(start, end));
+            
+            path.Add(end);
 
-            path.Update(); // call update to create all the bodies
-
-            path.LinkBodies(type, Min, Max, SpringConstant, DampingConstant, SpringRestLengthFactor); // link bodies together
+            // call update to create all the bodies
+            path.Update();
+            
+            // link bodies together
+            path.LinkBodies(type, Min, Max, SpringConstant, DampingConstant, SpringRestLengthFactor);
 
             if (pinStart)
                 path.Add(JointFactory.Instance.CreateFixedRevoluteJoint(path.Bodies[0], start));
@@ -246,47 +250,8 @@ namespace FarseerGames.FarseerPhysics.Factories
                 path.Add(JointFactory.Instance.CreateFixedRevoluteJoint(path.Bodies[path.Bodies.Count - 1],
                                                                         path.ControlPoints[2]));
 
-            foreach (Joint j in path.Joints)      // chains need a little give ;)
-            {
-                j.BiasFactor = 0.01f;
-                j.Softness = 0.05f;
-            }
-
-            return (path);
-        }
-
-        /// <summary>
-        /// Creates a rope.
-        /// </summary>
-        /// <param name="start">The start.</param>
-        /// <param name="end">The end.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="mass">The mass.</param>
-        /// <param name="pinStart">if set to <c>true</c> [pin start].</param>
-        /// <param name="pinEnd">if set to <c>true</c> [pin end].</param>
-        /// <param name="type">The joint/spring type.</param>
-        /// <returns></returns>
-        public Path CreateRope(Vector2 start, Vector2 end, float width, float height, float mass, bool pinStart,
-                               bool pinEnd, LinkType type)
-        {
-            Path path = new Path(width, height, mass, false); // create the path
-            path.Add(start); // add starting point
-            path.Add(Path.FindMidpoint(start, end));
-            // add midpoint of line (must have this because my code needs at least 3 control points)
-            path.Add(end); // add end point
-
-            path.Update(); // call update to create all the bodies
-
-            path.LinkBodies(type, Min, Max, SpringConstant, DampingConstant, SpringRestLengthFactor); // link bodies together
-
-            if (pinStart)
-                path.Add(JointFactory.Instance.CreateFixedRevoluteJoint(path.Bodies[0], start));
-            if (pinEnd)
-                path.Add(JointFactory.Instance.CreateFixedRevoluteJoint(path.Bodies[path.Bodies.Count - 1],
-                                                                        path.ControlPoints[2]));
-
-            foreach (Joint j in path.Joints)      // ropes need a little give ;)
+            // chains need a little give
+            foreach (Joint j in path.Joints)
             {
                 j.BiasFactor = 0.01f;
                 j.Softness = 0.05f;
@@ -308,21 +273,24 @@ namespace FarseerGames.FarseerPhysics.Factories
         /// <returns></returns>
         public Path CreateTrack(Vertices points, float width, float height, float mass, bool endless, int collisionGroup, LinkType type)
         {
-            Path path = new Path(width, height, mass, endless); // create the path
+            Path path = new Path(width, height, mass, endless);
 
+            // add all the points to the path
             foreach (Vector2 v in points)
-                path.Add(v); // add all the points to the path
+                path.Add(v);
 
-            path.Update(); // update the path
+            // create the bodies
+            path.Update();
 
-            Geom geom;
             for (int i = 0; i < path.Bodies.Count; i++)
             {
-                geom = GeomFactory.Instance.CreateRectangleGeom(path.Bodies[i], width, height);
+                Geom geom = GeomFactory.Instance.CreateRectangleGeom(path.Bodies[i], width, height);
                 geom.CollisionGroup = collisionGroup;
-                path.Add(geom); // add a geom to the chain
+                path.Add(geom);
             }
-            path.LinkBodies(type, Min, Max, SpringConstant, DampingConstant); // link bodies together
+
+            // link bodies together
+            path.LinkBodies(type, Min, Max, SpringConstant, DampingConstant);
 
             return path;
         }
