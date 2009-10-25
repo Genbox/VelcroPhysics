@@ -131,7 +131,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         /// Calculates all the work needed before updating the joint.
         /// </summary>
         /// <param name="inverseDt">The inverse dt.</param>
-        public override void PreStep(float inverseDt)
+        public override void PreStep(float inverseDt, float dt)
         {
             if (_body1.isStatic && _body2.isStatic)
                 return;

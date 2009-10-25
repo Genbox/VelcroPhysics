@@ -3,8 +3,7 @@ using DemoBaseXNA.DemoShare;
 using DemoBaseXNA.DrawingSystem;
 using FarseerGames.FarseerPhysics;
 using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
-using FarseerGames.FarseerPhysics.Factories;
+using FarseerGames.FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -36,7 +35,7 @@ namespace DemoBaseXNA.ScreenSystem
         protected bool firstRun = true;
         private Border _border;
         private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
-        private FixedLinearSpring _mousePickSpring;
+        private MouseJoint _mousePickSpring;
         private Geom _pickedGeom;
 
         protected GameScreen()
@@ -276,11 +275,14 @@ namespace DemoBaseXNA.ScreenSystem
                 _pickedGeom = PhysicsSimulator.Collide(point);
                 if (_pickedGeom != null)
                 {
-                    _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
-                                                                                      _pickedGeom.Body,
-                                                                                      _pickedGeom.Body.
-                                                                                          GetLocalPosition(point),
-                                                                                      point, 100, 50);
+                    _mousePickSpring = new MouseJoint(_pickedGeom.Body, point, 1000.0f * _pickedGeom.Body.Mass, 50, 0);
+                    PhysicsSimulator.Add(_mousePickSpring);
+                    
+                    //SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
+                    //                                                              _pickedGeom.Body,
+                    //                                                              _pickedGeom.Body.
+                    //                                                                  GetLocalPosition(point),
+                    //                                                              point, 100, 50);
                 }
             }
             else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&
@@ -297,7 +299,7 @@ namespace DemoBaseXNA.ScreenSystem
             //move anchor point
             if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && _mousePickSpring != null)
             {
-                _mousePickSpring.WorldAttachPoint = point;
+                _mousePickSpring.Target = point;
             }
         }
 #endif
@@ -312,8 +314,8 @@ namespace DemoBaseXNA.ScreenSystem
             if (_mousePickSpring != null)
             {
                 _lineBrush.Draw(ScreenManager.SpriteBatch,
-                                _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
-                                _mousePickSpring.WorldAttachPoint);
+                                _mousePickSpring.Body.Position,
+                                _mousePickSpring.Target);
             }
 
             if (DebugViewEnabled)
