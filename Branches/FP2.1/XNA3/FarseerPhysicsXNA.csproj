@@ -174,9 +174,6 @@
     <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Joints\JointList.cs">
       <Link>Dynamics\Joints\JointList.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Joints\MouseJoint.cs">
-      <Link>Dynamics\Joints\MouseJoint.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Dynamics\Joints\PinJoint.cs">
       <Link>Dynamics\Joints\PinJoint.cs</Link>
     </Compile>
