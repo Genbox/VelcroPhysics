@@ -72,7 +72,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Demo10\Demo10Screen.cs" />
     <Compile Include="Demo1\Demo1Screen.cs" />
     <Compile Include="Demo2\Demo2Screen.cs" />
     <Compile Include="Demo3\Demo3Screen.cs" />
