@@ -574,7 +574,7 @@ namespace FarseerGames.FarseerPhysics
                 if (!JointList[i].Enabled || JointList[i].IsDisposed)
                     continue;
 
-                JointList[i].PreStep(inverseDt);
+                JointList[i].PreStep(inverseDt, dt);
             }
 
             for (int i = 0; i < ArbiterList.Count; i++)

@@ -47,7 +47,8 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
         public event EventHandler<EventArgs> Broke;
 
         public abstract void Validate();
-        public abstract void PreStep(float inverseDt);
+
+        public abstract void PreStep(float inverseDt, float dt);
 
         public virtual void Update()
         {
@@ -58,6 +59,11 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
 
             if (Broke != null)
                 Broke(this, EventArgs.Empty);
+        }
+
+        public virtual void Update(float dt)
+        {
+
         }
 
         protected virtual void Dispose(bool disposing)

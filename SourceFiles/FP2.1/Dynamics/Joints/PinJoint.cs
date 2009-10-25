@@ -138,7 +138,7 @@ namespace FarseerGames.FarseerPhysics.Dynamics.Joints
             }
         }
 
-        public override void PreStep(float inverseDt)
+        public override void PreStep(float inverseDt, float dt)
         {
             if (_body1.isStatic && _body2.isStatic)
                 return;
