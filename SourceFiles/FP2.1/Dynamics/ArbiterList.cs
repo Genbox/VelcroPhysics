@@ -55,6 +55,17 @@ namespace FarseerGames.FarseerPhysics.Dynamics
                     Arbiter current = this[i];
                     RemoveAt(i);
                     arbiterPool.Insert(current);
+
+                    //No contacts exist between the two geometries, fire the OnSeperation event.
+                    if (current.GeometryA.OnSeparation != null)
+                    {
+                        current.GeometryA.OnSeparation(current.GeometryA, current.GeometryB);
+                    }
+
+                    if (current.GeometryB.OnSeparation != null)
+                    {
+                        current.GeometryB.OnSeparation(current.GeometryB, current.GeometryA);
+                    }
                 }
             }
         }
