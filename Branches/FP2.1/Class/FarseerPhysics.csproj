@@ -250,9 +250,6 @@
     <Compile Include="..\..\..\SourceFiles\FP2.1\Factories\ComplexFactory.cs">
       <Link>Factories\ComplexFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP2.1\Factories\ControllerFactory.cs">
-      <Link>Factories\ControllerFactory.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP2.1\Factories\GeomFactory.cs">
       <Link>Factories\GeomFactory.cs</Link>
     </Compile>
