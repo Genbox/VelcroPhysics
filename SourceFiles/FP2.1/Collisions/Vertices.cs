@@ -1263,12 +1263,16 @@ namespace FarseerGames.FarseerPhysics.Collisions
         private static Vertices CreateSimplePolygon(ref PolygonCreationAssistance pca, Vector2 entrance, Vector2 last)
         {
             bool entranceFound = false;
+            bool endOfHull = false;
 
             Vertices polygon = new Vertices();
             Vertices hullArea = new Vertices();
+            Vertices endOfHullArea = new Vertices();
 
             Vector2 current = Vector2.Zero;
-            Vector2 next;
+            Vector2 next = Vector2.Zero;
+
+            Vector2 outstanding;
 
             #region Entrance check
             // Get the entrance point. //todo: alle möglichkeiten testen
@@ -1309,28 +1313,35 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
             if (entranceFound)
             {
-
-                // next has to be set to entrance so it'll be added as the
-                // first point in the list.
-                next = entrance;
-
-                // Fast bugfix XD. The entrance point of course has to be added first to the polygon XD. Damn I forgot that!
                 polygon.Add(entrance);
+                hullArea.Add(entrance);
+
+                next = entrance;
 
                 do
                 {
-                    Vector2 outstanding;
-
-                    // Add the vertex to a hull pre vision list.
-                    hullArea.Add(next);
-
                     // Search in the pre vision list for an outstanding point.
                     if (SearchForOutstandingVertex(ref hullArea, pca.HullTolerance, out outstanding))
                     {
-                        // Add it and remove all vertices that don't matter anymore
-                        // (all the vertices before the outstanding).
-                        polygon.Add(outstanding);
-                        hullArea.RemoveRange(0, hullArea.IndexOf(outstanding));
+                        if (endOfHull)
+                        {
+                            // We have found the next pixel, but is it on the last bit of the hull?
+                            if (endOfHullArea.Contains(outstanding))
+                            {
+                                // Indeed.
+                                polygon.Add(outstanding);
+                            }
+
+                            // That's enough, quit.
+                            break;
+                        }
+                        else
+                        {
+                            // Add it and remove all vertices that don't matter anymore
+                            // (all the vertices before the outstanding).
+                            polygon.Add(outstanding);
+                            hullArea.RemoveRange(0, hullArea.IndexOf(outstanding));
+                        }
                     }
 
                     // Last point gets current and current gets next. Our little spider is moving forward on the hull ;).
@@ -1338,12 +1349,25 @@ namespace FarseerGames.FarseerPhysics.Collisions
                     current = next;
 
                     // Get the next point on hull.
-                    if (!GetNextHullPoint(ref pca, ref last, ref current, out next))
+                    if (GetNextHullPoint(ref pca, ref last, ref current, out next))
                     {
-                        next = entrance;
+                        // Add the vertex to a hull pre vision list.
+                        hullArea.Add(next);
                     }
-                } // Exit loop if next piont is the entrance point. The hull is complete now!
-                while (next != entrance);
+                    else
+                    {
+                        // Quit
+                        break;
+                    }
+
+                    if (next == entrance && !endOfHull)
+                    {
+                        // It's the last bit of the hull, search on and exit at next found vertex.
+                        endOfHull = true;
+                        endOfHullArea.AddRange(hullArea);
+                    }
+                }
+                while (true);
             }
 
             return polygon;
@@ -1474,27 +1498,29 @@ namespace FarseerGames.FarseerPhysics.Collisions
 
         private static bool SearchForOutstandingVertex(ref Vertices hullArea, float hullTolerance, out Vector2 outstanding)
         {
-            int hullAreaLastPoint = hullArea.Count - 1;
-
             Vector2 outstandingResult = Vector2.Zero;
             bool found = false;
 
-            Vector2 tempVector1;
-            Vector2 tempVector2;
-            Vector2 tempVector3;
-
-            // Search between the first and last hull point.
-            for (int i = 1; i < hullAreaLastPoint; i++)
+            if (hullArea.Count > 2)
             {
-                tempVector1 = hullArea[i];
-                tempVector2 = hullArea[0];
-                tempVector3 = hullArea[hullAreaLastPoint];
-                // Check if the distance is over the one that's tolerable.
-                if (Calculator.DistanceBetweenPointAndLineSegment(ref tempVector1, ref  tempVector2, ref tempVector3) >= hullTolerance)
+                int hullAreaLastPoint = hullArea.Count - 1;
+
+                Vector2 tempVector1;
+                Vector2 tempVector2 = hullArea[0];
+                Vector2 tempVector3 = hullArea[hullAreaLastPoint];
+
+                // Search between the first and last hull point.
+                for (int i = 1; i < hullAreaLastPoint; i++)
                 {
-                    outstandingResult = hullArea[i];
-                    found = true;
-                    break;
+                    tempVector1 = hullArea[i];
+
+                    // Check if the distance is over the one that's tolerable.
+                    if (Calculator.DistanceBetweenPointAndLineSegment(ref tempVector1, ref  tempVector2, ref tempVector3) >= hullTolerance)
+                    {
+                        outstandingResult = hullArea[i];
+                        found = true;
+                        break;
+                    }
                 }
             }
 
