@@ -238,7 +238,8 @@ namespace TestBed
 
             _pointCount = 0;
 
-            _world.Step(timeStep, settings.velocityIterations, settings.positionIterations, true);
+            _world.Step(timeStep, settings.velocityIterations, settings.positionIterations);
+            _world.ClearForces();
 
             _world.DrawDebugData();
 
@@ -402,11 +403,7 @@ namespace TestBed
                 md.BodyA = _groundBody;
                 md.BodyB = body;
                 md.Target = p;
-#if TARGET_FLOAT32_IS_FIXED
-		        md.maxForce = (body->GetMass() < 16.0)? (1000.0f * body->GetMass()) : float32(16000.0);
-#else
                 md.MaxForce = 1000.0f * body.GetMass();
-#endif
                 _mouseJoint = (MouseJoint)_world.CreateJoint(md);
                 body.SetAwake(true);
             }
@@ -452,7 +449,7 @@ namespace TestBed
             }
 
             BodyDef bd = new BodyDef();
-            bd.AutoSleep = true;
+            bd.AllowSleep = true;
             bd.Position = position;
 
             bd.Bullet = true;
@@ -505,7 +502,7 @@ namespace TestBed
         {
             Manifold manifold = contact.GetManifold();
 
-            if (manifold.PointCount == 0)
+            if (manifold._pointCount == 0)
             {
                 return;
             }
@@ -521,7 +518,7 @@ namespace TestBed
             WorldManifold worldManifold;
             contact.GetWorldManifold(out worldManifold);
 
-            for (int i = 0; i < manifold.PointCount && _pointCount < k_maxContactPoints; ++i)
+            for (int i = 0; i < manifold._pointCount && _pointCount < k_maxContactPoints; ++i)
             {
                 ContactPoint cp = _points[_pointCount];
                 cp.fixtureA = fixtureA;

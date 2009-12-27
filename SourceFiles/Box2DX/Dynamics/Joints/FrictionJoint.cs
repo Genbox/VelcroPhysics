@@ -95,18 +95,6 @@ namespace Box2DX.Dynamics
             return inv_dt * _angularImpulse;
         }
 
-        /// Set the maximum friction force in N.
-        public void SetMaxForce(float force)
-        {
-            _maxForce = force;
-        }
-
-        /// Get the maximum friction force in N.
-        public float GetMaxForce()
-        {
-            return _maxForce;
-        }
-
         /// Set the maximum friction torque in N*m.
         public void SetMaxTorque(float torque)
         {
@@ -273,6 +261,19 @@ namespace Box2DX.Dynamics
         public override Vec2 GetAnchorB()
         {
             return _bodyB.GetWorldPoint(_localAnchorB);
+        }
+
+        /// Set the maximum friction force in N.
+        public void SetMaxForce(float force)
+        {
+            Box2DXDebug.Assert(Math.IsValid(force) && force >= 0.0f);
+            _maxForce = force;
+        }
+
+        /// Get the maximum friction force in N.
+        public float GetMaxForce()
+        {
+            return _maxForce;
         }
     }
 }

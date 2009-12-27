@@ -62,7 +62,7 @@ namespace TestBed
             WorldManifold worldManifold = new WorldManifold();
             worldManifold.Initialize(manifold, _transformA, _polygonA._radius, _transformB, _polygonB._radius);
 
-            OpenGLDebugDraw.DrawString(5, _textLine, string.Format("point count = {0}", manifold.PointCount));
+            OpenGLDebugDraw.DrawString(5, _textLine, string.Format("point count = {0}", manifold._pointCount));
             _textLine += 15;
 
             {
@@ -81,7 +81,7 @@ namespace TestBed
                 _debugDraw.DrawPolygon(v, _polygonB._vertexCount, color);
             }
 
-            for (int i = 0; i < manifold.PointCount; ++i)
+            for (int i = 0; i < manifold._pointCount; ++i)
             {
                 OpenGLDebugDraw.DrawPoint(worldManifold.Points[i], 4.0f, new Color(0.9f, 0.3f, 0.3f));
             }

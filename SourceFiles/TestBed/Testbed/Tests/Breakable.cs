@@ -63,7 +63,7 @@ namespace TestBed
             }
 
             // Should the body break?
-            int count = contact.GetManifold().PointCount;
+            int count = contact.GetManifold()._pointCount;
 
             float maxImpulse = 0.0f;
             for (int i = 0; i < count; ++i)

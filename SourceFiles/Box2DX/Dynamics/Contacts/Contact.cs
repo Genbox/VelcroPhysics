@@ -133,7 +133,7 @@ namespace Box2DX.Dynamics
             _fixtureB = fixtureB;
 
             _manifold = new Manifold();
-            _manifold.PointCount = 0;
+            _manifold._pointCount = 0;
 
             _prev = null;
             _next = null;
@@ -301,7 +301,7 @@ namespace Box2DX.Dynamics
         {
             Box2DXDebug.Assert(Initialized == true);
 
-            if (contact._manifold.PointCount > 0)
+            if (contact._manifold._pointCount > 0)
             {
                 contact.GetFixtureA().GetBody().SetAwake(true);
                 contact.GetFixtureB().GetBody().SetAwake(true);
@@ -318,71 +318,93 @@ namespace Box2DX.Dynamics
 
         public void Update(ContactListener listener)
         {
-            //Note: Manifold is a class, not a struct. It will reference the old manifest, not copy it - DONE
+            //TODO: Check this method
+            //Manifold is a class, not a struct. It will reference the old manifest, not copy it - DONE
             Manifold oldManifold = new Manifold();
-            oldManifold.LocalPlaneNormal = _manifold.LocalPlaneNormal;
-            oldManifold.LocalPoint = _manifold.LocalPoint;
-            oldManifold.PointCount = _manifold.PointCount;
-            oldManifold.Points = _manifold.Points;
-            oldManifold.Type = _manifold.Type;
+            oldManifold._localPlaneNormal = _manifold._localPlaneNormal;
+            oldManifold._localPoint = _manifold._localPoint;
+            oldManifold._pointCount = _manifold._pointCount;
+            oldManifold._points = _manifold._points;
+            oldManifold._type = _manifold._type;
 
             // Re-enable this contact.
             _flags |= ContactFlag.EnabledFlag;
 
-            if (Collision.Collision.TestOverlap(_fixtureA._aabb, _fixtureB._aabb))
-            {
-                Evaluate();
-            }
-            else
-            {
-                _manifold.PointCount = 0;
-            }
+            bool touching = false;
+            bool wasTouching = (_flags & ContactFlag.TouchingFlag) == ContactFlag.TouchingFlag;
 
             Body bodyA = _fixtureA.GetBody();
             Body bodyB = _fixtureB.GetBody();
 
-            int oldCount = oldManifold.PointCount;
-            int newCount = _manifold.PointCount;
+            bool aabbOverlap = Collision.Collision.TestOverlap(_fixtureA._aabb, _fixtureB._aabb);
 
-            if (newCount == 0 && oldCount > 0)
+            // Is this contact a sensor?
+            if ((_flags & ContactFlag.SensorFlag) == ContactFlag.SensorFlag)
             {
-                bodyA.SetAwake(true);
-                bodyB.SetAwake(true);
-            }
+                if (aabbOverlap)
+                {
+                    Shape shapeA = _fixtureA.GetShape();
+                    Shape shapeB = _fixtureB.GetShape();
+                    Transform xfA = bodyA.GetTransform();
+                    Transform xfB = bodyB.GetTransform();
+                    touching = Collision.Collision.TestOverlap(shapeA, shapeB, xfA, xfB);
+                }
 
-            // Slow contacts don't generate TOI events.
-            if (bodyA.GetType() != Body.BodyType.Dynamic || bodyA.IsBullet() || bodyB.GetType() != Body.BodyType.Dynamic || bodyB.IsBullet())
-            {
-                _flags |= ContactFlag.ContinuousFlag;
+                // Sensors don't generate manifolds.
+                _manifold._pointCount = 0;
             }
             else
             {
-                _flags &= ~ContactFlag.ContinuousFlag;
-            }
-
-            // Match old contact ids to new contact ids and copy the
-            // stored impulses to warm start the solver.
-            for (int i = 0; i < _manifold.PointCount; ++i)
-            {
-                ManifoldPoint mp2 = _manifold.Points[i];
-                mp2._normalImpulse = 0.0f;
-                mp2._tangentImpulse = 0.0f;
-                ContactID id2 = mp2._id;
-
-                for (int j = 0; j < oldManifold.PointCount; ++j)
+                // Slow contacts don't generate TOI events.
+                if (bodyA.GetType() != Body.BodyType.Dynamic || bodyA.IsBullet() || bodyB.GetType() != Body.BodyType.Dynamic || bodyB.IsBullet())
                 {
-                    ManifoldPoint mp1 = oldManifold.Points[j];
+                    _flags |= ContactFlag.ContinuousFlag;
+                }
+                else
+                {
+                    _flags &= ~ContactFlag.ContinuousFlag;
+                }
 
-                    if (mp1._id.Key == id2.Key)
+                if (aabbOverlap)
+                {
+                    Evaluate();
+                    touching = _manifold._pointCount > 0;
+
+                    // Match old contact ids to new contact ids and copy the
+                    // stored impulses to warm start the solver.
+                    for (int i = 0; i < _manifold._pointCount; ++i)
                     {
-                        mp2._normalImpulse = mp1._normalImpulse;
-                        mp2._tangentImpulse = mp1._tangentImpulse;
-                        break;
+                        ManifoldPoint mp2 = _manifold._points[i];
+                        mp2._normalImpulse = 0.0f;
+                        mp2._tangentImpulse = 0.0f;
+                        ContactID id2 = mp2._id;
+
+                        for (int j = 0; j < oldManifold._pointCount; ++j)
+                        {
+                            ManifoldPoint mp1 = oldManifold._points[j];
+
+                            if (mp1._id.Key == id2.Key)
+                            {
+                                mp2._normalImpulse = mp1._normalImpulse;
+                                mp2._tangentImpulse = mp1._tangentImpulse;
+                                break;
+                            }
+                        }
                     }
+                }
+                else
+                {
+                    _manifold._pointCount = 0;
+                }
+
+                if (touching != wasTouching)
+                {
+                    bodyA.SetAwake(true);
+                    bodyB.SetAwake(true);
                 }
             }
 
-            if (newCount > 0)
+            if (touching)
             {
                 _flags |= ContactFlag.TouchingFlag;
             }
@@ -391,12 +413,12 @@ namespace Box2DX.Dynamics
                 _flags &= ~ContactFlag.TouchingFlag;
             }
 
-            if (oldCount == 0 && newCount > 0)
+            if (wasTouching == false && touching == true)
             {
                 listener.BeginContact(this);
             }
 
-            if (oldCount > 0 && newCount == 0)
+            if (wasTouching == true && touching == false)
             {
                 listener.EndContact(this);
             }

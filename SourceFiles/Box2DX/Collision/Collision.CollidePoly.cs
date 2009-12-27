@@ -218,7 +218,7 @@ namespace Box2DX.Collision
             PolygonShape polyB, Transform xfB)
         {
             manifold = new Manifold();
-            manifold.PointCount = 0;
+            manifold._pointCount = 0;
             float totalRadius = polyA._radius + polyB._radius;
 
             int edgeA = 0;
@@ -246,7 +246,7 @@ namespace Box2DX.Collision
                 xf1 = xfB;
                 xf2 = xfA;
                 edge1 = edgeB;
-                manifold.Type = Manifold.ManifoldType.FaceB;
+                manifold._type = Manifold.ManifoldType.FaceB;
                 flip = 1;
             }
             else
@@ -256,7 +256,7 @@ namespace Box2DX.Collision
                 xf1 = xfA;
                 xf2 = xfB;
                 edge1 = edgeA;
-                manifold.Type = Manifold.ManifoldType.FaceA;
+                manifold._type = Manifold.ManifoldType.FaceA;
                 flip = 0;
             }
 
@@ -310,8 +310,8 @@ namespace Box2DX.Collision
             }
 
             // Now clipPoints2 contains the clipped points.
-            manifold.LocalPlaneNormal = localNormal;
-            manifold.LocalPoint = planePoint;
+            manifold._localPlaneNormal = localNormal;
+            manifold._localPoint = planePoint;
 
             int pointCount = 0;
             for (int i = 0; i < Settings.MaxManifoldPoints; ++i)
@@ -320,7 +320,7 @@ namespace Box2DX.Collision
 
                 if (separation <= totalRadius)
                 {
-                    ManifoldPoint cp = manifold.Points[pointCount];
+                    ManifoldPoint cp = manifold._points[pointCount];
                     cp._localPoint = Math.MulT(xf2, clipPoints2[i].V);
                     cp._id = clipPoints2[i].ID;
                     cp._id.Features.Flip = flip;
@@ -328,7 +328,7 @@ namespace Box2DX.Collision
                 }
             }
 
-            manifold.PointCount = pointCount;
+            manifold._pointCount = pointCount;
         }
     }
 }
