@@ -236,10 +236,10 @@ namespace TestBed
             base.Step(settings);
 
 
-            if (Collision.GjkCalls > 0)
+            if (Collision._gjkCalls > 0)
             {
                 OpenGLDebugDraw.DrawString(5, _textLine, string.Format("gjk calls = {0}, ave gjk iters = {1}, max gjk iters = {2}",
-                    Collision.GjkCalls, Collision.GjkIters / Collision.GjkCalls, Collision.GjkMaxIters));
+                    Collision._gjkCalls, Collision._gjkIters / Collision._gjkCalls, Collision._gjkMaxIters));
                 _textLine += 15;
             }
 
