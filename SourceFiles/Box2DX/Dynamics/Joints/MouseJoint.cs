@@ -188,7 +188,7 @@ namespace Box2DX.Dynamics
 			K.Col1.X += _gamma;
 			K.Col2.Y += _gamma;
 
-			_mass = K.Invert();
+			_mass = K.GetInverse();
 
 			_C = b._sweep.C + r - _target;
 

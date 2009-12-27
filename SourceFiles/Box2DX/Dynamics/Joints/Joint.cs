@@ -33,7 +33,9 @@ namespace Box2DX.Dynamics
         MouseJoint,
         GearJoint,
         LineJoint,
-        FixedJoint
+        FixedJoint,
+        WeldJoint,
+        FrictionJoint
     }
 
     public enum LimitState
@@ -294,6 +296,18 @@ namespace Box2DX.Dynamics
                         joint = new LineJoint((LineJointDef)def);
                     }
                     break;
+
+                case JointType.WeldJoint:
+                    {
+                        joint = new WeldJoint((WeldJointDef)def);
+                    }
+                    break;
+
+                case JointType.FrictionJoint:
+                    {
+                        joint = new FrictionJoint((FrictionJointDef)def);
+                    }
+                    break;
                 default:
                     Box2DXDebug.Assert(false);
                     break;
@@ -309,6 +323,7 @@ namespace Box2DX.Dynamics
 
         internal abstract void InitVelocityConstraints(TimeStep step);
         internal abstract void SolveVelocityConstraints(TimeStep step);
+        internal virtual void FinalizeVelocityConstraints() { }
 
         // This returns true if the position errors are within tolerance.
         internal abstract bool SolvePositionConstraints(float baumgarte);

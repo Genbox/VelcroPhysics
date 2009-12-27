@@ -107,7 +107,7 @@ namespace Box2DX.Common
 		/// <summary>
 		/// Compute the inverse of this matrix, such that inv(A) * A = identity.
 		/// </summary>
-		public Mat22 Invert()
+		public Mat22 GetInverse()
 		{
 			float a = Col1.X, b = Col2.X, c = Col1.Y, d = Col2.Y;
 			Mat22 B = new Mat22();

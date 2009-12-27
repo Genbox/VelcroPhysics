@@ -198,7 +198,7 @@ namespace Box2DX.Dynamics
                         // K is safe to invert.
                         cc.K.Col1.Set(k11, k12);
                         cc.K.Col2.Set(k12, k22);
-                        cc.NormalMass = cc.K.Invert();
+                        cc.NormalMass = cc.K.GetInverse();
                     }
                     else
                     {

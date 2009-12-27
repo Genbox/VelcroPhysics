@@ -123,6 +123,7 @@ namespace TestBed
     {
         public static TestEntry[] g_testEntries = new TestEntry[]
 		{			
+	        new TestEntry("Cantilever", Cantilever.Create),
 	        new TestEntry("Body Types", BodyTypes.Create),
 	        new TestEntry("Confined", Confined.Create),
 	        new TestEntry("Bridge", Bridge.Create),
