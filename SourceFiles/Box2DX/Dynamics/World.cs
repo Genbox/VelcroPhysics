@@ -846,10 +846,10 @@ namespace Box2DX.Dynamics
                 island.Solve(step, _gravity, _allowSleep);
 
                 // Post solve cleanup.
-                for (int i = 0; i < island.BodyCount; ++i)
+                for (int i = 0; i < island._bodyCount; ++i)
                 {
                     // Allow static bodies to participate in other islands.
-                    Body b = island.Bodies[i];
+                    Body b = island._bodies[i];
                     if (b.GetType() == Body.BodyType.Static)
                     {
                         b._flags &= ~Body.BodyFlags.IslandFlag;
@@ -1078,7 +1078,7 @@ namespace Box2DX.Dynamics
                     for (ContactEdge cEdge = b._contactList; cEdge != null; cEdge = cEdge.Next)
                     {
                         // Does the TOI island still have space for contacts?
-                        if (island.ContactCount == island.ContactCapacity)
+                        if (island._contactCount == island._contactCapacity)
                         {
                             break;
                         }
@@ -1124,7 +1124,7 @@ namespace Box2DX.Dynamics
 
                     for (JointEdge jEdge = b._jointList; jEdge != null; jEdge = jEdge.Next)
                     {
-                        if (island.JointCount == island.JointCapacity)
+                        if (island._jointCount == island._jointCapacity)
                         {
                             continue;
                         }
@@ -1174,10 +1174,10 @@ namespace Box2DX.Dynamics
                 island.SolveTOI(ref subStep);
 
                 // Post solve cleanup.
-                for (int i = 0; i < island.BodyCount; ++i)
+                for (int i = 0; i < island._bodyCount; ++i)
                 {
                     // Allow bodies to participate in future TOI islands.
-                    Body b = island.Bodies[i];
+                    Body b = island._bodies[i];
                     b._flags &= ~Body.BodyFlags.IslandFlag;
 
                     if (b.IsAwake() == false)
@@ -1200,17 +1200,17 @@ namespace Box2DX.Dynamics
                     }
                 }
 
-                for (int i = 0; i < island.ContactCount; ++i)
+                for (int i = 0; i < island._contactCount; ++i)
                 {
                     // Allow contacts to participate in future TOI islands.
-                    Contact c = island.Contacts[i];
+                    Contact c = island._contacts[i];
                     c._flags &= ~(ContactFlag.ToiFlag | ContactFlag.IslandFlag);
                 }
 
-                for (int i = 0; i < island.JointCount; ++i)
+                for (int i = 0; i < island._jointCount; ++i)
                 {
                     // Allow joints to participate in future TOI islands.
-                    Joint j = island.Joints[i];
+                    Joint j = island._joints[i];
                     j._islandFlag = false;
                 }
 

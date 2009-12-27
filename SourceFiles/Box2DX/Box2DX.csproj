@@ -78,6 +78,7 @@
     <Compile Include="Dynamics\Fixture.cs" />
     <Compile Include="Dynamics\Island.cs" />
     <Compile Include="Dynamics\Joints\DistanceJoint.cs" />
+    <Compile Include="Dynamics\Joints\FrictionJoint.cs" />
     <Compile Include="Dynamics\Joints\GearJoint.cs" />
     <Compile Include="Dynamics\Joints\Joint.cs" />
     <Compile Include="Dynamics\Joints\LineJoint.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Dynamics\Joints\PrismaticJoint.cs" />
     <Compile Include="Dynamics\Joints\PulleyJoint.cs" />
     <Compile Include="Dynamics\Joints\RevoluteJoint.cs" />
+    <Compile Include="Dynamics\Joints\WeldJoint.cs" />
     <Compile Include="Dynamics\TimeStep.cs" />
     <Compile Include="Dynamics\World.cs" />
     <Compile Include="Dynamics\WorldCallbacks.cs" />

@@ -157,67 +157,67 @@ namespace Box2DX.Dynamics
 
     public class Island : IDisposable
     {
-        public ContactListener Listener;
+        public ContactListener _listener;
 
-        public Body[] Bodies;
-        public Contact[] Contacts;
-        public Joint[] Joints;
+        public Body[] _bodies;
+        public Contact[] _contacts;
+        public Joint[] _joints;
 
-        public Position[] Positions;
-        public Velocity[] Velocities;
+        public Position[] _positions;
+        public Velocity[] _velocities;
 
-        public int BodyCount;
-        public int JointCount;
-        public int ContactCount;
+        public int _bodyCount;
+        public int _jointCount;
+        public int _contactCount;
 
-        public int BodyCapacity;
-        public int ContactCapacity;
-        public int JointCapacity;
+        public int _bodyCapacity;
+        public int _contactCapacity;
+        public int _jointCapacity;
 
-        public int PositionIterationCount;
+        public int _positionIterationCount;
 
         public Island(int bodyCapacity, int contactCapacity, int jointCapacity, ContactListener listener)
         {
-            BodyCapacity = bodyCapacity;
-            ContactCapacity = contactCapacity;
-            JointCapacity = jointCapacity;
-            BodyCount = 0;
-            ContactCount = 0;
-            JointCount = 0;
+            _bodyCapacity = bodyCapacity;
+            _contactCapacity = contactCapacity;
+            _jointCapacity = jointCapacity;
+            _bodyCount = 0;
+            _contactCount = 0;
+            _jointCount = 0;
 
-            Listener = listener;
+            _listener = listener;
 
-            Bodies = new Body[bodyCapacity];
-            Contacts = new Contact[contactCapacity];
-            Joints = new Joint[jointCapacity];
+            _bodies = new Body[bodyCapacity];
+            _contacts = new Contact[contactCapacity];
+            _joints = new Joint[jointCapacity];
 
-            Velocities = new Velocity[BodyCapacity];
-            Positions = new Position[BodyCapacity];
+            _velocities = new Velocity[_bodyCapacity];
+            _positions = new Position[_bodyCapacity];
         }
 
         public void Dispose()
         {
             // Warning: the order should reverse the constructor order.
-            Positions = null;
-            Velocities = null;
-            Joints = null;
-            Contacts = null;
-            Bodies = null;
+            _positions = null;
+            _velocities = null;
+            _joints = null;
+            _contacts = null;
+            _bodies = null;
         }
 
         public void Clear()
         {
-            BodyCount = 0;
-            ContactCount = 0;
-            JointCount = 0;
+            _bodyCount = 0;
+            _contactCount = 0;
+            _jointCount = 0;
         }
 
         public void Solve(TimeStep step, Vec2 gravity, bool allowSleep)
         {
             // Integrate velocities and apply damping.
-            for (int i = 0; i < BodyCount; ++i)
+            for (int i = 0; i < _bodyCount; ++i)
             {
-                Body b = Bodies[i];
+                Body b = _bodies[i];
 
                 if (b.GetType() != Body.BodyType.Dynamic)
                 {
@@ -246,34 +246,39 @@ namespace Box2DX.Dynamics
                 b._angularVelocity *= Common.Math.Clamp(1.0f - step.Dt * b._angularDamping, 0.0f, 1.0f);
             }
 
-            ContactSolver contactSolver = new ContactSolver(step, Contacts, ContactCount);
+            ContactSolver contactSolver = new ContactSolver(step, _contacts, _contactCount);
 
             // Initialize velocity constraints.
             contactSolver.InitVelocityConstraints(step);
 
-            for (int i = 0; i < JointCount; ++i)
+            for (int i = 0; i < _jointCount; ++i)
             {
-                Joints[i].InitVelocityConstraints(step);
+                _joints[i].InitVelocityConstraints(step);
             }
 
             // Solve velocity constraints.
             for (int i = 0; i < step.VelocityIterations; ++i)
             {
-                for (int j = 0; j < JointCount; ++j)
+                for (int j = 0; j < _jointCount; ++j)
                 {
-                    Joints[j].SolveVelocityConstraints(step);
+                    _joints[j].SolveVelocityConstraints(step);
                 }
 
                 contactSolver.SolveVelocityConstraints();
             }
 
             // Post-solve (store impulses for warm starting).
+            for (int i = 0; i < _jointCount; ++i)
+            {
+                _joints[i].FinalizeVelocityConstraints();
+            }
+
             contactSolver.FinalizeVelocityConstraints();
 
             // Integrate positions.
-            for (int i = 0; i < BodyCount; ++i)
+            for (int i = 0; i < _bodyCount; ++i)
             {
-                Body b = Bodies[i];
+                Body b = _bodies[i];
 
                 if (b.GetType() == Body.BodyType.Static)
                 {
@@ -288,7 +293,7 @@ namespace Box2DX.Dynamics
                     b._linearVelocity = (Settings.MaxTranslation * step.Inv_Dt) * translation;
                 }
 
-                float rotation = step.Dt * Bodies[i]._angularVelocity;
+                float rotation = step.Dt * _bodies[i]._angularVelocity;
                 if (rotation * rotation > Settings.MaxRotationSquared)
                 {
                     if (rotation < 0.0)
@@ -321,9 +326,9 @@ namespace Box2DX.Dynamics
                 bool contactsOkay = contactSolver.SolvePositionConstraints(Settings.ContactBaumgarte);
 
                 bool jointsOkay = true;
-                for (int j = 0; j < JointCount; ++j)
+                for (int j = 0; j < _jointCount; ++j)
                 {
-                    bool jointOkay = Joints[j].SolvePositionConstraints(Settings.ContactBaumgarte);
+                    bool jointOkay = _joints[j].SolvePositionConstraints(Settings.ContactBaumgarte);
                     jointsOkay = jointsOkay && jointOkay;
                 }
 
@@ -345,9 +350,9 @@ namespace Box2DX.Dynamics
                 float angTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
 #endif
 
-                for (int i = 0; i < BodyCount; ++i)
+                for (int i = 0; i < _bodyCount; ++i)
                 {
-                    Body b = Bodies[i];
+                    Body b = _bodies[i];
 
                     if (b._invMass == 0.0f)
                     {
@@ -382,9 +387,9 @@ namespace Box2DX.Dynamics
 
                 if (minSleepTime >= Settings.TimeToSleep)
                 {
-                    for (int i = 0; i < BodyCount; ++i)
+                    for (int i = 0; i < _bodyCount; ++i)
                     {
-                        Body b = Bodies[i];
+                        Body b = _bodies[i];
                         b.SetAwake(false);
                     }
                 }
@@ -393,25 +398,25 @@ namespace Box2DX.Dynamics
 
         public void SolveTOI(ref TimeStep subStep)
         {
-            ContactSolver contactSolver = new ContactSolver(subStep, Contacts, ContactCount);
+            ContactSolver contactSolver = new ContactSolver(subStep, _contacts, _contactCount);
 
             // No warm starting is needed for TOI events because warm
             // starting impulses were applied in the discrete solver.
 
             // Warm starting for joints is off for now, but we need to
             // call this function to compute Jacobians.
-            for (int i = 0; i < JointCount; ++i)
+            for (int i = 0; i < _jointCount; ++i)
             {
-                Joints[i].InitVelocityConstraints(subStep);
+                _joints[i].InitVelocityConstraints(subStep);
             }
 
             // Solve velocity constraints.
             for (int i = 0; i < subStep.VelocityIterations; ++i)
             {
                 contactSolver.SolveVelocityConstraints();
-                for (int j = 0; j < JointCount; ++j)
+                for (int j = 0; j < _jointCount; ++j)
                 {
-                    Joints[j].SolveVelocityConstraints(subStep);
+                    _joints[j].SolveVelocityConstraints(subStep);
                 }
             }
 
@@ -419,9 +424,9 @@ namespace Box2DX.Dynamics
             // because they can be quite large.
 
             // Integrate positions.
-            for (int i = 0; i < BodyCount; ++i)
+            for (int i = 0; i < _bodyCount; ++i)
             {
-                Body b = Bodies[i];
+                Body b = _bodies[i];
 
                 if (b.GetType() == Body.BodyType.Static)
                 {
@@ -488,9 +493,9 @@ namespace Box2DX.Dynamics
             {
                 bool contactsOkay = contactSolver.SolvePositionConstraints(k_toiBaumgarte);
                 bool jointsOkay = true;
-                for (int j = 0; j < JointCount; ++j)
+                for (int j = 0; j < _jointCount; ++j)
                 {
-                    bool jointOkay = Joints[j].SolvePositionConstraints(k_toiBaumgarte);
+                    bool jointOkay = _joints[j].SolvePositionConstraints(k_toiBaumgarte);
                     jointsOkay = jointsOkay && jointOkay;
                 }
 
@@ -506,33 +511,33 @@ namespace Box2DX.Dynamics
 
         public void Add(ref Body body)
         {
-            Box2DXDebug.Assert(BodyCount < BodyCapacity);
-            body._islandIndex = BodyCount;
-            Bodies[BodyCount++] = body;
+            Box2DXDebug.Assert(_bodyCount < _bodyCapacity);
+            body._islandIndex = _bodyCount;
+            _bodies[_bodyCount++] = body;
         }
 
         public void Add(ref Contact contact)
         {
-            Box2DXDebug.Assert(ContactCount < ContactCapacity);
-            Contacts[ContactCount++] = contact;
+            Box2DXDebug.Assert(_contactCount < _contactCapacity);
+            _contacts[_contactCount++] = contact;
         }
 
         public void Add(Joint joint)
         {
-            Box2DXDebug.Assert(JointCount < JointCapacity);
-            Joints[JointCount++] = joint;
+            Box2DXDebug.Assert(_jointCount < _jointCapacity);
+            _joints[_jointCount++] = joint;
         }
 
         public void Report(ContactConstraint[] constraints)
         {
-            if (Listener == null)
+            if (_listener == null)
             {
                 return;
             }
 
-            for (int i = 0; i < ContactCount; ++i)
+            for (int i = 0; i < _contactCount; ++i)
             {
-                Contact c = Contacts[i];
+                Contact c = _contacts[i];
 
                 ContactConstraint cc = constraints[i];
 
@@ -543,7 +548,7 @@ namespace Box2DX.Dynamics
                     impulse.tangentImpulses[j] = cc.Points[j].TangentImpulse;
                 }
 
-                Listener.PostSolve(c, impulse);
+                _listener.PostSolve(c, impulse);
             }
         }
     }

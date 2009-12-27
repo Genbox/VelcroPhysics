@@ -35,11 +35,12 @@ namespace TestBed
             _world.Gravity = new Vec2(0.0f, 0.0f);
 
             const float k_restitution = 0.4f;
-
+             
+            Body ground;
             {
                 BodyDef bd = new BodyDef();
                 bd.Position.Set(0.0f, 20.0f);
-                Body ground = _world.CreateBody(bd);
+                ground = _world.CreateBody(bd);
 
                 PolygonShape shape = new PolygonShape();
 
@@ -80,7 +81,7 @@ namespace TestBed
 
                 FixtureDef sd1 = new FixtureDef();
                 sd1.Shape = poly1;
-                sd1.Density = 2.0f;
+                sd1.Density = 4.0f;
 
                 Transform xf2 = new Transform();
                 xf2.R.Set(-0.3524f * Box2DX.Common.Settings.pi);
@@ -98,7 +99,8 @@ namespace TestBed
                 sd2.Density = 2.0f;
 
                 BodyDef bd = new BodyDef();
-                bd.AngularDamping = 2.0f;
+                bd.Type = Body.BodyType.Dynamic;
+                bd.AngularDamping = 5.0f;
                 bd.LinearDamping = 0.1f;
 
                 bd.Position.Set(0.0f, 2.0f);
@@ -106,6 +108,45 @@ namespace TestBed
                 _body = _world.CreateBody(bd);
                 _body.CreateFixture(sd1);
                 _body.CreateFixture(sd2);
+            }
+
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.5f, 0.5f);
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Density = 1.0f;
+                fd.Friction = 0.3f;
+
+                for (int i = 0; i < 10; ++i)
+                {
+                    BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
+
+                    bd.Position.Set(0.0f, 5.0f + 1.54f * i);
+                    Body body = _world.CreateBody(bd);
+
+                    body.CreateFixture(fd);
+
+                    float gravity = 10.0f;
+                    float I = body.GetInertia();
+                    float mass = body.GetMass();
+
+                    // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
+                    float radius = Math.Sqrt(2.0f * I / mass);
+
+                    FrictionJointDef jd = new FrictionJointDef();
+                    jd.localAnchorA.SetZero();
+                    jd.localAnchorB.SetZero();
+                    jd.BodyA = ground;
+                    jd.BodyB = body;
+                    jd.CollideConnected = true;
+                    jd.maxForce = mass * gravity;
+                    jd.maxTorque = mass * radius * gravity;
+
+                    _world.CreateJoint(jd);
+                }
             }
         }
 
@@ -123,13 +164,13 @@ namespace TestBed
 
                 case System.Windows.Forms.Keys.A:
                     {
-                        _body.ApplyTorque(20.0f);
+                        _body.ApplyTorque(50.0f);
                     }
                     break;
 
                 case System.Windows.Forms.Keys.D:
                     {
-                        _body.ApplyTorque(-20.0f);
+                        _body.ApplyTorque(-50.0f);
                     }
                     break;
             }

@@ -52,6 +52,7 @@ namespace Box2DX.Dynamics
             Bullet = false;
             Type = Body.BodyType.Static;
             Active = true;
+            InertiaScale = 1.0f;
         }
 
         /// <summary>
@@ -119,14 +120,14 @@ namespace Box2DX.Dynamics
         /// </summary>
         public bool Active;
 
-        /// The body type: static, kinematic, or dynamic.
-        /// Note: if a dynamic body would have zero mass, the mass is set to one.
-
         /// <summary>
         /// The body type: static, kinematic, or dynamic.
         /// Note: if a dynamic body would have zero mass, the mass is set to one.
         /// </summary>
         public Body.BodyType Type;
+
+        /// Experimental: scales the inertia tensor.
+        public float InertiaScale;
     }
 
     /// <summary>
@@ -182,6 +183,8 @@ namespace Box2DX.Dynamics
 
         internal float _mass, _invMass;
         internal float _I, _invI;
+
+        internal float _inertiaScale;
 
         internal float _linearDamping;
         internal float _angularDamping;
@@ -256,6 +259,8 @@ namespace Box2DX.Dynamics
 
             _I = 0.0f;
             _invI = 0.0f;
+
+            _inertiaScale = bd.InertiaScale;
 
             _userData = bd.UserData;
 
@@ -757,8 +762,10 @@ namespace Box2DX.Dynamics
             {
                 // Center the inertia about the center of mass.
                 _I -= _mass * Vec2.Dot(center, center);
+                _I *= _inertiaScale;
                 Box2DXDebug.Assert(_I > 0.0f);
                 _invI = 1.0f / _I;
+
             }
             else
             {

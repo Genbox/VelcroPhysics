@@ -98,6 +98,7 @@
     <Compile Include="Tests\ApplyForce.cs" />
     <Compile Include="Tests\BodyTypes.cs" />
     <Compile Include="Tests\Bridge.cs" />
+    <Compile Include="Tests\Cantilever.cs" />
     <Compile Include="Tests\CCDTest.cs" />
     <Compile Include="Tests\Chain.cs" />
     <Compile Include="Tests\CollisionFiltering.cs" />
