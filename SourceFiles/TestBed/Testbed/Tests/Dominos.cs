@@ -61,6 +61,7 @@ namespace TestBed
                 for (int i = 0; i < 10; ++i)
                 {
                     BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
                     bd.Position.Set(-6.0f + 1.0f * i, 11.25f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(fd);
@@ -94,6 +95,7 @@ namespace TestBed
                 shape.SetAsBox(6.0f, 0.125f);
 
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position.Set(-0.9f, 1.0f);
                 bd.Angle = -0.15f;
 
@@ -115,6 +117,7 @@ namespace TestBed
                 shape.SetAsBox(0.25f, 0.25f);
 
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position.Set(-10.0f, 15.0f);
                 b4 = _world.CreateBody(bd);
                 b4.CreateFixture(shape, 10.0f);
@@ -127,6 +130,7 @@ namespace TestBed
             Body b5;
             {
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position.Set(6.5f, 3.0f);
                 b5 = _world.CreateBody(bd);
 
@@ -145,7 +149,6 @@ namespace TestBed
 
                 shape.SetAsBox(0.1f, 1.0f, new Vec2(0.9f, 0.0f), 0.0f);
                 b5.CreateFixture(fd);
-
             }
 
             anchor.Set(6.0f, 2.0f);
@@ -158,6 +161,7 @@ namespace TestBed
                 shape.SetAsBox(1.0f, 0.1f);
 
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position.Set(6.5f, 4.1f);
                 b6 = _world.CreateBody(bd);
                 b6.CreateFixture(shape, 30.0f);
@@ -173,6 +177,7 @@ namespace TestBed
                 shape.SetAsBox(0.1f, 1.0f);
 
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position.Set(7.4f, 1.0f);
 
                 b7 = _world.CreateBody(bd);
@@ -197,6 +202,7 @@ namespace TestBed
                 for (int i = 0; i < 4; ++i)
                 {
                     BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
                     bd.Position.Set(5.9f + 2.0f * radius * i, 2.4f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(shape, 10.0f);

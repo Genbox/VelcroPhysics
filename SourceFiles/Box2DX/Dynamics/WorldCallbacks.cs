@@ -214,7 +214,15 @@ namespace Box2DX.Dynamics
             _drawFlags = 0;
         }
 
-        public DrawFlags Flags { get { return _drawFlags; } set { _drawFlags = value; } }
+        public void SetFlags(DrawFlags flags)
+        {
+            _drawFlags = flags;
+        }
+
+        public DrawFlags GetFlags()
+        {
+            return _drawFlags;
+        }
 
         /// <summary>
         /// Append flags to the current flags.

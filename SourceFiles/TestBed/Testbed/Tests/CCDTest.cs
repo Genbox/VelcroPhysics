@@ -25,14 +25,13 @@ namespace TestBed
 {
     public class CCDTest : Test
     {
-        float _angularVelocity;
-
         public CCDTest()
         {
-#if true
             {
-                //TODO: only one shape is created here instead of two. That is because
-                //they are reference types and when shape is changed, it changes the original instead of a new copy.
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(0.0f, -0.2f);
+
+                Body body = _world.CreateBody(bd);
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(10.0f, 0.2f);
 
@@ -40,9 +39,6 @@ namespace TestBed
                 fd.Shape = shape;
                 fd.Density = 0.0f;
 
-                BodyDef bd = new BodyDef();
-                bd.Position.Set(0.0f, -0.2f);
-                Body body = _world.CreateBody(bd);
                 body.CreateFixture(fd);
 
                 shape.SetAsBox(0.2f, 1.0f, new Vec2(0.5f, 1.2f), 0.0f);
@@ -58,17 +54,18 @@ namespace TestBed
                 fd.Density = 1.0f;
                 fd.Restitution = 0.0f;
 
-                _angularVelocity = Math.Random(-50.0f, 50.0f);
+                _angularVelocity = Math.RandomFloat(-50.0f, 50.0f);
                 _angularVelocity = -30.669577f;
 
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position.Set(0.0f, 20.0f);
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(fd);
                 body.SetLinearVelocity(new Vec2(0.0f, -100.0f));
                 body.SetAngularVelocity(_angularVelocity);
             }
-#elif false
+#if false
 		{
 			FixtureDef fd;
 			fd.SetAsBox(10.0f, 0.1f);
@@ -120,30 +117,30 @@ namespace TestBed
 			b3.SetMassFromShapes();
 			b3.SetLinearVelocity(Vec2(0.0f, -150.0f));
 		}
-#else
-		const float32 k_restitution = 1.4f;
+#elif false
+            const float k_restitution = 1.4f;
 
-		{
-			BodyDef bd;
-			bd.position.Set(0.0f, 20.0f);
-			Body* body = m_world.CreateBody(&bd);
+            {
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(0.0f, 20.0f);
+                Body body = _world.CreateBody(bd);
 
-			FixtureDef fd;
-			fd.density = 0.0f;
-			fd.restitution = k_restitution;
+                FixtureDef fd = new FixtureDef();
+                fd.Density = 0.0f;
+                fd.Restitution = k_restitution;
 
-			fd.SetAsBox(0.1f, 10.0f, Vec2(-10.0f, 0.0f), 0.0f);
-			body.CreateFixture(&fd);
+                fd.SetAsBox(0.1f, 10.0f, new Vec2(-10.0f, 0.0f), 0.0f);
+                body.CreateFixture(fd);
 
-			fd.SetAsBox(0.1f, 10.0f, Vec2(10.0f, 0.0f), 0.0f);
-			body.CreateFixture(&fd);
+                fd.SetAsBox(0.1f, 10.0f, new Vec2(10.0f, 0.0f), 0.0f);
+                body.CreateFixture(fd);
 
-			fd.SetAsBox(0.1f, 10.0f, Vec2(0.0f, -10.0f), 0.5f * _pi);
-			body.CreateFixture(&fd);
+                fd.SetAsBox(0.1f, 10.0f, new Vec2(0.0f, -10.0f), 0.5f * _pi);
+                body.CreateFixture(fd);
 
-			fd.SetAsBox(0.1f, 10.0f, Vec2(0.0f, 10.0f), -0.5f * _pi);
-			body.CreateFixture(&fd);
-		}
+                fd.SetAsBox(0.1f, 10.0f, new Vec2(0.0f, 10.0f), -0.5f * _pi);
+                body.CreateFixture(fd);
+            }
 
 #if false
 		{
@@ -196,37 +193,36 @@ namespace TestBed
 			body.SetMassFromShapes();
 		}
 #else
-		{
-			BodyDef bd;
-			bd.position.Set(-5.0f, 20.0f);
-			bd.isBullet = true;
-			Body* body = m_world.CreateBody(&bd);
-			body.SetAngularVelocity(RandomFloat(-50.0f, 50.0f));
+            {
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(-5.0f, 20.0f);
+                bd.Bullet = true;
+                Body body = m_world.CreateBody(bd);
+                body.SetAngularVelocity(RandomFloat(-50.0f, 50.0f));
 
-			FixtureDef fd;
-			fd.SetAsBox(0.1f, 4.0f);
-			fd.density = 1.0f;
-			fd.restitution = 0.0f;
-			body.CreateFixture(&fd);
-			body.SetMassFromShapes();
-		}
+                FixtureDef fd = new FixtureDef();
+                fd.SetAsBox(0.1f, 4.0f);
+                fd.Density = 1.0f;
+                fd.Restitution = 0.0f;
+                body.CreateFixture(&fd);
+            }
 #endif
 
-		for (int32 i = 0; i < 0; ++i)
-		{
-			BodyDef bd;
-			bd.position.Set(0.0f, 15.0f + i);
-			bd.isBullet = true;
-			Body* body = m_world.CreateBody(&bd);
-			body.SetAngularVelocity(RandomFloat(-50.0f, 50.0f));
+            for (int i = 0; i < 0; ++i)
+            {
+                BodyDef bd = new BodyDef();
+                bd.Position.Set(0.0f, 15.0f + i);
+                bd.Bullet = true;
+                Body body = _world.CreateBody(bd);
+                body.SetAngularVelocity(RandomFloat(-50.0f, 50.0f));
 
-			FixtureDef fd;
-			fd.radius = 0.25f;
-			fd.density = 1.0f;
-			fd.restitution = 0.0f;
-			body.CreateFixture(&fd);
-			body.SetMassFromShapes();
-		}
+                FixtureDef fd = new FixtureDef();
+                //TODO: Check
+                fd.radius = 0.25f;
+                fd.Density = 1.0f;
+                fd.Restitution = 0.0f;
+                body.CreateFixture(&fd);
+            }
 #endif
         }
 
@@ -262,5 +258,7 @@ namespace TestBed
         {
             return new CCDTest();
         }
+
+        float _angularVelocity;
     }
 }

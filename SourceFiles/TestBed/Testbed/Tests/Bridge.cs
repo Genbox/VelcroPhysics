@@ -28,8 +28,7 @@ namespace TestBed
 {
     public class Bridge : Test
     {
-        private static int _count = 20;
-        private Body _middle;
+        private static int _count = 30;
 
         public Bridge()
         {
@@ -53,12 +52,12 @@ namespace TestBed
                 fd.Friction = 0.2f;
 
                 RevoluteJointDef jd = new RevoluteJointDef();
-                const int numPlanks = 30;
 
                 Body prevBody = ground;
                 for (int i = 0; i < _count; ++i)
                 {
                     BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
                     bd.Position.Set(-14.5f + 1.0f * i, 5.0f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(fd);
@@ -71,7 +70,6 @@ namespace TestBed
                     {
                         _middle = body;
                     }
-
                     prevBody = body;
                 }
 
@@ -95,6 +93,7 @@ namespace TestBed
                 fd.Density = 1.0f;
 
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position.Set(-8.0f + 8.0f * i, 12.0f);
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(fd);
@@ -110,38 +109,18 @@ namespace TestBed
                 fd.Density = 1.0f;
 
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position.Set(-6.0f + 6.0f * i, 10.0f);
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(fd);
             }
         }
 
-        public override void Keyboard(Keys key)
-        {
-            switch (key)
-            {
-                case Keys.S:
-                    {
-                        MassData data = new MassData();
-                        data.Center.SetZero();
-                        data.I = 0.0f;
-                        data.Mass = 0.0f;
-                        _middle.SetMassData(data);
-                    }
-                    break;
-            }
-        }
-
-        public override void Step(Settings settings)
-        {
-            base.Step(settings);
-            OpenGLDebugDraw.DrawString(5, _textLine, "Press (s) to make a body static");
-            _textLine += 15;
-        }
-
         public static Test Create()
         {
             return new Bridge();
         }
+
+        private Body _middle;
     }
 }

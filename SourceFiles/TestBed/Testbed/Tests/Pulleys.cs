@@ -27,8 +27,6 @@ namespace TestBed
 {
     public class Pulleys : Test
     {
-        PulleyJoint _joint1;
-
         public Pulleys()
         {
             Body ground = null;
@@ -51,6 +49,7 @@ namespace TestBed
                 shape.SetAsBox(a, b);
 
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
 
                 bd.Position.Set(-10.0f, y);
                 Body body1 = _world.CreateBody(bd);
@@ -85,7 +84,7 @@ namespace TestBed
             base.Step(settings);
 
             float ratio = _joint1.Ratio;
-            float L = _joint1.Length1 + ratio * _joint1.Length2;
+            float L = _joint1.GetLength1() + ratio * _joint1.GetLength2();
             OpenGLDebugDraw.DrawString(5, _textLine, string.Format("L1 + {0} * L2 = {1}", ratio, L));
             _textLine += 15;
         }
@@ -94,5 +93,7 @@ namespace TestBed
         {
             return new Pulleys();
         }
+
+        PulleyJoint _joint1;
     }
 }

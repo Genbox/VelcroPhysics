@@ -110,7 +110,7 @@ namespace TestBed
         public Test test;
     }
 
-    public struct ContactPoint
+    public class ContactPoint
     {
         public Fixture fixtureA;
         public Fixture fixtureB;
@@ -122,25 +122,27 @@ namespace TestBed
     public class Test : ContactListener
     {
         public static TestEntry[] g_testEntries = new TestEntry[]
-		{			
+		{		
+	        new TestEntry("Polygon Shapes", PolyShapes.Create),
+	        new TestEntry("Apply Force", ApplyForce.Create),
 	        new TestEntry("Cantilever", Cantilever.Create),
 	        new TestEntry("Body Types", BodyTypes.Create),
-	        new TestEntry("Confined", Confined.Create),
+            new TestEntry("CCD Test", CCDTest.Create),
+	        new TestEntry("SphereStack", SphereStack.Create),
+            new TestEntry("Vertical Stack", VerticalStack.Create),
+            new TestEntry("Confined", Confined.Create),
 	        new TestEntry("Bridge", Bridge.Create),
 	        new TestEntry("Breakable", Breakable.Create),
 	        new TestEntry("Varying Restitution", VaryingRestitution.Create),
-	        new TestEntry("Polygon Shapes", PolyShapes.Create),
-	        new TestEntry("Distance Test", DistanceTest.Create),
-	        new TestEntry("Collision Processing", CollisionProcessing.Create),
-            new TestEntry("PolyCollision", PolyCollision.Create),
-	        new TestEntry("Pyramid", Pyramid.Create),           
             new TestEntry("Ray-Cast", RayCast.Create),
-        	new TestEntry("One-Sided Platform", OneSidedPlatform.Create),
-	        new TestEntry("Apply Force", ApplyForce.Create),
-            new TestEntry("CCD Test", CCDTest.Create),
-	        new TestEntry("Chain", Chain.Create),
+	        new TestEntry("Pyramid", Pyramid.Create),     
+            new TestEntry("PolyCollision", PolyCollision.Create),
+        	new TestEntry("One-Sided Platform", OneSidedPlatform.Create), 
+            new TestEntry("Chain", Chain.Create),
 	        new TestEntry("Collision Filtering", CollisionFiltering.Create),
+	        new TestEntry("Collision Processing", CollisionProcessing.Create),
 	        new TestEntry("Compound Shapes", CompoundShapes.Create),
+	        new TestEntry("Distance Test", DistanceTest.Create),
 	        new TestEntry("Dominos", Dominos.Create),
 	        new TestEntry("Dynamic Tree", DynamicTreeTest.Create),
 	        new TestEntry("Gears", Gears.Create),
@@ -151,17 +153,16 @@ namespace TestBed
 		    new TestEntry("Sensor Test", SensorTest.Create),
 	        new TestEntry("Shape Editing", ShapeEditing.Create),
 	        new TestEntry("Slider Crank", SliderCrank.Create),
-	        new TestEntry("SphereStack", SphereStack.Create),
 	        new TestEntry("Theo Jansen's Walker", TheoJansen.Create),
 	        new TestEntry("Time of Impact", TimeOfImpact.Create),
 	        new TestEntry("Varying Friction", VaryingFriction.Create),
-            new TestEntry("Vertical Stack", VerticalStack.Create),
 	        new TestEntry("Web", Web.Create),
 		};
 
         public const int k_maxContactPoints = 2048;
 
         protected Body _groundBody;
+        protected AABB _worldAABB;
         protected ContactPoint[] _points = new ContactPoint[k_maxContactPoints];
         protected int _pointCount;
         protected DestructionListener _destructionListener = new DestructionListener();
@@ -197,6 +198,11 @@ namespace TestBed
 
             BodyDef bodyDef = new BodyDef();
             _groundBody = _world.CreateBody(bodyDef);
+
+            for (int i = 0; i < _points.Length; i++)
+            {
+                _points[i] = new ContactPoint();
+            }
         }
 
         public void SetTextLine(int line) { _textLine = line; }
@@ -231,7 +237,7 @@ namespace TestBed
             flags += settings.drawAABBs * (int)DebugDraw.DrawFlags.Aabb;
             flags += settings.drawPairs * (int)DebugDraw.DrawFlags.Pair;
             flags += settings.drawCOMs * (int)DebugDraw.DrawFlags.CenterOfMass;
-            _debugDraw.Flags = (DebugDraw.DrawFlags)flags;
+            _debugDraw.SetFlags((DebugDraw.DrawFlags)flags);
 
             _world.SetWarmStarting(settings.enableWarmStarting > 0);
             _world.SetContinuousPhysics(settings.enableContinuous > 0);
@@ -435,7 +441,7 @@ namespace TestBed
 
         public void LaunchBomb()
         {
-            Vec2 p = new Vec2(Math.Random(-15.0f, 15.0f), 30.0f);
+            Vec2 p = new Vec2(Math.RandomFloat(-15.0f, 15.0f), 30.0f);
             Vec2 v = -5.0f * p;
             LaunchBomb(p, v);
         }
@@ -449,9 +455,8 @@ namespace TestBed
             }
 
             BodyDef bd = new BodyDef();
-            bd.AllowSleep = true;
+            bd.Type = Body.BodyType.Dynamic;
             bd.Position = position;
-
             bd.Bullet = true;
             _bomb = _world.CreateBody(bd);
             _bomb.SetLinearVelocity(velocity);
@@ -526,7 +531,6 @@ namespace TestBed
                 cp.position = worldManifold.Points[i];
                 cp.normal = worldManifold.Normal;
                 cp.state = state2[i];
-                _points[_pointCount] = cp;
                 ++_pointCount;
             }
         }

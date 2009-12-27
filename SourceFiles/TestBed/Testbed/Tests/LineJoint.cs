@@ -45,6 +45,7 @@ namespace TestBed
                 shape.SetAsBox(0.5f, 2.0f);
 
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position.Set(0.0f, 7.0f);
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(shape, 1.0f);

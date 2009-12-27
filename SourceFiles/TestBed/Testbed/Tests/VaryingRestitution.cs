@@ -51,6 +51,7 @@ namespace TestBed
                 for (int i = 0; i < 7; ++i)
                 {
                     BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
                     bd.Position.Set(-10.0f + 3.0f * i, 20.0f);
 
                     Body body = _world.CreateBody(bd);

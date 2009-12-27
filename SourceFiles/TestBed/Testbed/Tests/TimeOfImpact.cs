@@ -27,18 +27,13 @@ namespace TestBed
 {
     public class TimeOfImpact : Test
     {
-        PolygonShape _shapeA;
-        PolygonShape _shapeB;
-
         public TimeOfImpact()
         {
             {
-                _shapeA = new PolygonShape();
                 _shapeA.SetAsBox(10.0f, 0.2f);
             }
 
             {
-                _shapeB = new PolygonShape();
                 _shapeB.SetAsBox(2.0f, 0.1f);
             }
         }
@@ -80,7 +75,7 @@ namespace TestBed
             OpenGLDebugDraw.DrawString(5, _textLine, string.Format("toi = {0}", toi));
             _textLine += 15;
 
-#warning "get variables from TOI implementation"
+            //TODO: "get variables from TOI implementation"
             int _maxToiIters = 0, _maxToiRootIters = 0;
             OpenGLDebugDraw.DrawString(5, _textLine, string.Format("max toi iters = {1}, max root iters = {1}", _maxToiIters, _maxToiRootIters));
             _textLine += 15;
@@ -117,5 +112,8 @@ namespace TestBed
             }
             _debugDraw.DrawPolygon(vertices, _shapeB._vertexCount, new Color(0.9f, 0.5f, 0.5f));
         }
+
+        PolygonShape _shapeA = new PolygonShape();
+        PolygonShape _shapeB = new PolygonShape();
     }
 }

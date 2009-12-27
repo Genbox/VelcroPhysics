@@ -140,8 +140,8 @@ namespace Box2DX.Collision
         /// </summary>
         public class DistanceInput
         {
-            public DistanceProxy proxyA = new DistanceProxy();
-            public DistanceProxy proxyB = new DistanceProxy();
+            public DistanceProxy ProxyA = new DistanceProxy();
+            public DistanceProxy ProxyB = new DistanceProxy();
             public Transform TransformA;
             public Transform TransformB;
             public bool UseRadii;
@@ -534,8 +534,8 @@ namespace Box2DX.Collision
         {
             ++GjkCalls;
 
-            DistanceProxy proxyA = input.proxyA;
-            DistanceProxy proxyB = input.proxyB;
+            DistanceProxy proxyA = input.ProxyA;
+            DistanceProxy proxyB = input.ProxyB;
 
             Transform transformA = input.TransformA;
             Transform transformB = input.TransformB;

@@ -51,10 +51,11 @@ namespace TestBed
 
                 for (int i = 0; i < 10; ++i)
                 {
-                    float x = Math.Random(-0.1f, 0.1f);
+                    float x = Math.RandomFloat(-0.1f, 0.1f);
                     BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
                     bd.Position.Set(x + 5.0f, 1.05f + 2.5f * i);
-                    bd.Angle = Math.Random(-Box2DX.Common.Settings.pi, Box2DX.Common.Settings.pi);
+                    bd.Angle = Math.RandomFloat(-Box2DX.Common.Settings.pi, Box2DX.Common.Settings.pi);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(circle1, 2.0f);
                     body.CreateFixture(circle2, 0);
@@ -70,10 +71,11 @@ namespace TestBed
 
                 for (int i = 0; i < 10; ++i)
                 {
-                    float x = Math.Random(-0.1f, 0.1f);
+                    float x = Math.RandomFloat(-0.1f, 0.1f);
                     BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
                     bd.Position.Set(x - 5.0f, 1.05f + 2.5f * i);
-                    bd.Angle = Math.Random(-Box2DX.Common.Settings.pi, Box2DX.Common.Settings.pi);
+                    bd.Angle = Math.RandomFloat(-Box2DX.Common.Settings.pi, Box2DX.Common.Settings.pi);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(polygon1, 2.0f);
                     body.CreateFixture(polygon2, 2.0f);
@@ -105,8 +107,9 @@ namespace TestBed
 
                 for (int i = 0; i < 10; ++i)
                 {
-                    float x = Math.Random(-0.1f, 0.1f);
+                    float x = Math.RandomFloat(-0.1f, 0.1f);
                     BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
                     bd.Position.Set(x, 2.05f + 2.5f * i);
                     bd.Angle = 0.0f;
                     Body body = _world.CreateBody(bd);
@@ -126,6 +129,7 @@ namespace TestBed
                 right.SetAsBox(0.15f, 2.7f, new Vec2(1.45f, 2.35f), -0.2f);
 
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position.Set(0.0f, 2.0f);
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(bottom, 4.0f);

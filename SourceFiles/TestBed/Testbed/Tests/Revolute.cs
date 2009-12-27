@@ -27,8 +27,6 @@ namespace TestBed
 {
     public class Revolute : Test
     {
-        private RevoluteJoint _joint;
-
         public Revolute()
         {
             Body ground = null;
@@ -46,6 +44,7 @@ namespace TestBed
                 shape._radius = 0.5f;
 
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
 
                 RevoluteJointDef rjd = new RevoluteJointDef();
 
@@ -77,9 +76,11 @@ namespace TestBed
                 case System.Windows.Forms.Keys.L:
                     _joint.EnableLimit(_joint.IsLimitEnabled);
                     break;
+
                 case System.Windows.Forms.Keys.S:
                     _joint.EnableMotor(false);
                     break;
+
                 default:
                     return;
             }
@@ -99,5 +100,7 @@ namespace TestBed
         {
             return new Revolute();
         }
+
+        private RevoluteJoint _joint;
     }
 }

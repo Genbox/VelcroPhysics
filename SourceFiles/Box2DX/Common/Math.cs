@@ -85,7 +85,7 @@ namespace Box2DX.Common
         /// <summary>
         /// Random number in range [-1,1]
         /// </summary>
-        public static float Random()
+        public static float RandomFloat()
         {
             float r = s_rnd.Next() & RAND_LIMIT;
             r /= RAND_LIMIT;
@@ -96,7 +96,7 @@ namespace Box2DX.Common
         /// <summary>
         /// Random floating point number in range [lo, hi]
         /// </summary>
-        public static float Random(float lo, float hi)
+        public static float RandomFloat(float lo, float hi)
         {
             float r = s_rnd.Next() & RAND_LIMIT;
             r /= RAND_LIMIT;

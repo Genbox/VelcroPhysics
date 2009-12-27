@@ -24,6 +24,8 @@ namespace TestBed
 {
     public class Breakable : Test
     {
+        public const int _count = 7;
+
         public Breakable()
         {
             // Ground body
@@ -39,6 +41,7 @@ namespace TestBed
             // Breakable dynamic body
             {
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position.Set(0.0f, 40.0f);
                 bd.Angle = 0.25f * Box2DX.Common.Settings.pi;
                 _body1 = _world.CreateBody(bd);
@@ -71,7 +74,7 @@ namespace TestBed
                 maxImpulse = Math.Max(maxImpulse, impulse.normalImpulses[i]);
             }
 
-            if (maxImpulse > 50.0f)
+            if (maxImpulse > 40.0f)
             {
                 // Flag the body for breaking.
                 _break = true;
@@ -88,6 +91,7 @@ namespace TestBed
             _piece2 = null;
 
             BodyDef bd = new BodyDef();
+            bd.Type = Body.BodyType.Dynamic;
             bd.Position = body1.GetPosition();
             bd.Angle = body1.GetAngle();
 
