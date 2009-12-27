@@ -195,6 +195,14 @@ namespace Box2DX.Dynamics
 
         internal Body(BodyDef bd, World world)
         {
+            Box2DXDebug.Assert(bd.Position.IsValid);
+            Box2DXDebug.Assert(bd.LinearVelocity.IsValid);
+            Box2DXDebug.Assert(Math.IsValid(bd.Angle));
+            Box2DXDebug.Assert(Math.IsValid(bd.AngularVelocity));
+            Box2DXDebug.Assert(Math.IsValid(bd.InertiaScale) && bd.InertiaScale >= 0.0f);
+            Box2DXDebug.Assert(Math.IsValid(bd.AngularDamping) && bd.AngularDamping >= 0.0f);
+            Box2DXDebug.Assert(Math.IsValid(bd.LinearDamping) && bd.LinearDamping >= 0.0f);
+
             _flags = 0;
 
             if (bd.Bullet)

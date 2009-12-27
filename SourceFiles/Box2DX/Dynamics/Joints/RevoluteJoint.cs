@@ -155,14 +155,14 @@ namespace Box2DX.Dynamics
 		public float _upperAngle;
 		public LimitState _limitState;
 
-		public override Vec2 AnchorA
+		public override Vec2 GetAnchorA()
 		{
-			get { return _bodyA.GetWorldPoint(_localAnchor1); }
+			 return _bodyA.GetWorldPoint(_localAnchor1); 
 		}
 
-		public override Vec2 AnchorB
+		public override Vec2 GetAnchorB()
 		{
-			get { return _bodyB.GetWorldPoint(_localAnchor2); }
+			 return _bodyB.GetWorldPoint(_localAnchor2); 
 		}
 
 		public override Vec2 GetReactionForce(float inv_dt)

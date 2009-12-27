@@ -89,33 +89,33 @@ namespace TestBed
 
             Transform transformA;
             sweepA.GetTransform(out transformA, 0.0f);
-            for (int i = 0; i < _shapeA.VertexCount; ++i)
+            for (int i = 0; i < _shapeA._vertexCount; ++i)
             {
-                vertices[i] = Math.Mul(transformA, _shapeA.Vertices[i]);
+                vertices[i] = Math.Mul(transformA, _shapeA._vertices[i]);
             }
-            _debugDraw.DrawPolygon(vertices, _shapeA.VertexCount, new Color(0.9f, 0.9f, 0.9f));
+            _debugDraw.DrawPolygon(vertices, _shapeA._vertexCount, new Color(0.9f, 0.9f, 0.9f));
 
             Transform transformB;
             sweepB.GetTransform(out transformB, 0.0f);
-            for (int i = 0; i < _shapeB.VertexCount; ++i)
+            for (int i = 0; i < _shapeB._vertexCount; ++i)
             {
-                vertices[i] = Math.Mul(transformB, _shapeB.Vertices[i]);
+                vertices[i] = Math.Mul(transformB, _shapeB._vertices[i]);
             }
-            _debugDraw.DrawPolygon(vertices, _shapeB.VertexCount, new Color(0.5f, 0.9f, 0.5f));
+            _debugDraw.DrawPolygon(vertices, _shapeB._vertexCount, new Color(0.5f, 0.9f, 0.5f));
 
             sweepB.GetTransform(out transformB, toi);
-            for (int i = 0; i < _shapeB.VertexCount; ++i)
+            for (int i = 0; i < _shapeB._vertexCount; ++i)
             {
-                vertices[i] = Math.Mul(transformB, _shapeB.Vertices[i]);
+                vertices[i] = Math.Mul(transformB, _shapeB._vertices[i]);
             }
-            _debugDraw.DrawPolygon(vertices, _shapeB.VertexCount, new Color(0.5f, 0.7f, 0.9f));
+            _debugDraw.DrawPolygon(vertices, _shapeB._vertexCount, new Color(0.5f, 0.7f, 0.9f));
 
             sweepB.GetTransform(out transformB, 1.0f);
-            for (int i = 0; i < _shapeB.VertexCount; ++i)
+            for (int i = 0; i < _shapeB._vertexCount; ++i)
             {
-                vertices[i] = Math.Mul(transformB, _shapeB.Vertices[i]);
+                vertices[i] = Math.Mul(transformB, _shapeB._vertices[i]);
             }
-            _debugDraw.DrawPolygon(vertices, _shapeB.VertexCount, new Color(0.9f, 0.5f, 0.5f));
+            _debugDraw.DrawPolygon(vertices, _shapeB._vertexCount, new Color(0.9f, 0.5f, 0.5f));
         }
     }
 }

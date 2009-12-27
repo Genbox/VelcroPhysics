@@ -55,8 +55,8 @@ namespace Box2DX.Collision
                     case ShapeType.PolygonShape:
                         {
                             PolygonShape polygon = (PolygonShape)shape;
-                            _vertices = polygon.Vertices;
-                            _count = polygon.VertexCount;
+                            _vertices = polygon._vertices;
+                            _count = polygon._vertexCount;
                             _radius = polygon._radius;
                         }
                         break;

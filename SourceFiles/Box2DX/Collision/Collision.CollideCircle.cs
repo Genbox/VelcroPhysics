@@ -48,8 +48,8 @@ namespace Box2DX.Collision
             manifold.LocalPlaneNormal.SetZero();
             manifold.PointCount = 1;
 
-            manifold.Points[0].LocalPoint = circle2._p;
-            manifold.Points[0].ID.Key = 0;
+            manifold.Points[0]._localPoint = circle2._p;
+            manifold.Points[0]._id.Key = 0;
         }
 
         public static void CollidePolygonAndCircle(
@@ -68,9 +68,9 @@ namespace Box2DX.Collision
             int normalIndex = 0;
             float separation = -Settings.floatMax;
             float radius = polygon._radius + circle._radius;
-            int vertexCount = polygon.VertexCount;
-            Vec2[] vertices = polygon.Vertices;
-            Vec2[] normals = polygon.Normals;
+            int vertexCount = polygon._vertexCount;
+            Vec2[] vertices = polygon._vertices;
+            Vec2[] normals = polygon._normals;
 
             for (int i = 0; i < vertexCount; ++i)
             {
@@ -102,8 +102,8 @@ namespace Box2DX.Collision
                 manifold.Type = Manifold.ManifoldType.FaceA;
                 manifold.LocalPlaneNormal = normals[normalIndex];
                 manifold.LocalPoint = 0.5f * (v1 + v2);
-                manifold.Points[0].LocalPoint = circle._p;
-                manifold.Points[0].ID.Key = 0;
+                manifold.Points[0]._localPoint = circle._p;
+                manifold.Points[0]._id.Key = 0;
                 return;
             }
 
@@ -122,8 +122,8 @@ namespace Box2DX.Collision
                 manifold.LocalPlaneNormal = cLocal - v1;
                 manifold.LocalPlaneNormal.Normalize();
                 manifold.LocalPoint = v1;
-                manifold.Points[0].LocalPoint = circle._p;
-                manifold.Points[0].ID.Key = 0;
+                manifold.Points[0]._localPoint = circle._p;
+                manifold.Points[0]._id.Key = 0;
             }
             else if (u2 <= 0.0f)
             {
@@ -137,8 +137,8 @@ namespace Box2DX.Collision
                 manifold.LocalPlaneNormal = cLocal - v2;
                 manifold.LocalPlaneNormal.Normalize();
                 manifold.LocalPoint = v2;
-                manifold.Points[0].LocalPoint = circle._p;
-                manifold.Points[0].ID.Key = 0;
+                manifold.Points[0]._localPoint = circle._p;
+                manifold.Points[0]._id.Key = 0;
             }
             else
             {
@@ -153,8 +153,8 @@ namespace Box2DX.Collision
                 manifold.Type = Manifold.ManifoldType.FaceA;
                 manifold.LocalPlaneNormal = normals[vertIndex1];
                 manifold.LocalPoint = faceCenter;
-                manifold.Points[0].LocalPoint = circle._p;
-                manifold.Points[0].ID.Key = 0;
+                manifold.Points[0]._localPoint = circle._p;
+                manifold.Points[0]._id.Key = 0;
             }
         }
     }

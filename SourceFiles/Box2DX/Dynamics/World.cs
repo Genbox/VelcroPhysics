@@ -1230,8 +1230,8 @@ namespace Box2DX.Dynamics
             Transform xf2 = b2.GetTransform();
             Vec2 x1 = xf1.Position;
             Vec2 x2 = xf2.Position;
-            Vec2 p1 = joint.AnchorA;
-            Vec2 p2 = joint.AnchorB;
+            Vec2 p1 = joint.GetAnchorA();
+            Vec2 p2 = joint.GetAnchorB();
 
             Color color = new Color(0.5f, 0.8f, 0.8f);
 
@@ -1266,8 +1266,6 @@ namespace Box2DX.Dynamics
 
         private void DrawShape(Fixture fixture, Transform xf, Color color)
         {
-            Color coreColor = new Color(0.9f, 0.6f, 0.6f);
-
             switch (fixture.GetType())
             {
                 case ShapeType.CircleShape:
@@ -1285,13 +1283,13 @@ namespace Box2DX.Dynamics
                 case ShapeType.PolygonShape:
                     {
                         PolygonShape poly = (PolygonShape)fixture.GetShape();
-                        int vertexCount = poly.VertexCount;
+                        int vertexCount = poly._vertexCount;
                         Box2DXDebug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         Vec2[] vertices = new Vec2[Settings.MaxPolygonVertices];
 
                         for (int i = 0; i < vertexCount; ++i)
                         {
-                            vertices[i] = Math.Mul(xf, poly.Vertices[i]);
+                            vertices[i] = Math.Mul(xf, poly._vertices[i]);
                         }
 
                         _debugDraw.DrawSolidPolygon(vertices, vertexCount, color);

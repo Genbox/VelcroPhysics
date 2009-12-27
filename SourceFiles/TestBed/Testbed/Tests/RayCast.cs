@@ -20,9 +20,9 @@ using Box2DX.Collision;
 using Box2DX.Common;
 using Box2DX.Dynamics;
 
+// This test demonstrates how to use the world ray-cast feature.
 namespace TestBed
 {
-
     public class MyRayCastCallback : RayCastCallback
     {
         public MyRayCastCallback()
