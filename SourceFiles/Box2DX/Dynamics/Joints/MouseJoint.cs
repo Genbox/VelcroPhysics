@@ -31,135 +31,196 @@ using Box2DX.Common;
 
 namespace Box2DX.Dynamics
 {
-	/// <summary>
-	/// Mouse joint definition. This requires a world target point,
-	/// tuning parameters, and the time step.
+    /// <summary>
+    /// Mouse joint definition. This requires a world target point,
+    /// tuning parameters, and the time step.
     /// NOTE: this joint is not documented in the manual because it was
     /// developed to be used in the testbed. If you want to learn how to
     /// use the mouse joint, look at the testbed.
-	/// </summary>
-	public class MouseJointDef : JointDef
-	{
-		public MouseJointDef()
-		{
-			Type = JointType.MouseJoint;
-			Target.Set(0.0f, 0.0f);
-			MaxForce = 0.0f;
-			FrequencyHz = 5.0f;
-			DampingRatio = 0.7f;
-		}
+    /// </summary>
+    public class MouseJointDef : JointDef
+    {
+        public MouseJointDef()
+        {
+            Type = JointType.MouseJoint;
+            Target.Set(0.0f, 0.0f);
+            MaxForce = 0.0f;
+            FrequencyHz = 5.0f;
+            DampingRatio = 0.7f;
+        }
 
-		/// <summary>
-		/// The initial world target point. This is assumed
-		/// to coincide with the body anchor initially.
-		/// </summary>
-		public Vec2 Target;
+        /// <summary>
+        /// The initial world target point. This is assumed
+        /// to coincide with the body anchor initially.
+        /// </summary>
+        public Vec2 Target;
 
-		/// <summary>
-		/// The maximum constraint force that can be exerted
-		/// to move the candidate body. Usually you will express
-		/// as some multiple of the weight (multiplier * mass * gravity).
-		/// </summary>
-		public float MaxForce;
+        /// <summary>
+        /// The maximum constraint force that can be exerted
+        /// to move the candidate body. Usually you will express
+        /// as some multiple of the weight (multiplier * mass * gravity).
+        /// </summary>
+        public float MaxForce;
 
-		/// <summary>
-		/// The response speed.
-		/// </summary>
-		public float FrequencyHz;
+        /// <summary>
+        /// The response speed.
+        /// </summary>
+        public float FrequencyHz;
 
-		/// <summary>
-		/// The damping ratio. 0 = no damping, 1 = critical damping.
-		/// </summary>
-		public float DampingRatio;
-	}
+        /// <summary>
+        /// The damping ratio. 0 = no damping, 1 = critical damping.
+        /// </summary>
+        public float DampingRatio;
+    }
 
-	/// <summary>
-	/// A mouse joint is used to make a point on a body track a
-	/// specified world point. This a soft constraint with a maximum
-	/// force. This allows the constraint to stretch and without
-	/// applying huge forces.
-	/// </summary>
-	public class MouseJoint : Joint
-	{
-		public Vec2 _localAnchor;
-		public Vec2 _target;
-		public Vec2 _impulse;
+    /// <summary>
+    /// A mouse joint is used to make a point on a body track a
+    /// specified world point. This a soft constraint with a maximum
+    /// force. This allows the constraint to stretch and without
+    /// applying huge forces.
+    /// </summary>
+    public class MouseJoint : Joint
+    {
+        public Vec2 _localAnchor;
+        public Vec2 _target;
+        public Vec2 _impulse;
 
-		public Mat22 _mass;		// effective mass for point-to-point constraint.
-		public Vec2 _C;				// position error
-		public float _maxForce;
-		public float _frequencyHz;
-		public float _dampingRatio;
-		public float _beta;
-		public float _gamma;
+        public Mat22 _mass;		// effective mass for point-to-point constraint.
+        public Vec2 _C;				// position error
+        public float _maxForce;
+        public float _frequencyHz;
+        public float _dampingRatio;
+        public float _beta;
+        public float _gamma;
 
-		public override Vec2 AnchorA
-		{
-			get { return _target; }
-		}
+        public override Vec2 GetAnchorA()
+        {
+            return _target;
+        }
 
-		public override Vec2 AnchorB
-		{
-			get { return _bodyB.GetWorldPoint(_localAnchor); }
-		}
+        public override Vec2 GetAnchorB()
+        {
+            return _bodyB.GetWorldPoint(_localAnchor);
+        }
 
-		public override Vec2 GetReactionForce(float inv_dt)
-		{
-			return inv_dt * _impulse;
-		}
+        public override Vec2 GetReactionForce(float inv_dt)
+        {
+            return inv_dt * _impulse;
+        }
 
-		public override float GetReactionTorque(float inv_dt)
-		{
-			return inv_dt * 0.0f;
-		}
+        public override float GetReactionTorque(float inv_dt)
+        {
+            return inv_dt * 0.0f;
+        }
 
-		/// <summary>
-		/// Use this to update the target point.
-		/// </summary>
-		public void SetTarget(Vec2 target)
-		{
+        public Vec2 GetTarget()
+        {
+            return _target;
+        }
+
+        /// <summary>
+        /// Set the maximum force in Newtons.
+        /// </summary>
+        /// <param name="force"></param>
+        public void SetMaxForce(float force)
+        {
+            _maxForce = force;
+        }
+
+        /// <summary>
+        /// Get the maximum force in Newtons.
+        /// </summary>
+        public float GetMaxForce()
+        {
+            return _maxForce;
+        }
+
+        /// <summary>
+        /// Set the frequency in Hertz.
+        /// </summary>
+        /// <param name="hz"></param>
+        public void SetFrequency(float hz)
+        {
+            _frequencyHz = hz;
+        }
+
+        /// <summary>
+        /// Get the frequency in Hertz.
+        /// </summary>
+        public float GetFrequency()
+        {
+            return _frequencyHz;
+        }
+
+        /// <summary>
+        /// Set the damping ratio (dimensionless).
+        /// </summary>
+        /// <param name="ratio"></param>
+        public void SetDampingRatio(float ratio)
+        {
+            _dampingRatio = ratio;
+        }
+
+        /// <summary>
+        /// Get the damping ratio (dimensionless).
+        /// </summary>
+        public float GetDampingRatio()
+        {
+            return _dampingRatio;
+        }
+
+        /// <summary>
+        /// Use this to update the target point.
+        /// </summary>
+        public void SetTarget(Vec2 target)
+        {
             if (_bodyB.IsAwake() == false)
             {
                 _bodyB.SetAwake(true);
             }
             _target = target;
-		}
+        }
 
-		public MouseJoint(MouseJointDef def)
-			: base(def)
-		{
-			_target = def.Target;
-			_localAnchor = Math.MulT(_bodyB.GetTransform(), _target);
+        public MouseJoint(MouseJointDef def)
+            : base(def)
+        {
+            Box2DXDebug.Assert(def.Target.IsValid);
+            Box2DXDebug.Assert(Math.IsValid(def.MaxForce) && def.MaxForce >= 0.0f);
+            Box2DXDebug.Assert(Math.IsValid(def.FrequencyHz) && def.FrequencyHz >= 0.0f);
+            Box2DXDebug.Assert(Math.IsValid(def.DampingRatio) && def.DampingRatio >= 0.0f);
 
-			_maxForce = def.MaxForce;
-			_impulse.SetZero();
+            _target = def.Target;
+            _localAnchor = Math.MulT(_bodyB.GetTransform(), _target);
 
-			_frequencyHz = def.FrequencyHz;
-			_dampingRatio = def.DampingRatio;
+            _maxForce = def.MaxForce;
+            _impulse.SetZero();
 
-			_beta = 0.0f;
-			_gamma = 0.0f;
-		}
+            _frequencyHz = def.FrequencyHz;
+            _dampingRatio = def.DampingRatio;
 
-		internal override void InitVelocityConstraints(TimeStep step)
-		{
-			Body b = _bodyB;
+            _beta = 0.0f;
+            _gamma = 0.0f;
+        }
 
-			float mass = b.GetMass();
+        internal override void InitVelocityConstraints(TimeStep step)
+        {
+            Body b = _bodyB;
 
-			// Frequency
-			float omega = 2.0f * Settings.pi * _frequencyHz;
+            float mass = b.GetMass();
 
-			// Damping coefficient
-			float d = 2.0f * mass * _dampingRatio * omega;
+            // Frequency
+            float omega = 2.0f * Settings.pi * _frequencyHz;
 
-			// Spring stiffness
-			float k = mass * (omega * omega);
+            // Damping coefficient
+            float d = 2.0f * mass * _dampingRatio * omega;
 
-			// magic formulas
-			// gamma has units of inverse mass.
-			// beta has units of inverse time.
-			Box2DXDebug.Assert(d + step.Dt * k > Settings.epsilon);
+            // Spring stiffness
+            float k = mass * (omega * omega);
+
+            // magic formulas
+            // gamma has units of inverse mass.
+            // beta has units of inverse time.
+            Box2DXDebug.Assert(d + step.Dt * k > Settings.epsilon);
             _gamma = step.Dt * (d + step.Dt * k);
             if (_gamma != 0.0f)
             {
@@ -167,66 +228,66 @@ namespace Box2DX.Dynamics
             }
             _beta = step.Dt * k * _gamma;
 
-			// Compute the effective mass matrix.
-			Vec2 r = Math.Mul(b.GetTransform().R, _localAnchor - b.GetLocalCenter());
+            // Compute the effective mass matrix.
+            Vec2 r = Math.Mul(b.GetTransform().R, _localAnchor - b.GetLocalCenter());
 
-			// K    = [(1/m1 + 1/m2) * eye(2) - skew(r1) * invI1 * skew(r1) - skew(r2) * invI2 * skew(r2)]
-			//      = [1/m1+1/m2     0    ] + invI1 * [r1.y*r1.y -r1.x*r1.y] + invI2 * [r1.y*r1.y -r1.x*r1.y]
-			//        [    0     1/m1+1/m2]           [-r1.x*r1.y r1.x*r1.x]           [-r1.x*r1.y r1.x*r1.x]
-			float invMass = b._invMass;
-			float invI = b._invI;
+            // K    = [(1/m1 + 1/m2) * eye(2) - skew(r1) * invI1 * skew(r1) - skew(r2) * invI2 * skew(r2)]
+            //      = [1/m1+1/m2     0    ] + invI1 * [r1.y*r1.y -r1.x*r1.y] + invI2 * [r1.y*r1.y -r1.x*r1.y]
+            //        [    0     1/m1+1/m2]           [-r1.x*r1.y r1.x*r1.x]           [-r1.x*r1.y r1.x*r1.x]
+            float invMass = b._invMass;
+            float invI = b._invI;
 
-			Mat22 K1 = new Mat22();
-			K1.Col1.X = invMass; K1.Col2.X = 0.0f;
-			K1.Col1.Y = 0.0f; K1.Col2.Y = invMass;
+            Mat22 K1 = new Mat22();
+            K1.Col1.X = invMass; K1.Col2.X = 0.0f;
+            K1.Col1.Y = 0.0f; K1.Col2.Y = invMass;
 
-			Mat22 K2 = new Mat22();
-			K2.Col1.X = invI * r.Y * r.Y; K2.Col2.X = -invI * r.X * r.Y;
-			K2.Col1.Y = -invI * r.X * r.Y; K2.Col2.Y = invI * r.X * r.X;
+            Mat22 K2 = new Mat22();
+            K2.Col1.X = invI * r.Y * r.Y; K2.Col2.X = -invI * r.X * r.Y;
+            K2.Col1.Y = -invI * r.X * r.Y; K2.Col2.Y = invI * r.X * r.X;
 
-			Mat22 K = K1 + K2;
-			K.Col1.X += _gamma;
-			K.Col2.Y += _gamma;
+            Mat22 K = K1 + K2;
+            K.Col1.X += _gamma;
+            K.Col2.Y += _gamma;
 
-			_mass = K.GetInverse();
+            _mass = K.GetInverse();
 
-			_C = b._sweep.C + r - _target;
+            _C = b._sweep.C + r - _target;
 
-			// Cheat with some damping
-			b._angularVelocity *= 0.98f;
+            // Cheat with some damping
+            b._angularVelocity *= 0.98f;
 
-			// Warm starting.
-			_impulse *= step.DtRatio;
-			b._linearVelocity += invMass * _impulse;
-			b._angularVelocity += invI * Vec2.Cross(r, _impulse);
-		}
+            // Warm starting.
+            _impulse *= step.DtRatio;
+            b._linearVelocity += invMass * _impulse;
+            b._angularVelocity += invI * Vec2.Cross(r, _impulse);
+        }
 
-		internal override void SolveVelocityConstraints(TimeStep step)
-		{
-			Body b = _bodyB;
+        internal override void SolveVelocityConstraints(TimeStep step)
+        {
+            Body b = _bodyB;
 
-			Vec2 r = Common.Math.Mul(b.GetTransform().R, _localAnchor - b.GetLocalCenter());
+            Vec2 r = Common.Math.Mul(b.GetTransform().R, _localAnchor - b.GetLocalCenter());
 
-			// Cdot = v + cross(w, r)
-			Vec2 Cdot = b._linearVelocity + Vec2.Cross(b._angularVelocity, r);
-			Vec2 impulse = Box2DX.Common.Math.Mul(_mass, -(Cdot + _beta * _C + _gamma * _impulse));
+            // Cdot = v + cross(w, r)
+            Vec2 Cdot = b._linearVelocity + Vec2.Cross(b._angularVelocity, r);
+            Vec2 impulse = Box2DX.Common.Math.Mul(_mass, -(Cdot + _beta * _C + _gamma * _impulse));
 
-			Vec2 oldImpulse = _impulse;
-			_impulse += impulse;
-			float maxImpulse = step.Dt * _maxForce;
-			if (_impulse.LengthSquared() > maxImpulse * maxImpulse)
-			{
-				_impulse *= maxImpulse / _impulse.Length();
-			}
-			impulse = _impulse - oldImpulse;
+            Vec2 oldImpulse = _impulse;
+            _impulse += impulse;
+            float maxImpulse = step.Dt * _maxForce;
+            if (_impulse.LengthSquared() > maxImpulse * maxImpulse)
+            {
+                _impulse *= maxImpulse / _impulse.Length();
+            }
+            impulse = _impulse - oldImpulse;
 
-			b._linearVelocity += b._invMass * impulse;
-			b._angularVelocity += b._invI * Vec2.Cross(r, impulse);
-		}
+            b._linearVelocity += b._invMass * impulse;
+            b._angularVelocity += b._invI * Vec2.Cross(r, impulse);
+        }
 
-		internal override bool SolvePositionConstraints(float baumgarte)
-		{
-			return true;
-		}
-	}
+        internal override bool SolvePositionConstraints(float baumgarte)
+        {
+            return true;
+        }
+    }
 }

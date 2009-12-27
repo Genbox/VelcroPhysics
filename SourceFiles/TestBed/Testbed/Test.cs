@@ -260,9 +260,8 @@ namespace TestBed
 
             if (_mouseJoint != null)
             {
-                Body body = _mouseJoint.GetBodyB();
-                Vec2 p1 = body.GetWorldPoint(_mouseJoint._localAnchor);
-                Vec2 p2 = _mouseJoint._target;
+                Vec2 p1 = _mouseJoint.GetAnchorB();
+                Vec2 p2 = _mouseJoint.GetTarget();
 
                 Gl.glPointSize(4.0f);
                 Gl.glColor3f(0.0f, 1.0f, 0.0f);

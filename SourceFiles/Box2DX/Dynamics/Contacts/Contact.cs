@@ -365,18 +365,18 @@ namespace Box2DX.Dynamics
             for (int i = 0; i < _manifold.PointCount; ++i)
             {
                 ManifoldPoint mp2 = _manifold.Points[i];
-                mp2.NormalImpulse = 0.0f;
-                mp2.TangentImpulse = 0.0f;
-                ContactID id2 = mp2.ID;
+                mp2._normalImpulse = 0.0f;
+                mp2._tangentImpulse = 0.0f;
+                ContactID id2 = mp2._id;
 
                 for (int j = 0; j < oldManifold.PointCount; ++j)
                 {
                     ManifoldPoint mp1 = oldManifold.Points[j];
 
-                    if (mp1.ID.Key == id2.Key)
+                    if (mp1._id.Key == id2.Key)
                     {
-                        mp2.NormalImpulse = mp1.NormalImpulse;
-                        mp2.TangentImpulse = mp1.TangentImpulse;
+                        mp2._normalImpulse = mp1._normalImpulse;
+                        mp2._tangentImpulse = mp1._tangentImpulse;
                         break;
                     }
                 }

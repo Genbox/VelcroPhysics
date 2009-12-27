@@ -68,17 +68,17 @@ namespace TestBed
             {
                 Color color = new Color(0.9f, 0.9f, 0.9f);
                 Vec2[] v = new Vec2[Box2DX.Common.Settings.MaxPolygonVertices];
-                for (int i = 0; i < _polygonA.VertexCount; ++i)
+                for (int i = 0; i < _polygonA._vertexCount; ++i)
                 {
-                    v[i] = Math.Mul(_transformA, _polygonA.Vertices[i]);
+                    v[i] = Math.Mul(_transformA, _polygonA._vertices[i]);
                 }
-                _debugDraw.DrawPolygon(v, _polygonA.VertexCount, color);
+                _debugDraw.DrawPolygon(v, _polygonA._vertexCount, color);
 
-                for (int i = 0; i < _polygonB.VertexCount; ++i)
+                for (int i = 0; i < _polygonB._vertexCount; ++i)
                 {
-                    v[i] = Math.Mul(_transformB, _polygonB.Vertices[i]);
+                    v[i] = Math.Mul(_transformB, _polygonB._vertices[i]);
                 }
-                _debugDraw.DrawPolygon(v, _polygonB.VertexCount, color);
+                _debugDraw.DrawPolygon(v, _polygonB._vertexCount, color);
             }
 
             for (int i = 0; i < manifold.PointCount; ++i)

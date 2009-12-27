@@ -5,6 +5,8 @@ using Math = Box2DX.Common.Math;
 
 namespace Box2DX.Collision
 {
+    /// A dynamic AABB tree broad-phase, inspired by Nathanael Presson's btDbvt.
+
     ///<summary>
     /// A node in the dynamic tree. The client does not interact with this directly.
     /// 4 + 8 + 6 = 18 bytes on a 32bit machine.
@@ -389,9 +391,15 @@ namespace Box2DX.Collision
                     }
                     else
                     {
-                        Box2DXDebug.Assert(count + 1 < k_stackSize);
-                        stack[count++] = node.Child1;
-                        stack[count++] = node.Child2;
+                        if (count < k_stackSize)
+                        {
+                            stack[count++] = node.Child1;
+                        }
+
+                        if (count < k_stackSize)
+                        {
+                            stack[count++] = node.Child2;
+                        }
                     }
                 }
             }
@@ -483,9 +491,15 @@ namespace Box2DX.Collision
                 }
                 else
                 {
-                    Box2DXDebug.Assert(count + 1 < k_stackSize);
-                    stack[count++] = node.Child1;
-                    stack[count++] = node.Child2;
+                    if (count < k_stackSize)
+                    {
+                        stack[count++] = node.Child1;
+                    }
+
+                    if (count < k_stackSize)
+                    {
+                        stack[count++] = node.Child2;
+                    }
                 }
             }
         }

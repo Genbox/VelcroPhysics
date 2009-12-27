@@ -71,7 +71,8 @@ namespace Box2DX.Dynamics
     /// It provides 2D translational friction and angular friction.
     public class FrictionJoint : Joint
     {
-        public FrictionJoint(FrictionJointDef def) : base(def)
+        public FrictionJoint(FrictionJointDef def)
+            : base(def)
         {
             _localAnchorA = def.localAnchorA;
             _localAnchorB = def.localAnchorB;
@@ -264,20 +265,14 @@ namespace Box2DX.Dynamics
         internal float _maxForce;
         internal float _maxTorque;
 
-        public override Vec2 AnchorA
+        public override Vec2 GetAnchorA()
         {
-            get
-            {
-                return _bodyA.GetWorldPoint(_localAnchorA);
-            }
+            return _bodyA.GetWorldPoint(_localAnchorA);
         }
 
-        public override Vec2 AnchorB
+        public override Vec2 GetAnchorB()
         {
-            get
-            {
-                return _bodyB.GetWorldPoint(_localAnchorB);
-            }
+            return _bodyB.GetWorldPoint(_localAnchorB);
         }
     }
 }

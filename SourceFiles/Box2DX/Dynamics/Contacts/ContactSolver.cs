@@ -126,10 +126,10 @@ namespace Box2DX.Dynamics
                     ManifoldPoint cp = manifold.Points[j];
                     ContactConstraintPoint ccp = cc.Points[j];
 
-                    ccp.NormalImpulse = cp.NormalImpulse;
-                    ccp.TangentImpulse = cp.TangentImpulse;
+                    ccp.NormalImpulse = cp._normalImpulse;
+                    ccp.TangentImpulse = cp._tangentImpulse;
 
-                    ccp.LocalPoint = cp.LocalPoint;
+                    ccp.LocalPoint = cp._localPoint;
 
                     ccp.RA = worldManifold.Points[j] - bodyA._sweep.C;
                     ccp.RB = worldManifold.Points[j] - bodyB._sweep.C;
@@ -566,8 +566,8 @@ namespace Box2DX.Dynamics
 
                 for (int j = 0; j < c.PointCount; ++j)
                 {
-                    m.Points[j].NormalImpulse = c.Points[j].NormalImpulse;
-                    m.Points[j].TangentImpulse = c.Points[j].TangentImpulse;
+                    m.Points[j]._normalImpulse = c.Points[j].NormalImpulse;
+                    m.Points[j]._tangentImpulse = c.Points[j].TangentImpulse;
                 }
             }
         }

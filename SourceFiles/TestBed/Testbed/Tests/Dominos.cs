@@ -28,7 +28,7 @@ namespace TestBed
     public class Dominos : Test
     {
         public Dominos()
-		{
+        {
             Body b1;
             {
                 PolygonShape shape = new PolygonShape();
@@ -36,7 +36,7 @@ namespace TestBed
 
                 BodyDef bd = new BodyDef();
                 b1 = _world.CreateBody(bd);
-                b1.CreateFixture(shape,0);
+                b1.CreateFixture(shape, 0);
             }
 
             {
@@ -46,7 +46,7 @@ namespace TestBed
                 BodyDef bd = new BodyDef();
                 bd.Position.Set(-1.5f, 10.0f);
                 Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(shape,0);
+                ground.CreateFixture(shape, 0);
             }
 
             {
@@ -74,7 +74,7 @@ namespace TestBed
                 BodyDef bd = new BodyDef();
                 bd.Position.Set(1.0f, 6.0f);
                 Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(shape,0);
+                ground.CreateFixture(shape, 0);
             }
 
             Body b2;
@@ -84,8 +84,8 @@ namespace TestBed
 
                 BodyDef bd = new BodyDef();
                 bd.Position.Set(-7.0f, 4.0f);
-                 b2 = _world.CreateBody(bd);
-                b2.CreateFixture(shape,0);
+                b2 = _world.CreateBody(bd);
+                b2.CreateFixture(shape, 0);
             }
 
             Body b3;
@@ -114,7 +114,7 @@ namespace TestBed
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(0.25f, 0.25f);
 
-                BodyDef bd  = new BodyDef();
+                BodyDef bd = new BodyDef();
                 bd.Position.Set(-10.0f, 15.0f);
                 b4 = _world.CreateBody(bd);
                 b4.CreateFixture(shape, 10.0f);
@@ -134,16 +134,16 @@ namespace TestBed
                 FixtureDef fd = new FixtureDef();
 
                 fd.Shape = shape;
-                fd.Density  = 10.0f;
+                fd.Density = 10.0f;
                 fd.Friction = 0.1f;
 
-                shape.SetAsBox(1.0f, 0.1f,new Vec2(0.0f, -0.9f), 0.0f);
+                shape.SetAsBox(1.0f, 0.1f, new Vec2(0.0f, -0.9f), 0.0f);
                 b5.CreateFixture(fd);
 
                 shape.SetAsBox(0.1f, 1.0f, new Vec2(-0.9f, 0.0f), 0.0f);
                 b5.CreateFixture(fd);
 
-                shape.SetAsBox(0.1f, 1.0f,new Vec2(0.9f, 0.0f), 0.0f);
+                shape.SetAsBox(0.1f, 1.0f, new Vec2(0.9f, 0.0f), 0.0f);
                 b5.CreateFixture(fd);
 
             }
@@ -179,7 +179,7 @@ namespace TestBed
                 b7.CreateFixture(shape, 10.0f);
             }
 
-            DistanceJointDef djd  =new DistanceJointDef();
+            DistanceJointDef djd = new DistanceJointDef();
             djd.BodyA = b3;
             djd.BodyB = b7;
             djd.LocalAnchorA.Set(6.0f, 0.0f);
@@ -202,7 +202,7 @@ namespace TestBed
                     body.CreateFixture(shape, 10.0f);
                 }
             }
-		}
+        }
 
         public static Test Create()
         {

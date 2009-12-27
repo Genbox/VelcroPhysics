@@ -123,12 +123,12 @@ namespace TestBed
             switch (key)
             {
                 case System.Windows.Forms.Keys.F:
-                    _joint2._enableMotor = !_joint2._enableMotor;
+                    _joint2.EnableMotor(!_joint2.IsMotorEnabled);
                     _joint2.GetBodyB().SetAwake(true);
                     break;
 
                 case System.Windows.Forms.Keys.M:
-                    _joint1._enableMotor = !_joint1._enableMotor;
+                    _joint1.EnableMotor(!_joint1.IsMotorEnabled);
                     _joint1.GetBodyB().SetAwake(true);
                     break;
             }

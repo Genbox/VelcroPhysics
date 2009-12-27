@@ -34,9 +34,9 @@ namespace TestBed
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
 
-                PolygonShape shape;
+                PolygonShape shape = new PolygonShape();
                 shape.SetAsEdge(new Vec2(-40.0f, 0.0f), new Vec2(40.0f, 0.0f));
-                ground.CreateFixture(&shape);
+                ground.CreateFixture(shape, 0);
             }
 
             {
@@ -166,7 +166,7 @@ namespace TestBed
                 shape.Set(vertices, 3);
 
                 FixtureDef fd = new FixtureDef();
-                fd.Shape = &shape;
+                fd.Shape = shape;
                 fd.Density = 1.0f;
 
                 BodyDef bd = new BodyDef();
@@ -176,7 +176,7 @@ namespace TestBed
                 body.CreateFixture(fd);
             }
 
-            for (int32 i = 0; i < 2; ++i)
+            for (int i = 0; i < 2; ++i)
             {
                 CircleShape shape = new CircleShape();
                 shape._radius = 0.5f;

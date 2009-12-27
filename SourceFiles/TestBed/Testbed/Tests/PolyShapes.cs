@@ -23,8 +23,87 @@ using Box2DX.Collision;
 using Box2DX.Common;
 using Box2DX.Dynamics;
 
+/// This tests stacking. It also shows how to use World.Query
+/// and TestOverlap.
 namespace TestBed
 {
+    /// This callback is called by b2World::QueryAABB. We find all the fixtures
+    /// that overlap an AABB. Of those, we use b2TestOverlap to determine which fixtures
+    /// overlap a circle. Up to 4 overlapped fixtures will be highlighted with a yellow border.
+    public class PolyShapesCallback : QueryCallback
+    {
+        public const int _maxCount = 4;
+
+        public PolyShapesCallback()
+        {
+            _count = 0;
+        }
+
+        public void DrawFixture(Fixture fixture)
+        {
+            Color color = new Color(0.95f, 0.95f, 0.6f);
+            Transform xf = fixture.GetBody().GetTransform();
+
+            switch (fixture.GetType())
+            {
+                case ShapeType.CircleShape:
+                    {
+                        CircleShape circle = (CircleShape)fixture.GetShape();
+
+                        Vec2 center = Math.Mul(xf, circle._p);
+                        float radius = circle._radius;
+
+                        _debugDraw.DrawCircle(center, radius, color);
+                    }
+                    break;
+
+                case ShapeType.PolygonShape:
+                    {
+                        PolygonShape poly = (PolygonShape)fixture.GetShape();
+                        int vertexCount = poly._vertexCount;
+                        Box2DX.Box2DXDebug.Assert(vertexCount <= Box2DX.Common.Settings.MaxPolygonVertices);
+                        Vec2[] vertices = new Vec2[Box2DX.Common.Settings.MaxPolygonVertices];
+
+                        for (int i = 0; i < vertexCount; ++i)
+                        {
+                            vertices[i] = Math.Mul(xf, poly._vertices[i]);
+                        }
+
+                        _debugDraw.DrawPolygon(vertices, vertexCount, color);
+                    }
+                    break;
+            }
+        }
+
+        /// Called for each fixture found in the query AABB.
+        /// @return false to terminate the query.
+        public override bool ReportFixture(Fixture fixture)
+        {
+            if (_count == _maxCount)
+            {
+                return false;
+            }
+
+            Body body = fixture.GetBody();
+            Shape shape = fixture.GetShape();
+
+            bool overlap = Collision.TestOverlap(shape, _circle, body.GetTransform(), _transform);
+
+            if (overlap)
+            {
+                DrawFixture(fixture);
+                ++_count;
+            }
+
+            return true;
+        }
+
+        public CircleShape _circle;
+        public Transform _transform;
+        public DebugDraw _debugDraw;
+        public int _count;
+    }
+
     public class PolyShapes : Test
     {
         const int _maxBodies = 256;
@@ -186,7 +265,28 @@ namespace TestBed
         public override void Step(Settings settings)
         {
             base.Step(settings);
+
+            PolyShapesCallback callback = new PolyShapesCallback();
+            callback._circle._radius = 2.0f;
+            callback._circle._p.Set(0.0f, 2.1f);
+            callback._transform.SetIdentity();
+            callback._debugDraw = _debugDraw;
+
+            AABB aabb;
+            callback._circle.ComputeAABB(out aabb, ref callback._transform);
+
+            _world.QueryAABB(callback, aabb);
+
+            Color color = new Color(0.4f, 0.7f, 0.8f);
+            _debugDraw.DrawCircle(callback._circle._p, callback._circle._radius, color);
+
             OpenGLDebugDraw.DrawString(5, _textLine, "Press 1-5 to drop stuff");
+            _textLine += 15;
+            OpenGLDebugDraw.DrawString(5, _textLine, "Press 'a' to (de)activate some bodies");
+
+            _textLine += 15;
+            OpenGLDebugDraw.DrawString(5, _textLine, "Press 'd' to destroy a body");
+
             _textLine += 15;
         }
 

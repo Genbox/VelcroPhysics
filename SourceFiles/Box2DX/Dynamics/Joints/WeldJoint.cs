@@ -73,14 +73,14 @@ namespace Box2DX.Dynamics
     /// distort somewhat because the island constraint solver is approximate.
     public class WeldJoint : Joint
     {
-        public override Vec2 AnchorA
+        public override Vec2 GetAnchorA()
         {
-            get { return _bodyA.GetWorldPoint(_localAnchorA); }
+            return _bodyA.GetWorldPoint(_localAnchorA);
         }
 
-        public override Vec2 AnchorB
+        public override Vec2 GetAnchorB()
         {
-            get { return _bodyB.GetWorldPoint(_localAnchorB); }
+            return _bodyB.GetWorldPoint(_localAnchorB);
         }
 
         public override Vec2 GetReactionForce(float inv_dt)

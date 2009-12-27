@@ -37,12 +37,12 @@ namespace Box2DX.Collision
         public static float EdgeSeparation(PolygonShape poly1, Transform xf1, int edge1,
             PolygonShape poly2, Transform xf2)
         {
-            int count1 = poly1.VertexCount;
-            Vec2[] vertices1 = poly1.Vertices;
-            Vec2[] normals1 = poly1.Normals;
+            int count1 = poly1._vertexCount;
+            Vec2[] vertices1 = poly1._vertices;
+            Vec2[] normals1 = poly1._normals;
 
-            int count2 = poly2.VertexCount;
-            Vec2[] vertices2 = poly2.Vertices;
+            int count2 = poly2._vertexCount;
+            Vec2[] vertices2 = poly2._vertices;
 
             Box2DXDebug.Assert(0 <= edge1 && edge1 < count1);
 
@@ -83,11 +83,11 @@ namespace Box2DX.Collision
             PolygonShape poly1, Transform xf1,
             PolygonShape poly2, Transform xf2)
         {
-            int count1 = poly1.VertexCount;
-            Vec2[] normals1 = poly1.Normals;
+            int count1 = poly1._vertexCount;
+            Vec2[] normals1 = poly1._normals;
 
             // Vector pointing from the centroid of poly1 to the centroid of poly2.
-            Vec2 d = Math.Mul(xf2, poly2.Centroid) - Math.Mul(xf1, poly1.Centroid);
+            Vec2 d = Math.Mul(xf2, poly2._centroid) - Math.Mul(xf1, poly1._centroid);
             Vec2 dLocal1 = Math.MulT(xf1.R, d);
 
             // Find edge normal on poly1 that has the largest projection onto d.
@@ -165,12 +165,12 @@ namespace Box2DX.Collision
             PolygonShape poly1, Transform xf1, int edge1,
             PolygonShape poly2, Transform xf2)
         {
-            int count1 = poly1.VertexCount;
-            Vec2[] normals1 = poly1.Normals;
+            int count1 = poly1._vertexCount;
+            Vec2[] normals1 = poly1._normals;
 
-            int count2 = poly2.VertexCount;
-            Vec2[] vertices2 = poly2.Vertices;
-            Vec2[] normals2 = poly2.Normals;
+            int count2 = poly2._vertexCount;
+            Vec2[] vertices2 = poly2._vertices;
+            Vec2[] normals2 = poly2._normals;
 
             Box2DXDebug.Assert(0 <= edge1 && edge1 < count1);
 
@@ -263,8 +263,8 @@ namespace Box2DX.Collision
             ClipVertex[] incidentEdge;
             FindIncidentEdge(out incidentEdge, poly1, xf1, edge1, poly2, xf2);
 
-            int count1 = poly1.VertexCount;
-            Vec2[] vertices1 = poly1.Vertices;
+            int count1 = poly1._vertexCount;
+            Vec2[] vertices1 = poly1._vertices;
 
             Vec2 v11 = vertices1[edge1];
             Vec2 v12 = edge1 + 1 < count1 ? vertices1[edge1 + 1] : vertices1[0];
@@ -321,9 +321,9 @@ namespace Box2DX.Collision
                 if (separation <= totalRadius)
                 {
                     ManifoldPoint cp = manifold.Points[pointCount];
-                    cp.LocalPoint = Math.MulT(xf2, clipPoints2[i].V);
-                    cp.ID = clipPoints2[i].ID;
-                    cp.ID.Features.Flip = flip;
+                    cp._localPoint = Math.MulT(xf2, clipPoints2[i].V);
+                    cp._id = clipPoints2[i].ID;
+                    cp._id.Features.Flip = flip;
                     ++pointCount;
                 }
             }

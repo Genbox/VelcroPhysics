@@ -43,279 +43,293 @@ using Box2DX.Common;
 
 namespace Box2DX.Dynamics
 {
-	/// <summary>
-	/// Gear joint definition. This definition requires two existing
-	/// revolute or prismatic joints (any combination will work).
-	/// The provided joints must attach a dynamic body to a static body.
-	/// </summary>
-	public class GearJointDef : JointDef
-	{
-		public GearJointDef()
-		{
-			Type = JointType.GearJoint;
-			Joint1 = null;
-			Joint2 = null;
-			Ratio = 1.0f;
-		}
+    /// <summary>
+    /// Gear joint definition. This definition requires two existing
+    /// revolute or prismatic joints (any combination will work).
+    /// The provided joints must attach a dynamic body to a static body.
+    /// </summary>
+    public class GearJointDef : JointDef
+    {
+        public GearJointDef()
+        {
+            Type = JointType.GearJoint;
+            Joint1 = null;
+            Joint2 = null;
+            Ratio = 1.0f;
+        }
 
-		/// <summary>
-		/// The first revolute/prismatic joint attached to the gear joint.
-		/// </summary>
-		public Joint Joint1;
+        /// <summary>
+        /// The first revolute/prismatic joint attached to the gear joint.
+        /// </summary>
+        public Joint Joint1;
 
-		/// <summary>
-		/// The second revolute/prismatic joint attached to the gear joint.
-		/// </summary>
-		public Joint Joint2;
+        /// <summary>
+        /// The second revolute/prismatic joint attached to the gear joint.
+        /// </summary>
+        public Joint Joint2;
 
-		/// <summary>
-		/// The gear ratio.
-		/// @see GearJoint for explanation.
-		/// </summary>
-		public float Ratio;
-	}
+        /// <summary>
+        /// The gear ratio.
+        /// @see GearJoint for explanation.
+        /// </summary>
+        public float Ratio;
+    }
 
-	/// <summary>
-	/// A gear joint is used to connect two joints together. Either joint
-	/// can be a revolute or prismatic joint. You specify a gear ratio
-	/// to bind the motions together:
-	/// coordinate1 + ratio * coordinate2 = constant
-	/// The ratio can be negative or positive. If one joint is a revolute joint
-	/// and the other joint is a prismatic joint, then the ratio will have units
-	/// of length or units of 1/length.
-	/// @warning The revolute and prismatic joints must be attached to
-	/// fixed bodies (which must be body1 on those joints).
-	/// </summary>
-	public class GearJoint : Joint
-	{
-		public Body _ground1;
-		public Body _ground2;
+    /// <summary>
+    /// A gear joint is used to connect two joints together. Either joint
+    /// can be a revolute or prismatic joint. You specify a gear ratio
+    /// to bind the motions together:
+    /// coordinate1 + ratio * coordinate2 = constant
+    /// The ratio can be negative or positive. If one joint is a revolute joint
+    /// and the other joint is a prismatic joint, then the ratio will have units
+    /// of length or units of 1/length.
+    /// @warning The revolute and prismatic joints must be attached to
+    /// fixed bodies (which must be body1 on those joints).
+    /// </summary>
+    public class GearJoint : Joint
+    {
+        public Body _ground1;
+        public Body _ground2;
 
-		// One of these is NULL.
-		public RevoluteJoint _revolute1;
-		public PrismaticJoint _prismatic1;
+        // One of these is NULL.
+        public RevoluteJoint _revolute1;
+        public PrismaticJoint _prismatic1;
 
-		// One of these is NULL.
-		public RevoluteJoint _revolute2;
-		public PrismaticJoint _prismatic2;
+        // One of these is NULL.
+        public RevoluteJoint _revolute2;
+        public PrismaticJoint _prismatic2;
 
-		public Vec2 _groundAnchor1;
-		public Vec2 _groundAnchor2;
+        public Vec2 _groundAnchor1;
+        public Vec2 _groundAnchor2;
 
-		public Vec2 _localAnchor1;
-		public Vec2 _localAnchor2;
+        public Vec2 _localAnchor1;
+        public Vec2 _localAnchor2;
 
-		public Jacobian _J;
+        public Jacobian _J;
 
-		public float _constant;
-		public float _ratio;
+        public float _constant;
+        public float _ratio;
 
-		// Effective mass
-		public float _mass;
+        // Effective mass
+        public float _mass;
 
-		// Impulse for accumulation/warm starting.
-		public float _impulse;
+        // Impulse for accumulation/warm starting.
+        public float _impulse;
 
-		public override Vec2 AnchorA { get { return _bodyA.GetWorldPoint(_localAnchor1); } }
-		public override Vec2 AnchorB { get { return _bodyB.GetWorldPoint(_localAnchor2); } }
+        public override Vec2 GetAnchorA()
+        {
+            return _bodyA.GetWorldPoint(_localAnchor1);
+        }
 
-		public override Vec2 GetReactionForce(float inv_dt)
-		{
-			// TODO_ERIN not tested
-			Vec2 P = _impulse * _J.LinearB;
-			return inv_dt * P;
-		}
+        public override Vec2 GetAnchorB()
+        {
+            return _bodyB.GetWorldPoint(_localAnchor2);
+        }
 
-		public override float GetReactionTorque(float inv_dt)
-		{
-			// TODO_ERIN not tested
-			Vec2 r = Math.Mul(_bodyB.GetTransform().R, _localAnchor2 - _bodyB.GetLocalCenter());
-			Vec2 P = _impulse * _J.LinearB;
-			float L = _impulse * _J.AngularB - Vec2.Cross(r, P);
-			return inv_dt * L;
-		}
+        public override Vec2 GetReactionForce(float inv_dt)
+        {
+            // TODO_ERIN not tested
+            Vec2 P = _impulse * _J.LinearB;
+            return inv_dt * P;
+        }
 
-		/// <summary>
-		/// Get the gear ratio.
-		/// </summary>
-		public float Ratio { get { return _ratio; } }
+        public override float GetReactionTorque(float inv_dt)
+        {
+            // TODO_ERIN not tested
+            Vec2 r = Math.Mul(_bodyB.GetTransform().R, _localAnchor2 - _bodyB.GetLocalCenter());
+            Vec2 P = _impulse * _J.LinearB;
+            float L = _impulse * _J.AngularB - Vec2.Cross(r, P);
+            return inv_dt * L;
+        }
 
-		public GearJoint(GearJointDef def)
-			: base(def)
-		{
-			JointType type1 = def.Joint1.GetType();
-			JointType type2 = def.Joint2.GetType();
+        /// <summary>
+        /// Get the gear ratio.
+        /// </summary>
+        public float Ratio { get { return _ratio; } }
 
-			Box2DXDebug.Assert(type1 == JointType.RevoluteJoint || type1 == JointType.PrismaticJoint);
-			Box2DXDebug.Assert(type2 == JointType.RevoluteJoint || type2 == JointType.PrismaticJoint);
-			Box2DXDebug.Assert(def.Joint1.GetBodyA().IsStatic());
-			Box2DXDebug.Assert(def.Joint2.GetBodyA().IsStatic());
+        public GearJoint(GearJointDef def)
+            : base(def)
+        {
+            JointType type1 = def.Joint1.GetType();
+            JointType type2 = def.Joint2.GetType();
 
-			_revolute1 = null;
-			_prismatic1 = null;
-			_revolute2 = null;
-			_prismatic2 = null;
+            Box2DXDebug.Assert(type1 == JointType.RevoluteJoint || type1 == JointType.PrismaticJoint);
+            Box2DXDebug.Assert(type2 == JointType.RevoluteJoint || type2 == JointType.PrismaticJoint);
+            Box2DXDebug.Assert(def.Joint1.GetBodyA().IsStatic());
+            Box2DXDebug.Assert(def.Joint2.GetBodyA().IsStatic());
 
-			float coordinate1, coordinate2;
+            _revolute1 = null;
+            _prismatic1 = null;
+            _revolute2 = null;
+            _prismatic2 = null;
 
-			_ground1 = def.Joint1.GetBodyA();
-			_bodyA = def.Joint1.GetBodyB();
-			if (type1 == JointType.RevoluteJoint)
-			{
-				_revolute1 = (RevoluteJoint)def.Joint1;
-				_groundAnchor1 = _revolute1._localAnchor1;
-				_localAnchor1 = _revolute1._localAnchor2;
-				coordinate1 = _revolute1.JointAngle;
-			}
-			else
-			{
-				_prismatic1 = (PrismaticJoint)def.Joint1;
-				_groundAnchor1 = _prismatic1._localAnchor1;
-				_localAnchor1 = _prismatic1._localAnchor2;
-				coordinate1 = _prismatic1.JointTranslation;
-			}
+            float coordinate1, coordinate2;
 
-			_ground2 = def.Joint2.GetBodyA();
-			_bodyB = def.Joint2.GetBodyB();
-			if (type2 == JointType.RevoluteJoint)
-			{
-				_revolute2 = (RevoluteJoint)def.Joint2;
-				_groundAnchor2 = _revolute2._localAnchor1;
-				_localAnchor2 = _revolute2._localAnchor2;
-				coordinate2 = _revolute2.JointAngle;
-			}
-			else
-			{
-				_prismatic2 = (PrismaticJoint)def.Joint2;
-				_groundAnchor2 = _prismatic2._localAnchor1;
-				_localAnchor2 = _prismatic2._localAnchor2;
-				coordinate2 = _prismatic2.JointTranslation;
-			}
+            _ground1 = def.Joint1.GetBodyA();
+            _bodyA = def.Joint1.GetBodyB();
+            if (type1 == JointType.RevoluteJoint)
+            {
+                _revolute1 = (RevoluteJoint)def.Joint1;
+                _groundAnchor1 = _revolute1._localAnchor1;
+                _localAnchor1 = _revolute1._localAnchor2;
+                coordinate1 = _revolute1.JointAngle;
+            }
+            else
+            {
+                _prismatic1 = (PrismaticJoint)def.Joint1;
+                _groundAnchor1 = _prismatic1._localAnchor1;
+                _localAnchor1 = _prismatic1._localAnchor2;
+                coordinate1 = _prismatic1.JointTranslation;
+            }
 
-			_ratio = def.Ratio;
+            _ground2 = def.Joint2.GetBodyA();
+            _bodyB = def.Joint2.GetBodyB();
+            if (type2 == JointType.RevoluteJoint)
+            {
+                _revolute2 = (RevoluteJoint)def.Joint2;
+                _groundAnchor2 = _revolute2._localAnchor1;
+                _localAnchor2 = _revolute2._localAnchor2;
+                coordinate2 = _revolute2.JointAngle;
+            }
+            else
+            {
+                _prismatic2 = (PrismaticJoint)def.Joint2;
+                _groundAnchor2 = _prismatic2._localAnchor1;
+                _localAnchor2 = _prismatic2._localAnchor2;
+                coordinate2 = _prismatic2.JointTranslation;
+            }
 
-			_constant = coordinate1 + _ratio * coordinate2;
+            _ratio = def.Ratio;
 
-			_impulse = 0.0f;
-		}
+            _constant = coordinate1 + _ratio * coordinate2;
 
-		internal override void InitVelocityConstraints(TimeStep step)
-		{
-			Body g1 = _ground1;
-			Body g2 = _ground2;
-			Body b1 = _bodyA;
-			Body b2 = _bodyB;
+            _impulse = 0.0f;
+        }
 
-			float K = 0.0f;
-			_J.SetZero();
+        internal override void InitVelocityConstraints(TimeStep step)
+        {
+            Body g1 = _ground1;
+            Body g2 = _ground2;
+            Body b1 = _bodyA;
+            Body b2 = _bodyB;
 
-			if (_revolute1!=null)
-			{
-				_J.AngularA = -1.0f;
-				K += b1._invI;
-			}
-			else
-			{
-				Vec2 ug = Math.Mul(g1.GetTransform().R, _prismatic1._localXAxis1);
-				Vec2 r = Math.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
-				float crug = Vec2.Cross(r, ug);
-				_J.LinearA = -ug;
-				_J.AngularA = -crug;
-				K += b1._invMass + b1._invI * crug * crug;
-			}
+            float K = 0.0f;
+            _J.SetZero();
 
-			if (_revolute2!=null)
-			{
-				_J.AngularB = -_ratio;
-				K += _ratio * _ratio * b2._invI;
-			}
-			else
-			{
-				Vec2 ug = Math.Mul(g2.GetTransform().R, _prismatic2._localXAxis1);
-				Vec2 r = Math.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
-				float crug = Vec2.Cross(r, ug);
-				_J.LinearB = -_ratio * ug;
-				_J.AngularB = -_ratio * crug;
-				K += _ratio * _ratio * (b2._invMass + b2._invI * crug * crug);
-			}
+            if (_revolute1 != null)
+            {
+                _J.AngularA = -1.0f;
+                K += b1._invI;
+            }
+            else
+            {
+                Vec2 ug = Math.Mul(g1.GetTransform().R, _prismatic1._localXAxis1);
+                Vec2 r = Math.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
+                float crug = Vec2.Cross(r, ug);
+                _J.LinearA = -ug;
+                _J.AngularA = -crug;
+                K += b1._invMass + b1._invI * crug * crug;
+            }
+
+            if (_revolute2 != null)
+            {
+                _J.AngularB = -_ratio;
+                K += _ratio * _ratio * b2._invI;
+            }
+            else
+            {
+                Vec2 ug = Math.Mul(g2.GetTransform().R, _prismatic2._localXAxis1);
+                Vec2 r = Math.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
+                float crug = Vec2.Cross(r, ug);
+                _J.LinearB = -_ratio * ug;
+                _J.AngularB = -_ratio * crug;
+                K += _ratio * _ratio * (b2._invMass + b2._invI * crug * crug);
+            }
 
             // Compute effective mass.
             _mass = K > 0.0f ? 1.0f / K : 0.0f;
-            
-            if (step.WarmStarting)
-			{
-				// Warm starting.
-				b1._linearVelocity += b1._invMass * _impulse * _J.LinearA;
-				b1._angularVelocity += b1._invI * _impulse * _J.AngularA;
-				b2._linearVelocity += b2._invMass * _impulse * _J.LinearB;
-				b2._angularVelocity += b2._invI * _impulse * _J.AngularB;
-			}
-			else
-			{
-				_impulse = 0.0f;
-			}
-		}
 
-		internal override void SolveVelocityConstraints(TimeStep step)
-		{
+            if (step.WarmStarting)
+            {
+                // Warm starting.
+                b1._linearVelocity += b1._invMass * _impulse * _J.LinearA;
+                b1._angularVelocity += b1._invI * _impulse * _J.AngularA;
+                b2._linearVelocity += b2._invMass * _impulse * _J.LinearB;
+                b2._angularVelocity += b2._invI * _impulse * _J.AngularB;
+            }
+            else
+            {
+                _impulse = 0.0f;
+            }
+        }
+
+        internal override void SolveVelocityConstraints(TimeStep step)
+        {
             //B2_NOT_USED(step);
 
-			Body b1 = _bodyA;
-			Body b2 = _bodyB;
+            Body b1 = _bodyA;
+            Body b2 = _bodyB;
 
-			float Cdot = _J.Compute(b1._linearVelocity, b1._angularVelocity, b2._linearVelocity, b2._angularVelocity);
+            float Cdot = _J.Compute(b1._linearVelocity, b1._angularVelocity, b2._linearVelocity, b2._angularVelocity);
 
-			float impulse = _mass * (-Cdot);
-			_impulse += impulse;
+            float impulse = _mass * (-Cdot);
+            _impulse += impulse;
 
-			b1._linearVelocity += b1._invMass * impulse * _J.LinearA;
-			b1._angularVelocity += b1._invI * impulse * _J.AngularA;
-			b2._linearVelocity += b2._invMass * impulse * _J.LinearB;
-			b2._angularVelocity += b2._invI * impulse * _J.AngularB;
-		}
+            b1._linearVelocity += b1._invMass * impulse * _J.LinearA;
+            b1._angularVelocity += b1._invI * impulse * _J.AngularA;
+            b2._linearVelocity += b2._invMass * impulse * _J.LinearB;
+            b2._angularVelocity += b2._invI * impulse * _J.AngularB;
+        }
 
-		internal override bool SolvePositionConstraints(float baumgarte)
-		{
+        internal override bool SolvePositionConstraints(float baumgarte)
+        {
             //B2_NOT_USED(baumgarte);
 
-			float linearError = 0.0f;
+            float linearError = 0.0f;
 
-			Body b1 = _bodyA;
-			Body b2 = _bodyB;
+            Body b1 = _bodyA;
+            Body b2 = _bodyB;
 
-			float coordinate1, coordinate2;
-			if (_revolute1 != null)
-			{
-				coordinate1 = _revolute1.JointAngle;
-			}
-			else
-			{
-				coordinate1 = _prismatic1.JointTranslation;
-			}
+            float coordinate1, coordinate2;
+            if (_revolute1 != null)
+            {
+                coordinate1 = _revolute1.JointAngle;
+            }
+            else
+            {
+                coordinate1 = _prismatic1.JointTranslation;
+            }
 
-			if (_revolute2 != null)
-			{
-				coordinate2 = _revolute2.JointAngle;
-			}
-			else
-			{
-				coordinate2 = _prismatic2.JointTranslation;
-			}
+            if (_revolute2 != null)
+            {
+                coordinate2 = _revolute2.JointAngle;
+            }
+            else
+            {
+                coordinate2 = _prismatic2.JointTranslation;
+            }
 
-			float C = _constant - (coordinate1 + _ratio * coordinate2);
+            float C = _constant - (coordinate1 + _ratio * coordinate2);
 
-			float impulse = _mass * (-C);
+            float impulse = _mass * (-C);
 
-			b1._sweep.C += b1._invMass * impulse * _J.LinearA;
-			b1._sweep.A += b1._invI * impulse * _J.AngularA;
-			b2._sweep.C += b2._invMass * impulse * _J.LinearB;
-			b2._sweep.A += b2._invI * impulse * _J.AngularB;
+            b1._sweep.C += b1._invMass * impulse * _J.LinearA;
+            b1._sweep.A += b1._invI * impulse * _J.AngularA;
+            b2._sweep.C += b2._invMass * impulse * _J.LinearB;
+            b2._sweep.A += b2._invI * impulse * _J.AngularB;
 
-			b1.SynchronizeTransform();
-			b2.SynchronizeTransform();
+            b1.SynchronizeTransform();
+            b2.SynchronizeTransform();
 
-			//TODO_ERIN not implemented
-			return linearError < Settings.LinearSlop;
-		}
-	}
+            //TODO_ERIN not implemented
+            return linearError < Settings.LinearSlop;
+        }
+
+        /// Set/Get the gear ratio.
+        public void SetRatio(float ratio)
+        {
+            Box2DXDebug.Assert(Math.IsValid(ratio));
+            _ratio = ratio;
+        }
+    }
 }
