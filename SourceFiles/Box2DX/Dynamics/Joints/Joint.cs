@@ -313,7 +313,7 @@ namespace Box2DX.Dynamics
         // This returns true if the position errors are within tolerance.
         internal abstract bool SolvePositionConstraints(float baumgarte);
 
-        internal void ComputeXForm(ref Transform xf, Vec2 center, Vec2 localCenter, float angle)
+        internal void ComputeTransform(ref Transform xf, Vec2 center, Vec2 localCenter, float angle)
         {
             xf.R.Set(angle);
             xf.Position = center - Math.Mul(xf.R, localCenter);

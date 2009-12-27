@@ -146,7 +146,7 @@ namespace Box2DX.Dynamics
         }
 
         /// The body type.
-        /// static: zero mass, zero velocity, never moves
+        /// static: zero mass, zero velocity, may be manually moved
         /// kinematic: zero mass, non-zero velocity set by user, moved by solver
         /// dynamic: positive mass, non-zero velocity determined by forces, moved by solver
         public enum BodyType
@@ -236,7 +236,7 @@ namespace Box2DX.Dynamics
             _linearDamping = bd.LinearDamping;
             _angularDamping = bd.AngularDamping;
 
-            _force.Set(0.0f, 0.0f);
+            _force.SetZero();
             _torque = 0.0f;
 
             _sleepTime = 0.0f;
@@ -460,12 +460,6 @@ namespace Box2DX.Dynamics
         {
             Box2DXDebug.Assert(_world.IsLocked() == false);
             if (_world.IsLocked() == true)
-            {
-                return;
-            }
-
-            // Static bodies are not allowed to move.
-            if (_type == BodyType.Static)
             {
                 return;
             }

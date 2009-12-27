@@ -466,7 +466,7 @@ namespace Box2DX.Collision
                 {
                     float inv_d12 = 1.0f / (d12_1 + d12_2);
                     Vertices[0].A = d12_1 * inv_d12;
-                    Vertices[1].A = d12_1 * inv_d12;
+                    Vertices[1].A = d12_2 * inv_d12;
                     Count = 2;
                     return;
                 }

@@ -418,7 +418,7 @@ namespace Box2DX.Dynamics
         /// <param name="dt">The amount of time to simulate, this should not vary.</param>
         /// <param name="velocityIterations">For the velocity constraint solver.</param>
         /// <param name="positionIteration">For the positionconstraint solver.</param>
-        public void Step(float dt, int velocityIterations, int positionIteration)
+        public void Step(float dt, int velocityIterations, int positionIteration, bool resetForces)
         {
             // If new fixtures were added, we need to find the new contacts.
             if ((_flags & WorldFlags.NewFixture) != 0)
@@ -433,6 +433,8 @@ namespace Box2DX.Dynamics
             step.Dt = dt;
             step.VelocityIterations = velocityIterations;
             step.PositionIterations = positionIteration;
+            step.ResetForces = resetForces;
+
             if (dt > 0.0f)
             {
                 step.Inv_Dt = 1.0f / dt;
@@ -576,7 +578,7 @@ namespace Box2DX.Dynamics
                 {
                     Transform xf = b.GetTransform();
                     xf.Position = b.GetWorldCenter();
-                    _debugDraw.DrawXForm(xf);
+                    _debugDraw.DrawTransform(xf);
                 }
             }
         }
@@ -1161,7 +1163,7 @@ namespace Box2DX.Dynamics
                     }
                 }
 
-                TimeStep subStep;
+                TimeStep subStep = new TimeStep();
                 subStep.WarmStarting = false;
                 subStep.Dt = (1.0f - minTOI) * step.Dt;
                 subStep.Inv_Dt = 1.0f / subStep.Dt;

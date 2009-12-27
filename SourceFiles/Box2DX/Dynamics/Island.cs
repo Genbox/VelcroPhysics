@@ -229,8 +229,11 @@ namespace Box2DX.Dynamics
                 b._angularVelocity += step.Dt * b._invI * b._torque;
 
                 // Reset forces.
-                b._force.Set(0.0f, 0.0f);
-                b._torque = 0.0f;
+                if (step.ResetForces)
+                {
+                    b._force.SetZero();
+                    b._torque = 0.0f;
+                }
 
                 // Apply damping.
                 // ODE: dv/dt + c * v = 0

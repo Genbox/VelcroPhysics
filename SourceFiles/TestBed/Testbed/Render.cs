@@ -134,7 +134,7 @@ namespace TestBed
             Gl.glEnd();
         }
 
-        public override void DrawXForm(Transform xf)
+        public override void DrawTransform(Transform xf)
         {
             Vec2 p1 = xf.Position, p2;
             float k_axisScale = 0.4f;
