@@ -332,8 +332,10 @@ namespace Box2DX.Dynamics
                 Fixture fixtureB = contact.GetFixtureB();
                 if (fixtureA == this || fixtureB == this)
                 {
-                    contact.SetAsSensor(IsSensor);
+                    contact.SetAsSensor(fixtureA.IsSensor || fixtureB.IsSensor);
                 }
+
+                edge = edge.Next;
             }
         }
     }
