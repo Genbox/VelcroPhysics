@@ -66,7 +66,7 @@ namespace Box2DX.Collision
 
             // Find the min separating edge.
             int normalIndex = 0;
-            float separation = -Settings.FLT_MAX;
+            float separation = -Settings.floatMax;
             float radius = polygon._radius + circle._radius;
             int vertexCount = polygon.VertexCount;
             Vec2[] vertices = polygon.Vertices;
@@ -96,7 +96,7 @@ namespace Box2DX.Collision
             Vec2 v2 = vertices[vertIndex2];
 
             // If the center is inside the polygon ...
-            if (separation < Settings.FLT_EPSILON)
+            if (separation < Settings.epsilon)
             {
                 manifold.PointCount = 1;
                 manifold.Type = Manifold.ManifoldType.FaceA;

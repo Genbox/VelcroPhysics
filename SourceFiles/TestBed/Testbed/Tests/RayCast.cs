@@ -127,7 +127,7 @@ namespace TestBed
             float x = Math.Random(-10.0f, 10.0f);
             float y = Math.Random(0.0f, 20.0f);
             bd.Position.Set(x, y);
-            bd.Angle = Math.Random(-Box2DX.Common.Settings.PI, Box2DX.Common.Settings.PI);
+            bd.Angle = Math.Random(-Box2DX.Common.Settings.pi, Box2DX.Common.Settings.pi);
 
             if (index == 4)
             {
@@ -227,7 +227,7 @@ namespace TestBed
                 _debugDraw.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
             }
 
-            _angle += 0.25f * Box2DX.Common.Settings.PI / 180.0f;
+            _angle += 0.25f * Box2DX.Common.Settings.pi / 180.0f;
         }
 
         public static Test Create()

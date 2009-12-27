@@ -52,7 +52,7 @@ namespace Box2DX.Collision
 
             // Find support vertex on poly2 for -normal.
             int index = 0;
-            float minDot = Settings.FLT_MAX;
+            float minDot = Settings.floatMax;
 
             for (int i = 0; i < count2; ++i)
             {
@@ -92,7 +92,7 @@ namespace Box2DX.Collision
 
             // Find edge normal on poly1 that has the largest projection onto d.
             int edge = 0;
-            float maxDot = -Settings.FLT_MAX;
+            float maxDot = -Settings.floatMax;
             for (int i = 0; i < count1; ++i)
             {
                 float dot = Vec2.Dot(normals1[i], dLocal1);
@@ -179,7 +179,7 @@ namespace Box2DX.Collision
 
             // Find the incident edge on poly2.
             int index = 0;
-            float minDot = Settings.FLT_MAX;
+            float minDot = Settings.floatMax;
             for (int i = 0; i < count2; ++i)
             {
                 float dot = Vec2.Dot(normal1, normals2[i]);

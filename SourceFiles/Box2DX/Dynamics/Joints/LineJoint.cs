@@ -113,8 +113,8 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void Initialize(Body body1, Body body2, Vec2 anchor, Vec2 axis)
 		{
-			Body1 = body1;
-			Body2 = body2;
+			BodyA = body1;
+			BodyB = body2;
 			localAnchor1 = body1.GetLocalPoint(anchor);
 			localAnchor2 = body2.GetLocalPoint(anchor);
 			localAxis1 = body1.GetLocalVector(axis);
@@ -222,12 +222,12 @@ namespace Box2DX.Dynamics
 			_perp.SetZero();
 		}
 
-		public override Vec2 Anchor1
+		public override Vec2 AnchorA
 		{
 			get { return _bodyA.GetWorldPoint(_localAnchor1); }
 		}
 
-		public override Vec2 Anchor2
+		public override Vec2 AnchorB
 		{
 			get { return _bodyB.GetWorldPoint(_localAnchor2); }
 		}
@@ -296,8 +296,8 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void EnableLimit(bool flag)
 		{
-			_bodyA.WakeUp();
-			_bodyB.WakeUp();
+			_bodyA.SetAwake(true);
+			_bodyB.SetAwake(true);
 			_enableLimit = flag;
 		}
 
@@ -323,8 +323,8 @@ namespace Box2DX.Dynamics
 		public void SetLimits(float lower, float upper)
 		{
 			Box2DXDebug.Assert(lower <= upper);
-			_bodyA.WakeUp();
-			_bodyB.WakeUp();
+			_bodyA.SetAwake(true);
+			_bodyB.SetAwake(true);
 			_lowerTranslation = lower;
 			_upperTranslation = upper;
 		}
@@ -342,8 +342,8 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void EnableMotor(bool flag)
 		{
-			_bodyA.WakeUp();
-			_bodyB.WakeUp();
+			_bodyA.SetAwake(true);
+			_bodyB.SetAwake(true);
 			_enableMotor = flag;
 		}
 
@@ -352,8 +352,8 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void SetMotorSpeed(float speed)
 		{
-			_bodyA.WakeUp();
-			_bodyB.WakeUp();
+			_bodyA.SetAwake(true);
+			_bodyB.SetAwake(true);
 			_motorSpeed = speed;
 		}
 
@@ -362,8 +362,8 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void SetMaxMotorForce(float force)
 		{
-			_bodyA.WakeUp();
-			_bodyB.WakeUp();
+			_bodyA.SetAwake(true);
+			_bodyB.SetAwake(true);
 			_maxMotorForce = force;
 		}
 
@@ -411,7 +411,7 @@ namespace Box2DX.Dynamics
 				_a2 = Vec2.Cross(r2, _axis);
 
 				_motorMass = _invMass1 + _invMass2 + _invI1 * _a1 * _a1 + _invI2 * _a2 * _a2;
-                if (_motorMass > Settings.FLT_EPSILON)
+                if (_motorMass > Settings.epsilon)
                 {
                     _motorMass = 1.0f / _motorMass;
                 }

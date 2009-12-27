@@ -206,7 +206,7 @@ namespace Box2DX.Collision
                 {
                     float metric1 = cache.Metric;
                     float metric2 = GetMetric();
-                    if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < Settings.FLT_EPSILON)
+                    if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < Settings.epsilon)
                     {
                         // Reset the simplex.
                         Count = 0;
@@ -608,7 +608,7 @@ namespace Box2DX.Collision
                 Vec2 d = simplex.GetSearchDirection();
 
                 // Ensure the search direction is numerically fit.
-                if (d.LengthSquared() < Settings.FLT_EPSILON * Settings.FLT_EPSILON)
+                if (d.LengthSquared() < Settings.epsilon * Settings.epsilon)
                 {
                     // The origin is probably contained by a line segment
                     // or triangle. Thus the shapes are overlapped.
@@ -668,7 +668,7 @@ namespace Box2DX.Collision
                 float rA = proxyA._radius;
                 float rB = proxyB._radius;
 
-                if (output.Distance > rA + rB && output.Distance > Settings.FLT_EPSILON)
+                if (output.Distance > rA + rB && output.Distance > Settings.epsilon)
                 {
                     // Shapes are still no overlapped.
                     // Move the witness points to the outer surface.

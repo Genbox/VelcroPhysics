@@ -96,6 +96,7 @@
     <Compile Include="Render.cs" />
     <Compile Include="Test.cs" />
     <Compile Include="Tests\ApplyForce.cs" />
+    <Compile Include="Tests\BodyTypes.cs" />
     <Compile Include="Tests\Bridge.cs" />
     <Compile Include="Tests\CCDTest.cs" />
     <Compile Include="Tests\Chain.cs" />

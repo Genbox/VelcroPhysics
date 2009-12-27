@@ -66,7 +66,7 @@ namespace TestBed
                         shape._radius = 3.0f;
                         shape._p.Set(0.5f, -4.0f);
                         _fixture2 = _body.CreateFixture(shape, 10.0f);
-                        _body.WakeUp();
+                        _body.SetAwake(true);
                     }
                     break;
 
@@ -75,7 +75,7 @@ namespace TestBed
                     {
                         _body.DestroyFixture(ref _fixture2);
                         _fixture2 = null;
-                        _body.WakeUp();
+                        _body.SetAwake(true);
                     }
                     break;
             }

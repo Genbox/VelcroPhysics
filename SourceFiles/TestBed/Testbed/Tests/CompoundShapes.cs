@@ -54,7 +54,7 @@ namespace TestBed
                     float x = Math.Random(-0.1f, 0.1f);
                     BodyDef bd = new BodyDef();
                     bd.Position.Set(x + 5.0f, 1.05f + 2.5f * i);
-                    bd.Angle = Math.Random(-Box2DX.Common.Settings.PI, Box2DX.Common.Settings.PI);
+                    bd.Angle = Math.Random(-Box2DX.Common.Settings.pi, Box2DX.Common.Settings.pi);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(circle1, 2.0f);
                     body.CreateFixture(circle2, 0);
@@ -66,14 +66,14 @@ namespace TestBed
                 polygon1.SetAsBox(0.25f, 0.5f);
 
                 PolygonShape polygon2 = new PolygonShape();
-                polygon2.SetAsBox(0.25f, 0.5f, new Vec2(0.0f, -0.5f), 0.5f * Box2DX.Common.Settings.PI);
+                polygon2.SetAsBox(0.25f, 0.5f, new Vec2(0.0f, -0.5f), 0.5f * Box2DX.Common.Settings.pi);
 
                 for (int i = 0; i < 10; ++i)
                 {
                     float x = Math.Random(-0.1f, 0.1f);
                     BodyDef bd = new BodyDef();
                     bd.Position.Set(x - 5.0f, 1.05f + 2.5f * i);
-                    bd.Angle = Math.Random(-Box2DX.Common.Settings.PI, Box2DX.Common.Settings.PI);
+                    bd.Angle = Math.Random(-Box2DX.Common.Settings.pi, Box2DX.Common.Settings.pi);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(polygon1, 2.0f);
                     body.CreateFixture(polygon2, 2.0f);
@@ -82,7 +82,7 @@ namespace TestBed
 
             {
                 Transform xf1 = new Transform();
-                xf1.R.Set(0.3524f * Box2DX.Common.Settings.PI);
+                xf1.R.Set(0.3524f * Box2DX.Common.Settings.pi);
                 xf1.Position = Math.Mul(xf1.R, new Vec2(1.0f, 0.0f));
 
                 Vec2[] vertices = new Vec2[3];
@@ -94,7 +94,7 @@ namespace TestBed
                 triangle1.Set(vertices, 3);
 
                 Transform xf2 = new Transform();
-                xf2.R.Set(-0.3524f * Box2DX.Common.Settings.PI);
+                xf2.R.Set(-0.3524f * Box2DX.Common.Settings.pi);
                 xf2.Position = Math.Mul(xf2.R, new Vec2(-1.0f, 0.0f));
 
                 PolygonShape triangle2 = new PolygonShape();

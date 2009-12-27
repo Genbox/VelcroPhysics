@@ -77,7 +77,7 @@ namespace Box2DX.Collision
                 int i1 = i;
                 int i2 = i + 1 < VertexCount ? i + 1 : 0;
                 Vec2 edge = Vertices[i2] - Vertices[i1];
-                Box2DXDebug.Assert(edge.LengthSquared() > Settings.FLT_EPSILON * Settings.FLT_EPSILON);
+                Box2DXDebug.Assert(edge.LengthSquared() > Settings.epsilon * Settings.epsilon);
                 Normals[i] = Vec2.Cross(edge, 1.0f);
                 Normals[i].Normalize();
             }
@@ -179,7 +179,7 @@ namespace Box2DX.Collision
             return true;
         }
 
-        public override void RayCast(out RayCastOutput output, ref RayCastInput input, Transform xf)
+        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, Transform xf)
         {
             output = new RayCastOutput();
 
@@ -190,8 +190,6 @@ namespace Box2DX.Collision
             Vec2 p2 = Math.MulT(xf.R, input.P2 - xf.Position);
             Vec2 d = p2 - p1;
             int index = -1;
-
-            output.Hit = false;
 
             for (int i = 0; i < VertexCount; ++i)
             {
@@ -205,7 +203,7 @@ namespace Box2DX.Collision
                 {
                     if (numerator < 0.0f)
                     {
-                        return;
+                        return false;
                     }
                 }
                 else
@@ -231,7 +229,7 @@ namespace Box2DX.Collision
 
                 if (upper < lower)
                 {
-                    return;
+                    return false;
                 }
             }
 
@@ -239,11 +237,12 @@ namespace Box2DX.Collision
 
             if (index >= 0)
             {
-                output.Hit = true;
                 output.Fraction = lower;
                 output.Normal = Math.Mul(xf.R, Normals[index]);
-                return;
+                return true;
             }
+
+            return false;
         }
 
         public override void ComputeAABB(out AABB aabb, ref Transform xf)
@@ -350,7 +349,7 @@ namespace Box2DX.Collision
             massData.Mass = density * area;
 
             // Center of mass
-            Box2DXDebug.Assert(area > Settings.FLT_EPSILON);
+            Box2DXDebug.Assert(area > Settings.epsilon);
             center *= 1.0f / area;
             massData.Center = center;
 
@@ -451,7 +450,7 @@ namespace Box2DX.Collision
             }
 
             // Centroid
-            Box2DXDebug.Assert(area > Settings.FLT_EPSILON);
+            Box2DXDebug.Assert(area > Settings.epsilon);
             c *= 1.0f / area;
             return c;
         }

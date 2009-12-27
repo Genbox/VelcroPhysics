@@ -48,7 +48,7 @@ namespace TestBed
 
                 BodyDef bd = new BodyDef();
                 bd.Position.Set(-10.0f, 10.0f);
-                bd.Angle = 0.5f * Box2DX.Common.Settings.PI;
+                bd.Angle = 0.5f * Box2DX.Common.Settings.pi;
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(shape, 5.0f);
 

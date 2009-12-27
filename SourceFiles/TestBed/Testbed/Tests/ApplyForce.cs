@@ -67,7 +67,7 @@ namespace TestBed
 
             {
                 Transform xf1 = new Transform();
-                xf1.R.Set(0.3524f * Box2DX.Common.Settings.PI);
+                xf1.R.Set(0.3524f * Box2DX.Common.Settings.pi);
                 xf1.Position = Math.Mul(xf1.R, new Vec2(1.0f, 0.0f));
 
                 Vec2[] vertices = new Vec2[3];
@@ -83,7 +83,7 @@ namespace TestBed
                 sd1.Density = 2.0f;
 
                 Transform xf2 = new Transform();
-                xf2.R.Set(-0.3524f * Box2DX.Common.Settings.PI);
+                xf2.R.Set(-0.3524f * Box2DX.Common.Settings.pi);
                 xf2.Position = Math.Mul(xf2.R, new Vec2(-1.0f, 0.0f));
 
                 vertices[0] = Math.Mul(xf2, new Vec2(-1.0f, 0.0f));
@@ -102,7 +102,7 @@ namespace TestBed
                 bd.LinearDamping = 0.1f;
 
                 bd.Position.Set(0.0f, 2.0f);
-                bd.Angle = Box2DX.Common.Settings.PI;
+                bd.Angle = Box2DX.Common.Settings.pi;
                 _body = _world.CreateBody(bd);
                 _body.CreateFixture(sd1);
                 _body.CreateFixture(sd2);

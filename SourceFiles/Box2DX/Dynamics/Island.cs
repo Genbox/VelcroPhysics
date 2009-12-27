@@ -219,8 +219,10 @@ namespace Box2DX.Dynamics
             {
                 Body b = Bodies[i];
 
-                if (b.IsStatic())
+                if (b.GetType() != Body.BodyType.Dynamic)
+                {
                     continue;
+                }
 
                 // Integrate velocities.
                 b._linearVelocity += step.Dt * (gravity + b._invMass * b._force);
@@ -270,8 +272,10 @@ namespace Box2DX.Dynamics
             {
                 Body b = Bodies[i];
 
-                if (b.IsStatic())
+                if (b.GetType() == Body.BodyType.Static)
+                {
                     continue;
+                }
 
                 // Check for large velocities.
                 Vec2 translation = step.Dt * b._linearVelocity;
@@ -331,7 +335,7 @@ namespace Box2DX.Dynamics
 
             if (allowSleep)
             {
-                float minSleepTime = Settings.FLT_MAX;
+                float minSleepTime = Settings.floatMax;
 
 #if !TARGET_FLOAT32_IS_FIXED
                 float linTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
@@ -347,13 +351,13 @@ namespace Box2DX.Dynamics
                         continue;
                     }
 
-                    if ((b._flags & Body.BodyFlags.AllowSleep) == 0)
+                    if ((b._flags & Body.BodyFlags.AutoSleepFlag) == 0)
                     {
                         b._sleepTime = 0.0f;
                         minSleepTime = 0.0f;
                     }
 
-                    if ((b._flags & Body.BodyFlags.AllowSleep) == 0 ||
+                    if ((b._flags & Body.BodyFlags.AutoSleepFlag) == 0 ||
 #if TARGET_FLOAT32_IS_FIXED
 						Common.Math.Abs(b._angularVelocity) > Settings.AngularSleepTolerance ||
 						Common.Math.Abs(b._linearVelocity.X) > Settings.LinearSleepTolerance ||
@@ -378,9 +382,7 @@ namespace Box2DX.Dynamics
                     for (int i = 0; i < BodyCount; ++i)
                     {
                         Body b = Bodies[i];
-                        b._flags |= Body.BodyFlags.Sleep;
-                        b._linearVelocity = Vec2.Zero;
-                        b._angularVelocity = 0.0f;
+                        b.SetAwake(false);
                     }
                 }
             }
@@ -418,8 +420,10 @@ namespace Box2DX.Dynamics
             {
                 Body b = Bodies[i];
 
-                if (b.IsStatic())
+                if (b.GetType() == Body.BodyType.Static)
+                {
                     continue;
+                }
 
                 // Check for large velocities.
                 Vec2 translation = subStep.Dt * b._linearVelocity;
