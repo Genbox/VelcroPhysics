@@ -53,15 +53,15 @@ namespace Box2DX.Collision
             }
 
             // Detect persists and removes.
-            for (int i = 0; i < manifold1.PointCount; ++i)
+            for (int i = 0; i < manifold1._pointCount; ++i)
             {
-                ContactID id = manifold1.Points[i]._id;
+                ContactID id = manifold1._points[i]._id;
 
                 state1[i] = PointState.RemoveState;
 
-                for (int j = 0; j < manifold2.PointCount; ++j)
+                for (int j = 0; j < manifold2._pointCount; ++j)
                 {
-                    if (manifold2.Points[j]._id.Key == id.Key)
+                    if (manifold2._points[j]._id.Key == id.Key)
                     {
                         state1[i] = PointState.PersistState;
                         break;
@@ -70,15 +70,15 @@ namespace Box2DX.Collision
             }
 
             // Detect persists and adds.
-            for (int i = 0; i < manifold2.PointCount; ++i)
+            for (int i = 0; i < manifold2._pointCount; ++i)
             {
-                ContactID id = manifold2.Points[i]._id;
+                ContactID id = manifold2._points[i]._id;
 
                 state2[i] = PointState.AddState;
 
-                for (int j = 0; j < manifold1.PointCount; ++j)
+                for (int j = 0; j < manifold1._pointCount; ++j)
                 {
-                    if (manifold1.Points[j]._id.Key == id.Key)
+                    if (manifold1._points[j]._id.Key == id.Key)
                     {
                         state2[i] = PointState.PersistState;
                         break;
@@ -224,11 +224,6 @@ namespace Box2DX.Collision
         public float _tangentImpulse;
 
         /// <summary>
-        /// Approach velocity (pre-solve)
-        /// </summary>
-        public float _approachVelocity;
-
-        /// <summary>
         /// Uniquely identifies a contact point between two shapes.
         /// </summary>
         public ContactID _id;
@@ -264,26 +259,26 @@ namespace Box2DX.Collision
         /// <summary>
         /// The points of contact.
         /// </summary>
-        public ManifoldPoint[] Points = new ManifoldPoint[Settings.MaxManifoldPoints];
+        public ManifoldPoint[] _points = new ManifoldPoint[Settings.MaxManifoldPoints];
 
-        public Vec2 LocalPlaneNormal;
+        public Vec2 _localPlaneNormal;
 
         /// <summary>
         /// Usage depends on manifold type
         /// </summary>
-        public Vec2 LocalPoint;
+        public Vec2 _localPoint;
 
-        public ManifoldType Type;
+        public ManifoldType _type;
 
         /// <summary>
         /// The number of manifold points.
         /// </summary>
-        public int PointCount;
+        public int _pointCount;
 
         public Manifold()
         {
             for (int i = 0; i < Settings.MaxManifoldPoints; i++)
-                Points[i] = new ManifoldPoint();
+                _points[i] = new ManifoldPoint();
         }
     }
 
@@ -295,17 +290,17 @@ namespace Box2DX.Collision
         /// that generated the manifold.
         public void Initialize(Manifold manifold, Transform xfA, float radiusA, Transform xfB, float radiusB)
         {
-            if (manifold.PointCount == 0)
+            if (manifold._pointCount == 0)
             {
                 return;
             }
 
-            switch (manifold.Type)
+            switch (manifold._type)
             {
                 case Manifold.ManifoldType.Circles:
                     {
-                        Vec2 pointA = Math.Mul(xfA, manifold.LocalPoint);
-                        Vec2 pointB = Math.Mul(xfB, manifold.Points[0]._localPoint);
+                        Vec2 pointA = Math.Mul(xfA, manifold._localPoint);
+                        Vec2 pointB = Math.Mul(xfB, manifold._points[0]._localPoint);
                         Vec2 normal = new Vec2(1.0f, 0.0f);
                         if (Vec2.DistanceSquared(pointA, pointB) > Settings.epsilon * Settings.epsilon)
                         {
@@ -323,15 +318,15 @@ namespace Box2DX.Collision
 
                 case Manifold.ManifoldType.FaceA:
                     {
-                        Vec2 normal = Math.Mul(xfA.R, manifold.LocalPlaneNormal);
-                        Vec2 planePoint = Math.Mul(xfA, manifold.LocalPoint);
+                        Vec2 normal = Math.Mul(xfA.R, manifold._localPlaneNormal);
+                        Vec2 planePoint = Math.Mul(xfA, manifold._localPoint);
 
                         // Ensure normal points from A to B.
                         Normal = normal;
 
-                        for (int i = 0; i < manifold.PointCount; ++i)
+                        for (int i = 0; i < manifold._pointCount; ++i)
                         {
-                            Vec2 clipPoint = Math.Mul(xfB, manifold.Points[i]._localPoint);
+                            Vec2 clipPoint = Math.Mul(xfB, manifold._points[i]._localPoint);
                             Vec2 cA = clipPoint + (radiusA - Vec2.Dot(clipPoint - planePoint, normal)) * normal;
                             Vec2 cB = clipPoint - radiusB * normal;
                             Points[i] = 0.5f * (cA + cB);
@@ -341,15 +336,15 @@ namespace Box2DX.Collision
 
                 case Manifold.ManifoldType.FaceB:
                     {
-                        Vec2 normal = Math.Mul(xfB.R, manifold.LocalPlaneNormal);
-                        Vec2 planePoint = Math.Mul(xfB, manifold.LocalPoint);
+                        Vec2 normal = Math.Mul(xfB.R, manifold._localPlaneNormal);
+                        Vec2 planePoint = Math.Mul(xfB, manifold._localPoint);
 
                         // Ensure normal points from A to B.
                         Normal = -normal;
 
-                        for (int i = 0; i < manifold.PointCount; ++i)
+                        for (int i = 0; i < manifold._pointCount; ++i)
                         {
-                            Vec2 clipPoint = Math.Mul(xfA, manifold.Points[i]._localPoint);
+                            Vec2 clipPoint = Math.Mul(xfA, manifold._points[i]._localPoint);
                             Vec2 cA = clipPoint - radiusA * normal;
                             Vec2 cB = clipPoint + (radiusB - Vec2.Dot(clipPoint - planePoint, normal)) * normal;
                             Points[i] = 0.5f * (cA + cB);

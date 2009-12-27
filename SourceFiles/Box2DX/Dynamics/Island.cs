@@ -228,13 +228,6 @@ namespace Box2DX.Dynamics
                 b._linearVelocity += step.Dt * (gravity + b._invMass * b._force);
                 b._angularVelocity += step.Dt * b._invI * b._torque;
 
-                // Reset forces.
-                if (step.ResetForces)
-                {
-                    b._force.SetZero();
-                    b._torque = 0.0f;
-                }
-
                 // Apply damping.
                 // ODE: dv/dt + c * v = 0
                 // Solution: v(t) = v0 * exp(-c * t)
@@ -345,14 +338,17 @@ namespace Box2DX.Dynamics
             {
                 float minSleepTime = Settings.floatMax;
 
-#if !TARGET_FLOAT32_IS_FIXED
                 float linTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
                 float angTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
-#endif
 
                 for (int i = 0; i < _bodyCount; ++i)
                 {
                     Body b = _bodies[i];
+
+                    if (b.GetType() == Body.BodyType.Static)
+                    {
+                        continue;
+                    }
 
                     if (b._invMass == 0.0f)
                     {
@@ -365,15 +361,8 @@ namespace Box2DX.Dynamics
                         minSleepTime = 0.0f;
                     }
 
-                    if ((b._flags & Body.BodyFlags.AutoSleepFlag) == 0 ||
-#if TARGET_FLOAT32_IS_FIXED
-						Common.Math.Abs(b._angularVelocity) > Settings.AngularSleepTolerance ||
-						Common.Math.Abs(b._linearVelocity.X) > Settings.LinearSleepTolerance ||
-						Common.Math.Abs(b._linearVelocity.Y) > Settings.LinearSleepTolerance)
-#else
- b._angularVelocity * b._angularVelocity > angTolSqr ||
-                        Vec2.Dot(b._linearVelocity, b._linearVelocity) > linTolSqr)
-#endif
+                    //TODO: Check
+                    if ((b._flags & Body.BodyFlags.AutoSleepFlag) == 0 || b._angularVelocity * b._angularVelocity > angTolSqr || Vec2.Dot(b._linearVelocity, b._linearVelocity) > linTolSqr)
                     {
                         b._sleepTime = 0.0f;
                         minSleepTime = 0.0f;

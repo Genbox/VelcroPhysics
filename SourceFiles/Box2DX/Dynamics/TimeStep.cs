@@ -8,6 +8,5 @@
         public int VelocityIterations;
         public int PositionIterations;
         public bool WarmStarting;
-        public bool ResetForces;
     }
 }

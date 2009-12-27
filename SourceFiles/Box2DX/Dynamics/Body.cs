@@ -46,7 +46,7 @@ namespace Box2DX.Dynamics
             AngularVelocity = 0.0f;
             LinearDamping = 0.0f;
             AngularDamping = 0.0f;
-            AutoSleep = true;
+            AllowSleep = true;
             Awake = true;
             FixedRotation = false;
             Bullet = false;
@@ -54,6 +54,12 @@ namespace Box2DX.Dynamics
             Active = true;
             InertiaScale = 1.0f;
         }
+
+        /// <summary>
+        /// The body type: static, kinematic, or dynamic.
+        /// Note: if a dynamic body would have zero mass, the mass is set to one.
+        /// </summary>
+        public Body.BodyType Type;
 
         /// <summary>
         /// Use this to store application specific body data.
@@ -71,7 +77,7 @@ namespace Box2DX.Dynamics
         /// </summary>
         public float Angle;
 
-        /// The linear velocity of the body in world co-ordinates.
+        /// The linear velocity of the body's origin in world co-ordinates.
         public Vec2 LinearVelocity;
 
         // The angular velocity of the body.
@@ -95,7 +101,7 @@ namespace Box2DX.Dynamics
         /// Set this flag to false if this body should never fall asleep. Note that
         /// this increases CPU usage.
         /// </summary>
-        public bool AutoSleep;
+        public bool AllowSleep;
 
         /// <summary>
         /// Is this body initially awake or sleeping?
@@ -120,11 +126,6 @@ namespace Box2DX.Dynamics
         /// </summary>
         public bool Active;
 
-        /// <summary>
-        /// The body type: static, kinematic, or dynamic.
-        /// Note: if a dynamic body would have zero mass, the mass is set to one.
-        /// </summary>
-        public Body.BodyType Type;
 
         /// Experimental: scales the inertia tensor.
         public float InertiaScale;
@@ -213,7 +214,7 @@ namespace Box2DX.Dynamics
             {
                 _flags |= BodyFlags.FixedRotationFlag;
             }
-            if (bd.AutoSleep)
+            if (bd.AllowSleep)
             {
                 _flags |= BodyFlags.AutoSleepFlag;
             }

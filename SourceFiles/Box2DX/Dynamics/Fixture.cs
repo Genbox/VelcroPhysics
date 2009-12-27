@@ -249,6 +249,7 @@ namespace Box2DX.Dynamics
         /// of the body. You must call b2Body::ResetMassData to update the body's mass.
         public void SetDensity(float density)
         {
+            Box2DXDebug.Assert(Math.IsValid(density) && density >= 0.0f);
             _density = density;
         }
 

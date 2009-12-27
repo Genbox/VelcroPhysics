@@ -418,7 +418,7 @@ namespace Box2DX.Dynamics
         /// <param name="dt">The amount of time to simulate, this should not vary.</param>
         /// <param name="velocityIterations">For the velocity constraint solver.</param>
         /// <param name="positionIteration">For the positionconstraint solver.</param>
-        public void Step(float dt, int velocityIterations, int positionIteration, bool resetForces)
+        public void Step(float dt, int velocityIterations, int positionIteration)
         {
             // If new fixtures were added, we need to find the new contacts.
             if ((_flags & WorldFlags.NewFixture) != 0)
@@ -433,7 +433,6 @@ namespace Box2DX.Dynamics
             step.Dt = dt;
             step.VelocityIterations = velocityIterations;
             step.PositionIterations = positionIteration;
-            step.ResetForces = resetForces;
 
             if (dt > 0.0f)
             {
@@ -469,6 +468,17 @@ namespace Box2DX.Dynamics
             }
 
             _flags &= ~WorldFlags.Locked;
+        }
+
+        /// Call this after you are done with time steps to clear the forces. You normally
+        /// call this after each call to Step, unless you are performing sub-steps.
+        public void ClearForces()
+        {
+            for (Body body = _bodyList; body != null; body = body.GetNext())
+            {
+                body._force.SetZero();
+                body._torque = 0.0f;
+            }
         }
 
         public class WorldQueryWrapper : IQueryEnabled

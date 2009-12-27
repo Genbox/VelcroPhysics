@@ -56,7 +56,7 @@ namespace Box2DX.Dynamics
             Body body1 = fixtureA.GetBody();
             Body body2 = fixtureB.GetBody();
 
-            if (c._manifold.PointCount > 0)
+            if (c._manifold._pointCount > 0)
             {
                 _contactListener.EndContact(c);
             }

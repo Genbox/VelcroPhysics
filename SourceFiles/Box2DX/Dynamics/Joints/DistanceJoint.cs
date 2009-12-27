@@ -87,7 +87,7 @@ namespace Box2DX.Dynamics
         public float Length;
 
         /// <summary>
-        /// The response speed.
+        /// The mass-spring-damper frequency in Hertz.
         /// </summary>
         public float FrequencyHz;
 

@@ -235,6 +235,8 @@ namespace Box2DX.Dynamics
 
         protected Joint(JointDef def)
         {
+            Box2DXDebug.Assert(def.BodyA != def.BodyB);
+
             _type = def.Type;
             _prev = null;
             _next = null;

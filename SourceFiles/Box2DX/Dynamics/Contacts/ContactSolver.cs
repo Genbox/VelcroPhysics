@@ -101,7 +101,7 @@ namespace Box2DX.Dynamics
                 float wA = bodyA._angularVelocity;
                 float wB = bodyB._angularVelocity;
 
-                Box2DXDebug.Assert(manifold.PointCount > 0);
+                Box2DXDebug.Assert(manifold._pointCount > 0);
 
                 WorldManifold worldManifold = new WorldManifold();
                 worldManifold.Initialize(manifold, bodyA.GetTransform(), radiusA, bodyB.GetTransform(), radiusB);
@@ -112,18 +112,18 @@ namespace Box2DX.Dynamics
                 cc.BodyB = bodyB;
                 cc.Manifold = manifold;
                 cc.Normal = worldManifold.Normal;
-                cc.PointCount = manifold.PointCount;
+                cc.PointCount = manifold._pointCount;
                 cc.Friction = friction;
                 cc.Restitution = restitution;
 
-                cc.LocalPlaneNormal = manifold.LocalPlaneNormal;
-                cc.LocalPoint = manifold.LocalPoint;
+                cc.LocalPlaneNormal = manifold._localPlaneNormal;
+                cc.LocalPoint = manifold._localPoint;
                 cc.Radius = radiusA + radiusB;
-                cc.Type = manifold.Type;
+                cc.Type = manifold._type;
 
                 for (int j = 0; j < cc.PointCount; ++j)
                 {
-                    ManifoldPoint cp = manifold.Points[j];
+                    ManifoldPoint cp = manifold._points[j];
                     ContactConstraintPoint ccp = cc.Points[j];
 
                     ccp.NormalImpulse = cp._normalImpulse;
@@ -566,8 +566,8 @@ namespace Box2DX.Dynamics
 
                 for (int j = 0; j < c.PointCount; ++j)
                 {
-                    m.Points[j]._normalImpulse = c.Points[j].NormalImpulse;
-                    m.Points[j]._tangentImpulse = c.Points[j].TangentImpulse;
+                    m._points[j]._normalImpulse = c.Points[j].NormalImpulse;
+                    m._points[j]._tangentImpulse = c.Points[j].TangentImpulse;
                 }
             }
         }
