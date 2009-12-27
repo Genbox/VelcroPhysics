@@ -78,6 +78,7 @@ namespace TestBed
             triangleShapeDef.Filter.MaskBits = k_triangleMask;
 
             BodyDef triangleBodyDef = new BodyDef();
+            triangleBodyDef.Type = Body.BodyType.Dynamic;
             triangleBodyDef.Position.Set(-5.0f, 2.0f);
 
             Body body1 = _world.CreateBody(triangleBodyDef);
@@ -95,6 +96,29 @@ namespace TestBed
             Body body2 = _world.CreateBody(triangleBodyDef);
             body2.CreateFixture(triangleShapeDef);
 
+            {
+                BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
+                bd.Position.Set(-5.0f, 10.0f);
+                Body body = _world.CreateBody(bd);
+
+                PolygonShape p = new PolygonShape();
+                p.SetAsBox(0.5f, 1.0f);
+                body.CreateFixture(p, 1.0f);
+
+                PrismaticJointDef jd = new PrismaticJointDef();
+                jd.BodyA = body2;
+                jd.BodyB = body;
+                jd.EnableLimit = true;
+                jd.LocalAnchorA.Set(0.0f, 4.0f);
+                jd.LocalAnchorB.SetZero();
+                jd.LocalAxis1.Set(0.0f, 1.0f);
+                jd.LowerTranslation = -1.0f;
+                jd.UpperTranslation = 1.0f;
+
+                _world.CreateJoint(jd);
+            }
+
             // Small box
             polygon.SetAsBox(1.0f, 0.5f);
             FixtureDef boxShapeDef = new FixtureDef();
@@ -107,6 +131,7 @@ namespace TestBed
             boxShapeDef.Filter.MaskBits = k_boxMask;
 
             BodyDef boxBodyDef = new BodyDef();
+            boxBodyDef.Type = Body.BodyType.Dynamic;
             boxBodyDef.Position.Set(0.0f, 2.0f);
 
             Body body3 = _world.CreateBody(boxBodyDef);
@@ -133,6 +158,7 @@ namespace TestBed
             circleShapeDef.Filter.MaskBits = k_circleMask;
 
             BodyDef circleBodyDef = new BodyDef();
+            circleBodyDef.Type = Body.BodyType.Dynamic;
             circleBodyDef.Position.Set(5.0f, 2.0f);
 
             Body body5 = _world.CreateBody(circleBodyDef);
@@ -146,7 +172,6 @@ namespace TestBed
             Body body6 = _world.CreateBody(circleBodyDef);
             body6.CreateFixture(circleShapeDef);
         }
-
         public static Test Create()
         {
             return new CollisionFiltering();

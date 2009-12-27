@@ -50,6 +50,7 @@ namespace TestBed
                     shape.SetAsBox(0.5f, 2.0f);
 
                     BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
                     bd.Position.Set(0.0f, 7.0f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(shape, 2.0f);
@@ -70,6 +71,7 @@ namespace TestBed
                     shape.SetAsBox(0.5f, 4.0f);
 
                     BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
                     bd.Position.Set(0.0f, 13.0f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(shape, 2.0f);
@@ -88,6 +90,7 @@ namespace TestBed
                     shape.SetAsBox(1.5f, 1.5f);
 
                     BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
                     bd.Position.Set(0.0f, 17.0f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(shape, 2.0f);
@@ -111,6 +114,7 @@ namespace TestBed
                     shape.SetAsBox(1.5f, 1.5f);
 
                     BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
                     bd.Position.Set(0.0f, 23.0f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(shape, 2.0f);
@@ -123,12 +127,12 @@ namespace TestBed
             switch (key)
             {
                 case System.Windows.Forms.Keys.F:
-                    _joint2.EnableMotor(!_joint2.IsMotorEnabled);
+                    _joint2.EnableMotor(!_joint2.IsMotorEnabled());
                     _joint2.GetBodyB().SetAwake(true);
                     break;
 
                 case System.Windows.Forms.Keys.M:
-                    _joint1.EnableMotor(!_joint1.IsMotorEnabled);
+                    _joint1.EnableMotor(!_joint1.IsMotorEnabled());
                     _joint1.GetBodyB().SetAwake(true);
                     break;
             }

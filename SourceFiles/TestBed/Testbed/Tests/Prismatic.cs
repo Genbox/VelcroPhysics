@@ -28,8 +28,6 @@ namespace TestBed
 {
     public class Prismatic : Test
     {
-        private PrismaticJoint _joint;
-
         public Prismatic()
         {
             Body ground = null;
@@ -47,6 +45,7 @@ namespace TestBed
                 shape.SetAsBox(2.0f, 0.5f);
 
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position.Set(-10.0f, 10.0f);
                 bd.Angle = 0.5f * Box2DX.Common.Settings.pi;
                 Body body = _world.CreateBody(bd);
@@ -76,13 +75,13 @@ namespace TestBed
             switch (key)
             {
                 case System.Windows.Forms.Keys.L:
-                    _joint.EnableLimit(!_joint.IsLimitEnabled);
+                    _joint.EnableLimit(!_joint.IsLimitEnabled());
                     break;
                 case System.Windows.Forms.Keys.M:
-                    _joint.EnableMotor(!_joint.IsMotorEnabled);
+                    _joint.EnableMotor(!_joint.IsMotorEnabled());
                     break;
                 case System.Windows.Forms.Keys.P:
-                    _joint.MotorSpeed = (-_joint.MotorSpeed);
+                    _joint.SetMotorSpeed(-_joint.GetMotorSpeed());
                     break;
                 default:
                     return;
@@ -97,12 +96,13 @@ namespace TestBed
             float force = _joint.MotorForce;
             OpenGLDebugDraw.DrawString(5, _textLine, String.Format("Motor Force = {0}", force));
             _textLine += 15;
-
         }
 
         public static Test Create()
         {
             return new Prismatic();
         }
+
+        private PrismaticJoint _joint;
     }
 }

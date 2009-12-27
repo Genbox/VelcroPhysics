@@ -23,7 +23,6 @@ using Box2DX.Dynamics;
 
 namespace TestBed.Tests
 {
-
     public class Confined : Test
     {
         private const int _columnCount = 0;
@@ -70,15 +69,16 @@ namespace TestBed.Tests
                     for (int i = 0; i < _rowCount; ++i)
                     {
                         BodyDef bd = new BodyDef();
+                        bd.Type = Body.BodyType.Dynamic;
                         bd.Position.Set(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius, (2.0f * i + 1.0f) * radius);
                         Body body = _world.CreateBody(bd);
 
                         body.CreateFixture(fd);
                     }
                 }
-            }
 
-            _world.Gravity = new Vec2(0, 0);
+                _world.SetGravity(new Vec2(0, 0));
+            }
         }
 
         private void CreateCircle()
@@ -94,7 +94,8 @@ namespace TestBed.Tests
             fd.Friction = 0.0f;
 
             BodyDef bd = new BodyDef();
-            bd.Position.Set(Math.Random(), (2.0f + Math.Random()) * radius);
+            bd.Type = Body.BodyType.Dynamic;
+            bd.Position.Set(Math.RandomFloat(), (2.0f + Math.RandomFloat()) * radius);
             Body body = _world.CreateBody(bd);
 
             body.CreateFixture(fd);
@@ -112,9 +113,12 @@ namespace TestBed.Tests
 
         public override void Step(Settings settings)
         {
+            int flag = settings.enableContinuous;
+            settings.enableContinuous = 0;
             base.Step(settings);
             OpenGLDebugDraw.DrawString(5, _textLine, "Press 'c' to create a circle.");
             _textLine += 15;
+            settings.enableContinuous = flag;
         }
 
         public static Test Create()

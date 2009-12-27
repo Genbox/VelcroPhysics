@@ -27,15 +27,6 @@ namespace TestBed
 {
     public class PolyCollision : Test
     {
-        private PolygonShape _polygonA = new PolygonShape();
-        private PolygonShape _polygonB = new PolygonShape();
-
-        private Transform _transformA;
-        private Transform _transformB;
-
-        private Vec2 _positionB;
-        private float _angleB;
-
         public PolyCollision()
         {
             {
@@ -49,12 +40,16 @@ namespace TestBed
                 _angleB = 2.2886343f;
                 _transformB.Set(_positionB, _angleB);
             }
+        }
 
+        public static Test Create()
+        {
+            return new PolyCollision();
         }
 
         public override void Step(Settings settings)
         {
-            //B2_NOT_USED(settings);
+            //B2_NOT_USED(settings); //TODO: Check
 
             Manifold manifold;
             Collision.CollidePolygons(out manifold, _polygonA, _transformA, _polygonB, _transformB);
@@ -85,13 +80,10 @@ namespace TestBed
             {
                 OpenGLDebugDraw.DrawPoint(worldManifold.Points[i], 4.0f, new Color(0.9f, 0.3f, 0.3f));
             }
-
-            base.Step(settings);
         }
 
         public override void Keyboard(System.Windows.Forms.Keys key)
         {
-
             switch (key)
             {
                 case System.Windows.Forms.Keys.A:
@@ -122,9 +114,13 @@ namespace TestBed
             _transformB.Set(_positionB, _angleB);
         }
 
-        public static Test Create()
-        {
-            return new PolyCollision();
-        }
+        private PolygonShape _polygonA = new PolygonShape();
+        private PolygonShape _polygonB = new PolygonShape();
+
+        private Transform _transformA;
+        private Transform _transformB;
+
+        private Vec2 _positionB;
+        private float _angleB;
     }
 }

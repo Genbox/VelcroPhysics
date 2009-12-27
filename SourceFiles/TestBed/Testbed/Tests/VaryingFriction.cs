@@ -22,7 +22,6 @@ using Box2DX.Common;
 
 namespace TestBed
 {
-
     class VaryingFriction : Test
     {
         public VaryingFriction()
@@ -107,6 +106,7 @@ namespace TestBed
                 for (int i = 0; i < 5; ++i)
                 {
                     BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
                     bd.Position.Set(-15.0f + 4.0f * i, 28.0f);
                     Body body = _world.CreateBody(bd);
 

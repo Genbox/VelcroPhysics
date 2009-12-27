@@ -29,20 +29,11 @@ namespace TestBed
 {
     public class DistanceTest : Test
     {
-        Vec2 _positionB;
-        float _angleB;
-
-        Transform _transformA;
-        Transform _transformB;
-        PolygonShape _polygonA;
-        PolygonShape _polygonB;
-
         public DistanceTest()
         {
             {
                 _transformA.SetIdentity();
                 _transformA.Position.Set(0.0f, -0.2f);
-                _polygonA = new PolygonShape();
                 _polygonA.SetAsBox(10.0f, 0.2f);
             }
 
@@ -51,9 +42,13 @@ namespace TestBed
                 _angleB = -0.0109265f;
                 _transformB.Set(_positionB, _angleB);
 
-                _polygonB = new PolygonShape();
                 _polygonB.SetAsBox(2.0f, 0.1f);
             }
+        }
+
+        public static Test Create()
+        {
+            return new DistanceTest();
         }
 
         public override void Step(Settings settings)
@@ -61,13 +56,14 @@ namespace TestBed
             base.Step(settings);
 
             Collision.DistanceInput input = new Collision.DistanceInput();
-            input.proxyA.Set(_polygonA);
-            input.proxyB.Set(_polygonB);
+            input.ProxyA.Set(_polygonA);
+            input.ProxyB.Set(_polygonB);
             input.TransformA = _transformA;
             input.TransformB = _transformB;
             input.UseRadii = true;
             Collision.SimplexCache cache = new Collision.SimplexCache();
             cache.Count = 0;
+            //TODO: Check
             Collision.DistanceOutput output;
             Collision.Distance(out output, cache, input);
 
@@ -135,9 +131,12 @@ namespace TestBed
             _transformB = new Transform(_positionB, new Mat22(_angleB));
         }
 
-        public static Test Create()
-        {
-            return new DistanceTest();
-        }
+        Vec2 _positionB;
+        float _angleB;
+
+        Transform _transformA;
+        Transform _transformB;
+        PolygonShape _polygonA = new PolygonShape();
+        PolygonShape _polygonB = new PolygonShape();
     }
 }

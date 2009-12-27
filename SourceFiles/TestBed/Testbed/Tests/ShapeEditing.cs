@@ -27,10 +27,6 @@ namespace TestBed
 {
     public class ShapeEditing : Test
     {
-        Body _body;
-        Fixture _fixture1;
-        Fixture _fixture2;
-
         public ShapeEditing()
         {
             {
@@ -42,11 +38,12 @@ namespace TestBed
                 ground.CreateFixture(shape, 0);
             }
 
-            BodyDef bodydef = new BodyDef();
-            bodydef.Position.Set(0.0f, 10.0f);
-            _body = _world.CreateBody(bodydef);
-
             {
+                BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
+                bd.Position.Set(0.0f, 10.0f);
+                _body = _world.CreateBody(bd);
+
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(4.0f, 4.0f, new Vec2(0.0f, 0.0f), 0.0f);
                 _fixture1 = _body.CreateFixture(shape, 10.0f);
@@ -92,5 +89,9 @@ namespace TestBed
         {
             return new ShapeEditing();
         }
+
+        Body _body;
+        Fixture _fixture1;
+        Fixture _fixture2;
     }
 }

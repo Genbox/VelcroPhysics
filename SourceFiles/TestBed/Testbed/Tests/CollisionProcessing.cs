@@ -61,7 +61,8 @@ namespace TestBed
             triangleShapeDef.Density = 1.0f;
 
             BodyDef triangleBodyDef = new BodyDef();
-            triangleBodyDef.Position.Set(Math.Random(xLo, xHi), Math.Random(yLo, yHi));
+            triangleBodyDef.Type = Body.BodyType.Dynamic;
+            triangleBodyDef.Position.Set(Math.RandomFloat(xLo, xHi), Math.RandomFloat(yLo, yHi));
 
             Body body1 = _world.CreateBody(triangleBodyDef);
             body1.CreateFixture(triangleShapeDef);
@@ -72,7 +73,7 @@ namespace TestBed
             vertices[2] *= 2.0f;
             polygon.Set(vertices, 3);
 
-            triangleBodyDef.Position.Set(Math.Random(xLo, xHi), Math.Random(yLo, yHi));
+            triangleBodyDef.Position.Set(Math.RandomFloat(xLo, xHi), Math.RandomFloat(yLo, yHi));
 
             Body body2 = _world.CreateBody(triangleBodyDef);
             body2.CreateFixture(triangleShapeDef);
@@ -85,14 +86,15 @@ namespace TestBed
             boxShapeDef.Density = 1.0f;
 
             BodyDef boxBodyDef = new BodyDef();
-            boxBodyDef.Position.Set(Math.Random(xLo, xHi), Math.Random(yLo, yHi));
+            boxBodyDef.Type = Body.BodyType.Dynamic;
+            boxBodyDef.Position.Set(Math.RandomFloat(xLo, xHi), Math.RandomFloat(yLo, yHi));
 
             Body body3 = _world.CreateBody(boxBodyDef);
             body3.CreateFixture(boxShapeDef);
 
             // Large box (recycle definitions)
             polygon.SetAsBox(2.0f, 1.0f);
-            boxBodyDef.Position.Set(Math.Random(xLo, xHi), Math.Random(yLo, yHi));
+            boxBodyDef.Position.Set(Math.RandomFloat(xLo, xHi), Math.RandomFloat(yLo, yHi));
 
             Body body4 = _world.CreateBody(boxBodyDef);
             body4.CreateFixture(boxShapeDef);
@@ -106,14 +108,15 @@ namespace TestBed
             circleShapeDef.Density = 1.0f;
 
             BodyDef circleBodyDef = new BodyDef();
-            circleBodyDef.Position.Set(Math.Random(xLo, xHi), Math.Random(yLo, yHi));
+            circleBodyDef.Type = Body.BodyType.Dynamic;
+            circleBodyDef.Position.Set(Math.RandomFloat(xLo, xHi), Math.RandomFloat(yLo, yHi));
 
             Body body5 = _world.CreateBody(circleBodyDef);
             body5.CreateFixture(circleShapeDef);
 
             // Large circle
             circle._radius *= 2.0f;
-            circleBodyDef.Position.Set(Math.Random(xLo, xHi), Math.Random(yLo, yHi));
+            circleBodyDef.Position.Set(Math.RandomFloat(xLo, xHi), Math.RandomFloat(yLo, yHi));
 
             Body body6 = _world.CreateBody(circleBodyDef);
             body6.CreateFixture(circleShapeDef);

@@ -290,8 +290,8 @@ namespace Box2DX.Collision
             SimplexCache cache = new SimplexCache();
             cache.Count = 0;
             DistanceInput distanceInput = new DistanceInput();
-            distanceInput.proxyA = input.ProxyA;
-            distanceInput.proxyB = input.ProxyB;
+            distanceInput.ProxyA = input.ProxyA;
+            distanceInput.ProxyB = input.ProxyB;
             distanceInput.UseRadii = false;
 
             for (;;)

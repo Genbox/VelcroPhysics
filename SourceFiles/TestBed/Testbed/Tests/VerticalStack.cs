@@ -27,7 +27,6 @@ namespace TestBed
 {
     public class VerticalStack : Test
     {
-        Body _bullet;
         const int _columCount = 5;
         const int _rowCount = 16;
 
@@ -60,6 +59,7 @@ namespace TestBed
                 for (int i = 0; i < _rowCount; ++i)
                 {
                     BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
 
                     float x = 0.0f;
                     //float32 x = RandomFloat(-0.02f, 0.02f);
@@ -78,12 +78,13 @@ namespace TestBed
         {
             switch (key)
             {
-                case System.Windows.Forms.Keys.S:
+                case System.Windows.Forms.Keys.Oemcomma:
                     if (_bullet != null)
                     {
                         _world.DestroyBody(_bullet);
                         _bullet = null;
                     }
+
                     {
                         CircleShape shape = new CircleShape();
                         shape._radius = 0.25f;
@@ -94,6 +95,7 @@ namespace TestBed
                         fd.Restitution = 0.05f;
 
                         BodyDef bd = new BodyDef();
+                        bd.Type = Body.BodyType.Dynamic;
                         bd.Bullet = true;
                         bd.Position.Set(-31.0f, 5.0f);
 
@@ -117,5 +119,7 @@ namespace TestBed
         {
             return new VerticalStack();
         }
+
+        Body _bullet;
     }
 }

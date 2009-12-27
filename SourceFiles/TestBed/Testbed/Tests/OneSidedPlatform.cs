@@ -6,11 +6,6 @@ namespace TestBed.Tests
 {
     public class OneSidedPlatform : Test
     {
-        private float _radius, _top, _bottom;
-        private State _state;
-        private Fixture _platform;
-        private Fixture _character;
-
         public enum State
         {
             e_unknown,
@@ -47,6 +42,7 @@ namespace TestBed.Tests
             // Actor
             {
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position.Set(0.0f, 12.0f);
                 Body body = _world.CreateBody(bd);
 
@@ -97,5 +93,10 @@ namespace TestBed.Tests
         {
             return new OneSidedPlatform();
         }
+
+        private float _radius, _top, _bottom;
+        private State _state;
+        private Fixture _platform;
+        private Fixture _character;
     }
 }

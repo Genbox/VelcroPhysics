@@ -28,8 +28,6 @@ namespace TestBed
     public class SensorTest : Test
     {
         const int _count = 7;
-        Fixture _sensor;
-        Body[] _bodies = new Body[_count];
 
         public SensorTest()
         {
@@ -71,6 +69,7 @@ namespace TestBed
                 for (int i = 0; i < _count; ++i)
                 {
                     BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
                     bd.Position.Set(-10.0f + 3.0f * i, 20.0f);
                     bd.UserData = false;
 
@@ -119,6 +118,7 @@ namespace TestBed
         public override void Step(Settings settings)
         {
             base.Step(settings);
+
             // Traverse the contact results. Apply a force on shapes
             // that overlap the sensor.
             for (int i = 0; i < 7; ++i)
@@ -152,5 +152,8 @@ namespace TestBed
         {
             return new SensorTest();
         }
+
+        Fixture _sensor;
+        Body[] _bodies = new Body[_count];
     }
 }

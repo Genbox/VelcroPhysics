@@ -106,8 +106,8 @@ namespace Box2DX.Dynamics
         public PrismaticJointDef()
         {
             Type = JointType.PrismaticJoint;
-            LocalAnchor1.SetZero();
-            LocalAnchor2.SetZero();
+            LocalAnchorA.SetZero();
+            LocalAnchorB.SetZero();
             LocalAxis1.Set(1.0f, 0.0f);
             ReferenceAngle = 0.0f;
             EnableLimit = false;
@@ -126,8 +126,8 @@ namespace Box2DX.Dynamics
         {
             BodyA = body1;
             BodyB = body2;
-            LocalAnchor1 = body1.GetLocalPoint(anchor);
-            LocalAnchor2 = body2.GetLocalPoint(anchor);
+            LocalAnchorA = body1.GetLocalPoint(anchor);
+            LocalAnchorB = body2.GetLocalPoint(anchor);
             LocalAxis1 = body1.GetLocalVector(axis);
             ReferenceAngle = body2.GetAngle() - body1.GetAngle();
         }
@@ -135,12 +135,12 @@ namespace Box2DX.Dynamics
         /// <summary>
         /// The local anchor point relative to body1's origin.
         /// </summary>
-        public Vec2 LocalAnchor1;
+        public Vec2 LocalAnchorA;
 
         /// <summary>
         /// The local anchor point relative to body2's origin.
         /// </summary>
-        public Vec2 LocalAnchor2;
+        public Vec2 LocalAnchorB;
 
         /// <summary>
         /// The local translation axis in body1.
@@ -286,9 +286,9 @@ namespace Box2DX.Dynamics
         /// <summary>
         /// Is the joint limit enabled?
         /// </summary>
-        public bool IsLimitEnabled
+        public bool IsLimitEnabled()
         {
-            get { return _enableLimit; }
+            return _enableLimit;
         }
 
         /// <summary>
@@ -332,9 +332,9 @@ namespace Box2DX.Dynamics
         /// <summary>
         /// Is the joint motor enabled?
         /// </summary>
-        public bool IsMotorEnabled
+        public bool IsMotorEnabled()
         {
-            get { return _enableMotor; }
+            return _enableMotor;
         }
 
         /// <summary>
@@ -350,15 +350,16 @@ namespace Box2DX.Dynamics
         /// <summary>
         /// Get\Set the motor speed, usually in meters per second.
         /// </summary>
-        public float MotorSpeed
+        public float GetMotorSpeed()
         {
-            get { return _motorSpeed; }
-            set
-            {
-                _bodyA.SetAwake(true);
-                _bodyB.SetAwake(true);
-                _motorSpeed = value;
-            }
+            return _motorSpeed;
+        }
+
+        public void SetMotorSpeed(float value)
+        {
+            _bodyA.SetAwake(true);
+            _bodyB.SetAwake(true);
+            _motorSpeed = value;
         }
 
         /// <summary>
@@ -382,8 +383,8 @@ namespace Box2DX.Dynamics
         public PrismaticJoint(PrismaticJointDef def)
             : base(def)
         {
-            _localAnchor1 = def.LocalAnchor1;
-            _localAnchor2 = def.LocalAnchor2;
+            _localAnchor1 = def.LocalAnchorA;
+            _localAnchor2 = def.LocalAnchorB;
             _localXAxis1 = def.LocalAxis1;
             _localYAxis1 = Vec2.Cross(1.0f, _localXAxis1);
             _refAngle = def.ReferenceAngle;

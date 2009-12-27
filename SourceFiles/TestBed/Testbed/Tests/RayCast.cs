@@ -42,7 +42,7 @@ namespace TestBed
         public Fixture _fixture;
         public Vec2 _point;
         public Vec2 _normal;
-    };
+    }
 
     public class RayCast : Test
     {
@@ -124,10 +124,10 @@ namespace TestBed
 
             BodyDef bd = new BodyDef();
 
-            float x = Math.Random(-10.0f, 10.0f);
-            float y = Math.Random(0.0f, 20.0f);
+            float x = Math.RandomFloat(-10.0f, 10.0f);
+            float y = Math.RandomFloat(0.0f, 20.0f);
             bd.Position.Set(x, y);
-            bd.Angle = Math.Random(-Box2DX.Common.Settings.pi, Box2DX.Common.Settings.pi);
+            bd.Angle = Math.RandomFloat(-Box2DX.Common.Settings.pi, Box2DX.Common.Settings.pi);
 
             if (index == 4)
             {

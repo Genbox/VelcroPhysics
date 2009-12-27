@@ -25,7 +25,6 @@ namespace TestBed
     public class SphereStack : Test
     {
         const int _count = 10;
-        Body[] _bodies = new Body[_count];
 
         public SphereStack()
         {
@@ -45,6 +44,7 @@ namespace TestBed
                 for (int i = 0; i < _count; ++i)
                 {
                     BodyDef bd = new BodyDef();
+                    bd.Type = Body.BodyType.Dynamic;
                     bd.Position.Set(0.0f, 4.0f + 3.0f * i);
 
                     _bodies[i] = _world.CreateBody(bd);
@@ -77,5 +77,7 @@ namespace TestBed
         {
             return new SphereStack();
         }
+
+        Body[] _bodies = new Body[_count];
     }
 }

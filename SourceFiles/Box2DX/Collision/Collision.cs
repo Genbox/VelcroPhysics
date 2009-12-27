@@ -128,8 +128,8 @@ namespace Box2DX.Collision
         public static bool TestOverlap(Shape shapeA, Shape shapeB, Transform xfA, Transform xfB)
         {
             DistanceInput input = new DistanceInput();
-            input.proxyA.Set(shapeA);
-            input.proxyB.Set(shapeB);
+            input.ProxyA.Set(shapeA);
+            input.ProxyB.Set(shapeB);
             input.TransformA = xfA;
             input.TransformB = xfB;
             input.UseRadii = true;

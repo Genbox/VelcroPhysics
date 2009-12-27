@@ -30,13 +30,6 @@ namespace TestBed
 {
     public class TheoJansen : Test
     {
-        Vec2 _offset;
-        Body _chassis;
-        Body _wheel;
-        RevoluteJoint _motorJoint;
-        bool _motorOn;
-        float _motorSpeed;
-
         private void CreateLeg(float s, Vec2 wheelAnchor)
         {
             Vec2 p1 = new Vec2(5.4f * s, -6.1f);
@@ -46,15 +39,13 @@ namespace TestBed
             Vec2 p5 = new Vec2(6.0f * s, 1.5f);
             Vec2 p6 = new Vec2(2.5f * s, 3.7f);
 
-            FixtureDef fd1 = new FixtureDef();
-            FixtureDef fd2 = new FixtureDef();
+            FixtureDef fd1 = new FixtureDef(); FixtureDef fd2 = new FixtureDef();
             fd1.Filter.GroupIndex = -1;
             fd2.Filter.GroupIndex = -1;
             fd1.Density = 1.0f;
             fd2.Density = 1.0f;
 
-            PolygonShape poly1 = new PolygonShape();
-            PolygonShape poly2 = new PolygonShape();
+            PolygonShape poly1 = new PolygonShape(); PolygonShape poly2 = new PolygonShape();
 
             if (s > 0.0f)
             {
@@ -88,8 +79,9 @@ namespace TestBed
             fd1.Shape = poly1;
             fd2.Shape = poly2;
 
-            BodyDef bd1 = new BodyDef();
-            BodyDef bd2 = new BodyDef();
+            BodyDef bd1 = new BodyDef(); BodyDef bd2 = new BodyDef();
+            bd1.Type = Body.BodyType.Dynamic;
+            bd2.Type = Body.BodyType.Dynamic;
             bd1.Position = _offset;
             bd2.Position = p4 + _offset;
 
@@ -158,6 +150,7 @@ namespace TestBed
                 shape._radius = 0.25f;
 
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position.Set(-40.0f + 2.0f * i, 0.5f);
 
                 Body body = _world.CreateBody(bd);
@@ -174,6 +167,7 @@ namespace TestBed
                 sd.Shape = shape;
                 sd.Filter.GroupIndex = -1;
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position = pivot + _offset;
                 _chassis = _world.CreateBody(bd);
                 _chassis.CreateFixture(sd);
@@ -188,6 +182,7 @@ namespace TestBed
                 sd.Shape = shape;
                 sd.Filter.GroupIndex = -1;
                 BodyDef bd = new BodyDef();
+                bd.Type = Body.BodyType.Dynamic;
                 bd.Position = pivot + _offset;
                 _wheel = _world.CreateBody(bd);
                 _wheel.CreateFixture(sd);
@@ -217,7 +212,6 @@ namespace TestBed
             _wheel.SetTransform(_wheel.GetPosition(), -120.0f * Box2DX.Common.Settings.pi / 180.0f);
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
-
         }
 
         public override void Step(Settings settings)
@@ -233,23 +227,19 @@ namespace TestBed
             switch (key)
             {
                 case System.Windows.Forms.Keys.A:
-                    _chassis.SetAwake(true);
-                    _motorJoint.MotorSpeed = -_motorSpeed;
+                    _motorJoint.SetMotorSpeed(-_motorSpeed);
                     break;
 
                 case System.Windows.Forms.Keys.S:
-                    _chassis.SetAwake(true);
-                    _motorJoint.MotorSpeed = (0.0f);
+                    _motorJoint.SetMotorSpeed(0.0f);
                     break;
 
                 case System.Windows.Forms.Keys.D:
-                    _chassis.SetAwake(true);
-                    _motorJoint.MotorSpeed = (_motorSpeed);
+                    _motorJoint.SetMotorSpeed(_motorSpeed);
                     break;
 
                 case System.Windows.Forms.Keys.M:
-                    _chassis.SetAwake(true);
-                    _motorJoint.EnableMotor(!_motorJoint.IsMotorEnabled);
+                    _motorJoint.EnableMotor(!_motorJoint.IsMotorEnabled());
                     break;
             }
         }
@@ -258,5 +248,12 @@ namespace TestBed
         {
             return new TheoJansen();
         }
+
+        Vec2 _offset;
+        Body _chassis;
+        Body _wheel;
+        RevoluteJoint _motorJoint;
+        bool _motorOn;
+        float _motorSpeed;
     }
 }

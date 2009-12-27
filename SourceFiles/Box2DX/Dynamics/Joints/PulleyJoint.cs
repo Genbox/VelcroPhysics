@@ -216,29 +216,23 @@ namespace Box2DX.Dynamics
         /// <summary>
         /// Get the current length of the segment attached to body1.
         /// </summary>
-        public float Length1
+        public float GetLength1()
         {
-            get
-            {
-                Vec2 p = _bodyA.GetWorldPoint(_localAnchor1);
-                Vec2 s = _groundAnchor1;
-                Vec2 d = p - s;
-                return d.Length();
-            }
+            Vec2 p = _bodyA.GetWorldPoint(_localAnchor1);
+            Vec2 s = _groundAnchor1;
+            Vec2 d = p - s;
+            return d.Length();
         }
 
         /// <summary>
         /// Get the current length of the segment attached to body2.
         /// </summary>
-        public float Length2
+        public float GetLength2()
         {
-            get
-            {
-                Vec2 p = _bodyB.GetWorldPoint(_localAnchor2);
-                Vec2 s = _groundAnchor2;
-                Vec2 d = p - s;
-                return d.Length();
-            }
+            Vec2 p = _bodyB.GetWorldPoint(_localAnchor2);
+            Vec2 s = _groundAnchor2;
+            Vec2 d = p - s;
+            return d.Length();
         }
 
         /// <summary>

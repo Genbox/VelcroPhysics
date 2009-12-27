@@ -40,29 +40,28 @@ namespace TestBed
                 ground.CreateFixture(shape, 0);
             }
 
-
             {
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(0.5f, 0.5f);
 
                 BodyDef bd = new BodyDef();
-
+                bd.Type = Body.BodyType.Dynamic;
 
                 bd.Position.Set(-5.0f, 5.0f);
                 _bodies[0] = _world.CreateBody(bd);
-                _bodies[0].CreateFixture(shape, 0);
+                _bodies[0].CreateFixture(shape, 5.0f);
 
                 bd.Position.Set(5.0f, 5.0f);
                 _bodies[1] = _world.CreateBody(bd);
-                _bodies[1].CreateFixture(shape, 0);
+                _bodies[1].CreateFixture(shape, 5.0f);
 
                 bd.Position.Set(5.0f, 15.0f);
                 _bodies[2] = _world.CreateBody(bd);
-                _bodies[2].CreateFixture(shape, 0);
+                _bodies[2].CreateFixture(shape, 5.0f);
 
                 bd.Position.Set(-5.0f, 15.0f);
                 _bodies[3] = _world.CreateBody(bd);
-                _bodies[3].CreateFixture(shape, 0);
+                _bodies[3].CreateFixture(shape, 5.0f);
 
                 DistanceJointDef jd = new DistanceJointDef();
                 Vec2 p1, p2, d;
@@ -185,7 +184,6 @@ namespace TestBed
         public override void Step(Settings settings)
         {
             base.Step(settings);
-
             OpenGLDebugDraw.DrawString(5, _textLine, "This demonstrates a soft distance joint.");
             _textLine += 15;
             OpenGLDebugDraw.DrawString(5, _textLine, "Press: (b) to delete a body, (j) to delete a joint");

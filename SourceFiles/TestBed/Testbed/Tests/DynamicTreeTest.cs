@@ -8,26 +8,7 @@ namespace TestBed.Tests
 {
     public class DynamicTreeTest : Test, IRayCastEnabled, IQueryEnabled
     {
-        private float _worldExtent;
-        private float _proxyExtent;
-
-        private DynamicTree _tree = new DynamicTree();
-        private AABB _queryAABB;
-        private RayCastInput _rayCastInput;
-        private RayCastOutput _rayCastOutput;
-        private Actor _rayActor;
-        private Actor[] _actors = new Actor[_actorCount];
-        private int _stepCount;
-        private bool _automated;
         private const int _actorCount = 128;
-
-        public class Actor
-        {
-            public AABB aabb;
-            public float fraction;
-            public bool overlap;
-            public int proxyId;
-        }
 
         public DynamicTreeTest()
         {
@@ -178,21 +159,29 @@ namespace TestBed.Tests
             return input.MaxFraction;
         }
 
+        private class Actor
+        {
+            public AABB aabb;
+            public float fraction;
+            public bool overlap;
+            public int proxyId;
+        }
+
         private void GetRandomAABB(AABB aabb)
         {
             Vec2 w = new Vec2(); w.Set(2.0f * _proxyExtent, 2.0f * _proxyExtent);
             //aabb.lowerBound.x = -_proxyExtent;
             //aabb.lowerBound.y = -_proxyExtent + _worldExtent;
-            aabb.LowerBound.X = Math.Random(-_worldExtent, _worldExtent);
-            aabb.LowerBound.Y = Math.Random(0.0f, 2.0f * _worldExtent);
+            aabb.LowerBound.X = Math.RandomFloat(-_worldExtent, _worldExtent);
+            aabb.LowerBound.Y = Math.RandomFloat(0.0f, 2.0f * _worldExtent);
             aabb.UpperBound = aabb.LowerBound + w;
         }
 
         private void MoveAABB(AABB aabb)
         {
             Vec2 d = new Vec2();
-            d.X = Math.Random(-0.5f, 0.5f);
-            d.Y = Math.Random(-0.5f, 0.5f);
+            d.X = Math.RandomFloat(-0.5f, 0.5f);
+            d.Y = Math.RandomFloat(-0.5f, 0.5f);
             //d.x = 2.0f;
             //d.y = 0.0f;
             aabb.LowerBound += d;
@@ -211,7 +200,7 @@ namespace TestBed.Tests
         {
             for (int i = 0; i < _actorCount; ++i)
             {
-                int j = (int)Math.Random() % _actorCount;
+                int j = (int)Math.RandomFloat() % _actorCount;
                 Actor actor = _actors[j];
                 if (actor.proxyId == DynamicTree.NullNode)
                 {
@@ -226,7 +215,7 @@ namespace TestBed.Tests
         {
             for (int i = 0; i < _actorCount; ++i)
             {
-                int j = (int)Math.Random() % _actorCount;
+                int j = (int)Math.RandomFloat() % _actorCount;
                 Actor actor = _actors[j];
                 if (actor.proxyId != DynamicTree.NullNode)
                 {
@@ -241,7 +230,7 @@ namespace TestBed.Tests
         {
             for (int i = 0; i < _actorCount; ++i)
             {
-                int j = (int)Math.Random() % _actorCount;
+                int j = (int)Math.RandomFloat() % _actorCount;
                 Actor actor = _actors[j];
                 if (actor.proxyId == DynamicTree.NullNode)
                 {
@@ -258,7 +247,7 @@ namespace TestBed.Tests
 
         private void Action()
         {
-            int choice = (int)Math.Random() % 20;
+            int choice = (int)Math.RandomFloat() % 20;
 
             switch (choice)
             {
@@ -327,5 +316,17 @@ namespace TestBed.Tests
                 Box2DX.Box2DXDebug.Assert(bruteOutput.Fraction == _rayCastOutput.Fraction);
             }
         }
+
+        private float _worldExtent;
+        private float _proxyExtent;
+
+        private DynamicTree _tree = new DynamicTree();
+        private AABB _queryAABB;
+        private RayCastInput _rayCastInput;
+        private RayCastOutput _rayCastOutput;
+        private Actor _rayActor;
+        private Actor[] _actors = new Actor[_actorCount];
+        private int _stepCount;
+        private bool _automated;
     }
 }

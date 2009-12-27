@@ -98,7 +98,7 @@ namespace TestBed
             return true;
         }
 
-        public CircleShape _circle;
+        public CircleShape _circle = new CircleShape();
         public Transform _transform;
         public DebugDraw _debugDraw;
         public int _count;
@@ -186,10 +186,11 @@ namespace TestBed
             }
 
             BodyDef bd = new BodyDef();
+            bd.Type = Body.BodyType.Dynamic;
 
-            float x = Math.Random(-2.0f, 2.0f);
+            float x = Math.RandomFloat(-2.0f, 2.0f);
             bd.Position.Set(x, 10.0f);
-            bd.Angle = Math.Random(-Box2DX.Common.Settings.pi, Box2DX.Common.Settings.pi);
+            bd.Angle = Math.RandomFloat(-Box2DX.Common.Settings.pi, Box2DX.Common.Settings.pi);
 
             if (index == 4)
             {
@@ -283,10 +284,8 @@ namespace TestBed
             OpenGLDebugDraw.DrawString(5, _textLine, "Press 1-5 to drop stuff");
             _textLine += 15;
             OpenGLDebugDraw.DrawString(5, _textLine, "Press 'a' to (de)activate some bodies");
-
             _textLine += 15;
             OpenGLDebugDraw.DrawString(5, _textLine, "Press 'd' to destroy a body");
-
             _textLine += 15;
         }
 

@@ -32,10 +32,10 @@ namespace TestBed
 
         public ApplyForce()
         {
-            _world.Gravity = new Vec2(0.0f, 0.0f);
+            _world.SetGravity(new Vec2(0.0f, 0.0f));
 
             const float k_restitution = 0.4f;
-             
+
             Body ground;
             {
                 BodyDef bd = new BodyDef();

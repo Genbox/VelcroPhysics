@@ -500,7 +500,7 @@ namespace Box2DX.Dynamics
                 return;
             }
 
-            DebugDraw.DrawFlags flags = _debugDraw.Flags;
+            DebugDraw.DrawFlags flags = _debugDraw.GetFlags();
 
             if ((flags & DebugDraw.DrawFlags.Shape) != 0)
             {
@@ -701,9 +701,12 @@ namespace Box2DX.Dynamics
         public int GetContactCount() { return _contactManager._contactCount; }
 
         /// <summary>
-        /// Get\Set global gravity vector.
+        /// Set global gravity vector.
         /// </summary>
-        public Vec2 Gravity { get { return _gravity; } set { _gravity = value; } }
+        public void SetGravity(Vec2 value)
+        {
+            _gravity = value;
+        }
 
         public bool IsLocked()
         {
