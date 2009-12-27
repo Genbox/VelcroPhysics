@@ -61,11 +61,11 @@ namespace TestBed
             input.TransformA = _transformA;
             input.TransformB = _transformB;
             input.UseRadii = true;
-            Collision.SimplexCache cache = new Collision.SimplexCache();
+            Collision.SimplexCache cache;
             cache.Count = 0;
             //TODO: Check
             Collision.DistanceOutput output;
-            Collision.Distance(out output, cache, input);
+            Collision.Distance(out output, out cache, ref input);
 
             OpenGLDebugDraw.DrawString(5, _textLine, string.Format("distance = {0}", output.Distance));
             _textLine += 15;

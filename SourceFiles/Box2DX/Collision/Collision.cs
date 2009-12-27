@@ -134,12 +134,12 @@ namespace Box2DX.Collision
             input.TransformB = xfB;
             input.UseRadii = true;
 
-            SimplexCache cache = new SimplexCache();
+            SimplexCache cache;
             cache.Count = 0;
 
             DistanceOutput output;
 
-            Distance(out output, cache, input);
+            Distance(out output, out cache, ref input);
 
             return output.Distance < 10.0f * Settings.epsilon;
         }
