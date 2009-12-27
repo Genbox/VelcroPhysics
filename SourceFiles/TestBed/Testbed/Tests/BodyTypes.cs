@@ -64,7 +64,7 @@ public class BodyTypes : TestBed.Test
 
             FixtureDef fd = new FixtureDef();
             fd.Shape = shape;
-            fd.Friction = 0.5f;
+            fd.Friction = 0.6f;
             fd.Density = 2.0f;
             _platform.CreateFixture(fd);
 
@@ -100,7 +100,7 @@ public class BodyTypes : TestBed.Test
 
             FixtureDef fd = new FixtureDef();
             fd.Shape = shape;
-            fd.Friction = 0.5f;
+            fd.Friction = 0.6f;
             fd.Density = 2.0f;
 
             body.CreateFixture(fd);

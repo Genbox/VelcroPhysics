@@ -181,14 +181,13 @@ namespace Box2DX.Dynamics
             return _shape;
         }
 
-        	/// Get the fixture's AABB. This AABB may be enlarge and/or stale.
-	/// If you need a more accurate AABB, compute it using the shape and
-	/// the body transform.
-	public AABB GetAABB()
-    {
-        return _aabb;
-    }
-
+        /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
+        /// If you need a more accurate AABB, compute it using the shape and
+        /// the body transform.
+        public AABB GetAABB()
+        {
+            return _aabb;
+        }
 
         /// Get the contact filtering data.
         public Filter GetFilterData()
@@ -371,11 +370,16 @@ namespace Box2DX.Dynamics
                 Fixture fixtureB = contact.GetFixtureB();
                 if (fixtureA == this || fixtureB == this)
                 {
-                    contact.SetSensor(_isSensor);
+                    contact.SetSensor(fixtureA.IsSensor() || fixtureB.IsSensor());
                 }
 
                 edge = edge.Next;
             }
+        }
+
+        public bool IsSensor()
+        {
+            return _isSensor;
         }
     }
 }

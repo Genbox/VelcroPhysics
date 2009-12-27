@@ -237,7 +237,7 @@ namespace TestBed
 
             _pointCount = 0;
 
-            _world.Step(timeStep, settings.velocityIterations, settings.positionIterations);
+            _world.Step(timeStep, settings.velocityIterations, settings.positionIterations, true);
 
             _world.DrawDebugData();
 

@@ -227,7 +227,7 @@ namespace Box2DX.Collision
                     }
                 }
 
-                if (upper < lower)
+                if (upper < lower - Settings.epsilon)
                 {
                     return false;
                 }

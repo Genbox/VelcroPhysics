@@ -96,19 +96,11 @@ namespace TestBed
             Vec2 x1 = output.PointA;
             Vec2 x2 = output.PointB;
 
-            Gl.glPointSize(4.0f);
-            Gl.glColor4f(1.0f, 0.0f, 0.0f, 1);
-            Gl.glBegin(Gl.GL_POINTS);
-            Gl.glVertex2f(x1.X, x1.Y);
-            Gl.glVertex2f(x2.X, x2.Y);
-            Gl.glEnd();
-            Gl.glPointSize(1.0f);
+            Color c1 = new Color(1.0f, 0.0f, 0.0f);
+            OpenGLDebugDraw.DrawPoint(x1, 4.0f, c1);
 
-            Gl.glColor4f(1.0f, 1.0f, 0.0f, 1);
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex2f(x1.X, x1.Y);
-            Gl.glVertex2f(x2.X, x2.Y);
-            Gl.glEnd();
+            Color c2 = new Color(1.0f, 1.0f, 0.0f);
+            OpenGLDebugDraw.DrawPoint(x2, 4.0f, c2);
         }
 
         public override void Keyboard(System.Windows.Forms.Keys key)
