@@ -372,13 +372,21 @@ namespace TestBed
 
             public override bool ReportFixture(Fixture fixture)
             {
-                if (fixture != null)
+                Body body = fixture.GetBody();
+                if (body.GetType() == Body.BodyType.Dynamic)
                 {
-                    _fixture = fixture;
-                    return true;
+                    bool inside = fixture.TestPoint(_point);
+                    if (inside)
+                    {
+                        _fixture = fixture;
+
+                        // We are done, terminate the query.
+                        return false;
+                    }
                 }
 
-                return false;
+                // Continue the query.
+                return true;
             }
         }
 
