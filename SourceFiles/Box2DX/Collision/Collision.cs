@@ -282,7 +282,7 @@ namespace Box2DX.Collision
                         Vec2 pointA = Math.Mul(xfA, manifold.LocalPoint);
                         Vec2 pointB = Math.Mul(xfB, manifold.Points[0].LocalPoint);
                         Vec2 normal = new Vec2(1.0f, 0.0f);
-                        if (Vec2.DistanceSquared(pointA, pointB) > Settings.FLT_EPSILON * Settings.FLT_EPSILON)
+                        if (Vec2.DistanceSquared(pointA, pointB) > Settings.epsilon * Settings.epsilon)
                         {
                             normal = pointB - pointA;
                             normal.Normalize();
@@ -384,7 +384,6 @@ namespace Box2DX.Collision
     {
         public Vec2 Normal;
         public float Fraction;
-        public bool Hit;
     };
 
     /// <summary>
@@ -425,7 +424,7 @@ namespace Box2DX.Collision
             Vec2 d = P2 - P1;
             Vec2 n = Vec2.Cross(d, 1.0f);
 
-            float k_slop = 100.0f * Settings.FLT_EPSILON;
+            float k_slop = 100.0f * Settings.epsilon;
             float denom = -Vec2.Dot(r, n);
 
             // Cull back facing collision and ignore parallel segments.
@@ -521,14 +520,13 @@ namespace Box2DX.Collision
             return result;
         }
 
-        public void RayCast(out RayCastOutput output, RayCastInput input)
+        // From Real-time Collision Detection, p179.
+        public bool RayCast(out RayCastOutput output, RayCastInput input)
         {
             output = new RayCastOutput();
 
-            float tmin = -Settings.FLT_MAX;
-            float tmax = Settings.FLT_MAX;
-
-            output.Hit = false;
+            float tmin = -Settings.floatMax;
+            float tmax = Settings.floatMax;
 
             Vec2 p = input.P1;
             Vec2 d = input.P2 - input.P1;
@@ -536,12 +534,12 @@ namespace Box2DX.Collision
 
             Vec2 normal = new Vec2();
 
-            if (absD.X < Settings.FLT_EPSILON)
+            if (absD.X < Settings.epsilon)
             {
                 // Parallel.
                 if (p.X < LowerBound.X || UpperBound.X < p.X)
                 {
-                    return;
+                    return false;
                 }
             }
             else
@@ -572,16 +570,16 @@ namespace Box2DX.Collision
 
                 if (tmin > tmax)
                 {
-                    return;
+                    return false;
                 }
             }
 
-            if (absD.Y < Settings.FLT_EPSILON)
+            if (absD.Y < Settings.epsilon)
             {
                 // Parallel.
                 if (p.Y < LowerBound.Y || UpperBound.Y < p.Y)
                 {
-                    return;
+                    return false;
                 }
             }
             else
@@ -612,7 +610,7 @@ namespace Box2DX.Collision
 
                 if (tmin > tmax)
                 {
-                    return;
+                    return false;
                 }
             }
 
@@ -620,13 +618,13 @@ namespace Box2DX.Collision
             //// Does the ray intersect beyond the max fraction?
             if (tmin < 0.0f || input.MaxFraction < tmin)
             {
-                return;
+                return false;
             }
 
             //// Intersection.
             output.Fraction = tmin;
             output.Normal = normal;
-            output.Hit = true;
+            return true;
         }
 
         /// <summary>

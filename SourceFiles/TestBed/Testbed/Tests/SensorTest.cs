@@ -137,7 +137,7 @@ namespace TestBed
                 Vec2 position = body.GetPosition();
 
                 Vec2 d = center - position;
-                if (d.LengthSquared() < Box2DX.Common.Settings.FLT_EPSILON * Box2DX.Common.Settings.FLT_EPSILON)
+                if (d.LengthSquared() < Box2DX.Common.Settings.epsilon * Box2DX.Common.Settings.epsilon)
                 {
                     continue;
                 }

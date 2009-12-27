@@ -40,7 +40,7 @@ namespace TestBed
             {
                 BodyDef bd = new BodyDef();
                 bd.Position.Set(0.0f, 40.0f);
-                bd.Angle = 0.25f * Box2DX.Common.Settings.PI;
+                bd.Angle = 0.25f * Box2DX.Common.Settings.pi;
                 _body1 = _world.CreateBody(bd);
 
                 _shape1.SetAsBox(0.5f, 0.5f, new Vec2(-0.5f, 0.0f), 0.0f);

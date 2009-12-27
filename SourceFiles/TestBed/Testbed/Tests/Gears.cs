@@ -62,8 +62,8 @@ namespace TestBed
                 body1.CreateFixture(circle1, 5.0f);
 
                 RevoluteJointDef jd1 = new RevoluteJointDef();
-                jd1.Body1 = ground;
-                jd1.Body2 = body1;
+                jd1.BodyA = ground;
+                jd1.BodyB = body1;
                 jd1.LocalAnchor1 = ground.GetLocalPoint(bd1.Position);
                 jd1.LocalAnchor2 = body1.GetLocalPoint(bd1.Position);
                 jd1.ReferenceAngle = body1.GetAngle() - ground.GetAngle();
@@ -92,16 +92,16 @@ namespace TestBed
                 _joint3 = (PrismaticJoint)_world.CreateJoint(jd3);
 
                 GearJointDef jd4 = new GearJointDef();
-                jd4.Body1 = body1;
-                jd4.Body2 = body2;
+                jd4.BodyA = body1;
+                jd4.BodyB = body2;
                 jd4.Joint1 = _joint1;
                 jd4.Joint2 = _joint2;
                 jd4.Ratio = circle2._radius / circle1._radius;
                 _joint4 = (GearJoint)_world.CreateJoint(jd4);
 
                 GearJointDef jd5 = new GearJointDef();
-                jd5.Body1 = body2;
-                jd5.Body2 = body3;
+                jd5.BodyA = body2;
+                jd5.BodyB = body3;
                 jd5.Joint1 = _joint2;
                 jd5.Joint2 = _joint3;
                 jd5.Ratio = -1.0f / circle2._radius;

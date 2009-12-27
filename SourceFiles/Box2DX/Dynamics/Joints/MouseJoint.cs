@@ -93,12 +93,12 @@ namespace Box2DX.Dynamics
 		public float _beta;
 		public float _gamma;
 
-		public override Vec2 Anchor1
+		public override Vec2 AnchorA
 		{
 			get { return _target; }
 		}
 
-		public override Vec2 Anchor2
+		public override Vec2 AnchorB
 		{
 			get { return _bodyB.GetWorldPoint(_localAnchor); }
 		}
@@ -118,11 +118,11 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void SetTarget(Vec2 target)
 		{
-			if (_bodyB.IsSleeping())
-			{
-				_bodyB.WakeUp();
-			}
-			_target = target;
+            if (_bodyB.IsAwake() == false)
+            {
+                _bodyB.SetAwake(true);
+            }
+            _target = target;
 		}
 
 		public MouseJoint(MouseJointDef def)
@@ -148,7 +148,7 @@ namespace Box2DX.Dynamics
 			float mass = b.GetMass();
 
 			// Frequency
-			float omega = 2.0f * Settings.PI * _frequencyHz;
+			float omega = 2.0f * Settings.pi * _frequencyHz;
 
 			// Damping coefficient
 			float d = 2.0f * mass * _dampingRatio * omega;
@@ -159,7 +159,7 @@ namespace Box2DX.Dynamics
 			// magic formulas
 			// gamma has units of inverse mass.
 			// beta has units of inverse time.
-			Box2DXDebug.Assert(d + step.Dt * k > Settings.FLT_EPSILON);
+			Box2DXDebug.Assert(d + step.Dt * k > Settings.epsilon);
             _gamma = step.Dt * (d + step.Dt * k);
             if (_gamma != 0.0f)
             {

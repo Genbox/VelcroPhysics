@@ -94,7 +94,7 @@ namespace TestBed
                         fd.Restitution = 0.05f;
 
                         BodyDef bd = new BodyDef();
-                        bd.IsBullet = true;
+                        bd.Bullet = true;
                         bd.Position.Set(-31.0f, 5.0f);
 
                         _bullet = _world.CreateBody(bd);

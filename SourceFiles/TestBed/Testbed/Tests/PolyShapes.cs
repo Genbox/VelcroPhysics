@@ -110,7 +110,7 @@ namespace TestBed
 
             float x = Math.Random(-2.0f, 2.0f);
             bd.Position.Set(x, 10.0f);
-            bd.Angle = Math.Random(-Box2DX.Common.Settings.PI, Box2DX.Common.Settings.PI);
+            bd.Angle = Math.Random(-Box2DX.Common.Settings.pi, Box2DX.Common.Settings.pi);
 
             if (index == 4)
             {

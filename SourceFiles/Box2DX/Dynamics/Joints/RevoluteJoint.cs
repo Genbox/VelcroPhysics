@@ -74,8 +74,8 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void Initialize(Body body1, Body body2, Vec2 anchor)
 		{
-			Body1 = body1;
-			Body2 = body2;
+			BodyA = body1;
+			BodyB = body2;
 			LocalAnchor1 = body1.GetLocalPoint(anchor);
 			LocalAnchor2 = body2.GetLocalPoint(anchor);
 			ReferenceAngle = body2.GetAngle() - body1.GetAngle();
@@ -155,12 +155,12 @@ namespace Box2DX.Dynamics
 		public float _upperAngle;
 		public LimitState _limitState;
 
-		public override Vec2 Anchor1
+		public override Vec2 AnchorA
 		{
 			get { return _bodyA.GetWorldPoint(_localAnchor1); }
 		}
 
-		public override Vec2 Anchor2
+		public override Vec2 AnchorB
 		{
 			get { return _bodyB.GetWorldPoint(_localAnchor2); }
 		}
@@ -216,8 +216,8 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void EnableLimit(bool flag)
 		{
-			_bodyA.WakeUp();
-			_bodyB.WakeUp();
+			_bodyA.SetAwake(true);
+			_bodyB.SetAwake(true);
 			_enableLimit = flag;
 		}
 
@@ -243,8 +243,8 @@ namespace Box2DX.Dynamics
 		public void SetLimits(float lower, float upper)
 		{
 			Box2DXDebug.Assert(lower <= upper);
-			_bodyA.WakeUp();
-			_bodyB.WakeUp();
+			_bodyA.SetAwake(true);
+			_bodyB.SetAwake(true);
 			_lowerAngle = lower;
 			_upperAngle = upper;
 		}
@@ -262,8 +262,8 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void EnableMotor(bool flag)
 		{
-			_bodyA.WakeUp();
-			_bodyB.WakeUp();
+			_bodyA.SetAwake(true);
+			_bodyB.SetAwake(true);
 			_enableMotor = flag;
 		}
 
@@ -275,8 +275,8 @@ namespace Box2DX.Dynamics
 			get { return _motorSpeed; }
 			set
 			{
-				_bodyA.WakeUp();
-				_bodyB.WakeUp();
+				_bodyA.SetAwake(true);
+				_bodyB.SetAwake(true);
 				_motorSpeed = value;
 			}
 		}
@@ -286,8 +286,8 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void SetMaxMotorTorque(float torque)
 		{
-			_bodyA.WakeUp();
-			_bodyB.WakeUp();
+			_bodyA.SetAwake(true);
+			_bodyB.SetAwake(true);
 			_maxMotorTorque = torque;
 		}
 
@@ -591,7 +591,7 @@ namespace Box2DX.Dynamics
 					// Use a particle solution (no rotation).
 					Vec2 u = C; u.Normalize();
 					float k = invMass1 + invMass2;
-					Box2DXDebug.Assert(k > Settings.FLT_EPSILON);
+					Box2DXDebug.Assert(k > Settings.epsilon);
 					float m = 1.0f / k;
 					Vec2 impulse = m * (-C);
 					float k_beta = 0.5f;

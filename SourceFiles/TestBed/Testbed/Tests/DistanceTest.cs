@@ -132,11 +132,11 @@ namespace TestBed
                     break;
 
                 case System.Windows.Forms.Keys.Q:
-                    _angleB += 0.1f * Box2DX.Common.Settings.PI;
+                    _angleB += 0.1f * Box2DX.Common.Settings.pi;
                     break;
 
                 case System.Windows.Forms.Keys.E:
-                    _angleB -= 0.1f * Box2DX.Common.Settings.PI;
+                    _angleB -= 0.1f * Box2DX.Common.Settings.pi;
                     break;
             }
 

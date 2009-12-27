@@ -73,8 +73,8 @@ namespace Box2DX.Dynamics
 						Vec2 anchor1, Vec2 anchor2,
 						float ratio)
 		{
-			Body1 = body1;
-			Body2 = body2;
+			BodyA = body1;
+			BodyB = body2;
 			GroundAnchor1 = groundAnchor1;
 			GroundAnchor2 = groundAnchor2;
 			LocalAnchor1 = body1.GetLocalPoint(anchor1);
@@ -84,7 +84,7 @@ namespace Box2DX.Dynamics
 			Vec2 d2 = anchor2 - groundAnchor2;
 			Length2 = d2.Length();
 			Ratio = ratio;
-			Box2DXDebug.Assert(ratio > Settings.FLT_EPSILON);
+			Box2DXDebug.Assert(ratio > Settings.epsilon);
 			float C = Length1 + ratio * Length2;
 			MaxLength1 = C - ratio * PulleyJoint.MinPulleyLength;
 			MaxLength2 = (C - PulleyJoint.MinPulleyLength) / ratio;
@@ -176,12 +176,12 @@ namespace Box2DX.Dynamics
 		public LimitState _limitState1;
 		public LimitState _limitState2;
 
-		public override Vec2 Anchor1
+		public override Vec2 AnchorA
 		{
 			get { return _bodyA.GetWorldPoint(_localAnchor1); }
 		}
 
-		public override Vec2 Anchor2
+		public override Vec2 AnchorB
 		{
 			get { return _bodyB.GetWorldPoint(_localAnchor2); }
 		}
@@ -347,9 +347,9 @@ namespace Box2DX.Dynamics
 			_limitMass1 = b1._invMass + b1._invI * cr1u1 * cr1u1;
 			_limitMass2 = b2._invMass + b2._invI * cr2u2 * cr2u2;
 			_pulleyMass = _limitMass1 + _ratio * _ratio * _limitMass2;
-			Box2DXDebug.Assert(_limitMass1 > Settings.FLT_EPSILON);
-			Box2DXDebug.Assert(_limitMass2 > Settings.FLT_EPSILON);
-			Box2DXDebug.Assert(_pulleyMass > Settings.FLT_EPSILON);
+			Box2DXDebug.Assert(_limitMass1 > Settings.epsilon);
+			Box2DXDebug.Assert(_limitMass2 > Settings.epsilon);
+			Box2DXDebug.Assert(_pulleyMass > Settings.epsilon);
 			_limitMass1 = 1.0f / _limitMass1;
 			_limitMass2 = 1.0f / _limitMass2;
 			_pulleyMass = 1.0f / _pulleyMass;

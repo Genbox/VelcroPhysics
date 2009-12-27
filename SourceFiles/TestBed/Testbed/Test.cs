@@ -123,6 +123,7 @@ namespace TestBed
     {
         public static TestEntry[] g_testEntries = new TestEntry[]
 		{			
+	        new TestEntry("Body Types", BodyTypes.Create),
 	        new TestEntry("Confined", Confined.Create),
 	        new TestEntry("Bridge", Bridge.Create),
 	        new TestEntry("Breakable", Breakable.Create),
@@ -258,7 +259,7 @@ namespace TestBed
 
             if (_mouseJoint != null)
             {
-                Body body = _mouseJoint.GetBody2();
+                Body body = _mouseJoint.GetBodyB();
                 Vec2 p1 = body.GetWorldPoint(_mouseJoint._localAnchor);
                 Vec2 p2 = _mouseJoint._target;
 
@@ -398,8 +399,8 @@ namespace TestBed
             {
                 Body body = callback._fixture.GetBody();
                 MouseJointDef md = new MouseJointDef();
-                md.Body1 = _groundBody;
-                md.Body2 = body;
+                md.BodyA = _groundBody;
+                md.BodyB = body;
                 md.Target = p;
 #if TARGET_FLOAT32_IS_FIXED
 		        md.maxForce = (body->GetMass() < 16.0)? (1000.0f * body->GetMass()) : float32(16000.0);
@@ -407,7 +408,7 @@ namespace TestBed
                 md.MaxForce = 1000.0f * body.GetMass();
 #endif
                 _mouseJoint = (MouseJoint)_world.CreateJoint(md);
-                body.WakeUp();
+                body.SetAwake(true);
             }
         }
 
@@ -451,10 +452,10 @@ namespace TestBed
             }
 
             BodyDef bd = new BodyDef();
-            bd.AllowSleep = true;
+            bd.AutoSleep = true;
             bd.Position = position;
 
-            bd.IsBullet = true;
+            bd.Bullet = true;
             _bomb = _world.CreateBody(bd);
             _bomb.SetLinearVelocity(velocity);
 

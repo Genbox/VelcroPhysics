@@ -47,7 +47,7 @@ namespace Box2DX.Dynamics
             Body bodyA = _fixtureA.GetBody();
             Body bodyB = _fixtureB.GetBody();
 
-            Collision.Collision.CollidePolygonAndCircle(out Manifold,
+            Collision.Collision.CollidePolygonAndCircle(out _manifold,
                                         (PolygonShape)_fixtureA.GetShape(), bodyA.GetTransform(),
                                         (CircleShape)_fixtureB.GetShape(), bodyB.GetTransform());
         }

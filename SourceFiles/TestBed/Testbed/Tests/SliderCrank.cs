@@ -56,7 +56,7 @@ namespace TestBed
 
                     RevoluteJointDef rjd = new RevoluteJointDef();
                     rjd.Initialize(prevBody, body, new Vec2(0.0f, 5.0f));
-                    rjd.MotorSpeed = 1.0f * Box2DX.Common.Settings.PI;
+                    rjd.MotorSpeed = 1.0f * Box2DX.Common.Settings.pi;
                     rjd.MaxMotorTorque = 10000.0f;
                     rjd.EnableMotor = true;
                     _joint1 = (RevoluteJoint)_world.CreateJoint(rjd);
@@ -124,12 +124,12 @@ namespace TestBed
             {
                 case System.Windows.Forms.Keys.F:
                     _joint2._enableMotor = !_joint2._enableMotor;
-                    _joint2.GetBody2().WakeUp();
+                    _joint2.GetBodyB().SetAwake(true);
                     break;
 
                 case System.Windows.Forms.Keys.M:
                     _joint1._enableMotor = !_joint1._enableMotor;
-                    _joint1.GetBody2().WakeUp();
+                    _joint1.GetBodyB().SetAwake(true);
                     break;
             }
         }

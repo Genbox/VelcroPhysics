@@ -165,9 +165,9 @@ namespace TestBed.Tests
             Actor actor = (Actor)_tree.GetUserData(proxyId);
 
             RayCastOutput output;
-            actor.aabb.RayCast(out output, input);
+            bool hit = actor.aabb.RayCast(out output, input);
 
-            if (output.Hit)
+            if (hit)
             {
                 _rayCastOutput = output;
                 _rayActor = actor;
@@ -313,8 +313,8 @@ namespace TestBed.Tests
                 }
 
                 RayCastOutput output;
-                _actors[i].aabb.RayCast(out output, input);
-                if (output.Hit)
+                bool hit = _actors[i].aabb.RayCast(out output, input);
+                if (hit)
                 {
                     bruteActor = _actors[i];
                     bruteOutput = output;

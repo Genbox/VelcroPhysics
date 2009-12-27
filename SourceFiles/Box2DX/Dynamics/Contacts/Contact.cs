@@ -79,7 +79,7 @@ namespace Box2DX.Dynamics
         // Set when the shapes are touching.
         TouchingFlag = 0x0010,
         // Disabled (by user)
-        DisabledFlag = 0x0020,
+        EnabledFlag = 0x0020,
         // This contact needs filtering because a fixture filter was changed.
         FilterFlag = 0x0040,
     }
@@ -93,70 +93,67 @@ namespace Box2DX.Dynamics
         public static ContactRegister[][] Registers = new ContactRegister[(int)ShapeType.ShapeTypeCount][];
         public static bool Initialized;
 
-        public ContactFlag Flags;
+        public ContactFlag _flags;
 
         // World pool and list pointers.
-        public Contact Prev;
-        public Contact Next;
+        public Contact _prev;
+        public Contact _next;
 
         // Nodes for connecting bodies.
-        public ContactEdge NodeA;
-        public ContactEdge NodeB;
+        public ContactEdge _nodeA;
+        public ContactEdge _nodeB;
 
         public Fixture _fixtureA;
         public Fixture _fixtureB;
 
-        public Manifold Manifold;
+        public Manifold _manifold;
 
-        public float Toi;
+        public float _toi;
 
         public Contact() { }
 
         public Contact(Fixture fixtureA, Fixture fixtureB)
         {
-            Flags = 0;
+            _flags = ContactFlag.EnabledFlag;
 
-            if (fixtureA.IsSensor || fixtureB.IsSensor)
+            if (fixtureA._isSensor || fixtureB._isSensor)
             {
-                Flags |= ContactFlag.SensorFlag;
+                _flags |= ContactFlag.SensorFlag;
             }
 
             Body bodyA = fixtureA.GetBody();
             Body bodyB = fixtureB.GetBody();
 
-            if (bodyA.IsStatic() || bodyA.IsBullet() || bodyB.IsStatic() || bodyB.IsBullet())
+            if (bodyA.GetType() != Body.BodyType.Dynamic || bodyA.IsBullet() || bodyB.GetType() != Body.BodyType.Dynamic || bodyB.IsBullet())
             {
-                Flags |= ContactFlag.ContinuousFlag;
-            }
-            else
-            {
-                Flags &= ~ContactFlag.ContinuousFlag;
+                _flags |= ContactFlag.ContinuousFlag;
             }
 
             _fixtureA = fixtureA;
             _fixtureB = fixtureB;
 
-            Manifold = new Manifold();
-            Manifold.PointCount = 0;
+            _manifold = new Manifold();
+            _manifold.PointCount = 0;
 
-            Prev = null;
-            Next = null;
+            _prev = null;
+            _next = null;
 
-            NodeA = new ContactEdge();
-            NodeA.Contact = null;
-            NodeA.Prev = null;
-            NodeA.Next = null;
-            NodeA.Other = null;
+            _nodeA = new ContactEdge();
+            _nodeA.Contact = null;
+            _nodeA.Prev = null;
+            _nodeA.Next = null;
+            _nodeA.Other = null;
 
-            NodeB = new ContactEdge();
-            NodeB.Contact = null;
-            NodeB.Prev = null;
-            NodeB.Next = null;
-            NodeB.Other = null;
+            _nodeB = new ContactEdge();
+            _nodeB.Contact = null;
+            _nodeB.Prev = null;
+            _nodeB.Next = null;
+            _nodeB.Other = null;
         }
 
-        /// Get the contact manifold.
-        public Manifold GetManifold() { return Manifold; }
+        /// Get the contact manifold. Do not modify the manifold unless you understand the
+        /// internals of Box2D.
+        public Manifold GetManifold() { return _manifold; }
 
         /// Get the world manifold.
         public void GetWorldManifold(out WorldManifold worldManifold)
@@ -168,37 +165,59 @@ namespace Box2DX.Dynamics
             Shape shapeA = _fixtureA.GetShape();
             Shape shapeB = _fixtureB.GetShape();
 
-            worldManifold.Initialize(Manifold, bodyA.GetTransform(), shapeA._radius, bodyB.GetTransform(), shapeB._radius);
+            worldManifold.Initialize(_manifold, bodyA.GetTransform(), shapeA._radius, bodyB.GetTransform(), shapeB._radius);
         }
 
-        public bool IsSolid()
-        {
-            return (Flags & (ContactFlag.SensorFlag | ContactFlag.DisabledFlag)) == 0;
-        }
-
-        public void SetAsSensor(bool sensor)
+        public void SetSensor(bool sensor)
         {
             if (sensor)
             {
-                Flags |= ContactFlag.SensorFlag;
+                _flags |= ContactFlag.SensorFlag;
             }
             else
             {
-                Flags &= ~ContactFlag.SensorFlag;
+                _flags &= ~ContactFlag.SensorFlag;
             }
         }
 
-        public void Disable()
+        public bool IsSensor()
         {
-            Flags |= ContactFlag.DisabledFlag;
+            return (_flags & ContactFlag.SensorFlag) == ContactFlag.SensorFlag;
         }
 
-        public bool IsTouching() { return (Flags & ContactFlag.TouchingFlag) != 0; }
+        /// Enable/disable this contact. This can be used inside the pre-solve
+        /// contact listener. The contact is only disabled for the current
+        /// time step (or sub-step in continuous collisions).
+        public void SetEnabled(bool flag)
+        {
+            if (flag)
+            {
+                _flags |= ContactFlag.EnabledFlag;
+            }
+            else
+            {
+                _flags &= ~ContactFlag.EnabledFlag;
+            }
+        }
 
-        public bool IsContinuous() { return (Flags & ContactFlag.ContinuousFlag) != 0; }
+        /// Has this contact been disabled?
+        public bool IsEnabled()
+        {
+            return (_flags & ContactFlag.EnabledFlag) == ContactFlag.EnabledFlag;
+        }
+
+        public bool IsTouching()
+        {
+            return (_flags & ContactFlag.TouchingFlag) == ContactFlag.TouchingFlag;
+        }
+
+        public bool IsContinuous()
+        {
+            return (_flags & ContactFlag.ContinuousFlag) == ContactFlag.ContinuousFlag;
+        }
 
         /// Get the next contact in the world's contact list.
-        public Contact GetNext() { return Next; }
+        public Contact GetNext() { return _next; }
 
         /// Get the first fixture in this contact.
         public Fixture GetFixtureA() { return _fixtureA; }
@@ -208,7 +227,7 @@ namespace Box2DX.Dynamics
 
         public void FlagForFiltering()
         {
-            Flags |= ContactFlag.FilterFlag;
+            _flags |= ContactFlag.FilterFlag;
         }
 
         public static void AddType(ContactCreateFcn createFcn, ContactDestroyFcn destroyFcn,
@@ -282,10 +301,10 @@ namespace Box2DX.Dynamics
         {
             Box2DXDebug.Assert(Initialized == true);
 
-            if (contact.Manifold.PointCount > 0)
+            if (contact._manifold.PointCount > 0)
             {
-                contact.GetFixtureA().GetBody().WakeUp();
-                contact.GetFixtureB().GetBody().WakeUp();
+                contact.GetFixtureA().GetBody().SetAwake(true);
+                contact.GetFixtureB().GetBody().SetAwake(true);
             }
 
             Box2DXDebug.Assert(ShapeType.UnknownShape < typeA && typeB < ShapeType.ShapeTypeCount);
@@ -301,51 +320,51 @@ namespace Box2DX.Dynamics
         {
             //Note: Manifold is a class, not a struct. It will reference the old manifest, not copy it - DONE
             Manifold oldManifold = new Manifold();
-            oldManifold.LocalPlaneNormal = Manifold.LocalPlaneNormal;
-            oldManifold.LocalPoint = Manifold.LocalPoint;
-            oldManifold.PointCount = Manifold.PointCount;
-            oldManifold.Points = Manifold.Points;
-            oldManifold.Type = Manifold.Type;
-            
-            // Re-enable this contact.
-            Flags &= ~ContactFlag.DisabledFlag;
+            oldManifold.LocalPlaneNormal = _manifold.LocalPlaneNormal;
+            oldManifold.LocalPoint = _manifold.LocalPoint;
+            oldManifold.PointCount = _manifold.PointCount;
+            oldManifold.Points = _manifold.Points;
+            oldManifold.Type = _manifold.Type;
 
-            if (Collision.Collision.TestOverlap(_fixtureA.Aabb, _fixtureB.Aabb))
+            // Re-enable this contact.
+            _flags |= ContactFlag.EnabledFlag;
+
+            if (Collision.Collision.TestOverlap(_fixtureA._aabb, _fixtureB._aabb))
             {
                 Evaluate();
             }
             else
             {
-                Manifold.PointCount = 0;
+                _manifold.PointCount = 0;
             }
 
             Body bodyA = _fixtureA.GetBody();
             Body bodyB = _fixtureB.GetBody();
 
             int oldCount = oldManifold.PointCount;
-            int newCount = Manifold.PointCount;
+            int newCount = _manifold.PointCount;
 
             if (newCount == 0 && oldCount > 0)
             {
-                bodyA.WakeUp();
-                bodyB.WakeUp();
+                bodyA.SetAwake(true);
+                bodyB.SetAwake(true);
             }
 
             // Slow contacts don't generate TOI events.
-            if (bodyA.IsStatic() || bodyA.IsBullet() || bodyB.IsStatic() || bodyB.IsBullet())
+            if (bodyA.GetType() != Body.BodyType.Dynamic || bodyA.IsBullet() || bodyB.GetType() != Body.BodyType.Dynamic || bodyB.IsBullet())
             {
-                Flags |= ContactFlag.ContinuousFlag;
+                _flags |= ContactFlag.ContinuousFlag;
             }
             else
             {
-                Flags &= ~ContactFlag.ContinuousFlag;
+                _flags &= ~ContactFlag.ContinuousFlag;
             }
 
             // Match old contact ids to new contact ids and copy the
             // stored impulses to warm start the solver.
-            for (int i = 0; i < Manifold.PointCount; ++i)
+            for (int i = 0; i < _manifold.PointCount; ++i)
             {
-                ManifoldPoint mp2 = Manifold.Points[i];
+                ManifoldPoint mp2 = _manifold.Points[i];
                 mp2.NormalImpulse = 0.0f;
                 mp2.TangentImpulse = 0.0f;
                 ContactID id2 = mp2.ID;
@@ -365,11 +384,11 @@ namespace Box2DX.Dynamics
 
             if (newCount > 0)
             {
-                Flags |= ContactFlag.TouchingFlag;
+                _flags |= ContactFlag.TouchingFlag;
             }
             else
             {
-                Flags &= ~ContactFlag.TouchingFlag;
+                _flags &= ~ContactFlag.TouchingFlag;
             }
 
             if (oldCount == 0 && newCount > 0)
@@ -382,7 +401,7 @@ namespace Box2DX.Dynamics
                 listener.EndContact(this);
             }
 
-            if ((Flags & ContactFlag.SensorFlag) == 0)
+            if ((_flags & ContactFlag.SensorFlag) == 0)
             {
                 listener.PreSolve(this, oldManifold);
             }

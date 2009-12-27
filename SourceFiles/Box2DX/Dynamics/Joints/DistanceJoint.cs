@@ -51,8 +51,8 @@ namespace Box2DX.Dynamics
 		public DistanceJointDef()
 		{
 			Type = JointType.DistanceJoint;
-			LocalAnchor1.Set(0.0f, 0.0f);
-			LocalAnchor2.Set(0.0f, 0.0f);
+			LocalAnchorA.Set(0.0f, 0.0f);
+			LocalAnchorB.Set(0.0f, 0.0f);
 			Length = 1.0f;
 			FrequencyHz = 0.0f;
 			DampingRatio = 0.0f;
@@ -63,10 +63,10 @@ namespace Box2DX.Dynamics
 		/// </summary>
 		public void Initialize(Body body1, Body body2, Vec2 anchor1, Vec2 anchor2)
 		{
-			Body1 = body1;
-			Body2 = body2;
-			LocalAnchor1 = body1.GetLocalPoint(anchor1);
-			LocalAnchor2 = body2.GetLocalPoint(anchor2);
+			BodyA = body1;
+			BodyB = body2;
+			LocalAnchorA = body1.GetLocalPoint(anchor1);
+			LocalAnchorB = body2.GetLocalPoint(anchor2);
 			Vec2 d = anchor2 - anchor1;
 			Length = d.Length();
 		}
@@ -74,12 +74,12 @@ namespace Box2DX.Dynamics
 		/// <summary>
 		/// The local anchor point relative to body1's origin.
 		/// </summary>
-		public Vec2 LocalAnchor1;
+		public Vec2 LocalAnchorA;
 
 		/// <summary>
 		/// The local anchor point relative to body2's origin.
 		/// </summary>
-		public Vec2 LocalAnchor2;
+		public Vec2 LocalAnchorB;
 
 		/// <summary>
 		/// The equilibrium length between the anchor points.
@@ -104,8 +104,8 @@ namespace Box2DX.Dynamics
 	/// </summary>
 	public class DistanceJoint : Joint
 	{
-		public Vec2 _localAnchor1;
-		public Vec2 _localAnchor2;
+		public Vec2 _localAnchorA;
+		public Vec2 _localAnchorB;
 		public Vec2 _u;
 		public float _frequencyHz;
 		public float _dampingRatio;
@@ -115,14 +115,14 @@ namespace Box2DX.Dynamics
 		public float _mass;		// effective mass for the constraint.
 		public float _length;
 
-		public override Vec2 Anchor1
+		public override Vec2 AnchorA
 		{
-			get { return _bodyA.GetWorldPoint(_localAnchor1);}
+			get { return _bodyA.GetWorldPoint(_localAnchorA);}
 		}
 
-		public override Vec2 Anchor2
+		public override Vec2 AnchorB
 		{
-			get { return _bodyB.GetWorldPoint(_localAnchor2);}
+			get { return _bodyB.GetWorldPoint(_localAnchorB);}
 		}
 
 		public override Vec2 GetReactionForce(float inv_dt)
@@ -139,8 +139,8 @@ namespace Box2DX.Dynamics
 		public DistanceJoint(DistanceJointDef def)
 			: base(def)
 		{
-			_localAnchor1 = def.LocalAnchor1;
-			_localAnchor2 = def.LocalAnchor2;
+			_localAnchorA = def.LocalAnchorA;
+			_localAnchorB = def.LocalAnchorB;
 			_length = def.Length;
 			_frequencyHz = def.FrequencyHz;
 			_dampingRatio = def.DampingRatio;
@@ -155,8 +155,8 @@ namespace Box2DX.Dynamics
 			Body b2 = _bodyB;
 
 			// Compute the effective mass matrix.
-			Vec2 r1 = Math.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
-			Vec2 r2 = Math.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
+			Vec2 r1 = Math.Mul(b1.GetTransform().R, _localAnchorA - b1.GetLocalCenter());
+			Vec2 r2 = Math.Mul(b2.GetTransform().R, _localAnchorB - b2.GetLocalCenter());
 			_u = b2._sweep.C + r2 - b1._sweep.C - r1;
 
 			// Handle singularity.
@@ -181,7 +181,7 @@ namespace Box2DX.Dynamics
 				float C = length - _length;
 
 				// Frequency
-				float omega = 2.0f * Settings.PI * _frequencyHz;
+				float omega = 2.0f * Settings.pi * _frequencyHz;
 
 				// Damping coefficient
 				float d = 2.0f * _mass * _dampingRatio * omega;
@@ -228,8 +228,8 @@ namespace Box2DX.Dynamics
 			Body b1 = _bodyA;
 			Body b2 = _bodyB;
 
-			Vec2 r1 = Math.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
-			Vec2 r2 = Math.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
+			Vec2 r1 = Math.Mul(b1.GetTransform().R, _localAnchorA - b1.GetLocalCenter());
+			Vec2 r2 = Math.Mul(b2.GetTransform().R, _localAnchorB - b2.GetLocalCenter());
 
 			Vec2 d = b2._sweep.C + r2 - b1._sweep.C - r1;
 
@@ -259,8 +259,8 @@ namespace Box2DX.Dynamics
 			Body b1 = _bodyA;
 			Body b2 = _bodyB;
 
-			Vec2 r1 = Math.Mul(b1.GetTransform().R, _localAnchor1 - b1.GetLocalCenter());
-			Vec2 r2 = Math.Mul(b2.GetTransform().R, _localAnchor2 - b2.GetLocalCenter());
+			Vec2 r1 = Math.Mul(b1.GetTransform().R, _localAnchorA - b1.GetLocalCenter());
+			Vec2 r2 = Math.Mul(b2.GetTransform().R, _localAnchorB - b2.GetLocalCenter());
 
 			// Cdot = dot(u, v + cross(w, r))
 			Vec2 v1 = b1._linearVelocity + Vec2.Cross(b1._angularVelocity, r1);

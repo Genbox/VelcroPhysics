@@ -86,44 +86,42 @@ namespace Box2DX.Dynamics
     /// @warning you cannot reuse fixtures.
     public class Fixture
     {
-        public AABB Aabb;
+        public AABB _aabb;
 
         public Fixture _next;
-        public Body Body;
+        public Body _body;
 
-        public Shape Shape;
+        public Shape _shape;
 
-        public MassData _massData;
-        public float Friction;
-        public float Restitution;
+        public float _friction;
+        public float _restitution;
 
-        public int ProxyId;
-        public Filter Filter;
+        public int _proxyId;
+        public Filter _filter;
 
-        public bool IsSensor;
+        public bool _isSensor;
 
-        public object UserData;
+        public object _userData;
+
+        public float _density;
 
         public Fixture()
         {
-            UserData = null;
-            Body = null;
+            _userData = null;
+            _body = null;
             _next = null;
-            ProxyId = BroadPhase.NullProxy;
-            Shape = null;
+            _proxyId = BroadPhase.NullProxy;
+            _shape = null;
+            _density = 0.0f;
         }
 
-        public void Destroy(BroadPhase broadPhase)
+        public void Destroy()
         {
-            // Remove proxy from the broad-phase.
-            if (ProxyId != BroadPhase.NullProxy)
-            {
-                broadPhase.DestroyProxy(ProxyId);
-                ProxyId = BroadPhase.NullProxy;
-            }
+            // The proxy must be destroyed before calling this.
+            Box2DXDebug.Assert(_proxyId == BroadPhase.NullProxy);
 
             // Free the child shape.
-            switch (Shape.Type)
+            switch (_shape.Type)
             {
                 case ShapeType.CircleShape:
                     {
@@ -145,34 +143,64 @@ namespace Box2DX.Dynamics
                     break;
             }
 
-            Shape = null;
+            _shape = null;
+        }
+
+        public void CreateProxy(BroadPhase broadPhase, Transform xf)
+        {
+            Box2DXDebug.Assert(_proxyId == BroadPhase.NullProxy);
+
+            // Create proxy in the broad-phase.
+            _shape.ComputeAABB(out _aabb, ref xf);
+            _proxyId = broadPhase.CreateProxy(_aabb, this);
+        }
+
+        public void DestroyProxy(BroadPhase broadPhase)
+        {
+            if (_proxyId == BroadPhase.NullProxy)
+            {
+                return;
+            }
+
+            // Destroy proxy in the broad-phase.
+            broadPhase.DestroyProxy(_proxyId);
+            _proxyId = BroadPhase.NullProxy;
         }
 
         /// Get the type of the child shape. You can use this to down cast to the concrete shape.
         /// @return the shape type.
         public new ShapeType GetType()
         {
-            return Shape.GetType();
+            return _shape.GetType();
         }
 
         /// Get the child shape. You can modify the child shape, however you should not change the
         /// number of vertices because this will crash some collision caching mechanisms.
         public Shape GetShape()
         {
-            return Shape;
+            return _shape;
         }
+
+        	/// Get the fixture's AABB. This AABB may be enlarge and/or stale.
+	/// If you need a more accurate AABB, compute it using the shape and
+	/// the body transform.
+	public AABB GetAABB()
+    {
+        return _aabb;
+    }
+
 
         /// Get the contact filtering data.
         public Filter GetFilterData()
         {
-            return Filter;
+            return _filter;
         }
 
         /// Get the parent body of this fixture. This is NULL if the fixture is not attached.
         /// @return the parent body.
         public Body GetBody()
         {
-            return Body;
+            return _body;
         }
 
         /// Get the next fixture in the parent body's fixture list.
@@ -186,117 +214,127 @@ namespace Box2DX.Dynamics
         /// store your application specific data.
         public object GetUserData()
         {
-            return UserData;
+            return _userData;
         }
 
         /// Set the user data. Use this to store your application specific data.
         public void SetUserData(object data)
         {
-            UserData = data;
+            _userData = data;
         }
 
-        /// Test a point for containment in this fixture. This only works for convex shapes.
+        /// Test a point for containment in this fixture.
         /// @param xf the shape world transform.
         /// @param p a point in world coordinates.
         public bool TestPoint(Vec2 p)
         {
-            return Shape.TestPoint(Body.GetTransform(), p);
+            return _shape.TestPoint(_body.GetTransform(), p);
         }
 
         /// Cast a ray against this shape.
         /// @param output the ray-cast results.
         /// @param input the ray-cast input parameters.
-        public void RayCast(out RayCastOutput output, ref RayCastInput input)
+        public bool RayCast(out RayCastOutput output, ref RayCastInput input)
         {
-            Shape.RayCast(out output, ref input, Body.GetTransform());
+            return _shape.RayCast(out output, ref input, _body.GetTransform());
         }
 
         /// Get the mass data for this fixture. The mass data is based on the density and
         /// the shape. The rotational inertia is about the shape's origin.
-        public MassData GetMassData()
+        public void GetMassData(out MassData massData)
         {
-            return _massData;
+            _shape.ComputeMass(out massData, _density);
+        }
+
+        /// Set the density of this fixture. This will _not_ automatically adjust the mass
+        /// of the body. You must call b2Body::ResetMassData to update the body's mass.
+        public void SetDensity(float density)
+        {
+            _density = density;
+        }
+
+        /// Get the density of this fixture.
+        public float GetDensity()
+        {
+            return _density;
         }
 
         /// Get the coefficient of friction.
         public float GetFriction()
         {
-            return Friction;
+            return _friction;
         }
 
         /// Set the coefficient of friction.
         public void SetFriction(float friction)
         {
-            Friction = friction;
+            _friction = friction;
         }
 
         /// Get the coefficient of restitution.
         public float GetRestitution()
         {
-            return Restitution;
+            return _restitution;
         }
 
         /// Set the coefficient of restitution.
         public void SetRestitution(float restitution)
         {
-            Restitution = restitution;
+            _restitution = restitution;
         }
 
         // We need separation create/destroy functions from the constructor/destructor because
         // the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
-        public void Create(BroadPhase broadPhase, Body body, Transform xf, FixtureDef def)
+        public void Create(Body body, FixtureDef def)
         {
-            UserData = def.UserData;
-            Friction = def.Friction;
-            Restitution = def.Restitution;
+            _userData = def.UserData;
+            _friction = def.Friction;
+            _restitution = def.Restitution;
 
-            Body = body;
+            _body = body;
             _next = null;
 
-            Filter = def.Filter;
+            _filter = def.Filter;
 
-            IsSensor = def.IsSensor;
+            _isSensor = def.IsSensor;
 
-            Shape = def.Shape.Clone();
+            _shape = def.Shape.Clone();
 
-            Shape.ComputeMass(out _massData, def.Density);
-
-            // Create proxy in the broad-phase.
-            Shape.ComputeAABB(out Aabb, ref xf);
-
-            ProxyId = broadPhase.CreateProxy(Aabb, this);
+            _density = def.Density;
         }
 
         public void Synchronize(BroadPhase broadPhase, Transform transform1, Transform transform2)
         {
-            if (ProxyId == BroadPhase.NullProxy)
+            if (_proxyId == BroadPhase.NullProxy)
             {
                 return;
             }
 
             // Compute an AABB that covers the swept shape (may miss some rotation effect).
             AABB aabb1, aabb2;
-            Shape.ComputeAABB(out aabb1, ref transform1);
-            Shape.ComputeAABB(out aabb2, ref transform2);
+            _shape.ComputeAABB(out aabb1, ref transform1);
+            _shape.ComputeAABB(out aabb2, ref transform2);
 
-            Aabb.Combine(aabb1, aabb2);
+            _aabb.Combine(aabb1, aabb2);
 
             Vec2 displacement = transform2.Position - transform1.Position;
 
-            broadPhase.MoveProxy(ProxyId, Aabb, displacement);
+            broadPhase.MoveProxy(_proxyId, _aabb, displacement);
         }
 
+        /// Set the contact filtering data. This will not update contacts until the next time
+        /// step when either parent body is active and awake.
         public void SetFilterData(Filter filter)
         {
-            Filter = filter;
+            _filter = filter;
 
-            if (Body == null)
+            if (_body == null)
             {
                 return;
             }
 
             // Flag associated contacts for filtering.
-            ContactEdge edge = Body.GetContactList();
+            ContactEdge edge = _body.GetContactList();
             while (edge != null)
             {
                 Contact contact = edge.Contact;
@@ -306,25 +344,26 @@ namespace Box2DX.Dynamics
                 {
                     contact.FlagForFiltering();
                 }
+
+                edge = edge.Next;
             }
         }
 
         public void SetSensor(bool sensor)
         {
-            if (IsSensor == sensor)
+            if (_isSensor == sensor)
             {
                 return;
             }
 
-            IsSensor = sensor;
+            _isSensor = sensor;
 
-            if (Body == null)
+            if (_body == null)
             {
                 return;
             }
 
-            // Flag associated contacts for filtering.
-            ContactEdge edge = Body.GetContactList();
+            ContactEdge edge = _body.GetContactList();
             while (edge != null)
             {
                 Contact contact = edge.Contact;
@@ -332,7 +371,7 @@ namespace Box2DX.Dynamics
                 Fixture fixtureB = contact.GetFixtureB();
                 if (fixtureA == this || fixtureB == this)
                 {
-                    contact.SetAsSensor(fixtureA.IsSensor || fixtureB.IsSensor);
+                    contact.SetSensor(_isSensor);
                 }
 
                 edge = edge.Next;

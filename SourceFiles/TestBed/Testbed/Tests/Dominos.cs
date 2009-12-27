@@ -180,11 +180,11 @@ namespace TestBed
             }
 
             DistanceJointDef djd  =new DistanceJointDef();
-            djd.Body1 = b3;
-            djd.Body2 = b7;
-            djd.LocalAnchor1.Set(6.0f, 0.0f);
-            djd.LocalAnchor2.Set(0.0f, -1.0f);
-            Vec2 d = djd.Body2.GetWorldPoint(djd.LocalAnchor2) - djd.Body1.GetWorldPoint(djd.LocalAnchor1);
+            djd.BodyA = b3;
+            djd.BodyB = b7;
+            djd.LocalAnchorA.Set(6.0f, 0.0f);
+            djd.LocalAnchorB.Set(0.0f, -1.0f);
+            Vec2 d = djd.BodyB.GetWorldPoint(djd.LocalAnchorB) - djd.BodyA.GetWorldPoint(djd.LocalAnchorA);
             djd.Length = d.Length();
             _world.CreateJoint(djd);
 

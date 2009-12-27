@@ -58,11 +58,11 @@ namespace TestBed
                 body.SetLinearVelocity(new Vec2(-8.0f * w, 0.0f));
 
                 rjd.Initialize(ground, body, new Vec2(0.0f, 12.0f));
-                rjd.MotorSpeed = 1.0f * Box2DX.Common.Settings.PI;
+                rjd.MotorSpeed = 1.0f * Box2DX.Common.Settings.pi;
                 rjd.MaxMotorTorque = 10000.0f;
                 rjd.EnableMotor = false;
-                rjd.LowerAngle = -0.25f * Box2DX.Common.Settings.PI;
-                rjd.UpperAngle = 0.5f * Box2DX.Common.Settings.PI;
+                rjd.LowerAngle = -0.25f * Box2DX.Common.Settings.pi;
+                rjd.UpperAngle = 0.5f * Box2DX.Common.Settings.pi;
                 rjd.EnableLimit = true;
                 rjd.CollideConnected = true;
 

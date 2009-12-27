@@ -82,7 +82,7 @@ namespace TestBed.Tests
 
             if (position.Y < _top)
             {
-                contact.Disable();
+                contact.SetEnabled(false);
             }
         }
 

@@ -210,11 +210,11 @@ namespace TestBed
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
 
-            _wheel.SetTransform(_wheel.GetPosition(), 120.0f * Box2DX.Common.Settings.PI / 180.0f);
+            _wheel.SetTransform(_wheel.GetPosition(), 120.0f * Box2DX.Common.Settings.pi / 180.0f);
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
 
-            _wheel.SetTransform(_wheel.GetPosition(), -120.0f * Box2DX.Common.Settings.PI / 180.0f);
+            _wheel.SetTransform(_wheel.GetPosition(), -120.0f * Box2DX.Common.Settings.pi / 180.0f);
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
 
@@ -233,22 +233,22 @@ namespace TestBed
             switch (key)
             {
                 case System.Windows.Forms.Keys.A:
-                    _chassis.WakeUp();
+                    _chassis.SetAwake(true);
                     _motorJoint.MotorSpeed = -_motorSpeed;
                     break;
 
                 case System.Windows.Forms.Keys.S:
-                    _chassis.WakeUp();
+                    _chassis.SetAwake(true);
                     _motorJoint.MotorSpeed = (0.0f);
                     break;
 
                 case System.Windows.Forms.Keys.D:
-                    _chassis.WakeUp();
+                    _chassis.SetAwake(true);
                     _motorJoint.MotorSpeed = (_motorSpeed);
                     break;
 
                 case System.Windows.Forms.Keys.M:
-                    _chassis.WakeUp();
+                    _chassis.SetAwake(true);
                     _motorJoint.EnableMotor(!_motorJoint.IsMotorEnabled);
                     break;
             }

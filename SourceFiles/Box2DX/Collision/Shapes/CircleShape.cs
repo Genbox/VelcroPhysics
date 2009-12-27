@@ -60,7 +60,7 @@ namespace Box2DX.Collision
         // From Section 3.1.2
         // x = s + a * r
         // norm(x) = radius
-        public override void RayCast(out RayCastOutput output, ref RayCastInput input, Transform transform)
+        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, Transform transform)
         {
             output = new RayCastOutput();
 
@@ -75,10 +75,9 @@ namespace Box2DX.Collision
             float sigma = c * c - rr * b;
 
             // Check for negative discriminant and short segment.
-            if (sigma < 0.0f || rr < Settings.FLT_EPSILON)
+            if (sigma < 0.0f || rr < Settings.epsilon)
             {
-                output.Hit = false;
-                return;
+                return false;
             }
 
             // Find the point of intersection of the line with the circle.
@@ -88,15 +87,13 @@ namespace Box2DX.Collision
             if (0.0f <= a && a <= input.MaxFraction * rr)
             {
                 a /= rr;
-                output.Hit = true;
                 output.Fraction = a;
                 output.Normal = s + a*r;
                 output.Normal.Normalize();
-                return;
+                return true;
             }
 
-            output.Hit = false;
-            return;
+            return false;
         }
 
         public override void ComputeAABB(out AABB aabb, ref Transform transform)
@@ -112,7 +109,7 @@ namespace Box2DX.Collision
         {
             massData = new MassData();
 
-            massData.Mass = density * Settings.PI * _radius * _radius;
+            massData.Mass = density * Settings.pi * _radius * _radius;
             massData.Center = _p;
 
             // inertia about the local origin

@@ -56,57 +56,57 @@ namespace Box2DX.Dynamics
             Body body1 = fixtureA.GetBody();
             Body body2 = fixtureB.GetBody();
 
-            if (c.Manifold.PointCount > 0)
+            if (c._manifold.PointCount > 0)
             {
                 _contactListener.EndContact(c);
             }
 
             // Remove from the world.
-            if (c.Prev != null)
+            if (c._prev != null)
             {
-                c.Prev.Next = c.Next;
+                c._prev._next = c._next;
             }
 
-            if (c.Next != null)
+            if (c._next != null)
             {
-                c.Next.Prev = c.Prev;
+                c._next._prev = c._prev;
             }
 
             if (c == _contactList)
             {
-                _contactList = c.Next;
+                _contactList = c._next;
             }
 
             // Remove from body 1
-            if (c.NodeA.Prev != null)
+            if (c._nodeA.Prev != null)
             {
-                c.NodeA.Prev.Next = c.NodeA.Next;
+                c._nodeA.Prev.Next = c._nodeA.Next;
             }
 
-            if (c.NodeA.Next != null)
+            if (c._nodeA.Next != null)
             {
-                c.NodeA.Next.Prev = c.NodeA.Prev;
+                c._nodeA.Next.Prev = c._nodeA.Prev;
             }
 
-            if (c.NodeA == body1._contactList)
+            if (c._nodeA == body1._contactList)
             {
-                body1._contactList = c.NodeA.Next;
+                body1._contactList = c._nodeA.Next;
             }
 
             // Remove from body 2
-            if (c.NodeB.Prev != null)
+            if (c._nodeB.Prev != null)
             {
-                c.NodeB.Prev.Next = c.NodeB.Next;
+                c._nodeB.Prev.Next = c._nodeB.Next;
             }
 
-            if (c.NodeB.Next != null)
+            if (c._nodeB.Next != null)
             {
-                c.NodeB.Next.Prev = c.NodeB.Prev;
+                c._nodeB.Next.Prev = c._nodeB.Prev;
             }
 
-            if (c.NodeB == body2._contactList)
+            if (c._nodeB == body2._contactList)
             {
-                body2._contactList = c.NodeB.Next;
+                body2._contactList = c._nodeB.Next;
             }
 
             // Call the factory.
@@ -128,27 +128,18 @@ namespace Box2DX.Dynamics
                 Body bodyA = fixtureA.GetBody();
                 Body bodyB = fixtureB.GetBody();
 
-                if (bodyA.IsSleeping() && bodyB.IsSleeping())
+                if (bodyA.IsAwake() == false && bodyB.IsAwake() == false)
                 {
                     c = c.GetNext();
                     continue;
                 }
 
                 // Is this contact flagged for filtering?
-                if ((c.Flags & ContactFlag.FilterFlag) == ContactFlag.FilterFlag)
+                if ((c._flags & ContactFlag.FilterFlag) == ContactFlag.FilterFlag)
                 {
                     //TODO: The following code (next 4 if blocks) use a class and thus copy by ref. It might expect to copy by value
-                    // Are both bodies static?
-                    if (bodyA.IsStatic() && bodyB.IsStatic())
-                    {
-                        Contact cNuke = c;
-                        c = cNuke.GetNext();
-                        Destroy(cNuke);
-                        continue;
-                    }
-
-                    // Does a joint override collision?
-                    if (bodyB.IsConnected(bodyA))
+                    // Should these bodies collide?
+                    if (bodyB.ShouldCollide(bodyA) == false)
                     {
                         Contact cNuke = c;
                         c = cNuke.GetNext();
@@ -166,11 +157,11 @@ namespace Box2DX.Dynamics
                     }
 
                     // Clear the filtering flag.
-                    c.Flags &= ~ContactFlag.FilterFlag;
+                    c._flags &= ~ContactFlag.FilterFlag;
                 }
 
-                int proxyIdA = fixtureA.ProxyId;
-                int proxyIdB = fixtureB.ProxyId;
+                int proxyIdA = fixtureA._proxyId;
+                int proxyIdB = fixtureB._proxyId;
                 bool overlap = _broadPhase.TestOverlap(proxyIdA, proxyIdB);
 
                 // Here we destroy contacts that cease to overlap in the broad-phase.
@@ -207,12 +198,6 @@ namespace Box2DX.Dynamics
                 return;
             }
 
-            // Are both bodies static?
-            if (bodyA.IsStatic() && bodyB.IsStatic())
-            {
-                return;
-            }
-
             // Does a contact already exist?
             ContactEdge edge = bodyB.GetContactList();
             while (edge != null)
@@ -237,8 +222,8 @@ namespace Box2DX.Dynamics
                 edge = edge.Next;
             }
 
-            // Does a joint override collision?
-            if (bodyB.IsConnected(bodyA))
+            // Does a joint override collision? Is at least one body dynamic?
+            if (bodyB.ShouldCollide(bodyA) == false)
             {
                 return;
             }
@@ -259,39 +244,39 @@ namespace Box2DX.Dynamics
             bodyB = fixtureB.GetBody();
 
             // Insert into the world.
-            c.Prev = null;
-            c.Next = _contactList;
+            c._prev = null;
+            c._next = _contactList;
             if (_contactList != null)
             {
-                _contactList.Prev = c;
+                _contactList._prev = c;
             }
             _contactList = c;
 
             // Connect to island graph.
 
             // Connect to body A
-            c.NodeA.Contact = c;
-            c.NodeA.Other = bodyB;
+            c._nodeA.Contact = c;
+            c._nodeA.Other = bodyB;
 
-            c.NodeA.Prev = null;
-            c.NodeA.Next = bodyA._contactList;
+            c._nodeA.Prev = null;
+            c._nodeA.Next = bodyA._contactList;
             if (bodyA._contactList != null)
             {
-                bodyA._contactList.Prev = c.NodeA;
+                bodyA._contactList.Prev = c._nodeA;
             }
-            bodyA._contactList = c.NodeA;
+            bodyA._contactList = c._nodeA;
 
             // Connect to body B
-            c.NodeB.Contact = c;
-            c.NodeB.Other = bodyA;
+            c._nodeB.Contact = c;
+            c._nodeB.Other = bodyA;
 
-            c.NodeB.Prev = null;
-            c.NodeB.Next = bodyB._contactList;
+            c._nodeB.Prev = null;
+            c._nodeB.Next = bodyB._contactList;
             if (bodyB._contactList != null)
             {
-                bodyB._contactList.Prev = c.NodeB;
+                bodyB._contactList.Prev = c._nodeB;
             }
-            bodyB._contactList = c.NodeB;
+            bodyB._contactList = c._nodeB;
 
             ++_contactCount;
         }

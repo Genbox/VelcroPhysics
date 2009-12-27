@@ -39,7 +39,7 @@ namespace TestBed
         public PolyCollision()
         {
             {
-                _polygonA.SetAsBox(1.0f, 1.0f, new Vec2(0.0f, 0.0f), Box2DX.Common.Settings.PI * 0.25f);
+                _polygonA.SetAsBox(1.0f, 1.0f, new Vec2(0.0f, 0.0f), Box2DX.Common.Settings.pi * 0.25f);
                 _transformA.Set(new Vec2(0.0f, 5.0f), 0.0f);
             }
 
@@ -111,11 +111,11 @@ namespace TestBed
                     break;
 
                 case System.Windows.Forms.Keys.Q:
-                    _angleB += 0.1f * Box2DX.Common.Settings.PI;
+                    _angleB += 0.1f * Box2DX.Common.Settings.pi;
                     break;
 
                 case System.Windows.Forms.Keys.E:
-                    _angleB -= 0.1f * Box2DX.Common.Settings.PI;
+                    _angleB -= 0.1f * Box2DX.Common.Settings.pi;
                     break;
             }
 

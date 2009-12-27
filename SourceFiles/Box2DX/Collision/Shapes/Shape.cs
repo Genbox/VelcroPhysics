@@ -95,7 +95,7 @@ namespace Box2DX.Collision
         /// @param output the ray-cast results.
         /// @param input the ray-cast input parameters.
         /// @param transform the transform to be applied to the shape.
-        public abstract void RayCast(out RayCastOutput output, ref RayCastInput input, Transform transform);
+        public abstract bool RayCast(out RayCastOutput output, ref RayCastInput input, Transform transform);
 
         /// <summary>
         /// Given a transform, compute the associated axis aligned bounding box for this shape.

@@ -214,7 +214,8 @@ namespace Box2DX.Dynamics
                     _destructionListener.SayGoodbye(f0);
                 }
 
-                f0.Destroy(_contactManager._broadPhase);
+                f0.DestroyProxy(_contactManager._broadPhase);
+                f0.Destroy();
                 f0 = null;
             }
             b._fixtureList = null;
@@ -284,22 +285,12 @@ namespace Box2DX.Dynamics
                 j._bodyB._jointList.Prev = j._edgeB;
             j._bodyB._jointList = j._edgeB;
 
-            Body bodyA = def.Body1;
-            Body bodyB = def.Body2;
-
-            bool staticA = bodyA.IsStatic();
-            bool staticB = bodyB.IsStatic();
+            Body bodyA = def.BodyA;
+            Body bodyB = def.BodyB;
 
             // If the joint prevents collisions, then flag any contacts for filtering.
-            if (def.CollideConnected == false && (staticA == false || staticB == false))
+            if (def.CollideConnected == false)
             {
-                // Ensure we iterate over contacts on a dynamic body (usually have less contacts
-                // than a static body). Ideally we will have a contact count on both bodies.
-                if (staticB)
-                {
-                    Math.Swap(ref bodyA, ref bodyB);
-                }
-
                 ContactEdge edge = bodyB.GetContactList();
                 while (edge != null)
                 {
@@ -356,8 +347,8 @@ namespace Box2DX.Dynamics
             Body bodyB = j._bodyB;
 
             // Wake up connected bodies.
-            bodyA.WakeUp();
-            bodyB.WakeUp();
+            bodyA.SetAwake(true);
+            bodyB.SetAwake(true);
 
             // Remove from body 1.
             if (j._edgeA.Prev != null)
@@ -429,9 +420,6 @@ namespace Box2DX.Dynamics
         /// <param name="positionIteration">For the positionconstraint solver.</param>
         public void Step(float dt, int velocityIterations, int positionIteration)
         {
-            int height;
-            height = _contactManager._broadPhase.ComputeHeight();
-
             // If new fixtures were added, we need to find the new contacts.
             if ((_flags & WorldFlags.NewFixture) != 0)
             {
@@ -509,17 +497,25 @@ namespace Box2DX.Dynamics
                     Transform xf = b.GetTransform();
                     for (Fixture f = b.GetFixtureList(); f != null; f = f.GetNext())
                     {
-                        if (b.IsStatic())
+                        if (b.IsActive() == false)
                         {
-                            DrawShape(f, xf, new Color(0.5f, 0.9f, 0.5f));
+                            DrawShape(f, xf, new Color(0.5f, 0.5f, 0.3f));
                         }
-                        else if (b.IsSleeping())
+                        else if (b.GetType() == Body.BodyType.Static)
                         {
                             DrawShape(f, xf, new Color(0.5f, 0.5f, 0.9f));
                         }
-                        else
+                        else if (b.GetType() == Body.BodyType.Kinematic)
                         {
                             DrawShape(f, xf, new Color(0.9f, 0.9f, 0.9f));
+                        }
+                        else if (b.IsAwake() == false)
+                        {
+                            DrawShape(f, xf, new Color(0.6f, 0.6f, 0.6f));
+                        }
+                        else
+                        {
+                            DrawShape(f, xf, new Color(0.9f, 0.7f, 0.7f));
                         }
                     }
                 }
@@ -529,16 +525,23 @@ namespace Box2DX.Dynamics
             {
                 for (Joint j = _jointList; j != null; j = j.GetNext())
                 {
-                    if (j.GetType() != JointType.MouseJoint)
-                    {
-                        DrawJoint(j);
-                    }
+                    DrawJoint(j);
                 }
             }
 
             if ((flags & DebugDraw.DrawFlags.Pair) != 0)
             {
-                // TODO_ERIN
+                Color color = new Color(0.3f, 0.9f, 0.9f);
+                for (Contact c = _contactManager._contactList; c != null; c = c.GetNext())
+                {
+                    Fixture fixtureA = c.GetFixtureA();
+                    Fixture fixtureB = c.GetFixtureB();
+
+                    Vec2 cA = fixtureA.GetAABB().GetCenter();
+                    Vec2 cB = fixtureB.GetAABB().GetCenter();
+
+                    _debugDraw.DrawSegment(cA, cB, color);
+                }
             }
 
             if ((flags & DebugDraw.DrawFlags.Aabb) != 0)
@@ -548,9 +551,14 @@ namespace Box2DX.Dynamics
 
                 for (Body b = _bodyList; b != null; b = b.GetNext())
                 {
+                    if (b.IsActive() == false)
+                    {
+                        continue;
+                    }
+
                     for (Fixture f = b.GetFixtureList(); f != null; f = f.GetNext())
                     {
-                        AABB aabb = bp.GetFatAABB(f.ProxyId);
+                        AABB aabb = bp.GetFatAABB(f._proxyId);
                         Vec2[] vs = new Vec2[4];
                         vs[0].Set(aabb.LowerBound.X, aabb.LowerBound.Y);
                         vs[1].Set(aabb.UpperBound.X, aabb.LowerBound.Y);
@@ -588,9 +596,9 @@ namespace Box2DX.Dynamics
                 object userData = broadPhase.GetUserData(proxyId);
                 Fixture fixture = (Fixture)userData;
                 RayCastOutput output;
-                fixture.RayCast(out output, ref input);
+                bool hit = fixture.RayCast(out output, ref input);
 
-                if (output.Hit)
+                if (hit)
                 {
                     float fraction = output.Fraction;
                     Vec2 point = (1.0f - fraction) * input.P1 + fraction * input.P2;
@@ -709,11 +717,11 @@ namespace Box2DX.Dynamics
             // Clear all the island flags.
             for (Body b = _bodyList; b != null; b = b._next)
             {
-                b._flags &= ~Body.BodyFlags.Island;
+                b._flags &= ~Body.BodyFlags.IslandFlag;
             }
-            for (Contact c = _contactManager._contactList; c != null; c = c.Next)
+            for (Contact c = _contactManager._contactList; c != null; c = c._next)
             {
-                c.Flags &= ~ContactFlag.IslandFlag;
+                c._flags &= ~ContactFlag.IslandFlag;
             }
             for (Joint j = _jointList; j != null; j = j._next)
             {
@@ -726,12 +734,19 @@ namespace Box2DX.Dynamics
             Body[] stack = new Body[stackSize];
             for (Body seed = _bodyList; seed != null; seed = seed._next)
             {
-                if ((seed._flags & (Body.BodyFlags.Island | Body.BodyFlags.Sleep)) != 0)
+                //NOTE: Correct?
+                if ((seed._flags & Body.BodyFlags.IslandFlag) == Body.BodyFlags.IslandFlag)
                 {
                     continue;
                 }
 
-                if (seed.IsStatic())
+                if (seed.IsAwake() == false || seed.IsActive() == false)
+                {
+                    continue;
+                }
+
+                // The seed can be dynamic or kinematic.
+                if (seed.GetType() == Body.BodyType.Static)
                 {
                     continue;
                 }
@@ -740,21 +755,25 @@ namespace Box2DX.Dynamics
                 island.Clear();
                 int stackCount = 0;
                 stack[stackCount++] = seed;
-                seed._flags |= Body.BodyFlags.Island;
+                seed._flags |= Body.BodyFlags.IslandFlag;
 
                 // Perform a depth first search (DFS) on the constraint graph.
                 while (stackCount > 0)
                 {
                     // Grab the next body off the stack and add it to the island.
                     Body b = stack[--stackCount];
+                    Box2DXDebug.Assert(b.IsActive() == true);
                     island.Add(ref b);
 
                     // Make sure the body is awake.
-                    b._flags &= ~Body.BodyFlags.Sleep;
+                    if (b.IsAwake() == false)
+                    {
+                        b.SetAwake(true);
+                    }
 
                     // To keep islands as small as possible, we don't
                     // propagate islands across static bodies.
-                    if (b.IsStatic())
+                    if (b.GetType() == Body.BodyType.Static)
                     {
                         continue;
                     }
@@ -763,31 +782,33 @@ namespace Box2DX.Dynamics
                     for (ContactEdge ce = b._contactList; ce != null; ce = ce.Next)
                     {
                         // Has this contact already been added to an island?
-                        if ((ce.Contact.Flags & ContactFlag.IslandFlag) != 0)
+                        if ((ce.Contact._flags & ContactFlag.IslandFlag) != 0)
                         {
                             continue;
                         }
 
-                        // Is this contact touching?
-                        if (ce.Contact.IsSolid() == false || ce.Contact.IsTouching() == false)
+                        // Is this contact solid and touching?
+                        if (ce.Contact.IsSensor() == true ||
+                            ce.Contact.IsEnabled() == false ||
+                            ce.Contact.IsTouching() == false)
                         {
                             continue;
                         }
 
                         island.Add(ref ce.Contact);
-                        ce.Contact.Flags |= ContactFlag.IslandFlag;
+                        ce.Contact._flags |= ContactFlag.IslandFlag;
 
                         Body other = ce.Other;
 
                         // Was the other body already added to this island?
-                        if ((other._flags & Body.BodyFlags.Island) != 0)
+                        if ((other._flags & Body.BodyFlags.IslandFlag) != 0)
                         {
                             continue;
                         }
 
                         Box2DXDebug.Assert(stackCount < stackSize);
                         stack[stackCount++] = other;
-                        other._flags |= Body.BodyFlags.Island;
+                        other._flags |= Body.BodyFlags.IslandFlag;
                     }
 
                     // Search all joints connect to this body.
@@ -798,18 +819,25 @@ namespace Box2DX.Dynamics
                             continue;
                         }
 
+                        Body other = je.Other;
+
+                        // Don't simulate joints connected to inactive bodies.
+                        if (other.IsActive() == false)
+                        {
+                            continue;
+                        }
+
                         island.Add(je.Joint);
                         je.Joint._islandFlag = true;
 
-                        Body other = je.Other;
-                        if ((other._flags & Body.BodyFlags.Island) != 0)
+                        if ((other._flags & Body.BodyFlags.IslandFlag) != 0)
                         {
                             continue;
                         }
 
                         Box2DXDebug.Assert(stackCount < stackSize);
                         stack[stackCount++] = other;
-                        other._flags |= Body.BodyFlags.Island;
+                        other._flags |= Body.BodyFlags.IslandFlag;
                     }
                 }
 
@@ -820,9 +848,9 @@ namespace Box2DX.Dynamics
                 {
                     // Allow static bodies to participate in other islands.
                     Body b = island.Bodies[i];
-                    if (b.IsStatic())
+                    if (b.GetType() == Body.BodyType.Static)
                     {
-                        b._flags &= ~Body.BodyFlags.Island;
+                        b._flags &= ~Body.BodyFlags.IslandFlag;
                     }
                 }
             }
@@ -832,12 +860,12 @@ namespace Box2DX.Dynamics
             // Synchronize shapes, check for out of range bodies.
             for (Body b = _bodyList; b != null; b = b.GetNext())
             {
-                if ((b._flags & Body.BodyFlags.Sleep) != 0)
+                if (b.IsAwake() == false || b.IsActive() == false)
                 {
                     continue;
                 }
 
-                if (b.IsStatic())
+                if (b.GetType() == Body.BodyType.Static)
                 {
                     continue;
                 }
@@ -872,14 +900,14 @@ namespace Box2DX.Dynamics
 
             for (Body b = _bodyList; b != null; b = b._next)
             {
-                b._flags &= ~Body.BodyFlags.Island;
+                b._flags &= ~Body.BodyFlags.IslandFlag;
                 b._sweep.T0 = 0.0f;
             }
 
-            for (Contact c = _contactManager._contactList; c != null; c = c.Next)
+            for (Contact c = _contactManager._contactList; c != null; c = c._next)
             {
                 // Invalidate TOI
-                c.Flags &= ~(ContactFlag.ToiFlag | ContactFlag.IslandFlag);
+                c._flags &= ~(ContactFlag.ToiFlag | ContactFlag.IslandFlag);
             }
 
             for (Joint j = _jointList; j != null; j = j._next)
@@ -894,10 +922,12 @@ namespace Box2DX.Dynamics
                 Contact minContact = null;
                 float minTOI = 1.0f;
 
-                for (Contact c = _contactManager._contactList; c != null; c = c.Next)
+                for (Contact c = _contactManager._contactList; c != null; c = c._next)
                 {
                     // Can this contact generate a solid TOI contact?
-                    if (c.IsSolid() == false || c.IsContinuous() == false)
+                    if (c.IsSensor() == true ||
+                        c.IsEnabled() == false ||
+                        c.IsContinuous() == false)
                     {
                         continue;
                     }
@@ -905,10 +935,10 @@ namespace Box2DX.Dynamics
                     // TODO_ERIN keep a counter on the contact, only respond to M TOIs per contact.
 
                     float toi = 1.0f;
-                    if ((c.Flags & ContactFlag.ToiFlag) != 0)
+                    if ((c._flags & ContactFlag.ToiFlag) != 0)
                     {
                         // This contact has a valid cached TOI.
-                        toi = c.Toi;
+                        toi = c._toi;
                     }
                     else
                     {
@@ -918,7 +948,8 @@ namespace Box2DX.Dynamics
                         Body b1 = s1.GetBody();
                         Body b2 = s2.GetBody();
 
-                        if ((b1.IsStatic() || b1.IsSleeping()) && (b2.IsStatic() || b2.IsSleeping()))
+                        if ((b1.GetType() != Body.BodyType.Dynamic || b1.IsAwake() == false) &&
+                            (b2.GetType() != Body.BodyType.Dynamic || b2.IsAwake() == false))
                         {
                             continue;
                         }
@@ -952,11 +983,11 @@ namespace Box2DX.Dynamics
                         }
 
 
-                        c.Toi = toi;
-                        c.Flags |= ContactFlag.ToiFlag;
+                        c._toi = toi;
+                        c._flags |= ContactFlag.ToiFlag;
                     }
 
-                    if (Settings.FLT_EPSILON < toi && toi < minTOI)
+                    if (Settings.epsilon < toi && toi < minTOI)
                     {
                         // This is the minimum TOI found so far.
                         minContact = c;
@@ -964,7 +995,7 @@ namespace Box2DX.Dynamics
                     }
                 }
 
-                if (minContact == null || 1.0f - 100.0f * Settings.FLT_EPSILON < minTOI)
+                if (minContact == null || 1.0f - 100.0f * Settings.epsilon < minTOI)
                 {
                     // No more TOI events. Done!
                     break;
@@ -984,10 +1015,10 @@ namespace Box2DX.Dynamics
 
                 // The TOI contact likely has some new contact points.
                 minContact.Update(_contactManager._contactListener);
-                minContact.Flags &= ~ContactFlag.ToiFlag;
+                minContact._flags &= ~ContactFlag.ToiFlag;
 
                 // Is the contact solid?
-                if (minContact.IsSolid() == false)
+                if (minContact.IsSensor() == true || minContact.IsEnabled() == false)
                 {
                     // Restore the sweeps.
                     b3._sweep = backup1;
@@ -1006,7 +1037,7 @@ namespace Box2DX.Dynamics
 
                 // Build the TOI island. We need a dynamic seed.
                 Body seed = b3;
-                if (seed.IsStatic())
+                if (seed.GetType() != Body.BodyType.Dynamic)
                 {
                     seed = b4;
                 }
@@ -1017,7 +1048,7 @@ namespace Box2DX.Dynamics
                 int queueStart = 0; // starting index for queue
                 int queueSize = 0;  // elements in queue
                 queue[queueStart + queueSize++] = seed;
-                seed._flags |= Body.BodyFlags.Island;
+                seed._flags |= Body.BodyFlags.IslandFlag;
 
                 // Perform a breadth first search (BFS) on the contact/joint graph.
                 while (queueSize > 0)
@@ -1029,11 +1060,14 @@ namespace Box2DX.Dynamics
                     island.Add(ref b);
 
                     // Make sure the body is awake.
-                    b._flags &= ~Body.BodyFlags.Sleep;
+                    if (b.IsAwake() == false)
+                    {
+                        b.SetAwake(true);
+                    }
 
                     // To keep islands as small as possible, we don't
-                    // propagate islands across static bodies.
-                    if (b.IsStatic())
+                    // propagate islands across static or kinematic bodies.
+                    if (b.GetType() != Body.BodyType.Dynamic)
                     {
                         continue;
                     }
@@ -1048,40 +1082,42 @@ namespace Box2DX.Dynamics
                         }
 
                         // Has this contact already been added to an island? Skip slow or non-solid contacts.
-                        if ((cEdge.Contact.Flags & ContactFlag.IslandFlag) != 0)
+                        if ((cEdge.Contact._flags & ContactFlag.IslandFlag) != 0)
                         {
                             continue;
                         }
 
-                        // Is this contact touching? For performance we are not updating this contact.
-                        if (cEdge.Contact.IsSolid() == false || cEdge.Contact.IsTouching() == false)
+                        // Skip separate, sensor, or disabled contacts.
+                        if (cEdge.Contact.IsSensor() == true ||
+                            cEdge.Contact.IsEnabled() == false ||
+                            cEdge.Contact.IsTouching() == false)
                         {
                             continue;
                         }
 
                         island.Add(ref cEdge.Contact);
-                        cEdge.Contact.Flags |= ContactFlag.IslandFlag;
+                        cEdge.Contact._flags |= ContactFlag.IslandFlag;
 
                         // Update other body.
                         Body other = cEdge.Other;
 
                         // Was the other body already added to this island?
-                        if ((other._flags & Body.BodyFlags.Island) != 0)
+                        if ((other._flags & Body.BodyFlags.IslandFlag) != 0)
                         {
                             continue;
                         }
 
-                        // March forward, this can do no harm since this is the min TOI.
-                        if (other.IsStatic() == false)
+                        // Synchronize the connected body.
+                        if (other.GetType() != Body.BodyType.Static)
                         {
                             other.Advance(minTOI);
-                            other.WakeUp();
+                            other.SetAwake(true);
                         }
 
                         Box2DXDebug.Assert(queueStart + queueSize < queueCapacity);
                         queue[queueStart + queueSize] = other;
                         ++queueSize;
-                        other._flags |= Body.BodyFlags.Island;
+                        other._flags |= Body.BodyFlags.IslandFlag;
                     }
 
                     for (JointEdge jEdge = b._jointList; jEdge != null; jEdge = jEdge.Next)
@@ -1096,27 +1132,32 @@ namespace Box2DX.Dynamics
                             continue;
                         }
 
-                        island.Add(jEdge.Joint);
-
-                        jEdge.Joint._islandFlag = true;
-
                         Body other = jEdge.Other;
-
-                        if ((other._flags & Body.BodyFlags.Island) != 0)
+                        if (other.IsActive() == false)
                         {
                             continue;
                         }
 
-                        if (!other.IsStatic())
+                        island.Add(jEdge.Joint);
+
+                        jEdge.Joint._islandFlag = true;
+
+                        if ((other._flags & Body.BodyFlags.IslandFlag) != 0)
+                        {
+                            continue;
+                        }
+
+                        // Synchronize the connected body.
+                        if (other.GetType() != Body.BodyType.Static)
                         {
                             other.Advance(minTOI);
-                            other.WakeUp();
+                            other.SetAwake(true);
                         }
 
                         Box2DXDebug.Assert(queueStart + queueSize < queueCapacity);
                         queue[queueStart + queueSize] = other;
                         ++queueSize;
-                        other._flags |= Body.BodyFlags.Island;
+                        other._flags |= Body.BodyFlags.IslandFlag;
                     }
                 }
 
@@ -1135,14 +1176,14 @@ namespace Box2DX.Dynamics
                 {
                     // Allow bodies to participate in future TOI islands.
                     Body b = island.Bodies[i];
-                    b._flags &= ~Body.BodyFlags.Island;
+                    b._flags &= ~Body.BodyFlags.IslandFlag;
 
-                    if ((b._flags & Body.BodyFlags.Sleep) != 0)
+                    if (b.IsAwake() == false)
                     {
                         continue;
                     }
 
-                    if (b.IsStatic())
+                    if (b.GetType() == Body.BodyType.Static)
                     {
                         continue;
                     }
@@ -1153,7 +1194,7 @@ namespace Box2DX.Dynamics
                     // may not be in the island because they were not touching.
                     for (ContactEdge ce = b._contactList; ce != null; ce = ce.Next)
                     {
-                        ce.Contact.Flags &= ~ContactFlag.ToiFlag;
+                        ce.Contact._flags &= ~ContactFlag.ToiFlag;
                     }
                 }
 
@@ -1161,7 +1202,7 @@ namespace Box2DX.Dynamics
                 {
                     // Allow contacts to participate in future TOI islands.
                     Contact c = island.Contacts[i];
-                    c.Flags &= ~(ContactFlag.ToiFlag | ContactFlag.IslandFlag);
+                    c._flags &= ~(ContactFlag.ToiFlag | ContactFlag.IslandFlag);
                 }
 
                 for (int i = 0; i < island.JointCount; ++i)
@@ -1181,14 +1222,14 @@ namespace Box2DX.Dynamics
 
         private void DrawJoint(Joint joint)
         {
-            Body b1 = joint.GetBody1();
-            Body b2 = joint.GetBody2();
+            Body b1 = joint.GetBodyA();
+            Body b2 = joint.GetBodyB();
             Transform xf1 = b1.GetTransform();
             Transform xf2 = b2.GetTransform();
             Vec2 x1 = xf1.Position;
             Vec2 x2 = xf2.Position;
-            Vec2 p1 = joint.Anchor1;
-            Vec2 p2 = joint.Anchor2;
+            Vec2 p1 = joint.AnchorA;
+            Vec2 p2 = joint.AnchorB;
 
             Color color = new Color(0.5f, 0.8f, 0.8f);
 
