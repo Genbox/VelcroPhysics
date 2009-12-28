@@ -340,13 +340,9 @@ namespace Box2DX.Dynamics
                 return null;
             }
 
-            //b2BlockAllocator* allocator = &m_world->m_blockAllocator;
-            //void* memory = allocator->Allocate(sizeof(b2Fixture));
-
             Fixture fixture = new Fixture();
             fixture.Create(this, def);
 
-            //NOTE: Correct?
             if ((_flags & BodyFlags.ActiveFlag) == BodyFlags.ActiveFlag)
             {
                 BroadPhase broadPhase = _world._contactManager._broadPhase;
