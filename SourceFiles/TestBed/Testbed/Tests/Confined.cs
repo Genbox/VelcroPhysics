@@ -116,7 +116,7 @@ namespace TestBed
             int flag = settings.enableContinuous;
             settings.enableContinuous = 0;
             base.Step(settings);
-            OpenGLDebugDraw.DrawString(5, _textLine, "Press 'c' to create a circle.");
+            _debugDraw.DrawString(5, _textLine, "Press 'c' to create a circle.");
             _textLine += 15;
             settings.enableContinuous = flag;
         }

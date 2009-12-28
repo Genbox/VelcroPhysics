@@ -201,7 +201,7 @@ namespace TestBed
         public override void Step(Settings settings)
         {
             base.Step(settings);
-            OpenGLDebugDraw.DrawString(5, _textLine, "Press 1-5 to drop stuff");
+            _debugDraw.DrawString(5, _textLine, "Press 1-5 to drop stuff");
             _textLine += 15;
 
             float L = 11.0f;
@@ -215,7 +215,7 @@ namespace TestBed
 
             if (callback._fixture != null)
             {
-                OpenGLDebugDraw.DrawPoint(callback._point, 5.0f, new Color(0.4f, 0.9f, 0.4f));
+                _debugDraw.DrawPoint(callback._point, 5.0f, new Color(0.4f, 0.9f, 0.4f));
 
                 _debugDraw.DrawSegment(point1, callback._point, new Color(0.8f, 0.8f, 0.8f));
 

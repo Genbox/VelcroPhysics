@@ -99,14 +99,14 @@ namespace TestBed
 
             Color c1 = new Color(0.2f, 0.9f, 0.2f);
             Color c2 = new Color(0.9f, 0.2f, 0.2f);
-            OpenGLDebugDraw.DrawPoint(_rayCastInput.P1, 6.0f, c1);
-            OpenGLDebugDraw.DrawPoint(_rayCastInput.P2, 6.0f, c2);
+            _debugDraw.DrawPoint(_rayCastInput.P1, 6.0f, c1);
+            _debugDraw.DrawPoint(_rayCastInput.P2, 6.0f, c2);
 
             if (_rayActor != null)
             {
                 Color cr = new Color(0.2f, 0.2f, 0.9f);
                 Vec2 p = _rayCastInput.P1 + _rayActor.fraction * (_rayCastInput.P2 - _rayCastInput.P1);
-                OpenGLDebugDraw.DrawPoint(p, 6.0f, cr);
+                _debugDraw.DrawPoint(p, 6.0f, cr);
             }
 
             ++_stepCount;

@@ -184,9 +184,9 @@ namespace TestBed
         public override void Step(Settings settings)
         {
             base.Step(settings);
-            OpenGLDebugDraw.DrawString(5, _textLine, "This demonstrates a soft distance joint.");
+            _debugDraw.DrawString(5, _textLine, "This demonstrates a soft distance joint.");
             _textLine += 15;
-            OpenGLDebugDraw.DrawString(5, _textLine, "Press: (b) to delete a body, (j) to delete a joint");
+            _debugDraw.DrawString(5, _textLine, "Press: (b) to delete a body, (j) to delete a joint");
             _textLine += 15;
         }
 

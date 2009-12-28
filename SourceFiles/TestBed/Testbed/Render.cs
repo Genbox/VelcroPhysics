@@ -153,7 +153,7 @@ namespace TestBed
             Gl.glEnd();
         }
 
-        public static void DrawPoint(Vec2 p, float size, Color color)
+        public void DrawPoint(Vec2 p, float size, Color color)
         {
             Gl.glPointSize(size);
             Gl.glBegin(Gl.GL_POINTS);
@@ -163,7 +163,7 @@ namespace TestBed
             Gl.glPointSize(1.0f);
         }
 
-        public static void DrawString(int x, int y, string str)
+        public void DrawString(int x, int y, string str)
         {
             if (sIsTextRendererInitialized)
             {

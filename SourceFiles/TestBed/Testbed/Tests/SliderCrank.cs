@@ -141,10 +141,10 @@ namespace TestBed
         public override void Step(Settings settings)
         {
             base.Step(settings);
-            OpenGLDebugDraw.DrawString(5, _textLine, "Keys: (f) toggle friction, (m) toggle motor");
+            _debugDraw.DrawString(5, _textLine, "Keys: (f) toggle friction, (m) toggle motor");
             _textLine += 15;
             float torque = _joint1.MotorTorque;
-            OpenGLDebugDraw.DrawString(5, _textLine, string.Format("Motor Torque = {0}", torque));
+            _debugDraw.DrawString(5, _textLine, string.Format("Motor Torque = {0}", torque));
             _textLine += 15;
         }
 

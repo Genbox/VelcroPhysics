@@ -81,7 +81,7 @@ namespace TestBed
         public override void Step(Settings settings)
         {
             base.Step(settings);
-            OpenGLDebugDraw.DrawString(5, _textLine, "Press: (c) create a shape, (d) destroy a shape.");
+            _debugDraw.DrawString(5, _textLine, "Press: (c) create a shape, (d) destroy a shape.");
             _textLine += 15;
         }
 

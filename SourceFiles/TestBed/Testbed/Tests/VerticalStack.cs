@@ -111,7 +111,7 @@ namespace TestBed
         public override void Step(Settings settings)
         {
             base.Step(settings);
-            OpenGLDebugDraw.DrawString(5, _textLine, "Press: (,) to launch a bullet.");
+            _debugDraw.DrawString(5, _textLine, "Press: (,) to launch a bullet.");
             _textLine += 15;
         }
 

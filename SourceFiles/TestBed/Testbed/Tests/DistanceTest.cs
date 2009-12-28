@@ -66,10 +66,10 @@ namespace TestBed
             Collision.DistanceOutput output;
             Collision.Distance(out output, out cache, ref input);
 
-            OpenGLDebugDraw.DrawString(5, _textLine, string.Format("distance = {0}", output.Distance));
+            _debugDraw.DrawString(5, _textLine, string.Format("distance = {0}", output.Distance));
             _textLine += 15;
 
-            OpenGLDebugDraw.DrawString(5, _textLine, string.Format("iterations = {0}", output.Iterations));
+            _debugDraw.DrawString(5, _textLine, string.Format("iterations = {0}", output.Iterations));
             _textLine += 15;
 
             {
@@ -92,10 +92,10 @@ namespace TestBed
             Vec2 x2 = output.PointB;
 
             Color c1 = new Color(1.0f, 0.0f, 0.0f);
-            OpenGLDebugDraw.DrawPoint(x1, 4.0f, c1);
+            _debugDraw.DrawPoint(x1, 4.0f, c1);
 
             Color c2 = new Color(1.0f, 1.0f, 0.0f);
-            OpenGLDebugDraw.DrawPoint(x2, 4.0f, c2);
+            _debugDraw.DrawPoint(x2, 4.0f, c2);
         }
 
         public override void Keyboard(System.Windows.Forms.Keys key)
