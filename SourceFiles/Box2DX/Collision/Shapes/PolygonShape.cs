@@ -44,14 +44,15 @@ namespace Box2DX.Collision
 
         public override Shape Clone()
         {
-            PolygonShape polygonShape = new PolygonShape();
-            polygonShape._centroid = _centroid;
-            polygonShape._normals = _normals;
-            polygonShape._radius = _radius;
-            polygonShape.Type = Type;
-            polygonShape._vertexCount = _vertexCount;
-            polygonShape._vertices = _vertices;
-            return polygonShape;
+            PolygonShape clone = new PolygonShape();
+            clone.Type = Type;
+            clone._radius = _radius;
+            clone._vertexCount = _vertexCount;
+            clone._centroid = _centroid;
+            clone._vertices = _vertices;
+            clone._normals = _normals;
+
+            return clone;
         }
 
         /// <summary>

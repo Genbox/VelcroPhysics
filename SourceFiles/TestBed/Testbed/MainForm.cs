@@ -83,8 +83,9 @@ namespace TestBed
                 cmbbTests.Items.Add(TestEntries._testEntries[i]);
 			}
 
-            testEntry = TestEntries._testEntries[0];
-			CurrentTest = testEntry.CreateFcn();
+            //NOTE: when we change the selectedindex, a test will be created!
+            //testEntry = TestEntries._testEntries[0];
+            //CurrentTest = testEntry.CreateFcn();
 			cmbbTests.SelectedIndex = 0;
 
 			/*timer = new System.Timers.Timer();
