@@ -167,33 +167,38 @@ namespace TestBed
         {
             if (sIsTextRendererInitialized)
             {
-                Gl.glMatrixMode(Gl.GL_PROJECTION);
-                Gl.glPushMatrix();
-                Gl.glLoadIdentity();
+                //Hack to make the text more visible
+                for (int i = 0; i < 2; i++)
+                {
+                    Gl.glMatrixMode(Gl.GL_PROJECTION);
+                    Gl.glPushMatrix();
+                    Gl.glLoadIdentity();
 
-                Gl.glMatrixMode(Gl.GL_MODELVIEW);
-                Gl.glPushMatrix();
-                Gl.glLoadIdentity();
+                    Gl.glMatrixMode(Gl.GL_MODELVIEW);
+                    Gl.glPushMatrix();
+                    Gl.glLoadIdentity();
 
-                float xOffset = -0.95f + (float)x / ((float)openGlControl.Width / 2f);
-                float yOffset = 0.95f - (float)y / ((float)openGlControl.Height / 2f);
-                // Offset the font on the screen
-                Gl.glTranslatef(xOffset, yOffset, 0);
+                    float xOffset = -0.95f + (float)x / ((float)openGlControl.Width / 2f);
+                    float yOffset = 0.95f - (float)y / ((float)openGlControl.Height / 2f);
+                    // Offset the font on the screen
+                    Gl.glTranslatef(xOffset, yOffset, 0);
 
-                Gl.glColor3f(0.9f, 0.6f, 0.6f);
-                // Scale the font
-                Gl.glScalef(0.0035f, 0.0035f, 0.0035f);
+                    Gl.glColor3f(0.9f, 0.6f, 0.6f);
+                    // Scale the font
+                    Gl.glScalef(0.0035f, 0.0035f, 0.0035f);
 
-                // Begin writing the font
-                sysfont.ftBeginFont();
-                sysfont.ftWrite(str);
-                // Stop writing the font and restore old OpenGL parameters
-                sysfont.ftEndFont();
+                    // Begin writing the font
+                    sysfont.ftBeginFont();
+                    sysfont.ftWrite(str);
+                    // Stop writing the font and restore old OpenGL parameters
+                    sysfont.ftEndFont();
 
-                Gl.glPopMatrix();
-                Gl.glMatrixMode(Gl.GL_PROJECTION);
-                Gl.glPopMatrix();
-                Gl.glMatrixMode(Gl.GL_MODELVIEW);
+                    Gl.glPopMatrix();
+                    Gl.glMatrixMode(Gl.GL_PROJECTION);
+                    Gl.glPopMatrix();
+                    Gl.glMatrixMode(Gl.GL_MODELVIEW);
+
+                }
             }
         }
 
@@ -209,7 +214,7 @@ namespace TestBed
             // CREATE FONT
             sysfont = new FTFont("FreeSans.ttf", out Errors);
             // INITIALISE FONT AS A PER_CHARACTER TEXTURE MAPPED FONT
-            sysfont.ftRenderToTexture(12, 196);
+            sysfont.ftRenderToTexture(14, 196);
             // SET the sample font to align CENTERED
             sysfont.FT_ALIGN = FTFontAlign.FT_ALIGN_LEFT;
             sIsTextRendererInitialized = true;
