@@ -1,9 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Diagnostics;
-using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
-namespace Box2D.XNA
+namespace FarseerPhysics
 {
     [Flags]
     public enum WorldFlags
