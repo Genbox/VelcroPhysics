@@ -21,7 +21,7 @@ using Box2DX.Collision;
 using Box2DX.Common;
 using Box2DX.Dynamics;
 
-namespace TestBed.Tests
+namespace TestBed
 {
     public class Confined : Test
     {

@@ -78,12 +78,12 @@ namespace TestBed
 			nudPosIters.Value = settings.positionIterations;
 			nudHz.Value = (decimal)settings.hz;
 
-			for (int i = 0; i < Test.g_testEntries.Length; i++)
+			for (int i = 0; i < TestEntries._testEntries.Length; i++)
 			{
-				cmbbTests.Items.Add(Test.g_testEntries[i]);
+                cmbbTests.Items.Add(TestEntries._testEntries[i]);
 			}
 
-			testEntry = Test.g_testEntries[0];
+            testEntry = TestEntries._testEntries[0];
 			CurrentTest = testEntry.CreateFcn();
 			cmbbTests.SelectedIndex = 0;
 

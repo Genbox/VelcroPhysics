@@ -49,7 +49,7 @@ namespace TestBed
 
         public override void Step(Settings settings)
         {
-            //B2_NOT_USED(settings); //TODO: Check
+            //B2_NOT_USED(settings);
 
             Manifold manifold;
             Collision.CollidePolygons(out manifold, _polygonA, _transformA, _polygonB, _transformB);
