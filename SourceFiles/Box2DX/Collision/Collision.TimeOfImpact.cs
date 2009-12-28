@@ -25,14 +25,11 @@ namespace Box2DX.Collision
 {
     public partial class Collision
     {
-        public static int ToiCalls, ToiIters, ToiMaxIters;
-        public static int ToiRootIters, ToiMaxRootIters;
-
-        /// Inpute parameters for b2TimeOfImpact
-        public class TOIInput
+        /// Inpute parameters for TimeOfImpact
+        public struct TOIInput
         {
-            public DistanceProxy ProxyA = new DistanceProxy();
-            public DistanceProxy ProxyB = new DistanceProxy();
+            public DistanceProxy ProxyA;
+            public DistanceProxy ProxyB;
             public Sweep SweepA;
             public Sweep SweepB;
             public float Tolerance;
@@ -47,10 +44,11 @@ namespace Box2DX.Collision
                 FaceB
             };
 
-            public void Initialize(SimplexCache cache,
-                DistanceProxy proxyA, Transform transformA,
-                DistanceProxy proxyB, Transform transformB)
+            public void Initialize(ref SimplexCache cache,
+                ref DistanceProxy proxyA, ref Transform transformA,
+                ref DistanceProxy proxyB, ref Transform transformB)
             {
+                _localPoint = Vec2.Zero;
                 _proxyA = proxyA;
                 _proxyB = proxyB;
                 int count = cache.Count;
@@ -73,7 +71,7 @@ namespace Box2DX.Collision
                     Vec2 localPointA1 = _proxyA.GetVertex(cache.IndexA[0]);
                     Vec2 localPointA2 = _proxyA.GetVertex(cache.IndexA[1]);
                     Vec2 localPointB = _proxyB.GetVertex(cache.IndexB[0]);
-                    _localPoint = 0.5f*(localPointA1 + localPointA2);
+                    _localPoint = 0.5f * (localPointA1 + localPointA2);
                     _axis = Vec2.Cross(localPointA2 - localPointA1, 1.0f);
                     _axis.Normalize();
 
@@ -94,7 +92,7 @@ namespace Box2DX.Collision
                     Vec2 localPointA = proxyA.GetVertex(cache.IndexA[0]);
                     Vec2 localPointB1 = proxyB.GetVertex(cache.IndexB[0]);
                     Vec2 localPointB2 = proxyB.GetVertex(cache.IndexB[1]);
-                    _localPoint = 0.5f*(localPointB1 + localPointB2);
+                    _localPoint = 0.5f * (localPointB1 + localPointB2);
                     _axis = Vec2.Cross(localPointB2 - localPointB1, 1.0f);
                     _axis.Normalize();
 
@@ -129,29 +127,29 @@ namespace Box2DX.Collision
                     float f = Vec2.Dot(dB, r);
 
                     float b = Vec2.Dot(dA, dB);
-                    float denom = a*e - b*b;
+                    float denom = a * e - b * b;
 
                     float s = 0.0f;
                     if (denom != 0.0f)
                     {
-                        s = Math.Clamp((b*f - c*e)/denom, 0.0f, 1.0f);
+                        s = Math.Clamp((b * f - c * e) / denom, 0.0f, 1.0f);
                     }
 
-                    float t = (b*s + f)/e;
+                    float t = (b * s + f) / e;
 
                     if (t < 0.0f)
                     {
                         t = 0.0f;
-                        s = Math.Clamp(-c/a, 0.0f, 1.0f);
+                        s = Math.Clamp(-c / a, 0.0f, 1.0f);
                     }
                     else if (t > 1.0f)
                     {
                         t = 1.0f;
-                        s = Math.Clamp((b - c)/a, 0.0f, 1.0f);
+                        s = Math.Clamp((b - c) / a, 0.0f, 1.0f);
                     }
 
-                    Vec2 localPointA = localPointA1 + s*(localPointA2 - localPointA1);
-                    Vec2 localPointB = localPointB1 + t*(localPointB2 - localPointB1);
+                    Vec2 localPointA = localPointA1 + s * (localPointA2 - localPointA1);
+                    Vec2 localPointB = localPointB1 + t * (localPointB2 - localPointB1);
 
                     if (s == 0.0f || s == 1.0f)
                     {
@@ -192,7 +190,7 @@ namespace Box2DX.Collision
                 }
             }
 
-            public float Evaluate(Transform transformA, Transform transformB)
+            public float Evaluate(ref Transform transformA, ref  Transform transformB)
             {
                 switch (_type)
                 {
@@ -242,11 +240,11 @@ namespace Box2DX.Collision
                 }
             }
 
-            private DistanceProxy _proxyA;
-            private DistanceProxy _proxyB;
-            private Type _type;
-            private Vec2 _localPoint;
-            private Vec2 _axis;
+            DistanceProxy _proxyA;
+            DistanceProxy _proxyB;
+            Type _type;
+            Vec2 _localPoint;
+            Vec2 _axis;
         };
 
         /// <summary>
@@ -266,10 +264,7 @@ namespace Box2DX.Collision
         /// </returns>
         public static float TimeOfImpact(TOIInput input)
         {
-            ++ToiCalls;
-
-            DistanceProxy proxyA = input.ProxyA;
-            DistanceProxy proxyB = input.ProxyB;
+            ++_toiCalls;
 
             Sweep sweepA = input.SweepA;
             Sweep sweepB = input.SweepB;
@@ -277,7 +272,7 @@ namespace Box2DX.Collision
             Box2DXDebug.Assert(sweepA.T0 == sweepB.T0);
             Box2DXDebug.Assert(1.0f - sweepA.T0 > Settings.epsilon);
 
-            float radius = proxyA._radius + proxyB._radius;
+            float radius = input.ProxyA._radius + input.ProxyB._radius;
             float tolerance = input.Tolerance;
 
             float alpha = 0.0f;
@@ -287,14 +282,13 @@ namespace Box2DX.Collision
             float target = 0.0f;
 
             // Prepare input for distance query.
-            SimplexCache cache = new SimplexCache();
-            cache.Count = 0;
-            DistanceInput distanceInput = new DistanceInput();
+            SimplexCache cache;
+            DistanceInput distanceInput;
             distanceInput.ProxyA = input.ProxyA;
             distanceInput.ProxyB = input.ProxyB;
             distanceInput.UseRadii = false;
 
-            for (;;)
+            for (; ; )
             {
                 Transform xfA, xfB;
                 sweepA.GetTransform(out xfA, alpha);
@@ -313,9 +307,9 @@ namespace Box2DX.Collision
                 }
 
                 SeparationFunction fcn = new SeparationFunction();
-                fcn.Initialize(cache, proxyA, xfA, proxyB, xfB);
+                fcn.Initialize(ref cache, ref input.ProxyA, ref xfA, ref input.ProxyB, ref xfB);
 
-                float separation = fcn.Evaluate(xfA, xfB);
+                float separation = fcn.Evaluate(ref xfA, ref xfB);
                 if (separation <= 0.0f)
                 {
                     alpha = 1.0f;
@@ -329,15 +323,15 @@ namespace Box2DX.Collision
                     // to create additional clearance.
                     if (separation > radius)
                     {
-                        target = Math.Max(radius - tolerance, 0.75f*radius);
+                        target = Math.Max(radius - tolerance, 0.75f * radius);
                     }
                     else
                     {
-                        target = Math.Max(separation - tolerance, 0.02f*radius);
+                        target = Math.Max(separation - tolerance, 0.02f * radius);
                     }
                 }
 
-                if (separation - target < 0.5f*tolerance)
+                if (separation - target < 0.5f * tolerance)
                 {
                     if (iter == 0)
                     {
@@ -383,7 +377,7 @@ namespace Box2DX.Collision
 
                     sweepA.GetTransform(out xfA, x2);
                     sweepB.GetTransform(out xfB, x2);
-                    float f2 = fcn.Evaluate(xfA, xfB);
+                    float f2 = fcn.Evaluate(ref xfA, ref xfB);
 
                     // If intervals don't overlap at t2, then we are done.
                     if (f2 >= target)
@@ -394,28 +388,27 @@ namespace Box2DX.Collision
 
                     // Determine when intervals intersect.
                     int rootIterCount = 0;
-                    for (;;)
+                    for (; ; )
                     {
                         // Use a mix of the secant rule and bisection.
                         float x;
-#warning "flag check is correct right?"
                         if ((rootIterCount & 1) != 0)
                         {
                             // Secant rule to improve convergence.
-                            x = x1 + (target - f1)*(x2 - x1)/(f2 - f1);
+                            x = x1 + (target - f1) * (x2 - x1) / (f2 - f1);
                         }
                         else
                         {
                             // Bisection to guarantee progress.
-                            x = 0.5f*(x1 + x2);
+                            x = 0.5f * (x1 + x2);
                         }
 
                         sweepA.GetTransform(out xfA, x);
                         sweepB.GetTransform(out xfB, x);
 
-                        float f = fcn.Evaluate(xfA, xfB);
+                        float f = fcn.Evaluate(ref xfA, ref xfB);
 
-                        if (Math.Abs(f - target) < 0.025f*tolerance)
+                        if (Math.Abs(f - target) < 0.025f * tolerance)
                         {
                             newAlpha = x;
                             break;
@@ -434,7 +427,7 @@ namespace Box2DX.Collision
                         }
 
                         ++rootIterCount;
-                        ++ToiRootIters;
+                        ++_toiRootIters;
 
                         if (rootIterCount == 50)
                         {
@@ -442,11 +435,11 @@ namespace Box2DX.Collision
                         }
                     }
 
-                    ToiMaxRootIters = Math.Max(ToiMaxRootIters, rootIterCount);
+                    _toiMaxRootIters = Math.Max(_toiMaxRootIters, rootIterCount);
                 }
 
                 // Ensure significant advancement.
-                if (newAlpha < (1.0f + 100.0f*Settings.epsilon)*alpha)
+                if (newAlpha < (1.0f + 100.0f * Settings.epsilon) * alpha)
                 {
                     break;
                 }
@@ -454,7 +447,7 @@ namespace Box2DX.Collision
                 alpha = newAlpha;
 
                 ++iter;
-                ++ToiIters;
+                ++_toiIters;
 
                 if (iter == k_maxIterations)
                 {
@@ -462,9 +455,12 @@ namespace Box2DX.Collision
                 }
             }
 
-            ToiMaxIters = Math.Max(ToiMaxIters, iter);
+            _toiMaxIters = Math.Max(_toiMaxIters, iter);
 
             return alpha;
         }
+
+        public static int _toiCalls, _toiIters, _toiMaxIters;
+        public static int _toiRootIters, _toiMaxRootIters;
     }
 }

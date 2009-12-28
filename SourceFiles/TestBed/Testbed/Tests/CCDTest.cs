@@ -242,13 +242,13 @@ namespace TestBed
                 _textLine += 15;
             }
 
-            if (Collision.ToiCalls > 0)
+            if (Collision._toiCalls > 0)
             {
                 OpenGLDebugDraw.DrawString(5, _textLine, string.Format("toi calls = {0}, ave toi iters = {1}, max toi iters = {2}",
-                                    Collision.ToiCalls, Collision.ToiIters / Collision.ToiCalls, Collision.ToiMaxRootIters));
+                                    Collision._toiCalls, Collision._toiIters / Collision._toiCalls, Collision._toiMaxRootIters));
                 _textLine += 15;
                 OpenGLDebugDraw.DrawString(5, _textLine, string.Format("ave toi root iters = {0}, max toi root iters = {1}",
-                    Collision.ToiRootIters / Collision.ToiCalls, Collision.ToiMaxRootIters));
+                    Collision._toiRootIters / Collision._toiCalls, Collision._toiMaxRootIters));
                 _textLine += 15;
             }
         }
