@@ -125,6 +125,7 @@
     <Compile Include="Tests\ShapeEditing.cs" />
     <Compile Include="Tests\SliderCrank.cs" />
     <Compile Include="Tests\SphereStack.cs" />
+    <Compile Include="Tests\TestEntries.cs" />
     <Compile Include="Tests\TheoJansen.cs" />
     <Compile Include="Tests\TimeOfImpact.cs" />
     <Compile Include="Tests\VaryingFriction.cs" />

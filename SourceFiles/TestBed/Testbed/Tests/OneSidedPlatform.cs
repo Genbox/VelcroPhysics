@@ -2,7 +2,7 @@
 using Box2DX.Common;
 using Box2DX.Dynamics;
 
-namespace TestBed.Tests
+namespace TestBed
 {
     public class OneSidedPlatform : Test
     {

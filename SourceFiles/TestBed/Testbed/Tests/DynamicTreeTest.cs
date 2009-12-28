@@ -4,7 +4,7 @@ using Box2DX.Common;
 using Box2DX.Dynamics;
 using Box2DX.Stuff;
 
-namespace TestBed.Tests
+namespace TestBed
 {
     public class DynamicTreeTest : Test, IRayCastEnabled, IQueryEnabled
     {

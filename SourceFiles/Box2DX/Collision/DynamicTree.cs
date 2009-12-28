@@ -313,31 +313,30 @@ namespace Box2DX.Collision
             }
         }
 
-        //TODO: uncomment
-        //public void Rebalance(int iterations)
-        //{
-        //    if (_root == NullNode)
-        //    {
-        //        return;
-        //    }
+        /// Perform some iterations to re-balance the tree.
+        public void Rebalance(int iterations)
+        {
+            if (_root == NullNode)
+            {
+                return;
+            }
 
-        //    for (int i = 0; i < iterations; ++i)
-        //    {
-        //        int node = _root;
+            for (int i = 0; i < iterations; ++i)
+            {
+                int node = _root;
 
-        //        uint bit = 0;
-        //        while (_nodes[node].IsLeaf() == false)
-        //        {
-        //            int children = _nodes[node].Child1;
-        //            node = children[(_path >> bit) & 1];
-        //            bit = (bit + 1) & (8 * sizeof(uint) - 1);
-        //        }
-        //        ++_path;
+                int bit = 0;
+                while (_nodes[node].IsLeaf() == false)
+                {
+                    node = ((_path >> bit) & 1) == 0 ? _nodes[node].Child1 : _nodes[node].Child1;
+                    bit = (bit + 1) & (8 * sizeof(uint) - 1);
+                }
+                ++_path;
 
-        //        RemoveLeaf(node);
-        //        InsertLeaf(node);
-        //    }
-        //}
+                RemoveLeaf(node);
+                InsertLeaf(node);
+            }
+        }
 
         // Compute the height of a sub-tree.
         public int ComputeHeight(int nodeId)

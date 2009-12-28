@@ -217,7 +217,6 @@ namespace TestBed
                 body.SetAngularVelocity(RandomFloat(-50.0f, 50.0f));
 
                 FixtureDef fd = new FixtureDef();
-                //TODO: Check
                 fd.radius = 0.25f;
                 fd.Density = 1.0f;
                 fd.Restitution = 0.0f;

@@ -63,7 +63,6 @@ namespace TestBed
             input.UseRadii = true;
             Collision.SimplexCache cache;
             cache.Count = 0;
-            //TODO: Check
             Collision.DistanceOutput output;
             Collision.Distance(out output, out cache, ref input);
 
