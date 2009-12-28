@@ -75,9 +75,7 @@ namespace TestBed
             OpenGLDebugDraw.DrawString(5, _textLine, string.Format("toi = {0}", toi));
             _textLine += 15;
 
-            //TODO: "get variables from TOI implementation"
-            int _maxToiIters = 0, _maxToiRootIters = 0;
-            OpenGLDebugDraw.DrawString(5, _textLine, string.Format("max toi iters = {1}, max root iters = {1}", _maxToiIters, _maxToiRootIters));
+            OpenGLDebugDraw.DrawString(5, _textLine, string.Format("max toi iters = {0}, max root iters = {1}", Collision._toiMaxIters, Collision._toiMaxRootIters));
             _textLine += 15;
 
             Vec2[] vertices = new Vec2[Box2DX.Common.Settings.MaxPolygonVertices];
