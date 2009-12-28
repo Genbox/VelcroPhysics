@@ -137,7 +137,6 @@ namespace Box2DX.Dynamics
                 // Is this contact flagged for filtering?
                 if ((c._flags & ContactFlag.FilterFlag) == ContactFlag.FilterFlag)
                 {
-                    //TODO: The following code (next 4 if blocks) use a class and thus copy by ref. It might expect to copy by value
                     // Should these bodies collide?
                     if (bodyB.ShouldCollide(bodyA) == false)
                     {

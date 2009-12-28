@@ -72,10 +72,10 @@ namespace TestBed
 
             float toi = Collision.TimeOfImpact(input);
 
-            OpenGLDebugDraw.DrawString(5, _textLine, string.Format("toi = {0}", toi));
+            _debugDraw.DrawString(5, _textLine, string.Format("toi = {0}", toi));
             _textLine += 15;
 
-            OpenGLDebugDraw.DrawString(5, _textLine, string.Format("max toi iters = {0}, max root iters = {1}", Collision._toiMaxIters, Collision._toiMaxRootIters));
+            _debugDraw.DrawString(5, _textLine, string.Format("max toi iters = {0}, max root iters = {1}", Collision._toiMaxIters, Collision._toiMaxRootIters));
             _textLine += 15;
 
             Vec2[] vertices = new Vec2[Box2DX.Common.Settings.MaxPolygonVertices];

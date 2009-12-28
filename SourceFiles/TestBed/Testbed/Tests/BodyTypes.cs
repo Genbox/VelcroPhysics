@@ -144,7 +144,7 @@ public class BodyTypes : TestBed.Test
         }
 
         base.Step(settings);
-        OpenGLDebugDraw.DrawString(5, _textLine, "Keys: (d) dynamic, (s) static, (k) kinematic");
+        _debugDraw.DrawString(5, _textLine, "Keys: (d) dynamic, (s) static, (k) kinematic");
         _textLine += 15;
     }
 

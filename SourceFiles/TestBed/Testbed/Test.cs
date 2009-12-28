@@ -129,7 +129,7 @@ namespace TestBed
         protected ContactPoint[] _points = new ContactPoint[k_maxContactPoints];
         protected int _pointCount;
         protected DestructionListener _destructionListener = new DestructionListener();
-        protected DebugDraw _debugDraw = new OpenGLDebugDraw();
+        protected OpenGLDebugDraw _debugDraw = new OpenGLDebugDraw();
         protected int _textLine;
         protected World _world;
         protected Body _bomb;
@@ -172,7 +172,7 @@ namespace TestBed
 
         public void DrawTitle(int x, int y, string text)
         {
-            OpenGLDebugDraw.DrawString(x, y, text);
+            _debugDraw.DrawString(x, y, text);
         }
 
         public virtual void Step(Settings settings)
@@ -190,7 +190,7 @@ namespace TestBed
                     timeStep = 0.0f;
                 }
 
-                OpenGLDebugDraw.DrawString(5, _textLine, "****PAUSED****");
+                _debugDraw.DrawString(5, _textLine, "****PAUSED****");
                 _textLine += 15;
             }
 
@@ -219,12 +219,12 @@ namespace TestBed
 
             if (settings.drawStats == 1)
             {
-                OpenGLDebugDraw.DrawString(5, _textLine, string.Format("bodies/contacts/joints/proxies = {0}/{1}/{2}",
+                _debugDraw.DrawString(5, _textLine, string.Format("bodies/contacts/joints/proxies = {0}/{1}/{2}",
                                                          _world.GetBodyCount(), _world.GetContactCount(),
                                                          _world.GetJointCount(), _world.GetProxyCount()));
                 _textLine += 15;
 
-                //OpenGLDebugDraw.DrawString(5, _textLine, "heap bytes = %d", b2_byteCount);
+                //_debugDraw.DrawString(5, _textLine, "heap bytes = %d", b2_byteCount);
                 //_textLine += 15;
             }
 
@@ -276,12 +276,12 @@ namespace TestBed
                     if (point.state == PointState.AddState)
                     {
                         // Add
-                        OpenGLDebugDraw.DrawPoint(point.position, 10.0f, new Color(0.3f, 0.95f, 0.3f));
+                        _debugDraw.DrawPoint(point.position, 10.0f, new Color(0.3f, 0.95f, 0.3f));
                     }
                     else if (point.state == PointState.PersistState)
                     {
                         // Persist
-                        OpenGLDebugDraw.DrawPoint(point.position, 5.0f, new Color(0.3f, 0.3f, 0.95f));
+                        _debugDraw.DrawPoint(point.position, 5.0f, new Color(0.3f, 0.3f, 0.95f));
                     }
 
                     if (settings.drawContactNormals == 1)

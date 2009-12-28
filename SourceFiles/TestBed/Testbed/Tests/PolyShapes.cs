@@ -281,11 +281,11 @@ namespace TestBed
             Color color = new Color(0.4f, 0.7f, 0.8f);
             _debugDraw.DrawCircle(callback._circle._p, callback._circle._radius, color);
 
-            OpenGLDebugDraw.DrawString(5, _textLine, "Press 1-5 to drop stuff");
+            _debugDraw.DrawString(5, _textLine, "Press 1-5 to drop stuff");
             _textLine += 15;
-            OpenGLDebugDraw.DrawString(5, _textLine, "Press 'a' to (de)activate some bodies");
+            _debugDraw.DrawString(5, _textLine, "Press 'a' to (de)activate some bodies");
             _textLine += 15;
-            OpenGLDebugDraw.DrawString(5, _textLine, "Press 'd' to destroy a body");
+            _debugDraw.DrawString(5, _textLine, "Press 'd' to destroy a body");
             _textLine += 15;
         }
 

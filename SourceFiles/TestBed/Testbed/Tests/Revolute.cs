@@ -89,7 +89,7 @@ namespace TestBed
         public override void Step(Settings settings)
         {
             base.Step(settings);
-            OpenGLDebugDraw.DrawString(5, _textLine, "Keys: (l) limits, (s) motor");
+            _debugDraw.DrawString(5, _textLine, "Keys: (l) limits, (s) motor");
             _textLine += 15;
             //float32 torque1 = m_joint1->GetMotorTorque();
             //m_debugDraw.DrawString(5, m_textLine, "Motor Torque = %4.0f, %4.0f : Motor Force = %4.0f", (float) torque1, (float) torque2, (float) force3);
