@@ -24,6 +24,18 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics
 {
+    // Point-to-point constraint
+    // Cdot = v2 - v1
+    //      = v2 + cross(w2, r2) - v1 - cross(w1, r1)
+    // J = [-I -r1_skew I r2_skew ]
+    // Identity used:
+    // w k % (rx i + ry j) = w * (-ry i + rx j)
+
+    // Angle constraint
+    // Cdot = w2 - w1
+    // J = [0 0 -1 0 0 1]
+    // K = invI1 + invI2
+    
     /// Friction joint definition.
     public class FrictionJointDef : JointDef
     {
@@ -31,27 +43,6 @@ namespace FarseerPhysics
 	    {
 		    type = JointType.Friction;
 	    }
-
-
-        // Point-to-point constraint
-        // Cdot = v2 - v1
-        //      = v2 + cross(w2, r2) - v1 - cross(w1, r1)
-        // J = [-I -r1_skew I r2_skew ]
-        // Identity used:
-        // w k % (rx i + ry j) = w * (-ry i + rx j)
-
-        // Angle constraint
-        // Cdot = w2 - w1
-        // J = [0 0 -1 0 0 1]
-        // K = invI1 + invI2
-	    public void Initialize(Body b1, Body b2,
-					    Vector2 anchor1, Vector2 anchor2)
-        {
-	        bodyA = b1;
-	        bodyB = b2;
-	        localAnchorA = bodyA.GetLocalPoint(anchor1);
-	        localAnchorB = bodyB.GetLocalPoint(anchor2);
-        }
 
 	    /// The local anchor point relative to body1's origin.
 	    public Vector2 localAnchorA;

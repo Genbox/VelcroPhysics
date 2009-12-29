@@ -39,12 +39,12 @@ namespace FarseerPhysics
     /// entities in your game.
     public abstract class DebugView
     {
-        public DebugView(World world)
+        protected DebugView(World world)
         {
             World = world;
         }
 
-        public World World
+        protected World World
         {
             get;
             set;

@@ -119,11 +119,11 @@ namespace FarseerPhysics.TestBed.Tests
             }
             if (state.IsKeyDown(Keys.Q))
             {
-                _angleB += 0.1f*FarseerPhysics.Settings.b2_pi;
+                _angleB += 0.1f*FarseerPhysics.Settings.Pi;
             }
             if (state.IsKeyDown(Keys.E))
             {
-                _angleB -= 0.1f*FarseerPhysics.Settings.b2_pi;
+                _angleB -= 0.1f*FarseerPhysics.Settings.Pi;
             }
 
             _transformB.Set(_positionB, _angleB);

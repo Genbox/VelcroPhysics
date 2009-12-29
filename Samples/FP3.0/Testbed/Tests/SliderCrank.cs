@@ -57,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     RevoluteJointDef rjd = new RevoluteJointDef();
                     rjd.Initialize(prevBody, body, new Vector2(0.0f, 5.0f));
-                    rjd.motorSpeed = 1.0f*FarseerPhysics.Settings.b2_pi;
+                    rjd.motorSpeed = 1.0f*FarseerPhysics.Settings.Pi;
                     rjd.maxMotorTorque = 10000.0f;
                     rjd.enableMotor = true;
                     _joint1 = (RevoluteJoint) _world.CreateJoint(rjd);

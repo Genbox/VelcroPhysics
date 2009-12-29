@@ -97,12 +97,6 @@ namespace FarseerPhysics
             return _vertices[bestIndex];            
         }
 
-	    /// Get the vertex count.
-	    public int GetVertexCount()
-        {
-            return _count;
-        }
-
 	    /// Get a vertex by index. Used by b2Distance.
 	    public Vector2 GetVertex(int index)
         {
@@ -110,12 +104,10 @@ namespace FarseerPhysics
             return _vertices[index];
         }
 
-	    internal FixedArray8<Vector2> _vertices;
-	    internal int _count;
+        private FixedArray8<Vector2> _vertices;
+        private int _count;
 	    internal float _radius;
-    };
-
-
+    }
 
     /// Used to warm start ComputeDistance.
     /// Set count to zero on first call.
@@ -188,7 +180,7 @@ namespace FarseerPhysics
 		    {
 			    float metric1 = cache.metric;
 			    float metric2 = GetMetric();
-			    if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < Settings.b2_epsilon)
+			    if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < Settings.Epsilon)
 			    {
 				    // Reset the simplex.
 				    _count = 0;
@@ -238,11 +230,9 @@ namespace FarseerPhysics
 					    // Origin is left of e12.
 					    return MathUtils.Cross(1.0f, e12);
 				    }
-				    else
-				    {
-					    // Origin is right of e12.
-					    return MathUtils.Cross(e12, 1.0f);
-				    }
+			    
+                    // Origin is right of e12.
+			        return MathUtils.Cross(e12, 1.0f);
 			    }
 
 		    default:
@@ -304,7 +294,7 @@ namespace FarseerPhysics
 		    }
 	    }
 
-        internal float GetMetric() 
+        private float GetMetric() 
 	    {
 		    switch (_count)
 		    {
@@ -549,24 +539,22 @@ namespace FarseerPhysics
             simplex.ReadCache(ref cache, ref input.proxyA, ref input.transformA, ref input.proxyB, ref input.transformB);
 
 	        // Get simplex vertices as an array.
-	        int k_maxIters = 20;
+	        const int k_maxIters = 20;
 
 	        // These store the vertices of the last simplex so that we
 	        // can check for duplicates and prevent cycling.
             FixedArray3<int> saveA = new FixedArray3<int>();
             FixedArray3<int> saveB = new FixedArray3<int>();
-	        int saveCount = 0;
 
-	        Vector2 closestPoint = simplex.GetClosestPoint();
+            Vector2 closestPoint = simplex.GetClosestPoint();
 	        float distanceSqr1 = closestPoint.LengthSquared();
-	        float distanceSqr2 = distanceSqr1;
 
-	        // Main iteration loop.
+            // Main iteration loop.
 	        int iter = 0;
 	        while (iter < k_maxIters)
 	        {
 		        // Copy simplex so we can identify duplicates.
-		        saveCount = simplex._count;
+		        int saveCount = simplex._count;
 		        for (int i = 0; i < saveCount; ++i)
 		        {
 			        saveA[i] = simplex._v[i].indexA;
@@ -599,7 +587,7 @@ namespace FarseerPhysics
 
 		        // Compute closest point.
 		        Vector2 p = simplex.GetClosestPoint();
-		        distanceSqr2 = p.LengthSquared();
+		        float distanceSqr2 = p.LengthSquared();
 
 		        // Ensure progress
 		        if (distanceSqr2 >= distanceSqr1)
@@ -612,7 +600,7 @@ namespace FarseerPhysics
 		        Vector2 d = simplex.GetSearchDirection();
 
 		        // Ensure the search direction is numerically fit.
-		        if (d.LengthSquared() < Settings.b2_epsilon * Settings.b2_epsilon)
+		        if (d.LengthSquared() < Settings.Epsilon * Settings.Epsilon)
 		        {
 			        // The origin is probably contained by a line segment
 			        // or triangle. Thus the shapes are overlapped.
@@ -627,7 +615,6 @@ namespace FarseerPhysics
                 SimplexVertex vertex = simplex._v[simplex._count];
                 vertex.indexA = input.proxyA.GetSupport(MathUtils.MultiplyT(ref input.transformA.R, -d));
                 vertex.wA = MathUtils.Multiply(ref input.transformA, input.proxyA.GetVertex(vertex.indexA));
-		        Vector2 wBLocal;
                 vertex.indexB = input.proxyB.GetSupport(MathUtils.MultiplyT(ref input.transformB.R, d));
                 vertex.wB = MathUtils.Multiply(ref input.transformB, input.proxyB.GetVertex(vertex.indexB));
 		        vertex.w = vertex.wB - vertex.wA;
@@ -674,7 +661,7 @@ namespace FarseerPhysics
                 float rA = input.proxyA._radius;
                 float rB = input.proxyB._radius;
 
-		        if (output.distance > rA + rB && output.distance > Settings.b2_epsilon)
+		        if (output.distance > rA + rB && output.distance > Settings.Epsilon)
 		        {
 			        // Shapes are still no overlapped.
 			        // Move the witness points to the outer surface.

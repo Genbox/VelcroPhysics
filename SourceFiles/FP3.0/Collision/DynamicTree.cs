@@ -58,7 +58,7 @@ namespace FarseerPhysics
     /// Nodes are pooled and relocatable, so we use node indices rather than pointers.
     public class DynamicTree
     {
-        internal static int NullNode = -1;
+        internal const int NullNode = -1;
 
 	    /// ructing the tree initializes the node pool.
 	    public DynamicTree()
@@ -76,8 +76,6 @@ namespace FarseerPhysics
 	        }
             _nodes[_nodeCapacity - 1].parentOrNext = NullNode;
 	        _freeList = 0;
-
-	        _path = 0;
         }
 
 	    /// Create a proxy. Provide a tight fitting AABB and a userData pointer.
@@ -86,7 +84,7 @@ namespace FarseerPhysics
 	        int proxyId = AllocateNode();
 
 	        // Fatten the aabb.
-            Vector2 r = new Vector2(Settings.b2_aabbExtension, Settings.b2_aabbExtension);
+            Vector2 r = new Vector2(Settings.AabbExtension, Settings.AabbExtension);
 	        _nodes[proxyId].aabb.lowerBound = aabb.lowerBound - r;
 	        _nodes[proxyId].aabb.upperBound = aabb.upperBound + r;
 	        _nodes[proxyId].userData = userData;
@@ -126,12 +124,12 @@ namespace FarseerPhysics
             // Extend AABB.
             AABB b = aabb;
 
-	        Vector2 r = new Vector2(Settings.b2_aabbExtension, Settings.b2_aabbExtension);
+	        Vector2 r = new Vector2(Settings.AabbExtension, Settings.AabbExtension);
             b.lowerBound = b.lowerBound - r;
             b.upperBound = b.upperBound + r;
 
             // Predict AABB displacement.
-            Vector2 d = Settings.b2_aabbMultiplier * displacement;
+            Vector2 d = Settings.AabbMultiplier * displacement;
 
             if (d.X < 0.0f)
             {
@@ -158,31 +156,6 @@ namespace FarseerPhysics
             return true;
         }
 
-	    /// Perform some iterations to re-balance the tree.
-	    public void Rebalance(int iterations)
-        {
-	        if (_root == NullNode)
-	        {
-		        return;
-	        }
-
-	        for (int i = 0; i < iterations; ++i)
-	        {
-		        int node = _root;
-
-		        int bit = 0;
-		        while (_nodes[node].IsLeaf() == false)
-		        {
-                    node = ((_path >> bit) & 1) == 0 ? _nodes[node].child1 : _nodes[node].child1;
-			        bit = (bit + 1) & (8 * sizeof(uint) - 1);
-		        }
-		        ++_path;
-
-		        RemoveLeaf(node);
-		        InsertLeaf(node);
-	        }
-        }
-
 	    /// Get proxy user data.
 	    /// @return the proxy user data or 0 if the id is invalid.
 	    public object GetUserData(int proxyId)
@@ -198,13 +171,7 @@ namespace FarseerPhysics
 	        fatAABB = _nodes[proxyId].aabb;
         }
 
-	    /// Compute the height of the tree.
-	    public int ComputeHeight()
-        {
-	        return ComputeHeight(_root);
-        }
-
-        static int k_stackSize = 128;
+        const int k_stackSize = 128;
         static int[] stack = new int[k_stackSize];
 
 	    /// Query an AABB for overlapping proxies. The callback class
@@ -530,31 +497,11 @@ namespace FarseerPhysics
 	        }
         }
 
-        private int ComputeHeight(int nodeId)
-        {
-		    if (nodeId == NullNode)
-	        {
-		        return 0;
-	        }
-
-	        Debug.Assert(0 <= nodeId && nodeId < _nodeCapacity);
-	        DynamicTreeNode node = _nodes[nodeId];
-	        int height1 = ComputeHeight(node.child1);
-	        int height2 = ComputeHeight(node.child2);
-	        return 1 + Math.Max(height1, height2);
-        }
-
 	    int _root;
-
 	    DynamicTreeNode[] _nodes;
 	    int _nodeCount;
 	    int _nodeCapacity;
-
 	    int _freeList;
-
-	    /// This is used incrementally traverse the tree for re-balancing.
-	    int _path;
-
         int _insertionCount;
     }
 }

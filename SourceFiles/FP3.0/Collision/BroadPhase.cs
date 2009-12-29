@@ -29,7 +29,6 @@ namespace FarseerPhysics
     {
         public int proxyIdA;
         public int proxyIdB;
-        public int next;
 
         public int CompareTo(Pair other)
         {
@@ -37,13 +36,15 @@ namespace FarseerPhysics
             {
                 return -1;
             }
-            else if (proxyIdA == other.proxyIdA)
+            
+            if (proxyIdA == other.proxyIdA)
             {
                 if (proxyIdB < other.proxyIdB)
                 {
                     return -1;
                 }
-                else if (proxyIdB == other.proxyIdB)
+                
+                if (proxyIdB == other.proxyIdB)
                 {
                     return 0;
                 }
@@ -58,7 +59,7 @@ namespace FarseerPhysics
     /// It is up to the client to consume the new pairs and to track subsequent overlap.
     public class BroadPhase
     {
-        internal static int NullProxy = -1;
+        internal const int NullProxy = -1;
 
 	    public BroadPhase()
         {
@@ -199,13 +200,7 @@ namespace FarseerPhysics
 	        _tree.RayCast(callback, ref input);
         }
 
-	    /// Compute the height of the embedded tree.
-	    public int ComputeHeight()
-        {
-            return _tree.ComputeHeight();
-        }
-
-	    internal void BufferMove(int proxyId)
+        private void BufferMove(int proxyId)
         {
 	        if (_moveCount == _moveCapacity)
 	        {
@@ -219,7 +214,7 @@ namespace FarseerPhysics
 	        ++_moveCount;
         }
 
-	    internal void UnBufferMove(int proxyId)
+        private void UnBufferMove(int proxyId)
         {
 	        for (int i = 0; i < _moveCount; ++i)
 	        {
@@ -231,7 +226,7 @@ namespace FarseerPhysics
 	        }
         }
 
-        internal bool QueryCallback(int proxyId)
+        private bool QueryCallback(int proxyId)
         {
 	        // A proxy cannot form a pair with itself.
 	        if (proxyId == _queryProxyId)
@@ -255,20 +250,15 @@ namespace FarseerPhysics
             return true;
         }
 
-	    internal DynamicTree _tree = new DynamicTree();
-
-        internal int _proxyCount;
-
-	    internal int[] _moveBuffer;
-	    internal int _moveCapacity;
-	    internal int _moveCount;
-
-	    internal Pair[] _pairBuffer;
-	    internal int _pairCapacity;
-	    internal int _pairCount;
-
-	    internal int _queryProxyId;
-
-        Func<int, bool> _queryCallback;
+        private DynamicTree _tree = new DynamicTree();
+        private int _proxyCount;
+        private int[] _moveBuffer;
+        private int _moveCapacity;
+        private int _moveCount;
+        private Pair[] _pairBuffer;
+        private int _pairCapacity;
+        private int _pairCount;
+        private int _queryProxyId;
+        private Func<int, bool> _queryCallback;
     }
 }

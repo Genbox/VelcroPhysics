@@ -76,7 +76,6 @@ namespace FarseerPhysics
 	    public void GetWorldManifold(out WorldManifold worldManifold)
         {
             Body bodyA = _fixtureA.GetBody();
-	        Body bodyB = _fixtureB.GetBody();
 	        Shape shapeA = _fixtureA.GetShape();
 	        Shape shapeB = _fixtureB.GetShape();
 
@@ -304,12 +303,12 @@ namespace FarseerPhysics
             }
 
 
-            if (wasTouching == false && touching == true)
+            if (wasTouching == false && touching)
 	        {
 		        listener.BeginContact(this);
 	        }
 
-            if (wasTouching == true && touching == false)
+            if (wasTouching && touching == false)
 	        {
 		        listener.EndContact(this);
 	        }
@@ -320,7 +319,7 @@ namespace FarseerPhysics
 	        }
         }
 
-	    internal abstract void Evaluate();
+        protected abstract void Evaluate();
 
         internal float ComputeTOI(ref Sweep sweepA, ref Sweep sweepB)
         {
@@ -329,12 +328,12 @@ namespace FarseerPhysics
 	        input.proxyB.Set(_fixtureB.GetShape());
 	        input.sweepA = sweepA;
 	        input.sweepB = sweepB;
-	        input.tolerance = Settings.b2_linearSlop;
+	        input.tolerance = Settings.LinearSlop;
 
 	        return TimeOfImpact.CalculateTimeOfImpact(ref input);
         }
 
-	    internal static Func<Fixture, Fixture, Contact>[,]  s_registers = new Func<Fixture, Fixture, Contact>[,] 
+        private static Func<Fixture, Fixture, Contact>[,]  s_registers = new Func<Fixture, Fixture, Contact>[,] 
         {
             { 
               (f1, f2) => { return new CircleContact(f1, f2); }, 
@@ -359,10 +358,8 @@ namespace FarseerPhysics
                 // primary
                 return s_registers[(int)type1, (int)type2](fixtureA, fixtureB);
 	        }
-	        else
-	        {
-                return s_registers[(int)type1, (int)type2](fixtureB, fixtureA);
-	        }
+        
+            return s_registers[(int)type1, (int)type2](fixtureB, fixtureA);
         }
 
 	    internal ContactFlags _flags;

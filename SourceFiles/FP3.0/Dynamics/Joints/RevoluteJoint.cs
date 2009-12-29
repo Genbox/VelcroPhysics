@@ -287,7 +287,7 @@ namespace FarseerPhysics
 	        if (_enableLimit)
 	        {
 		        float jointAngle = b2._sweep.a - b1._sweep.a - _referenceAngle;
-		        if (Math.Abs(_upperAngle - _lowerAngle) < 2.0f * Settings.b2_angularSlop)
+		        if (Math.Abs(_upperAngle - _lowerAngle) < 2.0f * Settings.AngularSlop)
 		        {
 			        _limitState = LimitState.Equal;
 		        }
@@ -461,7 +461,7 @@ namespace FarseerPhysics
 	        Body b2 = _bodyB;
 
 	        float angularError = 0.0f;
-	        float positionError = 0.0f;
+	        float positionError;
 
 	        // Solve angular limit raint.
 	        if (_enableLimit && _limitState != LimitState.Inactive)
@@ -472,7 +472,7 @@ namespace FarseerPhysics
 		        if (_limitState == LimitState.Equal)
 		        {
 			        // Prevent large angular corrections
-			        float C = MathUtils.Clamp(angle - _lowerAngle, -Settings.b2_maxAngularCorrection, Settings.b2_maxAngularCorrection);
+			        float C = MathUtils.Clamp(angle - _lowerAngle, -Settings.MaxAngularCorrection, Settings.MaxAngularCorrection);
 			        limitImpulse = -_motorMass * C;
 			        angularError = Math.Abs(C);
 		        }
@@ -482,7 +482,7 @@ namespace FarseerPhysics
 			        angularError = -C;
 
 			        // Prevent large angular corrections and allow some slop.
-			        C = MathUtils.Clamp(C + Settings.b2_angularSlop, -Settings.b2_maxAngularCorrection, 0.0f);
+			        C = MathUtils.Clamp(C + Settings.AngularSlop, -Settings.MaxAngularCorrection, 0.0f);
 			        limitImpulse = -_motorMass * C;
 		        }
 		        else if (_limitState == LimitState.AtUpper)
@@ -491,7 +491,7 @@ namespace FarseerPhysics
 			        angularError = C;
 
 			        // Prevent large angular corrections and allow some slop.
-			        C = MathUtils.Clamp(C - Settings.b2_angularSlop, 0.0f, Settings.b2_maxAngularCorrection);
+			        C = MathUtils.Clamp(C - Settings.AngularSlop, 0.0f, Settings.MaxAngularCorrection);
 			        limitImpulse = -_motorMass * C;
 		        }
 
@@ -518,16 +518,16 @@ namespace FarseerPhysics
 		        float invI1 = b1._invI, invI2 = b2._invI;
 
 		        // Handle large detachment.
-		        float k_allowedStretch = 10.0f * Settings.b2_linearSlop;
+		        const float k_allowedStretch = 10.0f * Settings.LinearSlop;
 		        if (C.LengthSquared() > k_allowedStretch * k_allowedStretch)
 		        {
 			        // Use a particle solution (no rotation).
 			        Vector2 u = C; u.Normalize();
 			        float k = invMass1 + invMass2;
-			        Debug.Assert(k > Settings.b2_epsilon);
+			        Debug.Assert(k > Settings.Epsilon);
 			        float m = 1.0f / k;
 			        Vector2 impulse2 = m * (-C);
-			        float k_beta = 0.5f;
+			        const float k_beta = 0.5f;
 			        b1._sweep.c -= k_beta * invMass1 * impulse2;
 			        b2._sweep.c += k_beta * invMass2 * impulse2;
 
@@ -555,25 +555,25 @@ namespace FarseerPhysics
 		        b2.SynchronizeTransform();
 	        }
         	
-	        return positionError <= Settings.b2_linearSlop && angularError <= Settings.b2_angularSlop;
+	        return positionError <= Settings.LinearSlop && angularError <= Settings.AngularSlop;
         }
 
         public Vector2 _localAnchor1;	// relative
         public Vector2 _localAnchor2;
-        public Vector3 _impulse;
-        public float _motorImpulse;
+        private Vector3 _impulse;
+        private float _motorImpulse;
 
-        public Mat33 _mass;			// effective mass for point-to-point raint.
-        public float _motorMass;	// effective mass for motor/limit angular raint.
+        private Mat33 _mass;			// effective mass for point-to-point raint.
+        private float _motorMass;	// effective mass for motor/limit angular raint.
 
-        public bool _enableMotor;
-        public float _maxMotorTorque;
-        public float _motorSpeed;
+        private bool _enableMotor;
+        private float _maxMotorTorque;
+        private float _motorSpeed;
 
-        public bool _enableLimit;
-        public float _referenceAngle;
-        public float _lowerAngle;
-        public float _upperAngle;
-        public LimitState _limitState;
+        private bool _enableLimit;
+        private float _referenceAngle;
+        private float _lowerAngle;
+        private float _upperAngle;
+        private LimitState _limitState;
     };
 }

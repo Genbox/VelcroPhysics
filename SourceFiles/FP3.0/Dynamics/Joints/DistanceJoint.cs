@@ -175,7 +175,7 @@ namespace FarseerPhysics
 
 	        // Handle singularity.
 	        float length = _u.Length();
-	        if (length > Settings.b2_linearSlop)
+	        if (length > Settings.LinearSlop)
 	        {
 		        _u *= 1.0f / length;
 	        }
@@ -187,7 +187,7 @@ namespace FarseerPhysics
 	        float cr1u = MathUtils.Cross(r1, _u);
 	        float cr2u = MathUtils.Cross(r2, _u);
 	        float invMass = b1._invMass + b1._invI * cr1u * cr1u + b2._invMass + b2._invI * cr2u * cr2u;
-	        Debug.Assert(invMass > Settings.b2_epsilon);
+	        Debug.Assert(invMass > Settings.Epsilon);
             _mass = invMass != 0.0f ? 1.0f / invMass : 0.0f;
 
 	        if (_frequencyHz > 0.0f)
@@ -195,7 +195,7 @@ namespace FarseerPhysics
 		        float C = length - _length;
 
 		        // Frequency
-		        float omega = 2.0f * Settings.b2_pi * _frequencyHz;
+		        float omega = 2.0f * Settings.Pi * _frequencyHz;
 
 		        // Damping coefficient
 		        float d = 2.0f * _mass * _dampingRatio * omega;
@@ -283,7 +283,7 @@ namespace FarseerPhysics
 
             d /= length;
 	        float C = length - _length;
-	        C = MathUtils.Clamp(C, -Settings.b2_maxLinearCorrection, Settings.b2_maxLinearCorrection);
+	        C = MathUtils.Clamp(C, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
 
 	        float impulse = -_mass * C;
 	        _u = d;
@@ -297,7 +297,7 @@ namespace FarseerPhysics
 	        b1.SynchronizeTransform();
 	        b2.SynchronizeTransform();
 
-	        return Math.Abs(C) < Settings.b2_linearSlop;
+	        return Math.Abs(C) < Settings.LinearSlop;
         }
 
 	    internal Vector2 _localAnchor1;

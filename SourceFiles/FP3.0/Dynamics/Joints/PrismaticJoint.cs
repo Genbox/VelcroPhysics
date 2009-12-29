@@ -362,7 +362,7 @@ namespace FarseerPhysics
 
 		        _motorMass = _invMassA + _invMassB + _invIA * _a1 * _a1 + _invIB * _a2 * _a2;
                 
-                if (_motorMass > Settings.b2_epsilon)
+                if (_motorMass > Settings.Epsilon)
                 {
                     _motorMass = 1.0f / _motorMass;
                 }
@@ -394,7 +394,7 @@ namespace FarseerPhysics
 	        if (_enableLimit)
 	        {
 		        float jointTranslation = Vector2.Dot(_axis, d);
-		        if (Math.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.b2_linearSlop)
+		        if (Math.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
 		        {
 			        _limitState = LimitState.Equal;
 		        }
@@ -559,7 +559,7 @@ namespace FarseerPhysics
 	        float a2 = b2._sweep.a;
 
 	        // Solve linear limit raint.
-	        float linearError = 0.0f, angularError = 0.0f;
+	        float linearError = 0.0f;
 	        bool active = false;
 	        float C2 = 0.0f;
 
@@ -578,24 +578,24 @@ namespace FarseerPhysics
 		        _a2 = MathUtils.Cross(r2, _axis);
 
 		        float translation = Vector2.Dot(_axis, d);
-		        if (Math.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.b2_linearSlop)
+		        if (Math.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
 		        {
 			        // Prevent large angular corrections
-			        C2 = MathUtils.Clamp(translation, -Settings.b2_maxLinearCorrection, Settings.b2_maxLinearCorrection);
+			        C2 = MathUtils.Clamp(translation, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
 			        linearError = Math.Abs(translation);
 			        active = true;
 		        }
 		        else if (translation <= _lowerTranslation)
 		        {
 			        // Prevent large linear corrections and allow some slop.
-			        C2 = MathUtils.Clamp(translation - _lowerTranslation + Settings.b2_linearSlop, -Settings.b2_maxLinearCorrection, 0.0f);
+			        C2 = MathUtils.Clamp(translation - _lowerTranslation + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
 			        linearError = _lowerTranslation - translation;
 			        active = true;
 		        }
 		        else if (translation >= _upperTranslation)
 		        {
 			        // Prevent large linear corrections and allow some slop.
-			        C2 = MathUtils.Clamp(translation - _upperTranslation - Settings.b2_linearSlop, 0.0f, Settings.b2_maxLinearCorrection);
+			        C2 = MathUtils.Clamp(translation - _upperTranslation - Settings.LinearSlop, 0.0f, Settings.MaxLinearCorrection);
 			        linearError = translation - _upperTranslation;
 			        active = true;
 		        }
@@ -610,7 +610,7 @@ namespace FarseerPhysics
             Vector2 C1 = new Vector2(Vector2.Dot(_perp, d), a2 - a1 - _refAngle);
 	        
 	        linearError = Math.Max(linearError, Math.Abs(C1.X));
-	        angularError = Math.Abs(C1.Y);
+	        float angularError = Math.Abs(C1.Y);
 
 	        if (active)
 	        {
@@ -666,32 +666,33 @@ namespace FarseerPhysics
 	        b1.SynchronizeTransform();
 	        b2.SynchronizeTransform();
         	
-	        return linearError <= Settings.b2_linearSlop && angularError <= Settings.b2_angularSlop;
+	        return linearError <= Settings.LinearSlop && angularError <= Settings.AngularSlop;
         }
 
 	    public Vector2 _localAnchor1;
         public Vector2 _localAnchor2;
         public Vector2 _localXAxis1;
-        public Vector2 _localYAxis1;
-        public float _refAngle;
+        private Vector2 _localYAxis1;
+        private float _refAngle;
 
-        public Vector2 _axis, _perp;
-        public float _s1, _s2;
-        public float _a1, _a2;
+        private Vector2 _axis;
+        private Vector2 _perp;
+        private float _s1, _s2;
+        private float _a1, _a2;
 
-        public Mat33 _K;
-        public Vector3 _impulse;
+        private Mat33 _K;
+        private Vector3 _impulse;
 
-        public float _motorMass;			// effective mass for motor/limit translational raint.
-        public float _motorImpulse;
+        private float _motorMass;			// effective mass for motor/limit translational raint.
+        private float _motorImpulse;
 
-        public float _lowerTranslation;
-        public float _upperTranslation;
-        public float _maxMotorForce;
-        public float _motorSpeed;
+        private float _lowerTranslation;
+        private float _upperTranslation;
+        private float _maxMotorForce;
+        private float _motorSpeed;
 
-        public bool _enableLimit;
-	    public bool _enableMotor;
-        public LimitState _limitState;
-    };
+        private bool _enableLimit;
+        private bool _enableMotor;
+        private LimitState _limitState;
+    }
 }

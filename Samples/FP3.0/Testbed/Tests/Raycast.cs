@@ -173,7 +173,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _debugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
             }
 
-            _angle += 0.25f*FarseerPhysics.Settings.b2_pi/180.0f;
+            _angle += 0.25f*FarseerPhysics.Settings.Pi/180.0f;
         }
 
         private void Create(int index)
@@ -189,7 +189,7 @@ namespace FarseerPhysics.TestBed.Tests
             float x = Rand.RandomFloat(-10.0f, 10.0f);
             float y = Rand.RandomFloat(0.0f, 20.0f);
             bd.position = new Vector2(x, y);
-            bd.angle = Rand.RandomFloat(-FarseerPhysics.Settings.b2_pi, FarseerPhysics.Settings.b2_pi);
+            bd.angle = Rand.RandomFloat(-FarseerPhysics.Settings.Pi, FarseerPhysics.Settings.Pi);
 
             if (index == 4)
             {

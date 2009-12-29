@@ -30,7 +30,7 @@ namespace FarseerPhysics
 	    public PolygonShape()
         {
 	        ShapeType = ShapeType.Polygon;
-	        _radius = Settings.b2_polygonRadius;
+	        _radius = Settings.PolygonRadius;
 	        _vertexCount = 0;
 	        _centroid = Vector2.Zero;
         }
@@ -53,7 +53,7 @@ namespace FarseerPhysics
 	    /// It is assumed that the exterior is the the right of each edge.
         public void Set(Vector2[] vertices, int count)
         {
-            Debug.Assert(2 <= count && count <= Settings.b2_maxPolygonVertices);
+            Debug.Assert(2 <= count && count <= Settings.MaxPolygonVertices);
             _vertexCount = count;
 
             // Copy vertices.
@@ -68,7 +68,7 @@ namespace FarseerPhysics
 	            int i1 = i;
 	            int i2 = i + 1 < _vertexCount ? i + 1 : 0;
 	            Vector2 edge = _vertices[i2] - _vertices[i1];
-	            Debug.Assert(edge.LengthSquared() > Settings.b2_epsilon * Settings.b2_epsilon);
+	            Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
                 
                 var temp = MathUtils.Cross(edge, 1.0f);
                 temp.Normalize();
@@ -153,7 +153,7 @@ namespace FarseerPhysics
 	        }
 
 	        // Centroid
-	        Debug.Assert(area > Settings.b2_epsilon);
+	        Debug.Assert(area > Settings.Epsilon);
 	        c *= 1.0f / area;
 	        return c;
         }
@@ -284,7 +284,7 @@ namespace FarseerPhysics
 			        }
 		        }
 
-		        if (upper < lower - Settings.b2_epsilon)
+		        if (upper < lower - Settings.Epsilon)
 		        {
                     return false;
 		        }
@@ -401,58 +401,12 @@ namespace FarseerPhysics
 	        massData.mass = density * area;
 
 	        // Center of mass
-	        Debug.Assert(area > Settings.b2_epsilon);
+	        Debug.Assert(area > Settings.Epsilon);
 	        center *= 1.0f / area;
 	        massData.center = center;
 
 	        // Inertia tensor relative to the local origin.
 	        massData.i = density * I;
-        }
-
-	    /// Get the supporting vertex index in the given direction.
-	    public override int GetSupport(Vector2 d)
-        {
-	        int bestIndex = 0;
-	        float bestValue = Vector2.Dot(_vertices[0], d);
-	        for (int i = 1; i < _vertexCount; ++i)
-	        {
-		        float value = Vector2.Dot(_vertices[i], d);
-		        if (value > bestValue)
-		        {
-			        bestIndex = i;
-			        bestValue = value;
-		        }
-	        }
-
-	        return bestIndex;
-        }
-
-	    /// Get the supporting vertex in the given direction.
-        public override Vector2 GetSupportVertex(Vector2 d)
-        {
-	        int bestIndex = 0;
-	        float bestValue = Vector2.Dot(_vertices[0], d);
-	        for (int i = 1; i < _vertexCount; ++i)
-	        {
-		        float value = Vector2.Dot(_vertices[i], d);
-		        if (value > bestValue)
-		        {
-			        bestIndex = i;
-			        bestValue = value;
-		        }
-	        }
-
-	        return _vertices[bestIndex];
-        }
-
-	    /// Get the vertex count.
-        public override int GetVertexCount() { return _vertexCount; }
-
-	    /// Get a vertex by index.
-        public override Vector2 GetVertex(int index)
-        {
-	        Debug.Assert(0 <= index && index < _vertexCount);
-	        return _vertices[index];
         }
 
         public Vector2 _centroid;

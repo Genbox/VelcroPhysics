@@ -179,7 +179,7 @@ namespace FarseerPhysics.DebugViewXNA
                     {
                         PolygonShape poly = (PolygonShape)fixture.GetShape();
                         int vertexCount = poly._vertexCount;
-                        Debug.Assert(vertexCount <= Settings.b2_maxPolygonVertices);
+                        Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         FixedArray8<Vector2> vertices = new FixedArray8<Vector2>();
 
                         for (int i = 0; i < vertexCount; ++i)

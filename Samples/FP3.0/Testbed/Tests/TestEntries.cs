@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using FarseerPhysics.TestBed.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
@@ -29,11 +28,11 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {
+                new TestEntry() {name = "Pyramid", createFcn = Pyramid.Create},
                 new TestEntry() {name = "Polygon Shapes", createFcn = PolyShapes.Create},
                 new TestEntry() {name = "Apply Force", createFcn = ApplyForce.Create},
                 new TestEntry() {name = "Cantilever", createFcn = Cantilever.Create},
                 new TestEntry() {name = "Body Types", createFcn = BodyTypes.Create},
-                new TestEntry() {name = "Pyramid", createFcn = Pyramid.Create},
                 new TestEntry() {name = "Bridge", createFcn = Bridge.Create},
                 new TestEntry() {name = "CCD Test", createFcn = CCDTest.Create},
                 new TestEntry() {name = "Chain", createFcn = Chain.Create},

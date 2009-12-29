@@ -267,20 +267,19 @@ namespace FarseerPhysics
 	        Sweep sweepB = input.sweepB;
 
 	        Debug.Assert(sweepA.t0 == sweepB.t0);
-	        Debug.Assert(1.0f - sweepA.t0 > Settings.b2_epsilon);
+	        Debug.Assert(1.0f - sweepA.t0 > Settings.Epsilon);
 
             float radius = input.proxyA._radius + input.proxyB._radius;
 	        float tolerance = input.tolerance;
 
 	        float alpha = 0.0f;
 
-	        int k_maxIterations = 1000;	// TODO_ERIN b2Settings
+            const int k_maxIterations = 1000; // TODO_ERIN b2Settings
 	        int iter = 0;
 	        float target = 0.0f;
 
 	        // Prepare input for distance query.
-            SimplexCache cache;
-	        DistanceInput distanceInput;
+            DistanceInput distanceInput;
             distanceInput.proxyA = input.proxyA;
             distanceInput.proxyB = input.proxyB;
 	        distanceInput.useRadii = false;
@@ -295,7 +294,8 @@ namespace FarseerPhysics
 		        distanceInput.transformA = xfA;
 		        distanceInput.transformB = xfB;
 		        DistanceOutput distanceOutput;
-		        Distance.ComputeDistance(out distanceOutput, out cache, ref distanceInput);
+	            SimplexCache cache;
+	            Distance.ComputeDistance(out distanceOutput, out cache, ref distanceInput);
 
 		        if (distanceOutput.distance <= 0.0f)
 		        {
@@ -435,7 +435,7 @@ namespace FarseerPhysics
 		        }
 
 		        // Ensure significant advancement.
-		        if (newAlpha < (1.0f + 100.0f * Settings.b2_epsilon) * alpha)
+		        if (newAlpha < (1.0f + 100.0f * Settings.Epsilon) * alpha)
 		        {
 			        break;
 		        }

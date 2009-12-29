@@ -26,93 +26,93 @@ namespace FarseerPhysics
 {
     public static class Settings
     {
-        public static float b2_maxFloat = 3.402823466e+38f;
-        public static float b2_epsilon = 1.192092896e-07f;
-        public static float b2_pi = 3.14159265359f;
+        public const float MaxFloat = 3.402823466e+38f;
+        public const float Epsilon = 1.192092896e-07f;
+        public const float Pi = 3.14159265359f;
 
         /// The maximum number of contact points between two convex shapes.
-        public static int b2_maxManifoldPoints = 2;
+        public const int MaxManifoldPoints = 2;
 
         /// The maximum number of vertices on a convex polygon.
-        public static int b2_maxPolygonVertices = 8;
+        public const int MaxPolygonVertices = 8;
 
         /// This is used to fatten AABBs in the dynamic tree. This allows proxies
         /// to move by a small amount without triggering a tree adjustment.
         /// This is in meters.
-        public static float b2_aabbExtension = 0.1f;
+        public const float AabbExtension = 0.1f;
 
         /// This is used to fatten AABBs in the dynamic tree. This is used to predict
         /// the future position based on the current displacement.
         /// This is a dimensionless multiplier.
-        public static float b2_aabbMultiplier = 2.0f;
+        public const float AabbMultiplier = 2.0f;
 
         /// A small length used as a collision and raint tolerance. Usually it is
         /// chosen to be numerically significant, but visually insignificant.
-        public static float b2_linearSlop = 0.005f;
+        public const float LinearSlop = 0.005f;
 
         /// A small angle used as a collision and raint tolerance. Usually it is
         /// chosen to be numerically significant, but visually insignificant.
-        public static float b2_angularSlop = (2.0f / 180.0f * b2_pi);
+        public const float AngularSlop = (2.0f / 180.0f * Pi);
 
         /// The radius of the polygon/edge shape skin. This should not be modified. Making
         /// this smaller means polygons will have and insufficient for continuous collision.
         /// Making it larger may create artifacts for vertex collision.
-        public static float b2_polygonRadius = (2.0f * b2_linearSlop);
+        public const float PolygonRadius = (2.0f * LinearSlop);
 
         // Dynamics
 
         /// Maximum number of contacts to be handled to solve a TOI island.
-        public static int b2_maxTOIContactsPerIsland = 32;
+        public const int MaxTOIContactsPerIsland = 32;
 
         /// Maximum number of joints to be handled to solve a TOI island.
-        public static int b2_maxTOIJointsPerIsland = 32;
+        public const int MaxTOIJointsPerIsland = 32;
 
         /// A velocity threshold for elastic collisions. Any collision with a relative linear
         /// velocity below this threshold will be treated as inelastic.
-        public static float b2_velocityThreshold = 1.0f;
+        public const float VelocityThreshold = 1.0f;
 
         /// The maximum linear position correction used when solving constraints. This helps to
         /// prevent overshoot.
-        public static float b2_maxLinearCorrection = 0.2f;
+        public const float MaxLinearCorrection = 0.2f;
 
         /// The maximum angular position correction used when solving constraints. This helps to
         /// prevent overshoot.
-        public static float b2_maxAngularCorrection = (8.0f / 180.0f * b2_pi);
+        public const float MaxAngularCorrection = (8.0f / 180.0f * Pi);
 
         /// The maximum linear velocity of a body. This limit is very large and is used
         /// to prevent numerical problems. You shouldn't need to adjust this.
-        public static float b2_maxTranslation = 2.0f;
-        public static float b2_maxTranslationSquared = (b2_maxTranslation * b2_maxTranslation);
+        public const float MaxTranslation = 2.0f;
+        public const float MaxTranslationSquared = (MaxTranslation * MaxTranslation);
 
         /// The maximum angular velocity of a body. This limit is very large and is used
         /// to prevent numerical problems. You shouldn't need to adjust this.
-        public static float b2_maxRotation = (0.5f * b2_pi);
-        public static float b2_maxRotationSquared = (b2_maxRotation * b2_maxRotation);
+        public const float MaxRotation = (0.5f * Pi);
+        public const float MaxRotationSquared = (MaxRotation * MaxRotation);
 
         /// This scale factor controls how fast overlap is resolved. Ideally this would be 1 so
         /// that overlap is removed in one time step. However using values close to 1 often lead
         /// to overshoot.
-        public static float b2_contactBaumgarte = 0.2f;
+        public const float ContactBaumgarte = 0.2f;
 
         // Sleep
 
         /// The time that a body must be still before it will go to sleep.
-        public static float b2_timeToSleep = 0.5f;
+        public const float TimeToSleep = 0.5f;
 
         /// A body cannot sleep if its linear velocity is above this tolerance.
-        public static float b2_linearSleepTolerance = 0.01f;
+        public const float LinearSleepTolerance = 0.01f;
 
         /// A body cannot sleep if its angular velocity is above this tolerance.
-        public static float b2_angularSleepTolerance = (2.0f / 180.0f * b2_pi);
+        public const float AngularSleepTolerance = (2.0f / 180.0f * Pi);
 
         /// Friction mixing law. Feel free to customize this.
-        public static float b2MixFriction(float friction1, float friction2)
+        public static float MixFriction(float friction1, float friction2)
         {
-	        return (float)Math.Sqrt((double)(friction1 * friction2));
+	        return (float)Math.Sqrt((friction1 * friction2));
         }
 
         /// Restitution mixing law. Feel free to customize this.
-        public static float b2MixRestitution(float restitution1, float restitution2)
+        public static float MixRestitution(float restitution1, float restitution2)
         {
 	        return restitution1 > restitution2 ? restitution1 : restitution2;
         }

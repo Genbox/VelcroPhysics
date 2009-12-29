@@ -40,8 +40,6 @@ namespace FarseerPhysics
 
     public class ContactSolver
     {
-        public ContactSolver() { }
-
         public void Reset(ref TimeStep step, List<Contact> contacts)
         {
             _step = step;
@@ -71,8 +69,8 @@ namespace FarseerPhysics
                 Manifold manifold;
                 contact.GetManifold(out manifold);
 
-		        float friction = Settings.b2MixFriction(fixtureA.GetFriction(), fixtureB.GetFriction());
-                float restitution = Settings.b2MixRestitution(fixtureA.GetRestitution(), fixtureB.GetRestitution());
+		        float friction = Settings.MixFriction(fixtureA.GetFriction(), fixtureB.GetFriction());
+                float restitution = Settings.MixRestitution(fixtureA.GetRestitution(), fixtureB.GetRestitution());
 
 		        Vector2 vA = bodyA._linearVelocity;
 		        Vector2 vB = bodyB._linearVelocity;
@@ -122,13 +120,13 @@ namespace FarseerPhysics
 
 			        float kNormal = bodyA._invMass + bodyB._invMass + bodyA._invI * rnA + bodyB._invI * rnB;
 
-			        Debug.Assert(kNormal > Settings.b2_epsilon);
+			        Debug.Assert(kNormal > Settings.Epsilon);
 			        ccp.normalMass = 1.0f / kNormal;
 
 			        float kEqualized = bodyA._mass * bodyA._invMass + bodyB._mass * bodyB._invMass;
 			        kEqualized += bodyA._mass * bodyA._invI * rnA + bodyB._mass * bodyB._invI * rnB;
 
-			        Debug.Assert(kEqualized > Settings.b2_epsilon);
+			        Debug.Assert(kEqualized > Settings.Epsilon);
 			        ccp.equalizedMass = 1.0f / kEqualized;
 
 #if MATH_OVERLOADS
@@ -146,13 +144,13 @@ namespace FarseerPhysics
                     rtB *= rtB;
 			        float kTangent = bodyA._invMass + bodyB._invMass + bodyA._invI * rtA + bodyB._invI * rtB;
 
-			        Debug.Assert(kTangent > Settings.b2_epsilon);
+			        Debug.Assert(kTangent > Settings.Epsilon);
 			        ccp.tangentMass = 1.0f /  kTangent;
 
 			        // Setup a velocity bias for restitution.
 			        ccp.velocityBias = 0.0f;
 			        float vRel = Vector2.Dot(cc.normal, vB + MathUtils.Cross(wB, ccp.rB) - vA - MathUtils.Cross(wA, ccp.rA));
-			        if (vRel < -Settings.b2_velocityThreshold)
+			        if (vRel < -Settings.VelocityThreshold)
 			        {
 				        ccp.velocityBias = -cc.restitution * vRel;
 			        }
@@ -181,7 +179,7 @@ namespace FarseerPhysics
 			        float k12 = invMassA + invMassB + invIA * rn1A * rn2A + invIB * rn1B * rn2B;
 
 			        // Ensure a reasonable condition number.
-			        float k_maxConditionNumber = 100.0f;
+			        const float k_maxConditionNumber = 100.0f;
 			        if (k11 * k11 < k_maxConditionNumber * (k11 * k22 - k12 * k12))
 			        {
 				        // K is safe to invert.
@@ -526,7 +524,6 @@ namespace FarseerPhysics
 				        //
 				        x.X = - cp1.normalMass * b.X;
 				        x.Y = 0.0f;
-				        vn1 = 0.0f;
 				        vn2 = c.K.col1.Y * x.X + b.Y;
 
 				        if (x.X >= 0.0f && vn2 >= 0.0f)
@@ -586,7 +583,6 @@ namespace FarseerPhysics
 				        x.X = 0.0f;
 				        x.Y = - cp2.normalMass * b.Y;
 				        vn1 = c.K.col2.X * x.Y + b.X;
-				        vn2 = 0.0f;
 
 				        if (x.Y >= 0.0f && vn1 >= 0.0f)
 				        {
@@ -759,7 +755,7 @@ namespace FarseerPhysics
 			        minSeparation = Math.Min(minSeparation, separation);
 
 			        // Prevent large corrections and allow slop.
-                    float C = MathUtils.Clamp(baumgarte *  (separation + Settings.b2_linearSlop), -Settings.b2_maxLinearCorrection, 0.0f);
+                    float C = MathUtils.Clamp(baumgarte *  (separation + Settings.LinearSlop), -Settings.MaxLinearCorrection, 0.0f);
 
 			        // Compute normal impulse
 			        float impulse = -ccp.equalizedMass * C;
@@ -787,14 +783,14 @@ namespace FarseerPhysics
 		        }
 	        }
 
-	        // We can't expect minSpeparation >= -Settings.b2_linearSlop because we don't
-	        // push the separation above -Settings.b2_linearSlop.
-	        return minSeparation >= -1.5f * Settings.b2_linearSlop;
+	        // We can't expect minSpeparation >= -Settings.LinearSlop because we don't
+	        // push the separation above -Settings.LinearSlop.
+	        return minSeparation >= -1.5f * Settings.LinearSlop;
         }
 
-        public TimeStep _step;
+        private TimeStep _step;
         public List<ContactConstraint> _constraints = new List<ContactConstraint>(50);
-        public int _constraintCount; // collection can be bigger.
+        private int _constraintCount; // collection can be bigger.
         List<Contact> _contacts;
     };
 
@@ -814,7 +810,7 @@ namespace FarseerPhysics
 		        {
 			        Vector2 pointA = cc.bodyA.GetWorldPoint(cc.localPoint);
 			        Vector2 pointB = cc.bodyB.GetWorldPoint(cc.points[0].localPoint);
-			        if (Vector2.DistanceSquared(pointA, pointB) > Settings.b2_epsilon * Settings.b2_epsilon)
+			        if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
 			        {
 				        _normal = pointB - pointA;
 				        _normal.Normalize();

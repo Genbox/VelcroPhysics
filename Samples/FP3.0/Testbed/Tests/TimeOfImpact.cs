@@ -72,7 +72,7 @@ namespace FarseerPhysics.TestBed.Tests
             input.proxyB.Set(_shapeB);
             input.sweepA = sweepA;
             input.sweepB = sweepB;
-            input.tolerance = FarseerPhysics.Settings.b2_linearSlop;
+            input.tolerance = FarseerPhysics.Settings.LinearSlop;
 
             float toi = FarseerPhysics.TimeOfImpact.CalculateTimeOfImpact(ref input);
 

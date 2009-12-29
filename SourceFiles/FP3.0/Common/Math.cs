@@ -96,7 +96,7 @@ namespace FarseerPhysics
         }
 
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
-        internal struct FloatConverter
+        private struct FloatConverter
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public float x;
@@ -194,7 +194,7 @@ namespace FarseerPhysics
 	    /// a rotation matrix).
         public float GetAngle() 
 	    {
-            return (float)Math.Atan2((double)col1.Y, (double)col1.X);
+            return (float)Math.Atan2(col1.Y, col1.X);
 	    }
 
         public Mat22 GetInverse() 
@@ -313,7 +313,7 @@ namespace FarseerPhysics
 	    /// Calculate the angle that the rotation matrix represents.
         public float GetAngle() 
 	    {
-		    return (float)Math.Atan2((double)R.col1.Y, (double)R.col1.X);
+		    return (float)Math.Atan2(R.col1.Y, R.col1.X);
 	    }
 
         public Vector2 Position;
@@ -343,7 +343,7 @@ namespace FarseerPhysics
 	    /// @param t the new initial time.
 	    public void Advance(float t)
         {
-	        if (t0 < t && 1.0f - t0 > Settings.b2_epsilon)
+	        if (t0 < t && 1.0f - t0 > Settings.Epsilon)
 	        {
 		        float alpha = (t - t0) / (1.0f - t0);
 		        c0 = (1.0f - alpha) * c0 + alpha * c;

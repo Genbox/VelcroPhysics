@@ -220,7 +220,7 @@ namespace FarseerPhysics
 	        float C2 = bB._sweep.a - bA._sweep.a - _referenceAngle;
 
 	        // Handle large detachment.
-	        float k_allowedStretch = 10.0f * Settings.b2_linearSlop;
+	        const float k_allowedStretch = 10.0f * Settings.LinearSlop;
 	        float positionError = C1.Length();
 	        float angularError = Math.Abs(C2);
 	        if (positionError > k_allowedStretch)
@@ -254,13 +254,13 @@ namespace FarseerPhysics
 	        bA.SynchronizeTransform();
 	        bB.SynchronizeTransform();
 
-	        return positionError <= Settings.b2_linearSlop && angularError <= Settings.b2_angularSlop;
+	        return positionError <= Settings.LinearSlop && angularError <= Settings.AngularSlop;
         }
 
-	    internal Vector2 _localAnchorA;
-	    internal Vector2 _localAnchorB;
-        internal float _referenceAngle;
-	    internal Vector3 _impulse;
-	    internal Mat33 _mass;
+        private Vector2 _localAnchorA;
+        private Vector2 _localAnchorB;
+        private float _referenceAngle;
+        private Vector3 _impulse;
+        private Mat33 _mass;
     };
 }

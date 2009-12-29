@@ -207,11 +207,11 @@ namespace FarseerPhysics.TestBed.Tests
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
 
-            _wheel.SetTransform(_wheel.GetPosition(), 120.0f*FarseerPhysics.Settings.b2_pi/180.0f);
+            _wheel.SetTransform(_wheel.GetPosition(), 120.0f*FarseerPhysics.Settings.Pi/180.0f);
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
 
-            _wheel.SetTransform(_wheel.GetPosition(), -120.0f*FarseerPhysics.Settings.b2_pi/180.0f);
+            _wheel.SetTransform(_wheel.GetPosition(), -120.0f*FarseerPhysics.Settings.Pi/180.0f);
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
         }
