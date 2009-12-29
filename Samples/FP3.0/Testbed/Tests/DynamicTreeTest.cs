@@ -23,7 +23,7 @@
 using System;
 using Box2D.XNA.TestBed.Framework;
 using System.Diagnostics;
-using Box2D.XNA;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -110,24 +110,24 @@ namespace Box2D.XNA.TestBed.Tests
 				    ca = new Color(0.6f, 0.6f, 0.9f);
 			    }
 
-			    _debugDraw.DrawAABB(ref actor.aabb, ca);
+			    _debugView.DrawAABB(ref actor.aabb, ca);
 		    }
 
 		    Color c = new Color(0.7f, 0.7f, 0.7f);
-		    _debugDraw.DrawAABB(ref _queryAABB, c);
+		    _debugView.DrawAABB(ref _queryAABB, c);
 
-		    _debugDraw.DrawSegment(_rayCastInput.p1, _rayCastInput.p2, c);
+		    _debugView.DrawSegment(_rayCastInput.p1, _rayCastInput.p2, c);
 
 		    Color c1 = new Color(0.2f, 0.9f, 0.2f);
 		    Color c2 = new Color(0.9f, 0.2f, 0.2f);
-		    _debugDraw.DrawPoint(_rayCastInput.p1, 6.0f, c1);
-		    _debugDraw.DrawPoint(_rayCastInput.p2, 6.0f, c2);
+		    _debugView.DrawPoint(_rayCastInput.p1, 6.0f, c1);
+		    _debugView.DrawPoint(_rayCastInput.p2, 6.0f, c2);
 
 		    if (_rayActor != null)
 		    {
 			    Color cr = new Color(0.2f, 0.2f, 0.9f);
 			    Vector2 p = _rayCastInput.p1 + _rayActor.fraction * (_rayCastInput.p2 - _rayCastInput.p1);
-			    _debugDraw.DrawPoint(p, 6.0f, cr);
+			    _debugView.DrawPoint(p, 6.0f, cr);
 		    }
 
 		    ++_stepCount;

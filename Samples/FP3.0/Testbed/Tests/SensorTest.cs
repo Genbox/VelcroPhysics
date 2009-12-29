@@ -22,7 +22,7 @@
 
 using System;
 using Box2D.XNA.TestBed.Framework;
-using Box2D.XNA;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
 
 namespace Box2D.XNA.TestBed.Tests
@@ -139,7 +139,7 @@ namespace Box2D.XNA.TestBed.Tests
 			    Vector2 position = body.GetPosition();
 
 			    Vector2 d = center - position;
-                if (d.LengthSquared() < Box2D.XNA.Settings.b2_epsilon * Box2D.XNA.Settings.b2_epsilon)
+                if (d.LengthSquared() < FarseerPhysics.Settings.b2_epsilon * FarseerPhysics.Settings.b2_epsilon)
 			    {
 				    continue;
 			    }

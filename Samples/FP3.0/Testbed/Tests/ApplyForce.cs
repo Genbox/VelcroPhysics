@@ -22,8 +22,8 @@
 
 using System;
 using Box2D.XNA.TestBed.Framework;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
-using Box2D.XNA;
 using Microsoft.Xna.Framework.Input;
 
 namespace Box2D.XNA.TestBed.Tests
@@ -68,7 +68,7 @@ namespace Box2D.XNA.TestBed.Tests
 
 		    {
                 Transform xf1 = new Transform();
-			    xf1.R.Set(0.3524f * (float)Box2D.XNA.Settings.b2_pi);
+			    xf1.R.Set(0.3524f * FarseerPhysics.Settings.b2_pi);
 			    xf1.Position = MathUtils.Multiply(ref xf1.R, new Vector2(1.0f, 0.0f));
 
 			    Vector2[] vertices = new Vector2[3];
@@ -84,7 +84,7 @@ namespace Box2D.XNA.TestBed.Tests
 			    sd1.density = 4.0f;
 
                 Transform xf2 = new Transform();
-                xf2.R.Set(-0.3524f * (float)Box2D.XNA.Settings.b2_pi);
+                xf2.R.Set(-0.3524f * FarseerPhysics.Settings.b2_pi);
 			    xf2.Position = MathUtils.Multiply(ref xf2.R, new Vector2(-1.0f, 0.0f));
 
 			    vertices[0] = MathUtils.Multiply(ref xf2, new Vector2(-1.0f, 0.0f));
@@ -104,7 +104,7 @@ namespace Box2D.XNA.TestBed.Tests
 			    bd.linearDamping = 0.1f;
 
 			    bd.position = new Vector2(0.0f, 2.0f);
-                bd.angle = (float)Box2D.XNA.Settings.b2_pi;
+                bd.angle = FarseerPhysics.Settings.b2_pi;
 			    _body = _world.CreateBody(bd);
 			    _body.CreateFixture(sd1);
 			    _body.CreateFixture(sd2);

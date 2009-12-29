@@ -20,9 +20,8 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Box2D.XNA.TestBed.Framework;
-using Box2D.XNA;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -60,11 +59,11 @@ namespace Box2D.XNA.TestBed.Tests
 			    body.SetLinearVelocity(new Vector2(-8.0f * w, 0.0f));
 
 			    rjd.Initialize(ground, body, new Vector2(0.0f, 12.0f));
-			    rjd.motorSpeed = 1.0f * (float)Box2D.XNA.Settings.b2_pi;
+			    rjd.motorSpeed = 1.0f * FarseerPhysics.Settings.b2_pi;
 			    rjd.maxMotorTorque = 10000.0f;
 			    rjd.enableMotor = false;
-			    rjd.lowerAngle = -0.25f * (float)Box2D.XNA.Settings.b2_pi;
-			    rjd.upperAngle = 0.5f * (float)Box2D.XNA.Settings.b2_pi;
+			    rjd.lowerAngle = -0.25f * FarseerPhysics.Settings.b2_pi;
+			    rjd.upperAngle = 0.5f * FarseerPhysics.Settings.b2_pi;
 			    rjd.enableLimit = true;
 			    rjd.collideConnected = true;
 
@@ -88,7 +87,7 @@ namespace Box2D.XNA.TestBed.Tests
 	    public override void Step(Framework.Settings settings)
 	    {
 		    base.Step(settings);
-		    _debugDraw.DrawString(50, _textLine, "Keys: (l) limits, (a) left, (s) off, (d) right");
+		    _debugView.DrawString(50, _textLine, "Keys: (l) limits, (a) left, (s) off, (d) right");
 		    _textLine += 15;
 		    //float torque1 = _joint1.GetMotorTorque();
 		    //_debugDraw.DrawString(50, _textLine, "Motor Torque = %4.0f, %4.0f : Motor Force = %4.0f", (float) torque1, (float) torque2, (float) force3);

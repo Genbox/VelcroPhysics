@@ -22,7 +22,7 @@
 
 using System;
 using Box2D.XNA.TestBed.Framework;
-using Box2D.XNA;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -34,7 +34,7 @@ namespace Box2D.XNA.TestBed.Tests
         public PolyCollision()
 	    {
             {
-                _polygonA.SetAsBox(1.0f, 1.0f, new Vector2(0.0f, 0.0f), (float)Box2D.XNA.Settings.b2_pi * 0.25f);
+                _polygonA.SetAsBox(1.0f, 1.0f, new Vector2(0.0f, 0.0f), FarseerPhysics.Settings.b2_pi * 0.25f);
                 _transformA.Set(new Vector2(0.0f, 5.0f), 0.0f);
             }
 
@@ -59,7 +59,7 @@ namespace Box2D.XNA.TestBed.Tests
 
 		    WorldManifold worldManifold = new WorldManifold(ref manifold, ref _transformA, _polygonA._radius, ref _transformB, _polygonB._radius);
 
-            _debugDraw.DrawString(50, _textLine, "point count = {0:n}", manifold._pointCount);
+            _debugView.DrawString(50, _textLine, "point count = {0:n}", manifold._pointCount);
 		    _textLine += 15;
 
 		    {
@@ -69,18 +69,18 @@ namespace Box2D.XNA.TestBed.Tests
 			    {
 				    v[i] = MathUtils.Multiply(ref _transformA, _polygonA._vertices[i]);
 			    }
-			    _debugDraw.DrawPolygon(ref v, _polygonA._vertexCount, color);
+			    _debugView.DrawPolygon(ref v, _polygonA._vertexCount, color);
 
 			    for (int i = 0; i < _polygonB._vertexCount; ++i)
 			    {
 				    v[i] = MathUtils.Multiply(ref _transformB, _polygonB._vertices[i]);
 			    }
-			    _debugDraw.DrawPolygon(ref v, _polygonB._vertexCount, color);
+			    _debugView.DrawPolygon(ref v, _polygonB._vertexCount, color);
 		    }
 
 		    for (int i = 0; i < manifold._pointCount; ++i)
 		    {
-			    _debugDraw.DrawPoint(worldManifold._points[i], 0.5f, new Color(0.9f, 0.3f, 0.3f));
+			    _debugView.DrawPoint(worldManifold._points[i], 0.5f, new Color(0.9f, 0.3f, 0.3f));
 		    }
 	    }
 
@@ -104,11 +104,11 @@ namespace Box2D.XNA.TestBed.Tests
             }
             if (state.IsKeyDown(Keys.Q))
             {
-                _angleB += 0.1f * (float)Box2D.XNA.Settings.b2_pi;
+                _angleB += 0.1f * FarseerPhysics.Settings.b2_pi;
             }
             if (state.IsKeyDown(Keys.E))
             {
-                _angleB -= 0.1f * (float)Box2D.XNA.Settings.b2_pi;
+                _angleB -= 0.1f * FarseerPhysics.Settings.b2_pi;
             }
 
 		    _transformB.Set(_positionB, _angleB);

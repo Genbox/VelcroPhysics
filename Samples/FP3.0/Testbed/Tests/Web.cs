@@ -20,9 +20,8 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Box2D.XNA.TestBed.Framework;
-using Box2D.XNA;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -186,9 +185,9 @@ namespace Box2D.XNA.TestBed.Tests
 	    public override void Step(Framework.Settings settings)
 	    {
 		    base.Step(settings);
-		    _debugDraw.DrawString(50, _textLine, "This demonstrates a soft distance joint.");
+		    _debugView.DrawString(50, _textLine, "This demonstrates a soft distance joint.");
 		    _textLine += 15;
-		    _debugDraw.DrawString(50, _textLine, "Press: (b) to delete a body, (j) to delete a joint");
+		    _debugView.DrawString(50, _textLine, "Press: (b) to delete a body, (j) to delete a joint");
 		    _textLine += 15;
 	    }
 

@@ -20,10 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Box2D.XNA.TestBed.Framework;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
-using Box2D.XNA;
 
 namespace Box2D.XNA.TestBed.Tests
 {
@@ -57,7 +56,7 @@ namespace Box2D.XNA.TestBed.Tests
 				    BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
 				    bd.position = new Vector2(x + 5.0f, 1.05f + 2.5f * i);
-                    bd.angle = Rand.RandomFloat(-(float)Box2D.XNA.Settings.b2_pi, (float)Box2D.XNA.Settings.b2_pi);
+                    bd.angle = Rand.RandomFloat(-FarseerPhysics.Settings.b2_pi, FarseerPhysics.Settings.b2_pi);
 				    Body body = _world.CreateBody(bd);
 				    body.CreateFixture(circle1, 2.0f);
 				    body.CreateFixture(circle2, 0.0f);
@@ -69,7 +68,7 @@ namespace Box2D.XNA.TestBed.Tests
 			    polygon1.SetAsBox(0.25f, 0.5f);
 
 			    PolygonShape polygon2 = new PolygonShape();
-                polygon2.SetAsBox(0.25f, 0.5f, new Vector2(0.0f, -0.5f), 0.5f * (float)Box2D.XNA.Settings.b2_pi);
+                polygon2.SetAsBox(0.25f, 0.5f, new Vector2(0.0f, -0.5f), 0.5f * FarseerPhysics.Settings.b2_pi);
 
 			    for (int i = 0; i < 10; ++i)
 			    {
@@ -77,7 +76,7 @@ namespace Box2D.XNA.TestBed.Tests
 				    BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
 				    bd.position = new Vector2(x - 5.0f, 1.05f + 2.5f * i);
-                    bd.angle = Rand.RandomFloat(-(float)Box2D.XNA.Settings.b2_pi, (float)Box2D.XNA.Settings.b2_pi);
+                    bd.angle = Rand.RandomFloat(-FarseerPhysics.Settings.b2_pi, FarseerPhysics.Settings.b2_pi);
 				    Body body = _world.CreateBody(bd);
 				    body.CreateFixture(polygon1, 2.0f);
 				    body.CreateFixture(polygon2, 2.0f);
@@ -86,7 +85,7 @@ namespace Box2D.XNA.TestBed.Tests
 
 		    {
                 Transform xf1 = new Transform();
-                xf1.R.Set(0.3524f * (float)Box2D.XNA.Settings.b2_pi);
+                xf1.R.Set(0.3524f * FarseerPhysics.Settings.b2_pi);
 			    xf1.Position = MathUtils.Multiply(ref xf1.R, new Vector2(1.0f, 0.0f));
 
 			    Vector2[] vertices = new Vector2[3];
@@ -98,7 +97,7 @@ namespace Box2D.XNA.TestBed.Tests
 			    triangle1.Set(vertices, 3);
 
                 Transform xf2 = new Transform();
-                xf2.R.Set(-0.3524f * (float)Box2D.XNA.Settings.b2_pi);
+                xf2.R.Set(-0.3524f * FarseerPhysics.Settings.b2_pi);
                 xf2.Position = MathUtils.Multiply(ref xf2.R, new Vector2(-1.0f, 0.0f));
 
                 PolygonShape triangle2 = new PolygonShape();

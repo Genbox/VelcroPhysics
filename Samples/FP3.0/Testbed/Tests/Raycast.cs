@@ -22,8 +22,9 @@
 
 using System;
 using Box2D.XNA.TestBed.Framework;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
-using Box2D.XNA;
+
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -140,7 +141,7 @@ namespace Box2D.XNA.TestBed.Tests
         public override void Step(Framework.Settings settings)
 	    {
 		    base.Step(settings);
-		    _debugDraw.DrawString(5, _textLine, "Press 1-5 to drop stuff");
+		    _debugView.DrawString(5, _textLine, "Press 1-5 to drop stuff");
 		    _textLine += 15;
 
 		    float L = 11.0f;
@@ -161,19 +162,19 @@ namespace Box2D.XNA.TestBed.Tests
 
 		    if (fixture != null)
 		    {
-			    _debugDraw.DrawPoint(point, .5f, new Color(0.4f, 0.9f, 0.4f));
+			    _debugView.DrawPoint(point, .5f, new Color(0.4f, 0.9f, 0.4f));
 
-			    _debugDraw.DrawSegment(point1, point, new Color(0.8f, 0.8f, 0.8f));
+			    _debugView.DrawSegment(point1, point, new Color(0.8f, 0.8f, 0.8f));
 
 			    Vector2 head = point + 0.5f * normal;
-			    _debugDraw.DrawSegment(point, head, new Color(0.9f, 0.9f, 0.4f));
+			    _debugView.DrawSegment(point, head, new Color(0.9f, 0.9f, 0.4f));
 		    }
 		    else
 		    {
-			    _debugDraw.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
+			    _debugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
 		    }
 
-		    _angle += 0.25f * Settings.b2_pi / 180.0f;
+		    _angle += 0.25f * FarseerPhysics.Settings.b2_pi / 180.0f;
 	    }
 
         private void Create(int index)
@@ -189,7 +190,7 @@ namespace Box2D.XNA.TestBed.Tests
 		    float x = Rand.RandomFloat(-10.0f, 10.0f);
             float y = Rand.RandomFloat(0.0f, 20.0f);
 		    bd.position = new Vector2(x, y);
-            bd.angle = Rand.RandomFloat(-Settings.b2_pi, Settings.b2_pi);
+            bd.angle = Rand.RandomFloat(-FarseerPhysics.Settings.b2_pi, FarseerPhysics.Settings.b2_pi);
 
 		    if (index == 4)
 		    {

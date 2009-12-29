@@ -20,10 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Box2D.XNA.TestBed.Framework;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
-using Box2D.XNA;
+
 using Microsoft.Xna.Framework.Input;
 
 namespace Box2D.XNA.TestBed.Tests
@@ -208,18 +208,18 @@ namespace Box2D.XNA.TestBed.Tests
 		    CreateLeg(-1.0f, wheelAnchor);
 		    CreateLeg(1.0f, wheelAnchor);
 
-		    _wheel.SetTransform(_wheel.GetPosition(), 120.0f * (float)Box2D.XNA.Settings.b2_pi / 180.0f);
+		    _wheel.SetTransform(_wheel.GetPosition(), 120.0f * FarseerPhysics.Settings.b2_pi / 180.0f);
 		    CreateLeg(-1.0f, wheelAnchor);
 		    CreateLeg(1.0f, wheelAnchor);
 
-		    _wheel.SetTransform(_wheel.GetPosition(), -120.0f * (float)Box2D.XNA.Settings.b2_pi / 180.0f);
+		    _wheel.SetTransform(_wheel.GetPosition(), -120.0f * FarseerPhysics.Settings.b2_pi / 180.0f);
 		    CreateLeg(-1.0f, wheelAnchor);
 		    CreateLeg(1.0f, wheelAnchor);
 	    }
 
 	    public override void Step(Framework.Settings settings)
 	    {
-		    _debugDraw.DrawString(50, _textLine, "Keys: left = a, brake = s, right = d, toggle motor = m");
+		    _debugView.DrawString(50, _textLine, "Keys: left = a, brake = s, right = d, toggle motor = m");
 		    _textLine += 15;
 
 		    base.Step(settings);

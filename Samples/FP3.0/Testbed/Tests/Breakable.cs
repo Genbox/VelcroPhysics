@@ -22,9 +22,8 @@
 
 using System;
 using Box2D.XNA.TestBed.Framework;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
-using Box2D.XNA;
-using Microsoft.Xna.Framework.Input;
 
 namespace Box2D.XNA.TestBed.Tests
 {
@@ -49,7 +48,7 @@ namespace Box2D.XNA.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 bd.type = BodyType.Dynamic;
                 bd.position = new Vector2(0.0f, 40.0f);
-                bd.angle = 0.25f * Settings.b2_pi;
+                bd.angle = 0.25f * FarseerPhysics.Settings.b2_pi;
                 _body1 = _world.CreateBody(bd);
 
                 _shape1 = new PolygonShape();
