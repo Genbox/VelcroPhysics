@@ -20,59 +20,59 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class Prismatic : Test
     {
         public Prismatic()
-	    {
-		    Body ground = null;
-		    {
-			    BodyDef bd = new BodyDef();
-			    ground = _world.CreateBody(bd);
+        {
+            Body ground = null;
+            {
+                BodyDef bd = new BodyDef();
+                ground = _world.CreateBody(bd);
 
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsBox(2.0f, 0.5f);
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(2.0f, 0.5f);
 
-			    BodyDef bd = new BodyDef();
+                BodyDef bd = new BodyDef();
                 bd.type = BodyType.Dynamic;
-			    bd.position = new Vector2(-10.0f, 10.0f);
-			    bd.angle = 0.5f * FarseerPhysics.Settings.b2_pi;
-			    Body body = _world.CreateBody(bd);
-			    body.CreateFixture(shape, 5.0f);
+                bd.position = new Vector2(-10.0f, 10.0f);
+                bd.angle = 0.5f*FarseerPhysics.Settings.b2_pi;
+                Body body = _world.CreateBody(bd);
+                body.CreateFixture(shape, 5.0f);
 
                 PrismaticJointDef pjd = new PrismaticJointDef();
 
-			    // Bouncy limit
-			    pjd.Initialize(ground, body, new Vector2(0.0f, 0.0f), new Vector2(1.0f, 0.0f));
+                // Bouncy limit
+                pjd.Initialize(ground, body, new Vector2(0.0f, 0.0f), new Vector2(1.0f, 0.0f));
 
-			    // Non-bouncy limit
-			    //pjd.Initialize(ground, body, new Vector2(-10.0f, 10.0f), new Vector2(1.0f, 0.0f));
+                // Non-bouncy limit
+                //pjd.Initialize(ground, body, new Vector2(-10.0f, 10.0f), new Vector2(1.0f, 0.0f));
 
-			    pjd.motorSpeed = 10.0f;
-			    pjd.maxMotorForce = 1000.0f;
-			    pjd.enableMotor = true;
-			    pjd.lowerTranslation = 0.0f;
-			    pjd.upperTranslation = 20.0f;
-			    pjd.enableLimit = true;
+                pjd.motorSpeed = 10.0f;
+                pjd.maxMotorForce = 1000.0f;
+                pjd.enableMotor = true;
+                pjd.lowerTranslation = 0.0f;
+                pjd.upperTranslation = 20.0f;
+                pjd.enableLimit = true;
 
-			    _joint = (PrismaticJoint)_world.CreateJoint(pjd);
-		    }
-	    }
+                _joint = (PrismaticJoint) _world.CreateJoint(pjd);
+            }
+        }
 
-	    public override void Keyboard(KeyboardState state, KeyboardState oldState)
-	    {
+        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        {
             if (state.IsKeyDown(Keys.L) && oldState.IsKeyUp(Keys.L))
             {
                 _joint.EnableLimit(!_joint.IsLimitEnabled());
@@ -85,23 +85,23 @@ namespace Box2D.XNA.TestBed.Tests
             {
                 _joint.SetMotorSpeed(-_joint.GetMotorSpeed());
             }
-	    }
+        }
 
-	    public override void Step(Framework.Settings settings)
-	    {
-		    base.Step(settings);
-		    _debugView.DrawString(50, _textLine, "Keys: (l) limits, (m) motors, (p) speed");
-		    _textLine += 15;
-		    float force = _joint.GetMotorForce();
-            _debugView.DrawString(50, _textLine, "Motor Force = {0:n}", (float)force);
-		    _textLine += 15;
-	    }
+        public override void Step(Framework.Settings settings)
+        {
+            base.Step(settings);
+            _debugView.DrawString(50, _textLine, "Keys: (l) limits, (m) motors, (p) speed");
+            _textLine += 15;
+            float force = _joint.GetMotorForce();
+            _debugView.DrawString(50, _textLine, "Motor Force = {0:n}", (float) force);
+            _textLine += 15;
+        }
 
-	    internal static Test Create()
-	    {
-		    return new Prismatic();
-	    }
+        internal static Test Create()
+        {
+            return new Prismatic();
+        }
 
-	    PrismaticJoint _joint;
+        private PrismaticJoint _joint;
     }
 }

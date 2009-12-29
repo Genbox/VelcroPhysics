@@ -27,13 +27,12 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace Box2D.XNA.TestBed.Framework
+namespace FarseerPhysics.TestBed.Framework
 {
     public static class TraceEvents
     {
         public static void Register(IEventTrace et)
         {
-
             FrameEventId = et.Register("Frame", Color.Orange);
             UpdateEventId = et.Register("Update", Color.Blue);
             PhysicsEventId = et.Register("Physics", Color.Cyan);
@@ -44,6 +43,5 @@ namespace Box2D.XNA.TestBed.Framework
         public static int UpdateEventId { get; private set; }
         public static int PhysicsEventId { get; private set; }
         public static int DrawEventId { get; private set; }
-        
     }
 }

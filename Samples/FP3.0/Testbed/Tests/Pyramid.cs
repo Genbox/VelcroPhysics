@@ -21,72 +21,72 @@
 */
 
 using System;
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class Pyramid : Test
     {
-		static int e_count = 20;
+        private static int e_count = 20;
 
-	    public Pyramid()
-	    {
-		    {
-			    BodyDef bd = new BodyDef();
-			    Body ground = _world.CreateBody(bd);
+        public Pyramid()
+        {
+            {
+                BodyDef bd = new BodyDef();
+                Body ground = _world.CreateBody(bd);
 
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
-			    float a = 0.5f;
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsBox(a, a);
+            {
+                float a = 0.5f;
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(a, a);
 
-			    Vector2 x = new Vector2(-7.0f, 0.75f);
-			    Vector2 y;
-			    Vector2 deltaX = new Vector2(0.5625f, 1.25f);
+                Vector2 x = new Vector2(-7.0f, 0.75f);
+                Vector2 y;
+                Vector2 deltaX = new Vector2(0.5625f, 1.25f);
                 Vector2 deltaY = new Vector2(1.125f, 0.0f);
 
-			    for (int i = 0; i < e_count; ++i)
-			    {
-				    y = x;
+                for (int i = 0; i < e_count; ++i)
+                {
+                    y = x;
 
-				    for (int j = i; j < e_count; ++j)
-				    {
-					    BodyDef bd = new BodyDef();
+                    for (int j = i; j < e_count; ++j)
+                    {
+                        BodyDef bd = new BodyDef();
                         bd.type = BodyType.Dynamic;
-					    bd.position = y;
-					    Body body = _world.CreateBody(bd);
-					    body.CreateFixture(shape, 5.0f);
+                        bd.position = y;
+                        Body body = _world.CreateBody(bd);
+                        body.CreateFixture(shape, 5.0f);
 
-					    y += deltaY;
-				    }
+                        y += deltaY;
+                    }
 
-				    x += deltaX;
-			    }
-		    }
-	    }
+                    x += deltaX;
+                }
+            }
+        }
 
-	    //void Step(Framework.Settings settings)
-	    //{
-	    //	// We need higher accuracy for the pyramid.
-	    //	int velocityIterations = settings.velocityIterations;
-	    //	int positionIterations = settings.positionIterations;
-	    //	settings.velocityIterations = b2Max(8, velocityIterations);
-	    //	settings.positionIterations = b2Max(1, positionIterations);
-	    //	base.Step(settings);
-	    //	settings.velocityIterations = velocityIterations;
-	    //	settings.positionIterations = positionIterations;
-	    //}
+        //void Step(Framework.Settings settings)
+        //{
+        //	// We need higher accuracy for the pyramid.
+        //	int velocityIterations = settings.velocityIterations;
+        //	int positionIterations = settings.positionIterations;
+        //	settings.velocityIterations = b2Max(8, velocityIterations);
+        //	settings.positionIterations = b2Max(1, positionIterations);
+        //	base.Step(settings);
+        //	settings.velocityIterations = velocityIterations;
+        //	settings.positionIterations = positionIterations;
+        //}
 
-	    public static Test Create()
-	    {
-		    return new Pyramid();
-	    }
+        public static Test Create()
+        {
+            return new Pyramid();
+        }
     }
 }

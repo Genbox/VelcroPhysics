@@ -21,13 +21,12 @@
 */
 
 using System;
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-
 using Microsoft.Xna.Framework.Input;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class OneSidedPlatform : Test
     {
@@ -83,45 +82,45 @@ namespace Box2D.XNA.TestBed.Tests
         }
 
         public override void PreSolve(Contact contact, ref Manifold oldManifold)
-	    {
-		    base.PreSolve(contact, ref oldManifold);
+        {
+            base.PreSolve(contact, ref oldManifold);
 
-		    Fixture fixtureA = contact.GetFixtureA();
-		    Fixture fixtureB = contact.GetFixtureB();
+            Fixture fixtureA = contact.GetFixtureA();
+            Fixture fixtureB = contact.GetFixtureB();
 
-		    if (fixtureA != _platform && fixtureA != _character)
-		    {
-			    return;
-		    }
+            if (fixtureA != _platform && fixtureA != _character)
+            {
+                return;
+            }
 
-		    if (fixtureB != _character && fixtureB != _character)
-		    {
-			    return;
-		    }
+            if (fixtureB != _character && fixtureB != _character)
+            {
+                return;
+            }
 
-		    Vector2 position = _character.GetBody().GetPosition();
+            Vector2 position = _character.GetBody().GetPosition();
 
-		    if (position.Y < _top)
-		    {
-			    contact.SetEnabled(false);
-		    }
-	    }
+            if (position.Y < _top)
+            {
+                contact.SetEnabled(false);
+            }
+        }
 
         public override void Step(Framework.Settings settings)
-	    {
-		    base.Step(settings);
-		    _debugView.DrawString(5, _textLine, "Press: (c) create a shape, (d) destroy a shape.");
-		    _textLine += 15;
-	    }
+        {
+            base.Step(settings);
+            _debugView.DrawString(5, _textLine, "Press: (c) create a shape, (d) destroy a shape.");
+            _textLine += 15;
+        }
 
-	    static internal Test Create()
-	    {
-		    return new OneSidedPlatform();
-	    }
+        internal static Test Create()
+        {
+            return new OneSidedPlatform();
+        }
 
-        float _radius, _top, _bottom;
-        State _state;
-        Fixture _platform;
-        Fixture _character;
+        private float _radius, _top, _bottom;
+        private State _state;
+        private Fixture _platform;
+        private Fixture _character;
     }
 }

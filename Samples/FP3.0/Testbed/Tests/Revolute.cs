@@ -20,85 +20,85 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class Revolute : Test
     {
         public Revolute()
-	    {
-		    Body ground = null;
-		    {
-			    BodyDef bd = new BodyDef();
-			    ground = _world.CreateBody(bd);
+        {
+            Body ground = null;
+            {
+                BodyDef bd = new BodyDef();
+                ground = _world.CreateBody(bd);
 
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
+            {
                 CircleShape shape = new CircleShape();
-			    shape._radius = 0.5f;
+                shape._radius = 0.5f;
 
-			    BodyDef bd = new BodyDef();
+                BodyDef bd = new BodyDef();
                 bd.type = BodyType.Dynamic;
 
                 RevoluteJointDef rjd = new RevoluteJointDef();
 
-			    bd.position = new Vector2(0.0f, 20.0f);
-			    Body body = _world.CreateBody(bd);
-			    body.CreateFixture(shape, 5.0f);
+                bd.position = new Vector2(0.0f, 20.0f);
+                Body body = _world.CreateBody(bd);
+                body.CreateFixture(shape, 5.0f);
 
-			    float w = 100.0f;
-			    body.SetAngularVelocity(w);
-			    body.SetLinearVelocity(new Vector2(-8.0f * w, 0.0f));
+                float w = 100.0f;
+                body.SetAngularVelocity(w);
+                body.SetLinearVelocity(new Vector2(-8.0f*w, 0.0f));
 
-			    rjd.Initialize(ground, body, new Vector2(0.0f, 12.0f));
-			    rjd.motorSpeed = 1.0f * FarseerPhysics.Settings.b2_pi;
-			    rjd.maxMotorTorque = 10000.0f;
-			    rjd.enableMotor = false;
-			    rjd.lowerAngle = -0.25f * FarseerPhysics.Settings.b2_pi;
-			    rjd.upperAngle = 0.5f * FarseerPhysics.Settings.b2_pi;
-			    rjd.enableLimit = true;
-			    rjd.collideConnected = true;
+                rjd.Initialize(ground, body, new Vector2(0.0f, 12.0f));
+                rjd.motorSpeed = 1.0f*FarseerPhysics.Settings.b2_pi;
+                rjd.maxMotorTorque = 10000.0f;
+                rjd.enableMotor = false;
+                rjd.lowerAngle = -0.25f*FarseerPhysics.Settings.b2_pi;
+                rjd.upperAngle = 0.5f*FarseerPhysics.Settings.b2_pi;
+                rjd.enableLimit = true;
+                rjd.collideConnected = true;
 
-			    _joint = (RevoluteJoint)_world.CreateJoint(rjd);
-		    }
-	    }
+                _joint = (RevoluteJoint) _world.CreateJoint(rjd);
+            }
+        }
 
-	    public override void Keyboard(KeyboardState state, KeyboardState oldState)
-	    {
-		    if (state.IsKeyDown(Keys.L) && oldState.IsKeyUp(Keys.L))
+        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        {
+            if (state.IsKeyDown(Keys.L) && oldState.IsKeyUp(Keys.L))
             {
-			    _joint.EnableLimit(_joint.IsLimitEnabled());
+                _joint.EnableLimit(_joint.IsLimitEnabled());
             }
 
-		    if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
+            if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
             {
-			    _joint.EnableMotor(false);
-		    }
-	    }
+                _joint.EnableMotor(false);
+            }
+        }
 
-	    public override void Step(Framework.Settings settings)
-	    {
-		    base.Step(settings);
-		    _debugView.DrawString(50, _textLine, "Keys: (l) limits, (a) left, (s) off, (d) right");
-		    _textLine += 15;
-		    //float torque1 = _joint1.GetMotorTorque();
-		    //_debugDraw.DrawString(50, _textLine, "Motor Torque = %4.0f, %4.0f : Motor Force = %4.0f", (float) torque1, (float) torque2, (float) force3);
-		    //_textLine += 15;
-	    }
+        public override void Step(Framework.Settings settings)
+        {
+            base.Step(settings);
+            _debugView.DrawString(50, _textLine, "Keys: (l) limits, (a) left, (s) off, (d) right");
+            _textLine += 15;
+            //float torque1 = _joint1.GetMotorTorque();
+            //_debugDraw.DrawString(50, _textLine, "Motor Torque = %4.0f, %4.0f : Motor Force = %4.0f", (float) torque1, (float) torque2, (float) force3);
+            //_textLine += 15;
+        }
 
-	    internal static Test Create()
-	    {
-		    return new Revolute();
-	    }
+        internal static Test Create()
+        {
+            return new Revolute();
+        }
 
-	    RevoluteJoint _joint;
+        private RevoluteJoint _joint;
     }
 }

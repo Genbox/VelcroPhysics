@@ -20,60 +20,60 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class Chain : Test
     {
         public Chain()
         {
             Body ground = null;
-		    {
-			    BodyDef bd = new BodyDef();
-			    ground = _world.CreateBody(bd);
+            {
+                BodyDef bd = new BodyDef();
+                ground = _world.CreateBody(bd);
 
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsBox(0.6f, 0.125f);
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.6f, 0.125f);
 
-			    FixtureDef fd = new FixtureDef();
-			    fd.shape = shape;
-			    fd.density = 20.0f;
-			    fd.friction = 0.2f;
+                FixtureDef fd = new FixtureDef();
+                fd.shape = shape;
+                fd.density = 20.0f;
+                fd.friction = 0.2f;
 
                 RevoluteJointDef jd = new RevoluteJointDef();
-			    jd.collideConnected = false;
+                jd.collideConnected = false;
 
-			    float y = 25.0f;
-			    Body prevBody = ground;
-			    for (int i = 0; i < 30; ++i)
-			    {
-				    BodyDef bd = new BodyDef();
+                float y = 25.0f;
+                Body prevBody = ground;
+                for (int i = 0; i < 30; ++i)
+                {
+                    BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-				    bd.position = new Vector2(0.5f + i, y);
-				    Body body = _world.CreateBody(bd);
-				    body.CreateFixture(fd);
+                    bd.position = new Vector2(0.5f + i, y);
+                    Body body = _world.CreateBody(bd);
+                    body.CreateFixture(fd);
 
-				    Vector2 anchor = new Vector2((float)i, y);
-				    jd.Initialize(prevBody, body, anchor);
-				    _world.CreateJoint(jd);
+                    Vector2 anchor = new Vector2((float) i, y);
+                    jd.Initialize(prevBody, body, anchor);
+                    _world.CreateJoint(jd);
 
-				    prevBody = body;
-			    }
-		    }
-	    }
+                    prevBody = body;
+                }
+            }
+        }
 
         internal static Test Create()
-	    {
-		    return new Chain();
-	    }
+        {
+            return new Chain();
+        }
     }
 }

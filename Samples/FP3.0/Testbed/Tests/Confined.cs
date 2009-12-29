@@ -20,17 +20,17 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class Confined : Test
     {
-        static int e_columnCount = 0;
-        static int e_rowCount = 0;
+        private static int e_columnCount = 0;
+        private static int e_rowCount = 0;
 
         public Confined()
         {
@@ -73,7 +73,7 @@ namespace Box2D.XNA.TestBed.Tests
                 {
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius, (2.0f * i + 1.0f) * radius);
+                    bd.position = new Vector2(-10.0f + (2.1f*j + 1.0f + 0.01f*i)*radius, (2.0f*i + 1.0f)*radius);
                     Body body = _world.CreateBody(bd);
 
                     body.CreateFixture(fd);
@@ -83,7 +83,7 @@ namespace Box2D.XNA.TestBed.Tests
             _world.Gravity = new Vector2(0.0f, 0.0f);
         }
 
-        void CreateCircle()
+        private void CreateCircle()
         {
             float radius = 0.5f;
             CircleShape shape = new CircleShape();
@@ -97,7 +97,7 @@ namespace Box2D.XNA.TestBed.Tests
 
             BodyDef bd = new BodyDef();
             bd.type = BodyType.Dynamic;
-            bd.position = new Vector2(Rand.RandomFloat(), (2.0f + Rand.RandomFloat()) * radius);
+            bd.position = new Vector2(Rand.RandomFloat(), (2.0f + Rand.RandomFloat())*radius);
             Body body = _world.CreateBody(bd);
 
             body.CreateFixture(fd);
@@ -109,23 +109,23 @@ namespace Box2D.XNA.TestBed.Tests
             {
                 CreateCircle();
             }
-	    }
+        }
 
         public override void Step(Framework.Settings settings)
-	    {
+        {
             uint oldFlag = settings.enableContinuous;
 
             settings.enableContinuous = 0;
-		    base.Step(settings);
-		    _debugView.DrawString(5, _textLine, "Press 'c' to create a circle.");
-		    _textLine += 15;
+            base.Step(settings);
+            _debugView.DrawString(5, _textLine, "Press 'c' to create a circle.");
+            _textLine += 15;
 
             settings.enableContinuous = oldFlag;
-	    }
+        }
 
-	    static internal Test Create()
-	    {
+        internal static Test Create()
+        {
             return new Confined();
-	    }
+        }
     }
 }

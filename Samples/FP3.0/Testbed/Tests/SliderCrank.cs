@@ -20,110 +20,110 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class SliderCrank : Test
     {
         public SliderCrank()
-	    {
-		    Body ground = null;
-		    {
-			    BodyDef bd = new BodyDef();
-			    ground = _world.CreateBody(bd);
+        {
+            Body ground = null;
+            {
+                BodyDef bd = new BodyDef();
+                ground = _world.CreateBody(bd);
 
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
-			    Body prevBody = ground;
+            {
+                Body prevBody = ground;
 
-			    // Define crank.
-			    {
-				    PolygonShape shape = new PolygonShape();
-				    shape.SetAsBox(0.5f, 2.0f);
+                // Define crank.
+                {
+                    PolygonShape shape = new PolygonShape();
+                    shape.SetAsBox(0.5f, 2.0f);
 
-				    BodyDef bd = new BodyDef();
+                    BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-				    bd.position = new Vector2(0.0f, 7.0f);
-				    Body body = _world.CreateBody(bd);
-				    body.CreateFixture(shape, 2.0f);
+                    bd.position = new Vector2(0.0f, 7.0f);
+                    Body body = _world.CreateBody(bd);
+                    body.CreateFixture(shape, 2.0f);
 
                     RevoluteJointDef rjd = new RevoluteJointDef();
-				    rjd.Initialize(prevBody, body, new Vector2(0.0f, 5.0f));
-				    rjd.motorSpeed = 1.0f * FarseerPhysics.Settings.b2_pi;
-				    rjd.maxMotorTorque = 10000.0f;
-				    rjd.enableMotor = true;
-				    _joint1 = (RevoluteJoint)_world.CreateJoint(rjd);
+                    rjd.Initialize(prevBody, body, new Vector2(0.0f, 5.0f));
+                    rjd.motorSpeed = 1.0f*FarseerPhysics.Settings.b2_pi;
+                    rjd.maxMotorTorque = 10000.0f;
+                    rjd.enableMotor = true;
+                    _joint1 = (RevoluteJoint) _world.CreateJoint(rjd);
 
-				    prevBody = body;
-			    }
+                    prevBody = body;
+                }
 
-			    // Define follower.
-			    {
-				    PolygonShape shape = new PolygonShape();
-				    shape.SetAsBox(0.5f, 4.0f);
+                // Define follower.
+                {
+                    PolygonShape shape = new PolygonShape();
+                    shape.SetAsBox(0.5f, 4.0f);
 
-				    BodyDef bd = new BodyDef();
+                    BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-				    bd.position = new Vector2(0.0f, 13.0f);
-				    Body body = _world.CreateBody(bd);
-				    body.CreateFixture(shape, 2.0f);
+                    bd.position = new Vector2(0.0f, 13.0f);
+                    Body body = _world.CreateBody(bd);
+                    body.CreateFixture(shape, 2.0f);
 
                     RevoluteJointDef rjd3 = new RevoluteJointDef();
-				    rjd3.Initialize(prevBody, body, new Vector2(0.0f, 9.0f));
-				    rjd3.enableMotor = false;
-				    _world.CreateJoint(rjd3);
+                    rjd3.Initialize(prevBody, body, new Vector2(0.0f, 9.0f));
+                    rjd3.enableMotor = false;
+                    _world.CreateJoint(rjd3);
 
-				    prevBody = body;
-			    }
+                    prevBody = body;
+                }
 
-			    // Define piston
-			    {
-				    PolygonShape shape = new PolygonShape();
-				    shape.SetAsBox(1.5f, 1.5f);
+                // Define piston
+                {
+                    PolygonShape shape = new PolygonShape();
+                    shape.SetAsBox(1.5f, 1.5f);
 
-				    BodyDef bd = new BodyDef();
+                    BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-				    bd.position = new Vector2(0.0f, 17.0f);
-				    Body body = _world.CreateBody(bd);
-				    body.CreateFixture(shape, 2.0f);
+                    bd.position = new Vector2(0.0f, 17.0f);
+                    Body body = _world.CreateBody(bd);
+                    body.CreateFixture(shape, 2.0f);
 
                     RevoluteJointDef rjd2 = new RevoluteJointDef();
-				    rjd2.Initialize(prevBody, body, new Vector2(0.0f, 17.0f));
-				    _world.CreateJoint(rjd2);
+                    rjd2.Initialize(prevBody, body, new Vector2(0.0f, 17.0f));
+                    _world.CreateJoint(rjd2);
 
                     PrismaticJointDef pjd = new PrismaticJointDef();
-				    pjd.Initialize(ground, body, new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f));
+                    pjd.Initialize(ground, body, new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f));
 
-				    pjd.maxMotorForce = 1000.0f;
-				    pjd.enableMotor = true;
+                    pjd.maxMotorForce = 1000.0f;
+                    pjd.enableMotor = true;
 
-				    _joint2 = (PrismaticJoint)_world.CreateJoint(pjd);
-			    }
+                    _joint2 = (PrismaticJoint) _world.CreateJoint(pjd);
+                }
 
-			    // Create a payload
-			    {
-				    PolygonShape shape = new PolygonShape();
-				    shape.SetAsBox(1.5f, 1.5f);
+                // Create a payload
+                {
+                    PolygonShape shape = new PolygonShape();
+                    shape.SetAsBox(1.5f, 1.5f);
 
-				    BodyDef bd = new BodyDef();
+                    BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-				    bd.position = new Vector2(0.0f, 23.0f);
-				    Body body = _world.CreateBody(bd);
-				    body.CreateFixture(shape, 2.0f);
-			    }
-		    }
-	    }
+                    bd.position = new Vector2(0.0f, 23.0f);
+                    Body body = _world.CreateBody(bd);
+                    body.CreateFixture(shape, 2.0f);
+                }
+            }
+        }
 
-	    public override void Keyboard(KeyboardState state, KeyboardState oldState)
-	    {
+        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        {
             if (state.IsKeyDown(Keys.F) && oldState.IsKeyUp(Keys.F))
             {
                 _joint2.EnableMotor(!_joint2.IsMotorEnabled());
@@ -134,24 +134,24 @@ namespace Box2D.XNA.TestBed.Tests
                 _joint1.EnableMotor(!_joint1.IsMotorEnabled());
                 _joint1.GetBodyB().SetAwake(true);
             }
-	    }
+        }
 
-	    public override void Step(Framework.Settings settings)
-	    {
-		    base.Step(settings);
-		    _debugView.DrawString(50, _textLine, "Keys: (f) toggle friction, (m) toggle motor");
-		    _textLine += 15;
-		    float torque = _joint1.GetMotorTorque();
-            _debugView.DrawString(50, _textLine, "Motor Torque = {0:n}", (float)torque);
-		    _textLine += 15;
-	    }
+        public override void Step(Framework.Settings settings)
+        {
+            base.Step(settings);
+            _debugView.DrawString(50, _textLine, "Keys: (f) toggle friction, (m) toggle motor");
+            _textLine += 15;
+            float torque = _joint1.GetMotorTorque();
+            _debugView.DrawString(50, _textLine, "Motor Torque = {0:n}", (float) torque);
+            _textLine += 15;
+        }
 
-	    internal static Test Create()
-	    {
-		    return new SliderCrank();
-	    }
+        internal static Test Create()
+        {
+            return new SliderCrank();
+        }
 
-	    RevoluteJoint _joint1;
-	    PrismaticJoint _joint2;
+        private RevoluteJoint _joint1;
+        private PrismaticJoint _joint2;
     }
 }

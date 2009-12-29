@@ -21,12 +21,12 @@
 */
 
 using System;
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class ApplyForce : Test
     {
@@ -34,81 +34,81 @@ namespace Box2D.XNA.TestBed.Tests
         {
             _world.Gravity = new Vector2(0.0f, 0.0f);
 
-		    float k_restitution = 0.4f;
+            float k_restitution = 0.4f;
 
             Body ground;
-		    {
-			    BodyDef bd = new BodyDef();
-			    bd.position = new Vector2(0.0f, 20.0f);
-			    ground = _world.CreateBody(bd);
+            {
+                BodyDef bd = new BodyDef();
+                bd.position = new Vector2(0.0f, 20.0f);
+                ground = _world.CreateBody(bd);
 
-			    PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape();
 
-			    FixtureDef sd = new FixtureDef();
-			    sd.shape = shape;
-			    sd.density = 0.0f;
-			    sd.restitution = k_restitution;
+                FixtureDef sd = new FixtureDef();
+                sd.shape = shape;
+                sd.density = 0.0f;
+                sd.restitution = k_restitution;
 
-			    // Left vertical
-			    shape.SetAsEdge(new Vector2(-20.0f, -20.0f), new Vector2(-20.0f, 20.0f));
-			    ground.CreateFixture(sd);
+                // Left vertical
+                shape.SetAsEdge(new Vector2(-20.0f, -20.0f), new Vector2(-20.0f, 20.0f));
+                ground.CreateFixture(sd);
 
-			    // Right vertical
-			    shape.SetAsEdge(new Vector2(20.0f, -20.0f), new Vector2(20.0f, 20.0f));
-			    ground.CreateFixture(sd);
+                // Right vertical
+                shape.SetAsEdge(new Vector2(20.0f, -20.0f), new Vector2(20.0f, 20.0f));
+                ground.CreateFixture(sd);
 
-			    // Top horizontal
-			    shape.SetAsEdge(new Vector2(-20.0f, 20.0f), new Vector2(20.0f, 20.0f));
-			    ground.CreateFixture(sd);
+                // Top horizontal
+                shape.SetAsEdge(new Vector2(-20.0f, 20.0f), new Vector2(20.0f, 20.0f));
+                ground.CreateFixture(sd);
 
-			    // Bottom horizontal
-			    shape.SetAsEdge(new Vector2(-20.0f, -20.0f), new Vector2(20.0f, -20.0f));
-			    ground.CreateFixture(sd);
-		    }
+                // Bottom horizontal
+                shape.SetAsEdge(new Vector2(-20.0f, -20.0f), new Vector2(20.0f, -20.0f));
+                ground.CreateFixture(sd);
+            }
 
-		    {
+            {
                 Transform xf1 = new Transform();
-			    xf1.R.Set(0.3524f * FarseerPhysics.Settings.b2_pi);
-			    xf1.Position = MathUtils.Multiply(ref xf1.R, new Vector2(1.0f, 0.0f));
+                xf1.R.Set(0.3524f*FarseerPhysics.Settings.b2_pi);
+                xf1.Position = MathUtils.Multiply(ref xf1.R, new Vector2(1.0f, 0.0f));
 
-			    Vector2[] vertices = new Vector2[3];
-			    vertices[0] = MathUtils.Multiply(ref xf1, new Vector2(-1.0f, 0.0f));
-			    vertices[1] = MathUtils.Multiply(ref xf1, new Vector2(1.0f, 0.0f));
-			    vertices[2] = MathUtils.Multiply(ref xf1, new Vector2(0.0f, 0.5f));
-    			
-			    PolygonShape poly1 = new PolygonShape();
-			    poly1.Set(vertices, 3);
+                Vector2[] vertices = new Vector2[3];
+                vertices[0] = MathUtils.Multiply(ref xf1, new Vector2(-1.0f, 0.0f));
+                vertices[1] = MathUtils.Multiply(ref xf1, new Vector2(1.0f, 0.0f));
+                vertices[2] = MathUtils.Multiply(ref xf1, new Vector2(0.0f, 0.5f));
 
-			    FixtureDef sd1 = new FixtureDef();
-			    sd1.shape = poly1;
-			    sd1.density = 4.0f;
+                PolygonShape poly1 = new PolygonShape();
+                poly1.Set(vertices, 3);
+
+                FixtureDef sd1 = new FixtureDef();
+                sd1.shape = poly1;
+                sd1.density = 4.0f;
 
                 Transform xf2 = new Transform();
-                xf2.R.Set(-0.3524f * FarseerPhysics.Settings.b2_pi);
-			    xf2.Position = MathUtils.Multiply(ref xf2.R, new Vector2(-1.0f, 0.0f));
+                xf2.R.Set(-0.3524f*FarseerPhysics.Settings.b2_pi);
+                xf2.Position = MathUtils.Multiply(ref xf2.R, new Vector2(-1.0f, 0.0f));
 
-			    vertices[0] = MathUtils.Multiply(ref xf2, new Vector2(-1.0f, 0.0f));
-			    vertices[1] = MathUtils.Multiply(ref xf2, new Vector2(1.0f, 0.0f));
-			    vertices[2] = MathUtils.Multiply(ref xf2, new Vector2(0.0f, 0.5f));
-    			
-			    PolygonShape poly2 = new PolygonShape();
-			    poly2.Set(vertices, 3);
+                vertices[0] = MathUtils.Multiply(ref xf2, new Vector2(-1.0f, 0.0f));
+                vertices[1] = MathUtils.Multiply(ref xf2, new Vector2(1.0f, 0.0f));
+                vertices[2] = MathUtils.Multiply(ref xf2, new Vector2(0.0f, 0.5f));
+
+                PolygonShape poly2 = new PolygonShape();
+                poly2.Set(vertices, 3);
 
                 FixtureDef sd2 = new FixtureDef();
-			    sd2.shape = poly2;
-			    sd2.density = 2.0f;
+                sd2.shape = poly2;
+                sd2.density = 2.0f;
 
-			    BodyDef bd = new BodyDef();
+                BodyDef bd = new BodyDef();
                 bd.type = BodyType.Dynamic;
-			    bd.angularDamping = 5.0f;
-			    bd.linearDamping = 0.1f;
+                bd.angularDamping = 5.0f;
+                bd.linearDamping = 0.1f;
 
-			    bd.position = new Vector2(0.0f, 2.0f);
+                bd.position = new Vector2(0.0f, 2.0f);
                 bd.angle = FarseerPhysics.Settings.b2_pi;
-			    _body = _world.CreateBody(bd);
-			    _body.CreateFixture(sd1);
-			    _body.CreateFixture(sd2);
-		    }
+                _body = _world.CreateBody(bd);
+                _body.CreateFixture(sd1);
+                _body.CreateFixture(sd2);
+            }
 
             {
                 PolygonShape shape = new PolygonShape();
@@ -124,7 +124,7 @@ namespace Box2D.XNA.TestBed.Tests
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
 
-                    bd.position = new Vector2(0.0f, 5.0f + 1.54f * i);
+                    bd.position = new Vector2(0.0f, 5.0f + 1.54f*i);
                     Body body = _world.CreateBody(bd);
 
                     body.CreateFixture(fd);
@@ -134,7 +134,7 @@ namespace Box2D.XNA.TestBed.Tests
                     float mass = body.GetMass();
 
                     // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
-                    float radius = (float)Math.Sqrt(2.0 * (double)(I / mass));
+                    float radius = (float) Math.Sqrt(2.0*(double) (I/mass));
 
                     FrictionJointDef jd = new FrictionJointDef();
                     jd.localAnchorA = Vector2.Zero;
@@ -142,8 +142,8 @@ namespace Box2D.XNA.TestBed.Tests
                     jd.bodyA = ground;
                     jd.bodyB = body;
                     jd.collideConnected = true;
-                    jd.maxForce = mass * gravity;
-                    jd.maxTorque = mass * radius * gravity;
+                    jd.maxForce = mass*gravity;
+                    jd.maxTorque = mass*radius*gravity;
 
                     _world.CreateJoint(jd);
                 }
@@ -151,28 +151,28 @@ namespace Box2D.XNA.TestBed.Tests
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
-	    {
-            if(state.IsKeyDown(Keys.W))
-		    {
-			    Vector2 f = _body.GetWorldVector(new Vector2(0.0f, -200.0f));
-			    Vector2 p = _body.GetWorldPoint(new Vector2(0.0f, 2.0f));
-			    _body.ApplyForce(f, p);
-		    }
-			if(state.IsKeyDown(Keys.A))
-		    {
-			    _body.ApplyTorque(50.0f);
-		    }
-			if(state.IsKeyDown(Keys.D))
-		    {
-			    _body.ApplyTorque(-50.0f);
-		    }
-	    }
+        {
+            if (state.IsKeyDown(Keys.W))
+            {
+                Vector2 f = _body.GetWorldVector(new Vector2(0.0f, -200.0f));
+                Vector2 p = _body.GetWorldPoint(new Vector2(0.0f, 2.0f));
+                _body.ApplyForce(f, p);
+            }
+            if (state.IsKeyDown(Keys.A))
+            {
+                _body.ApplyTorque(50.0f);
+            }
+            if (state.IsKeyDown(Keys.D))
+            {
+                _body.ApplyTorque(-50.0f);
+            }
+        }
 
-	    static internal Test Create()
-	    {
-		    return new ApplyForce();
-	    }
+        internal static Test Create()
+        {
+            return new ApplyForce();
+        }
 
-	    Body _body;
+        private Body _body;
     }
 }

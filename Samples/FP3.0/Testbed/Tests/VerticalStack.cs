@@ -20,70 +20,70 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class VerticalStack : Test
     {
         public enum StackOptions
-	    {
-		    e_columnCount = 5,
-		    e_rowCount = 16
-		    //e_columnCount = 1,
-		    //e_rowCount = 1
-	    };
+        {
+            e_columnCount = 5,
+            e_rowCount = 16
+            //e_columnCount = 1,
+            //e_rowCount = 1
+        } ;
 
-	    VerticalStack()
-	    {
-		    {
-			    BodyDef bd = new BodyDef();
-			    Body ground = _world.CreateBody(bd);
+        private VerticalStack()
+        {
+            {
+                BodyDef bd = new BodyDef();
+                Body ground = _world.CreateBody(bd);
 
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-			    ground.CreateFixture(shape, 0.0f);
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0.0f);
 
-			    shape.SetAsEdge(new Vector2(20.0f, 0.0f), new Vector2(20.0f, 20.0f));
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                shape.SetAsEdge(new Vector2(20.0f, 0.0f), new Vector2(20.0f, 20.0f));
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    float[] xs = new float[5]
-            {0.0f, -10.0f, -5.0f, 5.0f, 10.0f};
+            float[] xs = new float[5]
+                             {0.0f, -10.0f, -5.0f, 5.0f, 10.0f};
 
-            for (int j = 0; j < (int)StackOptions.e_columnCount; ++j)
-		    {
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsBox(0.5f, 0.5f);
+            for (int j = 0; j < (int) StackOptions.e_columnCount; ++j)
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.5f, 0.5f);
 
-			    FixtureDef fd = new FixtureDef();
-			    fd.shape = shape;
-			    fd.density = 1.0f;
-			    fd.friction = 0.3f;
+                FixtureDef fd = new FixtureDef();
+                fd.shape = shape;
+                fd.density = 1.0f;
+                fd.friction = 0.3f;
 
-                for (int i = 0; i < (int)StackOptions.e_rowCount; ++i)
-			    {
-				    BodyDef bd = new BodyDef();
+                for (int i = 0; i < (int) StackOptions.e_rowCount; ++i)
+                {
+                    BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
 
-				    float x = 0.0f;
-				    //float x = Rand.RandomFloat-0.02f, 0.02f);
-				    //float x = i % 2 == 0 ? -0.025f : 0.025f;
-				    bd.position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
-				    Body body = _world.CreateBody(bd);
+                    float x = 0.0f;
+                    //float x = Rand.RandomFloat-0.02f, 0.02f);
+                    //float x = i % 2 == 0 ? -0.025f : 0.025f;
+                    bd.position = new Vector2(xs[j] + x, 0.752f + 1.54f*i);
+                    Body body = _world.CreateBody(bd);
 
-				    body.CreateFixture(fd);
-			    }
-		    }
+                    body.CreateFixture(fd);
+                }
+            }
 
-		    _bullet = null;
-	    }
+            _bullet = null;
+        }
 
-	    public override void Keyboard(KeyboardState state, KeyboardState oldState)
-	    {
+        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        {
             if (state.IsKeyDown(Keys.OemComma) && oldState.IsKeyUp(Keys.OemComma))
             {
                 if (_bullet != null)
@@ -112,20 +112,20 @@ namespace Box2D.XNA.TestBed.Tests
                     _bullet.SetLinearVelocity(new Vector2(400.0f, 0.0f));
                 }
             }
-	    }
+        }
 
-	    public override void Step(Framework.Settings settings)
-	    {
-		    base.Step(settings);
-		    _debugView.DrawString(50, _textLine, "Press: (,) to launch a bullet.");
-		    _textLine += 15;
-	    }
+        public override void Step(Framework.Settings settings)
+        {
+            base.Step(settings);
+            _debugView.DrawString(50, _textLine, "Press: (,) to launch a bullet.");
+            _textLine += 15;
+        }
 
-	    internal static Test Create()
-	    {
-		    return new VerticalStack();
-	    }
+        internal static Test Create()
+        {
+            return new VerticalStack();
+        }
 
-	    Body _bullet;
+        private Body _bullet;
     }
 }
