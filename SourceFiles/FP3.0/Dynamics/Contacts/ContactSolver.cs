@@ -40,18 +40,21 @@ namespace FarseerPhysics
 
     public class ContactSolver
     {
-        public void Reset(ref TimeStep step, Contact[] contacts, int contactCount)
+        public void Reset(Contact[] contacts, int contactCount)
         {
-            _step = step;
             _contacts = contacts;
-
             _constraintCount = contactCount;
 
             // grow the array
-            for (int i = _constraints.Count; i < _constraintCount; i++)
+            if (_constraints == null || _constraints.Length < _constraintCount)
             {
-                _constraints.Add(new ContactConstraint());
+                _constraints = new ContactConstraint[_constraintCount * 2];
             }
+
+            //for (int i = _constraints.Count; i < _constraintCount; i++)
+            //{
+            //    _constraints.Add(new ContactConstraint());
+            //}
 
             for (int i = 0; i < _constraintCount; ++i)
             {
@@ -787,11 +790,10 @@ namespace FarseerPhysics
             return minSeparation >= -1.5f * Settings.LinearSlop;
         }
 
-        private TimeStep _step;
-        public List<ContactConstraint> _constraints = new List<ContactConstraint>(50);
+        public ContactConstraint[] _constraints;
         private int _constraintCount; // collection can be bigger.
         private Contact[] _contacts;
-    };
+    }
 
     internal struct PositionSolverManifold
     {
