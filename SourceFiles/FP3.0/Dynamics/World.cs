@@ -350,10 +350,10 @@ namespace FarseerPhysics
         }
 
         /// Take a time step. This performs collision detection, integration,
-        /// and raint solution.
+        /// and constraint solution.
         /// @param timeStep the amount of time to simulate, this should not vary.
-        /// @param velocityIterations for the velocity raint solver.
-        /// @param positionIterations for the position raint solver.
+        /// @param velocityIterations for the velocity constraint solver.
+        /// @param positionIterations for the position constraint solver.
         public void Step(float dt, int velocityIterations, int positionIterations)
         {
             // If new fixtures were added, we need to find the new contacts.
@@ -630,7 +630,7 @@ namespace FarseerPhysics
                 stack[stackCount++] = seed;
                 seed._flags |= BodyFlags.Island;
 
-                // Perform a depth first search (DFS) on the raint graph.
+                // Perform a depth first search (DFS) on the constraint graph.
                 while (stackCount > 0)
                 {
                     // Grab the next body off the stack and add it to the island.
