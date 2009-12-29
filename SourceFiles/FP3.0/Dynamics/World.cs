@@ -38,7 +38,7 @@ namespace FarseerPhysics
     /// management facilities.
     public class World
     {
-        /// ruct a world object.
+        /// Construct a world object.
         /// @param gravity the world gravity vector.
         /// @param doSleep improve performance by not simulating inactive bodies.
         public World(Vector2 gravity, bool doSleep)
