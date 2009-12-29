@@ -29,11 +29,11 @@ namespace FarseerPhysics.DebugViewXNA
                         {
                             DrawShape(f, xf, new Color(0.5f, 0.5f, 0.3f));
                         }
-                        else if (b.GetType() == BodyType.Static)
+                        else if (b.GetBodyType() == BodyType.Static)
                         {
                             DrawShape(f, xf, new Color(0.5f, 0.9f, 0.5f));
                         }
-                        else if (b.GetType() == BodyType.Kinematic)
+                        else if (b.GetBodyType() == BodyType.Kinematic)
                         {
                             DrawShape(f, xf, new Color(0.5f, 0.5f, 0.9f));
                         }

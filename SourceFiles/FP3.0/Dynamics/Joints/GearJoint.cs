@@ -107,8 +107,8 @@ namespace FarseerPhysics
 
 	        Debug.Assert(type1 == JointType.Revolute || type1 == JointType.Prismatic);
 	        Debug.Assert(type2 == JointType.Revolute || type2 == JointType.Prismatic);
-	        Debug.Assert(def.joint1.GetBodyA().GetType() == BodyType.Static);
-            Debug.Assert(def.joint2.GetBodyA().GetType() == BodyType.Static);
+	        Debug.Assert(def.joint1.GetBodyA().GetBodyType() == BodyType.Static);
+            Debug.Assert(def.joint2.GetBodyA().GetBodyType() == BodyType.Static);
 
 	        _revolute1 = null;
 	        _prismatic1 = null;

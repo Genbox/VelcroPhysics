@@ -619,7 +619,7 @@ namespace FarseerPhysics
                 }
 
                 // The seed can be dynamic or kinematic.
-                if (seed.GetType() == BodyType.Static)
+                if (seed.GetBodyType() == BodyType.Static)
                 {
                     continue;
                 }
@@ -646,7 +646,7 @@ namespace FarseerPhysics
 
                     // To keep islands as small as possible, we don't
                     // propagate islands across static bodies.
-                    if (b.GetType() == BodyType.Static)
+                    if (b.GetBodyType() == BodyType.Static)
                     {
                         continue;
                     }
@@ -719,7 +719,7 @@ namespace FarseerPhysics
                 {
                     // Allow static bodies to participate in other islands.
                     Body b = _island._bodies[i];
-                    if (b.GetType() == BodyType.Static)
+                    if (b.GetBodyType() == BodyType.Static)
                     {
                         b._flags &= ~BodyFlags.Island;
                     }
@@ -734,7 +734,7 @@ namespace FarseerPhysics
                     continue;
                 }
 
-                if (b.GetType() == BodyType.Static)
+                if (b.GetBodyType() == BodyType.Static)
                 {
                     continue;
                 }
@@ -815,8 +815,8 @@ namespace FarseerPhysics
                         Body b1 = s1.GetBody();
                         Body b2 = s2.GetBody();
 
-                        if ((b1.GetType() != BodyType.Dynamic || !b1.IsAwake()) &&
-                            (b2.GetType() != BodyType.Dynamic || !b2.IsAwake()))
+                        if ((b1.GetBodyType() != BodyType.Dynamic || !b1.IsAwake()) &&
+                            (b2.GetBodyType() != BodyType.Dynamic || !b2.IsAwake()))
                         {
                             continue;
                         }
@@ -904,7 +904,7 @@ namespace FarseerPhysics
 
                 // Build the TOI island. We need a dynamic seed.
                 Body seed = b1_2;
-                if (seed.GetType() != BodyType.Dynamic)
+                if (seed.GetBodyType() != BodyType.Dynamic)
                 {
                     seed = b2_2;
                 }
@@ -935,7 +935,7 @@ namespace FarseerPhysics
 
                     // To keep islands as small as possible, we don't
                     // propagate islands across static or kinematic bodies.
-                    if (b.GetType() != BodyType.Dynamic)
+                    if (b.GetBodyType() != BodyType.Dynamic)
                     {
                         continue;
                     }
@@ -976,7 +976,7 @@ namespace FarseerPhysics
                         }
 
                         // Synchronize the connected body.
-                        if (other.GetType() != BodyType.Static)
+                        if (other.GetBodyType() != BodyType.Static)
                         {
                             other.Advance(minTOI);
                             other.SetAwake(true);
@@ -1016,7 +1016,7 @@ namespace FarseerPhysics
                         }
 
                         // Synchronize the connected body.
-                        if (other.GetType() != BodyType.Static)
+                        if (other.GetBodyType() != BodyType.Static)
                         {
                             other.Advance(minTOI);
                             other.SetAwake(true);
@@ -1051,7 +1051,7 @@ namespace FarseerPhysics
                         continue;
                     }
 
-                    if (b.GetType() == BodyType.Static)
+                    if (b.GetBodyType() == BodyType.Static)
                     {
                         continue;
                     }
