@@ -46,7 +46,7 @@ namespace FarseerPhysics
     /// abstract fixture definition. You can reuse fixture definitions safely.
     public class FixtureDef
     {
-	    /// The ructor sets the default fixture definition values.
+	    /// The constructor sets the default fixture definition values.
         public FixtureDef()
 	    {
 		    shape = null;
@@ -288,7 +288,7 @@ namespace FarseerPhysics
 	        _shape = null;
         }
 
-	    // We need separation create/destroy functions from the ructor/destructor because
+	    // We need separation create/destroy functions from the constructor/destructor because
 	    // the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
 	    internal void Create(Body body, FixtureDef def)
         {

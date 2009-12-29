@@ -22,8 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
@@ -93,9 +91,9 @@ namespace FarseerPhysics.TestBed.Framework
 
                 double totalTime = _stopwatch.Elapsed.TotalSeconds;
                 Vector2 offset = new Vector2(50, 100);
-                float height = 20;
-                float textWidth = 175;
-                float timeWidth = 500;
+                const float height = 20;
+                const float textWidth = 175;
+                const float timeWidth = 500;
 
                 _spriteBatch.Begin();
 
