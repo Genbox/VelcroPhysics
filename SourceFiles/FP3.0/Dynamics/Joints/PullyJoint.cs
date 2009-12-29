@@ -31,7 +31,7 @@ namespace FarseerPhysics
     /// and a pulley ratio.
     public class PulleyJointDef : JointDef
     {
-        internal static float b2_minPulleyLength = 2.0f;
+        internal const float MinPulleyLength = 2.0f;
 
 	    public PulleyJointDef()
 	    {
@@ -65,10 +65,10 @@ namespace FarseerPhysics
 	        Vector2 d2 = anchor2 - ga2;
 	        lengthB = d2.Length();
 	        ratio = r;
-	        Debug.Assert(ratio > Settings.b2_epsilon);
+	        Debug.Assert(ratio > Settings.Epsilon);
 	        float C = lengthA + ratio * lengthB;
-	        maxLengthA = C - ratio * b2_minPulleyLength;
-	        maxLengthB = (C - b2_minPulleyLength) / ratio;
+	        maxLengthA = C - ratio * MinPulleyLength;
+	        maxLengthB = (C - MinPulleyLength) / ratio;
         }
 
 	    /// The first ground anchor in world coordinates. This point never moves.
@@ -177,8 +177,8 @@ namespace FarseerPhysics
 
 	        _ant = def.lengthA + _ratio * def.lengthB;
 
-            _maxLength1 = Math.Min(def.maxLengthA, _ant - _ratio * PulleyJointDef.b2_minPulleyLength);
-            _maxLength2 = Math.Min(def.maxLengthB, (_ant - PulleyJointDef.b2_minPulleyLength) / _ratio);
+            _maxLength1 = Math.Min(def.maxLengthA, _ant - _ratio * PulleyJointDef.MinPulleyLength);
+            _maxLength2 = Math.Min(def.maxLengthB, (_ant - PulleyJointDef.MinPulleyLength) / _ratio);
 
 	        _impulse = 0.0f;
 	        _limitImpulse1 = 0.0f;
@@ -210,7 +210,7 @@ namespace FarseerPhysics
 	        float length1 = _u1.Length();
 	        float length2 = _u2.Length();
 
-	        if (length1 > Settings.b2_linearSlop)
+	        if (length1 > Settings.LinearSlop)
 	        {
 		        _u1 *= 1.0f / length1;
 	        }
@@ -219,7 +219,7 @@ namespace FarseerPhysics
 		        _u1 = Vector2.Zero;
 	        }
 
-	        if (length2 > Settings.b2_linearSlop)
+	        if (length2 > Settings.LinearSlop)
 	        {
 		        _u2 *= 1.0f / length2;
 	        }
@@ -266,9 +266,9 @@ namespace FarseerPhysics
 	        _limitMass1 = b1._invMass + b1._invI * cr1u1 * cr1u1;
 	        _limitMass2 = b2._invMass + b2._invI * cr2u2 * cr2u2;
 	        _pulleyMass = _limitMass1 + _ratio * _ratio * _limitMass2;
-	        Debug.Assert(_limitMass1 > Settings.b2_epsilon);
-	        Debug.Assert(_limitMass2 > Settings.b2_epsilon);
-	        Debug.Assert(_pulleyMass > Settings.b2_epsilon);
+	        Debug.Assert(_limitMass1 > Settings.Epsilon);
+	        Debug.Assert(_limitMass2 > Settings.Epsilon);
+	        Debug.Assert(_pulleyMass > Settings.Epsilon);
 	        _limitMass1 = 1.0f / _limitMass1;
 	        _limitMass2 = 1.0f / _limitMass2;
 	        _pulleyMass = 1.0f / _pulleyMass;
@@ -387,7 +387,7 @@ namespace FarseerPhysics
 		        float length1 = _u1.Length();
 		        float length2 = _u2.Length();
 
-		        if (length1 > Settings.b2_linearSlop)
+		        if (length1 > Settings.LinearSlop)
 		        {
 			        _u1 *= 1.0f / length1;
 		        }
@@ -396,7 +396,7 @@ namespace FarseerPhysics
 			        _u1 = Vector2.Zero;
 		        }
 
-		        if (length2 > Settings.b2_linearSlop)
+		        if (length2 > Settings.LinearSlop)
 		        {
 			        _u2 *= 1.0f / length2;
 		        }
@@ -408,7 +408,7 @@ namespace FarseerPhysics
 		        float C = _ant - length1 - _ratio * length2;
 		        linearError = Math.Max(linearError, -C);
 
-		        C = MathUtils.Clamp(C + Settings.b2_linearSlop, -Settings.b2_maxLinearCorrection, 0.0f);
+		        C = MathUtils.Clamp(C + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
 		        float impulse = -_pulleyMass * C;
 
 		        Vector2 P1 = -impulse * _u1;
@@ -434,7 +434,7 @@ namespace FarseerPhysics
 		        _u1 = p1 - s1;
 		        float length1 = _u1.Length();
 
-		        if (length1 > Settings.b2_linearSlop)
+		        if (length1 > Settings.LinearSlop)
 		        {
 			        _u1 *= 1.0f / length1;
 		        }
@@ -445,7 +445,7 @@ namespace FarseerPhysics
 
 		        float C = _maxLength1 - length1;
 		        linearError = Math.Max(linearError, -C);
-		        C = MathUtils.Clamp(C + Settings.b2_linearSlop, -Settings.b2_maxLinearCorrection, 0.0f);
+		        C = MathUtils.Clamp(C + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
 		        float impulse = -_limitMass1 * C;
 
 		        Vector2 P1 = -impulse * _u1;
@@ -466,7 +466,7 @@ namespace FarseerPhysics
 		        _u2 = p2 - s2;
 		        float length2 = _u2.Length();
 
-		        if (length2 > Settings.b2_linearSlop)
+		        if (length2 > Settings.LinearSlop)
 		        {
 			        _u2 *= 1.0f / length2;
 		        }
@@ -477,7 +477,7 @@ namespace FarseerPhysics
 
 		        float C = _maxLength2 - length2;
 		        linearError = Math.Max(linearError, -C);
-		        C = MathUtils.Clamp(C + Settings.b2_linearSlop, -Settings.b2_maxLinearCorrection, 0.0f);
+		        C = MathUtils.Clamp(C + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
 		        float impulse = -_limitMass2 * C;
 
 		        Vector2 P2 = -impulse * _u2;
@@ -487,35 +487,35 @@ namespace FarseerPhysics
 		        b2.SynchronizeTransform();
 	        }
 
-	        return linearError < Settings.b2_linearSlop;
+	        return linearError < Settings.LinearSlop;
         }
 
-	    internal Vector2 _groundAnchor1;
-	    internal Vector2 _groundAnchor2;
-	    internal Vector2 _localAnchor1;
-	    internal Vector2 _localAnchor2;
+        private Vector2 _groundAnchor1;
+        private Vector2 _groundAnchor2;
+        private Vector2 _localAnchor1;
+        private Vector2 _localAnchor2;
 
-	    internal Vector2 _u1;
-	    internal Vector2 _u2;
-    	
-	    internal float _ant;
-	    internal float _ratio;
-    	
-	    internal float _maxLength1;
-	    internal float _maxLength2;
+        private Vector2 _u1;
+        private Vector2 _u2;
+
+        private float _ant;
+        private float _ratio;
+
+        private float _maxLength1;
+        private float _maxLength2;
 
 	    // Effective masses
-	    internal float _pulleyMass;
-	    internal float _limitMass1;
-	    internal float _limitMass2;
+        private float _pulleyMass;
+        private float _limitMass1;
+        private float _limitMass2;
 
 	    // Impulses for accumulation/warm starting.
-	    internal float _impulse;
-	    internal float _limitImpulse1;
-	    internal float _limitImpulse2;
+        private float _impulse;
+        private float _limitImpulse1;
+        private float _limitImpulse2;
 
-	    internal LimitState _state;
-	    internal LimitState _limitState1;
-	    internal LimitState _limitState2;
+        private LimitState _state;
+        private LimitState _limitState1;
+        private LimitState _limitState2;
     };
 }

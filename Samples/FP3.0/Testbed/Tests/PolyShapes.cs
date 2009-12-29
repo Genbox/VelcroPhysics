@@ -64,7 +64,7 @@ namespace FarseerPhysics.TestBed.Tests
                     {
                         PolygonShape poly = (PolygonShape) fixture.GetShape();
                         int vertexCount = poly._vertexCount;
-                        Debug.Assert(vertexCount <= FarseerPhysics.Settings.b2_maxPolygonVertices);
+                        Debug.Assert(vertexCount <= FarseerPhysics.Settings.MaxPolygonVertices);
                         FixedArray8<Vector2> vertices = new FixedArray8<Vector2>();
 
                         for (int i = 0; i < vertexCount; ++i)
@@ -189,7 +189,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             float x = Rand.RandomFloat(-2.0f, 2.0f);
             bd.position = new Vector2(x, 10.0f);
-            bd.angle = Rand.RandomFloat(-FarseerPhysics.Settings.b2_pi, FarseerPhysics.Settings.b2_pi);
+            bd.angle = Rand.RandomFloat(-FarseerPhysics.Settings.Pi, FarseerPhysics.Settings.Pi);
 
             if (index == 4)
             {

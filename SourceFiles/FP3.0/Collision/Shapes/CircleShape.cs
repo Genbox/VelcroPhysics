@@ -73,13 +73,13 @@ namespace FarseerPhysics
 	        float sigma = c * c - rr * b;
 
 	        // Check for negative discriminant and short segment.
-	        if (sigma < 0.0f || rr < Settings.b2_epsilon)
+	        if (sigma < 0.0f || rr < Settings.Epsilon)
 	        {
                 return false;
 	        }
 
 	        // Find the point of intersection of the line with the circle.
-	        float a = -(c + (float)Math.Sqrt((double)sigma));
+	        float a = -(c + (float)Math.Sqrt(sigma));
 
 	        // Is the intersection point on the segment?
             if (0.0f <= a && a <= input.maxFraction * rr)
@@ -106,33 +106,11 @@ namespace FarseerPhysics
         /// @see Shape.ComputeMass
         public override void ComputeMass(out MassData massData, float density)
         {
-            massData.mass = density * Settings.b2_pi * _radius * _radius;
+            massData.mass = density * Settings.Pi * _radius * _radius;
 	        massData.center = _p;
 
 	        // inertia about the local origin
 	        massData.i = massData.mass * (0.5f * _radius * _radius + Vector2.Dot(_p, _p));
-        }
-
-        /// Get the supporting vertex index in the given direction.
-        public override int GetSupport(Vector2 d)
-        {
-            return 0;
-        }
-
-        /// Get the supporting vertex in the given direction.
-        public override Vector2 GetSupportVertex(Vector2 d)
-        {
-            return _p;
-        }
-
-        /// Get the vertex count.
-        public override int GetVertexCount() { return 1; }
-
-        /// Get a vertex by index. Used by b2Distance.
-        public override Vector2 GetVertex(int index)
-        {
-            Debug.Assert(index == 0);
-            return _p;
         }
 
         /// Position

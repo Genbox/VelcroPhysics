@@ -139,7 +139,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 position = body.GetPosition();
 
                 Vector2 d = center - position;
-                if (d.LengthSquared() < FarseerPhysics.Settings.b2_epsilon*FarseerPhysics.Settings.b2_epsilon)
+                if (d.LengthSquared() < FarseerPhysics.Settings.Epsilon*FarseerPhysics.Settings.Epsilon)
                 {
                     continue;
                 }

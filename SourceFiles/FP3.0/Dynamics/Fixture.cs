@@ -366,16 +366,16 @@ namespace FarseerPhysics
 	    internal Fixture _next;
 	    internal Body _body;
 
-	    internal Shape _shape;
+        private Shape _shape;
 
-	    internal float _friction;
-	    internal float _restitution;
+        private float _friction;
+        private float _restitution;
 
 	    internal int _proxyId;
-	    internal Filter _filter;
+        private Filter _filter;
 
-	    internal bool _isSensor;
+        private bool _isSensor;
 
-	    internal object _userData;
+        private object _userData;
     }
 }

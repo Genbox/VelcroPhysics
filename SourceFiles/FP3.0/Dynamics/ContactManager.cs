@@ -37,7 +37,7 @@ namespace FarseerPhysics
         }
 
         // Broad-phase callback.
-        internal void AddPair(Fixture proxyUserDataA, Fixture proxyUserDataB)
+        private void AddPair(Fixture proxyUserDataA, Fixture proxyUserDataB)
         {
             Fixture fixtureA = proxyUserDataA;
             Fixture fixtureB = proxyUserDataB;
@@ -136,7 +136,7 @@ namespace FarseerPhysics
 
         internal void FindNewContacts()
         {
-            _broadPhase.UpdatePairs<Fixture>(_addPair);
+            _broadPhase.UpdatePairs(_addPair);
         }
 
         internal void Destroy(Contact c)

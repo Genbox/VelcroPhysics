@@ -232,9 +232,6 @@ namespace FarseerPhysics
             Body bodyA = def.bodyA;
             Body bodyB = def.bodyB;
 
-            bool staticA = bodyA.GetType() == BodyType.Static;
-            bool staticB = bodyB.GetType() == BodyType.Static;
-
             // If the joint prevents collisions, then flag any contacts for filtering.
             if (def.collideConnected == false)
             {
@@ -638,7 +635,7 @@ namespace FarseerPhysics
                 {
                     // Grab the next body off the stack and add it to the island.
                     Body b = stack[--stackCount];
-                    Debug.Assert(b.IsActive() == true);
+                    Debug.Assert(b.IsActive());
                     _island.Add(b);
 
                     // Make sure the body is awake.
@@ -688,7 +685,7 @@ namespace FarseerPhysics
                     // Search all joints connect to this body.
                     for (JointEdge je = b._jointList; je != null; je = je.Next)
                     {
-                        if (je.Joint._islandFlag == true)
+                        if (je.Joint._islandFlag)
                         {
                             continue;
                         }
@@ -754,8 +751,8 @@ namespace FarseerPhysics
         {
             // Reserve an island and a queue for TOI island solution.
             _island.Reset(_bodyCount,
-                            Settings.b2_maxTOIContactsPerIsland,
-                            Settings.b2_maxTOIJointsPerIsland,
+                            Settings.MaxTOIContactsPerIsland,
+                            Settings.MaxTOIJointsPerIsland,
                             _contactManager.ContactListener);
 
             //Simple one pass queue
@@ -804,7 +801,7 @@ namespace FarseerPhysics
 
                     // TODO_ERIN keep a counter on the contact, only respond to M TOIs per contact.
 
-                    float toi = 1.0f;
+                    float toi;
                     if ((c._flags & ContactFlags.Toi) != ContactFlags.None)
                     {
                         // This contact has a valid cached TOI.
@@ -857,7 +854,7 @@ namespace FarseerPhysics
                         c._flags |= ContactFlags.Toi;
                     }
 
-                    if (Settings.b2_epsilon < toi && toi < minTOI)
+                    if (Settings.Epsilon < toi && toi < minTOI)
                     {
                         // This is the minimum TOI found so far.
                         minContact = c;
@@ -865,7 +862,7 @@ namespace FarseerPhysics
                     }
                 }
 
-                if (minContact == null || 1.0f - 100.0f * Settings.b2_epsilon < minTOI)
+                if (minContact == null || 1.0f - 100.0f * Settings.Epsilon < minTOI)
                 {
                     // No more TOI events. Done!
                     break;
@@ -959,7 +956,7 @@ namespace FarseerPhysics
                         }
 
                         // Skip separate, sensor, or disabled contacts.
-                        if (cEdge.Contact.IsSensor() == true ||
+                        if (cEdge.Contact.IsSensor() ||
                             cEdge.Contact.IsEnabled() == false ||
                             cEdge.Contact.IsTouching() == false)
                         {
@@ -998,7 +995,7 @@ namespace FarseerPhysics
                             continue;
                         }
 
-                        if (jEdge.Joint._islandFlag == true)
+                        if (jEdge.Joint._islandFlag)
                         {
                             continue;
                         }
@@ -1091,21 +1088,21 @@ namespace FarseerPhysics
             }
         }
 
-        internal Island _island = new Island();
+        private Island _island = new Island();
         internal WorldFlags _flags;
 
         internal ContactManager _contactManager = new ContactManager();
 
-        internal Body _bodyList;
-        internal Joint _jointList;
+        private Body _bodyList;
+        private Joint _jointList;
 
-        internal int _bodyCount;
-        internal int _jointCount;
+        private int _bodyCount;
+        private int _jointCount;
 
-        internal bool _allowSleep;
+        private bool _allowSleep;
 
         // This is used to compute the time step ratio to
         // support a variable time step.
-        internal float _inv_dt0;
+        private float _inv_dt0;
     }
 }

@@ -123,7 +123,7 @@ namespace FarseerPhysics
 			        Vector2 pointA = MathUtils.Multiply(ref xfA, manifold._localPoint);
                     Vector2 pointB = MathUtils.Multiply(ref xfB, manifold._points[0].LocalPoint);
                     Vector2 normal = new Vector2(1.0f, 0.0f);
-			        if (Vector2.DistanceSquared(pointA, pointB) > Settings.b2_epsilon * Settings.b2_epsilon)
+			        if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
 			        {
 				        normal = pointB - pointA;
 				        normal.Normalize();
@@ -182,7 +182,6 @@ namespace FarseerPhysics
     /// This is used for determining the state of contact points.
     public enum PointState
     {
-	    Null,		///< point does not exist
 	    Add,		///< point was added in the update
 	    Persist,	///< point persisted across the update
 	    Remove,		///< point was removed in the update
@@ -238,7 +237,7 @@ namespace FarseerPhysics
 	        Vector2 d = p2 - p1;
 	        Vector2 n = MathUtils.Cross(d, 1.0f);
 
-	        float k_slop = 100.0f * Settings.b2_epsilon;
+	        float k_slop = 100.0f * Settings.Epsilon;
 	        float denom = -Vector2.Dot(r, n);
 
 	        // Cull back facing collision and ignore parallel segments.
@@ -315,9 +314,8 @@ namespace FarseerPhysics
 
         public static bool TestOverlap(ref AABB a, ref AABB b)
         {
-            Vector2 d1, d2;
-            d1 = b.lowerBound - a.upperBound;
-            d2 = a.lowerBound - b.upperBound;
+            Vector2 d1 = b.lowerBound - a.upperBound;
+            Vector2 d2 = a.lowerBound - b.upperBound;
 
             if (d1.X > 0.0f || d1.Y > 0.0f)
 	            return false;
@@ -341,7 +339,7 @@ namespace FarseerPhysics
 	        DistanceOutput output;
 	        Distance.ComputeDistance(out output, out cache, ref input);
 
-	        return output.distance < 10.0f * Settings.b2_epsilon;
+	        return output.distance < 10.0f * Settings.Epsilon;
         }
 
 
@@ -350,8 +348,8 @@ namespace FarseerPhysics
         {
             output = new RayCastOutput();
 
-            float tmin = -Settings.b2_maxFloat;
-            float tmax = Settings.b2_maxFloat;
+            float tmin = -Settings.MaxFloat;
+            float tmax = Settings.MaxFloat;
 
 	        Vector2 p = input.p1;
 	        Vector2 d = input.p2 - input.p1;
@@ -366,7 +364,7 @@ namespace FarseerPhysics
                 float upperBound_i = i == 0 ? upperBound.X : upperBound.Y;
                 float p_i = i == 0 ? p.X : p.Y;
 
-                if (absD_i < Settings.b2_epsilon)
+                if (absD_i < Settings.Epsilon)
 		        {
 			        // Parallel.
                     if (p_i < lowerBound_i || upperBound_i < p_i)
@@ -387,7 +385,7 @@ namespace FarseerPhysics
 
 			        if (t1 > t2)
 			        {
-				        MathUtils.Swap<float>(ref t1, ref t2);
+				        MathUtils.Swap(ref t1, ref t2);
 				        s = 1.0f;
 			        }
 
@@ -521,7 +519,7 @@ namespace FarseerPhysics
 
 	        // Find the min separating edge.
 	        int normalIndex = 0;
-	        float separation = -Settings.b2_maxFloat;
+	        float separation = -Settings.MaxFloat;
 	        float radius = polygon._radius + circle._radius;
 	        int vertexCount = polygon._vertexCount;
 
@@ -549,7 +547,7 @@ namespace FarseerPhysics
             Vector2 v2 = polygon._vertices[vertIndex2];
 
 	        // If the center is inside the polygon ...
-	        if (separation < Settings.b2_epsilon)
+	        if (separation < Settings.Epsilon)
 	        {
 		        manifold._pointCount = 1;
 		        manifold._type = ManifoldType.FaceA;
@@ -641,12 +639,12 @@ namespace FarseerPhysics
 	        manifold._pointCount = 0;
 	        float totalRadius = polyA._radius + polyB._radius;
 
-	        int edgeA = 0;
+	        int edgeA;
 	        float separationA = FindMaxSeparation(out edgeA, polyA, ref xfA, polyB, ref xfB);
 	        if (separationA > totalRadius)
 		        return;
 
-	        int edgeB = 0;
+	        int edgeB;
 	        float separationB = FindMaxSeparation(out edgeB, polyB, ref xfB, polyA, ref xfA);
 	        if (separationB > totalRadius)
 		        return;
@@ -656,8 +654,8 @@ namespace FarseerPhysics
 	        Transform xf1, xf2;
 	        int edge1;		// reference edge
 	        byte flip;
-	        float k_relativeTol = 0.98f;
-	        float k_absoluteTol = 0.001f;
+	        const float k_relativeTol = 0.98f;
+	        const float k_absoluteTol = 0.001f;
 
 	        if (separationB > k_relativeTol * separationA + k_absoluteTol)
 	        {
@@ -710,10 +708,9 @@ namespace FarseerPhysics
 	        // Clip incident edge against extruded edge1 side edges.
 	        FixedArray2<ClipVertex> clipPoints1;
 	        FixedArray2<ClipVertex> clipPoints2;
-	        int np;
 
-	        // Clip to box side 1
-            np = ClipSegmentToLine(out clipPoints1, ref incidentEdge, -tangent, sideOffset1);
+            // Clip to box side 1
+            int np = ClipSegmentToLine(out clipPoints1, ref incidentEdge, -tangent, sideOffset1);
 
 	        if (np < 2)
 		        return;
@@ -731,7 +728,7 @@ namespace FarseerPhysics
 	        manifold._localPoint = planePoint;
 
 	        int pointCount = 0;
-	        for (int i = 0; i < Settings.b2_maxManifoldPoints; ++i)
+	        for (int i = 0; i < Settings.MaxManifoldPoints; ++i)
 	        {
 		        float separation = Vector2.Dot(normal, clipPoints2[i].v) - frontOffset;
 
@@ -751,7 +748,7 @@ namespace FarseerPhysics
         }
 
         /// Clipping for contact manifolds.
-        public static int ClipSegmentToLine(out FixedArray2<ClipVertex> vOut, ref FixedArray2<ClipVertex> vIn,
+        private static int ClipSegmentToLine(out FixedArray2<ClipVertex> vOut, ref FixedArray2<ClipVertex> vIn,
 							        Vector2 normal, float offset)
         {
             vOut = new FixedArray2<ClipVertex>();
@@ -813,7 +810,7 @@ namespace FarseerPhysics
 #endif
 	        // Find support vertex on poly2 for -normal.
 	        int index = 0;
-	        float minDot = Settings.b2_maxFloat;
+	        float minDot = Settings.MaxFloat;
 
 	        for (int i = 0; i < count2; ++i)
 	        {
@@ -856,8 +853,7 @@ namespace FarseerPhysics
 								        PolygonShape poly1, ref Transform xf1,
 								        PolygonShape poly2, ref Transform xf2)
         {
-            edgeIndex = -1;
-	        int count1 = poly1._vertexCount;
+            int count1 = poly1._vertexCount;
 
 	        // Vector pointing from the centroid of poly1 to the centroid of poly2.
 	        Vector2 d = MathUtils.Multiply(ref xf2, poly2._centroid) - MathUtils.Multiply(ref xf1, poly1._centroid);
@@ -865,7 +861,7 @@ namespace FarseerPhysics
 
 	        // Find edge normal on poly1 that has the largest projection onto d.
 	        int edge = 0;
-	        float maxDot = -Settings.b2_maxFloat;
+	        float maxDot = -Settings.MaxFloat;
 	        for (int i = 0; i < count1; ++i)
 	        {
 		        float dot = Vector2.Dot(poly1._normals[i], dLocal1);
@@ -950,7 +946,7 @@ namespace FarseerPhysics
 
 	        // Find the incident edge on poly2.
 	        int index = 0;
-	        float minDot = Settings.b2_maxFloat;
+	        float minDot = Settings.MaxFloat;
 	        for (int i = 0; i < count2; ++i)
 	        {
 		        float dot = Vector2.Dot(normal1, poly2._normals[i]);

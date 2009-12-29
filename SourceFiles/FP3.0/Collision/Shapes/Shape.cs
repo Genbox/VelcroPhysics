@@ -48,7 +48,7 @@ namespace FarseerPhysics
 
     public abstract class Shape
     {
-	    public Shape() 
+        protected Shape() 
         {
             ShapeType = ShapeType.Unknown; 
         }
@@ -82,11 +82,6 @@ namespace FarseerPhysics
 	    /// @param massData returns the mass data for this shape.
 	    /// @param density the density in kilograms per meter squared.
 	    public abstract void ComputeMass(out MassData massData, float density);
-
-        public abstract int GetSupport(Vector2 d);
-        public abstract Vector2 GetSupportVertex(Vector2 d);
-        public abstract int GetVertexCount();
-        public abstract Vector2 GetVertex(int index);
 
 	    public float _radius;
     }

@@ -160,7 +160,7 @@ namespace FarseerPhysics
         }
 
 	    /// Get the type of this body.
-        public BodyType GetType()
+        public new BodyType GetType()
         {
             return _type;
         }
@@ -175,7 +175,7 @@ namespace FarseerPhysics
 	    public Fixture CreateFixture(FixtureDef def)
         {
             Debug.Assert(_world.IsLocked == false);
-	        if (_world.IsLocked == true)
+	        if (_world.IsLocked)
 	        {
 		        return null;
 	        }
@@ -235,7 +235,7 @@ namespace FarseerPhysics
 	    public void DestroyFixture(Fixture fixture)
         {
             Debug.Assert(_world.IsLocked == false);
-	        if (_world.IsLocked == true)
+	        if (_world.IsLocked)
 	        {
 		        return;
 	        }
@@ -308,7 +308,7 @@ namespace FarseerPhysics
 	    public void SetTransform(Vector2 position, float angle)
         {
             Debug.Assert(_world.IsLocked == false);
-	        if (_world.IsLocked == true)
+	        if (_world.IsLocked)
 	        {
 		        return;
 	        }
@@ -691,7 +691,7 @@ namespace FarseerPhysics
 
         /// You can disable sleeping on this body. If you disable sleeping, the
 	    /// body will be woken.
-	    void SetSleepingAllowed(bool flag)
+	    public void SetSleepingAllowed(bool flag)
         {
             if (flag)
             {
@@ -1026,7 +1026,7 @@ namespace FarseerPhysics
         }
 
         internal BodyFlags _flags;
-        internal BodyType _type;
+        private BodyType _type;
 
         internal int _islandIndex;
 
@@ -1039,7 +1039,7 @@ namespace FarseerPhysics
         internal Vector2 _force;
         internal float _torque;
 
-        internal World _world;
+        private World _world;
         internal Body _prev;
         internal Body _next;
 
@@ -1057,8 +1057,8 @@ namespace FarseerPhysics
 
         internal float _sleepTime;
 
-        internal object _userData;
+        private object _userData;
 
-        internal float _intertiaScale;
+        private float _intertiaScale;
     }
 }

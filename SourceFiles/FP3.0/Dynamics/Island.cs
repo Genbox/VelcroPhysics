@@ -30,8 +30,6 @@ namespace FarseerPhysics
     /// This is an internal class.
     class Island
     {
-        public Island() { }
-
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, IContactListener listener)
         {
             _bodyCapacity = bodyCapacity;
@@ -130,22 +128,22 @@ namespace FarseerPhysics
 
 		        // Check for large velocities.
 		        Vector2 translation = step.dt * b._linearVelocity;
-		        if (Vector2.Dot(translation, translation) > Settings.b2_maxTranslationSquared)
+		        if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
 		        {
 			        translation.Normalize();
-			        b._linearVelocity = (Settings.b2_maxTranslation * step.inv_dt) * translation;
+			        b._linearVelocity = (Settings.MaxTranslation * step.inv_dt) * translation;
 		        }
 
 		        float rotation = step.dt * b._angularVelocity;
-		        if (rotation * rotation > Settings.b2_maxRotationSquared)
+		        if (rotation * rotation > Settings.MaxRotationSquared)
 		        {
 			        if (rotation < 0.0)
 			        {
-				        b._angularVelocity = -step.inv_dt * Settings.b2_maxRotation;
+				        b._angularVelocity = -step.inv_dt * Settings.MaxRotation;
 			        }
 			        else
 			        {
-				        b._angularVelocity = step.inv_dt * Settings.b2_maxRotation;
+				        b._angularVelocity = step.inv_dt * Settings.MaxRotation;
 			        }
 		        }
 
@@ -166,12 +164,12 @@ namespace FarseerPhysics
 	        // Iterate over constraints.
             for (int i = 0; i < step.positionIterations; ++i)
 	        {
-                bool contactsOkay = _contactSolver.SolvePositionConstraints(Settings.b2_contactBaumgarte);
+                bool contactsOkay = _contactSolver.SolvePositionConstraints(Settings.ContactBaumgarte);
 
 		        bool jointsOkay = true;
 		        for (int j = 0; j < _jointCount; ++j)
 		        {
-			        bool jointOkay = _joints[j].SolvePositionConstraints(Settings.b2_contactBaumgarte);
+			        bool jointOkay = _joints[j].SolvePositionConstraints(Settings.ContactBaumgarte);
 			        jointsOkay = jointsOkay && jointOkay;
 		        }
 
@@ -186,10 +184,10 @@ namespace FarseerPhysics
 
 	        if (allowSleep)
 	        {
-		        float minSleepTime = Settings.b2_maxFloat;
+		        float minSleepTime = Settings.MaxFloat;
 
-		        float linTolSqr = Settings.b2_linearSleepTolerance * Settings.b2_linearSleepTolerance;
-		        float angTolSqr = Settings.b2_angularSleepTolerance * Settings.b2_angularSleepTolerance;
+		        const float linTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
+		        const float angTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
 
 		        for (int i = 0; i < _bodyCount; ++i)
 		        {
@@ -219,7 +217,7 @@ namespace FarseerPhysics
 			        }
 		        }
 
-		        if (minSleepTime >= Settings.b2_timeToSleep)
+		        if (minSleepTime >= Settings.TimeToSleep)
 		        {
 			        for (int i = 0; i < _bodyCount; ++i)
 			        {
@@ -269,22 +267,22 @@ namespace FarseerPhysics
 
 	            // Check for large velocities.
 	            Vector2 translation = subStep.dt * b._linearVelocity;
-	            if (Vector2.Dot(translation, translation) > Settings.b2_maxTranslationSquared)
+	            if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
 	            {
 		            translation.Normalize();
-		            b._linearVelocity = (Settings.b2_maxTranslation * subStep.inv_dt) * translation;
+		            b._linearVelocity = (Settings.MaxTranslation * subStep.inv_dt) * translation;
 	            }
 
 	            float rotation = subStep.dt * b._angularVelocity;
-	            if (rotation * rotation > Settings.b2_maxRotationSquared)
+	            if (rotation * rotation > Settings.MaxRotationSquared)
 	            {
 		            if (rotation < 0.0)
 		            {
-			            b._angularVelocity = -subStep.inv_dt * Settings.b2_maxRotation;
+			            b._angularVelocity = -subStep.inv_dt * Settings.MaxRotation;
 		            }
 		            else
 		            {
-			            b._angularVelocity = subStep.inv_dt * Settings.b2_maxRotation;
+			            b._angularVelocity = subStep.inv_dt * Settings.MaxRotation;
 		            }
 	            }
 
@@ -342,7 +340,7 @@ namespace FarseerPhysics
 		    _joints[_jointCount++] = joint;
 	    }
 
-	    public void Report(List<ContactConstraint> constraints)
+        private void Report(List<ContactConstraint> constraints)
         {
             if (_listener == null)
 	        {
@@ -368,7 +366,7 @@ namespace FarseerPhysics
         }
 
         private ContactSolver _contactSolver = new ContactSolver();
-	    public IContactListener _listener;
+        private IContactListener _listener;
 
 	    public Body[] _bodies;
         public List<Contact> _contacts = new List<Contact>(50);
@@ -377,10 +375,8 @@ namespace FarseerPhysics
 	    public int _bodyCount;
 	    public int _jointCount;
 
-	    public int _bodyCapacity;
+        private int _bodyCapacity;
 	    public int _contactCapacity;
 	    public int _jointCapacity;
-
-	    public int _positionIterationCount;
-    };
+    }
 }

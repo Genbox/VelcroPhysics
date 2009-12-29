@@ -27,7 +27,6 @@ namespace FarseerPhysics
 {
     public enum JointType
     {
-        Unknown,
         Revolute,
         Prismatic,
         Distance,
@@ -266,7 +265,7 @@ namespace FarseerPhysics
 	    // This returns true if the position errors are within tolerance.
 	    internal abstract bool SolvePositionConstraints(float baumgarte);
 
-	    internal JointType _type;
+        private JointType _type;
 	    internal Joint _prev;
 	    internal Joint _next;
 	    internal JointEdge _edgeA;
@@ -277,7 +276,7 @@ namespace FarseerPhysics
 	    internal bool _islandFlag;
 	    internal bool _collideConnected;
 
-	    internal object _userData;
+        private object _userData;
 
 	    // Cache here per time step to reduce cache misses.
 	    internal Vector2 _localCenterA, _localCenterB;

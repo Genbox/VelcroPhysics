@@ -289,7 +289,7 @@ namespace FarseerPhysics
 		        _a2 = MathUtils.Cross(r2, _axis);
 
 		        _motorMass = _invMassA + _invMassB + _invIA * _a1 * _a1 + _invIB * _a2 * _a2;
-                if (_motorMass > Settings.b2_epsilon)
+                if (_motorMass > Settings.Epsilon)
                 {
                     _motorMass = 1.0f / _motorMass;
                 }
@@ -321,7 +321,7 @@ namespace FarseerPhysics
 	        if (_enableLimit)
 	        {
 		        float jointTranslation = Vector2.Dot(_axis, d);
-		        if (Math.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.b2_linearSlop)
+		        if (Math.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
 		        {
 			        _limitState = LimitState.Equal;
 		        }
@@ -504,7 +504,7 @@ namespace FarseerPhysics
 	        float a2 = b2._sweep.a;
 
 	        // Solve linear limit raint.
-	        float linearError = 0.0f, angularError = 0.0f;
+	        float linearError = 0.0f;
 	        bool active = false;
 	        float C2 = 0.0f;
 
@@ -523,24 +523,24 @@ namespace FarseerPhysics
 		        _a2 = MathUtils.Cross(r2, _axis);
 
 		        float translation = Vector2.Dot(_axis, d);
-		        if (Math.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.b2_linearSlop)
+		        if (Math.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
 		        {
 			        // Prevent large angular corrections
-			        C2 = MathUtils.Clamp(translation, -Settings.b2_maxLinearCorrection, Settings.b2_maxLinearCorrection);
+			        C2 = MathUtils.Clamp(translation, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
 			        linearError = Math.Abs(translation);
 			        active = true;
 		        }
 		        else if (translation <= _lowerTranslation)
 		        {
 			        // Prevent large linear corrections and allow some slop.
-			        C2 = MathUtils.Clamp(translation - _lowerTranslation + Settings.b2_linearSlop, -Settings.b2_maxLinearCorrection, 0.0f);
+			        C2 = MathUtils.Clamp(translation - _lowerTranslation + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
 			        linearError = _lowerTranslation - translation;
 			        active = true;
 		        }
 		        else if (translation >= _upperTranslation)
 		        {
 			        // Prevent large linear corrections and allow some slop.
-			        C2 = MathUtils.Clamp(translation - _upperTranslation - Settings.b2_linearSlop, 0.0f, Settings.b2_maxLinearCorrection);
+			        C2 = MathUtils.Clamp(translation - _upperTranslation - Settings.LinearSlop, 0.0f, Settings.MaxLinearCorrection);
 			        linearError = translation - _upperTranslation;
 			        active = true;
 		        }
@@ -556,7 +556,7 @@ namespace FarseerPhysics
 	        C1 = Vector2.Dot(_perp, d);
 
 	        linearError = Math.Max(linearError, Math.Abs(C1));
-	        angularError = 0.0f;
+	        const float angularError = 0.0f;
 
 	        if (active)
 	        {
@@ -612,7 +612,7 @@ namespace FarseerPhysics
 	        b1.SynchronizeTransform();
 	        b2.SynchronizeTransform();
 
-	        return linearError <= Settings.b2_linearSlop && angularError <= Settings.b2_angularSlop;
+	        return linearError <= Settings.LinearSlop && angularError <= Settings.AngularSlop;
         }
 
 	    internal Vector2 _localAnchor1;

@@ -33,7 +33,7 @@ namespace FarseerPhysics
             Debug.Assert(_fixtureB.ShapeType == ShapeType.Polygon);
         }
 
-        internal override void Evaluate()  
+        protected override void Evaluate()  
         {
             Body b1 = _fixtureA.GetBody();
             Body b2 = _fixtureB.GetBody();

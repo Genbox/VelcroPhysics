@@ -161,7 +161,6 @@ namespace FarseerPhysics
 	    internal override void InitVelocityConstraints(ref TimeStep step)
         {
 	        Body g1 = _ground1;
-	        Body g2 = _ground2;
 	        Body b1 = _bodyA;
 	        Body b2 = _bodyB;
 
@@ -243,7 +242,7 @@ namespace FarseerPhysics
 
 	    internal override bool SolvePositionConstraints(float baumgarte)
         {
-            float linearError = 0.0f;
+            const float linearError = 0.0f;
 
 	        Body b1 = _bodyA;
 	        Body b2 = _bodyB;
@@ -280,35 +279,35 @@ namespace FarseerPhysics
 	        b2.SynchronizeTransform();
 
 	        // TODO_ERIN not implemented
-	        return linearError < Settings.b2_linearSlop;
+	        return linearError < Settings.LinearSlop;
         }
 
-	    internal Body _ground1;
-	    internal Body _ground2;
+        private Body _ground1;
+        private Body _ground2;
 
 	    // One of these is null.
-	    internal RevoluteJoint _revolute1;
-	    internal PrismaticJoint _prismatic1;
+        private RevoluteJoint _revolute1;
+        private PrismaticJoint _prismatic1;
 
 	    // One of these is null.
-	    internal RevoluteJoint _revolute2;
-	    internal PrismaticJoint _prismatic2;
+        private RevoluteJoint _revolute2;
+        private PrismaticJoint _prismatic2;
 
-	    internal Vector2 _groundAnchor1;
-	    internal Vector2 _groundAnchor2;
+        private Vector2 _groundAnchor1;
+        private Vector2 _groundAnchor2;
 
-	    internal Vector2 _localAnchor1;
-	    internal Vector2 _localAnchor2;
+        private Vector2 _localAnchor1;
+        private Vector2 _localAnchor2;
 
-	    internal Jacobian _J;
+        private Jacobian _J;
 
-	    internal float _ant;
-	    internal float _ratio;
+        private float _ant;
+        private float _ratio;
 
 	    // Effective mass
-	    internal float _mass;
+        private float _mass;
 
 	    // Impulse for accumulation/warm starting.
-	    internal float _impulse;
+        private float _impulse;
     };
 }
