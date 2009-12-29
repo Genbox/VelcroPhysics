@@ -944,7 +944,7 @@ namespace FarseerPhysics
                     for (ContactEdge cEdge = b._contactList; cEdge != null; cEdge = cEdge.Next)
                     {
                         // Does the TOI island still have space for contacts?
-                        if (_island._contacts.Count == _island._contactCapacity)
+                        if (_island._contactCount == _island._contactCapacity)
                         {
                             break;
                         }
@@ -1067,7 +1067,7 @@ namespace FarseerPhysics
                     }
                 }
 
-                int contactCount = _island._contacts.Count;
+                int contactCount = _island._contactCount;
                 for (int i = 0; i < contactCount; ++i)
                 {
                     // Allow contacts to participate in future TOI islands.
