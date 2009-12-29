@@ -23,7 +23,6 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Diagnostics;
-using System.Collections.Generic;
 
 namespace FarseerPhysics
 {
@@ -35,7 +34,9 @@ namespace FarseerPhysics
             _bodyCapacity = bodyCapacity;
             _contactCapacity = contactCapacity;
             _jointCapacity = jointCapacity;
+
             _bodyCount = 0;
+            _contactCount = 0;
             _jointCount = 0;
 
             _listener = listener;
@@ -47,12 +48,12 @@ namespace FarseerPhysics
 
             if (_contacts == null || _contacts.Length < contactCapacity)
             {
-                _contacts = new Contact[contactCapacity];
+                _contacts = new Contact[contactCapacity * 2];
             }
 
             if (_joints == null || _joints.Length < jointCapacity)
             {
-                _joints = new Joint[jointCapacity];
+                _joints = new Joint[jointCapacity * 2];
             }
         }
 
@@ -90,7 +91,7 @@ namespace FarseerPhysics
                 b._angularVelocity *= MathUtils.Clamp(1.0f - step.dt * b._angularDamping, 0.0f, 1.0f);
             }
 
-            _contactSolver.Reset(ref step, _contacts, _contactCount);
+            _contactSolver.Reset(_contacts, _contactCount);
 
             // Initialize velocity constraints.
             _contactSolver.InitVelocityConstraints(ref step);
@@ -238,7 +239,7 @@ namespace FarseerPhysics
 
         public void SolveTOI(ref TimeStep subStep)
         {
-            _contactSolver.Reset(ref subStep, _contacts, _contactCount);
+            _contactSolver.Reset(_contacts, _contactCount);
 
             // No warm starting is needed for TOI events because warm
             // starting impulses were applied in the discrete solver.
@@ -348,7 +349,7 @@ namespace FarseerPhysics
             _joints[_jointCount++] = joint;
         }
 
-        private void Report(List<ContactConstraint> constraints)
+        private void Report(ContactConstraint[] constraints)
         {
             if (_listener == null)
             {
