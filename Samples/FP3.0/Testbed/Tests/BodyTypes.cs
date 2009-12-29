@@ -30,7 +30,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public BodyTypes()
         {
-            Body ground = null;
+            Body ground;
             {
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
@@ -115,15 +115,15 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (state.IsKeyDown(Keys.D))
             {
-                _platform.SetType(BodyType.Dynamic);
+                _platform.SetBodyType(BodyType.Dynamic);
             }
             if (state.IsKeyDown(Keys.S))
             {
-                _platform.SetType(BodyType.Static);
+                _platform.SetBodyType(BodyType.Static);
             }
             if (state.IsKeyDown(Keys.K))
             {
-                _platform.SetType(BodyType.Kinematic);
+                _platform.SetBodyType(BodyType.Kinematic);
                 _platform.SetLinearVelocity(new Vector2(-_speed, 0.0f));
                 _platform.SetAngularVelocity(0.0f);
             }
@@ -132,7 +132,7 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Step(Framework.Settings settings)
         {
             // Drive the kinematic body.
-            if (_platform.GetType() == BodyType.Kinematic)
+            if (_platform.GetBodyType() == BodyType.Kinematic)
             {
                 Transform tf;
                 _platform.GetTransform(out tf);

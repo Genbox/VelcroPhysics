@@ -3,7 +3,6 @@
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
 using System;
-using System.Collections.Generic;
 
 namespace FarseerPhysics
 {
@@ -50,11 +49,6 @@ namespace FarseerPhysics
             {
                 _constraints = new ContactConstraint[_constraintCount * 2];
             }
-
-            //for (int i = _constraints.Count; i < _constraintCount; i++)
-            //{
-            //    _constraints.Add(new ContactConstraint());
-            //}
 
             for (int i = 0; i < _constraintCount; ++i)
             {
@@ -281,7 +275,7 @@ namespace FarseerPhysics
                 Vector2 normal = c.normal;
 
 #if MATH_OVERLOADS
-				Vector2 tangent = ZoomEngine.Physics.Common.Math.Cross(normal, 1.0f);
+				Vector2 tangent = MathUtils.Cross(normal, 1.0f);
 #else
                 Vector2 tangent = new Vector2(normal.Y, -normal.X);
 #endif

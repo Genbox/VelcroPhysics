@@ -71,7 +71,7 @@ namespace FarseerPhysics
             {
                 Body b = _bodies[i];
 
-                if (b.GetType() != BodyType.Dynamic)
+                if (b.GetBodyType() != BodyType.Dynamic)
                 {
                     continue;
                 }
@@ -125,7 +125,7 @@ namespace FarseerPhysics
             {
                 Body b = _bodies[i];
 
-                if (b.GetType() == BodyType.Static)
+                if (b.GetBodyType() == BodyType.Static)
                 {
                     continue;
                 }
@@ -196,7 +196,7 @@ namespace FarseerPhysics
                 for (int i = 0; i < _bodyCount; ++i)
                 {
                     Body b = _bodies[i];
-                    if (b.GetType() == BodyType.Static)
+                    if (b.GetBodyType() == BodyType.Static)
                     {
                         continue;
                     }
@@ -269,7 +269,7 @@ namespace FarseerPhysics
             {
                 Body b = _bodies[i];
 
-                if (b.GetType() == BodyType.Static)
+                if (b.GetBodyType() == BodyType.Static)
                 {
                     continue;
                 }

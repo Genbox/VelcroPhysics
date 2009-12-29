@@ -130,7 +130,7 @@ namespace FarseerPhysics
     {
 
         /// Set the type of this body. This may alter the mass and velocity.
-        public void SetType(BodyType type)
+        public void SetBodyType(BodyType type)
         {
             if (_type == type)
             {
@@ -160,7 +160,7 @@ namespace FarseerPhysics
         }
 
         /// Get the type of this body.
-        public new BodyType GetType()
+        public BodyType GetBodyType()
         {
             return _type;
         }
