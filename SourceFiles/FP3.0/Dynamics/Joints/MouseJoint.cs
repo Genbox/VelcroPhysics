@@ -42,7 +42,7 @@ namespace FarseerPhysics
         /// to coincide with the body anchor initially.
         public Vector2 target;
 
-        /// The maximum raint force that can be exerted
+        /// The maximum constraint force that can be exerted
         /// to move the candidate body. Usually you will express
         /// as some multiple of the weight (multiplier * mass * gravity).
         public float maxForce;
@@ -55,8 +55,8 @@ namespace FarseerPhysics
     };
 
     /// A mouse joint is used to make a point on a body track a
-    /// specified world point. This a soft raint with a maximum
-    /// force. This allows the raint to stretch and without
+    /// specified world point. This a soft constraint with a maximum
+    /// force. This allows the constraint to stretch and without
     /// applying huge forces.
     /// NOTE: this joint is not documented in the manual because it was
     /// developed to be used in the testbed. If you want to learn how to
@@ -256,7 +256,7 @@ namespace FarseerPhysics
         private Vector2 _target;
         private Vector2 _impulse;
 
-        private Mat22 _mass;		// effective mass for point-to-point raint.
+        private Mat22 _mass;		// effective mass for point-to-point constraint.
         private Vector2 _C;				// position error
         private float _maxForce;
         private float _frequencyHz;

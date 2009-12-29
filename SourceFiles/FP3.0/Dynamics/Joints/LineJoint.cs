@@ -29,7 +29,7 @@ namespace FarseerPhysics
     /// Line joint definition. This requires defining a line of
     /// motion using an axis and an anchor point. The definition uses local
     /// anchor points and a local axis so that the initial configuration
-    /// can violate the raint slightly. The joint translation is zero
+    /// can violate the constraint slightly. The joint translation is zero
     /// when the local anchor points coincide in world space. Using local
     /// anchors and a local axis helps when saving and loading a game.
     public class LineJointDef : JointDef
@@ -299,7 +299,7 @@ namespace FarseerPhysics
                 }
 	        }
 
-	        // Prismatic raint.
+	        // Prismatic constraint.
 	        {
 		        _perp = MathUtils.Multiply(ref xf1.R, _localYAxis1);
 
@@ -390,7 +390,7 @@ namespace FarseerPhysics
 	        Vector2 v2 = b2._linearVelocity;
 	        float w2 = b2._angularVelocity;
 
-	        // Solve linear motor raint.
+	        // Solve linear motor constraint.
 	        if (_enableMotor && _limitState != LimitState.Equal)
 	        {
 		        float Cdot = Vector2.Dot(_axis, v2 - v1) + _a2 * w2 - _a1 * w1;
@@ -415,7 +415,7 @@ namespace FarseerPhysics
 
 	        if (_enableLimit && _limitState != LimitState.Inactive)
 	        {
-		        // Solve prismatic and limit raint in block form.
+		        // Solve prismatic and limit constraint in block form.
 		        float Cdot2 = Vector2.Dot(_axis, v2 - v1) + _a2 * w2 - _a1 * w1;
 		        Vector2 Cdot = new Vector2(Cdot1, Cdot2);
 
@@ -461,7 +461,7 @@ namespace FarseerPhysics
 	        }
 	        else
 	        {
-		        // Limit is inactive, just solve the prismatic raint in block form.
+		        // Limit is inactive, just solve the prismatic constraint in block form.
                 
                 float df;
                 if (_K.col1.X != 0.0f)
@@ -503,7 +503,7 @@ namespace FarseerPhysics
 	        Vector2 c2 = b2._sweep.c;
 	        float a2 = b2._sweep.a;
 
-	        // Solve linear limit raint.
+	        // Solve linear limit constraint.
 	        float linearError = 0.0f;
 	        bool active = false;
 	        float C2 = 0.0f;
@@ -627,7 +627,7 @@ namespace FarseerPhysics
 	    internal Mat22 _K;
 	    internal Vector2 _impulse;
 
-	    internal float _motorMass;			// effective mass for motor/limit translational raint.
+	    internal float _motorMass;			// effective mass for motor/limit translational constraint.
 	    internal float _motorImpulse;
 
 	    internal float _lowerTranslation;

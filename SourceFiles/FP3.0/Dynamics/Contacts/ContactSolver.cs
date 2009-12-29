@@ -399,7 +399,7 @@ namespace FarseerPhysics
 			        // A = J * W * JT and J = ( -n, -r1 x n, n, r2 x n )
 			        // b = vn_0 - velocityBias
 			        //
-			        // The system is solved using the "Total enumeration method" (s. Murty). The complementary raint vn_i * x_i
+			        // The system is solved using the "Total enumeration method" (s. Murty). The complementary constraint vn_i * x_i
 			        // implies that we must have in any solution either vn_i = 0 or x_i = 0. So for the 2D contact problem the cases
 			        // vn1 = 0 and vn2 = 0, x1 = 0 and x2 = 0, x1 = 0 and vn2 = 0, x2 = 0 and vn1 = 0 need to be tested. The first valid
 			        // solution that satisfies the problem is chosen.
@@ -751,7 +751,7 @@ namespace FarseerPhysics
 			        Vector2 rA = point - bodyA._sweep.c;
 			        Vector2 rB = point - bodyB._sweep.c;
 
-			        // Track max raint error.
+			        // Track max constraint error.
 			        minSeparation = Math.Min(minSeparation, separation);
 
 			        // Prevent large corrections and allow slop.

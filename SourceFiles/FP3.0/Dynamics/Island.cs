@@ -197,6 +197,11 @@ namespace FarseerPhysics
 				        continue;
 			        }
 
+                    if (b._invMass == 0.0f)
+                    {
+                        continue;
+                    }
+
 			        if ((b._flags & BodyFlags.AutoSleep) == 0)
 			        {
 				        b._sleepTime = 0.0f;
