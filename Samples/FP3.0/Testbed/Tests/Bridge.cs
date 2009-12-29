@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -28,11 +27,11 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class Bridge : Test
     {
-        private static int e_count = 30;
+        private const int e_count = 30;
 
         public Bridge()
         {
-            Body ground = null;
+            Body ground;
             {
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
@@ -94,6 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
                 fd.density = 1.0f;
 
                 BodyDef bd = new BodyDef();
+                bd.type = BodyType.Dynamic;
                 bd.position = new Vector2(-8.0f + 8.0f*i, 12.0f);
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(fd);
