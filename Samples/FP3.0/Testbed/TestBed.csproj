@@ -83,7 +83,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\EventTrace.cs" />
-    <Compile Include="Framework\Render.cs" />
     <Compile Include="Framework\Test.cs" />
     <Compile Include="Framework\TraceEvents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -20,9 +20,8 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Box2D.XNA.TestBed.Framework;
-using Box2D.XNA;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
 
 namespace Box2D.XNA.TestBed.Tests
@@ -78,7 +77,7 @@ namespace Box2D.XNA.TestBed.Tests
 
 		    float ratio = _joint1.GetRatio();
 		    float L = _joint1.GetLength1() + ratio * _joint1.GetLength2();
-            _debugDraw.DrawString(50, _textLine, "L1 + {0:n} * L2 = {1:n}", (float)ratio, (float)L);
+            _debugView.DrawString(50, _textLine, "L1 + {0:n} * L2 = {1:n}", (float)ratio, (float)L);
 		    _textLine += 15;
 	    }
 

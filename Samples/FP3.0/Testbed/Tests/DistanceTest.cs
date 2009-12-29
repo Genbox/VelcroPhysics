@@ -20,9 +20,8 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Box2D.XNA.TestBed.Framework;
-using Box2D.XNA;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -68,10 +67,10 @@ namespace Box2D.XNA.TestBed.Tests
 		    DistanceOutput output = new DistanceOutput();
 		    Distance.ComputeDistance( out output, out cache, ref input);
 
-            _debugDraw.DrawString(50, _textLine, "distance = {0:n}", output.distance);
+            _debugView.DrawString(50, _textLine, "distance = {0:n}", output.distance);
 		    _textLine += 15;
 
-            _debugDraw.DrawString(50, _textLine, "iterations = {0:n}", output.iterations);
+            _debugView.DrawString(50, _textLine, "iterations = {0:n}", output.iterations);
 		    _textLine += 15;
 
 		    {
@@ -81,23 +80,23 @@ namespace Box2D.XNA.TestBed.Tests
 			    {
 				    v[i] = MathUtils.Multiply(ref _transformA, _polygonA._vertices[i]);
 			    }
-			    _debugDraw.DrawPolygon(ref v, _polygonA._vertexCount, color);
+			    _debugView.DrawPolygon(ref v, _polygonA._vertexCount, color);
 
 			    for (int i = 0; i < _polygonB._vertexCount; ++i)
 			    {
 				    v[i] = MathUtils.Multiply(ref _transformB, _polygonB._vertices[i]);
 			    }
-			    _debugDraw.DrawPolygon(ref v, _polygonB._vertexCount, color);
+			    _debugView.DrawPolygon(ref v, _polygonB._vertexCount, color);
 		    }
 
 		    Vector2 x1 = output.pointA;
 		    Vector2 x2 = output.pointB;
 
 
-            _debugDraw.DrawPoint(x1, 0.5f, new Color(1.0f, 0.0f, 0.0f));
-            _debugDraw.DrawPoint(x2, 0.5f, new Color(1.0f, 0.0f, 0.0f));
+            _debugView.DrawPoint(x1, 0.5f, new Color(1.0f, 0.0f, 0.0f));
+            _debugView.DrawPoint(x2, 0.5f, new Color(1.0f, 0.0f, 0.0f));
 
-            _debugDraw.DrawSegment(x1, x2, new Color(1.0f, 1.0f, 0.0f));
+            _debugView.DrawSegment(x1, x2, new Color(1.0f, 1.0f, 0.0f));
 	    }
 
 	    public override void Keyboard(KeyboardState state, KeyboardState oldState)
@@ -120,11 +119,11 @@ namespace Box2D.XNA.TestBed.Tests
             }
             if (state.IsKeyDown(Keys.Q))
             {
-                _angleB += 0.1f * (float)Box2D.XNA.Settings.b2_pi;
+                _angleB += 0.1f * FarseerPhysics.Settings.b2_pi;
             }
             if (state.IsKeyDown(Keys.E))
             {
-                _angleB -= 0.1f * (float)Box2D.XNA.Settings.b2_pi;
+                _angleB -= 0.1f * FarseerPhysics.Settings.b2_pi;
             }
 
 		    _transformB.Set(_positionB, _angleB);

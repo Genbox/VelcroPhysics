@@ -20,9 +20,8 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Box2D.XNA.TestBed.Framework;
-using Box2D.XNA;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
 
 namespace Box2D.XNA.TestBed.Tests
@@ -136,10 +135,10 @@ namespace Box2D.XNA.TestBed.Tests
 			    fd.SetAsBox(0.1f, 10.0f, new Vector2(10.0f, 0.0f), 0.0f);
 			    body.CreateFixture(fd);
 
-			    fd.SetAsBox(0.1f, 10.0f, new Vector2(0.0f, -10.0f), 0.5f * (float)Box2D.XNA.Settings.b2_pi);
+			    fd.SetAsBox(0.1f, 10.0f, new Vector2(0.0f, -10.0f), 0.5f * FarseerPhysics.Settings.b2_pi);
 			    body.CreateFixture(fd);
 
-			    fd.SetAsBox(0.1f, 10.0f, new Vector2(0.0f, 10.0f), -0.5f * (float)Box2D.XNA.Settings.b2_pi);
+			    fd.SetAsBox(0.1f, 10.0f, new Vector2(0.0f, 10.0f), -0.5f * FarseerPhysics.Settings.b2_pi);
 			    body.CreateFixture(fd);
 		    }
 
@@ -237,17 +236,17 @@ namespace Box2D.XNA.TestBed.Tests
 
 		    if (b2_gjkCalls > 0)
 		    {
-                _debugDraw.DrawString(50, _textLine, "gjk calls = {0:n}, ave gjk iters = {1:n}, max gjk iters = {2:n}",
+                _debugView.DrawString(50, _textLine, "gjk calls = {0:n}, ave gjk iters = {1:n}, max gjk iters = {2:n}",
 				    b2_gjkCalls, b2_gjkIters / (float)b2_gjkCalls, b2_gjkMaxIters);
 			    _textLine += 15;
 		    }
 
 		    if (b2_toiCalls > 0)
 		    {
-                _debugDraw.DrawString(50, _textLine, "toi calls = {0:n}, ave toi iters = {1:n}, max toi iters = {2:n}",
+                _debugView.DrawString(50, _textLine, "toi calls = {0:n}, ave toi iters = {1:n}, max toi iters = {2:n}",
 								    b2_toiCalls, b2_toiIters / (float)b2_toiCalls, b2_toiMaxRootIters);
 			    _textLine += 15;
-                _debugDraw.DrawString(50, _textLine, "ave toi root iters = {0:n}, max toi root iters = {1:n}",
+                _debugView.DrawString(50, _textLine, "ave toi root iters = {0:n}, max toi root iters = {1:n}",
 				    b2_toiRootIters / (float)b2_toiCalls, b2_toiMaxRootIters);
 			    _textLine += 15;
 		    }

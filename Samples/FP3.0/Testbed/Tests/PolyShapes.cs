@@ -22,7 +22,8 @@
 
 using System;
 using Box2D.XNA.TestBed.Framework;
-using Box2D.XNA;
+using FarseerPhysics;
+using FarseerPhysics.DebugViewXNA;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
@@ -64,7 +65,7 @@ namespace Box2D.XNA.TestBed.Tests
 			    {
 				    PolygonShape poly = (PolygonShape)fixture.GetShape();
 				    int vertexCount = poly._vertexCount;
-				    Debug.Assert(vertexCount <= Settings.b2_maxPolygonVertices);
+				    Debug.Assert(vertexCount <= FarseerPhysics.Settings.b2_maxPolygonVertices);
                     FixedArray8<Vector2> vertices = new FixedArray8<Vector2>();
 
 				    for (int i = 0; i < vertexCount; ++i)
@@ -106,7 +107,7 @@ namespace Box2D.XNA.TestBed.Tests
 
         internal CircleShape _circle = new CircleShape();
         internal Transform _transform;
-        internal DebugDraw _debugDraw;
+        internal DebugViewXNA _debugDraw;
         internal int _count;
     }
 
@@ -189,7 +190,7 @@ namespace Box2D.XNA.TestBed.Tests
 
 		    float x = Rand.RandomFloat(-2.0f, 2.0f);
 		    bd.position = new Vector2(x, 10.0f);
-		    bd.angle = Rand.RandomFloat(-(float)Box2D.XNA.Settings.b2_pi, (float)Box2D.XNA.Settings.b2_pi);
+		    bd.angle = Rand.RandomFloat(-FarseerPhysics.Settings.b2_pi, FarseerPhysics.Settings.b2_pi);
 
 		    if (index == 4)
 		    {
@@ -279,7 +280,7 @@ namespace Box2D.XNA.TestBed.Tests
 		    callback._circle._radius = 2.0f;
 		    callback._circle._p = new Vector2(0.0f, 2.1f);
 		    callback._transform.SetIdentity();
-		    callback._debugDraw = _debugDraw;
+		    callback._debugDraw = _debugView;
             
 		    AABB aabb;
 		    callback._circle.ComputeAABB(out aabb, ref callback._transform);
@@ -287,13 +288,13 @@ namespace Box2D.XNA.TestBed.Tests
 		    _world.QueryAABB(callback.ReportFixture, ref aabb);
 
 		    Color color = new Color(0.4f, 0.7f, 0.8f);
-		    _debugDraw.DrawCircle(callback._circle._p, callback._circle._radius, color);
+		    _debugView.DrawCircle(callback._circle._p, callback._circle._radius, color);
 
-            _debugDraw.DrawString(50, _textLine, "Press 1-5 to drop stuff");
+            _debugView.DrawString(50, _textLine, "Press 1-5 to drop stuff");
             _textLine += 15;
-            _debugDraw.DrawString(50, _textLine, "Press a to (de)activate some bodies");
+            _debugView.DrawString(50, _textLine, "Press a to (de)activate some bodies");
             _textLine += 15;
-            _debugDraw.DrawString(50, _textLine, "Press d to destroy a body");
+            _debugView.DrawString(50, _textLine, "Press d to destroy a body");
             _textLine += 15;
 	    }
 

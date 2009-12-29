@@ -22,8 +22,9 @@
 
 using System;
 using Box2D.XNA.TestBed.Framework;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
-using Box2D.XNA;
+
 using Microsoft.Xna.Framework.Input;
 
 namespace Box2D.XNA.TestBed.Tests
@@ -153,7 +154,7 @@ namespace Box2D.XNA.TestBed.Tests
 		    }
 
 		    base.Step(settings);
-		    _debugDraw.DrawString(5, _textLine, "Keys: (d) dynamic, (s) static, (k) kinematic");
+		    _debugView.DrawString(5, _textLine, "Keys: (d) dynamic, (s) static, (k) kinematic");
 		    _textLine += 15;
 	    }
 

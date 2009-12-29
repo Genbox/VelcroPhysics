@@ -20,9 +20,8 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Box2D.XNA.TestBed.Framework;
-using Box2D.XNA;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -58,7 +57,7 @@ namespace Box2D.XNA.TestBed.Tests
 
                     RevoluteJointDef rjd = new RevoluteJointDef();
 				    rjd.Initialize(prevBody, body, new Vector2(0.0f, 5.0f));
-				    rjd.motorSpeed = 1.0f * (float)Box2D.XNA.Settings.b2_pi;
+				    rjd.motorSpeed = 1.0f * FarseerPhysics.Settings.b2_pi;
 				    rjd.maxMotorTorque = 10000.0f;
 				    rjd.enableMotor = true;
 				    _joint1 = (RevoluteJoint)_world.CreateJoint(rjd);
@@ -140,10 +139,10 @@ namespace Box2D.XNA.TestBed.Tests
 	    public override void Step(Framework.Settings settings)
 	    {
 		    base.Step(settings);
-		    _debugDraw.DrawString(50, _textLine, "Keys: (f) toggle friction, (m) toggle motor");
+		    _debugView.DrawString(50, _textLine, "Keys: (f) toggle friction, (m) toggle motor");
 		    _textLine += 15;
 		    float torque = _joint1.GetMotorTorque();
-            _debugDraw.DrawString(50, _textLine, "Motor Torque = {0:n}", (float)torque);
+            _debugView.DrawString(50, _textLine, "Motor Torque = {0:n}", (float)torque);
 		    _textLine += 15;
 	    }
 

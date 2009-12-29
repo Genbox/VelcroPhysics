@@ -214,6 +214,10 @@ namespace FarseerPhysics
 	        return _density;
         }
 
+        public int ProxyId
+        {
+            get { return _proxyId; }
+        }
 
 	    /// Test a point for containment in this fixture.
 	    /// @param xf the shape world transform.
@@ -373,6 +377,5 @@ namespace FarseerPhysics
 	    internal bool _isSensor;
 
 	    internal object _userData;
-    };
-
+    }
 }

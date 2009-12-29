@@ -20,11 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Box2D.XNA.TestBed.Framework;
-using Box2D.XNA;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace Box2D.XNA.TestBed.Tests
 {
@@ -117,12 +115,12 @@ namespace Box2D.XNA.TestBed.Tests
     		
 		    ratio = _joint4.GetRatio();
 		    value = _joint1.GetJointAngle() + ratio * _joint2.GetJointAngle();
-            _debugDraw.DrawString(50, _textLine, "theta1 + {0:n} * theta2 = {1:n}", (float)ratio, (float)value);
+            _debugView.DrawString(50, _textLine, "theta1 + {0:n} * theta2 = {1:n}", (float)ratio, (float)value);
 		    _textLine += 15;
 
 		    ratio = _joint5.GetRatio();
 		    value = _joint2.GetJointAngle() + ratio * _joint3.GetJointTranslation();
-            _debugDraw.DrawString(50, _textLine, "theta2 + {0:n} * delta = {1:n}", (float)ratio, (float)value);
+            _debugView.DrawString(50, _textLine, "theta2 + {0:n} * delta = {1:n}", (float)ratio, (float)value);
 		    _textLine += 15;
 	    }
 

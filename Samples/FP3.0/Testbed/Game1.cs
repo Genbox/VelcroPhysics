@@ -23,6 +23,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FarseerPhysics;
+using FarseerPhysics.DebugViewXNA;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -33,7 +35,7 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 using Box2D.XNA.TestBed.Framework;
-using Box2D.XNA;
+
 using Box2D.XNA.TestBed.Tests;
 using System.Diagnostics;
 
@@ -90,9 +92,9 @@ namespace Box2D.XNA.TestBed
             simpleColorEffect.VertexColorEnabled = true;
 
             vertexDecl = new VertexDeclaration(GraphicsDevice, VertexPositionColor.VertexElements);
-            Box2D.XNA.TestBed.Framework.DebugDraw._device = GraphicsDevice;
-            Box2D.XNA.TestBed.Framework.DebugDraw._batch = spriteBatch;
-            Box2D.XNA.TestBed.Framework.DebugDraw._font = spriteFont;
+            DebugViewXNA._device = GraphicsDevice;
+            DebugViewXNA._batch = spriteBatch;
+            DebugViewXNA._font = spriteFont;
 
             oldState = Keyboard.GetState();
             oldGamePad = GamePad.GetState(PlayerIndex.One);
@@ -255,7 +257,7 @@ namespace Box2D.XNA.TestBed
 		        Resize(width, height);
 	        }
 
-            test._debugDraw.FinishDrawShapes();
+            test._debugView.FinishDrawShapes();
 
             simpleColorEffect.Techniques[0].Passes[0].End();
             simpleColorEffect.End();
@@ -263,7 +265,7 @@ namespace Box2D.XNA.TestBed
             if (test != null)
             {
                 spriteBatch.Begin();
-                test._debugDraw.FinishDrawString();
+                test._debugView.FinishDrawString();
                 spriteBatch.End();
             }
             base.Draw(gameTime);

@@ -20,9 +20,8 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Box2D.XNA.TestBed.Framework;
-using Box2D.XNA;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -49,7 +48,7 @@ namespace Box2D.XNA.TestBed.Tests
 			    BodyDef bd = new BodyDef();
                 bd.type = BodyType.Dynamic;
 			    bd.position = new Vector2(-10.0f, 10.0f);
-			    bd.angle = 0.5f * (float)Box2D.XNA.Settings.b2_pi;
+			    bd.angle = 0.5f * FarseerPhysics.Settings.b2_pi;
 			    Body body = _world.CreateBody(bd);
 			    body.CreateFixture(shape, 5.0f);
 
@@ -91,10 +90,10 @@ namespace Box2D.XNA.TestBed.Tests
 	    public override void Step(Framework.Settings settings)
 	    {
 		    base.Step(settings);
-		    _debugDraw.DrawString(50, _textLine, "Keys: (l) limits, (m) motors, (p) speed");
+		    _debugView.DrawString(50, _textLine, "Keys: (l) limits, (m) motors, (p) speed");
 		    _textLine += 15;
 		    float force = _joint.GetMotorForce();
-            _debugDraw.DrawString(50, _textLine, "Motor Force = {0:n}", (float)force);
+            _debugView.DrawString(50, _textLine, "Motor Force = {0:n}", (float)force);
 		    _textLine += 15;
 	    }
 

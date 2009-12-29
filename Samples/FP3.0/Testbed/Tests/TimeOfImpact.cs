@@ -20,9 +20,8 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Box2D.XNA.TestBed.Framework;
-using Box2D.XNA;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -73,14 +72,14 @@ namespace Box2D.XNA.TestBed.Tests
             input.proxyB.Set(_shapeB);
 		    input.sweepA = sweepA;
 		    input.sweepB = sweepB;
-		    input.tolerance = Box2D.XNA.Settings.b2_linearSlop;
+		    input.tolerance = FarseerPhysics.Settings.b2_linearSlop;
 
-		    float toi = Box2D.XNA.TimeOfImpact.CalculateTimeOfImpact(ref input);
+		    float toi = FarseerPhysics.TimeOfImpact.CalculateTimeOfImpact(ref input);
 
-            _debugDraw.DrawString(50, _textLine, "toi = {0:n}", (float)toi);
+            _debugView.DrawString(50, _textLine, "toi = {0:n}", (float)toi);
 		    _textLine += 15;
 
-            _debugDraw.DrawString(50, _textLine, "max toi iters = {0:n}, max root iters = {1:n}", b2_toiMaxIters, b2_toiMaxRootIters);
+            _debugView.DrawString(50, _textLine, "max toi iters = {0:n}, max root iters = {1:n}", b2_toiMaxIters, b2_toiMaxRootIters);
 		    _textLine += 15;
 
             FixedArray8<Vector2> vertices = new FixedArray8<Vector2>();
@@ -91,7 +90,7 @@ namespace Box2D.XNA.TestBed.Tests
 		    {
 			    vertices[i] = MathUtils.Multiply(ref transformA, _shapeA._vertices[i]);
 		    }
-		    _debugDraw.DrawPolygon(ref vertices, _shapeA._vertexCount, new Color(0.9f, 0.9f, 0.9f));
+		    _debugView.DrawPolygon(ref vertices, _shapeA._vertexCount, new Color(0.9f, 0.9f, 0.9f));
 
 		    Transform transformB;
 		    sweepB.GetTransform(out transformB, 0.0f);
@@ -99,21 +98,21 @@ namespace Box2D.XNA.TestBed.Tests
 		    {
 			    vertices[i] = MathUtils.Multiply(ref transformB, _shapeB._vertices[i]);
 		    }
-		    _debugDraw.DrawPolygon(ref vertices, _shapeB._vertexCount, new Color(0.5f, 0.9f, 0.5f));
+		    _debugView.DrawPolygon(ref vertices, _shapeB._vertexCount, new Color(0.5f, 0.9f, 0.5f));
 
 		    sweepB.GetTransform(out transformB, toi);
 		    for (int i = 0; i < _shapeB._vertexCount; ++i)
 		    {
 			    vertices[i] = MathUtils.Multiply(ref transformB, _shapeB._vertices[i]);
 		    }
-		    _debugDraw.DrawPolygon(ref vertices, _shapeB._vertexCount, new Color(0.5f, 0.7f, 0.9f));
+		    _debugView.DrawPolygon(ref vertices, _shapeB._vertexCount, new Color(0.5f, 0.7f, 0.9f));
 
 		    sweepB.GetTransform(out transformB, 1.0f);
 		    for (int i = 0; i < _shapeB._vertexCount; ++i)
 		    {
 			    vertices[i] = MathUtils.Multiply(ref transformB, _shapeB._vertices[i]);
 		    }
-		    _debugDraw.DrawPolygon(ref vertices, _shapeB._vertexCount, new Color(0.9f, 0.5f, 0.5f));
+		    _debugView.DrawPolygon(ref vertices, _shapeB._vertexCount, new Color(0.9f, 0.5f, 0.5f));
 	    }
 
 	    PolygonShape _shapeA = new PolygonShape();
