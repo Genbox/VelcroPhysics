@@ -20,87 +20,87 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class DistanceTest : Test
     {
-        DistanceTest()
-	    {
-		    {
-			    _transformA.SetIdentity();
-			    _transformA.Position = new Vector2(0.0f, -0.2f);
-			    _polygonA.SetAsBox(10.0f, 0.2f);
-		    }
+        private DistanceTest()
+        {
+            {
+                _transformA.SetIdentity();
+                _transformA.Position = new Vector2(0.0f, -0.2f);
+                _polygonA.SetAsBox(10.0f, 0.2f);
+            }
 
-		    {
-			    _positionB = new Vector2(12.017401f, 0.13678508f);
-			    _angleB = -0.0109265f;
-			    _transformB.Set(_positionB, _angleB);
+            {
+                _positionB = new Vector2(12.017401f, 0.13678508f);
+                _angleB = -0.0109265f;
+                _transformB.Set(_positionB, _angleB);
 
-			    _polygonB.SetAsBox(2.0f, 0.1f);
-		    }
-	    }
+                _polygonB.SetAsBox(2.0f, 0.1f);
+            }
+        }
 
-	    internal static Test Create()
-	    {
-		    return new DistanceTest();
-	    }
+        internal static Test Create()
+        {
+            return new DistanceTest();
+        }
 
-	    public override void Step(Framework.Settings settings)
-	    {
-		    base.Step(settings);
+        public override void Step(Framework.Settings settings)
+        {
+            base.Step(settings);
 
-		    DistanceInput input = new DistanceInput();
+            DistanceInput input = new DistanceInput();
             input.proxyA.Set(_polygonA);
             input.proxyB.Set(_polygonB);
-		    input.transformA = _transformA;
-		    input.transformB = _transformB;
-		    input.useRadii = true;
-		    SimplexCache cache = new SimplexCache();
-		    cache.count = 0;
-		    DistanceOutput output = new DistanceOutput();
-		    Distance.ComputeDistance( out output, out cache, ref input);
+            input.transformA = _transformA;
+            input.transformB = _transformB;
+            input.useRadii = true;
+            SimplexCache cache = new SimplexCache();
+            cache.count = 0;
+            DistanceOutput output = new DistanceOutput();
+            Distance.ComputeDistance(out output, out cache, ref input);
 
             _debugView.DrawString(50, _textLine, "distance = {0:n}", output.distance);
-		    _textLine += 15;
+            _textLine += 15;
 
             _debugView.DrawString(50, _textLine, "iterations = {0:n}", output.iterations);
-		    _textLine += 15;
+            _textLine += 15;
 
-		    {
-			    Color color = new Color(0.9f, 0.9f, 0.9f);
+            {
+                Color color = new Color(0.9f, 0.9f, 0.9f);
                 FixedArray8<Vector2> v = new FixedArray8<Vector2>();
-			    for (int i = 0; i < _polygonA._vertexCount; ++i)
-			    {
-				    v[i] = MathUtils.Multiply(ref _transformA, _polygonA._vertices[i]);
-			    }
-			    _debugView.DrawPolygon(ref v, _polygonA._vertexCount, color);
+                for (int i = 0; i < _polygonA._vertexCount; ++i)
+                {
+                    v[i] = MathUtils.Multiply(ref _transformA, _polygonA._vertices[i]);
+                }
+                _debugView.DrawPolygon(ref v, _polygonA._vertexCount, color);
 
-			    for (int i = 0; i < _polygonB._vertexCount; ++i)
-			    {
-				    v[i] = MathUtils.Multiply(ref _transformB, _polygonB._vertices[i]);
-			    }
-			    _debugView.DrawPolygon(ref v, _polygonB._vertexCount, color);
-		    }
+                for (int i = 0; i < _polygonB._vertexCount; ++i)
+                {
+                    v[i] = MathUtils.Multiply(ref _transformB, _polygonB._vertices[i]);
+                }
+                _debugView.DrawPolygon(ref v, _polygonB._vertexCount, color);
+            }
 
-		    Vector2 x1 = output.pointA;
-		    Vector2 x2 = output.pointB;
+            Vector2 x1 = output.pointA;
+            Vector2 x2 = output.pointB;
 
 
             _debugView.DrawPoint(x1, 0.5f, new Color(1.0f, 0.0f, 0.0f));
             _debugView.DrawPoint(x2, 0.5f, new Color(1.0f, 0.0f, 0.0f));
 
             _debugView.DrawSegment(x1, x2, new Color(1.0f, 1.0f, 0.0f));
-	    }
+        }
 
-	    public override void Keyboard(KeyboardState state, KeyboardState oldState)
-	    {
+        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        {
             if (state.IsKeyDown(Keys.A))
             {
                 _positionB.X -= 0.1f;
@@ -119,22 +119,22 @@ namespace Box2D.XNA.TestBed.Tests
             }
             if (state.IsKeyDown(Keys.Q))
             {
-                _angleB += 0.1f * FarseerPhysics.Settings.b2_pi;
+                _angleB += 0.1f*FarseerPhysics.Settings.b2_pi;
             }
             if (state.IsKeyDown(Keys.E))
             {
-                _angleB -= 0.1f * FarseerPhysics.Settings.b2_pi;
+                _angleB -= 0.1f*FarseerPhysics.Settings.b2_pi;
             }
 
-		    _transformB.Set(_positionB, _angleB);
-	    }
+            _transformB.Set(_positionB, _angleB);
+        }
 
-        Vector2 _positionB = Vector2.Zero;
-	    float _angleB;
+        private Vector2 _positionB = Vector2.Zero;
+        private float _angleB;
 
-        Transform _transformA = new Transform();
-        Transform _transformB = new Transform();
-	    PolygonShape _polygonA = new PolygonShape();
-	    PolygonShape _polygonB = new PolygonShape();
+        private Transform _transformA = new Transform();
+        private Transform _transformB = new Transform();
+        private PolygonShape _polygonA = new PolygonShape();
+        private PolygonShape _polygonB = new PolygonShape();
     }
 }

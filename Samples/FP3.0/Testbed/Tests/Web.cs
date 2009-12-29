@@ -20,141 +20,142 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     // This tests distance joints, body destruction, and joint destruction.
     public class Web : Test
     {
-        Web()
-	    {
-		    Body ground = null;
-		    {
-			    BodyDef bd = new BodyDef();
-			    ground = _world.CreateBody(bd);
+        private Web()
+        {
+            Body ground = null;
+            {
+                BodyDef bd = new BodyDef();
+                ground = _world.CreateBody(bd);
 
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsBox(0.5f, 0.5f);
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.5f, 0.5f);
 
-			    BodyDef bd = new BodyDef();
+                BodyDef bd = new BodyDef();
                 bd.type = BodyType.Dynamic;
 
-			    bd.position = new Vector2(-5.0f, 5.0f);
-			    _bodies[0] = _world.CreateBody(bd);
-			    _bodies[0].CreateFixture(shape, 5.0f);
+                bd.position = new Vector2(-5.0f, 5.0f);
+                _bodies[0] = _world.CreateBody(bd);
+                _bodies[0].CreateFixture(shape, 5.0f);
 
-			    bd.position = new Vector2(5.0f, 5.0f);
-			    _bodies[1] = _world.CreateBody(bd);
-			    _bodies[1].CreateFixture(shape, 5.0f);
+                bd.position = new Vector2(5.0f, 5.0f);
+                _bodies[1] = _world.CreateBody(bd);
+                _bodies[1].CreateFixture(shape, 5.0f);
 
-			    bd.position = new Vector2(5.0f, 15.0f);
-			    _bodies[2] = _world.CreateBody(bd);
-			    _bodies[2].CreateFixture(shape, 5.0f);
+                bd.position = new Vector2(5.0f, 15.0f);
+                _bodies[2] = _world.CreateBody(bd);
+                _bodies[2].CreateFixture(shape, 5.0f);
 
-			    bd.position = new Vector2(-5.0f, 15.0f);
-			    _bodies[3] = _world.CreateBody(bd);
-			    _bodies[3].CreateFixture(shape, 5.0f);
+                bd.position = new Vector2(-5.0f, 15.0f);
+                _bodies[3] = _world.CreateBody(bd);
+                _bodies[3].CreateFixture(shape, 5.0f);
 
-			    DistanceJointDef jd = new DistanceJointDef();
-			    Vector2 p1, p2, d;
+                DistanceJointDef jd = new DistanceJointDef();
+                Vector2 p1, p2, d;
 
-			    jd.frequencyHz = 4.0f;
-			    jd.dampingRatio = 0.5f;
+                jd.frequencyHz = 4.0f;
+                jd.dampingRatio = 0.5f;
 
-			    jd.bodyA = ground;
-			    jd.bodyB = _bodies[0];
-			    jd.localAnchorA = new Vector2(-10.0f, 0.0f);
-			    jd.localAnchorB = new Vector2(-0.5f, -0.5f);
-			    p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
-			    p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
-			    d = p2 - p1;
-			    jd.length = d.Length();
-			    _joints[0] = _world.CreateJoint(jd);
+                jd.bodyA = ground;
+                jd.bodyB = _bodies[0];
+                jd.localAnchorA = new Vector2(-10.0f, 0.0f);
+                jd.localAnchorB = new Vector2(-0.5f, -0.5f);
+                p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
+                p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
+                d = p2 - p1;
+                jd.length = d.Length();
+                _joints[0] = _world.CreateJoint(jd);
 
                 jd.bodyA = ground;
                 jd.bodyB = _bodies[1];
-			    jd.localAnchorA = new Vector2(10.0f, 0.0f);
-			    jd.localAnchorB = new Vector2(0.5f, -0.5f);
+                jd.localAnchorA = new Vector2(10.0f, 0.0f);
+                jd.localAnchorB = new Vector2(0.5f, -0.5f);
                 p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
                 p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
-			    d = p2 - p1;
-			    jd.length = d.Length();
-			    _joints[1] = _world.CreateJoint(jd);
+                d = p2 - p1;
+                jd.length = d.Length();
+                _joints[1] = _world.CreateJoint(jd);
 
                 jd.bodyA = ground;
                 jd.bodyB = _bodies[2];
-			    jd.localAnchorA = new Vector2(10.0f, 20.0f);
-			    jd.localAnchorB = new Vector2(0.5f, 0.5f);
+                jd.localAnchorA = new Vector2(10.0f, 20.0f);
+                jd.localAnchorB = new Vector2(0.5f, 0.5f);
                 p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
                 p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
-			    d = p2 - p1;
-			    jd.length = d.Length();
-			    _joints[2] = _world.CreateJoint(jd);
+                d = p2 - p1;
+                jd.length = d.Length();
+                _joints[2] = _world.CreateJoint(jd);
 
                 jd.bodyA = ground;
                 jd.bodyB = _bodies[3];
-			    jd.localAnchorA = new Vector2(-10.0f, 20.0f);
-			    jd.localAnchorB = new Vector2(-0.5f, 0.5f);
+                jd.localAnchorA = new Vector2(-10.0f, 20.0f);
+                jd.localAnchorB = new Vector2(-0.5f, 0.5f);
                 p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
                 p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
-			    d = p2 - p1;
-			    jd.length = d.Length();
-			    _joints[3] = _world.CreateJoint(jd);
+                d = p2 - p1;
+                jd.length = d.Length();
+                _joints[3] = _world.CreateJoint(jd);
 
                 jd.bodyA = _bodies[0];
                 jd.bodyB = _bodies[1];
-			    jd.localAnchorA = new Vector2(0.5f, 0.0f);
-			    jd.localAnchorB = new Vector2(-0.5f, 0.0f);;
+                jd.localAnchorA = new Vector2(0.5f, 0.0f);
+                jd.localAnchorB = new Vector2(-0.5f, 0.0f);
+                ;
                 p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
                 p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
-			    d = p2 - p1;
-			    jd.length = d.Length();
-			    _joints[4] = _world.CreateJoint(jd);
+                d = p2 - p1;
+                jd.length = d.Length();
+                _joints[4] = _world.CreateJoint(jd);
 
                 jd.bodyA = _bodies[1];
                 jd.bodyB = _bodies[2];
-			    jd.localAnchorA = new Vector2(0.0f, 0.5f);
-			    jd.localAnchorB = new Vector2(0.0f, -0.5f);
+                jd.localAnchorA = new Vector2(0.0f, 0.5f);
+                jd.localAnchorB = new Vector2(0.0f, -0.5f);
                 p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
                 p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
-			    d = p2 - p1;
-			    jd.length = d.Length();
-			    _joints[5] = _world.CreateJoint(jd);
+                d = p2 - p1;
+                jd.length = d.Length();
+                _joints[5] = _world.CreateJoint(jd);
 
                 jd.bodyA = _bodies[2];
                 jd.bodyB = _bodies[3];
-			    jd.localAnchorA = new Vector2(-0.5f, 0.0f);
-			    jd.localAnchorB = new Vector2(0.5f, 0.0f);
+                jd.localAnchorA = new Vector2(-0.5f, 0.0f);
+                jd.localAnchorB = new Vector2(0.5f, 0.0f);
                 p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
                 p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
-			    d = p2 - p1;
-			    jd.length = d.Length();
-			    _joints[6] = _world.CreateJoint(jd);
+                d = p2 - p1;
+                jd.length = d.Length();
+                _joints[6] = _world.CreateJoint(jd);
 
                 jd.bodyA = _bodies[3];
                 jd.bodyB = _bodies[0];
-			    jd.localAnchorA = new Vector2(0.0f, -0.5f);
-			    jd.localAnchorB = new Vector2(0.0f, 0.5f);
+                jd.localAnchorA = new Vector2(0.0f, -0.5f);
+                jd.localAnchorB = new Vector2(0.0f, 0.5f);
                 p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
-			    p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
-			    d = p2 - p1;
-			    jd.length = d.Length();
-			    _joints[7] = _world.CreateJoint(jd);
-		    }
-	    }
+                p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
+                d = p2 - p1;
+                jd.length = d.Length();
+                _joints[7] = _world.CreateJoint(jd);
+            }
+        }
 
-	    public override void Keyboard(KeyboardState state, KeyboardState oldState)
-	    {
+        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        {
             if (state.IsKeyDown(Keys.B) && oldState.IsKeyUp(Keys.B))
             {
                 for (int i = 0; i < 4; ++i)
@@ -180,35 +181,35 @@ namespace Box2D.XNA.TestBed.Tests
                     }
                 }
             }
-	    }
+        }
 
-	    public override void Step(Framework.Settings settings)
-	    {
-		    base.Step(settings);
-		    _debugView.DrawString(50, _textLine, "This demonstrates a soft distance joint.");
-		    _textLine += 15;
-		    _debugView.DrawString(50, _textLine, "Press: (b) to delete a body, (j) to delete a joint");
-		    _textLine += 15;
-	    }
+        public override void Step(Framework.Settings settings)
+        {
+            base.Step(settings);
+            _debugView.DrawString(50, _textLine, "This demonstrates a soft distance joint.");
+            _textLine += 15;
+            _debugView.DrawString(50, _textLine, "Press: (b) to delete a body, (j) to delete a joint");
+            _textLine += 15;
+        }
 
-	    public override void JointDestroyed(Joint joint)
-	    {
-		    for (int i = 0; i < 8; ++i)
-		    {
-			    if (_joints[i] == joint)
-			    {
-				    _joints[i] = null;
-				    break;
-			    }
-		    }
-	    }
+        public override void JointDestroyed(Joint joint)
+        {
+            for (int i = 0; i < 8; ++i)
+            {
+                if (_joints[i] == joint)
+                {
+                    _joints[i] = null;
+                    break;
+                }
+            }
+        }
 
-	    static internal Test Create()
-	    {
-		    return new Web();
-	    }
+        internal static Test Create()
+        {
+            return new Web();
+        }
 
-	    Body[] _bodies = new Body[4];
-	    Joint[] _joints = new Joint[8];
+        private Body[] _bodies = new Body[4];
+        private Joint[] _joints = new Joint[8];
     }
 }

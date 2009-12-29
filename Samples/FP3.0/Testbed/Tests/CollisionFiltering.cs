@@ -21,15 +21,13 @@
 */
 
 using System;
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
-    
-
     public class CollisionFiltering : Test
     {
         // This is a test of collision filtering.
@@ -38,68 +36,68 @@ namespace Box2D.XNA.TestBed.Tests
         // The 3 small ones always collide.
         // The 3 large ones never collide.
         // The boxes don't collide with triangles (except if both are small).
-        static Int16 k_smallGroup = 1;
-        static Int16 k_largeGroup = -1;
+        private static Int16 k_smallGroup = 1;
+        private static Int16 k_largeGroup = -1;
 
-        static UInt16 k_defaultCategory = 0x0001;
-        static UInt16 k_triangleCategory = 0x0002;
-        static UInt16 k_boxCategory = 0x0004;
-        static UInt16 k_circleCategory = 0x0008;
+        private static UInt16 k_defaultCategory = 0x0001;
+        private static UInt16 k_triangleCategory = 0x0002;
+        private static UInt16 k_boxCategory = 0x0004;
+        private static UInt16 k_circleCategory = 0x0008;
 
-        static UInt16 k_triangleMask = 0xFFFF;
-        static UInt16 k_boxMask = (ushort)(0xFFFF ^ k_triangleCategory);
-        static UInt16 k_circleMask = 0xFFFF;
+        private static UInt16 k_triangleMask = 0xFFFF;
+        private static UInt16 k_boxMask = (ushort) (0xFFFF ^ k_triangleCategory);
+        private static UInt16 k_circleMask = 0xFFFF;
 
         public CollisionFiltering()
-	    {
-		    // Ground body
-		    {
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+        {
+            // Ground body
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
                 FixtureDef sd = new FixtureDef();
-			    sd.shape = shape;
-			    sd.friction = 0.3f;
+                sd.shape = shape;
+                sd.friction = 0.3f;
 
-			    BodyDef bd = new BodyDef();
-			    Body ground = _world.CreateBody(bd);
-			    ground.CreateFixture(sd);
-		    }
+                BodyDef bd = new BodyDef();
+                Body ground = _world.CreateBody(bd);
+                ground.CreateFixture(sd);
+            }
 
-		    // Small triangle
-		    Vector2[] vertices = new Vector2[3];
-		    vertices[0] = new Vector2(-1.0f, 0.0f);
-		    vertices[1] = new Vector2(1.0f, 0.0f);
-		    vertices[2] = new Vector2(0.0f, 2.0f);
-		    PolygonShape polygon = new PolygonShape();
-		    polygon.Set(vertices, 3);
+            // Small triangle
+            Vector2[] vertices = new Vector2[3];
+            vertices[0] = new Vector2(-1.0f, 0.0f);
+            vertices[1] = new Vector2(1.0f, 0.0f);
+            vertices[2] = new Vector2(0.0f, 2.0f);
+            PolygonShape polygon = new PolygonShape();
+            polygon.Set(vertices, 3);
 
-		    FixtureDef triangleShapeDef = new FixtureDef();
-		    triangleShapeDef.shape = polygon;
-		    triangleShapeDef.density = 1.0f;
+            FixtureDef triangleShapeDef = new FixtureDef();
+            triangleShapeDef.shape = polygon;
+            triangleShapeDef.density = 1.0f;
 
-		    triangleShapeDef.filter.groupIndex = k_smallGroup;
-		    triangleShapeDef.filter.categoryBits = k_triangleCategory;
-		    triangleShapeDef.filter.maskBits = k_triangleMask;
+            triangleShapeDef.filter.groupIndex = k_smallGroup;
+            triangleShapeDef.filter.categoryBits = k_triangleCategory;
+            triangleShapeDef.filter.maskBits = k_triangleMask;
 
-		    BodyDef triangleBodyDef = new BodyDef();
+            BodyDef triangleBodyDef = new BodyDef();
             triangleBodyDef.type = BodyType.Dynamic;
-		    triangleBodyDef.position = new Vector2(-5.0f, 2.0f);
+            triangleBodyDef.position = new Vector2(-5.0f, 2.0f);
 
-		    Body body1 = _world.CreateBody(triangleBodyDef);
-		    body1.CreateFixture(triangleShapeDef);
+            Body body1 = _world.CreateBody(triangleBodyDef);
+            body1.CreateFixture(triangleShapeDef);
 
-		    // Large triangle (recycle definitions)
-		    vertices[0] *= 2.0f;
-		    vertices[1] *= 2.0f;
-		    vertices[2] *= 2.0f;
-		    polygon.Set(vertices, 3);
-		    triangleShapeDef.filter.groupIndex = k_largeGroup;
-		    triangleBodyDef.position = new Vector2(-5.0f, 6.0f);
-		    triangleBodyDef.fixedRotation = true; // look at me!
+            // Large triangle (recycle definitions)
+            vertices[0] *= 2.0f;
+            vertices[1] *= 2.0f;
+            vertices[2] *= 2.0f;
+            polygon.Set(vertices, 3);
+            triangleShapeDef.filter.groupIndex = k_largeGroup;
+            triangleBodyDef.position = new Vector2(-5.0f, 6.0f);
+            triangleBodyDef.fixedRotation = true; // look at me!
 
-		    Body body2 = _world.CreateBody(triangleBodyDef);
-		    body2.CreateFixture(triangleShapeDef);
+            Body body2 = _world.CreateBody(triangleBodyDef);
+            body2.CreateFixture(triangleShapeDef);
 
             {
                 BodyDef bd = new BodyDef();
@@ -125,62 +123,63 @@ namespace Box2D.XNA.TestBed.Tests
             }
 
 
-		    // Small box
-		    polygon.SetAsBox(1.0f, 0.5f);
+            // Small box
+            polygon.SetAsBox(1.0f, 0.5f);
             FixtureDef boxShapeDef = new FixtureDef();
-		    boxShapeDef.shape = polygon;
-		    boxShapeDef.density = 1.0f;
-		    boxShapeDef.restitution = 0.1f;
+            boxShapeDef.shape = polygon;
+            boxShapeDef.density = 1.0f;
+            boxShapeDef.restitution = 0.1f;
 
-		    boxShapeDef.filter.groupIndex = k_smallGroup;
-		    boxShapeDef.filter.categoryBits = k_boxCategory;
-		    boxShapeDef.filter.maskBits = k_boxMask;
+            boxShapeDef.filter.groupIndex = k_smallGroup;
+            boxShapeDef.filter.categoryBits = k_boxCategory;
+            boxShapeDef.filter.maskBits = k_boxMask;
 
             BodyDef boxBodyDef = new BodyDef();
             boxBodyDef.type = BodyType.Dynamic;
-		    boxBodyDef.position = new Vector2(0.0f, 2.0f);
+            boxBodyDef.position = new Vector2(0.0f, 2.0f);
 
-		    Body body3 = _world.CreateBody(boxBodyDef);
-		    body3.CreateFixture(boxShapeDef);
+            Body body3 = _world.CreateBody(boxBodyDef);
+            body3.CreateFixture(boxShapeDef);
 
-		    // Large box (recycle definitions)
-		    polygon.SetAsBox(2.0f, 1.0f);
-		    boxShapeDef.filter.groupIndex = k_largeGroup;
-		    boxBodyDef.position = new Vector2(0.0f, 6.0f);
+            // Large box (recycle definitions)
+            polygon.SetAsBox(2.0f, 1.0f);
+            boxShapeDef.filter.groupIndex = k_largeGroup;
+            boxBodyDef.position = new Vector2(0.0f, 6.0f);
 
-		    Body body4 = _world.CreateBody(boxBodyDef);
-		    body4.CreateFixture(boxShapeDef);
+            Body body4 = _world.CreateBody(boxBodyDef);
+            body4.CreateFixture(boxShapeDef);
 
-		    // Small circle
-		    CircleShape circle = new CircleShape();
-		    circle._radius = 1.0f;
+            // Small circle
+            CircleShape circle = new CircleShape();
+            circle._radius = 1.0f;
 
-		    FixtureDef circleShapeDef = new FixtureDef();
-		    circleShapeDef.shape = circle;
-		    circleShapeDef.density = 1.0f;
+            FixtureDef circleShapeDef = new FixtureDef();
+            circleShapeDef.shape = circle;
+            circleShapeDef.density = 1.0f;
 
-		    circleShapeDef.filter.groupIndex = k_smallGroup;
-		    circleShapeDef.filter.categoryBits = k_circleCategory;
-		    circleShapeDef.filter.maskBits = k_circleMask;
+            circleShapeDef.filter.groupIndex = k_smallGroup;
+            circleShapeDef.filter.categoryBits = k_circleCategory;
+            circleShapeDef.filter.maskBits = k_circleMask;
 
-		    BodyDef circleBodyDef = new BodyDef();
+            BodyDef circleBodyDef = new BodyDef();
             circleBodyDef.type = BodyType.Dynamic;
-		    circleBodyDef.position = new Vector2(5.0f, 2.0f);
-    		
-		    Body body5 = _world.CreateBody(circleBodyDef);
-		    body5.CreateFixture(circleShapeDef);
+            circleBodyDef.position = new Vector2(5.0f, 2.0f);
 
-		    // Large circle
-		    circle._radius *= 2.0f;
-		    circleShapeDef.filter.groupIndex = k_largeGroup;
-		    circleBodyDef.position = new Vector2(5.0f, 6.0f);
+            Body body5 = _world.CreateBody(circleBodyDef);
+            body5.CreateFixture(circleShapeDef);
 
-		    Body body6 = _world.CreateBody(circleBodyDef);
-		    body6.CreateFixture(circleShapeDef);
-	    }
-	    static internal Test Create()
-	    {
-		    return new CollisionFiltering();
-	    }
+            // Large circle
+            circle._radius *= 2.0f;
+            circleShapeDef.filter.groupIndex = k_largeGroup;
+            circleBodyDef.position = new Vector2(5.0f, 6.0f);
+
+            Body body6 = _world.CreateBody(circleBodyDef);
+            body6.CreateFixture(circleShapeDef);
+        }
+
+        internal static Test Create()
+        {
+            return new CollisionFiltering();
+        }
     }
 }

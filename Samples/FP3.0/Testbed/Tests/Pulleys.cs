@@ -20,72 +20,72 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class Pulleys : Test
     {
-        Pulleys()
-	    {
-		    Body ground = null;
-		    {
-			    BodyDef bd = new BodyDef();
-			    ground = _world.CreateBody(bd);
+        private Pulleys()
+        {
+            Body ground = null;
+            {
+                BodyDef bd = new BodyDef();
+                ground = _world.CreateBody(bd);
 
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
-			    float a = 2.0f;
-			    float b = 4.0f;
-			    float y = 16.0f;
-			    float L = 12.0f;
+            {
+                float a = 2.0f;
+                float b = 4.0f;
+                float y = 16.0f;
+                float L = 12.0f;
 
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsBox(a, b);
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(a, b);
 
-			    BodyDef bd = new BodyDef();
+                BodyDef bd = new BodyDef();
                 bd.type = BodyType.Dynamic;
 
-			    bd.position = new Vector2(-10.0f, y);
-			    Body body1 = _world.CreateBody(bd);
-			    body1.CreateFixture(shape, 5.0f);
+                bd.position = new Vector2(-10.0f, y);
+                Body body1 = _world.CreateBody(bd);
+                body1.CreateFixture(shape, 5.0f);
 
-			    bd.position = new Vector2(10.0f, y);
-			    Body body2 = _world.CreateBody(bd);
-			    body2.CreateFixture(shape, 5.0f);
+                bd.position = new Vector2(10.0f, y);
+                Body body2 = _world.CreateBody(bd);
+                body2.CreateFixture(shape, 5.0f);
 
-			    PulleyJointDef pulleyDef = new PulleyJointDef();
-			    Vector2 anchor1 = new Vector2(-10.0f, y + b);
-			    Vector2 anchor2 = new Vector2(10.0f, y + b);
-			    Vector2 groundAnchor1 = new Vector2(-10.0f, y + b + L);
+                PulleyJointDef pulleyDef = new PulleyJointDef();
+                Vector2 anchor1 = new Vector2(-10.0f, y + b);
+                Vector2 anchor2 = new Vector2(10.0f, y + b);
+                Vector2 groundAnchor1 = new Vector2(-10.0f, y + b + L);
                 Vector2 groundAnchor2 = new Vector2(10.0f, y + b + L);
-			    pulleyDef.Initialize(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2, 2.0f);
+                pulleyDef.Initialize(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2, 2.0f);
 
-			    _joint1 = (PulleyJoint)_world.CreateJoint(pulleyDef);
-		    }
-	    }
+                _joint1 = (PulleyJoint) _world.CreateJoint(pulleyDef);
+            }
+        }
 
-	    public override void Step(Framework.Settings settings)
-	    {
-		    base.Step(settings);
+        public override void Step(Framework.Settings settings)
+        {
+            base.Step(settings);
 
-		    float ratio = _joint1.GetRatio();
-		    float L = _joint1.GetLength1() + ratio * _joint1.GetLength2();
-            _debugView.DrawString(50, _textLine, "L1 + {0:n} * L2 = {1:n}", (float)ratio, (float)L);
-		    _textLine += 15;
-	    }
+            float ratio = _joint1.GetRatio();
+            float L = _joint1.GetLength1() + ratio*_joint1.GetLength2();
+            _debugView.DrawString(50, _textLine, "L1 + {0:n} * L2 = {1:n}", (float) ratio, (float) L);
+            _textLine += 15;
+        }
 
-	    internal static Test Create()
-	    {
-		    return new Pulleys();
-	    }
+        internal static Test Create()
+        {
+            return new Pulleys();
+        }
 
-	    PulleyJoint _joint1;
+        private PulleyJoint _joint1;
     }
 }

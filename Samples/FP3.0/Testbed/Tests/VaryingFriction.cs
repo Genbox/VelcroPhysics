@@ -20,109 +20,109 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class VaryingFriction : Test
     {
-        VaryingFriction()
-	    {
-		    {
-			    BodyDef bd = new BodyDef();
-			    Body ground = _world.CreateBody(bd);
+        private VaryingFriction()
+        {
+            {
+                BodyDef bd = new BodyDef();
+                Body ground = _world.CreateBody(bd);
 
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsBox(13.0f, 0.25f);
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(13.0f, 0.25f);
 
-			    BodyDef bd = new BodyDef();
-			    bd.position = new Vector2(-4.0f, 22.0f);
-			    bd.angle = -0.25f;
+                BodyDef bd = new BodyDef();
+                bd.position = new Vector2(-4.0f, 22.0f);
+                bd.angle = -0.25f;
 
-			    Body ground = _world.CreateBody(bd);
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                Body ground = _world.CreateBody(bd);
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsBox(0.25f, 1.0f);
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.25f, 1.0f);
 
-			    BodyDef bd = new BodyDef();
-			    bd.position = new Vector2(10.5f, 19.0f);
+                BodyDef bd = new BodyDef();
+                bd.position = new Vector2(10.5f, 19.0f);
 
-			    Body ground = _world.CreateBody(bd);
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                Body ground = _world.CreateBody(bd);
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsBox(13.0f, 0.25f);
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(13.0f, 0.25f);
 
-			    BodyDef bd = new BodyDef();
-			    bd.position = new Vector2(4.0f, 14.0f);
-			    bd.angle = 0.25f;
+                BodyDef bd = new BodyDef();
+                bd.position = new Vector2(4.0f, 14.0f);
+                bd.angle = 0.25f;
 
-			    Body ground = _world.CreateBody(bd);
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                Body ground = _world.CreateBody(bd);
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsBox(0.25f, 1.0f);
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.25f, 1.0f);
 
-			    BodyDef bd = new BodyDef();
-			    bd.position = new Vector2(-10.5f, 11.0f);
+                BodyDef bd = new BodyDef();
+                bd.position = new Vector2(-10.5f, 11.0f);
 
-			    Body ground = _world.CreateBody(bd);
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                Body ground = _world.CreateBody(bd);
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsBox(13.0f, 0.25f);
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(13.0f, 0.25f);
 
-			    BodyDef bd = new BodyDef();
-			    bd.position = new Vector2(-4.0f, 6.0f);
-			    bd.angle = -0.25f;
+                BodyDef bd = new BodyDef();
+                bd.position = new Vector2(-4.0f, 6.0f);
+                bd.angle = -0.25f;
 
-			    Body ground = _world.CreateBody(bd);
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                Body ground = _world.CreateBody(bd);
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsBox(0.5f, 0.5f);
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.5f, 0.5f);
 
-			    FixtureDef fd = new FixtureDef();
-			    fd.shape = shape;
-			    fd.density = 25.0f;
+                FixtureDef fd = new FixtureDef();
+                fd.shape = shape;
+                fd.density = 25.0f;
 
-			    float[] friction = new float[5] {0.75f, 0.5f, 0.35f, 0.1f, 0.0f};
+                float[] friction = new float[5] {0.75f, 0.5f, 0.35f, 0.1f, 0.0f};
 
-			    for (int i = 0; i < 5; ++i)
-			    {
-				    BodyDef bd = new BodyDef();
+                for (int i = 0; i < 5; ++i)
+                {
+                    BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-				    bd.position = new Vector2(-15.0f + 4.0f * i, 28.0f);
-				    Body body = _world.CreateBody(bd);
+                    bd.position = new Vector2(-15.0f + 4.0f*i, 28.0f);
+                    Body body = _world.CreateBody(bd);
 
-				    fd.friction = friction[i];
-				    body.CreateFixture(fd);
-			    }
-		    }
-	    }
+                    fd.friction = friction[i];
+                    body.CreateFixture(fd);
+                }
+            }
+        }
 
         internal static Test Create()
-	    {
-		    return new VaryingFriction();
-	    }
+        {
+            return new VaryingFriction();
+        }
     }
 }

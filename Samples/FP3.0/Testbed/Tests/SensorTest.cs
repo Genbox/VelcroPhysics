@@ -21,142 +21,142 @@
 */
 
 using System;
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class SensorTest : Test
     {
-		static int e_count = 7;
+        private static int e_count = 7;
 
-	    public SensorTest()
-	    {
-		    {
-			    BodyDef bd = new BodyDef();
-			    Body ground = _world.CreateBody(bd);
+        public SensorTest()
+        {
+            {
+                BodyDef bd = new BodyDef();
+                Body ground = _world.CreateBody(bd);
 
-			    {
-				    PolygonShape shape = new PolygonShape();
-				    shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-				    ground.CreateFixture(shape, 0.0f);
-			    }
+                {
+                    PolygonShape shape = new PolygonShape();
+                    shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                    ground.CreateFixture(shape, 0.0f);
+                }
 
-    #if false
+#if false
 			    {
 				    FixtureDef sd;
 				    sd.SetAsBox(10.0f, 2.0f, new Vector2(0.0f, 20.0f), 0.0f);
 				    sd.isSensor = true;
 				    _sensor = ground.CreateFixture(&sd);
 			    }
-    #else
-			    {
-				    CircleShape shape = new CircleShape();
-				    shape._radius = 5.0f;
-				    shape._p = new Vector2(0.0f, 10.0f);
+#else
+                {
+                    CircleShape shape = new CircleShape();
+                    shape._radius = 5.0f;
+                    shape._p = new Vector2(0.0f, 10.0f);
 
-				    FixtureDef fd = new FixtureDef();
-				    fd.shape = shape;
-				    fd.isSensor = true;
-				    _sensor = ground.CreateFixture(fd);
-			    }
-    #endif
-		    }
+                    FixtureDef fd = new FixtureDef();
+                    fd.shape = shape;
+                    fd.isSensor = true;
+                    _sensor = ground.CreateFixture(fd);
+                }
+#endif
+            }
 
-		    {
+            {
                 CircleShape shape = new CircleShape();
-			    shape._radius = 1.0f;
+                shape._radius = 1.0f;
 
-			    for (int i = 0; i < e_count; ++i)
-			    {
-				    BodyDef bd = new BodyDef();
+                for (int i = 0; i < e_count; ++i)
+                {
+                    BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-				    bd.position = new Vector2(-10.0f + 3.0f * i, 20.0f);
+                    bd.position = new Vector2(-10.0f + 3.0f*i, 20.0f);
                     bd.userData = i;
 
-				    _touching[i] = false;
-				    _bodies[i] = _world.CreateBody(bd);
+                    _touching[i] = false;
+                    _bodies[i] = _world.CreateBody(bd);
 
-				    _bodies[i].CreateFixture(shape, 1.0f);
-			    }
-		    }
-	    }
+                    _bodies[i].CreateFixture(shape, 1.0f);
+                }
+            }
+        }
 
-	    // Implement contact listener.
-	    public override void BeginContact(Contact contact)
-	    {
-		    Fixture fixtureA = contact.GetFixtureA();
-		    Fixture fixtureB = contact.GetFixtureB();
-
-            if (fixtureA == _sensor && fixtureB.GetBody().GetUserData() != null)
-		    {
-                _touching[(int)(fixtureB.GetBody().GetUserData())] = true;
-		    }
-
-            if (fixtureB == _sensor && fixtureA.GetBody().GetUserData() != null)
-		    {
-                _touching[(int)(fixtureA.GetBody().GetUserData())] = true;
-		    }
-	    }
-
-	    // Implement contact listener.
-	    public override void EndContact(Contact contact)
-	    {
-		    Fixture fixtureA = contact.GetFixtureA();
-		    Fixture fixtureB = contact.GetFixtureB();
+        // Implement contact listener.
+        public override void BeginContact(Contact contact)
+        {
+            Fixture fixtureA = contact.GetFixtureA();
+            Fixture fixtureB = contact.GetFixtureB();
 
             if (fixtureA == _sensor && fixtureB.GetBody().GetUserData() != null)
-		    {
-                _touching[(int)(fixtureB.GetBody().GetUserData())] = false;
-		    }
+            {
+                _touching[(int) (fixtureB.GetBody().GetUserData())] = true;
+            }
 
             if (fixtureB == _sensor && fixtureA.GetBody().GetUserData() != null)
-		    {
-                _touching[(int)(fixtureA.GetBody().GetUserData())] = false;
-		    }
-	    }
+            {
+                _touching[(int) (fixtureA.GetBody().GetUserData())] = true;
+            }
+        }
 
-	    public override void Step(Framework.Settings settings)
-	    {
-		    base.Step(settings);
+        // Implement contact listener.
+        public override void EndContact(Contact contact)
+        {
+            Fixture fixtureA = contact.GetFixtureA();
+            Fixture fixtureB = contact.GetFixtureB();
 
-		    // Traverse the contact results. Apply a force on shapes
-		    // that overlap the sensor.
-		    for (int i = 0; i < e_count; ++i)
-		    {
-			    if (_touching[i] == false)
-			    {
-				    continue;
-			    }
+            if (fixtureA == _sensor && fixtureB.GetBody().GetUserData() != null)
+            {
+                _touching[(int) (fixtureB.GetBody().GetUserData())] = false;
+            }
 
-			    Body body = _bodies[i];
-			    Body ground = _sensor.GetBody();
+            if (fixtureB == _sensor && fixtureA.GetBody().GetUserData() != null)
+            {
+                _touching[(int) (fixtureA.GetBody().GetUserData())] = false;
+            }
+        }
 
-			    CircleShape circle = (CircleShape)_sensor.GetShape();
-			    Vector2 center = ground.GetWorldPoint(circle._p);
+        public override void Step(Framework.Settings settings)
+        {
+            base.Step(settings);
 
-			    Vector2 position = body.GetPosition();
+            // Traverse the contact results. Apply a force on shapes
+            // that overlap the sensor.
+            for (int i = 0; i < e_count; ++i)
+            {
+                if (_touching[i] == false)
+                {
+                    continue;
+                }
 
-			    Vector2 d = center - position;
-                if (d.LengthSquared() < FarseerPhysics.Settings.b2_epsilon * FarseerPhysics.Settings.b2_epsilon)
-			    {
-				    continue;
-			    }
+                Body body = _bodies[i];
+                Body ground = _sensor.GetBody();
 
-			    d.Normalize();
-			    Vector2 F = 100.0f * d;
-			    body.ApplyForce(F, position);
-		    }
-	    }
+                CircleShape circle = (CircleShape) _sensor.GetShape();
+                Vector2 center = ground.GetWorldPoint(circle._p);
 
-	    internal static Test Create()
-	    {
-		    return new SensorTest();
-	    }
+                Vector2 position = body.GetPosition();
 
-	    Fixture _sensor;
-	    Body[] _bodies = new Body[e_count];
-	    bool[] _touching = new bool[e_count];
+                Vector2 d = center - position;
+                if (d.LengthSquared() < FarseerPhysics.Settings.b2_epsilon*FarseerPhysics.Settings.b2_epsilon)
+                {
+                    continue;
+                }
+
+                d.Normalize();
+                Vector2 F = 100.0f*d;
+                body.ApplyForce(F, position);
+            }
+        }
+
+        internal static Test Create()
+        {
+            return new SensorTest();
+        }
+
+        private Fixture _sensor;
+        private Body[] _bodies = new Body[e_count];
+        private bool[] _touching = new bool[e_count];
     }
 }

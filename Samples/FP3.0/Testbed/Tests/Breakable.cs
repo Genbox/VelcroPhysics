@@ -21,15 +21,15 @@
 */
 
 using System;
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class Breakable : Test
     {
-        static int e_count = 7;
+        private static int e_count = 7;
 
         public Breakable()
         {
@@ -48,7 +48,7 @@ namespace Box2D.XNA.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 bd.type = BodyType.Dynamic;
                 bd.position = new Vector2(0.0f, 40.0f);
-                bd.angle = 0.25f * FarseerPhysics.Settings.b2_pi;
+                bd.angle = 0.25f*FarseerPhysics.Settings.b2_pi;
                 _body1 = _world.CreateBody(bd);
 
                 _shape1 = new PolygonShape();
@@ -65,32 +65,32 @@ namespace Box2D.XNA.TestBed.Tests
         }
 
         public override void PostSolve(Contact contact, ref ContactImpulse impulse)
-	    {
-		    if (_broke)
-		    {
-			    // The body already broke.
-			    return;
-		    }
+        {
+            if (_broke)
+            {
+                // The body already broke.
+                return;
+            }
 
-		    // Should the body break?
+            // Should the body break?
             Manifold manifold;
             contact.GetManifold(out manifold);
             int count = manifold._pointCount;
 
-		    float maxImpulse = 0.0f;
-		    for (int i = 0; i < count; ++i)
-		    {
-			    maxImpulse = Math.Max(maxImpulse, impulse.normalImpulses[i]);
-		    }
+            float maxImpulse = 0.0f;
+            for (int i = 0; i < count; ++i)
+            {
+                maxImpulse = Math.Max(maxImpulse, impulse.normalImpulses[i]);
+            }
 
-		    if (maxImpulse > 40.0f)
-		    {
-			    // Flag the body for breaking.
-			    _break = true;
-		    }
-	    }
+            if (maxImpulse > 40.0f)
+            {
+                // Flag the body for breaking.
+                _break = true;
+            }
+        }
 
-        void Break()
+        private void Break()
         {
             // Create two bodies from one.
             Body body1 = _piece1.GetBody();
@@ -123,38 +123,38 @@ namespace Box2D.XNA.TestBed.Tests
         }
 
         public override void Step(Framework.Settings settings)
-	    {
-		    if (_break)
-		    {
-			    Break();
-			    _broke = true;
-			    _break = false;
-		    }
+        {
+            if (_break)
+            {
+                Break();
+                _broke = true;
+                _break = false;
+            }
 
-		    // Cache velocities to improve movement on breakage.
-		    if (_broke == false)
-		    {
-			    _velocity = _body1.GetLinearVelocity();
-			    _angularVelocity = _body1.GetAngularVelocity();
-		    }
+            // Cache velocities to improve movement on breakage.
+            if (_broke == false)
+            {
+                _velocity = _body1.GetLinearVelocity();
+                _angularVelocity = _body1.GetAngularVelocity();
+            }
 
-		    base.Step(settings);
-	    }
+            base.Step(settings);
+        }
 
-	    static internal Test Create()
-	    {
-		    return new Breakable();
-	    }
+        internal static Test Create()
+        {
+            return new Breakable();
+        }
 
-	    Body _body1;
-	    Vector2 _velocity;
-	    float _angularVelocity;
-	    PolygonShape _shape1;
-	    PolygonShape _shape2;
-	    Fixture _piece1;
-	    Fixture _piece2;
+        private Body _body1;
+        private Vector2 _velocity;
+        private float _angularVelocity;
+        private PolygonShape _shape1;
+        private PolygonShape _shape2;
+        private Fixture _piece1;
+        private Fixture _piece2;
 
-        bool _broke;
-        bool _break;
+        private bool _broke;
+        private bool _break;
     }
 }

@@ -20,53 +20,53 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class LineJoint : Test
     {
         public LineJoint()
-	    {
-		    Body ground = null;
-		    {
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+        {
+            Body ground = null;
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-			    BodyDef bd = new BodyDef();
-			    ground = _world.CreateBody(bd);
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                BodyDef bd = new BodyDef();
+                ground = _world.CreateBody(bd);
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsBox(0.5f, 2.0f);
+            {
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.5f, 2.0f);
 
-			    BodyDef bd = new BodyDef();
+                BodyDef bd = new BodyDef();
                 bd.type = BodyType.Dynamic;
-			    bd.position = new Vector2(0.0f, 7.0f);
-			    Body body = _world.CreateBody(bd);
-			    body.CreateFixture(shape, 1.0f);
+                bd.position = new Vector2(0.0f, 7.0f);
+                Body body = _world.CreateBody(bd);
+                body.CreateFixture(shape, 1.0f);
 
-			    LineJointDef jd = new LineJointDef();
-			    Vector2 axis = new Vector2(2.0f, 1.0f);
-			    axis.Normalize();
-			    jd.Initialize(ground, body, new Vector2(0.0f, 8.5f), axis);
-			    jd.motorSpeed = 0.0f;
-			    jd.maxMotorForce = 100.0f;
-			    jd.enableMotor = true;
-			    jd.lowerTranslation = -4.0f;
-			    jd.upperTranslation = 4.0f;
-			    jd.enableLimit = true;
-			    _world.CreateJoint(jd);
-		    }
-	    }
+                LineJointDef jd = new LineJointDef();
+                Vector2 axis = new Vector2(2.0f, 1.0f);
+                axis.Normalize();
+                jd.Initialize(ground, body, new Vector2(0.0f, 8.5f), axis);
+                jd.motorSpeed = 0.0f;
+                jd.maxMotorForce = 100.0f;
+                jd.enableMotor = true;
+                jd.lowerTranslation = -4.0f;
+                jd.upperTranslation = 4.0f;
+                jd.enableLimit = true;
+                _world.CreateJoint(jd);
+            }
+        }
 
         internal static Test Create()
-	    {
-		    return new LineJoint();
-	    }
+        {
+            return new LineJoint();
+        }
     }
 }

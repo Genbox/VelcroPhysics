@@ -20,11 +20,11 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class Dominos : Test
     {
@@ -63,7 +63,7 @@ namespace Box2D.XNA.TestBed.Tests
                 {
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(-6.0f + 1.0f * i, 11.25f);
+                    bd.position = new Vector2(-6.0f + 1.0f*i, 11.25f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(fd);
                 }
@@ -204,7 +204,7 @@ namespace Box2D.XNA.TestBed.Tests
                 {
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(5.9f + 2.0f * radius * i, 2.4f);
+                    bd.position = new Vector2(5.9f + 2.0f*radius*i, 2.4f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(shape, 10.0f);
                 }
@@ -212,8 +212,8 @@ namespace Box2D.XNA.TestBed.Tests
         }
 
         internal static Test Create()
-	    {
-		    return new Dominos();
-	    }
+        {
+            return new Dominos();
+        }
     }
 }

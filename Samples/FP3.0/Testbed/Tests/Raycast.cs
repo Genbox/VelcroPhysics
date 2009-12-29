@@ -21,84 +21,83 @@
 */
 
 using System;
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class RayCast : Test
     {
-        static int e_maxBodies = 256;
+        private static int e_maxBodies = 256;
 
         public RayCast()
         {
             // Ground body
-		    {
-			    BodyDef bd = new BodyDef();
-			    Body ground = _world.CreateBody(bd);
+            {
+                BodyDef bd = new BodyDef();
+                Body ground = _world.CreateBody(bd);
 
-			    PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape();
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
-			    var vertices = new Vector2[3];
-			    vertices[0] = new Vector2(-0.5f, 0.0f);
-			    vertices[1] = new Vector2(0.5f, 0.0f);
-			    vertices[2] = new Vector2(0.0f, 1.5f);
+            {
+                var vertices = new Vector2[3];
+                vertices[0] = new Vector2(-0.5f, 0.0f);
+                vertices[1] = new Vector2(0.5f, 0.0f);
+                vertices[2] = new Vector2(0.0f, 1.5f);
                 _polygons[0] = new PolygonShape();
-			    _polygons[0].Set(vertices, 3);
-		    }
+                _polygons[0].Set(vertices, 3);
+            }
 
-		    {
-			    var vertices2 = new Vector2[3];
-			    vertices2[0] = new Vector2(-0.1f, 0.0f);
-			    vertices2[1] = new Vector2(0.1f, 0.0f);
-			    vertices2[2] = new Vector2(0.0f, 1.5f);
+            {
+                var vertices2 = new Vector2[3];
+                vertices2[0] = new Vector2(-0.1f, 0.0f);
+                vertices2[1] = new Vector2(0.1f, 0.0f);
+                vertices2[2] = new Vector2(0.0f, 1.5f);
                 _polygons[1] = new PolygonShape();
-			    _polygons[1].Set(vertices2, 3);
-		    }
+                _polygons[1].Set(vertices2, 3);
+            }
 
-		    {
-			    float w = 1.0f;
-                float b = w / (2.0f + (float)Math.Sqrt(2.0));
-			    float s = (float)Math.Sqrt(2.0) * b;
+            {
+                float w = 1.0f;
+                float b = w/(2.0f + (float) Math.Sqrt(2.0));
+                float s = (float) Math.Sqrt(2.0)*b;
 
-			    var vertices3 = new Vector2[8];
-			    vertices3[0] = new Vector2(0.5f * s, 0.0f);
-			    vertices3[1] = new Vector2(0.5f * w, b);
-			    vertices3[2] = new Vector2(0.5f * w, b + s);
-			    vertices3[3] = new Vector2(0.5f * s, w);
-			    vertices3[4] = new Vector2(-0.5f * s, w);
-			    vertices3[5] = new Vector2(-0.5f * w, b + s);
-			    vertices3[6] = new Vector2(-0.5f * w, b);
-			    vertices3[7] = new Vector2(-0.5f * s, 0.0f);
+                var vertices3 = new Vector2[8];
+                vertices3[0] = new Vector2(0.5f*s, 0.0f);
+                vertices3[1] = new Vector2(0.5f*w, b);
+                vertices3[2] = new Vector2(0.5f*w, b + s);
+                vertices3[3] = new Vector2(0.5f*s, w);
+                vertices3[4] = new Vector2(-0.5f*s, w);
+                vertices3[5] = new Vector2(-0.5f*w, b + s);
+                vertices3[6] = new Vector2(-0.5f*w, b);
+                vertices3[7] = new Vector2(-0.5f*s, 0.0f);
                 _polygons[2] = new PolygonShape();
-			    _polygons[2].Set(vertices3, 8);
-		    }
+                _polygons[2].Set(vertices3, 8);
+            }
 
-		    {
+            {
                 _polygons[3] = new PolygonShape();
-			    _polygons[3].SetAsBox(0.5f, 0.5f);
-		    }
+                _polygons[3].SetAsBox(0.5f, 0.5f);
+            }
 
-		    {
+            {
                 _circle = new CircleShape();
-			    _circle._radius = 0.5f;
-		    }
+                _circle._radius = 0.5f;
+            }
 
-		    _bodyIndex = 0;
+            _bodyIndex = 0;
 
-		    _angle = 0.0f;
+            _angle = 0.0f;
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
-	    {
+        {
             if (state.IsKeyDown(Keys.NumPad1) && oldState.IsKeyUp(Keys.NumPad1))
             {
                 Create(0);
@@ -123,111 +122,111 @@ namespace Box2D.XNA.TestBed.Tests
             {
                 DestroyBody();
             }
-	    }
+        }
 
         public void DestroyBody()
-	    {
-		    for (int i = 0; i < e_maxBodies; ++i)
-		    {
-			    if (_bodies[i] != null)
-			    {
-				    _world.DestroyBody(_bodies[i]);
-				    _bodies[i] = null;
-				    return;
-			    }
-		    }
-	    }
+        {
+            for (int i = 0; i < e_maxBodies; ++i)
+            {
+                if (_bodies[i] != null)
+                {
+                    _world.DestroyBody(_bodies[i]);
+                    _bodies[i] = null;
+                    return;
+                }
+            }
+        }
 
         public override void Step(Framework.Settings settings)
-	    {
-		    base.Step(settings);
-		    _debugView.DrawString(5, _textLine, "Press 1-5 to drop stuff");
-		    _textLine += 15;
+        {
+            base.Step(settings);
+            _debugView.DrawString(5, _textLine, "Press 1-5 to drop stuff");
+            _textLine += 15;
 
-		    float L = 11.0f;
-		    Vector2 point1 = new Vector2(0.0f, 10.0f);
-            Vector2 d = new Vector2(L * (float)Math.Cos(_angle), L * (float)Math.Sin(_angle));
-		    Vector2 point2 = point1 + d;
+            float L = 11.0f;
+            Vector2 point1 = new Vector2(0.0f, 10.0f);
+            Vector2 d = new Vector2(L*(float) Math.Cos(_angle), L*(float) Math.Sin(_angle));
+            Vector2 point2 = point1 + d;
 
 
-		    Fixture fixture = null;
+            Fixture fixture = null;
             Vector2 point = Vector2.Zero, normal = Vector2.Zero;
-		    _world.RayCast((f, p, n, fr) => 
-                {
-                    fixture = f;
-                    point = p;
-                    normal = n;
-                    return fr;
-                }, point1, point2);
+            _world.RayCast((f, p, n, fr) =>
+                               {
+                                   fixture = f;
+                                   point = p;
+                                   normal = n;
+                                   return fr;
+                               }, point1, point2);
 
-		    if (fixture != null)
-		    {
-			    _debugView.DrawPoint(point, .5f, new Color(0.4f, 0.9f, 0.4f));
+            if (fixture != null)
+            {
+                _debugView.DrawPoint(point, .5f, new Color(0.4f, 0.9f, 0.4f));
 
-			    _debugView.DrawSegment(point1, point, new Color(0.8f, 0.8f, 0.8f));
+                _debugView.DrawSegment(point1, point, new Color(0.8f, 0.8f, 0.8f));
 
-			    Vector2 head = point + 0.5f * normal;
-			    _debugView.DrawSegment(point, head, new Color(0.9f, 0.9f, 0.4f));
-		    }
-		    else
-		    {
-			    _debugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
-		    }
+                Vector2 head = point + 0.5f*normal;
+                _debugView.DrawSegment(point, head, new Color(0.9f, 0.9f, 0.4f));
+            }
+            else
+            {
+                _debugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
+            }
 
-		    _angle += 0.25f * FarseerPhysics.Settings.b2_pi / 180.0f;
-	    }
+            _angle += 0.25f*FarseerPhysics.Settings.b2_pi/180.0f;
+        }
 
         private void Create(int index)
-	    {
-		    if (_bodies[_bodyIndex] != null)
-		    {
-			    _world.DestroyBody(_bodies[_bodyIndex]);
-			    _bodies[_bodyIndex] = null;
-		    }
+        {
+            if (_bodies[_bodyIndex] != null)
+            {
+                _world.DestroyBody(_bodies[_bodyIndex]);
+                _bodies[_bodyIndex] = null;
+            }
 
-		    BodyDef bd = new BodyDef();
+            BodyDef bd = new BodyDef();
 
-		    float x = Rand.RandomFloat(-10.0f, 10.0f);
+            float x = Rand.RandomFloat(-10.0f, 10.0f);
             float y = Rand.RandomFloat(0.0f, 20.0f);
-		    bd.position = new Vector2(x, y);
+            bd.position = new Vector2(x, y);
             bd.angle = Rand.RandomFloat(-FarseerPhysics.Settings.b2_pi, FarseerPhysics.Settings.b2_pi);
 
-		    if (index == 4)
-		    {
-			    bd.angularDamping = 0.02f;
-		    }
+            if (index == 4)
+            {
+                bd.angularDamping = 0.02f;
+            }
 
-		    _bodies[_bodyIndex] = _world.CreateBody(bd);
+            _bodies[_bodyIndex] = _world.CreateBody(bd);
 
-		    if (index < 4)
-		    {
-			    FixtureDef fd = new FixtureDef();
-			    fd.shape = _polygons[index];
-			    fd.friction = 0.3f;
-			    _bodies[_bodyIndex].CreateFixture(fd);
-		    }
-		    else
-		    {
-			    FixtureDef fd = new FixtureDef();
-			    fd.shape = _circle;
-			    fd.friction = 0.3f;
+            if (index < 4)
+            {
+                FixtureDef fd = new FixtureDef();
+                fd.shape = _polygons[index];
+                fd.friction = 0.3f;
+                _bodies[_bodyIndex].CreateFixture(fd);
+            }
+            else
+            {
+                FixtureDef fd = new FixtureDef();
+                fd.shape = _circle;
+                fd.friction = 0.3f;
 
-			    _bodies[_bodyIndex].CreateFixture(fd);
-		    }
+                _bodies[_bodyIndex].CreateFixture(fd);
+            }
 
-		    _bodyIndex = (_bodyIndex + 1) % e_maxBodies;
-	    }
+            _bodyIndex = (_bodyIndex + 1)%e_maxBodies;
+        }
 
-	    static internal Test Create()
-	    {
-		    return new RayCast();
-	    }
+        internal static Test Create()
+        {
+            return new RayCast();
+        }
 
-	    int _bodyIndex;
-	    Body[] _bodies = new Body[e_maxBodies];
-	    PolygonShape[] _polygons = new PolygonShape[4];
-	    CircleShape _circle;
+        private int _bodyIndex;
+        private Body[] _bodies = new Body[e_maxBodies];
+        private PolygonShape[] _polygons = new PolygonShape[4];
+        private CircleShape _circle;
 
-	    float _angle;
+        private float _angle;
     }
 }

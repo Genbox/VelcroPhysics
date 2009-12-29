@@ -21,13 +21,12 @@
 */
 
 using System;
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-
 using Microsoft.Xna.Framework.Input;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class BodyTypes : Test
     {
@@ -115,57 +114,54 @@ namespace Box2D.XNA.TestBed.Tests
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
-	    {
-            if(state.IsKeyDown(Keys.D))
-		    {
+        {
+            if (state.IsKeyDown(Keys.D))
+            {
                 _platform.SetType(BodyType.Dynamic);
-                
-		    }
-			if(state.IsKeyDown(Keys.S))
-		    {
+            }
+            if (state.IsKeyDown(Keys.S))
+            {
                 _platform.SetType(BodyType.Static);
-
-		    }
-			if(state.IsKeyDown(Keys.K))
-		    {
+            }
+            if (state.IsKeyDown(Keys.K))
+            {
                 _platform.SetType(BodyType.Kinematic);
                 _platform.SetLinearVelocity(new Vector2(-_speed, 0.0f));
                 _platform.SetAngularVelocity(0.0f);
-
-		    }
-	    }
+            }
+        }
 
         public override void Step(Framework.Settings settings)
-	    {
-		    // Drive the kinematic body.
-		    if (_platform.GetType() == BodyType.Kinematic)
-		    {
+        {
+            // Drive the kinematic body.
+            if (_platform.GetType() == BodyType.Kinematic)
+            {
                 Transform tf;
                 _platform.GetTransform(out tf);
-			    Vector2 p = tf.Position;
-			    Vector2 v = _platform.GetLinearVelocity();
+                Vector2 p = tf.Position;
+                Vector2 v = _platform.GetLinearVelocity();
 
-			    if ((p.X < -10.0f && v.X < 0.0f) ||
-				    (p.X > 10.0f && v.X > 0.0f))
-			    {
-				    v.X = -v.X;
-				    _platform.SetLinearVelocity(v);
-			    }
-		    }
+                if ((p.X < -10.0f && v.X < 0.0f) ||
+                    (p.X > 10.0f && v.X > 0.0f))
+                {
+                    v.X = -v.X;
+                    _platform.SetLinearVelocity(v);
+                }
+            }
 
-		    base.Step(settings);
-		    _debugView.DrawString(5, _textLine, "Keys: (d) dynamic, (s) static, (k) kinematic");
-		    _textLine += 15;
-	    }
+            base.Step(settings);
+            _debugView.DrawString(5, _textLine, "Keys: (d) dynamic, (s) static, (k) kinematic");
+            _textLine += 15;
+        }
 
 
-	    static internal Test Create()
-	    {
-		    return new BodyTypes();
-	    }
+        internal static Test Create()
+        {
+            return new BodyTypes();
+        }
 
-        Body _attachment;
-        Body _platform;
-        float _speed;
+        private Body _attachment;
+        private Body _platform;
+        private float _speed;
     }
 }

@@ -21,20 +21,20 @@
 */
 
 using System;
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class PolyCollision : Test
     {
         public PolyCollision()
-	    {
+        {
             {
-                _polygonA.SetAsBox(1.0f, 1.0f, new Vector2(0.0f, 0.0f), FarseerPhysics.Settings.b2_pi * 0.25f);
+                _polygonA.SetAsBox(1.0f, 1.0f, new Vector2(0.0f, 0.0f), FarseerPhysics.Settings.b2_pi*0.25f);
                 _transformA.Set(new Vector2(0.0f, 5.0f), 0.0f);
             }
 
@@ -44,48 +44,48 @@ namespace Box2D.XNA.TestBed.Tests
                 _angleB = 2.2886343f;
                 _transformB.Set(_positionB, _angleB);
             }
+        }
 
-	    }
+        internal static Test Create()
+        {
+            return new PolyCollision();
+        }
 
-	    internal static Test Create()
-	    {
-		    return new PolyCollision();
-	    }
-
-	    public override void Step(Framework.Settings settings)
-	    {
+        public override void Step(Framework.Settings settings)
+        {
             Manifold manifold = new Manifold();
-		    Collision.CollidePolygons(ref manifold, _polygonA, ref _transformA, _polygonB, ref _transformB);
+            Collision.CollidePolygons(ref manifold, _polygonA, ref _transformA, _polygonB, ref _transformB);
 
-		    WorldManifold worldManifold = new WorldManifold(ref manifold, ref _transformA, _polygonA._radius, ref _transformB, _polygonB._radius);
+            WorldManifold worldManifold = new WorldManifold(ref manifold, ref _transformA, _polygonA._radius,
+                                                            ref _transformB, _polygonB._radius);
 
             _debugView.DrawString(50, _textLine, "point count = {0:n}", manifold._pointCount);
-		    _textLine += 15;
+            _textLine += 15;
 
-		    {
-			    Color color = new Color(0.9f, 0.9f, 0.9f);
+            {
+                Color color = new Color(0.9f, 0.9f, 0.9f);
                 FixedArray8<Vector2> v = new FixedArray8<Vector2>();
-			    for (int i = 0; i < _polygonA._vertexCount; ++i)
-			    {
-				    v[i] = MathUtils.Multiply(ref _transformA, _polygonA._vertices[i]);
-			    }
-			    _debugView.DrawPolygon(ref v, _polygonA._vertexCount, color);
+                for (int i = 0; i < _polygonA._vertexCount; ++i)
+                {
+                    v[i] = MathUtils.Multiply(ref _transformA, _polygonA._vertices[i]);
+                }
+                _debugView.DrawPolygon(ref v, _polygonA._vertexCount, color);
 
-			    for (int i = 0; i < _polygonB._vertexCount; ++i)
-			    {
-				    v[i] = MathUtils.Multiply(ref _transformB, _polygonB._vertices[i]);
-			    }
-			    _debugView.DrawPolygon(ref v, _polygonB._vertexCount, color);
-		    }
+                for (int i = 0; i < _polygonB._vertexCount; ++i)
+                {
+                    v[i] = MathUtils.Multiply(ref _transformB, _polygonB._vertices[i]);
+                }
+                _debugView.DrawPolygon(ref v, _polygonB._vertexCount, color);
+            }
 
-		    for (int i = 0; i < manifold._pointCount; ++i)
-		    {
-			    _debugView.DrawPoint(worldManifold._points[i], 0.5f, new Color(0.9f, 0.3f, 0.3f));
-		    }
-	    }
+            for (int i = 0; i < manifold._pointCount; ++i)
+            {
+                _debugView.DrawPoint(worldManifold._points[i], 0.5f, new Color(0.9f, 0.3f, 0.3f));
+            }
+        }
 
-	    public override void Keyboard(KeyboardState state, KeyboardState oldState)
-	    {
+        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        {
             if (state.IsKeyDown(Keys.A))
             {
                 _positionB.X -= 0.1f;
@@ -104,23 +104,23 @@ namespace Box2D.XNA.TestBed.Tests
             }
             if (state.IsKeyDown(Keys.Q))
             {
-                _angleB += 0.1f * FarseerPhysics.Settings.b2_pi;
+                _angleB += 0.1f*FarseerPhysics.Settings.b2_pi;
             }
             if (state.IsKeyDown(Keys.E))
             {
-                _angleB -= 0.1f * FarseerPhysics.Settings.b2_pi;
+                _angleB -= 0.1f*FarseerPhysics.Settings.b2_pi;
             }
 
-		    _transformB.Set(_positionB, _angleB);
-	    }
+            _transformB.Set(_positionB, _angleB);
+        }
 
-        PolygonShape _polygonA = new PolygonShape();
-        PolygonShape _polygonB = new PolygonShape();
+        private PolygonShape _polygonA = new PolygonShape();
+        private PolygonShape _polygonB = new PolygonShape();
 
-        Transform _transformA = new Transform();
-        Transform _transformB = new Transform();
+        private Transform _transformA = new Transform();
+        private Transform _transformB = new Transform();
 
-	    Vector2 _positionB;
-	    float _angleB;
+        private Vector2 _positionB;
+        private float _angleB;
     }
 }

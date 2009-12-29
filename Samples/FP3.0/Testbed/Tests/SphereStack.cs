@@ -20,51 +20,51 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Box2D.XNA.TestBed.Framework;
 using FarseerPhysics;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace Box2D.XNA.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests
 {
     public class SphereStack : Test
     {
-		static int e_count = 10;
+        private static int e_count = 10;
 
-	    public SphereStack()
-	    {
-		    {
-			    BodyDef bd = new BodyDef();
-			    Body ground = _world.CreateBody(bd);
+        public SphereStack()
+        {
+            {
+                BodyDef bd = new BodyDef();
+                Body ground = _world.CreateBody(bd);
 
-			    PolygonShape shape = new PolygonShape();
-			    shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-			    ground.CreateFixture(shape, 0.0f);
-		    }
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape, 0.0f);
+            }
 
-		    {
-			    CircleShape shape = new CircleShape();
-			    shape._radius = 1.0f;
+            {
+                CircleShape shape = new CircleShape();
+                shape._radius = 1.0f;
 
-			    for (int i = 0; i < e_count; ++i)
-			    {
-				    BodyDef bd = new BodyDef();
+                for (int i = 0; i < e_count; ++i)
+                {
+                    BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-				    bd.position = new Vector2(0.0f, 4.0f + 3.0f * i);
+                    bd.position = new Vector2(0.0f, 4.0f + 3.0f*i);
 
-				    _bodies[i] = _world.CreateBody(bd);
+                    _bodies[i] = _world.CreateBody(bd);
 
-				    _bodies[i].CreateFixture(shape, 1.0f);
+                    _bodies[i].CreateFixture(shape, 1.0f);
 
-				    //_bodies[i].SetLinearVelocity(new Vector2(0.0f, -100.0f));
-			    }
-		    }
-	    }
+                    //_bodies[i].SetLinearVelocity(new Vector2(0.0f, -100.0f));
+                }
+            }
+        }
 
-	    public static Test Create()
-	    {
-		    return new SphereStack();
-	    }
+        public static Test Create()
+        {
+            return new SphereStack();
+        }
 
-	    Body[] _bodies = new Body[e_count];
+        private Body[] _bodies = new Body[e_count];
     }
 }

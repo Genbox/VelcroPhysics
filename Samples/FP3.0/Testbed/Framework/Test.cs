@@ -27,7 +27,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.DebugViewXNA;
 
-namespace Box2D.XNA.TestBed.Framework
+namespace FarseerPhysics.TestBed.Framework
 {
     public class Rand
     {
@@ -37,14 +37,14 @@ namespace Box2D.XNA.TestBed.Framework
         /// Random number in range [-1,1]
         public static float RandomFloat()
         {
-            return (float)(rand.NextDouble() * 2.0 - 1.0);
+            return (float) (rand.NextDouble()*2.0 - 1.0);
         }
 
         /// Random floating point number in range [lo, hi]
         public static float RandomFloat(float lo, float hi)
         {
-            float r = (float)rand.NextDouble();
-            r = (hi - lo) * r + lo;
+            float r = (float) rand.NextDouble();
+            r = (hi - lo)*r + lo;
             return r;
         }
     }
@@ -54,8 +54,8 @@ namespace Box2D.XNA.TestBed.Framework
         public Settings()
         {
             hz = 60.0f;
-            velocityIterations = 8;// 10;
-            positionIterations = 3;// 8;
+            velocityIterations = 8; // 10;
+            positionIterations = 3; // 8;
             drawShapes = 1;
             drawJoints = 1;
             enableWarmStarting = 1;
@@ -126,7 +126,7 @@ namespace Box2D.XNA.TestBed.Framework
         {
             Vector2 gravity = new Vector2(0.0f, -10.0f);
             _world = new World(gravity, true);
-            _debugView = new DebugViewXNA(_world);
+            _debugView = new DebugViewXNA.DebugViewXNA(_world);
             _textLine = 30;
 
             _destructionListener.test = this;
@@ -141,16 +141,19 @@ namespace Box2D.XNA.TestBed.Framework
             _groundBody = _world.CreateBody(bodyDef);
         }
 
-        public void SetTextLine(int line) { _textLine = line; }
+        public void SetTextLine(int line)
+        {
+            _textLine = line;
+        }
 
         public void DrawTitle(int x, int y, string title)
         {
             _debugView.DrawString(x, y, title);
         }
 
-        public virtual void Step(Framework.Settings settings)
+        public virtual void Step(Settings settings)
         {
-            float timeStep = settings.hz > 0.0f ? 1.0f / settings.hz : 0.0f;
+            float timeStep = settings.hz > 0.0f ? 1.0f/settings.hz : 0.0f;
 
             if (settings.pause > 0)
             {
@@ -168,12 +171,12 @@ namespace Box2D.XNA.TestBed.Framework
             }
 
             uint flags = 0;
-            flags += settings.drawShapes * (uint)DebugViewFlags.Shape;
-            flags += settings.drawJoints * (uint)DebugViewFlags.Joint;
-            flags += settings.drawAABBs * (uint)DebugViewFlags.AABB;
-            flags += settings.drawPairs * (uint)DebugViewFlags.Pair;
-            flags += settings.drawCOMs * (uint)DebugViewFlags.CenterOfMass;
-            _debugView.Flags = (DebugViewFlags)flags;
+            flags += settings.drawShapes*(uint) DebugViewFlags.Shape;
+            flags += settings.drawJoints*(uint) DebugViewFlags.Joint;
+            flags += settings.drawAABBs*(uint) DebugViewFlags.AABB;
+            flags += settings.drawPairs*(uint) DebugViewFlags.Pair;
+            flags += settings.drawCOMs*(uint) DebugViewFlags.CenterOfMass;
+            _debugView.Flags = (DebugViewFlags) flags;
 
             _world.WarmStarting = (settings.enableWarmStarting > 0);
             _world.ContinuousPhysics = (settings.enableContinuous > 0);
@@ -193,7 +196,7 @@ namespace Box2D.XNA.TestBed.Framework
             if (settings.drawStats > 0)
             {
                 _debugView.DrawString(50, _textLine, "bodies/contacts/joints/proxies = {0:n}/{1:n}/{2:n}",
-                    _world.BodyCount, _world.ContactCount, _world.JointCount, _world.ProxyCount);
+                                      _world.BodyCount, _world.ContactCount, _world.JointCount, _world.ProxyCount);
                 _textLine += 15;
             }
 
@@ -215,8 +218,7 @@ namespace Box2D.XNA.TestBed.Framework
 
             if (settings.drawContactPoints > 0)
             {
-                //float k_impulseScale = 0.1f;
-                float k_axisScale = 0.3f;
+                const float k_axisScale = 0.3f;
 
                 for (int i = 0; i < _pointCount; ++i)
                 {
@@ -236,7 +238,7 @@ namespace Box2D.XNA.TestBed.Framework
                     if (settings.drawContactNormals == 1)
                     {
                         Vector2 p1 = point.position;
-                        Vector2 p2 = p1 + k_axisScale * point.normal;
+                        Vector2 p2 = p1 + k_axisScale*point.normal;
                         _debugView.DrawSegment(p1, p2, new Color(0.4f, 0.9f, 0.4f));
                     }
                     else if (settings.drawContactForces == 1)
@@ -257,7 +259,9 @@ namespace Box2D.XNA.TestBed.Framework
             }
         }
 
-        public virtual void Keyboard(KeyboardState state, KeyboardState oldState) { }
+        public virtual void Keyboard(KeyboardState state, KeyboardState oldState)
+        {
+        }
 
         public void ShiftMouseDown(Vector2 p)
         {
@@ -271,7 +275,7 @@ namespace Box2D.XNA.TestBed.Framework
             SpawnBomb(p);
         }
 
-        public virtual void MouseDown(Vector2 p)
+        public void MouseDown(Vector2 p)
         {
             _mouseWorld = p;
 
@@ -291,23 +295,23 @@ namespace Box2D.XNA.TestBed.Framework
             // Query the world for overlapping shapes.
             _world.QueryAABB(
                 (fixture) =>
-                {
-                    Body body = fixture.GetBody();
-                    if (body.GetType() == BodyType.Dynamic)
                     {
-                        bool inside = fixture.TestPoint(p);
-                        if (inside)
+                        Body body = fixture.GetBody();
+                        if (body.GetType() == BodyType.Dynamic)
                         {
-                            _fixture = fixture;
+                            bool inside = fixture.TestPoint(p);
+                            if (inside)
+                            {
+                                _fixture = fixture;
 
-                            // We are done, terminate the query.
-                            return false;
+                                // We are done, terminate the query.
+                                return false;
+                            }
                         }
-                    }
 
-                    // Continue the query.
-                    return true;
-                }, ref aabb);
+                        // Continue the query.
+                        return true;
+                    }, ref aabb);
 
             if (_fixture != null)
             {
@@ -316,14 +320,13 @@ namespace Box2D.XNA.TestBed.Framework
                 md.bodyA = _groundBody;
                 md.bodyB = body;
                 md.target = p;
-                md.maxForce = 1000.0f * body.GetMass();
-                _mouseJoint = (MouseJoint)_world.CreateJoint(md);
+                md.maxForce = 1000.0f*body.GetMass();
+                _mouseJoint = (MouseJoint) _world.CreateJoint(md);
                 body.SetAwake(true);
             }
-
         }
 
-        public virtual void MouseUp(Vector2 p)
+        public void MouseUp(Vector2 p)
         {
             if (_mouseJoint != null)
             {
@@ -350,7 +353,7 @@ namespace Box2D.XNA.TestBed.Framework
         public void LaunchBomb()
         {
             Vector2 p = new Vector2(Rand.RandomFloat(-15.0f, 15.0f), 30.0f);
-            Vector2 v = -5.0f * p;
+            Vector2 v = -5.0f*p;
             LaunchBomb(p, v);
         }
 
@@ -409,12 +412,18 @@ namespace Box2D.XNA.TestBed.Framework
         }
 
         // Let derived tests know that a joint was destroyed.
-        public virtual void JointDestroyed(Joint joint) { }
+        public virtual void JointDestroyed(Joint joint)
+        {
+        }
 
         // Callbacks for derived classes.
-        public virtual void BeginContact(Contact contact) { }
+        public virtual void BeginContact(Contact contact)
+        {
+        }
 
-        public virtual void EndContact(Contact contact) { }
+        public virtual void EndContact(Contact contact)
+        {
+        }
 
         public virtual void PreSolve(Contact contact, ref Manifold oldManifold)
         {
@@ -452,14 +461,15 @@ namespace Box2D.XNA.TestBed.Framework
             }
         }
 
-        public virtual void PostSolve(Contact contact, ref ContactImpulse impulse) { }
+        public virtual void PostSolve(Contact contact, ref ContactImpulse impulse)
+        {
+        }
 
         internal Body _groundBody;
-        internal AABB _worldAABB;
         internal ContactPoint[] _points = new ContactPoint[k_maxContactPoints];
         internal int _pointCount;
         internal DestructionListener _destructionListener = new DestructionListener();
-        internal DebugViewXNA _debugView;
+        internal DebugViewXNA.DebugViewXNA _debugView;
         internal int _textLine;
         internal World _world;
         internal Body _bomb;
@@ -469,6 +479,6 @@ namespace Box2D.XNA.TestBed.Framework
         internal Vector2 _mouseWorld;
         internal int _stepCount;
 
-        public static int k_maxContactPoints = 2048;
+        public const int k_maxContactPoints = 2048;
     }
 }

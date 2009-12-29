@@ -21,30 +21,18 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using FarseerPhysics;
-using FarseerPhysics.DebugViewXNA;
+using FarseerPhysics.TestBed.Framework;
+using FarseerPhysics.TestBed.Tests;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
-using Box2D.XNA.TestBed.Framework;
 
-using Box2D.XNA.TestBed.Tests;
-using System.Diagnostics;
-
-namespace Box2D.XNA.TestBed
+namespace FarseerPhysics.TestBed
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Microsoft.Xna.Framework.Game
+    public class Game1 : Game
     {
         public Game1()
         {
@@ -67,16 +55,16 @@ namespace Box2D.XNA.TestBed
             TraceEvents.Register(et);
 
             testCount = 0;
-	        while (TestEntries.g_testEntries[testCount].createFcn != null)
-	        {
-		        ++testCount;
-	        }
+            while (TestEntries.g_testEntries[testCount].createFcn != null)
+            {
+                ++testCount;
+            }
 
             testIndex = MathUtils.Clamp(testIndex, 0, testCount - 1);
-	        testSelection = testIndex;
+            testSelection = testIndex;
 
-	        entry = TestEntries.g_testEntries[testIndex];
-	        test = entry.createFcn();
+            entry = TestEntries.g_testEntries[testIndex];
+            test = entry.createFcn();
         }
 
         /// <summary>
@@ -92,16 +80,17 @@ namespace Box2D.XNA.TestBed
             simpleColorEffect.VertexColorEnabled = true;
 
             vertexDecl = new VertexDeclaration(GraphicsDevice, VertexPositionColor.VertexElements);
-            DebugViewXNA._device = GraphicsDevice;
-            DebugViewXNA._batch = spriteBatch;
-            DebugViewXNA._font = spriteFont;
+            DebugViewXNA.DebugViewXNA._device = GraphicsDevice;
+            DebugViewXNA.DebugViewXNA._batch = spriteBatch;
+            DebugViewXNA.DebugViewXNA._font = spriteFont;
 
             oldState = Keyboard.GetState();
             oldGamePad = GamePad.GetState(PlayerIndex.One);
-            Resize(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
+            Resize(GraphicsDevice.PresentationParameters.BackBufferWidth,
+                   GraphicsDevice.PresentationParameters.BackBufferHeight);
         }
 
-        VertexDeclaration vertexDecl;
+        private VertexDeclaration vertexDecl;
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -128,94 +117,94 @@ namespace Box2D.XNA.TestBed
             GamePadState newGamePad = GamePad.GetState(PlayerIndex.One);
 
             // Press 'z' to zoom out.
-	        if (newState.IsKeyDown(Keys.Z) && oldState.IsKeyUp(Keys.Z))
+            if (newState.IsKeyDown(Keys.Z) && oldState.IsKeyUp(Keys.Z))
             {
-		        viewZoom = Math.Min(1.1f * viewZoom, 20.0f);
-		        Resize(width, height);
+                viewZoom = Math.Min(1.1f*viewZoom, 20.0f);
+                Resize(width, height);
             }
-            // Press 'x' to zoom in.
+                // Press 'x' to zoom in.
             else if (newState.IsKeyDown(Keys.X) && oldState.IsKeyUp(Keys.X))
             {
-		        viewZoom = Math.Max(0.9f * viewZoom, 0.02f);
-		        Resize(width, height);
-		    }
-		    // Press 'r' to reset.
-	        else if (newState.IsKeyDown(Keys.R) && oldState.IsKeyUp(Keys.R))
+                viewZoom = Math.Max(0.9f*viewZoom, 0.02f);
+                Resize(width, height);
+            }
+                // Press 'r' to reset.
+            else if (newState.IsKeyDown(Keys.R) && oldState.IsKeyUp(Keys.R))
             {
-		        test = entry.createFcn();
-		    }
-		    // Press space to launch a bomb.
+                test = entry.createFcn();
+            }
+                // Press space to launch a bomb.
             else if ((newState.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space)) ||
-                      newGamePad.IsButtonDown(Buttons.B) && oldGamePad.IsButtonUp(Buttons.B))
+                     newGamePad.IsButtonDown(Buttons.B) && oldGamePad.IsButtonUp(Buttons.B))
             {
-		        if (test != null)
-		        {
-			        test.LaunchBomb();
-		        }
+                if (test != null)
+                {
+                    test.LaunchBomb();
+                }
             }
             else if ((newState.IsKeyDown(Keys.P) && oldState.IsKeyUp(Keys.P)) ||
-                      newGamePad.IsButtonDown(Buttons.Start) && oldGamePad.IsButtonUp(Buttons.Start))
+                     newGamePad.IsButtonDown(Buttons.Start) && oldGamePad.IsButtonUp(Buttons.Start))
             {
-                settings.pause = settings.pause > (uint)0 ? (uint)1 : (uint)0;
+                settings.pause = settings.pause > 0 ? 1 : (uint) 0;
             }
-            // Press [ to prev test.
-	        else if ((newState.IsKeyDown(Keys.OemOpenBrackets) && oldState.IsKeyUp(Keys.OemOpenBrackets)) ||
-                      newGamePad.IsButtonDown(Buttons.LeftShoulder) && oldGamePad.IsButtonUp(Buttons.LeftShoulder))
+                // Press [ to prev test.
+            else if ((newState.IsKeyDown(Keys.OemOpenBrackets) && oldState.IsKeyUp(Keys.OemOpenBrackets)) ||
+                     newGamePad.IsButtonDown(Buttons.LeftShoulder) && oldGamePad.IsButtonUp(Buttons.LeftShoulder))
             {
-		        --testSelection;
-		        if (testSelection < 0)
-		        {
-			        testSelection = testCount - 1;
-		        }
+                --testSelection;
+                if (testSelection < 0)
+                {
+                    testSelection = testCount - 1;
+                }
             }
-		    // Press ] to next test.
+                // Press ] to next test.
             else if ((newState.IsKeyDown(Keys.OemCloseBrackets) && oldState.IsKeyUp(Keys.OemCloseBrackets)) ||
-                      newGamePad.IsButtonDown(Buttons.RightShoulder) && oldGamePad.IsButtonUp(Buttons.RightShoulder))
+                     newGamePad.IsButtonDown(Buttons.RightShoulder) && oldGamePad.IsButtonUp(Buttons.RightShoulder))
             {
-		        ++testSelection;
-		        if (testSelection == testCount)
-		        {
-			        testSelection = 0;
-		        }
+                ++testSelection;
+                if (testSelection == testCount)
+                {
+                    testSelection = 0;
+                }
             }
-		    // Press left to pan left.
+                // Press left to pan left.
             else if (newState.IsKeyDown(Keys.Left) && oldState.IsKeyUp(Keys.Left))
             {
                 viewCenter.X -= 0.5f;
-		        Resize(width, height);
+                Resize(width, height);
             }
-            // Press right to pan right.
-	        else if (newState.IsKeyDown(Keys.Right) && oldState.IsKeyUp(Keys.Right))
+                // Press right to pan right.
+            else if (newState.IsKeyDown(Keys.Right) && oldState.IsKeyUp(Keys.Right))
             {
-		        viewCenter.X += 0.5f;
-		        Resize(width, height);
+                viewCenter.X += 0.5f;
+                Resize(width, height);
             }
-            // Press down to pan down.
-	        else if (newState.IsKeyDown(Keys.Down) && oldState.IsKeyUp(Keys.Down))
+                // Press down to pan down.
+            else if (newState.IsKeyDown(Keys.Down) && oldState.IsKeyUp(Keys.Down))
             {
                 viewCenter.Y -= 0.5f;
-		        Resize(width, height);
-		    }
-            // Press up to pan up.
+                Resize(width, height);
+            }
+                // Press up to pan up.
             else if (newState.IsKeyDown(Keys.Up) && oldState.IsKeyUp(Keys.Up))
             {
-		        viewCenter.Y += 0.5f;
-		        Resize(width, height);
-		    }
-            // Press home to reset the view.
+                viewCenter.Y += 0.5f;
+                Resize(width, height);
+            }
+                // Press home to reset the view.
             else if (newState.IsKeyDown(Keys.Home) && oldState.IsKeyUp(Keys.Home))
             {
-		        viewZoom = 1.0f;
-		        viewCenter = new Vector2(0.0f, 20.0f);
-		        Resize(width, height);
+                viewZoom = 1.0f;
+                viewCenter = new Vector2(0.0f, 20.0f);
+                Resize(width, height);
             }
-        	else
+            else
             {
-		        if (test != null)
-		        {
-			        test.Keyboard(newState, oldState);
-		        }
-	        }
+                if (test != null)
+                {
+                    test.Keyboard(newState, oldState);
+                }
+            }
 
             base.Update(gameTime);
 
@@ -237,25 +226,25 @@ namespace Box2D.XNA.TestBed
             GraphicsDevice.VertexDeclaration = vertexDecl;
             simpleColorEffect.Begin();
             simpleColorEffect.Techniques[0].Passes[0].Begin();
-            
-	        test.SetTextLine(30);
-	        settings.hz = settingsHz;
+
+            test.SetTextLine(30);
+            settings.hz = settingsHz;
 
             et.BeginTrace(TraceEvents.PhysicsEventId);
-	        test.Step(settings);
+            test.Step(settings);
             et.EndTrace(TraceEvents.PhysicsEventId);
 
-	        test.DrawTitle(50, 15, entry.name);
+            test.DrawTitle(50, 15, entry.name);
 
-	        if (testSelection != testIndex)
-	        {
-		        testIndex = testSelection;
-		        entry = TestEntries.g_testEntries[testIndex];
-		        test = entry.createFcn();
-		        viewZoom = 1.0f;
-		        viewCenter = new Vector2(0.0f, 20.0f);
-		        Resize(width, height);
-	        }
+            if (testSelection != testIndex)
+            {
+                testIndex = testSelection;
+                entry = TestEntries.g_testEntries[testIndex];
+                test = entry.createFcn();
+                viewZoom = 1.0f;
+                viewCenter = new Vector2(0.0f, 20.0f);
+                Resize(width, height);
+            }
 
             test._debugView.FinishDrawShapes();
 
@@ -276,44 +265,26 @@ namespace Box2D.XNA.TestBed
             et.BeginTrace(TraceEvents.FrameEventId);
         }
 
-        void Resize(int w, int h)
+        private void Resize(int w, int h)
         {
-	        width = w;
-	        height = h;
+            width = w;
+            height = h;
 
-	        int tw = GraphicsDevice.Viewport.Width;
+            int tw = GraphicsDevice.Viewport.Width;
             int th = GraphicsDevice.Viewport.Height;
-            int x = GraphicsDevice.Viewport.X;
-            int y = GraphicsDevice.Viewport.Y;
 
-	        float ratio = (float)tw / (float)th;
+            float ratio = (float) tw/(float) th;
 
-	        Vector2 extents = new Vector2(ratio * 25.0f, 25.0f);
-	        extents *= viewZoom;
+            Vector2 extents = new Vector2(ratio*25.0f, 25.0f);
+            extents *= viewZoom;
 
-	        Vector2 lower = viewCenter - extents;
-	        Vector2 upper = viewCenter + extents;
+            Vector2 lower = viewCenter - extents;
+            Vector2 upper = viewCenter + extents;
 
-	        // L/R/B/T
-            simpleColorEffect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(lower.X, upper.X, lower.Y, upper.Y, -1, 1));
-        }
-
-        Vector2 ConvertScreenToWorld(int x, int y)
-        {
-	        float u = x / (float)tw;
-	        float v = (th - y) / (float)th;
-
-	        float ratio = (float)tw / (float)th;
-	        Vector2 extents = new Vector2(ratio * 25.0f, 25.0f);
-	        extents *= viewZoom;
-
-	        Vector2 lower = viewCenter - extents;
-	        Vector2 upper = viewCenter + extents;
-
-	        Vector2 p = new Vector2();
-	        p.X = (1.0f - u) * lower.X + u * upper.X;
-	        p.Y = (1.0f - v) * lower.Y + v * upper.Y;
-	        return p;
+            // L/R/B/T
+            simpleColorEffect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(lower.X, upper.X,
+                                                                                                   lower.Y, upper.Y, -1,
+                                                                                                   1));
         }
 
         /*
@@ -389,46 +360,42 @@ namespace Box2D.XNA.TestBed
         }
         */
 
-        void Restart()
+        private void Restart()
         {
-	        entry = TestEntries.g_testEntries[testIndex];
-	        test = entry.createFcn();
+            entry = TestEntries.g_testEntries[testIndex];
+            test = entry.createFcn();
             Resize(width, height);
         }
 
-        void Pause()
+        private void Pause()
         {
-	        settings.pause = (uint)(settings.pause > 0 ? 0 : 1);
+            settings.pause = (uint) (settings.pause > 0 ? 0 : 1);
         }
 
-        void SingleStep()
+        private void SingleStep()
         {
-	        settings.pause = 1;
-	        settings.singleStep = 1;
+            settings.pause = 1;
+            settings.singleStep = 1;
         }
 
-        int testIndex = 0;
-	    int testSelection = 0;
-	    int testCount = 0;
-	    TestEntry entry;
-	    Test test;
-	    Box2D.XNA.TestBed.Framework.Settings settings = new Box2D.XNA.TestBed.Framework.Settings();
-	    int width = 640;
-	    int height = 480;
-	    int framePeriod = 16;
-	    float settingsHz = 60.0f;
-	    float viewZoom = 1.0f;
-        Vector2 viewCenter = new Vector2(0.0f, 20.0f);
-	    int tx, ty, tw, th;
-	    bool rMouseDown;
-        Vector2 lastp;
+        private int testIndex;
+        private int testSelection;
+        private int testCount;
+        private TestEntry entry;
+        private Test test;
+        private Framework.Settings settings = new Framework.Settings();
+        private int width = 640;
+        private int height = 480;
+        private const float settingsHz = 60.0f;
+        private float viewZoom = 1.0f;
+        private Vector2 viewCenter = new Vector2(0.0f, 20.0f);
 
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        BasicEffect simpleColorEffect;
-        SpriteFont spriteFont;                
-        KeyboardState oldState;
-        GamePadState oldGamePad;
-        IEventTrace et;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+        private BasicEffect simpleColorEffect;
+        private SpriteFont spriteFont;
+        private KeyboardState oldState;
+        private GamePadState oldGamePad;
+        private IEventTrace et;
     }
 }
