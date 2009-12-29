@@ -20,11 +20,8 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {

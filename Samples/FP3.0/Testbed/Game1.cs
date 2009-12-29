@@ -147,8 +147,8 @@ namespace FarseerPhysics.TestBed
             {
                 settings.pause = settings.pause > 0 ? 1 : (uint) 0;
             }
-                // Press [ to prev test.
-            else if ((newState.IsKeyDown(Keys.OemOpenBrackets) && oldState.IsKeyUp(Keys.OemOpenBrackets)) ||
+                // Press I to prev test.
+            else if ((newState.IsKeyDown(Keys.I) && oldState.IsKeyUp(Keys.I)) ||
                      newGamePad.IsButtonDown(Buttons.LeftShoulder) && oldGamePad.IsButtonUp(Buttons.LeftShoulder))
             {
                 --testSelection;
@@ -157,8 +157,8 @@ namespace FarseerPhysics.TestBed
                     testSelection = testCount - 1;
                 }
             }
-                // Press ] to next test.
-            else if ((newState.IsKeyDown(Keys.OemCloseBrackets) && oldState.IsKeyUp(Keys.OemCloseBrackets)) ||
+                // Press O to next test.
+            else if ((newState.IsKeyDown(Keys.O) && oldState.IsKeyUp(Keys.O)) ||
                      newGamePad.IsButtonDown(Buttons.RightShoulder) && oldGamePad.IsButtonUp(Buttons.RightShoulder))
             {
                 ++testSelection;
