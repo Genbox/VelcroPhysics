@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics 3.0 XNA", "..\..\Branches\FP3.0\XNA\Farseer Physics 3.0 XNA.csproj", "{0A850700-1ABB-4288-A391-6726B90EBEB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed", "Testbed\TestBed.csproj", "{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugViewXNA", "..\..\DebugViews\DebugViewXNA\DebugViewXNA.csproj", "{FC7845FA-13FE-4FF8-822A-A577F3F59B00}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 7
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs01.codeplex.com/
+		SccProjectUniqueName0 = ..\\..\\Branches\\FP3.0\\XNA\\Farseer\u0020Physics\u00203.0\u0020XNA.csproj
+		SccProjectName0 = ../../Branches/FP3.0/XNA
+		SccLocalPath0 = ..\\..\\Branches\\FP3.0\\XNA
+		SccProjectUniqueName1 = ..\\..\\Branches\\FP3.0\\XNA\\Content\\Content.contentproj
+		SccProjectTopLevelParentUniqueName1 = ..\\..\\Branches\\FP3.0\\XNA\\Farseer\u0020Physics\u00203.0\u0020XNA.csproj
+		SccProjectName1 = ../../Branches/FP3.0/XNA/Content
+		SccLocalPath1 = ..\\..\\Branches\\FP3.0\\XNA\\Content
+		SccLocalPath2 = .
+		SccProjectUniqueName3 = ..\\..\\DebugViews\\DebugViewXNA\\Content\\Content.contentproj
+		SccProjectTopLevelParentUniqueName3 = ..\\..\\DebugViews\\DebugViewXNA\\DebugViewXNA.csproj
+		SccProjectName3 = ../../DebugViews/DebugViewXNA/Content
+		SccLocalPath3 = ..\\..\\DebugViews\\DebugViewXNA\\Content
+		SccProjectUniqueName4 = ..\\..\\DebugViews\\DebugViewXNA\\DebugViewXNA.csproj
+		SccProjectName4 = ../../DebugViews/DebugViewXNA
+		SccLocalPath4 = ..\\..\\DebugViews\\DebugViewXNA
+		SccProjectUniqueName5 = Testbed\\Content\\Content.contentproj
+		SccProjectTopLevelParentUniqueName5 = Testbed\\TestBed.csproj
+		SccProjectName5 = Testbed/Content
+		SccLocalPath5 = Testbed\\Content
+		SccProjectUniqueName6 = Testbed\\TestBed.csproj
+		SccProjectName6 = Testbed
+		SccLocalPath6 = Testbed
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0A850700-1ABB-4288-A391-6726B90EBEB9}.Debug|x86.ActiveCfg = Debug|x86
+		{0A850700-1ABB-4288-A391-6726B90EBEB9}.Debug|x86.Build.0 = Debug|x86
+		{0A850700-1ABB-4288-A391-6726B90EBEB9}.Release|x86.ActiveCfg = Release|x86
+		{0A850700-1ABB-4288-A391-6726B90EBEB9}.Release|x86.Build.0 = Release|x86
+		{129EF00A-26E6-4835-8DB3-848CB89276DA}.Debug|x86.ActiveCfg = Debug|x86
+		{129EF00A-26E6-4835-8DB3-848CB89276DA}.Release|x86.ActiveCfg = Release|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Debug|x86.ActiveCfg = Debug|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Debug|x86.Build.0 = Debug|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Release|x86.ActiveCfg = Release|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Release|x86.Build.0 = Release|x86
+		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Debug|x86.ActiveCfg = Debug|x86
+		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Release|x86.ActiveCfg = Release|x86
+		{FC7845FA-13FE-4FF8-822A-A577F3F59B00}.Debug|x86.ActiveCfg = Debug|x86
+		{FC7845FA-13FE-4FF8-822A-A577F3F59B00}.Debug|x86.Build.0 = Debug|x86
+		{FC7845FA-13FE-4FF8-822A-A577F3F59B00}.Release|x86.ActiveCfg = Release|x86
+		{FC7845FA-13FE-4FF8-822A-A577F3F59B00}.Release|x86.Build.0 = Release|x86
+		{E64C1098-713A-489A-BB70-725DCBED9271}.Debug|x86.ActiveCfg = Debug|x86
+		{E64C1098-713A-489A-BB70-725DCBED9271}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
