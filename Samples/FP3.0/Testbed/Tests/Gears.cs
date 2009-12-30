@@ -41,11 +41,9 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                CircleShape circle1 = new CircleShape();
-                circle1._radius = 1.0f;
+                CircleShape circle1 = new CircleShape(1.0f);
 
-                CircleShape circle2 = new CircleShape();
-                circle2._radius = 2.0f;
+                CircleShape circle2 = new CircleShape(2.0f);
 
                 PolygonShape box = new PolygonShape();
                 box.SetAsBox(0.5f, 5.0f);
@@ -93,7 +91,7 @@ namespace FarseerPhysics.TestBed.Tests
                 jd4.bodyB = body2;
                 jd4.joint1 = _joint1;
                 jd4.joint2 = _joint2;
-                jd4.ratio = circle2._radius/circle1._radius;
+                jd4.ratio = circle2.Radius/circle1.Radius;
                 _joint4 = (GearJoint) _world.CreateJoint(jd4);
 
                 GearJointDef jd5 = new GearJointDef();
@@ -101,7 +99,7 @@ namespace FarseerPhysics.TestBed.Tests
                 jd5.bodyB = body3;
                 jd5.joint1 = _joint2;
                 jd5.joint2 = _joint3;
-                jd5.ratio = -1.0f/circle2._radius;
+                jd5.ratio = -1.0f/circle2.Radius;
                 _joint5 = (GearJoint) _world.CreateJoint(jd5);
             }
         }

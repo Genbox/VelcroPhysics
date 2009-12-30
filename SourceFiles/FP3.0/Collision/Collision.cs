@@ -482,25 +482,25 @@ namespace FarseerPhysics
         {
 	        manifold._pointCount = 0;
 
-	        Vector2 p1 = MathUtils.Multiply(ref xf1, circle1._p);
-	        Vector2 p2 = MathUtils.Multiply(ref xf2, circle2._p);
+	        Vector2 p1 = MathUtils.Multiply(ref xf1, circle1.Position);
+	        Vector2 p2 = MathUtils.Multiply(ref xf2, circle2.Position);
 
 	        Vector2 d = p2 - p1;
 	        float distSqr = Vector2.Dot(d, d);
-	        float radius = circle1._radius + circle2._radius;
+	        float radius = circle1.Radius + circle2.Radius;
 	        if (distSqr > radius * radius)
 	        {
 		        return;
 	        }
 
 	        manifold._type = ManifoldType.Circles;
-	        manifold._localPoint = circle1._p;
+	        manifold._localPoint = circle1.Position;
 	        manifold._localPlaneNormal = Vector2.Zero;
 	        manifold._pointCount = 1;
 
             var p0 = manifold._points[0];
 
-            p0.LocalPoint = circle2._p;
+            p0.LocalPoint = circle2.Position;
             p0.Id.Key = 0;
 
             manifold._points[0] = p0;
@@ -514,18 +514,18 @@ namespace FarseerPhysics
 	        manifold._pointCount = 0;
 
 	        // Compute circle position in the frame of the polygon.
-	        Vector2 c = MathUtils.Multiply(ref xf2, circle._p);
+	        Vector2 c = MathUtils.Multiply(ref xf2, circle.Position);
 	        Vector2 cLocal = MathUtils.MultiplyT(ref xf1, c);
 
 	        // Find the min separating edge.
 	        int normalIndex = 0;
 	        float separation = -Settings.MaxFloat;
-	        float radius = polygon._radius + circle._radius;
-	        int vertexCount = polygon._vertexCount;
+	        float radius = polygon.Radius + circle.Radius;
+	        int vertexCount = polygon.VertexCount;
 
 	        for (int i = 0; i < vertexCount; ++i)
 	        {
-                float s = Vector2.Dot(polygon._normals[i], cLocal - polygon._vertices[i]);
+                float s = Vector2.Dot(polygon.Normals[i], cLocal - polygon.Vertices[i]);
 
 		        if (s > radius)
 		        {
@@ -543,20 +543,20 @@ namespace FarseerPhysics
 	        // Vertices that subtend the incident face.
 	        int vertIndex1 = normalIndex;
 	        int vertIndex2 = vertIndex1 + 1 < vertexCount ? vertIndex1 + 1 : 0;
-            Vector2 v1 = polygon._vertices[vertIndex1];
-            Vector2 v2 = polygon._vertices[vertIndex2];
+            Vector2 v1 = polygon.Vertices[vertIndex1];
+            Vector2 v2 = polygon.Vertices[vertIndex2];
 
 	        // If the center is inside the polygon ...
 	        if (separation < Settings.Epsilon)
 	        {
 		        manifold._pointCount = 1;
 		        manifold._type = ManifoldType.FaceA;
-                manifold._localPlaneNormal = polygon._normals[normalIndex];
+                manifold._localPlaneNormal = polygon.Normals[normalIndex];
 		        manifold._localPoint = 0.5f * (v1 + v2);
 
                 var p0 = manifold._points[0];
 
-                p0.LocalPoint = circle._p;
+                p0.LocalPoint = circle.Position;
                 p0.Id.Key = 0;
 
                 manifold._points[0] = p0;
@@ -582,7 +582,7 @@ namespace FarseerPhysics
 
                 var p0b = manifold._points[0];
 
-                p0b.LocalPoint = circle._p;
+                p0b.LocalPoint = circle.Position;
                 p0b.Id.Key = 0;
 
                 manifold._points[0] = p0b;
@@ -603,7 +603,7 @@ namespace FarseerPhysics
 
                 var p0c = manifold._points[0];
 
-                p0c.LocalPoint = circle._p;
+                p0c.LocalPoint = circle.Position;
                 p0c.Id.Key = 0;
 
                 manifold._points[0] = p0c;
@@ -611,7 +611,7 @@ namespace FarseerPhysics
 	        else
 	        {
 		        Vector2 faceCenter = 0.5f * (v1 + v2);
-                float separation2 = Vector2.Dot(cLocal - faceCenter, polygon._normals[vertIndex1]);
+                float separation2 = Vector2.Dot(cLocal - faceCenter, polygon.Normals[vertIndex1]);
 		        if (separation2 > radius)
 		        {
 			        return;
@@ -619,12 +619,12 @@ namespace FarseerPhysics
 
 		        manifold._pointCount = 1;
 		        manifold._type = ManifoldType.FaceA;
-                manifold._localPlaneNormal = polygon._normals[vertIndex1];
+                manifold._localPlaneNormal = polygon.Normals[vertIndex1];
 		        manifold._localPoint = faceCenter;
 
                 var p0d = manifold._points[0];
 
-                p0d.LocalPoint = circle._p;
+                p0d.LocalPoint = circle.Position;
                 p0d.Id.Key = 0;
 
                 manifold._points[0] = p0d;
@@ -637,7 +637,7 @@ namespace FarseerPhysics
                                PolygonShape polyB, ref Transform xfB)
         {
 	        manifold._pointCount = 0;
-	        float totalRadius = polyA._radius + polyB._radius;
+	        float totalRadius = polyA.Radius + polyB.Radius;
 
 	        int edgeA;
 	        float separationA = FindMaxSeparation(out edgeA, polyA, ref xfA, polyB, ref xfB);
@@ -681,10 +681,10 @@ namespace FarseerPhysics
 	        FixedArray2<ClipVertex> incidentEdge;
 	        FindIncidentEdge(out incidentEdge, poly1, ref xf1, edge1, poly2, ref xf2);
 
-	        int count1 = poly1._vertexCount;
+	        int count1 = poly1.VertexCount;
 
-	        Vector2 v11 = poly1._vertices[edge1];
-	        Vector2 v12 = edge1 + 1 < count1 ? poly1._vertices[edge1+1] : poly1._vertices[0];
+	        Vector2 v11 = poly1.Vertices[edge1];
+	        Vector2 v12 = edge1 + 1 < count1 ? poly1.Vertices[edge1+1] : poly1.Vertices[0];
 
 	        Vector2 localTangent = v12 - v11;
             localTangent.Normalize();
@@ -794,8 +794,8 @@ namespace FarseerPhysics
         static float EdgeSeparation(PolygonShape poly1, ref Transform xf1, int edge1,
 							        PolygonShape poly2, ref Transform xf2)
         {
-	        int count1 = poly1._vertexCount;
-	        int count2 = poly2._vertexCount;
+	        int count1 = poly1.VertexCount;
+	        int count2 = poly2.VertexCount;
 
 	        Debug.Assert(0 <= edge1 && edge1 < count1);
 
@@ -804,7 +804,7 @@ namespace FarseerPhysics
             Vector2 normal1World = MathUtils.Multiply(ref xf1.R, poly1._normals[edge1]);
             Vector2 normal1 = MathUtils.MultiplyT(ref xf2.R, normal1World);
 #else
-            Vector2 p1n = poly1._normals[edge1];
+            Vector2 p1n = poly1.Normals[edge1];
             Vector2 normal1World = new Vector2(xf1.R.col1.X * p1n.X + xf1.R.col2.X * p1n.Y, xf1.R.col1.Y * p1n.X + xf1.R.col2.Y * p1n.Y);            
             Vector2 normal1 = new Vector2(normal1World.X * xf2.R.col1.X + normal1World.Y * xf2.R.col1.Y, normal1World.X * xf2.R.col2.X + normal1World.Y * xf2.R.col2.Y); 
 #endif
@@ -815,7 +815,7 @@ namespace FarseerPhysics
 	        for (int i = 0; i < count2; ++i)
 	        {
 #if !MATH_OVERLOADS // inlining this made it 1ms slower
-		        float dot = Vector2.Dot(poly2._vertices[i], normal1);
+		        float dot = Vector2.Dot(poly2.Vertices[i], normal1);
 #else
                 Vector2 p2vi = poly2._vertices[i];
                 float dot = p2vi.X * normal1.X + p2vi.Y * normal1.Y;
@@ -831,8 +831,8 @@ namespace FarseerPhysics
 	        Vector2 v1 = MathUtils.Multiply(ref xf1, poly1._vertices[edge1]);
 	        Vector2 v2 = MathUtils.Multiply(ref xf2, poly2._vertices[index]);
 #else
-            Vector2 p1ve = poly1._vertices[edge1];
-            Vector2 p2vi = poly2._vertices[index];
+            Vector2 p1ve = poly1.Vertices[edge1];
+            Vector2 p2vi = poly2.Vertices[index];
             Vector2 v1 = new Vector2(xf1.Position.X + xf1.R.col1.X * p1ve.X + xf1.R.col2.X * p1ve.Y,
                                      xf1.Position.Y + xf1.R.col1.Y * p1ve.X + xf1.R.col2.Y * p1ve.Y);
             Vector2 v2 = new Vector2(xf2.Position.X + xf2.R.col1.X * p2vi.X + xf2.R.col2.X * p2vi.Y,
@@ -853,10 +853,10 @@ namespace FarseerPhysics
 								        PolygonShape poly1, ref Transform xf1,
 								        PolygonShape poly2, ref Transform xf2)
         {
-            int count1 = poly1._vertexCount;
+            int count1 = poly1.VertexCount;
 
 	        // Vector pointing from the centroid of poly1 to the centroid of poly2.
-	        Vector2 d = MathUtils.Multiply(ref xf2, poly2._centroid) - MathUtils.Multiply(ref xf1, poly1._centroid);
+	        Vector2 d = MathUtils.Multiply(ref xf2, poly2.Centroid) - MathUtils.Multiply(ref xf1, poly1.Centroid);
 	        Vector2 dLocal1 = MathUtils.MultiplyT(ref xf1.R, d);
 
 	        // Find edge normal on poly1 that has the largest projection onto d.
@@ -864,7 +864,7 @@ namespace FarseerPhysics
 	        float maxDot = -Settings.MaxFloat;
 	        for (int i = 0; i < count1; ++i)
 	        {
-		        float dot = Vector2.Dot(poly1._normals[i], dLocal1);
+		        float dot = Vector2.Dot(poly1.Normals[i], dLocal1);
 		        if (dot > maxDot)
 		        {
 			        maxDot = dot;
@@ -936,20 +936,20 @@ namespace FarseerPhysics
         {
             c = new FixedArray2<ClipVertex>();
 
-	        int count1 = poly1._vertexCount;
-	        int count2 = poly2._vertexCount;
+	        int count1 = poly1.VertexCount;
+	        int count2 = poly2.VertexCount;
 
 	        Debug.Assert(0 <= edge1 && edge1 < count1);
 
 	        // Get the normal of the reference edge in poly2's frame.
-	        Vector2 normal1 = MathUtils.MultiplyT(ref xf2.R, MathUtils.Multiply(ref xf1.R, poly1._normals[edge1]));
+	        Vector2 normal1 = MathUtils.MultiplyT(ref xf2.R, MathUtils.Multiply(ref xf1.R, poly1.Normals[edge1]));
 
 	        // Find the incident edge on poly2.
 	        int index = 0;
 	        float minDot = Settings.MaxFloat;
 	        for (int i = 0; i < count2; ++i)
 	        {
-		        float dot = Vector2.Dot(normal1, poly2._normals[i]);
+		        float dot = Vector2.Dot(normal1, poly2.Normals[i]);
 		        if (dot < minDot)
 		        {
 			        minDot = dot;
@@ -963,7 +963,7 @@ namespace FarseerPhysics
 
             var cv0 = c[0];
 
-            cv0.v = MathUtils.Multiply(ref xf2, poly2._vertices[i1]);
+            cv0.v = MathUtils.Multiply(ref xf2, poly2.Vertices[i1]);
             cv0.id.Features.ReferenceEdge = (byte)edge1;
             cv0.id.Features.IncidentEdge = (byte)i1;
             cv0.id.Features.IncidentVertex = 0;
@@ -971,7 +971,7 @@ namespace FarseerPhysics
             c[0] = cv0;
 
             var cv1 = c[1];
-            cv1.v = MathUtils.Multiply(ref xf2, poly2._vertices[i2]);
+            cv1.v = MathUtils.Multiply(ref xf2, poly2.Vertices[i2]);
             cv1.id.Features.ReferenceEdge = (byte)edge1;
             cv1.id.Features.IncidentEdge = (byte)i2;
             cv1.id.Features.IncidentVertex = 1;

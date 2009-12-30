@@ -21,10 +21,8 @@
 */
 
 using System;
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -36,8 +34,8 @@ namespace FarseerPhysics.TestBed.Tests
         // The 3 small ones always collide.
         // The 3 large ones never collide.
         // The boxes don't collide with triangles (except if both are small).
-        private static Int16 k_smallGroup = 1;
-        private static Int16 k_largeGroup = -1;
+        private const Int16 k_smallGroup = 1;
+        private const Int16 k_largeGroup = -1;
 
         private static UInt16 k_defaultCategory = 0x0001;
         private static UInt16 k_triangleCategory = 0x0002;
@@ -150,8 +148,7 @@ namespace FarseerPhysics.TestBed.Tests
             body4.CreateFixture(boxShapeDef);
 
             // Small circle
-            CircleShape circle = new CircleShape();
-            circle._radius = 1.0f;
+            CircleShape circle = new CircleShape(1.0f);
 
             FixtureDef circleShapeDef = new FixtureDef();
             circleShapeDef.shape = circle;
@@ -169,7 +166,7 @@ namespace FarseerPhysics.TestBed.Tests
             body5.CreateFixture(circleShapeDef);
 
             // Large circle
-            circle._radius *= 2.0f;
+            circle.Radius *= 2.0f;
             circleShapeDef.filter.groupIndex = k_largeGroup;
             circleBodyDef.position = new Vector2(5.0f, 6.0f);
 

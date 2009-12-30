@@ -42,8 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                CircleShape shape = new CircleShape();
-                shape._radius = 1.0f;
+                CircleShape shape = new CircleShape(1.0f);
 
                 for (int i = 0; i < e_count; ++i)
                 {

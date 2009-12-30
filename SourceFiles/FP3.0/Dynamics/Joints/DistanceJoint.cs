@@ -37,8 +37,8 @@ namespace FarseerPhysics
 	    public DistanceJointDef()
 	    {
 		    type = JointType.Distance;
-		    localAnchorA = new Vector2(0.0f, 0.0f);
-		    localAnchorB = new Vector2(0.0f, 0.0f);
+		    localAnchorA = Vector2.Zero;
+		    localAnchorB = Vector2.Zero;
 		    length = 1.0f;
 		    frequencyHz = 0.0f;
 		    dampingRatio = 0.0f;
@@ -181,7 +181,7 @@ namespace FarseerPhysics
 	        }
 	        else
 	        {
-		        _u = new Vector2(0.0f, 0.0f);
+		        _u = Vector2.Zero;
 	        }
 
 	        float cr1u = MathUtils.Cross(r1, _u);

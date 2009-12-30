@@ -40,8 +40,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                CircleShape shape = new CircleShape();
-                shape._radius = 1.0f;
+                CircleShape shape = new CircleShape(1.0f);
 
                 FixtureDef fd = new FixtureDef();
                 fd.shape = shape;

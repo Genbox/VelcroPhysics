@@ -21,7 +21,6 @@
 */
 
 using System;
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -31,7 +30,7 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class RayCast : Test
     {
-        private static int e_maxBodies = 256;
+        private const int e_maxBodies = 256;
 
         public RayCast()
         {
@@ -64,7 +63,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                float w = 1.0f;
+                const float w = 1.0f;
                 float b = w/(2.0f + (float) Math.Sqrt(2.0));
                 float s = (float) Math.Sqrt(2.0)*b;
 
@@ -87,8 +86,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                _circle = new CircleShape();
-                _circle._radius = 0.5f;
+                _circle = new CircleShape(0.5f);
             }
 
             _bodyIndex = 0;
@@ -98,23 +96,23 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
         {
-            if (state.IsKeyDown(Keys.NumPad1) && oldState.IsKeyUp(Keys.NumPad1))
+            if (state.IsKeyDown(Keys.D1) && oldState.IsKeyUp(Keys.D1))
             {
                 Create(0);
             }
-            if (state.IsKeyDown(Keys.NumPad2) && oldState.IsKeyUp(Keys.NumPad2))
+            if (state.IsKeyDown(Keys.D2) && oldState.IsKeyUp(Keys.D2))
             {
                 Create(1);
             }
-            if (state.IsKeyDown(Keys.NumPad3) && oldState.IsKeyUp(Keys.NumPad3))
+            if (state.IsKeyDown(Keys.D3) && oldState.IsKeyUp(Keys.D3))
             {
                 Create(2);
             }
-            if (state.IsKeyDown(Keys.NumPad4) && oldState.IsKeyUp(Keys.NumPad4))
+            if (state.IsKeyDown(Keys.D4) && oldState.IsKeyUp(Keys.D4))
             {
                 Create(3);
             }
-            if (state.IsKeyDown(Keys.NumPad5) && oldState.IsKeyUp(Keys.NumPad5))
+            if (state.IsKeyDown(Keys.D5) && oldState.IsKeyUp(Keys.D5))
             {
                 Create(4);
             }
@@ -124,7 +122,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public void DestroyBody()
+        private void DestroyBody()
         {
             for (int i = 0; i < e_maxBodies; ++i)
             {
@@ -143,7 +141,7 @@ namespace FarseerPhysics.TestBed.Tests
             _debugView.DrawString(5, _textLine, "Press 1-5 to drop stuff");
             _textLine += 15;
 
-            float L = 11.0f;
+            const float L = 11.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);
             Vector2 d = new Vector2(L*(float) Math.Cos(_angle), L*(float) Math.Sin(_angle));
             Vector2 point2 = point1 + d;
@@ -173,7 +171,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _debugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
             }
 
-            _angle += 0.25f*FarseerPhysics.Settings.Pi/180.0f;
+            _angle += 0.25f* Settings.Pi/180.0f;
         }
 
         private void Create(int index)
@@ -189,7 +187,7 @@ namespace FarseerPhysics.TestBed.Tests
             float x = Rand.RandomFloat(-10.0f, 10.0f);
             float y = Rand.RandomFloat(0.0f, 20.0f);
             bd.position = new Vector2(x, y);
-            bd.angle = Rand.RandomFloat(-FarseerPhysics.Settings.Pi, FarseerPhysics.Settings.Pi);
+            bd.angle = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
 
             if (index == 4)
             {

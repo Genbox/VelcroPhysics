@@ -29,7 +29,7 @@ namespace FarseerPhysics
     /// This is an internal class.
     internal class Island
     {
-        public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, IContactListener listener)
+        public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
         {
             _bodyCapacity = bodyCapacity;
             _contactCapacity = contactCapacity;
@@ -39,7 +39,7 @@ namespace FarseerPhysics
             _contactCount = 0;
             _jointCount = 0;
 
-            _listener = listener;
+            _contactManager = contactManager;
 
             if (_bodies == null || _bodies.Length < bodyCapacity)
             {
@@ -351,11 +351,6 @@ namespace FarseerPhysics
 
         private void Report(ContactConstraint[] constraints)
         {
-            if (_listener == null)
-            {
-                return;
-            }
-
             for (int i = 0; i < _contactCount; ++i)
             {
                 Contact c = _contacts[i];
@@ -369,12 +364,13 @@ namespace FarseerPhysics
                     impulse.tangentImpulses[j] = cc.points[j].tangentImpulse;
                 }
 
-                _listener.PostSolve(c, ref impulse);
+                if (_contactManager.PostSolve != null)
+                    _contactManager.PostSolve(c, ref impulse);
             }
         }
 
         private ContactSolver _contactSolver = new ContactSolver();
-        private IContactListener _listener;
+        private ContactManager _contactManager;
 
         public Body[] _bodies;
         public Contact[] _contacts;

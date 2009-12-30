@@ -68,8 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body body = _world.CreateBody(bd);
 
                 _radius = 0.5f;
-                CircleShape shape = new CircleShape();
-                shape._radius = _radius;
+                CircleShape shape = new CircleShape(_radius);
                 _character = body.CreateFixture(shape, 1.0f);
 
                 body.SetLinearVelocity(new Vector2(0.0f, -50.0f));

@@ -38,6 +38,16 @@ namespace FarseerPhysics
     /// management facilities.
     public class World
     {
+        /// <summary>
+        /// Called whenever a Joint is removed
+        /// </summary>
+        public JointRemovedDelegate JointRemoved;
+
+        /// <summary>
+        /// Called whenever a Fixture is removed
+        /// </summary>
+        public FixtureRemovedDelegate FixtureRemoved;
+
         /// Construct a world object.
         /// @param gravity the world gravity vector.
         /// @param doSleep improve performance by not simulating inactive bodies.
@@ -51,41 +61,10 @@ namespace FarseerPhysics
 
             _queryAABBCallbackWrapper = QueryAABBCallbackWrapper;
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
+
+            new DefaultContactFilter(this);
         }
 
-        /// Register a destruction listener.
-        public IDestructionListener DestructionListener { get; set; }
-
-        /// Register a contact filter to provide specific control over collision.
-        /// Otherwise the default filter is used (Settings.b2_defaultFilter).
-        public IContactFilter ContactFilter
-        {
-            get
-            {
-                return _contactManager.ContactFilter;
-            }
-            set
-            {
-                _contactManager.ContactFilter = value;
-            }
-        }
-
-        /// Register a contact event listener
-        public IContactListener ContactListener
-        {
-            get
-            {
-                return _contactManager.ContactListener;
-            }
-            set
-            {
-                _contactManager.ContactListener = value;
-            }
-        }
-
-        /// Create a rigid body given a definition. No reference to the definition
-        /// is retained.
-        /// @warning This function is locked during callbacks.
         public Body CreateBody(BodyDef def)
         {
             Debug.Assert(!IsLocked);
@@ -129,9 +108,9 @@ namespace FarseerPhysics
                 JointEdge je0 = je;
                 je = je.Next;
 
-                if (DestructionListener != null)
+                if (JointRemoved != null)
                 {
-                    DestructionListener.SayGoodbye(je0.Joint);
+                    JointRemoved(je0.Joint);
                 }
 
                 DestroyJoint(je0.Joint);
@@ -155,9 +134,9 @@ namespace FarseerPhysics
                 Fixture f0 = f;
                 f = f._next;
 
-                if (DestructionListener != null)
+                if (FixtureRemoved != null)
                 {
-                    DestructionListener.SayGoodbye(f0);
+                    FixtureRemoved(f0);
                 }
 
                 f0.DestroyProxy(_contactManager._broadPhase);
@@ -442,7 +421,7 @@ namespace FarseerPhysics
         /// @param callback a user implemented callback class.
         /// @param point1 the ray starting point
         /// @param point2 the ray ending point
-        public void RayCast(Func<Fixture, Vector2, Vector2, float, float> callback, Vector2 point1, Vector2 point2)
+        public void RayCast(WorldRayCastCallback callback, Vector2 point1, Vector2 point2)
         {
             RayCastInput input = new RayCastInput();
             input.maxFraction = 1.0f;
@@ -454,10 +433,10 @@ namespace FarseerPhysics
             _rayCastCallback = null;
         }
 
-        Func<Fixture, Vector2, Vector2, float, float> _rayCastCallback;
+        WorldRayCastCallback _rayCastCallback;
         RayCastCallback _rayCastCallbackWrapper;
 
-        float RayCastCallbackWrapper(ref RayCastInput input, int proxyId)
+        private float RayCastCallbackWrapper(ref RayCastInput input, int proxyId)
         {
             object userData = _contactManager._broadPhase.GetUserData(proxyId);
             Fixture fixture = (Fixture)userData;
@@ -585,7 +564,7 @@ namespace FarseerPhysics
             _island.Reset(_bodyCount,
                           _contactManager._contactCount,
                           _jointCount,
-                          _contactManager.ContactListener);
+                          _contactManager);
 
             // Clear all the island flags.
             for (Body b = _bodyList; b != null; b = b._next)
@@ -753,7 +732,7 @@ namespace FarseerPhysics
             _island.Reset(_bodyCount,
                             Settings.MaxTOIContactsPerIsland,
                             Settings.MaxTOIJointsPerIsland,
-                            _contactManager.ContactListener);
+                            _contactManager);
 
             //Simple one pass queue
             //Relies on the fact that we're only making one pass
@@ -881,7 +860,7 @@ namespace FarseerPhysics
                 b2_2.Advance(minTOI);
 
                 // The TOI contact likely has some new contact points.
-                minContact.Update(_contactManager.ContactListener);
+                minContact.Update(_contactManager);
                 minContact._flags &= ~ContactFlags.Toi;
 
                 // Is the contact solid?

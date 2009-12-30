@@ -22,17 +22,19 @@
 
 namespace FarseerPhysics
 {
-    public interface IDestructionListener
-    {
-        void SayGoodbye(Joint joint);
-        void SayGoodbye(Fixture fixture);
-    }
+    /// <summary>
+    /// This delegate is called when a contact is deleted
+    /// </summary>
+    public delegate void EndContactDelegate(Contact contact);
+    public delegate void BeginContactDelegate(Contact contact);
+    public delegate void PreSolveDelegate(Contact contact, ref Manifold oldManifold);
+    public delegate void PostSolveDelegate(Contact contact, ref ContactImpulse impulse);
 
-    public interface IContactFilter
-    {
-        bool ShouldCollide(Fixture fixtureA, Fixture fixtureB);
-        bool RayCollide(object userData, Fixture fixture);
-    }
+    public delegate void FixtureRemovedDelegate(Fixture fixture);
+    public delegate void JointRemovedDelegate(Joint joint);
+
+    public delegate bool CollisionFilterDelegate(Fixture fixtureA, Fixture fixtureB);
+    public delegate bool RaycastFilterDelegate(Fixture fixtureA, Fixture fixtureB);
 
     public struct ContactImpulse
     {
@@ -40,17 +42,14 @@ namespace FarseerPhysics
         public FixedArray2<float> tangentImpulses;
     }
 
-    public interface IContactListener
+    public class DefaultContactFilter 
     {
-        void BeginContact(Contact contact);
-        void EndContact(Contact contact);
-        void PreSolve(Contact contact, ref Manifold oldManifold);
-        void PostSolve(Contact contact, ref ContactImpulse impulse);
-    }
+        public DefaultContactFilter(World world)
+        {
+            world.ContactManager.CollisionFilter += ShouldCollide;
+        }
 
-    public class DefaultContactFilter : IContactFilter
-    {
-        public bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)
+        private static bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)
         {
             Filter filterA;
             fixtureA.GetFilterData(out filterA);
@@ -78,13 +77,5 @@ namespace FarseerPhysics
 
             return ShouldCollide((Fixture)userData, fixture);
         }
-    }
-
-    public class DefaultContactListener : IContactListener
-    {
-        public void BeginContact(Contact contact) { }
-        public void EndContact(Contact contact) { }
-        public void PreSolve(Contact contact, ref Manifold oldManifold) { }
-        public void PostSolve(Contact contact, ref ContactImpulse impulse) { }
     }
 }

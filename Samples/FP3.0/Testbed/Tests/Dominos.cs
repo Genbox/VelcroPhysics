@@ -63,7 +63,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(-6.0f + 1.0f*i, 11.25f);
+                    bd.position = new Vector2(-6.0f + 1.0f * i, 11.25f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(fd);
                 }
@@ -195,16 +195,15 @@ namespace FarseerPhysics.TestBed.Tests
             _world.CreateJoint(djd);
 
             {
-                float radius = 0.2f;
+                const float radius = 0.2f;
 
-                CircleShape shape = new CircleShape();
-                shape._radius = radius;
+                CircleShape shape = new CircleShape(radius);
 
                 for (int i = 0; i < 4; ++i)
                 {
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(5.9f + 2.0f*radius*i, 2.4f);
+                    bd.position = new Vector2(5.9f + 2.0f * radius * i, 2.4f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(shape, 10.0f);
                 }

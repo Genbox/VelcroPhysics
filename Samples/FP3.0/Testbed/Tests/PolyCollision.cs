@@ -56,8 +56,8 @@ namespace FarseerPhysics.TestBed.Tests
             Manifold manifold = new Manifold();
             Collision.CollidePolygons(ref manifold, _polygonA, ref _transformA, _polygonB, ref _transformB);
 
-            WorldManifold worldManifold = new WorldManifold(ref manifold, ref _transformA, _polygonA._radius,
-                                                            ref _transformB, _polygonB._radius);
+            WorldManifold worldManifold = new WorldManifold(ref manifold, ref _transformA, _polygonA.Radius,
+                                                            ref _transformB, _polygonB.Radius);
 
             _debugView.DrawString(50, _textLine, "point count = {0:n}", manifold._pointCount);
             _textLine += 15;
@@ -65,17 +65,17 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Color color = new Color(0.9f, 0.9f, 0.9f);
                 FixedArray8<Vector2> v = new FixedArray8<Vector2>();
-                for (int i = 0; i < _polygonA._vertexCount; ++i)
+                for (int i = 0; i < _polygonA.VertexCount; ++i)
                 {
-                    v[i] = MathUtils.Multiply(ref _transformA, _polygonA._vertices[i]);
+                    v[i] = MathUtils.Multiply(ref _transformA, _polygonA.Vertices[i]);
                 }
-                _debugView.DrawPolygon(ref v, _polygonA._vertexCount, color);
+                _debugView.DrawPolygon(ref v, _polygonA.VertexCount, color);
 
-                for (int i = 0; i < _polygonB._vertexCount; ++i)
+                for (int i = 0; i < _polygonB.VertexCount; ++i)
                 {
-                    v[i] = MathUtils.Multiply(ref _transformB, _polygonB._vertices[i]);
+                    v[i] = MathUtils.Multiply(ref _transformB, _polygonB.Vertices[i]);
                 }
-                _debugView.DrawPolygon(ref v, _polygonB._vertexCount, color);
+                _debugView.DrawPolygon(ref v, _polygonB.VertexCount, color);
             }
 
             for (int i = 0; i < manifold._pointCount; ++i)

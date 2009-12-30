@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             {
                 BodyDef bd = new BodyDef();
-                bd.position = new Vector2(0.0f, 0.0f);
+                bd.position = Vector2.Zero;
                 Body body = _world.CreateBody(bd);
 
                 PolygonShape shape = new PolygonShape();
@@ -42,13 +42,11 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                CircleShape circle1 = new CircleShape();
-                circle1._radius = 0.5f;
-                circle1._p = new Vector2(-0.5f, 0.5f);
+                CircleShape circle1 = new CircleShape(0.5f);
+                circle1.Position = new Vector2(-0.5f, 0.5f);
 
-                CircleShape circle2 = new CircleShape();
-                circle2._radius = 0.5f;
-                circle2._p = new Vector2(0.5f, 0.5f);
+                CircleShape circle2 = new CircleShape( 0.5f);
+                circle2.Position = new Vector2(0.5f, 0.5f);
 
                 for (int i = 0; i < 10; ++i)
                 {
@@ -56,7 +54,7 @@ namespace FarseerPhysics.TestBed.Tests
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
                     bd.position = new Vector2(x + 5.0f, 1.05f + 2.5f*i);
-                    bd.angle = Rand.RandomFloat(-FarseerPhysics.Settings.Pi, FarseerPhysics.Settings.Pi);
+                    bd.angle = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(circle1, 2.0f);
                     body.CreateFixture(circle2, 0.0f);

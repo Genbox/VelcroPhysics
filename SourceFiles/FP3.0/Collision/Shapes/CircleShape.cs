@@ -22,26 +22,23 @@
 
 using Microsoft.Xna.Framework;
 using System;
-using System.Diagnostics;
 
 namespace FarseerPhysics
 {
     public class CircleShape : Shape
     {
-        public CircleShape()
+        public CircleShape(float radius)
+            : base(radius)
         {
-	        ShapeType = ShapeType.Circle;
-	        _radius = 0.0f;
-	        _p = Vector2.Zero;
+            ShapeType = ShapeType.Circle;
         }
 
         /// Implement Shape.
         public override Shape Clone()
         {
-            CircleShape shape = new CircleShape();
+            CircleShape shape = new CircleShape(Radius);
             shape.ShapeType = ShapeType;
-            shape._radius = _radius;
-            shape._p = _p;
+            shape.Position = Position;
 
             return shape;
         }
@@ -49,9 +46,9 @@ namespace FarseerPhysics
         /// @see Shape.TestPoint
         public override bool TestPoint(ref Transform transform, Vector2 p)
         {
-            Vector2 center = transform.Position + MathUtils.Multiply(ref transform.R, _p);
-	        Vector2 d = p - center;
-	        return Vector2.Dot(d, d) <= _radius * _radius;
+            Vector2 center = transform.Position + MathUtils.Multiply(ref transform.R, Position);
+            Vector2 d = p - center;
+            return Vector2.Dot(d, d) <= Radius2;
         }
 
         // Collision Detection in Interactive 3D Environments by Gino van den Bergen
@@ -62,29 +59,29 @@ namespace FarseerPhysics
         {
             output = new RayCastOutput();
 
-	        Vector2 position = transform.Position + MathUtils.Multiply(ref transform.R, _p);
-	        Vector2 s = input.p1 - position;
-	        float b = Vector2.Dot(s, s) - _radius * _radius;
+            Vector2 position = transform.Position + MathUtils.Multiply(ref transform.R, Position);
+            Vector2 s = input.p1 - position;
+            float b = Vector2.Dot(s, s) - Radius2;
 
-	        // Solve quadratic equation.
+            // Solve quadratic equation.
             Vector2 r = input.p2 - input.p1;
-	        float c =  Vector2.Dot(s, r);
-	        float rr = Vector2.Dot(r, r);
-	        float sigma = c * c - rr * b;
+            float c = Vector2.Dot(s, r);
+            float rr = Vector2.Dot(r, r);
+            float sigma = c * c - rr * b;
 
-	        // Check for negative discriminant and short segment.
-	        if (sigma < 0.0f || rr < Settings.Epsilon)
-	        {
+            // Check for negative discriminant and short segment.
+            if (sigma < 0.0f || rr < Settings.Epsilon)
+            {
                 return false;
-	        }
+            }
 
-	        // Find the point of intersection of the line with the circle.
-	        float a = -(c + (float)Math.Sqrt(sigma));
+            // Find the point of intersection of the line with the circle.
+            float a = -(c + (float)Math.Sqrt(sigma));
 
-	        // Is the intersection point on the segment?
+            // Is the intersection point on the segment?
             if (0.0f <= a && a <= input.maxFraction * rr)
-	        {
-		        a /= rr;
+            {
+                a /= rr;
                 output.fraction = a;
                 Vector2 norm = (s + a * r);
                 norm.Normalize();
@@ -98,22 +95,22 @@ namespace FarseerPhysics
         /// @see Shape.ComputeAABB
         public override void ComputeAABB(out AABB aabb, ref Transform transform)
         {
-            Vector2 p = transform.Position + MathUtils.Multiply(ref transform.R, _p);
-	        aabb.lowerBound = new Vector2(p.X - _radius, p.Y - _radius);
-	        aabb.upperBound = new Vector2(p.X + _radius, p.Y + _radius);
+            Vector2 p = transform.Position + MathUtils.Multiply(ref transform.R, Position);
+            aabb.lowerBound = new Vector2(p.X - Radius, p.Y - Radius);
+            aabb.upperBound = new Vector2(p.X + Radius, p.Y + Radius);
         }
 
         /// @see Shape.ComputeMass
         public override void ComputeMass(out MassData massData, float density)
         {
-            massData.mass = density * Settings.Pi * _radius * _radius;
-	        massData.center = _p;
+            massData.Mass = density * Settings.Pi * Radius2;
+            massData.Center = Position;
 
-	        // inertia about the local origin
-	        massData.i = massData.mass * (0.5f * _radius * _radius + Vector2.Dot(_p, _p));
+            // inertia about the local origin
+            massData.Inertia = massData.Mass * (0.5f * Radius2 + Vector2.Dot(Position, Position));
         }
 
         /// Position
-        public Vector2 _p;
+        public Vector2 Position;
     }
 }

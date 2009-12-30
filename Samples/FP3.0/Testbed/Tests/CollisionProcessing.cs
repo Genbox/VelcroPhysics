@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
@@ -44,8 +43,10 @@ namespace FarseerPhysics.TestBed.Tests
                 ground.CreateFixture(sd);
             }
 
-            float xLo = -5.0f, xHi = 5.0f;
-            float yLo = 2.0f, yHi = 35.0f;
+            const float xLo = -5.0f;
+            const float xHi = 5.0f;
+            const float yLo = 2.0f;
+            const float yHi = 35.0f;
 
             // Small triangle
             Vector2[] vertices = new Vector2[3];
@@ -100,8 +101,7 @@ namespace FarseerPhysics.TestBed.Tests
             body4.CreateFixture(boxShapeDef);
 
             // Small circle
-            CircleShape circle = new CircleShape();
-            circle._radius = 1.0f;
+            CircleShape circle = new CircleShape(1.0f);
 
             FixtureDef circleShapeDef = new FixtureDef();
             circleShapeDef.shape = circle;
@@ -115,24 +115,21 @@ namespace FarseerPhysics.TestBed.Tests
             body5.CreateFixture(circleShapeDef);
 
             // Large circle
-            circle._radius *= 2.0f;
+            circle.Radius *= 2.0f;
             circleBodyDef.position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
             Body body6 = _world.CreateBody(circleBodyDef);
             body6.CreateFixture(circleShapeDef);
         }
 
-        private static int stepCount = 0;
-
         public override void Step(Framework.Settings settings)
         {
-            stepCount++;
             base.Step(settings);
 
             // We are going to destroy some bodies according to contact
             // points. We must buffer the bodies that should be destroyed
             // because they may belong to multiple contact points.
-            int k_maxNuke = 6;
+            const int k_maxNuke = 6;
             Body[] nuke = new Body[k_maxNuke];
             int nukeCount = 0;
 

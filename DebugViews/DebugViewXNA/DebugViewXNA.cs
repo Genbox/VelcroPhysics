@@ -167,8 +167,8 @@ namespace FarseerPhysics.DebugViewXNA
                     {
                         CircleShape circle = (CircleShape)fixture.GetShape();
 
-                        Vector2 center = MathUtils.Multiply(ref xf, circle._p);
-                        float radius = circle._radius;
+                        Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
+                        float radius = circle.Radius;
                         Vector2 axis = xf.R.col1;
 
                         DrawSolidCircle(center, radius, axis, color);
@@ -178,13 +178,13 @@ namespace FarseerPhysics.DebugViewXNA
                 case ShapeType.Polygon:
                     {
                         PolygonShape poly = (PolygonShape)fixture.GetShape();
-                        int vertexCount = poly._vertexCount;
+                        int vertexCount = poly.VertexCount;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         FixedArray8<Vector2> vertices = new FixedArray8<Vector2>();
 
                         for (int i = 0; i < vertexCount; ++i)
                         {
-                            vertices[i] = MathUtils.Multiply(ref xf, poly._vertices[i]);
+                            vertices[i] = MathUtils.Multiply(ref xf, poly.Vertices[i]);
                         }
 
                         DrawSolidPolygon(ref vertices, vertexCount, color);
