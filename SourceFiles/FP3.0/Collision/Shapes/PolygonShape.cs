@@ -54,7 +54,7 @@ namespace FarseerPhysics
             Debug.Assert(2 <= count && count <= Settings.MaxPolygonVertices);
             VertexCount = count;
 
-            // Copy vertices.
+            // Copy vertices. Arrays in C# are a reference type, so this is needed.
             for (int i = 0; i < VertexCount; ++i)
             {
 	            Vertices[i] = vertices[i];
@@ -68,7 +68,7 @@ namespace FarseerPhysics
 	            Vector2 edge = Vertices[i2] - Vertices[i1];
 	            Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
                 
-                var temp = MathUtils.Cross(edge, 1.0f);
+                Vector2 temp = MathUtils.Cross(edge, 1.0f);
                 temp.Normalize();
                 Normals[i] = temp;
             }
@@ -104,17 +104,16 @@ namespace FarseerPhysics
             Centroid = ComputeCentroid(ref Vertices, VertexCount);
         }
 
-        static Vector2 ComputeCentroid(ref FixedArray8<Vector2> vs, int count)
+        private static Vector2 ComputeCentroid(ref FixedArray8<Vector2> vertices, int verticeCount)
         {
-	        Debug.Assert(count >= 2);
+	        Debug.Assert(verticeCount >= 2);
 
 	        Vector2 c = Vector2.Zero;
 	        float area = 0.0f;
 
-	        if (count == 2)
+	        if (verticeCount == 2)
 	        {
-		        c = 0.5f * (vs[0] + vs[1]);
-		        return c;
+		        return 0.5f * (vertices[0] + vertices[1]);
 	        }
 
 	        // pRef is the reference point for forming triangles.
@@ -131,12 +130,12 @@ namespace FarseerPhysics
 
 	        const float inv3 = 1.0f / 3.0f;
 
-	        for (int i = 0; i < count; ++i)
+	        for (int i = 0; i < verticeCount; ++i)
 	        {
 		        // Triangle vertices.
 		        Vector2 p1 = pRef;
-		        Vector2 p2 = vs[i];
-		        Vector2 p3 = i + 1 < count ? vs[i+1] : vs[0];
+		        Vector2 p2 = vertices[i];
+		        Vector2 p3 = i + 1 < verticeCount ? vertices[i+1] : vertices[0];
 
 		        Vector2 e1 = p2 - p1;
 		        Vector2 e2 = p3 - p1;
