@@ -148,8 +148,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Balls
             for (int i = 0; i < 40; ++i)
             {
-                CircleShape shape = new CircleShape();
-                shape._radius = 0.25f;
+                CircleShape shape = new CircleShape(0.25f);
 
                 BodyDef bd = new BodyDef();
                 bd.type = BodyType.Dynamic;
@@ -176,8 +175,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                CircleShape shape = new CircleShape();
-                shape._radius = 1.6f;
+                CircleShape shape = new CircleShape(1.6f);
 
                 FixtureDef sd = new FixtureDef();
                 sd.density = 1.0f;

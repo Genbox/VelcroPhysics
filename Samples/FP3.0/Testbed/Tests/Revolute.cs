@@ -42,8 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                CircleShape shape = new CircleShape();
-                shape._radius = 0.5f;
+                CircleShape shape = new CircleShape(0.5f);
 
                 BodyDef bd = new BodyDef();
                 bd.type = BodyType.Dynamic;

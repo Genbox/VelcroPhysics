@@ -26,14 +26,19 @@ namespace FarseerPhysics
 {
     public class ContactManager
     {
+        /// <summary>
+        /// Fires when a contact is deleted
+        /// </summary>
+        public EndContactDelegate EndContact;
+        public BeginContactDelegate BeginContact;
+        public PreSolveDelegate PreSolve;
+        public PostSolveDelegate PostSolve;
+
+        public CollisionFilterDelegate CollisionFilter;
+
         internal ContactManager()
         {
             _addPair = AddPair;
-
-            _contactList = null;
-            _contactCount = 0;
-            ContactFilter = new DefaultContactFilter();
-            ContactListener = new DefaultContactListener();
         }
 
         // Broad-phase callback.
@@ -82,9 +87,10 @@ namespace FarseerPhysics
             }
 
             // Check user filtering.
-            if (ContactFilter.ShouldCollide(fixtureA, fixtureB) == false)
+            if (CollisionFilter != null)
             {
-                return;
+                if (CollisionFilter(fixtureA, fixtureB) == false)
+                    return;
             }
 
             // Call the factory.
@@ -148,7 +154,8 @@ namespace FarseerPhysics
 
             if (c._manifold._pointCount > 0)
             {
-                ContactListener.EndContact(c);
+                if (EndContact != null)
+                    EndContact(c);
             }
 
             // Remove from the world.
@@ -232,12 +239,15 @@ namespace FarseerPhysics
                     }
 
                     // Check user filtering.
-                    if (ContactFilter.ShouldCollide(fixtureA, fixtureB) == false)
+                    if (CollisionFilter != null)
                     {
-                        Contact cNuke = c;
-                        c = cNuke.GetNext();
-                        Destroy(cNuke);
-                        continue;
+                        if (CollisionFilter(fixtureA, fixtureB) == false)
+                        {
+                            Contact cNuke = c;
+                            c = cNuke.GetNext();
+                            Destroy(cNuke);
+                            continue;
+                        }
                     }
 
                     // Clear the filtering flag.
@@ -259,7 +269,7 @@ namespace FarseerPhysics
                 }
 
                 // The contact persists.
-                c.Update(ContactListener);
+                c.Update(this);
                 c = c.GetNext();
             }
         }
@@ -267,9 +277,6 @@ namespace FarseerPhysics
         internal BroadPhase _broadPhase = new BroadPhase();
         internal Contact _contactList;
         internal int _contactCount;
-
-        internal IContactFilter ContactFilter { get; set; }
-        internal IContactListener ContactListener { get; set; }
 
         Action<Fixture, Fixture> _addPair;
 

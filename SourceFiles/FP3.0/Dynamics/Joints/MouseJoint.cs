@@ -32,7 +32,7 @@ namespace FarseerPhysics
         public MouseJointDef()
         {
             type = JointType.Mouse;
-            target = new Vector2(0.0f, 0.0f);
+            target = Vector2.Zero;
             maxForce = 0.0f;
             frequencyHz = 5.0f;
             dampingRatio = 0.7f;

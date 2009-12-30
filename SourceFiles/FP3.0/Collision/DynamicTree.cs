@@ -28,8 +28,9 @@ namespace FarseerPhysics
 {
     /// A dynamic AABB tree broad-phase, inspired by Nathanael Presson's btDbvt.
 
-
     public delegate float RayCastCallback(ref RayCastInput input, int userData);
+
+    public delegate float WorldRayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction);
 
     /// A node in the dynamic tree. The client does not interact with this directly.
     internal struct DynamicTreeNode

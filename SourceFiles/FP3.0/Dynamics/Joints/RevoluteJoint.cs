@@ -42,8 +42,8 @@ namespace FarseerPhysics
 	    public RevoluteJointDef()
 	    {
 		    type = JointType.Revolute;
-		    localAnchorA = new Vector2(0.0f, 0.0f);
-		    localAnchorB = new Vector2(0.0f, 0.0f);
+		    localAnchorA = Vector2.Zero;
+		    localAnchorB = Vector2.Zero;
 		    referenceAngle = 0.0f;
 		    lowerAngle = 0.0f;
 		    upperAngle = 0.0f;

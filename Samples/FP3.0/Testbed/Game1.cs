@@ -39,6 +39,8 @@ namespace FarseerPhysics.TestBed
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferMultiSampling = true;
+            IsMouseVisible = true;
+            //graphics.IsFullScreen = true;
         }
 
         /// <summary>
@@ -65,6 +67,7 @@ namespace FarseerPhysics.TestBed
 
             entry = TestEntries.g_testEntries[testIndex];
             test = entry.createFcn();
+            test.Game = this;
         }
 
         /// <summary>
@@ -84,8 +87,10 @@ namespace FarseerPhysics.TestBed
             DebugViewXNA.DebugViewXNA._batch = spriteBatch;
             DebugViewXNA.DebugViewXNA._font = spriteFont;
 
-            oldState = Keyboard.GetState();
+            oldKeyboardState = Keyboard.GetState();
+            oldMouseState = Mouse.GetState();
             oldGamePad = GamePad.GetState(PlayerIndex.One);
+
             Resize(GraphicsDevice.PresentationParameters.BackBufferWidth,
                    GraphicsDevice.PresentationParameters.BackBufferHeight);
         }
@@ -111,30 +116,30 @@ namespace FarseerPhysics.TestBed
 
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+                Exit();
 
-            KeyboardState newState = Keyboard.GetState();
+            KeyboardState newKeyboardState = Keyboard.GetState();
             GamePadState newGamePad = GamePad.GetState(PlayerIndex.One);
 
             // Press 'z' to zoom out.
-            if (newState.IsKeyDown(Keys.Z) && oldState.IsKeyUp(Keys.Z))
+            if (newKeyboardState.IsKeyDown(Keys.Z) && oldKeyboardState.IsKeyUp(Keys.Z))
             {
-                viewZoom = Math.Min(1.1f*viewZoom, 20.0f);
+                viewZoom = Math.Min(1.1f * viewZoom, 20.0f);
                 Resize(width, height);
             }
-                // Press 'x' to zoom in.
-            else if (newState.IsKeyDown(Keys.X) && oldState.IsKeyUp(Keys.X))
+            // Press 'x' to zoom in.
+            else if (newKeyboardState.IsKeyDown(Keys.X) && oldKeyboardState.IsKeyUp(Keys.X))
             {
-                viewZoom = Math.Max(0.9f*viewZoom, 0.02f);
+                viewZoom = Math.Max(0.9f * viewZoom, 0.02f);
                 Resize(width, height);
             }
-                // Press 'r' to reset.
-            else if (newState.IsKeyDown(Keys.R) && oldState.IsKeyUp(Keys.R))
+            // Press 'r' to reset.
+            else if (newKeyboardState.IsKeyDown(Keys.R) && oldKeyboardState.IsKeyUp(Keys.R))
             {
-                test = entry.createFcn();
+                Restart();
             }
-                // Press space to launch a bomb.
-            else if ((newState.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space)) ||
+            // Press space to launch a bomb.
+            else if ((newKeyboardState.IsKeyDown(Keys.Space) && oldKeyboardState.IsKeyUp(Keys.Space)) ||
                      newGamePad.IsButtonDown(Buttons.B) && oldGamePad.IsButtonUp(Buttons.B))
             {
                 if (test != null)
@@ -142,13 +147,13 @@ namespace FarseerPhysics.TestBed
                     test.LaunchBomb();
                 }
             }
-            else if ((newState.IsKeyDown(Keys.P) && oldState.IsKeyUp(Keys.P)) ||
+            else if ((newKeyboardState.IsKeyDown(Keys.P) && oldKeyboardState.IsKeyUp(Keys.P)) ||
                      newGamePad.IsButtonDown(Buttons.Start) && oldGamePad.IsButtonUp(Buttons.Start))
             {
-                settings.pause = settings.pause > 0 ? 1 : (uint) 0;
+                settings.pause = settings.pause > 0 ? 1 : (uint)0;
             }
-                // Press I to prev test.
-            else if ((newState.IsKeyDown(Keys.I) && oldState.IsKeyUp(Keys.I)) ||
+            // Press I to prev test.
+            else if ((newKeyboardState.IsKeyDown(Keys.I) && oldKeyboardState.IsKeyUp(Keys.I)) ||
                      newGamePad.IsButtonDown(Buttons.LeftShoulder) && oldGamePad.IsButtonUp(Buttons.LeftShoulder))
             {
                 --testSelection;
@@ -157,8 +162,8 @@ namespace FarseerPhysics.TestBed
                     testSelection = testCount - 1;
                 }
             }
-                // Press O to next test.
-            else if ((newState.IsKeyDown(Keys.O) && oldState.IsKeyUp(Keys.O)) ||
+            // Press O to next test.
+            else if ((newKeyboardState.IsKeyDown(Keys.O) && oldKeyboardState.IsKeyUp(Keys.O)) ||
                      newGamePad.IsButtonDown(Buttons.RightShoulder) && oldGamePad.IsButtonUp(Buttons.RightShoulder))
             {
                 ++testSelection;
@@ -167,32 +172,32 @@ namespace FarseerPhysics.TestBed
                     testSelection = 0;
                 }
             }
-                // Press left to pan left.
-            else if (newState.IsKeyDown(Keys.Left) && oldState.IsKeyUp(Keys.Left))
+            // Press left to pan left.
+            else if (newKeyboardState.IsKeyDown(Keys.Left) && oldKeyboardState.IsKeyUp(Keys.Left))
             {
                 viewCenter.X -= 0.5f;
                 Resize(width, height);
             }
-                // Press right to pan right.
-            else if (newState.IsKeyDown(Keys.Right) && oldState.IsKeyUp(Keys.Right))
+            // Press right to pan right.
+            else if (newKeyboardState.IsKeyDown(Keys.Right) && oldKeyboardState.IsKeyUp(Keys.Right))
             {
                 viewCenter.X += 0.5f;
                 Resize(width, height);
             }
-                // Press down to pan down.
-            else if (newState.IsKeyDown(Keys.Down) && oldState.IsKeyUp(Keys.Down))
+            // Press down to pan down.
+            else if (newKeyboardState.IsKeyDown(Keys.Down) && oldKeyboardState.IsKeyUp(Keys.Down))
             {
                 viewCenter.Y -= 0.5f;
                 Resize(width, height);
             }
-                // Press up to pan up.
-            else if (newState.IsKeyDown(Keys.Up) && oldState.IsKeyUp(Keys.Up))
+            // Press up to pan up.
+            else if (newKeyboardState.IsKeyDown(Keys.Up) && oldKeyboardState.IsKeyUp(Keys.Up))
             {
                 viewCenter.Y += 0.5f;
                 Resize(width, height);
             }
-                // Press home to reset the view.
-            else if (newState.IsKeyDown(Keys.Home) && oldState.IsKeyUp(Keys.Home))
+            // Press home to reset the view.
+            else if (newKeyboardState.IsKeyDown(Keys.Home) && oldKeyboardState.IsKeyUp(Keys.Home))
             {
                 viewZoom = 1.0f;
                 viewCenter = new Vector2(0.0f, 20.0f);
@@ -202,13 +207,19 @@ namespace FarseerPhysics.TestBed
             {
                 if (test != null)
                 {
-                    test.Keyboard(newState, oldState);
+                    test.Keyboard(newKeyboardState, oldKeyboardState);
                 }
             }
 
+            MouseState newMouseState = Mouse.GetState();
+
+            if (test != null)
+                test.Mouse(newMouseState, oldMouseState);
+
             base.Update(gameTime);
 
-            oldState = newState;
+            oldKeyboardState = newKeyboardState;
+            oldMouseState = newMouseState;
             oldGamePad = newGamePad;
 
             et.EndTrace(TraceEvents.UpdateEventId);
@@ -241,6 +252,7 @@ namespace FarseerPhysics.TestBed
                 testIndex = testSelection;
                 entry = TestEntries.g_testEntries[testIndex];
                 test = entry.createFcn();
+                test.Game = this;
                 viewZoom = 1.0f;
                 viewCenter = new Vector2(0.0f, 20.0f);
                 Resize(width, height);
@@ -270,12 +282,12 @@ namespace FarseerPhysics.TestBed
             width = w;
             height = h;
 
-            int tw = GraphicsDevice.Viewport.Width;
-            int th = GraphicsDevice.Viewport.Height;
+            tw = GraphicsDevice.Viewport.Width;
+            th = GraphicsDevice.Viewport.Height;
 
-            float ratio = (float) tw/(float) th;
+            float ratio = (float)tw / (float)th;
 
-            Vector2 extents = new Vector2(ratio*25.0f, 25.0f);
+            Vector2 extents = new Vector2(ratio * 25.0f, 25.0f);
             extents *= viewZoom;
 
             Vector2 lower = viewCenter - extents;
@@ -287,89 +299,34 @@ namespace FarseerPhysics.TestBed
                                                                                                    1));
         }
 
-        /*
-        void Mouse(int button, int state, int x, int y)
+        public Vector2 ConvertScreenToWorld(int x, int y)
         {
-	        // Use the mouse to move things around.
-	        if (button == GLUT_LEFT_BUTTON)
-	        {
-		        int mod = glutGetModifiers();
-		        Vector2 p = ConvertScreenToWorld(x, y);
-		        if (state == GLUT_DOWN)
-		        {
-			        Vector2 p = ConvertScreenToWorld(x, y);
-			        if (mod == GLUT_ACTIVE_SHIFT)
-			        {
-				        test.ShiftMouseDown(p);
-			        }
-			        else
-			        {
-				        test.MouseDown(p);
-			        }
-		        }
-        		
-		        if (state == GLUT_UP)
-		        {
-			        test.MouseUp(p);
-		        }
-	        }
-	        else if (button == GLUT_RIGHT_BUTTON)
-	        {
-		        if (state == GLUT_DOWN)
-		        {	
-			        lastp = ConvertScreenToWorld(x, y);
-			        rMouseDown = true;
-		        }
+            float u = x / (float)tw;
+            float v = (th - y) / (float)th;
 
-		        if (state == GLUT_UP)
-		        {
-			        rMouseDown = false;
-		        }
-	        }
-        }
+            float ratio = (float)tw / (float)th;
+            Vector2 extents = new Vector2(ratio * 25.0f, 25.0f);
+            extents *= viewZoom;
 
-        void MouseMotion(int x, int y)
-        {
-	        Vector2 p = ConvertScreenToWorld(x, y);
-	        test.MouseMove(p);
-        	
-	        if (rMouseDown)
-	        {
-		        Vector2 diff = p - lastp;
-		        viewCenter.x -= diff.x;
-		        viewCenter.y -= diff.y;
-		        Resize(width, height);
-		        lastp = ConvertScreenToWorld(x, y);
-	        }
-        }
+            Vector2 lower = viewCenter - extents;
+            Vector2 upper = viewCenter + extents;
 
-        void MouseWheel(int wheel, int direction, int x, int y)
-        {
-	        B2_NOT_USED(wheel);
-	        B2_NOT_USED(x);
-	        B2_NOT_USED(y);
-	        if (direction > 0)
-	        {
-		        viewZoom /= 1.1f;
-	        }
-	        else
-	        {
-		        viewZoom *= 1.1f;
-	        }
-	        Resize(width, height);
+            Vector2 p = new Vector2();
+            p.X = (1.0f - u) * lower.X + u * upper.X;
+            p.Y = (1.0f - v) * lower.Y + v * upper.Y;
+            return p;
         }
-        */
 
         private void Restart()
         {
-            entry = TestEntries.g_testEntries[testIndex];
             test = entry.createFcn();
+            test.Game = this;
             Resize(width, height);
         }
 
         private void Pause()
         {
-            settings.pause = (uint) (settings.pause > 0 ? 0 : 1);
+            settings.pause = (uint)(settings.pause > 0 ? 0 : 1);
         }
 
         private void SingleStep()
@@ -389,12 +346,14 @@ namespace FarseerPhysics.TestBed
         private const float settingsHz = 60.0f;
         private float viewZoom = 1.0f;
         private Vector2 viewCenter = new Vector2(0.0f, 20.0f);
+        int tw, th;
 
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private BasicEffect simpleColorEffect;
         private SpriteFont spriteFont;
-        private KeyboardState oldState;
+        private KeyboardState oldKeyboardState;
+        private MouseState oldMouseState;
         private GamePadState oldGamePad;
         private IEventTrace et;
     }

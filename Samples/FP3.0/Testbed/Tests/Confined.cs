@@ -57,10 +57,9 @@ namespace FarseerPhysics.TestBed.Tests
                 ground.CreateFixture(shape, 0.0f);
             }
 
-            float radius = 0.5f;
-            CircleShape shape2 = new CircleShape();
-            shape2._p = Vector2.Zero;
-            shape2._radius = radius;
+            const float radius = 0.5f;
+            CircleShape shape2 = new CircleShape(radius);
+            shape2.Position = Vector2.Zero;
 
             FixtureDef fd = new FixtureDef();
             fd.shape = shape2;
@@ -80,15 +79,14 @@ namespace FarseerPhysics.TestBed.Tests
                 }
             }
 
-            _world.Gravity = new Vector2(0.0f, 0.0f);
+            _world.Gravity = Vector2.Zero;
         }
 
         private void CreateCircle()
         {
-            float radius = 0.5f;
-            CircleShape shape = new CircleShape();
-            shape._p = Vector2.Zero;
-            shape._radius = radius;
+            const float radius = 0.5f;
+            CircleShape shape = new CircleShape(radius);
+            shape.Position = Vector2.Zero;
 
             FixtureDef fd = new FixtureDef();
             fd.shape = shape;

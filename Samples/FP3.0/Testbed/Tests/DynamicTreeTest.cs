@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class DynamicTreeTest : Test
     {
-        private static int e_actorCount = 128;
+        private const int e_actorCount = 128;
 
         public DynamicTreeTest()
         {

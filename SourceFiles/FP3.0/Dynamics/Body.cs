@@ -45,9 +45,9 @@ namespace FarseerPhysics
         public BodyDef()
         {
             userData = null;
-            position = new Vector2(0.0f, 0.0f);
+            position = Vector2.Zero;
             angle = 0.0f;
-            linearVelocity = new Vector2(0.0f, 0.0f);
+            linearVelocity = Vector2.Zero;
             angularVelocity = 0.0f;
             linearDamping = 0.0f;
             angularDamping = 0.0f;
@@ -480,9 +480,9 @@ namespace FarseerPhysics
         public void GetMassData(out MassData massData)
         {
             massData = new MassData();
-            massData.mass = _mass;
-            massData.i = _I;
-            massData.center = _sweep.localCenter;
+            massData.Mass = _mass;
+            massData.Inertia = _I;
+            massData.Center = _sweep.localCenter;
         }
 
         /// Set the mass properties to override the mass properties of the fixtures.
@@ -508,7 +508,7 @@ namespace FarseerPhysics
             _I = 0.0f;
             _invI = 0.0f;
 
-            _mass = massData.mass;
+            _mass = massData.Mass;
 
             if (_mass <= 0.0f)
             {
@@ -518,15 +518,15 @@ namespace FarseerPhysics
             _invMass = 1.0f / _mass;
 
 
-            if (massData.i > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
+            if (massData.Inertia > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
             {
-                _I = massData.i - _mass * Vector2.Dot(massData.center, massData.center);
+                _I = massData.Inertia - _mass * Vector2.Dot(massData.Center, massData.Center);
                 _invI = 1.0f / _I;
             }
 
             // Move center of mass.
             Vector2 oldCenter = _sweep.c;
-            _sweep.localCenter = massData.center;
+            _sweep.localCenter = massData.Center;
             _sweep.c0 = _sweep.c = MathUtils.Multiply(ref _xf, _sweep.localCenter);
 
             // Update center of mass velocity.
@@ -564,9 +564,9 @@ namespace FarseerPhysics
 
                 MassData massData;
                 f.GetMassData(out massData);
-                _mass += massData.mass;
-                center += massData.mass * massData.center;
-                _I += massData.i;
+                _mass += massData.Mass;
+                center += massData.Mass * massData.Center;
+                _I += massData.Inertia;
             }
 
             // Compute center of mass.

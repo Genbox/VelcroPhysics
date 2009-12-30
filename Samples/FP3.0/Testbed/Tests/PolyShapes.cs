@@ -53,8 +53,8 @@ namespace FarseerPhysics.TestBed.Tests
                     {
                         CircleShape circle = (CircleShape) fixture.GetShape();
 
-                        Vector2 center = MathUtils.Multiply(ref xf, circle._p);
-                        float radius = circle._radius;
+                        Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
+                        float radius = circle.Radius;
 
                         _debugDraw.DrawCircle(center, radius, color);
                     }
@@ -63,13 +63,13 @@ namespace FarseerPhysics.TestBed.Tests
                 case ShapeType.Polygon:
                     {
                         PolygonShape poly = (PolygonShape) fixture.GetShape();
-                        int vertexCount = poly._vertexCount;
+                        int vertexCount = poly.VertexCount;
                         Debug.Assert(vertexCount <= FarseerPhysics.Settings.MaxPolygonVertices);
                         FixedArray8<Vector2> vertices = new FixedArray8<Vector2>();
 
                         for (int i = 0; i < vertexCount; ++i)
                         {
-                            vertices[i] = MathUtils.Multiply(ref xf, poly._vertices[i]);
+                            vertices[i] = MathUtils.Multiply(ref xf, poly.Vertices[i]);
                         }
 
                         _debugDraw.DrawPolygon(ref vertices, vertexCount, color);
@@ -104,7 +104,7 @@ namespace FarseerPhysics.TestBed.Tests
             return true;
         }
 
-        internal CircleShape _circle = new CircleShape();
+        internal CircleShape _circle;
         internal Transform _transform;
         internal DebugViewXNA.DebugViewXNA _debugDraw;
         internal int _count;
@@ -170,7 +170,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                _circle._radius = 0.5f;
+                _circle.Radius = 0.5f;
             }
 
             _bodyIndex = 0;
@@ -276,8 +276,8 @@ namespace FarseerPhysics.TestBed.Tests
             base.Step(settings);
 
             PolyShapesCallback callback = new PolyShapesCallback();
-            callback._circle._radius = 2.0f;
-            callback._circle._p = new Vector2(0.0f, 2.1f);
+            callback._circle.Radius = 2.0f;
+            callback._circle.Position = new Vector2(0.0f, 2.1f);
             callback._transform.SetIdentity();
             callback._debugDraw = _debugView;
 
@@ -287,7 +287,7 @@ namespace FarseerPhysics.TestBed.Tests
             _world.QueryAABB(callback.ReportFixture, ref aabb);
 
             Color color = new Color(0.4f, 0.7f, 0.8f);
-            _debugView.DrawCircle(callback._circle._p, callback._circle._radius, color);
+            _debugView.DrawCircle(callback._circle.Position, callback._circle.Radius, color);
 
             _debugView.DrawString(50, _textLine, "Press 1-5 to drop stuff");
             _textLine += 15;
@@ -305,6 +305,6 @@ namespace FarseerPhysics.TestBed.Tests
         private int _bodyIndex;
         private Body[] _bodies = new Body[k_maxBodies];
         private PolygonShape[] _polygons = new PolygonShape[4];
-        private CircleShape _circle = new CircleShape();
+        private CircleShape _circle;
     }
 }

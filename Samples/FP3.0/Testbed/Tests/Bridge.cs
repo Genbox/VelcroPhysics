@@ -101,8 +101,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             for (int i = 0; i < 3; ++i)
             {
-                CircleShape shape = new CircleShape();
-                shape._radius = 0.5f;
+                CircleShape shape = new CircleShape(0.5f);
 
                 FixtureDef fd = new FixtureDef();
                 fd.shape = shape;

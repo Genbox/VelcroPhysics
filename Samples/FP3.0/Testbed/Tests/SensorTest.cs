@@ -52,9 +52,8 @@ namespace FarseerPhysics.TestBed.Tests
 			    }
 #else
                 {
-                    CircleShape shape = new CircleShape();
-                    shape._radius = 5.0f;
-                    shape._p = new Vector2(0.0f, 10.0f);
+                    CircleShape shape = new CircleShape(5.0f);
+                    shape.Position = new Vector2(0.0f, 10.0f);
 
                     FixtureDef fd = new FixtureDef();
                     fd.shape = shape;
@@ -65,14 +64,13 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                CircleShape shape = new CircleShape();
-                shape._radius = 1.0f;
+                CircleShape shape = new CircleShape(1.0f);
 
                 for (int i = 0; i < e_count; ++i)
                 {
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(-10.0f + 3.0f*i, 20.0f);
+                    bd.position = new Vector2(-10.0f + 3.0f * i, 20.0f);
                     bd.userData = i;
 
                     _touching[i] = false;
@@ -91,12 +89,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (fixtureA == _sensor && fixtureB.GetBody().GetUserData() != null)
             {
-                _touching[(int) (fixtureB.GetBody().GetUserData())] = true;
+                _touching[(int)(fixtureB.GetBody().GetUserData())] = true;
             }
 
             if (fixtureB == _sensor && fixtureA.GetBody().GetUserData() != null)
             {
-                _touching[(int) (fixtureA.GetBody().GetUserData())] = true;
+                _touching[(int)(fixtureA.GetBody().GetUserData())] = true;
             }
         }
 
@@ -108,12 +106,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (fixtureA == _sensor && fixtureB.GetBody().GetUserData() != null)
             {
-                _touching[(int) (fixtureB.GetBody().GetUserData())] = false;
+                _touching[(int)(fixtureB.GetBody().GetUserData())] = false;
             }
 
             if (fixtureB == _sensor && fixtureA.GetBody().GetUserData() != null)
             {
-                _touching[(int) (fixtureA.GetBody().GetUserData())] = false;
+                _touching[(int)(fixtureA.GetBody().GetUserData())] = false;
             }
         }
 
@@ -133,19 +131,19 @@ namespace FarseerPhysics.TestBed.Tests
                 Body body = _bodies[i];
                 Body ground = _sensor.GetBody();
 
-                CircleShape circle = (CircleShape) _sensor.GetShape();
-                Vector2 center = ground.GetWorldPoint(circle._p);
+                CircleShape circle = (CircleShape)_sensor.GetShape();
+                Vector2 center = ground.GetWorldPoint(circle.Position);
 
                 Vector2 position = body.GetPosition();
 
                 Vector2 d = center - position;
-                if (d.LengthSquared() < FarseerPhysics.Settings.Epsilon*FarseerPhysics.Settings.Epsilon)
+                if (d.LengthSquared() < FarseerPhysics.Settings.Epsilon * FarseerPhysics.Settings.Epsilon)
                 {
                     continue;
                 }
 
                 d.Normalize();
-                Vector2 F = 100.0f*d;
+                Vector2 F = 100.0f * d;
                 body.ApplyForce(F, position);
             }
         }

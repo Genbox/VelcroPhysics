@@ -21,7 +21,6 @@
 */
 
 using System;
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -32,7 +31,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public ApplyForce()
         {
-            _world.Gravity = new Vector2(0.0f, 0.0f);
+            _world.Gravity = Vector2.Zero;
 
             float k_restitution = 0.4f;
 

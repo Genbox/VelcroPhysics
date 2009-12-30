@@ -225,11 +225,6 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Step(Framework.Settings settings)
         {
-            if (_stepCount == 10)
-            {
-                _stepCount += 0;
-            }
-
             base.Step(settings);
 
 

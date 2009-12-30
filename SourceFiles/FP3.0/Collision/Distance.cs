@@ -39,18 +39,18 @@ namespace FarseerPhysics
 	            case ShapeType.Circle:
 		        {
 			        CircleShape circle = (CircleShape)shape;
-                    _vertices[0] = circle._p;
+                    _vertices[0] = circle.Position;
 			        _count = 1;
-			        _radius = circle._radius;
+			        _radius = circle.Radius;
 		        }
 		        break;
 
                 case ShapeType.Polygon:
 		        {
 			        PolygonShape polygon = (PolygonShape)shape;
-			        _vertices = polygon._vertices;
-			        _count = polygon._vertexCount;
-			        _radius = polygon._radius;
+			        _vertices = polygon.Vertices;
+			        _count = polygon.VertexCount;
+			        _radius = polygon.Radius;
 		        }
 		        break;
 
