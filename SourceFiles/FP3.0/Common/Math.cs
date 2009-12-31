@@ -27,47 +27,109 @@ namespace FarseerPhysics
 {
     public static class MathUtils
     {
+        private static float tempFloat1;
+        private static float tempFloat2;
+        private static float tempFloat3;
+        private static Vector2 tempVector1;
+        private static Vector2 tempVector2;
+        private static Vector2 tempVector3;
+
         public static float Cross(Vector2 a, Vector2 b)
         {
-            return a.X * b.Y - a.Y * b.X;
+            Cross(ref a, ref b, out tempFloat1);
+            return tempFloat1;
         }
 
         public static Vector2 Cross(Vector2 a, float s)
         {
-            return new Vector2(s * a.Y, -s * a.X);
+            Cross(ref a, s, out tempVector1);
+            return tempVector1;
         }
 
         public static Vector2 Cross(float s, Vector2 a)
         {
-            return new Vector2(-s * a.Y, s * a.X);
+            Cross(s, ref a, out tempVector1);
+            return tempVector1;
+        }
+
+        //Ref versions
+        public static void Cross(ref Vector2 a, ref Vector2 b, out float c)
+        {
+            c = a.X * b.Y - a.Y * b.X;
+        }
+
+        public static void Cross(ref Vector2 a, float s, out Vector2 b)
+        {
+            b = new Vector2(s * a.Y, -s * a.X);
+        }
+
+        public static void Cross(float s, ref Vector2 a, out Vector2 b)
+        {
+            b = new Vector2(-s * a.Y, s * a.X);
         }
 
         public static Vector2 Abs(Vector2 v)
         {
-            return new Vector2(Math.Abs(v.X), Math.Abs(v.Y));
+            Abs(ref v, out tempVector1);
+            return tempVector1;
+        }
+
+        //Ref versions
+        public static void Abs(ref Vector2 v, out Vector2 r)
+        {
+            r = new Vector2(Math.Abs(v.X), Math.Abs(v.Y));
         }
 
         public static Vector2 Multiply(ref Mat22 A, Vector2 v)
         {
-            return new Vector2(A.col1.X * v.X + A.col2.X * v.Y, A.col1.Y * v.X + A.col2.Y * v.Y);
-        }
-
-        public static Vector2 MultiplyT(ref Mat22 A, Vector2 v)
-        {
-            return new Vector2(Vector2.Dot(v, A.col1), Vector2.Dot(v, A.col2));
+            Multiply(ref A, ref v, out tempVector1);
+            return tempVector1;
         }
 
         public static Vector2 Multiply(ref Transform T, Vector2 v)
         {
-            float x = T.Position.X + T.R.col1.X * v.X + T.R.col2.X * v.Y;
-            float y = T.Position.Y + T.R.col1.Y * v.X + T.R.col2.Y * v.Y;
+            Multiply(ref T, ref v, out tempVector1);
+            return tempVector1;
+        }
 
-            return new Vector2(x, y);
+        public static Vector2 MultiplyT(ref Mat22 A, Vector2 v)
+        {
+            MultiplyT(ref A, ref v, out tempVector1);
+            return tempVector1;
         }
 
         public static Vector2 MultiplyT(ref Transform T, Vector2 v)
         {
-            return MultiplyT(ref T.R, v - T.Position);
+            MultiplyT(ref T, ref v, out tempVector1);
+            return tempVector1;
+        }
+
+        //Ref versions
+        public static void Multiply(ref Mat22 A, ref Vector2 v, out Vector2 r)
+        {
+            r = new Vector2(A.col1.X * v.X + A.col2.X * v.Y, A.col1.Y * v.X + A.col2.Y * v.Y);
+        }
+
+        public static void Multiply(ref Transform T, ref Vector2 v, out Vector2 r)
+        {
+            float x = T.Position.X + T.R.col1.X * v.X + T.R.col2.X * v.Y;
+            float y = T.Position.Y + T.R.col1.Y * v.X + T.R.col2.Y * v.Y;
+
+            r = new Vector2(x, y);
+        }
+
+        public static void MultiplyT(ref Mat22 A, ref Vector2 v, out Vector2 r)
+        {
+            Vector2.Dot(ref v, ref A.col1, out tempFloat1);
+            Vector2.Dot(ref v, ref A.col2, out tempFloat2);
+
+            r = new Vector2(tempFloat1, tempFloat2);
+        }
+
+        public static void MultiplyT(ref Transform T, ref Vector2 v, out Vector2 r)
+        {
+            Vector2.Subtract(ref v, ref T.Position, out tempVector1);
+            MultiplyT(ref T.R, ref tempVector1, out r);
         }
 
         public static void Swap<T>(ref T a, ref T b)
@@ -93,28 +155,6 @@ namespace FarseerPhysics
         public static bool IsValid(this Vector2 x)
         {
             return IsValid(x.X) && IsValid(x.Y);
-        }
-
-        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
-        private struct FloatConverter
-        {
-            [System.Runtime.InteropServices.FieldOffset(0)]
-            public float x;
-            [System.Runtime.InteropServices.FieldOffset(0)]
-            public int i;
-        }
-
-
-        /// This is a approximate yet fast inverse square-root.
-        public static float InvSqrt(float x)
-        {
-            FloatConverter convert = new FloatConverter();
-            convert.x = x;
-            float xhalf = 0.5f * x;
-            convert.i = 0x5f3759df - (convert.i >> 1);
-            x = convert.x;
-            x = x * (1.5f - xhalf * x * x);
-            return x;
         }
 
         public static int Clamp(int a, int low, int high)
