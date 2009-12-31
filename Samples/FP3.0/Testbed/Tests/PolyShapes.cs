@@ -39,7 +39,7 @@ namespace FarseerPhysics.TestBed.Tests
     /// overlap a circle. Up to 4 overlapped fixtures will be highlighted with a yellow border.
     public class PolyShapesCallback
     {
-        private static int e_maxCount = 4;
+        private const int e_maxCount = 4;
 
         private void DrawFixture(Fixture fixture)
         {
@@ -234,23 +234,23 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
         {
-            if (state.IsKeyDown(Keys.NumPad1) && oldState.IsKeyUp(Keys.NumPad1))
+            if (state.IsKeyDown(Keys.D1) && oldState.IsKeyUp(Keys.D1))
             {
                 Create(0);
             }
-            if (state.IsKeyDown(Keys.NumPad2) && oldState.IsKeyUp(Keys.NumPad2))
+            if (state.IsKeyDown(Keys.D2) && oldState.IsKeyUp(Keys.D2))
             {
                 Create(1);
             }
-            if (state.IsKeyDown(Keys.NumPad3) && oldState.IsKeyUp(Keys.NumPad3))
+            if (state.IsKeyDown(Keys.D3) && oldState.IsKeyUp(Keys.D3))
             {
                 Create(2);
             }
-            if (state.IsKeyDown(Keys.NumPad4) && oldState.IsKeyUp(Keys.NumPad4))
+            if (state.IsKeyDown(Keys.D4) && oldState.IsKeyUp(Keys.D4))
             {
                 Create(3);
             }
-            if (state.IsKeyDown(Keys.NumPad5) && oldState.IsKeyUp(Keys.NumPad5))
+            if (state.IsKeyDown(Keys.D5) && oldState.IsKeyUp(Keys.D5))
             {
                 Create(4);
             }
