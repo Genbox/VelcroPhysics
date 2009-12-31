@@ -71,11 +71,11 @@ namespace FarseerPhysics
             output = new RayCastOutput();
 
             Vector2 position = transform.Position + MathUtils.Multiply(ref transform.R, Position);
-            Vector2 s = input.p1 - position;
+            Vector2 s = input.Point1 - position;
             float b = Vector2.Dot(s, s) - Radius2;
 
             // Solve quadratic equation.
-            Vector2 r = input.p2 - input.p1;
+            Vector2 r = input.Point2 - input.Point1;
             float c = Vector2.Dot(s, r);
             float rr = Vector2.Dot(r, r);
             float sigma = c * c - rr * b;
@@ -90,13 +90,13 @@ namespace FarseerPhysics
             float a = -(c + (float)Math.Sqrt(sigma));
 
             // Is the intersection point on the segment?
-            if (0.0f <= a && a <= input.maxFraction * rr)
+            if (0.0f <= a && a <= input.MaxFraction * rr)
             {
                 a /= rr;
-                output.fraction = a;
+                output.Fraction = a;
                 Vector2 norm = (s + a * r);
                 norm.Normalize();
-                output.normal = norm;
+                output.Normal = norm;
                 return true;
             }
 
@@ -106,8 +106,8 @@ namespace FarseerPhysics
         public override void ComputeAABB(out AABB aabb, ref Transform transform)
         {
             Vector2 p = transform.Position + MathUtils.Multiply(ref transform.R, Position);
-            aabb.lowerBound = new Vector2(p.X - Radius, p.Y - Radius);
-            aabb.upperBound = new Vector2(p.X + Radius, p.Y + Radius);
+            aabb.LowerBound = new Vector2(p.X - Radius, p.Y - Radius);
+            aabb.UpperBound = new Vector2(p.X + Radius, p.Y + Radius);
         }
 
         public override void ComputeMass(out MassData massData, float density)

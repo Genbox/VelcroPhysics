@@ -51,14 +51,14 @@ namespace FarseerPhysics.TestBed.Tests
             _stepCount = 0;
 
             float h = _worldExtent;
-            _queryAABB.lowerBound = new Vector2(-3.0f, -4.0f + h);
-            _queryAABB.upperBound = new Vector2(5.0f, 6.0f + h);
+            _queryAABB.LowerBound = new Vector2(-3.0f, -4.0f + h);
+            _queryAABB.UpperBound = new Vector2(5.0f, 6.0f + h);
 
-            _rayCastInput.p1 = new Vector2(-5.0f, 5.0f + h);
-            _rayCastInput.p2 = new Vector2(7.0f, -4.0f + h);
+            _rayCastInput.Point1 = new Vector2(-5.0f, 5.0f + h);
+            _rayCastInput.Point2 = new Vector2(7.0f, -4.0f + h);
             //_rayCastInput.p1 = new Vector2(0.0f, 2.0f + h);
             //_rayCastInput.p2 = new Vector2(0.0f, -2.0f + h);
-            _rayCastInput.maxFraction = 1.0f;
+            _rayCastInput.MaxFraction = 1.0f;
 
             _automated = false;
         }
@@ -116,17 +116,17 @@ namespace FarseerPhysics.TestBed.Tests
             Color c = new Color(0.7f, 0.7f, 0.7f);
             _debugView.DrawAABB(ref _queryAABB, c);
 
-            _debugView.DrawSegment(_rayCastInput.p1, _rayCastInput.p2, c);
+            _debugView.DrawSegment(_rayCastInput.Point1, _rayCastInput.Point2, c);
 
             Color c1 = new Color(0.2f, 0.9f, 0.2f);
             Color c2 = new Color(0.9f, 0.2f, 0.2f);
-            _debugView.DrawPoint(_rayCastInput.p1, 6.0f, c1);
-            _debugView.DrawPoint(_rayCastInput.p2, 6.0f, c2);
+            _debugView.DrawPoint(_rayCastInput.Point1, 6.0f, c1);
+            _debugView.DrawPoint(_rayCastInput.Point2, 6.0f, c2);
 
             if (_rayActor != null)
             {
                 Color cr = new Color(0.2f, 0.2f, 0.9f);
-                Vector2 p = _rayCastInput.p1 + _rayActor.fraction*(_rayCastInput.p2 - _rayCastInput.p1);
+                Vector2 p = _rayCastInput.Point1 + _rayActor.fraction*(_rayCastInput.Point2 - _rayCastInput.Point1);
                 _debugView.DrawPoint(p, 6.0f, cr);
             }
 
@@ -170,13 +170,13 @@ namespace FarseerPhysics.TestBed.Tests
             if (hit)
             {
                 _rayCastOutput = output;
-                actor.fraction = output.fraction;
+                actor.fraction = output.Fraction;
                 _rayActor = actor;
 
-                return output.fraction;
+                return output.Fraction;
             }
 
-            return input.maxFraction;
+            return input.MaxFraction;
         }
 
         private class Actor
@@ -194,9 +194,9 @@ namespace FarseerPhysics.TestBed.Tests
             Vector2 w = new Vector2(2.0f*_proxyExtent, 2.0f*_proxyExtent);
             //aabb.lowerBound.x = -_proxyExtent;
             //aabb.lowerBound.y = -_proxyExtent + _worldExtent;
-            aabb.lowerBound.X = Rand.RandomFloat(-_worldExtent, _worldExtent);
-            aabb.lowerBound.Y = Rand.RandomFloat(0.0f, 2.0f*_worldExtent);
-            aabb.upperBound = aabb.lowerBound + w;
+            aabb.LowerBound.X = Rand.RandomFloat(-_worldExtent, _worldExtent);
+            aabb.LowerBound.Y = Rand.RandomFloat(0.0f, 2.0f*_worldExtent);
+            aabb.UpperBound = aabb.LowerBound + w;
         }
 
         private void MoveAABB(ref AABB aabb)
@@ -206,18 +206,18 @@ namespace FarseerPhysics.TestBed.Tests
             d.Y = Rand.RandomFloat(-0.5f, 0.5f);
             //d.x = 2.0f;
             //d.y = 0.0f;
-            aabb.lowerBound += d;
-            aabb.upperBound += d;
+            aabb.LowerBound += d;
+            aabb.UpperBound += d;
 
-            Vector2 c0 = 0.5f*(aabb.lowerBound + aabb.upperBound);
+            Vector2 c0 = 0.5f*(aabb.LowerBound + aabb.UpperBound);
             Vector2 min;
             min = new Vector2(-_worldExtent, 0.0f);
             Vector2 max;
             max = new Vector2(_worldExtent, 2.0f*_worldExtent);
             Vector2 c = Vector2.Clamp(c0, min, max);
 
-            aabb.lowerBound += c - c0;
-            aabb.upperBound += c - c0;
+            aabb.LowerBound += c - c0;
+            aabb.UpperBound += c - c0;
         }
 
         private void CreateProxy()
@@ -330,7 +330,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     bruteActor = _actors[i];
                     bruteOutput = output;
-                    input.maxFraction = output.fraction;
+                    input.MaxFraction = output.Fraction;
                 }
             }
         }

@@ -81,7 +81,7 @@ namespace FarseerPhysics
                 cc.bodyA = bodyA;
                 cc.bodyB = bodyB;
                 cc.manifold = manifold;
-                cc.normal = worldManifold._normal;
+                cc.normal = worldManifold.Normal;
                 cc.pointCount = manifold._pointCount;
                 cc.friction = friction;
                 cc.restitution = restitution;
@@ -101,8 +101,8 @@ namespace FarseerPhysics
 
                     ccp.localPoint = cp.LocalPoint;
 
-                    ccp.rA = worldManifold._points[j] - bodyA._sweep.c;
-                    ccp.rB = worldManifold._points[j] - bodyB._sweep.c;
+                    ccp.rA = worldManifold.Points[j] - bodyA._sweep.c;
+                    ccp.rB = worldManifold.Points[j] - bodyB._sweep.c;
 
 #if MATH_OVERLOADS
 			        float rnA = MathUtils.Cross(ccp.rA, cc.normal);

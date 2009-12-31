@@ -86,8 +86,8 @@ namespace FarseerPhysics
 
 	        // Fatten the aabb.
             Vector2 r = new Vector2(Settings.AabbExtension, Settings.AabbExtension);
-	        _nodes[proxyId].aabb.lowerBound = aabb.lowerBound - r;
-	        _nodes[proxyId].aabb.upperBound = aabb.upperBound + r;
+	        _nodes[proxyId].aabb.LowerBound = aabb.LowerBound - r;
+	        _nodes[proxyId].aabb.UpperBound = aabb.UpperBound + r;
 	        _nodes[proxyId].userData = userData;
 
 	        InsertLeaf(proxyId);
@@ -126,28 +126,28 @@ namespace FarseerPhysics
             AABB b = aabb;
 
 	        Vector2 r = new Vector2(Settings.AabbExtension, Settings.AabbExtension);
-            b.lowerBound = b.lowerBound - r;
-            b.upperBound = b.upperBound + r;
+            b.LowerBound = b.LowerBound - r;
+            b.UpperBound = b.UpperBound + r;
 
             // Predict AABB displacement.
             Vector2 d = Settings.AabbMultiplier * displacement;
 
             if (d.X < 0.0f)
             {
-                b.lowerBound.X += d.X;
+                b.LowerBound.X += d.X;
             }
             else
             {
-                b.upperBound.X += d.X;
+                b.UpperBound.X += d.X;
             }
 
             if (d.Y < 0.0f)
             {
-                b.lowerBound.Y += d.Y;
+                b.LowerBound.Y += d.Y;
             }
             else
             {
-                b.upperBound.Y += d.Y;
+                b.UpperBound.Y += d.Y;
             }
 
             _nodes[proxyId].aabb = b;
@@ -252,8 +252,8 @@ namespace FarseerPhysics
 	    /// @param callback a callback class that is called for each proxy that is hit by the ray.
 	    public void RayCast(RayCastCallback callback, ref RayCastInput input) 
         {
-	        Vector2 p1 = input.p1;
-	        Vector2 p2 = input.p2;
+	        Vector2 p1 = input.Point1;
+	        Vector2 p2 = input.Point2;
 	        Vector2 r = p2 - p1;
 	        Debug.Assert(r.LengthSquared() > 0.0f);
 	        r.Normalize();
@@ -265,14 +265,14 @@ namespace FarseerPhysics
 	        // Separating axis for segment (Gino, p80).
 	        // |dot(v, p1 - c)| > dot(|v|, h)
 
-	        float maxFraction = input.maxFraction;
+	        float maxFraction = input.MaxFraction;
 
 	        // Build a bounding box for the segment.
 	        AABB segmentAABB = new AABB();
 	        {
 		        Vector2 t = p1 + maxFraction * (p2 - p1);
-		        segmentAABB.lowerBound = Vector2.Min(p1, t);
-		        segmentAABB.upperBound = Vector2.Max(p1, t);
+		        segmentAABB.LowerBound = Vector2.Min(p1, t);
+		        segmentAABB.UpperBound = Vector2.Max(p1, t);
 	        }
 
 	        int count = 0;
@@ -306,9 +306,9 @@ namespace FarseerPhysics
 		        if (node.IsLeaf())
 		        {
 			        RayCastInput subInput;
-			        subInput.p1 = input.p1;
-			        subInput.p2 = input.p2;
-			        subInput.maxFraction = maxFraction;
+			        subInput.Point1 = input.Point1;
+			        subInput.Point2 = input.Point2;
+			        subInput.MaxFraction = maxFraction;
 
 		        	maxFraction = callback(ref subInput, nodeId);
 
@@ -320,8 +320,8 @@ namespace FarseerPhysics
 			        // Update segment bounding box.
 			        {
 				        Vector2 t = p1 + maxFraction * (p2 - p1);
-				        segmentAABB.lowerBound = Vector2.Min(p1, t);
-                        segmentAABB.upperBound = Vector2.Max(p1, t);
+				        segmentAABB.LowerBound = Vector2.Min(p1, t);
+                        segmentAABB.UpperBound = Vector2.Max(p1, t);
 			        }
 		        }
 		        else

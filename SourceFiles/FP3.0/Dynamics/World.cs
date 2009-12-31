@@ -425,9 +425,9 @@ namespace FarseerPhysics
         public void RayCast(WorldRayCastCallback callback, Vector2 point1, Vector2 point2)
         {
             RayCastInput input = new RayCastInput();
-            input.maxFraction = 1.0f;
-            input.p1 = point1;
-            input.p2 = point2;
+            input.MaxFraction = 1.0f;
+            input.Point1 = point1;
+            input.Point2 = point2;
 
             _rayCastCallback = callback;
             _contactManager._broadPhase.RayCast(_rayCastCallbackWrapper, ref input);
@@ -446,12 +446,12 @@ namespace FarseerPhysics
 
             if (hit)
             {
-                float fraction = output.fraction;
-                Vector2 point = (1.0f - fraction) * input.p1 + fraction * input.p2;
-                return _rayCastCallback(fixture, point, output.normal, fraction);
+                float fraction = output.Fraction;
+                Vector2 point = (1.0f - fraction) * input.Point1 + fraction * input.Point2;
+                return _rayCastCallback(fixture, point, output.Normal, fraction);
             }
 
-            return input.maxFraction;
+            return input.MaxFraction;
         }
 
         /// Get the world body list. With the returned body, use Body.GetNext to get

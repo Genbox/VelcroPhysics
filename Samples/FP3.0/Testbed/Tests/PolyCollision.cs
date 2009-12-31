@@ -80,7 +80,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             for (int i = 0; i < manifold._pointCount; ++i)
             {
-                _debugView.DrawPoint(worldManifold._points[i], 0.5f, new Color(0.9f, 0.3f, 0.3f));
+                _debugView.DrawPoint(worldManifold.Points[i], 0.5f, new Color(0.9f, 0.3f, 0.3f));
             }
         }
 
