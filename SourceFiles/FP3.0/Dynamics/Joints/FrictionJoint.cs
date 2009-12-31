@@ -35,46 +35,46 @@ namespace FarseerPhysics
     // Cdot = w2 - w1
     // J = [0 0 -1 0 0 1]
     // K = invI1 + invI2
-    
+
     /// Friction joint definition.
     public class FrictionJointDef : JointDef
     {
         public FrictionJointDef()
-	    {
-		    type = JointType.Friction;
-	    }
+        {
+            type = JointType.Friction;
+        }
 
-	    /// The local anchor point relative to body1's origin.
-	    public Vector2 localAnchorA;
+        /// The local anchor point relative to body1's origin.
+        public Vector2 localAnchorA;
 
-	    /// The local anchor point relative to body2's origin.
-	    public Vector2 localAnchorB;
+        /// The local anchor point relative to body2's origin.
+        public Vector2 localAnchorB;
 
         /// The maximum friction force in N.
-	    public float maxForce;
+        public float maxForce;
 
         /// The maximum friction torque in N-m.
-	    public float maxTorque;
-    };
+        public float maxTorque;
+    }
 
     /// Friction joint. This is used for top-down friction.
     /// It provides 2D translational friction and angular friction.
     public class FrictionJoint : Joint
     {
-	    public override Vector2 GetAnchorA()
+        public override Vector2 GetAnchorA()
         {
             return _bodyA.GetWorldPoint(_localAnchor1);
         }
 
         public override Vector2 GetAnchorB()
         {
-	        return _bodyB.GetWorldPoint(_localAnchor2);
+            return _bodyB.GetWorldPoint(_localAnchor2);
         }
 
         public override Vector2 GetReactionForce(float inv_dt)
         {
-	        Vector2 F = (inv_dt * _linearImpulse);
-	        return F;
+            Vector2 F = (inv_dt * _linearImpulse);
+            return F;
         }
 
         public override float GetReactionTorque(float inv_dt)
@@ -88,9 +88,9 @@ namespace FarseerPhysics
             _maxForce = force;
         }
 
-        public float GetMaxForce() 
-        { 
-            return _maxForce; 
+        public float GetMaxForce()
+        {
+            return _maxForce;
         }
 
         public void SetMaxTorque(float torque)
@@ -103,89 +103,89 @@ namespace FarseerPhysics
             return _maxTorque;
         }
 
-	    internal FrictionJoint(FrictionJointDef def)
+        internal FrictionJoint(FrictionJointDef def)
             : base(def)
         {
-	        _localAnchor1 = def.localAnchorA;
-	        _localAnchor2 = def.localAnchorB;
+            _localAnchor1 = def.localAnchorA;
+            _localAnchor2 = def.localAnchorB;
             _maxForce = def.maxForce;
             _maxTorque = def.maxTorque;
         }
 
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
-	        Body bA = _bodyA;
-	        Body bB = _bodyB;
+            Body bA = _bodyA;
+            Body bB = _bodyB;
 
             Transform xfA, xfB;
             bA.GetTransform(out xfA);
             bB.GetTransform(out xfB);
 
-	        // Compute the effective mass matrix.
+            // Compute the effective mass matrix.
             Vector2 rA = MathUtils.Multiply(ref xfA.R, _localAnchor1 - bA.GetLocalCenter());
             Vector2 rB = MathUtils.Multiply(ref xfB.R, _localAnchor2 - bB.GetLocalCenter());
-	        
+
             // J = [-I -r1_skew I r2_skew]
-	        //     [ 0       -1 0       1]
-	        // r_skew = [-ry; rx]
+            //     [ 0       -1 0       1]
+            // r_skew = [-ry; rx]
 
-	        // Matlab
-	        // K = [ mA+r1y^2*iA+mB+r2y^2*iB,  -r1y*iA*r1x-r2y*iB*r2x,          -r1y*iA-r2y*iB]
-	        //     [  -r1y*iA*r1x-r2y*iB*r2x, mA+r1x^2*iA+mB+r2x^2*iB,           r1x*iA+r2x*iB]
-	        //     [          -r1y*iA-r2y*iB,           r1x*iA+r2x*iB,                   iA+iB]
+            // Matlab
+            // K = [ mA+r1y^2*iA+mB+r2y^2*iB,  -r1y*iA*r1x-r2y*iB*r2x,          -r1y*iA-r2y*iB]
+            //     [  -r1y*iA*r1x-r2y*iB*r2x, mA+r1x^2*iA+mB+r2x^2*iB,           r1x*iA+r2x*iB]
+            //     [          -r1y*iA-r2y*iB,           r1x*iA+r2x*iB,                   iA+iB]
 
-	        float mA = bA._invMass, mB = bB._invMass;
-	        float iA = bA._invI, iB = bB._invI;
+            float mA = bA._invMass, mB = bB._invMass;
+            float iA = bA._invI, iB = bB._invI;
 
-	        Mat22 K1 = new Mat22();
-	        K1.col1.X = mA + mB;	K1.col2.X = 0.0f;
-	        K1.col1.Y = 0.0f;		K1.col2.Y = mA + mB;
+            Mat22 K1 = new Mat22();
+            K1.col1.X = mA + mB; K1.col2.X = 0.0f;
+            K1.col1.Y = 0.0f; K1.col2.Y = mA + mB;
 
             Mat22 K2 = new Mat22();
-	        K2.col1.X =  iA * rA.Y * rA.Y;	K2.col2.X = -iA * rA.X * rA.Y;
-	        K2.col1.Y = -iA * rA.X * rA.Y;	K2.col2.Y =  iA * rA.X * rA.X;
+            K2.col1.X = iA * rA.Y * rA.Y; K2.col2.X = -iA * rA.X * rA.Y;
+            K2.col1.Y = -iA * rA.X * rA.Y; K2.col2.Y = iA * rA.X * rA.X;
 
             Mat22 K3 = new Mat22();
-	        K3.col1.X =  iB * rB.Y * rB.Y;	K3.col2.X = -iB * rB.X * rB.Y;
-	        K3.col1.Y = -iB * rB.X * rB.Y;	K3.col2.Y =  iB * rB.X * rB.X;
+            K3.col1.X = iB * rB.Y * rB.Y; K3.col2.X = -iB * rB.X * rB.Y;
+            K3.col1.Y = -iB * rB.X * rB.Y; K3.col2.Y = iB * rB.X * rB.X;
 
             Mat22 K12;
             Mat22.Add(ref K1, ref K2, out K12);
             Mat22 K;
             Mat22.Add(ref K12, ref K3, out K);
-	        _linearMass = K.GetInverse();
+            _linearMass = K.GetInverse();
 
-	        _angularMass = iA + iB;
-	        if (_angularMass > 0.0f)
-	        {
-		        _angularMass = 1.0f / _angularMass;
-	        }
+            _angularMass = iA + iB;
+            if (_angularMass > 0.0f)
+            {
+                _angularMass = 1.0f / _angularMass;
+            }
 
-	        if (step.warmStarting)
-	        {
-		        // Scale impulses to support a variable time step.
-		        _linearImpulse *= step.dtRatio;
-		        _angularImpulse *= step.dtRatio;
+            if (step.warmStarting)
+            {
+                // Scale impulses to support a variable time step.
+                _linearImpulse *= step.dtRatio;
+                _angularImpulse *= step.dtRatio;
 
-		        Vector2 P = new Vector2(_linearImpulse.X, _linearImpulse.Y);
+                Vector2 P = new Vector2(_linearImpulse.X, _linearImpulse.Y);
 
-		        bA._linearVelocity -= mA * P;
-		        bA._angularVelocity -= iA * (MathUtils.Cross(rA, P) + _angularImpulse);
+                bA._linearVelocity -= mA * P;
+                bA._angularVelocity -= iA * (MathUtils.Cross(rA, P) + _angularImpulse);
 
-		        bB._linearVelocity += mB * P;
-		        bB._angularVelocity += iB * (MathUtils.Cross(rB, P) + _angularImpulse);
-	        }
-	        else
-	        {
+                bB._linearVelocity += mB * P;
+                bB._angularVelocity += iB * (MathUtils.Cross(rB, P) + _angularImpulse);
+            }
+            else
+            {
                 _linearImpulse = Vector2.Zero;
-		        _angularImpulse = 0.0f;
-	        }
+                _angularImpulse = 0.0f;
+            }
         }
 
         internal override void SolveVelocityConstraints(ref TimeStep step)
         {
-	        Body bA = _bodyA;
-	        Body bB = _bodyB;
+            Body bA = _bodyA;
+            Body bB = _bodyB;
 
             Vector2 vA = bA._linearVelocity;
             float wA = bA._angularVelocity;
@@ -252,13 +252,13 @@ namespace FarseerPhysics
             return true;
         }
 
-	    internal Vector2 _localAnchor1;
-	    internal Vector2 _localAnchor2;
+        internal Vector2 _localAnchor1;
+        internal Vector2 _localAnchor2;
         internal Mat22 _linearMass;
         internal float _angularMass;
-	    internal Vector2 _linearImpulse;
-	    internal float _angularImpulse;
-	    internal float _maxForce;
-	    internal float _maxTorque;
-    };
+        internal Vector2 _linearImpulse;
+        internal float _angularImpulse;
+        internal float _maxForce;
+        internal float _maxTorque;
+    }
 }

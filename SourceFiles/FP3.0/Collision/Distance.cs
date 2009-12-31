@@ -30,39 +30,39 @@ namespace FarseerPhysics
     /// It encapsulates any shape.
     public struct DistanceProxy
     {
-	    /// Initialize the proxy using the given shape. The shape
-	    /// must remain in scope while the proxy is in use.
-	    public void Set(Shape shape)
+        /// Initialize the proxy using the given shape. The shape
+        /// must remain in scope while the proxy is in use.
+        public void Set(Shape shape)
         {
             switch (shape.ShapeType)
-	        {
-	            case ShapeType.Circle:
-		        {
-			        CircleShape circle = (CircleShape)shape;
-                    _vertices[0] = circle.Position;
-			        _count = 1;
-			        _radius = circle.Radius;
-		        }
-		        break;
+            {
+                case ShapeType.Circle:
+                    {
+                        CircleShape circle = (CircleShape)shape;
+                        _vertices[0] = circle.Position;
+                        _count = 1;
+                        _radius = circle.Radius;
+                    }
+                    break;
 
                 case ShapeType.Polygon:
-		        {
-			        PolygonShape polygon = (PolygonShape)shape;
-			        _vertices = polygon.Vertices;
-			        _count = polygon.VertexCount;
-			        _radius = polygon.Radius;
-		        }
-		        break;
+                    {
+                        PolygonShape polygon = (PolygonShape)shape;
+                        _vertices = polygon.Vertices;
+                        _count = polygon.VertexCount;
+                        _radius = polygon.Radius;
+                    }
+                    break;
 
-	        default:
-		        Debug.Assert(false);
-                break;
-	        }
+                default:
+                    Debug.Assert(false);
+                    break;
+            }
 
         }
 
-	    /// Get the supporting vertex index in the given direction.
-	    public int GetSupport(Vector2 d)
+        /// Get the supporting vertex index in the given direction.
+        public int GetSupport(Vector2 d)
         {
             int bestIndex = 0;
             float bestValue = Vector2.Dot(_vertices[0], d);
@@ -79,8 +79,8 @@ namespace FarseerPhysics
             return bestIndex;
         }
 
-	    /// Get the supporting vertex in the given direction.
-	    public Vector2 GetSupportVertex(Vector2 d)
+        /// Get the supporting vertex in the given direction.
+        public Vector2 GetSupportVertex(Vector2 d)
         {
             int bestIndex = 0;
             float bestValue = Vector2.Dot(_vertices[0], d);
@@ -94,11 +94,11 @@ namespace FarseerPhysics
                 }
             }
 
-            return _vertices[bestIndex];            
+            return _vertices[bestIndex];
         }
 
-	    /// Get a vertex by index. Used by b2Distance.
-	    public Vector2 GetVertex(int index)
+        /// Get a vertex by index. Used by b2Distance.
+        public Vector2 GetVertex(int index)
         {
             Debug.Assert(0 <= index && index < _count);
             return _vertices[index];
@@ -106,18 +106,18 @@ namespace FarseerPhysics
 
         private FixedArray8<Vector2> _vertices;
         private int _count;
-	    internal float _radius;
+        internal float _radius;
     }
 
     /// Used to warm start ComputeDistance.
     /// Set count to zero on first call.
     public struct SimplexCache
     {
-	    public float metric;		///< length or area
+        public float metric;		///< length or area
         public UInt16 count;
         public FixedArray3<byte> indexA;	///< vertices on shape A
         public FixedArray3<byte> indexB;	///< vertices on shape B
-    };
+    }
 
     /// Input for ComputeDistance.
     /// You have to option to use the shape radii
@@ -129,7 +129,7 @@ namespace FarseerPhysics
         public Transform transformA;
         public Transform transformB;
         public bool useRadii;
-    };
+    }
 
     /// Output for ComputeDistance.
     public struct DistanceOutput
@@ -138,7 +138,7 @@ namespace FarseerPhysics
         public Vector2 pointB;		///< closest point on shapeB
         public float distance;
         public int iterations;	///< number of GJK iterations used
-    };
+    }
 
     internal struct SimplexVertex
     {
@@ -148,174 +148,174 @@ namespace FarseerPhysics
         public float a;		// barycentric coordinate for closest point
         public int indexA;	// wA index
         public int indexB;	// wB index
-    };
+    }
 
     internal struct Simplex
     {
-	    internal void ReadCache(ref SimplexCache cache,
-					    ref DistanceProxy proxyA, ref Transform transformA,
+        internal void ReadCache(ref SimplexCache cache,
+                        ref DistanceProxy proxyA, ref Transform transformA,
                         ref DistanceProxy proxyB, ref Transform transformB)
-	    {
-		    Debug.Assert(0 <= cache.count && cache.count <= 3);
-    		
-		    // Copy data from cache.
-		    _count = cache.count;
-		    for (int i = 0; i < _count; ++i)
-		    {
-			    SimplexVertex v = _v[i];
-			    v.indexA = cache.indexA[i];
-			    v.indexB = cache.indexB[i];
-			    Vector2 wALocal = proxyA.GetVertex(v.indexA);
+        {
+            Debug.Assert(0 <= cache.count && cache.count <= 3);
+
+            // Copy data from cache.
+            _count = cache.count;
+            for (int i = 0; i < _count; ++i)
+            {
+                SimplexVertex v = _v[i];
+                v.indexA = cache.indexA[i];
+                v.indexB = cache.indexB[i];
+                Vector2 wALocal = proxyA.GetVertex(v.indexA);
                 Vector2 wBLocal = proxyB.GetVertex(v.indexB);
-			    v.wA = MathUtils.Multiply(ref transformA, wALocal);
-			    v.wB = MathUtils.Multiply(ref transformB, wBLocal);
-			    v.w = v.wB - v.wA;
-			    v.a = 0.0f;
+                v.wA = MathUtils.Multiply(ref transformA, wALocal);
+                v.wB = MathUtils.Multiply(ref transformB, wBLocal);
+                v.w = v.wB - v.wA;
+                v.a = 0.0f;
                 _v[i] = v;
-		    }
+            }
 
-		    // Compute the new simplex metric, if it is substantially different than
-		    // old metric then flush the simplex.
-		    if (_count > 1)
-		    {
-			    float metric1 = cache.metric;
-			    float metric2 = GetMetric();
-			    if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < Settings.Epsilon)
-			    {
-				    // Reset the simplex.
-				    _count = 0;
-			    }
-		    }
+            // Compute the new simplex metric, if it is substantially different than
+            // old metric then flush the simplex.
+            if (_count > 1)
+            {
+                float metric1 = cache.metric;
+                float metric2 = GetMetric();
+                if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < Settings.Epsilon)
+                {
+                    // Reset the simplex.
+                    _count = 0;
+                }
+            }
 
-		    // If the cache is empty or invalid ...
-		    if (_count == 0)
-		    {
-			    SimplexVertex v = _v[0];
-			    v.indexA = 0;
-			    v.indexB = 0;
-			    Vector2 wALocal = proxyA.GetVertex(0);
+            // If the cache is empty or invalid ...
+            if (_count == 0)
+            {
+                SimplexVertex v = _v[0];
+                v.indexA = 0;
+                v.indexB = 0;
+                Vector2 wALocal = proxyA.GetVertex(0);
                 Vector2 wBLocal = proxyB.GetVertex(0);
-			    v.wA = MathUtils.Multiply(ref transformA, wALocal);
-			    v.wB = MathUtils.Multiply(ref transformB, wBLocal);
-			    v.w = v.wB - v.wA;
+                v.wA = MathUtils.Multiply(ref transformA, wALocal);
+                v.wB = MathUtils.Multiply(ref transformB, wBLocal);
+                v.w = v.wB - v.wA;
                 _v[0] = v;
-			    _count = 1;
-		    }
-	    }
+                _count = 1;
+            }
+        }
 
-        internal void WriteCache(ref SimplexCache cache) 
-	    {
-		    cache.metric = GetMetric();
-		    cache.count = (UInt16)_count;
-		    for (int i = 0; i < _count; ++i)
-		    {
+        internal void WriteCache(ref SimplexCache cache)
+        {
+            cache.metric = GetMetric();
+            cache.count = (UInt16)_count;
+            for (int i = 0; i < _count; ++i)
+            {
                 cache.indexA[i] = (byte)(_v[i].indexA);
                 cache.indexB[i] = (byte)(_v[i].indexB);
-		    }
-	    }
+            }
+        }
 
-        internal Vector2 GetSearchDirection() 
-	    {
-		    switch (_count)
-		    {
-		    case 1:
-			    return -_v[0].w;
+        internal Vector2 GetSearchDirection()
+        {
+            switch (_count)
+            {
+                case 1:
+                    return -_v[0].w;
 
-		    case 2:
-			    {
-				    Vector2 e12 = _v[1].w - _v[0].w;
-				    float sgn = MathUtils.Cross(e12, -_v[0].w);
-				    if (sgn > 0.0f)
-				    {
-					    // Origin is left of e12.
-					    return MathUtils.Cross(1.0f, e12);
-				    }
-			    
-                    // Origin is right of e12.
-			        return MathUtils.Cross(e12, 1.0f);
-			    }
+                case 2:
+                    {
+                        Vector2 e12 = _v[1].w - _v[0].w;
+                        float sgn = MathUtils.Cross(e12, -_v[0].w);
+                        if (sgn > 0.0f)
+                        {
+                            // Origin is left of e12.
+                            return MathUtils.Cross(1.0f, e12);
+                        }
 
-		    default:
-			    Debug.Assert(false);
-			    return Vector2.Zero;
-		    }
-	    }
+                        // Origin is right of e12.
+                        return MathUtils.Cross(e12, 1.0f);
+                    }
 
-        internal Vector2 GetClosestPoint() 
-	    {
-		    switch (_count)
-		    {
-		    case 0:
-			    Debug.Assert(false);
-			    return Vector2.Zero;
+                default:
+                    Debug.Assert(false);
+                    return Vector2.Zero;
+            }
+        }
 
-		    case 1:
-			    return _v[0].w;
+        internal Vector2 GetClosestPoint()
+        {
+            switch (_count)
+            {
+                case 0:
+                    Debug.Assert(false);
+                    return Vector2.Zero;
 
-		    case 2:
-			    return _v[0].a * _v[0].w + _v[1].a * _v[1].w;
+                case 1:
+                    return _v[0].w;
 
-		    case 3:
-			    return Vector2.Zero;
+                case 2:
+                    return _v[0].a * _v[0].w + _v[1].a * _v[1].w;
 
-		    default:
-			    Debug.Assert(false);
-			    return Vector2.Zero;
-		    }
-	    }
+                case 3:
+                    return Vector2.Zero;
 
-        internal void GetWitnessPoints(out Vector2 pA, out Vector2 pB) 
-	    {
-		    switch (_count)
-		    {
-		    case 0:
-                pA = Vector2.Zero;
-                pB = Vector2.Zero;
-			    Debug.Assert(false);
-			    break;
+                default:
+                    Debug.Assert(false);
+                    return Vector2.Zero;
+            }
+        }
 
-		    case 1:
-			    pA = _v[0].wA;
-			    pB = _v[0].wB;
-			    break;
+        internal void GetWitnessPoints(out Vector2 pA, out Vector2 pB)
+        {
+            switch (_count)
+            {
+                case 0:
+                    pA = Vector2.Zero;
+                    pB = Vector2.Zero;
+                    Debug.Assert(false);
+                    break;
 
-		    case 2:
-			    pA = _v[0].a * _v[0].wA + _v[1].a * _v[1].wA;
-			    pB = _v[0].a * _v[0].wB + _v[1].a * _v[1].wB;
-			    break;
+                case 1:
+                    pA = _v[0].wA;
+                    pB = _v[0].wB;
+                    break;
 
-		    case 3:
-			    pA = _v[0].a * _v[0].wA + _v[1].a * _v[1].wA + _v[2].a * _v[2].wA;
-			    pB = pA;
-			    break;
+                case 2:
+                    pA = _v[0].a * _v[0].wA + _v[1].a * _v[1].wA;
+                    pB = _v[0].a * _v[0].wB + _v[1].a * _v[1].wB;
+                    break;
 
-		    default:
-                throw new Exception();
-		    }
-	    }
+                case 3:
+                    pA = _v[0].a * _v[0].wA + _v[1].a * _v[1].wA + _v[2].a * _v[2].wA;
+                    pB = pA;
+                    break;
 
-        private float GetMetric() 
-	    {
-		    switch (_count)
-		    {
-		    case 0:
-			    Debug.Assert(false);
-			    return 0.0f;
+                default:
+                    throw new Exception();
+            }
+        }
 
-		    case 1:
-			    return 0.0f;
+        private float GetMetric()
+        {
+            switch (_count)
+            {
+                case 0:
+                    Debug.Assert(false);
+                    return 0.0f;
 
-		    case 2:
-			    return (_v[0].w - _v[1].w).Length();
+                case 1:
+                    return 0.0f;
 
-		    case 3:
-			    return MathUtils.Cross(_v[1].w - _v[0].w, _v[2].w - _v[0].w);
+                case 2:
+                    return (_v[0].w - _v[1].w).Length();
 
-		    default:
-			    Debug.Assert(false);
-			    return 0.0f;
-		    }
-	    }
+                case 3:
+                    return MathUtils.Cross(_v[1].w - _v[0].w, _v[2].w - _v[0].w);
+
+                default:
+                    Debug.Assert(false);
+                    return 0.0f;
+            }
+        }
 
         // Solve a line segment using barycentric coordinates.
         //
@@ -521,166 +521,166 @@ namespace FarseerPhysics
             _count = 3;
         }
 
-	    internal FixedArray3<SimplexVertex> _v;
+        internal FixedArray3<SimplexVertex> _v;
         internal int _count;
-    };
+    }
 
     public static class Distance
     {
         public static void ComputeDistance(out DistanceOutput output,
-				                           out SimplexCache cache,
-				                           ref DistanceInput input)
+                                           out SimplexCache cache,
+                                           ref DistanceInput input)
         {
             cache = new SimplexCache();
-	        ++b2_gjkCalls;
+            ++b2_gjkCalls;
 
-	        // Initialize the simplex.
-	        Simplex simplex = new Simplex();
+            // Initialize the simplex.
+            Simplex simplex = new Simplex();
             simplex.ReadCache(ref cache, ref input.proxyA, ref input.transformA, ref input.proxyB, ref input.transformB);
 
-	        // Get simplex vertices as an array.
-	        const int k_maxIters = 20;
+            // Get simplex vertices as an array.
+            const int k_maxIters = 20;
 
-	        // These store the vertices of the last simplex so that we
-	        // can check for duplicates and prevent cycling.
+            // These store the vertices of the last simplex so that we
+            // can check for duplicates and prevent cycling.
             FixedArray3<int> saveA = new FixedArray3<int>();
             FixedArray3<int> saveB = new FixedArray3<int>();
 
             Vector2 closestPoint = simplex.GetClosestPoint();
-	        float distanceSqr1 = closestPoint.LengthSquared();
+            float distanceSqr1 = closestPoint.LengthSquared();
 
             // Main iteration loop.
-	        int iter = 0;
-	        while (iter < k_maxIters)
-	        {
-		        // Copy simplex so we can identify duplicates.
-		        int saveCount = simplex._count;
-		        for (int i = 0; i < saveCount; ++i)
-		        {
-			        saveA[i] = simplex._v[i].indexA;
+            int iter = 0;
+            while (iter < k_maxIters)
+            {
+                // Copy simplex so we can identify duplicates.
+                int saveCount = simplex._count;
+                for (int i = 0; i < saveCount; ++i)
+                {
+                    saveA[i] = simplex._v[i].indexA;
                     saveB[i] = simplex._v[i].indexB;
-		        }
+                }
 
-		        switch (simplex._count)
-		        {
-		        case 1:
-			        break;
+                switch (simplex._count)
+                {
+                    case 1:
+                        break;
 
-		        case 2:
-			        simplex.Solve2();
-			        break;
+                    case 2:
+                        simplex.Solve2();
+                        break;
 
-		        case 3:
-			        simplex.Solve3();
-			        break;
+                    case 3:
+                        simplex.Solve3();
+                        break;
 
-		        default:
-			        Debug.Assert(false);
+                    default:
+                        Debug.Assert(false);
+                        break;
+                }
+
+                // If we have 3 points, then the origin is in the corresponding triangle.
+                if (simplex._count == 3)
+                {
                     break;
-		        }
+                }
 
-		        // If we have 3 points, then the origin is in the corresponding triangle.
-		        if (simplex._count == 3)
-		        {
-			        break;
-		        }
+                // Compute closest point.
+                Vector2 p = simplex.GetClosestPoint();
+                float distanceSqr2 = p.LengthSquared();
 
-		        // Compute closest point.
-		        Vector2 p = simplex.GetClosestPoint();
-		        float distanceSqr2 = p.LengthSquared();
+                // Ensure progress
+                if (distanceSqr2 >= distanceSqr1)
+                {
+                    //break;
+                }
+                distanceSqr1 = distanceSqr2;
 
-		        // Ensure progress
-		        if (distanceSqr2 >= distanceSqr1)
-		        {
-			        //break;
-		        }
-		        distanceSqr1 = distanceSqr2;
+                // Get search direction.
+                Vector2 d = simplex.GetSearchDirection();
 
-		        // Get search direction.
-		        Vector2 d = simplex.GetSearchDirection();
+                // Ensure the search direction is numerically fit.
+                if (d.LengthSquared() < Settings.Epsilon * Settings.Epsilon)
+                {
+                    // The origin is probably contained by a line segment
+                    // or triangle. Thus the shapes are overlapped.
 
-		        // Ensure the search direction is numerically fit.
-		        if (d.LengthSquared() < Settings.Epsilon * Settings.Epsilon)
-		        {
-			        // The origin is probably contained by a line segment
-			        // or triangle. Thus the shapes are overlapped.
+                    // We can't return zero here even though there may be overlap.
+                    // In case the simplex is a point, segment, or triangle it is difficult
+                    // to determine if the origin is contained in the CSO or very close to it.
+                    break;
+                }
 
-			        // We can't return zero here even though there may be overlap.
-			        // In case the simplex is a point, segment, or triangle it is difficult
-			        // to determine if the origin is contained in the CSO or very close to it.
-			        break;
-		        }
-
-		        // Compute a tentative new simplex vertex using support points.
+                // Compute a tentative new simplex vertex using support points.
                 SimplexVertex vertex = simplex._v[simplex._count];
                 vertex.indexA = input.proxyA.GetSupport(MathUtils.MultiplyT(ref input.transformA.R, -d));
                 vertex.wA = MathUtils.Multiply(ref input.transformA, input.proxyA.GetVertex(vertex.indexA));
                 vertex.indexB = input.proxyB.GetSupport(MathUtils.MultiplyT(ref input.transformB.R, d));
                 vertex.wB = MathUtils.Multiply(ref input.transformB, input.proxyB.GetVertex(vertex.indexB));
-		        vertex.w = vertex.wB - vertex.wA;
+                vertex.w = vertex.wB - vertex.wA;
                 simplex._v[simplex._count] = vertex;
 
-		        // Iteration count is equated to the number of support point calls.
-		        ++iter;
-		        ++b2_gjkIters;
+                // Iteration count is equated to the number of support point calls.
+                ++iter;
+                ++b2_gjkIters;
 
-		        // Check for duplicate support points. This is the main termination criteria.
-		        bool duplicate = false;
-		        for (int i = 0; i < saveCount; ++i)
-		        {
-			        if (vertex.indexA == saveA[i] && vertex.indexB == saveB[i])
-			        {
-				        duplicate = true;
-				        break;
-			        }
-		        }
+                // Check for duplicate support points. This is the main termination criteria.
+                bool duplicate = false;
+                for (int i = 0; i < saveCount; ++i)
+                {
+                    if (vertex.indexA == saveA[i] && vertex.indexB == saveB[i])
+                    {
+                        duplicate = true;
+                        break;
+                    }
+                }
 
-		        // If we found a duplicate support point we must exit to avoid cycling.
-		        if (duplicate)
-		        {
-			        break;
-		        }
+                // If we found a duplicate support point we must exit to avoid cycling.
+                if (duplicate)
+                {
+                    break;
+                }
 
-		        // New vertex is ok and needed.
-		        ++simplex._count;
-	        }
+                // New vertex is ok and needed.
+                ++simplex._count;
+            }
 
-	        b2_gjkMaxIters = Math.Max(b2_gjkMaxIters, iter);
+            b2_gjkMaxIters = Math.Max(b2_gjkMaxIters, iter);
 
-	        // Prepare output.
-	        simplex.GetWitnessPoints(out output.pointA, out output.pointB);
-	        output.distance = (output.pointA - output.pointB).Length();
-	        output.iterations = iter;
+            // Prepare output.
+            simplex.GetWitnessPoints(out output.pointA, out output.pointB);
+            output.distance = (output.pointA - output.pointB).Length();
+            output.iterations = iter;
 
-	        // Cache the simplex.
-	        simplex.WriteCache(ref cache);
+            // Cache the simplex.
+            simplex.WriteCache(ref cache);
 
-	        // Apply radii if requested.
-	        if (input.useRadii)
-	        {
+            // Apply radii if requested.
+            if (input.useRadii)
+            {
                 float rA = input.proxyA._radius;
                 float rB = input.proxyB._radius;
 
-		        if (output.distance > rA + rB && output.distance > Settings.Epsilon)
-		        {
-			        // Shapes are still no overlapped.
-			        // Move the witness points to the outer surface.
-			        output.distance -= rA + rB;
-			        Vector2 normal = output.pointB - output.pointA;
-			        normal.Normalize();
-			        output.pointA += rA * normal;
-			        output.pointB -= rB * normal;
-		        }
-		        else
-		        {
-			        // Shapes are overlapped when radii are considered.
-			        // Move the witness points to the middle.
-			        Vector2 p = 0.5f * (output.pointA + output.pointB);
-			        output.pointA = p;
-			        output.pointB = p;
-			        output.distance = 0.0f;
-		        }
-	        }
+                if (output.distance > rA + rB && output.distance > Settings.Epsilon)
+                {
+                    // Shapes are still no overlapped.
+                    // Move the witness points to the outer surface.
+                    output.distance -= rA + rB;
+                    Vector2 normal = output.pointB - output.pointA;
+                    normal.Normalize();
+                    output.pointA += rA * normal;
+                    output.pointB -= rB * normal;
+                }
+                else
+                {
+                    // Shapes are overlapped when radii are considered.
+                    // Move the witness points to the middle.
+                    Vector2 p = 0.5f * (output.pointA + output.pointB);
+                    output.pointA = p;
+                    output.pointB = p;
+                    output.distance = 0.0f;
+                }
+            }
         }
 
         static int b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;

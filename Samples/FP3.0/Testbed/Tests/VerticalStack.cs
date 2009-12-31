@@ -51,8 +51,7 @@ namespace FarseerPhysics.TestBed.Tests
                 ground.CreateFixture(shape, 0.0f);
             }
 
-            float[] xs = new float[5]
-                             {0.0f, -10.0f, -5.0f, 5.0f, 10.0f};
+            float[] xs = new float[5] {0.0f, -10.0f, -5.0f, 5.0f, 10.0f};
 
             for (int j = 0; j < (int) StackOptions.e_columnCount; ++j)
             {

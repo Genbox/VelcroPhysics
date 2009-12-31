@@ -342,6 +342,7 @@ namespace FarseerPhysics
                 _flags &= ~WorldFlags.NewFixture;
             }
 
+            //Lock the world
             _flags |= WorldFlags.Locked;
 
             TimeStep step;

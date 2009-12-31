@@ -17,7 +17,7 @@ namespace FarseerPhysics
         public float tangentMass;
         public float equalizedMass;
         public float velocityBias;
-    };
+    }
 
     public struct ContactConstraint
     {
@@ -35,7 +35,7 @@ namespace FarseerPhysics
         public float restitution;
         public int pointCount;
         public Manifold manifold;
-    };
+    }
 
     public class ContactSolver
     {
@@ -856,5 +856,5 @@ namespace FarseerPhysics
         internal Vector2 _normal;
         internal FixedArray2<Vector2> _points;
         internal FixedArray2<float> _separations;
-    };
+    }
 }

@@ -33,7 +33,7 @@ namespace FarseerPhysics
         AABB = (1 << 2), ///< draw axis aligned bounding boxes
         Pair = (1 << 3), ///< draw broad-phase pairs
         CenterOfMass = (1 << 4), ///< draw center of mass frame
-    };
+    }
 
     /// Implement and register this class with a World to provide debug drawing of physics
     /// entities in your game.

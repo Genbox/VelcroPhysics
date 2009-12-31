@@ -111,8 +111,7 @@ namespace FarseerPhysics
 
         /// Experimental: scales the inertia tensor.
         public float inertiaScale;
-    };
-
+    }
 
     [Flags]
     public enum BodyFlags
@@ -128,20 +127,19 @@ namespace FarseerPhysics
 
     public class Body
     {
-
         /// Set the type of this body. This may alter the mass and velocity.
         public void SetBodyType(BodyType type)
         {
-            if (_type == type)
+            if (_bodyType == type)
             {
                 return;
             }
 
-            _type = type;
+            _bodyType = type;
 
             ResetMassData();
 
-            if (_type == BodyType.Static)
+            if (_bodyType == BodyType.Static)
             {
                 _linearVelocity = Vector2.Zero;
                 _angularVelocity = 0.0f;
@@ -162,7 +160,7 @@ namespace FarseerPhysics
         /// Get the type of this body.
         public BodyType GetBodyType()
         {
-            return _type;
+            return _bodyType;
         }
 
         /// Creates a fixture and attach it to this body. Use this function if you need
@@ -176,9 +174,7 @@ namespace FarseerPhysics
         {
             Debug.Assert(_world.IsLocked == false);
             if (_world.IsLocked)
-            {
                 return null;
-            }
 
             Fixture fixture = new Fixture();
             fixture.Create(this, def);
@@ -240,10 +236,12 @@ namespace FarseerPhysics
                 return;
             }
 
+#if DEBUG
             Debug.Assert(fixture._body == this);
 
             // Remove the fixture from this body's singly linked list.
             Debug.Assert(_fixtureCount > 0);
+
             Fixture node = _fixtureList;
             bool found = false;
             while (node != null)
@@ -260,6 +258,7 @@ namespace FarseerPhysics
 
             // You tried to remove a shape that is not attached to this body.
             Debug.Assert(found);
+#endif
 
             // Destroy any contacts associated with the fixture.
             ContactEdge edge = _contactList;
@@ -296,7 +295,6 @@ namespace FarseerPhysics
             fixture._next = null;
 
             --_fixtureCount;
-
 
             ResetMassData();
         }
@@ -365,7 +363,7 @@ namespace FarseerPhysics
         /// @param v the new linear velocity of the center of mass.
         public void SetLinearVelocity(Vector2 v)
         {
-            if (_type == BodyType.Static)
+            if (_bodyType == BodyType.Static)
             {
                 return;
             }
@@ -384,7 +382,7 @@ namespace FarseerPhysics
         /// @param omega the new angular velocity in radians/second.
         public void SetAngularVelocity(float omega)
         {
-            if (_type == BodyType.Static)
+            if (_bodyType == BodyType.Static)
             {
                 return;
             }
@@ -406,7 +404,7 @@ namespace FarseerPhysics
         /// @param point the world position of the point of application.
         public void ApplyForce(Vector2 force, Vector2 point)
         {
-            if (_type != BodyType.Dynamic)
+            if (_bodyType != BodyType.Dynamic)
             {
                 return;
             }
@@ -426,7 +424,7 @@ namespace FarseerPhysics
         /// @param torque about the z-axis (out of the screen), usually in N-m.
         public void ApplyTorque(float torque)
         {
-            if (_type != BodyType.Dynamic)
+            if (_bodyType != BodyType.Dynamic)
             {
                 return;
             }
@@ -446,7 +444,7 @@ namespace FarseerPhysics
         /// @param point the world position of the point of application.
         public void ApplyImpulse(Vector2 impulse, Vector2 point)
         {
-            if (_type != BodyType.Dynamic)
+            if (_bodyType != BodyType.Dynamic)
             {
                 return;
             }
@@ -499,7 +497,7 @@ namespace FarseerPhysics
                 return;
             }
 
-            if (_type != BodyType.Dynamic)
+            if (_bodyType != BodyType.Dynamic)
             {
                 return;
             }
@@ -546,12 +544,12 @@ namespace FarseerPhysics
             _sweep.localCenter = Vector2.Zero;
 
             // Static and kinematic bodies have zero mass.
-            if (_type == BodyType.Static || _type == BodyType.Kinematic)
+            if (_bodyType == BodyType.Static || _bodyType == BodyType.Kinematic)
             {
                 return;
             }
 
-            Debug.Assert(_type == BodyType.Dynamic);
+            Debug.Assert(_bodyType == BodyType.Dynamic);
 
             // Accumulate mass over all fixtures.
             Vector2 center = Vector2.Zero;
@@ -940,9 +938,9 @@ namespace FarseerPhysics
             _linearDamping = bd.linearDamping;
             _angularDamping = bd.angularDamping;
 
-            _type = bd.type;
+            _bodyType = bd.type;
 
-            if (_type == BodyType.Dynamic)
+            if (_bodyType == BodyType.Dynamic)
             {
                 _mass = 1.0f;
                 _invMass = 1.0f;
@@ -976,7 +974,7 @@ namespace FarseerPhysics
         internal bool ShouldCollide(Body other)
         {
             // At least one body should be dynamic.
-            if (_type != BodyType.Dynamic && other._type != BodyType.Dynamic)
+            if (_bodyType != BodyType.Dynamic && other._bodyType != BodyType.Dynamic)
             {
                 return false;
             }
@@ -1038,39 +1036,27 @@ namespace FarseerPhysics
         }
 
         internal BodyFlags _flags;
-        private BodyType _type;
-
+        private BodyType _bodyType;
         internal int _islandIndex;
-
         internal Transform _xf;		// the body origin transform
         internal Sweep _sweep;	// the swept motion for CCD
-
         internal Vector2 _linearVelocity;
         internal float _angularVelocity;
-
         internal Vector2 _force;
         internal float _torque;
-
         private World _world;
         internal Body _prev;
         internal Body _next;
-
         internal Fixture _fixtureList;
         internal int _fixtureCount;
-
         internal JointEdge _jointList;
         internal ContactEdge _contactList;
-
         internal float _mass, _invMass;
         internal float _I, _invI;
-
         internal float _linearDamping;
         internal float _angularDamping;
-
         internal float _sleepTime;
-
         private object _userData;
-
         private float _intertiaScale;
     }
 }

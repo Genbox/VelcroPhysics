@@ -338,12 +338,12 @@ namespace FarseerPhysics
         private static Func<Fixture, Fixture, Contact>[,] s_registers = new Func<Fixture, Fixture, Contact>[,] 
         {
             { 
-              (f1, f2) => { return new CircleContact(f1, f2); }, 
-              (f1, f2) => { return new PolygonAndCircleContact(f1, f2); }
+              (f1, f2) => new CircleContact(f1, f2), 
+              (f1, f2) => new PolygonAndCircleContact(f1, f2)
             },
             { 
-              (f1, f2) => { return new PolygonAndCircleContact(f1, f2); }, 
-              (f1, f2) => { return new PolygonContact(f1, f2); }
+              (f1, f2) => new PolygonAndCircleContact(f1, f2), 
+              (f1, f2) => new PolygonContact(f1, f2)
             },
         };
 
@@ -352,8 +352,8 @@ namespace FarseerPhysics
             ShapeType type1 = fixtureA.ShapeType;
             ShapeType type2 = fixtureB.ShapeType;
 
-            Debug.Assert(ShapeType.Unknown < type1 && type1 < ShapeType.TypeCount);
-            Debug.Assert(ShapeType.Unknown < type2 && type2 < ShapeType.TypeCount);
+            Debug.Assert(type1 != ShapeType.Unknown);
+            Debug.Assert(type2 != ShapeType.Unknown);
 
             if (type1 > type2)
             {

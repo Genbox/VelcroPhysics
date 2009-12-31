@@ -34,219 +34,219 @@ namespace FarseerPhysics
         public Sweep sweepA;
         public Sweep sweepB;
         public float tolerance;
-    };
-    
+    }
+
     public enum SeparationFunctionType
     {
-	    Points,
-	    FaceA,
-	    FaceB
-    };
+        Points,
+        FaceA,
+        FaceB
+    }
 
     public struct SeparationFunction
     {
         public SeparationFunction(ref SimplexCache cache,
-		    ref DistanceProxy proxyA, ref Transform transformA,
+            ref DistanceProxy proxyA, ref Transform transformA,
             ref DistanceProxy proxyB, ref Transform transformB)
-	    {
+        {
             _localPoint = Vector2.Zero;
             _proxyA = proxyA;
             _proxyB = proxyB;
-		    int count = cache.count;
-		    Debug.Assert(0 < count && count < 3);
+            int count = cache.count;
+            Debug.Assert(0 < count && count < 3);
 
-		    if (count == 1)
-		    {
+            if (count == 1)
+            {
                 _type = SeparationFunctionType.Points;
                 Vector2 localPointA = _proxyA.GetVertex(cache.indexA[0]);
                 Vector2 localPointB = _proxyB.GetVertex(cache.indexB[0]);
-			    Vector2 pointA = MathUtils.Multiply(ref transformA, localPointA);
-			    Vector2 pointB = MathUtils.Multiply(ref transformB, localPointB);
-			    _axis = pointB - pointA;
-			    _axis.Normalize();
-		    }
-		    else if (cache.indexB[0] == cache.indexB[1])
-		    {
-			    // Two points on A and one on B
+                Vector2 pointA = MathUtils.Multiply(ref transformA, localPointA);
+                Vector2 pointB = MathUtils.Multiply(ref transformB, localPointB);
+                _axis = pointB - pointA;
+                _axis.Normalize();
+            }
+            else if (cache.indexB[0] == cache.indexB[1])
+            {
+                // Two points on A and one on B
                 _type = SeparationFunctionType.FaceA;
                 Vector2 localPointA1 = _proxyA.GetVertex(cache.indexA[0]);
                 Vector2 localPointA2 = _proxyA.GetVertex(cache.indexA[1]);
                 Vector2 localPointB = _proxyB.GetVertex(cache.indexB[0]);
-			    _localPoint = 0.5f * (localPointA1 + localPointA2);
-			    _axis = MathUtils.Cross(localPointA2 - localPointA1, 1.0f);
-			    _axis.Normalize();
+                _localPoint = 0.5f * (localPointA1 + localPointA2);
+                _axis = MathUtils.Cross(localPointA2 - localPointA1, 1.0f);
+                _axis.Normalize();
 
-			    Vector2 normal = MathUtils.Multiply(ref transformA.R, _axis);
-			    Vector2 pointA = MathUtils.Multiply(ref transformA, _localPoint);
-			    Vector2 pointB = MathUtils.Multiply(ref transformB, localPointB);
+                Vector2 normal = MathUtils.Multiply(ref transformA.R, _axis);
+                Vector2 pointA = MathUtils.Multiply(ref transformA, _localPoint);
+                Vector2 pointB = MathUtils.Multiply(ref transformB, localPointB);
 
-			    float s = Vector2.Dot(pointB - pointA, normal);
-			    if (s < 0.0f)
-			    {
-				    _axis = -_axis;
-			    }
-		    }
-		    else if (cache.indexA[0] == cache.indexA[1])
-		    {
-			    // Two points on B and one on A.
+                float s = Vector2.Dot(pointB - pointA, normal);
+                if (s < 0.0f)
+                {
+                    _axis = -_axis;
+                }
+            }
+            else if (cache.indexA[0] == cache.indexA[1])
+            {
+                // Two points on B and one on A.
                 _type = SeparationFunctionType.FaceB;
                 Vector2 localPointA = proxyA.GetVertex(cache.indexA[0]);
                 Vector2 localPointB1 = proxyB.GetVertex(cache.indexB[0]);
                 Vector2 localPointB2 = proxyB.GetVertex(cache.indexB[1]);
-			    _localPoint = 0.5f * (localPointB1 + localPointB2);
-			    _axis = MathUtils.Cross(localPointB2 - localPointB1, 1.0f);
-			    _axis.Normalize();
+                _localPoint = 0.5f * (localPointB1 + localPointB2);
+                _axis = MathUtils.Cross(localPointB2 - localPointB1, 1.0f);
+                _axis.Normalize();
 
-			    Vector2 normal = MathUtils.Multiply(ref transformB.R, _axis);
-			    Vector2 pointB = MathUtils.Multiply(ref transformB, _localPoint);
-			    Vector2 pointA = MathUtils.Multiply(ref transformA, localPointA);
+                Vector2 normal = MathUtils.Multiply(ref transformB.R, _axis);
+                Vector2 pointB = MathUtils.Multiply(ref transformB, _localPoint);
+                Vector2 pointA = MathUtils.Multiply(ref transformA, localPointA);
 
-			    float s = Vector2.Dot(pointA - pointB, normal);
-			    if (s < 0.0f)
-			    {
-				    _axis = -_axis;
-			    }
-		    }
-		    else
-		    {
-			    // Two points on B and two points on A.
-			    // The faces are parallel.
+                float s = Vector2.Dot(pointA - pointB, normal);
+                if (s < 0.0f)
+                {
+                    _axis = -_axis;
+                }
+            }
+            else
+            {
+                // Two points on B and two points on A.
+                // The faces are parallel.
                 Vector2 localPointA1 = _proxyA.GetVertex(cache.indexA[0]);
                 Vector2 localPointA2 = _proxyA.GetVertex(cache.indexA[1]);
                 Vector2 localPointB1 = _proxyB.GetVertex(cache.indexB[0]);
                 Vector2 localPointB2 = _proxyB.GetVertex(cache.indexB[1]);
 
-			    Vector2 pA = MathUtils.Multiply(ref transformA, localPointA1);
-			    Vector2 dA = MathUtils.Multiply(ref transformA.R, localPointA2 - localPointA1);
-			    Vector2 pB = MathUtils.Multiply(ref transformB, localPointB1);
-			    Vector2 dB = MathUtils.Multiply(ref transformB.R, localPointB2 - localPointB1);
+                Vector2 pA = MathUtils.Multiply(ref transformA, localPointA1);
+                Vector2 dA = MathUtils.Multiply(ref transformA.R, localPointA2 - localPointA1);
+                Vector2 pB = MathUtils.Multiply(ref transformB, localPointB1);
+                Vector2 dB = MathUtils.Multiply(ref transformB.R, localPointB2 - localPointB1);
 
-			    float a = Vector2.Dot(dA, dA);
-			    float e = Vector2.Dot(dB, dB);
-			    Vector2 r = pA - pB;
-			    float c = Vector2.Dot(dA, r);
-			    float f = Vector2.Dot(dB, r);
+                float a = Vector2.Dot(dA, dA);
+                float e = Vector2.Dot(dB, dB);
+                Vector2 r = pA - pB;
+                float c = Vector2.Dot(dA, r);
+                float f = Vector2.Dot(dB, r);
 
-			    float b = Vector2.Dot(dA, dB);
-			    float denom = a * e - b * b;
+                float b = Vector2.Dot(dA, dB);
+                float denom = a * e - b * b;
 
-			    float s = 0.0f;
-			    if (denom != 0.0f)
-			    {
-				    s = MathUtils.Clamp((b * f - c * e) / denom, 0.0f, 1.0f);
-			    }
+                float s = 0.0f;
+                if (denom != 0.0f)
+                {
+                    s = MathUtils.Clamp((b * f - c * e) / denom, 0.0f, 1.0f);
+                }
 
-			    float t = (b * s + f) / e;
+                float t = (b * s + f) / e;
 
-			    if (t < 0.0f)
-			    {
-				    t = 0.0f;
-				    s = MathUtils.Clamp(-c / a, 0.0f, 1.0f);
-			    }
-			    else if (t > 1.0f)
-			    {
-				    t = 1.0f;
-				    s = MathUtils.Clamp((b - c) / a, 0.0f, 1.0f);
-			    }
+                if (t < 0.0f)
+                {
+                    t = 0.0f;
+                    s = MathUtils.Clamp(-c / a, 0.0f, 1.0f);
+                }
+                else if (t > 1.0f)
+                {
+                    t = 1.0f;
+                    s = MathUtils.Clamp((b - c) / a, 0.0f, 1.0f);
+                }
 
-			    Vector2 localPointA = localPointA1 + s * (localPointA2 - localPointA1);
-			    Vector2 localPointB = localPointB1 + t * (localPointB2 - localPointB1);
+                Vector2 localPointA = localPointA1 + s * (localPointA2 - localPointA1);
+                Vector2 localPointB = localPointB1 + t * (localPointB2 - localPointB1);
 
-			    if (s == 0.0f || s == 1.0f)
-			    {
+                if (s == 0.0f || s == 1.0f)
+                {
                     _type = SeparationFunctionType.FaceB;
-				    _axis = MathUtils.Cross(localPointB2 - localPointB1, 1.0f);
-				    _axis.Normalize();
+                    _axis = MathUtils.Cross(localPointB2 - localPointB1, 1.0f);
+                    _axis.Normalize();
 
-				    _localPoint = localPointB;
+                    _localPoint = localPointB;
 
-				    Vector2 normal = MathUtils.Multiply(ref transformB.R, _axis);
-				    Vector2 pointA = MathUtils.Multiply(ref transformA, localPointA);
-				    Vector2 pointB = MathUtils.Multiply(ref transformB, localPointB);
+                    Vector2 normal = MathUtils.Multiply(ref transformB.R, _axis);
+                    Vector2 pointA = MathUtils.Multiply(ref transformA, localPointA);
+                    Vector2 pointB = MathUtils.Multiply(ref transformB, localPointB);
 
-				    float sgn = Vector2.Dot(pointA - pointB, normal);
-				    if (sgn < 0.0f)
-				    {
-					    _axis = -_axis;
-				    }
-			    }
-			    else
-			    {
+                    float sgn = Vector2.Dot(pointA - pointB, normal);
+                    if (sgn < 0.0f)
+                    {
+                        _axis = -_axis;
+                    }
+                }
+                else
+                {
                     _type = SeparationFunctionType.FaceA;
-				    _axis = MathUtils.Cross(localPointA2 - localPointA1, 1.0f);
-				    _axis.Normalize();
+                    _axis = MathUtils.Cross(localPointA2 - localPointA1, 1.0f);
+                    _axis.Normalize();
 
-				    _localPoint = localPointA;
+                    _localPoint = localPointA;
 
-				    Vector2 normal = MathUtils.Multiply(ref transformA.R, _axis);
-				    Vector2 pointA = MathUtils.Multiply(ref transformA, localPointA);
-				    Vector2 pointB = MathUtils.Multiply(ref transformB, localPointB);
+                    Vector2 normal = MathUtils.Multiply(ref transformA.R, _axis);
+                    Vector2 pointA = MathUtils.Multiply(ref transformA, localPointA);
+                    Vector2 pointB = MathUtils.Multiply(ref transformB, localPointB);
 
-				    float sgn = Vector2.Dot(pointB - pointA, normal);
-				    if (sgn < 0.0f)
-				    {
-					    _axis = -_axis;
-				    }
-			    }
-		    }
-	    }
+                    float sgn = Vector2.Dot(pointB - pointA, normal);
+                    if (sgn < 0.0f)
+                    {
+                        _axis = -_axis;
+                    }
+                }
+            }
+        }
 
-	    public float Evaluate(ref Transform transformA, ref Transform transformB)
-	    {
-		    switch (_type)
-		    {
+        public float Evaluate(ref Transform transformA, ref Transform transformB)
+        {
+            switch (_type)
+            {
                 case SeparationFunctionType.Points:
-			    {
-				    Vector2 axisA = MathUtils.MultiplyT(ref transformA.R,  _axis);
-				    Vector2 axisB = MathUtils.MultiplyT(ref transformB.R, -_axis);
-                    Vector2 localPointA = _proxyA.GetSupportVertex(axisA);
-                    Vector2 localPointB = _proxyB.GetSupportVertex(axisB);
-				    Vector2 pointA = MathUtils.Multiply(ref transformA, localPointA);
-				    Vector2 pointB = MathUtils.Multiply(ref transformB, localPointB);
-				    float separation = Vector2.Dot(pointB - pointA, _axis);
-				    return separation;
-			    }
+                    {
+                        Vector2 axisA = MathUtils.MultiplyT(ref transformA.R, _axis);
+                        Vector2 axisB = MathUtils.MultiplyT(ref transformB.R, -_axis);
+                        Vector2 localPointA = _proxyA.GetSupportVertex(axisA);
+                        Vector2 localPointB = _proxyB.GetSupportVertex(axisB);
+                        Vector2 pointA = MathUtils.Multiply(ref transformA, localPointA);
+                        Vector2 pointB = MathUtils.Multiply(ref transformB, localPointB);
+                        float separation = Vector2.Dot(pointB - pointA, _axis);
+                        return separation;
+                    }
 
                 case SeparationFunctionType.FaceA:
-			    {
-				    Vector2 normal = MathUtils.Multiply(ref transformA.R, _axis);
-				    Vector2 pointA = MathUtils.Multiply(ref transformA, _localPoint);
+                    {
+                        Vector2 normal = MathUtils.Multiply(ref transformA.R, _axis);
+                        Vector2 pointA = MathUtils.Multiply(ref transformA, _localPoint);
 
-				    Vector2 axisB = MathUtils.MultiplyT(ref transformB.R, -normal);
+                        Vector2 axisB = MathUtils.MultiplyT(ref transformB.R, -normal);
 
-                    Vector2 localPointB = _proxyB.GetSupportVertex(axisB);
-				    Vector2 pointB = MathUtils.Multiply(ref transformB, localPointB);
+                        Vector2 localPointB = _proxyB.GetSupportVertex(axisB);
+                        Vector2 pointB = MathUtils.Multiply(ref transformB, localPointB);
 
-				    float separation = Vector2.Dot(pointB - pointA, normal);
-				    return separation;
-			    }
+                        float separation = Vector2.Dot(pointB - pointA, normal);
+                        return separation;
+                    }
 
                 case SeparationFunctionType.FaceB:
-			    {
-				    Vector2 normal = MathUtils.Multiply(ref transformB.R, _axis);
-				    Vector2 pointB = MathUtils.Multiply(ref transformB, _localPoint);
+                    {
+                        Vector2 normal = MathUtils.Multiply(ref transformB.R, _axis);
+                        Vector2 pointB = MathUtils.Multiply(ref transformB, _localPoint);
 
-				    Vector2 axisA = MathUtils.MultiplyT(ref transformA.R, -normal);
+                        Vector2 axisA = MathUtils.MultiplyT(ref transformA.R, -normal);
 
-                    Vector2 localPointA = _proxyA.GetSupportVertex(axisA);
-				    Vector2 pointA = MathUtils.Multiply(ref transformA, localPointA);
+                        Vector2 localPointA = _proxyA.GetSupportVertex(axisA);
+                        Vector2 pointA = MathUtils.Multiply(ref transformA, localPointA);
 
-				    float separation = Vector2.Dot(pointA - pointB, normal);
-				    return separation;
-			    }
+                        float separation = Vector2.Dot(pointA - pointB, normal);
+                        return separation;
+                    }
 
-		    default:
-			    Debug.Assert(false);
-			    return 0.0f;
-		    }
-	    }
+                default:
+                    Debug.Assert(false);
+                    return 0.0f;
+            }
+        }
 
         DistanceProxy _proxyA;
         DistanceProxy _proxyB;
         SeparationFunctionType _type;
-	    Vector2 _localPoint;
-	    Vector2 _axis;
-    };
+        Vector2 _localPoint;
+        Vector2 _axis;
+    }
 
 
 
@@ -261,84 +261,84 @@ namespace FarseerPhysics
         /// fraction=0 means the shapes begin touching/overlapped, and fraction=1 means the shapes don't touch.
         public static float CalculateTimeOfImpact(ref TOIInput input)
         {
-	        ++b2_toiCalls;
+            ++b2_toiCalls;
 
-	        Sweep sweepA = input.sweepA;
-	        Sweep sweepB = input.sweepB;
+            Sweep sweepA = input.sweepA;
+            Sweep sweepB = input.sweepB;
 
-	        Debug.Assert(sweepA.t0 == sweepB.t0);
-	        Debug.Assert(1.0f - sweepA.t0 > Settings.Epsilon);
+            Debug.Assert(sweepA.t0 == sweepB.t0);
+            Debug.Assert(1.0f - sweepA.t0 > Settings.Epsilon);
 
             float radius = input.proxyA._radius + input.proxyB._radius;
-	        float tolerance = input.tolerance;
+            float tolerance = input.tolerance;
 
-	        float alpha = 0.0f;
+            float alpha = 0.0f;
 
             const int k_maxIterations = 1000; // TODO_ERIN b2Settings
-	        int iter = 0;
-	        float target = 0.0f;
+            int iter = 0;
+            float target = 0.0f;
 
-	        // Prepare input for distance query.
+            // Prepare input for distance query.
             DistanceInput distanceInput;
             distanceInput.proxyA = input.proxyA;
             distanceInput.proxyB = input.proxyB;
-	        distanceInput.useRadii = false;
+            distanceInput.useRadii = false;
 
-	        for(;;)
-	        {
-		        Transform xfA, xfB;
-		        sweepA.GetTransform(out xfA, alpha);
+            for (; ; )
+            {
+                Transform xfA, xfB;
+                sweepA.GetTransform(out xfA, alpha);
                 sweepB.GetTransform(out xfB, alpha);
 
-		        // Get the distance between shapes.
-		        distanceInput.transformA = xfA;
-		        distanceInput.transformB = xfB;
-		        DistanceOutput distanceOutput;
-	            SimplexCache cache;
-	            Distance.ComputeDistance(out distanceOutput, out cache, ref distanceInput);
+                // Get the distance between shapes.
+                distanceInput.transformA = xfA;
+                distanceInput.transformB = xfB;
+                DistanceOutput distanceOutput;
+                SimplexCache cache;
+                Distance.ComputeDistance(out distanceOutput, out cache, ref distanceInput);
 
-		        if (distanceOutput.distance <= 0.0f)
-		        {
-			        alpha = 1.0f;
-			        break;
-		        }
+                if (distanceOutput.distance <= 0.0f)
+                {
+                    alpha = 1.0f;
+                    break;
+                }
 
                 SeparationFunction fcn = new SeparationFunction(ref cache, ref input.proxyA, ref xfA, ref input.proxyB, ref xfB);
 
-		        float separation = fcn.Evaluate(ref xfA, ref xfB);
-		        if (separation <= 0.0f)
-		        {
-			        alpha = 1.0f;
-			        break;
-		        }
+                float separation = fcn.Evaluate(ref xfA, ref xfB);
+                if (separation <= 0.0f)
+                {
+                    alpha = 1.0f;
+                    break;
+                }
 
-		        if (iter == 0)
-		        {
-			        // Compute a reasonable target distance to give some breathing room
-			        // for conservative advancement. We take advantage of the shape radii
-			        // to create additional clearance.
-			        if (separation > radius)
-			        {
-				        target = Math.Max(radius - tolerance, 0.75f * radius);
-			        }
-			        else
-			        {
-				        target = Math.Max(separation - tolerance, 0.02f * radius);
-			        }
-		        }
+                if (iter == 0)
+                {
+                    // Compute a reasonable target distance to give some breathing room
+                    // for conservative advancement. We take advantage of the shape radii
+                    // to create additional clearance.
+                    if (separation > radius)
+                    {
+                        target = Math.Max(radius - tolerance, 0.75f * radius);
+                    }
+                    else
+                    {
+                        target = Math.Max(separation - tolerance, 0.02f * radius);
+                    }
+                }
 
-		        if (separation - target < 0.5f * tolerance)
-		        {
-			        if (iter == 0)
-			        {
-				        alpha = 1.0f;
-				        break;
-			        }
+                if (separation - target < 0.5f * tolerance)
+                {
+                    if (iter == 0)
+                    {
+                        alpha = 1.0f;
+                        break;
+                    }
 
-			        break;
-		        }
+                    break;
+                }
 
-        #if false
+#if false
 		        // Dump the curve seen by the root finder
 		        {
 			        int N = 100;
@@ -362,98 +362,98 @@ namespace FarseerPhysics
 				        x += dx;
 			        }
 		        }
-        #endif
+#endif
 
-		        // Compute 1D root of: f(x) - target = 0
-		        float newAlpha = alpha;
-		        {
-			        float x1 = alpha, x2 = 1.0f;
+                // Compute 1D root of: f(x) - target = 0
+                float newAlpha = alpha;
+                {
+                    float x1 = alpha, x2 = 1.0f;
 
-			        float f1 = separation;
+                    float f1 = separation;
 
-			        sweepA.GetTransform(out xfA, x2);
+                    sweepA.GetTransform(out xfA, x2);
                     sweepB.GetTransform(out xfB, x2);
-			        float f2 = fcn.Evaluate(ref xfA, ref xfB);
+                    float f2 = fcn.Evaluate(ref xfA, ref xfB);
 
-			        // If intervals don't overlap at t2, then we are done.
-			        if (f2 >= target)
-			        {
-				        alpha = 1.0f;
-				        break;
-			        }
+                    // If intervals don't overlap at t2, then we are done.
+                    if (f2 >= target)
+                    {
+                        alpha = 1.0f;
+                        break;
+                    }
 
-			        // Determine when intervals intersect.
-			        int rootIterCount = 0;
-			        for (;;)
-			        {
-				        // Use a mix of the secant rule and bisection.
-				        float x;
-				        if ((rootIterCount & 1) != 0)
-				        {
-					        // Secant rule to improve convergence.
-					        x = x1 + (target - f1) * (x2 - x1) / (f2 - f1);
-				        }
-				        else
-				        {
-					        // Bisection to guarantee progress.
-					        x = 0.5f * (x1 + x2);
-				        }
+                    // Determine when intervals intersect.
+                    int rootIterCount = 0;
+                    for (; ; )
+                    {
+                        // Use a mix of the secant rule and bisection.
+                        float x;
+                        if ((rootIterCount & 1) != 0)
+                        {
+                            // Secant rule to improve convergence.
+                            x = x1 + (target - f1) * (x2 - x1) / (f2 - f1);
+                        }
+                        else
+                        {
+                            // Bisection to guarantee progress.
+                            x = 0.5f * (x1 + x2);
+                        }
 
-				        sweepA.GetTransform(out xfA, x);
+                        sweepA.GetTransform(out xfA, x);
                         sweepB.GetTransform(out xfB, x);
 
-				        float f = fcn.Evaluate(ref xfA, ref xfB);
+                        float f = fcn.Evaluate(ref xfA, ref xfB);
 
-				        if (Math.Abs(f - target) < 0.025f * tolerance)
-				        {
-					        newAlpha = x;
-					        break;
-				        }
+                        if (Math.Abs(f - target) < 0.025f * tolerance)
+                        {
+                            newAlpha = x;
+                            break;
+                        }
 
-				        // Ensure we continue to bracket the root.
-				        if (f > target)
-				        {
-					        x1 = x;
-					        f1 = f;
-				        }
-				        else
-				        {
-					        x2 = x;
-					        f2 = f;
-				        }
+                        // Ensure we continue to bracket the root.
+                        if (f > target)
+                        {
+                            x1 = x;
+                            f1 = f;
+                        }
+                        else
+                        {
+                            x2 = x;
+                            f2 = f;
+                        }
 
-				        ++rootIterCount;
-				        ++b2_toiRootIters;
+                        ++rootIterCount;
+                        ++b2_toiRootIters;
 
-				        if (rootIterCount == 50)
-				        {
-					        break;
-				        }
-			        }
+                        if (rootIterCount == 50)
+                        {
+                            break;
+                        }
+                    }
 
-			        b2_toiMaxRootIters = Math.Max(b2_toiMaxRootIters, rootIterCount);
-		        }
+                    b2_toiMaxRootIters = Math.Max(b2_toiMaxRootIters, rootIterCount);
+                }
 
-		        // Ensure significant advancement.
-		        if (newAlpha < (1.0f + 100.0f * Settings.Epsilon) * alpha)
-		        {
-			        break;
-		        }
+                // Ensure significant advancement.
+                if (newAlpha < (1.0f + 100.0f * Settings.Epsilon) * alpha)
+                {
+                    break;
+                }
 
-		        alpha = newAlpha;
+                alpha = newAlpha;
 
-		        ++iter;
-		        ++b2_toiIters;
+                ++iter;
+                ++b2_toiIters;
 
-		        if (iter == k_maxIterations)
-		        {
-			        break;
-		        }
-	        }
+                if (iter == k_maxIterations)
+                {
+                    break;
+                }
+            }
 
-	        b2_toiMaxIters = Math.Max(b2_toiMaxIters, iter);
+            b2_toiMaxIters = Math.Max(b2_toiMaxIters, iter);
 
-	        return alpha;
+            return alpha;
         }
 
         static int b2_toiCalls, b2_toiIters, b2_toiMaxIters;

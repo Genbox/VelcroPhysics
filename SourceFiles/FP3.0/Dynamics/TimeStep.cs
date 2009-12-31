@@ -31,5 +31,5 @@ namespace FarseerPhysics
         public int velocityIterations;
         public int positionIterations;
         public bool warmStarting;
-    };
+    }
 }

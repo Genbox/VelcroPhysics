@@ -52,7 +52,7 @@ namespace FarseerPhysics
 
             return 1;
         }
-    };
+    }
 
     /// The broad-phase is used for computing pairs and performing volume queries and ray casts.
     /// This broad-phase does not persist pairs. Instead, this reports potentially new pairs.
@@ -65,7 +65,7 @@ namespace FarseerPhysics
         {
             _queryCallback = new Func<int, bool>(QueryCallback);
 
-	        _proxyCount = 0;
+	        ProxyCount = 0;
 	        
 	        _pairCapacity = 16;
 	        _pairCount = 0;
@@ -81,7 +81,7 @@ namespace FarseerPhysics
 	    public int CreateProxy(ref AABB aabb, object userData)
         {
 	        int proxyId = _tree.CreateProxy(ref aabb, userData);
-            ++_proxyCount;
+            ++ProxyCount;
 	        BufferMove(proxyId);
 	        return proxyId;
         }
@@ -90,7 +90,7 @@ namespace FarseerPhysics
 	    public void DestroyProxy(int proxyId)
         {
 	        UnBufferMove(proxyId);
-            --_proxyCount;
+            --ProxyCount;
 	        _tree.DestroyProxy(proxyId);
         }
 
@@ -124,17 +124,10 @@ namespace FarseerPhysics
 	        return AABB.TestOverlap(ref aabbA, ref aabbB);
         }
 
+        /// Get the number of proxies.
+        public int ProxyCount { get; private set; }
 
-	    /// Get the number of proxies.
-	    public int ProxyCount
-        {
-            get
-            {
-                return _proxyCount;
-            }
-        }
-
-	    /// Update the pairs. This results in pair callbacks. This can only add pairs.
+        /// Update the pairs. This results in pair callbacks. This can only add pairs.
 	    public void UpdatePairs<T>(Action<T,T> callback)
         {
             // Reset pair buffer
@@ -161,6 +154,7 @@ namespace FarseerPhysics
 	        // Reset move buffer
 	        _moveCount = 0;
 
+            //TODO: Test different stable sorting methods
 	        // Sort the pair buffer to expose duplicates.
             Array.Sort(_pairBuffer, 0, _pairCount);
 
@@ -251,7 +245,6 @@ namespace FarseerPhysics
         }
 
         private DynamicTree _tree = new DynamicTree();
-        private int _proxyCount;
         private int[] _moveBuffer;
         private int _moveCapacity;
         private int _moveCount;

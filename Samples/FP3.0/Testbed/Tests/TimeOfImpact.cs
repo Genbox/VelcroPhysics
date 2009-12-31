@@ -76,7 +76,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             float toi = FarseerPhysics.TimeOfImpact.CalculateTimeOfImpact(ref input);
 
-            _debugView.DrawString(50, _textLine, "toi = {0:n}", (float) toi);
+            _debugView.DrawString(50, _textLine, "toi = {0:n}", (float)toi);
             _textLine += 15;
 
             _debugView.DrawString(50, _textLine, "max toi iters = {0:n}, max root iters = {1:n}", b2_toiMaxIters,

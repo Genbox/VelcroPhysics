@@ -40,7 +40,7 @@ namespace FarseerPhysics
         /// or always collide (positive). Zero means no collision group. Non-zero group
         /// filtering always wins against the mask bits.
         public Int16 groupIndex;
-    };
+    }
 
     /// A fixture definition is used to create a fixture. This class defines an
     /// abstract fixture definition. You can reuse fixture definitions safely.
@@ -82,7 +82,7 @@ namespace FarseerPhysics
 
 	    /// Contact filtering data.
         public Filter filter;
-    };
+    }
 
 
     /// A fixture is used to attach a shape to a body for collision detection. A fixture
@@ -246,7 +246,6 @@ namespace FarseerPhysics
             _shape.ComputeMass(out massData, _density);
         }
 
-
 	    /// Get the coefficient of friction.
 	    public float GetFriction()
         {
@@ -277,15 +276,6 @@ namespace FarseerPhysics
 	    public void GetAABB(out AABB aabb)
         {
             aabb = _aabb;
-        }
-
-	    internal Fixture()
-        {
-            _userData = null;
-	        _body = null;
-	        _next = null;
-	        _proxyId = BroadPhase.NullProxy;
-	        _shape = null;
         }
 
 	    // We need separation create/destroy functions from the constructor/destructor because
@@ -338,7 +328,6 @@ namespace FarseerPhysics
 	        _proxyId = BroadPhase.NullProxy;
         }
 
-
         internal void Synchronize(BroadPhase broadPhase, ref Transform transform1, ref Transform transform2)
         {
             if (_proxyId == BroadPhase.NullProxy)
@@ -360,22 +349,15 @@ namespace FarseerPhysics
         }
 
         internal AABB _aabb;
-
         internal float _density;
-
 	    internal Fixture _next;
 	    internal Body _body;
-
         private Shape _shape;
-
         private float _friction;
         private float _restitution;
-
-	    internal int _proxyId;
+        internal int _proxyId = BroadPhase.NullProxy;
         private Filter _filter;
-
         private bool _isSensor;
-
         private object _userData;
     }
 }
