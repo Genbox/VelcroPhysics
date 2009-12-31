@@ -20,19 +20,18 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class Confined : Test
+    public class ConfinedTest : Test
     {
-        private static int e_columnCount = 0;
-        private static int e_rowCount = 0;
+        private const int ColumnCount = 0;
+        private const int RowCount = 0;
 
-        public Confined()
+        private ConfinedTest()
         {
             {
                 BodyDef bd = new BodyDef();
@@ -66,9 +65,9 @@ namespace FarseerPhysics.TestBed.Tests
             fd.density = 1.0f;
             fd.friction = 0.1f;
 
-            for (int j = 0; j < e_columnCount; ++j)
+            for (int j = 0; j < ColumnCount; ++j)
             {
-                for (int i = 0; i < e_rowCount; ++i)
+                for (int i = 0; i < RowCount; ++i)
                 {
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
@@ -123,7 +122,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new Confined();
+            return new ConfinedTest();
         }
     }
 }

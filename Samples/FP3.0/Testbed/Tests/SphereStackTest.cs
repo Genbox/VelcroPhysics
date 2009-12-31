@@ -20,18 +20,16 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class Pyramid : Test
+    public class SphereStackTest : Test
     {
-        private static int e_count = 20;
+        private const int Count = 10;
 
-        public Pyramid()
+        private SphereStackTest()
         {
             {
                 BodyDef bd = new BodyDef();
@@ -43,50 +41,28 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                float a = 0.5f;
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(a, a);
+                CircleShape shape = new CircleShape(1.0f);
 
-                Vector2 x = new Vector2(-7.0f, 0.75f);
-                Vector2 y;
-                Vector2 deltaX = new Vector2(0.5625f, 1.25f);
-                Vector2 deltaY = new Vector2(1.125f, 0.0f);
-
-                for (int i = 0; i < e_count; ++i)
+                for (int i = 0; i < Count; ++i)
                 {
-                    y = x;
+                    BodyDef bd = new BodyDef();
+                    bd.type = BodyType.Dynamic;
+                    bd.position = new Vector2(0.0f, 4.0f + 3.0f*i);
 
-                    for (int j = i; j < e_count; ++j)
-                    {
-                        BodyDef bd = new BodyDef();
-                        bd.type = BodyType.Dynamic;
-                        bd.position = y;
-                        Body body = _world.CreateBody(bd);
-                        body.CreateFixture(shape, 5.0f);
+                    _bodies[i] = _world.CreateBody(bd);
 
-                        y += deltaY;
-                    }
+                    _bodies[i].CreateFixture(shape, 1.0f);
 
-                    x += deltaX;
+                    //_bodies[i].SetLinearVelocity(new Vector2(0.0f, -100.0f));
                 }
             }
         }
 
-        //void Step(Framework.Settings settings)
-        //{
-        //	// We need higher accuracy for the pyramid.
-        //	int velocityIterations = settings.velocityIterations;
-        //	int positionIterations = settings.positionIterations;
-        //	settings.velocityIterations = b2Max(8, velocityIterations);
-        //	settings.positionIterations = b2Max(1, positionIterations);
-        //	base.Step(settings);
-        //	settings.velocityIterations = velocityIterations;
-        //	settings.positionIterations = positionIterations;
-        //}
-
         public static Test Create()
         {
-            return new Pyramid();
+            return new SphereStackTest();
         }
+
+        private Body[] _bodies = new Body[Count];
     }
 }

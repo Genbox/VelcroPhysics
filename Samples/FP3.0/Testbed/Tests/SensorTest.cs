@@ -20,8 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -29,9 +27,9 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class SensorTest : Test
     {
-        private static int e_count = 7;
+        private const int Count = 7;
 
-        public SensorTest()
+        private SensorTest()
         {
             {
                 BodyDef bd = new BodyDef();
@@ -66,7 +64,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(1.0f);
 
-                for (int i = 0; i < e_count; ++i)
+                for (int i = 0; i < Count; ++i)
                 {
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
@@ -121,7 +119,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Traverse the contact results. Apply a force on shapes
             // that overlap the sensor.
-            for (int i = 0; i < e_count; ++i)
+            for (int i = 0; i < Count; ++i)
             {
                 if (_touching[i] == false)
                 {
@@ -137,7 +135,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 position = body.GetPosition();
 
                 Vector2 d = center - position;
-                if (d.LengthSquared() < FarseerPhysics.Settings.Epsilon * FarseerPhysics.Settings.Epsilon)
+                if (d.LengthSquared() < Settings.Epsilon * Settings.Epsilon)
                 {
                     continue;
                 }
@@ -154,7 +152,7 @@ namespace FarseerPhysics.TestBed.Tests
         }
 
         private Fixture _sensor;
-        private Body[] _bodies = new Body[e_count];
-        private bool[] _touching = new bool[e_count];
+        private Body[] _bodies = new Body[Count];
+        private bool[] _touching = new bool[Count];
     }
 }

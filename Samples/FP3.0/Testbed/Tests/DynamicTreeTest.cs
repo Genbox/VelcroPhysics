@@ -22,7 +22,6 @@
 
 using System;
 using System.Diagnostics;
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -32,14 +31,14 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class DynamicTreeTest : Test
     {
-        private const int e_actorCount = 128;
+        private const int ActorCount = 128;
 
-        public DynamicTreeTest()
+        private DynamicTreeTest()
         {
             _worldExtent = 15.0f;
             _proxyExtent = 0.5f;
 
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < ActorCount; ++i)
             {
                 _actors[i] = new Actor();
 
@@ -71,15 +70,15 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Step(Framework.Settings settings)
         {
             _rayActor = null;
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < ActorCount; ++i)
             {
                 _actors[i].fraction = 1.0f;
                 _actors[i].overlap = false;
             }
 
-            if (_automated == true)
+            if (_automated)
             {
-                int actionCount = Math.Max(1, e_actorCount >> 2);
+                int actionCount = Math.Max(1, ActorCount >> 2);
 
                 for (int i = 0; i < actionCount; ++i)
                 {
@@ -90,7 +89,7 @@ namespace FarseerPhysics.TestBed.Tests
             Query();
             RayCast();
 
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < ActorCount; ++i)
             {
                 Actor actor = _actors[i];
                 if (actor.proxyId == -1)
@@ -126,7 +125,7 @@ namespace FarseerPhysics.TestBed.Tests
             if (_rayActor != null)
             {
                 Color cr = new Color(0.2f, 0.2f, 0.9f);
-                Vector2 p = _rayCastInput.Point1 + _rayActor.fraction*(_rayCastInput.Point2 - _rayCastInput.Point1);
+                Vector2 p = _rayCastInput.Point1 + _rayActor.fraction * (_rayCastInput.Point2 - _rayCastInput.Point1);
                 _debugView.DrawPoint(p, 6.0f, cr);
             }
 
@@ -155,21 +154,20 @@ namespace FarseerPhysics.TestBed.Tests
 
         private bool QueryCallback(int proxyid)
         {
-            Actor actor = (Actor) _tree.GetUserData(proxyid);
+            Actor actor = (Actor)_tree.GetUserData(proxyid);
             actor.overlap = AABB.TestOverlap(ref _queryAABB, ref actor.aabb);
             return true;
         }
 
         private float RayCastCallback(ref RayCastInput input, int proxyid)
         {
-            Actor actor = (Actor) _tree.GetUserData(proxyid);
+            Actor actor = (Actor)_tree.GetUserData(proxyid);
 
             RayCastOutput output;
             bool hit = actor.aabb.RayCast(out output, ref input);
 
             if (hit)
             {
-                _rayCastOutput = output;
                 actor.fraction = output.Fraction;
                 _rayActor = actor;
 
@@ -191,11 +189,11 @@ namespace FarseerPhysics.TestBed.Tests
         {
             aabb = new AABB();
 
-            Vector2 w = new Vector2(2.0f*_proxyExtent, 2.0f*_proxyExtent);
+            Vector2 w = new Vector2(2.0f * _proxyExtent, 2.0f * _proxyExtent);
             //aabb.lowerBound.x = -_proxyExtent;
             //aabb.lowerBound.y = -_proxyExtent + _worldExtent;
             aabb.LowerBound.X = Rand.RandomFloat(-_worldExtent, _worldExtent);
-            aabb.LowerBound.Y = Rand.RandomFloat(0.0f, 2.0f*_worldExtent);
+            aabb.LowerBound.Y = Rand.RandomFloat(0.0f, 2.0f * _worldExtent);
             aabb.UpperBound = aabb.LowerBound + w;
         }
 
@@ -209,11 +207,9 @@ namespace FarseerPhysics.TestBed.Tests
             aabb.LowerBound += d;
             aabb.UpperBound += d;
 
-            Vector2 c0 = 0.5f*(aabb.LowerBound + aabb.UpperBound);
-            Vector2 min;
-            min = new Vector2(-_worldExtent, 0.0f);
-            Vector2 max;
-            max = new Vector2(_worldExtent, 2.0f*_worldExtent);
+            Vector2 c0 = 0.5f * (aabb.LowerBound + aabb.UpperBound);
+            Vector2 min = new Vector2(-_worldExtent, 0.0f);
+            Vector2 max = new Vector2(_worldExtent, 2.0f * _worldExtent);
             Vector2 c = Vector2.Clamp(c0, min, max);
 
             aabb.LowerBound += c - c0;
@@ -222,9 +218,9 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void CreateProxy()
         {
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < ActorCount; ++i)
             {
-                int j = Rand.rand.Next()%e_actorCount;
+                int j = Rand.rand.Next() % ActorCount;
                 Actor actor = _actors[j];
                 if (actor.proxyId == -1)
                 {
@@ -237,9 +233,9 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void DestroyProxy()
         {
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < ActorCount; ++i)
             {
-                int j = Rand.rand.Next()%e_actorCount;
+                int j = Rand.rand.Next() % ActorCount;
                 Actor actor = _actors[j];
                 if (actor.proxyId != -1)
                 {
@@ -252,9 +248,9 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void MoveProxy()
         {
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < ActorCount; ++i)
             {
-                int j = Rand.rand.Next()%e_actorCount;
+                int j = Rand.rand.Next() % ActorCount;
                 Actor actor = _actors[j];
                 if (actor.proxyId == -1)
                 {
@@ -271,7 +267,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void Action()
         {
-            int choice = Rand.rand.Next()%20;
+            int choice = Rand.rand.Next() % 20;
 
             switch (choice)
             {
@@ -293,7 +289,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             _tree.Query(QueryCallback, ref _queryAABB);
 
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < ActorCount; ++i)
             {
                 if (_actors[i].proxyId == -1)
                 {
@@ -315,9 +311,7 @@ namespace FarseerPhysics.TestBed.Tests
             _tree.RayCast(RayCastCallback, ref input);
 
             // Brute force ray cast.
-            Actor bruteActor = null;
-            RayCastOutput bruteOutput;
-            for (int i = 0; i < e_actorCount; ++i)
+            for (int i = 0; i < ActorCount; ++i)
             {
                 if (_actors[i].proxyId == -1)
                 {
@@ -328,8 +322,6 @@ namespace FarseerPhysics.TestBed.Tests
                 bool hit = _actors[i].aabb.RayCast(out output, ref input);
                 if (hit)
                 {
-                    bruteActor = _actors[i];
-                    bruteOutput = output;
                     input.MaxFraction = output.Fraction;
                 }
             }
@@ -339,11 +331,10 @@ namespace FarseerPhysics.TestBed.Tests
         private float _proxyExtent;
 
         private DynamicTree _tree = new DynamicTree();
-        private AABB _queryAABB = new AABB();
-        private RayCastInput _rayCastInput = new RayCastInput();
-        private RayCastOutput _rayCastOutput = new RayCastOutput();
+        private AABB _queryAABB;
+        private RayCastInput _rayCastInput;
         private Actor _rayActor = new Actor();
-        private Actor[] _actors = new Actor[e_actorCount];
+        private Actor[] _actors = new Actor[ActorCount];
         private int _stepCount;
         private bool _automated;
     }

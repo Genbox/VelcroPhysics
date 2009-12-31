@@ -26,9 +26,9 @@ using System.Collections.Generic;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class CollisionProcessing : Test
+    public class CollisionProcessingTest : Test
     {
-        public CollisionProcessing()
+        private CollisionProcessingTest()
         {
             // Ground body
             {
@@ -184,7 +184,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new CollisionProcessing();
+            return new CollisionProcessingTest();
         }
     }
 }

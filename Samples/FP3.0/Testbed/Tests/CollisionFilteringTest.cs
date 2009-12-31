@@ -26,7 +26,7 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class CollisionFiltering : Test
+    public class CollisionFilteringTest : Test
     {
         // This is a test of collision filtering.
         // There is a triangle, a box, and a circle.
@@ -34,19 +34,18 @@ namespace FarseerPhysics.TestBed.Tests
         // The 3 small ones always collide.
         // The 3 large ones never collide.
         // The boxes don't collide with triangles (except if both are small).
-        private const Int16 k_smallGroup = 1;
-        private const Int16 k_largeGroup = -1;
+        private const Int16 SmallGroup = 1;
+        private const Int16 LargeGroup = -1;
 
-        private static UInt16 k_defaultCategory = 0x0001;
-        private static UInt16 k_triangleCategory = 0x0002;
-        private static UInt16 k_boxCategory = 0x0004;
-        private static UInt16 k_circleCategory = 0x0008;
+        private const ushort TriangleCategory = 0x0002;
+        private const ushort BoxCategory = 0x0004;
+        private const ushort CircleCategory = 0x0008;
 
-        private static UInt16 k_triangleMask = 0xFFFF;
-        private static UInt16 k_boxMask = (ushort) (0xFFFF ^ k_triangleCategory);
-        private static UInt16 k_circleMask = 0xFFFF;
+        private const ushort TriangleMask = 0xFFFF;
+        private const ushort BoxMask = 0xFFFF ^ TriangleCategory;
+        private const ushort CircleMask = 0xFFFF;
 
-        public CollisionFiltering()
+        private CollisionFilteringTest()
         {
             // Ground body
             {
@@ -74,9 +73,9 @@ namespace FarseerPhysics.TestBed.Tests
             triangleShapeDef.shape = polygon;
             triangleShapeDef.density = 1.0f;
 
-            triangleShapeDef.filter.groupIndex = k_smallGroup;
-            triangleShapeDef.filter.categoryBits = k_triangleCategory;
-            triangleShapeDef.filter.maskBits = k_triangleMask;
+            triangleShapeDef.filter.groupIndex = SmallGroup;
+            triangleShapeDef.filter.categoryBits = TriangleCategory;
+            triangleShapeDef.filter.maskBits = TriangleMask;
 
             BodyDef triangleBodyDef = new BodyDef();
             triangleBodyDef.type = BodyType.Dynamic;
@@ -90,7 +89,7 @@ namespace FarseerPhysics.TestBed.Tests
             vertices[1] *= 2.0f;
             vertices[2] *= 2.0f;
             polygon.Set(vertices, 3);
-            triangleShapeDef.filter.groupIndex = k_largeGroup;
+            triangleShapeDef.filter.groupIndex = LargeGroup;
             triangleBodyDef.position = new Vector2(-5.0f, 6.0f);
             triangleBodyDef.fixedRotation = true; // look at me!
 
@@ -128,9 +127,9 @@ namespace FarseerPhysics.TestBed.Tests
             boxShapeDef.density = 1.0f;
             boxShapeDef.restitution = 0.1f;
 
-            boxShapeDef.filter.groupIndex = k_smallGroup;
-            boxShapeDef.filter.categoryBits = k_boxCategory;
-            boxShapeDef.filter.maskBits = k_boxMask;
+            boxShapeDef.filter.groupIndex = SmallGroup;
+            boxShapeDef.filter.categoryBits = BoxCategory;
+            boxShapeDef.filter.maskBits = BoxMask;
 
             BodyDef boxBodyDef = new BodyDef();
             boxBodyDef.type = BodyType.Dynamic;
@@ -141,7 +140,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Large box (recycle definitions)
             polygon.SetAsBox(2.0f, 1.0f);
-            boxShapeDef.filter.groupIndex = k_largeGroup;
+            boxShapeDef.filter.groupIndex = LargeGroup;
             boxBodyDef.position = new Vector2(0.0f, 6.0f);
 
             Body body4 = _world.CreateBody(boxBodyDef);
@@ -154,9 +153,9 @@ namespace FarseerPhysics.TestBed.Tests
             circleShapeDef.shape = circle;
             circleShapeDef.density = 1.0f;
 
-            circleShapeDef.filter.groupIndex = k_smallGroup;
-            circleShapeDef.filter.categoryBits = k_circleCategory;
-            circleShapeDef.filter.maskBits = k_circleMask;
+            circleShapeDef.filter.groupIndex = SmallGroup;
+            circleShapeDef.filter.categoryBits = CircleCategory;
+            circleShapeDef.filter.maskBits = CircleMask;
 
             BodyDef circleBodyDef = new BodyDef();
             circleBodyDef.type = BodyType.Dynamic;
@@ -167,7 +166,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Large circle
             circle.Radius *= 2.0f;
-            circleShapeDef.filter.groupIndex = k_largeGroup;
+            circleShapeDef.filter.groupIndex = LargeGroup;
             circleBodyDef.position = new Vector2(5.0f, 6.0f);
 
             Body body6 = _world.CreateBody(circleBodyDef);
@@ -176,7 +175,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new CollisionFiltering();
+            return new CollisionFilteringTest();
         }
     }
 }

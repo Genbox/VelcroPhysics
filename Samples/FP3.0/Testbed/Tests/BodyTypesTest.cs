@@ -26,9 +26,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class BodyTypes : Test
+    public class BodyTypesTest : Test
     {
-        public BodyTypes()
+        private BodyTypesTest()
         {
             Body ground;
             {
@@ -155,7 +155,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new BodyTypes();
+            return new BodyTypesTest();
         }
 
         private Body _attachment;

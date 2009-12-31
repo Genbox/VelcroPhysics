@@ -20,16 +20,15 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class TimeOfImpact : Test
+    public class TimeOfImpactTest : Test
     {
-        private TimeOfImpact()
+        private TimeOfImpactTest()
         {
             {
                 _shapeA.SetAsBox(10.0f, 0.2f);
@@ -42,10 +41,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new TimeOfImpact();
+            return new TimeOfImpactTest();
         }
-
-        private static int b2_toiMaxIters, b2_toiMaxRootIters = 0;
 
         public override void Step(Framework.Settings settings)
         {
@@ -72,15 +69,15 @@ namespace FarseerPhysics.TestBed.Tests
             input.proxyB.Set(_shapeB);
             input.sweepA = sweepA;
             input.sweepB = sweepB;
-            input.tolerance = FarseerPhysics.Settings.LinearSlop;
+            input.tolerance = Settings.LinearSlop;
 
-            float toi = FarseerPhysics.TimeOfImpact.CalculateTimeOfImpact(ref input);
+            float toi = TimeOfImpact.CalculateTimeOfImpact(ref input);
 
-            _debugView.DrawString(50, _textLine, "toi = {0:n}", (float)toi);
+            _debugView.DrawString(50, _textLine, "toi = {0:n}", toi);
             _textLine += 15;
 
-            _debugView.DrawString(50, _textLine, "max toi iters = {0:n}, max root iters = {1:n}", b2_toiMaxIters,
-                                  b2_toiMaxRootIters);
+            _debugView.DrawString(50, _textLine, "max toi iters = {0:n}, max root iters = {1:n}", TimeOfImpact.ToiMaxIters,
+                                  TimeOfImpact.ToiMaxRootIters);
             _textLine += 15;
 
             FixedArray8<Vector2> vertices = new FixedArray8<Vector2>();

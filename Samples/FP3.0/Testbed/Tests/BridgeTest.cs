@@ -20,20 +20,18 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class Cantilever : Test
+    public class BridgeTest : Test
     {
-        private static int e_count = 8;
+        private const int Count = 30;
 
-        public Cantilever()
+        private BridgeTest()
         {
-            Body ground = null;
+            Body ground;
             {
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
@@ -50,11 +48,12 @@ namespace FarseerPhysics.TestBed.Tests
                 FixtureDef fd = new FixtureDef();
                 fd.shape = shape;
                 fd.density = 20.0f;
+                fd.friction = 0.2f;
 
-                WeldJointDef jd = new WeldJointDef();
+                RevoluteJointDef jd = new RevoluteJointDef();
 
                 Body prevBody = ground;
-                for (int i = 0; i < e_count; ++i)
+                for (int i = 0; i < Count; ++i)
                 {
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
@@ -66,101 +65,21 @@ namespace FarseerPhysics.TestBed.Tests
                     jd.Initialize(prevBody, body, anchor);
                     _world.CreateJoint(jd);
 
-                    prevBody = body;
-                }
-            }
-
-            {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(0.5f, 0.125f);
-
-                FixtureDef fd = new FixtureDef();
-                fd.shape = shape;
-                fd.density = 20.0f;
-
-                WeldJointDef jd = new WeldJointDef();
-
-                Body prevBody = ground;
-                for (int i = 0; i < e_count; ++i)
-                {
-                    BodyDef bd = new BodyDef();
-                    bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(-14.5f + 1.0f*i, 15.0f);
-                    bd.inertiaScale = 10.0f;
-                    Body body = _world.CreateBody(bd);
-                    body.CreateFixture(fd);
-
-                    Vector2 anchor = new Vector2(-15.0f + 1.0f*i, 15.0f);
-                    jd.Initialize(prevBody, body, anchor);
-                    _world.CreateJoint(jd);
-
-                    prevBody = body;
-                }
-            }
-
-            {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(0.5f, 0.125f);
-
-                FixtureDef fd = new FixtureDef();
-                fd.shape = shape;
-                fd.density = 20.0f;
-
-                WeldJointDef jd = new WeldJointDef();
-
-                Body prevBody = ground;
-                for (int i = 0; i < e_count; ++i)
-                {
-                    BodyDef bd = new BodyDef();
-                    bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(-4.5f + 1.0f*i, 5.0f);
-                    Body body = _world.CreateBody(bd);
-                    body.CreateFixture(fd);
-
-                    if (i > 0)
+                    if (i == (Count >> 1))
                     {
-                        Vector2 anchor = new Vector2(-5.0f + 1.0f*i, 5.0f);
-                        jd.Initialize(prevBody, body, anchor);
-                        _world.CreateJoint(jd);
                     }
 
                     prevBody = body;
                 }
-            }
-            {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(0.5f, 0.125f);
 
-                FixtureDef fd = new FixtureDef();
-                fd.shape = shape;
-                fd.density = 20.0f;
-
-                WeldJointDef jd = new WeldJointDef();
-
-                Body prevBody = ground;
-                for (int i = 0; i < e_count; ++i)
-                {
-                    BodyDef bd = new BodyDef();
-                    bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(5.5f + 1.0f*i, 10.0f);
-                    bd.inertiaScale = 10.0f;
-                    Body body = _world.CreateBody(bd);
-                    body.CreateFixture(fd);
-
-                    if (i > 0)
-                    {
-                        Vector2 anchor = new Vector2(5.0f + 1.0f*i, 10.0f);
-                        jd.Initialize(prevBody, body, anchor);
-                        _world.CreateJoint(jd);
-                    }
-
-                    prevBody = body;
-                }
+                Vector2 anchor2 = new Vector2(-15.0f + 1.0f*Count, 5.0f);
+                jd.Initialize(prevBody, ground, anchor2);
+                _world.CreateJoint(jd);
             }
 
+            Vector2[] vertices = new Vector2[3];
             for (int i = 0; i < 2; ++i)
             {
-                Vector2[] vertices = new Vector2[3];
                 vertices[0] = new Vector2(-0.5f, 0.0f);
                 vertices[1] = new Vector2(0.5f, 0.0f);
                 vertices[2] = new Vector2(0.0f, 1.5f);
@@ -179,7 +98,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body.CreateFixture(fd);
             }
 
-            for (int i = 0; i < 2; ++i)
+            for (int i = 0; i < 3; ++i)
             {
                 CircleShape shape = new CircleShape(0.5f);
 
@@ -197,9 +116,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new Cantilever();
+            return new BridgeTest();
         }
-
-        private Body _middle;
     }
 }

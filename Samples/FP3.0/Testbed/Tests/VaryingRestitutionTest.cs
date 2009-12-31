@@ -20,20 +20,18 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class Chain : Test
+    public class VaryingRestitutionTest : Test
     {
-        public Chain()
+        private VaryingRestitutionTest()
         {
-            Body ground = null;
             {
                 BodyDef bd = new BodyDef();
-                ground = _world.CreateBody(bd);
+                Body ground = _world.CreateBody(bd);
 
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -41,39 +39,31 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(0.6f, 0.125f);
+                CircleShape shape = new CircleShape(1.0f);
 
                 FixtureDef fd = new FixtureDef();
                 fd.shape = shape;
-                fd.density = 20.0f;
-                fd.friction = 0.2f;
+                fd.density = 1.0f;
 
-                RevoluteJointDef jd = new RevoluteJointDef();
-                jd.collideConnected = false;
+                float[] restitution = new float[] {0.0f, 0.1f, 0.3f, 0.5f, 0.75f, 0.9f, 1.0f};
 
-                float y = 25.0f;
-                Body prevBody = ground;
-                for (int i = 0; i < 30; ++i)
+                for (int i = 0; i < 7; ++i)
                 {
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(0.5f + i, y);
+                    bd.position = new Vector2(-10.0f + 3.0f*i, 20.0f);
+
                     Body body = _world.CreateBody(bd);
+
+                    fd.restitution = restitution[i];
                     body.CreateFixture(fd);
-
-                    Vector2 anchor = new Vector2((float) i, y);
-                    jd.Initialize(prevBody, body, anchor);
-                    _world.CreateJoint(jd);
-
-                    prevBody = body;
                 }
             }
         }
 
         internal static Test Create()
         {
-            return new Chain();
+            return new VaryingRestitutionTest();
         }
     }
 }

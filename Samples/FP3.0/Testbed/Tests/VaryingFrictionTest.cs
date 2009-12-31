@@ -20,15 +20,14 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class VaryingFriction : Test
+    public class VaryingFrictionTest : Test
     {
-        private VaryingFriction()
+        private VaryingFrictionTest()
         {
             {
                 BodyDef bd = new BodyDef();
@@ -105,7 +104,7 @@ namespace FarseerPhysics.TestBed.Tests
                 fd.shape = shape;
                 fd.density = 25.0f;
 
-                float[] friction = new float[5] {0.75f, 0.5f, 0.35f, 0.1f, 0.0f};
+                float[] friction = new float[] {0.75f, 0.5f, 0.35f, 0.1f, 0.0f};
 
                 for (int i = 0; i < 5; ++i)
                 {
@@ -122,7 +121,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new VaryingFriction();
+            return new VaryingFrictionTest();
         }
     }
 }

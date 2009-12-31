@@ -21,17 +21,14 @@
 */
 
 using System;
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class Breakable : Test
+    public class BreakableTest : Test
     {
-        private static int e_count = 7;
-
-        public Breakable()
+        private BreakableTest()
         {
             // Ground body
             {
@@ -48,7 +45,7 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 bd.type = BodyType.Dynamic;
                 bd.position = new Vector2(0.0f, 40.0f);
-                bd.angle = 0.25f*FarseerPhysics.Settings.Pi;
+                bd.angle = 0.25f * Settings.Pi;
                 _body1 = _world.CreateBody(bd);
 
                 _shape1 = new PolygonShape();
@@ -143,7 +140,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new Breakable();
+            return new BreakableTest();
         }
 
         private Body _body1;

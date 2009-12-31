@@ -20,17 +20,16 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class Dominos : Test
+    public class DominosTest : Test
     {
-        public Dominos()
+        private DominosTest()
         {
-            Body b1 = null;
+            Body b1;
             {
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -79,7 +78,7 @@ namespace FarseerPhysics.TestBed.Tests
                 ground.CreateFixture(shape, 0.0f);
             }
 
-            Body b2 = null;
+            Body b2;
             {
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(0.25f, 1.5f);
@@ -90,7 +89,7 @@ namespace FarseerPhysics.TestBed.Tests
                 b2.CreateFixture(shape, 0.0f);
             }
 
-            Body b3 = null;
+            Body b3;
             {
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(6.0f, 0.125f);
@@ -105,14 +104,13 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             RevoluteJointDef jd = new RevoluteJointDef();
-            Vector2 anchor;
 
-            anchor = new Vector2(-2.0f, 1.0f);
+            Vector2 anchor = new Vector2(-2.0f, 1.0f);
             jd.Initialize(b1, b3, anchor);
             jd.collideConnected = true;
             _world.CreateJoint(jd);
 
-            Body b4 = null;
+            Body b4;
             {
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(0.25f, 0.25f);
@@ -128,7 +126,7 @@ namespace FarseerPhysics.TestBed.Tests
             jd.Initialize(b2, b4, anchor);
             _world.CreateJoint(jd);
 
-            Body b5 = null;
+            Body b5;
             {
                 BodyDef bd = new BodyDef();
                 bd.type = BodyType.Dynamic;
@@ -156,7 +154,7 @@ namespace FarseerPhysics.TestBed.Tests
             jd.Initialize(b1, b5, anchor);
             _world.CreateJoint(jd);
 
-            Body b6 = null;
+            Body b6;
             {
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(1.0f, 0.1f);
@@ -172,7 +170,7 @@ namespace FarseerPhysics.TestBed.Tests
             jd.Initialize(b5, b6, anchor);
             _world.CreateJoint(jd);
 
-            Body b7 = null;
+            Body b7;
             {
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(0.1f, 1.0f);
@@ -212,7 +210,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new Dominos();
+            return new DominosTest();
         }
     }
 }

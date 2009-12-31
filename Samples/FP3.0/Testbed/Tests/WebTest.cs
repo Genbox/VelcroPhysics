@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -28,11 +27,11 @@ using Microsoft.Xna.Framework.Input;
 namespace FarseerPhysics.TestBed.Tests
 {
     // This tests distance joints, body destruction, and joint destruction.
-    public class Web : Test
+    public class WebTest : Test
     {
-        private Web()
+        private WebTest()
         {
-            Body ground = null;
+            Body ground;
             {
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
@@ -66,7 +65,6 @@ namespace FarseerPhysics.TestBed.Tests
                 _bodies[3].CreateFixture(shape, 5.0f);
 
                 DistanceJointDef jd = new DistanceJointDef();
-                Vector2 p1, p2, d;
 
                 jd.frequencyHz = 4.0f;
                 jd.dampingRatio = 0.5f;
@@ -75,9 +73,9 @@ namespace FarseerPhysics.TestBed.Tests
                 jd.bodyB = _bodies[0];
                 jd.localAnchorA = new Vector2(-10.0f, 0.0f);
                 jd.localAnchorB = new Vector2(-0.5f, -0.5f);
-                p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
-                p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
-                d = p2 - p1;
+                Vector2 p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
+                Vector2 p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
+                Vector2 d = p2 - p1;
                 jd.length = d.Length();
                 _joints[0] = _world.CreateJoint(jd);
 
@@ -115,7 +113,7 @@ namespace FarseerPhysics.TestBed.Tests
                 jd.bodyB = _bodies[1];
                 jd.localAnchorA = new Vector2(0.5f, 0.0f);
                 jd.localAnchorB = new Vector2(-0.5f, 0.0f);
-                ;
+                
                 p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
                 p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
                 d = p2 - p1;
@@ -206,7 +204,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new Web();
+            return new WebTest();
         }
 
         private Body[] _bodies = new Body[4];
