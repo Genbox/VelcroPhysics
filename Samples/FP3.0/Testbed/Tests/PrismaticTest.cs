@@ -59,12 +59,12 @@ namespace FarseerPhysics.TestBed.Tests
                 // Non-bouncy limit
                 //pjd.Initialize(ground, body, new Vector2(-10.0f, 10.0f), new Vector2(1.0f, 0.0f));
 
-                pjd.motorSpeed = 10.0f;
-                pjd.maxMotorForce = 1000.0f;
-                pjd.enableMotor = true;
-                pjd.lowerTranslation = 0.0f;
-                pjd.upperTranslation = 20.0f;
-                pjd.enableLimit = true;
+                pjd.MotorSpeed = 10.0f;
+                pjd.MaxMotorForce = 1000.0f;
+                pjd.EnableMotor = true;
+                pjd.LowerTranslation = 0.0f;
+                pjd.UpperTranslation = 20.0f;
+                pjd.EnableLimit = true;
 
                 _joint = (PrismaticJoint)_world.CreateJoint(pjd);
             }

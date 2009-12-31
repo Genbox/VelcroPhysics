@@ -100,8 +100,8 @@ namespace FarseerPhysics.TestBed.Tests
             // Using a soft distanceraint can reduce some jitter.
             // It also makes the structure seem a bit more fluid by
             // acting like a suspension system.
-            djd.dampingRatio = 0.5f;
-            djd.frequencyHz = 10.0f;
+            djd.DampingRatio = 0.5f;
+            djd.FrequencyHz = 10.0f;
 
             djd.Initialize(body1, body2, p2 + _offset, p5 + _offset);
             _world.CreateJoint(djd);
@@ -190,10 +190,10 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 RevoluteJointDef jd = new RevoluteJointDef();
                 jd.Initialize(_wheel, _chassis, pivot + _offset);
-                jd.collideConnected = false;
-                jd.motorSpeed = _motorSpeed;
-                jd.maxMotorTorque = 400.0f;
-                jd.enableMotor = _motorOn;
+                jd.CollideConnected = false;
+                jd.MotorSpeed = _motorSpeed;
+                jd.MaxMotorTorque = 400.0f;
+                jd.EnableMotor = _motorOn;
                 _motorJoint = (RevoluteJoint)_world.CreateJoint(jd);
             }
 

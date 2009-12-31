@@ -26,22 +26,24 @@ using System;
 
 namespace FarseerPhysics
 {
+    /// <summary>
     /// Distance joint definition. This requires defining an
     /// anchor point on both bodies and the non-zero length of the
     /// distance joint. The definition uses local anchor points
     /// so that the initial configuration can violate the constraint
     /// slightly. This helps when saving and loading a game.
     /// @warning Do not use a zero or short length.
+    /// </summary>
     public class DistanceJointDef : JointDef
     {
         public DistanceJointDef()
         {
-            type = JointType.Distance;
-            localAnchorA = Vector2.Zero;
-            localAnchorB = Vector2.Zero;
-            length = 1.0f;
-            frequencyHz = 0.0f;
-            dampingRatio = 0.0f;
+            Type = JointType.Distance;
+            LocalAnchorA = Vector2.Zero;
+            LocalAnchorB = Vector2.Zero;
+            Length = 1.0f;
+            FrequencyHz = 0.0f;
+            DampingRatio = 0.0f;
         }
 
         /// Initialize the bodies, anchors, and length using the world
@@ -63,33 +65,45 @@ namespace FarseerPhysics
         public void Initialize(Body b1, Body b2,
                         Vector2 anchor1, Vector2 anchor2)
         {
-            bodyA = b1;
-            bodyB = b2;
-            localAnchorA = bodyA.GetLocalPoint(anchor1);
-            localAnchorB = bodyB.GetLocalPoint(anchor2);
+            BodyA = b1;
+            BodyB = b2;
+            LocalAnchorA = BodyA.GetLocalPoint(anchor1);
+            LocalAnchorB = BodyB.GetLocalPoint(anchor2);
             Vector2 d = anchor2 - anchor1;
-            length = d.Length();
+            Length = d.Length();
         }
 
+        /// <summary>
         /// The local anchor point relative to body1's origin.
-        public Vector2 localAnchorA;
+        /// </summary>
+        public Vector2 LocalAnchorA;
 
+        /// <summary>
         /// The local anchor point relative to body2's origin.
-        public Vector2 localAnchorB;
+        /// </summary>
+        public Vector2 LocalAnchorB;
 
+        /// <summary>
         /// The natural length between the anchor points.
-        public float length;
+        /// </summary>
+        public float Length;
 
+        /// <summary>
         /// The mass-spring-damper frequency in Hertz.
-        public float frequencyHz;
+        /// </summary>
+        public float FrequencyHz;
 
+        /// <summary>
         /// The damping ratio. 0 = no damping, 1 = critical damping.
-        public float dampingRatio;
+        /// </summary>
+        public float DampingRatio;
     }
 
+    /// <summary>
     /// A distance joint rains two points on two bodies
     /// to remain at a fixed distance from each other. You can view
     /// this as a massless, rigid rod.
+    /// </summary>
     public class DistanceJoint : Joint
     {
         // Set/get the natural length.
@@ -127,12 +141,12 @@ namespace FarseerPhysics
 
         public override Vector2 GetAnchorA()
         {
-            return _bodyA.GetWorldPoint(_localAnchor1);
+            return BodyA.GetWorldPoint(_localAnchor1);
         }
 
         public override Vector2 GetAnchorB()
         {
-            return _bodyB.GetWorldPoint(_localAnchor2);
+            return BodyB.GetWorldPoint(_localAnchor2);
         }
 
         public override Vector2 GetReactionForce(float inv_dt)
@@ -149,11 +163,11 @@ namespace FarseerPhysics
         internal DistanceJoint(DistanceJointDef def)
             : base(def)
         {
-            _localAnchor1 = def.localAnchorA;
-            _localAnchor2 = def.localAnchorB;
-            _length = def.length;
-            _frequencyHz = def.frequencyHz;
-            _dampingRatio = def.dampingRatio;
+            _localAnchor1 = def.LocalAnchorA;
+            _localAnchor2 = def.LocalAnchorB;
+            _length = def.Length;
+            _frequencyHz = def.FrequencyHz;
+            _dampingRatio = def.DampingRatio;
             _impulse = 0.0f;
             _gamma = 0.0f;
             _bias = 0.0f;
@@ -161,8 +175,8 @@ namespace FarseerPhysics
 
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
-            Body b1 = _bodyA;
-            Body b2 = _bodyB;
+            Body b1 = BodyA;
+            Body b2 = BodyB;
 
             Transform xf1, xf2;
             b1.GetTransform(out xf1);
@@ -231,8 +245,8 @@ namespace FarseerPhysics
 
         internal override void SolveVelocityConstraints(ref TimeStep step)
         {
-            Body b1 = _bodyA;
-            Body b2 = _bodyB;
+            Body b1 = BodyA;
+            Body b2 = BodyB;
 
             Transform xf1, xf2;
             b1.GetTransform(out xf1);
@@ -264,8 +278,8 @@ namespace FarseerPhysics
                 return true;
             }
 
-            Body b1 = _bodyA;
-            Body b2 = _bodyB;
+            Body b1 = BodyA;
+            Body b2 = BodyB;
 
             Transform xf1, xf2;
             b1.GetTransform(out xf1);

@@ -107,7 +107,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Vector2 anchor = new Vector2(-2.0f, 1.0f);
             jd.Initialize(b1, b3, anchor);
-            jd.collideConnected = true;
+            jd.CollideConnected = true;
             _world.CreateJoint(jd);
 
             Body b4;
@@ -184,12 +184,12 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             DistanceJointDef djd = new DistanceJointDef();
-            djd.bodyA = b3;
-            djd.bodyB = b7;
-            djd.localAnchorA = new Vector2(6.0f, 0.0f);
-            djd.localAnchorB = new Vector2(0.0f, -1.0f);
-            Vector2 d = djd.bodyB.GetWorldPoint(djd.localAnchorB) - djd.bodyA.GetWorldPoint(djd.localAnchorA);
-            djd.length = d.Length();
+            djd.BodyA = b3;
+            djd.BodyB = b7;
+            djd.LocalAnchorA = new Vector2(6.0f, 0.0f);
+            djd.LocalAnchorB = new Vector2(0.0f, -1.0f);
+            Vector2 d = djd.BodyB.GetWorldPoint(djd.LocalAnchorB) - djd.BodyA.GetWorldPoint(djd.LocalAnchorA);
+            djd.Length = d.Length();
             _world.CreateJoint(djd);
 
             {

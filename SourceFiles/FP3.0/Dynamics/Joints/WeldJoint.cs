@@ -25,14 +25,16 @@ using System;
 
 namespace FarseerPhysics
 {
+    /// <summary>
     /// Weld joint definition. You need to specify local anchor points
     /// where they are attached and the relative body angle. The position
     /// of the anchor points is important for computing the reaction torque.
+    /// </summary>
     public class WeldJointDef : JointDef
     {
         public WeldJointDef()
         {
-            type = JointType.Weld;
+            Type = JointType.Weld;
         }
 
         // Point-to-point constraint
@@ -51,35 +53,43 @@ namespace FarseerPhysics
 
         public void Initialize(Body b1, Body b2, Vector2 anchor)
         {
-            bodyA = b1;
-            bodyB = b2;
-            localAnchorA = bodyA.GetLocalPoint(anchor);
-            localAnchorB = bodyB.GetLocalPoint(anchor);
-            referenceAngle = bodyB.GetAngle() - bodyA.GetAngle();
+            BodyA = b1;
+            BodyB = b2;
+            LocalAnchorA = BodyA.GetLocalPoint(anchor);
+            LocalAnchorB = BodyB.GetLocalPoint(anchor);
+            ReferenceAngle = BodyB.GetAngle() - BodyA.GetAngle();
         }
 
+        /// <summary>
         /// The local anchor point relative to body1's origin.
-        public Vector2 localAnchorA;
+        /// </summary>
+        public Vector2 LocalAnchorA;
 
+        /// <summary>
         /// The local anchor point relative to body2's origin.
-        public Vector2 localAnchorB;
+        /// </summary>
+        public Vector2 LocalAnchorB;
 
+        /// <summary>
         /// The body2 angle minus body1 angle in the reference state (radians).
-        public float referenceAngle;
+        /// </summary>
+        public float ReferenceAngle;
     }
 
+    /// <summary>
     /// A weld joint essentially glues two bodies together. A weld joint may
     /// distort somewhat because the island constraint solver is approximate.
+    /// </summary>
     public class WeldJoint : Joint
     {
         public override Vector2 GetAnchorA()
         {
-            return _bodyA.GetWorldPoint(_localAnchorA);
+            return BodyA.GetWorldPoint(_localAnchorA);
         }
 
         public override Vector2 GetAnchorB()
         {
-            return _bodyB.GetWorldPoint(_localAnchorB);
+            return BodyB.GetWorldPoint(_localAnchorB);
         }
 
         public override Vector2 GetReactionForce(float inv_dt)
@@ -97,15 +107,15 @@ namespace FarseerPhysics
         internal WeldJoint(WeldJointDef def)
             : base(def)
         {
-            _localAnchorA = def.localAnchorA;
-            _localAnchorB = def.localAnchorB;
-            _referenceAngle = def.referenceAngle;
+            _localAnchorA = def.LocalAnchorA;
+            _localAnchorB = def.LocalAnchorB;
+            _referenceAngle = def.ReferenceAngle;
         }
 
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
-            Body bA = _bodyA;
-            Body bB = _bodyB;
+            Body bA = BodyA;
+            Body bB = BodyB;
 
             Transform xfA, xfB;
             bA.GetTransform(out xfA);
@@ -159,8 +169,8 @@ namespace FarseerPhysics
 
         internal override void SolveVelocityConstraints(ref TimeStep step)
         {
-            Body bA = _bodyA;
-            Body bB = _bodyB;
+            Body bA = BodyA;
+            Body bB = BodyB;
 
             Vector2 vA = bA._linearVelocity;
             float wA = bA._angularVelocity;
@@ -202,8 +212,8 @@ namespace FarseerPhysics
 
         internal override bool SolvePositionConstraints(float baumgarte)
         {
-            Body bA = _bodyA;
-            Body bB = _bodyB;
+            Body bA = BodyA;
+            Body bB = BodyB;
 
             float mA = bA._invMass, mB = bB._invMass;
             float iA = bA._invI, iB = bB._invI;

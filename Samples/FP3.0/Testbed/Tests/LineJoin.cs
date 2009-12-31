@@ -53,12 +53,12 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 axis = new Vector2(2.0f, 1.0f);
                 axis.Normalize();
                 jd.Initialize(ground, body, new Vector2(0.0f, 8.5f), axis);
-                jd.motorSpeed = 0.0f;
-                jd.maxMotorForce = 100.0f;
-                jd.enableMotor = true;
-                jd.lowerTranslation = -4.0f;
-                jd.upperTranslation = 4.0f;
-                jd.enableLimit = true;
+                jd.MotorSpeed = 0.0f;
+                jd.MaxMotorForce = 100.0f;
+                jd.EnableMotor = true;
+                jd.LowerTranslation = -4.0f;
+                jd.UpperTranslation = 4.0f;
+                jd.EnableLimit = true;
                 _world.CreateJoint(jd);
             }
         }

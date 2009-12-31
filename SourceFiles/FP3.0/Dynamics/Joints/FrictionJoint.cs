@@ -36,25 +36,35 @@ namespace FarseerPhysics
     // J = [0 0 -1 0 0 1]
     // K = invI1 + invI2
 
+    /// <summary>
     /// Friction joint definition.
+    /// </summary>
     public class FrictionJointDef : JointDef
     {
         public FrictionJointDef()
         {
-            type = JointType.Friction;
+            Type = JointType.Friction;
         }
 
+        /// <summary>
         /// The local anchor point relative to body1's origin.
-        public Vector2 localAnchorA;
+        /// </summary>
+        public Vector2 LocalAnchorA;
 
+        /// <summary>
         /// The local anchor point relative to body2's origin.
-        public Vector2 localAnchorB;
+        /// </summary>
+        public Vector2 LocalAnchorB;
 
+        /// <summary>
         /// The maximum friction force in N.
-        public float maxForce;
+        /// </summary>
+        public float MaxForce;
 
+        /// <summary>
         /// The maximum friction torque in N-m.
-        public float maxTorque;
+        /// </summary>
+        public float MaxTorque;
     }
 
     /// Friction joint. This is used for top-down friction.
@@ -63,12 +73,12 @@ namespace FarseerPhysics
     {
         public override Vector2 GetAnchorA()
         {
-            return _bodyA.GetWorldPoint(_localAnchor1);
+            return BodyA.GetWorldPoint(_localAnchor1);
         }
 
         public override Vector2 GetAnchorB()
         {
-            return _bodyB.GetWorldPoint(_localAnchor2);
+            return BodyB.GetWorldPoint(_localAnchor2);
         }
 
         public override Vector2 GetReactionForce(float inv_dt)
@@ -106,16 +116,16 @@ namespace FarseerPhysics
         internal FrictionJoint(FrictionJointDef def)
             : base(def)
         {
-            _localAnchor1 = def.localAnchorA;
-            _localAnchor2 = def.localAnchorB;
-            _maxForce = def.maxForce;
-            _maxTorque = def.maxTorque;
+            _localAnchor1 = def.LocalAnchorA;
+            _localAnchor2 = def.LocalAnchorB;
+            _maxForce = def.MaxForce;
+            _maxTorque = def.MaxTorque;
         }
 
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
-            Body bA = _bodyA;
-            Body bB = _bodyB;
+            Body bA = BodyA;
+            Body bB = BodyB;
 
             Transform xfA, xfB;
             bA.GetTransform(out xfA);
@@ -184,8 +194,8 @@ namespace FarseerPhysics
 
         internal override void SolveVelocityConstraints(ref TimeStep step)
         {
-            Body bA = _bodyA;
-            Body bB = _bodyB;
+            Body bA = BodyA;
+            Body bB = BodyB;
 
             Vector2 vA = bA._linearVelocity;
             float wA = bA._angularVelocity;

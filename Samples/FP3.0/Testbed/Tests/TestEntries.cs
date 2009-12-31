@@ -28,9 +28,9 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {
+                new TestEntry {name = "Pyramid", createFcn = PyramidTest.Create},
                 new TestEntry {name = "Collision Processing", createFcn = CollisionProcessingTest.Create},
                 new TestEntry {name = "Collision Filtering", createFcn = CollisionFilteringTest.Create},
-                new TestEntry {name = "Pyramid", createFcn = PyramidTest.Create},
                 new TestEntry {name = "Polygon Shapes", createFcn = PolyShapesTest.Create},
                 new TestEntry {name = "Apply Force", createFcn = ApplyForceTest.Create},
                 new TestEntry {name = "Cantilever", createFcn = CantileverTest.Create},

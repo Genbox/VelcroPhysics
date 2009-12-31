@@ -56,9 +56,9 @@ namespace FarseerPhysics.TestBed.Tests
 
                     RevoluteJointDef rjd = new RevoluteJointDef();
                     rjd.Initialize(prevBody, body, new Vector2(0.0f, 5.0f));
-                    rjd.motorSpeed = 1.0f * Settings.Pi;
-                    rjd.maxMotorTorque = 10000.0f;
-                    rjd.enableMotor = true;
+                    rjd.MotorSpeed = 1.0f * Settings.Pi;
+                    rjd.MaxMotorTorque = 10000.0f;
+                    rjd.EnableMotor = true;
                     _joint1 = (RevoluteJoint)_world.CreateJoint(rjd);
 
                     prevBody = body;
@@ -77,7 +77,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     RevoluteJointDef rjd3 = new RevoluteJointDef();
                     rjd3.Initialize(prevBody, body, new Vector2(0.0f, 9.0f));
-                    rjd3.enableMotor = false;
+                    rjd3.EnableMotor = false;
                     _world.CreateJoint(rjd3);
 
                     prevBody = body;
@@ -101,8 +101,8 @@ namespace FarseerPhysics.TestBed.Tests
                     PrismaticJointDef pjd = new PrismaticJointDef();
                     pjd.Initialize(ground, body, new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f));
 
-                    pjd.maxMotorForce = 1000.0f;
-                    pjd.enableMotor = true;
+                    pjd.MaxMotorForce = 1000.0f;
+                    pjd.EnableMotor = true;
 
                     _joint2 = (PrismaticJoint)_world.CreateJoint(pjd);
                 }

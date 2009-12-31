@@ -984,7 +984,7 @@ namespace FarseerPhysics
             {
                 if (jn.Other == other)
                 {
-                    if (jn.Joint._collideConnected == false)
+                    if (jn.Joint.CollideConnected == false)
                     {
                         return false;
                     }

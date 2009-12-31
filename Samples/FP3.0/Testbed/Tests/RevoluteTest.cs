@@ -57,13 +57,13 @@ namespace FarseerPhysics.TestBed.Tests
                 body.SetLinearVelocity(new Vector2(-8.0f * w, 0.0f));
 
                 rjd.Initialize(ground, body, new Vector2(0.0f, 12.0f));
-                rjd.motorSpeed = 1.0f * Settings.Pi;
-                rjd.maxMotorTorque = 10000.0f;
-                rjd.enableMotor = false;
-                rjd.lowerAngle = -0.25f * Settings.Pi;
-                rjd.upperAngle = 0.5f * Settings.Pi;
-                rjd.enableLimit = true;
-                rjd.collideConnected = true;
+                rjd.MotorSpeed = 1.0f * Settings.Pi;
+                rjd.MaxMotorTorque = 10000.0f;
+                rjd.EnableMotor = false;
+                rjd.LowerAngle = -0.25f * Settings.Pi;
+                rjd.UpperAngle = 0.5f * Settings.Pi;
+                rjd.EnableLimit = true;
+                rjd.CollideConnected = true;
 
                 _joint = (RevoluteJoint)_world.CreateJoint(rjd);
             }

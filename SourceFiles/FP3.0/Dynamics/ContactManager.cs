@@ -103,39 +103,39 @@ namespace FarseerPhysics
             bodyB = fixtureB.GetBody();
 
             // Insert into the world.
-            c._prev = null;
-            c._next = _contactList;
+            c.Prev = null;
+            c.Next = _contactList;
             if (_contactList != null)
             {
-                _contactList._prev = c;
+                _contactList.Prev = c;
             }
             _contactList = c;
 
             // Connect to island graph.
 
             // Connect to body A
-            c._nodeA.Contact = c;
-            c._nodeA.Other = bodyB;
+            c.NodeA.Contact = c;
+            c.NodeA.Other = bodyB;
 
-            c._nodeA.Prev = null;
-            c._nodeA.Next = bodyA._contactList;
+            c.NodeA.Prev = null;
+            c.NodeA.Next = bodyA._contactList;
             if (bodyA._contactList != null)
             {
-                bodyA._contactList.Prev = c._nodeA;
+                bodyA._contactList.Prev = c.NodeA;
             }
-            bodyA._contactList = c._nodeA;
+            bodyA._contactList = c.NodeA;
 
             // Connect to body B
-            c._nodeB.Contact = c;
-            c._nodeB.Other = bodyA;
+            c.NodeB.Contact = c;
+            c.NodeB.Other = bodyA;
 
-            c._nodeB.Prev = null;
-            c._nodeB.Next = bodyB._contactList;
+            c.NodeB.Prev = null;
+            c.NodeB.Next = bodyB._contactList;
             if (bodyB._contactList != null)
             {
-                bodyB._contactList.Prev = c._nodeB;
+                bodyB._contactList.Prev = c.NodeB;
             }
-            bodyB._contactList = c._nodeB;
+            bodyB._contactList = c.NodeB;
 
             ++_contactCount;
         }
@@ -152,58 +152,58 @@ namespace FarseerPhysics
             Body bodyA = fixtureA.GetBody();
             Body bodyB = fixtureB.GetBody();
 
-            if (c._manifold._pointCount > 0)
+            if (c.Manifold._pointCount > 0)
             {
                 if (EndContact != null)
                     EndContact(c);
             }
 
             // Remove from the world.
-            if (c._prev != null)
+            if (c.Prev != null)
             {
-                c._prev._next = c._next;
+                c.Prev.Next = c.Next;
             }
 
-            if (c._next != null)
+            if (c.Next != null)
             {
-                c._next._prev = c._prev;
+                c.Next.Prev = c.Prev;
             }
 
             if (c == _contactList)
             {
-                _contactList = c._next;
+                _contactList = c.Next;
             }
 
             // Remove from body 1
-            if (c._nodeA.Prev != null)
+            if (c.NodeA.Prev != null)
             {
-                c._nodeA.Prev.Next = c._nodeA.Next;
+                c.NodeA.Prev.Next = c.NodeA.Next;
             }
 
-            if (c._nodeA.Next != null)
+            if (c.NodeA.Next != null)
             {
-                c._nodeA.Next.Prev = c._nodeA.Prev;
+                c.NodeA.Next.Prev = c.NodeA.Prev;
             }
 
-            if (c._nodeA == bodyA._contactList)
+            if (c.NodeA == bodyA._contactList)
             {
-                bodyA._contactList = c._nodeA.Next;
+                bodyA._contactList = c.NodeA.Next;
             }
 
             // Remove from body 2
-            if (c._nodeB.Prev != null)
+            if (c.NodeB.Prev != null)
             {
-                c._nodeB.Prev.Next = c._nodeB.Next;
+                c.NodeB.Prev.Next = c.NodeB.Next;
             }
 
-            if (c._nodeB.Next != null)
+            if (c.NodeB.Next != null)
             {
-                c._nodeB.Next.Prev = c._nodeB.Prev;
+                c.NodeB.Next.Prev = c.NodeB.Prev;
             }
 
-            if (c._nodeB == bodyB._contactList)
+            if (c.NodeB == bodyB._contactList)
             {
-                bodyB._contactList = c._nodeB.Next;
+                bodyB._contactList = c.NodeB.Next;
             }
 
             --_contactCount;
@@ -227,7 +227,7 @@ namespace FarseerPhysics
                 }
 
                 // Is this contact flagged for filtering?
-                if ((c._flags & ContactFlags.Filter) == ContactFlags.Filter)
+                if ((c.Flags & ContactFlags.Filter) == ContactFlags.Filter)
                 {
                     // Should these bodies collide?
                     if (bodyB.ShouldCollide(bodyA) == false)
@@ -251,7 +251,7 @@ namespace FarseerPhysics
                     }
 
                     // Clear the filtering flag.
-                    c._flags &= ~ContactFlags.Filter;
+                    c.Flags &= ~ContactFlags.Filter;
                 }
 
                 int proxyIdA = fixtureA._proxyId;

@@ -29,21 +29,21 @@ namespace FarseerPhysics
 	    internal CircleContact(Fixture fixtureA, Fixture fixtureB)
             : base(fixtureA, fixtureB)
         {
-	        Debug.Assert(_fixtureA.ShapeType == ShapeType.Circle);
-	        Debug.Assert(_fixtureB.ShapeType == ShapeType.Circle);
+	        Debug.Assert(FixtureA.ShapeType == ShapeType.Circle);
+	        Debug.Assert(FixtureB.ShapeType == ShapeType.Circle);
         }
 
         protected override void Evaluate()  
         {
-	        Body bodyA = _fixtureA.GetBody();
-	        Body bodyB = _fixtureB.GetBody();
+	        Body bodyA = FixtureA.GetBody();
+	        Body bodyB = FixtureB.GetBody();
             Transform xfA, xfB;
             bodyA.GetTransform(out xfA);
             bodyB.GetTransform(out xfB);
 
-	        Collision.CollideCircles(ref _manifold,
-						        (CircleShape)_fixtureA.GetShape(), ref xfA,
-                                (CircleShape)_fixtureB.GetShape(), ref xfB);
+	        Collision.CollideCircles(ref Manifold,
+						        (CircleShape)FixtureA.GetShape(), ref xfA,
+                                (CircleShape)FixtureB.GetShape(), ref xfB);
         }
     }
 }

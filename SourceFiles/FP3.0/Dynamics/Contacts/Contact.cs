@@ -32,149 +32,217 @@ namespace FarseerPhysics
     /// nodes, one for each attached body.
     public class ContactEdge
     {
-        public Body Other;			///< provides quick access to the other body attached.
-        public Contact Contact;		///< the contact
-        public ContactEdge Prev;	///< the previous contact edge in the body's contact list
-        public ContactEdge Next;	///< the next contact edge in the body's contact list
-    };
+        /// <summary>
+        /// provides quick access to the other body attached.
+        /// </summary>
+        public Body Other;
+
+        /// <summary>
+        /// the contact
+        /// </summary>
+        public Contact Contact;
+
+        /// <summary>
+        /// the previous contact edge in the body's contact list
+        /// </summary>
+        public ContactEdge Prev;
+
+        /// <summary>
+        /// the next contact edge in the body's contact list
+        /// </summary>
+        public ContactEdge Next;
+    }
 
     [Flags]
     public enum ContactFlags
     {
         None = 0,
 
-        // This contact should not participate in Solve
-        // The contact equivalent of sensors
+        /// <summary>
+        /// This contact should not participate in Solve
+        /// The contact equivalent of sensors
+        /// </summary>
         Sensor = 0x0001,
-        // Do not use TOI solve.
+        /// <summary>
+        /// Do not use TOI solve.
+        /// </summary>
         Continuous = 0x0002,
-        // Used when crawling contact graph when forming islands.
+        /// <summary>
+        /// Used when crawling contact graph when forming islands.
+        /// </summary>
         Island = 0x0004,
-        // Used in SolveTOI to indicate the cached toi value is still valid.
+        /// <summary>
+        /// Used in SolveTOI to indicate the cached toi value is still valid.
+        /// </summary>
         Toi = 0x0008,
-        // TODO: Doc
+        /// <summary>
+        /// TODO
+        /// </summary>
         Touching = 0x0010,
-        // This contact can be disabled (by user)
+        /// <summary>
+        /// This contact can be disabled (by user)
+        /// </summary>
         Enabled = 0x0020,
-        // This contact needs filtering because a fixture filter was changed.
+        /// <summary>
+        /// This contact needs filtering because a fixture filter was changed.
+        /// </summary>
         Filter = 0x0040,
     };
 
+    /// <summary>
     /// The class manages contact between two shapes. A contact exists for each overlapping
     /// AABB in the broad-phase (except if filtered). Therefore a contact object may exist
     /// that has no contact points.
+    /// </summary>
     public abstract class Contact
     {
+        /// <summary>
         /// Get the contact manifold. Do not modify the manifold unless you understand the
         /// internals of Box2D.
+        /// </summary>
+        /// <param name="manifold">The manifold.</param>
         public void GetManifold(out Manifold manifold)
         {
-            manifold = _manifold;
+            manifold = Manifold;
         }
 
+        /// <summary>
         /// Get the world manifold.
+        /// </summary>
+        /// <param name="worldManifold">The world manifold.</param>
         public void GetWorldManifold(out WorldManifold worldManifold)
         {
-            Body bodyA = _fixtureA.GetBody();
-            Shape shapeA = _fixtureA.GetShape();
-            Shape shapeB = _fixtureB.GetShape();
+            Body bodyA = FixtureA.GetBody();
+            Shape shapeA = FixtureA.GetShape();
+            Shape shapeB = FixtureB.GetShape();
 
             Transform xfA, xfB;
             bodyA.GetTransform(out xfA);
             bodyA.GetTransform(out xfB);
 
-            worldManifold = new WorldManifold(ref _manifold, ref xfA, shapeA.Radius, ref xfB, shapeB.Radius);
+            worldManifold = new WorldManifold(ref Manifold, ref xfA, shapeA.Radius, ref xfB, shapeB.Radius);
         }
 
+        /// <summary>
         /// Is this contact touching.
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if this instance is touching; otherwise, <c>false</c>.
+        /// </returns>
         public bool IsTouching()
         {
-            return (_flags & ContactFlags.Touching) == ContactFlags.Touching;
+            return (Flags & ContactFlags.Touching) == ContactFlags.Touching;
         }
 
+        /// <summary>
         /// Does this contact generate TOI events for continuous simulation?
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if this instance is continuous; otherwise, <c>false</c>.
+        /// </returns>
         public bool IsContinuous()
         {
-            return (_flags & ContactFlags.Continuous) == ContactFlags.Continuous;
+            return (Flags & ContactFlags.Continuous) == ContactFlags.Continuous;
         }
 
+        /// <summary>
         /// Change this to be a sensor or non-sensor contact.
+        /// </summary>
+        /// <param name="sensor">if set to <c>true</c> [sensor].</param>
         public void SetSensor(bool sensor)
         {
             if (sensor)
             {
-                _flags |= ContactFlags.Sensor;
+                Flags |= ContactFlags.Sensor;
             }
             else
             {
-                _flags &= ~ContactFlags.Sensor;
+                Flags &= ~ContactFlags.Sensor;
             }
         }
 
+        /// <summary>
         /// Is this contact a sensor?
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if this instance is sensor; otherwise, <c>false</c>.
+        /// </returns>
         public bool IsSensor()
         {
-            return (_flags & ContactFlags.Sensor) == ContactFlags.Sensor;
+            return (Flags & ContactFlags.Sensor) == ContactFlags.Sensor;
         }
 
+        /// <summary>
         /// Enable/disable this contact. This can be used inside the pre-solve
         /// contact listener. The contact is only disabled for the current
         /// time step (or sub-step in continuous collisions).
+        /// </summary>
+        /// <param name="flag">if set to <c>true</c> [flag].</param>
         public void SetEnabled(bool flag)
         {
             if (flag)
             {
-                _flags |= ContactFlags.Enabled;
+                Flags |= ContactFlags.Enabled;
             }
             else
             {
-                _flags &= ~ContactFlags.Enabled;
+                Flags &= ~ContactFlags.Enabled;
             }
         }
 
+        /// <summary>
         /// Has this contact been disabled?
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if this instance is enabled; otherwise, <c>false</c>.
+        /// </returns>
         public bool IsEnabled()
         {
-            return (_flags & ContactFlags.Enabled) == ContactFlags.Enabled;
+            return (Flags & ContactFlags.Enabled) == ContactFlags.Enabled;
         }
 
+        /// <summary>
         /// Get the next contact in the world's contact list.
+        /// </summary>
+        /// <returns></returns>
         public Contact GetNext()
         {
-            return _next;
+            return Next;
         }
 
+        /// <summary>
         /// Get the first fixture in this contact.
+        /// </summary>
+        /// <returns></returns>
         public Fixture GetFixtureA()
         {
-            return _fixtureA;
+            return FixtureA;
         }
 
+        /// <summary>
         /// Get the second fixture in this contact.
+        /// </summary>
+        /// <returns></returns>
         public Fixture GetFixtureB()
         {
-            return _fixtureB;
+            return FixtureB;
         }
 
+        /// <summary>
         /// Flag this contact for filtering. Filtering will occur the next time step.
+        /// </summary>
         public void FlagForFiltering()
         {
-            _flags |= ContactFlags.Filter;
-        }
-
-        internal Contact()
-        {
-            _fixtureA = null;
-            _fixtureB = null;
+            Flags |= ContactFlags.Filter;
         }
 
         internal Contact(Fixture fA, Fixture fB)
         {
-            _flags = ContactFlags.Enabled;
+            Flags = ContactFlags.Enabled;
 
             if (fA.IsSensor() || fB.IsSensor())
             {
-                _flags |= ContactFlags.Sensor;
+                Flags |= ContactFlags.Sensor;
             }
 
             Body bodyA = fA.GetBody();
@@ -183,50 +251,50 @@ namespace FarseerPhysics
             if (bodyA.GetBodyType() != BodyType.Dynamic || bodyA.IsBullet ||
                 bodyB.GetBodyType() != BodyType.Dynamic || bodyB.IsBullet)
             {
-                _flags |= ContactFlags.Continuous;
+                Flags |= ContactFlags.Continuous;
             }
 
-            _fixtureA = fA;
-            _fixtureB = fB;
+            FixtureA = fA;
+            FixtureB = fB;
 
-            _manifold._pointCount = 0;
+            Manifold._pointCount = 0;
 
-            _prev = null;
-            _next = null;
+            Prev = null;
+            Next = null;
 
-            _nodeA.Contact = null;
-            _nodeA.Prev = null;
-            _nodeA.Next = null;
-            _nodeA.Other = null;
+            NodeA.Contact = null;
+            NodeA.Prev = null;
+            NodeA.Next = null;
+            NodeA.Other = null;
 
-            _nodeB.Contact = null;
-            _nodeB.Prev = null;
-            _nodeB.Next = null;
-            _nodeB.Other = null;
+            NodeB.Contact = null;
+            NodeB.Prev = null;
+            NodeB.Next = null;
+            NodeB.Other = null;
         }
 
         internal void Update(ContactManager contactManager)
         {
-            Manifold oldManifold = _manifold;
+            Manifold oldManifold = Manifold;
 
             // Re-enable this contact.
-            _flags |= ContactFlags.Enabled;
+            Flags |= ContactFlags.Enabled;
 
             bool touching = false;
-            bool wasTouching = (_flags & ContactFlags.Touching) == ContactFlags.Touching;
+            bool wasTouching = (Flags & ContactFlags.Touching) == ContactFlags.Touching;
 
-            Body bodyA = _fixtureA.GetBody();
-            Body bodyB = _fixtureB.GetBody();
+            Body bodyA = FixtureA.GetBody();
+            Body bodyB = FixtureB.GetBody();
 
-            bool aabbOverlap = AABB.TestOverlap(ref _fixtureA._aabb, ref _fixtureB._aabb);
+            bool aabbOverlap = AABB.TestOverlap(ref FixtureA._aabb, ref FixtureB._aabb);
 
             // Is this contact a sensor?
-            if ((_flags & ContactFlags.Sensor) == ContactFlags.Sensor)
+            if ((Flags & ContactFlags.Sensor) == ContactFlags.Sensor)
             {
                 if (aabbOverlap)
                 {
-                    Shape shapeA = _fixtureA.GetShape();
-                    Shape shapeB = _fixtureB.GetShape();
+                    Shape shapeA = FixtureA.GetShape();
+                    Shape shapeB = FixtureB.GetShape();
 
                     Transform xfA;
                     Transform xfB;
@@ -237,7 +305,7 @@ namespace FarseerPhysics
                 }
 
                 // Sensors don't generate manifolds.
-                _manifold._pointCount = 0;
+                Manifold._pointCount = 0;
             }
             else
             {
@@ -245,23 +313,23 @@ namespace FarseerPhysics
                 if (bodyA.GetBodyType() != BodyType.Dynamic || bodyA.IsBullet ||
                     bodyB.GetBodyType() != BodyType.Dynamic || bodyB.IsBullet)
                 {
-                    _flags |= ContactFlags.Continuous;
+                    Flags |= ContactFlags.Continuous;
                 }
                 else
                 {
-                    _flags &= ~ContactFlags.Continuous;
+                    Flags &= ~ContactFlags.Continuous;
                 }
 
                 if (aabbOverlap)
                 {
                     Evaluate();
-                    touching = _manifold._pointCount > 0;
+                    touching = Manifold._pointCount > 0;
 
                     // Match old contact ids to new contact ids and copy the
                     // stored impulses to warm start the solver.
-                    for (int i = 0; i < _manifold._pointCount; ++i)
+                    for (int i = 0; i < Manifold._pointCount; ++i)
                     {
-                        ManifoldPoint mp2 = _manifold._points[i];
+                        ManifoldPoint mp2 = Manifold._points[i];
                         mp2.NormalImpulse = 0.0f;
                         mp2.TangentImpulse = 0.0f;
                         ContactID id2 = mp2.Id;
@@ -278,12 +346,12 @@ namespace FarseerPhysics
                             }
                         }
 
-                        _manifold._points[i] = mp2;
+                        Manifold._points[i] = mp2;
                     }
                 }
                 else
                 {
-                    _manifold._pointCount = 0;
+                    Manifold._pointCount = 0;
                 }
 
                 if (touching != wasTouching)
@@ -295,11 +363,11 @@ namespace FarseerPhysics
 
             if (touching)
             {
-                _flags |= ContactFlags.Touching;
+                Flags |= ContactFlags.Touching;
             }
             else
             {
-                _flags &= ~ContactFlags.Touching;
+                Flags &= ~ContactFlags.Touching;
             }
 
             if (wasTouching == false && touching)
@@ -314,7 +382,7 @@ namespace FarseerPhysics
                     contactManager.EndContact(this);
             }
 
-            if ((_flags & ContactFlags.Sensor) == 0)
+            if ((Flags & ContactFlags.Sensor) == 0)
             {
                 if (contactManager.BeginContact != null)
                     contactManager.PreSolve(this, ref oldManifold);
@@ -326,8 +394,8 @@ namespace FarseerPhysics
         internal float ComputeTOI(ref Sweep sweepA, ref Sweep sweepB)
         {
             TOIInput input = new TOIInput();
-            input.proxyA.Set(_fixtureA.GetShape());
-            input.proxyB.Set(_fixtureB.GetShape());
+            input.proxyA.Set(FixtureA.GetShape());
+            input.proxyB.Set(FixtureB.GetShape());
             input.sweepA = sweepA;
             input.sweepB = sweepB;
             input.tolerance = Settings.LinearSlop;
@@ -364,21 +432,21 @@ namespace FarseerPhysics
             return s_registers[(int)type1, (int)type2](fixtureB, fixtureA);
         }
 
-        internal ContactFlags _flags;
+        internal ContactFlags Flags;
 
         // World pool and list pointers.
-        internal Contact _prev;
-        internal Contact _next;
+        internal Contact Prev;
+        internal Contact Next;
 
         // Nodes for connecting bodies.
-        internal ContactEdge _nodeA = new ContactEdge();
-        internal ContactEdge _nodeB = new ContactEdge();
+        internal ContactEdge NodeA = new ContactEdge();
+        internal ContactEdge NodeB = new ContactEdge();
 
-        internal Fixture _fixtureA;
-        internal Fixture _fixtureB;
+        internal Fixture FixtureA;
+        internal Fixture FixtureB;
 
-        internal Manifold _manifold;
+        internal Manifold Manifold;
 
-        internal float _toi;
-    };
+        internal float Toi;
+    }
 }

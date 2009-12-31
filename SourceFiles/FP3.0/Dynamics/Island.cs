@@ -184,7 +184,7 @@ namespace FarseerPhysics
                 }
             }
 
-            Report(_contactSolver._constraints);
+            Report(_contactSolver.Constraints);
 
             if (allowSleep)
             {
@@ -328,7 +328,7 @@ namespace FarseerPhysics
                 }
             }
 
-            Report(_contactSolver._constraints);
+            Report(_contactSolver.Constraints);
         }
 
         public void Add(Body body)
@@ -358,10 +358,10 @@ namespace FarseerPhysics
                 ContactConstraint cc = constraints[i];
 
                 ContactImpulse impulse = new ContactImpulse();
-                for (int j = 0; j < cc.pointCount; ++j)
+                for (int j = 0; j < cc.PointCount; ++j)
                 {
-                    impulse.normalImpulses[j] = cc.points[j].normalImpulse;
-                    impulse.tangentImpulses[j] = cc.points[j].tangentImpulse;
+                    impulse.normalImpulses[j] = cc.Points[j].NormalImpulse;
+                    impulse.tangentImpulses[j] = cc.Points[j].TangentImpulse;
                 }
 
                 if (_contactManager.PostSolve != null)

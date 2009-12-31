@@ -300,10 +300,10 @@ namespace FarseerPhysics.TestBed.Framework
             {
                 Body body = _fixture.GetBody();
                 MouseJointDef md = new MouseJointDef();
-                md.bodyA = _groundBody;
-                md.bodyB = body;
-                md.target = p;
-                md.maxForce = 1000.0f * body.GetMass();
+                md.BodyA = _groundBody;
+                md.BodyB = body;
+                md.Target = p;
+                md.MaxForce = 1000.0f * body.GetMass();
                 _mouseJoint = (MouseJoint)_world.CreateJoint(md);
                 body.SetAwake(true);
             }
