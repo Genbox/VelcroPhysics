@@ -270,8 +270,8 @@ namespace FarseerPhysics.TestBed.Framework
             // Make a small box.
             AABB aabb;
             Vector2 d = new Vector2(0.001f, 0.001f);
-            aabb.lowerBound = p - d;
-            aabb.upperBound = p + d;
+            aabb.LowerBound = p - d;
+            aabb.UpperBound = p + d;
 
             Fixture _fixture = null;
 
@@ -367,8 +367,8 @@ namespace FarseerPhysics.TestBed.Framework
             Vector2 maxV = position + new Vector2(0.3f, 0.3f);
 
             AABB aabb;
-            aabb.lowerBound = minV;
-            aabb.upperBound = maxV;
+            aabb.LowerBound = minV;
+            aabb.UpperBound = maxV;
 
             _bomb.CreateFixture(fd);
         }
@@ -435,8 +435,8 @@ namespace FarseerPhysics.TestBed.Framework
                 ContactPoint cp = _points[_pointCount];
                 cp.fixtureA = fixtureA;
                 cp.fixtureB = fixtureB;
-                cp.position = worldManifold._points[i];
-                cp.normal = worldManifold._normal;
+                cp.position = worldManifold.Points[i];
+                cp.normal = worldManifold.Normal;
                 cp.state = state2[i];
                 _points[_pointCount] = cp;
                 ++_pointCount;

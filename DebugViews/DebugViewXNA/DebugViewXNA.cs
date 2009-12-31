@@ -94,10 +94,10 @@ namespace FarseerPhysics.DebugViewXNA
                         AABB aabb;
                         bp.GetFatAABB(f.ProxyId, out aabb);
                         FixedArray8<Vector2> vs = new FixedArray8<Vector2>();
-                        vs[0] = new Vector2(aabb.lowerBound.X, aabb.lowerBound.Y);
-                        vs[1] = new Vector2(aabb.upperBound.X, aabb.lowerBound.Y);
-                        vs[2] = new Vector2(aabb.upperBound.X, aabb.upperBound.Y);
-                        vs[3] = new Vector2(aabb.lowerBound.X, aabb.upperBound.Y);
+                        vs[0] = new Vector2(aabb.LowerBound.X, aabb.LowerBound.Y);
+                        vs[1] = new Vector2(aabb.UpperBound.X, aabb.LowerBound.Y);
+                        vs[2] = new Vector2(aabb.UpperBound.X, aabb.UpperBound.Y);
+                        vs[3] = new Vector2(aabb.LowerBound.X, aabb.UpperBound.Y);
 
                         DrawPolygon(ref vs, 4, color);
                     }
@@ -390,10 +390,10 @@ namespace FarseerPhysics.DebugViewXNA
         public void DrawAABB(ref AABB aabb, Color color)
         {
             FixedArray8<Vector2> verts = new FixedArray8<Vector2>();
-            verts[0] = new Vector2(aabb.lowerBound.X, aabb.lowerBound.Y);
-            verts[1] = new Vector2(aabb.upperBound.X, aabb.lowerBound.Y);
-            verts[2] = new Vector2(aabb.upperBound.X, aabb.upperBound.Y);
-            verts[3] = new Vector2(aabb.lowerBound.X, aabb.upperBound.Y);
+            verts[0] = new Vector2(aabb.LowerBound.X, aabb.LowerBound.Y);
+            verts[1] = new Vector2(aabb.UpperBound.X, aabb.LowerBound.Y);
+            verts[2] = new Vector2(aabb.UpperBound.X, aabb.UpperBound.Y);
+            verts[3] = new Vector2(aabb.LowerBound.X, aabb.UpperBound.Y);
 
             DrawPolygon(ref verts, 4, color);
         }

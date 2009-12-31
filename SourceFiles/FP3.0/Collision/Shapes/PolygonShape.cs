@@ -33,7 +33,6 @@ namespace FarseerPhysics
             Radius = Settings.PolygonRadius;
         }
 
-        /// Implement Shape.
         public override Shape Clone()
         {
             var clone = new PolygonShape();
@@ -47,8 +46,12 @@ namespace FarseerPhysics
             return clone;
         }
 
+        /// <summary>
         /// Copy vertices. This assumes the vertices define a convex polygon.
         /// It is assumed that the exterior is the the right of each edge.
+        /// </summary>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="count">The vertice count.</param>
         public void Set(Vector2[] vertices, int count)
         {
             Debug.Assert(2 <= count && count <= Settings.MaxPolygonVertices);
@@ -155,9 +158,11 @@ namespace FarseerPhysics
             return c;
         }
 
+        /// <summary>
         /// Build vertices to represent an axis-aligned box.
-        /// @param hx the half-width.
-        /// @param hy the half-height.
+        /// </summary>
+        /// <param name="hx">the half-width.</param>
+        /// <param name="hy">the half-height.</param>
         public void SetAsBox(float hx, float hy)
         {
             VertexCount = 4;
@@ -172,11 +177,13 @@ namespace FarseerPhysics
             Centroid = Vector2.Zero;
         }
 
+        /// <summary>
         /// Build vertices to represent an oriented box.
-        /// @param hx the half-width.
-        /// @param hy the half-height.
-        /// @param center the center of the box in local coordinates.
-        /// @param angle the rotation of the box in local coordinates.
+        /// </summary>
+        /// <param name="hx">the half-width.</param>
+        /// <param name="hy">the half-height.</param>
+        /// <param name="center">the center of the box in local coordinates.</param>
+        /// <param name="angle"> the rotation of the box in local coordinates.</param>
         public void SetAsBox(float hx, float hy, Vector2 center, float angle)
         {
             VertexCount = 4;
@@ -202,7 +209,11 @@ namespace FarseerPhysics
             }
         }
 
+        /// <summary>
         /// Set this as a single edge.
+        /// </summary>
+        /// <param name="v1">The first point.</param>
+        /// <param name="v2">The second point.</param>
         public void SetAsEdge(Vector2 v1, Vector2 v2)
         {
             VertexCount = 2;
@@ -217,7 +228,6 @@ namespace FarseerPhysics
             Normals[1] = -Normals[0];
         }
 
-        /// @see Shape.TestPoint
         public override bool TestPoint(ref Transform xf, Vector2 point)
         {
             Vector2 pLocal = MathUtils.MultiplyT(ref xf.R, point - xf.Position);
@@ -237,11 +247,11 @@ namespace FarseerPhysics
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform xf)
         {
             output = new RayCastOutput();
-            float lower = 0.0f, upper = input.maxFraction;
+            float lower = 0.0f, upper = input.MaxFraction;
 
             // Put the ray into the polygon's frame of reference.
-            Vector2 p1 = MathUtils.MultiplyT(ref xf.R, input.p1 - xf.Position);
-            Vector2 p2 = MathUtils.MultiplyT(ref xf.R, input.p2 - xf.Position);
+            Vector2 p1 = MathUtils.MultiplyT(ref xf.R, input.Point1 - xf.Position);
+            Vector2 p2 = MathUtils.MultiplyT(ref xf.R, input.Point2 - xf.Position);
             Vector2 d = p2 - p1;
             int index = -1;
 
@@ -287,19 +297,18 @@ namespace FarseerPhysics
                 }
             }
 
-            Debug.Assert(0.0f <= lower && lower <= input.maxFraction);
+            Debug.Assert(0.0f <= lower && lower <= input.MaxFraction);
 
             if (index >= 0)
             {
-                output.fraction = lower;
-                output.normal = MathUtils.Multiply(ref xf.R, Normals[index]);
+                output.Fraction = lower;
+                output.Normal = MathUtils.Multiply(ref xf.R, Normals[index]);
                 return true;
             }
 
             return false;
         }
 
-        /// @see Shape.ComputeAABB
         public override void ComputeAABB(out AABB aabb, ref Transform xf)
         {
             Vector2 lower = MathUtils.Multiply(ref xf, Vertices[0]);
@@ -313,11 +322,10 @@ namespace FarseerPhysics
             }
 
             Vector2 r = new Vector2(Radius, Radius);
-            aabb.lowerBound = lower - r;
-            aabb.upperBound = upper + r;
+            aabb.LowerBound = lower - r;
+            aabb.UpperBound = upper + r;
         }
 
-        /// @see Shape.ComputeMass
         public override void ComputeMass(out MassData massData, float density)
         {
             // Polygon mass, centroid, and inertia.
