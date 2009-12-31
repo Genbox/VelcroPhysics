@@ -27,13 +27,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class ApplyForce : Test
+    public class ApplyForceTest : Test
     {
-        public ApplyForce()
+        private ApplyForceTest()
         {
             _world.Gravity = Vector2.Zero;
 
-            float k_restitution = 0.4f;
+            const float k_restitution = 0.4f;
 
             Body ground;
             {
@@ -103,7 +103,7 @@ namespace FarseerPhysics.TestBed.Tests
                 bd.linearDamping = 0.1f;
 
                 bd.position = new Vector2(0.0f, 2.0f);
-                bd.angle = FarseerPhysics.Settings.Pi;
+                bd.angle = Settings.Pi;
                 _body = _world.CreateBody(bd);
                 _body.CreateFixture(sd1);
                 _body.CreateFixture(sd2);
@@ -128,12 +128,12 @@ namespace FarseerPhysics.TestBed.Tests
 
                     body.CreateFixture(fd);
 
-                    float gravity = 10.0f;
+                    const float gravity = 10.0f;
                     float I = body.GetInertia();
                     float mass = body.GetMass();
 
                     // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
-                    float radius = (float)Math.Sqrt(2.0 * (double)(I / mass));
+                    float radius = (float)Math.Sqrt(2.0 * (I / mass));
 
                     FrictionJointDef jd = new FrictionJointDef();
                     jd.localAnchorA = Vector2.Zero;
@@ -169,7 +169,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new ApplyForce();
+            return new ApplyForceTest();
         }
 
         private Body _body;

@@ -20,17 +20,16 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class Pulleys : Test
+    public class PulleysTest : Test
     {
-        private Pulleys()
+        private PulleysTest()
         {
-            Body ground = null;
+            Body ground;
             {
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
@@ -41,10 +40,10 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                float a = 2.0f;
-                float b = 4.0f;
-                float y = 16.0f;
-                float L = 12.0f;
+                const float a = 2.0f;
+                const float b = 4.0f;
+                const float y = 16.0f;
+                const float L = 12.0f;
 
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(a, b);
@@ -67,7 +66,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 groundAnchor2 = new Vector2(10.0f, y + b + L);
                 pulleyDef.Initialize(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2, 2.0f);
 
-                _joint1 = (PulleyJoint) _world.CreateJoint(pulleyDef);
+                _joint1 = (PulleyJoint)_world.CreateJoint(pulleyDef);
             }
         }
 
@@ -76,14 +75,14 @@ namespace FarseerPhysics.TestBed.Tests
             base.Step(settings);
 
             float ratio = _joint1.GetRatio();
-            float L = _joint1.GetLength1() + ratio*_joint1.GetLength2();
-            _debugView.DrawString(50, _textLine, "L1 + {0:n} * L2 = {1:n}", (float) ratio, (float) L);
+            float L = _joint1.GetLength1() + ratio * _joint1.GetLength2();
+            _debugView.DrawString(50, _textLine, "L1 + {0:n} * L2 = {1:n}", ratio, L);
             _textLine += 15;
         }
 
         internal static Test Create()
         {
-            return new Pulleys();
+            return new PulleysTest();
         }
 
         private PulleyJoint _joint1;

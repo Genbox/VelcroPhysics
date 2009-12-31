@@ -20,17 +20,16 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class Gears : Test
+    public class GearsTest : Test
     {
-        private Gears()
+        private GearsTest()
         {
-            Body ground = null;
+            Body ground;
             {
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
@@ -108,23 +107,20 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Step(settings);
 
-            float ratio = 0.0f;
-            float value = 0.0f;
-
-            ratio = _joint4.GetRatio();
-            value = _joint1.GetJointAngle() + ratio*_joint2.GetJointAngle();
-            _debugView.DrawString(50, _textLine, "theta1 + {0:n} * theta2 = {1:n}", (float) ratio, (float) value);
+            float ratio = _joint4.GetRatio();
+            float value = _joint1.GetJointAngle() + ratio*_joint2.GetJointAngle();
+            _debugView.DrawString(50, _textLine, "theta1 + {0:n} * theta2 = {1:n}", ratio, value);
             _textLine += 15;
 
             ratio = _joint5.GetRatio();
             value = _joint2.GetJointAngle() + ratio*_joint3.GetJointTranslation();
-            _debugView.DrawString(50, _textLine, "theta2 + {0:n} * delta = {1:n}", (float) ratio, (float) value);
+            _debugView.DrawString(50, _textLine, "theta2 + {0:n} * delta = {1:n}", ratio, value);
             _textLine += 15;
         }
 
         internal static Test Create()
         {
-            return new Gears();
+            return new GearsTest();
         }
 
         private RevoluteJoint _joint1;

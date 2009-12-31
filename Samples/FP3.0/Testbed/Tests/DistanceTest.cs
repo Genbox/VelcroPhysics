@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -57,20 +56,20 @@ namespace FarseerPhysics.TestBed.Tests
             base.Step(settings);
 
             DistanceInput input = new DistanceInput();
-            input.proxyA.Set(_polygonA);
-            input.proxyB.Set(_polygonB);
-            input.transformA = _transformA;
-            input.transformB = _transformB;
-            input.useRadii = true;
-            SimplexCache cache = new SimplexCache();
-            cache.count = 0;
-            DistanceOutput output = new DistanceOutput();
+            input.ProxyA.Set(_polygonA);
+            input.ProxyB.Set(_polygonB);
+            input.TransformA = _transformA;
+            input.TransformB = _transformB;
+            input.UseRadii = true;
+            SimplexCache cache;
+            cache.Count = 0;
+            DistanceOutput output;
             Distance.ComputeDistance(out output, out cache, ref input);
 
-            _debugView.DrawString(50, _textLine, "distance = {0:n}", output.distance);
+            _debugView.DrawString(50, _textLine, "distance = {0:n}", output.Distance);
             _textLine += 15;
 
-            _debugView.DrawString(50, _textLine, "iterations = {0:n}", output.iterations);
+            _debugView.DrawString(50, _textLine, "iterations = {0:n}", output.Iterations);
             _textLine += 15;
 
             {
@@ -89,8 +88,8 @@ namespace FarseerPhysics.TestBed.Tests
                 _debugView.DrawPolygon(ref v, _polygonB.VertexCount, color);
             }
 
-            Vector2 x1 = output.pointA;
-            Vector2 x2 = output.pointB;
+            Vector2 x1 = output.PointA;
+            Vector2 x2 = output.PointB;
 
 
             _debugView.DrawPoint(x1, 0.5f, new Color(1.0f, 0.0f, 0.0f));
@@ -119,11 +118,11 @@ namespace FarseerPhysics.TestBed.Tests
             }
             if (state.IsKeyDown(Keys.Q))
             {
-                _angleB += 0.1f * FarseerPhysics.Settings.Pi;
+                _angleB += 0.1f * Settings.Pi;
             }
             if (state.IsKeyDown(Keys.E))
             {
-                _angleB -= 0.1f * FarseerPhysics.Settings.Pi;
+                _angleB -= 0.1f * Settings.Pi;
             }
 
             _transformB.Set(_positionB, _angleB);
@@ -132,8 +131,8 @@ namespace FarseerPhysics.TestBed.Tests
         private Vector2 _positionB = Vector2.Zero;
         private float _angleB;
 
-        private Transform _transformA = new Transform();
-        private Transform _transformB = new Transform();
+        private Transform _transformA;
+        private Transform _transformB;
         private PolygonShape _polygonA = new PolygonShape();
         private PolygonShape _polygonB = new PolygonShape();
     }

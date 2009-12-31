@@ -20,18 +20,17 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class Revolute : Test
+    public class RevoluteTest : Test
     {
-        public Revolute()
+        private RevoluteTest()
         {
-            Body ground = null;
+            Body ground;
             {
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
@@ -55,18 +54,18 @@ namespace FarseerPhysics.TestBed.Tests
 
                 float w = 100.0f;
                 body.SetAngularVelocity(w);
-                body.SetLinearVelocity(new Vector2(-8.0f*w, 0.0f));
+                body.SetLinearVelocity(new Vector2(-8.0f * w, 0.0f));
 
                 rjd.Initialize(ground, body, new Vector2(0.0f, 12.0f));
-                rjd.motorSpeed = 1.0f*FarseerPhysics.Settings.Pi;
+                rjd.motorSpeed = 1.0f * Settings.Pi;
                 rjd.maxMotorTorque = 10000.0f;
                 rjd.enableMotor = false;
-                rjd.lowerAngle = -0.25f*FarseerPhysics.Settings.Pi;
-                rjd.upperAngle = 0.5f*FarseerPhysics.Settings.Pi;
+                rjd.lowerAngle = -0.25f * Settings.Pi;
+                rjd.upperAngle = 0.5f * Settings.Pi;
                 rjd.enableLimit = true;
                 rjd.collideConnected = true;
 
-                _joint = (RevoluteJoint) _world.CreateJoint(rjd);
+                _joint = (RevoluteJoint)_world.CreateJoint(rjd);
             }
         }
 
@@ -95,7 +94,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new Revolute();
+            return new RevoluteTest();
         }
 
         private RevoluteJoint _joint;

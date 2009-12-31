@@ -20,18 +20,17 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class Prismatic : Test
+    public class PrismaticTest : Test
     {
-        public Prismatic()
+        private PrismaticTest()
         {
-            Body ground = null;
+            Body ground;
             {
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
@@ -48,7 +47,7 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 bd.type = BodyType.Dynamic;
                 bd.position = new Vector2(-10.0f, 10.0f);
-                bd.angle = 0.5f*FarseerPhysics.Settings.Pi;
+                bd.angle = 0.5f * Settings.Pi;
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(shape, 5.0f);
 
@@ -67,7 +66,7 @@ namespace FarseerPhysics.TestBed.Tests
                 pjd.upperTranslation = 20.0f;
                 pjd.enableLimit = true;
 
-                _joint = (PrismaticJoint) _world.CreateJoint(pjd);
+                _joint = (PrismaticJoint)_world.CreateJoint(pjd);
             }
         }
 
@@ -93,13 +92,13 @@ namespace FarseerPhysics.TestBed.Tests
             _debugView.DrawString(50, _textLine, "Keys: (l) limits, (m) motors, (p) speed");
             _textLine += 15;
             float force = _joint.GetMotorForce();
-            _debugView.DrawString(50, _textLine, "Motor Force = {0:n}", (float) force);
+            _debugView.DrawString(50, _textLine, "Motor Force = {0:n}", force);
             _textLine += 15;
         }
 
         internal static Test Create()
         {
-            return new Prismatic();
+            return new PrismaticTest();
         }
 
         private PrismaticJoint _joint;

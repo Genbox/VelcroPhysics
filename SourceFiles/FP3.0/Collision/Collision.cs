@@ -27,7 +27,7 @@ using System.Diagnostics;
 namespace FarseerPhysics
 {
     /// <summary>
-    /// 
+    /// Features contain the contact details of a collision
     /// </summary>
     public struct Features
     {
@@ -454,22 +454,23 @@ namespace FarseerPhysics
         public static bool TestOverlap(Shape shapeA, Shape shapeB, ref Transform xfA, ref Transform xfB)
         {
             DistanceInput input = new DistanceInput();
-            input.proxyA.Set(shapeA);
-            input.proxyB.Set(shapeB);
-            input.transformA = xfA;
-            input.transformB = xfB;
-            input.useRadii = true;
+            input.ProxyA.Set(shapeA);
+            input.ProxyB.Set(shapeB);
+            input.TransformA = xfA;
+            input.TransformB = xfB;
+            input.UseRadii = true;
 
             SimplexCache cache;
             DistanceOutput output;
             Distance.ComputeDistance(out output, out cache, ref input);
 
-            return output.distance < 10.0f * Settings.Epsilon;
+            return output.Distance < 10.0f * Settings.Epsilon;
         }
 
-        // From Real-time Collision Detection, p179.
         public bool RayCast(out RayCastOutput output, ref RayCastInput input)
         {
+            // From Real-time Collision Detection, p179.
+
             output = new RayCastOutput();
 
             float tmin = -Settings.MaxFloat;
@@ -950,7 +951,7 @@ namespace FarseerPhysics
         }
 
         /// <summary>
-        // Find the separation between poly1 and poly2 for a give edge normal on poly1.
+        /// Find the separation between poly1 and poly2 for a give edge normal on poly1.
         /// </summary>
         /// <param name="poly1">The poly1.</param>
         /// <param name="xf1">The XF1.</param>
@@ -1016,7 +1017,7 @@ namespace FarseerPhysics
         }
 
         /// <summary>
-        // Find the max separation between poly1 and poly2 using edge normals from poly1.
+        /// Find the max separation between poly1 and poly2 using edge normals from poly1.
         /// </summary>
         /// <param name="edgeIndex">Index of the edge.</param>
         /// <param name="poly1">The poly1.</param>

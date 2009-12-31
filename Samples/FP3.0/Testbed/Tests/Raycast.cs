@@ -28,11 +28,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class RayCast : Test
+    public class RayCastTest : Test
     {
-        private const int e_maxBodies = 256;
+        private const int MaxBodies = 256;
 
-        public RayCast()
+        private RayCastTest()
         {
             // Ground body
             {
@@ -124,7 +124,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void DestroyBody()
         {
-            for (int i = 0; i < e_maxBodies; ++i)
+            for (int i = 0; i < MaxBodies; ++i)
             {
                 if (_bodies[i] != null)
                 {
@@ -212,16 +212,16 @@ namespace FarseerPhysics.TestBed.Tests
                 _bodies[_bodyIndex].CreateFixture(fd);
             }
 
-            _bodyIndex = (_bodyIndex + 1)%e_maxBodies;
+            _bodyIndex = (_bodyIndex + 1)%MaxBodies;
         }
 
         internal static Test Create()
         {
-            return new RayCast();
+            return new RayCastTest();
         }
 
         private int _bodyIndex;
-        private Body[] _bodies = new Body[e_maxBodies];
+        private Body[] _bodies = new Body[MaxBodies];
         private PolygonShape[] _polygons = new PolygonShape[4];
         private CircleShape _circle;
 

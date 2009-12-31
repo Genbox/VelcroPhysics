@@ -26,12 +26,17 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics
 {
+    /// <summary>
     /// A distance proxy is used by the GJK algorithm.
     /// It encapsulates any shape.
+    /// </summary>
     public struct DistanceProxy
     {
+        /// <summary>
         /// Initialize the proxy using the given shape. The shape
         /// must remain in scope while the proxy is in use.
+        /// </summary>
+        /// <param name="shape">The shape.</param>
         public void Set(Shape shape)
         {
             switch (shape.ShapeType)
@@ -41,7 +46,7 @@ namespace FarseerPhysics
                         CircleShape circle = (CircleShape)shape;
                         _vertices[0] = circle.Position;
                         _count = 1;
-                        _radius = circle.Radius;
+                        Radius = circle.Radius;
                     }
                     break;
 
@@ -50,7 +55,7 @@ namespace FarseerPhysics
                         PolygonShape polygon = (PolygonShape)shape;
                         _vertices = polygon.Vertices;
                         _count = polygon.VertexCount;
-                        _radius = polygon.Radius;
+                        Radius = polygon.Radius;
                     }
                     break;
 
@@ -61,7 +66,11 @@ namespace FarseerPhysics
 
         }
 
+        /// <summary>
         /// Get the supporting vertex index in the given direction.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <returns></returns>
         public int GetSupport(Vector2 d)
         {
             int bestIndex = 0;
@@ -79,7 +88,11 @@ namespace FarseerPhysics
             return bestIndex;
         }
 
+        /// <summary>
         /// Get the supporting vertex in the given direction.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <returns></returns>
         public Vector2 GetSupportVertex(Vector2 d)
         {
             int bestIndex = 0;
@@ -97,7 +110,11 @@ namespace FarseerPhysics
             return _vertices[bestIndex];
         }
 
+        /// <summary>
         /// Get a vertex by index. Used by b2Distance.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns></returns>
         public Vector2 GetVertex(int index)
         {
             Debug.Assert(0 <= index && index < _count);
@@ -106,17 +123,28 @@ namespace FarseerPhysics
 
         private FixedArray8<Vector2> _vertices;
         private int _count;
-        internal float _radius;
+        internal float Radius;
     }
 
     /// Used to warm start ComputeDistance.
     /// Set count to zero on first call.
     public struct SimplexCache
     {
-        public float metric;		///< length or area
-        public UInt16 count;
-        public FixedArray3<byte> indexA;	///< vertices on shape A
-        public FixedArray3<byte> indexB;	///< vertices on shape B
+        /// <summary>
+        /// length or area
+        /// </summary>
+        public float Metric;
+        public ushort Count;
+
+        /// <summary>
+        /// vertices on shape A
+        /// </summary>
+        public FixedArray3<byte> IndexA;
+
+        /// <summary>
+        /// vertices on shape B
+        /// </summary>
+        public FixedArray3<byte> IndexB;
     }
 
     /// Input for ComputeDistance.
@@ -124,30 +152,65 @@ namespace FarseerPhysics
     /// in the computation. Even 
     public struct DistanceInput
     {
-        public DistanceProxy proxyA;
-        public DistanceProxy proxyB;
-        public Transform transformA;
-        public Transform transformB;
-        public bool useRadii;
+        public DistanceProxy ProxyA;
+        public DistanceProxy ProxyB;
+        public Transform TransformA;
+        public Transform TransformB;
+        public bool UseRadii;
     }
 
     /// Output for ComputeDistance.
     public struct DistanceOutput
     {
-        public Vector2 pointA;		///< closest point on shapeA
-        public Vector2 pointB;		///< closest point on shapeB
-        public float distance;
-        public int iterations;	///< number of GJK iterations used
+        /// <summary>
+        /// closest point on shapeA
+        /// </summary>
+        public Vector2 PointA;
+
+        /// <summary>
+        /// closest point on shapeB
+        /// </summary>
+        public Vector2 PointB;
+
+        public float Distance;
+
+        /// <summary>
+        /// number of GJK iterations used
+        /// </summary>
+        public int Iterations;
     }
 
     internal struct SimplexVertex
     {
-        public Vector2 wA;		// support point in proxyA
-        public Vector2 wB;		// support point in proxyB
-        public Vector2 w;		// wB - wA
-        public float a;		// barycentric coordinate for closest point
-        public int indexA;	// wA index
-        public int indexB;	// wB index
+        /// <summary>
+        /// support point in proxyA
+        /// </summary>
+        public Vector2 WA;
+
+        /// <summary>
+        /// support point in proxyB
+        /// </summary>
+        public Vector2 WB;
+
+        /// <summary>
+        /// wB - wA
+        /// </summary>
+        public Vector2 W;
+
+        /// <summary>
+        /// barycentric coordinate for closest point
+        /// </summary>
+        public float A;
+
+        /// <summary>
+        /// wA index
+        /// </summary>
+        public int IndexA;
+
+        /// <summary>
+        /// wB index
+        /// </summary>
+        public int IndexB;
     }
 
     internal struct Simplex
@@ -156,75 +219,75 @@ namespace FarseerPhysics
                         ref DistanceProxy proxyA, ref Transform transformA,
                         ref DistanceProxy proxyB, ref Transform transformB)
         {
-            Debug.Assert(0 <= cache.count && cache.count <= 3);
+            Debug.Assert(0 <= cache.Count && cache.Count <= 3);
 
             // Copy data from cache.
-            _count = cache.count;
-            for (int i = 0; i < _count; ++i)
+            Count = cache.Count;
+            for (int i = 0; i < Count; ++i)
             {
-                SimplexVertex v = _v[i];
-                v.indexA = cache.indexA[i];
-                v.indexB = cache.indexB[i];
-                Vector2 wALocal = proxyA.GetVertex(v.indexA);
-                Vector2 wBLocal = proxyB.GetVertex(v.indexB);
-                v.wA = MathUtils.Multiply(ref transformA, wALocal);
-                v.wB = MathUtils.Multiply(ref transformB, wBLocal);
-                v.w = v.wB - v.wA;
-                v.a = 0.0f;
-                _v[i] = v;
+                SimplexVertex v = V[i];
+                v.IndexA = cache.IndexA[i];
+                v.IndexB = cache.IndexB[i];
+                Vector2 wALocal = proxyA.GetVertex(v.IndexA);
+                Vector2 wBLocal = proxyB.GetVertex(v.IndexB);
+                v.WA = MathUtils.Multiply(ref transformA, wALocal);
+                v.WB = MathUtils.Multiply(ref transformB, wBLocal);
+                v.W = v.WB - v.WA;
+                v.A = 0.0f;
+                V[i] = v;
             }
 
             // Compute the new simplex metric, if it is substantially different than
             // old metric then flush the simplex.
-            if (_count > 1)
+            if (Count > 1)
             {
-                float metric1 = cache.metric;
+                float metric1 = cache.Metric;
                 float metric2 = GetMetric();
                 if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < Settings.Epsilon)
                 {
                     // Reset the simplex.
-                    _count = 0;
+                    Count = 0;
                 }
             }
 
             // If the cache is empty or invalid ...
-            if (_count == 0)
+            if (Count == 0)
             {
-                SimplexVertex v = _v[0];
-                v.indexA = 0;
-                v.indexB = 0;
+                SimplexVertex v = V[0];
+                v.IndexA = 0;
+                v.IndexB = 0;
                 Vector2 wALocal = proxyA.GetVertex(0);
                 Vector2 wBLocal = proxyB.GetVertex(0);
-                v.wA = MathUtils.Multiply(ref transformA, wALocal);
-                v.wB = MathUtils.Multiply(ref transformB, wBLocal);
-                v.w = v.wB - v.wA;
-                _v[0] = v;
-                _count = 1;
+                v.WA = MathUtils.Multiply(ref transformA, wALocal);
+                v.WB = MathUtils.Multiply(ref transformB, wBLocal);
+                v.W = v.WB - v.WA;
+                V[0] = v;
+                Count = 1;
             }
         }
 
         internal void WriteCache(ref SimplexCache cache)
         {
-            cache.metric = GetMetric();
-            cache.count = (UInt16)_count;
-            for (int i = 0; i < _count; ++i)
+            cache.Metric = GetMetric();
+            cache.Count = (ushort)Count;
+            for (int i = 0; i < Count; ++i)
             {
-                cache.indexA[i] = (byte)(_v[i].indexA);
-                cache.indexB[i] = (byte)(_v[i].indexB);
+                cache.IndexA[i] = (byte)(V[i].IndexA);
+                cache.IndexB[i] = (byte)(V[i].IndexB);
             }
         }
 
         internal Vector2 GetSearchDirection()
         {
-            switch (_count)
+            switch (Count)
             {
                 case 1:
-                    return -_v[0].w;
+                    return -V[0].W;
 
                 case 2:
                     {
-                        Vector2 e12 = _v[1].w - _v[0].w;
-                        float sgn = MathUtils.Cross(e12, -_v[0].w);
+                        Vector2 e12 = V[1].W - V[0].W;
+                        float sgn = MathUtils.Cross(e12, -V[0].W);
                         if (sgn > 0.0f)
                         {
                             // Origin is left of e12.
@@ -243,17 +306,17 @@ namespace FarseerPhysics
 
         internal Vector2 GetClosestPoint()
         {
-            switch (_count)
+            switch (Count)
             {
                 case 0:
                     Debug.Assert(false);
                     return Vector2.Zero;
 
                 case 1:
-                    return _v[0].w;
+                    return V[0].W;
 
                 case 2:
-                    return _v[0].a * _v[0].w + _v[1].a * _v[1].w;
+                    return V[0].A * V[0].W + V[1].A * V[1].W;
 
                 case 3:
                     return Vector2.Zero;
@@ -266,7 +329,7 @@ namespace FarseerPhysics
 
         internal void GetWitnessPoints(out Vector2 pA, out Vector2 pB)
         {
-            switch (_count)
+            switch (Count)
             {
                 case 0:
                     pA = Vector2.Zero;
@@ -275,17 +338,17 @@ namespace FarseerPhysics
                     break;
 
                 case 1:
-                    pA = _v[0].wA;
-                    pB = _v[0].wB;
+                    pA = V[0].WA;
+                    pB = V[0].WB;
                     break;
 
                 case 2:
-                    pA = _v[0].a * _v[0].wA + _v[1].a * _v[1].wA;
-                    pB = _v[0].a * _v[0].wB + _v[1].a * _v[1].wB;
+                    pA = V[0].A * V[0].WA + V[1].A * V[1].WA;
+                    pB = V[0].A * V[0].WB + V[1].A * V[1].WB;
                     break;
 
                 case 3:
-                    pA = _v[0].a * _v[0].wA + _v[1].a * _v[1].wA + _v[2].a * _v[2].wA;
+                    pA = V[0].A * V[0].WA + V[1].A * V[1].WA + V[2].A * V[2].WA;
                     pB = pA;
                     break;
 
@@ -296,7 +359,7 @@ namespace FarseerPhysics
 
         private float GetMetric()
         {
-            switch (_count)
+            switch (Count)
             {
                 case 0:
                     Debug.Assert(false);
@@ -306,10 +369,10 @@ namespace FarseerPhysics
                     return 0.0f;
 
                 case 2:
-                    return (_v[0].w - _v[1].w).Length();
+                    return (V[0].W - V[1].W).Length();
 
                 case 3:
-                    return MathUtils.Cross(_v[1].w - _v[0].w, _v[2].w - _v[0].w);
+                    return MathUtils.Cross(V[1].W - V[0].W, V[2].W - V[0].W);
 
                 default:
                     Debug.Assert(false);
@@ -317,6 +380,7 @@ namespace FarseerPhysics
             }
         }
 
+        /// <summary>
         // Solve a line segment using barycentric coordinates.
         //
         // p = a1 * w1 + a2 * w2
@@ -340,11 +404,11 @@ namespace FarseerPhysics
         // Solution
         // a1 = d12_1 / d12
         // a2 = d12_2 / d12
-
+        /// </summary>
         internal void Solve2()
         {
-            Vector2 w1 = _v[0].w;
-            Vector2 w2 = _v[1].w;
+            Vector2 w1 = V[0].W;
+            Vector2 w2 = V[1].W;
             Vector2 e12 = w2 - w1;
 
             // w1 region
@@ -352,10 +416,10 @@ namespace FarseerPhysics
             if (d12_2 <= 0.0f)
             {
                 // a2 <= 0, so we clamp it to 0
-                var v0 = _v[0];
-                v0.a = 1.0f;
-                _v[0] = v0;
-                _count = 1;
+                var v0 = V[0];
+                v0.A = 1.0f;
+                V[0] = v0;
+                Count = 1;
                 return;
             }
 
@@ -364,35 +428,37 @@ namespace FarseerPhysics
             if (d12_1 <= 0.0f)
             {
                 // a1 <= 0, so we clamp it to 0
-                var v1 = _v[1];
-                v1.a = 1.0f;
-                _v[1] = v1;
-                _count = 1;
-                _v[0] = _v[1];
+                var v1 = V[1];
+                v1.A = 1.0f;
+                V[1] = v1;
+                Count = 1;
+                V[0] = V[1];
                 return;
             }
 
             // Must be in e12 region.
             float inv_d12 = 1.0f / (d12_1 + d12_2);
-            var v0_2 = _v[0];
-            var v1_2 = _v[1];
-            v0_2.a = d12_1 * inv_d12;
-            v1_2.a = d12_2 * inv_d12;
-            _v[0] = v0_2;
-            _v[1] = v1_2;
-            _count = 2;
+            var v0_2 = V[0];
+            var v1_2 = V[1];
+            v0_2.A = d12_1 * inv_d12;
+            v1_2.A = d12_2 * inv_d12;
+            V[0] = v0_2;
+            V[1] = v1_2;
+            Count = 2;
         }
 
+        /// <summary>
         // Possible regions:
         // - points[2]
         // - edge points[0]-points[2]
         // - edge points[1]-points[2]
         // - inside the triangle
+        /// </summary>
         internal void Solve3()
         {
-            Vector2 w1 = _v[0].w;
-            Vector2 w2 = _v[1].w;
-            Vector2 w3 = _v[2].w;
+            Vector2 w1 = V[0].W;
+            Vector2 w2 = V[1].W;
+            Vector2 w3 = V[2].W;
 
             // Edge12
             // [1      1     ][a1] = [1]
@@ -434,10 +500,10 @@ namespace FarseerPhysics
             // w1 region
             if (d12_2 <= 0.0f && d13_2 <= 0.0f)
             {
-                var v0_1 = _v[0];
-                v0_1.a = 1.0f;
-                _v[0] = v0_1;
-                _count = 1;
+                var v0_1 = V[0];
+                v0_1.A = 1.0f;
+                V[0] = v0_1;
+                Count = 1;
                 return;
             }
 
@@ -445,13 +511,13 @@ namespace FarseerPhysics
             if (d12_1 > 0.0f && d12_2 > 0.0f && d123_3 <= 0.0f)
             {
                 float inv_d12 = 1.0f / (d12_1 + d12_2);
-                var v0_2 = _v[0];
-                var v1_2 = _v[1];
-                v0_2.a = d12_1 * inv_d12;
-                v1_2.a = d12_2 * inv_d12;
-                _v[0] = v0_2;
-                _v[1] = v1_2;
-                _count = 2;
+                var v0_2 = V[0];
+                var v1_2 = V[1];
+                v0_2.A = d12_1 * inv_d12;
+                v1_2.A = d12_2 * inv_d12;
+                V[0] = v0_2;
+                V[1] = v1_2;
+                Count = 2;
                 return;
             }
 
@@ -459,36 +525,36 @@ namespace FarseerPhysics
             if (d13_1 > 0.0f && d13_2 > 0.0f && d123_2 <= 0.0f)
             {
                 float inv_d13 = 1.0f / (d13_1 + d13_2);
-                var v0_3 = _v[0];
-                var v2_3 = _v[2];
-                v0_3.a = d13_1 * inv_d13;
-                v2_3.a = d13_2 * inv_d13;
-                _v[0] = v0_3;
-                _v[2] = v2_3;
-                _count = 2;
-                _v[1] = _v[2];
+                var v0_3 = V[0];
+                var v2_3 = V[2];
+                v0_3.A = d13_1 * inv_d13;
+                v2_3.A = d13_2 * inv_d13;
+                V[0] = v0_3;
+                V[2] = v2_3;
+                Count = 2;
+                V[1] = V[2];
                 return;
             }
 
             // w2 region
             if (d12_1 <= 0.0f && d23_2 <= 0.0f)
             {
-                var v1_4 = _v[1];
-                v1_4.a = 1.0f;
-                _v[1] = v1_4;
-                _count = 1;
-                _v[0] = _v[1];
+                var v1_4 = V[1];
+                v1_4.A = 1.0f;
+                V[1] = v1_4;
+                Count = 1;
+                V[0] = V[1];
                 return;
             }
 
             // w3 region
             if (d13_1 <= 0.0f && d23_1 <= 0.0f)
             {
-                var v2_5 = _v[2];
-                v2_5.a = 1.0f;
-                _v[2] = v2_5;
-                _count = 1;
-                _v[0] = _v[2];
+                var v2_5 = V[2];
+                v2_5.A = 1.0f;
+                V[2] = v2_5;
+                Count = 1;
+                V[0] = V[2];
                 return;
             }
 
@@ -496,33 +562,33 @@ namespace FarseerPhysics
             if (d23_1 > 0.0f && d23_2 > 0.0f && d123_1 <= 0.0f)
             {
                 float inv_d23 = 1.0f / (d23_1 + d23_2);
-                var v1_6 = _v[1];
-                var v2_6 = _v[2];
-                v1_6.a = d23_1 * inv_d23;
-                v2_6.a = d23_2 * inv_d23;
-                _v[1] = v1_6;
-                _v[2] = v2_6;
-                _count = 2;
-                _v[0] = _v[2];
+                var v1_6 = V[1];
+                var v2_6 = V[2];
+                v1_6.A = d23_1 * inv_d23;
+                v2_6.A = d23_2 * inv_d23;
+                V[1] = v1_6;
+                V[2] = v2_6;
+                Count = 2;
+                V[0] = V[2];
                 return;
             }
 
             // Must be in triangle123
             float inv_d123 = 1.0f / (d123_1 + d123_2 + d123_3);
-            var v0_7 = _v[0];
-            var v1_7 = _v[1];
-            var v2_7 = _v[2];
-            v0_7.a = d123_1 * inv_d123;
-            v1_7.a = d123_2 * inv_d123;
-            v2_7.a = d123_3 * inv_d123;
-            _v[0] = v0_7;
-            _v[1] = v1_7;
-            _v[2] = v2_7;
-            _count = 3;
+            var v0_7 = V[0];
+            var v1_7 = V[1];
+            var v2_7 = V[2];
+            v0_7.A = d123_1 * inv_d123;
+            v1_7.A = d123_2 * inv_d123;
+            v2_7.A = d123_3 * inv_d123;
+            V[0] = v0_7;
+            V[1] = v1_7;
+            V[2] = v2_7;
+            Count = 3;
         }
 
-        internal FixedArray3<SimplexVertex> _v;
-        internal int _count;
+        internal FixedArray3<SimplexVertex> V;
+        internal int Count;
     }
 
     public static class Distance
@@ -532,11 +598,11 @@ namespace FarseerPhysics
                                            ref DistanceInput input)
         {
             cache = new SimplexCache();
-            ++b2_gjkCalls;
+            ++GjkCalls;
 
             // Initialize the simplex.
             Simplex simplex = new Simplex();
-            simplex.ReadCache(ref cache, ref input.proxyA, ref input.transformA, ref input.proxyB, ref input.transformB);
+            simplex.ReadCache(ref cache, ref input.ProxyA, ref input.TransformA, ref input.ProxyB, ref input.TransformB);
 
             // Get simplex vertices as an array.
             const int k_maxIters = 20;
@@ -554,14 +620,14 @@ namespace FarseerPhysics
             while (iter < k_maxIters)
             {
                 // Copy simplex so we can identify duplicates.
-                int saveCount = simplex._count;
+                int saveCount = simplex.Count;
                 for (int i = 0; i < saveCount; ++i)
                 {
-                    saveA[i] = simplex._v[i].indexA;
-                    saveB[i] = simplex._v[i].indexB;
+                    saveA[i] = simplex.V[i].IndexA;
+                    saveB[i] = simplex.V[i].IndexB;
                 }
 
-                switch (simplex._count)
+                switch (simplex.Count)
                 {
                     case 1:
                         break;
@@ -580,7 +646,7 @@ namespace FarseerPhysics
                 }
 
                 // If we have 3 points, then the origin is in the corresponding triangle.
-                if (simplex._count == 3)
+                if (simplex.Count == 3)
                 {
                     break;
                 }
@@ -612,23 +678,23 @@ namespace FarseerPhysics
                 }
 
                 // Compute a tentative new simplex vertex using support points.
-                SimplexVertex vertex = simplex._v[simplex._count];
-                vertex.indexA = input.proxyA.GetSupport(MathUtils.MultiplyT(ref input.transformA.R, -d));
-                vertex.wA = MathUtils.Multiply(ref input.transformA, input.proxyA.GetVertex(vertex.indexA));
-                vertex.indexB = input.proxyB.GetSupport(MathUtils.MultiplyT(ref input.transformB.R, d));
-                vertex.wB = MathUtils.Multiply(ref input.transformB, input.proxyB.GetVertex(vertex.indexB));
-                vertex.w = vertex.wB - vertex.wA;
-                simplex._v[simplex._count] = vertex;
+                SimplexVertex vertex = simplex.V[simplex.Count];
+                vertex.IndexA = input.ProxyA.GetSupport(MathUtils.MultiplyT(ref input.TransformA.R, -d));
+                vertex.WA = MathUtils.Multiply(ref input.TransformA, input.ProxyA.GetVertex(vertex.IndexA));
+                vertex.IndexB = input.ProxyB.GetSupport(MathUtils.MultiplyT(ref input.TransformB.R, d));
+                vertex.WB = MathUtils.Multiply(ref input.TransformB, input.ProxyB.GetVertex(vertex.IndexB));
+                vertex.W = vertex.WB - vertex.WA;
+                simplex.V[simplex.Count] = vertex;
 
                 // Iteration count is equated to the number of support point calls.
                 ++iter;
-                ++b2_gjkIters;
+                ++GjkIters;
 
                 // Check for duplicate support points. This is the main termination criteria.
                 bool duplicate = false;
                 for (int i = 0; i < saveCount; ++i)
                 {
-                    if (vertex.indexA == saveA[i] && vertex.indexB == saveB[i])
+                    if (vertex.IndexA == saveA[i] && vertex.IndexB == saveB[i])
                     {
                         duplicate = true;
                         break;
@@ -642,47 +708,47 @@ namespace FarseerPhysics
                 }
 
                 // New vertex is ok and needed.
-                ++simplex._count;
+                ++simplex.Count;
             }
 
-            b2_gjkMaxIters = Math.Max(b2_gjkMaxIters, iter);
+            GjkMaxIters = Math.Max(GjkMaxIters, iter);
 
             // Prepare output.
-            simplex.GetWitnessPoints(out output.pointA, out output.pointB);
-            output.distance = (output.pointA - output.pointB).Length();
-            output.iterations = iter;
+            simplex.GetWitnessPoints(out output.PointA, out output.PointB);
+            output.Distance = (output.PointA - output.PointB).Length();
+            output.Iterations = iter;
 
             // Cache the simplex.
             simplex.WriteCache(ref cache);
 
             // Apply radii if requested.
-            if (input.useRadii)
+            if (input.UseRadii)
             {
-                float rA = input.proxyA._radius;
-                float rB = input.proxyB._radius;
+                float rA = input.ProxyA.Radius;
+                float rB = input.ProxyB.Radius;
 
-                if (output.distance > rA + rB && output.distance > Settings.Epsilon)
+                if (output.Distance > rA + rB && output.Distance > Settings.Epsilon)
                 {
                     // Shapes are still no overlapped.
                     // Move the witness points to the outer surface.
-                    output.distance -= rA + rB;
-                    Vector2 normal = output.pointB - output.pointA;
+                    output.Distance -= rA + rB;
+                    Vector2 normal = output.PointB - output.PointA;
                     normal.Normalize();
-                    output.pointA += rA * normal;
-                    output.pointB -= rB * normal;
+                    output.PointA += rA * normal;
+                    output.PointB -= rB * normal;
                 }
                 else
                 {
                     // Shapes are overlapped when radii are considered.
                     // Move the witness points to the middle.
-                    Vector2 p = 0.5f * (output.pointA + output.pointB);
-                    output.pointA = p;
-                    output.pointB = p;
-                    output.distance = 0.0f;
+                    Vector2 p = 0.5f * (output.PointA + output.PointB);
+                    output.PointA = p;
+                    output.PointB = p;
+                    output.Distance = 0.0f;
                 }
             }
         }
 
-        static int b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
+        public static int GjkCalls, GjkIters, GjkMaxIters;
     }
 }

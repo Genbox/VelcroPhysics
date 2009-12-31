@@ -21,8 +21,6 @@
 */
 
 using System;
-using FarseerPhysics;
-using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -39,7 +37,7 @@ namespace FarseerPhysics.TestBed.Tests
     /// overlap a circle. Up to 4 overlapped fixtures will be highlighted with a yellow border.
     public class PolyShapesCallback
     {
-        private const int e_maxCount = 4;
+        private const int MaxCount = 4;
 
         private void DrawFixture(Fixture fixture)
         {
@@ -82,7 +80,7 @@ namespace FarseerPhysics.TestBed.Tests
         /// @return false to terminate the query.
         public bool ReportFixture(Fixture fixture)
         {
-            if (_count == e_maxCount)
+            if (_count == MaxCount)
             {
                 return false;
             }
@@ -107,14 +105,14 @@ namespace FarseerPhysics.TestBed.Tests
         internal CircleShape _circle = new CircleShape();
         internal Transform _transform;
         internal DebugViewXNA.DebugViewXNA _debugDraw;
-        internal int _count;
+        private int _count;
     }
 
-    public class PolyShapes : Test
+    public class PolyShapesTest : Test
     {
-        private const int k_maxBodies = 256;
+        private const int MaxBodies = 256;
 
-        public PolyShapes()
+        private PolyShapesTest()
         {
             for (int i = 0; i < 4; i++)
             {
@@ -148,7 +146,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                float w = 1.0f;
+                const float w = 1.0f;
                 float b = w / (2.0f + (float)Math.Sqrt(2.0));
                 float s = (float)Math.Sqrt(2.0) * b;
 
@@ -189,7 +187,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             float x = Rand.RandomFloat(-2.0f, 2.0f);
             bd.position = new Vector2(x, 10.0f);
-            bd.angle = Rand.RandomFloat(-FarseerPhysics.Settings.Pi, FarseerPhysics.Settings.Pi);
+            bd.angle = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
 
             if (index == 4)
             {
@@ -216,12 +214,12 @@ namespace FarseerPhysics.TestBed.Tests
                 _bodies[_bodyIndex].CreateFixture(fd);
             }
 
-            _bodyIndex = (_bodyIndex + 1) % k_maxBodies;
+            _bodyIndex = (_bodyIndex + 1) % MaxBodies;
         }
 
         private void DestroyBody()
         {
-            for (int i = 0; i < k_maxBodies; ++i)
+            for (int i = 0; i < MaxBodies; ++i)
             {
                 if (_bodies[i] != null)
                 {
@@ -256,7 +254,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
             if (state.IsKeyDown(Keys.A) && oldState.IsKeyUp(Keys.A))
             {
-                for (int i = 0; i < k_maxBodies; i += 2)
+                for (int i = 0; i < MaxBodies; i += 2)
                 {
                     if (_bodies[i] != null)
                     {
@@ -299,11 +297,11 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new PolyShapes();
+            return new PolyShapesTest();
         }
 
         private int _bodyIndex;
-        private Body[] _bodies = new Body[k_maxBodies];
+        private Body[] _bodies = new Body[MaxBodies];
         private PolygonShape[] _polygons = new PolygonShape[4];
         private CircleShape _circle = new CircleShape();
     }

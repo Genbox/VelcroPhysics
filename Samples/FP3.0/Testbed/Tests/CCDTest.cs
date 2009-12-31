@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -28,7 +27,7 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class CCDTest : Test
     {
-        public CCDTest()
+        private CCDTest()
         {
             {
                 BodyDef bd = new BodyDef();
@@ -142,7 +141,7 @@ namespace FarseerPhysics.TestBed.Tests
 			    body.CreateFixture(fd);
 		    }
 
-    #if false
+#if false
 		    {
 			    FixtureDef sd_bottom;
 			    sd_bottom.SetAsBox(1.0f, 0.1f, new Vector2(0.0f, -1.0f), 0.0f);
@@ -228,20 +227,20 @@ namespace FarseerPhysics.TestBed.Tests
             base.Step(settings);
 
 
-            if (b2_gjkCalls > 0)
+            if (Distance.GjkCalls > 0)
             {
                 _debugView.DrawString(50, _textLine, "gjk calls = {0:n}, ave gjk iters = {1:n}, max gjk iters = {2:n}",
-                                      b2_gjkCalls, b2_gjkIters/(float) b2_gjkCalls, b2_gjkMaxIters);
+                                      Distance.GjkCalls, Distance.GjkIters / (float)Distance.GjkCalls, Distance.GjkMaxIters);
                 _textLine += 15;
             }
 
-            if (b2_toiCalls > 0)
+            if (TimeOfImpact.ToiCalls > 0)
             {
                 _debugView.DrawString(50, _textLine, "toi calls = {0:n}, ave toi iters = {1:n}, max toi iters = {2:n}",
-                                      b2_toiCalls, b2_toiIters/(float) b2_toiCalls, b2_toiMaxRootIters);
+                                      TimeOfImpact.ToiCalls, TimeOfImpact.ToiIters / (float)TimeOfImpact.ToiCalls, TimeOfImpact.ToiMaxRootIters);
                 _textLine += 15;
                 _debugView.DrawString(50, _textLine, "ave toi root iters = {0:n}, max toi root iters = {1:n}",
-                                      b2_toiRootIters/(float) b2_toiCalls, b2_toiMaxRootIters);
+                                      TimeOfImpact.ToiRootIters / (float)TimeOfImpact.ToiCalls, TimeOfImpact.ToiMaxRootIters);
                 _textLine += 15;
             }
         }
@@ -252,9 +251,5 @@ namespace FarseerPhysics.TestBed.Tests
         }
 
         private float _angularVelocity;
-
-        private static int b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters = 0;
-        private static int b2_toiCalls, b2_toiIters, b2_toiMaxIters = 0;
-        private static int b2_toiRootIters, b2_toiMaxRootIters = 0;
     }
 }

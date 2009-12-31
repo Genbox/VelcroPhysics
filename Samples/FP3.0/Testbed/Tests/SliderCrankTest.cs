@@ -20,18 +20,17 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class SliderCrank : Test
+    public class SliderCrankTest : Test
     {
-        public SliderCrank()
+        private SliderCrankTest()
         {
-            Body ground = null;
+            Body ground;
             {
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
@@ -57,10 +56,10 @@ namespace FarseerPhysics.TestBed.Tests
 
                     RevoluteJointDef rjd = new RevoluteJointDef();
                     rjd.Initialize(prevBody, body, new Vector2(0.0f, 5.0f));
-                    rjd.motorSpeed = 1.0f*FarseerPhysics.Settings.Pi;
+                    rjd.motorSpeed = 1.0f * Settings.Pi;
                     rjd.maxMotorTorque = 10000.0f;
                     rjd.enableMotor = true;
-                    _joint1 = (RevoluteJoint) _world.CreateJoint(rjd);
+                    _joint1 = (RevoluteJoint)_world.CreateJoint(rjd);
 
                     prevBody = body;
                 }
@@ -105,7 +104,7 @@ namespace FarseerPhysics.TestBed.Tests
                     pjd.maxMotorForce = 1000.0f;
                     pjd.enableMotor = true;
 
-                    _joint2 = (PrismaticJoint) _world.CreateJoint(pjd);
+                    _joint2 = (PrismaticJoint)_world.CreateJoint(pjd);
                 }
 
                 // Create a payload
@@ -142,13 +141,13 @@ namespace FarseerPhysics.TestBed.Tests
             _debugView.DrawString(50, _textLine, "Keys: (f) toggle friction, (m) toggle motor");
             _textLine += 15;
             float torque = _joint1.GetMotorTorque();
-            _debugView.DrawString(50, _textLine, "Motor Torque = {0:n}", (float) torque);
+            _debugView.DrawString(50, _textLine, "Motor Torque = {0:n}", torque);
             _textLine += 15;
         }
 
         internal static Test Create()
         {
-            return new SliderCrank();
+            return new SliderCrankTest();
         }
 
         private RevoluteJoint _joint1;

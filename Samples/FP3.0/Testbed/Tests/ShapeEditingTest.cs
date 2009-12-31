@@ -20,16 +20,15 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class ShapeEditing : Test
+    public class ShapeEditingTest : Test
     {
-        public ShapeEditing()
+        private ShapeEditingTest()
         {
             {
                 BodyDef bd = new BodyDef();
@@ -47,7 +46,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             PolygonShape shape2 = new PolygonShape();
             shape2.SetAsBox(4.0f, 4.0f, new Vector2(0.0f, 0.0f), 0.0f);
-            _fixture1 = _body.CreateFixture(shape2, 10.0f);
+            _body.CreateFixture(shape2, 10.0f);
 
             _fixture2 = null;
         }
@@ -80,11 +79,10 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new ShapeEditing();
+            return new ShapeEditingTest();
         }
 
         private Body _body;
-        private Fixture _fixture1;
         private Fixture _fixture2;
     }
 }

@@ -26,7 +26,9 @@ using System;
 
 namespace FarseerPhysics
 {
+    /// <summary>
     /// Input parameters for CalculateTimeOfImpact
+    /// </summary>
     public struct TOIInput
     {
         public DistanceProxy proxyA;
@@ -52,26 +54,26 @@ namespace FarseerPhysics
             _localPoint = Vector2.Zero;
             _proxyA = proxyA;
             _proxyB = proxyB;
-            int count = cache.count;
+            int count = cache.Count;
             Debug.Assert(0 < count && count < 3);
 
             if (count == 1)
             {
                 _type = SeparationFunctionType.Points;
-                Vector2 localPointA = _proxyA.GetVertex(cache.indexA[0]);
-                Vector2 localPointB = _proxyB.GetVertex(cache.indexB[0]);
+                Vector2 localPointA = _proxyA.GetVertex(cache.IndexA[0]);
+                Vector2 localPointB = _proxyB.GetVertex(cache.IndexB[0]);
                 Vector2 pointA = MathUtils.Multiply(ref transformA, localPointA);
                 Vector2 pointB = MathUtils.Multiply(ref transformB, localPointB);
                 _axis = pointB - pointA;
                 _axis.Normalize();
             }
-            else if (cache.indexB[0] == cache.indexB[1])
+            else if (cache.IndexB[0] == cache.IndexB[1])
             {
                 // Two points on A and one on B
                 _type = SeparationFunctionType.FaceA;
-                Vector2 localPointA1 = _proxyA.GetVertex(cache.indexA[0]);
-                Vector2 localPointA2 = _proxyA.GetVertex(cache.indexA[1]);
-                Vector2 localPointB = _proxyB.GetVertex(cache.indexB[0]);
+                Vector2 localPointA1 = _proxyA.GetVertex(cache.IndexA[0]);
+                Vector2 localPointA2 = _proxyA.GetVertex(cache.IndexA[1]);
+                Vector2 localPointB = _proxyB.GetVertex(cache.IndexB[0]);
                 _localPoint = 0.5f * (localPointA1 + localPointA2);
                 _axis = MathUtils.Cross(localPointA2 - localPointA1, 1.0f);
                 _axis.Normalize();
@@ -86,13 +88,13 @@ namespace FarseerPhysics
                     _axis = -_axis;
                 }
             }
-            else if (cache.indexA[0] == cache.indexA[1])
+            else if (cache.IndexA[0] == cache.IndexA[1])
             {
                 // Two points on B and one on A.
                 _type = SeparationFunctionType.FaceB;
-                Vector2 localPointA = proxyA.GetVertex(cache.indexA[0]);
-                Vector2 localPointB1 = proxyB.GetVertex(cache.indexB[0]);
-                Vector2 localPointB2 = proxyB.GetVertex(cache.indexB[1]);
+                Vector2 localPointA = proxyA.GetVertex(cache.IndexA[0]);
+                Vector2 localPointB1 = proxyB.GetVertex(cache.IndexB[0]);
+                Vector2 localPointB2 = proxyB.GetVertex(cache.IndexB[1]);
                 _localPoint = 0.5f * (localPointB1 + localPointB2);
                 _axis = MathUtils.Cross(localPointB2 - localPointB1, 1.0f);
                 _axis.Normalize();
@@ -111,10 +113,10 @@ namespace FarseerPhysics
             {
                 // Two points on B and two points on A.
                 // The faces are parallel.
-                Vector2 localPointA1 = _proxyA.GetVertex(cache.indexA[0]);
-                Vector2 localPointA2 = _proxyA.GetVertex(cache.indexA[1]);
-                Vector2 localPointB1 = _proxyB.GetVertex(cache.indexB[0]);
-                Vector2 localPointB2 = _proxyB.GetVertex(cache.indexB[1]);
+                Vector2 localPointA1 = _proxyA.GetVertex(cache.IndexA[0]);
+                Vector2 localPointA2 = _proxyA.GetVertex(cache.IndexA[1]);
+                Vector2 localPointB1 = _proxyB.GetVertex(cache.IndexB[0]);
+                Vector2 localPointB2 = _proxyB.GetVertex(cache.IndexB[1]);
 
                 Vector2 pA = MathUtils.Multiply(ref transformA, localPointA1);
                 Vector2 dA = MathUtils.Multiply(ref transformA.R, localPointA2 - localPointA1);
@@ -241,27 +243,28 @@ namespace FarseerPhysics
             }
         }
 
-        DistanceProxy _proxyA;
-        DistanceProxy _proxyB;
-        SeparationFunctionType _type;
-        Vector2 _localPoint;
-        Vector2 _axis;
+        private DistanceProxy _proxyA;
+        private DistanceProxy _proxyB;
+        private SeparationFunctionType _type;
+        private Vector2 _localPoint;
+        private Vector2 _axis;
     }
-
-
 
     public static class TimeOfImpact
     {
+        /// <summary>
         /// Compute the time when two shapes begin to touch or touch at a closer distance.
         /// TOI considers the shape radii. It attempts to have the radii overlap by the tolerance.
         /// Iterations terminate with the overlap is within 0.5 * tolerance. The tolerance should be
         /// smaller than sum of the shape radii.
         /// @warning the sweeps must have the same time interval.
-        /// @return the fraction between [0,1] in which the shapes first touch.
-        /// fraction=0 means the shapes begin touching/overlapped, and fraction=1 means the shapes don't touch.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>the fraction between [0,1] in which the shapes first touch.
+        /// fraction=0 means the shapes begin touching/overlapped, and fraction=1 means the shapes don't touch.</returns>
         public static float CalculateTimeOfImpact(ref TOIInput input)
         {
-            ++b2_toiCalls;
+            ++ToiCalls;
 
             Sweep sweepA = input.sweepA;
             Sweep sweepB = input.sweepB;
@@ -269,7 +272,7 @@ namespace FarseerPhysics
             Debug.Assert(sweepA.t0 == sweepB.t0);
             Debug.Assert(1.0f - sweepA.t0 > Settings.Epsilon);
 
-            float radius = input.proxyA._radius + input.proxyB._radius;
+            float radius = input.proxyA.Radius + input.proxyB.Radius;
             float tolerance = input.tolerance;
 
             float alpha = 0.0f;
@@ -280,9 +283,9 @@ namespace FarseerPhysics
 
             // Prepare input for distance query.
             DistanceInput distanceInput;
-            distanceInput.proxyA = input.proxyA;
-            distanceInput.proxyB = input.proxyB;
-            distanceInput.useRadii = false;
+            distanceInput.ProxyA = input.proxyA;
+            distanceInput.ProxyB = input.proxyB;
+            distanceInput.UseRadii = false;
 
             for (; ; )
             {
@@ -291,13 +294,13 @@ namespace FarseerPhysics
                 sweepB.GetTransform(out xfB, alpha);
 
                 // Get the distance between shapes.
-                distanceInput.transformA = xfA;
-                distanceInput.transformB = xfB;
+                distanceInput.TransformA = xfA;
+                distanceInput.TransformB = xfB;
                 DistanceOutput distanceOutput;
                 SimplexCache cache;
                 Distance.ComputeDistance(out distanceOutput, out cache, ref distanceInput);
 
-                if (distanceOutput.distance <= 0.0f)
+                if (distanceOutput.Distance <= 0.0f)
                 {
                     alpha = 1.0f;
                     break;
@@ -338,23 +341,23 @@ namespace FarseerPhysics
                     break;
                 }
 
-#if false
+#if DetailedDebug
 		        // Dump the curve seen by the root finder
 		        {
-			        int N = 100;
-			        float dx = 1.0f / N;
-			        float xs[N+1];
-			        float fs[N+1];
+			        const int N = 100;
+			        const float dx = 1.0f / N;
+			        float[] xs = new float[N+1];
+			        float[] fs = new float[N+1];
 
 			        float x = 0.0f;
 
 			        for (int i = 0; i <= N; ++i)
 			        {
-				        sweepA.GetTransform(&xfA, x);
-				        sweepB.GetTransform(&xfB, x);
-				        float f = fcn.Evaluate(xfA, xfB) - target;
+				        sweepA.GetTransform(out xfA, x);
+				        sweepB.GetTransform(out xfB, x);
+				        float f = fcn.Evaluate(ref xfA, ref xfB) - target;
 
-				        printf("%g %g\n", x, f);
+			            Debug.WriteLine(string.Format("{0} {1}", x, f));
 
 				        xs[i] = x;
 				        fs[i] = f;
@@ -423,7 +426,7 @@ namespace FarseerPhysics
                         }
 
                         ++rootIterCount;
-                        ++b2_toiRootIters;
+                        ++ToiRootIters;
 
                         if (rootIterCount == 50)
                         {
@@ -431,7 +434,7 @@ namespace FarseerPhysics
                         }
                     }
 
-                    b2_toiMaxRootIters = Math.Max(b2_toiMaxRootIters, rootIterCount);
+                    ToiMaxRootIters = Math.Max(ToiMaxRootIters, rootIterCount);
                 }
 
                 // Ensure significant advancement.
@@ -443,7 +446,7 @@ namespace FarseerPhysics
                 alpha = newAlpha;
 
                 ++iter;
-                ++b2_toiIters;
+                ++ToiIters;
 
                 if (iter == k_maxIterations)
                 {
@@ -451,12 +454,12 @@ namespace FarseerPhysics
                 }
             }
 
-            b2_toiMaxIters = Math.Max(b2_toiMaxIters, iter);
+            ToiMaxIters = Math.Max(ToiMaxIters, iter);
 
             return alpha;
         }
 
-        static int b2_toiCalls, b2_toiIters, b2_toiMaxIters;
-        static int b2_toiRootIters, b2_toiMaxRootIters;
+        public static int ToiCalls, ToiIters, ToiMaxIters;
+        public static int ToiRootIters, ToiMaxRootIters;
     }
 }

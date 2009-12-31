@@ -30,11 +30,11 @@ namespace FarseerPhysics
     public struct Filter
     {
         /// The collision category bits. Normally you would just set one bit.
-        public UInt16 categoryBits;
+        public ushort categoryBits;
 
         /// The collision mask bits. This states the categories that this
         /// shape would accept for collision.
-        public UInt16 maskBits;
+        public ushort maskBits;
 
         /// Collision groups allow a certain group of objects to never collide (negative)
         /// or always collide (positive). Zero means no collision group. Non-zero group

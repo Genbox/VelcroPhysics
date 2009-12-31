@@ -25,16 +25,9 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class OneSidedPlatform : Test
+    public class OneSidedPlatformTest : Test
     {
-        public enum State
-        {
-            e_unknown,
-            e_above,
-            e_below,
-        }
-
-        public OneSidedPlatform()
+        private OneSidedPlatformTest()
         {
             // Ground
             {
@@ -56,7 +49,6 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(3.0f, 0.5f);
                 _platform = body.CreateFixture(shape, 0.0f);
 
-                _bottom = 10.0f - 0.5f;
                 _top = 10.0f + 0.5f;
             }
 
@@ -72,8 +64,6 @@ namespace FarseerPhysics.TestBed.Tests
                 _character = body.CreateFixture(shape, 1.0f);
 
                 body.SetLinearVelocity(new Vector2(0.0f, -50.0f));
-
-                _state = State.e_unknown;
             }
         }
 
@@ -111,11 +101,10 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new OneSidedPlatform();
+            return new OneSidedPlatformTest();
         }
 
-        private float _radius, _top, _bottom;
-        private State _state;
+        private float _radius, _top;
         private Fixture _platform;
         private Fixture _character;
     }

@@ -20,15 +20,16 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class VaryingRestitution : Test
+    public class PyramidTest : Test
     {
-        private VaryingRestitution()
+        private const int Count = 20;
+
+        private PyramidTest()
         {
             {
                 BodyDef bd = new BodyDef();
@@ -40,31 +41,49 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                CircleShape shape = new CircleShape(1.0f);
+                const float a = 0.5f;
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(a, a);
 
-                FixtureDef fd = new FixtureDef();
-                fd.shape = shape;
-                fd.density = 1.0f;
+                Vector2 x = new Vector2(-7.0f, 0.75f);
+                Vector2 deltaX = new Vector2(0.5625f, 1.25f);
+                Vector2 deltaY = new Vector2(1.125f, 0.0f);
 
-                float[] restitution = new float[7] {0.0f, 0.1f, 0.3f, 0.5f, 0.75f, 0.9f, 1.0f};
-
-                for (int i = 0; i < 7; ++i)
+                for (int i = 0; i < Count; ++i)
                 {
-                    BodyDef bd = new BodyDef();
-                    bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(-10.0f + 3.0f*i, 20.0f);
+                    Vector2 y = x;
 
-                    Body body = _world.CreateBody(bd);
+                    for (int j = i; j < Count; ++j)
+                    {
+                        BodyDef bd = new BodyDef();
+                        bd.type = BodyType.Dynamic;
+                        bd.position = y;
+                        Body body = _world.CreateBody(bd);
+                        body.CreateFixture(shape, 5.0f);
 
-                    fd.restitution = restitution[i];
-                    body.CreateFixture(fd);
+                        y += deltaY;
+                    }
+
+                    x += deltaX;
                 }
             }
         }
 
-        internal static Test Create()
+        //void Step(Framework.Settings settings)
+        //{
+        //	// We need higher accuracy for the pyramid.
+        //	int velocityIterations = settings.velocityIterations;
+        //	int positionIterations = settings.positionIterations;
+        //	settings.velocityIterations = b2Max(8, velocityIterations);
+        //	settings.positionIterations = b2Max(1, positionIterations);
+        //	base.Step(settings);
+        //	settings.velocityIterations = velocityIterations;
+        //	settings.positionIterations = positionIterations;
+        //}
+
+        public static Test Create()
         {
-            return new VaryingRestitution();
+            return new PyramidTest();
         }
     }
 }

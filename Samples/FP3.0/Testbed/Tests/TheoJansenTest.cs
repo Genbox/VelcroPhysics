@@ -20,23 +20,22 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class TheoJansen : Test
+    public class TheoJansenTest : Test
     {
         private void CreateLeg(float s, Vector2 wheelAnchor)
         {
-            Vector2 p1 = new Vector2(5.4f*s, -6.1f);
-            Vector2 p2 = new Vector2(7.2f*s, -1.2f);
-            Vector2 p3 = new Vector2(4.3f*s, -1.9f);
-            Vector2 p4 = new Vector2(3.1f*s, 0.8f);
-            Vector2 p5 = new Vector2(6.0f*s, 1.5f);
-            Vector2 p6 = new Vector2(2.5f*s, 3.7f);
+            Vector2 p1 = new Vector2(5.4f * s, -6.1f);
+            Vector2 p2 = new Vector2(7.2f * s, -1.2f);
+            Vector2 p3 = new Vector2(4.3f * s, -1.9f);
+            Vector2 p4 = new Vector2(3.1f * s, 0.8f);
+            Vector2 p5 = new Vector2(6.0f * s, 1.5f);
+            Vector2 p6 = new Vector2(2.5f * s, 3.7f);
 
             FixtureDef fd1 = new FixtureDef();
             FixtureDef fd2 = new FixtureDef();
@@ -122,7 +121,7 @@ namespace FarseerPhysics.TestBed.Tests
             _world.CreateJoint(rjd);
         }
 
-        private TheoJansen()
+        private TheoJansenTest()
         {
             _offset = new Vector2(0.0f, 8.0f);
             _motorSpeed = 2.0f;
@@ -152,7 +151,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 BodyDef bd = new BodyDef();
                 bd.type = BodyType.Dynamic;
-                bd.position = new Vector2(-40.0f + 2.0f*i, 0.5f);
+                bd.position = new Vector2(-40.0f + 2.0f * i, 0.5f);
 
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(shape, 1.0f);
@@ -195,21 +194,19 @@ namespace FarseerPhysics.TestBed.Tests
                 jd.motorSpeed = _motorSpeed;
                 jd.maxMotorTorque = 400.0f;
                 jd.enableMotor = _motorOn;
-                _motorJoint = (RevoluteJoint) _world.CreateJoint(jd);
+                _motorJoint = (RevoluteJoint)_world.CreateJoint(jd);
             }
 
-            Vector2 wheelAnchor;
-
-            wheelAnchor = pivot + new Vector2(0.0f, -0.8f);
+            Vector2 wheelAnchor = pivot + new Vector2(0.0f, -0.8f);
 
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
 
-            _wheel.SetTransform(_wheel.GetPosition(), 120.0f*FarseerPhysics.Settings.Pi/180.0f);
+            _wheel.SetTransform(_wheel.GetPosition(), 120.0f * Settings.Pi / 180.0f);
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
 
-            _wheel.SetTransform(_wheel.GetPosition(), -120.0f*FarseerPhysics.Settings.Pi/180.0f);
+            _wheel.SetTransform(_wheel.GetPosition(), -120.0f * Settings.Pi / 180.0f);
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
         }
@@ -244,7 +241,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new TheoJansen();
+            return new TheoJansenTest();
         }
 
         private Vector2 _offset;

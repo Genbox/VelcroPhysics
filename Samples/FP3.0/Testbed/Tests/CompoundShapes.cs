@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -28,7 +27,7 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class CompoundShapes : Test
     {
-        public CompoundShapes()
+        private CompoundShapes()
         {
             {
                 BodyDef bd = new BodyDef();
@@ -66,7 +65,7 @@ namespace FarseerPhysics.TestBed.Tests
                 polygon1.SetAsBox(0.25f, 0.5f);
 
                 PolygonShape polygon2 = new PolygonShape();
-                polygon2.SetAsBox(0.25f, 0.5f, new Vector2(0.0f, -0.5f), 0.5f * FarseerPhysics.Settings.Pi);
+                polygon2.SetAsBox(0.25f, 0.5f, new Vector2(0.0f, -0.5f), 0.5f * Settings.Pi);
 
                 for (int i = 0; i < 10; ++i)
                 {
@@ -74,7 +73,7 @@ namespace FarseerPhysics.TestBed.Tests
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
                     bd.position = new Vector2(x - 5.0f, 1.05f + 2.5f * i);
-                    bd.angle = Rand.RandomFloat(-FarseerPhysics.Settings.Pi, FarseerPhysics.Settings.Pi);
+                    bd.angle = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(polygon1, 2.0f);
                     body.CreateFixture(polygon2, 2.0f);
@@ -83,7 +82,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 Transform xf1 = new Transform();
-                xf1.R.Set(0.3524f * FarseerPhysics.Settings.Pi);
+                xf1.R.Set(0.3524f * Settings.Pi);
                 xf1.Position = MathUtils.Multiply(ref xf1.R, new Vector2(1.0f, 0.0f));
 
                 Vector2[] vertices = new Vector2[3];
@@ -95,7 +94,7 @@ namespace FarseerPhysics.TestBed.Tests
                 triangle1.Set(vertices, 3);
 
                 Transform xf2 = new Transform();
-                xf2.R.Set(-0.3524f * FarseerPhysics.Settings.Pi);
+                xf2.R.Set(-0.3524f * Settings.Pi);
                 xf2.Position = MathUtils.Multiply(ref xf2.R, new Vector2(-1.0f, 0.0f));
 
                 PolygonShape triangle2 = new PolygonShape();

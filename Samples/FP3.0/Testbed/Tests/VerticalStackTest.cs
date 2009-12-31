@@ -20,24 +20,18 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class VerticalStack : Test
+    public class VerticalStackTest : Test
     {
-        public enum StackOptions
-        {
-            e_columnCount = 5,
-            e_rowCount = 16
-            //e_columnCount = 1,
-            //e_rowCount = 1
-        } ;
+        private const int ColumnCount = 5;
+        private const int RowCount = 16;
 
-        private VerticalStack()
+        private VerticalStackTest()
         {
             {
                 BodyDef bd = new BodyDef();
@@ -51,9 +45,9 @@ namespace FarseerPhysics.TestBed.Tests
                 ground.CreateFixture(shape, 0.0f);
             }
 
-            float[] xs = new float[5] {0.0f, -10.0f, -5.0f, 5.0f, 10.0f};
+            float[] xs = new float[] {0.0f, -10.0f, -5.0f, 5.0f, 10.0f};
 
-            for (int j = 0; j < (int) StackOptions.e_columnCount; ++j)
+            for (int j = 0; j < ColumnCount; ++j)
             {
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(0.5f, 0.5f);
@@ -63,12 +57,12 @@ namespace FarseerPhysics.TestBed.Tests
                 fd.density = 1.0f;
                 fd.friction = 0.3f;
 
-                for (int i = 0; i < (int) StackOptions.e_rowCount; ++i)
+                for (int i = 0; i < RowCount; ++i)
                 {
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
 
-                    float x = 0.0f;
+                    const float x = 0.0f;
                     //float x = Rand.RandomFloat-0.02f, 0.02f);
                     //float x = i % 2 == 0 ? -0.025f : 0.025f;
                     bd.position = new Vector2(xs[j] + x, 0.752f + 1.54f*i);
@@ -121,7 +115,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new VerticalStack();
+            return new VerticalStackTest();
         }
 
         private Body _bullet;

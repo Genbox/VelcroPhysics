@@ -20,21 +20,19 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class SphereStack : Test
+    public class ChainTest : Test
     {
-        private static int e_count = 10;
-
-        public SphereStack()
+        private ChainTest()
         {
+            Body ground;
             {
                 BodyDef bd = new BodyDef();
-                Body ground = _world.CreateBody(bd);
+                ground = _world.CreateBody(bd);
 
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -42,28 +40,39 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                CircleShape shape = new CircleShape(1.0f);
+                PolygonShape shape = new PolygonShape();
+                shape.SetAsBox(0.6f, 0.125f);
 
-                for (int i = 0; i < e_count; ++i)
+                FixtureDef fd = new FixtureDef();
+                fd.shape = shape;
+                fd.density = 20.0f;
+                fd.friction = 0.2f;
+
+                RevoluteJointDef jd = new RevoluteJointDef();
+                jd.collideConnected = false;
+
+                const float y = 25.0f;
+                Body prevBody = ground;
+                for (int i = 0; i < 30; ++i)
                 {
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(0.0f, 4.0f + 3.0f*i);
+                    bd.position = new Vector2(0.5f + i, y);
+                    Body body = _world.CreateBody(bd);
+                    body.CreateFixture(fd);
 
-                    _bodies[i] = _world.CreateBody(bd);
+                    Vector2 anchor = new Vector2(i, y);
+                    jd.Initialize(prevBody, body, anchor);
+                    _world.CreateJoint(jd);
 
-                    _bodies[i].CreateFixture(shape, 1.0f);
-
-                    //_bodies[i].SetLinearVelocity(new Vector2(0.0f, -100.0f));
+                    prevBody = body;
                 }
             }
         }
 
-        public static Test Create()
+        internal static Test Create()
         {
-            return new SphereStack();
+            return new ChainTest();
         }
-
-        private Body[] _bodies = new Body[e_count];
     }
 }
