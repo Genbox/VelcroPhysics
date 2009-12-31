@@ -178,41 +178,41 @@ namespace FarseerPhysics
             Joint j = Joint.Create(def);
 
             // Connect to the world list.
-            j._prev = null;
-            j._next = _jointList;
+            j.Prev = null;
+            j.Next = _jointList;
             if (_jointList != null)
             {
-                _jointList._prev = j;
+                _jointList.Prev = j;
             }
             _jointList = j;
             ++_jointCount;
 
             // Connect to the bodies' doubly linked lists.
-            j._edgeA.Joint = j;
-            j._edgeA.Other = j._bodyB;
-            j._edgeA.Prev = null;
-            j._edgeA.Next = j._bodyA._jointList;
+            j.EdgeA.Joint = j;
+            j.EdgeA.Other = j.BodyB;
+            j.EdgeA.Prev = null;
+            j.EdgeA.Next = j.BodyA._jointList;
 
-            if (j._bodyA._jointList != null)
-                j._bodyA._jointList.Prev = j._edgeA;
+            if (j.BodyA._jointList != null)
+                j.BodyA._jointList.Prev = j.EdgeA;
 
-            j._bodyA._jointList = j._edgeA;
+            j.BodyA._jointList = j.EdgeA;
 
-            j._edgeB.Joint = j;
-            j._edgeB.Other = j._bodyA;
-            j._edgeB.Prev = null;
-            j._edgeB.Next = j._bodyB._jointList;
+            j.EdgeB.Joint = j;
+            j.EdgeB.Other = j.BodyA;
+            j.EdgeB.Prev = null;
+            j.EdgeB.Next = j.BodyB._jointList;
 
-            if (j._bodyB._jointList != null)
-                j._bodyB._jointList.Prev = j._edgeB;
+            if (j.BodyB._jointList != null)
+                j.BodyB._jointList.Prev = j.EdgeB;
 
-            j._bodyB._jointList = j._edgeB;
+            j.BodyB._jointList = j.EdgeB;
 
-            Body bodyA = def.bodyA;
-            Body bodyB = def.bodyB;
+            Body bodyA = def.BodyA;
+            Body bodyB = def.BodyB;
 
             // If the joint prevents collisions, then flag any contacts for filtering.
-            if (def.collideConnected == false)
+            if (def.CollideConnected == false)
             {
                 ContactEdge edge = bodyB.GetContactList();
                 while (edge != null)
@@ -243,69 +243,69 @@ namespace FarseerPhysics
                 return;
             }
 
-            bool collideConnected = j._collideConnected;
+            bool collideConnected = j.CollideConnected;
 
             // Remove from the doubly linked list.
-            if (j._prev != null)
+            if (j.Prev != null)
             {
-                j._prev._next = j._next;
+                j.Prev.Next = j.Next;
             }
 
-            if (j._next != null)
+            if (j.Next != null)
             {
-                j._next._prev = j._prev;
+                j.Next.Prev = j.Prev;
             }
 
             if (j == _jointList)
             {
-                _jointList = j._next;
+                _jointList = j.Next;
             }
 
             // Disconnect from island graph.
-            Body bodyA = j._bodyA;
-            Body bodyB = j._bodyB;
+            Body bodyA = j.BodyA;
+            Body bodyB = j.BodyB;
 
             // Wake up connected bodies.
             bodyA.SetAwake(true);
             bodyB.SetAwake(true);
 
             // Remove from body 1.
-            if (j._edgeA.Prev != null)
+            if (j.EdgeA.Prev != null)
             {
-                j._edgeA.Prev.Next = j._edgeA.Next;
+                j.EdgeA.Prev.Next = j.EdgeA.Next;
             }
 
-            if (j._edgeA.Next != null)
+            if (j.EdgeA.Next != null)
             {
-                j._edgeA.Next.Prev = j._edgeA.Prev;
+                j.EdgeA.Next.Prev = j.EdgeA.Prev;
             }
 
-            if (j._edgeA == bodyA._jointList)
+            if (j.EdgeA == bodyA._jointList)
             {
-                bodyA._jointList = j._edgeA.Next;
+                bodyA._jointList = j.EdgeA.Next;
             }
 
-            j._edgeA.Prev = null;
-            j._edgeA.Next = null;
+            j.EdgeA.Prev = null;
+            j.EdgeA.Next = null;
 
             // Remove from body 2
-            if (j._edgeB.Prev != null)
+            if (j.EdgeB.Prev != null)
             {
-                j._edgeB.Prev.Next = j._edgeB.Next;
+                j.EdgeB.Prev.Next = j.EdgeB.Next;
             }
 
-            if (j._edgeB.Next != null)
+            if (j.EdgeB.Next != null)
             {
-                j._edgeB.Next.Prev = j._edgeB.Prev;
+                j.EdgeB.Next.Prev = j.EdgeB.Prev;
             }
 
-            if (j._edgeB == bodyB._jointList)
+            if (j.EdgeB == bodyB._jointList)
             {
-                bodyB._jointList = j._edgeB.Next;
+                bodyB._jointList = j.EdgeB.Next;
             }
 
-            j._edgeB.Prev = null;
-            j._edgeB.Next = null;
+            j.EdgeB.Prev = null;
+            j.EdgeB.Next = null;
 
             Debug.Assert(_jointCount > 0);
             --_jointCount;
@@ -572,13 +572,13 @@ namespace FarseerPhysics
             {
                 b._flags &= ~BodyFlags.Island;
             }
-            for (Contact c = _contactManager._contactList; c != null; c = c._next)
+            for (Contact c = _contactManager._contactList; c != null; c = c.Next)
             {
-                c._flags &= ~ContactFlags.Island;
+                c.Flags &= ~ContactFlags.Island;
             }
-            for (Joint j = _jointList; j != null; j = j._next)
+            for (Joint j = _jointList; j != null; j = j.Next)
             {
-                j._islandFlag = false;
+                j.IslandFlag = false;
             }
 
             // Build and simulate all awake islands.
@@ -635,7 +635,7 @@ namespace FarseerPhysics
                     for (ContactEdge ce = b._contactList; ce != null; ce = ce.Next)
                     {
                         // Has this contact already been added to an island?
-                        if ((ce.Contact._flags & ContactFlags.Island) != ContactFlags.None)
+                        if ((ce.Contact.Flags & ContactFlags.Island) != ContactFlags.None)
                         {
                             continue;
                         }
@@ -647,7 +647,7 @@ namespace FarseerPhysics
                         }
 
                         _island.Add(ce.Contact);
-                        ce.Contact._flags |= ContactFlags.Island;
+                        ce.Contact.Flags |= ContactFlags.Island;
 
                         Body other = ce.Other;
 
@@ -665,7 +665,7 @@ namespace FarseerPhysics
                     // Search all joints connect to this body.
                     for (JointEdge je = b._jointList; je != null; je = je.Next)
                     {
-                        if (je.Joint._islandFlag)
+                        if (je.Joint.IslandFlag)
                         {
                             continue;
                         }
@@ -679,7 +679,7 @@ namespace FarseerPhysics
                         }
 
                         _island.Add(je.Joint);
-                        je.Joint._islandFlag = true;
+                        je.Joint.IslandFlag = true;
 
                         if ((other._flags & BodyFlags.Island) != BodyFlags.None)
                         {
@@ -753,15 +753,15 @@ namespace FarseerPhysics
                 b._sweep.t0 = 0.0f;
             }
 
-            for (Contact c = _contactManager._contactList; c != null; c = c._next)
+            for (Contact c = _contactManager._contactList; c != null; c = c.Next)
             {
                 // Invalidate TOI
-                c._flags &= ~(ContactFlags.Toi | ContactFlags.Island);
+                c.Flags &= ~(ContactFlags.Toi | ContactFlags.Island);
             }
 
-            for (Joint j = _jointList; j != null; j = j._next)
+            for (Joint j = _jointList; j != null; j = j.Next)
             {
-                j._islandFlag = false;
+                j.IslandFlag = false;
             }
 
             // Find TOI events and solve them.
@@ -771,7 +771,7 @@ namespace FarseerPhysics
                 Contact minContact = null;
                 float minTOI = 1.0f;
 
-                for (Contact c = _contactManager._contactList; c != null; c = c._next)
+                for (Contact c = _contactManager._contactList; c != null; c = c.Next)
                 {
                     // Can this contact generate a solid TOI contact?
                     if (c.IsSensor() || c.IsEnabled() == false || c.IsContinuous() == false)
@@ -782,10 +782,10 @@ namespace FarseerPhysics
                     // TODO_ERIN keep a counter on the contact, only respond to M TOIs per contact.
 
                     float toi;
-                    if ((c._flags & ContactFlags.Toi) != ContactFlags.None)
+                    if ((c.Flags & ContactFlags.Toi) != ContactFlags.None)
                     {
                         // This contact has a valid cached TOI.
-                        toi = c._toi;
+                        toi = c.Toi;
                     }
                     else
                     {
@@ -830,8 +830,8 @@ namespace FarseerPhysics
                         }
 
 
-                        c._toi = toi;
-                        c._flags |= ContactFlags.Toi;
+                        c.Toi = toi;
+                        c.Flags |= ContactFlags.Toi;
                     }
 
                     if (Settings.Epsilon < toi && toi < minTOI)
@@ -862,7 +862,7 @@ namespace FarseerPhysics
 
                 // The TOI contact likely has some new contact points.
                 minContact.Update(_contactManager);
-                minContact._flags &= ~ContactFlags.Toi;
+                minContact.Flags &= ~ContactFlags.Toi;
 
                 // Is the contact solid?
                 if (minContact.IsSensor() || !minContact.IsEnabled())
@@ -930,7 +930,7 @@ namespace FarseerPhysics
                         }
 
                         // Has this contact already been added to an island?
-                        if ((cEdge.Contact._flags & ContactFlags.Island) != ContactFlags.None)
+                        if ((cEdge.Contact.Flags & ContactFlags.Island) != ContactFlags.None)
                         {
                             continue;
                         }
@@ -944,7 +944,7 @@ namespace FarseerPhysics
                         }
 
                         _island.Add(cEdge.Contact);
-                        cEdge.Contact._flags |= ContactFlags.Island;
+                        cEdge.Contact.Flags |= ContactFlags.Island;
 
                         // Update other body.
                         Body other = cEdge.Other;
@@ -975,7 +975,7 @@ namespace FarseerPhysics
                             continue;
                         }
 
-                        if (jEdge.Joint._islandFlag)
+                        if (jEdge.Joint.IslandFlag)
                         {
                             continue;
                         }
@@ -988,7 +988,7 @@ namespace FarseerPhysics
 
                         _island.Add(jEdge.Joint);
 
-                        jEdge.Joint._islandFlag = true;
+                        jEdge.Joint.IslandFlag = true;
 
                         if ((other._flags & BodyFlags.Island) != BodyFlags.None)
                         {
@@ -1043,7 +1043,7 @@ namespace FarseerPhysics
                     // may not be in the island because they were not touching.
                     for (ContactEdge ce = b._contactList; ce != null; ce = ce.Next)
                     {
-                        ce.Contact._flags &= ~ContactFlags.Toi;
+                        ce.Contact.Flags &= ~ContactFlags.Toi;
                     }
                 }
 
@@ -1052,14 +1052,14 @@ namespace FarseerPhysics
                 {
                     // Allow contacts to participate in future TOI islands.
                     Contact c = _island._contacts[i];
-                    c._flags &= ~(ContactFlags.Toi | ContactFlags.Island);
+                    c.Flags &= ~(ContactFlags.Toi | ContactFlags.Island);
                 }
 
                 for (int i = 0; i < _island._jointCount; ++i)
                 {
                     // Allow joints to participate in future TOI islands.
                     Joint j = _island._joints[i];
-                    j._islandFlag = false;
+                    j.IslandFlag = false;
                 }
 
                 // Commit fixture proxy movements to the broad-phase so that new contacts are created.

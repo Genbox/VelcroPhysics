@@ -48,34 +48,36 @@ namespace FarseerPhysics
 
     internal struct Jacobian
     {
-	    public Vector2 linearA;
-	    public float angularA;
-	    public Vector2 linearB;
-	    public float angularB;
+	    public Vector2 LinearA;
+	    public float AngularA;
+	    public Vector2 LinearB;
+	    public float AngularB;
 
 	    public void SetZero()
         {
-	        linearA = Vector2.Zero; angularA = 0.0f;
-	        linearB = Vector2.Zero; angularB = 0.0f;
+	        LinearA = Vector2.Zero; AngularA = 0.0f;
+	        LinearB = Vector2.Zero; AngularB = 0.0f;
         }
 
 	    public void Set(Vector2 x1, float a1, Vector2 x2, float a2)
         {
-	        linearA = x1; angularA = a1;
-	        linearB = x2; angularB = a2;
+	        LinearA = x1; AngularA = a1;
+	        LinearB = x2; AngularB = a2;
         }
 
 	    public float Compute(Vector2 x1, float a1, Vector2 x2, float a2)
         {
-            return Vector2.Dot(linearA, x1) + angularA * a1 + Vector2.Dot(linearB, x2) + angularB * a2;
+            return Vector2.Dot(LinearA, x1) + AngularA * a1 + Vector2.Dot(LinearB, x2) + AngularB * a2;
         }
     }
 
-     /// A joint edge is used to connect bodies and joints together
+    /// <summary>
+    /// A joint edge is used to connect bodies and joints together
     /// in a joint graph where each body is a node and each joint
     /// is an edge. A joint edge belongs to a doubly linked list
     /// maintained in each attached body. Each joint has two joint
     /// nodes, one for each attached body.
+    /// </summary>
     public class JointEdge
     {
         /// <summary>
@@ -101,79 +103,120 @@ namespace FarseerPhysics
 
     public class JointDef
     {
-	    /// The joint type is set automatically for concrete joint types.
-        internal JointType type;
+        /// <summary>
+        /// The joint type is set automatically for concrete joint types.
+        /// </summary>
+        internal JointType Type;
 
-	    /// Use this to attach application specific data to your joints.
-        public object userData;
+        /// <summary>
+        /// Use this to attach application specific data to your joints.
+        /// </summary>
+        public object UserData;
 
-	    /// The first attached body.
-        public Body bodyA;
+        /// <summary>
+        /// The first attached body.
+        /// </summary>
+        public Body BodyA;
 
-	    /// The second attached body.
-        public Body bodyB;
+        /// <summary>
+        /// The second attached body.
+        /// </summary>
+        public Body BodyB;
 
-	    /// Set this flag to true if the attached bodies should collide.
-	    public bool collideConnected;
+        /// <summary>
+        /// Set this flag to true if the attached bodies should collide.
+        /// </summary>
+	    public bool CollideConnected;
     }
 
     public abstract class Joint
     {
-	    /// Get the type of the concrete joint.
-	    public JointType JointType
-        {
-            get
-            {
-                return _type;
-            }
-        }
+        /// <summary>
+        /// Gets or sets the type of the joint.
+        /// </summary>
+        /// <value>The type of the joint.</value>
+        public JointType JointType { get; private set; }
 
-	    /// Get the first body attached to this joint.
+        /// <summary>
+        /// Get the first body attached to this joint.
+        /// </summary>
+        /// <returns></returns>
 	    public Body GetBodyA()
         {
-            return _bodyA;
+            return BodyA;
         }
 
-	    /// Get the second body attached to this joint.
+        /// <summary>
+        /// Get the second body attached to this joint.
+        /// </summary>
+        /// <returns></returns>
 	    public Body GetBodyB()
         {
-            return _bodyB;
+            return BodyB;
         }
 
-	    /// Get the anchor point on body1 in world coordinates.
+        /// <summary>
+        /// Get the anchor point on body1 in world coordinates.
+        /// </summary>
+        /// <returns></returns>
 	    public abstract Vector2 GetAnchorA();
 
-	    /// Get the anchor point on body2 in world coordinates.
+        /// <summary>
+        /// Get the anchor point on body2 in world coordinates.
+        /// </summary>
+        /// <returns></returns>
 	    public abstract Vector2 GetAnchorB();
 
+        /// <summary>
         /// Get the reaction force on body2 at the joint anchor in Newtons.
+        /// </summary>
+        /// <param name="inv_dt">The inv_dt.</param>
+        /// <returns></returns>
 	    public abstract Vector2 GetReactionForce(float inv_dt);
 
+        /// <summary>
         /// Get the reaction torque on body2 in N*m.
+        /// </summary>
+        /// <param name="inv_dt">The inv_dt.</param>
+        /// <returns></returns>
 	    public abstract float GetReactionTorque(float inv_dt);
 
-	    /// Get the next joint the world joint list.
+        /// <summary>
+        /// Get the next joint the world joint list.
+        /// </summary>
+        /// <returns></returns>
 	    public Joint GetNext()
         {
-	        return _next;
+	        return Next;
         }
 
-	    /// Get the user data pointer.
+        /// <summary>
+        /// Get the user data pointer.
+        /// </summary>
+        /// <returns></returns>
 	    public object GetUserData()
         {
             return _userData;
         }
 
-	    /// Set the user data pointer.
+        /// <summary>
+        /// Set the user data pointer.
+        /// </summary>
+        /// <param name="data">The data.</param>
 	    public void SetUserData(object data)
         {
             _userData = data;
         }
 
+        /// <summary>
         /// Short-cut function to determine if either body is inactive.
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if this instance is active; otherwise, <c>false</c>.
+        /// </returns>
         public bool IsActive()
         {
-            return _bodyA.IsActive() && _bodyB.IsActive();
+            return BodyA.IsActive() && BodyB.IsActive();
 
         }
 
@@ -181,7 +224,7 @@ namespace FarseerPhysics
         {
 	        Joint joint = null;
 
-	        switch (def.type)
+	        switch (def.Type)
 	        {
 	        case JointType.Distance:
 		        {
@@ -246,16 +289,16 @@ namespace FarseerPhysics
 
 	    protected Joint(JointDef def)
         {
-            Debug.Assert(def.bodyA != def.bodyB);
+            Debug.Assert(def.BodyA != def.BodyB);
 
-	        _type = def.type;
-	        _bodyA = def.bodyA;
-	        _bodyB = def.bodyB;
-	        _collideConnected = def.collideConnected;
-	        _userData = def.userData;
+	        JointType = def.Type;
+	        BodyA = def.BodyA;
+	        BodyB = def.BodyB;
+	        CollideConnected = def.CollideConnected;
+	        _userData = def.UserData;
 
-            _edgeA = new JointEdge();
-            _edgeB = new JointEdge();
+            EdgeA = new JointEdge();
+            EdgeB = new JointEdge();
         }
 
 	    internal abstract void InitVelocityConstraints(ref TimeStep step);
@@ -265,22 +308,21 @@ namespace FarseerPhysics
 	    // This returns true if the position errors are within tolerance.
 	    internal abstract bool SolvePositionConstraints(float baumgarte);
 
-        private JointType _type;
-	    internal Joint _prev;
-	    internal Joint _next;
-	    internal JointEdge _edgeA;
-	    internal JointEdge _edgeB;
-	    internal Body _bodyA;
-	    internal Body _bodyB;
+        internal Joint Prev;
+	    internal Joint Next;
+	    internal JointEdge EdgeA;
+	    internal JointEdge EdgeB;
+	    internal Body BodyA;
+	    internal Body BodyB;
 
-	    internal bool _islandFlag;
-	    internal bool _collideConnected;
+	    internal bool IslandFlag;
+	    internal bool CollideConnected;
 
         private object _userData;
 
 	    // Cache here per time step to reduce cache misses.
-	    internal Vector2 _localCenterA, _localCenterB;
-	    internal float _invMassA, _invIA;
-	    internal float _invMassB, _invIB;
+	    internal Vector2 LocalCenterA, LocalCenterB;
+	    internal float InvMassA, InvIA;
+	    internal float InvMassB, InvIB;
     }
 }

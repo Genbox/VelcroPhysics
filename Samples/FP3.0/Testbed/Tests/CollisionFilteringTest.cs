@@ -107,14 +107,14 @@ namespace FarseerPhysics.TestBed.Tests
                 body.CreateFixture(p, 1.0f);
 
                 PrismaticJointDef jd = new PrismaticJointDef();
-                jd.bodyA = body2;
-                jd.bodyB = body;
-                jd.enableLimit = true;
-                jd.localAnchorA = new Vector2(0.0f, 4.0f);
-                jd.localAnchorB = Vector2.Zero;
-                jd.localAxis1 = new Vector2(0.0f, 1.0f);
-                jd.lowerTranslation = -1.0f;
-                jd.upperTranslation = 1.0f;
+                jd.BodyA = body2;
+                jd.BodyB = body;
+                jd.EnableLimit = true;
+                jd.LocalAnchorA = new Vector2(0.0f, 4.0f);
+                jd.LocalAnchorB = Vector2.Zero;
+                jd.LocalAxis1 = new Vector2(0.0f, 1.0f);
+                jd.LowerTranslation = -1.0f;
+                jd.UpperTranslation = 1.0f;
 
                 _world.CreateJoint(jd);
             }

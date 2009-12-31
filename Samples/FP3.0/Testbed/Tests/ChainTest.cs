@@ -49,7 +49,7 @@ namespace FarseerPhysics.TestBed.Tests
                 fd.friction = 0.2f;
 
                 RevoluteJointDef jd = new RevoluteJointDef();
-                jd.collideConnected = false;
+                jd.CollideConnected = false;
 
                 const float y = 25.0f;
                 Body prevBody = ground;

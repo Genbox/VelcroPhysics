@@ -26,95 +26,126 @@ using System;
 
 namespace FarseerPhysics
 {
+    /// <summary>
     /// Pulley joint definition. This requires two ground anchors,
     /// two dynamic body anchor points, max lengths for each side,
     /// and a pulley ratio.
+    /// </summary>
     public class PulleyJointDef : JointDef
     {
         internal const float MinPulleyLength = 2.0f;
 
         public PulleyJointDef()
         {
-            type = JointType.Pulley;
-            groundAnchorA = new Vector2(-1.0f, 1.0f);
-            groundAnchorB = new Vector2(1.0f, 1.0f);
-            localAnchorA = new Vector2(-1.0f, 0.0f);
-            localAnchorB = new Vector2(1.0f, 0.0f);
-            lengthA = 0.0f;
+            Type = JointType.Pulley;
+            GroundAnchorA = new Vector2(-1.0f, 1.0f);
+            GroundAnchorB = new Vector2(1.0f, 1.0f);
+            LocalAnchorA = new Vector2(-1.0f, 0.0f);
+            LocalAnchorB = new Vector2(1.0f, 0.0f);
+            LengthA = 0.0f;
             maxLengthA = 0.0f;
-            lengthB = 0.0f;
-            maxLengthB = 0.0f;
-            ratio = 1.0f;
-            collideConnected = true;
+            LengthB = 0.0f;
+            MaxLengthB = 0.0f;
+            Ratio = 1.0f;
+            CollideConnected = true;
         }
 
+        /// <summary>
         /// Initialize the bodies, anchors, lengths, max lengths, and ratio using the world anchors.
+        /// </summary>
+        /// <param name="b1">The b1.</param>
+        /// <param name="b2">The b2.</param>
+        /// <param name="ga1">The ga1.</param>
+        /// <param name="ga2">The ga2.</param>
+        /// <param name="anchor1">The anchor1.</param>
+        /// <param name="anchor2">The anchor2.</param>
+        /// <param name="r">The r.</param>
         public void Initialize(Body b1, Body b2,
                         Vector2 ga1, Vector2 ga2,
                         Vector2 anchor1, Vector2 anchor2,
                         float r)
         {
-            bodyA = b1;
-            bodyB = b2;
-            groundAnchorA = ga1;
-            groundAnchorB = ga2;
-            localAnchorA = bodyA.GetLocalPoint(anchor1);
-            localAnchorB = bodyB.GetLocalPoint(anchor2);
+            BodyA = b1;
+            BodyB = b2;
+            GroundAnchorA = ga1;
+            GroundAnchorB = ga2;
+            LocalAnchorA = BodyA.GetLocalPoint(anchor1);
+            LocalAnchorB = BodyB.GetLocalPoint(anchor2);
             Vector2 d1 = anchor1 - ga1;
-            lengthA = d1.Length();
+            LengthA = d1.Length();
             Vector2 d2 = anchor2 - ga2;
-            lengthB = d2.Length();
-            ratio = r;
-            Debug.Assert(ratio > Settings.Epsilon);
-            float C = lengthA + ratio * lengthB;
-            maxLengthA = C - ratio * MinPulleyLength;
-            maxLengthB = (C - MinPulleyLength) / ratio;
+            LengthB = d2.Length();
+            Ratio = r;
+            Debug.Assert(Ratio > Settings.Epsilon);
+            float C = LengthA + Ratio * LengthB;
+            maxLengthA = C - Ratio * MinPulleyLength;
+            MaxLengthB = (C - MinPulleyLength) / Ratio;
         }
 
+        /// <summary>
         /// The first ground anchor in world coordinates. This point never moves.
-        public Vector2 groundAnchorA;
+        /// </summary>
+        public Vector2 GroundAnchorA;
 
+        /// <summary>
         /// The second ground anchor in world coordinates. This point never moves.
-        public Vector2 groundAnchorB;
+        /// </summary>
+        public Vector2 GroundAnchorB;
 
+        /// <summary>
         /// The local anchor point relative to body1's origin.
-        public Vector2 localAnchorA;
+        /// </summary>
+        public Vector2 LocalAnchorA;
 
+        /// <summary>
         /// The local anchor point relative to body2's origin.
-        public Vector2 localAnchorB;
+        /// </summary>
+        public Vector2 LocalAnchorB;
 
+        /// <summary>
         /// The a reference length for the segment attached to body1.
-        public float lengthA;
+        /// </summary>
+        public float LengthA;
 
+        /// <summary>
         /// The maximum length of the segment attached to body1.
+        /// </summary>
         public float maxLengthA;
 
+        /// <summary>
         /// The a reference length for the segment attached to body2.
-        public float lengthB;
+        /// </summary>
+        public float LengthB;
 
+        /// <summary>
         /// The maximum length of the segment attached to body2.
-        public float maxLengthB;
+        /// </summary>
+        public float MaxLengthB;
 
+        /// <summary>
         /// The pulley ratio, used to simulate a block-and-tackle.
-        public float ratio;
+        /// </summary>
+        public float Ratio;
     }
 
+    /// <summary>
     /// The pulley joint is connected to two bodies and two fixed ground points.
     /// The pulley supports a ratio such that:
-    /// length1 + ratio * length2 <= ant
+    /// length1 + ratio * length2 <!--<-->= ant
     /// Yes, the force transmitted is scaled by the ratio.
     /// The pulley also enforces a maximum length limit on both sides. This is
     /// useful to prevent one side of the pulley hitting the top.
+    /// </summary>
     public class PulleyJoint : Joint
     {
         public override Vector2 GetAnchorA()
         {
-            return _bodyA.GetWorldPoint(_localAnchor1);
+            return BodyA.GetWorldPoint(_localAnchor1);
         }
 
         public override Vector2 GetAnchorB()
         {
-            return _bodyB.GetWorldPoint(_localAnchor2);
+            return BodyB.GetWorldPoint(_localAnchor2);
         }
 
         public override Vector2 GetReactionForce(float inv_dt)
@@ -128,37 +159,52 @@ namespace FarseerPhysics
             return 0.0f;
         }
 
+        /// <summary>
         /// Get the first ground anchor.
+        /// </summary>
+        /// <returns></returns>
         public Vector2 GetGroundAnchorA()
         {
             return _groundAnchor1;
         }
 
+        /// <summary>
         /// Get the second ground anchor.
+        /// </summary>
+        /// <returns></returns>
         public Vector2 GetGroundAnchorB()
         {
             return _groundAnchor2;
         }
 
+        /// <summary>
         /// Get the current length of the segment attached to body1.
+        /// </summary>
+        /// <returns></returns>
         public float GetLength1()
         {
-            Vector2 p = _bodyA.GetWorldPoint(_localAnchor1);
+            Vector2 p = BodyA.GetWorldPoint(_localAnchor1);
             Vector2 s = _groundAnchor1;
             Vector2 d = p - s;
             return d.Length();
         }
 
+        /// <summary>
         /// Get the current length of the segment attached to body2.
+        /// </summary>
+        /// <returns></returns>
         public float GetLength2()
         {
-            Vector2 p = _bodyB.GetWorldPoint(_localAnchor2);
+            Vector2 p = BodyB.GetWorldPoint(_localAnchor2);
             Vector2 s = _groundAnchor2;
             Vector2 d = p - s;
             return d.Length();
         }
 
+        /// <summary>
         /// Get the pulley ratio.
+        /// </summary>
+        /// <returns></returns>
         public float GetRatio()
         {
             return _ratio;
@@ -167,18 +213,18 @@ namespace FarseerPhysics
         internal PulleyJoint(PulleyJointDef def)
             : base(def)
         {
-            _groundAnchor1 = def.groundAnchorA;
-            _groundAnchor2 = def.groundAnchorB;
-            _localAnchor1 = def.localAnchorA;
-            _localAnchor2 = def.localAnchorB;
+            _groundAnchor1 = def.GroundAnchorA;
+            _groundAnchor2 = def.GroundAnchorB;
+            _localAnchor1 = def.LocalAnchorA;
+            _localAnchor2 = def.LocalAnchorB;
 
-            Debug.Assert(def.ratio != 0.0f);
-            _ratio = def.ratio;
+            Debug.Assert(def.Ratio != 0.0f);
+            _ratio = def.Ratio;
 
-            _ant = def.lengthA + _ratio * def.lengthB;
+            _ant = def.LengthA + _ratio * def.LengthB;
 
             _maxLength1 = Math.Min(def.maxLengthA, _ant - _ratio * PulleyJointDef.MinPulleyLength);
-            _maxLength2 = Math.Min(def.maxLengthB, (_ant - PulleyJointDef.MinPulleyLength) / _ratio);
+            _maxLength2 = Math.Min(def.MaxLengthB, (_ant - PulleyJointDef.MinPulleyLength) / _ratio);
 
             _impulse = 0.0f;
             _limitImpulse1 = 0.0f;
@@ -187,8 +233,8 @@ namespace FarseerPhysics
 
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
-            Body b1 = _bodyA;
-            Body b2 = _bodyB;
+            Body b1 = BodyA;
+            Body b2 = BodyB;
 
             Transform xf1, xf2;
             b1.GetTransform(out xf1);
@@ -298,8 +344,8 @@ namespace FarseerPhysics
 
         internal override void SolveVelocityConstraints(ref TimeStep step)
         {
-            Body b1 = _bodyA;
-            Body b2 = _bodyB;
+            Body b1 = BodyA;
+            Body b2 = BodyB;
 
             Transform xf1, xf2;
             b1.GetTransform(out xf1);
@@ -360,8 +406,8 @@ namespace FarseerPhysics
 
         internal override bool SolvePositionConstraints(float baumgarte)
         {
-            Body b1 = _bodyA;
-            Body b2 = _bodyB;
+            Body b1 = BodyA;
+            Body b2 = BodyB;
 
             Vector2 s1 = _groundAnchor1;
             Vector2 s2 = _groundAnchor2;

@@ -136,13 +136,13 @@ namespace FarseerPhysics.TestBed.Tests
                     float radius = (float)Math.Sqrt(2.0 * (I / mass));
 
                     FrictionJointDef jd = new FrictionJointDef();
-                    jd.localAnchorA = Vector2.Zero;
-                    jd.localAnchorB = Vector2.Zero;
-                    jd.bodyA = ground;
-                    jd.bodyB = body;
-                    jd.collideConnected = true;
-                    jd.maxForce = mass * gravity;
-                    jd.maxTorque = mass * radius * gravity;
+                    jd.LocalAnchorA = Vector2.Zero;
+                    jd.LocalAnchorB = Vector2.Zero;
+                    jd.BodyA = ground;
+                    jd.BodyB = body;
+                    jd.CollideConnected = true;
+                    jd.MaxForce = mass * gravity;
+                    jd.MaxTorque = mass * radius * gravity;
 
                     _world.CreateJoint(jd);
                 }

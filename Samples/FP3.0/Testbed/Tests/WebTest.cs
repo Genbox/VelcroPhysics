@@ -66,88 +66,88 @@ namespace FarseerPhysics.TestBed.Tests
 
                 DistanceJointDef jd = new DistanceJointDef();
 
-                jd.frequencyHz = 4.0f;
-                jd.dampingRatio = 0.5f;
+                jd.FrequencyHz = 4.0f;
+                jd.DampingRatio = 0.5f;
 
-                jd.bodyA = ground;
-                jd.bodyB = _bodies[0];
-                jd.localAnchorA = new Vector2(-10.0f, 0.0f);
-                jd.localAnchorB = new Vector2(-0.5f, -0.5f);
-                Vector2 p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
-                Vector2 p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
+                jd.BodyA = ground;
+                jd.BodyB = _bodies[0];
+                jd.LocalAnchorA = new Vector2(-10.0f, 0.0f);
+                jd.LocalAnchorB = new Vector2(-0.5f, -0.5f);
+                Vector2 p1 = jd.BodyA.GetWorldPoint(jd.LocalAnchorA);
+                Vector2 p2 = jd.BodyB.GetWorldPoint(jd.LocalAnchorB);
                 Vector2 d = p2 - p1;
-                jd.length = d.Length();
+                jd.Length = d.Length();
                 _joints[0] = _world.CreateJoint(jd);
 
-                jd.bodyA = ground;
-                jd.bodyB = _bodies[1];
-                jd.localAnchorA = new Vector2(10.0f, 0.0f);
-                jd.localAnchorB = new Vector2(0.5f, -0.5f);
-                p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
-                p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
+                jd.BodyA = ground;
+                jd.BodyB = _bodies[1];
+                jd.LocalAnchorA = new Vector2(10.0f, 0.0f);
+                jd.LocalAnchorB = new Vector2(0.5f, -0.5f);
+                p1 = jd.BodyA.GetWorldPoint(jd.LocalAnchorA);
+                p2 = jd.BodyB.GetWorldPoint(jd.LocalAnchorB);
                 d = p2 - p1;
-                jd.length = d.Length();
+                jd.Length = d.Length();
                 _joints[1] = _world.CreateJoint(jd);
 
-                jd.bodyA = ground;
-                jd.bodyB = _bodies[2];
-                jd.localAnchorA = new Vector2(10.0f, 20.0f);
-                jd.localAnchorB = new Vector2(0.5f, 0.5f);
-                p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
-                p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
+                jd.BodyA = ground;
+                jd.BodyB = _bodies[2];
+                jd.LocalAnchorA = new Vector2(10.0f, 20.0f);
+                jd.LocalAnchorB = new Vector2(0.5f, 0.5f);
+                p1 = jd.BodyA.GetWorldPoint(jd.LocalAnchorA);
+                p2 = jd.BodyB.GetWorldPoint(jd.LocalAnchorB);
                 d = p2 - p1;
-                jd.length = d.Length();
+                jd.Length = d.Length();
                 _joints[2] = _world.CreateJoint(jd);
 
-                jd.bodyA = ground;
-                jd.bodyB = _bodies[3];
-                jd.localAnchorA = new Vector2(-10.0f, 20.0f);
-                jd.localAnchorB = new Vector2(-0.5f, 0.5f);
-                p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
-                p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
+                jd.BodyA = ground;
+                jd.BodyB = _bodies[3];
+                jd.LocalAnchorA = new Vector2(-10.0f, 20.0f);
+                jd.LocalAnchorB = new Vector2(-0.5f, 0.5f);
+                p1 = jd.BodyA.GetWorldPoint(jd.LocalAnchorA);
+                p2 = jd.BodyB.GetWorldPoint(jd.LocalAnchorB);
                 d = p2 - p1;
-                jd.length = d.Length();
+                jd.Length = d.Length();
                 _joints[3] = _world.CreateJoint(jd);
 
-                jd.bodyA = _bodies[0];
-                jd.bodyB = _bodies[1];
-                jd.localAnchorA = new Vector2(0.5f, 0.0f);
-                jd.localAnchorB = new Vector2(-0.5f, 0.0f);
+                jd.BodyA = _bodies[0];
+                jd.BodyB = _bodies[1];
+                jd.LocalAnchorA = new Vector2(0.5f, 0.0f);
+                jd.LocalAnchorB = new Vector2(-0.5f, 0.0f);
                 
-                p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
-                p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
+                p1 = jd.BodyA.GetWorldPoint(jd.LocalAnchorA);
+                p2 = jd.BodyB.GetWorldPoint(jd.LocalAnchorB);
                 d = p2 - p1;
-                jd.length = d.Length();
+                jd.Length = d.Length();
                 _joints[4] = _world.CreateJoint(jd);
 
-                jd.bodyA = _bodies[1];
-                jd.bodyB = _bodies[2];
-                jd.localAnchorA = new Vector2(0.0f, 0.5f);
-                jd.localAnchorB = new Vector2(0.0f, -0.5f);
-                p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
-                p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
+                jd.BodyA = _bodies[1];
+                jd.BodyB = _bodies[2];
+                jd.LocalAnchorA = new Vector2(0.0f, 0.5f);
+                jd.LocalAnchorB = new Vector2(0.0f, -0.5f);
+                p1 = jd.BodyA.GetWorldPoint(jd.LocalAnchorA);
+                p2 = jd.BodyB.GetWorldPoint(jd.LocalAnchorB);
                 d = p2 - p1;
-                jd.length = d.Length();
+                jd.Length = d.Length();
                 _joints[5] = _world.CreateJoint(jd);
 
-                jd.bodyA = _bodies[2];
-                jd.bodyB = _bodies[3];
-                jd.localAnchorA = new Vector2(-0.5f, 0.0f);
-                jd.localAnchorB = new Vector2(0.5f, 0.0f);
-                p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
-                p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
+                jd.BodyA = _bodies[2];
+                jd.BodyB = _bodies[3];
+                jd.LocalAnchorA = new Vector2(-0.5f, 0.0f);
+                jd.LocalAnchorB = new Vector2(0.5f, 0.0f);
+                p1 = jd.BodyA.GetWorldPoint(jd.LocalAnchorA);
+                p2 = jd.BodyB.GetWorldPoint(jd.LocalAnchorB);
                 d = p2 - p1;
-                jd.length = d.Length();
+                jd.Length = d.Length();
                 _joints[6] = _world.CreateJoint(jd);
 
-                jd.bodyA = _bodies[3];
-                jd.bodyB = _bodies[0];
-                jd.localAnchorA = new Vector2(0.0f, -0.5f);
-                jd.localAnchorB = new Vector2(0.0f, 0.5f);
-                p1 = jd.bodyA.GetWorldPoint(jd.localAnchorA);
-                p2 = jd.bodyB.GetWorldPoint(jd.localAnchorB);
+                jd.BodyA = _bodies[3];
+                jd.BodyB = _bodies[0];
+                jd.LocalAnchorA = new Vector2(0.0f, -0.5f);
+                jd.LocalAnchorB = new Vector2(0.0f, 0.5f);
+                p1 = jd.BodyA.GetWorldPoint(jd.LocalAnchorA);
+                p2 = jd.BodyB.GetWorldPoint(jd.LocalAnchorB);
                 d = p2 - p1;
-                jd.length = d.Length();
+                jd.Length = d.Length();
                 _joints[7] = _world.CreateJoint(jd);
             }
         }

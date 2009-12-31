@@ -54,11 +54,11 @@ namespace FarseerPhysics.TestBed.Tests
                 body1.CreateFixture(circle1, 5.0f);
 
                 RevoluteJointDef jd1 = new RevoluteJointDef();
-                jd1.bodyA = ground;
-                jd1.bodyB = body1;
-                jd1.localAnchorA = ground.GetLocalPoint(bd1.position);
-                jd1.localAnchorB = body1.GetLocalPoint(bd1.position);
-                jd1.referenceAngle = body1.GetAngle() - ground.GetAngle();
+                jd1.BodyA = ground;
+                jd1.BodyB = body1;
+                jd1.LocalAnchorA = ground.GetLocalPoint(bd1.position);
+                jd1.LocalAnchorB = body1.GetLocalPoint(bd1.position);
+                jd1.ReferenceAngle = body1.GetAngle() - ground.GetAngle();
                 _joint1 = (RevoluteJoint) _world.CreateJoint(jd1);
 
                 BodyDef bd2 = new BodyDef();
@@ -79,26 +79,26 @@ namespace FarseerPhysics.TestBed.Tests
 
                 PrismaticJointDef jd3 = new PrismaticJointDef();
                 jd3.Initialize(ground, body3, bd3.position, new Vector2(0.0f, 1.0f));
-                jd3.lowerTranslation = -5.0f;
-                jd3.upperTranslation = 5.0f;
-                jd3.enableLimit = true;
+                jd3.LowerTranslation = -5.0f;
+                jd3.UpperTranslation = 5.0f;
+                jd3.EnableLimit = true;
 
                 _joint3 = (PrismaticJoint) _world.CreateJoint(jd3);
 
                 GearJointDef jd4 = new GearJointDef();
-                jd4.bodyA = body1;
-                jd4.bodyB = body2;
-                jd4.joint1 = _joint1;
-                jd4.joint2 = _joint2;
-                jd4.ratio = circle2.Radius/circle1.Radius;
+                jd4.BodyA = body1;
+                jd4.BodyB = body2;
+                jd4.Joint1 = _joint1;
+                jd4.Joint2 = _joint2;
+                jd4.Ratio = circle2.Radius/circle1.Radius;
                 _joint4 = (GearJoint) _world.CreateJoint(jd4);
 
                 GearJointDef jd5 = new GearJointDef();
-                jd5.bodyA = body2;
-                jd5.bodyB = body3;
-                jd5.joint1 = _joint2;
-                jd5.joint2 = _joint3;
-                jd5.ratio = -1.0f/circle2.Radius;
+                jd5.BodyA = body2;
+                jd5.BodyB = body3;
+                jd5.Joint1 = _joint2;
+                jd5.Joint2 = _joint3;
+                jd5.Ratio = -1.0f/circle2.Radius;
                 _joint5 = (GearJoint) _world.CreateJoint(jd5);
             }
         }

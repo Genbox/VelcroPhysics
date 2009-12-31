@@ -29,22 +29,22 @@ namespace FarseerPhysics
 	    internal PolygonAndCircleContact(Fixture fixtureA, Fixture fixtureB)
             : base(fixtureA, fixtureB)
         {
-            Debug.Assert(_fixtureA.ShapeType == ShapeType.Polygon);
-	        Debug.Assert(_fixtureB.ShapeType == ShapeType.Circle);
+            Debug.Assert(FixtureA.ShapeType == ShapeType.Polygon);
+	        Debug.Assert(FixtureB.ShapeType == ShapeType.Circle);
         }
 
         protected override void Evaluate()  
         {
-            Body b1 = _fixtureA.GetBody();
-            Body b2 = _fixtureB.GetBody();
+            Body b1 = FixtureA.GetBody();
+            Body b2 = FixtureB.GetBody();
 
             Transform xf1, xf2;
             b1.GetTransform(out xf1);
             b2.GetTransform(out xf2);
 
-	        Collision.CollidePolygonAndCircle(ref _manifold,
-                                        (PolygonShape)_fixtureA.GetShape(), ref xf1,
-                                        (CircleShape)_fixtureB.GetShape(), ref xf2);
+	        Collision.CollidePolygonAndCircle(ref Manifold,
+                                        (PolygonShape)FixtureA.GetShape(), ref xf1,
+                                        (CircleShape)FixtureB.GetShape(), ref xf2);
         }
     }
 }

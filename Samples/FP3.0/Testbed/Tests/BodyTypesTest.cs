@@ -74,18 +74,18 @@ namespace FarseerPhysics.TestBed.Tests
 
                 RevoluteJointDef rjd = new RevoluteJointDef();
                 rjd.Initialize(_attachment, _platform, new Vector2(0.0f, 5.0f));
-                rjd.maxMotorTorque = 50.0f;
-                rjd.enableMotor = true;
+                rjd.MaxMotorTorque = 50.0f;
+                rjd.EnableMotor = true;
                 _world.CreateJoint(rjd);
 
                 PrismaticJointDef pjd = new PrismaticJointDef();
                 pjd.Initialize(ground, _platform, new Vector2(0.0f, 5.0f), new Vector2(1.0f, 0.0f));
 
-                pjd.maxMotorForce = 1000.0f;
-                pjd.enableMotor = true;
-                pjd.lowerTranslation = -10.0f;
-                pjd.upperTranslation = 10.0f;
-                pjd.enableLimit = true;
+                pjd.MaxMotorForce = 1000.0f;
+                pjd.EnableMotor = true;
+                pjd.LowerTranslation = -10.0f;
+                pjd.UpperTranslation = 10.0f;
+                pjd.EnableLimit = true;
 
                 _world.CreateJoint(pjd);
 
