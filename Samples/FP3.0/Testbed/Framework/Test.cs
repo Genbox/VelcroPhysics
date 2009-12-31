@@ -349,19 +349,19 @@ namespace FarseerPhysics.TestBed.Framework
             }
 
             BodyDef bd = new BodyDef();
-            bd.type = BodyType.Dynamic;
-            bd.position = position;
+            bd.Type = BodyType.Dynamic;
+            bd.Position = position;
 
-            bd.bullet = true;
+            bd.Bullet = true;
             _bomb = _world.CreateBody(bd);
             _bomb.SetLinearVelocity(velocity);
 
             CircleShape circle = new CircleShape(0.3f);
 
             FixtureDef fd = new FixtureDef();
-            fd.shape = circle;
-            fd.density = 20.0f;
-            fd.restitution = 0.1f;
+            fd.Shape = circle;
+            fd.Density = 20.0f;
+            fd.Restitution = 0.1f;
 
             Vector2 minV = position - new Vector2(0.3f, 0.3f);
             Vector2 maxV = position + new Vector2(0.3f, 0.3f);

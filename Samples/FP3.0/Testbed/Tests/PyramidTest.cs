@@ -56,8 +56,8 @@ namespace FarseerPhysics.TestBed.Tests
                     for (int j = i; j < Count; ++j)
                     {
                         BodyDef bd = new BodyDef();
-                        bd.type = BodyType.Dynamic;
-                        bd.position = y;
+                        bd.Type = BodyType.Dynamic;
+                        bd.Position = y;
                         Body body = _world.CreateBody(bd);
                         body.CreateFixture(shape, 5.0f);
 

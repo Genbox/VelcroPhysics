@@ -286,7 +286,7 @@ namespace FarseerPhysics
             Body bodyA = FixtureA.GetBody();
             Body bodyB = FixtureB.GetBody();
 
-            bool aabbOverlap = AABB.TestOverlap(ref FixtureA._aabb, ref FixtureB._aabb);
+            bool aabbOverlap = AABB.TestOverlap(ref FixtureA.Aabb, ref FixtureB.Aabb);
 
             // Is this contact a sensor?
             if ((Flags & ContactFlags.Sensor) == ContactFlags.Sensor)

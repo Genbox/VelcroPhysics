@@ -44,11 +44,11 @@ namespace FarseerPhysics.TestBed.Tests
                 CircleShape shape = new CircleShape(0.5f);
 
                 BodyDef bd = new BodyDef();
-                bd.type = BodyType.Dynamic;
+                bd.Type = BodyType.Dynamic;
 
                 RevoluteJointDef rjd = new RevoluteJointDef();
 
-                bd.position = new Vector2(0.0f, 20.0f);
+                bd.Position = new Vector2(0.0f, 20.0f);
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(shape, 5.0f);
 

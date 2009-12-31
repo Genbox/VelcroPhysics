@@ -53,8 +53,8 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
                 FixtureDef sd = new FixtureDef();
-                sd.shape = shape;
-                sd.friction = 0.3f;
+                sd.Shape = shape;
+                sd.Friction = 0.3f;
 
                 BodyDef bd = new BodyDef();
                 Body ground = _world.CreateBody(bd);
@@ -70,16 +70,16 @@ namespace FarseerPhysics.TestBed.Tests
             polygon.Set(vertices, 3);
 
             FixtureDef triangleShapeDef = new FixtureDef();
-            triangleShapeDef.shape = polygon;
-            triangleShapeDef.density = 1.0f;
+            triangleShapeDef.Shape = polygon;
+            triangleShapeDef.Density = 1.0f;
 
-            triangleShapeDef.filter.groupIndex = SmallGroup;
-            triangleShapeDef.filter.categoryBits = TriangleCategory;
-            triangleShapeDef.filter.maskBits = TriangleMask;
+            triangleShapeDef.Filter.groupIndex = SmallGroup;
+            triangleShapeDef.Filter.categoryBits = TriangleCategory;
+            triangleShapeDef.Filter.maskBits = TriangleMask;
 
             BodyDef triangleBodyDef = new BodyDef();
-            triangleBodyDef.type = BodyType.Dynamic;
-            triangleBodyDef.position = new Vector2(-5.0f, 2.0f);
+            triangleBodyDef.Type = BodyType.Dynamic;
+            triangleBodyDef.Position = new Vector2(-5.0f, 2.0f);
 
             Body body1 = _world.CreateBody(triangleBodyDef);
             body1.CreateFixture(triangleShapeDef);
@@ -89,17 +89,17 @@ namespace FarseerPhysics.TestBed.Tests
             vertices[1] *= 2.0f;
             vertices[2] *= 2.0f;
             polygon.Set(vertices, 3);
-            triangleShapeDef.filter.groupIndex = LargeGroup;
-            triangleBodyDef.position = new Vector2(-5.0f, 6.0f);
-            triangleBodyDef.fixedRotation = true; // look at me!
+            triangleShapeDef.Filter.groupIndex = LargeGroup;
+            triangleBodyDef.Position = new Vector2(-5.0f, 6.0f);
+            triangleBodyDef.FixedRotation = true; // look at me!
 
             Body body2 = _world.CreateBody(triangleBodyDef);
             body2.CreateFixture(triangleShapeDef);
 
             {
                 BodyDef bd = new BodyDef();
-                bd.type = BodyType.Dynamic;
-                bd.position = new Vector2(-5.0f, 10.0f);
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-5.0f, 10.0f);
                 Body body = _world.CreateBody(bd);
 
                 PolygonShape p = new PolygonShape();
@@ -123,25 +123,25 @@ namespace FarseerPhysics.TestBed.Tests
             // Small box
             polygon.SetAsBox(1.0f, 0.5f);
             FixtureDef boxShapeDef = new FixtureDef();
-            boxShapeDef.shape = polygon;
-            boxShapeDef.density = 1.0f;
-            boxShapeDef.restitution = 0.1f;
+            boxShapeDef.Shape = polygon;
+            boxShapeDef.Density = 1.0f;
+            boxShapeDef.Restitution = 0.1f;
 
-            boxShapeDef.filter.groupIndex = SmallGroup;
-            boxShapeDef.filter.categoryBits = BoxCategory;
-            boxShapeDef.filter.maskBits = BoxMask;
+            boxShapeDef.Filter.groupIndex = SmallGroup;
+            boxShapeDef.Filter.categoryBits = BoxCategory;
+            boxShapeDef.Filter.maskBits = BoxMask;
 
             BodyDef boxBodyDef = new BodyDef();
-            boxBodyDef.type = BodyType.Dynamic;
-            boxBodyDef.position = new Vector2(0.0f, 2.0f);
+            boxBodyDef.Type = BodyType.Dynamic;
+            boxBodyDef.Position = new Vector2(0.0f, 2.0f);
 
             Body body3 = _world.CreateBody(boxBodyDef);
             body3.CreateFixture(boxShapeDef);
 
             // Large box (recycle definitions)
             polygon.SetAsBox(2.0f, 1.0f);
-            boxShapeDef.filter.groupIndex = LargeGroup;
-            boxBodyDef.position = new Vector2(0.0f, 6.0f);
+            boxShapeDef.Filter.groupIndex = LargeGroup;
+            boxBodyDef.Position = new Vector2(0.0f, 6.0f);
 
             Body body4 = _world.CreateBody(boxBodyDef);
             body4.CreateFixture(boxShapeDef);
@@ -150,24 +150,24 @@ namespace FarseerPhysics.TestBed.Tests
             CircleShape circle = new CircleShape(1.0f);
 
             FixtureDef circleShapeDef = new FixtureDef();
-            circleShapeDef.shape = circle;
-            circleShapeDef.density = 1.0f;
+            circleShapeDef.Shape = circle;
+            circleShapeDef.Density = 1.0f;
 
-            circleShapeDef.filter.groupIndex = SmallGroup;
-            circleShapeDef.filter.categoryBits = CircleCategory;
-            circleShapeDef.filter.maskBits = CircleMask;
+            circleShapeDef.Filter.groupIndex = SmallGroup;
+            circleShapeDef.Filter.categoryBits = CircleCategory;
+            circleShapeDef.Filter.maskBits = CircleMask;
 
             BodyDef circleBodyDef = new BodyDef();
-            circleBodyDef.type = BodyType.Dynamic;
-            circleBodyDef.position = new Vector2(5.0f, 2.0f);
+            circleBodyDef.Type = BodyType.Dynamic;
+            circleBodyDef.Position = new Vector2(5.0f, 2.0f);
 
             Body body5 = _world.CreateBody(circleBodyDef);
             body5.CreateFixture(circleShapeDef);
 
             // Large circle
             circle.Radius *= 2.0f;
-            circleShapeDef.filter.groupIndex = LargeGroup;
-            circleBodyDef.position = new Vector2(5.0f, 6.0f);
+            circleShapeDef.Filter.groupIndex = LargeGroup;
+            circleBodyDef.Position = new Vector2(5.0f, 6.0f);
 
             Body body6 = _world.CreateBody(circleBodyDef);
             body6.CreateFixture(circleShapeDef);

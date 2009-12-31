@@ -171,11 +171,11 @@ namespace FarseerPhysics
                 _angularMass = 1.0f / _angularMass;
             }
 
-            if (step.warmStarting)
+            if (step.WarmStarting)
             {
                 // Scale impulses to support a variable time step.
-                _linearImpulse *= step.dtRatio;
-                _angularImpulse *= step.dtRatio;
+                _linearImpulse *= step.DtRatio;
+                _angularImpulse *= step.DtRatio;
 
                 Vector2 P = new Vector2(_linearImpulse.X, _linearImpulse.Y);
 
@@ -218,7 +218,7 @@ namespace FarseerPhysics
                 float impulse = -_angularMass * Cdot;
 
                 float oldImpulse = _angularImpulse;
-                float maxImpulse = step.dt * _maxTorque;
+                float maxImpulse = step.DeltaTime * _maxTorque;
                 _angularImpulse = MathUtils.Clamp(_angularImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = _angularImpulse - oldImpulse;
 
@@ -234,7 +234,7 @@ namespace FarseerPhysics
                 Vector2 oldImpulse = _linearImpulse;
                 _linearImpulse += impulse;
 
-                float maxImpulse = step.dt * _maxForce;
+                float maxImpulse = step.DeltaTime * _maxForce;
 
                 if (_linearImpulse.LengthSquared() > maxImpulse * maxImpulse)
                 {

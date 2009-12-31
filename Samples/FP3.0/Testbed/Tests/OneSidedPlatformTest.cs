@@ -42,7 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Platform
             {
                 BodyDef bd = new BodyDef();
-                bd.position = new Vector2(0.0f, 10.0f);
+                bd.Position = new Vector2(0.0f, 10.0f);
                 Body body = _world.CreateBody(bd);
 
                 PolygonShape shape = new PolygonShape();
@@ -55,8 +55,8 @@ namespace FarseerPhysics.TestBed.Tests
             // Actor
             {
                 BodyDef bd = new BodyDef();
-                bd.type = BodyType.Dynamic;
-                bd.position = new Vector2(0.0f, 12.0f);
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(0.0f, 12.0f);
                 Body body = _world.CreateBody(bd);
 
                 _radius = 0.5f;

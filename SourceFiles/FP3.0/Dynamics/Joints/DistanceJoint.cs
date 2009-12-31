@@ -218,18 +218,18 @@ namespace FarseerPhysics
                 float k = _mass * omega * omega;
 
                 // magic formulas
-                _gamma = step.dt * (d + step.dt * k);
+                _gamma = step.DeltaTime * (d + step.DeltaTime * k);
                 _gamma = _gamma != 0.0f ? 1.0f / _gamma : 0.0f;
-                _bias = C * step.dt * k * _gamma;
+                _bias = C * step.DeltaTime * k * _gamma;
 
                 _mass = invMass + _gamma;
                 _mass = _mass != 0.0f ? 1.0f / _mass : 0.0f;
             }
 
-            if (step.warmStarting)
+            if (step.WarmStarting)
             {
                 // Scale the impulse to support a variable time step.
-                _impulse *= step.dtRatio;
+                _impulse *= step.DtRatio;
 
                 Vector2 P = _impulse * _u;
                 b1._linearVelocity -= b1._invMass * P;

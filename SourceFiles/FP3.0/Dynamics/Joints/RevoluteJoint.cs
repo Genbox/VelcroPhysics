@@ -389,11 +389,11 @@ namespace FarseerPhysics
                 _limitState = LimitState.Inactive;
             }
 
-            if (step.warmStarting)
+            if (step.WarmStarting)
             {
                 // Scale impulses to support a variable time step.
-                _impulse *= step.dtRatio;
-                _motorImpulse *= step.dtRatio;
+                _impulse *= step.DtRatio;
+                _motorImpulse *= step.DtRatio;
 
                 Vector2 P = new Vector2(_impulse.X, _impulse.Y);
 
@@ -429,7 +429,7 @@ namespace FarseerPhysics
                 float Cdot = w2 - w1 - _motorSpeed;
                 float impulse = _motorMass * (-Cdot);
                 float oldImpulse = _motorImpulse;
-                float maxImpulse = step.dt * _maxMotorTorque;
+                float maxImpulse = step.DeltaTime * _maxMotorTorque;
                 _motorImpulse = MathUtils.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = _motorImpulse - oldImpulse;
 

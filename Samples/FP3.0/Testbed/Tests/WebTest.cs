@@ -46,21 +46,21 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(0.5f, 0.5f);
 
                 BodyDef bd = new BodyDef();
-                bd.type = BodyType.Dynamic;
+                bd.Type = BodyType.Dynamic;
 
-                bd.position = new Vector2(-5.0f, 5.0f);
+                bd.Position = new Vector2(-5.0f, 5.0f);
                 _bodies[0] = _world.CreateBody(bd);
                 _bodies[0].CreateFixture(shape, 5.0f);
 
-                bd.position = new Vector2(5.0f, 5.0f);
+                bd.Position = new Vector2(5.0f, 5.0f);
                 _bodies[1] = _world.CreateBody(bd);
                 _bodies[1].CreateFixture(shape, 5.0f);
 
-                bd.position = new Vector2(5.0f, 15.0f);
+                bd.Position = new Vector2(5.0f, 15.0f);
                 _bodies[2] = _world.CreateBody(bd);
                 _bodies[2].CreateFixture(shape, 5.0f);
 
-                bd.position = new Vector2(-5.0f, 15.0f);
+                bd.Position = new Vector2(-5.0f, 15.0f);
                 _bodies[3] = _world.CreateBody(bd);
                 _bodies[3].CreateFixture(shape, 5.0f);
 

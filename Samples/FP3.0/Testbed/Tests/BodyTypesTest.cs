@@ -39,7 +39,7 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsEdge(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
 
                 FixtureDef fd = new FixtureDef();
-                fd.shape = shape;
+                fd.Shape = shape;
 
                 ground.CreateFixture(fd);
             }
@@ -47,8 +47,8 @@ namespace FarseerPhysics.TestBed.Tests
             // Define attachment
             {
                 BodyDef bd = new BodyDef();
-                bd.type = BodyType.Dynamic;
-                bd.position = new Vector2(0.0f, 3.0f);
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(0.0f, 3.0f);
                 _attachment = _world.CreateBody(bd);
 
                 PolygonShape shape = new PolygonShape();
@@ -59,17 +59,17 @@ namespace FarseerPhysics.TestBed.Tests
             // Define platform
             {
                 BodyDef bd = new BodyDef();
-                bd.type = BodyType.Dynamic;
-                bd.position = new Vector2(0.0f, 5.0f);
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(0.0f, 5.0f);
                 _platform = _world.CreateBody(bd);
 
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(4.0f, 0.5f);
 
                 FixtureDef fd = new FixtureDef();
-                fd.shape = shape;
-                fd.friction = 0.6f;
-                fd.density = 2.0f;
+                fd.Shape = shape;
+                fd.Friction = 0.6f;
+                fd.Density = 2.0f;
                 _platform.CreateFixture(fd);
 
                 RevoluteJointDef rjd = new RevoluteJointDef();
@@ -95,17 +95,17 @@ namespace FarseerPhysics.TestBed.Tests
             // Create a payload
             {
                 BodyDef bd = new BodyDef();
-                bd.type = BodyType.Dynamic;
-                bd.position = new Vector2(0.0f, 8.0f);
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(0.0f, 8.0f);
                 Body body = _world.CreateBody(bd);
 
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(0.75f, 0.75f);
 
                 FixtureDef fd = new FixtureDef();
-                fd.shape = shape;
-                fd.friction = 0.6f;
-                fd.density = 2.0f;
+                fd.Shape = shape;
+                fd.Friction = 0.6f;
+                fd.Density = 2.0f;
 
                 body.CreateFixture(fd);
             }

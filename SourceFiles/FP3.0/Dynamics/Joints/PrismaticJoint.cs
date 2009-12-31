@@ -492,11 +492,11 @@ namespace FarseerPhysics
                 _motorImpulse = 0.0f;
             }
 
-            if (step.warmStarting)
+            if (step.WarmStarting)
             {
                 // Account for variable time step.
-                _impulse *= step.dtRatio;
-                _motorImpulse *= step.dtRatio;
+                _impulse *= step.DtRatio;
+                _motorImpulse *= step.DtRatio;
 
                 Vector2 P = _impulse.X * _perp + (_motorImpulse + _impulse.Z) * _axis;
                 float L1 = _impulse.X * _s1 + _impulse.Y + (_motorImpulse + _impulse.Z) * _a1;
@@ -531,7 +531,7 @@ namespace FarseerPhysics
                 float Cdot = Vector2.Dot(_axis, v2 - v1) + _a2 * w2 - _a1 * w1;
                 float impulse = _motorMass * (_motorSpeed - Cdot);
                 float oldImpulse = _motorImpulse;
-                float maxImpulse = step.dt * _maxMotorForce;
+                float maxImpulse = step.DeltaTime * _maxMotorForce;
                 _motorImpulse = MathUtils.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = _motorImpulse - oldImpulse;
 

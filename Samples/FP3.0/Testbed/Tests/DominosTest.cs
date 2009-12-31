@@ -44,7 +44,7 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(6.0f, 0.25f);
 
                 BodyDef bd = new BodyDef();
-                bd.position = new Vector2(-1.5f, 10.0f);
+                bd.Position = new Vector2(-1.5f, 10.0f);
                 Body ground = _world.CreateBody(bd);
                 ground.CreateFixture(shape, 0.0f);
             }
@@ -54,15 +54,15 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(0.1f, 1.0f);
 
                 FixtureDef fd = new FixtureDef();
-                fd.shape = shape;
-                fd.density = 20.0f;
-                fd.friction = 0.1f;
+                fd.Shape = shape;
+                fd.Density = 20.0f;
+                fd.Friction = 0.1f;
 
                 for (int i = 0; i < 10; ++i)
                 {
                     BodyDef bd = new BodyDef();
-                    bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(-6.0f + 1.0f * i, 11.25f);
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(-6.0f + 1.0f * i, 11.25f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(fd);
                 }
@@ -73,7 +73,7 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(7.0f, 0.25f, Vector2.Zero, 0.3f);
 
                 BodyDef bd = new BodyDef();
-                bd.position = new Vector2(1.0f, 6.0f);
+                bd.Position = new Vector2(1.0f, 6.0f);
                 Body ground = _world.CreateBody(bd);
                 ground.CreateFixture(shape, 0.0f);
             }
@@ -84,7 +84,7 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(0.25f, 1.5f);
 
                 BodyDef bd = new BodyDef();
-                bd.position = new Vector2(-7.0f, 4.0f);
+                bd.Position = new Vector2(-7.0f, 4.0f);
                 b2 = _world.CreateBody(bd);
                 b2.CreateFixture(shape, 0.0f);
             }
@@ -95,9 +95,9 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(6.0f, 0.125f);
 
                 BodyDef bd = new BodyDef();
-                bd.type = BodyType.Dynamic;
-                bd.position = new Vector2(-0.9f, 1.0f);
-                bd.angle = -0.15f;
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-0.9f, 1.0f);
+                bd.Angle = -0.15f;
 
                 b3 = _world.CreateBody(bd);
                 b3.CreateFixture(shape, 10.0f);
@@ -116,8 +116,8 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(0.25f, 0.25f);
 
                 BodyDef bd = new BodyDef();
-                bd.type = BodyType.Dynamic;
-                bd.position = new Vector2(-10.0f, 15.0f);
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-10.0f, 15.0f);
                 b4 = _world.CreateBody(bd);
                 b4.CreateFixture(shape, 10.0f);
             }
@@ -129,16 +129,16 @@ namespace FarseerPhysics.TestBed.Tests
             Body b5;
             {
                 BodyDef bd = new BodyDef();
-                bd.type = BodyType.Dynamic;
-                bd.position = new Vector2(6.5f, 3.0f);
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(6.5f, 3.0f);
                 b5 = _world.CreateBody(bd);
 
                 PolygonShape shape = new PolygonShape();
                 FixtureDef fd = new FixtureDef();
 
-                fd.shape = shape;
-                fd.density = 10.0f;
-                fd.friction = 0.1f;
+                fd.Shape = shape;
+                fd.Density = 10.0f;
+                fd.Friction = 0.1f;
 
                 shape.SetAsBox(1.0f, 0.1f, new Vector2(0.0f, -0.9f), 0.0f);
                 b5.CreateFixture(fd);
@@ -160,8 +160,8 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(1.0f, 0.1f);
 
                 BodyDef bd = new BodyDef();
-                bd.type = BodyType.Dynamic;
-                bd.position = new Vector2(6.5f, 4.1f);
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(6.5f, 4.1f);
                 b6 = _world.CreateBody(bd);
                 b6.CreateFixture(shape, 30.0f);
             }
@@ -176,8 +176,8 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(0.1f, 1.0f);
 
                 BodyDef bd = new BodyDef();
-                bd.type = BodyType.Dynamic;
-                bd.position = new Vector2(7.4f, 1.0f);
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(7.4f, 1.0f);
 
                 b7 = _world.CreateBody(bd);
                 b7.CreateFixture(shape, 10.0f);
@@ -200,8 +200,8 @@ namespace FarseerPhysics.TestBed.Tests
                 for (int i = 0; i < 4; ++i)
                 {
                     BodyDef bd = new BodyDef();
-                    bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(5.9f + 2.0f * radius * i, 2.4f);
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(5.9f + 2.0f * radius * i, 2.4f);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(shape, 10.0f);
                 }

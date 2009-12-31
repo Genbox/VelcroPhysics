@@ -31,15 +31,15 @@ namespace FarseerPhysics.TestBed.Tests
         {
             {
                 BodyDef bd = new BodyDef();
-                bd.position = new Vector2(0.0f, -0.2f);
+                bd.Position = new Vector2(0.0f, -0.2f);
 
                 Body body = _world.CreateBody(bd);
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(10.0f, 0.2f);
 
                 FixtureDef fd = new FixtureDef();
-                fd.shape = shape;
-                fd.density = 0.0f;
+                fd.Shape = shape;
+                fd.Density = 0.0f;
 
                 body.CreateFixture(fd);
 
@@ -52,16 +52,16 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(2.0f, 0.1f);
 
                 FixtureDef fd = new FixtureDef();
-                fd.shape = shape;
-                fd.density = 1.0f;
-                fd.restitution = 0.0f;
+                fd.Shape = shape;
+                fd.Density = 1.0f;
+                fd.Restitution = 0.0f;
 
                 _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
                 _angularVelocity = -30.669577f;
 
                 BodyDef bd = new BodyDef();
-                bd.type = BodyType.Dynamic;
-                bd.position = new Vector2(0.0f, 20.0f);
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(0.0f, 20.0f);
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(fd);
                 body.SetLinearVelocity(new Vector2(0.0f, -100.0f));

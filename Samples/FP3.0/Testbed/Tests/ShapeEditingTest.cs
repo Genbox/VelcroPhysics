@@ -40,8 +40,8 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             BodyDef bodydef = new BodyDef();
-            bodydef.type = BodyType.Dynamic;
-            bodydef.position = new Vector2(0.0f, 10.0f);
+            bodydef.Type = BodyType.Dynamic;
+            bodydef.Position = new Vector2(0.0f, 10.0f);
             _body = _world.CreateBody(bodydef);
 
             PolygonShape shape2 = new PolygonShape();

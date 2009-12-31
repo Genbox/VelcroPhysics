@@ -147,10 +147,10 @@ namespace FarseerPhysics
             _mass.col2.Z = _mass.col3.Y;
             _mass.col3.Z = iA + iB;
 
-            if (step.warmStarting)
+            if (step.WarmStarting)
             {
                 // Scale impulses to support a variable time step.
-                _impulse *= step.dtRatio;
+                _impulse *= step.DtRatio;
 
                 Vector2 P = new Vector2(_impulse.X, _impulse.Y);
 

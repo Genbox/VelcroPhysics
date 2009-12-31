@@ -45,9 +45,9 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(2.0f, 0.5f);
 
                 BodyDef bd = new BodyDef();
-                bd.type = BodyType.Dynamic;
-                bd.position = new Vector2(-10.0f, 10.0f);
-                bd.angle = 0.5f * Settings.Pi;
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-10.0f, 10.0f);
+                bd.Angle = 0.5f * Settings.Pi;
                 Body body = _world.CreateBody(bd);
                 body.CreateFixture(shape, 5.0f);
 
