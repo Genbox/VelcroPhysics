@@ -26,19 +26,29 @@ using System.Diagnostics;
 
 namespace FarseerPhysics
 {
+    /// <summary>
     /// The body type.
-    /// static: zero mass, zero velocity, may be manually moved
-    /// kinematic: zero mass, non-zero velocity set by user, moved by solver
-    /// dynamic: positive mass, non-zero velocity determined by forces, moved by solver
+    /// </summary>
     public enum BodyType
     {
+        /// <summary>
+        /// zero mass, zero velocity, may be manually moved
+        /// </summary>
         Static,
+        /// <summary>
+        /// zero mass, non-zero velocity set by user, moved by solver
+        /// </summary>
         Kinematic,
+        /// <summary>
+        ///  positive mass, non-zero velocity determined by forces, moved by solver
+        /// </summary>
         Dynamic,
     }
 
+    /// <summary>
     /// A body definition holds all the data needed to construct a rigid body.
     /// You can safely re-use body definitions. Shapes are added to a body after construction.
+    /// </summary>
     public class BodyDef
     {
         /// <summary>

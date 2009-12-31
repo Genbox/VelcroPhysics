@@ -34,7 +34,6 @@ namespace FarseerPhysics
     public delegate void JointRemovedDelegate(Joint joint);
 
     public delegate bool CollisionFilterDelegate(Fixture fixtureA, Fixture fixtureB);
-    public delegate bool RaycastFilterDelegate(Fixture fixtureA, Fixture fixtureB);
 
     public struct ContactImpulse
     {
@@ -65,17 +64,6 @@ namespace FarseerPhysics
             bool collide = (filterA.maskBits & filterB.categoryBits) != 0 && (filterA.categoryBits & filterB.maskBits) != 0;
 
             return collide;
-        }
-
-        public bool RayCollide(object userData, Fixture fixture)
-        {
-            // By default, cast userData as a fixture, and then collide if the shapes would collide
-            if (userData == null)
-            {
-                return true;
-            }
-
-            return ShouldCollide((Fixture)userData, fixture);
         }
     }
 }
