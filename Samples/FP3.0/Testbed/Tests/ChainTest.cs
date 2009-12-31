@@ -44,9 +44,9 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(0.6f, 0.125f);
 
                 FixtureDef fd = new FixtureDef();
-                fd.shape = shape;
-                fd.density = 20.0f;
-                fd.friction = 0.2f;
+                fd.Shape = shape;
+                fd.Density = 20.0f;
+                fd.Friction = 0.2f;
 
                 RevoluteJointDef jd = new RevoluteJointDef();
                 jd.CollideConnected = false;
@@ -56,8 +56,8 @@ namespace FarseerPhysics.TestBed.Tests
                 for (int i = 0; i < 30; ++i)
                 {
                     BodyDef bd = new BodyDef();
-                    bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(0.5f + i, y);
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(0.5f + i, y);
                     Body body = _world.CreateBody(bd);
                     body.CreateFixture(fd);
 

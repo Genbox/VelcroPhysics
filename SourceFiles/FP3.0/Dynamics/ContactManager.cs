@@ -254,8 +254,8 @@ namespace FarseerPhysics
                     c.Flags &= ~ContactFlags.Filter;
                 }
 
-                int proxyIdA = fixtureA._proxyId;
-                int proxyIdB = fixtureB._proxyId;
+                int proxyIdA = fixtureA.ProxyId;
+                int proxyIdB = fixtureB.ProxyId;
 
                 bool overlap = _broadPhase.TestOverlap(proxyIdA, proxyIdB);
 

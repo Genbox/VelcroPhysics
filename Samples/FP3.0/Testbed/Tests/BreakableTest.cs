@@ -43,9 +43,9 @@ namespace FarseerPhysics.TestBed.Tests
             // Breakable dynamic body
             {
                 BodyDef bd = new BodyDef();
-                bd.type = BodyType.Dynamic;
-                bd.position = new Vector2(0.0f, 40.0f);
-                bd.angle = 0.25f * Settings.Pi;
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(0.0f, 40.0f);
+                bd.Angle = 0.25f * Settings.Pi;
                 _body1 = _world.CreateBody(bd);
 
                 _shape1 = new PolygonShape();
@@ -97,9 +97,9 @@ namespace FarseerPhysics.TestBed.Tests
             _piece2 = null;
 
             BodyDef bd = new BodyDef();
-            bd.type = BodyType.Dynamic;
-            bd.position = body1.GetPosition();
-            bd.angle = body1.GetAngle();
+            bd.Type = BodyType.Dynamic;
+            bd.Position = body1.GetPosition();
+            bd.Angle = body1.GetAngle();
 
             Body body2 = _world.CreateBody(bd);
             _piece2 = body2.CreateFixture(_shape2, 1.0f);

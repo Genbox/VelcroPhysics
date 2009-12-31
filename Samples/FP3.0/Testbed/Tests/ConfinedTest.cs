@@ -61,17 +61,17 @@ namespace FarseerPhysics.TestBed.Tests
             shape2.Position = Vector2.Zero;
 
             FixtureDef fd = new FixtureDef();
-            fd.shape = shape2;
-            fd.density = 1.0f;
-            fd.friction = 0.1f;
+            fd.Shape = shape2;
+            fd.Density = 1.0f;
+            fd.Friction = 0.1f;
 
             for (int j = 0; j < ColumnCount; ++j)
             {
                 for (int i = 0; i < RowCount; ++i)
                 {
                     BodyDef bd = new BodyDef();
-                    bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(-10.0f + (2.1f*j + 1.0f + 0.01f*i)*radius, (2.0f*i + 1.0f)*radius);
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(-10.0f + (2.1f*j + 1.0f + 0.01f*i)*radius, (2.0f*i + 1.0f)*radius);
                     Body body = _world.CreateBody(bd);
 
                     body.CreateFixture(fd);
@@ -88,13 +88,13 @@ namespace FarseerPhysics.TestBed.Tests
             shape.Position = Vector2.Zero;
 
             FixtureDef fd = new FixtureDef();
-            fd.shape = shape;
-            fd.density = 1.0f;
-            fd.friction = 0.0f;
+            fd.Shape = shape;
+            fd.Density = 1.0f;
+            fd.Friction = 0.0f;
 
             BodyDef bd = new BodyDef();
-            bd.type = BodyType.Dynamic;
-            bd.position = new Vector2(Rand.RandomFloat(), (2.0f + Rand.RandomFloat())*radius);
+            bd.Type = BodyType.Dynamic;
+            bd.Position = new Vector2(Rand.RandomFloat(), (2.0f + Rand.RandomFloat())*radius);
             Body body = _world.CreateBody(bd);
 
             body.CreateFixture(fd);

@@ -29,91 +29,133 @@ namespace FarseerPhysics
     /// This holds contact filtering data.
     public struct Filter
     {
+        /// <summary>
         /// The collision category bits. Normally you would just set one bit.
+        /// </summary>
         public ushort categoryBits;
 
+        /// <summary>
         /// The collision mask bits. This states the categories that this
         /// shape would accept for collision.
+        /// </summary>
         public ushort maskBits;
 
+        /// <summary>
         /// Collision groups allow a certain group of objects to never collide (negative)
         /// or always collide (positive). Zero means no collision group. Non-zero group
         /// filtering always wins against the mask bits.
-        public Int16 groupIndex;
+        /// </summary>
+        public short groupIndex;
     }
 
     /// A fixture definition is used to create a fixture. This class defines an
     /// abstract fixture definition. You can reuse fixture definitions safely.
     public class FixtureDef
     {
-	    /// The constructor sets the default fixture definition values.
+        /// <summary>
+        /// The constructor sets the default fixture definition values.
+        /// </summary>
         public FixtureDef()
 	    {
-		    shape = null;
-		    userData = null;
-		    friction = 0.2f;
-		    restitution = 0.0f;
-		    density = 0.0f;
-		    filter.categoryBits = 0x0001;
-		    filter.maskBits = 0xFFFF;
-		    filter.groupIndex = 0;
-		    isSensor = false;
+		    Shape = null;
+		    UserData = null;
+		    Friction = 0.2f;
+		    Restitution = 0.0f;
+		    Density = 0.0f;
+		    Filter.categoryBits = 0x0001;
+		    Filter.maskBits = 0xFFFF;
+		    Filter.groupIndex = 0;
+		    IsSensor = false;
 	    }
 
-	    /// The shape, this must be set. The shape will be cloned, so you
-	    /// can create the shape on the stack.
-        public Shape shape;
+        /// <summary>
+        /// The shape, this must be set. The shape will be cloned, so you
+        /// can create the shape on the stack.
+        /// </summary>
+        public Shape Shape;
 
-	    /// Use this to store application specific fixture data.
-        public object userData;
+        /// <summary>
+        /// Use this to store application specific fixture data.
+        /// </summary>
+        public object UserData;
 
-	    /// The friction coefficient, usually in the range [0,1].
-        public float friction;
+        /// <summary>
+        /// The friction coefficient, usually in the range [0,1].
+        /// </summary>
+        public float Friction;
 
-	    /// The restitution (elasticity) usually in the range [0,1].
-        public float restitution;
+        /// <summary>
+        /// The restitution (elasticity) usually in the range [0,1].
+        /// </summary>
+        public float Restitution;
 
-	    /// The density, usually in kg/m^2.
-        public float density;
+        /// <summary>
+        /// The density, usually in kg/m^2.
+        /// </summary>
+        public float Density;
 
-	    /// A sensor shape collects contact information but never generates a collision
-	    /// response.
-        public bool isSensor;
+        /// <summary>
+        /// A sensor shape collects contact information but never generates a collision
+        /// response.
+        /// </summary>
+        public bool IsSensor;
 
-	    /// Contact filtering data.
-        public Filter filter;
+        /// <summary>
+        /// Contact filtering data.
+        /// </summary>
+        public Filter Filter;
     }
 
 
+    /// <summary>
     /// A fixture is used to attach a shape to a body for collision detection. A fixture
     /// inherits its transform from its parent. Fixtures hold additional non-geometric data
     /// such as friction, collision filters, etc.
     /// Fixtures are created via Body.CreateFixture.
     /// @warning you cannot reuse fixtures.
+    /// </summary>
     public class Fixture
     {
-	    /// Get the type of the child shape. You can use this to down cast to the concrete shape.
-	    /// @return the shape type.
+        public Fixture()
+        {
+            ProxyId = BroadPhase.NullProxy;
+        }
+
+        /// <summary>
+        /// Get the type of the child shape. You can use this to down cast to the concrete shape.
+        /// @return the shape type.
+        /// </summary>
+        /// <value>The type of the shape.</value>
 	    public ShapeType ShapeType
         {
             get { return _shape.ShapeType; }
         }
 
-	    /// Get the child shape. You can modify the child shape, however you should not change the
-	    /// number of vertices because this will crash some collision caching mechanisms.
+        /// <summary>
+        /// Get the child shape. You can modify the child shape, however you should not change the
+        /// number of vertices because this will crash some collision caching mechanisms.
+        /// </summary>
+        /// <returns></returns>
 	    public Shape GetShape()
         {
             return _shape;
         }
 
-	    /// Is this fixture a sensor (non-solid)?
-	    /// @return the true if the shape is a sensor.
+        /// <summary>
+        /// Is this fixture a sensor (non-solid)?
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if this instance is sensor; otherwise, <c>false</c>.
+        /// </returns>
 	    public bool IsSensor()
         {
             return _isSensor;
         }
 
-	    /// Set if this fixture is a sensor.
+        /// <summary>
+        /// Set if this fixture is a sensor.
+        /// </summary>
+        /// <param name="sensor">if set to <c>true</c> [sensor].</param>
 	    public void SetSensor(bool sensor)
         {
             if (_isSensor == sensor)
@@ -123,12 +165,12 @@ namespace FarseerPhysics
 
 	        _isSensor = sensor;
 
-	        if (_body == null)
+	        if (Body == null)
 	        {
 		        return;
 	        }
 
-	        ContactEdge edge = _body.GetContactList();
+	        ContactEdge edge = Body.GetContactList();
 	        while (edge != null)
 	        {
 		        Contact contact = edge.Contact;
@@ -143,19 +185,22 @@ namespace FarseerPhysics
 	        }
         }
 
+        /// <summary>
         /// Set the contact filtering data. This will not update contacts until the next time
         /// step when either parent body is active and awake.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
 	    public void SetFilterData(ref Filter filter)
         {
             _filter = filter;
 
-	        if (_body == null)
+	        if (Body == null)
 	        {
 		        return;
 	        }
 
 	        // Flag associated contacts for filtering.
-	        ContactEdge edge = _body.GetContactList();
+	        ContactEdge edge = Body.GetContactList();
 	        while (edge != null)
 	        {
 		        Contact contact = edge.Contact;
@@ -170,34 +215,47 @@ namespace FarseerPhysics
 	        }
         }
 
-	    /// Get the contact filtering data.
+        /// <summary>
+        /// Get the contact filtering data.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
 	    public void GetFilterData(out Filter filter)
         {
             filter = _filter;
         }
 
-	    /// Get the parent body of this fixture. This is null if the fixture is not attached.
-	    /// @return the parent body.
+        /// <summary>
+        /// Get the parent body of this fixture. This is null if the fixture is not attached.
+        /// </summary>
+        /// <returns>the parent body.</returns>
 	    public Body GetBody()
         {
-            return _body;
+            return Body;
         }
 
-	    /// Get the next fixture in the parent body's fixture list.
-	    /// @return the next shape.
+        /// <summary>
+        /// Get the next fixture in the parent body's fixture list.
+        /// </summary>
+        /// <returns>the next shape.</returns>
 	    public Fixture GetNext()
         {
-            return _next;
+            return Next;
         }
 
-	    /// Get the user data that was assigned in the fixture definition. Use this to
-	    /// store your application specific data.
+        /// <summary>
+        /// Get the user data that was assigned in the fixture definition. Use this to
+        /// store your application specific data.
+        /// </summary>
+        /// <returns></returns>
 	    public object GetUserData()
         {
             return _userData;
         }
 
-	    /// Set the user data. Use this to store your application specific data.
+        /// <summary>
+        /// Set the user data. Use this to store your application specific data.
+        /// </summary>
+        /// <param name="data">The data.</param>
 	    public void SetUserData(object data)
         {
             _userData = data;
@@ -206,102 +264,129 @@ namespace FarseerPhysics
         public void SetDensity(float density)
         {
 	        Debug.Assert(MathUtils.IsValid(density) && density >= 0.0f);
-	        _density = density;
+	        Density = density;
         }
 
         public float GetDensity()
         {
-	        return _density;
+	        return Density;
         }
 
         public int ProxyId
         {
-            get { return _proxyId; }
+            get; private set;
         }
 
-	    /// Test a point for containment in this fixture.
-	    /// @param xf the shape world transform.
-	    /// @param p a point in world coordinates.
+        /// <summary>
+        /// Test a point for containment in this fixture.
+        /// </summary>
+        /// <param name="p">a point in world coordinates.</param>
+        /// <returns></returns>
 	    public bool TestPoint(Vector2 p)
         {
             Transform xf;
-            _body.GetTransform(out xf);
+            Body.GetTransform(out xf);
             return _shape.TestPoint(ref xf, p);
         }
 
+        /// <summary>
         /// Cast a ray against this shape.
-	    /// @param output the ray-cast results.
-	    /// @param input the ray-cast input parameters.
+        /// </summary>
+        /// <param name="output">the ray-cast results.</param>
+        /// <param name="input">the ray-cast input parameters.</param>
+        /// <returns></returns>
 	    public bool RayCast(out RayCastOutput output, ref RayCastInput input)
         {
             Transform xf;
-            _body.GetTransform(out xf);
+            Body.GetTransform(out xf);
             return _shape.RayCast(out output, ref input, ref xf);
         }
 
-	    /// Get the mass data for this fixture. The mass data is based on the density and
-	    /// the shape. The rotational inertia is about the shape's origin.
+        /// <summary>
+        /// Get the mass data for this fixture. The mass data is based on the density and
+        /// the shape. The rotational inertia is about the shape's origin.
+        /// </summary>
+        /// <param name="massData">The mass data.</param>
 	    public void GetMassData(out MassData massData)
         {
-            _shape.ComputeMass(out massData, _density);
+            _shape.ComputeMass(out massData, Density);
         }
 
-	    /// Get the coefficient of friction.
+        /// <summary>
+        /// Get the coefficient of friction.
+        /// </summary>
+        /// <returns></returns>
 	    public float GetFriction()
         {
             return _friction;
         }
 
-	    /// Set the coefficient of friction.
+        /// <summary>
+        /// Set the coefficient of friction.
+        /// </summary>
+        /// <param name="friction">The friction.</param>
 	    public void SetFriction(float friction)
         {
             _friction = friction;
         }
 
-	    /// Get the coefficient of restitution.
+        /// <summary>
+        /// Get the coefficient of restitution.
+        /// </summary>
+        /// <returns></returns>
 	    public float GetRestitution()
         {
             return _restitution;
         }
 
-	    /// Set the coefficient of restitution.
+        /// <summary>
+        /// Set the coefficient of restitution.
+        /// </summary>
+        /// <param name="restitution">The restitution.</param>
 	    public void SetRestitution(float restitution)
         {
             _restitution = restitution;
         }
 
+        /// <summary>
         /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
-	    /// If you need a more accurate AABB, compute it using the shape and
-	    /// the body transform.
+        /// If you need a more accurate AABB, compute it using the shape and
+        /// the body transform.
+        /// </summary>
+        /// <param name="aabb">The aabb.</param>
 	    public void GetAABB(out AABB aabb)
         {
-            aabb = _aabb;
+            aabb = Aabb;
         }
 
-	    // We need separation create/destroy functions from the constructor/destructor because
-	    // the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
+        /// <summary>
+        /// We need separation create/destroy functions from the constructor/destructor because
+        /// the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
+        /// </summary>
+        /// <param name="body">The body.</param>
+        /// <param name="def">The def.</param>
 	    internal void Create(Body body, FixtureDef def)
         {
-            _userData = def.userData;
-	        _friction = def.friction;
-	        _restitution = def.restitution;
+            _userData = def.UserData;
+	        _friction = def.Friction;
+	        _restitution = def.Restitution;
 
-	        _body = body;
-	        _next = null;
+	        Body = body;
+	        Next = null;
 
-	        _filter = def.filter;
+	        _filter = def.Filter;
 
-	        _isSensor = def.isSensor;
+	        _isSensor = def.IsSensor;
 
-	        _shape = def.shape.Clone();
+	        _shape = def.Shape.Clone();
 
-            _density = def.density;
+            Density = def.Density;
         }
 
 	    internal void Destroy()
         {
             // The proxy must be destroyed before calling this.
-	        Debug.Assert(_proxyId == BroadPhase.NullProxy);
+            Debug.Assert(ProxyId == BroadPhase.NullProxy);
 
             _shape = null;
         }
@@ -309,28 +394,28 @@ namespace FarseerPhysics
         // These support body activation/deactivation.
 	    internal void CreateProxy(BroadPhase broadPhase, ref Transform xf)
         {
-        	Debug.Assert(_proxyId == BroadPhase.NullProxy);
+            Debug.Assert(ProxyId == BroadPhase.NullProxy);
 
 	        // Create proxy in the broad-phase.
-	        _shape.ComputeAABB(out _aabb, ref xf);
-	        _proxyId = broadPhase.CreateProxy(ref _aabb, this);
+	        _shape.ComputeAABB(out Aabb, ref xf);
+            ProxyId = broadPhase.CreateProxy(ref Aabb, this);
         }
 
 	    internal void DestroyProxy(BroadPhase broadPhase)
         {
-    	    if (_proxyId == BroadPhase.NullProxy)
+    	    if (ProxyId == BroadPhase.NullProxy)
 	        {
 		        return;
 	        }
 
 	        // Destroy proxy in the broad-phase.
-	        broadPhase.DestroyProxy(_proxyId);
-	        _proxyId = BroadPhase.NullProxy;
+            broadPhase.DestroyProxy(ProxyId);
+            ProxyId = BroadPhase.NullProxy;
         }
 
         internal void Synchronize(BroadPhase broadPhase, ref Transform transform1, ref Transform transform2)
         {
-            if (_proxyId == BroadPhase.NullProxy)
+            if (ProxyId == BroadPhase.NullProxy)
 	        {	
 		        return;
 	        }
@@ -340,22 +425,20 @@ namespace FarseerPhysics
 	        _shape.ComputeAABB(out aabb1, ref transform1);
 	        _shape.ComputeAABB(out aabb2, ref transform2);
         	
-	        _aabb.Combine(ref aabb1, ref aabb2);
+	        Aabb.Combine(ref aabb1, ref aabb2);
 
             Vector2 displacement = transform2.Position - transform1.Position;
 
-            broadPhase.MoveProxy(_proxyId, ref _aabb, displacement);
-
+            broadPhase.MoveProxy(ProxyId, ref Aabb, displacement);
         }
 
-        internal AABB _aabb;
-        internal float _density;
-	    internal Fixture _next;
-	    internal Body _body;
+        internal AABB Aabb;
+        internal float Density;
+	    internal Fixture Next;
+	    internal Body Body;
         private Shape _shape;
         private float _friction;
         private float _restitution;
-        internal int _proxyId = BroadPhase.NullProxy;
         private Filter _filter;
         private bool _isSensor;
         private object _userData;

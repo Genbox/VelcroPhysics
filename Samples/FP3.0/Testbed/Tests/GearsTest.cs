@@ -48,37 +48,37 @@ namespace FarseerPhysics.TestBed.Tests
                 box.SetAsBox(0.5f, 5.0f);
 
                 BodyDef bd1 = new BodyDef();
-                bd1.type = BodyType.Dynamic;
-                bd1.position = new Vector2(-3.0f, 12.0f);
+                bd1.Type = BodyType.Dynamic;
+                bd1.Position = new Vector2(-3.0f, 12.0f);
                 Body body1 = _world.CreateBody(bd1);
                 body1.CreateFixture(circle1, 5.0f);
 
                 RevoluteJointDef jd1 = new RevoluteJointDef();
                 jd1.BodyA = ground;
                 jd1.BodyB = body1;
-                jd1.LocalAnchorA = ground.GetLocalPoint(bd1.position);
-                jd1.LocalAnchorB = body1.GetLocalPoint(bd1.position);
+                jd1.LocalAnchorA = ground.GetLocalPoint(bd1.Position);
+                jd1.LocalAnchorB = body1.GetLocalPoint(bd1.Position);
                 jd1.ReferenceAngle = body1.GetAngle() - ground.GetAngle();
                 _joint1 = (RevoluteJoint) _world.CreateJoint(jd1);
 
                 BodyDef bd2 = new BodyDef();
-                bd2.type = BodyType.Dynamic;
-                bd2.position = new Vector2(0.0f, 12.0f);
+                bd2.Type = BodyType.Dynamic;
+                bd2.Position = new Vector2(0.0f, 12.0f);
                 Body body2 = _world.CreateBody(bd2);
                 body2.CreateFixture(circle2, 5.0f);
 
                 RevoluteJointDef jd2 = new RevoluteJointDef();
-                jd2.Initialize(ground, body2, bd2.position);
+                jd2.Initialize(ground, body2, bd2.Position);
                 _joint2 = (RevoluteJoint) _world.CreateJoint(jd2);
 
                 BodyDef bd3 = new BodyDef();
-                bd3.type = BodyType.Dynamic;
-                bd3.position = new Vector2(2.5f, 12.0f);
+                bd3.Type = BodyType.Dynamic;
+                bd3.Position = new Vector2(2.5f, 12.0f);
                 Body body3 = _world.CreateBody(bd3);
                 body3.CreateFixture(box, 5.0f);
 
                 PrismaticJointDef jd3 = new PrismaticJointDef();
-                jd3.Initialize(ground, body3, bd3.position, new Vector2(0.0f, 1.0f));
+                jd3.Initialize(ground, body3, bd3.Position, new Vector2(0.0f, 1.0f));
                 jd3.LowerTranslation = -5.0f;
                 jd3.UpperTranslation = 5.0f;
                 jd3.EnableLimit = true;

@@ -319,12 +319,12 @@ namespace FarseerPhysics
             _limitMass2 = 1.0f / _limitMass2;
             _pulleyMass = 1.0f / _pulleyMass;
 
-            if (step.warmStarting)
+            if (step.WarmStarting)
             {
                 // Scale impulses to support variable time steps.
-                _impulse *= step.dtRatio;
-                _limitImpulse1 *= step.dtRatio;
-                _limitImpulse2 *= step.dtRatio;
+                _impulse *= step.DtRatio;
+                _limitImpulse1 *= step.DtRatio;
+                _limitImpulse2 *= step.DtRatio;
 
                 // Warm starting.
                 Vector2 P1 = -(_impulse + _limitImpulse1) * _u1;

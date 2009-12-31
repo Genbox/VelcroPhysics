@@ -215,13 +215,13 @@ namespace FarseerPhysics
                 Vector2 tangent = new Vector2(normal.Y, -normal.X);
 #endif
 
-                if (step.warmStarting)
+                if (step.WarmStarting)
                 {
                     for (int j = 0; j < c.PointCount; ++j)
                     {
                         ContactConstraintPoint ccp = c.Points[j];
-                        ccp.NormalImpulse *= step.dtRatio;
-                        ccp.TangentImpulse *= step.dtRatio;
+                        ccp.NormalImpulse *= step.DtRatio;
+                        ccp.TangentImpulse *= step.DtRatio;
 
 #if MATH_OVERLOADS
 			            Vector2 P = ccp.normalImpulse * normal + ccp.tangentImpulse * tangent;

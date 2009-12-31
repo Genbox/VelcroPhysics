@@ -36,7 +36,7 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsEdge(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
 
                 FixtureDef sd = new FixtureDef();
-                sd.shape = shape;
+                sd.Shape = shape;
 
                 BodyDef bd = new BodyDef();
                 Body ground = _world.CreateBody(bd);
@@ -58,12 +58,12 @@ namespace FarseerPhysics.TestBed.Tests
             polygon.Set(vertices, 3);
 
             FixtureDef triangleShapeDef = new FixtureDef();
-            triangleShapeDef.shape = polygon;
-            triangleShapeDef.density = 1.0f;
+            triangleShapeDef.Shape = polygon;
+            triangleShapeDef.Density = 1.0f;
 
             BodyDef triangleBodyDef = new BodyDef();
-            triangleBodyDef.type = BodyType.Dynamic;
-            triangleBodyDef.position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+            triangleBodyDef.Type = BodyType.Dynamic;
+            triangleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
             Body body1 = _world.CreateBody(triangleBodyDef);
             body1.CreateFixture(triangleShapeDef);
@@ -74,7 +74,7 @@ namespace FarseerPhysics.TestBed.Tests
             vertices[2] *= 2.0f;
             polygon.Set(vertices, 3);
 
-            triangleBodyDef.position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+            triangleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
             Body body2 = _world.CreateBody(triangleBodyDef);
             body2.CreateFixture(triangleShapeDef);
@@ -83,19 +83,19 @@ namespace FarseerPhysics.TestBed.Tests
             polygon.SetAsBox(1.0f, 0.5f);
 
             FixtureDef boxShapeDef = new FixtureDef();
-            boxShapeDef.shape = polygon;
-            boxShapeDef.density = 1.0f;
+            boxShapeDef.Shape = polygon;
+            boxShapeDef.Density = 1.0f;
 
             BodyDef boxBodyDef = new BodyDef();
-            boxBodyDef.type = BodyType.Dynamic;
-            boxBodyDef.position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+            boxBodyDef.Type = BodyType.Dynamic;
+            boxBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
             Body body3 = _world.CreateBody(boxBodyDef);
             body3.CreateFixture(boxShapeDef);
 
             // Large box (recycle definitions)
             polygon.SetAsBox(2.0f, 1.0f);
-            boxBodyDef.position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+            boxBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
             Body body4 = _world.CreateBody(boxBodyDef);
             body4.CreateFixture(boxShapeDef);
@@ -104,19 +104,19 @@ namespace FarseerPhysics.TestBed.Tests
             CircleShape circle = new CircleShape(1.0f);
 
             FixtureDef circleShapeDef = new FixtureDef();
-            circleShapeDef.shape = circle;
-            circleShapeDef.density = 1.0f;
+            circleShapeDef.Shape = circle;
+            circleShapeDef.Density = 1.0f;
 
             BodyDef circleBodyDef = new BodyDef();
-            circleBodyDef.type = BodyType.Dynamic;
-            circleBodyDef.position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+            circleBodyDef.Type = BodyType.Dynamic;
+            circleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
             Body body5 = _world.CreateBody(circleBodyDef);
             body5.CreateFixture(circleShapeDef);
 
             // Large circle
             circle.Radius *= 2.0f;
-            circleBodyDef.position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+            circleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
             Body body6 = _world.CreateBody(circleBodyDef);
             body6.CreateFixture(circleShapeDef);

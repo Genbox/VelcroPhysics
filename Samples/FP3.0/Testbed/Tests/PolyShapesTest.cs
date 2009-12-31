@@ -183,15 +183,15 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             BodyDef bd = new BodyDef();
-            bd.type = BodyType.Dynamic;
+            bd.Type = BodyType.Dynamic;
 
             float x = Rand.RandomFloat(-2.0f, 2.0f);
-            bd.position = new Vector2(x, 10.0f);
-            bd.angle = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
+            bd.Position = new Vector2(x, 10.0f);
+            bd.Angle = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
 
             if (index == 4)
             {
-                bd.angularDamping = 0.02f;
+                bd.AngularDamping = 0.02f;
             }
 
             _bodies[_bodyIndex] = _world.CreateBody(bd);
@@ -199,17 +199,17 @@ namespace FarseerPhysics.TestBed.Tests
             if (index < 4)
             {
                 FixtureDef fd = new FixtureDef();
-                fd.shape = _polygons[index];
-                fd.density = 1.0f;
-                fd.friction = 0.3f;
+                fd.Shape = _polygons[index];
+                fd.Density = 1.0f;
+                fd.Friction = 0.3f;
                 _bodies[_bodyIndex].CreateFixture(fd);
             }
             else
             {
                 FixtureDef fd = new FixtureDef();
-                fd.shape = _circle;
-                fd.density = 1.0f;
-                fd.friction = 0.3f;
+                fd.Shape = _circle;
+                fd.Density = 1.0f;
+                fd.Friction = 0.3f;
 
                 _bodies[_bodyIndex].CreateFixture(fd);
             }

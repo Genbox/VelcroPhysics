@@ -54,8 +54,8 @@ namespace FarseerPhysics.TestBed.Tests
                     shape.Position = new Vector2(0.0f, 10.0f);
 
                     FixtureDef fd = new FixtureDef();
-                    fd.shape = shape;
-                    fd.isSensor = true;
+                    fd.Shape = shape;
+                    fd.IsSensor = true;
                     _sensor = ground.CreateFixture(fd);
                 }
 #endif
@@ -67,9 +67,9 @@ namespace FarseerPhysics.TestBed.Tests
                 for (int i = 0; i < Count; ++i)
                 {
                     BodyDef bd = new BodyDef();
-                    bd.type = BodyType.Dynamic;
-                    bd.position = new Vector2(-10.0f + 3.0f * i, 20.0f);
-                    bd.userData = i;
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
+                    bd.UserData = i;
 
                     _touching[i] = false;
                     _bodies[i] = _world.CreateBody(bd);

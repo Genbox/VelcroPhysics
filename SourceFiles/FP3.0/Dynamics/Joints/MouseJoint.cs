@@ -196,15 +196,15 @@ namespace FarseerPhysics
             // magic formulas
             // gamma has units of inverse mass.
             // beta has units of inverse time.
-            Debug.Assert(d + step.dt * k > Settings.Epsilon);
+            Debug.Assert(d + step.DeltaTime * k > Settings.Epsilon);
 
-            _gamma = step.dt * (d + step.dt * k);
+            _gamma = step.DeltaTime * (d + step.DeltaTime * k);
             if (_gamma != 0.0f)
             {
                 _gamma = 1.0f / _gamma;
             }
 
-            _beta = step.dt * k * _gamma;
+            _beta = step.DeltaTime * k * _gamma;
 
             // Compute the effective mass matrix.
             Transform xf1;
@@ -234,7 +234,7 @@ namespace FarseerPhysics
             b._angularVelocity *= 0.98f;
 
             // Warm starting.
-            _impulse *= step.dtRatio;
+            _impulse *= step.DtRatio;
             b._linearVelocity += invMass * _impulse;
             b._angularVelocity += invI * MathUtils.Cross(r, _impulse);
         }
@@ -254,7 +254,7 @@ namespace FarseerPhysics
 
             Vector2 oldImpulse = _impulse;
             _impulse += impulse;
-            float maxImpulse = step.dt * _maxForce;
+            float maxImpulse = step.DeltaTime * _maxForce;
             if (_impulse.LengthSquared() > maxImpulse * maxImpulse)
             {
                 _impulse *= maxImpulse / _impulse.Length();
