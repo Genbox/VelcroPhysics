@@ -25,15 +25,26 @@ using System;
 
 namespace FarseerPhysics
 {
+    /// <summary>
+    /// Shape that represents a circle
+    /// </summary>
     public class CircleShape : Shape
     {
+        public CircleShape()
+        {
+            ShapeType = ShapeType.Circle;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CircleShape"/> class.
+        /// </summary>
+        /// <param name="radius">The radius.</param>
         public CircleShape(float radius)
             : base(radius)
         {
             ShapeType = ShapeType.Circle;
         }
 
-        /// Implement Shape.
         public override Shape Clone()
         {
             CircleShape shape = new CircleShape(Radius);
@@ -43,20 +54,20 @@ namespace FarseerPhysics
             return shape;
         }
 
-        /// @see Shape.TestPoint
-        public override bool TestPoint(ref Transform transform, Vector2 p)
+        public override bool TestPoint(ref Transform transform, Vector2 point)
         {
             Vector2 center = transform.Position + MathUtils.Multiply(ref transform.R, Position);
-            Vector2 d = p - center;
+            Vector2 d = point - center;
             return Vector2.Dot(d, d) <= Radius2;
         }
 
-        // Collision Detection in Interactive 3D Environments by Gino van den Bergen
-        // From Section 3.1.2
-        // x = s + a * r
-        // norm(x) = radius
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform)
         {
+            // Collision Detection in Interactive 3D Environments by Gino van den Bergen
+            // From Section 3.1.2
+            // x = s + a * r
+            // norm(x) = radius
+
             output = new RayCastOutput();
 
             Vector2 position = transform.Position + MathUtils.Multiply(ref transform.R, Position);
@@ -92,7 +103,6 @@ namespace FarseerPhysics
             return false;
         }
 
-        /// @see Shape.ComputeAABB
         public override void ComputeAABB(out AABB aabb, ref Transform transform)
         {
             Vector2 p = transform.Position + MathUtils.Multiply(ref transform.R, Position);
@@ -100,7 +110,6 @@ namespace FarseerPhysics
             aabb.upperBound = new Vector2(p.X + Radius, p.Y + Radius);
         }
 
-        /// @see Shape.ComputeMass
         public override void ComputeMass(out MassData massData, float density)
         {
             massData.Mass = density * Settings.Pi * Radius2;
@@ -110,7 +119,9 @@ namespace FarseerPhysics
             massData.Inertia = massData.Mass * (0.5f * Radius2 + Vector2.Dot(Position, Position));
         }
 
-        /// Position
+        /// <summary>
+        /// Position of the shape
+        /// </summary>
         public Vector2 Position;
     }
 }

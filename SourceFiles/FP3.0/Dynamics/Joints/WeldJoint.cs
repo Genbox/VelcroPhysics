@@ -31,9 +31,9 @@ namespace FarseerPhysics
     public class WeldJointDef : JointDef
     {
         public WeldJointDef()
-	    {
+        {
             type = JointType.Weld;
-	    }
+        }
 
         // Point-to-point constraint
         // C = p2 - p1
@@ -49,43 +49,43 @@ namespace FarseerPhysics
         // J = [0 0 -1 0 0 1]
         // K = invI1 + invI2
 
-	    public void Initialize(Body b1, Body b2, Vector2 anchor)
+        public void Initialize(Body b1, Body b2, Vector2 anchor)
         {
-	        bodyA = b1;
-	        bodyB = b2;
-	        localAnchorA = bodyA.GetLocalPoint(anchor);
-	        localAnchorB = bodyB.GetLocalPoint(anchor);
+            bodyA = b1;
+            bodyB = b2;
+            localAnchorA = bodyA.GetLocalPoint(anchor);
+            localAnchorB = bodyB.GetLocalPoint(anchor);
             referenceAngle = bodyB.GetAngle() - bodyA.GetAngle();
         }
 
-	    /// The local anchor point relative to body1's origin.
-	    public Vector2 localAnchorA;
+        /// The local anchor point relative to body1's origin.
+        public Vector2 localAnchorA;
 
-	    /// The local anchor point relative to body2's origin.
-	    public Vector2 localAnchorB;
-    
-	    /// The body2 angle minus body1 angle in the reference state (radians).
-	    public float referenceAngle;
-    };
+        /// The local anchor point relative to body2's origin.
+        public Vector2 localAnchorB;
+
+        /// The body2 angle minus body1 angle in the reference state (radians).
+        public float referenceAngle;
+    }
 
     /// A weld joint essentially glues two bodies together. A weld joint may
     /// distort somewhat because the island constraint solver is approximate.
     public class WeldJoint : Joint
     {
-	    public override Vector2 GetAnchorA()
+        public override Vector2 GetAnchorA()
         {
             return _bodyA.GetWorldPoint(_localAnchorA);
         }
 
         public override Vector2 GetAnchorB()
         {
-	        return _bodyB.GetWorldPoint(_localAnchorB);
+            return _bodyB.GetWorldPoint(_localAnchorB);
         }
 
         public override Vector2 GetReactionForce(float inv_dt)
         {
-	        Vector2 F = (inv_dt * new Vector2(_impulse.X, _impulse.Y));
-	        return F;
+            Vector2 F = (inv_dt * new Vector2(_impulse.X, _impulse.Y));
+            return F;
         }
 
         public override float GetReactionTorque(float inv_dt)
@@ -94,73 +94,73 @@ namespace FarseerPhysics
             return F;
         }
 
-	    internal WeldJoint(WeldJointDef def)
+        internal WeldJoint(WeldJointDef def)
             : base(def)
         {
-	        _localAnchorA = def.localAnchorA;
-	        _localAnchorB = def.localAnchorB;
+            _localAnchorA = def.localAnchorA;
+            _localAnchorB = def.localAnchorB;
             _referenceAngle = def.referenceAngle;
         }
 
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
-	        Body bA = _bodyA;
-	        Body bB = _bodyB;
+            Body bA = _bodyA;
+            Body bB = _bodyB;
 
             Transform xfA, xfB;
             bA.GetTransform(out xfA);
             bB.GetTransform(out xfB);
 
-	        // Compute the effective mass matrix.
+            // Compute the effective mass matrix.
             Vector2 rA = MathUtils.Multiply(ref xfA.R, _localAnchorA - bA.GetLocalCenter());
             Vector2 rB = MathUtils.Multiply(ref xfB.R, _localAnchorB - bB.GetLocalCenter());
-	        
-           	// J = [-I -r1_skew I r2_skew]
-	        //     [ 0       -1 0       1]
-	        // r_skew = [-ry; rx]
 
-	        // Matlab
-	        // K = [ mA+r1y^2*iA+mB+r2y^2*iB,  -r1y*iA*r1x-r2y*iB*r2x,          -r1y*iA-r2y*iB]
-	        //     [  -r1y*iA*r1x-r2y*iB*r2x, mA+r1x^2*iA+mB+r2x^2*iB,           r1x*iA+r2x*iB]
-	        //     [          -r1y*iA-r2y*iB,           r1x*iA+r2x*iB,                   iA+iB]
+            // J = [-I -r1_skew I r2_skew]
+            //     [ 0       -1 0       1]
+            // r_skew = [-ry; rx]
 
-	        float mA = bA._invMass, mB = bB._invMass;
-	        float iA = bA._invI, iB = bB._invI;
+            // Matlab
+            // K = [ mA+r1y^2*iA+mB+r2y^2*iB,  -r1y*iA*r1x-r2y*iB*r2x,          -r1y*iA-r2y*iB]
+            //     [  -r1y*iA*r1x-r2y*iB*r2x, mA+r1x^2*iA+mB+r2x^2*iB,           r1x*iA+r2x*iB]
+            //     [          -r1y*iA-r2y*iB,           r1x*iA+r2x*iB,                   iA+iB]
 
-	        _mass.col1.X = mA + mB + rA.Y * rA.Y * iA + rB.Y * rB.Y * iB;
-	        _mass.col2.X = -rA.Y * rA.X * iA - rB.Y * rB.X * iB;
-	        _mass.col3.X = -rA.Y * iA - rB.Y * iB;
-	        _mass.col1.Y = _mass.col2.X;
-	        _mass.col2.Y = mA + mB + rA.X * rA.X * iA + rB.X * rB.X * iB;
-	        _mass.col3.Y = rA.X * iA + rB.X * iB;
-	        _mass.col1.Z = _mass.col3.X;
-	        _mass.col2.Z = _mass.col3.Y;
-	        _mass.col3.Z = iA + iB;
+            float mA = bA._invMass, mB = bB._invMass;
+            float iA = bA._invI, iB = bB._invI;
 
-	        if (step.warmStarting)
-	        {
-		        // Scale impulses to support a variable time step.
-		        _impulse *= step.dtRatio;
+            _mass.col1.X = mA + mB + rA.Y * rA.Y * iA + rB.Y * rB.Y * iB;
+            _mass.col2.X = -rA.Y * rA.X * iA - rB.Y * rB.X * iB;
+            _mass.col3.X = -rA.Y * iA - rB.Y * iB;
+            _mass.col1.Y = _mass.col2.X;
+            _mass.col2.Y = mA + mB + rA.X * rA.X * iA + rB.X * rB.X * iB;
+            _mass.col3.Y = rA.X * iA + rB.X * iB;
+            _mass.col1.Z = _mass.col3.X;
+            _mass.col2.Z = _mass.col3.Y;
+            _mass.col3.Z = iA + iB;
 
-		        Vector2 P = new Vector2(_impulse.X, _impulse.Y);
+            if (step.warmStarting)
+            {
+                // Scale impulses to support a variable time step.
+                _impulse *= step.dtRatio;
 
-		        bA._linearVelocity -= mA * P;
-		        bA._angularVelocity -= iA * (MathUtils.Cross(rA, P) + _impulse.Z);
+                Vector2 P = new Vector2(_impulse.X, _impulse.Y);
 
-		        bB._linearVelocity += mB * P;
-		        bB._angularVelocity += iB * (MathUtils.Cross(rB, P) + _impulse.Z);
-	        }
-	        else
-	        {
-		        _impulse = Vector3.Zero;
-	        }
+                bA._linearVelocity -= mA * P;
+                bA._angularVelocity -= iA * (MathUtils.Cross(rA, P) + _impulse.Z);
+
+                bB._linearVelocity += mB * P;
+                bB._angularVelocity += iB * (MathUtils.Cross(rB, P) + _impulse.Z);
+            }
+            else
+            {
+                _impulse = Vector3.Zero;
+            }
 
         }
 
         internal override void SolveVelocityConstraints(ref TimeStep step)
         {
-	        Body bA = _bodyA;
-	        Body bB = _bodyB;
+            Body bA = _bodyA;
+            Body bB = _bodyB;
 
             Vector2 vA = bA._linearVelocity;
             float wA = bA._angularVelocity;
@@ -178,83 +178,83 @@ namespace FarseerPhysics
             Vector2 rB = MathUtils.Multiply(ref xfB.R, _localAnchorB - bB.GetLocalCenter());
 
             //  Solve point-to-point constraint
-	        Vector2 Cdot1 = vB + MathUtils.Cross(wB, rB) - vA - MathUtils.Cross(wA, rA);
-	        float Cdot2 = wB - wA;
-	        Vector3 Cdot = new Vector3(Cdot1.X, Cdot1.Y, Cdot2);
+            Vector2 Cdot1 = vB + MathUtils.Cross(wB, rB) - vA - MathUtils.Cross(wA, rA);
+            float Cdot2 = wB - wA;
+            Vector3 Cdot = new Vector3(Cdot1.X, Cdot1.Y, Cdot2);
 
-	        Vector3 impulse = _mass.Solve33(-Cdot);
-	        _impulse += impulse;
+            Vector3 impulse = _mass.Solve33(-Cdot);
+            _impulse += impulse;
 
-	        Vector2 P = new Vector2(impulse.X, impulse.Y);
+            Vector2 P = new Vector2(impulse.X, impulse.Y);
 
-	        vA -= mA * P;
-	        wA -= iA * (MathUtils.Cross(rA, P) + impulse.Z);
+            vA -= mA * P;
+            wA -= iA * (MathUtils.Cross(rA, P) + impulse.Z);
 
-	        vB += mB * P;
-	        wB += iB * (MathUtils.Cross(rB, P) + impulse.Z);
+            vB += mB * P;
+            wB += iB * (MathUtils.Cross(rB, P) + impulse.Z);
 
-	        bA._linearVelocity = vA;
-	        bA._angularVelocity = wA;
-	        bB._linearVelocity = vB;
-	        bB._angularVelocity = wB;
+            bA._linearVelocity = vA;
+            bA._angularVelocity = wA;
+            bB._linearVelocity = vB;
+            bB._angularVelocity = wB;
 
         }
 
         internal override bool SolvePositionConstraints(float baumgarte)
         {
-	        Body bA = _bodyA;
-	        Body bB = _bodyB;
+            Body bA = _bodyA;
+            Body bB = _bodyB;
 
-	        float mA = bA._invMass, mB = bB._invMass;
-	        float iA = bA._invI, iB = bB._invI;
+            float mA = bA._invMass, mB = bB._invMass;
+            float iA = bA._invI, iB = bB._invI;
 
             Transform xfA;
             Transform xfB;
             bA.GetTransform(out xfA);
             bB.GetTransform(out xfB);
 
-	        Vector2 rA = MathUtils.Multiply(ref xfA.R, _localAnchorA - bA.GetLocalCenter());
-	        Vector2 rB = MathUtils.Multiply(ref xfB.R, _localAnchorB - bB.GetLocalCenter());
+            Vector2 rA = MathUtils.Multiply(ref xfA.R, _localAnchorA - bA.GetLocalCenter());
+            Vector2 rB = MathUtils.Multiply(ref xfB.R, _localAnchorB - bB.GetLocalCenter());
 
-	        Vector2 C1 =  bB._sweep.c + rB - bA._sweep.c - rA;
-	        float C2 = bB._sweep.a - bA._sweep.a - _referenceAngle;
+            Vector2 C1 = bB._sweep.c + rB - bA._sweep.c - rA;
+            float C2 = bB._sweep.a - bA._sweep.a - _referenceAngle;
 
-	        // Handle large detachment.
-	        const float k_allowedStretch = 10.0f * Settings.LinearSlop;
-	        float positionError = C1.Length();
-	        float angularError = Math.Abs(C2);
-	        if (positionError > k_allowedStretch)
-	        {
-		        iA *= 1.0f;
-		        iB *= 1.0f;
-	        }
+            // Handle large detachment.
+            const float k_allowedStretch = 10.0f * Settings.LinearSlop;
+            float positionError = C1.Length();
+            float angularError = Math.Abs(C2);
+            if (positionError > k_allowedStretch)
+            {
+                iA *= 1.0f;
+                iB *= 1.0f;
+            }
 
-	        _mass.col1.X = mA + mB + rA.Y * rA.Y * iA + rB.Y * rB.Y * iB;
-	        _mass.col2.X = -rA.Y * rA.X * iA - rB.Y * rB.X * iB;
-	        _mass.col3.X = -rA.Y * iA - rB.Y * iB;
-	        _mass.col1.Y = _mass.col2.X;
-	        _mass.col2.Y = mA + mB + rA.X * rA.X * iA + rB.X * rB.X * iB;
-	        _mass.col3.Y = rA.X * iA + rB.X * iB;
-	        _mass.col1.Z = _mass.col3.X;
-	        _mass.col2.Z = _mass.col3.Y;
-	        _mass.col3.Z = iA + iB;
+            _mass.col1.X = mA + mB + rA.Y * rA.Y * iA + rB.Y * rB.Y * iB;
+            _mass.col2.X = -rA.Y * rA.X * iA - rB.Y * rB.X * iB;
+            _mass.col3.X = -rA.Y * iA - rB.Y * iB;
+            _mass.col1.Y = _mass.col2.X;
+            _mass.col2.Y = mA + mB + rA.X * rA.X * iA + rB.X * rB.X * iB;
+            _mass.col3.Y = rA.X * iA + rB.X * iB;
+            _mass.col1.Z = _mass.col3.X;
+            _mass.col2.Z = _mass.col3.Y;
+            _mass.col3.Z = iA + iB;
 
-	        Vector3 C = new Vector3(C1.X, C1.Y, C2);
+            Vector3 C = new Vector3(C1.X, C1.Y, C2);
 
-	        Vector3 impulse = _mass.Solve33(-C);
+            Vector3 impulse = _mass.Solve33(-C);
 
-	        Vector2 P = new Vector2(impulse.X, impulse.Y);
+            Vector2 P = new Vector2(impulse.X, impulse.Y);
 
-	        bA._sweep.c -= mA * P;
-	        bA._sweep.a -= iA * (MathUtils.Cross(rA, P) + impulse.Z);
+            bA._sweep.c -= mA * P;
+            bA._sweep.a -= iA * (MathUtils.Cross(rA, P) + impulse.Z);
 
-	        bB._sweep.c += mB * P;
-	        bB._sweep.a += iB * (MathUtils.Cross(rB, P) + impulse.Z);
+            bB._sweep.c += mB * P;
+            bB._sweep.a += iB * (MathUtils.Cross(rB, P) + impulse.Z);
 
-	        bA.SynchronizeTransform();
-	        bB.SynchronizeTransform();
+            bA.SynchronizeTransform();
+            bB.SynchronizeTransform();
 
-	        return positionError <= Settings.LinearSlop && angularError <= Settings.AngularSlop;
+            return positionError <= Settings.LinearSlop && angularError <= Settings.AngularSlop;
         }
 
         private Vector2 _localAnchorA;
@@ -262,5 +262,5 @@ namespace FarseerPhysics
         private float _referenceAngle;
         private Vector3 _impulse;
         private Mat33 _mass;
-    };
+    }
 }

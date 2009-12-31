@@ -67,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 Transform xf1 = new Transform();
-                xf1.R.Set(0.3524f*FarseerPhysics.Settings.Pi);
+                xf1.R.Set(0.3524f * Settings.Pi);
                 xf1.Position = MathUtils.Multiply(ref xf1.R, new Vector2(1.0f, 0.0f));
 
                 Vector2[] vertices = new Vector2[3];
@@ -83,7 +83,7 @@ namespace FarseerPhysics.TestBed.Tests
                 sd1.density = 4.0f;
 
                 Transform xf2 = new Transform();
-                xf2.R.Set(-0.3524f*FarseerPhysics.Settings.Pi);
+                xf2.R.Set(-0.3524f * Settings.Pi);
                 xf2.Position = MathUtils.Multiply(ref xf2.R, new Vector2(-1.0f, 0.0f));
 
                 vertices[0] = MathUtils.Multiply(ref xf2, new Vector2(-1.0f, 0.0f));
@@ -123,7 +123,7 @@ namespace FarseerPhysics.TestBed.Tests
                     BodyDef bd = new BodyDef();
                     bd.type = BodyType.Dynamic;
 
-                    bd.position = new Vector2(0.0f, 5.0f + 1.54f*i);
+                    bd.position = new Vector2(0.0f, 5.0f + 1.54f * i);
                     Body body = _world.CreateBody(bd);
 
                     body.CreateFixture(fd);
@@ -133,7 +133,7 @@ namespace FarseerPhysics.TestBed.Tests
                     float mass = body.GetMass();
 
                     // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
-                    float radius = (float) Math.Sqrt(2.0*(double) (I/mass));
+                    float radius = (float)Math.Sqrt(2.0 * (double)(I / mass));
 
                     FrictionJointDef jd = new FrictionJointDef();
                     jd.localAnchorA = Vector2.Zero;
@@ -141,8 +141,8 @@ namespace FarseerPhysics.TestBed.Tests
                     jd.bodyA = ground;
                     jd.bodyB = body;
                     jd.collideConnected = true;
-                    jd.maxForce = mass*gravity;
-                    jd.maxTorque = mass*radius*gravity;
+                    jd.maxForce = mass * gravity;
+                    jd.maxTorque = mass * radius * gravity;
 
                     _world.CreateJoint(jd);
                 }

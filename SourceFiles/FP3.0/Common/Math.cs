@@ -102,7 +102,7 @@ namespace FarseerPhysics
             public float x;
             [System.Runtime.InteropServices.FieldOffset(0)]
             public int i;
-        };
+        }
 
 
         /// This is a approximate yet fast inverse square-root.
@@ -229,7 +229,7 @@ namespace FarseerPhysics
         }
 
         public Vector2 col1, col2;
-    };
+    }
 
     /// A 3-by-3 matrix. Stored in column-major order.
     public struct Mat33

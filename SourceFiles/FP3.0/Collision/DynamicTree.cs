@@ -48,7 +48,7 @@ namespace FarseerPhysics
 
         internal int child1;
         internal int child2;
-    };
+    }
 
     /// A dynamic tree arranges data in a binary tree to accelerate
     /// queries such as volume queries and ray casts. Leafs are proxies
@@ -155,6 +155,31 @@ namespace FarseerPhysics
 	        InsertLeaf(proxyId);
 
             return true;
+        }
+
+        /// Perform some iterations to re-balance the tree.
+        public void Rebalance(int iterations)
+        {
+            if (_root == NullNode)
+            {
+                return;
+            }
+
+            for (int i = 0; i < iterations; ++i)
+            {
+                int node = _root;
+
+                int bit = 0;
+                while (_nodes[node].IsLeaf() == false)
+                {
+                    node = ((_path >> bit) & 1) == 0 ? _nodes[node].child1 : _nodes[node].child2;
+                    bit = (bit + 1) & (8 * sizeof(uint) - 1);
+                }
+                ++_path;
+
+                RemoveLeaf(node);
+                InsertLeaf(node);
+            }
         }
 
 	    /// Get proxy user data.
@@ -504,5 +529,8 @@ namespace FarseerPhysics
 	    int _nodeCapacity;
 	    int _freeList;
         int _insertionCount;
+
+        /// This is used incrementally traverse the tree for re-balancing.
+        int _path;
     }
 }

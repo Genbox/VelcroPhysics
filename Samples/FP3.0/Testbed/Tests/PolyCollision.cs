@@ -34,7 +34,7 @@ namespace FarseerPhysics.TestBed.Tests
         public PolyCollision()
         {
             {
-                _polygonA.SetAsBox(1.0f, 1.0f, new Vector2(0.0f, 0.0f), FarseerPhysics.Settings.Pi*0.25f);
+                _polygonA.SetAsBox(1.0f, 1.0f, new Vector2(0.0f, 0.0f), FarseerPhysics.Settings.Pi * 0.25f);
                 _transformA.Set(new Vector2(0.0f, 5.0f), 0.0f);
             }
 
@@ -104,11 +104,11 @@ namespace FarseerPhysics.TestBed.Tests
             }
             if (state.IsKeyDown(Keys.Q))
             {
-                _angleB += 0.1f*FarseerPhysics.Settings.Pi;
+                _angleB += 0.1f * FarseerPhysics.Settings.Pi;
             }
             if (state.IsKeyDown(Keys.E))
             {
-                _angleB -= 0.1f*FarseerPhysics.Settings.Pi;
+                _angleB -= 0.1f * FarseerPhysics.Settings.Pi;
             }
 
             _transformB.Set(_positionB, _angleB);

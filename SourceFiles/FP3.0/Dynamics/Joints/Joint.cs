@@ -36,7 +36,7 @@ namespace FarseerPhysics
         Line,
         Weld,
         Friction,
-    };
+    }
 
     public enum LimitState
     {
@@ -44,7 +44,7 @@ namespace FarseerPhysics
 	    AtLower,
 	    AtUpper,
 	    Equal,
-    };
+    }
 
     internal struct Jacobian
     {
@@ -69,7 +69,7 @@ namespace FarseerPhysics
         {
             return Vector2.Dot(linearA, x1) + angularA * a1 + Vector2.Dot(linearB, x2) + angularB * a2;
         }
-    };
+    }
 
      /// A joint edge is used to connect bodies and joints together
     /// in a joint graph where each body is a node and each joint

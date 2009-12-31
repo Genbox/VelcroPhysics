@@ -52,7 +52,7 @@ namespace FarseerPhysics
 
         /// The damping ratio. 0 = no damping, 1 = critical damping.
         public float dampingRatio;
-    };
+    }
 
     /// A mouse joint is used to make a point on a body track a
     /// specified world point. This a soft constraint with a maximum

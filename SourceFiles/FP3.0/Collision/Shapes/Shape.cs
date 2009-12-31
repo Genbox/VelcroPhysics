@@ -24,33 +24,56 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics
 {
+    /// <summary>
     /// This holds the mass data computed for a shape.
+    /// </summary>
     public struct MassData
     {
+        /// <summary>
         /// The mass of the shape, usually in kilograms.
+        /// </summary>
         public float Mass;
 
+        /// <summary>
         /// The position of the shape's centroid relative to the shape's origin.
+        /// </summary>
         public Vector2 Center;
 
+        /// <summary>
         /// The rotational inertia of the shape. This may be about the center or local
         /// origin, depending on usage.
+        /// </summary>
         public float Inertia;
-    };
+    }
 
+    /// <summary>
+    /// Type of shape
+    /// </summary>
     public enum ShapeType
     {
+        /// <summary>
+        /// The shape type is unknown or not set.
+        /// </summary>
         Unknown = -1,
+        /// <summary>
+        /// The shape type is a circle
+        /// </summary>
         Circle = 0,
-        Polygon = 1,
-        TypeCount = 2,
-    };
+        /// <summary>
+        /// The shape type is a polygon
+        /// </summary>
+        Polygon = 1
+    }
 
+    /// <summary>
+    /// Base class for shapes.
+    /// </summary>
     public abstract class Shape
     {
         protected Shape(float radius)
         {
             Radius = radius;
+            ShapeType = ShapeType.Unknown;
         }
 
         protected Shape()
@@ -58,35 +81,54 @@ namespace FarseerPhysics
             ShapeType = ShapeType.Unknown;
         }
 
-        /// Clone the concrete shape using the provided allocator.
+        /// <summary>
+        /// Clone the concrete shape.
+        /// </summary>
+        /// <returns></returns>
         public abstract Shape Clone();
 
+        /// <summary>
         /// Get the type of this shape. You can use this to down cast to the concrete shape.
-        /// @return the shape type.
+        /// </summary>
+        /// <value>The type of the shape.</value>
         public ShapeType ShapeType { get; protected set; }
 
+        /// <summary>
         /// Test a point for containment in this shape. This only works for convex shapes.
-        /// @param xf the shape world transform.
-        /// @param p a point in world coordinates.
-        public abstract bool TestPoint(ref Transform xf, Vector2 p);
+        /// </summary>
+        /// <param name="xf">the shape world transform.</param>
+        /// <param name="point">a point in world coordinates.</param>
+        /// <returns></returns>
+        public abstract bool TestPoint(ref Transform xf, Vector2 point);
 
+        /// <summary>
         /// Cast a ray against this shape.
-        /// @param output the ray-cast results.
-        /// @param input the ray-cast input parameters.
-        /// @param transform the transform to be applied to the shape.
+        /// </summary>
+        /// <param name="output">the ray-cast results.</param>
+        /// <param name="input">the ray-cast input parameters.</param>
+        /// <param name="transform"the transform to be applied to the shape.</param>
+        /// <returns>True if the raycast hit something</returns>
         public abstract bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform);
 
+        /// <summary>
         /// Given a transform, compute the associated axis aligned bounding box for this shape.
-        /// @param aabb returns the axis aligned box.
-        /// @param xf the world transform of the shape.
+        /// </summary>
+        /// <param name="aabb">returns the axis aligned box.</param>
+        /// <param name="xf">the world transform of the shape.</param>
         public abstract void ComputeAABB(out AABB aabb, ref Transform xf);
 
+        /// <summary>
         /// Compute the mass properties of this shape using its dimensions and density.
         /// The inertia tensor is computed about the local origin, not the centroid.
-        /// @param massData returns the mass data for this shape.
-        /// @param density the density in kilograms per meter squared.
+        /// </summary>
+        /// <param name="massData">massData returns the mass data for this shape.</param>
+        /// <param name="density">density the density in kilograms per meter squared.</param>
         public abstract void ComputeMass(out MassData massData, float density);
 
+        /// <summary>
+        /// Gets or sets the radius.
+        /// </summary>
+        /// <value>The radius.</value>
         public float Radius
         {
             get { return _radius; }
