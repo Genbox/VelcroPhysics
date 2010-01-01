@@ -31,23 +31,21 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                PolygonShape shape = new PolygonShape(PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f)), 0);
 
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
-                ground.CreateFixture(shape, 0.0f);
+                ground.CreateFixture(shape);
             }
 
             {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(0.5f, 2.0f);
+                PolygonShape shape = new PolygonShape(PolygonTools.CreateBox(0.5f, 2.0f), 1);
 
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(0.0f, 7.0f);
                 Body body = _world.CreateBody(bd);
-                body.CreateFixture(shape, 1.0f);
+                body.CreateFixture(shape);
 
                 LineJointDef jd = new LineJointDef();
                 Vector2 axis = new Vector2(2.0f, 1.0f);

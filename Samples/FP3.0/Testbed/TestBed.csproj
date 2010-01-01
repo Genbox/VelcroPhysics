@@ -89,9 +89,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Tests\ApplyForceTest.cs" />
+    <Compile Include="Tests\BodyTypesTest.cs" />
     <Compile Include="Tests\BridgeTest.cs" />
     <Compile Include="Tests\CCDTest.cs" />
     <Compile Include="Tests\ChainTest.cs" />
+    <Compile Include="Tests\CantileverTest.cs" />
+    <Compile Include="Tests\BreakableTest.cs" />
     <Compile Include="Tests\CollisionFilteringTest.cs" />
     <Compile Include="Tests\CollisionProcessingTest.cs">
       <SubType>Code</SubType>
@@ -99,23 +102,25 @@
     <Compile Include="Tests\CompoundShapes.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\BodyTypesTest.cs" />
-    <Compile Include="Tests\CantileverTest.cs" />
-    <Compile Include="Tests\Raycast.cs" />
-    <Compile Include="Tests\OneSidedPlatformTest.cs" />
-    <Compile Include="Tests\ConfinedTest.cs" />
-    <Compile Include="Tests\BreakableTest.cs" />
+    <Compile Include="Tests\ConfinedTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Tests\DistanceTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\DominosTest.cs" />
+    <Compile Include="Tests\DominosTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Tests\DynamicTreeTest.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\GearsTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\LineJoin.cs" />
+    <Compile Include="Tests\LineJoin.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\OneSidedPlatformTest.cs" />
     <Compile Include="Tests\PolyCollisionTest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -129,6 +134,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\PyramidTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Raycast.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\RevoluteTest.cs">

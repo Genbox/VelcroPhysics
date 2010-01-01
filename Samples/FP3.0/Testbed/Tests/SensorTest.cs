@@ -36,9 +36,9 @@ namespace FarseerPhysics.TestBed.Tests
                 Body ground = _world.CreateBody(bd);
 
                 {
-                    PolygonShape shape = new PolygonShape();
-                    shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                    ground.CreateFixture(shape, 0.0f);
+                    Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                    PolygonShape shape = new PolygonShape(edge, 0);
+                    ground.CreateFixture(shape);
                 }
 
 #if false
@@ -50,19 +50,17 @@ namespace FarseerPhysics.TestBed.Tests
 			    }
 #else
                 {
-                    CircleShape shape = new CircleShape(5.0f);
+                    CircleShape shape = new CircleShape(5.0f, 0);
                     shape.Position = new Vector2(0.0f, 10.0f);
 
-                    FixtureDef fd = new FixtureDef();
-                    fd.Shape = shape;
-                    fd.IsSensor = true;
-                    _sensor = ground.CreateFixture(fd);
+                    _sensor = ground.CreateFixture(shape);
+                    _sensor.Sensor = true;
                 }
 #endif
             }
 
             {
-                CircleShape shape = new CircleShape(1.0f);
+                CircleShape shape = new CircleShape(1.0f, 1);
 
                 for (int i = 0; i < Count; ++i)
                 {
@@ -74,7 +72,7 @@ namespace FarseerPhysics.TestBed.Tests
                     _touching[i] = false;
                     _bodies[i] = _world.CreateBody(bd);
 
-                    _bodies[i].CreateFixture(shape, 1.0f);
+                    _bodies[i].CreateFixture(shape);
                 }
             }
         }
@@ -129,7 +127,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body body = _bodies[i];
                 Body ground = _sensor.GetBody();
 
-                CircleShape circle = (CircleShape)_sensor.GetShape();
+                CircleShape circle = (CircleShape)_sensor.Shape;
                 Vector2 center = ground.GetWorldPoint(circle.Position);
 
                 Vector2 position = body.GetPosition();

@@ -37,33 +37,29 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 Body ground = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
 
                 // Floor
-                shape.SetAsEdge(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f));
-                ground.CreateFixture(shape, 0.0f);
+                Vertices edge = PolygonTools.CreateEdge(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f));
+                PolygonShape shape = new PolygonShape(edge, 0);
+
+                ground.CreateFixture(shape);
 
                 // Left wall
-                shape.SetAsEdge(new Vector2(-10.0f, 0.0f), new Vector2(-10.0f, 20.0f));
-                ground.CreateFixture(shape, 0.0f);
+                shape.Set(PolygonTools.CreateEdge(new Vector2(-10.0f, 0.0f), new Vector2(-10.0f, 20.0f)));
+                ground.CreateFixture(shape);
 
                 // Right wall
-                shape.SetAsEdge(new Vector2(10.0f, 0.0f), new Vector2(10.0f, 20.0f));
-                ground.CreateFixture(shape, 0.0f);
+                shape.Set(PolygonTools.CreateEdge(new Vector2(10.0f, 0.0f), new Vector2(10.0f, 20.0f)));
+                ground.CreateFixture(shape);
 
                 // Roof
-                shape.SetAsEdge(new Vector2(-10.0f, 20.0f), new Vector2(10.0f, 20.0f));
-                ground.CreateFixture(shape, 0.0f);
+                shape.Set(PolygonTools.CreateEdge(new Vector2(-10.0f, 20.0f), new Vector2(10.0f, 20.0f)));
+                ground.CreateFixture(shape);
             }
 
             const float radius = 0.5f;
-            CircleShape shape2 = new CircleShape(radius);
+            CircleShape shape2 = new CircleShape(radius, 1);
             shape2.Position = Vector2.Zero;
-
-            FixtureDef fd = new FixtureDef();
-            fd.Shape = shape2;
-            fd.Density = 1.0f;
-            fd.Friction = 0.1f;
 
             for (int j = 0; j < ColumnCount; ++j)
             {
@@ -71,10 +67,11 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     BodyDef bd = new BodyDef();
                     bd.Type = BodyType.Dynamic;
-                    bd.Position = new Vector2(-10.0f + (2.1f*j + 1.0f + 0.01f*i)*radius, (2.0f*i + 1.0f)*radius);
+                    bd.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius, (2.0f * i + 1.0f) * radius);
                     Body body = _world.CreateBody(bd);
 
-                    body.CreateFixture(fd);
+                    Fixture fixture = body.CreateFixture(shape2);
+                    fixture.SetFriction(0.1f);
                 }
             }
 
@@ -84,20 +81,16 @@ namespace FarseerPhysics.TestBed.Tests
         private void CreateCircle()
         {
             const float radius = 0.5f;
-            CircleShape shape = new CircleShape(radius);
+            CircleShape shape = new CircleShape(radius, 1);
             shape.Position = Vector2.Zero;
-
-            FixtureDef fd = new FixtureDef();
-            fd.Shape = shape;
-            fd.Density = 1.0f;
-            fd.Friction = 0.0f;
 
             BodyDef bd = new BodyDef();
             bd.Type = BodyType.Dynamic;
-            bd.Position = new Vector2(Rand.RandomFloat(), (2.0f + Rand.RandomFloat())*radius);
+            bd.Position = new Vector2(Rand.RandomFloat(), (2.0f + Rand.RandomFloat()) * radius);
             Body body = _world.CreateBody(bd);
 
-            body.CreateFixture(fd);
+            Fixture fixture = body.CreateFixture(shape);
+            fixture.SetFriction(0);
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)

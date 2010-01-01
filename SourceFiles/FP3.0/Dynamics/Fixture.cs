@@ -20,93 +20,11 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
 
 namespace FarseerPhysics
 {
-    /// This holds contact filtering data.
-    public struct Filter
-    {
-        /// <summary>
-        /// The collision category bits. Normally you would just set one bit.
-        /// </summary>
-        public ushort categoryBits;
-
-        /// <summary>
-        /// The collision mask bits. This states the categories that this
-        /// shape would accept for collision.
-        /// </summary>
-        public ushort maskBits;
-
-        /// <summary>
-        /// Collision groups allow a certain group of objects to never collide (negative)
-        /// or always collide (positive). Zero means no collision group. Non-zero group
-        /// filtering always wins against the mask bits.
-        /// </summary>
-        public short groupIndex;
-    }
-
-    /// A fixture definition is used to create a fixture. This class defines an
-    /// abstract fixture definition. You can reuse fixture definitions safely.
-    public class FixtureDef
-    {
-        /// <summary>
-        /// The constructor sets the default fixture definition values.
-        /// </summary>
-        public FixtureDef()
-	    {
-		    Shape = null;
-		    UserData = null;
-		    Friction = 0.2f;
-		    Restitution = 0.0f;
-		    Density = 0.0f;
-		    Filter.categoryBits = 0x0001;
-		    Filter.maskBits = 0xFFFF;
-		    Filter.groupIndex = 0;
-		    IsSensor = false;
-	    }
-
-        /// <summary>
-        /// The shape, this must be set. The shape will be cloned, so you
-        /// can create the shape on the stack.
-        /// </summary>
-        public Shape Shape;
-
-        /// <summary>
-        /// Use this to store application specific fixture data.
-        /// </summary>
-        public object UserData;
-
-        /// <summary>
-        /// The friction coefficient, usually in the range [0,1].
-        /// </summary>
-        public float Friction;
-
-        /// <summary>
-        /// The restitution (elasticity) usually in the range [0,1].
-        /// </summary>
-        public float Restitution;
-
-        /// <summary>
-        /// The density, usually in kg/m^2.
-        /// </summary>
-        public float Density;
-
-        /// <summary>
-        /// A sensor shape collects contact information but never generates a collision
-        /// response.
-        /// </summary>
-        public bool IsSensor;
-
-        /// <summary>
-        /// Contact filtering data.
-        /// </summary>
-        public Filter Filter;
-    }
-
-
     /// <summary>
     /// A fixture is used to attach a shape to a body for collision detection. A fixture
     /// inherits its transform from its parent. Fixtures hold additional non-geometric data
@@ -119,6 +37,14 @@ namespace FarseerPhysics
         public Fixture()
         {
             ProxyId = BroadPhase.NullProxy;
+
+            //Fixture defaults
+            _friction = 0.2f;
+            _restitution = 0.0f;
+            _categoryBits = 0x0001;
+            _maskBits = 0xFFFF;
+            _groupIndex = 0;
+            _isSensor = false;
         }
 
         /// <summary>
@@ -126,7 +52,7 @@ namespace FarseerPhysics
         /// @return the shape type.
         /// </summary>
         /// <value>The type of the shape.</value>
-	    public ShapeType ShapeType
+        public ShapeType ShapeType
         {
             get { return _shape.ShapeType; }
         }
@@ -135,100 +61,149 @@ namespace FarseerPhysics
         /// Get the child shape. You can modify the child shape, however you should not change the
         /// number of vertices because this will crash some collision caching mechanisms.
         /// </summary>
-        /// <returns></returns>
-	    public Shape GetShape()
+        /// <value></value>
+        public Shape Shape
         {
-            return _shape;
-        }
-
-        /// <summary>
-        /// Is this fixture a sensor (non-solid)?
-        /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if this instance is sensor; otherwise, <c>false</c>.
-        /// </returns>
-	    public bool IsSensor()
-        {
-            return _isSensor;
+            get { return _shape; }
         }
 
         /// <summary>
         /// Set if this fixture is a sensor.
         /// </summary>
-        /// <param name="sensor">if set to <c>true</c> [sensor].</param>
-	    public void SetSensor(bool sensor)
+        /// <value>
+        ///   if set to &lt;c&gt;true&lt;/c&gt; [sensor].
+        /// </value>
+        public bool Sensor
         {
-            if (_isSensor == sensor)
-	        {
-		        return;
-	        }
+            set
+            {
+                if (_isSensor == value)
+                {
+                    return;
+                }
 
-	        _isSensor = sensor;
+                _isSensor = value;
 
-	        if (Body == null)
-	        {
-		        return;
-	        }
+                if (Body == null)
+                {
+                    return;
+                }
 
-	        ContactEdge edge = Body.GetContactList();
-	        while (edge != null)
-	        {
-		        Contact contact = edge.Contact;
-		        Fixture fixtureA = contact.GetFixtureA();
-		        Fixture fixtureB = contact.GetFixtureB();
-		        if (fixtureA == this || fixtureB == this)
-		        {
-                    contact.SetSensor(fixtureA.IsSensor() || fixtureB.IsSensor());
-		        }
+                ContactEdge edge = Body.GetContactList();
+                while (edge != null)
+                {
+                    Contact contact = edge.Contact;
+                    Fixture fixtureA = contact.GetFixtureA();
+                    Fixture fixtureB = contact.GetFixtureB();
+                    if (fixtureA == this || fixtureB == this)
+                    {
+                        contact.SetSensor(fixtureA.Sensor || fixtureB.Sensor);
+                    }
 
-                edge = edge.Next;
-	        }
+                    edge = edge.Next;
+                }
+            }
+            get
+            {
+                return _isSensor;
+            }
         }
 
         /// <summary>
-        /// Set the contact filtering data. This will not update contacts until the next time
-        /// step when either parent body is active and awake.
+        /// Collision groups allow a certain group of objects to never collide (negative)
+        /// or always collide (positive). Zero means no collision group. Non-zero group
+        /// filtering always wins against the mask bits.
+        /// Warning: The filter will not take effect until next step.
         /// </summary>
-        /// <param name="filter">The filter.</param>
-	    public void SetFilterData(ref Filter filter)
+        public short GroupIndex
         {
-            _filter = filter;
+            set
+            {
+                if (Body == null)
+                    return;
 
-	        if (Body == null)
-	        {
-		        return;
-	        }
+                if (_groupIndex == value)
+                    return;
 
-	        // Flag associated contacts for filtering.
-	        ContactEdge edge = Body.GetContactList();
-	        while (edge != null)
-	        {
-		        Contact contact = edge.Contact;
-		        Fixture fixtureA = contact.GetFixtureA();
-		        Fixture fixtureB = contact.GetFixtureB();
-		        if (fixtureA == this || fixtureB == this)
-		        {
-			        contact.FlagForFiltering();
-		        }
-
-                edge = edge.Next;
-	        }
+                _groupIndex = value;
+                FilterChanged();
+            }
+            get
+            {
+                return _groupIndex;
+            }
         }
 
         /// <summary>
-        /// Get the contact filtering data.
+        /// The collision mask bits. This states the categories that this
+        /// shape would accept for collision.
         /// </summary>
-        /// <param name="filter">The filter.</param>
-	    public void GetFilterData(out Filter filter)
+        public ushort MaskBits
         {
-            filter = _filter;
+            get
+            {
+                return _maskBits;
+            }
+
+            set
+            {
+                if (Body == null)
+                    return;
+
+                if (_maskBits == value)
+                    return;
+
+                _maskBits = value;
+                FilterChanged();
+            }
+        }
+
+        /// <summary>
+        /// The collision category bits. Normally you would just set one bit.
+        /// </summary>
+        public ushort CategoryBits
+        {
+            get
+            {
+                return _categoryBits;
+            }
+
+            set
+            {
+                if (Body == null)
+                    return;
+
+                if (_categoryBits == value)
+                    return;
+
+                _categoryBits = value;
+                FilterChanged();
+            }
+        }
+
+        private void FilterChanged()
+        {
+            // Flag associated contacts for filtering.
+            ContactEdge edge = Body.GetContactList();
+            while (edge != null)
+            {
+                Contact contact = edge.Contact;
+                Fixture fixtureA = contact.GetFixtureA();
+                Fixture fixtureB = contact.GetFixtureB();
+                if (fixtureA == this || fixtureB == this)
+                {
+                    contact.FlagForFiltering();
+                }
+
+                edge = edge.Next;
+            }
         }
 
         /// <summary>
         /// Get the parent body of this fixture. This is null if the fixture is not attached.
         /// </summary>
         /// <returns>the parent body.</returns>
-	    public Body GetBody()
+        public Body GetBody()
         {
             return Body;
         }
@@ -237,7 +212,7 @@ namespace FarseerPhysics
         /// Get the next fixture in the parent body's fixture list.
         /// </summary>
         /// <returns>the next shape.</returns>
-	    public Fixture GetNext()
+        public Fixture GetNext()
         {
             return Next;
         }
@@ -247,7 +222,7 @@ namespace FarseerPhysics
         /// store your application specific data.
         /// </summary>
         /// <returns></returns>
-	    public object GetUserData()
+        public object GetUserData()
         {
             return _userData;
         }
@@ -256,25 +231,15 @@ namespace FarseerPhysics
         /// Set the user data. Use this to store your application specific data.
         /// </summary>
         /// <param name="data">The data.</param>
-	    public void SetUserData(object data)
+        public void SetUserData(object data)
         {
             _userData = data;
         }
 
-        public void SetDensity(float density)
-        {
-	        Debug.Assert(MathUtils.IsValid(density) && density >= 0.0f);
-	        Density = density;
-        }
-
-        public float GetDensity()
-        {
-	        return Density;
-        }
-
         public int ProxyId
         {
-            get; private set;
+            get;
+            private set;
         }
 
         /// <summary>
@@ -282,7 +247,7 @@ namespace FarseerPhysics
         /// </summary>
         /// <param name="p">a point in world coordinates.</param>
         /// <returns></returns>
-	    public bool TestPoint(Vector2 p)
+        public bool TestPoint(Vector2 p)
         {
             Transform xf;
             Body.GetTransform(out xf);
@@ -295,7 +260,7 @@ namespace FarseerPhysics
         /// <param name="output">the ray-cast results.</param>
         /// <param name="input">the ray-cast input parameters.</param>
         /// <returns></returns>
-	    public bool RayCast(out RayCastOutput output, ref RayCastInput input)
+        public bool RayCast(out RayCastOutput output, ref RayCastInput input)
         {
             Transform xf;
             Body.GetTransform(out xf);
@@ -307,16 +272,16 @@ namespace FarseerPhysics
         /// the shape. The rotational inertia is about the shape's origin.
         /// </summary>
         /// <param name="massData">The mass data.</param>
-	    public void GetMassData(out MassData massData)
-        {
-            _shape.ComputeMass(out massData, Density);
-        }
+        //public void GetMassData(out MassData massData)
+        //{
+        //    _shape.ComputeMass(out massData, Density);
+        //}
 
         /// <summary>
         /// Get the coefficient of friction.
         /// </summary>
         /// <returns></returns>
-	    public float GetFriction()
+        public float GetFriction()
         {
             return _friction;
         }
@@ -325,7 +290,7 @@ namespace FarseerPhysics
         /// Set the coefficient of friction.
         /// </summary>
         /// <param name="friction">The friction.</param>
-	    public void SetFriction(float friction)
+        public void SetFriction(float friction)
         {
             _friction = friction;
         }
@@ -334,7 +299,7 @@ namespace FarseerPhysics
         /// Get the coefficient of restitution.
         /// </summary>
         /// <returns></returns>
-	    public float GetRestitution()
+        public float GetRestitution()
         {
             return _restitution;
         }
@@ -343,7 +308,7 @@ namespace FarseerPhysics
         /// Set the coefficient of restitution.
         /// </summary>
         /// <param name="restitution">The restitution.</param>
-	    public void SetRestitution(float restitution)
+        public void SetRestitution(float restitution)
         {
             _restitution = restitution;
         }
@@ -354,7 +319,7 @@ namespace FarseerPhysics
         /// the body transform.
         /// </summary>
         /// <param name="aabb">The aabb.</param>
-	    public void GetAABB(out AABB aabb)
+        public void GetAABB(out AABB aabb)
         {
             aabb = Aabb;
         }
@@ -364,26 +329,16 @@ namespace FarseerPhysics
         /// the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
         /// </summary>
         /// <param name="body">The body.</param>
-        /// <param name="def">The def.</param>
-	    internal void Create(Body body, FixtureDef def)
+        /// <param name="shape">The shape.</param>
+        internal void Create(Body body, Shape shape)
         {
-            _userData = def.UserData;
-	        _friction = def.Friction;
-	        _restitution = def.Restitution;
+            Body = body;
+            Next = null;
 
-	        Body = body;
-	        Next = null;
-
-	        _filter = def.Filter;
-
-	        _isSensor = def.IsSensor;
-
-	        _shape = def.Shape.Clone();
-
-            Density = def.Density;
+            _shape = shape.Clone();
         }
 
-	    internal void Destroy()
+        internal void Destroy()
         {
             // The proxy must be destroyed before calling this.
             Debug.Assert(ProxyId == BroadPhase.NullProxy);
@@ -392,23 +347,23 @@ namespace FarseerPhysics
         }
 
         // These support body activation/deactivation.
-	    internal void CreateProxy(BroadPhase broadPhase, ref Transform xf)
+        internal void CreateProxy(BroadPhase broadPhase, ref Transform xf)
         {
             Debug.Assert(ProxyId == BroadPhase.NullProxy);
 
-	        // Create proxy in the broad-phase.
-	        _shape.ComputeAABB(out Aabb, ref xf);
+            // Create proxy in the broad-phase.
+            _shape.ComputeAABB(out Aabb, ref xf);
             ProxyId = broadPhase.CreateProxy(ref Aabb, this);
         }
 
-	    internal void DestroyProxy(BroadPhase broadPhase)
+        internal void DestroyProxy(BroadPhase broadPhase)
         {
-    	    if (ProxyId == BroadPhase.NullProxy)
-	        {
-		        return;
-	        }
+            if (ProxyId == BroadPhase.NullProxy)
+            {
+                return;
+            }
 
-	        // Destroy proxy in the broad-phase.
+            // Destroy proxy in the broad-phase.
             broadPhase.DestroyProxy(ProxyId);
             ProxyId = BroadPhase.NullProxy;
         }
@@ -416,16 +371,16 @@ namespace FarseerPhysics
         internal void Synchronize(BroadPhase broadPhase, ref Transform transform1, ref Transform transform2)
         {
             if (ProxyId == BroadPhase.NullProxy)
-	        {	
-		        return;
-	        }
+            {
+                return;
+            }
 
-	        // Compute an AABB that covers the swept shape (may miss some rotation effect).
-	        AABB aabb1, aabb2;
-	        _shape.ComputeAABB(out aabb1, ref transform1);
-	        _shape.ComputeAABB(out aabb2, ref transform2);
-        	
-	        Aabb.Combine(ref aabb1, ref aabb2);
+            // Compute an AABB that covers the swept shape (may miss some rotation effect).
+            AABB aabb1, aabb2;
+            _shape.ComputeAABB(out aabb1, ref transform1);
+            _shape.ComputeAABB(out aabb2, ref transform2);
+
+            Aabb.Combine(ref aabb1, ref aabb2);
 
             Vector2 displacement = transform2.Position - transform1.Position;
 
@@ -433,14 +388,15 @@ namespace FarseerPhysics
         }
 
         internal AABB Aabb;
-        internal float Density;
-	    internal Fixture Next;
-	    internal Body Body;
+        internal Fixture Next;
+        internal Body Body;
         private Shape _shape;
         private float _friction;
         private float _restitution;
-        private Filter _filter;
         private bool _isSensor;
         private object _userData;
+        private short _groupIndex;
+        private ushort _maskBits;
+        private ushort _categoryBits;
     }
 }

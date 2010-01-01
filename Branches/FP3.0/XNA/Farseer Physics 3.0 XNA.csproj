@@ -188,6 +188,8 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\WorldCallbacks.cs">
       <Link>Dynamics\WorldCallbacks.cs</Link>
     </Compile>
+    <Compile Include="Common\PolygonTools.cs" />
+    <Compile Include="Common\Vertices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

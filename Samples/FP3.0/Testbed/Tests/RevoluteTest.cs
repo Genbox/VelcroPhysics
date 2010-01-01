@@ -35,13 +35,13 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape, 0.0f);
+                ground.CreateFixture(shape);
             }
 
             {
-                CircleShape shape = new CircleShape(0.5f);
+                CircleShape shape = new CircleShape(0.5f, 5);
 
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 bd.Position = new Vector2(0.0f, 20.0f);
                 Body body = _world.CreateBody(bd);
-                body.CreateFixture(shape, 5.0f);
+                body.CreateFixture(shape);
 
                 float w = 100.0f;
                 body.SetAngularVelocity(w);

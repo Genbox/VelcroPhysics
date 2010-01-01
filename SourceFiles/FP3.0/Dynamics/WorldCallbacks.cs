@@ -41,7 +41,7 @@ namespace FarseerPhysics
         public FixedArray2<float> tangentImpulses;
     }
 
-    public class DefaultContactFilter 
+    public class DefaultContactFilter
     {
         public DefaultContactFilter(World world)
         {
@@ -50,18 +50,12 @@ namespace FarseerPhysics
 
         private static bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)
         {
-            Filter filterA;
-            fixtureA.GetFilterData(out filterA);
-
-            Filter filterB;
-            fixtureB.GetFilterData(out filterB);
-
-            if (filterA.groupIndex == filterB.groupIndex && filterA.groupIndex != 0)
+            if (fixtureA.GroupIndex == fixtureB.GroupIndex && fixtureA.GroupIndex != 0)
             {
-                return filterA.groupIndex > 0;
+                return fixtureA.GroupIndex > 0;
             }
 
-            bool collide = (filterA.maskBits & filterB.categoryBits) != 0 && (filterA.categoryBits & filterB.maskBits) != 0;
+            bool collide = (fixtureA.MaskBits & fixtureB.CategoryBits) != 0 && (fixtureA.CategoryBits & fixtureB.MaskBits) != 0;
 
             return collide;
         }

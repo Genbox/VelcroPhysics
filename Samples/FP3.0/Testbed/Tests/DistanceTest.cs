@@ -34,7 +34,8 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 _transformA.SetIdentity();
                 _transformA.Position = new Vector2(0.0f, -0.2f);
-                _polygonA.SetAsBox(10.0f, 0.2f);
+                Vertices vertices = PolygonTools.CreateBox(10.0f, 0.2f);
+                _polygonA = new PolygonShape(vertices, 0);
             }
 
             {
@@ -42,7 +43,8 @@ namespace FarseerPhysics.TestBed.Tests
                 _angleB = -0.0109265f;
                 _transformB.Set(_positionB, _angleB);
 
-                _polygonB.SetAsBox(2.0f, 0.1f);
+                Vertices vertices = PolygonTools.CreateBox(2.0f, 0.1f);
+                _polygonB = new PolygonShape(vertices, 0);
             }
         }
 
@@ -75,17 +77,17 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Color color = new Color(0.9f, 0.9f, 0.9f);
                 FixedArray8<Vector2> v = new FixedArray8<Vector2>();
-                for (int i = 0; i < _polygonA.VertexCount; ++i)
+                for (int i = 0; i < _polygonA.Vertices.Count; ++i)
                 {
                     v[i] = MathUtils.Multiply(ref _transformA, _polygonA.Vertices[i]);
                 }
-                _debugView.DrawPolygon(ref v, _polygonA.VertexCount, color);
+                _debugView.DrawPolygon(ref v, _polygonA.Vertices.Count, color);
 
-                for (int i = 0; i < _polygonB.VertexCount; ++i)
+                for (int i = 0; i < _polygonB.Vertices.Count; ++i)
                 {
                     v[i] = MathUtils.Multiply(ref _transformB, _polygonB.Vertices[i]);
                 }
-                _debugView.DrawPolygon(ref v, _polygonB.VertexCount, color);
+                _debugView.DrawPolygon(ref v, _polygonB.Vertices.Count, color);
             }
 
             Vector2 x1 = output.PointA;
@@ -133,7 +135,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         private Transform _transformA;
         private Transform _transformB;
-        private PolygonShape _polygonA = new PolygonShape();
-        private PolygonShape _polygonB = new PolygonShape();
+        private PolygonShape _polygonA;
+        private PolygonShape _polygonB;
     }
 }

@@ -113,8 +113,8 @@ namespace FarseerPhysics
         public void GetWorldManifold(out WorldManifold worldManifold)
         {
             Body bodyA = FixtureA.GetBody();
-            Shape shapeA = FixtureA.GetShape();
-            Shape shapeB = FixtureB.GetShape();
+            Shape shapeA = FixtureA.Shape;
+            Shape shapeB = FixtureB.Shape;
 
             Transform xfA, xfB;
             bodyA.GetTransform(out xfA);
@@ -240,7 +240,7 @@ namespace FarseerPhysics
         {
             Flags = ContactFlags.Enabled;
 
-            if (fA.IsSensor() || fB.IsSensor())
+            if (fA.Sensor || fB.Sensor)
             {
                 Flags |= ContactFlags.Sensor;
             }
@@ -293,8 +293,8 @@ namespace FarseerPhysics
             {
                 if (aabbOverlap)
                 {
-                    Shape shapeA = FixtureA.GetShape();
-                    Shape shapeB = FixtureB.GetShape();
+                    Shape shapeA = FixtureA.Shape;
+                    Shape shapeB = FixtureB.Shape;
 
                     Transform xfA;
                     Transform xfB;
@@ -394,8 +394,8 @@ namespace FarseerPhysics
         internal float ComputeTOI(ref Sweep sweepA, ref Sweep sweepB)
         {
             TOIInput input = new TOIInput();
-            input.proxyA.Set(FixtureA.GetShape());
-            input.proxyB.Set(FixtureB.GetShape());
+            input.proxyA.Set(FixtureA.Shape);
+            input.proxyB.Set(FixtureB.Shape);
             input.sweepA = sweepA;
             input.sweepB = sweepB;
             input.tolerance = Settings.LinearSlop;

@@ -70,10 +70,16 @@ namespace FarseerPhysics
     /// </summary>
     public abstract class Shape
     {
+        protected Shape(float radius, float density)
+        {
+            Radius = radius;
+            Density = density;
+            ShapeType = ShapeType.Unknown;
+        }
+
         protected Shape(float radius)
         {
             Radius = radius;
-            ShapeType = ShapeType.Unknown;
         }
 
         protected Shape()
@@ -121,9 +127,8 @@ namespace FarseerPhysics
         /// Compute the mass properties of this shape using its dimensions and density.
         /// The inertia tensor is computed about the local origin, not the centroid.
         /// </summary>
-        /// <param name="massData">massData returns the mass data for this shape.</param>
-        /// <param name="density">density the density in kilograms per meter squared.</param>
-        public abstract void ComputeMass(out MassData massData, float density);
+        /// <param name="density"></param>
+        protected abstract void ComputeMass();
 
         /// <summary>
         /// Gets or sets the radius.
@@ -137,6 +142,23 @@ namespace FarseerPhysics
                 _radius = value;
                 Radius2 = _radius * _radius;
             }
+        }
+
+
+        /// <summary>
+        /// The density in kilograms per meter squared.
+        /// </summary>
+        /// <value>The density.</value>
+        public float Density
+        {
+            get;
+            set;
+        }
+
+        public MassData MassData
+        {
+            get;
+            set;
         }
 
         private float _radius;

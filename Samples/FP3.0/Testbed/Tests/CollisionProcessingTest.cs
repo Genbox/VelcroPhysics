@@ -32,15 +32,12 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Ground body
             {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsEdge(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
-
-                FixtureDef sd = new FixtureDef();
-                sd.Shape = shape;
+                Vertices edge = PolygonTools.CreateEdge(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
+                PolygonShape shape = new PolygonShape(edge, 0);
 
                 BodyDef bd = new BodyDef();
                 Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(sd);
+                ground.CreateFixture(shape);
             }
 
             const float xLo = -5.0f;
@@ -49,77 +46,66 @@ namespace FarseerPhysics.TestBed.Tests
             const float yHi = 35.0f;
 
             // Small triangle
-            Vector2[] vertices = new Vector2[3];
+            Vertices vertices = new Vertices(3);
             vertices[0] = new Vector2(-1.0f, 0.0f);
             vertices[1] = new Vector2(1.0f, 0.0f);
             vertices[2] = new Vector2(0.0f, 2.0f);
 
-            PolygonShape polygon = new PolygonShape();
-            polygon.Set(vertices, 3);
-
-            FixtureDef triangleShapeDef = new FixtureDef();
-            triangleShapeDef.Shape = polygon;
-            triangleShapeDef.Density = 1.0f;
+            PolygonShape polygon = new PolygonShape(vertices, 1);
 
             BodyDef triangleBodyDef = new BodyDef();
             triangleBodyDef.Type = BodyType.Dynamic;
             triangleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
             Body body1 = _world.CreateBody(triangleBodyDef);
-            body1.CreateFixture(triangleShapeDef);
+            body1.CreateFixture(polygon);
 
             // Large triangle (recycle definitions)
             vertices[0] *= 2.0f;
             vertices[1] *= 2.0f;
             vertices[2] *= 2.0f;
-            polygon.Set(vertices, 3);
+            polygon.Set(vertices);
 
             triangleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
             Body body2 = _world.CreateBody(triangleBodyDef);
-            body2.CreateFixture(triangleShapeDef);
+            body2.CreateFixture(polygon);
 
             // Small box
-            polygon.SetAsBox(1.0f, 0.5f);
-
-            FixtureDef boxShapeDef = new FixtureDef();
-            boxShapeDef.Shape = polygon;
-            boxShapeDef.Density = 1.0f;
+            Vertices smallBox = PolygonTools.CreateBox(1.0f, 0.5f);
+            polygon.Set(smallBox);
 
             BodyDef boxBodyDef = new BodyDef();
             boxBodyDef.Type = BodyType.Dynamic;
             boxBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
             Body body3 = _world.CreateBody(boxBodyDef);
-            body3.CreateFixture(boxShapeDef);
+            body3.CreateFixture(polygon);
 
             // Large box (recycle definitions)
-            polygon.SetAsBox(2.0f, 1.0f);
+            Vertices largeBox = PolygonTools.CreateBox(2.0f, 1.0f);
+            polygon.Set(largeBox);
             boxBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
             Body body4 = _world.CreateBody(boxBodyDef);
-            body4.CreateFixture(boxShapeDef);
+            body4.CreateFixture(polygon);
 
             // Small circle
-            CircleShape circle = new CircleShape(1.0f);
-
-            FixtureDef circleShapeDef = new FixtureDef();
-            circleShapeDef.Shape = circle;
-            circleShapeDef.Density = 1.0f;
+            CircleShape circle = new CircleShape(1.0f, 1);
 
             BodyDef circleBodyDef = new BodyDef();
             circleBodyDef.Type = BodyType.Dynamic;
             circleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
             Body body5 = _world.CreateBody(circleBodyDef);
-            body5.CreateFixture(circleShapeDef);
+            body5.CreateFixture(circle);
 
             // Large circle
             circle.Radius *= 2.0f;
             circleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
             Body body6 = _world.CreateBody(circleBodyDef);
-            body6.CreateFixture(circleShapeDef);
+            body6.CreateFixture(circle);
         }
 
         public override void Step(Framework.Settings settings)

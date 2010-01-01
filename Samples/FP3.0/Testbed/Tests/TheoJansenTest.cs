@@ -37,46 +37,35 @@ namespace FarseerPhysics.TestBed.Tests
             Vector2 p5 = new Vector2(6.0f * s, 1.5f);
             Vector2 p6 = new Vector2(2.5f * s, 3.7f);
 
-            FixtureDef fd1 = new FixtureDef();
-            FixtureDef fd2 = new FixtureDef();
+            PolygonShape poly1 = new PolygonShape(1);
+            PolygonShape poly2 = new PolygonShape(2);
 
-            fd1.Filter.groupIndex = -1;
-            fd2.Filter.groupIndex = -1;
-            fd1.Density = 1.0f;
-            fd2.Density = 1.0f;
-
-            PolygonShape poly1 = new PolygonShape();
-            PolygonShape poly2 = new PolygonShape();
-
-            Vector2[] vertices = new Vector2[3];
+            Vertices vertices = new Vertices(3);
 
             if (s > 0.0f)
             {
                 vertices[0] = p1;
                 vertices[1] = p2;
                 vertices[2] = p3;
-                poly1.Set(vertices, 3);
+                poly1.Set(vertices);
 
                 vertices[0] = Vector2.Zero;
                 vertices[1] = p5 - p4;
                 vertices[2] = p6 - p4;
-                poly2.Set(vertices, 3);
+                poly2.Set(vertices);
             }
             else
             {
                 vertices[0] = p1;
                 vertices[1] = p3;
                 vertices[2] = p2;
-                poly1.Set(vertices, 3);
+                poly1.Set(vertices);
 
                 vertices[0] = Vector2.Zero;
                 vertices[1] = p6 - p4;
                 vertices[2] = p5 - p4;
-                poly2.Set(vertices, 3);
+                poly2.Set(vertices);
             }
-
-            fd1.Shape = poly1;
-            fd2.Shape = poly2;
 
             BodyDef bd1 = new BodyDef();
             BodyDef bd2 = new BodyDef();
@@ -92,8 +81,11 @@ namespace FarseerPhysics.TestBed.Tests
             Body body1 = _world.CreateBody(bd1);
             Body body2 = _world.CreateBody(bd2);
 
-            body1.CreateFixture(fd1);
-            body2.CreateFixture(fd2);
+            Fixture f1 = body1.CreateFixture(poly1);
+            f1.GroupIndex = -1;
+
+            Fixture f2 = body2.CreateFixture(poly2);
+            f2.GroupIndex = -1;
 
             DistanceJointDef djd = new DistanceJointDef();
 
@@ -133,58 +125,52 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 Body ground = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
-                ground.CreateFixture(shape, 0.0f);
+                ground.CreateFixture(shape);
 
                 shape.SetAsEdge(new Vector2(-50.0f, 0.0f), new Vector2(-50.0f, 10.0f));
-                ground.CreateFixture(shape, 0.0f);
+                ground.CreateFixture(shape);
 
                 shape.SetAsEdge(new Vector2(50.0f, 0.0f), new Vector2(50.0f, 10.0f));
-                ground.CreateFixture(shape, 0.0f);
+                ground.CreateFixture(shape);
             }
 
             // Balls
             for (int i = 0; i < 40; ++i)
             {
-                CircleShape shape = new CircleShape(0.25f);
+                CircleShape shape = new CircleShape(0.25f, 1);
 
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(-40.0f + 2.0f * i, 0.5f);
 
                 Body body = _world.CreateBody(bd);
-                body.CreateFixture(shape, 1.0f);
+                body.CreateFixture(shape);
             }
 
             // Chassis
             {
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(1);
                 shape.SetAsBox(2.5f, 1.0f);
 
-                FixtureDef sd = new FixtureDef();
-                sd.Density = 1.0f;
-                sd.Shape = shape;
-                sd.Filter.groupIndex = -1;
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = pivot + _offset;
                 _chassis = _world.CreateBody(bd);
-                _chassis.CreateFixture(sd);
+                Fixture fixture = _chassis.CreateFixture(shape);
+                fixture.GroupIndex = -1;
             }
 
             {
-                CircleShape shape = new CircleShape(1.6f);
+                CircleShape shape = new CircleShape(1.6f, 1);
 
-                FixtureDef sd = new FixtureDef();
-                sd.Density = 1.0f;
-                sd.Shape = shape;
-                sd.Filter.groupIndex = -1;
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = pivot + _offset;
                 _wheel = _world.CreateBody(bd);
-                _wheel.CreateFixture(sd);
+                Fixture fixture = _wheel.CreateFixture(shape);
+                fixture.GroupIndex = -1;
             }
 
             {

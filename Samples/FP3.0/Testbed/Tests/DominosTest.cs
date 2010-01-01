@@ -31,32 +31,27 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body b1;
             {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                PolygonShape shape = new PolygonShape(edge, 0);
 
                 BodyDef bd = new BodyDef();
                 b1 = _world.CreateBody(bd);
-                b1.CreateFixture(shape, 0.0f);
+                b1.CreateFixture(shape);
             }
 
             {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(6.0f, 0.25f);
+                Vertices box = PolygonTools.CreateBox(6.0f, 0.25f);
+                PolygonShape shape = new PolygonShape(box, 0);
 
                 BodyDef bd = new BodyDef();
                 bd.Position = new Vector2(-1.5f, 10.0f);
                 Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(shape, 0.0f);
+                ground.CreateFixture(shape);
             }
 
             {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(0.1f, 1.0f);
-
-                FixtureDef fd = new FixtureDef();
-                fd.Shape = shape;
-                fd.Density = 20.0f;
-                fd.Friction = 0.1f;
+                Vertices box = PolygonTools.CreateBox(0.1f, 1.0f);
+                PolygonShape shape = new PolygonShape(box, 20);
 
                 for (int i = 0; i < 10; ++i)
                 {
@@ -64,35 +59,36 @@ namespace FarseerPhysics.TestBed.Tests
                     bd.Type = BodyType.Dynamic;
                     bd.Position = new Vector2(-6.0f + 1.0f * i, 11.25f);
                     Body body = _world.CreateBody(bd);
-                    body.CreateFixture(fd);
+                    Fixture fixture = body.CreateFixture(shape);
+                    fixture.SetFriction(0.1f);
                 }
             }
 
             {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(7.0f, 0.25f, Vector2.Zero, 0.3f);
+                Vertices box = PolygonTools.CreateBox(7.0f, 0.25f, Vector2.Zero, 0.3f);
+                PolygonShape shape = new PolygonShape(box, 0);
 
                 BodyDef bd = new BodyDef();
                 bd.Position = new Vector2(1.0f, 6.0f);
                 Body ground = _world.CreateBody(bd);
-                ground.CreateFixture(shape, 0.0f);
+                ground.CreateFixture(shape);
             }
 
             Body b2;
             {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(0.25f, 1.5f);
+                Vertices box = PolygonTools.CreateBox(0.25f, 1.5f);
+                PolygonShape shape = new PolygonShape(box, 0);
 
                 BodyDef bd = new BodyDef();
                 bd.Position = new Vector2(-7.0f, 4.0f);
                 b2 = _world.CreateBody(bd);
-                b2.CreateFixture(shape, 0.0f);
+                b2.CreateFixture(shape);
             }
 
             Body b3;
             {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(6.0f, 0.125f);
+                Vertices box = PolygonTools.CreateBox(6.0f, 0.125f);
+                PolygonShape shape = new PolygonShape(box, 10);
 
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
@@ -100,7 +96,7 @@ namespace FarseerPhysics.TestBed.Tests
                 bd.Angle = -0.15f;
 
                 b3 = _world.CreateBody(bd);
-                b3.CreateFixture(shape, 10.0f);
+                b3.CreateFixture(shape);
             }
 
             RevoluteJointDef jd = new RevoluteJointDef();
@@ -112,14 +108,14 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body b4;
             {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(0.25f, 0.25f);
+                Vertices box = PolygonTools.CreateBox(0.25f, 0.25f);
+                PolygonShape shape = new PolygonShape(box, 10);
 
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(-10.0f, 15.0f);
                 b4 = _world.CreateBody(bd);
-                b4.CreateFixture(shape, 10.0f);
+                b4.CreateFixture(shape);
             }
 
             anchor = new Vector2(-7.0f, 15.0f);
@@ -133,21 +129,24 @@ namespace FarseerPhysics.TestBed.Tests
                 bd.Position = new Vector2(6.5f, 3.0f);
                 b5 = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
-                FixtureDef fd = new FixtureDef();
+                Vertices vertices = PolygonTools.CreateBox(1.0f, 0.1f, new Vector2(0.0f, -0.9f), 0.0f);
+                PolygonShape shape = new PolygonShape(vertices, 10);
 
-                fd.Shape = shape;
-                fd.Density = 10.0f;
-                fd.Friction = 0.1f;
+                Fixture fix = b5.CreateFixture(shape);
+                fix.SetFriction(0.1f);
 
-                shape.SetAsBox(1.0f, 0.1f, new Vector2(0.0f, -0.9f), 0.0f);
-                b5.CreateFixture(fd);
+                vertices = PolygonTools.CreateBox(0.1f, 1.0f, new Vector2(-0.9f, 0.0f), 0.0f);
 
-                shape.SetAsBox(0.1f, 1.0f, new Vector2(-0.9f, 0.0f), 0.0f);
-                b5.CreateFixture(fd);
+                shape.Set(vertices);
+                fix = b5.CreateFixture(shape);
+                fix.SetFriction(0.1f);
 
-                shape.SetAsBox(0.1f, 1.0f, new Vector2(0.9f, 0.0f), 0.0f);
-                b5.CreateFixture(fd);
+                vertices = PolygonTools.CreateBox(0.1f, 1.0f, new Vector2(0.9f, 0.0f), 0.0f);
+
+                shape.Set(vertices);
+                fix = b5.CreateFixture(shape);
+                fix.SetFriction(0.1f);
+
             }
 
             anchor = new Vector2(6.0f, 2.0f);
@@ -156,14 +155,14 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body b6;
             {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(1.0f, 0.1f);
+                Vertices box = PolygonTools.CreateBox(1.0f, 0.1f);
+                PolygonShape shape = new PolygonShape(box, 30);
 
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(6.5f, 4.1f);
                 b6 = _world.CreateBody(bd);
-                b6.CreateFixture(shape, 30.0f);
+                b6.CreateFixture(shape);
             }
 
             anchor = new Vector2(7.5f, 4.0f);
@@ -172,15 +171,15 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body b7;
             {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(0.1f, 1.0f);
+                Vertices box = PolygonTools.CreateBox(0.1f, 1.0f);
+                PolygonShape shape = new PolygonShape(box, 10);
 
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(7.4f, 1.0f);
 
                 b7 = _world.CreateBody(bd);
-                b7.CreateFixture(shape, 10.0f);
+                b7.CreateFixture(shape);
             }
 
             DistanceJointDef djd = new DistanceJointDef();
@@ -195,7 +194,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 const float radius = 0.2f;
 
-                CircleShape shape = new CircleShape(radius);
+                CircleShape shape = new CircleShape(radius, 10);
 
                 for (int i = 0; i < 4; ++i)
                 {
@@ -203,7 +202,7 @@ namespace FarseerPhysics.TestBed.Tests
                     bd.Type = BodyType.Dynamic;
                     bd.Position = new Vector2(5.9f + 2.0f * radius * i, 2.4f);
                     Body body = _world.CreateBody(bd);
-                    body.CreateFixture(shape, 10.0f);
+                    body.CreateFixture(shape);
                 }
             }
         }

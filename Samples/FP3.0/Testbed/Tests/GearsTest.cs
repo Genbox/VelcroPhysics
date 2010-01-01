@@ -33,25 +33,27 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
-
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsEdge(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
-                ground.CreateFixture(shape, 0.0f);
+                
+                Vertices edge = PolygonTools.CreateEdge(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
+                PolygonShape shape = new PolygonShape(edge,0);
+                
+                ground.CreateFixture(shape);
             }
 
             {
-                CircleShape circle1 = new CircleShape(1.0f);
+                CircleShape circle1 = new CircleShape(1.0f,5);
 
-                CircleShape circle2 = new CircleShape(2.0f);
+                CircleShape circle2 = new CircleShape(2.0f,5);
 
-                PolygonShape box = new PolygonShape();
-                box.SetAsBox(0.5f, 5.0f);
+                Vertices box = PolygonTools.CreateBox(0.5f, 5.0f);
+
+                PolygonShape polygonBox = new PolygonShape(box,5);
 
                 BodyDef bd1 = new BodyDef();
                 bd1.Type = BodyType.Dynamic;
                 bd1.Position = new Vector2(-3.0f, 12.0f);
                 Body body1 = _world.CreateBody(bd1);
-                body1.CreateFixture(circle1, 5.0f);
+                body1.CreateFixture(circle1);
 
                 RevoluteJointDef jd1 = new RevoluteJointDef();
                 jd1.BodyA = ground;
@@ -65,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
                 bd2.Type = BodyType.Dynamic;
                 bd2.Position = new Vector2(0.0f, 12.0f);
                 Body body2 = _world.CreateBody(bd2);
-                body2.CreateFixture(circle2, 5.0f);
+                body2.CreateFixture(circle2);
 
                 RevoluteJointDef jd2 = new RevoluteJointDef();
                 jd2.Initialize(ground, body2, bd2.Position);
@@ -75,7 +77,7 @@ namespace FarseerPhysics.TestBed.Tests
                 bd3.Type = BodyType.Dynamic;
                 bd3.Position = new Vector2(2.5f, 12.0f);
                 Body body3 = _world.CreateBody(bd3);
-                body3.CreateFixture(box, 5.0f);
+                body3.CreateFixture(polygonBox);
 
                 PrismaticJointDef jd3 = new PrismaticJointDef();
                 jd3.Initialize(ground, body3, bd3.Position, new Vector2(0.0f, 1.0f));

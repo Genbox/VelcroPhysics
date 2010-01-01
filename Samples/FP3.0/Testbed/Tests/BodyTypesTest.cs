@@ -35,13 +35,10 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsEdge(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
+                Vertices edge = PolygonTools.CreateEdge(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
+                PolygonShape shape = new PolygonShape(edge, 0);
 
-                FixtureDef fd = new FixtureDef();
-                fd.Shape = shape;
-
-                ground.CreateFixture(fd);
+                ground.CreateFixture(shape);
             }
 
             // Define attachment
@@ -51,9 +48,9 @@ namespace FarseerPhysics.TestBed.Tests
                 bd.Position = new Vector2(0.0f, 3.0f);
                 _attachment = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(0.5f, 2.0f);
-                _attachment.CreateFixture(shape, 2.0f);
+                Vertices box = PolygonTools.CreateBox(0.5f, 2.0f);
+                PolygonShape shape = new PolygonShape(box, 2.0f);
+                _attachment.CreateFixture(shape);
             }
 
             // Define platform
@@ -63,14 +60,11 @@ namespace FarseerPhysics.TestBed.Tests
                 bd.Position = new Vector2(0.0f, 5.0f);
                 _platform = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(4.0f, 0.5f);
+                Vertices box = PolygonTools.CreateBox(4.0f, 0.5f);
+                PolygonShape shape = new PolygonShape(box, 2.0f);
 
-                FixtureDef fd = new FixtureDef();
-                fd.Shape = shape;
-                fd.Friction = 0.6f;
-                fd.Density = 2.0f;
-                _platform.CreateFixture(fd);
+                Fixture fixture = _platform.CreateFixture(shape);
+                fixture.SetFriction(0.6f);
 
                 RevoluteJointDef rjd = new RevoluteJointDef();
                 rjd.Initialize(_attachment, _platform, new Vector2(0.0f, 5.0f));
@@ -99,15 +93,11 @@ namespace FarseerPhysics.TestBed.Tests
                 bd.Position = new Vector2(0.0f, 8.0f);
                 Body body = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(0.75f, 0.75f);
+                Vertices box = PolygonTools.CreateBox(0.75f, 0.75f);
+                PolygonShape shape = new PolygonShape(box, 2.0f);
 
-                FixtureDef fd = new FixtureDef();
-                fd.Shape = shape;
-                fd.Friction = 0.6f;
-                fd.Density = 2.0f;
-
-                body.CreateFixture(fd);
+                Fixture fixture = body.CreateFixture(shape);
+                fixture.SetFriction(0.6f);
             }
         }
 

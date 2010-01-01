@@ -356,12 +356,7 @@ namespace FarseerPhysics.TestBed.Framework
             _bomb = _world.CreateBody(bd);
             _bomb.SetLinearVelocity(velocity);
 
-            CircleShape circle = new CircleShape(0.3f);
-
-            FixtureDef fd = new FixtureDef();
-            fd.Shape = circle;
-            fd.Density = 20.0f;
-            fd.Restitution = 0.1f;
+            CircleShape circle = new CircleShape(0.3f,20.0f);
 
             Vector2 minV = position - new Vector2(0.3f, 0.3f);
             Vector2 maxV = position + new Vector2(0.3f, 0.3f);
@@ -370,7 +365,8 @@ namespace FarseerPhysics.TestBed.Framework
             aabb.LowerBound = minV;
             aabb.UpperBound = maxV;
 
-            _bomb.CreateFixture(fd);
+            Fixture fixture = _bomb.CreateFixture(circle);
+            fixture.SetRestitution(0.1f);
         }
 
         public void SpawnBomb(Vector2 worldPt)

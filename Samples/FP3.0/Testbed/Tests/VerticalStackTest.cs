@@ -37,25 +37,20 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 Body ground = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape, 0.0f);
+                ground.CreateFixture(shape);
 
                 shape.SetAsEdge(new Vector2(20.0f, 0.0f), new Vector2(20.0f, 20.0f));
-                ground.CreateFixture(shape, 0.0f);
+                ground.CreateFixture(shape);
             }
 
-            float[] xs = new float[] {0.0f, -10.0f, -5.0f, 5.0f, 10.0f};
+            float[] xs = new float[] { 0.0f, -10.0f, -5.0f, 5.0f, 10.0f };
 
             for (int j = 0; j < ColumnCount; ++j)
             {
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(1);
                 shape.SetAsBox(0.5f, 0.5f);
-
-                FixtureDef fd = new FixtureDef();
-                fd.Shape = shape;
-                fd.Density = 1.0f;
-                fd.Friction = 0.3f;
 
                 for (int i = 0; i < RowCount; ++i)
                 {
@@ -65,10 +60,11 @@ namespace FarseerPhysics.TestBed.Tests
                     const float x = 0.0f;
                     //float x = Rand.RandomFloat-0.02f, 0.02f);
                     //float x = i % 2 == 0 ? -0.025f : 0.025f;
-                    bd.Position = new Vector2(xs[j] + x, 0.752f + 1.54f*i);
+                    bd.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
                     Body body = _world.CreateBody(bd);
 
-                    body.CreateFixture(fd);
+                    Fixture fixture = body.CreateFixture(shape);
+                    fixture.SetFriction(0.3f);
                 }
             }
 
@@ -86,12 +82,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
 
                 {
-                    CircleShape shape = new CircleShape(0.25f);
-
-                    FixtureDef fd = new FixtureDef();
-                    fd.Shape = shape;
-                    fd.Density = 20.0f;
-                    fd.Restitution = 0.05f;
+                    CircleShape shape = new CircleShape(0.25f, 20);
 
                     BodyDef bd = new BodyDef();
                     bd.Type = BodyType.Dynamic;
@@ -99,7 +90,8 @@ namespace FarseerPhysics.TestBed.Tests
                     bd.Position = new Vector2(-31.0f, 5.0f);
 
                     _bullet = _world.CreateBody(bd);
-                    _bullet.CreateFixture(fd);
+                    Fixture fixture = _bullet.CreateFixture(shape);
+                    fixture.SetRestitution(0.05f);
 
                     _bullet.SetLinearVelocity(new Vector2(400.0f, 0.0f));
                 }

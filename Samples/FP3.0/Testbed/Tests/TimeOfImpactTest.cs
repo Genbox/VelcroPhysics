@@ -84,36 +84,36 @@ namespace FarseerPhysics.TestBed.Tests
 
             Transform transformA;
             sweepA.GetTransform(out transformA, 0.0f);
-            for (int i = 0; i < _shapeA.VertexCount; ++i)
+            for (int i = 0; i < _shapeA.Vertices.Count; ++i)
             {
                 vertices[i] = MathUtils.Multiply(ref transformA, _shapeA.Vertices[i]);
             }
-            _debugView.DrawPolygon(ref vertices, _shapeA.VertexCount, new Color(0.9f, 0.9f, 0.9f));
+            _debugView.DrawPolygon(ref vertices, _shapeA.Vertices.Count, new Color(0.9f, 0.9f, 0.9f));
 
             Transform transformB;
             sweepB.GetTransform(out transformB, 0.0f);
-            for (int i = 0; i < _shapeB.VertexCount; ++i)
+            for (int i = 0; i < _shapeB.Vertices.Count; ++i)
             {
                 vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
             }
-            _debugView.DrawPolygon(ref vertices, _shapeB.VertexCount, new Color(0.5f, 0.9f, 0.5f));
+            _debugView.DrawPolygon(ref vertices, _shapeB.Vertices.Count, new Color(0.5f, 0.9f, 0.5f));
 
             sweepB.GetTransform(out transformB, toi);
-            for (int i = 0; i < _shapeB.VertexCount; ++i)
+            for (int i = 0; i < _shapeB.Vertices.Count; ++i)
             {
                 vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
             }
-            _debugView.DrawPolygon(ref vertices, _shapeB.VertexCount, new Color(0.5f, 0.7f, 0.9f));
+            _debugView.DrawPolygon(ref vertices, _shapeB.Vertices.Count, new Color(0.5f, 0.7f, 0.9f));
 
             sweepB.GetTransform(out transformB, 1.0f);
-            for (int i = 0; i < _shapeB.VertexCount; ++i)
+            for (int i = 0; i < _shapeB.Vertices.Count; ++i)
             {
                 vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
             }
-            _debugView.DrawPolygon(ref vertices, _shapeB.VertexCount, new Color(0.9f, 0.5f, 0.5f));
+            _debugView.DrawPolygon(ref vertices, _shapeB.Vertices.Count, new Color(0.9f, 0.5f, 0.5f));
         }
 
-        private PolygonShape _shapeA = new PolygonShape();
-        private PolygonShape _shapeB = new PolygonShape();
+        private PolygonShape _shapeA = new PolygonShape(0);
+        private PolygonShape _shapeB = new PolygonShape(0);
     }
 }
