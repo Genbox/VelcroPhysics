@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -132,8 +132,8 @@ namespace FarseerPhysics
             bB.GetTransform(out xfB);
 
             // Compute the effective mass matrix.
-            Vector2 rA = MathUtils.Multiply(ref xfA.R, _localAnchor1 - bA.GetLocalCenter());
-            Vector2 rB = MathUtils.Multiply(ref xfB.R, _localAnchor2 - bB.GetLocalCenter());
+            Vector2 rA = MathUtils.Multiply(ref xfA.R, _localAnchor1 - bA.LocalCenter);
+            Vector2 rB = MathUtils.Multiply(ref xfB.R, _localAnchor2 - bB.LocalCenter);
 
             // J = [-I -r1_skew I r2_skew]
             //     [ 0       -1 0       1]
@@ -209,8 +209,8 @@ namespace FarseerPhysics
             bA.GetTransform(out xfA);
             bB.GetTransform(out xfB);
 
-            Vector2 rA = MathUtils.Multiply(ref xfA.R, _localAnchor1 - bA.GetLocalCenter());
-            Vector2 rB = MathUtils.Multiply(ref xfB.R, _localAnchor2 - bB.GetLocalCenter());
+            Vector2 rA = MathUtils.Multiply(ref xfA.R, _localAnchor1 - bA.LocalCenter);
+            Vector2 rB = MathUtils.Multiply(ref xfB.R, _localAnchor2 - bB.LocalCenter);
 
             // Solve angular friction
             {

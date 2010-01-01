@@ -280,7 +280,7 @@ namespace FarseerPhysics.TestBed.Framework
                 (fixture) =>
                 {
                     Body body = fixture.GetBody();
-                    if (body.GetBodyType() == BodyType.Dynamic)
+                    if (body.BodyType == BodyType.Dynamic)
                     {
                         bool inside = fixture.TestPoint(p);
                         if (inside)
@@ -303,9 +303,9 @@ namespace FarseerPhysics.TestBed.Framework
                 md.BodyA = _groundBody;
                 md.BodyB = body;
                 md.Target = p;
-                md.MaxForce = 1000.0f * body.GetMass();
+                md.MaxForce = 1000.0f * body.Mass;
                 _mouseJoint = (MouseJoint)_world.CreateJoint(md);
-                body.SetAwake(true);
+                body.Awake = true;
             }
         }
 
@@ -354,7 +354,7 @@ namespace FarseerPhysics.TestBed.Framework
 
             bd.Bullet = true;
             _bomb = _world.CreateBody(bd);
-            _bomb.SetLinearVelocity(velocity);
+            _bomb.LinearVelocity = velocity;
 
             CircleShape circle = new CircleShape(0.3f,20.0f);
 

@@ -105,35 +105,35 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (state.IsKeyDown(Keys.D))
             {
-                _platform.SetBodyType(BodyType.Dynamic);
+                _platform.BodyType = BodyType.Dynamic;
             }
             if (state.IsKeyDown(Keys.S))
             {
-                _platform.SetBodyType(BodyType.Static);
+                _platform.BodyType = BodyType.Static;
             }
             if (state.IsKeyDown(Keys.K))
             {
-                _platform.SetBodyType(BodyType.Kinematic);
-                _platform.SetLinearVelocity(new Vector2(-_speed, 0.0f));
-                _platform.SetAngularVelocity(0.0f);
+                _platform.BodyType = BodyType.Kinematic;
+                _platform.LinearVelocity = new Vector2(-_speed, 0.0f);
+                _platform.AngularVelocity = 0.0f;
             }
         }
 
         public override void Step(Framework.Settings settings)
         {
             // Drive the kinematic body.
-            if (_platform.GetBodyType() == BodyType.Kinematic)
+            if (_platform.BodyType == BodyType.Kinematic)
             {
                 Transform tf;
                 _platform.GetTransform(out tf);
                 Vector2 p = tf.Position;
-                Vector2 v = _platform.GetLinearVelocity();
+                Vector2 v = _platform.LinearVelocity;
 
                 if ((p.X < -10.0f && v.X < 0.0f) ||
                     (p.X > 10.0f && v.X > 0.0f))
                 {
                     v.X = -v.X;
-                    _platform.SetLinearVelocity(v);
+                    _platform.LinearVelocity = v;
                 }
             }
 

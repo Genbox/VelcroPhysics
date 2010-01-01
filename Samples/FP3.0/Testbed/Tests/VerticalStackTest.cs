@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -93,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
                     Fixture fixture = _bullet.CreateFixture(shape);
                     fixture.SetRestitution(0.05f);
 
-                    _bullet.SetLinearVelocity(new Vector2(400.0f, 0.0f));
+                    _bullet.LinearVelocity = new Vector2(400.0f, 0.0f);
                 }
             }
         }

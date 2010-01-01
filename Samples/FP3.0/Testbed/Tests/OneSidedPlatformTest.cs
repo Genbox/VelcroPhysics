@@ -63,7 +63,7 @@ namespace FarseerPhysics.TestBed.Tests
                 CircleShape shape = new CircleShape(_radius, 1);
                 _character = body.CreateFixture(shape);
 
-                body.SetLinearVelocity(new Vector2(0.0f, -50.0f));
+                body.LinearVelocity = new Vector2(0.0f, -50.0f);
             }
         }
 
@@ -84,7 +84,7 @@ namespace FarseerPhysics.TestBed.Tests
                 return;
             }
 
-            Vector2 position = _character.GetBody().GetPosition();
+            Vector2 position = _character.GetBody().Position;
 
             if (position.Y < _top)
             {
