@@ -71,7 +71,7 @@ namespace FarseerPhysics
             new DefaultContactFilter(this);
         }
 
-        public Body CreateBody(BodyDef def)
+        public Body CreateBody()
         {
             Debug.Assert(!IsLocked);
             if (IsLocked)
@@ -79,7 +79,31 @@ namespace FarseerPhysics
                 return null;
             }
 
-            var b = new Body(def, this);
+
+            Body b = new Body(this);
+
+            // Add to world doubly linked list.
+            b._prev = null;
+            b._next = BodyList;
+            if (BodyList != null)
+            {
+                BodyList._prev = b;
+            }
+            BodyList = b;
+            ++BodyCount;
+
+            return b;
+        }
+
+        public Body CreateBody(Body body)
+        {
+            Debug.Assert(!IsLocked);
+            if (IsLocked)
+            {
+                return null;
+            }
+
+            Body b = new Body(body, this);
 
             // Add to world doubly linked list.
             b._prev = null;
