@@ -217,16 +217,16 @@ namespace FarseerPhysics
         /// Contacts are not created until the next time step.
         /// @warning This function is locked during callbacks.
         /// </summary>
-        /// <param name="def">the fixture definition.</param>
+        /// <param name="shape">The shape.</param>
         /// <returns></returns>
-        public Fixture CreateFixture(FixtureDef def)
+        public Fixture CreateFixture(Shape shape)
         {
             Debug.Assert(_world.IsLocked == false);
             if (_world.IsLocked)
                 return null;
 
             Fixture fixture = new Fixture();
-            fixture.Create(this, def);
+            fixture.Create(this, shape);
 
             if ((_flags & BodyFlags.Active) == BodyFlags.Active)
             {
@@ -238,11 +238,8 @@ namespace FarseerPhysics
             _fixtureList = fixture;
             ++_fixtureCount;
 
-            fixture.Body = this;
-
-
             // Adjust mass properties if needed.
-            if (fixture.Density > 0.0f)
+            if (fixture.Shape.Density > 0.0f)
             {
                 ResetMassData();
             }
@@ -252,25 +249,6 @@ namespace FarseerPhysics
             _world.Flags |= WorldFlags.NewFixture;
 
             return fixture;
-        }
-
-        /// <summary>
-        /// Creates a fixture from a shape and attach it to this body.
-        /// This is a convenience function. Use FixtureDef if you need to set parameters
-        /// like friction, restitution, user data, or filtering.
-        /// If the density is non-zero, this function automatically updates the mass of the body.
-        /// @warning This function is locked during callbacks.
-        /// </summary>
-        /// <param name="shape">the shape to be cloned.</param>
-        /// <param name="density">the shape density (set to zero for static bodies).</param>
-        /// <returns></returns>
-        public Fixture CreateFixture(Shape shape, float density)
-        {
-            FixtureDef def = new FixtureDef();
-            def.Shape = shape;
-            def.Density = density;
-
-            return CreateFixture(def);
         }
 
         /// <summary>
@@ -647,13 +625,13 @@ namespace FarseerPhysics
             Vector2 center = Vector2.Zero;
             for (Fixture f = _fixtureList; f != null; f = f.Next)
             {
-                if (f.Density == 0.0f)
+                if (f.Shape.Density == 0.0f)
                 {
                     continue;
                 }
 
-                MassData massData;
-                f.GetMassData(out massData);
+                MassData massData = f.Shape.MassData;
+                //f.GetMassData(out massData);
                 _mass += massData.Mass;
                 center += massData.Mass * massData.Center;
                 _I += massData.Inertia;

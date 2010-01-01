@@ -35,13 +35,13 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(0.0f);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape, 0.0f);
+                ground.CreateFixture(shape);
             }
 
             {
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(5.0f);
                 shape.SetAsBox(2.0f, 0.5f);
 
                 BodyDef bd = new BodyDef();
@@ -49,7 +49,7 @@ namespace FarseerPhysics.TestBed.Tests
                 bd.Position = new Vector2(-10.0f, 10.0f);
                 bd.Angle = 0.5f * Settings.Pi;
                 Body body = _world.CreateBody(bd);
-                body.CreateFixture(shape, 5.0f);
+                body.CreateFixture(shape);
 
                 PrismaticJointDef pjd = new PrismaticJointDef();
 

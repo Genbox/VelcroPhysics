@@ -36,13 +36,13 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape, 0.0f);
+                ground.CreateFixture(shape);
             }
 
             {
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(5);
                 shape.SetAsBox(0.5f, 0.5f);
 
                 BodyDef bd = new BodyDef();
@@ -50,19 +50,19 @@ namespace FarseerPhysics.TestBed.Tests
 
                 bd.Position = new Vector2(-5.0f, 5.0f);
                 _bodies[0] = _world.CreateBody(bd);
-                _bodies[0].CreateFixture(shape, 5.0f);
+                _bodies[0].CreateFixture(shape);
 
                 bd.Position = new Vector2(5.0f, 5.0f);
                 _bodies[1] = _world.CreateBody(bd);
-                _bodies[1].CreateFixture(shape, 5.0f);
+                _bodies[1].CreateFixture(shape);
 
                 bd.Position = new Vector2(5.0f, 15.0f);
                 _bodies[2] = _world.CreateBody(bd);
-                _bodies[2].CreateFixture(shape, 5.0f);
+                _bodies[2].CreateFixture(shape);
 
                 bd.Position = new Vector2(-5.0f, 15.0f);
                 _bodies[3] = _world.CreateBody(bd);
-                _bodies[3].CreateFixture(shape, 5.0f);
+                _bodies[3].CreateFixture(shape);
 
                 DistanceJointDef jd = new DistanceJointDef();
 
@@ -113,7 +113,7 @@ namespace FarseerPhysics.TestBed.Tests
                 jd.BodyB = _bodies[1];
                 jd.LocalAnchorA = new Vector2(0.5f, 0.0f);
                 jd.LocalAnchorB = new Vector2(-0.5f, 0.0f);
-                
+
                 p1 = jd.BodyA.GetWorldPoint(jd.LocalAnchorA);
                 p2 = jd.BodyB.GetWorldPoint(jd.LocalAnchorB);
                 d = p2 - p1;

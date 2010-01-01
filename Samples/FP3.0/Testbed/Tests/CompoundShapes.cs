@@ -34,17 +34,17 @@ namespace FarseerPhysics.TestBed.Tests
                 bd.Position = Vector2.Zero;
                 Body body = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsEdge(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
+                Vertices edge = PolygonTools.CreateEdge(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
+                PolygonShape shape = new PolygonShape(edge, 0);
 
-                body.CreateFixture(shape, 0.0f);
+                body.CreateFixture(shape);
             }
 
             {
-                CircleShape circle1 = new CircleShape(0.5f);
+                CircleShape circle1 = new CircleShape(0.5f, 2.0f);
                 circle1.Position = new Vector2(-0.5f, 0.5f);
 
-                CircleShape circle2 = new CircleShape(0.5f);
+                CircleShape circle2 = new CircleShape(0.5f, 0);
                 circle2.Position = new Vector2(0.5f, 0.5f);
 
                 for (int i = 0; i < 10; ++i)
@@ -55,17 +55,17 @@ namespace FarseerPhysics.TestBed.Tests
                     bd.Position = new Vector2(x + 5.0f, 1.05f + 2.5f * i);
                     bd.Angle = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
                     Body body = _world.CreateBody(bd);
-                    body.CreateFixture(circle1, 2.0f);
-                    body.CreateFixture(circle2, 0.0f);
+                    body.CreateFixture(circle1);
+                    body.CreateFixture(circle2);
                 }
             }
 
             {
-                PolygonShape polygon1 = new PolygonShape();
-                polygon1.SetAsBox(0.25f, 0.5f);
+                Vertices box = PolygonTools.CreateBox(0.25f, 0.5f);
+                PolygonShape polygon1 = new PolygonShape(box, 2.0f);
 
-                PolygonShape polygon2 = new PolygonShape();
-                polygon2.SetAsBox(0.25f, 0.5f, new Vector2(0.0f, -0.5f), 0.5f * Settings.Pi);
+                box = PolygonTools.CreateBox(0.25f, 0.5f, new Vector2(0.0f, -0.5f), 0.5f * Settings.Pi);
+                PolygonShape polygon2 = new PolygonShape(box, 2.0f);
 
                 for (int i = 0; i < 10; ++i)
                 {
@@ -75,8 +75,8 @@ namespace FarseerPhysics.TestBed.Tests
                     bd.Position = new Vector2(x - 5.0f, 1.05f + 2.5f * i);
                     bd.Angle = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
                     Body body = _world.CreateBody(bd);
-                    body.CreateFixture(polygon1, 2.0f);
-                    body.CreateFixture(polygon2, 2.0f);
+                    body.CreateFixture(polygon1);
+                    body.CreateFixture(polygon2);
                 }
             }
 
@@ -85,23 +85,23 @@ namespace FarseerPhysics.TestBed.Tests
                 xf1.R.Set(0.3524f * Settings.Pi);
                 xf1.Position = MathUtils.Multiply(ref xf1.R, new Vector2(1.0f, 0.0f));
 
-                Vector2[] vertices = new Vector2[3];
+                Vertices vertices = new Vertices(3);
 
-                PolygonShape triangle1 = new PolygonShape();
                 vertices[0] = MathUtils.Multiply(ref xf1, new Vector2(-1.0f, 0.0f));
                 vertices[1] = MathUtils.Multiply(ref xf1, new Vector2(1.0f, 0.0f));
                 vertices[2] = MathUtils.Multiply(ref xf1, new Vector2(0.0f, 0.5f));
-                triangle1.Set(vertices, 3);
+
+                PolygonShape triangle1 = new PolygonShape(vertices, 2);
 
                 Transform xf2 = new Transform();
                 xf2.R.Set(-0.3524f * Settings.Pi);
                 xf2.Position = MathUtils.Multiply(ref xf2.R, new Vector2(-1.0f, 0.0f));
 
-                PolygonShape triangle2 = new PolygonShape();
                 vertices[0] = MathUtils.Multiply(ref xf2, new Vector2(-1.0f, 0.0f));
                 vertices[1] = MathUtils.Multiply(ref xf2, new Vector2(1.0f, 0.0f));
                 vertices[2] = MathUtils.Multiply(ref xf2, new Vector2(0.0f, 0.5f));
-                triangle2.Set(vertices, 3);
+
+                PolygonShape triangle2 = new PolygonShape(vertices, 2);
 
                 for (int i = 0; i < 10; ++i)
                 {
@@ -111,28 +111,28 @@ namespace FarseerPhysics.TestBed.Tests
                     bd.Position = new Vector2(x, 2.05f + 2.5f * i);
                     bd.Angle = 0.0f;
                     Body body = _world.CreateBody(bd);
-                    body.CreateFixture(triangle1, 2.0f);
-                    body.CreateFixture(triangle2, 2.0f);
+                    body.CreateFixture(triangle1);
+                    body.CreateFixture(triangle2);
                 }
             }
 
             {
-                PolygonShape bottom = new PolygonShape();
-                bottom.SetAsBox(1.5f, 0.15f);
+                Vertices box = PolygonTools.CreateBox(1.5f, 0.15f);
+                PolygonShape bottom = new PolygonShape(box, 4);
 
-                PolygonShape left = new PolygonShape();
-                left.SetAsBox(0.15f, 2.7f, new Vector2(-1.45f, 2.35f), 0.2f);
+                box = PolygonTools.CreateBox(0.15f, 2.7f, new Vector2(-1.45f, 2.35f), 0.2f);
+                PolygonShape left = new PolygonShape(box, 4);
 
-                PolygonShape right = new PolygonShape();
-                right.SetAsBox(0.15f, 2.7f, new Vector2(1.45f, 2.35f), -0.2f);
+                box = PolygonTools.CreateBox(0.15f, 2.7f, new Vector2(1.45f, 2.35f), -0.2f);
+                PolygonShape right = new PolygonShape(box, 4);
 
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(0.0f, 2.0f);
                 Body body = _world.CreateBody(bd);
-                body.CreateFixture(bottom, 4.0f);
-                body.CreateFixture(left, 4.0f);
-                body.CreateFixture(right, 4.0f);
+                body.CreateFixture(bottom);
+                body.CreateFixture(left);
+                body.CreateFixture(right);
             }
         }
 

@@ -68,6 +68,8 @@ namespace FarseerPhysics.TestBed
             entry = TestEntries.g_testEntries[testIndex];
             test = entry.createFcn();
             test.Game = this;
+
+            //settings.drawAABBs = 1;
         }
 
         /// <summary>

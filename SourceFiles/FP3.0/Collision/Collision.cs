@@ -667,7 +667,7 @@ namespace FarseerPhysics
             int normalIndex = 0;
             float separation = -Settings.MaxFloat;
             float radius = polygon.Radius + circle.Radius;
-            int vertexCount = polygon.VertexCount;
+            int vertexCount = polygon.Vertices.Count;
 
             for (int i = 0; i < vertexCount; ++i)
             {
@@ -834,7 +834,7 @@ namespace FarseerPhysics
             FixedArray2<ClipVertex> incidentEdge;
             FindIncidentEdge(out incidentEdge, poly1, ref xf1, edge1, poly2, ref xf2);
 
-            int count1 = poly1.VertexCount;
+            int count1 = poly1.Vertices.Count;
 
             Vector2 v11 = poly1.Vertices[edge1];
             Vector2 v12 = edge1 + 1 < count1 ? poly1.Vertices[edge1 + 1] : poly1.Vertices[0];
@@ -962,8 +962,8 @@ namespace FarseerPhysics
         static float EdgeSeparation(PolygonShape poly1, ref Transform xf1, int edge1,
                                     PolygonShape poly2, ref Transform xf2)
         {
-            int count1 = poly1.VertexCount;
-            int count2 = poly2.VertexCount;
+            int count1 = poly1.Vertices.Count;
+            int count2 = poly2.Vertices.Count;
 
             Debug.Assert(0 <= edge1 && edge1 < count1);
 
@@ -1029,10 +1029,10 @@ namespace FarseerPhysics
                                         PolygonShape poly1, ref Transform xf1,
                                         PolygonShape poly2, ref Transform xf2)
         {
-            int count1 = poly1.VertexCount;
+            int count1 = poly1.Vertices.Count;
 
             // Vector pointing from the centroid of poly1 to the centroid of poly2.
-            Vector2 d = MathUtils.Multiply(ref xf2, poly2.Centroid) - MathUtils.Multiply(ref xf1, poly1.Centroid);
+            Vector2 d = MathUtils.Multiply(ref xf2, poly2.MassData.Center) - MathUtils.Multiply(ref xf1, poly1.MassData.Center);
             Vector2 dLocal1 = MathUtils.MultiplyT(ref xf1.R, d);
 
             // Find edge normal on poly1 that has the largest projection onto d.
@@ -1112,8 +1112,8 @@ namespace FarseerPhysics
         {
             c = new FixedArray2<ClipVertex>();
 
-            int count1 = poly1.VertexCount;
-            int count2 = poly2.VertexCount;
+            int count1 = poly1.Vertices.Count;
+            int count2 = poly2.Vertices.Count;
 
             Debug.Assert(0 <= edge1 && edge1 < count1);
 

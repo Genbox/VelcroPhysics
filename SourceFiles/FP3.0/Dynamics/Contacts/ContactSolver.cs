@@ -56,8 +56,8 @@ namespace FarseerPhysics
 
                 Fixture fixtureA = contact.FixtureA;
                 Fixture fixtureB = contact.FixtureB;
-                Shape shapeA = fixtureA.GetShape();
-                Shape shapeB = fixtureB.GetShape();
+                Shape shapeA = fixtureA.Shape;
+                Shape shapeB = fixtureB.Shape;
                 float radiusA = shapeA.Radius;
                 float radiusB = shapeB.Radius;
                 Body bodyA = fixtureA.GetBody();

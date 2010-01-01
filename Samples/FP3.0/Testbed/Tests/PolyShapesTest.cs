@@ -49,7 +49,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape)fixture.GetShape();
+                        CircleShape circle = (CircleShape)fixture.Shape;
 
                         Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
                         float radius = circle.Radius;
@@ -60,8 +60,8 @@ namespace FarseerPhysics.TestBed.Tests
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape poly = (PolygonShape)fixture.GetShape();
-                        int vertexCount = poly.VertexCount;
+                        PolygonShape poly = (PolygonShape)fixture.Shape;
+                        int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         FixedArray8<Vector2> vertices = new FixedArray8<Vector2>();
 
@@ -86,7 +86,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             Body body = fixture.GetBody();
-            Shape shape = fixture.GetShape();
+            Shape shape = fixture.Shape;
 
             Transform xf;
             body.GetTransform(out xf);
@@ -102,7 +102,7 @@ namespace FarseerPhysics.TestBed.Tests
             return true;
         }
 
-        internal CircleShape _circle = new CircleShape();
+        internal CircleShape _circle = new CircleShape(0, 0);
         internal Transform _transform;
         internal DebugViewXNA.DebugViewXNA _debugDraw;
         private int _count;
@@ -114,35 +114,30 @@ namespace FarseerPhysics.TestBed.Tests
 
         private PolyShapesTest()
         {
-            for (int i = 0; i < 4; i++)
-            {
-                _polygons[i] = new PolygonShape();
-            }
-
             // Ground body
             {
                 BodyDef bd = new BodyDef();
                 Body ground = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape, 0.0f);
+                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                PolygonShape shape = new PolygonShape(edge, 0);
+                ground.CreateFixture(shape);
             }
 
             {
-                Vector2[] vertices = new Vector2[3];
+                Vertices vertices = new Vertices(3);
                 vertices[0] = new Vector2(-0.5f, 0.0f);
                 vertices[1] = new Vector2(0.5f, 0.0f);
                 vertices[2] = new Vector2(0.0f, 1.5f);
-                _polygons[0].Set(vertices, 3);
+                _polygons[0] = new PolygonShape(vertices, 0);
             }
 
             {
-                Vector2[] vertices3 = new Vector2[3];
+                Vertices vertices3 = new Vertices(3);
                 vertices3[0] = new Vector2(-0.1f, 0.0f);
                 vertices3[1] = new Vector2(0.1f, 0.0f);
                 vertices3[2] = new Vector2(0.0f, 1.5f);
-                _polygons[1].Set(vertices3, 3);
+                _polygons[1] = new PolygonShape(vertices3, 0);
             }
 
             {
@@ -150,7 +145,7 @@ namespace FarseerPhysics.TestBed.Tests
                 float b = w / (2.0f + (float)Math.Sqrt(2.0));
                 float s = (float)Math.Sqrt(2.0) * b;
 
-                Vector2[] vertices8 = new Vector2[8];
+                Vertices vertices8 = new Vertices(8);
                 vertices8[0] = new Vector2(0.5f * s, 0.0f);
                 vertices8[1] = new Vector2(0.5f * w, b);
                 vertices8[2] = new Vector2(0.5f * w, b + s);
@@ -160,11 +155,12 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices8[6] = new Vector2(-0.5f * w, b);
                 vertices8[7] = new Vector2(-0.5f * s, 0.0f);
 
-                _polygons[2].Set(vertices8, 8);
+                _polygons[2] = new PolygonShape(vertices8, 0);
             }
 
             {
-                _polygons[3].SetAsBox(0.5f, 0.5f);
+                Vertices box = PolygonTools.CreateBox(0.5f, 0.5f);
+                _polygons[3] = new PolygonShape(box, 0);
             }
 
             {
@@ -198,20 +194,13 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (index < 4)
             {
-                FixtureDef fd = new FixtureDef();
-                fd.Shape = _polygons[index];
-                fd.Density = 1.0f;
-                fd.Friction = 0.3f;
-                _bodies[_bodyIndex].CreateFixture(fd);
+                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_polygons[index]);
+                fixture.SetFriction(0.3f);
             }
             else
             {
-                FixtureDef fd = new FixtureDef();
-                fd.Shape = _circle;
-                fd.Density = 1.0f;
-                fd.Friction = 0.3f;
-
-                _bodies[_bodyIndex].CreateFixture(fd);
+                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_circle);
+                fixture.SetFriction(0.3f);
             }
 
             _bodyIndex = (_bodyIndex + 1) % MaxBodies;
@@ -303,6 +292,6 @@ namespace FarseerPhysics.TestBed.Tests
         private int _bodyIndex;
         private Body[] _bodies = new Body[MaxBodies];
         private PolygonShape[] _polygons = new PolygonShape[4];
-        private CircleShape _circle = new CircleShape();
+        private CircleShape _circle = new CircleShape(0, 0);
     }
 }

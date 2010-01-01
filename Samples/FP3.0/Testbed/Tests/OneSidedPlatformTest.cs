@@ -34,9 +34,9 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 Body ground = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(0.0f);
                 shape.SetAsEdge(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
-                ground.CreateFixture(shape, 0.0f);
+                ground.CreateFixture(shape);
             }
 
             // Platform
@@ -45,9 +45,9 @@ namespace FarseerPhysics.TestBed.Tests
                 bd.Position = new Vector2(0.0f, 10.0f);
                 Body body = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(0.0f);
                 shape.SetAsBox(3.0f, 0.5f);
-                _platform = body.CreateFixture(shape, 0.0f);
+                _platform = body.CreateFixture(shape);
 
                 _top = 10.0f + 0.5f;
             }
@@ -60,8 +60,8 @@ namespace FarseerPhysics.TestBed.Tests
                 Body body = _world.CreateBody(bd);
 
                 _radius = 0.5f;
-                CircleShape shape = new CircleShape(_radius);
-                _character = body.CreateFixture(shape, 1.0f);
+                CircleShape shape = new CircleShape(_radius, 1);
+                _character = body.CreateFixture(shape);
 
                 body.SetLinearVelocity(new Vector2(0.0f, -50.0f));
             }
@@ -90,13 +90,6 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 contact.SetEnabled(false);
             }
-        }
-
-        public override void Step(Framework.Settings settings)
-        {
-            base.Step(settings);
-            _debugView.DrawString(5, _textLine, "Press: (c) create a shape, (d) destroy a shape.");
-            _textLine += 15;
         }
 
         internal static Test Create()

@@ -63,17 +63,17 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Color color = new Color(0.9f, 0.9f, 0.9f);
                 FixedArray8<Vector2> v = new FixedArray8<Vector2>();
-                for (int i = 0; i < _polygonA.VertexCount; ++i)
+                for (int i = 0; i < _polygonA.Vertices.Count; ++i)
                 {
                     v[i] = MathUtils.Multiply(ref _transformA, _polygonA.Vertices[i]);
                 }
-                _debugView.DrawPolygon(ref v, _polygonA.VertexCount, color);
+                _debugView.DrawPolygon(ref v, _polygonA.Vertices.Count, color);
 
-                for (int i = 0; i < _polygonB.VertexCount; ++i)
+                for (int i = 0; i < _polygonB.Vertices.Count; ++i)
                 {
                     v[i] = MathUtils.Multiply(ref _transformB, _polygonB.Vertices[i]);
                 }
-                _debugView.DrawPolygon(ref v, _polygonB.VertexCount, color);
+                _debugView.DrawPolygon(ref v, _polygonB.Vertices.Count, color);
             }
 
             for (int i = 0; i < manifold._pointCount; ++i)
@@ -112,8 +112,8 @@ namespace FarseerPhysics.TestBed.Tests
             _transformB.Set(_positionB, _angleB);
         }
 
-        private PolygonShape _polygonA = new PolygonShape();
-        private PolygonShape _polygonB = new PolygonShape();
+        private PolygonShape _polygonA = new PolygonShape(0.0f);
+        private PolygonShape _polygonB = new PolygonShape(0.0f);
 
         private Transform _transformA;
         private Transform _transformB;

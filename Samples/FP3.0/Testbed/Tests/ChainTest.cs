@@ -34,19 +34,14 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape, 0.0f);
+                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                PolygonShape shape = new PolygonShape(edge, 0);
+                ground.CreateFixture(shape);
             }
 
             {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(0.6f, 0.125f);
-
-                FixtureDef fd = new FixtureDef();
-                fd.Shape = shape;
-                fd.Density = 20.0f;
-                fd.Friction = 0.2f;
+                Vertices box = PolygonTools.CreateBox(0.6f, 0.125f);
+                PolygonShape shape = new PolygonShape(box, 20);
 
                 RevoluteJointDef jd = new RevoluteJointDef();
                 jd.CollideConnected = false;
@@ -59,8 +54,8 @@ namespace FarseerPhysics.TestBed.Tests
                     bd.Type = BodyType.Dynamic;
                     bd.Position = new Vector2(0.5f + i, y);
                     Body body = _world.CreateBody(bd);
-                    body.CreateFixture(fd);
-
+                    Fixture fixture = body.CreateFixture(shape);
+                    fixture.SetFriction(0.2f);
                     Vector2 anchor = new Vector2(i, y);
                     jd.Initialize(prevBody, body, anchor);
                     _world.CreateJoint(jd);

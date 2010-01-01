@@ -34,9 +34,9 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 ground = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(0.0f);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape, 0.0f);
+                ground.CreateFixture(shape);
             }
 
             {
@@ -45,7 +45,7 @@ namespace FarseerPhysics.TestBed.Tests
                 const float y = 16.0f;
                 const float L = 12.0f;
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(5);
                 shape.SetAsBox(a, b);
 
                 BodyDef bd = new BodyDef();
@@ -53,11 +53,11 @@ namespace FarseerPhysics.TestBed.Tests
 
                 bd.Position = new Vector2(-10.0f, y);
                 Body body1 = _world.CreateBody(bd);
-                body1.CreateFixture(shape, 5.0f);
+                body1.CreateFixture(shape);
 
                 bd.Position = new Vector2(10.0f, y);
                 Body body2 = _world.CreateBody(bd);
-                body2.CreateFixture(shape, 5.0f);
+                body2.CreateFixture(shape);
 
                 PulleyJointDef pulleyDef = new PulleyJointDef();
                 Vector2 anchor1 = new Vector2(-10.0f, y + b);

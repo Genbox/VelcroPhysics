@@ -44,6 +44,7 @@ namespace FarseerPhysics
                 case ShapeType.Circle:
                     {
                         CircleShape circle = (CircleShape)shape;
+                        _vertices = new Vertices(1);
                         _vertices[0] = circle.Position;
                         _count = 1;
                         Radius = circle.Radius;
@@ -54,7 +55,7 @@ namespace FarseerPhysics
                     {
                         PolygonShape polygon = (PolygonShape)shape;
                         _vertices = polygon.Vertices;
-                        _count = polygon.VertexCount;
+                        _count = polygon.Vertices.Count;
                         Radius = polygon.Radius;
                     }
                     break;
@@ -121,7 +122,7 @@ namespace FarseerPhysics
             return _vertices[index];
         }
 
-        private FixedArray8<Vector2> _vertices;
+        private Vertices _vertices;
         private int _count;
         internal float Radius;
     }

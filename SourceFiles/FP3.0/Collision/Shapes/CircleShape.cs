@@ -30,24 +30,21 @@ namespace FarseerPhysics
     /// </summary>
     public class CircleShape : Shape
     {
-        public CircleShape()
-        {
-            ShapeType = ShapeType.Circle;
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CircleShape"/> class.
         /// </summary>
         /// <param name="radius">The radius.</param>
-        public CircleShape(float radius)
-            : base(radius)
+        /// <param name="density">The density.</param>
+        public CircleShape(float radius, float density)
+            : base(radius, density)
         {
             ShapeType = ShapeType.Circle;
+            ComputeMass();
         }
 
         public override Shape Clone()
         {
-            CircleShape shape = new CircleShape(Radius);
+            CircleShape shape = new CircleShape(Radius, Density);
             shape.ShapeType = ShapeType;
             shape.Position = Position;
 
@@ -106,17 +103,26 @@ namespace FarseerPhysics
         public override void ComputeAABB(out AABB aabb, ref Transform transform)
         {
             Vector2 p = transform.Position + MathUtils.Multiply(ref transform.R, Position);
-            aabb.LowerBound = new Vector2(p.X - Radius, p.Y - Radius);
-            aabb.UpperBound = new Vector2(p.X + Radius, p.Y + Radius);
+
+            //aabb.LowerBound = new Vector2(p.X - Radius, p.Y - Radius);
+            aabb.LowerBound.X = p.X - Radius;
+            aabb.LowerBound.Y = p.Y - Radius;
+
+            //aabb.UpperBound = new Vector2(p.X + Radius, p.Y + Radius);
+            aabb.UpperBound.X = p.X + Radius;
+            aabb.UpperBound.Y = p.Y + Radius;
         }
 
-        public override void ComputeMass(out MassData massData, float density)
+        protected override sealed void ComputeMass()
         {
-            massData.Mass = density * Settings.Pi * Radius2;
-            massData.Center = Position;
+            MassData data = new MassData();
+            data.Mass = Density * Settings.Pi * Radius2;
+            data.Center = Position;
 
             // inertia about the local origin
-            massData.Inertia = massData.Mass * (0.5f * Radius2 + Vector2.Dot(Position, Position));
+            data.Inertia = data.Mass * (0.5f * Radius2 + Vector2.Dot(Position, Position));
+
+            MassData = data;
         }
 
         /// <summary>

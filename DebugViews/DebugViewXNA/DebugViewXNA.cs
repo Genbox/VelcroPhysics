@@ -165,7 +165,7 @@ namespace FarseerPhysics.DebugViewXNA
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape)fixture.GetShape();
+                        CircleShape circle = (CircleShape)fixture.Shape;
 
                         Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
                         float radius = circle.Radius;
@@ -177,8 +177,8 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape poly = (PolygonShape)fixture.GetShape();
-                        int vertexCount = poly.VertexCount;
+                        PolygonShape poly = (PolygonShape)fixture.Shape;
+                        int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         FixedArray8<Vector2> vertices = new FixedArray8<Vector2>();
 

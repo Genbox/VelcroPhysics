@@ -43,8 +43,8 @@ namespace FarseerPhysics
             b2.GetTransform(out xf2);
 
 	        Collision.CollidePolygons(ref Manifold,
-                        (PolygonShape)FixtureA.GetShape(), ref xf1,
-                        (PolygonShape)FixtureB.GetShape(), ref xf2);
+                        (PolygonShape)FixtureA.Shape, ref xf1,
+                        (PolygonShape)FixtureB.Shape, ref xf2);
         }
     }
 }

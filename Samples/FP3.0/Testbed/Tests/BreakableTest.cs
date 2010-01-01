@@ -35,9 +35,9 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 Body ground = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape, 0.0f);
+                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                PolygonShape shape = new PolygonShape(edge, 0);
+                ground.CreateFixture(shape);
             }
 
             // Breakable dynamic body
@@ -48,13 +48,15 @@ namespace FarseerPhysics.TestBed.Tests
                 bd.Angle = 0.25f * Settings.Pi;
                 _body1 = _world.CreateBody(bd);
 
-                _shape1 = new PolygonShape();
-                _shape1.SetAsBox(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
-                _piece1 = _body1.CreateFixture(_shape1, 1.0f);
+                Vertices box = PolygonTools.CreateBox(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
 
-                _shape2 = new PolygonShape();
-                _shape2.SetAsBox(0.5f, 0.5f, new Vector2(0.5f, 0.0f), 0.0f);
-                _piece2 = _body1.CreateFixture(_shape2, 1.0f);
+                _shape1 = new PolygonShape(box, 1.0f);
+                _piece1 = _body1.CreateFixture(_shape1);
+
+                box = PolygonTools.CreateBox(0.5f, 0.5f, new Vector2(0.5f, 0.0f), 0.0f);
+                _shape2 = new PolygonShape(box, 1.0f);
+
+                _piece2 = _body1.CreateFixture(_shape2);
             }
 
             _break = false;
@@ -102,7 +104,7 @@ namespace FarseerPhysics.TestBed.Tests
             bd.Angle = body1.GetAngle();
 
             Body body2 = _world.CreateBody(bd);
-            _piece2 = body2.CreateFixture(_shape2, 1.0f);
+            _piece2 = body2.CreateFixture(_shape2);
 
             // Compute consistent velocities for new bodies based on
             // cached velocity.

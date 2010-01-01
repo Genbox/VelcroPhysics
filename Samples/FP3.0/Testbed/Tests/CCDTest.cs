@@ -34,27 +34,20 @@ namespace FarseerPhysics.TestBed.Tests
                 bd.Position = new Vector2(0.0f, -0.2f);
 
                 Body body = _world.CreateBody(bd);
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(10.0f, 0.2f);
 
-                FixtureDef fd = new FixtureDef();
-                fd.Shape = shape;
-                fd.Density = 0.0f;
+                Vertices box = PolygonTools.CreateBox(10, 0.2f);
+                PolygonShape shape = new PolygonShape(box, 0);
 
-                body.CreateFixture(fd);
+                body.CreateFixture(shape);
 
-                shape.SetAsBox(0.2f, 1.0f, new Vector2(0.5f, 1.2f), 0.0f);
-                body.CreateFixture(fd);
+                box = PolygonTools.CreateBox(0.2f, 1.0f, new Vector2(0.5f, 1.2f), 0.0f);
+                shape.Set(box);
+                body.CreateFixture(shape);
             }
 
             {
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(2.0f, 0.1f);
-
-                FixtureDef fd = new FixtureDef();
-                fd.Shape = shape;
-                fd.Density = 1.0f;
-                fd.Restitution = 0.0f;
+                Vertices box = PolygonTools.CreateBox(2, 0.1f);
+                PolygonShape shape = new PolygonShape(box, 1);
 
                 _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
                 _angularVelocity = -30.669577f;
@@ -63,7 +56,8 @@ namespace FarseerPhysics.TestBed.Tests
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(0.0f, 20.0f);
                 Body body = _world.CreateBody(bd);
-                body.CreateFixture(fd);
+                Fixture fixture = body.CreateFixture(shape);
+                fixture.SetRestitution(0.0f);
                 body.SetLinearVelocity(new Vector2(0.0f, -100.0f));
                 body.SetAngularVelocity(_angularVelocity);
             }

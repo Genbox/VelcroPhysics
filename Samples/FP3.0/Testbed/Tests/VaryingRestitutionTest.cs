@@ -33,30 +33,26 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 Body ground = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape, 0.0f);
+                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                PolygonShape shape = new PolygonShape(edge, 0);
+                ground.CreateFixture(shape);
             }
 
             {
-                CircleShape shape = new CircleShape(1.0f);
+                CircleShape shape = new CircleShape(1.0f, 1);
 
-                FixtureDef fd = new FixtureDef();
-                fd.Shape = shape;
-                fd.Density = 1.0f;
-
-                float[] restitution = new float[] {0.0f, 0.1f, 0.3f, 0.5f, 0.75f, 0.9f, 1.0f};
+                float[] restitution = new float[] { 0.0f, 0.1f, 0.3f, 0.5f, 0.75f, 0.9f, 1.0f };
 
                 for (int i = 0; i < 7; ++i)
                 {
                     BodyDef bd = new BodyDef();
                     bd.Type = BodyType.Dynamic;
-                    bd.Position = new Vector2(-10.0f + 3.0f*i, 20.0f);
+                    bd.Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
 
                     Body body = _world.CreateBody(bd);
 
-                    fd.Restitution = restitution[i];
-                    body.CreateFixture(fd);
+                    Fixture fixture = body.CreateFixture(shape);
+                    fixture.SetRestitution(restitution[i]);
                 }
             }
         }

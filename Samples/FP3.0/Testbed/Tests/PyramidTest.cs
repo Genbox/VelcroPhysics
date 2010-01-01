@@ -20,6 +20,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System.Diagnostics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -35,15 +36,16 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyDef bd = new BodyDef();
                 Body ground = _world.CreateBody(bd);
 
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape, 0.0f);
+                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                PolygonShape shape = new PolygonShape(edge, 0);
+                ground.CreateFixture(shape);
             }
 
+            sw.Start();
+
             {
-                const float a = 0.5f;
-                PolygonShape shape = new PolygonShape();
-                shape.SetAsBox(a, a);
+                Vertices box = PolygonTools.CreateBox(0.5f, 0.5f);
+                PolygonShape shape = new PolygonShape(box, 5);
 
                 Vector2 x = new Vector2(-7.0f, 0.75f);
                 Vector2 deltaX = new Vector2(0.5625f, 1.25f);
@@ -59,7 +61,7 @@ namespace FarseerPhysics.TestBed.Tests
                         bd.Type = BodyType.Dynamic;
                         bd.Position = y;
                         Body body = _world.CreateBody(bd);
-                        body.CreateFixture(shape, 5.0f);
+                        body.CreateFixture(shape);
 
                         y += deltaY;
                     }
@@ -67,7 +69,12 @@ namespace FarseerPhysics.TestBed.Tests
                     x += deltaX;
                 }
             }
+
+            sw.Stop();
+            Debug.WriteLine(sw.ElapsedMilliseconds.ToString());
         }
+
+        Stopwatch sw = new Stopwatch();
 
         //void Step(Framework.Settings settings)
         //{
