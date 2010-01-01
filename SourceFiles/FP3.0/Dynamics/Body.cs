@@ -45,114 +45,6 @@ namespace FarseerPhysics
         Dynamic,
     }
 
-    /// <summary>
-    /// A body definition holds all the data needed to construct a rigid body.
-    /// You can safely re-use body definitions. Shapes are added to a body after construction.
-    /// </summary>
-    public class BodyDef
-    {
-        /// <summary>
-        /// Does this body start out active?
-        /// </summary>
-        public bool Active;
-
-        /// <summary>
-        /// Set this flag to false if this body should never fall asleep. Note that
-        /// this increases CPU usage.
-        /// </summary>
-        public bool AllowSleep;
-
-        /// <summary>
-        /// The world angle of the body in radians.
-        /// </summary>
-        public float Angle;
-
-        /// <summary>
-        /// Angular damping is use to reduce the angular velocity. The damping parameter
-        /// can be larger than 1.0f but the damping effect becomes sensitive to the
-        /// time step when the damping parameter is large.
-        /// </summary>
-        public float AngularDamping;
-
-        /// <summary>
-        /// The angular velocity of the body.
-        /// </summary>
-        public float AngularVelocity;
-
-        /// <summary>
-        /// Is this body awake or sleeping?
-        /// </summary>
-        public bool Awake;
-
-        /// <summary>
-        /// Is this a fast moving body that should be prevented from tunneling through
-        /// other moving bodies? Note that all bodies are prevented from tunneling through
-        /// static bodies.
-        /// @warning You should use this flag sparingly since it increases processing time.
-        /// </summary>
-        public bool Bullet;
-
-        /// <summary>
-        /// Should this body be prevented from rotating? Useful for characters.
-        /// </summary>
-        public bool FixedRotation;
-
-        /// <summary>
-        /// Experimental: scales the inertia tensor.
-        /// </summary>
-        public float InertiaScale;
-
-        /// <summary>
-        /// Linear damping is use to reduce the linear velocity. The damping parameter
-        /// can be larger than 1.0f but the damping effect becomes sensitive to the
-        /// time step when the damping parameter is large.
-        /// </summary>
-        public float LinearDamping;
-
-        /// <summary>
-        /// The linear velocity of the body's origin in world co-ordinates.
-        /// </summary>
-        public Vector2 LinearVelocity;
-
-        /// <summary>
-        /// The world position of the body. Avoid creating bodies at the origin
-        /// since this can lead to many overlapping shapes.
-        /// </summary>
-        public Vector2 Position;
-
-        /// <summary>
-        /// The body type: static, kinematic, or dynamic.
-        /// Note: if a dynamic body would have zero mass, the mass is set to one.
-        /// </summary>
-        public BodyType Type;
-
-        /// <summary>
-        /// Use this to store application specific body data.
-        /// </summary>
-        public object UserData;
-
-        /// <summary>
-        /// This constructor sets the body definition default values.
-        /// </summary>
-        public BodyDef()
-        {
-            UserData = null;
-            Position = Vector2.Zero;
-            Angle = 0.0f;
-            LinearVelocity = Vector2.Zero;
-            AngularVelocity = 0.0f;
-            LinearDamping = 0.0f;
-            AngularDamping = 0.0f;
-            AllowSleep = true;
-            Awake = true;
-            FixedRotation = false;
-            Bullet = false;
-            Type = BodyType.Static;
-            Active = true;
-            InertiaScale = 1.0f;
-        }
-    }
-
     [Flags]
     public enum BodyFlags
     {
@@ -176,7 +68,6 @@ namespace FarseerPhysics
         internal Fixture _fixtureList;
         internal BodyFlags _flags;
         internal Vector2 _force;
-        private float _intertiaScale;
         internal float _invI;
         internal float _invMass;
         internal JointEdge _jointList;
@@ -191,63 +82,68 @@ namespace FarseerPhysics
         private World _world;
         internal Transform _xf;		// the body origin transform
 
-        internal Body(BodyDef bd, World world)
+        public Body(World world)
         {
-            Debug.Assert(bd.Position.IsValid());
-            Debug.Assert(bd.LinearVelocity.IsValid());
-            Debug.Assert(MathUtils.IsValid(bd.Angle));
-            Debug.Assert(MathUtils.IsValid(bd.AngularVelocity));
-            Debug.Assert(MathUtils.IsValid(bd.InertiaScale) && bd.InertiaScale >= 0.0f);
-            Debug.Assert(MathUtils.IsValid(bd.AngularDamping) && bd.AngularDamping >= 0.0f);
-            Debug.Assert(MathUtils.IsValid(bd.LinearDamping) && bd.LinearDamping >= 0.0f);
+            InertiaScale = 1;
+        }
 
+        internal Body(Body body, World world)
+        {
+            Debug.Assert(body.Position.IsValid());
+            Debug.Assert(body.LinearVelocity.IsValid());
+            Debug.Assert(MathUtils.IsValid(body.Rotation));
+            Debug.Assert(MathUtils.IsValid(body.AngularVelocity));
+            Debug.Assert(MathUtils.IsValid(body.InertiaScale) && body.InertiaScale >= 0.0f);
+            Debug.Assert(MathUtils.IsValid(body.AngularDamping) && body.AngularDamping >= 0.0f);
+            Debug.Assert(MathUtils.IsValid(body.LinearDamping) && body.LinearDamping >= 0.0f);
 
-            if (bd.Bullet)
-            {
-                _flags |= BodyFlags.Bullet;
-            }
-            if (bd.FixedRotation)
-            {
-                _flags |= BodyFlags.FixedRotation;
-            }
-            if (bd.AllowSleep)
-            {
-                _flags |= BodyFlags.AutoSleep;
-            }
-            if (bd.Awake)
-            {
-                _flags |= BodyFlags.Awake;
-            }
-            if (bd.Active)
-            {
-                _flags |= BodyFlags.Active;
-            }
+            Bullet = body.Bullet;
+            FixedRotation = body.FixedRotation;
+            AllowSleep = body.AllowSleep;
+            Awake = body.Awake;
+            Active = body.Active;
 
             _world = world;
 
-            _xf.Position = bd.Position;
-            _xf.R.Set(bd.Angle);
+            _xf.Position = body.Position;
+            _xf.R.Set(body.Rotation);
 
             _sweep.t0 = 1.0f;
-            _sweep.a0 = _sweep.a = bd.Angle;
+            _sweep.a0 = _sweep.a = body.Rotation;
             _sweep.c0 = _sweep.c = MathUtils.Multiply(ref _xf, _sweep.localCenter);
 
-            _linearVelocity = bd.LinearVelocity;
-            _angularVelocity = bd.AngularVelocity;
+            LinearVelocity = body.LinearVelocity;
+            AngularVelocity = body.AngularVelocity;
 
-            _linearDamping = bd.LinearDamping;
-            _angularDamping = bd.AngularDamping;
+            LinearDamping = body.LinearDamping;
+            AngularDamping = body.AngularDamping;
 
-            _bodyType = bd.Type;
+            BodyType = body.BodyType;
 
-            if (_bodyType == BodyType.Dynamic)
+            if (BodyType == BodyType.Dynamic)
             {
                 _mass = 1.0f;
                 _invMass = 1.0f;
             }
 
-            _intertiaScale = bd.InertiaScale;
-            UserData = bd.UserData;
+            InertiaScale = body.InertiaScale;
+            UserData = body.UserData;
+        }
+
+        /// <summary>
+        /// Set this flag to false if this body should never fall asleep. Note that
+        /// this increases CPU usage.
+        /// </summary>
+        public bool AllowSleep
+        {
+            get { return (_flags & BodyFlags.AutoSleep) == BodyFlags.AutoSleep; }
+            set
+            {
+                if (value)
+                    _flags |= BodyFlags.AutoSleep;
+                else
+                    _flags &= ~BodyFlags.AutoSleep;
+            }
         }
 
         /// <summary>
@@ -306,7 +202,7 @@ namespace FarseerPhysics
         }
 
         /// <summary>
-        /// Get the linear velocity of the center of mass.
+        /// The linear velocity of the body's center of mass in world co-ordinates.
         /// </summary>
         /// <value>
         ///   the linear velocity of the center of mass.
@@ -368,9 +264,18 @@ namespace FarseerPhysics
         }
 
         /// <summary>
-        /// Set the linear damping of the body.
+        /// Experimental: scales the inertia tensor.
         /// </summary>
-        /// <value>The linear damping.</value>
+        public float InertiaScale
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Linear damping is use to reduce the linear velocity. The damping parameter
+        /// can be larger than 1.0f but the damping effect becomes sensitive to the
+        /// time step when the damping parameter is large.
+        /// </summary>
         public float LinearDamping
         {
             set { _linearDamping = value; }
@@ -378,9 +283,10 @@ namespace FarseerPhysics
         }
 
         /// <summary>
-        /// Set the angular damping of the body.
+        /// Angular damping is use to reduce the angular velocity. The damping parameter
+        /// can be larger than 1.0f but the damping effect becomes sensitive to the
+        /// time step when the damping parameter is large.
         /// </summary>
-        /// <value>The angular damping.</value>
         public float AngularDamping
         {
             set { _angularDamping = value; }
@@ -388,7 +294,10 @@ namespace FarseerPhysics
         }
 
         /// <summary>
-        /// Should this body be treated like a bullet for continuous collision detection?
+        /// Is this a fast moving body that should be prevented from tunneling through
+        /// other moving bodies? Note that all bodies are prevented from tunneling through
+        /// static bodies.
+        /// @warning You should use this flag sparingly since it increases processing time.
         /// </summary>
         public bool Bullet
         {
@@ -410,32 +319,7 @@ namespace FarseerPhysics
         }
 
         /// <summary>
-        /// Is this body allowed to sleep.
-        /// If you disable sleeping, the
-        /// body will be woken.
-        /// </summary>
-        public bool AllowSleeping
-        {
-            set
-            {
-                if (value)
-                {
-                    _flags |= BodyFlags.AutoSleep;
-                }
-                else
-                {
-                    _flags &= ~BodyFlags.AutoSleep;
-                    Awake = true;
-                }
-            }
-            get
-            {
-                return (_flags & BodyFlags.AutoSleep) == BodyFlags.AutoSleep;
-            }
-        }
-
-        /// <summary>
-        /// Get the sleeping state of this body.
+        /// Is this body awake or sleeping?
         /// </summary>
         /// <value>
         ///   &lt;c&gt;true&lt;/c&gt; if this instance is awake; otherwise, &lt;c&gt;false&lt;/c&gt;.
@@ -515,7 +399,7 @@ namespace FarseerPhysics
         }
 
         /// <summary>
-        /// Does this body have fixed rotation?
+        /// Should this body be prevented from rotating? Useful for characters.
         /// </summary>
         /// <value>
         ///   &lt;c&gt;true&lt;/c&gt; if [is fixed rotation]; otherwise, &lt;c&gt;false&lt;/c&gt;.
@@ -588,7 +472,8 @@ namespace FarseerPhysics
         }
 
         /// <summary>
-        /// Get the world body origin position.
+        /// The world position of the body. Avoid creating bodies at the origin
+        /// since this can lead to many overlapping shapes.
         /// </summary>
         /// <returns>Return the world position of the body's origin.</returns>
         public Vector2 Position
@@ -910,7 +795,7 @@ namespace FarseerPhysics
             {
                 // Center the inertia about the center of mass.
                 _I -= _mass * Vector2.Dot(center, center);
-                _I *= _intertiaScale;
+                _I *= InertiaScale;
 
                 Debug.Assert(_I > 0.0f);
                 _invI = 1.0f / _I;

@@ -110,8 +110,7 @@ namespace FarseerPhysics.TestBed.Framework
 
             _bombSpawning = false;
 
-            BodyDef bodyDef = new BodyDef();
-            _groundBody = _world.CreateBody(bodyDef);
+            _groundBody = _world.CreateBody();
         }
 
         private void JointRemoved(Joint joint)
@@ -348,12 +347,10 @@ namespace FarseerPhysics.TestBed.Framework
                 _bomb = null;
             }
 
-            BodyDef bd = new BodyDef();
-            bd.Type = BodyType.Dynamic;
-            bd.Position = position;
-
-            bd.Bullet = true;
-            _bomb = _world.CreateBody(bd);
+            _bomb = _world.CreateBody();
+            _bomb.BodyType = BodyType.Dynamic;
+            _bomb.Position = position;
+            _bomb.Bullet = true;
             _bomb.LinearVelocity = velocity;
 
             CircleShape circle = new CircleShape(0.3f,20.0f);
