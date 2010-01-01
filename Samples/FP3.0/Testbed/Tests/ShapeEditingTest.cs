@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -58,14 +58,14 @@ namespace FarseerPhysics.TestBed.Tests
                 CircleShape shape = new CircleShape(3.0f, 10);
                 shape.Position = new Vector2(0.5f, -4.0f);
                 _fixture2 = _body.CreateFixture(shape);
-                _body.SetAwake(true);
+                _body.Awake = true;
             }
 
             if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D) && _fixture2 != null)
             {
                 _body.DestroyFixture(_fixture2);
                 _fixture2 = null;
-                _body.SetAwake(true);
+                _body.Awake = true;
             }
         }
 

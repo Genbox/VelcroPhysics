@@ -89,7 +89,7 @@ namespace FarseerPhysics
                     return;
                 }
 
-                ContactEdge edge = Body.GetContactList();
+                ContactEdge edge = Body.ContactList;
                 while (edge != null)
                 {
                     Contact contact = edge.Contact;
@@ -184,7 +184,7 @@ namespace FarseerPhysics
         private void FilterChanged()
         {
             // Flag associated contacts for filtering.
-            ContactEdge edge = Body.GetContactList();
+            ContactEdge edge = Body.ContactList;
             while (edge != null)
             {
                 Contact contact = edge.Contact;

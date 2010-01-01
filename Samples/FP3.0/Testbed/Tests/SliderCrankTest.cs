@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -126,12 +126,12 @@ namespace FarseerPhysics.TestBed.Tests
             if (state.IsKeyDown(Keys.F) && oldState.IsKeyUp(Keys.F))
             {
                 _joint2.EnableMotor(!_joint2.IsMotorEnabled());
-                _joint2.GetBodyB().SetAwake(true);
+                _joint2.GetBodyB().Awake = true;
             }
             if (state.IsKeyDown(Keys.M) && oldState.IsKeyUp(Keys.M))
             {
                 _joint1.EnableMotor(!_joint1.IsMotorEnabled());
-                _joint1.GetBodyB().SetAwake(true);
+                _joint1.GetBodyB().Awake = true;
             }
         }
 

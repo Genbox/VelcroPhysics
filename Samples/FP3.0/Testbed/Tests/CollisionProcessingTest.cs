@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -127,8 +127,8 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body body1 = point.fixtureA.GetBody();
                 Body body2 = point.fixtureB.GetBody();
-                float mass1 = body1.GetMass();
-                float mass2 = body2.GetMass();
+                float mass1 = body1.Mass;
+                float mass2 = body2.Mass;
 
                 if (mass1 > 0.0f && mass2 > 0.0f)
                 {

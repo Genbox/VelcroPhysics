@@ -83,14 +83,14 @@ namespace FarseerPhysics.TestBed.Tests
             Fixture fixtureA = contact.GetFixtureA();
             Fixture fixtureB = contact.GetFixtureB();
 
-            if (fixtureA == _sensor && fixtureB.GetBody().GetUserData() != null)
+            if (fixtureA == _sensor && fixtureB.GetBody().UserData != null)
             {
-                _touching[(int)(fixtureB.GetBody().GetUserData())] = true;
+                _touching[(int)(fixtureB.GetBody().UserData)] = true;
             }
 
-            if (fixtureB == _sensor && fixtureA.GetBody().GetUserData() != null)
+            if (fixtureB == _sensor && fixtureA.GetBody().UserData != null)
             {
-                _touching[(int)(fixtureA.GetBody().GetUserData())] = true;
+                _touching[(int)(fixtureA.GetBody().UserData)] = true;
             }
         }
 
@@ -100,14 +100,14 @@ namespace FarseerPhysics.TestBed.Tests
             Fixture fixtureA = contact.GetFixtureA();
             Fixture fixtureB = contact.GetFixtureB();
 
-            if (fixtureA == _sensor && fixtureB.GetBody().GetUserData() != null)
+            if (fixtureA == _sensor && fixtureB.GetBody().UserData != null)
             {
-                _touching[(int)(fixtureB.GetBody().GetUserData())] = false;
+                _touching[(int)(fixtureB.GetBody().UserData)] = false;
             }
 
-            if (fixtureB == _sensor && fixtureA.GetBody().GetUserData() != null)
+            if (fixtureB == _sensor && fixtureA.GetBody().UserData != null)
             {
-                _touching[(int)(fixtureA.GetBody().GetUserData())] = false;
+                _touching[(int)(fixtureA.GetBody().UserData)] = false;
             }
         }
 
@@ -130,7 +130,7 @@ namespace FarseerPhysics.TestBed.Tests
                 CircleShape circle = (CircleShape)_sensor.Shape;
                 Vector2 center = ground.GetWorldPoint(circle.Position);
 
-                Vector2 position = body.GetPosition();
+                Vector2 position = body.Position;
 
                 Vector2 d = center - position;
                 if (d.LengthSquared() < Settings.Epsilon * Settings.Epsilon)

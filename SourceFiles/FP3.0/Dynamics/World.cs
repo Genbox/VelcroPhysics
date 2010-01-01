@@ -227,7 +227,7 @@ namespace FarseerPhysics
             // If the joint prevents collisions, then flag any contacts for filtering.
             if (def.CollideConnected == false)
             {
-                ContactEdge edge = bodyB.GetContactList();
+                ContactEdge edge = bodyB.ContactList;
                 while (edge != null)
                 {
                     if (edge.Other == bodyA)
@@ -282,8 +282,8 @@ namespace FarseerPhysics
             Body bodyB = j.BodyB;
 
             // Wake up connected bodies.
-            bodyA.SetAwake(true);
-            bodyB.SetAwake(true);
+            bodyA.Awake = true;
+            bodyB.Awake = true;
 
             // Remove from body 1.
             if (j.EdgeA.Prev != null)
@@ -329,7 +329,7 @@ namespace FarseerPhysics
             // If the joint prevents collisions, then flag any contacts for filtering.
             if (collideConnected == false)
             {
-                ContactEdge edge = bodyB.GetContactList();
+                ContactEdge edge = bodyB.ContactList;
                 while (edge != null)
                 {
                     if (edge.Other == bodyA)
@@ -409,7 +409,7 @@ namespace FarseerPhysics
         /// </summary>
         public void ClearForces()
         {
-            for (Body body = BodyList; body != null; body = body.GetNext())
+            for (Body body = BodyList; body != null; body = body.NextBody)
             {
                 body._force = Vector2.Zero;
                 body._torque = 0.0f;
@@ -623,13 +623,13 @@ namespace FarseerPhysics
                     continue;
                 }
 
-                if (seed.IsAwake() == false || seed.IsActive() == false)
+                if (seed.Awake == false || seed.Active == false)
                 {
                     continue;
                 }
 
                 // The seed can be dynamic or kinematic.
-                if (seed.GetBodyType() == BodyType.Static)
+                if (seed.BodyType == BodyType.Static)
                 {
                     continue;
                 }
@@ -645,18 +645,18 @@ namespace FarseerPhysics
                 {
                     // Grab the next body off the stack and add it to the island.
                     Body b = stack[--stackCount];
-                    Debug.Assert(b.IsActive());
+                    Debug.Assert(b.Active);
                     _island.Add(b);
 
                     // Make sure the body is awake.
-                    if (b.IsAwake() == false)
+                    if (b.Awake == false)
                     {
-                        b.SetAwake(true);
+                        b.Awake = true;
                     }
 
                     // To keep islands as small as possible, we don't
                     // propagate islands across static bodies.
-                    if (b.GetBodyType() == BodyType.Static)
+                    if (b.BodyType == BodyType.Static)
                     {
                         continue;
                     }
@@ -703,7 +703,7 @@ namespace FarseerPhysics
                         Body other = je.Other;
 
                         // Don't simulate joints connected to inactive bodies.
-                        if (other.IsActive() == false)
+                        if (other.Active == false)
                         {
                             continue;
                         }
@@ -729,7 +729,7 @@ namespace FarseerPhysics
                 {
                     // Allow static bodies to participate in other islands.
                     Body b = _island.Bodies[i];
-                    if (b.GetBodyType() == BodyType.Static)
+                    if (b.BodyType == BodyType.Static)
                     {
                         b._flags &= ~BodyFlags.Island;
                     }
@@ -737,14 +737,14 @@ namespace FarseerPhysics
             }
 
             // Synchronize fixtures, check for out of range bodies.
-            for (Body b = BodyList; b != null; b = b.GetNext())
+            for (Body b = BodyList; b != null; b = b.NextBody)
             {
-                if (!b.IsAwake() || !b.IsActive())
+                if (!b.Awake || !b.Active)
                 {
                     continue;
                 }
 
-                if (b.GetBodyType() == BodyType.Static)
+                if (b.BodyType == BodyType.Static)
                 {
                     continue;
                 }
@@ -825,8 +825,8 @@ namespace FarseerPhysics
                         Body b1 = s1.GetBody();
                         Body b2 = s2.GetBody();
 
-                        if ((b1.GetBodyType() != BodyType.Dynamic || !b1.IsAwake()) &&
-                            (b2.GetBodyType() != BodyType.Dynamic || !b2.IsAwake()))
+                        if ((b1.BodyType != BodyType.Dynamic || !b1.Awake) &&
+                            (b2.BodyType != BodyType.Dynamic || !b2.Awake))
                         {
                             continue;
                         }
@@ -914,7 +914,7 @@ namespace FarseerPhysics
 
                 // Build the TOI island. We need a dynamic seed.
                 Body seed = b1_2;
-                if (seed.GetBodyType() != BodyType.Dynamic)
+                if (seed.BodyType != BodyType.Dynamic)
                 {
                     seed = b2_2;
                 }
@@ -937,15 +937,15 @@ namespace FarseerPhysics
                     _island.Add(b);
 
                     // Make sure the body is awake.
-                    if (b.IsAwake() == false)
+                    if (b.Awake == false)
                     {
-                        b.SetAwake(true);
+                        b.Awake = true;
                     }
 
 
                     // To keep islands as small as possible, we don't
                     // propagate islands across static or kinematic bodies.
-                    if (b.GetBodyType() != BodyType.Dynamic)
+                    if (b.BodyType != BodyType.Dynamic)
                     {
                         continue;
                     }
@@ -986,10 +986,10 @@ namespace FarseerPhysics
                         }
 
                         // Synchronize the connected body.
-                        if (other.GetBodyType() != BodyType.Static)
+                        if (other.BodyType != BodyType.Static)
                         {
                             other.Advance(minTOI);
-                            other.SetAwake(true);
+                            other.Awake = true;
                         }
 
                         Debug.Assert(queueStart + queueSize < queueCapacity);
@@ -1011,7 +1011,7 @@ namespace FarseerPhysics
                         }
 
                         Body other = jEdge.Other;
-                        if (other.IsActive() == false)
+                        if (other.Active == false)
                         {
                             continue;
                         }
@@ -1026,10 +1026,10 @@ namespace FarseerPhysics
                         }
 
                         // Synchronize the connected body.
-                        if (other.GetBodyType() != BodyType.Static)
+                        if (other.BodyType != BodyType.Static)
                         {
                             other.Advance(minTOI);
-                            other.SetAwake(true);
+                            other.Awake = true;
                         }
 
                         Debug.Assert(queueStart + queueSize < queueCapacity);
@@ -1056,12 +1056,12 @@ namespace FarseerPhysics
                     Body b = _island.Bodies[i];
                     b._flags &= ~BodyFlags.Island;
 
-                    if (b.IsAwake() == false)
+                    if (b.Awake == false)
                     {
                         continue;
                     }
 
-                    if (b.GetBodyType() == BodyType.Static)
+                    if (b.BodyType == BodyType.Static)
                     {
                         continue;
                     }

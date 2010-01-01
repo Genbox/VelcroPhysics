@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -188,8 +188,8 @@ namespace FarseerPhysics
         /// <param name="flag">if set to <c>true</c> [flag].</param>
         public void EnableLimit(bool flag)
         {
-            BodyA.SetAwake(true);
-            BodyB.SetAwake(true);
+            BodyA.Awake = true;
+            BodyB.Awake = true;
             _enableLimit = flag;
         }
 
@@ -219,8 +219,8 @@ namespace FarseerPhysics
         public void SetLimits(float lower, float upper)
         {
             Debug.Assert(lower <= upper);
-            BodyA.SetAwake(true);
-            BodyB.SetAwake(true);
+            BodyA.Awake = true;
+            BodyB.Awake = true;
             _lowerAngle = lower;
             _upperAngle = upper;
         }
@@ -242,8 +242,8 @@ namespace FarseerPhysics
         /// <param name="flag">if set to <c>true</c> [flag].</param>
         public void EnableMotor(bool flag)
         {
-            BodyA.SetAwake(true);
-            BodyB.SetAwake(true);
+            BodyA.Awake = true;
+            BodyB.Awake = true;
             _enableMotor = flag;
         }
 
@@ -253,8 +253,8 @@ namespace FarseerPhysics
         /// <param name="speed">The speed.</param>
         public void SetMotorSpeed(float speed)
         {
-            BodyA.SetAwake(true);
-            BodyB.SetAwake(true);
+            BodyA.Awake = true;
+            BodyB.Awake = true;
             _motorSpeed = speed;
         }
 
@@ -273,8 +273,8 @@ namespace FarseerPhysics
         /// <param name="torque">The torque.</param>
         public void SetMaxMotorTorque(float torque)
         {
-            BodyA.SetAwake(true);
-            BodyB.SetAwake(true);
+            BodyA.Awake = true;
+            BodyB.Awake = true;
             _maxMotorTorque = torque;
         }
 
@@ -323,8 +323,8 @@ namespace FarseerPhysics
             b1.GetTransform(out xf1);
             b2.GetTransform(out xf2);
 
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchor1 - b1.GetLocalCenter());
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.GetLocalCenter());
+            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchor1 - b1.LocalCenter);
+            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.LocalCenter);
 
             // J = [-I -r1_skew I r2_skew]
             //     [ 0       -1 0       1]
@@ -444,8 +444,8 @@ namespace FarseerPhysics
                 b1.GetTransform(out xf1);
                 b2.GetTransform(out xf2);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchor1 - b1.GetLocalCenter());
-                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.GetLocalCenter());
+                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchor1 - b1.LocalCenter);
+                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.LocalCenter);
 
                 // Solve point-to-point constraint
                 Vector2 Cdot1 = v2 + MathUtils.Cross(w2, r2) - v1 - MathUtils.Cross(w1, r1);
@@ -501,8 +501,8 @@ namespace FarseerPhysics
                 b1.GetTransform(out xf1);
                 b2.GetTransform(out xf2);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchor1 - b1.GetLocalCenter());
-                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.GetLocalCenter());
+                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchor1 - b1.LocalCenter);
+                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.LocalCenter);
 
                 // Solve point-to-point constraint
                 Vector2 Cdot = v2 + MathUtils.Cross(w2, r2) - v1 - MathUtils.Cross(w1, r1);
@@ -579,8 +579,8 @@ namespace FarseerPhysics
                 b1.GetTransform(out xf1);
                 b2.GetTransform(out xf2);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchor1 - b1.GetLocalCenter());
-                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.GetLocalCenter());
+                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchor1 - b1.LocalCenter);
+                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.LocalCenter);
 
                 Vector2 C = b2._sweep.c + r2 - b1._sweep.c - r1;
                 positionError = C.Length();

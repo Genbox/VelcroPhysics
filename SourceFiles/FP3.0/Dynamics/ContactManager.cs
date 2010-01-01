@@ -57,7 +57,7 @@ namespace FarseerPhysics
             }
 
             // Does a contact already exist?
-            ContactEdge edge = bodyB.GetContactList();
+            ContactEdge edge = bodyB.ContactList;
             while (edge != null)
             {
                 if (edge.Other == bodyA)
@@ -220,7 +220,7 @@ namespace FarseerPhysics
                 Body bodyA = fixtureA.GetBody();
                 Body bodyB = fixtureB.GetBody();
 
-                if (bodyA.IsAwake() == false && bodyB.IsAwake() == false)
+                if (bodyA.Awake == false && bodyB.Awake == false)
                 {
                     c = c.GetNext();
                     continue;

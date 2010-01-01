@@ -91,7 +91,7 @@ namespace FarseerPhysics
             Transform xf1;
             BodyB.GetTransform(out xf1);
 
-            Vector2 r = MathUtils.Multiply(ref xf1.R, _localAnchor2 - BodyB.GetLocalCenter());
+            Vector2 r = MathUtils.Multiply(ref xf1.R, _localAnchor2 - BodyB.LocalCenter);
             Vector2 P = _impulse * _J.LinearB;
             float L = _impulse * _J.AngularB - MathUtils.Cross(r, P);
             return inv_dt * L;
@@ -117,8 +117,8 @@ namespace FarseerPhysics
 
             Debug.Assert(type1 == JointType.Revolute || type1 == JointType.Prismatic);
             Debug.Assert(type2 == JointType.Revolute || type2 == JointType.Prismatic);
-            Debug.Assert(def.Joint1.GetBodyA().GetBodyType() == BodyType.Static);
-            Debug.Assert(def.Joint2.GetBodyA().GetBodyType() == BodyType.Static);
+            Debug.Assert(def.Joint1.GetBodyA().BodyType == BodyType.Static);
+            Debug.Assert(def.Joint2.GetBodyA().BodyType == BodyType.Static);
 
             _revolute1 = null;
             _prismatic1 = null;
@@ -184,7 +184,7 @@ namespace FarseerPhysics
                 g1.GetTransform(out xfg1);
 
                 Vector2 ug = MathUtils.Multiply(ref xfg1.R, _prismatic1.LocalXAxis1);
-                Vector2 r = MathUtils.Multiply(ref xf1.R, _localAnchor1 - b1.GetLocalCenter());
+                Vector2 r = MathUtils.Multiply(ref xf1.R, _localAnchor1 - b1.LocalCenter);
                 float crug = MathUtils.Cross(r, ug);
                 _J.LinearA = -ug;
                 _J.AngularA = -crug;
@@ -203,7 +203,7 @@ namespace FarseerPhysics
                 b2.GetTransform(out xf2);
 
                 Vector2 ug = MathUtils.Multiply(ref xfg1.R, _prismatic2.LocalXAxis1);
-                Vector2 r = MathUtils.Multiply(ref xf2.R, _localAnchor2 - b2.GetLocalCenter());
+                Vector2 r = MathUtils.Multiply(ref xf2.R, _localAnchor2 - b2.LocalCenter);
                 float crug = MathUtils.Cross(r, ug);
                 _J.LinearB = -_ratio * ug;
                 _J.AngularB = -_ratio * crug;

@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -247,8 +247,8 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     if (_bodies[i] != null)
                     {
-                        bool active = _bodies[i].IsActive();
-                        _bodies[i].SetActive(!active);
+                        bool active = _bodies[i].Active;
+                        _bodies[i].Active = !active;
                     }
                 }
             }

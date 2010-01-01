@@ -93,14 +93,14 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Create two bodies from one.
             Body body1 = _piece1.GetBody();
-            Vector2 center = body1.GetWorldCenter();
+            Vector2 center = body1.WorldCenter;
 
             body1.DestroyFixture(_piece2);
             _piece2 = null;
 
             BodyDef bd = new BodyDef();
             bd.Type = BodyType.Dynamic;
-            bd.Position = body1.GetPosition();
+            bd.Position = body1.Position;
             bd.Angle = body1.GetAngle();
 
             Body body2 = _world.CreateBody(bd);
@@ -108,17 +108,17 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Compute consistent velocities for new bodies based on
             // cached velocity.
-            Vector2 center1 = body1.GetWorldCenter();
-            Vector2 center2 = body2.GetWorldCenter();
+            Vector2 center1 = body1.WorldCenter;
+            Vector2 center2 = body2.WorldCenter;
 
             Vector2 velocity1 = _velocity + MathUtils.Cross(_angularVelocity, center1 - center);
             Vector2 velocity2 = _velocity + MathUtils.Cross(_angularVelocity, center2 - center);
 
-            body1.SetAngularVelocity(_angularVelocity);
-            body1.SetLinearVelocity(velocity1);
+            body1.AngularVelocity = _angularVelocity;
+            body1.LinearVelocity = velocity1;
 
-            body2.SetAngularVelocity(_angularVelocity);
-            body2.SetLinearVelocity(velocity2);
+            body2.AngularVelocity = _angularVelocity;
+            body2.LinearVelocity = velocity2;
         }
 
         public override void Step(Framework.Settings settings)
@@ -133,8 +133,8 @@ namespace FarseerPhysics.TestBed.Tests
             // Cache velocities to improve movement on breakage.
             if (_broke == false)
             {
-                _velocity = _body1.GetLinearVelocity();
-                _angularVelocity = _body1.GetAngularVelocity();
+                _velocity = _body1.LinearVelocity;
+                _angularVelocity = _body1.AngularVelocity;
             }
 
             base.Step(settings);

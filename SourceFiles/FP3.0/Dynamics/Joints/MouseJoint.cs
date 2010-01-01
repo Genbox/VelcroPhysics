@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -99,9 +99,9 @@ namespace FarseerPhysics
         /// <param name="target">The target.</param>
         public void SetTarget(Vector2 target)
         {
-            if (BodyB.IsAwake() == false)
+            if (BodyB.Awake == false)
             {
-                BodyB.SetAwake(true);
+                BodyB.Awake = true;
             }
             _target = target;
         }
@@ -182,7 +182,7 @@ namespace FarseerPhysics
         {
             Body b = BodyB;
 
-            float mass = b.GetMass();
+            float mass = b.Mass;
 
             // Frequency
             float omega = 2.0f * Settings.Pi * _frequencyHz;
@@ -209,7 +209,7 @@ namespace FarseerPhysics
             // Compute the effective mass matrix.
             Transform xf1;
             b.GetTransform(out xf1);
-            Vector2 r = MathUtils.Multiply(ref xf1.R, _localAnchor - b.GetLocalCenter());
+            Vector2 r = MathUtils.Multiply(ref xf1.R, _localAnchor - b.LocalCenter);
 
             // K    = [(1/m1 + 1/m2) * eye(2) - skew(r1) * invI1 * skew(r1) - skew(r2) * invI2 * skew(r2)]
             //      = [1/m1+1/m2     0    ] + invI1 * [r1.Y*r1.Y -r1.X*r1.Y] + invI2 * [r1.Y*r1.Y -r1.X*r1.Y]
@@ -246,7 +246,7 @@ namespace FarseerPhysics
             Transform xf1;
             b.GetTransform(out xf1);
 
-            Vector2 r = MathUtils.Multiply(ref xf1.R, _localAnchor - b.GetLocalCenter());
+            Vector2 r = MathUtils.Multiply(ref xf1.R, _localAnchor - b.LocalCenter);
 
             // Cdot = v + cross(w, r)
             Vector2 Cdot = b._linearVelocity + MathUtils.Cross(b._angularVelocity, r);

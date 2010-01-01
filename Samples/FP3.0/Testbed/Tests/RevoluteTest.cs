@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -53,8 +53,8 @@ namespace FarseerPhysics.TestBed.Tests
                 body.CreateFixture(shape);
 
                 float w = 100.0f;
-                body.SetAngularVelocity(w);
-                body.SetLinearVelocity(new Vector2(-8.0f * w, 0.0f));
+                body.AngularVelocity = w;
+                body.LinearVelocity = new Vector2(-8.0f * w, 0.0f);
 
                 rjd.Initialize(ground, body, new Vector2(0.0f, 12.0f));
                 rjd.MotorSpeed = 1.0f * Settings.Pi;

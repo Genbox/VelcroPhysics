@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -163,8 +163,8 @@ namespace FarseerPhysics
             b1.GetTransform(out xf1);
             b2.GetTransform(out xf2);
 
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, _localAnchor1 - b1.GetLocalCenter());
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, _localAnchor2 - b2.GetLocalCenter());
+            Vector2 r1 = MathUtils.Multiply(ref xf1.R, _localAnchor1 - b1.LocalCenter);
+            Vector2 r2 = MathUtils.Multiply(ref xf2.R, _localAnchor2 - b2.LocalCenter);
             Vector2 p1 = b1._sweep.c + r1;
             Vector2 p2 = b2._sweep.c + r2;
             Vector2 d = p2 - p1;
@@ -196,8 +196,8 @@ namespace FarseerPhysics
         /// <param name="flag">if set to <c>true</c> [flag].</param>
         public void EnableLimit(bool flag)
         {
-            BodyA.SetAwake(true);
-            BodyB.SetAwake(true);
+            BodyA.Awake = true;
+            BodyB.Awake = true;
             _enableLimit = flag;
         }
 
@@ -227,8 +227,8 @@ namespace FarseerPhysics
         public void SetLimits(float lower, float upper)
         {
             Debug.Assert(lower <= upper);
-            BodyA.SetAwake(true);
-            BodyB.SetAwake(true);
+            BodyA.Awake = true;
+            BodyB.Awake = true;
             _lowerTranslation = lower;
             _upperTranslation = upper;
         }
@@ -250,8 +250,8 @@ namespace FarseerPhysics
         /// <param name="flag">if set to <c>true</c> [flag].</param>
         public void EnableMotor(bool flag)
         {
-            BodyA.SetAwake(true);
-            BodyB.SetAwake(true);
+            BodyA.Awake = true;
+            BodyB.Awake = true;
             _enableMotor = flag;
         }
 
@@ -261,8 +261,8 @@ namespace FarseerPhysics
         /// <param name="speed">The speed.</param>
         public void SetMotorSpeed(float speed)
         {
-            BodyA.SetAwake(true);
-            BodyB.SetAwake(true);
+            BodyA.Awake = true;
+            BodyB.Awake = true;
             _motorSpeed = speed;
         }
 
@@ -286,8 +286,8 @@ namespace FarseerPhysics
         /// <param name="force">The force.</param>
         public void SetMaxMotorForce(float force)
         {
-            BodyA.SetAwake(true);
-            BodyB.SetAwake(true);
+            BodyA.Awake = true;
+            BodyB.Awake = true;
             _maxMotorForce = force;
         }
 
@@ -329,8 +329,8 @@ namespace FarseerPhysics
             Body b1 = BodyA;
             Body b2 = BodyB;
 
-            LocalCenterA = b1.GetLocalCenter();
-            LocalCenterB = b2.GetLocalCenter();
+            LocalCenterA = b1.LocalCenter;
+            LocalCenterB = b2.LocalCenter;
 
             Transform xf1, xf2;
             b1.GetTransform(out xf1);

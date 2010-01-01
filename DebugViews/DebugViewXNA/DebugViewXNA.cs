@@ -19,25 +19,25 @@ namespace FarseerPhysics.DebugViewXNA
         {
             if ((Flags & DebugViewFlags.Shape) == DebugViewFlags.Shape)
             {
-                for (Body b = World.BodyList; b != null; b = b.GetNext())
+                for (Body b = World.BodyList; b != null; b = b.NextBody)
                 {
                     Transform xf;
                     b.GetTransform(out xf);
-                    for (Fixture f = b.GetFixtureList(); f != null; f = f.GetNext())
+                    for (Fixture f = b.FixtureList; f != null; f = f.GetNext())
                     {
-                        if (b.IsActive() == false)
+                        if (b.Active == false)
                         {
                             DrawShape(f, xf, new Color(0.5f, 0.5f, 0.3f));
                         }
-                        else if (b.GetBodyType() == BodyType.Static)
+                        else if (b.BodyType == BodyType.Static)
                         {
                             DrawShape(f, xf, new Color(0.5f, 0.9f, 0.5f));
                         }
-                        else if (b.GetBodyType() == BodyType.Kinematic)
+                        else if (b.BodyType == BodyType.Kinematic)
                         {
                             DrawShape(f, xf, new Color(0.5f, 0.5f, 0.9f));
                         }
-                        else if (b.IsAwake() == false)
+                        else if (b.Awake == false)
                         {
                             DrawShape(f, xf, new Color(0.6f, 0.6f, 0.6f));
                         }
@@ -82,14 +82,14 @@ namespace FarseerPhysics.DebugViewXNA
                 Color color = new Color(0.9f, 0.3f, 0.9f);
                 BroadPhase bp = World.ContactManager.BroadPhase;
 
-                for (Body b = World.BodyList; b != null; b = b.GetNext())
+                for (Body b = World.BodyList; b != null; b = b.NextBody)
                 {
-                    if (b.IsActive() == false)
+                    if (b.Active == false)
                     {
                         continue;
                     }
 
-                    for (Fixture f = b.GetFixtureList(); f != null; f = f.GetNext())
+                    for (Fixture f = b.FixtureList; f != null; f = f.GetNext())
                     {
                         AABB aabb;
                         bp.GetFatAABB(f.ProxyId, out aabb);
@@ -106,11 +106,11 @@ namespace FarseerPhysics.DebugViewXNA
 
             if ((Flags & DebugViewFlags.CenterOfMass) == DebugViewFlags.CenterOfMass)
             {
-                for (Body b = World.BodyList; b != null; b = b.GetNext())
+                for (Body b = World.BodyList; b != null; b = b.NextBody)
                 {
                     Transform xf;
                     b.GetTransform(out xf);
-                    xf.Position = b.GetWorldCenter();
+                    xf.Position = b.WorldCenter;
                     DrawTransform(ref xf);
                 }
             }

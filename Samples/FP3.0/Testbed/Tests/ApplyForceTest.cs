@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -115,8 +115,8 @@ namespace FarseerPhysics.TestBed.Tests
                     fixture.SetFriction(0.3f);
 
                     const float gravity = 10.0f;
-                    float I = body.GetInertia();
-                    float mass = body.GetMass();
+                    float I = body.Inertia;
+                    float mass = body.Mass;
 
                     // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
                     float radius = (float)Math.Sqrt(2.0 * (I / mass));

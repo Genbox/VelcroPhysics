@@ -248,8 +248,8 @@ namespace FarseerPhysics
             Body bodyA = fA.GetBody();
             Body bodyB = fB.GetBody();
 
-            if (bodyA.GetBodyType() != BodyType.Dynamic || bodyA.IsBullet ||
-                bodyB.GetBodyType() != BodyType.Dynamic || bodyB.IsBullet)
+            if (bodyA.BodyType != BodyType.Dynamic || bodyA.Bullet ||
+                bodyB.BodyType != BodyType.Dynamic || bodyB.Bullet)
             {
                 Flags |= ContactFlags.Continuous;
             }
@@ -310,8 +310,8 @@ namespace FarseerPhysics
             else
             {
                 // Slow contacts don't generate TOI events.
-                if (bodyA.GetBodyType() != BodyType.Dynamic || bodyA.IsBullet ||
-                    bodyB.GetBodyType() != BodyType.Dynamic || bodyB.IsBullet)
+                if (bodyA.BodyType != BodyType.Dynamic || bodyA.Bullet ||
+                    bodyB.BodyType != BodyType.Dynamic || bodyB.Bullet)
                 {
                     Flags |= ContactFlags.Continuous;
                 }
@@ -356,8 +356,8 @@ namespace FarseerPhysics
 
                 if (touching != wasTouching)
                 {
-                    bodyA.SetAwake(true);
-                    bodyB.SetAwake(true);
+                    bodyA.Awake = true;
+                    bodyB.Awake = true;
                 }
             }
 
