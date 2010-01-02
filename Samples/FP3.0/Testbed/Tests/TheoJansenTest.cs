@@ -84,29 +84,34 @@ namespace FarseerPhysics.TestBed.Tests
             Fixture f2 = body2.CreateFixture(poly2);
             f2.GroupIndex = -1;
 
-            DistanceJointDef djd = new DistanceJointDef();
-
             // Using a soft distanceraint can reduce some jitter.
             // It also makes the structure seem a bit more fluid by
             // acting like a suspension system.
+            DistanceJoint djd = new DistanceJoint(body1, body2, p2 + _offset, p5 + _offset);
             djd.DampingRatio = 0.5f;
-            djd.FrequencyHz = 10.0f;
+            djd.Frequency = 10.0f;
 
-            djd.Initialize(body1, body2, p2 + _offset, p5 + _offset);
             _world.CreateJoint(djd);
 
-            djd.Initialize(body1, body2, p3 + _offset, p4 + _offset);
-            _world.CreateJoint(djd);
+            DistanceJoint djd2 = new DistanceJoint(body1, body2, p3 + _offset, p4 + _offset);
+            djd2.DampingRatio = 0.5f;
+            djd2.Frequency = 10.0f;
 
-            djd.Initialize(body1, _wheel, p3 + _offset, wheelAnchor + _offset);
-            _world.CreateJoint(djd);
+            _world.CreateJoint(djd2);
 
-            djd.Initialize(body2, _wheel, p6 + _offset, wheelAnchor + _offset);
-            _world.CreateJoint(djd);
+            DistanceJoint djd3 = new DistanceJoint(body1, _wheel, p3 + _offset, wheelAnchor + _offset);
+            djd3.DampingRatio = 0.5f;
+            djd3.Frequency = 10.0f;
 
-            RevoluteJointDef rjd = new RevoluteJointDef();
+            _world.CreateJoint(djd3);
 
-            rjd.Initialize(body2, _chassis, p4 + _offset);
+            DistanceJoint djd4 = new DistanceJoint(body2, _wheel, p6 + _offset, wheelAnchor + _offset);
+            djd4.DampingRatio = 0.5f;
+            djd4.Frequency = 10.0f;
+
+            _world.CreateJoint(djd4);
+
+            RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, p4 + _offset);
             _world.CreateJoint(rjd);
         }
 
@@ -119,7 +124,6 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Ground
             {
-                
                 Body ground = _world.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0);
@@ -170,13 +174,12 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                RevoluteJointDef jd = new RevoluteJointDef();
-                jd.Initialize(_wheel, _chassis, pivot + _offset);
-                jd.CollideConnected = false;
-                jd.MotorSpeed = _motorSpeed;
-                jd.MaxMotorTorque = 400.0f;
-                jd.EnableMotor = _motorOn;
-                _motorJoint = (RevoluteJoint)_world.CreateJoint(jd);
+                _motorJoint = new RevoluteJoint(_wheel, _chassis, pivot + _offset);
+                _motorJoint.CollideConnected = false;
+                _motorJoint.MotorSpeed = _motorSpeed;
+                _motorJoint.MaxMotorTorque = 400.0f;
+                _motorJoint.MotorEnabled = _motorOn;
+                _world.CreateJoint(_motorJoint);
             }
 
             Vector2 wheelAnchor = pivot + new Vector2(0.0f, -0.8f);
@@ -205,19 +208,19 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (state.IsKeyDown(Keys.A) && oldState.IsKeyUp(Keys.A))
             {
-                _motorJoint.SetMotorSpeed(-_motorSpeed);
+                _motorJoint.MotorSpeed = -_motorSpeed;
             }
             if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
             {
-                _motorJoint.SetMotorSpeed(0.0f);
+                _motorJoint.MotorSpeed = 0.0f;
             }
             if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D))
             {
-                _motorJoint.SetMotorSpeed(_motorSpeed);
+                _motorJoint.MotorSpeed = _motorSpeed;
             }
             if (state.IsKeyDown(Keys.M) && oldState.IsKeyUp(Keys.M))
             {
-                _motorJoint.EnableMotor(!_motorJoint.IsMotorEnabled());
+                _motorJoint.MotorEnabled = !_motorJoint.MotorEnabled;
             }
         }
 

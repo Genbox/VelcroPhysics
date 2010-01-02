@@ -51,7 +51,7 @@ namespace FarseerPhysics.DebugViewXNA
 
             if ((Flags & DebugViewFlags.Joint) == DebugViewFlags.Joint)
             {
-                for (Joint j = World.JointList; j != null; j = j.GetNext())
+                for (Joint j = World.JointList; j != null; j = j.Next)
                 {
                     DrawJoint(j);
                 }
@@ -118,15 +118,15 @@ namespace FarseerPhysics.DebugViewXNA
 
         private void DrawJoint(Joint joint)
         {
-            Body b1 = joint.GetBodyA();
-            Body b2 = joint.GetBodyB();
+            Body b1 = joint.BodyA;
+            Body b2 = joint.BodyB;
             Transform xf1, xf2;
             b1.GetTransform(out xf1);
             b2.GetTransform(out xf2);
             Vector2 x1 = xf1.Position;
             Vector2 x2 = xf2.Position;
-            Vector2 p1 = joint.GetAnchorA();
-            Vector2 p2 = joint.GetAnchorB();
+            Vector2 p1 = joint.AnchorA;
+            Vector2 p2 = joint.AnchorB;
 
             Color color = new Color(0.5f, 0.8f, 0.8f);
 
@@ -139,8 +139,8 @@ namespace FarseerPhysics.DebugViewXNA
                 case JointType.Pulley:
                     {
                         PulleyJoint pulley = (PulleyJoint)joint;
-                        Vector2 s1 = pulley.GetGroundAnchorA();
-                        Vector2 s2 = pulley.GetGroundAnchorB();
+                        Vector2 s1 = pulley.GroundAnchorA;
+                        Vector2 s2 = pulley.GroundAnchorB;
                         DrawSegment(s1, p1, color);
                         DrawSegment(s2, p2, color);
                         DrawSegment(s1, s2, color);

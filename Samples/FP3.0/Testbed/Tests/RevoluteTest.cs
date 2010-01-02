@@ -32,7 +32,6 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                
                 ground = _world.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0);
@@ -53,17 +52,16 @@ namespace FarseerPhysics.TestBed.Tests
                 body.AngularVelocity = w;
                 body.LinearVelocity = new Vector2(-8.0f * w, 0.0f);
 
-                RevoluteJointDef rjd = new RevoluteJointDef();
-                rjd.Initialize(ground, body, new Vector2(0.0f, 12.0f));
-                rjd.MotorSpeed = 1.0f * Settings.Pi;
-                rjd.MaxMotorTorque = 10000.0f;
-                rjd.EnableMotor = false;
-                rjd.LowerAngle = -0.25f * Settings.Pi;
-                rjd.UpperAngle = 0.5f * Settings.Pi;
-                rjd.EnableLimit = true;
-                rjd.CollideConnected = true;
+                _joint = new RevoluteJoint(ground, body, new Vector2(0.0f, 12.0f));
+                _joint.MotorSpeed = 1.0f * Settings.Pi;
+                _joint.MaxMotorTorque = 10000.0f;
+                _joint.MotorEnabled = false;
+                _joint.LowerLimit = -0.25f * Settings.Pi;
+                _joint.UpperLimit = 0.5f * Settings.Pi;
+                _joint.LimitEnabled = true;
+                _joint.CollideConnected = true;
 
-                _joint = (RevoluteJoint)_world.CreateJoint(rjd);
+                _world.CreateJoint(_joint);
             }
         }
 
@@ -71,12 +69,12 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (state.IsKeyDown(Keys.L) && oldState.IsKeyUp(Keys.L))
             {
-                _joint.EnableLimit(_joint.IsLimitEnabled());
+                _joint.LimitEnabled = _joint.LimitEnabled;
             }
 
             if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
             {
-                _joint.EnableMotor(false);
+                _joint.MotorEnabled = false;
             }
         }
 

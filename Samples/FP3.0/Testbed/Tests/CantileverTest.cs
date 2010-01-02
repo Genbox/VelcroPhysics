@@ -44,7 +44,6 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box = PolygonTools.CreateBox(0.5f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 20.0f);
 
-                WeldJointDef jd = new WeldJointDef();
 
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
@@ -56,7 +55,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.CreateFixture(shape);
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 5.0f);
-                    jd.Initialize(prevBody, body, anchor);
+                    WeldJoint jd = new WeldJoint(prevBody, body,anchor);
                     _world.CreateJoint(jd);
 
                     prevBody = body;
@@ -67,7 +66,6 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box = PolygonTools.CreateBox(0.5f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 20.0f);
 
-                WeldJointDef jd = new WeldJointDef();
 
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
@@ -80,7 +78,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.CreateFixture(shape);
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 15.0f);
-                    jd.Initialize(prevBody, body, anchor);
+                    WeldJoint jd = new WeldJoint(prevBody,body,anchor);
                     _world.CreateJoint(jd);
 
                     prevBody = body;
@@ -91,7 +89,6 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box = PolygonTools.CreateBox(0.5f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 20.0f);
 
-                WeldJointDef jd = new WeldJointDef();
 
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
@@ -105,7 +102,7 @@ namespace FarseerPhysics.TestBed.Tests
                     if (i > 0)
                     {
                         Vector2 anchor = new Vector2(-5.0f + 1.0f * i, 5.0f);
-                        jd.Initialize(prevBody, body, anchor);
+                        WeldJoint jd = new WeldJoint(prevBody,body,anchor);
                         _world.CreateJoint(jd);
                     }
 
@@ -118,7 +115,6 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box = PolygonTools.CreateBox(0.5f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 20.0f);
 
-                WeldJointDef jd = new WeldJointDef();
 
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
@@ -133,7 +129,7 @@ namespace FarseerPhysics.TestBed.Tests
                     if (i > 0)
                     {
                         Vector2 anchor = new Vector2(5.0f + 1.0f * i, 10.0f);
-                        jd.Initialize(prevBody, body, anchor);
+                        WeldJoint jd = new WeldJoint(prevBody,body,anchor);
                         _world.CreateJoint(jd);
                     }
 

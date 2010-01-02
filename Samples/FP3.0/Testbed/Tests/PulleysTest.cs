@@ -59,14 +59,12 @@ namespace FarseerPhysics.TestBed.Tests
 
                 body2.CreateFixture(shape);
 
-                PulleyJointDef pulleyDef = new PulleyJointDef();
                 Vector2 anchor1 = new Vector2(-10.0f, y + b);
                 Vector2 anchor2 = new Vector2(10.0f, y + b);
                 Vector2 groundAnchor1 = new Vector2(-10.0f, y + b + L);
                 Vector2 groundAnchor2 = new Vector2(10.0f, y + b + L);
-                pulleyDef.Initialize(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2, 2.0f);
-
-                _joint1 = (PulleyJoint)_world.CreateJoint(pulleyDef);
+                _joint1 = new PulleyJoint(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2, 2.0f);
+                _world.CreateJoint(_joint1);
             }
         }
 
@@ -74,8 +72,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Step(settings);
 
-            float ratio = _joint1.GetRatio();
-            float L = _joint1.GetLength1() + ratio * _joint1.GetLength2();
+            float ratio = _joint1.Ratio;
+            float L = _joint1.LengthA + ratio * _joint1.LengthB;
             _debugView.DrawString(50, _textLine, "L1 + {0:n} * L2 = {1:n}", ratio, L);
             _textLine += 15;
         }

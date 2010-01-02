@@ -51,22 +51,20 @@ namespace FarseerPhysics.TestBed.Tests
 
                 body.CreateFixture(shape);
 
-                PrismaticJointDef pjd = new PrismaticJointDef();
-
                 // Bouncy limit
-                pjd.Initialize(ground, body, new Vector2(0.0f, 0.0f), new Vector2(1.0f, 0.0f));
+                _joint = new PrismaticJoint(ground, body, new Vector2(0.0f, 0.0f), new Vector2(1.0f, 0.0f));
 
                 // Non-bouncy limit
                 //pjd.Initialize(ground, body, new Vector2(-10.0f, 10.0f), new Vector2(1.0f, 0.0f));
 
-                pjd.MotorSpeed = 10.0f;
-                pjd.MaxMotorForce = 1000.0f;
-                pjd.EnableMotor = true;
-                pjd.LowerTranslation = 0.0f;
-                pjd.UpperTranslation = 20.0f;
-                pjd.EnableLimit = true;
+                _joint.MotorSpeed = 10.0f;
+                _joint.MaxMotorForce = 1000.0f;
+                _joint.MotorEnabled = true;
+                _joint.LowerLimit = 0.0f;
+                _joint.UpperLimit = 20.0f;
+                _joint.LimitEnabled = true;
 
-                _joint = (PrismaticJoint)_world.CreateJoint(pjd);
+                _world.CreateJoint(_joint);
             }
         }
 
@@ -74,15 +72,15 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (state.IsKeyDown(Keys.L) && oldState.IsKeyUp(Keys.L))
             {
-                _joint.EnableLimit(!_joint.IsLimitEnabled());
+                _joint.LimitEnabled = !_joint.LimitEnabled;
             }
             if (state.IsKeyDown(Keys.M) && oldState.IsKeyUp(Keys.M))
             {
-                _joint.EnableMotor(!_joint.IsMotorEnabled());
+                _joint.MotorEnabled = !_joint.MotorEnabled;
             }
             if (state.IsKeyDown(Keys.P) && oldState.IsKeyUp(Keys.P))
             {
-                _joint.SetMotorSpeed(-_joint.GetMotorSpeed());
+                _joint.MotorSpeed = -_joint.MotorSpeed;
             }
         }
 
@@ -91,7 +89,7 @@ namespace FarseerPhysics.TestBed.Tests
             base.Step(settings);
             _debugView.DrawString(50, _textLine, "Keys: (l) limits, (m) motors, (p) speed");
             _textLine += 15;
-            float force = _joint.GetMotorForce();
+            float force = _joint.MotorForce;
             _debugView.DrawString(50, _textLine, "Motor Force = {0:n}", force);
             _textLine += 15;
         }

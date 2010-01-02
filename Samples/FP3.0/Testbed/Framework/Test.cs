@@ -177,8 +177,8 @@ namespace FarseerPhysics.TestBed.Framework
 
             if (_mouseJoint != null)
             {
-                Vector2 p1 = _mouseJoint.GetAnchorB();
-                Vector2 p2 = _mouseJoint.GetTarget();
+                Vector2 p1 = _mouseJoint.AnchorB;
+                Vector2 p2 = _mouseJoint.Target;
 
                 _debugView.DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
                 _debugView.DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
@@ -298,12 +298,9 @@ namespace FarseerPhysics.TestBed.Framework
             if (_fixture != null)
             {
                 Body body = _fixture.Body;
-                MouseJointDef md = new MouseJointDef();
-                md.BodyA = _groundBody;
-                md.BodyB = body;
-                md.Target = p;
-                md.MaxForce = 1000.0f * body.Mass;
-                _mouseJoint = (MouseJoint)_world.CreateJoint(md);
+                _mouseJoint = new MouseJoint(_groundBody,body,p);
+                _mouseJoint.MaxForce = 1000.0f * body.Mass;
+                _world.CreateJoint(_mouseJoint);
                 body.Awake = true;
             }
         }
@@ -328,7 +325,7 @@ namespace FarseerPhysics.TestBed.Framework
 
             if (_mouseJoint != null)
             {
-                _mouseJoint.SetTarget(p);
+                _mouseJoint.Target = p;
             }
         }
 

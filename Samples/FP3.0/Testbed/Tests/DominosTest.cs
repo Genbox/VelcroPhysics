@@ -88,7 +88,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Vertices box = PolygonTools.CreateBox(6.0f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 10);
-                
+
                 b3 = _world.CreateBody();
                 b3.BodyType = BodyType.Dynamic;
                 b3.Position = new Vector2(-0.9f, 1.0f);
@@ -97,10 +97,8 @@ namespace FarseerPhysics.TestBed.Tests
                 b3.CreateFixture(shape);
             }
 
-            RevoluteJointDef jd = new RevoluteJointDef();
-
             Vector2 anchor = new Vector2(-2.0f, 1.0f);
-            jd.Initialize(b1, b3, anchor);
+            RevoluteJoint jd = new RevoluteJoint(b1, b3, anchor);
             jd.CollideConnected = true;
             _world.CreateJoint(jd);
 
@@ -117,12 +115,12 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             anchor = new Vector2(-7.0f, 15.0f);
-            jd.Initialize(b2, b4, anchor);
-            _world.CreateJoint(jd);
+            RevoluteJoint jd2 = new RevoluteJoint(b2, b4, anchor);
+            _world.CreateJoint(jd2);
 
             Body b5;
             {
-                
+
                 b5 = _world.CreateBody();
                 b5.BodyType = BodyType.Dynamic;
                 b5.Position = new Vector2(6.5f, 3.0f);
@@ -148,8 +146,8 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             anchor = new Vector2(6.0f, 2.0f);
-            jd.Initialize(b1, b5, anchor);
-            _world.CreateJoint(jd);
+            RevoluteJoint jd3 = new RevoluteJoint(b1, b5, anchor);
+            _world.CreateJoint(jd3);
 
             Body b6;
             {
@@ -164,8 +162,8 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             anchor = new Vector2(7.5f, 4.0f);
-            jd.Initialize(b5, b6, anchor);
-            _world.CreateJoint(jd);
+            RevoluteJoint jd4 = new RevoluteJoint(b5, b6, anchor);
+            _world.CreateJoint(jd4);
 
             Body b7;
             {
@@ -179,11 +177,7 @@ namespace FarseerPhysics.TestBed.Tests
                 b7.CreateFixture(shape);
             }
 
-            DistanceJointDef djd = new DistanceJointDef();
-            djd.BodyA = b3;
-            djd.BodyB = b7;
-            djd.LocalAnchorA = new Vector2(6.0f, 0.0f);
-            djd.LocalAnchorB = new Vector2(0.0f, -1.0f);
+            DistanceJoint djd = new DistanceJoint(b3, b7, new Vector2(6.0f, 0.0f), new Vector2(0.0f, -1.0f));
             Vector2 d = djd.BodyB.GetWorldPoint(djd.LocalAnchorB) - djd.BodyA.GetWorldPoint(djd.LocalAnchorA);
             djd.Length = d.Length();
             _world.CreateJoint(djd);

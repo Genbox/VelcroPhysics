@@ -47,15 +47,14 @@ namespace FarseerPhysics.TestBed.Tests
 
                 body.CreateFixture(shape);
 
-                LineJointDef jd = new LineJointDef();
                 Vector2 axis = new Vector2(2.0f, 1.0f);
                 axis.Normalize();
-                jd.Initialize(ground, body, new Vector2(0.0f, 8.5f), axis);
+                LineJoint jd = new LineJoint(ground, body, new Vector2(0.0f, 8.5f), axis);
                 jd.MotorSpeed = 0.0f;
                 jd.MaxMotorForce = 100.0f;
-                jd.EnableMotor = true;
-                jd.LowerTranslation = -4.0f;
-                jd.UpperTranslation = 4.0f;
+                jd.MotorEnabled = true;
+                jd.LowerLimit = -4.0f;
+                jd.UpperLimit = 4.0f;
                 jd.EnableLimit = true;
                 _world.CreateJoint(jd);
             }

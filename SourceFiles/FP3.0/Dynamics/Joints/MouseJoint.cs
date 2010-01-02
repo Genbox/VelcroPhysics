@@ -20,48 +20,11 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics
 {
-    /// Mouse joint definition. This requires a world target point,
-    /// tuning parameters, and the time step.
-    public class MouseJointDef : JointDef
-    {
-        public MouseJointDef()
-        {
-            Type = JointType.Mouse;
-            Target = Vector2.Zero;
-            MaxForce = 0.0f;
-            FrequencyHz = 5.0f;
-            DampingRatio = 0.7f;
-        }
-
-        /// <summary>
-        /// The initial world target point. This is assumed
-        /// to coincide with the body anchor initially.
-        /// </summary>
-        public Vector2 Target;
-
-        /// <summary>
-        /// The maximum constraint force that can be exerted
-        /// to move the candidate body. Usually you will express
-        /// as some multiple of the weight (multiplier * mass * gravity).
-        /// </summary>
-        public float MaxForce;
-
-        /// <summary>
-        /// The response speed.
-        /// </summary>
-        public float FrequencyHz;
-
-        /// <summary>
-        /// The damping ratio. 0 = no damping, 1 = critical damping.
-        /// </summary>
-        public float DampingRatio;
-    }
-
     /// <summary>
     /// A mouse joint is used to make a point on a body track a
     /// specified world point. This a soft constraint with a maximum
@@ -73,14 +36,90 @@ namespace FarseerPhysics
     /// </summary>
     public class MouseJoint : Joint
     {
-        public override Vector2 GetAnchorA()
+        private Vector2 _C; // position error
+        private float _beta;
+        private float _dampingRatio;
+        private float _gamma;
+        private Vector2 _impulse;
+        public Vector2 LocalAnchorA { get; private set; }
+        private Mat22 _mass; // effective mass for point-to-point constraint.
+        private float _maxForce;
+        public Vector2 LocalAnchorB { get; private set; }
+
+        /// <summary>
+        /// This requires a world target point,
+        /// tuning parameters, and the time step.
+        /// </summary>
+        /// <param name="def"></param>
+        public MouseJoint(Body bodyA, Body bodyB, Vector2 target)
+            : base(bodyA, bodyB)
         {
-            return _target;
+            JointType = JointType.Mouse;
+            Frequency = 5.0f;
+            DampingRatio = 0.7f;
+
+            Debug.Assert(target.IsValid());
+            //Debug.Assert(MathUtils.IsValid(def.MaxForce) && def.MaxForce >= 0.0f);
+            //Debug.Assert(MathUtils.IsValid(def.FrequencyHz) && def.FrequencyHz >= 0.0f);
+            //Debug.Assert(MathUtils.IsValid(def.DampingRatio) && def.DampingRatio >= 0.0f);
+
+            Transform xf1;
+            BodyB.GetTransform(out xf1);
+
+            LocalAnchorB = target;
+            LocalAnchorA = MathUtils.MultiplyT(ref xf1, LocalAnchorB);
         }
 
-        public override Vector2 GetAnchorB()
+        public override Vector2 AnchorA
         {
-            return BodyB.GetWorldPoint(_localAnchor);
+            get { return LocalAnchorB; }
+        }
+
+        public override Vector2 AnchorB
+        {
+            get { return BodyB.GetWorldPoint(LocalAnchorA); }
+        }
+
+        /// <summary>
+        /// The initial world target point. This is assumed
+        /// to coincide with the body anchor initially.
+        /// </summary>
+        public Vector2 Target
+        {
+            get { return LocalAnchorB; }
+            set
+            {
+                if (BodyB.Awake == false)
+                {
+                    BodyB.Awake = true;
+                }
+                LocalAnchorB = value;
+            }
+        }
+
+        /// <summary>
+        /// The maximum constraint force that can be exerted
+        /// to move the candidate body. Usually you will express
+        /// as some multiple of the weight (multiplier * mass * gravity).
+        /// </summary>
+        public float MaxForce
+        {
+            set { _maxForce = value; }
+            get { return _maxForce; }
+        }
+
+        /// <summary>
+        /// The response speed.
+        /// </summary>
+        public float Frequency { get; set; }
+
+        /// <summary>
+        /// The damping ratio. 0 = no damping, 1 = critical damping.
+        /// </summary>
+        public float DampingRatio
+        {
+            set { _dampingRatio = value; }
+            get { return _dampingRatio; }
         }
 
         public override Vector2 GetReactionForce(float inv_dt)
@@ -93,91 +132,6 @@ namespace FarseerPhysics
             return inv_dt * 0.0f;
         }
 
-        /// <summary>
-        /// Use this to update the target point.
-        /// </summary>
-        /// <param name="target">The target.</param>
-        public void SetTarget(Vector2 target)
-        {
-            if (BodyB.Awake == false)
-            {
-                BodyB.Awake = true;
-            }
-            _target = target;
-        }
-
-        public Vector2 GetTarget()
-        {
-            return _target;
-        }
-
-        /// <summary>
-        /// Set/get the maximum force in Newtons.
-        /// </summary>
-        /// <param name="force">The force.</param>
-        public void SetMaxForce(float force)
-        {
-            _maxForce = force;
-        }
-
-        public float GetMaxForce()
-        {
-            return _maxForce;
-        }
-
-        /// <summary>
-        /// Set/get the frequency in Hertz.
-        /// </summary>
-        /// <param name="hz">The hz.</param>
-        public void SetFrequency(float hz)
-        {
-            _frequencyHz = hz;
-        }
-
-        public float GetFrequency()
-        {
-            return _frequencyHz;
-        }
-
-        /// <summary>
-        /// Set/get the damping ratio (dimensionless).
-        /// </summary>
-        /// <param name="ratio">The ratio.</param>
-        public void SetDampingRatio(float ratio)
-        {
-            _dampingRatio = ratio;
-        }
-
-        public float GetDampingRatio()
-        {
-            return _dampingRatio;
-        }
-
-
-        internal MouseJoint(MouseJointDef def)
-            : base(def)
-        {
-            Debug.Assert(def.Target.IsValid());
-            Debug.Assert(MathUtils.IsValid(def.MaxForce) && def.MaxForce >= 0.0f);
-            Debug.Assert(MathUtils.IsValid(def.FrequencyHz) && def.FrequencyHz >= 0.0f);
-            Debug.Assert(MathUtils.IsValid(def.DampingRatio) && def.DampingRatio >= 0.0f);
-
-            Transform xf1;
-            BodyB.GetTransform(out xf1);
-
-            _target = def.Target;
-            _localAnchor = MathUtils.MultiplyT(ref xf1, _target);
-
-            _maxForce = def.MaxForce;
-            _impulse = Vector2.Zero;
-
-            _frequencyHz = def.FrequencyHz;
-            _dampingRatio = def.DampingRatio;
-
-            _beta = 0.0f;
-            _gamma = 0.0f;
-        }
-
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
             Body b = BodyB;
@@ -185,7 +139,7 @@ namespace FarseerPhysics
             float mass = b.Mass;
 
             // Frequency
-            float omega = 2.0f * Settings.Pi * _frequencyHz;
+            float omega = 2.0f * Settings.Pi * Frequency;
 
             // Damping coefficient
             float d = 2.0f * mass * _dampingRatio * omega;
@@ -209,7 +163,7 @@ namespace FarseerPhysics
             // Compute the effective mass matrix.
             Transform xf1;
             b.GetTransform(out xf1);
-            Vector2 r = MathUtils.Multiply(ref xf1.R, _localAnchor - b.LocalCenter);
+            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b.LocalCenter);
 
             // K    = [(1/m1 + 1/m2) * eye(2) - skew(r1) * invI1 * skew(r1) - skew(r2) * invI2 * skew(r2)]
             //      = [1/m1+1/m2     0    ] + invI1 * [r1.Y*r1.Y -r1.X*r1.Y] + invI2 * [r1.Y*r1.Y -r1.X*r1.Y]
@@ -228,7 +182,7 @@ namespace FarseerPhysics
 
             _mass = K.GetInverse();
 
-            _C = b._sweep.Center + r - _target;
+            _C = b._sweep.Center + r - LocalAnchorB;
 
             // Cheat with some damping
             b._angularVelocity *= 0.98f;
@@ -246,7 +200,7 @@ namespace FarseerPhysics
             Transform xf1;
             b.GetTransform(out xf1);
 
-            Vector2 r = MathUtils.Multiply(ref xf1.R, _localAnchor - b.LocalCenter);
+            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b.LocalCenter);
 
             // Cdot = v + cross(w, r)
             Vector2 Cdot = b._linearVelocity + MathUtils.Cross(b._angularVelocity, r);
@@ -265,21 +219,9 @@ namespace FarseerPhysics
             b._angularVelocity += b._invI * MathUtils.Cross(r, impulse);
         }
 
-        internal override bool SolvePositionConstraints(float baumgarte)
+        internal override bool SolvePositionConstraints()
         {
             return true;
         }
-
-        private Vector2 _localAnchor;
-        private Vector2 _target;
-        private Vector2 _impulse;
-
-        private Mat22 _mass;		// effective mass for point-to-point constraint.
-        private Vector2 _C;				// position error
-        private float _maxForce;
-        private float _frequencyHz;
-        private float _dampingRatio;
-        private float _beta;
-        private float _gamma;
     }
 }

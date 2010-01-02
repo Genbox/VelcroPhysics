@@ -309,54 +309,52 @@ namespace FarseerPhysics
         /// is retained. This may cause the connected bodies to cease colliding.
         /// @warning This function is locked during callbacks.
         /// </summary>
-        /// <param name="def">The def.</param>
+        /// <param name="joint">The joint.</param>
         /// <returns></returns>
-        public Joint CreateJoint(JointDef def)
+        public void CreateJoint(Joint joint)
         {
             Debug.Assert(!Locked);
             if (Locked)
             {
-                return null;
+                return;
             }
-
-            Joint j = Joint.Create(def);
 
             // Connect to the world list.
-            j.Prev = null;
-            j.Next = JointList;
+            joint.Prev = null;
+            joint.Next = JointList;
             if (JointList != null)
             {
-                JointList.Prev = j;
+                JointList.Prev = joint;
             }
-            JointList = j;
+            JointList = joint;
             ++JointCount;
 
             // Connect to the bodies' doubly linked lists.
-            j.EdgeA.Joint = j;
-            j.EdgeA.Other = j.BodyB;
-            j.EdgeA.Prev = null;
-            j.EdgeA.Next = j.BodyA._jointList;
+            joint._edgeA.Joint = joint;
+            joint._edgeA.Other = joint.BodyB;
+            joint._edgeA.Prev = null;
+            joint._edgeA.Next = joint.BodyA._jointList;
 
-            if (j.BodyA._jointList != null)
-                j.BodyA._jointList.Prev = j.EdgeA;
+            if (joint.BodyA._jointList != null)
+                joint.BodyA._jointList.Prev = joint._edgeA;
 
-            j.BodyA._jointList = j.EdgeA;
+            joint.BodyA._jointList = joint._edgeA;
 
-            j.EdgeB.Joint = j;
-            j.EdgeB.Other = j.BodyA;
-            j.EdgeB.Prev = null;
-            j.EdgeB.Next = j.BodyB._jointList;
+            joint._edgeB.Joint = joint;
+            joint._edgeB.Other = joint.BodyA;
+            joint._edgeB.Prev = null;
+            joint._edgeB.Next = joint.BodyB._jointList;
 
-            if (j.BodyB._jointList != null)
-                j.BodyB._jointList.Prev = j.EdgeB;
+            if (joint.BodyB._jointList != null)
+                joint.BodyB._jointList.Prev = joint._edgeB;
 
-            j.BodyB._jointList = j.EdgeB;
+            joint.BodyB._jointList = joint._edgeB;
 
-            Body bodyA = def.BodyA;
-            Body bodyB = def.BodyB;
+            Body bodyA = joint.BodyA;
+            Body bodyB = joint.BodyB;
 
             // If the joint prevents collisions, then flag any contacts for filtering.
-            if (def.CollideConnected == false)
+            if (joint.CollideConnected == false)
             {
                 ContactEdge edge = bodyB.ContactList;
                 while (edge != null)
@@ -373,8 +371,6 @@ namespace FarseerPhysics
             }
 
             // Note: creating a joint doesn't wake the bodies.
-
-            return j;
         }
 
         /// <summary>
@@ -417,42 +413,42 @@ namespace FarseerPhysics
             bodyB.Awake = true;
 
             // Remove from body 1.
-            if (j.EdgeA.Prev != null)
+            if (j._edgeA.Prev != null)
             {
-                j.EdgeA.Prev.Next = j.EdgeA.Next;
+                j._edgeA.Prev.Next = j._edgeA.Next;
             }
 
-            if (j.EdgeA.Next != null)
+            if (j._edgeA.Next != null)
             {
-                j.EdgeA.Next.Prev = j.EdgeA.Prev;
+                j._edgeA.Next.Prev = j._edgeA.Prev;
             }
 
-            if (j.EdgeA == bodyA._jointList)
+            if (j._edgeA == bodyA._jointList)
             {
-                bodyA._jointList = j.EdgeA.Next;
+                bodyA._jointList = j._edgeA.Next;
             }
 
-            j.EdgeA.Prev = null;
-            j.EdgeA.Next = null;
+            j._edgeA.Prev = null;
+            j._edgeA.Next = null;
 
             // Remove from body 2
-            if (j.EdgeB.Prev != null)
+            if (j._edgeB.Prev != null)
             {
-                j.EdgeB.Prev.Next = j.EdgeB.Next;
+                j._edgeB.Prev.Next = j._edgeB.Next;
             }
 
-            if (j.EdgeB.Next != null)
+            if (j._edgeB.Next != null)
             {
-                j.EdgeB.Next.Prev = j.EdgeB.Prev;
+                j._edgeB.Next.Prev = j._edgeB.Prev;
             }
 
-            if (j.EdgeB == bodyB._jointList)
+            if (j._edgeB == bodyB._jointList)
             {
-                bodyB._jointList = j.EdgeB.Next;
+                bodyB._jointList = j._edgeB.Next;
             }
 
-            j.EdgeB.Prev = null;
-            j.EdgeB.Next = null;
+            j._edgeB.Prev = null;
+            j._edgeB.Next = null;
 
             Debug.Assert(JointCount > 0);
             --JointCount;
@@ -622,7 +618,7 @@ namespace FarseerPhysics
             }
             for (Joint j = JointList; j != null; j = j.Next)
             {
-                j.IslandFlag = false;
+                j._islandFlag = false;
             }
 
             // Build and simulate all awake islands.
@@ -709,7 +705,7 @@ namespace FarseerPhysics
                     // Search all joints connect to this body.
                     for (JointEdge je = b._jointList; je != null; je = je.Next)
                     {
-                        if (je.Joint.IslandFlag)
+                        if (je.Joint._islandFlag)
                         {
                             continue;
                         }
@@ -723,7 +719,7 @@ namespace FarseerPhysics
                         }
 
                         _island.Add(je.Joint);
-                        je.Joint.IslandFlag = true;
+                        je.Joint._islandFlag = true;
 
                         if ((other._flags & BodyFlags.Island) != BodyFlags.None)
                         {
@@ -805,7 +801,7 @@ namespace FarseerPhysics
 
             for (Joint j = JointList; j != null; j = j.Next)
             {
-                j.IslandFlag = false;
+                j._islandFlag = false;
             }
 
             // Find TOI events and solve them.
@@ -1019,7 +1015,7 @@ namespace FarseerPhysics
                             continue;
                         }
 
-                        if (jEdge.Joint.IslandFlag)
+                        if (jEdge.Joint._islandFlag)
                         {
                             continue;
                         }
@@ -1032,7 +1028,7 @@ namespace FarseerPhysics
 
                         _island.Add(jEdge.Joint);
 
-                        jEdge.Joint.IslandFlag = true;
+                        jEdge.Joint._islandFlag = true;
 
                         if ((other._flags & BodyFlags.Island) != BodyFlags.None)
                         {
@@ -1103,7 +1099,7 @@ namespace FarseerPhysics
                 {
                     // Allow joints to participate in future TOI islands.
                     Joint j = _island.Joints[i];
-                    j.IslandFlag = false;
+                    j._islandFlag = false;
                 }
 
                 // Commit fixture proxy movements to the broad-phase so that new contacts are created.

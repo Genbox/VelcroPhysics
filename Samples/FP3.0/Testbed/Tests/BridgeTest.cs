@@ -44,7 +44,6 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box = PolygonTools.CreateBox(0.5f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 20.0f);
 
-                RevoluteJointDef jd = new RevoluteJointDef();
 
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
@@ -57,7 +56,7 @@ namespace FarseerPhysics.TestBed.Tests
                     fixture.Friction = 0.2f;
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 5.0f);
-                    jd.Initialize(prevBody, body, anchor);
+                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, anchor);
                     _world.CreateJoint(jd);
 
                     if (i == (Count >> 1))
@@ -68,8 +67,8 @@ namespace FarseerPhysics.TestBed.Tests
                 }
 
                 Vector2 anchor2 = new Vector2(-15.0f + 1.0f * Count, 5.0f);
-                jd.Initialize(prevBody, ground, anchor2);
-                _world.CreateJoint(jd);
+                RevoluteJoint jd2 = new RevoluteJoint(prevBody, ground, anchor2);
+                _world.CreateJoint(jd2);
             }
 
             Vertices vertices = new Vertices(3);
