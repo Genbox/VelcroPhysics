@@ -515,8 +515,8 @@ namespace FarseerPhysics
         /// <returns></returns>
         public Fixture CreateFixture(Shape shape)
         {
-            Debug.Assert(World.IsLocked == false);
-            if (World.IsLocked)
+            Debug.Assert(World.Locked == false);
+            if (World.Locked)
                 return null;
 
             Fixture fixture = new Fixture();
@@ -556,8 +556,8 @@ namespace FarseerPhysics
         /// <param name="fixture"> the fixture to be removed.</param>
         public void DestroyFixture(Fixture fixture)
         {
-            Debug.Assert(World.IsLocked == false);
-            if (World.IsLocked)
+            Debug.Assert(World.Locked == false);
+            if (World.Locked)
             {
                 return;
             }
@@ -633,8 +633,8 @@ namespace FarseerPhysics
         /// <param name="angle">the world rotation in radians.</param>
         public void SetTransform(Vector2 position, float angle)
         {
-            Debug.Assert(World.IsLocked == false);
-            if (World.IsLocked)
+            Debug.Assert(World.Locked == false);
+            if (World.Locked)
             {
                 return;
             }
