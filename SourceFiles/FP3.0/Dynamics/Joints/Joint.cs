@@ -101,71 +101,37 @@ namespace FarseerPhysics
         public JointEdge Next;
     }
 
-    public class JointDef
-    {
-        /// <summary>
-        /// The joint type is set automatically for concrete joint types.
-        /// </summary>
-        internal JointType Type;
-
-        /// <summary>
-        /// Use this to attach application specific data to your joints.
-        /// </summary>
-        public object UserData;
-
-        /// <summary>
-        /// The first attached body.
-        /// </summary>
-        public Body BodyA;
-
-        /// <summary>
-        /// The second attached body.
-        /// </summary>
-        public Body BodyB;
-
-        /// <summary>
-        /// Set this flag to true if the attached bodies should collide.
-        /// </summary>
-	    public bool CollideConnected;
-    }
-
     public abstract class Joint
     {
         /// <summary>
         /// Gets or sets the type of the joint.
         /// </summary>
         /// <value>The type of the joint.</value>
-        public JointType JointType { get; private set; }
+        public JointType JointType { get; set; }
 
         /// <summary>
         /// Get the first body attached to this joint.
         /// </summary>
-        /// <returns></returns>
-	    public Body GetBodyA()
-        {
-            return BodyA;
-        }
+        /// <value></value>
+        public Body BodyA { get; set; }
 
         /// <summary>
         /// Get the second body attached to this joint.
         /// </summary>
-        /// <returns></returns>
-	    public Body GetBodyB()
-        {
-            return BodyB;
-        }
+        /// <value></value>
+        public Body BodyB { get; set; }
 
         /// <summary>
         /// Get the anchor point on body1 in world coordinates.
         /// </summary>
-        /// <returns></returns>
-	    public abstract Vector2 GetAnchorA();
+        /// <value></value>
+        public abstract Vector2 AnchorA { get; }
 
         /// <summary>
         /// Get the anchor point on body2 in world coordinates.
         /// </summary>
-        /// <returns></returns>
-	    public abstract Vector2 GetAnchorB();
+        /// <value></value>
+        public abstract Vector2 AnchorB { get; }
 
         /// <summary>
         /// Get the reaction force on body2 at the joint anchor in Newtons.
@@ -184,121 +150,44 @@ namespace FarseerPhysics
         /// <summary>
         /// Get the next joint the world joint list.
         /// </summary>
-        /// <returns></returns>
-	    public Joint GetNext()
-        {
-	        return Next;
-        }
+        /// <value></value>
+        public Joint Next { get; internal set; }
 
         /// <summary>
-        /// Get the user data pointer.
+        /// Get the previous joint the world joint list.
         /// </summary>
-        /// <returns></returns>
-	    public object GetUserData()
-        {
-            return _userData;
-        }
+        /// <value></value>
+        public Joint Prev { get; set; }
 
         /// <summary>
         /// Set the user data pointer.
         /// </summary>
-        /// <param name="data">The data.</param>
-	    public void SetUserData(object data)
-        {
-            _userData = data;
-        }
+        /// <value>The data.</value>
+        public object UserData { get; set; }
 
         /// <summary>
         /// Short-cut function to determine if either body is inactive.
         /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if this instance is active; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsActive()
+        /// <value>
+        ///   &lt;c&gt;true&lt;/c&gt; if this instance is active; otherwise, &lt;c&gt;false&lt;/c&gt;.
+        /// </value>
+        public bool Active
         {
-            return BodyA.Active && BodyB.Active;
-
+            get { return BodyA.Active && BodyB.Active; }
         }
 
-	    internal static Joint Create(JointDef def)
+	    protected Joint(Body bodyA, Body bodyB)
         {
-	        Joint joint = null;
+            Debug.Assert(bodyA != bodyB);
 
-	        switch (def.Type)
-	        {
-	        case JointType.Distance:
-		        {
-			        joint = new DistanceJoint((DistanceJointDef)def);
-		        }
-		        break;
+            BodyA = bodyA;
+            BodyB = bodyB;
 
-	        case JointType.Mouse:
-		        {
-			        joint = new MouseJoint((MouseJointDef)def);
-		        }
-		        break;
+            //Connected bodies should collide by default
+            CollideConnected = true;
 
-	        case JointType.Prismatic:
-		        {
-			        joint = new PrismaticJoint((PrismaticJointDef)def);
-		        }
-		        break;
-
-	        case JointType.Revolute:
-		        {
-			        joint = new RevoluteJoint((RevoluteJointDef)def);
-		        }
-		        break;
-
-	        case JointType.Pulley:
-		        {
-			        joint = new PulleyJoint((PulleyJointDef)def);
-		        }
-		        break;
-
-	        case JointType.Gear:
-		        {
-			        joint = new GearJoint((GearJointDef)def);
-		        }
-		        break;
-
-	        case JointType.Line:
-		        {
-			        joint = new LineJoint((LineJointDef)def);
-		        }
-		        break;
-
-            case JointType.Weld:
-                {
-                    joint = new WeldJoint((WeldJointDef)def);
-                }
-                break;
-            case JointType.Friction:
-                {
-                    joint = new FrictionJoint((FrictionJointDef)def);
-                }
-                break;
-                
-	        default:
-		        Debug.Assert(false);
-		        break;
-	        }
-
-	        return joint;
-        }
-
-	    protected Joint(JointDef def)
-        {
-            Debug.Assert(def.BodyA != def.BodyB);
-
-	        JointType = def.Type;
-	        BodyA = def.BodyA;
-	        BodyB = def.BodyB;
-	        CollideConnected = def.CollideConnected;
-	        _userData = def.UserData;
-
-            EdgeA = new JointEdge();
-            EdgeB = new JointEdge();
+            _edgeA = new JointEdge();
+            _edgeB = new JointEdge();
         }
 
 	    internal abstract void InitVelocityConstraints(ref TimeStep step);
@@ -306,23 +195,21 @@ namespace FarseerPhysics
         internal virtual void FinalizeVelocityConstraints() {}
 
 	    // This returns true if the position errors are within tolerance.
-	    internal abstract bool SolvePositionConstraints(float baumgarte);
+        internal abstract bool SolvePositionConstraints();
 
-        internal Joint Prev;
-	    internal Joint Next;
-	    internal JointEdge EdgeA;
-	    internal JointEdge EdgeB;
-	    internal Body BodyA;
-	    internal Body BodyB;
+        internal JointEdge _edgeA;
+	    internal JointEdge _edgeB;
 
-	    internal bool IslandFlag;
-	    internal bool CollideConnected;
+        internal bool _islandFlag;
 
-        private object _userData;
+        /// <summary>
+        /// Set this flag to true if the attached bodies should collide.
+        /// </summary>
+        public bool CollideConnected { get; set; }
 
-	    // Cache here per time step to reduce cache misses.
-	    internal Vector2 LocalCenterA, LocalCenterB;
-	    internal float InvMassA, InvIA;
-	    internal float InvMassB, InvIB;
+        // Cache here per time step to reduce cache misses.
+        protected Vector2 _localCenterA, _localCenterB;
+        protected float _invMassA, _invIA;
+	    protected float _invMassB, _invIB;
     }
 }

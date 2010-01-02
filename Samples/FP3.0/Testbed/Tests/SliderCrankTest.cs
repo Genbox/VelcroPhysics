@@ -54,12 +54,11 @@ namespace FarseerPhysics.TestBed.Tests
 
                     body.CreateFixture(shape);
 
-                    RevoluteJointDef rjd = new RevoluteJointDef();
-                    rjd.Initialize(prevBody, body, new Vector2(0.0f, 5.0f));
-                    rjd.MotorSpeed = 1.0f * Settings.Pi;
-                    rjd.MaxMotorTorque = 10000.0f;
-                    rjd.EnableMotor = true;
-                    _joint1 = (RevoluteJoint)_world.CreateJoint(rjd);
+                    _joint1 = new RevoluteJoint(prevBody, body, new Vector2(0.0f, 5.0f));
+                    _joint1.MotorSpeed = 1.0f * Settings.Pi;
+                    _joint1.MaxMotorTorque = 10000.0f;
+                    _joint1.MotorEnabled = true;
+                    _world.CreateJoint(_joint1);
 
                     prevBody = body;
                 }
@@ -75,9 +74,8 @@ namespace FarseerPhysics.TestBed.Tests
 
                     body.CreateFixture(shape);
 
-                    RevoluteJointDef rjd3 = new RevoluteJointDef();
-                    rjd3.Initialize(prevBody, body, new Vector2(0.0f, 9.0f));
-                    rjd3.EnableMotor = false;
+                    RevoluteJoint rjd3 = new RevoluteJoint(prevBody, body, new Vector2(0.0f, 9.0f));
+                    rjd3.MotorEnabled = false;
                     _world.CreateJoint(rjd3);
 
                     prevBody = body;
@@ -94,17 +92,14 @@ namespace FarseerPhysics.TestBed.Tests
 
                     body.CreateFixture(shape);
 
-                    RevoluteJointDef rjd2 = new RevoluteJointDef();
-                    rjd2.Initialize(prevBody, body, new Vector2(0.0f, 17.0f));
+                    RevoluteJoint rjd2 = new RevoluteJoint(prevBody, body, new Vector2(0.0f, 17.0f));
                     _world.CreateJoint(rjd2);
 
-                    PrismaticJointDef pjd = new PrismaticJointDef();
-                    pjd.Initialize(ground, body, new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f));
+                    _joint2 = new PrismaticJoint(ground, body, new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f));
+                    _joint2.MaxMotorForce = 1000.0f;
+                    _joint2.MotorEnabled = true;
 
-                    pjd.MaxMotorForce = 1000.0f;
-                    pjd.EnableMotor = true;
-
-                    _joint2 = (PrismaticJoint)_world.CreateJoint(pjd);
+                    _world.CreateJoint(_joint2);
                 }
 
                 // Create a payload
@@ -125,13 +120,13 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (state.IsKeyDown(Keys.F) && oldState.IsKeyUp(Keys.F))
             {
-                _joint2.EnableMotor(!_joint2.IsMotorEnabled());
-                _joint2.GetBodyB().Awake = true;
+                _joint2.MotorEnabled = !_joint2.MotorEnabled;
+                _joint2.BodyB.Awake = true;
             }
             if (state.IsKeyDown(Keys.M) && oldState.IsKeyUp(Keys.M))
             {
-                _joint1.EnableMotor(!_joint1.IsMotorEnabled());
-                _joint1.GetBodyB().Awake = true;
+                _joint1.MotorEnabled = !_joint1.MotorEnabled;
+                _joint1.BodyB.Awake = true;
             }
         }
 
@@ -140,7 +135,7 @@ namespace FarseerPhysics.TestBed.Tests
             base.Step(settings);
             _debugView.DrawString(50, _textLine, "Keys: (f) toggle friction, (m) toggle motor");
             _textLine += 15;
-            float torque = _joint1.GetMotorTorque();
+            float torque = _joint1.MotorTorque;
             _debugView.DrawString(50, _textLine, "Motor Torque = {0:n}", torque);
             _textLine += 15;
         }

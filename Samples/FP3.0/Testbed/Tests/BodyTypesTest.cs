@@ -63,20 +63,17 @@ namespace FarseerPhysics.TestBed.Tests
                 Fixture fixture = _platform.CreateFixture(shape);
                 fixture.Friction = 0.6f;
 
-                RevoluteJointDef rjd = new RevoluteJointDef();
-                rjd.Initialize(_attachment, _platform, new Vector2(0.0f, 5.0f));
+                RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform, new Vector2(0.0f, 5.0f));
                 rjd.MaxMotorTorque = 50.0f;
-                rjd.EnableMotor = true;
+                rjd.MotorEnabled = true;
                 _world.CreateJoint(rjd);
 
-                PrismaticJointDef pjd = new PrismaticJointDef();
-                pjd.Initialize(ground, _platform, new Vector2(0.0f, 5.0f), new Vector2(1.0f, 0.0f));
-
+                PrismaticJoint pjd = new PrismaticJoint(ground, _platform, new Vector2(0.0f, 5.0f), new Vector2(1.0f, 0.0f));
                 pjd.MaxMotorForce = 1000.0f;
-                pjd.EnableMotor = true;
-                pjd.LowerTranslation = -10.0f;
-                pjd.UpperTranslation = 10.0f;
-                pjd.EnableLimit = true;
+                pjd.MotorEnabled = true;
+                pjd.LowerLimit= -10.0f;
+                pjd.UpperLimit= 10.0f;
+                pjd.LimitEnabled = true;
 
                 _world.CreateJoint(pjd);
 

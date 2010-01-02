@@ -36,49 +36,19 @@ namespace FarseerPhysics
     // J = [0 0 -1 0 0 1]
     // K = invI1 + invI2
 
-    /// <summary>
-    /// Friction joint definition.
-    /// </summary>
-    public class FrictionJointDef : JointDef
-    {
-        public FrictionJointDef()
-        {
-            Type = JointType.Friction;
-        }
-
-        /// <summary>
-        /// The local anchor point relative to body1's origin.
-        /// </summary>
-        public Vector2 LocalAnchorA;
-
-        /// <summary>
-        /// The local anchor point relative to body2's origin.
-        /// </summary>
-        public Vector2 LocalAnchorB;
-
-        /// <summary>
-        /// The maximum friction force in N.
-        /// </summary>
-        public float MaxForce;
-
-        /// <summary>
-        /// The maximum friction torque in N-m.
-        /// </summary>
-        public float MaxTorque;
-    }
 
     /// Friction joint. This is used for top-down friction.
     /// It provides 2D translational friction and angular friction.
     public class FrictionJoint : Joint
     {
-        public override Vector2 GetAnchorA()
+        public override Vector2 AnchorA
         {
-            return BodyA.GetWorldPoint(_localAnchor1);
+            get { return BodyA.GetWorldPoint(_localAnchor1); }
         }
 
-        public override Vector2 GetAnchorB()
+        public override Vector2 AnchorB
         {
-            return BodyB.GetWorldPoint(_localAnchor2);
+            get { return BodyB.GetWorldPoint(_localAnchor2); }
         }
 
         public override Vector2 GetReactionForce(float inv_dt)
@@ -93,33 +63,28 @@ namespace FarseerPhysics
             return F;
         }
 
-        public void SetMaxForce(float force)
+        /// <summary>
+        /// The maximum friction force in N.
+        /// </summary>
+        public float MaxForce
         {
-            _maxForce = force;
+            set { _maxForce = value; }
+            get { return _maxForce; }
         }
 
-        public float GetMaxForce()
+        /// <summary>
+        /// The maximum friction torque in N-m.
+        /// </summary>
+        public float MaxTorque
         {
-            return _maxForce;
+            set { _maxTorque = value; }
+            get { return _maxTorque; }
         }
 
-        public void SetMaxTorque(float torque)
+        public FrictionJoint(Body bodyA, Body bodyB)
+            : base(bodyA, bodyB)
         {
-            _maxTorque = torque;
-        }
-
-        public float GetMaxTorque()
-        {
-            return _maxTorque;
-        }
-
-        internal FrictionJoint(FrictionJointDef def)
-            : base(def)
-        {
-            _localAnchor1 = def.LocalAnchorA;
-            _localAnchor2 = def.LocalAnchorB;
-            _maxForce = def.MaxForce;
-            _maxTorque = def.MaxTorque;
+            JointType = JointType.Friction;
         }
 
         internal override void InitVelocityConstraints(ref TimeStep step)
@@ -257,7 +222,7 @@ namespace FarseerPhysics
             bB._angularVelocity = wB;
         }
 
-        internal override bool SolvePositionConstraints(float baumgarte)
+        internal override bool SolvePositionConstraints()
         {
             return true;
         }

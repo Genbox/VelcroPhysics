@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -31,23 +31,23 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                
+
                 ground = _world.CreateBody();
-                
+
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge,0);
-                
+                PolygonShape shape = new PolygonShape(edge, 0);
+
                 ground.CreateFixture(shape);
             }
 
             {
-                CircleShape circle1 = new CircleShape(1.0f,5);
+                CircleShape circle1 = new CircleShape(1.0f, 5);
 
-                CircleShape circle2 = new CircleShape(2.0f,5);
+                CircleShape circle2 = new CircleShape(2.0f, 5);
 
                 Vertices box = PolygonTools.CreateBox(0.5f, 5.0f);
 
-                PolygonShape polygonBox = new PolygonShape(box,5);
+                PolygonShape polygonBox = new PolygonShape(box, 5);
 
                 Body body1 = _world.CreateBody();
                 body1.BodyType = BodyType.Dynamic;
@@ -55,13 +55,10 @@ namespace FarseerPhysics.TestBed.Tests
 
                 body1.CreateFixture(circle1);
 
-                RevoluteJointDef jd1 = new RevoluteJointDef();
-                jd1.BodyA = ground;
-                jd1.BodyB = body1;
-                jd1.LocalAnchorA = ground.GetLocalPoint(body1.Position);
-                jd1.LocalAnchorB = body1.GetLocalPoint(body1.Position);
-                jd1.ReferenceAngle = body1.GetAngle() - ground.GetAngle();
-                _joint1 = (RevoluteJoint) _world.CreateJoint(jd1);
+                _joint1 = new RevoluteJoint(ground, body1, ground.GetLocalPoint(body1.Position));
+                _joint1.LocalAnchorB = body1.GetLocalPoint(body1.Position);
+                _joint1.ReferenceAngle = body1.GetAngle() - ground.GetAngle();
+                _world.CreateJoint(_joint1);
 
                 Body body2 = _world.CreateBody();
                 body2.BodyType = BodyType.Dynamic;
@@ -69,9 +66,8 @@ namespace FarseerPhysics.TestBed.Tests
 
                 body2.CreateFixture(circle2);
 
-                RevoluteJointDef jd2 = new RevoluteJointDef();
-                jd2.Initialize(ground, body2, body2.Position);
-                _joint2 = (RevoluteJoint) _world.CreateJoint(jd2);
+                _joint2 = new RevoluteJoint(ground, body2, body2.Position);
+                _world.CreateJoint(_joint2);
 
                 Body body3 = _world.CreateBody();
                 body3.BodyType = BodyType.Dynamic;
@@ -79,29 +75,22 @@ namespace FarseerPhysics.TestBed.Tests
 
                 body3.CreateFixture(polygonBox);
 
-                PrismaticJointDef jd3 = new PrismaticJointDef();
-                jd3.Initialize(ground, body3, body3.Position, new Vector2(0.0f, 1.0f));
-                jd3.LowerTranslation = -5.0f;
-                jd3.UpperTranslation = 5.0f;
-                jd3.EnableLimit = true;
+                _joint3 = new PrismaticJoint(ground, body3, body3.Position, new Vector2(0.0f, 1.0f));
+                _joint3.LowerLimit = -5.0f;
+                _joint3.UpperLimit = 5.0f;
+                _joint3.LimitEnabled = true;
 
-                _joint3 = (PrismaticJoint) _world.CreateJoint(jd3);
+                _world.CreateJoint(_joint3);
 
-                GearJointDef jd4 = new GearJointDef();
-                jd4.BodyA = body1;
-                jd4.BodyB = body2;
-                jd4.Joint1 = _joint1;
-                jd4.Joint2 = _joint2;
-                jd4.Ratio = circle2.Radius/circle1.Radius;
-                _joint4 = (GearJoint) _world.CreateJoint(jd4);
+                _joint4 = new GearJoint(_joint1, _joint2, circle2.Radius / circle1.Radius);
+                _joint4.BodyA = body1;
+                _joint4.BodyB = body2;
+                _world.CreateJoint(_joint4);
 
-                GearJointDef jd5 = new GearJointDef();
-                jd5.BodyA = body2;
-                jd5.BodyB = body3;
-                jd5.Joint1 = _joint2;
-                jd5.Joint2 = _joint3;
-                jd5.Ratio = -1.0f/circle2.Radius;
-                _joint5 = (GearJoint) _world.CreateJoint(jd5);
+                _joint5 = new GearJoint(_joint2, _joint3, -1.0f / circle2.Radius);
+                _joint5.BodyA = body2;
+                _joint5.BodyB = body3;
+                _world.CreateJoint(_joint5);
             }
         }
 
@@ -109,13 +98,13 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Step(settings);
 
-            float ratio = _joint4.GetRatio();
-            float value = _joint1.GetJointAngle() + ratio*_joint2.GetJointAngle();
+            float ratio = _joint4.Ratio;
+            float value = _joint1.JointAngle + ratio * _joint2.JointAngle;
             _debugView.DrawString(50, _textLine, "theta1 + {0:n} * theta2 = {1:n}", ratio, value);
             _textLine += 15;
 
-            ratio = _joint5.GetRatio();
-            value = _joint2.GetJointAngle() + ratio*_joint3.GetJointTranslation();
+            ratio = _joint5.Ratio;
+            value = _joint2.JointAngle + ratio * _joint3.JointTranslation;
             _debugView.DrawString(50, _textLine, "theta2 + {0:n} * delta = {1:n}", ratio, value);
             _textLine += 15;
         }

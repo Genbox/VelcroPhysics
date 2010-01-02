@@ -175,7 +175,7 @@ namespace FarseerPhysics
                 bool jointsOkay = true;
                 for (int j = 0; j < JointCount; ++j)
                 {
-                    bool jointOkay = Joints[j].SolvePositionConstraints(Settings.ContactBaumgarte);
+                    bool jointOkay = Joints[j].SolvePositionConstraints();
                     jointsOkay = jointsOkay && jointOkay;
                 }
 
@@ -320,7 +320,7 @@ namespace FarseerPhysics
                 bool jointsOkay = true;
                 for (int j = 0; j < JointCount; ++j)
                 {
-                    bool jointOkay = Joints[j].SolvePositionConstraints(k_toiBaumgarte);
+                    bool jointOkay = Joints[j].SolvePositionConstraints();
                     jointsOkay = jointsOkay && jointOkay;
                 }
 

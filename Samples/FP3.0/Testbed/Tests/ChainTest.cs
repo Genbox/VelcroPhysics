@@ -43,8 +43,6 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box = PolygonTools.CreateBox(0.6f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 20);
 
-                RevoluteJointDef jd = new RevoluteJointDef();
-                jd.CollideConnected = false;
 
                 const float y = 25.0f;
                 Body prevBody = ground;
@@ -57,7 +55,8 @@ namespace FarseerPhysics.TestBed.Tests
                     Fixture fixture = body.CreateFixture(shape);
                     fixture.Friction = 0.2f;
                     Vector2 anchor = new Vector2(i, y);
-                    jd.Initialize(prevBody, body, anchor);
+                    RevoluteJoint jd = new RevoluteJoint(prevBody,body,anchor);
+                    jd.CollideConnected = false;
                     _world.CreateJoint(jd);
 
                     prevBody = body;

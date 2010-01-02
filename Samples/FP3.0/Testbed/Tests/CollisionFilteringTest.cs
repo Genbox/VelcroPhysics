@@ -97,15 +97,10 @@ namespace FarseerPhysics.TestBed.Tests
                     PolygonShape p = new PolygonShape(box, 1);
                     body.CreateFixture(p);
 
-                    PrismaticJointDef jd = new PrismaticJointDef();
-                    jd.BodyA = body2;
-                    jd.BodyB = body;
-                    jd.EnableLimit = true;
-                    jd.LocalAnchorA = new Vector2(0.0f, 4.0f);
-                    jd.LocalAnchorB = Vector2.Zero;
-                    jd.LocalAxis1 = new Vector2(0.0f, 1.0f);
-                    jd.LowerTranslation = -1.0f;
-                    jd.UpperTranslation = 1.0f;
+                    PrismaticJoint jd = new PrismaticJoint(body2, body, new Vector2(0.0f, 4.0f),new Vector2(0.0f, 1.0f));
+                    jd.LimitEnabled = true;
+                    jd.LowerLimit = -1.0f;
+                    jd.UpperLimit = 1.0f;
 
                     _world.CreateJoint(jd);
                 }
