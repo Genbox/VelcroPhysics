@@ -33,8 +33,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                BodyDef bd = new BodyDef();
-                ground = _world.CreateBody(bd);
+
+                ground = _world.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -45,23 +45,29 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(5);
                 shape.SetAsBox(0.5f, 0.5f);
 
-                BodyDef bd = new BodyDef();
-                bd.Type = BodyType.Dynamic;
 
-                bd.Position = new Vector2(-5.0f, 5.0f);
-                _bodies[0] = _world.CreateBody(bd);
+                _bodies[0] = _world.CreateBody();
+                _bodies[0].BodyType = BodyType.Dynamic;
+                _bodies[0].Position = new Vector2(-5.0f, 5.0f);
+
                 _bodies[0].CreateFixture(shape);
 
-                bd.Position = new Vector2(5.0f, 5.0f);
-                _bodies[1] = _world.CreateBody(bd);
+                _bodies[1] = _world.CreateBody();
+                _bodies[1].BodyType = BodyType.Dynamic;
+                _bodies[1].Position = new Vector2(5.0f, 5.0f);
+
                 _bodies[1].CreateFixture(shape);
 
-                bd.Position = new Vector2(5.0f, 15.0f);
-                _bodies[2] = _world.CreateBody(bd);
+                _bodies[2] = _world.CreateBody();
+                _bodies[2].BodyType = BodyType.Dynamic;
+                _bodies[2].Position = new Vector2(5.0f, 15.0f);
+
                 _bodies[2].CreateFixture(shape);
 
-                bd.Position = new Vector2(-5.0f, 15.0f);
-                _bodies[3] = _world.CreateBody(bd);
+                _bodies[3] = _world.CreateBody();
+                _bodies[3].BodyType = BodyType.Dynamic;
+                _bodies[3].Position = new Vector2(-5.0f, 15.0f);
+
                 _bodies[3].CreateFixture(shape);
 
                 DistanceJointDef jd = new DistanceJointDef();

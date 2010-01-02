@@ -35,8 +35,8 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
 
-                BodyDef bd = new BodyDef();
-                Body ground = _world.CreateBody(bd);
+                
+                Body ground = _world.CreateBody();
                 ground.CreateFixture(shape);
             }
 
@@ -53,11 +53,10 @@ namespace FarseerPhysics.TestBed.Tests
 
             PolygonShape polygon = new PolygonShape(vertices, 1);
 
-            BodyDef triangleBodyDef = new BodyDef();
-            triangleBodyDef.Type = BodyType.Dynamic;
-            triangleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+            Body body1 = _world.CreateBody();
+            body1.BodyType = BodyType.Dynamic;
+            body1.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
-            Body body1 = _world.CreateBody(triangleBodyDef);
             body1.CreateFixture(polygon);
 
             // Large triangle (recycle definitions)
@@ -66,45 +65,43 @@ namespace FarseerPhysics.TestBed.Tests
             vertices[2] *= 2.0f;
             polygon.Set(vertices);
 
-            triangleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
-
-            Body body2 = _world.CreateBody(triangleBodyDef);
+            Body body2 = _world.CreateBody();
+            body2.BodyType = BodyType.Dynamic;
+            body2.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
             body2.CreateFixture(polygon);
 
             // Small box
             Vertices smallBox = PolygonTools.CreateBox(1.0f, 0.5f);
             polygon.Set(smallBox);
 
-            BodyDef boxBodyDef = new BodyDef();
-            boxBodyDef.Type = BodyType.Dynamic;
-            boxBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
-
-            Body body3 = _world.CreateBody(boxBodyDef);
+            Body body3 = _world.CreateBody();
+            body3.BodyType = BodyType.Dynamic;
+            body3.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
             body3.CreateFixture(polygon);
 
             // Large box (recycle definitions)
             Vertices largeBox = PolygonTools.CreateBox(2.0f, 1.0f);
             polygon.Set(largeBox);
-            boxBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
-            Body body4 = _world.CreateBody(boxBodyDef);
+            Body body4 = _world.CreateBody();
+            body4.BodyType = BodyType.Dynamic;
+            body4.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
             body4.CreateFixture(polygon);
 
             // Small circle
             CircleShape circle = new CircleShape(1.0f, 1);
 
-            BodyDef circleBodyDef = new BodyDef();
-            circleBodyDef.Type = BodyType.Dynamic;
-            circleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
-
-            Body body5 = _world.CreateBody(circleBodyDef);
+            Body body5 = _world.CreateBody();
+            body5.BodyType = BodyType.Dynamic;
+            body5.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
             body5.CreateFixture(circle);
 
             // Large circle
             circle.Radius *= 2.0f;
-            circleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
-            Body body6 = _world.CreateBody(circleBodyDef);
+            Body body6 = _world.CreateBody();
+            body6.BodyType = BodyType.Dynamic;
+            body6.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
             body6.CreateFixture(circle);
         }
 

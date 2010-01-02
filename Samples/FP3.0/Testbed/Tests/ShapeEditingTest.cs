@@ -31,18 +31,17 @@ namespace FarseerPhysics.TestBed.Tests
         private ShapeEditingTest()
         {
             {
-                BodyDef bd = new BodyDef();
-                Body ground = _world.CreateBody(bd);
+                
+                Body ground = _world.CreateBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
                 ground.CreateFixture(shape);
             }
 
-            BodyDef bodydef = new BodyDef();
-            bodydef.Type = BodyType.Dynamic;
-            bodydef.Position = new Vector2(0.0f, 10.0f);
-            _body = _world.CreateBody(bodydef);
+            _body = _world.CreateBody();
+            _body.BodyType = BodyType.Dynamic;
+            _body.Position = new Vector2(0.0f, 10.0f);
 
             Vertices box = PolygonTools.CreateBox(4.0f, 4.0f);
             PolygonShape shape2 = new PolygonShape(box, 10);

@@ -275,10 +275,10 @@ namespace FarseerPhysics
 
             float impulse = _mass * (-C);
 
-            b1._sweep.c += b1._invMass * impulse * _J.LinearA;
-            b1._sweep.a += b1._invI * impulse * _J.AngularA;
-            b2._sweep.c += b2._invMass * impulse * _J.LinearB;
-            b2._sweep.a += b2._invI * impulse * _J.AngularB;
+            b1._sweep.Center += b1._invMass * impulse * _J.LinearA;
+            b1._sweep.Angle += b1._invI * impulse * _J.AngularA;
+            b2._sweep.Center += b2._invMass * impulse * _J.LinearB;
+            b2._sweep.Angle += b2._invI * impulse * _J.AngularB;
 
             b1.SynchronizeTransform();
             b2.SynchronizeTransform();

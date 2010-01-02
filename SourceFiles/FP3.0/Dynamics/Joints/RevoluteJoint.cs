@@ -157,7 +157,7 @@ namespace FarseerPhysics
         {
             Body b1 = BodyA;
             Body b2 = BodyB;
-            return b2._sweep.a - b1._sweep.a - _referenceAngle;
+            return b2._sweep.Angle - b1._sweep.Angle - _referenceAngle;
         }
 
         /// <summary>
@@ -338,15 +338,15 @@ namespace FarseerPhysics
             float m1 = b1._invMass, m2 = b2._invMass;
             float i1 = b1._invI, i2 = b2._invI;
 
-            _mass.col1.X = m1 + m2 + r1.Y * r1.Y * i1 + r2.Y * r2.Y * i2;
-            _mass.col2.X = -r1.Y * r1.X * i1 - r2.Y * r2.X * i2;
-            _mass.col3.X = -r1.Y * i1 - r2.Y * i2;
-            _mass.col1.Y = _mass.col2.X;
-            _mass.col2.Y = m1 + m2 + r1.X * r1.X * i1 + r2.X * r2.X * i2;
-            _mass.col3.Y = r1.X * i1 + r2.X * i2;
-            _mass.col1.Z = _mass.col3.X;
-            _mass.col2.Z = _mass.col3.Y;
-            _mass.col3.Z = i1 + i2;
+            _mass.Col1.X = m1 + m2 + r1.Y * r1.Y * i1 + r2.Y * r2.Y * i2;
+            _mass.Col2.X = -r1.Y * r1.X * i1 - r2.Y * r2.X * i2;
+            _mass.Col3.X = -r1.Y * i1 - r2.Y * i2;
+            _mass.Col1.Y = _mass.Col2.X;
+            _mass.Col2.Y = m1 + m2 + r1.X * r1.X * i1 + r2.X * r2.X * i2;
+            _mass.Col3.Y = r1.X * i1 + r2.X * i2;
+            _mass.Col1.Z = _mass.Col3.X;
+            _mass.Col2.Z = _mass.Col3.Y;
+            _mass.Col3.Z = i1 + i2;
 
             _motorMass = 1.0f / (i1 + i2);
 
@@ -357,7 +357,7 @@ namespace FarseerPhysics
 
             if (_enableLimit)
             {
-                float jointAngle = b2._sweep.a - b1._sweep.a - _referenceAngle;
+                float jointAngle = b2._sweep.Angle - b1._sweep.Angle - _referenceAngle;
                 if (Math.Abs(_upperAngle - _lowerAngle) < 2.0f * Settings.AngularSlop)
                 {
                     _limitState = LimitState.Equal;
@@ -537,7 +537,7 @@ namespace FarseerPhysics
             // Solve angular limit constraint.
             if (_enableLimit && _limitState != LimitState.Inactive)
             {
-                float angle = b2._sweep.a - b1._sweep.a - _referenceAngle;
+                float angle = b2._sweep.Angle - b1._sweep.Angle - _referenceAngle;
                 float limitImpulse = 0.0f;
 
                 if (_limitState == LimitState.Equal)
@@ -566,8 +566,8 @@ namespace FarseerPhysics
                     limitImpulse = -_motorMass * C;
                 }
 
-                b1._sweep.a -= b1._invI * limitImpulse;
-                b2._sweep.a += b2._invI * limitImpulse;
+                b1._sweep.Angle -= b1._invI * limitImpulse;
+                b2._sweep.Angle += b2._invI * limitImpulse;
 
                 b1.SynchronizeTransform();
                 b2.SynchronizeTransform();
@@ -582,7 +582,7 @@ namespace FarseerPhysics
                 Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchor1 - b1.LocalCenter);
                 Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.LocalCenter);
 
-                Vector2 C = b2._sweep.c + r2 - b1._sweep.c - r1;
+                Vector2 C = b2._sweep.Center + r2 - b1._sweep.Center - r1;
                 positionError = C.Length();
 
                 float invMass1 = b1._invMass, invMass2 = b2._invMass;
@@ -599,10 +599,10 @@ namespace FarseerPhysics
                     float m = 1.0f / k;
                     Vector2 impulse2 = m * (-C);
                     const float k_beta = 0.5f;
-                    b1._sweep.c -= k_beta * invMass1 * impulse2;
-                    b2._sweep.c += k_beta * invMass2 * impulse2;
+                    b1._sweep.Center -= k_beta * invMass1 * impulse2;
+                    b2._sweep.Center += k_beta * invMass2 * impulse2;
 
-                    C = b2._sweep.c + r2 - b1._sweep.c - r1;
+                    C = b2._sweep.Center + r2 - b1._sweep.Center - r1;
                 }
 
                 Mat22 K1 = new Mat22(new Vector2(invMass1 + invMass2, 0.0f), new Vector2(0.0f, invMass1 + invMass2));
@@ -616,11 +616,11 @@ namespace FarseerPhysics
 
                 Vector2 impulse = K.Solve(-C);
 
-                b1._sweep.c -= b1._invMass * impulse;
-                b1._sweep.a -= b1._invI * MathUtils.Cross(r1, impulse);
+                b1._sweep.Center -= b1._invMass * impulse;
+                b1._sweep.Angle -= b1._invI * MathUtils.Cross(r1, impulse);
 
-                b2._sweep.c += b2._invMass * impulse;
-                b2._sweep.a += b2._invI * MathUtils.Cross(r2, impulse);
+                b2._sweep.Center += b2._invMass * impulse;
+                b2._sweep.Angle += b2._invI * MathUtils.Cross(r2, impulse);
 
                 b1.SynchronizeTransform();
                 b2.SynchronizeTransform();

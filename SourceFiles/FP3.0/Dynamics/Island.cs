@@ -89,7 +89,7 @@ namespace FarseerPhysics
                 // v2 = exp(-c * dt) * v1
                 // Taylor expansion:
                 // v2 = (1.0f - c * dt) * v1
-                b._linearVelocity *= MathUtils.Clamp(1.0f - step.DeltaTime * b._linearDamping, 0.0f, 1.0f);
+                b._linearVelocity *= MathUtils.Clamp(1.0f - step.DeltaTime * b.LinearDamping, 0.0f, 1.0f);
                 b._angularVelocity *= MathUtils.Clamp(1.0f - step.DeltaTime * b._angularDamping, 0.0f, 1.0f);
             }
 
@@ -154,12 +154,12 @@ namespace FarseerPhysics
                 }
 
                 // Store positions for continuous collision.
-                b._sweep.c0 = b._sweep.c;
-                b._sweep.a0 = b._sweep.a;
+                b._sweep.Center0 = b._sweep.Center;
+                b._sweep.Angle0 = b._sweep.Angle;
 
                 // Integrate
-                b._sweep.c += step.DeltaTime * b._linearVelocity;
-                b._sweep.a += step.DeltaTime * b._angularVelocity;
+                b._sweep.Center += step.DeltaTime * b._linearVelocity;
+                b._sweep.Angle += step.DeltaTime * b._angularVelocity;
 
                 // Compute new transform
                 b.SynchronizeTransform();
@@ -298,12 +298,12 @@ namespace FarseerPhysics
                 }
 
                 // Store positions for continuous collision.
-                b._sweep.c0 = b._sweep.c;
-                b._sweep.a0 = b._sweep.a;
+                b._sweep.Center0 = b._sweep.Center;
+                b._sweep.Angle0 = b._sweep.Angle;
 
                 // Integrate
-                b._sweep.c += subStep.DeltaTime * b._linearVelocity;
-                b._sweep.a += subStep.DeltaTime * b._angularVelocity;
+                b._sweep.Center += subStep.DeltaTime * b._linearVelocity;
+                b._sweep.Angle += subStep.DeltaTime * b._angularVelocity;
 
                 // Compute new transform
                 b.SynchronizeTransform();

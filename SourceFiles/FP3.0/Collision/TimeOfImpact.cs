@@ -269,8 +269,8 @@ namespace FarseerPhysics
             Sweep sweepA = input.sweepA;
             Sweep sweepB = input.sweepB;
 
-            Debug.Assert(sweepA.t0 == sweepB.t0);
-            Debug.Assert(1.0f - sweepA.t0 > Settings.Epsilon);
+            Debug.Assert(sweepA.TimeInt0 == sweepB.TimeInt0);
+            Debug.Assert(1.0f - sweepA.TimeInt0 > Settings.Epsilon);
 
             float radius = input.proxyA.Radius + input.proxyB.Radius;
             float tolerance = input.tolerance;

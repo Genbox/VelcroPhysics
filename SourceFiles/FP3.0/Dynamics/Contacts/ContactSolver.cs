@@ -101,8 +101,8 @@ namespace FarseerPhysics
 
                     ccp.LocalPoint = cp.LocalPoint;
 
-                    ccp.RA = worldManifold.Points[j] - bodyA._sweep.c;
-                    ccp.RB = worldManifold.Points[j] - bodyB._sweep.c;
+                    ccp.RA = worldManifold.Points[j] - bodyA._sweep.Center;
+                    ccp.RB = worldManifold.Points[j] - bodyB._sweep.Center;
 
 #if MATH_OVERLOADS
 			        float rnA = MathUtils.Cross(ccp.RA, cc.Normal);
@@ -520,7 +520,7 @@ namespace FarseerPhysics
                         //
                         x.X = -cp1.NormalMass * b.X;
                         x.Y = 0.0f;
-                        vn2 = c.K.col1.Y * x.X + b.Y;
+                        vn2 = c.K.Col1.Y * x.X + b.Y;
 
                         if (x.X >= 0.0f && vn2 >= 0.0f)
                         {
@@ -578,7 +578,7 @@ namespace FarseerPhysics
                         //
                         x.X = 0.0f;
                         x.Y = -cp2.NormalMass * b.Y;
-                        vn1 = c.K.col2.X * x.Y + b.X;
+                        vn1 = c.K.Col2.X * x.Y + b.X;
 
                         if (x.Y >= 0.0f && vn1 >= 0.0f)
                         {
@@ -744,8 +744,8 @@ namespace FarseerPhysics
                     Vector2 point = psm.Points[j];
                     float separation = psm.Separations[j];
 
-                    Vector2 rA = point - bodyA._sweep.c;
-                    Vector2 rB = point - bodyB._sweep.c;
+                    Vector2 rA = point - bodyA._sweep.Center;
+                    Vector2 rB = point - bodyB._sweep.Center;
 
                     // Track max constraint error.
                     minSeparation = Math.Min(minSeparation, separation);
@@ -766,13 +766,13 @@ namespace FarseerPhysics
 #else
                     Vector2 P = new Vector2(impulse * normal.X, impulse * normal.Y);
 
-                    bodyA._sweep.c.X -= invMassA * P.X;
-                    bodyA._sweep.c.Y -= invMassA * P.Y;
-                    bodyA._sweep.a -= invIA * (rA.X * P.Y - rA.Y * P.X);
+                    bodyA._sweep.Center.X -= invMassA * P.X;
+                    bodyA._sweep.Center.Y -= invMassA * P.Y;
+                    bodyA._sweep.Angle -= invIA * (rA.X * P.Y - rA.Y * P.X);
 
-                    bodyB._sweep.c.X += invMassB * P.X;
-                    bodyB._sweep.c.Y += invMassB * P.Y;
-                    bodyB._sweep.a += invIB * (rB.X * P.Y - rB.Y * P.X);
+                    bodyB._sweep.Center.X += invMassB * P.X;
+                    bodyB._sweep.Center.Y += invMassB * P.Y;
+                    bodyB._sweep.Angle += invIB * (rB.X * P.Y - rB.Y * P.X);
 #endif
                     bodyA.SynchronizeTransform();
                     bodyB.SynchronizeTransform();

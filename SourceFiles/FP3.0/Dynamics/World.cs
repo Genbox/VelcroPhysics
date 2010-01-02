@@ -55,12 +55,12 @@ namespace FarseerPhysics
         /// </summary>
         /// <param name="gravity">the world gravity vector.</param>
         /// <param name="doSleep">improve performance by not simulating inactive bodies.</param>
-        public World(Vector2 gravity, bool doSleep)
+        public World(Vector2 gravity, bool allowSleep)
         {
             WarmStarting = true;
             ContinuousPhysics = true;
 
-            _allowSleep = doSleep;
+            _allowSleep = allowSleep;
             Gravity = gravity;
 
             _queryAABBCallbackWrapper = QueryAABBCallbackWrapper;
@@ -68,6 +68,7 @@ namespace FarseerPhysics
 
             ContactManager = new ContactManager();
 
+            //Create the default contact filter
             new DefaultContactFilter(this);
         }
 
@@ -78,7 +79,6 @@ namespace FarseerPhysics
             {
                 return null;
             }
-
 
             Body b = new Body(this);
 
@@ -103,6 +103,7 @@ namespace FarseerPhysics
                 return null;
             }
 
+            //NOTE: This constructor is untested and might not work.
             Body b = new Body(body, this);
 
             // Add to world doubly linked list.
@@ -804,7 +805,7 @@ namespace FarseerPhysics
             for (Body b = BodyList; b != null; b = b._next)
             {
                 b._flags &= ~BodyFlags.Island;
-                b._sweep.t0 = 0.0f;
+                b._sweep.TimeInt0 = 0.0f;
             }
 
             for (Contact c = ContactManager._contactList; c != null; c = c.Next)
@@ -856,16 +857,16 @@ namespace FarseerPhysics
                         }
 
                         // Put the sweeps onto the same time interval.
-                        float t0 = b1._sweep.t0;
+                        float t0 = b1._sweep.TimeInt0;
 
-                        if (b1._sweep.t0 < b2._sweep.t0)
+                        if (b1._sweep.TimeInt0 < b2._sweep.TimeInt0)
                         {
-                            t0 = b2._sweep.t0;
+                            t0 = b2._sweep.TimeInt0;
                             b1._sweep.Advance(t0);
                         }
-                        else if (b2._sweep.t0 < b1._sweep.t0)
+                        else if (b2._sweep.TimeInt0 < b1._sweep.TimeInt0)
                         {
-                            t0 = b1._sweep.t0;
+                            t0 = b1._sweep.TimeInt0;
                             b2._sweep.Advance(t0);
                         }
 

@@ -52,8 +52,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
 
-                BodyDef bd = new BodyDef();
-                Body ground = _world.CreateBody(bd);
+                Body ground = _world.CreateBody();
                 Fixture fixture = ground.CreateFixture(shape);
                 fixture.SetFriction(0.3f);
             }
@@ -66,15 +65,14 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices[2] = new Vector2(0.0f, 2.0f);
                 PolygonShape polygon = new PolygonShape(vertices, 1);
 
-                BodyDef triangleBodyDef = new BodyDef();
-                triangleBodyDef.Type = BodyType.Dynamic;
-                triangleBodyDef.Position = new Vector2(-5.0f, 2.0f);
+                Body body1 = _world.CreateBody();
+                body1.BodyType = BodyType.Dynamic;
+                body1.Position = new Vector2(-5.0f, 2.0f);
 
-                Body body1 = _world.CreateBody(triangleBodyDef);
-                Fixture fixture = body1.CreateFixture(polygon);
-                fixture.GroupIndex = SmallGroup;
-                fixture.CategoryBits = TriangleCategory;
-                fixture.MaskBits = TriangleMask;
+                Fixture body1Fixture = body1.CreateFixture(polygon);
+                body1Fixture.GroupIndex = SmallGroup;
+                body1Fixture.CategoryBits = TriangleCategory;
+                body1Fixture.MaskBits = TriangleMask;
 
                 // Large triangle (recycle definitions)
                 vertices[0] *= 2.0f;
@@ -82,17 +80,18 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices[2] *= 2.0f;
                 polygon.Set(vertices);
 
-                triangleBodyDef.Position = new Vector2(-5.0f, 6.0f);
-                triangleBodyDef.FixedRotation = true; // look at me!
+                Body body2 = _world.CreateBody();
+                body2.BodyType = BodyType.Dynamic;
+                body2.Position = new Vector2(-5.0f, 6.0f);
+                body2.FixedRotation = true; // look at me!
 
-                Body body2 = _world.CreateBody(triangleBodyDef);
-                body2.CreateFixture(polygon);
+                Fixture body2Fixture = body2.CreateFixture(polygon);
+                body2Fixture.GroupIndex = LargeGroup;
 
                 {
-                    BodyDef bd = new BodyDef();
-                    bd.Type = BodyType.Dynamic;
-                    bd.Position = new Vector2(-5.0f, 10.0f);
-                    Body body = _world.CreateBody(bd);
+                    Body body = _world.CreateBody();
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = new Vector2(-5.0f, 10.0f);
 
                     Vertices box = PolygonTools.CreateBox(0.5f, 1.0f);
                     PolygonShape p = new PolygonShape(box, 1);
@@ -116,48 +115,48 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box2 = PolygonTools.CreateBox(1.0f, 0.5f);
                 polygon.Set(box2);
 
+                Body body3 = _world.CreateBody();
+                body3.BodyType = BodyType.Dynamic;
+                body3.Position = new Vector2(0.0f, 2.0f);
 
-                BodyDef boxBodyDef = new BodyDef();
-                boxBodyDef.Type = BodyType.Dynamic;
-                boxBodyDef.Position = new Vector2(0.0f, 2.0f);
-
-                Body body3 = _world.CreateBody(boxBodyDef);
-                Fixture fixture2 = body3.CreateFixture(polygon);
-                fixture2.SetRestitution(0.1f);
-                fixture2.GroupIndex = SmallGroup;
-                fixture2.CategoryBits = BoxCategory;
-                fixture2.MaskBits = BoxMask;
+                Fixture body3fixture = body3.CreateFixture(polygon);
+                body3fixture.SetRestitution(0.1f);
+                body3fixture.GroupIndex = SmallGroup;
+                body3fixture.CategoryBits = BoxCategory;
+                body3fixture.MaskBits = BoxMask;
 
                 // Large box (recycle definitions)
                 Vertices box3 = PolygonTools.CreateBox(2, 1);
                 polygon.Set(box3);
 
-                //boxShapeDef.Filter.groupIndex = LargeGroup;
-                boxBodyDef.Position = new Vector2(0.0f, 6.0f);
+                Body body4 = _world.CreateBody();
+                body4.BodyType = BodyType.Dynamic;
+                body4.Position = new Vector2(0.0f, 6.0f);
 
-                Body body4 = _world.CreateBody(boxBodyDef);
-                body4.CreateFixture(polygon);
+                Fixture body4Fixture = body4.CreateFixture(polygon);
+                body4Fixture.GroupIndex = LargeGroup;
 
                 // Small circle
                 CircleShape circle = new CircleShape(1.0f, 1);
 
-                BodyDef circleBodyDef = new BodyDef();
-                circleBodyDef.Type = BodyType.Dynamic;
-                circleBodyDef.Position = new Vector2(5.0f, 2.0f);
+                Body body5 = _world.CreateBody();
+                body5.BodyType = BodyType.Dynamic;
+                body5.Position = new Vector2(5.0f, 2.0f);
 
-                Body body5 = _world.CreateBody(circleBodyDef);
-                Fixture fixture3 = body5.CreateFixture(circle);
-                fixture3.GroupIndex = SmallGroup;
-                fixture3.CategoryBits = CircleCategory;
-                fixture3.MaskBits = CircleMask;
+                Fixture body5Fixture = body5.CreateFixture(circle);
+                body5Fixture.GroupIndex = SmallGroup;
+                body5Fixture.CategoryBits = CircleCategory;
+                body5Fixture.MaskBits = CircleMask;
 
                 // Large circle
                 circle.Radius *= 2.0f;
-                //circleShapeDef.Filter.groupIndex = LargeGroup;
-                circleBodyDef.Position = new Vector2(5.0f, 6.0f);
 
-                Body body6 = _world.CreateBody(circleBodyDef);
-                body6.CreateFixture(circle);
+                Body body6 = _world.CreateBody();
+                body6.BodyType = BodyType.Dynamic;
+                body6.Position = new Vector2(5.0f, 6.0f);
+
+                Fixture body6Fixture = body6.CreateFixture(circle);
+                body6Fixture.GroupIndex = LargeGroup;
             }
 
         }

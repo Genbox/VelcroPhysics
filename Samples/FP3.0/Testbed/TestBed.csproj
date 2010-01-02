@@ -90,11 +90,11 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Tests\ApplyForceTest.cs" />
     <Compile Include="Tests\BodyTypesTest.cs" />
+    <Compile Include="Tests\BreakableTest.cs" />
     <Compile Include="Tests\BridgeTest.cs" />
+    <Compile Include="Tests\CantileverTest.cs" />
     <Compile Include="Tests\CCDTest.cs" />
     <Compile Include="Tests\ChainTest.cs" />
-    <Compile Include="Tests\CantileverTest.cs" />
-    <Compile Include="Tests\BreakableTest.cs" />
     <Compile Include="Tests\CollisionFilteringTest.cs" />
     <Compile Include="Tests\CollisionProcessingTest.cs">
       <SubType>Code</SubType>

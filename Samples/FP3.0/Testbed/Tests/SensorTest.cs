@@ -32,8 +32,8 @@ namespace FarseerPhysics.TestBed.Tests
         private SensorTest()
         {
             {
-                BodyDef bd = new BodyDef();
-                Body ground = _world.CreateBody(bd);
+                
+                Body ground = _world.CreateBody();
 
                 {
                     Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -64,13 +64,11 @@ namespace FarseerPhysics.TestBed.Tests
 
                 for (int i = 0; i < Count; ++i)
                 {
-                    BodyDef bd = new BodyDef();
-                    bd.Type = BodyType.Dynamic;
-                    bd.Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
-                    bd.UserData = i;
-
                     _touching[i] = false;
-                    _bodies[i] = _world.CreateBody(bd);
+                    _bodies[i] = _world.CreateBody();
+                    _bodies[i].BodyType = BodyType.Dynamic;
+                    _bodies[i].Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
+                    _bodies[i].UserData = i;
 
                     _bodies[i].CreateFixture(shape);
                 }

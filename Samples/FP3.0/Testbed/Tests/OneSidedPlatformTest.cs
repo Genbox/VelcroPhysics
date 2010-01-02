@@ -31,8 +31,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Ground
             {
-                BodyDef bd = new BodyDef();
-                Body ground = _world.CreateBody(bd);
+                
+                Body ground = _world.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0.0f);
                 shape.SetAsEdge(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
@@ -41,9 +41,9 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Platform
             {
-                BodyDef bd = new BodyDef();
-                bd.Position = new Vector2(0.0f, 10.0f);
-                Body body = _world.CreateBody(bd);
+                
+                Body body = _world.CreateBody();
+                body.Position = new Vector2(0.0f, 10.0f);
 
                 PolygonShape shape = new PolygonShape(0.0f);
                 shape.SetAsBox(3.0f, 0.5f);
@@ -54,10 +54,10 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Actor
             {
-                BodyDef bd = new BodyDef();
-                bd.Type = BodyType.Dynamic;
-                bd.Position = new Vector2(0.0f, 12.0f);
-                Body body = _world.CreateBody(bd);
+                
+                Body body = _world.CreateBody();
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(0.0f, 12.0f);
 
                 _radius = 0.5f;
                 CircleShape shape = new CircleShape(_radius, 1);

@@ -223,12 +223,12 @@ namespace FarseerPhysics
             Mat22 K;
             Mat22.Add(ref K1, ref K2, out K);
 
-            K.col1.X += _gamma;
-            K.col2.Y += _gamma;
+            K.Col1.X += _gamma;
+            K.Col2.Y += _gamma;
 
             _mass = K.GetInverse();
 
-            _C = b._sweep.c + r - _target;
+            _C = b._sweep.Center + r - _target;
 
             // Cheat with some damping
             b._angularVelocity *= 0.98f;

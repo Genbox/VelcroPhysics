@@ -116,8 +116,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Ground body
             {
-                BodyDef bd = new BodyDef();
-                Body ground = _world.CreateBody(bd);
+                
+                Body ground = _world.CreateBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -178,19 +178,19 @@ namespace FarseerPhysics.TestBed.Tests
                 _bodies[_bodyIndex] = null;
             }
 
-            BodyDef bd = new BodyDef();
-            bd.Type = BodyType.Dynamic;
-
+            _bodies[_bodyIndex] = _world.CreateBody();
+            _bodies[_bodyIndex].BodyType = BodyType.Dynamic;
+            
             float x = Rand.RandomFloat(-2.0f, 2.0f);
-            bd.Position = new Vector2(x, 10.0f);
-            bd.Angle = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
+            
+            _bodies[_bodyIndex].Position = new Vector2(x, 10.0f);
+            _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
 
             if (index == 4)
             {
-                bd.AngularDamping = 0.02f;
+                _bodies[_bodyIndex].AngularDamping = 0.02f;
             }
 
-            _bodies[_bodyIndex] = _world.CreateBody(bd);
 
             if (index < 4)
             {

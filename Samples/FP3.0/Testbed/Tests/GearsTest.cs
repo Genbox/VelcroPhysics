@@ -31,8 +31,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                BodyDef bd = new BodyDef();
-                ground = _world.CreateBody(bd);
+                
+                ground = _world.CreateBody();
                 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge,0);
@@ -49,38 +49,38 @@ namespace FarseerPhysics.TestBed.Tests
 
                 PolygonShape polygonBox = new PolygonShape(box,5);
 
-                BodyDef bd1 = new BodyDef();
-                bd1.Type = BodyType.Dynamic;
-                bd1.Position = new Vector2(-3.0f, 12.0f);
-                Body body1 = _world.CreateBody(bd1);
+                Body body1 = _world.CreateBody();
+                body1.BodyType = BodyType.Dynamic;
+                body1.Position = new Vector2(-3.0f, 12.0f);
+
                 body1.CreateFixture(circle1);
 
                 RevoluteJointDef jd1 = new RevoluteJointDef();
                 jd1.BodyA = ground;
                 jd1.BodyB = body1;
-                jd1.LocalAnchorA = ground.GetLocalPoint(bd1.Position);
-                jd1.LocalAnchorB = body1.GetLocalPoint(bd1.Position);
+                jd1.LocalAnchorA = ground.GetLocalPoint(body1.Position);
+                jd1.LocalAnchorB = body1.GetLocalPoint(body1.Position);
                 jd1.ReferenceAngle = body1.GetAngle() - ground.GetAngle();
                 _joint1 = (RevoluteJoint) _world.CreateJoint(jd1);
 
-                BodyDef bd2 = new BodyDef();
-                bd2.Type = BodyType.Dynamic;
-                bd2.Position = new Vector2(0.0f, 12.0f);
-                Body body2 = _world.CreateBody(bd2);
+                Body body2 = _world.CreateBody();
+                body2.BodyType = BodyType.Dynamic;
+                body2.Position = new Vector2(0.0f, 12.0f);
+
                 body2.CreateFixture(circle2);
 
                 RevoluteJointDef jd2 = new RevoluteJointDef();
-                jd2.Initialize(ground, body2, bd2.Position);
+                jd2.Initialize(ground, body2, body2.Position);
                 _joint2 = (RevoluteJoint) _world.CreateJoint(jd2);
 
-                BodyDef bd3 = new BodyDef();
-                bd3.Type = BodyType.Dynamic;
-                bd3.Position = new Vector2(2.5f, 12.0f);
-                Body body3 = _world.CreateBody(bd3);
+                Body body3 = _world.CreateBody();
+                body3.BodyType = BodyType.Dynamic;
+                body3.Position = new Vector2(2.5f, 12.0f);
+
                 body3.CreateFixture(polygonBox);
 
                 PrismaticJointDef jd3 = new PrismaticJointDef();
-                jd3.Initialize(ground, body3, bd3.Position, new Vector2(0.0f, 1.0f));
+                jd3.Initialize(ground, body3, body3.Position, new Vector2(0.0f, 1.0f));
                 jd3.LowerTranslation = -5.0f;
                 jd3.UpperTranslation = 5.0f;
                 jd3.EnableLimit = true;
