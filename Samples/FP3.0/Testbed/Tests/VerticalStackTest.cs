@@ -34,8 +34,8 @@ namespace FarseerPhysics.TestBed.Tests
         private VerticalStackTest()
         {
             {
-                BodyDef bd = new BodyDef();
-                Body ground = _world.CreateBody(bd);
+                
+                Body ground = _world.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -54,14 +54,14 @@ namespace FarseerPhysics.TestBed.Tests
 
                 for (int i = 0; i < RowCount; ++i)
                 {
-                    BodyDef bd = new BodyDef();
-                    bd.Type = BodyType.Dynamic;
+                    
 
                     const float x = 0.0f;
                     //float x = Rand.RandomFloat-0.02f, 0.02f);
                     //float x = i % 2 == 0 ? -0.025f : 0.025f;
-                    bd.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
-                    Body body = _world.CreateBody(bd);
+                    Body body = _world.CreateBody();
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
 
                     Fixture fixture = body.CreateFixture(shape);
                     fixture.SetFriction(0.3f);
@@ -84,12 +84,11 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     CircleShape shape = new CircleShape(0.25f, 20);
 
-                    BodyDef bd = new BodyDef();
-                    bd.Type = BodyType.Dynamic;
-                    bd.Bullet = true;
-                    bd.Position = new Vector2(-31.0f, 5.0f);
+                    _bullet = _world.CreateBody();
+                    _bullet.BodyType = BodyType.Dynamic;
+                    _bullet.Bullet = true;
+                    _bullet.Position = new Vector2(-31.0f, 5.0f);
 
-                    _bullet = _world.CreateBody(bd);
                     Fixture fixture = _bullet.CreateFixture(shape);
                     fixture.SetRestitution(0.05f);
 

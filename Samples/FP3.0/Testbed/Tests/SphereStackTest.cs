@@ -33,8 +33,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
 
             {
-                BodyDef bd = new BodyDef();
-                Body ground = _world.CreateBody(bd);
+                
+                Body ground = _world.CreateBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -46,11 +46,9 @@ namespace FarseerPhysics.TestBed.Tests
 
                 for (int i = 0; i < Count; ++i)
                 {
-                    BodyDef bd = new BodyDef();
-                    bd.Type = BodyType.Dynamic;
-                    bd.Position = new Vector2(0.0f, 4.0f + 3.0f * i);
-
-                    _bodies[i] = _world.CreateBody(bd);
+                    _bodies[i] = _world.CreateBody();
+                    _bodies[i].BodyType = BodyType.Dynamic;
+                    _bodies[i].Position = new Vector2(0.0f, 4.0f + 3.0f * i);
 
                     _bodies[i].CreateFixture(shape);
 

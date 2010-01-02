@@ -67,19 +67,16 @@ namespace FarseerPhysics.TestBed.Tests
                 poly2.Set(vertices);
             }
 
-            BodyDef bd1 = new BodyDef();
-            BodyDef bd2 = new BodyDef();
-            bd1.Type = BodyType.Dynamic;
-            bd2.Type = BodyType.Dynamic;
 
-            bd1.Position = _offset;
-            bd2.Position = p4 + _offset;
+            Body body1 = _world.CreateBody();
+            body1.BodyType = BodyType.Dynamic;
+            body1.Position = _offset;
+            body1.AngularDamping = 10.0f;
 
-            bd1.AngularDamping = 10.0f;
-            bd2.AngularDamping = 10.0f;
-
-            Body body1 = _world.CreateBody(bd1);
-            Body body2 = _world.CreateBody(bd2);
+            Body body2 = _world.CreateBody();
+            body2.BodyType = BodyType.Dynamic;
+            body2.Position = p4 + _offset;
+            body2.AngularDamping = 10.0f;
 
             Fixture f1 = body1.CreateFixture(poly1);
             f1.GroupIndex = -1;
@@ -122,8 +119,8 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Ground
             {
-                BodyDef bd = new BodyDef();
-                Body ground = _world.CreateBody(bd);
+                
+                Body ground = _world.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
@@ -141,11 +138,10 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(0.25f, 1);
 
-                BodyDef bd = new BodyDef();
-                bd.Type = BodyType.Dynamic;
-                bd.Position = new Vector2(-40.0f + 2.0f * i, 0.5f);
+                Body body = _world.CreateBody();
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(-40.0f + 2.0f * i, 0.5f);
 
-                Body body = _world.CreateBody(bd);
                 body.CreateFixture(shape);
             }
 
@@ -154,10 +150,10 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(1);
                 shape.SetAsBox(2.5f, 1.0f);
 
-                BodyDef bd = new BodyDef();
-                bd.Type = BodyType.Dynamic;
-                bd.Position = pivot + _offset;
-                _chassis = _world.CreateBody(bd);
+                _chassis = _world.CreateBody();
+                _chassis.BodyType = BodyType.Dynamic;
+                _chassis.Position = pivot + _offset;
+
                 Fixture fixture = _chassis.CreateFixture(shape);
                 fixture.GroupIndex = -1;
             }
@@ -165,10 +161,10 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(1.6f, 1);
 
-                BodyDef bd = new BodyDef();
-                bd.Type = BodyType.Dynamic;
-                bd.Position = pivot + _offset;
-                _wheel = _world.CreateBody(bd);
+                _wheel = _world.CreateBody();
+                _wheel.BodyType = BodyType.Dynamic;
+                _wheel.Position = pivot + _offset;
+
                 Fixture fixture = _wheel.CreateFixture(shape);
                 fixture.GroupIndex = -1;
             }

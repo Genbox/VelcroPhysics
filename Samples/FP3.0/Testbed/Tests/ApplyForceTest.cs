@@ -37,9 +37,8 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body ground;
             {
-                BodyDef bd = new BodyDef();
-                bd.Position = new Vector2(0.0f, 20.0f);
-                ground = _world.CreateBody(bd);
+                ground = _world.CreateBody();
+                ground.Position = new Vector2(0.0f, 20.0f); 
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-20.0f, -20.0f), new Vector2(-20.0f, 20.0f));
 
@@ -87,14 +86,13 @@ namespace FarseerPhysics.TestBed.Tests
 
                 PolygonShape poly2 = new PolygonShape(vertices,2.0f);
 
-                BodyDef bd = new BodyDef();
-                bd.Type = BodyType.Dynamic;
-                bd.AngularDamping = 5.0f;
-                bd.LinearDamping = 0.1f;
+                _body = _world.CreateBody();
+                _body.BodyType = BodyType.Dynamic;
+                _body.Position = new Vector2(0.0f, 2.0f);
+                _body.Rotation = Settings.Pi;
+                _body.AngularDamping = 5.0f;
+                _body.LinearDamping = 0.1f;
 
-                bd.Position = new Vector2(0.0f, 2.0f);
-                bd.Angle = Settings.Pi;
-                _body = _world.CreateBody(bd);
                 _body.CreateFixture(poly1);
                 _body.CreateFixture(poly2);
             }
@@ -105,11 +103,9 @@ namespace FarseerPhysics.TestBed.Tests
 
                 for (int i = 0; i < 10; ++i)
                 {
-                    BodyDef bd = new BodyDef();
-                    bd.Type = BodyType.Dynamic;
-
-                    bd.Position = new Vector2(0.0f, 5.0f + 1.54f * i);
-                    Body body = _world.CreateBody(bd);
+                    Body body = _world.CreateBody();
+                    body.Position = new Vector2(0.0f, 5.0f + 1.54f * i);
+                    body.BodyType = BodyType.Dynamic;
 
                     Fixture fixture = body.CreateFixture(shape);
                     fixture.SetFriction(0.3f);

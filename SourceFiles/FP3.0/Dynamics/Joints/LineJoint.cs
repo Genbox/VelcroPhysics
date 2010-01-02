@@ -165,8 +165,8 @@ namespace FarseerPhysics
 
             Vector2 r1 = MathUtils.Multiply(ref xf1.R, _localAnchor1 - b1.LocalCenter);
             Vector2 r2 = MathUtils.Multiply(ref xf2.R, _localAnchor2 - b2.LocalCenter);
-            Vector2 p1 = b1._sweep.c + r1;
-            Vector2 p2 = b2._sweep.c + r2;
+            Vector2 p1 = b1._sweep.Center + r1;
+            Vector2 p2 = b2._sweep.Center + r2;
             Vector2 d = p2 - p1;
             Vector2 axis = b1.GetWorldVector(_localXAxis1);
 
@@ -339,7 +339,7 @@ namespace FarseerPhysics
             // Compute the effective masses.
             Vector2 r1 = MathUtils.Multiply(ref xf1.R, _localAnchor1 - LocalCenterA);
             Vector2 r2 = MathUtils.Multiply(ref xf2.R, _localAnchor2 - LocalCenterB);
-            Vector2 d = b2._sweep.c + r2 - b1._sweep.c - r1;
+            Vector2 d = b2._sweep.Center + r2 - b1._sweep.Center - r1;
 
             InvMassA = b1._invMass;
             InvIA = b1._invI;
@@ -377,8 +377,8 @@ namespace FarseerPhysics
                 float k12 = i1 * _s1 * _a1 + i2 * _s2 * _a2;
                 float k22 = m1 + m2 + i1 * _a1 * _a1 + i2 * _a2 * _a2;
 
-                _K.col1 = new Vector2(k11, k12);
-                _K.col2 = new Vector2(k12, k22);
+                _K.Col1 = new Vector2(k11, k12);
+                _K.Col2 = new Vector2(k12, k22);
             }
 
             // Compute motor and limit terms.
@@ -497,12 +497,12 @@ namespace FarseerPhysics
                 }
 
                 // f2(1) = invK(1,1) * (-Cdot(1) - K(1,2) * (f2(2) - f1(2))) + f1(1)
-                float b = -Cdot1 - (_impulse.Y - f1.Y) * _K.col2.X;
+                float b = -Cdot1 - (_impulse.Y - f1.Y) * _K.Col2.X;
 
                 float f2r;
-                if (_K.col1.X != 0.0f)
+                if (_K.Col1.X != 0.0f)
                 {
-                    f2r = b / _K.col1.X + f1.X;
+                    f2r = b / _K.Col1.X + f1.X;
                 }
                 else
                 {
@@ -528,9 +528,9 @@ namespace FarseerPhysics
                 // Limit is inactive, just solve the prismatic constraint in block form.
 
                 float df;
-                if (_K.col1.X != 0.0f)
+                if (_K.Col1.X != 0.0f)
                 {
-                    df = -Cdot1 / _K.col1.X;
+                    df = -Cdot1 / _K.Col1.X;
                 }
                 else
                 {
@@ -561,11 +561,11 @@ namespace FarseerPhysics
             Body b1 = BodyA;
             Body b2 = BodyB;
 
-            Vector2 c1 = b1._sweep.c;
-            float a1 = b1._sweep.a;
+            Vector2 c1 = b1._sweep.Center;
+            float a1 = b1._sweep.Angle;
 
-            Vector2 c2 = b2._sweep.c;
-            float a2 = b2._sweep.a;
+            Vector2 c2 = b2._sweep.Center;
+            float a2 = b2._sweep.Angle;
 
             // Solve linear limit constraint.
             float linearError = 0.0f;
@@ -631,8 +631,8 @@ namespace FarseerPhysics
                 float k12 = i1 * _s1 * _a1 + i2 * _s2 * _a2;
                 float k22 = m1 + m2 + i1 * _a1 * _a1 + i2 * _a2 * _a2;
 
-                _K.col1 = new Vector2(k11, k12);
-                _K.col2 = new Vector2(k12, k22);
+                _K.Col1 = new Vector2(k11, k12);
+                _K.Col2 = new Vector2(k12, k22);
 
                 Vector2 C = new Vector2(-C1, -C2);
 
@@ -669,10 +669,10 @@ namespace FarseerPhysics
             a2 += InvIB * L2;
 
             // TODO_ERIN remove need for this.
-            b1._sweep.c = c1;
-            b1._sweep.a = a1;
-            b2._sweep.c = c2;
-            b2._sweep.a = a2;
+            b1._sweep.Center = c1;
+            b1._sweep.Angle = a1;
+            b2._sweep.Center = c2;
+            b2._sweep.Angle = a2;
             b1.SynchronizeTransform();
             b2.SynchronizeTransform();
 

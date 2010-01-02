@@ -33,18 +33,18 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 PolygonShape shape = new PolygonShape(PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f)), 0);
 
-                BodyDef bd = new BodyDef();
-                ground = _world.CreateBody(bd);
+                
+                ground = _world.CreateBody();
                 ground.CreateFixture(shape);
             }
 
             {
                 PolygonShape shape = new PolygonShape(PolygonTools.CreateBox(0.5f, 2.0f), 1);
 
-                BodyDef bd = new BodyDef();
-                bd.Type = BodyType.Dynamic;
-                bd.Position = new Vector2(0.0f, 7.0f);
-                Body body = _world.CreateBody(bd);
+                Body body = _world.CreateBody();
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(0.0f, 7.0f);
+
                 body.CreateFixture(shape);
 
                 LineJointDef jd = new LineJointDef();

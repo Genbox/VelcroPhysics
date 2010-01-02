@@ -32,8 +32,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                BodyDef bd = new BodyDef();
-                ground = _world.CreateBody(bd);
+                
+                ground = _world.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -48,10 +48,10 @@ namespace FarseerPhysics.TestBed.Tests
                     PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(0.5f, 2.0f);
 
-                    BodyDef bd = new BodyDef();
-                    bd.Type = BodyType.Dynamic;
-                    bd.Position = new Vector2(0.0f, 7.0f);
-                    Body body = _world.CreateBody(bd);
+                    Body body = _world.CreateBody();
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = new Vector2(0.0f, 7.0f);
+
                     body.CreateFixture(shape);
 
                     RevoluteJointDef rjd = new RevoluteJointDef();
@@ -68,11 +68,11 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(0.5f, 4.0f);
+                    
+                    Body body = _world.CreateBody();
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = new Vector2(0.0f, 13.0f);
 
-                    BodyDef bd = new BodyDef();
-                    bd.Type = BodyType.Dynamic;
-                    bd.Position = new Vector2(0.0f, 13.0f);
-                    Body body = _world.CreateBody(bd);
                     body.CreateFixture(shape);
 
                     RevoluteJointDef rjd3 = new RevoluteJointDef();
@@ -88,10 +88,10 @@ namespace FarseerPhysics.TestBed.Tests
                     PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(1.5f, 1.5f);
 
-                    BodyDef bd = new BodyDef();
-                    bd.Type = BodyType.Dynamic;
-                    bd.Position = new Vector2(0.0f, 17.0f);
-                    Body body = _world.CreateBody(bd);
+                    Body body = _world.CreateBody();
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = new Vector2(0.0f, 17.0f);
+
                     body.CreateFixture(shape);
 
                     RevoluteJointDef rjd2 = new RevoluteJointDef();
@@ -111,11 +111,11 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(1.5f, 1.5f);
+                    
+                    Body body = _world.CreateBody();
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = new Vector2(0.0f, 23.0f);
 
-                    BodyDef bd = new BodyDef();
-                    bd.Type = BodyType.Dynamic;
-                    bd.Position = new Vector2(0.0f, 23.0f);
-                    Body body = _world.CreateBody(bd);
                     body.CreateFixture(shape);
                 }
             }

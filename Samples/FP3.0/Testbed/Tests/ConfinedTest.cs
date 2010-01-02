@@ -34,8 +34,8 @@ namespace FarseerPhysics.TestBed.Tests
         private ConfinedTest()
         {
             {
-                BodyDef bd = new BodyDef();
-                Body ground = _world.CreateBody(bd);
+                
+                Body ground = _world.CreateBody();
 
 
                 // Floor
@@ -65,10 +65,9 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 for (int i = 0; i < RowCount; ++i)
                 {
-                    BodyDef bd = new BodyDef();
-                    bd.Type = BodyType.Dynamic;
-                    bd.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius, (2.0f * i + 1.0f) * radius);
-                    Body body = _world.CreateBody(bd);
+                    Body body = _world.CreateBody();
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius, (2.0f * i + 1.0f) * radius);
 
                     Fixture fixture = body.CreateFixture(shape2);
                     fixture.SetFriction(0.1f);
@@ -84,10 +83,9 @@ namespace FarseerPhysics.TestBed.Tests
             CircleShape shape = new CircleShape(radius, 1);
             shape.Position = Vector2.Zero;
 
-            BodyDef bd = new BodyDef();
-            bd.Type = BodyType.Dynamic;
-            bd.Position = new Vector2(Rand.RandomFloat(), (2.0f + Rand.RandomFloat()) * radius);
-            Body body = _world.CreateBody(bd);
+            Body body = _world.CreateBody();
+            body.BodyType = BodyType.Dynamic;
+            body.Position = new Vector2(Rand.RandomFloat(), (2.0f + Rand.RandomFloat()) * radius);
 
             Fixture fixture = body.CreateFixture(shape);
             fixture.SetFriction(0);

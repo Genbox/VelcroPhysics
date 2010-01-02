@@ -32,8 +32,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                BodyDef bd = new BodyDef();
-                ground = _world.CreateBody(bd);
+                
+                ground = _world.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -43,19 +43,17 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(0.5f, 5);
 
-                BodyDef bd = new BodyDef();
-                bd.Type = BodyType.Dynamic;
+                Body body = _world.CreateBody();
+                body.Position = new Vector2(0.0f, 20.0f);
+                body.BodyType = BodyType.Dynamic;
 
-                RevoluteJointDef rjd = new RevoluteJointDef();
-
-                bd.Position = new Vector2(0.0f, 20.0f);
-                Body body = _world.CreateBody(bd);
                 body.CreateFixture(shape);
 
-                float w = 100.0f;
+                const float w = 100.0f;
                 body.AngularVelocity = w;
                 body.LinearVelocity = new Vector2(-8.0f * w, 0.0f);
 
+                RevoluteJointDef rjd = new RevoluteJointDef();
                 rjd.Initialize(ground, body, new Vector2(0.0f, 12.0f));
                 rjd.MotorSpeed = 1.0f * Settings.Pi;
                 rjd.MaxMotorTorque = 10000.0f;

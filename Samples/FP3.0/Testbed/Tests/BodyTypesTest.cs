@@ -32,8 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                BodyDef bd = new BodyDef();
-                ground = _world.CreateBody(bd);
+                ground = _world.CreateBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -43,10 +42,9 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Define attachment
             {
-                BodyDef bd = new BodyDef();
-                bd.Type = BodyType.Dynamic;
-                bd.Position = new Vector2(0.0f, 3.0f);
-                _attachment = _world.CreateBody(bd);
+                _attachment = _world.CreateBody();
+                _attachment.BodyType = BodyType.Dynamic;
+                _attachment.Position = new Vector2(0.0f, 3.0f);
 
                 Vertices box = PolygonTools.CreateBox(0.5f, 2.0f);
                 PolygonShape shape = new PolygonShape(box, 2.0f);
@@ -55,10 +53,9 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Define platform
             {
-                BodyDef bd = new BodyDef();
-                bd.Type = BodyType.Dynamic;
-                bd.Position = new Vector2(0.0f, 5.0f);
-                _platform = _world.CreateBody(bd);
+                _platform = _world.CreateBody();
+                _platform.BodyType = BodyType.Dynamic;
+                _platform.Position = new Vector2(0.0f, 5.0f);
 
                 Vertices box = PolygonTools.CreateBox(4.0f, 0.5f);
                 PolygonShape shape = new PolygonShape(box, 2.0f);
@@ -88,10 +85,9 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Create a payload
             {
-                BodyDef bd = new BodyDef();
-                bd.Type = BodyType.Dynamic;
-                bd.Position = new Vector2(0.0f, 8.0f);
-                Body body = _world.CreateBody(bd);
+                Body body = _world.CreateBody();
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(0.0f, 8.0f);
 
                 Vertices box = PolygonTools.CreateBox(0.75f, 0.75f);
                 PolygonShape shape = new PolygonShape(box, 2.0f);

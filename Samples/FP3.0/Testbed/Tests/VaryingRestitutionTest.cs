@@ -30,8 +30,8 @@ namespace FarseerPhysics.TestBed.Tests
         private VaryingRestitutionTest()
         {
             {
-                BodyDef bd = new BodyDef();
-                Body ground = _world.CreateBody(bd);
+                
+                Body ground = _world.CreateBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -45,11 +45,9 @@ namespace FarseerPhysics.TestBed.Tests
 
                 for (int i = 0; i < 7; ++i)
                 {
-                    BodyDef bd = new BodyDef();
-                    bd.Type = BodyType.Dynamic;
-                    bd.Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
-
-                    Body body = _world.CreateBody(bd);
+                    Body body = _world.CreateBody();
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
 
                     Fixture fixture = body.CreateFixture(shape);
                     fixture.SetRestitution(restitution[i]);

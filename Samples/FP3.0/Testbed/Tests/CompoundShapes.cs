@@ -30,9 +30,7 @@ namespace FarseerPhysics.TestBed.Tests
         private CompoundShapes()
         {
             {
-                BodyDef bd = new BodyDef();
-                bd.Position = Vector2.Zero;
-                Body body = _world.CreateBody(bd);
+                Body body = _world.CreateBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -50,11 +48,12 @@ namespace FarseerPhysics.TestBed.Tests
                 for (int i = 0; i < 10; ++i)
                 {
                     float x = Rand.RandomFloat(-0.1f, 0.1f);
-                    BodyDef bd = new BodyDef();
-                    bd.Type = BodyType.Dynamic;
-                    bd.Position = new Vector2(x + 5.0f, 1.05f + 2.5f * i);
-                    bd.Angle = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
-                    Body body = _world.CreateBody(bd);
+
+                    Body body = _world.CreateBody();
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = new Vector2(x + 5.0f, 1.05f + 2.5f * i);
+                    body.Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
+
                     body.CreateFixture(circle1);
                     body.CreateFixture(circle2);
                 }
@@ -70,11 +69,12 @@ namespace FarseerPhysics.TestBed.Tests
                 for (int i = 0; i < 10; ++i)
                 {
                     float x = Rand.RandomFloat(-0.1f, 0.1f);
-                    BodyDef bd = new BodyDef();
-                    bd.Type = BodyType.Dynamic;
-                    bd.Position = new Vector2(x - 5.0f, 1.05f + 2.5f * i);
-                    bd.Angle = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
-                    Body body = _world.CreateBody(bd);
+
+                    Body body = _world.CreateBody();
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = new Vector2(x - 5.0f, 1.05f + 2.5f * i);
+                    body.Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
+
                     body.CreateFixture(polygon1);
                     body.CreateFixture(polygon2);
                 }
@@ -106,11 +106,11 @@ namespace FarseerPhysics.TestBed.Tests
                 for (int i = 0; i < 10; ++i)
                 {
                     float x = Rand.RandomFloat(-0.1f, 0.1f);
-                    BodyDef bd = new BodyDef();
-                    bd.Type = BodyType.Dynamic;
-                    bd.Position = new Vector2(x, 2.05f + 2.5f * i);
-                    bd.Angle = 0.0f;
-                    Body body = _world.CreateBody(bd);
+
+                    Body body = _world.CreateBody();
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = new Vector2(x, 2.05f + 2.5f * i);
+
                     body.CreateFixture(triangle1);
                     body.CreateFixture(triangle2);
                 }
@@ -126,10 +126,10 @@ namespace FarseerPhysics.TestBed.Tests
                 box = PolygonTools.CreateBox(0.15f, 2.7f, new Vector2(1.45f, 2.35f), -0.2f);
                 PolygonShape right = new PolygonShape(box, 4);
 
-                BodyDef bd = new BodyDef();
-                bd.Type = BodyType.Dynamic;
-                bd.Position = new Vector2(0.0f, 2.0f);
-                Body body = _world.CreateBody(bd);
+                Body body = _world.CreateBody();
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(0.0f, 2.0f);
+
                 body.CreateFixture(bottom);
                 body.CreateFixture(left);
                 body.CreateFixture(right);

@@ -30,10 +30,8 @@ namespace FarseerPhysics.TestBed.Tests
         private CCDTest()
         {
             {
-                BodyDef bd = new BodyDef();
-                bd.Position = new Vector2(0.0f, -0.2f);
-
-                Body body = _world.CreateBody(bd);
+                Body body = _world.CreateBody();
+                body.Position = new Vector2(0.0f, -0.2f);
 
                 Vertices box = PolygonTools.CreateBox(10, 0.2f);
                 PolygonShape shape = new PolygonShape(box, 0);
@@ -52,10 +50,10 @@ namespace FarseerPhysics.TestBed.Tests
                 _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
                 _angularVelocity = -30.669577f;
 
-                BodyDef bd = new BodyDef();
-                bd.Type = BodyType.Dynamic;
-                bd.Position = new Vector2(0.0f, 20.0f);
-                Body body = _world.CreateBody(bd);
+                Body body = _world.CreateBody();
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(0.0f, 20.0f);
+
                 Fixture fixture = body.CreateFixture(shape);
                 fixture.SetRestitution(0.0f);
                 body.LinearVelocity = new Vector2(0.0f, -100.0f);
@@ -67,10 +65,10 @@ namespace FarseerPhysics.TestBed.Tests
 			    fd.SetAsBox(10.0f, 0.1f);
 			    fd.density = 0.0f;
 
-			    BodyDef bd = new BodyDef();
-			    bd.type = BodyDef.e_static;
+			    
+			    bd.BodyType = BodyDef.e_static;
 			    bd.position = new Vector2(0.0f, -0.2f);
-			    Body ground = _world.CreateBody(bd);
+			    Body ground = _world.CreateBody();
 			    ground.CreateFixture(fd);
 		    }
 
@@ -114,9 +112,9 @@ namespace FarseerPhysics.TestBed.Tests
 		    float k_restitution = 1.4f;
 
 		    {
-			    BodyDef bd = new BodyDef();
+			    
 			    bd.position = new Vector2(0.0f, 20.0f);
-			    Body body = _world.CreateBody(bd);
+			    Body body = _world.CreateBody();
 
 			    FixtureDef fd = new FixtureDef();
 			    fd.density = 0.0f;
@@ -153,10 +151,10 @@ namespace FarseerPhysics.TestBed.Tests
 			    sd_right.SetAsBox(0.1f, 1.0f, new Vector2(1.0f, 0.0f), 0.0f);
 			    sd_right.density = 4.0f;
 
-			    BodyDef bd = new BodyDef();
-			    bd.type = BodyDef.e_dynamicBody;
+			    
+			    bd.BodyType = BodyDef.e_dynamicBody;
 			    bd.position = new Vector2(0.0f, 15.0f);
-			    Body body = _world.CreateBody(bd);
+			    Body body = _world.CreateBody();
 			    body.CreateFixture(&sd_bottom);
 			    body.CreateFixture(&sd_top);
 			    body.CreateFixture(&sd_left);
@@ -176,19 +174,19 @@ namespace FarseerPhysics.TestBed.Tests
 			    sd_right.SetAsBox(0.15f, 2.7f, new Vector2(1.45f, 2.35f), -0.2f);
 			    sd_right.density = 4.0f;
 
-			    BodyDef bd = new BodyDef();
+			    
 			    bd.position = new Vector2( 0.0f, 15.0f );
-			    Body body = _world.CreateBody(bd);
+			    Body body = _world.CreateBody();
 			    body.CreateFixture(&sd_bottom);
 			    body.CreateFixture(&sd_left);
 			    body.CreateFixture(&sd_right);
 		    }
 #else
 		    {
-			    BodyDef bd = new BodyDef();
+			    
 			    bd.position = new Vector2(-5.0f, 20.0f);
 			    bd.bullet = true;
-			    Body body = _world.CreateBody(bd);
+			    Body body = _world.CreateBody();
 			    body.SetAngularVelocity(Rand.RandomFloat(-50.0f, 50.0f));
 
 			    FixtureDef fd = new FixtureDef();
@@ -201,10 +199,10 @@ namespace FarseerPhysics.TestBed.Tests
 
 		    for (int i = 0; i < 0; ++i)
 		    {
-			    BodyDef bd = new BodyDef();
+			    
 			    bd.position = new Vector2(0.0f, 15.0f + i);
 			    bd.bullet = true;
-			    Body body = _world.CreateBody(bd);
+			    Body body = _world.CreateBody();
 			    body.SetAngularVelocity(Rand.RandomFloat(-50.0f, 50.0f));
 
 			    FixtureDef fd = new FixtureDef();
