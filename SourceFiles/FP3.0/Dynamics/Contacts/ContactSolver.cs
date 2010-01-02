@@ -60,13 +60,13 @@ namespace FarseerPhysics
                 Shape shapeB = fixtureB.Shape;
                 float radiusA = shapeA.Radius;
                 float radiusB = shapeB.Radius;
-                Body bodyA = fixtureA.GetBody();
-                Body bodyB = fixtureB.GetBody();
+                Body bodyA = fixtureA.Body;
+                Body bodyB = fixtureB.Body;
                 Manifold manifold;
                 contact.GetManifold(out manifold);
 
-                float friction = Settings.MixFriction(fixtureA.GetFriction(), fixtureB.GetFriction());
-                float restitution = Settings.MixRestitution(fixtureA.GetRestitution(), fixtureB.GetRestitution());
+                float friction = Settings.MixFriction(fixtureA.Friction, fixtureB.Friction);
+                float restitution = Settings.MixRestitution(fixtureA.Restitution, fixtureB.Restitution);
 
                 Vector2 vA = bodyA._linearVelocity;
                 Vector2 vB = bodyB._linearVelocity;

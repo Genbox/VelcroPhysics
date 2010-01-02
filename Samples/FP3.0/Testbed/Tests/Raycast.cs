@@ -198,12 +198,12 @@ namespace FarseerPhysics.TestBed.Tests
             if (index < 4)
             {
                 Fixture fixture = _bodies[_bodyIndex].CreateFixture(_polygons[index]);
-                fixture.SetFriction(0.3f);
+                fixture.Friction = 0.3f;
             }
             else
             {
                 Fixture fixture = _bodies[_bodyIndex].CreateFixture(_circle);
-                fixture.SetFriction(0.3f);
+                fixture.Friction = 0.3f;
             }
 
             _bodyIndex = (_bodyIndex + 1) % MaxBodies;

@@ -272,7 +272,7 @@ namespace FarseerPhysics
             while (f != null)
             {
                 Fixture f0 = f;
-                f = f.Next;
+                f = f._next;
 
                 if (FixtureRemoved != null)
                 {
@@ -836,8 +836,8 @@ namespace FarseerPhysics
                         // Compute the TOI for this contact.
                         Fixture s1 = c.GetFixtureA();
                         Fixture s2 = c.GetFixtureB();
-                        Body b1 = s1.GetBody();
-                        Body b2 = s2.GetBody();
+                        Body b1 = s1.Body;
+                        Body b2 = s2.Body;
 
                         if ((b1.BodyType != BodyType.Dynamic || !b1.Awake) &&
                             (b2.BodyType != BodyType.Dynamic || !b2.Awake))
@@ -895,8 +895,8 @@ namespace FarseerPhysics
                 // Advance the bodies to the TOI.
                 Fixture s1_2 = minContact.GetFixtureA();
                 Fixture s2_2 = minContact.GetFixtureB();
-                Body b1_2 = s1_2.GetBody();
-                Body b2_2 = s2_2.GetBody();
+                Body b1_2 = s1_2.Body;
+                Body b2_2 = s2_2.Body;
 
                 Sweep backup1 = b1_2._sweep;
                 Sweep backup2 = b2_2._sweep;

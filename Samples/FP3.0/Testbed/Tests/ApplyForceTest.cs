@@ -46,7 +46,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 // Left vertical
                 Fixture fixture = ground.CreateFixture(shape);
-                fixture.SetRestitution(k_restitution);
+                fixture.Restitution = k_restitution;
 
                 // Right vertical
                 edge = PolygonTools.CreateEdge(new Vector2(20.0f, -20.0f), new Vector2(20.0f, 20.0f));
@@ -108,7 +108,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
 
                     Fixture fixture = body.CreateFixture(shape);
-                    fixture.SetFriction(0.3f);
+                    fixture.Friction = 0.3f;
 
                     const float gravity = 10.0f;
                     float I = body.Inertia;

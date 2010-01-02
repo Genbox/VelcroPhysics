@@ -61,7 +61,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(box, 2.0f);
 
                 Fixture fixture = _platform.CreateFixture(shape);
-                fixture.SetFriction(0.6f);
+                fixture.Friction = 0.6f;
 
                 RevoluteJointDef rjd = new RevoluteJointDef();
                 rjd.Initialize(_attachment, _platform, new Vector2(0.0f, 5.0f));
@@ -93,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(box, 2.0f);
 
                 Fixture fixture = body.CreateFixture(shape);
-                fixture.SetFriction(0.6f);
+                fixture.Friction = 0.6f;
             }
         }
 

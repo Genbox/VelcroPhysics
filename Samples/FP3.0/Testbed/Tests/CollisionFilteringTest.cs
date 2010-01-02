@@ -54,7 +54,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body ground = _world.CreateBody();
                 Fixture fixture = ground.CreateFixture(shape);
-                fixture.SetFriction(0.3f);
+                fixture.Friction = 0.3f;
             }
 
             {
@@ -120,7 +120,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body3.Position = new Vector2(0.0f, 2.0f);
 
                 Fixture body3fixture = body3.CreateFixture(polygon);
-                body3fixture.SetRestitution(0.1f);
+                body3fixture.Restitution = 0.1f;
                 body3fixture.GroupIndex = SmallGroup;
                 body3fixture.CategoryBits = BoxCategory;
                 body3fixture.MaskBits = BoxMask;

@@ -23,7 +23,7 @@ namespace FarseerPhysics.DebugViewXNA
                 {
                     Transform xf;
                     b.GetTransform(out xf);
-                    for (Fixture f = b.FixtureList; f != null; f = f.GetNext())
+                    for (Fixture f = b.FixtureList; f != null; f = f.NextFixture)
                     {
                         if (b.Active == false)
                         {
@@ -89,7 +89,7 @@ namespace FarseerPhysics.DebugViewXNA
                         continue;
                     }
 
-                    for (Fixture f = b.FixtureList; f != null; f = f.GetNext())
+                    for (Fixture f = b.FixtureList; f != null; f = f.NextFixture)
                     {
                         AABB aabb;
                         bp.GetFatAABB(f.ProxyId, out aabb);

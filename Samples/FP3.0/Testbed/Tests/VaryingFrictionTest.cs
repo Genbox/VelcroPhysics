@@ -105,7 +105,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.Position = new Vector2(-15.0f + 4.0f * i, 28.0f);
 
                     Fixture fixture = body.CreateFixture(shape);
-                    fixture.SetFriction(friction[i]);
+                    fixture.Friction = friction[i];
                 }
             }
         }
