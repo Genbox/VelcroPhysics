@@ -369,7 +369,7 @@ namespace FarseerPhysics
 
                     // Create all proxies.
                     BroadPhase broadPhase = World.ContactManager._broadPhase;
-                    for (Fixture f = _fixtureList; f != null; f = f.Next)
+                    for (Fixture f = _fixtureList; f != null; f = f._next)
                     {
                         f.CreateProxy(broadPhase, ref _xf);
                     }
@@ -382,7 +382,7 @@ namespace FarseerPhysics
 
                     // Destroy all proxies.
                     BroadPhase broadPhase = World.ContactManager._broadPhase;
-                    for (Fixture f = _fixtureList; f != null; f = f.Next)
+                    for (Fixture f = _fixtureList; f != null; f = f._next)
                     {
                         f.DestroyProxy(broadPhase);
                     }
@@ -528,7 +528,7 @@ namespace FarseerPhysics
                 fixture.CreateProxy(broadPhase, ref _xf);
             }
 
-            fixture.Next = _fixtureList;
+            fixture._next = _fixtureList;
             _fixtureList = fixture;
             ++_fixtureCount;
 
@@ -563,7 +563,7 @@ namespace FarseerPhysics
             }
 
 #if DEBUG
-            Debug.Assert(fixture.Body == this);
+            Debug.Assert(fixture._body == this);
 
             // Remove the fixture from this body's singly linked list.
             Debug.Assert(_fixtureCount > 0);
@@ -574,12 +574,12 @@ namespace FarseerPhysics
             {
                 if (node == fixture)
                 {
-                    _fixtureList = fixture.Next;
+                    _fixtureList = fixture._next;
                     found = true;
                     break;
                 }
 
-                node = node.Next;
+                node = node._next;
             }
 
             // You tried to remove a shape that is not attached to this body.
@@ -617,8 +617,8 @@ namespace FarseerPhysics
             }
 
             fixture.Destroy();
-            fixture.Body = null;
-            fixture.Next = null;
+            fixture._body = null;
+            fixture._next = null;
 
             --_fixtureCount;
 
@@ -646,7 +646,7 @@ namespace FarseerPhysics
             _sweep.Angle0 = _sweep.Angle = angle;
 
             BroadPhase broadPhase = World.ContactManager._broadPhase;
-            for (Fixture f = _fixtureList; f != null; f = f.Next)
+            for (Fixture f = _fixtureList; f != null; f = f._next)
             {
                 f.Synchronize(broadPhase, ref _xf, ref _xf);
             }
@@ -763,7 +763,7 @@ namespace FarseerPhysics
 
             // Accumulate mass over all fixtures.
             Vector2 center = Vector2.Zero;
-            for (Fixture f = _fixtureList; f != null; f = f.Next)
+            for (Fixture f = _fixtureList; f != null; f = f._next)
             {
                 if (f.Shape.Density == 0.0f)
                 {
@@ -880,7 +880,7 @@ namespace FarseerPhysics
             xf1.Position = _sweep.Center0 - MathUtils.Multiply(ref xf1.R, _sweep.LocalCenter);
 
             BroadPhase broadPhase = World.ContactManager._broadPhase;
-            for (Fixture f = _fixtureList; f != null; f = f.Next)
+            for (Fixture f = _fixtureList; f != null; f = f._next)
             {
                 f.Synchronize(broadPhase, ref xf1, ref _xf);
             }

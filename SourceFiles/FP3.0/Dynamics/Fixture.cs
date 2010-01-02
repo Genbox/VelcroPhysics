@@ -40,10 +40,8 @@ namespace FarseerPhysics
 
             //Fixture defaults
             _friction = 0.2f;
-            _restitution = 0.0f;
             _categoryBits = 0x0001;
             _maskBits = 0xFFFF;
-            _groupIndex = 0;
             _isSensor = false;
         }
 
@@ -84,12 +82,12 @@ namespace FarseerPhysics
 
                 _isSensor = value;
 
-                if (Body == null)
+                if (_body == null)
                 {
                     return;
                 }
 
-                ContactEdge edge = Body.ContactList;
+                ContactEdge edge = _body.ContactList;
                 while (edge != null)
                 {
                     Contact contact = edge.Contact;
@@ -119,7 +117,7 @@ namespace FarseerPhysics
         {
             set
             {
-                if (Body == null)
+                if (_body == null)
                     return;
 
                 if (_groupIndex == value)
@@ -147,7 +145,7 @@ namespace FarseerPhysics
 
             set
             {
-                if (Body == null)
+                if (_body == null)
                     return;
 
                 if (_maskBits == value)
@@ -170,7 +168,7 @@ namespace FarseerPhysics
 
             set
             {
-                if (Body == null)
+                if (_body == null)
                     return;
 
                 if (_categoryBits == value)
@@ -184,7 +182,7 @@ namespace FarseerPhysics
         private void FilterChanged()
         {
             // Flag associated contacts for filtering.
-            ContactEdge edge = Body.ContactList;
+            ContactEdge edge = _body.ContactList;
             while (edge != null)
             {
                 Contact contact = edge.Contact;
@@ -202,38 +200,29 @@ namespace FarseerPhysics
         /// <summary>
         /// Get the parent body of this fixture. This is null if the fixture is not attached.
         /// </summary>
-        /// <returns>the parent body.</returns>
-        public Body GetBody()
+        /// <value>the parent body.</value>
+        public Body Body
         {
-            return Body;
+            get { return _body; }
         }
 
         /// <summary>
         /// Get the next fixture in the parent body's fixture list.
         /// </summary>
-        /// <returns>the next shape.</returns>
-        public Fixture GetNext()
+        /// <value>the next shape.</value>
+        public Fixture NextFixture
         {
-            return Next;
-        }
-
-        /// <summary>
-        /// Get the user data that was assigned in the fixture definition. Use this to
-        /// store your application specific data.
-        /// </summary>
-        /// <returns></returns>
-        public object GetUserData()
-        {
-            return _userData;
+            get { return _next; }
         }
 
         /// <summary>
         /// Set the user data. Use this to store your application specific data.
         /// </summary>
-        /// <param name="data">The data.</param>
-        public void SetUserData(object data)
+        /// <value>The data.</value>
+        public object UserData
         {
-            _userData = data;
+            set { _userData = value; }
+            get { return _userData; }
         }
 
         public int ProxyId
@@ -250,7 +239,7 @@ namespace FarseerPhysics
         public bool TestPoint(Vector2 p)
         {
             Transform xf;
-            Body.GetTransform(out xf);
+            _body.GetTransform(out xf);
             return _shape.TestPoint(ref xf, p);
         }
 
@@ -263,54 +252,28 @@ namespace FarseerPhysics
         public bool RayCast(out RayCastOutput output, ref RayCastInput input)
         {
             Transform xf;
-            Body.GetTransform(out xf);
+            _body.GetTransform(out xf);
             return _shape.RayCast(out output, ref input, ref xf);
-        }
-
-        /// <summary>
-        /// Get the mass data for this fixture. The mass data is based on the density and
-        /// the shape. The rotational inertia is about the shape's origin.
-        /// </summary>
-        /// <param name="massData">The mass data.</param>
-        //public void GetMassData(out MassData massData)
-        //{
-        //    _shape.ComputeMass(out massData, Density);
-        //}
-
-        /// <summary>
-        /// Get the coefficient of friction.
-        /// </summary>
-        /// <returns></returns>
-        public float GetFriction()
-        {
-            return _friction;
         }
 
         /// <summary>
         /// Set the coefficient of friction.
         /// </summary>
-        /// <param name="friction">The friction.</param>
-        public void SetFriction(float friction)
+        /// <value>The friction.</value>
+        public float Friction
         {
-            _friction = friction;
+            set { _friction = value; }
+            get { return _friction; }
         }
 
         /// <summary>
         /// Get the coefficient of restitution.
         /// </summary>
-        /// <returns></returns>
-        public float GetRestitution()
+        /// <value></value>
+        public float Restitution
         {
-            return _restitution;
-        }
-
-        /// <summary>
-        /// Set the coefficient of restitution.
-        /// </summary>
-        /// <param name="restitution">The restitution.</param>
-        public void SetRestitution(float restitution)
-        {
-            _restitution = restitution;
+            get { return _restitution; }
+            set { _restitution = value; }
         }
 
         /// <summary>
@@ -321,7 +284,7 @@ namespace FarseerPhysics
         /// <param name="aabb">The aabb.</param>
         public void GetAABB(out AABB aabb)
         {
-            aabb = Aabb;
+            aabb = _aabb;
         }
 
         /// <summary>
@@ -332,8 +295,8 @@ namespace FarseerPhysics
         /// <param name="shape">The shape.</param>
         internal void Create(Body body, Shape shape)
         {
-            Body = body;
-            Next = null;
+            _body = body;
+            _next = null;
 
             _shape = shape.Clone();
         }
@@ -352,8 +315,8 @@ namespace FarseerPhysics
             Debug.Assert(ProxyId == BroadPhase.NullProxy);
 
             // Create proxy in the broad-phase.
-            _shape.ComputeAABB(out Aabb, ref xf);
-            ProxyId = broadPhase.CreateProxy(ref Aabb, this);
+            _shape.ComputeAABB(out _aabb, ref xf);
+            ProxyId = broadPhase.CreateProxy(ref _aabb, this);
         }
 
         internal void DestroyProxy(BroadPhase broadPhase)
@@ -380,16 +343,16 @@ namespace FarseerPhysics
             _shape.ComputeAABB(out aabb1, ref transform1);
             _shape.ComputeAABB(out aabb2, ref transform2);
 
-            Aabb.Combine(ref aabb1, ref aabb2);
+            _aabb.Combine(ref aabb1, ref aabb2);
 
             Vector2 displacement = transform2.Position - transform1.Position;
 
-            broadPhase.MoveProxy(ProxyId, ref Aabb, displacement);
+            broadPhase.MoveProxy(ProxyId, ref _aabb, displacement);
         }
 
-        internal AABB Aabb;
-        internal Fixture Next;
-        internal Body Body;
+        internal AABB _aabb;
+        internal Fixture _next;
+        internal Body _body;
         private Shape _shape;
         private float _friction;
         private float _restitution;

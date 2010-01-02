@@ -112,7 +112,7 @@ namespace FarseerPhysics
         /// <param name="worldManifold">The world manifold.</param>
         public void GetWorldManifold(out WorldManifold worldManifold)
         {
-            Body bodyA = FixtureA.GetBody();
+            Body bodyA = FixtureA.Body;
             Shape shapeA = FixtureA.Shape;
             Shape shapeB = FixtureB.Shape;
 
@@ -245,8 +245,8 @@ namespace FarseerPhysics
                 Flags |= ContactFlags.Sensor;
             }
 
-            Body bodyA = fA.GetBody();
-            Body bodyB = fB.GetBody();
+            Body bodyA = fA.Body;
+            Body bodyB = fB.Body;
 
             if (bodyA.BodyType != BodyType.Dynamic || bodyA.Bullet ||
                 bodyB.BodyType != BodyType.Dynamic || bodyB.Bullet)
@@ -283,10 +283,10 @@ namespace FarseerPhysics
             bool touching = false;
             bool wasTouching = (Flags & ContactFlags.Touching) == ContactFlags.Touching;
 
-            Body bodyA = FixtureA.GetBody();
-            Body bodyB = FixtureB.GetBody();
+            Body bodyA = FixtureA.Body;
+            Body bodyB = FixtureB.Body;
 
-            bool aabbOverlap = AABB.TestOverlap(ref FixtureA.Aabb, ref FixtureB.Aabb);
+            bool aabbOverlap = AABB.TestOverlap(ref FixtureA._aabb, ref FixtureB._aabb);
 
             // Is this contact a sensor?
             if ((Flags & ContactFlags.Sensor) == ContactFlags.Sensor)

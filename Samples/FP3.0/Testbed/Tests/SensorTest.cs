@@ -81,14 +81,14 @@ namespace FarseerPhysics.TestBed.Tests
             Fixture fixtureA = contact.GetFixtureA();
             Fixture fixtureB = contact.GetFixtureB();
 
-            if (fixtureA == _sensor && fixtureB.GetBody().UserData != null)
+            if (fixtureA == _sensor && fixtureB.Body.UserData != null)
             {
-                _touching[(int)(fixtureB.GetBody().UserData)] = true;
+                _touching[(int)(fixtureB.Body.UserData)] = true;
             }
 
-            if (fixtureB == _sensor && fixtureA.GetBody().UserData != null)
+            if (fixtureB == _sensor && fixtureA.Body.UserData != null)
             {
-                _touching[(int)(fixtureA.GetBody().UserData)] = true;
+                _touching[(int)(fixtureA.Body.UserData)] = true;
             }
         }
 
@@ -98,14 +98,14 @@ namespace FarseerPhysics.TestBed.Tests
             Fixture fixtureA = contact.GetFixtureA();
             Fixture fixtureB = contact.GetFixtureB();
 
-            if (fixtureA == _sensor && fixtureB.GetBody().UserData != null)
+            if (fixtureA == _sensor && fixtureB.Body.UserData != null)
             {
-                _touching[(int)(fixtureB.GetBody().UserData)] = false;
+                _touching[(int)(fixtureB.Body.UserData)] = false;
             }
 
-            if (fixtureB == _sensor && fixtureA.GetBody().UserData != null)
+            if (fixtureB == _sensor && fixtureA.Body.UserData != null)
             {
-                _touching[(int)(fixtureA.GetBody().UserData)] = false;
+                _touching[(int)(fixtureA.Body.UserData)] = false;
             }
         }
 
@@ -123,7 +123,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
 
                 Body body = _bodies[i];
-                Body ground = _sensor.GetBody();
+                Body ground = _sensor.Body;
 
                 CircleShape circle = (CircleShape)_sensor.Shape;
                 Vector2 center = ground.GetWorldPoint(circle.Position);

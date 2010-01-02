@@ -47,8 +47,8 @@ namespace FarseerPhysics
             Fixture fixtureA = proxyUserDataA;
             Fixture fixtureB = proxyUserDataB;
 
-            Body bodyA = fixtureA.GetBody();
-            Body bodyB = fixtureB.GetBody();
+            Body bodyA = fixtureA.Body;
+            Body bodyB = fixtureB.Body;
 
             // Are the fixtures on the same body?
             if (bodyA == bodyB)
@@ -99,8 +99,8 @@ namespace FarseerPhysics
             // Contact creation may swap fixtures.
             fixtureA = c.GetFixtureA();
             fixtureB = c.GetFixtureB();
-            bodyA = fixtureA.GetBody();
-            bodyB = fixtureB.GetBody();
+            bodyA = fixtureA.Body;
+            bodyB = fixtureB.Body;
 
             // Insert into the world.
             c.Prev = null;
@@ -149,8 +149,8 @@ namespace FarseerPhysics
         {
             Fixture fixtureA = c.GetFixtureA();
             Fixture fixtureB = c.GetFixtureB();
-            Body bodyA = fixtureA.GetBody();
-            Body bodyB = fixtureB.GetBody();
+            Body bodyA = fixtureA.Body;
+            Body bodyB = fixtureB.Body;
 
             if (c.Manifold._pointCount > 0)
             {
@@ -217,8 +217,8 @@ namespace FarseerPhysics
             {
                 Fixture fixtureA = c.GetFixtureA();
                 Fixture fixtureB = c.GetFixtureB();
-                Body bodyA = fixtureA.GetBody();
-                Body bodyB = fixtureB.GetBody();
+                Body bodyA = fixtureA.Body;
+                Body bodyB = fixtureB.Body;
 
                 if (bodyA.Awake == false && bodyB.Awake == false)
                 {

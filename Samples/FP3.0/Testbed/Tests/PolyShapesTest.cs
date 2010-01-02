@@ -43,7 +43,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Color color = new Color(0.95f, 0.95f, 0.6f);
             Transform xf;
-            fixture.GetBody().GetTransform(out xf);
+            fixture.Body.GetTransform(out xf);
 
             switch (fixture.ShapeType)
             {
@@ -85,7 +85,7 @@ namespace FarseerPhysics.TestBed.Tests
                 return false;
             }
 
-            Body body = fixture.GetBody();
+            Body body = fixture.Body;
             Shape shape = fixture.Shape;
 
             Transform xf;
@@ -195,12 +195,12 @@ namespace FarseerPhysics.TestBed.Tests
             if (index < 4)
             {
                 Fixture fixture = _bodies[_bodyIndex].CreateFixture(_polygons[index]);
-                fixture.SetFriction(0.3f);
+                fixture.Friction = 0.3f;
             }
             else
             {
                 Fixture fixture = _bodies[_bodyIndex].CreateFixture(_circle);
-                fixture.SetFriction(0.3f);
+                fixture.Friction = 0.3f;
             }
 
             _bodyIndex = (_bodyIndex + 1) % MaxBodies;

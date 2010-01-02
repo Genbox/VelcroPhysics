@@ -122,8 +122,8 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 ContactPoint point = _points[i];
 
-                Body body1 = point.fixtureA.GetBody();
-                Body body2 = point.fixtureB.GetBody();
+                Body body1 = point.fixtureA.Body;
+                Body body2 = point.fixtureB.Body;
                 float mass1 = body1.Mass;
                 float mass2 = body2.Mass;
 

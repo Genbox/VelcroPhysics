@@ -55,7 +55,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.Position = new Vector2(0.5f + i, y);
 
                     Fixture fixture = body.CreateFixture(shape);
-                    fixture.SetFriction(0.2f);
+                    fixture.Friction = 0.2f;
                     Vector2 anchor = new Vector2(i, y);
                     jd.Initialize(prevBody, body, anchor);
                     _world.CreateJoint(jd);

@@ -59,7 +59,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.Position = new Vector2(-6.0f + 1.0f * i, 11.25f);
 
                     Fixture fixture = body.CreateFixture(shape);
-                    fixture.SetFriction(0.1f);
+                    fixture.Friction = 0.1f;
                 }
             }
 
@@ -131,19 +131,19 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(vertices, 10);
 
                 Fixture fix = b5.CreateFixture(shape);
-                fix.SetFriction(0.1f);
+                fix.Friction = 0.1f;
 
                 vertices = PolygonTools.CreateBox(0.1f, 1.0f, new Vector2(-0.9f, 0.0f), 0.0f);
 
                 shape.Set(vertices);
                 fix = b5.CreateFixture(shape);
-                fix.SetFriction(0.1f);
+                fix.Friction = 0.1f;
 
                 vertices = PolygonTools.CreateBox(0.1f, 1.0f, new Vector2(0.9f, 0.0f), 0.0f);
 
                 shape.Set(vertices);
                 fix = b5.CreateFixture(shape);
-                fix.SetFriction(0.1f);
+                fix.Friction = 0.1f;
 
             }
 

@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
 
                     Fixture fixture = body.CreateFixture(shape);
-                    fixture.SetRestitution(restitution[i]);
+                    fixture.Restitution = restitution[i];
                 }
             }
         }

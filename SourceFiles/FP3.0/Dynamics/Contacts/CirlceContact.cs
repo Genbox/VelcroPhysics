@@ -35,8 +35,8 @@ namespace FarseerPhysics
 
         protected override void Evaluate()  
         {
-	        Body bodyA = FixtureA.GetBody();
-	        Body bodyB = FixtureB.GetBody();
+	        Body bodyA = FixtureA.Body;
+	        Body bodyB = FixtureB.Body;
             Transform xfA, xfB;
             bodyA.GetTransform(out xfA);
             bodyB.GetTransform(out xfB);

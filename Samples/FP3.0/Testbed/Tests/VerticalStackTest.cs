@@ -64,7 +64,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
 
                     Fixture fixture = body.CreateFixture(shape);
-                    fixture.SetFriction(0.3f);
+                    fixture.Friction = 0.3f;
                 }
             }
 
@@ -90,7 +90,7 @@ namespace FarseerPhysics.TestBed.Tests
                     _bullet.Position = new Vector2(-31.0f, 5.0f);
 
                     Fixture fixture = _bullet.CreateFixture(shape);
-                    fixture.SetRestitution(0.05f);
+                    fixture.Restitution = 0.05f;
 
                     _bullet.LinearVelocity = new Vector2(400.0f, 0.0f);
                 }

@@ -90,7 +90,7 @@ namespace FarseerPhysics.TestBed.Tests
         private void Break()
         {
             // Create two bodies from one.
-            Body body1 = _piece1.GetBody();
+            Body body1 = _piece1.Body;
             Vector2 center = body1.WorldCenter;
 
             body1.DestroyFixture(_piece2);

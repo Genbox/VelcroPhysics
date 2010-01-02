@@ -55,7 +55,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body.Position = new Vector2(0.0f, 20.0f);
 
                 Fixture fixture = body.CreateFixture(shape);
-                fixture.SetRestitution(0.0f);
+                fixture.Restitution = 0.0f;
                 body.LinearVelocity = new Vector2(0.0f, -100.0f);
                 body.AngularVelocity = _angularVelocity;
             }

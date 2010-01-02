@@ -278,7 +278,7 @@ namespace FarseerPhysics.TestBed.Framework
             _world.QueryAABB(
                 (fixture) =>
                 {
-                    Body body = fixture.GetBody();
+                    Body body = fixture.Body;
                     if (body.BodyType == BodyType.Dynamic)
                     {
                         bool inside = fixture.TestPoint(p);
@@ -297,7 +297,7 @@ namespace FarseerPhysics.TestBed.Framework
 
             if (_fixture != null)
             {
-                Body body = _fixture.GetBody();
+                Body body = _fixture.Body;
                 MouseJointDef md = new MouseJointDef();
                 md.BodyA = _groundBody;
                 md.BodyB = body;
@@ -363,7 +363,7 @@ namespace FarseerPhysics.TestBed.Framework
             aabb.UpperBound = maxV;
 
             Fixture fixture = _bomb.CreateFixture(circle);
-            fixture.SetRestitution(0.1f);
+            fixture.Restitution = 0.1f;
         }
 
         public void SpawnBomb(Vector2 worldPt)
