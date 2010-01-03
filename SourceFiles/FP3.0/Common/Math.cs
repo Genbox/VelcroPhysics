@@ -82,14 +82,12 @@ namespace FarseerPhysics
 
         public static Vector2 Multiply(ref Mat22 A, Vector2 v)
         {
-            Multiply(ref A, ref v, out tempVector1);
-            return tempVector1;
+            return new Vector2(A.Col1.X * v.X + A.Col2.X * v.Y, A.Col1.Y * v.X + A.Col2.Y * v.Y);
         }
 
         public static Vector2 Multiply(ref Transform T, Vector2 v)
         {
-            Multiply(ref T, ref v, out tempVector1);
-            return tempVector1;
+            return new Vector2(T.Position.X + T.R.Col1.X * v.X + T.R.Col2.X * v.Y, T.Position.Y + T.R.Col1.Y * v.X + T.R.Col2.Y * v.Y);
         }
 
         public static Vector2 MultiplyT(ref Mat22 A, Vector2 v)
