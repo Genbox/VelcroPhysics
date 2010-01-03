@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
-[Serializable, DebuggerDisplay("Count = {Count}")]
+//[Serializable, DebuggerDisplay("Count = {Count}")]
 public class Vertices
 {
     private static Vector2[] _emptyArray;
