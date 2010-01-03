@@ -74,6 +74,11 @@ namespace FarseerPhysics
             return tempVector1;
         }
 
+        public static float Abs(float value)
+        {
+            return Math.Abs(value);
+        }
+
         //Ref versions
         public static void Abs(ref Vector2 v, out Vector2 r)
         {
