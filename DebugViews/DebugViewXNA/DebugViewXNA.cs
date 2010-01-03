@@ -93,7 +93,7 @@ namespace FarseerPhysics.DebugViewXNA
                     {
                         AABB aabb;
                         bp.GetFatAABB(f.ProxyId, out aabb);
-                        FixedArray8<Vector2> vs = new FixedArray8<Vector2>();
+                        Vector2[] vs = new Vector2[4];
                         vs[0] = new Vector2(aabb.LowerBound.X, aabb.LowerBound.Y);
                         vs[1] = new Vector2(aabb.UpperBound.X, aabb.LowerBound.Y);
                         vs[2] = new Vector2(aabb.UpperBound.X, aabb.UpperBound.Y);
@@ -180,7 +180,7 @@ namespace FarseerPhysics.DebugViewXNA
                         PolygonShape poly = (PolygonShape)fixture.Shape;
                         int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
-                        FixedArray8<Vector2> vertices = new FixedArray8<Vector2>();
+                        Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
 
                         for (int i = 0; i < vertexCount; ++i)
                         {
@@ -193,12 +193,12 @@ namespace FarseerPhysics.DebugViewXNA
             }
         }
 
-        public override void DrawPolygon(ref FixedArray8<Vector2> vertices, int count, float red, float green, float blue)
+        public override void DrawPolygon(ref Vector2[] vertices, int count, float red, float green, float blue)
         {
             DrawPolygon(ref vertices, count, new Color(red, green, blue));
         }
 
-        public void DrawPolygon(ref FixedArray8<Vector2> vertices, int count, Color color)
+        public void DrawPolygon(ref Vector2[] vertices, int count, Color color)
         {
             for (int i = 0; i < count - 1; i++)
             {
@@ -216,17 +216,17 @@ namespace FarseerPhysics.DebugViewXNA
             _lineCount++;
         }
 
-        public override void DrawSolidPolygon(ref FixedArray8<Vector2> vertices, int count, float red, float green, float blue)
+        public override void DrawSolidPolygon(ref Vector2[] vertices, int count, float red, float green, float blue)
         {
             DrawSolidPolygon(ref vertices, count, new Color(red, green, blue), true);
         }
 
-        public void DrawSolidPolygon(ref FixedArray8<Vector2> vertices, int count, Color color)
+        public void DrawSolidPolygon(ref Vector2[] vertices, int count, Color color)
         {
             DrawSolidPolygon(ref vertices, count, color, true);
         }
 
-        public void DrawSolidPolygon(ref FixedArray8<Vector2> vertices, int count, Color color, bool outline)
+        public void DrawSolidPolygon(ref Vector2[] vertices, int count, Color color, bool outline)
         {
             if (count == 2)
             {
@@ -348,7 +348,7 @@ namespace FarseerPhysics.DebugViewXNA
 
         public void DrawPoint(Vector2 p, float size, Color color)
         {
-            FixedArray8<Vector2> verts = new FixedArray8<Vector2>();
+            Vector2[] verts = new Vector2[4];
             float hs = size / 2.0f;
             verts[0] = p + new Vector2(-hs, -hs);
             verts[1] = p + new Vector2(hs, -hs);
@@ -389,7 +389,7 @@ namespace FarseerPhysics.DebugViewXNA
 
         public void DrawAABB(ref AABB aabb, Color color)
         {
-            FixedArray8<Vector2> verts = new FixedArray8<Vector2>();
+            Vector2[] verts = new Vector2[4];
             verts[0] = new Vector2(aabb.LowerBound.X, aabb.LowerBound.Y);
             verts[1] = new Vector2(aabb.UpperBound.X, aabb.LowerBound.Y);
             verts[2] = new Vector2(aabb.UpperBound.X, aabb.UpperBound.Y);

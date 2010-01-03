@@ -63,7 +63,7 @@ namespace FarseerPhysics.TestBed.Tests
                         PolygonShape poly = (PolygonShape)fixture.Shape;
                         int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
-                        FixedArray8<Vector2> vertices = new FixedArray8<Vector2>();
+                        Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
 
                         for (int i = 0; i < vertexCount; ++i)
                         {
@@ -116,7 +116,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Ground body
             {
-                
+
                 Body ground = _world.CreateBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -126,17 +126,17 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 Vertices vertices = new Vertices(3);
-                vertices[0] = new Vector2(-0.5f, 0.0f);
-                vertices[1] = new Vector2(0.5f, 0.0f);
-                vertices[2] = new Vector2(0.0f, 1.5f);
+                vertices.Add(new Vector2(-0.5f, 0.0f));
+                vertices.Add(new Vector2(0.5f, 0.0f));
+                vertices.Add(new Vector2(0.0f, 1.5f));
                 _polygons[0] = new PolygonShape(vertices, 0);
             }
 
             {
                 Vertices vertices3 = new Vertices(3);
-                vertices3[0] = new Vector2(-0.1f, 0.0f);
-                vertices3[1] = new Vector2(0.1f, 0.0f);
-                vertices3[2] = new Vector2(0.0f, 1.5f);
+                vertices3.Add(new Vector2(-0.1f, 0.0f));
+                vertices3.Add(new Vector2(0.1f, 0.0f));
+                vertices3.Add(new Vector2(0.0f, 1.5f));
                 _polygons[1] = new PolygonShape(vertices3, 0);
             }
 
@@ -146,14 +146,14 @@ namespace FarseerPhysics.TestBed.Tests
                 float s = (float)Math.Sqrt(2.0) * b;
 
                 Vertices vertices8 = new Vertices(8);
-                vertices8[0] = new Vector2(0.5f * s, 0.0f);
-                vertices8[1] = new Vector2(0.5f * w, b);
-                vertices8[2] = new Vector2(0.5f * w, b + s);
-                vertices8[3] = new Vector2(0.5f * s, w);
-                vertices8[4] = new Vector2(-0.5f * s, w);
-                vertices8[5] = new Vector2(-0.5f * w, b + s);
-                vertices8[6] = new Vector2(-0.5f * w, b);
-                vertices8[7] = new Vector2(-0.5f * s, 0.0f);
+                vertices8.Add(new Vector2(0.5f * s, 0.0f));
+                vertices8.Add(new Vector2(0.5f * w, b));
+                vertices8.Add(new Vector2(0.5f * w, b + s));
+                vertices8.Add( new Vector2(0.5f * s, w));
+                vertices8.Add( new Vector2(-0.5f * s, w));
+                vertices8.Add( new Vector2(-0.5f * w, b + s));
+                vertices8.Add(new Vector2(-0.5f * w, b));
+                vertices8.Add( new Vector2(-0.5f * s, 0.0f));
 
                 _polygons[2] = new PolygonShape(vertices8, 0);
             }
@@ -180,9 +180,9 @@ namespace FarseerPhysics.TestBed.Tests
 
             _bodies[_bodyIndex] = _world.CreateBody();
             _bodies[_bodyIndex].BodyType = BodyType.Dynamic;
-            
+
             float x = Rand.RandomFloat(-2.0f, 2.0f);
-            
+
             _bodies[_bodyIndex].Position = new Vector2(x, 10.0f);
             _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
 

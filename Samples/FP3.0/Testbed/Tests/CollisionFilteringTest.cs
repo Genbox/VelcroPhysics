@@ -60,9 +60,9 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 // Small triangle
                 Vertices vertices = new Vertices(3);
-                vertices[0] = new Vector2(-1.0f, 0.0f);
-                vertices[1] = new Vector2(1.0f, 0.0f);
-                vertices[2] = new Vector2(0.0f, 2.0f);
+                vertices.Add(new Vector2(-1.0f, 0.0f));
+                vertices.Add(new Vector2(1.0f, 0.0f));
+                vertices.Add(new Vector2(0.0f, 2.0f));
                 PolygonShape polygon = new PolygonShape(vertices, 1);
 
                 Body body1 = _world.CreateBody();

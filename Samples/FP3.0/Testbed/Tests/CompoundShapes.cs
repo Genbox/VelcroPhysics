@@ -87,9 +87,9 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Vertices vertices = new Vertices(3);
 
-                vertices[0] = MathUtils.Multiply(ref xf1, new Vector2(-1.0f, 0.0f));
-                vertices[1] = MathUtils.Multiply(ref xf1, new Vector2(1.0f, 0.0f));
-                vertices[2] = MathUtils.Multiply(ref xf1, new Vector2(0.0f, 0.5f));
+                vertices.Add(MathUtils.Multiply(ref xf1, new Vector2(-1.0f, 0.0f)));
+                vertices.Add(MathUtils.Multiply(ref xf1, new Vector2(1.0f, 0.0f)));
+                vertices.Add(MathUtils.Multiply(ref xf1, new Vector2(0.0f, 0.5f)));
 
                 PolygonShape triangle1 = new PolygonShape(vertices, 2);
 

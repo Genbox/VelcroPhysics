@@ -83,7 +83,7 @@ namespace FarseerPhysics
 
                 Vector2 temp = MathUtils.Cross(edge, 1.0f);
                 temp.Normalize();
-                Normals[i] = temp;
+                Normals.Add(temp);
             }
 
 #if DEBUG

@@ -36,7 +36,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Ground body
             {
-                
+
                 Body ground = _world.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0);
@@ -46,20 +46,18 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 Vertices vertices = new Vertices(3);
-                vertices[0] = new Vector2(-0.5f, 0.0f);
-                vertices[1] = new Vector2(0.5f, 0.0f);
-                vertices[2] = new Vector2(0.0f, 1.5f);
-                _polygons[0] = new PolygonShape(0);
-                _polygons[0].Set(vertices);
+                vertices.Add(new Vector2(-0.5f, 0.0f));
+                vertices.Add(new Vector2(0.5f, 0.0f));
+                vertices.Add(new Vector2(0.0f, 1.5f));
+                _polygons[0] = new PolygonShape(vertices, 0);
             }
 
             {
                 Vertices vertices2 = new Vertices(3);
-                vertices2[0] = new Vector2(-0.1f, 0.0f);
-                vertices2[1] = new Vector2(0.1f, 0.0f);
-                vertices2[2] = new Vector2(0.0f, 1.5f);
-                _polygons[1] = new PolygonShape(0);
-                _polygons[1].Set(vertices2);
+                vertices2.Add(new Vector2(-0.1f, 0.0f));
+                vertices2.Add(new Vector2(0.1f, 0.0f));
+                vertices2.Add(new Vector2(0.0f, 1.5f));
+                _polygons[1] = new PolygonShape(vertices2, 0);
             }
 
             {
@@ -68,16 +66,15 @@ namespace FarseerPhysics.TestBed.Tests
                 float s = (float)Math.Sqrt(2.0) * b;
 
                 Vertices vertices3 = new Vertices(8);
-                vertices3[0] = new Vector2(0.5f * s, 0.0f);
-                vertices3[1] = new Vector2(0.5f * w, b);
-                vertices3[2] = new Vector2(0.5f * w, b + s);
-                vertices3[3] = new Vector2(0.5f * s, w);
-                vertices3[4] = new Vector2(-0.5f * s, w);
-                vertices3[5] = new Vector2(-0.5f * w, b + s);
-                vertices3[6] = new Vector2(-0.5f * w, b);
-                vertices3[7] = new Vector2(-0.5f * s, 0.0f);
-                _polygons[2] = new PolygonShape(0);
-                _polygons[2].Set(vertices3);
+                vertices3.Add(new Vector2(0.5f * s, 0.0f));
+                vertices3.Add(new Vector2(0.5f * w, b));
+                vertices3.Add(new Vector2(0.5f * w, b + s));
+                vertices3.Add(new Vector2(0.5f * s, w));
+                vertices3.Add(new Vector2(-0.5f * s, w));
+                vertices3.Add(new Vector2(-0.5f * w, b + s));
+                vertices3.Add(new Vector2(-0.5f * w, b));
+                vertices3.Add(new Vector2(-0.5f * s, 0.0f));
+                _polygons[2] = new PolygonShape(vertices3, 0);
             }
 
             {

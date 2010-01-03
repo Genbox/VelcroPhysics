@@ -44,9 +44,9 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (s > 0.0f)
             {
-                vertices[0] = p1;
-                vertices[1] = p2;
-                vertices[2] = p3;
+                vertices.Add(p1);
+                vertices.Add(p2);
+                vertices.Add(p3);
                 poly1.Set(vertices);
 
                 vertices[0] = Vector2.Zero;
@@ -56,9 +56,9 @@ namespace FarseerPhysics.TestBed.Tests
             }
             else
             {
-                vertices[0] = p1;
-                vertices[1] = p3;
-                vertices[2] = p2;
+                vertices.Add(p1);
+                vertices.Add(p3);
+                vertices.Add(p2);
                 poly1.Set(vertices);
 
                 vertices[0] = Vector2.Zero;

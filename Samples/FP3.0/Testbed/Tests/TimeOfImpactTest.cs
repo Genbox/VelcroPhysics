@@ -80,7 +80,7 @@ namespace FarseerPhysics.TestBed.Tests
                                   TimeOfImpact.ToiMaxRootIters);
             _textLine += 15;
 
-            FixedArray8<Vector2> vertices = new FixedArray8<Vector2>();
+            Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
 
             Transform transformA;
             sweepA.GetTransform(out transformA, 0.0f);
