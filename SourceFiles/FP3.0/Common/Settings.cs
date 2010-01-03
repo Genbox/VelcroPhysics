@@ -30,9 +30,6 @@ namespace FarseerPhysics
         public const float Epsilon = 1.192092896e-07f;
         public const float Pi = 3.14159265359f;
 
-        /// The maximum number of contact points between two convex shapes.
-        public const int MaxManifoldPoints = 2;
-
         /// The maximum number of vertices on a convex polygon.
         public const int MaxPolygonVertices = 8;
 
