@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿//#define DEBUG_SOLVER
+
+using Microsoft.Xna.Framework;
 using System.Diagnostics;
 using System;
 
@@ -119,7 +121,7 @@ namespace FarseerPhysics
 
                     float rnA = ccp.RA.X * cc.Normal.Y - ccp.RA.Y * cc.Normal.X;
                     float rnB = ccp.RB.X * cc.Normal.Y - ccp.RB.Y * cc.Normal.X;
-      
+
                     rnA *= rnA;
                     rnB *= rnB;
 
@@ -138,7 +140,7 @@ namespace FarseerPhysics
 
                     float rtA = ccp.RA.X * tangent.Y - ccp.RA.Y * tangent.X;
                     float rtB = ccp.RB.X * tangent.Y - ccp.RB.Y * tangent.X;
-      
+
                     rtA *= rtA;
                     rtB *= rtB;
                     float kTangent = bodyA._invMass + bodyB._invMass + bodyA._invI * rtA + bodyB._invI * rtB;
@@ -337,7 +339,7 @@ namespace FarseerPhysics
                     vB.X += invMassB * (lambda * normal.X);
                     vB.Y += invMassB * (lambda * normal.Y);
                     wB += invIB * (ccp.RB.X * (lambda * normal.Y) - ccp.RB.Y * (lambda * normal.X));
-      
+
                     ccp.NormalImpulse = newImpulse;
                     cc.Points[0] = ccp;
                 }
@@ -384,6 +386,13 @@ namespace FarseerPhysics
                     //Vector2 dv2 = new Vector2(vB.X + (-wB * cp2.RB.Y) - vA.X - (-wA * cp2.RA.Y),
                     //                          vB.Y + (wB * cp2.RB.X) - vA.Y - (wA * cp2.RA.X));
 
+#if DEBUG_SOLVER
+                    Vector2 dv1 = new Vector2(vB.X + (-wB * cp1.RB.Y) - vA.X - (-wA * cp1.RA.Y),
+                                              vB.Y + (wB * cp1.RB.X) - vA.Y - (wA * cp1.RA.X));
+                    Vector2 dv2 = new Vector2(vB.X + (-wB * cp2.RB.Y) - vA.X - (-wA * cp2.RA.Y),
+                                              vB.Y + (wB * cp2.RB.X) - vA.Y - (wA * cp2.RA.X));
+#endif
+
                     // Compute normal velocity
                     float vn1 = (vB.X + (-wB * cp1.RB.Y) - vA.X - (-wA * cp1.RA.Y)) * normal.X + (vB.Y + (wB * cp1.RB.X) - vA.Y - (wA * cp1.RA.X)) * normal.Y;
                     float vn2 = (vB.X + (-wB * cp2.RB.Y) - vA.X - (-wA * cp2.RA.Y)) * normal.X + (vB.Y + (wB * cp2.RB.X) - vA.Y - (wA * cp2.RA.X)) * normal.Y;
@@ -391,7 +400,7 @@ namespace FarseerPhysics
                     Vector2 b = new Vector2(vn1 - cp1.VelocityBias, vn2 - cp2.VelocityBias);
                     b.X -= cc.K.Col1.X * (cp1.NormalImpulse) + cc.K.Col2.X * (cp2.NormalImpulse);
                     b.Y -= cc.K.Col1.Y * (cp1.NormalImpulse) + cc.K.Col2.Y * (cp2.NormalImpulse);
-      
+
                     while (true)
                     {
                         //
@@ -426,20 +435,23 @@ namespace FarseerPhysics
                             cp1.NormalImpulse = x.X;
                             cp2.NormalImpulse = x.Y;
 
-#if DEBUG_SOLVER 
-                            
-			                float k_errorTol = 1e-3f;
+#if DEBUG_SOLVER
 
-					        // Postconditions
-					        dv1 = vB + MathUtils.Cross(wB, cp1.rB) - vA - MathUtils.Cross(wA, cp1.rA);
-					        dv2 = vB + MathUtils.Cross(wB, cp2.rB) - vA - MathUtils.Cross(wA, cp2.rA);
+                            const float k_errorTol = 1e-3f;
 
-					        // Compute normal velocity
-					        vn1 = Vector2.Dot(dv1, normal);
-					        vn2 = Vector2.Dot(dv2, normal);
+                            // Postconditions
+                            dv1 = vB + MathUtils.Cross(wB, cp1.RB) - vA - MathUtils.Cross(wA, cp1.RA);
+                            dv2 = vB + MathUtils.Cross(wB, cp2.RB) - vA - MathUtils.Cross(wA, cp2.RA);
 
-					        Debug.Assert(MathUtils.Abs(vn1 - cp1.velocityBias) < k_errorTol);
-					        Debug.Assert(MathUtils.Abs(vn2 - cp2.velocityBias) < k_errorTol);
+                            // Compute normal velocity
+                            {
+                                vn1 = Vector2.Dot(dv1, normal);
+                                vn2 = Vector2.Dot(dv2, normal);
+
+                                Debug.Assert(MathUtils.Abs(vn1 - cp1.VelocityBias) < k_errorTol);
+                                Debug.Assert(MathUtils.Abs(vn2 - cp2.VelocityBias) < k_errorTol);
+                            }
+
 #endif
                             break;
                         }
@@ -475,14 +487,16 @@ namespace FarseerPhysics
                             cp1.NormalImpulse = x.X;
                             cp2.NormalImpulse = x.Y;
 
-#if DEBUG_SOLVER 
-					        // Postconditions
-					        dv1 = vB + MathUtils.Cross(wB, cp1.rB) - vA - MathUtils.Cross(wA, cp1.rA);
+#if DEBUG_SOLVER
+                            const float k_errorTol = 1e-3f;
 
-					        // Compute normal velocity
-					        vn1 = Vector2.Dot(dv1, normal);
+                            // Postconditions
+                            dv1 = vB + MathUtils.Cross(wB, cp1.RB) - vA - MathUtils.Cross(wA, cp1.RA);
 
-					        Debug.Assert(MathUtils.Abs(vn1 - cp1.velocityBias) < k_errorTol);
+                            // Compute normal velocity
+                            vn1 = Vector2.Dot(dv1, normal);
+
+                            Debug.Assert(MathUtils.Abs(vn1 - cp1.VelocityBias) < k_errorTol);
 #endif
                             break;
                         }
@@ -520,14 +534,16 @@ namespace FarseerPhysics
                             cp1.NormalImpulse = x.X;
                             cp2.NormalImpulse = x.Y;
 
-#if DEBUG_SOLVER 
-					        // Postconditions
-					        dv2 = vB + MathUtils.Cross(wB, cp2.rB) - vA - MathUtils.Cross(wA, cp2.rA);
+#if DEBUG_SOLVER
+                            const float k_errorTol = 1e-3f;
 
-					        // Compute normal velocity
-					        vn2 = Vector2.Dot(dv2, normal);
+                            // Postconditions
+                            dv2 = vB + MathUtils.Cross(wB, cp2.RB) - vA - MathUtils.Cross(wA, cp2.RA);
 
-					        Debug.Assert(MathUtils.Abs(vn2 - cp2.velocityBias) < k_errorTol);
+                            // Compute normal velocity
+                            vn2 = Vector2.Dot(dv2, normal);
+
+                            Debug.Assert(MathUtils.Abs(vn2 - cp2.VelocityBias) < k_errorTol);
 #endif
                             break;
                         }
@@ -559,7 +575,7 @@ namespace FarseerPhysics
                             vB.X += invMassB * P12.X;
                             vB.Y += invMassB * P12.Y;
                             wB += invIB * ((cp1.RB.X * P1.Y - cp1.RB.Y * P1.X) + (cp2.RB.X * P2.Y - cp2.RB.Y * P2.X));
-      
+
                             // Accumulate
                             cp1.NormalImpulse = x.X;
                             cp2.NormalImpulse = x.Y;
@@ -654,7 +670,7 @@ namespace FarseerPhysics
                     bodyB._sweep.Center.X += invMassB * P.X;
                     bodyB._sweep.Center.Y += invMassB * P.Y;
                     bodyB._sweep.Angle += invIB * (rB.X * P.Y - rB.Y * P.X);
-      
+
                     bodyA.SynchronizeTransform();
                     bodyB.SynchronizeTransform();
                 }
