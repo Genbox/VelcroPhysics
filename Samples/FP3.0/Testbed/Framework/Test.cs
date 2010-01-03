@@ -22,8 +22,8 @@
 
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Framework
 {
@@ -49,6 +49,24 @@ namespace FarseerPhysics.TestBed.Framework
 
     public class Settings
     {
+        public uint drawAABBs;
+        public uint drawCOMs;
+        public uint drawContactForces;
+        public uint drawContactNormals;
+        public uint drawContactPoints;
+        public uint drawFrictionForces;
+        public uint drawJoints;
+        public uint drawPairs;
+        public uint drawShapes;
+        public uint drawStats;
+        public uint enableContinuous;
+        public uint enableWarmStarting;
+        public float hz;
+        public uint pause;
+        public int positionIterations;
+        public uint singleStep;
+        public int velocityIterations;
+
         public Settings()
         {
             hz = 60.0f;
@@ -59,30 +77,12 @@ namespace FarseerPhysics.TestBed.Framework
             enableWarmStarting = 1;
             enableContinuous = 1;
         }
-
-        public float hz;
-        public int velocityIterations;
-        public int positionIterations;
-        public uint drawShapes;
-        public uint drawJoints;
-        public uint drawAABBs;
-        public uint drawPairs;
-        public uint drawContactPoints;
-        public uint drawContactNormals;
-        public uint drawContactForces;
-        public uint drawFrictionForces;
-        public uint drawCOMs;
-        public uint drawStats;
-        public uint enableWarmStarting;
-        public uint enableContinuous;
-        public uint pause;
-        public uint singleStep;
     }
 
     public struct TestEntry
     {
-        public string name;
         public Func<Test> createFcn;
+        public string name;
     }
 
     public struct ContactPoint
@@ -96,22 +96,39 @@ namespace FarseerPhysics.TestBed.Framework
 
     public class Test
     {
+        private const int k_maxContactPoints = 2048;
+        internal int TextLine;
+        internal World World;
+        private Body _bomb;
+        private Vector2 _bombSpawnPoint;
+        private bool _bombSpawning;
+        internal DebugViewXNA.DebugViewXNA _debugView;
+        private Body _groundBody;
+        private MouseJoint _mouseJoint;
+        private Vector2 _mouseWorld;
+        internal int _pointCount;
+        internal ContactPoint[] _points = new ContactPoint[k_maxContactPoints];
+
         protected Test()
         {
-            _world = new World(new Vector2(0.0f, -10.0f), true);
-            _debugView = new DebugViewXNA.DebugViewXNA(_world);
-            _textLine = 30;
-            
-            _world.JointRemoved += JointRemoved;
-            _world.ContactManager.PreSolve += PreSolve;
-            _world.ContactManager.PostSolve += PostSolve;
-            _world.ContactManager.BeginContact += BeginContact;
-            _world.ContactManager.EndContact += EndContact;
+            World = new World(new Vector2(0.0f, -10.0f), true);
+            _debugView = new DebugViewXNA.DebugViewXNA(World);
+            TextLine = 30;
+
+            World.JointRemoved += JointRemoved;
+            World.ContactManager.PreSolve += PreSolve;
+            World.ContactManager.PostSolve += PostSolve;
+            World.ContactManager.BeginContact += BeginContact;
+            World.ContactManager.EndContact += EndContact;
 
             _bombSpawning = false;
 
-            _groundBody = _world.CreateBody();
+            _groundBody = World.CreateBody();
         }
+
+        public Game1 GameInstance { get; set; }
+
+        public virtual void Initialize(){}
 
         private void JointRemoved(Joint joint)
         {
@@ -123,7 +140,7 @@ namespace FarseerPhysics.TestBed.Framework
 
         public void SetTextLine(int line)
         {
-            _textLine = line;
+            TextLine = line;
         }
 
         public void DrawTitle(int x, int y, string title)
@@ -146,8 +163,8 @@ namespace FarseerPhysics.TestBed.Framework
                     timeStep = 0.0f;
                 }
 
-                _debugView.DrawString(50, _textLine, "****PAUSED****");
-                _textLine += 15;
+                _debugView.DrawString(50, TextLine, "****PAUSED****");
+                TextLine += 15;
             }
 
             uint flags = 0;
@@ -158,21 +175,21 @@ namespace FarseerPhysics.TestBed.Framework
             flags += settings.drawCOMs * (uint)DebugViewFlags.CenterOfMass;
             _debugView.Flags = (DebugViewFlags)flags;
 
-            _world.WarmStarting = (settings.enableWarmStarting > 0);
-            _world.ContinuousPhysics = (settings.enableContinuous > 0);
+            World.WarmStarting = (settings.enableWarmStarting > 0);
+            World.ContinuousPhysics = (settings.enableContinuous > 0);
 
             _pointCount = 0;
 
-            _world.Step(timeStep, settings.velocityIterations, settings.positionIterations);
-            _world.ClearForces();
+            World.Step(timeStep, settings.velocityIterations, settings.positionIterations);
+            World.ClearForces();
 
             _debugView.DrawDebugData();
 
             if (settings.drawStats > 0)
             {
-                _debugView.DrawString(50, _textLine, "bodies/contacts/joints/proxies = {0:n}/{1:n}/{2:n}",
-                                      _world.BodyCount, _world.ContactCount, _world.JointCount, _world.ProxyCount);
-                _textLine += 15;
+                _debugView.DrawString(50, TextLine, "bodies/contacts/joints/proxies = {0:n}/{1:n}/{2:n}",
+                                      World.BodyCount, World.ContactCount, World.JointCount, World.ProxyCount);
+                TextLine += 15;
             }
 
             if (_mouseJoint != null)
@@ -234,8 +251,6 @@ namespace FarseerPhysics.TestBed.Framework
             }
         }
 
-        public Game1 Game { get; set; }
-        
         public virtual void Keyboard(KeyboardState state, KeyboardState oldState)
         {
         }
@@ -243,7 +258,7 @@ namespace FarseerPhysics.TestBed.Framework
         public virtual void Mouse(MouseState state, MouseState oldState)
         {
             Vector2 position;// = new Vector2(state.X,state.Y );
-            position = Game.ConvertScreenToWorld(state.X, state.Y);
+            position = GameInstance.ConvertScreenToWorld(state.X, state.Y);
 
             if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
             {
@@ -275,7 +290,7 @@ namespace FarseerPhysics.TestBed.Framework
             Fixture _fixture = null;
 
             // Query the world for overlapping shapes.
-            _world.QueryAABB(
+            World.QueryAABB(
                 (fixture) =>
                 {
                     Body body = fixture.Body;
@@ -298,9 +313,9 @@ namespace FarseerPhysics.TestBed.Framework
             if (_fixture != null)
             {
                 Body body = _fixture.Body;
-                _mouseJoint = new MouseJoint(_groundBody,body,p);
+                _mouseJoint = new MouseJoint(_groundBody, body, p);
                 _mouseJoint.MaxForce = 1000.0f * body.Mass;
-                _world.CreateJoint(_mouseJoint);
+                World.CreateJoint(_mouseJoint);
                 body.Awake = true;
             }
         }
@@ -309,7 +324,7 @@ namespace FarseerPhysics.TestBed.Framework
         {
             if (_mouseJoint != null)
             {
-                _world.DestroyJoint(_mouseJoint);
+                World.DestroyJoint(_mouseJoint);
                 _mouseJoint = null;
             }
 
@@ -340,17 +355,17 @@ namespace FarseerPhysics.TestBed.Framework
         {
             if (_bomb != null)
             {
-                _world.DestroyBody(_bomb);
+                World.DestroyBody(_bomb);
                 _bomb = null;
             }
 
-            _bomb = _world.CreateBody();
+            _bomb = World.CreateBody();
             _bomb.BodyType = BodyType.Dynamic;
             _bomb.Position = position;
             _bomb.Bullet = true;
             _bomb.LinearVelocity = velocity;
 
-            CircleShape circle = new CircleShape(0.3f,20.0f);
+            CircleShape circle = new CircleShape(0.3f, 20.0f);
 
             Vector2 minV = position - new Vector2(0.3f, 0.3f);
             Vector2 maxV = position + new Vector2(0.3f, 0.3f);
@@ -436,19 +451,5 @@ namespace FarseerPhysics.TestBed.Framework
         public virtual void PostSolve(Contact contact, ref ContactImpulse impulse)
         {
         }
-
-        private Body _groundBody;
-        internal ContactPoint[] _points = new ContactPoint[k_maxContactPoints];
-        internal int _pointCount;
-        internal DebugViewXNA.DebugViewXNA _debugView;
-        internal int _textLine;
-        internal World _world;
-        private Body _bomb;
-        private MouseJoint _mouseJoint;
-        private Vector2 _bombSpawnPoint;
-        private bool _bombSpawning;
-        private Vector2 _mouseWorld;
-
-        private const int k_maxContactPoints = 2048;
     }
 }

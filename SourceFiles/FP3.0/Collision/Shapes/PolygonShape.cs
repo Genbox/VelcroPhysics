@@ -106,7 +106,7 @@ namespace FarseerPhysics
                     Vector2 r = Vertices[j] - Vertices[i1];
 
                     // Your polygon is non-convex (it has an indentation) or
-                    // has colinear edges.
+                    // has collinear edges.
                     float s = MathUtils.Cross(edge, r);
                     Debug.Assert(s > 0.0f);
                 }

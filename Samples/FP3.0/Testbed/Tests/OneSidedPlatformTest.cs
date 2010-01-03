@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Ground
             {
                 
-                Body ground = _world.CreateBody();
+                Body ground = World.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0.0f);
                 shape.SetAsEdge(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
@@ -42,7 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Platform
             {
                 
-                Body body = _world.CreateBody();
+                Body body = World.CreateBody();
                 body.Position = new Vector2(0.0f, 10.0f);
 
                 PolygonShape shape = new PolygonShape(0.0f);
@@ -55,7 +55,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Actor
             {
                 
-                Body body = _world.CreateBody();
+                Body body = World.CreateBody();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 12.0f);
 

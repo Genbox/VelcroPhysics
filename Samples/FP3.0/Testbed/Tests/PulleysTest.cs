@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
             Body ground;
             {
                 
-                ground = _world.CreateBody();
+                ground = World.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0.0f);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -48,12 +48,12 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(5);
                 shape.SetAsBox(a, b);
 
-                Body body1 = _world.CreateBody();
+                Body body1 = World.CreateBody();
                 body1.BodyType = BodyType.Dynamic;
                 body1.Position = new Vector2(-10.0f, y);
                 body1.CreateFixture(shape);
 
-                Body body2 = _world.CreateBody();
+                Body body2 = World.CreateBody();
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(10.0f, y);
 
@@ -64,7 +64,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 groundAnchor1 = new Vector2(-10.0f, y + b + L);
                 Vector2 groundAnchor2 = new Vector2(10.0f, y + b + L);
                 _joint1 = new PulleyJoint(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2, 2.0f);
-                _world.CreateJoint(_joint1);
+                World.CreateJoint(_joint1);
             }
         }
 
@@ -74,8 +74,8 @@ namespace FarseerPhysics.TestBed.Tests
 
             float ratio = _joint1.Ratio;
             float L = _joint1.LengthA + ratio * _joint1.LengthB;
-            _debugView.DrawString(50, _textLine, "L1 + {0:n} * L2 = {1:n}", ratio, L);
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "L1 + {0:n} * L2 = {1:n}", ratio, L);
+            TextLine += 15;
         }
 
         internal static Test Create()

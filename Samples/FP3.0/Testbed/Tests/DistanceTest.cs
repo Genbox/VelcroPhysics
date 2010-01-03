@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -68,11 +68,11 @@ namespace FarseerPhysics.TestBed.Tests
             DistanceOutput output;
             Distance.ComputeDistance(out output, out cache, ref input);
 
-            _debugView.DrawString(50, _textLine, "distance = {0:n}", output.Distance);
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "distance = {0:n}", output.Distance);
+            TextLine += 15;
 
-            _debugView.DrawString(50, _textLine, "iterations = {0:n}", output.Iterations);
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "iterations = {0:n}", output.Iterations);
+            TextLine += 15;
 
             {
                 Color color = new Color(0.9f, 0.9f, 0.9f);

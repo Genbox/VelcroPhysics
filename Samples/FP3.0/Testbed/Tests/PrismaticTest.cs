@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -33,7 +33,7 @@ namespace FarseerPhysics.TestBed.Tests
             Body ground;
             {
 
-                ground = _world.CreateBody();
+                ground = World.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0.0f);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -44,7 +44,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(5.0f);
                 shape.SetAsBox(2.0f, 0.5f);
 
-                Body body = _world.CreateBody();
+                Body body = World.CreateBody();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-10.0f, 10.0f);
                 body.Rotation = 0.5f * Settings.Pi;
@@ -64,7 +64,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _joint.UpperLimit = 20.0f;
                 _joint.LimitEnabled = true;
 
-                _world.CreateJoint(_joint);
+                World.CreateJoint(_joint);
             }
         }
 
@@ -87,11 +87,11 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Step(Framework.Settings settings)
         {
             base.Step(settings);
-            _debugView.DrawString(50, _textLine, "Keys: (l) limits, (m) motors, (p) speed");
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "Keys: (l) limits, (m) motors, (p) speed");
+            TextLine += 15;
             float force = _joint.MotorForce;
-            _debugView.DrawString(50, _textLine, "Motor Force = {0:n}", force);
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "Motor Force = {0:n}", force);
+            TextLine += 15;
         }
 
         internal static Test Create()

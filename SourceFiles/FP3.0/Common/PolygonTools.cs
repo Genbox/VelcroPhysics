@@ -1001,219 +1001,218 @@ namespace FarseerPhysics
             return 0;
         }
         #endregion
+    }
 
-        #region Sickbattery's Extension - Enums & Classes
-        public enum EdgeAlignment
+    #region Sickbattery's Extension - Enums & Classes
+    public enum EdgeAlignment
+    {
+        Vertical = 0,
+        Horizontal = 1
+    }
+
+    public class CrossingEdgeInfo : IComparable
+    {
+        #region Attributes
+        private Vector2 _egdeVertex1;
+        private Vector2 _edgeVertex2;
+
+        private EdgeAlignment _alignment;
+        private Vector2 _crossingPoint;
+        #endregion
+
+        #region Properties
+        public Vector2 EdgeVertex1
         {
-            Vertical = 0,
-            Horizontal = 1
+            get { return _egdeVertex1; }
+            set { _egdeVertex1 = value; }
         }
 
-        private class CrossingEdgeInfo : IComparable
+        public Vector2 EdgeVertex2
         {
-            #region Attributes
-            private Vector2 _egdeVertex1;
-            private Vector2 _edgeVertex2;
-
-            private EdgeAlignment _alignment;
-            private Vector2 _crossingPoint;
-            #endregion
-
-            #region Properties
-            public Vector2 EdgeVertex1
-            {
-                get { return _egdeVertex1; }
-                set { _egdeVertex1 = value; }
-            }
-
-            public Vector2 EdgeVertex2
-            {
-                get { return _edgeVertex2; }
-                set { _edgeVertex2 = value; }
-            }
-
-            public EdgeAlignment CheckLineAlignment
-            {
-                get { return _alignment; }
-                set { _alignment = value; }
-            }
-
-            public Vector2 CrossingPoint
-            {
-                get { return _crossingPoint; }
-                set { _crossingPoint = value; }
-            }
-            #endregion
-
-            #region Constructor
-            public CrossingEdgeInfo(Vector2 edgeVertex1, Vector2 edgeVertex2, Vector2 crossingPoint, EdgeAlignment checkLineAlignment)
-            {
-                _egdeVertex1 = edgeVertex1;
-                _edgeVertex2 = edgeVertex2;
-
-                _alignment = checkLineAlignment;
-                _crossingPoint = crossingPoint;
-            }
-            #endregion
-
-            #region IComparable Member
-            public int CompareTo(object obj)
-            {
-                CrossingEdgeInfo cei = (CrossingEdgeInfo)obj;
-                int result = 0;
-
-                switch (_alignment)
-                {
-                    case EdgeAlignment.Vertical:
-                        if (_crossingPoint.X < cei.CrossingPoint.X)
-                        {
-                            result = -1;
-                        }
-                        else if (_crossingPoint.X > cei.CrossingPoint.X)
-                        {
-                            result = 1;
-                        }
-                        break;
-
-                    case EdgeAlignment.Horizontal:
-                        if (_crossingPoint.Y < cei.CrossingPoint.Y)
-                        {
-                            result = -1;
-                        }
-                        else if (_crossingPoint.Y > cei.CrossingPoint.Y)
-                        {
-                            result = 1;
-                        }
-                        break;
-                }
-
-                return result;
-            }
-            #endregion
+            get { return _edgeVertex2; }
+            set { _edgeVertex2 = value; }
         }
 
-        /// <summary>
-        /// Class used as a data container and helper for the texture-to-vertices code.
-        /// </summary>
-        public class PolygonCreationAssistance
+        public EdgeAlignment CheckLineAlignment
         {
-            private byte _alphaTolerance;
-            private uint _alphaToleranceRealValue;
-            private float _hullTolerance;
-            private int _holeDetectionLineStepSize;
+            get { return _alignment; }
+            set { _alignment = value; }
+        }
 
-            public uint[] Data { get; private set; }
-
-            public int Width { get; private set; }
-
-            public int Height { get; private set; }
-
-            public byte AlphaTolerance
-            {
-                get { return _alphaTolerance; }
-                set
-                {
-                    _alphaTolerance = value;
-                    _alphaToleranceRealValue = (uint)value << 24;
-                }
-            }
-
-            public float HullTolerance
-            {
-                get { return _hullTolerance; }
-                set
-                {
-                    float hullTolerance = value;
-
-                    if (hullTolerance > 4f) hullTolerance = 4f;
-                    if (hullTolerance < 0.9f) hullTolerance = 0.9f;
-
-                    _hullTolerance = hullTolerance;
-                }
-            }
-
-            public int HoleDetectionLineStepSize
-            {
-                get { return _holeDetectionLineStepSize; }
-                set
-                {
-                    if (value < 1)
-                    {
-                        _holeDetectionLineStepSize = 1;
-                    }
-                    else
-                    {
-                        if (value > 10)
-                        {
-                            _holeDetectionLineStepSize = 10;
-                        }
-                        else
-                        {
-                            _holeDetectionLineStepSize = value;
-                        }
-                    }
-                }
-            }
-
-            public bool HoleDetection { get; set; }
-
-            public bool MultipartDetection { get; set; }
-
-            public PolygonCreationAssistance(uint[] data, int width, int height)
-            {
-                Data = data;
-                Width = width;
-                Height = height;
-
-                AlphaTolerance = 20;
-                HullTolerance = 1.5f;
-
-                HoleDetectionLineStepSize = 1;
-
-                HoleDetection = false;
-                MultipartDetection = false;
-            }
-
-            public bool IsSolid(Vector2 pixel)
-            {
-                return IsSolid((int)pixel.X, (int)pixel.Y);
-            }
-
-            public bool IsSolid(int x, int y)
-            {
-                if (x >= 0 && x < Width && y >= 0 && y < Height)
-                    return ((Data[x + y * Width] & 0xFF000000) >= _alphaToleranceRealValue);
-
-                return false;
-            }
-
-            public bool IsSolid(int index)
-            {
-                if (index >= 0 && index < Width * Height)
-                    return ((Data[index] & 0xFF000000) >= _alphaToleranceRealValue);
-
-                return false;
-            }
-
-            public bool InBounds(Vector2 coord)
-            {
-                return (coord.X >= 0f && coord.X < Width && coord.Y >= 0f && coord.Y < Height);
-            }
-
-            public bool IsValid()
-            {
-                if (Data != null && Data.Length > 0)
-                    return Data.Length == Width * Height;
-
-                return false;
-            }
-
-            ~PolygonCreationAssistance()
-            {
-                Data = null;
-            }
+        public Vector2 CrossingPoint
+        {
+            get { return _crossingPoint; }
+            set { _crossingPoint = value; }
         }
         #endregion
 
+        #region Constructor
+        public CrossingEdgeInfo(Vector2 edgeVertex1, Vector2 edgeVertex2, Vector2 crossingPoint, EdgeAlignment checkLineAlignment)
+        {
+            _egdeVertex1 = edgeVertex1;
+            _edgeVertex2 = edgeVertex2;
+
+            _alignment = checkLineAlignment;
+            _crossingPoint = crossingPoint;
+        }
+        #endregion
+
+        #region IComparable Member
+        public int CompareTo(object obj)
+        {
+            CrossingEdgeInfo cei = (CrossingEdgeInfo)obj;
+            int result = 0;
+
+            switch (_alignment)
+            {
+                case EdgeAlignment.Vertical:
+                    if (_crossingPoint.X < cei.CrossingPoint.X)
+                    {
+                        result = -1;
+                    }
+                    else if (_crossingPoint.X > cei.CrossingPoint.X)
+                    {
+                        result = 1;
+                    }
+                    break;
+
+                case EdgeAlignment.Horizontal:
+                    if (_crossingPoint.Y < cei.CrossingPoint.Y)
+                    {
+                        result = -1;
+                    }
+                    else if (_crossingPoint.Y > cei.CrossingPoint.Y)
+                    {
+                        result = 1;
+                    }
+                    break;
+            }
+
+            return result;
+        }
+        #endregion
     }
+
+    /// <summary>
+    /// Class used as a data container and helper for the texture-to-vertices code.
+    /// </summary>
+    public class PolygonCreationAssistance
+    {
+        private byte _alphaTolerance;
+        private uint _alphaToleranceRealValue;
+        private float _hullTolerance;
+        private int _holeDetectionLineStepSize;
+
+        public uint[] Data { get; private set; }
+
+        public int Width { get; private set; }
+
+        public int Height { get; private set; }
+
+        public byte AlphaTolerance
+        {
+            get { return _alphaTolerance; }
+            set
+            {
+                _alphaTolerance = value;
+                _alphaToleranceRealValue = (uint)value << 24;
+            }
+        }
+
+        public float HullTolerance
+        {
+            get { return _hullTolerance; }
+            set
+            {
+                float hullTolerance = value;
+
+                if (hullTolerance > 4f) hullTolerance = 4f;
+                if (hullTolerance < 0.9f) hullTolerance = 0.9f;
+
+                _hullTolerance = hullTolerance;
+            }
+        }
+
+        public int HoleDetectionLineStepSize
+        {
+            get { return _holeDetectionLineStepSize; }
+            set
+            {
+                if (value < 1)
+                {
+                    _holeDetectionLineStepSize = 1;
+                }
+                else
+                {
+                    if (value > 10)
+                    {
+                        _holeDetectionLineStepSize = 10;
+                    }
+                    else
+                    {
+                        _holeDetectionLineStepSize = value;
+                    }
+                }
+            }
+        }
+
+        public bool HoleDetection { get; set; }
+
+        public bool MultipartDetection { get; set; }
+
+        public PolygonCreationAssistance(uint[] data, int width, int height)
+        {
+            Data = data;
+            Width = width;
+            Height = height;
+
+            AlphaTolerance = 20;
+            HullTolerance = 1.5f;
+
+            HoleDetectionLineStepSize = 1;
+
+            HoleDetection = false;
+            MultipartDetection = false;
+        }
+
+        public bool IsSolid(Vector2 pixel)
+        {
+            return IsSolid((int)pixel.X, (int)pixel.Y);
+        }
+
+        public bool IsSolid(int x, int y)
+        {
+            if (x >= 0 && x < Width && y >= 0 && y < Height)
+                return ((Data[x + y * Width] & 0xFF000000) >= _alphaToleranceRealValue);
+
+            return false;
+        }
+
+        public bool IsSolid(int index)
+        {
+            if (index >= 0 && index < Width * Height)
+                return ((Data[index] & 0xFF000000) >= _alphaToleranceRealValue);
+
+            return false;
+        }
+
+        public bool InBounds(Vector2 coord)
+        {
+            return (coord.X >= 0f && coord.X < Width && coord.Y >= 0f && coord.Y < Height);
+        }
+
+        public bool IsValid()
+        {
+            if (Data != null && Data.Length > 0)
+                return Data.Length == Width * Height;
+
+            return false;
+        }
+
+        ~PolygonCreationAssistance()
+        {
+            Data = null;
+        }
+    }
+    #endregion
 }

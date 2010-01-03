@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -22,66 +22,68 @@
 
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class ShapeEditingTest : Test
+    public class TextureVerticesTest : Test
     {
-        private ShapeEditingTest()
+        private Texture2D _polygonTexture;
+        private Body _polygonBody;
+
+        private TextureVerticesTest()
         {
             {
-                
                 Body ground = World.CreateBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
                 ground.CreateFixture(shape);
             }
-
-            _body = World.CreateBody();
-            _body.BodyType = BodyType.Dynamic;
-            _body.Position = new Vector2(0.0f, 10.0f);
-
-            Vertices box = PolygonTools.CreateBox(4.0f, 4.0f);
-            PolygonShape shape2 = new PolygonShape(box, 10);
-            _body.CreateFixture(shape2);
-
-            _fixture2 = null;
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Initialize()
         {
-            if (state.IsKeyDown(Keys.C) && oldState.IsKeyUp(Keys.C) && _fixture2 == null)
-            {
-                CircleShape shape = new CircleShape(3.0f, 10);
-                shape.Position = new Vector2(0.5f, -4.0f);
-                _fixture2 = _body.CreateFixture(shape);
-                _body.Awake = true;
-            }
+            //load texture that will represent the physics body
+            _polygonTexture = GameInstance.Content.Load<Texture2D>("Texture");
 
-            if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D) && _fixture2 != null)
-            {
-                _body.DestroyFixture(_fixture2);
-                _fixture2 = null;
-                _body.Awake = true;
-            }
+            //Create an array to hold the data from the texture
+            uint[] data = new uint[_polygonTexture.Width * _polygonTexture.Height];
+
+            //Transfer the texture data to the array
+            _polygonTexture.GetData(data);
+
+            Vertices verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height);
+            Vector2 scale = new Vector2(0.1f, 0.1f);
+            PolygonTools.Scale(ref verts, ref scale);
+
+            vertices = verts.ToArray();
+
+            //PolygonShape diamondShape = new PolygonShape(verts, 100);
+
+            //Use the body factory to create the physics body
+            //_polygonBody = World.CreateBody();
+            //_polygonBody.Position = new Vector2(0, 0);
+            //_polygonBody.CreateFixture(diamondShape);
+
+            base.Initialize();
         }
 
-
-        public override void Step(Framework.Settings settings)
+        private Vector2[] vertices;
+        public override void Step(FarseerPhysics.TestBed.Framework.Settings settings)
         {
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                _debugView.DrawCircle(vertices[i],0.1f,Color.White);
+                
+            }
+
             base.Step(settings);
-            _debugView.DrawString(50, TextLine, "Press: (c) create a shape, (d) destroy a shape.");
-            TextLine += 15;
         }
 
-        internal static Test Create()
+        public static Test Create()
         {
-            return new ShapeEditingTest();
+            return new TextureVerticesTest();
         }
-
-        private Body _body;
-        private Fixture _fixture2;
     }
 }

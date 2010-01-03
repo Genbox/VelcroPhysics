@@ -30,7 +30,7 @@ namespace FarseerPhysics.TestBed.Tests
         private CCDTest()
         {
             {
-                Body body = _world.CreateBody();
+                Body body = World.CreateBody();
                 body.Position = new Vector2(0.0f, -0.2f);
 
                 Vertices box = PolygonTools.CreateBox(10, 0.2f);
@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
                 _angularVelocity = -30.669577f;
 
-                Body body = _world.CreateBody();
+                Body body = World.CreateBody();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 20.0f);
 
@@ -221,19 +221,19 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (Distance.GjkCalls > 0)
             {
-                _debugView.DrawString(50, _textLine, "gjk calls = {0:n}, ave gjk iters = {1:n}, max gjk iters = {2:n}",
+                _debugView.DrawString(50, TextLine, "gjk calls = {0:n}, ave gjk iters = {1:n}, max gjk iters = {2:n}",
                                       Distance.GjkCalls, Distance.GjkIters / (float)Distance.GjkCalls, Distance.GjkMaxIters);
-                _textLine += 15;
+                TextLine += 15;
             }
 
             if (TimeOfImpact.ToiCalls > 0)
             {
-                _debugView.DrawString(50, _textLine, "toi calls = {0:n}, ave toi iters = {1:n}, max toi iters = {2:n}",
+                _debugView.DrawString(50, TextLine, "toi calls = {0:n}, ave toi iters = {1:n}, max toi iters = {2:n}",
                                       TimeOfImpact.ToiCalls, TimeOfImpact.ToiIters / (float)TimeOfImpact.ToiCalls, TimeOfImpact.ToiMaxRootIters);
-                _textLine += 15;
-                _debugView.DrawString(50, _textLine, "ave toi root iters = {0:n}, max toi root iters = {1:n}",
+                TextLine += 15;
+                _debugView.DrawString(50, TextLine, "ave toi root iters = {0:n}, max toi root iters = {1:n}",
                                       TimeOfImpact.ToiRootIters / (float)TimeOfImpact.ToiCalls, TimeOfImpact.ToiMaxRootIters);
-                _textLine += 15;
+                TextLine += 15;
             }
         }
 

@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = _world.CreateBody();
+                ground = World.CreateBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -42,7 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Define attachment
             {
-                _attachment = _world.CreateBody();
+                _attachment = World.CreateBody();
                 _attachment.BodyType = BodyType.Dynamic;
                 _attachment.Position = new Vector2(0.0f, 3.0f);
 
@@ -53,7 +53,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Define platform
             {
-                _platform = _world.CreateBody();
+                _platform = World.CreateBody();
                 _platform.BodyType = BodyType.Dynamic;
                 _platform.Position = new Vector2(0.0f, 5.0f);
 
@@ -66,7 +66,7 @@ namespace FarseerPhysics.TestBed.Tests
                 RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform, new Vector2(0.0f, 5.0f));
                 rjd.MaxMotorTorque = 50.0f;
                 rjd.MotorEnabled = true;
-                _world.CreateJoint(rjd);
+                World.CreateJoint(rjd);
 
                 PrismaticJoint pjd = new PrismaticJoint(ground, _platform, new Vector2(0.0f, 5.0f), new Vector2(1.0f, 0.0f));
                 pjd.MaxMotorForce = 1000.0f;
@@ -75,14 +75,14 @@ namespace FarseerPhysics.TestBed.Tests
                 pjd.UpperLimit= 10.0f;
                 pjd.LimitEnabled = true;
 
-                _world.CreateJoint(pjd);
+                World.CreateJoint(pjd);
 
                 _speed = 3.0f;
             }
 
             // Create a payload
             {
-                Body body = _world.CreateBody();
+                Body body = World.CreateBody();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 8.0f);
 
@@ -131,8 +131,8 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             base.Step(settings);
-            _debugView.DrawString(5, _textLine, "Keys: (d) dynamic, (s) static, (k) kinematic");
-            _textLine += 15;
+            _debugView.DrawString(5, TextLine, "Keys: (d) dynamic, (s) static, (k) kinematic");
+            TextLine += 15;
         }
 
 

@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -57,8 +57,8 @@ namespace FarseerPhysics.TestBed.Tests
             WorldManifold worldManifold = new WorldManifold(ref manifold, ref _transformA, _polygonA.Radius,
                                                             ref _transformB, _polygonB.Radius);
 
-            _debugView.DrawString(50, _textLine, "point count = {0:n}", manifold._pointCount);
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "point count = {0:n}", manifold._pointCount);
+            TextLine += 15;
 
             {
                 Color color = new Color(0.9f, 0.9f, 0.9f);

@@ -35,7 +35,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             {
                 
-                Body ground = _world.CreateBody();
+                Body ground = World.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -59,7 +59,7 @@ namespace FarseerPhysics.TestBed.Tests
                     const float x = 0.0f;
                     //float x = Rand.RandomFloat-0.02f, 0.02f);
                     //float x = i % 2 == 0 ? -0.025f : 0.025f;
-                    Body body = _world.CreateBody();
+                    Body body = World.CreateBody();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
 
@@ -77,14 +77,14 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_bullet != null)
                 {
-                    _world.DestroyBody(_bullet);
+                    World.DestroyBody(_bullet);
                     _bullet = null;
                 }
 
                 {
                     CircleShape shape = new CircleShape(0.25f, 20);
 
-                    _bullet = _world.CreateBody();
+                    _bullet = World.CreateBody();
                     _bullet.BodyType = BodyType.Dynamic;
                     _bullet.Bullet = true;
                     _bullet.Position = new Vector2(-31.0f, 5.0f);
@@ -100,8 +100,8 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Step(Framework.Settings settings)
         {
             base.Step(settings);
-            _debugView.DrawString(50, _textLine, "Press: (,) to launch a bullet.");
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "Press: (,) to launch a bullet.");
+            TextLine += 15;
         }
 
         internal static Test Create()

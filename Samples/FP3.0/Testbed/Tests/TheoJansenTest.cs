@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -68,12 +68,12 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
 
-            Body body1 = _world.CreateBody();
+            Body body1 = World.CreateBody();
             body1.BodyType = BodyType.Dynamic;
             body1.Position = _offset;
             body1.AngularDamping = 10.0f;
 
-            Body body2 = _world.CreateBody();
+            Body body2 = World.CreateBody();
             body2.BodyType = BodyType.Dynamic;
             body2.Position = p4 + _offset;
             body2.AngularDamping = 10.0f;
@@ -91,28 +91,28 @@ namespace FarseerPhysics.TestBed.Tests
             djd.DampingRatio = 0.5f;
             djd.Frequency = 10.0f;
 
-            _world.CreateJoint(djd);
+            World.CreateJoint(djd);
 
             DistanceJoint djd2 = new DistanceJoint(body1, body2, p3 + _offset, p4 + _offset);
             djd2.DampingRatio = 0.5f;
             djd2.Frequency = 10.0f;
 
-            _world.CreateJoint(djd2);
+            World.CreateJoint(djd2);
 
             DistanceJoint djd3 = new DistanceJoint(body1, _wheel, p3 + _offset, wheelAnchor + _offset);
             djd3.DampingRatio = 0.5f;
             djd3.Frequency = 10.0f;
 
-            _world.CreateJoint(djd3);
+            World.CreateJoint(djd3);
 
             DistanceJoint djd4 = new DistanceJoint(body2, _wheel, p6 + _offset, wheelAnchor + _offset);
             djd4.DampingRatio = 0.5f;
             djd4.Frequency = 10.0f;
 
-            _world.CreateJoint(djd4);
+            World.CreateJoint(djd4);
 
             RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, p4 + _offset);
-            _world.CreateJoint(rjd);
+            World.CreateJoint(rjd);
         }
 
         private TheoJansenTest()
@@ -124,7 +124,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Ground
             {
-                Body ground = _world.CreateBody();
+                Body ground = World.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
@@ -142,7 +142,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(0.25f, 1);
 
-                Body body = _world.CreateBody();
+                Body body = World.CreateBody();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-40.0f + 2.0f * i, 0.5f);
 
@@ -154,7 +154,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(1);
                 shape.SetAsBox(2.5f, 1.0f);
 
-                _chassis = _world.CreateBody();
+                _chassis = World.CreateBody();
                 _chassis.BodyType = BodyType.Dynamic;
                 _chassis.Position = pivot + _offset;
 
@@ -165,7 +165,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(1.6f, 1);
 
-                _wheel = _world.CreateBody();
+                _wheel = World.CreateBody();
                 _wheel.BodyType = BodyType.Dynamic;
                 _wheel.Position = pivot + _offset;
 
@@ -179,7 +179,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _motorJoint.MotorSpeed = _motorSpeed;
                 _motorJoint.MaxMotorTorque = 400.0f;
                 _motorJoint.MotorEnabled = _motorOn;
-                _world.CreateJoint(_motorJoint);
+                World.CreateJoint(_motorJoint);
             }
 
             Vector2 wheelAnchor = pivot + new Vector2(0.0f, -0.8f);
@@ -198,8 +198,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Step(Framework.Settings settings)
         {
-            _debugView.DrawString(50, _textLine, "Keys: left = a, brake = s, right = d, toggle motor = m");
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "Keys: left = a, brake = s, right = d, toggle motor = m");
+            TextLine += 15;
 
             base.Step(settings);
         }
