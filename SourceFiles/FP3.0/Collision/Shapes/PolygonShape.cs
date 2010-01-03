@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -41,17 +41,17 @@ namespace FarseerPhysics
         }
 
         public PolygonShape(float density)
+            : base(Settings.PolygonRadius, density)
         {
             ShapeType = ShapeType.Polygon;
-            Density = density;
         }
 
         public override Shape Clone()
         {
             PolygonShape clone = new PolygonShape();
             clone.ShapeType = ShapeType;
-            clone.Radius = Radius;
-            clone.Radius2 = clone.Radius2;
+            clone._radius = _radius;
+            clone._radius2 = _radius2;
             clone.MassData = MassData;
             clone.Vertices = Vertices;
             clone.Normals = Normals;
@@ -65,7 +65,6 @@ namespace FarseerPhysics
         /// It is assumed that the exterior is the the right of each edge.
         /// </summary>
         /// <param name="vertices">The vertices.</param>
-        /// <param name="count">The vertice count.</param>
         public void Set(Vertices vertices)
         {
             Debug.Assert(2 <= vertices.Count && vertices.Count <= Settings.MaxPolygonVertices);

@@ -30,6 +30,10 @@ namespace FarseerPhysics
     /// </summary>
     public class CircleShape : Shape
     {
+        private CircleShape()
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CircleShape"/> class.
         /// </summary>
@@ -44,9 +48,13 @@ namespace FarseerPhysics
 
         public override Shape Clone()
         {
-            CircleShape shape = new CircleShape(Radius, Density);
+            CircleShape shape = new CircleShape();
+            shape._radius = _radius;
+            shape._radius2 = _radius2;
+            shape.Density = Density;
             shape.ShapeType = ShapeType;
             shape.Position = Position;
+            shape.MassData = MassData;
 
             return shape;
         }
@@ -55,7 +63,7 @@ namespace FarseerPhysics
         {
             Vector2 center = transform.Position + MathUtils.Multiply(ref transform.R, Position);
             Vector2 d = point - center;
-            return Vector2.Dot(d, d) <= Radius2;
+            return Vector2.Dot(d, d) <= _radius2;
         }
 
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform)
@@ -69,7 +77,7 @@ namespace FarseerPhysics
 
             Vector2 position = transform.Position + MathUtils.Multiply(ref transform.R, Position);
             Vector2 s = input.Point1 - position;
-            float b = Vector2.Dot(s, s) - Radius2;
+            float b = Vector2.Dot(s, s) - _radius2;
 
             // Solve quadratic equation.
             Vector2 r = input.Point2 - input.Point1;
@@ -116,11 +124,11 @@ namespace FarseerPhysics
         protected override sealed void ComputeMass()
         {
             MassData data = new MassData();
-            data.Mass = Density * Settings.Pi * Radius2;
+            data.Mass = Density * Settings.Pi * _radius2;
             data.Center = Position;
 
             // inertia about the local origin
-            data.Inertia = data.Mass * (0.5f * Radius2 + Vector2.Dot(Position, Position));
+            data.Inertia = data.Mass * (0.5f * _radius2 + Vector2.Dot(Position, Position));
 
             MassData = data;
         }

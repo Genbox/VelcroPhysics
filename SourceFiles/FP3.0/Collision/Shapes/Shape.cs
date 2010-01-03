@@ -30,11 +30,6 @@ namespace FarseerPhysics
     public struct MassData
     {
         /// <summary>
-        /// The mass of the shape, usually in kilograms.
-        /// </summary>
-        public float Mass;
-
-        /// <summary>
         /// The position of the shape's centroid relative to the shape's origin.
         /// </summary>
         public Vector2 Center;
@@ -44,6 +39,11 @@ namespace FarseerPhysics
         /// origin, depending on usage.
         /// </summary>
         public float Inertia;
+
+        /// <summary>
+        /// The mass of the shape, usually in kilograms.
+        /// </summary>
+        public float Mass;
     }
 
     /// <summary>
@@ -70,6 +70,9 @@ namespace FarseerPhysics
     /// </summary>
     public abstract class Shape
     {
+        internal float _radius2;
+        internal float _radius;
+
         protected Shape(float radius, float density)
         {
             Radius = radius;
@@ -88,16 +91,46 @@ namespace FarseerPhysics
         }
 
         /// <summary>
-        /// Clone the concrete shape.
-        /// </summary>
-        /// <returns></returns>
-        public abstract Shape Clone();
-
-        /// <summary>
         /// Get the type of this shape. You can use this to down cast to the concrete shape.
         /// </summary>
         /// <value>The type of the shape.</value>
         public ShapeType ShapeType { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the radius.
+        /// </summary>
+        /// <value>The radius.</value>
+        public float Radius
+        {
+            get { return _radius; }
+            set
+            {
+                _radius = value;
+                _radius2 = _radius * _radius;
+            }
+        }
+
+        /// <summary>
+        /// The density in kilograms per meter squared.
+        /// </summary>
+        /// <value>The density.</value>
+        public float Density
+        {
+            get;
+            set;
+        }
+
+        public MassData MassData
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Clone the concrete shape.
+        /// </summary>
+        /// <returns></returns>
+        public abstract Shape Clone();
 
         /// <summary>
         /// Test a point for containment in this shape. This only works for convex shapes.
@@ -127,41 +160,6 @@ namespace FarseerPhysics
         /// Compute the mass properties of this shape using its dimensions and density.
         /// The inertia tensor is computed about the local origin, not the centroid.
         /// </summary>
-        /// <param name="density"></param>
         protected abstract void ComputeMass();
-
-        /// <summary>
-        /// Gets or sets the radius.
-        /// </summary>
-        /// <value>The radius.</value>
-        public float Radius
-        {
-            get { return _radius; }
-            set
-            {
-                _radius = value;
-                Radius2 = _radius * _radius;
-            }
-        }
-
-
-        /// <summary>
-        /// The density in kilograms per meter squared.
-        /// </summary>
-        /// <value>The density.</value>
-        public float Density
-        {
-            get;
-            set;
-        }
-
-        public MassData MassData
-        {
-            get;
-            set;
-        }
-
-        private float _radius;
-        internal float Radius2;
     }
 }
