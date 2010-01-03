@@ -87,6 +87,7 @@ namespace FarseerPhysics
     //
     // Now compute impulse to be applied:
     // df = f2 - f1
+
     /// <summary>
     /// A prismatic joint. This joint provides one degree of freedom: translation
     /// along an axis fixed in body1. Relative rotation is prevented. You can
@@ -140,12 +141,12 @@ namespace FarseerPhysics
 
         public Vector2 LocalAnchorB { get; set; }
 
-        public override Vector2 AnchorA
+        public override Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
         }
 
-        public override Vector2 AnchorB
+        public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
         }
@@ -158,16 +159,10 @@ namespace FarseerPhysics
         {
             get
             {
-                Body b1 = BodyA;
-                Body b2 = BodyB;
+                Vector2 d = BodyB.GetWorldPoint(LocalAnchorB) - BodyA.GetWorldPoint(LocalAnchorA);
+                Vector2 axis = BodyA.GetWorldVector(LocalXAxis1);
 
-                Vector2 p1 = b1.GetWorldPoint(LocalAnchorA);
-                Vector2 p2 = b2.GetWorldPoint(LocalAnchorB);
-                Vector2 d = p2 - p1;
-                Vector2 axis = b1.GetWorldVector(LocalXAxis1);
-
-                float translation = Vector2.Dot(d, axis);
-                return translation;
+                return Vector2.Dot(d, axis);
             }
         }
 
@@ -179,24 +174,21 @@ namespace FarseerPhysics
         {
             get
             {
-                Body b1 = BodyA;
-                Body b2 = BodyB;
-
                 Transform xf1, xf2;
-                b1.GetTransform(out xf1);
-                b2.GetTransform(out xf2);
+                BodyA.GetTransform(out xf1);
+                BodyB.GetTransform(out xf2);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
-                Vector2 p1 = b1._sweep.Center + r1;
-                Vector2 p2 = b2._sweep.Center + r2;
+                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - BodyA.LocalCenter);
+                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - BodyB.LocalCenter);
+                Vector2 p1 = BodyA._sweep.Center + r1;
+                Vector2 p2 = BodyB._sweep.Center + r2;
                 Vector2 d = p2 - p1;
-                Vector2 axis = b1.GetWorldVector(LocalXAxis1);
+                Vector2 axis = BodyA.GetWorldVector(LocalXAxis1);
 
-                Vector2 v1 = b1._linearVelocity;
-                Vector2 v2 = b2._linearVelocity;
-                float w1 = b1._angularVelocity;
-                float w2 = b2._angularVelocity;
+                Vector2 v1 = BodyA._linearVelocity;
+                Vector2 v2 = BodyB._linearVelocity;
+                float w1 = BodyA._angularVelocity;
+                float w2 = BodyB._angularVelocity;
 
                 float speed = Vector2.Dot(d, MathUtils.Cross(w1, axis)) +
                               Vector2.Dot(axis, v2 + MathUtils.Cross(w2, r2) - v1 - MathUtils.Cross(w1, r1));
@@ -215,8 +207,7 @@ namespace FarseerPhysics
             get { return _enableLimit; }
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
+                WakeBodies();
                 _enableLimit = value;
             }
         }
@@ -230,9 +221,7 @@ namespace FarseerPhysics
             get { return _lowerTranslation; }
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
-
+                WakeBodies();
                 _lowerTranslation = value;
             }
         }
@@ -246,8 +235,7 @@ namespace FarseerPhysics
             get { return _upperTranslation; }
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
+                WakeBodies();
                 _upperTranslation = value;
             }
         }
@@ -263,8 +251,7 @@ namespace FarseerPhysics
             get { return _enableMotor; }
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
+                WakeBodies();
                 _enableMotor = value;
             }
         }
@@ -277,8 +264,7 @@ namespace FarseerPhysics
         {
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
+                WakeBodies();
                 _motorSpeed = value;
             }
             get { return _motorSpeed; }
@@ -292,8 +278,7 @@ namespace FarseerPhysics
         {
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
+                WakeBodies();
                 _maxMotorForce = value;
             }
         }
@@ -305,6 +290,7 @@ namespace FarseerPhysics
         public float MotorForce
         {
             get { return _motorImpulse; }
+            set { _motorImpulse = value; }
         }
 
         public override Vector2 GetReactionForce(float inv_dt)

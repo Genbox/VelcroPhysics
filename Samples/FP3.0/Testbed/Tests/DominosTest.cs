@@ -163,6 +163,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             anchor = new Vector2(7.5f, 4.0f);
             RevoluteJoint jd4 = new RevoluteJoint(b5, b6, anchor);
+            jd4.CollideConnected = true;
             _world.CreateJoint(jd4);
 
             Body b7;

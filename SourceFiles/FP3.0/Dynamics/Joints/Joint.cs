@@ -125,13 +125,13 @@ namespace FarseerPhysics
         /// Get the anchor point on body1 in world coordinates.
         /// </summary>
         /// <value></value>
-        public abstract Vector2 AnchorA { get; }
+        public abstract Vector2 WorldAnchorA { get; }
 
         /// <summary>
         /// Get the anchor point on body2 in world coordinates.
         /// </summary>
         /// <value></value>
-        public abstract Vector2 AnchorB { get; }
+        public abstract Vector2 WorldAnchorB { get; }
 
         /// <summary>
         /// Get the reaction force on body2 at the joint anchor in Newtons.
@@ -176,6 +176,12 @@ namespace FarseerPhysics
             get { return BodyA.Active && BodyB.Active; }
         }
 
+        protected void WakeBodies()
+        {
+            BodyA.Awake = true;
+            BodyB.Awake = true;
+        }
+
 	    protected Joint(Body bodyA, Body bodyB)
         {
             Debug.Assert(bodyA != bodyB);
@@ -183,8 +189,8 @@ namespace FarseerPhysics
             BodyA = bodyA;
             BodyB = bodyB;
 
-            //Connected bodies should collide by default
-            CollideConnected = true;
+            //Connected bodies should not collide by default
+            CollideConnected = false;
 
             _edgeA = new JointEdge();
             _edgeB = new JointEdge();

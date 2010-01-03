@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -125,8 +125,8 @@ namespace FarseerPhysics.DebugViewXNA
             b2.GetTransform(out xf2);
             Vector2 x1 = xf1.Position;
             Vector2 x2 = xf2.Position;
-            Vector2 p1 = joint.AnchorA;
-            Vector2 p2 = joint.AnchorB;
+            Vector2 p1 = joint.WorldAnchorA;
+            Vector2 p2 = joint.WorldAnchorB;
 
             Color color = new Color(0.5f, 0.8f, 0.8f);
 

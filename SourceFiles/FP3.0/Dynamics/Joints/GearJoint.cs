@@ -46,7 +46,6 @@ namespace FarseerPhysics
         private float _mass;
         private PrismaticJoint _prismatic1;
         private PrismaticJoint _prismatic2;
-        private float _ratio;
         private RevoluteJoint _revolute1;
         private RevoluteJoint _revolute2;
 
@@ -105,15 +104,15 @@ namespace FarseerPhysics
                 coordinate2 = _prismatic2.JointTranslation;
             }
 
-            _ant = coordinate1 + _ratio*coordinate2;
+            _ant = coordinate1 + Ratio*coordinate2;
         }
 
-        public override Vector2 AnchorA
+        public override Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchor1); }
         }
 
-        public override Vector2 AnchorB
+        public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchor2); }
         }
@@ -121,15 +120,7 @@ namespace FarseerPhysics
         /// <summary>
         /// The gear ratio.
         /// </summary>
-        public float Ratio
-        {
-            get { return _ratio; }
-            set
-            {
-                Debug.Assert(MathUtils.IsValid(value));
-                _ratio = value;
-            }
-        }
+        public float Ratio { get; set; }
 
         /// <summary>
         /// The first revolute/prismatic joint attached to the gear joint.
@@ -191,8 +182,8 @@ namespace FarseerPhysics
 
             if (_revolute2 != null)
             {
-                _J.AngularB = -_ratio;
-                K += _ratio*_ratio*b2._invI;
+                _J.AngularB = -Ratio;
+                K += Ratio*Ratio*b2._invI;
             }
             else
             {
@@ -203,9 +194,9 @@ namespace FarseerPhysics
                 Vector2 ug = MathUtils.Multiply(ref xfg1.R, _prismatic2.LocalXAxis1);
                 Vector2 r = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.LocalCenter);
                 float crug = MathUtils.Cross(r, ug);
-                _J.LinearB = -_ratio*ug;
-                _J.AngularB = -_ratio*crug;
-                K += _ratio*_ratio*(b2._invMass + b2._invI*crug*crug);
+                _J.LinearB = -Ratio*ug;
+                _J.AngularB = -Ratio*crug;
+                K += Ratio*Ratio*(b2._invMass + b2._invI*crug*crug);
             }
 
             // Compute effective mass.
@@ -269,7 +260,7 @@ namespace FarseerPhysics
                 coordinate2 = _prismatic2.JointTranslation;
             }
 
-            float C = _ant - (coordinate1 + _ratio*coordinate2);
+            float C = _ant - (coordinate1 + Ratio*coordinate2);
 
             float impulse = _mass*(-C);
 

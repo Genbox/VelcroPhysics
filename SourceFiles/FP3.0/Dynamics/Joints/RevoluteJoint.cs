@@ -36,8 +36,6 @@ namespace FarseerPhysics
     /// </summary>
     public class RevoluteJoint : Joint
     {
-        public Vector2 LocalAnchorA { get; set; }
-        public Vector2 LocalAnchorB { get; set; }
         private bool _enableLimit;
         private bool _enableMotor;
         private Vector3 _impulse;
@@ -48,7 +46,6 @@ namespace FarseerPhysics
         private float _motorImpulse;
         private float _motorMass; // effective mass for motor/limit angular constraint.
         private float _motorSpeed;
-        public float ReferenceAngle { get; set; }
         private float _upperAngle;
 
         /// <summary>
@@ -83,15 +80,21 @@ namespace FarseerPhysics
             _limitState = LimitState.Inactive;
         }
 
-        public override Vector2 AnchorA
+        public override Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
         }
 
-        public override Vector2 AnchorB
+        public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
         }
+
+        public Vector2 LocalAnchorA { get; set; }
+
+        public Vector2 LocalAnchorB { get; set; }
+
+        public float ReferenceAngle { get; set; }
 
         /// <summary>
         /// Get the current joint angle in radians.
@@ -101,9 +104,7 @@ namespace FarseerPhysics
         {
             get
             {
-                Body b1 = BodyA;
-                Body b2 = BodyB;
-                return b2._sweep.Angle - b1._sweep.Angle - ReferenceAngle;
+                return BodyB._sweep.Angle - BodyA._sweep.Angle - ReferenceAngle;
             }
         }
 
@@ -115,9 +116,7 @@ namespace FarseerPhysics
         {
             get
             {
-                Body b1 = BodyA;
-                Body b2 = BodyB;
-                return b2._angularVelocity - b1._angularVelocity;
+                return BodyB._angularVelocity - BodyA._angularVelocity;
             }
         }
 
@@ -132,8 +131,7 @@ namespace FarseerPhysics
             get { return _enableLimit; }
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
+                WakeBodies(); 
                 _enableLimit = value;
             }
         }
@@ -147,8 +145,7 @@ namespace FarseerPhysics
             get { return _lowerAngle; }
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
+                WakeBodies(); 
                 _lowerAngle = value;
             }
         }
@@ -162,8 +159,7 @@ namespace FarseerPhysics
             get { return _upperAngle; }
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
+                WakeBodies(); 
                 _upperAngle = value;
             }
         }
@@ -179,8 +175,7 @@ namespace FarseerPhysics
             get { return _enableMotor; }
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
+                WakeBodies(); 
                 _enableMotor = value;
             }
         }
@@ -193,8 +188,7 @@ namespace FarseerPhysics
         {
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
+                WakeBodies();
                 _motorSpeed = value;
             }
             get { return _motorSpeed; }
@@ -208,8 +202,7 @@ namespace FarseerPhysics
         {
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
+                WakeBodies();
                 _maxMotorTorque = value;
             }
             get { return _maxMotorTorque; }
@@ -222,6 +215,11 @@ namespace FarseerPhysics
         public float MotorTorque
         {
             get { return _motorImpulse; }
+            set
+            {
+                WakeBodies();
+                _motorImpulse = value;
+            }
         }
 
         public override Vector2 GetReactionForce(float inv_dt)
