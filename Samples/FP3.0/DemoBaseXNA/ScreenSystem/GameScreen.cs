@@ -1,10 +1,7 @@
 using System;
 using DemoBaseXNA.DemoShare;
 using DemoBaseXNA.DrawingSystem;
-using FarseerGames.FarseerPhysics;
-using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
-using FarseerGames.FarseerPhysics.Factories;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -36,20 +33,20 @@ namespace DemoBaseXNA.ScreenSystem
         protected bool firstRun = true;
         private Border _border;
         private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
-        private FixedLinearSpring _mousePickSpring;
-        private Geom _pickedGeom;
+        //private FixedLinearSpring _mousePickSpring;
+        //private Geom _pickedGeom;
 
         protected GameScreen()
         {
             ScreenState = ScreenState.TransitionOn;
             TransitionPosition = 1;
-            TransitionOffTime = TimeSpan.Zero;
-            TransitionOnTime = TimeSpan.Zero;
-            PhysicsSimulator = new PhysicsSimulator(new Vector2(0, 0));
+            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            TransitionOnTime = TimeSpan.FromSeconds(0.5);
+            PhysicsSimulator = new World(new Vector2(0, 0), true);
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
         }
 
-        public PhysicsSimulator PhysicsSimulator { get; set; }
+        public World PhysicsSimulator { get; set; }
 
         public PhysicsSimulatorView PhysicsSimulatorView { get; set; }
 
@@ -141,10 +138,10 @@ namespace DemoBaseXNA.ScreenSystem
         {
             _lineBrush.Load(ScreenManager.GraphicsDevice);
             PhysicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
-            int borderWidth = (int)(ScreenManager.ScreenHeight * .05f);
+            float borderWidth = ConvertUnits.ToSimUnits(ScreenManager.ScreenHeight * .05f);
 
-            _border = new Border(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, borderWidth,
-                                 ScreenManager.ScreenCenter);
+            _border = new Border(ConvertUnits.ToSimUnits(ScreenManager.ScreenWidth), ConvertUnits.ToSimUnits(ScreenManager.ScreenHeight), borderWidth,
+                                 ConvertUnits.ToSimUnits(ScreenManager.ScreenCenter));
             _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
         }
@@ -208,7 +205,8 @@ namespace DemoBaseXNA.ScreenSystem
 
             if (!coveredByOtherScreen && !otherScreenHasFocus)
             {
-                PhysicsSimulator.Update(gameTime.ElapsedGameTime.Milliseconds * .001f);
+                PhysicsSimulator.Step(1f / 60f, 8, 3);
+                PhysicsSimulator.ClearForces();
             }
         }
 
@@ -250,14 +248,14 @@ namespace DemoBaseXNA.ScreenSystem
             if (input.LastGamePadState.Buttons.Y != ButtonState.Pressed && input.CurrentGamePadState.Buttons.Y == ButtonState.Pressed)
             {
                 DebugViewEnabled = !DebugViewEnabled;
-                PhysicsSimulator.EnableDiagnostics = DebugViewEnabled;
+                //PhysicsSimulator.EnableDiagnostics = DebugViewEnabled;
             }
 
             //Windows
             if (!input.LastKeyboardState.IsKeyDown(Keys.F1) && input.CurrentKeyboardState.IsKeyDown(Keys.F1))
             {
                 DebugViewEnabled = !DebugViewEnabled;
-                PhysicsSimulator.EnableDiagnostics = DebugViewEnabled;
+                //PhysicsSimulator.EnableDiagnostics = DebugViewEnabled;
             }
 
 #if !XBOX
@@ -268,6 +266,7 @@ namespace DemoBaseXNA.ScreenSystem
 #if !XBOX
         private void HandleMouseInput(InputState input)
         {
+            /*
             Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
             if (input.LastMouseState.LeftButton == ButtonState.Released &&
                 input.CurrentMouseState.LeftButton == ButtonState.Pressed)
@@ -299,6 +298,7 @@ namespace DemoBaseXNA.ScreenSystem
             {
                 _mousePickSpring.WorldAttachPoint = point;
             }
+             * */
         }
 #endif
 
@@ -309,12 +309,12 @@ namespace DemoBaseXNA.ScreenSystem
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
 
-            if (_mousePickSpring != null)
-            {
-                _lineBrush.Draw(ScreenManager.SpriteBatch,
-                                _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
-                                _mousePickSpring.WorldAttachPoint);
-            }
+            //if (_mousePickSpring != null)
+            //{
+            //    _lineBrush.Draw(ScreenManager.SpriteBatch,
+            //                    _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
+            //                    _mousePickSpring.WorldAttachPoint);
+            //}
 
             if (DebugViewEnabled)
             {

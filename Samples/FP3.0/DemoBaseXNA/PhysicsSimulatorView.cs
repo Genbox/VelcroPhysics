@@ -1,8 +1,6 @@
 using System;
 using DemoBaseXNA.DrawingSystem;
-using FarseerGames.FarseerPhysics;
-using FarseerGames.FarseerPhysics.Dynamics.Joints;
-using FarseerGames.FarseerPhysics.Dynamics.Springs;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,7 +12,7 @@ namespace DemoBaseXNA
     /// </summary>
     public sealed class PhysicsSimulatorView
     {
-        private PhysicsSimulator _physicsSimulator;
+        private World _physicsSimulator;
 
         //Performance panel
         private bool _enablePerformancePanelView = true;
@@ -105,7 +103,7 @@ namespace DemoBaseXNA
         private Vector2 _worldAttachPoint;
         private Vector2 _vectorTemp1;
 
-        public PhysicsSimulatorView(PhysicsSimulator physicsSimulator)
+        public PhysicsSimulatorView(World physicsSimulator)
         {
             _physicsSimulator = physicsSimulator;
 
@@ -426,19 +424,19 @@ namespace DemoBaseXNA
         {
             if (_enableVerticeView || _enableEdgeView)
             {
-                DrawVerticesAndEdges(spriteBatch);
+                //DrawVerticesAndEdges(spriteBatch);
             }
             if (_enableAABBView)
             {
-                DrawAABB(spriteBatch);
+                //DrawAABB(spriteBatch);
             }
             if (_enableCoordinateAxisView)
             {
-                DrawCoordinateAxis(spriteBatch);
+                //DrawCoordinateAxis(spriteBatch);
             }
             if (_enableContactView)
             {
-                DrawContacts(spriteBatch);
+                //DrawContacts(spriteBatch);
             }
             if (_enablePerformancePanelView)
             {
@@ -446,77 +444,43 @@ namespace DemoBaseXNA
             }
             if (EnableSpringView)
             {
-                DrawSprings(spriteBatch);
+                //DrawSprings(spriteBatch);
             }
             if (EnableRevoluteJointView)
             {
-                DrawRevoluteJoints(spriteBatch);
+                //DrawRevoluteJoints(spriteBatch);
             }
             if (EnablePinJointView)
             {
-                DrawPinJoints(spriteBatch);
+                //DrawPinJoints(spriteBatch);
             }
             if (EnableSliderJointView)
             {
-                DrawSliderJoints(spriteBatch);
+                //DrawSliderJoints(spriteBatch);
             }
         }
-
+        
         private void DrawPerformancePanel(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_performancePanelTexture, _performancePanelPosition, _performancePanelColor);
 
-            spriteBatch.DrawString(_spriteFont,
-                                   String.Format(_updateTotal, _physicsSimulator.UpdateTime.ToString("0.00")),
-                                   new Vector2(110, 110), Color.White);
-            spriteBatch.DrawString(_spriteFont, String.Format(_cleanUp, _physicsSimulator.CleanUpTime.ToString("0.00")),
-                                   new Vector2(120, 125), Color.White);
-            spriteBatch.DrawString(_spriteFont,
-                                   String.Format(_broadPhaseCollision,
-                                                 _physicsSimulator.BroadPhaseCollisionTime.ToString("0.00")),
-                                   new Vector2(120, 140), Color.White);
-            spriteBatch.DrawString(_spriteFont,
-                                   String.Format(_narrowPhaseCollision,
-                                                 _physicsSimulator.NarrowPhaseCollisionTime.ToString("0.00")),
-                                   new Vector2(120, 155), Color.White);
-            spriteBatch.DrawString(_spriteFont,
-                                   String.Format(_applyForces, _physicsSimulator.ApplyForcesTime.ToString("0.00")),
-                                   new Vector2(120, 170), Color.White);
-            spriteBatch.DrawString(_spriteFont,
-                                   String.Format(_applyImpulses, _physicsSimulator.ApplyImpulsesTime.ToString("0.00")),
-                                   new Vector2(120, 185), Color.White);
-            spriteBatch.DrawString(_spriteFont,
-                                   String.Format(_updatePosition, _physicsSimulator.UpdatePositionsTime.ToString("0.00")),
-                                   new Vector2(120, 200), Color.White);
 
             spriteBatch.DrawString(_spriteFont,
-                                   String.Format(_bodyCount, _physicsSimulator.BodyList.Count),
+                                   String.Format(_bodyCount, _physicsSimulator.BodyCount),
                                    new Vector2(340, 125), Color.White);
 
             spriteBatch.DrawString(_spriteFont,
-                                   String.Format(_geomCount, _physicsSimulator.GeomList.Count),
-                                   new Vector2(340, 140), Color.White);
-
-            spriteBatch.DrawString(_spriteFont,
-                                   String.Format(_jointCount, _physicsSimulator.JointList.Count),
+                                   String.Format(_jointCount, _physicsSimulator.JointCount),
                                    new Vector2(340, 155), Color.White);
 
             spriteBatch.DrawString(_spriteFont,
-                                   String.Format(_springCount, _physicsSimulator.SpringList.Count),
-                                   new Vector2(340, 170), Color.White);
-
-            spriteBatch.DrawString(_spriteFont,
-                                   String.Format(_controllerCount, _physicsSimulator.ControllerList.Count),
-                                   new Vector2(340, 185), Color.White);
-
-            spriteBatch.DrawString(_spriteFont,
-                                   String.Format(_arbiterCount, _physicsSimulator.ArbiterList.Count),
+                                   String.Format(_arbiterCount, _physicsSimulator.ProxyCount),
                                    new Vector2(340, 200), Color.White);
 
 
             //spriteBatch.DrawString(_spriteFont, String.Format("Broadphase Pairs: {0}",this._physicsSimulator.sweepAndPrune.collisionPairs.Keys.Count), new Vector2(120, 215), Color.White);
         }
-
+        /*
         private void DrawContacts(SpriteBatch spriteBatch)
         {
             //draw contact textures
@@ -695,5 +659,6 @@ namespace DemoBaseXNA
                 _sliderJointLineBrush.Draw(spriteBatch, sliderJoint.WorldAnchor1, sliderJoint.WorldAnchor2);
             }
         }
+         * */
     }
 }
