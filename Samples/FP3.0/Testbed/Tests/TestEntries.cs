@@ -28,10 +28,10 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {
+                new TestEntry {name = "Pyramid", createFcn = PyramidTest.Create},
                 new TestEntry {name = "Collision Filtering", createFcn = CollisionFilteringTest.Create},
                 new TestEntry {name = "Web", createFcn = WebTest.Create},
                 new TestEntry {name = "Body Types", createFcn = BodyTypesTest.Create},
-                new TestEntry {name = "Pyramid", createFcn = PyramidTest.Create},
                 new TestEntry {name = "Theo Jansen's Walker", createFcn = TheoJansenTest.Create},
                 new TestEntry {name = "Shape Editing", createFcn = ShapeEditingTest.Create},
                 new TestEntry {name = "Sensor Test", createFcn = SensorTest.Create},

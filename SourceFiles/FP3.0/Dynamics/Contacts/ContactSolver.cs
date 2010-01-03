@@ -1,6 +1,4 @@
-﻿//#define MATH_OVERLOADS
-
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System.Diagnostics;
 using System;
 
@@ -119,13 +117,9 @@ namespace FarseerPhysics
                     ccp.RA = worldManifold.Points[j] - bodyA._sweep.Center;
                     ccp.RB = worldManifold.Points[j] - bodyB._sweep.Center;
 
-#if MATH_OVERLOADS
-			        float rnA = MathUtils.Cross(ccp.RA, cc.Normal);
-			        float rnB = MathUtils.Cross(ccp.RB, cc.Normal);
-#else
                     float rnA = ccp.RA.X * cc.Normal.Y - ccp.RA.Y * cc.Normal.X;
                     float rnB = ccp.RB.X * cc.Normal.Y - ccp.RB.Y * cc.Normal.X;
-#endif
+      
                     rnA *= rnA;
                     rnB *= rnB;
 
@@ -140,17 +134,11 @@ namespace FarseerPhysics
                     Debug.Assert(kEqualized > Settings.Epsilon);
                     ccp.EqualizedMass = 1.0f / kEqualized;
 
-#if MATH_OVERLOADS
-			        Vector2 tangent = MathUtils.Cross(cc.normal, 1.0f);
-
-			        float rtA = MathUtils.Cross(ccp.rA, tangent);
-			        float rtB = MathUtils.Cross(ccp.rB, tangent);
-#else
                     Vector2 tangent = new Vector2(cc.Normal.Y, -cc.Normal.X);
 
                     float rtA = ccp.RA.X * tangent.Y - ccp.RA.Y * tangent.X;
                     float rtB = ccp.RB.X * tangent.Y - ccp.RB.Y * tangent.X;
-#endif
+      
                     rtA *= rtA;
                     rtB *= rtB;
                     float kTangent = bodyA._invMass + bodyB._invMass + bodyA._invI * rtA + bodyB._invI * rtB;
@@ -222,11 +210,7 @@ namespace FarseerPhysics
                 float invIB = bodyB._invI;
                 Vector2 normal = c.Normal;
 
-#if MATH_OVERLOADS
-	            Vector2 tangent = MathUtils.Cross(normal, 1.0f);
-#else
                 Vector2 tangent = new Vector2(normal.Y, -normal.X);
-#endif
 
                 if (step.WarmStarting)
                 {
@@ -236,13 +220,6 @@ namespace FarseerPhysics
                         ccp.NormalImpulse *= step.DtRatio;
                         ccp.TangentImpulse *= step.DtRatio;
 
-#if MATH_OVERLOADS
-			            Vector2 P = ccp.normalImpulse * normal + ccp.tangentImpulse * tangent;
-			            bodyA._angularVelocity -= invIA * MathUtils.Cross(ccp.rA, P);
-			            bodyA._linearVelocity -= invMassA * P;
-			            bodyB._angularVelocity += invIB * MathUtils.Cross(ccp.rB, P);
-			            bodyB._linearVelocity += invMassB * P;
-#else
                         Vector2 P = new Vector2(ccp.NormalImpulse * normal.X + ccp.TangentImpulse * tangent.X,
                                                 ccp.NormalImpulse * normal.Y + ccp.TangentImpulse * tangent.Y);
                         bodyA._angularVelocity -= invIA * (ccp.RA.X * P.Y - ccp.RA.Y * P.X);
@@ -251,7 +228,7 @@ namespace FarseerPhysics
                         bodyB._angularVelocity += invIB * (ccp.RB.X * P.Y - ccp.RB.Y * P.X);
                         bodyB._linearVelocity.X += invMassB * P.X;
                         bodyB._linearVelocity.Y += invMassB * P.Y;
-#endif
+
                         c.Points[j] = ccp;
                     }
                 }
@@ -286,11 +263,7 @@ namespace FarseerPhysics
                 float invIB = bodyB._invI;
                 Vector2 normal = cc.Normal;
 
-#if MATH_OVERLOADS
-				Vector2 tangent = MathUtils.Cross(normal, 1.0f);
-#else
                 Vector2 tangent = new Vector2(normal.Y, -normal.X);
-#endif
                 float friction = cc.Friction;
 
                 Debug.Assert(cc.PointCount == 1 || cc.PointCount == 2);
@@ -300,13 +273,6 @@ namespace FarseerPhysics
                 {
                     ContactConstraintPoint ccp = cc.Points[j];
 
-#if MATH_OVERLOADS
-			        // Relative velocity at contact
-			        Vector2 dv = vB + MathUtils.Cross(wB, ccp.rB) - vA - MathUtils.Cross(wA, ccp.rA);
-
-			        // Compute tangent force
-			        float vt = Vector2.Dot(dv, tangent);
-#else
                     // Relative velocity at contact
 
                     //INLINED into vt
@@ -315,7 +281,6 @@ namespace FarseerPhysics
 
                     // Compute tangent force
                     float vt = (vB.X + (-wB * ccp.RB.Y) - vA.X - (-wA * ccp.RA.Y)) * tangent.X + (vB.Y + (wB * ccp.RB.X) - vA.Y - (wA * ccp.RA.X)) * tangent.Y;
-#endif
                     float lambda = ccp.TangentMass * (-vt);
 
                     // MathUtils.Clamp the accumulated force
@@ -323,16 +288,6 @@ namespace FarseerPhysics
                     float newImpulse = MathUtils.Clamp(ccp.TangentImpulse + lambda, -maxFriction, maxFriction);
                     lambda = newImpulse - ccp.TangentImpulse;
 
-#if MATH_OVERLOADS
-			        // Apply contact impulse
-			        Vector2 P = lambda * tangent;
-
-			        vA -= invMassA * P;
-			        wA -= invIA * MathUtils.Cross(ccp.rA, P);
-
-			        vB += invMassB * P;
-			        wB += invIB * MathUtils.Cross(ccp.rB, P);
-#else
                     // Apply contact impulse
 
                     //INLINED into vA and vB
@@ -345,7 +300,7 @@ namespace FarseerPhysics
                     vB.X += invMassB * (lambda * tangent.X);
                     vB.Y += invMassB * (lambda * tangent.Y);
                     wB += invIB * (ccp.RB.X * (lambda * tangent.Y) - ccp.RB.Y * (lambda * tangent.X));
-#endif
+
                     ccp.TangentImpulse = newImpulse;
                     cc.Points[j] = ccp;
                 }
@@ -355,26 +310,6 @@ namespace FarseerPhysics
                 {
                     ContactConstraintPoint ccp = cc.Points[0];
 
-#if MATH_OVERLOADS
-			        // Relative velocity at contact
-			        Vector2 dv = vB + MathUtils.Cross(wB, ccp.rB) - vA - MathUtils.Cross(wA, ccp.rA);
-
-			        // Compute normal impulse
-			        float vn = Vector2.Dot(dv, normal);
-			        float lambda = -ccp.normalMass * (vn - ccp.velocityBias);
-
-			        // MathUtils.Clamp the accumulated impulse
-			        float newImpulse = Math.Max(ccp.normalImpulse + lambda, 0.0f);
-			        lambda = newImpulse - ccp.normalImpulse;
-
-			        // Apply contact impulse
-			        Vector2 P = lambda * normal;
-			        vA -= invMassA * P;
-			        wA -= invIA * MathUtils.Cross(ccp.rA, P);
-
-			        vB += invMassB * P;
-			        wB += invIB * MathUtils.Cross(ccp.rB, P);
-#else
                     // Relative velocity at contact
 
                     //INLINED into vn
@@ -402,7 +337,7 @@ namespace FarseerPhysics
                     vB.X += invMassB * (lambda * normal.X);
                     vB.Y += invMassB * (lambda * normal.Y);
                     wB += invIB * (ccp.RB.X * (lambda * normal.Y) - ccp.RB.Y * (lambda * normal.X));
-#endif
+      
                     ccp.NormalImpulse = newImpulse;
                     cc.Points[0] = ccp;
                 }
@@ -441,18 +376,6 @@ namespace FarseerPhysics
 
                     Debug.Assert((cp1.NormalImpulse) >= 0.0f && (cp2.NormalImpulse) >= 0.0f);
 
-#if MATH_OVERLOADS
-			        // Relative velocity at contact
-			        Vector2 dv1 = vB + MathUtils.Cross(wB, cp1.rB) - vA - MathUtils.Cross(wA, cp1.rA);
-			        Vector2 dv2 = vB + MathUtils.Cross(wB, cp2.rB) - vA - MathUtils.Cross(wA, cp2.rA);
-
-			        // Compute normal velocity
-			        float vn1 = Vector2.Dot(dv1, normal);
-			        float vn2 = Vector2.Dot(dv2, normal);
-
-                    Vector2 b = new Vector2(vn1 - cp1.velocityBias, vn2 - cp2.velocityBias);
-			        b -= MathUtils.Multiply(ref c.K, a);
-#else
                     // Relative velocity at contact
 
                     //INLINED into vn1 and vn2
@@ -468,7 +391,7 @@ namespace FarseerPhysics
                     Vector2 b = new Vector2(vn1 - cp1.VelocityBias, vn2 - cp2.VelocityBias);
                     b.X -= cc.K.Col1.X * (cp1.NormalImpulse) + cc.K.Col2.X * (cp2.NormalImpulse);
                     b.Y -= cc.K.Col1.Y * (cp1.NormalImpulse) + cc.K.Col2.Y * (cp2.NormalImpulse);
-#endif
+      
                     while (true)
                     {
                         //
@@ -484,19 +407,6 @@ namespace FarseerPhysics
 
                         if (x.X >= 0.0f && x.Y >= 0.0f)
                         {
-#if MATH_OVERLOADS
-					        // Resubstitute for the incremental impulse
-					        Vector2 d = x - a;
-
-					        // Apply incremental impulse
-					        Vector2 P1 = d.X * normal;
-					        Vector2 P2 = d.Y * normal;
-					        vA -= invMassA * (P1 + P2);
-					        wA -= invIA * (MathUtils.Cross(cp1.rA, P1) + MathUtils.Cross(cp2.rA, P2));
-
-					        vB += invMassB * (P1 + P2);
-					        wB += invIB * (MathUtils.Cross(cp1.rB, P1) + MathUtils.Cross(cp2.rB, P2));
-#else
                             // Resubstitute for the incremental impulse
                             Vector2 d = new Vector2(x.X - (cp1.NormalImpulse), x.Y - (cp2.NormalImpulse));
 
@@ -512,12 +422,11 @@ namespace FarseerPhysics
                             vB.X += invMassB * P12.X;
                             vB.Y += invMassB * P12.Y;
                             wB += invIB * ((cp1.RB.X * P1.Y - cp1.RB.Y * P1.X) + (cp2.RB.X * P2.Y - cp2.RB.Y * P2.X));
-#endif
                             // Accumulate
                             cp1.NormalImpulse = x.X;
                             cp2.NormalImpulse = x.Y;
 
-#if B2_DEBUG_SOLVER 
+#if DEBUG_SOLVER 
                             
 			                float k_errorTol = 1e-3f;
 
@@ -547,19 +456,6 @@ namespace FarseerPhysics
 
                         if (x.X >= 0.0f && vn2 >= 0.0f)
                         {
-#if MATH_OVERLOADS
-					        // Resubstitute for the incremental impulse
-					        Vector2 d = x - a;
-
-					        // Apply incremental impulse
-					        Vector2 P1 = d.X * normal;
-					        Vector2 P2 = d.Y * normal;
-					        vA -= invMassA * (P1 + P2);
-					        wA -= invIA * (MathUtils.Cross(cp1.rA, P1) + MathUtils.Cross(cp2.rA, P2));
-
-					        vB += invMassB * (P1 + P2);
-					        wB += invIB * (MathUtils.Cross(cp1.rB, P1) + MathUtils.Cross(cp2.rB, P2));
-#else
                             // Resubstitute for the incremental impulse
                             Vector2 d = new Vector2(x.X - (cp1.NormalImpulse), x.Y - (cp2.NormalImpulse));
 
@@ -575,12 +471,11 @@ namespace FarseerPhysics
                             vB.X += invMassB * P12.X;
                             vB.Y += invMassB * P12.Y;
                             wB += invIB * ((cp1.RB.X * P1.Y - cp1.RB.Y * P1.X) + (cp2.RB.X * P2.Y - cp2.RB.Y * P2.X));
-#endif
                             // Accumulate
                             cp1.NormalImpulse = x.X;
                             cp2.NormalImpulse = x.Y;
 
-#if B2_DEBUG_SOLVER 
+#if DEBUG_SOLVER 
 					        // Postconditions
 					        dv1 = vB + MathUtils.Cross(wB, cp1.rB) - vA - MathUtils.Cross(wA, cp1.rA);
 
@@ -605,19 +500,7 @@ namespace FarseerPhysics
 
                         if (x.Y >= 0.0f && vn1 >= 0.0f)
                         {
-#if MATH_OVERLOADS
-					        // Resubstitute for the incremental impulse
-					        Vector2 d = x - a;
 
-					        // Apply incremental impulse
-					        Vector2 P1 = d.X * normal;
-					        Vector2 P2 = d.Y * normal;
-					        vA -= invMassA * (P1 + P2);
-					        wA -= invIA * (MathUtils.Cross(cp1.rA, P1) + MathUtils.Cross(cp2.rA, P2));
-
-					        vB += invMassB * (P1 + P2);
-					        wB += invIB * (MathUtils.Cross(cp1.rB, P1) + MathUtils.Cross(cp2.rB, P2));
-#else
                             // Resubstitute for the incremental impulse
                             Vector2 d = new Vector2(x.X - (cp1.NormalImpulse), x.Y - (cp2.NormalImpulse));
 
@@ -633,12 +516,11 @@ namespace FarseerPhysics
                             vB.X += invMassB * P12.X;
                             vB.Y += invMassB * P12.Y;
                             wB += invIB * ((cp1.RB.X * P1.Y - cp1.RB.Y * P1.X) + (cp2.RB.X * P2.Y - cp2.RB.Y * P2.X));
-#endif
                             // Accumulate
                             cp1.NormalImpulse = x.X;
                             cp2.NormalImpulse = x.Y;
 
-#if B2_DEBUG_SOLVER 
+#if DEBUG_SOLVER 
 					        // Postconditions
 					        dv2 = vB + MathUtils.Cross(wB, cp2.rB) - vA - MathUtils.Cross(wA, cp2.rA);
 
@@ -662,19 +544,6 @@ namespace FarseerPhysics
 
                         if (vn1 >= 0.0f && vn2 >= 0.0f)
                         {
-#if MATH_OVERLOADS
-					        // Resubstitute for the incremental impulse
-					        Vector2 d = x - a;
-
-					        // Apply incremental impulse
-					        Vector2 P1 = d.X * normal;
-					        Vector2 P2 = d.Y * normal;
-					        vA -= invMassA * (P1 + P2);
-					        wA -= invIA * (MathUtils.Cross(cp1.rA, P1) + MathUtils.Cross(cp2.rA, P2));
-
-					        vB += invMassB * (P1 + P2);
-					        wB += invIB * (MathUtils.Cross(cp1.rB, P1) + MathUtils.Cross(cp2.rB, P2));
-#else
                             // Resubstitute for the incremental impulse
                             Vector2 d = new Vector2(x.X - (cp1.NormalImpulse), x.Y - (cp2.NormalImpulse));
 
@@ -690,7 +559,7 @@ namespace FarseerPhysics
                             vB.X += invMassB * P12.X;
                             vB.Y += invMassB * P12.Y;
                             wB += invIB * ((cp1.RB.X * P1.Y - cp1.RB.Y * P1.X) + (cp2.RB.X * P2.Y - cp2.RB.Y * P2.X));
-#endif
+      
                             // Accumulate
                             cp1.NormalImpulse = x.X;
                             cp2.NormalImpulse = x.Y;
@@ -775,15 +644,7 @@ namespace FarseerPhysics
 
                     // Compute normal impulse
                     float impulse = -ccp.EqualizedMass * C;
-#if MATH_OVERLOADS
-			        Vector2 P = impulse * normal;
 
-			        bodyA._sweep.c -= invMassA * P;
-			        bodyA._sweep.a -= invIA * MathUtils.Cross(rA, P);
-			        
-			        bodyB._sweep.c += invMassB * P;
-			        bodyB._sweep.a += invIB * MathUtils.Cross(rB, P);
-#else
                     Vector2 P = new Vector2(impulse * normal.X, impulse * normal.Y);
 
                     bodyA._sweep.Center.X -= invMassA * P.X;
@@ -793,7 +654,7 @@ namespace FarseerPhysics
                     bodyB._sweep.Center.X += invMassB * P.X;
                     bodyB._sweep.Center.Y += invMassB * P.Y;
                     bodyB._sweep.Angle += invIB * (rB.X * P.Y - rB.Y * P.X);
-#endif
+      
                     bodyA.SynchronizeTransform();
                     bodyB.SynchronizeTransform();
                 }

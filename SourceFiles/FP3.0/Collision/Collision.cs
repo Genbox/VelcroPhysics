@@ -968,26 +968,20 @@ namespace FarseerPhysics
             Debug.Assert(0 <= edge1 && edge1 < count1);
 
             // Convert normal from poly1's frame into poly2's frame.
-#if MATH_OVERLOADS
-            Vector2 normal1World = MathUtils.Multiply(ref xf1.R, poly1._normals[edge1]);
-            Vector2 normal1 = MathUtils.MultiplyT(ref xf2.R, normal1World);
-#else
+
             Vector2 p1n = poly1.Normals[edge1];
             Vector2 normal1World = new Vector2(xf1.R.Col1.X * p1n.X + xf1.R.Col2.X * p1n.Y, xf1.R.Col1.Y * p1n.X + xf1.R.Col2.Y * p1n.Y);
             Vector2 normal1 = new Vector2(normal1World.X * xf2.R.Col1.X + normal1World.Y * xf2.R.Col1.Y, normal1World.X * xf2.R.Col2.X + normal1World.Y * xf2.R.Col2.Y);
-#endif
+
             // Find support vertex on poly2 for -normal.
             int index = 0;
             float minDot = Settings.MaxFloat;
 
             for (int i = 0; i < count2; ++i)
             {
-#if !MATH_OVERLOADS // inlining this made it 1ms slower
+                // inlining this made it 1ms slower
                 float dot = Vector2.Dot(poly2.Vertices[i], normal1);
-#else
-                Vector2 p2vi = poly2._vertices[i];
-                float dot = p2vi.X * normal1.X + p2vi.Y * normal1.Y;
-#endif
+
                 if (dot < minDot)
                 {
                     minDot = dot;
@@ -995,24 +989,16 @@ namespace FarseerPhysics
                 }
             }
 
-#if MATH_OVERLOADS
-	        Vector2 v1 = MathUtils.Multiply(ref xf1, poly1._vertices[edge1]);
-	        Vector2 v2 = MathUtils.Multiply(ref xf2, poly2._vertices[index]);
-#else
             Vector2 p1ve = poly1.Vertices[edge1];
             Vector2 p2vi = poly2.Vertices[index];
             Vector2 v1 = new Vector2(xf1.Position.X + xf1.R.Col1.X * p1ve.X + xf1.R.Col2.X * p1ve.Y,
                                      xf1.Position.Y + xf1.R.Col1.Y * p1ve.X + xf1.R.Col2.Y * p1ve.Y);
             Vector2 v2 = new Vector2(xf2.Position.X + xf2.R.Col1.X * p2vi.X + xf2.R.Col2.X * p2vi.Y,
                                      xf2.Position.Y + xf2.R.Col1.Y * p2vi.X + xf2.R.Col2.Y * p2vi.Y);
-#endif
 
-#if !MATH_OVERLOADS // inlining is 1ms slower
+            // inlining is 1ms slower
             float separation = Vector2.Dot(v2 - v1, normal1World);
-#else
-            Vector2 v2subv1 = new Vector2(v2.X - v1.X, v2.Y - v1.Y);
-            float separation = v2subv1.X * normal1World.X + v2subv1.Y * normal1World.Y;
-#endif
+
             return separation;
         }
 
