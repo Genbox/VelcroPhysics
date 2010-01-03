@@ -66,6 +66,14 @@ namespace FarseerPhysics.TestBed.Tests
 
                     x += deltaX;
                 }
+
+                //Vertices gear = PolygonTools.CreateEllipse(0.5f, 1f, 4);
+                //PolygonShape gearShape = new PolygonShape(gear, 5);
+                //Body gearBody = _world.CreateBody();
+                //gearBody.BodyType = BodyType.Dynamic;
+                //gearBody.Position = x;
+                //gearBody.CreateFixture(gearShape);
+
             }
 
             sw.Stop();

@@ -72,12 +72,12 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             Vertices vertices = new Vertices(3);
+            vertices.Add(new Vector2(-0.5f, 0.0f));
+            vertices.Add(new Vector2(0.5f, 0.0f));
+            vertices.Add(new Vector2(0.0f, 1.5f));
+
             for (int i = 0; i < 2; ++i)
             {
-                vertices[0] = new Vector2(-0.5f, 0.0f);
-                vertices[1] = new Vector2(0.5f, 0.0f);
-                vertices[2] = new Vector2(0.0f, 1.5f);
-
                 PolygonShape shape = new PolygonShape(vertices, 1.0f);
 
                 Body body = _world.CreateBody();

@@ -55,7 +55,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.CreateFixture(shape);
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 5.0f);
-                    WeldJoint jd = new WeldJoint(prevBody, body,anchor);
+                    WeldJoint jd = new WeldJoint(prevBody, body, anchor);
                     _world.CreateJoint(jd);
 
                     prevBody = body;
@@ -78,7 +78,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.CreateFixture(shape);
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 15.0f);
-                    WeldJoint jd = new WeldJoint(prevBody,body,anchor);
+                    WeldJoint jd = new WeldJoint(prevBody, body, anchor);
                     _world.CreateJoint(jd);
 
                     prevBody = body;
@@ -102,7 +102,7 @@ namespace FarseerPhysics.TestBed.Tests
                     if (i > 0)
                     {
                         Vector2 anchor = new Vector2(-5.0f + 1.0f * i, 5.0f);
-                        WeldJoint jd = new WeldJoint(prevBody,body,anchor);
+                        WeldJoint jd = new WeldJoint(prevBody, body, anchor);
                         _world.CreateJoint(jd);
                     }
 
@@ -129,7 +129,7 @@ namespace FarseerPhysics.TestBed.Tests
                     if (i > 0)
                     {
                         Vector2 anchor = new Vector2(5.0f + 1.0f * i, 10.0f);
-                        WeldJoint jd = new WeldJoint(prevBody,body,anchor);
+                        WeldJoint jd = new WeldJoint(prevBody, body, anchor);
                         _world.CreateJoint(jd);
                     }
 
@@ -138,15 +138,16 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             //Triangels
+
+            Vertices vertices = new Vertices(3);
+            vertices.Add(new Vector2(-0.5f, 0.0f));
+            vertices.Add(new Vector2(0.5f, 0.0f));
+            vertices.Add(new Vector2(0.0f, 1.5f));
+
             for (int i = 0; i < 2; ++i)
             {
-                Vertices vertices = new Vertices(3);
-                vertices[0] = new Vector2(-0.5f, 0.0f);
-                vertices[1] = new Vector2(0.5f, 0.0f);
-                vertices[2] = new Vector2(0.0f, 1.5f);
-
                 PolygonShape shape = new PolygonShape(vertices, 1.0f);
-                
+
                 Body body = _world.CreateBody();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
@@ -158,7 +159,7 @@ namespace FarseerPhysics.TestBed.Tests
             for (int i = 0; i < 2; ++i)
             {
                 CircleShape shape = new CircleShape(0.5f, 1.0f);
-                
+
                 Body body = _world.CreateBody();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);

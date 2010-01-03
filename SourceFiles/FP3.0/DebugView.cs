@@ -65,10 +65,10 @@ namespace FarseerPhysics
         }
 
         /// Draw a closed polygon provided in CCW order.
-        public abstract void DrawPolygon(ref FixedArray8<Vector2> vertices, int count, float red, float blue, float green);
+        public abstract void DrawPolygon(ref Vector2[] vertices, int count, float red, float blue, float green);
 
         /// Draw a solid closed polygon provided in CCW order.
-        public abstract void DrawSolidPolygon(ref FixedArray8<Vector2> vertices, int count, float red, float blue, float green);
+        public abstract void DrawSolidPolygon(ref Vector2[] vertices, int count, float red, float blue, float green);
 
         /// Draw a circle.
         public abstract void DrawCircle(Vector2 center, float radius, float red, float blue, float green);

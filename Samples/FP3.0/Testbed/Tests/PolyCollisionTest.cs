@@ -62,7 +62,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 Color color = new Color(0.9f, 0.9f, 0.9f);
-                FixedArray8<Vector2> v = new FixedArray8<Vector2>();
+                Vector2[] v = new Vector2[Settings.MaxPolygonVertices];
                 for (int i = 0; i < _polygonA.Vertices.Count; ++i)
                 {
                     v[i] = MathUtils.Multiply(ref _transformA, _polygonA.Vertices[i]);

@@ -45,8 +45,7 @@ namespace FarseerPhysics
                     {
                         CircleShape circle = (CircleShape)shape;
                         _vertices = new Vertices(1);
-                        _vertices[0] = circle.Position;
-                        _count = 1;
+                        _vertices.Add(circle.Position);
                         Radius = circle.Radius;
                     }
                     break;
@@ -55,7 +54,6 @@ namespace FarseerPhysics
                     {
                         PolygonShape polygon = (PolygonShape)shape;
                         _vertices = polygon.Vertices;
-                        _count = polygon.Vertices.Count;
                         Radius = polygon.Radius;
                     }
                     break;
@@ -76,7 +74,7 @@ namespace FarseerPhysics
         {
             int bestIndex = 0;
             float bestValue = Vector2.Dot(_vertices[0], d);
-            for (int i = 1; i < _count; ++i)
+            for (int i = 1; i < _vertices.Count; ++i)
             {
                 float value = Vector2.Dot(_vertices[i], d);
                 if (value > bestValue)
@@ -98,7 +96,7 @@ namespace FarseerPhysics
         {
             int bestIndex = 0;
             float bestValue = Vector2.Dot(_vertices[0], d);
-            for (int i = 1; i < _count; ++i)
+            for (int i = 1; i < _vertices.Count; ++i)
             {
                 float value = Vector2.Dot(_vertices[i], d);
                 if (value > bestValue)
@@ -118,12 +116,11 @@ namespace FarseerPhysics
         /// <returns></returns>
         public Vector2 GetVertex(int index)
         {
-            Debug.Assert(0 <= index && index < _count);
+            Debug.Assert(0 <= index && index < _vertices.Count);
             return _vertices[index];
         }
 
         private Vertices _vertices;
-        private int _count;
         internal float Radius;
     }
 
