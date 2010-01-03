@@ -1,6 +1,7 @@
 using System;
 using DemoBaseXNA.Components;
 using DemoBaseXNA.ScreenSystem;
+using FarseerPhysics;
 using FarseerGames.SimpleSamplesXNA.Demo1;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,7 +22,8 @@ namespace FarseerGames.SimpleSamplesXNA
 
             _graphics.SynchronizeWithVerticalRetrace = false;
 
-            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 10);
+            // 60 fps
+            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 16);
             IsFixedTimeStep = true;
 
 #if !XBOX
@@ -55,6 +57,7 @@ namespace FarseerGames.SimpleSamplesXNA
             Components.Add(frameRateCounter);
 
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo1Screen.GetTitle(), new Demo1Screen());
+            /*
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo2Screen.GetTitle(), new Demo2Screen());
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo3Screen.GetTitle(), new Demo3Screen());
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo4Screen.GetTitle(), new Demo4Screen());
@@ -64,6 +67,7 @@ namespace FarseerGames.SimpleSamplesXNA
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo8Screen.GetTitle(), new Demo8Screen());
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo9Screen.GetTitle(), new Demo9Screen());
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo10Screen.GetTitle(), new Demo10Screen());
+             */
             ScreenManager.MainMenuScreen.AddMainMenuItem("Exit", null, true);
 
             ScreenManager.GoToMainMenu();
