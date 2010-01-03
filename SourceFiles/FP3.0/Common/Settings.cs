@@ -31,7 +31,7 @@ namespace FarseerPhysics
         public const float Pi = 3.14159265359f;
 
         /// The maximum number of vertices on a convex polygon.
-        public const int MaxPolygonVertices = 8;
+        public const int MaxPolygonVertices = 100;
 
         /// This is used to fatten AABBs in the dynamic tree. This allows proxies
         /// to move by a small amount without triggering a tree adjustment.

@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -33,7 +33,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = _world.CreateBody();
+                ground = World.CreateBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -48,7 +48,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
                 {
-                    Body body = _world.CreateBody();
+                    Body body = World.CreateBody();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
 
@@ -57,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 5.0f);
                     RevoluteJoint jd = new RevoluteJoint(prevBody, body, anchor);
-                    _world.CreateJoint(jd);
+                    World.CreateJoint(jd);
 
                     if (i == (Count >> 1))
                     {
@@ -68,7 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Vector2 anchor2 = new Vector2(-15.0f + 1.0f * Count, 5.0f);
                 RevoluteJoint jd2 = new RevoluteJoint(prevBody, ground, anchor2);
-                _world.CreateJoint(jd2);
+                World.CreateJoint(jd2);
             }
 
             Vertices vertices = new Vertices(3);
@@ -80,7 +80,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 PolygonShape shape = new PolygonShape(vertices, 1.0f);
 
-                Body body = _world.CreateBody();
+                Body body = World.CreateBody();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
 
@@ -91,7 +91,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(0.5f, 1.0f);
 
-                Body body = _world.CreateBody();
+                Body body = World.CreateBody();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);
 

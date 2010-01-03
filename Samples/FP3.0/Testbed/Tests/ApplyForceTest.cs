@@ -31,13 +31,13 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private ApplyForceTest()
         {
-            _world.Gravity = Vector2.Zero;
+            World.Gravity = Vector2.Zero;
 
             const float k_restitution = 0.4f;
 
             Body ground;
             {
-                ground = _world.CreateBody();
+                ground = World.CreateBody();
                 ground.Position = new Vector2(0.0f, 20.0f);
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-20.0f, -20.0f), new Vector2(-20.0f, 20.0f));
@@ -86,7 +86,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 PolygonShape poly2 = new PolygonShape(vertices, 2.0f);
 
-                _body = _world.CreateBody();
+                _body = World.CreateBody();
                 _body.BodyType = BodyType.Dynamic;
                 _body.Position = new Vector2(0.0f, 2.0f);
                 _body.Rotation = Settings.Pi;
@@ -103,7 +103,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 for (int i = 0; i < 10; ++i)
                 {
-                    Body body = _world.CreateBody();
+                    Body body = World.CreateBody();
                     body.Position = new Vector2(0.0f, 5.0f + 1.54f * i);
                     body.BodyType = BodyType.Dynamic;
 
@@ -122,7 +122,7 @@ namespace FarseerPhysics.TestBed.Tests
                     jd.MaxForce = mass * gravity;
                     jd.MaxTorque = mass * radius * gravity;
 
-                    _world.CreateJoint(jd);
+                    World.CreateJoint(jd);
                 }
             }
         }

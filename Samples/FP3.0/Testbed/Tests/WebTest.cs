@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -34,7 +34,7 @@ namespace FarseerPhysics.TestBed.Tests
             Body ground;
             {
 
-                ground = _world.CreateBody();
+                ground = World.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -46,25 +46,25 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(0.5f, 0.5f);
 
 
-                _bodies[0] = _world.CreateBody();
+                _bodies[0] = World.CreateBody();
                 _bodies[0].BodyType = BodyType.Dynamic;
                 _bodies[0].Position = new Vector2(-5.0f, 5.0f);
 
                 _bodies[0].CreateFixture(shape);
 
-                _bodies[1] = _world.CreateBody();
+                _bodies[1] = World.CreateBody();
                 _bodies[1].BodyType = BodyType.Dynamic;
                 _bodies[1].Position = new Vector2(5.0f, 5.0f);
 
                 _bodies[1].CreateFixture(shape);
 
-                _bodies[2] = _world.CreateBody();
+                _bodies[2] = World.CreateBody();
                 _bodies[2].BodyType = BodyType.Dynamic;
                 _bodies[2].Position = new Vector2(5.0f, 15.0f);
 
                 _bodies[2].CreateFixture(shape);
 
-                _bodies[3] = _world.CreateBody();
+                _bodies[3] = World.CreateBody();
                 _bodies[3].BodyType = BodyType.Dynamic;
                 _bodies[3].Position = new Vector2(-5.0f, 15.0f);
 
@@ -72,35 +72,35 @@ namespace FarseerPhysics.TestBed.Tests
 
                 DistanceJoint dj = new DistanceJoint(ground, _bodies[0], new Vector2(-10.0f, 0.0f), new Vector2(-0.5f, -0.5f));
                 _joints[0] = dj;
-                _world.CreateJoint(_joints[0]);
+                World.CreateJoint(_joints[0]);
 
                 DistanceJoint dj1 = new DistanceJoint(ground, _bodies[1], new Vector2(10.0f, 0.0f), new Vector2(0.5f, -0.5f));
                 _joints[1] = dj1;
-                _world.CreateJoint(_joints[1]);
+                World.CreateJoint(_joints[1]);
 
                 DistanceJoint dj2 = new DistanceJoint(ground, _bodies[2], new Vector2(10.0f, 20.0f), new Vector2(0.5f, 0.5f));
                 _joints[2] = dj2;
-                _world.CreateJoint(_joints[2]);
+                World.CreateJoint(_joints[2]);
 
                 DistanceJoint dj3 = new DistanceJoint(ground, _bodies[3], new Vector2(-10.0f, 20.0f), new Vector2(-0.5f, 0.5f));
                 _joints[3] = dj3;
-                _world.CreateJoint(_joints[3]);
+                World.CreateJoint(_joints[3]);
 
                 DistanceJoint dj4 = new DistanceJoint(_bodies[0], _bodies[1], new Vector2(0.5f, 0.0f), new Vector2(-0.5f, 0.0f));
                 _joints[4] = dj4;
-                _world.CreateJoint(_joints[4]);
+                World.CreateJoint(_joints[4]);
 
                 DistanceJoint dj5 = new DistanceJoint(_bodies[1], _bodies[2], new Vector2(0.0f, 0.5f), new Vector2(0.0f, -0.5f));
                 _joints[5] = dj5;
-                _world.CreateJoint(_joints[5]);
+                World.CreateJoint(_joints[5]);
 
                 DistanceJoint dj6 = new DistanceJoint(_bodies[2], _bodies[3], new Vector2(-0.5f, 0.0f), new Vector2(0.5f, 0.0f));
                 _joints[6] = dj6;
-                _world.CreateJoint(_joints[6]);
+                World.CreateJoint(_joints[6]);
 
                 DistanceJoint dj7 = new DistanceJoint(_bodies[3], _bodies[0], new Vector2(0.0f, -0.5f), new Vector2(0.0f, 0.5f));
                 _joints[7] = dj7;
-                _world.CreateJoint(_joints[7]);
+                World.CreateJoint(_joints[7]);
 
                 for (int i = 0; i < 8; i++)
                 {
@@ -118,7 +118,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     if (_bodies[i] != null)
                     {
-                        _world.DestroyBody(_bodies[i]);
+                        World.DestroyBody(_bodies[i]);
                         _bodies[i] = null;
                         break;
                     }
@@ -131,7 +131,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     if (_joints[i] != null)
                     {
-                        _world.DestroyJoint(_joints[i]);
+                        World.DestroyJoint(_joints[i]);
                         _joints[i] = null;
                         break;
                     }
@@ -142,10 +142,10 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Step(Framework.Settings settings)
         {
             base.Step(settings);
-            _debugView.DrawString(50, _textLine, "This demonstrates a soft distance joint.");
-            _textLine += 15;
-            _debugView.DrawString(50, _textLine, "Press: (b) to delete a body, (j) to delete a joint");
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "This demonstrates a soft distance joint.");
+            TextLine += 15;
+            _debugView.DrawString(50, TextLine, "Press: (b) to delete a body, (j) to delete a joint");
+            TextLine += 15;
         }
 
         public override void JointDestroyed(Joint joint)

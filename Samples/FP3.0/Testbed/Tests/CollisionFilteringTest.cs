@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -52,7 +52,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
 
-                Body ground = _world.CreateBody();
+                Body ground = World.CreateBody();
                 Fixture fixture = ground.CreateFixture(shape);
                 fixture.Friction = 0.3f;
             }
@@ -65,7 +65,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(0.0f, 2.0f));
                 PolygonShape polygon = new PolygonShape(vertices, 1);
 
-                Body body1 = _world.CreateBody();
+                Body body1 = World.CreateBody();
                 body1.BodyType = BodyType.Dynamic;
                 body1.Position = new Vector2(-5.0f, 2.0f);
 
@@ -80,7 +80,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices[2] *= 2.0f;
                 polygon.Set(vertices);
 
-                Body body2 = _world.CreateBody();
+                Body body2 = World.CreateBody();
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(-5.0f, 6.0f);
                 body2.FixedRotation = true; // look at me!
@@ -89,7 +89,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body2Fixture.GroupIndex = LargeGroup;
 
                 {
-                    Body body = _world.CreateBody();
+                    Body body = World.CreateBody();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-5.0f, 10.0f);
 
@@ -103,7 +103,7 @@ namespace FarseerPhysics.TestBed.Tests
                     jd.LowerLimit = -1.0f;
                     jd.UpperLimit = 1.0f;
 
-                    _world.CreateJoint(jd);
+                    World.CreateJoint(jd);
                 }
 
 
@@ -111,7 +111,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box2 = PolygonTools.CreateBox(1.0f, 0.5f);
                 polygon.Set(box2);
 
-                Body body3 = _world.CreateBody();
+                Body body3 = World.CreateBody();
                 body3.BodyType = BodyType.Dynamic;
                 body3.Position = new Vector2(0.0f, 2.0f);
 
@@ -125,7 +125,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box3 = PolygonTools.CreateBox(2, 1);
                 polygon.Set(box3);
 
-                Body body4 = _world.CreateBody();
+                Body body4 = World.CreateBody();
                 body4.BodyType = BodyType.Dynamic;
                 body4.Position = new Vector2(0.0f, 6.0f);
 
@@ -135,7 +135,7 @@ namespace FarseerPhysics.TestBed.Tests
                 // Small circle
                 CircleShape circle = new CircleShape(1.0f, 1);
 
-                Body body5 = _world.CreateBody();
+                Body body5 = World.CreateBody();
                 body5.BodyType = BodyType.Dynamic;
                 body5.Position = new Vector2(5.0f, 2.0f);
 
@@ -147,7 +147,7 @@ namespace FarseerPhysics.TestBed.Tests
                 // Large circle
                 circle.Radius *= 2.0f;
 
-                Body body6 = _world.CreateBody();
+                Body body6 = World.CreateBody();
                 body6.BodyType = BodyType.Dynamic;
                 body6.Position = new Vector2(5.0f, 6.0f);
 

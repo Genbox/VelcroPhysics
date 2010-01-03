@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
             Body ground;
             {
 
-                ground = _world.CreateBody();
+                ground = World.CreateBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -49,7 +49,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 PolygonShape polygonBox = new PolygonShape(box, 5);
 
-                Body body1 = _world.CreateBody();
+                Body body1 = World.CreateBody();
                 body1.BodyType = BodyType.Dynamic;
                 body1.Position = new Vector2(-3.0f, 12.0f);
 
@@ -58,18 +58,18 @@ namespace FarseerPhysics.TestBed.Tests
                 _joint1 = new RevoluteJoint(ground, body1, ground.GetLocalPoint(body1.Position));
                 _joint1.LocalAnchorB = body1.GetLocalPoint(body1.Position);
                 _joint1.ReferenceAngle = body1.GetAngle() - ground.GetAngle();
-                _world.CreateJoint(_joint1);
+                World.CreateJoint(_joint1);
 
-                Body body2 = _world.CreateBody();
+                Body body2 = World.CreateBody();
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(0.0f, 12.0f);
 
                 body2.CreateFixture(circle2);
 
                 _joint2 = new RevoluteJoint(ground, body2, body2.Position);
-                _world.CreateJoint(_joint2);
+                World.CreateJoint(_joint2);
 
-                Body body3 = _world.CreateBody();
+                Body body3 = World.CreateBody();
                 body3.BodyType = BodyType.Dynamic;
                 body3.Position = new Vector2(2.5f, 12.0f);
 
@@ -80,17 +80,17 @@ namespace FarseerPhysics.TestBed.Tests
                 _joint3.UpperLimit = 5.0f;
                 _joint3.LimitEnabled = true;
 
-                _world.CreateJoint(_joint3);
+                World.CreateJoint(_joint3);
 
                 _joint4 = new GearJoint(_joint1, _joint2, circle2.Radius / circle1.Radius);
                 _joint4.BodyA = body1;
                 _joint4.BodyB = body2;
-                _world.CreateJoint(_joint4);
+                World.CreateJoint(_joint4);
 
                 _joint5 = new GearJoint(_joint2, _joint3, -1.0f / circle2.Radius);
                 _joint5.BodyA = body2;
                 _joint5.BodyB = body3;
-                _world.CreateJoint(_joint5);
+                World.CreateJoint(_joint5);
             }
         }
 
@@ -100,13 +100,13 @@ namespace FarseerPhysics.TestBed.Tests
 
             float ratio = _joint4.Ratio;
             float value = _joint1.JointAngle + ratio * _joint2.JointAngle;
-            _debugView.DrawString(50, _textLine, "theta1 + {0:n} * theta2 = {1:n}", ratio, value);
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "theta1 + {0:n} * theta2 = {1:n}", ratio, value);
+            TextLine += 15;
 
             ratio = _joint5.Ratio;
             value = _joint2.JointAngle + ratio * _joint3.JointTranslation;
-            _debugView.DrawString(50, _textLine, "theta2 + {0:n} * delta = {1:n}", ratio, value);
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "theta2 + {0:n} * delta = {1:n}", ratio, value);
+            TextLine += 15;
         }
 
         internal static Test Create()

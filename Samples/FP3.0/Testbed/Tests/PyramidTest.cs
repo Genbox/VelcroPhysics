@@ -33,7 +33,7 @@ namespace FarseerPhysics.TestBed.Tests
         private PyramidTest()
         {
             {
-                Body ground = _world.CreateBody();
+                Body ground = World.CreateBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -56,7 +56,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     for (int j = i; j < Count; ++j)
                     {
-                        Body body = _world.CreateBody();
+                        Body body = World.CreateBody();
                         body.BodyType = BodyType.Dynamic;
                         body.Position = y;
                         body.CreateFixture(shape);
@@ -66,14 +66,6 @@ namespace FarseerPhysics.TestBed.Tests
 
                     x += deltaX;
                 }
-
-                //Vertices gear = PolygonTools.CreateEllipse(0.5f, 1f, 4);
-                //PolygonShape gearShape = new PolygonShape(gear, 5);
-                //Body gearBody = _world.CreateBody();
-                //gearBody.BodyType = BodyType.Dynamic;
-                //gearBody.Position = x;
-                //gearBody.CreateFixture(gearShape);
-
             }
 
             sw.Stop();

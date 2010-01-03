@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = _world.CreateBody();
+                ground = World.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -42,7 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(0.5f, 5);
 
-                Body body = _world.CreateBody();
+                Body body = World.CreateBody();
                 body.Position = new Vector2(0.0f, 20.0f);
                 body.BodyType = BodyType.Dynamic;
 
@@ -61,7 +61,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _joint.LimitEnabled = true;
                 _joint.CollideConnected = true;
 
-                _world.CreateJoint(_joint);
+                World.CreateJoint(_joint);
             }
         }
 
@@ -81,11 +81,11 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Step(Framework.Settings settings)
         {
             base.Step(settings);
-            _debugView.DrawString(50, _textLine, "Keys: (l) limits, (a) left, (s) off, (d) right");
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "Keys: (l) limits, (a) left, (s) off, (d) right");
+            TextLine += 15;
             //float torque1 = _joint1.GetMotorTorque();
-            //_debugDraw.DrawString(50, _textLine, "Motor Torque = %4.0f, %4.0f : Motor Force = %4.0f", (float) torque1, (float) torque2, (float) force3);
-            //_textLine += 15;
+            //_debugDraw.DrawString(50, TextLine, "Motor Torque = %4.0f, %4.0f : Motor Force = %4.0f", (float) torque1, (float) torque2, (float) force3);
+            //TextLine += 15;
         }
 
         internal static Test Create()

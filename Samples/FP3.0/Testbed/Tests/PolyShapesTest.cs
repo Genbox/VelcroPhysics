@@ -117,7 +117,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Ground body
             {
 
-                Body ground = _world.CreateBody();
+                Body ground = World.CreateBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -174,11 +174,11 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (_bodies[_bodyIndex] != null)
             {
-                _world.DestroyBody(_bodies[_bodyIndex]);
+                World.DestroyBody(_bodies[_bodyIndex]);
                 _bodies[_bodyIndex] = null;
             }
 
-            _bodies[_bodyIndex] = _world.CreateBody();
+            _bodies[_bodyIndex] = World.CreateBody();
             _bodies[_bodyIndex].BodyType = BodyType.Dynamic;
 
             float x = Rand.RandomFloat(-2.0f, 2.0f);
@@ -212,7 +212,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_bodies[i] != null)
                 {
-                    _world.DestroyBody(_bodies[i]);
+                    World.DestroyBody(_bodies[i]);
                     _bodies[i] = null;
                     return;
                 }
@@ -271,17 +271,17 @@ namespace FarseerPhysics.TestBed.Tests
             AABB aabb;
             callback._circle.ComputeAABB(out aabb, ref callback._transform);
 
-            _world.QueryAABB(callback.ReportFixture, ref aabb);
+            World.QueryAABB(callback.ReportFixture, ref aabb);
 
             Color color = new Color(0.4f, 0.7f, 0.8f);
             _debugView.DrawCircle(callback._circle.Position, callback._circle.Radius, color);
 
-            _debugView.DrawString(50, _textLine, "Press 1-5 to drop stuff");
-            _textLine += 15;
-            _debugView.DrawString(50, _textLine, "Press a to (de)activate some bodies");
-            _textLine += 15;
-            _debugView.DrawString(50, _textLine, "Press d to destroy a body");
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "Press 1-5 to drop stuff");
+            TextLine += 15;
+            _debugView.DrawString(50, TextLine, "Press a to (de)activate some bodies");
+            TextLine += 15;
+            _debugView.DrawString(50, TextLine, "Press d to destroy a body");
+            TextLine += 15;
         }
 
         internal static Test Create()

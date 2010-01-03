@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
             Body ground;
             {
                 
-                ground = _world.CreateBody();
+                ground = World.CreateBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -48,7 +48,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body prevBody = ground;
                 for (int i = 0; i < 30; ++i)
                 {
-                    Body body = _world.CreateBody();
+                    Body body = World.CreateBody();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.5f + i, y);
 
@@ -57,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
                     Vector2 anchor = new Vector2(i, y);
                     RevoluteJoint jd = new RevoluteJoint(prevBody,body,anchor);
                     jd.CollideConnected = false;
-                    _world.CreateJoint(jd);
+                    World.CreateJoint(jd);
 
                     prevBody = body;
                 }

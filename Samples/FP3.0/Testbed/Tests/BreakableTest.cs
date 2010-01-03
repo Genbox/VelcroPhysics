@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Ground body
             {
-                Body ground = _world.CreateBody();
+                Body ground = World.CreateBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -41,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Breakable dynamic body
             {
-                _body1 = _world.CreateBody();
+                _body1 = World.CreateBody();
                 _body1.BodyType = BodyType.Dynamic;
                 _body1.Position = new Vector2(0.0f, 40.0f);
                 _body1.Rotation = 0.25f * Settings.Pi;
@@ -96,7 +96,7 @@ namespace FarseerPhysics.TestBed.Tests
             body1.DestroyFixture(_piece2);
             _piece2 = null;
 
-            Body body2 = _world.CreateBody();
+            Body body2 = World.CreateBody();
             body2.BodyType = BodyType.Dynamic;
             body2.Position = body1.Position;
             body2.Rotation = body1.GetAngle();

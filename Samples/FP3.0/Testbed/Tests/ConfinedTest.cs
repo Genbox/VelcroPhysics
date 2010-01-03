@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -35,7 +35,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             {
                 
-                Body ground = _world.CreateBody();
+                Body ground = World.CreateBody();
 
 
                 // Floor
@@ -65,7 +65,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 for (int i = 0; i < RowCount; ++i)
                 {
-                    Body body = _world.CreateBody();
+                    Body body = World.CreateBody();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius, (2.0f * i + 1.0f) * radius);
 
@@ -74,7 +74,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
             }
 
-            _world.Gravity = Vector2.Zero;
+            World.Gravity = Vector2.Zero;
         }
 
         private void CreateCircle()
@@ -83,7 +83,7 @@ namespace FarseerPhysics.TestBed.Tests
             CircleShape shape = new CircleShape(radius, 1);
             shape.Position = Vector2.Zero;
 
-            Body body = _world.CreateBody();
+            Body body = World.CreateBody();
             body.BodyType = BodyType.Dynamic;
             body.Position = new Vector2(Rand.RandomFloat(), (2.0f + Rand.RandomFloat()) * radius);
 
@@ -105,8 +105,8 @@ namespace FarseerPhysics.TestBed.Tests
 
             settings.enableContinuous = 0;
             base.Step(settings);
-            _debugView.DrawString(5, _textLine, "Press 'c' to create a circle.");
-            _textLine += 15;
+            _debugView.DrawString(5, TextLine, "Press 'c' to create a circle.");
+            TextLine += 15;
 
             settings.enableContinuous = oldFlag;
         }

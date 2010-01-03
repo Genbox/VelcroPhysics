@@ -33,7 +33,7 @@ namespace FarseerPhysics.TestBed.Tests
             Body ground;
             {
                 
-                ground = _world.CreateBody();
+                ground = World.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -48,7 +48,7 @@ namespace FarseerPhysics.TestBed.Tests
                     PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(0.5f, 2.0f);
 
-                    Body body = _world.CreateBody();
+                    Body body = World.CreateBody();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 7.0f);
 
@@ -58,7 +58,7 @@ namespace FarseerPhysics.TestBed.Tests
                     _joint1.MotorSpeed = 1.0f * Settings.Pi;
                     _joint1.MaxMotorTorque = 10000.0f;
                     _joint1.MotorEnabled = true;
-                    _world.CreateJoint(_joint1);
+                    World.CreateJoint(_joint1);
 
                     prevBody = body;
                 }
@@ -68,7 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
                     PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(0.5f, 4.0f);
                     
-                    Body body = _world.CreateBody();
+                    Body body = World.CreateBody();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 13.0f);
 
@@ -76,7 +76,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     RevoluteJoint rjd3 = new RevoluteJoint(prevBody, body, new Vector2(0.0f, 9.0f));
                     rjd3.MotorEnabled = false;
-                    _world.CreateJoint(rjd3);
+                    World.CreateJoint(rjd3);
 
                     prevBody = body;
                 }
@@ -86,20 +86,20 @@ namespace FarseerPhysics.TestBed.Tests
                     PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(1.5f, 1.5f);
 
-                    Body body = _world.CreateBody();
+                    Body body = World.CreateBody();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 17.0f);
 
                     body.CreateFixture(shape);
 
                     RevoluteJoint rjd2 = new RevoluteJoint(prevBody, body, new Vector2(0.0f, 17.0f));
-                    _world.CreateJoint(rjd2);
+                    World.CreateJoint(rjd2);
 
                     _joint2 = new PrismaticJoint(ground, body, new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f));
                     _joint2.MaxMotorForce = 1000.0f;
                     _joint2.MotorEnabled = true;
 
-                    _world.CreateJoint(_joint2);
+                    World.CreateJoint(_joint2);
                 }
 
                 // Create a payload
@@ -107,7 +107,7 @@ namespace FarseerPhysics.TestBed.Tests
                     PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(1.5f, 1.5f);
                     
-                    Body body = _world.CreateBody();
+                    Body body = World.CreateBody();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 23.0f);
 
@@ -133,11 +133,11 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Step(Framework.Settings settings)
         {
             base.Step(settings);
-            _debugView.DrawString(50, _textLine, "Keys: (f) toggle friction, (m) toggle motor");
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "Keys: (f) toggle friction, (m) toggle motor");
+            TextLine += 15;
             float torque = _joint1.MotorTorque;
-            _debugView.DrawString(50, _textLine, "Motor Torque = {0:n}", torque);
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "Motor Torque = {0:n}", torque);
+            TextLine += 15;
         }
 
         internal static Test Create()

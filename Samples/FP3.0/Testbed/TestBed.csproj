@@ -155,6 +155,7 @@
     <Compile Include="Tests\TestEntries.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\TextureVerticesTest.cs" />
     <Compile Include="Tests\TheoJansenTest.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -73,12 +73,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             float toi = TimeOfImpact.CalculateTimeOfImpact(ref input);
 
-            _debugView.DrawString(50, _textLine, "toi = {0:n}", toi);
-            _textLine += 15;
+            _debugView.DrawString(50, TextLine, "toi = {0:n}", toi);
+            TextLine += 15;
 
-            _debugView.DrawString(50, _textLine, "max toi iters = {0:n}, max root iters = {1:n}", TimeOfImpact.ToiMaxIters,
+            _debugView.DrawString(50, TextLine, "max toi iters = {0:n}, max root iters = {1:n}", TimeOfImpact.ToiMaxIters,
                                   TimeOfImpact.ToiMaxRootIters);
-            _textLine += 15;
+            TextLine += 15;
 
             Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
 

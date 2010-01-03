@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -34,14 +34,14 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f)), 0);
 
                 
-                ground = _world.CreateBody();
+                ground = World.CreateBody();
                 ground.CreateFixture(shape);
             }
 
             {
                 PolygonShape shape = new PolygonShape(PolygonTools.CreateBox(0.5f, 2.0f), 1);
 
-                Body body = _world.CreateBody();
+                Body body = World.CreateBody();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 7.0f);
 
@@ -56,7 +56,7 @@ namespace FarseerPhysics.TestBed.Tests
                 jd.LowerLimit = -4.0f;
                 jd.UpperLimit = 4.0f;
                 jd.EnableLimit = true;
-                _world.CreateJoint(jd);
+                World.CreateJoint(jd);
             }
         }
 

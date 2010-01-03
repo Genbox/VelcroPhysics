@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -37,7 +37,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Ground body
             {
 
-                Body ground = _world.CreateBody();
+                Body ground = World.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -125,7 +125,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_bodies[i] != null)
                 {
-                    _world.DestroyBody(_bodies[i]);
+                    World.DestroyBody(_bodies[i]);
                     _bodies[i] = null;
                     return;
                 }
@@ -135,8 +135,8 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Step(Framework.Settings settings)
         {
             base.Step(settings);
-            _debugView.DrawString(5, _textLine, "Press 1-5 to drop stuff");
-            _textLine += 15;
+            _debugView.DrawString(5, TextLine, "Press 1-5 to drop stuff");
+            TextLine += 15;
 
             const float L = 11.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);
@@ -146,7 +146,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Fixture fixture = null;
             Vector2 point = Vector2.Zero, normal = Vector2.Zero;
-            _world.RayCast((f, p, n, fr) =>
+            World.RayCast((f, p, n, fr) =>
                                {
                                    fixture = f;
                                    point = p;
@@ -175,14 +175,14 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (_bodies[_bodyIndex] != null)
             {
-                _world.DestroyBody(_bodies[_bodyIndex]);
+                World.DestroyBody(_bodies[_bodyIndex]);
                 _bodies[_bodyIndex] = null;
             }
 
             float x = Rand.RandomFloat(-10.0f, 10.0f);
             float y = Rand.RandomFloat(0.0f, 20.0f);
 
-            _bodies[_bodyIndex] = _world.CreateBody();
+            _bodies[_bodyIndex] = World.CreateBody();
 
             _bodies[_bodyIndex].Position = new Vector2(x, y);
             _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);

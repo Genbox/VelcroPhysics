@@ -34,6 +34,29 @@ namespace FarseerPhysics.TestBed
     /// </summary>
     public class Game1 : Game
     {
+        private const float settingsHz = 60.0f;
+        private IEventTrace et;
+        private TestEntry entry;
+        private GraphicsDeviceManager graphics;
+        private int height = 480;
+        private GamePadState oldGamePad;
+        private KeyboardState oldKeyboardState;
+        private MouseState oldMouseState;
+        private Framework.Settings settings = new Framework.Settings();
+        private BasicEffect simpleColorEffect;
+        private SpriteBatch spriteBatch;
+        private SpriteFont spriteFont;
+        private Test test;
+        private int testCount;
+        private int testIndex;
+        private int testSelection;
+        int th;
+        int tw;
+        private VertexDeclaration vertexDecl;
+        private Vector2 viewCenter = new Vector2(0.0f, 20.0f);
+        private float viewZoom = 1.0f;
+        private int width = 640;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -64,12 +87,17 @@ namespace FarseerPhysics.TestBed
 
             testIndex = MathUtils.Clamp(testIndex, 0, testCount - 1);
             testSelection = testIndex;
-
-            entry = TestEntries.g_testEntries[testIndex];
-            test = entry.createFcn();
-            test.Game = this;
+            StartTest(testIndex);
 
             //settings.drawAABBs = 1;
+        }
+
+        private void StartTest(int index)
+        {
+            entry = TestEntries.g_testEntries[index];
+            test = entry.createFcn();
+            test.GameInstance = this;
+            test.Initialize();
         }
 
         /// <summary>
@@ -95,16 +123,6 @@ namespace FarseerPhysics.TestBed
 
             Resize(GraphicsDevice.PresentationParameters.BackBufferWidth,
                    GraphicsDevice.PresentationParameters.BackBufferHeight);
-        }
-
-        private VertexDeclaration vertexDecl;
-
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
-        protected override void UnloadContent()
-        {
         }
 
         /// <summary>
@@ -252,9 +270,7 @@ namespace FarseerPhysics.TestBed
             if (testSelection != testIndex)
             {
                 testIndex = testSelection;
-                entry = TestEntries.g_testEntries[testIndex];
-                test = entry.createFcn();
-                test.Game = this;
+                StartTest(testIndex);
                 viewZoom = 1.0f;
                 viewCenter = new Vector2(0.0f, 20.0f);
                 Resize(width, height);
@@ -321,8 +337,7 @@ namespace FarseerPhysics.TestBed
 
         private void Restart()
         {
-            test = entry.createFcn();
-            test.Game = this;
+            StartTest(testIndex);
             Resize(width, height);
         }
 
@@ -336,27 +351,5 @@ namespace FarseerPhysics.TestBed
             settings.pause = 1;
             settings.singleStep = 1;
         }
-
-        private int testIndex;
-        private int testSelection;
-        private int testCount;
-        private TestEntry entry;
-        private Test test;
-        private Framework.Settings settings = new Framework.Settings();
-        private int width = 640;
-        private int height = 480;
-        private const float settingsHz = 60.0f;
-        private float viewZoom = 1.0f;
-        private Vector2 viewCenter = new Vector2(0.0f, 20.0f);
-        int tw, th;
-
-        private GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
-        private BasicEffect simpleColorEffect;
-        private SpriteFont spriteFont;
-        private KeyboardState oldKeyboardState;
-        private MouseState oldMouseState;
-        private GamePadState oldGamePad;
-        private IEventTrace et;
     }
 }
