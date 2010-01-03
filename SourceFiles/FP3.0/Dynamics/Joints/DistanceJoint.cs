@@ -70,9 +70,9 @@ namespace FarseerPhysics
             : base(bodyA, bodyB)
         {
             JointType = JointType.Distance;
-            LocalAnchorA = bodyA.GetLocalPoint(anchor1);
-            LocalAnchorB = bodyB.GetLocalPoint(anchor2);
-            Vector2 d = anchor2 - anchor1;
+            LocalAnchorA = anchor1;
+            LocalAnchorB = anchor2;
+            Vector2 d = WorldAnchorB - WorldAnchorA;
             Length = d.Length();
         }
 
@@ -91,12 +91,12 @@ namespace FarseerPhysics
         /// </summary>
         public float DampingRatio { get; set; }
 
-        public override Vector2 AnchorA
+        public override sealed Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
         }
 
-        public override Vector2 AnchorB
+        public override sealed Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
         }

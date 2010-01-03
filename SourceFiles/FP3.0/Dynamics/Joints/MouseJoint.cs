@@ -41,10 +41,8 @@ namespace FarseerPhysics
         private float _dampingRatio;
         private float _gamma;
         private Vector2 _impulse;
-        public Vector2 LocalAnchorA { get; private set; }
         private Mat22 _mass; // effective mass for point-to-point constraint.
         private float _maxForce;
-        public Vector2 LocalAnchorB { get; private set; }
 
         /// <summary>
         /// This requires a world target point,
@@ -70,12 +68,15 @@ namespace FarseerPhysics
             LocalAnchorA = MathUtils.MultiplyT(ref xf1, LocalAnchorB);
         }
 
-        public override Vector2 AnchorA
+        public Vector2 LocalAnchorA { get; private set; }
+        public Vector2 LocalAnchorB { get; private set; }
+
+        public override Vector2 WorldAnchorA
         {
             get { return LocalAnchorB; }
         }
 
-        public override Vector2 AnchorB
+        public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorA); }
         }
@@ -89,10 +90,7 @@ namespace FarseerPhysics
             get { return LocalAnchorB; }
             set
             {
-                if (BodyB.Awake == false)
-                {
-                    BodyB.Awake = true;
-                }
+                BodyB.Awake = true;
                 LocalAnchorB = value;
             }
         }

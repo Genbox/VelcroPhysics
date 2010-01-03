@@ -28,6 +28,8 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {
+                new TestEntry {name = "Collision Filtering", createFcn = CollisionFilteringTest.Create},
+                new TestEntry {name = "Web", createFcn = WebTest.Create},
                 new TestEntry {name = "Body Types", createFcn = BodyTypesTest.Create},
                 new TestEntry {name = "Pyramid", createFcn = PyramidTest.Create},
                 new TestEntry {name = "Theo Jansen's Walker", createFcn = TheoJansenTest.Create},
@@ -38,7 +40,6 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {name = "Cantilever", createFcn = CantileverTest.Create},
                 new TestEntry {name = "SphereStack", createFcn = SphereStackTest.Create},
                 new TestEntry {name = "Collision Processing", createFcn = CollisionProcessingTest.Create},
-                new TestEntry {name = "Collision Filtering", createFcn = CollisionFilteringTest.Create},
                 new TestEntry {name = "Polygon Shapes", createFcn = PolyShapesTest.Create},
                 new TestEntry {name = "Apply Force", createFcn = ApplyForceTest.Create},
                 new TestEntry {name = "Bridge", createFcn = BridgeTest.Create},
@@ -57,7 +58,6 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {name = "Varying Friction", createFcn = VaryingFrictionTest.Create},
                 new TestEntry {name = "Varying Restitution", createFcn = VaryingRestitutionTest.Create},
                 new TestEntry {name = "Vertical Stack", createFcn = VerticalStackTest.Create},
-                new TestEntry {name = "Web", createFcn = WebTest.Create},
                 new TestEntry {name = "Confined", createFcn = ConfinedTest.Create},
                 new TestEntry {name = "Breakable", createFcn = BreakableTest.Create},
                 new TestEntry {name = "Ray-Cast", createFcn = RayCastTest.Create},

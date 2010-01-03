@@ -36,20 +36,47 @@ namespace FarseerPhysics
     // J = [0 0 -1 0 0 1]
     // K = invI1 + invI2
 
-
+    /// <summary>
     /// Friction joint. This is used for top-down friction.
     /// It provides 2D translational friction and angular friction.
+    /// </summary>
     public class FrictionJoint : Joint
     {
-        public override Vector2 AnchorA
+        private float _angularImpulse;
+        private float _angularMass;
+        private Vector2 _linearImpulse;
+        private Mat22 _linearMass;
+
+        public FrictionJoint(Body bodyA, Body bodyB, Vector2 anchor1, Vector2 anchor2)
+            : base(bodyA, bodyB)
         {
-            get { return BodyA.GetWorldPoint(_localAnchor1); }
+            JointType = JointType.Friction;
+            LocalAnchorA = bodyA.GetLocalPoint(anchor1);
+            LocalAnchorB = bodyB.GetLocalPoint(anchor2);
         }
 
-        public override Vector2 AnchorB
+        public Vector2 LocalAnchorA { get; private set; }
+        public Vector2 LocalAnchorB { get; private set; }
+
+        public override Vector2 WorldAnchorA
         {
-            get { return BodyB.GetWorldPoint(_localAnchor2); }
+            get { return BodyA.GetWorldPoint(LocalAnchorA); }
         }
+
+        public override Vector2 WorldAnchorB
+        {
+            get { return BodyB.GetWorldPoint(LocalAnchorB); }
+        }
+
+        /// <summary>
+        /// The maximum friction force in N.
+        /// </summary>
+        public float MaxForce { get; set; }
+
+        /// <summary>
+        /// The maximum friction torque in N-m.
+        /// </summary>
+        public float MaxTorque { get; set; }
 
         public override Vector2 GetReactionForce(float inv_dt)
         {
@@ -63,30 +90,6 @@ namespace FarseerPhysics
             return F;
         }
 
-        /// <summary>
-        /// The maximum friction force in N.
-        /// </summary>
-        public float MaxForce
-        {
-            set { _maxForce = value; }
-            get { return _maxForce; }
-        }
-
-        /// <summary>
-        /// The maximum friction torque in N-m.
-        /// </summary>
-        public float MaxTorque
-        {
-            set { _maxTorque = value; }
-            get { return _maxTorque; }
-        }
-
-        public FrictionJoint(Body bodyA, Body bodyB)
-            : base(bodyA, bodyB)
-        {
-            JointType = JointType.Friction;
-        }
-
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
             Body bA = BodyA;
@@ -97,8 +100,8 @@ namespace FarseerPhysics
             bB.GetTransform(out xfB);
 
             // Compute the effective mass matrix.
-            Vector2 rA = MathUtils.Multiply(ref xfA.R, _localAnchor1 - bA.LocalCenter);
-            Vector2 rB = MathUtils.Multiply(ref xfB.R, _localAnchor2 - bB.LocalCenter);
+            Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.LocalCenter);
+            Vector2 rB = MathUtils.Multiply(ref xfB.R, LocalAnchorB - bB.LocalCenter);
 
             // J = [-I -r1_skew I r2_skew]
             //     [ 0       -1 0       1]
@@ -174,8 +177,8 @@ namespace FarseerPhysics
             bA.GetTransform(out xfA);
             bB.GetTransform(out xfB);
 
-            Vector2 rA = MathUtils.Multiply(ref xfA.R, _localAnchor1 - bA.LocalCenter);
-            Vector2 rB = MathUtils.Multiply(ref xfB.R, _localAnchor2 - bB.LocalCenter);
+            Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.LocalCenter);
+            Vector2 rB = MathUtils.Multiply(ref xfB.R, LocalAnchorB - bB.LocalCenter);
 
             // Solve angular friction
             {
@@ -183,7 +186,7 @@ namespace FarseerPhysics
                 float impulse = -_angularMass * Cdot;
 
                 float oldImpulse = _angularImpulse;
-                float maxImpulse = step.DeltaTime * _maxTorque;
+                float maxImpulse = step.DeltaTime * MaxTorque;
                 _angularImpulse = MathUtils.Clamp(_angularImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = _angularImpulse - oldImpulse;
 
@@ -199,7 +202,7 @@ namespace FarseerPhysics
                 Vector2 oldImpulse = _linearImpulse;
                 _linearImpulse += impulse;
 
-                float maxImpulse = step.DeltaTime * _maxForce;
+                float maxImpulse = step.DeltaTime * MaxForce;
 
                 if (_linearImpulse.LengthSquared() > maxImpulse * maxImpulse)
                 {
@@ -226,14 +229,5 @@ namespace FarseerPhysics
         {
             return true;
         }
-
-        internal Vector2 _localAnchor1;
-        internal Vector2 _localAnchor2;
-        internal Mat22 _linearMass;
-        internal float _angularMass;
-        internal Vector2 _linearImpulse;
-        internal float _angularImpulse;
-        internal float _maxForce;
-        internal float _maxTorque;
     }
 }

@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -177,7 +177,7 @@ namespace FarseerPhysics.TestBed.Framework
 
             if (_mouseJoint != null)
             {
-                Vector2 p1 = _mouseJoint.AnchorB;
+                Vector2 p1 = _mouseJoint.WorldAnchorB;
                 Vector2 p2 = _mouseJoint.Target;
 
                 _debugView.DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));

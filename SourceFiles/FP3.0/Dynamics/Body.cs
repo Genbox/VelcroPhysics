@@ -91,6 +91,8 @@ namespace FarseerPhysics
             InertiaScale = 1;
 
             _xf.R.Set(0);
+
+            _sweep.TimeInt0 = 1.0f;
         }
 
         internal Body(Body body, World world)

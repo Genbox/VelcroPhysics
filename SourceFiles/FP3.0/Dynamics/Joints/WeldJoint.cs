@@ -54,11 +54,11 @@ namespace FarseerPhysics
         /// where they are attached and the relative body angle. The position
         /// of the anchor points is important for computing the reaction torque.
         /// </summary>
-        /// <param name="b1"></param>
-        /// <param name="b2"></param>
+        /// <param name="bodyA"></param>
+        /// <param name="bodyB"></param>
         /// <param name="anchor"></param>
-        public WeldJoint(Body b1, Body b2, Vector2 anchor)
-            : base(b1, b2)
+        public WeldJoint(Body bodyA, Body bodyB, Vector2 anchor)
+            : base(bodyA, bodyB)
         {
             JointType = JointType.Weld;
 
@@ -70,12 +70,12 @@ namespace FarseerPhysics
         public Vector2 LocalAnchorA { get; private set; }
         public Vector2 LocalAnchorB { get; private set; }
 
-        public override Vector2 AnchorA
+        public override Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
         }
 
-        public override Vector2 AnchorB
+        public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
         }

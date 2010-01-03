@@ -38,7 +38,7 @@ namespace FarseerPhysics.TestBed.Tests
             Body ground;
             {
                 ground = _world.CreateBody();
-                ground.Position = new Vector2(0.0f, 20.0f); 
+                ground.Position = new Vector2(0.0f, 20.0f);
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-20.0f, -20.0f), new Vector2(-20.0f, 20.0f));
 
@@ -84,7 +84,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices[1] = MathUtils.Multiply(ref xf2, new Vector2(1.0f, 0.0f));
                 vertices[2] = MathUtils.Multiply(ref xf2, new Vector2(0.0f, 0.5f));
 
-                PolygonShape poly2 = new PolygonShape(vertices,2.0f);
+                PolygonShape poly2 = new PolygonShape(vertices, 2.0f);
 
                 _body = _world.CreateBody();
                 _body.BodyType = BodyType.Dynamic;
@@ -117,7 +117,7 @@ namespace FarseerPhysics.TestBed.Tests
                     // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
                     float radius = (float)Math.Sqrt(2.0 * (I / mass));
 
-                    FrictionJoint jd = new FrictionJoint(ground,body);
+                    FrictionJoint jd = new FrictionJoint(ground, body, Vector2.Zero, Vector2.Zero);
                     jd.CollideConnected = true;
                     jd.MaxForce = mass * gravity;
                     jd.MaxTorque = mass * radius * gravity;

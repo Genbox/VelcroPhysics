@@ -83,12 +83,12 @@ namespace FarseerPhysics
             _limitState = LimitState.Inactive;
         }
 
-        public override Vector2 AnchorA
+        public override Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
         }
 
-        public override Vector2 AnchorB
+        public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
         }
@@ -101,8 +101,7 @@ namespace FarseerPhysics
         {
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
+                WakeBodies();
                 _enableLimit = value;
             }
             get { return _enableLimit; }
@@ -116,9 +115,7 @@ namespace FarseerPhysics
             get { return _lowerLimit; }
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
-
+                WakeBodies();
                 _lowerLimit = value;
             }
         }
@@ -131,9 +128,7 @@ namespace FarseerPhysics
             get { return _upperLimit; }
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
-
+                WakeBodies();
                 _upperLimit = value;
             }
         }
@@ -149,8 +144,7 @@ namespace FarseerPhysics
             get { return _enableMotor; }
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
+                WakeBodies();
                 _enableMotor = value;
             }
         }
@@ -162,8 +156,7 @@ namespace FarseerPhysics
         {
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
+                WakeBodies();
                 _motorSpeed = value;
             }
             get { return _motorSpeed; }
@@ -177,8 +170,7 @@ namespace FarseerPhysics
             get { return _maxMotorForce; }
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
+                WakeBodies();
                 _maxMotorForce = value;
             }
         }
@@ -190,12 +182,13 @@ namespace FarseerPhysics
         public float MotorForce
         {
             get { return _motorImpulse; }
+            set { _motorImpulse = value; }
         }
 
         /// <summary>
         /// The local anchor point relative to body1's origin.
         /// </summary>
-        public Vector2 LocalAnchorA { get; private set; }
+        public Vector2 LocalAnchorA { get; set; }
 
         /// <summary>
         /// The local anchor point relative to body2's origin.
@@ -210,16 +203,10 @@ namespace FarseerPhysics
         {
             get
             {
-                Body b1 = BodyA;
-                Body b2 = BodyB;
+                Vector2 d = BodyB.GetWorldPoint(LocalAnchorB) - BodyA.GetWorldPoint(LocalAnchorA);
+                Vector2 axis = BodyA.GetWorldVector(_localXAxis1);
 
-                Vector2 p1 = b1.GetWorldPoint(LocalAnchorA);
-                Vector2 p2 = b2.GetWorldPoint(LocalAnchorB);
-                Vector2 d = p2 - p1;
-                Vector2 axis = b1.GetWorldVector(_localXAxis1);
-
-                float translation = Vector2.Dot(d, axis);
-                return translation;
+                return Vector2.Dot(d, axis);
             }
         }
 
@@ -231,23 +218,21 @@ namespace FarseerPhysics
         {
             get
             {
-                Body b1 = BodyA;
-                Body b2 = BodyB;
                 Transform xf1, xf2;
-                b1.GetTransform(out xf1);
-                b2.GetTransform(out xf2);
+                BodyA.GetTransform(out xf1);
+                BodyB.GetTransform(out xf2);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
-                Vector2 p1 = b1._sweep.Center + r1;
-                Vector2 p2 = b2._sweep.Center + r2;
+                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - BodyA.LocalCenter);
+                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - BodyB.LocalCenter);
+                Vector2 p1 = BodyA._sweep.Center + r1;
+                Vector2 p2 = BodyB._sweep.Center + r2;
                 Vector2 d = p2 - p1;
-                Vector2 axis = b1.GetWorldVector(_localXAxis1);
+                Vector2 axis = BodyA.GetWorldVector(_localXAxis1);
 
-                Vector2 v1 = b1._linearVelocity;
-                Vector2 v2 = b2._linearVelocity;
-                float w1 = b1._angularVelocity;
-                float w2 = b2._angularVelocity;
+                Vector2 v1 = BodyA._linearVelocity;
+                Vector2 v2 = BodyB._linearVelocity;
+                float w1 = BodyA._angularVelocity;
+                float w2 = BodyB._angularVelocity;
 
                 float speed = Vector2.Dot(d, MathUtils.Cross(w1, axis)) +
                               Vector2.Dot(axis, v2 + MathUtils.Cross(w2, r2) - v1 - MathUtils.Cross(w1, r1));
