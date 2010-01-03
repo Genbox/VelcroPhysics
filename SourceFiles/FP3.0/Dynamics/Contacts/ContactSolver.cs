@@ -261,9 +261,8 @@ namespace FarseerPhysics
         {
             for (int i = 0; i < _constraintCount; ++i)
             {
-                ContactConstraint c = Constraints[i];
-                Body bodyA = c.BodyA;
-                Body bodyB = c.BodyB;
+                Body bodyA = Constraints[i].BodyA;
+                Body bodyB = Constraints[i].BodyB;
                 float wA = bodyA._angularVelocity;
                 float wB = bodyB._angularVelocity;
                 Vector2 vA = bodyA._linearVelocity;
@@ -272,21 +271,21 @@ namespace FarseerPhysics
                 float invIA = bodyA._invI;
                 float invMassB = bodyB._invMass;
                 float invIB = bodyB._invI;
-                Vector2 normal = c.Normal;
+                Vector2 normal = Constraints[i].Normal;
 
 #if MATH_OVERLOADS
 				Vector2 tangent = MathUtils.Cross(normal, 1.0f);
 #else
                 Vector2 tangent = new Vector2(normal.Y, -normal.X);
 #endif
-                float friction = c.Friction;
+                float friction = Constraints[i].Friction;
 
-                Debug.Assert(c.PointCount == 1 || c.PointCount == 2);
+                Debug.Assert(Constraints[i].PointCount == 1 || Constraints[i].PointCount == 2);
 
                 // Solve tangent constraints
-                for (int j = 0; j < c.PointCount; ++j)
+                for (int j = 0; j < Constraints[i].PointCount; ++j)
                 {
-                    ContactConstraintPoint ccp = c.Points[j];
+                    ContactConstraintPoint ccp = Constraints[i].Points[j];
 
 #if MATH_OVERLOADS
 			        // Relative velocity at contact
@@ -331,13 +330,13 @@ namespace FarseerPhysics
                     wB += invIB * (ccp.RB.X * P.Y - ccp.RB.Y * P.X);
 #endif
                     ccp.TangentImpulse = newImpulse;
-                    c.Points[j] = ccp;
+                    Constraints[i].Points[j] = ccp;
                 }
 
                 // Solve normal constraints
-                if (c.PointCount == 1)
+                if (Constraints[i].PointCount == 1)
                 {
-                    ContactConstraintPoint ccp = c.Points[0];
+                    ContactConstraintPoint ccp = Constraints[i].Points[0];
 
 #if MATH_OVERLOADS
 			        // Relative velocity at contact
@@ -383,7 +382,7 @@ namespace FarseerPhysics
                     wB += invIB * (ccp.RB.X * P.Y - ccp.RB.Y * P.X);
 #endif
                     ccp.NormalImpulse = newImpulse;
-                    c.Points[0] = ccp;
+                    Constraints[i].Points[0] = ccp;
                 }
                 else
                 {
@@ -415,8 +414,8 @@ namespace FarseerPhysics
                     //    = A * x' + b'
                     // b' = b - A * a;
 
-                    ContactConstraintPoint cp1 = c.Points[0];
-                    ContactConstraintPoint cp2 = c.Points[1];
+                    ContactConstraintPoint cp1 = Constraints[i].Points[0];
+                    ContactConstraintPoint cp2 = Constraints[i].Points[1];
 
                     Vector2 a = new Vector2(cp1.NormalImpulse, cp2.NormalImpulse);
                     Debug.Assert(a.X >= 0.0f && a.Y >= 0.0f);
@@ -444,7 +443,8 @@ namespace FarseerPhysics
                     float vn2 = dv2.X * normal.X + dv2.Y * normal.Y;
 
                     Vector2 b = new Vector2(vn1 - cp1.VelocityBias, vn2 - cp2.VelocityBias);
-                    b -= MathUtils.Multiply(ref c.K, a); // Inlining didn't help for the multiply.
+                    b.X -= Constraints[i].K.Col1.X * a.X + Constraints[i].K.Col2.X * a.Y;
+                    b.Y -= Constraints[i].K.Col1.Y * a.X + Constraints[i].K.Col2.Y * a.Y;
 #endif
                     while (true)
                     {
@@ -457,7 +457,7 @@ namespace FarseerPhysics
                         //
                         // x' = - inv(A) * b'
                         //
-                        Vector2 x = -MathUtils.Multiply(ref c.NormalMass, b);
+                        Vector2 x = -new Vector2(Constraints[i].NormalMass.Col1.X * b.X + Constraints[i].NormalMass.Col2.X * b.Y, Constraints[i].NormalMass.Col1.Y * b.X + Constraints[i].NormalMass.Col2.Y * b.Y);
 
                         if (x.X >= 0.0f && x.Y >= 0.0f)
                         {
@@ -520,7 +520,7 @@ namespace FarseerPhysics
                         //
                         x.X = -cp1.NormalMass * b.X;
                         x.Y = 0.0f;
-                        vn2 = c.K.Col1.Y * x.X + b.Y;
+                        vn2 = Constraints[i].K.Col1.Y * x.X + b.Y;
 
                         if (x.X >= 0.0f && vn2 >= 0.0f)
                         {
@@ -578,7 +578,7 @@ namespace FarseerPhysics
                         //
                         x.X = 0.0f;
                         x.Y = -cp2.NormalMass * b.Y;
-                        vn1 = c.K.Col2.X * x.Y + b.X;
+                        vn1 = Constraints[i].K.Col2.X * x.Y + b.X;
 
                         if (x.Y >= 0.0f && vn1 >= 0.0f)
                         {
@@ -679,11 +679,9 @@ namespace FarseerPhysics
                         break;
                     }
 
-                    c.Points[0] = cp1;
-                    c.Points[1] = cp2;
+                    Constraints[i].Points[0] = cp1;
+                    Constraints[i].Points[1] = cp2;
                 }
-
-                Constraints[i] = c;
 
                 bodyA._linearVelocity = vA;
                 bodyA._angularVelocity = wA;
