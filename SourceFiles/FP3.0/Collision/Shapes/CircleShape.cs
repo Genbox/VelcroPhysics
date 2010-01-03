@@ -110,6 +110,10 @@ namespace FarseerPhysics
 
         public override void ComputeAABB(out AABB aabb, ref Transform transform)
         {
+#if XBOX360
+            aabb = new AABB();
+#endif
+            
             Vector2 p = transform.Position + MathUtils.Multiply(ref transform.R, Position);
 
             //aabb.LowerBound = new Vector2(p.X - Radius, p.Y - Radius);
