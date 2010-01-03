@@ -881,7 +881,7 @@ namespace FarseerPhysics
             manifold._localPoint = planePoint;
 
             int pointCount = 0;
-            for (int i = 0; i < Settings.MaxManifoldPoints; ++i)
+            for (int i = 0; i < 2; ++i)
             {
                 float separation = Vector2.Dot(normal, clipPoints2[i].Vertex) - frontOffset;
 
