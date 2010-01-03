@@ -7,19 +7,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed", "Testbed\TestBed.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugViewXNA", "..\..\DebugViews\DebugViewXNA\DebugViewXNA.csproj", "{FC7845FA-13FE-4FF8-822A-A577F3F59B00}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSamplesXNA", "SimpleSamplesXNA\SimpleSamplesXNA.csproj", "{DAAB9460-F064-424A-BAC7-8A71A04E4AB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoBaseXNA", "DemoBaseXNA\DemoBaseXNA.csproj", "{46487979-1F6B-4F55-A377-3D80BCB248CE}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 11
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs01.codeplex.com/
-		SccProjectUniqueName0 = ..\\..\\Branches\\FP3.0\\XNA\\Farseer\u0020Physics\u00203.0\u0020XNA.csproj
-		SccProjectName0 = ../../Branches/FP3.0/XNA
-		SccLocalPath0 = ..\\..\\Branches\\FP3.0\\XNA
-		SccProjectUniqueName1 = ..\\..\\Branches\\FP3.0\\XNA\\Content\\Content.contentproj
-		SccProjectTopLevelParentUniqueName1 = ..\\..\\Branches\\FP3.0\\XNA\\Farseer\u0020Physics\u00203.0\u0020XNA.csproj
-		SccProjectName1 = ../../Branches/FP3.0/XNA/Content
-		SccLocalPath1 = ..\\..\\Branches\\FP3.0\\XNA\\Content
-		SccLocalPath2 = .
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = ..\\..\\Branches\\FP3.0\\XNA\\Farseer\u0020Physics\u00203.0\u0020XNA.csproj
+		SccProjectName1 = ../../Branches/FP3.0/XNA
+		SccLocalPath1 = ..\\..\\Branches\\FP3.0\\XNA
+		SccProjectUniqueName2 = ..\\..\\Branches\\FP3.0\\XNA\\Content\\Content.contentproj
+		SccProjectTopLevelParentUniqueName2 = ..\\..\\Branches\\FP3.0\\XNA\\Farseer\u0020Physics\u00203.0\u0020XNA.csproj
+		SccProjectName2 = ../../Branches/FP3.0/XNA/Content
+		SccLocalPath2 = ..\\..\\Branches\\FP3.0\\XNA\\Content
 		SccProjectUniqueName3 = ..\\..\\DebugViews\\DebugViewXNA\\Content\\Content.contentproj
 		SccProjectTopLevelParentUniqueName3 = ..\\..\\DebugViews\\DebugViewXNA\\DebugViewXNA.csproj
 		SccProjectName3 = ../../DebugViews/DebugViewXNA/Content
@@ -34,6 +38,20 @@ Global
 		SccProjectUniqueName6 = Testbed\\TestBed.csproj
 		SccProjectName6 = Testbed
 		SccLocalPath6 = Testbed
+		SccProjectUniqueName7 = SimpleSamplesXNA\\SimpleSamplesXNA.csproj
+		SccProjectName7 = SimpleSamplesXNA
+		SccLocalPath7 = SimpleSamplesXNA
+		SccProjectUniqueName8 = SimpleSamplesXNA\\Content\\Content.contentproj
+		SccProjectTopLevelParentUniqueName8 = SimpleSamplesXNA\\SimpleSamplesXNA.csproj
+		SccProjectName8 = SimpleSamplesXNA/Content
+		SccLocalPath8 = SimpleSamplesXNA\\Content
+		SccProjectUniqueName9 = DemoBaseXNA\\DemoBaseXNA.csproj
+		SccProjectName9 = DemoBaseXNA
+		SccLocalPath9 = DemoBaseXNA
+		SccProjectUniqueName10 = DemoBaseXNA\\Content\\Content.contentproj
+		SccProjectTopLevelParentUniqueName10 = DemoBaseXNA\\DemoBaseXNA.csproj
+		SccProjectName10 = DemoBaseXNA/Content
+		SccLocalPath10 = DemoBaseXNA\\Content
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -44,20 +62,32 @@ Global
 		{0A850700-1ABB-4288-A391-6726B90EBEB9}.Debug|x86.Build.0 = Debug|x86
 		{0A850700-1ABB-4288-A391-6726B90EBEB9}.Release|x86.ActiveCfg = Release|x86
 		{0A850700-1ABB-4288-A391-6726B90EBEB9}.Release|x86.Build.0 = Release|x86
-		{129EF00A-26E6-4835-8DB3-848CB89276DA}.Debug|x86.ActiveCfg = Debug|x86
-		{129EF00A-26E6-4835-8DB3-848CB89276DA}.Release|x86.ActiveCfg = Release|x86
 		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Debug|x86.ActiveCfg = Debug|x86
 		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Debug|x86.Build.0 = Debug|x86
 		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Release|x86.ActiveCfg = Release|x86
 		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Release|x86.Build.0 = Release|x86
-		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Debug|x86.ActiveCfg = Debug|x86
-		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Release|x86.ActiveCfg = Release|x86
 		{FC7845FA-13FE-4FF8-822A-A577F3F59B00}.Debug|x86.ActiveCfg = Debug|x86
 		{FC7845FA-13FE-4FF8-822A-A577F3F59B00}.Debug|x86.Build.0 = Debug|x86
 		{FC7845FA-13FE-4FF8-822A-A577F3F59B00}.Release|x86.ActiveCfg = Release|x86
 		{FC7845FA-13FE-4FF8-822A-A577F3F59B00}.Release|x86.Build.0 = Release|x86
+		{129EF00A-26E6-4835-8DB3-848CB89276DA}.Debug|x86.ActiveCfg = Debug|x86
+		{129EF00A-26E6-4835-8DB3-848CB89276DA}.Release|x86.ActiveCfg = Release|x86
+		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Debug|x86.ActiveCfg = Debug|x86
+		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Release|x86.ActiveCfg = Release|x86
 		{E64C1098-713A-489A-BB70-725DCBED9271}.Debug|x86.ActiveCfg = Debug|x86
 		{E64C1098-713A-489A-BB70-725DCBED9271}.Release|x86.ActiveCfg = Release|x86
+		{DAAB9460-F064-424A-BAC7-8A71A04E4AB3}.Debug|x86.ActiveCfg = Debug|x86
+		{DAAB9460-F064-424A-BAC7-8A71A04E4AB3}.Debug|x86.Build.0 = Debug|x86
+		{DAAB9460-F064-424A-BAC7-8A71A04E4AB3}.Release|x86.ActiveCfg = Release|x86
+		{DAAB9460-F064-424A-BAC7-8A71A04E4AB3}.Release|x86.Build.0 = Release|x86
+		{96019E52-1970-4B61-8085-36AB85A90D2B}.Debug|x86.ActiveCfg = Debug|x86
+		{96019E52-1970-4B61-8085-36AB85A90D2B}.Release|x86.ActiveCfg = Release|x86
+		{46487979-1F6B-4F55-A377-3D80BCB248CE}.Debug|x86.ActiveCfg = Debug|x86
+		{46487979-1F6B-4F55-A377-3D80BCB248CE}.Debug|x86.Build.0 = Debug|x86
+		{46487979-1F6B-4F55-A377-3D80BCB248CE}.Release|x86.ActiveCfg = Release|x86
+		{46487979-1F6B-4F55-A377-3D80BCB248CE}.Release|x86.Build.0 = Release|x86
+		{5974DDEE-2869-45CF-8EA3-0F4EF3E5941F}.Debug|x86.ActiveCfg = Debug|x86
+		{5974DDEE-2869-45CF-8EA3-0F4EF3E5941F}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
