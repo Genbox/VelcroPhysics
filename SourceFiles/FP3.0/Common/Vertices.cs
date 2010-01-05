@@ -2,7 +2,9 @@
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
+#if !(XBOX360)
 [DebuggerDisplay("Count = {Count}")]
+#endif
 public class Vertices : List<Vector2>
 {
     private Vector2 _res;
