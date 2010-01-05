@@ -15,10 +15,38 @@ namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
     /// </summary>
     public class GraphicsDemoScreen : GameScreen
     {
-        
+        PolygonRenderHelper _polyRenderer;
+        BasicEffect _effect;
         
         public override void Initialize()
         {
+            _effect = new BasicEffect(ScreenManager.GraphicsDevice, null);
+            _effect.VertexColorEnabled = true;
+            _effect.Projection = Matrix.CreateOrthographic(10, 10, 0, 1);
+            
+            _polyRenderer = new PolygonRenderHelper(100);
+
+            Vertices verts = new Vertices();
+
+            verts.Add(new Vector2(-1,-1));
+            verts.Add(new Vector2(-0.5f, 0));
+            verts.Add(new Vector2(-1,1));
+            verts.Add(new Vector2(0, 0.5f));
+            verts.Add(new Vector2(1,1));
+            verts.Add(new Vector2(0.5f, 0));
+            verts.Add(new Vector2(1,-1));
+            verts.Add(new Vector2(0, -0.5f));
+
+            _polyRenderer.Submit(verts, Color.Green);
+
+            //Vertices convexHull = new Vertices(verts.GetConvexHull());
+
+            //Vector2 t = new Vector2(3, 0);
+
+            //convexHull.Translate(ref t);
+
+            //_polyRenderer.Submit(convexHull, Color.Yellow);
+            
             base.Initialize();
         }
 
@@ -39,6 +67,14 @@ namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
 
         public override void Draw(GameTime gameTime)
         {
+            ScreenManager.GraphicsDevice.RenderState.FillMode = FillMode.WireFrame;
+            ScreenManager.GraphicsDevice.RenderState.CullMode = CullMode.None;
+
+            _polyRenderer.Render(ScreenManager.GraphicsDevice, _effect);
+
+            ScreenManager.GraphicsDevice.RenderState.FillMode = FillMode.Solid;
+            ScreenManager.GraphicsDevice.RenderState.CullMode = CullMode.CullCounterClockwiseFace;
+            
             base.Draw(gameTime);
         }
 
