@@ -595,8 +595,8 @@ namespace FarseerPhysics
                 Contact c = edge.Contact;
                 edge = edge.Next;
 
-                Fixture fixtureA = c.GetFixtureA();
-                Fixture fixtureB = c.GetFixtureB();
+                Fixture fixtureA = c.FixtureA;
+                Fixture fixtureB = c.FixtureB;
 
                 if (fixture == fixtureA || fixture == fixtureB)
                 {

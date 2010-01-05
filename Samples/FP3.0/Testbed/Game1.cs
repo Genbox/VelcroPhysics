@@ -69,8 +69,8 @@ namespace FarseerPhysics.TestBed
             IsMouseVisible = true;
 #endif
 
-            _traceEnabled = false;
-            _drawEnabled = false;
+            _traceEnabled = true;
+            _drawEnabled = true;
             //graphics.IsFullScreen = true;
         }
 
@@ -303,6 +303,8 @@ namespace FarseerPhysics.TestBed
                     _viewCenter = new Vector2(0.0f, 20.0f);
                     Resize(_width, _height);
                 }
+
+                _test.Draw(_settings);
 
                 _test.DebugView.FinishDrawShapes();
 

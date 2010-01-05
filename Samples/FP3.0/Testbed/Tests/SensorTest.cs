@@ -78,8 +78,8 @@ namespace FarseerPhysics.TestBed.Tests
         // Implement contact listener.
         public override void BeginContact(Contact contact)
         {
-            Fixture fixtureA = contact.GetFixtureA();
-            Fixture fixtureB = contact.GetFixtureB();
+            Fixture fixtureA = contact.FixtureA;
+            Fixture fixtureB = contact.FixtureB;
 
             if (fixtureA == _sensor && fixtureB.Body.UserData != null)
             {
@@ -95,8 +95,8 @@ namespace FarseerPhysics.TestBed.Tests
         // Implement contact listener.
         public override void EndContact(Contact contact)
         {
-            Fixture fixtureA = contact.GetFixtureA();
-            Fixture fixtureB = contact.GetFixtureB();
+            Fixture fixtureA = contact.FixtureA;
+            Fixture fixtureB = contact.FixtureB;
 
             if (fixtureA == _sensor && fixtureB.Body.UserData != null)
             {

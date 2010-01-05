@@ -60,10 +60,10 @@ namespace FarseerPhysics.DebugViewXNA
             if ((Flags & DebugViewFlags.Pair) == DebugViewFlags.Pair)
             {
                 Color color = new Color(0.3f, 0.9f, 0.9f);
-                for (Contact c = World.ContactManager.ContactList; c != null; c = c.GetNext())
+                for (Contact c = World.ContactManager.ContactList; c != null; c = c.NextContact)
                 {
-                    Fixture fixtureA = c.GetFixtureA();
-                    Fixture fixtureB = c.GetFixtureB();
+                    Fixture fixtureA = c.FixtureA;
+                    Fixture fixtureB = c.FixtureB;
 
                     AABB aabbA;
                     AABB aabbB;

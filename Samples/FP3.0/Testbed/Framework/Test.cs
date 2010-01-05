@@ -428,8 +428,8 @@ namespace FarseerPhysics.TestBed.Framework
                 return;
             }
 
-            Fixture fixtureA = contact.GetFixtureA();
-            Fixture fixtureB = contact.GetFixtureB();
+            Fixture fixtureA = contact.FixtureA;
+            Fixture fixtureB = contact.FixtureB;
 
             FixedArray2<PointState> state1, state2;
             Collision.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
