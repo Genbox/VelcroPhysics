@@ -102,7 +102,7 @@ namespace FarseerPhysics
                 float wA = bodyA._angularVelocity;
                 float wB = bodyB._angularVelocity;
 
-                Debug.Assert(manifold._pointCount > 0);
+                Debug.Assert(manifold.PointCount > 0);
 
                 WorldManifold worldManifold = new WorldManifold(ref manifold, ref bodyA._xf, radiusA, ref bodyB._xf, radiusB);
 
@@ -111,18 +111,18 @@ namespace FarseerPhysics
                 cc.BodyB = bodyB;
                 cc.Manifold = manifold;
                 cc.Normal = worldManifold.Normal;
-                cc.PointCount = manifold._pointCount;
+                cc.PointCount = manifold.PointCount;
                 cc.Friction = friction;
                 cc.Restitution = restitution;
 
-                cc.LocalPlaneNormal = manifold._localPlaneNormal;
-                cc.LocalPoint = manifold._localPoint;
+                cc.LocalPlaneNormal = manifold.LocalPlaneNormal;
+                cc.LocalPoint = manifold.LocalPoint;
                 cc.Radius = radiusA + radiusB;
-                cc.ManifoldType = manifold._type;
+                cc.ManifoldType = manifold.Type;
 
                 for (int j = 0; j < cc.PointCount; ++j)
                 {
-                    ManifoldPoint cp = manifold._points[j];
+                    ManifoldPoint cp = manifold.Points[j];
                     ContactConstraintPoint ccp = cc.Points[j];
 
                     ccp.NormalImpulse = cp.NormalImpulse;
@@ -150,10 +150,11 @@ namespace FarseerPhysics
                     Debug.Assert(kEqualized > Settings.Epsilon);
                     ccp.EqualizedMass = 1.0f / kEqualized;
 
-                    Vector2 tangent = new Vector2(cc.Normal.Y, -cc.Normal.X);
+                    //Inlined
+                    //Vector2 tangent = new Vector2(cc.Normal.Y, -cc.Normal.X);
 
-                    float rtA = ccp.RA.X * tangent.Y - ccp.RA.Y * tangent.X;
-                    float rtB = ccp.RB.X * tangent.Y - ccp.RB.Y * tangent.X;
+                    float rtA = ccp.RA.X * cc.Normal.Y - ccp.RA.Y * -cc.Normal.X;
+                    float rtB = ccp.RB.X * cc.Normal.Y - ccp.RB.Y * -cc.Normal.X;
 
                     rtA *= rtA;
                     rtB *= rtB;
@@ -164,13 +165,15 @@ namespace FarseerPhysics
 
                     // Setup a velocity bias for restitution.
                     ccp.VelocityBias = 0.0f;
-                    float vRel = Vector2.Dot(cc.Normal, vB + MathUtils.Cross(wB, ccp.RB) - vA - MathUtils.Cross(wA, ccp.RA));
+                    Vector2 v2 = vB + MathUtils.Cross(wB, ref ccp.RB) - vA - MathUtils.Cross(wA, ref ccp.RA);
+                    float vRel;
+                    Vector2.Dot(ref cc.Normal, ref v2,out vRel);
                     if (vRel < -Settings.VelocityThreshold)
                     {
                         ccp.VelocityBias = -cc.Restitution * vRel;
                     }
 
-                    cc.Points[j] = ccp;
+                    //cc.Points[j] = ccp;
                 }
 
                 // If we have two points, then prepare the block solver.
@@ -247,7 +250,7 @@ namespace FarseerPhysics
                         bodyB._linearVelocity.X += invMassB * P.X;
                         bodyB._linearVelocity.Y += invMassB * P.Y;
 
-                        c.Points[j] = ccp;
+                        //c.Points[j] = ccp;
                     }
                 }
                 else
@@ -257,7 +260,7 @@ namespace FarseerPhysics
                         ContactConstraintPoint ccp = c.Points[j];
                         ccp.NormalImpulse = 0.0f;
                         ccp.TangentImpulse = 0.0f;
-                        c.Points[j] = ccp;
+                        //c.Points[j] = ccp;
                     }
                 }
 
@@ -322,7 +325,7 @@ namespace FarseerPhysics
                     wB += invIB * (ccp.RB.X * (lambda * tangent.Y) - ccp.RB.Y * (lambda * tangent.X));
 
                     ccp.TangentImpulse = newImpulse;
-                    cc.Points[j] = ccp;
+                    //cc.Points[j] = ccp;
                 }
 
                 // Solve normal constraints
@@ -359,7 +362,7 @@ namespace FarseerPhysics
                     wB += invIB * (ccp.RB.X * (lambda * normal.Y) - ccp.RB.Y * (lambda * normal.X));
 
                     ccp.NormalImpulse = newImpulse;
-                    cc.Points[0] = ccp;
+                    //cc.Points[0] = ccp;
                 }
                 else
                 {
@@ -605,8 +608,8 @@ namespace FarseerPhysics
                         break;
                     }
 
-                    cc.Points[0] = cp1;
-                    cc.Points[1] = cp2;
+                    //cc.Points[0] = cp1;
+                    //cc.Points[1] = cp2;
                 }
 
                 //Constraints[i] = cc;
@@ -627,13 +630,13 @@ namespace FarseerPhysics
 
                 for (int j = 0; j < c.PointCount; ++j)
                 {
-                    var pj = m._points[j];
-                    var cp = c.Points[j];
+                    ManifoldPoint pj = m.Points[j];
+                    ContactConstraintPoint cp = c.Points[j];
 
                     pj.NormalImpulse = cp.NormalImpulse;
                     pj.TangentImpulse = cp.TangentImpulse;
 
-                    m._points[j] = pj;
+                    m.Points[j] = pj;
                 }
 
                 // TODO: look for better ways of doing this.
@@ -642,6 +645,10 @@ namespace FarseerPhysics
                 _contacts[i].Manifold = m;
             }
         }
+
+        private Vector2 _normal;
+        private FixedArray2<Vector2> _points;
+        private FixedArray2<float> _separations;
 
         public bool SolvePositionConstraints(float baumgarte)
         {
@@ -659,16 +666,72 @@ namespace FarseerPhysics
                 float invMassB = bodyB._mass * bodyB._invMass;
                 float invIB = bodyB._mass * bodyB._invI;
 
-                PositionSolverManifold psm = new PositionSolverManifold(ref c);
-                Vector2 normal = psm.Normal;
+                //WARNING: Inlined method here. removed init of variables and that might make something weird.
+
+                Debug.Assert(c.PointCount > 0);
+
+                switch (c.ManifoldType)
+                {
+                    case ManifoldType.Circles:
+                        {
+                            Vector2 pointA = c.BodyA.GetWorldPoint(c.LocalPoint);
+                            Vector2 pointB = c.BodyB.GetWorldPoint(c.Points[0].LocalPoint);
+                            if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
+                            {
+                                _normal.X = pointB.X - pointA.X;
+                                _normal.Y = pointB.Y - pointA.Y;
+                                _normal.Normalize();
+                            }
+                            else
+                            {
+                                _normal.X = 1.0f;
+                                _normal.Y = 0.0f;
+                            }
+
+                            _points[0] = 0.5f * (pointA + pointB);
+                            _separations[0] = Vector2.Dot(pointB - pointA, _normal) - c.Radius;
+                        }
+                        break;
+
+                    case ManifoldType.FaceA:
+                        {
+                            _normal = c.BodyA.GetWorldVector(c.LocalPlaneNormal);
+                            Vector2 planePoint = c.BodyA.GetWorldPoint(c.LocalPoint);
+
+                            for (int i1 = 0; i1 < c.PointCount; ++i1)
+                            {
+                                Vector2 clipPoint = c.BodyB.GetWorldPoint(c.Points[i1].LocalPoint);
+                                _separations[i1] = Vector2.Dot(clipPoint - planePoint, _normal) - c.Radius;
+                                _points[i1] = clipPoint;
+                            }
+                        }
+                        break;
+
+                    case ManifoldType.FaceB:
+                        {
+                            _normal = c.BodyB.GetWorldVector(c.LocalPlaneNormal);
+                            Vector2 planePoint = c.BodyB.GetWorldPoint(c.LocalPoint);
+
+                            for (int i2 = 0; i2 < c.PointCount; ++i2)
+                            {
+                                Vector2 clipPoint = c.BodyA.GetWorldPoint(c.Points[i2].LocalPoint);
+                                _separations[i2] = Vector2.Dot(clipPoint - planePoint, _normal) - c.Radius;
+                                _points[i2] = clipPoint;
+                            }
+
+                            // Ensure normal points from A to B
+                            _normal = -_normal;
+                        }
+                        break;
+                }
 
                 // Solve normal constraints
                 for (int j = 0; j < c.PointCount; ++j)
                 {
                     ContactConstraintPoint ccp = c.Points[j];
 
-                    Vector2 point = psm.Points[j];
-                    float separation = psm.Separations[j];
+                    Vector2 point = _points[j];
+                    float separation = _separations[j];
 
                     Vector2 rA = point - bodyA._sweep.Center;
                     Vector2 rB = point - bodyB._sweep.Center;
@@ -682,7 +745,7 @@ namespace FarseerPhysics
                     // Compute normal impulse
                     float impulse = -ccp.EqualizedMass * C;
 
-                    Vector2 P = new Vector2(impulse * normal.X, impulse * normal.Y);
+                    Vector2 P = new Vector2(impulse * _normal.X, impulse * _normal.Y);
 
                     bodyA._sweep.Center.X -= invMassA * P.X;
                     bodyA._sweep.Center.Y -= invMassA * P.Y;
@@ -705,74 +768,6 @@ namespace FarseerPhysics
         public ContactConstraint[] Constraints;
         private int _constraintCount; // collection can be bigger.
         private Contact[] _contacts;
-    }
 
-    internal struct PositionSolverManifold
-    {
-        internal PositionSolverManifold(ref ContactConstraint cc)
-        {
-            Points = new FixedArray2<Vector2>();
-            Separations = new FixedArray2<float>();
-            Normal = new Vector2();
-
-            Debug.Assert(cc.PointCount > 0);
-
-            switch (cc.ManifoldType)
-            {
-                case ManifoldType.Circles:
-                    {
-                        Vector2 pointA = cc.BodyA.GetWorldPoint(cc.LocalPoint);
-                        Vector2 pointB = cc.BodyB.GetWorldPoint(cc.Points[0].LocalPoint);
-                        if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
-                        {
-                            Normal = pointB - pointA;
-                            Normal.Normalize();
-                        }
-                        else
-                        {
-                            Normal = new Vector2(1.0f, 0.0f);
-                        }
-
-                        Points[0] = 0.5f * (pointA + pointB);
-                        Separations[0] = Vector2.Dot(pointB - pointA, Normal) - cc.Radius;
-                    }
-                    break;
-
-                case ManifoldType.FaceA:
-                    {
-                        Normal = cc.BodyA.GetWorldVector(cc.LocalPlaneNormal);
-                        Vector2 planePoint = cc.BodyA.GetWorldPoint(cc.LocalPoint);
-
-                        for (int i = 0; i < cc.PointCount; ++i)
-                        {
-                            Vector2 clipPoint = cc.BodyB.GetWorldPoint(cc.Points[i].LocalPoint);
-                            Separations[i] = Vector2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
-                            Points[i] = clipPoint;
-                        }
-                    }
-                    break;
-
-                case ManifoldType.FaceB:
-                    {
-                        Normal = cc.BodyB.GetWorldVector(cc.LocalPlaneNormal);
-                        Vector2 planePoint = cc.BodyB.GetWorldPoint(cc.LocalPoint);
-
-                        for (int i = 0; i < cc.PointCount; ++i)
-                        {
-                            Vector2 clipPoint = cc.BodyA.GetWorldPoint(cc.Points[i].LocalPoint);
-                            Separations[i] = Vector2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
-                            Points[i] = clipPoint;
-                        }
-
-                        // Ensure normal points from A to B
-                        Normal = -Normal;
-                    }
-                    break;
-            }
-        }
-
-        internal Vector2 Normal;
-        internal FixedArray2<Vector2> Points;
-        internal FixedArray2<float> Separations;
     }
 }

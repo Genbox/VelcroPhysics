@@ -416,7 +416,7 @@ namespace FarseerPhysics.TestBed.Framework
             Manifold manifold;
             contact.GetManifold(out manifold);
 
-            if (manifold._pointCount == 0)
+            if (manifold.PointCount == 0)
             {
                 return;
             }
@@ -430,7 +430,7 @@ namespace FarseerPhysics.TestBed.Framework
             WorldManifold worldManifold;
             contact.GetWorldManifold(out worldManifold);
 
-            for (int i = 0; i < manifold._pointCount && PointCount < k_maxContactPoints; ++i)
+            for (int i = 0; i < manifold.PointCount && PointCount < k_maxContactPoints; ++i)
             {
                 if (fixtureA == null)
                 {

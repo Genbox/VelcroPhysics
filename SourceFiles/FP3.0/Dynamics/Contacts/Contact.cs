@@ -269,7 +269,7 @@ namespace FarseerPhysics
                 }
 
                 // Sensors don't generate manifolds.
-                Manifold._pointCount = 0;
+                Manifold.PointCount = 0;
             }
             else
             {
@@ -287,20 +287,20 @@ namespace FarseerPhysics
                 if (aabbOverlap)
                 {
                     Evaluate();
-                    touching = Manifold._pointCount > 0;
+                    touching = Manifold.PointCount > 0;
 
                     // Match old contact ids to new contact ids and copy the
                     // stored impulses to warm start the solver.
-                    for (int i = 0; i < Manifold._pointCount; ++i)
+                    for (int i = 0; i < Manifold.PointCount; ++i)
                     {
-                        ManifoldPoint mp2 = Manifold._points[i];
+                        ManifoldPoint mp2 = Manifold.Points[i];
                         mp2.NormalImpulse = 0.0f;
                         mp2.TangentImpulse = 0.0f;
                         ContactID id2 = mp2.Id;
 
-                        for (int j = 0; j < oldManifold._pointCount; ++j)
+                        for (int j = 0; j < oldManifold.PointCount; ++j)
                         {
-                            ManifoldPoint mp1 = oldManifold._points[j];
+                            ManifoldPoint mp1 = oldManifold.Points[j];
 
                             if (mp1.Id.Key == id2.Key)
                             {
@@ -310,12 +310,12 @@ namespace FarseerPhysics
                             }
                         }
 
-                        Manifold._points[i] = mp2;
+                        Manifold.Points[i] = mp2;
                     }
                 }
                 else
                 {
-                    Manifold._pointCount = 0;
+                    Manifold.PointCount = 0;
                 }
 
                 if (touching != wasTouching)
