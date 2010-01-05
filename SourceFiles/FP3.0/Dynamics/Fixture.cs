@@ -91,11 +91,11 @@ namespace FarseerPhysics
                 while (edge != null)
                 {
                     Contact contact = edge.Contact;
-                    Fixture fixtureA = contact.GetFixtureA();
-                    Fixture fixtureB = contact.GetFixtureB();
+                    Fixture fixtureA = contact.FixtureA;
+                    Fixture fixtureB = contact.FixtureB;
                     if (fixtureA == this || fixtureB == this)
                     {
-                        contact.SetSensor(fixtureA.Sensor || fixtureB.Sensor);
+                        contact.Sensor = fixtureA.Sensor || fixtureB.Sensor;
                     }
 
                     edge = edge.Next;
@@ -186,8 +186,8 @@ namespace FarseerPhysics
             while (edge != null)
             {
                 Contact contact = edge.Contact;
-                Fixture fixtureA = contact.GetFixtureA();
-                Fixture fixtureB = contact.GetFixtureB();
+                Fixture fixtureA = contact.FixtureA;
+                Fixture fixtureB = contact.FixtureB;
                 if (fixtureA == this || fixtureB == this)
                 {
                     contact.FlagForFiltering();

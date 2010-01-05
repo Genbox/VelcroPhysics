@@ -126,50 +126,43 @@ namespace FarseerPhysics
         /// <summary>
         /// Is this contact touching.
         /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if this instance is touching; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsTouching()
+        /// <value>
+        ///   &lt;c&gt;true&lt;/c&gt; if this instance is touching; otherwise, &lt;c&gt;false&lt;/c&gt;.
+        /// </value>
+        public bool Touching
         {
-            return (Flags & ContactFlags.Touching) == ContactFlags.Touching;
+            get { return (Flags & ContactFlags.Touching) == ContactFlags.Touching; }
         }
 
         /// <summary>
         /// Does this contact generate TOI events for continuous simulation?
         /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if this instance is continuous; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsContinuous()
+        /// <value>
+        ///   &lt;c&gt;true&lt;/c&gt; if this instance is continuous; otherwise, &lt;c&gt;false&lt;/c&gt;.
+        /// </value>
+        public bool Continuous
         {
-            return (Flags & ContactFlags.Continuous) == ContactFlags.Continuous;
+            get { return (Flags & ContactFlags.Continuous) == ContactFlags.Continuous; }
         }
 
         /// <summary>
         /// Change this to be a sensor or non-sensor contact.
         /// </summary>
-        /// <param name="sensor">if set to <c>true</c> [sensor].</param>
-        public void SetSensor(bool sensor)
+        /// <value>if set to &lt;c&gt;true&lt;/c&gt; [sensor].</value>
+        public bool Sensor
         {
-            if (sensor)
+            set
             {
-                Flags |= ContactFlags.Sensor;
+                if (value)
+                {
+                    Flags |= ContactFlags.Sensor;
+                }
+                else
+                {
+                    Flags &= ~ContactFlags.Sensor;
+                }
             }
-            else
-            {
-                Flags &= ~ContactFlags.Sensor;
-            }
-        }
-
-        /// <summary>
-        /// Is this contact a sensor?
-        /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if this instance is sensor; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsSensor()
-        {
-            return (Flags & ContactFlags.Sensor) == ContactFlags.Sensor;
+            get { return (Flags & ContactFlags.Sensor) == ContactFlags.Sensor; }
         }
 
         /// <summary>
@@ -177,56 +170,42 @@ namespace FarseerPhysics
         /// contact listener. The contact is only disabled for the current
         /// time step (or sub-step in continuous collisions).
         /// </summary>
-        /// <param name="flag">if set to <c>true</c> [flag].</param>
-        public void SetEnabled(bool flag)
+        /// <value>if set to &lt;c&gt;true&lt;/c&gt; [flag].</value>
+        public bool Enabled
         {
-            if (flag)
+            set
             {
-                Flags |= ContactFlags.Enabled;
+                if (value)
+                {
+                    Flags |= ContactFlags.Enabled;
+                }
+                else
+                {
+                    Flags &= ~ContactFlags.Enabled;
+                }
             }
-            else
-            {
-                Flags &= ~ContactFlags.Enabled;
-            }
-        }
-
-        /// <summary>
-        /// Has this contact been disabled?
-        /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if this instance is enabled; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsEnabled()
-        {
-            return (Flags & ContactFlags.Enabled) == ContactFlags.Enabled;
+            get { return (Flags & ContactFlags.Enabled) == ContactFlags.Enabled; }
         }
 
         /// <summary>
         /// Get the next contact in the world's contact list.
         /// </summary>
-        /// <returns></returns>
-        public Contact GetNext()
-        {
-            return Next;
-        }
+        /// <value></value>
+        public Contact NextContact { get; internal set; }
+
+        public Contact PrevContact { get; internal set; }
 
         /// <summary>
         /// Get the first fixture in this contact.
         /// </summary>
-        /// <returns></returns>
-        public Fixture GetFixtureA()
-        {
-            return FixtureA;
-        }
+        /// <value></value>
+        public Fixture FixtureA { get; private set; }
 
         /// <summary>
         /// Get the second fixture in this contact.
         /// </summary>
-        /// <returns></returns>
-        public Fixture GetFixtureB()
-        {
-            return FixtureB;
-        }
+        /// <value></value>
+        public Fixture FixtureB { get; private set; }
 
         /// <summary>
         /// Flag this contact for filtering. Filtering will occur the next time step.
@@ -256,21 +235,6 @@ namespace FarseerPhysics
 
             FixtureA = fA;
             FixtureB = fB;
-
-            Manifold._pointCount = 0;
-
-            Prev = null;
-            Next = null;
-
-            NodeA.Contact = null;
-            NodeA.Prev = null;
-            NodeA.Next = null;
-            NodeA.Other = null;
-
-            NodeB.Contact = null;
-            NodeB.Prev = null;
-            NodeB.Next = null;
-            NodeB.Other = null;
         }
 
         internal void Update(ContactManager contactManager)
@@ -403,7 +367,7 @@ namespace FarseerPhysics
             return TimeOfImpact.CalculateTimeOfImpact(ref input);
         }
 
-        private static Func<Fixture, Fixture, Contact>[,] s_registers = new Func<Fixture, Fixture, Contact>[,] 
+        private static Func<Fixture, Fixture, Contact>[,] _sRegisters = new Func<Fixture, Fixture, Contact>[,] 
         {
             { 
               (f1, f2) => new CircleContact(f1, f2), 
@@ -426,27 +390,20 @@ namespace FarseerPhysics
             if (type1 > type2)
             {
                 // primary
-                return s_registers[(int)type1, (int)type2](fixtureA, fixtureB);
+                return _sRegisters[(int)type1, (int)type2](fixtureA, fixtureB);
             }
 
-            return s_registers[(int)type1, (int)type2](fixtureB, fixtureA);
+            return _sRegisters[(int)type1, (int)type2](fixtureB, fixtureA);
         }
 
         internal ContactFlags Flags;
-
-        // World pool and list pointers.
-        internal Contact Prev;
-        internal Contact Next;
 
         // Nodes for connecting bodies.
         internal ContactEdge NodeA = new ContactEdge();
         internal ContactEdge NodeB = new ContactEdge();
 
-        internal Fixture FixtureA;
-        internal Fixture FixtureB;
-
         internal Manifold Manifold;
 
-        internal float Toi;
+        internal float TOI;
     }
 }

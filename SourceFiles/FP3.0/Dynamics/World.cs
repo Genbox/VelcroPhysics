@@ -56,9 +56,11 @@ namespace FarseerPhysics
         private Island _island = new Island();
         private Func<Fixture, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
+        private Body[] _queue;
 
         private WorldRayCastCallback _rayCastCallback;
         private RayCastCallback _rayCastCallbackWrapper;
+        private Body[] _stack;
 
         /// <summary>
         /// Construct a world object.
@@ -496,14 +498,14 @@ namespace FarseerPhysics
             step.PositionIterations = positionIterations;
             if (dt > 0.0f)
             {
-                step.Inv_DeltaTime = 1.0f/dt;
+                step.Inv_DeltaTime = 1.0f / dt;
             }
             else
             {
                 step.Inv_DeltaTime = 0.0f;
             }
 
-            step.DtRatio = _invDt0*dt;
+            step.DtRatio = _invDt0 * dt;
 
             step.WarmStarting = WarmStarting;
 
@@ -591,7 +593,7 @@ namespace FarseerPhysics
             if (hit)
             {
                 float fraction = output.Fraction;
-                Vector2 point = (1.0f - fraction)*input.Point1 + fraction*input.Point2;
+                Vector2 point = (1.0f - fraction) * input.Point1 + fraction * input.Point2;
                 return _rayCastCallback(fixture, point, output.Normal, fraction);
             }
 
@@ -611,7 +613,7 @@ namespace FarseerPhysics
             {
                 b._flags &= ~BodyFlags.Island;
             }
-            for (Contact c = ContactManager._contactList; c != null; c = c.Next)
+            for (Contact c = ContactManager._contactList; c != null; c = c.NextContact)
             {
                 c.Flags &= ~ContactFlags.Island;
             }
@@ -621,10 +623,11 @@ namespace FarseerPhysics
             }
 
             // Build and simulate all awake islands.
-#warning Remove extra allocs
-
             int stackSize = BodyCount;
-            Body[] stack = new Body[BodyCount];
+
+            if (_stack == null || _stack.Length < stackSize)
+                _stack = new Body[BodyCount];
+
             for (Body seed = BodyList; seed != null; seed = seed._next)
             {
                 if ((seed._flags & (BodyFlags.Island)) != BodyFlags.None)
@@ -646,14 +649,14 @@ namespace FarseerPhysics
                 // Reset island and stack.
                 _island.Clear();
                 int stackCount = 0;
-                stack[stackCount++] = seed;
+                _stack[stackCount++] = seed;
                 seed._flags |= BodyFlags.Island;
 
                 // Perform a depth first search (DFS) on the constraint graph.
                 while (stackCount > 0)
                 {
                     // Grab the next body off the stack and add it to the island.
-                    Body b = stack[--stackCount];
+                    Body b = _stack[--stackCount];
                     Debug.Assert(b.Active);
                     _island.Add(b);
 
@@ -680,7 +683,7 @@ namespace FarseerPhysics
                         }
 
                         // Is this contact solid and touching?
-                        if (ce.Contact.IsSensor() || !ce.Contact.IsEnabled() || !ce.Contact.IsTouching())
+                        if (ce.Contact.Sensor || !ce.Contact.Enabled || !ce.Contact.Touching)
                         {
                             continue;
                         }
@@ -697,7 +700,7 @@ namespace FarseerPhysics
                         }
 
                         Debug.Assert(stackCount < stackSize);
-                        stack[stackCount++] = other;
+                        _stack[stackCount++] = other;
                         other._flags |= BodyFlags.Island;
                     }
 
@@ -726,7 +729,7 @@ namespace FarseerPhysics
                         }
 
                         Debug.Assert(stackCount < stackSize);
-                        stack[stackCount++] = other;
+                        _stack[stackCount++] = other;
                         other._flags |= BodyFlags.Island;
                     }
                 }
@@ -782,9 +785,11 @@ namespace FarseerPhysics
             //To pop: 
             //	poppedElement = queue[queueStart++];
             //  --queueSize;
-#warning More Body array Allocs
+
             int queueCapacity = BodyCount;
-            Body[] queue = new Body[BodyCount];
+
+            if (_queue == null || _queue.Length < queueCapacity)
+                _queue = new Body[BodyCount];
 
             for (Body b = BodyList; b != null; b = b._next)
             {
@@ -792,7 +797,7 @@ namespace FarseerPhysics
                 b._sweep.TimeInt0 = 0.0f;
             }
 
-            for (Contact c = ContactManager._contactList; c != null; c = c.Next)
+            for (Contact c = ContactManager._contactList; c != null; c = c.NextContact)
             {
                 // Invalidate TOI
                 c.Flags &= ~(ContactFlags.Toi | ContactFlags.Island);
@@ -804,16 +809,16 @@ namespace FarseerPhysics
             }
 
             // Find TOI events and solve them.
-            for (;;)
+            for (; ; )
             {
                 // Find the first TOI.
                 Contact minContact = null;
                 float minTOI = 1.0f;
 
-                for (Contact c = ContactManager._contactList; c != null; c = c.Next)
+                for (Contact c = ContactManager._contactList; c != null; c = c.NextContact)
                 {
                     // Can this contact generate a solid TOI contact?
-                    if (c.IsSensor() || c.IsEnabled() == false || c.IsContinuous() == false)
+                    if (c.Sensor || c.Enabled == false || c.Continuous == false)
                     {
                         continue;
                     }
@@ -824,13 +829,13 @@ namespace FarseerPhysics
                     if ((c.Flags & ContactFlags.Toi) != ContactFlags.None)
                     {
                         // This contact has a valid cached TOI.
-                        toi = c.Toi;
+                        toi = c.TOI;
                     }
                     else
                     {
                         // Compute the TOI for this contact.
-                        Fixture s1 = c.GetFixtureA();
-                        Fixture s2 = c.GetFixtureB();
+                        Fixture s1 = c.FixtureA;
+                        Fixture s2 = c.FixtureB;
                         Body b1 = s1.Body;
                         Body b2 = s2.Body;
 
@@ -865,11 +870,11 @@ namespace FarseerPhysics
                         if (0.0f < toi && toi < 1.0f)
                         {
                             // Interpolate on the actual range.
-                            toi = Math.Min((1.0f - toi)*t0 + toi, 1.0f);
+                            toi = Math.Min((1.0f - toi) * t0 + toi, 1.0f);
                         }
 
 
-                        c.Toi = toi;
+                        c.TOI = toi;
                         c.Flags |= ContactFlags.Toi;
                     }
 
@@ -881,51 +886,51 @@ namespace FarseerPhysics
                     }
                 }
 
-                if (minContact == null || 1.0f - 100.0f*Settings.Epsilon < minTOI)
+                if (minContact == null || 1.0f - 100.0f * Settings.Epsilon < minTOI)
                 {
                     // No more TOI events. Done!
                     break;
                 }
 
                 // Advance the bodies to the TOI.
-                Fixture s1_2 = minContact.GetFixtureA();
-                Fixture s2_2 = minContact.GetFixtureB();
-                Body b1_2 = s1_2.Body;
-                Body b2_2 = s2_2.Body;
+                Fixture s12 = minContact.FixtureA;
+                Fixture s22 = minContact.FixtureB;
+                Body b12 = s12.Body;
+                Body b22 = s22.Body;
 
-                Sweep backup1 = b1_2._sweep;
-                Sweep backup2 = b2_2._sweep;
+                Sweep backup1 = b12._sweep;
+                Sweep backup2 = b22._sweep;
 
-                b1_2.Advance(minTOI);
-                b2_2.Advance(minTOI);
+                b12.Advance(minTOI);
+                b22.Advance(minTOI);
 
                 // The TOI contact likely has some new contact points.
                 minContact.Update(ContactManager);
                 minContact.Flags &= ~ContactFlags.Toi;
 
                 // Is the contact solid?
-                if (minContact.IsSensor() || !minContact.IsEnabled())
+                if (minContact.Sensor || !minContact.Enabled)
                 {
                     // Restore the sweeps.
-                    b1_2._sweep = backup1;
-                    b2_2._sweep = backup2;
-                    b1_2.SynchronizeTransform();
-                    b2_2.SynchronizeTransform();
+                    b12._sweep = backup1;
+                    b22._sweep = backup2;
+                    b12.SynchronizeTransform();
+                    b22.SynchronizeTransform();
                     continue;
                 }
 
                 // Did numerical issues prevent a contact point from being generated?
-                if (!minContact.IsTouching())
+                if (!minContact.Touching)
                 {
                     // Give up on this TOI.
                     continue;
                 }
 
                 // Build the TOI island. We need a dynamic seed.
-                Body seed = b1_2;
+                Body seed = b12;
                 if (seed.BodyType != BodyType.Dynamic)
                 {
-                    seed = b2_2;
+                    seed = b22;
                 }
 
                 // Reset island and queue.
@@ -933,14 +938,14 @@ namespace FarseerPhysics
 
                 int queueStart = 0; // starting index for queue
                 int queueSize = 0; // elements in queue
-                queue[queueStart + queueSize++] = seed;
+                _queue[queueStart + queueSize++] = seed;
                 seed._flags |= BodyFlags.Island;
 
                 // Perform a breadth first search (BFS) on the contact/joint graph.
                 while (queueSize > 0)
                 {
                     // Grab the next body off the stack and add it to the island.
-                    Body b = queue[queueStart++];
+                    Body b = _queue[queueStart++];
                     --queueSize;
 
                     _island.Add(b);
@@ -975,9 +980,9 @@ namespace FarseerPhysics
                         }
 
                         // Skip separate, sensor, or disabled contacts.
-                        if (cEdge.Contact.IsSensor() ||
-                            cEdge.Contact.IsEnabled() == false ||
-                            cEdge.Contact.IsTouching() == false)
+                        if (cEdge.Contact.Sensor ||
+                            cEdge.Contact.Enabled == false ||
+                            cEdge.Contact.Touching == false)
                         {
                             continue;
                         }
@@ -1002,7 +1007,7 @@ namespace FarseerPhysics
                         }
 
                         Debug.Assert(queueStart + queueSize < queueCapacity);
-                        queue[queueStart + queueSize] = other;
+                        _queue[queueStart + queueSize] = other;
                         ++queueSize;
                         other._flags |= BodyFlags.Island;
                     }
@@ -1042,7 +1047,7 @@ namespace FarseerPhysics
                         }
 
                         Debug.Assert(queueStart + queueSize < queueCapacity);
-                        queue[queueStart + queueSize] = other;
+                        _queue[queueStart + queueSize] = other;
                         ++queueSize;
                         other._flags |= BodyFlags.Island;
                     }
@@ -1050,8 +1055,8 @@ namespace FarseerPhysics
 
                 TimeStep subStep;
                 subStep.WarmStarting = false;
-                subStep.DeltaTime = (1.0f - minTOI)*step.DeltaTime;
-                subStep.Inv_DeltaTime = 1.0f/subStep.DeltaTime;
+                subStep.DeltaTime = (1.0f - minTOI) * step.DeltaTime;
+                subStep.Inv_DeltaTime = 1.0f / subStep.DeltaTime;
                 subStep.DtRatio = 0.0f;
                 subStep.VelocityIterations = step.VelocityIterations;
                 subStep.PositionIterations = step.PositionIterations;

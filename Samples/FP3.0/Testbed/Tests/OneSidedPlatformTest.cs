@@ -71,8 +71,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.PreSolve(contact, ref oldManifold);
 
-            Fixture fixtureA = contact.GetFixtureA();
-            Fixture fixtureB = contact.GetFixtureB();
+            Fixture fixtureA = contact.FixtureA;
+            Fixture fixtureB = contact.FixtureB;
 
             if (fixtureA != _platform && fixtureA != _character)
             {
@@ -88,7 +88,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (position.Y < _top)
             {
-                contact.SetEnabled(false);
+                contact.Enabled = false;
             }
         }
 

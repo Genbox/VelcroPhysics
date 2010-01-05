@@ -62,8 +62,8 @@ namespace FarseerPhysics
             {
                 if (edge.Other == bodyA)
                 {
-                    Fixture fA = edge.Contact.GetFixtureA();
-                    Fixture fB = edge.Contact.GetFixtureB();
+                    Fixture fA = edge.Contact.FixtureA;
+                    Fixture fB = edge.Contact.FixtureB;
                     if (fA == fixtureA && fB == fixtureB)
                     {
                         // A contact already exists.
@@ -97,17 +97,17 @@ namespace FarseerPhysics
             Contact c = Contact.Create(fixtureA, fixtureB);
 
             // Contact creation may swap fixtures.
-            fixtureA = c.GetFixtureA();
-            fixtureB = c.GetFixtureB();
+            fixtureA = c.FixtureA;
+            fixtureB = c.FixtureB;
             bodyA = fixtureA.Body;
             bodyB = fixtureB.Body;
 
             // Insert into the world.
-            c.Prev = null;
-            c.Next = _contactList;
+            c.PrevContact = null;
+            c.NextContact = _contactList;
             if (_contactList != null)
             {
-                _contactList.Prev = c;
+                _contactList.PrevContact = c;
             }
             _contactList = c;
 
@@ -147,8 +147,8 @@ namespace FarseerPhysics
 
         internal void Destroy(Contact c)
         {
-            Fixture fixtureA = c.GetFixtureA();
-            Fixture fixtureB = c.GetFixtureB();
+            Fixture fixtureA = c.FixtureA;
+            Fixture fixtureB = c.FixtureB;
             Body bodyA = fixtureA.Body;
             Body bodyB = fixtureB.Body;
 
@@ -159,19 +159,19 @@ namespace FarseerPhysics
             }
 
             // Remove from the world.
-            if (c.Prev != null)
+            if (c.PrevContact != null)
             {
-                c.Prev.Next = c.Next;
+                c.PrevContact.NextContact = c.NextContact;
             }
 
-            if (c.Next != null)
+            if (c.NextContact != null)
             {
-                c.Next.Prev = c.Prev;
+                c.NextContact.PrevContact = c.PrevContact;
             }
 
             if (c == _contactList)
             {
-                _contactList = c.Next;
+                _contactList = c.NextContact;
             }
 
             // Remove from body 1
@@ -215,14 +215,14 @@ namespace FarseerPhysics
             Contact c = _contactList;
             while (c != null)
             {
-                Fixture fixtureA = c.GetFixtureA();
-                Fixture fixtureB = c.GetFixtureB();
+                Fixture fixtureA = c.FixtureA;
+                Fixture fixtureB = c.FixtureB;
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
 
                 if (bodyA.Awake == false && bodyB.Awake == false)
                 {
-                    c = c.GetNext();
+                    c = c.NextContact;
                     continue;
                 }
 
@@ -233,7 +233,7 @@ namespace FarseerPhysics
                     if (bodyB.ShouldCollide(bodyA) == false)
                     {
                         Contact cNuke = c;
-                        c = cNuke.GetNext();
+                        c = cNuke.NextContact;
                         Destroy(cNuke);
                         continue;
                     }
@@ -244,7 +244,7 @@ namespace FarseerPhysics
                         if (CollisionFilter(fixtureA, fixtureB) == false)
                         {
                             Contact cNuke = c;
-                            c = cNuke.GetNext();
+                            c = cNuke.NextContact;
                             Destroy(cNuke);
                             continue;
                         }
@@ -263,14 +263,14 @@ namespace FarseerPhysics
                 if (overlap == false)
                 {
                     Contact cNuke = c;
-                    c = cNuke.GetNext();
+                    c = cNuke.NextContact;
                     Destroy(cNuke);
                     continue;
                 }
 
                 // The contact persists.
                 c.Update(this);
-                c = c.GetNext();
+                c = c.NextContact;
             }
         }
 
