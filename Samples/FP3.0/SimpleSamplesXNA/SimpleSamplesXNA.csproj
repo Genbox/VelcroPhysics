@@ -89,6 +89,7 @@
   <ItemGroup>
     <Compile Include="Demo1\Demo1Screen.cs" />
     <Compile Include="FarseerPhysicsGame.cs" />
+    <Compile Include="GraphicsDemo\GraphicsDemoScreen.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

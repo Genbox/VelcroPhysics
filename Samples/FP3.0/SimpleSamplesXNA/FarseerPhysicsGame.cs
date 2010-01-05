@@ -3,6 +3,7 @@ using DemoBaseXNA.Components;
 using DemoBaseXNA.ScreenSystem;
 using FarseerPhysics;
 using FarseerGames.SimpleSamplesXNA.Demo1;
+using FarseerGames.SimpleSamplesXNA.GraphicsDemo;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -68,6 +69,7 @@ namespace FarseerGames.SimpleSamplesXNA
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo9Screen.GetTitle(), new Demo9Screen());
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo10Screen.GetTitle(), new Demo10Screen());
              */
+            ScreenManager.MainMenuScreen.AddMainMenuItem(GraphicsDemoScreen.GetTitle(), new GraphicsDemoScreen());
             ScreenManager.MainMenuScreen.AddMainMenuItem("Exit", null, true);
 
             ScreenManager.GoToMainMenu();

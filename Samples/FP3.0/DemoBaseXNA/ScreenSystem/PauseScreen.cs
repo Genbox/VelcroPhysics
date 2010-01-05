@@ -28,8 +28,8 @@ namespace DemoBaseXNA.ScreenSystem
             IsPopup = true;
             _title = title;
             _details = details;
-            TransitionOnTime = TimeSpan.FromSeconds(.2f);
-            TransitionOffTime = TimeSpan.FromSeconds(.2f);
+            TransitionOnTime = TimeSpan.FromSeconds(0.5f);
+            TransitionOffTime = TimeSpan.FromSeconds(0.5f);
         }
 
         public override void Initialize()
@@ -67,7 +67,8 @@ namespace DemoBaseXNA.ScreenSystem
 
         public override void Draw(GameTime gameTime)
         {
-            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None, 
+                Matrix.CreateTranslation((float)Math.Pow((float)TransitionPosition, 2) * ScreenManager.ScreenWidth, 0, 0));
             Vector2 panelOrigin = new Vector2(_panelTexture.Width/2f, _panelTexture.Height/2f);
             ScreenManager.SpriteBatch.Draw(_panelTexture, ScreenManager.ScreenCenter, null, _panelColor, 0, panelOrigin,
                                            Vector2.One, SpriteEffects.None, 0);

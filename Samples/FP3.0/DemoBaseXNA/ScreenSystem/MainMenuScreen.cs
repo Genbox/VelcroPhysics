@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,6 +19,8 @@ namespace DemoBaseXNA.ScreenSystem
         public MainMenuScreen()
         {
             LeftBorder = 100;
+            TransitionOnTime = TimeSpan.FromSeconds(0.5f);
+            TransitionOffTime = TimeSpan.FromSeconds(0.5f);
         }
 
         public void AddMainMenuItem(string name, GameScreen screen)
@@ -48,7 +51,8 @@ namespace DemoBaseXNA.ScreenSystem
 
         public override void Draw(GameTime gameTime)
         {
-            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None,
+                Matrix.CreateTranslation((float)Math.Pow((float)TransitionPosition, 2) * ScreenManager.ScreenWidth, 0, 0));
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont,
                                                  "1) Toggle between debug and normal view using either F1 on the keyboard or 'Y' on the controller",
                                                  new Vector2(100, ScreenManager.ScreenHeight - 116), Color.White);
