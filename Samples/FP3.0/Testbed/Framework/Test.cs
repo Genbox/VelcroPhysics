@@ -27,20 +27,21 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Framework
 {
-    public static class Rand
+    public class Rand
     {
-        public static Random Random = new Random(0x2eed2eed);
+        public static int RAND_LIMIT = 32767;
+        public static Random rand = new Random(0x2eed2eed);
 
         /// Random number in range [-1,1]
         public static float RandomFloat()
         {
-            return (float)(Random.NextDouble() * 2.0 - 1.0);
+            return (float)(rand.NextDouble() * 2.0 - 1.0);
         }
 
         /// Random floating point number in range [lo, hi]
         public static float RandomFloat(float lo, float hi)
         {
-            float r = (float)Random.NextDouble();
+            float r = (float)rand.NextDouble();
             r = (hi - lo) * r + lo;
             return r;
         }
@@ -48,49 +49,49 @@ namespace FarseerPhysics.TestBed.Framework
 
     public class Settings
     {
-        public uint DrawAABBs;
-        public uint DrawCOMs;
-        public uint DrawContactForces;
-        public uint DrawContactNormals;
-        public uint DrawContactPoints;
-        public uint DrawFrictionForces;
-        public uint DrawJoints;
-        public uint DrawPairs;
-        public uint DrawShapes;
-        public uint DrawStats;
-        public uint EnableContinuous;
-        public uint EnableWarmStarting;
-        public float Hz;
-        public uint Pause;
-        public int PositionIterations;
-        public uint SingleStep;
-        public int VelocityIterations;
+        public uint drawAABBs;
+        public uint drawCOMs;
+        public uint drawContactForces;
+        public uint drawContactNormals;
+        public uint drawContactPoints;
+        public uint drawFrictionForces;
+        public uint drawJoints;
+        public uint drawPairs;
+        public uint drawShapes;
+        public uint drawStats;
+        public uint enableContinuous;
+        public uint enableWarmStarting;
+        public float hz;
+        public uint pause;
+        public int positionIterations;
+        public uint singleStep;
+        public int velocityIterations;
 
         public Settings()
         {
-            Hz = 60.0f;
-            VelocityIterations = 8; // 10;
-            PositionIterations = 3; // 8;
-            DrawShapes = 1;
-            DrawJoints = 1;
-            EnableWarmStarting = 1;
-            EnableContinuous = 1;
+            hz = 60.0f;
+            velocityIterations = 8; // 10;
+            positionIterations = 3; // 8;
+            drawShapes = 1;
+            drawJoints = 1;
+            enableWarmStarting = 1;
+            enableContinuous = 1;
         }
     }
 
     public struct TestEntry
     {
-        public Func<Test> CreateFcn;
-        public string Name;
+        public Func<Test> createFcn;
+        public string name;
     }
 
     public struct ContactPoint
     {
-        public Fixture FixtureA;
-        public Fixture FixtureB;
-        public Vector2 Normal;
-        public Vector2 Position;
-        public PointState State;
+        public Fixture fixtureA;
+        public Fixture fixtureB;
+        public Vector2 normal;
+        public Vector2 position;
+        public PointState state;
     }
 
     public class Test
@@ -101,17 +102,17 @@ namespace FarseerPhysics.TestBed.Framework
         private Body _bomb;
         private Vector2 _bombSpawnPoint;
         private bool _bombSpawning;
-        internal DebugViewXNA.DebugViewXNA DebugView;
+        internal DebugViewXNA.DebugViewXNA _debugView;
         private Body _groundBody;
         private MouseJoint _mouseJoint;
         private Vector2 _mouseWorld;
-        internal int PointCount;
-        internal ContactPoint[] Points = new ContactPoint[k_maxContactPoints];
+        internal int _pointCount;
+        internal ContactPoint[] _points = new ContactPoint[k_maxContactPoints];
 
         protected Test()
         {
             World = new World(new Vector2(0.0f, -10.0f), false);
-            DebugView = new DebugViewXNA.DebugViewXNA(World);
+            _debugView = new DebugViewXNA.DebugViewXNA(World);
             TextLine = 30;
 
             World.JointRemoved += JointRemoved;
@@ -144,58 +145,51 @@ namespace FarseerPhysics.TestBed.Framework
 
         public void DrawTitle(int x, int y, string title)
         {
-            DebugView.DrawString(x, y, title);
+            _debugView.DrawString(x, y, title);
         }
 
-        public virtual void Update(Settings settings)
+        public virtual void Step(Settings settings)
         {
-            float timeStep = settings.Hz > 0.0f ? 1.0f / settings.Hz : 0.0f;
+            float timeStep = settings.hz > 0.0f ? 1.0f / settings.hz : 0.0f;
 
-            if (settings.Pause > 0)
+            if (settings.pause > 0)
             {
-                if (settings.SingleStep > 0)
+                if (settings.singleStep > 0)
                 {
-                    settings.SingleStep = 0;
+                    settings.singleStep = 0;
                 }
                 else
                 {
                     timeStep = 0.0f;
                 }
+
+                _debugView.DrawString(50, TextLine, "****PAUSED****");
+                TextLine += 15;
             }
 
             uint flags = 0;
-            flags += settings.DrawShapes * (uint)DebugViewFlags.Shape;
-            flags += settings.DrawJoints * (uint)DebugViewFlags.Joint;
-            flags += settings.DrawAABBs * (uint)DebugViewFlags.AABB;
-            flags += settings.DrawPairs * (uint)DebugViewFlags.Pair;
-            flags += settings.DrawCOMs * (uint)DebugViewFlags.CenterOfMass;
-            DebugView.Flags = (DebugViewFlags)flags;
+            flags += settings.drawShapes * (uint)DebugViewFlags.Shape;
+            flags += settings.drawJoints * (uint)DebugViewFlags.Joint;
+            flags += settings.drawAABBs * (uint)DebugViewFlags.AABB;
+            flags += settings.drawPairs * (uint)DebugViewFlags.Pair;
+            flags += settings.drawCOMs * (uint)DebugViewFlags.CenterOfMass;
+            _debugView.Flags = (DebugViewFlags)flags;
 
-            World.WarmStarting = (settings.EnableWarmStarting > 0);
-            World.ContinuousPhysics = (settings.EnableContinuous > 0);
+            World.WarmStarting = (settings.enableWarmStarting > 0);
+            World.ContinuousPhysics = (settings.enableContinuous > 0);
 
-            World.Step(timeStep, settings.VelocityIterations, settings.PositionIterations);
+            _pointCount = 0;
+
+            World.Step(timeStep, settings.velocityIterations, settings.positionIterations);
             World.ClearForces();
-        }
 
-        public void Draw(Settings settings)
-        {
-            PointCount = 0;
+            _debugView.DrawDebugData();
 
-            DebugView.DrawDebugData();
-
-            if (settings.DrawStats > 0)
+            if (settings.drawStats > 0)
             {
-                DebugView.DrawString(50, TextLine, "bodies/contacts/joints/proxies = {0:n}/{1:n}/{2:n}",
+                _debugView.DrawString(50, TextLine, "bodies/contacts/joints/proxies = {0:n}/{1:n}/{2:n}",
                                       World.BodyCount, World.ContactCount, World.JointCount, World.ProxyCount);
                 TextLine += 15;
-            }
-
-            if (settings.Pause > 0)
-            {
-                DebugView.DrawString(50, TextLine, "****PAUSED****");
-                TextLine += 15;
-
             }
 
             if (_mouseJoint != null)
@@ -203,50 +197,50 @@ namespace FarseerPhysics.TestBed.Framework
                 Vector2 p1 = _mouseJoint.WorldAnchorB;
                 Vector2 p2 = _mouseJoint.Target;
 
-                DebugView.DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
-                DebugView.DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
-                DebugView.DrawSegment(p1, p2, new Color(0.8f, 0.8f, 0.8f));
+                _debugView.DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
+                _debugView.DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
+                _debugView.DrawSegment(p1, p2, new Color(0.8f, 0.8f, 0.8f));
             }
 
             if (_bombSpawning)
             {
-                DebugView.DrawPoint(_bombSpawnPoint, 0.5f, new Color(0.0f, 0.0f, 1.0f));
-                DebugView.DrawSegment(_mouseWorld, _bombSpawnPoint, new Color(0.8f, 0.8f, 0.8f));
+                _debugView.DrawPoint(_bombSpawnPoint, 0.5f, new Color(0.0f, 0.0f, 1.0f));
+                _debugView.DrawSegment(_mouseWorld, _bombSpawnPoint, new Color(0.8f, 0.8f, 0.8f));
             }
 
-            if (settings.DrawContactPoints > 0)
+            if (settings.drawContactPoints > 0)
             {
                 const float k_axisScale = 0.3f;
 
-                for (int i = 0; i < PointCount; ++i)
+                for (int i = 0; i < _pointCount; ++i)
                 {
-                    ContactPoint point = Points[i];
+                    ContactPoint point = _points[i];
 
-                    if (point.State == PointState.Add)
+                    if (point.state == PointState.Add)
                     {
                         // Add
-                        DebugView.DrawPoint(point.Position, 1.5f, new Color(0.3f, 0.95f, 0.3f));
+                        _debugView.DrawPoint(point.position, 1.5f, new Color(0.3f, 0.95f, 0.3f));
                     }
-                    else if (point.State == PointState.Persist)
+                    else if (point.state == PointState.Persist)
                     {
                         // Persist
-                        DebugView.DrawPoint(point.Position, 0.65f, new Color(0.3f, 0.3f, 0.95f));
+                        _debugView.DrawPoint(point.position, 0.65f, new Color(0.3f, 0.3f, 0.95f));
                     }
 
-                    if (settings.DrawContactNormals == 1)
+                    if (settings.drawContactNormals == 1)
                     {
-                        Vector2 p1 = point.Position;
-                        Vector2 p2 = p1 + k_axisScale * point.Normal;
-                        DebugView.DrawSegment(p1, p2, new Color(0.4f, 0.9f, 0.4f));
+                        Vector2 p1 = point.position;
+                        Vector2 p2 = p1 + k_axisScale * point.normal;
+                        _debugView.DrawSegment(p1, p2, new Color(0.4f, 0.9f, 0.4f));
                     }
-                    else if (settings.DrawContactForces == 1)
+                    else if (settings.drawContactForces == 1)
                     {
                         //Vector2 p1 = point.position;
                         //Vector2 p2 = p1 + k_forceScale * point.normalForce * point.normal;
                         //DrawSegment(p1, p2, Color(0.9f, 0.9f, 0.3f));
                     }
 
-                    if (settings.DrawFrictionForces == 1)
+                    if (settings.drawFrictionForces == 1)
                     {
                         //Vector2 tangent = b2Cross(point.normal, 1.0f);
                         //Vector2 p1 = point.position;
@@ -428,8 +422,8 @@ namespace FarseerPhysics.TestBed.Framework
                 return;
             }
 
-            Fixture fixtureA = contact.FixtureA;
-            Fixture fixtureB = contact.FixtureB;
+            Fixture fixtureA = contact.GetFixtureA();
+            Fixture fixtureB = contact.GetFixtureB();
 
             FixedArray2<PointState> state1, state2;
             Collision.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
@@ -437,20 +431,20 @@ namespace FarseerPhysics.TestBed.Framework
             WorldManifold worldManifold;
             contact.GetWorldManifold(out worldManifold);
 
-            for (int i = 0; i < manifold._pointCount && PointCount < k_maxContactPoints; ++i)
+            for (int i = 0; i < manifold._pointCount && _pointCount < k_maxContactPoints; ++i)
             {
                 if (fixtureA == null)
                 {
-                    Points[i] = new ContactPoint();
+                    _points[i] = new ContactPoint();
                 }
-                ContactPoint cp = Points[PointCount];
-                cp.FixtureA = fixtureA;
-                cp.FixtureB = fixtureB;
-                cp.Position = worldManifold.Points[i];
-                cp.Normal = worldManifold.Normal;
-                cp.State = state2[i];
-                Points[PointCount] = cp;
-                ++PointCount;
+                ContactPoint cp = _points[_pointCount];
+                cp.fixtureA = fixtureA;
+                cp.fixtureB = fixtureB;
+                cp.position = worldManifold.Points[i];
+                cp.normal = worldManifold.Normal;
+                cp.state = state2[i];
+                _points[_pointCount] = cp;
+                ++_pointCount;
             }
         }
 
