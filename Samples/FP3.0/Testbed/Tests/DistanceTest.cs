@@ -53,9 +53,9 @@ namespace FarseerPhysics.TestBed.Tests
             return new DistanceTest();
         }
 
-        public override void Step(Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
-            base.Step(settings);
+            base.Update(settings);
 
             DistanceInput input = new DistanceInput();
             input.ProxyA.Set(_polygonA);
@@ -68,10 +68,10 @@ namespace FarseerPhysics.TestBed.Tests
             DistanceOutput output;
             Distance.ComputeDistance(out output, out cache, ref input);
 
-            _debugView.DrawString(50, TextLine, "distance = {0:n}", output.Distance);
+            DebugView.DrawString(50, TextLine, "distance = {0:n}", output.Distance);
             TextLine += 15;
 
-            _debugView.DrawString(50, TextLine, "iterations = {0:n}", output.Iterations);
+            DebugView.DrawString(50, TextLine, "iterations = {0:n}", output.Iterations);
             TextLine += 15;
 
             {
@@ -81,23 +81,23 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     v[i] = MathUtils.Multiply(ref _transformA, _polygonA.Vertices[i]);
                 }
-                _debugView.DrawPolygon(ref v, _polygonA.Vertices.Count, color);
+                DebugView.DrawPolygon(ref v, _polygonA.Vertices.Count, color);
 
                 for (int i = 0; i < _polygonB.Vertices.Count; ++i)
                 {
                     v[i] = MathUtils.Multiply(ref _transformB, _polygonB.Vertices[i]);
                 }
-                _debugView.DrawPolygon(ref v, _polygonB.Vertices.Count, color);
+                DebugView.DrawPolygon(ref v, _polygonB.Vertices.Count, color);
             }
 
             Vector2 x1 = output.PointA;
             Vector2 x2 = output.PointB;
 
 
-            _debugView.DrawPoint(x1, 0.5f, new Color(1.0f, 0.0f, 0.0f));
-            _debugView.DrawPoint(x2, 0.5f, new Color(1.0f, 0.0f, 0.0f));
+            DebugView.DrawPoint(x1, 0.5f, new Color(1.0f, 0.0f, 0.0f));
+            DebugView.DrawPoint(x2, 0.5f, new Color(1.0f, 0.0f, 0.0f));
 
-            _debugView.DrawSegment(x1, x2, new Color(1.0f, 1.0f, 0.0f));
+            DebugView.DrawSegment(x1, x2, new Color(1.0f, 1.0f, 0.0f));
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)

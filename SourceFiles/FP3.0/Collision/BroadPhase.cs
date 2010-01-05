@@ -128,9 +128,9 @@ namespace FarseerPhysics
         /// </summary>
         /// <param name="proxyId">The proxy id.</param>
         /// <returns></returns>
-	    public object GetUserData(int proxyId)
+        public T GetUserData<T>(int proxyId)
         {
-            return _tree.GetUserData(proxyId);
+            return _tree.GetUserData<T>(proxyId);
         }
 
         /// <summary>
@@ -156,7 +156,6 @@ namespace FarseerPhysics
         /// <summary>
         /// Update the pairs. This results in pair callbacks. This can only add pairs.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="callback">The callback.</param>
 	    public void UpdatePairs<T>(Action<T,T> callback)
         {
@@ -193,10 +192,8 @@ namespace FarseerPhysics
 	        while (i < _pairCount)
 	        {
 		        Pair primaryPair = _pairBuffer[i];
-                object userDataA = _tree.GetUserData(primaryPair.proxyIdA);
-                object userDataB = _tree.GetUserData(primaryPair.proxyIdB);
 
-		        callback((T)userDataA, (T)userDataB);
+                callback(_tree.GetUserData<T>(primaryPair.proxyIdA), _tree.GetUserData<T>(primaryPair.proxyIdB));
 		        ++i;
 
 		        // Skip any duplicate pairs.

@@ -70,15 +70,15 @@ namespace FarseerPhysics.TestBed.Tests
         }
 
         private Vector2[] vertices;
-        public override void Step(FarseerPhysics.TestBed.Framework.Settings settings)
+        public override void Update(FarseerPhysics.TestBed.Framework.Settings settings)
         {
             for (int i = 0; i < vertices.Length; i++)
             {
-                _debugView.DrawCircle(vertices[i],0.1f,Color.White);
+                DebugView.DrawCircle(vertices[i],0.1f,Color.White);
                 
             }
 
-            base.Step(settings);
+            base.Update(settings);
         }
 
         public static Test Create()

@@ -78,10 +78,10 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Step(Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
-            base.Step(settings);
-            _debugView.DrawString(50, TextLine, "Keys: (l) limits, (a) left, (s) off, (d) right");
+            base.Update(settings);
+            DebugView.DrawString(50, TextLine, "Keys: (l) limits, (a) left, (s) off, (d) right");
             TextLine += 15;
             //float torque1 = _joint1.GetMotorTorque();
             //_debugDraw.DrawString(50, TextLine, "Motor Torque = %4.0f, %4.0f : Motor Force = %4.0f", (float) torque1, (float) torque2, (float) force3);

@@ -118,7 +118,7 @@ namespace FarseerPhysics.TestBed.Tests
             body2.LinearVelocity = velocity2;
         }
 
-        public override void Step(Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
             if (_break)
             {
@@ -134,7 +134,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _angularVelocity = _body1.AngularVelocity;
             }
 
-            base.Step(settings);
+            base.Update(settings);
         }
 
         internal static Test Create()

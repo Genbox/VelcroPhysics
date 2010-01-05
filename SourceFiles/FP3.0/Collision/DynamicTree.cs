@@ -205,10 +205,10 @@ namespace FarseerPhysics
         /// </summary>
         /// <param name="proxyId">The proxy id.</param>
         /// <returns>the proxy user data or 0 if the id is invalid.</returns>
-        public object GetUserData(int proxyId)
+        public T GetUserData<T>(int proxyId)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
-            return _nodes[proxyId].UserData;
+            return (T)_nodes[proxyId].UserData;
         }
 
         /// <summary>
@@ -317,8 +317,8 @@ namespace FarseerPhysics
 
                 // Separating axis for segment (Gino, p80).
                 // |dot(v, p1 - c)| > dot(|v|, h)
-                Vector2 c = node.Aabb.GetCenter();
-                Vector2 h = node.Aabb.GetExtents();
+                Vector2 c = node.Aabb.Center;
+                Vector2 h = node.Aabb.Extents;
                 float separation = Math.Abs(Vector2.Dot(v, p1 - c)) - Vector2.Dot(abs_v, h);
                 if (separation > 0.0f)
                 {
@@ -415,7 +415,7 @@ namespace FarseerPhysics
             }
 
             // Find the best sibling for this node.
-            Vector2 center = _nodes[leaf].Aabb.GetCenter();
+            Vector2 center = _nodes[leaf].Aabb.Center;
             int sibling = _root;
             if (_nodes[sibling].IsLeaf() == false)
             {
@@ -424,8 +424,8 @@ namespace FarseerPhysics
                     int child1 = _nodes[sibling].Child1;
                     int child2 = _nodes[sibling].Child2;
 
-                    Vector2 delta1 = MathUtils.Abs(_nodes[child1].Aabb.GetCenter() - center);
-                    Vector2 delta2 = MathUtils.Abs(_nodes[child2].Aabb.GetCenter() - center);
+                    Vector2 delta1 = MathUtils.Abs(_nodes[child1].Aabb.Center - center);
+                    Vector2 delta2 = MathUtils.Abs(_nodes[child2].Aabb.Center - center);
 
                     float norm1 = delta1.X + delta1.Y;
                     float norm2 = delta2.X + delta2.Y;
@@ -447,7 +447,7 @@ namespace FarseerPhysics
             int node1 = _nodes[sibling].ParentOrNext;
             int node2 = AllocateNode();
             _nodes[node2].ParentOrNext = node1;
-            _nodes[node2].UserData = 0;
+            //_nodes[node2].UserData = 0;
             _nodes[node2].Aabb.Combine(ref _nodes[leaf].Aabb, ref _nodes[sibling].Aabb);
 
             if (node1 != NullNode)

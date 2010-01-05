@@ -68,13 +68,13 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Step(Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
-            base.Step(settings);
+            base.Update(settings);
 
             float ratio = _joint1.Ratio;
             float L = _joint1.LengthA + ratio * _joint1.LengthB;
-            _debugView.DrawString(50, TextLine, "L1 + {0:n} * L2 = {1:n}", ratio, L);
+            DebugView.DrawString(50, TextLine, "L1 + {0:n} * L2 = {1:n}", ratio, L);
             TextLine += 15;
         }
 

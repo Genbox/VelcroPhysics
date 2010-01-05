@@ -258,15 +258,15 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Step(Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
-            base.Step(settings);
+            base.Update(settings);
 
             PolyShapesCallback callback = new PolyShapesCallback();
             callback._circle.Radius = 2.0f;
             callback._circle.Position = new Vector2(0.0f, 2.1f);
             callback._transform.SetIdentity();
-            callback._debugDraw = _debugView;
+            callback._debugDraw = DebugView;
 
             AABB aabb;
             callback._circle.ComputeAABB(out aabb, ref callback._transform);
@@ -274,13 +274,13 @@ namespace FarseerPhysics.TestBed.Tests
             World.QueryAABB(callback.ReportFixture, ref aabb);
 
             Color color = new Color(0.4f, 0.7f, 0.8f);
-            _debugView.DrawCircle(callback._circle.Position, callback._circle.Radius, color);
+            DebugView.DrawCircle(callback._circle.Position, callback._circle.Radius, color);
 
-            _debugView.DrawString(50, TextLine, "Press 1-5 to drop stuff");
+            DebugView.DrawString(50, TextLine, "Press 1-5 to drop stuff");
             TextLine += 15;
-            _debugView.DrawString(50, TextLine, "Press a to (de)activate some bodies");
+            DebugView.DrawString(50, TextLine, "Press a to (de)activate some bodies");
             TextLine += 15;
-            _debugView.DrawString(50, TextLine, "Press d to destroy a body");
+            DebugView.DrawString(50, TextLine, "Press d to destroy a body");
             TextLine += 15;
         }
 

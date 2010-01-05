@@ -6,7 +6,7 @@ using System;
 
 namespace FarseerPhysics
 {
-    public struct ContactConstraintPoint
+    public class ContactConstraintPoint
     {
         public Vector2 LocalPoint;
         public Vector2 RA;
@@ -21,7 +21,15 @@ namespace FarseerPhysics
 
     public class ContactConstraint
     {
-        public FixedArray2<ContactConstraintPoint> Points;
+        public ContactConstraint()
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                Points[i] = new ContactConstraintPoint();
+            }
+        }
+
+        public ContactConstraintPoint[] Points = new ContactConstraintPoint[2];
         public Vector2 LocalPlaneNormal;
         public Vector2 LocalPoint;
         public Vector2 Normal;
@@ -64,6 +72,12 @@ namespace FarseerPhysics
                     Constraints[i] = new ContactConstraint();
                 }
             }
+
+            // grow the array
+            //if (Constraints == null || Constraints.Length < _constraintCount)
+            //{
+            //    Constraints = new ContactConstraint[_constraintCount * 2];
+            //}
 
             for (int i = 0; i < _constraintCount; ++i)
             {
@@ -194,6 +208,8 @@ namespace FarseerPhysics
                         cc.PointCount = 1;
                     }
                 }
+
+                //Constraints[i] = cc;
             }
         }
 
@@ -244,6 +260,8 @@ namespace FarseerPhysics
                         c.Points[j] = ccp;
                     }
                 }
+
+                //Constraints[i] = c;
 
             }
         }
@@ -591,6 +609,8 @@ namespace FarseerPhysics
                     cc.Points[1] = cp2;
                 }
 
+                //Constraints[i] = cc;
+
                 bodyA._linearVelocity = vA;
                 bodyA._angularVelocity = wA;
                 bodyB._linearVelocity = vB;
@@ -618,6 +638,7 @@ namespace FarseerPhysics
 
                 // TODO: look for better ways of doing this.
                 c.Manifold = m;
+                //Constraints[i] = c;
                 _contacts[i].Manifold = m;
             }
         }

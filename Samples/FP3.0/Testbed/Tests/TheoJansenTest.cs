@@ -196,12 +196,12 @@ namespace FarseerPhysics.TestBed.Tests
             CreateLeg(1.0f, wheelAnchor);
         }
 
-        public override void Step(Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
-            _debugView.DrawString(50, TextLine, "Keys: left = a, brake = s, right = d, toggle motor = m");
+            DebugView.DrawString(50, TextLine, "Keys: left = a, brake = s, right = d, toggle motor = m");
             TextLine += 15;
 
-            base.Step(settings);
+            base.Update(settings);
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)

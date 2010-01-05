@@ -380,33 +380,36 @@ namespace FarseerPhysics
         /// <summary>
         /// Verify that the bounds are sorted.
         /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if this instance is valid; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsValid()
+        /// <value>
+        ///   &lt;c&gt;true&lt;/c&gt; if this instance is valid; otherwise, &lt;c&gt;false&lt;/c&gt;.
+        /// </value>
+        public bool Valid
         {
-            Vector2 d = UpperBound - LowerBound;
-            bool valid = d.X >= 0.0f && d.Y >= 0.0f;
-            valid = valid && LowerBound.IsValid() && UpperBound.IsValid();
-            return valid;
+            get
+            {
+                Vector2 d = UpperBound - LowerBound;
+                bool valid = d.X >= 0.0f && d.Y >= 0.0f;
+                valid = valid && LowerBound.IsValid() && UpperBound.IsValid();
+                return valid;
+            }
         }
 
         /// <summary>
         /// Get the center of the AABB.
         /// </summary>
-        /// <returns></returns>
-        public Vector2 GetCenter()
+        /// <value></value>
+        public Vector2 Center
         {
-            return 0.5f * (LowerBound + UpperBound);
+            get { return 0.5f*(LowerBound + UpperBound); }
         }
 
         /// <summary>
         /// Get the extents of the AABB (half-widths).
         /// </summary>
-        /// <returns></returns>
-        public Vector2 GetExtents()
+        /// <value></value>
+        public Vector2 Extents
         {
-            return 0.5f * (UpperBound - LowerBound);
+            get { return 0.5f*(UpperBound - LowerBound); }
         }
 
         /// <summary>
