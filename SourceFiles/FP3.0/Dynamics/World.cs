@@ -56,11 +56,9 @@ namespace FarseerPhysics
         private Island _island = new Island();
         private Func<Fixture, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
-        private Body[] _queue;
 
         private WorldRayCastCallback _rayCastCallback;
         private RayCastCallback _rayCastCallbackWrapper;
-        private Body[] _stack;
 
         /// <summary>
         /// Construct a world object.
@@ -560,7 +558,7 @@ namespace FarseerPhysics
 
         private bool QueryAABBCallbackWrapper(int proxyId)
         {
-            Fixture fixture = ContactManager._broadPhase.GetUserData<Fixture>(proxyId);
+            Fixture fixture = (Fixture)ContactManager._broadPhase.GetUserData(proxyId);
             return _queryAABBCallback(fixture);
         }
 
@@ -586,7 +584,8 @@ namespace FarseerPhysics
 
         private float RayCastCallbackWrapper(ref RayCastInput input, int proxyId)
         {
-            Fixture fixture = ContactManager._broadPhase.GetUserData<Fixture>(proxyId);
+            object userData = ContactManager._broadPhase.GetUserData(proxyId);
+            Fixture fixture = (Fixture)userData;
             RayCastOutput output;
             bool hit = fixture.RayCast(out output, ref input);
 
@@ -599,6 +598,8 @@ namespace FarseerPhysics
 
             return input.MaxFraction;
         }
+
+        private Body[] _stack;
 
         private void Solve(ref TimeStep step)
         {
@@ -613,7 +614,7 @@ namespace FarseerPhysics
             {
                 b._flags &= ~BodyFlags.Island;
             }
-            for (Contact c = ContactManager._contactList; c != null; c = c.NextContact)
+            for (Contact c = ContactManager._contactList; c != null; c = c.Next)
             {
                 c.Flags &= ~ContactFlags.Island;
             }
@@ -683,7 +684,7 @@ namespace FarseerPhysics
                         }
 
                         // Is this contact solid and touching?
-                        if (ce.Contact.Sensor || !ce.Contact.Enabled || !ce.Contact.Touching)
+                        if (ce.Contact.IsSensor() || !ce.Contact.IsEnabled() || !ce.Contact.IsTouching())
                         {
                             continue;
                         }
@@ -769,6 +770,8 @@ namespace FarseerPhysics
             ContactManager.FindNewContacts();
         }
 
+        private Body[] _queue;
+
         private void SolveTOI(ref TimeStep step)
         {
             // Reserve an island and a queue for TOI island solution.
@@ -797,7 +800,7 @@ namespace FarseerPhysics
                 b._sweep.TimeInt0 = 0.0f;
             }
 
-            for (Contact c = ContactManager._contactList; c != null; c = c.NextContact)
+            for (Contact c = ContactManager._contactList; c != null; c = c.Next)
             {
                 // Invalidate TOI
                 c.Flags &= ~(ContactFlags.Toi | ContactFlags.Island);
@@ -815,10 +818,10 @@ namespace FarseerPhysics
                 Contact minContact = null;
                 float minTOI = 1.0f;
 
-                for (Contact c = ContactManager._contactList; c != null; c = c.NextContact)
+                for (Contact c = ContactManager._contactList; c != null; c = c.Next)
                 {
                     // Can this contact generate a solid TOI contact?
-                    if (c.Sensor || c.Enabled == false || c.Continuous == false)
+                    if (c.IsSensor() || c.IsEnabled() == false || c.IsContinuous() == false)
                     {
                         continue;
                     }
@@ -829,13 +832,13 @@ namespace FarseerPhysics
                     if ((c.Flags & ContactFlags.Toi) != ContactFlags.None)
                     {
                         // This contact has a valid cached TOI.
-                        toi = c.TOI;
+                        toi = c.Toi;
                     }
                     else
                     {
                         // Compute the TOI for this contact.
-                        Fixture s1 = c.FixtureA;
-                        Fixture s2 = c.FixtureB;
+                        Fixture s1 = c.GetFixtureA();
+                        Fixture s2 = c.GetFixtureB();
                         Body b1 = s1.Body;
                         Body b2 = s2.Body;
 
@@ -874,7 +877,7 @@ namespace FarseerPhysics
                         }
 
 
-                        c.TOI = toi;
+                        c.Toi = toi;
                         c.Flags |= ContactFlags.Toi;
                     }
 
@@ -893,44 +896,44 @@ namespace FarseerPhysics
                 }
 
                 // Advance the bodies to the TOI.
-                Fixture s12 = minContact.FixtureA;
-                Fixture s22 = minContact.FixtureB;
-                Body b12 = s12.Body;
-                Body b22 = s22.Body;
+                Fixture s1_2 = minContact.GetFixtureA();
+                Fixture s2_2 = minContact.GetFixtureB();
+                Body b1_2 = s1_2.Body;
+                Body b2_2 = s2_2.Body;
 
-                Sweep backup1 = b12._sweep;
-                Sweep backup2 = b22._sweep;
+                Sweep backup1 = b1_2._sweep;
+                Sweep backup2 = b2_2._sweep;
 
-                b12.Advance(minTOI);
-                b22.Advance(minTOI);
+                b1_2.Advance(minTOI);
+                b2_2.Advance(minTOI);
 
                 // The TOI contact likely has some new contact points.
                 minContact.Update(ContactManager);
                 minContact.Flags &= ~ContactFlags.Toi;
 
                 // Is the contact solid?
-                if (minContact.Sensor || !minContact.Enabled)
+                if (minContact.IsSensor() || !minContact.IsEnabled())
                 {
                     // Restore the sweeps.
-                    b12._sweep = backup1;
-                    b22._sweep = backup2;
-                    b12.SynchronizeTransform();
-                    b22.SynchronizeTransform();
+                    b1_2._sweep = backup1;
+                    b2_2._sweep = backup2;
+                    b1_2.SynchronizeTransform();
+                    b2_2.SynchronizeTransform();
                     continue;
                 }
 
                 // Did numerical issues prevent a contact point from being generated?
-                if (!minContact.Touching)
+                if (!minContact.IsTouching())
                 {
                     // Give up on this TOI.
                     continue;
                 }
 
                 // Build the TOI island. We need a dynamic seed.
-                Body seed = b12;
+                Body seed = b1_2;
                 if (seed.BodyType != BodyType.Dynamic)
                 {
-                    seed = b22;
+                    seed = b2_2;
                 }
 
                 // Reset island and queue.
@@ -968,7 +971,7 @@ namespace FarseerPhysics
                     for (ContactEdge cEdge = b._contactList; cEdge != null; cEdge = cEdge.Next)
                     {
                         // Does the TOI island still have space for contacts?
-                        if (_island.ContactCount == _island.ContactCapacity)
+                        if (_island.ContactCount == _island._contactCapacity)
                         {
                             break;
                         }
@@ -980,9 +983,9 @@ namespace FarseerPhysics
                         }
 
                         // Skip separate, sensor, or disabled contacts.
-                        if (cEdge.Contact.Sensor ||
-                            cEdge.Contact.Enabled == false ||
-                            cEdge.Contact.Touching == false)
+                        if (cEdge.Contact.IsSensor() ||
+                            cEdge.Contact.IsEnabled() == false ||
+                            cEdge.Contact.IsTouching() == false)
                         {
                             continue;
                         }
@@ -1014,7 +1017,7 @@ namespace FarseerPhysics
 
                     for (JointEdge jEdge = b._jointList; jEdge != null; jEdge = jEdge.Next)
                     {
-                        if (_island.JointCount == _island.JointCapacity)
+                        if (_island.JointCount == _island._jointCapacity)
                         {
                             continue;
                         }
