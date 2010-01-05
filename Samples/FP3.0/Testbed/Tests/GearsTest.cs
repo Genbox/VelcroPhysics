@@ -94,18 +94,18 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Step(Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
-            base.Step(settings);
+            base.Update(settings);
 
             float ratio = _joint4.Ratio;
             float value = _joint1.JointAngle + ratio * _joint2.JointAngle;
-            _debugView.DrawString(50, TextLine, "theta1 + {0:n} * theta2 = {1:n}", ratio, value);
+            DebugView.DrawString(50, TextLine, "theta1 + {0:n} * theta2 = {1:n}", ratio, value);
             TextLine += 15;
 
             ratio = _joint5.Ratio;
             value = _joint2.JointAngle + ratio * _joint3.JointTranslation;
-            _debugView.DrawString(50, TextLine, "theta2 + {0:n} * delta = {1:n}", ratio, value);
+            DebugView.DrawString(50, TextLine, "theta2 + {0:n} * delta = {1:n}", ratio, value);
             TextLine += 15;
         }
 

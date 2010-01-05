@@ -99,16 +99,16 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Step(Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
-            uint oldFlag = settings.enableContinuous;
+            uint oldFlag = settings.EnableContinuous;
 
-            settings.enableContinuous = 0;
-            base.Step(settings);
-            _debugView.DrawString(5, TextLine, "Press 'c' to create a circle.");
+            settings.EnableContinuous = 0;
+            base.Update(settings);
+            DebugView.DrawString(5, TextLine, "Press 'c' to create a circle.");
             TextLine += 15;
 
-            settings.enableContinuous = oldFlag;
+            settings.EnableContinuous = oldFlag;
         }
 
         internal static Test Create()

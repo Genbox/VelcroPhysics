@@ -34,35 +34,43 @@ namespace FarseerPhysics.TestBed
     /// </summary>
     public class Game1 : Game
     {
-        private const float settingsHz = 60.0f;
-        private IEventTrace et;
-        private TestEntry entry;
-        private GraphicsDeviceManager graphics;
-        private int height = 480;
-        private GamePadState oldGamePad;
-        private KeyboardState oldKeyboardState;
-        private MouseState oldMouseState;
-        private Framework.Settings settings = new Framework.Settings();
-        private BasicEffect simpleColorEffect;
-        private SpriteBatch spriteBatch;
-        private SpriteFont spriteFont;
-        private Test test;
-        private int testCount;
-        private int testIndex;
-        private int testSelection;
-        int th;
-        int tw;
-        private VertexDeclaration vertexDecl;
-        private Vector2 viewCenter = new Vector2(0.0f, 20.0f);
-        private float viewZoom = 1.0f;
-        private int width = 640;
+        private const float SettingsHz = 60.0f;
+        private IEventTrace _et;
+        private TestEntry _entry;
+        private GraphicsDeviceManager _graphics;
+        private int _height = 480;
+        private GamePadState _oldGamePad;
+        private KeyboardState _oldKeyboardState;
+        private MouseState _oldMouseState;
+        private Framework.Settings _settings = new Framework.Settings();
+        private BasicEffect _simpleColorEffect;
+        private SpriteBatch _spriteBatch;
+        private SpriteFont _spriteFont;
+        private Test _test;
+        private int _testCount;
+        private int _testIndex;
+        private int _testSelection;
+        int _th;
+        int _tw;
+        private VertexDeclaration _vertexDecl;
+        private Vector2 _viewCenter = new Vector2(0.0f, 20.0f);
+        private float _viewZoom = 1.0f;
+        private int _width = 640;
+        private bool _traceEnabled;
+        private bool _drawEnabled;
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            graphics.PreferMultiSampling = true;
+            _graphics.PreferMultiSampling = true;
+
+#if (!XBOX360)
             IsMouseVisible = true;
+#endif
+
+            _traceEnabled = false;
+            _drawEnabled = false;
             //graphics.IsFullScreen = true;
         }
 
@@ -76,28 +84,29 @@ namespace FarseerPhysics.TestBed
         {
             base.Initialize();
 
-            et = new EventTrace(this);
-            TraceEvents.Register(et);
-
-            testCount = 0;
-            while (TestEntries.g_testEntries[testCount].createFcn != null)
+            if (_traceEnabled)
             {
-                ++testCount;
+                _et = new EventTrace(this);
+                TraceEvents.Register(_et);
             }
 
-            testIndex = MathUtils.Clamp(testIndex, 0, testCount - 1);
-            testSelection = testIndex;
-            StartTest(testIndex);
+            _testCount = 0;
+            while (TestEntries.g_testEntries[_testCount].CreateFcn != null)
+            {
+                ++_testCount;
+            }
 
-            //settings.drawAABBs = 1;
+            _testIndex = MathUtils.Clamp(_testIndex, 0, _testCount - 1);
+            _testSelection = _testIndex;
+            StartTest(_testIndex);
         }
 
         private void StartTest(int index)
         {
-            entry = TestEntries.g_testEntries[index];
-            test = entry.createFcn();
-            test.GameInstance = this;
-            test.Initialize();
+            _entry = TestEntries.g_testEntries[index];
+            _test = _entry.CreateFcn();
+            _test.GameInstance = this;
+            _test.Initialize();
         }
 
         /// <summary>
@@ -107,19 +116,19 @@ namespace FarseerPhysics.TestBed
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            spriteFont = Content.Load<SpriteFont>("font");
-            simpleColorEffect = new BasicEffect(GraphicsDevice, null);
-            simpleColorEffect.VertexColorEnabled = true;
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteFont = Content.Load<SpriteFont>("font");
+            _simpleColorEffect = new BasicEffect(GraphicsDevice, null);
+            _simpleColorEffect.VertexColorEnabled = true;
 
-            vertexDecl = new VertexDeclaration(GraphicsDevice, VertexPositionColor.VertexElements);
+            _vertexDecl = new VertexDeclaration(GraphicsDevice, VertexPositionColor.VertexElements);
             DebugViewXNA.DebugViewXNA._device = GraphicsDevice;
-            DebugViewXNA.DebugViewXNA._batch = spriteBatch;
-            DebugViewXNA.DebugViewXNA._font = spriteFont;
+            DebugViewXNA.DebugViewXNA._batch = _spriteBatch;
+            DebugViewXNA.DebugViewXNA._font = _spriteFont;
 
-            oldKeyboardState = Keyboard.GetState();
-            oldMouseState = Mouse.GetState();
-            oldGamePad = GamePad.GetState(PlayerIndex.One);
+            _oldKeyboardState = Keyboard.GetState();
+            _oldMouseState = Mouse.GetState();
+            _oldGamePad = GamePad.GetState(PlayerIndex.One);
 
             Resize(GraphicsDevice.PresentationParameters.BackBufferWidth,
                    GraphicsDevice.PresentationParameters.BackBufferHeight);
@@ -132,8 +141,10 @@ namespace FarseerPhysics.TestBed
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            et.BeginTrace(TraceEvents.UpdateEventId);
-
+            if (_traceEnabled)
+            {
+                _et.BeginTrace(TraceEvents.UpdateEventId);
+            }
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
@@ -142,107 +153,125 @@ namespace FarseerPhysics.TestBed
             GamePadState newGamePad = GamePad.GetState(PlayerIndex.One);
 
             // Press 'z' to zoom out.
-            if (newKeyboardState.IsKeyDown(Keys.Z) && oldKeyboardState.IsKeyUp(Keys.Z))
+            if (newKeyboardState.IsKeyDown(Keys.Z) && _oldKeyboardState.IsKeyUp(Keys.Z))
             {
-                viewZoom = Math.Min(1.1f * viewZoom, 20.0f);
-                Resize(width, height);
+                _viewZoom = Math.Min(1.1f * _viewZoom, 20.0f);
+                Resize(_width, _height);
             }
             // Press 'x' to zoom in.
-            else if (newKeyboardState.IsKeyDown(Keys.X) && oldKeyboardState.IsKeyUp(Keys.X))
+            else if (newKeyboardState.IsKeyDown(Keys.X) && _oldKeyboardState.IsKeyUp(Keys.X))
             {
-                viewZoom = Math.Max(0.9f * viewZoom, 0.02f);
-                Resize(width, height);
+                _viewZoom = Math.Max(0.9f * _viewZoom, 0.02f);
+                Resize(_width, _height);
             }
             // Press 'r' to reset.
-            else if (newKeyboardState.IsKeyDown(Keys.R) && oldKeyboardState.IsKeyUp(Keys.R))
+            else if (newKeyboardState.IsKeyDown(Keys.R) && _oldKeyboardState.IsKeyUp(Keys.R))
             {
                 Restart();
             }
             // Press space to launch a bomb.
-            else if ((newKeyboardState.IsKeyDown(Keys.Space) && oldKeyboardState.IsKeyUp(Keys.Space)) ||
-                     newGamePad.IsButtonDown(Buttons.B) && oldGamePad.IsButtonUp(Buttons.B))
+            else if ((newKeyboardState.IsKeyDown(Keys.Space) && _oldKeyboardState.IsKeyUp(Keys.Space)) ||
+                     newGamePad.IsButtonDown(Buttons.B) && _oldGamePad.IsButtonUp(Buttons.B))
             {
-                if (test != null)
+                if (_test != null)
                 {
-                    test.LaunchBomb();
+                    _test.LaunchBomb();
                 }
             }
-            else if ((newKeyboardState.IsKeyDown(Keys.P) && oldKeyboardState.IsKeyUp(Keys.P)) ||
-                     newGamePad.IsButtonDown(Buttons.Start) && oldGamePad.IsButtonUp(Buttons.Start))
+            else if ((newKeyboardState.IsKeyDown(Keys.P) && _oldKeyboardState.IsKeyUp(Keys.P)) ||
+                     newGamePad.IsButtonDown(Buttons.Start) && _oldGamePad.IsButtonUp(Buttons.Start))
             {
-                settings.pause = settings.pause > 0 ? 1 : (uint)0;
+                _settings.Pause = _settings.Pause > 0 ? 1 : (uint)0;
             }
             // Press I to prev test.
-            else if ((newKeyboardState.IsKeyDown(Keys.I) && oldKeyboardState.IsKeyUp(Keys.I)) ||
-                     newGamePad.IsButtonDown(Buttons.LeftShoulder) && oldGamePad.IsButtonUp(Buttons.LeftShoulder))
+            else if ((newKeyboardState.IsKeyDown(Keys.I) && _oldKeyboardState.IsKeyUp(Keys.I)) ||
+                     newGamePad.IsButtonDown(Buttons.LeftShoulder) && _oldGamePad.IsButtonUp(Buttons.LeftShoulder))
             {
-                --testSelection;
-                if (testSelection < 0)
+                --_testSelection;
+                if (_testSelection < 0)
                 {
-                    testSelection = testCount - 1;
+                    _testSelection = _testCount - 1;
                 }
             }
             // Press O to next test.
-            else if ((newKeyboardState.IsKeyDown(Keys.O) && oldKeyboardState.IsKeyUp(Keys.O)) ||
-                     newGamePad.IsButtonDown(Buttons.RightShoulder) && oldGamePad.IsButtonUp(Buttons.RightShoulder))
+            else if ((newKeyboardState.IsKeyDown(Keys.O) && _oldKeyboardState.IsKeyUp(Keys.O)) ||
+                     newGamePad.IsButtonDown(Buttons.RightShoulder) && _oldGamePad.IsButtonUp(Buttons.RightShoulder))
             {
-                ++testSelection;
-                if (testSelection == testCount)
+                ++_testSelection;
+                if (_testSelection == _testCount)
                 {
-                    testSelection = 0;
+                    _testSelection = 0;
                 }
             }
             // Press left to pan left.
-            else if (newKeyboardState.IsKeyDown(Keys.Left) && oldKeyboardState.IsKeyUp(Keys.Left))
+            else if (newKeyboardState.IsKeyDown(Keys.Left) && _oldKeyboardState.IsKeyUp(Keys.Left))
             {
-                viewCenter.X -= 0.5f;
-                Resize(width, height);
+                _viewCenter.X -= 0.5f;
+                Resize(_width, _height);
             }
             // Press right to pan right.
-            else if (newKeyboardState.IsKeyDown(Keys.Right) && oldKeyboardState.IsKeyUp(Keys.Right))
+            else if (newKeyboardState.IsKeyDown(Keys.Right) && _oldKeyboardState.IsKeyUp(Keys.Right))
             {
-                viewCenter.X += 0.5f;
-                Resize(width, height);
+                _viewCenter.X += 0.5f;
+                Resize(_width, _height);
             }
             // Press down to pan down.
-            else if (newKeyboardState.IsKeyDown(Keys.Down) && oldKeyboardState.IsKeyUp(Keys.Down))
+            else if (newKeyboardState.IsKeyDown(Keys.Down) && _oldKeyboardState.IsKeyUp(Keys.Down))
             {
-                viewCenter.Y -= 0.5f;
-                Resize(width, height);
+                _viewCenter.Y -= 0.5f;
+                Resize(_width, _height);
             }
             // Press up to pan up.
-            else if (newKeyboardState.IsKeyDown(Keys.Up) && oldKeyboardState.IsKeyUp(Keys.Up))
+            else if (newKeyboardState.IsKeyDown(Keys.Up) && _oldKeyboardState.IsKeyUp(Keys.Up))
             {
-                viewCenter.Y += 0.5f;
-                Resize(width, height);
+                _viewCenter.Y += 0.5f;
+                Resize(_width, _height);
             }
             // Press home to reset the view.
-            else if (newKeyboardState.IsKeyDown(Keys.Home) && oldKeyboardState.IsKeyUp(Keys.Home))
+            else if (newKeyboardState.IsKeyDown(Keys.Home) && _oldKeyboardState.IsKeyUp(Keys.Home))
             {
-                viewZoom = 1.0f;
-                viewCenter = new Vector2(0.0f, 20.0f);
-                Resize(width, height);
+                _viewZoom = 1.0f;
+                _viewCenter = new Vector2(0.0f, 20.0f);
+                Resize(_width, _height);
             }
             else
             {
-                if (test != null)
+                if (_test != null)
                 {
-                    test.Keyboard(newKeyboardState, oldKeyboardState);
+                    _test.Keyboard(newKeyboardState, _oldKeyboardState);
                 }
             }
 
             MouseState newMouseState = Mouse.GetState();
 
-            if (test != null)
-                test.Mouse(newMouseState, oldMouseState);
+            if (_test != null)
+                _test.Mouse(newMouseState, _oldMouseState);
 
             base.Update(gameTime);
 
-            oldKeyboardState = newKeyboardState;
-            oldMouseState = newMouseState;
-            oldGamePad = newGamePad;
+            _oldKeyboardState = newKeyboardState;
+            _oldMouseState = newMouseState;
+            _oldGamePad = newGamePad;
 
-            et.EndTrace(TraceEvents.UpdateEventId);
+            if (_traceEnabled)
+            {
+                _et.EndTrace(TraceEvents.UpdateEventId);
+            }
+
+            if (_traceEnabled)
+            {
+                _et.BeginTrace(TraceEvents.PhysicsEventId);
+            }
+
+            _test.SetTextLine(30);
+            _settings.Hz = SettingsHz;
+
+            _test.Update(_settings);
+
+            if (_traceEnabled)
+            {
+                _et.EndTrace(TraceEvents.PhysicsEventId);
+            }
         }
 
         /// <summary>
@@ -251,83 +280,86 @@ namespace FarseerPhysics.TestBed
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            et.BeginTrace(TraceEvents.DrawEventId);
-            GraphicsDevice.Clear(Color.Black);
-
-            GraphicsDevice.VertexDeclaration = vertexDecl;
-            simpleColorEffect.Begin();
-            simpleColorEffect.Techniques[0].Passes[0].Begin();
-
-            test.SetTextLine(30);
-            settings.hz = settingsHz;
-
-            et.BeginTrace(TraceEvents.PhysicsEventId);
-            test.Step(settings);
-            et.EndTrace(TraceEvents.PhysicsEventId);
-
-            test.DrawTitle(50, 15, entry.name);
-
-            if (testSelection != testIndex)
+            if (_drawEnabled)
             {
-                testIndex = testSelection;
-                StartTest(testIndex);
-                viewZoom = 1.0f;
-                viewCenter = new Vector2(0.0f, 20.0f);
-                Resize(width, height);
+                if (_traceEnabled)
+                {
+                    _et.BeginTrace(TraceEvents.DrawEventId);
+                }
+
+                GraphicsDevice.Clear(Color.Black);
+
+                GraphicsDevice.VertexDeclaration = _vertexDecl;
+                _simpleColorEffect.Begin();
+                _simpleColorEffect.Techniques[0].Passes[0].Begin();
+
+                _test.DrawTitle(50, 15, _entry.Name);
+
+                if (_testSelection != _testIndex)
+                {
+                    _testIndex = _testSelection;
+                    StartTest(_testIndex);
+                    _viewZoom = 1.0f;
+                    _viewCenter = new Vector2(0.0f, 20.0f);
+                    Resize(_width, _height);
+                }
+
+                _test.DebugView.FinishDrawShapes();
+
+                _simpleColorEffect.Techniques[0].Passes[0].End();
+                _simpleColorEffect.End();
+
+                if (_test != null)
+                {
+                    _spriteBatch.Begin();
+                    _test.DebugView.FinishDrawString();
+                    _spriteBatch.End();
+                }
+                base.Draw(gameTime);
+
+                if (_traceEnabled)
+                {
+                    _et.EndTrace(TraceEvents.DrawEventId);
+                    _et.EndTrace(TraceEvents.FrameEventId);
+                    _et.ResetFrame();
+                    _et.BeginTrace(TraceEvents.FrameEventId);
+                }
             }
-
-            test._debugView.FinishDrawShapes();
-
-            simpleColorEffect.Techniques[0].Passes[0].End();
-            simpleColorEffect.End();
-
-            if (test != null)
-            {
-                spriteBatch.Begin();
-                test._debugView.FinishDrawString();
-                spriteBatch.End();
-            }
-            base.Draw(gameTime);
-
-            et.EndTrace(TraceEvents.DrawEventId);
-            et.EndTrace(TraceEvents.FrameEventId);
-            et.ResetFrame();
-            et.BeginTrace(TraceEvents.FrameEventId);
         }
 
         private void Resize(int w, int h)
         {
-            width = w;
-            height = h;
+            _width = w;
+            _height = h;
 
-            tw = GraphicsDevice.Viewport.Width;
-            th = GraphicsDevice.Viewport.Height;
+            _tw = GraphicsDevice.Viewport.Width;
+            _th = GraphicsDevice.Viewport.Height;
 
-            float ratio = (float)tw / (float)th;
+            float ratio = (float)_tw / (float)_th;
 
             Vector2 extents = new Vector2(ratio * 25.0f, 25.0f);
-            extents *= viewZoom;
+            extents *= _viewZoom;
 
-            Vector2 lower = viewCenter - extents;
-            Vector2 upper = viewCenter + extents;
+            Vector2 lower = _viewCenter - extents;
+            Vector2 upper = _viewCenter + extents;
 
             // L/R/B/T
-            simpleColorEffect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(lower.X, upper.X,
+            _simpleColorEffect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(lower.X, upper.X,
                                                                                                    lower.Y, upper.Y, -1,
                                                                                                    1));
         }
 
         public Vector2 ConvertScreenToWorld(int x, int y)
         {
-            float u = x / (float)tw;
-            float v = (th - y) / (float)th;
+            float u = x / (float)_tw;
+            float v = (_th - y) / (float)_th;
 
-            float ratio = (float)tw / (float)th;
+            float ratio = (float)_tw / (float)_th;
             Vector2 extents = new Vector2(ratio * 25.0f, 25.0f);
-            extents *= viewZoom;
+            extents *= _viewZoom;
 
-            Vector2 lower = viewCenter - extents;
-            Vector2 upper = viewCenter + extents;
+            Vector2 lower = _viewCenter - extents;
+            Vector2 upper = _viewCenter + extents;
 
             Vector2 p = new Vector2();
             p.X = (1.0f - u) * lower.X + u * upper.X;
@@ -337,19 +369,19 @@ namespace FarseerPhysics.TestBed
 
         private void Restart()
         {
-            StartTest(testIndex);
-            Resize(width, height);
+            StartTest(_testIndex);
+            Resize(_width, _height);
         }
 
         private void Pause()
         {
-            settings.pause = (uint)(settings.pause > 0 ? 0 : 1);
+            _settings.Pause = (uint)(_settings.Pause > 0 ? 0 : 1);
         }
 
         private void SingleStep()
         {
-            settings.pause = 1;
-            settings.singleStep = 1;
+            _settings.Pause = 1;
+            _settings.SingleStep = 1;
         }
     }
 }

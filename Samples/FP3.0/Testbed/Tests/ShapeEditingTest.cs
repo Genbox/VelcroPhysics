@@ -69,10 +69,10 @@ namespace FarseerPhysics.TestBed.Tests
         }
 
 
-        public override void Step(Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
-            base.Step(settings);
-            _debugView.DrawString(50, TextLine, "Press: (c) create a shape, (d) destroy a shape.");
+            base.Update(settings);
+            DebugView.DrawString(50, TextLine, "Press: (c) create a shape, (d) destroy a shape.");
             TextLine += 15;
         }
 

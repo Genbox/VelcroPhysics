@@ -70,8 +70,8 @@ namespace FarseerPhysics.DebugViewXNA
                     fixtureA.GetAABB(out aabbA);
                     fixtureB.GetAABB(out aabbB);
 
-                    Vector2 cA = aabbA.GetCenter();
-                    Vector2 cB = aabbB.GetCenter();
+                    Vector2 cA = aabbA.Center;
+                    Vector2 cB = aabbB.Center;
 
                     DrawSegment(cA, cB, color);
                 }

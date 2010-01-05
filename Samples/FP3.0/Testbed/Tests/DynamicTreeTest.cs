@@ -67,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
             return new DynamicTreeTest();
         }
 
-        public override void Step(Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
             _rayActor = null;
             for (int i = 0; i < ActorCount; ++i)
@@ -109,24 +109,24 @@ namespace FarseerPhysics.TestBed.Tests
                     ca = new Color(0.6f, 0.6f, 0.9f);
                 }
 
-                _debugView.DrawAABB(ref actor.aabb, ca);
+                DebugView.DrawAABB(ref actor.aabb, ca);
             }
 
             Color c = new Color(0.7f, 0.7f, 0.7f);
-            _debugView.DrawAABB(ref _queryAABB, c);
+            DebugView.DrawAABB(ref _queryAABB, c);
 
-            _debugView.DrawSegment(_rayCastInput.Point1, _rayCastInput.Point2, c);
+            DebugView.DrawSegment(_rayCastInput.Point1, _rayCastInput.Point2, c);
 
             Color c1 = new Color(0.2f, 0.9f, 0.2f);
             Color c2 = new Color(0.9f, 0.2f, 0.2f);
-            _debugView.DrawPoint(_rayCastInput.Point1, 6.0f, c1);
-            _debugView.DrawPoint(_rayCastInput.Point2, 6.0f, c2);
+            DebugView.DrawPoint(_rayCastInput.Point1, 6.0f, c1);
+            DebugView.DrawPoint(_rayCastInput.Point2, 6.0f, c2);
 
             if (_rayActor != null)
             {
                 Color cr = new Color(0.2f, 0.2f, 0.9f);
                 Vector2 p = _rayCastInput.Point1 + _rayActor.fraction * (_rayCastInput.Point2 - _rayCastInput.Point1);
-                _debugView.DrawPoint(p, 6.0f, cr);
+                DebugView.DrawPoint(p, 6.0f, cr);
             }
 
             ++_stepCount;
@@ -154,14 +154,14 @@ namespace FarseerPhysics.TestBed.Tests
 
         private bool QueryCallback(int proxyid)
         {
-            Actor actor = (Actor)_tree.GetUserData(proxyid);
+            Actor actor = _tree.GetUserData<Actor>(proxyid);
             actor.overlap = AABB.TestOverlap(ref _queryAABB, ref actor.aabb);
             return true;
         }
 
         private float RayCastCallback(ref RayCastInput input, int proxyid)
         {
-            Actor actor = (Actor)_tree.GetUserData(proxyid);
+            Actor actor = _tree.GetUserData<Actor>(proxyid);
 
             RayCastOutput output;
             bool hit = actor.aabb.RayCast(out output, ref input);
@@ -220,7 +220,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             for (int i = 0; i < ActorCount; ++i)
             {
-                int j = Rand.rand.Next() % ActorCount;
+                int j = Rand.Random.Next() % ActorCount;
                 Actor actor = _actors[j];
                 if (actor.proxyId == -1)
                 {
@@ -235,7 +235,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             for (int i = 0; i < ActorCount; ++i)
             {
-                int j = Rand.rand.Next() % ActorCount;
+                int j = Rand.Random.Next() % ActorCount;
                 Actor actor = _actors[j];
                 if (actor.proxyId != -1)
                 {
@@ -250,7 +250,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             for (int i = 0; i < ActorCount; ++i)
             {
-                int j = Rand.rand.Next() % ActorCount;
+                int j = Rand.Random.Next() % ActorCount;
                 Actor actor = _actors[j];
                 if (actor.proxyId == -1)
                 {
@@ -259,7 +259,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 AABB aabb0 = actor.aabb;
                 MoveAABB(ref actor.aabb);
-                Vector2 displacement = actor.aabb.GetCenter() - aabb0.GetCenter();
+                Vector2 displacement = actor.aabb.Center - aabb0.Center;
                 _tree.MoveProxy(actor.proxyId, ref actor.aabb, displacement);
                 return;
             }
@@ -267,7 +267,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void Action()
         {
-            int choice = Rand.rand.Next() % 20;
+            int choice = Rand.Random.Next() % 20;
 
             switch (choice)
             {

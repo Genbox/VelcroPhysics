@@ -105,9 +105,9 @@ namespace FarseerPhysics.TestBed.Tests
             body6.CreateFixture(circle);
         }
 
-        public override void Step(Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
-            base.Step(settings);
+            base.Update(settings);
 
             // We are going to destroy some bodies according to contact
             // points. We must buffer the bodies that should be destroyed
@@ -118,12 +118,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Traverse the contact results. Destroy bodies that
             // are touching heavier bodies.
-            for (int i = 0; i < _pointCount; ++i)
+            for (int i = 0; i < PointCount; ++i)
             {
-                ContactPoint point = _points[i];
+                ContactPoint point = Points[i];
 
-                Body body1 = point.fixtureA.Body;
-                Body body2 = point.fixtureB.Body;
+                Body body1 = point.FixtureA.Body;
+                Body body2 = point.FixtureB.Body;
                 float mass1 = body1.Mass;
                 float mass2 = body2.Mass;
 

@@ -52,7 +52,7 @@ namespace FarseerPhysics
         /// </summary>
         public JointRemovedDelegate JointRemoved;
 
-        private float _inv_dt0;
+        private float _invDt0;
         private Island _island = new Island();
         private Func<Fixture, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
@@ -503,7 +503,7 @@ namespace FarseerPhysics
                 step.Inv_DeltaTime = 0.0f;
             }
 
-            step.DtRatio = _inv_dt0*dt;
+            step.DtRatio = _invDt0*dt;
 
             step.WarmStarting = WarmStarting;
 
@@ -524,7 +524,7 @@ namespace FarseerPhysics
 
             if (step.DeltaTime > 0.0f)
             {
-                _inv_dt0 = step.Inv_DeltaTime;
+                _invDt0 = step.Inv_DeltaTime;
             }
 
             Flags &= ~WorldFlags.Locked;
@@ -558,7 +558,7 @@ namespace FarseerPhysics
 
         private bool QueryAABBCallbackWrapper(int proxyId)
         {
-            Fixture fixture = (Fixture) ContactManager._broadPhase.GetUserData(proxyId);
+            Fixture fixture = ContactManager._broadPhase.GetUserData<Fixture>(proxyId);
             return _queryAABBCallback(fixture);
         }
 
@@ -584,8 +584,7 @@ namespace FarseerPhysics
 
         private float RayCastCallbackWrapper(ref RayCastInput input, int proxyId)
         {
-            object userData = ContactManager._broadPhase.GetUserData(proxyId);
-            Fixture fixture = (Fixture) userData;
+            Fixture fixture = ContactManager._broadPhase.GetUserData<Fixture>(proxyId);
             RayCastOutput output;
             bool hit = fixture.RayCast(out output, ref input);
 
@@ -964,7 +963,7 @@ namespace FarseerPhysics
                     for (ContactEdge cEdge = b._contactList; cEdge != null; cEdge = cEdge.Next)
                     {
                         // Does the TOI island still have space for contacts?
-                        if (_island.ContactCount == _island._contactCapacity)
+                        if (_island.ContactCount == _island.ContactCapacity)
                         {
                             break;
                         }
@@ -1010,7 +1009,7 @@ namespace FarseerPhysics
 
                     for (JointEdge jEdge = b._jointList; jEdge != null; jEdge = jEdge.Next)
                     {
-                        if (_island.JointCount == _island._jointCapacity)
+                        if (_island.JointCount == _island.JointCapacity)
                         {
                             continue;
                         }

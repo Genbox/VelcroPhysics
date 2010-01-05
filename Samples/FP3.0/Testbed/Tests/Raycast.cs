@@ -132,10 +132,10 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Step(Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
-            base.Step(settings);
-            _debugView.DrawString(5, TextLine, "Press 1-5 to drop stuff");
+            base.Update(settings);
+            DebugView.DrawString(5, TextLine, "Press 1-5 to drop stuff");
             TextLine += 15;
 
             const float L = 11.0f;
@@ -156,16 +156,16 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (fixture != null)
             {
-                _debugView.DrawPoint(point, .5f, new Color(0.4f, 0.9f, 0.4f));
+                DebugView.DrawPoint(point, .5f, new Color(0.4f, 0.9f, 0.4f));
 
-                _debugView.DrawSegment(point1, point, new Color(0.8f, 0.8f, 0.8f));
+                DebugView.DrawSegment(point1, point, new Color(0.8f, 0.8f, 0.8f));
 
                 Vector2 head = point + 0.5f * normal;
-                _debugView.DrawSegment(point, head, new Color(0.9f, 0.9f, 0.4f));
+                DebugView.DrawSegment(point, head, new Color(0.9f, 0.9f, 0.4f));
             }
             else
             {
-                _debugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
+                DebugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
             }
 
             _angle += 0.25f * Settings.Pi / 180.0f;

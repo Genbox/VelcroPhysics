@@ -49,7 +49,7 @@ namespace FarseerPhysics.TestBed.Tests
             return new PolyCollisionTest();
         }
 
-        public override void Step(Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
             Manifold manifold = new Manifold();
             Collision.CollidePolygons(ref manifold, _polygonA, ref _transformA, _polygonB, ref _transformB);
@@ -57,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
             WorldManifold worldManifold = new WorldManifold(ref manifold, ref _transformA, _polygonA.Radius,
                                                             ref _transformB, _polygonB.Radius);
 
-            _debugView.DrawString(50, TextLine, "point count = {0:n}", manifold._pointCount);
+            DebugView.DrawString(50, TextLine, "point count = {0:n}", manifold._pointCount);
             TextLine += 15;
 
             {
@@ -67,18 +67,18 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     v[i] = MathUtils.Multiply(ref _transformA, _polygonA.Vertices[i]);
                 }
-                _debugView.DrawPolygon(ref v, _polygonA.Vertices.Count, color);
+                DebugView.DrawPolygon(ref v, _polygonA.Vertices.Count, color);
 
                 for (int i = 0; i < _polygonB.Vertices.Count; ++i)
                 {
                     v[i] = MathUtils.Multiply(ref _transformB, _polygonB.Vertices[i]);
                 }
-                _debugView.DrawPolygon(ref v, _polygonB.Vertices.Count, color);
+                DebugView.DrawPolygon(ref v, _polygonB.Vertices.Count, color);
             }
 
             for (int i = 0; i < manifold._pointCount; ++i)
             {
-                _debugView.DrawPoint(worldManifold.Points[i], 0.5f, new Color(0.9f, 0.3f, 0.3f));
+                DebugView.DrawPoint(worldManifold.Points[i], 0.5f, new Color(0.9f, 0.3f, 0.3f));
             }
         }
 

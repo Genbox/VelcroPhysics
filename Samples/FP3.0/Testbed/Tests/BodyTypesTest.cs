@@ -112,7 +112,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Step(Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
             // Drive the kinematic body.
             if (_platform.BodyType == BodyType.Kinematic)
@@ -130,8 +130,8 @@ namespace FarseerPhysics.TestBed.Tests
                 }
             }
 
-            base.Step(settings);
-            _debugView.DrawString(5, TextLine, "Keys: (d) dynamic, (s) static, (k) kinematic");
+            base.Update(settings);
+            DebugView.DrawString(5, TextLine, "Keys: (d) dynamic, (s) static, (k) kinematic");
             TextLine += 15;
         }
 

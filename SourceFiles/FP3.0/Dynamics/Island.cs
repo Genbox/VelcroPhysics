@@ -34,8 +34,8 @@ namespace FarseerPhysics
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
         {
             _bodyCapacity = bodyCapacity;
-            _contactCapacity = contactCapacity;
-            _jointCapacity = jointCapacity;
+            ContactCapacity = contactCapacity;
+            JointCapacity = jointCapacity;
 
             BodyCount = 0;
             ContactCount = 0;
@@ -346,7 +346,7 @@ namespace FarseerPhysics
 
         public void Add(Joint joint)
         {
-            Debug.Assert(JointCount < _jointCapacity);
+            Debug.Assert(JointCount < JointCapacity);
             Joints[JointCount++] = joint;
         }
 
@@ -382,7 +382,7 @@ namespace FarseerPhysics
         public int JointCount;
 
         private int _bodyCapacity;
-        public int _contactCapacity;
-        public int _jointCapacity;
+        public int ContactCapacity;
+        public int JointCapacity;
     }
 }

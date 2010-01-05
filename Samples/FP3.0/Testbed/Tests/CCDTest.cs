@@ -214,24 +214,24 @@ namespace FarseerPhysics.TestBed.Tests
 #endif
         }
 
-        public override void Step(Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
-            base.Step(settings);
+            base.Update(settings);
 
 
             if (Distance.GjkCalls > 0)
             {
-                _debugView.DrawString(50, TextLine, "gjk calls = {0:n}, ave gjk iters = {1:n}, max gjk iters = {2:n}",
+                DebugView.DrawString(50, TextLine, "gjk calls = {0:n}, ave gjk iters = {1:n}, max gjk iters = {2:n}",
                                       Distance.GjkCalls, Distance.GjkIters / (float)Distance.GjkCalls, Distance.GjkMaxIters);
                 TextLine += 15;
             }
 
             if (TimeOfImpact.ToiCalls > 0)
             {
-                _debugView.DrawString(50, TextLine, "toi calls = {0:n}, ave toi iters = {1:n}, max toi iters = {2:n}",
+                DebugView.DrawString(50, TextLine, "toi calls = {0:n}, ave toi iters = {1:n}, max toi iters = {2:n}",
                                       TimeOfImpact.ToiCalls, TimeOfImpact.ToiIters / (float)TimeOfImpact.ToiCalls, TimeOfImpact.ToiMaxRootIters);
                 TextLine += 15;
-                _debugView.DrawString(50, TextLine, "ave toi root iters = {0:n}, max toi root iters = {1:n}",
+                DebugView.DrawString(50, TextLine, "ave toi root iters = {0:n}, max toi root iters = {1:n}",
                                       TimeOfImpact.ToiRootIters / (float)TimeOfImpact.ToiCalls, TimeOfImpact.ToiMaxRootIters);
                 TextLine += 15;
             }

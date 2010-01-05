@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System.Diagnostics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -39,8 +38,6 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(edge, 0);
                 ground.CreateFixture(shape);
             }
-
-            sw.Start();
 
             {
                 Vertices box = PolygonTools.CreateBox(0.5f, 0.5f);
@@ -67,24 +64,7 @@ namespace FarseerPhysics.TestBed.Tests
                     x += deltaX;
                 }
             }
-
-            sw.Stop();
-            Debug.WriteLine(sw.ElapsedMilliseconds.ToString());
         }
-
-        Stopwatch sw = new Stopwatch();
-
-        //void Step(Framework.Settings settings)
-        //{
-        //	// We need higher accuracy for the pyramid.
-        //	int velocityIterations = settings.velocityIterations;
-        //	int positionIterations = settings.positionIterations;
-        //	settings.velocityIterations = b2Max(8, velocityIterations);
-        //	settings.positionIterations = b2Max(1, positionIterations);
-        //	base.Step(settings);
-        //	settings.velocityIterations = velocityIterations;
-        //	settings.positionIterations = positionIterations;
-        //}
 
         public static Test Create()
         {
