@@ -57,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
             WorldManifold worldManifold = new WorldManifold(ref manifold, ref _transformA, _polygonA.Radius,
                                                             ref _transformB, _polygonB.Radius);
 
-            DebugView.DrawString(50, TextLine, "point count = {0:n}", manifold._pointCount);
+            DebugView.DrawString(50, TextLine, "point count = {0:n}", manifold.PointCount);
             TextLine += 15;
 
             {
@@ -76,7 +76,7 @@ namespace FarseerPhysics.TestBed.Tests
                 DebugView.DrawPolygon(ref v, _polygonB.Vertices.Count, color);
             }
 
-            for (int i = 0; i < manifold._pointCount; ++i)
+            for (int i = 0; i < manifold.PointCount; ++i)
             {
                 DebugView.DrawPoint(worldManifold.Points[i], 0.5f, new Color(0.9f, 0.3f, 0.3f));
             }

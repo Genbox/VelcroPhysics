@@ -53,6 +53,13 @@ namespace FarseerPhysics
         }
 
         //Ref versions
+        public static Vector2 Cross(float s, ref Vector2 a)
+        {
+            Cross(s, ref a, out tempVector1);
+            return tempVector1;
+        }
+
+
         public static void Cross(ref Vector2 a, ref Vector2 b, out float c)
         {
             c = a.X * b.Y - a.Y * b.X;

@@ -152,7 +152,7 @@ namespace FarseerPhysics
             Body bodyA = fixtureA.Body;
             Body bodyB = fixtureB.Body;
 
-            if (c.Manifold._pointCount > 0)
+            if (c.Manifold.PointCount > 0)
             {
                 if (EndContact != null)
                     EndContact(c);

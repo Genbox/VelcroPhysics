@@ -134,27 +134,27 @@ namespace FarseerPhysics
         /// <summary>
         /// the points of contact
         /// </summary>
-        public FixedArray2<ManifoldPoint> _points;
+        public FixedArray2<ManifoldPoint> Points;
 
         /// <summary>
         /// not use for Type.SeparationFunction.Points
         /// </summary>
-        public Vector2 _localPlaneNormal;
+        public Vector2 LocalPlaneNormal;
 
         /// <summary>
         /// usage depends on manifold type
         /// </summary>
-        public Vector2 _localPoint;
+        public Vector2 LocalPoint;
 
         /// <summary>
         /// The manifold type
         /// </summary>
-        public ManifoldType _type;
+        public ManifoldType Type;
 
         /// <summary>
         /// the number of manifold points
         /// </summary>
-        public int _pointCount;
+        public int PointCount;
     }
 
     /// <summary>
@@ -180,17 +180,17 @@ namespace FarseerPhysics
             Normal = Vector2.Zero;
             Points = new FixedArray2<Vector2>();
 
-            if (manifold._pointCount == 0)
+            if (manifold.PointCount == 0)
             {
                 return;
             }
 
-            switch (manifold._type)
+            switch (manifold.Type)
             {
                 case ManifoldType.Circles:
                     {
-                        Vector2 pointA = MathUtils.Multiply(ref xfA, manifold._localPoint);
-                        Vector2 pointB = MathUtils.Multiply(ref xfB, manifold._points[0].LocalPoint);
+                        Vector2 pointA = MathUtils.Multiply(ref xfA, manifold.LocalPoint);
+                        Vector2 pointB = MathUtils.Multiply(ref xfB, manifold.Points[0].LocalPoint);
                         Vector2 normal = new Vector2(1.0f, 0.0f);
                         if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
                         {
@@ -208,15 +208,15 @@ namespace FarseerPhysics
 
                 case ManifoldType.FaceA:
                     {
-                        Vector2 normal = MathUtils.Multiply(ref xfA.R, manifold._localPlaneNormal);
-                        Vector2 planePoint = MathUtils.Multiply(ref xfA, manifold._localPoint);
+                        Vector2 normal = MathUtils.Multiply(ref xfA.R, manifold.LocalPlaneNormal);
+                        Vector2 planePoint = MathUtils.Multiply(ref xfA, manifold.LocalPoint);
 
                         // Ensure normal points from A to B.
                         Normal = normal;
 
-                        for (int i = 0; i < manifold._pointCount; ++i)
+                        for (int i = 0; i < manifold.PointCount; ++i)
                         {
-                            Vector2 clipPoint = MathUtils.Multiply(ref xfB, manifold._points[i].LocalPoint);
+                            Vector2 clipPoint = MathUtils.Multiply(ref xfB, manifold.Points[i].LocalPoint);
                             Vector2 cA = clipPoint + (radiusA - Vector2.Dot(clipPoint - planePoint, normal)) * normal;
                             Vector2 cB = clipPoint - radiusB * normal;
                             Points[i] = 0.5f * (cA + cB);
@@ -226,15 +226,15 @@ namespace FarseerPhysics
 
                 case ManifoldType.FaceB:
                     {
-                        Vector2 normal = MathUtils.Multiply(ref xfB.R, manifold._localPlaneNormal);
-                        Vector2 planePoint = MathUtils.Multiply(ref xfB, manifold._localPoint);
+                        Vector2 normal = MathUtils.Multiply(ref xfB.R, manifold.LocalPlaneNormal);
+                        Vector2 planePoint = MathUtils.Multiply(ref xfB, manifold.LocalPoint);
 
                         // Ensure normal points from A to B.
                         Normal = -normal;
 
-                        for (int i = 0; i < manifold._pointCount; ++i)
+                        for (int i = 0; i < manifold.PointCount; ++i)
                         {
-                            Vector2 clipPoint = MathUtils.Multiply(ref xfA, manifold._points[i].LocalPoint);
+                            Vector2 clipPoint = MathUtils.Multiply(ref xfA, manifold.Points[i].LocalPoint);
                             Vector2 cA = clipPoint - radiusA * normal;
                             Vector2 cB = clipPoint + (radiusB - Vector2.Dot(clipPoint - planePoint, normal)) * normal;
                             Points[i] = 0.5f * (cA + cB);
@@ -575,15 +575,15 @@ namespace FarseerPhysics
             state2 = new FixedArray2<PointState>();
 
             // Detect persists and removes.
-            for (int i = 0; i < manifold1._pointCount; ++i)
+            for (int i = 0; i < manifold1.PointCount; ++i)
             {
-                ContactID id = manifold1._points[i].Id;
+                ContactID id = manifold1.Points[i].Id;
 
                 state1[i] = PointState.Remove;
 
-                for (int j = 0; j < manifold2._pointCount; ++j)
+                for (int j = 0; j < manifold2.PointCount; ++j)
                 {
-                    if (manifold2._points[j].Id.Key == id.Key)
+                    if (manifold2.Points[j].Id.Key == id.Key)
                     {
                         state1[i] = PointState.Persist;
                         break;
@@ -592,15 +592,15 @@ namespace FarseerPhysics
             }
 
             // Detect persists and adds.
-            for (int i = 0; i < manifold2._pointCount; ++i)
+            for (int i = 0; i < manifold2.PointCount; ++i)
             {
-                ContactID id = manifold2._points[i].Id;
+                ContactID id = manifold2.Points[i].Id;
 
                 state2[i] = PointState.Add;
 
-                for (int j = 0; j < manifold1._pointCount; ++j)
+                for (int j = 0; j < manifold1.PointCount; ++j)
                 {
-                    if (manifold1._points[j].Id.Key == id.Key)
+                    if (manifold1.Points[j].Id.Key == id.Key)
                     {
                         state2[i] = PointState.Persist;
                         break;
@@ -622,7 +622,7 @@ namespace FarseerPhysics
                               CircleShape circle1, ref Transform xf1,
                               CircleShape circle2, ref Transform xf2)
         {
-            manifold._pointCount = 0;
+            manifold.PointCount = 0;
 
             Vector2 p1 = MathUtils.Multiply(ref xf1, circle1.Position);
             Vector2 p2 = MathUtils.Multiply(ref xf2, circle2.Position);
@@ -635,17 +635,17 @@ namespace FarseerPhysics
                 return;
             }
 
-            manifold._type = ManifoldType.Circles;
-            manifold._localPoint = circle1.Position;
-            manifold._localPlaneNormal = Vector2.Zero;
-            manifold._pointCount = 1;
+            manifold.Type = ManifoldType.Circles;
+            manifold.LocalPoint = circle1.Position;
+            manifold.LocalPlaneNormal = Vector2.Zero;
+            manifold.PointCount = 1;
 
-            var p0 = manifold._points[0];
+            var p0 = manifold.Points[0];
 
             p0.LocalPoint = circle2.Position;
             p0.Id.Key = 0;
 
-            manifold._points[0] = p0;
+            manifold.Points[0] = p0;
         }
 
         /// <summary>
@@ -660,7 +660,7 @@ namespace FarseerPhysics
                                        PolygonShape polygon, ref Transform xf1,
                                        CircleShape circle, ref Transform xf2)
         {
-            manifold._pointCount = 0;
+            manifold.PointCount = 0;
 
             // Compute circle position in the frame of the polygon.
             Vector2 c = MathUtils.Multiply(ref xf2, circle.Position);
@@ -698,17 +698,17 @@ namespace FarseerPhysics
             // If the center is inside the polygon ...
             if (separation < Settings.Epsilon)
             {
-                manifold._pointCount = 1;
-                manifold._type = ManifoldType.FaceA;
-                manifold._localPlaneNormal = polygon.Normals[normalIndex];
-                manifold._localPoint = 0.5f * (v1 + v2);
+                manifold.PointCount = 1;
+                manifold.Type = ManifoldType.FaceA;
+                manifold.LocalPlaneNormal = polygon.Normals[normalIndex];
+                manifold.LocalPoint = 0.5f * (v1 + v2);
 
-                var p0 = manifold._points[0];
+                var p0 = manifold.Points[0];
 
                 p0.LocalPoint = circle.Position;
                 p0.Id.Key = 0;
 
-                manifold._points[0] = p0;
+                manifold.Points[0] = p0;
 
                 return;
             }
@@ -723,18 +723,18 @@ namespace FarseerPhysics
                     return;
                 }
 
-                manifold._pointCount = 1;
-                manifold._type = ManifoldType.FaceA;
-                manifold._localPlaneNormal = cLocal - v1;
-                manifold._localPlaneNormal.Normalize();
-                manifold._localPoint = v1;
+                manifold.PointCount = 1;
+                manifold.Type = ManifoldType.FaceA;
+                manifold.LocalPlaneNormal = cLocal - v1;
+                manifold.LocalPlaneNormal.Normalize();
+                manifold.LocalPoint = v1;
 
-                var p0b = manifold._points[0];
+                var p0b = manifold.Points[0];
 
                 p0b.LocalPoint = circle.Position;
                 p0b.Id.Key = 0;
 
-                manifold._points[0] = p0b;
+                manifold.Points[0] = p0b;
 
             }
             else if (u2 <= 0.0f)
@@ -744,18 +744,18 @@ namespace FarseerPhysics
                     return;
                 }
 
-                manifold._pointCount = 1;
-                manifold._type = ManifoldType.FaceA;
-                manifold._localPlaneNormal = cLocal - v2;
-                manifold._localPlaneNormal.Normalize();
-                manifold._localPoint = v2;
+                manifold.PointCount = 1;
+                manifold.Type = ManifoldType.FaceA;
+                manifold.LocalPlaneNormal = cLocal - v2;
+                manifold.LocalPlaneNormal.Normalize();
+                manifold.LocalPoint = v2;
 
-                var p0c = manifold._points[0];
+                var p0c = manifold.Points[0];
 
                 p0c.LocalPoint = circle.Position;
                 p0c.Id.Key = 0;
 
-                manifold._points[0] = p0c;
+                manifold.Points[0] = p0c;
             }
             else
             {
@@ -766,17 +766,17 @@ namespace FarseerPhysics
                     return;
                 }
 
-                manifold._pointCount = 1;
-                manifold._type = ManifoldType.FaceA;
-                manifold._localPlaneNormal = polygon.Normals[vertIndex1];
-                manifold._localPoint = faceCenter;
+                manifold.PointCount = 1;
+                manifold.Type = ManifoldType.FaceA;
+                manifold.LocalPlaneNormal = polygon.Normals[vertIndex1];
+                manifold.LocalPoint = faceCenter;
 
-                var p0d = manifold._points[0];
+                var p0d = manifold.Points[0];
 
                 p0d.LocalPoint = circle.Position;
                 p0d.Id.Key = 0;
 
-                manifold._points[0] = p0d;
+                manifold.Points[0] = p0d;
             }
         }
 
@@ -792,7 +792,7 @@ namespace FarseerPhysics
                                PolygonShape polyA, ref Transform xfA,
                                PolygonShape polyB, ref Transform xfB)
         {
-            manifold._pointCount = 0;
+            manifold.PointCount = 0;
             float totalRadius = polyA.Radius + polyB.Radius;
 
             int edgeA;
@@ -820,7 +820,7 @@ namespace FarseerPhysics
                 xf1 = xfB;
                 xf2 = xfA;
                 edge1 = edgeB;
-                manifold._type = ManifoldType.FaceB;
+                manifold.Type = ManifoldType.FaceB;
                 flip = 1;
             }
             else
@@ -830,7 +830,7 @@ namespace FarseerPhysics
                 xf1 = xfA;
                 xf2 = xfB;
                 edge1 = edgeA;
-                manifold._type = ManifoldType.FaceA;
+                manifold.Type = ManifoldType.FaceA;
                 flip = 0;
             }
 
@@ -880,8 +880,8 @@ namespace FarseerPhysics
             }
 
             // Now clipPoints2 contains the clipped points.
-            manifold._localPlaneNormal = localNormal;
-            manifold._localPoint = planePoint;
+            manifold.LocalPlaneNormal = localNormal;
+            manifold.LocalPoint = planePoint;
 
             int pointCount = 0;
             for (int i = 0; i < 2; ++i)
@@ -890,17 +890,17 @@ namespace FarseerPhysics
 
                 if (separation <= totalRadius)
                 {
-                    ManifoldPoint cp = manifold._points[pointCount];
+                    ManifoldPoint cp = manifold.Points[pointCount];
                     cp.LocalPoint = MathUtils.MultiplyT(ref xf2, clipPoints2[i].Vertex);
                     cp.Id = clipPoints2[i].Id;
                     cp.Id.Features.Flip = flip;
-                    manifold._points[pointCount] = cp;
+                    manifold.Points[pointCount] = cp;
 
                     ++pointCount;
                 }
             }
 
-            manifold._pointCount = pointCount;
+            manifold.PointCount = pointCount;
         }
 
         /// <summary>
