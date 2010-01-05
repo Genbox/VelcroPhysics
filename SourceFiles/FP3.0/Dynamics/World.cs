@@ -558,7 +558,7 @@ namespace FarseerPhysics
 
         private bool QueryAABBCallbackWrapper(int proxyId)
         {
-            Fixture fixture = (Fixture)ContactManager._broadPhase.GetUserData(proxyId);
+            Fixture fixture = ContactManager._broadPhase.GetUserData<Fixture>(proxyId);
             return _queryAABBCallback(fixture);
         }
 
@@ -584,8 +584,7 @@ namespace FarseerPhysics
 
         private float RayCastCallbackWrapper(ref RayCastInput input, int proxyId)
         {
-            object userData = ContactManager._broadPhase.GetUserData(proxyId);
-            Fixture fixture = (Fixture)userData;
+            Fixture fixture = ContactManager._broadPhase.GetUserData<Fixture>(proxyId);
             RayCastOutput output;
             bool hit = fixture.RayCast(out output, ref input);
 
@@ -614,7 +613,7 @@ namespace FarseerPhysics
             {
                 b._flags &= ~BodyFlags.Island;
             }
-            for (Contact c = ContactManager._contactList; c != null; c = c.Next)
+            for (Contact c = ContactManager._contactList; c != null; c = c.NextContact)
             {
                 c.Flags &= ~ContactFlags.Island;
             }
@@ -684,7 +683,7 @@ namespace FarseerPhysics
                         }
 
                         // Is this contact solid and touching?
-                        if (ce.Contact.IsSensor() || !ce.Contact.IsEnabled() || !ce.Contact.IsTouching())
+                        if (ce.Contact.Sensor || !ce.Contact.Enabled || !ce.Contact.Touching)
                         {
                             continue;
                         }
@@ -800,7 +799,7 @@ namespace FarseerPhysics
                 b._sweep.TimeInt0 = 0.0f;
             }
 
-            for (Contact c = ContactManager._contactList; c != null; c = c.Next)
+            for (Contact c = ContactManager._contactList; c != null; c = c.NextContact)
             {
                 // Invalidate TOI
                 c.Flags &= ~(ContactFlags.Toi | ContactFlags.Island);
@@ -818,10 +817,10 @@ namespace FarseerPhysics
                 Contact minContact = null;
                 float minTOI = 1.0f;
 
-                for (Contact c = ContactManager._contactList; c != null; c = c.Next)
+                for (Contact c = ContactManager._contactList; c != null; c = c.NextContact)
                 {
                     // Can this contact generate a solid TOI contact?
-                    if (c.IsSensor() || c.IsEnabled() == false || c.IsContinuous() == false)
+                    if (c.Sensor || c.Enabled == false || c.Continuous == false)
                     {
                         continue;
                     }
@@ -832,13 +831,13 @@ namespace FarseerPhysics
                     if ((c.Flags & ContactFlags.Toi) != ContactFlags.None)
                     {
                         // This contact has a valid cached TOI.
-                        toi = c.Toi;
+                        toi = c.TOI;
                     }
                     else
                     {
                         // Compute the TOI for this contact.
-                        Fixture s1 = c.GetFixtureA();
-                        Fixture s2 = c.GetFixtureB();
+                        Fixture s1 = c.FixtureA;
+                        Fixture s2 = c.FixtureB;
                         Body b1 = s1.Body;
                         Body b2 = s2.Body;
 
@@ -877,7 +876,7 @@ namespace FarseerPhysics
                         }
 
 
-                        c.Toi = toi;
+                        c.TOI = toi;
                         c.Flags |= ContactFlags.Toi;
                     }
 
@@ -896,8 +895,8 @@ namespace FarseerPhysics
                 }
 
                 // Advance the bodies to the TOI.
-                Fixture s1_2 = minContact.GetFixtureA();
-                Fixture s2_2 = minContact.GetFixtureB();
+                Fixture s1_2 = minContact.FixtureA;
+                Fixture s2_2 = minContact.FixtureB;
                 Body b1_2 = s1_2.Body;
                 Body b2_2 = s2_2.Body;
 
@@ -912,7 +911,7 @@ namespace FarseerPhysics
                 minContact.Flags &= ~ContactFlags.Toi;
 
                 // Is the contact solid?
-                if (minContact.IsSensor() || !minContact.IsEnabled())
+                if (minContact.Sensor || !minContact.Enabled)
                 {
                     // Restore the sweeps.
                     b1_2._sweep = backup1;
@@ -923,7 +922,7 @@ namespace FarseerPhysics
                 }
 
                 // Did numerical issues prevent a contact point from being generated?
-                if (!minContact.IsTouching())
+                if (!minContact.Touching)
                 {
                     // Give up on this TOI.
                     continue;
@@ -971,7 +970,7 @@ namespace FarseerPhysics
                     for (ContactEdge cEdge = b._contactList; cEdge != null; cEdge = cEdge.Next)
                     {
                         // Does the TOI island still have space for contacts?
-                        if (_island.ContactCount == _island._contactCapacity)
+                        if (_island.ContactCount == _island.ContactCapacity)
                         {
                             break;
                         }
@@ -983,9 +982,9 @@ namespace FarseerPhysics
                         }
 
                         // Skip separate, sensor, or disabled contacts.
-                        if (cEdge.Contact.IsSensor() ||
-                            cEdge.Contact.IsEnabled() == false ||
-                            cEdge.Contact.IsTouching() == false)
+                        if (cEdge.Contact.Sensor ||
+                            cEdge.Contact.Enabled == false ||
+                            cEdge.Contact.Touching == false)
                         {
                             continue;
                         }
@@ -1017,7 +1016,7 @@ namespace FarseerPhysics
 
                     for (JointEdge jEdge = b._jointList; jEdge != null; jEdge = jEdge.Next)
                     {
-                        if (_island.JointCount == _island._jointCapacity)
+                        if (_island.JointCount == _island.JointCapacity)
                         {
                             continue;
                         }

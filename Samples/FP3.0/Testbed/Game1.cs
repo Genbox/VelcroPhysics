@@ -80,7 +80,7 @@ namespace FarseerPhysics.TestBed
             TraceEvents.Register(et);
 
             testCount = 0;
-            while (TestEntries.g_testEntries[testCount].createFcn != null)
+            while (TestEntries.g_testEntries[testCount].CreateFcn != null)
             {
                 ++testCount;
             }
@@ -95,7 +95,7 @@ namespace FarseerPhysics.TestBed
         private void StartTest(int index)
         {
             entry = TestEntries.g_testEntries[index];
-            test = entry.createFcn();
+            test = entry.CreateFcn();
             test.GameInstance = this;
             test.Initialize();
         }
@@ -171,7 +171,7 @@ namespace FarseerPhysics.TestBed
             else if ((newKeyboardState.IsKeyDown(Keys.P) && oldKeyboardState.IsKeyUp(Keys.P)) ||
                      newGamePad.IsButtonDown(Buttons.Start) && oldGamePad.IsButtonUp(Buttons.Start))
             {
-                settings.pause = settings.pause > 0 ? 1 : (uint)0;
+                settings.Pause = settings.Pause > 0 ? 1 : (uint)0;
             }
             // Press I to prev test.
             else if ((newKeyboardState.IsKeyDown(Keys.I) && oldKeyboardState.IsKeyUp(Keys.I)) ||
@@ -263,17 +263,17 @@ namespace FarseerPhysics.TestBed
             simpleColorEffect.Techniques[0].Passes[0].Begin();
 
             test.SetTextLine(30);
-            settings.hz = settingsHz;
+            settings.Hz = settingsHz;
 
             if (_traceEnabled)
                 et.BeginTrace(TraceEvents.PhysicsEventId);
 
-            test.Step(settings);
+            test.Update(settings);
 
             if (_traceEnabled)
                 et.EndTrace(TraceEvents.PhysicsEventId);
 
-            test.DrawTitle(50, 15, entry.name);
+            test.DrawTitle(50, 15, entry.Name);
 
             if (testSelection != testIndex)
             {
@@ -284,7 +284,7 @@ namespace FarseerPhysics.TestBed
                 Resize(width, height);
             }
 
-            test._debugView.FinishDrawShapes();
+            test.DebugView.FinishDrawShapes();
 
             simpleColorEffect.Techniques[0].Passes[0].End();
             simpleColorEffect.End();
@@ -292,7 +292,7 @@ namespace FarseerPhysics.TestBed
             if (test != null)
             {
                 spriteBatch.Begin();
-                test._debugView.FinishDrawString();
+                test.DebugView.FinishDrawString();
                 spriteBatch.End();
             }
             base.Draw(gameTime);
@@ -354,13 +354,13 @@ namespace FarseerPhysics.TestBed
 
         private void Pause()
         {
-            settings.pause = (uint)(settings.pause > 0 ? 0 : 1);
+            settings.Pause = (uint)(settings.Pause > 0 ? 0 : 1);
         }
 
         private void SingleStep()
         {
-            settings.pause = 1;
-            settings.singleStep = 1;
+            settings.Pause = 1;
+            settings.SingleStep = 1;
         }
     }
 }
