@@ -22,7 +22,6 @@
  * 
  *   o Change transformations to use 3x3 Matrix and Vector2
  *   o Use Indexed TriangleList
- *   o Use Indexed TriangleStrip
  *   o Add support for sprite sheet textures
  */
 
@@ -48,6 +47,8 @@ namespace DemoBaseXNA.DrawingSystem
         private VertexPositionColorTexture[] _vertexArray;
         private Vector3[] _quadIdentity;
         private Vector3[] _tempArray;
+        private int[] _indices;
+        private int _indiceCount;
         private int _vertexCount;
         private int _primitiveCount;
         private int[,] _cache;
@@ -64,6 +65,9 @@ namespace DemoBaseXNA.DrawingSystem
             _cache = new int[500, 10000];
             // cacheCount stores how many quads are being rendered per texture
             _cacheCount = new int[500];
+
+            _indices = new int[60000];
+            _indiceCount = 0;
 
             GraphicsDevice = graphicsDevice;
             VertexDeclaration = new VertexDeclaration(GraphicsDevice, VertexPositionColorTexture.VertexElements);
@@ -93,7 +97,7 @@ namespace DemoBaseXNA.DrawingSystem
             _tempArray = new Vector3[4];
 
             // temp for testing only this will become a variable
-            _effect.Projection = Matrix.CreateOrthographic(1000, 1000, 0, 1);
+            _effect.Projection = Matrix.CreateOrthographic(100, 100, 0, 1);
         }
 
 
@@ -128,8 +132,6 @@ namespace DemoBaseXNA.DrawingSystem
             _cacheCount[quad.TextureIndex]++;
             // add the quad to the list for processing
             _quadList.Add(quad);
-            // be sure to increment the primitive count
-            _primitiveCount += 2;
         }
 
         public void Render()
@@ -169,7 +171,7 @@ namespace DemoBaseXNA.DrawingSystem
                     _vertexArray[_vertexCount].TextureCoordinate.Y = 1f;
                     _vertexArray[_vertexCount].Color = quad.Tint;
                     _vertexCount++;
-
+                    /*
                     _vertexArray[_vertexCount].Position = _tempArray[0];
                     _vertexArray[_vertexCount].TextureCoordinate.X = 0f;
                     _vertexArray[_vertexCount].TextureCoordinate.Y = 0f;
@@ -182,14 +184,20 @@ namespace DemoBaseXNA.DrawingSystem
                     _vertexArray[_vertexCount].TextureCoordinate.Y = 1f;
                     _vertexArray[_vertexCount].Color = quad.Tint;
                     _vertexCount++;
-
+                    */
                     _vertexArray[_vertexCount].Position = _tempArray[3];
                     _vertexArray[_vertexCount].TextureCoordinate.X = 1f;
                     _vertexArray[_vertexCount].TextureCoordinate.Y = 0f;
                     _vertexArray[_vertexCount].Color = quad.Tint;
                     _vertexCount++;
 
-                    
+                    _indices[_indiceCount++] = _vertexCount - 4;
+                    _indices[_indiceCount++] = _vertexCount - 3;
+                    _indices[_indiceCount++] = _vertexCount - 2;
+                    _indices[_indiceCount++] = _vertexCount - 4;
+                    _indices[_indiceCount++] = _vertexCount - 2;
+                    _indices[_indiceCount++] = _vertexCount - 1;
+
                 }
 
                 // this is 6 because we are useing triangle lists
@@ -204,9 +212,9 @@ namespace DemoBaseXNA.DrawingSystem
                         _effect.Texture = _textureList[i];
                         _effect.CommitChanges();
 
-                        //GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _vertexArray, 0, _vertexCount, _indices, 0, _vertexCount / 3);
+                        GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _vertexArray, 0, _vertexCount, _indices, 0, _vertexCount / 3);
 
-                        GraphicsDevice.DrawUserPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _vertexArray, 0, _vertexCount / 3);
+                        //GraphicsDevice.DrawUserPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _vertexArray, 0, _vertexCount / 3);
 
                         pass.End();
                     }
@@ -215,6 +223,7 @@ namespace DemoBaseXNA.DrawingSystem
 
                 // reset vertex  count
                 _vertexCount = 0;
+                _indiceCount = 0;
             }
 
             _quadList.Clear();
