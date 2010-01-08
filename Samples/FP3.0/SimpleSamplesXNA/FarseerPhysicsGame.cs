@@ -24,8 +24,8 @@ namespace FarseerGames.SimpleSamplesXNA
             _graphics.SynchronizeWithVerticalRetrace = false;
 
             // 60 fps
-            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 16);
-            IsFixedTimeStep = true;
+            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 100);
+            IsFixedTimeStep = false;
 
 #if !XBOX
             //windowed
