@@ -1,5 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Collections.Generic;
+using System.Diagnostics;
 using DemoBaseXNA;
 using DemoBaseXNA.DrawingSystem;
 using DemoBaseXNA.ScreenSystem;
@@ -15,37 +17,34 @@ namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
     /// </summary>
     public class GraphicsDemoScreen : GameScreen
     {
-        PolygonRenderHelper _polyRenderer;
-        BasicEffect _effect;
+        QuadRenderEngine renderEngine;
+        Texture2D texture;
+        float angle = 0;
+        Stopwatch watch;
+        Color tempColor;
+        Random rand = new Random();
         
         public override void Initialize()
         {
-            _effect = new BasicEffect(ScreenManager.GraphicsDevice, null);
-            _effect.VertexColorEnabled = true;
-            _effect.Projection = Matrix.CreateOrthographic(10, 10, 0, 1);
+            // init the new render engine
+            renderEngine = new QuadRenderEngine(ScreenManager.GraphicsDevice);
+
+            tempColor = Color.White;
+
             
-            _polyRenderer = new PolygonRenderHelper(100);
+            for (int i = 0; i < 49; i++)
+            {
+                tempColor.R -= (byte)((float)rand.NextDouble() * 255f);
+                tempColor.G -= (byte)((float)rand.NextDouble() * 255f);
+                tempColor.B -= (byte)((float)rand.NextDouble() * 255f);
+                texture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 100, 50, 2, tempColor, Color.Black);
+                renderEngine.Submit(texture, true);
+            }
+            
 
-            Vertices verts = new Vertices();
+            renderEngine.Submit(ScreenManager.ContentManager.Load<Texture2D>("Content/Star"), true);
 
-            verts.Add(new Vector2(-1,-1));
-            verts.Add(new Vector2(-0.5f, 0));
-            verts.Add(new Vector2(-1,1));
-            verts.Add(new Vector2(0, 0.5f));
-            verts.Add(new Vector2(1,1));
-            verts.Add(new Vector2(0.5f, 0));
-            verts.Add(new Vector2(1,-1));
-            verts.Add(new Vector2(0, -0.5f));
-
-            _polyRenderer.Submit(verts, Color.Green);
-
-            //Vertices convexHull = new Vertices(verts.GetConvexHull());
-
-            //Vector2 t = new Vector2(3, 0);
-
-            //convexHull.Translate(ref t);
-
-            //_polyRenderer.Submit(convexHull, Color.Yellow);
+            watch = new Stopwatch();
             
             base.Initialize();
         }
@@ -62,18 +61,40 @@ namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
+            // add a quad
+            for (int i = 0; i < 1000; i++)
+            {
+                angle = ((float)rand.NextDouble() * 6.14f) - 3.14f;
+
+                renderEngine.Submit(new Quad(new Vector2(((float)rand.NextDouble() * 900f) - 450f, ((float)rand.NextDouble() * 900f) - 450f), angle,
+                    ((float)rand.NextDouble() * 100f) + 10f, ((float)rand.NextDouble() * 50f) + 5f, (int)((float)rand.NextDouble() * 50)));
+            }
+
+            //angle = 1f;
+            
+            
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            ScreenManager.GraphicsDevice.RenderState.FillMode = FillMode.WireFrame;
-            ScreenManager.GraphicsDevice.RenderState.CullMode = CullMode.None;
+            //ScreenManager.GraphicsDevice.RenderState.FillMode = FillMode.WireFrame;
+            //ScreenManager.GraphicsDevice.RenderState.CullMode = CullMode.None;
+            watch.Start();
+            renderEngine.Render();
+            watch.Stop();
+            //ScreenManager.GraphicsDevice.RenderState.FillMode = FillMode.Solid;
+            //ScreenManager.GraphicsDevice.RenderState.CullMode = CullMode.CullCounterClockwiseFace;
 
-            _polyRenderer.Render(ScreenManager.GraphicsDevice, _effect);
+            ScreenManager.SpriteBatch.Begin();
 
-            ScreenManager.GraphicsDevice.RenderState.FillMode = FillMode.Solid;
-            ScreenManager.GraphicsDevice.RenderState.CullMode = CullMode.CullCounterClockwiseFace;
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, watch.ElapsedTicks.ToString(), new Vector2(5, 0), Color.Black);
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, Stopwatch.Frequency.ToString(), new Vector2(50,0), Color.Black);
+
+            ScreenManager.SpriteBatch.End();
+
+            watch.Reset();
+            
             
             base.Draw(gameTime);
         }
