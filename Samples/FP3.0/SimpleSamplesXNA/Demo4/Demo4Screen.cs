@@ -19,22 +19,15 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
     {
         List<Body> _crateBodies = new List<Body>();
 
-        QuadRenderEngine renderEngine;
         float crateSize = 0.8f;
-        Stopwatch watch;
-        Random rand = new Random();
         int Count = 20;
-        int BodyCount;
 
         public override void Initialize()
         {
-            //PhysicsSimulator = new World(new Vector2(0, -9.8f), true);
             PhysicsSimulator.Gravity = new Vector2(0, -9.8f);
 
-            //PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
-
             Vertices box = PolygonTools.CreateBox(crateSize, crateSize);
-            PolygonShape shape = new PolygonShape(box, 5);
+            PolygonShape shape = new PolygonShape(box, 10f);
 
             Vector2 x = new Vector2(-15f, -18);
             Vector2 deltaX = new Vector2(crateSize * 1.1f, crateSize * 2f);
@@ -53,32 +46,18 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
                     body.CreateFixture(shape);
 
                     y += deltaY;
-
-                    BodyCount++;
                 }
 
                 x += deltaX;
             }
 
-            // init the new render engine
-            renderEngine = new QuadRenderEngine(ScreenManager.GraphicsDevice);
+            // this is the crate image and yes you probably should load that content inside LoadContent...
+            //ScreenManager.QuadRenderEngine.Submit(ScreenManager.ContentManager.Load<Texture2D>("Content/crate2"), true);
 
-            renderEngine.Submit(ScreenManager.ContentManager.Load<Texture2D>("Content/crate2"), true);
-            //renderEngine.Submit(DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 50, 50, 1, Color.White, Color.Black), true);
-
-            watch = new Stopwatch();
+            // this is the default image and looks just like the old farseer
+            ScreenManager.QuadRenderEngine.Submit(DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 50, 50, 1, Color.White, Color.Black), false);
 
             base.Initialize();
-        }
-
-        public override void LoadContent()
-        {
-            base.LoadContent();
-        }
-
-        public override void UnloadContent()
-        {
-            base.UnloadContent();
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
@@ -89,34 +68,27 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
         public override void Draw(GameTime gameTime)
         {
 
-            watch.Start();
-            // add a quad
-            foreach (var globe in _crateBodies)
+            // add a quad for each body
+            foreach (var crate in _crateBodies)
             {
                 Color tint;
 
-                if (globe.Awake == true)
+                // if the crate is awake no tint
+                if (crate.Awake == true)
                     tint = Color.White;
+
+                // otherwise tint it light blue
                 else
                     tint = Color.LightBlue;
 
-                renderEngine.Submit(new Quad(globe.Position, globe.Rotation,
+                // submit the quad to the QuadRenderEngine
+                // we add 0.0055 to the crates size to help cover cracks when stacking crates
+                ScreenManager.QuadRenderEngine.Submit(new Quad(crate.Position, crate.Rotation,
                     (crateSize + 0.0055f) * 2, (crateSize + 0.0055f) * 2, 0, tint));
             }
 
-            renderEngine.Render();
-            watch.Stop();
-
-            ScreenManager.SpriteBatch.Begin();
-
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, watch.ElapsedMilliseconds.ToString(), new Vector2(5, 0), Color.Black);
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, Stopwatch.Frequency.ToString(), new Vector2(50, 0), Color.Black);
-
-            ScreenManager.SpriteBatch.End();
-
-            watch.Reset();
-
-            
+            // Call Render and relax.
+            ScreenManager.QuadRenderEngine.Render();
 
             base.Draw(gameTime);
         }
@@ -132,15 +104,6 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
             if (input.PauseGame)
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
-            }
-
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Space))
-            {
-                ScreenManager.Game.IsFixedTimeStep = true;
-            }
-            else
-            {
-                //ScreenManager.Game.IsFixedTimeStep = false;
             }
 
             base.HandleInput(input);
