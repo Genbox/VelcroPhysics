@@ -33,7 +33,7 @@ namespace FarseerGames.SimpleSamplesXNA
 #if !XBOX
             //windowed
             _graphics.PreferredBackBufferWidth = 1024;
-            _graphics.PreferredBackBufferHeight = 768;
+            _graphics.PreferredBackBufferHeight = 600;
             _graphics.IsFullScreen = false;
 
             //fullscreen

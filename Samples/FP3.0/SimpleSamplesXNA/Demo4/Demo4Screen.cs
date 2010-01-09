@@ -20,7 +20,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
         List<Body> _crateBodies = new List<Body>();
 
         float crateSize = 0.8f;
-        int Count = 20;
+        int Count = 10;
 
         public override void Initialize()
         {
@@ -52,10 +52,10 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
             }
 
             // this is the crate image and yes you probably should load that content inside LoadContent...
-            //ScreenManager.QuadRenderEngine.Submit(ScreenManager.ContentManager.Load<Texture2D>("Content/crate2"), true);
+            ScreenManager.QuadRenderEngine.Submit(ScreenManager.ContentManager.Load<Texture2D>("Content/crate2"), true);
 
             // this is the default image and looks just like the old farseer
-            ScreenManager.QuadRenderEngine.Submit(DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 50, 50, 1, Color.White, Color.Black), false);
+            //ScreenManager.QuadRenderEngine.Submit(DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 50, 50, 1, Color.White, Color.Black), false);
 
             base.Initialize();
         }
@@ -88,7 +88,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
             }
 
             // Call Render and relax.
-            ScreenManager.QuadRenderEngine.Render();
+            ScreenManager.QuadRenderEngine.Render(ScreenManager.Camera.Projection, ScreenManager.Camera.View);
 
             base.Draw(gameTime);
         }

@@ -85,7 +85,7 @@ namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
                     (radius + 0.0055f) * 2, (radius + 0.0055f) * 2, 0, tint));
             }
 
-            renderEngine.Render();
+            //renderEngine.Render();
             watch.Stop();
 
             ScreenManager.SpriteBatch.Begin();

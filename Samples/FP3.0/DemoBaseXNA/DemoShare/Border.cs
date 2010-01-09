@@ -110,9 +110,9 @@ namespace DemoBaseXNA.DemoShare
                 //Vector2 borderOrigin = new Vector2(_borderTexture[i].Width / 2f, _borderTexture[i].Height / 2f);
                 //spriteBatch.Draw(_borderTexture[i], ConvertUnits.ToDisplayUnits(_borderBody.Position + (Vector2)_borderGeom[i].UserData), null, Color.White, 0,
                 //                 borderOrigin, 1, SpriteEffects.None, 0f);
-                _quadRenderEngine.Submit(_quads[i]);
+                //_quadRenderEngine.Submit(_quads[i]);
             }
-            _quadRenderEngine.Render();
+            //_quadRenderEngine.Render();
         }
     }
 }

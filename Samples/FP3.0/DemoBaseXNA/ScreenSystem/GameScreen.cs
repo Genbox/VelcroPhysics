@@ -265,6 +265,7 @@ namespace DemoBaseXNA.ScreenSystem
 #if !XBOX
             HandleMouseInput(input);
             PhysicsSimulatorView.HandleInput(input);
+            ScreenManager.Camera.HandleInput(input);
 #endif
         }
 
@@ -276,9 +277,9 @@ namespace DemoBaseXNA.ScreenSystem
 
         private void Mouse(MouseState state, MouseState oldState)
         {
-            Matrix m = Matrix.CreateOrthographic(50, 40, 0, 1);
-
-            Vector3 p = ScreenManager.GraphicsDevice.Viewport.Unproject(new Vector3(state.X, state.Y, 0), m, Matrix.Identity, Matrix.Identity);
+            Vector3 p = ScreenManager.GraphicsDevice.Viewport.Unproject(new Vector3(state.X, state.Y, 0),
+                ScreenManager.Camera.Projection, 
+                ScreenManager.Camera.View, Matrix.Identity);
 
             Vector2 position = new Vector2(p.X, p.Y );
             
@@ -389,7 +390,7 @@ namespace DemoBaseXNA.ScreenSystem
                 PhysicsSimulatorView.Draw(ScreenManager.SpriteBatch);
             }
 
-            _border.Draw(ScreenManager.SpriteBatch);
+            //_border.Draw(ScreenManager.SpriteBatch);
             ScreenManager.SpriteBatch.End();
         }
 
