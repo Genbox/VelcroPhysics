@@ -172,20 +172,7 @@ namespace DemoBaseXNA.DrawingSystem
                     _vertexArray[_vertexCount].TextureCoordinate.Y = 0f;
                     _vertexArray[_vertexCount].Color = quad.Tint;
                     _vertexCount++;
-                    /*
-                    _vertexArray[_vertexCount].Position = _tempArray[0];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 0f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 0f;
-                    _vertexArray[_vertexCount].Color = quad.Tint;
-                    _vertexCount++;
 
-
-                    _vertexArray[_vertexCount].Position = _tempArray[2];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 1f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 1f;
-                    _vertexArray[_vertexCount].Color = quad.Tint;
-                    _vertexCount++;
-                    */
                     _vertexArray[_vertexCount].Position = _tempArray[3];
                     _vertexArray[_vertexCount].TextureCoordinate.X = 1f;
                     _vertexArray[_vertexCount].TextureCoordinate.Y = 0f;
@@ -214,12 +201,11 @@ namespace DemoBaseXNA.DrawingSystem
                         EffectPass pass = _effect.CurrentTechnique.Passes[0];
                         pass.Begin();
 
+                        // set the texture
                         _effect.Texture = _textureList[i];
                         _effect.CommitChanges();
 
                         GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _vertexArray, 0, _vertexCount, _indices, 0, _primitiveCount);
-
-                        //GraphicsDevice.DrawUserPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _vertexArray, 0, _vertexCount / 3);
 
                         pass.End();
                     }
@@ -240,94 +226,5 @@ namespace DemoBaseXNA.DrawingSystem
                 _cacheCount[i] = 0;
             }
         }
-
-        /*
-        public void Render()
-        {
-            Matrix matrix;
-
-            if (_primitiveCount > 0)
-            {
-
-                // loop thru all the quads and create the vertices for them
-                foreach (var quad in _quadList)
-                {
-                    // each quad knows everything about itself
-                    // all we need to do is create and transform 2 triangles
-                    matrix = Matrix.CreateScale(quad.Width, quad.Height, 1) * Matrix.CreateRotationZ(quad.Rotation) * Matrix.CreateTranslation(quad.Position.X, quad.Position.Y, 0);
-
-                    Vector3.Transform(_quadIdentity, ref matrix, _tempArray);
-
-                    _vertexArray[_vertexCount].Position = _tempArray[0];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 0f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 0f;
-                    _vertexArray[_vertexCount].Color = quad.Tint;
-                    _vertexCount++;
-
-                    _vertexArray[_vertexCount].Position = _tempArray[1];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 0f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 1f;
-                    _vertexArray[_vertexCount].Color = quad.Tint;
-                    _vertexCount++;
-
-                    _vertexArray[_vertexCount].Position = _tempArray[2];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 1f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 1f;
-                    _vertexArray[_vertexCount].Color = quad.Tint;
-                    _vertexCount++;
-
-                    _vertexArray[_vertexCount].Position = _tempArray[0];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 0f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 0f;
-                    _vertexArray[_vertexCount].Color = quad.Tint;
-                    _vertexCount++;
-
-                    _vertexArray[_vertexCount].Position = _tempArray[2];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 1f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 1f;
-                    _vertexArray[_vertexCount].Color = quad.Tint;
-                    _vertexCount++;
-
-                    _vertexArray[_vertexCount].Position = _tempArray[3];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 1f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 0f;
-                    _vertexArray[_vertexCount].Color = quad.Tint;
-                    _vertexCount++;
-                }
-
-
-                // temp for testing only
-                _effect.Projection = Matrix.CreateOrthographic(1000, 1000, 0, 1);
-
-                // this is 6 because we are useing triangle lists
-                if (_vertexCount >= 6)
-                {
-                    _effect.Begin();
-                    for (int i = 0; i < _effect.CurrentTechnique.Passes.Count; i++)
-                    {
-                        EffectPass pass = _effect.CurrentTechnique.Passes[0];
-                        pass.Begin();
-
-                        _effect.Texture = _textureList[0];
-                        _effect.CommitChanges();
-
-                        GraphicsDevice.DrawUserPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _vertexArray, 0, _primitiveCount);
-
-                        pass.End();
-                    }
-                    _effect.End();
-                }
-            }
-            _quadList.Clear();
-            _vertexCount = 0;
-            _primitiveCount = 0;
-
-            // clear the cache count
-            for (int i = 0; i < 50; i++)
-            {
-                _cacheCount[i] = 0;
-            }
-        }
-         * */
     }
 }
