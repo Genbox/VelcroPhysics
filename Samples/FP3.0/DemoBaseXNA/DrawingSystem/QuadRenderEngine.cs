@@ -96,9 +96,6 @@ namespace DemoBaseXNA.DrawingSystem
             _quadIdentity[3].Z = 0.0f;
 
             _tempArray = new Vector3[4];
-
-            // temp for testing only this will become a variable
-            _effect.Projection = Matrix.CreateOrthographic(50, 40, 0, 1);
         }
 
 
@@ -112,7 +109,7 @@ namespace DemoBaseXNA.DrawingSystem
         {
             // if the user would like mipmaps generated for the texture
             if (createMipMaps)
-                texture.GenerateMipMaps(TextureFilter.Anisotropic);
+                texture.GenerateMipMaps(TextureFilter.GaussianQuad);
 
             // add the texture to the list
             _textureList.Add(texture);
@@ -135,10 +132,13 @@ namespace DemoBaseXNA.DrawingSystem
             _quadList.Add(quad);
         }
 
-        public void Render()
+        public void Render(Matrix projection, Matrix view)
         {
             Matrix matrix;
             Quad quad;
+
+            _effect.Projection = projection;
+            _effect.View = view;
 
             // for every texture...used or not?
             for (int i = 0; i < _textureList.Count; i++)
@@ -151,7 +151,9 @@ namespace DemoBaseXNA.DrawingSystem
 
                     // each quad knows everything about itself
                     // all we need to do is create and transform 2 triangles
-                    matrix = Matrix.CreateScale(quad.Width, quad.Height, 1) * Matrix.CreateRotationZ(quad.Rotation) * Matrix.CreateTranslation(quad.Position.X, quad.Position.Y, 0);
+                    matrix = Matrix.CreateScale(quad.Width, quad.Height, 1) *
+                        Matrix.CreateRotationZ(quad.Rotation) *
+                        Matrix.CreateTranslation(quad.Position.X, quad.Position.Y, 0);
 
                     Vector3.Transform(_quadIdentity, ref matrix, _tempArray);
 

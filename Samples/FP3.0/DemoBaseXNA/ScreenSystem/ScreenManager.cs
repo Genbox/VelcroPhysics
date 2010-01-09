@@ -79,6 +79,12 @@ namespace DemoBaseXNA.ScreenSystem
         /// </summary>
         public  QuadRenderEngine QuadRenderEngine { get; private set; }
 
+        /// <summary>
+        /// A default Camera shared by all the screens. This saves
+        /// each screen having to bother creating their own local instance.
+        /// </summary>
+        public Camera2D Camera { get; private set; }
+
         public Vector2 ScreenCenter
         {
             get
@@ -154,6 +160,7 @@ namespace DemoBaseXNA.ScreenSystem
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             _blankTexture = ContentManager.Load<Texture2D>("Content/Common/blank");
             QuadRenderEngine = new QuadRenderEngine(GraphicsDevice);
+            Camera = new Camera2D(GraphicsDevice, Vector3.Zero, 50, 40);
 
             // Tell each of the _screens to load their content.
             foreach (GameScreen screen in _screens)
