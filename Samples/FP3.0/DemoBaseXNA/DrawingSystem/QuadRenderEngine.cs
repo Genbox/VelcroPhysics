@@ -47,7 +47,7 @@ namespace DemoBaseXNA.DrawingSystem
         private VertexPositionColorTexture[] _vertexArray;
         private Vector3[] _quadIdentity;
         private Vector3[] _tempArray;
-        private int[] _indices;
+        private short[] _indices;
         private int _indiceCount;
         private int _vertexCount;
         private int _primitiveCount;
@@ -59,14 +59,14 @@ namespace DemoBaseXNA.DrawingSystem
         {
             #warning These need to be adjustable not hard coded.
             _quadList = new List<Quad>(10000);
-            _textureList = new List<Texture2D>(500);
-            _vertexArray = new VertexPositionColorTexture[60000];
+            _textureList = new List<Texture2D>(50);
+            _vertexArray = new VertexPositionColorTexture[40000];
             // cache stores where each quad is stored in the _quadList based on it's texture
-            _cache = new int[500, 10000];
+            _cache = new int[50, 10000];
             // cacheCount stores how many quads are being rendered per texture
-            _cacheCount = new int[500];
+            _cacheCount = new int[50];
 
-            _indices = new int[60000];
+            _indices = new short[40000];
             _indiceCount = 0;
 
             GraphicsDevice = graphicsDevice;
@@ -74,6 +74,7 @@ namespace DemoBaseXNA.DrawingSystem
             // for now we are using BasicEffect, but this might change for performance reasons.
             _effect = new BasicEffect(GraphicsDevice, null);
             _effect.TextureEnabled = true;
+            _effect.VertexColorEnabled = true;
 
             // create the _quadIdentity
             _quadIdentity = new Vector3[4];
@@ -97,7 +98,7 @@ namespace DemoBaseXNA.DrawingSystem
             _tempArray = new Vector3[4];
 
             // temp for testing only this will become a variable
-            _effect.Projection = Matrix.CreateOrthographic(100, 100, 0, 1);
+            _effect.Projection = Matrix.CreateOrthographic(50, 40, 0, 1);
         }
 
 
@@ -155,8 +156,8 @@ namespace DemoBaseXNA.DrawingSystem
                     Vector3.Transform(_quadIdentity, ref matrix, _tempArray);
 
                     _vertexArray[_vertexCount].Position = _tempArray[0];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 0f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 0f;
+                    _vertexArray[_vertexCount].TextureCoordinate.X = 1f;
+                    _vertexArray[_vertexCount].TextureCoordinate.Y = 1f;
                     _vertexArray[_vertexCount].Color = quad.Tint;
                     _vertexCount++;
 
@@ -167,8 +168,8 @@ namespace DemoBaseXNA.DrawingSystem
                     _vertexCount++;
 
                     _vertexArray[_vertexCount].Position = _tempArray[2];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 1f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 1f;
+                    _vertexArray[_vertexCount].TextureCoordinate.X = 0f;
+                    _vertexArray[_vertexCount].TextureCoordinate.Y = 0f;
                     _vertexArray[_vertexCount].Color = quad.Tint;
                     _vertexCount++;
                     /*
@@ -191,18 +192,22 @@ namespace DemoBaseXNA.DrawingSystem
                     _vertexArray[_vertexCount].Color = quad.Tint;
                     _vertexCount++;
 
-                    _indices[_indiceCount++] = _vertexCount - 4;
-                    _indices[_indiceCount++] = _vertexCount - 3;
-                    _indices[_indiceCount++] = _vertexCount - 2;
-                    _indices[_indiceCount++] = _vertexCount - 4;
-                    _indices[_indiceCount++] = _vertexCount - 2;
-                    _indices[_indiceCount++] = _vertexCount - 1;
+                    // create indexs for our triangles
+                    _indices[_indiceCount++] = (short)(_vertexCount - 4);
+                    _indices[_indiceCount++] = (short)(_vertexCount - 3);
+                    _indices[_indiceCount++] = (short)(_vertexCount - 2);
+                    _indices[_indiceCount++] = (short)(_vertexCount - 4);
+                    _indices[_indiceCount++] = (short)(_vertexCount - 2);
+                    _indices[_indiceCount++] = (short)(_vertexCount - 1);
 
+                    _primitiveCount += 2;
                 }
 
                 // this is 6 because we are useing triangle lists
-                if (_vertexCount >= 6)
+                if (_vertexCount >= 4)
                 {
+                    GraphicsDevice.VertexDeclaration = VertexDeclaration;
+
                     _effect.Begin();
                     for (int k = 0; k < _effect.CurrentTechnique.Passes.Count; k++)
                     {
@@ -212,7 +217,7 @@ namespace DemoBaseXNA.DrawingSystem
                         _effect.Texture = _textureList[i];
                         _effect.CommitChanges();
 
-                        GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _vertexArray, 0, _vertexCount, _indices, 0, _vertexCount / 3);
+                        GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _vertexArray, 0, _vertexCount, _indices, 0, _primitiveCount);
 
                         //GraphicsDevice.DrawUserPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _vertexArray, 0, _vertexCount / 3);
 
@@ -224,12 +229,13 @@ namespace DemoBaseXNA.DrawingSystem
                 // reset vertex  count
                 _vertexCount = 0;
                 _indiceCount = 0;
+                _primitiveCount = 0;
             }
 
             _quadList.Clear();
 
             // clear the cache count
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < 50; i++)
             {
                 _cacheCount[i] = 0;
             }
