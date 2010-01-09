@@ -41,11 +41,11 @@ namespace DemoBaseXNA.Components
         {
             _frameCounter++;
 
-            string fps = string.Format(_format, "fps: {0}", _frameRate);
+            string fps = string.Format(_format, "{0} fps", _frameRate);
 
             _screenManager.SpriteBatch.Begin();
             _screenManager.SpriteBatch.DrawString(_screenManager.SpriteFonts.FrameRateCounterFont, fps,
-                                                  new Vector2(100, 80), Color.White, 0, Vector2.Zero, 1.0f, SpriteEffects.None, 1);
+                                                  new Vector2(5, 5), Color.Black, 0, Vector2.Zero, 1.0f, SpriteEffects.None, 1);
             _screenManager.SpriteBatch.End();
         }
     }

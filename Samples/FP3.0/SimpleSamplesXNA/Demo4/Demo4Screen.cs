@@ -20,26 +20,25 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
         List<Body> _crateBodies = new List<Body>();
 
         QuadRenderEngine renderEngine;
-        float crateSize = 0.4f;
+        float crateSize = 0.8f;
         Stopwatch watch;
         Random rand = new Random();
-        int Count = 45;
+        int Count = 20;
         int BodyCount;
 
         public override void Initialize()
         {
-            PhysicsSimulator = new World(new Vector2(0, -9.8f), true);
+            //PhysicsSimulator = new World(new Vector2(0, -9.8f), true);
+            PhysicsSimulator.Gravity = new Vector2(0, -9.8f);
+
+            //PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
 
             Vertices box = PolygonTools.CreateBox(crateSize, crateSize);
             PolygonShape shape = new PolygonShape(box, 5);
 
-            //Vector2 x = new Vector2(-7.0f, 0.75f);
-            //Vector2 deltaX = new Vector2(0.5625f, 1.25f);
-            //Vector2 deltaY = new Vector2(1.125f, 0.0f);
-
             Vector2 x = new Vector2(-15f, -18);
-            Vector2 deltaX = new Vector2(0.45f, .8f);
-            Vector2 deltaY = new Vector2(.9f, 0.0f);
+            Vector2 deltaX = new Vector2(crateSize * 1.1f, crateSize * 2f);
+            Vector2 deltaY = new Vector2(crateSize * 2.1f, 0.0f);
 
             for (int i = 0; i < Count; ++i)
             {
@@ -64,7 +63,8 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
             // init the new render engine
             renderEngine = new QuadRenderEngine(ScreenManager.GraphicsDevice);
 
-            renderEngine.Submit(ScreenManager.ContentManager.Load<Texture2D>("Content/Crate"), true);
+            renderEngine.Submit(ScreenManager.ContentManager.Load<Texture2D>("Content/crate2"), true);
+            //renderEngine.Submit(DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 50, 50, 1, Color.White, Color.Black), true);
 
             watch = new Stopwatch();
 
@@ -116,6 +116,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
 
             watch.Reset();
 
+            
 
             base.Draw(gameTime);
         }
@@ -147,14 +148,15 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
 
         public static string GetTitle()
         {
-            return "Graphics Demo: Cool new interface";
+            return "Demo4: Stacked Objects";
         }
 
         public static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows a single body with geometry");
-            sb.AppendLine("attached.");
+            sb.AppendLine("This demo shows the stacking stability of the engine.");
+            sb.AppendLine("It shows a stack of rectangular bodies stacked in");
+            sb.AppendLine("the shape of a pyramid.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("GamePad:");
             sb.AppendLine("  -Rotate: left and right triggers");
@@ -163,6 +165,9 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  -Rotate: left and right arrows");
             sb.AppendLine("  -Move: A,S,D,W");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("Mouse");
+            sb.AppendLine("  -Hold down left button and drag");
             return sb.ToString();
         }
     }
