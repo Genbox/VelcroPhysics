@@ -3,6 +3,7 @@ using DemoBaseXNA.Components;
 using DemoBaseXNA.ScreenSystem;
 using FarseerPhysics;
 using FarseerGames.SimpleSamplesXNA.Demo1;
+using FarseerGames.SimpleSamplesXNA.Demo4;
 using FarseerGames.SimpleSamplesXNA.GraphicsDemo;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,8 +25,10 @@ namespace FarseerGames.SimpleSamplesXNA
             _graphics.SynchronizeWithVerticalRetrace = false;
 
             // 60 fps
-            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 100);
+            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 16);
             IsFixedTimeStep = false;
+
+            _graphics.PreferMultiSampling = true;
 
 #if !XBOX
             //windowed
@@ -58,17 +61,15 @@ namespace FarseerGames.SimpleSamplesXNA
             Components.Add(frameRateCounter);
 
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo1Screen.GetTitle(), new Demo1Screen());
-            /*
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo2Screen.GetTitle(), new Demo2Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo3Screen.GetTitle(), new Demo3Screen());
+            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo2Screen.GetTitle(), new Demo2Screen());
+            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo3Screen.GetTitle(), new Demo3Screen());
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo4Screen.GetTitle(), new Demo4Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo5Screen.GetTitle(), new Demo5Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo6Screen.GetTitle(), new Demo6Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo7Screen.GetTitle(), new Demo7Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo8Screen.GetTitle(), new Demo8Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo9Screen.GetTitle(), new Demo9Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo10Screen.GetTitle(), new Demo10Screen());
-             */
+            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo5Screen.GetTitle(), new Demo5Screen());
+            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo6Screen.GetTitle(), new Demo6Screen());
+            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo7Screen.GetTitle(), new Demo7Screen());
+            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo8Screen.GetTitle(), new Demo8Screen());
+            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo9Screen.GetTitle(), new Demo9Screen());
+            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo10Screen.GetTitle(), new Demo10Screen());
             ScreenManager.MainMenuScreen.AddMainMenuItem(GraphicsDemoScreen.GetTitle(), new GraphicsDemoScreen());
             ScreenManager.MainMenuScreen.AddMainMenuItem("Exit", null, true);
 

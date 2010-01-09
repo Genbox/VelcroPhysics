@@ -33,8 +33,9 @@ namespace DemoBaseXNA.ScreenSystem
         protected bool firstRun = true;
         private Border _border;
         private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
-        //private FixedLinearSpring _mousePickSpring;
-        //private Geom _pickedGeom;
+        private Body _groundBody;
+        private MouseJoint _mouseJoint;
+        private Vector2 _mouseWorld;
 
         protected GameScreen()
         {
@@ -44,6 +45,7 @@ namespace DemoBaseXNA.ScreenSystem
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             PhysicsSimulator = new World(new Vector2(0, 0), true);
             PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
+            _groundBody = PhysicsSimulator.CreateBody();
         }
 
         public World PhysicsSimulator { get; set; }
@@ -138,10 +140,9 @@ namespace DemoBaseXNA.ScreenSystem
         {
             _lineBrush.Load(ScreenManager.GraphicsDevice);
             PhysicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
-            float borderWidth = ConvertUnits.ToSimUnits(ScreenManager.ScreenHeight * .05f);
+            float borderWidth = 0.3f;
 
-            _border = new Border(ConvertUnits.ToSimUnits(ScreenManager.ScreenWidth), ConvertUnits.ToSimUnits(ScreenManager.ScreenHeight), borderWidth,
-                                 ConvertUnits.ToSimUnits(ScreenManager.ScreenCenter));
+            _border = new Border(50, 40, borderWidth, new Vector2(0, 0));
             _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
         }
@@ -205,7 +206,7 @@ namespace DemoBaseXNA.ScreenSystem
 
             if (!coveredByOtherScreen && !otherScreenHasFocus)
             {
-                PhysicsSimulator.Step(1f / 60f, 8, 3);
+                PhysicsSimulator.Step(1f / 60f, 4, 2);
                 PhysicsSimulator.ClearForces();
             }
         }
@@ -266,39 +267,102 @@ namespace DemoBaseXNA.ScreenSystem
 #if !XBOX
         private void HandleMouseInput(InputState input)
         {
-            /*
-            Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
-            if (input.LastMouseState.LeftButton == ButtonState.Released &&
-                input.CurrentMouseState.LeftButton == ButtonState.Pressed)
+            Mouse(input.CurrentMouseState, input.LastMouseState);
+        }
+
+        private void Mouse(MouseState state, MouseState oldState)
+        {
+            Matrix m = Matrix.CreateOrthographic(50, 40, 0, 1);
+
+            Vector3 p = ScreenManager.GraphicsDevice.Viewport.Unproject(new Vector3(state.X, state.Y, 0), m, Matrix.Identity, Matrix.Identity);
+
+            Vector2 position = new Vector2(p.X, p.Y );
+            
+
+            //position = GameInstance.ConvertScreenToWorld(state.X, state.Y);
+
+            if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
             {
-                //create mouse spring
-                _pickedGeom = PhysicsSimulator.Collide(point);
-                if (_pickedGeom != null)
-                {
-                    _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(PhysicsSimulator,
-                                                                                      _pickedGeom.Body,
-                                                                                      _pickedGeom.Body.
-                                                                                          GetLocalPosition(point),
-                                                                                      point, 100, 50);
-                }
+                MouseUp(position);
             }
-            else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&
-                     input.CurrentMouseState.LeftButton == ButtonState.Released)
+            else if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
             {
-                //destroy mouse spring
-                if (_mousePickSpring != null && _mousePickSpring.IsDisposed == false)
-                {
-                    _mousePickSpring.Dispose();
-                    _mousePickSpring = null;
-                }
+                MouseDown(position);
             }
 
-            //move anchor point
-            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && _mousePickSpring != null)
+            MouseMove(position);
+        }
+
+        private void MouseDown(Vector2 p)
+        {
+            _mouseWorld = p;
+
+            if (_mouseJoint != null)
             {
-                _mousePickSpring.WorldAttachPoint = point;
+                return;
             }
-             * */
+
+            // Make a small box.
+            AABB aabb;
+            Vector2 d = new Vector2(0.001f, 0.001f);
+            aabb.LowerBound = p - d;
+            aabb.UpperBound = p + d;
+
+            Fixture _fixture = null;
+
+            // Query the world for overlapping shapes.
+            PhysicsSimulator.QueryAABB(
+                (fixture) =>
+                {
+                    Body body = fixture.Body;
+                    if (body.BodyType == BodyType.Dynamic)
+                    {
+                        bool inside = fixture.TestPoint(p);
+                        if (inside)
+                        {
+                            _fixture = fixture;
+
+                            // We are done, terminate the query.
+                            return false;
+                        }
+                    }
+
+                    // Continue the query.
+                    return true;
+                }, ref aabb);
+
+            if (_fixture != null)
+            {
+                Body body = _fixture.Body;
+                _mouseJoint = new MouseJoint(_groundBody, body, p);
+                _mouseJoint.MaxForce = 1000.0f * body.Mass;
+                PhysicsSimulator.CreateJoint(_mouseJoint);
+                body.Awake = true;
+            }
+        }
+
+        private void MouseUp(Vector2 p)
+        {
+            if (_mouseJoint != null)
+            {
+                PhysicsSimulator.DestroyJoint(_mouseJoint);
+                _mouseJoint = null;
+            }
+
+            //if (_bombSpawning)
+            //{
+            //    CompleteBombSpawn(p);
+            //}
+        }
+
+        private void MouseMove(Vector2 p)
+        {
+            _mouseWorld = p;
+
+            if (_mouseJoint != null)
+            {
+                _mouseJoint.Target = p;
+            }
         }
 #endif
 
@@ -307,7 +371,7 @@ namespace DemoBaseXNA.ScreenSystem
         /// </summary>
         public virtual void Draw(GameTime gameTime)
         {
-            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+            //ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
 
             //if (_mousePickSpring != null)
             //{
@@ -322,7 +386,7 @@ namespace DemoBaseXNA.ScreenSystem
             }
 
             _border.Draw(ScreenManager.SpriteBatch);
-            ScreenManager.SpriteBatch.End();
+            //ScreenManager.SpriteBatch.End();
         }
 
         /// <summary>

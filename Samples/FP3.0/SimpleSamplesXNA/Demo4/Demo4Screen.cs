@@ -10,37 +10,56 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
+namespace FarseerGames.SimpleSamplesXNA.Demo4
 {
     /// <summary>
     /// Designed to show the new rendering engine.
     /// </summary>
-    public class GraphicsDemoScreen : GameScreen
+    public class Demo4Screen : GameScreen
     {
-        List<Body> _globeBodies = new List<Body>();
-        
+        List<Body> _crateBodies = new List<Body>();
+
         QuadRenderEngine renderEngine;
-        float radius = 0.1f;
+        float crateSize = 0.4f;
         Stopwatch watch;
         Random rand = new Random();
-        
+        int Count = 45;
+        int BodyCount;
+
         public override void Initialize()
         {
-            PhysicsSimulator.Gravity = new Vector2(0, -10f);
+            PhysicsSimulator = new World(new Vector2(0, -9.8f), true);
 
-            for (int i = 0; i < 1000; i++)
+            Vertices box = PolygonTools.CreateBox(crateSize, crateSize);
+            PolygonShape shape = new PolygonShape(box, 5);
+
+            //Vector2 x = new Vector2(-7.0f, 0.75f);
+            //Vector2 deltaX = new Vector2(0.5625f, 1.25f);
+            //Vector2 deltaY = new Vector2(1.125f, 0.0f);
+
+            Vector2 x = new Vector2(-15f, -18);
+            Vector2 deltaX = new Vector2(0.45f, .8f);
+            Vector2 deltaY = new Vector2(.9f, 0.0f);
+
+            for (int i = 0; i < Count; ++i)
             {
-                //use the body factory to create the physics body
-                _globeBodies.Add(PhysicsSimulator.CreateBody());
-                _globeBodies[_globeBodies.Count - 1].Position = new Vector2(((float)rand.NextDouble() * 9f) - 4.5f, ((float)rand.NextDouble() * 9f) - 4.5f);
-                _globeBodies[_globeBodies.Count - 1].BodyType = BodyType.Dynamic;
-                Vertices box = PolygonTools.CreateBox(radius, radius);
-                PolygonShape shape = new PolygonShape(box, 1);
-                Fixture fix = _globeBodies[_globeBodies.Count - 1].CreateFixture(shape);
-                fix.Friction = 0.5f;
-                fix.Restitution = 0f;
+                Vector2 y = x;
+
+                for (int j = i; j < Count; ++j)
+                {
+                    Body body = PhysicsSimulator.CreateBody();
+                    _crateBodies.Add(body);
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = y;
+                    body.CreateFixture(shape);
+
+                    y += deltaY;
+
+                    BodyCount++;
+                }
+
+                x += deltaX;
             }
-           
 
             // init the new render engine
             renderEngine = new QuadRenderEngine(ScreenManager.GraphicsDevice);
@@ -48,7 +67,7 @@ namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
             renderEngine.Submit(ScreenManager.ContentManager.Load<Texture2D>("Content/Crate"), true);
 
             watch = new Stopwatch();
-            
+
             base.Initialize();
         }
 
@@ -69,10 +88,10 @@ namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
 
         public override void Draw(GameTime gameTime)
         {
-            
+
             watch.Start();
             // add a quad
-            foreach (var globe in _globeBodies)
+            foreach (var globe in _crateBodies)
             {
                 Color tint;
 
@@ -80,9 +99,9 @@ namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
                     tint = Color.White;
                 else
                     tint = Color.LightBlue;
-                
+
                 renderEngine.Submit(new Quad(globe.Position, globe.Rotation,
-                    (radius + 0.0055f) * 2, (radius + 0.0055f) * 2, 0, tint));
+                    (crateSize + 0.0055f) * 2, (crateSize + 0.0055f) * 2, 0, tint));
             }
 
             renderEngine.Render();
@@ -91,13 +110,13 @@ namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
             ScreenManager.SpriteBatch.Begin();
 
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, watch.ElapsedMilliseconds.ToString(), new Vector2(5, 0), Color.Black);
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, Stopwatch.Frequency.ToString(), new Vector2(50,0), Color.Black);
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, Stopwatch.Frequency.ToString(), new Vector2(50, 0), Color.Black);
 
             ScreenManager.SpriteBatch.End();
 
             watch.Reset();
-            
-            
+
+
             base.Draw(gameTime);
         }
 
@@ -122,7 +141,7 @@ namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
             {
                 //ScreenManager.Game.IsFixedTimeStep = false;
             }
-            
+
             base.HandleInput(input);
         }
 

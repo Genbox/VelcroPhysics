@@ -38,5 +38,21 @@ namespace DemoBaseXNA.DrawingSystem
             // tint is none aka white
             Tint = Color.White;
         }
+
+        public Quad(Vector2 position, float rotation, float width, float height, int textureIndex, Color tint)
+        {
+            Position = position;
+            Rotation = rotation;
+            Width = width;
+            Height = height;
+            TextureIndex = textureIndex;
+
+            // alpha is opaque
+            Alpha = 1.0f;
+            // layer is half
+            Layer = 0.5f;
+            // tint is none aka white
+            Tint = tint;
+        }
     }
 }
