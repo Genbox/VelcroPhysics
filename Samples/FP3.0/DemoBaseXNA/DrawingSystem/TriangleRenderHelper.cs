@@ -9,8 +9,8 @@ namespace DemoBaseXNA.DrawingSystem
     public class TriangleRenderHelper : BasePrimitiveRenderHelper
     {
         // Methods
-        public TriangleRenderHelper(int vertexcapacity)
-            : base(vertexcapacity)
+        public TriangleRenderHelper(int vertexcapacity, GraphicsDevice gd)
+            : base(vertexcapacity, gd)
         {
         }
 

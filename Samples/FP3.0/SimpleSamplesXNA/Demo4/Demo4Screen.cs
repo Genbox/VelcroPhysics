@@ -17,14 +17,18 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
     /// </summary>
     public class Demo4Screen : GameScreen
     {
-        List<Body> _crateBodies = new List<Body>();
+        List<Body> _crateBodies;
 
-        float crateSize = 0.8f;
-        int Count = 10;
+        float crateSize = 0.5f;
+        int texture;
+        int Count = 30;
 
         public override void Initialize()
         {
-            PhysicsSimulator.Gravity = new Vector2(0, -9.8f);
+            PhysicsSimulator = new World(new Vector2(0, -9.8f), true);
+            PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
+
+            _crateBodies = new List<Body>();
 
             Vertices box = PolygonTools.CreateBox(crateSize, crateSize);
             PolygonShape shape = new PolygonShape(box, 10f);
@@ -51,23 +55,23 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
                 x += deltaX;
             }
 
-            // this is the crate image and yes you probably should load that content inside LoadContent...
-            ScreenManager.QuadRenderEngine.Submit(ScreenManager.ContentManager.Load<Texture2D>("Content/crate2"), true);
-
-            // this is the default image and looks just like the old farseer
-            //ScreenManager.QuadRenderEngine.Submit(DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 50, 50, 1, Color.White, Color.Black), false);
-
             base.Initialize();
         }
 
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        public override void LoadContent()
         {
-            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+           
+            // this is the crate image and yes you probably should load that content inside LoadContent...
+            //ScreenManager.QuadRenderEngine.Submit(ScreenManager.ContentManager.Load<Texture2D>("Content/crate2"), true);
+
+            // this is the default image and looks just like the old farseer
+            texture = ScreenManager.QuadRenderEngine.Submit(DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 50, 50, 1, Color.White, Color.Black), false);
+
+            base.LoadContent();
         }
 
         public override void Draw(GameTime gameTime)
         {
-
             // add a quad for each body
             foreach (var crate in _crateBodies)
             {
@@ -84,7 +88,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
                 // submit the quad to the QuadRenderEngine
                 // we add 0.0055 to the crates size to help cover cracks when stacking crates
                 ScreenManager.QuadRenderEngine.Submit(new Quad(crate.Position, crate.Rotation,
-                    (crateSize + 0.0055f) * 2, (crateSize + 0.0055f) * 2, 0, tint));
+                    (crateSize + 0.0055f) * 2, (crateSize + 0.0055f) * 2, texture, tint));
             }
 
             // Call Render and relax.

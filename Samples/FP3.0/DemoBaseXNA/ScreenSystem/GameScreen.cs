@@ -32,10 +32,10 @@ namespace DemoBaseXNA.ScreenSystem
         //Note: This should not really be here. It should be in an engine instead that takes care of physics
         protected bool firstRun = true;
         private Border _border;
-        private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
         private Body _groundBody;
         private MouseJoint _mouseJoint;
         private Vector2 _mouseWorld;
+        private LineRenderHelper _lineRender;
 
         protected GameScreen()
         {
@@ -43,10 +43,6 @@ namespace DemoBaseXNA.ScreenSystem
             TransitionPosition = 1;
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
-            PhysicsSimulator = new World(new Vector2(0, 0), true);
-            //PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
-            //ScreenManager.AddScreen(PhysicsSimulatorView);
-            _groundBody = PhysicsSimulator.CreateBody();
         }
 
         public World PhysicsSimulator { get; set; }
@@ -139,15 +135,14 @@ namespace DemoBaseXNA.ScreenSystem
         /// </summary>
         public virtual void LoadContent()
         {
-            _lineBrush.Load(ScreenManager.GraphicsDevice);
-            float borderWidth = 1f;
+            PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
+            PhysicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
+            _lineRender = new LineRenderHelper(100, ScreenManager.GraphicsDevice);
+            float borderWidth = 2f;
 
             _border = new Border(50, 40, borderWidth, new Vector2(0, 0));
-            _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
-
-            PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
-
-            PhysicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
+            _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator, ScreenManager.QuadRenderEngine);
+            _groundBody = PhysicsSimulator.CreateBody();
         }
 
         /// <summary>
@@ -209,8 +204,11 @@ namespace DemoBaseXNA.ScreenSystem
 
             if (!coveredByOtherScreen && !otherScreenHasFocus)
             {
-                PhysicsSimulator.Step(1f / 60f, 8, 3);
-                PhysicsSimulator.ClearForces();
+                if (PhysicsSimulator != null)
+                {
+                    PhysicsSimulator.Step(1f / 60f, 8, 3);
+                    PhysicsSimulator.ClearForces();
+                }
             }
         }
 
@@ -378,19 +376,16 @@ namespace DemoBaseXNA.ScreenSystem
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
 
-            //if (_mousePickSpring != null)
-            //{
-            //    _lineBrush.Draw(ScreenManager.SpriteBatch,
-            //                    _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
-            //                    _mousePickSpring.WorldAttachPoint);
-            //}
-
-            if (DebugViewEnabled)
+            if (_mouseJoint != null)
             {
-                PhysicsSimulatorView.Draw(ScreenManager.SpriteBatch);
+                _lineRender.Submit(new Vector3(_mouseJoint.WorldAnchorA, 0), new Vector3(_mouseJoint.WorldAnchorB, 0), Color.Black);
             }
 
-            //_border.Draw(ScreenManager.SpriteBatch);
+            PhysicsSimulatorView.Draw(ScreenManager.SpriteBatch);
+            
+            _lineRender.Render(ScreenManager.GraphicsDevice, ScreenManager.Camera.Projection, ScreenManager.Camera.View);
+            _lineRender.Clear();
+            _border.Draw();
             ScreenManager.SpriteBatch.End();
         }
 

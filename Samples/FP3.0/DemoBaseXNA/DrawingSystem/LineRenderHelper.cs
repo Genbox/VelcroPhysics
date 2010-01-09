@@ -11,8 +11,8 @@ namespace DemoBaseXNA.DrawingSystem
     public class LineRenderHelper : BasePrimitiveRenderHelper
     {
         // Methods
-        public LineRenderHelper(int vertexcapacity)
-            : base(vertexcapacity)
+        public LineRenderHelper(int vertexcapacity, GraphicsDevice gd)
+            : base(vertexcapacity, gd)
         {
         }
 

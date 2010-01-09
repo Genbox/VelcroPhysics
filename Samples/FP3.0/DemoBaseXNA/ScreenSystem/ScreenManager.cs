@@ -77,7 +77,7 @@ namespace DemoBaseXNA.ScreenSystem
         /// A default QuadRenderEngine shared by all the screens. This saves
         /// each screen having to bother creating their own local instance.
         /// </summary>
-        public  QuadRenderEngine QuadRenderEngine { get; private set; }
+        public  QuadRenderEngine QuadRenderEngine { get; set; }
 
         /// <summary>
         /// A default Camera shared by all the screens. This saves

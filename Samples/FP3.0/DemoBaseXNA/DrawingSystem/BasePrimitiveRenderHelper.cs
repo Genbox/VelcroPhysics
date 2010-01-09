@@ -13,11 +13,14 @@ namespace DemoBaseXNA.DrawingSystem
         private int count;
         private VertexPositionColor[] vertices;
         private VertexDeclaration vertexDeclaration;
+        private BasicEffect effect;
 
         // Methods
-        public BasePrimitiveRenderHelper(int vertexcapacity)
+        public BasePrimitiveRenderHelper(int vertexcapacity, GraphicsDevice gd)
         {
             this.vertices = new VertexPositionColor[vertexcapacity];
+            effect = new BasicEffect(gd, null);
+            effect.VertexColorEnabled = true;
         }
 
         public virtual void Clear()
@@ -32,6 +35,14 @@ namespace DemoBaseXNA.DrawingSystem
                 //device.VertexDeclaration = ;
                 device.DrawUserPrimitives<VertexPositionColor>(this.PrimitiveType, this.vertices, 0, this.PrimitiveCount);
             }
+        }
+
+        public void Render(GraphicsDevice device, Matrix projection, Matrix view)
+        {
+            effect.Projection = projection;
+            effect.View = view;
+
+            Render(device, effect);
         }
 
         public void Render(GraphicsDevice device, Effect effect)

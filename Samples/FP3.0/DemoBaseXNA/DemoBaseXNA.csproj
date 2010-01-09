@@ -96,7 +96,6 @@
     <Compile Include="DrawingSystem\EllipseBrush.cs" />
     <Compile Include="DrawingSystem\LineBrush.cs" />
     <Compile Include="DrawingSystem\LineRenderHelper.cs" />
-    <Compile Include="DrawingSystem\PolygonRenderHelper.cs" />
     <Compile Include="DrawingSystem\Quad.cs" />
     <Compile Include="DrawingSystem\QuadRenderEngine.cs" />
     <Compile Include="DrawingSystem\RectangleBrush.cs" />
