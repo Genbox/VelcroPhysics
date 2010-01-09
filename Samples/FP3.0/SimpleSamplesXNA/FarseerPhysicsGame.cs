@@ -26,7 +26,7 @@ namespace FarseerGames.SimpleSamplesXNA
 
             // 60 fps
             TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 16);
-            IsFixedTimeStep = false;
+            IsFixedTimeStep = true;
 
             _graphics.PreferMultiSampling = true;
 

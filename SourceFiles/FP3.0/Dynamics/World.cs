@@ -60,6 +60,8 @@ namespace FarseerPhysics
         private WorldRayCastCallback _rayCastCallback;
         private RayCastCallback _rayCastCallbackWrapper;
 
+        private Stopwatch _watch;
+
         /// <summary>
         /// Construct a world object.
         /// </summary>
@@ -80,6 +82,9 @@ namespace FarseerPhysics
 
             //Create the default contact filter
             new DefaultContactFilter(this);
+
+            // init the watch
+            _watch = new Stopwatch();
         }
 
         /// <summary>
@@ -167,6 +172,8 @@ namespace FarseerPhysics
         public Joint JointList { get; private set; }
 
         public bool AllowSleep { get; private set; }
+
+        public TimeSpan UpdateTime { get; private set; }
 
         /// <summary>
         /// Get the world contact list. With the returned contact, use Contact.GetNext to get
@@ -480,6 +487,8 @@ namespace FarseerPhysics
         /// <param name="positionIterations">for the position constraint solver.</param>
         public void Step(float dt, int velocityIterations, int positionIterations)
         {
+            _watch.Start();
+            
             // If new fixtures were added, we need to find the new contacts.
             if ((Flags & WorldFlags.NewFixture) == WorldFlags.NewFixture)
             {
@@ -528,6 +537,10 @@ namespace FarseerPhysics
             }
 
             Flags &= ~WorldFlags.Locked;
+
+            _watch.Stop();
+            UpdateTime = _watch.Elapsed;
+            _watch.Reset();
         }
 
         /// <summary>

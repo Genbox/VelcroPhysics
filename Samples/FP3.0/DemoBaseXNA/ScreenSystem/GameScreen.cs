@@ -44,7 +44,8 @@ namespace DemoBaseXNA.ScreenSystem
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             PhysicsSimulator = new World(new Vector2(0, 0), true);
-            PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
+            //PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
+            //ScreenManager.AddScreen(PhysicsSimulatorView);
             _groundBody = PhysicsSimulator.CreateBody();
         }
 
@@ -139,12 +140,14 @@ namespace DemoBaseXNA.ScreenSystem
         public virtual void LoadContent()
         {
             _lineBrush.Load(ScreenManager.GraphicsDevice);
-            PhysicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
-            float borderWidth = 0.3f;
+            float borderWidth = 1f;
 
             _border = new Border(50, 40, borderWidth, new Vector2(0, 0));
             _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
 
+            PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
+
+            PhysicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
         }
 
         /// <summary>
@@ -206,7 +209,7 @@ namespace DemoBaseXNA.ScreenSystem
 
             if (!coveredByOtherScreen && !otherScreenHasFocus)
             {
-                PhysicsSimulator.Step(1f / 60f, 4, 2);
+                PhysicsSimulator.Step(1f / 60f, 8, 3);
                 PhysicsSimulator.ClearForces();
             }
         }
@@ -261,6 +264,7 @@ namespace DemoBaseXNA.ScreenSystem
 
 #if !XBOX
             HandleMouseInput(input);
+            PhysicsSimulatorView.HandleInput(input);
 #endif
         }
 
@@ -371,7 +375,7 @@ namespace DemoBaseXNA.ScreenSystem
         /// </summary>
         public virtual void Draw(GameTime gameTime)
         {
-            //ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
 
             //if (_mousePickSpring != null)
             //{
@@ -386,7 +390,7 @@ namespace DemoBaseXNA.ScreenSystem
             }
 
             _border.Draw(ScreenManager.SpriteBatch);
-            //ScreenManager.SpriteBatch.End();
+            ScreenManager.SpriteBatch.End();
         }
 
         /// <summary>
