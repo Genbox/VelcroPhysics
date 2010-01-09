@@ -10,13 +10,13 @@ namespace DemoBaseXNA.DemoShare
     {
         private Body _borderBody;
         private Fixture[] _borderGeom;
-        private Texture2D[] _borderTexture;
+        private int[] _borderTexture;
         private float _borderWidth;
         private float _height;
         private Vector2 _position;
         private float _width;
-        private QuadRenderEngine _quadRenderEngine;
         private Quad[] _quads;
+        private QuadRenderEngine _quadRenderEngine;
 
         public Border(float width, float height, float borderWidth, Vector2 position)
         {
@@ -26,26 +26,22 @@ namespace DemoBaseXNA.DemoShare
             _position = position;
         }
 
-        public void Load(GraphicsDevice graphicsDevice, World physicsSimulator)
+        public void Load(GraphicsDevice graphicsDevice, World physicsSimulator, QuadRenderEngine engine)
         {
-            _quadRenderEngine = new QuadRenderEngine(graphicsDevice);
             _quads = new Quad[4];
             
-            _borderTexture = new Texture2D[4];
+            _borderTexture = new int[4];
 
-            _borderTexture[0] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int)(_borderWidth * 10), (int)(_height * 10), 2, 0, 0,
-                                                                     new Color(200, 200, 200, 150), Color.White);
-            _borderTexture[1] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int)(_borderWidth * 100), (int)(_height * 10), 2, 0, 0,
-                                                                     new Color(200, 200, 200, 150), Color.White);
-            _borderTexture[2] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int)(_width * 10), (int)(_borderWidth * 10), 2, 0, 0,
-                                                                     new Color(200, 200, 200, 150), Color.White);
-            _borderTexture[3] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int)(_width * 10), (int)(_borderWidth * 10), 2, 0, 0,
-                                                                     new Color(200, 200, 200, 150), Color.White);
+            _quadRenderEngine = engine;
 
-            _quadRenderEngine.Submit(_borderTexture[0], false);
-            _quadRenderEngine.Submit(_borderTexture[1], false);
-            _quadRenderEngine.Submit(_borderTexture[2], false);
-            _quadRenderEngine.Submit(_borderTexture[3], false);
+            _borderTexture[0] = _quadRenderEngine.Submit(DrawingHelper.CreateRectangleTexture(graphicsDevice, (int)(_borderWidth * 10), (int)(_height * 10), 2, 0, 0,
+                                                                     new Color(200, 200, 200, 150), Color.White), true);
+            _borderTexture[1] = _quadRenderEngine.Submit(DrawingHelper.CreateRectangleTexture(graphicsDevice, (int)(_borderWidth * 10), (int)(_height * 10), 2, 0, 0,
+                                                                     new Color(200, 200, 200, 150), Color.White), true);
+            _borderTexture[2] = _quadRenderEngine.Submit(DrawingHelper.CreateRectangleTexture(graphicsDevice, (int)(_width * 10), (int)(_borderWidth * 10), 2, 0, 0,
+                                                                     new Color(200, 200, 200, 150), Color.White), true);
+            _borderTexture[3] = _quadRenderEngine.Submit(DrawingHelper.CreateRectangleTexture(graphicsDevice, (int)(_width * 10), (int)(_borderWidth * 10), 2, 0, 0,
+                                                                     new Color(200, 200, 200, 150), Color.White), true);
 
             //use the body factory to create the physics body
             _borderBody = physicsSimulator.CreateBody();
@@ -67,7 +63,7 @@ namespace DemoBaseXNA.DemoShare
             _borderGeom[0].Friction = .5f;
             _borderGeom[0].GroupIndex = 100;
             _borderGeom[0].UserData = geometryOffset;
-            _quads[0] = new Quad(geometryOffset, 0, _borderWidth, _height, 0);
+            _quads[0] = new Quad(geometryOffset, 0, _borderWidth, _height, _borderTexture[0]);
 
             //right border (clone left border since geometry is same size)
             geometryOffset = new Vector2((_width * .5f - _borderWidth * .5f), 0);
@@ -78,7 +74,7 @@ namespace DemoBaseXNA.DemoShare
             _borderGeom[1].Friction = .5f;
             _borderGeom[1].GroupIndex = 100;
             _borderGeom[1].UserData = geometryOffset;
-            _quads[1] = new Quad(geometryOffset, 0, _borderWidth, _height, 1);
+            _quads[1] = new Quad(geometryOffset, 0, _borderWidth, _height, _borderTexture[1]);
 
             //top border
             geometryOffset = new Vector2(0, -(_height * .5f - _borderWidth * .5f));
@@ -89,7 +85,7 @@ namespace DemoBaseXNA.DemoShare
             _borderGeom[2].Friction = .5f;
             _borderGeom[2].GroupIndex = 100;
             _borderGeom[2].UserData = geometryOffset;
-            _quads[2] = new Quad(geometryOffset, 0, _width, _borderWidth, 2);
+            _quads[2] = new Quad(geometryOffset, 0, _width, _borderWidth, _borderTexture[2]);
 
             //bottom border (clone top border since geometry is same size)
             geometryOffset = new Vector2(0, _height * .5f - _borderWidth * .5f);
@@ -100,19 +96,15 @@ namespace DemoBaseXNA.DemoShare
             _borderGeom[3].Friction = .5f;
             _borderGeom[3].GroupIndex = 100;
             _borderGeom[3].UserData = geometryOffset;
-            _quads[3] = new Quad(geometryOffset, 0, _width, _borderWidth, 3);
+            _quads[3] = new Quad(geometryOffset, 0, _width, _borderWidth, _borderTexture[3]);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
             for (int i = 0; i < 4; i++)
             {
-                //Vector2 borderOrigin = new Vector2(_borderTexture[i].Width / 2f, _borderTexture[i].Height / 2f);
-                //spriteBatch.Draw(_borderTexture[i], ConvertUnits.ToDisplayUnits(_borderBody.Position + (Vector2)_borderGeom[i].UserData), null, Color.White, 0,
-                //                 borderOrigin, 1, SpriteEffects.None, 0f);
-                //_quadRenderEngine.Submit(_quads[i]);
+                _quadRenderEngine.Submit(_quads[i]);
             }
-            //_quadRenderEngine.Render();
         }
     }
 }

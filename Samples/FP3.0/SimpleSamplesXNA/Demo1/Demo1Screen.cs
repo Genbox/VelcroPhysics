@@ -12,13 +12,13 @@ namespace FarseerGames.SimpleSamplesXNA.Demo1
 {
     public class Demo1Screen : GameScreen
     {
-        private RectangleBrush _rectangleBrush;
+        private int texture;
         private Body _rectangleBody;
+        private float size = 2;
 
         public override void Initialize()
         {
             PhysicsSimulator = new World(new Vector2(0, 0), true);
-            PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
 
             base.Initialize();
         }
@@ -26,14 +26,13 @@ namespace FarseerGames.SimpleSamplesXNA.Demo1
         public override void LoadContent()
         {
             //load texture that will visually represent the physics body
-            _rectangleBrush = new RectangleBrush(100, 100, Color.Gold, Color.Black);
-            _rectangleBrush.Load(ScreenManager.GraphicsDevice);
+            texture = ScreenManager.QuadRenderEngine.Submit(DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 100, 100, 1, Color.Gold, Color.Black), true);
 
             //use the body factory to create the physics body
             _rectangleBody = PhysicsSimulator.CreateBody();
-            _rectangleBody.Position = ConvertUnits.ToSimUnits(ScreenManager.ScreenCenter);
+            _rectangleBody.Position = Vector2.Zero;
             _rectangleBody.BodyType = BodyType.Dynamic;
-            Vertices box = PolygonTools.CreateBox(ConvertUnits.ToSimUnits(46), ConvertUnits.ToSimUnits(46));
+            Vertices box = PolygonTools.CreateBox(size, size);
             PolygonShape shape = new PolygonShape(box, 5);
             _rectangleBody.CreateFixture(shape);
 
@@ -42,9 +41,9 @@ namespace FarseerGames.SimpleSamplesXNA.Demo1
 
         public override void Draw(GameTime gameTime)
         {
-            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            _rectangleBrush.Draw(ScreenManager.SpriteBatch, ConvertUnits.ToDisplayUnits(_rectangleBody.Position), _rectangleBody.Rotation);
-            ScreenManager.SpriteBatch.End();
+            ScreenManager.QuadRenderEngine.Submit(new Quad(_rectangleBody.Position, _rectangleBody.Rotation, (size + 0.0055f) * 2, (size + 0.0055f) * 2, texture));
+
+            ScreenManager.QuadRenderEngine.Render(ScreenManager.Camera.Projection, ScreenManager.Camera.View);
 
             base.Draw(gameTime);
         }
@@ -89,22 +88,22 @@ namespace FarseerGames.SimpleSamplesXNA.Demo1
 
         private void HandleKeyboardInput(InputState input)
         {
-            const float forceAmount = 10;
+            const float forceAmount = 1000;
             Vector2 force = Vector2.Zero;
             force.Y = -force.Y;
 
             if (input.CurrentKeyboardState.IsKeyDown(Keys.A)) { force += new Vector2(-forceAmount, 0); }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { force += new Vector2(0, forceAmount); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { force += new Vector2(0, -forceAmount); }
             if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { force += new Vector2(forceAmount, 0); }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, -forceAmount); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, forceAmount); }
 
             _rectangleBody.ApplyForce(force, _rectangleBody.Position);
 
-            const float torqueAmount = 1;
+            const float torqueAmount = 1000;
             float torque = 0;
 
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque -= torqueAmount; }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque += torqueAmount; }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque += torqueAmount; }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque -= torqueAmount; }
 
             _rectangleBody.ApplyTorque(torque);
         }

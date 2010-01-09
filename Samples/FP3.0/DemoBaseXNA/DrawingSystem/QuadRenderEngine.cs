@@ -164,8 +164,8 @@ namespace DemoBaseXNA.DrawingSystem
                     _vertexCount++;
 
                     _vertexArray[_vertexCount].Position = _tempArray[1];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 0f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 1f;
+                    _vertexArray[_vertexCount].TextureCoordinate.X = 1f;
+                    _vertexArray[_vertexCount].TextureCoordinate.Y = 0f;
                     _vertexArray[_vertexCount].Color = quad.Tint;
                     _vertexCount++;
 
@@ -176,8 +176,8 @@ namespace DemoBaseXNA.DrawingSystem
                     _vertexCount++;
 
                     _vertexArray[_vertexCount].Position = _tempArray[3];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 1f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 0f;
+                    _vertexArray[_vertexCount].TextureCoordinate.X = 0f;
+                    _vertexArray[_vertexCount].TextureCoordinate.Y = 1f;
                     _vertexArray[_vertexCount].Color = quad.Tint;
                     _vertexCount++;
 

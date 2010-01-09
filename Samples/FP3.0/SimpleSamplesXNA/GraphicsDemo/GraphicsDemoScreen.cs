@@ -17,37 +17,10 @@ namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
     /// </summary>
     public class GraphicsDemoScreen : GameScreen
     {
-        List<Body> _globeBodies = new List<Body>();
         
-        QuadRenderEngine renderEngine;
-        float radius = 0.1f;
-        Stopwatch watch;
-        Random rand = new Random();
         
         public override void Initialize()
         {
-            PhysicsSimulator.Gravity = new Vector2(0, -10f);
-
-            for (int i = 0; i < 1000; i++)
-            {
-                //use the body factory to create the physics body
-                _globeBodies.Add(PhysicsSimulator.CreateBody());
-                _globeBodies[_globeBodies.Count - 1].Position = new Vector2(((float)rand.NextDouble() * 9f) - 4.5f, ((float)rand.NextDouble() * 9f) - 4.5f);
-                _globeBodies[_globeBodies.Count - 1].BodyType = BodyType.Dynamic;
-                Vertices box = PolygonTools.CreateBox(radius, radius);
-                PolygonShape shape = new PolygonShape(box, 1);
-                Fixture fix = _globeBodies[_globeBodies.Count - 1].CreateFixture(shape);
-                fix.Friction = 0.5f;
-                fix.Restitution = 0f;
-            }
-           
-
-            // init the new render engine
-            renderEngine = new QuadRenderEngine(ScreenManager.GraphicsDevice);
-
-            renderEngine.Submit(ScreenManager.ContentManager.Load<Texture2D>("Content/Crate"), true);
-
-            watch = new Stopwatch();
             
             base.Initialize();
         }
@@ -69,34 +42,7 @@ namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
 
         public override void Draw(GameTime gameTime)
         {
-            
-            watch.Start();
-            // add a quad
-            foreach (var globe in _globeBodies)
-            {
-                Color tint;
-
-                if (globe.Awake == true)
-                    tint = Color.White;
-                else
-                    tint = Color.LightBlue;
-                
-                renderEngine.Submit(new Quad(globe.Position, globe.Rotation,
-                    (radius + 0.0055f) * 2, (radius + 0.0055f) * 2, 0, tint));
-            }
-
-            //renderEngine.Render();
-            watch.Stop();
-
-            ScreenManager.SpriteBatch.Begin();
-
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, watch.ElapsedMilliseconds.ToString(), new Vector2(5, 0), Color.Black);
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, Stopwatch.Frequency.ToString(), new Vector2(50,0), Color.Black);
-
-            ScreenManager.SpriteBatch.End();
-
-            watch.Reset();
-            
+           
             
             base.Draw(gameTime);
         }
