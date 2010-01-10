@@ -1,35 +1,19 @@
-﻿/*
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
-* Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.gphysics.com 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
-*/
-
+﻿using FarseerPhysics.Common.Siedel;
+using FarseerPhysics.Common.Siedel.Shapes;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using Point = FarseerPhysics.Common.Siedel.Shapes.Point;
 
 namespace FarseerPhysics.TestBed.Tests
 {
     public class TextureVerticesTest : Test
     {
-        private Texture2D _polygonTexture;
         private Body _polygonBody;
+        private Texture2D _polygonTexture;
+        private Vector2[] _vertices;
+        private TrapezoidalMap map;
 
         private TextureVerticesTest()
         {
@@ -57,25 +41,55 @@ namespace FarseerPhysics.TestBed.Tests
             Vector2 scale = new Vector2(0.1f, 0.1f);
             PolygonTools.Scale(ref verts, ref scale);
 
-            vertices = verts.ToArray();
+            List<Common.Siedel.Shapes.Point> points = new List<Common.Siedel.Shapes.Point>();
 
-            //PolygonShape diamondShape = new PolygonShape(verts, 100);
+            foreach (Vector2 vector2 in verts)
+            {
+                points.Add(new Common.Siedel.Shapes.Point(vector2.X, vector2.Y));
+            }
+
+            Triangulator tr = new Triangulator(points);
+            map = tr.trapezoidalMap;
+
+            //_vertices = verts.ToArray();
+
+            //PolygonShape shape = new PolygonShape(verts, 100);
 
             //Use the body factory to create the physics body
             //_polygonBody = World.CreateBody();
             //_polygonBody.Position = new Vector2(0, 0);
-            //_polygonBody.CreateFixture(diamondShape);
+            //_polygonBody.CreateFixture(shape);
 
             base.Initialize();
         }
 
-        private Vector2[] vertices;
-        public override void Update(FarseerPhysics.TestBed.Framework.Settings settings)
+        public override void Update(Framework.Settings settings)
         {
-            for (int i = 0; i < vertices.Length; i++)
+            //for (int i = 0; i < _vertices.Length; i++)
+            //{
+            //    DebugView.DrawCircle(_vertices[i], 0.1f, Color.White);
+            //}
+
+            foreach (Trapezoid t in map.map)
             {
-                DebugView.DrawCircle(vertices[i],0.1f,Color.White);
-                
+                List<Point> point = t.vertices();
+
+                //Vector2[] vec = new Vector2[point.Count];
+                for (int i = 0; i < point.Count; i++)
+                {
+                    //vec[i] = new Vector2(point[i].x, point[i].y);
+
+                    //DebugView.DrawPoint(new Vector2(point[i].x, point[i].y), 0.1f, Color.White);
+                    if (i== point.Count -1)
+                        break;
+                    DebugView.DrawSegment(new Vector2(point[i].x, point[i].y), new Vector2(point[i + 1].x, point[i + 1].x), Color.White);
+
+                }
+
+                break;
+
+
+                //DebugView.DrawPolygon(ref vec, vec.Length, Color.Red);
             }
 
             base.Update(settings);

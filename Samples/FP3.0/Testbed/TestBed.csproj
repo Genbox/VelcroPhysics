@@ -105,6 +105,7 @@
     <Compile Include="Tests\ConfinedTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\ConvexDecompositionTest.cs" />
     <Compile Include="Tests\DistanceTest.cs">
       <SubType>Code</SubType>
     </Compile>
