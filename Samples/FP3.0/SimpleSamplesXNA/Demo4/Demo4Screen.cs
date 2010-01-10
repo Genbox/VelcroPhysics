@@ -33,9 +33,9 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
             Vertices box = PolygonTools.CreateBox(crateSize, crateSize);
             PolygonShape shape = new PolygonShape(box, 10f);
 
-            Vector2 x = new Vector2(-15f, -18);
-            Vector2 deltaX = new Vector2(crateSize * 1.1f, crateSize * 2f);
-            Vector2 deltaY = new Vector2(crateSize * 2.1f, 0.0f);
+            Vector2 x = new Vector2(-15f, -17.5f);
+            Vector2 deltaX = new Vector2(crateSize * 1.01f, crateSize * 2f);
+            Vector2 deltaY = new Vector2(crateSize * 2.01f, 0.0f);
 
             for (int i = 0; i < Count; ++i)
             {
@@ -47,7 +47,8 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
                     _crateBodies.Add(body);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = y;
-                    body.CreateFixture(shape);
+                    Fixture fix = body.CreateFixture(shape);
+                    fix.Friction = 1.0f;
 
                     y += deltaY;
                 }

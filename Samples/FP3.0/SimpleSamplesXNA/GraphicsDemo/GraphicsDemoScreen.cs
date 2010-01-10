@@ -59,29 +59,20 @@ namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
             {
                 ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
             }
-
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Space))
-            {
-                ScreenManager.Game.IsFixedTimeStep = true;
-            }
-            else
-            {
-                //ScreenManager.Game.IsFixedTimeStep = false;
-            }
             
             base.HandleInput(input);
         }
 
         public static string GetTitle()
         {
-            return "Graphics Demo: Cool new interface";
+            return "Graphics Demo: QuadRenderEngine is easy and fast.";
         }
 
         public static string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows a single body with geometry");
-            sb.AppendLine("attached.");
+            sb.AppendLine("This demo shows several of QuadRenderEngines");
+            sb.AppendLine("features.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("GamePad:");
             sb.AppendLine("  -Rotate: left and right triggers");
