@@ -21,12 +21,12 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
 
         float crateSize = 0.5f;
         int texture;
-        int Count = 30;
+        int Count = 15;
 
         public override void Initialize()
         {
             PhysicsSimulator = new World(new Vector2(0, -9.8f), true);
-            PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
+            PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator, ScreenManager.Camera);
 
             _crateBodies = new List<Body>();
 
@@ -88,12 +88,12 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
 
                 // submit the quad to the QuadRenderEngine
                 // we add 0.0055 to the crates size to help cover cracks when stacking crates
-                ScreenManager.QuadRenderEngine.Submit(new Quad(crate.Position, crate.Rotation,
-                    (crateSize + 0.0055f) * 2, (crateSize + 0.0055f) * 2, texture, tint));
+                //ScreenManager.QuadRenderEngine.Submit(new Quad(crate.Position, crate.Rotation,
+                //    (crateSize + 0.0055f) * 2, (crateSize + 0.0055f) * 2, texture, tint));
             }
 
             // Call Render and relax.
-            ScreenManager.QuadRenderEngine.Render(ScreenManager.Camera.Projection, ScreenManager.Camera.View);
+           // ScreenManager.QuadRenderEngine.Render(ScreenManager.Camera.Projection, ScreenManager.Camera.View);
 
             base.Draw(gameTime);
         }

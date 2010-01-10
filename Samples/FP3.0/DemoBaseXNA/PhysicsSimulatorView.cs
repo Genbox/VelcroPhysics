@@ -15,16 +15,19 @@ namespace DemoBaseXNA
     /// </summary>
     public sealed class PhysicsSimulatorView
     {
+        public bool EnableDiagnostics;
+        
         private World _physicsSimulator;
         private GraphicsDevice _graphics;
-        public bool EnableDiagnostics;
+        private Camera2D _camera;
+        
 
         //Performance panel
         private bool _enablePerformancePanelView = true;
         private const string _stepTime = "Time: {0}ms";
         private const string _bodyCount = "Bodies: {0}";
         private const string _jointCount = "Joints: {0}";
-        private Color _performancePanelColor = new Color(0, 0, 0, 150);
+        private Color _performancePanelColor = new Color(128, 128, 128, 150);
         private Vector2 _performancePanelPosition = new Vector2(50, 50);
         private Color _performancePanelTextColor = new Color(0, 0, 0, 255);
         private Texture2D _performancePanelTexture;
@@ -39,9 +42,13 @@ namespace DemoBaseXNA
         private List<float> _graphValues;
         private LineRenderHelper _line;
 
-        public PhysicsSimulatorView(World physicsSimulator)
+        // edges
+        private bool _enableEdgeView = true;
+
+        public PhysicsSimulatorView(World physicsSimulator, Camera2D camera)
         {
             _physicsSimulator = physicsSimulator;
+            _camera = camera;
 
             _graphValues = new List<float>();
 
@@ -70,7 +77,7 @@ namespace DemoBaseXNA
 
             _diagnosticSpriteFont = Content.Load<SpriteFont>("Content/Fonts/diagnosticFont");
 
-            _line = new LineRenderHelper(10000, GraphicsDevice);
+            _line = new LineRenderHelper(20000, GraphicsDevice);
         }
 
         public void HandleInput(InputState input)
@@ -169,6 +176,56 @@ namespace DemoBaseXNA
                 {
                     DrawPerformancePanel(spriteBatch);
                 }
+
+                if (_enableEdgeView)
+                {
+                    DrawEdges();
+                }
+            }
+        }
+
+        private void DrawEdges()
+        {
+            Vector2 temp1, temp2;
+            Matrix transform;
+            Color edgeColor;
+            
+            for (Body body = _physicsSimulator.BodyList; body != null; body = body.NextBody)
+            {
+                if (body.Awake)
+                    edgeColor = Color.Red;
+                else
+                    edgeColor = Color.Green;
+                
+                for (Fixture fixture = body.FixtureList; fixture != null; fixture = fixture.NextFixture)
+                {
+                    switch (fixture.ShapeType)
+                    {
+                        case ShapeType.Unknown:
+                            break;
+                        case ShapeType.Circle:
+                            break;
+                        case ShapeType.Polygon:
+                            PolygonShape polygon = (PolygonShape)fixture.Shape;
+
+                            transform = Matrix.CreateRotationZ(body.Rotation) * Matrix.CreateTranslation(body.Position.X, body.Position.Y, 0);
+                            
+                            for (int i = 1; i < polygon.Vertices.Count; i++)
+                            {
+                                temp1 = Vector2.Transform(polygon.Vertices[i - 1], transform);
+                                temp2 = Vector2.Transform(polygon.Vertices[i], transform);
+
+                                _line.Submit(new Vector3(temp1, 0), new Vector3(temp2, 0), edgeColor);
+                            }
+                            temp1 = Vector2.Transform(polygon.Vertices[polygon.Vertices.Count - 1], transform);
+                            temp2 = Vector2.Transform(polygon.Vertices[0], transform);
+
+                            _line.Submit(new Vector3(temp1, 0), new Vector3(temp2, 0), edgeColor);
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
         }
         
@@ -206,6 +263,8 @@ namespace DemoBaseXNA
                                    String.Format(_jointCount, _physicsSimulator.JointCount),
                                    _performancePanelPosition + new Vector2(12, 38), Color.White);
 
+            _line.Render(_graphics, _camera.Projection, _camera.View);
+            _line.Clear();
 
             if (_graphValues.Count > 2)
             {
