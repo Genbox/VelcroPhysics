@@ -135,7 +135,7 @@ namespace DemoBaseXNA.ScreenSystem
         /// </summary>
         public virtual void LoadContent()
         {
-            PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator);
+            PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator, ScreenManager.Camera);
             PhysicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
             _lineRender = new LineRenderHelper(100, ScreenManager.GraphicsDevice);
             float borderWidth = 2f;
