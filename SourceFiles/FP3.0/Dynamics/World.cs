@@ -171,7 +171,7 @@ namespace FarseerPhysics
         /// <returns>the head of the world joint list.</returns>
         public Joint JointList { get; private set; }
 
-        public bool AllowSleep { get; private set; }
+        public bool AllowSleep { get; set; }
 
         public TimeSpan UpdateTime { get; private set; }
 
