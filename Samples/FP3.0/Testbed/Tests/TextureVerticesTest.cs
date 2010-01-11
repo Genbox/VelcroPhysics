@@ -41,8 +41,8 @@ namespace FarseerPhysics.TestBed.Tests
 
             _vertices = verts.ToArray();
 
-            Polygon polygon = new Polygon(verts);
-             list = polygon.convexPartition();
+
+            list = BayazitDecomposer.ConvexPartition(verts);
 
             colors = new Color[list.Count];
             Random random = new Random((int)DateTime.Now.Ticks);
@@ -62,7 +62,7 @@ namespace FarseerPhysics.TestBed.Tests
             base.Initialize();
         }
 
-        private List<Polygon> list;
+        private List<Vertices> list;
         private Color[] colors;
 
         public override void Update(Framework.Settings settings)
@@ -74,7 +74,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             for (int i = 0; i < list.Count; i++)
             {
-                Polygon v = list[i];
+                Vertices v = list[i];
                 Vector2[] vector2s = v.ToArray();
 
                 DebugView.DrawSolidPolygon(ref vector2s, v.Count, colors[i]);
