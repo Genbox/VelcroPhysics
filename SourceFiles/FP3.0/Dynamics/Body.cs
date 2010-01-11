@@ -564,7 +564,6 @@ namespace FarseerPhysics
                 return;
             }
 
-#if DEBUG
             Debug.Assert(fixture._body == this);
 
             // Remove the fixture from this body's singly linked list.
@@ -586,7 +585,6 @@ namespace FarseerPhysics
 
             // You tried to remove a shape that is not attached to this body.
             Debug.Assert(found);
-#endif
 
             // Destroy any contacts associated with the fixture.
             ContactEdge edge = _contactList;
