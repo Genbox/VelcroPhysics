@@ -41,27 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             _vertices = verts.ToArray();
 
-
-            Vertices vertices = new Vertices();
-            vertices.Add(new Vector2(-172f, -203f));
-            vertices.Add(new Vector2(-81f, -36f));
-            vertices.Add(new Vector2(-249f, -177f));
-            vertices.Add(new Vector2(-198f, 172f));
-            vertices.Add(new Vector2(-51f, 58f));
-            vertices.Add(new Vector2(-129f, 202f));
-            vertices.Add(new Vector2(167f, 181f));
-            vertices.Add(new Vector2(82f, 41f));
-            vertices.Add(new Vector2(211f, 153f));
-            vertices.Add(new Vector2(174f, -171f));
-            vertices.Add(new Vector2(62f, -54f));
-            vertices.Add(new Vector2(155f, -217f));
-            
-            vertices.MakeCCW();
-            vertices.Scale(ref scale);
-            Vector2 trans = new Vector2(0, 10);
-            vertices.Translate(ref trans);
-
-            Polygon polygon = new Polygon(vertices);
+            Polygon polygon = new Polygon(verts);
              list = polygon.convexPartition();
 
             colors = new Color[list.Count];
@@ -69,11 +49,10 @@ namespace FarseerPhysics.TestBed.Tests
 
             for (int i = 0; i < list.Count; i++)
             {
-                colors[i] = new Color((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255));
+                colors[i] = new Color((byte)random.Next(100, 255), (byte)random.Next(100, 255), (byte)random.Next(100, 255));
             }
 
-
-            //PolygonShape shape = new PolygonShape(verts, 100);
+            //PolygonShape shape = new PolygonShape(verts, 1);
 
             //Use the body factory to create the physics body
             //_polygonBody = World.CreateBody();
@@ -90,7 +69,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             for (int i = 0; i < _vertices.Length; i++)
             {
-                DebugView.DrawCircle(_vertices[i], 0.1f, Color.White);
+                DebugView.DrawCircle(_vertices[i], 0.07f, Color.White);
             }
 
             for (int i = 0; i < list.Count; i++)
@@ -99,8 +78,6 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2[] vector2s = v.ToArray();
 
                 DebugView.DrawSolidPolygon(ref vector2s, v.Count, colors[i]);
-
-                //DebugView.DrawCircle(_vertices[i], 0.1f, Color.White);
             }
 
 
