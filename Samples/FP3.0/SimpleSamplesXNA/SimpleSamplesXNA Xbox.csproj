@@ -139,10 +139,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Branches\FP3.0\XNA\Farseer Physics 3.0 XNA Xbox.csproj">
-      <Project>{9A010234-D0F7-4490-8E53-B592A47A9CF0}</Project>
-      <Name>Farseer Physics 3.0 XNA Xbox</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DemoBaseXNA\DemoBaseXNA Xbox.csproj">
       <Project>{1eae8b56-1e85-4274-9b13-36428454abc8}</Project>
       <Name>DemoBaseXNA Xbox</Name>
