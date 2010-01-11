@@ -110,8 +110,14 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Collision\TimeOfImpact.cs">
       <Link>Collision\TimeOfImpact.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Decomposition\Steiner.cs">
+      <Link>Common\Decomposition\Steiner.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\FixedArray.cs">
       <Link>Common\FixedArray.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\LineTools.cs">
+      <Link>Common\LineTools.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Math.cs">
       <Link>Common\Math.cs</Link>
@@ -194,8 +200,6 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\WorldCallbacks.cs">
       <Link>Dynamics\WorldCallbacks.cs</Link>
     </Compile>
-    <Compile Include="Common\Decomposition\Steiner.cs" />
-    <Compile Include="Common\LineTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
