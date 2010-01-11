@@ -181,6 +181,43 @@ namespace FarseerPhysics
         {
             return Vector2.Max(low, Vector2.Min(a, high));
         }
+
+        public static float Sqdist(Vector2 a, Vector2 b)
+        {
+            float dx = b.X - a.X;
+            float dy = b.Y - a.Y;
+            return dx * dx + dy * dy;
+        }
+
+        public static float Area(Vector2 a, Vector2 b, Vector2 c)
+        {
+            return (((b.X - a.X) * (c.Y - a.Y)) - ((c.X - a.X) * (b.Y - a.Y)));
+        }
+
+        public static bool Left(Vector2 a, Vector2 b, Vector2 c)
+        {
+            return Area(a, b, c) > 0;
+        }
+
+        public static bool LeftOn(Vector2 a, Vector2 b, Vector2 c)
+        {
+            return Area(a, b, c) >= 0;
+        }
+
+        public static bool Right(Vector2 a, Vector2 b, Vector2 c)
+        {
+            return Area(a, b, c) < 0;
+        }
+
+        public static bool RightOn(Vector2 a, Vector2 b, Vector2 c)
+        {
+            return Area(a, b, c) <= 0;
+        }
+
+        public static bool Collinear(Vector2 a, Vector2 b, Vector2 c)
+        {
+            return Area(a, b, c) == 0;
+        }
     }
 
     /// A 2-by-2 matrix. Stored in column-major order.
@@ -406,7 +443,7 @@ namespace FarseerPhysics
         /// local center of mass position
         /// </summary>
         public Vector2 LocalCenter;
-        
+
         /// <summary>
         /// Center world positions
         /// </summary>
@@ -416,7 +453,7 @@ namespace FarseerPhysics
         /// world angles
         /// </summary>
         public float Angle0, Angle;
-        
+
         /// <summary>
         /// time interval = [t0,1], where t0 is in [0,1]
         /// </summary>

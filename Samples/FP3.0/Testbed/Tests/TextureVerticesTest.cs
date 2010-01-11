@@ -1,10 +1,9 @@
-﻿using FarseerPhysics.Common.Siedel;
-using FarseerPhysics.Common.Siedel.Shapes;
+﻿using System;
+using FarseerPhysics.Common.Decomposition;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using Point = FarseerPhysics.Common.Siedel.Shapes.Point;
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -13,7 +12,6 @@ namespace FarseerPhysics.TestBed.Tests
         private Body _polygonBody;
         private Texture2D _polygonTexture;
         private Vector2[] _vertices;
-        private TrapezoidalMap map;
 
         private TextureVerticesTest()
         {
@@ -38,20 +36,42 @@ namespace FarseerPhysics.TestBed.Tests
             _polygonTexture.GetData(data);
 
             Vertices verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height);
-            Vector2 scale = new Vector2(0.1f, 0.1f);
-            PolygonTools.Scale(ref verts, ref scale);
+            Vector2 scale = new Vector2(0.07f, 0.07f);
+            verts.Scale(ref scale);
 
-            List<Common.Siedel.Shapes.Point> points = new List<Common.Siedel.Shapes.Point>();
+            _vertices = verts.ToArray();
 
-            foreach (Vector2 vector2 in verts)
+
+            Vertices vertices = new Vertices();
+            vertices.Add(new Vector2(-172f, -203f));
+            vertices.Add(new Vector2(-81f, -36f));
+            vertices.Add(new Vector2(-249f, -177f));
+            vertices.Add(new Vector2(-198f, 172f));
+            vertices.Add(new Vector2(-51f, 58f));
+            vertices.Add(new Vector2(-129f, 202f));
+            vertices.Add(new Vector2(167f, 181f));
+            vertices.Add(new Vector2(82f, 41f));
+            vertices.Add(new Vector2(211f, 153f));
+            vertices.Add(new Vector2(174f, -171f));
+            vertices.Add(new Vector2(62f, -54f));
+            vertices.Add(new Vector2(155f, -217f));
+            
+            vertices.MakeCCW();
+            vertices.Scale(ref scale);
+            Vector2 trans = new Vector2(0, 10);
+            vertices.Translate(ref trans);
+
+            Polygon polygon = new Polygon(vertices);
+             list = polygon.convexPartition();
+
+            colors = new Color[list.Count];
+            Random random = new Random((int)DateTime.Now.Ticks);
+
+            for (int i = 0; i < list.Count; i++)
             {
-                points.Add(new Common.Siedel.Shapes.Point(vector2.X, vector2.Y));
+                colors[i] = new Color((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255));
             }
 
-            Triangulator tr = new Triangulator(points);
-            map = tr.trapezoidalMap;
-
-            //_vertices = verts.ToArray();
 
             //PolygonShape shape = new PolygonShape(verts, 100);
 
@@ -63,34 +83,26 @@ namespace FarseerPhysics.TestBed.Tests
             base.Initialize();
         }
 
+        private List<Polygon> list;
+        private Color[] colors;
+
         public override void Update(Framework.Settings settings)
         {
-            //for (int i = 0; i < _vertices.Length; i++)
-            //{
-            //    DebugView.DrawCircle(_vertices[i], 0.1f, Color.White);
-            //}
-
-            foreach (Trapezoid t in map.map)
+            for (int i = 0; i < _vertices.Length; i++)
             {
-                List<Point> point = t.vertices();
-
-                //Vector2[] vec = new Vector2[point.Count];
-                for (int i = 0; i < point.Count; i++)
-                {
-                    //vec[i] = new Vector2(point[i].x, point[i].y);
-
-                    //DebugView.DrawPoint(new Vector2(point[i].x, point[i].y), 0.1f, Color.White);
-                    if (i== point.Count -1)
-                        break;
-                    DebugView.DrawSegment(new Vector2(point[i].x, point[i].y), new Vector2(point[i + 1].x, point[i + 1].x), Color.White);
-
-                }
-
-                break;
-
-
-                //DebugView.DrawPolygon(ref vec, vec.Length, Color.Red);
+                DebugView.DrawCircle(_vertices[i], 0.1f, Color.White);
             }
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                Polygon v = list[i];
+                Vector2[] vector2s = v.ToArray();
+
+                DebugView.DrawSolidPolygon(ref vector2s, v.Count, colors[i]);
+
+                //DebugView.DrawCircle(_vertices[i], 0.1f, Color.White);
+            }
+
 
             base.Update(settings);
         }
