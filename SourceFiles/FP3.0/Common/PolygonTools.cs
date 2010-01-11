@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics
@@ -58,99 +59,6 @@ namespace FarseerPhysics
             vertices.Add(v2);
 
             return vertices;
-        }
-
-        /// <summary>
-        /// Translates the vertices with the specified vector.
-        /// </summary>
-        /// <param name="vector">The vector.</param>
-        public static void Translate(ref Vertices vertices, ref Vector2 vector)
-        {
-            for (int i = 0; i < vertices.Count; i++)
-                vertices[i] = Vector2.Add(vertices[i], vector);
-        }
-
-        /// <summary>
-        /// Scales the vertices with the specified vector.
-        /// </summary>
-        /// <param name="value">The Value.</param>
-        public static void Scale(ref Vertices vertices, ref Vector2 value)
-        {
-            for (int i = 0; i < vertices.Count; i++)
-                vertices[i] = Vector2.Multiply(vertices[i], value);
-        }
-
-        /// <summary>
-        /// Rotate the vertices with the defined value in radians.
-        /// </summary>
-        /// <param name="value">The amount to rotate by in radians.</param>
-        public static void Rotate(ref Vertices vertices, float value)
-        {
-            Matrix rotationMatrix;
-            Matrix.CreateRotationZ(value, out rotationMatrix);
-
-            for (int i = 0; i < vertices.Count; i++)
-                vertices[i] = Vector2.Transform(vertices[i], rotationMatrix);
-        }
-
-        /// <summary>
-        /// Determines whether the polygon is convex.
-        /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if it is convex; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool IsConvex(ref Vertices vertices)
-        {
-            bool isPositive = false;
-
-            for (int i = 0; i < vertices.Count; ++i)
-            {
-                int lower = (i == 0) ? (vertices.Count - 1) : (i - 1);
-                int middle = i;
-                int upper = (i == vertices.Count - 1) ? (0) : (i + 1);
-
-                float dx0 = vertices[middle].X - vertices[lower].X;
-                float dy0 = vertices[middle].Y - vertices[lower].Y;
-                float dx1 = vertices[upper].X - vertices[middle].X;
-                float dy1 = vertices[upper].Y - vertices[middle].Y;
-
-                float cross = dx0 * dy1 - dx1 * dy0;
-                // Cross product should have same sign
-                // for each vertex if poly is convex.
-                bool newIsP = (cross >= 0) ? true : false;
-                if (i == 0)
-                {
-                    isPositive = newIsP;
-                }
-                else if (isPositive != newIsP)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public static float DistanceBetweenPointAndPoint(ref Vector2 point1, ref Vector2 point2)
-        {
-            Vector2 v;
-            Vector2.Subtract(ref point1, ref point2, out v);
-            return v.Length();
-        }
-
-        public static float DistanceBetweenPointAndLineSegment(ref Vector2 point, ref Vector2 lineEndPoint1, ref Vector2 lineEndPoint2)
-        {
-            Vector2 v = Vector2.Subtract(lineEndPoint2, lineEndPoint1);
-            Vector2 w = Vector2.Subtract(point, lineEndPoint1);
-
-            float c1 = Vector2.Dot(w, v);
-            if (c1 <= 0) return DistanceBetweenPointAndPoint(ref point, ref lineEndPoint1);
-
-            float c2 = Vector2.Dot(v, v);
-            if (c2 <= c1) return DistanceBetweenPointAndPoint(ref point, ref lineEndPoint2);
-
-            float b = c1 / c2;
-            Vector2 pointOnLine = Vector2.Add(lineEndPoint1, Vector2.Multiply(v, b));
-            return DistanceBetweenPointAndPoint(ref point, ref  pointOnLine);
         }
 
         #region Sickbattery's Extension
@@ -413,8 +321,8 @@ namespace FarseerPhysics
                     {
                         edgeVertex1 = polygon[i];
 
-                        if (DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <= pca.HullTolerance ||
-                            DistanceBetweenPointAndPoint(ref point, ref edgeVertex1) <= pca.HullTolerance)
+                        if (LineTools.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <= pca.HullTolerance ||
+                            LineTools.DistanceBetweenPointAndPoint(ref point, ref edgeVertex1) <= pca.HullTolerance)
                         {
                             return false;
                         }
@@ -430,7 +338,7 @@ namespace FarseerPhysics
                     {
                         edgeVertex1 = polygon[i];
 
-                        if (DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <= pca.HullTolerance)
+                        if (LineTools.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <= pca.HullTolerance)
                         {
                             return false;
                         }
@@ -639,7 +547,7 @@ namespace FarseerPhysics
                             {
                                 Vector2 tempVector1 = polygon[edgeVertex1Index];
                                 Vector2 tempVector2 = polygon[edgeVertex2Index];
-                                distance = DistanceBetweenPointAndLineSegment(ref foundEdgeCoord, ref tempVector1, ref tempVector2);
+                                distance = LineTools.DistanceBetweenPointAndLineSegment(ref foundEdgeCoord, ref tempVector1, ref tempVector2);
                                 if (distance < shortestDistance)
                                 {
                                     shortestDistance = distance;
@@ -659,7 +567,7 @@ namespace FarseerPhysics
                                 slope.Normalize();
 
                                 Vector2 tempVector = polygon[nearestEdgeVertex1Index];
-                                distance = DistanceBetweenPointAndPoint(ref tempVector, ref foundEdgeCoord);
+                                distance = LineTools.DistanceBetweenPointAndPoint(ref tempVector, ref foundEdgeCoord);
 
                                 vertex1Index = nearestEdgeVertex1Index;
                                 vertex2Index = nearestEdgeVertex1Index + 1;
@@ -931,7 +839,7 @@ namespace FarseerPhysics
                     tempVector1 = hullArea[i];
 
                     // Check if the distance is over the one that's tolerable.
-                    if (DistanceBetweenPointAndLineSegment(ref tempVector1, ref  tempVector2, ref tempVector3) >= hullTolerance)
+                    if (LineTools.DistanceBetweenPointAndLineSegment(ref tempVector1, ref  tempVector2, ref tempVector3) >= hullTolerance)
                     {
                         outstandingResult = hullArea[i];
                         found = true;

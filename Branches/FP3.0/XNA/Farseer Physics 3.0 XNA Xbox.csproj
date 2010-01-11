@@ -166,6 +166,8 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\WorldCallbacks.cs">
       <Link>Dynamics\WorldCallbacks.cs</Link>
     </Compile>
+    <Compile Include="Common\Decomposition\Steiner.cs" />
+    <Compile Include="Common\LineTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -400,7 +400,7 @@ namespace FarseerPhysics
         /// <value></value>
         public Vector2 Center
         {
-            get { return 0.5f*(LowerBound + UpperBound); }
+            get { return 0.5f * (LowerBound + UpperBound); }
         }
 
         /// <summary>
@@ -409,7 +409,7 @@ namespace FarseerPhysics
         /// <value></value>
         public Vector2 Extents
         {
-            get { return 0.5f*(UpperBound - LowerBound); }
+            get { return 0.5f * (UpperBound - LowerBound); }
         }
 
         /// <summary>
@@ -564,6 +564,20 @@ namespace FarseerPhysics
         /// the upper vertex
         /// </summary>
         public Vector2 UpperBound;
+
+        /// <summary>
+        /// Gets the vertices of the AABB.
+        /// </summary>
+        /// <returns>The corners of the AABB</returns>
+        public Vertices GetVertices()
+        {
+            Vertices vertices = new Vertices();
+            vertices.Add(LowerBound);
+            vertices.Add(new Vector2(LowerBound.X, UpperBound.Y));
+            vertices.Add(UpperBound);
+            vertices.Add(new Vector2(UpperBound.X, LowerBound.Y));
+            return vertices;
+        }
     }
 
     public static class Collision

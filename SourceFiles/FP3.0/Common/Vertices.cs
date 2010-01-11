@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
 
 #if !(XBOX360)
@@ -13,10 +14,9 @@ public class Vertices : List<Vector2>
     private Vector2 _vectorTemp3 = Vector2.Zero;
     private Vector2 _vectorTemp4 = Vector2.Zero;
     private Vector2 _vectorTemp5 = Vector2.Zero;
-    
+
     public Vertices()
     {
-
     }
 
     public Vertices(int capacity)
@@ -43,6 +43,29 @@ public class Vertices : List<Vector2>
     public Vector2[] GetVerticesArray()
     {
         return ToArray();
+    }
+
+    public int NextIndex(int index)
+    {
+        if (index == Count - 1)
+        {
+            return 0;
+        }
+        return index + 1;
+    }
+
+    /// <summary>
+    /// Gets the previous index.
+    /// </summary>
+    /// <param name="index">The index.</param>
+    /// <returns></returns>
+    public int PreviousIndex(int index)
+    {
+        if (index == 0)
+        {
+            return Count - 1;
+        }
+        return index - 1;
     }
 
     /// <summary>
@@ -175,6 +198,78 @@ public class Vertices : List<Vector2>
 
         for (int i = 0; i < Count; i++)
             this[i] = Vector2.Transform(this[i], rotationMatrix);
+    }
+
+    /// <summary>
+    /// Determines whether the polygon is convex.
+    /// </summary>
+    /// <returns>
+    /// 	<c>true</c> if it is convex; otherwise, <c>false</c>.
+    /// </returns>
+    public bool IsConvex()
+    {
+        bool isPositive = false;
+
+        for (int i = 0; i < this.Count; ++i)
+        {
+            int lower = (i == 0) ? (this.Count - 1) : (i - 1);
+            int middle = i;
+            int upper = (i == this.Count - 1) ? (0) : (i + 1);
+
+            float dx0 = this[middle].X - this[lower].X;
+            float dy0 = this[middle].Y - this[lower].Y;
+            float dx1 = this[upper].X - this[middle].X;
+            float dy1 = this[upper].Y - this[middle].Y;
+
+            float cross = dx0 * dy1 - dx1 * dy0;
+            // Cross product should have same sign
+            // for each vertex if poly is convex.
+            bool newIsP = (cross >= 0) ? true : false;
+            if (i == 0)
+            {
+                isPositive = newIsP;
+            }
+            else if (isPositive != newIsP)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void MakeCCW()
+    {
+        int br = 0;
+
+        // find bottom right point
+        for (int i = 1; i < Count; ++i)
+        {
+            if (this[i].Y < this[br].Y || (this[i].Y == this[br].Y && this[i].X > this[br].X))
+            {
+                br = i;
+            }
+        }
+
+        // reverse poly if clockwise
+        if (!MathUtils.Left(At(br - 1), At(br), At(br + 1)))
+        {
+            Reverse();
+        }
+    }
+
+    public bool IsReflex(int i)
+    {
+        return MathUtils.Right(At(i - 1), At(i), At(i + 1));
+    }
+
+    public Vector2 At(int i)
+    {
+        return this[Wrap(i, Count)];
+    }
+
+    private int Wrap(int a, int b)
+    {
+        return a < 0 ? a % b + b : a % b;
     }
 
     #region Cowdozer's Extension
