@@ -30,7 +30,7 @@ namespace FarseerPhysics.Common.Decomposition
         /// <summary>
         /// Precondition: Counter Clockwise polygon
         /// Decompose the polygon into several smaller non-concave polygon.
-        /// If the polygon is already convex, it will return the original polygon.
+        /// If the polygon is already convex, it will return the original polygon, unless it is over Settings.MaxPolygonVertices.
         /// </summary>
         /// <param name="vertices"></param>
         /// <returns></returns>
