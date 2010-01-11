@@ -52,12 +52,18 @@ namespace FarseerPhysics.TestBed.Tests
                 colors[i] = new Color((byte)random.Next(100, 255), (byte)random.Next(100, 255), (byte)random.Next(100, 255));
             }
 
-            //PolygonShape shape = new PolygonShape(verts, 1);
+            _polygonBody = World.CreateBody();
+            _polygonBody.BodyType = BodyType.Dynamic;
+            _polygonBody.Position = new Vector2(0, 0);
 
-            //Use the body factory to create the physics body
-            //_polygonBody = World.CreateBody();
-            //_polygonBody.Position = new Vector2(0, 0);
-            //_polygonBody.CreateFixture(shape);
+            foreach (Vertices vert in list)
+            {
+                if (!vert.IsConvex())
+                    throw new Exception("eh..");
+
+                PolygonShape shape = new PolygonShape(vert,1);
+                _polygonBody.CreateFixture(shape);
+            }
 
             base.Initialize();
         }

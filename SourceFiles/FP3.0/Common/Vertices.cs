@@ -9,11 +9,6 @@ using Microsoft.Xna.Framework;
 public class Vertices : List<Vector2>
 {
     private Vector2 _res;
-    private Vector2 _vectorTemp1 = Vector2.Zero;
-    private Vector2 _vectorTemp2 = Vector2.Zero;
-    private Vector2 _vectorTemp3 = Vector2.Zero;
-    private Vector2 _vectorTemp4 = Vector2.Zero;
-    private Vector2 _vectorTemp5 = Vector2.Zero;
 
     public Vertices()
     {
@@ -210,11 +205,11 @@ public class Vertices : List<Vector2>
     {
         bool isPositive = false;
 
-        for (int i = 0; i < this.Count; ++i)
+        for (int i = 0; i < Count; ++i)
         {
-            int lower = (i == 0) ? (this.Count - 1) : (i - 1);
+            int lower = (i == 0) ? (Count - 1) : (i - 1);
             int middle = i;
-            int upper = (i == this.Count - 1) ? (0) : (i + 1);
+            int upper = (i == Count - 1) ? (0) : (i + 1);
 
             float dx0 = this[middle].X - this[lower].X;
             float dy0 = this[middle].Y - this[lower].Y;

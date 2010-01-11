@@ -10,7 +10,7 @@ namespace FarseerPhysics.Common
     /// </summary>
     public static class LineTools
     {
-        private const float _epsilon = .00001f;
+        private const float Epsilon = .00001f;
 
         public static float DistanceBetweenPointAndPoint(ref Vector2 point1, ref Vector2 point2)
         {
@@ -35,8 +35,29 @@ namespace FarseerPhysics.Common
             return DistanceBetweenPointAndPoint(ref point, ref  pointOnLine);
         }
 
+        public static Vector2 LineIntersect(Vector2 p1, Vector2 p2, Vector2 q1, Vector2 q2)
+        {
+            Vector2 i = Vector2.Zero;
+            float a1, b1, c1, a2, b2, c2, det;
+            a1 = p2.Y - p1.Y;
+            b1 = p1.X - p2.X;
+            c1 = a1 * p1.X + b1 * p1.Y;
+            a2 = q2.Y - q1.Y;
+            b2 = q1.X - q2.X;
+            c2 = a2 * q1.X + b2 * q1.Y;
+            det = a1 * b2 - a2 * b1;
+            if (!FloatEquals(det, 0))
+            { // lines are not parallel
+                i.X = (b2 * c1 - b1 * c2) / det;
+                i.Y = (a1 * c2 - a2 * c1) / det;
+            }
+            return i;
+        }
 
-
+        public static bool FloatEquals(float value1, float value2)
+        {
+            return Math.Abs(value1 - value2) <= 1e-8;
+        }
 
         /// <summary>
         /// Checks if a floating point Value is equal to another,
@@ -88,13 +109,9 @@ namespace FarseerPhysics.Common
         /// intersection point be on the first line segment.</param>
         /// <param name="secondIsSegment">Set this to true to require that the
         /// intersection point be on the second line segment.</param>
-        /// <param name="floatTolerance">Some of the calculations require
-        /// checking if a floating point Value equals another. This is
-        /// the tolerance that is used to determine this (ie Value +
-        /// or - <paramref name="floatTolerance"/>)</param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
         public static bool LineIntersect(ref Vector2 point1, ref Vector2 point2, ref Vector2 point3, ref Vector2 point4,
-                                 bool firstIsSegment, bool secondIsSegment, float floatTolerance,
+                                 bool firstIsSegment, bool secondIsSegment,
                                  out Vector2 point)
         {
             point = new Vector2();
@@ -111,7 +128,7 @@ namespace FarseerPhysics.Common
             float denom = (a * b) - (c * d);
 
             // if denominator is 0, then lines are parallel
-            if (!(denom >= -_epsilon && denom <= _epsilon))
+            if (!(denom >= -Epsilon && denom <= Epsilon))
             {
                 float e = point1.Y - point3.Y;
                 float f = point1.X - point3.X;
@@ -171,15 +188,11 @@ namespace FarseerPhysics.Common
         /// intersection point be on the first line segment.</param>
         /// <param name="secondIsSegment">Set this to true to require that the
         /// intersection point be on the second line segment.</param>
-        /// <param name="floatTolerance">Some of the calculations require
-        /// checking if a floating point Value equals another. This is
-        /// the tolerance that is used to determine this (ie Value +
-        /// or - <paramref name="floatTolerance"/>)</param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
         public static bool LineIntersect(Vector2 point1, Vector2 point2, Vector2 point3, Vector2 point4, bool firstIsSegment,
-                                         bool secondIsSegment, float floatTolerance, out Vector2 intersectionPoint)
+                                         bool secondIsSegment, out Vector2 intersectionPoint)
         {
-            return LineIntersect(ref point1, ref point2, ref point3, ref point4, firstIsSegment, secondIsSegment, floatTolerance,
+            return LineIntersect(ref point1, ref point2, ref point3, ref point4, firstIsSegment, secondIsSegment,
                                  out intersectionPoint);
         }
 
@@ -200,7 +213,7 @@ namespace FarseerPhysics.Common
         public static bool LineIntersect(ref Vector2 point1, ref Vector2 point2, ref Vector2 point3, ref Vector2 point4,
                                          out Vector2 intersectionPoint)
         {
-            return LineIntersect(ref point1, ref point2, ref point3, ref point4, true, true, _epsilon, out intersectionPoint);
+            return LineIntersect(ref point1, ref point2, ref point3, ref point4, true, true, out intersectionPoint);
         }
 
         /// <summary>
@@ -219,7 +232,7 @@ namespace FarseerPhysics.Common
         /// <returns>True if an intersection is detected, false otherwise.</returns>
         public static bool LineIntersect(Vector2 point1, Vector2 point2, Vector2 point3, Vector2 point4, out Vector2 intersectionPoint)
         {
-            return LineIntersect(ref point1, ref point2, ref point3, ref point4, true, true, _epsilon, out intersectionPoint);
+            return LineIntersect(ref point1, ref point2, ref point3, ref point4, true, true, out intersectionPoint);
         }
 
         /// <summary>
@@ -241,7 +254,7 @@ namespace FarseerPhysics.Common
             {
                 Vector2 point;
                 if (LineIntersect(vertices[i], vertices[vertices.NextIndex(i)],
-                                  point1, point2, true, true, _epsilon, out point))
+                                  point1, point2, true, true, out point))
                 {
                     intersectionPoints.Add(point);
                 }
@@ -259,103 +272,5 @@ namespace FarseerPhysics.Common
         {
             LineSegmentVerticesIntersect(ref point1, ref point2, aabb.GetVertices(), ref intersectionPoints);
         }
-
-        /// <summary>
-        /// Detects all collision points between a line and a Geom. If intersections exist
-        /// a LineIntersectionInfo  object is created and added to an existing list of such
-        /// objects. </summary>
-        /// <param name="point1">The first point of the line segment to test</param>
-        /// <param name="point2">The second point of the line segment to test</param>
-        /// <param name="geom">The geometry to test.</param>
-        /// <param name="detectUsingAABB">If true, intersection will be tested using the
-        /// Geoms AABB. If false, the Geoms vertices will be used.</param>
-        /// <param name="intersectionPoints">An existing points info list to add to
-        /// </param>
-        //public static void LineSegmentGeomIntersect(Vector2 point1, Vector2 point2, Geom geom, bool detectUsingAABB,
-        //                                            ref List<Vector2> intersectionPoints)
-        //{
-        //    LineSegmentGeomIntersect(ref point1, ref point2, geom, detectUsingAABB, ref intersectionPoints);
-        //}
-
-        /// <summary>
-        /// Detects all collision points between a line and a Geom. If intersections exist a LineIntersectionInfo 
-        /// object is created and added to an existing list of such objects.
-        /// </summary>
-        /// <param name="point1">The first point of the line segment to test</param>
-        /// <param name="point2">The second point of the line segment to test</param>
-        /// <param name="geom">The geometry to test.</param>
-        /// <param name="detectUsingAABB">If true, intersection will be tested using the Geoms AABB. If false, the Geoms vertices will be used.</param>
-        /// <param name="intersectionPoints">An existing point list to add to</param>
-        //public static void LineSegmentGeomIntersect(ref Vector2 point1, ref Vector2 point2, Geom geom, bool detectUsingAABB,
-        //                                            ref List<Vector2> intersectionPoints)
-        //{
-        //    if (detectUsingAABB)
-        //    {
-        //        LineSegmentAABBIntersect(ref point1, ref point2, geom.AABB, ref intersectionPoints);
-        //    }
-        //    else
-        //    {
-        //        LineSegmentVerticesIntersect(ref point1, ref point2, geom.WorldVertices, ref intersectionPoints);
-        //    }
-        //}
-
-        /// <summary>
-        /// Gets a list of geometries and their intersectionpoints that the line intersects.
-        /// </summary>
-        /// <param name="point1">The point1.</param>
-        /// <param name="point2">The point2.</param>
-        /// <param name="simulator">The simulator.</param>
-        /// <param name="detectUsingAABB">if set to <c>true</c> [detect using AABB].</param>
-        /// <returns></returns>
-        //public static List<GeomPointPair> LineSegmentAllGeomsIntersect(Vector2 point1, Vector2 point2, PhysicsSimulator simulator, bool detectUsingAABB)
-        //{
-        //    return LineSegmentAllGeomsIntersect(ref point1, ref point2, simulator, detectUsingAABB);
-        //}
-
-        /// <summary>
-        /// Gets a list of geometries and their intersectionpoints that the line intersects.
-        /// </summary>
-        /// <param name="point1">The point1.</param>
-        /// <param name="point2">The point2.</param>
-        /// <param name="simulator">The simulator.</param>
-        /// <param name="detectUsingAABB">if set to <c>true</c> [detect using AABB].</param>
-        /// <returns></returns>
-        //public static List<GeomPointPair> LineSegmentAllGeomsIntersect(ref Vector2 point1, ref Vector2 point2, PhysicsSimulator simulator, bool detectUsingAABB)
-        //{
-        //    List<Vector2> intSecPoints = new List<Vector2>();
-        //    List<GeomPointPair> geoms = new List<GeomPointPair>();
-
-        //    foreach (Geom geom in simulator.GeomList)
-        //    {
-        //        intSecPoints.Clear();
-
-        //        if (detectUsingAABB)
-        //        {
-        //            LineSegmentAABBIntersect(ref point1, ref point2, geom.AABB, ref intSecPoints);
-        //        }
-        //        else
-        //        {
-        //            LineSegmentVerticesIntersect(ref point1, ref point2, geom.WorldVertices, ref intSecPoints);
-        //        }
-
-        //        if (intSecPoints.Count > 0)
-        //        {
-        //            _tempPair = new GeomPointPair();
-        //            _tempPair.Geom = geom;
-        //            _tempPair.Points = new List<Vector2>(intSecPoints);
-        //            geoms.Add(_tempPair);
-        //        }
-        //    }
-
-        //    return geoms;
-        //}
-
-        //private static GeomPointPair _tempPair;
     }
-
-    //public struct GeomPointPair
-    //{
-    //    public Geom Geom;
-    //    public List<Vector2> Points;
-    //}
 }

@@ -1,18 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.Decomposition
 {
+    /// <summary>
+    /// Convex decomposition algorithm created by Mark Bayazit (http://mnbayazit.com/)
+    /// For more information about this algorithm, see http://mnbayazit.com/406/bayazit
+    /// </summary>
     public static class BayazitDecomposer
     {
-        public static Vector2 At(int i, Vertices vertices)
+        private static Vector2 At(int i, Vertices vertices)
         {
             int s = vertices.Count;
             return vertices[i < 0 ? s - (-i % s) : i % s];
         }
 
-        public static Vertices Copy(int i, int j, Vertices vertices)
+        private static Vertices Copy(int i, int j, Vertices vertices)
         {
             Vertices p = new Vertices();
             while (j < i) j += vertices.Count;
@@ -24,8 +27,13 @@ namespace FarseerPhysics.Common.Decomposition
             return p;
         }
 
-        // precondition: ccw
-        // see mnbayazit.com/406/bayazit for details about how this works
+        /// <summary>
+        /// Precondition: Counter Clockwise polygon
+        /// Decompose the polygon into several smaller non-concave polygon.
+        /// If the polygon is already convex, it will return the original polygon.
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <returns></returns>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
             List<Vertices> list = new List<Vertices>();
@@ -46,7 +54,7 @@ namespace FarseerPhysics.Common.Decomposition
                         if (Left(At(i - 1, vertices), At(i, vertices), At(j, vertices)) && RightOn(At(i - 1, vertices), At(i, vertices), At(j - 1, vertices)))
                         { // if ray (i-1)->(i) intersects with edge (j, j-1)
                             //QLineF(at(i - 1), at(i)).intersect(QLineF(at(j), at(j - 1)), ip);
-                            ip = Intersection(At(i - 1, vertices), At(i, vertices), At(j, vertices), At(j - 1, vertices));
+                            ip = LineTools.LineIntersect(At(i - 1, vertices), At(i, vertices), At(j, vertices), At(j - 1, vertices));
                             if (Right(At(i + 1, vertices), At(i, vertices), ip))
                             { // intersection point isn't caused by backwards ray
                                 d = SquareDist(At(i, vertices), ip);
@@ -61,7 +69,7 @@ namespace FarseerPhysics.Common.Decomposition
                         if (Left(At(i + 1, vertices), At(i, vertices), At(j + 1, vertices)) && RightOn(At(i + 1, vertices), At(i, vertices), At(j, vertices)))
                         { // if ray (i+1)->(i) intersects with edge (j+1, j)
                             //QLineF(at(i + 1), at(i)).intersect(QLineF(at(j), at(j + 1)), ip);
-                            ip = Intersection(At(i + 1, vertices), At(i, vertices), At(j, vertices), At(j + 1, vertices));
+                            ip = LineTools.LineIntersect(At(i + 1, vertices), At(i, vertices), At(j, vertices), At(j + 1, vertices));
                             if (Left(At(i - 1, vertices), At(i, vertices), ip))
                             {
                                 d = SquareDist(At(i, vertices), ip);
@@ -84,13 +92,13 @@ namespace FarseerPhysics.Common.Decomposition
                     }
                     else
                     {
-                        double highestScore = 0, bestIndex = ind1, score;
+                        double highestScore = 0, bestIndex = ind1;
                         while (ind2 < ind1) ind2 += vertices.Count;
                         for (int j = ind1; j <= ind2; ++j)
                         {
                             if (CanSee(i, j, vertices))
                             {
-                                score = 1 / (SquareDist(At(i, vertices), At(j, vertices)) + 1);
+                                double score = 1 / (SquareDist(At(i, vertices), At(j, vertices)) + 1);
                                 if (Reflex(j, vertices))
                                 {
                                     if (RightOn(At(j - 1, vertices), At(j, vertices), At(i, vertices)) && LeftOn(At(j + 1, vertices), At(j, vertices), At(i, vertices)))
@@ -121,6 +129,7 @@ namespace FarseerPhysics.Common.Decomposition
                     return list;
                 }
             }
+
             // polygon is already convex
             if (vertices.Count > Settings.MaxPolygonVertices)
             {
@@ -131,10 +140,11 @@ namespace FarseerPhysics.Common.Decomposition
             }
             else
                 list.Add(vertices);
+
             return list;
         }
 
-        public static bool CanSee(int i, int j, Vertices vertices)
+        private static bool CanSee(int i, int j, Vertices vertices)
         {
             if (Reflex(i, vertices))
             {
@@ -159,7 +169,7 @@ namespace FarseerPhysics.Common.Decomposition
                     continue; // ignore incident edges
                 }
                 //if(QLineF(at(i), at(j)).intersect(QLineF(at(k), at(k + 1)), NULL) == QLineF::BoundedIntersection) {
-                if (Intersection(At(i, vertices), At(j, vertices), At(k, vertices), At(k + 1, vertices)) != Vector2.Zero)
+                if (LineTools.LineIntersect(At(i, vertices), At(j, vertices), At(k, vertices), At(k + 1, vertices)) != Vector2.Zero)
                 {
                     return false;
                 }
@@ -167,32 +177,8 @@ namespace FarseerPhysics.Common.Decomposition
             return true;
         }
 
-        public static Vector2 Intersection(Vector2 p1, Vector2 p2, Vector2 q1, Vector2 q2)
-        {
-            Vector2 i = Vector2.Zero;
-            float a1, b1, c1, a2, b2, c2, det;
-            a1 = p2.Y - p1.Y;
-            b1 = p1.X - p2.X;
-            c1 = a1 * p1.X + b1 * p1.Y;
-            a2 = q2.Y - q1.Y;
-            b2 = q1.X - q2.X;
-            c2 = a2 * q1.X + b2 * q1.Y;
-            det = a1 * b2 - a2 * b1;
-            if (!FloatEquals(det, 0))
-            { // lines are not parallel
-                i.X = (b2 * c1 - b1 * c2) / det;
-                i.Y = (a1 * c2 - a2 * c1) / det;
-            }
-            return i;
-        }
-
-        public static bool FloatEquals(float value1, float value2)
-        {
-            return Math.Abs(value1 - value2) <= 1e-8;
-        }
-
         // precondition: ccw
-        public static bool Reflex(int i, Vertices vertices)
+        private static bool Reflex(int i, Vertices vertices)
         {
             return Right(i, vertices);
         }
