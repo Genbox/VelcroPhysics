@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.Decomposition
 {
+    //From phed rev 36
+
     /// <summary>
     /// Convex decomposition algorithm created by Mark Bayazit (http://mnbayazit.com/)
     /// For more information about this algorithm, see http://mnbayazit.com/406/bayazit
