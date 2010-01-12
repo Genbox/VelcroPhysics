@@ -158,27 +158,31 @@ namespace DemoBaseXNA.DrawingSystem
                     Vector3.Transform(_quadIdentity, ref matrix, _tempArray);
 
                     _vertexArray[_vertexCount].Position = _tempArray[0];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 1f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 1f;
+                    _vertexArray[_vertexCount].TextureCoordinate.X = quad.Frames[quad.CurrentFrame].Left;
+                    _vertexArray[_vertexCount].TextureCoordinate.Y = quad.Frames[quad.CurrentFrame].Bottom;
                     _vertexArray[_vertexCount].Color = quad.Tint;
+                    _vertexArray[_vertexCount].Color.A = (byte)(quad.Alpha * 255f);
                     _vertexCount++;
 
                     _vertexArray[_vertexCount].Position = _tempArray[1];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 1f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 0f;
+                    _vertexArray[_vertexCount].TextureCoordinate.X = quad.Frames[quad.CurrentFrame].Left;
+                    _vertexArray[_vertexCount].TextureCoordinate.Y = quad.Frames[quad.CurrentFrame].Top;
                     _vertexArray[_vertexCount].Color = quad.Tint;
+                    _vertexArray[_vertexCount].Color.A = (byte)(quad.Alpha * 255f);
                     _vertexCount++;
 
                     _vertexArray[_vertexCount].Position = _tempArray[2];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 0f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 0f;
+                    _vertexArray[_vertexCount].TextureCoordinate.X = quad.Frames[quad.CurrentFrame].Right;
+                    _vertexArray[_vertexCount].TextureCoordinate.Y = quad.Frames[quad.CurrentFrame].Top;
                     _vertexArray[_vertexCount].Color = quad.Tint;
+                    _vertexArray[_vertexCount].Color.A = (byte)(quad.Alpha * 255f);
                     _vertexCount++;
 
                     _vertexArray[_vertexCount].Position = _tempArray[3];
-                    _vertexArray[_vertexCount].TextureCoordinate.X = 0f;
-                    _vertexArray[_vertexCount].TextureCoordinate.Y = 1f;
+                    _vertexArray[_vertexCount].TextureCoordinate.X = quad.Frames[quad.CurrentFrame].Right;
+                    _vertexArray[_vertexCount].TextureCoordinate.Y = quad.Frames[quad.CurrentFrame].Bottom;
                     _vertexArray[_vertexCount].Color = quad.Tint;
+                    _vertexArray[_vertexCount].Color.A = (byte)(quad.Alpha * 255f);
                     _vertexCount++;
 
                     // create indexs for our triangles
@@ -206,6 +210,8 @@ namespace DemoBaseXNA.DrawingSystem
                         // set the texture
                         _effect.Texture = _textureList[i];
                         _effect.CommitChanges();
+
+                        GraphicsDevice.RenderState.CullMode = CullMode.None;
 
                         GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _vertexArray, 0, _vertexCount, _indices, 0, _primitiveCount);
 

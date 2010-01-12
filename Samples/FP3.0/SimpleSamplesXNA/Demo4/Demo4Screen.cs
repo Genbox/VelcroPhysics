@@ -63,10 +63,10 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
         {
            
             // this is the crate image and yes you probably should load that content inside LoadContent...
-            //ScreenManager.QuadRenderEngine.Submit(ScreenManager.ContentManager.Load<Texture2D>("Content/crate2"), true);
+            texture = ScreenManager.QuadRenderEngine.Submit(ScreenManager.ContentManager.Load<Texture2D>("Content/crate2"), true);
 
             // this is the default image and looks just like the old farseer
-            texture = ScreenManager.QuadRenderEngine.Submit(DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 50, 50, 1, Color.White, Color.Black), false);
+            //texture = ScreenManager.QuadRenderEngine.Submit(DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 50, 50, 1, Color.White, Color.Black), false);
 
             base.LoadContent();
         }
@@ -88,12 +88,12 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
 
                 // submit the quad to the QuadRenderEngine
                 // we add 0.0055 to the crates size to help cover cracks when stacking crates
-                //ScreenManager.QuadRenderEngine.Submit(new Quad(crate.Position, crate.Rotation,
-                //    (crateSize + 0.0055f) * 2, (crateSize + 0.0055f) * 2, texture, tint));
+                ScreenManager.QuadRenderEngine.Submit(new Quad(crate.Position, crate.Rotation,
+                    (crateSize + 0.0055f) * 2, (crateSize + 0.0055f) * 2, 1, 1, texture, tint, false));
             }
 
             // Call Render and relax.
-           // ScreenManager.QuadRenderEngine.Render(ScreenManager.Camera.Projection, ScreenManager.Camera.View);
+            ScreenManager.QuadRenderEngine.Render(ScreenManager.Camera.Projection, ScreenManager.Camera.View);
 
             base.Draw(gameTime);
         }
