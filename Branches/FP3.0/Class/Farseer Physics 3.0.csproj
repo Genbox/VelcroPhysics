@@ -76,6 +76,9 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Decomposition\BayazitDecomposer.cs">
       <Link>Common\Decomposition\BayazitDecomposer.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Decomposition\EarclipDecomposer.cs">
+      <Link>Common\Decomposition\EarclipDecomposer.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\FixedArray.cs">
       <Link>Common\FixedArray.cs</Link>
     </Compile>
