@@ -35,14 +35,13 @@ namespace FarseerPhysics.TestBed.Tests
             //Transfer the texture data to the array
             _polygonTexture.GetData(data);
 
-            Vertices verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height);
+            List<Vertices> verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height, 1.5f, 20, false, true);
             Vector2 scale = new Vector2(0.07f, 0.07f);
-            verts.Scale(ref scale);
+            verts[0].Scale(ref scale);
 
-            _vertices = verts.ToArray();
+            _vertices = verts[0].ToArray();
 
-
-            list = BayazitDecomposer.ConvexPartition(verts);
+            list = BayazitDecomposer.ConvexPartition(verts[0]);
 
             colors = new Color[list.Count];
             Random random = new Random((int)DateTime.Now.Ticks);
@@ -61,7 +60,7 @@ namespace FarseerPhysics.TestBed.Tests
                 if (!vert.IsConvex())
                     throw new Exception("eh..");
 
-                PolygonShape shape = new PolygonShape(vert,1);
+                PolygonShape shape = new PolygonShape(vert, 1);
                 _polygonBody.CreateFixture(shape);
             }
 
