@@ -94,6 +94,7 @@
     <Compile Include="DrawingSystem\CircleBrush.cs" />
     <Compile Include="DrawingSystem\DrawingHelper.cs" />
     <Compile Include="DrawingSystem\EllipseBrush.cs" />
+    <Compile Include="DrawingSystem\GraphRenderHelper.cs" />
     <Compile Include="DrawingSystem\LineBrush.cs" />
     <Compile Include="DrawingSystem\LineRenderHelper.cs" />
     <Compile Include="DrawingSystem\Quad.cs" />

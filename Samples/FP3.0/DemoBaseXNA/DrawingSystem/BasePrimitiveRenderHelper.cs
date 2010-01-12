@@ -21,6 +21,7 @@ namespace DemoBaseXNA.DrawingSystem
             this.vertices = new VertexPositionColor[vertexcapacity];
             effect = new BasicEffect(gd, null);
             effect.VertexColorEnabled = true;
+            vertexDeclaration = new VertexDeclaration(gd, VertexPositionColor.VertexElements);
         }
 
         public virtual void Clear()
@@ -32,7 +33,7 @@ namespace DemoBaseXNA.DrawingSystem
         {
             if (this.count >= 2)
             {
-                //device.VertexDeclaration = ;
+                device.VertexDeclaration = vertexDeclaration;
                 device.DrawUserPrimitives<VertexPositionColor>(this.PrimitiveType, this.vertices, 0, this.PrimitiveCount);
             }
         }

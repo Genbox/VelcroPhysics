@@ -135,14 +135,17 @@ namespace DemoBaseXNA.ScreenSystem
         /// </summary>
         public virtual void LoadContent()
         {
-            PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator, ScreenManager.Camera);
-            PhysicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
-            _lineRender = new LineRenderHelper(100, ScreenManager.GraphicsDevice);
-            float borderWidth = 2f;
+            if (PhysicsSimulator != null)
+            {
+                PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator, ScreenManager.Camera);
+                PhysicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
+                _lineRender = new LineRenderHelper(100, ScreenManager.GraphicsDevice);
+                float borderWidth = 2f;
 
-            _border = new Border(50, 40, borderWidth, new Vector2(0, 0));
-            _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator, ScreenManager.QuadRenderEngine);
-            _groundBody = PhysicsSimulator.CreateBody();
+                _border = new Border(50, 40, borderWidth, new Vector2(0, 0));
+                _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator, ScreenManager.QuadRenderEngine);
+                _groundBody = PhysicsSimulator.CreateBody();
+            }
         }
 
         /// <summary>
@@ -261,8 +264,11 @@ namespace DemoBaseXNA.ScreenSystem
             }
 
 #if !XBOX
-            HandleMouseInput(input);
-            PhysicsSimulatorView.HandleInput(input);
+            if (PhysicsSimulator != null)
+            {
+                HandleMouseInput(input);
+                PhysicsSimulatorView.HandleInput(input);
+            }
             ScreenManager.Camera.HandleInput(input);
 #endif
         }
@@ -374,19 +380,22 @@ namespace DemoBaseXNA.ScreenSystem
         /// </summary>
         public virtual void Draw(GameTime gameTime)
         {
-            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-
-            if (_mouseJoint != null)
+            if (PhysicsSimulator != null)
             {
-                _lineRender.Submit(new Vector3(_mouseJoint.WorldAnchorA, 0), new Vector3(_mouseJoint.WorldAnchorB, 0), Color.Black);
-            }
+                ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
 
-            PhysicsSimulatorView.Draw(ScreenManager.SpriteBatch);
-            
-            _lineRender.Render(ScreenManager.GraphicsDevice, ScreenManager.Camera.Projection, ScreenManager.Camera.View);
-            _lineRender.Clear();
-            _border.Draw();
-            ScreenManager.SpriteBatch.End();
+                if (_mouseJoint != null)
+                {
+                    _lineRender.Submit(new Vector3(_mouseJoint.WorldAnchorA, 0), new Vector3(_mouseJoint.WorldAnchorB, 0), Color.Black);
+                }
+
+                PhysicsSimulatorView.Draw(ScreenManager.SpriteBatch);
+
+                _lineRender.Render(ScreenManager.GraphicsDevice, ScreenManager.Camera.Projection, ScreenManager.Camera.View);
+                _lineRender.Clear();
+                _border.Draw();
+                ScreenManager.SpriteBatch.End();
+            }
         }
 
         /// <summary>
