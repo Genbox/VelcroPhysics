@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using FarseerPhysics.Common.Decomposition;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
@@ -35,14 +38,32 @@ namespace FarseerPhysics.TestBed.Tests
             //Transfer the texture data to the array
             _polygonTexture.GetData(data);
 
-            List<Vertices> verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height, 1.5f, 20, false, true);
+            Vertices verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height);
             Vector2 scale = new Vector2(0.07f, 0.07f);
-            verts[0].Scale(ref scale);
+            verts.Scale(ref scale);
 
-            _vertices = verts[0].ToArray();
+            _vertices = verts.ToArray();
 
-            list = BayazitDecomposer.ConvexPartition(verts[0]);
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start();
+            //Vector2 centroid = verts[0].GetCentroid();
+            //sw.Stop();
 
+            //File.AppendAllText("info.txt", sw.ElapsedTicks + " " + centroid);
+            //sw.Reset();
+
+            //sw.Start();
+            //Vector2 centroid2= verts[0].GetCentroid2();
+            //sw.Stop();
+
+            //File.AppendAllText("info.txt", sw.ElapsedTicks + " " + centroid2);
+
+
+
+            //list = BayazitDecomposer.ConvexPartition(verts[0]);
+            EarclipDecomposer ear = new EarclipDecomposer();
+            ear.DecomposeConvex(verts, out list, 10000);
+            
             colors = new Color[list.Count];
             Random random = new Random((int)DateTime.Now.Ticks);
 
@@ -51,18 +72,18 @@ namespace FarseerPhysics.TestBed.Tests
                 colors[i] = new Color((byte)random.Next(100, 255), (byte)random.Next(100, 255), (byte)random.Next(100, 255));
             }
 
-            _polygonBody = World.CreateBody();
-            _polygonBody.BodyType = BodyType.Dynamic;
-            _polygonBody.Position = new Vector2(0, 0);
+            //_polygonBody = World.CreateBody();
+            //_polygonBody.BodyType = BodyType.Dynamic;
+            //_polygonBody.Position = new Vector2(0, 0);
 
-            foreach (Vertices vert in list)
-            {
-                if (!vert.IsConvex())
-                    throw new Exception("eh..");
+            //foreach (Vertices vert in list)
+            //{
+            //    if (!vert.IsConvex())
+            //        throw new Exception("eh..");
 
-                PolygonShape shape = new PolygonShape(vert, 1);
-                _polygonBody.CreateFixture(shape);
-            }
+            //    PolygonShape shape = new PolygonShape(vert, 1);
+            //    _polygonBody.CreateFixture(shape);
+            //}
 
             base.Initialize();
         }
@@ -80,9 +101,12 @@ namespace FarseerPhysics.TestBed.Tests
             for (int i = 0; i < list.Count; i++)
             {
                 Vertices v = list[i];
-                Vector2[] vector2s = v.ToArray();
+                if (v != null)
+                {
+                    Vector2[] vector2s = v.ToArray();
 
-                DebugView.DrawSolidPolygon(ref vector2s, v.Count, colors[i]);
+                    DebugView.DrawSolidPolygon(ref vector2s, v.Count, colors[i]);
+                }
             }
 
 

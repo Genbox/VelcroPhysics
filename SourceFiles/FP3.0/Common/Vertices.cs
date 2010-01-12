@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerPhysics;
+using FarseerPhysics.Common.Decomposition;
 using Microsoft.Xna.Framework;
 
 #if !(XBOX360)
@@ -35,9 +37,86 @@ public class Vertices : List<Vector2>
         }
     }
 
-    public Vector2[] GetVerticesArray()
+    public Vertices AddTriangle(EarclipDecomposer.Triangle t)
     {
-        return ToArray();
+        // float32 equalTol = .001f;
+        // First, find vertices that connect
+        int firstP = -1;
+        int firstT = -1;
+        int secondP = -1;
+        int secondT = -1;
+        for (int i = 0; i < Count; i++)
+        {
+            if (t.x[0] == this[i].X && t.y[0] == this[i].Y)
+            {
+                if (firstP == -1)
+                {
+                    firstP = i;
+                    firstT = 0;
+                }
+                else
+                {
+                    secondP = i;
+                    secondT = 0;
+                }
+            }
+            else if (t.x[1] == this[i].X && t.y[1] == this[i].Y)
+            {
+                if (firstP == -1)
+                {
+                    firstP = i;
+                    firstT = 1;
+                }
+                else
+                {
+                    secondP = i;
+                    secondT = 1;
+                }
+            }
+            else if (t.x[2] == this[i].X && t.y[2] == this[i].Y)
+            {
+                if (firstP == -1)
+                {
+                    firstP = i;
+                    firstT = 2;
+                }
+                else
+                {
+                    secondP = i;
+                    secondT = 2;
+                }
+            }
+        }
+        // Fix ordering if first should be last vertex of poly
+        if (firstP == 0 && secondP == Count - 1)
+        {
+            firstP = Count - 1;
+            secondP = 0;
+        }
+
+        // Didn't find it
+        if (secondP == -1)
+        {
+            return null;
+        }
+
+        // Find tip index on triangle
+        int tipT = 0;
+        if (tipT == firstT || tipT == secondT)
+            tipT = 1;
+        if (tipT == firstT || tipT == secondT)
+            tipT = 2;
+
+        Vertices result = new Vertices(Count + 1);
+        for (int i = 0; i < Count; i++)
+        {
+            result.Add(this[i]);
+
+            if (i == firstP)
+                result.Add(new Vector2(t.x[tipT], t.y[tipT]));
+        }
+
+        return result;
     }
 
     public int NextIndex(int index)
@@ -67,7 +146,7 @@ public class Vertices : List<Vector2>
     /// Gets the signed area.
     /// </summary>
     /// <returns></returns>
-    private float GetSignedArea()
+    public float GetSignedArea()
     {
         int i;
         float area = 0;
@@ -107,59 +186,35 @@ public class Vertices : List<Vector2>
     /// <returns></returns>
     public Vector2 GetCentroid()
     {
-        float area = GetArea();
-        return GetCentroid(area);
-    }
+        // Same algorithm is used by Box2D
 
-    /// <summary>
-    /// Gets the centroid.
-    /// </summary>
-    /// <param name="area">The area.</param>
-    /// <returns></returns>
-    public Vector2 GetCentroid(float area)
-    {
-        Vertices verts = this;
+        Vector2 c = Vector2.Zero;
+        float area = 0.0f;
 
-        float cx = 0, cy = 0;
-        int i;
-
-        float signedarea = GetSignedArea();
-        float factor;
-
-        if (signedarea > 0)	//if it's meant to be reversed, go through the vertices backwards
+        const float inv3 = 1.0f / 3.0f;
+        Vector2 pRef = new Vector2(0.0f, 0.0f);
+        for (int i = 0; i < Count; ++i)
         {
-            for (i = Count - 1; i >= 0; i--)
-            {
-                int j = (i - 1) % Count;
+            // Triangle vertices.
+            Vector2 p1 = pRef;
+            Vector2 p2 = this[i];
+            Vector2 p3 = i + 1 < Count ? this[i + 1] : this[0];
 
-                if (j < 0) { j += Count; }
+            Vector2 e1 = p2 - p1;
+            Vector2 e2 = p3 - p1;
 
-                factor = -(verts[i].X * verts[j].Y - verts[j].X * verts[i].Y);
-                cx += (verts[i].X + verts[j].X) * factor;
-                cy += (verts[i].Y + verts[j].Y) * factor;
-            }
+            float D = MathUtils.Cross(e1, e2);
 
-        }
-        else
-        {
-            for (i = 0; i < Count; i++)
-            {
-                int j = (i + 1) % Count;
+            float triangleArea = 0.5f * D;
+            area += triangleArea;
 
-                factor = -(verts[i].X * verts[j].Y - verts[j].X * verts[i].Y);
-                cx += (verts[i].X + verts[j].X) * factor;
-                cy += (verts[i].Y + verts[j].Y) * factor;
-            }
+            // Area weighted centroid
+            c += triangleArea * inv3 * (p1 + p2 + p3);
         }
 
-        area *= 6.0f;
-        factor = 1 / area;
-        cx *= factor;
-        cy *= factor;
-        _res.X = cx;
-        _res.Y = cy;
-
-        return _res;
+        // Centroid
+        c *= 1.0f / area;
+        return c;
     }
 
     /// <summary>
@@ -196,7 +251,7 @@ public class Vertices : List<Vector2>
     }
 
     /// <summary>
-    /// Determines whether the polygon is convex.
+    /// Assuming the polygon is simple; determines whether the polygon is convex.
     /// </summary>
     /// <returns>
     /// 	<c>true</c> if it is convex; otherwise, <c>false</c>.
@@ -232,39 +287,277 @@ public class Vertices : List<Vector2>
         return true;
     }
 
-    public void MakeCCW()
+    public bool IsCounterClockWise()
     {
-        int br = 0;
+        return (GetSignedArea() > 0.0f);
+    }
 
-        // find bottom right point
-        for (int i = 1; i < Count; ++i)
-        {
-            if (this[i].Y < this[br].Y || (this[i].Y == this[br].Y && this[i].X > this[br].X))
-            {
-                br = i;
-            }
-        }
-
-        // reverse poly if clockwise
-        if (!MathUtils.Left(At(br - 1), At(br), At(br + 1)))
+    /// <summary>
+    /// Forces counter clock wise order.
+    /// </summary>
+    public void ForceCounterClockWise()
+    {
+        // the sign of the 'area' of the polygon is all
+        // we are interested in.
+        float area = GetSignedArea();
+        if (area > 0)
         {
             Reverse();
         }
     }
 
-    public bool IsReflex(int i)
+    /*
+* Check if the lines a0->a1 and b0->b1 cross.
+* If they do, intersectionPoint will be filled
+* with the point of crossing.
+*
+* Grazing lines should not return true.
+*/
+    public static bool intersect(Vector2 a0, Vector2 a1, Vector2 b0, Vector2 b1, out Vector2 intersectionPoint)
     {
-        return MathUtils.Right(At(i - 1), At(i), At(i + 1));
+        intersectionPoint = Vector2.Zero;
+        if (a0 == b0 || a0 == b1 || a1 == b0 || a1 == b1) return false;
+        float x1 = a0.X; float y1 = a0.Y;
+        float x2 = a1.X; float y2 = a1.Y;
+        float x3 = b0.X; float y3 = b0.Y;
+        float x4 = b1.X; float y4 = b1.Y;
+
+        //AABB early exit
+        if (Math.Max(x1, x2) < Math.Min(x3, x4) || Math.Max(x3, x4) < Math.Min(x1, x2)) return false;
+        if (Math.Max(y1, y2) < Math.Min(y3, y4) || Math.Max(y3, y4) < Math.Min(y1, y2)) return false;
+
+        float ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3));
+        float ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3));
+        float denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+        if (Math.Abs(denom) < Settings.Epsilon)
+        {
+            //Lines are too close to parallel to call
+            return false;
+        }
+        ua /= denom;
+        ub /= denom;
+
+        if ((0 < ua) && (ua < 1) && (0 < ub) && (ub < 1))
+        {
+            intersectionPoint.X = (x1 + ua * (x2 - x1));
+            intersectionPoint.Y = (y1 + ua * (y2 - y1));
+            //printf("%f, %f -> %f, %f crosses %f, %f -> %f, %f\n",x1,y1,x2,y2,x3,y3,x4,y4);
+            return true;
+        }
+
+        return false;
     }
 
-    public Vector2 At(int i)
+    /// <summary>
+    /// Check for edge crossings
+    /// </summary>
+    /// <returns></returns>
+    public bool IsSimple()
     {
-        return this[Wrap(i, Count)];
+        for (int i = 0; i < Count; ++i)
+        {
+            int iplus = (i + 1 > Count - 1) ? 0 : i + 1;
+            Vector2 a1 = new Vector2(this[i].X, this[i].Y);
+            Vector2 a2 = new Vector2(this[iplus].X, this[iplus].Y);
+            for (int j = i + 1; j < Count; ++j)
+            {
+                int jplus = (j + 1 > Count - 1) ? 0 : j + 1;
+                Vector2 b1 = new Vector2(this[j].X, this[j].Y);
+                Vector2 b2 = new Vector2(this[jplus].X, this[jplus].Y);
+
+                Vector2 temp;
+
+                if (intersect(a1, a2, b1, b2, out temp))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
-    private int Wrap(int a, int b)
+    public void MergeParallelEdges(float tolerance)
     {
-        return a < 0 ? a % b + b : a % b;
+        if (Count <= 3)
+            //Can't do anything useful here to a triangle
+            return;
+
+        bool[] mergeMe = new bool[Count];
+        int newNVertices = Count;
+        for (int i = 0; i < Count; ++i)
+        {
+            int lower = (i == 0) ? (Count - 1) : (i - 1);
+            int middle = i;
+            int upper = (i == Count - 1) ? (0) : (i + 1);
+            float dx0 = this[middle].X - this[lower].X;
+            float dy0 = this[middle].Y - this[lower].Y;
+            float dx1 = this[upper].X - this[middle].X;
+            float dy1 = this[upper].Y - this[middle].Y;
+            float norm0 = (float)Math.Sqrt(dx0 * dx0 + dy0 * dy0);
+            float norm1 = (float)Math.Sqrt(dx1 * dx1 + dy1 * dy1);
+            if (!(norm0 > 0.0f && norm1 > 0.0f) && newNVertices > 3)
+            {
+                //Merge identical points
+                mergeMe[i] = true;
+                --newNVertices;
+            }
+            dx0 /= norm0; dy0 /= norm0;
+            dx1 /= norm1; dy1 /= norm1;
+            float cross = dx0 * dy1 - dx1 * dy0;
+            float dot = dx0 * dx1 + dy0 * dy1;
+            if (Math.Abs(cross) < tolerance && dot > 0 && newNVertices > 3)
+            {
+                mergeMe[i] = true;
+                --newNVertices;
+            }
+            else
+            {
+                mergeMe[i] = false;
+            }
+        }
+
+        if (newNVertices == Count || newNVertices == 0)
+        {
+            //Nothing needed to be merged
+            return;
+        }
+
+        //Copy the old vertices to a new list
+        Vertices oldVertices = new Vertices(this);
+
+        //Clear this list
+        Clear();
+
+        int currIndex = 0;
+        for (int i = 0; i < Count; ++i)
+        {
+            if (mergeMe[i] || newNVertices == 0 || currIndex == newNVertices)
+                continue;
+
+            Debug.Assert(currIndex < newNVertices);
+
+            //Add the old vertices that needs to be kept
+            Add(oldVertices[i]);
+            ++currIndex;
+        }
+    }
+
+    /*
+ * Checks if polygon is valid for use in Box2d engine.
+ * Last ditch effort to ensure no invalid polygons are
+ * added to world geometry.
+ *
+ * Performs a full check, for simplicity, convexity,
+ * orientation, minimum angle, and volume.  This won't
+ * be very efficient, and a lot of it is redundant when
+ * other tools in this section are used.
+ */
+    bool IsUsable(bool printErrors)
+    {
+        int error = -1;
+        bool noError = true;
+        if (Count < 3 || Count > Settings.MaxPolygonVertices) { noError = false; error = 0; }
+        if (!IsConvex()) { noError = false; error = 1; }
+        if (!IsSimple()) { noError = false; error = 2; }
+        if (GetArea() < Settings.Epsilon) { noError = false; error = 3; }
+
+        //Compute normals
+        Vector2[] normals = new Vector2[Count];
+        Vertices vertices = new Vertices(Count);
+        for (int i = 0; i < Count; ++i)
+        {
+            vertices[i] = new Vector2(this[i].X, this[i].Y);
+            int i1 = i;
+            int i2 = i + 1 < Count ? i + 1 : 0;
+            Vector2 edge = new Vector2(this[i2].X - this[i1].X, this[i2].Y - this[i1].Y);
+            normals[i] = MathUtils.Cross(edge, 1.0f);
+            normals[i].Normalize();
+        }
+
+        //Required side checks
+        for (int i = 0; i < Count; ++i)
+        {
+            int iminus = (i == 0) ? Count - 1 : i - 1;
+            //int iplus = (i==nVertices-1)?0:i+1;
+
+            //Parallel sides check
+            float cross = MathUtils.Cross(normals[iminus], normals[i]);
+            cross = MathUtils.Clamp(cross, -1.0f, 1.0f);
+            float angle = (float)Math.Asin(cross);
+            if (angle <= Settings.AngularSlop)
+            {
+                noError = false;
+                error = 4;
+                break;
+            }
+
+            //Too skinny check
+            for (int j = 0; j < Count; ++j)
+            {
+                if (j == i || j == (i + 1) % Count)
+                {
+                    continue;
+                }
+                float s = Vector2.Dot(normals[i], vertices[j] - vertices[i]);
+                if (s >= -Settings.LinearSlop)
+                {
+                    noError = false;
+                    error = 5;
+                }
+            }
+
+
+            Vector2 centroid = vertices.GetCentroid();
+            Vector2 n1 = normals[iminus];
+            Vector2 n2 = normals[i];
+            Vector2 v = vertices[i] - centroid; ;
+
+            Vector2 d = new Vector2();
+            d.X = Vector2.Dot(n1, v); // - toiSlop;
+            d.Y = Vector2.Dot(n2, v); // - toiSlop;
+
+            // Shifting the edge inward by toiSlop should
+            // not cause the plane to pass the centroid.
+            if ((d.X < 0.0f) || (d.Y < 0.0f))
+            {
+                noError = false;
+                error = 6;
+            }
+
+        }
+
+        if (!noError && printErrors)
+        {
+            Debug.WriteLine("Found invalid polygon, ");
+            switch (error)
+            {
+                case 0:
+                    Debug.WriteLine(string.Format("must have between 3 and {0} vertices.\n", Settings.MaxPolygonVertices));
+                    break;
+                case 1:
+                    Debug.WriteLine("must be convex.\n");
+                    break;
+                case 2:
+                    Debug.WriteLine("must be simple (cannot intersect itself).\n");
+                    break;
+                case 3:
+                    Debug.WriteLine("area is too small.\n");
+                    break;
+                case 4:
+                    Debug.WriteLine("sides are too close to parallel.\n");
+                    break;
+                case 5:
+                    Debug.WriteLine("polygon is too thin.\n");
+                    break;
+                case 6:
+                    Debug.WriteLine("core shape generation would move edge past centroid (too thin).\n");
+                    break;
+                default:
+                    Debug.WriteLine("don't know why.\n");
+                    break;
+            }
+        }
+        return noError;
     }
 
     #region Cowdozer's Extension
