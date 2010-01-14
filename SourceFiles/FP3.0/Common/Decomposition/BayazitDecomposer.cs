@@ -185,37 +185,37 @@ namespace FarseerPhysics.Common.Decomposition
             return Right(i, vertices);
         }
 
-        static bool Right(int i, Vertices vertices)
+        private static bool Right(int i, Vertices vertices)
         {
             return Right(At(i - 1, vertices), At(i, vertices), At(i + 1, vertices));
         }
 
-        static float Area(Vector2 a, Vector2 b, Vector2 c)
+        private static float Area(Vector2 a, Vector2 b, Vector2 c)
         {
             return ((b.X - a.X) * (c.Y - a.Y) - ((c.X - a.X) * (b.Y - a.Y)));
         }
 
-        static bool Left(Vector2 a, Vector2 b, Vector2 c)
+        private static bool Left(Vector2 a, Vector2 b, Vector2 c)
         {
             return Area(a, b, c) > 0;
         }
 
-        static bool LeftOn(Vector2 a, Vector2 b, Vector2 c)
+        private static bool LeftOn(Vector2 a, Vector2 b, Vector2 c)
         {
             return Area(a, b, c) >= 0;
         }
 
-        static bool Right(Vector2 a, Vector2 b, Vector2 c)
+        private static bool Right(Vector2 a, Vector2 b, Vector2 c)
         {
             return Area(a, b, c) < 0;
         }
 
-        static bool RightOn(Vector2 a, Vector2 b, Vector2 c)
+        private static bool RightOn(Vector2 a, Vector2 b, Vector2 c)
         {
             return Area(a, b, c) <= 0;
         }
 
-        static float SquareDist(Vector2 a, Vector2 b)
+        private static float SquareDist(Vector2 a, Vector2 b)
         {
             float dx = b.X - a.X;
             float dy = b.Y - a.Y;
