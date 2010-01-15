@@ -90,6 +90,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Tests\ApplyForceTest.cs" />
     <Compile Include="Tests\BodyTypesTest.cs" />
+    <Compile Include="Tests\BooleanPolygonTest.cs" />
     <Compile Include="Tests\BreakableTest.cs" />
     <Compile Include="Tests\BridgeTest.cs" />
     <Compile Include="Tests\CantileverTest.cs" />

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
+using FarseerPhysics.Common;
 
 namespace FarseerPhysics
 {
@@ -61,1066 +61,621 @@ namespace FarseerPhysics
             return vertices;
         }
 
-        #region Sickbattery's Extension
-
-        /// <summary>
-        /// TODO:
-        /// 1.) Das Array welches ich bekomme am besten in einen bool array verwandeln. Würde die Geschwindigkeit verbessern
-        /// </summary>
-        private static readonly int[,] _closePixels = new int[8, 2] { { -1, -1 }, { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
-
-        /// <summary>
-        /// Creates vertices from the texture data.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <returns></returns>
         public static Vertices CreatePolygon(uint[] data, int width, int height)
         {
-            PolygonCreationAssistance pca = new PolygonCreationAssistance(data, width, height);
-            List<Vertices> verts = CreatePolygon(ref pca);
-
-            return verts[0];
+            return TextureConverter.CreatePolygon(data, width, height);
         }
 
-        /// <summary>
-        /// Creates a list of vertices from the texture data.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="hullTolerance">The hull tolerance. This argument controls the amount of details found in the detection.</param>
-        /// <param name="alphaTolerance">The alpha tolerance.</param>
-        /// <param name="multiPartDetection">if set to <c>true</c> [multi part detection].</param>
-        /// <param name="holeDetection">if set to <c>true</c> [hole detection].</param>
-        /// <returns></returns>
+        public static Vertices CreatePolygon(uint[] data, int width, int height, bool holeDetection)
+        {
+            return TextureConverter.CreatePolygon(data, width, height, holeDetection);
+        }
+
         public static List<Vertices> CreatePolygon(uint[] data, int width, int height, float hullTolerance, byte alphaTolerance, bool multiPartDetection, bool holeDetection)
         {
-            PolygonCreationAssistance pca = new PolygonCreationAssistance(data, width, height);
-            pca.HullTolerance = hullTolerance;
-            pca.AlphaTolerance = alphaTolerance;
-            pca.MultipartDetection = multiPartDetection;
-            pca.HoleDetection = holeDetection;
-            return CreatePolygon(ref pca);
+            return TextureConverter.CreatePolygon(data, width, height, hullTolerance, alphaTolerance, holeDetection, multiPartDetection);
+        }
+
+        // Boolean polygon operations contributed by DrDeth
+
+        /// <summary>
+        /// Merges two polygons, given that they intersect.
+        /// </summary>
+        /// <param name="polygon1">The first polygon.</param>
+        /// <param name="polygon2">The second polygon.</param>
+        /// <param name="error">The error returned from union</param>
+        /// <returns>The union of the two polygons, or null if there was an error.</returns>
+        public static Vertices Union(Vertices polygon1, Vertices polygon2, out PolyUnionError error)
+        {
+            Vertices poly1;
+            Vertices poly2;
+            List<EdgeIntersectInfo> intersections;
+
+            int startingIndex = PreparePolygons(polygon1, polygon2, out poly1, out poly2, out intersections, out error);
+
+            if (startingIndex == -1)
+            {
+                switch (error)
+                {
+                    case PolyUnionError.NoIntersections:
+                        return null;
+
+                    case PolyUnionError.Poly1InsidePoly2:
+                        return polygon2;
+                }
+            }
+
+            Vertices union = new Vertices();
+            Vertices currentPoly = poly1;
+            Vertices otherPoly = poly2;
+
+            // Store the starting vertex so we can refer to it later.
+            Vector2 startingVertex = poly1[startingIndex];
+            int currentIndex = startingIndex;
+
+            do
+            {
+                // Add the current vertex to the final union
+                union.Add(currentPoly[currentIndex]);
+
+                foreach (EdgeIntersectInfo intersect in intersections)
+                {
+                    // If the current point is an intersection point
+                    if (currentPoly[currentIndex] == intersect.IntersectionPoint)
+                    {
+                        // Make sure we want to swap polygons here.
+                        int otherIndex = otherPoly.IndexOf(intersect.IntersectionPoint);
+
+                        // If the next vertex, if we do swap, is not inside the current polygon,
+                        // then its safe to swap, otherwise, just carry on with the current poly.
+                        if (!PointInPolygonAngle(otherPoly[otherPoly.NextIndex(otherIndex)], currentPoly))
+                        {
+                            // switch polygons
+                            if (currentPoly == poly1)
+                            {
+                                currentPoly = poly2;
+                                otherPoly = poly1;
+                            }
+                            else
+                            {
+                                currentPoly = poly1;
+                                otherPoly = poly2;
+                            }
+
+                            // set currentIndex
+                            currentIndex = otherIndex;
+
+                            // Stop checking intersections for this point.
+                            break;
+                        }
+                    }
+                }
+
+                // Move to next index
+                currentIndex = currentPoly.NextIndex(currentIndex);
+            } while ((currentPoly[currentIndex] != startingVertex) && (union.Count <= (poly1.Count + poly2.Count)));
+
+
+            // If the number of vertices in the union is more than the combined vertices
+            // of the input polygons, then something is wrong and the algorithm will
+            // loop forever. Luckily, we check for that.
+            if (union.Count > (poly1.Count + poly2.Count))
+            {
+                error = PolyUnionError.InfiniteLoop;
+            }
+
+            return union;
         }
 
         /// <summary>
-        /// Creates a list of vertices. Create a PolygonCreationAssistance that contains all the data needed for detection.
+        /// Subtracts one polygon from another.
         /// </summary>
-        /// <param name="pca">The pca.</param>
-        /// <returns></returns>
-        public static List<Vertices> CreatePolygon(ref PolygonCreationAssistance pca)
+        /// <param name="polygon1">The base polygon.</param>
+        /// <param name="polygon2">The polygon to subtract from the base.</param>
+        /// <param name="error">The error.</param>
+        /// <returns>
+        /// The result of the polygon subtraction, or null if there was an error.
+        /// </returns>
+        public static Vertices Subtract(Vertices polygon1, Vertices polygon2, out PolyUnionError error)
         {
-            List<Vertices> polygons = new List<Vertices>();
+            Vertices poly1;
+            Vertices poly2;
+            List<EdgeIntersectInfo> intersections;
 
-            Vertices polygon;
-            Vertices holePolygon;
+            int startingIndex = PreparePolygons(polygon1, polygon2, out poly1, out poly2, out intersections, out error);
 
-            Vector2? holeEntrance = null;
-            Vector2? polygonEntrance = null;
-
-            List<Vector2> blackList = new List<Vector2>();
-
-            // First of all: Check the array you just got.
-            if (pca.IsValid())
+            if (startingIndex == -1)
             {
-                bool searchOn;
-                do
+                switch (error)
                 {
-                    if (polygons.Count == 0)
-                    {
-                        polygon = CreateSimplePolygon(ref pca, Vector2.Zero, Vector2.Zero);
+                    case PolyUnionError.NoIntersections:
+                        return null;
 
-                        if (polygon != null && polygon.Count > 2)
+                    case PolyUnionError.Poly1InsidePoly2:
+                        return null;
+                }
+            }
+
+            Vertices subtract = new Vertices();
+            Vertices currentPoly = poly1;
+            Vertices otherPoly = poly2;
+
+            // Store the starting vertex so we can refer to it later.
+            Vector2 startingVertex = poly1[startingIndex];
+            int currentIndex = startingIndex;
+
+            // Trace direction
+            bool forward = true;
+
+            do
+            {
+                // Add the current vertex to the final union
+                subtract.Add(currentPoly[currentIndex]);
+
+                foreach (EdgeIntersectInfo intersect in intersections)
+                {
+                    // If the current point is an intersection point
+                    if (currentPoly[currentIndex] == intersect.IntersectionPoint)
+                    {
+                        // Make sure we want to swap polygons here.
+                        int otherIndex = otherPoly.IndexOf(intersect.IntersectionPoint);
+
+                        Vector2 otherVertex;
+                        if (forward)
                         {
-                            polygonEntrance = GetTopMostVertex(ref polygon);
-                        }
-                    }
-                    else if (polygonEntrance.HasValue)
-                    {
-                        polygon = CreateSimplePolygon(ref pca, polygonEntrance.Value, new Vector2(polygonEntrance.Value.X - 1f, polygonEntrance.Value.Y));
-                    }
-                    else
-                    {
-                        break;
-                    }
+                            otherVertex = otherPoly[otherPoly.PreviousIndex(otherIndex)];
 
-                    searchOn = false;
-
-                    if (polygon != null && polygon.Count > 2)
-                    {
-                        if (pca.HoleDetection)
-                        {
-                            do
+                            // If the next vertex, if we do swap, is inside the current polygon,
+                            // then its safe to swap, otherwise, just carry on with the current poly.
+                            if (PointInPolygonAngle(otherVertex, currentPoly))
                             {
-                                holeEntrance = GetHoleHullEntrance(ref pca, ref polygon, holeEntrance);
-
-                                if (holeEntrance.HasValue)
+                                // switch polygons
+                                if (currentPoly == poly1)
                                 {
-                                    if (!blackList.Contains(holeEntrance.Value))
-                                    {
-                                        blackList.Add(holeEntrance.Value);
-                                        holePolygon = CreateSimplePolygon(ref pca, holeEntrance.Value, new Vector2(holeEntrance.Value.X + 1, holeEntrance.Value.Y));
-
-                                        if (holePolygon != null && holePolygon.Count > 2)
-                                        {
-                                            holePolygon.Add(holePolygon[0]);
-
-                                            int vertex2Index;
-                                            int vertex1Index;
-                                            if (SplitPolygonEdge(ref polygon, EdgeAlignment.Vertical, holeEntrance.Value, out vertex1Index, out vertex2Index))
-                                            {
-                                                polygon.InsertRange(vertex2Index, holePolygon);
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
+                                    currentPoly = poly2;
+                                    otherPoly = poly1;
                                 }
                                 else
                                 {
-                                    break;
+                                    currentPoly = poly1;
+                                    otherPoly = poly2;
                                 }
 
-                            } while (true);
-                        }
+                                // set currentIndex
+                                currentIndex = otherIndex;
 
-                        polygons.Add(polygon);
+                                // Reverse direction
+                                forward = !forward;
 
-                        if (pca.MultipartDetection)
-                        {
-                            // 1:  95 / 151
-                            // 2: 232 / 252
-                            // 
-                            while (GetNextHullEntrance(ref pca, polygonEntrance.Value, out polygonEntrance))
-                            {
-                                bool inPolygon = false;
-
-                                for (int i = 0; i < polygons.Count; i++)
-                                {
-                                    polygon = polygons[i];
-
-                                    if (InPolygon(ref pca, ref polygon, polygonEntrance.Value))
-                                    {
-                                        inPolygon = true;
-                                        break;
-                                    }
-                                }
-
-                                if (!inPolygon)
-                                {
-                                    searchOn = true;
-                                    break;
-                                }
+                                // Stop checking intersections for this point.
+                                break;
                             }
-                        }
-                    }
-
-                } while (searchOn);
-            }
-            else
-            {
-                throw new Exception("Sizes don't match: Color array must contain texture width * texture height elements.");
-            }
-
-            return polygons;
-        }
-
-        private static Vector2? GetHoleHullEntrance(ref PolygonCreationAssistance pca, ref Vertices polygon, Vector2? startVertex)
-        {
-            List<CrossingEdgeInfo> edges = new List<CrossingEdgeInfo>();
-            Vector2? entrance;
-
-            int startLine;
-            int endLine;
-
-            int lastSolid = 0;
-            bool foundSolid;
-            bool foundTransparent;
-
-            if (polygon != null && polygon.Count > 0)
-            {
-                if (startVertex.HasValue)
-                {
-                    startLine = (int)startVertex.Value.Y;
-                }
-                else
-                {
-                    startLine = (int)GetTopMostCoord(ref polygon);
-                }
-                endLine = (int)GetBottomMostCoord(ref polygon);
-
-                if (startLine > 0 && startLine < pca.Height && endLine > 0 && endLine < pca.Height)
-                {
-                    // go from top to bottom of the polygon
-                    for (int y = startLine; y <= endLine; y += pca.HoleDetectionLineStepSize)
-                    {
-                        // get x-coord of every polygon edge which crosses y
-                        edges = GetCrossingEdges(ref polygon, EdgeAlignment.Vertical, y);
-
-                        // we need an even number of crossing edges
-                        if (edges.Count > 1 && edges.Count % 2 == 0)
-                        {
-                            for (int i = 0; i < edges.Count; i += 2)
-                            {
-                                foundSolid = false;
-                                foundTransparent = false;
-
-                                for (int x = (int)edges[i].CrossingPoint.X; x <= (int)edges[i + 1].CrossingPoint.X; x++)
-                                {
-                                    if (pca.IsSolid(x, y))
-                                    {
-                                        if (!foundTransparent)
-                                        {
-                                            foundSolid = true;
-                                            lastSolid = x;
-                                        }
-
-                                        if (foundSolid && foundTransparent)
-                                        {
-                                            entrance = new Vector2(lastSolid, y);
-
-                                            if (DistanceToHullAcceptable(ref pca, ref polygon, entrance.Value, true))
-                                            {
-                                                return entrance;
-                                            }
-                                            entrance = null;
-                                            break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (foundSolid)
-                                        {
-                                            foundTransparent = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        private static bool DistanceToHullAcceptable(ref PolygonCreationAssistance pca, ref Vertices polygon, Vector2 point, bool higherDetail)
-        {
-            if (polygon != null && polygon.Count > 2)
-            {
-                Vector2 edgeVertex2 = polygon[polygon.Count - 1];
-
-                Vector2 edgeVertex1;
-                if (higherDetail)
-                {
-                    for (int i = 0; i < polygon.Count; i++)
-                    {
-                        edgeVertex1 = polygon[i];
-
-                        if (LineTools.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <= pca.HullTolerance ||
-                            LineTools.DistanceBetweenPointAndPoint(ref point, ref edgeVertex1) <= pca.HullTolerance)
-                        {
-                            return false;
-                        }
-
-                        edgeVertex2 = polygon[i];
-                    }
-
-                    return true;
-                }
-                else
-                {
-                    for (int i = 0; i < polygon.Count; i++)
-                    {
-                        edgeVertex1 = polygon[i];
-
-                        if (LineTools.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <= pca.HullTolerance)
-                        {
-                            return false;
-                        }
-
-                        edgeVertex2 = polygon[i];
-                    }
-
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private static bool InPolygon(ref PolygonCreationAssistance pca, ref Vertices polygon, Vector2 point)
-        {
-            bool inPolygon = !DistanceToHullAcceptable(ref pca, ref polygon, point, true);
-
-            if (!inPolygon)
-            {
-                List<CrossingEdgeInfo> edges = GetCrossingEdges(ref polygon, EdgeAlignment.Vertical, (int)point.Y);
-
-                if (edges.Count > 0 && edges.Count % 2 == 0)
-                {
-                    for (int i = 0; i < edges.Count; i += 2)
-                    {
-                        if (edges[i].CrossingPoint.X <= point.X && edges[i + 1].CrossingPoint.X >= point.X)
-                        {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                }
-                return false;
-            }
-
-            return inPolygon;
-        }
-
-        private static Vector2? GetTopMostVertex(ref Vertices vertices)
-        {
-            float topMostValue = float.MaxValue;
-            Vector2? topMost = null;
-
-            for (int i = 0; i < vertices.Count; i++)
-            {
-                if (topMostValue > vertices[i].Y)
-                {
-                    topMostValue = vertices[i].Y;
-                    topMost = vertices[i];
-                }
-            }
-
-            return topMost;
-        }
-
-        private static float GetTopMostCoord(ref Vertices vertices)
-        {
-            float returnValue = float.MaxValue;
-
-            for (int i = 0; i < vertices.Count; i++)
-            {
-                if (returnValue > vertices[i].Y)
-                {
-                    returnValue = vertices[i].Y;
-                }
-            }
-
-            return returnValue;
-        }
-
-        private static float GetBottomMostCoord(ref Vertices vertices)
-        {
-            float returnValue = float.MinValue;
-
-            for (int i = 0; i < vertices.Count; i++)
-            {
-                if (returnValue < vertices[i].Y)
-                {
-                    returnValue = vertices[i].Y;
-                }
-            }
-
-            return returnValue;
-        }
-
-        private static List<CrossingEdgeInfo> GetCrossingEdges(ref Vertices polygon, EdgeAlignment edgeAlign, int checkLine)
-        {
-            List<CrossingEdgeInfo> edges = new List<CrossingEdgeInfo>();
-
-            Vector2 slope;
-            Vector2 edgeVertex1;
-            Vector2 edgeVertex2;
-
-            Vector2 slopePreview;
-            Vector2 edgeVertexPreview;
-
-            Vector2 crossingPoint;
-            bool addCrossingPoint;
-
-            if (polygon.Count > 1)
-            {
-                edgeVertex2 = polygon[polygon.Count - 1];
-
-                switch (edgeAlign)
-                {
-                    case EdgeAlignment.Vertical:
-                        for (int i = 0; i < polygon.Count; i++)
-                        {
-                            edgeVertex1 = polygon[i];
-
-                            if ((edgeVertex1.Y >= checkLine && edgeVertex2.Y <= checkLine) || (edgeVertex1.Y <= checkLine && edgeVertex2.Y >= checkLine))
-                            {
-                                if (edgeVertex1.Y != edgeVertex2.Y)
-                                {
-                                    addCrossingPoint = true;
-                                    slope = edgeVertex2 - edgeVertex1;
-
-                                    if (edgeVertex1.Y == checkLine)
-                                    {
-                                        edgeVertexPreview = polygon[(i + 1) % polygon.Count];
-                                        slopePreview = edgeVertex1 - edgeVertexPreview;
-
-                                        if (slope.Y > 0)
-                                        {
-                                            addCrossingPoint = (slopePreview.Y <= 0);
-                                        }
-                                        else
-                                        {
-                                            addCrossingPoint = (slopePreview.Y >= 0);
-                                        }
-                                    }
-
-                                    if (addCrossingPoint)
-                                    {
-                                        crossingPoint = new Vector2((checkLine - edgeVertex1.Y) / slope.Y * slope.X + edgeVertex1.X, (float)checkLine);
-                                        edges.Add(new CrossingEdgeInfo(edgeVertex1, edgeVertex2, crossingPoint, edgeAlign));
-                                    }
-                                }
-                            }
-                            edgeVertex2 = edgeVertex1;
-                        }
-                        break;
-
-                    case EdgeAlignment.Horizontal:
-                        throw new Exception("EdgeAlignment.Horizontal isn't implemented yet. Sorry.");
-                }
-            }
-
-            edges.Sort();
-            return edges;
-        }
-
-        private static bool SplitPolygonEdge(ref Vertices polygon, EdgeAlignment edgeAlign, Vector2 coordInsideThePolygon, out int vertex1Index, out int vertex2Index)
-        {
-            List<CrossingEdgeInfo> edges = new List<CrossingEdgeInfo>();
-
-            Vector2 slope;
-            int nearestEdgeVertex1Index = 0;
-            int nearestEdgeVertex2Index = 0;
-            bool edgeFound = false;
-
-            float shortestDistance = float.MaxValue;
-
-            bool edgeCoordFound = false;
-            Vector2 foundEdgeCoord = Vector2.Zero;
-
-            vertex1Index = 0;
-            vertex2Index = 0;
-
-            switch (edgeAlign)
-            {
-                case EdgeAlignment.Vertical:
-                    edges = GetCrossingEdges(ref polygon, EdgeAlignment.Vertical, (int)coordInsideThePolygon.Y);
-
-                    foundEdgeCoord.Y = coordInsideThePolygon.Y;
-
-                    if (edges != null && edges.Count > 1 && edges.Count % 2 == 0)
-                    {
-                        float distance;
-                        for (int i = 0; i < edges.Count; i++)
-                        {
-                            if (edges[i].CrossingPoint.X < coordInsideThePolygon.X)
-                            {
-                                distance = coordInsideThePolygon.X - edges[i].CrossingPoint.X;
-
-                                if (distance < shortestDistance)
-                                {
-                                    shortestDistance = distance;
-                                    foundEdgeCoord.X = edges[i].CrossingPoint.X;
-
-                                    edgeCoordFound = true;
-                                }
-                            }
-                        }
-
-                        if (edgeCoordFound)
-                        {
-                            shortestDistance = float.MaxValue;
-
-                            int edgeVertex2Index = polygon.Count - 1;
-
-                            int edgeVertex1Index;
-                            for (edgeVertex1Index = 0; edgeVertex1Index < polygon.Count; edgeVertex1Index++)
-                            {
-                                Vector2 tempVector1 = polygon[edgeVertex1Index];
-                                Vector2 tempVector2 = polygon[edgeVertex2Index];
-                                distance = LineTools.DistanceBetweenPointAndLineSegment(ref foundEdgeCoord, ref tempVector1, ref tempVector2);
-                                if (distance < shortestDistance)
-                                {
-                                    shortestDistance = distance;
-
-                                    nearestEdgeVertex1Index = edgeVertex1Index;
-                                    nearestEdgeVertex2Index = edgeVertex2Index;
-
-                                    edgeFound = true;
-                                }
-
-                                edgeVertex2Index = edgeVertex1Index;
-                            }
-
-                            if (edgeFound)
-                            {
-                                slope = polygon[nearestEdgeVertex2Index] - polygon[nearestEdgeVertex1Index];
-                                slope.Normalize();
-
-                                Vector2 tempVector = polygon[nearestEdgeVertex1Index];
-                                distance = LineTools.DistanceBetweenPointAndPoint(ref tempVector, ref foundEdgeCoord);
-
-                                vertex1Index = nearestEdgeVertex1Index;
-                                vertex2Index = nearestEdgeVertex1Index + 1;
-
-                                polygon.Insert(nearestEdgeVertex1Index, distance * slope + polygon[vertex1Index]);
-                                polygon.Insert(nearestEdgeVertex1Index, distance * slope + polygon[vertex2Index]);
-
-                                return true;
-                            }
-                        }
-                    }
-                    break;
-
-                case EdgeAlignment.Horizontal:
-                    throw new Exception("EdgeAlignment.Horizontal isn't implemented yet. Sorry.");
-            }
-
-            return false;
-        }
-
-        private static Vertices CreateSimplePolygon(ref PolygonCreationAssistance pca, Vector2 entrance, Vector2 last)
-        {
-            bool entranceFound = false;
-            bool endOfHull = false;
-
-            Vertices polygon = new Vertices();
-            Vertices hullArea = new Vertices();
-            Vertices endOfHullArea = new Vertices();
-
-            Vector2 current = Vector2.Zero;
-
-            #region Entrance check
-            // Get the entrance point. //todo: alle möglichkeiten testen
-            if (entrance == Vector2.Zero || !pca.InBounds(entrance))
-            {
-                entranceFound = GetHullEntrance(ref pca, out entrance);
-
-                if (entranceFound)
-                {
-                    current = new Vector2(entrance.X - 1f, entrance.Y);
-                }
-            }
-            else
-            {
-                if (pca.IsSolid(entrance))
-                {
-                    if (IsNearPixel(ref pca, entrance, last))
-                    {
-                        current = last;
-                        entranceFound = true;
-                    }
-                    else
-                    {
-                        Vector2 temp;
-                        if (SearchNearPixels(ref pca, false, entrance, out temp))
-                        {
-                            current = temp;
-                            entranceFound = true;
                         }
                         else
                         {
-                            entranceFound = false;
-                        }
-                    }
-                }
-            }
-            #endregion
+                            otherVertex = otherPoly[otherPoly.NextIndex(otherIndex)];
 
-            if (entranceFound)
-            {
-                polygon.Add(entrance);
-                hullArea.Add(entrance);
-
-                Vector2 next = entrance;
-
-                do
-                {
-                    // Search in the pre vision list for an outstanding point.
-                    Vector2 outstanding;
-                    if (SearchForOutstandingVertex(ref hullArea, pca.HullTolerance, out outstanding))
-                    {
-                        if (endOfHull)
-                        {
-                            // We have found the next pixel, but is it on the last bit of the hull?
-                            if (endOfHullArea.Contains(outstanding))
+                            // If the next vertex, if we do swap, is outside the current polygon,
+                            // then its safe to swap, otherwise, just carry on with the current poly.
+                            if (!PointInPolygonAngle(otherVertex, currentPoly))
                             {
-                                // Indeed.
-                                polygon.Add(outstanding);
+                                // switch polygons
+                                if (currentPoly == poly1)
+                                {
+                                    currentPoly = poly2;
+                                    otherPoly = poly1;
+                                }
+                                else
+                                {
+                                    currentPoly = poly1;
+                                    otherPoly = poly2;
+                                }
+
+                                // set currentIndex
+                                currentIndex = otherIndex;
+
+                                // Reverse direction
+                                forward = !forward;
+
+                                // Stop checking intersections for this point.
+                                break;
                             }
-
-                            // That's enough, quit.
-                            break;
                         }
-
-                        // Add it and remove all vertices that don't matter anymore
-                        // (all the vertices before the outstanding).
-                        polygon.Add(outstanding);
-                        hullArea.RemoveRange(0, hullArea.IndexOf(outstanding));
-                    }
-
-                    // Last point gets current and current gets next. Our little spider is moving forward on the hull ;).
-                    last = current;
-                    current = next;
-
-                    // Get the next point on hull.
-                    if (GetNextHullPoint(ref pca, ref last, ref current, out next))
-                    {
-                        // Add the vertex to a hull pre vision list.
-                        hullArea.Add(next);
-                    }
-                    else
-                    {
-                        // Quit
-                        break;
-                    }
-
-                    if (next == entrance && !endOfHull)
-                    {
-                        // It's the last bit of the hull, search on and exit at next found vertex.
-                        endOfHull = true;
-                        endOfHullArea.AddRange(hullArea);
                     }
                 }
-                while (true);
-            }
 
-            return polygon;
-        }
-
-        private static bool SearchNearPixels(ref PolygonCreationAssistance pca, bool searchingForSolidPixel, Vector2 current, out Vector2 foundPixel)
-        {
-            int x;
-            int y;
-
-            for (int i = 0; i < 8; i++)
-            {
-                x = (int)current.X + _closePixels[i, 0];
-                y = (int)current.Y + _closePixels[i, 1];
-
-                if (!searchingForSolidPixel ^ pca.IsSolid(x, y))
+                if (forward)
                 {
-                    foundPixel = new Vector2(x, y);
-                    return true;
-                }
-            }
-
-            // Nothing found.
-            foundPixel = Vector2.Zero;
-            return false;
-        }
-
-        private static bool IsNearPixel(ref PolygonCreationAssistance pca, Vector2 current, Vector2 near)
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                int x = (int)current.X + _closePixels[i, 0];
-                int y = (int)current.Y + _closePixels[i, 1];
-
-                if (x >= 0 && x <= pca.Width && y >= 0 && y <= pca.Height)
-                {
-                    if (x == (int)near.X && y == (int)near.Y)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        private static bool GetHullEntrance(ref PolygonCreationAssistance pca, out Vector2 entrance)
-        {
-            // Search for first solid pixel.
-            for (int y = 0; y <= pca.Height; y++)
-            {
-                for (int x = 0; x <= pca.Width; x++)
-                {
-                    if (pca.IsSolid(x, y))
-                    {
-                        entrance = new Vector2(x, y);
-                        return true;
-                    }
-                }
-            }
-
-            // If there are no solid pixels.
-            entrance = Vector2.Zero;
-            return false;
-        }
-
-        private static bool GetNextHullEntrance(ref PolygonCreationAssistance pca, Vector2 start, out Vector2? entrance)
-        {
-            // Search for first solid pixel.
-            int size = pca.Height * pca.Width;
-            int x;
-
-            bool foundTransparent = false;
-
-            for (int i = (int)start.X + (int)start.Y * pca.Width; i <= size; i++)
-            {
-                if (pca.IsSolid(i))
-                {
-                    if (foundTransparent)
-                    {
-                        x = i % pca.Width;
-
-                        entrance = new Vector2(x, (i - x) / pca.Width);
-                        return true;
-                    }
+                    // Move to next index
+                    currentIndex = currentPoly.NextIndex(currentIndex);
                 }
                 else
                 {
-                    foundTransparent = true;
+                    currentIndex = currentPoly.PreviousIndex(currentIndex);
                 }
+            } while ((currentPoly[currentIndex] != startingVertex) &&
+                     (subtract.Count <= (poly1.Count + poly2.Count)));
+
+
+            // If the number of vertices in the union is more than the combined vertices
+            // of the input polygons, then something is wrong and the algorithm will
+            // loop forever. Luckily, we check for that.
+            if (subtract.Count > (poly1.Count + poly2.Count))
+            {
+                error = PolyUnionError.InfiniteLoop;
             }
 
-            // If there are no solid pixels.
-            entrance = null;
-            return false;
+            return subtract;
         }
 
-        private static bool GetNextHullPoint(ref PolygonCreationAssistance pca, ref Vector2 last, ref Vector2 current, out Vector2 next)
+        /// <summary>
+        /// Finds the intersection between two polygons.
+        /// </summary>
+        /// <param name="polygon1">The first polygon.</param>
+        /// <param name="polygon2">The second polygon.</param>
+        /// <param name="error">The error.</param>
+        /// <returns>
+        /// The intersection of the two polygons, or null if there was an error.
+        /// </returns>
+        public static Vertices Intersect(Vertices polygon1, Vertices polygon2, out PolyUnionError error)
         {
-            int x;
-            int y;
+            error = PolyUnionError.None;
 
-            int indexOfFirstPixelToCheck = GetIndexOfFirstPixelToCheck(last, current);
-            int indexOfPixelToCheck;
+            Vertices poly1;
+            Vertices poly2;
+            List<EdgeIntersectInfo> intersections;
 
-            const int pixelsToCheck = 8;// _closePixels.Length;
+            PolyUnionError gotError;
+            int startingIndex = PreparePolygons(polygon1, polygon2, out poly1, out poly2, out intersections, out gotError);
 
-            for (int i = 0; i < pixelsToCheck; i++)
+            if (startingIndex == -1)
             {
-                indexOfPixelToCheck = (indexOfFirstPixelToCheck + i) % pixelsToCheck;
-
-                x = (int)current.X + _closePixels[indexOfPixelToCheck, 0];
-                y = (int)current.Y + _closePixels[indexOfPixelToCheck, 1];
-
-                if (x >= 0 && x < pca.Width && y >= 0 && y <= pca.Height)
+                switch (gotError)
                 {
-                    if (pca.IsSolid(x, y)) //todo
-                    {
-                        next = new Vector2(x, y);
-                        return true;
-                    }
+                    case PolyUnionError.NoIntersections:
+                        return null;
+
+                    case PolyUnionError.Poly1InsidePoly2:
+                        return polygon2;
                 }
             }
 
-            next = Vector2.Zero;
-            return false;
-        }
+            Vertices intersectOut = new Vertices();
+            Vertices currentPoly = poly1;
+            Vertices otherPoly = poly2;
 
-        private static bool SearchForOutstandingVertex(ref Vertices hullArea, float hullTolerance, out Vector2 outstanding)
-        {
-            Vector2 outstandingResult = Vector2.Zero;
-            bool found = false;
+            // Store the starting vertex so we can refer to it later.            
+            int currentIndex = poly1.IndexOf(intersections[0].IntersectionPoint);
+            Vector2 startingVertex = poly1[currentIndex];
 
-            if (hullArea.Count > 2)
+            do
             {
-                int hullAreaLastPoint = hullArea.Count - 1;
+                // Add the current vertex to the final union
+                intersectOut.Add(currentPoly[currentIndex]);
 
-                Vector2 tempVector1;
-                Vector2 tempVector2 = hullArea[0];
-                Vector2 tempVector3 = hullArea[hullAreaLastPoint];
-
-                // Search between the first and last hull point.
-                for (int i = 1; i < hullAreaLastPoint; i++)
+                foreach (EdgeIntersectInfo intersect in intersections)
                 {
-                    tempVector1 = hullArea[i];
-
-                    // Check if the distance is over the one that's tolerable.
-                    if (LineTools.DistanceBetweenPointAndLineSegment(ref tempVector1, ref  tempVector2, ref tempVector3) >= hullTolerance)
+                    // If the current point is an intersection point
+                    if (currentPoly[currentIndex] == intersect.IntersectionPoint)
                     {
-                        outstandingResult = hullArea[i];
-                        found = true;
-                        break;
+                        // Make sure we want to swap polygons here.
+                        int otherIndex = otherPoly.IndexOf(intersect.IntersectionPoint);
+
+                        // If the next vertex, if we do swap, is inside the current polygon,
+                        // then its safe to swap, otherwise, just carry on with the current poly.
+                        if (PointInPolygonAngle(otherPoly[otherPoly.NextIndex(otherIndex)], currentPoly))
+                        {
+                            // switch polygons
+                            if (currentPoly == poly1)
+                            {
+                                currentPoly = poly2;
+                                otherPoly = poly1;
+                            }
+                            else
+                            {
+                                currentPoly = poly1;
+                                otherPoly = poly2;
+                            }
+
+                            // set currentIndex
+                            currentIndex = otherIndex;
+
+                            // Stop checking intersections for this point.
+                            break;
+                        }
+                    }
+                }
+
+                // Move to next index
+                currentIndex = currentPoly.NextIndex(currentIndex);
+            } while ((currentPoly[currentIndex] != startingVertex) &&
+                     (intersectOut.Count <= (poly1.Count + poly2.Count)));
+
+
+            // If the number of vertices in the union is more than the combined vertices
+            // of the input polygons, then something is wrong and the algorithm will
+            // loop forever. Luckily, we check for that.
+            if (intersectOut.Count > (poly1.Count + poly2.Count))
+            {
+                error = PolyUnionError.InfiniteLoop;
+            }
+
+            return intersectOut;
+        }
+
+        /// <summary>
+        /// Prepares the polygons.
+        /// </summary>
+        /// <param name="polygon1">The polygon1.</param>
+        /// <param name="polygon2">The polygon2.</param>
+        /// <param name="poly1">The poly1.</param>
+        /// <param name="poly2">The poly2.</param>
+        /// <param name="intersections">The intersections.</param>
+        /// <param name="error">The error.</param>
+        /// <returns></returns>
+        private static int PreparePolygons(Vertices polygon1, Vertices polygon2, out Vertices poly1, out Vertices poly2,
+                                    out List<EdgeIntersectInfo> intersections, out PolyUnionError error)
+        {
+            error = PolyUnionError.None;
+
+            // Make a copy of the polygons so that we dont modify the originals, and
+            // force vertices to integer (pixel) values.
+            poly1 = polygon1;
+
+            poly2 = polygon2;
+
+            // Find intersection points
+            if (!VerticesIntersect(poly1, poly2, out intersections))
+            {
+                // No intersections found - polygons do not overlap.
+                error = PolyUnionError.NoIntersections;
+                return -1;
+            }
+
+            // Add intersection points to original polygons, ignoring existing points.
+            foreach (EdgeIntersectInfo intersect in intersections)
+            {
+                if (!poly1.Contains(intersect.IntersectionPoint))
+                {
+                    poly1.Insert(poly1.IndexOf(intersect.EdgeOne.EdgeStart) + 1, intersect.IntersectionPoint);
+                }
+
+                if (!poly2.Contains(intersect.IntersectionPoint))
+                {
+                    poly2.Insert(poly2.IndexOf(intersect.EdgeTwo.EdgeStart) + 1, intersect.IntersectionPoint);
+                }
+            }
+
+            // Find starting point on the edge of polygon1 
+            // that is outside of the intersected area
+            // to begin polygon trace.
+            int startingIndex = -1;
+            int currentIndex = 0;
+            do
+            {
+                if (!PointInPolygonAngle(poly1[currentIndex], poly2))
+                {
+                    startingIndex = currentIndex;
+                    break;
+                }
+                currentIndex = poly1.NextIndex(currentIndex);
+            } while (currentIndex != 0);
+
+            // If we dont find a point on polygon1 thats outside of the
+            // intersect area, the polygon1 must be inside of polygon2,
+            // in which case, polygon2 IS the union of the two.
+            if (startingIndex == -1)
+            {
+                error = PolyUnionError.Poly1InsidePoly2;
+            }
+
+            return startingIndex;
+        }
+
+        /// <summary>
+        /// Check and return polygon intersections
+        /// </summary>
+        /// <param name="polygon1"></param>
+        /// <param name="polygon2"></param>
+        /// <param name="intersections"></param>
+        /// <returns></returns>
+        private static bool VerticesIntersect(Vertices polygon1, Vertices polygon2,
+                                       out List<EdgeIntersectInfo> intersections)
+        {
+            intersections = new List<EdgeIntersectInfo>();
+
+            // Iterate through polygon1's edges
+            for (int i = 0; i < polygon1.Count; i++)
+            {
+                // Get edge vertices
+                Vector2 p1 = polygon1[i];
+                Vector2 p2 = polygon1[polygon1.NextIndex(i)];
+
+                // Get intersections between this edge and polygon2
+                for (int j = 0; j < polygon2.Count; j++)
+                {
+                    Vector2 point;
+
+                    Vector2 p3 = polygon2[j];
+                    Vector2 p4 = polygon2[polygon2.NextIndex(j)];
+
+                    // Check if the edges intersect
+                    if (LineTools.LineIntersect(p1, p2, p3, p4, true, true, out point))
+                    {
+                        // Here, we round the returned intersection point to its nearest whole number.
+                        // This prevents floating point anomolies where 99.9999-> is returned instead of 100.
+                        point = new Vector2((float)Math.Round(point.X, 0), (float)Math.Round(point.Y, 0));
+                        // Record the intersection
+                        intersections.Add(new EdgeIntersectInfo(new Edge(p1, p2), new Edge(p3, p4), point));
                     }
                 }
             }
 
-            outstanding = outstandingResult;
-            return found;
+            // true if any intersections were found.
+            return (intersections.Count > 0);
         }
 
-        private static int GetIndexOfFirstPixelToCheck(Vector2 last, Vector2 current)
+        /// <summary>
+        /// * ref: http://ozviz.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/  - Solution 2 
+        /// * Compute the sum of the angles made between the test point and each pair of points making up the polygon. 
+        /// * If this sum is 2pi then the point is an interior point, if 0 then the point is an exterior point. 
+        /// </summary>
+        private static bool PointInPolygonAngle(Vector2 point, Vertices polygon)
         {
-            // .: pixel
-            // l: last position
-            // c: current position
-            // f: first pixel for next search
+            double angle = 0;
 
-            // f . .
-            // l c .
-            // . . .
-
-            //Calculate in which direction the last move went and decide over the next first pixel.
-            switch ((int)(current.X - last.X))
+            // Iterate through polygon's edges
+            for (int i = 0; i < polygon.Count; i++)
             {
-                case 1:
-                    switch ((int)(current.Y - last.Y))
-                    {
-                        case 1:
-                            return 1;
+                /*
+                p1.h = polygon[i].h - p.h;
+                p1.v = polygon[i].v - p.v;
+                p2.h = polygon[(i + 1) % n].h - p.h;
+                p2.v = polygon[(i + 1) % n].v - p.v;
+                */
+                // Get points
+                Vector2 p1 = polygon[i] - point;
+                Vector2 p2 = polygon[polygon.NextIndex(i)] - point;
 
-                        case 0:
-                            return 0;
-
-                        case -1:
-                            return 7;
-                    }
-                    break;
-
-                case 0:
-                    switch ((int)(current.Y - last.Y))
-                    {
-                        case 1:
-                            return 2;
-
-                        case -1:
-                            return 6;
-                    }
-                    break;
-
-                case -1:
-                    switch ((int)(current.Y - last.Y))
-                    {
-                        case 1:
-                            return 3;
-
-                        case 0:
-                            return 4;
-
-                        case -1:
-                            return 5;
-                    }
-                    break;
+                angle += VectorAngle(p1, p2);
             }
 
-            return 0;
-        }
-        #endregion
-    }
-
-    #region Sickbattery's Extension - Enums & Classes
-    public enum EdgeAlignment
-    {
-        Vertical = 0,
-        Horizontal = 1
-    }
-
-    public class CrossingEdgeInfo : IComparable
-    {
-        #region Attributes
-        private Vector2 _egdeVertex1;
-        private Vector2 _edgeVertex2;
-
-        private EdgeAlignment _alignment;
-        private Vector2 _crossingPoint;
-        #endregion
-
-        #region Properties
-        public Vector2 EdgeVertex1
-        {
-            get { return _egdeVertex1; }
-            set { _egdeVertex1 = value; }
-        }
-
-        public Vector2 EdgeVertex2
-        {
-            get { return _edgeVertex2; }
-            set { _edgeVertex2 = value; }
-        }
-
-        public EdgeAlignment CheckLineAlignment
-        {
-            get { return _alignment; }
-            set { _alignment = value; }
-        }
-
-        public Vector2 CrossingPoint
-        {
-            get { return _crossingPoint; }
-            set { _crossingPoint = value; }
-        }
-        #endregion
-
-        #region Constructor
-        public CrossingEdgeInfo(Vector2 edgeVertex1, Vector2 edgeVertex2, Vector2 crossingPoint, EdgeAlignment checkLineAlignment)
-        {
-            _egdeVertex1 = edgeVertex1;
-            _edgeVertex2 = edgeVertex2;
-
-            _alignment = checkLineAlignment;
-            _crossingPoint = crossingPoint;
-        }
-        #endregion
-
-        #region IComparable Member
-        public int CompareTo(object obj)
-        {
-            CrossingEdgeInfo cei = (CrossingEdgeInfo)obj;
-            int result = 0;
-
-            switch (_alignment)
+            if (Math.Abs(angle) < Math.PI)
             {
-                case EdgeAlignment.Vertical:
-                    if (_crossingPoint.X < cei.CrossingPoint.X)
-                    {
-                        result = -1;
-                    }
-                    else if (_crossingPoint.X > cei.CrossingPoint.X)
-                    {
-                        result = 1;
-                    }
-                    break;
-
-                case EdgeAlignment.Horizontal:
-                    if (_crossingPoint.Y < cei.CrossingPoint.Y)
-                    {
-                        result = -1;
-                    }
-                    else if (_crossingPoint.Y > cei.CrossingPoint.Y)
-                    {
-                        result = 1;
-                    }
-                    break;
+                return false;
             }
 
-            return result;
+            return true;
         }
-        #endregion
+
+        /// <summary>
+        /// Return the angle between two vectors on a plane
+        /// The angle is from vector 1 to vector 2, positive anticlockwise
+        /// The result is between -pi -> pi
+        /// </summary>
+        private static double VectorAngle(Vector2 p1, Vector2 p2)
+        {
+            double theta1 = Math.Atan2(p1.Y, p1.X);
+            double theta2 = Math.Atan2(p2.Y, p2.X);
+            double dtheta = theta2 - theta1;
+            while (dtheta > Math.PI)
+                dtheta -= (2 * Math.PI);
+            while (dtheta < -Math.PI)
+                dtheta += (2 * Math.PI);
+
+            return (dtheta);
+        }
+
+        /// <summary>
+        /// Rounds vertices X and Y values to whole numbers.
+        /// </summary>
+        /// <param name="polygon">The polygon whose vertices should be rounded.</param>
+        /// <returns>A new polygon with rounded vertices.</returns>
+        //public static Vertices Round(Vertices polygon)
+        //{
+        //    Vertices returnPoly = new Vertices();
+        //    for (int i = 0; i < polygon.Count; i++)
+        //        returnPoly.Add(new Vector2((float)Math.Round(polygon[i].X, 0), (float)Math.Round(polygon[i].Y, 0)));
+
+        //    return returnPoly;
+        //}
+
+        /// <summary>
+        /// Determines if three vertices are collinear (ie. on a straight line)
+        /// </summary>
+        /// <param name="p1">Vertex 1</param>
+        /// <param name="p2">Vertex 2</param>
+        /// <param name="p3">Vertex 3</param>
+        /// <returns></returns>
+        private static bool VerticesAreCollinear(ref Vector2 p1, ref Vector2 p2, ref Vector2 p3)
+        {
+            double collinearity = (p3.X - p1.X) * (p2.Y - p1.Y) + (p3.Y - p1.Y) * (p1.X - p2.X);
+            return (collinearity == 0);
+        }
+
+        /// <summary>
+        /// Removes all collinear points on the polygon.
+        /// </summary>
+        /// <param name="polygon">The polygon that needs simplification.</param>
+        /// <param name="bias">The distance bias between points. Points closer than this will be 'joined'.</param>
+        /// <returns>A simplified polygon.</returns>
+        public static Vertices Simplify(Vertices polygon, int bias)
+        {
+            //We can't simplify polygons under 3 vertices
+            if (polygon.Count < 3)
+                return polygon;
+
+            Vertices simplified = new Vertices();
+
+            for (int curr = 0; curr < polygon.Count; curr++)
+            {
+                int prevId = polygon.PreviousIndex(curr);
+                int nextId = polygon.NextIndex(curr);
+
+                Vector2 prev = polygon[prevId];
+                Vector2 current = polygon[curr];
+                Vector2 next = polygon[nextId];
+
+                //If they are closer than the bias, continue
+                if ((prev - current).Length() <= bias)
+                    continue;
+
+                //If they collinear, continue
+                if (VerticesAreCollinear(ref prev, ref current, ref next))
+                    continue;
+
+                simplified.Add(next);
+            }
+
+            return simplified;
+        }
+
+        /// <summary>
+        /// Removes all collinear points on the polygon.
+        /// Has a default bias of 0
+        /// </summary>
+        /// <param name="polygon">The polygon that needs simplification.</param>
+        /// <returns>A simplified polygon.</returns>
+        public static Vertices Simplify(Vertices polygon)
+        {
+            return Simplify(polygon, 0);
+        }
     }
 
     /// <summary>
-    /// Class used as a data container and helper for the texture-to-vertices code.
+    /// Enumerator to specify errors with Polygon functions.
     /// </summary>
-    public class PolygonCreationAssistance
+    public enum PolyUnionError
     {
-        private byte _alphaTolerance;
-        private uint _alphaToleranceRealValue;
-        private float _hullTolerance;
-        private int _holeDetectionLineStepSize;
-
-        public uint[] Data { get; private set; }
-
-        public int Width { get; private set; }
-
-        public int Height { get; private set; }
-
-        public byte AlphaTolerance
-        {
-            get { return _alphaTolerance; }
-            set
-            {
-                _alphaTolerance = value;
-                _alphaToleranceRealValue = (uint)value << 24;
-            }
-        }
-
-        public float HullTolerance
-        {
-            get { return _hullTolerance; }
-            set
-            {
-                float hullTolerance = value;
-
-                if (hullTolerance > 4f) hullTolerance = 4f;
-                if (hullTolerance < 0.9f) hullTolerance = 0.9f;
-
-                _hullTolerance = hullTolerance;
-            }
-        }
-
-        public int HoleDetectionLineStepSize
-        {
-            get { return _holeDetectionLineStepSize; }
-            set
-            {
-                if (value < 1)
-                {
-                    _holeDetectionLineStepSize = 1;
-                }
-                else
-                {
-                    if (value > 10)
-                    {
-                        _holeDetectionLineStepSize = 10;
-                    }
-                    else
-                    {
-                        _holeDetectionLineStepSize = value;
-                    }
-                }
-            }
-        }
-
-        public bool HoleDetection { get; set; }
-
-        public bool MultipartDetection { get; set; }
-
-        public PolygonCreationAssistance(uint[] data, int width, int height)
-        {
-            Data = data;
-            Width = width;
-            Height = height;
-
-            AlphaTolerance = 20;
-            HullTolerance = 1.5f;
-
-            HoleDetectionLineStepSize = 1;
-
-            HoleDetection = false;
-            MultipartDetection = false;
-        }
-
-        public bool IsSolid(Vector2 pixel)
-        {
-            return IsSolid((int)pixel.X, (int)pixel.Y);
-        }
-
-        public bool IsSolid(int x, int y)
-        {
-            if (x >= 0 && x < Width && y >= 0 && y < Height)
-                return ((Data[x + y * Width] & 0xFF000000) >= _alphaToleranceRealValue);
-
-            return false;
-        }
-
-        public bool IsSolid(int index)
-        {
-            if (index >= 0 && index < Width * Height)
-                return ((Data[index] & 0xFF000000) >= _alphaToleranceRealValue);
-
-            return false;
-        }
-
-        public bool InBounds(Vector2 coord)
-        {
-            return (coord.X >= 0f && coord.X < Width && coord.Y >= 0f && coord.Y < Height);
-        }
-
-        public bool IsValid()
-        {
-            if (Data != null && Data.Length > 0)
-                return Data.Length == Width * Height;
-
-            return false;
-        }
-
-        ~PolygonCreationAssistance()
-        {
-            Data = null;
-        }
+        None,
+        NoIntersections,
+        Poly1InsidePoly2,
+        InfiniteLoop
     }
-    #endregion
+
+    public class Edge
+    {
+        public Edge(Vector2 edgeStart, Vector2 edgeEnd)
+        {
+            EdgeStart = edgeStart;
+            EdgeEnd = edgeEnd;
+        }
+
+        public Vector2 EdgeStart { get; private set; }
+        public Vector2 EdgeEnd { get; private set; }
+    }
+
+    public class EdgeIntersectInfo
+    {
+        public EdgeIntersectInfo(Edge edgeOne, Edge edgeTwo, Vector2 intersectionPoint)
+        {
+            EdgeOne = edgeOne;
+            EdgeTwo = edgeTwo;
+            IntersectionPoint = intersectionPoint;
+        }
+
+        public Edge EdgeOne { get; private set; }
+        public Edge EdgeTwo { get; private set; }
+        public Vector2 IntersectionPoint { get; private set; }
+    }
 }

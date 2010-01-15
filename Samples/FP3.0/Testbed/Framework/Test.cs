@@ -377,12 +377,6 @@ namespace FarseerPhysics.TestBed.Framework
             fixture.Restitution = 0.1f;
         }
 
-        public void SpawnBomb(Vector2 worldPt)
-        {
-            _bombSpawnPoint = worldPt;
-            _bombSpawning = true;
-        }
-
         private void CompleteBombSpawn(Vector2 p)
         {
             if (_bombSpawning == false)

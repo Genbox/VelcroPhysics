@@ -41,19 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             _vertices = verts.ToArray();
 
-            //Stopwatch sw = new Stopwatch();
-            //sw.Start();
-            //vertices = GiftWrap.GetConvexHull(verts);
-            //sw.Stop();
-
-            //File.AppendAllText("info.txt", sw.ElapsedMilliseconds + Environment.NewLine);
-            //sw.Reset();
-
-            //sw.Start();
-
-            //sw.Stop();
-
-            //File.AppendAllText("info.txt", sw.ElapsedMilliseconds + Environment.NewLine);
+            verts = PolygonTools.Simplify(verts);
 
             list = BayazitDecomposer.ConvexPartition(verts);
             //list = EarclipDecomposer.ConvexPartition(verts, 10000);
@@ -80,11 +68,6 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (!vert.IsConvex())
                     throw new Exception("eh..");
-
-                if (!vert.IsUsable())
-                {
-                    int i = 0;
-                }
 
                 PolygonShape shape = new PolygonShape(vert, 1);
                 _polygonBody.CreateFixture(shape);

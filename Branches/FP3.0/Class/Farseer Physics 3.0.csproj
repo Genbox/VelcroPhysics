@@ -106,6 +106,9 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Settings.cs">
       <Link>Common\Settings.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\TextureConverter.cs">
+      <Link>Common\TextureConverter.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Vector2.cs">
       <Link>Common\Vector2.cs</Link>
     </Compile>

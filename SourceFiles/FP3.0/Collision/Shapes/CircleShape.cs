@@ -43,7 +43,7 @@ namespace FarseerPhysics
             : base(radius, density)
         {
             ShapeType = ShapeType.Circle;
-            ComputeMass();
+            ComputeProperties();
         }
 
         public override Shape Clone()
@@ -125,7 +125,7 @@ namespace FarseerPhysics
             aabb.UpperBound.Y = p.Y + Radius;
         }
 
-        protected override sealed void ComputeMass()
+        protected override sealed void ComputeProperties()
         {
             MassData data = new MassData();
             data.Mass = Density * Settings.Pi * _radius2;
