@@ -87,34 +87,11 @@ namespace FarseerPhysics
             }
 
 #if DEBUG
-            // Ensure the polygon is convex and the interior
-            // is to the left of each edge.
-            for (int i = 0; i < Vertices.Count; ++i)
-            {
-                int i1 = i;
-                int i2 = i + 1 < Vertices.Count ? i + 1 : 0;
-                Vector2 edge = Vertices[i2] - Vertices[i1];
-
-                for (int j = 0; j < Vertices.Count; ++j)
-                {
-                    // Don't check vertices on the current edge.
-                    if (j == i1 || j == i2)
-                    {
-                        continue;
-                    }
-
-                    Vector2 r = Vertices[j] - Vertices[i1];
-
-                    // Your polygon is non-convex (it has an indentation) or
-                    // has collinear edges.
-                    float s = MathUtils.Cross(edge, r);
-                    Debug.Assert(s > 0.0f);
-                }
-            }
+            vertices.IsUsable();
 #endif
 
             // Compute the polygon centroid.
-            ComputeMass();
+            ComputeProperties();
         }
 
         public void SetAsEdge(Vector2 v1, Vector2 v2)
@@ -230,7 +207,7 @@ namespace FarseerPhysics
             aabb.UpperBound = upper + r;
         }
 
-        protected override sealed void ComputeMass()
+        protected override sealed void ComputeProperties()
         {
             // Polygon mass, centroid, and inertia.
             // Let rho be the polygon density in mass per unit area.

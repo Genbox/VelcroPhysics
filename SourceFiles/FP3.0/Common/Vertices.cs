@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using FarseerPhysics;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
 using Microsoft.Xna.Framework;
 
 #if !(XBOX360)
-[DebuggerDisplay("Count = {Count}")]
+[DebuggerDisplay("Count = {Count} Vertices = {ToString()}")]
 #endif
 public class Vertices : List<Vector2>
 {
@@ -264,7 +265,7 @@ public class Vertices : List<Vector2>
     /// </summary>
     /// <param name="printErrors"></param>
     /// <returns></returns>
-    public bool IsUsable()
+    public bool CheckPolygon()
     {
         int error = -1;
         if (Count < 3 || Count > Settings.MaxPolygonVertices) { error = 0; }
@@ -365,6 +366,35 @@ public class Vertices : List<Vector2>
             }
         }
         return error != -1;
+    }
+
+    public bool IsUsable()
+    {
+        // Ensure the polygon is convex and the interior
+        // is to the left of each edge.
+        for (int i = 0; i < this.Count; ++i)
+        {
+            int i1 = i;
+            int i2 = i + 1 < this.Count ? i + 1 : 0;
+            Vector2 edge = this[i2] - this[i1];
+
+            for (int j = 0; j < this.Count; ++j)
+            {
+                // Don't check vertices on the current edge.
+                if (j == i1 || j == i2)
+                {
+                    continue;
+                }
+
+                Vector2 r = this[j] - this[i1];
+
+                // Your polygon is non-convex (it has an indentation) or
+                // has collinear edges.
+                return MathUtils.Cross(edge, r) < 0;
+            }
+        }
+
+        return true;
     }
 
     // From Eric Jordan's convex decomposition library
@@ -893,4 +923,19 @@ public class Vertices : List<Vector2>
             return res;
         }
     }
+
+    public override string ToString()
+    {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < Count; i++)
+        {
+            builder.Append(this[i].ToString());
+            if (i < Count - 1)
+            {
+                builder.Append(" ");
+            }
+        }
+        return builder.ToString();
+    }
+
 }

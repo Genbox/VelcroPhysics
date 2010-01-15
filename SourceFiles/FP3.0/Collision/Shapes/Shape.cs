@@ -160,6 +160,6 @@ namespace FarseerPhysics
         /// Compute the mass properties of this shape using its dimensions and density.
         /// The inertia tensor is computed about the local origin, not the centroid.
         /// </summary>
-        protected abstract void ComputeMass();
+        protected abstract void ComputeProperties();
     }
 }

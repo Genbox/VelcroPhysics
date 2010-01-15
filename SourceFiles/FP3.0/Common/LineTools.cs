@@ -10,7 +10,7 @@ namespace FarseerPhysics.Common
     /// </summary>
     public static class LineTools
     {
-        private const float Epsilon = .00001f;
+        public static float Epsilon = .00001f;
 
         public static float DistanceBetweenPointAndPoint(ref Vector2 point1, ref Vector2 point2)
         {
