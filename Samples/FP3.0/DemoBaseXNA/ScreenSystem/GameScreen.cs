@@ -35,7 +35,6 @@ namespace DemoBaseXNA.ScreenSystem
         private Body _groundBody;
         private MouseJoint _mouseJoint;
         private Vector2 _mouseWorld;
-        private LineRenderHelper _lineRender;
 
         protected GameScreen()
         {
@@ -46,8 +45,6 @@ namespace DemoBaseXNA.ScreenSystem
         }
 
         public World PhysicsSimulator { get; set; }
-
-        public PhysicsSimulatorView PhysicsSimulatorView { get; set; }
 
         public bool DebugViewEnabled { get; set; }
 
@@ -137,13 +134,10 @@ namespace DemoBaseXNA.ScreenSystem
         {
             if (PhysicsSimulator != null)
             {
-                PhysicsSimulatorView = new PhysicsSimulatorView(PhysicsSimulator, ScreenManager.Camera);
-                PhysicsSimulatorView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
-                _lineRender = new LineRenderHelper(100, ScreenManager.GraphicsDevice);
                 float borderWidth = 2f;
 
                 _border = new Border(50, 40, borderWidth, new Vector2(0, 0));
-                _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator, ScreenManager.QuadRenderEngine);
+                _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
                 _groundBody = PhysicsSimulator.CreateBody();
             }
         }
@@ -267,9 +261,7 @@ namespace DemoBaseXNA.ScreenSystem
             if (PhysicsSimulator != null)
             {
                 HandleMouseInput(input);
-                PhysicsSimulatorView.HandleInput(input);
             }
-            ScreenManager.Camera.HandleInput(input);
 #endif
         }
 
@@ -281,9 +273,7 @@ namespace DemoBaseXNA.ScreenSystem
 
         private void Mouse(MouseState state, MouseState oldState)
         {
-            Vector3 p = ScreenManager.GraphicsDevice.Viewport.Unproject(new Vector3(state.X, state.Y, 0),
-                ScreenManager.Camera.Projection, 
-                ScreenManager.Camera.View, Matrix.Identity);
+            Vector3 p = new Vector3(state.X, state.Y, 0);
 
             Vector2 position = new Vector2(p.X, p.Y );
             
@@ -386,13 +376,9 @@ namespace DemoBaseXNA.ScreenSystem
 
                 if (_mouseJoint != null)
                 {
-                    _lineRender.Submit(new Vector3(_mouseJoint.WorldAnchorA, 0), new Vector3(_mouseJoint.WorldAnchorB, 0), Color.Black);
+                    
                 }
 
-                PhysicsSimulatorView.Draw(ScreenManager.SpriteBatch);
-
-                _lineRender.Render(ScreenManager.GraphicsDevice, ScreenManager.Camera.Projection, ScreenManager.Camera.View);
-                _lineRender.Clear();
                 _border.Draw();
                 ScreenManager.SpriteBatch.End();
             }

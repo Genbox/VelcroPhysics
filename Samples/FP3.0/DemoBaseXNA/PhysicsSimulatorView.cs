@@ -19,7 +19,6 @@ namespace DemoBaseXNA
         
         private World _physicsSimulator;
         private GraphicsDevice _graphics;
-        private Camera2D _camera;
         
 
         //Performance panel
