@@ -60,10 +60,10 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateBox(0.25f, 0.5f);
+                Vertices box = PolygonTools.CreateRectangle(0.25f, 0.5f);
                 PolygonShape polygon1 = new PolygonShape(box, 2.0f);
 
-                box = PolygonTools.CreateBox(0.25f, 0.5f, new Vector2(0.0f, -0.5f), 0.5f * Settings.Pi);
+                box = PolygonTools.CreateRectangle(0.25f, 0.5f, new Vector2(0.0f, -0.5f), 0.5f * Settings.Pi);
                 PolygonShape polygon2 = new PolygonShape(box, 2.0f);
 
                 for (int i = 0; i < 10; ++i)
@@ -117,13 +117,13 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateBox(1.5f, 0.15f);
+                Vertices box = PolygonTools.CreateRectangle(1.5f, 0.15f);
                 PolygonShape bottom = new PolygonShape(box, 4);
 
-                box = PolygonTools.CreateBox(0.15f, 2.7f, new Vector2(-1.45f, 2.35f), 0.2f);
+                box = PolygonTools.CreateRectangle(0.15f, 2.7f, new Vector2(-1.45f, 2.35f), 0.2f);
                 PolygonShape left = new PolygonShape(box, 4);
 
-                box = PolygonTools.CreateBox(0.15f, 2.7f, new Vector2(1.45f, 2.35f), -0.2f);
+                box = PolygonTools.CreateRectangle(0.15f, 2.7f, new Vector2(1.45f, 2.35f), -0.2f);
                 PolygonShape right = new PolygonShape(box, 4);
 
                 Body body = World.CreateBody();

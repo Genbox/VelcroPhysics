@@ -40,7 +40,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateBox(0.6f, 0.125f);
+                Vertices box = PolygonTools.CreateRectangle(0.6f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 20);
 
 

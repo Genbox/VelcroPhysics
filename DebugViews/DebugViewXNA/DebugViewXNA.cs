@@ -263,8 +263,8 @@ namespace FarseerPhysics.DebugViewXNA
 
         public void DrawCircle(Vector2 center, float radius, Color color)
         {
-            int segments = 16;
-            double increment = Math.PI * 2.0 / (double)segments;
+            const int segments = 16;
+            const double increment = Math.PI * 2.0 / segments;
             double theta = 0.0;
 
             for (int i = 0; i < segments; i++)
@@ -289,8 +289,8 @@ namespace FarseerPhysics.DebugViewXNA
 
         public void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, Color color)
         {
-            int segments = 16;
-            double increment = Math.PI * 2.0 / (double)segments;
+            const int segments = 16;
+            const double increment = Math.PI * 2.0 / segments;
             double theta = 0.0;
 
             Color colorFill = new Color(color, 0.5f);
@@ -365,14 +365,14 @@ namespace FarseerPhysics.DebugViewXNA
 
         public void FinishDrawShapes()
         {
-            _device.RenderState.CullMode = CullMode.None;
-            _device.RenderState.AlphaBlendEnable = true;
+            Device.RenderState.CullMode = CullMode.None;
+            Device.RenderState.AlphaBlendEnable = true;
 
             if (_fillCount > 0)
-                _device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
+                Device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
 
             if (_lineCount > 0)
-                _device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
+                Device.DrawUserPrimitives(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
 
             _lineCount = _fillCount = 0;
         }
@@ -381,7 +381,7 @@ namespace FarseerPhysics.DebugViewXNA
         {
             for (int i = 0; i < _stringData.Count; i++)
             {
-                _batch.DrawString(_font, string.Format(_stringData[i].s, _stringData[i].args), new Vector2(_stringData[i].x, _stringData[i].y), new Color(0.9f, 0.6f, 0.6f));
+                Batch.DrawString(Font, string.Format(_stringData[i].S, _stringData[i].Args), new Vector2(_stringData[i].X, _stringData[i].Y), new Color(0.9f, 0.6f, 0.6f));
             }
 
             _stringData.Clear();
@@ -402,9 +402,9 @@ namespace FarseerPhysics.DebugViewXNA
         private static VertexPositionColor[] _vertsFill = new VertexPositionColor[100000];
         private static int _lineCount;
         private static int _fillCount;
-        public static SpriteBatch _batch;
-        public static SpriteFont _font;
-        public static GraphicsDevice _device;
+        public static SpriteBatch Batch;
+        public static SpriteFont Font;
+        public static GraphicsDevice Device;
 
         private List<StringData> _stringData;
 
@@ -412,15 +412,15 @@ namespace FarseerPhysics.DebugViewXNA
         {
             public StringData(int x, int y, string s, object[] args)
             {
-                this.x = x;
-                this.y = y;
-                this.s = s;
-                this.args = args;
+                X = x;
+                Y = y;
+                S = s;
+                Args = args;
             }
 
-            public int x, y;
-            public string s;
-            public object[] args;
+            public int X, Y;
+            public string S;
+            public object[] Args;
         }
     }
 }

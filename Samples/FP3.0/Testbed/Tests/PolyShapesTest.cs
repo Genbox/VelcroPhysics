@@ -159,7 +159,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateBox(0.5f, 0.5f);
+                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
                 _polygons[3] = new PolygonShape(box, 0);
             }
 

@@ -39,7 +39,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                PolygonShape shape = new PolygonShape(PolygonTools.CreateBox(0.5f, 2.0f), 1);
+                PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 2.0f), 1);
 
                 Body body = World.CreateBody();
                 body.BodyType = BodyType.Dynamic;

@@ -33,18 +33,18 @@ namespace FarseerPhysics.TestBed.Tests
                 Body body = World.CreateBody();
                 body.Position = new Vector2(0.0f, -0.2f);
 
-                Vertices box = PolygonTools.CreateBox(10, 0.2f);
+                Vertices box = PolygonTools.CreateRectangle(10, 0.2f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 body.CreateFixture(shape);
 
-                box = PolygonTools.CreateBox(0.2f, 1.0f, new Vector2(0.5f, 1.2f), 0.0f);
+                box = PolygonTools.CreateRectangle(0.2f, 1.0f, new Vector2(0.5f, 1.2f), 0.0f);
                 shape.Set(box);
                 body.CreateFixture(shape);
             }
 
             {
-                Vertices box = PolygonTools.CreateBox(2, 0.1f);
+                Vertices box = PolygonTools.CreateRectangle(2, 0.1f);
                 PolygonShape shape = new PolygonShape(box, 1);
 
                 _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);

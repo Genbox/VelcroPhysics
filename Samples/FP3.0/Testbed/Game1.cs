@@ -113,9 +113,9 @@ namespace FarseerPhysics.TestBed
             _simpleColorEffect.VertexColorEnabled = true;
 
             _vertexDecl = new VertexDeclaration(GraphicsDevice, VertexPositionColor.VertexElements);
-            DebugViewXNA.DebugViewXNA._device = GraphicsDevice;
-            DebugViewXNA.DebugViewXNA._batch = _spriteBatch;
-            DebugViewXNA.DebugViewXNA._font = _spriteFont;
+            DebugViewXNA.DebugViewXNA.Device = GraphicsDevice;
+            DebugViewXNA.DebugViewXNA.Batch = _spriteBatch;
+            DebugViewXNA.DebugViewXNA.Font = _spriteFont;
 
             _oldKeyboardState = Keyboard.GetState();
             _oldMouseState = Mouse.GetState();
@@ -158,15 +158,6 @@ namespace FarseerPhysics.TestBed
             else if (newKeyboardState.IsKeyDown(Keys.R) && _oldKeyboardState.IsKeyUp(Keys.R))
             {
                 Restart();
-            }
-            // Press space to launch a bomb.
-            else if ((newKeyboardState.IsKeyDown(Keys.Space) && _oldKeyboardState.IsKeyUp(Keys.Space)) ||
-                     newGamePad.IsButtonDown(Buttons.B) && _oldGamePad.IsButtonUp(Buttons.B))
-            {
-                if (_test != null)
-                {
-                    _test.LaunchBomb();
-                }
             }
             else if ((newKeyboardState.IsKeyDown(Keys.P) && _oldKeyboardState.IsKeyUp(Keys.P)) ||
                      newGamePad.IsButtonDown(Buttons.Start) && _oldGamePad.IsButtonUp(Buttons.Start))
@@ -318,7 +309,7 @@ namespace FarseerPhysics.TestBed
             _tw = GraphicsDevice.Viewport.Width;
             _th = GraphicsDevice.Viewport.Height;
 
-            float ratio = (float)_tw / (float)_th;
+            float ratio = _tw / (float)_th;
 
             Vector2 extents = new Vector2(ratio * 25.0f, 25.0f);
             extents *= _viewZoom;
@@ -337,7 +328,7 @@ namespace FarseerPhysics.TestBed
             float u = x / (float)_tw;
             float v = (_th - y) / (float)_th;
 
-            float ratio = (float)_tw / (float)_th;
+            float ratio = _tw / (float)_th;
             Vector2 extents = new Vector2(ratio * 25.0f, 25.0f);
             extents *= _viewZoom;
 
@@ -356,15 +347,15 @@ namespace FarseerPhysics.TestBed
             Resize(_width, _height);
         }
 
-        private void Pause()
-        {
-            _settings.Pause = (uint)(_settings.Pause > 0 ? 0 : 1);
-        }
+        //private void Pause()
+        //{
+        //    _settings.Pause = (uint)(_settings.Pause > 0 ? 0 : 1);
+        //}
 
-        private void SingleStep()
-        {
-            _settings.Pause = 1;
-            _settings.SingleStep = 1;
-        }
+        //private void SingleStep()
+        //{
+        //    _settings.Pause = 1;
+        //    _settings.SingleStep = 1;
+        //}
     }
 }

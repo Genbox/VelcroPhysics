@@ -93,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-5.0f, 10.0f);
 
-                    Vertices box = PolygonTools.CreateBox(0.5f, 1.0f);
+                    Vertices box = PolygonTools.CreateRectangle(0.5f, 1.0f);
                     PolygonShape p = new PolygonShape(box, 1);
                     body.CreateFixture(p);
 
@@ -108,7 +108,7 @@ namespace FarseerPhysics.TestBed.Tests
 
 
                 // Small box
-                Vertices box2 = PolygonTools.CreateBox(1.0f, 0.5f);
+                Vertices box2 = PolygonTools.CreateRectangle(1.0f, 0.5f);
                 polygon.Set(box2);
 
                 Body body3 = World.CreateBody();
@@ -122,7 +122,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body3fixture.MaskBits = BoxMask;
 
                 // Large box (recycle definitions)
-                Vertices box3 = PolygonTools.CreateBox(2, 1);
+                Vertices box3 = PolygonTools.CreateRectangle(2, 1);
                 polygon.Set(box3);
 
                 Body body4 = World.CreateBody();

@@ -30,7 +30,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demo4
 
             _crateBodies = new List<Body>();
 
-            Vertices box = PolygonTools.CreateBox(crateSize, crateSize);
+            Vertices box = PolygonTools.CreateRectangle(crateSize, crateSize);
             PolygonShape shape = new PolygonShape(box, 10f);
 
             Vector2 x = new Vector2(-15f, -17.5f);

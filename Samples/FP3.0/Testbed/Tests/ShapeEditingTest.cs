@@ -43,7 +43,7 @@ namespace FarseerPhysics.TestBed.Tests
             _body.BodyType = BodyType.Dynamic;
             _body.Position = new Vector2(0.0f, 10.0f);
 
-            Vertices box = PolygonTools.CreateBox(4.0f, 4.0f);
+            Vertices box = PolygonTools.CreateRectangle(4.0f, 4.0f);
             PolygonShape shape2 = new PolygonShape(box, 10);
             _body.CreateFixture(shape2);
 

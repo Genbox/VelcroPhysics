@@ -101,12 +101,12 @@ namespace FarseerPhysics
 
         public void SetAsBox(float hx, float hy, Vector2 center, float angle)
         {
-            Set(PolygonTools.CreateBox(hx, hy, center, angle));
+            Set(PolygonTools.CreateRectangle(hx, hy, center, angle));
         }
 
         public void SetAsBox(float hx, float hy)
         {
-            Set(PolygonTools.CreateBox(hx, hy));
+            Set(PolygonTools.CreateRectangle(hx, hy));
         }
 
         public override bool TestPoint(ref Transform xf, Vector2 point)
