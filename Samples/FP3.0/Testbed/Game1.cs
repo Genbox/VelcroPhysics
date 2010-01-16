@@ -43,20 +43,17 @@ namespace FarseerPhysics.TestBed
         private KeyboardState _oldKeyboardState;
         private MouseState _oldMouseState;
         private Framework.Settings _settings = new Framework.Settings();
-        private BasicEffect _simpleColorEffect;
-        private SpriteBatch _spriteBatch;
-        private SpriteFont _spriteFont;
         private Test _test;
         private int _testCount;
         private int _testIndex;
         private int _testSelection;
         int _th;
         int _tw;
-        private VertexDeclaration _vertexDecl;
         private Vector2 _viewCenter = new Vector2(0.0f, 20.0f);
         private float _viewZoom = 1.0f;
         private int _width = 640;
         private bool _traceEnabled = true;
+        private Matrix _projection;
 
         public Game1()
         {
@@ -75,6 +72,10 @@ namespace FarseerPhysics.TestBed
         protected override void Initialize()
         {
             base.Initialize();
+
+            //Set window defaults. Parent game can override in constructor
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += Window_ClientSizeChanged;
 
             _et = new EventTrace(this);
             TraceEvents.Register(_et);
@@ -106,16 +107,7 @@ namespace FarseerPhysics.TestBed
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _spriteFont = Content.Load<SpriteFont>("font");
-            _simpleColorEffect = new BasicEffect(GraphicsDevice, null);
-            _simpleColorEffect.VertexColorEnabled = true;
-
-            _vertexDecl = new VertexDeclaration(GraphicsDevice, VertexPositionColor.VertexElements);
-            DebugViewXNA.DebugViewXNA.Device = GraphicsDevice;
-            DebugViewXNA.DebugViewXNA.Batch = _spriteBatch;
-            DebugViewXNA.DebugViewXNA.Font = _spriteFont;
+            DebugViewXNA.DebugViewXNA.LoadContent(GraphicsDevice, Content);
 
             _oldKeyboardState = Keyboard.GetState();
             _oldMouseState = Mouse.GetState();
@@ -253,10 +245,6 @@ namespace FarseerPhysics.TestBed
 
             GraphicsDevice.Clear(Color.Black);
 
-            GraphicsDevice.VertexDeclaration = _vertexDecl;
-            _simpleColorEffect.Begin();
-            _simpleColorEffect.Techniques[0].Passes[0].Begin();
-
             _test.SetTextLine(30);
             _settings.Hz = SettingsHz;
 
@@ -279,17 +267,8 @@ namespace FarseerPhysics.TestBed
                 Resize(_width, _height);
             }
 
-            _test.DebugView.FinishDrawShapes();
+            _test.DebugView.RenderDebugData(ref _projection);
 
-            _simpleColorEffect.Techniques[0].Passes[0].End();
-            _simpleColorEffect.End();
-
-            if (_test != null)
-            {
-                _spriteBatch.Begin();
-                _test.DebugView.FinishDrawString();
-                _spriteBatch.End();
-            }
             base.Draw(gameTime);
 
             if (_traceEnabled)
@@ -318,9 +297,7 @@ namespace FarseerPhysics.TestBed
             Vector2 upper = _viewCenter + extents;
 
             // L/R/B/T
-            _simpleColorEffect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(lower.X, upper.X,
-                                                                                                   lower.Y, upper.Y, -1,
-                                                                                                   1));
+            _projection = Matrix.CreateOrthographicOffCenter(lower.X, upper.X, lower.Y, upper.Y, -1, 1);
         }
 
         public Vector2 ConvertScreenToWorld(int x, int y)
@@ -357,5 +334,14 @@ namespace FarseerPhysics.TestBed
         //    _settings.Pause = 1;
         //    _settings.SingleStep = 1;
         //}
+
+        private void Window_ClientSizeChanged(object sender, EventArgs e)
+        {
+            if (Window.ClientBounds.Width > 0 && Window.ClientBounds.Height > 0)
+            {
+                _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+                _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+            }
+        }
     }
 }

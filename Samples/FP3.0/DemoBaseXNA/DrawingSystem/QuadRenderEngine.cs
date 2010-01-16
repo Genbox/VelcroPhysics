@@ -157,6 +157,13 @@ namespace DemoBaseXNA.DrawingSystem
 
                     Vector3.Transform(_quadIdentity, ref matrix, _tempArray);
 
+                    // if auto loop is on, loop back to the first frame
+                    if (quad.CurrentFrame >= quad.NumOfFrames && quad.AutoLoop)
+                        quad.CurrentFrame = 0;
+                    // otherwise ensure we are not trying to use a frame that doesen't exist
+                    else if (quad.CurrentFrame >= quad.NumOfFrames && !quad.AutoLoop)
+                        quad.CurrentFrame = quad.NumOfFrames - 1;
+
                     _vertexArray[_vertexCount].Position = _tempArray[0];
                     _vertexArray[_vertexCount].TextureCoordinate.X = quad.Frames[quad.CurrentFrame].Left;
                     _vertexArray[_vertexCount].TextureCoordinate.Y = quad.Frames[quad.CurrentFrame].Bottom;

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
@@ -363,28 +364,85 @@ namespace FarseerPhysics.DebugViewXNA
             _stringData.Add(new StringData(x, y, s, args));
         }
 
-        public void FinishDrawShapes()
+        public void RenderDebugData(ref Matrix projection)
         {
+            // set the cull mode? should be unnecessary
             Device.RenderState.CullMode = CullMode.None;
+            // turn alpha blending on
             Device.RenderState.AlphaBlendEnable = true;
-
+            // set the vertex declaration...this ensures if window resizes occur...rendering continues ;)
+            Device.VertexDeclaration = _vertexDeclaration;
+            // set the effects projection matrix
+            _effect.Projection = projection;
+            // begin the effect
+            _effect.Begin();
+            // we should have only 1 technique and 1 pass
+            _effect.Techniques[0].Passes[0].Begin();
+            // make sure we have stuff to draw
             if (_fillCount > 0)
                 Device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
-
+            // make sure we have lines to draw
             if (_lineCount > 0)
                 Device.DrawUserPrimitives(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
 
+            // end the pass and effect
+            _effect.Techniques[0].Passes[0].End();
+            _effect.End();
+
+            // begin the sprite batch effect
+            Batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None, projection);
+            // draw any strings we have
+            for (int i = 0; i < _stringData.Count; i++)
+            {
+                Batch.DrawString(Font, string.Format(_stringData[i].S, _stringData[i].Args), new Vector2(_stringData[i].X, _stringData[i].Y), _stringData[i].Color);
+            }
+            // end the sprite batch effect
+            Batch.End();
+
+            _stringData.Clear();
             _lineCount = _fillCount = 0;
         }
 
-        public void FinishDrawString()
+        public void RenderDebugData(ref Matrix projection, ref Matrix view)
         {
+            // set the cull mode? should be unnecessary
+            Device.RenderState.CullMode = CullMode.None;
+            // turn alpha blending on
+            Device.RenderState.AlphaBlendEnable = true;
+            // set the vertex declaration...this ensures if window resizes occur...rendering continues ;)
+            Device.VertexDeclaration = _vertexDeclaration;
+            // set the effects projection matrix
+            _effect.Projection = projection;
+            // set the effects view matrix
+            _effect.View = view;
+
+            // begin the effect
+            _effect.Begin();
+            // we should have only 1 technique and 1 pass
+            _effect.Techniques[0].Passes[0].Begin();
+            // make sure we have stuff to draw
+            if (_fillCount > 0)
+                Device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
+            // make sure we have lines to draw
+            if (_lineCount > 0)
+                Device.DrawUserPrimitives(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
+
+            // end the pass and effect
+            _effect.Techniques[0].Passes[0].End();
+            _effect.End();
+
+            // begin the sprite batch effect
+            Batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None, projection * view);
+            // draw any strings we have
             for (int i = 0; i < _stringData.Count; i++)
             {
-                Batch.DrawString(Font, string.Format(_stringData[i].S, _stringData[i].Args), new Vector2(_stringData[i].X, _stringData[i].Y), new Color(0.9f, 0.6f, 0.6f));
+                Batch.DrawString(Font, string.Format(_stringData[i].S, _stringData[i].Args), new Vector2(_stringData[i].X, _stringData[i].Y), _stringData[i].Color);
             }
+            // end the sprite batch effect
+            Batch.End();
 
             _stringData.Clear();
+            _lineCount = _fillCount = 0;
         }
 
         public void DrawAABB(ref AABB aabb, Color color)
@@ -398,6 +456,28 @@ namespace FarseerPhysics.DebugViewXNA
             DrawPolygon(ref verts, 4, color);
         }
 
+        public static void LoadContent(GraphicsDevice device, ContentManager content)
+        {
+            // Create a new SpriteBatch, which can be used to draw textures.
+            Batch = new SpriteBatch(device);
+            Font = content.Load<SpriteFont>("font");
+            _vertexDeclaration = new VertexDeclaration(device, VertexPositionColor.VertexElements);
+            Device = device;
+            _effect = new BasicEffect(device, null);
+            _effect.VertexColorEnabled = true;
+        }
+
+        public void LoadContent(GraphicsDevice device, ContentManager content, string fontName)
+        {
+            // Create a new SpriteBatch, which can be used to draw textures and fonts.
+            Batch = new SpriteBatch(device);
+            Font = content.Load<SpriteFont>(fontName);
+            _vertexDeclaration = new VertexDeclaration(device, VertexPositionColor.VertexElements);
+            Device = device;
+            _effect = new BasicEffect(device, null);
+            _effect.VertexColorEnabled = true;
+        }
+
         private static VertexPositionColor[] _vertsLines = new VertexPositionColor[100000];
         private static VertexPositionColor[] _vertsFill = new VertexPositionColor[100000];
         private static int _lineCount;
@@ -407,6 +487,8 @@ namespace FarseerPhysics.DebugViewXNA
         public static GraphicsDevice Device;
 
         private List<StringData> _stringData;
+        private static VertexDeclaration _vertexDeclaration;
+        private static BasicEffect _effect;
 
         private struct StringData
         {
@@ -416,11 +498,22 @@ namespace FarseerPhysics.DebugViewXNA
                 Y = y;
                 S = s;
                 Args = args;
+                Color = new Color(0.9f, 0.6f, 0.6f);
+            }
+
+            public StringData(int x, int y, string s, object[] args, Color color)
+            {
+                X = x;
+                Y = y;
+                S = s;
+                Args = args;
+                Color = color;
             }
 
             public int X, Y;
             public string S;
             public object[] Args;
+            public Color Color;
         }
     }
 }
