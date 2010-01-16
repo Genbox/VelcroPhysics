@@ -69,11 +69,6 @@ namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
 
             _explostionTextureIndex = ScreenManager.QuadRenderEngine.Submit(ScreenManager.ContentManager.Load<Texture2D>("Content/Explosions"), true);
 
-            for (int i = 0; i < 16; i++)
-            {
-                _explosionFrames.Add(new RectF(((float)i * 64f) / 1024f, 65f / 512f, 62f / 1024f, 62f / 512f));
-            }
-
             #endregion
             base.LoadContent();
         }
@@ -110,18 +105,27 @@ namespace FarseerGames.SimpleSamplesXNA.GraphicsDemo
 
             if (_explosionRect.Contains(new Vector2(mouseState.X, mouseState.Y)))
             {
-                Quad quad = new Quad(new Vector2(mouseState.X + (float)rand.NextDouble() * 50f - 50f, mouseState.Y + (float)rand.NextDouble() * 50f - 50f),
-                    0, size, size, (float)rand.NextDouble(), 0.5f, _explostionTextureIndex, Color.White, true);
-                quad.Frames = _explosionFrames;
+                int k = rand.Next(8);
+
+                for (int i = 0; i < 16; i++)
+                {
+                    _explosionFrames.Add(new RectF(((float)i * 64f) / 1024f, k * 64f / 512f, 62f / 1024f, 62f / 512f));
+                }
+                
+                Quad quad = new Quad(new Vector2(mouseState.X + (float)(rand.NextDouble() * 50f) - 50f, mouseState.Y + (float)(rand.NextDouble() * 50f) - 50f),
+                    0, size, size, 1.0f, 0.5f, _explostionTextureIndex, Color.White, true);
+                quad.Frames = new List<RectF>(_explosionFrames);
+                quad.AutoLoop = true;
                 _explosionQuads.Add(quad);
+                _explosionFrames.Clear();
             }
 
             for (int i = 0; i < _explosionQuads.Count; i++)
 			{
                 _explosionQuads[i].CurrentFrame++;
                 
-                if (_explosionQuads[i].CurrentFrame >= 15)
-                    _explosionQuads.RemoveAt(i);
+                if (_explosionQuads.Count > 30)
+                    _explosionQuads.RemoveAt(0);
 
                 if (_explosionQuads.Count > 0)
                     ScreenManager.QuadRenderEngine.Submit(_explosionQuads[i]);

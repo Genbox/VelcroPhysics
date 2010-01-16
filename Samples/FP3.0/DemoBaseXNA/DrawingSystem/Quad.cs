@@ -23,6 +23,8 @@ namespace DemoBaseXNA.DrawingSystem
         public Color Tint;
         public List<RectF> Frames;
         public int CurrentFrame;
+        public int NumOfFrames { get { return Frames.Count; } }
+        public bool AutoLoop;
 
         #endregion
 
