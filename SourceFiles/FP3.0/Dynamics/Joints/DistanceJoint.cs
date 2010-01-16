@@ -70,8 +70,15 @@ namespace FarseerPhysics
             : base(bodyA, bodyB)
         {
             JointType = JointType.Distance;
+
+            //Theo Jansen's walker works
+            //LocalAnchorA = BodyA.GetLocalPoint(anchor1);
+            //LocalAnchorB = BodyB.GetLocalPoint(anchor2);
+
+            //Web works
             LocalAnchorA = anchor1;
             LocalAnchorB = anchor2;
+
             Vector2 d = WorldAnchorB - WorldAnchorA;
             Length = d.Length();
         }
