@@ -623,7 +623,6 @@ namespace FarseerPhysics
             }
         }
 
-
         /// <summary>
         /// Compute the collision manifold between two circles.
         /// </summary>
@@ -632,11 +631,11 @@ namespace FarseerPhysics
         /// <param name="xf1">The XF1.</param>
         /// <param name="circle2">The circle2.</param>
         /// <param name="xf2">The XF2.</param>
-        public static void CollideCircles(ref Manifold manifold,
+        public static void CollideCircles(out Manifold manifold,
                               CircleShape circle1, ref Transform xf1,
                               CircleShape circle2, ref Transform xf2)
         {
-            manifold.PointCount = 0;
+            manifold = new Manifold();
 
             Vector2 p1 = MathUtils.Multiply(ref xf1, circle1.Position);
             Vector2 p2 = MathUtils.Multiply(ref xf2, circle2.Position);
@@ -670,11 +669,11 @@ namespace FarseerPhysics
         /// <param name="xf1">The XF1.</param>
         /// <param name="circle">The circle.</param>
         /// <param name="xf2">The XF2.</param>
-        public static void CollidePolygonAndCircle(ref Manifold manifold,
+        public static void CollidePolygonAndCircle(out Manifold manifold,
                                        PolygonShape polygon, ref Transform xf1,
                                        CircleShape circle, ref Transform xf2)
         {
-            manifold.PointCount = 0;
+            manifold = new Manifold();
 
             // Compute circle position in the frame of the polygon.
             Vector2 c = MathUtils.Multiply(ref xf2, circle.Position);
@@ -802,11 +801,12 @@ namespace FarseerPhysics
         /// <param name="xfA">The xf A.</param>
         /// <param name="polyB">The poly B.</param>
         /// <param name="xfB">The xf B.</param>
-        public static void CollidePolygons(ref Manifold manifold,
+        public static void CollidePolygons(out Manifold manifold,
                                PolygonShape polyA, ref Transform xfA,
                                PolygonShape polyB, ref Transform xfB)
         {
-            manifold.PointCount = 0;
+            manifold = new Manifold();
+
             float totalRadius = polyA.Radius + polyB.Radius;
 
             int edgeA;
