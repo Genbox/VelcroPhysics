@@ -12,7 +12,7 @@ namespace FarseerPhysics.DebugViewXNA
         public DebugViewXNA(World world)
             : base(world)
         {
-            _stringData = new List<StringData>();
+            
         }
 
         /// Call this to draw shapes and other debug draw data.
@@ -390,7 +390,7 @@ namespace FarseerPhysics.DebugViewXNA
             _effect.End();
 
             // begin the sprite batch effect
-            Batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None, projection);
+            Batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None, Matrix.Identity);
             // draw any strings we have
             for (int i = 0; i < _stringData.Count; i++)
             {
@@ -432,7 +432,7 @@ namespace FarseerPhysics.DebugViewXNA
             _effect.End();
 
             // begin the sprite batch effect
-            Batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None, projection * view);
+            Batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None, Matrix.Identity);
             // draw any strings we have
             for (int i = 0; i < _stringData.Count; i++)
             {
@@ -465,9 +465,10 @@ namespace FarseerPhysics.DebugViewXNA
             Device = device;
             _effect = new BasicEffect(device, null);
             _effect.VertexColorEnabled = true;
+            _stringData = new List<StringData>();
         }
 
-        public void LoadContent(GraphicsDevice device, ContentManager content, string fontName)
+        public static void LoadContent(GraphicsDevice device, ContentManager content, string fontName)
         {
             // Create a new SpriteBatch, which can be used to draw textures and fonts.
             Batch = new SpriteBatch(device);
@@ -476,6 +477,7 @@ namespace FarseerPhysics.DebugViewXNA
             Device = device;
             _effect = new BasicEffect(device, null);
             _effect.VertexColorEnabled = true;
+            _stringData = new List<StringData>();
         }
 
         private static VertexPositionColor[] _vertsLines = new VertexPositionColor[100000];
@@ -486,7 +488,7 @@ namespace FarseerPhysics.DebugViewXNA
         public static SpriteFont Font;
         public static GraphicsDevice Device;
 
-        private List<StringData> _stringData;
+        private static List<StringData> _stringData;
         private static VertexDeclaration _vertexDeclaration;
         private static BasicEffect _effect;
 
