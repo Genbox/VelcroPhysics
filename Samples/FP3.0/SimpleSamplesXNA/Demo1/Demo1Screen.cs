@@ -32,7 +32,7 @@ namespace FarseerGames.SimpleSamplesXNA.Demo1
             _rectangleBody = PhysicsSimulator.CreateBody();
             _rectangleBody.Position = Vector2.Zero;
             _rectangleBody.BodyType = BodyType.Dynamic;
-            Vertices box = PolygonTools.CreateBox(size, size);
+            Vertices box = PolygonTools.CreateRectangle(size, size);
             PolygonShape shape = new PolygonShape(box, 5);
             _rectangleBody.CreateFixture(shape);
 

@@ -11,11 +11,17 @@ namespace FarseerPhysics.TestBed.Tests
         private List<TextMessage> _messages;
         private Vertices _left;
         private Vertices _right;
-        private Vertices _result;
 
         public override void Initialize()
         {
             _messages = new List<TextMessage>();
+
+            _left = PolygonTools.CreateGear(5, 10, 40, 5);
+
+            //_left.Add(new Vector2(0.5f, 0.5f));
+            //_left.Add(new Vector2(2, -2));
+            //_left.Add(new Vector2(2, 2));
+            //_left.Add(new Vector2(-2, 2));
 
             base.Initialize();
         }
@@ -37,7 +43,6 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2[] array = _left.ToArray();
                 DebugView.DrawSolidPolygon(ref array, _left.Count, Color.Red);
             }
-
 
             if (_right != null)
             {
@@ -85,37 +90,37 @@ namespace FarseerPhysics.TestBed.Tests
                 // Add Circles
                 if (state.IsKeyDown(Keys.Q) && oldState.IsKeyUp(Keys.Q))
                 {
-                    AddCircle(50, 8);
+                    AddCircle(3, 8);
                 }
 
                 // Add Circles
                 if (state.IsKeyDown(Keys.W) && oldState.IsKeyUp(Keys.W))
                 {
-                    AddCircle(50, 16);
+                    AddCircle(3, 16);
                 }
 
                 // Add Circles
                 if (state.IsKeyDown(Keys.E) && oldState.IsKeyUp(Keys.E))
                 {
-                    AddCircle(50, 32);
+                    AddCircle(3, 32);
                 }
 
                 // Add Rectangle
                 if (state.IsKeyDown(Keys.A) && oldState.IsKeyUp(Keys.A))
                 {
-                    AddRectangle(100, 100);
+                    AddRectangle(5, 5);
                 }
 
                 // Add Rectangle
                 if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
                 {
-                    AddRectangle(100, 50);
+                    AddRectangle(5, 2);
                 }
 
                 // Add Rectangle
                 if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D))
                 {
-                    AddRectangle(50, 100);
+                    AddRectangle(2, 5);
                 }
             }
             else
@@ -147,16 +152,13 @@ namespace FarseerPhysics.TestBed.Tests
                 if (_left != null && _right == null)
                 {
                     _left = PolygonTools.Simplify(_left);
-                    _right = PolygonTools.Simplify(_right);
-
-                    //SetProduct(_left);
                 }
             }
 
             // Add to Simulation
             if (state.IsKeyDown(Keys.Enter) && oldState.IsKeyUp(Keys.Enter))
             {
-                if (_result != null)
+                if (_left != null)
                 {
 
                 }
@@ -210,7 +212,7 @@ namespace FarseerPhysics.TestBed.Tests
                     break;
             }
 
-            _result = vertices;
+            SetResult(vertices);
         }
 
         private void DoSubtract()
@@ -239,19 +241,19 @@ namespace FarseerPhysics.TestBed.Tests
                     break;
             }
 
-            _result = subtract;
+            SetResult(subtract);
         }
 
         private void AddCircle(int radius, int numSides)
         {
-            //Vertices verts = PolygonTools.CreateCircle(radius, numSides);
-            //SetVertices(verts);
+            Vertices verts = PolygonTools.CreateCircle(radius, numSides);
+            SetVertices(verts);
         }
 
         private void AddRectangle(int width, int height)
         {
-            //Vertices verts = PolygonTools.CreateRectangle(width, height);
-            //SetVertices(verts);
+            Vertices verts = PolygonTools.CreateRectangle(width, height);
+            SetVertices(verts);
         }
 
         private void SetVertices(Vertices vertices)
@@ -264,6 +266,12 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 _right = vertices;
             }
+        }
+
+        private void SetResult(Vertices vertices)
+        {
+            _left = vertices;
+            _right = null;
         }
 
         private void WriteMessage(string message)

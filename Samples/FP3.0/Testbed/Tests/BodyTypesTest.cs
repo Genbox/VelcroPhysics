@@ -46,7 +46,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _attachment.BodyType = BodyType.Dynamic;
                 _attachment.Position = new Vector2(0.0f, 3.0f);
 
-                Vertices box = PolygonTools.CreateBox(0.5f, 2.0f);
+                Vertices box = PolygonTools.CreateRectangle(0.5f, 2.0f);
                 PolygonShape shape = new PolygonShape(box, 2.0f);
                 _attachment.CreateFixture(shape);
             }
@@ -57,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _platform.BodyType = BodyType.Dynamic;
                 _platform.Position = new Vector2(0.0f, 5.0f);
 
-                Vertices box = PolygonTools.CreateBox(4.0f, 0.5f);
+                Vertices box = PolygonTools.CreateRectangle(4.0f, 0.5f);
                 PolygonShape shape = new PolygonShape(box, 2.0f);
 
                 Fixture fixture = _platform.CreateFixture(shape);
@@ -86,7 +86,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 8.0f);
 
-                Vertices box = PolygonTools.CreateBox(0.75f, 0.75f);
+                Vertices box = PolygonTools.CreateRectangle(0.75f, 0.75f);
                 PolygonShape shape = new PolygonShape(box, 2.0f);
 
                 Fixture fixture = body.CreateFixture(shape);

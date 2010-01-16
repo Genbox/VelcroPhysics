@@ -45,7 +45,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 CircleShape circle2 = new CircleShape(2.0f, 5);
 
-                Vertices box = PolygonTools.CreateBox(0.5f, 5.0f);
+                Vertices box = PolygonTools.CreateRectangle(0.5f, 5.0f);
 
                 PolygonShape polygonBox = new PolygonShape(box, 5);
 

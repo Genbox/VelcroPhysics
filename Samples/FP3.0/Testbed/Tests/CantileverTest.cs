@@ -41,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateBox(0.5f, 0.125f);
+                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 20.0f);
 
 
@@ -63,7 +63,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateBox(0.5f, 0.125f);
+                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 20.0f);
 
 
@@ -86,7 +86,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateBox(0.5f, 0.125f);
+                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 20.0f);
 
 
@@ -112,7 +112,7 @@ namespace FarseerPhysics.TestBed.Tests
 
 
             {
-                Vertices box = PolygonTools.CreateBox(0.5f, 0.125f);
+                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 20.0f);
 
 

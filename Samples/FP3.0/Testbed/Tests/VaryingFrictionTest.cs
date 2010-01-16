@@ -39,7 +39,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateBox(13.0f, 0.25f);
+                Vertices box = PolygonTools.CreateRectangle(13.0f, 0.25f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = World.CreateBody();
@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateBox(0.25f, 1.0f);
+                Vertices box = PolygonTools.CreateRectangle(0.25f, 1.0f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = World.CreateBody();
@@ -60,7 +60,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateBox(13.0f, 0.25f);
+                Vertices box = PolygonTools.CreateRectangle(13.0f, 0.25f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = World.CreateBody();
@@ -71,7 +71,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateBox(0.25f, 1.0f);
+                Vertices box = PolygonTools.CreateRectangle(0.25f, 1.0f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = World.CreateBody();
@@ -81,7 +81,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateBox(13f, 1.0f);
+                Vertices box = PolygonTools.CreateRectangle(13f, 1.0f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = World.CreateBody();
@@ -92,7 +92,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateBox(0.5f, 0.5f);
+                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
                 PolygonShape shape = new PolygonShape(box, 25);
 
                 float[] friction = new float[] { 0.75f, 0.5f, 0.35f, 0.1f, 0.0f };

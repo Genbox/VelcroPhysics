@@ -98,13 +98,9 @@ namespace FarseerPhysics.TestBed.Framework
         private const int k_maxContactPoints = 2048;
         internal int TextLine;
         internal World World;
-        private Body _bomb;
-        private Vector2 _bombSpawnPoint;
-        private bool _bombSpawning;
         internal DebugViewXNA.DebugViewXNA DebugView;
         private Body _groundBody;
         private MouseJoint _mouseJoint;
-        private Vector2 _mouseWorld;
         internal int PointCount;
         internal ContactPoint[] Points = new ContactPoint[k_maxContactPoints];
 
@@ -119,8 +115,6 @@ namespace FarseerPhysics.TestBed.Framework
             World.ContactManager.PostSolve += PostSolve;
             World.ContactManager.BeginContact += BeginContact;
             World.ContactManager.EndContact += EndContact;
-
-            _bombSpawning = false;
 
             _groundBody = World.CreateBody();
         }
@@ -201,12 +195,6 @@ namespace FarseerPhysics.TestBed.Framework
                 DebugView.DrawSegment(p1, p2, new Color(0.8f, 0.8f, 0.8f));
             }
 
-            if (_bombSpawning)
-            {
-                DebugView.DrawPoint(_bombSpawnPoint, 0.5f, new Color(0.0f, 0.0f, 1.0f));
-                DebugView.DrawSegment(_mouseWorld, _bombSpawnPoint, new Color(0.8f, 0.8f, 0.8f));
-            }
-
             if (settings.DrawContactPoints > 0)
             {
                 const float k_axisScale = 0.3f;
@@ -273,8 +261,6 @@ namespace FarseerPhysics.TestBed.Framework
 
         private void MouseDown(Vector2 p)
         {
-            _mouseWorld = p;
-
             if (_mouseJoint != null)
             {
                 return;
@@ -326,69 +312,14 @@ namespace FarseerPhysics.TestBed.Framework
                 World.DestroyJoint(_mouseJoint);
                 _mouseJoint = null;
             }
-
-            if (_bombSpawning)
-            {
-                CompleteBombSpawn(p);
-            }
         }
 
         private void MouseMove(Vector2 p)
         {
-            _mouseWorld = p;
-
             if (_mouseJoint != null)
             {
                 _mouseJoint.Target = p;
             }
-        }
-
-        public void LaunchBomb()
-        {
-            Vector2 p = new Vector2(Rand.RandomFloat(-15.0f, 15.0f), 30.0f);
-            Vector2 v = -5.0f * p;
-            LaunchBomb(p, v);
-        }
-
-        private void LaunchBomb(Vector2 position, Vector2 velocity)
-        {
-            if (_bomb != null)
-            {
-                World.DestroyBody(_bomb);
-                _bomb = null;
-            }
-
-            _bomb = World.CreateBody();
-            _bomb.BodyType = BodyType.Dynamic;
-            _bomb.Position = position;
-            _bomb.Bullet = true;
-            _bomb.LinearVelocity = velocity;
-
-            CircleShape circle = new CircleShape(0.3f, 20.0f);
-
-            Vector2 minV = position - new Vector2(0.3f, 0.3f);
-            Vector2 maxV = position + new Vector2(0.3f, 0.3f);
-
-            AABB aabb;
-            aabb.LowerBound = minV;
-            aabb.UpperBound = maxV;
-
-            Fixture fixture = _bomb.CreateFixture(circle);
-            fixture.Restitution = 0.1f;
-        }
-
-        private void CompleteBombSpawn(Vector2 p)
-        {
-            if (_bombSpawning == false)
-            {
-                return;
-            }
-
-            const float multiplier = 30.0f;
-            Vector2 vel = _bombSpawnPoint - p;
-            vel *= multiplier;
-            LaunchBomb(_bombSpawnPoint, vel);
-            _bombSpawning = false;
         }
 
         // Let derived tests know that a joint was destroyed.

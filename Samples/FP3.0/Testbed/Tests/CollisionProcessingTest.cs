@@ -71,7 +71,7 @@ namespace FarseerPhysics.TestBed.Tests
             body2.CreateFixture(polygon);
 
             // Small box
-            Vertices smallBox = PolygonTools.CreateBox(1.0f, 0.5f);
+            Vertices smallBox = PolygonTools.CreateRectangle(1.0f, 0.5f);
             polygon.Set(smallBox);
 
             Body body3 = World.CreateBody();
@@ -80,7 +80,7 @@ namespace FarseerPhysics.TestBed.Tests
             body3.CreateFixture(polygon);
 
             // Large box (recycle definitions)
-            Vertices largeBox = PolygonTools.CreateBox(2.0f, 1.0f);
+            Vertices largeBox = PolygonTools.CreateRectangle(2.0f, 1.0f);
             polygon.Set(largeBox);
 
             Body body4 = World.CreateBody();

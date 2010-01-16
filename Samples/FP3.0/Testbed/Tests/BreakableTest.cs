@@ -46,12 +46,12 @@ namespace FarseerPhysics.TestBed.Tests
                 _body1.Position = new Vector2(0.0f, 40.0f);
                 _body1.Rotation = 0.25f * Settings.Pi;
 
-                Vertices box = PolygonTools.CreateBox(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
+                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
 
                 _shape1 = new PolygonShape(box, 1.0f);
                 _piece1 = _body1.CreateFixture(_shape1);
 
-                box = PolygonTools.CreateBox(0.5f, 0.5f, new Vector2(0.5f, 0.0f), 0.0f);
+                box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(0.5f, 0.0f), 0.0f);
                 _shape2 = new PolygonShape(box, 1.0f);
 
                 _piece2 = _body1.CreateFixture(_shape2);

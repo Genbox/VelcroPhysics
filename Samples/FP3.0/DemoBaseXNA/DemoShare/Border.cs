@@ -56,7 +56,7 @@ namespace DemoBaseXNA.DemoShare
             _borderGeom = new Fixture[4];
             //left border
             Vector2 geometryOffset = new Vector2(-(_width * .5f - (_borderWidth * .5f)), 0);
-            Vertices box = PolygonTools.CreateBox(_borderWidth / 2f, _height / 2f, geometryOffset, 0);
+            Vertices box = PolygonTools.CreateRectangle(_borderWidth / 2f, _height / 2f, geometryOffset, 0);
             PolygonShape shape = new PolygonShape(box, 5);
             _borderGeom[0] = _borderBody.CreateFixture(shape);
             _borderGeom[0].Restitution = .0f;
@@ -67,7 +67,7 @@ namespace DemoBaseXNA.DemoShare
 
             //right border (clone left border since geometry is same size)
             geometryOffset = new Vector2((_width * .5f - _borderWidth * .5f), 0);
-            box = PolygonTools.CreateBox(_borderWidth / 2f, _height / 2f, geometryOffset, 0);
+            box = PolygonTools.CreateRectangle(_borderWidth / 2f, _height / 2f, geometryOffset, 0);
             shape = new PolygonShape(box, 5);
             _borderGeom[1] = _borderBody.CreateFixture(shape);
             _borderGeom[1].Restitution = .0f;
@@ -78,7 +78,7 @@ namespace DemoBaseXNA.DemoShare
 
             //top border
             geometryOffset = new Vector2(0, -(_height * .5f - _borderWidth * .5f));
-            box = PolygonTools.CreateBox(_width / 2f, _borderWidth / 2f, geometryOffset, 0);
+            box = PolygonTools.CreateRectangle(_width / 2f, _borderWidth / 2f, geometryOffset, 0);
             shape = new PolygonShape(box, 5);
             _borderGeom[2] = _borderBody.CreateFixture(shape);
             _borderGeom[2].Restitution = .0f;
@@ -89,7 +89,7 @@ namespace DemoBaseXNA.DemoShare
 
             //bottom border (clone top border since geometry is same size)
             geometryOffset = new Vector2(0, _height * .5f - _borderWidth * .5f);
-            box = PolygonTools.CreateBox(_width / 2f, _borderWidth / 2f, geometryOffset, 0);
+            box = PolygonTools.CreateRectangle(_width / 2f, _borderWidth / 2f, geometryOffset, 0);
             shape = new PolygonShape(box, 5);
             _borderGeom[3] = _borderBody.CreateFixture(shape);
             _borderGeom[3].Restitution = .0f;
