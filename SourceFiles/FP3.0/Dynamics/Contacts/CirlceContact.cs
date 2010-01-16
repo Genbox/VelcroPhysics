@@ -41,7 +41,7 @@ namespace FarseerPhysics
             bodyA.GetTransform(out xfA);
             bodyB.GetTransform(out xfB);
 
-	        Collision.CollideCircles(ref Manifold,
+	        Collision.CollideCircles(out Manifold,
 						        (CircleShape)FixtureA.Shape, ref xfA,
                                 (CircleShape)FixtureB.Shape, ref xfB);
         }
