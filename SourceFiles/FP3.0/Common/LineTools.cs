@@ -10,8 +10,6 @@ namespace FarseerPhysics.Common
     /// </summary>
     public static class LineTools
     {
-        public static float Epsilon = .00001f;
-
         public static float DistanceBetweenPointAndPoint(ref Vector2 point1, ref Vector2 point2)
         {
             Vector2 v;
@@ -184,7 +182,7 @@ namespace FarseerPhysics.Common
             float denom = (a * b) - (c * d);
 
             // if denominator is 0, then lines are parallel
-            if (!(denom >= -Epsilon && denom <= Epsilon))
+            if (!(denom >= -Settings.Epsilon && denom <= Settings.Epsilon))
             {
                 float e = point1.Y - point3.Y;
                 float f = point1.X - point3.X;

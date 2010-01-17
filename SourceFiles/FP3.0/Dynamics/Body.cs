@@ -54,7 +54,8 @@ namespace FarseerPhysics
         AutoSleep = (1 << 2),
         Bullet = (1 << 3),
         FixedRotation = (1 << 4),
-        Active = (1 << 5),
+        Enabled = (1 << 5),
+        IgnoreGravity = (1 << 6)
     }
 
     public class Body
@@ -87,55 +88,12 @@ namespace FarseerPhysics
             AllowSleep = true;
             Awake = true;
             BodyType = BodyType.Static;
-            Active = true;
+            Enabled = true;
             InertiaScale = 1;
 
             _xf.R.Set(0);
 
             _sweep.TimeInt0 = 1.0f;
-        }
-
-        internal Body(Body body, World world)
-        {
-            Debug.Assert(body.Position.IsValid());
-            Debug.Assert(body.LinearVelocity.IsValid());
-            Debug.Assert(MathUtils.IsValid(body.Rotation));
-            Debug.Assert(MathUtils.IsValid(body.AngularVelocity));
-            Debug.Assert(MathUtils.IsValid(body.InertiaScale) && body.InertiaScale >= 0.0f);
-            Debug.Assert(MathUtils.IsValid(body.AngularDamping) && body.AngularDamping >= 0.0f);
-            Debug.Assert(MathUtils.IsValid(body.LinearDamping) && body.LinearDamping >= 0.0f);
-
-            Bullet = body.Bullet;
-            FixedRotation = body.FixedRotation;
-            AllowSleep = body.AllowSleep;
-            Awake = body.Awake;
-            Active = body.Active;
-
-            World = world;
-
-            _xf.Position = body.Position;
-            _xf.R.Set(body.Rotation);
-
-            _sweep.TimeInt0 = 1.0f;
-            _sweep.Angle0 = _sweep.Angle = body.Rotation;
-            _sweep.Center0 = _sweep.Center = MathUtils.Multiply(ref _xf, _sweep.LocalCenter);
-
-            _linearVelocity = body.LinearVelocity;
-            _angularVelocity = body.AngularVelocity;
-
-            LinearDamping = body.LinearDamping;
-            _angularDamping = body.AngularDamping;
-
-            _bodyType = body.BodyType;
-
-            if (BodyType == BodyType.Dynamic)
-            {
-                _mass = 1.0f;
-                _invMass = 1.0f;
-            }
-
-            InertiaScale = body.InertiaScale;
-            UserData = body.UserData;
         }
 
         /// <summary>
@@ -151,6 +109,18 @@ namespace FarseerPhysics
                     _flags |= BodyFlags.AutoSleep;
                 else
                     _flags &= ~BodyFlags.AutoSleep;
+            }
+        }
+
+        public bool IgnoreGravity
+        {
+            get { return (_flags & BodyFlags.IgnoreGravity) == BodyFlags.IgnoreGravity; }
+            set
+            {
+                if (value)
+                    _flags |= BodyFlags.IgnoreGravity;
+                else
+                    _flags &= ~BodyFlags.IgnoreGravity;
             }
         }
 
@@ -276,7 +246,8 @@ namespace FarseerPhysics
         /// </summary>
         public float InertiaScale
         {
-            get; set;
+            get;
+            set;
         }
 
         /// <summary>
@@ -355,19 +326,19 @@ namespace FarseerPhysics
         /// <value>
         ///   &lt;c&gt;true&lt;/c&gt; if this instance is active; otherwise, &lt;c&gt;false&lt;/c&gt;.
         /// </value>
-        public bool Active
+        public bool Enabled
         {
-            get { return (_flags & BodyFlags.Active) == BodyFlags.Active; }
+            get { return (_flags & BodyFlags.Enabled) == BodyFlags.Enabled; }
             set
             {
-                if (value == Active)
+                if (value == Enabled)
                 {
                     return;
                 }
 
                 if (value)
                 {
-                    _flags |= BodyFlags.Active;
+                    _flags |= BodyFlags.Enabled;
 
                     // Create all proxies.
                     BroadPhase broadPhase = World.ContactManager._broadPhase;
@@ -380,7 +351,7 @@ namespace FarseerPhysics
                 }
                 else
                 {
-                    _flags &= ~BodyFlags.Active;
+                    _flags &= ~BodyFlags.Enabled;
 
                     // Destroy all proxies.
                     BroadPhase broadPhase = World.ContactManager._broadPhase;
@@ -505,6 +476,16 @@ namespace FarseerPhysics
             }
         }
 
+        public bool IsStatic
+        {
+            get { return BodyType == BodyType.Static; }
+            set
+            {
+                if (value)
+                    BodyType = BodyType.Static;
+            }
+        }
+
         /// <summary>
         /// Creates a fixture and attach it to this body. Use this function if you need
         /// to set some fixture parameters, like friction. Otherwise you can create the
@@ -521,10 +502,9 @@ namespace FarseerPhysics
             if (World.Locked)
                 return null;
 
-            Fixture fixture = new Fixture();
-            fixture.Create(this, shape);
+            Fixture fixture = new Fixture(this, shape);
 
-            if ((_flags & BodyFlags.Active) == BodyFlags.Active)
+            if ((_flags & BodyFlags.Enabled) == BodyFlags.Enabled)
             {
                 BroadPhase broadPhase = World.ContactManager._broadPhase;
                 fixture.CreateProxy(broadPhase, ref _xf);
@@ -604,7 +584,7 @@ namespace FarseerPhysics
                 }
             }
 
-            if ((_flags & BodyFlags.Active) == BodyFlags.Active)
+            if ((_flags & BodyFlags.Enabled) == BodyFlags.Enabled)
             {
                 Debug.Assert(fixture.ProxyId != BroadPhase.NullProxy);
 
@@ -681,6 +661,16 @@ namespace FarseerPhysics
         /// <param name="point">the world position of the point of application.</param>
         public void ApplyForce(Vector2 force, Vector2 point)
         {
+            ApplyForce(ref force, ref point);
+        }
+
+        public void ApplyForce(ref Vector2 force)
+        {
+            ApplyForce(ref force, ref _xf.Position);
+        }
+
+        public void ApplyForce(ref Vector2 force, ref Vector2 point)
+        {
             if (_bodyType != BodyType.Dynamic)
             {
                 return;
@@ -725,6 +715,11 @@ namespace FarseerPhysics
         /// <param name="point">the world position of the point of application.</param>
         public void ApplyImpulse(Vector2 impulse, Vector2 point)
         {
+            ApplyImpulse(ref impulse, ref point);
+        }
+
+        public void ApplyImpulse(ref Vector2 impulse, ref Vector2 point)
+        {
             if (_bodyType != BodyType.Dynamic)
             {
                 return;
@@ -753,13 +748,13 @@ namespace FarseerPhysics
             _invI = 0.0f;
             _sweep.LocalCenter = Vector2.Zero;
 
-            // Static and kinematic bodies have zero mass.
-            if (_bodyType == BodyType.Static || _bodyType == BodyType.Kinematic)
+            // Kinematic bodies have zero mass.
+            if (_bodyType == BodyType.Kinematic)
             {
                 return;
             }
 
-            Debug.Assert(_bodyType == BodyType.Dynamic);
+            Debug.Assert(_bodyType == BodyType.Dynamic || _bodyType == BodyType.Static);
 
             // Accumulate mass over all fixtures.
             Vector2 center = Vector2.Zero;
@@ -774,6 +769,12 @@ namespace FarseerPhysics
                 _mass += massData.Mass;
                 center += massData.Mass * massData.Center;
                 _I += massData.Inertia;
+            }
+
+            //Static bodies only have mass, they don't have other properties. A little hacky tho...
+            if (_bodyType == BodyType.Static)
+            {
+                return;
             }
 
             // Compute center of mass.
@@ -893,10 +894,10 @@ namespace FarseerPhysics
         }
 
         /// <summary>
-        // This is used to prevent connected bodies from colliding.
-        // It may lie, depending on the collideConnected flag.
+        /// This is used to prevent connected bodies from colliding.
+        /// It may lie, depending on the collideConnected flag.
         /// </summary>
-        /// <param name="other">The other.</param>
+        /// <param name="other">The other body.</param>
         /// <returns></returns>
         internal bool ShouldCollide(Body other)
         {

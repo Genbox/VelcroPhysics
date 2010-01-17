@@ -247,8 +247,8 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     if (_bodies[i] != null)
                     {
-                        bool active = _bodies[i].Active;
-                        _bodies[i].Active = !active;
+                        bool active = _bodies[i].Enabled;
+                        _bodies[i].Enabled = !active;
                     }
                 }
             }

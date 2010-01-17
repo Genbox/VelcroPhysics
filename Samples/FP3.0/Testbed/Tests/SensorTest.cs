@@ -32,7 +32,6 @@ namespace FarseerPhysics.TestBed.Tests
         private SensorTest()
         {
             {
-                
                 Body ground = World.CreateBody();
 
                 {
@@ -41,14 +40,6 @@ namespace FarseerPhysics.TestBed.Tests
                     ground.CreateFixture(shape);
                 }
 
-#if false
-			    {
-				    FixtureDef sd;
-				    sd.SetAsBox(10.0f, 2.0f, new Vector2(0.0f, 20.0f), 0.0f);
-				    sd.isSensor = true;
-				    _sensor = ground.CreateFixture(&sd);
-			    }
-#else
                 {
                     CircleShape shape = new CircleShape(5.0f, 0);
                     shape.Position = new Vector2(0.0f, 10.0f);
@@ -56,7 +47,6 @@ namespace FarseerPhysics.TestBed.Tests
                     _sensor = ground.CreateFixture(shape);
                     _sensor.Sensor = true;
                 }
-#endif
             }
 
             {

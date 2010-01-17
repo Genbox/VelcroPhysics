@@ -173,7 +173,7 @@ namespace FarseerPhysics
         /// </value>
         public bool Active
         {
-            get { return BodyA.Active && BodyB.Active; }
+            get { return BodyA.Enabled && BodyB.Enabled; }
         }
 
         protected void WakeBodies()
