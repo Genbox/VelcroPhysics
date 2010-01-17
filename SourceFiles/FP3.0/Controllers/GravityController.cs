@@ -32,7 +32,7 @@ namespace FarseerPhysics.Controllers
             Strength = strength;
         }
 
-        public override void Update()
+        public override void Update(float dt)
         {
             Vector2 f = Vector2.Zero;
 

@@ -375,8 +375,21 @@ namespace FarseerPhysics
     /// <summary>
     /// An axis aligned bounding box.
     /// </summary>
-    public struct AABB
+    public struct AABB : IEquatable<AABB>
     {
+        //TODO: Can cause trouble with VB.net
+        public AABB(Vector2 min, Vector2 max)
+        {
+            LowerBound = min;
+            UpperBound = max;
+        }
+
+        public AABB(ref Vector2 min, ref Vector2 max)
+        {
+            LowerBound = min;
+            UpperBound = max;
+        }
+        
         /// <summary>
         /// Verify that the bounds are sorted.
         /// </summary>
@@ -577,6 +590,81 @@ namespace FarseerPhysics
             vertices.Add(UpperBound);
             vertices.Add(new Vector2(UpperBound.X, LowerBound.Y));
             return vertices;
+        }
+
+        /// <summary>
+        /// Determines whether the AAABB contains the specified point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <returns>
+        /// 	<c>true</c> if it contains the specified point; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Contains(ref Vector2 point)
+        {
+            //using epsilon to try and gaurd against float rounding errors.
+            if ((point.X > (LowerBound.X + Settings.Epsilon) && point.X < (UpperBound.X - Settings.Epsilon) &&
+                 (point.Y > (LowerBound.Y + Settings.Epsilon) && point.Y < (UpperBound.Y - Settings.Epsilon))))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        #region IEquatable<AABB> Members
+
+        public bool Equals(AABB other)
+        {
+            return ((LowerBound == other.LowerBound) && (UpperBound == other.UpperBound));
+        }
+
+        #endregion
+
+        public override bool Equals(object obj)
+        {
+            if (obj is AABB)
+                return Equals((AABB)obj);
+
+            return false;
+        }
+
+        public bool Equals(ref AABB other)
+        {
+            return ((LowerBound == other.LowerBound) && (UpperBound == other.UpperBound));
+        }
+
+        public override int GetHashCode()
+        {
+            return (LowerBound.GetHashCode() + UpperBound.GetHashCode());
+        }
+
+        public static bool operator ==(AABB a, AABB b)
+        {
+            return a.Equals(ref b);
+        }
+
+        public static bool operator !=(AABB a, AABB b)
+        {
+            return !a.Equals(ref b);
+        }
+
+        /// <summary>
+        /// Gets the distance to the specified point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="distance">The distance.</param>
+        public void GetDistance(ref Vector2 point, out float distance)
+        {
+            float xDistance = Math.Abs(point.X - ((UpperBound.X + LowerBound.X) * .5f)) - (UpperBound.X - LowerBound.X) * .5f;
+            float yDistance = Math.Abs(point.Y - ((UpperBound.Y + LowerBound.Y) * .5f)) - (UpperBound.Y - LowerBound.Y) * .5f;
+
+            if (xDistance > 0 && yDistance > 0)
+            {
+                distance = (float)Math.Sqrt(xDistance * xDistance + yDistance * yDistance);
+            }
+            else
+            {
+                distance = Math.Max(xDistance, yDistance);
+            }
         }
     }
 

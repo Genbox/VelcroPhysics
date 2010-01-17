@@ -26,7 +26,7 @@ namespace FarseerPhysics.DebugViewXNA
                     b.GetTransform(out xf);
                     for (Fixture f = b.FixtureList; f != null; f = f.NextFixture)
                     {
-                        if (b.Active == false)
+                        if (b.Enabled == false)
                         {
                             DrawShape(f, xf, new Color(0.5f, 0.5f, 0.3f));
                         }
@@ -85,7 +85,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 for (Body b = World.BodyList; b != null; b = b.NextBody)
                 {
-                    if (b.Active == false)
+                    if (b.Enabled == false)
                     {
                         continue;
                     }

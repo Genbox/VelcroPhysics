@@ -938,4 +938,33 @@ public class Vertices : List<Vector2>
         return builder.ToString();
     }
 
+    /// <summary>
+    /// Projects to axis.
+    /// </summary>
+    /// <param name="axis">The axis.</param>
+    /// <param name="min">The min.</param>
+    /// <param name="max">The max.</param>
+    public void ProjectToAxis(ref Vector2 axis, out float min, out float max)
+    {
+        // To project a point on an axis use the dot product
+        float dotProduct = Vector2.Dot(axis, this[0]);
+        min = dotProduct;
+        max = dotProduct;
+
+        for (int i = 0; i < Count; i++)
+        {
+            dotProduct = Vector2.Dot(this[i], axis);
+            if (dotProduct < min)
+            {
+                min = dotProduct;
+            }
+            else
+            {
+                if (dotProduct > max)
+                {
+                    max = dotProduct;
+                }
+            }
+        }
+    }
 }

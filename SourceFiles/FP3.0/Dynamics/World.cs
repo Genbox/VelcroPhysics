@@ -507,7 +507,7 @@ namespace FarseerPhysics
             //Update controllers
             foreach (Controller controller in _controllers)
             {
-                controller.Update();
+                controller.Update(dt);
             }
 
             // Update contacts. This is where some contacts are destroyed.
