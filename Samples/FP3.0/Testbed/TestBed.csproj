@@ -93,6 +93,7 @@
     <Compile Include="Tests\BooleanPolygonTest.cs" />
     <Compile Include="Tests\BreakableTest.cs" />
     <Compile Include="Tests\BridgeTest.cs" />
+    <Compile Include="Tests\BuoyancyTest.cs" />
     <Compile Include="Tests\CantileverTest.cs" />
     <Compile Include="Tests\CCDTest.cs" />
     <Compile Include="Tests\ChainTest.cs" />

@@ -44,6 +44,11 @@ namespace FarseerPhysics
         /// The mass of the shape, usually in kilograms.
         /// </summary>
         public float Mass;
+
+        /// <summary>
+        /// Area of the shape
+        /// </summary>
+        public float Area;
     }
 
     /// <summary>
@@ -161,5 +166,7 @@ namespace FarseerPhysics
         /// The inertia tensor is computed about the local origin, not the centroid.
         /// </summary>
         protected abstract void ComputeProperties();
+
+        public abstract float ComputeSubmergedArea(ref Vector2 normal, float offset, ref Transform transform, out Vector2 centroid);
     }
 }

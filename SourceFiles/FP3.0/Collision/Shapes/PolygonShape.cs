@@ -20,6 +20,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
 
@@ -44,6 +45,13 @@ namespace FarseerPhysics
             : base(Settings.PolygonRadius, density)
         {
             ShapeType = ShapeType.Polygon;
+        }
+
+        public PolygonShape(Vertices vertices)
+            : base(Settings.PolygonRadius,0)
+        {
+            ShapeType = ShapeType.Polygon;
+            Set(vertices);
         }
 
         public override Shape Clone()
@@ -232,6 +240,8 @@ namespace FarseerPhysics
             // Simplification: triangle centroid = (1/3) * (p1 + p2 + p3)
             //
             // The rest of the derivation is handled by computer algebra.
+            //
+            // See http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/ for more information
 
             Debug.Assert(Vertices.Count >= 2);
 
@@ -285,6 +295,9 @@ namespace FarseerPhysics
                 I += D * (intx2 + inty2);
             }
 
+            //Save the area for later
+            data.Area = area;
+
             // Total mass
             data.Mass = Density * area;
 
@@ -298,6 +311,128 @@ namespace FarseerPhysics
 
             MassData = data;
         }
+
+        public override float ComputeSubmergedArea(ref Vector2 normal, float offset, ref Transform transform, out Vector2 centroid)
+        {
+            centroid = Vector2.Zero;
+
+            //Transform plane into shape co-ordinates
+            Vector2 normalL = MathUtils.MultiplyT(ref transform.R, normal);
+            float offsetL = offset - Vector2.Dot(normal, transform.Position);
+
+            float[] depths = new float[Settings.MaxPolygonVertices];
+            int diveCount = 0;
+            int intoIndex = -1;
+            int outoIndex = -1;
+
+            bool lastSubmerged = false;
+            int i;
+            for (i = 0; i < Vertices.Count; i++)
+            {
+                depths[i] = Vector2.Dot(normalL, Vertices[i]) - offsetL;
+                bool isSubmerged = depths[i] < -Settings.Epsilon;
+                if (i > 0)
+                {
+                    if (isSubmerged)
+                    {
+                        if (!lastSubmerged)
+                        {
+                            intoIndex = i - 1;
+                            diveCount++;
+                        }
+                    }
+                    else
+                    {
+                        if (lastSubmerged)
+                        {
+                            outoIndex = i - 1;
+                            diveCount++;
+                        }
+                    }
+                }
+                lastSubmerged = isSubmerged;
+            }
+            switch (diveCount)
+            {
+                case 0:
+                    if (lastSubmerged)
+                    {
+                        //Completely submerged
+                        centroid = MathUtils.Multiply(ref transform, MassData.Center);
+                        return MassData.Mass / Density;
+                    }
+                    else
+                    {
+                        //Completely dry
+                        return 0;
+                    }
+                    break;
+                case 1:
+                    if (intoIndex == -1)
+                    {
+                        intoIndex = Vertices.Count - 1;
+                    }
+                    else
+                    {
+                        outoIndex = Vertices.Count - 1;
+                    }
+                    break;
+            }
+            int intoIndex2 = (intoIndex + 1) % Vertices.Count;
+            int outoIndex2 = (outoIndex + 1) % Vertices.Count;
+
+            float intoLambda = (0 - depths[intoIndex]) / (depths[intoIndex2] - depths[intoIndex]);
+            float outoLambda = (0 - depths[outoIndex]) / (depths[outoIndex2] - depths[outoIndex]);
+
+            Vector2 intoVec = new Vector2(Vertices[intoIndex].X * (1 - intoLambda) + Vertices[intoIndex2].X * intoLambda,
+                            Vertices[intoIndex].Y * (1 - intoLambda) + Vertices[intoIndex2].Y * intoLambda);
+            Vector2 outoVec = new Vector2(Vertices[outoIndex].X * (1 - outoLambda) + Vertices[outoIndex2].X * outoLambda,
+                            Vertices[outoIndex].Y * (1 - outoLambda) + Vertices[outoIndex2].Y * outoLambda);
+
+            //Initialize accumulator
+            float area = 0;
+            Vector2 center = Vector2.Zero;
+            Vector2 p2 = Vertices[intoIndex2];
+            Vector2 p3;
+
+            const float k_inv3 = 1.0f / 3.0f;
+
+            //An awkward loop from intoIndex2+1 to outIndex2
+            i = intoIndex2;
+            while (i != outoIndex2)
+            {
+                i = (i + 1) % Vertices.Count;
+                if (i == outoIndex2)
+                    p3 = outoVec;
+                else
+                    p3 = Vertices[i];
+                //Add the triangle formed by intoVec,p2,p3
+                {
+                    Vector2 e1 = p2 - intoVec;
+                    Vector2 e2 = p3 - intoVec;
+
+                    float D = MathUtils.Cross(e1, e2);
+
+                    float triangleArea = 0.5f * D;
+
+                    area += triangleArea;
+
+                    // Area weighted centroid
+                    center += triangleArea * k_inv3 * (intoVec + p2 + p3);
+
+                }
+                //
+                p2 = p3;
+            }
+
+            //Normalize and transform centroid
+            center *= 1.0f / area;
+
+            centroid = MathUtils.Multiply(ref transform, center);
+
+            return area;
+        }
+
 
         public Vertices Vertices;
         public Vertices Normals;
