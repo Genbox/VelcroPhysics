@@ -21,7 +21,9 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using FarseerPhysics.Controllers;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics
@@ -61,6 +63,8 @@ namespace FarseerPhysics
         private RayCastCallback _rayCastCallbackWrapper;
 
         private Stopwatch _watch;
+
+        private List<Controller> _controllers = new List<Controller>();
 
         /// <summary>
         /// Construct a world object.
@@ -185,6 +189,14 @@ namespace FarseerPhysics
             get { return ContactManager._contactList; }
         }
 
+        public void AddController(Controller controller)
+        {
+            Debug.Assert(!_controllers.Contains(controller));
+
+            controller.World = this;
+            _controllers.Add(controller);
+        }
+
         public Body CreateBody()
         {
             Debug.Assert(!Locked);
@@ -194,30 +206,6 @@ namespace FarseerPhysics
             }
 
             Body b = new Body(this);
-
-            // Add to world doubly linked list.
-            b._prev = null;
-            b._next = BodyList;
-            if (BodyList != null)
-            {
-                BodyList._prev = b;
-            }
-            BodyList = b;
-            ++BodyCount;
-
-            return b;
-        }
-
-        public Body CreateBody(Body body)
-        {
-            Debug.Assert(!Locked);
-            if (Locked)
-            {
-                return null;
-            }
-
-            //NOTE: This constructor is untested and might not work.
-            Body b = new Body(body, this);
 
             // Add to world doubly linked list.
             b._prev = null;
@@ -516,6 +504,12 @@ namespace FarseerPhysics
 
             step.WarmStarting = WarmStarting;
 
+            //Update controllers
+            foreach (Controller controller in _controllers)
+            {
+                controller.Update();
+            }
+
             // Update contacts. This is where some contacts are destroyed.
             ContactManager.Collide();
 
@@ -648,7 +642,7 @@ namespace FarseerPhysics
                     continue;
                 }
 
-                if (seed.Awake == false || seed.Active == false)
+                if (seed.Awake == false || seed.Enabled == false)
                 {
                     continue;
                 }
@@ -670,7 +664,7 @@ namespace FarseerPhysics
                 {
                     // Grab the next body off the stack and add it to the island.
                     Body b = _stack[--stackCount];
-                    Debug.Assert(b.Active);
+                    Debug.Assert(b.Enabled);
                     _island.Add(b);
 
                     // Make sure the body is awake.
@@ -728,7 +722,7 @@ namespace FarseerPhysics
                         Body other = je.Other;
 
                         // Don't simulate joints connected to inactive bodies.
-                        if (other.Active == false)
+                        if (other.Enabled == false)
                         {
                             continue;
                         }
@@ -764,7 +758,7 @@ namespace FarseerPhysics
             // Synchronize fixtures, check for out of range bodies.
             for (Body b = BodyList; b != null; b = b.NextBody)
             {
-                if (!b.Awake || !b.Active)
+                if (!b.Awake || !b.Enabled)
                 {
                     continue;
                 }
@@ -1040,7 +1034,7 @@ namespace FarseerPhysics
                         }
 
                         Body other = jEdge.Other;
-                        if (other.Active == false)
+                        if (other.Enabled == false)
                         {
                             continue;
                         }

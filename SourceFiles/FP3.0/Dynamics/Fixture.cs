@@ -34,17 +34,6 @@ namespace FarseerPhysics
     /// </summary>
     public class Fixture
     {
-        public Fixture()
-        {
-            ProxyId = BroadPhase.NullProxy;
-
-            //Fixture defaults
-            _friction = 0.2f;
-            _categoryBits = 0x0001;
-            _maskBits = 0xFFFF;
-            _isSensor = false;
-        }
-
         /// <summary>
         /// Get the type of the child shape. You can use this to down cast to the concrete shape.
         /// @return the shape type.
@@ -293,8 +282,16 @@ namespace FarseerPhysics
         /// </summary>
         /// <param name="body">The body.</param>
         /// <param name="shape">The shape.</param>
-        internal void Create(Body body, Shape shape)
+        internal Fixture(Body body, Shape shape)
         {
+            ProxyId = BroadPhase.NullProxy;
+
+            //Fixture defaults
+            _friction = 0.2f;
+            _categoryBits = 0x0001;
+            _maskBits = 0xFFFF;
+            _isSensor = false;
+
             _body = body;
             _next = null;
 

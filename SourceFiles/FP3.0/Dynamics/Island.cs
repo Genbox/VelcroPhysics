@@ -78,9 +78,17 @@ namespace FarseerPhysics
                     continue;
                 }
 
-                // Integrate velocities.
-                b._linearVelocity += step.DeltaTime * (gravity + b._invMass * b._force);
-                b._angularVelocity += step.DeltaTime * b._invI * b._torque;
+                // Integrate velocities. Only apply gravity if the body wants it.
+                if (b.IgnoreGravity)
+                {
+                    b._linearVelocity += step.DeltaTime * (b._invMass * b._force);
+                    b._angularVelocity += step.DeltaTime * b._invI * b._torque;
+                }
+                else
+                {
+                    b._linearVelocity += step.DeltaTime * (gravity + b._invMass * b._force);
+                    b._angularVelocity += step.DeltaTime * b._invI * b._torque;
+                }
 
                 // Apply damping.
                 // ODE: dv/dt + c * v = 0

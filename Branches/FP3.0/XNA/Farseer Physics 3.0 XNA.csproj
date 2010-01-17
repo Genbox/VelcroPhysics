@@ -143,6 +143,12 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Vertices.cs">
       <Link>Common\Vertices.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Controllers\Controller.cs">
+      <Link>Controllers\Controller.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Controllers\GravityController.cs">
+      <Link>Controllers\GravityController.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\DebugView.cs">
       <Link>DebugView.cs</Link>
     </Compile>
