@@ -389,7 +389,42 @@ namespace FarseerPhysics
             LowerBound = min;
             UpperBound = max;
         }
-        
+
+        public AABB(float width, float height, Vector2 position)
+        {
+            LowerBound = position;
+            UpperBound = new Vector2(position.X + width, position.Y + height);
+        }
+
+        /// <summary>
+        /// Gets the width.
+        /// </summary>
+        /// <Value>The width.</Value>
+        public float Width
+        {
+            get { return UpperBound.X - LowerBound.X; }
+        }
+
+        /// <summary>
+        /// Gets the height.
+        /// </summary>
+        /// <Value>The height.</Value>
+        public float Height
+        {
+            get { return UpperBound.Y - LowerBound.Y; }
+        }
+
+        /// <summary>
+        /// Gets or sets the position of the AABB
+        /// The position is the same as LowerBound
+        /// </summary>
+        /// <value>The position.</value>
+        public Vector2 Position
+        {
+            get { return LowerBound; }
+            set { LowerBound = value; }
+        }
+
         /// <summary>
         /// Verify that the bounds are sorted.
         /// </summary>

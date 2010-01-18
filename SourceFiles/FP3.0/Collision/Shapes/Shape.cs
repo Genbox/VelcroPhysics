@@ -119,17 +119,9 @@ namespace FarseerPhysics
         /// The density in kilograms per meter squared.
         /// </summary>
         /// <value>The density.</value>
-        public float Density
-        {
-            get;
-            set;
-        }
+        public float Density { get; set; }
 
-        public MassData MassData
-        {
-            get;
-            set;
-        }
+        public MassData MassData { get; set; }
 
         /// <summary>
         /// Clone the concrete shape.
@@ -167,6 +159,11 @@ namespace FarseerPhysics
         /// </summary>
         protected abstract void ComputeProperties();
 
-        public abstract float ComputeSubmergedArea(ref Vector2 normal, float offset, ref Transform transform, out Vector2 centroid);
+        /// <summary>
+        /// Gets the vertices of the shape. If the shape is not already represented by vertices
+        /// an approximation will be made.
+        /// </summary>
+        /// <returns></returns>
+        public abstract Vertices GetVertices();
     }
 }

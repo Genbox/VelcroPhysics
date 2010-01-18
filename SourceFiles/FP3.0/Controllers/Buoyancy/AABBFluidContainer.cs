@@ -25,18 +25,19 @@ namespace FarseerGames.FarseerPhysics.Controllers
             AABB = aabb;
         }
 
-        #region IFluidContainer Members
+        public AABBFluidContainer(float width, float height, Vector2 position)
+        {
+            AABB = new AABB(width, height, position);
+        }
 
         public bool Intersect(ref AABB aabb)
         {
             return AABB.TestOverlap(ref aabb, ref AABB);
         }
 
-        public bool Contains(ref Vector2 vector)
+        public bool Contains(ref Vector2 point)
         {
-            return AABB.Contains(ref vector);
+            return AABB.Contains(ref point);
         }
-
-        #endregion
     }
 }
