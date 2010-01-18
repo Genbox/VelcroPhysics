@@ -142,6 +142,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 Fixture fixture = _geomList[i];
                 Body body = fixture.Body;
                 Vertices localVertices = fixture.Shape.GetVertices();
+                _totalArea = fixture.Shape.MassData.Area;
 
                 //If the AABB of the geometry does not intersect the fluidcontainer
                 //continue to the next geometry
@@ -157,7 +158,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 for (int k = 0; k < localVertices.Count; k++)
                 {
                     _vert = fixture.Body.GetWorldPoint(localVertices[k]);
-                    //_vert = localVertices[k];
                     if (_fluidContainer.Contains(ref _vert))
                     {
                         _vertices.Add(_vert);
@@ -191,7 +191,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
                 _vertices.ProjectToAxis(ref _axis, out _min, out _max);
                 _dragArea = Math.Abs(_max - _min);
-                _partialMass = fixture.Body.Mass * (_area / fixture.Shape.MassData.Area);
+                _partialMass = fixture.Body.Mass * (_area / _totalArea);
                 _linearDragForce = -.5f * Density * _dragArea * LinearDragCoefficient * _partialMass * _centroidVelocity;
                 _rotationalDragTorque = -fixture.Body.AngularVelocity * AngularDragCoefficient * _partialMass;
 
