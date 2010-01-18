@@ -1,8 +1,6 @@
 ﻿using FarseerGames.FarseerPhysics.Controllers;
-using FarseerGames.FarseerPhysics.Interfaces;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -38,12 +36,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             _waveContainer.WaveGeneratorMax = 4;
             _waveContainer.WaveGeneratorMin = 2;
-            _waveContainer.WaveGeneratorStep = 0.1f;
+            _waveContainer.WaveGeneratorStep = 0.2f;
 
             _waveContainer.Initialize();
 
-            FluidDragController buoyancyController = new FluidDragController(_waveContainer, 4f, 0.98f, 0.002f, World.Gravity);
-            buoyancyController.Entry +=EntryEventHandler;
+            FluidDragController buoyancyController = new FluidDragController(_waveContainer, 4f, 0.98f, 0.2f, World.Gravity);
+            buoyancyController.Entry += EntryEventHandler;
 
             Vector2 offset = new Vector2(5, 0);
 
@@ -60,13 +58,11 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             World.AddController(buoyancyController);
+            World.AddController(_waveContainer);
         }
 
         public override void Update(Framework.Settings settings)
         {
-            //DebugView.DrawAABB(ref _aabbContainer.AABB, Color.Wheat);
-            //DebugView.DrawAABB(ref _waveContainer._aabb, Color.Wheat);
-            //_waveContainer.Update(settings.Hz);
             DebugView.DrawWaveContainer(_waveContainer);
             base.Update(settings);
         }
@@ -75,8 +71,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             for (int i = 0; i < verts.Count; i++)
             {
-                Vector2 vel, point = verts[i];
-                vel = geom.Body.GetLinearVelocityFromWorldPoint(point);
+                Vector2 point = verts[i];
+                Vector2 vel = geom.Body.GetLinearVelocityFromWorldPoint(point);
 
                 _waveContainer.Disturb(verts[i].X, (vel.Y * geom.Body.Mass) / (100.0f * geom.Body.Mass));
             }
