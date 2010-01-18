@@ -37,7 +37,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
     /// </summary>
     public class WaveController : Controller, IFluidContainer
     {
-        private AABB _aabb;
+        public AABB _aabb;
         private float _aabbMin = float.MaxValue;
         private float[] _currentWave;
         private float _dampningCoefficient = .95f;
@@ -190,8 +190,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         public bool Contains(ref Vector2 vector)
         {
-            //try
-            //{
             int index = (int)Math.Floor((vector.X - _xPosition[0]) / _singleWaveWidth);
 
             //handle the boundry conditions
@@ -220,11 +218,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 return false;
             }
             return true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw ex;
-            //}
         }
 
         #endregion
@@ -239,7 +232,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// <param name="offset">The amount to move the node up or down (negative values moves the node up, positive moves it down)</param>
         public void Disturb(float x, float offset)
         {
-            int i = 0;
+            int i;
 
             for (i = 0; i < _nodeCount - 1; i++)
             {

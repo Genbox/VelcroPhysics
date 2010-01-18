@@ -33,19 +33,55 @@ namespace FarseerGames.FarseerPhysics.Controllers
     /// </summary>
     public sealed class FluidDragController : Controller
     {
-        public delegate void EntryEventHandler(Fixture fixture, Vertices verts);
+        #region Delegates
 
+        public delegate void EntryEventHandler(Fixture geom, Vertices verts);
+
+        #endregion
+
+        private float _area;
+        private Vector2 _axis = Vector2.Zero;
+        private Vector2 _buoyancyForce = Vector2.Zero;
+        private Vector2 _centroid = Vector2.Zero;
+        private Vector2 _centroidVelocity;
+
+        private float _dragArea;
         private IFluidContainer _fluidContainer;
         private Dictionary<Fixture, bool> _geomInFluidList;
         private List<Fixture> _geomList;
         private Vector2 _gravity = Vector2.Zero;
+        private Vector2 _linearDragForce = Vector2.Zero;
+        private float _max;
+        private float _min;
+        private float _partialMass;
+        private float _rotationalDragTorque;
+        private float _totalArea;
+        private Vector2 _totalForce;
+        private Vector2 _vert;
+        private Vertices _vertices;
 
         public EntryEventHandler Entry;
 
-        public FluidDragController()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FluidDragController"/> class.
+        /// </summary>
+        /// <param name="fluidContainer">An object that implements <see cref="IFluidContainer"/></param>
+        /// <param name="density">Density of the fluid</param>
+        /// <param name="linearDragCoefficient">Linear drag coefficient of the fluid</param>
+        /// <param name="rotationalDragCoefficient">Rotational drag coefficient of the fluid</param>
+        /// <param name="gravity">The direction gravity acts. Buoyancy force will act in opposite direction of gravity.</param>
+        public FluidDragController(IFluidContainer fluidContainer, float density, float linearDragCoefficient,
+                               float rotationalDragCoefficient, Vector2 gravity)
         {
             _geomList = new List<Fixture>();
             _geomInFluidList = new Dictionary<Fixture, bool>();
+
+            _fluidContainer = fluidContainer;
+            Density = density;
+            LinearDragCoefficient = linearDragCoefficient;
+            AngularDragCoefficient = rotationalDragCoefficient;
+            _gravity = gravity;
+            _vertices = new Vertices();
         }
 
         /// <summary>
@@ -64,28 +100,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// simulate water-like fluids. 
         /// </summary>
         public float AngularDragCoefficient { get; set; }
-
-        public Vector2 Normal = new Vector2(-1, 0);
-
-        public Vector2 Velocity = Vector2.Zero;
-
-        /// <summary>
-        /// Initializes the fluid drag controller
-        /// </summary>
-        /// <param name="fluidContainer">An object that implements <see cref="IFluidContainer"/></param>
-        /// <param name="density">Density of the fluid</param>
-        /// <param name="linearDragCoefficient">Linear drag coefficient of the fluid</param>
-        /// <param name="rotationalDragCoefficient">Rotational drag coefficient of the fluid</param>
-        /// <param name="gravity">The direction gravity acts. Buoyancy force will act in opposite direction of gravity.</param>
-        public void Initialize(IFluidContainer fluidContainer, float density, float linearDragCoefficient,
-                               float rotationalDragCoefficient, Vector2 gravity)
-        {
-            _fluidContainer = fluidContainer;
-            Density = density;
-            LinearDragCoefficient = linearDragCoefficient;
-            AngularDragCoefficient = rotationalDragCoefficient;
-            _gravity = gravity;
-        }
 
         /// <summary>
         /// Add a geom to be controlled by the fluid drag controller.  The geom does not need to already be in
@@ -125,111 +139,125 @@ namespace FarseerGames.FarseerPhysics.Controllers
         {
             for (int i = 0; i < _geomList.Count; i++)
             {
-                Body body = _geomList[i].Body;
+                Fixture fixture = _geomList[i];
+                Body body = fixture.Body;
+                Vertices localVertices = fixture.Shape.GetVertices();
 
-                if (body.Awake == false || body.IsStatic || !body.Enabled)
+                //If the AABB of the geometry does not intersect the fluidcontainer
+                //continue to the next geometry
+                AABB aabb;
+                fixture.GetAABB(out aabb);
+
+                if (!_fluidContainer.Intersect(ref aabb))
+                    continue;
+
+                //Find the vertices contained in the fluidcontainer
+                _vertices.Clear();
+
+                for (int k = 0; k < localVertices.Count; k++)
+                {
+                    _vert = fixture.Body.GetWorldPoint(localVertices[k]);
+                    if (_fluidContainer.Contains(ref _vert))
+                    {
+                        _vertices.Add(_vert);
+                    }
+                }
+
+                //The geometry is not in the fluid, up til a certain point.
+                if (_vertices.Count < localVertices.Count * 0.15f)
+                    _geomInFluidList[fixture] = false;
+
+                _area = _vertices.GetArea();
+
+                if (_area < .00001)
+                    continue;
+
+                _centroid = _vertices.GetCentroid();
+
+#if true
+                //Calculate buoyancy force
+                _buoyancyForce = -_gravity * (_area * fixture.Shape.Density) * Density;
+
+                //Calculate linear and rotational drag
+                _centroidVelocity = fixture.Body.GetLinearVelocityFromWorldPoint(_centroid);
+
+                _axis.X = -_centroidVelocity.Y;
+                _axis.Y = _centroidVelocity.X;
+
+                //can't normalize a zero length vector
+                if (_axis.X != 0 || _axis.Y != 0)
+                    _axis.Normalize();
+
+                _vertices.ProjectToAxis(ref _axis, out _min, out _max);
+                _dragArea = Math.Abs(_max - _min);
+                _partialMass = fixture.Body.Mass * (_area / fixture.Shape.MassData.Area);
+                _linearDragForce = -.5f * Density * _dragArea * LinearDragCoefficient * _partialMass * _centroidVelocity;
+                _rotationalDragTorque = -fixture.Body.AngularVelocity * AngularDragCoefficient * _partialMass;
+
+                //Add the buoyancy force and lienar drag force
+                Vector2.Add(ref _buoyancyForce, ref _linearDragForce, out _totalForce);
+
+                //Apply total force to the body
+                body.ApplyForce(ref _totalForce);
+
+                //Apply rotational drag
+                body.ApplyTorque(_rotationalDragTorque);
+
+#else
+                if (body.Awake == false)
                 {
                     //Buoyancy force is just a function of position,
                     //so unlike most forces, it is safe to ignore sleeping bodes
                     continue;
                 }
-
                 Vector2 areac = Vector2.Zero;
                 Vector2 massc = Vector2.Zero;
-                float area = 0;
-                float mass = 0;
+                float area = 0.0f;
+                float mass = 0.0f;
+                //for(Fixture fixture1=body.FixtureList;fixture1 != null;fixture1=fixture.NextFixture){
+                Vector2 sc = Vector2.Zero;
+                area += _area;
+                areac.X += _area * sc.X;
+                areac.Y += _area * sc.Y;
 
-                for (Fixture fixture = body.FixtureList; fixture != null; fixture = fixture.NextFixture)
-                {
-                    Vector2 sc;
-                    Transform transform;
-                    body.GetTransform(out transform);
+                mass += _area * fixture.Shape.Density;
+                massc.X += _area * sc.X * _area * fixture.Shape.Density;
+                massc.Y += _area * sc.Y * _area * fixture.Shape.Density;
+                //}
 
-                    float sarea = fixture.Shape.ComputeSubmergedArea(ref Normal, -2, ref transform, out sc);
-                    area += sarea;
-                    areac.X += sarea * sc.X;
-                    areac.Y += sarea * sc.Y;
-
-                    mass += sarea * fixture.Shape.Density;
-                    massc.X += sarea * sc.X * fixture.Shape.Density;
-                    massc.Y += sarea * sc.Y * fixture.Shape.Density;
-                }
                 areac.X /= area;
                 areac.Y /= area;
                 massc.X /= mass;
                 massc.Y /= mass;
 
-                if (area < Settings.Epsilon)
-                    continue;
+                //if(area<Number.MIN_VALUE)
+                //continue;
 
                 //Buoyancy
-                Vector2 buoyancyForce = -Density * area * _gravity;
+
+                Vector2 buoyancyForce = _gravity * -1;
+                buoyancyForce *= Density * area;
                 body.ApplyForce(buoyancyForce, massc);
+
                 //Linear drag
-                Vector2 dragForce = body.GetLinearVelocityFromWorldPoint(areac) - Velocity;
+                Vector2 dragForce = body.GetLinearVelocityFromWorldPoint(areac);
+                //dragForce -= velocity;
                 dragForce *= -LinearDragCoefficient * area;
                 body.ApplyForce(dragForce, areac);
-
                 //Angular drag
                 //TODO: Something that makes more physical sense?
                 body.ApplyTorque(-body.Inertia / body.Mass * area * body.AngularVelocity * AngularDragCoefficient);
-
-                //if (_geomInFluidList[_geomList[i]] == false)
-                //{
-                //    //The geometry is now in the water. Fire the Entry event
-                //    _geomInFluidList[_geomList[i]] = true;
-                //    if (Entry != null)
-                //    {
-                //        Entry(_geomList[i], _vertices);
-                //    }
-                //}
+#endif
+                if (_geomInFluidList[_geomList[i]] == false)
+                {
+                    //The geometry is now in the water. Fire the Entry event
+                    _geomInFluidList[_geomList[i]] = true;
+                    if (Entry != null)
+                    {
+                        Entry(_geomList[i], _vertices);
+                    }
+                }
             }
         }
-
-        /// <summary>
-        /// Finds what vertices of the geometry that is inside the fluidcontainer
-        /// </summary>
-        /// <param name="geom">The geometry to check against</param>
-        //private void FindVerticesInFluid(Fixture geom)
-        //{
-        //    _vertices.Clear();
-        //    AABB aabb;
-        //    geom.GetAABB(out aabb);
-
-        //    for (int i = 0; i < geom.worldVertices.Count; i++)
-        //    {
-        //        _vert = geom.worldVertices[i];
-        //        if (_fluidContainer.Contains(ref _vert))
-        //        {
-        //            _vertices.Add(_vert);
-        //        }
-        //    }
-        //}
-
-        /// <summary>
-        /// Calculates the linear and rotational drag of the geometry
-        /// </summary>
-        //private void CalculateDrag(Fixture geom)
-        //{
-        //    //localCentroid = geom.body.GetLocalPosition(_centroid);
-        //    _centroidVelocity= geom.Body.GetLinearVelocityFromWorldPoint(_centroid);
-
-        //    _axis.X = -_centroidVelocity.Y;
-        //    _axis.Y = _centroidVelocity.X;
-
-        //    //can't normalize a zero length vector
-        //    if (_axis.X != 0 || _axis.Y != 0)
-        //        _axis.Normalize();
-
-        //    _vertices.ProjectToAxis(ref _axis, out _min, out _max);
-
-        //    _dragArea = Math.Abs(_max - _min);
-
-        //    _partialMass = geom.Body.Mass * (_area / _totalArea);
-
-        //    _linearDragForce = -.5f * Density * _dragArea * LinearDragCoefficient * _partialMass * _centroidVelocity;
-
-        //    _rotationalDragTorque = -geom.Body.AngularVelocity * AngularDragCoefficient * _partialMass;
-        //}
     }
 }
