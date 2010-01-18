@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using FarseerGames.FarseerPhysics.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,7 +13,7 @@ namespace FarseerPhysics.DebugViewXNA
         public DebugViewXNA(World world)
             : base(world)
         {
-            
+
         }
 
         /// Call this to draw shapes and other debug draw data.
@@ -115,6 +116,36 @@ namespace FarseerPhysics.DebugViewXNA
                     DrawTransform(ref xf);
                 }
             }
+        }
+
+        public void DrawWaveContainer(WaveController waveController)
+        {
+            // here we create a vertex buffer to hold position and color...this could be changed to hold many other elements for special effects that use a custom shader
+            //_vertsFill = new VertexPositionColor[waveController.NodeCount * 2];
+
+            // start at bottom left... this just sets the first corner of the triangle strip to the bottom left
+            Vector3 position = new Vector3(waveController.Position.X, waveController.Position.Y + waveController.Height, 0);
+            //_vertsFill[_fillCount] = new VertexPositionColor(position, Color.Aquamarine); // save it to the buffer
+
+            // for each point on the wave   
+            for (int i = 0; i < waveController.NodeCount; i += 2)
+            {
+                position = new Vector3(waveController.XPosition[i],
+                                       waveController.Position.Y + waveController.CurrentWave[i], 0);
+                // bottom of screen - waveHeight + that nodes offset
+                _vertsFill[i + 1] = new VertexPositionColor(position, Color.Aquamarine); // save it to the buffer
+
+                position = new Vector3(waveController.XPosition[i + 1], waveController.Position.Y + waveController.Height, 0); // bottom of screen
+                _vertsFill[i + 2] = new VertexPositionColor(position, Color.Aquamarine); // save it to the buffer
+
+                _fillCount++;
+                _fillCount++;
+            }
+
+            // start at bottom left
+            //position = new Vector3(waveController.XPosition[waveController.NodeCount - 1], waveController.Position.Y, 0); // assumes bottom of screen is 600
+            //_vertsFill[_fillCount + waveController.NodeCount + 1] = new VertexPositionColor(position, Color.Aquamarine);
+            // save it to the buffer
         }
 
         private void DrawJoint(Joint joint)
@@ -367,7 +398,7 @@ namespace FarseerPhysics.DebugViewXNA
         public void RenderDebugData(ref Matrix projection)
         {
             // set the cull mode? should be unnecessary
-            Device.RenderState.CullMode = CullMode.None;
+            Device.RenderState.CullMode = CullMode.CullCounterClockwiseFace;
             // turn alpha blending on
             Device.RenderState.AlphaBlendEnable = true;
             // set the vertex declaration...this ensures if window resizes occur...rendering continues ;)
@@ -376,17 +407,23 @@ namespace FarseerPhysics.DebugViewXNA
             _effect.Projection = projection;
             // begin the effect
             _effect.Begin();
-            // we should have only 1 technique and 1 pass
-            _effect.Techniques[0].Passes[0].Begin();
-            // make sure we have stuff to draw
-            if (_fillCount > 0)
-                Device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
-            // make sure we have lines to draw
-            if (_lineCount > 0)
-                Device.DrawUserPrimitives(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
+            foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
+            {
+                pass.Begin();
+                // we should have only 1 technique and 1 pass
+                //_effect.Techniques[0].Passes[0].Begin();
+                // make sure we have stuff to draw
+                if (_fillCount > 0)
+                    Device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
+                // make sure we have lines to draw
+                if (_lineCount > 0)
+                    Device.DrawUserPrimitives(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
 
-            // end the pass and effect
-            _effect.Techniques[0].Passes[0].End();
+                pass.End();
+                // end the pass and effect
+                //_effect.Techniques[0].Passes[0].End();
+            }
+
             _effect.End();
 
             // begin the sprite batch effect
@@ -480,8 +517,8 @@ namespace FarseerPhysics.DebugViewXNA
             _stringData = new List<StringData>();
         }
 
-        private static VertexPositionColor[] _vertsLines = new VertexPositionColor[100000];
-        private static VertexPositionColor[] _vertsFill = new VertexPositionColor[100000];
+        private static VertexPositionColor[] _vertsLines = new VertexPositionColor[1000000];
+        private static VertexPositionColor[] _vertsFill = new VertexPositionColor[1000000];
         private static int _lineCount;
         private static int _fillCount;
         public static SpriteBatch Batch;

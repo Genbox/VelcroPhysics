@@ -139,40 +139,14 @@ namespace FarseerPhysics
             MassData = data;
         }
 
-        public override float ComputeSubmergedArea(ref Vector2 normal, float offset, ref Transform transform, out Vector2 centroid)
-        {
-            centroid = Vector2.Zero;
-
-            Vector2 p = MathUtils.Multiply(ref transform, Position);
-            float l = -(Vector2.Dot(normal, p) - offset);
-            if (l < -_radius + Settings.Epsilon)
-            {
-                //Completely dry
-                return 0;
-            }
-            if (l > _radius)
-            {
-                //Completely wet
-                centroid = p;
-                return MathHelper.Pi * _radius2;
-            }
-
-            //Magic
-            float l2 = l * l;
-            float area = _radius2 * ((float)Math.Asin(l / _radius) + MathHelper.Pi / 2) + l * (float)Math.Sqrt(_radius2 - l2);
-            float com = -2.0f / 3.0f * (float)Math.Pow(_radius2 - l2, 1.5f) / area;
-
-            centroid.X = p.X + normal.X * com;
-            centroid.Y = p.Y + normal.Y * com;
-
-            return area;
-        }
-
-
-        //TODO: Get rid of this. Use Body.Position
         /// <summary>
         /// Position of the shape
         /// </summary>
         public Vector2 Position;
+
+        public override Vertices GetVertices()
+        {
+            return PolygonTools.CreateCircle(_radius, 16);
+        }
     }
 }
