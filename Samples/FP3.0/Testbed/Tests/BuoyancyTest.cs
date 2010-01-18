@@ -33,18 +33,19 @@ namespace FarseerPhysics.TestBed.Tests
             _waveContainer.Width = 40;
             _waveContainer.Height = 10;
             _waveContainer.NodeCount = 100;
-            _waveContainer.DampingCoefficient = .98f;
-            _waveContainer.Frequency = 1f;
+            _waveContainer.DampingCoefficient = 0.98f;
+            _waveContainer.Frequency = .001f;
 
-            _waveContainer.WaveGeneratorMax = 6;
-            _waveContainer.WaveGeneratorMin = 5;
-            _waveContainer.WaveGeneratorStep = 0.2f;
+            _waveContainer.WaveGeneratorMax = 4;
+            _waveContainer.WaveGeneratorMin = 2;
+            _waveContainer.WaveGeneratorStep = 0.1f;
 
             _waveContainer.Initialize();
 
-            FluidDragController buoyancyController = new FluidDragController(_waveContainer, 4f, 0.9f, 0.3f, World.Gravity);
+            FluidDragController buoyancyController = new FluidDragController(_waveContainer, 4f, 0.98f, 0.002f, World.Gravity);
+            buoyancyController.Entry +=EntryEventHandler;
 
-            Vector2 offset = new Vector2(5, 3);
+            Vector2 offset = new Vector2(5, 0);
 
             //Bunch of balls
             for (int i = 0; i < 4; i++)
@@ -65,9 +66,20 @@ namespace FarseerPhysics.TestBed.Tests
         {
             //DebugView.DrawAABB(ref _aabbContainer.AABB, Color.Wheat);
             //DebugView.DrawAABB(ref _waveContainer._aabb, Color.Wheat);
-            _waveContainer.Update(settings.Hz);
+            //_waveContainer.Update(settings.Hz);
             DebugView.DrawWaveContainer(_waveContainer);
             base.Update(settings);
+        }
+
+        public void EntryEventHandler(Fixture geom, Vertices verts)
+        {
+            for (int i = 0; i < verts.Count; i++)
+            {
+                Vector2 vel, point = verts[i];
+                vel = geom.Body.GetLinearVelocityFromWorldPoint(point);
+
+                _waveContainer.Disturb(verts[i].X, (vel.Y * geom.Body.Mass) / (100.0f * geom.Body.Mass));
+            }
         }
 
         private AABBFluidContainer _aabbContainer;

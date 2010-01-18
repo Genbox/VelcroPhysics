@@ -118,34 +118,13 @@ namespace FarseerPhysics.DebugViewXNA
             }
         }
 
+        //TODO: Visualize controllers in general
         public void DrawWaveContainer(WaveController waveController)
         {
-            // here we create a vertex buffer to hold position and color...this could be changed to hold many other elements for special effects that use a custom shader
-            //_vertsFill = new VertexPositionColor[waveController.NodeCount * 2];
-
-            // start at bottom left... this just sets the first corner of the triangle strip to the bottom left
-            Vector3 position = new Vector3(waveController.Position.X, waveController.Position.Y + waveController.Height, 0);
-            //_vertsFill[_fillCount] = new VertexPositionColor(position, Color.Aquamarine); // save it to the buffer
-
-            // for each point on the wave   
-            for (int i = 0; i < waveController.NodeCount; i += 2)
+            for (int i = 0; i < waveController.NodeCount; i++)
             {
-                position = new Vector3(waveController.XPosition[i],
-                                       waveController.Position.Y + waveController.CurrentWave[i], 0);
-                // bottom of screen - waveHeight + that nodes offset
-                _vertsFill[i + 1] = new VertexPositionColor(position, Color.Aquamarine); // save it to the buffer
-
-                position = new Vector3(waveController.XPosition[i + 1], waveController.Position.Y + waveController.Height, 0); // bottom of screen
-                _vertsFill[i + 2] = new VertexPositionColor(position, Color.Aquamarine); // save it to the buffer
-
-                _fillCount++;
-                _fillCount++;
+                DrawCircle(new Vector2(waveController.XPosition[i], waveController.Position.Y + waveController.Height+ waveController.CurrentWave[i]), 0.1f, Color.Red);
             }
-
-            // start at bottom left
-            //position = new Vector3(waveController.XPosition[waveController.NodeCount - 1], waveController.Position.Y, 0); // assumes bottom of screen is 600
-            //_vertsFill[_fillCount + waveController.NodeCount + 1] = new VertexPositionColor(position, Color.Aquamarine);
-            // save it to the buffer
         }
 
         private void DrawJoint(Joint joint)
