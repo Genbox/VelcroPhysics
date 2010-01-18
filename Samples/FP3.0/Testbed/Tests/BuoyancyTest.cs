@@ -34,11 +34,11 @@ namespace FarseerPhysics.TestBed.Tests
             _waveContainer.Height = 10;
             _waveContainer.NodeCount = 100;
             _waveContainer.DampingCoefficient = .98f;
-            _waveContainer.Frequency = .001f;
+            _waveContainer.Frequency = 1f;
 
-            _waveContainer.WaveGeneratorMax = 20;
+            _waveContainer.WaveGeneratorMax = 6;
             _waveContainer.WaveGeneratorMin = 5;
-            _waveContainer.WaveGeneratorStep = 5;
+            _waveContainer.WaveGeneratorStep = 0.2f;
 
             _waveContainer.Initialize();
 
@@ -64,9 +64,10 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(Framework.Settings settings)
         {
             //DebugView.DrawAABB(ref _aabbContainer.AABB, Color.Wheat);
-            DebugView.DrawAABB(ref _waveContainer._aabb, Color.Wheat);
-
-            //DebugView.DrawWaveContainer(_waveContainer);
+            //DebugView.DrawAABB(ref _waveContainer._aabb, Color.Wheat);
+            _waveContainer.Update(settings.Hz);
+            DebugView.DrawWaveContainer(_waveContainer);
+            base.Update(settings);
         }
 
         private AABBFluidContainer _aabbContainer;

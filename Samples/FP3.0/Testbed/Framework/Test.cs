@@ -75,9 +75,9 @@ namespace FarseerPhysics.TestBed.Framework
             DrawJoints = 1;
             EnableWarmStarting = 1;
             EnableContinuous = 1;
-            DrawAABBs = 1;
-            DrawStats = 1;
-            DrawCOMs = 1;
+            //DrawAABBs = 1;
+            //DrawStats = 1;
+            //DrawCOMs = 1;
         }
     }
 
