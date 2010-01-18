@@ -157,6 +157,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 for (int k = 0; k < localVertices.Count; k++)
                 {
                     _vert = fixture.Body.GetWorldPoint(localVertices[k]);
+                    //_vert = localVertices[k];
                     if (_fluidContainer.Contains(ref _vert))
                     {
                         _vertices.Add(_vert);
