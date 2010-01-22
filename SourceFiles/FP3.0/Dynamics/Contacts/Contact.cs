@@ -113,12 +113,13 @@ namespace FarseerPhysics
         public void GetWorldManifold(out WorldManifold worldManifold)
         {
             Body bodyA = FixtureA.Body;
+            Body bodyB = FixtureA.Body;
             Shape shapeA = FixtureA.Shape;
             Shape shapeB = FixtureB.Shape;
 
             Transform xfA, xfB;
             bodyA.GetTransform(out xfA);
-            bodyA.GetTransform(out xfB);
+            bodyB.GetTransform(out xfB);
 
             worldManifold = new WorldManifold(ref Manifold, ref xfA, shapeA.Radius, ref xfB, shapeB.Radius);
         }
