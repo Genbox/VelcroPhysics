@@ -7,5 +7,6 @@ namespace FarseerGames.FarseerPhysics.Interfaces
     {
         bool Intersect(ref AABB aabb);
         bool Contains(ref Vector2 point);
+        void Update(float dt);
     }
 }
