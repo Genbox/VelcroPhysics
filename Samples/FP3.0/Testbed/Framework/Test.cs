@@ -27,7 +27,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Framework
 {
-    public class Rand
+    public static class Rand
     {
         public static Random Random = new Random(0x2eed2eed);
 
@@ -98,14 +98,14 @@ namespace FarseerPhysics.TestBed.Framework
 
     public class Test
     {
-        private const int k_maxContactPoints = 2048;
+        private const int k_MaxContactPoints = 2048;
         internal int TextLine;
         internal World World;
         internal DebugViewXNA.DebugViewXNA DebugView;
         private Body _groundBody;
         private MouseJoint _mouseJoint;
         internal int PointCount;
-        internal ContactPoint[] Points = new ContactPoint[k_maxContactPoints];
+        internal ContactPoint[] Points = new ContactPoint[k_MaxContactPoints];
 
         protected Test()
         {
@@ -122,7 +122,7 @@ namespace FarseerPhysics.TestBed.Framework
             _groundBody = World.CreateBody();
         }
 
-        public Game1 GameInstance { get; set; }
+        public Game1 GameInstance { protected get; set; }
 
         public virtual void Initialize(){}
 
@@ -252,7 +252,7 @@ namespace FarseerPhysics.TestBed.Framework
 
             if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
             {
-                MouseUp(position);
+                MouseUp();
             }
             else if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
             {
@@ -275,11 +275,11 @@ namespace FarseerPhysics.TestBed.Framework
             aabb.LowerBound = p - d;
             aabb.UpperBound = p + d;
 
-            Fixture _fixture = null;
+            Fixture myFixture = null;
 
             // Query the world for overlapping shapes.
             World.QueryAABB(
-                (fixture) =>
+                fixture =>
                 {
                     Body body = fixture.Body;
                     if (body.BodyType == BodyType.Dynamic)
@@ -287,7 +287,7 @@ namespace FarseerPhysics.TestBed.Framework
                         bool inside = fixture.TestPoint(p);
                         if (inside)
                         {
-                            _fixture = fixture;
+                            myFixture = fixture;
 
                             // We are done, terminate the query.
                             return false;
@@ -298,9 +298,9 @@ namespace FarseerPhysics.TestBed.Framework
                     return true;
                 }, ref aabb);
 
-            if (_fixture != null)
+            if (myFixture != null)
             {
-                Body body = _fixture.Body;
+                Body body = myFixture.Body;
                 _mouseJoint = new MouseJoint(_groundBody, body, p);
                 _mouseJoint.MaxForce = 1000.0f * body.Mass;
                 World.CreateJoint(_mouseJoint);
@@ -308,7 +308,7 @@ namespace FarseerPhysics.TestBed.Framework
             }
         }
 
-        private void MouseUp(Vector2 p)
+        private void MouseUp()
         {
             if (_mouseJoint != null)
             {
@@ -358,7 +358,7 @@ namespace FarseerPhysics.TestBed.Framework
             WorldManifold worldManifold;
             contact.GetWorldManifold(out worldManifold);
 
-            for (int i = 0; i < manifold.PointCount && PointCount < k_maxContactPoints; ++i)
+            for (int i = 0; i < manifold.PointCount && PointCount < k_MaxContactPoints; ++i)
             {
                 if (fixtureA == null)
                 {

@@ -34,7 +34,7 @@ namespace FarseerPhysics.TestBed
     /// </summary>
     public class Game1 : Game
     {
-        private const float SettingsHz = 60.0f;
+        private const float k_SettingsHz = 60.0f;
         private IEventTrace _et;
         private TestEntry _entry;
         private GraphicsDeviceManager _graphics;
@@ -135,13 +135,13 @@ namespace FarseerPhysics.TestBed
             GamePadState newGamePad = GamePad.GetState(PlayerIndex.One);
 
             // Press 'z' to zoom out.
-            if (newKeyboardState.IsKeyDown(Keys.Z) && _oldKeyboardState.IsKeyUp(Keys.Z))
+            if (newKeyboardState.IsKeyDown(Keys.Z))
             {
                 _viewZoom = Math.Min(1.1f * _viewZoom, 20.0f);
                 Resize(_width, _height);
             }
             // Press 'x' to zoom in.
-            else if (newKeyboardState.IsKeyDown(Keys.X) && _oldKeyboardState.IsKeyUp(Keys.X))
+            else if (newKeyboardState.IsKeyDown(Keys.X))
             {
                 _viewZoom = Math.Max(0.9f * _viewZoom, 0.02f);
                 Resize(_width, _height);
@@ -177,25 +177,25 @@ namespace FarseerPhysics.TestBed
                 }
             }
             // Press left to pan left.
-            else if (newKeyboardState.IsKeyDown(Keys.Left) && _oldKeyboardState.IsKeyUp(Keys.Left))
+            else if (newKeyboardState.IsKeyDown(Keys.Left))
             {
                 _viewCenter.X -= 0.5f;
                 Resize(_width, _height);
             }
             // Press right to pan right.
-            else if (newKeyboardState.IsKeyDown(Keys.Right) && _oldKeyboardState.IsKeyUp(Keys.Right))
+            else if (newKeyboardState.IsKeyDown(Keys.Right))
             {
                 _viewCenter.X += 0.5f;
                 Resize(_width, _height);
             }
             // Press down to pan down.
-            else if (newKeyboardState.IsKeyDown(Keys.Down) && _oldKeyboardState.IsKeyUp(Keys.Down))
+            else if (newKeyboardState.IsKeyDown(Keys.Down))
             {
                 _viewCenter.Y -= 0.5f;
                 Resize(_width, _height);
             }
             // Press up to pan up.
-            else if (newKeyboardState.IsKeyDown(Keys.Up) && _oldKeyboardState.IsKeyUp(Keys.Up))
+            else if (newKeyboardState.IsKeyDown(Keys.Up))
             {
                 _viewCenter.Y += 0.5f;
                 Resize(_width, _height);
@@ -246,7 +246,7 @@ namespace FarseerPhysics.TestBed
             GraphicsDevice.Clear(Color.Black);
 
             _test.SetTextLine(30);
-            _settings.Hz = SettingsHz;
+            _settings.Hz = k_SettingsHz;
 
             if (_traceEnabled)
                 _et.BeginTrace(TraceEvents.PhysicsEventId);
