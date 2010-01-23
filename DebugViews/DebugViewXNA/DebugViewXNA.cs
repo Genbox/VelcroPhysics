@@ -119,11 +119,11 @@ namespace FarseerPhysics.DebugViewXNA
         }
 
         //TODO: Visualize controllers in general
-        public void DrawWaveContainer(WaveController waveController)
+        public void DrawWaveContainer(WaveContainer waveContainer)
         {
-            for (int i = 0; i < waveController.NodeCount; i++)
+            for (int i = 0; i < waveContainer.NodeCount; i++)
             {
-                DrawCircle(new Vector2(waveController.XPosition[i], waveController.Position.Y + waveController.Height+ waveController.CurrentWave[i]), 0.1f, Color.Red);
+                DrawCircle(new Vector2(waveContainer.XPosition[i], waveContainer.Position.Y + waveContainer.Height+ waveContainer.YPosition[i]), 0.1f, Color.Red);
             }
         }
 

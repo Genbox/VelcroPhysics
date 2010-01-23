@@ -24,11 +24,11 @@ namespace FarseerGames.FarseerPhysics.Controllers
     /// For a very simple example of a very simple fluid container. See the <see cref="AABBFluidContainer"/>.  This represents a fluid container
     /// in the shape of an AABB.
     /// 
-    /// More complex fluid containers are where things get interesting.  The <see cref="WaveController"/> object is an example of a complex
-    /// fluid container.  The <see cref="WaveController"/> simulates wave motion. It's driven by an algorithm (not physics) which dynamically 
-    /// alters a polygonal shape to mimic waves.  Where it gets interesting is the <see cref="WaveController"/> also implements <see cref="IFluidContainer"/>. This allows 
+    /// More complex fluid containers are where things get interesting.  The <see cref="WaveContainer"/> object is an example of a complex
+    /// fluid container.  The <see cref="WaveContainer"/> simulates wave motion. It's driven by an algorithm (not physics) which dynamically 
+    /// alters a polygonal shape to mimic waves.  Where it gets interesting is the <see cref="WaveContainer"/> also implements <see cref="IFluidContainer"/>. This allows 
     /// it to be used in conjunction with the FluidDragController.  Anything that falls into the dynamically changing fluid container
-    /// defined by the <see cref="WaveController"/> will have fluid physics applied to it.
+    /// defined by the <see cref="WaveContainer"/> will have fluid physics applied to it.
     /// 
     /// </summary>
     public sealed class FluidDragController : Controller
@@ -137,6 +137,8 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         public override void Update(float dt)
         {
+            _fluidContainer.Update(dt);
+
             for (int i = 0; i < _geomList.Count; i++)
             {
                 Fixture fixture = _geomList[i];
@@ -170,12 +172,11 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
                 _area = _vertices.GetArea();
 
-                if (_area < .00001)
+                if (_area < .0001)
                     continue;
 
                 _centroid = _vertices.GetCentroid();
 
-#if true
                 //Calculate buoyancy force
                 _buoyancyForce = -_gravity * (_area * fixture.Shape.Density) * Density;
 
@@ -204,51 +205,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 //Apply rotational drag
                 body.ApplyTorque(_rotationalDragTorque);
 
-#else
-                if (body.Awake == false)
-                {
-                    //Buoyancy force is just a function of position,
-                    //so unlike most forces, it is safe to ignore sleeping bodes
-                    continue;
-                }
-                Vector2 areac = Vector2.Zero;
-                Vector2 massc = Vector2.Zero;
-                float area = 0.0f;
-                float mass = 0.0f;
-                //for(Fixture fixture1=body.FixtureList;fixture1 != null;fixture1=fixture.NextFixture){
-                Vector2 sc = Vector2.Zero;
-                area += _area;
-                areac.X += _area * sc.X;
-                areac.Y += _area * sc.Y;
-
-                mass += _area * fixture.Shape.Density;
-                massc.X += _area * sc.X * _area * fixture.Shape.Density;
-                massc.Y += _area * sc.Y * _area * fixture.Shape.Density;
-                //}
-
-                areac.X /= area;
-                areac.Y /= area;
-                massc.X /= mass;
-                massc.Y /= mass;
-
-                //if(area<Number.MIN_VALUE)
-                //continue;
-
-                //Buoyancy
-
-                Vector2 buoyancyForce = _gravity * -1;
-                buoyancyForce *= Density * area;
-                body.ApplyForce(buoyancyForce, massc);
-
-                //Linear drag
-                Vector2 dragForce = body.GetLinearVelocityFromWorldPoint(areac);
-                //dragForce -= velocity;
-                dragForce *= -LinearDragCoefficient * area;
-                body.ApplyForce(dragForce, areac);
-                //Angular drag
-                //TODO: Something that makes more physical sense?
-                body.ApplyTorque(-body.Inertia / body.Mass * area * body.AngularVelocity * AngularDragCoefficient);
-#endif
                 if (_geomInFluidList[_geomList[i]] == false)
                 {
                     //The geometry is now in the water. Fire the Entry event

@@ -24,21 +24,8 @@ namespace FarseerPhysics.TestBed.Tests
             ground.CreateFixture(shape);
 
             //Buoyancy controller
-            _aabbContainer = new AABBFluidContainer(40, 10, new Vector2(-20, 0));
-
-            _waveContainer = new WaveController();
-            _waveContainer.Position = new Vector2(-20, 0);
-            _waveContainer.Width = 40;
-            _waveContainer.Height = 10;
-            _waveContainer.NodeCount = 100;
-            _waveContainer.DampingCoefficient = 0.98f;
-            _waveContainer.Frequency = .001f;
-
-            _waveContainer.WaveGeneratorMax = 4;
-            _waveContainer.WaveGeneratorMin = 2;
-            _waveContainer.WaveGeneratorStep = 0.2f;
-
-            _waveContainer.Initialize();
+            _aabbContainer = new AABBFluidContainer(new Vector2(-20, 0), 40, 10);
+            _waveContainer = new WaveContainer(new Vector2(20, 0), 40, 10);
 
             FluidDragController buoyancyController = new FluidDragController(_waveContainer, 4f, 0.98f, 0.2f, World.Gravity);
             buoyancyController.Entry += EntryEventHandler;
@@ -58,7 +45,6 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             World.AddController(buoyancyController);
-            World.AddController(_waveContainer);
         }
 
         public override void Update(Framework.Settings settings)
@@ -69,17 +55,17 @@ namespace FarseerPhysics.TestBed.Tests
 
         public void EntryEventHandler(Fixture geom, Vertices verts)
         {
-            for (int i = 0; i < verts.Count; i++)
-            {
-                Vector2 point = verts[i];
-                Vector2 vel = geom.Body.GetLinearVelocityFromWorldPoint(point);
+            //for (int i = 0; i < verts.Count; i++)
+            //{
+            //    Vector2 point = verts[i];
+            //    Vector2 vel = geom.Body.GetLinearVelocityFromWorldPoint(point);
 
-                _waveContainer.Disturb(verts[i].X, (vel.Y * geom.Body.Mass) / (100.0f * geom.Body.Mass));
-            }
+            //    _waveContainer.Disturb(verts[i].X, (vel.Y * geom.Body.Mass) / (100.0f * geom.Body.Mass));
+            //}
         }
 
         private AABBFluidContainer _aabbContainer;
-        private WaveController _waveContainer;
+        private WaveContainer _waveContainer;
 
         public static Test Create()
         {
