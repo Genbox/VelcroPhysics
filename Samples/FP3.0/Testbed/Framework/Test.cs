@@ -245,6 +245,10 @@ namespace FarseerPhysics.TestBed.Framework
         {
         }
 
+        public virtual void Gamepad(GamePadState state, GamePadState oldState)
+        {
+        }
+
         public virtual void Mouse(MouseState state, MouseState oldState)
         {
             Vector2 position;// = new Vector2(state.X,state.Y );

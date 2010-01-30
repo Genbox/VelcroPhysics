@@ -34,16 +34,6 @@ namespace FarseerPhysics.TestBed.Tests
 
         private RayCastTest()
         {
-            // Ground body
-            {
-
-                Body ground = World.CreateBody();
-
-                PolygonShape shape = new PolygonShape(0);
-                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
-            }
-
             {
                 Vertices vertices = new Vertices(3);
                 vertices.Add(new Vector2(-0.5f, 0.0f));

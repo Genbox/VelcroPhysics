@@ -108,6 +108,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\ControllerTest.cs" />
+    <Compile Include="Tests\CuttingTest.cs" />
     <Compile Include="Tests\DistanceTest.cs">
       <SubType>Code</SubType>
     </Compile>

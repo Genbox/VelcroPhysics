@@ -230,6 +230,8 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\WorldCallbacks.cs">
       <Link>Dynamics\WorldCallbacks.cs</Link>
     </Compile>
+    <Compile Include="Common\PolygonManipulation\BooleanTools.cs" />
+    <Compile Include="Common\PolygonManipulation\CuttingTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
