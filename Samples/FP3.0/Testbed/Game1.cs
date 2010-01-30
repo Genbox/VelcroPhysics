@@ -133,6 +133,7 @@ namespace FarseerPhysics.TestBed
 
             KeyboardState newKeyboardState = Keyboard.GetState();
             GamePadState newGamePad = GamePad.GetState(PlayerIndex.One);
+            MouseState newMouseState = Mouse.GetState();
 
             // Press 'z' to zoom out.
             if (newKeyboardState.IsKeyDown(Keys.Z))
@@ -219,10 +220,11 @@ namespace FarseerPhysics.TestBed
                 }
             }
 
-            MouseState newMouseState = Mouse.GetState();
-
             if (_test != null)
                 _test.Mouse(newMouseState, _oldMouseState);
+
+            if (_test != null && newGamePad.IsConnected)
+                _test.Gamepad(newGamePad, _oldGamePad);
 
             base.Update(gameTime);
 

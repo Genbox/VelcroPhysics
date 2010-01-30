@@ -28,6 +28,9 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {       
+                new TestEntry {Name = "Cutting of polygons", CreateFcn = CuttingTest.Create},
+                new TestEntry {Name = "Ray-Cast", CreateFcn = RayCastTest.Create},
+
                 new TestEntry {Name = "Buoyancy controller", CreateFcn = BuoyancyTest.Create},
                 new TestEntry {Name = "Controllers", CreateFcn = ControllerTest.Create},
                 new TestEntry {Name = "Boolean polygon", CreateFcn = BooleanPolygonTest.Create},
@@ -64,7 +67,6 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Vertical Stack", CreateFcn = VerticalStackTest.Create},
                 new TestEntry {Name = "Confined", CreateFcn = ConfinedTest.Create},
                 new TestEntry {Name = "Breakable", CreateFcn = BreakableTest.Create},
-                new TestEntry {Name = "Ray-Cast", CreateFcn = RayCastTest.Create},
                 new TestEntry {Name = "One-Sided Platform", CreateFcn = OneSidedPlatformTest.Create},
                 new TestEntry {Name = null, CreateFcn = null}
             };

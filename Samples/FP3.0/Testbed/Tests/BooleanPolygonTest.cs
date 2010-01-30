@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FarseerPhysics.Common.Boolean;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -151,7 +152,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_left != null && _right == null)
                 {
-                    _left = PolygonTools.Simplify(_left);
+                    _left = BooleanTools.Simplify(_left);
                 }
             }
 
@@ -193,7 +194,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Do the union
             PolyUnionError error;
-            Vertices vertices = PolygonTools.Union(_left, _right, out error);
+            Vertices vertices = BooleanTools.Union(_left, _right, out error);
 
             // Check for errors.
             switch (error)
@@ -219,7 +220,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Do the subtraction.
             PolyUnionError error;
-            Vertices subtract = PolygonTools.Subtract(_left, _right, out error);
+            Vertices subtract = BooleanTools.Subtract(_left, _right, out error);
 
             // Check for errors
             switch (error)

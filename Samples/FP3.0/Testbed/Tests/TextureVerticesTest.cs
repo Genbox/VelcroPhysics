@@ -1,4 +1,5 @@
 ﻿using System;
+using FarseerPhysics.Common.Boolean;
 using FarseerPhysics.Common.Decomposition;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
@@ -41,7 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             _vertices = verts.ToArray();
 
-            verts = PolygonTools.Simplify(verts);
+            verts = BooleanTools.Simplify(verts);
 
             list = BayazitDecomposer.ConvexPartition(verts);
             //list = EarclipDecomposer.ConvexPartition(verts, 10000);
