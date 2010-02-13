@@ -70,25 +70,25 @@ namespace FarseerPhysics.TestBed.Tests
 
                 _bodies[3].CreateFixture(shape);
 
-                FixedDistanceJoint dj = new FixedDistanceJoint(_bodies[0], _bodies[0].Position + new Vector2(-0.5f, -0.5f), new Vector2(-10.0f, 0.0f));
+                FixedDistanceJoint dj = new FixedDistanceJoint(_bodies[0], new Vector2(-0.5f, -0.5f), new Vector2(-10.0f, 0.0f));
                 _joints[0] = dj;
                 dj.Frequency = 4.0f;
                 dj.DampingRatio = 0.5f;
                 World.CreateJoint(_joints[0]);
 
-                FixedDistanceJoint dj1 = new FixedDistanceJoint(_bodies[1], _bodies[1].Position + new Vector2(0.5f, -0.5f), new Vector2(10.0f, 0.0f));
+                FixedDistanceJoint dj1 = new FixedDistanceJoint(_bodies[1], new Vector2(0.5f, -0.5f), new Vector2(10.0f, 0.0f));
                 _joints[1] = dj1;
                 dj1.Frequency = 4.0f;
                 dj1.DampingRatio = 0.5f;
                 World.CreateJoint(_joints[1]);
 
-                FixedDistanceJoint dj2 = new FixedDistanceJoint(_bodies[2], _bodies[2].Position + new Vector2(0.5f, 0.5f), new Vector2(10.0f, 20.0f));
+                FixedDistanceJoint dj2 = new FixedDistanceJoint(_bodies[2], new Vector2(0.5f, 0.5f), new Vector2(10.0f, 20.0f));
                 _joints[2] = dj2;
                 dj2.Frequency = 4.0f;
                 dj2.DampingRatio = 0.5f;
                 World.CreateJoint(_joints[2]);
 
-                FixedDistanceJoint dj3 = new FixedDistanceJoint(_bodies[3], _bodies[3].Position + new Vector2(-0.5f, 0.5f), new Vector2(-10.0f, 20.0f));
+                FixedDistanceJoint dj3 = new FixedDistanceJoint(_bodies[3], new Vector2(-0.5f, 0.5f), new Vector2(-10.0f, 20.0f));
                 _joints[3] = dj3;
                 dj3.Frequency = 4.0f;
                 dj3.DampingRatio = 0.5f;

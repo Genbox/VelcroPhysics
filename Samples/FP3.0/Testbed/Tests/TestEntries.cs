@@ -27,17 +27,18 @@ namespace FarseerPhysics.TestBed.Tests
     public static class TestEntries
     {
         public static TestEntry[] g_testEntries =
-            {       
+            {     
+                new TestEntry {Name = "Gears", CreateFcn = GearsTest.Create},
+                new TestEntry {Name = "Line Joint", CreateFcn = LineJointTest.Create},
+                new TestEntry {Name = "Web", CreateFcn = WebTest.Create},
                 new TestEntry {Name = "Cutting of polygons", CreateFcn = CuttingTest.Create},
                 new TestEntry {Name = "Ray-Cast", CreateFcn = RayCastTest.Create},
-
                 new TestEntry {Name = "Buoyancy controller", CreateFcn = BuoyancyTest.Create},
                 new TestEntry {Name = "Controllers", CreateFcn = ControllerTest.Create},
                 new TestEntry {Name = "Boolean polygon", CreateFcn = BooleanPolygonTest.Create},
                 new TestEntry {Name = "Texture to Vertices", CreateFcn = TextureVerticesTest.Create},
                 new TestEntry {Name = "Pyramid", CreateFcn = PyramidTest.Create},
                 new TestEntry {Name = "Collision Filtering", CreateFcn = CollisionFilteringTest.Create},
-                new TestEntry {Name = "Web", CreateFcn = WebTest.Create},
                 new TestEntry {Name = "Body Types", CreateFcn = BodyTypesTest.Create},
                 new TestEntry {Name = "Theo Jansen's Walker", CreateFcn = TheoJansenTest.Create},
                 new TestEntry {Name = "Shape Editing", CreateFcn = ShapeEditingTest.Create},
@@ -55,12 +56,9 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Distance Test", CreateFcn = DistanceTest.Create},
                 new TestEntry {Name = "Dominos", CreateFcn = DominosTest.Create},
                 //new TestEntry {Name = "Dynamic Tree", CreateFcn = DynamicTreeTest.Create},
-                new TestEntry {Name = "Gears", CreateFcn = GearsTest.Create},
-                new TestEntry {Name = "Line Joint", CreateFcn = LineJointTest.Create},
                 new TestEntry {Name = "PolyCollision", CreateFcn = PolyCollisionTest.Create},
                 new TestEntry {Name = "Pulleys", CreateFcn = PulleysTest.Create},
                 new TestEntry {Name = "Revolute", CreateFcn = RevoluteTest.Create},
-                new TestEntry {Name = "FixedRevolute", CreateFcn = FixedRevoluteTest.Create},
                 new TestEntry {Name = "Slider Crank", CreateFcn = SliderCrankTest.Create},
                 new TestEntry {Name = "Time of Impact", CreateFcn = TimeOfImpactTest.Create},
                 new TestEntry {Name = "Varying Friction", CreateFcn = VaryingFrictionTest.Create},

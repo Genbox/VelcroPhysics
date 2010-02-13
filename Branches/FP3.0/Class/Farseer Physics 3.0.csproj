@@ -154,6 +154,18 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\DistanceJoint.cs">
       <Link>Dynamics\Joints\DistanceJoint.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\FixedDistanceJoint.cs">
+      <Link>Dynamics\Joints\FixedDistanceJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\FixedLineJoint.cs">
+      <Link>Dynamics\Joints\FixedLineJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\FixedPrismaticJoint.cs">
+      <Link>Dynamics\Joints\FixedPrismaticJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\FixedRevoluteJoint.cs">
+      <Link>Dynamics\Joints\FixedRevoluteJoint.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\FrictionJoint.cs">
       <Link>Dynamics\Joints\FrictionJoint.cs</Link>
     </Compile>
