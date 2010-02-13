@@ -22,6 +22,7 @@
 
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -49,14 +50,16 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Vector2 axis = new Vector2(2.0f, 1.0f);
                 axis.Normalize();
-                LineJoint jd = new LineJoint(ground, body, new Vector2(0.0f, 8.5f), axis);
-                jd.MotorSpeed = 0.0f;
+                //LineJoint jd = new LineJoint(ground, body, new Vector2(0.0f, 8.5f),new Vector2(0.0f, 1.5f), axis);
+                FixedLineJoint jd = new FixedLineJoint(body, /*ground, */new Vector2(0.0f, 8.5f), axis);
+                jd.MotorSpeed = 100.0f;
                 jd.MaxMotorForce = 100.0f;
-                jd.MotorEnabled = true;
+                jd.MotorEnabled = false;
                 jd.LowerLimit = -4.0f;
                 jd.UpperLimit = 4.0f;
                 jd.EnableLimit = true;
                 World.CreateJoint(jd);
+                _jd = jd;
             }
         }
 
@@ -64,5 +67,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new LineJointTest();
         }
+
+        FixedLineJoint _jd;
+        //LineJoint _jd;
     }
 }

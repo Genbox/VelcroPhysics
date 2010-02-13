@@ -133,11 +133,22 @@ namespace FarseerPhysics.DebugViewXNA
             Body b2 = joint.BodyB;
             Transform xf1, xf2;
             b1.GetTransform(out xf1);
-            b2.GetTransform(out xf2);
+            
+            Vector2 x2 = new Vector2();
+            Vector2 p2 = new Vector2();
+
+            // WIP David
+            if (!joint.IsFixedType())
+            {
+                b2.GetTransform(out xf2);
+                x2 = xf2.Position;
+                
+            }
+            p2 = joint.WorldAnchorB;
+
             Vector2 x1 = xf1.Position;
-            Vector2 x2 = xf2.Position;
+            
             Vector2 p1 = joint.WorldAnchorA;
-            Vector2 p2 = joint.WorldAnchorB;
 
             Color color = new Color(0.5f, 0.8f, 0.8f);
 
@@ -161,7 +172,18 @@ namespace FarseerPhysics.DebugViewXNA
                 case JointType.Mouse:
                     // don't draw this
                     break;
-
+                // WIP David
+                case JointType.FixedRevolute:
+                    DrawSegment(x1, p1, color);
+                    break;
+                case JointType.FixedLine:
+                    DrawSegment(x1, p1, color);
+                    DrawSegment(p1, p2, color);
+                    break;
+                case JointType.FixedDistance:
+                    DrawSegment(x1, p1, color);
+                    DrawSegment(p1, p2, color);
+                    break;
                 default:
                     DrawSegment(x1, p1, color);
                     DrawSegment(p1, p2, color);
