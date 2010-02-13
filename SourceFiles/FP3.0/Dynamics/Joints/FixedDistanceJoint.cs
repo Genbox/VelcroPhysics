@@ -63,20 +63,17 @@ namespace FarseerPhysics
         /// @warning Do not use a zero or short length.
         /// </summary>
         /// <param name="bodyA"></param>
-        /// <param name="bodyB"></param>
-        /// <param name="anchor1"></param>
-        /// <param name="anchor2"></param>
-        public FixedDistanceJoint(Body bodyA,Vector2 anchor1, Vector2 anchor2)
+        /// <param name="bodyAnchor"></param>
+        /// <param name="worldAnchor"></param>
+        public FixedDistanceJoint(Body bodyA, Vector2 bodyAnchor, Vector2 worldAnchor)
             : base(bodyA)
         {
             JointType = JointType.FixedDistance;
 
-            LocalAnchorA = BodyA.GetLocalPoint(anchor1);
-            LocalAnchorB = anchor2;// BodyB.GetLocalPoint(anchor2);
+            LocalAnchorA = bodyAnchor;
+            LocalAnchorB = worldAnchor;
 
-            //LocalAnchorA = anchor1;
-            //LocalAnchorB = anchor2;
-
+            //Calculate the length
             Vector2 d = WorldAnchorB - WorldAnchorA;
             Length = d.Length();
         }
@@ -103,7 +100,7 @@ namespace FarseerPhysics
 
         public override sealed Vector2 WorldAnchorB
         {
-            get { return LocalAnchorB;/*BodyB.GetWorldPoint(LocalAnchorB);*/ }
+            get { return LocalAnchorB; }
         }
 
         /// <summary>
@@ -116,13 +113,12 @@ namespace FarseerPhysics
         /// </summary>
         public Vector2 LocalAnchorB { get; set; }
 
-        public override Vector2 GetReactionForce(float inv_dt)
+        public override Vector2 GetReactionForce(float invDt)
         {
-            Vector2 F = (inv_dt * _impulse) * _u;
-            return F;
+            return (invDt * _impulse) * _u;
         }
 
-        public override float GetReactionTorque(float inv_dt)
+        public override float GetReactionTorque(float invDt)
         {
             return 0.0f;
         }
@@ -130,16 +126,14 @@ namespace FarseerPhysics
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
             Body b1 = BodyA;
-            //Body b2 = BodyB;
 
-            Transform xf1;//, xf2;
+            Transform xf1;
             b1.GetTransform(out xf1);
-            //b2.GetTransform(out xf2);
 
             // Compute the effective mass matrix.
             Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-            Vector2 r2 = LocalAnchorB;// MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
-            _u = /*b2._sweep.Center +*/ r2 - b1._sweep.Center - r1;
+            Vector2 r2 = LocalAnchorB;
+            _u = r2 - b1._sweep.Center - r1;
 
             // Handle singularity.
             float length = _u.Length();
@@ -154,7 +148,7 @@ namespace FarseerPhysics
 
             float cr1u = MathUtils.Cross(r1, _u);
             float cr2u = MathUtils.Cross(r2, _u);
-            float invMass = b1._invMass + b1._invI * cr1u * cr1u + 0/*b2._invMass + b2._invI*/ * cr2u * cr2u;
+            float invMass = b1._invMass + b1._invI * cr1u * cr1u + 0 * cr2u * cr2u;
             Debug.Assert(invMass > Settings.Epsilon);
             _mass = invMass != 0.0f ? 1.0f / invMass : 0.0f;
 
@@ -188,8 +182,6 @@ namespace FarseerPhysics
                 Vector2 P = _impulse * _u;
                 b1._linearVelocity -= b1._invMass * P;
                 b1._angularVelocity -= b1._invI * MathUtils.Cross(r1, P);
-                //b2._linearVelocity += b2._invMass * P;
-                //b2._angularVelocity += b2._invI * MathUtils.Cross(r2, P);
             }
             else
             {
@@ -200,18 +192,15 @@ namespace FarseerPhysics
         internal override void SolveVelocityConstraints(ref TimeStep step)
         {
             Body b1 = BodyA;
-            //Body b2 = BodyB;
 
-            Transform xf1;//, xf2;
+            Transform xf1;
             b1.GetTransform(out xf1);
-            //b2.GetTransform(out xf2);
 
             Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-            Vector2 r2 = LocalAnchorB;// MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
             // Cdot = dot(u, v + cross(w, r))
             Vector2 v1 = b1._linearVelocity + MathUtils.Cross(b1._angularVelocity, r1);
-            Vector2 v2 = new Vector2(0, 0);// b2._linearVelocity + MathUtils.Cross(b2._angularVelocity, r2);
+            Vector2 v2 = new Vector2(0, 0);
             float Cdot = Vector2.Dot(_u, v2 - v1);
 
             float impulse = -_mass * (Cdot + _bias + _gamma * _impulse);
@@ -220,8 +209,6 @@ namespace FarseerPhysics
             Vector2 P = impulse * _u;
             b1._linearVelocity -= b1._invMass * P;
             b1._angularVelocity -= b1._invI * MathUtils.Cross(r1, P);
-            //b2._linearVelocity += b2._invMass * P;
-            //b2._angularVelocity += b2._invI * MathUtils.Cross(r2, P);
         }
 
         internal override bool SolvePositionConstraints()
@@ -233,16 +220,14 @@ namespace FarseerPhysics
             }
 
             Body b1 = BodyA;
-            //Body b2 = BodyB;
 
-            Transform xf1;//, xf2;
+            Transform xf1;
             b1.GetTransform(out xf1);
-            //b2.GetTransform(out xf2);
 
             Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-            Vector2 r2 = LocalAnchorB;// MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+            Vector2 r2 = LocalAnchorB;
 
-            Vector2 d = /*b2._sweep.Center +*/ r2 - b1._sweep.Center - r1;
+            Vector2 d = r2 - b1._sweep.Center - r1;
 
             float length = d.Length();
 
@@ -259,11 +244,8 @@ namespace FarseerPhysics
 
             b1._sweep.Center -= b1._invMass * P;
             b1._sweep.Angle -= b1._invI * MathUtils.Cross(r1, P);
-            //b2._sweep.Center += b2._invMass * P;
-            //b2._sweep.Angle += b2._invI * MathUtils.Cross(r2, P);
 
             b1.SynchronizeTransform();
-            //b2.SynchronizeTransform();
 
             return Math.Abs(C) < Settings.LinearSlop;
         }
