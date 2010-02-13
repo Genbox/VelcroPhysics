@@ -48,17 +48,17 @@ namespace FarseerPhysics.TestBed.Tests
 
                 body.CreateFixture(shape);
 
-                const float w = 100.0f;
-                body.AngularVelocity = w;
-                body.LinearVelocity = new Vector2(-8.0f * w, 0.0f);
+                //const float w = 100.0f;
+                //body.AngularVelocity = w;
+                //body.LinearVelocity = new Vector2(-8.0f * w, 0.0f);
 
-                _joint = new RevoluteJoint(ground, body, new Vector2(0.0f, 12.0f));
+                _joint = new RevoluteJoint(body,ground,new Vector2(0.0f, 10.0f));
                 _joint.MotorSpeed = 1.0f * Settings.Pi;
                 _joint.MaxMotorTorque = 10000.0f;
                 _joint.MotorEnabled = false;
                 _joint.LowerLimit = -0.25f * Settings.Pi;
                 _joint.UpperLimit = 0.5f * Settings.Pi;
-                _joint.LimitEnabled = true;
+                _joint.LimitEnabled = false;
                 _joint.CollideConnected = true;
 
                 World.CreateJoint(_joint);
@@ -69,12 +69,12 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (state.IsKeyDown(Keys.L) && oldState.IsKeyUp(Keys.L))
             {
-                _joint.LimitEnabled = _joint.LimitEnabled;
+                _joint.LimitEnabled = !_joint.LimitEnabled;
             }
 
             if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
             {
-                _joint.MotorEnabled = false;
+                _joint.MotorEnabled = !_joint.MotorEnabled;
             }
         }
 
