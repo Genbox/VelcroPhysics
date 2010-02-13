@@ -327,6 +327,7 @@ namespace FarseerPhysics
             // Connect to the bodies' doubly linked lists.
             joint._edgeA.Joint = joint;
             joint._edgeA.Other = joint.BodyB;
+            
             joint._edgeA.Prev = null;
             joint._edgeA.Next = joint.BodyA._jointList;
 
@@ -335,33 +336,41 @@ namespace FarseerPhysics
 
             joint.BodyA._jointList = joint._edgeA;
 
-            joint._edgeB.Joint = joint;
-            joint._edgeB.Other = joint.BodyA;
-            joint._edgeB.Prev = null;
-            joint._edgeB.Next = joint.BodyB._jointList;
-
-            if (joint.BodyB._jointList != null)
-                joint.BodyB._jointList.Prev = joint._edgeB;
-
-            joint.BodyB._jointList = joint._edgeB;
-
-            Body bodyA = joint.BodyA;
-            Body bodyB = joint.BodyB;
-
-            // If the joint prevents collisions, then flag any contacts for filtering.
-            if (joint.CollideConnected == false)
+            // WIP David
+            if (!joint.IsFixedType())
             {
-                ContactEdge edge = bodyB.ContactList;
-                while (edge != null)
-                {
-                    if (edge.Other == bodyA)
-                    {
-                        // Flag the contact for filtering at the next time step (where either
-                        // body is awake).
-                        edge.Contact.FlagForFiltering();
-                    }
+                joint._edgeB.Joint = joint;
+                joint._edgeB.Other = joint.BodyA;
+                joint._edgeB.Prev = null;
+                joint._edgeB.Next = joint.BodyB._jointList;
 
-                    edge = edge.Next;
+                if (joint.BodyB._jointList != null)
+                    joint.BodyB._jointList.Prev = joint._edgeB;
+
+                joint.BodyB._jointList = joint._edgeB;
+            }
+
+            // WIP David
+            if (!joint.IsFixedType())
+            {
+                Body bodyA = joint.BodyA;
+                Body bodyB = joint.BodyB;
+
+                // If the joint prevents collisions, then flag any contacts for filtering.
+                if (joint.CollideConnected == false)
+                {
+                    ContactEdge edge = bodyB.ContactList;
+                    while (edge != null)
+                    {
+                        if (edge.Other == bodyA)
+                        {
+                            // Flag the contact for filtering at the next time step (where either
+                            // body is awake).
+                            edge.Contact.FlagForFiltering();
+                        }
+
+                        edge = edge.Next;
+                    }
                 }
             }
 
@@ -405,7 +414,12 @@ namespace FarseerPhysics
 
             // Wake up connected bodies.
             bodyA.Awake = true;
-            bodyB.Awake = true;
+
+            // WIP David
+            if (!j.IsFixedType())
+            {
+                bodyB.Awake = true;
+            }
 
             // Remove from body 1.
             if (j._edgeA.Prev != null)
@@ -426,42 +440,50 @@ namespace FarseerPhysics
             j._edgeA.Prev = null;
             j._edgeA.Next = null;
 
-            // Remove from body 2
-            if (j._edgeB.Prev != null)
+            // WIP David
+            if (!j.IsFixedType())
             {
-                j._edgeB.Prev.Next = j._edgeB.Next;
-            }
+                // Remove from body 2
+                if (j._edgeB.Prev != null)
+                {
+                    j._edgeB.Prev.Next = j._edgeB.Next;
+                }
 
-            if (j._edgeB.Next != null)
-            {
-                j._edgeB.Next.Prev = j._edgeB.Prev;
-            }
+                if (j._edgeB.Next != null)
+                {
+                    j._edgeB.Next.Prev = j._edgeB.Prev;
+                }
 
-            if (j._edgeB == bodyB._jointList)
-            {
-                bodyB._jointList = j._edgeB.Next;
-            }
+                if (j._edgeB == bodyB._jointList)
+                {
+                    bodyB._jointList = j._edgeB.Next;
+                }
 
-            j._edgeB.Prev = null;
-            j._edgeB.Next = null;
+                j._edgeB.Prev = null;
+                j._edgeB.Next = null;
+            }
 
             Debug.Assert(JointCount > 0);
             --JointCount;
 
-            // If the joint prevents collisions, then flag any contacts for filtering.
-            if (collideConnected == false)
+            // WIP David
+            if (!j.IsFixedType())
             {
-                ContactEdge edge = bodyB.ContactList;
-                while (edge != null)
+                // If the joint prevents collisions, then flag any contacts for filtering.
+                if (collideConnected == false)
                 {
-                    if (edge.Other == bodyA)
+                    ContactEdge edge = bodyB.ContactList;
+                    while (edge != null)
                     {
-                        // Flag the contact for filtering at the next time step (where either
-                        // body is awake).
-                        edge.Contact.FlagForFiltering();
-                    }
+                        if (edge.Other == bodyA)
+                        {
+                            // Flag the contact for filtering at the next time step (where either
+                            // body is awake).
+                            edge.Contact.FlagForFiltering();
+                        }
 
-                    edge = edge.Next;
+                        edge = edge.Next;
+                    }
                 }
             }
         }
@@ -721,23 +743,32 @@ namespace FarseerPhysics
 
                         Body other = je.Other;
 
-                        // Don't simulate joints connected to inactive bodies.
-                        if (other.Enabled == false)
+                        // Enter here when it's a non-fixed joint. Non-fixed joints have a other body.
+                        if (other != null)
                         {
-                            continue;
+                            // Don't simulate joints connected to inactive bodies.
+                            if (other.Enabled == false)
+                            {
+                                continue;
+                            }
+
+                            _island.Add(je.Joint);
+                            je.Joint._islandFlag = true;
+
+                            if ((other._flags & BodyFlags.Island) != BodyFlags.None)
+                            {
+                                continue;
+                            }
+
+                            Debug.Assert(stackCount < stackSize);
+                            _stack[stackCount++] = other;
+                            other._flags |= BodyFlags.Island;
                         }
-
-                        _island.Add(je.Joint);
-                        je.Joint._islandFlag = true;
-
-                        if ((other._flags & BodyFlags.Island) != BodyFlags.None)
+                        else 
                         {
-                            continue;
+                            _island.Add(je.Joint);
+                            je.Joint._islandFlag = true;
                         }
-
-                        Debug.Assert(stackCount < stackSize);
-                        _stack[stackCount++] = other;
-                        other._flags |= BodyFlags.Island;
                     }
                 }
 
@@ -1034,31 +1065,42 @@ namespace FarseerPhysics
                         }
 
                         Body other = jEdge.Other;
-                        if (other.Enabled == false)
+                        
+                        // WIP David
+                        // The "other" object is only used when it's not a fixed joint.
+                        if (!jEdge.Joint.IsFixedType())
                         {
-                            continue;
+                            if (other.Enabled == false)
+                            {
+                                continue;
+                            }
+
+                            _island.Add(jEdge.Joint);
+
+                            jEdge.Joint._islandFlag = true;
+
+                            if ((other._flags & BodyFlags.Island) != BodyFlags.None)
+                            {
+                                continue;
+                            }
+
+                            // Synchronize the connected body.
+                            if (other.BodyType != BodyType.Static)
+                            {
+                                other.Advance(minTOI);
+                                other.Awake = true;
+                            }
+
+                            Debug.Assert(queueStart + queueSize < queueCapacity);
+                            _queue[queueStart + queueSize] = other;
+                            ++queueSize;
+                            other._flags |= BodyFlags.Island;
                         }
-
-                        _island.Add(jEdge.Joint);
-
-                        jEdge.Joint._islandFlag = true;
-
-                        if ((other._flags & BodyFlags.Island) != BodyFlags.None)
+                        else 
                         {
-                            continue;
+                            // In the case of a fixed joint, simply add the joint to the island.
+                            _island.Add(jEdge.Joint);
                         }
-
-                        // Synchronize the connected body.
-                        if (other.BodyType != BodyType.Static)
-                        {
-                            other.Advance(minTOI);
-                            other.Awake = true;
-                        }
-
-                        Debug.Assert(queueStart + queueSize < queueCapacity);
-                        _queue[queueStart + queueSize] = other;
-                        ++queueSize;
-                        other._flags |= BodyFlags.Island;
                     }
                 }
 
