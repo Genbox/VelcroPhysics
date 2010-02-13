@@ -36,6 +36,10 @@ namespace FarseerPhysics
         Line,
         Weld,
         Friction,
+        FixedRevolute,
+        FixedDistance,
+        FixedLine,
+        FixedPrismatic,
     }
 
     public enum LimitState
@@ -179,7 +183,10 @@ namespace FarseerPhysics
         protected void WakeBodies()
         {
             BodyA.Awake = true;
-            BodyB.Awake = true;
+            if (BodyB != null)
+            {
+                BodyB.Awake = true;
+            }
         }
 
 	    protected Joint(Body bodyA, Body bodyB)
@@ -187,13 +194,37 @@ namespace FarseerPhysics
             Debug.Assert(bodyA != bodyB);
 
             BodyA = bodyA;
+            _edgeA = new JointEdge();
             BodyB = bodyB;
+            _edgeB = new JointEdge();
+
+            //Connected bodies should not collide by default
+            CollideConnected = false;
+        }
+
+        /// <summary>
+        /// Constructor for fixed joint
+        /// </summary>
+        protected Joint(Body bodyA)
+        {
+            
+            BodyA = bodyA;
 
             //Connected bodies should not collide by default
             CollideConnected = false;
 
             _edgeA = new JointEdge();
-            _edgeB = new JointEdge();
+        }
+
+        /// <summary>
+        /// Return true if the joint is a fixed type.
+        /// </summary>
+        public bool IsFixedType()
+        {
+            return JointType == JointType.FixedRevolute ||
+                JointType == JointType.FixedDistance ||
+                JointType == JointType.FixedPrismatic ||
+                JointType == JointType.FixedLine;
         }
 
 	    internal abstract void InitVelocityConstraints(ref TimeStep step);
