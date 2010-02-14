@@ -101,10 +101,28 @@ namespace FarseerPhysics
                 b._angularVelocity *= MathUtils.Clamp(1.0f - step.DeltaTime * b._angularDamping, 0.0f, 1.0f);
             }
 
-            _contactSolver.Reset(Contacts, ContactCount);
+            // Partition contacts so that contacts with static bodies are solved last.
+            int i1 = -1;
+            for (int i2 = 0; i2 < ContactCount; ++i2)
+            {
+                Fixture fixtureA = Contacts[i2].GetFixtureA();
+                Fixture fixtureB = Contacts[i2].GetFixtureB();
+                Body bodyA = fixtureA.Body;
+                Body bodyB = fixtureB.Body;
+                bool nonStatic = bodyA.BodyType != BodyType.Static && bodyB.BodyType != BodyType.Static;
+                if (nonStatic)
+                {
+                    ++i1;
+                    //b2Swap(_contacts[i1], _contacts[i2]);
+                    Contact temp = Contacts[i1];
+                    Contacts[i1] = Contacts[i2];
+                    Contacts[i2] = temp;
+                }
+            }
 
             // Initialize velocity constraints.
-            _contactSolver.InitVelocityConstraints(ref step);
+            _contactSolver.Reset(Contacts, ContactCount, step.DtRatio);
+            _contactSolver.WarmStart();
 
             for (int i = 0; i < JointCount; ++i)
             {
@@ -123,12 +141,7 @@ namespace FarseerPhysics
             }
 
             // Post-solve (store impulses for warm starting).
-            for (int j = 0; j < JointCount; ++j)
-            {
-                Joints[j].FinalizeVelocityConstraints();
-            }
-
-            _contactSolver.FinalizeVelocityConstraints();
+            _contactSolver.StoreImpulses();
 
             // Integrate positions.
             for (int i = 0; i < BodyCount; ++i)
@@ -144,21 +157,15 @@ namespace FarseerPhysics
                 Vector2 translation = step.DeltaTime * b._linearVelocity;
                 if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
                 {
-                    translation.Normalize();
-                    b._linearVelocity = (Settings.MaxTranslation * step.Inv_DeltaTime) * translation;
+                    float ratio = Settings.MaxTranslation / translation.Length();
+                    b._linearVelocity *= ratio;
                 }
 
                 float rotation = step.DeltaTime * b._angularVelocity;
                 if (rotation * rotation > Settings.MaxRotationSquared)
                 {
-                    if (rotation < 0.0)
-                    {
-                        b._angularVelocity = -step.Inv_DeltaTime * Settings.MaxRotation;
-                    }
-                    else
-                    {
-                        b._angularVelocity = step.Inv_DeltaTime * Settings.MaxRotation;
-                    }
+                    float ratio = Settings.MaxRotation / Math.Abs(rotation);
+                    b._angularVelocity *= ratio;
                 }
 
                 // Store positions for continuous collision.
@@ -194,7 +201,7 @@ namespace FarseerPhysics
                 }
             }
 
-            Report(_contactSolver.Constraints);
+            Report(_contactSolver._constraints);
 
             if (allowSleep)
             {
@@ -245,100 +252,6 @@ namespace FarseerPhysics
                     }
                 }
             }
-        }
-
-        public void SolveTOI(ref TimeStep subStep)
-        {
-            _contactSolver.Reset(Contacts, ContactCount);
-
-            // No warm starting is needed for TOI events because warm
-            // starting impulses were applied in the discrete solver.
-
-            // Warm starting for joints is off for now, but we need to
-            // call this function to compute Jacobians.
-            for (int i = 0; i < JointCount; ++i)
-            {
-                Joints[i].InitVelocityConstraints(ref subStep);
-            }
-
-            // Solve velocity constraints.
-            for (int i = 0; i < subStep.VelocityIterations; ++i)
-            {
-                _contactSolver.SolveVelocityConstraints();
-                for (int j = 0; j < JointCount; ++j)
-                {
-                    Joints[j].SolveVelocityConstraints(ref subStep);
-                }
-            }
-
-            // Don't store the TOI contact forces for warm starting
-            // because they can be quite large.
-
-            // Integrate positions.
-            for (int i = 0; i < BodyCount; ++i)
-            {
-                Body b = Bodies[i];
-
-                if (b.BodyType == BodyType.Static)
-                {
-                    continue;
-                }
-
-                // Check for large velocities.
-                Vector2 translation = subStep.DeltaTime * b._linearVelocity;
-                if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
-                {
-                    translation.Normalize();
-                    b._linearVelocity = (Settings.MaxTranslation * subStep.Inv_DeltaTime) * translation;
-                }
-
-                float rotation = subStep.DeltaTime * b._angularVelocity;
-                if (rotation * rotation > Settings.MaxRotationSquared)
-                {
-                    if (rotation < 0.0)
-                    {
-                        b._angularVelocity = -subStep.Inv_DeltaTime * Settings.MaxRotation;
-                    }
-                    else
-                    {
-                        b._angularVelocity = subStep.Inv_DeltaTime * Settings.MaxRotation;
-                    }
-                }
-
-                // Store positions for continuous collision.
-                b._sweep.Center0 = b._sweep.Center;
-                b._sweep.Angle0 = b._sweep.Angle;
-
-                // Integrate
-                b._sweep.Center += subStep.DeltaTime * b._linearVelocity;
-                b._sweep.Angle += subStep.DeltaTime * b._angularVelocity;
-
-                // Compute new transform
-                b.SynchronizeTransform();
-
-                // Note: shapes are synchronized later.
-            }
-
-
-            // Solve position constraints.
-            const float k_toiBaumgarte = 0.75f;
-            for (int i = 0; i < subStep.PositionIterations; ++i)
-            {
-                bool contactsOkay = _contactSolver.SolvePositionConstraints(k_toiBaumgarte);
-                bool jointsOkay = true;
-                for (int j = 0; j < JointCount; ++j)
-                {
-                    bool jointOkay = Joints[j].SolvePositionConstraints();
-                    jointsOkay = jointsOkay && jointOkay;
-                }
-
-                if (contactsOkay && jointsOkay)
-                {
-                    break;
-                }
-            }
-
-            Report(_contactSolver.Constraints);
         }
 
         public void Add(Body body)

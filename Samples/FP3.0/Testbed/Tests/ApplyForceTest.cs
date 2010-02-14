@@ -92,6 +92,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _body.Rotation = Settings.Pi;
                 _body.AngularDamping = 5.0f;
                 _body.LinearDamping = 0.1f;
+                _body.AllowSleep = false;
 
                 _body.CreateFixture(poly1);
                 _body.CreateFixture(poly2);

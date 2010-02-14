@@ -20,6 +20,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System.Diagnostics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -30,11 +31,13 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private const int ColumnCount = 5;
         private const int RowCount = 16;
+        private Body[] _bodies = new Body[RowCount * ColumnCount];
+        private int[] _indices = new int[RowCount * ColumnCount];
 
         private VerticalStackTest()
         {
             {
-                
+
                 Body ground = World.CreateBody();
 
                 PolygonShape shape = new PolygonShape(0);
@@ -54,7 +57,9 @@ namespace FarseerPhysics.TestBed.Tests
 
                 for (int i = 0; i < RowCount; ++i)
                 {
-                    
+                    int n = j * RowCount + i;
+                    Debug.Assert(n < RowCount * ColumnCount);
+                    _indices[n] = n;
 
                     const float x = 0.0f;
                     //float x = Rand.RandomFloat-0.02f, 0.02f);
@@ -62,6 +67,8 @@ namespace FarseerPhysics.TestBed.Tests
                     Body body = World.CreateBody();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
+                    body.UserData = _indices[n];
+                    _bodies[n] = body;
 
                     Fixture fixture = body.CreateFixture(shape);
                     fixture.Friction = 0.3f;
@@ -100,7 +107,31 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(Framework.Settings settings)
         {
             base.Update(settings);
+
             DebugView.DrawString(50, TextLine, "Press: (,) to launch a bullet.");
+
+            if (_stepCount == 300)
+            {
+                if (_bullet != null)
+                {
+                    World.DestroyBody(_bullet);
+                    _bullet = null;
+                }
+
+                {
+                    CircleShape shape = new CircleShape(0.25f, 20);
+
+                    _bullet = World.CreateBody();
+                    _bullet.BodyType = BodyType.Dynamic;
+                    _bullet.Bullet = true;
+                    _bullet.Position = new Vector2(-31.0f, 5.0f);
+                    _bullet.LinearVelocity = new Vector2(400.0f, 0.0f);
+
+                    Fixture fixture = _bullet.CreateFixture(shape);
+                    fixture.Restitution = 0.05f;
+                }
+            }
+
             TextLine += 15;
         }
 

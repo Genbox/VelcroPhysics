@@ -181,12 +181,12 @@ namespace FarseerPhysics
     internal struct SimplexVertex
     {
         /// <summary>
-        /// support point in proxyA
+        /// support point in ProxyA
         /// </summary>
         public Vector2 WA;
 
         /// <summary>
-        /// support point in proxyB
+        /// support point in ProxyB
         /// </summary>
         public Vector2 WB;
 
@@ -217,7 +217,7 @@ namespace FarseerPhysics
                         ref DistanceProxy proxyA, ref Transform transformA,
                         ref DistanceProxy proxyB, ref Transform transformB)
         {
-            Debug.Assert(0 <= cache.Count && cache.Count <= 3);
+            Debug.Assert(cache.Count <= 3);
 
             // Copy data from cache.
             Count = cache.Count;

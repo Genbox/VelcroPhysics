@@ -27,7 +27,9 @@ namespace FarseerPhysics.TestBed.Tests
     public static class TestEntries
     {
         public static TestEntry[] g_testEntries =
-            {     
+            {    
+                new TestEntry { Name="Edge Shapes", CreateFcn = EdgeShapes.Create},
+                new TestEntry { Name="Continuous Test", CreateFcn = ContinuousTest.Create},
                 new TestEntry {Name = "Gears", CreateFcn = GearsTest.Create},
                 new TestEntry {Name = "Line Joint", CreateFcn = LineJointTest.Create},
                 new TestEntry {Name = "Web", CreateFcn = WebTest.Create},

@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
 
@@ -136,63 +135,112 @@ namespace FarseerPhysics
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform xf)
         {
             output = new RayCastOutput();
-            float lower = 0.0f, upper = input.MaxFraction;
 
             // Put the ray into the polygon's frame of reference.
             Vector2 p1 = MathUtils.MultiplyT(ref xf.R, input.Point1 - xf.Position);
             Vector2 p2 = MathUtils.MultiplyT(ref xf.R, input.Point2 - xf.Position);
             Vector2 d = p2 - p1;
-            int index = -1;
 
-            for (int i = 0; i < Vertices.Count; ++i)
+            if (Vertices.Count == 2)
             {
-                // p = p1 + a * d
-                // dot(normal, p - v) = 0
-                // dot(normal, p1 - v) + a * dot(normal, d) = 0
-                float numerator = Vector2.Dot(Normals[i], Vertices[i] - p1);
-                float denominator = Vector2.Dot(Normals[i], d);
+                Vector2 v1 = Vertices[0];
+                Vector2 v2 = Vertices[1];
+                Vector2 normal = Normals[0];
+
+                // q = p1 + t * d
+                // dot(normal, q - v1) = 0
+                // dot(normal, p1 - v1) + t * dot(normal, d) = 0
+                float numerator = Vector2.Dot(normal, v1 - p1);
+                float denominator = Vector2.Dot(normal, d);
 
                 if (denominator == 0.0f)
                 {
-                    if (numerator < 0.0f)
+                    return false;
+                }
+
+                float t = numerator / denominator;
+                if (t < 0.0f || 1.0f < t)
+                {
+                    return false;
+                }
+
+                Vector2 q = p1 + t * d;
+
+                // q = v1 + s * r
+                // s = dot(q - v1, r) / dot(r, r)
+                Vector2 r = v2 - v1;
+                float rr = Vector2.Dot(r, r);
+                if (rr == 0.0f)
+                {
+                    return false;
+                }
+
+                float s = Vector2.Dot(q - v1, r) / rr;
+                if (s < 0.0f || 1.0f < s)
+                {
+                    return false;
+                }
+
+                output.Fraction = t;
+                output.Normal = normal;
+                return true;
+            }
+            else
+            {
+                float lower = 0.0f, upper = input.MaxFraction;
+
+                int index = -1;
+
+                for (int i = 0; i < Vertices.Count; ++i)
+                {
+                    // p = p1 + a * d
+                    // dot(normal, p - v) = 0
+                    // dot(normal, p1 - v) + a * dot(normal, d) = 0
+                    float numerator = Vector2.Dot(Normals[i], Vertices[i] - p1);
+                    float denominator = Vector2.Dot(Normals[i], d);
+
+                    if (denominator == 0.0f)
+                    {
+                        if (numerator < 0.0f)
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        // Note: we want this predicate without division:
+                        // lower < numerator / denominator, where denominator < 0
+                        // Since denominator < 0, we have to flip the inequality:
+                        // lower < numerator / denominator <==> denominator * lower > numerator.
+                        if (denominator < 0.0f && numerator < lower * denominator)
+                        {
+                            // Increase lower.
+                            // The segment enters this half-space.
+                            lower = numerator / denominator;
+                            index = i;
+                        }
+                        else if (denominator > 0.0f && numerator < upper * denominator)
+                        {
+                            // Decrease upper.
+                            // The segment exits this half-space.
+                            upper = numerator / denominator;
+                        }
+                    }
+
+                    if (upper < lower - Settings.Epsilon)
                     {
                         return false;
                     }
                 }
-                else
+
+                Debug.Assert(0.0f <= lower && lower <= input.MaxFraction);
+
+                if (index >= 0)
                 {
-                    // Note: we want this predicate without division:
-                    // lower < numerator / denominator, where denominator < 0
-                    // Since denominator < 0, we have to flip the inequality:
-                    // lower < numerator / denominator <==> denominator * lower > numerator.
-                    if (denominator < 0.0f && numerator < lower * denominator)
-                    {
-                        // Increase lower.
-                        // The segment enters this half-space.
-                        lower = numerator / denominator;
-                        index = i;
-                    }
-                    else if (denominator > 0.0f && numerator < upper * denominator)
-                    {
-                        // Decrease upper.
-                        // The segment exits this half-space.
-                        upper = numerator / denominator;
-                    }
+                    output.Fraction = lower;
+                    output.Normal = MathUtils.Multiply(ref xf.R, Normals[index]);
+                    return true;
                 }
-
-                if (upper < lower - Settings.Epsilon)
-                {
-                    return false;
-                }
-            }
-
-            Debug.Assert(0.0f <= lower && lower <= input.MaxFraction);
-
-            if (index >= 0)
-            {
-                output.Fraction = lower;
-                output.Normal = MathUtils.Multiply(ref xf.R, Normals[index]);
-                return true;
             }
 
             return false;

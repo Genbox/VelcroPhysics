@@ -106,6 +106,7 @@ namespace FarseerPhysics.TestBed.Framework
         private MouseJoint _mouseJoint;
         internal int PointCount;
         internal ContactPoint[] Points = new ContactPoint[k_MaxContactPoints];
+        internal int _stepCount;
 
         protected Test()
         {
@@ -118,6 +119,8 @@ namespace FarseerPhysics.TestBed.Framework
             World.ContactManager.PostSolve += PostSolve;
             World.ContactManager.BeginContact += BeginContact;
             World.ContactManager.EndContact += EndContact;
+
+            _stepCount = 0;
 
             _groundBody = World.CreateBody();
         }
@@ -177,9 +180,13 @@ namespace FarseerPhysics.TestBed.Framework
             PointCount = 0;
 
             World.Step(timeStep, settings.VelocityIterations, settings.PositionIterations);
-            World.ClearForces();
 
             DebugView.DrawDebugData();
+
+            if (timeStep > 0.0f)
+            {
+                ++_stepCount;
+            }
 
             if (settings.DrawStats > 0)
             {

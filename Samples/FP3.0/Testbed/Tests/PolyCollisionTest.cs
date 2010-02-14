@@ -32,14 +32,14 @@ namespace FarseerPhysics.TestBed.Tests
         private PolyCollisionTest()
         {
             {
-                _polygonA.SetAsBox(1.0f, 1.0f, new Vector2(0.0f, 0.0f), Settings.Pi * 0.25f);
+                _polygonA.SetAsEdge(new Vector2(20.0f, 0.0f), new Vector2(20.0f, 20.0f));
                 _transformA.Set(new Vector2(0.0f, 5.0f), 0.0f);
             }
 
             {
                 _polygonB.SetAsBox(0.25f, 0.25f);
-                _positionB = new Vector2(-1.7793884f, 5.0326509f);
-                _angleB = 2.2886343f;
+                _positionB = new Vector2(19.345284f, 1.5632932f);
+                _angleB = 1.9160721f;
                 _transformB.Set(_positionB, _angleB);
             }
         }

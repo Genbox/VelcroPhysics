@@ -430,13 +430,8 @@ namespace FarseerPhysics
         /// @param t the new initial time.
         public void Advance(float t)
         {
-            if (TimeInt0 < t && 1.0f - TimeInt0 > Settings.Epsilon)
-            {
-                float alpha = (t - TimeInt0) / (1.0f - TimeInt0);
-                Center0 = (1.0f - alpha) * Center0 + alpha * Center;
-                Angle0 = (1.0f - alpha) * Angle0 + alpha * Angle;
-                TimeInt0 = t;
-            }
+            Center0 = (1.0f - t) * Center0 + t * Center;
+            Angle0 = (1.0f - t) * Angle0 + t * Angle;
         }
 
         /// <summary>
@@ -453,10 +448,5 @@ namespace FarseerPhysics
         /// world angles
         /// </summary>
         public float Angle0, Angle;
-
-        /// <summary>
-        /// time interval = [t0,1], where t0 is in [0,1]
-        /// </summary>
-        public float TimeInt0;
     }
 }
