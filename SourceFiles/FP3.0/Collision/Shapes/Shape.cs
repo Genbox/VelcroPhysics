@@ -67,7 +67,8 @@ namespace FarseerPhysics
         /// <summary>
         /// The shape type is a polygon
         /// </summary>
-        Polygon = 1
+        Polygon = 1,
+        TypeCount = 2,
     }
 
     /// <summary>

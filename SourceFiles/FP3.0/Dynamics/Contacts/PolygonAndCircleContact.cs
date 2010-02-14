@@ -30,21 +30,14 @@ namespace FarseerPhysics
             : base(fixtureA, fixtureB)
         {
             Debug.Assert(FixtureA.ShapeType == ShapeType.Polygon);
-	        Debug.Assert(FixtureB.ShapeType == ShapeType.Circle);
+            Debug.Assert(FixtureB.ShapeType == ShapeType.Circle);
         }
 
-        protected override void Evaluate()  
+        internal override void Evaluate(out Manifold manifold, ref Transform xfA, ref Transform xfB)
         {
-            Body b1 = FixtureA.Body;
-            Body b2 = FixtureB.Body;
-
-            Transform xf1, xf2;
-            b1.GetTransform(out xf1);
-            b2.GetTransform(out xf2);
-
-	        Collision.CollidePolygonAndCircle(out Manifold,
-                                        (PolygonShape)FixtureA.Shape, ref xf1,
-                                        (CircleShape)FixtureB.Shape, ref xf2);
+            Collision.CollidePolygonAndCircle(out manifold,
+                                        (PolygonShape)FixtureA.Shape, ref xfA,
+                                        (CircleShape)FixtureB.Shape, ref xfB);
         }
     }
 }

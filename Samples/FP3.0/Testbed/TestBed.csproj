@@ -107,6 +107,7 @@
     <Compile Include="Tests\ConfinedTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\ContinuousTest.cs" />
     <Compile Include="Tests\ControllerTest.cs" />
     <Compile Include="Tests\CuttingTest.cs" />
     <Compile Include="Tests\DistanceTest.cs">
@@ -118,6 +119,7 @@
     <Compile Include="Tests\DynamicTreeTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\EdgeShapesTest.cs" />
     <Compile Include="Tests\GearsTest.cs">
       <SubType>Code</SubType>
     </Compile>

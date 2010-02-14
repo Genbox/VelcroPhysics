@@ -52,7 +52,7 @@ namespace FarseerPhysics
         public const float AngularSlop = (2.0f / 180.0f * Pi);
 
         /// The radius of the polygon/edge shape skin. This should not be modified. Making
-        /// this smaller means polygons will have and insufficient for continuous collision.
+        /// this smaller means polygons will have an insufficient buffer for continuous collision.
         /// Making it larger may create artifacts for vertex collision.
         public const float PolygonRadius = (2.0f * LinearSlop);
 
@@ -60,9 +60,6 @@ namespace FarseerPhysics
 
         /// Maximum number of contacts to be handled to solve a TOI island.
         public const int MaxTOIContactsPerIsland = 32;
-
-        /// Maximum number of joints to be handled to solve a TOI island.
-        public const int MaxTOIJointsPerIsland = 32;
 
         /// A velocity threshold for elastic collisions. Any collision with a relative linear
         /// velocity below this threshold will be treated as inelastic.

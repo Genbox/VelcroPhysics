@@ -48,14 +48,15 @@ namespace FarseerPhysics
     [Flags]
     public enum BodyFlags
     {
-        None = 0,
-        Island = (1 << 0),
-        Awake = (1 << 1),
-        AutoSleep = (1 << 2),
-        Bullet = (1 << 3),
+        None =           0,
+        Island =        (1 << 0),
+        Awake =         (1 << 1),
+        AutoSleep =     (1 << 2),
+        Bullet =        (1 << 3),
         FixedRotation = (1 << 4),
-        Enabled = (1 << 5),
-        IgnoreGravity = (1 << 6)
+        Enabled =       (1 << 5),
+        IgnoreGravity = (1 << 6),
+        Toi =           (1 << 7),
     }
 
     public class Body
@@ -92,8 +93,6 @@ namespace FarseerPhysics
             InertiaScale = 1;
 
             _xf.R.Set(0);
-
-            _sweep.TimeInt0 = 1.0f;
         }
 
         /// <summary>
@@ -195,6 +194,11 @@ namespace FarseerPhysics
                     return;
                 }
 
+                if (Vector2.Dot(value, value) > 0.0f)
+                {
+                    Awake = true;
+                }
+
                 _linearVelocity = value;
             }
         }
@@ -213,6 +217,11 @@ namespace FarseerPhysics
                 if (_bodyType == BodyType.Static)
                 {
                     return;
+                }
+
+                if (value * value > 0.0f)
+                {
+                    Awake = true;
                 }
 
                 _angularVelocity = value;
@@ -271,7 +280,7 @@ namespace FarseerPhysics
         /// <summary>
         /// Is this a fast moving body that should be prevented from tunneling through
         /// other moving bodies? Note that all bodies are prevented from tunneling through
-        /// static bodies.
+        /// kinematic and static bodies. This setting is only considered on dynamic bodies.
         /// @warning You should use this flag sparingly since it increases processing time.
         /// </summary>
         public bool Bullet
@@ -306,7 +315,11 @@ namespace FarseerPhysics
             {
                 if (value)
                 {
-                    _flags |= BodyFlags.Awake;
+                    if ((_flags & BodyFlags.Awake) == 0)
+                    {
+                        _flags |= BodyFlags.Awake;
+                        _sleepTime = 0.0f;
+                    }
                 }
                 else
                 {

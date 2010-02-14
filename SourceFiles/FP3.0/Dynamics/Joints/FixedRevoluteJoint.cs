@@ -277,7 +277,11 @@ namespace FarseerPhysics
             _mass.Col2.Z = _mass.Col3.Y;
             _mass.Col3.Z = i1 + i2;
 
-            _motorMass = 1.0f / (i1 + i2);
+            _motorMass = i1 + i2;
+            if (_motorMass > 0.0f)
+            {
+                _motorMass = 1.0f / _motorMass;
+            } 
 
             if (_enableMotor == false)
             {

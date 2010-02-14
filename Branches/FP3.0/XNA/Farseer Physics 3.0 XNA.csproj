@@ -185,6 +185,9 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\PolygonContact.cs">
       <Link>Dynamics\Contacts\PolygonContact.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\TOISolver.cs">
+      <Link>Dynamics\Contacts\TOISolver.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Fixture.cs">
       <Link>Dynamics\Fixture.cs</Link>
     </Compile>

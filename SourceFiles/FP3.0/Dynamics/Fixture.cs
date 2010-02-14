@@ -60,41 +60,7 @@ namespace FarseerPhysics
         /// <value>
         ///   if set to &lt;c&gt;true&lt;/c&gt; [sensor].
         /// </value>
-        public bool Sensor
-        {
-            set
-            {
-                if (_isSensor == value)
-                {
-                    return;
-                }
-
-                _isSensor = value;
-
-                if (_body == null)
-                {
-                    return;
-                }
-
-                ContactEdge edge = _body.ContactList;
-                while (edge != null)
-                {
-                    Contact contact = edge.Contact;
-                    Fixture fixtureA = contact.FixtureA;
-                    Fixture fixtureB = contact.FixtureB;
-                    if (fixtureA == this || fixtureB == this)
-                    {
-                        contact.Sensor = fixtureA.Sensor || fixtureB.Sensor;
-                    }
-
-                    edge = edge.Next;
-                }
-            }
-            get
-            {
-                return _isSensor;
-            }
-        }
+        public bool Sensor { get; set; }
 
         /// <summary>
         /// Collision groups allow a certain group of objects to never collide (negative)
@@ -290,7 +256,7 @@ namespace FarseerPhysics
             _friction = 0.2f;
             _categoryBits = 0x0001;
             _maskBits = 0xFFFF;
-            _isSensor = false;
+            Sensor = false;
 
             _body = body;
             _next = null;
@@ -353,7 +319,6 @@ namespace FarseerPhysics
         private Shape _shape;
         private float _friction;
         private float _restitution;
-        private bool _isSensor;
         private object _userData;
         private short _groupIndex;
         private ushort _maskBits;

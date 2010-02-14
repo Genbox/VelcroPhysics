@@ -229,7 +229,6 @@ namespace FarseerPhysics
 
 	    internal abstract void InitVelocityConstraints(ref TimeStep step);
 	    internal abstract void SolveVelocityConstraints(ref TimeStep step);
-        internal virtual void FinalizeVelocityConstraints() {}
 
 	    // This returns true if the position errors are within tolerance.
         internal abstract bool SolvePositionConstraints();
