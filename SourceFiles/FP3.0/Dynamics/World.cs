@@ -870,9 +870,16 @@ namespace FarseerPhysics
                     Body other = ce.Other;
                     BodyType type = other.BodyType;
 
-                    // Only perform correction with static bodies, so the
-                    // body won't get pushed out of the world.
-                    if (type != BodyType.Static)
+                    // Only bullets perform TOI with dynamic bodies.
+                    if (bullet == true)
+                    {
+                        // Bullets only perform TOI with bodies that have their TOI resolved.
+                        if ((other._flags & BodyFlags.Toi) == 0)
+                        {
+                            continue;
+                        }
+                    }
+                    else if (type == BodyType.Dynamic)
                     {
                         continue;
                     }
@@ -944,16 +951,9 @@ namespace FarseerPhysics
                 Body other = ce.Other;
                 BodyType type = other.BodyType;
 
-                // Only bullets perform TOI with dynamic bodies.
-                if (bullet == true)
-                {
-                    // Bullets only perform TOI with bodies that have their TOI resolved.
-                    if ((other._flags & BodyFlags.Toi) == 0)
-                    {
-                        continue;
-                    }
-                }
-                else if (type == BodyType.Dynamic)
+                // Only perform correction with static bodies, so the
+                // body won't get pushed out of the world.
+                if (type != BodyType.Static)
                 {
                     continue;
                 }
