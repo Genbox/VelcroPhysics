@@ -31,16 +31,6 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private WebTest()
         {
-            Body ground;
-            {
-
-                ground = World.CreateBody();
-
-                PolygonShape shape = new PolygonShape(0);
-                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
-            }
-
             {
                 PolygonShape shape = new PolygonShape(5);
                 shape.SetAsBox(0.5f, 0.5f);
