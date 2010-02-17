@@ -52,7 +52,8 @@ namespace FarseerPhysics.TestBed.Tests
                 body.CreateFixture(shape);
 
                 // Bouncy limit
-                _joint = new PrismaticJoint(ground, body, new Vector2(0.0f, 0.0f), new Vector2(1.0f, 0.0f));
+                _joint = new FixedPrismaticJoint(body, new Vector2(0.0f, 10.0f), new Vector2(1.0f, 1.0f));
+                //_joint = new FixedPrismaticJoint(ground, body, new Vector2(0.0f, 10.0f), new Vector2(1.0f, 1.0f));
 
                 // Non-bouncy limit
                 //pjd.Initialize(ground, body, new Vector2(-10.0f, 10.0f), new Vector2(1.0f, 0.0f));
@@ -86,6 +87,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(Framework.Settings settings)
         {
+            float trans = _joint.JointTranslation;
+            float speed = _joint.JointSpeed;
             base.Update(settings);
             DebugView.DrawString(50, TextLine, "Keys: (l) limits, (m) motors, (p) speed");
             TextLine += 15;
@@ -99,6 +102,6 @@ namespace FarseerPhysics.TestBed.Tests
             return new PrismaticTest();
         }
 
-        private PrismaticJoint _joint;
+        private FixedPrismaticJoint _joint;
     }
 }

@@ -123,12 +123,15 @@ namespace FarseerPhysics
         /// when the local anchor points coincide in world space. Using local
         /// anchors and a local axis helps when saving and loading a game.
         /// </summary>
-        public PrismaticJoint(Body b1, Body b2, Vector2 anchor, Vector2 axis)
+        public PrismaticJoint(Body b1, Body b2, Vector2 anchor1,Vector2 anchor2, Vector2 axis)
             : base(b1, b2)
         {
             JointType = JointType.Prismatic;
-            LocalAnchorA = BodyA.GetLocalPoint(anchor);
-            LocalAnchorB = BodyB.GetLocalPoint(anchor);
+            //LocalAnchorA = BodyA.GetLocalPoint(anchor1);
+            //LocalAnchorB = BodyB.GetLocalPoint(anchor1);
+
+            LocalAnchorA = anchor1;
+            LocalAnchorB = anchor2;
 
             LocalXAxis1 = BodyA.GetLocalVector(axis);
             _localYAxis1 = MathUtils.Cross(1.0f, LocalXAxis1);

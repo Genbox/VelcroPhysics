@@ -184,6 +184,10 @@ namespace FarseerPhysics.DebugViewXNA
                     DrawSegment(x1, p1, color);
                     DrawSegment(p1, p2, color);
                     break;
+                case JointType.FixedPrismatic:
+                    DrawSegment(x1, p1, color);
+                    DrawSegment(p1, p2, color);
+                    break;
                 default:
                     DrawSegment(x1, p1, color);
                     DrawSegment(p1, p2, color);

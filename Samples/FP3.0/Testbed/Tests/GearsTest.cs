@@ -75,7 +75,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 body3.CreateFixture(polygonBox);
 
-                _joint3 = new PrismaticJoint(ground, body3, body3.Position, new Vector2(0.0f, 1.0f));
+                _joint3 = new FixedPrismaticJoint(body3, body3.Position, new Vector2(0.0f, 1.0f));
                 _joint3.LowerLimit = -5.0f;
                 _joint3.UpperLimit = 5.0f;
                 _joint3.LimitEnabled = true;
@@ -116,7 +116,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         private FixedRevoluteJoint _joint1;
         private FixedRevoluteJoint _joint2;
-        private PrismaticJoint _joint3;
+        private FixedPrismaticJoint _joint3;
         private GearJoint _joint4;
         private GearJoint _joint5;
     }
