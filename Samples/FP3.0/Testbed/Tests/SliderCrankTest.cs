@@ -95,7 +95,7 @@ namespace FarseerPhysics.TestBed.Tests
                     RevoluteJoint rjd2 = new RevoluteJoint(prevBody, body, new Vector2(0.0f, 17.0f));
                     World.CreateJoint(rjd2);
 
-                    _joint2 = new PrismaticJoint(ground, body, new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f));
+                    _joint2 = new FixedPrismaticJoint(body,  new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f));
                     _joint2.MaxMotorForce = 1000.0f;
                     _joint2.MotorEnabled = true;
 
@@ -146,6 +146,6 @@ namespace FarseerPhysics.TestBed.Tests
         }
 
         private RevoluteJoint _joint1;
-        private PrismaticJoint _joint2;
+        private FixedPrismaticJoint _joint2;
     }
 }
