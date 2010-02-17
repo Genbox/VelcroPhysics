@@ -52,8 +52,11 @@ namespace FarseerPhysics.TestBed
         private Vector2 _viewCenter = new Vector2(0.0f, 20.0f);
         private float _viewZoom = 1.0f;
         private int _width = 640;
-        private bool _traceEnabled = true;
         private Matrix _projection;
+        public bool TraceEnabled = true;
+        public bool DebugViewEnabled = true;
+        //public bool TraceEnabled;
+        //public bool DebugViewEnabled;
 
         public Game1()
         {
@@ -107,7 +110,8 @@ namespace FarseerPhysics.TestBed
         /// </summary>
         protected override void LoadContent()
         {
-            DebugViewXNA.DebugViewXNA.LoadContent(GraphicsDevice, Content);
+            if (DebugViewEnabled)
+                DebugViewXNA.DebugViewXNA.LoadContent(GraphicsDevice, Content);
 
             _oldKeyboardState = Keyboard.GetState();
             _oldMouseState = Mouse.GetState();
@@ -124,7 +128,7 @@ namespace FarseerPhysics.TestBed
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (_traceEnabled)
+            if (TraceEnabled)
                 _et.BeginTrace(TraceEvents.UpdateEventId);
 
             // Allows the game to exit
@@ -210,7 +214,7 @@ namespace FarseerPhysics.TestBed
             }
             else if (newKeyboardState.IsKeyDown(Keys.F1) && _oldKeyboardState.IsKeyUp(Keys.F1))
             {
-                _traceEnabled = !_traceEnabled;
+                TraceEnabled = !TraceEnabled;
             }
             else
             {
@@ -232,7 +236,7 @@ namespace FarseerPhysics.TestBed
             _oldMouseState = newMouseState;
             _oldGamePad = newGamePad;
 
-            if (_traceEnabled)
+            if (TraceEnabled)
                 _et.EndTrace(TraceEvents.UpdateEventId);
         }
 
@@ -242,7 +246,7 @@ namespace FarseerPhysics.TestBed
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            if (_traceEnabled)
+            if (TraceEnabled)
                 _et.BeginTrace(TraceEvents.DrawEventId);
 
             GraphicsDevice.Clear(Color.Black);
@@ -250,15 +254,16 @@ namespace FarseerPhysics.TestBed
             _test.SetTextLine(30);
             _settings.Hz = k_SettingsHz;
 
-            if (_traceEnabled)
+            if (TraceEnabled)
                 _et.BeginTrace(TraceEvents.PhysicsEventId);
 
             _test.Update(_settings);
 
-            if (_traceEnabled)
+            if (TraceEnabled)
                 _et.EndTrace(TraceEvents.PhysicsEventId);
 
-            _test.DrawTitle(50, 15, _entry.Name);
+            if (DebugViewEnabled)
+                _test.DrawTitle(50, 15, _entry.Name);
 
             if (_testSelection != _testIndex)
             {
@@ -269,11 +274,12 @@ namespace FarseerPhysics.TestBed
                 Resize(_width, _height);
             }
 
-            _test.DebugView.RenderDebugData(ref _projection);
+            if (DebugViewEnabled)
+                _test.DebugView.RenderDebugData(ref _projection);
 
             base.Draw(gameTime);
 
-            if (_traceEnabled)
+            if (TraceEnabled)
             {
                 _et.EndTrace(TraceEvents.DrawEventId);
                 _et.EndTrace(TraceEvents.FrameEventId);

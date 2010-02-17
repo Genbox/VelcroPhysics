@@ -88,14 +88,14 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(Framework.Settings settings)
         {
-            if (_stepCount == 12)
+            if (StepCount == 12)
             {
-                _stepCount += 0;
+                StepCount += 0;
             }
 
             base.Update(settings);
 
-            if (_stepCount % 60 == 0)
+            if (StepCount % 60 == 0)
             {
                 Launch();
             }

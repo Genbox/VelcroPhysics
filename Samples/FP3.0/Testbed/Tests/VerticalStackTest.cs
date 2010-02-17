@@ -110,7 +110,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             DebugView.DrawString(50, TextLine, "Press: (,) to launch a bullet.");
 
-            if (_stepCount == 300)
+            if (StepCount == 300)
             {
                 if (_bullet != null)
                 {

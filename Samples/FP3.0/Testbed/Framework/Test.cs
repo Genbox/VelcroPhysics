@@ -106,12 +106,12 @@ namespace FarseerPhysics.TestBed.Framework
         private MouseJoint _mouseJoint;
         internal int PointCount;
         internal ContactPoint[] Points = new ContactPoint[k_MaxContactPoints];
-        internal int _stepCount;
+        internal int StepCount;
 
         protected Test()
         {
             World = new World(new Vector2(0.0f, -10.0f), false);
-            DebugView = new DebugViewXNA.DebugViewXNA(World);
+                       
             TextLine = 30;
 
             World.JointRemoved += JointRemoved;
@@ -120,14 +120,18 @@ namespace FarseerPhysics.TestBed.Framework
             World.ContactManager.BeginContact += BeginContact;
             World.ContactManager.EndContact += EndContact;
 
-            _stepCount = 0;
+            StepCount = 0;
 
             _groundBody = World.CreateBody();
         }
 
         public Game1 GameInstance { protected get; set; }
 
-        public virtual void Initialize(){}
+        public virtual void Initialize()
+        {
+            if (GameInstance.DebugViewEnabled)
+                DebugView = new DebugViewXNA.DebugViewXNA(World);
+        }
 
         private void JointRemoved(Joint joint)
         {
@@ -166,13 +170,16 @@ namespace FarseerPhysics.TestBed.Framework
                 TextLine += 15;
             }
 
-            uint flags = 0;
-            flags += settings.DrawShapes * (uint)DebugViewFlags.Shape;
-            flags += settings.DrawJoints * (uint)DebugViewFlags.Joint;
-            flags += settings.DrawAABBs * (uint)DebugViewFlags.AABB;
-            flags += settings.DrawPairs * (uint)DebugViewFlags.Pair;
-            flags += settings.DrawCOMs * (uint)DebugViewFlags.CenterOfMass;
-            DebugView.Flags = (DebugViewFlags)flags;
+            if (GameInstance.DebugViewEnabled)
+            {
+                uint flags = 0;
+                flags += settings.DrawShapes * (uint)DebugViewFlags.Shape;
+                flags += settings.DrawJoints * (uint)DebugViewFlags.Joint;
+                flags += settings.DrawAABBs * (uint)DebugViewFlags.AABB;
+                flags += settings.DrawPairs * (uint)DebugViewFlags.Pair;
+                flags += settings.DrawCOMs * (uint)DebugViewFlags.CenterOfMass;
+                DebugView.Flags = (DebugViewFlags)flags;
+            }
 
             World.WarmStarting = (settings.EnableWarmStarting > 0);
             World.ContinuousPhysics = (settings.EnableContinuous > 0);
@@ -181,68 +188,72 @@ namespace FarseerPhysics.TestBed.Framework
 
             World.Step(timeStep, settings.VelocityIterations, settings.PositionIterations);
 
-            DebugView.DrawDebugData();
-
             if (timeStep > 0.0f)
             {
-                ++_stepCount;
+                ++StepCount;
             }
 
-            if (settings.DrawStats > 0)
+            if (GameInstance.DebugViewEnabled)
             {
-                DebugView.DrawString(50, TextLine, "bodies/contacts/joints/proxies = {0:n}/{1:n}/{2:n}",
-                                      World.BodyCount, World.ContactCount, World.JointCount, World.ProxyCount);
-                TextLine += 15;
-            }
+                DebugView.DrawDebugData();
 
-            if (_mouseJoint != null)
-            {
-                Vector2 p1 = _mouseJoint.WorldAnchorB;
-                Vector2 p2 = _mouseJoint.Target;
-
-                DebugView.DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
-                DebugView.DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
-                DebugView.DrawSegment(p1, p2, new Color(0.8f, 0.8f, 0.8f));
-            }
-
-            if (settings.DrawContactPoints > 0)
-            {
-                const float k_axisScale = 0.3f;
-
-                for (int i = 0; i < PointCount; ++i)
+                if (settings.DrawStats > 0)
                 {
-                    ContactPoint point = Points[i];
+                    DebugView.DrawString(50, TextLine, "bodies/contacts/joints/proxies = {0:n}/{1:n}/{2:n}",
+                                         World.BodyCount, World.ContactCount, World.JointCount,
+                                         World.ProxyCount);
+                    TextLine += 15;
+                }
 
-                    if (point.State == PointState.Add)
-                    {
-                        // Add
-                        DebugView.DrawPoint(point.Position, 1.5f, new Color(0.3f, 0.95f, 0.3f));
-                    }
-                    else if (point.State == PointState.Persist)
-                    {
-                        // Persist
-                        DebugView.DrawPoint(point.Position, 0.65f, new Color(0.3f, 0.3f, 0.95f));
-                    }
+                if (_mouseJoint != null)
+                {
+                    Vector2 p1 = _mouseJoint.WorldAnchorB;
+                    Vector2 p2 = _mouseJoint.Target;
 
-                    if (settings.DrawContactNormals == 1)
-                    {
-                        Vector2 p1 = point.Position;
-                        Vector2 p2 = p1 + k_axisScale * point.Normal;
-                        DebugView.DrawSegment(p1, p2, new Color(0.4f, 0.9f, 0.4f));
-                    }
-                    else if (settings.DrawContactForces == 1)
-                    {
-                        //Vector2 p1 = point.position;
-                        //Vector2 p2 = p1 + k_forceScale * point.normalForce * point.normal;
-                        //DrawSegment(p1, p2, Color(0.9f, 0.9f, 0.3f));
-                    }
+                    DebugView.DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
+                    DebugView.DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
+                    DebugView.DrawSegment(p1, p2, new Color(0.8f, 0.8f, 0.8f));
+                }
 
-                    if (settings.DrawFrictionForces == 1)
+                if (settings.DrawContactPoints > 0)
+                {
+                    const float k_axisScale = 0.3f;
+
+                    for (int i = 0; i < PointCount; ++i)
                     {
-                        //Vector2 tangent = b2Cross(point.normal, 1.0f);
-                        //Vector2 p1 = point.position;
-                        //Vector2 p2 = p1 + k_forceScale * point.tangentForce * tangent;
-                        //DrawSegment(p1, p2, Color(0.9f, 0.9f, 0.3f));
+                        ContactPoint point = Points[i];
+
+                        if (point.State == PointState.Add)
+                        {
+                            // Add
+                            DebugView.DrawPoint(point.Position, 1.5f, new Color(0.3f, 0.95f, 0.3f));
+                        }
+                        else if (point.State == PointState.Persist)
+                        {
+                            // Persist
+                            DebugView.DrawPoint(point.Position, 0.65f, new Color(0.3f, 0.3f, 0.95f));
+                        }
+
+                        if (settings.DrawContactNormals == 1)
+                        {
+                            Vector2 p1 = point.Position;
+                            Vector2 p2 = p1 + k_axisScale * point.Normal;
+                            DebugView.DrawSegment(p1, p2, new Color(0.4f, 0.9f, 0.4f));
+                        }
+                        else if (settings.DrawContactForces == 1)
+                        {
+                            //Vector2 p1 = point.position;
+                            //Vector2 p2 = p1 + k_forceScale * point.normalForce * point.normal;
+                            //DrawSegment(p1, p2, Color(0.9f, 0.9f, 0.3f));
+                        }
+
+                        if (settings.DrawFrictionForces == 1)
+                        {
+                            //Vector2 tangent = b2Cross(point.normal, 1.0f);
+                            //Vector2 p1 = point.position;
+                            //Vector2 p2 = p1 + k_forceScale * point.tangentForce * tangent;
+                            //DrawSegment(p1, p2, Color(0.9f, 0.9f, 0.3f));
+                        }
                     }
                 }
             }
@@ -352,8 +363,7 @@ namespace FarseerPhysics.TestBed.Framework
 
         public virtual void PreSolve(Contact contact, ref Manifold oldManifold)
         {
-            Manifold manifold;
-            contact.GetManifold(out manifold);
+            Manifold manifold = contact.Manifold;
 
             if (manifold.PointCount == 0)
             {

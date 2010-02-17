@@ -70,8 +70,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             // Should the body break?
-            Manifold manifold;
-            contact.GetManifold(out manifold);
+            Manifold manifold = contact.Manifold;
             int count = manifold.PointCount;
 
             float maxImpulse = 0.0f;

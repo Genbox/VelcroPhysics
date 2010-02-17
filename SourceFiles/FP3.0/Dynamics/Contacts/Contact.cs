@@ -32,10 +32,10 @@ namespace FarseerPhysics
     /// nodes, one for each attached body.
     public class ContactEdge
     {
-        public Body Other;			///< provides quick access to the other body attached.
-        public Contact Contact;		///< the contact
-        public ContactEdge Prev;	///< the previous contact edge in the body's contact list
-        public ContactEdge Next;	///< the next contact edge in the body's contact list
+        public Body Other;			/// provides quick access to the other body attached.
+        public Contact Contact;		/// the contact
+        public ContactEdge Prev;	/// the previous contact edge in the body's contact list
+        public ContactEdge Next;	/// the next contact edge in the body's contact list
     };
 
     [Flags]
@@ -59,15 +59,8 @@ namespace FarseerPhysics
     /// The class manages contact between two shapes. A contact exists for each overlapping
     /// AABB in the broad-phase (except if filtered). Therefore a contact object may exist
     /// that has no contact points.
-    public abstract class Contact
+    public class Contact
     {
-        /// Get the contact manifold. Do not modify the manifold unless you understand the
-        /// internals of Box2D.
-        public void GetManifold(out Manifold manifold)
-        {
-            manifold = Manifold;
-        }
-
         /// Get the world manifold.
         public void GetWorldManifold(out WorldManifold worldManifold)
         {
@@ -111,31 +104,13 @@ namespace FarseerPhysics
             }
         }
 
-        /// Get the next contact in the world's contact list.
-        public Contact GetNext()
-        {
-            return NextContact;
-        }
-
-        /// Get the first fixture in this contact.
-        public Fixture GetFixtureA()
-        {
-            return FixtureA;
-        }
-
-        /// Get the second fixture in this contact.
-        public Fixture GetFixtureB()
-        {
-            return FixtureB;
-        }
-
         /// Flag this contact for filtering. Filtering will occur the next time step.
         public void FlagForFiltering()
         {
             Flags |= ContactFlags.Filter;
         }
 
-        internal Contact()
+        public Contact()
         {
             FixtureA = null;
             FixtureB = null;
@@ -199,7 +174,19 @@ namespace FarseerPhysics
             }
             else
             {
-                Evaluate(out Manifold, ref xfA, ref xfB);
+                switch (ContactType)
+                {
+                    case ContactType.CircleContact:
+                        Collision.CollideCircles(out Manifold, (CircleShape)FixtureA.Shape, ref xfA, (CircleShape)FixtureB.Shape, ref xfB);
+                        break;
+                    case ContactType.PolygonAndCircleContact:
+                        Collision.CollidePolygonAndCircle(out Manifold, (PolygonShape)FixtureA.Shape, ref xfA, (CircleShape)FixtureB.Shape, ref xfB);
+                        break;
+                    case ContactType.PolygonContact:
+                        Collision.CollidePolygons(out Manifold, (PolygonShape)FixtureA.Shape, ref xfA, (PolygonShape)FixtureB.Shape, ref xfB);
+                        break;
+                }
+
                 touching = Manifold.PointCount > 0;
 
                 // Match old contact ids to new contact ids and copy the
@@ -261,21 +248,21 @@ namespace FarseerPhysics
         }
 
         /// Evaluate this contact with your own manifold and transforms.   
-        internal abstract void Evaluate(out Manifold manifold, ref Transform xfA, ref Transform xfB);
+        //internal abstract void Evaluate(out Manifold manifold, ref Transform xfA, ref Transform xfB);
 
-        internal static Func<Fixture, Fixture, Contact>[,] s_registers = new Func<Fixture, Fixture, Contact>[,] 
+        internal static Func<ContactType>[,] DetermineType = new Func<ContactType>[,] 
         {
             { 
-              (f1, f2) => { return new CircleContact(f1, f2); }, 
-              (f1, f2) => { return new PolygonAndCircleContact(f1, f2); }
+              () => ContactType.CircleContact, 
+              () => ContactType.PolygonAndCircleContact
             },
             { 
-              (f1, f2) => { return new PolygonAndCircleContact(f1, f2); }, 
-              (f1, f2) => { return new PolygonContact(f1, f2); }
+              () => ContactType.PolygonAndCircleContact, 
+              () => ContactType.PolygonContact
             },
         };
 
-        internal static Contact Create(Fixture fixtureA, Fixture fixtureB)
+        internal void Create(Fixture fixtureA, Fixture fixtureB)
         {
             ShapeType type1 = fixtureA.ShapeType;
             ShapeType type2 = fixtureB.ShapeType;
@@ -283,14 +270,18 @@ namespace FarseerPhysics
             Debug.Assert(ShapeType.Unknown < type1 && type1 < ShapeType.TypeCount);
             Debug.Assert(ShapeType.Unknown < type2 && type2 < ShapeType.TypeCount);
 
+            ContactType = DetermineType[(int)type1, (int)type2]();
+
             if (type1 > type2)
             {
                 // primary
-                return s_registers[(int)type1, (int)type2](fixtureA, fixtureB);
+                FixtureA = fixtureA;
+                FixtureB = fixtureB;
             }
             else
             {
-                return s_registers[(int)type1, (int)type2](fixtureB, fixtureA);
+                FixtureA = fixtureB;
+                FixtureB = fixtureA;
             }
         }
 
@@ -307,8 +298,17 @@ namespace FarseerPhysics
         public Fixture FixtureA;
         public Fixture FixtureB;
 
-        internal Manifold Manifold;
+        public Manifold Manifold;
 
         internal int ToiCount;
-    };
+
+        internal ContactType ContactType;
+    }
+
+    public enum ContactType
+    {
+        CircleContact,
+        PolygonAndCircleContact,
+        PolygonContact
+    }
 }

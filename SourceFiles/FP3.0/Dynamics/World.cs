@@ -59,8 +59,8 @@ namespace FarseerPhysics
         private Island _island = new Island();
         private Func<Fixture, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
-        TOISolver _toiSolver = new TOISolver();
-        Contact[] _toiContacts = new Contact[Settings.MaxTOIContactsPerIsland];
+        private TOISolver _toiSolver = new TOISolver();
+        private Contact[] _toiContacts = new Contact[Settings.MaxTOIContactsPerIsland];
 
         private WorldRayCastCallback _rayCastCallback;
         private RayCastCallback _rayCastCallbackWrapper;
