@@ -71,10 +71,6 @@ namespace FarseerPhysics
         {
             JointType = JointType.Distance;
 
-            //Theo Jansen's walker works
-            //LocalAnchorA = BodyA.GetLocalPoint(anchor1);
-            //LocalAnchorB = BodyB.GetLocalPoint(anchor2);
-
             //Web works
             LocalAnchorA = anchor1;
             LocalAnchorB = anchor2;
