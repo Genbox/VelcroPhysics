@@ -71,7 +71,6 @@ namespace FarseerPhysics
         {
             JointType = JointType.Distance;
 
-            //Web works
             LocalAnchorA = anchor1;
             LocalAnchorB = anchor2;
 
