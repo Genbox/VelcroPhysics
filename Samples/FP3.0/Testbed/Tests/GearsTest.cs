@@ -55,9 +55,9 @@ namespace FarseerPhysics.TestBed.Tests
 
                 body1.CreateFixture(circle1);
 
-                _joint1 = new RevoluteJoint(ground, body1, ground.GetLocalPoint(body1.Position));
-                _joint1.LocalAnchorB = body1.GetLocalPoint(body1.Position);
-                _joint1.ReferenceAngle = body1.GetAngle() - ground.GetAngle();
+                _joint1 = new FixedRevoluteJoint(/*ground, */body1, body1.Position/*ground.GetLocalPoint(body1.Position)*/);
+                //_joint1.LocalAnchorB = body1.GetLocalPoint(body1.Position);
+                //_joint1.ReferenceAngle = body1.GetAngle() - ground.GetAngle();
                 World.CreateJoint(_joint1);
 
                 Body body2 = World.CreateBody();
@@ -66,7 +66,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 body2.CreateFixture(circle2);
 
-                _joint2 = new RevoluteJoint(ground, body2, body2.Position);
+                _joint2 = new FixedRevoluteJoint(/*ground,*/ body2, body2.Position);
                 World.CreateJoint(_joint2);
 
                 Body body3 = World.CreateBody();
@@ -114,8 +114,8 @@ namespace FarseerPhysics.TestBed.Tests
             return new GearsTest();
         }
 
-        private RevoluteJoint _joint1;
-        private RevoluteJoint _joint2;
+        private FixedRevoluteJoint _joint1;
+        private FixedRevoluteJoint _joint2;
         private PrismaticJoint _joint3;
         private GearJoint _joint4;
         private GearJoint _joint5;
