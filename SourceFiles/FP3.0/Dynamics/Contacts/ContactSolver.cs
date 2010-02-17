@@ -28,7 +28,7 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics
 {
-    public struct ContactConstraintPoint
+    public class ContactConstraintPoint
     {
         public Vector2 LocalPoint;
         public Vector2 RA;
@@ -40,9 +40,15 @@ namespace FarseerPhysics
         public float VelocityBias;
     };
 
-    public struct ContactConstraint
+    public class ContactConstraint
     {
-        public FixedArray2<ContactConstraintPoint> Points;
+        public ContactConstraint()
+        {
+            Points[0] = new ContactConstraintPoint();
+            Points[1] = new ContactConstraintPoint();
+        }
+
+        public ContactConstraintPoint[] Points = new ContactConstraintPoint[2];
         public Vector2 LocalNormal;
         public Vector2 LocalPoint;
         public Vector2 Normal;
@@ -59,21 +65,23 @@ namespace FarseerPhysics
 
     public class ContactSolver
     {
-        public ContactSolver() { }
-
         public void Reset(Contact[] contacts, int contactCount, float impulseRatio)
         {
             _contacts = contacts;
-
-            _constraintCount = contactCount;
+            ConstraintCount = contactCount;
 
             // grow the array
-            if (_constraints == null || _constraints.Length < _constraintCount)
+            if (Constraints == null || Constraints.Length < ConstraintCount)
             {
-                _constraints = new ContactConstraint[_constraintCount * 2];
+                Constraints = new ContactConstraint[ConstraintCount * 2];
+
+                for (int i = 0; i < ConstraintCount * 2; i++)
+                {
+                    Constraints[i] = new ContactConstraint();                   
+                }
             }
 
-            for (int i = 0; i < _constraintCount; ++i)
+            for (int i = 0; i < ConstraintCount; ++i)
             {
                 Contact contact = contacts[i];
 
@@ -85,8 +93,7 @@ namespace FarseerPhysics
                 float radiusB = shapeB._radius;
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
-                Manifold manifold;
-                contact.GetManifold(out manifold);
+                Manifold manifold = contact.Manifold;
 
                 float friction = Settings.MixFriction(fixtureA.Friction, fixtureB.Friction);
                 float restitution = Settings.MixRestitution(fixtureA.Restitution, fixtureB.Restitution);
@@ -99,8 +106,9 @@ namespace FarseerPhysics
                 Debug.Assert(manifold.PointCount > 0);
 
                 WorldManifold worldManifold = new WorldManifold(ref manifold, ref bodyA._xf, radiusA, ref bodyB._xf, radiusB);
-
-                ContactConstraint cc = _constraints[i];
+                
+                               
+                ContactConstraint cc = Constraints[i];
                 cc.BodyA = bodyA;
                 cc.BodyB = bodyB;
                 cc.Manifold = manifold;
@@ -166,8 +174,6 @@ namespace FarseerPhysics
                     {
                         ccp.VelocityBias = -restitution * vRel;
                     }
-
-                    cc.Points[j] = ccp;
                 }
 
                 // If we have two points, then prepare the block solver.
@@ -205,17 +211,15 @@ namespace FarseerPhysics
                         cc.PointCount = 1;
                     }
                 }
-
-                _constraints[i] = cc;
             }
         }
 
         public void WarmStart()
         {
             // Warm start.
-            for (int i = 0; i < _constraintCount; ++i)
+            for (int i = 0; i < ConstraintCount; ++i)
             {
-                ContactConstraint c = _constraints[i];
+                ContactConstraint c = Constraints[i];
 
                 Body bodyA = c.BodyA;
                 Body bodyB = c.BodyB;
@@ -250,18 +254,15 @@ namespace FarseerPhysics
                     bodyB._linearVelocity.X += invMassB * P.X;
                     bodyB._linearVelocity.Y += invMassB * P.Y;
 #endif
-                    c.Points[j] = ccp;
                 }
-
-                _constraints[i] = c;
             }
         }
 
         public void SolveVelocityConstraints()
         {
-            for (int i = 0; i < _constraintCount; ++i)
+            for (int i = 0; i < ConstraintCount; ++i)
             {
-                ContactConstraint c = _constraints[i];
+                ContactConstraint c = Constraints[i];
                 Body bodyA = c.BodyA;
                 Body bodyB = c.BodyB;
                 float wA = bodyA._angularVelocity;
@@ -331,7 +332,6 @@ namespace FarseerPhysics
                     wB += invIB * (ccp.RB.X * P.Y - ccp.RB.Y * P.X);
 #endif
                     ccp.TangentImpulse = newImpulse;
-                    c.Points[j] = ccp;
                 }
 
                 // Solve normal constraints
@@ -383,7 +383,6 @@ namespace FarseerPhysics
                     wB += invIB * (ccp.RB.X * P.Y - ccp.RB.Y * P.X);
 #endif
                     ccp.NormalImpulse = newImpulse;
-                    c.Points[0] = ccp;
                 }
                 else
                 {
@@ -680,12 +679,7 @@ namespace FarseerPhysics
                         // No solution, give up. This is hit sometimes, but it doesn't seem to matter.
                         break;
                     }
-
-                    c.Points[0] = cp1;
-                    c.Points[1] = cp2;
                 }
-
-                _constraints[i] = c;
 
                 bodyA._linearVelocity = vA;
                 bodyA._angularVelocity = wA;
@@ -696,9 +690,9 @@ namespace FarseerPhysics
 
         public void StoreImpulses()
         {
-            for (int i = 0; i < _constraintCount; ++i)
+            for (int i = 0; i < ConstraintCount; ++i)
             {
-                ContactConstraint c = _constraints[i];
+                ContactConstraint c = Constraints[i];
                 Manifold m = c.Manifold;
 
                 for (int j = 0; j < c.PointCount; ++j)
@@ -714,7 +708,6 @@ namespace FarseerPhysics
 
                 // TODO: look for better ways of doing this.
                 c.Manifold = m;
-                _constraints[i] = c;
                 _contacts[i].Manifold = m;
             }
         }
@@ -723,9 +716,9 @@ namespace FarseerPhysics
         {
             float minSeparation = 0.0f;
 
-            for (int i = 0; i < _constraintCount; ++i)
+            for (int i = 0; i < ConstraintCount; ++i)
             {
-                ContactConstraint c = _constraints[i];
+                ContactConstraint c = Constraints[i];
 
                 Body bodyA = c.BodyA;
                 Body bodyB = c.BodyB;
@@ -738,24 +731,72 @@ namespace FarseerPhysics
                 // Solve normal constraints
                 for (int j = 0; j < c.PointCount; ++j)
                 {
-                    PositionSolverManifold psm = new PositionSolverManifold(ref c, j);
-                    Vector2 normal = psm._normal;
+                    Debug.Assert(c.PointCount > 0);
 
-                    Vector2 point = psm._point;
-                    float separation = psm._separation;
+                    switch (c.Type)
+                    {
+                        case ManifoldType.Circles:
+                            {
+                                Vector2 pointA = c.BodyA.GetWorldPoint(c.LocalPoint);
+                                Vector2 pointB = c.BodyB.GetWorldPoint(c.Points[0].LocalPoint);
+                                if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
+                                {
+                                    _normal = pointB - pointA;
+                                    _normal.Normalize();
+                                }
+                                else
+                                {
+                                    _normal = new Vector2(1.0f, 0.0f);
+                                }
 
-                    Vector2 rA = point - bodyA._sweep.Center;
-                    Vector2 rB = point - bodyB._sweep.Center;
+                                _point = 0.5f * (pointA + pointB);
+                                _separation = Vector2.Dot(pointB - pointA, _normal) - c.Radius;
+                            }
+                            break;
+
+                        case ManifoldType.FaceA:
+                            {
+                                _normal = c.BodyA.GetWorldVector(c.LocalNormal);
+                                Vector2 planePoint = c.BodyA.GetWorldPoint(c.LocalPoint);
+
+                                Vector2 clipPoint = c.BodyB.GetWorldPoint(c.Points[j].LocalPoint);
+                                _separation = Vector2.Dot(clipPoint - planePoint, _normal) - c.Radius;
+                                _point = clipPoint;
+                            }
+                            break;
+
+                        case ManifoldType.FaceB:
+                            {
+                                _normal = c.BodyB.GetWorldVector(c.LocalNormal);
+                                Vector2 planePoint = c.BodyB.GetWorldPoint(c.LocalPoint);
+
+                                Vector2 clipPoint = c.BodyA.GetWorldPoint(c.Points[j].LocalPoint);
+                                _separation = Vector2.Dot(clipPoint - planePoint, _normal) - c.Radius;
+                                _point = clipPoint;
+
+                                // Ensure normal points from A to B
+                                _normal = -_normal;
+                            }
+                            break;
+                        default:
+                            _normal = Vector2.Zero;
+                            _point = Vector2.Zero;
+                            _separation = 0.0f;
+                            break;
+                    }
+
+                    Vector2 rA = _point - bodyA._sweep.Center;
+                    Vector2 rB = _point - bodyB._sweep.Center;
 
                     // Track max constraint error.
-                    minSeparation = Math.Min(minSeparation, separation);
+                    minSeparation = Math.Min(minSeparation, _separation);
 
                     // Prevent large corrections and allow slop.
-                    float C = MathUtils.Clamp(baumgarte * (separation + Settings.LinearSlop), -Settings.MaxLinearCorrection, 0.0f);
+                    float C = MathUtils.Clamp(baumgarte * (_separation + Settings.LinearSlop), -Settings.MaxLinearCorrection, 0.0f);
 
                     // Compute the effective mass.
-                    float rnA = MathUtils.Cross(rA, normal);
-                    float rnB = MathUtils.Cross(rB, normal);
+                    float rnA = MathUtils.Cross(rA, _normal);
+                    float rnB = MathUtils.Cross(rB, _normal);
                     float K = invMassA + invMassB + invIA * rnA * rnA + invIB * rnB * rnB;
 
                     // Compute normal impulse
@@ -770,7 +811,7 @@ namespace FarseerPhysics
 			        bodyB._sweep.c += invMassB * P;
 			        bodyB._sweep.a += invIB * MathUtils.Cross(rB, P);
 #else
-                    Vector2 P = new Vector2(impulse * normal.X, impulse * normal.Y);
+                    Vector2 P = new Vector2(impulse * _normal.X, impulse * _normal.Y);
 
                     bodyA._sweep.Center.X -= invMassA * P.X;
                     bodyA._sweep.Center.Y -= invMassA * P.Y;
@@ -790,72 +831,12 @@ namespace FarseerPhysics
             return minSeparation >= -1.5f * Settings.LinearSlop;
         }
 
-        public ContactConstraint[] _constraints;
-        public int _constraintCount; // collection can be bigger.
+        internal ContactConstraint[] Constraints;
+        internal int ConstraintCount; // collection can be bigger.
         private Contact[] _contacts;
-    };
 
-    internal struct PositionSolverManifold
-    {
-        internal PositionSolverManifold(ref ContactConstraint cc, int index)
-        {
-            Debug.Assert(cc.PointCount > 0);
-
-            switch (cc.Type)
-            {
-                case ManifoldType.Circles:
-                    {
-                        Vector2 pointA = cc.BodyA.GetWorldPoint(cc.LocalPoint);
-                        Vector2 pointB = cc.BodyB.GetWorldPoint(cc.Points[0].LocalPoint);
-                        if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
-                        {
-                            _normal = pointB - pointA;
-                            _normal.Normalize();
-                        }
-                        else
-                        {
-                            _normal = new Vector2(1.0f, 0.0f);
-                        }
-
-                        _point = 0.5f * (pointA + pointB);
-                        _separation = Vector2.Dot(pointB - pointA, _normal) - cc.Radius;
-                    }
-                    break;
-
-                case ManifoldType.FaceA:
-                    {
-                        _normal = cc.BodyA.GetWorldVector(cc.LocalNormal);
-                        Vector2 planePoint = cc.BodyA.GetWorldPoint(cc.LocalPoint);
-
-                        Vector2 clipPoint = cc.BodyB.GetWorldPoint(cc.Points[index].LocalPoint);
-                        _separation = Vector2.Dot(clipPoint - planePoint, _normal) - cc.Radius;
-                        _point = clipPoint;
-                    }
-                    break;
-
-                case ManifoldType.FaceB:
-                    {
-                        _normal = cc.BodyB.GetWorldVector(cc.LocalNormal);
-                        Vector2 planePoint = cc.BodyB.GetWorldPoint(cc.LocalPoint);
-
-                        Vector2 clipPoint = cc.BodyA.GetWorldPoint(cc.Points[index].LocalPoint);
-                        _separation = Vector2.Dot(clipPoint - planePoint, _normal) - cc.Radius;
-                        _point = clipPoint;
-
-                        // Ensure normal points from A to B
-                        _normal = -_normal;
-                    }
-                    break;
-                default:
-                    _normal = Vector2.Zero;
-                    _point = Vector2.Zero;
-                    _separation = 0.0f;
-                    break;
-            }
-        }
-
-        internal Vector2 _normal;
-        internal Vector2 _point;
-        internal float _separation;
-    };
+        private Vector2 _normal;
+        private Vector2 _point;
+        private float _separation;
+    }
 }

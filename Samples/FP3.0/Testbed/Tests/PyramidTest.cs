@@ -66,6 +66,14 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
+        public override void Update(Framework.Settings settings)
+        {
+            if (base.StepCount == 10000)
+                base.GameInstance.Exit();
+            
+            base.Update(settings);
+        }
+
         public static Test Create()
         {
             return new PyramidTest();

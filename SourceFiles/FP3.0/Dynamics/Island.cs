@@ -105,8 +105,8 @@ namespace FarseerPhysics
             int i1 = -1;
             for (int i2 = 0; i2 < ContactCount; ++i2)
             {
-                Fixture fixtureA = Contacts[i2].GetFixtureA();
-                Fixture fixtureB = Contacts[i2].GetFixtureB();
+                Fixture fixtureA = Contacts[i2].FixtureA;
+                Fixture fixtureB = Contacts[i2].FixtureB;
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
                 bool nonStatic = bodyA.BodyType != BodyType.Static && bodyB.BodyType != BodyType.Static;
@@ -201,7 +201,7 @@ namespace FarseerPhysics
                 }
             }
 
-            Report(_contactSolver._constraints);
+            Report(_contactSolver.Constraints);
 
             if (allowSleep)
             {

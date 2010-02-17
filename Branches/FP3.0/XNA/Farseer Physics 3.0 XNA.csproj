@@ -170,20 +170,11 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\ContactManager.cs">
       <Link>Dynamics\ContactManager.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\CirlceContact.cs">
-      <Link>Dynamics\Contacts\CirlceContact.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\Contact.cs">
       <Link>Dynamics\Contacts\Contact.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\ContactSolver.cs">
       <Link>Dynamics\Contacts\ContactSolver.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\PolygonAndCircleContact.cs">
-      <Link>Dynamics\Contacts\PolygonAndCircleContact.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\PolygonContact.cs">
-      <Link>Dynamics\Contacts\PolygonContact.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\TOISolver.cs">
       <Link>Dynamics\Contacts\TOISolver.cs</Link>

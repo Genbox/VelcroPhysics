@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerGames.FarseerPhysics.Controllers;
 using Microsoft.Xna.Framework;
@@ -13,7 +13,8 @@ namespace FarseerPhysics.DebugViewXNA
         public DebugViewXNA(World world)
             : base(world)
         {
-
+            _vertsLines = new VertexPositionColor[1000000];
+            _vertsFill = new VertexPositionColor[1000000];
         }
 
         /// Call this to draw shapes and other debug draw data.
@@ -522,8 +523,8 @@ namespace FarseerPhysics.DebugViewXNA
             _stringData = new List<StringData>();
         }
 
-        private static VertexPositionColor[] _vertsLines = new VertexPositionColor[1000000];
-        private static VertexPositionColor[] _vertsFill = new VertexPositionColor[1000000];
+        private static VertexPositionColor[] _vertsLines;
+        private static VertexPositionColor[] _vertsFill;
         private static int _lineCount;
         private static int _fillCount;
         public static SpriteBatch Batch;
