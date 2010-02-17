@@ -67,7 +67,7 @@ namespace FarseerPhysics
         /// <param name="bodyB"></param>
         /// <param name="anchor"></param>
         /// <param name="axis"></param>
-        public FixedLineJoint(Body bodyA,/* Body bodyB,*/ Vector2 anchor, Vector2 axis)
+        public FixedLineJoint(Body bodyA,/* Body bodyB,*/ Vector2 bodyAnchor, Vector2 worldAnchor, Vector2 axis)
             : base(bodyA/*, bodyB*/)
         {
             JointType = JointType.FixedLine;
@@ -75,8 +75,8 @@ namespace FarseerPhysics
             BodyA = bodyA;
             //BodyB = bodyB;
 
-            LocalAnchorA = anchor;// BodyB.GetLocalPoint(anchor);
-            LocalAnchorB = BodyA.GetLocalPoint(anchor);
+            LocalAnchorA = worldAnchor;
+            LocalAnchorB = bodyAnchor;
 
             //LocalAnchorA = BodyA.GetLocalPoint(anchor);// BodyB.GetLocalPoint(anchor);
             //LocalAnchorB = anchor;

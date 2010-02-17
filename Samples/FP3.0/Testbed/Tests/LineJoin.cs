@@ -50,8 +50,8 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Vector2 axis = new Vector2(2.0f, 1.0f);
                 axis.Normalize();
-                //LineJoint jd = new LineJoint(ground, body, new Vector2(0.0f, 8.5f),new Vector2(0.0f, 1.5f), axis);
-                FixedLineJoint jd = new FixedLineJoint(body, /*ground, */new Vector2(0.0f, 8.5f), axis);
+                //LineJoint jd = new LineJoint(ground, body, new Vector2(0.0f, 8.5f),new Vector2(1.0f, 2.5f), axis);
+                FixedLineJoint jd = new FixedLineJoint(body, /*ground, */new Vector2(1.0f, 1.5f),new Vector2(10.0f, 8.5f), axis);
                 jd.MotorSpeed = 100.0f;
                 jd.MaxMotorForce = 100.0f;
                 jd.MotorEnabled = false;
