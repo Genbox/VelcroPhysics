@@ -223,13 +223,13 @@ namespace FarseerPhysics
                         continue;
                     }
 
-                    if ((b._flags & BodyFlags.AutoSleep) == 0)
+                    if ((b._flags & BodyFlags.AllowSleep) == 0)
                     {
                         b._sleepTime = 0.0f;
                         minSleepTime = 0.0f;
                     }
 
-                    if ((b._flags & BodyFlags.AutoSleep) == 0 ||
+                    if ((b._flags & BodyFlags.AllowSleep) == 0 ||
                         b._angularVelocity * b._angularVelocity > angTolSqr ||
                         Vector2.Dot(b._linearVelocity, b._linearVelocity) > linTolSqr)
                     {

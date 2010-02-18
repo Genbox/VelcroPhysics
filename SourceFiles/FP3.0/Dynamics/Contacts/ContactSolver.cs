@@ -723,10 +723,10 @@ namespace FarseerPhysics
                 Body bodyA = c.BodyA;
                 Body bodyB = c.BodyB;
 
-                float invMassA = bodyA._mass * bodyA._invMass;
-                float invIA = bodyA._mass * bodyA._invI;
-                float invMassB = bodyB._mass * bodyB._invMass;
-                float invIB = bodyB._mass * bodyB._invI;
+                float invMassA = bodyA.Mass * bodyA._invMass;
+                float invIA = bodyA.Mass * bodyA._invI;
+                float invMassB = bodyB.Mass * bodyB._invMass;
+                float invIB = bodyB.Mass * bodyB._invI;
 
                 // Solve normal constraints
                 for (int j = 0; j < c.PointCount; ++j)

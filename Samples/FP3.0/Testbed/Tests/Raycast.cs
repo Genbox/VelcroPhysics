@@ -115,7 +115,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_bodies[i] != null)
                 {
-                    World.DestroyBody(_bodies[i]);
+                    World.RemoveBody(_bodies[i]);
                     _bodies[i] = null;
                     return;
                 }
@@ -165,14 +165,14 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (_bodies[_bodyIndex] != null)
             {
-                World.DestroyBody(_bodies[_bodyIndex]);
+                World.RemoveBody(_bodies[_bodyIndex]);
                 _bodies[_bodyIndex] = null;
             }
 
             float x = Rand.RandomFloat(-10.0f, 10.0f);
             float y = Rand.RandomFloat(0.0f, 20.0f);
 
-            _bodies[_bodyIndex] = World.CreateBody();
+            _bodies[_bodyIndex] = World.AddBody();
 
             _bodies[_bodyIndex].Position = new Vector2(x, y);
             _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);

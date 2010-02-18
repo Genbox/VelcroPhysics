@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
             Body ground;
             {
                 
-                ground = World.CreateBody();
+                ground = World.AddBody();
 
                 PolygonShape shape = new PolygonShape(0.0f);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -48,12 +48,12 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(5);
                 shape.SetAsBox(a, b);
 
-                Body body1 = World.CreateBody();
+                Body body1 = World.AddBody();
                 body1.BodyType = BodyType.Dynamic;
                 body1.Position = new Vector2(-10.0f, y);
                 body1.CreateFixture(shape);
 
-                Body body2 = World.CreateBody();
+                Body body2 = World.AddBody();
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(10.0f, y);
 
@@ -64,7 +64,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 groundAnchor1 = new Vector2(-10.0f, y + b + L);
                 Vector2 groundAnchor2 = new Vector2(10.0f, y + b + L);
                 _joint1 = new PulleyJoint(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2, 2.0f);
-                World.CreateJoint(_joint1);
+                World.AddJoint(_joint1);
             }
         }
 

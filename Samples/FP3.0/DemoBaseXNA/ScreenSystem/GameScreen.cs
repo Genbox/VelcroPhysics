@@ -138,7 +138,7 @@ namespace DemoBaseXNA.ScreenSystem
 
                 _border = new Border(50, 40, borderWidth, new Vector2(0, 0));
                 _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
-                _groundBody = PhysicsSimulator.CreateBody();
+                _groundBody = PhysicsSimulator.AddBody();
             }
         }
 
@@ -335,7 +335,7 @@ namespace DemoBaseXNA.ScreenSystem
                 Body body = _fixture.Body;
                 _mouseJoint = new MouseJoint(_groundBody, body, p);
                 _mouseJoint.MaxForce = 1000.0f * body.Mass;
-                PhysicsSimulator.CreateJoint(_mouseJoint);
+                PhysicsSimulator.AddJoint(_mouseJoint);
                 body.Awake = true;
             }
         }
@@ -344,7 +344,7 @@ namespace DemoBaseXNA.ScreenSystem
         {
             if (_mouseJoint != null)
             {
-                PhysicsSimulator.DestroyJoint(_mouseJoint);
+                PhysicsSimulator.RemoveJoint(_mouseJoint);
                 _mouseJoint = null;
             }
 

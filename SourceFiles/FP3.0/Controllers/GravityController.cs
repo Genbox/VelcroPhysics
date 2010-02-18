@@ -36,7 +36,7 @@ namespace FarseerPhysics.Controllers
         {
             Vector2 f = Vector2.Zero;
 
-            for (Body body1 = World.BodyList; body1 != null; body1 = body1.NextBody)
+            for (Body body1 = World.BodyList; body1 != null; body1 = body1.Next)
             {
                 if (!body1.Enabled || body1.IgnoreGravity || body1.IsStatic)
                     continue;

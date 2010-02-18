@@ -117,7 +117,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Ground body
             {
 
-                Body ground = World.CreateBody();
+                Body ground = World.AddBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -174,11 +174,11 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (_bodies[_bodyIndex] != null)
             {
-                World.DestroyBody(_bodies[_bodyIndex]);
+                World.RemoveBody(_bodies[_bodyIndex]);
                 _bodies[_bodyIndex] = null;
             }
 
-            _bodies[_bodyIndex] = World.CreateBody();
+            _bodies[_bodyIndex] = World.AddBody();
             _bodies[_bodyIndex].BodyType = BodyType.Dynamic;
 
             float x = Rand.RandomFloat(-2.0f, 2.0f);
@@ -212,7 +212,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_bodies[i] != null)
                 {
-                    World.DestroyBody(_bodies[i]);
+                    World.RemoveBody(_bodies[i]);
                     _bodies[i] = null;
                     return;
                 }
