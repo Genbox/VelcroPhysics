@@ -202,6 +202,29 @@ namespace FarseerPhysics
             _controllers.Add(controller);
         }
 
+        public Body CreateBody(Body body)
+        {
+            Debug.Assert(!Locked);
+            if (Locked)
+            {
+                return null;
+            }
+
+            Body clone = body.Clone(this);
+
+            // Add to world doubly linked list.
+            clone._prev = null;
+            clone._next = BodyList;
+            if (BodyList != null)
+            {
+                BodyList._prev = clone;
+            }
+            BodyList = clone;
+            ++BodyCount;
+
+            return clone;
+        }
+
         public Body CreateBody()
         {
             Debug.Assert(!Locked);

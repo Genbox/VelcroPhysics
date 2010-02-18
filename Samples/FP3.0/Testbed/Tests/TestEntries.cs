@@ -28,6 +28,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {    
+                new TestEntry {Name = "Cutting of polygons", CreateFcn = CuttingTest.Create},
                 new TestEntry {Name = "Apply Force", CreateFcn = ApplyForceTest.Create},
                 new TestEntry {Name = "Prismatic", CreateFcn = PrismaticTest.Create},
                 new TestEntry {Name = "Collision Filtering", CreateFcn = CollisionFilteringTest.Create},
@@ -37,7 +38,6 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Web", CreateFcn = WebTest.Create},
                 new TestEntry {Name = "Edge Shapes", CreateFcn = EdgeShapes.Create},
                 new TestEntry {Name = "Continuous Test", CreateFcn = ContinuousTest.Create},
-                new TestEntry {Name = "Cutting of polygons", CreateFcn = CuttingTest.Create},
                 new TestEntry {Name = "Ray-Cast", CreateFcn = RayCastTest.Create},
                 new TestEntry {Name = "Buoyancy controller", CreateFcn = BuoyancyTest.Create},
                 new TestEntry {Name = "Controllers", CreateFcn = ControllerTest.Create},
