@@ -316,7 +316,7 @@ namespace DemoBaseXNA.ScreenSystem
                     Body body = fixture.Body;
                     if (body.BodyType == BodyType.Dynamic)
                     {
-                        bool inside = fixture.TestPoint(p);
+                        bool inside = fixture.TestPoint(ref p);
                         if (inside)
                         {
                             _fixture = fixture;

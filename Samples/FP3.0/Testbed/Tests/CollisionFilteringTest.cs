@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -35,16 +34,16 @@ namespace FarseerPhysics.TestBed.Tests
         // The 3 small ones always collide.
         // The 3 large ones never collide.
         // The boxes don't collide with triangles (except if both are small).
-        private const Int16 SmallGroup = 1;
-        private const Int16 LargeGroup = -1;
+        private const short SmallGroup = 1;
+        private const short LargeGroup = -1;
 
-        private const ushort TriangleCategory = 0x0002;
-        private const ushort BoxCategory = 0x0004;
-        private const ushort CircleCategory = 0x0008;
+        private const CollisionCategory TriangleCategory = CollisionCategory.Cat1;
+        private const CollisionCategory BoxCategory = CollisionCategory.Cat2;
+        private const CollisionCategory CircleCategory = CollisionCategory.Cat3;
 
-        private const ushort TriangleMask = 0xFFFF;
-        private const ushort BoxMask = 0xFFFF ^ TriangleCategory;
-        private const ushort CircleMask = 0xFFFF;
+        private const CollisionCategory TriangleMask = CollisionCategory.All;
+        private const CollisionCategory BoxMask = CollisionCategory.All ^ TriangleCategory;
+        private const CollisionCategory CircleMask = CollisionCategory.All;
 
         private CollisionFilteringTest()
         {
@@ -71,9 +70,9 @@ namespace FarseerPhysics.TestBed.Tests
                 body1.Position = new Vector2(-5.0f, 2.0f);
 
                 Fixture body1Fixture = body1.CreateFixture(polygon);
-                body1Fixture.GroupIndex = SmallGroup;
-                body1Fixture.CategoryBits = TriangleCategory;
-                body1Fixture.MaskBits = TriangleMask;
+                body1Fixture.CollisionGroup = SmallGroup;
+                body1Fixture.CollisionCategories = TriangleCategory;
+                body1Fixture.CollidesWith = TriangleMask;
 
                 // Large triangle (recycle definitions)
                 vertices[0] *= 2.0f;
@@ -81,13 +80,13 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices[2] *= 2.0f;
                 polygon.Set(vertices);
 
-                body2 = World.CreateBody();
+                Body body2 = World.CreateBody();
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(-5.0f, 6.0f);
                 body2.FixedRotation = true; // look at me!
 
                 Fixture body2Fixture = body2.CreateFixture(polygon);
-                body2Fixture.GroupIndex = LargeGroup;
+                body2Fixture.CollisionGroup = LargeGroup;
 
                 {
                     Body body = World.CreateBody();
@@ -115,11 +114,11 @@ namespace FarseerPhysics.TestBed.Tests
                 body3.BodyType = BodyType.Dynamic;
                 body3.Position = new Vector2(0.0f, 2.0f);
 
-                Fixture body3fixture = body3.CreateFixture(polygon);
-                body3fixture.Restitution = 0.1f;
-                body3fixture.GroupIndex = SmallGroup;
-                body3fixture.CategoryBits = BoxCategory;
-                body3fixture.MaskBits = BoxMask;
+                Fixture body3Fixture = body3.CreateFixture(polygon);
+                body3Fixture.Restitution = 0.1f;
+                body3Fixture.CollisionGroup = SmallGroup;
+                body3Fixture.CollisionCategories = BoxCategory;
+                body3Fixture.CollidesWith = BoxMask;
 
                 // Large box (recycle definitions)
                 Vertices box3 = PolygonTools.CreateRectangle(2, 1);
@@ -130,7 +129,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body4.Position = new Vector2(0.0f, 6.0f);
 
                 Fixture body4Fixture = body4.CreateFixture(polygon);
-                body4Fixture.GroupIndex = LargeGroup;
+                body4Fixture.CollisionGroup = LargeGroup;
 
                 // Small circle
                 CircleShape circle = new CircleShape(1.0f, 1);
@@ -140,9 +139,9 @@ namespace FarseerPhysics.TestBed.Tests
                 body5.Position = new Vector2(5.0f, 2.0f);
 
                 Fixture body5Fixture = body5.CreateFixture(circle);
-                body5Fixture.GroupIndex = SmallGroup;
-                body5Fixture.CategoryBits = CircleCategory;
-                body5Fixture.MaskBits = CircleMask;
+                body5Fixture.CollisionGroup = SmallGroup;
+                body5Fixture.CollisionCategories = CircleCategory;
+                body5Fixture.CollidesWith = CircleMask;
 
                 // Large circle
                 circle.Radius *= 2.0f;
@@ -152,20 +151,16 @@ namespace FarseerPhysics.TestBed.Tests
                 body6.Position = new Vector2(5.0f, 6.0f);
 
                 Fixture body6Fixture = body6.CreateFixture(circle);
-                body6Fixture.GroupIndex = LargeGroup;
+                body6Fixture.CollisionGroup = LargeGroup;
+
+                // Large circle - Ignore with other large circle
+                Body body7 = World.CreateBody();
+                body7.BodyType = BodyType.Dynamic;
+                body7.Position = new Vector2(6.0f, 9.0f);
+
+                Fixture body7Fixture = body7.CreateFixture(circle);
+                body7Fixture.IgnoreCollisionWith(body6Fixture);
             }
-        }
-
-        private Body body2;
-
-        public override void Keyboard(Microsoft.Xna.Framework.Input.KeyboardState state, Microsoft.Xna.Framework.Input.KeyboardState oldState)
-        {
-            if (state.IsKeyDown(Keys.D))
-                body2.ApplyForce(new Vector2(100f, 0), body2.Position);
-
-            base.Keyboard(state, oldState);
-
-            base.Keyboard(state, oldState);
         }
 
         internal static Test Create()
