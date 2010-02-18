@@ -697,8 +697,8 @@ namespace FarseerPhysics
 
                 for (int j = 0; j < c.PointCount; ++j)
                 {
-                    var pj = m.Points[j];
-                    var cp = c.Points[j];
+                    ManifoldPoint pj = m.Points[j];
+                    ContactConstraintPoint cp = c.Points[j];
 
                     pj.NormalImpulse = cp.NormalImpulse;
                     pj.TangentImpulse = cp.TangentImpulse;

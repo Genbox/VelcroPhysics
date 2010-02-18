@@ -23,6 +23,7 @@
 using System;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -80,7 +81,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices[2] *= 2.0f;
                 polygon.Set(vertices);
 
-                Body body2 = World.CreateBody();
+                body2 = World.CreateBody();
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(-5.0f, 6.0f);
                 body2.FixedRotation = true; // look at me!
@@ -97,8 +98,7 @@ namespace FarseerPhysics.TestBed.Tests
                     PolygonShape p = new PolygonShape(box, 1);
                     body.CreateFixture(p);
 
-                    PrismaticJoint jd = new PrismaticJoint(body2, body, new Vector2(5.0f, -2.0f), new Vector2(5.0f, -6.0f), new Vector2(0.0f, 0.0f));
-                    jd.LocalXAxis1 = new Vector2(0f,1f);
+                    PrismaticJoint jd = new PrismaticJoint(body2, body, new Vector2(0.0f, 4.0f), new Vector2(0.0f, 0.0f), new Vector2(0.0f, 1.0f));
                     jd.LimitEnabled = true;
                     jd.LowerLimit = -1.0f;
                     jd.UpperLimit = 1.0f;
@@ -154,7 +154,18 @@ namespace FarseerPhysics.TestBed.Tests
                 Fixture body6Fixture = body6.CreateFixture(circle);
                 body6Fixture.GroupIndex = LargeGroup;
             }
+        }
 
+        private Body body2;
+
+        public override void Keyboard(Microsoft.Xna.Framework.Input.KeyboardState state, Microsoft.Xna.Framework.Input.KeyboardState oldState)
+        {
+            if (state.IsKeyDown(Keys.D))
+                body2.ApplyForce(new Vector2(100f, 0), body2.Position);
+
+            base.Keyboard(state, oldState);
+
+            base.Keyboard(state, oldState);
         }
 
         internal static Test Create()
