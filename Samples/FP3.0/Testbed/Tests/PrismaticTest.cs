@@ -30,43 +30,25 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private PrismaticTest()
         {
-            Body ground;
-            {
+            PolygonShape shape = new PolygonShape(5.0f);
+            shape.SetAsBox(2.0f, 0.5f);
 
-                ground = World.CreateBody();
+            Body body = World.CreateBody();
+            body.BodyType = BodyType.Dynamic;
+            body.Position = new Vector2(-10.0f, 10.0f);
+            body.Rotation = 0.5f * Settings.Pi;
 
-                PolygonShape shape = new PolygonShape(0.0f);
-                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
-            }
+            body.CreateFixture(shape);
 
-            {
-                PolygonShape shape = new PolygonShape(5.0f);
-                shape.SetAsBox(2.0f, 0.5f);
+            _joint = new FixedPrismaticJoint(body, Vector2.Zero, new Vector2(1.0f, 0.0f));
+            _joint.MotorSpeed = 10.0f;
+            _joint.MaxMotorForce = 1000.0f;
+            _joint.MotorEnabled = true;
+            _joint.LowerLimit = 0.0f;
+            _joint.UpperLimit = 20.0f;
+            _joint.LimitEnabled = true;
 
-                Body body = World.CreateBody();
-                body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(-10.0f, 10.0f);
-                body.Rotation = 0.5f * Settings.Pi;
-
-                body.CreateFixture(shape);
-
-                // Bouncy limit
-                _joint = new FixedPrismaticJoint(body, new Vector2(0.0f, 10.0f), new Vector2(1.0f, 1.0f));
-                //_joint = new FixedPrismaticJoint(ground, body, new Vector2(0.0f, 10.0f), new Vector2(1.0f, 1.0f));
-
-                // Non-bouncy limit
-                //pjd.Initialize(ground, body, new Vector2(-10.0f, 10.0f), new Vector2(1.0f, 0.0f));
-
-                _joint.MotorSpeed = 10.0f;
-                _joint.MaxMotorForce = 1000.0f;
-                _joint.MotorEnabled = true;
-                _joint.LowerLimit = 0.0f;
-                _joint.UpperLimit = 20.0f;
-                _joint.LimitEnabled = true;
-
-                World.CreateJoint(_joint);
-            }
+            World.CreateJoint(_joint);
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
@@ -87,8 +69,6 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(Framework.Settings settings)
         {
-            float trans = _joint.JointTranslation;
-            float speed = _joint.JointSpeed;
             base.Update(settings);
             DebugView.DrawString(50, TextLine, "Keys: (l) limits, (m) motors, (p) speed");
             TextLine += 15;

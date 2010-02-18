@@ -96,7 +96,7 @@ namespace FarseerPhysics
     /// </summary>
     public class FixedPrismaticJoint : Joint
     {
-        public Vector2 LocalXAxis1;
+        public Vector2 _localXAxis1;
         private Mat33 _K;
         private float _a1, _a2;
         private Vector2 _axis;
@@ -133,8 +133,8 @@ namespace FarseerPhysics
             LocalAnchorA = BodyA.GetLocalPoint(anchor);
             LocalAnchorB = anchor;// BodyB.GetLocalPoint(anchor);
 
-            LocalXAxis1 = BodyA.GetLocalVector(axis);
-            _localYAxis1 = MathUtils.Cross(1.0f, LocalXAxis1);
+            _localXAxis1 = BodyA.GetLocalVector(axis);
+            _localYAxis1 = MathUtils.Cross(1.0f, _localXAxis1);
             _refAngle = /*BodyB.GetAngle()*/ - BodyA.GetAngle();
 
             _limitState = LimitState.Inactive;
@@ -163,7 +163,7 @@ namespace FarseerPhysics
             get
             {
                 Vector2 d = LocalAnchorB/*BodyB.GetWorldPoint(LocalAnchorB)*/ - BodyA.GetWorldPoint(LocalAnchorA);
-                Vector2 axis = BodyA.GetWorldVector(LocalXAxis1);
+                Vector2 axis = BodyA.GetWorldVector(_localXAxis1);
 
                 return Vector2.Dot(d, axis);
             }
@@ -186,7 +186,7 @@ namespace FarseerPhysics
                 Vector2 p1 = BodyA._sweep.Center + r1;
                 Vector2 p2 = /*BodyB._sweep.Center +*/ r2;
                 Vector2 d = p2 - p1;
-                Vector2 axis = BodyA.GetWorldVector(LocalXAxis1);
+                Vector2 axis = BodyA.GetWorldVector(_localXAxis1);
 
                 Vector2 v1 = BodyA._linearVelocity;
                 Vector2 v2 = new Vector2(0.0f, 0.0f);// BodyB._linearVelocity;
@@ -330,7 +330,7 @@ namespace FarseerPhysics
 
             // Compute motor Jacobian and effective mass.
             {
-                _axis = MathUtils.Multiply(ref xf1.R, LocalXAxis1);
+                _axis = MathUtils.Multiply(ref xf1.R, _localXAxis1);
                 _a1 = MathUtils.Cross(d + r1, _axis);
                 _a2 = MathUtils.Cross(r2, _axis);
 
@@ -546,7 +546,7 @@ namespace FarseerPhysics
 
             if (_enableLimit)
             {
-                _axis = MathUtils.Multiply(ref R1, LocalXAxis1);
+                _axis = MathUtils.Multiply(ref R1, _localXAxis1);
 
                 _a1 = MathUtils.Cross(d + r1, _axis);
                 _a2 = MathUtils.Cross(r2, _axis);
