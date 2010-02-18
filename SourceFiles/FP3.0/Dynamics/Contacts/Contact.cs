@@ -247,9 +247,6 @@ namespace FarseerPhysics
             }
         }
 
-        /// Evaluate this contact with your own manifold and transforms.   
-        //internal abstract void Evaluate(out Manifold manifold, ref Transform xfA, ref Transform xfB);
-
         internal static Func<ContactType>[,] DetermineType = new Func<ContactType>[,] 
         {
             { 
