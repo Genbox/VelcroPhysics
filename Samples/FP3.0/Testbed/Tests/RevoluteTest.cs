@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = World.CreateBody();
+                ground = World.AddBody();
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -42,7 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(0.5f, 5);
 
-                Body body = World.CreateBody();
+                Body body = World.AddBody();
                 body.Position = new Vector2(0.0f, 20.0f);
                 body.BodyType = BodyType.Dynamic;
 
@@ -61,7 +61,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _joint.LimitEnabled = false;
                 _joint.CollideConnected = true;
 
-                World.CreateJoint(_joint);
+                World.AddJoint(_joint);
             }
         }
 

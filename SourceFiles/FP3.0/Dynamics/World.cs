@@ -48,8 +48,6 @@ namespace FarseerPhysics
         /// </summary>
         public FixtureRemovedDelegate FixtureRemoved;
 
-        internal WorldFlags Flags;
-
         /// <summary>
         /// Called whenever a Joint is removed
         /// </summary>
@@ -68,9 +66,11 @@ namespace FarseerPhysics
         private Stopwatch _watch;
 
         private List<Controller> _controllers = new List<Controller>();
+        internal WorldFlags Flags;
 
         /// <summary>
         /// Construct a world object.
+        /// Warmstarting and continuous collision detection is on by default.
         /// </summary>
         /// <param name="gravity">the world gravity vector.</param>
         /// <param name="allowSleep">improve performance by not simulating inactive bodies.</param>
@@ -154,12 +154,27 @@ namespace FarseerPhysics
             set
             {
                 if (value)
-                {
                     Flags |= WorldFlags.Locked;
+                else
+                    Flags &= ~WorldFlags.Locked;
+            }
+        }
+
+        public bool AllowSleep { get; set; }
+
+        /// Get the flag that controls automatic clearing of forces after each time step.
+        public bool AutoClearForces
+        {
+            get { return (Flags & WorldFlags.ClearForces) == WorldFlags.ClearForces; }
+            set
+            {
+                if (value)
+                {
+                    Flags |= WorldFlags.ClearForces;
                 }
                 else
                 {
-                    Flags &= ~WorldFlags.Locked;
+                    Flags &= ~WorldFlags.ClearForces;
                 }
             }
         }
@@ -180,10 +195,6 @@ namespace FarseerPhysics
         /// <returns>the head of the world joint list.</returns>
         public Joint JointList { get; private set; }
 
-        public bool AllowSleep { get; set; }
-
-        public TimeSpan UpdateTime { get; private set; }
-
         /// <summary>
         /// Get the world contact list. With the returned contact, use Contact.GetNext to get
         /// the next contact in the world list. A null contact indicates the end of the list.
@@ -194,6 +205,8 @@ namespace FarseerPhysics
             get { return ContactManager._contactList; }
         }
 
+        public TimeSpan UpdateTime { get; private set; }
+
         public void AddController(Controller controller)
         {
             Debug.Assert(!_controllers.Contains(controller));
@@ -202,7 +215,13 @@ namespace FarseerPhysics
             _controllers.Add(controller);
         }
 
-        public Body CreateBody(Body body)
+        public void RemoveController(Controller controller)
+        {
+            if (_controllers.Contains(controller))
+                _controllers.Remove(controller);
+        }
+
+        public Body AddBody(Body body)
         {
             Debug.Assert(!Locked);
             if (Locked)
@@ -225,7 +244,7 @@ namespace FarseerPhysics
             return clone;
         }
 
-        public Body CreateBody()
+        public Body AddBody()
         {
             Debug.Assert(!Locked);
             if (Locked)
@@ -255,7 +274,7 @@ namespace FarseerPhysics
         /// @warning This function is locked during callbacks.
         /// </summary>
         /// <param name="b">The b.</param>
-        public void DestroyBody(Body b)
+        public void RemoveBody(Body b)
         {
             Debug.Assert(BodyCount > 0);
             Debug.Assert(!Locked);
@@ -276,7 +295,7 @@ namespace FarseerPhysics
                     JointRemoved(je0.Joint);
                 }
 
-                DestroyJoint(je0.Joint);
+                RemoveJoint(je0.Joint);
             }
             b._jointList = null;
 
@@ -334,7 +353,7 @@ namespace FarseerPhysics
         /// </summary>
         /// <param name="joint">The joint.</param>
         /// <returns></returns>
-        public void CreateJoint(Joint joint)
+        public void AddJoint(Joint joint)
         {
             Debug.Assert(!Locked);
             if (Locked)
@@ -410,7 +429,7 @@ namespace FarseerPhysics
         /// @warning This function is locked during callbacks.
         /// </summary>
         /// <param name="j">The j.</param>
-        public void DestroyJoint(Joint j)
+        public void RemoveJoint(Joint j)
         {
             Debug.Assert(!Locked);
             if (Locked)
@@ -598,30 +617,11 @@ namespace FarseerPhysics
         /// @see SetAutoClearForces
         public void ClearForces()
         {
-            for (Body body = BodyList; body != null; body = body.NextBody)
+            for (Body body = BodyList; body != null; body = body.Next)
             {
                 body._force = Vector2.Zero;
                 body._torque = 0.0f;
             }
-        }
-
-        /// Set flag to control automatic clearing of forces after each time step.
-        public void SetAutoClearForces(bool flag)
-        {
-            if (flag)
-            {
-                Flags |= WorldFlags.ClearForces;
-            }
-            else
-            {
-                Flags &= ~WorldFlags.ClearForces;
-            }
-        }
-
-        /// Get the flag that controls automatic clearing of forces after each time step.
-        public bool GetAutoClearForces()
-        {
-            return (Flags & WorldFlags.ClearForces) == WorldFlags.ClearForces;
         }
 
         /// <summary>
@@ -846,7 +846,7 @@ namespace FarseerPhysics
             }
 
             // Synchronize fixtures, check for out of range bodies.
-            for (Body b = BodyList; b != null; b = b.NextBody)
+            for (Body b = BodyList; b != null; b = b.Next)
             {
                 if (!b.Awake || !b.Enabled)
                 {
@@ -865,8 +865,6 @@ namespace FarseerPhysics
             // Look for new contacts.
             ContactManager.FindNewContacts();
         }
-
-        private Body[] _queue;
 
         // Advance a dynamic body to its first time of contact
         // and adjust the position to ensure clearance.

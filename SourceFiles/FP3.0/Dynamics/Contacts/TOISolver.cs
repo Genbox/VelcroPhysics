@@ -93,8 +93,8 @@ namespace FarseerPhysics
                 Body bodyA = c.BodyA;
                 Body bodyB = c.BodyB;
 
-                float massA = bodyA._mass;
-                float massB = bodyB._mass;
+                float massA = bodyA.Mass;
+                float massB = bodyB.Mass;
 
                 // Only the TOI body should move.
                 if (bodyA == _toiBody)

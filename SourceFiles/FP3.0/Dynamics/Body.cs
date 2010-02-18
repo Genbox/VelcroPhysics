@@ -51,7 +51,7 @@ namespace FarseerPhysics
         None = 0,
         Island = (1 << 0),
         Awake = (1 << 1),
-        AutoSleep = (1 << 2),
+        AllowSleep = (1 << 2),
         Bullet = (1 << 3),
         FixedRotation = (1 << 4),
         Enabled = (1 << 5),
@@ -61,7 +61,6 @@ namespace FarseerPhysics
 
     public class Body
     {
-        private float _I;
         private BodyType _bodyType;
 
         internal float _angularDamping;
@@ -75,7 +74,6 @@ namespace FarseerPhysics
         internal float _invMass;
         internal JointEdge _jointList;
         internal Vector2 _linearVelocity;
-        internal float _mass;
         internal Body _next;
         internal Body _prev;
         internal float _sleepTime;
@@ -119,34 +117,6 @@ namespace FarseerPhysics
         }
 
         /// <summary>
-        /// Set this flag to false if this body should never fall asleep. Note that
-        /// this increases CPU usage.
-        /// </summary>
-        public bool AllowSleep
-        {
-            get { return (_flags & BodyFlags.AutoSleep) == BodyFlags.AutoSleep; }
-            set
-            {
-                if (value)
-                    _flags |= BodyFlags.AutoSleep;
-                else
-                    _flags &= ~BodyFlags.AutoSleep;
-            }
-        }
-
-        public bool IgnoreGravity
-        {
-            get { return (_flags & BodyFlags.IgnoreGravity) == BodyFlags.IgnoreGravity; }
-            set
-            {
-                if (value)
-                    _flags |= BodyFlags.IgnoreGravity;
-                else
-                    _flags &= ~BodyFlags.IgnoreGravity;
-            }
-        }
-
-        /// <summary>
         /// Set the type of this body. This may alter the mass and velocity.
         /// </summary>
         /// <value>The type.</value>
@@ -182,6 +152,170 @@ namespace FarseerPhysics
             }
             get { return _bodyType; }
         }
+
+        // Flags
+
+        /// <summary>
+        /// Is this body awake or sleeping?
+        /// </summary>
+        /// <value>
+        ///   &lt;c&gt;true&lt;/c&gt; if this instance is awake; otherwise, &lt;c&gt;false&lt;/c&gt;.
+        /// </value>
+        public bool Awake
+        {
+            get { return (_flags & BodyFlags.Awake) == BodyFlags.Awake; }
+            set
+            {
+                if (value)
+                {
+                    if ((_flags & BodyFlags.Awake) == 0)
+                    {
+                        _flags |= BodyFlags.Awake;
+                        _sleepTime = 0.0f;
+                    }
+                }
+                else
+                {
+                    _flags &= ~BodyFlags.Awake;
+                    _sleepTime = 0.0f;
+                    _linearVelocity = Vector2.Zero;
+                    _angularVelocity = 0.0f;
+                    _force = Vector2.Zero;
+                    _torque = 0.0f;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set this flag to false if this body should never fall asleep. Note that
+        /// this increases CPU usage.
+        /// </summary>
+        public bool AllowSleep
+        {
+            get { return (_flags & BodyFlags.AllowSleep) == BodyFlags.AllowSleep; }
+            set
+            {
+                if (value)
+                    _flags |= BodyFlags.AllowSleep;
+                else
+                    _flags &= ~BodyFlags.AllowSleep;
+            }
+        }
+
+        /// <summary>
+        /// Is this a fast moving body that should be prevented from tunneling through
+        /// other moving bodies? Note that all bodies are prevented from tunneling through
+        /// kinematic and static bodies. This setting is only considered on dynamic bodies.
+        /// @warning You should use this flag sparingly since it increases processing time.
+        /// </summary>
+        public bool Bullet
+        {
+            set
+            {
+                if (value)
+                {
+                    _flags |= BodyFlags.Bullet;
+                }
+                else
+                {
+                    _flags &= ~BodyFlags.Bullet;
+                }
+            }
+            get
+            {
+                return (_flags & BodyFlags.Bullet) == BodyFlags.Bullet;
+            }
+        }
+
+        /// <summary>
+        /// Should this body be prevented from rotating? Useful for characters.
+        /// </summary>
+        /// <value>
+        ///   &lt;c&gt;true&lt;/c&gt; if [is fixed rotation]; otherwise, &lt;c&gt;false&lt;/c&gt;.
+        /// </value>
+        public bool FixedRotation
+        {
+            get { return (_flags & BodyFlags.FixedRotation) == BodyFlags.FixedRotation; }
+            set
+            {
+                if (value)
+                {
+                    _flags |= BodyFlags.FixedRotation;
+                }
+                else
+                {
+                    _flags &= ~BodyFlags.FixedRotation;
+                }
+
+                ResetMassData();
+            }
+        }
+
+        /// <summary>
+        /// Get the active state of the body.
+        /// </summary>
+        /// <value>
+        ///   &lt;c&gt;true&lt;/c&gt; if this instance is active; otherwise, &lt;c&gt;false&lt;/c&gt;.
+        /// </value>
+        public bool Enabled
+        {
+            get { return (_flags & BodyFlags.Enabled) == BodyFlags.Enabled; }
+            set
+            {
+                if (value == Enabled)
+                {
+                    return;
+                }
+
+                if (value)
+                {
+                    _flags |= BodyFlags.Enabled;
+
+                    // Create all proxies.
+                    BroadPhase broadPhase = World.ContactManager._broadPhase;
+                    for (Fixture f = _fixtureList; f != null; f = f._next)
+                    {
+                        f.CreateProxy(broadPhase, ref _xf);
+                    }
+
+                    // Contacts are created the next time step.
+                }
+                else
+                {
+                    _flags &= ~BodyFlags.Enabled;
+
+                    // Destroy all proxies.
+                    BroadPhase broadPhase = World.ContactManager._broadPhase;
+                    for (Fixture f = _fixtureList; f != null; f = f._next)
+                    {
+                        f.DestroyProxy(broadPhase);
+                    }
+
+                    // Destroy the attached contacts.
+                    ContactEdge ce = _contactList;
+                    while (ce != null)
+                    {
+                        ContactEdge ce0 = ce;
+                        ce = ce.Next;
+                        World.ContactManager.Destroy(ce0.Contact);
+                    }
+                    _contactList = null;
+                }
+            }
+        }
+
+        public bool IgnoreGravity
+        {
+            get { return (_flags & BodyFlags.IgnoreGravity) == BodyFlags.IgnoreGravity; }
+            set
+            {
+                if (value)
+                    _flags |= BodyFlags.IgnoreGravity;
+                else
+                    _flags &= ~BodyFlags.IgnoreGravity;
+            }
+        }
+
 
         /// <summary>
         /// Get the world position of the center of mass.
@@ -257,10 +391,7 @@ namespace FarseerPhysics
         /// <value>
         ///   the mass, usually in kilograms (kg).
         /// </value>
-        public float Mass
-        {
-            get { return _mass; }
-        }
+        public float Mass { get; internal set; }
 
         /// <summary>
         /// Get the central rotational inertia of the body.
@@ -268,10 +399,7 @@ namespace FarseerPhysics
         /// <value>
         ///   the rotational inertia, usually in kg-m^2.
         /// </value>
-        public float Inertia
-        {
-            get { return _I; }
-        }
+        public float Inertia { get; private set; }
 
         /// <summary>
         /// Experimental: scales the inertia tensor.
@@ -294,139 +422,6 @@ namespace FarseerPhysics
         {
             set { _angularDamping = value; }
             get { return _angularDamping; }
-        }
-
-        /// <summary>
-        /// Is this a fast moving body that should be prevented from tunneling through
-        /// other moving bodies? Note that all bodies are prevented from tunneling through
-        /// kinematic and static bodies. This setting is only considered on dynamic bodies.
-        /// @warning You should use this flag sparingly since it increases processing time.
-        /// </summary>
-        public bool Bullet
-        {
-            set
-            {
-                if (value)
-                {
-                    _flags |= BodyFlags.Bullet;
-                }
-                else
-                {
-                    _flags &= ~BodyFlags.Bullet;
-                }
-            }
-            get
-            {
-                return (_flags & BodyFlags.Bullet) == BodyFlags.Bullet;
-            }
-        }
-
-        /// <summary>
-        /// Is this body awake or sleeping?
-        /// </summary>
-        /// <value>
-        ///   &lt;c&gt;true&lt;/c&gt; if this instance is awake; otherwise, &lt;c&gt;false&lt;/c&gt;.
-        /// </value>
-        public bool Awake
-        {
-            get { return (_flags & BodyFlags.Awake) == BodyFlags.Awake; }
-            set
-            {
-                if (value)
-                {
-                    if ((_flags & BodyFlags.Awake) == 0)
-                    {
-                        _flags |= BodyFlags.Awake;
-                        _sleepTime = 0.0f;
-                    }
-                }
-                else
-                {
-                    _flags &= ~BodyFlags.Awake;
-                    _sleepTime = 0.0f;
-                    _linearVelocity = Vector2.Zero;
-                    _angularVelocity = 0.0f;
-                    _force = Vector2.Zero;
-                    _torque = 0.0f;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get the active state of the body.
-        /// </summary>
-        /// <value>
-        ///   &lt;c&gt;true&lt;/c&gt; if this instance is active; otherwise, &lt;c&gt;false&lt;/c&gt;.
-        /// </value>
-        public bool Enabled
-        {
-            get { return (_flags & BodyFlags.Enabled) == BodyFlags.Enabled; }
-            set
-            {
-                if (value == Enabled)
-                {
-                    return;
-                }
-
-                if (value)
-                {
-                    _flags |= BodyFlags.Enabled;
-
-                    // Create all proxies.
-                    BroadPhase broadPhase = World.ContactManager._broadPhase;
-                    for (Fixture f = _fixtureList; f != null; f = f._next)
-                    {
-                        f.CreateProxy(broadPhase, ref _xf);
-                    }
-
-                    // Contacts are created the next time step.
-                }
-                else
-                {
-                    _flags &= ~BodyFlags.Enabled;
-
-                    // Destroy all proxies.
-                    BroadPhase broadPhase = World.ContactManager._broadPhase;
-                    for (Fixture f = _fixtureList; f != null; f = f._next)
-                    {
-                        f.DestroyProxy(broadPhase);
-                    }
-
-                    // Destroy the attached contacts.
-                    ContactEdge ce = _contactList;
-                    while (ce != null)
-                    {
-                        ContactEdge ce0 = ce;
-                        ce = ce.Next;
-                        World.ContactManager.Destroy(ce0.Contact);
-                    }
-                    _contactList = null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Should this body be prevented from rotating? Useful for characters.
-        /// </summary>
-        /// <value>
-        ///   &lt;c&gt;true&lt;/c&gt; if [is fixed rotation]; otherwise, &lt;c&gt;false&lt;/c&gt;.
-        /// </value>
-        public bool FixedRotation
-        {
-            get { return (_flags & BodyFlags.FixedRotation) == BodyFlags.FixedRotation; }
-            set
-            {
-                if (value)
-                {
-                    _flags |= BodyFlags.FixedRotation;
-                }
-                else
-                {
-                    _flags &= ~BodyFlags.FixedRotation;
-                }
-
-                ResetMassData();
-            }
         }
 
         public Fixture FixtureList
@@ -458,7 +453,7 @@ namespace FarseerPhysics
         /// Get the next body in the world's body list.
         /// </summary>
         /// <value></value>
-        public Body NextBody
+        public Body Next
         {
             get { return _next; }
         }
@@ -755,6 +750,16 @@ namespace FarseerPhysics
             ApplyImpulse(ref impulse, ref point);
         }
 
+        public void ApplyImpulse(Vector2 impulse)
+        {
+            ApplyImpulse(ref impulse, ref _xf.Position);
+        }
+
+        public void ApplyImpulse(ref Vector2 impulse)
+        {
+            ApplyImpulse(ref impulse, ref _xf.Position);
+        }
+
         public void ApplyImpulse(ref Vector2 impulse, ref Vector2 point)
         {
             if (_bodyType != BodyType.Dynamic)
@@ -779,9 +784,9 @@ namespace FarseerPhysics
         public void ResetMassData()
         {
             // Compute mass data from shapes. Each shape has its own density.
-            _mass = 0.0f;
+            Mass = 0.0f;
             _invMass = 0.0f;
-            _I = 0.0f;
+            Inertia = 0.0f;
             _invI = 0.0f;
             _sweep.LocalCenter = Vector2.Zero;
 
@@ -803,9 +808,9 @@ namespace FarseerPhysics
                 }
 
                 MassData massData = f.Shape.MassData;
-                _mass += massData.Mass;
+                Mass += massData.Mass;
                 center += massData.Mass * massData.Center;
-                _I += massData.Inertia;
+                Inertia += massData.Inertia;
             }
 
             //Static bodies only have mass, they don't have other properties. A little hacky tho...
@@ -815,30 +820,30 @@ namespace FarseerPhysics
             }
 
             // Compute center of mass.
-            if (_mass > 0.0f)
+            if (Mass > 0.0f)
             {
-                _invMass = 1.0f / _mass;
+                _invMass = 1.0f / Mass;
                 center *= _invMass;
             }
             else
             {
                 // Force all dynamic bodies to have a positive mass.
-                _mass = 1.0f;
+                Mass = 1.0f;
                 _invMass = 1.0f;
             }
 
-            if (_I > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
+            if (Inertia > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
             {
                 // Center the inertia about the center of mass.
-                _I -= _mass * Vector2.Dot(center, center);
-                _I *= InertiaScale;
+                Inertia -= Mass * Vector2.Dot(center, center);
+                Inertia *= InertiaScale;
 
-                Debug.Assert(_I > 0.0f);
-                _invI = 1.0f / _I;
+                Debug.Assert(Inertia > 0.0f);
+                _invI = 1.0f / Inertia;
             }
             else
             {
-                _I = 0.0f;
+                Inertia = 0.0f;
                 _invI = 0.0f;
             }
 

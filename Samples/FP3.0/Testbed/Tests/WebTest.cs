@@ -36,25 +36,25 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(0.5f, 0.5f);
 
 
-                _bodies[0] = World.CreateBody();
+                _bodies[0] = World.AddBody();
                 _bodies[0].BodyType = BodyType.Dynamic;
                 _bodies[0].Position = new Vector2(-5.0f, 5.0f);
 
                 _bodies[0].CreateFixture(shape);
 
-                _bodies[1] = World.CreateBody();
+                _bodies[1] = World.AddBody();
                 _bodies[1].BodyType = BodyType.Dynamic;
                 _bodies[1].Position = new Vector2(5.0f, 5.0f);
 
                 _bodies[1].CreateFixture(shape);
 
-                _bodies[2] = World.CreateBody();
+                _bodies[2] = World.AddBody();
                 _bodies[2].BodyType = BodyType.Dynamic;
                 _bodies[2].Position = new Vector2(5.0f, 15.0f);
 
                 _bodies[2].CreateFixture(shape);
 
-                _bodies[3] = World.CreateBody();
+                _bodies[3] = World.AddBody();
                 _bodies[3].BodyType = BodyType.Dynamic;
                 _bodies[3].Position = new Vector2(-5.0f, 15.0f);
 
@@ -64,49 +64,49 @@ namespace FarseerPhysics.TestBed.Tests
                 _joints[0] = dj;
                 dj.Frequency = 4.0f;
                 dj.DampingRatio = 0.5f;
-                World.CreateJoint(_joints[0]);
+                World.AddJoint(_joints[0]);
 
                 FixedDistanceJoint dj1 = new FixedDistanceJoint(_bodies[1], new Vector2(0.5f, -0.5f), new Vector2(10.0f, 0.0f));
                 _joints[1] = dj1;
                 dj1.Frequency = 4.0f;
                 dj1.DampingRatio = 0.5f;
-                World.CreateJoint(_joints[1]);
+                World.AddJoint(_joints[1]);
 
                 FixedDistanceJoint dj2 = new FixedDistanceJoint(_bodies[2], new Vector2(0.5f, 0.5f), new Vector2(10.0f, 20.0f));
                 _joints[2] = dj2;
                 dj2.Frequency = 4.0f;
                 dj2.DampingRatio = 0.5f;
-                World.CreateJoint(_joints[2]);
+                World.AddJoint(_joints[2]);
 
                 FixedDistanceJoint dj3 = new FixedDistanceJoint(_bodies[3], new Vector2(-0.5f, 0.5f), new Vector2(-10.0f, 20.0f));
                 _joints[3] = dj3;
                 dj3.Frequency = 4.0f;
                 dj3.DampingRatio = 0.5f;
-                World.CreateJoint(_joints[3]);
+                World.AddJoint(_joints[3]);
 
                 DistanceJoint dj4 = new DistanceJoint(_bodies[0], _bodies[1], new Vector2(0.0f, 0.0f), new Vector2(0.0f, 0.0f));
                 _joints[4] = dj4;
                 dj4.Frequency = 4.0f;
                 dj4.DampingRatio = 0.5f;
-                World.CreateJoint(_joints[4]);
+                World.AddJoint(_joints[4]);
 
                 DistanceJoint dj5 = new DistanceJoint(_bodies[1], _bodies[2], new Vector2(0.0f, 0.0f), new Vector2(0.0f, 0.0f));
                 _joints[5] = dj5;
                 dj5.Frequency = 4.0f;
                 dj5.DampingRatio = 0.5f;
-                World.CreateJoint(_joints[5]);
+                World.AddJoint(_joints[5]);
 
                 DistanceJoint dj6 = new DistanceJoint(_bodies[2], _bodies[3], new Vector2(0.0f, 0.0f), new Vector2(0.0f, 0.0f));
                 _joints[6] = dj6;
                 dj6.Frequency = 4.0f;
                 dj6.DampingRatio = 0.5f;
-                World.CreateJoint(_joints[6]);
+                World.AddJoint(_joints[6]);
 
                 DistanceJoint dj7 = new DistanceJoint(_bodies[3], _bodies[0], new Vector2(0.0f, 0.0f), new Vector2(0.0f, 0.0f));
                 _joints[7] = dj7;
                 dj7.Frequency = 4.0f;
                 dj7.DampingRatio = 0.5f;
-                World.CreateJoint(_joints[7]);
+                World.AddJoint(_joints[7]);
             }
         }
 
@@ -118,7 +118,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     if (_bodies[i] != null)
                     {
-                        World.DestroyBody(_bodies[i]);
+                        World.RemoveBody(_bodies[i]);
                         _bodies[i] = null;
                         break;
                     }
@@ -131,7 +131,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     if (_joints[i] != null)
                     {
-                        World.DestroyJoint(_joints[i]);
+                        World.RemoveJoint(_joints[i]);
                         _joints[i] = null;
                         break;
                     }

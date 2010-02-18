@@ -122,7 +122,7 @@ namespace FarseerPhysics.TestBed.Framework
 
             StepCount = 0;
 
-            _groundBody = World.CreateBody();
+            _groundBody = World.AddBody();
         }
 
         public Game1 GameInstance { protected get; set; }
@@ -325,7 +325,7 @@ namespace FarseerPhysics.TestBed.Framework
                 Body body = myFixture.Body;
                 _mouseJoint = new MouseJoint(_groundBody, body, p);
                 _mouseJoint.MaxForce = 1000.0f * body.Mass;
-                World.CreateJoint(_mouseJoint);
+                World.AddJoint(_mouseJoint);
                 body.Awake = true;
             }
         }
@@ -334,7 +334,7 @@ namespace FarseerPhysics.TestBed.Framework
         {
             if (_mouseJoint != null)
             {
-                World.DestroyJoint(_mouseJoint);
+                World.RemoveJoint(_mouseJoint);
                 _mouseJoint = null;
             }
         }

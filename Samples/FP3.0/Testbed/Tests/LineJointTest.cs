@@ -31,7 +31,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 2.0f), 1);
 
-            Body body = World.CreateBody();
+            Body body = World.AddBody();
             body.BodyType = BodyType.Dynamic;
             body.Position = new Vector2(0.0f, 7.0f);
 
@@ -47,7 +47,7 @@ namespace FarseerPhysics.TestBed.Tests
             jd.LowerLimit = -4.0f;
             jd.UpperLimit = 4.0f;
             jd.EnableLimit = true;
-            World.CreateJoint(jd);
+            World.AddJoint(jd);
         }
 
         internal static Test Create()

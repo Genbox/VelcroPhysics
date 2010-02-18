@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Ground
             {
                 
-                Body ground = World.CreateBody();
+                Body ground = World.AddBody();
 
                 PolygonShape shape = new PolygonShape(0.0f);
                 shape.SetAsEdge(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
@@ -42,7 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Platform
             {
                 
-                Body body = World.CreateBody();
+                Body body = World.AddBody();
                 body.Position = new Vector2(0.0f, 10.0f);
 
                 PolygonShape shape = new PolygonShape(0.0f);
@@ -55,7 +55,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Actor
             {
                 
-                Body body = World.CreateBody();
+                Body body = World.AddBody();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 12.0f);
 

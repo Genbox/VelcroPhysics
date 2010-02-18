@@ -31,8 +31,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                
-                ground = World.CreateBody();
+                ground = World.AddBody();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -43,12 +42,11 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box = PolygonTools.CreateRectangle(0.6f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 20);
 
-
                 const float y = 25.0f;
                 Body prevBody = ground;
                 for (int i = 0; i < 30; ++i)
                 {
-                    Body body = World.CreateBody();
+                    Body body = World.AddBody();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.5f + i, y);
 
@@ -57,7 +55,7 @@ namespace FarseerPhysics.TestBed.Tests
                     Vector2 anchor = new Vector2(i, y);
                     RevoluteJoint jd = new RevoluteJoint(prevBody,body,anchor);
                     jd.CollideConnected = false;
-                    World.CreateJoint(jd);
+                    World.AddJoint(jd);
 
                     prevBody = body;
                 }
