@@ -9,6 +9,11 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class CuttingTest : Test
     {
+        private Vector2 _start = new Vector2(-6, 5);
+        private Vector2 _end = new Vector2(6, 5);
+        private const float moveAmount = 0.1f;
+        private bool switched;
+
         public CuttingTest()
         {
             Body ground;
@@ -25,20 +30,17 @@ namespace FarseerPhysics.TestBed.Tests
             for (int i = 0; i < 1; i++)
             {
                 Body boxBody = World.CreateBody();
-                boxBody.BodyType = BodyType.Static;
+                boxBody.BodyType = BodyType.Dynamic;
                 boxBody.Position = i * offset + new Vector2(0, 5);
-                PolygonShape boxShape = new PolygonShape(PolygonTools.CreateRectangle(1, 1));
+                boxBody.Rotation = 0.33f * Settings.Pi;
+                PolygonShape boxShape = new PolygonShape(PolygonTools.CreateRectangle(3, 3),1);
                 boxBody.CreateFixture(boxShape);
             }
-
         }
-
-        Vector2 start = new Vector2(-2, 5);
-        Vector2 end = new Vector2(15, 5);
 
         public override void Update(Framework.Settings settings)
         {
-            DebugView.DrawSegment(start, end, Color.Red);
+            DebugView.DrawSegment(_start, _end, Color.Red);
 
             List<Fixture> fixtures = new List<Fixture>();
             List<Vector2> entryPoints = new List<Vector2>();
@@ -50,14 +52,14 @@ namespace FarseerPhysics.TestBed.Tests
                 fixtures.Add(f);
                 entryPoints.Add(p);
                 return 1;
-            }, start, end);
+            }, _start, _end);
 
             //Reverse the ray to get the exitpoints
             World.RayCast((f, p, n, fr) =>
             {
                 exitPoints.Add(p);
                 return 1;
-            }, end, start);
+            }, _end, _start);
 
             DebugView.DrawString(100, 50, "Fixtures: " + fixtures.Count);
 
@@ -74,49 +76,41 @@ namespace FarseerPhysics.TestBed.Tests
             base.Update(settings);
         }
 
-        public static CuttingTest Create()
-        {
-            return new CuttingTest();
-        }
-
-        private float moveAmount = 0.1f;
-        private bool switched = false;
-
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
         {
             if (state.IsKeyDown(Keys.Tab) && oldState.IsKeyUp(Keys.Tab))
                 switched = !switched;
 
             if (state.IsKeyDown(Keys.Enter) && oldState.IsKeyUp(Keys.Enter))
-                CuttingTools.Cut(World, start, end);
+                CuttingTools.Cut(World, _start, _end, 0.001f);
 
             if (switched)
             {
                 if (state.IsKeyDown(Keys.A))
-                    start.X -= moveAmount;
+                    _start.X -= moveAmount;
 
                 if (state.IsKeyDown(Keys.S))
-                    start.Y -= moveAmount;
+                    _start.Y -= moveAmount;
 
                 if (state.IsKeyDown(Keys.W))
-                    start.Y += moveAmount;
+                    _start.Y += moveAmount;
 
                 if (state.IsKeyDown(Keys.D))
-                    start.X += moveAmount;
+                    _start.X += moveAmount;
             }
             else
             {
                 if (state.IsKeyDown(Keys.A))
-                    end.X -= moveAmount;
+                    _end.X -= moveAmount;
 
                 if (state.IsKeyDown(Keys.S))
-                    end.Y -= moveAmount;
+                    _end.Y -= moveAmount;
 
                 if (state.IsKeyDown(Keys.W))
-                    end.Y += moveAmount;
+                    _end.Y += moveAmount;
 
                 if (state.IsKeyDown(Keys.D))
-                    end.X += moveAmount;
+                    _end.X += moveAmount;
             }
 
             base.Keyboard(state, oldState);
@@ -124,16 +118,21 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Gamepad(GamePadState state, GamePadState oldState)
         {
-            start.X += state.ThumbSticks.Left.X / 5;
-            start.Y += state.ThumbSticks.Left.Y / 5;
+            _start.X += state.ThumbSticks.Left.X / 5;
+            _start.Y += state.ThumbSticks.Left.Y / 5;
 
-            end.X += state.ThumbSticks.Right.X / 5;
-            end.Y += state.ThumbSticks.Right.Y / 5;
+            _end.X += state.ThumbSticks.Right.X / 5;
+            _end.Y += state.ThumbSticks.Right.Y / 5;
 
             if (state.Buttons.A == ButtonState.Pressed && oldState.Buttons.A == ButtonState.Released)
-                CuttingTools.Cut(World, start, end);
+                CuttingTools.Cut(World, _start, _end, 0.001f);
 
             base.Gamepad(state, oldState);
+        }
+
+        public static CuttingTest Create()
+        {
+            return new CuttingTest();
         }
     }
 }

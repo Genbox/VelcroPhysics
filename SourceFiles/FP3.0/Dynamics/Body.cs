@@ -48,23 +48,24 @@ namespace FarseerPhysics
     [Flags]
     public enum BodyFlags
     {
-        None =           0,
-        Island =        (1 << 0),
-        Awake =         (1 << 1),
-        AutoSleep =     (1 << 2),
-        Bullet =        (1 << 3),
+        None = 0,
+        Island = (1 << 0),
+        Awake = (1 << 1),
+        AutoSleep = (1 << 2),
+        Bullet = (1 << 3),
         FixedRotation = (1 << 4),
-        Enabled =       (1 << 5),
+        Enabled = (1 << 5),
         IgnoreGravity = (1 << 6),
-        Toi =           (1 << 7),
+        Toi = (1 << 7),
     }
 
     public class Body
     {
         private float _I;
+        private BodyType _bodyType;
+
         internal float _angularDamping;
         internal float _angularVelocity;
-        private BodyType _bodyType;
         internal ContactEdge _contactList;
         internal int _fixtureCount;
         internal Fixture _fixtureList;
@@ -82,6 +83,11 @@ namespace FarseerPhysics
         internal float _torque;
         internal Transform _xf;		// the body origin transform
 
+        private Body()
+        {
+
+        }
+
         public Body(World world)
         {
             World = world;
@@ -93,6 +99,24 @@ namespace FarseerPhysics
             InertiaScale = 1;
 
             _xf.R.Set(0);
+        }
+
+        public Body Clone(World world)
+        {
+            Body clone = new Body();
+            clone.World = world;
+            clone._angularDamping = _angularDamping;
+            clone._angularVelocity = _angularVelocity;
+            clone._bodyType = _bodyType;
+            clone._flags = _flags;
+            clone._linearVelocity = _linearVelocity;
+            clone.Position = Position;
+            clone.Rotation = Rotation;
+            clone.InertiaScale = InertiaScale;
+            clone.UserData = UserData;
+            clone.LinearDamping = LinearDamping;
+
+            return clone;
         }
 
         /// <summary>
@@ -253,11 +277,7 @@ namespace FarseerPhysics
         /// <summary>
         /// Experimental: scales the inertia tensor.
         /// </summary>
-        public float InertiaScale
-        {
-            get;
-            set;
-        }
+        public float InertiaScale { get; set; }
 
         /// <summary>
         /// Linear damping is use to reduce the linear velocity. The damping parameter
@@ -454,7 +474,7 @@ namespace FarseerPhysics
         /// Get the parent world of this body.
         /// </summary>
         /// <value></value>
-        public World World { get; private set; }
+        public World World { get; internal set; }
 
         /// <summary>
         /// The world position of the body. Avoid creating bodies at the origin
@@ -675,6 +695,11 @@ namespace FarseerPhysics
         public void ApplyForce(Vector2 force, Vector2 point)
         {
             ApplyForce(ref force, ref point);
+        }
+
+        public void ApplyForce(Vector2 force)
+        {
+            ApplyForce(ref force);
         }
 
         public void ApplyForce(ref Vector2 force)

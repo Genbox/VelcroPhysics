@@ -115,7 +115,8 @@ namespace FarseerPhysics.Common.PolygonManipulation
         /// <param name="world">The world.</param>
         /// <param name="start">The startpoint.</param>
         /// <param name="end">The endpoint.</param>
-        public static void Cut(World world, Vector2 start, Vector2 end)
+        /// <param name="thickness">The thickness of the cut</param>
+        public static void Cut(World world, Vector2 start, Vector2 end, float thickness)
         {
             List<Fixture> fixtures = new List<Fixture>();
             List<Vector2> entryPoints = new List<Vector2>();
@@ -136,8 +137,25 @@ namespace FarseerPhysics.Common.PolygonManipulation
                                         return 1;
                                     }, end, start);
 
-            //TODO: Ignore fixtures with a single entrypoint or exitpoint (ray ends inside of shape)           
-            //an alternative would be to substract the amount shape that penetrates into the shape
+            //We only have a single point. We need at least 2
+            if (entryPoints.Count + exitPoints.Count < 2)
+                return;
+
+            //There should be as many entry as exit points
+            if (entryPoints.Count != exitPoints.Count)
+            {
+                if (entryPoints.Count > exitPoints.Count)
+                {
+                    entryPoints.RemoveAt(entryPoints.Count - 1);
+                    fixtures.RemoveAt(fixtures.Count - 1);
+                }
+
+                if (exitPoints.Count > entryPoints.Count)
+                {
+                    exitPoints.RemoveAt(exitPoints.Count - 1);
+                    fixtures.RemoveAt(fixtures.Count - 1);
+                }
+            }
 
             for (int i = 0; i < fixtures.Count; i++)
             {
@@ -147,23 +165,17 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 //Split the shape up into two shapes
                 Vertices first;
                 Vertices second;
-                SplitShape(fixtures[i], entryPoints[i], exitPoints[i], 0.1f, out first, out second);
+                SplitShape(fixtures[i], entryPoints[i], exitPoints[i], thickness, out first, out second);
 
-                //Delete the original shape and create two new
-                Body body1 = world.CreateBody();
-                body1.BodyType = BodyType.Dynamic;
-                body1.Position = fixtures[i].Body.Position;
-                body1.Rotation = fixtures[i].Body.Rotation;
+                //Delete the original shape and create two new. Retain the properties of the body.
+                Body body1 = world.CreateBody(fixtures[i].Body);
 
-                PolygonShape shape1 = new PolygonShape(first);
+                PolygonShape shape1 = new PolygonShape(first, fixtures[i].Shape.Density);
                 body1.CreateFixture(shape1);
 
-                Body body2 = world.CreateBody();
-                body2.BodyType = BodyType.Dynamic;
-                body2.Position = fixtures[i].Body.Position;
-                body2.Rotation = fixtures[i].Body.Rotation;
+                Body body2 = world.CreateBody(fixtures[i].Body);
 
-                PolygonShape shape2 = new PolygonShape(second);
+                PolygonShape shape2 = new PolygonShape(second, fixtures[i].Shape.Density);
                 body2.CreateFixture(shape2);
 
                 world.DestroyBody(fixtures[i].Body);
