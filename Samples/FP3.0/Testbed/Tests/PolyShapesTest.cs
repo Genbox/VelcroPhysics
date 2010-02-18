@@ -45,7 +45,7 @@ namespace FarseerPhysics.TestBed.Tests
             Transform xf;
             fixture.Body.GetTransform(out xf);
 
-            switch (fixture.ShapeType)
+            switch (fixture.Shape.ShapeType)
             {
                 case ShapeType.Circle:
                     {

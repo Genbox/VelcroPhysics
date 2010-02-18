@@ -159,7 +159,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
             for (int i = 0; i < fixtures.Count; i++)
             {
-                if (fixtures[i].ShapeType != ShapeType.Polygon)
+                if (fixtures[i].Shape.ShapeType != ShapeType.Polygon)
                     continue;
 
                 //Split the shape up into two shapes

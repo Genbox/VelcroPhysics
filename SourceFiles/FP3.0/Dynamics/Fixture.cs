@@ -20,11 +20,51 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
 
 namespace FarseerPhysics
 {
+    [Flags]
+    public enum CollisionCategory
+    {
+        None = 0,
+        All = int.MaxValue,
+        Cat1 = 1,
+        Cat2 = 2,
+        Cat3 = 4,
+        Cat4 = 8,
+        Cat5 = 16,
+        Cat6 = 32,
+        Cat7 = 64,
+        Cat8 = 128,
+        Cat9 = 256,
+        Cat10 = 512,
+        Cat11 = 1024,
+        Cat12 = 2048,
+        Cat13 = 4096,
+        Cat14 = 8192,
+        Cat15 = 16384,
+        Cat16 = 32768,
+        Cat17 = 65536,
+        Cat18 = 131072,
+        Cat19 = 262144,
+        Cat20 = 524288,
+        Cat21 = 1048576,
+        Cat22 = 2097152,
+        Cat23 = 4194304,
+        Cat24 = 8388608,
+        Cat25 = 16777216,
+        Cat26 = 33554432,
+        Cat27 = 67108864,
+        Cat28 = 134217728,
+        Cat29 = 268435456,
+        Cat30 = 536870912,
+        Cat31 = 1073741824
+    }
+
     /// <summary>
     /// A fixture is used to attach a shape to a body for collision detection. A fixture
     /// inherits its transform from its parent. Fixtures hold additional non-geometric data
@@ -34,16 +74,6 @@ namespace FarseerPhysics
     /// </summary>
     public class Fixture
     {
-        /// <summary>
-        /// Get the type of the child shape. You can use this to down cast to the concrete shape.
-        /// @return the shape type.
-        /// </summary>
-        /// <value>The type of the shape.</value>
-        public ShapeType ShapeType
-        {
-            get { return _shape.ShapeType; }
-        }
-
         /// <summary>
         /// Get the child shape. You can modify the child shape, however you should not change the
         /// number of vertices because this will crash some collision caching mechanisms.
@@ -68,22 +98,22 @@ namespace FarseerPhysics
         /// filtering always wins against the mask bits.
         /// Warning: The filter will not take effect until next step.
         /// </summary>
-        public short GroupIndex
+        public short CollisionGroup
         {
             set
             {
                 if (_body == null)
                     return;
 
-                if (_groupIndex == value)
+                if (_collisionGroup == value)
                     return;
 
-                _groupIndex = value;
+                _collisionGroup = value;
                 FilterChanged();
             }
             get
             {
-                return _groupIndex;
+                return _collisionGroup;
             }
         }
 
@@ -91,11 +121,11 @@ namespace FarseerPhysics
         /// The collision mask bits. This states the categories that this
         /// shape would accept for collision.
         /// </summary>
-        public ushort MaskBits
+        public CollisionCategory CollidesWith
         {
             get
             {
-                return _maskBits;
+                return _collidesWith;
             }
 
             set
@@ -103,10 +133,10 @@ namespace FarseerPhysics
                 if (_body == null)
                     return;
 
-                if (_maskBits == value)
+                if (_collidesWith == value)
                     return;
 
-                _maskBits = value;
+                _collidesWith = value;
                 FilterChanged();
             }
         }
@@ -114,11 +144,11 @@ namespace FarseerPhysics
         /// <summary>
         /// The collision category bits. Normally you would just set one bit.
         /// </summary>
-        public ushort CategoryBits
+        public CollisionCategory CollisionCategories
         {
             get
             {
-                return _categoryBits;
+                return _collisionCategories;
             }
 
             set
@@ -126,12 +156,39 @@ namespace FarseerPhysics
                 if (_body == null)
                     return;
 
-                if (_categoryBits == value)
+                if (_collisionCategories == value)
                     return;
 
-                _categoryBits = value;
+                _collisionCategories = value;
                 FilterChanged();
             }
+        }
+
+        public void RestoreCollisionWith(Fixture fixture)
+        {
+            if (_collisionIgnores.ContainsKey(fixture.ProxyId))
+            {
+                _collisionIgnores[fixture.ProxyId] = false;
+                FilterChanged();
+            }
+        }
+
+        public void IgnoreCollisionWith(Fixture fixture)
+        {
+            if (_collisionIgnores.ContainsKey(fixture.ProxyId))
+                _collisionIgnores[fixture.ProxyId] = true;
+            else
+                _collisionIgnores.Add(fixture.ProxyId, true);
+
+            FilterChanged();
+        }
+
+        public bool IsGeometryIgnored(Fixture fixture)
+        {
+            if (_collisionIgnores.ContainsKey(fixture.ProxyId))
+                return _collisionIgnores[fixture.ProxyId];
+
+            return false;
         }
 
         private void FilterChanged()
@@ -165,7 +222,7 @@ namespace FarseerPhysics
         /// Get the next fixture in the parent body's fixture list.
         /// </summary>
         /// <value>the next shape.</value>
-        public Fixture NextFixture
+        public Fixture Next
         {
             get { return _next; }
         }
@@ -174,24 +231,16 @@ namespace FarseerPhysics
         /// Set the user data. Use this to store your application specific data.
         /// </summary>
         /// <value>The data.</value>
-        public object UserData
-        {
-            set { _userData = value; }
-            get { return _userData; }
-        }
+        public object UserData { get; set; }
 
-        public int ProxyId
-        {
-            get;
-            private set;
-        }
+        public int ProxyId { get; private set; }
 
         /// <summary>
         /// Test a point for containment in this fixture.
         /// </summary>
         /// <param name="p">a point in world coordinates.</param>
         /// <returns></returns>
-        public bool TestPoint(Vector2 p)
+        public bool TestPoint(ref Vector2 p)
         {
             Transform xf;
             _body.GetTransform(out xf);
@@ -215,21 +264,13 @@ namespace FarseerPhysics
         /// Set the coefficient of friction.
         /// </summary>
         /// <value>The friction.</value>
-        public float Friction
-        {
-            set { _friction = value; }
-            get { return _friction; }
-        }
+        public float Friction { get; set; }
 
         /// <summary>
         /// Get the coefficient of restitution.
         /// </summary>
         /// <value></value>
-        public float Restitution
-        {
-            get { return _restitution; }
-            set { _restitution = value; }
-        }
+        public float Restitution { get; set; }
 
         /// <summary>
         /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
@@ -253,9 +294,9 @@ namespace FarseerPhysics
             ProxyId = BroadPhase.NullProxy;
 
             //Fixture defaults
-            _friction = 0.2f;
-            _categoryBits = 0x0001;
-            _maskBits = 0xFFFF;
+            Friction = 0.2f;
+            _collisionCategories = CollisionCategory.All;
+            _collidesWith = CollisionCategory.All;
             Sensor = false;
 
             _body = body;
@@ -317,11 +358,9 @@ namespace FarseerPhysics
         internal Fixture _next;
         internal Body _body;
         private Shape _shape;
-        private float _friction;
-        private float _restitution;
-        private object _userData;
-        private short _groupIndex;
-        private ushort _maskBits;
-        private ushort _categoryBits;
+        private short _collisionGroup;
+        private CollisionCategory _collidesWith;
+        private CollisionCategory _collisionCategories;
+        private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
     }
 }

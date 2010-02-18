@@ -85,7 +85,6 @@ namespace FarseerPhysics
 
         private Body()
         {
-
         }
 
         public Body(World world)

@@ -55,7 +55,7 @@ namespace DemoBaseXNA.DemoShare
             _borderGeom[0] = _borderBody.CreateFixture(shape);
             _borderGeom[0].Restitution = .0f;
             _borderGeom[0].Friction = .5f;
-            _borderGeom[0].GroupIndex = 100;
+            _borderGeom[0].CollisionGroup = 100;
             _borderGeom[0].UserData = geometryOffset;
 
             //right border (clone left border since geometry is same size)
@@ -65,7 +65,7 @@ namespace DemoBaseXNA.DemoShare
             _borderGeom[1] = _borderBody.CreateFixture(shape);
             _borderGeom[1].Restitution = .0f;
             _borderGeom[1].Friction = .5f;
-            _borderGeom[1].GroupIndex = 100;
+            _borderGeom[1].CollisionGroup = 100;
             _borderGeom[1].UserData = geometryOffset;
 
             //top border
@@ -75,7 +75,7 @@ namespace DemoBaseXNA.DemoShare
             _borderGeom[2] = _borderBody.CreateFixture(shape);
             _borderGeom[2].Restitution = .0f;
             _borderGeom[2].Friction = .5f;
-            _borderGeom[2].GroupIndex = 100;
+            _borderGeom[2].CollisionGroup = 100;
             _borderGeom[2].UserData = geometryOffset;
 
             //bottom border (clone top border since geometry is same size)
@@ -85,7 +85,7 @@ namespace DemoBaseXNA.DemoShare
             _borderGeom[3] = _borderBody.CreateFixture(shape);
             _borderGeom[3].Restitution = .0f;
             _borderGeom[3].Friction = .5f;
-            _borderGeom[3].GroupIndex = 100;
+            _borderGeom[3].CollisionGroup = 100;
             _borderGeom[3].UserData = geometryOffset;
         }
 

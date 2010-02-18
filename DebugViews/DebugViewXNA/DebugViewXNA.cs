@@ -26,7 +26,7 @@ namespace FarseerPhysics.DebugViewXNA
                 {
                     Transform xf;
                     b.GetTransform(out xf);
-                    for (Fixture f = b.FixtureList; f != null; f = f.NextFixture)
+                    for (Fixture f = b.FixtureList; f != null; f = f.Next)
                     {
                         if (b.Enabled == false)
                         {
@@ -92,7 +92,7 @@ namespace FarseerPhysics.DebugViewXNA
                         continue;
                     }
 
-                    for (Fixture f = b.FixtureList; f != null; f = f.NextFixture)
+                    for (Fixture f = b.FixtureList; f != null; f = f.Next)
                     {
                         AABB aabb;
                         bp.GetFatAABB(f.ProxyId, out aabb);
@@ -199,7 +199,7 @@ namespace FarseerPhysics.DebugViewXNA
 
         private void DrawShape(Fixture fixture, Transform xf, Color color)
         {
-            switch (fixture.ShapeType)
+            switch (fixture.Shape.ShapeType)
             {
                 case ShapeType.Circle:
                     {

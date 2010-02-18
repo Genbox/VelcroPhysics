@@ -50,14 +50,17 @@ namespace FarseerPhysics
 
         private static bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)
         {
-            if (fixtureA.GroupIndex == fixtureB.GroupIndex && fixtureA.GroupIndex != 0)
-            {
-                return fixtureA.GroupIndex > 0;
-            }
+            if ((fixtureA.CollisionGroup == fixtureB.CollisionGroup) && fixtureA.CollisionGroup != 0 && fixtureB.CollisionGroup != 0)
+                return false;
 
-            bool collide = (fixtureA.MaskBits & fixtureB.CategoryBits) != 0 && (fixtureA.CategoryBits & fixtureB.MaskBits) != 0;
+            if (((fixtureA.CollisionCategories & fixtureB.CollidesWith) == CollisionCategory.None) &
+                ((fixtureB.CollisionCategories & fixtureA.CollidesWith) == CollisionCategory.None))
+                return false;
 
-            return collide;
+            if (fixtureA.IsGeometryIgnored(fixtureB) || fixtureB.IsGeometryIgnored(fixtureA))
+                return false;
+
+            return true;
         }
     }
 }
