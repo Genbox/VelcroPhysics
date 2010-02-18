@@ -51,8 +51,8 @@ namespace FarseerPhysics
             : base(bodyA, bodyB)
         {
             JointType = JointType.Friction;
-            LocalAnchorA = bodyA.GetLocalPoint(anchor1);
-            LocalAnchorB = bodyB.GetLocalPoint(anchor2);
+            LocalAnchorA = anchor1;
+            LocalAnchorB = anchor2;
         }
 
         public Vector2 LocalAnchorA { get; private set; }

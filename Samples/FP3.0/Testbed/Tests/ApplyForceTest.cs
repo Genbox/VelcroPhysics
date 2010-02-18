@@ -133,7 +133,7 @@ namespace FarseerPhysics.TestBed.Tests
             if (state.IsKeyDown(Keys.W))
             {
                 Vector2 f = _body.GetWorldVector(new Vector2(0.0f, -200.0f));
-                Vector2 p = _body.GetWorldPoint(new Vector2(0.0f, 2.0f));
+                Vector2 p = _body.GetWorldPoint(new Vector2(0.0f, 0.0f));
                 _body.ApplyForce(f, p);
             }
             if (state.IsKeyDown(Keys.A))
