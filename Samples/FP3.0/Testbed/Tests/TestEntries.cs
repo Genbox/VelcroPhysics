@@ -28,24 +28,23 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {    
+                new TestEntry {Name = "Prismatic", CreateFcn = PrismaticTest.Create},
+                new TestEntry {Name = "Collision Filtering", CreateFcn = CollisionFilteringTest.Create},
+                new TestEntry {Name = "Line Joint", CreateFcn = LineJointTest.Create},
                 new TestEntry {Name = "Pyramid", CreateFcn = PyramidTest.Create},
                 new TestEntry {Name = "Theo Jansen's Walker", CreateFcn = TheoJansenTest.Create},
                 new TestEntry {Name = "Web", CreateFcn = WebTest.Create},
                 new TestEntry {Name = "Edge Shapes", CreateFcn = EdgeShapes.Create},
                 new TestEntry {Name = "Continuous Test", CreateFcn = ContinuousTest.Create},
-                new TestEntry {Name = "Gears", CreateFcn = GearsTest.Create},
-                new TestEntry {Name = "Line Joint", CreateFcn = LineJointTest.Create},
                 new TestEntry {Name = "Cutting of polygons", CreateFcn = CuttingTest.Create},
                 new TestEntry {Name = "Ray-Cast", CreateFcn = RayCastTest.Create},
                 new TestEntry {Name = "Buoyancy controller", CreateFcn = BuoyancyTest.Create},
                 new TestEntry {Name = "Controllers", CreateFcn = ControllerTest.Create},
                 new TestEntry {Name = "Boolean polygon", CreateFcn = BooleanPolygonTest.Create},
                 new TestEntry {Name = "Texture to Vertices", CreateFcn = TextureVerticesTest.Create},
-                new TestEntry {Name = "Collision Filtering", CreateFcn = CollisionFilteringTest.Create},
                 new TestEntry {Name = "Body Types", CreateFcn = BodyTypesTest.Create},
                 new TestEntry {Name = "Shape Editing", CreateFcn = ShapeEditingTest.Create},
                 new TestEntry {Name = "Sensor Test", CreateFcn = SensorTest.Create},
-                new TestEntry {Name = "Prismatic", CreateFcn = PrismaticTest.Create},
                 new TestEntry {Name = "Compound Shapes", CreateFcn = CompoundShapes.Create},
                 new TestEntry {Name = "Cantilever", CreateFcn = CantileverTest.Create},
                 new TestEntry {Name = "SphereStack", CreateFcn = SphereStackTest.Create},
@@ -69,6 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Confined", CreateFcn = ConfinedTest.Create},
                 new TestEntry {Name = "Breakable", CreateFcn = BreakableTest.Create},
                 new TestEntry {Name = "One-Sided Platform", CreateFcn = OneSidedPlatformTest.Create},
+                new TestEntry {Name = "Gears", CreateFcn = GearsTest.Create},
                 new TestEntry {Name = null, CreateFcn = null}
             };
     }
