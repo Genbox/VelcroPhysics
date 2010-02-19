@@ -118,7 +118,7 @@ namespace FarseerPhysics
         /// <value>The proxy count.</value>
         public int ProxyCount
         {
-            get { return ContactManager._broadPhase.ProxyCount; }
+            get { return ContactManager.BroadPhase.ProxyCount; }
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace FarseerPhysics
         /// <returns>the head of the world contact list.</returns>
         public List<Contact> ContactList
         {
-            get { return ContactManager._contactList; }
+            get { return ContactManager.ContactList; }
         }
 
         public List<Controller> Controllers { get; private set; }
@@ -296,7 +296,7 @@ namespace FarseerPhysics
                     FixtureRemoved(f);
                 }
 
-                f.DestroyProxy(ContactManager._broadPhase);
+                f.DestroyProxy(ContactManager.BroadPhase);
                 f.Destroy();
             }
 
@@ -585,13 +585,13 @@ namespace FarseerPhysics
         public void QueryAABB(Func<Fixture, bool> callback, ref AABB aabb)
         {
             _queryAABBCallback = callback;
-            ContactManager._broadPhase.Query(_queryAABBCallbackWrapper, ref aabb);
+            ContactManager.BroadPhase.Query(_queryAABBCallbackWrapper, ref aabb);
             _queryAABBCallback = null;
         }
 
         private bool QueryAABBCallbackWrapper(int proxyId)
         {
-            Fixture fixture = ContactManager._broadPhase.GetUserData<Fixture>(proxyId);
+            Fixture fixture = ContactManager.BroadPhase.GetUserData<Fixture>(proxyId);
             return _queryAABBCallback(fixture);
         }
 
@@ -611,13 +611,13 @@ namespace FarseerPhysics
             input.Point2 = point2;
 
             _rayCastCallback = callback;
-            ContactManager._broadPhase.RayCast(_rayCastCallbackWrapper, ref input);
+            ContactManager.BroadPhase.RayCast(_rayCastCallbackWrapper, ref input);
             _rayCastCallback = null;
         }
 
         private float RayCastCallbackWrapper(ref RayCastInput input, int proxyId)
         {
-            Fixture fixture = ContactManager._broadPhase.GetUserData<Fixture>(proxyId);
+            Fixture fixture = ContactManager.BroadPhase.GetUserData<Fixture>(proxyId);
             RayCastOutput output;
             bool hit = fixture.RayCast(out output, ref input);
 

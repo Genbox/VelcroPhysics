@@ -149,7 +149,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 //If the AABB of the geometry does not intersect the fluidcontainer
                 //continue to the next geometry
                 AABB aabb;
-                fixture.GetAABB(out aabb);
+                fixture.Shape.ComputeAABB(out aabb, ref fixture.Body._xf);
 
                 if (!_fluidContainer.Intersect(ref aabb))
                     continue;

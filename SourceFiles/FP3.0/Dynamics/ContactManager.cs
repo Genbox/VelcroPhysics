@@ -60,9 +60,6 @@ namespace FarseerPhysics
 
     public class ContactManager
     {
-        internal BroadPhase _broadPhase = new BroadPhase();
-        internal List<Contact> _contactList = new List<Contact>(128);
-
         /// <summary>
         /// Fires when a contact is deleted
         /// </summary>
@@ -77,6 +74,8 @@ namespace FarseerPhysics
 
         internal ContactManager()
         {
+            ContactList = new List<Contact>(128);
+            BroadPhase = new BroadPhase();
             BroadphaseCollision = AddPair;
 
             //Precreate 128 contacts
@@ -143,7 +142,7 @@ namespace FarseerPhysics
             bodyB = fixtureB.Body;
 
             // Insert into the world.
-            _contactList.Add(c);
+            ContactList.Add(c);
 
             // Connect to island graph.
 
@@ -174,7 +173,7 @@ namespace FarseerPhysics
 
         internal void FindNewContacts()
         {
-            _broadPhase.UpdatePairs(BroadphaseCollision);
+            BroadPhase.UpdatePairs(BroadphaseCollision);
         }
 
         internal void Destroy(Contact c)
@@ -191,7 +190,7 @@ namespace FarseerPhysics
             }
 
             // Remove from the world.
-            _contactList.Remove(c);
+            ContactList.Remove(c);
 
             // Remove from body 1
             if (c.NodeA.Prev != null)
@@ -231,9 +230,9 @@ namespace FarseerPhysics
         internal void Collide()
         {
             // Update awake contacts.
-            for (int i = 0; i < _contactList.Count; i++)
+            for (int i = 0; i < ContactList.Count; i++)
             {
-                Contact c = _contactList[i];
+                Contact c = ContactList[i];
 
                 Fixture fixtureA = c.FixtureA;
                 Fixture fixtureB = c.FixtureB;
@@ -272,7 +271,7 @@ namespace FarseerPhysics
                 int proxyIdA = fixtureA.ProxyId;
                 int proxyIdB = fixtureB.ProxyId;
 
-                bool overlap = _broadPhase.TestOverlap(proxyIdA, proxyIdB);
+                bool overlap = BroadPhase.TestOverlap(proxyIdA, proxyIdB);
 
                 // Here we destroy contacts that cease to overlap in the broad-phase.
                 if (overlap == false)
@@ -286,14 +285,8 @@ namespace FarseerPhysics
             }
         }
 
-        public List<Contact> ContactList
-        {
-            get { return _contactList; }
-        }
+        public List<Contact> ContactList { get; private set; }
 
-        public BroadPhase BroadPhase
-        {
-            get { return _broadPhase; }
-        }
+        public BroadPhase BroadPhase { get; private set; }
     }
 }

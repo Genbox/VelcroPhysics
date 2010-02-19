@@ -270,7 +270,7 @@ namespace FarseerPhysics
                     _flags |= BodyFlags.Enabled;
 
                     // Create all proxies.
-                    BroadPhase broadPhase = World.ContactManager._broadPhase;
+                    BroadPhase broadPhase = World.ContactManager.BroadPhase;
                     for (int j = 0; j < _fixtureList.Count; j++)
                     {
                         Fixture f = _fixtureList[j];
@@ -284,7 +284,7 @@ namespace FarseerPhysics
                     _flags &= ~BodyFlags.Enabled;
 
                     // Destroy all proxies.
-                    BroadPhase broadPhase = World.ContactManager._broadPhase;
+                    BroadPhase broadPhase = World.ContactManager.BroadPhase;
                     for (int j = 0; j < _fixtureList.Count; j++)
                     {
                         Fixture f = _fixtureList[j];
@@ -524,7 +524,7 @@ namespace FarseerPhysics
 
             if ((_flags & BodyFlags.Enabled) == BodyFlags.Enabled)
             {
-                BroadPhase broadPhase = World.ContactManager._broadPhase;
+                BroadPhase broadPhase = World.ContactManager.BroadPhase;
                 fixture.CreateProxy(broadPhase, ref _xf);
             }
 
@@ -592,7 +592,7 @@ namespace FarseerPhysics
             {
                 Debug.Assert(fixture.ProxyId != BroadPhase.NullProxy);
 
-                BroadPhase broadPhase = World.ContactManager._broadPhase;
+                BroadPhase broadPhase = World.ContactManager.BroadPhase;
                 fixture.DestroyProxy(broadPhase);
             }
             else
@@ -626,7 +626,7 @@ namespace FarseerPhysics
             _sweep.Center0 = _sweep.Center = MathUtils.Multiply(ref _xf, _sweep.LocalCenter);
             _sweep.Angle0 = _sweep.Angle = angle;
 
-            BroadPhase broadPhase = World.ContactManager._broadPhase;
+            BroadPhase broadPhase = World.ContactManager.BroadPhase;
 
             for (int i = 0; i < _fixtureList.Count; i++)
             {
@@ -899,7 +899,7 @@ namespace FarseerPhysics
             xf1.R.Set(_sweep.Angle0);
             xf1.Position = _sweep.Center0 - MathUtils.Multiply(ref xf1.R, _sweep.LocalCenter);
 
-            BroadPhase broadPhase = World.ContactManager._broadPhase;
+            BroadPhase broadPhase = World.ContactManager.BroadPhase;
             for (int i = 0; i < _fixtureList.Count; i++)
             {
                 Fixture f = _fixtureList[i];
