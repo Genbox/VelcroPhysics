@@ -264,17 +264,6 @@ namespace FarseerPhysics
         public float Restitution { get; set; }
 
         /// <summary>
-        /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
-        /// If you need a more accurate AABB, compute it using the shape and
-        /// the body transform.
-        /// </summary>
-        /// <param name="aabb">The aabb.</param>
-        public void GetAABB(out AABB aabb)
-        {
-            aabb = _aabb;
-        }
-
-        /// <summary>
         /// We need separation create/destroy functions from the constructor/destructor because
         /// the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
         /// </summary>
@@ -309,8 +298,8 @@ namespace FarseerPhysics
             Debug.Assert(ProxyId == BroadPhase.NullProxy);
 
             // Create proxy in the broad-phase.
-            _shape.ComputeAABB(out _aabb, ref xf);
-            ProxyId = broadPhase.CreateProxy(ref _aabb, this);
+            _shape.ComputeAABB(out AABB, ref xf);
+            ProxyId = broadPhase.CreateProxy(ref AABB, this);
         }
 
         internal void DestroyProxy(BroadPhase broadPhase)
@@ -337,14 +326,21 @@ namespace FarseerPhysics
             _shape.ComputeAABB(out aabb1, ref transform1);
             _shape.ComputeAABB(out aabb2, ref transform2);
 
-            _aabb.Combine(ref aabb1, ref aabb2);
+            AABB.Combine(ref aabb1, ref aabb2);
 
             Vector2 displacement = transform2.Position - transform1.Position;
 
-            broadPhase.MoveProxy(ProxyId, ref _aabb, displacement);
+            broadPhase.MoveProxy(ProxyId, ref AABB, displacement);
         }
 
-        internal AABB _aabb;
+        /// <summary>
+        /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
+        /// If you need a more accurate AABB, compute it using the shape and
+        /// the body transform.
+        /// </summary>
+        /// <param name="aabb">The aabb.</param>
+        public AABB AABB;
+
         internal Body _body;
         private Shape _shape;
         private short _collisionGroup;
