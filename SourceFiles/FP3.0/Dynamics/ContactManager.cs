@@ -61,7 +61,7 @@ namespace FarseerPhysics
     public class ContactManager
     {
         internal BroadPhase _broadPhase = new BroadPhase();
-        internal Contact _contactList;
+        internal List<Contact> _contactList = new List<Contact>(2);
         internal int _contactCount;
 
         /// <summary>
@@ -143,13 +143,7 @@ namespace FarseerPhysics
             bodyB = fixtureB.Body;
 
             // Insert into the world.
-            c.PrevContact = null;
-            c.NextContact = _contactList;
-            if (_contactList != null)
-            {
-                _contactList.PrevContact = c;
-            }
-            _contactList = c;
+            _contactList.Add(c);
 
             // Connect to island graph.
 
@@ -199,20 +193,7 @@ namespace FarseerPhysics
             }
 
             // Remove from the world.
-            if (c.PrevContact != null)
-            {
-                c.PrevContact.NextContact = c.NextContact;
-            }
-
-            if (c.NextContact != null)
-            {
-                c.NextContact.PrevContact = c.PrevContact;
-            }
-
-            if (c == _contactList)
-            {
-                _contactList = c.NextContact;
-            }
+            _contactList.Remove(c);
 
             // Remove from body 1
             if (c.NodeA.Prev != null)
@@ -254,9 +235,10 @@ namespace FarseerPhysics
         internal void Collide()
         {
             // Update awake contacts.
-            Contact c = _contactList;
-            while (c != null)
+            for (int i = 0; i < _contactList.Count; i++)
             {
+                Contact c = _contactList[i];
+
                 Fixture fixtureA = c.FixtureA;
                 Fixture fixtureB = c.FixtureB;
                 Body bodyA = fixtureA.Body;
@@ -264,7 +246,6 @@ namespace FarseerPhysics
 
                 if (bodyA.Awake == false && bodyB.Awake == false)
                 {
-                    c = c.NextContact;
                     continue;
                 }
 
@@ -274,9 +255,7 @@ namespace FarseerPhysics
                     // Should these bodies collide?
                     if (bodyB.ShouldCollide(bodyA) == false)
                     {
-                        Contact cNuke = c;
-                        c = cNuke.NextContact;
-                        Destroy(cNuke);
+                        Destroy(c);
                         continue;
                     }
 
@@ -285,9 +264,7 @@ namespace FarseerPhysics
                     {
                         if (CollisionFilter(fixtureA, fixtureB) == false)
                         {
-                            Contact cNuke = c;
-                            c = cNuke.NextContact;
-                            Destroy(cNuke);
+                            Destroy(c);
                             continue;
                         }
                     }
@@ -304,19 +281,16 @@ namespace FarseerPhysics
                 // Here we destroy contacts that cease to overlap in the broad-phase.
                 if (overlap == false)
                 {
-                    Contact cNuke = c;
-                    c = cNuke.NextContact;
-                    Destroy(cNuke);
+                    Destroy(c);
                     continue;
                 }
 
                 // The contact persists.
                 c.Update(this);
-                c = c.NextContact;
             }
         }
 
-        public Contact ContactList
+        public List<Contact> ContactList
         {
             get { return _contactList; }
         }

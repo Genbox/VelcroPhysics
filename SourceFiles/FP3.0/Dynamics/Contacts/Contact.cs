@@ -125,9 +125,6 @@ namespace FarseerPhysics
 
             Manifold.PointCount = 0;
 
-            PrevContact = null;
-            NextContact = null;
-
             NodeA.Contact = null;
             NodeA.Prev = null;
             NodeA.Next = null;
@@ -283,10 +280,6 @@ namespace FarseerPhysics
         }
 
         internal ContactFlags Flags;
-
-        // World pool and list pointers.
-        public Contact PrevContact;
-        public Contact NextContact;
 
         // Nodes for connecting bodies.
         internal ContactEdge NodeA = new ContactEdge();

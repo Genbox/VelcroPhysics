@@ -54,6 +54,7 @@ namespace FarseerPhysics
         public JointRemovedDelegate JointRemoved;
 
         private float _invDt0;
+        private Body[] _stack;
         private Island _island = new Island();
         private Func<Fixture, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
@@ -65,7 +66,6 @@ namespace FarseerPhysics
 
         private Stopwatch _watch;
 
-        private List<Controller> _controllers = new List<Controller>();
         internal WorldFlags Flags;
 
         /// <summary>
@@ -94,6 +94,10 @@ namespace FarseerPhysics
 
             // init the watch
             _watch = new Stopwatch();
+
+            Controllers = new List<Controller>();
+            BodyList = new List<Body>(32);
+            JointList = new List<Joint>(8);
         }
 
         /// <summary>
@@ -116,18 +120,6 @@ namespace FarseerPhysics
         {
             get { return ContactManager._broadPhase.ProxyCount; }
         }
-
-        /// <summary>
-        /// Get the number of bodies.
-        /// </summary>
-        /// <value>The body count.</value>
-        public int BodyCount { get; private set; }
-
-        /// <summary>
-        /// Get the number of joints.
-        /// </summary>
-        /// <value>The joint count.</value>
-        public int JointCount { get; private set; }
 
         /// <summary>
         /// Get the number of contacts (each may have 0 or more contact points).
@@ -184,7 +176,7 @@ namespace FarseerPhysics
         /// the next body in the world list. A null body indicates the end of the list.
         /// </summary>
         /// <returns>the head of the world body list.</returns>
-        public Body BodyList { get; private set; }
+        public List<Body> BodyList { get; private set; }
 
         public ContactManager ContactManager { get; private set; }
 
@@ -193,14 +185,14 @@ namespace FarseerPhysics
         /// the next joint in the world list. A null joint indicates the end of the list.
         /// </summary>
         /// <returns>the head of the world joint list.</returns>
-        public Joint JointList { get; private set; }
+        public List<Joint> JointList { get; private set; }
 
         /// <summary>
         /// Get the world contact list. With the returned contact, use Contact.GetNext to get
         /// the next contact in the world list. A null contact indicates the end of the list.
         /// </summary>
         /// <returns>the head of the world contact list.</returns>
-        public Contact ContactList
+        public List<Contact> ContactList
         {
             get { return ContactManager._contactList; }
         }
@@ -213,18 +205,20 @@ namespace FarseerPhysics
 
         public float NewContactsTime { get; private set; }
 
+        public List<Controller> Controllers { get; private set; }
+
         public void Add(Controller controller)
         {
-            Debug.Assert(!_controllers.Contains(controller));
+            Debug.Assert(!Controllers.Contains(controller));
 
             controller.World = this;
-            _controllers.Add(controller);
+            Controllers.Add(controller);
         }
 
         public void Remove(Controller controller)
         {
-            if (_controllers.Contains(controller))
-                _controllers.Remove(controller);
+            if (Controllers.Contains(controller))
+                Controllers.Remove(controller);
         }
 
         public void Add(Body body)
@@ -235,15 +229,7 @@ namespace FarseerPhysics
                 return;
             }
 
-            // Add to world doubly linked list.
-            body._prev = null;
-            body._next = BodyList;
-            if (BodyList != null)
-            {
-                BodyList._prev = body;
-            }
-            BodyList = body;
-            ++BodyCount;
+            BodyList.Add(body);
         }
 
         //TODO: Change behavior
@@ -257,16 +243,7 @@ namespace FarseerPhysics
 
             Body b = new Body(this);
 
-            // Add to world doubly linked list.
-            b._prev = null;
-            b._next = BodyList;
-            if (BodyList != null)
-            {
-                BodyList._prev = b;
-            }
-            BodyList = b;
-            ++BodyCount;
-
+            BodyList.Add(b);
             return b;
         }
 
@@ -279,7 +256,7 @@ namespace FarseerPhysics
         /// <param name="body">The body.</param>
         public void Remove(Body body)
         {
-            Debug.Assert(BodyCount > 0);
+            Debug.Assert(BodyList.Count > 0);
             Debug.Assert(!Locked);
             if (Locked)
             {
@@ -313,40 +290,22 @@ namespace FarseerPhysics
             body._contactList = null;
 
             // Delete the attached fixtures. This destroys broad-phase proxies.
-            Fixture f = body._fixtureList;
-            while (f != null)
-            {
-                Fixture f0 = f;
-                f = f._next;
 
+            for (int i = 0; i < body._fixtureList.Count; i++)
+            {
+                Fixture f = body._fixtureList[i];
                 if (FixtureRemoved != null)
                 {
-                    FixtureRemoved(f0);
+                    FixtureRemoved(f);
                 }
 
-                f0.DestroyProxy(ContactManager._broadPhase);
-                f0.Destroy();
+                f.DestroyProxy(ContactManager._broadPhase);
+                f.Destroy();
             }
+            
             body._fixtureList = null;
-            body._fixtureCount = 0;
 
-            // Remove world body list.
-            if (body._prev != null)
-            {
-                body._prev._next = body._next;
-            }
-
-            if (body._next != null)
-            {
-                body._next._prev = body._prev;
-            }
-
-            if (body == BodyList)
-            {
-                BodyList = body._next;
-            }
-
-            --BodyCount;
+            BodyList.Remove(body);
         }
 
         /// <summary>
@@ -364,15 +323,7 @@ namespace FarseerPhysics
                 return;
             }
 
-            // Connect to the world list.
-            joint.Prev = null;
-            joint.Next = JointList;
-            if (JointList != null)
-            {
-                JointList.Prev = joint;
-            }
-            JointList = joint;
-            ++JointCount;
+            JointList.Add(joint);
 
             // Connect to the bodies' doubly linked lists.
             joint._edgeA.Joint = joint;
@@ -443,20 +394,7 @@ namespace FarseerPhysics
             bool collideConnected = joint.CollideConnected;
 
             // Remove from the doubly linked list.
-            if (joint.Prev != null)
-            {
-                joint.Prev.Next = joint.Next;
-            }
-
-            if (joint.Next != null)
-            {
-                joint.Next.Prev = joint.Prev;
-            }
-
-            if (joint == JointList)
-            {
-                JointList = joint.Next;
-            }
+            JointList.Remove(joint);
 
             // Disconnect from island graph.
             Body bodyA = joint.BodyA;
@@ -513,8 +451,7 @@ namespace FarseerPhysics
                 joint._edgeB.Next = null;
             }
 
-            Debug.Assert(JointCount > 0);
-            --JointCount;
+            Debug.Assert(JointList.Count > 0);
 
             // WIP David
             if (!joint.IsFixedType())
@@ -580,7 +517,7 @@ namespace FarseerPhysics
 
             _watch.Start();
             //Update controllers
-            foreach (Controller controller in _controllers)
+            foreach (Controller controller in Controllers)
             {
                 controller.Update(dt);
             }
@@ -623,10 +560,10 @@ namespace FarseerPhysics
         /// @see SetAutoClearForces
         public void ClearForces()
         {
-            for (Body body = BodyList; body != null; body = body.Next)
+            for (int i = 0; i < BodyList.Count; i++)
             {
-                body._force = Vector2.Zero;
-                body._torque = 0.0f;
+                BodyList[i]._force = Vector2.Zero;
+                BodyList[i]._torque = 0.0f;
             }
         }
 
@@ -685,38 +622,42 @@ namespace FarseerPhysics
             return input.MaxFraction;
         }
 
-        private Body[] _stack;
-
         private void Solve(ref TimeStep step)
         {
             // Size the island for the worst case.
-            _island.Reset(BodyCount,
+            _island.Reset(BodyList.Count,
                           ContactManager._contactCount,
-                          JointCount,
+                          JointList.Count,
                           ContactManager);
 
             // Clear all the island flags.
-            for (Body b = BodyList; b != null; b = b._next)
+            for (int i = 0; i < BodyList.Count; i++)
             {
+                Body b = BodyList[i];
+
                 b._flags &= ~BodyFlags.Island;
             }
-            for (Contact c = ContactManager._contactList; c != null; c = c.NextContact)
+            for (int i = 0; i < ContactList.Count; i++)
             {
+                Contact c = ContactList[i];
+
                 c.Flags &= ~ContactFlags.Island;
             }
-            for (Joint j = JointList; j != null; j = j.Next)
+            for (int i = 0; i < JointList.Count; i++)
             {
+                Joint j = JointList[i];
                 j._islandFlag = false;
             }
 
             // Build and simulate all awake islands.
-            int stackSize = BodyCount;
+            int stackSize = BodyList.Count;
 
             if (_stack == null || _stack.Length < stackSize)
-                _stack = new Body[BodyCount];
+                _stack = new Body[BodyList.Count];
 
-            for (Body seed = BodyList; seed != null; seed = seed._next)
+            for (int j = 0; j < BodyList.Count; j++)
             {
+                Body seed = BodyList[j];
                 if ((seed._flags & (BodyFlags.Island)) != BodyFlags.None)
                 {
                     continue;
@@ -852,8 +793,9 @@ namespace FarseerPhysics
             }
 
             // Synchronize fixtures, check for out of range bodies.
-            for (Body b = BodyList; b != null; b = b.Next)
+            for (int i = 0; i < BodyList.Count; i++)
             {
+                Body b = BodyList[i];
                 if (!b.Awake || !b.Enabled)
                 {
                     continue;
@@ -1054,8 +996,10 @@ namespace FarseerPhysics
         private void SolveTOI()
         {
             // Prepare all contacts.
-            for (Contact c = ContactManager._contactList; c != null; c = c.NextContact)
+            for (int i = 0; i < ContactList.Count; i++)
             {
+                Contact c = ContactList[i];
+
                 // Enable the contact
                 c.Flags |= ContactFlags.Enabled;
 
@@ -1064,8 +1008,9 @@ namespace FarseerPhysics
             }
 
             // Initialize the TOI flag.
-            for (Body body = BodyList; body != null; body = body._next)
+            for (int i = 0; i < BodyList.Count; i++)
             {
+                Body body = BodyList[i];
                 // Sleeping, kinematic, and static bodies will not be affected by the TOI event.
                 if (body.Awake == false || body.BodyType == BodyType.Kinematic || body.BodyType == BodyType.Static)
                 {
@@ -1078,8 +1023,9 @@ namespace FarseerPhysics
             }
 
             // Collide non-bullets.
-            for (Body body = BodyList; body != null; body = body._next)
+            for (int i = 0; i < BodyList.Count; i++)
             {
+                Body body = BodyList[i];
                 if (body.BodyType != BodyType.Dynamic || body.Awake == false)
                 {
                     continue;
@@ -1096,8 +1042,9 @@ namespace FarseerPhysics
             }
 
             // Collide bullets.
-            for (Body body = BodyList; body != null; body = body._next)
+            for (int i = 0; i < BodyList.Count; i++)
             {
+                Body body = BodyList[i];
                 if (body.BodyType != BodyType.Dynamic || body.Awake == false)
                 {
                     continue;
