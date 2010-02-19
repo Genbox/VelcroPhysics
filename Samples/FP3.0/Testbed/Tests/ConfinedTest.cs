@@ -35,7 +35,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             {
                 
-                Body ground = World.AddBody();
+                Body ground = World.Add();
 
 
                 // Floor
@@ -65,7 +65,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 for (int i = 0; i < RowCount; ++i)
                 {
-                    Body body = World.AddBody();
+                    Body body = World.Add();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius, (2.0f * i + 1.0f) * radius);
 
@@ -83,7 +83,7 @@ namespace FarseerPhysics.TestBed.Tests
             CircleShape shape = new CircleShape(radius, 1);
             shape.Position = Vector2.Zero;
 
-            Body body = World.AddBody();
+            Body body = World.Add();
             body.BodyType = BodyType.Dynamic;
             body.Position = new Vector2(Rand.RandomFloat(), (2.0f + Rand.RandomFloat()) * radius);
 

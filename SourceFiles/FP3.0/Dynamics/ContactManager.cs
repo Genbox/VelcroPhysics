@@ -60,6 +60,10 @@ namespace FarseerPhysics
 
     public class ContactManager
     {
+        internal BroadPhase _broadPhase = new BroadPhase();
+        internal Contact _contactList;
+        internal int _contactCount;
+
         /// <summary>
         /// Fires when a contact is deleted
         /// </summary>
@@ -69,21 +73,19 @@ namespace FarseerPhysics
         public PostSolveDelegate PostSolve;
         public Pool<Contact> ContactPool;
 
+        public Action<Fixture, Fixture> BroadphaseCollision;
         public CollisionFilterDelegate CollisionFilter;
 
         internal ContactManager()
         {
-            _addPair = AddPair;
+            BroadphaseCollision = AddPair;
 
-           ContactPool = new Pool<Contact>(50);
+            ContactPool = new Pool<Contact>(64);
         }
 
         // Broad-phase callback.
-        private void AddPair(Fixture proxyUserDataA, Fixture proxyUserDataB)
+        private void AddPair(Fixture fixtureA, Fixture fixtureB)
         {
-            Fixture fixtureA = proxyUserDataA;
-            Fixture fixtureB = proxyUserDataB;
-
             Body bodyA = fixtureA.Body;
             Body bodyB = fixtureB.Body;
 
@@ -180,7 +182,7 @@ namespace FarseerPhysics
 
         internal void FindNewContacts()
         {
-            _broadPhase.UpdatePairs(_addPair);
+            _broadPhase.UpdatePairs(BroadphaseCollision);
         }
 
         internal void Destroy(Contact c)
@@ -313,12 +315,6 @@ namespace FarseerPhysics
                 c = c.NextContact;
             }
         }
-
-        internal BroadPhase _broadPhase = new BroadPhase();
-        internal Contact _contactList;
-        internal int _contactCount;
-
-        Action<Fixture, Fixture> _addPair;
 
         public Contact ContactList
         {

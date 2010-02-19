@@ -33,7 +33,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = World.AddBody();
+                ground = World.Add();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -48,7 +48,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
                 {
-                    Body body = World.AddBody();
+                    Body body = World.Add();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
 
@@ -57,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 5.0f);
                     RevoluteJoint jd = new RevoluteJoint(prevBody, body, anchor);
-                    World.AddJoint(jd);
+                    World.Add(jd);
 
                     if (i == (Count >> 1))
                     {
@@ -68,7 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Vector2 anchor2 = new Vector2(-15.0f + 1.0f * Count, 5.0f);
                 RevoluteJoint jd2 = new RevoluteJoint(prevBody, ground, anchor2);
-                World.AddJoint(jd2);
+                World.Add(jd2);
             }
 
             Vertices vertices = new Vertices(3);
@@ -80,7 +80,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 PolygonShape shape = new PolygonShape(vertices, 1.0f);
 
-                Body body = World.AddBody();
+                Body body = World.Add();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
 
@@ -91,7 +91,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(0.5f, 1.0f);
 
-                Body body = World.AddBody();
+                Body body = World.Add();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);
 

@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
             Body ground;
             {
 
-                ground = World.AddBody();
+                ground = World.Add();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -49,7 +49,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 PolygonShape polygonBox = new PolygonShape(box, 5);
 
-                Body body1 = World.AddBody();
+                Body body1 = World.Add();
                 body1.BodyType = BodyType.Dynamic;
                 body1.Position = new Vector2(-3.0f, 12.0f);
 
@@ -58,18 +58,18 @@ namespace FarseerPhysics.TestBed.Tests
                 _joint1 = new FixedRevoluteJoint(/*ground, */body1, body1.Position/*ground.GetLocalPoint(body1.Position)*/);
                 //_joint1.LocalAnchorB = body1.GetLocalPoint(body1.Position);
                 //_joint1.ReferenceAngle = body1.GetAngle() - ground.GetAngle();
-                World.AddJoint(_joint1);
+                World.Add(_joint1);
 
-                Body body2 = World.AddBody();
+                Body body2 = World.Add();
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(0.0f, 12.0f);
 
                 body2.CreateFixture(circle2);
 
                 _joint2 = new FixedRevoluteJoint(/*ground,*/ body2, body2.Position);
-                World.AddJoint(_joint2);
+                World.Add(_joint2);
 
-                Body body3 = World.AddBody();
+                Body body3 = World.Add();
                 body3.BodyType = BodyType.Dynamic;
                 body3.Position = new Vector2(2.5f, 12.0f);
 
@@ -80,17 +80,17 @@ namespace FarseerPhysics.TestBed.Tests
                 _joint3.UpperLimit = 5.0f;
                 _joint3.LimitEnabled = true;
 
-                World.AddJoint(_joint3);
+                World.Add(_joint3);
 
                 _joint4 = new GearJoint(_joint1, _joint2, circle2.Radius / circle1.Radius);
                 _joint4.BodyA = body1;
                 _joint4.BodyB = body2;
-                World.AddJoint(_joint4);
+                World.Add(_joint4);
 
                 _joint5 = new GearJoint(_joint2, _joint3, -1.0f / circle2.Radius);
                 _joint5.BodyA = body2;
                 _joint5.BodyB = body3;
-                World.AddJoint(_joint5);
+                World.Add(_joint5);
             }
         }
 

@@ -205,9 +205,15 @@ namespace FarseerPhysics
             get { return ContactManager._contactList; }
         }
 
-        public TimeSpan UpdateTime { get; private set; }
+        public bool EnableDiagnostics { get; set; }
 
-        public void AddController(Controller controller)
+        public float UpdateTime { get; private set; }
+
+        public float ContinuousPhysicsTime { get; private set; }
+
+        public float NewContactsTime { get; private set; }
+
+        public void Add(Controller controller)
         {
             Debug.Assert(!_controllers.Contains(controller));
 
@@ -215,36 +221,33 @@ namespace FarseerPhysics
             _controllers.Add(controller);
         }
 
-        public void RemoveController(Controller controller)
+        public void Remove(Controller controller)
         {
             if (_controllers.Contains(controller))
                 _controllers.Remove(controller);
         }
 
-        public Body AddBody(Body body)
+        public void Add(Body body)
         {
             Debug.Assert(!Locked);
             if (Locked)
             {
-                return null;
+                return;
             }
-
-            Body clone = body.Clone(this);
 
             // Add to world doubly linked list.
-            clone._prev = null;
-            clone._next = BodyList;
+            body._prev = null;
+            body._next = BodyList;
             if (BodyList != null)
             {
-                BodyList._prev = clone;
+                BodyList._prev = body;
             }
-            BodyList = clone;
+            BodyList = body;
             ++BodyCount;
-
-            return clone;
         }
 
-        public Body AddBody()
+        //TODO: Change behavior
+        public Body Add()
         {
             Debug.Assert(!Locked);
             if (Locked)
@@ -273,8 +276,8 @@ namespace FarseerPhysics
         /// @warning This automatically deletes all associated shapes and joints.
         /// @warning This function is locked during callbacks.
         /// </summary>
-        /// <param name="b">The b.</param>
-        public void RemoveBody(Body b)
+        /// <param name="body">The body.</param>
+        public void Remove(Body body)
         {
             Debug.Assert(BodyCount > 0);
             Debug.Assert(!Locked);
@@ -284,7 +287,7 @@ namespace FarseerPhysics
             }
 
             // Delete the attached joints.
-            JointEdge je = b._jointList;
+            JointEdge je = body._jointList;
             while (je != null)
             {
                 JointEdge je0 = je;
@@ -295,22 +298,22 @@ namespace FarseerPhysics
                     JointRemoved(je0.Joint);
                 }
 
-                RemoveJoint(je0.Joint);
+                Remove(je0.Joint);
             }
-            b._jointList = null;
+            body._jointList = null;
 
             // Delete the attached contacts.
-            ContactEdge ce = b._contactList;
+            ContactEdge ce = body._contactList;
             while (ce != null)
             {
                 ContactEdge ce0 = ce;
                 ce = ce.Next;
                 ContactManager.Destroy(ce0.Contact);
             }
-            b._contactList = null;
+            body._contactList = null;
 
             // Delete the attached fixtures. This destroys broad-phase proxies.
-            Fixture f = b._fixtureList;
+            Fixture f = body._fixtureList;
             while (f != null)
             {
                 Fixture f0 = f;
@@ -324,23 +327,23 @@ namespace FarseerPhysics
                 f0.DestroyProxy(ContactManager._broadPhase);
                 f0.Destroy();
             }
-            b._fixtureList = null;
-            b._fixtureCount = 0;
+            body._fixtureList = null;
+            body._fixtureCount = 0;
 
             // Remove world body list.
-            if (b._prev != null)
+            if (body._prev != null)
             {
-                b._prev._next = b._next;
+                body._prev._next = body._next;
             }
 
-            if (b._next != null)
+            if (body._next != null)
             {
-                b._next._prev = b._prev;
+                body._next._prev = body._prev;
             }
 
-            if (b == BodyList)
+            if (body == BodyList)
             {
-                BodyList = b._next;
+                BodyList = body._next;
             }
 
             --BodyCount;
@@ -353,7 +356,7 @@ namespace FarseerPhysics
         /// </summary>
         /// <param name="joint">The joint.</param>
         /// <returns></returns>
-        public void AddJoint(Joint joint)
+        public void Add(Joint joint)
         {
             Debug.Assert(!Locked);
             if (Locked)
@@ -428,8 +431,8 @@ namespace FarseerPhysics
         /// Destroy a joint. This may cause the connected bodies to begin colliding.
         /// @warning This function is locked during callbacks.
         /// </summary>
-        /// <param name="j">The j.</param>
-        public void RemoveJoint(Joint j)
+        /// <param name="joint">The joint.</param>
+        public void Remove(Joint joint)
         {
             Debug.Assert(!Locked);
             if (Locked)
@@ -437,84 +440,84 @@ namespace FarseerPhysics
                 return;
             }
 
-            bool collideConnected = j.CollideConnected;
+            bool collideConnected = joint.CollideConnected;
 
             // Remove from the doubly linked list.
-            if (j.Prev != null)
+            if (joint.Prev != null)
             {
-                j.Prev.Next = j.Next;
+                joint.Prev.Next = joint.Next;
             }
 
-            if (j.Next != null)
+            if (joint.Next != null)
             {
-                j.Next.Prev = j.Prev;
+                joint.Next.Prev = joint.Prev;
             }
 
-            if (j == JointList)
+            if (joint == JointList)
             {
-                JointList = j.Next;
+                JointList = joint.Next;
             }
 
             // Disconnect from island graph.
-            Body bodyA = j.BodyA;
-            Body bodyB = j.BodyB;
+            Body bodyA = joint.BodyA;
+            Body bodyB = joint.BodyB;
 
             // Wake up connected bodies.
             bodyA.Awake = true;
 
             // WIP David
-            if (!j.IsFixedType())
+            if (!joint.IsFixedType())
             {
                 bodyB.Awake = true;
             }
 
             // Remove from body 1.
-            if (j._edgeA.Prev != null)
+            if (joint._edgeA.Prev != null)
             {
-                j._edgeA.Prev.Next = j._edgeA.Next;
+                joint._edgeA.Prev.Next = joint._edgeA.Next;
             }
 
-            if (j._edgeA.Next != null)
+            if (joint._edgeA.Next != null)
             {
-                j._edgeA.Next.Prev = j._edgeA.Prev;
+                joint._edgeA.Next.Prev = joint._edgeA.Prev;
             }
 
-            if (j._edgeA == bodyA._jointList)
+            if (joint._edgeA == bodyA._jointList)
             {
-                bodyA._jointList = j._edgeA.Next;
+                bodyA._jointList = joint._edgeA.Next;
             }
 
-            j._edgeA.Prev = null;
-            j._edgeA.Next = null;
+            joint._edgeA.Prev = null;
+            joint._edgeA.Next = null;
 
             // WIP David
-            if (!j.IsFixedType())
+            if (!joint.IsFixedType())
             {
                 // Remove from body 2
-                if (j._edgeB.Prev != null)
+                if (joint._edgeB.Prev != null)
                 {
-                    j._edgeB.Prev.Next = j._edgeB.Next;
+                    joint._edgeB.Prev.Next = joint._edgeB.Next;
                 }
 
-                if (j._edgeB.Next != null)
+                if (joint._edgeB.Next != null)
                 {
-                    j._edgeB.Next.Prev = j._edgeB.Prev;
+                    joint._edgeB.Next.Prev = joint._edgeB.Prev;
                 }
 
-                if (j._edgeB == bodyB._jointList)
+                if (joint._edgeB == bodyB._jointList)
                 {
-                    bodyB._jointList = j._edgeB.Next;
+                    bodyB._jointList = joint._edgeB.Next;
                 }
 
-                j._edgeB.Prev = null;
-                j._edgeB.Next = null;
+                joint._edgeB.Prev = null;
+                joint._edgeB.Next = null;
             }
 
             Debug.Assert(JointCount > 0);
             --JointCount;
 
             // WIP David
-            if (!j.IsFixedType())
+            if (!joint.IsFixedType())
             {
                 // If the joint prevents collisions, then flag any contacts for filtering.
                 if (collideConnected == false)
@@ -544,7 +547,8 @@ namespace FarseerPhysics
         /// <param name="positionIterations">for the position constraint solver.</param>
         public void Step(float dt, int velocityIterations, int positionIterations)
         {
-            _watch.Start();
+            if (EnableDiagnostics)
+                _watch.Start();
 
             // If new fixtures were added, we need to find the new contacts.
             if ((Flags & WorldFlags.NewFixture) == WorldFlags.NewFixture)
@@ -552,6 +556,8 @@ namespace FarseerPhysics
                 ContactManager.FindNewContacts();
                 Flags &= ~WorldFlags.NewFixture;
             }
+
+            NewContactsTime = _watch.ElapsedTicks;
 
             //Lock the world
             Flags |= WorldFlags.Locked;
@@ -570,9 +576,9 @@ namespace FarseerPhysics
             }
 
             step.DtRatio = _invDt0 * dt;
-
             step.WarmStarting = WarmStarting;
 
+            _watch.Start();
             //Update controllers
             foreach (Controller controller in _controllers)
             {
@@ -607,7 +613,7 @@ namespace FarseerPhysics
             Flags &= ~WorldFlags.Locked;
 
             _watch.Stop();
-            UpdateTime = _watch.Elapsed;
+            UpdateTime = _watch.ElapsedTicks;
             _watch.Reset();
         }
 

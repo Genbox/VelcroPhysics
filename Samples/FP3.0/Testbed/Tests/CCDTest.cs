@@ -30,7 +30,7 @@ namespace FarseerPhysics.TestBed.Tests
         private CCDTest()
         {
             {
-                Body body = World.AddBody();
+                Body body = World.Add();
                 body.Position = new Vector2(0.0f, -0.2f);
 
                 Vertices box = PolygonTools.CreateRectangle(10, 0.2f);
@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
                 _angularVelocity = -30.669577f;
 
-                Body body = World.AddBody();
+                Body body = World.Add();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 20.0f);
 

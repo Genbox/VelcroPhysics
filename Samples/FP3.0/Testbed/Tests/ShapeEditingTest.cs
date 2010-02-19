@@ -32,14 +32,14 @@ namespace FarseerPhysics.TestBed.Tests
         {
             {
                 
-                Body ground = World.AddBody();
+                Body ground = World.Add();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
                 ground.CreateFixture(shape);
             }
 
-            _body = World.AddBody();
+            _body = World.Add();
             _body.BodyType = BodyType.Dynamic;
             _body.Position = new Vector2(0.0f, 10.0f);
 

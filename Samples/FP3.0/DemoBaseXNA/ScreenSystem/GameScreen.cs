@@ -1,6 +1,5 @@
 using System;
 using DemoBaseXNA.DemoShare;
-using DemoBaseXNA.DrawingSystem;
 using FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -138,7 +137,7 @@ namespace DemoBaseXNA.ScreenSystem
 
                 _border = new Border(50, 40, borderWidth, new Vector2(0, 0));
                 _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
-                _groundBody = PhysicsSimulator.AddBody();
+                _groundBody = PhysicsSimulator.Add();
             }
         }
 
@@ -335,7 +334,7 @@ namespace DemoBaseXNA.ScreenSystem
                 Body body = _fixture.Body;
                 _mouseJoint = new MouseJoint(_groundBody, body, p);
                 _mouseJoint.MaxForce = 1000.0f * body.Mass;
-                PhysicsSimulator.AddJoint(_mouseJoint);
+                PhysicsSimulator.Add(_mouseJoint);
                 body.Awake = true;
             }
         }
@@ -344,7 +343,7 @@ namespace DemoBaseXNA.ScreenSystem
         {
             if (_mouseJoint != null)
             {
-                PhysicsSimulator.RemoveJoint(_mouseJoint);
+                PhysicsSimulator.Remove(_mouseJoint);
                 _mouseJoint = null;
             }
 

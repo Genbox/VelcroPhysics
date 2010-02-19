@@ -33,7 +33,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = World.AddBody();
+                ground = World.Add();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0.0f);
@@ -48,7 +48,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
                 {
-                    Body body = World.AddBody();
+                    Body body = World.Add();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
 
@@ -56,7 +56,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 5.0f);
                     WeldJoint jd = new WeldJoint(prevBody, body, anchor);
-                    World.AddJoint(jd);
+                    World.Add(jd);
 
                     prevBody = body;
                 }
@@ -70,7 +70,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
                 {
-                    Body body = World.AddBody();
+                    Body body = World.Add();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-14.5f + 1.0f * i, 15.0f);
                     body.InertiaScale = 10.0f;
@@ -79,7 +79,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 15.0f);
                     WeldJoint jd = new WeldJoint(prevBody, body, anchor);
-                    World.AddJoint(jd);
+                    World.Add(jd);
 
                     prevBody = body;
                 }
@@ -93,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
                 {
-                    Body body = World.AddBody();
+                    Body body = World.Add();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-4.5f + 1.0f * i, 5.0f);
 
@@ -103,7 +103,7 @@ namespace FarseerPhysics.TestBed.Tests
                     {
                         Vector2 anchor = new Vector2(-5.0f + 1.0f * i, 5.0f);
                         WeldJoint jd = new WeldJoint(prevBody, body, anchor);
-                        World.AddJoint(jd);
+                        World.Add(jd);
                     }
 
                     prevBody = body;
@@ -119,7 +119,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
                 {
-                    Body body = World.AddBody();
+                    Body body = World.Add();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(5.5f + 1.0f * i, 10.0f);
                     body.InertiaScale = 10.0f;
@@ -130,7 +130,7 @@ namespace FarseerPhysics.TestBed.Tests
                     {
                         Vector2 anchor = new Vector2(5.0f + 1.0f * i, 10.0f);
                         WeldJoint jd = new WeldJoint(prevBody, body, anchor);
-                        World.AddJoint(jd);
+                        World.Add(jd);
                     }
 
                     prevBody = body;
@@ -148,7 +148,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 PolygonShape shape = new PolygonShape(vertices, 1.0f);
 
-                Body body = World.AddBody();
+                Body body = World.Add();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
 
@@ -160,7 +160,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(0.5f, 1.0f);
 
-                Body body = World.AddBody();
+                Body body = World.Add();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);
 

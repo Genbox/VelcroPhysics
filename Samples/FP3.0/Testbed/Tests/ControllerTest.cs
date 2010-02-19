@@ -8,7 +8,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private ControllerTest()
         {
-            Body ground = World.AddBody();
+            Body ground = World.Add();
 
             Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
             PolygonShape shape = new PolygonShape(edge, 0);
@@ -16,13 +16,13 @@ namespace FarseerPhysics.TestBed.Tests
 
             //Create the gravity controller
             GravityController gravity = new GravityController(20);
-            World.AddController(gravity);
+            World.Add(gravity);
 
             Vector2 startPosition = new Vector2(-10, 2);
             Vector2 offset = new Vector2(2);
 
             //Create the planet
-            Body planet = World.AddBody();
+            Body planet = World.Add();
             planet.Position = new Vector2(0, 20);
 
             CircleShape planetShape = new CircleShape(2, 1);
@@ -34,7 +34,7 @@ namespace FarseerPhysics.TestBed.Tests
             //Create 10 smaller circles
             for (int i = 0; i < 10; i++)
             {
-                Body circle = World.AddBody();
+                Body circle = World.Add();
                 circle.BodyType = BodyType.Dynamic;
                 circle.Position = startPosition + offset * i;
 
