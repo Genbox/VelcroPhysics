@@ -33,7 +33,7 @@ namespace FarseerPhysics
     {
         NewFixture = (1 << 0),
         Locked = (1 << 1),
-        ClearForces = (1 << 2),
+        AutoClearForces = (1 << 2),
     }
 
     /// <summary>
@@ -82,7 +82,7 @@ namespace FarseerPhysics
             AllowSleep = allowSleep;
             Gravity = gravity;
 
-            Flags = WorldFlags.ClearForces;
+            Flags = WorldFlags.AutoClearForces;
 
             _queryAABBCallbackWrapper = QueryAABBCallbackWrapper;
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
@@ -122,15 +122,6 @@ namespace FarseerPhysics
         }
 
         /// <summary>
-        /// Get the number of contacts (each may have 0 or more contact points).
-        /// </summary>
-        /// <value>The contact count.</value>
-        public int ContactCount
-        {
-            get { return ContactManager._contactCount; }
-        }
-
-        /// <summary>
         /// Change the global gravity vector.
         /// </summary>
         /// <value>The gravity.</value>
@@ -157,16 +148,16 @@ namespace FarseerPhysics
         /// Get the flag that controls automatic clearing of forces after each time step.
         public bool AutoClearForces
         {
-            get { return (Flags & WorldFlags.ClearForces) == WorldFlags.ClearForces; }
+            get { return (Flags & WorldFlags.AutoClearForces) == WorldFlags.AutoClearForces; }
             set
             {
                 if (value)
                 {
-                    Flags |= WorldFlags.ClearForces;
+                    Flags |= WorldFlags.AutoClearForces;
                 }
                 else
                 {
-                    Flags &= ~WorldFlags.ClearForces;
+                    Flags &= ~WorldFlags.AutoClearForces;
                 }
             }
         }
@@ -197,6 +188,8 @@ namespace FarseerPhysics
             get { return ContactManager._contactList; }
         }
 
+        public List<Controller> Controllers { get; private set; }
+
         public bool EnableDiagnostics { get; set; }
 
         public float UpdateTime { get; private set; }
@@ -205,7 +198,11 @@ namespace FarseerPhysics
 
         public float NewContactsTime { get; private set; }
 
-        public List<Controller> Controllers { get; private set; }
+        public float ControllersUpdateTime { get; private set; }
+
+        public float ContactsUpdateTime { get; private set; }
+
+        public float SolveUpdateTime { get; private set; }
 
         public void Add(Controller controller)
         {
@@ -302,7 +299,7 @@ namespace FarseerPhysics
                 f.DestroyProxy(ContactManager._broadPhase);
                 f.Destroy();
             }
-            
+
             body._fixtureList = null;
 
             BodyList.Remove(body);
@@ -484,6 +481,19 @@ namespace FarseerPhysics
         /// <param name="positionIterations">for the position constraint solver.</param>
         public void Step(float dt, int velocityIterations, int positionIterations)
         {
+            TimeStep step;
+            step.DeltaTime = dt;
+            step.VelocityIterations = velocityIterations;
+            step.PositionIterations = positionIterations;
+
+            if (dt > 0.0f)
+                step.Inv_DeltaTime = 1.0f / dt;
+            else
+                step.Inv_DeltaTime = 0.0f;
+
+            step.DtRatio = _invDt0 * dt;
+            step.WarmStarting = WarmStarting;
+
             if (EnableDiagnostics)
                 _watch.Start();
 
@@ -494,36 +504,26 @@ namespace FarseerPhysics
                 Flags &= ~WorldFlags.NewFixture;
             }
 
-            NewContactsTime = _watch.ElapsedTicks;
+            if (EnableDiagnostics)
+                NewContactsTime = _watch.ElapsedTicks;
 
             //Lock the world
             Flags |= WorldFlags.Locked;
 
-            TimeStep step;
-            step.DeltaTime = dt;
-            step.VelocityIterations = velocityIterations;
-            step.PositionIterations = positionIterations;
-            if (dt > 0.0f)
-            {
-                step.Inv_DeltaTime = 1.0f / dt;
-            }
-            else
-            {
-                step.Inv_DeltaTime = 0.0f;
-            }
-
-            step.DtRatio = _invDt0 * dt;
-            step.WarmStarting = WarmStarting;
-
-            _watch.Start();
             //Update controllers
             foreach (Controller controller in Controllers)
             {
                 controller.Update(dt);
             }
 
+            if (EnableDiagnostics)
+                ControllersUpdateTime = _watch.ElapsedTicks - NewContactsTime;
+
             // Update contacts. This is where some contacts are destroyed.
             ContactManager.Collide();
+
+            if (EnableDiagnostics)
+                ContactsUpdateTime = _watch.ElapsedTicks - (NewContactsTime + ControllersUpdateTime);
 
             // Integrate velocities, solve velocity constraints, and integrate positions.
             if (step.DeltaTime > 0.0f)
@@ -531,27 +531,36 @@ namespace FarseerPhysics
                 Solve(ref step);
             }
 
+            if (EnableDiagnostics)
+                SolveUpdateTime = _watch.ElapsedTicks - (NewContactsTime + ControllersUpdateTime + ContactsUpdateTime);
+
             // Handle TOI events.
             if (ContinuousPhysics && step.DeltaTime > 0.0f)
             {
                 SolveTOI();
             }
 
+            if (EnableDiagnostics)
+                ContinuousPhysicsTime = _watch.ElapsedTicks - (NewContactsTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
+
             if (step.DeltaTime > 0.0f)
             {
                 _invDt0 = step.Inv_DeltaTime;
             }
 
-            if ((Flags & WorldFlags.ClearForces) != 0)
+            if ((Flags & WorldFlags.AutoClearForces) != 0)
             {
                 ClearForces();
             }
 
             Flags &= ~WorldFlags.Locked;
 
-            _watch.Stop();
-            UpdateTime = _watch.ElapsedTicks;
-            _watch.Reset();
+            if (EnableDiagnostics)
+            {
+                _watch.Stop();
+                UpdateTime = _watch.ElapsedTicks;
+                _watch.Reset();
+            }
         }
 
         /// Call this after you are done with time steps to clear the forces. You normally
@@ -626,7 +635,7 @@ namespace FarseerPhysics
         {
             // Size the island for the worst case.
             _island.Reset(BodyList.Count,
-                          ContactManager._contactCount,
+                          ContactManager.ContactList.Count,
                           JointList.Count,
                           ContactManager);
 

@@ -61,8 +61,7 @@ namespace FarseerPhysics
     public class ContactManager
     {
         internal BroadPhase _broadPhase = new BroadPhase();
-        internal List<Contact> _contactList = new List<Contact>(2);
-        internal int _contactCount;
+        internal List<Contact> _contactList = new List<Contact>(128);
 
         /// <summary>
         /// Fires when a contact is deleted
@@ -80,7 +79,8 @@ namespace FarseerPhysics
         {
             BroadphaseCollision = AddPair;
 
-            ContactPool = new Pool<Contact>(64);
+            //Precreate 128 contacts
+            ContactPool = new Pool<Contact>(128);
         }
 
         // Broad-phase callback.
@@ -170,8 +170,6 @@ namespace FarseerPhysics
                 bodyB._contactList.Prev = c.NodeB;
             }
             bodyB._contactList = c.NodeB;
-
-            ++_contactCount;
         }
 
         internal void FindNewContacts()
@@ -228,8 +226,6 @@ namespace FarseerPhysics
             }
 
             ContactPool.Insert(c);
-
-            --_contactCount;
         }
 
         internal void Collide()
