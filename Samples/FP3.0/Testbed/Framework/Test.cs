@@ -200,7 +200,7 @@ namespace FarseerPhysics.TestBed.Framework
                 if (settings.DrawStats > 0)
                 {
                     DebugView.DrawString(50, TextLine, "bodies/contacts/joints/proxies = {0:n}/{1:n}/{2:n}",
-                                         World.BodyCount, World.ContactCount, World.JointCount,
+                                         World.BodyList.Count, World.ContactCount, World.JointList.Count,
                                          World.ProxyCount);
                     TextLine += 15;
                 }

@@ -22,12 +22,15 @@ namespace FarseerPhysics.DebugViewXNA
         {
             if ((Flags & DebugViewFlags.Shape) == DebugViewFlags.Shape)
             {
-                for (Body b = World.BodyList; b != null; b = b.Next)
+                for (int i = 0; i < World.BodyList.Count; i++)
                 {
+                    Body b = World.BodyList[i];
+
                     Transform xf;
                     b.GetTransform(out xf);
-                    for (Fixture f = b.FixtureList; f != null; f = f.Next)
+                    for (int j = 0; j < b.FixtureList.Count; j++)
                     {
+                        Fixture f = b.FixtureList[j];
                         if (b.Enabled == false)
                         {
                             DrawShape(f, xf, new Color(0.5f, 0.5f, 0.3f));
@@ -54,8 +57,10 @@ namespace FarseerPhysics.DebugViewXNA
 
             if ((Flags & DebugViewFlags.Joint) == DebugViewFlags.Joint)
             {
-                for (Joint j = World.JointList; j != null; j = j.Next)
+                for (int i = 0; i < World.JointList.Count; i++)
                 {
+                    Joint j = World.JointList[i];
+
                     DrawJoint(j);
                 }
             }
@@ -63,8 +68,9 @@ namespace FarseerPhysics.DebugViewXNA
             if ((Flags & DebugViewFlags.Pair) == DebugViewFlags.Pair)
             {
                 Color color = new Color(0.3f, 0.9f, 0.9f);
-                for (Contact c = World.ContactManager.ContactList; c != null; c = c.NextContact)
+                for (int i = 0; i < World.ContactList.Count; i++)
                 {
+                    Contact c = World.ContactList[i];
                     Fixture fixtureA = c.FixtureA;
                     Fixture fixtureB = c.FixtureB;
 
@@ -85,15 +91,18 @@ namespace FarseerPhysics.DebugViewXNA
                 Color color = new Color(0.9f, 0.3f, 0.9f);
                 BroadPhase bp = World.ContactManager.BroadPhase;
 
-                for (Body b = World.BodyList; b != null; b = b.Next)
+                for (int i = 0; i < World.BodyList.Count; i++)
                 {
+                    Body b = World.BodyList[i];
+
                     if (b.Enabled == false)
                     {
                         continue;
                     }
 
-                    for (Fixture f = b.FixtureList; f != null; f = f.Next)
+                    for (int j = 0; j < b.FixtureList.Count; j++)
                     {
+                        Fixture f = b.FixtureList[j];
                         AABB aabb;
                         bp.GetFatAABB(f.ProxyId, out aabb);
                         Vector2[] vs = new Vector2[4];
@@ -109,8 +118,10 @@ namespace FarseerPhysics.DebugViewXNA
 
             if ((Flags & DebugViewFlags.CenterOfMass) == DebugViewFlags.CenterOfMass)
             {
-                for (Body b = World.BodyList; b != null; b = b.Next)
+                for (int i = 0; i < World.BodyList.Count; i++)
                 {
+                    Body b = World.BodyList[i];
+
                     Transform xf;
                     b.GetTransform(out xf);
                     xf.Position = b.WorldCenter;

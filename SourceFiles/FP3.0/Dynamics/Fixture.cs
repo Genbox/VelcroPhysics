@@ -219,15 +219,6 @@ namespace FarseerPhysics
         }
 
         /// <summary>
-        /// Get the next fixture in the parent body's fixture list.
-        /// </summary>
-        /// <value>the next shape.</value>
-        public Fixture Next
-        {
-            get { return _next; }
-        }
-
-        /// <summary>
         /// Set the user data. Use this to store your application specific data.
         /// </summary>
         /// <value>The data.</value>
@@ -300,7 +291,6 @@ namespace FarseerPhysics
             Sensor = false;
 
             _body = body;
-            _next = null;
 
             _shape = shape.Clone();
         }
@@ -355,7 +345,6 @@ namespace FarseerPhysics
         }
 
         internal AABB _aabb;
-        internal Fixture _next;
         internal Body _body;
         private Shape _shape;
         private short _collisionGroup;
