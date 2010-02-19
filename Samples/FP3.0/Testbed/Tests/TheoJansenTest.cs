@@ -68,12 +68,12 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
 
-            Body body1 = World.AddBody();
+            Body body1 = World.Add();
             body1.BodyType = BodyType.Dynamic;
             body1.Position = _offset;
             body1.AngularDamping = 10.0f;
 
-            Body body2 = World.AddBody();
+            Body body2 = World.Add();
             body2.BodyType = BodyType.Dynamic;
             body2.Position = p4 + _offset;
             body2.AngularDamping = 10.0f;
@@ -91,28 +91,28 @@ namespace FarseerPhysics.TestBed.Tests
             djd.DampingRatio = 0.5f;
             djd.Frequency = 10.0f;
 
-            World.AddJoint(djd);
+            World.Add(djd);
 
             DistanceJoint djd2 = new DistanceJoint(body1, body2, body1.GetLocalPoint(p3 + _offset),body2.GetLocalPoint(p4 + _offset));
             djd2.DampingRatio = 0.5f;
             djd2.Frequency = 10.0f;
 
-            World.AddJoint(djd2);
+            World.Add(djd2);
 
             DistanceJoint djd3 = new DistanceJoint(body1, _wheel, body1.GetLocalPoint(p3 + _offset), _wheel.GetLocalPoint(wheelAnchor + _offset));
             djd3.DampingRatio = 0.5f;
             djd3.Frequency = 10.0f;
 
-            World.AddJoint(djd3);
+            World.Add(djd3);
 
             DistanceJoint djd4 = new DistanceJoint(body2, _wheel, body2.GetLocalPoint(p6 + _offset), _wheel.GetLocalPoint(wheelAnchor + _offset));
             djd4.DampingRatio = 0.5f;
             djd4.Frequency = 10.0f;
 
-            World.AddJoint(djd4);
+            World.Add(djd4);
 
             RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, p4 + _offset);
-            World.AddJoint(rjd);
+            World.Add(rjd);
         }
 
         private TheoJansenTest()
@@ -124,7 +124,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Ground
             {
-                Body ground = World.AddBody();
+                Body ground = World.Add();
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
@@ -142,7 +142,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(0.25f, 1);
 
-                Body body = World.AddBody();
+                Body body = World.Add();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-40.0f + 2.0f * i, 0.5f);
 
@@ -154,7 +154,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(1);
                 shape.SetAsBox(2.5f, 1.0f);
 
-                _chassis = World.AddBody();
+                _chassis = World.Add();
                 _chassis.BodyType = BodyType.Dynamic;
                 _chassis.Position = pivot + _offset;
 
@@ -165,7 +165,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(1.6f, 1);
 
-                _wheel = World.AddBody();
+                _wheel = World.Add();
                 _wheel.BodyType = BodyType.Dynamic;
                 _wheel.Position = pivot + _offset;
 
@@ -179,7 +179,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _motorJoint.MotorSpeed = _motorSpeed;
                 _motorJoint.MaxMotorTorque = 400.0f;
                 _motorJoint.MotorEnabled = _motorOn;
-                World.AddJoint(_motorJoint);
+                World.Add(_motorJoint);
             }
 
             Vector2 wheelAnchor = pivot + new Vector2(0.0f, -0.8f);

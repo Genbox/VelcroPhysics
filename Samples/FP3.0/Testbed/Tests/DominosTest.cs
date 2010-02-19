@@ -34,7 +34,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
 
-                b1 = World.AddBody();
+                b1 = World.Add();
                 b1.CreateFixture(shape);
             }
 
@@ -42,7 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box = PolygonTools.CreateRectangle(6.0f, 0.25f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
-                Body ground = World.AddBody();
+                Body ground = World.Add();
                 ground.Position = new Vector2(-1.5f, 10.0f);
 
                 ground.CreateFixture(shape);
@@ -54,7 +54,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 for (int i = 0; i < 10; ++i)
                 {
-                    Body body = World.AddBody();
+                    Body body = World.Add();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-6.0f + 1.0f * i, 11.25f);
 
@@ -67,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box = PolygonTools.CreateRectangle(7.0f, 0.25f, Vector2.Zero, 0.3f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
-                Body ground = World.AddBody();
+                Body ground = World.Add();
                 ground.Position = new Vector2(1.0f, 6.0f);
 
                 ground.CreateFixture(shape);
@@ -78,7 +78,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box = PolygonTools.CreateRectangle(0.25f, 1.5f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
-                b2 = World.AddBody();
+                b2 = World.Add();
                 b2.Position = new Vector2(-7.0f, 4.0f);
 
                 b2.CreateFixture(shape);
@@ -89,7 +89,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box = PolygonTools.CreateRectangle(6.0f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 10);
 
-                b3 = World.AddBody();
+                b3 = World.Add();
                 b3.BodyType = BodyType.Dynamic;
                 b3.Position = new Vector2(-0.9f, 1.0f);
                 b3.Rotation = -0.15f;
@@ -100,14 +100,14 @@ namespace FarseerPhysics.TestBed.Tests
             Vector2 anchor = new Vector2(-2.0f, 1.0f);
             RevoluteJoint jd = new RevoluteJoint(b1, b3, anchor);
             jd.CollideConnected = true;
-            World.AddJoint(jd);
+            World.Add(jd);
 
             Body b4;
             {
                 Vertices box = PolygonTools.CreateRectangle(0.25f, 0.25f);
                 PolygonShape shape = new PolygonShape(box, 10);
 
-                b4 = World.AddBody();
+                b4 = World.Add();
                 b4.BodyType = BodyType.Dynamic;
                 b4.Position = new Vector2(-10.0f, 15.0f);
 
@@ -116,12 +116,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             anchor = new Vector2(-7.0f, 15.0f);
             RevoluteJoint jd2 = new RevoluteJoint(b2, b4, anchor);
-            World.AddJoint(jd2);
+            World.Add(jd2);
 
             Body b5;
             {
 
-                b5 = World.AddBody();
+                b5 = World.Add();
                 b5.BodyType = BodyType.Dynamic;
                 b5.Position = new Vector2(6.5f, 3.0f);
 
@@ -147,14 +147,14 @@ namespace FarseerPhysics.TestBed.Tests
 
             anchor = new Vector2(6.0f, 2.0f);
             RevoluteJoint jd3 = new RevoluteJoint(b1, b5, anchor);
-            World.AddJoint(jd3);
+            World.Add(jd3);
 
             Body b6;
             {
                 Vertices box = PolygonTools.CreateRectangle(1.0f, 0.1f);
                 PolygonShape shape = new PolygonShape(box, 30);
 
-                b6 = World.AddBody();
+                b6 = World.Add();
                 b6.BodyType = BodyType.Dynamic;
                 b6.Position = new Vector2(6.5f, 4.1f);
 
@@ -164,14 +164,14 @@ namespace FarseerPhysics.TestBed.Tests
             anchor = new Vector2(7.5f, 4.0f);
             RevoluteJoint jd4 = new RevoluteJoint(b5, b6, anchor);
             jd4.CollideConnected = true;
-            World.AddJoint(jd4);
+            World.Add(jd4);
 
             Body b7;
             {
                 Vertices box = PolygonTools.CreateRectangle(0.1f, 1.0f);
                 PolygonShape shape = new PolygonShape(box, 10);
 
-                b7 = World.AddBody();
+                b7 = World.Add();
                 b7.BodyType = BodyType.Dynamic;
                 b7.Position = new Vector2(7.4f, 1.0f);
 
@@ -181,7 +181,7 @@ namespace FarseerPhysics.TestBed.Tests
             DistanceJoint djd = new DistanceJoint(b3, b7, new Vector2(6.0f, 0.0f), new Vector2(0.0f, -1.0f));
             Vector2 d = djd.BodyB.GetWorldPoint(djd.LocalAnchorB) - djd.BodyA.GetWorldPoint(djd.LocalAnchorA);
             djd.Length = d.Length();
-            World.AddJoint(djd);
+            World.Add(djd);
 
             {
                 const float radius = 0.2f;
@@ -190,7 +190,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 for (int i = 0; i < 4; ++i)
                 {
-                    Body body = World.AddBody();
+                    Body body = World.Add();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(5.9f + 2.0f * radius * i, 2.4f);
 

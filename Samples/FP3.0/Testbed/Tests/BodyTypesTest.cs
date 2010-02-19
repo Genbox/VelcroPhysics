@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = World.AddBody();
+                ground = World.Add();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -42,7 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Define attachment
             {
-                _attachment = World.AddBody();
+                _attachment = World.Add();
                 _attachment.BodyType = BodyType.Dynamic;
                 _attachment.Position = new Vector2(0.0f, 3.0f);
 
@@ -53,7 +53,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Define platform
             {
-                _platform = World.AddBody();
+                _platform = World.Add();
                 _platform.BodyType = BodyType.Dynamic;
                 _platform.Position = new Vector2(0.0f, 5.0f);
 
@@ -66,7 +66,7 @@ namespace FarseerPhysics.TestBed.Tests
                 RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform, new Vector2(0.0f, 5.0f));
                 rjd.MaxMotorTorque = 50.0f;
                 rjd.MotorEnabled = true;
-                World.AddJoint(rjd);
+                World.Add(rjd);
 
                 FixedPrismaticJoint pjd = new FixedPrismaticJoint(_platform, new Vector2(0.0f, 5.0f), new Vector2(1.0f, 0.0f));
                 pjd.MaxMotorForce = 1000.0f;
@@ -75,14 +75,14 @@ namespace FarseerPhysics.TestBed.Tests
                 pjd.UpperLimit= 10.0f;
                 pjd.LimitEnabled = true;
 
-                World.AddJoint(pjd);
+                World.Add(pjd);
 
                 _speed = 3.0f;
             }
 
             // Create a payload
             {
-                Body body = World.AddBody();
+                Body body = World.Add();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 8.0f);
 

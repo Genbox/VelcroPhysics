@@ -17,7 +17,7 @@ namespace FarseerPhysics.TestBed.Tests
         private TextureVerticesTest()
         {
             {
-                Body ground = World.AddBody();
+                Body ground = World.Add();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -61,7 +61,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
             }
 
-            _polygonBody = World.AddBody();
+            _polygonBody = World.Add();
             _polygonBody.BodyType = BodyType.Dynamic;
             _polygonBody.Position = new Vector2(0, 0);
 

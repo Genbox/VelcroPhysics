@@ -38,7 +38,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             {
 
-                Body ground = World.AddBody();
+                Body ground = World.Add();
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -64,7 +64,7 @@ namespace FarseerPhysics.TestBed.Tests
                     const float x = 0.0f;
                     //float x = Rand.RandomFloat-0.02f, 0.02f);
                     //float x = i % 2 == 0 ? -0.025f : 0.025f;
-                    Body body = World.AddBody();
+                    Body body = World.Add();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
                     body.UserData = _indices[n];
@@ -84,14 +84,14 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_bullet != null)
                 {
-                    World.RemoveBody(_bullet);
+                    World.Remove(_bullet);
                     _bullet = null;
                 }
 
                 {
                     CircleShape shape = new CircleShape(0.25f, 20);
 
-                    _bullet = World.AddBody();
+                    _bullet = World.Add();
                     _bullet.BodyType = BodyType.Dynamic;
                     _bullet.Bullet = true;
                     _bullet.Position = new Vector2(-31.0f, 5.0f);
@@ -114,14 +114,14 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_bullet != null)
                 {
-                    World.RemoveBody(_bullet);
+                    World.Remove(_bullet);
                     _bullet = null;
                 }
 
                 {
                     CircleShape shape = new CircleShape(0.25f, 20);
 
-                    _bullet = World.AddBody();
+                    _bullet = World.Add();
                     _bullet.BodyType = BodyType.Dynamic;
                     _bullet.Bullet = true;
                     _bullet.Position = new Vector2(-31.0f, 5.0f);

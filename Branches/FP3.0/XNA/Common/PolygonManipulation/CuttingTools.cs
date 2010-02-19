@@ -168,17 +168,19 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 SplitShape(fixtures[i], entryPoints[i], exitPoints[i], thickness, out first, out second);
 
                 //Delete the original shape and create two new. Retain the properties of the body.
-                Body body1 = world.AddBody(fixtures[i].Body);
+                Body body1 = fixtures[i].Body.Clone(world);
+                world.Add(body1);
 
                 PolygonShape shape1 = new PolygonShape(first, fixtures[i].Shape.Density);
                 body1.CreateFixture(shape1);
 
-                Body body2 = world.AddBody(fixtures[i].Body);
+                Body body2 = fixtures[i].Body.Clone(world);
+                world.Add(body2);
 
                 PolygonShape shape2 = new PolygonShape(second, fixtures[i].Shape.Density);
                 body2.CreateFixture(shape2);
 
-                world.RemoveBody(fixtures[i].Body);
+                world.Remove(fixtures[i].Body);
             }
         }
     }

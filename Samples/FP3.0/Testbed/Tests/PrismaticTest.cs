@@ -33,7 +33,7 @@ namespace FarseerPhysics.TestBed.Tests
             PolygonShape shape = new PolygonShape(5.0f);
             shape.SetAsBox(2.0f, 0.5f);
 
-            Body body = World.AddBody();
+            Body body = World.Add();
             body.BodyType = BodyType.Dynamic;
             body.Position = new Vector2(-10.0f, 10.0f);
             body.Rotation = 0.5f * Settings.Pi;
@@ -48,7 +48,7 @@ namespace FarseerPhysics.TestBed.Tests
             _joint.UpperLimit = 20.0f;
             _joint.LimitEnabled = true;
 
-            World.AddJoint(_joint);
+            World.Add(_joint);
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)

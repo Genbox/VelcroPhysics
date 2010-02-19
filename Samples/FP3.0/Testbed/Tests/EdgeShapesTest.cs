@@ -34,7 +34,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Ground body
             {
-                Body ground = World.AddBody();
+                Body ground = World.Add();
 
                 float x1 = -20.0f;
                 float y1 = 2.0f * (float)Math.Cos(x1 / 10.0f * (float)Math.PI);
@@ -105,14 +105,14 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (_bodies[_bodyIndex] != null)
             {
-                World.RemoveBody(_bodies[_bodyIndex]);
+                World.Remove(_bodies[_bodyIndex]);
                 _bodies[_bodyIndex] = null;
             }
 
             float x = Rand.RandomFloat(-10.0f, 10.0f);
             float y = Rand.RandomFloat(10.0f, 20.0f);
 
-            _bodies[_bodyIndex] = World.AddBody();
+            _bodies[_bodyIndex] = World.Add();
             if (index == 4)
             {
                 _bodies[_bodyIndex].AngularDamping = 0.02f;
@@ -142,7 +142,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_bodies[i] != null)
                 {
-                    World.RemoveBody(_bodies[i]);
+                    World.Remove(_bodies[i]);
                     _bodies[i] = null;
                     return;
                 }
