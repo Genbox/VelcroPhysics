@@ -388,6 +388,8 @@ namespace FarseerPhysics
                 return;
             }
 
+            Debug.Assert(JointList.Count > 0);
+
             bool collideConnected = joint.CollideConnected;
 
             // Remove from the doubly linked list.
@@ -447,8 +449,6 @@ namespace FarseerPhysics
                 joint._edgeB.Prev = null;
                 joint._edgeB.Next = null;
             }
-
-            Debug.Assert(JointList.Count > 0);
 
             // WIP David
             if (!joint.IsFixedType())
