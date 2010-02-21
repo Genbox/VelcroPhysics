@@ -74,7 +74,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(MathUtils.Multiply(ref xf1, new Vector2(1.0f, 0.0f)));
                 vertices.Add(MathUtils.Multiply(ref xf1, new Vector2(0.0f, 0.5f)));
 
-                PolygonShape poly1 = new PolygonShape(vertices, 4.0f);
+                PolygonShape poly1 = new PolygonShape(vertices, 2.0f);
 
                 Transform xf2 = new Transform();
                 xf2.R.Set(-0.3524f * Settings.Pi);
@@ -91,7 +91,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _body.Position = new Vector2(0.0f, 2.0f);
                 _body.Rotation = Settings.Pi;
                 _body.AngularDamping = 5.0f;
-                _body.LinearDamping = 0.1f;
+                _body.LinearDamping = 0.8f;
                 _body.AllowSleep = false;
 
                 _body.CreateFixture(poly1);
@@ -133,8 +133,7 @@ namespace FarseerPhysics.TestBed.Tests
             if (state.IsKeyDown(Keys.W))
             {
                 Vector2 f = _body.GetWorldVector(new Vector2(0.0f, -200.0f));
-                Vector2 p = _body.GetWorldPoint(new Vector2(0.0f, 0.0f));
-                _body.ApplyForce(f, p);
+                _body.ApplyForce(f);
             }
             if (state.IsKeyDown(Keys.A))
             {
