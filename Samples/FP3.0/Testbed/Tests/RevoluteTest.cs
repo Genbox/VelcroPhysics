@@ -40,26 +40,43 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                CircleShape shape = new CircleShape(0.5f, 5);
+
+                //The big fixed wheel
+                CircleShape shape = new CircleShape(5.0f, 5);
 
                 Body body = World.Add();
-                body.Position = new Vector2(0.0f, 20.0f);
+                body.Position = new Vector2(0.0f, 15.0f);
                 body.BodyType = BodyType.Dynamic;
 
                 body.CreateFixture(shape);
 
-                //const float w = 100.0f;
-                //body.AngularVelocity = w;
-                //body.LinearVelocity = new Vector2(-8.0f * w, 0.0f);
+                _fixedJoint = new FixedRevoluteJoint(body, body.Position);
+                _fixedJoint.MotorSpeed = 0.25f * Settings.Pi;
+                _fixedJoint.MaxMotorTorque = 5000.0f;
+                _fixedJoint.MotorEnabled = true;
+                _fixedJoint.LowerLimit = -0.25f * Settings.Pi;
+                _fixedJoint.UpperLimit = 0.5f * Settings.Pi;
+                _fixedJoint.LimitEnabled = false;
 
-                _joint = new RevoluteJoint(body,ground,new Vector2(0.0f, 10.0f));
+                World.Add(_fixedJoint);
+
+                // The small wheel attached to the big one
+                CircleShape shape2 = new CircleShape(1.0f, 5);
+
+                Body body2 = World.Add();
+                body2.Position = new Vector2(0.0f, 12.0f);
+                body2.BodyType = BodyType.Dynamic;
+
+                body2.CreateFixture(shape2);
+
+                _joint = new RevoluteJoint(body, body2, new Vector2(0.0f,-5.0f));
                 _joint.MotorSpeed = 1.0f * Settings.Pi;
-                _joint.MaxMotorTorque = 10000.0f;
-                _joint.MotorEnabled = false;
+                _joint.MaxMotorTorque = 5000.0f;
+                _joint.MotorEnabled = true;
                 _joint.LowerLimit = -0.25f * Settings.Pi;
                 _joint.UpperLimit = 0.5f * Settings.Pi;
                 _joint.LimitEnabled = false;
-                _joint.CollideConnected = true;
+                _joint.CollideConnected = false;
 
                 World.Add(_joint);
             }
@@ -70,22 +87,23 @@ namespace FarseerPhysics.TestBed.Tests
             if (state.IsKeyDown(Keys.L) && oldState.IsKeyUp(Keys.L))
             {
                 _joint.LimitEnabled = !_joint.LimitEnabled;
+                _fixedJoint.LimitEnabled = !_fixedJoint.LimitEnabled;
             }
 
-            if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
+            if (state.IsKeyDown(Keys.M) && oldState.IsKeyUp(Keys.M))
             {
                 _joint.MotorEnabled = !_joint.MotorEnabled;
+                _fixedJoint.MotorEnabled = !_fixedJoint.MotorEnabled;
             }
         }
 
         public override void Update(Framework.Settings settings)
         {
             base.Update(settings);
-            DebugView.DrawString(50, TextLine, "Keys: (l) limits, (a) left, (s) off, (d) right");
-            TextLine += 15;
-            //float torque1 = _joint1.GetMotorTorque();
-            //_debugDraw.DrawString(50, TextLine, "Motor Torque = %4.0f, %4.0f : Motor Force = %4.0f", (float) torque1, (float) torque2, (float) force3);
-            //TextLine += 15;
+            DebugView.DrawString(50, TextLine, "Keys: (l) limits on/off, (m) motor on/off");
+            /*TextLine += 15;
+            DebugView.DrawString(50, TextLine, "_joint:{0:n}",_joint.JointAngle);
+            */
         }
 
         internal static Test Create()
@@ -94,5 +112,6 @@ namespace FarseerPhysics.TestBed.Tests
         }
 
         private RevoluteJoint _joint;
+        private FixedRevoluteJoint _fixedJoint;
     }
 }

@@ -75,7 +75,7 @@ namespace FarseerPhysics
             LocalAnchorA = BodyA.GetLocalPoint(anchor);
             LocalAnchorB = anchor;// BodyB.GetLocalPoint(anchor);
 
-            ReferenceAngle = /*BodyB.GetAngle()*/ - BodyA.GetAngle();
+            ReferenceAngle = /*BodyB.GetAngle() */- BodyA.GetAngle();
 
             _impulse = Vector3.Zero;
 
@@ -106,7 +106,7 @@ namespace FarseerPhysics
         {
             get
             {
-                return /*BodyB._sweep.Angle*/ - BodyA._sweep.Angle - ReferenceAngle;
+                return /*BodyB._sweep.Angle -*/ BodyA._sweep.Angle - ReferenceAngle;
             }
         }
 
@@ -118,7 +118,7 @@ namespace FarseerPhysics
         {
             get
             {
-                return /*BodyB._angularVelocity*/ - BodyA._angularVelocity;
+                return /*BodyB._angularVelocity -*/ BodyA._angularVelocity;
             }
         }
 
