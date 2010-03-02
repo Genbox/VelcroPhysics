@@ -41,55 +41,49 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
+                // First circle
                 CircleShape circle1 = new CircleShape(1.0f, 5);
-
-                CircleShape circle2 = new CircleShape(2.0f, 5);
-
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 5.0f);
-
-                PolygonShape polygonBox = new PolygonShape(box, 5);
-
                 Body body1 = World.Add();
                 body1.BodyType = BodyType.Dynamic;
                 body1.Position = new Vector2(-3.0f, 12.0f);
-
                 body1.CreateFixture(circle1);
-
-                _joint1 = new FixedRevoluteJoint(/*ground, */body1, body1.Position/*ground.GetLocalPoint(body1.Position)*/);
-                //_joint1.LocalAnchorB = body1.GetLocalPoint(body1.Position);
-                //_joint1.ReferenceAngle = body1.GetAngle() - ground.GetAngle();
-                World.Add(_joint1);
-
+                
+                // Second circle
+                CircleShape circle2 = new CircleShape(2.0f, 5);
                 Body body2 = World.Add();
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(0.0f, 12.0f);
-
                 body2.CreateFixture(circle2);
-
-                _joint2 = new FixedRevoluteJoint(/*ground,*/ body2, body2.Position);
-                World.Add(_joint2);
-
+                
+                // Rectangle
+                Vertices box = PolygonTools.CreateRectangle(0.5f, 5.0f);
+                PolygonShape polygonBox = new PolygonShape(box, 5);
                 Body body3 = World.Add();
                 body3.BodyType = BodyType.Dynamic;
                 body3.Position = new Vector2(2.5f, 12.0f);
-
                 body3.CreateFixture(polygonBox);
+                
+                // Fix first circle
+                _joint1 = new FixedRevoluteJoint(body1, body1.Position);
+                World.Add(_joint1);
 
+                // Fix second circle
+                _joint2 = new FixedRevoluteJoint(body2, body2.Position);
+                World.Add(_joint2);
+
+                // Fix rectangle
                 _joint3 = new FixedPrismaticJoint(body3, body3.Position, new Vector2(0.0f, 1.0f));
                 _joint3.LowerLimit = -5.0f;
                 _joint3.UpperLimit = 5.0f;
                 _joint3.LimitEnabled = true;
-
                 World.Add(_joint3);
 
+                // Attach first and second circle together with a gear joint
                 _joint4 = new GearJoint(_joint1, _joint2, circle2.Radius / circle1.Radius);
-                _joint4.BodyA = body1;
-                _joint4.BodyB = body2;
                 World.Add(_joint4);
 
+                // Attach second and rectangle together with a gear joint
                 _joint5 = new GearJoint(_joint2, _joint3, -1.0f / circle2.Radius);
-                _joint5.BodyA = body2;
-                _joint5.BodyB = body3;
                 World.Add(_joint5);
             }
         }
@@ -98,15 +92,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Update(settings);
 
-            float ratio = _joint4.Ratio;
-            float value = _joint1.JointAngle + ratio * _joint2.JointAngle;
-            DebugView.DrawString(50, TextLine, "theta1 + {0:n} * theta2 = {1:n}", ratio, value);
-            TextLine += 15;
-
-            ratio = _joint5.Ratio;
-            value = _joint2.JointAngle + ratio * _joint3.JointTranslation;
-            DebugView.DrawString(50, TextLine, "theta2 + {0:n} * delta = {1:n}", ratio, value);
-            TextLine += 15;
+            //DebugView.DrawString(50, TextLine, "theta1 + {0:n} * theta2 = {1:n}", _joint1.JointAngle, _joint2.JointAngle);
+            //TextLine += 15;
         }
 
         internal static Test Create()
@@ -117,6 +104,7 @@ namespace FarseerPhysics.TestBed.Tests
         private FixedRevoluteJoint _joint1;
         private FixedRevoluteJoint _joint2;
         private FixedPrismaticJoint _joint3;
+
         private GearJoint _joint4;
         private GearJoint _joint5;
     }

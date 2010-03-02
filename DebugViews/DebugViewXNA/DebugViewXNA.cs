@@ -182,7 +182,9 @@ namespace FarseerPhysics.DebugViewXNA
                 case JointType.Mouse:
                     // don't draw this
                     break;
-                // WIP David
+                case JointType.Revolute:
+                    DrawSegment(x2, p1, color);
+                    break;
                 case JointType.FixedRevolute:
                     DrawSegment(x1, p1, color);
                     break;
@@ -195,6 +197,10 @@ namespace FarseerPhysics.DebugViewXNA
                     DrawSegment(p1, p2, color);
                     break;
                 case JointType.FixedPrismatic:
+                    DrawSegment(x1, p1, color);
+                    DrawSegment(p1, p2, color);
+                    break;
+                case JointType.Gear:
                     DrawSegment(x1, p1, color);
                     DrawSegment(p1, p2, color);
                     break;

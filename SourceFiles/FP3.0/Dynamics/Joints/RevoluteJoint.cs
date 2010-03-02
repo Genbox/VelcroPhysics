@@ -49,8 +49,7 @@ namespace FarseerPhysics
         private float _upperAngle;
 
         /// <summary>
-        /// Initialize the bodies, anchors, and reference angle using the world
-        /// anchor.
+        /// Initialize the bodies and local anchor.
         /// This requires defining an
         /// anchor point where the bodies are joined. The definition
         /// uses local anchor points so that the initial configuration
@@ -72,8 +71,8 @@ namespace FarseerPhysics
             JointType = JointType.Revolute;
 
             // Changed to local coordinates.
-            LocalAnchorA = BodyA.GetLocalPoint(anchor);
-            LocalAnchorB = BodyB.GetLocalPoint(anchor);
+            LocalAnchorA = anchor;
+            LocalAnchorB = BodyB.GetLocalPoint(BodyA.GetWorldPoint(anchor));
 
             ReferenceAngle = BodyB.GetAngle() - BodyA.GetAngle();
 
