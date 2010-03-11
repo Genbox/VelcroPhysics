@@ -55,7 +55,7 @@ namespace FarseerPhysics.TestBed.Tests
                     Fixture fixture = body.CreateFixture(shape);
                     fixture.Friction = 0.2f;
 
-                    Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 5.0f);
+                    Vector2 anchor = new Vector2(-0.5f , 0.0f);
                     RevoluteJoint jd = new RevoluteJoint(prevBody, body, anchor);
                     World.Add(jd);
 
@@ -66,8 +66,8 @@ namespace FarseerPhysics.TestBed.Tests
                     prevBody = body;
                 }
 
-                Vector2 anchor2 = new Vector2(-15.0f + 1.0f * Count, 5.0f);
-                RevoluteJoint jd2 = new RevoluteJoint(prevBody, ground, anchor2);
+                Vector2 anchor2 = new Vector2(0.5f, 0.0f);
+                RevoluteJoint jd2 = new RevoluteJoint(ground,prevBody, anchor2);
                 World.Add(jd2);
             }
 
