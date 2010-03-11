@@ -122,14 +122,18 @@ namespace FarseerPhysics
         /// can violate the constraint slightly. The joint translation is zero
         /// when the local anchor points coincide in world space. Using local
         /// anchors and a local axis helps when saving and loading a game.
-        /// </summary>
-        public PrismaticJoint(Body b1, Body b2, Vector2 anchor1, Vector2 anchor2, Vector2 axis)
+        /// </summary>        
+        public PrismaticJoint(Body b1, Body b2, Vector2 anchor,Vector2 axis)
             : base(b1, b2)
         {
             JointType = JointType.Prismatic;
 
-            LocalAnchorA = anchor1;
-            LocalAnchorB = anchor2;
+            LocalAnchorA = BodyA.GetLocalPoint(BodyB.GetWorldPoint(anchor));
+            LocalAnchorB = anchor;
+
+            //LocalAnchorA = BodyA.GetLocalPoint(anchor);
+            //LocalAnchorB = BodyB.GetLocalPoint(anchor);
+
 
             _localXAxis1 = BodyA.GetLocalVector(axis);
             _localYAxis1 = MathUtils.Cross(1.0f, _localXAxis1);

@@ -30,21 +30,49 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private PrismaticTest()
         {
+
+            Body ground;
+            {
+                ground = World.Add();
+
+                PolygonShape shape3 = new PolygonShape(0);
+                shape3.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape3);
+            }
+
             PolygonShape shape = new PolygonShape(5.0f);
             shape.SetAsBox(2.0f, 0.5f);
 
             Body body = World.Add();
             body.BodyType = BodyType.Dynamic;
-            body.Position = new Vector2(-10.0f, 10.0f);
-            body.Rotation = 0.5f * Settings.Pi;
+            body.Position = new Vector2(0.0f, 10.0f);
 
             body.CreateFixture(shape);
 
-            _joint = new FixedPrismaticJoint(body, Vector2.Zero, new Vector2(1.0f, 0.0f));
-            _joint.MotorSpeed = 10.0f;
+            _fixedJoint = new FixedPrismaticJoint(body, body.Position, new Vector2(0.5f, 1.0f));
+            _fixedJoint.MotorSpeed = 5.0f;
+            _fixedJoint.MaxMotorForce = 1000.0f;
+            _fixedJoint.MotorEnabled = true;
+            _fixedJoint.LowerLimit = -10.0f;
+            _fixedJoint.UpperLimit = 20.0f;
+            _fixedJoint.LimitEnabled = true;
+
+            World.Add(_fixedJoint);
+
+            PolygonShape shape2 = new PolygonShape(5.0f);
+            shape2.SetAsBox(2.0f, 0.5f);
+
+            Body body2 = World.Add();
+            body2.BodyType = BodyType.Dynamic;
+            body2.Position = new Vector2(10.0f, 10.0f);
+
+            body2.CreateFixture(shape2);
+
+            _joint = new PrismaticJoint(ground, body2, new Vector2(0.0f, 0.0f), new Vector2(0.5f, 1.0f));
+            _joint.MotorSpeed = 5.0f;
             _joint.MaxMotorForce = 1000.0f;
             _joint.MotorEnabled = true;
-            _joint.LowerLimit = 0.0f;
+            _joint.LowerLimit = -10.0f;
             _joint.UpperLimit = 20.0f;
             _joint.LimitEnabled = true;
 
@@ -55,14 +83,17 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (state.IsKeyDown(Keys.L) && oldState.IsKeyUp(Keys.L))
             {
+                _fixedJoint.LimitEnabled = !_fixedJoint.LimitEnabled;
                 _joint.LimitEnabled = !_joint.LimitEnabled;
             }
             if (state.IsKeyDown(Keys.M) && oldState.IsKeyUp(Keys.M))
             {
+                _fixedJoint.MotorEnabled = !_fixedJoint.MotorEnabled;
                 _joint.MotorEnabled = !_joint.MotorEnabled;
             }
             if (state.IsKeyDown(Keys.P) && oldState.IsKeyUp(Keys.P))
             {
+                _fixedJoint.MotorSpeed = -_fixedJoint.MotorSpeed;
                 _joint.MotorSpeed = -_joint.MotorSpeed;
             }
         }
@@ -70,11 +101,18 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(Framework.Settings settings)
         {
             base.Update(settings);
-            DebugView.DrawString(50, TextLine, "Keys: (l) limits, (m) motors, (p) speed");
+            DebugView.DrawString(50, TextLine+200, "Keys: (l) limits, (m) motors, (p) speed");
             TextLine += 15;
-            float force = _joint.MotorForce;
-            DebugView.DrawString(50, TextLine, "Motor Force = {0:n}", force);
+            //float force = _fixedJoint.MotorForce;
+            //DebugView.DrawString(50, TextLine + 200, "Motor Force = {0:n}", force);
+            /*TextLine += 15;
+            DebugView.DrawString(50, TextLine + 200, "_fixedJoint joint translation = {0:n}", _fixedJoint.JointTranslation);
             TextLine += 15;
+            DebugView.DrawString(50, TextLine + 200, "_joint joint translation = {0:n}", _joint.JointTranslation);
+            TextLine += 15;
+            DebugView.DrawString(50, TextLine + 200, "_fixedJoint joint JointSpeed = {0:n}", _fixedJoint.JointSpeed);
+            TextLine += 15;
+            DebugView.DrawString(50, TextLine + 200, "_joint joint JointSpeed = {0:n}", _joint.JointSpeed);*/
         }
 
         internal static Test Create()
@@ -82,6 +120,7 @@ namespace FarseerPhysics.TestBed.Tests
             return new PrismaticTest();
         }
 
-        private FixedPrismaticJoint _joint;
+        private FixedPrismaticJoint _fixedJoint;
+        private PrismaticJoint _joint;
     }
 }

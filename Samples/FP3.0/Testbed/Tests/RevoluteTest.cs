@@ -69,7 +69,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 body2.CreateFixture(shape2);
 
-                _joint = new RevoluteJoint(body, body2, new Vector2(0.0f,-5.0f));
+                _joint = new RevoluteJoint(body, body2, new Vector2(0.0f,0.0f));
                 _joint.MotorSpeed = 1.0f * Settings.Pi;
                 _joint.MaxMotorTorque = 5000.0f;
                 _joint.MotorEnabled = true;

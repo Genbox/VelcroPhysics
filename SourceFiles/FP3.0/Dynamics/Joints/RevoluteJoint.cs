@@ -71,8 +71,11 @@ namespace FarseerPhysics
             JointType = JointType.Revolute;
 
             // Changed to local coordinates.
-            LocalAnchorA = anchor;
-            LocalAnchorB = BodyB.GetLocalPoint(BodyA.GetWorldPoint(anchor));
+            LocalAnchorA = BodyA.GetLocalPoint(BodyB.GetWorldPoint(anchor));
+            LocalAnchorB = anchor;
+
+            //LocalAnchorA = BodyA.GetLocalPoint(anchor);
+            //LocalAnchorB = BodyB.GetLocalPoint(anchor);
 
             ReferenceAngle = BodyB.GetAngle() - BodyA.GetAngle();
 
