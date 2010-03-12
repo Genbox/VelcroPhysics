@@ -25,7 +25,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             //Buoyancy controller
             _aabbContainer = new AABBFluidContainer(new Vector2(-20, 0), 40, 10);
-            _waveContainer = new WaveContainer(new Vector2(20, 0), 40, 10);
+            _waveContainer = new WaveContainer(new Vector2(-20, 0), 40, 10);
 
             FluidDragController buoyancyController = new FluidDragController(_waveContainer, 4f, 0.98f, 0.2f, World.Gravity);
             buoyancyController.Entry += EntryEventHandler;

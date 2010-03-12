@@ -54,7 +54,7 @@ namespace FarseerPhysics
         private float _upperLimit;
 
         /// <summary>
-        /// Initialize the bodies, anchors, axis, and reference angle using the world
+        /// Initialize the bodies, anchors, axis, and reference angle using the local
         /// anchor and world axis.
         /// This requires defining a line of
         /// motion using an axis and an anchor point. Uses local
@@ -67,20 +67,17 @@ namespace FarseerPhysics
         /// <param name="bodyB"></param>
         /// <param name="anchor"></param>
         /// <param name="axis"></param>
-        public FixedLineJoint(Body bodyA,/* Body bodyB,*/ Vector2 bodyAnchor, Vector2 worldAnchor, Vector2 axis)
+        public FixedLineJoint(Body bodyA, /*Body bodyB, */Vector2 anchor, Vector2 axis)
             : base(bodyA/*, bodyB*/)
         {
             JointType = JointType.FixedLine;
 
-            BodyA = bodyA;
-            //BodyB = bodyB;
+            BodyB = bodyA;
 
-            LocalAnchorA = worldAnchor;
-            LocalAnchorB = bodyAnchor;
+            LocalAnchorA = anchor;// BodyA.GetLocalPoint(anchor);
+            LocalAnchorB = BodyB.GetLocalPoint(anchor);
 
-            //LocalAnchorA = BodyA.GetLocalPoint(anchor);// BodyB.GetLocalPoint(anchor);
-            //LocalAnchorB = anchor;
-            _localXAxis1 = axis;// bodyB.GetLocalVector(axis);
+            _localXAxis1 = bodyA.GetLocalVector(axis);
             _localYAxis1 = MathUtils.Cross(1.0f, _localXAxis1);
             _localYAxis1 = MathUtils.Cross(1.0f, _localXAxis1);
 
@@ -89,12 +86,12 @@ namespace FarseerPhysics
 
         public override Vector2 WorldAnchorA
         {
-            get { return BodyA.GetWorldPoint(LocalAnchorB); }
+            get { return LocalAnchorA;}// BodyA.GetWorldPoint(LocalAnchorA); }
         }
 
         public override Vector2 WorldAnchorB
         {
-            get { return LocalAnchorA;/* BodyB.GetWorldPoint(LocalAnchorB);*/ }
+            get { return BodyB.GetWorldPoint(LocalAnchorB); }
         }
 
         /// <summary>
@@ -207,8 +204,7 @@ namespace FarseerPhysics
         {
             get
             {
-                //Vector2 d = BodyB.GetWorldPoint(LocalAnchorB) - BodyA.GetWorldPoint(LocalAnchorA);
-                Vector2 d = BodyA.GetWorldPoint(LocalAnchorB) - LocalAnchorA;
+                Vector2 d = BodyB.GetWorldPoint(LocalAnchorB) - LocalAnchorA;// BodyA.GetWorldPoint(LocalAnchorA);
                 Vector2 axis = _localXAxis1;// BodyA.GetWorldVector(_localXAxis1);
 
                 return Vector2.Dot(d, axis);
@@ -223,24 +219,21 @@ namespace FarseerPhysics
         {
             get
             {
-                //Body b1 = BodyB;
-                Body b2 = BodyA;
-
                 Transform /*xf1,*/ xf2;
-                //b1.GetTransform(out xf1);
-                b2.GetTransform(out xf2);
+                //BodyA.GetTransform(out xf1);
+                BodyB.GetTransform(out xf2);
 
-                Vector2 r1 = LocalAnchorA;// MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
-                Vector2 p1 = /*b1._sweep.Center +*/ r1;
-                Vector2 p2 = b2._sweep.Center + r2;
+                Vector2 r1 = LocalAnchorA;// MathUtils.Multiply(ref xf1.R, LocalAnchorA - BodyA.LocalCenter);
+                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - BodyB.LocalCenter);
+                Vector2 p1 = r1;// BodyA._sweep.Center + r1;
+                Vector2 p2 = BodyB._sweep.Center + r2;
                 Vector2 d = p2 - p1;
-                Vector2 axis = _localXAxis1;// b1.GetWorldVector(_localXAxis1);
+                Vector2 axis = _localXAxis1;// BodyA.GetWorldVector(_localXAxis1);
 
-                Vector2 v1 = new Vector2(0.0f, 0.0f);// b1._linearVelocity;
-                Vector2 v2 = b2._linearVelocity;
-                float w1 = 0.0f;// b1._angularVelocity;
-                float w2 = b2._angularVelocity;
+                Vector2 v1 = Vector2.Zero;// BodyA._linearVelocity;
+                Vector2 v2 = BodyB._linearVelocity;
+                float w1 = 0.0f;// BodyA._angularVelocity;
+                float w2 = BodyB._angularVelocity;
 
                 float speed = Vector2.Dot(d, MathUtils.Cross(w1, axis)) +
                               Vector2.Dot(axis, v2 + MathUtils.Cross(w2, r2) - v1 - MathUtils.Cross(w1, r1));
@@ -260,10 +253,10 @@ namespace FarseerPhysics
 
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
-            //Body b1 = BodyB;
-            Body b2 = BodyA;
+            //Body b1 = BodyA;
+            Body b2 = BodyB;
 
-            _localCenterA = new Vector2(0, 0);// b1.LocalCenter;
+            _localCenterA = Vector2.Zero;// b1.LocalCenter;
             _localCenterB = b2.LocalCenter;
 
             Transform /*xf1,*/ xf2;
@@ -273,7 +266,7 @@ namespace FarseerPhysics
             // Compute the effective masses.
             Vector2 r1 = LocalAnchorA;// MathUtils.Multiply(ref xf1.R, LocalAnchorA - _localCenterA);
             Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - _localCenterB);
-            Vector2 d = b2._sweep.Center + r2 - /*b1._sweep.Center -*/ r1;
+            Vector2 d = b2._sweep.Center + r2 /*- b1._sweep.Center*/ - r1;
 
             _invMassA = 0.0f;// b1._invMass;
             _invIA = 0.0f;// b1._invI;
@@ -380,10 +373,10 @@ namespace FarseerPhysics
 
         internal override void SolveVelocityConstraints(ref TimeStep step)
         {
-            //Body b1 = BodyB;
-            Body b2 = BodyA;
+            //Body b1 = BodyA;
+            Body b2 = BodyB;
 
-            Vector2 v1 = new Vector2(0, 0);// b1._linearVelocity;
+            Vector2 v1 = Vector2.Zero;// b1._linearVelocity;
             float w1 = 0.0f;// b1._angularVelocity;
             Vector2 v2 = b2._linearVelocity;
             float w2 = b2._angularVelocity;
@@ -492,10 +485,10 @@ namespace FarseerPhysics
 
         internal override bool SolvePositionConstraints()
         {
-            //Body b1 = BodyB;
-            Body b2 = BodyA;
+            //Body b1 = BodyA;
+            Body b2 = BodyB;
 
-            Vector2 c1 = new Vector2(0.0f, 0.0f);// b1._sweep.Center;
+            Vector2 c1 = Vector2.Zero;// b1._sweep.Center;
             float a1 = 0.0f;// b1._sweep.Angle;
 
             Vector2 c2 = b2._sweep.Center;
