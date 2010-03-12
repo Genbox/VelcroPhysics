@@ -98,7 +98,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             Vector2 anchor = new Vector2(-2.0f, 1.0f);
-            RevoluteJoint jd = new RevoluteJoint(b1, b3, anchor);
+            FixedRevoluteJoint jd = new FixedRevoluteJoint(b3, anchor);
             jd.CollideConnected = true;
             World.Add(jd);
 
@@ -115,7 +115,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             anchor = new Vector2(-7.0f, 15.0f);
-            RevoluteJoint jd2 = new RevoluteJoint(b2, b4, anchor);
+            FixedRevoluteJoint jd2 = new FixedRevoluteJoint(b4, anchor);
             World.Add(jd2);
 
             Body b5;
@@ -146,7 +146,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             anchor = new Vector2(6.0f, 2.0f);
-            RevoluteJoint jd3 = new RevoluteJoint(b1, b5, anchor);
+            FixedRevoluteJoint jd3 = new FixedRevoluteJoint(b5, anchor);
             World.Add(jd3);
 
             Body b6;
@@ -161,7 +161,7 @@ namespace FarseerPhysics.TestBed.Tests
                 b6.CreateFixture(shape);
             }
 
-            anchor = new Vector2(7.5f, 4.0f);
+            anchor = new Vector2(1.0f, -0.1f);
             RevoluteJoint jd4 = new RevoluteJoint(b5, b6, anchor);
             jd4.CollideConnected = true;
             World.Add(jd4);

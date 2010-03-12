@@ -201,8 +201,9 @@ namespace FarseerPhysics.DebugViewXNA
                     DrawSegment(p1, p2, color);
                     break;
                 case JointType.Gear:
-                    DrawSegment(x1, p1, color);
-                    DrawSegment(p1, p2, color);
+                    DrawSegment(x1, x2, color);
+                    //DrawSegment(x1, p1, color);
+                    //DrawSegment(p1, p2, color);
                     break;
                 default:
                     DrawSegment(x1, p1, color);

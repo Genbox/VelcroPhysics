@@ -22,6 +22,7 @@
 
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -29,30 +30,100 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private LineJointTest()
         {
-            PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 2.0f), 1);
 
-            Body body = World.Add();
-            body.BodyType = BodyType.Dynamic;
-            body.Position = new Vector2(0.0f, 7.0f);
+            Body ground;
+            {
+                ground = World.Add();
 
-            body.CreateFixture(shape);
+                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                PolygonShape shape = new PolygonShape(edge, 0);
+                ground.CreateFixture(shape);
+            }
 
-            Vector2 axis = new Vector2(2.0f, 1.0f);
-            axis.Normalize();
+            //-------------------------
+            // FixedLineJoint example
+            //-------------------------
+            {
+                PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 2.0f), 1);
+                Body body = World.Add();
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(0.0f, 7.0f);
+                body.CreateFixture(shape);
 
-            FixedLineJoint jd = new FixedLineJoint(body, new Vector2(0.0f, 1.5f), new Vector2(0.0f, 8.5f), axis);
-            jd.MotorSpeed = 100.0f;
-            jd.MaxMotorForce = 100.0f;
-            jd.MotorEnabled = false;
-            jd.LowerLimit = -4.0f;
-            jd.UpperLimit = 4.0f;
-            jd.EnableLimit = true;
-            World.Add(jd);
+                Vector2 axis = new Vector2(2.0f, 1.0f);
+                axis.Normalize();
+
+                _fixedLineJoint = new FixedLineJoint(body, new Vector2(0.0f, 8.5f), axis);
+                _fixedLineJoint.MotorSpeed = 100.0f;
+                _fixedLineJoint.MaxMotorForce = 100.0f;
+                _fixedLineJoint.MotorEnabled = false;
+                _fixedLineJoint.LowerLimit = -4.0f;
+                _fixedLineJoint.UpperLimit = 4.0f;
+                _fixedLineJoint.EnableLimit = true;
+                World.Add(_fixedLineJoint);
+            }
+
+            //-------------------------
+            // LineJoint example
+            //-------------------------
+            {
+                PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 2.0f), 1);
+                Body body = World.Add();
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(10.0f, 7.0f);
+                body.CreateFixture(shape);
+
+                Vector2 axis = new Vector2(2.0f, 1.0f);
+                axis.Normalize();
+
+                _lineJoint = new LineJoint(ground, body, new Vector2(0.0f, 1.5f), axis);
+                _lineJoint.MotorSpeed = 100.0f;
+                _lineJoint.MaxMotorForce = 100.0f;
+                _lineJoint.MotorEnabled = false;
+                _lineJoint.LowerLimit = -4.0f;
+                _lineJoint.UpperLimit = 4.0f;
+                _lineJoint.EnableLimit = true;
+                World.Add(_lineJoint);
+            }
+        }
+
+        public override void Update(Framework.Settings settings)
+        {
+            base.Update(settings);
+            DebugView.DrawString(50, TextLine+200, "Keys: (l) limits on/off, (m) motor on/off");
+            TextLine += 15;
+            DebugView.DrawString(50, TextLine + 200, "_lineJoint.JointSpeed:{0:n}", _lineJoint.JointSpeed);
+            TextLine += 15;
+            DebugView.DrawString(50, TextLine + 200, "_fixedLineJoint.JointSpeed:{0:n}", _fixedLineJoint.JointSpeed);
+            TextLine += 15;
+            DebugView.DrawString(50, TextLine + 200, "_lineJoint.JointTranslation:{0:n}", _lineJoint.JointTranslation);
+            TextLine += 15;
+            DebugView.DrawString(50, TextLine + 200, "_fixedLineJoint.JointTranslation:{0:n}", _fixedLineJoint.JointTranslation);
+            
+        }
+
+        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        {
+            if (state.IsKeyDown(Keys.L) && oldState.IsKeyUp(Keys.L))
+            {
+                _lineJoint.EnableLimit = !_lineJoint.EnableLimit;
+                _fixedLineJoint.EnableLimit = !_fixedLineJoint.EnableLimit;
+            }
+
+            if (state.IsKeyDown(Keys.M) && oldState.IsKeyUp(Keys.M))
+            {
+                _lineJoint.MotorEnabled = !_lineJoint.MotorEnabled;
+                _fixedLineJoint.MotorEnabled = !_fixedLineJoint.MotorEnabled;
+            }
         }
 
         internal static Test Create()
         {
             return new LineJointTest();
         }
+
+        private LineJoint _lineJoint;
+        private FixedLineJoint _fixedLineJoint;
     }
 }
+

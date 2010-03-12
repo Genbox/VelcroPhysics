@@ -226,7 +226,7 @@ namespace FarseerPhysics.TestBed.Tests
                 TextLine += 15;
             }
 
-            if (TimeOfImpact.ToiCalls > 0)
+            /*if (TimeOfImpact.ToiCalls > 0)
             {
                 DebugView.DrawString(50, TextLine, "toi calls = {0:n}, ave toi iters = {1:n}, max toi iters = {2:n}",
                                       TimeOfImpact.ToiCalls, TimeOfImpact.ToiIters / (float)TimeOfImpact.ToiCalls, TimeOfImpact.ToiMaxRootIters);
@@ -234,7 +234,7 @@ namespace FarseerPhysics.TestBed.Tests
                 DebugView.DrawString(50, TextLine, "ave toi root iters = {0:n}, max toi root iters = {1:n}",
                                       TimeOfImpact.ToiRootIters / (float)TimeOfImpact.ToiCalls, TimeOfImpact.ToiMaxRootIters);
                 TextLine += 15;
-            }
+            }*/
         }
 
         internal static Test Create()
