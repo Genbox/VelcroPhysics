@@ -34,7 +34,6 @@ namespace FarseerPhysics
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
         {
             _bodyCapacity = bodyCapacity;
-            ContactCapacity = contactCapacity;
             JointCapacity = jointCapacity;
 
             BodyCount = 0;
@@ -201,7 +200,9 @@ namespace FarseerPhysics
                 }
             }
 
-            Report(_contactSolver.Constraints);
+            //We only report using the postsolve delegate. If no one wants the data, we don't collect it.
+            if (_contactManager.PostSolve != null)
+                Report(_contactSolver.Constraints);
 
             if (allowSleep)
             {
@@ -276,18 +277,17 @@ namespace FarseerPhysics
             for (int i = 0; i < ContactCount; ++i)
             {
                 Contact c = Contacts[i];
-
                 ContactConstraint cc = constraints[i];
-
                 ContactImpulse impulse = new ContactImpulse();
+
                 for (int j = 0; j < cc.PointCount; ++j)
                 {
                     impulse.normalImpulses[j] = cc.Points[j].NormalImpulse;
                     impulse.tangentImpulses[j] = cc.Points[j].TangentImpulse;
                 }
 
-                if (_contactManager.PostSolve != null)
-                    _contactManager.PostSolve(c, ref impulse);
+                //The Report method does not get run unless someone is subscribed to the PostSolve delegate
+                _contactManager.PostSolve(c, ref impulse);
             }
         }
 
@@ -303,7 +303,6 @@ namespace FarseerPhysics
         public int JointCount;
 
         private int _bodyCapacity;
-        public int ContactCapacity;
         public int JointCapacity;
     }
 }

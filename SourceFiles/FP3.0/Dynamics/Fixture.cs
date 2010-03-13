@@ -22,8 +22,8 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics
 {
@@ -75,6 +75,44 @@ namespace FarseerPhysics
     public class Fixture
     {
         /// <summary>
+        /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
+        /// If you need a more accurate AABB, compute it using the shape and
+        /// the body transform.
+        /// </summary>
+        /// <param name="aabb">The aabb.</param>
+        public AABB AABB;
+
+        internal Body _body;
+        private CollisionCategory _collidesWith;
+        private CollisionCategory _collisionCategories;
+        private short _collisionGroup;
+        private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
+        private Shape _shape;
+
+        internal Fixture() { }
+
+        /// <summary>
+        /// We need separation create/destroy functions from the constructor/destructor because
+        /// the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
+        /// </summary>
+        /// <param name="body">The body.</param>
+        /// <param name="shape">The shape.</param>
+        internal Fixture(Body body, Shape shape)
+        {
+            ProxyId = BroadPhase.NullProxy;
+
+            //Fixture defaults
+            Friction = 0.2f;
+            _collisionCategories = CollisionCategory.All;
+            _collidesWith = CollisionCategory.All;
+            Sensor = false;
+
+            _body = body;
+
+            _shape = shape.Clone();
+        }
+
+        /// <summary>
         /// Get the child shape. You can modify the child shape, however you should not change the
         /// number of vertices because this will crash some collision caching mechanisms.
         /// </summary>
@@ -111,10 +149,7 @@ namespace FarseerPhysics
                 _collisionGroup = value;
                 FilterChanged();
             }
-            get
-            {
-                return _collisionGroup;
-            }
+            get { return _collisionGroup; }
         }
 
         /// <summary>
@@ -123,10 +158,7 @@ namespace FarseerPhysics
         /// </summary>
         public CollisionCategory CollidesWith
         {
-            get
-            {
-                return _collidesWith;
-            }
+            get { return _collidesWith; }
 
             set
             {
@@ -146,10 +178,7 @@ namespace FarseerPhysics
         /// </summary>
         public CollisionCategory CollisionCategories
         {
-            get
-            {
-                return _collisionCategories;
-            }
+            get { return _collisionCategories; }
 
             set
             {
@@ -163,6 +192,35 @@ namespace FarseerPhysics
                 FilterChanged();
             }
         }
+
+        /// <summary>
+        /// Get the parent body of this fixture. This is null if the fixture is not attached.
+        /// </summary>
+        /// <value>the parent body.</value>
+        public Body Body
+        {
+            get { return _body; }
+        }
+
+        /// <summary>
+        /// Set the user data. Use this to store your application specific data.
+        /// </summary>
+        /// <value>The data.</value>
+        public object UserData { get; set; }
+
+        public int ProxyId { get; private set; }
+
+        /// <summary>
+        /// Set the coefficient of friction.
+        /// </summary>
+        /// <value>The friction.</value>
+        public float Friction { get; set; }
+
+        /// <summary>
+        /// Get the coefficient of restitution.
+        /// </summary>
+        /// <value></value>
+        public float Restitution { get; set; }
 
         public void RestoreCollisionWith(Fixture fixture)
         {
@@ -210,23 +268,6 @@ namespace FarseerPhysics
         }
 
         /// <summary>
-        /// Get the parent body of this fixture. This is null if the fixture is not attached.
-        /// </summary>
-        /// <value>the parent body.</value>
-        public Body Body
-        {
-            get { return _body; }
-        }
-
-        /// <summary>
-        /// Set the user data. Use this to store your application specific data.
-        /// </summary>
-        /// <value>The data.</value>
-        public object UserData { get; set; }
-
-        public int ProxyId { get; private set; }
-
-        /// <summary>
         /// Test a point for containment in this fixture.
         /// </summary>
         /// <param name="p">a point in world coordinates.</param>
@@ -249,39 +290,6 @@ namespace FarseerPhysics
             Transform xf;
             _body.GetTransform(out xf);
             return _shape.RayCast(out output, ref input, ref xf);
-        }
-
-        /// <summary>
-        /// Set the coefficient of friction.
-        /// </summary>
-        /// <value>The friction.</value>
-        public float Friction { get; set; }
-
-        /// <summary>
-        /// Get the coefficient of restitution.
-        /// </summary>
-        /// <value></value>
-        public float Restitution { get; set; }
-
-        /// <summary>
-        /// We need separation create/destroy functions from the constructor/destructor because
-        /// the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
-        /// </summary>
-        /// <param name="body">The body.</param>
-        /// <param name="shape">The shape.</param>
-        internal Fixture(Body body, Shape shape)
-        {
-            ProxyId = BroadPhase.NullProxy;
-
-            //Fixture defaults
-            Friction = 0.2f;
-            _collisionCategories = CollisionCategory.All;
-            _collidesWith = CollisionCategory.All;
-            Sensor = false;
-
-            _body = body;
-
-            _shape = shape.Clone();
         }
 
         internal void Destroy()
@@ -332,20 +340,5 @@ namespace FarseerPhysics
 
             broadPhase.MoveProxy(ProxyId, ref AABB, displacement);
         }
-
-        /// <summary>
-        /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
-        /// If you need a more accurate AABB, compute it using the shape and
-        /// the body transform.
-        /// </summary>
-        /// <param name="aabb">The aabb.</param>
-        public AABB AABB;
-
-        internal Body _body;
-        private Shape _shape;
-        private short _collisionGroup;
-        private CollisionCategory _collidesWith;
-        private CollisionCategory _collisionCategories;
-        private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
     }
 }

@@ -20,6 +20,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -31,48 +32,42 @@ namespace FarseerPhysics.TestBed.Tests
 
         private PyramidTest()
         {
+            //Create ground
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+
+            Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
+            PolygonShape shape = new PolygonShape(box, 5);
+
+            Vector2 x = new Vector2(-7.0f, 0.75f);
+            Vector2 deltaX = new Vector2(0.5625f, 1.25f);
+            Vector2 deltaY = new Vector2(1.125f, 0.0f);
+
+            for (int i = 0; i < Count; ++i)
             {
-                Body ground = World.Add();
+                Vector2 y = x;
 
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
-                ground.CreateFixture(shape);
-            }
-
-            {
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
-                PolygonShape shape = new PolygonShape(box, 5);
-
-                Vector2 x = new Vector2(-7.0f, 0.75f);
-                Vector2 deltaX = new Vector2(0.5625f, 1.25f);
-                Vector2 deltaY = new Vector2(1.125f, 0.0f);
-
-                for (int i = 0; i < Count; ++i)
+                for (int j = i; j < Count; ++j)
                 {
-                    Vector2 y = x;
+                    Body body = World.Add();
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = y;
+                    body.CreateFixture(shape);
 
-                    for (int j = i; j < Count; ++j)
-                    {
-                        Body body = World.Add();
-                        body.BodyType = BodyType.Dynamic;
-                        body.Position = y;
-                        body.CreateFixture(shape);
-
-                        y += deltaY;
-                    }
-
-                    x += deltaX;
+                    y += deltaY;
                 }
+
+                x += deltaX;
             }
         }
 
-        public override void Update(Framework.Settings settings)
-        {
-            if (base.StepCount == 10000)
-                base.GameInstance.Exit();
-            
-            base.Update(settings);
-        }
+        //Genbox: I use this in performance profiling to get consistant values from each run
+        //public override void Update(Framework.Settings settings)
+        //{
+        //    if (StepCount == 10000)
+        //        GameInstance.Exit();
+
+        //    base.Update(settings);
+        //}
 
         public static Test Create()
         {

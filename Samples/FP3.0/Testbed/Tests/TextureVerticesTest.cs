@@ -16,13 +16,11 @@ namespace FarseerPhysics.TestBed.Tests
 
         private TextureVerticesTest()
         {
-            {
-                Body ground = World.Add();
+            Body ground = World.Add();
 
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
-                ground.CreateFixture(shape);
-            }
+            Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            PolygonShape shape = new PolygonShape(edge, 0);
+            ground.CreateFixture(shape);
         }
 
         public override void Initialize()
@@ -36,7 +34,7 @@ namespace FarseerPhysics.TestBed.Tests
             //Transfer the texture data to the array
             _polygonTexture.GetData(data);
 
-            Vertices verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height);
+            Vertices verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height, true);
             Vector2 scale = new Vector2(0.07f, 0.07f);
             verts.Scale(ref scale);
 
@@ -45,10 +43,6 @@ namespace FarseerPhysics.TestBed.Tests
             verts = BooleanTools.Simplify(verts);
 
             list = BayazitDecomposer.ConvexPartition(verts);
-            //list = EarclipDecomposer.ConvexPartition(verts, 10000);
-
-            //vertices = GiftWrap.GetConvexHull(verts);
-            //vertices = Melkman.GetConvexHull(verts);
 
             if (list != null)
             {

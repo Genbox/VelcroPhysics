@@ -131,6 +131,18 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Math.cs">
       <Link>Common\Math.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\MathHelper.cs">
+      <Link>Common\MathHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Matrix.cs">
+      <Link>Common\Matrix.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\PolygonManipulation\BooleanTools.cs">
+      <Link>Common\PolygonManipulation\BooleanTools.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\PolygonManipulation\CuttingTools.cs">
+      <Link>Common\PolygonManipulation\CuttingTools.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\PolygonTools.cs">
       <Link>Common\PolygonTools.cs</Link>
     </Compile>
@@ -139,6 +151,12 @@
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\TextureConverter.cs">
       <Link>Common\TextureConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Vector2.cs">
+      <Link>Common\Vector2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Vector3.cs">
+      <Link>Common\Vector3.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Vertices.cs">
       <Link>Common\Vertices.cs</Link>
@@ -170,11 +188,20 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\ContactManager.cs">
       <Link>Dynamics\ContactManager.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\CirlceContact.cs">
+      <Link>Dynamics\Contacts\CirlceContact.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\Contact.cs">
       <Link>Dynamics\Contacts\Contact.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\ContactSolver.cs">
       <Link>Dynamics\Contacts\ContactSolver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\PolygonAndCircleContact.cs">
+      <Link>Dynamics\Contacts\PolygonAndCircleContact.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\PolygonContact.cs">
+      <Link>Dynamics\Contacts\PolygonContact.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\TOISolver.cs">
       <Link>Dynamics\Contacts\TOISolver.cs</Link>
@@ -236,8 +263,6 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\WorldCallbacks.cs">
       <Link>Dynamics\WorldCallbacks.cs</Link>
     </Compile>
-    <Compile Include="Common\PolygonManipulation\BooleanTools.cs" />
-    <Compile Include="Common\PolygonManipulation\CuttingTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
