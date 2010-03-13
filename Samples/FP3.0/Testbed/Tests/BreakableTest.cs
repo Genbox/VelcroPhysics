@@ -21,8 +21,10 @@
 */
 
 using System;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -31,34 +33,46 @@ namespace FarseerPhysics.TestBed.Tests
         private BreakableTest()
         {
             // Ground body
-            {
-                Body ground = World.Add();
-
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
-                ground.CreateFixture(shape);
-            }
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             // Breakable dynamic body
-            {
-                _body1 = World.Add();
-                _body1.BodyType = BodyType.Dynamic;
-                _body1.Position = new Vector2(0.0f, 40.0f);
-                _body1.Rotation = 0.25f * Settings.Pi;
+            _body1 = World.Add();
+            _body1.BodyType = BodyType.Dynamic;
+            _body1.Position = new Vector2(0.0f, 40.0f);
+            _body1.Rotation = 0.25f * Settings.Pi;
 
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
+            Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
 
-                _shape1 = new PolygonShape(box, 1.0f);
-                _piece1 = _body1.CreateFixture(_shape1);
+            _shape1 = new PolygonShape(box, 1.0f);
+            _piece1 = _body1.CreateFixture(_shape1);
 
-                box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(0.5f, 0.0f), 0.0f);
-                _shape2 = new PolygonShape(box, 1.0f);
+            box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(0.5f, 0.0f), 0.0f);
+            _shape2 = new PolygonShape(box, 1.0f);
 
-                _piece2 = _body1.CreateFixture(_shape2);
-            }
+            _piece2 = _body1.CreateFixture(_shape2);
 
             _break = false;
             _broke = false;
+        }
+
+        public override void Initialize()
+        {
+            //load texture that will represent the physics body
+            Texture2D polygonTexture = GameInstance.Content.Load<Texture2D>("rock");
+
+            //Create an array to hold the data from the texture
+            uint[] data = new uint[polygonTexture.Width * polygonTexture.Height];
+
+            //Transfer the texture data to the array
+            polygonTexture.GetData(data);
+
+            Vertices verts = PolygonTools.CreatePolygon(data, polygonTexture.Width, polygonTexture.Height);
+            Vector2 scale = new Vector2(0.07f, 0.07f);
+            verts.Scale(ref scale);
+
+            FixtureFactory.CreateBreakablePolygon(World, verts, 50);
+
+            base.Initialize();
         }
 
         public override void PostSolve(Contact contact, ref ContactImpulse impulse)
@@ -70,11 +84,8 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             // Should the body break?
-            Manifold manifold = contact.Manifold;
-            int count = manifold.PointCount;
-
             float maxImpulse = 0.0f;
-            for (int i = 0; i < count; ++i)
+            for (int i = 0; i < contact.Manifold.PointCount; ++i)
             {
                 maxImpulse = Math.Max(maxImpulse, impulse.normalImpulses[i]);
             }

@@ -535,6 +535,22 @@ namespace FarseerPhysics.Common.Decomposition
         /// Warning: Only works on simple polygons
         /// </summary>
         /// <param name="vertices">The vertices.</param>
+        /// <returns></returns>
+        public static List<Vertices> ConvexPartition(Vertices vertices)
+        {
+            return ConvexPartition(vertices, int.MaxValue);
+        }
+
+        /// <summary>
+        /// Decomposes a non-convex polygon into a number of convex polygons, up
+        /// to maxPolys (remaining pieces are thrown out).
+        ///
+        /// Each resulting polygon will have no more than Settings.MaxPolygonVertices
+        /// vertices.
+        /// 
+        /// Warning: Only works on simple polygons
+        /// </summary>
+        /// <param name="vertices">The vertices.</param>
         /// <param name="maxPolys">The maximum number of polygons.</param>
         /// <returns></returns>
         public static List<Vertices> ConvexPartition(Vertices vertices, int maxPolys)
