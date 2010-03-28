@@ -158,14 +158,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Fixture body7Fixture = body7.CreateFixture(circle);
                 body7Fixture.IgnoreCollisionWith(body6Fixture);
-
-                World.ContactManager.BroadphaseCollision += ContactManager_OnBroadphaseCollision;
             }
-        }
-
-        private void ContactManager_OnBroadphaseCollision(Fixture arg1, Fixture arg2)
-        {
-            
         }
 
         internal static Test Create()
