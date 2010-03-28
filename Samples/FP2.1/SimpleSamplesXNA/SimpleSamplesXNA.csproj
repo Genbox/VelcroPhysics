@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FarseerGames.SimpleSamplesXNA</RootNamespace>
     <AssemblyName>SimpleSamplesXNA</AssemblyName>
-    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
     <XnaCrossPlatformGroupID>d85ac275-347b-4cc4-9543-7f1a7d01772c</XnaCrossPlatformGroupID>
@@ -69,6 +69,9 @@
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -136,12 +139,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Branches\FP2.1\XNA3\FarseerPhysicsXNA.csproj">
-      <Project>{3CA74E02-3210-4BF8-85E9-024E9AD6F18D}</Project>
-      <Name>FarseerPhysicsXNA</Name>
+    <ProjectReference Include="..\..\..\Branches\FP3.0\XNA\Farseer Physics 3.0 XNA.csproj">
+      <Project>{0A850700-1ABB-4288-A391-6726B90EBEB9}</Project>
+      <Name>Farseer Physics 3.0 XNA</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DemoBaseXNA\DemoBaseXNA.csproj">
-      <Project>{747459A4-53B2-494E-AE37-94D1A3F10669}</Project>
+    <ProjectReference Include="..\..\FP3.0\DemoBaseXNA\DemoBaseXNA.csproj">
+      <Project>{46487979-1F6B-4F55-A377-3D80BCB248CE}</Project>
       <Name>DemoBaseXNA</Name>
     </ProjectReference>
   </ItemGroup>
