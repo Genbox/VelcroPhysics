@@ -390,7 +390,7 @@ namespace FarseerPhysics.DebugViewXNA
 
         public override void DrawTransform(ref Transform xf)
         {
-            float axisScale = 0.4f;
+            const float axisScale = 0.4f;
             Vector2 p1 = xf.Position;
 
             Vector2 p2 = p1 + axisScale * xf.R.Col1;
