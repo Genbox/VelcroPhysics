@@ -227,12 +227,35 @@ namespace FarseerPhysics
 
             if (wasTouching == false && touching == true)
             {
+                //Report the collision to both participants:
+                if (FixtureA.OnCollision != null)
+                    Enabled = FixtureA.OnCollision(FixtureA, FixtureB, Manifold);
+
+                //Reverse the order of the reported fixtures. The first fixture is always the one that the
+                //user subscribed to.
+                if (FixtureB.OnCollision != null)
+                    Enabled = FixtureB.OnCollision(FixtureB, FixtureA, Manifold);
+
+                //if the user disabled the contact (needed to exclude it in TOI solver), we also need to mark
+                //it as not touching.
+                if (Enabled == false)
+                    Flags &= ~ContactFlags.Touching;
+
                 if (contactManager.BeginContact != null)
                     contactManager.BeginContact(this);
             }
 
             if (wasTouching == true && touching == false)
             {
+                //Report the separation to both participants:
+                if (FixtureA.OnSeparation != null)
+                    FixtureA.OnSeparation(FixtureA, FixtureB);
+
+                //Reverse the order of the reported fixtures. The first fixture is always the one that the
+                //user subscribed to.
+                if (FixtureB.OnSeparation != null)
+                    FixtureB.OnSeparation(FixtureB, FixtureA);
+
                 if (contactManager.EndContact != null)
                     contactManager.EndContact(this);
             }
