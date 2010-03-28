@@ -30,14 +30,11 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private ShapeEditingTest()
         {
-            {
-                
-                Body ground = World.Add();
+            Body ground = World.Add();
 
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
-                ground.CreateFixture(shape);
-            }
+            Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            PolygonShape shape = new PolygonShape(edge, 0);
+            ground.CreateFixture(shape);
 
             _body = World.Add();
             _body.BodyType = BodyType.Dynamic;
@@ -67,7 +64,6 @@ namespace FarseerPhysics.TestBed.Tests
                 _body.Awake = true;
             }
         }
-
 
         public override void Update(Framework.Settings settings)
         {

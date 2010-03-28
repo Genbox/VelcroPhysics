@@ -88,6 +88,12 @@ namespace FarseerPhysics
         private short _collisionGroup;
         private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
         private Shape _shape;
+        
+        public delegate bool CollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Manifold manifold);
+        public CollisionEventHandler OnCollision;
+        
+        public delegate void SeparationEventHandler(Fixture fixtureA, Fixture fixtureB);
+        public SeparationEventHandler OnSeparation;
 
         internal Fixture() { }
 

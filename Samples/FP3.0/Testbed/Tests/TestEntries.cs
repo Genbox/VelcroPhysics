@@ -28,6 +28,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {    
+                new TestEntry {Name = "Shape Editing", CreateFcn = ShapeEditingTest.Create},
                 new TestEntry {Name = "Pyramid", CreateFcn = PyramidTest.Create},
                 new TestEntry {Name = "Collision Filtering", CreateFcn = CollisionFilteringTest.Create},
                 new TestEntry {Name = "Chain", CreateFcn = ChainTest.Create},
@@ -45,7 +46,6 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Boolean polygon", CreateFcn = BooleanPolygonTest.Create},
                 new TestEntry {Name = "Texture to Vertices", CreateFcn = TextureVerticesTest.Create},
                 new TestEntry {Name = "Body Types", CreateFcn = BodyTypesTest.Create},
-                new TestEntry {Name = "Shape Editing", CreateFcn = ShapeEditingTest.Create},
                 new TestEntry {Name = "Sensor Test", CreateFcn = SensorTest.Create},
                 new TestEntry {Name = "Compound Shapes", CreateFcn = CompoundShapes.Create},
                 new TestEntry {Name = "Cantilever", CreateFcn = CantileverTest.Create}, //20
