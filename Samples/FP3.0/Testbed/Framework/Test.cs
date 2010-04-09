@@ -151,9 +151,12 @@ namespace FarseerPhysics.TestBed.Framework
             DebugView.DrawString(x, y, title);
         }
 
-        public virtual void Update(Settings settings)
+        public virtual void Update(Settings settings, GameTime gameTime)
         {
-            float timeStep = settings.Hz > 0.0f ? 1.0f / settings.Hz : 0.0f;
+            //float timeStep = settings.Hz > 0.0f ? 1.0f / settings.Hz : 0.0f;
+
+            // added
+            float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
 
             if (settings.Pause > 0)
             {

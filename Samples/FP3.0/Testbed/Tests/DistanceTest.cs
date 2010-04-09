@@ -53,9 +53,9 @@ namespace FarseerPhysics.TestBed.Tests
             return new DistanceTest();
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
-            base.Update(settings);
+            base.Update(settings, gameTime);
 
             DistanceInput input = new DistanceInput();
             input.ProxyA.Set(_polygonA);

@@ -27,7 +27,7 @@ namespace FarseerPhysics.TestBed.Tests
             base.Initialize();
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
             //If the message times out, remove it from the list.
             for (int i = _messages.Count - 1; i >= 0; i--)
@@ -81,7 +81,7 @@ namespace FarseerPhysics.TestBed.Tests
                 TextLine += 15;
             }
 
-            base.Update(settings);
+            base.Update(settings, gameTime);
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)

@@ -130,9 +130,9 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
-            base.Update(settings);
+            base.Update(settings, gameTime);
             DebugView.DrawString(50, TextLine, "Keys: (f) toggle friction, (m) toggle motor");
             TextLine += 15;
             float torque = _joint1.MotorTorque;

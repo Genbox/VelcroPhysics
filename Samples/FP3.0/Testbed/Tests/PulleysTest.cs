@@ -68,9 +68,9 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
-            base.Update(settings);
+            base.Update(settings,gameTime);
 
             float ratio = _joint1.Ratio;
             float L = _joint1.LengthA + ratio * _joint1.LengthB;

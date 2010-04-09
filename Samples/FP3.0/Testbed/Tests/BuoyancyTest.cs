@@ -47,10 +47,10 @@ namespace FarseerPhysics.TestBed.Tests
             World.Add(buoyancyController);
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
             DebugView.DrawWaveContainer(_waveContainer);
-            base.Update(settings);
+            base.Update(settings, gameTime);
         }
 
         public void EntryEventHandler(Fixture geom, Vertices verts)

@@ -258,9 +258,9 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
-            base.Update(settings);
+            base.Update(settings, gameTime);
 
             PolyShapesCallback callback = new PolyShapesCallback();
             callback._circle.Radius = 2.0f;

@@ -64,6 +64,9 @@ namespace FarseerPhysics.TestBed
             Content.RootDirectory = "Content";
             _graphics.PreferMultiSampling = true;
             IsMouseVisible = true;
+
+            IsFixedTimeStep = false;
+            _graphics.SynchronizeWithVerticalRetrace = false;
         }
 
         /// <summary>
@@ -257,7 +260,7 @@ namespace FarseerPhysics.TestBed
             if (TraceEnabled)
                 _et.BeginTrace(TraceEvents.PhysicsEventId);
 
-            _test.Update(_settings);
+            _test.Update(_settings, gameTime);
 
             if (TraceEnabled)
                 _et.EndTrace(TraceEvents.PhysicsEventId);

@@ -44,9 +44,9 @@ namespace FarseerPhysics.TestBed.Tests
             return new TimeOfImpactTest();
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
-            base.Update(settings);
+            base.Update(settings, gameTime);
 
             Sweep sweepA = new Sweep();
             sweepA.Center0 = Vector2.Zero;

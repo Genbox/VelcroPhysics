@@ -105,9 +105,9 @@ namespace FarseerPhysics.TestBed.Tests
             body6.CreateFixture(circle);
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
-            base.Update(settings);
+            base.Update(settings, gameTime);
 
             // We are going to destroy some bodies according to contact
             // points. We must buffer the bodies that should be destroyed

@@ -67,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
             return new DynamicTreeTest();
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
             _rayActor = null;
             for (int i = 0; i < ActorCount; ++i)

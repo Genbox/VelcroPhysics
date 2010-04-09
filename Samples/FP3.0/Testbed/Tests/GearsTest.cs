@@ -88,9 +88,9 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
-            base.Update(settings);
+            base.Update(settings, gameTime);
 
             //DebugView.DrawString(50, TextLine, "theta1 + {0:n} * theta2 = {1:n}", _joint1.JointAngle, _joint2.JointAngle);
             //TextLine += 15;

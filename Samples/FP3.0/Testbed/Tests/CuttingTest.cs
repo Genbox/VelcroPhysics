@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.TestBed.Framework;
+using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -13,7 +14,7 @@ namespace FarseerPhysics.TestBed.Tests
         private Vector2 _end = new Vector2(6, 5);
         private const float moveAmount = 0.1f;
         private bool switched;
-
+        /*
         public CuttingTest()
         {
             Body ground;
@@ -37,8 +38,41 @@ namespace FarseerPhysics.TestBed.Tests
                 boxBody.CreateFixture(boxShape);
             }
         }
+        */
+            private const int Count = 20;
 
-        public override void Update(Framework.Settings settings)
+        private CuttingTest()
+        {
+            //Create ground
+            //FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            FixtureFactory.CreateRectangle(World, 1, 80, 1);
+
+            Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
+            PolygonShape shape = new PolygonShape(box, 5);
+
+            Vector2 x = new Vector2(-7.0f, 0.75f);
+            Vector2 deltaX = new Vector2(0.5625f, 1.25f);
+            Vector2 deltaY = new Vector2(1.125f, 0.0f);
+
+            for (int i = 0; i < Count; ++i)
+            {
+                Vector2 y = x;
+
+                for (int j = i; j < Count; ++j)
+                {
+                    Body body = World.Add();
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = y;
+                    body.CreateFixture(shape);
+
+                    y += deltaY;
+                }
+
+                x += deltaX;
+            }
+        }
+
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
             DebugView.DrawSegment(_start, _end, Color.Red);
 
@@ -73,7 +107,7 @@ namespace FarseerPhysics.TestBed.Tests
                 DebugView.DrawPoint(exitPoint, 0.5f, Color.PowderBlue);
             }
 
-            base.Update(settings);
+            base.Update(settings, gameTime);
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
