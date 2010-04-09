@@ -65,9 +65,9 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
-            base.Update(settings);
+            base.Update(settings, gameTime);
             DebugView.DrawString(50, TextLine, "Press: (c) create a shape, (d) destroy a shape.");
             TextLine += 15;
         }

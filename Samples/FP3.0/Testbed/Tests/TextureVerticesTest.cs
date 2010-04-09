@@ -75,7 +75,7 @@ namespace FarseerPhysics.TestBed.Tests
         private List<Vertices> list;
         private Color[] colors;
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
             if (_vertices != null)
                 for (int i = 0; i < _vertices.Length; i++)
@@ -107,7 +107,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
 
 
-            base.Update(settings);
+            base.Update(settings, gameTime);
         }
 
         public static Test Create()

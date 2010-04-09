@@ -49,7 +49,7 @@ namespace FarseerPhysics.TestBed.Tests
             return new PolyCollisionTest();
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
             Manifold manifold;
             Collision.CollidePolygons(out manifold, _polygonA, ref _transformA, _polygonB, ref _transformB);

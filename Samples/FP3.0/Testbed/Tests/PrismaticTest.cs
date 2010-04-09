@@ -98,9 +98,9 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
-            base.Update(settings);
+            base.Update(settings, gameTime);
             DebugView.DrawString(50, TextLine+200, "Keys: (l) limits, (m) motors, (p) speed");
             TextLine += 15;
             //float force = _fixedJoint.MotorForce;

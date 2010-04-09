@@ -128,7 +128,7 @@ namespace FarseerPhysics.TestBed.Tests
             body2.LinearVelocity = velocity2;
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
             if (_break)
             {
@@ -144,7 +144,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _angularVelocity = _body1.AngularVelocity;
             }
 
-            base.Update(settings);
+            base.Update(settings, gameTime);
         }
 
         internal static Test Create()

@@ -99,9 +99,9 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
-            base.Update(settings);
+            base.Update(settings, gameTime);
 
             // Traverse the contact results. Apply a force on shapes
             // that overlap the sensor.

@@ -99,12 +99,12 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
             uint oldFlag = settings.EnableContinuous;
 
             settings.EnableContinuous = 0;
-            base.Update(settings);
+            base.Update(settings, gameTime);
             DebugView.DrawString(5, TextLine, "Press 'c' to create a circle.");
             TextLine += 15;
 

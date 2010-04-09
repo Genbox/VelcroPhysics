@@ -104,9 +104,9 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
-            base.Update(settings);
+            base.Update(settings, gameTime);
 
             DebugView.DrawString(50, TextLine, "Press: (,) to launch a bullet.");
 

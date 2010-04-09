@@ -86,14 +86,14 @@ namespace FarseerPhysics.TestBed.Tests
             _body.AngularVelocity = _angularVelocity;
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
             if (StepCount == 12)
             {
                 StepCount += 0;
             }
 
-            base.Update(settings);
+            base.Update(settings, gameTime);
 
             if (StepCount % 60 == 0)
             {

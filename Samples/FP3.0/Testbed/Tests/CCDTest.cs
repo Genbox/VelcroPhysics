@@ -214,9 +214,9 @@ namespace FarseerPhysics.TestBed.Tests
 #endif
         }
 
-        public override void Update(Framework.Settings settings)
+        public override void Update(Framework.Settings settings, GameTime gameTime)
         {
-            base.Update(settings);
+            base.Update(settings, gameTime);
 
 
             if (Distance.GjkCalls > 0)
