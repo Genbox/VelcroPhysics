@@ -1,0 +1,156 @@
+﻿using System.Text;
+using System.Collections.Generic;
+using DemoBaseXNA;
+using DemoBaseXNA.DrawingSystem;
+using DemoBaseXNA.ScreenSystem;
+using FarseerPhysics.DebugViewXNA;
+using FarseerPhysics;
+using FarseerPhysics.Factories;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using FarseerPhysics.Common.Decomposition;
+using FarseerPhysics.Common.Boolean;
+
+namespace SamplesXNA.Demo1
+{
+    class Demo1Screen : GameScreen
+    {
+        private Texture2D _rectangleTexture;
+        private Body _rectangleBody;
+        private CircleShape _rectangleShape;
+
+        public override void Initialize()
+        {
+            PhysicsSimulator = new World(new Vector2(0, -10), true);
+            PhysicsSimulatorView = new DebugViewXNA(PhysicsSimulator);
+            DebugViewEnabled = true;
+
+            //PhysicsSimulatorView.AppendFlags(DebugViewFlags.CenterOfMass);
+
+            base.Initialize();
+        }
+
+        public override void LoadContent()
+        {
+            //load texture that will visually represent the physics body
+            _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 100, 100, Color.White, Color.Black);
+
+            //Vertices verts = PolygonTools.CreateGear(1, 13, 0.65f, 0.25f);
+            //Vertices verts = PolygonTools.CreateRoundedRectangle(2, 1f, 0.5f, 0.5f, 5);
+            //Vertices verts = PolygonTools.CreateCapsule(4, 0.5f, 32, 0.5f, 32);
+            Vertices verts = PolygonTools.CreateRectangle(0.5f, 0.25f);
+
+            verts = BooleanTools.Simplify(verts);
+
+            List<Vertices> decomposedVerts = BayazitDecomposer.ConvexPartition(verts);
+
+            for (int i = 0; i < 25; i++)
+            {
+                for (int j = 0; j < 20; j++)
+                {
+                    //use the body factory to create the physics body
+                    _rectangleBody = PhysicsSimulator.Add();
+                    _rectangleBody.BodyType = BodyType.Dynamic;
+                    _rectangleBody.Position = new Vector2(i * 1.1f - 15f, j * 0.6f - 18f);
+                    //_rectangleShape = new PolygonShape(decomposedVerts[0], 1);
+                        _rectangleShape = new CircleShape(0.2f, 1);
+                        _rectangleBody.CreateFixture(_rectangleShape);
+                        _rectangleBody.FixtureList[0].Friction = 0.5f;
+                }
+            }
+            
+            base.LoadContent();
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+            //_rectangleBrush.Draw(ScreenManager.SpriteBatch, _rectangleBody.Position, _rectangleBody.Rotation);
+            ScreenManager.SpriteBatch.End();
+            
+            base.Draw(gameTime);
+        }
+
+        public override void HandleInput(InputState input)
+        {
+            if (firstRun)
+            {
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
+                firstRun = false;
+            }
+
+            if (input.PauseGame)
+            {
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
+            }
+
+            if (input.CurrentGamePadState.IsConnected)
+            {
+                //HandleGamePadInput(input);
+            }
+            else
+            {
+                //HandleKeyboardInput(input);
+            }
+
+            base.HandleInput(input);
+        }
+
+        private void HandleGamePadInput(InputState input)
+        {
+            Vector2 force = 50 * input.CurrentGamePadState.ThumbSticks.Left;
+            force.Y = -force.Y;
+            _rectangleBody.ApplyForce(force);
+
+            float rotation = -1000 * input.CurrentGamePadState.Triggers.Left;
+            _rectangleBody.ApplyTorque(rotation);
+
+            rotation = 1000 * input.CurrentGamePadState.Triggers.Right;
+            _rectangleBody.ApplyTorque(rotation);
+        }
+
+        private void HandleKeyboardInput(InputState input)
+        {
+            const float forceAmount = 50;
+            Vector2 force = Vector2.Zero;
+            force.Y = -force.Y;
+
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.A)) { force += new Vector2(-forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { force += new Vector2(0, forceAmount); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { force += new Vector2(forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, -forceAmount); }
+
+            _rectangleBody.ApplyForce(force);
+
+            const float torqueAmount = 1000;
+            float torque = 0;
+
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque -= torqueAmount; }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque += torqueAmount; }
+
+            _rectangleBody.ApplyTorque(torque);
+        }
+
+        public static string GetTitle()
+        {
+            return "Demo1: A Single Body";
+        }
+
+        public static string GetDetails()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("This demo shows a single body with no geometry");
+            sb.AppendLine("attached. Note that it does not collide with the borders.");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  -Rotate: left and right triggers");
+            sb.AppendLine("  -Move: left thumbstick");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("Keyboard:");
+            sb.AppendLine("  -Rotate: left and right arrows");
+            sb.AppendLine("  -Move: A,S,D,W");
+            return sb.ToString();
+        }
+    }
+}

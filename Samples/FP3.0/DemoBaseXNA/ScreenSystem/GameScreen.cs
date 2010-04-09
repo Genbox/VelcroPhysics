@@ -1,5 +1,6 @@
 using System;
 using DemoBaseXNA.DemoShare;
+using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -44,6 +45,12 @@ namespace DemoBaseXNA.ScreenSystem
         }
 
         public World PhysicsSimulator { get; set; }
+
+        public DebugViewXNA PhysicsSimulatorView { get; set; }
+
+        public Matrix Projection;
+
+        public Matrix View = Matrix.Identity;
 
         public bool DebugViewEnabled { get; set; }
 
@@ -135,9 +142,13 @@ namespace DemoBaseXNA.ScreenSystem
             {
                 float borderWidth = 2f;
 
-                _border = new Border(50, 40, borderWidth, new Vector2(0, 0));
+                _border = new Border(40, 40, borderWidth, new Vector2(0, 0));
                 _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
                 _groundBody = PhysicsSimulator.Add();
+
+                PhysicsSimulatorView.AppendFlags(DebugViewFlags.Shape);
+
+                DebugViewXNA.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
             }
         }
 
@@ -202,8 +213,8 @@ namespace DemoBaseXNA.ScreenSystem
             {
                 if (PhysicsSimulator != null)
                 {
-                    PhysicsSimulator.Step(1f / 60f, 8, 3);
-                    PhysicsSimulator.ClearForces();
+                    // variable time step but never less then 30 Hz
+                    PhysicsSimulator.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)), 5, 3);
                 }
             }
         }
@@ -272,12 +283,8 @@ namespace DemoBaseXNA.ScreenSystem
 
         private void Mouse(MouseState state, MouseState oldState)
         {
-            Vector3 p = new Vector3(state.X, state.Y, 0);
-
-            Vector2 position = new Vector2(p.X, p.Y );
-            
-
-            //position = GameInstance.ConvertScreenToWorld(state.X, state.Y);
+            Vector3 worldPosition = ScreenManager.GraphicsDevice.Viewport.Unproject(new Vector3(state.X, state.Y, 0), Projection, View, Matrix.Identity);
+            Vector2 position = new Vector2(worldPosition.X, worldPosition.Y);
 
             if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
             {
@@ -371,6 +378,17 @@ namespace DemoBaseXNA.ScreenSystem
         {
             if (PhysicsSimulator != null)
             {
+                if (DebugViewEnabled)
+                {
+                    float aspect = ScreenManager.ScreenWidth / ScreenManager.ScreenHeight;
+
+                    Projection = Matrix.CreateOrthographic(40 * aspect, 40, 0, 1);
+
+                    PhysicsSimulatorView.DrawDebugData();
+
+                    PhysicsSimulatorView.RenderDebugData(ref Projection, ref View);
+                }
+                
                 ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
 
                 if (_mouseJoint != null)
