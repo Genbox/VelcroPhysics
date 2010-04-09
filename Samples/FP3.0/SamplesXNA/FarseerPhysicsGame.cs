@@ -1,14 +1,22 @@
 using System;
 using DemoBaseXNA.Components;
 using DemoBaseXNA.ScreenSystem;
-using FarseerPhysics;
-using FarseerGames.SimpleSamplesXNA.Demo1;
+using SamplesXNA.Demo1;
+/*
+using FarseerGames.SimpleSamplesXNA.Demo10;
+using FarseerGames.SimpleSamplesXNA.Demo2;
+using FarseerGames.SimpleSamplesXNA.Demo3;
 using FarseerGames.SimpleSamplesXNA.Demo4;
-using FarseerGames.SimpleSamplesXNA.GraphicsDemo;
+using FarseerGames.SimpleSamplesXNA.Demo5;
+using FarseerGames.SimpleSamplesXNA.Demo6;
+using FarseerGames.SimpleSamplesXNA.Demo7;
+using FarseerGames.SimpleSamplesXNA.Demo8;
+using FarseerGames.SimpleSamplesXNA.Demo9;
+ * */
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerGames.SimpleSamplesXNA
+namespace SamplesXNA
 {
     /// <summary>
     /// This is the main type for your game
@@ -24,16 +32,13 @@ namespace FarseerGames.SimpleSamplesXNA
 
             _graphics.SynchronizeWithVerticalRetrace = false;
 
-            // 60 fps
             TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 16);
-            IsFixedTimeStep = true;
-
-            _graphics.PreferMultiSampling = true;
+            IsFixedTimeStep = false;
 
 #if !XBOX
             //windowed
-            _graphics.PreferredBackBufferWidth = 1024;
-            _graphics.PreferredBackBufferHeight = 768;
+            _graphics.PreferredBackBufferWidth = 800;
+            _graphics.PreferredBackBufferHeight = 800;
             _graphics.IsFullScreen = false;
 
             //fullscreen
@@ -61,16 +66,17 @@ namespace FarseerGames.SimpleSamplesXNA
             Components.Add(frameRateCounter);
 
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo1Screen.GetTitle(), new Demo1Screen());
-            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo2Screen.GetTitle(), new Demo2Screen());
-            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo3Screen.GetTitle(), new Demo3Screen());
+            /*
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo2Screen.GetTitle(), new Demo2Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo3Screen.GetTitle(), new Demo3Screen());
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo4Screen.GetTitle(), new Demo4Screen());
-            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo5Screen.GetTitle(), new Demo5Screen());
-            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo6Screen.GetTitle(), new Demo6Screen());
-            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo7Screen.GetTitle(), new Demo7Screen());
-            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo8Screen.GetTitle(), new Demo8Screen());
-            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo9Screen.GetTitle(), new Demo9Screen());
-            //ScreenManager.MainMenuScreen.AddMainMenuItem(Demo10Screen.GetTitle(), new Demo10Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(GraphicsDemoScreen.GetTitle(), new GraphicsDemoScreen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo5Screen.GetTitle(), new Demo5Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo6Screen.GetTitle(), new Demo6Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo7Screen.GetTitle(), new Demo7Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo8Screen.GetTitle(), new Demo8Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo9Screen.GetTitle(), new Demo9Screen());
+            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo10Screen.GetTitle(), new Demo10Screen());
+             * */
             ScreenManager.MainMenuScreen.AddMainMenuItem("Exit", null, true);
 
             ScreenManager.GoToMainMenu();
@@ -110,20 +116,4 @@ namespace FarseerGames.SimpleSamplesXNA
             }
         }
     }
-
-    #region Entry Point
-    static class Program
-    {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        static void Main(string[] args)
-        {
-            using (FarseerPhysicsGame game = new FarseerPhysicsGame())
-            {
-                game.Run();
-            }
-        }
-    }
-    #endregion
 }
