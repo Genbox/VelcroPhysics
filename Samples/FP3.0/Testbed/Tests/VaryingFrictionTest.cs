@@ -20,6 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -30,7 +33,6 @@ namespace FarseerPhysics.TestBed.Tests
         private VaryingFrictionTest()
         {
             {
-                
                 Body ground = World.Add();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -95,11 +97,10 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
                 PolygonShape shape = new PolygonShape(box, 25);
 
-                float[] friction = new float[] { 0.75f, 0.5f, 0.35f, 0.1f, 0.0f };
+                float[] friction = new[] {0.75f, 0.5f, 0.35f, 0.1f, 0.0f};
 
                 for (int i = 0; i < 5; ++i)
                 {
-                    
                     Body body = World.Add();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-15.0f + 4.0f * i, 28.0f);

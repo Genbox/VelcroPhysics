@@ -20,6 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -55,7 +59,7 @@ namespace FarseerPhysics.TestBed.Tests
                     Fixture fixture = body.CreateFixture(shape);
                     fixture.Friction = 0.2f;
 
-                    Vector2 anchor = new Vector2(-0.5f , 0.0f);
+                    Vector2 anchor = new Vector2(-0.5f, 0.0f);
                     RevoluteJoint jd = new RevoluteJoint(prevBody, body, anchor);
                     World.Add(jd);
 
@@ -67,7 +71,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
 
                 Vector2 anchor2 = new Vector2(0.5f, 0.0f);
-                RevoluteJoint jd2 = new RevoluteJoint(ground,prevBody, anchor2);
+                RevoluteJoint jd2 = new RevoluteJoint(ground, prevBody, anchor2);
                 World.Add(jd2);
             }
 

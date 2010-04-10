@@ -20,6 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -28,6 +31,9 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class ShapeEditingTest : Test
     {
+        private Body _body;
+        private Fixture _fixture2;
+
         private ShapeEditingTest()
         {
             Body ground = World.Add();
@@ -65,7 +71,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
             DebugView.DrawString(50, TextLine, "Press: (c) create a shape, (d) destroy a shape.");
@@ -76,8 +82,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new ShapeEditingTest();
         }
-
-        private Body _body;
-        private Fixture _fixture2;
     }
 }

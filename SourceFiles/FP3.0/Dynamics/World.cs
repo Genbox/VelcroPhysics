@@ -23,10 +23,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Common;
 using FarseerPhysics.Controllers;
+using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Dynamics
 {
     [Flags]
     public enum WorldFlags
@@ -48,25 +52,25 @@ namespace FarseerPhysics
         /// </summary>
         public FixtureRemovedDelegate FixtureRemoved;
 
+        internal WorldFlags Flags;
+
         /// <summary>
         /// Called whenever a Joint is removed
         /// </summary>
         public JointRemovedDelegate JointRemoved;
 
         private float _invDt0;
-        private Body[] _stack;
         private Island _island = new Island();
         private Func<Fixture, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
-        private TOISolver _toiSolver = new TOISolver();
-        private Contact[] _toiContacts = new Contact[Settings.MaxTOIContactsPerIsland];
 
         private WorldRayCastCallback _rayCastCallback;
         private RayCastCallback _rayCastCallbackWrapper;
+        private Body[] _stack;
+        private Contact[] _toiContacts = new Contact[Settings.MaxTOIContactsPerIsland];
+        private TOISolver _toiSolver = new TOISolver();
 
         private Stopwatch _watch;
-
-        internal WorldFlags Flags;
 
         /// <summary>
         /// Construct a world object.
@@ -541,7 +545,8 @@ namespace FarseerPhysics
             }
 
             if (EnableDiagnostics)
-                ContinuousPhysicsTime = _watch.ElapsedTicks - (NewContactsTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
+                ContinuousPhysicsTime = _watch.ElapsedTicks -
+                                        (NewContactsTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
 
             if (step.DeltaTime > 0.0f)
             {
@@ -849,7 +854,7 @@ namespace FarseerPhysics
                     BodyType type = other.BodyType;
 
                     // Only bullets perform TOI with dynamic bodies.
-                    if (bullet == true)
+                    if (bullet)
                     {
                         // Bullets only perform TOI with bodies that have their TOI resolved.
                         if ((other._flags & BodyFlags.Toi) == 0)
@@ -924,7 +929,9 @@ namespace FarseerPhysics
 
             // Update all the valid contacts on this body and build a contact island.
             count = 0;
-            for (ContactEdge ce = body._contactList; (ce != null) && (count < Settings.MaxTOIContactsPerIsland); ce = ce.Next)
+            for (ContactEdge ce = body._contactList;
+                 (ce != null) && (count < Settings.MaxTOIContactsPerIsland);
+                 ce = ce.Next)
             {
                 Body other = ce.Other;
                 BodyType type = other.BodyType;
@@ -1040,7 +1047,7 @@ namespace FarseerPhysics
                     continue;
                 }
 
-                if (body.Bullet == true)
+                if (body.Bullet)
                 {
                     continue;
                 }

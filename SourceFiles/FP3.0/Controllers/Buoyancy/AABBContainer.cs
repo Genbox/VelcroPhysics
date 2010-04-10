@@ -1,9 +1,7 @@
-using System;
-using FarseerGames.FarseerPhysics.Interfaces;
-using FarseerPhysics;
+using FarseerPhysics.Collision;
 using Microsoft.Xna.Framework;
 
-namespace FarseerGames.FarseerPhysics.Controllers
+namespace FarseerPhysics.Controllers.Buoyancy
 {
     /// <summary>
     /// TODO: Create documentation
@@ -31,6 +29,8 @@ namespace FarseerGames.FarseerPhysics.Controllers
             AABB = new AABB(width, height, position);
         }
 
+        #region IFluidContainer Members
+
         public bool Intersect(ref AABB aabb)
         {
             return AABB.TestOverlap(ref aabb, ref AABB);
@@ -45,5 +45,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
         {
             //do nothing
         }
+
+        #endregion
     }
 }

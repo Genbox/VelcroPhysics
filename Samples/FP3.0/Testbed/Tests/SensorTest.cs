@@ -20,6 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -28,6 +32,9 @@ namespace FarseerPhysics.TestBed.Tests
     public class SensorTest : Test
     {
         private const int Count = 7;
+        private Body[] _bodies = new Body[Count];
+        private Fixture _sensor;
+        private bool[] _touching = new bool[Count];
 
         private SensorTest()
         {
@@ -73,12 +80,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (fixtureA == _sensor && fixtureB.Body.UserData != null)
             {
-                _touching[(int)(fixtureB.Body.UserData)] = true;
+                _touching[(int) (fixtureB.Body.UserData)] = true;
             }
 
             if (fixtureB == _sensor && fixtureA.Body.UserData != null)
             {
-                _touching[(int)(fixtureA.Body.UserData)] = true;
+                _touching[(int) (fixtureA.Body.UserData)] = true;
             }
         }
 
@@ -90,16 +97,16 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (fixtureA == _sensor && fixtureB.Body.UserData != null)
             {
-                _touching[(int)(fixtureB.Body.UserData)] = false;
+                _touching[(int) (fixtureB.Body.UserData)] = false;
             }
 
             if (fixtureB == _sensor && fixtureA.Body.UserData != null)
             {
-                _touching[(int)(fixtureA.Body.UserData)] = false;
+                _touching[(int) (fixtureA.Body.UserData)] = false;
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
 
@@ -115,7 +122,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body body = _bodies[i];
                 Body ground = _sensor.Body;
 
-                CircleShape circle = (CircleShape)_sensor.Shape;
+                CircleShape circle = (CircleShape) _sensor.Shape;
                 Vector2 center = ground.GetWorldPoint(circle.Position);
 
                 Vector2 position = body.Position;
@@ -136,9 +143,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new SensorTest();
         }
-
-        private Fixture _sensor;
-        private Body[] _bodies = new Body[Count];
-        private bool[] _touching = new bool[Count];
     }
 }

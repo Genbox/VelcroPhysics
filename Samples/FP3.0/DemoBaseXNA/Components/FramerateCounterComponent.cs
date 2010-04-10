@@ -45,7 +45,8 @@ namespace DemoBaseXNA.Components
 
             _screenManager.SpriteBatch.Begin();
             _screenManager.SpriteBatch.DrawString(_screenManager.SpriteFonts.FrameRateCounterFont, fps,
-                                                  new Vector2(5, 5), Color.Black, 0, Vector2.Zero, 1.0f, SpriteEffects.None, 1);
+                                                  new Vector2(5, 5), Color.Black, 0, Vector2.Zero, 1.0f,
+                                                  SpriteEffects.None, 1);
             _screenManager.SpriteBatch.End();
         }
     }

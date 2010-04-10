@@ -17,7 +17,7 @@ namespace DemoBaseXNA.DrawingSystem
             colorArray[0] = Color.TransparentWhite;
             colorArray[1] = Color.TransparentWhite;
 
-            for (int i = 2; i < count - 2; i++) 
+            for (int i = 2; i < count - 2; i++)
             {
                 colorArray[i] = Color.White;
             }
@@ -75,9 +75,10 @@ namespace DemoBaseXNA.DrawingSystem
                 }
                 else if (length >= radius - borderOuterTransitionWidth)
                 {
-                    float transitionAmount = (length - (radius - borderOuterTransitionWidth)) / borderOuterTransitionWidth;
+                    float transitionAmount = (length - (radius - borderOuterTransitionWidth)) /
+                                             borderOuterTransitionWidth;
                     transitionAmount = 255 * (1 - transitionAmount);
-                    colors[i] = new Color(borderColor.R, borderColor.G, borderColor.B, (byte)transitionAmount);
+                    colors[i] = new Color(borderColor.R, borderColor.G, borderColor.B, (byte) transitionAmount);
                 }
                 else if (length > radius - (borderWidth + borderOuterTransitionWidth))
                 {
@@ -89,9 +90,9 @@ namespace DemoBaseXNA.DrawingSystem
                                               (radius -
                                                (borderWidth + borderOuterTransitionWidth + borderInnerTransitionWidth))) /
                                              (borderInnerTransitionWidth + 1);
-                    colors[i] = new Color((byte)MathHelper.Lerp(color.R, borderColor.R, transitionAmount),
-                                          (byte)MathHelper.Lerp(color.G, borderColor.G, transitionAmount),
-                                          (byte)MathHelper.Lerp(color.B, borderColor.B, transitionAmount));
+                    colors[i] = new Color((byte) MathHelper.Lerp(color.R, borderColor.R, transitionAmount),
+                                          (byte) MathHelper.Lerp(color.G, borderColor.G, transitionAmount),
+                                          (byte) MathHelper.Lerp(color.B, borderColor.B, transitionAmount));
                 }
                 else
                 {
@@ -134,8 +135,8 @@ namespace DemoBaseXNA.DrawingSystem
 
             for (j = 0; j < borderOuterTransitionWidth; j++)
             {
-                transitionAmount = (j) / (float)(borderOuterTransitionWidth);
-                shellColor[j] = new Color(borderColor.R, borderColor.G, borderColor.B, (byte)(255 * transitionAmount));
+                transitionAmount = (j) / (float) (borderOuterTransitionWidth);
+                shellColor[j] = new Color(borderColor.R, borderColor.G, borderColor.B, (byte) (255 * transitionAmount));
             }
             for (j = borderOuterTransitionWidth; j < borderWidth + borderOuterTransitionWidth; j++)
             {
@@ -147,10 +148,10 @@ namespace DemoBaseXNA.DrawingSystem
             {
                 transitionAmount = 1 -
                                    (j - (borderWidth + borderOuterTransitionWidth) + 1) /
-                                   (float)(borderInnerTransitionWidth + 1);
-                shellColor[j] = new Color((byte)MathHelper.Lerp(color.R, borderColor.R, transitionAmount),
-                                          (byte)MathHelper.Lerp(color.G, borderColor.G, transitionAmount),
-                                          (byte)MathHelper.Lerp(color.B, borderColor.B, transitionAmount));
+                                   (float) (borderInnerTransitionWidth + 1);
+                shellColor[j] = new Color((byte) MathHelper.Lerp(color.R, borderColor.R, transitionAmount),
+                                          (byte) MathHelper.Lerp(color.G, borderColor.G, transitionAmount),
+                                          (byte) MathHelper.Lerp(color.B, borderColor.B, transitionAmount));
             }
 
 
@@ -184,25 +185,29 @@ namespace DemoBaseXNA.DrawingSystem
             return texture2D;
         }
 
-        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius, Color color)
+        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius,
+                                                     Color color)
         {
             return CreateEllipseTexture(graphicsDevice, xRadius, yRadius, 0, 0, 2, color, color);
         }
 
-        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius, Color color,
+        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius,
+                                                     Color color,
                                                      Color borderColor)
         {
             return CreateEllipseTexture(graphicsDevice, xRadius, yRadius, 1, 1, 1, color, borderColor);
         }
 
-        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius, int borderWidth,
+        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius,
+                                                     int borderWidth,
                                                      Color color, Color borderColor)
         {
             return CreateEllipseTexture(graphicsDevice, xRadius, yRadius, borderWidth, 1, 2, color, borderColor);
         }
 
 
-        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius, int borderWidth,
+        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius,
+                                                     int borderWidth,
                                                      int borderInnerTransitionWidth, int borderOuterTransitionWidth,
                                                      Color color, Color borderColor)
         {
@@ -224,7 +229,7 @@ namespace DemoBaseXNA.DrawingSystem
 
             //Just calculate the upper left quarter of the ellipse
             //(it's axis-symmetric)
-            Color[,] ulColors = new Color[diameterX / 2 + 1, diameterY / 2 + 1];
+            Color[,] ulColors = new Color[diameterX / 2 + 1,diameterY / 2 + 1];
 
             //Create a description of the ellipse boundary
 
@@ -264,12 +269,12 @@ namespace DemoBaseXNA.DrawingSystem
                     // calculate angle of a straight line intersecting the center of the ellipse and the current point
                     Vector2 lineFromCurPointToCenter = curPoint - center;
                     float gradient = lineFromCurPointToCenter.Y / lineFromCurPointToCenter.X;
-                    float angle = (float)Math.Atan(gradient * width / height);
+                    float angle = (float) Math.Atan(gradient * width / height);
 
                     // find out where the line intersecting the center of the ellipse and the current point 
                     // intersects the ellipse
-                    Vector2 intersectionPoint = center + new Vector2(xRadius * (float)Math.Cos(angle),
-                                                                     yRadius * (float)Math.Sin(angle));
+                    Vector2 intersectionPoint = center + new Vector2(xRadius * (float) Math.Cos(angle),
+                                                                     yRadius * (float) Math.Sin(angle));
                     // calculate squared distance from intersection point to center
                     float distanceFromIntersectionPointToCenter = (intersectionPoint - center).LengthSquared();
                     // calculate squared distance from current point to center of ellipse
@@ -295,21 +300,24 @@ namespace DemoBaseXNA.DrawingSystem
                         // outside of border, where the border color fades to transparent
                         float transitionAmount = (-distanceFromCurToBoundary) / borderOuterTransitionWidth;
                         transitionAmount = 255 * transitionAmount;
-                        ulColors[x, y] = new Color(borderColor.R, borderColor.G, borderColor.B, (byte)transitionAmount);
+                        ulColors[x, y] = new Color(borderColor.R, borderColor.G, borderColor.B, (byte) transitionAmount);
                     }
                     else if (distanceFromCurToBoundary > -(borderWidth + borderOuterTransitionWidth))
                     {
                         // on border
                         ulColors[x, y] = borderColor;
                     }
-                    else if (distanceFromCurToBoundary >= -(borderWidth + borderOuterTransitionWidth + borderInnerTransitionWidth))
+                    else if (distanceFromCurToBoundary >=
+                             -(borderWidth + borderOuterTransitionWidth + borderInnerTransitionWidth))
                     {
                         // inside of border, where the border color fades to the fill color
-                        float transitionAmount = (-distanceFromCurToBoundary - (borderWidth + borderOuterTransitionWidth)) / (borderInnerTransitionWidth + 1);
+                        float transitionAmount = (-distanceFromCurToBoundary -
+                                                  (borderWidth + borderOuterTransitionWidth)) /
+                                                 (borderInnerTransitionWidth + 1);
                         transitionAmount = 1 - transitionAmount;
-                        ulColors[x, y] = new Color((byte)MathHelper.Lerp(color.R, borderColor.R, transitionAmount),
-                                                   (byte)MathHelper.Lerp(color.G, borderColor.G, transitionAmount),
-                                                   (byte)MathHelper.Lerp(color.B, borderColor.B, transitionAmount));
+                        ulColors[x, y] = new Color((byte) MathHelper.Lerp(color.R, borderColor.R, transitionAmount),
+                                                   (byte) MathHelper.Lerp(color.G, borderColor.G, transitionAmount),
+                                                   (byte) MathHelper.Lerp(color.B, borderColor.B, transitionAmount));
                     }
                     else
                     {
@@ -385,8 +393,8 @@ namespace DemoBaseXNA.DrawingSystem
 
             // calculate points
             for (int i = 0; i < count; i++)
-                vectorCache[i] = center + new Vector2(halfWidth * (float)Math.Cos(i * accuracy),
-                                                      halfHeight * (float)Math.Sin(i * accuracy));
+                vectorCache[i] = center + new Vector2(halfWidth * (float) Math.Cos(i * accuracy),
+                                                      halfHeight * (float) Math.Sin(i * accuracy));
 
             return vectorCache;
         }

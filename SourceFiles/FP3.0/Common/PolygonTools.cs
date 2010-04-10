@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using FarseerPhysics.Common;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Common
 {
     public static class PolygonTools
     {
@@ -57,7 +56,8 @@ namespace FarseerPhysics
         /// <param name="yRadius">The rounding Y radius.</param>
         /// <param name="segments">The number of segments to subdivide the edges.</param>
         /// <returns></returns>
-        public static Vertices CreateRoundedRectangle(float width, float height, float xRadius, float yRadius, float segments)
+        public static Vertices CreateRoundedRectangle(float width, float height, float xRadius, float yRadius,
+                                                      float segments)
         {
             if (yRadius > height / 2 || xRadius > width / 2)
                 throw new Exception("Rounding amount can't be more than half the height and width respectively.");
@@ -83,7 +83,7 @@ namespace FarseerPhysics
             {
                 float numberOfEdges = (segments * 4 + 8);
                 float stepSize = MathHelper.TwoPi / (numberOfEdges - 4);
-                int perPhase = (int)numberOfEdges / 4;
+                int perPhase = (int) numberOfEdges / 4;
 
                 Vector2 posOffset = new Vector2(width / 2 - xRadius, -height / 2 + yRadius);
                 vertices.Add(posOffset + new Vector2(xRadius, -yRadius + yRadius));
@@ -101,14 +101,14 @@ namespace FarseerPhysics
                         phase--;
                     }
 
-                    vertices.Add(posOffset + new Vector2(xRadius * (float)Math.Cos(stepSize * (i + phase)),
-                                                         -yRadius * (float)Math.Sin(stepSize * (i + phase))));
+                    vertices.Add(posOffset + new Vector2(xRadius * (float) Math.Cos(stepSize * (i + phase)),
+                                                         -yRadius * (float) Math.Sin(stepSize * (i + phase))));
                 }
             }
 
             return vertices;
         }
-        
+
         /// <summary>
         /// Set this as a single edge.
         /// </summary>
@@ -149,7 +149,8 @@ namespace FarseerPhysics
 
             vertices.Add(new Vector2(xRadius, 0));
             for (int i = 1; i < numberOfEdges; i++)
-                vertices.Add(new Vector2(xRadius * (float)Math.Cos(stepSize * i), -yRadius * (float)Math.Sin(stepSize * i)));
+                vertices.Add(new Vector2(xRadius * (float) Math.Cos(stepSize * i),
+                                         -yRadius * (float) Math.Sin(stepSize * i)));
 
             return vertices;
         }
@@ -166,7 +167,9 @@ namespace FarseerPhysics
         public static Vertices CreateCapsule(float height, float endRadius, int edges)
         {
             if (endRadius >= height / 2)
-                throw new ArgumentException("The radius must be lower than height / 2. Higher values of radius would create a circle, and not a half circle.", "endRadius");
+                throw new ArgumentException(
+                    "The radius must be lower than height / 2. Higher values of radius would create a circle, and not a half circle.",
+                    "endRadius");
 
             return CreateCapsule(height, endRadius, edges, endRadius, edges);
         }
@@ -181,7 +184,8 @@ namespace FarseerPhysics
         /// <param name="bottomRadius">Radius of bottom.</param>
         /// <param name="bottomEdges">The number of edges of the bottom. The more edges, the more it resembles an capsule</param>
         /// <returns></returns>
-        public static Vertices CreateCapsule(float height, float topRadius, int topEdges, float bottomRadius, int bottomEdges)
+        public static Vertices CreateCapsule(float height, float topRadius, int topEdges, float bottomRadius,
+                                             int bottomEdges)
         {
             if (height <= 0)
                 throw new ArgumentException("Height must be longer than 0", "height");
@@ -199,10 +203,14 @@ namespace FarseerPhysics
                 throw new ArgumentException("Bottom edges must be more than 0", "bottomEdges");
 
             if (topRadius >= height / 2)
-                throw new ArgumentException("The top radius must be lower than height / 2. Higher values of top radius would create a circle, and not a half circle.", "topRadius");
+                throw new ArgumentException(
+                    "The top radius must be lower than height / 2. Higher values of top radius would create a circle, and not a half circle.",
+                    "topRadius");
 
             if (bottomRadius >= height / 2)
-                throw new ArgumentException("The bottom radius must be lower than height / 2. Higher values of bottom radius would create a circle, and not a half circle.", "bottomRadius");
+                throw new ArgumentException(
+                    "The bottom radius must be lower than height / 2. Higher values of bottom radius would create a circle, and not a half circle.",
+                    "bottomRadius");
 
             Vertices vertices = new Vertices();
 
@@ -214,7 +222,8 @@ namespace FarseerPhysics
             float stepSize = MathHelper.Pi / topEdges;
             for (int i = 1; i < topEdges; i++)
             {
-                vertices.Add(new Vector2(topRadius * (float)Math.Cos(stepSize * i), topRadius * (float)Math.Sin(stepSize * i) + newHeight));
+                vertices.Add(new Vector2(topRadius * (float) Math.Cos(stepSize * i),
+                                         topRadius * (float) Math.Sin(stepSize * i) + newHeight));
             }
 
             vertices.Add(new Vector2(-topRadius, newHeight));
@@ -225,7 +234,8 @@ namespace FarseerPhysics
             stepSize = MathHelper.Pi / bottomEdges;
             for (int i = 1; i < bottomEdges; i++)
             {
-                vertices.Add(new Vector2(-bottomRadius * (float)Math.Cos(stepSize * i), -bottomRadius * (float)Math.Sin(stepSize * i) - newHeight));
+                vertices.Add(new Vector2(-bottomRadius * (float) Math.Cos(stepSize * i),
+                                         -bottomRadius * (float) Math.Sin(stepSize * i) - newHeight));
             }
 
             vertices.Add(new Vector2(bottomRadius, -newHeight));
@@ -253,17 +263,23 @@ namespace FarseerPhysics
 
             for (int i = 0; i < numberOfTeeth; i++)
             {
-                vertices.Add(new Vector2((radius) * (float)Math.Cos(stepSize * i),
-                    -(radius) * (float)Math.Sin(stepSize * i)));
+                vertices.Add(new Vector2((radius) * (float) Math.Cos(stepSize * i),
+                                         -(radius) * (float) Math.Sin(stepSize * i)));
 
-                vertices.Add(new Vector2((radius + toothHeight) * (float)Math.Cos((stepSize * i) + toothAngleStepSize),
-                    -(radius + toothHeight) * (float)Math.Sin((stepSize * i) + toothAngleStepSize)));
+                vertices.Add(new Vector2((radius + toothHeight) * (float) Math.Cos((stepSize * i) + toothAngleStepSize),
+                                         -(radius + toothHeight) * (float) Math.Sin((stepSize * i) + toothAngleStepSize)));
 
-                vertices.Add(new Vector2((radius + toothHeight) * (float)Math.Cos((stepSize * i) + toothAngleStepSize + toothTipStepSize),
-                    -(radius + toothHeight) * (float)Math.Sin((stepSize * i) + toothAngleStepSize + toothTipStepSize)));
+                vertices.Add(
+                    new Vector2(
+                        (radius + toothHeight) *
+                        (float) Math.Cos((stepSize * i) + toothAngleStepSize + toothTipStepSize),
+                        -(radius + toothHeight) *
+                        (float) Math.Sin((stepSize * i) + toothAngleStepSize + toothTipStepSize)));
 
-                vertices.Add(new Vector2((radius) * (float)Math.Cos((stepSize * i) + (toothAngleStepSize * 2f) + toothTipStepSize),
-                    -(radius) * (float)Math.Sin((stepSize * i) + (toothAngleStepSize * 2f) + toothTipStepSize)));
+                vertices.Add(
+                    new Vector2(
+                        (radius) * (float) Math.Cos((stepSize * i) + (toothAngleStepSize * 2f) + toothTipStepSize),
+                        -(radius) * (float) Math.Sin((stepSize * i) + (toothAngleStepSize * 2f) + toothTipStepSize)));
             }
 
             return vertices;
@@ -279,9 +295,11 @@ namespace FarseerPhysics
             return TextureConverter.CreatePolygon(data, width, height, holeDetection);
         }
 
-        public static List<Vertices> CreatePolygon(uint[] data, int width, int height, float hullTolerance, byte alphaTolerance, bool multiPartDetection, bool holeDetection)
+        public static List<Vertices> CreatePolygon(uint[] data, int width, int height, float hullTolerance,
+                                                   byte alphaTolerance, bool multiPartDetection, bool holeDetection)
         {
-            return TextureConverter.CreatePolygon(data, width, height, hullTolerance, alphaTolerance, holeDetection, multiPartDetection);
+            return TextureConverter.CreatePolygon(data, width, height, hullTolerance, alphaTolerance, holeDetection,
+                                                  multiPartDetection);
         }
     }
 }

@@ -20,6 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -34,7 +37,6 @@ namespace FarseerPhysics.TestBed.Tests
         private ConfinedTest()
         {
             {
-                
                 Body ground = World.Add();
 
 
@@ -67,7 +69,8 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Body body = World.Add();
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius, (2.0f * i + 1.0f) * radius);
+                    body.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
+                                                (2.0f * i + 1.0f) * radius);
 
                     Fixture fixture = body.CreateFixture(shape2);
                     fixture.Friction = 0.1f;
@@ -99,7 +102,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             uint oldFlag = settings.EnableContinuous;
 

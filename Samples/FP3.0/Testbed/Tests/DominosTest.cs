@@ -20,6 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -120,7 +124,6 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body b5;
             {
-
                 b5 = World.Add();
                 b5.BodyType = BodyType.Dynamic;
                 b5.Position = new Vector2(6.5f, 3.0f);
@@ -142,7 +145,6 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.Set(vertices);
                 fix = b5.CreateFixture(shape);
                 fix.Friction = 0.1f;
-
             }
 
             anchor = new Vector2(6.0f, 2.0f);

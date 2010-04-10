@@ -20,6 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -28,12 +31,11 @@ namespace FarseerPhysics.TestBed.Tests
     public class SphereStackTest : Test
     {
         private const int Count = 10;
+        private Body[] _bodies = new Body[Count];
 
         private SphereStackTest()
         {
-
             {
-                
                 Body ground = World.Add();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -61,7 +63,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new SphereStackTest();
         }
-
-        private Body[] _bodies = new Body[Count];
     }
 }

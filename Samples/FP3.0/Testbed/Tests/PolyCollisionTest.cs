@@ -20,6 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -29,6 +32,14 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class PolyCollisionTest : Test
     {
+        private float _angleB;
+        private PolygonShape _polygonA = new PolygonShape(0.0f);
+        private PolygonShape _polygonB = new PolygonShape(0.0f);
+        private Vector2 _positionB;
+
+        private Transform _transformA;
+        private Transform _transformB;
+
         private PolyCollisionTest()
         {
             {
@@ -49,10 +60,10 @@ namespace FarseerPhysics.TestBed.Tests
             return new PolyCollisionTest();
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             Manifold manifold;
-            Collision.CollidePolygons(out manifold, _polygonA, ref _transformA, _polygonB, ref _transformB);
+            CollisionManager.CollidePolygons(out manifold, _polygonA, ref _transformA, _polygonB, ref _transformB);
 
             WorldManifold worldManifold = new WorldManifold(ref manifold, ref _transformA, _polygonA.Radius,
                                                             ref _transformB, _polygonB.Radius);
@@ -111,14 +122,5 @@ namespace FarseerPhysics.TestBed.Tests
 
             _transformB.Set(_positionB, _angleB);
         }
-
-        private PolygonShape _polygonA = new PolygonShape(0.0f);
-        private PolygonShape _polygonB = new PolygonShape(0.0f);
-
-        private Transform _transformA;
-        private Transform _transformB;
-
-        private Vector2 _positionB;
-        private float _angleB;
     }
 }

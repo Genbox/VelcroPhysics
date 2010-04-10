@@ -20,17 +20,26 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-namespace FarseerPhysics
+using FarseerPhysics.Collision;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Dynamics.Joints;
+
+namespace FarseerPhysics.Dynamics
 {
     /// <summary>
     /// This delegate is called when a contact is deleted
     /// </summary>
     public delegate void EndContactDelegate(Contact contact);
+
     public delegate void BeginContactDelegate(Contact contact);
+
     public delegate void PreSolveDelegate(Contact contact, ref Manifold oldManifold);
+
     public delegate void PostSolveDelegate(Contact contact, ref ContactImpulse impulse);
 
     public delegate void FixtureRemovedDelegate(Fixture fixture);
+
     public delegate void JointRemovedDelegate(Joint joint);
 
     public delegate bool CollisionFilterDelegate(Fixture fixtureA, Fixture fixtureB);
@@ -50,7 +59,8 @@ namespace FarseerPhysics
 
         private static bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)
         {
-            if ((fixtureA.CollisionGroup == fixtureB.CollisionGroup) && fixtureA.CollisionGroup != 0 && fixtureB.CollisionGroup != 0)
+            if ((fixtureA.CollisionGroup == fixtureB.CollisionGroup) && fixtureA.CollisionGroup != 0 &&
+                fixtureB.CollisionGroup != 0)
                 return false;
 
             if (((fixtureA.CollisionCategories & fixtureB.CollidesWith) == CollisionCategory.None) &

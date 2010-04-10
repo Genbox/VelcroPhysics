@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.PolygonManipulation
@@ -17,7 +19,8 @@ namespace FarseerPhysics.Common.PolygonManipulation
         /// <param name="splitSize">The size of the split. Think of this as the laser-width</param>
         /// <param name="first">The first collection of vertexes</param>
         /// <param name="second">The second collection of vertexes</param>
-        public static void SplitShape(Fixture fixture, Vector2 entryPoint, Vector2 exitPoint, float splitSize, out Vertices first, out Vertices second)
+        public static void SplitShape(Fixture fixture, Vector2 entryPoint, Vector2 exitPoint, float splitSize,
+                                      out Vertices first, out Vertices second)
         {
             Vector2 localEntryPoint = fixture.Body.GetLocalPoint(entryPoint);
             Vector2 localExitPoint = fixture.Body.GetLocalPoint(exitPoint);
@@ -29,7 +32,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 newPolygon[i] = new Vertices(vertices.Count);
             }
 
-            int[] cutAdded = { -1, -1 };
+            int[] cutAdded = {-1, -1};
             int last = -1;
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -124,18 +127,18 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
             //Get the entry points
             world.RayCast((f, p, n, fr) =>
-                                    {
-                                        fixtures.Add(f);
-                                        entryPoints.Add(p);
-                                        return 1;
-                                    }, start, end);
+                              {
+                                  fixtures.Add(f);
+                                  entryPoints.Add(p);
+                                  return 1;
+                              }, start, end);
 
             //Reverse the ray to get the exitpoints
             world.RayCast((f, p, n, fr) =>
-                                    {
-                                        exitPoints.Add(p);
-                                        return 1;
-                                    }, end, start);
+                              {
+                                  exitPoints.Add(p);
+                                  return 1;
+                              }, end, start);
 
             //We only have a single point. We need at least 2
             if (entryPoints.Count + exitPoints.Count < 2)

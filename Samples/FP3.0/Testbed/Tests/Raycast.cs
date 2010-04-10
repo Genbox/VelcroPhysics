@@ -21,16 +21,24 @@
 */
 
 using System;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
     public class RayCastTest : Test
     {
         private const int MaxBodies = 256;
+        private float _angle;
+        private Body[] _bodies = new Body[MaxBodies];
+        private int _bodyIndex;
+        private CircleShape _circle;
+        private PolygonShape[] _polygons = new PolygonShape[4];
 
         private RayCastTest()
         {
@@ -52,8 +60,8 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 const float w = 1.0f;
-                float b = w / (2.0f + (float)Math.Sqrt(2.0));
-                float s = (float)Math.Sqrt(2.0) * b;
+                float b = w / (2.0f + (float) Math.Sqrt(2.0));
+                float s = (float) Math.Sqrt(2.0) * b;
 
                 Vertices vertices3 = new Vertices(8);
                 vertices3.Add(new Vector2(0.5f * s, 0.0f));
@@ -122,7 +130,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
             DebugView.DrawString(5, TextLine, "Press 1-5 to drop stuff");
@@ -130,19 +138,19 @@ namespace FarseerPhysics.TestBed.Tests
 
             const float L = 11.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);
-            Vector2 d = new Vector2(L * (float)Math.Cos(_angle), L * (float)Math.Sin(_angle));
+            Vector2 d = new Vector2(L * (float) Math.Cos(_angle), L * (float) Math.Sin(_angle));
             Vector2 point2 = point1 + d;
 
 
             Fixture fixture = null;
             Vector2 point = Vector2.Zero, normal = Vector2.Zero;
             World.RayCast((f, p, n, fr) =>
-                               {
-                                   fixture = f;
-                                   point = p;
-                                   normal = n;
-                                   return fr;
-                               }, point1, point2);
+                              {
+                                  fixture = f;
+                                  point = p;
+                                  normal = n;
+                                  return fr;
+                              }, point1, point2);
 
             if (fixture != null)
             {
@@ -200,12 +208,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new RayCastTest();
         }
-
-        private int _bodyIndex;
-        private Body[] _bodies = new Body[MaxBodies];
-        private PolygonShape[] _polygons = new PolygonShape[4];
-        private CircleShape _circle;
-
-        private float _angle;
     }
 }

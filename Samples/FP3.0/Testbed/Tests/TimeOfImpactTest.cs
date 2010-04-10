@@ -20,6 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -28,6 +31,9 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class TimeOfImpactTest : Test
     {
+        private PolygonShape _shapeA = new PolygonShape(0);
+        private PolygonShape _shapeB = new PolygonShape(0);
+
         private TimeOfImpactTest()
         {
             {
@@ -44,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
             return new TimeOfImpactTest();
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
 
@@ -75,7 +81,7 @@ namespace FarseerPhysics.TestBed.Tests
             TextLine += 15;
 
             DebugView.DrawString(50, TextLine, "max toi iters = {0:n}, max root iters = {1:n}", TimeOfImpact.ToiMaxIters,
-                                  TimeOfImpact.ToiMaxRootIters);
+                                 TimeOfImpact.ToiMaxRootIters);
             TextLine += 15;
 
             Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
@@ -95,7 +101,7 @@ namespace FarseerPhysics.TestBed.Tests
             Vector2 rB = MathUtils.Multiply(ref transformB, localPoint) - sweepB.Center0;
             float wB = sweepB.Angle - sweepB.Angle0;
             Vector2 vB = sweepB.Center - sweepB.Center0;
-            Vector2 v = vB + MathUtils.Cross(wB, rB); 
+            Vector2 v = vB + MathUtils.Cross(wB, rB);
 
             for (int i = 0; i < _shapeB.Vertices.Count; ++i)
             {
@@ -117,8 +123,5 @@ namespace FarseerPhysics.TestBed.Tests
             }
             DebugView.DrawPolygon(ref vertices, _shapeB.Vertices.Count, new Color(0.9f, 0.5f, 0.5f));
         }
-
-        private PolygonShape _shapeA = new PolygonShape(0);
-        private PolygonShape _shapeB = new PolygonShape(0);
     }
 }

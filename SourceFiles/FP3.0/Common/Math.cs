@@ -20,10 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Microsoft.Xna.Framework;
 using System;
+using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Common
 {
     public static class MathUtils
     {
@@ -99,7 +99,8 @@ namespace FarseerPhysics
 
         public static Vector2 Multiply(ref Transform T, Vector2 v)
         {
-            return new Vector2(T.Position.X + T.R.Col1.X * v.X + T.R.Col2.X * v.Y, T.Position.Y + T.R.Col1.Y * v.X + T.R.Col2.Y * v.Y);
+            return new Vector2(T.Position.X + T.R.Col1.X * v.X + T.R.Col2.X * v.Y,
+                               T.Position.Y + T.R.Col1.Y * v.X + T.R.Col2.Y * v.Y);
         }
 
         public static Vector2 MultiplyT(ref Mat22 A, Vector2 v)
@@ -223,6 +224,8 @@ namespace FarseerPhysics
     /// A 2-by-2 matrix. Stored in column-major order.
     public struct Mat22
     {
+        public Vector2 Col1, Col2;
+
         /// Construct this matrix using columns.
         public Mat22(Vector2 c1, Vector2 c2)
         {
@@ -242,7 +245,7 @@ namespace FarseerPhysics
         public Mat22(float angle)
         {
             // TODO_ERIN compute sin+cos together.
-            float c = (float)Math.Cos(angle), s = (float)Math.Sin(angle);
+            float c = (float) Math.Cos(angle), s = (float) Math.Sin(angle);
             Col1 = new Vector2(c, s);
             Col2 = new Vector2(-s, c);
         }
@@ -258,30 +261,36 @@ namespace FarseerPhysics
         /// an orthonormal rotation matrix.
         public void Set(float angle)
         {
-            float c = (float)Math.Cos(angle), s = (float)Math.Sin(angle);
-            Col1.X = c; Col2.X = -s;
-            Col1.Y = s; Col2.Y = c;
+            float c = (float) Math.Cos(angle), s = (float) Math.Sin(angle);
+            Col1.X = c;
+            Col2.X = -s;
+            Col1.Y = s;
+            Col2.Y = c;
         }
 
         /// Set this to the identity matrix.
         public void SetIdentity()
         {
-            Col1.X = 1.0f; Col2.X = 0.0f;
-            Col1.Y = 0.0f; Col2.Y = 1.0f;
+            Col1.X = 1.0f;
+            Col2.X = 0.0f;
+            Col1.Y = 0.0f;
+            Col2.Y = 1.0f;
         }
 
         /// Set this matrix to all zeros.
         public void SetZero()
         {
-            Col1.X = 0.0f; Col2.X = 0.0f;
-            Col1.Y = 0.0f; Col2.Y = 0.0f;
+            Col1.X = 0.0f;
+            Col2.X = 0.0f;
+            Col1.Y = 0.0f;
+            Col2.Y = 0.0f;
         }
 
         /// Extract the angle from this matrix (assumed to be
         /// a rotation matrix).
         public float GetAngle()
         {
-            return (float)Math.Atan2(Col1.Y, Col1.X);
+            return (float) Math.Atan2(Col1.Y, Col1.X);
         }
 
         public Mat22 GetInverse()
@@ -314,13 +323,12 @@ namespace FarseerPhysics
         {
             R = new Mat22(A.Col1 + B.Col1, A.Col2 + B.Col2);
         }
-
-        public Vector2 Col1, Col2;
     }
 
     /// A 3-by-3 matrix. Stored in column-major order.
     public struct Mat33
     {
+        public Vector3 Col1, Col2, Col3;
 
         /// Construct this matrix using columns.
         public Mat33(Vector3 c1, Vector3 c2, Vector3 c3)
@@ -349,8 +357,8 @@ namespace FarseerPhysics
             }
 
             return new Vector3(det * Vector3.Dot(b, Vector3.Cross(Col2, Col3)),
-                                det * Vector3.Dot(Col1, Vector3.Cross(b, Col3)),
-                                det * Vector3.Dot(Col1, Vector3.Cross(Col2, b)));
+                               det * Vector3.Dot(Col1, Vector3.Cross(b, Col3)),
+                               det * Vector3.Dot(Col1, Vector3.Cross(Col2, b)));
         }
 
         /// Solve A * x = b, where b is a column vector. This is more efficient
@@ -368,14 +376,15 @@ namespace FarseerPhysics
 
             return new Vector2(det * (a22 * b.X - a12 * b.Y), det * (a11 * b.Y - a21 * b.X));
         }
-
-        public Vector3 Col1, Col2, Col3;
     }
 
     /// A transform contains translation and rotation. It is used to represent
     /// the position and orientation of rigid frames.
     public struct Transform
     {
+        public Vector2 Position;
+        public Mat22 R;
+
         /// Initialize using a position vector and a rotation matrix.
         public Transform(Vector2 position, ref Mat22 r)
         {
@@ -400,11 +409,8 @@ namespace FarseerPhysics
         /// Calculate the angle that the rotation matrix represents.
         public float GetAngle()
         {
-            return (float)Math.Atan2(R.Col1.Y, R.Col1.X);
+            return (float) Math.Atan2(R.Col1.Y, R.Col1.X);
         }
-
-        public Vector2 Position;
-        public Mat22 R;
     }
 
     /// This describes the motion of a body/shape for TOI computation.
@@ -413,6 +419,31 @@ namespace FarseerPhysics
     /// we must interpolate the center of mass position.
     public struct Sweep
     {
+        /// <summary>
+        /// world angles
+        /// </summary>
+        public float Angle;
+
+        /// <summary>
+        /// world angles
+        /// </summary>
+        public float Angle0;
+
+        /// <summary>
+        /// Center world positions
+        /// </summary>
+        public Vector2 Center;
+
+        /// <summary>
+        /// Center world positions
+        /// </summary>
+        public Vector2 Center0;
+
+        /// <summary>
+        /// local center of mass position
+        /// </summary>
+        public Vector2 LocalCenter;
+
         /// Get the interpolated transform at a specific time.
         /// @param alpha is a factor in [0,1], where 0 indicates t0.
         public void GetTransform(out Transform xf, float alpha)
@@ -433,20 +464,5 @@ namespace FarseerPhysics
             Center0 = (1.0f - t) * Center0 + t * Center;
             Angle0 = (1.0f - t) * Angle0 + t * Angle;
         }
-
-        /// <summary>
-        /// local center of mass position
-        /// </summary>
-        public Vector2 LocalCenter;
-
-        /// <summary>
-        /// Center world positions
-        /// </summary>
-        public Vector2 Center0, Center;
-
-        /// <summary>
-        /// world angles
-        /// </summary>
-        public float Angle0, Angle;
     }
 }

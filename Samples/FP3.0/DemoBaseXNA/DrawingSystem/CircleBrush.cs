@@ -6,8 +6,8 @@ namespace DemoBaseXNA.DrawingSystem
 {
     public class CircleBrush
     {
-        private Texture2D _circleTexture;
         private Vector2 _circleOrigin;
+        private Texture2D _circleTexture;
 
         public CircleBrush()
         {

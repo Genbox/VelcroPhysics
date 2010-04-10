@@ -22,9 +22,10 @@
 
 using System;
 using System.Diagnostics;
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Dynamics.Joints
 {
     // 1-D rained system
     // m (v2 - v1) = lambda

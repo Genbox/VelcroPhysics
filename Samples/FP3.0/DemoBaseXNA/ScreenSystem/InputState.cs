@@ -33,6 +33,7 @@ namespace DemoBaseXNA.ScreenSystem
 #if !XBOX
         public MouseState LastMouseState;
 #endif
+
         /// <summary>
         /// Checks for a "menu up" input action (on either keyboard or gamepad).
         /// </summary>
@@ -152,6 +153,5 @@ namespace DemoBaseXNA.ScreenSystem
 
             return false;
         }
-
     }
 }

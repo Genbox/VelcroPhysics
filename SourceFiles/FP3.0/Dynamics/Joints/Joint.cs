@@ -20,10 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Dynamics.Joints
 {
     public enum JointType
     {
@@ -44,32 +44,36 @@ namespace FarseerPhysics
 
     public enum LimitState
     {
-	    Inactive,
-	    AtLower,
-	    AtUpper,
-	    Equal,
+        Inactive,
+        AtLower,
+        AtUpper,
+        Equal,
     }
 
     internal struct Jacobian
     {
-	    public Vector2 LinearA;
-	    public float AngularA;
-	    public Vector2 LinearB;
-	    public float AngularB;
+        public float AngularA;
+        public float AngularB;
+        public Vector2 LinearA;
+        public Vector2 LinearB;
 
-	    public void SetZero()
+        public void SetZero()
         {
-	        LinearA = Vector2.Zero; AngularA = 0.0f;
-	        LinearB = Vector2.Zero; AngularB = 0.0f;
+            LinearA = Vector2.Zero;
+            AngularA = 0.0f;
+            LinearB = Vector2.Zero;
+            AngularB = 0.0f;
         }
 
-	    public void Set(Vector2 x1, float a1, Vector2 x2, float a2)
+        public void Set(Vector2 x1, float a1, Vector2 x2, float a2)
         {
-	        LinearA = x1; AngularA = a1;
-	        LinearB = x2; AngularB = a2;
+            LinearA = x1;
+            AngularA = a1;
+            LinearB = x2;
+            AngularB = a2;
         }
 
-	    public float Compute(Vector2 x1, float a1, Vector2 x2, float a2)
+        public float Compute(Vector2 x1, float a1, Vector2 x2, float a2)
         {
             return Vector2.Dot(LinearA, x1) + AngularA * a1 + Vector2.Dot(LinearB, x2) + AngularB * a2;
         }
@@ -85,28 +89,63 @@ namespace FarseerPhysics
     public class JointEdge
     {
         /// <summary>
-        /// Provides quick access to the other body attached.
-        /// </summary>
-        public Body Other;
-
-        /// <summary>
         /// The joint.
         /// </summary>
         public Joint Joint;
 
         /// <summary>
-        /// The previous joint edge in the body's joint list.
-        /// </summary>
-        public JointEdge Prev;
-
-        /// <summary>
         /// The next joint edge in the body's joint list.
         /// </summary>
         public JointEdge Next;
+
+        /// <summary>
+        /// Provides quick access to the other body attached.
+        /// </summary>
+        public Body Other;
+
+        /// <summary>
+        /// The previous joint edge in the body's joint list.
+        /// </summary>
+        public JointEdge Prev;
     }
 
     public abstract class Joint
     {
+        internal JointEdge _edgeA;
+        internal JointEdge _edgeB;
+        protected float _invIA;
+        protected float _invIB;
+        protected float _invMassA;
+        protected float _invMassB;
+        internal bool _islandFlag;
+        protected Vector2 _localCenterA, _localCenterB;
+
+        protected Joint(Body bodyA, Body bodyB)
+        {
+            Debug.Assert(bodyA != bodyB);
+
+            BodyA = bodyA;
+            _edgeA = new JointEdge();
+            BodyB = bodyB;
+            _edgeB = new JointEdge();
+
+            //Connected bodies should not collide by default
+            CollideConnected = false;
+        }
+
+        /// <summary>
+        /// Constructor for fixed joint
+        /// </summary>
+        protected Joint(Body bodyA)
+        {
+            BodyA = bodyA;
+
+            //Connected bodies should not collide by default
+            CollideConnected = false;
+
+            _edgeA = new JointEdge();
+        }
+
         /// <summary>
         /// Gets or sets the type of the joint.
         /// </summary>
@@ -138,20 +177,6 @@ namespace FarseerPhysics
         public abstract Vector2 WorldAnchorB { get; }
 
         /// <summary>
-        /// Get the reaction force on body2 at the joint anchor in Newtons.
-        /// </summary>
-        /// <param name="inv_dt">The inv_dt.</param>
-        /// <returns></returns>
-	    public abstract Vector2 GetReactionForce(float inv_dt);
-
-        /// <summary>
-        /// Get the reaction torque on body2 in N*m.
-        /// </summary>
-        /// <param name="inv_dt">The inv_dt.</param>
-        /// <returns></returns>
-	    public abstract float GetReactionTorque(float inv_dt);
-
-        /// <summary>
         /// Get the next joint the world joint list.
         /// </summary>
         /// <value></value>
@@ -180,6 +205,25 @@ namespace FarseerPhysics
             get { return BodyA.Enabled && BodyB.Enabled; }
         }
 
+        /// <summary>
+        /// Set this flag to true if the attached bodies should collide.
+        /// </summary>
+        public bool CollideConnected { get; set; }
+
+        /// <summary>
+        /// Get the reaction force on body2 at the joint anchor in Newtons.
+        /// </summary>
+        /// <param name="inv_dt">The inv_dt.</param>
+        /// <returns></returns>
+        public abstract Vector2 GetReactionForce(float inv_dt);
+
+        /// <summary>
+        /// Get the reaction torque on body2 in N*m.
+        /// </summary>
+        /// <param name="inv_dt">The inv_dt.</param>
+        /// <returns></returns>
+        public abstract float GetReactionTorque(float inv_dt);
+
         protected void WakeBodies()
         {
             BodyA.Awake = true;
@@ -189,63 +233,21 @@ namespace FarseerPhysics
             }
         }
 
-	    protected Joint(Body bodyA, Body bodyB)
-        {
-            Debug.Assert(bodyA != bodyB);
-
-            BodyA = bodyA;
-            _edgeA = new JointEdge();
-            BodyB = bodyB;
-            _edgeB = new JointEdge();
-
-            //Connected bodies should not collide by default
-            CollideConnected = false;
-        }
-
-        /// <summary>
-        /// Constructor for fixed joint
-        /// </summary>
-        protected Joint(Body bodyA)
-        {
-            
-            BodyA = bodyA;
-
-            //Connected bodies should not collide by default
-            CollideConnected = false;
-
-            _edgeA = new JointEdge();
-        }
-
         /// <summary>
         /// Return true if the joint is a fixed type.
         /// </summary>
         public bool IsFixedType()
         {
             return JointType == JointType.FixedRevolute ||
-                JointType == JointType.FixedDistance ||
-                JointType == JointType.FixedPrismatic ||
-                JointType == JointType.FixedLine;
+                   JointType == JointType.FixedDistance ||
+                   JointType == JointType.FixedPrismatic ||
+                   JointType == JointType.FixedLine;
         }
 
-	    internal abstract void InitVelocityConstraints(ref TimeStep step);
-	    internal abstract void SolveVelocityConstraints(ref TimeStep step);
+        internal abstract void InitVelocityConstraints(ref TimeStep step);
+        internal abstract void SolveVelocityConstraints(ref TimeStep step);
 
-	    // This returns true if the position errors are within tolerance.
+        // This returns true if the position errors are within tolerance.
         internal abstract bool SolvePositionConstraints();
-
-        internal JointEdge _edgeA;
-	    internal JointEdge _edgeB;
-
-        internal bool _islandFlag;
-
-        /// <summary>
-        /// Set this flag to true if the attached bodies should collide.
-        /// </summary>
-        public bool CollideConnected { get; set; }
-
-        // Cache here per time step to reduce cache misses.
-        protected Vector2 _localCenterA, _localCenterB;
-        protected float _invMassA, _invIA;
-	    protected float _invMassB, _invIB;
     }
 }

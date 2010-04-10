@@ -21,6 +21,11 @@
 */
 
 using System;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -34,19 +39,19 @@ namespace FarseerPhysics.TestBed.Framework
         /// Random number in range [-1,1]
         public static float RandomFloat()
         {
-            return (float)(Random.NextDouble() * 2.0 - 1.0);
+            return (float) (Random.NextDouble() * 2.0 - 1.0);
         }
 
         /// Random floating point number in range [lo, hi]
         public static float RandomFloat(float lo, float hi)
         {
-            float r = (float)Random.NextDouble();
+            float r = (float) Random.NextDouble();
             r = (hi - lo) * r + lo;
             return r;
         }
     }
 
-    public class Settings
+    public class GameSettings
     {
         public uint DrawAABBs;
         public uint DrawCOMs;
@@ -66,7 +71,7 @@ namespace FarseerPhysics.TestBed.Framework
         public uint SingleStep;
         public int VelocityIterations;
 
-        public Settings()
+        public GameSettings()
         {
             Hz = 60.0f;
             VelocityIterations = 8; // 10;
@@ -99,19 +104,19 @@ namespace FarseerPhysics.TestBed.Framework
     public class Test
     {
         private const int k_MaxContactPoints = 2048;
-        internal int TextLine;
-        internal World World;
         internal DebugViewXNA.DebugViewXNA DebugView;
-        private Body _groundBody;
-        private MouseJoint _mouseJoint;
         internal int PointCount;
         internal ContactPoint[] Points = new ContactPoint[k_MaxContactPoints];
         internal int StepCount;
+        internal int TextLine;
+        internal World World;
+        private Body _groundBody;
+        private MouseJoint _mouseJoint;
 
         protected Test()
         {
             World = new World(new Vector2(0.0f, -10.0f), false);
-                       
+
             TextLine = 30;
 
             World.JointRemoved += JointRemoved;
@@ -151,12 +156,12 @@ namespace FarseerPhysics.TestBed.Framework
             DebugView.DrawString(x, y, title);
         }
 
-        public virtual void Update(Settings settings, GameTime gameTime)
+        public virtual void Update(GameSettings settings, GameTime gameTime)
         {
             //float timeStep = settings.Hz > 0.0f ? 1.0f / settings.Hz : 0.0f;
 
             // added
-            float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
+            float timeStep = Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
 
             if (settings.Pause > 0)
             {
@@ -176,12 +181,12 @@ namespace FarseerPhysics.TestBed.Framework
             if (GameInstance.DebugViewEnabled)
             {
                 uint flags = 0;
-                flags += settings.DrawShapes * (uint)DebugViewFlags.Shape;
-                flags += settings.DrawJoints * (uint)DebugViewFlags.Joint;
-                flags += settings.DrawAABBs * (uint)DebugViewFlags.AABB;
-                flags += settings.DrawPairs * (uint)DebugViewFlags.Pair;
-                flags += settings.DrawCOMs * (uint)DebugViewFlags.CenterOfMass;
-                DebugView.Flags = (DebugViewFlags)flags;
+                flags += settings.DrawShapes * (uint) DebugViewFlags.Shape;
+                flags += settings.DrawJoints * (uint) DebugViewFlags.Joint;
+                flags += settings.DrawAABBs * (uint) DebugViewFlags.AABB;
+                flags += settings.DrawPairs * (uint) DebugViewFlags.Pair;
+                flags += settings.DrawCOMs * (uint) DebugViewFlags.CenterOfMass;
+                DebugView.Flags = (DebugViewFlags) flags;
             }
 
             World.WarmStarting = (settings.EnableWarmStarting > 0);
@@ -272,7 +277,7 @@ namespace FarseerPhysics.TestBed.Framework
 
         public virtual void Mouse(MouseState state, MouseState oldState)
         {
-            Vector2 position;// = new Vector2(state.X,state.Y );
+            Vector2 position; // = new Vector2(state.X,state.Y );
             position = GameInstance.ConvertScreenToWorld(state.X, state.Y);
 
             if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
@@ -305,23 +310,23 @@ namespace FarseerPhysics.TestBed.Framework
             // Query the world for overlapping shapes.
             World.QueryAABB(
                 fixture =>
-                {
-                    Body body = fixture.Body;
-                    if (body.BodyType == BodyType.Dynamic)
                     {
-                        bool inside = fixture.TestPoint(ref p);
-                        if (inside)
+                        Body body = fixture.Body;
+                        if (body.BodyType == BodyType.Dynamic)
                         {
-                            myFixture = fixture;
+                            bool inside = fixture.TestPoint(ref p);
+                            if (inside)
+                            {
+                                myFixture = fixture;
 
-                            // We are done, terminate the query.
-                            return false;
+                                // We are done, terminate the query.
+                                return false;
+                            }
                         }
-                    }
 
-                    // Continue the query.
-                    return true;
-                }, ref aabb);
+                        // Continue the query.
+                        return true;
+                    }, ref aabb);
 
             if (myFixture != null)
             {
@@ -377,7 +382,7 @@ namespace FarseerPhysics.TestBed.Framework
             Fixture fixtureB = contact.FixtureB;
 
             FixedArray2<PointState> state1, state2;
-            Collision.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
+            CollisionManager.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
 
             WorldManifold worldManifold;
             contact.GetWorldManifold(out worldManifold);

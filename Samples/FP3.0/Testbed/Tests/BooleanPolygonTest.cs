@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using FarseerPhysics.Common.Boolean;
+using FarseerPhysics.Common;
+using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,8 +10,8 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class BooleanPolygonTest : Test
     {
-        private List<TextMessage> _messages;
         private Vertices _left;
+        private List<TextMessage> _messages;
         private Vertices _right;
 
         public override void Initialize()
@@ -27,7 +28,7 @@ namespace FarseerPhysics.TestBed.Tests
             base.Initialize();
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             //If the message times out, remove it from the list.
             for (int i = _messages.Count - 1; i >= 0; i--)
@@ -161,7 +162,6 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_left != null)
                 {
-
                 }
             }
 
@@ -172,7 +172,6 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
             {
-
             }
 
             //if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
@@ -280,6 +279,13 @@ namespace FarseerPhysics.TestBed.Tests
             _messages.Add(new TextMessage(message));
         }
 
+        public static Test Create()
+        {
+            return new BooleanPolygonTest();
+        }
+
+        #region Nested type: TextMessage
+
         private class TextMessage
         {
             public float ElapsedTime;
@@ -292,9 +298,6 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public static Test Create()
-        {
-            return new BooleanPolygonTest();
-        }
+        #endregion
     }
 }

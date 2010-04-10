@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Controllers
@@ -12,12 +14,8 @@ namespace FarseerPhysics.Controllers
 
     public class GravityController : Controller
     {
-        public List<Vector2> Points = new List<Vector2>();
         public List<Body> Bodies = new List<Body>();
-        public float MinRadius { get; set; }
-        public float MaxRadius { get; set; }
-        public float Strength { get; set; }
-        public GravityType GravityType { get; set; }
+        public List<Vector2> Points = new List<Vector2>();
 
         public GravityController(float strength)
         {
@@ -31,6 +29,11 @@ namespace FarseerPhysics.Controllers
             MaxRadius = maxRadius;
             Strength = strength;
         }
+
+        public float MinRadius { get; set; }
+        public float MaxRadius { get; set; }
+        public float Strength { get; set; }
+        public GravityType GravityType { get; set; }
 
         public override void Update(float dt)
         {
@@ -62,7 +65,7 @@ namespace FarseerPhysics.Controllers
                     switch (GravityType)
                     {
                         case GravityType.DistanceSquared:
-                            f = Strength / r2 / (float)Math.Sqrt(r2) * body1.Mass * body2.Mass * d;
+                            f = Strength / r2 / (float) Math.Sqrt(r2) * body1.Mass * body2.Mass * d;
                             break;
                         case GravityType.Linear:
                             f = Strength / r2 * body1.Mass * body2.Mass * d;
@@ -90,7 +93,7 @@ namespace FarseerPhysics.Controllers
                     switch (GravityType)
                     {
                         case GravityType.DistanceSquared:
-                            f = Strength / r2 / (float)Math.Sqrt(r2) * body1.Mass * d;
+                            f = Strength / r2 / (float) Math.Sqrt(r2) * body1.Mass * d;
                             break;
                         case GravityType.Linear:
                             f = Strength / r2 * body1.Mass * d;

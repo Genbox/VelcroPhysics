@@ -21,9 +21,10 @@
 */
 
 using System.Diagnostics;
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
     /// A gear joint is used to connect two joints together. Either joint
@@ -41,6 +42,10 @@ namespace FarseerPhysics
         private Jacobian _J;
 
         private float _ant;
+        private FixedPrismaticJoint _fixedPrismatic1;
+        private FixedPrismaticJoint _fixedPrismatic2;
+        private FixedRevoluteJoint _fixedRevolute1;
+        private FixedRevoluteJoint _fixedRevolute2;
         //private Body _ground1;
         private float _impulse;
         private float _mass;
@@ -48,11 +53,6 @@ namespace FarseerPhysics
         private PrismaticJoint _prismatic2;
         private RevoluteJoint _revolute1;
         private RevoluteJoint _revolute2;
-
-        private FixedPrismaticJoint _fixedPrismatic1;
-        private FixedPrismaticJoint _fixedPrismatic2;
-        private FixedRevoluteJoint _fixedRevolute1;
-        private FixedRevoluteJoint _fixedRevolute2;
 
 
         /// <summary>
@@ -75,14 +75,14 @@ namespace FarseerPhysics
             JointType type2 = jointB.JointType;
 
             // Make sure its the right kind of joint
-            Debug.Assert(type1 == JointType.Revolute || 
-                type1 == JointType.Prismatic ||
-                type1 == JointType.FixedRevolute ||
-                type1 == JointType.FixedPrismatic);
+            Debug.Assert(type1 == JointType.Revolute ||
+                         type1 == JointType.Prismatic ||
+                         type1 == JointType.FixedRevolute ||
+                         type1 == JointType.FixedPrismatic);
             Debug.Assert(type2 == JointType.Revolute ||
-                type2 == JointType.Prismatic ||
-                type2 == JointType.FixedRevolute ||
-                type2 == JointType.FixedPrismatic);
+                         type2 == JointType.Prismatic ||
+                         type2 == JointType.FixedRevolute ||
+                         type2 == JointType.FixedPrismatic);
 
             // In the case of a prismatic and revolute joint, the first body must be static.
             if (type1 == JointType.Revolute || type1 == JointType.Prismatic)
@@ -98,25 +98,25 @@ namespace FarseerPhysics
             {
                 case JointType.Revolute:
                     BodyA = jointA.BodyB;
-                    _revolute1 = (RevoluteJoint)jointA;
+                    _revolute1 = (RevoluteJoint) jointA;
                     LocalAnchor1 = _revolute1.LocalAnchorB;
                     coordinate1 = _revolute1.JointAngle;
                     break;
                 case JointType.Prismatic:
                     BodyA = jointA.BodyB;
-                    _prismatic1 = (PrismaticJoint)jointA;
+                    _prismatic1 = (PrismaticJoint) jointA;
                     LocalAnchor1 = _prismatic1.LocalAnchorB;
                     coordinate1 = _prismatic1.JointTranslation;
                     break;
                 case JointType.FixedRevolute:
                     BodyA = jointA.BodyA;
-                    _fixedRevolute1 = (FixedRevoluteJoint)jointA;
+                    _fixedRevolute1 = (FixedRevoluteJoint) jointA;
                     LocalAnchor1 = _fixedRevolute1.LocalAnchorA;
                     coordinate1 = _fixedRevolute1.JointAngle;
                     break;
                 case JointType.FixedPrismatic:
                     BodyA = jointA.BodyA;
-                    _fixedPrismatic1 = (FixedPrismaticJoint)jointA;
+                    _fixedPrismatic1 = (FixedPrismaticJoint) jointA;
                     LocalAnchor1 = _fixedPrismatic1.LocalAnchorA;
                     coordinate1 = _fixedPrismatic1.JointTranslation;
                     break;
@@ -126,31 +126,31 @@ namespace FarseerPhysics
             {
                 case JointType.Revolute:
                     BodyB = jointB.BodyB;
-                    _revolute2 = (RevoluteJoint)jointB;
+                    _revolute2 = (RevoluteJoint) jointB;
                     LocalAnchor2 = _revolute2.LocalAnchorB;
                     coordinate2 = _revolute2.JointAngle;
                     break;
                 case JointType.Prismatic:
                     BodyB = jointB.BodyB;
-                    _prismatic2 = (PrismaticJoint)jointB;
+                    _prismatic2 = (PrismaticJoint) jointB;
                     LocalAnchor2 = _prismatic2.LocalAnchorB;
                     coordinate2 = _prismatic2.JointTranslation;
                     break;
                 case JointType.FixedRevolute:
                     BodyB = jointB.BodyA;
-                    _fixedRevolute2 = (FixedRevoluteJoint)jointB;
+                    _fixedRevolute2 = (FixedRevoluteJoint) jointB;
                     LocalAnchor2 = _fixedRevolute2.LocalAnchorA;
                     coordinate2 = _fixedRevolute2.JointAngle;
                     break;
                 case JointType.FixedPrismatic:
                     BodyB = jointB.BodyA;
-                    _fixedPrismatic2 = (FixedPrismaticJoint)jointB;
+                    _fixedPrismatic2 = (FixedPrismaticJoint) jointB;
                     LocalAnchor2 = _fixedPrismatic2.LocalAnchorA;
                     coordinate2 = _fixedPrismatic2.JointTranslation;
                     break;
             }
 
-            _ant = coordinate1 + Ratio*coordinate2;
+            _ant = coordinate1 + Ratio * coordinate2;
         }
 
         public override Vector2 WorldAnchorA
@@ -183,8 +183,8 @@ namespace FarseerPhysics
 
         public override Vector2 GetReactionForce(float inv_dt)
         {
-            Vector2 P = _impulse*_J.LinearB;
-            return inv_dt*P;
+            Vector2 P = _impulse * _J.LinearB;
+            return inv_dt * P;
         }
 
         public override float GetReactionTorque(float inv_dt)
@@ -193,9 +193,9 @@ namespace FarseerPhysics
             BodyB.GetTransform(out xf1);
 
             Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchor2 - BodyB.LocalCenter);
-            Vector2 P = _impulse*_J.LinearB;
-            float L = _impulse*_J.AngularB - MathUtils.Cross(r, P);
-            return inv_dt*L;
+            Vector2 P = _impulse * _J.LinearB;
+            float L = _impulse * _J.AngularB - MathUtils.Cross(r, P);
+            return inv_dt * L;
         }
 
         internal override void InitVelocityConstraints(ref TimeStep step)
@@ -215,35 +215,35 @@ namespace FarseerPhysics
             else
             {
                 Vector2 ug;
-                if(_prismatic1 != null)
-                    ug = _prismatic1.LocalXAxis1;// MathUtils.Multiply(ref xfg1.R, _prismatic1.LocalXAxis1);
+                if (_prismatic1 != null)
+                    ug = _prismatic1.LocalXAxis1; // MathUtils.Multiply(ref xfg1.R, _prismatic1.LocalXAxis1);
                 else
-                    ug = _fixedPrismatic1.LocalXAxis1;// MathUtils.Multiply(ref xfg1.R, _prismatic1.LocalXAxis1);
+                    ug = _fixedPrismatic1.LocalXAxis1; // MathUtils.Multiply(ref xfg1.R, _prismatic1.LocalXAxis1);
 
-                Transform xf1/*, xfg1*/;
+                Transform xf1 /*, xfg1*/;
                 b1.GetTransform(out xf1);
                 //g1.GetTransform(out xfg1);
 
-                
+
                 Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchor1 - b1.LocalCenter);
                 float crug = MathUtils.Cross(r, ug);
                 _J.LinearA = -ug;
                 _J.AngularA = -crug;
-                K += b1._invMass + b1._invI*crug*crug;
+                K += b1._invMass + b1._invI * crug * crug;
             }
 
             if (_revolute2 != null || _fixedRevolute2 != null)
             {
                 _J.AngularB = -Ratio;
-                K += Ratio*Ratio*b2._invI;
+                K += Ratio * Ratio * b2._invI;
             }
             else
             {
                 Vector2 ug;
                 if (_prismatic2 != null)
-                    ug = _prismatic2.LocalXAxis1;// MathUtils.Multiply(ref xfg1.R, _prismatic1.LocalXAxis1);
+                    ug = _prismatic2.LocalXAxis1; // MathUtils.Multiply(ref xfg1.R, _prismatic1.LocalXAxis1);
                 else
-                    ug = _fixedPrismatic2.LocalXAxis1;// MathUtils.Multiply(ref xfg1.R, _prismatic1.LocalXAxis1);
+                    ug = _fixedPrismatic2.LocalXAxis1; // MathUtils.Multiply(ref xfg1.R, _prismatic1.LocalXAxis1);
 
                 Transform /*xfg1,*/ xf2;
                 //g1.GetTransform(out xfg1);
@@ -251,22 +251,22 @@ namespace FarseerPhysics
 
                 Vector2 r = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.LocalCenter);
                 float crug = MathUtils.Cross(r, ug);
-                _J.LinearB = -Ratio*ug;
-                _J.AngularB = -Ratio*crug;
-                K += Ratio*Ratio*(b2._invMass + b2._invI*crug*crug);
+                _J.LinearB = -Ratio * ug;
+                _J.AngularB = -Ratio * crug;
+                K += Ratio * Ratio * (b2._invMass + b2._invI * crug * crug);
             }
 
             // Compute effective mass.
             Debug.Assert(K > 0.0f);
-            _mass = K > 0.0f ? 1.0f/K : 0.0f;
+            _mass = K > 0.0f ? 1.0f / K : 0.0f;
 
             if (step.WarmStarting)
             {
                 // Warm starting.
-                b1._linearVelocity += b1._invMass*_impulse*_J.LinearA;
-                b1._angularVelocity += b1._invI*_impulse*_J.AngularA;
-                b2._linearVelocity += b2._invMass*_impulse*_J.LinearB;
-                b2._angularVelocity += b2._invI*_impulse*_J.AngularB;
+                b1._linearVelocity += b1._invMass * _impulse * _J.LinearA;
+                b1._angularVelocity += b1._invI * _impulse * _J.AngularA;
+                b2._linearVelocity += b2._invMass * _impulse * _J.LinearB;
+                b2._angularVelocity += b2._invI * _impulse * _J.AngularB;
             }
             else
             {
@@ -282,13 +282,13 @@ namespace FarseerPhysics
             float Cdot = _J.Compute(b1._linearVelocity, b1._angularVelocity,
                                     b2._linearVelocity, b2._angularVelocity);
 
-            float impulse = _mass*(-Cdot);
+            float impulse = _mass * (-Cdot);
             _impulse += impulse;
 
-            b1._linearVelocity += b1._invMass*impulse*_J.LinearA;
-            b1._angularVelocity += b1._invI*impulse*_J.AngularA;
-            b2._linearVelocity += b2._invMass*impulse*_J.LinearB;
-            b2._angularVelocity += b2._invI*impulse*_J.AngularB;
+            b1._linearVelocity += b1._invMass * impulse * _J.LinearA;
+            b1._angularVelocity += b1._invI * impulse * _J.AngularA;
+            b2._linearVelocity += b2._invMass * impulse * _J.LinearB;
+            b2._angularVelocity += b2._invI * impulse * _J.AngularB;
         }
 
         internal override bool SolvePositionConstraints()
@@ -307,7 +307,7 @@ namespace FarseerPhysics
             {
                 coordinate1 = _fixedRevolute1.JointAngle;
             }
-            else if( _prismatic1 != null)
+            else if (_prismatic1 != null)
             {
                 coordinate1 = _prismatic1.JointTranslation;
             }
@@ -333,9 +333,9 @@ namespace FarseerPhysics
                 coordinate2 = _fixedPrismatic2.JointTranslation;
             }
 
-            float C = _ant - (coordinate1 + Ratio*coordinate2);
+            float C = _ant - (coordinate1 + Ratio * coordinate2);
 
-            float impulse = _mass*(-C);
+            float impulse = _mass * (-C);
 
             b1._sweep.Center += b1._invMass * impulse * _J.LinearA;
             b1._sweep.Angle += b1._invI * impulse * _J.AngularA;

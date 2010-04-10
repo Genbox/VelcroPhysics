@@ -22,24 +22,35 @@
 
 using System;
 using System.Diagnostics;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Dynamics.Contacts
 {
     internal struct TOIConstraint
     {
-        public FixedArray2<Vector2> LocalPoints;
-        public Vector2 LocalNormal;
-        public Vector2 LocalPoint;
-        public ManifoldType Type;
-        public float Radius;
-        public int PointCount;
         public Body BodyA;
         public Body BodyB;
+        public Vector2 LocalNormal;
+        public Vector2 LocalPoint;
+        public FixedArray2<Vector2> LocalPoints;
+        public int PointCount;
+        public float Radius;
+        public ManifoldType Type;
     }
 
     internal class TOISolver
     {
+        private TOIConstraint[] _constraints = new TOIConstraint[1];
+        private int _count;
+        private Vector2 _normal;
+        private Vector2 _point;
+        private float _separation;
+
+        private Body _toiBody;
+
         public void Initialize(Contact[] contacts, int count, Body toiBody)
         {
             _count = count;
@@ -173,7 +184,8 @@ namespace FarseerPhysics
                     minSeparation = Math.Min(minSeparation, _separation);
 
                     // Prevent large corrections and allow slop.
-                    float C = MathUtils.Clamp(baumgarte * (_separation + Settings.LinearSlop), -Settings.MaxLinearCorrection, 0.0f);
+                    float C = MathUtils.Clamp(baumgarte * (_separation + Settings.LinearSlop),
+                                              -Settings.MaxLinearCorrection, 0.0f);
 
                     // Compute the effective mass.
                     float rnA = MathUtils.Cross(rA, _normal);
@@ -199,13 +211,5 @@ namespace FarseerPhysics
             // push the separation above -b2_linearSlop.
             return minSeparation >= -1.5f * Settings.LinearSlop;
         }
-
-        private Vector2 _normal;
-        private Vector2 _point;
-        private float _separation;
-
-        private TOIConstraint[] _constraints = new TOIConstraint[1];
-        private int _count;
-        private Body _toiBody;
     }
 }

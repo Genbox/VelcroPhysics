@@ -20,6 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -27,11 +31,14 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class OneSidedPlatformTest : Test
     {
+        private Fixture _character;
+        private Fixture _platform;
+        private float _radius, _top;
+
         private OneSidedPlatformTest()
         {
             // Ground
             {
-                
                 Body ground = World.Add();
 
                 PolygonShape shape = new PolygonShape(0.0f);
@@ -41,7 +48,6 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Platform
             {
-                
                 Body body = World.Add();
                 body.Position = new Vector2(0.0f, 10.0f);
 
@@ -54,7 +60,6 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Actor
             {
-                
                 Body body = World.Add();
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 12.0f);
@@ -96,9 +101,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new OneSidedPlatformTest();
         }
-
-        private float _radius, _top;
-        private Fixture _platform;
-        private Fixture _character;
     }
 }

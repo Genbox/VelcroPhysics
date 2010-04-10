@@ -1,4 +1,7 @@
-﻿using FarseerGames.FarseerPhysics.Controllers;
+﻿using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Controllers.Buoyancy;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -6,6 +9,9 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class BuoyancyTest : Test
     {
+        private AABBFluidContainer _aabbContainer;
+        private WaveContainer _waveContainer;
+
         private BuoyancyTest()
         {
             //Make a box
@@ -27,7 +33,8 @@ namespace FarseerPhysics.TestBed.Tests
             _aabbContainer = new AABBFluidContainer(new Vector2(-20, 0), 40, 10);
             _waveContainer = new WaveContainer(new Vector2(-20, 0), 40, 10);
 
-            FluidDragController buoyancyController = new FluidDragController(_waveContainer, 4f, 0.98f, 0.2f, World.Gravity);
+            FluidDragController buoyancyController = new FluidDragController(_waveContainer, 4f, 0.98f, 0.2f,
+                                                                             World.Gravity);
             buoyancyController.Entry += EntryEventHandler;
 
             Vector2 offset = new Vector2(5, 0);
@@ -47,7 +54,7 @@ namespace FarseerPhysics.TestBed.Tests
             World.Add(buoyancyController);
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             DebugView.DrawWaveContainer(_waveContainer);
             base.Update(settings, gameTime);
@@ -63,9 +70,6 @@ namespace FarseerPhysics.TestBed.Tests
             //    _waveContainer.Disturb(verts[i].X, (vel.Y * geom.Body.Mass) / (100.0f * geom.Body.Mass));
             //}
         }
-
-        private AABBFluidContainer _aabbContainer;
-        private WaveContainer _waveContainer;
 
         public static Test Create()
         {

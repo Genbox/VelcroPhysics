@@ -20,14 +20,15 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Microsoft.Xna.Framework;
 using System;
 using System.Diagnostics;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Collision
 {
     /// A dynamic AABB tree broad-phase, inspired by Nathanael Presson's btDbvt.
-
     public delegate float RayCastCallback(ref RayCastInput input, int userData);
 
     public delegate float WorldRayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction);
@@ -37,19 +38,18 @@ namespace FarseerPhysics
     /// </summary>
     internal struct DynamicTreeNode
     {
+        /// This is the fattened AABB.
+        internal AABB Aabb;
+
+        internal int Child1;
+        internal int Child2;
+        internal int ParentOrNext;
+        internal object UserData;
+
         internal bool IsLeaf()
         {
             return Child1 == DynamicTree.NullNode;
         }
-
-        /// This is the fattened AABB.
-        internal AABB Aabb;
-        internal object UserData;
-
-        internal int ParentOrNext;
-
-        internal int Child1;
-        internal int Child2;
     }
 
     /// <summary>
@@ -63,6 +63,18 @@ namespace FarseerPhysics
     public class DynamicTree
     {
         public const int NullNode = -1;
+        private const int k_stackSize = 128;
+        private static int[] _stack = new int[k_stackSize];
+        private int _freeList;
+        private int _insertionCount;
+        private int _nodeCapacity;
+        private int _nodeCount;
+        private DynamicTreeNode[] _nodes;
+
+        /// This is used incrementally traverse the tree for re-balancing.
+        private int _path;
+
+        private int _root;
 
         /// constructing the tree initializes the node pool.
         public DynamicTree()
@@ -202,7 +214,7 @@ namespace FarseerPhysics
                 while (_nodes[node].IsLeaf() == false)
                 {
                     node = ((_path >> bit) & 1) == 0 ? _nodes[node].Child1 : _nodes[node].Child2;
-                    bit = (bit + 1) & (8 * sizeof(uint) - 1);
+                    bit = (bit + 1) & (8 * sizeof (uint) - 1);
                 }
                 ++_path;
 
@@ -219,7 +231,7 @@ namespace FarseerPhysics
         public T GetUserData<T>(int proxyId)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
-            return (T)_nodes[proxyId].UserData;
+            return (T) _nodes[proxyId].UserData;
         }
 
         /// <summary>
@@ -449,9 +461,7 @@ namespace FarseerPhysics
                     {
                         sibling = child2;
                     }
-
-                }
-                while (_nodes[sibling].IsLeaf() == false);
+                } while (_nodes[sibling].IsLeaf() == false);
             }
 
             // Create a parent for the siblings.
@@ -484,11 +494,11 @@ namespace FarseerPhysics
                         break;
                     }
 
-                    _nodes[node1].Aabb.Combine(ref _nodes[_nodes[node1].Child1].Aabb, ref _nodes[_nodes[node1].Child2].Aabb);
+                    _nodes[node1].Aabb.Combine(ref _nodes[_nodes[node1].Child1].Aabb,
+                                               ref _nodes[_nodes[node1].Child2].Aabb);
                     node2 = node1;
                     node1 = _nodes[node1].ParentOrNext;
-                }
-                while (node1 != NullNode);
+                } while (node1 != NullNode);
             }
             else
             {
@@ -538,7 +548,8 @@ namespace FarseerPhysics
                 while (node1 != NullNode)
                 {
                     AABB oldAABB = _nodes[node1].Aabb;
-                    _nodes[node1].Aabb.Combine(ref _nodes[_nodes[node1].Child1].Aabb, ref _nodes[_nodes[node1].Child2].Aabb);
+                    _nodes[node1].Aabb.Combine(ref _nodes[_nodes[node1].Child1].Aabb,
+                                               ref _nodes[_nodes[node1].Child2].Aabb);
 
                     if (oldAABB.Contains(ref _nodes[node1].Aabb))
                     {
@@ -575,17 +586,5 @@ namespace FarseerPhysics
             int height2 = ComputeHeight(node.Child2);
             return 1 + Math.Max(height1, height2);
         }
-
-        private const int k_stackSize = 128;
-        private static int[] _stack = new int[k_stackSize];
-        private int _root;
-        private DynamicTreeNode[] _nodes;
-        private int _nodeCount;
-        private int _nodeCapacity;
-        private int _freeList;
-        private int _insertionCount;
-
-        /// This is used incrementally traverse the tree for re-balancing.
-        private int _path;
     }
 }

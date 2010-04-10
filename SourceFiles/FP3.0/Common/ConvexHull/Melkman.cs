@@ -26,7 +26,7 @@ namespace FarseerPhysics.Common.ConvexHull
             //Create double-ended queue
             Vector2[] deque = new Vector2[vertices.Count + 1];
             int qf = 3, qb = 0; //Queue front index, queue back index
-            int qfm1, qbm1;     //qfm1 = second element, qbm1 = second last element
+            int qfm1, qbm1; //qfm1 = second element, qbm1 = second last element
 
             //Start by placing first 3 vertices in convex CCW order
             int startIndex = 3;
@@ -62,8 +62,8 @@ namespace FarseerPhysics.Common.ConvexHull
                 }
             }
 
-            qfm1 = qf == 0 ? deque.Length - 1 : qf - 1;       //qfm1 = qf - 1;
-            qbm1 = qb == deque.Length - 1 ? 0 : qb + 1;       //qbm1 = qb + 1;
+            qfm1 = qf == 0 ? deque.Length - 1 : qf - 1; //qfm1 = qf - 1;
+            qbm1 = qb == deque.Length - 1 ? 0 : qb + 1; //qbm1 = qb + 1;
 
             //Add vertices one at a time and adjust convex hull as needed
             for (int i = startIndex; i < vertices.Count; i++)
@@ -79,24 +79,24 @@ namespace FarseerPhysics.Common.ConvexHull
                 while (!(IsLeft(deque[qfm1], deque[qf], nextPt) > 0))
                 {
                     //Pop the front element from the queue
-                    qf = qfm1;                                    //qf--;
-                    qfm1 = qf == 0 ? deque.Length - 1 : qf - 1;   //qfm1 = qf - 1;
+                    qf = qfm1; //qf--;
+                    qfm1 = qf == 0 ? deque.Length - 1 : qf - 1; //qfm1 = qf - 1;
                 }
                 //Add vertex to the front of the queue
-                qf = qf == deque.Length - 1 ? 0 : qf + 1;         //qf++;
-                qfm1 = qf == 0 ? deque.Length - 1 : qf - 1;       //qfm1 = qf - 1;
+                qf = qf == deque.Length - 1 ? 0 : qf + 1; //qf++;
+                qfm1 = qf == 0 ? deque.Length - 1 : qf - 1; //qfm1 = qf - 1;
                 deque[qf] = nextPt;
 
                 //Pop back until convex
                 while (!(IsLeft(deque[qb], deque[qbm1], nextPt) > 0))
                 {
                     //Pop the back element from the queue
-                    qb = qbm1;                                    //qb++;
-                    qbm1 = qb == deque.Length - 1 ? 0 : qb + 1;   //qbm1 = qb + 1;
+                    qb = qbm1; //qb++;
+                    qbm1 = qb == deque.Length - 1 ? 0 : qb + 1; //qbm1 = qb + 1;
                 }
                 //Add vertex to the back of the queue
-                qb = qb == 0 ? deque.Length - 1 : qb - 1;         //qb--;
-                qbm1 = qb == deque.Length - 1 ? 0 : qb + 1;       //qbm1 = qb + 1;
+                qb = qb == 0 ? deque.Length - 1 : qb - 1; //qb--;
+                qbm1 = qb == deque.Length - 1 ? 0 : qb + 1; //qbm1 = qb + 1;
                 deque[qb] = nextPt;
             }
 

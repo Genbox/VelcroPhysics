@@ -4,13 +4,13 @@ namespace Microsoft.Xna.Framework
 {
     public static class MathHelper
     {
-        public const float E = (float)Math.E;
+        public const float E = (float) Math.E;
         public const float Log10E = 0.4342945f;
         public const float Log2E = 1.442695f;
-        public const float Pi = (float)Math.PI;
-        public const float PiOver2 = (float)(Math.PI / 2.0);
-        public const float PiOver4 = (float)(Math.PI / 4.0);
-        public const float TwoPi = (float)(Math.PI * 2.0);
+        public const float Pi = (float) Math.PI;
+        public const float PiOver2 = (float) (Math.PI / 2.0);
+        public const float PiOver4 = (float) (Math.PI / 4.0);
+        public const float TwoPi = (float) (Math.PI * 2.0);
 
         public static float Barycentric(float value1, float value2, float value3, float amount1, float amount2)
         {
@@ -23,10 +23,10 @@ namespace Microsoft.Xna.Framework
             // Internally using doubles not to lose precission
             double amountSquared = amount * amount;
             double amountCubed = amountSquared * amount;
-            return (float)(0.5 * (2.0 * value2 +
-                (value3 - value1) * amount +
-                (2.0 * value1 - 5.0 * value2 + 4.0 * value3 - value4) * amountSquared +
-                (3.0 * value2 - value1 - 3.0 * value3 + value4) * amountCubed));
+            return (float) (0.5 * (2.0 * value2 +
+                                   (value3 - value1) * amount +
+                                   (2.0 * value1 - 5.0 * value2 + 4.0 * value3 - value4) * amountSquared +
+                                   (3.0 * value2 - value1 - 3.0 * value3 + value4) * amountCubed));
         }
 
         public static float Clamp(float value, float min, float max)
@@ -60,10 +60,10 @@ namespace Microsoft.Xna.Framework
                 result = value2;
             else
                 result = (2 * v1 - 2 * v2 + t2 + t1) * sCubed +
-                    (3 * v2 - 3 * v1 - 2 * t1 - t2) * sSquared +
-                    t1 * s +
-                    v1;
-            return (float)result;
+                         (3 * v2 - 3 * v1 - 2 * t1 - t2) * sSquared +
+                         t1 * s +
+                         v1;
+            return (float) result;
         }
 
 
@@ -87,8 +87,8 @@ namespace Microsoft.Xna.Framework
             // It is expected that 0 < amount < 1
             // If amount < 0, return value1
             // If amount > 1, return value2
-            float result = MathHelper.Clamp(amount, 0f, 1f);
-            result = MathHelper.Hermite(value1, 0f, value2, 0f, result);
+            float result = Clamp(amount, 0f, 1f);
+            result = Hermite(value1, 0f, value2, 0f, result);
             return result;
         }
 
@@ -97,7 +97,7 @@ namespace Microsoft.Xna.Framework
             // This method uses double precission internally,
             // though it returns single float
             // Factor = 180 / pi
-            return (float)(radians * 57.295779513082320876798154814105);
+            return (float) (radians * 57.295779513082320876798154814105);
         }
 
         public static float ToRadians(float degrees)
@@ -105,7 +105,7 @@ namespace Microsoft.Xna.Framework
             // This method uses double precission internally,
             // though it returns single float
             // Factor = pi / 180
-            return (float)(degrees * 0.017453292519943295769236907684886);
+            return (float) (degrees * 0.017453292519943295769236907684886);
         }
     }
 }

@@ -1,7 +1,10 @@
 using System;
 using DemoBaseXNA.DemoShare;
-using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics;
+using FarseerPhysics.Collision;
+using FarseerPhysics.DebugViewXNA;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -89,7 +92,7 @@ namespace DemoBaseXNA.ScreenSystem
         /// </summary>
         public byte TransitionAlpha
         {
-            get { return (byte)(255 - TransitionPosition * 255); }
+            get { return (byte) (255 - TransitionPosition * 255); }
         }
 
         /// <summary>
@@ -127,11 +130,15 @@ namespace DemoBaseXNA.ScreenSystem
 
         #region IDisposable Members
 
-        public virtual void Dispose() { }
+        public virtual void Dispose()
+        {
+        }
 
         #endregion
 
-        public virtual void Initialize() { }
+        public virtual void Initialize()
+        {
+        }
 
         /// <summary>
         /// Load graphics content for the screen.
@@ -155,7 +162,9 @@ namespace DemoBaseXNA.ScreenSystem
         /// <summary>
         /// Unload content for the screen.
         /// </summary>
-        public virtual void UnloadContent() { }
+        public virtual void UnloadContent()
+        {
+        }
 
         /// <summary>
         /// Allows the screen to run logic, such as updating the transition position.
@@ -214,7 +223,8 @@ namespace DemoBaseXNA.ScreenSystem
                 if (PhysicsSimulator != null)
                 {
                     // variable time step but never less then 30 Hz
-                    PhysicsSimulator.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)), 5, 3);
+                    PhysicsSimulator.Step(
+                        Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)), 5, 3);
                 }
             }
         }
@@ -230,8 +240,8 @@ namespace DemoBaseXNA.ScreenSystem
             if (time == TimeSpan.Zero)
                 transitionDelta = 1;
             else
-                transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
-                                          time.TotalMilliseconds);
+                transitionDelta = (float) (gameTime.ElapsedGameTime.TotalMilliseconds /
+                                           time.TotalMilliseconds);
 
             // Update the transition position.
             TransitionPosition += transitionDelta * direction;
@@ -254,7 +264,8 @@ namespace DemoBaseXNA.ScreenSystem
         public virtual void HandleInput(InputState input)
         {
             //Xbox
-            if (input.LastGamePadState.Buttons.Y != ButtonState.Pressed && input.CurrentGamePadState.Buttons.Y == ButtonState.Pressed)
+            if (input.LastGamePadState.Buttons.Y != ButtonState.Pressed &&
+                input.CurrentGamePadState.Buttons.Y == ButtonState.Pressed)
             {
                 DebugViewEnabled = !DebugViewEnabled;
                 //PhysicsSimulator.EnableDiagnostics = DebugViewEnabled;
@@ -283,7 +294,8 @@ namespace DemoBaseXNA.ScreenSystem
 
         private void Mouse(MouseState state, MouseState oldState)
         {
-            Vector3 worldPosition = ScreenManager.GraphicsDevice.Viewport.Unproject(new Vector3(state.X, state.Y, 0), Projection, View, Matrix.Identity);
+            Vector3 worldPosition = ScreenManager.GraphicsDevice.Viewport.Unproject(new Vector3(state.X, state.Y, 0),
+                                                                                    Projection, View, Matrix.Identity);
             Vector2 position = new Vector2(worldPosition.X, worldPosition.Y);
 
             if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
@@ -318,23 +330,23 @@ namespace DemoBaseXNA.ScreenSystem
             // Query the world for overlapping shapes.
             PhysicsSimulator.QueryAABB(
                 (fixture) =>
-                {
-                    Body body = fixture.Body;
-                    if (body.BodyType == BodyType.Dynamic)
                     {
-                        bool inside = fixture.TestPoint(ref p);
-                        if (inside)
+                        Body body = fixture.Body;
+                        if (body.BodyType == BodyType.Dynamic)
                         {
-                            _fixture = fixture;
+                            bool inside = fixture.TestPoint(ref p);
+                            if (inside)
+                            {
+                                _fixture = fixture;
 
-                            // We are done, terminate the query.
-                            return false;
+                                // We are done, terminate the query.
+                                return false;
+                            }
                         }
-                    }
 
-                    // Continue the query.
-                    return true;
-                }, ref aabb);
+                        // Continue the query.
+                        return true;
+                    }, ref aabb);
 
             if (_fixture != null)
             {
@@ -388,12 +400,11 @@ namespace DemoBaseXNA.ScreenSystem
 
                     PhysicsSimulatorView.RenderDebugData(ref Projection, ref View);
                 }
-                
+
                 ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
 
                 if (_mouseJoint != null)
                 {
-                    
                 }
 
                 _border.Draw();

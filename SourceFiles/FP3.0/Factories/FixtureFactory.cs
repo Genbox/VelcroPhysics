@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using FarseerPhysics.Common.Boolean;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
+using FarseerPhysics.Common.PolygonManipulation;
+using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Factories
@@ -87,7 +90,7 @@ namespace FarseerPhysics.Factories
         {
             vertices = BooleanTools.Simplify(vertices);
             List<Vertices> triangles = EarclipDecomposer.ConvexPartition(vertices);
-            
+
             Body body = CreateBody(world);
             body.BodyType = BodyType.Dynamic;
 

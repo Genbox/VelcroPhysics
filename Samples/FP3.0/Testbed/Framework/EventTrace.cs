@@ -22,9 +22,9 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.TestBed.Framework
 {
@@ -39,11 +39,21 @@ namespace FarseerPhysics.TestBed.Framework
 
     public class EventTrace : IEventTrace
     {
+        private Texture2D _1x1;
+        private SpriteFont _font;
+        private Game _game;
+        private int _nextId;
+        private Dictionary<int, Event> _registeredEvents = new Dictionary<int, Event>();
+        private SpriteBatch _spriteBatch;
+        private Stopwatch _stopwatch = new Stopwatch();
+
         public EventTrace(Game game)
         {
             _game = game;
             game.Services.AddService(typeof (IEventTrace), this);
         }
+
+        #region IEventTrace Members
 
         public int Register(string label, Color color)
         {
@@ -100,7 +110,7 @@ namespace FarseerPhysics.TestBed.Framework
                 foreach (var e in _registeredEvents.Values)
                 {
                     var count = e.TraceTicks.Count;
-                    if (count%2 != 0)
+                    if (count % 2 != 0)
                     {
                         throw new InvalidOperationException();
                     }
@@ -109,10 +119,10 @@ namespace FarseerPhysics.TestBed.Framework
                     double eventTime = 0;
                     for (int i = 0; i < count; i += 2)
                     {
-                        double startRatio = (double) e.TraceTicks[i]/(double) Stopwatch.Frequency/totalTime;
-                        double endRatio = (double) e.TraceTicks[i + 1]/(double) Stopwatch.Frequency/totalTime;
-                        int startOffset = (int) (offset.X + textWidth + startRatio*timeWidth);
-                        int endOffset = (int) (offset.X + textWidth + endRatio*timeWidth);
+                        double startRatio = e.TraceTicks[i] / (double) Stopwatch.Frequency / totalTime;
+                        double endRatio = e.TraceTicks[i + 1] / (double) Stopwatch.Frequency / totalTime;
+                        int startOffset = (int) (offset.X + textWidth + startRatio * timeWidth);
+                        int endOffset = (int) (offset.X + textWidth + endRatio * timeWidth);
                         if (endOffset <= startOffset)
                             endOffset++;
 
@@ -120,11 +130,11 @@ namespace FarseerPhysics.TestBed.Framework
                                           new Rectangle(startOffset, (int) offset.Y, endOffset - startOffset,
                                                         (int) height), e.Color);
                         intervals++;
-                        eventTime += (endRatio - startRatio)*totalTime;
+                        eventTime += (endRatio - startRatio) * totalTime;
                     }
 
                     _spriteBatch.DrawString(_font,
-                                            string.Format("{0} ({1}) {2:f}", e.Label, intervals, eventTime*1000.0),
+                                            string.Format("{0} ({1}) {2:f}", e.Label, intervals, eventTime * 1000.0),
                                             offset, e.Color);
 
                     e.ResetFrame();
@@ -136,6 +146,8 @@ namespace FarseerPhysics.TestBed.Framework
             _stopwatch.Reset();
             _stopwatch.Start();
         }
+
+        #endregion
 
         private void EnsureContent()
         {
@@ -155,21 +167,15 @@ namespace FarseerPhysics.TestBed.Framework
             }
         }
 
-        private Game _game;
-        private SpriteBatch _spriteBatch;
-        private SpriteFont _font;
-        private Texture2D _1x1;
-        private int _nextId;
-        private Stopwatch _stopwatch = new Stopwatch();
-        private Dictionary<int, Event> _registeredEvents = new Dictionary<int, Event>();
+        #region Nested type: Event
 
         public class Event
         {
+            public Color Color;
             public int Id;
             public string Label;
-            public Color Color;
-            public List<long> TraceTicks;
             public bool LastTraceWasStart;
+            public List<long> TraceTicks;
 
             internal void ResetFrame()
             {
@@ -181,5 +187,7 @@ namespace FarseerPhysics.TestBed.Framework
                 TraceTicks.Clear();
             }
         }
+
+        #endregion
     }
 }

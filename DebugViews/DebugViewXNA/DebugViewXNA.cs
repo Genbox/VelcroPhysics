@@ -1,15 +1,33 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using FarseerGames.FarseerPhysics.Controllers;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Controllers.Buoyancy;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace FarseerPhysics.DebugViewXNA
 {
     public class DebugViewXNA : DebugView
     {
+        private static VertexPositionColor[] _vertsLines;
+        private static VertexPositionColor[] _vertsFill;
+        private static int _lineCount;
+        private static int _fillCount;
+        public static SpriteBatch Batch;
+        public static SpriteFont Font;
+        public static GraphicsDevice Device;
+
+        private static List<StringData> _stringData;
+        private static VertexDeclaration _vertexDeclaration;
+        private static BasicEffect _effect;
+
         public DebugViewXNA(World world)
             : base(world)
         {
@@ -133,7 +151,10 @@ namespace FarseerPhysics.DebugViewXNA
         {
             for (int i = 0; i < waveContainer.NodeCount; i++)
             {
-                DrawCircle(new Vector2(waveContainer.XPosition[i], waveContainer.Position.Y + waveContainer.Height+ waveContainer.YPosition[i]), 0.1f, Color.Red);
+                DrawCircle(
+                    new Vector2(waveContainer.XPosition[i],
+                                waveContainer.Position.Y + waveContainer.Height + waveContainer.YPosition[i]), 0.1f,
+                    Color.Red);
             }
         }
 
@@ -143,7 +164,7 @@ namespace FarseerPhysics.DebugViewXNA
             Body b2 = joint.BodyB;
             Transform xf1, xf2;
             b1.GetTransform(out xf1);
-            
+
             Vector2 x2 = new Vector2();
             Vector2 p2 = new Vector2();
 
@@ -152,12 +173,11 @@ namespace FarseerPhysics.DebugViewXNA
             {
                 b2.GetTransform(out xf2);
                 x2 = xf2.Position;
-                
             }
             p2 = joint.WorldAnchorB;
 
             Vector2 x1 = xf1.Position;
-            
+
             Vector2 p1 = joint.WorldAnchorA;
 
             Color color = new Color(0.5f, 0.8f, 0.8f);
@@ -170,7 +190,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case JointType.Pulley:
                     {
-                        PulleyJoint pulley = (PulleyJoint)joint;
+                        PulleyJoint pulley = (PulleyJoint) joint;
                         Vector2 s1 = pulley.GroundAnchorA;
                         Vector2 s2 = pulley.GroundAnchorB;
                         DrawSegment(s1, p1, color);
@@ -219,7 +239,7 @@ namespace FarseerPhysics.DebugViewXNA
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape)fixture.Shape;
+                        CircleShape circle = (CircleShape) fixture.Shape;
 
                         Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
                         float radius = circle.Radius;
@@ -231,7 +251,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape poly = (PolygonShape)fixture.Shape;
+                        PolygonShape poly = (PolygonShape) fixture.Shape;
                         int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
@@ -323,8 +343,10 @@ namespace FarseerPhysics.DebugViewXNA
 
             for (int i = 0; i < segments; i++)
             {
-                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
-                Vector2 v2 = center + radius * new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
+                Vector2 v1 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
+                Vector2 v2 = center +
+                             radius *
+                             new Vector2((float) Math.Cos(theta + increment), (float) Math.Sin(theta + increment));
 
                 _vertsLines[_lineCount * 2].Position = new Vector3(v1, 0.0f);
                 _vertsLines[_lineCount * 2].Color = color;
@@ -336,7 +358,8 @@ namespace FarseerPhysics.DebugViewXNA
             }
         }
 
-        public override void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, float red, float green, float blue)
+        public override void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, float red, float green,
+                                             float blue)
         {
             DrawSolidCircle(center, radius, axis, new Color(red, green, blue));
         }
@@ -349,13 +372,15 @@ namespace FarseerPhysics.DebugViewXNA
 
             Color colorFill = new Color(color, 0.5f);
 
-            Vector2 v0 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
+            Vector2 v0 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
             theta += increment;
 
             for (int i = 1; i < segments - 1; i++)
             {
-                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
-                Vector2 v2 = center + radius * new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
+                Vector2 v1 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
+                Vector2 v2 = center +
+                             radius *
+                             new Vector2((float) Math.Cos(theta + increment), (float) Math.Sin(theta + increment));
 
                 _vertsFill[_fillCount * 3].Position = new Vector3(v0, 0.0f);
                 _vertsFill[_fillCount * 3].Color = colorFill;
@@ -453,7 +478,8 @@ namespace FarseerPhysics.DebugViewXNA
             // draw any strings we have
             for (int i = 0; i < _stringData.Count; i++)
             {
-                Batch.DrawString(Font, string.Format(_stringData[i].S, _stringData[i].Args), new Vector2(_stringData[i].X, _stringData[i].Y), _stringData[i].Color);
+                Batch.DrawString(Font, string.Format(_stringData[i].S, _stringData[i].Args),
+                                 new Vector2(_stringData[i].X, _stringData[i].Y), _stringData[i].Color);
             }
             // end the sprite batch effect
             Batch.End();
@@ -495,7 +521,8 @@ namespace FarseerPhysics.DebugViewXNA
             // draw any strings we have
             for (int i = 0; i < _stringData.Count; i++)
             {
-                Batch.DrawString(Font, string.Format(_stringData[i].S, _stringData[i].Args), new Vector2(_stringData[i].X, _stringData[i].Y), _stringData[i].Color);
+                Batch.DrawString(Font, string.Format(_stringData[i].S, _stringData[i].Args),
+                                 new Vector2(_stringData[i].X, _stringData[i].Y), _stringData[i].Color);
             }
             // end the sprite batch effect
             Batch.End();
@@ -539,20 +566,15 @@ namespace FarseerPhysics.DebugViewXNA
             _stringData = new List<StringData>();
         }
 
-        private static VertexPositionColor[] _vertsLines;
-        private static VertexPositionColor[] _vertsFill;
-        private static int _lineCount;
-        private static int _fillCount;
-        public static SpriteBatch Batch;
-        public static SpriteFont Font;
-        public static GraphicsDevice Device;
-
-        private static List<StringData> _stringData;
-        private static VertexDeclaration _vertexDeclaration;
-        private static BasicEffect _effect;
+        #region Nested type: StringData
 
         private struct StringData
         {
+            public object[] Args;
+            public Color Color;
+            public string S;
+            public int X, Y;
+
             public StringData(int x, int y, string s, object[] args)
             {
                 X = x;
@@ -570,11 +592,8 @@ namespace FarseerPhysics.DebugViewXNA
                 Args = args;
                 Color = color;
             }
-
-            public int X, Y;
-            public string S;
-            public object[] Args;
-            public Color Color;
         }
+
+        #endregion
     }
 }

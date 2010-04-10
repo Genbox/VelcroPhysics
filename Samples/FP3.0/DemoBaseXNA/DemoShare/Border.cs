@@ -1,6 +1,7 @@
 using DemoBaseXNA.DrawingSystem;
-using DemoBaseXNA.ScreenSystem;
-using FarseerPhysics;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -28,14 +29,18 @@ namespace DemoBaseXNA.DemoShare
         {
             _borderTextures = new Texture2D[4];
 
-            _borderTextures[0] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int)(_borderWidth * 10), (int)(_height * 10), 2, 0, 0,
-                                                                     new Color(200, 200, 200, 150), Color.White);
-            _borderTextures[1] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int)(_borderWidth * 10), (int)(_height * 10), 2, 0, 0,
-                                                                     new Color(200, 200, 200, 150), Color.White);
-            _borderTextures[2] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int)(_width * 10), (int)(_borderWidth * 10), 2, 0, 0,
-                                                                     new Color(200, 200, 200, 150), Color.White);
-            _borderTextures[3] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int)(_width * 10), (int)(_borderWidth * 10), 2, 0, 0,
-                                                                     new Color(200, 200, 200, 150), Color.White);
+            _borderTextures[0] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int) (_borderWidth * 10),
+                                                                      (int) (_height * 10), 2, 0, 0,
+                                                                      new Color(200, 200, 200, 150), Color.White);
+            _borderTextures[1] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int) (_borderWidth * 10),
+                                                                      (int) (_height * 10), 2, 0, 0,
+                                                                      new Color(200, 200, 200, 150), Color.White);
+            _borderTextures[2] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int) (_width * 10),
+                                                                      (int) (_borderWidth * 10), 2, 0, 0,
+                                                                      new Color(200, 200, 200, 150), Color.White);
+            _borderTextures[3] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int) (_width * 10),
+                                                                      (int) (_borderWidth * 10), 2, 0, 0,
+                                                                      new Color(200, 200, 200, 150), Color.White);
 
             //use the body factory to create the physics body
             _borderBody = physicsSimulator.Add();
@@ -91,7 +96,6 @@ namespace DemoBaseXNA.DemoShare
 
         public void Draw()
         {
-           
         }
     }
 }

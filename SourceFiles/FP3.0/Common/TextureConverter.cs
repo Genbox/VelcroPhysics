@@ -12,7 +12,12 @@ namespace FarseerPhysics.Common
         /// TODO:
         /// 1.) Das Array welches ich bekomme am besten in einen bool array verwandeln. Würde die Geschwindigkeit verbessern
         /// </summary>
-        private static readonly int[,] ClosePixels = new int[8, 2] { { -1, -1 }, { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
+        private static readonly int[,] ClosePixels = new int[8,2]
+                                                         {
+                                                             {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}
+                                                             ,
+                                                             {-1, 0}
+                                                         };
 
         public static Vertices CreatePolygon(uint[] data, int width, int height)
         {
@@ -27,11 +32,12 @@ namespace FarseerPhysics.Common
             PolygonCreationAssistance pca = new PolygonCreationAssistance(data, width, height);
             pca.HoleDetection = holeDetection;
             List<Vertices> verts = CreatePolygon(pca);
-            
+
             return verts[0];
         }
 
-        public static List<Vertices> CreatePolygon(uint[] data, int width, int height, float hullTolerance, byte alphaTolerance, bool multiPartDetection, bool holeDetection)
+        public static List<Vertices> CreatePolygon(uint[] data, int width, int height, float hullTolerance,
+                                                   byte alphaTolerance, bool multiPartDetection, bool holeDetection)
         {
             PolygonCreationAssistance pca = new PolygonCreationAssistance(data, width, height);
             pca.HullTolerance = hullTolerance;
@@ -70,7 +76,8 @@ namespace FarseerPhysics.Common
                     }
                     else if (polygonEntrance.HasValue)
                     {
-                        polygon = CreateSimplePolygon(pca, polygonEntrance.Value, new Vector2(polygonEntrance.Value.X - 1f, polygonEntrance.Value.Y));
+                        polygon = CreateSimplePolygon(pca, polygonEntrance.Value,
+                                                      new Vector2(polygonEntrance.Value.X - 1f, polygonEntrance.Value.Y));
                     }
                     else
                     {
@@ -92,7 +99,9 @@ namespace FarseerPhysics.Common
                                     if (!blackList.Contains(holeEntrance.Value))
                                     {
                                         blackList.Add(holeEntrance.Value);
-                                        holePolygon = CreateSimplePolygon(pca, holeEntrance.Value, new Vector2(holeEntrance.Value.X + 1, holeEntrance.Value.Y));
+                                        holePolygon = CreateSimplePolygon(pca, holeEntrance.Value,
+                                                                          new Vector2(holeEntrance.Value.X + 1,
+                                                                                      holeEntrance.Value.Y));
 
                                         if (holePolygon != null && holePolygon.Count > 2)
                                         {
@@ -100,7 +109,8 @@ namespace FarseerPhysics.Common
 
                                             int vertex2Index;
                                             int vertex1Index;
-                                            if (SplitPolygonEdge(polygon, EdgeAlignment.Vertical, holeEntrance.Value, out vertex1Index, out vertex2Index))
+                                            if (SplitPolygonEdge(polygon, EdgeAlignment.Vertical, holeEntrance.Value,
+                                                                 out vertex1Index, out vertex2Index))
                                             {
                                                 polygon.InsertRange(vertex2Index, holePolygon);
                                             }
@@ -115,7 +125,6 @@ namespace FarseerPhysics.Common
                                 {
                                     break;
                                 }
-
                             } while (true);
                         }
 
@@ -149,18 +158,19 @@ namespace FarseerPhysics.Common
                             }
                         }
                     }
-
                 } while (searchOn);
             }
             else
             {
-                throw new Exception("Sizes don't match: Color array must contain texture width * texture height elements.");
+                throw new Exception(
+                    "Sizes don't match: Color array must contain texture width * texture height elements.");
             }
 
             return polygons;
         }
 
-        private static Vector2? GetHoleHullEntrance(PolygonCreationAssistance pca, Vertices polygon, Vector2? startVertex)
+        private static Vector2? GetHoleHullEntrance(PolygonCreationAssistance pca, Vertices polygon,
+                                                    Vector2? startVertex)
         {
             List<CrossingEdgeInfo> edges = new List<CrossingEdgeInfo>();
             Vector2? entrance;
@@ -176,13 +186,13 @@ namespace FarseerPhysics.Common
             {
                 if (startVertex.HasValue)
                 {
-                    startLine = (int)startVertex.Value.Y;
+                    startLine = (int) startVertex.Value.Y;
                 }
                 else
                 {
-                    startLine = (int)GetTopMostCoord(polygon);
+                    startLine = (int) GetTopMostCoord(polygon);
                 }
-                endLine = (int)GetBottomMostCoord(polygon);
+                endLine = (int) GetBottomMostCoord(polygon);
 
                 if (startLine > 0 && startLine < pca.Height && endLine > 0 && endLine < pca.Height)
                 {
@@ -200,7 +210,9 @@ namespace FarseerPhysics.Common
                                 foundSolid = false;
                                 foundTransparent = false;
 
-                                for (int x = (int)edges[i].CrossingPoint.X; x <= (int)edges[i + 1].CrossingPoint.X; x++)
+                                for (int x = (int) edges[i].CrossingPoint.X;
+                                     x <= (int) edges[i + 1].CrossingPoint.X;
+                                     x++)
                                 {
                                     if (pca.IsSolid(x, y))
                                     {
@@ -239,7 +251,8 @@ namespace FarseerPhysics.Common
             return null;
         }
 
-        private static bool DistanceToHullAcceptable(PolygonCreationAssistance pca, Vertices polygon, Vector2 point, bool higherDetail)
+        private static bool DistanceToHullAcceptable(PolygonCreationAssistance pca, Vertices polygon, Vector2 point,
+                                                     bool higherDetail)
         {
             if (polygon != null && polygon.Count > 2)
             {
@@ -252,7 +265,8 @@ namespace FarseerPhysics.Common
                     {
                         edgeVertex1 = polygon[i];
 
-                        if (LineTools.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <= pca.HullTolerance ||
+                        if (LineTools.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <=
+                            pca.HullTolerance ||
                             LineTools.DistanceBetweenPointAndPoint(ref point, ref edgeVertex1) <= pca.HullTolerance)
                         {
                             return false;
@@ -269,7 +283,8 @@ namespace FarseerPhysics.Common
                     {
                         edgeVertex1 = polygon[i];
 
-                        if (LineTools.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <= pca.HullTolerance)
+                        if (LineTools.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <=
+                            pca.HullTolerance)
                         {
                             return false;
                         }
@@ -290,7 +305,7 @@ namespace FarseerPhysics.Common
 
             if (!inPolygon)
             {
-                List<CrossingEdgeInfo> edges = GetCrossingEdges(polygon, EdgeAlignment.Vertical, (int)point.Y);
+                List<CrossingEdgeInfo> edges = GetCrossingEdges(polygon, EdgeAlignment.Vertical, (int) point.Y);
 
                 if (edges.Count > 0 && edges.Count % 2 == 0)
                 {
@@ -382,7 +397,8 @@ namespace FarseerPhysics.Common
                         {
                             edgeVertex1 = polygon[i];
 
-                            if ((edgeVertex1.Y >= checkLine && edgeVertex2.Y <= checkLine) || (edgeVertex1.Y <= checkLine && edgeVertex2.Y >= checkLine))
+                            if ((edgeVertex1.Y >= checkLine && edgeVertex2.Y <= checkLine) ||
+                                (edgeVertex1.Y <= checkLine && edgeVertex2.Y >= checkLine))
                             {
                                 if (edgeVertex1.Y != edgeVertex2.Y)
                                 {
@@ -406,8 +422,11 @@ namespace FarseerPhysics.Common
 
                                     if (addCrossingPoint)
                                     {
-                                        crossingPoint = new Vector2((checkLine - edgeVertex1.Y) / slope.Y * slope.X + edgeVertex1.X, (float)checkLine);
-                                        edges.Add(new CrossingEdgeInfo(edgeVertex1, edgeVertex2, crossingPoint, edgeAlign));
+                                        crossingPoint =
+                                            new Vector2((checkLine - edgeVertex1.Y) / slope.Y * slope.X + edgeVertex1.X,
+                                                        checkLine);
+                                        edges.Add(new CrossingEdgeInfo(edgeVertex1, edgeVertex2, crossingPoint,
+                                                                       edgeAlign));
                                     }
                                 }
                             }
@@ -424,7 +443,8 @@ namespace FarseerPhysics.Common
             return edges;
         }
 
-        private static bool SplitPolygonEdge(Vertices polygon, EdgeAlignment edgeAlign, Vector2 coordInsideThePolygon, out int vertex1Index, out int vertex2Index)
+        private static bool SplitPolygonEdge(Vertices polygon, EdgeAlignment edgeAlign, Vector2 coordInsideThePolygon,
+                                             out int vertex1Index, out int vertex2Index)
         {
             List<CrossingEdgeInfo> edges;
 
@@ -444,7 +464,7 @@ namespace FarseerPhysics.Common
             switch (edgeAlign)
             {
                 case EdgeAlignment.Vertical:
-                    edges = GetCrossingEdges(polygon, EdgeAlignment.Vertical, (int)coordInsideThePolygon.Y);
+                    edges = GetCrossingEdges(polygon, EdgeAlignment.Vertical, (int) coordInsideThePolygon.Y);
 
                     foundEdgeCoord.Y = coordInsideThePolygon.Y;
 
@@ -478,7 +498,8 @@ namespace FarseerPhysics.Common
                             {
                                 Vector2 tempVector1 = polygon[edgeVertex1Index];
                                 Vector2 tempVector2 = polygon[edgeVertex2Index];
-                                distance = LineTools.DistanceBetweenPointAndLineSegment(ref foundEdgeCoord, ref tempVector1, ref tempVector2);
+                                distance = LineTools.DistanceBetweenPointAndLineSegment(ref foundEdgeCoord,
+                                                                                        ref tempVector1, ref tempVector2);
                                 if (distance < shortestDistance)
                                 {
                                     shortestDistance = distance;
@@ -531,6 +552,7 @@ namespace FarseerPhysics.Common
             Vector2 current = Vector2.Zero;
 
             #region Entrance check
+
             // Get the entrance point. //todo: alle möglichkeiten testen
             if (entrance == Vector2.Zero || !pca.InBounds(entrance))
             {
@@ -565,6 +587,7 @@ namespace FarseerPhysics.Common
                     }
                 }
             }
+
             #endregion
 
             if (entranceFound)
@@ -621,22 +644,22 @@ namespace FarseerPhysics.Common
                         endOfHull = true;
                         endOfHullArea.AddRange(hullArea);
                     }
-                }
-                while (true);
+                } while (true);
             }
 
             return polygon;
         }
 
-        private static bool SearchNearPixels(PolygonCreationAssistance pca, bool searchingForSolidPixel, Vector2 current, out Vector2 foundPixel)
+        private static bool SearchNearPixels(PolygonCreationAssistance pca, bool searchingForSolidPixel, Vector2 current,
+                                             out Vector2 foundPixel)
         {
             int x;
             int y;
 
             for (int i = 0; i < 8; i++)
             {
-                x = (int)current.X + ClosePixels[i, 0];
-                y = (int)current.Y + ClosePixels[i, 1];
+                x = (int) current.X + ClosePixels[i, 0];
+                y = (int) current.Y + ClosePixels[i, 1];
 
                 if (!searchingForSolidPixel ^ pca.IsSolid(x, y))
                 {
@@ -654,12 +677,12 @@ namespace FarseerPhysics.Common
         {
             for (int i = 0; i < 8; i++)
             {
-                int x = (int)current.X + ClosePixels[i, 0];
-                int y = (int)current.Y + ClosePixels[i, 1];
+                int x = (int) current.X + ClosePixels[i, 0];
+                int y = (int) current.Y + ClosePixels[i, 1];
 
                 if (x >= 0 && x <= pca.Width && y >= 0 && y <= pca.Height)
                 {
-                    if (x == (int)near.X && y == (int)near.Y)
+                    if (x == (int) near.X && y == (int) near.Y)
                     {
                         return true;
                     }
@@ -697,7 +720,7 @@ namespace FarseerPhysics.Common
 
             bool foundTransparent = false;
 
-            for (int i = (int)start.X + (int)start.Y * pca.Width; i <= size; i++)
+            for (int i = (int) start.X + (int) start.Y * pca.Width; i <= size; i++)
             {
                 if (pca.IsSolid(i))
                 {
@@ -720,7 +743,8 @@ namespace FarseerPhysics.Common
             return false;
         }
 
-        private static bool GetNextHullPoint(PolygonCreationAssistance pca, ref Vector2 last, ref Vector2 current, out Vector2 next)
+        private static bool GetNextHullPoint(PolygonCreationAssistance pca, ref Vector2 last, ref Vector2 current,
+                                             out Vector2 next)
         {
             int x;
             int y;
@@ -728,14 +752,14 @@ namespace FarseerPhysics.Common
             int indexOfFirstPixelToCheck = GetIndexOfFirstPixelToCheck(last, current);
             int indexOfPixelToCheck;
 
-            const int pixelsToCheck = 8;// _closePixels.Length;
+            const int pixelsToCheck = 8; // _closePixels.Length;
 
             for (int i = 0; i < pixelsToCheck; i++)
             {
                 indexOfPixelToCheck = (indexOfFirstPixelToCheck + i) % pixelsToCheck;
 
-                x = (int)current.X + ClosePixels[indexOfPixelToCheck, 0];
-                y = (int)current.Y + ClosePixels[indexOfPixelToCheck, 1];
+                x = (int) current.X + ClosePixels[indexOfPixelToCheck, 0];
+                y = (int) current.Y + ClosePixels[indexOfPixelToCheck, 1];
 
                 if (x >= 0 && x < pca.Width && y >= 0 && y <= pca.Height)
                 {
@@ -770,7 +794,9 @@ namespace FarseerPhysics.Common
                     tempVector1 = hullArea[i];
 
                     // Check if the distance is over the one that's tolerable.
-                    if (LineTools.DistanceBetweenPointAndLineSegment(ref tempVector1, ref  tempVector2, ref tempVector3) >= hullTolerance)
+                    if (
+                        LineTools.DistanceBetweenPointAndLineSegment(ref tempVector1, ref tempVector2, ref tempVector3) >=
+                        hullTolerance)
                     {
                         outstandingResult = hullArea[i];
                         found = true;
@@ -795,10 +821,10 @@ namespace FarseerPhysics.Common
             // . . .
 
             //Calculate in which direction the last move went and decide over the next first pixel.
-            switch ((int)(current.X - last.X))
+            switch ((int) (current.X - last.X))
             {
                 case 1:
-                    switch ((int)(current.Y - last.Y))
+                    switch ((int) (current.Y - last.Y))
                     {
                         case 1:
                             return 1;
@@ -812,7 +838,7 @@ namespace FarseerPhysics.Common
                     break;
 
                 case 0:
-                    switch ((int)(current.Y - last.Y))
+                    switch ((int) (current.Y - last.Y))
                     {
                         case 1:
                             return 2;
@@ -823,7 +849,7 @@ namespace FarseerPhysics.Common
                     break;
 
                 case -1:
-                    switch ((int)(current.Y - last.Y))
+                    switch ((int) (current.Y - last.Y))
                     {
                         case 1:
                             return 3;
@@ -850,14 +876,16 @@ namespace FarseerPhysics.Common
     public class CrossingEdgeInfo : IComparable
     {
         #region Attributes
-        private Vector2 _egdeVertex1;
-        private Vector2 _edgeVertex2;
 
         private EdgeAlignment _alignment;
         private Vector2 _crossingPoint;
+        private Vector2 _edgeVertex2;
+        private Vector2 _egdeVertex1;
+
         #endregion
 
         #region Properties
+
         public Vector2 EdgeVertex1
         {
             get { return _egdeVertex1; }
@@ -881,10 +909,13 @@ namespace FarseerPhysics.Common
             get { return _crossingPoint; }
             set { _crossingPoint = value; }
         }
+
         #endregion
 
         #region Constructor
-        public CrossingEdgeInfo(Vector2 edgeVertex1, Vector2 edgeVertex2, Vector2 crossingPoint, EdgeAlignment checkLineAlignment)
+
+        public CrossingEdgeInfo(Vector2 edgeVertex1, Vector2 edgeVertex2, Vector2 crossingPoint,
+                                EdgeAlignment checkLineAlignment)
         {
             _egdeVertex1 = edgeVertex1;
             _edgeVertex2 = edgeVertex2;
@@ -892,12 +923,14 @@ namespace FarseerPhysics.Common
             _alignment = checkLineAlignment;
             _crossingPoint = crossingPoint;
         }
+
         #endregion
 
         #region IComparable Member
+
         public int CompareTo(object obj)
         {
-            CrossingEdgeInfo cei = (CrossingEdgeInfo)obj;
+            CrossingEdgeInfo cei = (CrossingEdgeInfo) obj;
             int result = 0;
 
             switch (_alignment)
@@ -927,6 +960,7 @@ namespace FarseerPhysics.Common
 
             return result;
         }
+
         #endregion
     }
 
@@ -937,8 +971,23 @@ namespace FarseerPhysics.Common
     {
         private byte _alphaTolerance;
         private uint _alphaToleranceRealValue;
-        private float _hullTolerance;
         private int _holeDetectionLineStepSize;
+        private float _hullTolerance;
+
+        public PolygonCreationAssistance(uint[] data, int width, int height)
+        {
+            Data = data;
+            Width = width;
+            Height = height;
+
+            AlphaTolerance = 20;
+            HullTolerance = 1.5f;
+
+            HoleDetectionLineStepSize = 1;
+
+            HoleDetection = false;
+            MultipartDetection = false;
+        }
 
         private uint[] Data { get; set; }
 
@@ -952,7 +1001,7 @@ namespace FarseerPhysics.Common
             set
             {
                 _alphaTolerance = value;
-                _alphaToleranceRealValue = (uint)value << 24;
+                _alphaToleranceRealValue = (uint) value << 24;
             }
         }
 
@@ -997,24 +1046,9 @@ namespace FarseerPhysics.Common
 
         public bool MultipartDetection { get; set; }
 
-        public PolygonCreationAssistance(uint[] data, int width, int height)
-        {
-            Data = data;
-            Width = width;
-            Height = height;
-
-            AlphaTolerance = 20;
-            HullTolerance = 1.5f;
-
-            HoleDetectionLineStepSize = 1;
-
-            HoleDetection = false;
-            MultipartDetection = false;
-        }
-
         public bool IsSolid(Vector2 pixel)
         {
-            return IsSolid((int)pixel.X, (int)pixel.Y);
+            return IsSolid((int) pixel.X, (int) pixel.Y);
         }
 
         public bool IsSolid(int x, int y)

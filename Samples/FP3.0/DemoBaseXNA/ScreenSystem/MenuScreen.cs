@@ -86,7 +86,7 @@ namespace DemoBaseXNA.ScreenSystem
             float totalHeight = ScreenManager.SpriteFonts.MenuSpriteFont.MeasureString("T").Y;
             totalHeight *= _menuEntries.Count;
 
-            _position.Y = (ScreenManager.GraphicsDevice.Viewport.Height - totalHeight)/2;
+            _position.Y = (ScreenManager.GraphicsDevice.Viewport.Height - totalHeight) / 2;
             _position.X = _leftBorder;
         }
 
@@ -107,8 +107,8 @@ namespace DemoBaseXNA.ScreenSystem
                     //// The selected entry is yellow, and has an animating size.
                     double time = gameTime.TotalGameTime.TotalSeconds;
 
-                    float pulsate = (float) Math.Sin(time*3) + 1;
-                    scale = 1 + pulsate*0.05f;
+                    float pulsate = (float) Math.Sin(time * 3) + 1;
+                    scale = 1 + pulsate * 0.05f;
 
                     color = Color.White;
                 }
@@ -123,7 +123,7 @@ namespace DemoBaseXNA.ScreenSystem
                 color = new Color(color.R, color.G, color.B, TransitionAlpha);
 
                 // Draw text, centered on the middle of each line.
-                Vector2 origin = new Vector2(0, ScreenManager.SpriteFonts.MenuSpriteFont.LineSpacing/2f);
+                Vector2 origin = new Vector2(0, ScreenManager.SpriteFonts.MenuSpriteFont.LineSpacing / 2f);
 
                 ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.MenuSpriteFont, _menuEntries[i],
                                                      itemPosition, color, 0, origin, scale,

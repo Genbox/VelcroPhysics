@@ -156,45 +156,45 @@ namespace Microsoft.Xna.Framework
             float num12 = matrix.M42;
             float num11 = matrix.M43;
             float num10 = matrix.M44;
-            float num23 = (num15*num10) - (num14*num11);
-            float num22 = (num16*num10) - (num14*num12);
-            float num21 = (num16*num11) - (num15*num12);
-            float num20 = (num17*num10) - (num14*num13);
-            float num19 = (num17*num11) - (num15*num13);
-            float num18 = (num17*num12) - (num16*num13);
-            float num39 = ((num8*num23) - (num7*num22)) + (num6*num21);
-            float num38 = -(((num9*num23) - (num7*num20)) + (num6*num19));
-            float num37 = ((num9*num22) - (num8*num20)) + (num6*num18);
-            float num36 = -(((num9*num21) - (num8*num19)) + (num7*num18));
-            float num = 1f/((((num5*num39) + (num4*num38)) + (num3*num37)) + (num2*num36));
-            result.M11 = num39*num;
-            result.M21 = num38*num;
-            result.M31 = num37*num;
-            result.M41 = num36*num;
-            result.M12 = -(((num4*num23) - (num3*num22)) + (num2*num21))*num;
-            result.M22 = (((num5*num23) - (num3*num20)) + (num2*num19))*num;
-            result.M32 = -(((num5*num22) - (num4*num20)) + (num2*num18))*num;
-            result.M42 = (((num5*num21) - (num4*num19)) + (num3*num18))*num;
-            float num35 = (num7*num10) - (num6*num11);
-            float num34 = (num8*num10) - (num6*num12);
-            float num33 = (num8*num11) - (num7*num12);
-            float num32 = (num9*num10) - (num6*num13);
-            float num31 = (num9*num11) - (num7*num13);
-            float num30 = (num9*num12) - (num8*num13);
-            result.M13 = (((num4*num35) - (num3*num34)) + (num2*num33))*num;
-            result.M23 = -(((num5*num35) - (num3*num32)) + (num2*num31))*num;
-            result.M33 = (((num5*num34) - (num4*num32)) + (num2*num30))*num;
-            result.M43 = -(((num5*num33) - (num4*num31)) + (num3*num30))*num;
-            float num29 = (num7*num14) - (num6*num15);
-            float num28 = (num8*num14) - (num6*num16);
-            float num27 = (num8*num15) - (num7*num16);
-            float num26 = (num9*num14) - (num6*num17);
-            float num25 = (num9*num15) - (num7*num17);
-            float num24 = (num9*num16) - (num8*num17);
-            result.M14 = -(((num4*num29) - (num3*num28)) + (num2*num27))*num;
-            result.M24 = (((num5*num29) - (num3*num26)) + (num2*num25))*num;
-            result.M34 = -(((num5*num28) - (num4*num26)) + (num2*num24))*num;
-            result.M44 = (((num5*num27) - (num4*num25)) + (num3*num24))*num;
+            float num23 = (num15 * num10) - (num14 * num11);
+            float num22 = (num16 * num10) - (num14 * num12);
+            float num21 = (num16 * num11) - (num15 * num12);
+            float num20 = (num17 * num10) - (num14 * num13);
+            float num19 = (num17 * num11) - (num15 * num13);
+            float num18 = (num17 * num12) - (num16 * num13);
+            float num39 = ((num8 * num23) - (num7 * num22)) + (num6 * num21);
+            float num38 = -(((num9 * num23) - (num7 * num20)) + (num6 * num19));
+            float num37 = ((num9 * num22) - (num8 * num20)) + (num6 * num18);
+            float num36 = -(((num9 * num21) - (num8 * num19)) + (num7 * num18));
+            float num = 1f / ((((num5 * num39) + (num4 * num38)) + (num3 * num37)) + (num2 * num36));
+            result.M11 = num39 * num;
+            result.M21 = num38 * num;
+            result.M31 = num37 * num;
+            result.M41 = num36 * num;
+            result.M12 = -(((num4 * num23) - (num3 * num22)) + (num2 * num21)) * num;
+            result.M22 = (((num5 * num23) - (num3 * num20)) + (num2 * num19)) * num;
+            result.M32 = -(((num5 * num22) - (num4 * num20)) + (num2 * num18)) * num;
+            result.M42 = (((num5 * num21) - (num4 * num19)) + (num3 * num18)) * num;
+            float num35 = (num7 * num10) - (num6 * num11);
+            float num34 = (num8 * num10) - (num6 * num12);
+            float num33 = (num8 * num11) - (num7 * num12);
+            float num32 = (num9 * num10) - (num6 * num13);
+            float num31 = (num9 * num11) - (num7 * num13);
+            float num30 = (num9 * num12) - (num8 * num13);
+            result.M13 = (((num4 * num35) - (num3 * num34)) + (num2 * num33)) * num;
+            result.M23 = -(((num5 * num35) - (num3 * num32)) + (num2 * num31)) * num;
+            result.M33 = (((num5 * num34) - (num4 * num32)) + (num2 * num30)) * num;
+            result.M43 = -(((num5 * num33) - (num4 * num31)) + (num3 * num30)) * num;
+            float num29 = (num7 * num14) - (num6 * num15);
+            float num28 = (num8 * num14) - (num6 * num16);
+            float num27 = (num8 * num15) - (num7 * num16);
+            float num26 = (num9 * num14) - (num6 * num17);
+            float num25 = (num9 * num15) - (num7 * num17);
+            float num24 = (num9 * num16) - (num8 * num17);
+            result.M14 = -(((num4 * num29) - (num3 * num28)) + (num2 * num27)) * num;
+            result.M24 = (((num5 * num29) - (num3 * num26)) + (num2 * num25)) * num;
+            result.M34 = -(((num5 * num28) - (num4 * num26)) + (num2 * num24)) * num;
+            result.M44 = (((num5 * num27) - (num4 * num25)) + (num3 * num24)) * num;
         }
 
         public static Matrix Invert(Matrix matrix)
@@ -216,45 +216,45 @@ namespace Microsoft.Xna.Framework
             float num12 = matrix.M42;
             float num11 = matrix.M43;
             float num10 = matrix.M44;
-            float num23 = (num15*num10) - (num14*num11);
-            float num22 = (num16*num10) - (num14*num12);
-            float num21 = (num16*num11) - (num15*num12);
-            float num20 = (num17*num10) - (num14*num13);
-            float num19 = (num17*num11) - (num15*num13);
-            float num18 = (num17*num12) - (num16*num13);
-            float num39 = ((num8*num23) - (num7*num22)) + (num6*num21);
-            float num38 = -(((num9*num23) - (num7*num20)) + (num6*num19));
-            float num37 = ((num9*num22) - (num8*num20)) + (num6*num18);
-            float num36 = -(((num9*num21) - (num8*num19)) + (num7*num18));
-            float num = 1f/((((num5*num39) + (num4*num38)) + (num3*num37)) + (num2*num36));
-            matrix2.M11 = num39*num;
-            matrix2.M21 = num38*num;
-            matrix2.M31 = num37*num;
-            matrix2.M41 = num36*num;
-            matrix2.M12 = -(((num4*num23) - (num3*num22)) + (num2*num21))*num;
-            matrix2.M22 = (((num5*num23) - (num3*num20)) + (num2*num19))*num;
-            matrix2.M32 = -(((num5*num22) - (num4*num20)) + (num2*num18))*num;
-            matrix2.M42 = (((num5*num21) - (num4*num19)) + (num3*num18))*num;
-            float num35 = (num7*num10) - (num6*num11);
-            float num34 = (num8*num10) - (num6*num12);
-            float num33 = (num8*num11) - (num7*num12);
-            float num32 = (num9*num10) - (num6*num13);
-            float num31 = (num9*num11) - (num7*num13);
-            float num30 = (num9*num12) - (num8*num13);
-            matrix2.M13 = (((num4*num35) - (num3*num34)) + (num2*num33))*num;
-            matrix2.M23 = -(((num5*num35) - (num3*num32)) + (num2*num31))*num;
-            matrix2.M33 = (((num5*num34) - (num4*num32)) + (num2*num30))*num;
-            matrix2.M43 = -(((num5*num33) - (num4*num31)) + (num3*num30))*num;
-            float num29 = (num7*num14) - (num6*num15);
-            float num28 = (num8*num14) - (num6*num16);
-            float num27 = (num8*num15) - (num7*num16);
-            float num26 = (num9*num14) - (num6*num17);
-            float num25 = (num9*num15) - (num7*num17);
-            float num24 = (num9*num16) - (num8*num17);
-            matrix2.M14 = -(((num4*num29) - (num3*num28)) + (num2*num27))*num;
-            matrix2.M24 = (((num5*num29) - (num3*num26)) + (num2*num25))*num;
-            matrix2.M34 = -(((num5*num28) - (num4*num26)) + (num2*num24))*num;
-            matrix2.M44 = (((num5*num27) - (num4*num25)) + (num3*num24))*num;
+            float num23 = (num15 * num10) - (num14 * num11);
+            float num22 = (num16 * num10) - (num14 * num12);
+            float num21 = (num16 * num11) - (num15 * num12);
+            float num20 = (num17 * num10) - (num14 * num13);
+            float num19 = (num17 * num11) - (num15 * num13);
+            float num18 = (num17 * num12) - (num16 * num13);
+            float num39 = ((num8 * num23) - (num7 * num22)) + (num6 * num21);
+            float num38 = -(((num9 * num23) - (num7 * num20)) + (num6 * num19));
+            float num37 = ((num9 * num22) - (num8 * num20)) + (num6 * num18);
+            float num36 = -(((num9 * num21) - (num8 * num19)) + (num7 * num18));
+            float num = 1f / ((((num5 * num39) + (num4 * num38)) + (num3 * num37)) + (num2 * num36));
+            matrix2.M11 = num39 * num;
+            matrix2.M21 = num38 * num;
+            matrix2.M31 = num37 * num;
+            matrix2.M41 = num36 * num;
+            matrix2.M12 = -(((num4 * num23) - (num3 * num22)) + (num2 * num21)) * num;
+            matrix2.M22 = (((num5 * num23) - (num3 * num20)) + (num2 * num19)) * num;
+            matrix2.M32 = -(((num5 * num22) - (num4 * num20)) + (num2 * num18)) * num;
+            matrix2.M42 = (((num5 * num21) - (num4 * num19)) + (num3 * num18)) * num;
+            float num35 = (num7 * num10) - (num6 * num11);
+            float num34 = (num8 * num10) - (num6 * num12);
+            float num33 = (num8 * num11) - (num7 * num12);
+            float num32 = (num9 * num10) - (num6 * num13);
+            float num31 = (num9 * num11) - (num7 * num13);
+            float num30 = (num9 * num12) - (num8 * num13);
+            matrix2.M13 = (((num4 * num35) - (num3 * num34)) + (num2 * num33)) * num;
+            matrix2.M23 = -(((num5 * num35) - (num3 * num32)) + (num2 * num31)) * num;
+            matrix2.M33 = (((num5 * num34) - (num4 * num32)) + (num2 * num30)) * num;
+            matrix2.M43 = -(((num5 * num33) - (num4 * num31)) + (num3 * num30)) * num;
+            float num29 = (num7 * num14) - (num6 * num15);
+            float num28 = (num8 * num14) - (num6 * num16);
+            float num27 = (num8 * num15) - (num7 * num16);
+            float num26 = (num9 * num14) - (num6 * num17);
+            float num25 = (num9 * num15) - (num7 * num17);
+            float num24 = (num9 * num16) - (num8 * num17);
+            matrix2.M14 = -(((num4 * num29) - (num3 * num28)) + (num2 * num27)) * num;
+            matrix2.M24 = (((num5 * num29) - (num3 * num26)) + (num2 * num25)) * num;
+            matrix2.M34 = -(((num5 * num28) - (num4 * num26)) + (num2 * num24)) * num;
+            matrix2.M44 = (((num5 * num27) - (num4 * num25)) + (num3 * num24)) * num;
             return matrix2;
         }
 
@@ -316,38 +316,38 @@ namespace Microsoft.Xna.Framework
 
         public static void Multiply(ref Matrix matrix1, ref Matrix matrix2, out Matrix result)
         {
-            float num16 = (((matrix1.M11*matrix2.M11) + (matrix1.M12*matrix2.M21)) + (matrix1.M13*matrix2.M31)) +
-                          (matrix1.M14*matrix2.M41);
-            float num15 = (((matrix1.M11*matrix2.M12) + (matrix1.M12*matrix2.M22)) + (matrix1.M13*matrix2.M32)) +
-                          (matrix1.M14*matrix2.M42);
-            float num14 = (((matrix1.M11*matrix2.M13) + (matrix1.M12*matrix2.M23)) + (matrix1.M13*matrix2.M33)) +
-                          (matrix1.M14*matrix2.M43);
-            float num13 = (((matrix1.M11*matrix2.M14) + (matrix1.M12*matrix2.M24)) + (matrix1.M13*matrix2.M34)) +
-                          (matrix1.M14*matrix2.M44);
-            float num12 = (((matrix1.M21*matrix2.M11) + (matrix1.M22*matrix2.M21)) + (matrix1.M23*matrix2.M31)) +
-                          (matrix1.M24*matrix2.M41);
-            float num11 = (((matrix1.M21*matrix2.M12) + (matrix1.M22*matrix2.M22)) + (matrix1.M23*matrix2.M32)) +
-                          (matrix1.M24*matrix2.M42);
-            float num10 = (((matrix1.M21*matrix2.M13) + (matrix1.M22*matrix2.M23)) + (matrix1.M23*matrix2.M33)) +
-                          (matrix1.M24*matrix2.M43);
-            float num9 = (((matrix1.M21*matrix2.M14) + (matrix1.M22*matrix2.M24)) + (matrix1.M23*matrix2.M34)) +
-                         (matrix1.M24*matrix2.M44);
-            float num8 = (((matrix1.M31*matrix2.M11) + (matrix1.M32*matrix2.M21)) + (matrix1.M33*matrix2.M31)) +
-                         (matrix1.M34*matrix2.M41);
-            float num7 = (((matrix1.M31*matrix2.M12) + (matrix1.M32*matrix2.M22)) + (matrix1.M33*matrix2.M32)) +
-                         (matrix1.M34*matrix2.M42);
-            float num6 = (((matrix1.M31*matrix2.M13) + (matrix1.M32*matrix2.M23)) + (matrix1.M33*matrix2.M33)) +
-                         (matrix1.M34*matrix2.M43);
-            float num5 = (((matrix1.M31*matrix2.M14) + (matrix1.M32*matrix2.M24)) + (matrix1.M33*matrix2.M34)) +
-                         (matrix1.M34*matrix2.M44);
-            float num4 = (((matrix1.M41*matrix2.M11) + (matrix1.M42*matrix2.M21)) + (matrix1.M43*matrix2.M31)) +
-                         (matrix1.M44*matrix2.M41);
-            float num3 = (((matrix1.M41*matrix2.M12) + (matrix1.M42*matrix2.M22)) + (matrix1.M43*matrix2.M32)) +
-                         (matrix1.M44*matrix2.M42);
-            float num2 = (((matrix1.M41*matrix2.M13) + (matrix1.M42*matrix2.M23)) + (matrix1.M43*matrix2.M33)) +
-                         (matrix1.M44*matrix2.M43);
-            float num = (((matrix1.M41*matrix2.M14) + (matrix1.M42*matrix2.M24)) + (matrix1.M43*matrix2.M34)) +
-                        (matrix1.M44*matrix2.M44);
+            float num16 = (((matrix1.M11 * matrix2.M11) + (matrix1.M12 * matrix2.M21)) + (matrix1.M13 * matrix2.M31)) +
+                          (matrix1.M14 * matrix2.M41);
+            float num15 = (((matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22)) + (matrix1.M13 * matrix2.M32)) +
+                          (matrix1.M14 * matrix2.M42);
+            float num14 = (((matrix1.M11 * matrix2.M13) + (matrix1.M12 * matrix2.M23)) + (matrix1.M13 * matrix2.M33)) +
+                          (matrix1.M14 * matrix2.M43);
+            float num13 = (((matrix1.M11 * matrix2.M14) + (matrix1.M12 * matrix2.M24)) + (matrix1.M13 * matrix2.M34)) +
+                          (matrix1.M14 * matrix2.M44);
+            float num12 = (((matrix1.M21 * matrix2.M11) + (matrix1.M22 * matrix2.M21)) + (matrix1.M23 * matrix2.M31)) +
+                          (matrix1.M24 * matrix2.M41);
+            float num11 = (((matrix1.M21 * matrix2.M12) + (matrix1.M22 * matrix2.M22)) + (matrix1.M23 * matrix2.M32)) +
+                          (matrix1.M24 * matrix2.M42);
+            float num10 = (((matrix1.M21 * matrix2.M13) + (matrix1.M22 * matrix2.M23)) + (matrix1.M23 * matrix2.M33)) +
+                          (matrix1.M24 * matrix2.M43);
+            float num9 = (((matrix1.M21 * matrix2.M14) + (matrix1.M22 * matrix2.M24)) + (matrix1.M23 * matrix2.M34)) +
+                         (matrix1.M24 * matrix2.M44);
+            float num8 = (((matrix1.M31 * matrix2.M11) + (matrix1.M32 * matrix2.M21)) + (matrix1.M33 * matrix2.M31)) +
+                         (matrix1.M34 * matrix2.M41);
+            float num7 = (((matrix1.M31 * matrix2.M12) + (matrix1.M32 * matrix2.M22)) + (matrix1.M33 * matrix2.M32)) +
+                         (matrix1.M34 * matrix2.M42);
+            float num6 = (((matrix1.M31 * matrix2.M13) + (matrix1.M32 * matrix2.M23)) + (matrix1.M33 * matrix2.M33)) +
+                         (matrix1.M34 * matrix2.M43);
+            float num5 = (((matrix1.M31 * matrix2.M14) + (matrix1.M32 * matrix2.M24)) + (matrix1.M33 * matrix2.M34)) +
+                         (matrix1.M34 * matrix2.M44);
+            float num4 = (((matrix1.M41 * matrix2.M11) + (matrix1.M42 * matrix2.M21)) + (matrix1.M43 * matrix2.M31)) +
+                         (matrix1.M44 * matrix2.M41);
+            float num3 = (((matrix1.M41 * matrix2.M12) + (matrix1.M42 * matrix2.M22)) + (matrix1.M43 * matrix2.M32)) +
+                         (matrix1.M44 * matrix2.M42);
+            float num2 = (((matrix1.M41 * matrix2.M13) + (matrix1.M42 * matrix2.M23)) + (matrix1.M43 * matrix2.M33)) +
+                         (matrix1.M44 * matrix2.M43);
+            float num = (((matrix1.M41 * matrix2.M14) + (matrix1.M42 * matrix2.M24)) + (matrix1.M43 * matrix2.M34)) +
+                        (matrix1.M44 * matrix2.M44);
             result.M11 = num16;
             result.M12 = num15;
             result.M13 = num14;

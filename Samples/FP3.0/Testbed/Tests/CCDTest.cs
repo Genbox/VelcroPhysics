@@ -20,6 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -27,6 +31,8 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class CCDTest : Test
     {
+        private float _angularVelocity;
+
         private CCDTest()
         {
             {
@@ -214,7 +220,7 @@ namespace FarseerPhysics.TestBed.Tests
 #endif
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
 
@@ -222,7 +228,8 @@ namespace FarseerPhysics.TestBed.Tests
             if (Distance.GjkCalls > 0)
             {
                 DebugView.DrawString(50, TextLine, "gjk calls = {0:n}, ave gjk iters = {1:n}, max gjk iters = {2:n}",
-                                      Distance.GjkCalls, Distance.GjkIters / (float)Distance.GjkCalls, Distance.GjkMaxIters);
+                                     Distance.GjkCalls, Distance.GjkIters / (float) Distance.GjkCalls,
+                                     Distance.GjkMaxIters);
                 TextLine += 15;
             }
 
@@ -241,7 +248,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new CCDTest();
         }
-
-        private float _angularVelocity;
     }
 }

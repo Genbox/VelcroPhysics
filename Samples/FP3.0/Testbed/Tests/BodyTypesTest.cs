@@ -20,6 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -28,6 +32,10 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class BodyTypesTest : Test
     {
+        private Body _attachment;
+        private Body _platform;
+        private float _speed;
+
         private BodyTypesTest()
         {
             Body ground;
@@ -68,11 +76,12 @@ namespace FarseerPhysics.TestBed.Tests
                 rjd.MotorEnabled = true;
                 World.Add(rjd);
 
-                FixedPrismaticJoint pjd = new FixedPrismaticJoint(_platform, new Vector2(0.0f, 5.0f), new Vector2(1.0f, 0.0f));
+                FixedPrismaticJoint pjd = new FixedPrismaticJoint(_platform, new Vector2(0.0f, 5.0f),
+                                                                  new Vector2(1.0f, 0.0f));
                 pjd.MaxMotorForce = 1000.0f;
                 pjd.MotorEnabled = true;
-                pjd.LowerLimit= -10.0f;
-                pjd.UpperLimit= 10.0f;
+                pjd.LowerLimit = -10.0f;
+                pjd.UpperLimit = 10.0f;
                 pjd.LimitEnabled = true;
 
                 World.Add(pjd);
@@ -112,7 +121,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             // Drive the kinematic body.
             if (_platform.BodyType == BodyType.Kinematic)
@@ -140,9 +149,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new BodyTypesTest();
         }
-
-        private Body _attachment;
-        private Body _platform;
-        private float _speed;
     }
 }
