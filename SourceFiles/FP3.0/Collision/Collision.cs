@@ -284,7 +284,7 @@ namespace FarseerPhysics.Collision
     }
 
     /// <summary>
-    /// Ray-cast input data.
+    /// Ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).
     /// </summary>
     public struct RayCastInput
     {
@@ -293,83 +293,13 @@ namespace FarseerPhysics.Collision
     }
 
     /// <summary>
-    /// Ray-cast output data.
+    /// Ray-cast output data.  The ray hits at p1 + fraction * (p2 - p1), where p1 and p2
+    /// come from RayCastInput. 
     /// </summary>
     public struct RayCastOutput
     {
         public float Fraction;
         public Vector2 Normal;
-    }
-
-    /// <summary>
-    /// A line segment.
-    /// </summary>
-    public struct Segment
-    {
-        /// <summary>
-        /// the starting point
-        /// </summary>
-        public Vector2 Point1;
-
-        /// <summary>
-        /// the ending point
-        /// </summary>
-        public Vector2 Point2;
-
-        /// Ray cast against this segment with another segment.
-        // Collision Detection in Interactive 3D Environments by Gino van den Bergen
-        // From Section 3.4.1
-        // x = mu1 * p1 + mu2 * p2
-        // mu1 + mu2 = 1 && mu1 >= 0 && mu2 >= 0
-        // mu1 = 1 - mu2;
-        // x = (1 - mu2) * p1 + mu2 * p2
-        //   = p1 + mu2 * (p2 - p1)
-        // x = s + a * r (s := start, r := end - start)
-        // s + a * r = p1 + mu2 * d (d := p2 - p1)
-        // -a * r + mu2 * d = b (b := s - p1)
-        // [-r d] * [a; mu2] = b
-        // Cramer's rule:
-        // denom = det[-r d]
-        // a = det[b d] / denom
-        // mu2 = det[-r b] / denom
-        public bool TestSegment(out float lambda, out Vector2 normal, ref Segment segment, float maxLambda)
-        {
-            lambda = 0;
-            normal = Vector2.Zero;
-
-            Vector2 s = segment.Point1;
-            Vector2 r = segment.Point2 - s;
-            Vector2 d = Point2 - Point1;
-            Vector2 n = MathUtils.Cross(d, 1.0f);
-
-            float k_slop = 100.0f * Settings.Epsilon;
-            float denom = -Vector2.Dot(r, n);
-
-            // Cull back facing collision and ignore parallel segments.
-            if (denom > k_slop)
-            {
-                // Does the segment intersect the infinite line associated with this segment?
-                Vector2 b = s - Point1;
-                float a = Vector2.Dot(b, n);
-
-                if (0.0f <= a && a <= maxLambda * denom)
-                {
-                    float mu2 = -r.X * b.Y + r.Y * b.X;
-
-                    // Does the segment intersect this segment?
-                    if (-k_slop * denom <= mu2 && mu2 <= denom * (1.0f + k_slop))
-                    {
-                        a /= denom;
-                        n.Normalize();
-                        lambda = a;
-                        normal = n;
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
     }
 
     /// <summary>
@@ -767,8 +697,8 @@ namespace FarseerPhysics.Collision
 
             Vector2 d = pB - pA;
             float distSqr = Vector2.Dot(d, d);
-            float rA = circleA._radius;
-            float rB = circleB._radius;
+            float rA = circleA.Radius;
+            float rB = circleB.Radius;
             float radius = rA + rB;
             if (distSqr > radius * radius)
             {

@@ -95,7 +95,6 @@ namespace FarseerPhysics.Dynamics
             Awake = true;
             BodyType = BodyType.Static;
             Enabled = true;
-            InertiaScale = 1;
 
             _xf.R.Set(0);
         }
@@ -299,7 +298,6 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
-
         /// <summary>
         /// Get the world position of the center of mass.
         /// </summary>
@@ -376,18 +374,22 @@ namespace FarseerPhysics.Dynamics
         /// </value>
         public float Mass { get; internal set; }
 
+        private float _I;
+
         /// <summary>
-        /// Get the central rotational inertia of the body.
+        /// Get the rotational inertia of the body about the local origin.
+        /// @return the rotational inertia, usually in kg-m^2.
         /// </summary>
         /// <value>
         ///   the rotational inertia, usually in kg-m^2.
         /// </value>
-        public float Inertia { get; private set; }
-
-        /// <summary>
-        /// Experimental: scales the inertia tensor.
-        /// </summary>
-        public float InertiaScale { get; set; }
+        public float Inertia
+        {
+            get
+            {
+                return _I + Mass * Vector2.Dot(_sweep.LocalCenter, _sweep.LocalCenter);
+            }
+        }
 
         /// <summary>
         /// Linear damping is use to reduce the linear velocity. The damping parameter
@@ -486,7 +488,6 @@ namespace FarseerPhysics.Dynamics
             clone._linearVelocity = _linearVelocity;
             clone.Position = Position;
             clone.Rotation = Rotation;
-            clone.InertiaScale = InertiaScale;
             clone.UserData = UserData;
             clone.LinearDamping = LinearDamping;
 
@@ -710,22 +711,22 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         /// <param name="impulse">the world impulse vector, usually in N-seconds or kg-m/s.</param>
         /// <param name="point">the world position of the point of application.</param>
-        public void ApplyImpulse(Vector2 impulse, Vector2 point)
+        public void ApplyLinearImpulse(Vector2 impulse, Vector2 point)
         {
-            ApplyImpulse(ref impulse, ref point);
+            ApplyLinearImpulse(ref impulse, ref point);
         }
 
-        public void ApplyImpulse(Vector2 impulse)
+        public void ApplyLinearImpulse(Vector2 impulse)
         {
-            ApplyImpulse(ref impulse, ref _xf.Position);
+            ApplyLinearImpulse(ref impulse, ref _xf.Position);
         }
 
-        public void ApplyImpulse(ref Vector2 impulse)
+        public void ApplyLinearImpulse(ref Vector2 impulse)
         {
-            ApplyImpulse(ref impulse, ref _xf.Position);
+            ApplyLinearImpulse(ref impulse, ref _xf.Position);
         }
 
-        public void ApplyImpulse(ref Vector2 impulse, ref Vector2 point)
+        public void ApplyLinearImpulse(ref Vector2 impulse, ref Vector2 point)
         {
             if (_bodyType != BodyType.Dynamic)
             {
@@ -741,6 +742,23 @@ namespace FarseerPhysics.Dynamics
             _angularVelocity += _invI * MathUtils.Cross(point - _sweep.Center, impulse);
         }
 
+        /// Apply an angular impulse.  
+        /// @param impulse the angular impulse in units of kg*m*m/s  
+        public void ApplyAngularImpulse(float impulse)
+        {
+            if (_bodyType != BodyType.Dynamic)
+            {
+                return;
+            }
+
+            if (Awake == false)
+            {
+                Awake = true;
+            }
+
+            _angularVelocity += _invI * impulse;
+        }
+
         /// <summary>
         /// This resets the mass properties to the sum of the mass properties of the fixtures.
         /// This normally does not need to be called unless you called SetMassData to override
@@ -751,7 +769,7 @@ namespace FarseerPhysics.Dynamics
             // Compute mass data from shapes. Each shape has its own density.
             Mass = 0.0f;
             _invMass = 0.0f;
-            Inertia = 0.0f;
+            _I = 0.0f;
             _invI = 0.0f;
             _sweep.LocalCenter = Vector2.Zero;
 
@@ -776,7 +794,7 @@ namespace FarseerPhysics.Dynamics
                 MassData massData = f.Shape.MassData;
                 Mass += massData.Mass;
                 center += massData.Mass * massData.Center;
-                Inertia += massData.Inertia;
+                _I += massData.Inertia;
             }
 
             //Static bodies only have mass, they don't have other properties. A little hacky tho...
@@ -798,18 +816,17 @@ namespace FarseerPhysics.Dynamics
                 _invMass = 1.0f;
             }
 
-            if (Inertia > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
+            if (_I > 0.0f && (_flags & BodyFlags.FixedRotation) == 0)
             {
                 // Center the inertia about the center of mass.
-                Inertia -= Mass * Vector2.Dot(center, center);
-                Inertia *= InertiaScale;
+                _I -= Mass * Vector2.Dot(center, center);
 
-                Debug.Assert(Inertia > 0.0f);
-                _invI = 1.0f / Inertia;
+                Debug.Assert(_I > 0.0f);
+                _invI = 1.0f / _I;
             }
             else
             {
-                Inertia = 0.0f;
+                _I = 0.0f;
                 _invI = 0.0f;
             }
 

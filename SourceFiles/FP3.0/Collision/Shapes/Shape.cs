@@ -156,12 +156,6 @@ namespace FarseerPhysics.Collision.Shapes
         public abstract void ComputeAABB(out AABB aabb, ref Transform xf);
 
         /// <summary>
-        /// Compute the mass properties of this shape using its dimensions and density.
-        /// The inertia tensor is computed about the local origin, not the centroid.
-        /// </summary>
-        protected abstract void ComputeProperties();
-
-        /// <summary>
         /// Gets the vertices of the shape. If the shape is not already represented by vertices
         /// an approximation will be made.
         /// </summary>

@@ -21,6 +21,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
@@ -39,6 +40,16 @@ namespace FarseerPhysics.TestBed.Tests
         private int _bodyIndex;
         private CircleShape _circle;
         private PolygonShape[] _polygons = new PolygonShape[4];
+
+        enum RayCastMode
+        {
+            Closest,
+            Any,
+            Multiple,
+        }
+
+        RayCastMode _mode;
+
 
         private RayCastTest()
         {
@@ -87,6 +98,7 @@ namespace FarseerPhysics.TestBed.Tests
             _bodyIndex = 0;
 
             _angle = 0.0f;
+            _mode = RayCastMode.Closest;
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
@@ -115,6 +127,23 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 DestroyBody();
             }
+            if (state.IsKeyDown(Keys.M) && oldState.IsKeyUp(Keys.M))
+            {
+                switch (_mode)
+                {
+                    case RayCastMode.Closest:
+                        _mode = RayCastMode.Any;
+                        break;
+                    case RayCastMode.Any:
+                        _mode = RayCastMode.Multiple;
+                        break;
+                    case RayCastMode.Multiple:
+                        _mode = RayCastMode.Closest;
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         private void DestroyBody()
@@ -132,38 +161,128 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            base.Update(settings, gameTime);
-            DebugView.DrawString(5, TextLine, "Press 1-5 to drop stuff");
+            base.Update(settings,gameTime);
+            
+            DebugView.DrawString(5, TextLine, "Press 1-5 to drop stuff, m to change the mode");
+            TextLine += 15;
+            DebugView.DrawString(5, TextLine, string.Format("Mode = {0}", _mode));
             TextLine += 15;
 
-            const float L = 11.0f;
+            float L = 11.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);
-            Vector2 d = new Vector2(L * (float) Math.Cos(_angle), L * (float) Math.Sin(_angle));
+            Vector2 d = new Vector2(L * (float)Math.Cos(_angle), L * (float)Math.Sin(_angle));
             Vector2 point2 = point1 + d;
 
-
-            Fixture fixture = null;
             Vector2 point = Vector2.Zero, normal = Vector2.Zero;
-            World.RayCast((f, p, n, fr) =>
-                              {
-                                  fixture = f;
-                                  point = p;
-                                  normal = n;
-                                  return fr;
-                              }, point1, point2);
 
-            if (fixture != null)
+            switch (_mode)
             {
-                DebugView.DrawPoint(point, .5f, new Color(0.4f, 0.9f, 0.4f));
+                case RayCastMode.Closest:
+                    bool hitClosest = false;
+                    World.RayCast((f, p, n, fr) =>
+                    {
+                        Body body = f.Body;
+                        if (body.UserData != null)
+                        {
+                            int index = (int)body.UserData;
+                            if (index == 0)
+                            {
+                                // filter
+                                return -1.0f;
+                            }
+                        }
 
-                DebugView.DrawSegment(point1, point, new Color(0.8f, 0.8f, 0.8f));
+                        hitClosest = true;
+                        point = p;
+                        normal = n;
+                        return fr;
+                    }, point1, point2);
 
-                Vector2 head = point + 0.5f * normal;
-                DebugView.DrawSegment(point, head, new Color(0.9f, 0.9f, 0.4f));
-            }
-            else
-            {
-                DebugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
+                    if (hitClosest)
+                    {
+                        DebugView.DrawPoint(point, .5f, new Color(0.4f, 0.9f, 0.4f));
+
+                        DebugView.DrawSegment(point1, point, new Color(0.8f, 0.8f, 0.8f));
+
+                        Vector2 head = point + 0.5f * normal;
+                        DebugView.DrawSegment(point, head, new Color(0.9f, 0.9f, 0.4f));
+                    }
+                    else
+                    {
+                        DebugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
+                    }
+
+                    break;
+                case RayCastMode.Any:
+                    bool hitAny = false;
+                    World.RayCast((f, p, n, fr) =>
+                    {
+                        Body body = f.Body;
+                        if (body.UserData != null)
+                        {
+                            int index = (int)body.UserData;
+                            if (index == 0)
+                            {
+                                // filter
+                                return -1.0f;
+                            }
+                        }
+
+                        hitAny = true;
+                        point = p;
+                        normal = n;
+                        return 0;
+                    }, point1, point2);
+
+                    if (hitAny)
+                    {
+                        DebugView.DrawPoint(point, .5f, new Color(0.4f, 0.9f, 0.4f));
+
+                        DebugView.DrawSegment(point1, point, new Color(0.8f, 0.8f, 0.8f));
+
+                        Vector2 head = point + 0.5f * normal;
+                        DebugView.DrawSegment(point, head, new Color(0.9f, 0.9f, 0.4f));
+                    }
+                    else
+                    {
+                        DebugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
+                    }
+                    break;
+                case RayCastMode.Multiple:
+                    var points = new List<Vector2>();
+                    var normals = new List<Vector2>();
+                    World.RayCast((f, p, n, fr) =>
+                    {
+                        Body body = f.Body;
+                        if (body.UserData != null)
+                        {
+                            int index = (int) body.UserData;
+                            if (index == 0)
+                            {
+                                // filter
+                                return -1.0f;
+                            }
+                        }
+
+                        points.Add(p);
+                        normals.Add(n);
+                        return 1.0f;
+                    }, point1, point2);
+
+                    DebugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
+
+                    for (int i = 0; i < points.Count; i++)
+                    {
+                        DebugView.DrawPoint(points[i], .5f, new Color(0.4f, 0.9f, 0.4f));
+
+                        DebugView.DrawSegment(point1, points[i], new Color(0.8f, 0.8f, 0.8f));
+
+                        Vector2 head = points[i] + 0.5f * normals[i];
+                        DebugView.DrawSegment(points[i], head, new Color(0.9f, 0.9f, 0.4f));
+                    }
+                    break;
+                default:
+                    break;
             }
 
             _angle += 0.25f * Settings.Pi / 180.0f;
@@ -184,6 +303,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             _bodies[_bodyIndex].Position = new Vector2(x, y);
             _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
+            _bodies[_bodyIndex].UserData = index;
 
             if (index == 4)
             {

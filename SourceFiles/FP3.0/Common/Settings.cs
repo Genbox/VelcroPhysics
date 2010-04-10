@@ -59,7 +59,7 @@ namespace FarseerPhysics.Common
         // Dynamics
 
         /// Maximum number of contacts to be handled to solve a TOI island.
-        public const int MaxTOIContactsPerIsland = 32;
+        public const int MaxTOIContacts = 32;
 
         /// A velocity threshold for elastic collisions. Any collision with a relative linear
         /// velocity below this threshold will be treated as inelastic.

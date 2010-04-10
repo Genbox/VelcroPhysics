@@ -231,12 +231,12 @@ namespace FarseerPhysics.Collision
         /// </summary>
         /// <param name="callback">The callback.</param>
         /// <param name="aabb">The aabb.</param>
-        public void Query(Func<int, bool> callback, ref AABB aabb)
+        internal void Query(Func<int, bool> callback, ref AABB aabb)
         {
             _tree.Query(callback, ref aabb);
         }
 
-        public void RayCast(RayCastCallback callback, ref RayCastInput input)
+        internal void RayCast(RayCastCallbackInternal callback, ref RayCastInput input)
         {
             _tree.RayCast(callback, ref input);
         }

@@ -29,9 +29,7 @@ using Microsoft.Xna.Framework;
 namespace FarseerPhysics.Collision
 {
     /// A dynamic AABB tree broad-phase, inspired by Nathanael Presson's btDbvt.
-    public delegate float RayCastCallback(ref RayCastInput input, int userData);
-
-    public delegate float WorldRayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction);
+    public delegate float RayCastCallbackInternal(ref RayCastInput input, int userData);
 
     /// <summary>
     /// A node in the dynamic tree. The client does not interact with this directly.
@@ -295,7 +293,7 @@ namespace FarseerPhysics.Collision
         /// number of proxies in the tree.
         /// @param input the ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).
         /// @param callback a callback class that is called for each proxy that is hit by the ray.
-        public void RayCast(RayCastCallback callback, ref RayCastInput input)
+        public void RayCast(RayCastCallbackInternal callback, ref RayCastInput input)
         {
             Vector2 p1 = input.Point1;
             Vector2 p2 = input.Point2;
@@ -355,15 +353,18 @@ namespace FarseerPhysics.Collision
                     subInput.Point2 = input.Point2;
                     subInput.MaxFraction = maxFraction;
 
-                    maxFraction = callback(ref subInput, nodeId);
+                    float value = callback(ref subInput, nodeId);
 
-                    if (maxFraction == 0.0f)
+                    if (value == 0.0f)
                     {
+                        // the client has terminated the raycast.
                         return;
                     }
 
-                    // Update segment bounding box.
+                    if (value > 0.0f)
                     {
+                        // Update segment bounding box.
+                        maxFraction = value;
                         Vector2 t = p1 + maxFraction * (p2 - p1);
                         segmentAABB.LowerBound = Vector2.Min(p1, t);
                         segmentAABB.UpperBound = Vector2.Max(p1, t);

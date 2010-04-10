@@ -64,10 +64,10 @@ namespace FarseerPhysics.Dynamics
         private Func<Fixture, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
 
-        private WorldRayCastCallback _rayCastCallback;
-        private RayCastCallback _rayCastCallbackWrapper;
+        private RayCastCallback _rayCastCallback;
+        private RayCastCallbackInternal _rayCastCallbackWrapper;
         private Body[] _stack;
-        private Contact[] _toiContacts = new Contact[Settings.MaxTOIContactsPerIsland];
+        private Contact[] _toiContacts = new Contact[Settings.MaxTOIContacts];
         private TOISolver _toiSolver = new TOISolver();
 
         private Stopwatch _watch;
@@ -608,7 +608,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="callback">a user implemented callback class.</param>
         /// <param name="point1">the ray starting point</param>
         /// <param name="point2">the ray ending point</param>
-        public void RayCast(WorldRayCastCallback callback, Vector2 point1, Vector2 point2)
+        public void RayCast(RayCastCallback callback, Vector2 point1, Vector2 point2)
         {
             RayCastInput input = new RayCastInput();
             input.MaxFraction = 1.0f;
@@ -930,7 +930,7 @@ namespace FarseerPhysics.Dynamics
             // Update all the valid contacts on this body and build a contact island.
             count = 0;
             for (ContactEdge ce = body._contactList;
-                 (ce != null) && (count < Settings.MaxTOIContactsPerIsland);
+                 (ce != null) && (count < Settings.MaxTOIContacts);
                  ce = ce.Next)
             {
                 Body other = ce.Other;
