@@ -36,6 +36,8 @@ namespace SamplesXNA
             TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 16);
             IsFixedTimeStep = false;
 
+            Content.RootDirectory = "Content";
+
 #if !XBOX
             //windowed
             _graphics.PreferredBackBufferWidth = 800;

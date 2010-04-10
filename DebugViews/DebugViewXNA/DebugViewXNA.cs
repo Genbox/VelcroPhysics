@@ -337,7 +337,7 @@ namespace FarseerPhysics.DebugViewXNA
 
         public void DrawCircle(Vector2 center, float radius, Color color)
         {
-            const int segments = 16;
+            const int segments = 8;
             const double increment = Math.PI * 2.0 / segments;
             double theta = 0.0;
 
@@ -366,7 +366,7 @@ namespace FarseerPhysics.DebugViewXNA
 
         public void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, Color color)
         {
-            const int segments = 16;
+            const int segments = 8;
             const double increment = Math.PI * 2.0 / segments;
             double theta = 0.0;
 

@@ -156,6 +156,8 @@ namespace DemoBaseXNA.ScreenSystem
                 PhysicsSimulatorView.AppendFlags(DebugViewFlags.Shape);
 
                 DebugViewXNA.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
+
+                PhysicsSimulator.EnableDiagnostics = true;
             }
         }
 
@@ -408,6 +410,11 @@ namespace DemoBaseXNA.ScreenSystem
                 }
 
                 _border.Draw();
+
+                float time = PhysicsSimulator.UpdateTime / 1000.0f;
+
+                ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, time.ToString() + " ms", new Vector2(50, 100), Color.White);
+
                 ScreenManager.SpriteBatch.End();
             }
         }
