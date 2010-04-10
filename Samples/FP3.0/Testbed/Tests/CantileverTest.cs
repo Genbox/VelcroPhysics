@@ -77,7 +77,6 @@ namespace FarseerPhysics.TestBed.Tests
                     Body body = World.Add();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-14.5f + 1.0f * i, 15.0f);
-                    body.InertiaScale = 10.0f;
 
                     body.CreateFixture(shape);
 
@@ -126,7 +125,6 @@ namespace FarseerPhysics.TestBed.Tests
                     Body body = World.Add();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(5.5f + 1.0f * i, 10.0f);
-                    body.InertiaScale = 10.0f;
 
                     body.CreateFixture(shape);
 

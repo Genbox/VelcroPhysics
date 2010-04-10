@@ -131,7 +131,7 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound.Y = p.Y + Radius;
         }
 
-        protected override sealed void ComputeProperties()
+        private void ComputeProperties()
         {
             MassData data = new MassData();
             float area = Settings.Pi * _radius2;

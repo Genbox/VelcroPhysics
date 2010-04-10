@@ -100,8 +100,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                 Fixture fixtureB = contact.FixtureB;
                 Shape shapeA = fixtureA.Shape;
                 Shape shapeB = fixtureB.Shape;
-                float radiusA = shapeA._radius;
-                float radiusB = shapeB._radius;
+                float radiusA = shapeA.Radius;
+                float radiusB = shapeB.Radius;
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
                 Manifold manifold = contact.Manifold;

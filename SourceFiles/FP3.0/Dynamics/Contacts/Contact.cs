@@ -154,7 +154,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             bodyA.GetTransform(out xfA);
             bodyB.GetTransform(out xfB);
 
-            worldManifold = new WorldManifold(ref Manifold, ref xfA, shapeA._radius, ref xfB, shapeB._radius);
+            worldManifold = new WorldManifold(ref Manifold, ref xfA, shapeA.Radius, ref xfB, shapeB.Radius);
         }
 
         /// Is this contact touching?
