@@ -20,6 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -27,11 +30,12 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class PulleysTest : Test
     {
+        private PulleyJoint _joint1;
+
         private PulleysTest()
         {
             Body ground;
             {
-                
                 ground = World.Add();
 
                 PolygonShape shape = new PolygonShape(0.0f);
@@ -68,9 +72,9 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
-            base.Update(settings,gameTime);
+            base.Update(settings, gameTime);
 
             float ratio = _joint1.Ratio;
             float L = _joint1.LengthA + ratio * _joint1.LengthB;
@@ -82,7 +86,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new PulleysTest();
         }
-
-        private PulleyJoint _joint1;
     }
 }

@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.Common.PolygonManipulation;
-using FarseerPhysics.TestBed.Framework;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
+using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,10 +13,7 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class CuttingTest : Test
     {
-        private Vector2 _start = new Vector2(-6, 5);
-        private Vector2 _end = new Vector2(6, 5);
         private const float moveAmount = 0.1f;
-        private bool switched;
         /*
         public CuttingTest()
         {
@@ -39,7 +39,10 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
         */
-            private const int Count = 20;
+        private const int Count = 20;
+        private Vector2 _end = new Vector2(6, 5);
+        private Vector2 _start = new Vector2(-6, 5);
+        private bool switched;
 
         private CuttingTest()
         {
@@ -72,7 +75,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             DebugView.DrawSegment(_start, _end, Color.Red);
 
@@ -82,18 +85,18 @@ namespace FarseerPhysics.TestBed.Tests
 
             //Get the entry points
             World.RayCast((f, p, n, fr) =>
-            {
-                fixtures.Add(f);
-                entryPoints.Add(p);
-                return 1;
-            }, _start, _end);
+                              {
+                                  fixtures.Add(f);
+                                  entryPoints.Add(p);
+                                  return 1;
+                              }, _start, _end);
 
             //Reverse the ray to get the exitpoints
             World.RayCast((f, p, n, fr) =>
-            {
-                exitPoints.Add(p);
-                return 1;
-            }, _end, _start);
+                              {
+                                  exitPoints.Add(p);
+                                  return 1;
+                              }, _end, _start);
 
             DebugView.DrawString(100, 50, "Fixtures: " + fixtures.Count);
 

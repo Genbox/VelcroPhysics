@@ -20,13 +20,17 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using FarseerPhysics.Common;
+using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Collision.Shapes
 {
     public class PolygonShape : Shape
     {
+        public Vertices Normals;
+        public Vertices Vertices;
+
         private PolygonShape()
             : base(Settings.PolygonRadius)
         {
@@ -47,7 +51,7 @@ namespace FarseerPhysics
         }
 
         public PolygonShape(Vertices vertices)
-            : base(Settings.PolygonRadius,0)
+            : base(Settings.PolygonRadius, 0)
         {
             ShapeType = ShapeType.Polygon;
             Set(vertices);
@@ -361,8 +365,10 @@ namespace FarseerPhysics
                 float ex1 = e1.X, ey1 = e1.Y;
                 float ex2 = e2.X, ey2 = e2.Y;
 
-                float intx2 = k_inv3 * (0.25f * (ex1 * ex1 + ex2 * ex1 + ex2 * ex2) + (px * ex1 + px * ex2)) + 0.5f * px * px;
-                float inty2 = k_inv3 * (0.25f * (ey1 * ey1 + ey2 * ey1 + ey2 * ey2) + (py * ey1 + py * ey2)) + 0.5f * py * py;
+                float intx2 = k_inv3 * (0.25f * (ex1 * ex1 + ex2 * ex1 + ex2 * ex2) + (px * ex1 + px * ex2)) +
+                              0.5f * px * px;
+                float inty2 = k_inv3 * (0.25f * (ey1 * ey1 + ey2 * ey1 + ey2 * ey2) + (py * ey1 + py * ey2)) +
+                              0.5f * py * py;
 
                 I += D * (intx2 + inty2);
             }
@@ -388,8 +394,5 @@ namespace FarseerPhysics
         {
             return Vertices;
         }
-
-        public Vertices Vertices;
-        public Vertices Normals;
     }
 }

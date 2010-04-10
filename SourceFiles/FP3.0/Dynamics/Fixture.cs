@@ -23,9 +23,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics.Contacts;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Dynamics
 {
     [Flags]
     public enum CollisionCategory
@@ -74,6 +78,14 @@ namespace FarseerPhysics
     /// </summary>
     public class Fixture
     {
+        #region Delegates
+
+        public delegate bool CollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Manifold manifold);
+
+        public delegate void SeparationEventHandler(Fixture fixtureA, Fixture fixtureB);
+
+        #endregion
+
         /// <summary>
         /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
         /// If you need a more accurate AABB, compute it using the shape and
@@ -82,20 +94,19 @@ namespace FarseerPhysics
         /// <param name="aabb">The aabb.</param>
         public AABB AABB;
 
+        public CollisionEventHandler OnCollision;
+        public SeparationEventHandler OnSeparation;
+
         internal Body _body;
         private CollisionCategory _collidesWith;
         private CollisionCategory _collisionCategories;
         private short _collisionGroup;
         private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
         private Shape _shape;
-        
-        public delegate bool CollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Manifold manifold);
-        public CollisionEventHandler OnCollision;
-        
-        public delegate void SeparationEventHandler(Fixture fixtureA, Fixture fixtureB);
-        public SeparationEventHandler OnSeparation;
 
-        internal Fixture() { }
+        internal Fixture()
+        {
+        }
 
         /// <summary>
         /// We need separation create/destroy functions from the constructor/destructor because

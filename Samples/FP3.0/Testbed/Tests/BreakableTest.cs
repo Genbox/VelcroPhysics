@@ -21,6 +21,10 @@
 */
 
 using System;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
@@ -30,6 +34,16 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class BreakableTest : Test
     {
+        private float _angularVelocity;
+        private Body _body1;
+        private bool _break;
+        private bool _broke;
+        private Fixture _piece1;
+        private Fixture _piece2;
+        private PolygonShape _shape1;
+        private PolygonShape _shape2;
+        private Vector2 _velocity;
+
         private BreakableTest()
         {
             // Ground body
@@ -128,7 +142,7 @@ namespace FarseerPhysics.TestBed.Tests
             body2.LinearVelocity = velocity2;
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             if (_break)
             {
@@ -151,16 +165,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new BreakableTest();
         }
-
-        private Body _body1;
-        private Vector2 _velocity;
-        private float _angularVelocity;
-        private PolygonShape _shape1;
-        private PolygonShape _shape2;
-        private Fixture _piece1;
-        private Fixture _piece2;
-
-        private bool _broke;
-        private bool _break;
     }
 }

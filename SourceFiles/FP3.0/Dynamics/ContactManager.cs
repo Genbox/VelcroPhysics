@@ -22,8 +22,10 @@
 
 using System;
 using System.Collections.Generic;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Dynamics.Contacts;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Dynamics
 {
     /// <summary>
     /// Pool used to cache objects.
@@ -60,17 +62,19 @@ namespace FarseerPhysics
 
     public class ContactManager
     {
+        public BeginContactDelegate BeginContact;
+
+        public Action<Fixture, Fixture> BroadphaseCollision;
+        public CollisionFilterDelegate CollisionFilter;
+        public Pool<Contact> ContactPool;
+
         /// <summary>
         /// Fires when a contact is deleted
         /// </summary>
         public EndContactDelegate EndContact;
-        public BeginContactDelegate BeginContact;
-        public PreSolveDelegate PreSolve;
-        public PostSolveDelegate PostSolve;
-        public Pool<Contact> ContactPool;
 
-        public Action<Fixture, Fixture> BroadphaseCollision;
-        public CollisionFilterDelegate CollisionFilter;
+        public PostSolveDelegate PostSolve;
+        public PreSolveDelegate PreSolve;
 
         internal ContactManager()
         {
@@ -81,6 +85,10 @@ namespace FarseerPhysics
             //Precreate 128 contacts
             ContactPool = new Pool<Contact>(128);
         }
+
+        public List<Contact> ContactList { get; private set; }
+
+        public BroadPhase BroadPhase { get; private set; }
 
         // Broad-phase callback.
         private void AddPair(Fixture fixtureA, Fixture fixtureB)
@@ -284,9 +292,5 @@ namespace FarseerPhysics
                 c.Update(this);
             }
         }
-
-        public List<Contact> ContactList { get; private set; }
-
-        public BroadPhase BroadPhase { get; private set; }
     }
 }

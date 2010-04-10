@@ -1,24 +1,24 @@
-﻿using System.Text;
-using System.Collections.Generic;
-using DemoBaseXNA;
+﻿using System.Collections.Generic;
+using System.Text;
 using DemoBaseXNA.DrawingSystem;
 using DemoBaseXNA.ScreenSystem;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Common.Decomposition;
+using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.DebugViewXNA;
-using FarseerPhysics;
-using FarseerPhysics.Factories;
+using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Common.Boolean;
 
 namespace SamplesXNA.Demo1
 {
-    class Demo1Screen : GameScreen
+    internal class Demo1Screen : GameScreen
     {
-        private Texture2D _rectangleTexture;
         private Body _rectangleBody;
         private CircleShape _rectangleShape;
+        private Texture2D _rectangleTexture;
 
         public override void Initialize()
         {
@@ -34,7 +34,8 @@ namespace SamplesXNA.Demo1
         public override void LoadContent()
         {
             //load texture that will visually represent the physics body
-            _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 100, 100, Color.White, Color.Black);
+            _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 100, 100, Color.White,
+                                                                     Color.Black);
 
             //Vertices verts = PolygonTools.CreateGear(1, 13, 0.65f, 0.25f);
             //Vertices verts = PolygonTools.CreateRoundedRectangle(2, 1f, 0.5f, 0.5f, 5);
@@ -54,12 +55,12 @@ namespace SamplesXNA.Demo1
                     _rectangleBody.BodyType = BodyType.Dynamic;
                     _rectangleBody.Position = new Vector2(i * 1.1f - 15f, j * 0.6f - 18f);
                     //_rectangleShape = new PolygonShape(decomposedVerts[0], 1);
-                        _rectangleShape = new CircleShape(0.2f, 1);
-                        _rectangleBody.CreateFixture(_rectangleShape);
-                        _rectangleBody.FixtureList[0].Friction = 0.5f;
+                    _rectangleShape = new CircleShape(0.2f, 1);
+                    _rectangleBody.CreateFixture(_rectangleShape);
+                    _rectangleBody.FixtureList[0].Friction = 0.5f;
                 }
             }
-            
+
             base.LoadContent();
         }
 
@@ -68,7 +69,7 @@ namespace SamplesXNA.Demo1
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             //_rectangleBrush.Draw(ScreenManager.SpriteBatch, _rectangleBody.Position, _rectangleBody.Rotation);
             ScreenManager.SpriteBatch.End();
-            
+
             base.Draw(gameTime);
         }
 
@@ -116,18 +117,36 @@ namespace SamplesXNA.Demo1
             Vector2 force = Vector2.Zero;
             force.Y = -force.Y;
 
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.A)) { force += new Vector2(-forceAmount, 0); }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { force += new Vector2(0, forceAmount); }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { force += new Vector2(forceAmount, 0); }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, -forceAmount); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.A))
+            {
+                force += new Vector2(-forceAmount, 0);
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.S))
+            {
+                force += new Vector2(0, forceAmount);
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.D))
+            {
+                force += new Vector2(forceAmount, 0);
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.W))
+            {
+                force += new Vector2(0, -forceAmount);
+            }
 
             _rectangleBody.ApplyForce(force);
 
             const float torqueAmount = 1000;
             float torque = 0;
 
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque -= torqueAmount; }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque += torqueAmount; }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left))
+            {
+                torque -= torqueAmount;
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right))
+            {
+                torque += torqueAmount;
+            }
 
             _rectangleBody.ApplyTorque(torque);
         }

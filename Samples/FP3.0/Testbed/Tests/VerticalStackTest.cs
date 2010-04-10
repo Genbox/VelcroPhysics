@@ -21,6 +21,8 @@
 */
 
 using System.Diagnostics;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -32,12 +34,12 @@ namespace FarseerPhysics.TestBed.Tests
         private const int ColumnCount = 5;
         private const int RowCount = 16;
         private Body[] _bodies = new Body[RowCount * ColumnCount];
+        private Body _bullet;
         private int[] _indices = new int[RowCount * ColumnCount];
 
         private VerticalStackTest()
         {
             {
-
                 Body ground = World.Add();
 
                 PolygonShape shape = new PolygonShape(0);
@@ -48,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
                 ground.CreateFixture(shape);
             }
 
-            float[] xs = new float[] { 0.0f, -10.0f, -5.0f, 5.0f, 10.0f };
+            float[] xs = new[] {0.0f, -10.0f, -5.0f, 5.0f, 10.0f};
 
             for (int j = 0; j < ColumnCount; ++j)
             {
@@ -104,7 +106,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
 
@@ -139,7 +141,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new VerticalStackTest();
         }
-
-        private Body _bullet;
     }
 }

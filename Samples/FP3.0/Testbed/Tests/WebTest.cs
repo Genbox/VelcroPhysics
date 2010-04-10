@@ -20,6 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -29,6 +32,9 @@ namespace FarseerPhysics.TestBed.Tests
     // This tests distance joints, body destruction, and joint destruction.
     public class WebTest : Test
     {
+        private Body[] _bodies = new Body[4];
+        private Joint[] _joints = new Joint[8];
+
         private WebTest()
         {
             {
@@ -60,49 +66,57 @@ namespace FarseerPhysics.TestBed.Tests
 
                 _bodies[3].CreateFixture(shape);
 
-                FixedDistanceJoint dj = new FixedDistanceJoint(_bodies[0], new Vector2(-0.5f, -0.5f), new Vector2(-10.0f, 0.0f));
+                FixedDistanceJoint dj = new FixedDistanceJoint(_bodies[0], new Vector2(-0.5f, -0.5f),
+                                                               new Vector2(-10.0f, 0.0f));
                 _joints[0] = dj;
                 dj.Frequency = 4.0f;
                 dj.DampingRatio = 0.5f;
                 World.Add(_joints[0]);
 
-                FixedDistanceJoint dj1 = new FixedDistanceJoint(_bodies[1], new Vector2(0.5f, -0.5f), new Vector2(10.0f, 0.0f));
+                FixedDistanceJoint dj1 = new FixedDistanceJoint(_bodies[1], new Vector2(0.5f, -0.5f),
+                                                                new Vector2(10.0f, 0.0f));
                 _joints[1] = dj1;
                 dj1.Frequency = 4.0f;
                 dj1.DampingRatio = 0.5f;
                 World.Add(_joints[1]);
 
-                FixedDistanceJoint dj2 = new FixedDistanceJoint(_bodies[2], new Vector2(0.5f, 0.5f), new Vector2(10.0f, 20.0f));
+                FixedDistanceJoint dj2 = new FixedDistanceJoint(_bodies[2], new Vector2(0.5f, 0.5f),
+                                                                new Vector2(10.0f, 20.0f));
                 _joints[2] = dj2;
                 dj2.Frequency = 4.0f;
                 dj2.DampingRatio = 0.5f;
                 World.Add(_joints[2]);
 
-                FixedDistanceJoint dj3 = new FixedDistanceJoint(_bodies[3], new Vector2(-0.5f, 0.5f), new Vector2(-10.0f, 20.0f));
+                FixedDistanceJoint dj3 = new FixedDistanceJoint(_bodies[3], new Vector2(-0.5f, 0.5f),
+                                                                new Vector2(-10.0f, 20.0f));
                 _joints[3] = dj3;
                 dj3.Frequency = 4.0f;
                 dj3.DampingRatio = 0.5f;
                 World.Add(_joints[3]);
 
-                DistanceJoint dj4 = new DistanceJoint(_bodies[0], _bodies[1], new Vector2(0.0f, 0.0f), new Vector2(0.0f, 0.0f));
+                DistanceJoint dj4 = new DistanceJoint(_bodies[0], _bodies[1], new Vector2(0.0f, 0.0f),
+                                                      new Vector2(0.0f, 0.0f));
                 _joints[4] = dj4;
                 dj4.Frequency = 4.0f;
                 dj4.DampingRatio = 0.5f;
                 World.Add(_joints[4]);
 
-                DistanceJoint dj5 = new DistanceJoint(_bodies[1], _bodies[2], new Vector2(0.0f, 0.0f), new Vector2(0.0f, 0.0f));
+                DistanceJoint dj5 = new DistanceJoint(_bodies[1], _bodies[2], new Vector2(0.0f, 0.0f),
+                                                      new Vector2(0.0f, 0.0f));
                 _joints[5] = dj5;
                 dj5.Frequency = 4.0f;
                 dj5.DampingRatio = 0.5f;
                 World.Add(_joints[5]);
 
-                DistanceJoint dj6 = new DistanceJoint(_bodies[2], _bodies[3], new Vector2(0.0f, 0.0f), new Vector2(0.0f, 0.0f));
+                DistanceJoint dj6 = new DistanceJoint(_bodies[2], _bodies[3], new Vector2(0.0f, 0.0f),
+                                                      new Vector2(0.0f, 0.0f));
                 _joints[6] = dj6;
                 dj6.Frequency = 4.0f;
                 dj6.DampingRatio = 0.5f;
                 World.Add(_joints[6]);
 
-                DistanceJoint dj7 = new DistanceJoint(_bodies[3], _bodies[0], new Vector2(0.0f, 0.0f), new Vector2(0.0f, 0.0f));
+                DistanceJoint dj7 = new DistanceJoint(_bodies[3], _bodies[0], new Vector2(0.0f, 0.0f),
+                                                      new Vector2(0.0f, 0.0f));
                 _joints[7] = dj7;
                 dj7.Frequency = 4.0f;
                 dj7.DampingRatio = 0.5f;
@@ -139,7 +153,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
             DebugView.DrawString(50, TextLine, "This demonstrates a soft distance joint.");
@@ -164,8 +178,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new WebTest();
         }
-
-        private Body[] _bodies = new Body[4];
-        private Joint[] _joints = new Joint[8];
     }
 }

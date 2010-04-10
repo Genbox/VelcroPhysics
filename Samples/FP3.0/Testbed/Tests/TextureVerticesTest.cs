@@ -1,10 +1,13 @@
 ﻿using System;
-using FarseerPhysics.Common.Boolean;
+using System.Collections.Generic;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
+using FarseerPhysics.Common.PolygonManipulation;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -13,6 +16,9 @@ namespace FarseerPhysics.TestBed.Tests
         private Body _polygonBody;
         private Texture2D _polygonTexture;
         private Vector2[] _vertices;
+        private Color[] colors;
+        private List<Vertices> list;
+        private Vertices vertices;
 
         private TextureVerticesTest()
         {
@@ -47,11 +53,12 @@ namespace FarseerPhysics.TestBed.Tests
             if (list != null)
             {
                 colors = new Color[list.Count];
-                Random random = new Random((int)DateTime.Now.Ticks);
+                Random random = new Random((int) DateTime.Now.Ticks);
 
                 for (int i = 0; i < list.Count; i++)
                 {
-                    colors[i] = new Color((byte)random.Next(100, 255), (byte)random.Next(100, 255), (byte)random.Next(100, 255));
+                    colors[i] = new Color((byte) random.Next(100, 255), (byte) random.Next(100, 255),
+                                          (byte) random.Next(100, 255));
                 }
             }
 
@@ -71,11 +78,7 @@ namespace FarseerPhysics.TestBed.Tests
             base.Initialize();
         }
 
-        private Vertices vertices;
-        private List<Vertices> list;
-        private Color[] colors;
-
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             if (_vertices != null)
                 for (int i = 0; i < _vertices.Length; i++)

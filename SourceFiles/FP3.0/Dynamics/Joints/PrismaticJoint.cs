@@ -21,9 +21,10 @@
 */
 
 using System;
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Dynamics.Joints
 {
     // Linear constraint (point-to-line)
     // d = p2 - p1 = x2 + r2 - x1 - r1
@@ -96,7 +97,6 @@ namespace FarseerPhysics
     /// </summary>
     public class PrismaticJoint : Joint
     {
-        private Vector2 _localXAxis1;
         private Mat33 _K;
         private float _a1, _a2;
         private Vector2 _axis;
@@ -104,6 +104,7 @@ namespace FarseerPhysics
         private bool _enableMotor;
         private Vector3 _impulse;
         private LimitState _limitState;
+        private Vector2 _localXAxis1;
         private Vector2 _localYAxis1;
         private float _lowerTranslation;
         private float _maxMotorForce;
@@ -123,7 +124,7 @@ namespace FarseerPhysics
         /// when the local anchor points coincide in world space. Using local
         /// anchors and a local axis helps when saving and loading a game.
         /// </summary>        
-        public PrismaticJoint(Body b1, Body b2, Vector2 anchor,Vector2 axis)
+        public PrismaticJoint(Body b1, Body b2, Vector2 anchor, Vector2 axis)
             : base(b1, b2)
         {
             JointType = JointType.Prismatic;

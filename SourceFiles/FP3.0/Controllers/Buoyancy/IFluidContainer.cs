@@ -1,7 +1,7 @@
-using FarseerPhysics;
+using FarseerPhysics.Collision;
 using Microsoft.Xna.Framework;
 
-namespace FarseerGames.FarseerPhysics.Interfaces
+namespace FarseerPhysics.Controllers.Buoyancy
 {
     public interface IFluidContainer
     {

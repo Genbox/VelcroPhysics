@@ -21,9 +21,10 @@
 */
 
 using System.Diagnostics;
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
     /// A mouse joint is used to make a point on a body track a
@@ -170,7 +171,8 @@ namespace FarseerPhysics
             float invI = b._invI;
 
             Mat22 K1 = new Mat22(new Vector2(invMass, 0.0f), new Vector2(0.0f, invMass));
-            Mat22 K2 = new Mat22(new Vector2(invI * r.Y * r.Y, -invI * r.X * r.Y), new Vector2(-invI * r.X * r.Y, invI * r.X * r.X));
+            Mat22 K2 = new Mat22(new Vector2(invI * r.Y * r.Y, -invI * r.X * r.Y),
+                                 new Vector2(-invI * r.X * r.Y, invI * r.X * r.X));
 
             Mat22 K;
             Mat22.Add(ref K1, ref K2, out K);

@@ -20,6 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -28,9 +32,11 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class LineJointTest : Test
     {
+        private FixedLineJoint _fixedLineJoint;
+        private LineJoint _lineJoint;
+
         private LineJointTest()
         {
-
             Body ground;
             {
                 ground = World.Add();
@@ -87,10 +93,10 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine+200, "Keys: (l) limits on/off, (m) motor on/off");
+            DebugView.DrawString(50, TextLine + 200, "Keys: (l) limits on/off, (m) motor on/off");
             TextLine += 15;
             DebugView.DrawString(50, TextLine + 200, "_lineJoint.JointSpeed:{0:n}", _lineJoint.JointSpeed);
             TextLine += 15;
@@ -98,8 +104,8 @@ namespace FarseerPhysics.TestBed.Tests
             TextLine += 15;
             DebugView.DrawString(50, TextLine + 200, "_lineJoint.JointTranslation:{0:n}", _lineJoint.JointTranslation);
             TextLine += 15;
-            DebugView.DrawString(50, TextLine + 200, "_fixedLineJoint.JointTranslation:{0:n}", _fixedLineJoint.JointTranslation);
-            
+            DebugView.DrawString(50, TextLine + 200, "_fixedLineJoint.JointTranslation:{0:n}",
+                                 _fixedLineJoint.JointTranslation);
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
@@ -121,9 +127,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new LineJointTest();
         }
-
-        private LineJoint _lineJoint;
-        private FixedLineJoint _fixedLineJoint;
     }
 }
-

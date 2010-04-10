@@ -1,5 +1,4 @@
 using System;
-using FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -58,7 +57,7 @@ namespace DemoBaseXNA.DrawingSystem
             Vector2.Normalize(ref difference, out _normalizedDifference);
             Vector2.Dot(ref _xVector, ref _normalizedDifference, out _theta);
 
-            _theta = (float)Math.Acos((float)_theta);
+            _theta = (float) Math.Acos(_theta);
             if (difference.Y < 0)
             {
                 _theta = -_theta;

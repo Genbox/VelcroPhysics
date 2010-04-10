@@ -23,9 +23,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Dynamics
 {
     /// <summary>
     /// The body type.
@@ -62,10 +67,9 @@ namespace FarseerPhysics
 
     public class Body
     {
-        private BodyType _bodyType;
-
         internal float _angularDamping;
         internal float _angularVelocity;
+        private BodyType _bodyType;
         internal ContactEdge _contactList;
         internal List<Fixture> _fixtureList = new List<Fixture>(32);
         internal BodyFlags _flags;
@@ -75,9 +79,9 @@ namespace FarseerPhysics
         internal JointEdge _jointList;
         internal Vector2 _linearVelocity;
         internal float _sleepTime;
-        internal Sweep _sweep;	// the swept motion for CCD
+        internal Sweep _sweep; // the swept motion for CCD
         internal float _torque;
-        internal Transform _xf;		// the body origin transform
+        internal Transform _xf; // the body origin transform
 
         private Body()
         {
@@ -94,24 +98,6 @@ namespace FarseerPhysics
             InertiaScale = 1;
 
             _xf.R.Set(0);
-        }
-
-        public Body Clone(World world)
-        {
-            Body clone = new Body();
-            clone.World = world;
-            clone._angularDamping = _angularDamping;
-            clone._angularVelocity = _angularVelocity;
-            clone._bodyType = _bodyType;
-            clone._flags = _flags;
-            clone._linearVelocity = _linearVelocity;
-            clone.Position = Position;
-            clone.Rotation = Rotation;
-            clone.InertiaScale = InertiaScale;
-            clone.UserData = UserData;
-            clone.LinearDamping = LinearDamping;
-
-            return clone;
         }
 
         /// <summary>
@@ -219,10 +205,7 @@ namespace FarseerPhysics
                     _flags &= ~BodyFlags.Bullet;
                 }
             }
-            get
-            {
-                return (_flags & BodyFlags.Bullet) == BodyFlags.Bullet;
-            }
+            get { return (_flags & BodyFlags.Bullet) == BodyFlags.Bullet; }
         }
 
         /// <summary>
@@ -468,14 +451,8 @@ namespace FarseerPhysics
         /// <returns>Return the world position of the body's origin.</returns>
         public Vector2 Position
         {
-            get
-            {
-                return _xf.Position;
-            }
-            set
-            {
-                SetTransform(value, Rotation);
-            }
+            get { return _xf.Position; }
+            set { SetTransform(value, Rotation); }
         }
 
         /// <summary>
@@ -484,14 +461,8 @@ namespace FarseerPhysics
         /// <returns>Return the current world rotation angle in radians.</returns>
         public float Rotation
         {
-            get
-            {
-                return _sweep.Angle;
-            }
-            set
-            {
-                SetTransform(Position, value);
-            }
+            get { return _sweep.Angle; }
+            set { SetTransform(Position, value); }
         }
 
         public bool IsStatic
@@ -502,6 +473,24 @@ namespace FarseerPhysics
                 if (value)
                     BodyType = BodyType.Static;
             }
+        }
+
+        public Body Clone(World world)
+        {
+            Body clone = new Body();
+            clone.World = world;
+            clone._angularDamping = _angularDamping;
+            clone._angularVelocity = _angularVelocity;
+            clone._bodyType = _bodyType;
+            clone._flags = _flags;
+            clone._linearVelocity = _linearVelocity;
+            clone.Position = Position;
+            clone.Rotation = Rotation;
+            clone.InertiaScale = InertiaScale;
+            clone.UserData = UserData;
+            clone.LinearDamping = LinearDamping;
+
+            return clone;
         }
 
         /// <summary>

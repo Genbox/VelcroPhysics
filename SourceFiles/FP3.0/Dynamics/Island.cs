@@ -20,17 +20,31 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Microsoft.Xna.Framework;
 using System;
 using System.Diagnostics;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Dynamics.Joints;
+using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Dynamics
 {
     /// <summary>
     /// This is an internal class.
     /// </summary>
     internal class Island
     {
+        public Body[] Bodies;
+        public int BodyCount;
+        public int ContactCount;
+        public Contact[] Contacts;
+        public int JointCapacity;
+        public int JointCount;
+        public Joint[] Joints;
+        private int _bodyCapacity;
+        private ContactManager _contactManager;
+        private ContactSolver _contactSolver = new ContactSolver();
+
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
         {
             _bodyCapacity = bodyCapacity;
@@ -290,19 +304,5 @@ namespace FarseerPhysics
                 _contactManager.PostSolve(c, ref impulse);
             }
         }
-
-        private ContactSolver _contactSolver = new ContactSolver();
-        private ContactManager _contactManager;
-
-        public Body[] Bodies;
-        public Contact[] Contacts;
-        public Joint[] Joints;
-
-        public int BodyCount;
-        public int ContactCount;
-        public int JointCount;
-
-        private int _bodyCapacity;
-        public int JointCapacity;
     }
 }

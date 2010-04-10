@@ -50,28 +50,36 @@ namespace FarseerPhysics.Common.Decomposition
             {
                 if (Reflex(i, vertices))
                 {
-                    dist1 = dist2 = float.MaxValue;// std::numeric_limits<qreal>::max();
+                    dist1 = dist2 = float.MaxValue; // std::numeric_limits<qreal>::max();
                     for (int j = 0; j < vertices.Count; ++j)
                     {
-                        if (Left(At(i - 1, vertices), At(i, vertices), At(j, vertices)) && RightOn(At(i - 1, vertices), At(i, vertices), At(j - 1, vertices)))
-                        { // if ray (i-1)->(i) intersects with edge (j, j-1)
+                        if (Left(At(i - 1, vertices), At(i, vertices), At(j, vertices)) &&
+                            RightOn(At(i - 1, vertices), At(i, vertices), At(j - 1, vertices)))
+                        {
+                            // if ray (i-1)->(i) intersects with edge (j, j-1)
                             //QLineF(at(i - 1), at(i)).intersect(QLineF(at(j), at(j - 1)), ip);
-                            ip = LineTools.LineIntersect(At(i - 1, vertices), At(i, vertices), At(j, vertices), At(j - 1, vertices));
+                            ip = LineTools.LineIntersect(At(i - 1, vertices), At(i, vertices), At(j, vertices),
+                                                         At(j - 1, vertices));
                             if (Right(At(i + 1, vertices), At(i, vertices), ip))
-                            { // intersection point isn't caused by backwards ray
+                            {
+                                // intersection point isn't caused by backwards ray
                                 d = SquareDist(At(i, vertices), ip);
                                 if (d < dist1)
-                                { // take the closest intersection so we know it isn't blocked by another edge
+                                {
+                                    // take the closest intersection so we know it isn't blocked by another edge
                                     dist1 = d;
                                     ind1 = j;
                                     ip1 = ip;
                                 }
                             }
                         }
-                        if (Left(At(i + 1, vertices), At(i, vertices), At(j + 1, vertices)) && RightOn(At(i + 1, vertices), At(i, vertices), At(j, vertices)))
-                        { // if ray (i+1)->(i) intersects with edge (j+1, j)
+                        if (Left(At(i + 1, vertices), At(i, vertices), At(j + 1, vertices)) &&
+                            RightOn(At(i + 1, vertices), At(i, vertices), At(j, vertices)))
+                        {
+                            // if ray (i+1)->(i) intersects with edge (j+1, j)
                             //QLineF(at(i + 1), at(i)).intersect(QLineF(at(j), at(j + 1)), ip);
-                            ip = LineTools.LineIntersect(At(i + 1, vertices), At(i, vertices), At(j, vertices), At(j + 1, vertices));
+                            ip = LineTools.LineIntersect(At(i + 1, vertices), At(i, vertices), At(j, vertices),
+                                                         At(j + 1, vertices));
                             if (Left(At(i - 1, vertices), At(i, vertices), ip))
                             {
                                 d = SquareDist(At(i, vertices), ip);
@@ -85,7 +93,8 @@ namespace FarseerPhysics.Common.Decomposition
                         }
                     }
                     if (ind1 == (ind2 + 1) % vertices.Count)
-                    { // no vertices in range
+                    {
+                        // no vertices in range
                         Vector2 sp = ((ip1 + ip2) / 2);
                         poly1 = Copy(i, ind2, vertices);
                         poly1.Add(sp);
@@ -103,7 +112,8 @@ namespace FarseerPhysics.Common.Decomposition
                                 double score = 1 / (SquareDist(At(i, vertices), At(j, vertices)) + 1);
                                 if (Reflex(j, vertices))
                                 {
-                                    if (RightOn(At(j - 1, vertices), At(j, vertices), At(i, vertices)) && LeftOn(At(j + 1, vertices), At(j, vertices), At(i, vertices)))
+                                    if (RightOn(At(j - 1, vertices), At(j, vertices), At(i, vertices)) &&
+                                        LeftOn(At(j + 1, vertices), At(j, vertices), At(i, vertices)))
                                     {
                                         score += 3;
                                     }
@@ -123,8 +133,8 @@ namespace FarseerPhysics.Common.Decomposition
                                 }
                             }
                         }
-                        poly1 = Copy(i, (int)bestIndex, vertices);
-                        poly2 = Copy((int)bestIndex, i, vertices);
+                        poly1 = Copy(i, (int) bestIndex, vertices);
+                        poly2 = Copy((int) bestIndex, i, vertices);
                     }
                     list.AddRange(ConvexPartition(poly1));
                     list.AddRange(ConvexPartition(poly2));
@@ -150,19 +160,23 @@ namespace FarseerPhysics.Common.Decomposition
         {
             if (Reflex(i, vertices))
             {
-                if (LeftOn(At(i, vertices), At(i - 1, vertices), At(j, vertices)) && RightOn(At(i, vertices), At(i + 1, vertices), At(j, vertices))) return false;
+                if (LeftOn(At(i, vertices), At(i - 1, vertices), At(j, vertices)) &&
+                    RightOn(At(i, vertices), At(i + 1, vertices), At(j, vertices))) return false;
             }
             else
             {
-                if (RightOn(At(i, vertices), At(i + 1, vertices), At(j, vertices)) || LeftOn(At(i, vertices), At(i - 1, vertices), At(j, vertices))) return false;
+                if (RightOn(At(i, vertices), At(i + 1, vertices), At(j, vertices)) ||
+                    LeftOn(At(i, vertices), At(i - 1, vertices), At(j, vertices))) return false;
             }
             if (Reflex(j, vertices))
             {
-                if (LeftOn(At(j, vertices), At(j - 1, vertices), At(i, vertices)) && RightOn(At(j, vertices), At(j + 1, vertices), At(i, vertices))) return false;
+                if (LeftOn(At(j, vertices), At(j - 1, vertices), At(i, vertices)) &&
+                    RightOn(At(j, vertices), At(j + 1, vertices), At(i, vertices))) return false;
             }
             else
             {
-                if (RightOn(At(j, vertices), At(j + 1, vertices), At(i, vertices)) || LeftOn(At(j, vertices), At(j - 1, vertices), At(i, vertices))) return false;
+                if (RightOn(At(j, vertices), At(j + 1, vertices), At(i, vertices)) ||
+                    LeftOn(At(j, vertices), At(j - 1, vertices), At(i, vertices))) return false;
             }
             for (int k = 0; k < vertices.Count; ++k)
             {
@@ -171,7 +185,8 @@ namespace FarseerPhysics.Common.Decomposition
                     continue; // ignore incident edges
                 }
                 //if(QLineF(at(i), at(j)).intersect(QLineF(at(k), at(k + 1)), NULL) == QLineF::BoundedIntersection) {
-                if (LineTools.LineIntersect(At(i, vertices), At(j, vertices), At(k, vertices), At(k + 1, vertices)) != Vector2.Zero)
+                if (LineTools.LineIntersect(At(i, vertices), At(j, vertices), At(k, vertices), At(k + 1, vertices)) !=
+                    Vector2.Zero)
                 {
                     return false;
                 }

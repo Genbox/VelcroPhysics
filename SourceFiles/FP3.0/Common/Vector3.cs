@@ -1,4 +1,5 @@
 #region License
+
 /*
 MIT License
 Copyright © 2006 The Mono.Xna Team
@@ -26,13 +27,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 #endregion License
 
 #if(!XNA)
 using System;
-using System.ComponentModel;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Microsoft.Xna.Framework
 {
@@ -56,7 +57,6 @@ namespace Microsoft.Xna.Framework
 
         #endregion Private Fields
 
-
         #region Public Fields
 
         public float X;
@@ -64,7 +64,6 @@ namespace Microsoft.Xna.Framework
         public float Z;
 
         #endregion Public Fields
-
 
         #region Properties
 
@@ -125,35 +124,32 @@ namespace Microsoft.Xna.Framework
 
         #endregion Properties
 
-
         #region Constructors
 
         public Vector3(float x, float y, float z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            X = x;
+            Y = y;
+            Z = z;
         }
 
 
         public Vector3(float value)
         {
-            this.X = value;
-            this.Y = value;
-            this.Z = value;
+            X = value;
+            Y = value;
+            Z = value;
         }
 
 
         public Vector3(Vector2 value, float z)
         {
-            this.X = value.X;
-            this.Y = value.Y;
-            this.Z = z;
+            X = value.X;
+            Y = value.Y;
+            Z = z;
         }
 
-
         #endregion Constructors
-
 
         #region Public Methods
 
@@ -180,7 +176,8 @@ namespace Microsoft.Xna.Framework
                 MathHelper.Barycentric(value1.Z, value2.Z, value3.Z, amount1, amount2));
         }
 
-        public static void Barycentric(ref Vector3 value1, ref Vector3 value2, ref Vector3 value3, float amount1, float amount2, out Vector3 result)
+        public static void Barycentric(ref Vector3 value1, ref Vector3 value2, ref Vector3 value3, float amount1,
+                                       float amount2, out Vector3 result)
         {
             result = new Vector3(
                 MathHelper.Barycentric(value1.X, value2.X, value3.X, amount1, amount2),
@@ -196,7 +193,8 @@ namespace Microsoft.Xna.Framework
                 MathHelper.CatmullRom(value1.Z, value2.Z, value3.Z, value4.Z, amount));
         }
 
-        public static void CatmullRom(ref Vector3 value1, ref Vector3 value2, ref Vector3 value3, ref Vector3 value4, float amount, out Vector3 result)
+        public static void CatmullRom(ref Vector3 value1, ref Vector3 value2, ref Vector3 value3, ref Vector3 value4,
+                                      float amount, out Vector3 result)
         {
             result = new Vector3(
                 MathHelper.CatmullRom(value1.X, value2.X, value3.X, value4.X, amount),
@@ -237,13 +235,13 @@ namespace Microsoft.Xna.Framework
         {
             float result;
             DistanceSquared(ref vector1, ref vector2, out result);
-            return (float)Math.Sqrt(result);
+            return (float) Math.Sqrt(result);
         }
 
         public static void Distance(ref Vector3 value1, ref Vector3 value2, out float result)
         {
             DistanceSquared(ref value1, ref value2, out result);
-            result = (float)Math.Sqrt(result);
+            result = (float) Math.Sqrt(result);
         }
 
         public static float DistanceSquared(Vector3 value1, Vector3 value2)
@@ -304,7 +302,7 @@ namespace Microsoft.Xna.Framework
 
         public override bool Equals(object obj)
         {
-            return (obj is Vector3) ? this == (Vector3)obj : false;
+            return (obj is Vector3) ? this == (Vector3) obj : false;
         }
 
         public bool Equals(Vector3 other)
@@ -314,7 +312,7 @@ namespace Microsoft.Xna.Framework
 
         public override int GetHashCode()
         {
-            return (int)(this.X + this.Y + this.Z);
+            return (int) (X + Y + Z);
         }
 
         public static Vector3 Hermite(Vector3 value1, Vector3 tangent1, Vector3 value2, Vector3 tangent2, float amount)
@@ -324,7 +322,8 @@ namespace Microsoft.Xna.Framework
             return result;
         }
 
-        public static void Hermite(ref Vector3 value1, ref Vector3 tangent1, ref Vector3 value2, ref Vector3 tangent2, float amount, out Vector3 result)
+        public static void Hermite(ref Vector3 value1, ref Vector3 tangent1, ref Vector3 value2, ref Vector3 tangent2,
+                                   float amount, out Vector3 result)
         {
             result.X = MathHelper.Hermite(value1.X, tangent1.X, value2.X, tangent2.X, amount);
             result.Y = MathHelper.Hermite(value1.Y, tangent1.Y, value2.Y, tangent2.Y, amount);
@@ -335,7 +334,7 @@ namespace Microsoft.Xna.Framework
         {
             float result;
             DistanceSquared(ref this, ref zero, out result);
-            return (float)Math.Sqrt(result);
+            return (float) Math.Sqrt(result);
         }
 
         public float LengthSquared()
@@ -505,11 +504,11 @@ namespace Microsoft.Xna.Framework
         {
             StringBuilder sb = new StringBuilder(32);
             sb.Append("{X:");
-            sb.Append(this.X);
+            sb.Append(X);
             sb.Append(" Y:");
-            sb.Append(this.Y);
+            sb.Append(Y);
             sb.Append(" Z:");
-            sb.Append(this.Z);
+            sb.Append(Z);
             sb.Append("}");
             return sb.ToString();
         }
@@ -522,9 +521,11 @@ namespace Microsoft.Xna.Framework
 
         public static void Transform(ref Vector3 position, ref Matrix matrix, out Vector3 result)
         {
-            result = new Vector3((position.X * matrix.M11) + (position.Y * matrix.M21) + (position.Z * matrix.M31) + matrix.M41,
-                                 (position.X * matrix.M12) + (position.Y * matrix.M22) + (position.Z * matrix.M32) + matrix.M42,
-                                 (position.X * matrix.M13) + (position.Y * matrix.M23) + (position.Z * matrix.M33) + matrix.M43);
+            result =
+                new Vector3(
+                    (position.X * matrix.M11) + (position.Y * matrix.M21) + (position.Z * matrix.M31) + matrix.M41,
+                    (position.X * matrix.M12) + (position.Y * matrix.M22) + (position.Z * matrix.M32) + matrix.M42,
+                    (position.X * matrix.M13) + (position.Y * matrix.M23) + (position.Z * matrix.M33) + matrix.M43);
         }
 
         public static void Transform(Vector3[] sourceArray, ref Matrix matrix, Vector3[] destinationArray)
@@ -532,7 +533,8 @@ namespace Microsoft.Xna.Framework
             throw new NotImplementedException();
         }
 
-        public static void Transform(Vector3[] sourceArray, int sourceIndex, ref Matrix matrix, Vector3[] destinationArray, int destinationIndex, int length)
+        public static void Transform(Vector3[] sourceArray, int sourceIndex, ref Matrix matrix,
+                                     Vector3[] destinationArray, int destinationIndex, int length)
         {
             throw new NotImplementedException();
         }
@@ -542,7 +544,8 @@ namespace Microsoft.Xna.Framework
             throw new NotImplementedException();
         }
 
-        public static void TransformNormal(Vector3[] sourceArray, int sourceIndex, ref Matrix matrix, Vector3[] destinationArray, int destinationIndex, int length)
+        public static void TransformNormal(Vector3[] sourceArray, int sourceIndex, ref Matrix matrix,
+                                           Vector3[] destinationArray, int destinationIndex, int length)
         {
             throw new NotImplementedException();
         }
@@ -562,14 +565,13 @@ namespace Microsoft.Xna.Framework
 
         #endregion Public methods
 
-
         #region Operators
 
         public static bool operator ==(Vector3 value1, Vector3 value2)
         {
             return value1.X == value2.X
-                && value1.Y == value2.Y
-                && value1.Z == value2.Z;
+                   && value1.Y == value2.Y
+                   && value1.Z == value2.Z;
         }
 
         public static bool operator !=(Vector3 value1, Vector3 value2)
@@ -643,4 +645,5 @@ namespace Microsoft.Xna.Framework
         #endregion
     }
 }
+
 #endif

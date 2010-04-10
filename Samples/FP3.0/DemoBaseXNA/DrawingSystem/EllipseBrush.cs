@@ -6,11 +6,10 @@ namespace DemoBaseXNA.DrawingSystem
 {
     public class EllipseBrush
     {
-        private Texture2D _ellipseTexture;
-        private Vector2 _ellipseOrigin;
-
         public int XRadius;
         public int YRadius;
+        private Vector2 _ellipseOrigin;
+        private Texture2D _ellipseTexture;
 
         public EllipseBrush()
         {

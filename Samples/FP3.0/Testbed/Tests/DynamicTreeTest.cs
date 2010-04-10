@@ -22,6 +22,7 @@
 
 using System;
 using System.Diagnostics;
+using FarseerPhysics.Collision;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -32,6 +33,15 @@ namespace FarseerPhysics.TestBed.Tests
     public class DynamicTreeTest : Test
     {
         private const int ActorCount = 128;
+        private Actor[] _actors = new Actor[ActorCount];
+        private bool _automated;
+        private float _proxyExtent;
+        private AABB _queryAABB;
+        private Actor _rayActor = new Actor();
+        private RayCastInput _rayCastInput;
+        private int _stepCount;
+        private DynamicTree _tree = new DynamicTree();
+        private float _worldExtent;
 
         private DynamicTreeTest()
         {
@@ -67,7 +77,7 @@ namespace FarseerPhysics.TestBed.Tests
             return new DynamicTreeTest();
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             _rayActor = null;
             for (int i = 0; i < ActorCount; ++i)
@@ -176,14 +186,6 @@ namespace FarseerPhysics.TestBed.Tests
 
             return input.MaxFraction;
         }
-
-        private class Actor
-        {
-            internal AABB aabb;
-            internal float fraction;
-            internal bool overlap;
-            internal int proxyId;
-        } ;
 
         private void GetRandomAABB(out AABB aabb)
         {
@@ -327,15 +329,16 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        private float _worldExtent;
-        private float _proxyExtent;
+        #region Nested type: Actor
 
-        private DynamicTree _tree = new DynamicTree();
-        private AABB _queryAABB;
-        private RayCastInput _rayCastInput;
-        private Actor _rayActor = new Actor();
-        private Actor[] _actors = new Actor[ActorCount];
-        private int _stepCount;
-        private bool _automated;
+        private class Actor
+        {
+            internal AABB aabb;
+            internal float fraction;
+            internal bool overlap;
+            internal int proxyId;
+        } ;
+
+        #endregion
     }
 }

@@ -20,6 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -28,11 +32,13 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class SliderCrankTest : Test
     {
+        private RevoluteJoint _joint1;
+        private FixedPrismaticJoint _joint2;
+
         private SliderCrankTest()
         {
             Body ground;
             {
-                
                 ground = World.Add();
 
                 PolygonShape shape = new PolygonShape(0);
@@ -67,7 +73,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(0.5f, 4.0f);
-                    
+
                     Body body = World.Add();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 13.0f);
@@ -106,7 +112,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(1.5f, 1.5f);
-                    
+
                     Body body = World.Add();
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 23.0f);
@@ -130,7 +136,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
             DebugView.DrawString(50, TextLine, "Keys: (f) toggle friction, (m) toggle motor");
@@ -144,8 +150,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new SliderCrankTest();
         }
-
-        private RevoluteJoint _joint1;
-        private FixedPrismaticJoint _joint2;
     }
 }

@@ -52,7 +52,9 @@ namespace DemoBaseXNA.ScreenSystem
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None,
-                Matrix.CreateTranslation((float)Math.Pow((float)TransitionPosition, 2) * ScreenManager.ScreenWidth, 0, 0));
+                                            Matrix.CreateTranslation(
+                                                (float) Math.Pow(TransitionPosition, 2) * ScreenManager.ScreenWidth, 0,
+                                                0));
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont,
                                                  "1) Toggle between debug and normal view using either F1 on the keyboard or 'Y' on the controller",
                                                  new Vector2(100, ScreenManager.ScreenHeight - 116), Color.White);

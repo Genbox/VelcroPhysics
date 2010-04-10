@@ -22,9 +22,10 @@
 
 using System;
 using System.Diagnostics;
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
     /// The pulley joint is connected to two bodies and two fixed ground points.

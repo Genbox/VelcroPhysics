@@ -20,9 +20,12 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System.Collections.Generic;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -35,7 +38,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
 
-                
+
                 Body ground = World.Add();
                 ground.CreateFixture(shape);
             }
@@ -105,7 +108,7 @@ namespace FarseerPhysics.TestBed.Tests
             body6.CreateFixture(circle);
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
 

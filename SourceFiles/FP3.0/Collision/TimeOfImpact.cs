@@ -22,9 +22,10 @@
 
 using System;
 using System.Diagnostics;
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Collision
 {
     /// Input parameters for CalculateTimeOfImpact
     public struct TOIInput
@@ -34,7 +35,7 @@ namespace FarseerPhysics
         public Sweep SweepA;
         public Sweep SweepB;
         public float TMax; // defines sweep interval [0, TMax]
-    };
+    } ;
 
     public enum TOIOutputState
     {
@@ -56,13 +57,20 @@ namespace FarseerPhysics
         Points,
         FaceA,
         FaceB
-    };
+    } ;
 
     public struct SeparationFunction
     {
+        private Vector2 _axis;
+        private Vector2 _localPoint;
+        private DistanceProxy _proxyA;
+        private DistanceProxy _proxyB;
+        private Sweep _sweepA, _sweepB;
+        private SeparationFunctionType _type;
+
         public SeparationFunction(ref SimplexCache cache,
-            ref DistanceProxy proxyA, ref Sweep sweepA,
-            ref DistanceProxy proxyB, ref Sweep sweepB)
+                                  ref DistanceProxy proxyA, ref Sweep sweepA,
+                                  ref DistanceProxy proxyB, ref Sweep sweepB)
         {
             _localPoint = Vector2.Zero;
             _proxyA = proxyA;
@@ -264,21 +272,18 @@ namespace FarseerPhysics
                     return 0.0f;
             }
         }
-
-        DistanceProxy _proxyA;
-        DistanceProxy _proxyB;
-        Sweep _sweepA, _sweepB;
-        SeparationFunctionType _type;
-        Vector2 _localPoint;
-        Vector2 _axis;
-    };
-
+    } ;
 
 
     public static class TimeOfImpact
     {
         // CCD via the local separating axis method. This seeks progression
         // by computing the largest time at which separation is maintained.
+
+        public static int ToiCalls, ToiIters, ToiMaxIters;
+        public static int ToiRootIters, ToiMaxRootIters;
+        public static int ToiMaxOptIters;
+
         /// Compute the upper bound on time before two shapes penetrate. Time is represented as
         /// a fraction between [0,TMax]. This uses a swept separating axis and may miss some intermediate,
         /// non-tunneling collision. If you change the time interval, you should call this function
@@ -314,7 +319,7 @@ namespace FarseerPhysics
 
             // The outer loop progressively attempts to compute new separating axes.
             // This loop terminates when an axis is repeated (no progress is made).
-            for (; ; )
+            for (;;)
             {
                 Transform xfA, xfB;
                 sweepA.GetTransform(out xfA, t1);
@@ -336,13 +341,14 @@ namespace FarseerPhysics
                     break;
                 }
 
-                SeparationFunction fcn = new SeparationFunction(ref cache, ref input.ProxyA, ref sweepA, ref input.ProxyB, ref sweepB);
+                SeparationFunction fcn = new SeparationFunction(ref cache, ref input.ProxyA, ref sweepA,
+                                                                ref input.ProxyB, ref sweepB);
 
                 // Compute the TOI on the separating axis. We do this by successively
                 // resolving the deepest point. This loop is bounded by the number of vertices.
                 bool done = false;
                 float t2 = tMax;
-                for (; ; )
+                for (;;)
                 {
                     // Find the deepest point at t2. Store the witness point indices.
                     int indexA, indexB;
@@ -394,7 +400,7 @@ namespace FarseerPhysics
                     // Compute 1D root of: f(x) - target = 0
                     int rootIterCount = 0;
                     float a1 = t1, a2 = t2;
-                    for (; ; )
+                    for (;;)
                     {
                         // Use a mix of the secant rule and bisection.
                         float t;
@@ -461,9 +467,5 @@ namespace FarseerPhysics
 
             ToiMaxIters = Math.Max(ToiMaxIters, iter);
         }
-
-        public static int ToiCalls, ToiIters, ToiMaxIters;
-        public static int ToiRootIters, ToiMaxRootIters;
-        public static int ToiMaxOptIters;
     }
 }

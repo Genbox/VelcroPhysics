@@ -20,6 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -29,6 +32,13 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class DistanceTest : Test
     {
+        private float _angleB;
+        private PolygonShape _polygonA;
+        private PolygonShape _polygonB;
+        private Vector2 _positionB = Vector2.Zero;
+        private Transform _transformA;
+        private Transform _transformB;
+
         private DistanceTest()
         {
             {
@@ -53,7 +63,7 @@ namespace FarseerPhysics.TestBed.Tests
             return new DistanceTest();
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
 
@@ -129,13 +139,5 @@ namespace FarseerPhysics.TestBed.Tests
 
             _transformB.Set(_positionB, _angleB);
         }
-
-        private Vector2 _positionB = Vector2.Zero;
-        private float _angleB;
-
-        private Transform _transformA;
-        private Transform _transformB;
-        private PolygonShape _polygonA;
-        private PolygonShape _polygonB;
     }
 }

@@ -20,16 +20,22 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Microsoft.Xna.Framework;
 using System;
+using FarseerPhysics.Common;
+using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Collision.Shapes
 {
     /// <summary>
     /// Shape that represents a circle
     /// </summary>
     public class CircleShape : Shape
     {
+        /// <summary>
+        /// Position of the shape
+        /// </summary>
+        public Vector2 Position;
+
         private CircleShape()
         {
         }
@@ -92,7 +98,7 @@ namespace FarseerPhysics
             }
 
             // Find the point of intersection of the line with the circle.
-            float a = -(c + (float)Math.Sqrt(sigma));
+            float a = -(c + (float) Math.Sqrt(sigma));
 
             // Is the intersection point on the segment?
             if (0.0f <= a && a <= input.MaxFraction * rr)
@@ -138,11 +144,6 @@ namespace FarseerPhysics
 
             MassData = data;
         }
-
-        /// <summary>
-        /// Position of the shape
-        /// </summary>
-        public Vector2 Position;
 
         public override Vertices GetVertices()
         {

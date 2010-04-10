@@ -20,6 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -28,6 +32,9 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class RevoluteTest : Test
     {
+        private FixedRevoluteJoint _fixedJoint;
+        private RevoluteJoint _joint;
+
         private RevoluteTest()
         {
             Body ground;
@@ -40,7 +47,6 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-
                 //The big fixed wheel
                 CircleShape shape = new CircleShape(5.0f, 5);
 
@@ -69,7 +75,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 body2.CreateFixture(shape2);
 
-                _joint = new RevoluteJoint(body, body2, new Vector2(0.0f,0.0f));
+                _joint = new RevoluteJoint(body, body2, new Vector2(0.0f, 0.0f));
                 _joint.MotorSpeed = 1.0f * Settings.Pi;
                 _joint.MaxMotorTorque = 5000.0f;
                 _joint.MotorEnabled = true;
@@ -97,7 +103,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
             DebugView.DrawString(50, TextLine, "Keys: (l) limits on/off, (m) motor on/off");
@@ -110,8 +116,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new RevoluteTest();
         }
-
-        private RevoluteJoint _joint;
-        private FixedRevoluteJoint _fixedJoint;
     }
 }

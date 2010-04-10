@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.Common.Boolean
+namespace FarseerPhysics.Common.PolygonManipulation
 {
     public static class BooleanTools
     {
@@ -256,7 +256,8 @@ namespace FarseerPhysics.Common.Boolean
             List<EdgeIntersectInfo> intersections;
 
             PolyUnionError gotError;
-            int startingIndex = PreparePolygons(polygon1, polygon2, out poly1, out poly2, out intersections, out gotError);
+            int startingIndex = PreparePolygons(polygon1, polygon2, out poly1, out poly2, out intersections,
+                                                out gotError);
 
             if (startingIndex == -1)
             {
@@ -344,7 +345,7 @@ namespace FarseerPhysics.Common.Boolean
         /// <param name="error">The error.</param>
         /// <returns></returns>
         private static int PreparePolygons(Vertices polygon1, Vertices polygon2, out Vertices poly1, out Vertices poly2,
-                                    out List<EdgeIntersectInfo> intersections, out PolyUnionError error)
+                                           out List<EdgeIntersectInfo> intersections, out PolyUnionError error)
         {
             error = PolyUnionError.None;
 
@@ -410,7 +411,7 @@ namespace FarseerPhysics.Common.Boolean
         /// <param name="intersections"></param>
         /// <returns></returns>
         private static bool VerticesIntersect(Vertices polygon1, Vertices polygon2,
-                                       out List<EdgeIntersectInfo> intersections)
+                                              out List<EdgeIntersectInfo> intersections)
         {
             intersections = new List<EdgeIntersectInfo>();
 
@@ -434,7 +435,7 @@ namespace FarseerPhysics.Common.Boolean
                     {
                         // Here, we round the returned intersection point to its nearest whole number.
                         // This prevents floating point anomolies where 99.9999-> is returned instead of 100.
-                        point = new Vector2((float)Math.Round(point.X, 0), (float)Math.Round(point.Y, 0));
+                        point = new Vector2((float) Math.Round(point.X, 0), (float) Math.Round(point.Y, 0));
                         // Record the intersection
                         intersections.Add(new EdgeIntersectInfo(new Edge(p1, p2), new Edge(p3, p4), point));
                     }
@@ -507,10 +508,8 @@ namespace FarseerPhysics.Common.Boolean
         //    Vertices returnPoly = new Vertices();
         //    for (int i = 0; i < polygon.Count; i++)
         //        returnPoly.Add(new Vector2((float)Math.Round(polygon[i].X, 0), (float)Math.Round(polygon[i].Y, 0)));
-
         //    return returnPoly;
         //}
-
         /// <summary>
         /// Determines if three vertices are collinear (ie. on a straight line)
         /// </summary>
@@ -571,7 +570,6 @@ namespace FarseerPhysics.Common.Boolean
         {
             return Simplify(polygon, 0);
         }
-
     }
 
     /// <summary>

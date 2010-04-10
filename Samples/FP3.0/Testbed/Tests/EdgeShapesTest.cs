@@ -21,15 +21,28 @@
 */
 
 using System;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
     public class EdgeShapes : Test
     {
+        private const int e_maxBodies = 256;
+        private float _angle;
+        private Body[] _bodies = new Body[e_maxBodies];
+        private int _bodyIndex;
+        private CircleShape _circle;
+        private Fixture _fixture;
+        private Vector2 _normal;
+        private Vector2 _point;
+        private PolygonShape[] _polygons = new PolygonShape[4];
+
         public EdgeShapes()
         {
             // Ground body
@@ -37,11 +50,11 @@ namespace FarseerPhysics.TestBed.Tests
                 Body ground = World.Add();
 
                 float x1 = -20.0f;
-                float y1 = 2.0f * (float)Math.Cos(x1 / 10.0f * (float)Math.PI);
+                float y1 = 2.0f * (float) Math.Cos(x1 / 10.0f * (float) Math.PI);
                 for (int i = 0; i < 80; ++i)
                 {
                     float x2 = x1 + 0.5f;
-                    float y2 = 2.0f * (float)Math.Cos(x2 / 10.0f * (float)Math.PI);
+                    float y2 = 2.0f * (float) Math.Cos(x2 / 10.0f * (float) Math.PI);
 
                     PolygonShape shape = new PolygonShape(1);
                     shape.SetAsEdge(new Vector2(x1, y1), new Vector2(x2, y2));
@@ -72,8 +85,8 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 float w = 1.0f;
-                float b = w / (2.0f + (float)Math.Sqrt(2.0f));
-                float s = (float)Math.Sqrt(2.0f) * b;
+                float b = w / (2.0f + (float) Math.Sqrt(2.0f));
+                float s = (float) Math.Sqrt(2.0f) * b;
 
                 Vertices vertices = new Vertices(8);
                 vertices.Add(new Vector2(0.5f * s, 0.0f));
@@ -101,7 +114,7 @@ namespace FarseerPhysics.TestBed.Tests
             _angle = 0.0f;
         }
 
-        void Create(int index)
+        private void Create(int index)
         {
             if (_bodies[_bodyIndex] != null)
             {
@@ -118,14 +131,13 @@ namespace FarseerPhysics.TestBed.Tests
                 _bodies[_bodyIndex].AngularDamping = 0.02f;
             }
             _bodies[_bodyIndex].Position = new Vector2(x, y);
-            _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-(float)Math.PI, (float)Math.PI);
+            _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-(float) Math.PI, (float) Math.PI);
             _bodies[_bodyIndex].BodyType = BodyType.Dynamic;
 
             if (index < 4)
             {
                 Fixture fixture = _bodies[_bodyIndex].CreateFixture(_polygons[index]);
                 fixture.Friction = 0.3f;
-
             }
             else
             {
@@ -136,7 +148,7 @@ namespace FarseerPhysics.TestBed.Tests
             _bodyIndex = (_bodyIndex + 1) % e_maxBodies;
         }
 
-        void DestroyBody()
+        private void DestroyBody()
         {
             for (int i = 0; i < e_maxBodies; ++i)
             {
@@ -174,7 +186,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
             DebugView.DrawString(5, TextLine, "Press 1-5 to drop stuff");
@@ -182,17 +194,17 @@ namespace FarseerPhysics.TestBed.Tests
 
             float L = 25.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);
-            Vector2 d = new Vector2(L * (float)Math.Cos(_angle), -L * Math.Abs((float)Math.Sin(_angle)));
+            Vector2 d = new Vector2(L * (float) Math.Cos(_angle), -L * Math.Abs((float) Math.Sin(_angle)));
             Vector2 point2 = point1 + d;
 
             World.RayCast((fixture, point, normal, fraction) =>
-            {
-                _fixture = fixture;
-                _point = point;
-                _normal = normal;
+                              {
+                                  _fixture = fixture;
+                                  _point = point;
+                                  _normal = normal;
 
-                return fraction;
-            }, point1, point2);
+                                  return fraction;
+                              }, point1, point2);
 
             if (_fixture != null)
             {
@@ -208,26 +220,12 @@ namespace FarseerPhysics.TestBed.Tests
                 DebugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
             }
 
-            _angle += 0.25f * (float)Math.PI / 180.0f;
-
+            _angle += 0.25f * (float) Math.PI / 180.0f;
         }
 
-        static internal Test Create()
+        internal static Test Create()
         {
             return new EdgeShapes();
         }
-
-        const int e_maxBodies = 256;
-
-        int _bodyIndex;
-        Body[] _bodies = new Body[e_maxBodies];
-        PolygonShape[] _polygons = new PolygonShape[4];
-        CircleShape _circle;
-
-        float _angle;
-
-        Fixture _fixture;
-        Vector2 _point;
-        Vector2 _normal;
     }
 }

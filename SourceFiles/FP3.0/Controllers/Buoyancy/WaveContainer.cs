@@ -1,10 +1,9 @@
 using System;
-using FarseerGames.FarseerPhysics.Interfaces;
-using FarseerPhysics;
-using FarseerPhysics.Controllers;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
-namespace FarseerGames.FarseerPhysics.Controllers
+namespace FarseerPhysics.Controllers.Buoyancy
 {
     /// <summary>
     /// The waveContainer simulates wave motion. It's driven by a mathematical algorithm (not physics) which dynamically 
@@ -37,6 +36,8 @@ namespace FarseerGames.FarseerPhysics.Controllers
     /// </summary>
     public class WaveContainer : IFluidContainer
     {
+        public Vector2 VectorFarWaveEdge;
+        public Vector2 VectorNearWaveEdge;
         private AABB _aabb;
         private float _aabbMin = float.MaxValue;
         private bool _goingUp = true;
@@ -49,9 +50,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private Vector2 _waveEdgeVector;
         private float _waveGeneratorCount;
 
-        public Vector2 VectorFarWaveEdge;
-        public Vector2 VectorNearWaveEdge;
-
         public WaveContainer(Vector2 position, float width, float height, int nodeCount)
         {
             //Default values
@@ -63,7 +61,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
             //Generate nodecount from width
             if (nodeCount <= 0)
-                nodeCount = (int)width * (int)(width * 0.1f);
+                nodeCount = (int) width * (int) (width * 0.1f);
 
             NodeCount = nodeCount;
             Position = position;
@@ -77,7 +75,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
             for (short i = 0; i < nodeCount; i++)
             {
-                XPosition[i] = MathHelper.Lerp(position.X, position.X + width, (float)i / (nodeCount - 1));
+                XPosition[i] = MathHelper.Lerp(position.X, position.X + width, (float) i / (nodeCount - 1));
                 YPosition[i] = 0;
                 PreviousWave[i] = 0;
                 _resultWave[i] = 0;
@@ -163,12 +161,12 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         public bool Intersect(ref AABB aabb)
         {
-            return AABB.TestOverlap(ref aabb, ref  _aabb);
+            return AABB.TestOverlap(ref aabb, ref _aabb);
         }
 
         public bool Contains(ref Vector2 vector)
         {
-            int index = (int)Math.Floor((vector.X - XPosition[0]) / _singleWaveWidth);
+            int index = (int) Math.Floor((vector.X - XPosition[0]) / _singleWaveWidth);
 
             //handle the boundry conditions
             if (index > NodeCount - 2)
@@ -196,27 +194,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 return false;
 
             return true;
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Create a disturbance in the water surface that will create waves.  The disturbance created will "ripple" across
-        /// the surface of the "water" based on the parameters that define the <see cref="WaveContainer"/>.
-        /// This could be used to create waves when something falls in the water. For this,though, you would need to determine what vertices
-        /// to move and how far.
-        /// </summary>
-        /// <param name="x">The node to change the height of</param>
-        /// <param name="offset">The amount to move the node up or down (negative values moves the node up, positive moves it down)</param>
-        public void Disturb(float x, float offset)
-        {
-            int i;
-
-            for (i = 0; i < NodeCount - 1; i++)
-            {
-                if (x >= XPosition[i] && x <= XPosition[i + 1])
-                    YPosition[i] = YPosition[i] + offset;
-            }
         }
 
         /// <summary>
@@ -272,6 +249,27 @@ namespace FarseerGames.FarseerPhysics.Controllers
                 }
             }
             YPosition[YPosition.Length - 1] = _waveGeneratorCount;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Create a disturbance in the water surface that will create waves.  The disturbance created will "ripple" across
+        /// the surface of the "water" based on the parameters that define the <see cref="WaveContainer"/>.
+        /// This could be used to create waves when something falls in the water. For this,though, you would need to determine what vertices
+        /// to move and how far.
+        /// </summary>
+        /// <param name="x">The node to change the height of</param>
+        /// <param name="offset">The amount to move the node up or down (negative values moves the node up, positive moves it down)</param>
+        public void Disturb(float x, float offset)
+        {
+            int i;
+
+            for (i = 0; i < NodeCount - 1; i++)
+            {
+                if (x >= XPosition[i] && x <= XPosition[i + 1])
+                    YPosition[i] = YPosition[i] + offset;
+            }
         }
     }
 }

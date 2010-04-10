@@ -6,8 +6,8 @@ namespace DemoBaseXNA.DrawingSystem
 {
     public class RectangleBrush
     {
-        private Texture2D _rectangleTexture;
         private Vector2 _rectangleOrigin;
+        private Texture2D _rectangleTexture;
 
         public RectangleBrush()
         {

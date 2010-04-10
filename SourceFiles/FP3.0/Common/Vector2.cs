@@ -1,4 +1,5 @@
 #region License
+
 /*
 MIT License
 Copyright © 2006 The Mono.Xna Team
@@ -26,14 +27,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 #endregion License
 
 #if(!XNA)
 
 using System;
-using System.ComponentModel;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Microsoft.Xna.Framework
 {
@@ -50,14 +51,12 @@ namespace Microsoft.Xna.Framework
 
         #endregion Private Fields
 
-
         #region Public Fields
 
         public float X;
         public float Y;
 
         #endregion Public Fields
-
 
         #region Properties
 
@@ -83,7 +82,6 @@ namespace Microsoft.Xna.Framework
 
         #endregion Properties
 
-
         #region Constructors
 
         /// <summary>
@@ -97,8 +95,8 @@ namespace Microsoft.Xna.Framework
         /// </param>
         public Vector2(float x, float y)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
 
         /// <summary>
@@ -109,12 +107,11 @@ namespace Microsoft.Xna.Framework
         /// </param>
         public Vector2(float value)
         {
-            this.X = value;
-            this.Y = value;
+            X = value;
+            Y = value;
         }
 
         #endregion Constructors
-
 
         #region Public Methods
 
@@ -152,7 +149,8 @@ namespace Microsoft.Xna.Framework
                 MathHelper.Barycentric(value1.Y, value2.Y, value3.Y, amount1, amount2));
         }
 
-        public static void Barycentric(ref Vector2 value1, ref Vector2 value2, ref Vector2 value3, float amount1, float amount2, out Vector2 result)
+        public static void Barycentric(ref Vector2 value1, ref Vector2 value2, ref Vector2 value3, float amount1,
+                                       float amount2, out Vector2 result)
         {
             result = new Vector2(
                 MathHelper.Barycentric(value1.X, value2.X, value3.X, amount1, amount2),
@@ -166,7 +164,8 @@ namespace Microsoft.Xna.Framework
                 MathHelper.CatmullRom(value1.Y, value2.Y, value3.Y, value4.Y, amount));
         }
 
-        public static void CatmullRom(ref Vector2 value1, ref Vector2 value2, ref Vector2 value3, ref Vector2 value4, float amount, out Vector2 result)
+        public static void CatmullRom(ref Vector2 value1, ref Vector2 value2, ref Vector2 value3, ref Vector2 value4,
+                                      float amount, out Vector2 result)
         {
             result = new Vector2(
                 MathHelper.CatmullRom(value1.X, value2.X, value3.X, value4.X, amount),
@@ -203,14 +202,14 @@ namespace Microsoft.Xna.Framework
         {
             float result;
             DistanceSquared(ref value1, ref value2, out result);
-            return (float)Math.Sqrt(result);
+            return (float) Math.Sqrt(result);
         }
 
 
         public static void Distance(ref Vector2 value1, ref Vector2 value2, out float result)
         {
             DistanceSquared(ref value1, ref value2, out result);
-            result = (float)Math.Sqrt(result);
+            result = (float) Math.Sqrt(result);
         }
 
         public static float DistanceSquared(Vector2 value1, Vector2 value2)
@@ -277,7 +276,7 @@ namespace Microsoft.Xna.Framework
 
         public override bool Equals(object obj)
         {
-            return (obj is Vector2) ? this == ((Vector2)obj) : false;
+            return (obj is Vector2) ? this == ((Vector2) obj) : false;
         }
 
         public bool Equals(Vector2 other)
@@ -287,7 +286,7 @@ namespace Microsoft.Xna.Framework
 
         public override int GetHashCode()
         {
-            return (int)(this.X + this.Y);
+            return (int) (X + Y);
         }
 
         public static Vector2 Hermite(Vector2 value1, Vector2 tangent1, Vector2 value2, Vector2 tangent2, float amount)
@@ -297,7 +296,8 @@ namespace Microsoft.Xna.Framework
             return result;
         }
 
-        public static void Hermite(ref Vector2 value1, ref Vector2 tangent1, ref Vector2 value2, ref Vector2 tangent2, float amount, out Vector2 result)
+        public static void Hermite(ref Vector2 value1, ref Vector2 tangent1, ref Vector2 value2, ref Vector2 tangent2,
+                                   float amount, out Vector2 result)
         {
             result.X = MathHelper.Hermite(value1.X, tangent1.X, value2.X, tangent2.X, amount);
             result.Y = MathHelper.Hermite(value1.Y, tangent1.Y, value2.Y, tangent2.Y, amount);
@@ -307,7 +307,7 @@ namespace Microsoft.Xna.Framework
         {
             float result;
             DistanceSquared(ref this, ref zeroVector, out result);
-            return (float)Math.Sqrt(result);
+            return (float) Math.Sqrt(result);
         }
 
         public float LengthSquared()
@@ -413,7 +413,7 @@ namespace Microsoft.Xna.Framework
         {
             float factor;
             DistanceSquared(ref value, ref zeroVector, out factor);
-            factor = 1f / (float)Math.Sqrt(factor);
+            factor = 1f / (float) Math.Sqrt(factor);
             result.X = value.X * factor;
             result.Y = value.Y * factor;
         }
@@ -462,14 +462,15 @@ namespace Microsoft.Xna.Framework
             throw new NotImplementedException();
         }
 
-        public static void Transform(Vector2[] sourceArray, int sourceIndex, ref Matrix matrix, Vector2[] destinationArray, int destinationIndex, int length)
+        public static void Transform(Vector2[] sourceArray, int sourceIndex, ref Matrix matrix,
+                                     Vector2[] destinationArray, int destinationIndex, int length)
         {
             throw new NotImplementedException();
         }
 
         public static Vector2 TransformNormal(Vector2 normal, Matrix matrix)
         {
-            Vector2.TransformNormal(ref normal, ref matrix, out normal);
+            TransformNormal(ref normal, ref matrix, out normal);
             return normal;
         }
 
@@ -484,7 +485,8 @@ namespace Microsoft.Xna.Framework
             throw new NotImplementedException();
         }
 
-        public static void TransformNormal(Vector2[] sourceArray, int sourceIndex, ref Matrix matrix, Vector2[] destinationArray, int destinationIndex, int length)
+        public static void TransformNormal(Vector2[] sourceArray, int sourceIndex, ref Matrix matrix,
+                                           Vector2[] destinationArray, int destinationIndex, int length)
         {
             throw new NotImplementedException();
         }
@@ -493,15 +495,14 @@ namespace Microsoft.Xna.Framework
         {
             StringBuilder sb = new StringBuilder(24);
             sb.Append("{X:");
-            sb.Append(this.X);
+            sb.Append(X);
             sb.Append(" Y:");
-            sb.Append(this.Y);
+            sb.Append(Y);
             sb.Append("}");
             return sb.ToString();
         }
 
         #endregion Public Methods
-
 
         #region Operators
 
@@ -584,4 +585,5 @@ namespace Microsoft.Xna.Framework
         #endregion Operators
     }
 }
+
 #endif

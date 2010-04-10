@@ -57,7 +57,7 @@ namespace DemoBaseXNA.ScreenSystem
         {
             _panelTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, panelWidth, panelHeight,
                                                                  _panelColor);
-            LeftBorder = ScreenManager.ScreenCenter.X - panelWidth/2f + leftBorder;
+            LeftBorder = ScreenManager.ScreenCenter.X - panelWidth / 2f + leftBorder;
 
             _textPanelTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, textPanelWidth,
                                                                      textPanelHeight, _textPanelColor);
@@ -67,15 +67,17 @@ namespace DemoBaseXNA.ScreenSystem
 
         public override void Draw(GameTime gameTime)
         {
-            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None, 
-                Matrix.CreateTranslation((float)Math.Pow((float)TransitionPosition, 2) * ScreenManager.ScreenWidth, 0, 0));
-            Vector2 panelOrigin = new Vector2(_panelTexture.Width/2f, _panelTexture.Height/2f);
+            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None,
+                                            Matrix.CreateTranslation(
+                                                (float) Math.Pow(TransitionPosition, 2) * ScreenManager.ScreenWidth, 0,
+                                                0));
+            Vector2 panelOrigin = new Vector2(_panelTexture.Width / 2f, _panelTexture.Height / 2f);
             ScreenManager.SpriteBatch.Draw(_panelTexture, ScreenManager.ScreenCenter, null, _panelColor, 0, panelOrigin,
                                            Vector2.One, SpriteEffects.None, 0);
 
             Vector2 textPanelTexturePosition =
-                new Vector2(ScreenManager.ScreenCenter.X - panelWidth/2f + textPanelLeftBorder,
-                            ScreenManager.ScreenCenter.Y - textPanelHeight/2f);
+                new Vector2(ScreenManager.ScreenCenter.X - panelWidth / 2f + textPanelLeftBorder,
+                            ScreenManager.ScreenCenter.Y - textPanelHeight / 2f);
             ScreenManager.SpriteBatch.Draw(_textPanelTexture, textPanelTexturePosition, null, _textPanelColor, 0,
                                            Vector2.Zero, Vector2.One, SpriteEffects.None, 0);
 

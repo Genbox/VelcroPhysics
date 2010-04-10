@@ -20,9 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Dynamics.Joints
 {
     // Point-to-point constraint
     // Cdot = v2 - v1
@@ -116,16 +117,22 @@ namespace FarseerPhysics
             float iA = bA._invI, iB = bB._invI;
 
             Mat22 K1 = new Mat22();
-            K1.Col1.X = mA + mB; K1.Col2.X = 0.0f;
-            K1.Col1.Y = 0.0f; K1.Col2.Y = mA + mB;
+            K1.Col1.X = mA + mB;
+            K1.Col2.X = 0.0f;
+            K1.Col1.Y = 0.0f;
+            K1.Col2.Y = mA + mB;
 
             Mat22 K2 = new Mat22();
-            K2.Col1.X = iA * rA.Y * rA.Y; K2.Col2.X = -iA * rA.X * rA.Y;
-            K2.Col1.Y = -iA * rA.X * rA.Y; K2.Col2.Y = iA * rA.X * rA.X;
+            K2.Col1.X = iA * rA.Y * rA.Y;
+            K2.Col2.X = -iA * rA.X * rA.Y;
+            K2.Col1.Y = -iA * rA.X * rA.Y;
+            K2.Col2.Y = iA * rA.X * rA.X;
 
             Mat22 K3 = new Mat22();
-            K3.Col1.X = iB * rB.Y * rB.Y; K3.Col2.X = -iB * rB.X * rB.Y;
-            K3.Col1.Y = -iB * rB.X * rB.Y; K3.Col2.Y = iB * rB.X * rB.X;
+            K3.Col1.X = iB * rB.Y * rB.Y;
+            K3.Col2.X = -iB * rB.X * rB.Y;
+            K3.Col1.Y = -iB * rB.X * rB.Y;
+            K3.Col2.Y = iB * rB.X * rB.X;
 
             Mat22 K12;
             Mat22.Add(ref K1, ref K2, out K12);

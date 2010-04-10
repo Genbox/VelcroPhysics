@@ -73,17 +73,17 @@ namespace FarseerPhysics.Common.Decomposition
             {
                 //printf("Found pinch point\n");
                 int sizeA = pinchIndexB - pinchIndexA;
-                if (sizeA == pin.Count) return false;//has dupe points at wraparound, not a problem here
+                if (sizeA == pin.Count) return false; //has dupe points at wraparound, not a problem here
                 for (int i = 0; i < sizeA; ++i)
                 {
-                    int ind = Remainder(pinchIndexA + i, pin.Count);             // is this right
+                    int ind = Remainder(pinchIndexA + i, pin.Count); // is this right
                     poutA.Add(pin[ind]);
                 }
 
                 int sizeB = pin.Count - sizeA;
                 for (int i = 0; i < sizeB; ++i)
                 {
-                    int ind = Remainder(pinchIndexB + i, pin.Count);          // is this right    
+                    int ind = Remainder(pinchIndexB + i, pin.Count); // is this right    
                     poutB.Add(pin[ind]);
                 }
                 //printf("Size of a: %d, size of b: %d\n",sizeA,sizeB);
@@ -232,7 +232,8 @@ namespace FarseerPhysics.Common.Decomposition
                 // - add the clipped triangle to the triangle list
                 int under = (earIndex == 0) ? (vNum) : (earIndex - 1);
                 int over = (earIndex == vNum) ? 0 : (earIndex + 1);
-                Triangle toAdd = new Triangle(xrem[earIndex], yrem[earIndex], xrem[over], yrem[over], xrem[under], yrem[under]);
+                Triangle toAdd = new Triangle(xrem[earIndex], yrem[earIndex], xrem[over], yrem[over], xrem[under],
+                                              yrem[under]);
                 buffer[bufferSize] = new Triangle(toAdd);
                 ++bufferSize;
 
@@ -307,8 +308,10 @@ namespace FarseerPhysics.Common.Decomposition
 
                 //Check here for degenerate triangles
                 if (((triangulated[i].X[0] == triangulated[i].X[1]) && (triangulated[i].Y[0] == triangulated[i].Y[1]))
-                    || ((triangulated[i].X[1] == triangulated[i].X[2]) && (triangulated[i].Y[1] == triangulated[i].Y[2]))
-                    || ((triangulated[i].X[0] == triangulated[i].X[2]) && (triangulated[i].Y[0] == triangulated[i].Y[2])))
+                    ||
+                    ((triangulated[i].X[1] == triangulated[i].X[2]) && (triangulated[i].Y[1] == triangulated[i].Y[2]))
+                    ||
+                    ((triangulated[i].X[0] == triangulated[i].X[2]) && (triangulated[i].Y[0] == triangulated[i].Y[2])))
                 {
                     covered[i] = true;
                 }
@@ -556,7 +559,7 @@ namespace FarseerPhysics.Common.Decomposition
         public static List<Vertices> ConvexPartition(Vertices vertices, int maxPolys)
         {
             if (vertices.Count < 3)
-                return new List<Vertices> { vertices };
+                return new List<Vertices> {vertices};
 
             List<Triangle> triangulated;
 
@@ -599,13 +602,21 @@ namespace FarseerPhysics.Common.Decomposition
                 bool ccw = (cross > 0);
                 if (ccw)
                 {
-                    X[0] = x1; X[1] = x2; X[2] = x3;
-                    Y[0] = y1; Y[1] = y2; Y[2] = y3;
+                    X[0] = x1;
+                    X[1] = x2;
+                    X[2] = x3;
+                    Y[0] = y1;
+                    Y[1] = y2;
+                    Y[2] = y3;
                 }
                 else
                 {
-                    X[0] = x1; X[1] = x3; X[2] = x2;
-                    Y[0] = y1; Y[1] = y3; Y[2] = y2;
+                    X[0] = x1;
+                    X[1] = x3;
+                    X[2] = x2;
+                    Y[0] = y1;
+                    Y[1] = y3;
+                    Y[2] = y2;
                 }
             }
 
@@ -614,8 +625,12 @@ namespace FarseerPhysics.Common.Decomposition
                 X = new float[3];
                 Y = new float[3];
 
-                X[0] = t.X[0]; X[1] = t.X[1]; X[2] = t.X[2];
-                Y[0] = t.Y[0]; Y[1] = t.Y[1]; Y[2] = t.Y[2];
+                X[0] = t.X[0];
+                X[1] = t.X[1];
+                X[2] = t.X[2];
+                Y[0] = t.Y[0];
+                Y[1] = t.Y[1];
+                Y[2] = t.Y[2];
             }
 
             public bool IsInside(float x, float y)
@@ -625,9 +640,12 @@ namespace FarseerPhysics.Common.Decomposition
                 if (y < Y[0] && y < Y[1] && y < Y[2]) return false;
                 if (y > Y[0] && y > Y[1] && y > Y[2]) return false;
 
-                float vx2 = x - X[0]; float vy2 = y - Y[0];
-                float vx1 = X[1] - X[0]; float vy1 = Y[1] - Y[0];
-                float vx0 = X[2] - X[0]; float vy0 = Y[2] - Y[0];
+                float vx2 = x - X[0];
+                float vy2 = y - Y[0];
+                float vx1 = X[1] - X[0];
+                float vy1 = Y[1] - Y[0];
+                float vx0 = X[2] - X[0];
+                float vy0 = Y[2] - Y[0];
 
                 float dot00 = vx0 * vx0 + vy0 * vy0;
                 float dot01 = vx0 * vx1 + vy0 * vy1;

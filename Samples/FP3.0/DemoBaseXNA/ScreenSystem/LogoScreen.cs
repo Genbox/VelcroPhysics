@@ -24,7 +24,7 @@ namespace DemoBaseXNA.ScreenSystem
         public override void LoadContent()
         {
             _farseerLogoTexture = ScreenManager.ContentManager.Load<Texture2D>("Content/Common/logo");
-            _origin = new Vector2(_farseerLogoTexture.Width/2f, _farseerLogoTexture.Height/2f);
+            _origin = new Vector2(_farseerLogoTexture.Width / 2f, _farseerLogoTexture.Height / 2f);
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,

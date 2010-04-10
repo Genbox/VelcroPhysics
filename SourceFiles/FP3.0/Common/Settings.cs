@@ -22,7 +22,7 @@
 
 using System;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Common
 {
     public static class Settings
     {
@@ -76,11 +76,13 @@ namespace FarseerPhysics
         /// The maximum linear velocity of a body. This limit is very large and is used
         /// to prevent numerical problems. You shouldn't need to adjust this.
         public const float MaxTranslation = 2.0f;
+
         public const float MaxTranslationSquared = (MaxTranslation * MaxTranslation);
 
         /// The maximum angular velocity of a body. This limit is very large and is used
         /// to prevent numerical problems. You shouldn't need to adjust this.
         public const float MaxRotation = (0.5f * Pi);
+
         public const float MaxRotationSquared = (MaxRotation * MaxRotation);
 
         /// This scale factor controls how fast overlap is resolved. Ideally this would be 1 so
@@ -102,13 +104,13 @@ namespace FarseerPhysics
         /// Friction mixing law. Feel free to customize this.
         public static float MixFriction(float friction1, float friction2)
         {
-	        return (float)Math.Sqrt((friction1 * friction2));
+            return (float) Math.Sqrt((friction1 * friction2));
         }
 
         /// Restitution mixing law. Feel free to customize this.
         public static float MixRestitution(float restitution1, float restitution2)
         {
-	        return restitution1 > restitution2 ? restitution1 : restitution2;
+            return restitution1 > restitution2 ? restitution1 : restitution2;
         }
     }
 }

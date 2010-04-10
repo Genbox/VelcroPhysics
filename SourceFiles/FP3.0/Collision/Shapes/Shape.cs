@@ -20,15 +20,21 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Collision.Shapes
 {
     /// <summary>
     /// This holds the mass data computed for a shape.
     /// </summary>
     public struct MassData
     {
+        /// <summary>
+        /// Area of the shape
+        /// </summary>
+        public float Area;
+
         /// <summary>
         /// The position of the shape's centroid relative to the shape's origin.
         /// </summary>
@@ -44,11 +50,6 @@ namespace FarseerPhysics
         /// The mass of the shape, usually in kilograms.
         /// </summary>
         public float Mass;
-
-        /// <summary>
-        /// Area of the shape
-        /// </summary>
-        public float Area;
     }
 
     /// <summary>
@@ -76,8 +77,8 @@ namespace FarseerPhysics
     /// </summary>
     public abstract class Shape
     {
-        internal float _radius2;
         internal float _radius;
+        internal float _radius2;
 
         protected Shape(float radius, float density)
         {

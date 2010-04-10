@@ -1,7 +1,10 @@
 using System;
 using DemoBaseXNA.Components;
 using DemoBaseXNA.ScreenSystem;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SamplesXNA.Demo1;
+
 /*
 using FarseerGames.SimpleSamplesXNA.Demo10;
 using FarseerGames.SimpleSamplesXNA.Demo2;
@@ -13,8 +16,6 @@ using FarseerGames.SimpleSamplesXNA.Demo7;
 using FarseerGames.SimpleSamplesXNA.Demo8;
 using FarseerGames.SimpleSamplesXNA.Demo9;
  * */
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace SamplesXNA
 {

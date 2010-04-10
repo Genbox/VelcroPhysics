@@ -21,6 +21,10 @@
 */
 
 using System;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -29,6 +33,8 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class ApplyForceTest : Test
     {
+        private Body _body;
+
         private ApplyForceTest()
         {
             World.Gravity = Vector2.Zero;
@@ -116,7 +122,7 @@ namespace FarseerPhysics.TestBed.Tests
                     float mass = body.Mass;
 
                     // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
-                    float radius = (float)Math.Sqrt(2.0 * (I / mass));
+                    float radius = (float) Math.Sqrt(2.0 * (I / mass));
 
                     FrictionJoint jd = new FrictionJoint(ground, body, Vector2.Zero, Vector2.Zero);
                     jd.CollideConnected = true;
@@ -149,7 +155,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new ApplyForceTest();
         }
-
-        private Body _body;
     }
 }

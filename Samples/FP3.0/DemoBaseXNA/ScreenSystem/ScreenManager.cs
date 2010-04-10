@@ -17,7 +17,6 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using DemoBaseXNA.DrawingSystem;
 
 #endregion
 
@@ -31,13 +30,13 @@ namespace DemoBaseXNA.ScreenSystem
     /// </summary>
     public class ScreenManager : DrawableGameComponent
     {
+        public MainMenuScreen MainMenuScreen = new MainMenuScreen();
         private Texture2D _blankTexture;
         private IGraphicsDeviceService _graphicsDeviceService;
         private InputState _input = new InputState();
         private List<GameScreen> _screens = new List<GameScreen>();
         private List<GameScreen> _screensToUpdate = new List<GameScreen>();
         private SpriteFonts _spriteFonts;
-        public MainMenuScreen MainMenuScreen = new MainMenuScreen();
 
         /// <summary>
         /// Constructs a new screen manager component.
@@ -48,7 +47,7 @@ namespace DemoBaseXNA.ScreenSystem
         {
             ContentManager = new ContentManager(game.Services);
             _graphicsDeviceService = (IGraphicsDeviceService) game.Services.GetService(
-                                                                  typeof (IGraphicsDeviceService));
+                typeof (IGraphicsDeviceService));
             game.Exiting += Game_Exiting;
 
             if (_graphicsDeviceService == null)
@@ -77,8 +76,8 @@ namespace DemoBaseXNA.ScreenSystem
         {
             get
             {
-                return new Vector2(_graphicsDeviceService.GraphicsDevice.Viewport.Width/2f,
-                                   _graphicsDeviceService.GraphicsDevice.Viewport.Height/2f);
+                return new Vector2(_graphicsDeviceService.GraphicsDevice.Viewport.Width / 2f,
+                                   _graphicsDeviceService.GraphicsDevice.Viewport.Height / 2f);
             }
         }
 
@@ -147,7 +146,7 @@ namespace DemoBaseXNA.ScreenSystem
             // Load content belonging to the screen manager.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             _blankTexture = ContentManager.Load<Texture2D>("Content/Common/blank");
-            
+
             // Tell each of the _screens to load their content.
             foreach (GameScreen screen in _screens)
             {

@@ -22,9 +22,10 @@
 
 using System;
 using System.Diagnostics;
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
     /// A revolute joint rains to bodies to share a common point while they
@@ -66,16 +67,16 @@ namespace FarseerPhysics
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
         /// <param name="anchor"></param>
-        public FixedRevoluteJoint(Body bodyA/*, Body bodyB*/, Vector2 anchor)
-            : base(bodyA/*, bodyB*/)
+        public FixedRevoluteJoint(Body bodyA /*, Body bodyB*/, Vector2 anchor)
+            : base(bodyA /*, bodyB*/)
         {
             JointType = JointType.FixedRevolute;
 
             // Changed to local coordinates.
             LocalAnchorA = BodyA.GetLocalPoint(anchor);
-            LocalAnchorB = anchor;// BodyB.GetLocalPoint(anchor);
+            LocalAnchorB = anchor; // BodyB.GetLocalPoint(anchor);
 
-            ReferenceAngle = /*BodyB.GetAngle() */- BodyA.GetAngle();
+            ReferenceAngle = /*BodyB.GetAngle() */ - BodyA.GetAngle();
 
             _impulse = Vector3.Zero;
 
@@ -89,7 +90,7 @@ namespace FarseerPhysics
 
         public override Vector2 WorldAnchorB
         {
-            get { return LocalAnchorB;/* BodyB.GetWorldPoint(LocalAnchorB);*/ }
+            get { return LocalAnchorB; /* BodyB.GetWorldPoint(LocalAnchorB);*/ }
         }
 
         public Vector2 LocalAnchorA { get; set; }
@@ -104,10 +105,7 @@ namespace FarseerPhysics
         /// <value></value>
         public float JointAngle
         {
-            get
-            {
-                return /*BodyB._sweep.Angle -*/ BodyA._sweep.Angle - ReferenceAngle;
-            }
+            get { return /*BodyB._sweep.Angle -*/ BodyA._sweep.Angle - ReferenceAngle; }
         }
 
         /// <summary>
@@ -116,10 +114,7 @@ namespace FarseerPhysics
         /// <value></value>
         public float JointSpeed
         {
-            get
-            {
-                return /*BodyB._angularVelocity -*/ BodyA._angularVelocity;
-            }
+            get { return /*BodyB._angularVelocity -*/ BodyA._angularVelocity; }
         }
 
         /// <summary>
@@ -244,16 +239,16 @@ namespace FarseerPhysics
             {
                 // You cannot create a rotation limit between bodies that
                 // both have fixed rotation.
-                Debug.Assert(b1._invI > 0.0f/* || b2._invI > 0.0f*/);
+                Debug.Assert(b1._invI > 0.0f /* || b2._invI > 0.0f*/);
             }
 
             // Compute the effective mass matrix.
-            Transform xf1;//, xf2;
+            Transform xf1; //, xf2;
             b1.GetTransform(out xf1);
             //b2.GetTransform(out xf2);
 
             Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-            Vector2 r2 = LocalAnchorB;// MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+            Vector2 r2 = LocalAnchorB; // MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
             // J = [-I -r1_skew I r2_skew]
             //     [ 0       -1 0       1]
@@ -264,8 +259,8 @@ namespace FarseerPhysics
             //     [  -r1y*i1*r1x-r2y*i2*r2x, m1+r1x^2*i1+m2+r2x^2*i2,           r1x*i1+r2x*i2]
             //     [          -r1y*i1-r2y*i2,           r1x*i1+r2x*i2,                   i1+i2]
 
-            float m1 = b1._invMass, m2 = 0;/* b2._invMass;*/
-            float i1 = b1._invI, i2 = 0;/* b2._invI;*/
+            float m1 = b1._invMass, m2 = 0; /* b2._invMass;*/
+            float i1 = b1._invI, i2 = 0; /* b2._invI;*/
 
             _mass.Col1.X = m1 + m2 + r1.Y * r1.Y * i1 + r2.Y * r2.Y * i2;
             _mass.Col2.X = -r1.Y * r1.X * i1 - r2.Y * r2.X * i2;
@@ -281,7 +276,7 @@ namespace FarseerPhysics
             if (_motorMass > 0.0f)
             {
                 _motorMass = 1.0f / _motorMass;
-            } 
+            }
 
             if (_enableMotor == false)
             {
@@ -290,7 +285,7 @@ namespace FarseerPhysics
 
             if (_enableLimit)
             {
-                float jointAngle = 0/*b2._sweep.Angle*/ - b1._sweep.Angle - ReferenceAngle;
+                float jointAngle = 0 /*b2._sweep.Angle*/- b1._sweep.Angle - ReferenceAngle;
                 if (Math.Abs(_upperAngle - _lowerAngle) < 2.0f * Settings.AngularSlop)
                 {
                     _limitState = LimitState.Equal;
@@ -350,11 +345,11 @@ namespace FarseerPhysics
 
             Vector2 v1 = b1._linearVelocity;
             float w1 = b1._angularVelocity;
-            Vector2 v2 = new Vector2(0, 0);// b2._linearVelocity;
-            float w2 = 0;// b2._angularVelocity;
+            Vector2 v2 = new Vector2(0, 0); // b2._linearVelocity;
+            float w2 = 0; // b2._angularVelocity;
 
-            float m1 = b1._invMass, m2 = 0;// b2._invMass;
-            float i1 = b1._invI, i2 = 0;// b2._invI;
+            float m1 = b1._invMass, m2 = 0; // b2._invMass;
+            float i1 = b1._invI, i2 = 0; // b2._invI;
 
             // Solve motor constraint.
             if (_enableMotor && _limitState != LimitState.Equal)
@@ -373,12 +368,12 @@ namespace FarseerPhysics
             // Solve limit constraint.
             if (_enableLimit && _limitState != LimitState.Inactive)
             {
-                Transform xf1;//, xf2;
+                Transform xf1; //, xf2;
                 b1.GetTransform(out xf1);
                 //b2.GetTransform(out xf2);
 
                 Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-                Vector2 r2 = LocalAnchorB;// MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+                Vector2 r2 = LocalAnchorB; // MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
                 // Solve point-to-point constraint
                 Vector2 Cdot1 = v2 + MathUtils.Cross(w2, r2) - v1 - MathUtils.Cross(w1, r1);
@@ -430,12 +425,12 @@ namespace FarseerPhysics
             }
             else
             {
-                Transform xf1;//, xf2;
+                Transform xf1; //, xf2;
                 b1.GetTransform(out xf1);
                 //b2.GetTransform(out xf2);
 
                 Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-                Vector2 r2 = LocalAnchorB;// MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+                Vector2 r2 = LocalAnchorB; // MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
                 // Solve point-to-point constraint
                 Vector2 Cdot = v2 + MathUtils.Cross(w2, r2) - v1 - MathUtils.Cross(w1, r1);
@@ -470,7 +465,7 @@ namespace FarseerPhysics
             // Solve angular limit constraint.
             if (_enableLimit && _limitState != LimitState.Inactive)
             {
-                float angle = 0/*b2._sweep.Angle*/ - b1._sweep.Angle - ReferenceAngle;
+                float angle = 0 /*b2._sweep.Angle*/- b1._sweep.Angle - ReferenceAngle;
                 float limitImpulse = 0.0f;
 
                 if (_limitState == LimitState.Equal)
@@ -509,18 +504,18 @@ namespace FarseerPhysics
 
             // Solve point-to-point constraint.
             {
-                Transform xf1;//, xf2;
+                Transform xf1; //, xf2;
                 b1.GetTransform(out xf1);
                 //b2.GetTransform(out xf2);
 
                 Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-                Vector2 r2 = LocalAnchorB;// MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+                Vector2 r2 = LocalAnchorB; // MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
-                Vector2 C = new Vector2(0,0)/*b2._sweep.Center*/ + r2 - b1._sweep.Center - r1;
+                Vector2 C = new Vector2(0, 0) /*b2._sweep.Center*/+ r2 - b1._sweep.Center - r1;
                 positionError = C.Length();
 
-                float invMass1 = b1._invMass, invMass2 = 0;// b2._invMass;
-                float invI1 = b1._invI, invI2 = 0;// b2._invI;
+                float invMass1 = b1._invMass, invMass2 = 0; // b2._invMass;
+                float invI1 = b1._invI, invI2 = 0; // b2._invI;
 
                 // Handle large detachment.
                 const float k_allowedStretch = 10.0f * Settings.LinearSlop;
@@ -537,7 +532,7 @@ namespace FarseerPhysics
                     b1._sweep.Center -= k_beta * invMass1 * impulse2;
                     //b2._sweep.Center += k_beta * invMass2 * impulse2;
 
-                    C = new Vector2(0,0)/*b2._sweep.Center*/ + r2 - b1._sweep.Center - r1;
+                    C = new Vector2(0, 0) /*b2._sweep.Center*/+ r2 - b1._sweep.Center - r1;
                 }
 
                 Mat22 K1 = new Mat22(new Vector2(invMass1 + invMass2, 0.0f), new Vector2(0.0f, invMass1 + invMass2));

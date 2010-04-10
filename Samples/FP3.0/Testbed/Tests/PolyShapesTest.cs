@@ -21,11 +21,15 @@
 */
 
 using System;
+using System.Diagnostics;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
-using System.Diagnostics;
+using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -39,6 +43,11 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private const int MaxCount = 4;
 
+        internal CircleShape _circle = new CircleShape(0, 0);
+        private int _count;
+        internal DebugViewXNA.DebugViewXNA _debugDraw;
+        internal Transform _transform;
+
         private void DrawFixture(Fixture fixture)
         {
             Color color = new Color(0.95f, 0.95f, 0.6f);
@@ -49,7 +58,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape)fixture.Shape;
+                        CircleShape circle = (CircleShape) fixture.Shape;
 
                         Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
                         float radius = circle.Radius;
@@ -60,7 +69,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape poly = (PolygonShape)fixture.Shape;
+                        PolygonShape poly = (PolygonShape) fixture.Shape;
                         int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
@@ -101,22 +110,20 @@ namespace FarseerPhysics.TestBed.Tests
 
             return true;
         }
-
-        internal CircleShape _circle = new CircleShape(0, 0);
-        internal Transform _transform;
-        internal DebugViewXNA.DebugViewXNA _debugDraw;
-        private int _count;
     }
 
     public class PolyShapesTest : Test
     {
         private const int MaxBodies = 256;
+        private Body[] _bodies = new Body[MaxBodies];
+        private int _bodyIndex;
+        private CircleShape _circle = new CircleShape(0, 0);
+        private PolygonShape[] _polygons = new PolygonShape[4];
 
         private PolyShapesTest()
         {
             // Ground body
             {
-
                 Body ground = World.Add();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -142,18 +149,18 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 const float w = 1.0f;
-                float b = w / (2.0f + (float)Math.Sqrt(2.0));
-                float s = (float)Math.Sqrt(2.0) * b;
+                float b = w / (2.0f + (float) Math.Sqrt(2.0));
+                float s = (float) Math.Sqrt(2.0) * b;
 
                 Vertices vertices8 = new Vertices(8);
                 vertices8.Add(new Vector2(0.5f * s, 0.0f));
                 vertices8.Add(new Vector2(0.5f * w, b));
                 vertices8.Add(new Vector2(0.5f * w, b + s));
-                vertices8.Add( new Vector2(0.5f * s, w));
-                vertices8.Add( new Vector2(-0.5f * s, w));
-                vertices8.Add( new Vector2(-0.5f * w, b + s));
+                vertices8.Add(new Vector2(0.5f * s, w));
+                vertices8.Add(new Vector2(-0.5f * s, w));
+                vertices8.Add(new Vector2(-0.5f * w, b + s));
                 vertices8.Add(new Vector2(-0.5f * w, b));
-                vertices8.Add( new Vector2(-0.5f * s, 0.0f));
+                vertices8.Add(new Vector2(-0.5f * s, 0.0f));
 
                 _polygons[2] = new PolygonShape(vertices8, 0);
             }
@@ -258,7 +265,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
 
@@ -288,10 +295,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new PolyShapesTest();
         }
-
-        private int _bodyIndex;
-        private Body[] _bodies = new Body[MaxBodies];
-        private PolygonShape[] _polygons = new PolygonShape[4];
-        private CircleShape _circle = new CircleShape(0, 0);
     }
 }

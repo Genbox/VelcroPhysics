@@ -20,17 +20,17 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Framework
 {
     public static class TraceEvents
     {
+        public static int FrameEventId { get; private set; }
+        public static int UpdateEventId { get; private set; }
+        public static int PhysicsEventId { get; private set; }
+        public static int DrawEventId { get; private set; }
+
         public static void Register(IEventTrace et)
         {
             FrameEventId = et.Register("Frame", Color.Orange);
@@ -38,10 +38,5 @@ namespace FarseerPhysics.TestBed.Framework
             PhysicsEventId = et.Register("Physics", Color.Cyan);
             DrawEventId = et.Register("Draw", Color.Red);
         }
-
-        public static int FrameEventId { get; private set; }
-        public static int UpdateEventId { get; private set; }
-        public static int PhysicsEventId { get; private set; }
-        public static int DrawEventId { get; private set; }
     }
 }

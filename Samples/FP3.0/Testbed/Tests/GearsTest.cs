@@ -20,6 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -27,11 +31,17 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class GearsTest : Test
     {
+        private FixedRevoluteJoint _joint1;
+        private FixedRevoluteJoint _joint2;
+        private FixedPrismaticJoint _joint3;
+
+        private GearJoint _joint4;
+        private GearJoint _joint5;
+
         private GearsTest()
         {
             Body ground;
             {
-
                 ground = World.Add();
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
@@ -47,14 +57,14 @@ namespace FarseerPhysics.TestBed.Tests
                 body1.BodyType = BodyType.Dynamic;
                 body1.Position = new Vector2(-3.0f, 12.0f);
                 body1.CreateFixture(circle1);
-                
+
                 // Second circle
                 CircleShape circle2 = new CircleShape(2.0f, 5);
                 Body body2 = World.Add();
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(0.0f, 12.0f);
                 body2.CreateFixture(circle2);
-                
+
                 // Rectangle
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 5.0f);
                 PolygonShape polygonBox = new PolygonShape(box, 5);
@@ -62,7 +72,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body3.BodyType = BodyType.Dynamic;
                 body3.Position = new Vector2(2.5f, 12.0f);
                 body3.CreateFixture(polygonBox);
-                
+
                 // Fix first circle
                 _joint1 = new FixedRevoluteJoint(body1, body1.Position);
                 World.Add(_joint1);
@@ -88,7 +98,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
 
@@ -100,12 +110,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new GearsTest();
         }
-
-        private FixedRevoluteJoint _joint1;
-        private FixedRevoluteJoint _joint2;
-        private FixedPrismaticJoint _joint3;
-
-        private GearJoint _joint4;
-        private GearJoint _joint5;
     }
 }

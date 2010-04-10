@@ -21,9 +21,10 @@
 */
 
 using System;
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.Dynamics.Joints
 {
     // Linear constraint (point-to-line)
     // d = p2 - p1 = x2 + r2 - x1 - r1
@@ -96,7 +97,6 @@ namespace FarseerPhysics
     /// </summary>
     public class FixedPrismaticJoint : Joint
     {
-        private Vector2 _localXAxis1;
         private Mat33 _K;
         private float _a1, _a2;
         private Vector2 _axis;
@@ -104,6 +104,7 @@ namespace FarseerPhysics
         private bool _enableMotor;
         private Vector3 _impulse;
         private LimitState _limitState;
+        private Vector2 _localXAxis1;
         private Vector2 _localYAxis1;
         private float _lowerTranslation;
         private float _maxMotorForce;
@@ -123,20 +124,20 @@ namespace FarseerPhysics
         /// when the local anchor points coincide in world space. Using local
         /// anchors and a local axis helps when saving and loading a game.
         /// </summary>        
-        public FixedPrismaticJoint(Body b1/*, Body b2*/, Vector2 anchor, Vector2 axis)
-            : base(b1/*, b2*/)
+        public FixedPrismaticJoint(Body b1 /*, Body b2*/, Vector2 anchor, Vector2 axis)
+            : base(b1 /*, b2*/)
         {
             JointType = JointType.FixedPrismatic;
 
             BodyB = BodyA;
 
-            LocalAnchorA = anchor;// BodyA.GetLocalPoint(anchor);
+            LocalAnchorA = anchor; // BodyA.GetLocalPoint(anchor);
             LocalAnchorB = BodyB.GetLocalPoint(anchor);
 
 
-            _localXAxis1 = axis;// BodyA.GetLocalVector(axis);
+            _localXAxis1 = axis; // BodyA.GetLocalVector(axis);
             _localYAxis1 = MathUtils.Cross(1.0f, _localXAxis1);
-            _refAngle = BodyB.GetAngle();// -BodyA.GetAngle();
+            _refAngle = BodyB.GetAngle(); // -BodyA.GetAngle();
 
             _limitState = LimitState.Inactive;
         }
@@ -147,7 +148,7 @@ namespace FarseerPhysics
 
         public override Vector2 WorldAnchorA
         {
-            get { return LocalAnchorA;/*BodyA.GetWorldPoint(LocalAnchorA);*/ }
+            get { return LocalAnchorA; /*BodyA.GetWorldPoint(LocalAnchorA);*/ }
         }
 
         public override Vector2 WorldAnchorB
@@ -163,8 +164,8 @@ namespace FarseerPhysics
         {
             get
             {
-                Vector2 d = BodyB.GetWorldPoint(LocalAnchorB) - LocalAnchorA;// BodyA.GetWorldPoint(LocalAnchorA);
-                Vector2 axis = _localXAxis1;// BodyA.GetWorldVector(_localXAxis1);
+                Vector2 d = BodyB.GetWorldPoint(LocalAnchorB) - LocalAnchorA; // BodyA.GetWorldPoint(LocalAnchorA);
+                Vector2 axis = _localXAxis1; // BodyA.GetWorldVector(_localXAxis1);
 
                 return Vector2.Dot(d, axis);
             }
@@ -182,16 +183,16 @@ namespace FarseerPhysics
                 //BodyA.GetTransform(out xf1);
                 BodyB.GetTransform(out xf2);
 
-                Vector2 r1 = LocalAnchorA;// MathUtils.Multiply(ref xf1.R, LocalAnchorA - BodyA.LocalCenter);
+                Vector2 r1 = LocalAnchorA; // MathUtils.Multiply(ref xf1.R, LocalAnchorA - BodyA.LocalCenter);
                 Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - BodyB.LocalCenter);
                 Vector2 p1 = /*BodyA._sweep.Center +*/ r1;
                 Vector2 p2 = BodyB._sweep.Center + r2;
                 Vector2 d = p2 - p1;
-                Vector2 axis = _localXAxis1;// BodyA.GetWorldVector(_localXAxis1);
+                Vector2 axis = _localXAxis1; // BodyA.GetWorldVector(_localXAxis1);
 
-                Vector2 v1 = Vector2.Zero;// BodyA._linearVelocity;
+                Vector2 v1 = Vector2.Zero; // BodyA._linearVelocity;
                 Vector2 v2 = BodyB._linearVelocity;
-                float w1 = 0.0f;// BodyA._angularVelocity;
+                float w1 = 0.0f; // BodyA._angularVelocity;
                 float w2 = BodyB._angularVelocity;
 
                 float speed = Vector2.Dot(d, MathUtils.Cross(w1, axis)) +
@@ -302,7 +303,7 @@ namespace FarseerPhysics
             get { return _localXAxis1; }
             set
             {
-                _localXAxis1 = value;// BodyA.GetLocalVector(value);
+                _localXAxis1 = value; // BodyA.GetLocalVector(value);
                 _localYAxis1 = MathUtils.Cross(1.0f, _localXAxis1);
             }
         }
@@ -322,7 +323,7 @@ namespace FarseerPhysics
             //Body b1 = BodyA;
             Body b2 = BodyB;
 
-            _localCenterA = Vector2.Zero;// b1.LocalCenter;
+            _localCenterA = Vector2.Zero; // b1.LocalCenter;
             _localCenterB = b2.LocalCenter;
 
             Transform /*xf1,*/ xf2;
@@ -330,18 +331,18 @@ namespace FarseerPhysics
             b2.GetTransform(out xf2);
 
             // Compute the effective masses.
-            Vector2 r1 = LocalAnchorA;// MathUtils.Multiply(ref xf1.R, LocalAnchorA - _localCenterA);
+            Vector2 r1 = LocalAnchorA; // MathUtils.Multiply(ref xf1.R, LocalAnchorA - _localCenterA);
             Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - _localCenterB);
-            Vector2 d = b2._sweep.Center + r2 -/* b1._sweep.Center - */r1;
+            Vector2 d = b2._sweep.Center + r2 - /* b1._sweep.Center - */ r1;
 
-            _invMassA = 0.0f;// b1._invMass;
-            _invIA = 0.0f;// b1._invI;
+            _invMassA = 0.0f; // b1._invMass;
+            _invIA = 0.0f; // b1._invI;
             _invMassB = b2._invMass;
             _invIB = b2._invI;
 
             // Compute motor Jacobian and effective mass.
             {
-                _axis = _localXAxis1;// MathUtils.Multiply(ref xf1.R, _localXAxis1);
+                _axis = _localXAxis1; // MathUtils.Multiply(ref xf1.R, _localXAxis1);
                 _a1 = MathUtils.Cross(d + r1, _axis);
                 _a2 = MathUtils.Cross(r2, _axis);
 
@@ -355,7 +356,7 @@ namespace FarseerPhysics
 
             // Prismatic constraint.
             {
-                _perp = _localYAxis1;// MathUtils.Multiply(ref xf1.R, _localYAxis1);
+                _perp = _localYAxis1; // MathUtils.Multiply(ref xf1.R, _localYAxis1);
 
                 _s1 = MathUtils.Cross(d + r1, _perp);
                 _s2 = MathUtils.Cross(r2, _perp);
@@ -443,8 +444,8 @@ namespace FarseerPhysics
             //Body b1 = BodyA;
             Body b2 = BodyB;
 
-            Vector2 v1 = Vector2.Zero;// b1._linearVelocity;
-            float w1 = 0.0f;// b1._angularVelocity;
+            Vector2 v1 = Vector2.Zero; // b1._linearVelocity;
+            float w1 = 0.0f; // b1._angularVelocity;
             Vector2 v2 = b2._linearVelocity;
             float w2 = b2._angularVelocity;
 
@@ -537,8 +538,8 @@ namespace FarseerPhysics
             //Body b1 = BodyA;
             Body b2 = BodyB;
 
-            Vector2 c1 = Vector2.Zero;// b1._sweep.Center;
-            float a1 = 0.0f;// b1._sweep.Angle;
+            Vector2 c1 = Vector2.Zero; // b1._sweep.Center;
+            float a1 = 0.0f; // b1._sweep.Angle;
 
             Vector2 c2 = b2._sweep.Center;
             float a2 = b2._sweep.Angle;

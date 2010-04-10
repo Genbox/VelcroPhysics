@@ -20,6 +20,8 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -27,6 +29,9 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class ContinuousTest : Test
     {
+        private float _angularVelocity;
+        private Body _body;
+
         public ContinuousTest()
         {
             {
@@ -78,7 +83,7 @@ namespace FarseerPhysics.TestBed.Tests
 #endif
         }
 
-        void Launch()
+        private void Launch()
         {
             _body.SetTransform(new Vector2(0.0f, 20.0f), 0.0f);
             _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
@@ -86,7 +91,7 @@ namespace FarseerPhysics.TestBed.Tests
             _body.AngularVelocity = _angularVelocity;
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             if (StepCount == 12)
             {
@@ -101,12 +106,9 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        static internal Test Create()
+        internal static Test Create()
         {
             return new ContinuousTest();
         }
-
-        Body _body;
-        float _angularVelocity;
     }
 }

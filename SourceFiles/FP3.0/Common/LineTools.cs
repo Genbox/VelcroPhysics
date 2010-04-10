@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FarseerPhysics.Collision;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common
@@ -17,7 +18,8 @@ namespace FarseerPhysics.Common
             return v.Length();
         }
 
-        public static float DistanceBetweenPointAndLineSegment(ref Vector2 point, ref Vector2 lineEndPoint1, ref Vector2 lineEndPoint2)
+        public static float DistanceBetweenPointAndLineSegment(ref Vector2 point, ref Vector2 lineEndPoint1,
+                                                               ref Vector2 lineEndPoint2)
         {
             Vector2 v = Vector2.Subtract(lineEndPoint2, lineEndPoint1);
             Vector2 w = Vector2.Subtract(point, lineEndPoint1);
@@ -30,7 +32,7 @@ namespace FarseerPhysics.Common
 
             float b = c1 / c2;
             Vector2 pointOnLine = Vector2.Add(lineEndPoint1, Vector2.Multiply(v, b));
-            return DistanceBetweenPointAndPoint(ref point, ref  pointOnLine);
+            return DistanceBetweenPointAndPoint(ref point, ref pointOnLine);
         }
 
         // From Eric Jordan's convex decomposition library
@@ -55,10 +57,14 @@ namespace FarseerPhysics.Common
             if (a0 == b0 || a0 == b1 || a1 == b0 || a1 == b1)
                 return false;
 
-            float x1 = a0.X; float y1 = a0.Y;
-            float x2 = a1.X; float y2 = a1.Y;
-            float x3 = b0.X; float y3 = b0.Y;
-            float x4 = b1.X; float y4 = b1.Y;
+            float x1 = a0.X;
+            float y1 = a0.Y;
+            float x2 = a1.X;
+            float y2 = a1.Y;
+            float x3 = b0.X;
+            float y3 = b0.Y;
+            float x4 = b1.X;
+            float y4 = b1.Y;
 
             //AABB early exit
             if (Math.Max(x1, x2) < Math.Min(x3, x4) || Math.Max(x3, x4) < Math.Min(x1, x2))
@@ -101,7 +107,8 @@ namespace FarseerPhysics.Common
             float det = a1 * b2 - a2 * b1;
 
             if (!FloatEquals(det, 0))
-            { // lines are not parallel
+            {
+                // lines are not parallel
                 i.X = (b2 * c1 - b1 * c2) / det;
                 i.Y = (a1 * c2 - a2 * c1) / det;
             }
@@ -165,8 +172,8 @@ namespace FarseerPhysics.Common
         /// intersection point be on the second line segment.</param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
         public static bool LineIntersect(ref Vector2 point1, ref Vector2 point2, ref Vector2 point3, ref Vector2 point4,
-                                 bool firstIsSegment, bool secondIsSegment,
-                                 out Vector2 point)
+                                         bool firstIsSegment, bool secondIsSegment,
+                                         out Vector2 point)
         {
             point = new Vector2();
 
@@ -243,7 +250,8 @@ namespace FarseerPhysics.Common
         /// <param name="secondIsSegment">Set this to true to require that the
         /// intersection point be on the second line segment.</param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
-        public static bool LineIntersect(Vector2 point1, Vector2 point2, Vector2 point3, Vector2 point4, bool firstIsSegment,
+        public static bool LineIntersect(Vector2 point1, Vector2 point2, Vector2 point3, Vector2 point4,
+                                         bool firstIsSegment,
                                          bool secondIsSegment, out Vector2 intersectionPoint)
         {
             return LineIntersect(ref point1, ref point2, ref point3, ref point4, firstIsSegment, secondIsSegment,
@@ -284,7 +292,8 @@ namespace FarseerPhysics.Common
         /// <param name="intersectionPoint">This is set to the intersection
         /// point if an intersection is detected.</param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
-        public static bool LineIntersect(Vector2 point1, Vector2 point2, Vector2 point3, Vector2 point4, out Vector2 intersectionPoint)
+        public static bool LineIntersect(Vector2 point1, Vector2 point2, Vector2 point3, Vector2 point4,
+                                         out Vector2 intersectionPoint)
         {
             return LineIntersect(ref point1, ref point2, ref point3, ref point4, true, true, out intersectionPoint);
         }
@@ -322,7 +331,8 @@ namespace FarseerPhysics.Common
         /// <param name="point2">The second point of the line segment to test.</param>
         /// <param name="aabb">The AABB that is used for testing intersection.</param>
         /// <param name="intersectionPoints">An list of intersection points. Any intersection points found will be added to this list.</param>
-        public static void LineSegmentAABBIntersect(ref Vector2 point1, ref Vector2 point2, AABB aabb, ref List<Vector2> intersectionPoints)
+        public static void LineSegmentAABBIntersect(ref Vector2 point1, ref Vector2 point2, AABB aabb,
+                                                    ref List<Vector2> intersectionPoints)
         {
             LineSegmentVerticesIntersect(ref point1, ref point2, aabb.GetVertices(), ref intersectionPoints);
         }

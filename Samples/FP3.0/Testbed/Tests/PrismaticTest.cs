@@ -20,6 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -28,9 +31,11 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class PrismaticTest : Test
     {
+        private FixedPrismaticJoint _fixedJoint;
+        private PrismaticJoint _joint;
+
         private PrismaticTest()
         {
-
             Body ground;
             {
                 ground = World.Add();
@@ -98,10 +103,10 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Update(Framework.Settings settings, GameTime gameTime)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine+200, "Keys: (l) limits, (m) motors, (p) speed");
+            DebugView.DrawString(50, TextLine + 200, "Keys: (l) limits, (m) motors, (p) speed");
             TextLine += 15;
             //float force = _fixedJoint.MotorForce;
             //DebugView.DrawString(50, TextLine + 200, "Motor Force = {0:n}", force);
@@ -119,8 +124,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new PrismaticTest();
         }
-
-        private FixedPrismaticJoint _fixedJoint;
-        private PrismaticJoint _joint;
     }
 }

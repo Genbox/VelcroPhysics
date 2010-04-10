@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using FarseerGames.FarseerPhysics.Interfaces;
-using FarseerPhysics;
-using FarseerPhysics.Controllers;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
-namespace FarseerGames.FarseerPhysics.Controllers
+namespace FarseerPhysics.Controllers.Buoyancy
 {
     /// <summary>
     /// FluidDragController applies fluid physics to the bodies within it.  Things like fluid drag and fluid density
@@ -39,6 +39,8 @@ namespace FarseerGames.FarseerPhysics.Controllers
 
         #endregion
 
+        public EntryEventHandler Entry;
+
         private float _area;
         private Vector2 _axis = Vector2.Zero;
         private Vector2 _buoyancyForce = Vector2.Zero;
@@ -60,8 +62,6 @@ namespace FarseerGames.FarseerPhysics.Controllers
         private Vector2 _vert;
         private Vertices _vertices;
 
-        public EntryEventHandler Entry;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FluidDragController"/> class.
         /// </summary>
@@ -71,7 +71,7 @@ namespace FarseerGames.FarseerPhysics.Controllers
         /// <param name="rotationalDragCoefficient">Rotational drag coefficient of the fluid</param>
         /// <param name="gravity">The direction gravity acts. Buoyancy force will act in opposite direction of gravity.</param>
         public FluidDragController(IFluidContainer fluidContainer, float density, float linearDragCoefficient,
-                               float rotationalDragCoefficient, Vector2 gravity)
+                                   float rotationalDragCoefficient, Vector2 gravity)
         {
             _geomList = new List<Fixture>();
             _geomInFluidList = new Dictionary<Fixture, bool>();
