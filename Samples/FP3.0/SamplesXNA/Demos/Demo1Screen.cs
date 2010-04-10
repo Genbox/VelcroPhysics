@@ -17,12 +17,11 @@ namespace SamplesXNA.Demo1
     internal class Demo1Screen : GameScreen
     {
         private Body _rectangleBody;
-        private CircleShape _rectangleShape;
-        private Texture2D _rectangleTexture;
+        private PolygonShape _rectangleShape;
 
         public override void Initialize()
         {
-            PhysicsSimulator = new World(new Vector2(0, -10), true);
+            PhysicsSimulator = new World(new Vector2(0, -50), true);
             PhysicsSimulatorView = new DebugViewXNA(PhysicsSimulator);
             DebugViewEnabled = true;
 
@@ -37,27 +36,32 @@ namespace SamplesXNA.Demo1
             _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 100, 100, Color.White,
                                                                      Color.Black);
 
-            //Vertices verts = PolygonTools.CreateGear(1, 13, 0.65f, 0.25f);
-            //Vertices verts = PolygonTools.CreateRoundedRectangle(2, 1f, 0.5f, 0.5f, 5);
+            //Vertices verts = PolygonTools.CreateGear(1, 12, 0.65f, 0.25f);
+            Vertices verts = PolygonTools.CreateRoundedRectangle(2, 1f, 0.5f, 0.5f, 5);
             //Vertices verts = PolygonTools.CreateCapsule(4, 0.5f, 32, 0.5f, 32);
-            Vertices verts = PolygonTools.CreateRectangle(0.5f, 0.25f);
+            //Vertices verts = PolygonTools.CreateRectangle(0.5f, 0.25f);
 
             verts = BooleanTools.Simplify(verts);
 
-            List<Vertices> decomposedVerts = BayazitDecomposer.ConvexPartition(verts);
+            List<Vertices> decomposedVerts = EarclipDecomposer.ConvexPartition(verts);
 
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 10; i++)
             {
-                for (int j = 0; j < 20; j++)
+                for (int j = 0; j < 10; j++)
                 {
                     //use the body factory to create the physics body
                     _rectangleBody = PhysicsSimulator.Add();
                     _rectangleBody.BodyType = BodyType.Dynamic;
-                    _rectangleBody.Position = new Vector2(i * 1.1f - 15f, j * 0.6f - 18f);
-                    //_rectangleShape = new PolygonShape(decomposedVerts[0], 1);
-                    _rectangleShape = new CircleShape(0.2f, 1);
-                    _rectangleBody.CreateFixture(_rectangleShape);
-                    _rectangleBody.FixtureList[0].Friction = 0.5f;
+                    _rectangleBody.Position = new Vector2(i * 2f - 15f, j * 2f - 15f);
+                    
+                        //_rectangleShape = new CircleShape(0.5f, 1);
+                    foreach (var item in decomposedVerts)
+                    {
+                        _rectangleShape = new PolygonShape(item, 1);
+                        _rectangleBody.CreateFixture(_rectangleShape);
+                        _rectangleBody.FixtureList[0].Friction = 0.5f;
+                    }
+                        
                 }
             }
 

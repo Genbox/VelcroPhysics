@@ -46,6 +46,7 @@ namespace DemoBaseXNA.ScreenSystem
             : base(game)
         {
             ContentManager = new ContentManager(game.Services);
+            ContentManager.RootDirectory = "Content";
             _graphicsDeviceService = (IGraphicsDeviceService) game.Services.GetService(
                 typeof (IGraphicsDeviceService));
             game.Exiting += Game_Exiting;
@@ -145,8 +146,8 @@ namespace DemoBaseXNA.ScreenSystem
         {
             // Load content belonging to the screen manager.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-            _blankTexture = ContentManager.Load<Texture2D>("Content/Common/blank");
-
+            _blankTexture = ContentManager.Load<Texture2D>("Common/blank");
+            
             // Tell each of the _screens to load their content.
             foreach (GameScreen screen in _screens)
             {

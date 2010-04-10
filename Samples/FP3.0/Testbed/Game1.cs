@@ -66,7 +66,8 @@ namespace FarseerPhysics.TestBed
             _graphics.PreferMultiSampling = true;
             IsMouseVisible = true;
 
-            IsFixedTimeStep = false;
+            IsFixedTimeStep = true;
+            
             _graphics.SynchronizeWithVerticalRetrace = false;
         }
 

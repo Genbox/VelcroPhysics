@@ -13,11 +13,11 @@ namespace DemoBaseXNA.ScreenSystem
 
         public SpriteFonts(ContentManager contentManager)
         {
-            _diagnosticSpriteFont = contentManager.Load<SpriteFont>("Content/Fonts/diagnosticFont");
-            _menuSpriteFont = contentManager.Load<SpriteFont>("Content/Fonts/menuFont");
-            _frameRateCounterFont = contentManager.Load<SpriteFont>("Content/Fonts/frameRateCounterFont");
-            _gameSpriteFont = contentManager.Load<SpriteFont>("Content/Fonts/gamefont");
-            _detailsFont = contentManager.Load<SpriteFont>("Content/Fonts/detailsFont");
+            _diagnosticSpriteFont = contentManager.Load<SpriteFont>("Fonts/diagnosticFont");
+            _menuSpriteFont = contentManager.Load<SpriteFont>("Fonts/menuFont");
+            _frameRateCounterFont = contentManager.Load<SpriteFont>("Fonts/frameRateCounterFont");
+            _gameSpriteFont = contentManager.Load<SpriteFont>("Fonts/gamefont");
+            _detailsFont = contentManager.Load<SpriteFont>("Fonts/detailsFont");
         }
 
         public SpriteFont DetailsFont
