@@ -101,6 +101,7 @@ namespace FarseerPhysics.Dynamics
 
             Controllers = new List<Controller>();
             BodyList = new List<Body>(32);
+            BreakableBodyList = new List<BreakableBody>(8);
             JointList = new List<Joint>(8);
         }
 
@@ -173,6 +174,8 @@ namespace FarseerPhysics.Dynamics
         /// <returns>the head of the world body list.</returns>
         public List<Body> BodyList { get; private set; }
 
+        public List<BreakableBody> BreakableBodyList { get; private set; }
+
         public ContactManager ContactManager { get; private set; }
 
         /// <summary>
@@ -233,19 +236,17 @@ namespace FarseerPhysics.Dynamics
             BodyList.Add(body);
         }
 
-        //TODO: Change behavior
-        public Body Add()
+        public void Add(BreakableBody body)
         {
             Debug.Assert(!Locked);
             if (Locked)
             {
-                return null;
+                return;
             }
 
-            Body b = new Body(this);
+            Add(body.MainBody);
 
-            BodyList.Add(b);
-            return b;
+            BreakableBodyList.Add(body);
         }
 
         /// <summary>
@@ -307,6 +308,24 @@ namespace FarseerPhysics.Dynamics
             body._fixtureList = null;
 
             BodyList.Remove(body);
+        }
+
+        public void Remove(BreakableBody body)
+        {
+            Debug.Assert(BreakableBodyList.Count > 0);
+            Debug.Assert(!Locked);
+            if (Locked)
+            {
+                return;
+            }
+
+            //Remove all the parts of the breakable body.
+            for (int i = 0; i < body.Parts.Count; i++)
+            {
+               Remove(body.Parts[i].Body);
+            }
+
+            BreakableBodyList.Remove(body);
         }
 
         /// <summary>
@@ -565,6 +584,11 @@ namespace FarseerPhysics.Dynamics
                 _watch.Stop();
                 UpdateTime = _watch.ElapsedTicks;
                 _watch.Reset();
+            }
+
+            foreach (BreakableBody breakableBody in BreakableBodyList)
+            {
+                breakableBody.Update();
             }
         }
 

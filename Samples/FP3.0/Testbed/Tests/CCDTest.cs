@@ -24,6 +24,7 @@ using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -36,7 +37,7 @@ namespace FarseerPhysics.TestBed.Tests
         private CCDTest()
         {
             {
-                Body body = World.Add();
+                Body body = FixtureFactory.CreateBody(World);
                 body.Position = new Vector2(0.0f, -0.2f);
 
                 Vertices box = PolygonTools.CreateRectangle(10, 0.2f);
@@ -56,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
                 _angularVelocity = -30.669577f;
 
-                Body body = World.Add();
+                Body body = FixtureFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 20.0f);
 

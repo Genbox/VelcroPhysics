@@ -300,7 +300,7 @@ namespace FarseerPhysics.Dynamics
                     impulse.tangentImpulses[j] = cc.Points[j].TangentImpulse;
                 }
 
-                //The Report method does not get run unless someone is subscribed to the PostSolve delegate
+                //The Report method does not run unless someone is subscribed to the PostSolve delegate
                 _contactManager.PostSolve(c, ref impulse);
             }
         }

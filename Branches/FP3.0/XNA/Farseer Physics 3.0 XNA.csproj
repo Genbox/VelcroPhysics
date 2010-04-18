@@ -173,6 +173,9 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Body.cs">
       <Link>Dynamics\Body.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\BreakableBody.cs">
+      <Link>Dynamics\BreakableBody.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\ContactManager.cs">
       <Link>Dynamics\ContactManager.cs</Link>
     </Compile>

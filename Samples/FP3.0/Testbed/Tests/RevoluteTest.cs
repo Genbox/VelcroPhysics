@@ -24,6 +24,7 @@ using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -39,7 +40,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = World.Add();
+                ground = FixtureFactory.CreateBody(World);
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -50,7 +51,7 @@ namespace FarseerPhysics.TestBed.Tests
                 //The big fixed wheel
                 CircleShape shape = new CircleShape(5.0f, 5);
 
-                Body body = World.Add();
+                Body body = FixtureFactory.CreateBody(World);
                 body.Position = new Vector2(0.0f, 15.0f);
                 body.BodyType = BodyType.Dynamic;
 
@@ -69,7 +70,7 @@ namespace FarseerPhysics.TestBed.Tests
                 // The small wheel attached to the big one
                 CircleShape shape2 = new CircleShape(1.0f, 5);
 
-                Body body2 = World.Add();
+                Body body2 = FixtureFactory.CreateBody(World);
                 body2.Position = new Vector2(0.0f, 12.0f);
                 body2.BodyType = BodyType.Dynamic;
 

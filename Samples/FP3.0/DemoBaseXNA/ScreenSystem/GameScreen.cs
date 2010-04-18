@@ -5,6 +5,7 @@ using FarseerPhysics.Collision;
 using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -151,7 +152,7 @@ namespace DemoBaseXNA.ScreenSystem
 
                 _border = new Border(40, 40, borderWidth, new Vector2(0, 0));
                 _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
-                _groundBody = PhysicsSimulator.Add();
+                _groundBody = FixtureFactory.CreateBody(PhysicsSimulator);
 
                 PhysicsSimulatorView.AppendFlags(DebugViewFlags.Shape);
 

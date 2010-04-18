@@ -23,6 +23,7 @@
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -37,7 +38,7 @@ namespace FarseerPhysics.TestBed.Tests
         private ConfinedTest()
         {
             {
-                Body ground = World.Add();
+                Body ground = FixtureFactory.CreateBody(World);
 
 
                 // Floor
@@ -67,7 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 for (int i = 0; i < RowCount; ++i)
                 {
-                    Body body = World.Add();
+                    Body body = FixtureFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
                                                 (2.0f * i + 1.0f) * radius);
@@ -86,7 +87,7 @@ namespace FarseerPhysics.TestBed.Tests
             CircleShape shape = new CircleShape(radius, 1);
             shape.Position = Vector2.Zero;
 
-            Body body = World.Add();
+            Body body = FixtureFactory.CreateBody(World);
             body.BodyType = BodyType.Dynamic;
             body.Position = new Vector2(Rand.RandomFloat(), (2.0f + Rand.RandomFloat()) * radius);
 

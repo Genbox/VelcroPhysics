@@ -24,6 +24,7 @@ using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -40,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = World.Add();
+                ground = FixtureFactory.CreateBody(World);
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -50,7 +51,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Define attachment
             {
-                _attachment = World.Add();
+                _attachment = FixtureFactory.CreateBody(World);
                 _attachment.BodyType = BodyType.Dynamic;
                 _attachment.Position = new Vector2(0.0f, 3.0f);
 
@@ -61,7 +62,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Define platform
             {
-                _platform = World.Add();
+                _platform = FixtureFactory.CreateBody(World);
                 _platform.BodyType = BodyType.Dynamic;
                 _platform.Position = new Vector2(0.0f, 5.0f);
 
@@ -91,7 +92,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Create a payload
             {
-                Body body = World.Add();
+                Body body = FixtureFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 8.0f);
 

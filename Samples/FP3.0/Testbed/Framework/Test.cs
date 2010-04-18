@@ -26,6 +26,7 @@ using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -127,7 +128,7 @@ namespace FarseerPhysics.TestBed.Framework
 
             StepCount = 0;
 
-            _groundBody = World.Add();
+            _groundBody = FixtureFactory.CreateBody(World);
         }
 
         public Game1 GameInstance { protected get; set; }
