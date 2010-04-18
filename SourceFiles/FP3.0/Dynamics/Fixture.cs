@@ -357,5 +357,7 @@ namespace FarseerPhysics.Dynamics
 
             broadPhase.MoveProxy(ProxyId, ref AABB, displacement);
         }
+
+        public Action<ContactConstraint> PostSolve;
     }
 }

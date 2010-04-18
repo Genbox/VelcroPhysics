@@ -23,6 +23,7 @@
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -36,13 +37,13 @@ namespace FarseerPhysics.TestBed.Tests
 
         private ShapeEditingTest()
         {
-            Body ground = World.Add();
+            Body ground = FixtureFactory.CreateBody(World);
 
             Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
             PolygonShape shape = new PolygonShape(edge, 0);
             ground.CreateFixture(shape);
 
-            _body = World.Add();
+            _body = FixtureFactory.CreateBody(World);
             _body.BodyType = BodyType.Dynamic;
             _body.Position = new Vector2(0.0f, 10.0f);
 

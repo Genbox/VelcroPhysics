@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
@@ -79,30 +80,30 @@ namespace FarseerPhysics.Factories
             return body.CreateFixture(polygonShape);
         }
 
-        private static Body CreateBody(World world)
+        public static Body CreateBody(World world)
         {
             Body body = new Body(world);
             world.Add(body);
             return body;
         }
 
-        public static List<Fixture> CreateBreakablePolygon(World world, Vertices vertices, float density)
+        public static BreakableBody CreateBreakableBody(World world, Vertices vertices, float density)
         {
             vertices = BooleanTools.Simplify(vertices);
             List<Vertices> triangles = EarclipDecomposer.ConvexPartition(vertices);
 
-            Body body = CreateBody(world);
-            body.BodyType = BodyType.Dynamic;
-
-            List<Fixture> fixtures = new List<Fixture>(triangles.Count);
+            BreakableBody breakableBody = new BreakableBody(world);
 
             foreach (Vertices triangle in triangles)
             {
                 PolygonShape polygonShape = new PolygonShape(triangle, density);
-                fixtures.Add(body.CreateFixture(polygonShape));
+                Fixture f = breakableBody.MainBody.CreateFixture(polygonShape);
+                breakableBody.AddPart(f);
             }
 
-            return fixtures;
+            world.Add(breakableBody);
+
+            return breakableBody;
         }
     }
 }

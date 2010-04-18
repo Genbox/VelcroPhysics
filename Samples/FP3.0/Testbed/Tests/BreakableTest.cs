@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
             FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             // Breakable dynamic body
-            _body1 = World.Add();
+            _body1 = FixtureFactory.CreateBody(World);
             _body1.BodyType = BodyType.Dynamic;
             _body1.Position = new Vector2(0.0f, 40.0f);
             _body1.Rotation = 0.25f * Settings.Pi;
@@ -84,7 +84,7 @@ namespace FarseerPhysics.TestBed.Tests
             Vector2 scale = new Vector2(0.07f, 0.07f);
             verts.Scale(ref scale);
 
-            FixtureFactory.CreateBreakablePolygon(World, verts, 50);
+            FixtureFactory.CreateBreakableBody(World, verts, 50);
 
             base.Initialize();
         }
@@ -120,7 +120,7 @@ namespace FarseerPhysics.TestBed.Tests
             body1.DestroyFixture(_piece2);
             _piece2 = null;
 
-            Body body2 = World.Add();
+            Body body2 = FixtureFactory.CreateBody(World);
             body2.BodyType = BodyType.Dynamic;
             body2.Position = body1.Position;
             body2.Rotation = body1.GetAngle();

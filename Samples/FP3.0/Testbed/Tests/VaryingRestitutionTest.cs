@@ -23,6 +23,7 @@
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -33,7 +34,7 @@ namespace FarseerPhysics.TestBed.Tests
         private VaryingRestitutionTest()
         {
             {
-                Body ground = World.Add();
+                Body ground = FixtureFactory.CreateBody(World);
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -47,7 +48,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 for (int i = 0; i < 7; ++i)
                 {
-                    Body body = World.Add();
+                    Body body = FixtureFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
 

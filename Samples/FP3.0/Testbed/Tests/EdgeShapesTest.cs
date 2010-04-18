@@ -24,6 +24,7 @@ using System;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -47,7 +48,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Ground body
             {
-                Body ground = World.Add();
+                Body ground = FixtureFactory.CreateBody(World);
 
                 float x1 = -20.0f;
                 float y1 = 2.0f * (float) Math.Cos(x1 / 10.0f * (float) Math.PI);
@@ -125,7 +126,7 @@ namespace FarseerPhysics.TestBed.Tests
             float x = Rand.RandomFloat(-10.0f, 10.0f);
             float y = Rand.RandomFloat(10.0f, 20.0f);
 
-            _bodies[_bodyIndex] = World.Add();
+            _bodies[_bodyIndex] = FixtureFactory.CreateBody(World);
             if (index == 4)
             {
                 _bodies[_bodyIndex].AngularDamping = 0.02f;

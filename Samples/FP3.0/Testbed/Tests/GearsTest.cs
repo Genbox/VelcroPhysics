@@ -24,6 +24,7 @@ using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -42,7 +43,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = World.Add();
+                ground = FixtureFactory.CreateBody(World);
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -53,14 +54,14 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 // First circle
                 CircleShape circle1 = new CircleShape(1.0f, 5);
-                Body body1 = World.Add();
+                Body body1 = FixtureFactory.CreateBody(World);
                 body1.BodyType = BodyType.Dynamic;
                 body1.Position = new Vector2(-3.0f, 12.0f);
                 body1.CreateFixture(circle1);
 
                 // Second circle
                 CircleShape circle2 = new CircleShape(2.0f, 5);
-                Body body2 = World.Add();
+                Body body2 = FixtureFactory.CreateBody(World);
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(0.0f, 12.0f);
                 body2.CreateFixture(circle2);
@@ -68,7 +69,7 @@ namespace FarseerPhysics.TestBed.Tests
                 // Rectangle
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 5.0f);
                 PolygonShape polygonBox = new PolygonShape(box, 5);
-                Body body3 = World.Add();
+                Body body3 = FixtureFactory.CreateBody(World);
                 body3.BodyType = BodyType.Dynamic;
                 body3.Position = new Vector2(2.5f, 12.0f);
                 body3.CreateFixture(polygonBox);

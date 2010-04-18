@@ -52,7 +52,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 for (int j = i; j < Count; ++j)
                 {
-                    Body body = World.Add();
+                    Body body = FixtureFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = y;
                     body.CreateFixture(shape);

@@ -26,6 +26,7 @@ using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -124,7 +125,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Ground body
             {
-                Body ground = World.Add();
+                Body ground = FixtureFactory.CreateBody(World);
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -185,7 +186,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _bodies[_bodyIndex] = null;
             }
 
-            _bodies[_bodyIndex] = World.Add();
+            _bodies[_bodyIndex] = FixtureFactory.CreateBody(World);
             _bodies[_bodyIndex].BodyType = BodyType.Dynamic;
 
             float x = Rand.RandomFloat(-2.0f, 2.0f);

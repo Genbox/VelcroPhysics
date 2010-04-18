@@ -24,6 +24,7 @@ using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -48,7 +49,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Ground
             {
-                Body ground = World.Add();
+                Body ground = FixtureFactory.CreateBody(World);
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
@@ -66,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(0.25f, 1);
 
-                Body body = World.Add();
+                Body body = FixtureFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-40.0f + 2.0f * i, 0.5f);
 
@@ -78,7 +79,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(1);
                 shape.SetAsBox(2.5f, 1.0f);
 
-                _chassis = World.Add();
+                _chassis = FixtureFactory.CreateBody(World);
                 _chassis.BodyType = BodyType.Dynamic;
                 _chassis.Position = pivot + _offset;
 
@@ -89,7 +90,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(1.6f, 1);
 
-                _wheel = World.Add();
+                _wheel = FixtureFactory.CreateBody(World);
                 _wheel.BodyType = BodyType.Dynamic;
                 _wheel.Position = pivot + _offset;
 
@@ -161,12 +162,12 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
 
-            Body body1 = World.Add();
+            Body body1 = FixtureFactory.CreateBody(World);
             body1.BodyType = BodyType.Dynamic;
             body1.Position = _offset;
             body1.AngularDamping = 10.0f;
 
-            Body body2 = World.Add();
+            Body body2 = FixtureFactory.CreateBody(World);
             body2.BodyType = BodyType.Dynamic;
             body2.Position = p4 + _offset;
             body2.AngularDamping = 10.0f;

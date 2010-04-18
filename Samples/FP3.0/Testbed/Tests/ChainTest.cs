@@ -24,6 +24,7 @@ using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -35,7 +36,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = World.Add();
+                ground = FixtureFactory.CreateBody(World);
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -50,7 +51,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body prevBody = ground;
                 for (int i = 0; i < 30; ++i)
                 {
-                    Body body = World.Add();
+                    Body body = FixtureFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.5f + i, y);
 

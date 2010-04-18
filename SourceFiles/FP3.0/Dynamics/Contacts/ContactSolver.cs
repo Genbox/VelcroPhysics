@@ -224,6 +224,12 @@ namespace FarseerPhysics.Dynamics.Contacts
                         cc.PointCount = 1;
                     }
                 }
+
+                if (fixtureA.PostSolve != null)
+                    fixtureA.PostSolve(cc);
+
+                if (fixtureB.PostSolve != null)
+                    fixtureB.PostSolve(cc);
             }
         }
 

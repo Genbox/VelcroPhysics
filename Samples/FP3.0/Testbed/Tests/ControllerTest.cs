@@ -2,6 +2,7 @@
 using FarseerPhysics.Common;
 using FarseerPhysics.Controllers;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -11,7 +12,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private ControllerTest()
         {
-            Body ground = World.Add();
+            Body ground = FixtureFactory.CreateBody(World);
 
             Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
             PolygonShape shape = new PolygonShape(edge, 0);
@@ -25,7 +26,7 @@ namespace FarseerPhysics.TestBed.Tests
             Vector2 offset = new Vector2(2);
 
             //Create the planet
-            Body planet = World.Add();
+            Body planet = FixtureFactory.CreateBody(World);
             planet.Position = new Vector2(0, 20);
 
             CircleShape planetShape = new CircleShape(2, 1);
@@ -37,7 +38,7 @@ namespace FarseerPhysics.TestBed.Tests
             //Create 10 smaller circles
             for (int i = 0; i < 10; i++)
             {
-                Body circle = World.Add();
+                Body circle = FixtureFactory.CreateBody(World);
                 circle.BodyType = BodyType.Dynamic;
                 circle.Position = startPosition + offset * i;
 

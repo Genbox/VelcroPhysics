@@ -2,6 +2,7 @@ using DemoBaseXNA.DrawingSystem;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -43,7 +44,7 @@ namespace DemoBaseXNA.DemoShare
                                                                       new Color(200, 200, 200, 150), Color.White);
 
             //use the body factory to create the physics body
-            _borderBody = physicsSimulator.Add();
+            _borderBody = FixtureFactory.CreateBody(physicsSimulator);
             _borderBody.BodyType = BodyType.Static;
             _borderBody.Position = _position;
 

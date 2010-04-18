@@ -23,6 +23,7 @@
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -42,25 +43,25 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.SetAsBox(0.5f, 0.5f);
 
 
-                _bodies[0] = World.Add();
+                _bodies[0] = FixtureFactory.CreateBody(World);
                 _bodies[0].BodyType = BodyType.Dynamic;
                 _bodies[0].Position = new Vector2(-5.0f, 5.0f);
 
                 _bodies[0].CreateFixture(shape);
 
-                _bodies[1] = World.Add();
+                _bodies[1] = FixtureFactory.CreateBody(World);
                 _bodies[1].BodyType = BodyType.Dynamic;
                 _bodies[1].Position = new Vector2(5.0f, 5.0f);
 
                 _bodies[1].CreateFixture(shape);
 
-                _bodies[2] = World.Add();
+                _bodies[2] = FixtureFactory.CreateBody(World);
                 _bodies[2].BodyType = BodyType.Dynamic;
                 _bodies[2].Position = new Vector2(5.0f, 15.0f);
 
                 _bodies[2].CreateFixture(shape);
 
-                _bodies[3] = World.Add();
+                _bodies[3] = FixtureFactory.CreateBody(World);
                 _bodies[3].BodyType = BodyType.Dynamic;
                 _bodies[3].Position = new Vector2(-5.0f, 15.0f);
 

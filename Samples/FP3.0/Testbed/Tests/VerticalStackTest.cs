@@ -23,6 +23,7 @@
 using System.Diagnostics;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -40,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
         private VerticalStackTest()
         {
             {
-                Body ground = World.Add();
+                Body ground = FixtureFactory.CreateBody(World);
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -66,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
                     const float x = 0.0f;
                     //float x = Rand.RandomFloat-0.02f, 0.02f);
                     //float x = i % 2 == 0 ? -0.025f : 0.025f;
-                    Body body = World.Add();
+                    Body body = FixtureFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
                     body.UserData = _indices[n];
@@ -93,7 +94,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     CircleShape shape = new CircleShape(0.25f, 20);
 
-                    _bullet = World.Add();
+                    _bullet = FixtureFactory.CreateBody(World);
                     _bullet.BodyType = BodyType.Dynamic;
                     _bullet.Bullet = true;
                     _bullet.Position = new Vector2(-31.0f, 5.0f);
@@ -123,7 +124,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     CircleShape shape = new CircleShape(0.25f, 20);
 
-                    _bullet = World.Add();
+                    _bullet = FixtureFactory.CreateBody(World);
                     _bullet.BodyType = BodyType.Dynamic;
                     _bullet.Bullet = true;
                     _bullet.Position = new Vector2(-31.0f, 5.0f);

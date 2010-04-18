@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -299,7 +300,7 @@ namespace FarseerPhysics.TestBed.Tests
             float x = Rand.RandomFloat(-10.0f, 10.0f);
             float y = Rand.RandomFloat(0.0f, 20.0f);
 
-            _bodies[_bodyIndex] = World.Add();
+            _bodies[_bodyIndex] = FixtureFactory.CreateBody(World);
 
             _bodies[_bodyIndex].Position = new Vector2(x, y);
             _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);

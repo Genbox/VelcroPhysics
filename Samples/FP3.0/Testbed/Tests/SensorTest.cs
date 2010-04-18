@@ -24,6 +24,7 @@ using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -39,7 +40,7 @@ namespace FarseerPhysics.TestBed.Tests
         private SensorTest()
         {
             {
-                Body ground = World.Add();
+                Body ground = FixtureFactory.CreateBody(World);
 
                 {
                     Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -62,7 +63,7 @@ namespace FarseerPhysics.TestBed.Tests
                 for (int i = 0; i < Count; ++i)
                 {
                     _touching[i] = false;
-                    _bodies[i] = World.Add();
+                    _bodies[i] = FixtureFactory.CreateBody(World);
                     _bodies[i].BodyType = BodyType.Dynamic;
                     _bodies[i].Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
                     _bodies[i].UserData = i;
