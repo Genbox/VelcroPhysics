@@ -56,7 +56,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
 
-                Body ground = FixtureFactory.CreateBody(World);
+                Body ground = BodyFactory.CreateBody(World);
                 Fixture fixture = ground.CreateFixture(shape);
                 fixture.Friction = 0.3f;
             }
@@ -69,7 +69,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(0.0f, 2.0f));
                 PolygonShape polygon = new PolygonShape(vertices, 1);
 
-                Body body1 = FixtureFactory.CreateBody(World);
+                Body body1 = BodyFactory.CreateBody(World);
                 body1.BodyType = BodyType.Dynamic;
                 body1.Position = new Vector2(-5.0f, 2.0f);
 
@@ -84,7 +84,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices[2] *= 2.0f;
                 polygon.Set(vertices);
 
-                Body body2 = FixtureFactory.CreateBody(World);
+                Body body2 = BodyFactory.CreateBody(World);
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(-5.0f, 6.0f);
                 body2.FixedRotation = true; // look at me!
@@ -93,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body2Fixture.CollisionGroup = LargeGroup;
 
                 {
-                    Body body = FixtureFactory.CreateBody(World);
+                    Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-5.0f, 10.0f);
 
@@ -113,7 +113,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box2 = PolygonTools.CreateRectangle(1.0f, 0.5f);
                 polygon.Set(box2);
 
-                Body body3 = FixtureFactory.CreateBody(World);
+                Body body3 = BodyFactory.CreateBody(World);
                 body3.BodyType = BodyType.Dynamic;
                 body3.Position = new Vector2(0.0f, 2.0f);
 
@@ -127,7 +127,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box3 = PolygonTools.CreateRectangle(2, 1);
                 polygon.Set(box3);
 
-                Body body4 = FixtureFactory.CreateBody(World);
+                Body body4 = BodyFactory.CreateBody(World);
                 body4.BodyType = BodyType.Dynamic;
                 body4.Position = new Vector2(0.0f, 6.0f);
 
@@ -137,7 +137,7 @@ namespace FarseerPhysics.TestBed.Tests
                 // Small circle
                 CircleShape circle = new CircleShape(1.0f, 1);
 
-                Body body5 = FixtureFactory.CreateBody(World);
+                Body body5 = BodyFactory.CreateBody(World);
                 body5.BodyType = BodyType.Dynamic;
                 body5.Position = new Vector2(5.0f, 2.0f);
 
@@ -149,7 +149,7 @@ namespace FarseerPhysics.TestBed.Tests
                 // Large circle
                 circle.Radius *= 2.0f;
 
-                Body body6 = FixtureFactory.CreateBody(World);
+                Body body6 = BodyFactory.CreateBody(World);
                 body6.BodyType = BodyType.Dynamic;
                 body6.Position = new Vector2(5.0f, 6.0f);
 
@@ -157,7 +157,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body6Fixture.CollisionGroup = LargeGroup;
 
                 // Large circle - Ignore with other large circle
-                Body body7 = FixtureFactory.CreateBody(World);
+                Body body7 = BodyFactory.CreateBody(World);
                 body7.BodyType = BodyType.Dynamic;
                 body7.Position = new Vector2(6.0f, 9.0f);
 

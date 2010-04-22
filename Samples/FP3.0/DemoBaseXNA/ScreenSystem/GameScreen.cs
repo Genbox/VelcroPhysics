@@ -152,7 +152,7 @@ namespace DemoBaseXNA.ScreenSystem
 
                 _border = new Border(40, 40, borderWidth, new Vector2(0, 0));
                 _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
-                _groundBody = FixtureFactory.CreateBody(PhysicsSimulator);
+                _groundBody = BodyFactory.CreateBody(PhysicsSimulator);
 
                 PhysicsSimulatorView.AppendFlags(DebugViewFlags.Shape);
 

@@ -128,7 +128,7 @@ namespace FarseerPhysics.TestBed.Framework
 
             StepCount = 0;
 
-            _groundBody = FixtureFactory.CreateBody(World);
+            _groundBody = BodyFactory.CreateBody(World);
         }
 
         public Game1 GameInstance { protected get; set; }

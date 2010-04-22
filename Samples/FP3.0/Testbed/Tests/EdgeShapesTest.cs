@@ -48,7 +48,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Ground body
             {
-                Body ground = FixtureFactory.CreateBody(World);
+                Body ground = BodyFactory.CreateBody(World);
 
                 float x1 = -20.0f;
                 float y1 = 2.0f * (float) Math.Cos(x1 / 10.0f * (float) Math.PI);
@@ -126,7 +126,7 @@ namespace FarseerPhysics.TestBed.Tests
             float x = Rand.RandomFloat(-10.0f, 10.0f);
             float y = Rand.RandomFloat(10.0f, 20.0f);
 
-            _bodies[_bodyIndex] = FixtureFactory.CreateBody(World);
+            _bodies[_bodyIndex] = BodyFactory.CreateBody(World);
             if (index == 4)
             {
                 _bodies[_bodyIndex].AngularDamping = 0.02f;

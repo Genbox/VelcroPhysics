@@ -44,7 +44,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body ground;
             {
-                ground = FixtureFactory.CreateBody(World);
+                ground = BodyFactory.CreateBody(World);
                 ground.Position = new Vector2(0.0f, 20.0f);
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-20.0f, -20.0f), new Vector2(-20.0f, 20.0f));
@@ -93,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 PolygonShape poly2 = new PolygonShape(vertices, 2.0f);
 
-                _body = FixtureFactory.CreateBody(World);
+                _body = BodyFactory.CreateBody(World);
                 _body.BodyType = BodyType.Dynamic;
                 _body.Position = new Vector2(0.0f, 2.0f);
                 _body.Rotation = Settings.Pi;
@@ -111,7 +111,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 for (int i = 0; i < 10; ++i)
                 {
-                    Body body = FixtureFactory.CreateBody(World);
+                    Body body = BodyFactory.CreateBody(World);
                     body.Position = new Vector2(0.0f, 5.0f + 1.54f * i);
                     body.BodyType = BodyType.Dynamic;
 

@@ -38,7 +38,7 @@ namespace FarseerPhysics.TestBed.Tests
         private ConfinedTest()
         {
             {
-                Body ground = FixtureFactory.CreateBody(World);
+                Body ground = BodyFactory.CreateBody(World);
 
 
                 // Floor
@@ -68,7 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 for (int i = 0; i < RowCount; ++i)
                 {
-                    Body body = FixtureFactory.CreateBody(World);
+                    Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
                                                 (2.0f * i + 1.0f) * radius);
@@ -87,7 +87,7 @@ namespace FarseerPhysics.TestBed.Tests
             CircleShape shape = new CircleShape(radius, 1);
             shape.Position = Vector2.Zero;
 
-            Body body = FixtureFactory.CreateBody(World);
+            Body body = BodyFactory.CreateBody(World);
             body.BodyType = BodyType.Dynamic;
             body.Position = new Vector2(Rand.RandomFloat(), (2.0f + Rand.RandomFloat()) * radius);
 

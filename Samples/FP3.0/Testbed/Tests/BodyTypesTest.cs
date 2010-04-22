@@ -41,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = FixtureFactory.CreateBody(World);
+                ground = BodyFactory.CreateBody(World);
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -51,7 +51,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Define attachment
             {
-                _attachment = FixtureFactory.CreateBody(World);
+                _attachment = BodyFactory.CreateBody(World);
                 _attachment.BodyType = BodyType.Dynamic;
                 _attachment.Position = new Vector2(0.0f, 3.0f);
 
@@ -62,7 +62,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Define platform
             {
-                _platform = FixtureFactory.CreateBody(World);
+                _platform = BodyFactory.CreateBody(World);
                 _platform.BodyType = BodyType.Dynamic;
                 _platform.Position = new Vector2(0.0f, 5.0f);
 
@@ -92,7 +92,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Create a payload
             {
-                Body body = FixtureFactory.CreateBody(World);
+                Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 8.0f);
 

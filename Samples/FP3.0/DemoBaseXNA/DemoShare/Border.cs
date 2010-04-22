@@ -44,7 +44,7 @@ namespace DemoBaseXNA.DemoShare
                                                                       new Color(200, 200, 200, 150), Color.White);
 
             //use the body factory to create the physics body
-            _borderBody = FixtureFactory.CreateBody(physicsSimulator);
+            _borderBody = BodyFactory.CreateBody(physicsSimulator);
             _borderBody.BodyType = BodyType.Static;
             _borderBody.Position = _position;
 

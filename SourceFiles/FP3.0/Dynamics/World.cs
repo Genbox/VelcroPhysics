@@ -66,7 +66,7 @@ namespace FarseerPhysics.Dynamics
 
         private RayCastCallback _rayCastCallback;
         private RayCastCallbackInternal _rayCastCallbackWrapper;
-        private Body[] _stack;
+        private Body[] _stack = new Body[64];
         private Contact[] _toiContacts = new Contact[Settings.MaxTOIContacts];
         private TOISolver _toiSolver = new TOISolver();
 
@@ -690,7 +690,7 @@ namespace FarseerPhysics.Dynamics
             // Build and simulate all awake islands.
             int stackSize = BodyList.Count;
 
-            if (_stack == null || _stack.Length < stackSize)
+            if (_stack.Length < stackSize)
                 _stack = new Body[BodyList.Count];
 
             for (int j = 0; j < BodyList.Count; j++)
@@ -1018,13 +1018,13 @@ namespace FarseerPhysics.Dynamics
             _toiSolver.Initialize(_toiContacts, count, body);
 
             const float k_toiBaumgarte = 0.75f;
-            bool solved = false;
+            //bool solved = false;
             for (int i = 0; i < 20; ++i)
             {
                 bool contactsOkay = _toiSolver.Solve(k_toiBaumgarte);
                 if (contactsOkay)
                 {
-                    solved = true;
+                    //solved = true;
                     break;
                 }
             }

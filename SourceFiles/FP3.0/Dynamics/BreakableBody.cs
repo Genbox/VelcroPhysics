@@ -108,7 +108,7 @@ namespace FarseerPhysics.Dynamics
                 Shape shape = fixture.Shape.Clone();
                 MainBody.DestroyFixture(fixture);
 
-                Body body = FixtureFactory.CreateBody(_world);
+                Body body = BodyFactory.CreateBody(_world);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = MainBody.Position;
                 body.Rotation = MainBody.GetAngle();

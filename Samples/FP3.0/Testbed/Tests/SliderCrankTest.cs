@@ -40,7 +40,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = FixtureFactory.CreateBody(World);
+                ground = BodyFactory.CreateBody(World);
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -55,7 +55,7 @@ namespace FarseerPhysics.TestBed.Tests
                     PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(0.5f, 2.0f);
 
-                    Body body = FixtureFactory.CreateBody(World);
+                    Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 7.0f);
 
@@ -75,7 +75,7 @@ namespace FarseerPhysics.TestBed.Tests
                     PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(0.5f, 4.0f);
 
-                    Body body = FixtureFactory.CreateBody(World);
+                    Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 13.0f);
 
@@ -93,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
                     PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(1.5f, 1.5f);
 
-                    Body body = FixtureFactory.CreateBody(World);
+                    Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 17.0f);
 
@@ -114,7 +114,7 @@ namespace FarseerPhysics.TestBed.Tests
                     PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(1.5f, 1.5f);
 
-                    Body body = FixtureFactory.CreateBody(World);
+                    Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 23.0f);
 

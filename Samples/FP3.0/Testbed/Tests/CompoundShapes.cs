@@ -34,7 +34,7 @@ namespace FarseerPhysics.TestBed.Tests
         private CompoundShapes()
         {
             {
-                Body body = FixtureFactory.CreateBody(World);
+                Body body = BodyFactory.CreateBody(World);
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -53,7 +53,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     float x = Rand.RandomFloat(-0.1f, 0.1f);
 
-                    Body body = FixtureFactory.CreateBody(World);
+                    Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(x + 5.0f, 1.05f + 2.5f * i);
                     body.Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
@@ -74,7 +74,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     float x = Rand.RandomFloat(-0.1f, 0.1f);
 
-                    Body body = FixtureFactory.CreateBody(World);
+                    Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(x - 5.0f, 1.05f + 2.5f * i);
                     body.Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
@@ -111,7 +111,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     float x = Rand.RandomFloat(-0.1f, 0.1f);
 
-                    Body body = FixtureFactory.CreateBody(World);
+                    Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(x, 2.05f + 2.5f * i);
 
@@ -130,7 +130,7 @@ namespace FarseerPhysics.TestBed.Tests
                 box = PolygonTools.CreateRectangle(0.15f, 2.7f, new Vector2(1.45f, 2.35f), -0.2f);
                 PolygonShape right = new PolygonShape(box, 4);
 
-                Body body = FixtureFactory.CreateBody(World);
+                Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 2.0f);
 

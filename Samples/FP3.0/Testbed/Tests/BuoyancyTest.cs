@@ -17,7 +17,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             //Make a box
             //Bottom
-            Body ground = FixtureFactory.CreateBody(World);
+            Body ground = BodyFactory.CreateBody(World);
             Vertices edge = PolygonTools.CreateEdge(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
             PolygonShape shape = new PolygonShape(edge);
             ground.CreateFixture(shape);
@@ -43,7 +43,7 @@ namespace FarseerPhysics.TestBed.Tests
             //Bunch of balls
             for (int i = 0; i < 4; i++)
             {
-                Body circleBody = FixtureFactory.CreateBody(World);
+                Body circleBody = BodyFactory.CreateBody(World);
                 circleBody.BodyType = BodyType.Dynamic;
                 circleBody.Position = new Vector2(-7, 1) + offset * i;
 
