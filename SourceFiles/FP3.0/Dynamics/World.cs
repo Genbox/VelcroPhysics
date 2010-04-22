@@ -972,7 +972,7 @@ namespace FarseerPhysics.Dynamics
 
                 // Only perform correction with static bodies, so the
                 // body won't get pushed out of the world.
-                if (type != BodyType.Static)
+                if (type == BodyType.Dynamic)
                 {
                     continue;
                 }
