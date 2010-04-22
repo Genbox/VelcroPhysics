@@ -70,7 +70,7 @@ namespace FarseerPhysics.Collision
 
         public SeparationFunction(ref SimplexCache cache,
                                   ref DistanceProxy proxyA, ref Sweep sweepA,
-                                  ref DistanceProxy proxyB, ref Sweep sweepB)
+                                  ref DistanceProxy proxyB, ref Sweep sweepB, float t1)
         {
             _localPoint = Vector2.Zero;
             _proxyA = proxyA;
@@ -82,8 +82,8 @@ namespace FarseerPhysics.Collision
             _sweepB = sweepB;
 
             Transform xfA, xfB;
-            _sweepA.GetTransform(out xfA, 0.0f);
-            _sweepB.GetTransform(out xfB, 0.0f);
+            _sweepA.GetTransform(out xfA, t1);
+            _sweepB.GetTransform(out xfB, t1);
 
             if (count == 1)
             {
@@ -311,7 +311,7 @@ namespace FarseerPhysics.Collision
             const float tolerance = 0.25f * Settings.LinearSlop;
             Debug.Assert(target > tolerance);
 
-            float t1 = 0.0f;
+            const float t1 = 0.0f;
             const int k_maxIterations = 20; // TODO_ERIN: b2Settings
             int iter = 0;
 
@@ -347,7 +347,7 @@ namespace FarseerPhysics.Collision
                 }
 
                 SeparationFunction fcn = new SeparationFunction(ref cache, ref input.ProxyA, ref sweepA,
-                                                                ref input.ProxyB, ref sweepB);
+                                                                ref input.ProxyB, ref sweepB, t1);
 
                 // Compute the TOI on the separating axis. We do this by successively
                 // resolving the deepest point. This loop is bounded by the number of vertices.
