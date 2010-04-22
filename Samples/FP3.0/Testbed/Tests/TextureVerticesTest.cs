@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
@@ -16,7 +15,6 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private Body _polygonBody;
         private Texture2D _polygonTexture;
-        private Color[] colors;
         private List<Vertices> list;
 
         private TextureVerticesTest()
