@@ -36,13 +36,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         private TimeOfImpactTest()
         {
-            {
-                _shapeA.SetAsBox(0.2f, 1.0f, new Vector2(0.5f, 1.0f), 0.0f);
-            }
-
-            {
-                _shapeB.SetAsBox(2.0f, 0.1f);
-            }
+            _shapeA.SetAsBox(25.0f, 5.0f);
+            _shapeB.SetAsBox(2.5f, 2.5f);
         }
 
         internal static Test Create()
