@@ -322,7 +322,7 @@ namespace FarseerPhysics.Dynamics
             //Remove all the parts of the breakable body.
             for (int i = 0; i < body.Parts.Count; i++)
             {
-               Remove(body.Parts[i].Body);
+                Remove(body.Parts[i].Body);
             }
 
             BreakableBodyList.Remove(body);
@@ -859,6 +859,7 @@ namespace FarseerPhysics.Dynamics
             // Find the minimum contact.
             Contact toiContact = null;
             float toi = 1.0f;
+            Body toiOther = null;
             bool found;
             int count;
             int iter = 0;
@@ -885,6 +886,13 @@ namespace FarseerPhysics.Dynamics
                         {
                             continue;
                         }
+
+                        // No repeated hits on non-static bodies
+                        if (type != BodyType.Static && (ce.Contact.Flags & ContactFlags.BulletHit) != 0)
+                        {
+                            continue;
+                        }
+
                     }
                     else if (type == BodyType.Dynamic)
                     {
@@ -931,6 +939,7 @@ namespace FarseerPhysics.Dynamics
                     {
                         toiContact = contact;
                         toi = output.t;
+                        toiOther = other;
                         found = true;
                     }
 
@@ -940,18 +949,19 @@ namespace FarseerPhysics.Dynamics
                 ++iter;
             } while (found && count > 1 && iter < 50);
 
+            // Advance the body to its safe time. We have to do this even for bodies without a
+            // TOI so that later TOIs see the correct state.
+            body.Advance(toi);
+
             if (toiContact == null)
             {
                 return;
             }
 
-            // Advance the body to its safe time.
-            Sweep backup = body._sweep;
-            body.Advance(toi);
-
             ++toiContact.ToiCount;
 
             // Update all the valid contacts on this body and build a contact island.
+            Sweep backup = body._sweep;
             count = 0;
             for (ContactEdge ce = body._contactList;
                  (ce != null) && (count < Settings.MaxTOIContacts);
@@ -1027,6 +1037,11 @@ namespace FarseerPhysics.Dynamics
                     //solved = true;
                     break;
                 }
+            }
+
+            if (toiOther.BodyType != BodyType.Static)
+            {
+                toiContact.Flags |= ContactFlags.BulletHit;
             }
         }
 

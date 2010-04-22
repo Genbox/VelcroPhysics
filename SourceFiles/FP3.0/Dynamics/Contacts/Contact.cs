@@ -64,7 +64,10 @@ namespace FarseerPhysics.Dynamics.Contacts
 
         // This contact needs filtering because a fixture filter was changed.
         Filter = 0x0008,
-    } ;
+
+        // This bullet contact had a TOI event
+        BulletHit = 0x0010,
+    }
 
     /// The class manages contact between two shapes. A contact exists for each overlapping
     /// AABB in the broad-phase (except if filtered). Therefore a contact object may exist
