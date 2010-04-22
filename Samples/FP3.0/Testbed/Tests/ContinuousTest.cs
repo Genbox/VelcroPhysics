@@ -36,7 +36,7 @@ namespace FarseerPhysics.TestBed.Tests
         public ContinuousTest()
         {
             {
-                Body body = FixtureFactory.CreateBody(World);
+                Body body = BodyFactory.CreateBody(World);
 
                 PolygonShape shape = new PolygonShape(1);
 
@@ -52,7 +52,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(1.0f);
                 shape.SetAsBox(2.0f, 0.1f);
 
-                _body = FixtureFactory.CreateBody(World);
+                _body = BodyFactory.CreateBody(World);
                 _body.BodyType = BodyType.Dynamic;
                 _body.Position = new Vector2(0.0f, 20.0f);
 

@@ -8,6 +8,7 @@ using FarseerPhysics.Common.Decomposition;
 using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -18,6 +19,7 @@ namespace SamplesXNA.Demo1
     {
         private Body _rectangleBody;
         private PolygonShape _rectangleShape;
+        private Texture2D _rectangleTexture;
 
         public override void Initialize()
         {
@@ -50,7 +52,7 @@ namespace SamplesXNA.Demo1
                 for (int j = 0; j < 10; j++)
                 {
                     //use the body factory to create the physics body
-                    _rectangleBody = PhysicsSimulator.Add();
+                    _rectangleBody = BodyFactory.CreateBody(PhysicsSimulator);
                     _rectangleBody.BodyType = BodyType.Dynamic;
                     _rectangleBody.Position = new Vector2(i * 2f - 15f, j * 2f - 15f);
                     

@@ -40,7 +40,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(edge, 0);
 
 
-                Body ground = FixtureFactory.CreateBody(World);
+                Body ground = BodyFactory.CreateBody(World);
                 ground.CreateFixture(shape);
             }
 
@@ -57,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             PolygonShape polygon = new PolygonShape(vertices, 1);
 
-            Body body1 = FixtureFactory.CreateBody(World);
+            Body body1 = BodyFactory.CreateBody(World);
             body1.BodyType = BodyType.Dynamic;
             body1.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
@@ -69,7 +69,7 @@ namespace FarseerPhysics.TestBed.Tests
             vertices[2] *= 2.0f;
             polygon.Set(vertices);
 
-            Body body2 = FixtureFactory.CreateBody(World);
+            Body body2 = BodyFactory.CreateBody(World);
             body2.BodyType = BodyType.Dynamic;
             body2.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
             body2.CreateFixture(polygon);
@@ -78,7 +78,7 @@ namespace FarseerPhysics.TestBed.Tests
             Vertices smallBox = PolygonTools.CreateRectangle(1.0f, 0.5f);
             polygon.Set(smallBox);
 
-            Body body3 = FixtureFactory.CreateBody(World);
+            Body body3 = BodyFactory.CreateBody(World);
             body3.BodyType = BodyType.Dynamic;
             body3.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
             body3.CreateFixture(polygon);
@@ -87,7 +87,7 @@ namespace FarseerPhysics.TestBed.Tests
             Vertices largeBox = PolygonTools.CreateRectangle(2.0f, 1.0f);
             polygon.Set(largeBox);
 
-            Body body4 = FixtureFactory.CreateBody(World);
+            Body body4 = BodyFactory.CreateBody(World);
             body4.BodyType = BodyType.Dynamic;
             body4.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
             body4.CreateFixture(polygon);
@@ -95,7 +95,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Small circle
             CircleShape circle = new CircleShape(1.0f, 1);
 
-            Body body5 = FixtureFactory.CreateBody(World);
+            Body body5 = BodyFactory.CreateBody(World);
             body5.BodyType = BodyType.Dynamic;
             body5.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
             body5.CreateFixture(circle);
@@ -103,7 +103,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Large circle
             circle.Radius *= 2.0f;
 
-            Body body6 = FixtureFactory.CreateBody(World);
+            Body body6 = BodyFactory.CreateBody(World);
             body6.BodyType = BodyType.Dynamic;
             body6.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
             body6.CreateFixture(circle);

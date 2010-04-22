@@ -125,7 +125,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Ground body
             {
-                Body ground = FixtureFactory.CreateBody(World);
+                Body ground = BodyFactory.CreateBody(World);
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -186,7 +186,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _bodies[_bodyIndex] = null;
             }
 
-            _bodies[_bodyIndex] = FixtureFactory.CreateBody(World);
+            _bodies[_bodyIndex] = BodyFactory.CreateBody(World);
             _bodies[_bodyIndex].BodyType = BodyType.Dynamic;
 
             float x = Rand.RandomFloat(-2.0f, 2.0f);

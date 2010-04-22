@@ -245,6 +245,9 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\WorldCallbacks.cs">
       <Link>Dynamics\WorldCallbacks.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Factories\BodyFactory.cs">
+      <Link>Factories\BodyFactory.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Factories\FixtureFactory.cs">
       <Link>Factories\FixtureFactory.cs</Link>
     </Compile>

@@ -43,7 +43,7 @@ namespace FarseerPhysics.Dynamics.Contacts
 
     internal class TOISolver
     {
-        private TOIConstraint[] _constraints = new TOIConstraint[1];
+        private TOIConstraint[] _constraints = new TOIConstraint[8];
         private int _count;
         private Vector2 _normal;
         private Vector2 _point;

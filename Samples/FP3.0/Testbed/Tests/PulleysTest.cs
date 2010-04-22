@@ -37,7 +37,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = FixtureFactory.CreateBody(World);
+                ground = BodyFactory.CreateBody(World);
 
                 PolygonShape shape = new PolygonShape(0.0f);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -53,12 +53,12 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(5);
                 shape.SetAsBox(a, b);
 
-                Body body1 = FixtureFactory.CreateBody(World);
+                Body body1 = BodyFactory.CreateBody(World);
                 body1.BodyType = BodyType.Dynamic;
                 body1.Position = new Vector2(-10.0f, y);
                 body1.CreateFixture(shape);
 
-                Body body2 = FixtureFactory.CreateBody(World);
+                Body body2 = BodyFactory.CreateBody(World);
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(10.0f, y);
 

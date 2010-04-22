@@ -49,7 +49,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Ground
             {
-                Body ground = FixtureFactory.CreateBody(World);
+                Body ground = BodyFactory.CreateBody(World);
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
@@ -67,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(0.25f, 1);
 
-                Body body = FixtureFactory.CreateBody(World);
+                Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-40.0f + 2.0f * i, 0.5f);
 
@@ -79,7 +79,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(1);
                 shape.SetAsBox(2.5f, 1.0f);
 
-                _chassis = FixtureFactory.CreateBody(World);
+                _chassis = BodyFactory.CreateBody(World);
                 _chassis.BodyType = BodyType.Dynamic;
                 _chassis.Position = pivot + _offset;
 
@@ -90,7 +90,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(1.6f, 1);
 
-                _wheel = FixtureFactory.CreateBody(World);
+                _wheel = BodyFactory.CreateBody(World);
                 _wheel.BodyType = BodyType.Dynamic;
                 _wheel.Position = pivot + _offset;
 
@@ -162,12 +162,12 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
 
-            Body body1 = FixtureFactory.CreateBody(World);
+            Body body1 = BodyFactory.CreateBody(World);
             body1.BodyType = BodyType.Dynamic;
             body1.Position = _offset;
             body1.AngularDamping = 10.0f;
 
-            Body body2 = FixtureFactory.CreateBody(World);
+            Body body2 = BodyFactory.CreateBody(World);
             body2.BodyType = BodyType.Dynamic;
             body2.Position = p4 + _offset;
             body2.AngularDamping = 10.0f;

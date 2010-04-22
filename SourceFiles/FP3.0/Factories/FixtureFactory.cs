@@ -17,7 +17,7 @@ namespace FarseerPhysics.Factories
     {
         public static Fixture CreateEdge(World world, Vector2 start, Vector2 end)
         {
-            Body body = CreateBody(world);
+            Body body = BodyFactory.CreateBody(world);
             Vertices edgeVertices = PolygonTools.CreateEdge(start, end);
             PolygonShape rectangleShape = new PolygonShape(edgeVertices, 0);
             return body.CreateFixture(rectangleShape);
@@ -34,7 +34,7 @@ namespace FarseerPhysics.Factories
             if (density <= 0)
                 throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
 
-            Body body = CreateBody(world);
+            Body body = BodyFactory.CreateBody(world);
             Vertices rectangleVertices = PolygonTools.CreateRectangle(height / 2, width / 2);
             PolygonShape rectangleShape = new PolygonShape(rectangleVertices, density);
             return body.CreateFixture(rectangleShape);
@@ -48,7 +48,7 @@ namespace FarseerPhysics.Factories
             if (density <= 0)
                 throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
 
-            Body body = CreateBody(world);
+            Body body = BodyFactory.CreateBody(world);
             CircleShape circleShape = new CircleShape(radius, density);
             return body.CreateFixture(circleShape);
         }
@@ -64,7 +64,7 @@ namespace FarseerPhysics.Factories
             if (density <= 0)
                 throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
 
-            Body body = CreateBody(world);
+            Body body = BodyFactory.CreateBody(world);
             Vertices ellipseVertices = PolygonTools.CreateEllipse(xRadius, yRadius, edges);
             PolygonShape polygonShape = new PolygonShape(ellipseVertices, density);
             return body.CreateFixture(polygonShape);
@@ -75,16 +75,9 @@ namespace FarseerPhysics.Factories
             if (density <= 0)
                 throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
 
-            Body body = CreateBody(world);
+            Body body = BodyFactory.CreateBody(world);
             PolygonShape polygonShape = new PolygonShape(vertices, density);
             return body.CreateFixture(polygonShape);
-        }
-
-        public static Body CreateBody(World world)
-        {
-            Body body = new Body(world);
-            world.Add(body);
-            return body;
         }
 
         public static BreakableBody CreateBreakableBody(World world, Vertices vertices, float density)
