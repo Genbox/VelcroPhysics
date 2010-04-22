@@ -949,19 +949,25 @@ namespace FarseerPhysics.Dynamics
                 ++iter;
             } while (found && count > 1 && iter < 50);
 
-            // Advance the body to its safe time. We have to do this even for bodies without a
-            // TOI so that later TOIs see the correct state.
-            body.Advance(toi);
-
             if (toiContact == null)
             {
+                body.Advance(1.0f);
                 return;
+            }
+
+            Sweep backup = body._sweep;
+            body.Advance(toi);
+            toiContact.Update(ContactManager);
+            if (toiContact.Enabled == false)
+            {
+                // Contact disabled. Backup and recurse.
+                body._sweep = backup;
+                SolveTOI(body);
             }
 
             ++toiContact.ToiCount;
 
             // Update all the valid contacts on this body and build a contact island.
-            Sweep backup = body._sweep;
             count = 0;
             for (ContactEdge ce = body._contactList;
                  (ce != null) && (count < Settings.MaxTOIContacts);
