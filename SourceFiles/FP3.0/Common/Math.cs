@@ -245,7 +245,7 @@ namespace FarseerPhysics.Common
         public Mat22(float angle)
         {
             // TODO_ERIN compute sin+cos together.
-            float c = (float) Math.Cos(angle), s = (float) Math.Sin(angle);
+            float c = (float)Math.Cos(angle), s = (float)Math.Sin(angle);
             Col1 = new Vector2(c, s);
             Col2 = new Vector2(-s, c);
         }
@@ -261,7 +261,7 @@ namespace FarseerPhysics.Common
         /// an orthonormal rotation matrix.
         public void Set(float angle)
         {
-            float c = (float) Math.Cos(angle), s = (float) Math.Sin(angle);
+            float c = (float)Math.Cos(angle), s = (float)Math.Sin(angle);
             Col1.X = c;
             Col2.X = -s;
             Col1.Y = s;
@@ -290,7 +290,7 @@ namespace FarseerPhysics.Common
         /// a rotation matrix).
         public float GetAngle()
         {
-            return (float) Math.Atan2(Col1.Y, Col1.X);
+            return (float)Math.Atan2(Col1.Y, Col1.X);
         }
 
         public Mat22 GetInverse()
@@ -409,7 +409,7 @@ namespace FarseerPhysics.Common
         /// Calculate the angle that the rotation matrix represents.
         public float GetAngle()
         {
-            return (float) Math.Atan2(R.Col1.Y, R.Col1.X);
+            return (float)Math.Atan2(R.Col1.Y, R.Col1.X);
         }
     }
 
@@ -463,6 +463,14 @@ namespace FarseerPhysics.Common
         {
             Center0 = (1.0f - t) * Center0 + t * Center;
             Angle0 = (1.0f - t) * Angle0 + t * Angle;
+        }
+
+        public void Normalize()
+        {
+            const float twoPi = 2.0f * Settings.Pi;
+            float d = twoPi * (float)Math.Floor(Angle0 / twoPi);
+            Angle0 -= d;
+            Angle -= d;
         }
     }
 }

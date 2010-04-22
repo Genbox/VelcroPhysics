@@ -300,14 +300,19 @@ namespace FarseerPhysics.Collision
             Sweep sweepA = input.SweepA;
             Sweep sweepB = input.SweepB;
 
+            // Large rotations can make the root finder fail, so we normalize the
+            // sweep angles.
+            sweepA.Normalize();
+            sweepB.Normalize();
+
             float tMax = input.TMax;
 
-            float target = Settings.LinearSlop;
-            float tolerance = 0.25f * Settings.LinearSlop;
+            const float target = Settings.LinearSlop;
+            const float tolerance = 0.25f * Settings.LinearSlop;
             Debug.Assert(target > tolerance);
 
             float t1 = 0.0f;
-            const int k_maxIterations = 1000;
+            const int k_maxIterations = 20; // TODO_ERIN: b2Settings
             int iter = 0;
 
             // Prepare input for distance query.

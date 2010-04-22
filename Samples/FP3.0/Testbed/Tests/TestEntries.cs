@@ -28,6 +28,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {
+                new TestEntry {Name = "Time of Impact", CreateFcn = TimeOfImpactTest.Create},
                 new TestEntry {Name = "Texture to Vertices", CreateFcn = TextureVerticesTest.Create},
                 new TestEntry {Name = "Breakable", CreateFcn = BreakableTest.Create},
                 new TestEntry {Name = "Shape Editing", CreateFcn = ShapeEditingTest.Create},
@@ -62,7 +63,6 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Pulleys", CreateFcn = PulleysTest.Create},
                 new TestEntry {Name = "Revolute", CreateFcn = RevoluteTest.Create}, //30
                 new TestEntry {Name = "Slider Crank", CreateFcn = SliderCrankTest.Create},
-                new TestEntry {Name = "Time of Impact", CreateFcn = TimeOfImpactTest.Create},
                 new TestEntry {Name = "Varying Friction", CreateFcn = VaryingFrictionTest.Create},
                 new TestEntry {Name = "Varying Restitution", CreateFcn = VaryingRestitutionTest.Create},
                 new TestEntry {Name = "Vertical Stack", CreateFcn = VerticalStackTest.Create},
