@@ -287,18 +287,18 @@ namespace FarseerPhysics.Common
 
         public static Vertices CreatePolygon(uint[] data, int width, int height)
         {
-            return TextureConverter.CreatePolygon(data, width, height);
+            return TextureConverter.CreateVertices(data, width, height);
         }
 
         public static Vertices CreatePolygon(uint[] data, int width, int height, bool holeDetection)
         {
-            return TextureConverter.CreatePolygon(data, width, height, holeDetection);
+            return TextureConverter.CreateVertices(data, width, height, holeDetection);
         }
 
         public static List<Vertices> CreatePolygon(uint[] data, int width, int height, float hullTolerance,
                                                    byte alphaTolerance, bool multiPartDetection, bool holeDetection)
         {
-            return TextureConverter.CreatePolygon(data, width, height, hullTolerance, alphaTolerance, holeDetection,
+            return TextureConverter.CreateVertices(data, width, height, hullTolerance, alphaTolerance, holeDetection,
                                                   multiPartDetection);
         }
     }

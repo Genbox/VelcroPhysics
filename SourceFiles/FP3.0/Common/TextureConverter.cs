@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FarseerPhysics.Collision.Shapes;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common
@@ -7,6 +8,11 @@ namespace FarseerPhysics.Common
     public static class TextureConverter
     {
         //User contribution from Sickbattery
+
+        //public static PolygonShape CreatePolygon()
+        //{
+            
+        //}
 
         /// <summary>
         /// TODO:
@@ -19,24 +25,24 @@ namespace FarseerPhysics.Common
                                                              {-1, 0}
                                                          };
 
-        public static Vertices CreatePolygon(uint[] data, int width, int height)
+        public static Vertices CreateVertices(uint[] data, int width, int height)
         {
             PolygonCreationAssistance pca = new PolygonCreationAssistance(data, width, height);
-            List<Vertices> verts = CreatePolygon(pca);
+            List<Vertices> verts = CreateVertices(pca);
 
             return verts[0];
         }
 
-        public static Vertices CreatePolygon(uint[] data, int width, int height, bool holeDetection)
+        public static Vertices CreateVertices(uint[] data, int width, int height, bool holeDetection)
         {
             PolygonCreationAssistance pca = new PolygonCreationAssistance(data, width, height);
             pca.HoleDetection = holeDetection;
-            List<Vertices> verts = CreatePolygon(pca);
+            List<Vertices> verts = CreateVertices(pca);
 
             return verts[0];
         }
 
-        public static List<Vertices> CreatePolygon(uint[] data, int width, int height, float hullTolerance,
+        public static List<Vertices> CreateVertices(uint[] data, int width, int height, float hullTolerance,
                                                    byte alphaTolerance, bool multiPartDetection, bool holeDetection)
         {
             PolygonCreationAssistance pca = new PolygonCreationAssistance(data, width, height);
@@ -44,10 +50,10 @@ namespace FarseerPhysics.Common
             pca.AlphaTolerance = alphaTolerance;
             pca.MultipartDetection = multiPartDetection;
             pca.HoleDetection = holeDetection;
-            return CreatePolygon(pca);
+            return CreateVertices(pca);
         }
 
-        private static List<Vertices> CreatePolygon(PolygonCreationAssistance pca)
+        private static List<Vertices> CreateVertices(PolygonCreationAssistance pca)
         {
             List<Vertices> polygons = new List<Vertices>();
 

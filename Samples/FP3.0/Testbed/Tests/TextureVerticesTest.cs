@@ -16,10 +16,8 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private Body _polygonBody;
         private Texture2D _polygonTexture;
-        private Vector2[] _vertices;
         private Color[] colors;
         private List<Vertices> list;
-        private Vertices vertices;
 
         private TextureVerticesTest()
         {
@@ -41,77 +39,31 @@ namespace FarseerPhysics.TestBed.Tests
             //Transfer the texture data to the array
             _polygonTexture.GetData(data);
 
+            //Find the vertices that makes up the outline of the shape in the texture
             Vertices verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height, true);
+
+            //For now we need to scale the vertices (result is in pixels, we use meters)
             Vector2 scale = new Vector2(0.07f, 0.07f);
             verts.Scale(ref scale);
 
-            _vertices = verts.ToArray();
-
+            //Simplify the vertices (less is better)
             verts = BooleanTools.Simplify(verts);
 
+            //Since it is a concave polygon, we need to partition it into several smaller convex polygons
             list = BayazitDecomposer.ConvexPartition(verts);
 
-            if (list != null)
-            {
-                colors = new Color[list.Count];
-                Random random = new Random((int) DateTime.Now.Ticks);
-
-                for (int i = 0; i < list.Count; i++)
-                {
-                    colors[i] = new Color((byte) random.Next(100, 255), (byte) random.Next(100, 255),
-                                          (byte) random.Next(100, 255));
-                }
-            }
-
+            //We create a single body
             _polygonBody = BodyFactory.CreateBody(World);
             _polygonBody.BodyType = BodyType.Dynamic;
-            _polygonBody.Position = new Vector2(0, 0);
 
+            //Then we create several fixtures using the body
             foreach (Vertices vert in list)
             {
-                if (!vert.IsConvex())
-                    throw new Exception("eh..");
-
                 PolygonShape shape = new PolygonShape(vert, 1);
                 _polygonBody.CreateFixture(shape);
             }
 
             base.Initialize();
-        }
-
-        public override void Update(GameSettings settings, GameTime gameTime)
-        {
-            if (_vertices != null)
-                for (int i = 0; i < _vertices.Length; i++)
-                {
-                    DebugView.DrawCircle(_vertices[i], 0.07f, Color.White);
-                }
-
-            if (vertices != null)
-            {
-                for (int i = 0; i < vertices.Count; i++)
-                {
-                    DebugView.DrawCircle(vertices[i], 0.07f, Color.White);
-                }
-
-                Vector2[] vector2s = vertices.ToArray();
-                DebugView.DrawSolidPolygon(ref vector2s, vertices.Count, Color.Red);
-            }
-
-            if (list != null)
-                for (int i = 0; i < list.Count; i++)
-                {
-                    Vertices v = list[i];
-                    if (v != null)
-                    {
-                        Vector2[] vector2s = v.ToArray();
-
-                        DebugView.DrawSolidPolygon(ref vector2s, v.Count, colors[i]);
-                    }
-                }
-
-
-            base.Update(settings, gameTime);
         }
 
         public static Test Create()
