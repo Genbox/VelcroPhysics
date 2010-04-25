@@ -35,8 +35,8 @@ namespace SamplesXNA.Demo1
         public override void LoadContent()
         {
             //load texture that will visually represent the physics body
-            _rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 100, 100, Color.White,
-                                                                     Color.Black);
+            //_rectangleTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, 100, 100, Color.White,
+            //                                                         Color.Black);
 
             //Vertices verts = PolygonTools.CreateGear(1, 12, 0.65f, 0.25f);
             Vertices verts = PolygonTools.CreateRoundedRectangle(2, 1f, 0.5f, 0.5f, 5);

@@ -126,6 +126,7 @@
     </Compile>
     <Compile Include="Tests\LineJointTest.cs" />
     <Compile Include="Tests\OneSidedPlatformTest.cs" />
+    <Compile Include="Tests\PathTest.cs" />
     <Compile Include="Tests\PolyCollisionTest.cs">
       <SubType>Code</SubType>
     </Compile>

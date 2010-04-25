@@ -203,7 +203,10 @@ namespace FarseerPhysics.DebugViewXNA
                     // don't draw this
                     break;
                 case JointType.Revolute:
-                    DrawSegment(x2, p1, color);
+                    //DrawSegment(x2, p1, color);
+                    DrawSegment(p2, p1, color);
+                    DrawSolidCircle(p2, 0.1f, new Vector2(), Color.Red);
+                    DrawSolidCircle(p1, 0.1f, new Vector2(), Color.Blue);
                     break;
                 case JointType.FixedRevolute:
                     DrawSegment(x1, p1, color);
@@ -337,7 +340,7 @@ namespace FarseerPhysics.DebugViewXNA
 
         public void DrawCircle(Vector2 center, float radius, Color color)
         {
-            const int segments = 8;
+            const int segments = 32;
             const double increment = Math.PI * 2.0 / segments;
             double theta = 0.0;
 
@@ -366,7 +369,7 @@ namespace FarseerPhysics.DebugViewXNA
 
         public void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, Color color)
         {
-            const int segments = 8;
+            const int segments = 32;
             const double increment = Math.PI * 2.0 / segments;
             double theta = 0.0;
 
