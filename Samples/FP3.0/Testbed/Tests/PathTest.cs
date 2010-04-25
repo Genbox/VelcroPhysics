@@ -1,4 +1,6 @@
-﻿using FarseerPhysics.Collision.Shapes;
+﻿using System;
+using System.Collections.Generic;
+using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
@@ -34,10 +36,24 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body body = new Body(World);
                 body.BodyType = BodyType.Static;
-                body.CreateFixture(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0), 0), 1));
-                Fixture f = body.CreateFixture(new CircleShape(0.5f, 1));
+                //body.CreateFixture(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0), 0), 1));
+                Fixture f = body.CreateFixture(new CircleShape(0.25f, 1));
 
-                PathFactory.EvenlyDistibuteShapesAlongPath(World, path, body, 75);
+                PathFactory.EvenlyDistibuteShapesAlongPath(World, path, body, 140);
+
+                Vector2 scale = new Vector2(0.5f, 0.5f);
+                path.Scale(ref scale);
+                scale = new Vector2(5, 5);
+                path.Translate(ref scale);
+
+                body = new Body(World);
+                body.BodyType = BodyType.Dynamic;
+                body.CreateFixture(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0), 0), 1));
+                f = body.CreateFixture(new CircleShape(0.5f, 1));
+
+                List<Body> bodies = PathFactory.EvenlyDistibuteShapesAlongPath(World, path, body, 30);
+
+                JointFactory.AttachBodiesWithRevoluteJoint(World, bodies, new Vector2(0, 0.5f), new Vector2(0, -0.5f), true, true);
             }
         }
 

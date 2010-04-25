@@ -23,9 +23,10 @@ namespace FarseerPhysics.Factories
         /// <param name="path"></param>
         /// <param name="body"></param>
         /// <param name="copies"></param>
-        public static void EvenlyDistibuteShapesAlongPath(World world, Path path, Body body, int copies)
+        public static List<Body> EvenlyDistibuteShapesAlongPath(World world, Path path, Body body, int copies)
         {
             List<Vector3> centers = path.SubdivideEvenly(copies);
+            List<Body> bodyList = new List<Body>();
 
             Body b;
             int firstIndex = world.BodyList.Count;
@@ -44,7 +45,11 @@ namespace FarseerPhysics.Factories
                 }
 
                 world.Add(b);
+
+                bodyList.Add(b);
             }
+
+            return bodyList;
         }
 
     }
