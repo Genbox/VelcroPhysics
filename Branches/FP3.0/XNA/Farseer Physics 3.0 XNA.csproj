@@ -252,6 +252,7 @@
       <Link>Factories\FixtureFactory.cs</Link>
     </Compile>
     <Compile Include="Common\Path.cs" />
+    <Compile Include="Factories\JointFactory.cs" />
     <Compile Include="Factories\PathFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
