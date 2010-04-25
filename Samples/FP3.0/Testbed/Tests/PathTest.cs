@@ -39,21 +39,33 @@ namespace FarseerPhysics.TestBed.Tests
                 //body.CreateFixture(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0), 0), 1));
                 Fixture f = body.CreateFixture(new CircleShape(0.25f, 1));
 
-                PathFactory.EvenlyDistibuteShapesAlongPath(World, path, body, 140);
+                PathFactory.EvenlyDistibuteShapesAlongPath(World, path, body, 10);
 
-                Vector2 scale = new Vector2(0.5f, 0.5f);
-                path.Scale(ref scale);
-                scale = new Vector2(5, 5);
-                path.Translate(ref scale);
+                Vector2 xform = new Vector2(0.5f, 0.5f);
+                path.Scale(ref xform);
+                xform = new Vector2(5, 5);
+                path.Translate(ref xform);
 
                 body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
-                body.CreateFixture(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0), 0), 1));
+                body.CreateFixture(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.1f, 0), 0), 1));
                 f = body.CreateFixture(new CircleShape(0.5f, 1));
 
-                List<Body> bodies = PathFactory.EvenlyDistibuteShapesAlongPath(World, path, body, 30);
+                List<Body> bodies = PathFactory.EvenlyDistibuteShapesAlongPath(World, path, body, 20);
 
                 JointFactory.AttachBodiesWithRevoluteJoint(World, bodies, new Vector2(0, 0.5f), new Vector2(0, -0.5f), true, true);
+
+                xform = new Vector2(-25, 0);
+                path.Translate(ref xform);
+
+                body = new Body(World);
+                body.BodyType = BodyType.Static;
+
+                path.Closed = true;
+
+                PathFactory.ConvertPathToEdges(World, path, body, 25);
+
+                World.Add(body);
             }
         }
 
