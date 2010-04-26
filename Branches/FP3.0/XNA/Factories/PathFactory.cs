@@ -16,6 +16,14 @@ namespace FarseerPhysics.Factories
     /// </summary>
     public static class PathFactory
     {
+        /// <summary>
+        /// Convert a path into a set of edges.
+        /// Note: use only for static edges.
+        /// </summary>
+        /// <param name="world"></param>
+        /// <param name="path"></param>
+        /// <param name="body"></param>
+        /// <param name="subdivisions"></param>
         public static void ConvertPathToEdges(World world, Path path, Body body, int subdivisions)
         {
             List<Vector2> verts = path.GetVertices(subdivisions);
@@ -31,18 +39,28 @@ namespace FarseerPhysics.Factories
             }
         }
 
-        public static void ConvertPathToEdges(World world, Path path, Body body, float density, int subdivisions)
+        /// <summary>
+        /// Convert a closed path into a polygon.
+        /// Convex decomposition is automatically performed.
+        /// </summary>
+        /// <param name="world"></param>
+        /// <param name="path"></param>
+        /// <param name="body"></param>
+        /// <param name="density"></param>
+        /// <param name="subdivisions"></param>
+        public static void ConvertPathToPolygon(World world, Path path, Body body, float density, int subdivisions)
         {
+            if (!path.Closed)
+                throw new Exception("The path must be closed to convert to a polygon.");
+            
             List<Vector2> verts = path.GetVertices(subdivisions);
 
-            for (int i = 1; i < verts.Count; i++)
+            List<Vertices> decomposedVerts = EarclipDecomposer.ConvexPartition(new Vertices(verts));
+            //List<Vertices> decomposedVerts = BayazitDecomposer.ConvexPartition(new Vertices(verts));
+
+            foreach (var item in decomposedVerts)
             {
-                PolygonShape shape = new PolygonShape(PolygonTools.CreateEdge(verts[i], verts[i - 1]), density);
-                MassData data = shape.MassData;
-                data.Mass = 1;
-                data.Inertia = 1;
-                shape.MassData = data;
-                body.CreateFixture(shape);
+                body.CreateFixture(new PolygonShape(item, density));
             }
         }
         
@@ -82,5 +100,16 @@ namespace FarseerPhysics.Factories
             return bodyList;
         }
 
+
+        public static void MoveBodyOnPath(Path path, Body body, float time, float strength, float timeStep)
+        {
+            Vector2 destination = path.GetPosition(time);
+
+            Vector2 positionDelta = body.Position - destination;
+
+            Vector2 velocity = (positionDelta / timeStep) * strength;
+
+            body.LinearVelocity = -velocity;
+        }
     }
 }
