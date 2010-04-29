@@ -62,12 +62,14 @@ namespace FarseerPhysics.Collision
         /// <summary>
         /// The features that intersect to form the contact point
         /// </summary>
-        [FieldOffset(0)] public Features Features;
+        [FieldOffset(0)]
+        public Features Features;
 
         /// <summary>
         /// Used to quickly compare contact ids.
         /// </summary>
-        [FieldOffset(0)] public uint Key;
+        [FieldOffset(0)]
+        public uint Key;
     }
 
     /// <summary>
@@ -400,6 +402,21 @@ namespace FarseerPhysics.Collision
             get { return 0.5f * (UpperBound - LowerBound); }
         }
 
+        /// Get the perimeter length
+        public float GetPerimeter()
+        {
+            float wx = UpperBound.X - LowerBound.X;
+            float wy = UpperBound.Y - LowerBound.Y;
+            return 2.0f * (wx + wy);
+        }
+
+        /// Combine an AABB into this one.
+        public void Combine(ref AABB aabb)
+        {
+            LowerBound = Vector2.Min(LowerBound, aabb.LowerBound);
+            UpperBound = Vector2.Max(UpperBound, aabb.UpperBound);
+        }
+
         #region IEquatable<AABB> Members
 
         public bool Equals(AABB other)
@@ -587,7 +604,7 @@ namespace FarseerPhysics.Collision
         public override bool Equals(object obj)
         {
             if (obj is AABB)
-                return Equals((AABB) obj);
+                return Equals((AABB)obj);
 
             return false;
         }
@@ -626,7 +643,7 @@ namespace FarseerPhysics.Collision
 
             if (xDistance > 0 && yDistance > 0)
             {
-                distance = (float) Math.Sqrt(xDistance * xDistance + yDistance * yDistance);
+                distance = (float)Math.Sqrt(xDistance * xDistance + yDistance * yDistance);
             }
             else
             {
@@ -1144,7 +1161,7 @@ namespace FarseerPhysics.Collision
             }
 
             // Perform a local search for the best edge normal.
-            for (;;)
+            for (; ; )
             {
                 if (increment == -1)
                     edge = bestEdge - 1 >= 0 ? bestEdge - 1 : count1 - 1;
@@ -1202,16 +1219,16 @@ namespace FarseerPhysics.Collision
             var cv0 = c[0];
 
             cv0.Vertex = MathUtils.Multiply(ref xf2, poly2.Vertices[i1]);
-            cv0.Id.Features.ReferenceEdge = (byte) edge1;
-            cv0.Id.Features.IncidentEdge = (byte) i1;
+            cv0.Id.Features.ReferenceEdge = (byte)edge1;
+            cv0.Id.Features.IncidentEdge = (byte)i1;
             cv0.Id.Features.IncidentVertex = 0;
 
             c[0] = cv0;
 
             var cv1 = c[1];
             cv1.Vertex = MathUtils.Multiply(ref xf2, poly2.Vertices[i2]);
-            cv1.Id.Features.ReferenceEdge = (byte) edge1;
-            cv1.Id.Features.IncidentEdge = (byte) i2;
+            cv1.Id.Features.ReferenceEdge = (byte)edge1;
+            cv1.Id.Features.IncidentEdge = (byte)i2;
             cv1.Id.Features.IncidentVertex = 1;
 
             c[1] = cv1;
