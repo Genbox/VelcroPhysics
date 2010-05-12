@@ -14,31 +14,7 @@ namespace FarseerPhysics.TestBed.Tests
     public class CuttingTest : Test
     {
         private const float moveAmount = 0.1f;
-        /*
-        public CuttingTest()
-        {
-            Body ground;
-            {
-                ground = BodyFactory.CreateBody(World);
 
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0.0f);
-                ground.CreateFixture(shape);
-            }
-
-            Vector2 offset = new Vector2(3, 5);
-
-            for (int i = 0; i < 1; i++)
-            {
-                Body boxBody = BodyFactory.CreateBody(World);
-                boxBody.BodyType = BodyType.Dynamic;
-                boxBody.Position = i * offset + new Vector2(0, 5);
-                boxBody.Rotation = 0.33f * Settings.Pi;
-                PolygonShape boxShape = new PolygonShape(PolygonTools.CreateRectangle(3, 3),1);
-                boxBody.CreateFixture(boxShape);
-            }
-        }
-        */
         private const int Count = 20;
         private Vector2 _end = new Vector2(6, 5);
         private Vector2 _start = new Vector2(-6, 5);
@@ -47,8 +23,7 @@ namespace FarseerPhysics.TestBed.Tests
         private CuttingTest()
         {
             //Create ground
-            //FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-            FixtureFactory.CreateRectangle(World, 1, 80, 1);
+            FixtureFactory.CreateRectangle(World, 80, 1, 1);
 
             Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
             PolygonShape shape = new PolygonShape(box, 5);

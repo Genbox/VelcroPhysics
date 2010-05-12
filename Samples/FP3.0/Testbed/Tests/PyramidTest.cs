@@ -36,8 +36,7 @@ namespace FarseerPhysics.TestBed.Tests
         private PyramidTest()
         {
             //Create ground
-            //FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-            FixtureFactory.CreateRectangle(World, 1, 80, 1);
+            FixtureFactory.CreateRectangle(World, 80, 1, 1);
 
             Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
             PolygonShape shape = new PolygonShape(box, 5);

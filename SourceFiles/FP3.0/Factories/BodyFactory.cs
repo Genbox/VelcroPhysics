@@ -21,5 +21,13 @@ namespace FarseerPhysics.Factories
             world.Add(body);
             return body;
         }
+
+        public static Body CreateBody(World world, Vector2 position)
+        {
+            Body body = new Body(world);
+            body.Position = position;
+            world.Add(body);
+            return body;
+        }
     }
 }

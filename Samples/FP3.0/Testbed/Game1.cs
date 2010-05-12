@@ -67,8 +67,18 @@ namespace FarseerPhysics.TestBed
             IsMouseVisible = true;
 
             IsFixedTimeStep = true;
-            
+
             _graphics.SynchronizeWithVerticalRetrace = false;
+        }
+
+        public Vector2 ViewCenter
+        {
+            get { return _viewCenter; }
+            set
+            {
+                _viewCenter = value;
+                Resize(_width, _height);
+            }
         }
 
         /// <summary>
@@ -150,13 +160,13 @@ namespace FarseerPhysics.TestBed
                 _viewZoom = Math.Min(1.1f * _viewZoom, 20.0f);
                 Resize(_width, _height);
             }
-                // Press 'x' to zoom in.
+            // Press 'x' to zoom in.
             else if (newKeyboardState.IsKeyDown(Keys.X))
             {
                 _viewZoom = Math.Max(0.9f * _viewZoom, 0.02f);
                 Resize(_width, _height);
             }
-                // Press 'r' to reset.
+            // Press 'r' to reset.
             else if (newKeyboardState.IsKeyDown(Keys.R) && _oldKeyboardState.IsKeyUp(Keys.R))
             {
                 Restart();
@@ -164,9 +174,9 @@ namespace FarseerPhysics.TestBed
             else if ((newKeyboardState.IsKeyDown(Keys.P) && _oldKeyboardState.IsKeyUp(Keys.P)) ||
                      newGamePad.IsButtonDown(Buttons.Start) && _oldGamePad.IsButtonUp(Buttons.Start))
             {
-                _settings.Pause = _settings.Pause > 0 ? 1 : (uint) 0;
+                _settings.Pause = _settings.Pause > 0 ? 1 : (uint)0;
             }
-                // Press I to prev test.
+            // Press I to prev test.
             else if ((newKeyboardState.IsKeyDown(Keys.I) && _oldKeyboardState.IsKeyUp(Keys.I)) ||
                      newGamePad.IsButtonDown(Buttons.LeftShoulder) && _oldGamePad.IsButtonUp(Buttons.LeftShoulder))
             {
@@ -176,7 +186,7 @@ namespace FarseerPhysics.TestBed
                     _testSelection = _testCount - 1;
                 }
             }
-                // Press O to next test.
+            // Press O to next test.
             else if ((newKeyboardState.IsKeyDown(Keys.O) && _oldKeyboardState.IsKeyUp(Keys.O)) ||
                      newGamePad.IsButtonDown(Buttons.RightShoulder) && _oldGamePad.IsButtonUp(Buttons.RightShoulder))
             {
@@ -186,31 +196,31 @@ namespace FarseerPhysics.TestBed
                     _testSelection = 0;
                 }
             }
-                // Press left to pan left.
+            // Press left to pan left.
             else if (newKeyboardState.IsKeyDown(Keys.Left))
             {
                 _viewCenter.X -= 0.5f;
                 Resize(_width, _height);
             }
-                // Press right to pan right.
+            // Press right to pan right.
             else if (newKeyboardState.IsKeyDown(Keys.Right))
             {
                 _viewCenter.X += 0.5f;
                 Resize(_width, _height);
             }
-                // Press down to pan down.
+            // Press down to pan down.
             else if (newKeyboardState.IsKeyDown(Keys.Down))
             {
                 _viewCenter.Y -= 0.5f;
                 Resize(_width, _height);
             }
-                // Press up to pan up.
+            // Press up to pan up.
             else if (newKeyboardState.IsKeyDown(Keys.Up))
             {
                 _viewCenter.Y += 0.5f;
                 Resize(_width, _height);
             }
-                // Press home to reset the view.
+            // Press home to reset the view.
             else if (newKeyboardState.IsKeyDown(Keys.Home) && _oldKeyboardState.IsKeyUp(Keys.Home))
             {
                 _viewZoom = 1.0f;
@@ -301,7 +311,7 @@ namespace FarseerPhysics.TestBed
             _tw = GraphicsDevice.Viewport.Width;
             _th = GraphicsDevice.Viewport.Height;
 
-            float ratio = _tw / (float) _th;
+            float ratio = _tw / (float)_th;
 
             Vector2 extents = new Vector2(ratio * 25.0f, 25.0f);
             extents *= _viewZoom;
@@ -315,10 +325,10 @@ namespace FarseerPhysics.TestBed
 
         public Vector2 ConvertScreenToWorld(int x, int y)
         {
-            float u = x / (float) _tw;
-            float v = (_th - y) / (float) _th;
+            float u = x / (float)_tw;
+            float v = (_th - y) / (float)_th;
 
-            float ratio = _tw / (float) _th;
+            float ratio = _tw / (float)_th;
             Vector2 extents = new Vector2(ratio * 25.0f, 25.0f);
             extents *= _viewZoom;
 
