@@ -25,6 +25,11 @@ namespace FarseerPhysics.Factories
 
         public static Fixture CreateRectangle(World world, float width, float height, float density)
         {
+            return CreateRectangle(world, width, height, density, Vector2.Zero);
+        }
+
+        public static Fixture CreateRectangle(World world, float width, float height, float density, Vector2 position)
+        {
             if (width <= 0)
                 throw new ArgumentOutOfRangeException("width", "Width must be more than 0");
 
@@ -34,13 +39,18 @@ namespace FarseerPhysics.Factories
             if (density <= 0)
                 throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
 
-            Body body = BodyFactory.CreateBody(world);
-            Vertices rectangleVertices = PolygonTools.CreateRectangle(height / 2, width / 2);
+            Body body = BodyFactory.CreateBody(world, position);
+            Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
             PolygonShape rectangleShape = new PolygonShape(rectangleVertices, density);
             return body.CreateFixture(rectangleShape);
         }
 
         public static Fixture CreateCircle(World world, float radius, float density)
+        {
+            return CreateCircle(world, radius, density, Vector2.Zero);
+        }
+
+        public static Fixture CreateCircle(World world, float radius, float density, Vector2 position)
         {
             if (radius <= 0)
                 throw new ArgumentOutOfRangeException("radius", "Radius must be more than 0");
@@ -48,12 +58,17 @@ namespace FarseerPhysics.Factories
             if (density <= 0)
                 throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
 
-            Body body = BodyFactory.CreateBody(world);
+            Body body = BodyFactory.CreateBody(world, position);
             CircleShape circleShape = new CircleShape(radius, density);
             return body.CreateFixture(circleShape);
         }
 
         public static Fixture CreateEllipse(World world, float xRadius, float yRadius, int edges, float density)
+        {
+            return CreateEllipse(world, xRadius, yRadius, edges, density, Vector2.Zero);
+        }
+
+        public static Fixture CreateEllipse(World world, float xRadius, float yRadius, int edges, float density, Vector2 position)
         {
             if (xRadius <= 0)
                 throw new ArgumentOutOfRangeException("xRadius", "X-radius must be more than 0");
@@ -64,7 +79,7 @@ namespace FarseerPhysics.Factories
             if (density <= 0)
                 throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
 
-            Body body = BodyFactory.CreateBody(world);
+            Body body = BodyFactory.CreateBody(world, position);
             Vertices ellipseVertices = PolygonTools.CreateEllipse(xRadius, yRadius, edges);
             PolygonShape polygonShape = new PolygonShape(ellipseVertices, density);
             return body.CreateFixture(polygonShape);
@@ -72,15 +87,25 @@ namespace FarseerPhysics.Factories
 
         public static Fixture CreatePolygon(World world, Vertices vertices, float density)
         {
+            return CreatePolygon(world, vertices, density, Vector2.Zero);
+        }
+
+        public static Fixture CreatePolygon(World world, Vertices vertices, float density, Vector2 position)
+        {
             if (density <= 0)
                 throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
 
-            Body body = BodyFactory.CreateBody(world);
+            Body body = BodyFactory.CreateBody(world, position);
             PolygonShape polygonShape = new PolygonShape(vertices, density);
             return body.CreateFixture(polygonShape);
         }
 
         public static BreakableBody CreateBreakableBody(World world, Vertices vertices, float density)
+        {
+            return CreateBreakableBody(world, vertices, density, Vector2.Zero);
+        }
+
+        public static BreakableBody CreateBreakableBody(World world, Vertices vertices, float density, Vector2 position)
         {
             vertices = BooleanTools.Simplify(vertices);
             List<Vertices> triangles = EarclipDecomposer.ConvexPartition(vertices);
@@ -94,6 +119,7 @@ namespace FarseerPhysics.Factories
                 breakableBody.AddPart(f);
             }
 
+            breakableBody.MainBody.Position = position;
             world.Add(breakableBody);
 
             return breakableBody;

@@ -15,24 +15,26 @@ namespace FarseerPhysics.TestBed.Tests
 
         private BuoyancyTest()
         {
+
             //Make a box
             //Bottom
             Body ground = BodyFactory.CreateBody(World);
-            Vertices edge = PolygonTools.CreateEdge(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
+            Vertices edge = PolygonTools.CreateEdge(new Vector2(0.0f, 0.0f), new Vector2(40.0f, 0.0f));
             PolygonShape shape = new PolygonShape(edge);
             ground.CreateFixture(shape);
 
             //Left side
-            shape.Set(PolygonTools.CreateEdge(new Vector2(-20.0f, 0.0f), new Vector2(-20.0f, 15.0f)));
+            shape.Set(PolygonTools.CreateEdge(new Vector2(0.0f, 0.0f), new Vector2(00.0f, 15.0f)));
             ground.CreateFixture(shape);
 
             //Right side
-            shape.Set(PolygonTools.CreateEdge(new Vector2(20.0f, 0.0f), new Vector2(20.0f, 15.0f)));
+            shape.Set(PolygonTools.CreateEdge(new Vector2(40.0f, 0.0f), new Vector2(40.0f, 15.0f)));
             ground.CreateFixture(shape);
 
             //Buoyancy controller
-            _aabbContainer = new AABBFluidContainer(new Vector2(-20, 0), 40, 10);
-            _waveContainer = new WaveContainer(new Vector2(-20, 0), 40, 10);
+            _aabbContainer = new AABBFluidContainer(new Vector2(0, 0), 40, 10);
+            _waveContainer = new WaveContainer(new Vector2(0, 0), 40, 10);
+            _waveContainer.WaveGeneratorStep = 0;
 
             FluidDragController buoyancyController = new FluidDragController(_waveContainer, 4f, 0.98f, 0.2f,
                                                                              World.Gravity);
@@ -43,16 +45,20 @@ namespace FarseerPhysics.TestBed.Tests
             //Bunch of balls
             for (int i = 0; i < 4; i++)
             {
-                Body circleBody = BodyFactory.CreateBody(World);
-                circleBody.BodyType = BodyType.Dynamic;
-                circleBody.Position = new Vector2(-7, 1) + offset * i;
-
-                CircleShape circleShape = new CircleShape(1, 1);
-
-                buoyancyController.AddGeom(circleBody.CreateFixture(circleShape));
+                Fixture fixture = FixtureFactory.CreateCircle(World, 1, 1, new Vector2(15, 1) + offset*i);
+                fixture.Body.BodyType = BodyType.Dynamic;
+                buoyancyController.AddGeom(fixture);
             }
 
             World.Add(buoyancyController);
+        }
+
+        public override void Initialize()
+        {
+            //move the field of view to the right - the wavecontroller only works in positive coordinates.
+            GameInstance.ViewCenter = new Vector2(GameInstance.ViewCenter.X + 20);
+
+            base.Initialize();
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

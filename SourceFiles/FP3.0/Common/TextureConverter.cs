@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using FarseerPhysics.Collision.Shapes;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common
@@ -8,11 +7,6 @@ namespace FarseerPhysics.Common
     public static class TextureConverter
     {
         //User contribution from Sickbattery
-
-        //public static PolygonShape CreatePolygon()
-        //{
-            
-        //}
 
         /// <summary>
         /// TODO:
