@@ -125,18 +125,19 @@ namespace FarseerPhysics.Dynamics.Joints
             return 0.0f;
         }
 
+        private float _tmpFloat1;
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
             Body b1 = BodyA;
             Body b2 = BodyB;
 
-            Transform xf1, xf2;
+            /*Transform xf1, xf2;
             b1.GetTransform(out xf1);
-            b2.GetTransform(out xf2);
+            b2.GetTransform(out xf2);*/
 
             // Compute the effective mass matrix.
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+            Vector2 r1 = MathUtils.Multiply(ref b1._xf.R, LocalAnchorA - b1.LocalCenter);
+            Vector2 r2 = MathUtils.Multiply(ref b2._xf.R, LocalAnchorB - b2.LocalCenter);
             _u = b2._sweep.Center + r2 - b1._sweep.Center - r1;
 
             // Handle singularity.
@@ -150,8 +151,9 @@ namespace FarseerPhysics.Dynamics.Joints
                 _u = Vector2.Zero;
             }
 
-            float cr1u = MathUtils.Cross(r1, _u);
-            float cr2u = MathUtils.Cross(r2, _u);
+            float cr1u, cr2u;
+            MathUtils.Cross(ref r1, ref _u, out cr1u);
+            MathUtils.Cross(ref r2, ref _u, out cr2u);
             float invMass = b1._invMass + b1._invI * cr1u * cr1u + b2._invMass + b2._invI * cr2u * cr2u;
             Debug.Assert(invMass > Settings.Epsilon);
             _mass = invMass != 0.0f ? 1.0f / invMass : 0.0f;
@@ -185,9 +187,11 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 Vector2 P = _impulse * _u;
                 b1._linearVelocity -= b1._invMass * P;
-                b1._angularVelocity -= b1._invI * MathUtils.Cross(r1, P);
+                MathUtils.Cross(ref r1, ref P, out _tmpFloat1);
+                b1._angularVelocity -= b1._invI * /* r1 x P */_tmpFloat1;
                 b2._linearVelocity += b2._invMass * P;
-                b2._angularVelocity += b2._invI * MathUtils.Cross(r2, P);
+                MathUtils.Cross(ref r2, ref P, out _tmpFloat1);
+                b2._angularVelocity += b2._invI * /* r2 x P */_tmpFloat1;
             }
             else
             {
@@ -195,6 +199,7 @@ namespace FarseerPhysics.Dynamics.Joints
             }
         }
 
+        private Vector2 _tmpVector1;
         internal override void SolveVelocityConstraints(ref TimeStep step)
         {
             Body b1 = BodyA;
@@ -208,8 +213,10 @@ namespace FarseerPhysics.Dynamics.Joints
             Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
             // Cdot = dot(u, v + cross(w, r))
-            Vector2 v1 = b1._linearVelocity + MathUtils.Cross(b1._angularVelocity, r1);
-            Vector2 v2 = b2._linearVelocity + MathUtils.Cross(b2._angularVelocity, r2);
+            MathUtils.Cross(b1._angularVelocity, ref r1, out _tmpVector1);
+            Vector2 v1 = b1._linearVelocity + _tmpVector1;
+            MathUtils.Cross(b2._angularVelocity, ref r2, out _tmpVector1);
+            Vector2 v2 = b2._linearVelocity + _tmpVector1;
             float Cdot = Vector2.Dot(_u, v2 - v1);
 
             float impulse = -_mass * (Cdot + _bias + _gamma * _impulse);
@@ -217,9 +224,11 @@ namespace FarseerPhysics.Dynamics.Joints
 
             Vector2 P = impulse * _u;
             b1._linearVelocity -= b1._invMass * P;
-            b1._angularVelocity -= b1._invI * MathUtils.Cross(r1, P);
+            MathUtils.Cross(ref r1, ref P, out _tmpFloat1);
+            b1._angularVelocity -= b1._invI * _tmpFloat1;
             b2._linearVelocity += b2._invMass * P;
-            b2._angularVelocity += b2._invI * MathUtils.Cross(r2, P);
+            MathUtils.Cross(ref r2, ref P, out _tmpFloat1);
+            b2._angularVelocity += b2._invI * _tmpFloat1;
         }
 
         internal override bool SolvePositionConstraints()
@@ -256,9 +265,11 @@ namespace FarseerPhysics.Dynamics.Joints
             Vector2 P = impulse * _u;
 
             b1._sweep.Center -= b1._invMass * P;
-            b1._sweep.Angle -= b1._invI * MathUtils.Cross(r1, P);
+            MathUtils.Cross(ref r1, ref P, out _tmpFloat1);
+            b1._sweep.Angle -= b1._invI * _tmpFloat1;
             b2._sweep.Center += b2._invMass * P;
-            b2._sweep.Angle += b2._invI * MathUtils.Cross(r2, P);
+            MathUtils.Cross(ref r2, ref P, out _tmpFloat1);
+            b2._sweep.Angle += b2._invI * _tmpFloat1;
 
             b1.SynchronizeTransform();
             b2.SynchronizeTransform();
