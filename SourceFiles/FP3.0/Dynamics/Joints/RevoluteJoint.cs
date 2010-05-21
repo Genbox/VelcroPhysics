@@ -245,12 +245,12 @@ namespace FarseerPhysics.Dynamics.Joints
             }
 
             // Compute the effective mass matrix.
-            Transform xf1, xf2;
+            /*Transform xf1, xf2;
             b1.GetTransform(out xf1);
-            b2.GetTransform(out xf2);
+            b2.GetTransform(out xf2);*/
 
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+            Vector2 r1 = MathUtils.Multiply(ref b1._xf.R, LocalAnchorA - b1.LocalCenter);
+            Vector2 r2 = MathUtils.Multiply(ref b2._xf.R, LocalAnchorB - b2.LocalCenter);
 
             // J = [-I -r1_skew I r2_skew]
             //     [ 0       -1 0       1]
@@ -328,10 +328,12 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 P = new Vector2(_impulse.X, _impulse.Y);
 
                 b1._linearVelocity -= m1 * P;
-                b1._angularVelocity -= i1 * (MathUtils.Cross(r1, P) + _motorImpulse + _impulse.Z);
+                MathUtils.Cross(ref r1, ref P, out _tmpFloat1);
+                b1._angularVelocity -= i1 * (/* r1 x P */_tmpFloat1 + _motorImpulse + _impulse.Z);
 
                 b2._linearVelocity += m2 * P;
-                b2._angularVelocity += i2 * (MathUtils.Cross(r2, P) + _motorImpulse + _impulse.Z);
+                MathUtils.Cross(ref r2, ref P, out _tmpFloat1);
+                b2._angularVelocity += i2 * (/* r2 x P */_tmpFloat1 + _motorImpulse + _impulse.Z);
             }
             else
             {
@@ -339,6 +341,9 @@ namespace FarseerPhysics.Dynamics.Joints
                 _motorImpulse = 0.0f;
             }
         }
+
+        Vector2 _tmpVector1, _tmpVector2;
+        float _tmpFloat1;
 
         internal override void SolveVelocityConstraints(ref TimeStep step)
         {
@@ -370,15 +375,17 @@ namespace FarseerPhysics.Dynamics.Joints
             // Solve limit constraint.
             if (_enableLimit && _limitState != LimitState.Inactive)
             {
-                Transform xf1, xf2;
+                /*Transform xf1, xf2;
                 b1.GetTransform(out xf1);
-                b2.GetTransform(out xf2);
+                b2.GetTransform(out xf2);*/
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+                Vector2 r1 = MathUtils.Multiply(ref b1._xf.R, LocalAnchorA - b1.LocalCenter);
+                Vector2 r2 = MathUtils.Multiply(ref b2._xf.R, LocalAnchorB - b2.LocalCenter);
 
                 // Solve point-to-point constraint
-                Vector2 Cdot1 = v2 + MathUtils.Cross(w2, r2) - v1 - MathUtils.Cross(w1, r1);
+                MathUtils.Cross(w2, ref r2, out _tmpVector2);
+                MathUtils.Cross(w1, ref r1, out _tmpVector1);
+                Vector2 Cdot1 = v2 + /* w2 x r2 */_tmpVector2 - v1 - /* w1 x r1 */_tmpVector1;
                 float Cdot2 = w2 - w1;
                 Vector3 Cdot = new Vector3(Cdot1.X, Cdot1.Y, Cdot2);
 
@@ -420,32 +427,40 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 P = new Vector2(impulse.X, impulse.Y);
 
                 v1 -= m1 * P;
-                w1 -= i1 * (MathUtils.Cross(r1, P) + impulse.Z);
+                MathUtils.Cross(ref r1, ref P, out _tmpFloat1);
+                w1 -= i1 * (/* r1 x P */_tmpFloat1 + impulse.Z);
 
                 v2 += m2 * P;
-                w2 += i2 * (MathUtils.Cross(r2, P) + impulse.Z);
+                MathUtils.Cross(ref r2, ref P, out _tmpFloat1);
+                w2 += i2 * (/* r2 x P */_tmpFloat1 + impulse.Z);
             }
             else
             {
-                Transform xf1, xf2;
+                /*Transform xf1, xf2;
                 b1.GetTransform(out xf1);
-                b2.GetTransform(out xf2);
+                b2.GetTransform(out xf2);*/
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+                _tmpVector1 = LocalAnchorA - b1.LocalCenter;
+                _tmpVector2 = LocalAnchorB - b2.LocalCenter;
+                Vector2 r1 = MathUtils.Multiply(ref b1._xf.R, _tmpVector1);
+                Vector2 r2 = MathUtils.Multiply(ref b2._xf.R, _tmpVector2);
 
                 // Solve point-to-point constraint
-                Vector2 Cdot = v2 + MathUtils.Cross(w2, r2) - v1 - MathUtils.Cross(w1, r1);
+                MathUtils.Cross(w2, ref r2, out _tmpVector2);
+                MathUtils.Cross(w1, ref r1, out _tmpVector1);
+                Vector2 Cdot = v2 + /* w2 x r2 */_tmpVector2 - v1 - /* w1 x r1 */_tmpVector1;
                 Vector2 impulse = _mass.Solve22(-Cdot);
 
                 _impulse.X += impulse.X;
                 _impulse.Y += impulse.Y;
 
                 v1 -= m1 * impulse;
-                w1 -= i1 * MathUtils.Cross(r1, impulse);
+                MathUtils.Cross(ref r1, ref impulse, out _tmpFloat1);
+                w1 -= i1 * /* r1 x impulse */_tmpFloat1;
 
                 v2 += m2 * impulse;
-                w2 += i2 * MathUtils.Cross(r2, impulse);
+                MathUtils.Cross(ref r2, ref impulse, out _tmpFloat1);
+                w2 += i2 * /* r2 x impulse */_tmpFloat1;
             }
 
             b1._linearVelocity = v1;
@@ -506,12 +521,12 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // Solve point-to-point constraint.
             {
-                Transform xf1, xf2;
+                /*Transform xf1, xf2;
                 b1.GetTransform(out xf1);
-                b2.GetTransform(out xf2);
+                b2.GetTransform(out xf2);*/
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+                Vector2 r1 = MathUtils.Multiply(ref b1._xf.R, LocalAnchorA - b1.LocalCenter);
+                Vector2 r2 = MathUtils.Multiply(ref b2._xf.R, LocalAnchorB - b2.LocalCenter);
 
                 Vector2 C = b2._sweep.Center + r2 - b1._sweep.Center - r1;
                 positionError = C.Length();
@@ -551,10 +566,12 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 impulse = K.Solve(-C);
 
                 b1._sweep.Center -= b1._invMass * impulse;
-                b1._sweep.Angle -= b1._invI * MathUtils.Cross(r1, impulse);
+                MathUtils.Cross(ref r1, ref impulse, out _tmpFloat1);
+                b1._sweep.Angle -= b1._invI * /* r1 x impulse */_tmpFloat1;
 
                 b2._sweep.Center += b2._invMass * impulse;
-                b2._sweep.Angle += b2._invI * MathUtils.Cross(r2, impulse);
+                MathUtils.Cross(ref r2, ref impulse, out _tmpFloat1);
+                b2._sweep.Angle += b2._invI * /* r2 x impulse */_tmpFloat1;
 
                 b1.SynchronizeTransform();
                 b2.SynchronizeTransform();
