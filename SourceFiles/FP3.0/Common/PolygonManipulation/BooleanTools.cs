@@ -554,7 +554,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 if (VerticesAreCollinear(ref prev, ref current, ref next))
                     continue;
 
-                simplified.Add(next);
+                simplified.Add(current);
             }
 
             return simplified;
