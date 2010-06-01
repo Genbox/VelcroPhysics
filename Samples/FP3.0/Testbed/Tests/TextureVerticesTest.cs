@@ -2,7 +2,6 @@
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
@@ -16,6 +15,7 @@ namespace FarseerPhysics.TestBed.Tests
         private Body _polygonBody;
         private Texture2D _polygonTexture;
         private List<Vertices> list;
+        private Vertices verts;
 
         private TextureVerticesTest()
         {
@@ -38,14 +38,11 @@ namespace FarseerPhysics.TestBed.Tests
             _polygonTexture.GetData(data);
 
             //Find the vertices that makes up the outline of the shape in the texture
-            Vertices verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height, true);
+            verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height, true);
 
             //For now we need to scale the vertices (result is in pixels, we use meters)
             Vector2 scale = new Vector2(0.07f, 0.07f);
             verts.Scale(ref scale);
-
-            //Simplify the vertices (less is better)
-            verts = BooleanTools.Simplify(verts);
 
             //Since it is a concave polygon, we need to partition it into several smaller convex polygons
             list = BayazitDecomposer.ConvexPartition(verts);

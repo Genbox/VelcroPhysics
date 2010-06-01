@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FarseerPhysics.Common.PolygonManipulation;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.Decomposition
@@ -152,6 +153,13 @@ namespace FarseerPhysics.Common.Decomposition
             }
             else
                 list.Add(vertices);
+
+            //The polygons are not guaranteed to be without collinear points. We remove
+            //them to be sure.
+            for (int i = 0; i < list.Count; i++)
+            {
+                list[i] = SimplifyTools.CollinearSimplify(list[i], 0);
+            }
 
             return list;
         }

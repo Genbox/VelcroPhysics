@@ -105,9 +105,16 @@ namespace FarseerPhysics.Factories
             return CreateBreakableBody(world, vertices, density, Vector2.Zero);
         }
 
+        /// <summary>
+        /// Creates a breakable body. You would want to remove collinear points before using this.
+        /// </summary>
+        /// <param name="world">The world.</param>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="density">The density.</param>
+        /// <param name="position">The position.</param>
+        /// <returns></returns>
         public static BreakableBody CreateBreakableBody(World world, Vertices vertices, float density, Vector2 position)
         {
-            vertices = BooleanTools.Simplify(vertices);
             List<Vertices> triangles = EarclipDecomposer.ConvexPartition(vertices);
 
             BreakableBody breakableBody = new BreakableBody(world);
