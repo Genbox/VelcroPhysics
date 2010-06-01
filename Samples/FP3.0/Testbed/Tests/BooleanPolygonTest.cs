@@ -70,9 +70,6 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(50, TextLine, "Space = Union");
             TextLine += 15;
 
-            DebugView.DrawString(50, TextLine, "Tab = Simplify");
-            TextLine += 15;
-
             DebugView.DrawString(50, TextLine, "Enter = Add to Simulation");
             TextLine += 15;
 
@@ -145,15 +142,6 @@ namespace FarseerPhysics.TestBed.Tests
                 if (_left != null && _right != null)
                 {
                     DoSubtract();
-                }
-            }
-
-            // Simplify
-            if (state.IsKeyDown(Keys.Tab) && oldState.IsKeyUp(Keys.Tab))
-            {
-                if (_left != null && _right == null)
-                {
-                    _left = BooleanTools.Simplify(_left);
                 }
             }
 

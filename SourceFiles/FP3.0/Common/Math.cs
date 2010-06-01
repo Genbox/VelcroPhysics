@@ -29,10 +29,7 @@ namespace FarseerPhysics.Common
     {
         private static float tempFloat1;
         private static float tempFloat2;
-        private static float tempFloat3;
         private static Vector2 tempVector1;
-        private static Vector2 tempVector2;
-        private static Vector2 tempVector3;
 
         public static float Cross(Vector2 a, Vector2 b)
         {
@@ -58,7 +55,6 @@ namespace FarseerPhysics.Common
             Cross(s, ref a, out tempVector1);
             return tempVector1;
         }
-
 
         public static void Cross(ref Vector2 a, ref Vector2 b, out float c)
         {
@@ -195,29 +191,21 @@ namespace FarseerPhysics.Common
             return (((b.X - a.X) * (c.Y - a.Y)) - ((c.X - a.X) * (b.Y - a.Y)));
         }
 
-        public static bool Left(Vector2 a, Vector2 b, Vector2 c)
-        {
-            return Area(a, b, c) > 0;
-        }
-
-        public static bool LeftOn(Vector2 a, Vector2 b, Vector2 c)
-        {
-            return Area(a, b, c) >= 0;
-        }
-
-        public static bool Right(Vector2 a, Vector2 b, Vector2 c)
-        {
-            return Area(a, b, c) < 0;
-        }
-
-        public static bool RightOn(Vector2 a, Vector2 b, Vector2 c)
-        {
-            return Area(a, b, c) <= 0;
-        }
-
+        /// <summary>
+        /// Determines if three vertices are collinear (ie. on a straight line)
+        /// </summary>
+        /// <param name="a">First vertex</param>
+        /// <param name="b">Second vertex</param>
+        /// <param name="c">Third vertex</param>
+        /// <returns></returns>
         public static bool Collinear(Vector2 a, Vector2 b, Vector2 c)
         {
-            return Area(a, b, c) == 0;
+            return Collinear(a, b, c, 0);
+        }
+
+        public static bool Collinear(Vector2 a, Vector2 b, Vector2 c, float tolerance)
+        {
+            return Area(a, b, c) <= tolerance;
         }
     }
 

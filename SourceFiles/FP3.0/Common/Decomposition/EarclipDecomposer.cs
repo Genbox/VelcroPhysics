@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using FarseerPhysics.Common.PolygonManipulation;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.Decomposition
@@ -29,66 +30,182 @@ namespace FarseerPhysics.Common.Decomposition
         //box2D rev 32 - for details, see http://www.box2d.org/forum/viewtopic.php?f=4&t=83&start=50
 
         /// <summary>
-        /// Finds and fixes "pinch points," points where two polygon
-        /// vertices are at the same point.
-        /// If a pinch point is found, pin is broken up into poutA and poutB
-        /// and true is returned; otherwise, returns false.
-        /// Mostly for internal use.
+        /// Decomposes a non-convex polygon into a number of convex polygons, up
+        /// to maxPolys (remaining pieces are thrown out).
+        ///
+        /// Each resulting polygon will have no more than Settings.MaxPolygonVertices
+        /// vertices.
+        /// 
+        /// Warning: Only works on simple polygons
         /// </summary>
-        /// <param name="pin">The pin.</param>
-        /// <param name="poutA">The pout A.</param>
-        /// <param name="poutB">The pout B.</param>
+        /// <param name="vertices">The vertices.</param>
         /// <returns></returns>
-        private static bool ResolvePinchPoint(Vertices pin, out Vertices poutA, out Vertices poutB)
+        public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            poutA = new Vertices();
-            poutB = new Vertices();
+            //TODO: Move tolerance to settings file or give epsilon as tolerance
+            return ConvexPartition(vertices, int.MaxValue, 0);
+        }
 
-            if (pin.Count < 3)
-                return false;
+        /// <summary>
+        /// Decomposes a non-convex polygon into a number of convex polygons, up
+        /// to maxPolys (remaining pieces are thrown out).
+        ///
+        /// Each resulting polygon will have no more than Settings.MaxPolygonVertices
+        /// vertices.
+        /// 
+        /// Warning: Only works on simple polygons
+        /// </summary>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="maxPolys">The maximum number of polygons.</param>
+        /// <returns></returns>
+        public static List<Vertices> ConvexPartition(Vertices vertices, int maxPolys, float tolerance)
+        {
+            if (vertices.Count < 3)
+                return new List<Vertices> { vertices };
 
-            const float tol = .001f;
-            bool hasPinchPoint = false;
-            int pinchIndexA = -1;
-            int pinchIndexB = -1;
-            for (int i = 0; i < pin.Count; ++i)
+            List<Triangle> triangulated;
+
+            if (vertices.IsCounterClockWise())
             {
-                for (int j = i + 1; j < pin.Count; ++j)
+                Vertices tempP = new Vertices(vertices);
+                tempP.Reverse();
+                triangulated = TriangulatePolygon(tempP);
+            }
+            else
+            {
+                triangulated = TriangulatePolygon(vertices);
+            }
+            if (triangulated.Count < 1)
+            {
+                //Still no luck?  Oh well...
+                throw new Exception("Can't triangulate your polygon.");
+            }
+            
+            List<Vertices> polygonizedTriangles = PolygonizeTriangles(triangulated, maxPolys, tolerance);
+
+            //The polygonized triangles are not guaranteed to be without collinear points. We remove
+            //them to be sure.
+            for (int i = 0; i < polygonizedTriangles.Count; i++)
+            {
+                polygonizedTriangles[i] = SimplifyTools.CollinearSimplify(polygonizedTriangles[i], 0);
+            }
+
+            return polygonizedTriangles;
+        }
+
+        /// <summary>
+        /// Turns a list of triangles into a list of convex polygons. Very simple
+        /// method - start with a seed triangle, keep adding triangles to it until
+        /// you can't add any more without making the polygon non-convex.
+        ///
+        /// Returns an integer telling how many polygons were created.  Will fill
+        /// polys array up to polysLength entries, which may be smaller or larger
+        /// than the return value.
+        /// 
+        /// Takes O(N///P) where P is the number of resultant polygons, N is triangle
+        /// count.
+        /// 
+        /// The final polygon list will not necessarily be minimal, though in
+        /// practice it works fairly well.
+        /// </summary>
+        /// <param name="triangulated">The triangulated.</param>
+        ///<param name="maxPolys"></param>
+        ///<returns></returns>
+        public static List<Vertices> PolygonizeTriangles(List<Triangle> triangulated, int maxPolys, float tolerance)
+        {
+            List<Vertices> polys = new List<Vertices>(50);
+
+            int polyIndex = 0;
+
+            if (triangulated.Count <= 0)
+            {
+                //return empty polygon list
+                return polys;
+            }
+
+            bool[] covered = new bool[triangulated.Count];
+            for (int i = 0; i < triangulated.Count; ++i)
+            {
+                covered[i] = false;
+
+                //Check here for degenerate triangles
+                if (((triangulated[i].X[0] == triangulated[i].X[1]) && (triangulated[i].Y[0] == triangulated[i].Y[1]))
+                    ||
+                    ((triangulated[i].X[1] == triangulated[i].X[2]) && (triangulated[i].Y[1] == triangulated[i].Y[2]))
+                    ||
+                    ((triangulated[i].X[0] == triangulated[i].X[2]) && (triangulated[i].Y[0] == triangulated[i].Y[2])))
                 {
-                    //Don't worry about pinch points where the points
-                    //are actually just dupe neighbors
-                    if (Math.Abs(pin[i].X - pin[j].X) < tol && Math.Abs(pin[i].Y - pin[j].Y) < tol && j != i + 1)
+                    covered[i] = true;
+                }
+            }
+
+            bool notDone = true;
+            while (notDone)
+            {
+                int currTri = -1;
+                for (int i = 0; i < triangulated.Count; ++i)
+                {
+                    if (covered[i])
+                        continue;
+                    currTri = i;
+                    break;
+                }
+                if (currTri == -1)
+                {
+                    notDone = false;
+                }
+                else
+                {
+                    Vertices poly = new Vertices(3);
+
+                    for (int i = 0; i < 3; i++)
                     {
-                        pinchIndexA = i;
-                        pinchIndexB = j;
-                        //printf("pinch: %f, %f == %f, %f\n",pin.x[i],pin.y[i],pin.x[j],pin.y[j]);
-                        //printf("at indexes %d, %d\n",i,j);
-                        hasPinchPoint = true;
-                        break;
+                        poly.Add(new Vector2(triangulated[currTri].X[i], triangulated[currTri].Y[i]));
                     }
-                }
-                if (hasPinchPoint) break;
-            }
-            if (hasPinchPoint)
-            {
-                //printf("Found pinch point\n");
-                int sizeA = pinchIndexB - pinchIndexA;
-                if (sizeA == pin.Count) return false; //has dupe points at wraparound, not a problem here
-                for (int i = 0; i < sizeA; ++i)
-                {
-                    int ind = Remainder(pinchIndexA + i, pin.Count); // is this right
-                    poutA.Add(pin[ind]);
-                }
 
-                int sizeB = pin.Count - sizeA;
-                for (int i = 0; i < sizeB; ++i)
-                {
-                    int ind = Remainder(pinchIndexB + i, pin.Count); // is this right    
-                    poutB.Add(pin[ind]);
+                    covered[currTri] = true;
+                    int index = 0;
+                    for (int i = 0; i < 2 * triangulated.Count; ++i, ++index)
+                    {
+                        while (index >= triangulated.Count) index -= triangulated.Count;
+                        if (covered[index])
+                        {
+                            continue;
+                        }
+                        Vertices newP = AddTriangle(triangulated[index], poly);
+                        if (newP == null)
+                            continue; // is this right
+
+                        if (newP.Count > Settings.MaxPolygonVertices)
+                            continue;
+
+                        if (newP.IsConvex())
+                        {
+                            //Or should it be IsUsable?  Maybe re-write IsConvex to apply the angle threshold from Box2d
+                            poly = new Vertices(newP);
+                            covered[index] = true;
+                        }
+                    }
+
+                    //We have a maximum of polygons that we need to keep under.
+                    if (polyIndex < maxPolys)
+                    {
+                        SimplifyTools.MergeParallelEdges(poly, tolerance);
+
+                        //If identical points are present, a triangle gets
+                        //borked by the MergeParallelEdges function, hence
+                        //the vertex number check
+                        if (poly.Count >= 3)
+                            polys.Add(new Vertices(poly));
+                        //else
+                        //    printf("Skipping corrupt poly\n");
+                    }
+                    if (poly.Count >= 3)
+                        polyIndex++; //Must be outside (polyIndex < polysLength) test
                 }
-                //printf("Size of a: %d, size of b: %d\n",sizeA,sizeB);
             }
-            return hasPinchPoint;
+
+            return polys;
         }
 
         /// <summary>
@@ -256,6 +373,69 @@ namespace FarseerPhysics.Common.Decomposition
         }
 
         /// <summary>
+        /// Finds and fixes "pinch points," points where two polygon
+        /// vertices are at the same point.
+        /// If a pinch point is found, pin is broken up into poutA and poutB
+        /// and true is returned; otherwise, returns false.
+        /// Mostly for internal use.
+        /// </summary>
+        /// <param name="pin">The pin.</param>
+        /// <param name="poutA">The pout A.</param>
+        /// <param name="poutB">The pout B.</param>
+        /// <returns></returns>
+        private static bool ResolvePinchPoint(Vertices pin, out Vertices poutA, out Vertices poutB)
+        {
+            poutA = new Vertices();
+            poutB = new Vertices();
+
+            if (pin.Count < 3)
+                return false;
+
+            const float tol = .001f;
+            bool hasPinchPoint = false;
+            int pinchIndexA = -1;
+            int pinchIndexB = -1;
+            for (int i = 0; i < pin.Count; ++i)
+            {
+                for (int j = i + 1; j < pin.Count; ++j)
+                {
+                    //Don't worry about pinch points where the points
+                    //are actually just dupe neighbors
+                    if (Math.Abs(pin[i].X - pin[j].X) < tol && Math.Abs(pin[i].Y - pin[j].Y) < tol && j != i + 1)
+                    {
+                        pinchIndexA = i;
+                        pinchIndexB = j;
+                        //printf("pinch: %f, %f == %f, %f\n",pin.x[i],pin.y[i],pin.x[j],pin.y[j]);
+                        //printf("at indexes %d, %d\n",i,j);
+                        hasPinchPoint = true;
+                        break;
+                    }
+                }
+                if (hasPinchPoint) break;
+            }
+            if (hasPinchPoint)
+            {
+                //printf("Found pinch point\n");
+                int sizeA = pinchIndexB - pinchIndexA;
+                if (sizeA == pin.Count) return false; //has dupe points at wraparound, not a problem here
+                for (int i = 0; i < sizeA; ++i)
+                {
+                    int ind = Remainder(pinchIndexA + i, pin.Count); // is this right
+                    poutA.Add(pin[ind]);
+                }
+
+                int sizeB = pin.Count - sizeA;
+                for (int i = 0; i < sizeB; ++i)
+                {
+                    int ind = Remainder(pinchIndexB + i, pin.Count); // is this right    
+                    poutB.Add(pin[ind]);
+                }
+                //printf("Size of a: %d, size of b: %d\n",sizeA,sizeB);
+            }
+            return hasPinchPoint;
+        }
+
+        /// <summary>
         /// Fix for obnoxious behavior for the % operator for negative numbers...
         /// </summary>
         /// <param name="x">The x.</param>
@@ -269,121 +449,6 @@ namespace FarseerPhysics.Common.Decomposition
                 rem += modulus;
             }
             return rem;
-        }
-
-        /// <summary>
-        /// Turns a list of triangles into a list of convex polygons. Very simple
-        /// method - start with a seed triangle, keep adding triangles to it until
-        /// you can't add any more without making the polygon non-convex.
-        ///
-        /// Returns an integer telling how many polygons were created.  Will fill
-        /// polys array up to polysLength entries, which may be smaller or larger
-        /// than the return value.
-        /// 
-        /// Takes O(N///P) where P is the number of resultant polygons, N is triangle
-        /// count.
-        /// 
-        /// The final polygon list will not necessarily be minimal, though in
-        /// practice it works fairly well.
-        /// </summary>
-        /// <param name="triangulated">The triangulated.</param>
-        ///<param name="maxPolys"></param>
-        ///<returns></returns>
-        public static List<Vertices> PolygonizeTriangles(List<Triangle> triangulated, int maxPolys)
-        {
-            List<Vertices> polys = new List<Vertices>(50);
-
-            int polyIndex = 0;
-
-            if (triangulated.Count <= 0)
-            {
-                //return empty polygon list
-                return polys;
-            }
-
-            bool[] covered = new bool[triangulated.Count];
-            for (int i = 0; i < triangulated.Count; ++i)
-            {
-                covered[i] = false;
-
-                //Check here for degenerate triangles
-                if (((triangulated[i].X[0] == triangulated[i].X[1]) && (triangulated[i].Y[0] == triangulated[i].Y[1]))
-                    ||
-                    ((triangulated[i].X[1] == triangulated[i].X[2]) && (triangulated[i].Y[1] == triangulated[i].Y[2]))
-                    ||
-                    ((triangulated[i].X[0] == triangulated[i].X[2]) && (triangulated[i].Y[0] == triangulated[i].Y[2])))
-                {
-                    covered[i] = true;
-                }
-            }
-
-            bool notDone = true;
-            while (notDone)
-            {
-                int currTri = -1;
-                for (int i = 0; i < triangulated.Count; ++i)
-                {
-                    if (covered[i])
-                        continue;
-                    currTri = i;
-                    break;
-                }
-                if (currTri == -1)
-                {
-                    notDone = false;
-                }
-                else
-                {
-                    Vertices poly = new Vertices(3);
-
-                    for (int i = 0; i < 3; i++)
-                    {
-                        poly.Add(new Vector2(triangulated[currTri].X[i], triangulated[currTri].Y[i]));
-                    }
-
-                    covered[currTri] = true;
-                    int index = 0;
-                    for (int i = 0; i < 2 * triangulated.Count; ++i, ++index)
-                    {
-                        while (index >= triangulated.Count) index -= triangulated.Count;
-                        if (covered[index])
-                        {
-                            continue;
-                        }
-                        Vertices newP = AddTriangle(triangulated[index], poly);
-                        if (newP == null)
-                            continue; // is this right
-
-                        if (newP.Count > Settings.MaxPolygonVertices)
-                            continue;
-
-                        if (newP.IsConvex())
-                        {
-                            //Or should it be IsUsable?  Maybe re-write IsConvex to apply the angle threshold from Box2d
-                            poly = new Vertices(newP);
-                            covered[index] = true;
-                        }
-                    }
-
-                    //We have a maximum of polygons that we need to keep under.
-                    if (polyIndex < maxPolys)
-                    {
-                        poly.MergeParallelEdges(Settings.AngularSlop);
-
-                        //If identical points are present, a triangle gets
-                        //borked by the MergeParallelEdges function, hence
-                        //the vertex number check
-                        if (poly.Count >= 3)
-                            polys.Add(new Vertices(poly));
-                        //else
-                        //    printf("Skipping corrupt poly\n");
-                    }
-                    if (poly.Count >= 3)
-                        polyIndex++; //Must be outside (polyIndex < polysLength) test
-                }
-            }
-
-            return polys;
         }
 
         private static Vertices AddTriangle(Triangle t, Vertices vertices)
@@ -526,60 +591,6 @@ namespace FarseerPhysics.Common.Decomposition
                     return false;
             }
             return true;
-        }
-
-        /// <summary>
-        /// Decomposes a non-convex polygon into a number of convex polygons, up
-        /// to maxPolys (remaining pieces are thrown out).
-        ///
-        /// Each resulting polygon will have no more than Settings.MaxPolygonVertices
-        /// vertices.
-        /// 
-        /// Warning: Only works on simple polygons
-        /// </summary>
-        /// <param name="vertices">The vertices.</param>
-        /// <returns></returns>
-        public static List<Vertices> ConvexPartition(Vertices vertices)
-        {
-            return ConvexPartition(vertices, int.MaxValue);
-        }
-
-        /// <summary>
-        /// Decomposes a non-convex polygon into a number of convex polygons, up
-        /// to maxPolys (remaining pieces are thrown out).
-        ///
-        /// Each resulting polygon will have no more than Settings.MaxPolygonVertices
-        /// vertices.
-        /// 
-        /// Warning: Only works on simple polygons
-        /// </summary>
-        /// <param name="vertices">The vertices.</param>
-        /// <param name="maxPolys">The maximum number of polygons.</param>
-        /// <returns></returns>
-        public static List<Vertices> ConvexPartition(Vertices vertices, int maxPolys)
-        {
-            if (vertices.Count < 3)
-                return new List<Vertices> {vertices};
-
-            List<Triangle> triangulated;
-
-            if (vertices.IsCounterClockWise())
-            {
-                Vertices tempP = new Vertices(vertices);
-                tempP.Reverse();
-                triangulated = TriangulatePolygon(tempP);
-            }
-            else
-            {
-                triangulated = TriangulatePolygon(vertices);
-            }
-            if (triangulated.Count < 1)
-            {
-                //Still no luck?  Oh well...
-                throw new Exception("Can't triangulate your polygon.");
-            }
-
-            return PolygonizeTriangles(triangulated, maxPolys);
         }
 
         #region Nested type: Triangle

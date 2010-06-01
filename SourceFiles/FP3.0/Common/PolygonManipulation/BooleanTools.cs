@@ -510,66 +510,6 @@ namespace FarseerPhysics.Common.PolygonManipulation
         //        returnPoly.Add(new Vector2((float)Math.Round(polygon[i].X, 0), (float)Math.Round(polygon[i].Y, 0)));
         //    return returnPoly;
         //}
-        /// <summary>
-        /// Determines if three vertices are collinear (ie. on a straight line)
-        /// </summary>
-        /// <param name="p1">Vertex 1</param>
-        /// <param name="p2">Vertex 2</param>
-        /// <param name="p3">Vertex 3</param>
-        /// <returns></returns>
-        public static bool VerticesAreCollinear(ref Vector2 p1, ref Vector2 p2, ref Vector2 p3)
-        {
-            float collinearity = (p3.X - p1.X) * (p2.Y - p1.Y) + (p3.Y - p1.Y) * (p1.X - p2.X);
-            return LineTools.FloatEquals(collinearity, 0, 0.00001f);
-        }
-
-        /// <summary>
-        /// Removes all collinear points on the polygon.
-        /// </summary>
-        /// <param name="polygon">The polygon that needs simplification.</param>
-        /// <param name="bias">The distance bias between points. Points closer than this will be 'joined'.</param>
-        /// <returns>A simplified polygon.</returns>
-        public static Vertices Simplify(Vertices polygon, int bias)
-        {
-            //We can't simplify polygons under 3 vertices
-            if (polygon.Count < 3)
-                return polygon;
-
-            Vertices simplified = new Vertices();
-
-            for (int curr = 0; curr < polygon.Count; curr++)
-            {
-                int prevId = polygon.PreviousIndex(curr);
-                int nextId = polygon.NextIndex(curr);
-
-                Vector2 prev = polygon[prevId];
-                Vector2 current = polygon[curr];
-                Vector2 next = polygon[nextId];
-
-                //If they are closer than the bias, continue
-                if ((prev - current).Length() <= bias)
-                    continue;
-
-                //If they collinear, continue
-                if (VerticesAreCollinear(ref prev, ref current, ref next))
-                    continue;
-
-                simplified.Add(current);
-            }
-
-            return simplified;
-        }
-
-        /// <summary>
-        /// Removes all collinear points on the polygon.
-        /// Has a default bias of 0
-        /// </summary>
-        /// <param name="polygon">The polygon that needs simplification.</param>
-        /// <returns>A simplified polygon.</returns>
-        public static Vertices Simplify(Vertices polygon)
-        {
-            return Simplify(polygon, 0);
-        }
     }
 
     /// <summary>
