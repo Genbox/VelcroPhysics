@@ -28,15 +28,15 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {
+                new TestEntry {Name = "Chain", CreateFcn = ChainTest.Create},
+                new TestEntry {Name = "Path Test", CreateFcn = PathTest.Create},
                 new TestEntry {Name = "Texture to Vertices", CreateFcn = TextureVerticesTest.Create},               
                 new TestEntry {Name = "Buoyancy controller", CreateFcn = BuoyancyTest.Create},
                 new TestEntry {Name = "Breakable", CreateFcn = BreakableTest.Create},
                 new TestEntry {Name = "Pyramid", CreateFcn = PyramidTest.Create},
-                new TestEntry {Name = "Path Test", CreateFcn = PathTest.Create},
                 new TestEntry {Name = "Time of Impact", CreateFcn = TimeOfImpactTest.Create},
                 new TestEntry {Name = "Shape Editing", CreateFcn = ShapeEditingTest.Create},
                 new TestEntry {Name = "Collision Filtering", CreateFcn = CollisionFilteringTest.Create},
-                new TestEntry {Name = "Chain", CreateFcn = ChainTest.Create},
                 new TestEntry {Name = "Cutting of polygons", CreateFcn = CuttingTest.Create},
                 new TestEntry {Name = "Apply Force", CreateFcn = ApplyForceTest.Create},
                 new TestEntry {Name = "Prismatic", CreateFcn = PrismaticTest.Create},
