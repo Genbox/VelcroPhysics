@@ -20,6 +20,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
@@ -34,37 +35,28 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private ChainTest()
         {
-            Body ground;
-            {
-                ground = BodyFactory.CreateBody(World);
+            //Ground
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
-                ground.CreateFixture(shape);
-            }
+            //Chain start / end
+            Path path = new Path();
+            path.Add(new Vector2(0, 20));
+            path.Add(new Vector2(30, 20));
 
-            {
-                Vertices box = PolygonTools.CreateRectangle(0.6f, 0.125f);
-                PolygonShape shape = new PolygonShape(box, 20);
+            //A single chainlink
+            Body chainlink = new Body(World);
+            chainlink.BodyType = BodyType.Dynamic;
+            chainlink.CreateFixture(new CircleShape(0.25f, 1));
 
-                const float y = 25.0f;
-                Body prevBody = ground;
-                for (int i = 0; i < 30; ++i)
-                {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(0.5f + i, y);
-
-                    Fixture fixture = body.CreateFixture(shape);
-                    fixture.Friction = 0.2f;
-                    Vector2 anchor = new Vector2(i, y);
-                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, new Vector2(-0.5f, 0.0f));
-                    jd.CollideConnected = false;
-                    World.Add(jd);
-
-                    prevBody = body;
-                }
-            }
+            //Use PathFactory to create all the chainlinks based on the chainlink created before.
+            List<Body> chainLinks = PathFactory.EvenlyDistibuteShapesAlongPath(World, path, chainlink, 50);
+            
+            //Fix the first chainlink to the world
+            FixedRevoluteJoint fixedJoint = new FixedRevoluteJoint(chainLinks[0], chainLinks[0].Position);
+            World.Add(fixedJoint);
+            
+            //Attach all the chainlinks together with a revolute joint
+            PathFactory.AttachBodiesWithRevoluteJoint(World, chainLinks, new Vector2(0, -0.25f), new Vector2(0, 0.25f), false, false);
         }
 
         internal static Test Create()
