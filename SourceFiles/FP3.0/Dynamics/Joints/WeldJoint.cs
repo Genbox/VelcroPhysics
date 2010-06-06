@@ -51,13 +51,15 @@ namespace FarseerPhysics.Dynamics.Joints
         private Mat33 _mass;
 
         /// <summary>
-        /// You need to specify local anchor points
+        /// You need to specify a local anchor point
         /// where they are attached and the relative body angle. The position
-        /// of the anchor points is important for computing the reaction torque.
+        /// of the anchor point is important for computing the reaction torque.
+        /// You can change the anchor points relative to bodyA or bodyB by changing LocalAnchorA
+        /// and/or LocalAnchorB.
         /// </summary>
-        /// <param name="bodyA"></param>
-        /// <param name="bodyB"></param>
-        /// <param name="anchor"></param>
+        /// <param name="bodyA">The first body</param>
+        /// <param name="bodyB">The second body</param>
+        /// <param name="anchor">The anchor point relative to the bodies</param>
         public WeldJoint(Body bodyA, Body bodyB, Vector2 anchor)
             : base(bodyA, bodyB)
         {
