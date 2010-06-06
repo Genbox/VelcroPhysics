@@ -50,17 +50,21 @@ namespace FarseerPhysics.TestBed.Tests
             base.Update(settings, gameTime);
 
             Sweep sweepA = new Sweep();
-            sweepA.Center0 = Vector2.Zero;
-            sweepA.Angle0 = 0.0f;
+            sweepA.Center0 = new Vector2(24.0f, -60.0f);
+            sweepA.Angle0 = 2.95f;
             sweepA.Center = sweepA.Center0;
             sweepA.Angle = sweepA.Angle0;
             sweepA.LocalCenter = Vector2.Zero;
 
             Sweep sweepB = new Sweep();
-            sweepB.Center0 = new Vector2(-0.20382018f, 2.1368704f);
-            sweepB.Angle0 = -3.1664171f;
-            sweepB.Center = new Vector2(-0.26699525f, 2.3552670f);
+            sweepB.Center0 = new Vector2(53.474274f, -50.252514f);
+            sweepB.Angle0 = 513.36676f; // - 162.0f * b2_pi;
+            sweepB.Center = new Vector2(54.595478f, -51.083473f);
+            sweepB.Angle = 513.62781f; //  - 162.0f * b2_pi;
             sweepB.LocalCenter = Vector2.Zero;
+
+            //sweepB.a0 -= 300.0f * b2_pi;
+            //sweepB.a -= 300.0f * b2_pi;
 
             TOIInput input = new TOIInput();
             input.ProxyA.Set(_shapeA);
