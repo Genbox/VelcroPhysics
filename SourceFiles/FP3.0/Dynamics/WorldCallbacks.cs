@@ -71,7 +71,7 @@ namespace FarseerPhysics.Dynamics
             world.ContactManager.CollisionFilter += ShouldCollide;
         }
 
-        private static bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)
+        public static bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)
         {
             if ((fixtureA.CollisionGroup == fixtureB.CollisionGroup) && fixtureA.CollisionGroup != 0 &&
                 fixtureB.CollisionGroup != 0)
