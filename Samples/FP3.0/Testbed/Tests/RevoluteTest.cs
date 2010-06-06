@@ -20,6 +20,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
@@ -67,16 +68,11 @@ namespace FarseerPhysics.TestBed.Tests
 
                 World.Add(_fixedJoint);
 
-                // The small wheel attached to the big one
-                CircleShape shape2 = new CircleShape(1.0f, 5);
+                // The small gear attached to the big one
+                List<Fixture> fixtures = FixtureFactory.CreateGear(World, 1.5f, 10, 0.1f, 1, 1);
+                fixtures[0].Body.Position = new Vector2(0.0f, 12.0f);
 
-                Body body2 = BodyFactory.CreateBody(World);
-                body2.Position = new Vector2(0.0f, 12.0f);
-                body2.BodyType = BodyType.Dynamic;
-
-                body2.CreateFixture(shape2);
-
-                _joint = new RevoluteJoint(body, body2, new Vector2(0.0f, 0.0f));
+                _joint = new RevoluteJoint(body, fixtures[0].Body, new Vector2(0.0f, 0.0f));
                 _joint.MotorSpeed = 1.0f * Settings.Pi;
                 _joint.MaxMotorTorque = 5000.0f;
                 _joint.MotorEnabled = true;
@@ -108,9 +104,6 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Update(settings, gameTime);
             DebugView.DrawString(50, TextLine, "Keys: (l) limits on/off, (m) motor on/off");
-            /*TextLine += 15;
-            DebugView.DrawString(50, TextLine, "_joint:{0:n}",_joint.JointAngle);
-            */
         }
 
         internal static Test Create()

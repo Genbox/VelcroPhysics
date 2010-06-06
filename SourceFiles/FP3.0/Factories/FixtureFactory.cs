@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
@@ -98,6 +96,42 @@ namespace FarseerPhysics.Factories
             Body body = BodyFactory.CreateBody(world, position);
             PolygonShape polygonShape = new PolygonShape(vertices, density);
             return body.CreateFixture(polygonShape);
+        }
+
+        public static List<Fixture> CreateCompundPolygon(World world, List<Vertices> list, float density)
+        {
+            //We create a single body
+            Body polygonBody = BodyFactory.CreateBody(world);
+            polygonBody.BodyType = BodyType.Dynamic;
+            
+            List<Fixture> fixtures = new List<Fixture>(list.Count);
+
+            //Then we create several fixtures using the body
+            foreach (Vertices vertices in list)
+            {
+                PolygonShape shape = new PolygonShape(vertices, density);
+                fixtures.Add(polygonBody.CreateFixture(shape));
+            }
+
+            return fixtures;
+        }
+
+        public static List<Fixture> CreateGear(World world, float radius, int numberOfTeeth, float tipPercentage, float toothHeight, float density)
+        {
+            Vertices gearPolygon = PolygonTools.CreateGear(radius, numberOfTeeth, tipPercentage, toothHeight);
+            
+            //Gears can in some cases be convex
+            if (!gearPolygon.IsConvex())
+            {
+                //Decompose the gear:
+                List<Vertices> list = EarclipDecomposer.ConvexPartition(gearPolygon);
+
+                return CreateCompundPolygon(world, list, density);
+            }
+
+            List<Fixture> fixtures = new List<Fixture>();
+            fixtures.Add(CreatePolygon(world, gearPolygon, density));
+            return fixtures;
         }
 
         public static BreakableBody CreateBreakableBody(World world, Vertices vertices, float density)
