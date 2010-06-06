@@ -105,14 +105,14 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            uint oldFlag = settings.EnableContinuous;
+            bool oldFlag = Settings.EnableContinuousPhysics;
 
-            settings.EnableContinuous = 0;
+            Settings.EnableContinuousPhysics = false;
             base.Update(settings, gameTime);
             DebugView.DrawString(5, TextLine, "Press 'c' to create a circle.");
             TextLine += 15;
 
-            settings.EnableContinuous = oldFlag;
+            Settings.EnableContinuousPhysics = oldFlag;
         }
 
         internal static Test Create()

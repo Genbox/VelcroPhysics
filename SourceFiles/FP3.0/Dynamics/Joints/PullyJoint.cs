@@ -266,7 +266,7 @@ namespace FarseerPhysics.Dynamics.Joints
             _limitMass2 = 1.0f / _limitMass2;
             _pulleyMass = 1.0f / _pulleyMass;
 
-            if (step.WarmStarting)
+            if (Settings.EnableWarmstarting)
             {
                 // Scale impulses to support variable time steps.
                 _impulse *= step.DtRatio;

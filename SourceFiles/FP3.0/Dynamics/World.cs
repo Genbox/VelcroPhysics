@@ -77,13 +77,8 @@ namespace FarseerPhysics.Dynamics
         /// Warmstarting and continuous collision detection is on by default.
         /// </summary>
         /// <param name="gravity">the world gravity vector.</param>
-        /// <param name="allowSleep">improve performance by not simulating inactive bodies.</param>
-        public World(Vector2 gravity, bool allowSleep)
+        public World(Vector2 gravity)
         {
-            WarmStarting = true;
-            ContinuousPhysics = true;
-
-            AllowSleep = allowSleep;
             Gravity = gravity;
 
             Flags = WorldFlags.AutoClearForces;
@@ -104,18 +99,6 @@ namespace FarseerPhysics.Dynamics
             BreakableBodyList = new List<BreakableBody>(8);
             JointList = new List<Joint>(8);
         }
-
-        /// <summary>
-        /// Enable/disable warm starting. For testing.
-        /// </summary>
-        /// <value><c>true</c> if [warm starting]; otherwise, <c>false</c>.</value>
-        public bool WarmStarting { get; set; }
-
-        /// <summary>
-        /// Enable/disable continuous physics. For testing.
-        /// </summary>
-        /// <value><c>true</c> if [continuous physics]; otherwise, <c>false</c>.</value>
-        public bool ContinuousPhysics { get; set; }
 
         /// <summary>
         /// Get the number of broad-phase proxies.
@@ -147,8 +130,6 @@ namespace FarseerPhysics.Dynamics
                     Flags &= ~WorldFlags.Locked;
             }
         }
-
-        public bool AllowSleep { get; set; }
 
         /// Get the flag that controls automatic clearing of forces after each time step.
         public bool AutoClearForces
@@ -196,8 +177,6 @@ namespace FarseerPhysics.Dynamics
         }
 
         public List<Controller> Controllers { get; private set; }
-
-        public bool EnableDiagnostics { get; set; }
 
         public float UpdateTime { get; private set; }
 
@@ -500,14 +479,10 @@ namespace FarseerPhysics.Dynamics
         /// and constraint solution.
         /// </summary>
         /// <param name="dt">the amount of time to simulate, this should not vary.</param>
-        /// <param name="velocityIterations">for the velocity constraint solver.</param>
-        /// <param name="positionIterations">for the position constraint solver.</param>
-        public void Step(float dt, int velocityIterations, int positionIterations)
+        public void Step(float dt)
         {
             TimeStep step;
             step.DeltaTime = dt;
-            step.VelocityIterations = velocityIterations;
-            step.PositionIterations = positionIterations;
 
             if (dt > 0.0f)
                 step.Inv_DeltaTime = 1.0f / dt;
@@ -515,9 +490,8 @@ namespace FarseerPhysics.Dynamics
                 step.Inv_DeltaTime = 0.0f;
 
             step.DtRatio = _invDt0 * dt;
-            step.WarmStarting = WarmStarting;
 
-            if (EnableDiagnostics)
+            if (Settings.EnableDiagnostics)
                 _watch.Start();
 
             // If new fixtures were added, we need to find the new contacts.
@@ -527,7 +501,7 @@ namespace FarseerPhysics.Dynamics
                 Flags &= ~WorldFlags.NewFixture;
             }
 
-            if (EnableDiagnostics)
+            if (Settings.EnableDiagnostics)
                 NewContactsTime = _watch.ElapsedTicks;
 
             //Lock the world
@@ -539,13 +513,13 @@ namespace FarseerPhysics.Dynamics
                 controller.Update(dt);
             }
 
-            if (EnableDiagnostics)
+            if (Settings.EnableDiagnostics)
                 ControllersUpdateTime = _watch.ElapsedTicks - NewContactsTime;
 
             // Update contacts. This is where some contacts are destroyed.
             ContactManager.Collide();
 
-            if (EnableDiagnostics)
+            if (Settings.EnableDiagnostics)
                 ContactsUpdateTime = _watch.ElapsedTicks - (NewContactsTime + ControllersUpdateTime);
 
             // Integrate velocities, solve velocity constraints, and integrate positions.
@@ -554,16 +528,16 @@ namespace FarseerPhysics.Dynamics
                 Solve(ref step);
             }
 
-            if (EnableDiagnostics)
+            if (Settings.EnableDiagnostics)
                 SolveUpdateTime = _watch.ElapsedTicks - (NewContactsTime + ControllersUpdateTime + ContactsUpdateTime);
 
             // Handle TOI events.
-            if (ContinuousPhysics && step.DeltaTime > 0.0f)
+            if (Settings.EnableContinuousPhysics && step.DeltaTime > 0.0f)
             {
                 SolveTOI();
             }
 
-            if (EnableDiagnostics)
+            if (Settings.EnableDiagnostics)
                 ContinuousPhysicsTime = _watch.ElapsedTicks -
                                         (NewContactsTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
 
@@ -579,7 +553,7 @@ namespace FarseerPhysics.Dynamics
 
             Flags &= ~WorldFlags.Locked;
 
-            if (EnableDiagnostics)
+            if (Settings.EnableDiagnostics)
             {
                 _watch.Stop();
                 UpdateTime = _watch.ElapsedTicks;
@@ -816,7 +790,7 @@ namespace FarseerPhysics.Dynamics
                     }
                 }
 
-                _island.Solve(ref step, Gravity, AllowSleep);
+                _island.Solve(ref step, Gravity, Settings.EnableSleeping);
 
                 // Post solve cleanup.
                 for (int i = 0; i < _island.BodyCount; ++i)

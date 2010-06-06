@@ -349,7 +349,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 _motorImpulse = 0.0f;
             }
 
-            if (step.WarmStarting)
+            if (Settings.EnableWarmstarting)
             {
                 // Account for variable time step.
                 _impulse *= step.DtRatio;

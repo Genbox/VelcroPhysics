@@ -64,23 +64,15 @@ namespace FarseerPhysics.TestBed.Framework
         public uint DrawPairs;
         public uint DrawShapes;
         public uint DrawStats;
-        public uint EnableContinuous;
-        public uint EnableWarmStarting;
         public float Hz;
         public uint Pause;
-        public int PositionIterations;
         public uint SingleStep;
-        public int VelocityIterations;
 
         public GameSettings()
         {
             Hz = 60.0f;
-            VelocityIterations = 8; // 10;
-            PositionIterations = 3; // 8;
             DrawShapes = 1;
             DrawJoints = 1;
-            EnableWarmStarting = 1;
-            EnableContinuous = 1;
             //DrawAABBs = 1;
             //DrawStats = 1;
             //DrawCOMs = 1;
@@ -116,7 +108,7 @@ namespace FarseerPhysics.TestBed.Framework
 
         protected Test()
         {
-            World = new World(new Vector2(0.0f, -10.0f), false);
+            World = new World(new Vector2(0.0f, -10.0f));
 
             TextLine = 30;
 
@@ -190,12 +182,9 @@ namespace FarseerPhysics.TestBed.Framework
                 DebugView.Flags = (DebugViewFlags) flags;
             }
 
-            World.WarmStarting = (settings.EnableWarmStarting > 0);
-            World.ContinuousPhysics = (settings.EnableContinuous > 0);
-
             PointCount = 0;
 
-            World.Step(timeStep, settings.VelocityIterations, settings.PositionIterations);
+            World.Step(timeStep);
 
             if (timeStep > 0.0f)
             {

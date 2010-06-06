@@ -2,6 +2,7 @@ using System;
 using DemoBaseXNA.DemoShare;
 using FarseerPhysics;
 using FarseerPhysics.Collision;
+using FarseerPhysics.Common;
 using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
@@ -158,7 +159,7 @@ namespace DemoBaseXNA.ScreenSystem
 
                 DebugViewXNA.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
 
-                PhysicsSimulator.EnableDiagnostics = true;
+                Settings.EnableDiagnostics = true;
             }
         }
 
@@ -226,8 +227,9 @@ namespace DemoBaseXNA.ScreenSystem
                 if (PhysicsSimulator != null)
                 {
                     // variable time step but never less then 30 Hz
-                    PhysicsSimulator.Step(
-                        Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)), 5, 3);
+                    PhysicsSimulator.Step(Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)));
+                    Settings.VelocityIterations = 5;
+                    Settings.PositionIterations = 3;
                 }
             }
         }

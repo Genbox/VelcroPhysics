@@ -143,7 +143,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Solve velocity constraints.
-            for (int i = 0; i < step.VelocityIterations; ++i)
+            for (int i = 0; i < Settings.VelocityIterations; ++i)
             {
                 for (int j = 0; j < JointCount; ++j)
                 {
@@ -196,7 +196,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Iterate over constraints.
-            for (int i = 0; i < step.PositionIterations; ++i)
+            for (int i = 0; i < Settings.PositionIterations; ++i)
             {
                 bool contactsOkay = _contactSolver.SolvePositionConstraints(Settings.ContactBaumgarte);
 

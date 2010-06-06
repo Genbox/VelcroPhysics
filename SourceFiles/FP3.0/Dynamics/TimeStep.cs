@@ -28,8 +28,5 @@ namespace FarseerPhysics.Dynamics
         public float DeltaTime; // time step
         public float DtRatio; // dt * inv_dt0
         public float Inv_DeltaTime; // inverse time step (0 if dt == 0).
-        public int PositionIterations;
-        public int VelocityIterations;
-        public bool WarmStarting;
     }
 }

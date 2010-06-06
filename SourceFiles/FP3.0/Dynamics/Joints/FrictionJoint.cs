@@ -146,7 +146,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 _angularMass = 1.0f / _angularMass;
             }
 
-            if (step.WarmStarting)
+            if (Settings.EnableWarmstarting)
             {
                 // Scale impulses to support a variable time step.
                 _linearImpulse *= step.DtRatio;

@@ -176,7 +176,7 @@ namespace Box2D.XNA
                 _mass = _mass != 0.0f ? 1.0f / _mass : 0.0f;
             }
 
-            if (step.WarmStarting)
+            if (Settings.EnableWarmstarting)
             {
                 // Scale the impulse to support a variable time step.
                 _impulse *= step.DtRatio;
