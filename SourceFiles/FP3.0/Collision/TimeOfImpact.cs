@@ -68,6 +68,8 @@ namespace FarseerPhysics.Collision
         private Sweep _sweepA, _sweepB;
         private SeparationFunctionType _type;
 
+        // TODO_ERIN might not need to return the separation
+
         public SeparationFunction(ref SimplexCache cache,
                                   ref DistanceProxy proxyA, ref Sweep sweepA,
                                   ref DistanceProxy proxyB, ref Sweep sweepB, float t1)
