@@ -311,7 +311,7 @@ namespace FarseerPhysics.Collision
             const float tolerance = 0.25f * Settings.LinearSlop;
             Debug.Assert(target > tolerance);
 
-            const float t1 = 0.0f;
+            float t1 = 0.0f;
             const int k_maxIterations = 20; // TODO_ERIN: b2Settings
             int iter = 0;
 
@@ -324,7 +324,7 @@ namespace FarseerPhysics.Collision
 
             // The outer loop progressively attempts to compute new separating axes.
             // This loop terminates when an axis is repeated (no progress is made).
-            for (;;)
+            for (; ; )
             {
                 Transform xfA, xfB;
                 sweepA.GetTransform(out xfA, t1);
@@ -346,6 +346,15 @@ namespace FarseerPhysics.Collision
                     break;
                 }
 
+                if (distanceOutput.Distance < target + tolerance)
+                {
+                    // Victory!
+                    output.State = TOIOutputState.Touching;
+                    output.t = t1;
+                    break;
+                }
+
+
                 SeparationFunction fcn = new SeparationFunction(ref cache, ref input.ProxyA, ref sweepA,
                                                                 ref input.ProxyB, ref sweepB, t1);
 
@@ -353,19 +362,19 @@ namespace FarseerPhysics.Collision
                 // resolving the deepest point. This loop is bounded by the number of vertices.
                 bool done = false;
                 float t2 = tMax;
-                for (;;)
+                int pushBackIter = 0;
+
+                for (; ; )
                 {
                     // Find the deepest point at t2. Store the witness point indices.
                     int indexA, indexB;
                     float s2 = fcn.FindMinSeparation(out indexA, out indexB, t2);
 
-                    // Is the final configuration separated?
-                    if (s2 > target + tolerance)
+                    // Has the separation reached tolerance?
+                    if (s2 > target - tolerance)
                     {
-                        // Victory!
-                        output.State = TOIOutputState.Seperated;
-                        output.t = tMax;
-                        done = true;
+                        // Advance the sweeps
+                        t1 = t2;
                         break;
                     }
 
@@ -405,7 +414,7 @@ namespace FarseerPhysics.Collision
                     // Compute 1D root of: f(x) - target = 0
                     int rootIterCount = 0;
                     float a1 = t1, a2 = t2;
-                    for (;;)
+                    for (; ; )
                     {
                         // Use a mix of the secant rule and bisection.
                         float t;
@@ -451,6 +460,13 @@ namespace FarseerPhysics.Collision
                     }
 
                     ToiMaxRootIters = Math.Max(ToiMaxRootIters, rootIterCount);
+
+                    ++pushBackIter;
+
+                    if (pushBackIter == Settings.MaxPolygonVertices)
+                    {
+                        break;
+                    }
                 }
 
                 ++iter;
