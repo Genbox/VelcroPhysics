@@ -892,7 +892,6 @@ namespace FarseerPhysics.Dynamics
                         {
                             continue;
                         }
-
                     }
                     else if (type == BodyType.Dynamic)
                     {
@@ -1001,22 +1000,14 @@ namespace FarseerPhysics.Dynamics
 
                 // The contact likely has some new contact points. The listener
                 // gives the user a chance to disable the contact;
-                contact.Update(ContactManager);
+                if (contact != toiContact)
+                {
+                    contact.Update(ContactManager);
+                }
 
                 // Did the user disable the contact?
                 if (contact.Enabled == false)
                 {
-                    if (contact == toiContact)
-                    {
-                        // Restore the body's sweep.
-                        body._sweep = backup;
-                        body.SynchronizeTransform();
-
-                        // Recurse because the TOI has been invalidated.
-                        SolveTOI(body);
-                        return;
-                    }
-
                     // Skip this contact.
                     continue;
                 }
