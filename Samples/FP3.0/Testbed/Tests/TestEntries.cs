@@ -28,6 +28,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {
+                new TestEntry {Name = "Revolute", CreateFcn = RevoluteTest.Create},
                 new TestEntry {Name = "Time of Impact", CreateFcn = TimeOfImpactTest.Create},
                 new TestEntry {Name = "Chain", CreateFcn = ChainTest.Create},
                 new TestEntry {Name = "Path Test", CreateFcn = PathTest.Create},
@@ -62,7 +63,6 @@ namespace FarseerPhysics.TestBed.Tests
                 //new TestEntry {Name = "Dynamic Tree", CreateFcn = DynamicTreeTest.Create},
                 new TestEntry {Name = "PolyCollision", CreateFcn = PolyCollisionTest.Create},
                 new TestEntry {Name = "Pulleys", CreateFcn = PulleysTest.Create},
-                new TestEntry {Name = "Revolute", CreateFcn = RevoluteTest.Create}, //30
                 new TestEntry {Name = "Slider Crank", CreateFcn = SliderCrankTest.Create},
                 new TestEntry {Name = "Varying Friction", CreateFcn = VaryingFrictionTest.Create},
                 new TestEntry {Name = "Varying Restitution", CreateFcn = VaryingRestitutionTest.Create},
