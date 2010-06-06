@@ -30,6 +30,30 @@ namespace FarseerPhysics.Common
         public const float Epsilon = 1.192092896e-07f;
         public const float Pi = 3.14159265359f;
 
+        public static bool EnableDiagnostics = true;
+
+        /// Set this to true if you want the bodies to go to sleep when they are moving
+        /// under a certain tolerance.
+        public static bool EnableSleeping = true;
+
+        /// Enable continuous physics solver. If this is true, time of impact algorithms will be
+        /// enabled to prevent tunneling issues.
+        public static bool EnableContinuousPhysics = true;
+
+        /// If this is set to true, a warmstarting technique will be used to make the engine better
+        /// at guessing the state of bodies. It can make the engine more precise and give a performance boost.
+        public static bool EnableWarmstarting = true;
+
+        /// The number of velocity iterations. Used in the velocity constraint solver.
+        /// Higher number of iterations means a more precise simulation at the cost
+        /// of performance.
+        public static int VelocityIterations = 8;
+
+        /// The number of position iterations. Used in the position constraint solver.
+        /// Higher number of iterations means a more precise simulation at the cost
+        /// of performance.
+        public static int PositionIterations = 3;
+
         /// The maximum number of vertices on a convex polygon.
         public const int MaxPolygonVertices = 32;
 

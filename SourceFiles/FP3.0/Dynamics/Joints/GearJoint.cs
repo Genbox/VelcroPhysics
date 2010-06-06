@@ -260,7 +260,7 @@ namespace FarseerPhysics.Dynamics.Joints
             Debug.Assert(K > 0.0f);
             _mass = K > 0.0f ? 1.0f / K : 0.0f;
 
-            if (step.WarmStarting)
+            if (Settings.EnableWarmstarting)
             {
                 // Warm starting.
                 b1._linearVelocity += b1._invMass * _impulse * _J.LinearA;

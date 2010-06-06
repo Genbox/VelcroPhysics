@@ -317,7 +317,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 _limitState = LimitState.Inactive;
             }
 
-            if (step.WarmStarting)
+            if (Settings.EnableWarmstarting)
             {
                 // Scale impulses to support a variable time step.
                 _impulse *= step.DtRatio;

@@ -135,7 +135,7 @@ namespace FarseerPhysics.Dynamics.Joints
             _mass.Col2.Z = _mass.Col3.Y;
             _mass.Col3.Z = iA + iB;
 
-            if (step.WarmStarting)
+            if (Settings.EnableWarmstarting)
             {
                 // Scale impulses to support a variable time step.
                 _impulse *= step.DtRatio;
