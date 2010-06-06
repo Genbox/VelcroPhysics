@@ -62,7 +62,7 @@ namespace FarseerPhysics.Common
             if (yRadius > height / 2 || xRadius > width / 2)
                 throw new Exception("Rounding amount can't be more than half the height and width respectively.");
             if (segments < 0)
-                throw new Exception("Segments must be zero or above.");
+                throw new Exception("Segments must be zero or more.");
 
             Vertices vertices = new Vertices();
             if (segments == 0)

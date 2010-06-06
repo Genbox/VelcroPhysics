@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
+using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
@@ -103,7 +104,7 @@ namespace FarseerPhysics.Factories
             //We create a single body
             Body polygonBody = BodyFactory.CreateBody(world);
             polygonBody.BodyType = BodyType.Dynamic;
-            
+
             List<Fixture> fixtures = new List<Fixture>(list.Count);
 
             //Then we create several fixtures using the body
@@ -119,7 +120,7 @@ namespace FarseerPhysics.Factories
         public static List<Fixture> CreateGear(World world, float radius, int numberOfTeeth, float tipPercentage, float toothHeight, float density)
         {
             Vertices gearPolygon = PolygonTools.CreateGear(radius, numberOfTeeth, tipPercentage, toothHeight);
-            
+
             //Gears can in some cases be convex
             if (!gearPolygon.IsConvex())
             {
@@ -131,6 +132,29 @@ namespace FarseerPhysics.Factories
 
             List<Fixture> fixtures = new List<Fixture>();
             fixtures.Add(CreatePolygon(world, gearPolygon, density));
+            return fixtures;
+        }
+
+        public static List<Fixture> CreateCapsule(World world, float height, float endRadius, float density)
+        {
+            //Create the middle rectangle
+            Vertices leftEdge = PolygonTools.CreateEdge(new Vector2(-endRadius, height / 2), new Vector2(-endRadius, -(height / 2)));
+            Vertices rightEdge = PolygonTools.CreateEdge(new Vector2(endRadius, height / 2), new Vector2(endRadius, -(height / 2)));
+
+            List<Vertices> list = new List<Vertices>();
+            list.Add(leftEdge);
+            list.Add(rightEdge);
+
+            List<Fixture> fixtures = CreateCompundPolygon(world, list, density);
+
+            //Create the two circles
+            CircleShape topCircle = new CircleShape(endRadius, density);
+            topCircle.Position = new Vector2(0, height / 2);
+            fixtures.Add(fixtures[0].Body.CreateFixture(topCircle));
+
+            CircleShape bottomCircle = new CircleShape(endRadius, density);
+            bottomCircle.Position = new Vector2(0, -(height / 2));
+            fixtures.Add(fixtures[0].Body.CreateFixture(bottomCircle));
             return fixtures;
         }
 

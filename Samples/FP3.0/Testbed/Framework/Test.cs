@@ -22,6 +22,7 @@
 
 using System;
 using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
@@ -40,13 +41,13 @@ namespace FarseerPhysics.TestBed.Framework
         /// Random number in range [-1,1]
         public static float RandomFloat()
         {
-            return (float) (Random.NextDouble() * 2.0 - 1.0);
+            return (float)(Random.NextDouble() * 2.0 - 1.0);
         }
 
         /// Random floating point number in range [lo, hi]
         public static float RandomFloat(float lo, float hi)
         {
-            float r = (float) Random.NextDouble();
+            float r = (float)Random.NextDouble();
             r = (hi - lo) * r + lo;
             return r;
         }
@@ -64,6 +65,7 @@ namespace FarseerPhysics.TestBed.Framework
         public uint DrawPairs;
         public uint DrawShapes;
         public uint DrawStats;
+        public uint DrawPolygonPoints;
         public float Hz;
         public uint Pause;
         public uint SingleStep;
@@ -76,6 +78,7 @@ namespace FarseerPhysics.TestBed.Framework
             //DrawAABBs = 1;
             //DrawStats = 1;
             //DrawCOMs = 1;
+            DrawPolygonPoints = 1;
         }
     }
 
@@ -154,7 +157,7 @@ namespace FarseerPhysics.TestBed.Framework
             //float timeStep = settings.Hz > 0.0f ? 1.0f / settings.Hz : 0.0f;
 
             // added
-            float timeStep = Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
+            float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
 
             if (settings.Pause > 0)
             {
@@ -174,12 +177,12 @@ namespace FarseerPhysics.TestBed.Framework
             if (GameInstance.DebugViewEnabled)
             {
                 uint flags = 0;
-                flags += settings.DrawShapes * (uint) DebugViewFlags.Shape;
-                flags += settings.DrawJoints * (uint) DebugViewFlags.Joint;
-                flags += settings.DrawAABBs * (uint) DebugViewFlags.AABB;
-                flags += settings.DrawPairs * (uint) DebugViewFlags.Pair;
-                flags += settings.DrawCOMs * (uint) DebugViewFlags.CenterOfMass;
-                DebugView.Flags = (DebugViewFlags) flags;
+                flags += settings.DrawShapes * (uint)DebugViewFlags.Shape;
+                flags += settings.DrawJoints * (uint)DebugViewFlags.Joint;
+                flags += settings.DrawAABBs * (uint)DebugViewFlags.AABB;
+                flags += settings.DrawPairs * (uint)DebugViewFlags.Pair;
+                flags += settings.DrawCOMs * (uint)DebugViewFlags.CenterOfMass;
+                DebugView.Flags = (DebugViewFlags)flags;
             }
 
             PointCount = 0;
@@ -252,6 +255,30 @@ namespace FarseerPhysics.TestBed.Framework
                             //Vector2 p2 = p1 + k_forceScale * point.tangentForce * tangent;
                             //DrawSegment(p1, p2, Color(0.9f, 0.9f, 0.3f));
                         }
+
+
+                    }
+                }
+
+                if (settings.DrawPolygonPoints == 1)
+                {
+                    foreach (Body body in World.BodyList)
+                    {
+                        foreach (Fixture fixture in body.FixtureList)
+                        {
+                            PolygonShape polygon = fixture.Shape as PolygonShape;
+                            if (polygon != null)
+                            {
+                                Transform xf;
+                                body.GetTransform(out xf);
+
+                                foreach (Vector2 point in polygon.Vertices)
+                                {
+                                    Vector2 tmp = MathUtils.Multiply(ref xf, point);
+                                    DebugView.DrawPoint(tmp, 0.05f, Color.Red);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -299,23 +326,23 @@ namespace FarseerPhysics.TestBed.Framework
             // Query the world for overlapping shapes.
             World.QueryAABB(
                 fixture =>
+                {
+                    Body body = fixture.Body;
+                    if (body.BodyType == BodyType.Dynamic)
                     {
-                        Body body = fixture.Body;
-                        if (body.BodyType == BodyType.Dynamic)
+                        bool inside = fixture.TestPoint(ref p);
+                        if (inside)
                         {
-                            bool inside = fixture.TestPoint(ref p);
-                            if (inside)
-                            {
-                                myFixture = fixture;
+                            myFixture = fixture;
 
-                                // We are done, terminate the query.
-                                return false;
-                            }
+                            // We are done, terminate the query.
+                            return false;
                         }
+                    }
 
-                        // Continue the query.
-                        return true;
-                    }, ref aabb);
+                    // Continue the query.
+                    return true;
+                }, ref aabb);
 
             if (myFixture != null)
             {

@@ -47,16 +47,11 @@ namespace FarseerPhysics.TestBed.Tests
             //Since it is a concave polygon, we need to partition it into several smaller convex polygons
             list = BayazitDecomposer.ConvexPartition(verts);
 
-            //We create a single body
-            _polygonBody = BodyFactory.CreateBody(World);
-            _polygonBody.BodyType = BodyType.Dynamic;
+            //Create a single body with multiple fixtures
+            FixtureFactory.CreateCompundPolygon(World, list, 1);
 
-            //Then we create several fixtures using the body
-            foreach (Vertices vert in list)
-            {
-                PolygonShape shape = new PolygonShape(vert, 1);
-                _polygonBody.CreateFixture(shape);
-            }
+            List<Fixture> fixtures = FixtureFactory.CreateCapsule(World, 3, 1, 1);
+            fixtures[0].Body.Position = new Vector2(0, 5);
 
             base.Initialize();
         }

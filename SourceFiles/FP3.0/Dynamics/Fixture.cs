@@ -91,7 +91,6 @@ namespace FarseerPhysics.Dynamics
         /// If you need a more accurate AABB, compute it using the shape and
         /// the body transform.
         /// </summary>
-        /// <param name="aabb">The aabb.</param>
         public AABB AABB;
 
         public CollisionEventHandler OnCollision;
