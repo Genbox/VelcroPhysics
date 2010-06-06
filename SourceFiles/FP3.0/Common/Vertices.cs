@@ -206,6 +206,10 @@ namespace FarseerPhysics.Common
 
         public bool IsCounterClockWise()
         {
+            //We just return true for lines
+            if (Count < 3)
+                return true;
+
             return (GetSignedArea() > 0.0f);
         }
 
@@ -214,10 +218,7 @@ namespace FarseerPhysics.Common
         /// </summary>
         public void ForceCounterClockWise()
         {
-            // the sign of the 'area' of the polygon is all
-            // we are interested in.
-            float area = GetSignedArea();
-            if (area > 0)
+            if (!IsCounterClockWise())
             {
                 Reverse();
             }

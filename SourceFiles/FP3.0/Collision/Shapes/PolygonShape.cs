@@ -123,6 +123,8 @@ namespace FarseerPhysics.Collision.Shapes
                 }
             }
 
+            // Ensure that vertices are in counter-clockwise order
+            Debug.Assert(Vertices.IsCounterClockWise());
 #endif
 
             // Compute the polygon centroid.
