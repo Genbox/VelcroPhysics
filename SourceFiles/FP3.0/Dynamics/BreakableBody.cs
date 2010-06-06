@@ -76,7 +76,7 @@ namespace FarseerPhysics.Dynamics
         {
             if (_break)
             {
-                Break();
+                Decompose();
                 Broken = true;
                 _break = false;
             }
@@ -100,7 +100,7 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
-        public void Break()
+        private void Decompose()
         {
             for (int i = 0; i < Parts.Count; i++)
             {
@@ -117,6 +117,11 @@ namespace FarseerPhysics.Dynamics
                 body.AngularVelocity = _angularVelocitiesCache[i];
                 body.LinearVelocity = _velocitiesCache[i];
             }
+        }
+
+        public void Break()
+        {
+            _break = true;
         }
     }
 }
