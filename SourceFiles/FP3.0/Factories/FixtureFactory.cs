@@ -103,7 +103,6 @@ namespace FarseerPhysics.Factories
         {
             //We create a single body
             Body polygonBody = BodyFactory.CreateBody(world);
-            polygonBody.BodyType = BodyType.Dynamic;
 
             List<Fixture> fixtures = new List<Fixture>(list.Count);
 

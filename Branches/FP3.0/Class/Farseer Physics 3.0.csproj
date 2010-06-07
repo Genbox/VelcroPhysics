@@ -100,6 +100,9 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Matrix.cs">
       <Link>Common\Matrix.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Path.cs">
+      <Link>Common\Path.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\PolygonManipulation\BooleanTools.cs">
       <Link>Common\PolygonManipulation\BooleanTools.cs</Link>
     </Compile>

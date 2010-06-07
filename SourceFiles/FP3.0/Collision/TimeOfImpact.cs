@@ -299,6 +299,9 @@ namespace FarseerPhysics.Collision
             output.State = TOIOutputState.Unknown;
             output.t = input.TMax;
 
+            DistanceProxy proxyA = input.ProxyA;
+            DistanceProxy proxyB = input.ProxyB;
+
             Sweep sweepA = input.SweepA;
             Sweep sweepB = input.SweepB;
 
@@ -309,6 +312,7 @@ namespace FarseerPhysics.Collision
 
             float tMax = input.TMax;
 
+            float totalRadius = proxyA.Radius + proxyB.Radius;
             const float target = Settings.LinearSlop;
             const float tolerance = 0.25f * Settings.LinearSlop;
             Debug.Assert(target > tolerance);
@@ -319,6 +323,7 @@ namespace FarseerPhysics.Collision
 
             // Prepare input for distance query.
             SimplexCache cache;
+            cache.Count = 0;
             DistanceInput distanceInput;
             distanceInput.ProxyA = input.ProxyA;
             distanceInput.ProxyB = input.ProxyB;
@@ -356,7 +361,7 @@ namespace FarseerPhysics.Collision
                     break;
                 }
 
-
+                // Initialize the separating axis.
                 SeparationFunction fcn = new SeparationFunction(ref cache, ref input.ProxyA, ref sweepA,
                                                                 ref input.ProxyB, ref sweepB, t1);
 
@@ -365,28 +370,27 @@ namespace FarseerPhysics.Collision
                 bool done = false;
                 float t2 = tMax;
                 int pushBackIter = 0;
-
                 for (; ; )
                 {
                     // Find the deepest point at t2. Store the witness point indices.
                     int indexA, indexB;
                     float s2 = fcn.FindMinSeparation(out indexA, out indexB, t2);
 
+                    // Is the final configuration separated?
+                    if (s2 > target + tolerance)
+                    {
+                        // Victory!
+                        output.State = TOIOutputState.Seperated;
+                        output.t = tMax;
+                        done = true;
+                        break;
+                    }
+
                     // Has the separation reached tolerance?
                     if (s2 > target - tolerance)
                     {
                         // Advance the sweeps
                         t1 = t2;
-                        break;
-                    }
-
-                    // Is the final configuration touching?
-                    if (s2 > target - tolerance)
-                    {
-                        // Victory!
-                        output.State = TOIOutputState.Touching;
-                        output.t = t2;
-                        done = true;
                         break;
                     }
 

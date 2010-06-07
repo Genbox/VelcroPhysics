@@ -20,7 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics.Collision.Shapes;
+using System.Collections.Generic;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
@@ -30,76 +32,59 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class ContinuousTest : Test
     {
+        private Fixture _box;
         private float _angularVelocity;
-        private Body _body;
 
-        public ContinuousTest()
+        private ContinuousTest()
         {
-            {
-                Body body = BodyFactory.CreateBody(World);
+            List<Vertices> list = new List<Vertices>();
+            list.Add(PolygonTools.CreateEdge(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f)));
+            list.Add(PolygonTools.CreateRectangle(0.2f, 1.0f, new Vector2(0.5f, 1.0f), 0));
 
-                PolygonShape shape = new PolygonShape(1);
+            FixtureFactory.CreateCompundPolygon(World, list, 0);
 
-                shape.SetAsEdge(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f));
-                body.CreateFixture(shape);
+            _box = FixtureFactory.CreateRectangle(World, 4, 0.2f, 1);
+            _box.Body.Position = new Vector2(0, 20);
+            _box.Body.BodyType = BodyType.Dynamic;
 
-                shape.SetAsBox(0.2f, 1.0f, new Vector2(0.5f, 1.0f), 0.0f);
-                body.CreateFixture(shape);
-            }
-
-#if true
-            {
-                PolygonShape shape = new PolygonShape(1.0f);
-                shape.SetAsBox(2.0f, 0.1f);
-
-                _body = BodyFactory.CreateBody(World);
-                _body.BodyType = BodyType.Dynamic;
-                _body.Position = new Vector2(0.0f, 20.0f);
-
-                _body.CreateFixture(shape);
-
-                _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
-                _angularVelocity = 33.468121f;
-                _body.LinearVelocity = new Vector2(0.0f, -100.0f);
-                _body.AngularVelocity = _angularVelocity;
-            }
-#else
-		{
-			BodyDef bd = new BodyDef();
-			bd.type = BodyType.Dynamic;
-			bd.position = new Vector2(0.0f, 0.5f);
-			Body body = _world.CreateBody(bd);
-
-			CircleShape shape = new CircleShape();
-			shape._p = new Vector2Zero();
-			shape._radius = 0.5f;
-			body.CreateFixture(shape, 1.0f);
-
-			//bd.bullet = true;
-			bd.position = new Vector2(0.0f, 10.0f);
-			body = _world.CreateBody(bd);
-			body.CreateFixture(shape, 1.0f);
-			body.SetLinearVelocity(new Vector2(0.0f, -100.0f));
-		}
-#endif
+            _angularVelocity = 33.468121f;
+            _box.Body.LinearVelocity = new Vector2(0.0f, -100.0f);
+            _box.Body.AngularVelocity = _angularVelocity;
         }
 
         private void Launch()
         {
-            _body.SetTransform(new Vector2(0.0f, 20.0f), 0.0f);
+            _box.Body.SetTransform(new Vector2(0.0f, 20.0f), 0.0f);
             _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
-            _body.LinearVelocity = new Vector2(0.0f, -100.0f);
-            _body.AngularVelocity = _angularVelocity;
+            _box.Body.LinearVelocity = new Vector2(0.0f, -100.0f);
+            _box.Body.AngularVelocity = _angularVelocity;
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            if (StepCount == 12)
+            base.Update(settings, gameTime);
+
+            if (Distance.GjkCalls > 0)
             {
-                StepCount += 0;
+                DebugView.DrawString(50, TextLine, "gjk calls = {0:n}, ave gjk iters = {1:n}, max gjk iters = {2:n}",
+                                     Distance.GjkCalls, Distance.GjkIters / (float)Distance.GjkCalls,
+                                     Distance.GjkMaxIters);
+                TextLine += 15;
             }
 
-            base.Update(settings, gameTime);
+            if (TimeOfImpact.ToiCalls > 0)
+            {
+                DebugView.DrawString(50, TextLine, "toi calls = {0:n}, ave toi iters = {1:n}, max toi iters = {2:n}",
+                                      TimeOfImpact.ToiCalls, TimeOfImpact.ToiIters / (float)TimeOfImpact.ToiCalls, TimeOfImpact.ToiMaxRootIters);
+                TextLine += 15;
+
+                DebugView.DrawString(50, TextLine, "ave toi root iters = {0:n}, max toi root iters = {1:n}",
+                                      TimeOfImpact.ToiRootIters / (float)TimeOfImpact.ToiCalls, TimeOfImpact.ToiMaxRootIters);
+                TextLine += 15;
+
+                DebugView.DrawString(50, TextLine, "max toi opt iters = {0:n}", TimeOfImpact.ToiMaxOptIters);
+                TextLine += 15;
+            }
 
             if (StepCount % 60 == 0)
             {
