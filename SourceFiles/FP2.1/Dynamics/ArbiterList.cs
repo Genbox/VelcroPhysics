@@ -28,10 +28,9 @@ namespace FarseerGames.FarseerPhysics.Dynamics
 
             // at this point the Geomlist should be complete, and we can generate new collision ids
             // for the next run of the broadphasecollider
-            CollisionIdGenerator collisionIdGenerator = new CollisionIdGenerator();
-            foreach (Geom geom in geomList)
+            for (int i = 0; i < geomList.Count; i++)
             {
-                geom.CollisionId = collisionIdGenerator.NextCollisionId();
+                geomList[i].CollisionId = i;
             }
         }
 
