@@ -96,7 +96,6 @@
     <Compile Include="Tests\BridgeTest.cs" />
     <Compile Include="Tests\BuoyancyTest.cs" />
     <Compile Include="Tests\CantileverTest.cs" />
-    <Compile Include="Tests\CCDTest.cs" />
     <Compile Include="Tests\ChainTest.cs" />
     <Compile Include="Tests\CollisionFilteringTest.cs" />
     <Compile Include="Tests\CollisionProcessingTest.cs">
@@ -110,6 +109,7 @@
     </Compile>
     <Compile Include="Tests\ContinuousTest.cs" />
     <Compile Include="Tests\ControllerTest.cs" />
+    <Compile Include="Tests\CharacterCollisionTest.cs" />
     <Compile Include="Tests\CuttingTest.cs" />
     <Compile Include="Tests\DistanceTest.cs">
       <SubType>Code</SubType>

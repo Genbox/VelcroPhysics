@@ -616,6 +616,7 @@ namespace FarseerPhysics.Collision
 
             Vector2 closestPoint = simplex.GetClosestPoint();
             float distanceSqr1 = closestPoint.LengthSquared();
+            float distanceSqr2 = distanceSqr1;
 
             // Main iteration loop.
             int iter = 0;
@@ -655,7 +656,7 @@ namespace FarseerPhysics.Collision
 
                 // Compute closest point.
                 Vector2 p = simplex.GetClosestPoint();
-                float distanceSqr2 = p.LengthSquared();
+                distanceSqr2 = p.LengthSquared();
 
                 // Ensure progress
                 if (distanceSqr2 >= distanceSqr1)
