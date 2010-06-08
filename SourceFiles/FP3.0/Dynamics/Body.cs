@@ -599,6 +599,7 @@ namespace FarseerPhysics.Dynamics
         /// <summary>
         /// Set the position of the body's origin and rotation.
         /// This breaks any contacts and wakes the other bodies.
+        /// Manipulating a body's transform may cause non-physical behavior.
         /// </summary>
         /// <param name="position">the world position of the body's local origin.</param>
         /// <param name="angle">the world rotation in radians.</param>

@@ -81,6 +81,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
         /// <summary>
         /// The natural length between the anchor points.
+        /// Manipulating the length can lead to non-physical behavior when the frequency is zero.
         /// </summary>
         public float Length { get; set; }
 
