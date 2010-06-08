@@ -37,11 +37,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         private ShapeEditingTest()
         {
-            Body ground = BodyFactory.CreateBody(World);
-
-            Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-            PolygonShape shape = new PolygonShape(edge, 0);
-            ground.CreateFixture(shape);
+            //Ground
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             _body = BodyFactory.CreateBody(World);
             _body.BodyType = BodyType.Dynamic;

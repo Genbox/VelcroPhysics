@@ -22,8 +22,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         private CuttingTest()
         {
-            //Create ground
-            FixtureFactory.CreateRectangle(World, 80, 1, 1);
+            //Ground
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
             PolygonShape shape = new PolygonShape(box, 5);
@@ -73,7 +73,7 @@ namespace FarseerPhysics.TestBed.Tests
                                   return 1;
                               }, _end, _start);
 
-            DebugView.DrawString(100, 50, "Fixtures: " + fixtures.Count);
+            DebugView.DrawString(50, 50, "Fixtures: " + fixtures.Count);
 
             foreach (Vector2 entryPoint in entryPoints)
             {

@@ -14,11 +14,11 @@ namespace FarseerPhysics.Factories
     /// </summary>
     public static class FixtureFactory
     {
-        public static Fixture CreateEdge(World world, Vector2 start, Vector2 end)
+        public static Fixture CreateEdge(World world, Vector2 start, Vector2 end, float density)
         {
             Body body = BodyFactory.CreateBody(world);
             Vertices edgeVertices = PolygonTools.CreateEdge(start, end);
-            PolygonShape rectangleShape = new PolygonShape(edgeVertices, 0);
+            PolygonShape rectangleShape = new PolygonShape(edgeVertices, density);
             return body.CreateFixture(rectangleShape);
         }
 

@@ -37,10 +37,10 @@ namespace FarseerPhysics.TestBed.Tests
         private TilesTest()
         {
             {
-                float a = 0.5f;
+                const float a = 0.5f;
                 Body ground = BodyFactory.CreateBody(World, new Vector2(0, -a));
-                int N = 200;
-                int M = 10;
+                const int N = 200;
+                const int M = 10;
                 Vector2 position = new Vector2();
                 position.Y = 0.0f;
                 for (int j = 0; j < M; ++j)
@@ -91,7 +91,7 @@ namespace FarseerPhysics.TestBed.Tests
             int leafCount = cm.BroadPhase.ProxyCount;
             int minimumNodeCount = 2 * leafCount - 1;
             float minimumHeight = (float)Math.Ceiling(Math.Log(minimumNodeCount) / Math.Log(2.0f));
-            DebugView.DrawString(5, TextLine, "dynamic tree height = {0}, min = {1}", height, minimumHeight);
+            DebugView.DrawString(50, TextLine, "dynamic tree height = {0}, min = {1}", height, minimumHeight);
             TextLine += 15;
 
             base.Update(settings, gameTime);

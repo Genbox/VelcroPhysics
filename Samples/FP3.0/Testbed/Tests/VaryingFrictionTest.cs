@@ -33,13 +33,8 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private VaryingFrictionTest()
         {
-            {
-                Body ground = BodyFactory.CreateBody(World);
-
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
-                ground.CreateFixture(shape);
-            }
+            //Ground
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             {
                 Vertices box = PolygonTools.CreateRectangle(13.0f, 0.25f);

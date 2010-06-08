@@ -15,7 +15,6 @@ namespace FarseerPhysics.TestBed.Tests
 
         private BuoyancyTest()
         {
-
             //Make a box
             //Bottom
             Body ground = BodyFactory.CreateBody(World);

@@ -34,14 +34,8 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private DominosTest()
         {
-            Body b1;
-            {
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
-
-                b1 = BodyFactory.CreateBody(World);
-                b1.CreateFixture(shape);
-            }
+            //Ground
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             {
                 Vertices box = PolygonTools.CreateRectangle(6.0f, 0.25f);

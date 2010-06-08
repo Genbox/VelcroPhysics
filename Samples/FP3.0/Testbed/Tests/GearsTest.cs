@@ -41,16 +41,6 @@ namespace FarseerPhysics.TestBed.Tests
 
         private GearsTest()
         {
-            Body ground;
-            {
-                ground = BodyFactory.CreateBody(World);
-
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
-
-                ground.CreateFixture(shape);
-            }
-
             {
                 // First circle
                 CircleShape circle1 = new CircleShape(1.0f, 5);
@@ -103,8 +93,15 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Update(settings, gameTime);
 
-            //DebugView.DrawString(50, TextLine, "theta1 + {0:n} * theta2 = {1:n}", _joint1.JointAngle, _joint2.JointAngle);
-            //TextLine += 15;
+            float ratio = _joint4.Ratio;
+            float value = _joint1.JointAngle + ratio * _joint2.JointAngle;
+            DebugView.DrawString(50, TextLine, "theta1 + {0} * theta2 = {1}", ratio, value);
+            TextLine += 15;
+
+            ratio = _joint5.Ratio;
+            value = _joint2.JointAngle + ratio * _joint3.JointTranslation;
+            DebugView.DrawString(50, TextLine, "theta2 + {0} * delta = {1}", ratio, value);
+            TextLine += 15;
         }
 
         internal static Test Create()

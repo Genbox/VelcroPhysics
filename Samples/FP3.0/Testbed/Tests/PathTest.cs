@@ -16,7 +16,7 @@ namespace FarseerPhysics.TestBed.Tests
         private PathTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             //Single body that moves around path
             movingBody = BodyFactory.CreateBody(World);

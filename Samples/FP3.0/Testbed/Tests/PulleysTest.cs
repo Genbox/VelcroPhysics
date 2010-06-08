@@ -35,14 +35,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         private PulleysTest()
         {
-            Body ground;
-            {
-                ground = BodyFactory.CreateBody(World);
-
-                PolygonShape shape = new PolygonShape(0.0f);
-                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
-            }
+            //Ground
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             {
                 const float a = 2.0f;

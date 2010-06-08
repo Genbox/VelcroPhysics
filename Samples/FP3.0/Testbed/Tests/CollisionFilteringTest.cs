@@ -51,15 +51,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         private CollisionFilteringTest()
         {
-            // Ground body
-            {
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
-
-                Body ground = BodyFactory.CreateBody(World);
-                Fixture fixture = ground.CreateFixture(shape);
-                fixture.Friction = 0.3f;
-            }
+            //Ground
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             {
                 // Small triangle
