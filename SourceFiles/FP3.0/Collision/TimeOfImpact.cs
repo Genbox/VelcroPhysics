@@ -35,7 +35,7 @@ namespace FarseerPhysics.Collision
         public Sweep SweepA;
         public Sweep SweepB;
         public float TMax; // defines sweep interval [0, TMax]
-    } ;
+    }
 
     public enum TOIOutputState
     {
@@ -57,7 +57,7 @@ namespace FarseerPhysics.Collision
         Points,
         FaceA,
         FaceB
-    } ;
+    }
 
     public struct SeparationFunction
     {
@@ -119,7 +119,6 @@ namespace FarseerPhysics.Collision
                 if (s < 0.0f)
                 {
                     _axis = -_axis;
-                    s = -s;
                 }
                 return;
             }
@@ -144,7 +143,6 @@ namespace FarseerPhysics.Collision
                 if (s < 0.0f)
                 {
                     _axis = -_axis;
-                    s = -s;
                 }
                 return;
             }
@@ -228,8 +226,9 @@ namespace FarseerPhysics.Collision
             {
                 case SeparationFunctionType.Points:
                     {
-                        Vector2 axisA = MathUtils.MultiplyT(ref xfA.R, _axis);
-                        Vector2 axisB = MathUtils.MultiplyT(ref xfB.R, -_axis);
+#warning Not used: Note Box2D about this
+                        //Vector2 axisA = MathUtils.MultiplyT(ref xfA.R, _axis);
+                        //Vector2 axisB = MathUtils.MultiplyT(ref xfB.R, -_axis);
 
                         Vector2 localPointA = _proxyA.GetVertex(indexA);
                         Vector2 localPointB = _proxyB.GetVertex(indexB);
@@ -246,7 +245,8 @@ namespace FarseerPhysics.Collision
                         Vector2 normal = MathUtils.Multiply(ref xfA.R, _axis);
                         Vector2 pointA = MathUtils.Multiply(ref xfA, _localPoint);
 
-                        Vector2 axisB = MathUtils.MultiplyT(ref xfB.R, -normal);
+#warning Not used: Note Box2D about this
+                        //Vector2 axisB = MathUtils.MultiplyT(ref xfB.R, -normal);
 
                         Vector2 localPointB = _proxyB.GetVertex(indexB);
                         Vector2 pointB = MathUtils.Multiply(ref xfB, localPointB);
@@ -260,7 +260,8 @@ namespace FarseerPhysics.Collision
                         Vector2 normal = MathUtils.Multiply(ref xfB.R, _axis);
                         Vector2 pointB = MathUtils.Multiply(ref xfB, _localPoint);
 
-                        Vector2 axisA = MathUtils.MultiplyT(ref xfA.R, -normal);
+#warning Not used: Note Box2D about this
+                        //Vector2 axisA = MathUtils.MultiplyT(ref xfA.R, -normal);
 
                         Vector2 localPointA = _proxyA.GetVertex(indexA);
                         Vector2 pointA = MathUtils.Multiply(ref xfA, localPointA);
@@ -274,28 +275,29 @@ namespace FarseerPhysics.Collision
                     return 0.0f;
             }
         }
-    } ;
-
+    }
 
     public static class TimeOfImpact
     {
-        // CCD via the local separating axis method. This seeks progression
-        // by computing the largest time at which separation is maintained.
-
         public static int ToiCalls, ToiIters, ToiMaxIters;
         public static int ToiRootIters, ToiMaxRootIters;
         public static int ToiMaxOptIters;
 
+        /// <summary>
+        /// CCD via the local separating axis method. This seeks progression
+        /// by computing the largest time at which separation is maintained.
         /// Compute the upper bound on time before two shapes penetrate. Time is represented as
         /// a fraction between [0,TMax]. This uses a swept separating axis and may miss some intermediate,
         /// non-tunneling collision. If you change the time interval, you should call this function
         /// again.
         /// Note: use b2Distance to compute the contact point and normal at the time of impact.
+        /// </summary>
+        /// <param name="output">The output.</param>
+        /// <param name="input">The input.</param>
         public static void CalculateTimeOfImpact(out TOIOutput output, ref TOIInput input)
         {
             ++ToiCalls;
 
-            output = new TOIOutput();
             output.State = TOIOutputState.Unknown;
             output.t = input.TMax;
 
@@ -313,7 +315,7 @@ namespace FarseerPhysics.Collision
             float tMax = input.TMax;
 
             float totalRadius = proxyA.Radius + proxyB.Radius;
-            const float target = Settings.LinearSlop;
+            float target = Math.Max(Settings.LinearSlop, totalRadius - 3.0f * Settings.LinearSlop);
             const float tolerance = 0.25f * Settings.LinearSlop;
             Debug.Assert(target > tolerance);
 
@@ -424,7 +426,7 @@ namespace FarseerPhysics.Collision
                     {
                         // Use a mix of the secant rule and bisection.
                         float t;
-                        if ((rootIterCount & 1) != 0)
+                        if ((rootIterCount & 1) == 1)
                         {
                             // Secant rule to improve convergence.
                             t = a1 + (target - s1) * (a2 - a1) / (s2 - s1);

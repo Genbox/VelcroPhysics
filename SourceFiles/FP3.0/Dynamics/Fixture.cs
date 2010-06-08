@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -121,7 +121,7 @@ namespace FarseerPhysics.Dynamics
             Friction = 0.2f;
             _collisionCategories = CollisionCategory.All;
             _collidesWith = CollisionCategory.All;
-            Sensor = false;
+            IsSensor = false;
 
             _body = body;
 
@@ -145,7 +145,7 @@ namespace FarseerPhysics.Dynamics
         /// <value>
         ///   if set to &lt;c&gt;true&lt;/c&gt; [sensor].
         /// </value>
-        public bool Sensor { get; set; }
+        public bool IsSensor { get; set; }
 
         /// <summary>
         /// Collision groups allow a certain group of objects to never collide (negative)

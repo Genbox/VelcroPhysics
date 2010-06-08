@@ -96,7 +96,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     _bullet = BodyFactory.CreateBody(World);
                     _bullet.BodyType = BodyType.Dynamic;
-                    _bullet.Bullet = true;
+                    _bullet.IsBullet = true;
                     _bullet.Position = new Vector2(-31.0f, 5.0f);
 
                     Fixture fixture = _bullet.CreateFixture(shape);

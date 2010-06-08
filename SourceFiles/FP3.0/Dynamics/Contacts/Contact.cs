@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Box2D.XNA port of Box2D:
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
@@ -129,7 +129,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         /// Enable/disable this contact. This can be used inside the pre-solve
         /// contact listener. The contact is only disabled for the current
         /// time step (or sub-step in continuous collisions).
-        public bool Enabled
+        public bool IsEnabled
         {
             set
             {
@@ -182,8 +182,8 @@ namespace FarseerPhysics.Dynamics.Contacts
             bool touching = false;
             bool wasTouching = (Flags & ContactFlags.Touching) == ContactFlags.Touching;
 
-            bool sensorA = FixtureA.Sensor;
-            bool sensorB = FixtureB.Sensor;
+            bool sensorA = FixtureA.IsSensor;
+            bool sensorB = FixtureB.IsSensor;
             bool sensor = sensorA || sensorB;
 
             Body bodyA = FixtureA.Body;
@@ -266,16 +266,16 @@ namespace FarseerPhysics.Dynamics.Contacts
             {
                 //Report the collision to both participants:
                 if (FixtureA.OnCollision != null)
-                    Enabled = FixtureA.OnCollision(FixtureA, FixtureB, Manifold);
+                    IsEnabled = FixtureA.OnCollision(FixtureA, FixtureB, Manifold);
 
                 //Reverse the order of the reported fixtures. The first fixture is always the one that the
                 //user subscribed to.
                 if (FixtureB.OnCollision != null)
-                    Enabled = FixtureB.OnCollision(FixtureB, FixtureA, Manifold);
+                    IsEnabled = FixtureB.OnCollision(FixtureB, FixtureA, Manifold);
 
                 //if the user disabled the contact (needed to exclude it in TOI solver), we also need to mark
                 //it as not touching.
-                if (Enabled == false)
+                if (IsEnabled == false)
                     Flags &= ~ContactFlags.Touching;
 
                 if (contactManager.BeginContact != null)
