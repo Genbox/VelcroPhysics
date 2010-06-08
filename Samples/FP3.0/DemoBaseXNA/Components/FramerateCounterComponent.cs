@@ -1,10 +1,10 @@
 using System;
 using System.Globalization;
-using DemoBaseXNA.ScreenSystem;
+using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DemoBaseXNA.Components
+namespace FarseerPhysics.DemoBaseXNA.Components
 {
     /// <summary>
     /// Displays the FPS

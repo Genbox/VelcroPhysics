@@ -1,12 +1,12 @@
-using DemoBaseXNA.DrawingSystem;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
+using FarseerPhysics.DemoBaseXNA.DrawingSystem;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DemoBaseXNA.DemoShare
+namespace FarseerPhysics.DemoBaseXNA.DemoShare
 {
     public class Border
     {

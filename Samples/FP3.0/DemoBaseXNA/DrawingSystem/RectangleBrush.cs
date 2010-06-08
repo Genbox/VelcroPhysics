@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DemoBaseXNA.DrawingSystem
+namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
 {
     public class RectangleBrush
     {
