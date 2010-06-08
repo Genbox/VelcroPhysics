@@ -47,8 +47,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             ContentManager = new ContentManager(game.Services);
             ContentManager.RootDirectory = "Content";
-            _graphicsDeviceService = (IGraphicsDeviceService) game.Services.GetService(
-                typeof (IGraphicsDeviceService));
+            _graphicsDeviceService = (IGraphicsDeviceService)game.Services.GetService(
+                typeof(IGraphicsDeviceService));
             game.Exiting += Game_Exiting;
 
             if (_graphicsDeviceService == null)
@@ -131,11 +131,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         public override void Initialize()
         {
             _spriteFonts = new SpriteFonts(ContentManager);
-
-            foreach (GameScreen screen in _screens)
-            {
-                screen.Initialize();
-            }
             base.Initialize();
         }
 
@@ -256,6 +251,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             screen.ScreenManager = this;
             screen.Initialize();
+
             // If we have a graphics device, tell the screen to load content.
             if ((_graphicsDeviceService != null) &&
                 (_graphicsDeviceService.GraphicsDevice != null))
@@ -264,6 +260,13 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             }
 
             _screens.Add(screen);
+
+            IDemoScreen demoScreen = screen as IDemoScreen;
+            if (demoScreen != null && screen.firstRun)
+            {
+                AddScreen(new PauseScreen(demoScreen.GetTitle(), demoScreen.GetDetails()));
+                screen.firstRun = false;
+            }
         }
 
         /// <summary>
@@ -299,7 +302,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             SpriteBatch.Draw(_blankTexture,
                              new Rectangle(0, 0, viewport.Width, viewport.Height),
-                             new Color(0, 0, 0, (byte) alpha));
+                             new Color(0, 0, 0, (byte)alpha));
 
             SpriteBatch.End();
         }

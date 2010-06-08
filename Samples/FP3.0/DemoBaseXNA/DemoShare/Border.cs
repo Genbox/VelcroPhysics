@@ -1,102 +1,23 @@
-using FarseerPhysics.Collision.Shapes;
+using System.Collections.Generic;
 using FarseerPhysics.Common;
-using FarseerPhysics.DemoBaseXNA.DrawingSystem;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.DemoBaseXNA.DemoShare
 {
     public class Border
     {
-        private Body _borderBody;
-        private Fixture[] _borderGeom;
-        private Texture2D[] _borderTextures;
-        private float _borderWidth;
-        private float _height;
-        private Vector2 _position;
-        private float _width;
-
-        public Border(float width, float height, float borderWidth, Vector2 position)
+        public Border(World world, float width, float height, float borderWidth)
         {
-            _width = width;
-            _height = height;
-            _borderWidth = borderWidth;
-            _position = position;
-        }
+            List<Vertices> borders = new List<Vertices>(4);
 
-        public void Load(GraphicsDevice graphicsDevice, World physicsSimulator)
-        {
-            _borderTextures = new Texture2D[4];
+            borders.Add(PolygonTools.CreateRectangle(width, borderWidth, new Vector2(0, (height / 2)), 0));
+            borders.Add(PolygonTools.CreateRectangle(borderWidth, height, new Vector2(-(width / 2), 0), 0));
+            borders.Add(PolygonTools.CreateRectangle(width, borderWidth, new Vector2(0, -height / 2), 0));
+            borders.Add(PolygonTools.CreateRectangle(borderWidth, height, new Vector2((width / 2), 0), 0));
 
-            _borderTextures[0] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int) (_borderWidth * 10),
-                                                                      (int) (_height * 10), 2, 0, 0,
-                                                                      new Color(200, 200, 200, 150), Color.White);
-            _borderTextures[1] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int) (_borderWidth * 10),
-                                                                      (int) (_height * 10), 2, 0, 0,
-                                                                      new Color(200, 200, 200, 150), Color.White);
-            _borderTextures[2] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int) (_width * 10),
-                                                                      (int) (_borderWidth * 10), 2, 0, 0,
-                                                                      new Color(200, 200, 200, 150), Color.White);
-            _borderTextures[3] = DrawingHelper.CreateRectangleTexture(graphicsDevice, (int) (_width * 10),
-                                                                      (int) (_borderWidth * 10), 2, 0, 0,
-                                                                      new Color(200, 200, 200, 150), Color.White);
-
-            //use the body factory to create the physics body
-            _borderBody = BodyFactory.CreateBody(physicsSimulator);
-            _borderBody.BodyType = BodyType.Static;
-            _borderBody.Position = _position;
-
-            LoadBorderGeom(physicsSimulator);
-        }
-
-        private void LoadBorderGeom(World physicsSimulator)
-        {
-            _borderGeom = new Fixture[4];
-            //left border
-            Vector2 geometryOffset = new Vector2(-(_width * .5f - (_borderWidth * .5f)), 0);
-            Vertices box = PolygonTools.CreateRectangle(_borderWidth / 2f, _height / 2f, geometryOffset, 0);
-            PolygonShape shape = new PolygonShape(box, 5);
-            _borderGeom[0] = _borderBody.CreateFixture(shape);
-            _borderGeom[0].Restitution = .0f;
-            _borderGeom[0].Friction = .5f;
-            _borderGeom[0].CollisionGroup = 100;
-            _borderGeom[0].UserData = geometryOffset;
-
-            //right border (clone left border since geometry is same size)
-            geometryOffset = new Vector2((_width * .5f - _borderWidth * .5f), 0);
-            box = PolygonTools.CreateRectangle(_borderWidth / 2f, _height / 2f, geometryOffset, 0);
-            shape = new PolygonShape(box, 5);
-            _borderGeom[1] = _borderBody.CreateFixture(shape);
-            _borderGeom[1].Restitution = .0f;
-            _borderGeom[1].Friction = .5f;
-            _borderGeom[1].CollisionGroup = 100;
-            _borderGeom[1].UserData = geometryOffset;
-
-            //top border
-            geometryOffset = new Vector2(0, -(_height * .5f - _borderWidth * .5f));
-            box = PolygonTools.CreateRectangle(_width / 2f, _borderWidth / 2f, geometryOffset, 0);
-            shape = new PolygonShape(box, 5);
-            _borderGeom[2] = _borderBody.CreateFixture(shape);
-            _borderGeom[2].Restitution = .0f;
-            _borderGeom[2].Friction = .5f;
-            _borderGeom[2].CollisionGroup = 100;
-            _borderGeom[2].UserData = geometryOffset;
-
-            //bottom border (clone top border since geometry is same size)
-            geometryOffset = new Vector2(0, _height * .5f - _borderWidth * .5f);
-            box = PolygonTools.CreateRectangle(_width / 2f, _borderWidth / 2f, geometryOffset, 0);
-            shape = new PolygonShape(box, 5);
-            _borderGeom[3] = _borderBody.CreateFixture(shape);
-            _borderGeom[3].Restitution = .0f;
-            _borderGeom[3].Friction = .5f;
-            _borderGeom[3].CollisionGroup = 100;
-            _borderGeom[3].UserData = geometryOffset;
-        }
-
-        public void Draw()
-        {
+            FixtureFactory.CreateCompundPolygon(world, borders, 1);
         }
     }
 }

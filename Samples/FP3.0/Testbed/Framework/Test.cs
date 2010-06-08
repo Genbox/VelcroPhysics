@@ -27,7 +27,6 @@ using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
-using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -106,7 +105,6 @@ namespace FarseerPhysics.TestBed.Framework
         internal int StepCount;
         internal int TextLine;
         internal World World;
-        private Body _groundBody;
         private FixedMouseJoint _fixedMouseJoint;
 
         protected Test()
@@ -122,8 +120,6 @@ namespace FarseerPhysics.TestBed.Framework
             World.ContactManager.EndContact += EndContact;
 
             StepCount = 0;
-
-            _groundBody = BodyFactory.CreateBody(World);
         }
 
         public Game1 GameInstance { protected get; set; }
