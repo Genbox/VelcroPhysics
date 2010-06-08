@@ -645,20 +645,15 @@ namespace FarseerPhysics.Dynamics
             // Clear all the island flags.
             for (int i = 0; i < BodyList.Count; i++)
             {
-                Body b = BodyList[i];
-
-                b._flags &= ~BodyFlags.Island;
+                BodyList[i]._flags &= ~BodyFlags.Island;
             }
             for (int i = 0; i < ContactList.Count; i++)
             {
-                Contact c = ContactList[i];
-
-                c.Flags &= ~ContactFlags.Island;
+                ContactList[i].Flags &= ~ContactFlags.Island;
             }
             for (int i = 0; i < JointList.Count; i++)
             {
-                Joint j = JointList[i];
-                j._islandFlag = false;
+                JointList[i]._islandFlag = false;
             }
 
             // Build and simulate all awake islands.
@@ -670,7 +665,7 @@ namespace FarseerPhysics.Dynamics
             for (int j = 0; j < BodyList.Count; j++)
             {
                 Body seed = BodyList[j];
-                if ((seed._flags & (BodyFlags.Island)) != BodyFlags.None)
+                if ((seed._flags & (BodyFlags.Island)) == BodyFlags.Island)
                 {
                     continue;
                 }
@@ -722,14 +717,14 @@ namespace FarseerPhysics.Dynamics
                         }
 
                         // Is this contact solid and touching?
-                        if (!contact.Enabled || !contact.IsTouching())
+                        if (!contact.IsEnabled || !contact.IsTouching())
                         {
                             continue;
                         }
 
                         // Skip sensors.
-                        bool sensorA = contact.FixtureA.Sensor;
-                        bool sensorB = contact.FixtureB.Sensor;
+                        bool sensorA = contact.FixtureA.IsSensor;
+                        bool sensorB = contact.FixtureB.IsSensor;
                         if (sensorA || sensorB)
                         {
                             continue;
@@ -741,7 +736,7 @@ namespace FarseerPhysics.Dynamics
                         Body other = ce.Other;
 
                         // Was the other body already added to this island?
-                        if ((other._flags & BodyFlags.Island) != BodyFlags.None)
+                        if ((other._flags & BodyFlags.Island) == BodyFlags.Island)
                         {
                             continue;
                         }
@@ -773,7 +768,7 @@ namespace FarseerPhysics.Dynamics
                             _island.Add(je.Joint);
                             je.Joint._islandFlag = true;
 
-                            if ((other._flags & BodyFlags.Island) != BodyFlags.None)
+                            if ((other._flags & BodyFlags.Island) == BodyFlags.Island)
                             {
                                 continue;
                             }
@@ -809,8 +804,8 @@ namespace FarseerPhysics.Dynamics
             {
                 Body b = BodyList[i];
 
-		        // If a body was not in an island then it did not move.
-		        if ((b._flags & BodyFlags.Island) == 0)
+                // If a body was not in an island then it did not move.
+                if ((b._flags & BodyFlags.Island) == 0)
                 {
                     continue;
                 }
@@ -840,7 +835,7 @@ namespace FarseerPhysics.Dynamics
             int count;
             int iter = 0;
 
-            bool bullet = body.Bullet;
+            bool bullet = body.IsBullet;
 
             // Iterate until all contacts agree on the minimum TOI. We have
             // to iterate because the TOI algorithm may skip some intermediate
@@ -881,7 +876,7 @@ namespace FarseerPhysics.Dynamics
 
                     // Check for a disabled contact.
                     Contact contact = ce.Contact;
-                    if (contact.Enabled == false)
+                    if (contact.IsEnabled == false)
                     {
                         continue;
                     }
@@ -896,7 +891,7 @@ namespace FarseerPhysics.Dynamics
                     Fixture fixtureB = contact.FixtureB;
 
                     // Cull sensors.
-                    if (fixtureA.Sensor || fixtureB.Sensor)
+                    if (fixtureA.IsSensor || fixtureB.IsSensor)
                     {
                         continue;
                     }
@@ -938,7 +933,7 @@ namespace FarseerPhysics.Dynamics
             Sweep backup = body._sweep;
             body.Advance(toi);
             toiContact.Update(ContactManager);
-            if (toiContact.Enabled == false)
+            if (toiContact.IsEnabled == false)
             {
                 // Contact disabled. Backup and recurse.
                 body._sweep = backup;
@@ -949,9 +944,7 @@ namespace FarseerPhysics.Dynamics
 
             // Update all the valid contacts on this body and build a contact island.
             count = 0;
-            for (ContactEdge ce = body._contactList;
-                 (ce != null) && (count < Settings.MaxTOIContacts);
-                 ce = ce.Next)
+            for (ContactEdge ce = body._contactList; (ce != null) && (count < Settings.MaxTOIContacts); ce = ce.Next)
             {
                 Body other = ce.Other;
                 BodyType type = other.BodyType;
@@ -965,7 +958,7 @@ namespace FarseerPhysics.Dynamics
 
                 // Check for a disabled contact.
                 Contact contact = ce.Contact;
-                if (contact.Enabled == false)
+                if (contact.IsEnabled == false)
                 {
                     continue;
                 }
@@ -974,7 +967,7 @@ namespace FarseerPhysics.Dynamics
                 Fixture fixtureB = contact.FixtureB;
 
                 // Cull sensors.
-                if (fixtureA.Sensor || fixtureB.Sensor)
+                if (fixtureA.IsSensor || fixtureB.IsSensor)
                 {
                     continue;
                 }
@@ -987,7 +980,7 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Did the user disable the contact?
-                if (contact.Enabled == false)
+                if (contact.IsEnabled == false)
                 {
                     // Skip this contact.
                     continue;
@@ -1044,8 +1037,9 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < BodyList.Count; i++)
             {
                 Body body = BodyList[i];
-                // Sleeping, kinematic, and static bodies will not be affected by the TOI event.
-                if (body.Awake == false || body.BodyType == BodyType.Kinematic || body.BodyType == BodyType.Static)
+                // Kinematic, and static bodies will not be affected by the TOI event.
+                // If a body was not in an island then it did not move.
+                if ((body._flags & BodyFlags.Island) == 0 || body.BodyType == BodyType.Kinematic || body.BodyType == BodyType.Static)
                 {
                     body._flags |= BodyFlags.Toi;
                 }
@@ -1059,12 +1053,12 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < BodyList.Count; i++)
             {
                 Body body = BodyList[i];
-                if (body.BodyType != BodyType.Dynamic || body.Awake == false)
+                if ((body._flags & BodyFlags.Toi) == BodyFlags.Toi)
                 {
                     continue;
                 }
 
-                if (body.Bullet)
+                if (body.IsBullet)
                 {
                     continue;
                 }
@@ -1078,12 +1072,12 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < BodyList.Count; i++)
             {
                 Body body = BodyList[i];
-                if (body.BodyType != BodyType.Dynamic || body.Awake == false)
+                if ((body._flags & BodyFlags.Toi) == BodyFlags.Toi)
                 {
                     continue;
                 }
 
-                if (body.Bullet == false)
+                if (body.IsBullet == false)
                 {
                     continue;
                 }

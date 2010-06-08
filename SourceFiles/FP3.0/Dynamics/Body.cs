@@ -191,7 +191,7 @@ namespace FarseerPhysics.Dynamics
         /// kinematic and static bodies. This setting is only considered on dynamic bodies.
         /// @warning You should use this flag sparingly since it increases processing time.
         /// </summary>
-        public bool Bullet
+        public bool IsBullet
         {
             set
             {

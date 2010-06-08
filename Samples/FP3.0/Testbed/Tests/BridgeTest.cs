@@ -39,6 +39,7 @@ namespace FarseerPhysics.TestBed.Tests
             Body ground;
             {
                 ground = BodyFactory.CreateBody(World);
+                ground.IsBullet = true;
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -56,6 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
+                    body.IsBullet = true;
 
                     Fixture fixture = body.CreateFixture(shape);
                     fixture.Friction = 0.2f;
@@ -86,6 +88,8 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(vertices, 1.0f);
 
                 Body body = BodyFactory.CreateBody(World);
+                body.IsBullet = true;
+
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
 
@@ -97,6 +101,7 @@ namespace FarseerPhysics.TestBed.Tests
                 CircleShape shape = new CircleShape(0.5f, 1.0f);
 
                 Body body = BodyFactory.CreateBody(World);
+                body.IsBullet = true;
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);
 

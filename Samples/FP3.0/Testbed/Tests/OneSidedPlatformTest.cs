@@ -94,7 +94,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (position.Y < _top)
             {
-                contact.Enabled = false;
+                contact.IsEnabled = false;
             }
         }
 

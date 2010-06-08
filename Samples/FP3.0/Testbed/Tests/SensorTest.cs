@@ -53,7 +53,7 @@ namespace FarseerPhysics.TestBed.Tests
                     shape.Position = new Vector2(0.0f, 10.0f);
 
                     _sensor = ground.CreateFixture(shape);
-                    _sensor.Sensor = true;
+                    _sensor.IsSensor = true;
                 }
             }
 
