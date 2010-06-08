@@ -174,7 +174,7 @@ namespace FarseerPhysics.TestBed
             else if ((newKeyboardState.IsKeyDown(Keys.P) && _oldKeyboardState.IsKeyUp(Keys.P)) ||
                      newGamePad.IsButtonDown(Buttons.Start) && _oldGamePad.IsButtonUp(Buttons.Start))
             {
-                _settings.Pause = _settings.Pause > 0 ? 1 : (uint)0;
+                _settings.Pause = !_settings.Pause;
             }
             // Press I to prev test.
             else if ((newKeyboardState.IsKeyDown(Keys.I) && _oldKeyboardState.IsKeyUp(Keys.I)) ||

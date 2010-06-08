@@ -162,6 +162,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
+            bool advanceRay = settings.Pause == false || settings.SingleStep;
+
             base.Update(settings,gameTime);
             
             DebugView.DrawString(5, TextLine, "Press 1-5 to drop stuff, m to change the mode");
@@ -286,7 +288,10 @@ namespace FarseerPhysics.TestBed.Tests
                     break;
             }
 
-            _angle += 0.25f * Settings.Pi / 180.0f;
+            if (advanceRay)
+            {
+                _angle += 0.25f * Settings.Pi / 180.0f;
+            }
         }
 
         private void Create(int index)

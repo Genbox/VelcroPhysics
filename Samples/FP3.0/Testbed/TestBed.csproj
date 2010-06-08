@@ -142,7 +142,7 @@
     <Compile Include="Tests\PyramidTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\Raycast.cs">
+    <Compile Include="Tests\RaycastTest.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\RevoluteTest.cs">
@@ -165,6 +165,7 @@
     <Compile Include="Tests\TheoJansenTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\TilesTest.cs" />
     <Compile Include="Tests\TimeOfImpactTest.cs">
       <SubType>Code</SubType>
     </Compile>
