@@ -1,9 +1,7 @@
 using System;
-using DemoBaseXNA.DemoShare;
-using FarseerPhysics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
-using FarseerPhysics.DebugViewXNA;
+using FarseerPhysics.DemoBaseXNA.DemoShare;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
@@ -11,7 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace DemoBaseXNA.ScreenSystem
+namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 {
     /// <summary>
     /// Enum describes the screen transition state.
@@ -51,7 +49,7 @@ namespace DemoBaseXNA.ScreenSystem
 
         public World PhysicsSimulator { get; set; }
 
-        public DebugViewXNA PhysicsSimulatorView { get; set; }
+        public DebugViewXNA.DebugViewXNA PhysicsSimulatorView { get; set; }
 
         public Matrix Projection;
 
@@ -157,7 +155,7 @@ namespace DemoBaseXNA.ScreenSystem
 
                 PhysicsSimulatorView.AppendFlags(DebugViewFlags.Shape);
 
-                DebugViewXNA.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
+                DebugViewXNA.DebugViewXNA.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
 
                 Settings.EnableDiagnostics = true;
             }

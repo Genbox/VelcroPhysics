@@ -1,9 +1,9 @@
 using System;
-using DemoBaseXNA.DrawingSystem;
+using FarseerPhysics.DemoBaseXNA.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DemoBaseXNA.ScreenSystem
+namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 {
     public class PauseScreen : MenuScreen
     {

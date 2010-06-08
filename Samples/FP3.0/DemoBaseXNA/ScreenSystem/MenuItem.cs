@@ -1,4 +1,4 @@
-﻿namespace DemoBaseXNA.ScreenSystem
+﻿namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 {
     public class MenuItem
     {

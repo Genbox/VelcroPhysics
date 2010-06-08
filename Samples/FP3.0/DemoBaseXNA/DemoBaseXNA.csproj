@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DemoBaseXNA</RootNamespace>
-    <AssemblyName>DemoBaseXNA</AssemblyName>
+    <RootNamespace>FarseerPhysics.DemoBaseXNA</RootNamespace>
+    <AssemblyName>FarseerPhysics.DemoBaseXNA</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>

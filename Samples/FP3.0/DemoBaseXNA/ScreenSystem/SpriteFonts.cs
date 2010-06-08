@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DemoBaseXNA.ScreenSystem
+namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 {
     public class SpriteFonts
     {
