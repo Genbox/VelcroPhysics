@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSamplesXNA", "SimpleS
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
+		SccNumberOfProjects = 12
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs01.codeplex.com/
 		SccLocalPath0 = .
@@ -55,6 +55,9 @@ Global
 		SccProjectUniqueName10 = SimpleSamplesXNA\\SimpleSamplesXNA.csproj
 		SccProjectName10 = SimpleSamplesXNA
 		SccLocalPath10 = SimpleSamplesXNA
+		SccProjectUniqueName11 = AdvancedSamplesXNA\\AdvancedSamplesXNA.csproj
+		SccProjectName11 = AdvancedSamplesXNA
+		SccLocalPath11 = AdvancedSamplesXNA
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

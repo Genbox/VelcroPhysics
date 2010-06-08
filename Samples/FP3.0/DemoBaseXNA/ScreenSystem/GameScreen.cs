@@ -225,7 +225,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 if (PhysicsSimulator != null)
                 {
                     // variable time step but never less then 30 Hz
-                    PhysicsSimulator.Step(Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)));
+                    PhysicsSimulator.Step(Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f,
+                                                   (1f / 30f)));
                     Settings.VelocityIterations = 5;
                     Settings.PositionIterations = 3;
                 }
@@ -414,7 +415,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
                 float time = PhysicsSimulator.UpdateTime / 1000.0f;
 
-                ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, time.ToString() + " ms", new Vector2(50, 100), Color.White);
+                ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, time + " ms",
+                                                     new Vector2(50, 100), Color.White);
 
                 ScreenManager.SpriteBatch.End();
             }

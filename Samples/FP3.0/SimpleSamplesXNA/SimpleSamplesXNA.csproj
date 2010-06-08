@@ -149,6 +149,20 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Branches\FP3.0\XNA\Farseer Physics 3.0 XNA.csproj">
+      <Project>{0A850700-1ABB-4288-A391-6726B90EBEB9}</Project>
+      <Name>Farseer Physics 3.0 XNA</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\DebugViews\DebugViewXNA\DebugViewXNA.csproj">
+      <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
+      <Name>DebugViewXNA</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DemoBaseXNA\DemoBaseXNA.csproj">
+      <Project>{46487979-1F6B-4F55-A377-3D80BCB248CE}</Project>
+      <Name>DemoBaseXNA</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
