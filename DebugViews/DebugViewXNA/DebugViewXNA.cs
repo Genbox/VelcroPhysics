@@ -448,7 +448,7 @@ namespace FarseerPhysics.DebugViewXNA
         public void RenderDebugData(ref Matrix projection)
         {
             // set the cull mode? should be unnecessary
-            Device.RenderState.CullMode = CullMode.CullCounterClockwiseFace;
+            Device.RenderState.CullMode = CullMode.None;
             // turn alpha blending on
             Device.RenderState.AlphaBlendEnable = true;
             // set the vertex declaration...this ensures if window resizes occur...rendering continues ;)
@@ -457,23 +457,17 @@ namespace FarseerPhysics.DebugViewXNA
             _effect.Projection = projection;
             // begin the effect
             _effect.Begin();
-            foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
-            {
-                pass.Begin();
-                // we should have only 1 technique and 1 pass
-                //_effect.Techniques[0].Passes[0].Begin();
-                // make sure we have stuff to draw
-                if (_fillCount > 0)
-                    Device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
-                // make sure we have lines to draw
-                if (_lineCount > 0)
-                    Device.DrawUserPrimitives(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
+            // we should have only 1 technique and 1 pass
+            _effect.Techniques[0].Passes[0].Begin();
+            // make sure we have stuff to draw
+            if (_fillCount > 0)
+                Device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
+            // make sure we have lines to draw
+            if (_lineCount > 0)
+                Device.DrawUserPrimitives(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
 
-                pass.End();
-                // end the pass and effect
-                //_effect.Techniques[0].Passes[0].End();
-            }
-
+            // end the pass and effect
+            _effect.Techniques[0].Passes[0].End();
             _effect.End();
 
             // begin the sprite batch effect
@@ -524,8 +518,7 @@ namespace FarseerPhysics.DebugViewXNA
             // draw any strings we have
             for (int i = 0; i < _stringData.Count; i++)
             {
-                Batch.DrawString(Font, string.Format(_stringData[i].S, _stringData[i].Args),
-                                 new Vector2(_stringData[i].X, _stringData[i].Y), _stringData[i].Color);
+                Batch.DrawString(Font, string.Format(_stringData[i].S, _stringData[i].Args), new Vector2(_stringData[i].X, _stringData[i].Y), _stringData[i].Color);
             }
             // end the sprite batch effect
             Batch.End();
@@ -550,18 +543,6 @@ namespace FarseerPhysics.DebugViewXNA
             // Create a new SpriteBatch, which can be used to draw textures.
             Batch = new SpriteBatch(device);
             Font = content.Load<SpriteFont>("font");
-            _vertexDeclaration = new VertexDeclaration(device, VertexPositionColor.VertexElements);
-            Device = device;
-            _effect = new BasicEffect(device, null);
-            _effect.VertexColorEnabled = true;
-            _stringData = new List<StringData>();
-        }
-
-        public static void LoadContent(GraphicsDevice device, ContentManager content, string fontName)
-        {
-            // Create a new SpriteBatch, which can be used to draw textures and fonts.
-            Batch = new SpriteBatch(device);
-            Font = content.Load<SpriteFont>(fontName);
             _vertexDeclaration = new VertexDeclaration(device, VertexPositionColor.VertexElements);
             Device = device;
             _effect = new BasicEffect(device, null);
