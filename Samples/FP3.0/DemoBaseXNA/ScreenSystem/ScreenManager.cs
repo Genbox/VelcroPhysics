@@ -147,7 +147,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             // Load content belonging to the screen manager.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             _blankTexture = ContentManager.Load<Texture2D>("Common/blank");
-            
+
             // Tell each of the _screens to load their content.
             foreach (GameScreen screen in _screens)
             {

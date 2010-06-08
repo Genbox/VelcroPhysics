@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerPhysics.Collision;
@@ -518,7 +518,8 @@ namespace FarseerPhysics.DebugViewXNA
             // draw any strings we have
             for (int i = 0; i < _stringData.Count; i++)
             {
-                Batch.DrawString(Font, string.Format(_stringData[i].S, _stringData[i].Args), new Vector2(_stringData[i].X, _stringData[i].Y), _stringData[i].Color);
+                Batch.DrawString(Font, string.Format(_stringData[i].S, _stringData[i].Args),
+                                 new Vector2(_stringData[i].X, _stringData[i].Y), _stringData[i].Color);
             }
             // end the sprite batch effect
             Batch.End();

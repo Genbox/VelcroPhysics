@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace SimpleSamplesXNA.Demo9
+﻿namespace SimpleSamplesXNA.Demo9
 {
-    class Demo9Screen
+    internal class Demo9Screen
     {
     }
 }
