@@ -2,6 +2,7 @@
 using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -11,13 +12,20 @@ namespace SimpleSamplesXNA.Demo1
     {
         public override void Initialize()
         {
-            PhysicsSimulator = new World(new Vector2(0, -50));
-            PhysicsSimulatorView = new DebugViewXNA(PhysicsSimulator);
+            World = new World(new Vector2(0, -50));
+            DebugView = new DebugViewXNA(World);
             DebugViewEnabled = true;
 
             base.Initialize();
         }
 
+        public override void LoadContent()
+        {
+            FixtureFactory.CreateRectangle(World, 2, 2, 1);
+
+            base.LoadContent();
+        }
+        
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);

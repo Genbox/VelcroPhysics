@@ -29,7 +29,7 @@ namespace SimpleSamplesXNA
 #if !XBOX
             //windowed
             _graphics.PreferredBackBufferWidth = 800;
-            _graphics.PreferredBackBufferHeight = 800;
+            _graphics.PreferredBackBufferHeight = 600;
             _graphics.IsFullScreen = false;
 
             //fullscreen
