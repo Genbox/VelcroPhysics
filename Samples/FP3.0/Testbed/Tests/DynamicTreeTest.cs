@@ -42,6 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
         private int _stepCount;
         private DynamicTree _tree = new DynamicTree();
         private float _worldExtent;
+        private RayCastOutput _rayCastOutput;
 
         private DynamicTreeTest()
         {
@@ -129,14 +130,20 @@ namespace FarseerPhysics.TestBed.Tests
 
             Color c1 = new Color(0.2f, 0.9f, 0.2f);
             Color c2 = new Color(0.9f, 0.2f, 0.2f);
-            DebugView.DrawPoint(_rayCastInput.Point1, 6.0f, c1);
-            DebugView.DrawPoint(_rayCastInput.Point2, 6.0f, c2);
+            DebugView.DrawPoint(_rayCastInput.Point1, 0.1f, c1);
+            DebugView.DrawPoint(_rayCastInput.Point2, 0.1f, c2);
 
             if (_rayActor != null)
             {
                 Color cr = new Color(0.2f, 0.2f, 0.9f);
                 Vector2 p = _rayCastInput.Point1 + _rayActor.fraction * (_rayCastInput.Point2 - _rayCastInput.Point1);
-                DebugView.DrawPoint(p, 6.0f, cr);
+                DebugView.DrawPoint(p, 0.1f, cr);
+            }
+
+            {
+                int height = _tree.ComputeHeight();
+                DebugView.DrawString(50, TextLine, "dynamic tree height = {0}", height);
+                TextLine += 15;
             }
 
             ++_stepCount;
@@ -178,9 +185,9 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (hit)
             {
-                actor.fraction = output.Fraction;
+                _rayCastOutput = output;
                 _rayActor = actor;
-
+                actor.fraction = output.Fraction;
                 return output.Fraction;
             }
 
@@ -313,6 +320,8 @@ namespace FarseerPhysics.TestBed.Tests
             _tree.RayCast(RayCastCallback, ref input);
 
             // Brute force ray cast.
+            Actor bruteActor = null;
+            RayCastOutput bruteOutput = new RayCastOutput();
             for (int i = 0; i < ActorCount; ++i)
             {
                 if (_actors[i].proxyId == -1)
@@ -324,8 +333,15 @@ namespace FarseerPhysics.TestBed.Tests
                 bool hit = _actors[i].aabb.RayCast(out output, ref input);
                 if (hit)
                 {
+                    bruteActor = _actors[i];
+                    bruteOutput = output;
                     input.MaxFraction = output.Fraction;
                 }
+            }
+            
+            if (bruteActor != null)
+            {
+                Debug.Assert(bruteOutput.Fraction == _rayCastOutput.Fraction);
             }
         }
 
@@ -337,7 +353,7 @@ namespace FarseerPhysics.TestBed.Tests
             internal float fraction;
             internal bool overlap;
             internal int proxyId;
-        } ;
+        }
 
         #endregion
     }

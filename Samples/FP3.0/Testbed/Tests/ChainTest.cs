@@ -21,7 +21,6 @@
 */
 
 using System.Collections.Generic;
-using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
@@ -36,7 +35,7 @@ namespace FarseerPhysics.TestBed.Tests
         private ChainTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             //Chain start / end
             Path path = new Path();
@@ -44,17 +43,17 @@ namespace FarseerPhysics.TestBed.Tests
             path.Add(new Vector2(30, 20));
 
             //A single chainlink
-            Body chainlink = new Body(World);
-            chainlink.BodyType = BodyType.Dynamic;
-            chainlink.CreateFixture(new CircleShape(0.25f, 1));
+            Fixture chainlink = FixtureFactory.CreateRectangle(World, 0.125f, 0.6f, 20);
+            chainlink.Friction = 0.2f;
+            chainlink.Body.BodyType = BodyType.Dynamic;
 
             //Use PathFactory to create all the chainlinks based on the chainlink created before.
-            List<Body> chainLinks = PathFactory.EvenlyDistibuteShapesAlongPath(World, path, chainlink, 50);
-            
+            List<Body> chainLinks = PathFactory.EvenlyDistibuteShapesAlongPath(World, path, chainlink.Body, 50);
+
             //Fix the first chainlink to the world
             FixedRevoluteJoint fixedJoint = new FixedRevoluteJoint(chainLinks[0], chainLinks[0].Position);
             World.Add(fixedJoint);
-            
+
             //Attach all the chainlinks together with a revolute joint
             PathFactory.AttachBodiesWithRevoluteJoint(World, chainLinks, new Vector2(0, -0.25f), new Vector2(0, 0.25f), false, false);
         }

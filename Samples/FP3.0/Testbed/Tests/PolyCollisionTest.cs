@@ -44,11 +44,11 @@ namespace FarseerPhysics.TestBed.Tests
         {
             {
                 _polygonA.SetAsEdge(new Vector2(20.0f, 0.0f), new Vector2(20.0f, 20.0f));
-                _transformA.Set(new Vector2(0.0f, 5.0f), 0.0f);
+                _transformA.Set(new Vector2(0.0f, 0.0f), 0.0f);
             }
 
             {
-                _polygonB.SetAsBox(0.25f, 0.25f);
+                _polygonB.SetAsBox(0.5f, 0.5f);
                 _positionB = new Vector2(19.345284f, 1.5632932f);
                 _angleB = 1.9160721f;
                 _transformB.Set(_positionB, _angleB);
@@ -89,33 +89,33 @@ namespace FarseerPhysics.TestBed.Tests
 
             for (int i = 0; i < manifold.PointCount; ++i)
             {
-                DebugView.DrawPoint(worldManifold.Points[i], 0.5f, new Color(0.9f, 0.3f, 0.3f));
+                DebugView.DrawPoint(worldManifold.Points[i], 0.1f, new Color(0.9f, 0.3f, 0.3f));
             }
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
         {
-            if (state.IsKeyDown(Keys.A))
+            if (state.IsKeyDown(Keys.A) && oldState.IsKeyUp(Keys.A))
             {
                 _positionB.X -= 0.1f;
             }
-            if (state.IsKeyDown(Keys.D))
+            if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D))
             {
                 _positionB.X += 0.1f;
             }
-            if (state.IsKeyDown(Keys.S))
+            if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
             {
                 _positionB.Y -= 0.1f;
             }
-            if (state.IsKeyDown(Keys.W))
+            if (state.IsKeyDown(Keys.W) && oldState.IsKeyUp(Keys.W))
             {
                 _positionB.Y += 0.1f;
             }
-            if (state.IsKeyDown(Keys.Q))
+            if (state.IsKeyDown(Keys.Q) && oldState.IsKeyUp(Keys.Q))
             {
                 _angleB += 0.1f * Settings.Pi;
             }
-            if (state.IsKeyDown(Keys.E))
+            if (state.IsKeyDown(Keys.E) && oldState.IsKeyUp(Keys.E))
             {
                 _angleB -= 0.1f * Settings.Pi;
             }

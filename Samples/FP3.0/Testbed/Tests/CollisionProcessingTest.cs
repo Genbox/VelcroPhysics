@@ -34,15 +34,8 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private CollisionProcessingTest()
         {
-            // Ground body
-            {
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
-
-
-                Body ground = BodyFactory.CreateBody(World);
-                ground.CreateFixture(shape);
-            }
+            //Ground
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             const float xLo = -5.0f;
             const float xHi = 5.0f;

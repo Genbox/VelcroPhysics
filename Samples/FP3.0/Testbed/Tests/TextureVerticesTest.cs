@@ -12,18 +12,14 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class TextureVerticesTest : Test
     {
-        private Body _polygonBody;
         private Texture2D _polygonTexture;
         private List<Vertices> list;
         private Vertices verts;
 
         private TextureVerticesTest()
         {
-            Body ground = BodyFactory.CreateBody(World);
-
-            Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-            PolygonShape shape = new PolygonShape(edge, 0);
-            ground.CreateFixture(shape);
+            //Ground
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
         }
 
         public override void Initialize()
@@ -48,10 +44,12 @@ namespace FarseerPhysics.TestBed.Tests
             list = BayazitDecomposer.ConvexPartition(verts);
 
             //Create a single body with multiple fixtures
-            FixtureFactory.CreateCompundPolygon(World, list, 1);
+            List<Fixture> compund = FixtureFactory.CreateCompundPolygon(World, list, 1);
+            compund[0].Body.BodyType = BodyType.Dynamic;
 
             List<Fixture> fixtures = FixtureFactory.CreateCapsule(World, 3, 1, 1);
             fixtures[0].Body.Position = new Vector2(0, 5);
+            fixtures[0].Body.BodyType = BodyType.Dynamic;
 
             base.Initialize();
         }

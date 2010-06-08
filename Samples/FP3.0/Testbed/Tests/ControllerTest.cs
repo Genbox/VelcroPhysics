@@ -1,5 +1,4 @@
 ﻿using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
 using FarseerPhysics.Controllers;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
@@ -12,11 +11,8 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private ControllerTest()
         {
-            Body ground = BodyFactory.CreateBody(World);
-
-            Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-            PolygonShape shape = new PolygonShape(edge, 0);
-            ground.CreateFixture(shape);
+            //Ground
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             //Create the gravity controller
             GravityController gravity = new GravityController(20);

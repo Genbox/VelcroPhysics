@@ -47,7 +47,7 @@ namespace FarseerPhysics.TestBed.Tests
         private BreakableTest()
         {
             // Ground body
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             // Breakable dynamic body
             _body1 = BodyFactory.CreateBody(World);

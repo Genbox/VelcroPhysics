@@ -308,6 +308,7 @@ namespace FarseerPhysics.Collision
 
             Stack<int> stack = new Stack<int>(256);
             stack.Push(_root);
+
             while (stack.Count > 0)
             {
                 int nodeId = stack.Pop();

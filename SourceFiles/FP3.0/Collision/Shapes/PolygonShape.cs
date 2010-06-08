@@ -212,7 +212,14 @@ namespace FarseerPhysics.Collision.Shapes
                 }
 
                 output.Fraction = t;
-                output.Normal = normal;
+                if (numerator > 0.0f)
+                {
+                    output.Normal = -normal;
+                }
+                else
+                {
+                    output.Normal = normal;
+                } 
                 return true;
             }
             else

@@ -12,7 +12,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private CharacterCollisionTest()
         {
-            Fixture ground = FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            Fixture ground = FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             // Collinear edges
             PolygonShape shape = new PolygonShape(0);

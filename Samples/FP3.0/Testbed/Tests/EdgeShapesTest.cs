@@ -44,7 +44,7 @@ namespace FarseerPhysics.TestBed.Tests
         private Vector2 _point;
         private PolygonShape[] _polygons = new PolygonShape[4];
 
-        public EdgeShapes()
+        private EdgeShapes()
         {
             // Ground body
             {
@@ -85,7 +85,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                float w = 1.0f;
+                const float w = 1.0f;
                 float b = w / (2.0f + (float) Math.Sqrt(2.0f));
                 float s = (float) Math.Sqrt(2.0f) * b;
 
@@ -185,18 +185,21 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Create(4);
             }
+            if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D))
+            {
+                DestroyBody();
+            }
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             bool advanceRay = settings.Pause == false || settings.SingleStep;
 
-
             base.Update(settings, gameTime);
-            DebugView.DrawString(5, TextLine, "Press 1-5 to drop stuff");
+            DebugView.DrawString(50, TextLine, "Press 1-5 to drop stuff");
             TextLine += 15;
 
-            float L = 25.0f;
+            const float L = 25.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);
             Vector2 d = new Vector2(L * (float) Math.Cos(_angle), -L * Math.Abs((float) Math.Sin(_angle)));
             Vector2 point2 = point1 + d;
@@ -212,7 +215,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (_fixture != null)
             {
-                DebugView.DrawPoint(_point, 5.0f, new Color(0.4f, 0.9f, 0.4f));
+                DebugView.DrawPoint(_point, 0.5f, new Color(0.4f, 0.9f, 0.4f));
 
                 DebugView.DrawSegment(point1, _point, new Color(0.8f, 0.8f, 0.8f));
 

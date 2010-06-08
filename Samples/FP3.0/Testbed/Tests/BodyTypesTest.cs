@@ -39,15 +39,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         private BodyTypesTest()
         {
-            Body ground;
-            {
-                ground = BodyFactory.CreateBody(World);
-
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
-
-                ground.CreateFixture(shape);
-            }
+            //Ground
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             // Define attachment
             {
@@ -141,7 +134,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             base.Update(settings, gameTime);
-            DebugView.DrawString(5, TextLine, "Keys: (d) dynamic, (s) static, (k) kinematic");
+            DebugView.DrawString(50, TextLine, "Keys: (d) dynamic, (s) static, (k) kinematic");
             TextLine += 15;
         }
 

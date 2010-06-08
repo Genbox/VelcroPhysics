@@ -78,10 +78,10 @@ namespace FarseerPhysics.TestBed.Tests
             DistanceOutput output;
             Distance.ComputeDistance(out output, out cache, ref input);
 
-            DebugView.DrawString(50, TextLine, "distance = {0:n}", output.Distance);
+            DebugView.DrawString(50, TextLine, "distance = {0:n7}", output.Distance);
             TextLine += 15;
 
-            DebugView.DrawString(50, TextLine, "iterations = {0:n}", output.Iterations);
+            DebugView.DrawString(50, TextLine, "iterations = {0:n0}", output.Iterations);
             TextLine += 15;
 
             {
@@ -112,27 +112,27 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
         {
-            if (state.IsKeyDown(Keys.A))
+            if (state.IsKeyDown(Keys.A) && oldState.IsKeyUp(Keys.A))
             {
                 _positionB.X -= 0.1f;
             }
-            if (state.IsKeyDown(Keys.D))
+            if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D))
             {
                 _positionB.X += 0.1f;
             }
-            if (state.IsKeyDown(Keys.S))
+            if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
             {
                 _positionB.Y -= 0.1f;
             }
-            if (state.IsKeyDown(Keys.W))
+            if (state.IsKeyDown(Keys.W) && oldState.IsKeyUp(Keys.W))
             {
                 _positionB.Y += 0.1f;
             }
-            if (state.IsKeyDown(Keys.Q))
+            if (state.IsKeyDown(Keys.Q) && oldState.IsKeyUp(Keys.Q))
             {
                 _angleB += 0.1f * Settings.Pi;
             }
-            if (state.IsKeyDown(Keys.E))
+            if (state.IsKeyDown(Keys.E) && oldState.IsKeyUp(Keys.E))
             {
                 _angleB -= 0.1f * Settings.Pi;
             }
