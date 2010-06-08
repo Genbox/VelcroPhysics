@@ -808,7 +808,9 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < BodyList.Count; i++)
             {
                 Body b = BodyList[i];
-                if (!b.Awake || !b.Enabled)
+
+		        // If a body was not in an island then it did not move.
+		        if ((b._flags & BodyFlags.Island) == 0)
                 {
                     continue;
                 }
@@ -849,6 +851,11 @@ namespace FarseerPhysics.Dynamics
                 found = false;
                 for (ContactEdge ce = body._contactList; ce != null; ce = ce.Next)
                 {
+                    if (ce.Contact == toiContact)
+                    {
+                        continue;
+                    }
+
                     Body other = ce.Other;
                     BodyType type = other.BodyType;
 

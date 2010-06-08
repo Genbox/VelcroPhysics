@@ -131,6 +131,7 @@ namespace FarseerPhysics.Dynamics
         /// <summary>
         /// Get the child shape. You can modify the child shape, however you should not change the
         /// number of vertices because this will crash some collision caching mechanisms.
+        /// Manipulating the shape may lead to non-physical behavior.
         /// </summary>
         /// <value></value>
         public Shape Shape
