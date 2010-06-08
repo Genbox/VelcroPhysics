@@ -56,7 +56,9 @@ namespace SimpleSamplesXNA
             frameRateCounter.DrawOrder = 101;
             Components.Add(frameRateCounter);
 
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo1Screen.GetTitle(), new Demo1Screen());
+            Demo1Screen demo1 = new Demo1Screen();
+            ScreenManager.MainMenuScreen.AddMainMenuItem(demo1.GetTitle(), demo1);
+
             /*
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo2Screen.GetTitle(), new Demo2Screen());
             ScreenManager.MainMenuScreen.AddMainMenuItem(Demo3Screen.GetTitle(), new Demo3Screen());
@@ -70,7 +72,8 @@ namespace SimpleSamplesXNA
              * */
             ScreenManager.MainMenuScreen.AddMainMenuItem("Exit", null, true);
 
-            ScreenManager.GoToMainMenu();
+            //ScreenManager.GoToMainMenu();
+            ScreenManager.AddScreen(new Demo1Screen());
         }
 
         public ScreenManager ScreenManager { get; set; }

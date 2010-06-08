@@ -31,8 +31,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
     public abstract class GameScreen : IDisposable
     {
         private bool _otherScreenHasFocus;
-        protected bool firstRun = true;
-        private Border _border;
+        public bool firstRun = true;
         private FixedMouseJoint _fixedMouseJoint;
 
         protected GameScreen()
@@ -88,7 +87,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         public byte TransitionAlpha
         {
-            get { return (byte) (255 - TransitionPosition * 255); }
+            get { return (byte)(255 - TransitionPosition * 255); }
         }
 
         /// <summary>
@@ -134,6 +133,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         public virtual void Initialize()
         {
+            DebugView = new DebugViewXNA.DebugViewXNA(World);
         }
 
         /// <summary>
@@ -143,10 +143,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             if (World != null)
             {
-                float borderWidth = 2f;
-
-                _border = new Border(40, 40, borderWidth, new Vector2(0, 0));
-                _border.Load(ScreenManager.GraphicsDevice, World);
+                new Border(World, 55, 42.5f, 2);
 
                 DebugViewXNA.DebugViewXNA.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
 
@@ -218,7 +215,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 if (World != null)
                 {
                     // variable time step but never less then 30 Hz
-                    World.Step(Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f,
+                    World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f,
                                                    (1f / 30f)));
                     Settings.VelocityIterations = 5;
                     Settings.PositionIterations = 3;
@@ -237,7 +234,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             if (time == TimeSpan.Zero)
                 transitionDelta = 1;
             else
-                transitionDelta = (float) (gameTime.ElapsedGameTime.TotalMilliseconds /
+                transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
                                            time.TotalMilliseconds);
 
             // Update the transition position.
@@ -265,15 +262,21 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 input.CurrentGamePadState.Buttons.Y == ButtonState.Pressed)
             {
                 DebugViewEnabled = !DebugViewEnabled;
-                //World.EnableDiagnostics = DebugViewEnabled;
+                Settings.EnableDiagnostics = DebugViewEnabled;
             }
 
             //Windows
             if (!input.LastKeyboardState.IsKeyDown(Keys.F1) && input.CurrentKeyboardState.IsKeyDown(Keys.F1))
             {
                 DebugViewEnabled = !DebugViewEnabled;
-                //World.EnableDiagnostics = DebugViewEnabled;
+                Settings.EnableDiagnostics = DebugViewEnabled;
             }
+
+            //TODO: Create pause screen and presentation screen
+            //if (input.PauseGame)
+            //{
+            //    ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
+            //}
 
 #if !XBOX
             if (World != null)
@@ -297,7 +300,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
             {
-                MouseUp(position);
+                MouseUp();
             }
             else if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
             {
@@ -324,24 +327,24 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             // Query the world for overlapping shapes.
             World.QueryAABB(
-                (fixture) =>
+                fixture =>
+                {
+                    Body body = fixture.Body;
+                    if (body.BodyType == BodyType.Dynamic)
                     {
-                        Body body = fixture.Body;
-                        if (body.BodyType == BodyType.Dynamic)
+                        bool inside = fixture.TestPoint(ref p);
+                        if (inside)
                         {
-                            bool inside = fixture.TestPoint(ref p);
-                            if (inside)
-                            {
-                                _fixture = fixture;
+                            _fixture = fixture;
 
-                                // We are done, terminate the query.
-                                return false;
-                            }
+                            // We are done, terminate the query.
+                            return false;
                         }
+                    }
 
-                        // Continue the query.
-                        return true;
-                    }, ref aabb);
+                    // Continue the query.
+                    return true;
+                }, ref aabb);
 
             if (_fixture != null)
             {
@@ -353,18 +356,13 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             }
         }
 
-        private void MouseUp(Vector2 p)
+        private void MouseUp()
         {
             if (_fixedMouseJoint != null)
             {
                 World.Remove(_fixedMouseJoint);
                 _fixedMouseJoint = null;
             }
-
-            //if (_bombSpawning)
-            //{
-            //    CompleteBombSpawn(p);
-            //}
         }
 
         private void MouseMove(Vector2 p)
@@ -394,12 +392,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 }
 
                 ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-
-                if (_fixedMouseJoint != null)
-                {
-                }
-
-                _border.Draw();
 
                 float time = World.UpdateTime / 1000.0f;
 
