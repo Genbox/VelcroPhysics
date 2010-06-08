@@ -40,7 +40,6 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Body ground = BodyFactory.CreateBody(World);
 
-
                 // Floor
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f));
                 PolygonShape shape = new PolygonShape(edge, 0);
@@ -83,13 +82,13 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void CreateCircle()
         {
-            const float radius = 0.5f;
+            const float radius = 2f;
             CircleShape shape = new CircleShape(radius, 1);
             shape.Position = Vector2.Zero;
 
             Body body = BodyFactory.CreateBody(World);
             body.BodyType = BodyType.Dynamic;
-            body.Position = new Vector2(Rand.RandomFloat(), (2.0f + Rand.RandomFloat()) * radius);
+            body.Position = new Vector2(Rand.RandomFloat(), 3.0f + Rand.RandomFloat());
 
             Fixture fixture = body.CreateFixture(shape);
             fixture.Friction = 0;
@@ -105,14 +104,51 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            bool oldFlag = Settings.EnableContinuousPhysics;
+            bool sleeping = true;
+            for (int i = 0; i < World.BodyList.Count; i++)
+            {
+                Body b = World.BodyList[i];
 
-            Settings.EnableContinuousPhysics = false;
+                if (b.BodyType != BodyType.Dynamic)
+                {
+                    continue;
+                }
+
+                if (b.Awake)
+                {
+                    sleeping = false;
+                }
+            }
+
+            if (StepCount == 180)
+            {
+                StepCount += 0;
+            }
+
+            //if (sleeping)
+            //{
+            //	CreateCircle();
+            //}
+
             base.Update(settings, gameTime);
+
+            for (int i = 0; i < World.BodyList.Count; i++)
+            {
+                Body b = World.BodyList[i];
+                if (b.BodyType != BodyType.Dynamic)
+                {
+                    continue;
+                }
+
+                Vector2 p = b.Position;
+                if (p.X <= -10.0f || 10.0f <= p.X || p.Y <= 0.0f || 20.0f <= p.Y)
+                {
+                    p.X += 0.0f;
+                }
+            }
+
             DebugView.DrawString(5, TextLine, "Press 'c' to create a circle.");
             TextLine += 15;
-
-            Settings.EnableContinuousPhysics = oldFlag;
         }
 
         internal static Test Create()

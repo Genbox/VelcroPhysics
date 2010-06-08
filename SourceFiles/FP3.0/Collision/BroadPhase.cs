@@ -290,5 +290,10 @@ namespace FarseerPhysics.Collision
 
             return true;
         }
+
+        public int ComputeHeight()
+        {
+            return _tree.ComputeHeight();
+        }
     }
 }

@@ -28,14 +28,15 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {
+                new TestEntry {Name = "Confined", CreateFcn = ConfinedTest.Create},
                 new TestEntry {Name = "Continuous Test", CreateFcn = ContinuousTest.Create},
+                new TestEntry {Name = "Tiles", CreateFcn = TilesTest.Create},
                 new TestEntry {Name = "Character collision", CreateFcn = CharacterCollisionTest.Create},               
                 new TestEntry {Name = "Web", CreateFcn = WebTest.Create},
                 new TestEntry {Name = "Vertical Stack", CreateFcn = VerticalStackTest.Create},
                 new TestEntry {Name = "Time of Impact", CreateFcn = TimeOfImpactTest.Create},
                 new TestEntry {Name = "Ray-Cast", CreateFcn = RayCastTest.Create},
                 new TestEntry {Name = "One-Sided Platform", CreateFcn = OneSidedPlatformTest.Create},
-                new TestEntry {Name = "Confined", CreateFcn = ConfinedTest.Create},
                 new TestEntry {Name = "Pyramid", CreateFcn = PyramidTest.Create},
                 new TestEntry {Name = "Varying Restitution", CreateFcn = VaryingRestitutionTest.Create},
                 new TestEntry {Name = "Theo Jansen's Walker", CreateFcn = TheoJansenTest.Create},

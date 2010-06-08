@@ -189,6 +189,9 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
+            bool advanceRay = settings.Pause == false || settings.SingleStep;
+
+
             base.Update(settings, gameTime);
             DebugView.DrawString(5, TextLine, "Press 1-5 to drop stuff");
             TextLine += 15;
@@ -221,7 +224,10 @@ namespace FarseerPhysics.TestBed.Tests
                 DebugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
             }
 
-            _angle += 0.25f * (float) Math.PI / 180.0f;
+            if (advanceRay)
+            {
+                _angle += 0.25f * Settings.Pi / 180.0f;
+            }
         }
 
         internal static Test Create()

@@ -297,7 +297,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     contactManager.EndContact(this);
             }
 
-            if (sensor == false)
+            if (sensor == false && touching)
             {
                 if (contactManager.PreSolve != null)
                     contactManager.PreSolve(this, ref oldManifold);

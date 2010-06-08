@@ -67,8 +67,8 @@ namespace FarseerPhysics.TestBed.Framework
         public uint DrawStats;
         public uint DrawPolygonPoints;
         public float Hz;
-        public uint Pause;
-        public uint SingleStep;
+        public bool Pause;
+        public bool SingleStep;
 
         public GameSettings()
         {
@@ -159,11 +159,11 @@ namespace FarseerPhysics.TestBed.Framework
             // added
             float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
 
-            if (settings.Pause > 0)
+            if (settings.Pause)
             {
-                if (settings.SingleStep > 0)
+                if (settings.SingleStep)
                 {
-                    settings.SingleStep = 0;
+                    settings.SingleStep = false;
                 }
                 else
                 {
