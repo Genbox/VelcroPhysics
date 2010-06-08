@@ -4,7 +4,6 @@ using FarseerPhysics.Common;
 using FarseerPhysics.DemoBaseXNA.DemoShare;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
-using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -32,12 +31,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
     public abstract class GameScreen : IDisposable
     {
         private bool _otherScreenHasFocus;
-        //Note: This should not really be here. It should be in an engine instead that takes care of physics
         protected bool firstRun = true;
         private Border _border;
-        private Body _groundBody;
-        private MouseJoint _mouseJoint;
-        private Vector2 _mouseWorld;
+        private FixedMouseJoint _fixedMouseJoint;
 
         protected GameScreen()
         {
@@ -47,9 +43,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
         }
 
-        public World PhysicsSimulator { get; set; }
+        public World World { get; set; }
 
-        public DebugViewXNA.DebugViewXNA PhysicsSimulatorView { get; set; }
+        public DebugViewXNA.DebugViewXNA DebugView { get; set; }
 
         public Matrix Projection;
 
@@ -145,15 +141,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         public virtual void LoadContent()
         {
-            if (PhysicsSimulator != null)
+            if (World != null)
             {
                 float borderWidth = 2f;
 
                 _border = new Border(40, 40, borderWidth, new Vector2(0, 0));
-                _border.Load(ScreenManager.GraphicsDevice, PhysicsSimulator);
-                _groundBody = BodyFactory.CreateBody(PhysicsSimulator);
-
-                PhysicsSimulatorView.AppendFlags(DebugViewFlags.Shape);
+                _border.Load(ScreenManager.GraphicsDevice, World);
 
                 DebugViewXNA.DebugViewXNA.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
 
@@ -222,10 +215,10 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             if (!coveredByOtherScreen && !otherScreenHasFocus)
             {
-                if (PhysicsSimulator != null)
+                if (World != null)
                 {
                     // variable time step but never less then 30 Hz
-                    PhysicsSimulator.Step(Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f,
+                    World.Step(Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f,
                                                    (1f / 30f)));
                     Settings.VelocityIterations = 5;
                     Settings.PositionIterations = 3;
@@ -272,18 +265,18 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 input.CurrentGamePadState.Buttons.Y == ButtonState.Pressed)
             {
                 DebugViewEnabled = !DebugViewEnabled;
-                //PhysicsSimulator.EnableDiagnostics = DebugViewEnabled;
+                //World.EnableDiagnostics = DebugViewEnabled;
             }
 
             //Windows
             if (!input.LastKeyboardState.IsKeyDown(Keys.F1) && input.CurrentKeyboardState.IsKeyDown(Keys.F1))
             {
                 DebugViewEnabled = !DebugViewEnabled;
-                //PhysicsSimulator.EnableDiagnostics = DebugViewEnabled;
+                //World.EnableDiagnostics = DebugViewEnabled;
             }
 
 #if !XBOX
-            if (PhysicsSimulator != null)
+            if (World != null)
             {
                 HandleMouseInput(input);
             }
@@ -316,9 +309,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         private void MouseDown(Vector2 p)
         {
-            _mouseWorld = p;
-
-            if (_mouseJoint != null)
+            if (_fixedMouseJoint != null)
             {
                 return;
             }
@@ -332,7 +323,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             Fixture _fixture = null;
 
             // Query the world for overlapping shapes.
-            PhysicsSimulator.QueryAABB(
+            World.QueryAABB(
                 (fixture) =>
                     {
                         Body body = fixture.Body;
@@ -355,19 +346,19 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             if (_fixture != null)
             {
                 Body body = _fixture.Body;
-                _mouseJoint = new MouseJoint(_groundBody, body, p);
-                _mouseJoint.MaxForce = 1000.0f * body.Mass;
-                PhysicsSimulator.Add(_mouseJoint);
+                _fixedMouseJoint = new FixedMouseJoint(body, p);
+                _fixedMouseJoint.MaxForce = 1000.0f * body.Mass;
+                World.Add(_fixedMouseJoint);
                 body.Awake = true;
             }
         }
 
         private void MouseUp(Vector2 p)
         {
-            if (_mouseJoint != null)
+            if (_fixedMouseJoint != null)
             {
-                PhysicsSimulator.Remove(_mouseJoint);
-                _mouseJoint = null;
+                World.Remove(_fixedMouseJoint);
+                _fixedMouseJoint = null;
             }
 
             //if (_bombSpawning)
@@ -378,11 +369,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         private void MouseMove(Vector2 p)
         {
-            _mouseWorld = p;
-
-            if (_mouseJoint != null)
+            if (_fixedMouseJoint != null)
             {
-                _mouseJoint.Target = p;
+                _fixedMouseJoint.Target = p;
             }
         }
 #endif
@@ -392,28 +381,27 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         public virtual void Draw(GameTime gameTime)
         {
-            if (PhysicsSimulator != null)
+            if (World != null)
             {
                 if (DebugViewEnabled)
                 {
-                    float aspect = ScreenManager.ScreenWidth / ScreenManager.ScreenHeight;
+                    float aspect = (float)ScreenManager.ScreenWidth / ScreenManager.ScreenHeight;
 
                     Projection = Matrix.CreateOrthographic(40 * aspect, 40, 0, 1);
 
-                    PhysicsSimulatorView.DrawDebugData();
-
-                    PhysicsSimulatorView.RenderDebugData(ref Projection, ref View);
+                    DebugView.DrawDebugData();
+                    DebugView.RenderDebugData(ref Projection, ref View);
                 }
 
                 ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
 
-                if (_mouseJoint != null)
+                if (_fixedMouseJoint != null)
                 {
                 }
 
                 _border.Draw();
 
-                float time = PhysicsSimulator.UpdateTime / 1000.0f;
+                float time = World.UpdateTime / 1000.0f;
 
                 ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont, time + " ms",
                                                      new Vector2(50, 100), Color.White);

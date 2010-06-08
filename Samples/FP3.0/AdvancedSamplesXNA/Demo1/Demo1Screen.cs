@@ -11,8 +11,8 @@ namespace AdvancedSamplesXNA.Demo1
     {
         public override void Initialize()
         {
-            PhysicsSimulator = new World(new Vector2(0, -50));
-            PhysicsSimulatorView = new DebugViewXNA(PhysicsSimulator);
+            World = new World(new Vector2(0, -50));
+            DebugView = new DebugViewXNA(World);
             DebugViewEnabled = true;
 
             base.Initialize();

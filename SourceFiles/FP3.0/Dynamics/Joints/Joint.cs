@@ -31,11 +31,11 @@ namespace FarseerPhysics.Dynamics.Joints
         Prismatic,
         Distance,
         Pulley,
-        Mouse,
         Gear,
         Line,
         Weld,
         Friction,
+        FixedMouse,
         FixedRevolute,
         FixedDistance,
         FixedLine,
@@ -242,7 +242,8 @@ namespace FarseerPhysics.Dynamics.Joints
             return JointType == JointType.FixedRevolute ||
                    JointType == JointType.FixedDistance ||
                    JointType == JointType.FixedPrismatic ||
-                   JointType == JointType.FixedLine;
+                   JointType == JointType.FixedLine ||
+                   JointType == JointType.FixedMouse;
         }
 
         internal abstract void InitVelocityConstraints(ref TimeStep step);

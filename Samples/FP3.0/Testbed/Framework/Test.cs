@@ -107,7 +107,7 @@ namespace FarseerPhysics.TestBed.Framework
         internal int TextLine;
         internal World World;
         private Body _groundBody;
-        private MouseJoint _mouseJoint;
+        private FixedMouseJoint _fixedMouseJoint;
 
         protected Test()
         {
@@ -136,9 +136,9 @@ namespace FarseerPhysics.TestBed.Framework
 
         private void JointRemoved(Joint joint)
         {
-            if (_mouseJoint == joint)
+            if (_fixedMouseJoint == joint)
             {
-                _mouseJoint = null;
+                _fixedMouseJoint = null;
             }
         }
 
@@ -206,10 +206,10 @@ namespace FarseerPhysics.TestBed.Framework
                     TextLine += 15;
                 }
 
-                if (_mouseJoint != null)
+                if (_fixedMouseJoint != null)
                 {
-                    Vector2 p1 = _mouseJoint.WorldAnchorB;
-                    Vector2 p2 = _mouseJoint.Target;
+                    Vector2 p1 = _fixedMouseJoint.WorldAnchorB;
+                    Vector2 p2 = _fixedMouseJoint.Target;
 
                     DebugView.DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
                     DebugView.DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
@@ -310,7 +310,7 @@ namespace FarseerPhysics.TestBed.Framework
 
         private void MouseDown(Vector2 p)
         {
-            if (_mouseJoint != null)
+            if (_fixedMouseJoint != null)
             {
                 return;
             }
@@ -347,27 +347,27 @@ namespace FarseerPhysics.TestBed.Framework
             if (myFixture != null)
             {
                 Body body = myFixture.Body;
-                _mouseJoint = new MouseJoint(_groundBody, body, p);
-                _mouseJoint.MaxForce = 1000.0f * body.Mass;
-                World.Add(_mouseJoint);
+                _fixedMouseJoint = new FixedMouseJoint(body, p);
+                _fixedMouseJoint.MaxForce = 1000.0f * body.Mass;
+                World.Add(_fixedMouseJoint);
                 body.Awake = true;
             }
         }
 
         private void MouseUp()
         {
-            if (_mouseJoint != null)
+            if (_fixedMouseJoint != null)
             {
-                World.Remove(_mouseJoint);
-                _mouseJoint = null;
+                World.Remove(_fixedMouseJoint);
+                _fixedMouseJoint = null;
             }
         }
 
         private void MouseMove(Vector2 p)
         {
-            if (_mouseJoint != null)
+            if (_fixedMouseJoint != null)
             {
-                _mouseJoint.Target = p;
+                _fixedMouseJoint.Target = p;
             }
         }
 

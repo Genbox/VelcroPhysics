@@ -172,6 +172,9 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\FixedLineJoint.cs">
       <Link>Dynamics\Joints\FixedLineJoint.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\FixedMouseJoint.cs">
+      <Link>Dynamics\Joints\FixedMouseJoint.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\FixedPrismaticJoint.cs">
       <Link>Dynamics\Joints\FixedPrismaticJoint.cs</Link>
     </Compile>
@@ -192,9 +195,6 @@
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\MaxDistanceJoint.cs">
       <Link>Dynamics\Joints\MaxDistanceJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\MouseJoint.cs">
-      <Link>Dynamics\Joints\MouseJoint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\PrismaticJoint.cs">
       <Link>Dynamics\Joints\PrismaticJoint.cs</Link>

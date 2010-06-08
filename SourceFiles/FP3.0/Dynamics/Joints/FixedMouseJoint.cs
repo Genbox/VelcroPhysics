@@ -35,25 +35,24 @@ namespace FarseerPhysics.Dynamics.Joints
     /// developed to be used in the testbed. If you want to learn how to
     /// use the mouse joint, look at the testbed.
     /// </summary>
-    public class MouseJoint : Joint
+    public class FixedMouseJoint : Joint
     {
         private Vector2 _C; // position error
         private float _beta;
-        private float _dampingRatio;
         private float _gamma;
         private Vector2 _impulse;
         private Mat22 _mass; // effective mass for point-to-point constraint.
-        private float _maxForce;
 
         /// <summary>
         /// This requires a world target point,
         /// tuning parameters, and the time step.
         /// </summary>
-        /// <param name="def"></param>
-        public MouseJoint(Body bodyA, Body bodyB, Vector2 target)
-            : base(bodyA, bodyB)
+        /// <param name="body">The body.</param>
+        /// <param name="target">The target.</param>
+        public FixedMouseJoint(Body body, Vector2 target)
+            : base(body)
         {
-            JointType = JointType.Mouse;
+            JointType = JointType.FixedMouse;
             Frequency = 5.0f;
             DampingRatio = 0.7f;
 
@@ -63,7 +62,7 @@ namespace FarseerPhysics.Dynamics.Joints
             //Debug.Assert(MathUtils.IsValid(def.DampingRatio) && def.DampingRatio >= 0.0f);
 
             Transform xf1;
-            BodyB.GetTransform(out xf1);
+            BodyA.GetTransform(out xf1);
 
             LocalAnchorB = target;
             LocalAnchorA = MathUtils.MultiplyT(ref xf1, LocalAnchorB);
@@ -79,7 +78,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 WorldAnchorB
         {
-            get { return BodyB.GetWorldPoint(LocalAnchorA); }
+            get { return BodyA.GetWorldPoint(LocalAnchorA); }
         }
 
         /// <summary>
@@ -91,7 +90,7 @@ namespace FarseerPhysics.Dynamics.Joints
             get { return LocalAnchorB; }
             set
             {
-                BodyB.Awake = true;
+                BodyA.Awake = true;
                 LocalAnchorB = value;
             }
         }
@@ -101,11 +100,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// to move the candidate body. Usually you will express
         /// as some multiple of the weight (multiplier * mass * gravity).
         /// </summary>
-        public float MaxForce
-        {
-            set { _maxForce = value; }
-            get { return _maxForce; }
-        }
+        public float MaxForce { get; set; }
 
         /// <summary>
         /// The response speed.
@@ -115,11 +110,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// The damping ratio. 0 = no damping, 1 = critical damping.
         /// </summary>
-        public float DampingRatio
-        {
-            set { _dampingRatio = value; }
-            get { return _dampingRatio; }
-        }
+        public float DampingRatio { get; set; }
 
         public override Vector2 GetReactionForce(float inv_dt)
         {
@@ -133,7 +124,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
-            Body b = BodyB;
+            Body b = BodyA;
 
             float mass = b.Mass;
 
@@ -141,7 +132,7 @@ namespace FarseerPhysics.Dynamics.Joints
             float omega = 2.0f * Settings.Pi * Frequency;
 
             // Damping coefficient
-            float d = 2.0f * mass * _dampingRatio * omega;
+            float d = 2.0f * mass * DampingRatio * omega;
 
             // Spring stiffness
             float k = mass * (omega * omega);
@@ -195,7 +186,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
         internal override void SolveVelocityConstraints(ref TimeStep step)
         {
-            Body b = BodyB;
+            Body b = BodyA;
 
             Transform xf1;
             b.GetTransform(out xf1);
@@ -208,7 +199,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             Vector2 oldImpulse = _impulse;
             _impulse += impulse;
-            float maxImpulse = step.DeltaTime * _maxForce;
+            float maxImpulse = step.DeltaTime * MaxForce;
             if (_impulse.LengthSquared() > maxImpulse * maxImpulse)
             {
                 _impulse *= maxImpulse / _impulse.Length();

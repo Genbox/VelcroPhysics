@@ -199,7 +199,7 @@ namespace FarseerPhysics.DebugViewXNA
                     }
                     break;
 
-                case JointType.Mouse:
+                case JointType.FixedMouse:
                     // don't draw this
                     break;
                 case JointType.Revolute:
