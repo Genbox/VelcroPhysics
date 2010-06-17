@@ -121,7 +121,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\EdgeShapesTest.cs" />
-    <Compile Include="Tests\FarseerBugTest.cs" />
     <Compile Include="Tests\GearsTest.cs">
       <SubType>Code</SubType>
     </Compile>
