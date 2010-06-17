@@ -79,8 +79,8 @@ namespace FarseerPhysics.Collision.Shapes
     {
         protected Shape(float radius, float density)
         {
+            _density = density;
             Radius = radius;
-            Density = density;
             ShapeType = ShapeType.Unknown;
         }
 
