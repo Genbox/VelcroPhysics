@@ -1,8 +1,13 @@
-﻿using FarseerPhysics.Collision.Shapes;
+﻿using System.Collections.Generic;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
+
+// when the dynamic circle hits the static poly shape, observe the poly shape move
+// this is due to me changing it between dynamic / static during its creation
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -14,7 +19,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             {
                 m_dynamicBody = BodyFactory.CreateBody(World);
-                m_dynamicBody.Position = new Vector2(10.0f, 10.0f);
+                m_dynamicBody.Position = new Vector2(10.0f, 20.0f);
                 m_dynamicBody.BodyType = BodyType.Dynamic;
                 m_dynamicBody.FixedRotation = true;
 
@@ -23,11 +28,18 @@ namespace FarseerPhysics.TestBed.Tests
                 fixture.Friction = 0.3f;
             }
             {
-                Fixture fixture = FixtureFactory.CreateRectangle(World, 2, 2, 20);
 
-                fixture.Body.BodyType = BodyType.Dynamic;
-                fixture.Body.Position = new Vector2(10.0f, 0.0f);
-                fixture.Body.BodyType = BodyType.Static;
+                Vertices rect1 = PolygonTools.CreateRectangle(5, 1, new Vector2(0, 0), 0);
+                Vertices rect2 = PolygonTools.CreateRectangle(5, 1, new Vector2(0, -2), 0);
+
+                List<Vertices> list = new List<Vertices>();
+                list.Add(rect1);
+                list.Add(rect2);
+
+                List<Fixture> fixtures = FixtureFactory.CreateCompundPolygon(World, list, 20);
+                fixtures[0].Body.BodyType = BodyType.Dynamic;
+                fixtures[0].Body.Position = new Vector2(10.0f, 0.0f);
+                fixtures[0].Body.BodyType = BodyType.Static;
             }
         }
 
