@@ -777,6 +777,7 @@ namespace FarseerPhysics.Dynamics
             // Kinematic bodies have zero mass.
             if (_bodyType == BodyType.Kinematic)
             {
+                _sweep.Center0 = _sweep.Center = _xf.Position;
                 return;
             }
 
@@ -801,6 +802,7 @@ namespace FarseerPhysics.Dynamics
             //Static bodies only have mass, they don't have other properties. A little hacky tho...
             if (_bodyType == BodyType.Static)
             {
+                _sweep.Center0 = _sweep.Center = _xf.Position;
                 return;
             }
 
@@ -821,7 +823,6 @@ namespace FarseerPhysics.Dynamics
             {
                 // Center the inertia about the center of mass.
                 _I -= Mass * Vector2.Dot(center, center);
-
                 Debug.Assert(_I > 0.0f);
                 _invI = 1.0f / _I;
             }
