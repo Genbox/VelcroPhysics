@@ -77,9 +77,6 @@ namespace FarseerPhysics.Collision.Shapes
     /// </summary>
     public abstract class Shape
     {
-        internal float _radius;
-        internal float _radius2;
-
         protected Shape(float radius, float density)
         {
             Radius = radius;
@@ -107,21 +104,23 @@ namespace FarseerPhysics.Collision.Shapes
         /// Gets or sets the radius.
         /// </summary>
         /// <value>The radius.</value>
-        public float Radius
-        {
-            get { return _radius; }
-            set
-            {
-                _radius = value;
-                _radius2 = _radius * _radius;
-            }
-        }
+        public float Radius { get; set; }
+
+        private float _density;
 
         /// <summary>
         /// The density in kilograms per meter squared.
         /// </summary>
         /// <value>The density.</value>
-        public float Density { get; set; }
+        public float Density
+        {
+            get { return _density; }
+            set
+            {
+                _density = value;
+                ComputeProperties();
+            }
+        }
 
         public MassData MassData { get; set; }
 
@@ -144,7 +143,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         /// <param name="output">the ray-cast results.</param>
         /// <param name="input">the ray-cast input parameters.</param>
-        /// <param name="transform"the transform to be applied to the shape.</param>
+        /// <param name="transform">the transform to be applied to the shape.</param>
         /// <returns>True if the raycast hit something</returns>
         public abstract bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform);
 
@@ -161,5 +160,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         /// <returns></returns>
         public abstract Vertices GetVertices();
+
+        protected abstract void ComputeProperties();
     }
 }
