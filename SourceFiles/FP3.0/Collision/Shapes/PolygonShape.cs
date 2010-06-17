@@ -61,8 +61,7 @@ namespace FarseerPhysics.Collision.Shapes
         {
             PolygonShape clone = new PolygonShape();
             clone.ShapeType = ShapeType;
-            clone._radius = _radius;
-            clone._radius2 = _radius2;
+            clone.Radius = Radius;
             clone.MassData = MassData;
             clone.Vertices = Vertices;
             clone.Normals = Normals;
@@ -304,7 +303,7 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound = upper + r;
         }
 
-        private void ComputeProperties()
+        protected override void ComputeProperties()
         {
             // Polygon mass, centroid, and inertia.
             // Let rho be the polygon density in mass per unit area.

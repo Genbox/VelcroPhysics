@@ -55,8 +55,7 @@ namespace FarseerPhysics.Collision.Shapes
         public override Shape Clone()
         {
             CircleShape shape = new CircleShape();
-            shape._radius = _radius;
-            shape._radius2 = _radius2;
+            shape.Radius = Radius;
             shape.Density = Density;
             shape.ShapeType = ShapeType;
             shape.Position = Position;
@@ -69,7 +68,7 @@ namespace FarseerPhysics.Collision.Shapes
         {
             Vector2 center = transform.Position + MathUtils.Multiply(ref transform.R, Position);
             Vector2 d = point - center;
-            return Vector2.Dot(d, d) <= _radius2;
+            return Vector2.Dot(d, d) <= (Radius * Radius);
         }
 
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform)
@@ -83,7 +82,7 @@ namespace FarseerPhysics.Collision.Shapes
 
             Vector2 position = transform.Position + MathUtils.Multiply(ref transform.R, Position);
             Vector2 s = input.Point1 - position;
-            float b = Vector2.Dot(s, s) - _radius2;
+            float b = Vector2.Dot(s, s) - (Radius * Radius);
 
             // Solve quadratic equation.
             Vector2 r = input.Point2 - input.Point1;
@@ -98,7 +97,7 @@ namespace FarseerPhysics.Collision.Shapes
             }
 
             // Find the point of intersection of the line with the circle.
-            float a = -(c + (float) Math.Sqrt(sigma));
+            float a = -(c + (float)Math.Sqrt(sigma));
 
             // Is the intersection point on the segment?
             if (0.0f <= a && a <= input.MaxFraction * rr)
@@ -131,23 +130,23 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound.Y = p.Y + Radius;
         }
 
-        private void ComputeProperties()
+        protected override sealed void ComputeProperties()
         {
             MassData data = new MassData();
-            float area = Settings.Pi * _radius2;
+            float area = Settings.Pi * (Radius * Radius);
             data.Area = area;
             data.Mass = Density * area;
             data.Center = Position;
 
             // inertia about the local origin
-            data.Inertia = data.Mass * (0.5f * _radius2 + Vector2.Dot(Position, Position));
+            data.Inertia = data.Mass * (0.5f * (Radius * Radius) + Vector2.Dot(Position, Position));
 
             MassData = data;
         }
 
         public override Vertices GetVertices()
         {
-            return PolygonTools.CreateCircle(_radius, 16);
+            return PolygonTools.CreateCircle(Radius, 16);
         }
     }
 }
