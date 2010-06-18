@@ -47,6 +47,9 @@ namespace FarseerPhysics.Dynamics.Joints
         private float _motorImpulse;
         private float _motorMass; // effective mass for motor/limit angular constraint.
         private float _motorSpeed;
+        private float _referenceAngle;
+        private float _tmpFloat1;
+        private Vector2 _tmpVector1, _tmpVector2;
         private float _upperAngle;
 
         /// <summary>
@@ -99,7 +102,15 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public Vector2 LocalAnchorB { get; set; }
 
-        public float ReferenceAngle { get; set; }
+        public float ReferenceAngle
+        {
+            get { return _referenceAngle; }
+            set
+            {
+                WakeBodies();
+                _referenceAngle = value;
+            }
+        }
 
         /// <summary>
         /// Get the current joint angle in radians.
@@ -329,11 +340,11 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 b1._linearVelocity -= m1 * P;
                 MathUtils.Cross(ref r1, ref P, out _tmpFloat1);
-                b1._angularVelocity -= i1 * (/* r1 x P */_tmpFloat1 + _motorImpulse + _impulse.Z);
+                b1._angularVelocity -= i1 * ( /* r1 x P */_tmpFloat1 + _motorImpulse + _impulse.Z);
 
                 b2._linearVelocity += m2 * P;
                 MathUtils.Cross(ref r2, ref P, out _tmpFloat1);
-                b2._angularVelocity += i2 * (/* r2 x P */_tmpFloat1 + _motorImpulse + _impulse.Z);
+                b2._angularVelocity += i2 * ( /* r2 x P */_tmpFloat1 + _motorImpulse + _impulse.Z);
             }
             else
             {
@@ -341,9 +352,6 @@ namespace FarseerPhysics.Dynamics.Joints
                 _motorImpulse = 0.0f;
             }
         }
-
-        Vector2 _tmpVector1, _tmpVector2;
-        float _tmpFloat1;
 
         internal override void SolveVelocityConstraints(ref TimeStep step)
         {
@@ -385,7 +393,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 // Solve point-to-point constraint
                 MathUtils.Cross(w2, ref r2, out _tmpVector2);
                 MathUtils.Cross(w1, ref r1, out _tmpVector1);
-                Vector2 Cdot1 = v2 + /* w2 x r2 */_tmpVector2 - v1 - /* w1 x r1 */_tmpVector1;
+                Vector2 Cdot1 = v2 + /* w2 x r2 */ _tmpVector2 - v1 - /* w1 x r1 */ _tmpVector1;
                 float Cdot2 = w2 - w1;
                 Vector3 Cdot = new Vector3(Cdot1.X, Cdot1.Y, Cdot2);
 
@@ -428,11 +436,11 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 v1 -= m1 * P;
                 MathUtils.Cross(ref r1, ref P, out _tmpFloat1);
-                w1 -= i1 * (/* r1 x P */_tmpFloat1 + impulse.Z);
+                w1 -= i1 * ( /* r1 x P */_tmpFloat1 + impulse.Z);
 
                 v2 += m2 * P;
                 MathUtils.Cross(ref r2, ref P, out _tmpFloat1);
-                w2 += i2 * (/* r2 x P */_tmpFloat1 + impulse.Z);
+                w2 += i2 * ( /* r2 x P */_tmpFloat1 + impulse.Z);
             }
             else
             {
@@ -448,7 +456,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 // Solve point-to-point constraint
                 MathUtils.Cross(w2, ref r2, out _tmpVector2);
                 MathUtils.Cross(w1, ref r1, out _tmpVector1);
-                Vector2 Cdot = v2 + /* w2 x r2 */_tmpVector2 - v1 - /* w1 x r1 */_tmpVector1;
+                Vector2 Cdot = v2 + /* w2 x r2 */ _tmpVector2 - v1 - /* w1 x r1 */ _tmpVector1;
                 Vector2 impulse = _mass.Solve22(-Cdot);
 
                 _impulse.X += impulse.X;
@@ -456,11 +464,11 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 v1 -= m1 * impulse;
                 MathUtils.Cross(ref r1, ref impulse, out _tmpFloat1);
-                w1 -= i1 * /* r1 x impulse */_tmpFloat1;
+                w1 -= i1 * /* r1 x impulse */ _tmpFloat1;
 
                 v2 += m2 * impulse;
                 MathUtils.Cross(ref r2, ref impulse, out _tmpFloat1);
-                w2 += i2 * /* r2 x impulse */_tmpFloat1;
+                w2 += i2 * /* r2 x impulse */ _tmpFloat1;
             }
 
             b1._linearVelocity = v1;
@@ -567,11 +575,11 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 b1._sweep.Center -= b1._invMass * impulse;
                 MathUtils.Cross(ref r1, ref impulse, out _tmpFloat1);
-                b1._sweep.Angle -= b1._invI * /* r1 x impulse */_tmpFloat1;
+                b1._sweep.Angle -= b1._invI * /* r1 x impulse */ _tmpFloat1;
 
                 b2._sweep.Center += b2._invMass * impulse;
                 MathUtils.Cross(ref r2, ref impulse, out _tmpFloat1);
-                b2._sweep.Angle += b2._invI * /* r2 x impulse */_tmpFloat1;
+                b2._sweep.Angle += b2._invI * /* r2 x impulse */ _tmpFloat1;
 
                 b1.SynchronizeTransform();
                 b2.SynchronizeTransform();

@@ -23,11 +23,9 @@
 using System;
 using System.Diagnostics;
 using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 
-namespace Box2D.XNA
+namespace FarseerPhysics.Dynamics.Joints
 {
     /// A distance joint rains two points on two bodies
     /// to remain at a fixed distance from each other. You can view
