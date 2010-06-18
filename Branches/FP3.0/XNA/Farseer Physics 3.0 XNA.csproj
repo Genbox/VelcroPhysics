@@ -260,8 +260,12 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Factories\FixtureFactory.cs">
       <Link>Factories\FixtureFactory.cs</Link>
     </Compile>
-    <Compile Include="Factories\JointFactory.cs" />
-    <Compile Include="Factories\PathFactory.cs" />
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Factories\JointFactory.cs">
+      <Link>Factories\JointFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Factories\PathFactory.cs">
+      <Link>Factories\PathFactory.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
