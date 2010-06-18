@@ -28,7 +28,6 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {
-                new TestEntry {Name = "Farseer Bug", CreateFcn = FarseerBugTest.Create},
                 new TestEntry {Name = "Time of Impact", CreateFcn = TimeOfImpactTest.Create},
                 new TestEntry {Name = "Continuous Test", CreateFcn = ContinuousTest.Create},
                 new TestEntry {Name = "Tiles", CreateFcn = TilesTest.Create},
