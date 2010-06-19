@@ -144,7 +144,7 @@ namespace FarseerPhysics.Controllers.Buoyancy
                 Fixture fixture = _geomList[i];
                 Body body = fixture.Body;
                 Vertices localVertices = fixture.Shape.GetVertices();
-                _totalArea = fixture.Shape.MassData.Area;
+                _totalArea = fixture.Shape.Area;
 
                 //If the AABB of the geometry does not intersect the fluidcontainer
                 //continue to the next geometry

@@ -26,33 +26,6 @@ using Microsoft.Xna.Framework;
 namespace FarseerPhysics.Collision.Shapes
 {
     /// <summary>
-    /// This holds the mass data computed for a shape.
-    /// </summary>
-    public struct MassData
-    {
-        /// <summary>
-        /// Area of the shape
-        /// </summary>
-        public float Area;
-
-        /// <summary>
-        /// The position of the shape's centroid relative to the shape's origin.
-        /// </summary>
-        public Vector2 Center;
-
-        /// <summary>
-        /// The rotational inertia of the shape. This may be about the center or local
-        /// origin, depending on usage.
-        /// </summary>
-        public float Inertia;
-
-        /// <summary>
-        /// The mass of the shape, usually in kilograms.
-        /// </summary>
-        public float Mass;
-    }
-
-    /// <summary>
     /// Type of shape
     /// </summary>
     public enum ShapeType
@@ -77,6 +50,29 @@ namespace FarseerPhysics.Collision.Shapes
     /// </summary>
     public abstract class Shape
     {
+        /// <summary>
+        /// Area of the shape
+        /// </summary>
+        public float Area;
+
+        /// <summary>
+        /// The position of the shape's centroid relative to the shape's origin.
+        /// </summary>
+        public Vector2 Center;
+
+        /// <summary>
+        /// The rotational inertia of the shape. This may be about the center or local
+        /// origin, depending on usage.
+        /// </summary>
+        public float Inertia;
+
+        /// <summary>
+        /// The mass of the shape, usually in kilograms.
+        /// </summary>
+        public float Mass;
+
+        private float _density;
+
         protected Shape(float radius, float density)
         {
             _density = density;
@@ -101,12 +97,10 @@ namespace FarseerPhysics.Collision.Shapes
         public ShapeType ShapeType { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the radius.
+        /// Gets or sets the radius of the shape. Even polygons have a radius.
         /// </summary>
         /// <value>The radius.</value>
         public float Radius { get; set; }
-
-        private float _density;
 
         /// <summary>
         /// The density in kilograms per meter squared.
@@ -122,8 +116,6 @@ namespace FarseerPhysics.Collision.Shapes
             }
         }
 
-        public MassData MassData { get; set; }
-
         /// <summary>
         /// Clone the concrete shape.
         /// </summary>
@@ -133,10 +125,10 @@ namespace FarseerPhysics.Collision.Shapes
         /// <summary>
         /// Test a point for containment in this shape. This only works for convex shapes.
         /// </summary>
-        /// <param name="xf">the shape world transform.</param>
+        /// <param name="transform">the shape world transform.</param>
         /// <param name="point">a point in world coordinates.</param>
         /// <returns></returns>
-        public abstract bool TestPoint(ref Transform xf, Vector2 point);
+        public abstract bool TestPoint(ref Transform transform, Vector2 point);
 
         /// <summary>
         /// Cast a ray against this shape.
@@ -151,8 +143,8 @@ namespace FarseerPhysics.Collision.Shapes
         /// Given a transform, compute the associated axis aligned bounding box for this shape.
         /// </summary>
         /// <param name="aabb">returns the axis aligned box.</param>
-        /// <param name="xf">the world transform of the shape.</param>
-        public abstract void ComputeAABB(out AABB aabb, ref Transform xf);
+        /// <param name="transform">the world transform of the shape.</param>
+        public abstract void ComputeAABB(out AABB aabb, ref Transform transform);
 
         /// <summary>
         /// Gets the vertices of the shape. If the shape is not already represented by vertices
@@ -161,6 +153,14 @@ namespace FarseerPhysics.Collision.Shapes
         /// <returns></returns>
         public abstract Vertices GetVertices();
 
+        /// <summary>
+        /// Computes the properties of the shape
+        /// The following properties are computed:
+        /// - Area
+        /// - Mass
+        /// - Center of shape
+        /// - Interia
+        /// </summary>
         protected abstract void ComputeProperties();
     }
 }

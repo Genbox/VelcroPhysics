@@ -57,12 +57,19 @@ namespace FarseerPhysics.Collision.Shapes
             Set(vertices);
         }
 
+        /// <summary>
+        /// Clone the concrete shape.
+        /// </summary>
+        /// <returns></returns>
         public override Shape Clone()
         {
             PolygonShape clone = new PolygonShape();
             clone.ShapeType = ShapeType;
             clone.Radius = Radius;
-            clone.MassData = MassData;
+            clone.Area = Area;
+            clone.Mass = Mass;
+            clone.Center = Center;
+            clone.Inertia = Inertia;
             clone.Vertices = Vertices;
             clone.Normals = Normals;
             clone.Density = Density;
@@ -130,24 +137,47 @@ namespace FarseerPhysics.Collision.Shapes
             ComputeProperties();
         }
 
-        public void SetAsEdge(Vector2 v1, Vector2 v2)
+        /// <summary>
+        /// Sets this polygon as an edge shape.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        public void SetAsEdge(Vector2 start, Vector2 end)
         {
-            Set(PolygonTools.CreateEdge(v1, v2));
+            Set(PolygonTools.CreateEdge(start, end));
         }
 
+        /// <summary>
+        /// Sets this polygon as a box.
+        /// </summary>
+        /// <param name="hx">The half-width.</param>
+        /// <param name="hy">The half-height.</param>
+        /// <param name="center">The center.</param>
+        /// <param name="angle">The angle.</param>
         public void SetAsBox(float hx, float hy, Vector2 center, float angle)
         {
             Set(PolygonTools.CreateRectangle(hx, hy, center, angle));
         }
 
+        /// <summary>
+        /// Sets this polygon as a box.
+        /// </summary>
+        /// <param name="hx">The half-width.</param>
+        /// <param name="hy">The half-height.</param>
         public void SetAsBox(float hx, float hy)
         {
             Set(PolygonTools.CreateRectangle(hx, hy));
         }
 
-        public override bool TestPoint(ref Transform xf, Vector2 point)
+        /// <summary>
+        /// Test a point for containment in this shape. This only works for convex shapes.
+        /// </summary>
+        /// <param name="transform">the shape world transform.</param>
+        /// <param name="point">a point in world coordinates.</param>
+        /// <returns></returns>
+        public override bool TestPoint(ref Transform transform, Vector2 point)
         {
-            Vector2 pLocal = MathUtils.MultiplyT(ref xf.R, point - xf.Position);
+            Vector2 pLocal = MathUtils.MultiplyT(ref transform.R, point - transform.Position);
 
             for (int i = 0; i < Vertices.Count; ++i)
             {
@@ -161,13 +191,20 @@ namespace FarseerPhysics.Collision.Shapes
             return true;
         }
 
-        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform xf)
+        /// <summary>
+        /// Cast a ray against this shape.
+        /// </summary>
+        /// <param name="output">the ray-cast results.</param>
+        /// <param name="input">the ray-cast input parameters.</param>
+        /// <param name="transform">the transform to be applied to the shape.</param>
+        /// <returns>True if the raycast hit something</returns>
+        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform)
         {
             output = new RayCastOutput();
 
             // Put the ray into the polygon's frame of reference.
-            Vector2 p1 = MathUtils.MultiplyT(ref xf.R, input.Point1 - xf.Position);
-            Vector2 p2 = MathUtils.MultiplyT(ref xf.R, input.Point2 - xf.Position);
+            Vector2 p1 = MathUtils.MultiplyT(ref transform.R, input.Point1 - transform.Position);
+            Vector2 p2 = MathUtils.MultiplyT(ref transform.R, input.Point2 - transform.Position);
             Vector2 d = p2 - p1;
 
             if (Vertices.Count == 2)
@@ -278,7 +315,7 @@ namespace FarseerPhysics.Collision.Shapes
                 if (index >= 0)
                 {
                     output.Fraction = lower;
-                    output.Normal = MathUtils.Multiply(ref xf.R, Normals[index]);
+                    output.Normal = MathUtils.Multiply(ref transform.R, Normals[index]);
                     return true;
                 }
             }
@@ -286,14 +323,19 @@ namespace FarseerPhysics.Collision.Shapes
             return false;
         }
 
-        public override void ComputeAABB(out AABB aabb, ref Transform xf)
+        /// <summary>
+        /// Given a transform, compute the associated axis aligned bounding box for this shape.
+        /// </summary>
+        /// <param name="aabb">returns the axis aligned box.</param>
+        /// <param name="transform">the world transform of the shape.</param>
+        public override void ComputeAABB(out AABB aabb, ref Transform transform)
         {
-            Vector2 lower = MathUtils.Multiply(ref xf, Vertices[0]);
+            Vector2 lower = MathUtils.Multiply(ref transform, Vertices[0]);
             Vector2 upper = lower;
 
             for (int i = 1; i < Vertices.Count; ++i)
             {
-                Vector2 v = MathUtils.Multiply(ref xf, Vertices[i]);
+                Vector2 v = MathUtils.Multiply(ref transform, Vertices[i]);
                 lower = Vector2.Min(lower, v);
                 upper = Vector2.Max(upper, v);
             }
@@ -303,6 +345,14 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound = upper + r;
         }
 
+        /// <summary>
+        /// Computes the properties of the shape
+        /// The following properties are computed:
+        /// - Area
+        /// - Mass
+        /// - Center of shape
+        /// - Interia
+        /// </summary>
         protected override void ComputeProperties()
         {
             // Polygon mass, centroid, and inertia.
@@ -333,15 +383,12 @@ namespace FarseerPhysics.Collision.Shapes
 
             Debug.Assert(Vertices.Count >= 2);
 
-            MassData data = new MassData();
-
             // A line segment has zero mass.
             if (Vertices.Count == 2)
             {
-                data.Center = 0.5f * (Vertices[0] + Vertices[1]);
-                data.Mass = 0.0f;
-                data.Inertia = 0.0f;
-                MassData = data;
+                Center = 0.5f * (Vertices[0] + Vertices[1]);
+                Mass = 0.0f;
+                Inertia = 0.0f;
                 return;
             }
 
@@ -386,22 +433,25 @@ namespace FarseerPhysics.Collision.Shapes
             }
 
             //Save the area for later
-            data.Area = area;
+            Area = area;
 
             // Total mass
-            data.Mass = Density * area;
+            Mass = Density * area;
 
             // Center of mass
             Debug.Assert(area > Settings.Epsilon);
             center *= 1.0f / area;
-            data.Center = center;
+            Center = center;
 
             // Inertia tensor relative to the local origin.
-            data.Inertia = Density * I;
-
-            MassData = data;
+            Inertia = Density * I;
         }
 
+        /// <summary>
+        /// Gets the vertices of the shape. If the shape is not already represented by vertices
+        /// an approximation will be made.
+        /// </summary>
+        /// <returns></returns>
         public override Vertices GetVertices()
         {
             return Vertices;
