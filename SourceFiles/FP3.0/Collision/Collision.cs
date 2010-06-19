@@ -1110,8 +1110,8 @@ namespace FarseerPhysics.Collision
             int count1 = poly1.Vertices.Count;
 
             // Vector pointing from the centroid of poly1 to the centroid of poly2.
-            Vector2 d = MathUtils.Multiply(ref xf2, poly2.MassData.Center) -
-                        MathUtils.Multiply(ref xf1, poly1.MassData.Center);
+            Vector2 d = MathUtils.Multiply(ref xf2, poly2.Center) -
+                        MathUtils.Multiply(ref xf1, poly1.Center);
             Vector2 dLocal1 = MathUtils.MultiplyT(ref xf1.R, d);
 
             // Find edge normal on poly1 that has the largest projection onto d.

@@ -52,6 +52,10 @@ namespace FarseerPhysics.Collision.Shapes
             ComputeProperties();
         }
 
+        /// <summary>
+        /// Clones the shape.
+        /// </summary>
+        /// <returns>A clone of the shape</returns>
         public override Shape Clone()
         {
             CircleShape shape = new CircleShape();
@@ -59,11 +63,20 @@ namespace FarseerPhysics.Collision.Shapes
             shape.Density = Density;
             shape.ShapeType = ShapeType;
             shape.Position = Position;
-            shape.MassData = MassData;
+            shape.Area = Area;
+            shape.Mass = Mass;
+            shape.Center = Center;
+            shape.Inertia = Inertia;
 
             return shape;
         }
 
+        /// <summary>
+        /// Tests if the supplied point is inside the shape.
+        /// </summary>
+        /// <param name="transform">The transform.</param>
+        /// <param name="point">The point.</param>
+        /// <returns></returns>
         public override bool TestPoint(ref Transform transform, Vector2 point)
         {
             Vector2 center = transform.Position + MathUtils.Multiply(ref transform.R, Position);
@@ -71,6 +84,13 @@ namespace FarseerPhysics.Collision.Shapes
             return Vector2.Dot(d, d) <= (Radius * Radius);
         }
 
+        /// <summary>
+        /// Cast a ray against this shape.
+        /// </summary>
+        /// <param name="output">the ray-cast results.</param>
+        /// <param name="input">the ray-cast input parameters.</param>
+        /// <param name="transform">the transform to be applied to the shape.</param>
+        /// <returns>True if the raycast hit something</returns>
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform)
         {
             // Collision Detection in Interactive 3D Environments by Gino van den Bergen
@@ -113,6 +133,11 @@ namespace FarseerPhysics.Collision.Shapes
             return false;
         }
 
+        /// <summary>
+        /// Given a transform, compute the associated axis aligned bounding box for this shape.
+        /// </summary>
+        /// <param name="aabb">returns the axis aligned box.</param>
+        /// <param name="transform">the world transform of the shape.</param>
         public override void ComputeAABB(out AABB aabb, ref Transform transform)
         {
 #if XBOX360
@@ -130,20 +155,30 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound.Y = p.Y + Radius;
         }
 
+        /// <summary>
+        /// Computes the properties of the shape
+        /// The following properties are computed:
+        /// - Area
+        /// - Mass
+        /// - Center of shape
+        /// - Interia
+        /// </summary>
         protected override sealed void ComputeProperties()
         {
-            MassData data = new MassData();
             float area = Settings.Pi * (Radius * Radius);
-            data.Area = area;
-            data.Mass = Density * area;
-            data.Center = Position;
+            Area = area;
+            Mass = Density * area;
+            Center = Position;
 
             // inertia about the local origin
-            data.Inertia = data.Mass * (0.5f * (Radius * Radius) + Vector2.Dot(Position, Position));
-
-            MassData = data;
+            Inertia = Mass * (0.5f * (Radius * Radius) + Vector2.Dot(Position, Position));
         }
 
+        /// <summary>
+        /// Gets the vertices of the shape. If the shape is not already represented by vertices
+        /// an approximation will be made.
+        /// </summary>
+        /// <returns></returns>
         public override Vertices GetVertices()
         {
             return PolygonTools.CreateCircle(Radius, 16);

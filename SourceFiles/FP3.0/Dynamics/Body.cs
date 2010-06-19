@@ -793,10 +793,9 @@ namespace FarseerPhysics.Dynamics
                     continue;
                 }
 
-                MassData massData = f.Shape.MassData;
-                Mass += massData.Mass;
-                center += massData.Mass * massData.Center;
-                _I += massData.Inertia;
+                Mass += f.Shape.Mass;
+                center += f.Shape.Mass * f.Shape.Center;
+                _I += f.Shape.Inertia;
             }
 
             //Static bodies only have mass, they don't have other properties. A little hacky tho...
