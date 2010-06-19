@@ -48,8 +48,10 @@ namespace FarseerPhysics.TestBed.Tests
             compund[0].Body.BodyType = BodyType.Dynamic;
 
             List<Fixture> fixtures = FixtureFactory.CreateCapsule(World, 3, 1, 1);
-            fixtures[0].Body.Position = new Vector2(0, 5);
+            fixtures[0].Body.Position = new Vector2(-10, 15);
             fixtures[0].Body.BodyType = BodyType.Dynamic;
+
+            FixtureFactory.CreateRoundedRectangle(World, 3, 3, 0.25F, 0.25F, 2, 1, new Vector2(-10, 10));
 
             base.Initialize();
         }

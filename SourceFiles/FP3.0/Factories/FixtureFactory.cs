@@ -137,12 +137,10 @@ namespace FarseerPhysics.Factories
         public static List<Fixture> CreateCapsule(World world, float height, float endRadius, float density)
         {
             //Create the middle rectangle
-            Vertices leftEdge = PolygonTools.CreateEdge(new Vector2(-endRadius, height / 2), new Vector2(-endRadius, -(height / 2)));
-            Vertices rightEdge = PolygonTools.CreateEdge(new Vector2(endRadius, height / 2), new Vector2(endRadius, -(height / 2)));
+            Vertices rectangle = PolygonTools.CreateRectangle(endRadius, height / 2);
 
             List<Vertices> list = new List<Vertices>();
-            list.Add(leftEdge);
-            list.Add(rightEdge);
+            list.Add(rectangle);
 
             List<Fixture> fixtures = CreateCompundPolygon(world, list, density);
 
@@ -155,6 +153,21 @@ namespace FarseerPhysics.Factories
             bottomCircle.Position = new Vector2(0, -(height / 2));
             fixtures.Add(fixtures[0].Body.CreateFixture(bottomCircle));
             return fixtures;
+        }
+
+        public static Fixture CreateRoundedRectangle(World world, float width, float height, float xRadius, float yRadius,
+                                                              int segments, float density, Vector2 position)
+        {
+            Vertices verts = PolygonTools.CreateRoundedRectangle(width, height, xRadius, yRadius, segments);
+            Fixture fixture = CreatePolygon(world, verts, density);
+            fixture.Body.Position = position;
+            return fixture;
+        }
+
+        public static Fixture CreateRoundedRectangle(World world, float width, float height, float xRadius, float yRadius,
+                                                      int segments, float density)
+        {
+            return CreateRoundedRectangle(world, width, height, xRadius, yRadius, segments, density, Vector2.Zero);
         }
 
         public static BreakableBody CreateBreakableBody(World world, Vertices vertices, float density)
