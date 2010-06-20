@@ -15,9 +15,6 @@ namespace FarseerPhysics.TestBed.Tests
 
         private PathTest()
         {
-            //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
-
             //Single body that moves around path
             movingBody = BodyFactory.CreateBody(World);
             movingBody.Position = new Vector2(-25, 25);
@@ -34,11 +31,9 @@ namespace FarseerPhysics.TestBed.Tests
             path.Add(new Vector2(-5, 14));
             path.Closed = true;
 
-            Body body = new Body(World);
-            body.BodyType = BodyType.Static;
-            body.CreateFixture(new CircleShape(0.25f, 1));
+            CircleShape shape = new CircleShape(0.25f, 1);
 
-            PathFactory.EvenlyDistibuteShapesAlongPath(World, path, body, 100);
+            PathFactory.EvenlyDistibuteShapesAlongPath(World, path, shape, BodyType.Static, 100);
 
             //Smaller shape that is movable. Created from small rectangles and circles.
             Vector2 xform = new Vector2(0.5f, 0.5f);
@@ -46,12 +41,11 @@ namespace FarseerPhysics.TestBed.Tests
             xform = new Vector2(5, 5);
             path.Translate(ref xform);
 
-            body = new Body(World);
-            body.BodyType = BodyType.Dynamic;
-            body.CreateFixture(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.1f, 0), 0), 1));
-            body.CreateFixture(new CircleShape(0.5f, 1));
+            List<Shape> shapes = new List<Shape>(2);
+            shapes.Add(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.1f, 0), 0), 1));
+            shapes.Add(new CircleShape(0.5f, 1));
 
-            List<Body> bodies = PathFactory.EvenlyDistibuteShapesAlongPath(World, path, body, 20);
+            List<Body> bodies = PathFactory.EvenlyDistibuteShapesAlongPath(World, path, shapes, BodyType.Dynamic, 20);
 
             //Attach the bodies together with revolute joints
             PathFactory.AttachBodiesWithRevoluteJoint(World, bodies, new Vector2(0, 0.5f), new Vector2(0, -0.5f), true, true);
@@ -59,22 +53,17 @@ namespace FarseerPhysics.TestBed.Tests
             xform = new Vector2(-25, 0);
             path.Translate(ref xform);
 
-            body = new Body(World);
+            Body body = new Body(World);
             body.BodyType = BodyType.Static;
 
             //Static shape made up of edges
-            PathFactory.ConvertPathToEdges(World, path, body, 25);
+            PathFactory.ConvertPathToEdges(path, body, 25);
+            body.Position -= new Vector2(0, 10);
 
-            World.Add(body);
-
-            xform = new Vector2(0, 25);
+            xform = new Vector2(0, 15);
             path.Translate(ref xform);
 
-            body = new Body(World);
-            body.BodyType = BodyType.Dynamic;
-
-            PathFactory.ConvertPathToPolygon(World, path, body, 1, 50);
-            body.Position -= new Vector2(0, 10);
+            PathFactory.ConvertPathToPolygon(path, body, 1, 50);
             World.Add(body);
         }
 
