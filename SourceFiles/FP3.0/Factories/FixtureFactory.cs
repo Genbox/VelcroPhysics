@@ -155,16 +155,21 @@ namespace FarseerPhysics.Factories
             return fixtures;
         }
 
-        public static Fixture CreateRoundedRectangle(World world, float width, float height, float xRadius, float yRadius,
+        public static List<Fixture> CreateRoundedRectangle(World world, float width, float height, float xRadius, float yRadius,
                                                               int segments, float density, Vector2 position)
         {
-            Vertices verts = PolygonTools.CreateRoundedRectangle(width, height, xRadius, yRadius, segments);
-            Fixture fixture = CreatePolygon(world, verts, density);
-            fixture.Body.Position = position;
+            List<Vertices> verts = PolygonTools.CreateRoundedRectangle(width, height, xRadius, yRadius, segments);
+            List<Fixture> fixture = new List<Fixture>(verts.Count);
+            for (int i = 0; i < verts.Count; i++)
+            {
+                fixture[i] = CreatePolygon(world, verts[i], density);
+                fixture[i].Body.Position = position;
+            }
+
             return fixture;
         }
 
-        public static Fixture CreateRoundedRectangle(World world, float width, float height, float xRadius, float yRadius,
+        public static List<Fixture> CreateRoundedRectangle(World world, float width, float height, float xRadius, float yRadius,
                                                       int segments, float density)
         {
             return CreateRoundedRectangle(world, width, height, xRadius, yRadius, segments, density, Vector2.Zero);
