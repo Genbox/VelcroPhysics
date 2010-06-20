@@ -130,6 +130,7 @@
     <Compile Include="Tests\PolyCollisionTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\PolygonShapesTest.cs" />
     <Compile Include="Tests\PolyShapesTest.cs">
       <SubType>Code</SubType>
     </Compile>

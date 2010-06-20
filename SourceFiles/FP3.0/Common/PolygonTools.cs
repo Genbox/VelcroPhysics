@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using FarseerPhysics.Common.Decomposition;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common
@@ -47,7 +48,7 @@ namespace FarseerPhysics.Common
             return vertices;
         }
 
-        //Contributed by Jonathan Smars
+        //Contributed by Jonathan Smars - jsmars@gmail.com
         /// <summary>
         /// Creates a rounded rectangle with the specified width and height.
         /// </summary>
@@ -57,7 +58,7 @@ namespace FarseerPhysics.Common
         /// <param name="yRadius">The rounding Y radius.</param>
         /// <param name="segments">The number of segments to subdivide the edges.</param>
         /// <returns></returns>
-        public static Vertices CreateRoundedRectangle(float width, float height, float xRadius, float yRadius,
+        public static List<Vertices> CreateRoundedRectangle(float width, float height, float xRadius, float yRadius,
                                                               int segments)
         {
             if (yRadius > height / 2 || xRadius > width / 2)
@@ -87,10 +88,6 @@ namespace FarseerPhysics.Common
             {
                 int numberOfEdges = (segments * 4 + 8);
 
-                //There are too many vertices in the rounded rectangle. Change the Settings.MaxPolygonVertices
-                //or lower the number of segments in the roudned rectangle.
-                Debug.Assert(Settings.MaxPolygonVertices >= numberOfEdges);
-
                 float stepSize = MathHelper.TwoPi / (numberOfEdges - 4);
                 int perPhase = numberOfEdges / 4;
 
@@ -115,7 +112,11 @@ namespace FarseerPhysics.Common
                 }
             }
 
-            return vertices;
+            //There are too many vertices in the rounded rectangle. We decompose it
+            if (vertices.Count >= Settings.MaxPolygonVertices)
+                return EarclipDecomposer.ConvexPartition(vertices);
+            
+            return new List<Vertices> { vertices };
         }
 
         /// <summary>
@@ -173,7 +174,7 @@ namespace FarseerPhysics.Common
         /// <param name="endRadius">Radius of the capsule ends.</param>
         /// <param name="edges">The number of edges of the capsule ends. The more edges, the more it resembles an capsule</param>
         /// <returns></returns>
-        public static Vertices CreateCapsule(float height, float endRadius, int edges)
+        public static List<Vertices> CreateCapsule(float height, float endRadius, int edges)
         {
             if (endRadius >= height / 2)
                 throw new ArgumentException(
@@ -193,7 +194,7 @@ namespace FarseerPhysics.Common
         /// <param name="bottomRadius">Radius of bottom.</param>
         /// <param name="bottomEdges">The number of edges of the bottom. The more edges, the more it resembles an capsule</param>
         /// <returns></returns>
-        public static Vertices CreateCapsule(float height, float topRadius, int topEdges, float bottomRadius,
+        public static List<Vertices> CreateCapsule(float height, float topRadius, int topEdges, float bottomRadius,
                                              int bottomEdges)
         {
             if (height <= 0)
@@ -249,7 +250,11 @@ namespace FarseerPhysics.Common
 
             vertices.Add(new Vector2(bottomRadius, -newHeight));
 
-            return vertices;
+            //There are too many vertices in the capsule. We decompose it.
+            if (vertices.Count >= Settings.MaxPolygonVertices)
+                return EarclipDecomposer.ConvexPartition(vertices);
+            
+            return new List<Vertices> { vertices };
         }
 
         /// <summary>
