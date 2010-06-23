@@ -162,8 +162,9 @@ namespace FarseerPhysics.Factories
             List<Fixture> fixture = new List<Fixture>(verts.Count);
             for (int i = 0; i < verts.Count; i++)
             {
-                fixture[i] = CreatePolygon(world, verts[i], density);
-                fixture[i].Body.Position = position;
+                Fixture fix = CreatePolygon(world, verts[i], density);
+                fix.Body.Position = position;
+                fixture.Add(fix);
             }
 
             return fixture;
