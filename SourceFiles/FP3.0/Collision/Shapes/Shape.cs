@@ -61,8 +61,7 @@ namespace FarseerPhysics.Collision.Shapes
         public Vector2 Center;
 
         /// <summary>
-        /// The rotational inertia of the shape. This may be about the center or local
-        /// origin, depending on usage.
+        /// The rotational inertia of the shape about the local origin.
         /// </summary>
         public float Inertia;
 
