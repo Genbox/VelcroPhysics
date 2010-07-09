@@ -149,7 +149,7 @@ namespace FarseerPhysics.Controllers.Buoyancy
                 //If the AABB of the geometry does not intersect the fluidcontainer
                 //continue to the next geometry
                 AABB aabb;
-                fixture.Shape.ComputeAABB(out aabb, ref fixture.Body._xf);
+                fixture.Shape.ComputeAABB(out aabb, ref fixture.Body._xf, 0);
 
                 if (!_fluidContainer.Intersect(ref aabb))
                     continue;

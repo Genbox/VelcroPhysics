@@ -77,6 +77,11 @@ namespace FarseerPhysics.Collision.Shapes
             return clone;
         }
 
+        public override int GetChildCount()
+        {
+            return 1;
+        }
+
         /// <summary>
         /// Copy vertices. This assumes the vertices define a convex polygon.
         /// It is assumed that the exterior is the the right of each edge.
@@ -198,7 +203,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// <param name="input">the ray-cast input parameters.</param>
         /// <param name="transform">the transform to be applied to the shape.</param>
         /// <returns>True if the raycast hit something</returns>
-        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform)
+        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex)
         {
             output = new RayCastOutput();
 
@@ -328,7 +333,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         /// <param name="aabb">returns the axis aligned box.</param>
         /// <param name="transform">the world transform of the shape.</param>
-        public override void ComputeAABB(out AABB aabb, ref Transform transform)
+        public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
             Vector2 lower = MathUtils.Multiply(ref transform, Vertices[0]);
             Vector2 upper = lower;

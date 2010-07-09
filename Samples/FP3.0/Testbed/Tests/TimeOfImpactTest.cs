@@ -67,8 +67,8 @@ namespace FarseerPhysics.TestBed.Tests
             //sweepB.a -= 300.0f * b2_pi;
 
             TOIInput input = new TOIInput();
-            input.ProxyA.Set(_shapeA);
-            input.ProxyB.Set(_shapeB);
+            input.ProxyA.Set(_shapeA, 0);
+            input.ProxyB.Set(_shapeB, 0);
             input.SweepA = sweepA;
             input.SweepB = sweepB;
             input.TMax = 1.0f;

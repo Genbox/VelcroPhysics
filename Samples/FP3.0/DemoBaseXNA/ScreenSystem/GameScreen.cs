@@ -329,13 +329,13 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             World.QueryAABB(
                 fixture =>
                 {
-                    Body body = fixture.Body;
+                    Body body = fixture.Fixture.Body;
                     if (body.BodyType == BodyType.Dynamic)
                     {
-                        bool inside = fixture.TestPoint(ref p);
+                        bool inside = fixture.Fixture.TestPoint(ref p);
                         if (inside)
                         {
-                            _fixture = fixture;
+                            _fixture = fixture.Fixture;
 
                             // We are done, terminate the query.
                             return false;

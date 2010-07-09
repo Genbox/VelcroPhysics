@@ -69,6 +69,15 @@ namespace FarseerPhysics.Dynamics
         Cat31 = 1073741824
     }
 
+    /// This proxy is used internally to connect fixtures to the broad-phase.
+    public class FixtureProxy
+    {
+        public AABB Aabb;
+        public Fixture Fixture;
+        public int ChildIndex;
+        public int ProxyId;
+    }
+
     /// <summary>
     /// A fixture is used to attach a shape to a body for collision detection. A fixture
     /// inherits its transform from its parent. Fixtures hold additional non-geometric data
@@ -86,15 +95,10 @@ namespace FarseerPhysics.Dynamics
 
         #endregion
 
-        /// <summary>
-        /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
-        /// If you need a more accurate AABB, compute it using the shape and
-        /// the body transform.
-        /// </summary>
-        public AABB AABB;
-
         public CollisionEventHandler OnCollision;
         public SeparationEventHandler OnSeparation;
+
+#warning Box2D.XNA has internal _aabb
 
         internal Body _body;
         private CollisionCategory _collidesWith;
@@ -102,6 +106,9 @@ namespace FarseerPhysics.Dynamics
         private short _collisionGroup;
         private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
         private Shape _shape;
+
+        public FixtureProxy[] _proxies;
+        public int _proxyCount;
 
         internal Fixture()
         {
@@ -126,6 +133,18 @@ namespace FarseerPhysics.Dynamics
             _body = body;
 
             _shape = shape.Clone();
+
+            // Reserve proxy space
+            int childCount = _shape.GetChildCount();
+            _proxies = new FixtureProxy[childCount];
+            for (int i = 0; i < childCount; ++i)
+            {
+                _proxies[i] = new FixtureProxy();
+                _proxies[i].Fixture = null;
+                _proxies[i].ProxyId = BroadPhase.NullProxy;
+            }
+            _proxyCount = 0;
+
         }
 
         /// <summary>
@@ -239,6 +258,17 @@ namespace FarseerPhysics.Dynamics
         /// <value></value>
         public float Restitution { get; set; }
 
+        /// <summary>
+        /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
+        /// If you need a more accurate AABB, compute it using the shape and
+        /// the body transform.
+        /// </summary>
+        public void GetAABB(out AABB aabb, int childIndex)
+        {
+            Debug.Assert(0 <= childIndex && childIndex < _proxyCount);
+            aabb = _proxies[childIndex].Aabb;
+        }
+
         public void RestoreCollisionWith(Fixture fixture)
         {
             if (_collisionIgnores.ContainsKey(fixture.ProxyId))
@@ -302,60 +332,78 @@ namespace FarseerPhysics.Dynamics
         /// <param name="output">the ray-cast results.</param>
         /// <param name="input">the ray-cast input parameters.</param>
         /// <returns></returns>
-        public bool RayCast(out RayCastOutput output, ref RayCastInput input)
+        public bool RayCast(out RayCastOutput output, ref RayCastInput input, int childIndex)
         {
             Transform xf;
             _body.GetTransform(out xf);
-            return _shape.RayCast(out output, ref input, ref xf);
+            return _shape.RayCast(out output, ref input, ref xf, childIndex);
         }
 
         internal void Destroy()
         {
-            // The proxy must be destroyed before calling this.
-            Debug.Assert(ProxyId == BroadPhase.NullProxy);
+            // The proxies must be destroyed before calling this.
+            Debug.Assert(_proxyCount == 0);
+
+            // Free the proxy array.
+            _proxies = null;
 
             _shape = null;
         }
 
         // These support body activation/deactivation.
-        internal void CreateProxy(BroadPhase broadPhase, ref Transform xf)
+        internal void CreateProxies(BroadPhase broadPhase, ref Transform xf)
         {
-            Debug.Assert(ProxyId == BroadPhase.NullProxy);
+            Debug.Assert(_proxyCount == 0);
 
-            // Create proxy in the broad-phase.
-            _shape.ComputeAABB(out AABB, ref xf);
-            ProxyId = broadPhase.CreateProxy(ref AABB, this);
+            // Create proxies in the broad-phase.
+            _proxyCount = _shape.GetChildCount();
+
+            for (int i = 0; i < _proxyCount; ++i)
+            {
+                FixtureProxy proxy = _proxies[i];
+                _shape.ComputeAABB(out proxy.Aabb, ref xf, i);
+                proxy.Fixture = this;
+                proxy.ChildIndex = i;
+                proxy.ProxyId = broadPhase.CreateProxy(ref proxy.Aabb, proxy);
+
+                _proxies[i] = proxy;
+            }
         }
 
-        internal void DestroyProxy(BroadPhase broadPhase)
+        internal void DestroyProxies(BroadPhase broadPhase)
         {
-            if (ProxyId == BroadPhase.NullProxy)
+            // Destroy proxies in the broad-phase.
+            for (int i = 0; i < _proxyCount; ++i)
             {
-                return;
+                broadPhase.DestroyProxy(_proxies[i].ProxyId);
+                _proxies[i].ProxyId = BroadPhase.NullProxy;
             }
 
-            // Destroy proxy in the broad-phase.
-            broadPhase.DestroyProxy(ProxyId);
-            ProxyId = BroadPhase.NullProxy;
+            _proxyCount = 0;
         }
 
         internal void Synchronize(BroadPhase broadPhase, ref Transform transform1, ref Transform transform2)
         {
-            if (ProxyId == BroadPhase.NullProxy)
+            if (_proxyCount == 0)
             {
                 return;
             }
 
-            // Compute an AABB that covers the swept shape (may miss some rotation effect).
-            AABB aabb1, aabb2;
-            _shape.ComputeAABB(out aabb1, ref transform1);
-            _shape.ComputeAABB(out aabb2, ref transform2);
+            for (int i = 0; i < _proxyCount; ++i)
+            {
+                FixtureProxy proxy = _proxies[i];
 
-            AABB.Combine(ref aabb1, ref aabb2);
+                // Compute an AABB that covers the swept Shape (may miss some rotation effect).
+                AABB aabb1, aabb2;
+                _shape.ComputeAABB(out aabb1, ref transform1, proxy.ChildIndex);
+                _shape.ComputeAABB(out aabb2, ref transform2, proxy.ChildIndex);
 
-            Vector2 displacement = transform2.Position - transform1.Position;
+                proxy.Aabb.Combine(ref aabb1, ref aabb2);
 
-            broadPhase.MoveProxy(ProxyId, ref AABB, displacement);
+                Vector2 displacement = transform2.Position - transform1.Position;
+
+                broadPhase.MoveProxy(proxy.ProxyId, ref proxy.Aabb, displacement);
+            }
         }
 
         public Action<ContactConstraint> PostSolve;

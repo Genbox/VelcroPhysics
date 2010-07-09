@@ -71,6 +71,11 @@ namespace FarseerPhysics.Collision.Shapes
             return shape;
         }
 
+        public override int GetChildCount()
+        {
+            return 1;
+        }
+
         /// <summary>
         /// Tests if the supplied point is inside the shape.
         /// </summary>
@@ -91,7 +96,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// <param name="input">the ray-cast input parameters.</param>
         /// <param name="transform">the transform to be applied to the shape.</param>
         /// <returns>True if the raycast hit something</returns>
-        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform)
+        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex)
         {
             // Collision Detection in Interactive 3D Environments by Gino van den Bergen
             // From Section 3.1.2
@@ -138,7 +143,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         /// <param name="aabb">returns the axis aligned box.</param>
         /// <param name="transform">the world transform of the shape.</param>
-        public override void ComputeAABB(out AABB aabb, ref Transform transform)
+        public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
 #if XBOX360
             aabb = new AABB();

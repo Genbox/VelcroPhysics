@@ -36,13 +36,14 @@ namespace FarseerPhysics.Collision
     {
         internal float Radius;
         private Vertices _vertices;
+        internal Vector2[] _buffer;
 
         /// <summary>
         /// Initialize the proxy using the given shape. The shape
         /// must remain in scope while the proxy is in use.
         /// </summary>
         /// <param name="shape">The shape.</param>
-        public void Set(Shape shape)
+        public void Set(Shape shape, int index)
         {
             switch (shape.ShapeType)
             {
@@ -62,7 +63,37 @@ namespace FarseerPhysics.Collision
                         Radius = polygon.Radius;
                     }
                     break;
+                case ShapeType.Loop:
+                    {
+                        LoopShape loop = (LoopShape)shape;
+                        Debug.Assert(0 <= index && index < loop._count);
 
+                        _buffer[0] = loop._vertices[index];
+                        if (index + 1 < loop._count)
+                        {
+                            _buffer[1] = loop._vertices[index + 1];
+                        }
+                        else
+                        {
+                            _buffer[1] = loop._vertices[0];
+                        }
+
+                        _vertices = new Vertices(2);
+                        _vertices.Add(_buffer[0]);
+                        _vertices.Add(_buffer[1]);
+                        Radius = loop.Radius;
+                    }
+                    break;
+                case ShapeType.Edge:
+                    {
+                        EdgeShape edge = (EdgeShape)shape;
+
+                        _vertices = new Vertices(2);
+                        _vertices.Add(edge._vertex1);
+                        _vertices.Add(edge._vertex2);
+                        Radius = edge.Radius;
+                    }
+                    break;
                 default:
                     Debug.Assert(false);
                     break;

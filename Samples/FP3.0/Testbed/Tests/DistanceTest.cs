@@ -68,8 +68,8 @@ namespace FarseerPhysics.TestBed.Tests
             base.Update(settings, gameTime);
 
             DistanceInput input = new DistanceInput();
-            input.ProxyA.Set(_polygonA);
-            input.ProxyB.Set(_polygonB);
+            input.ProxyA.Set(_polygonA, 0);
+            input.ProxyB.Set(_polygonB, 0);
             input.TransformA = _transformA;
             input.TransformB = _transformB;
             input.UseRadii = true;

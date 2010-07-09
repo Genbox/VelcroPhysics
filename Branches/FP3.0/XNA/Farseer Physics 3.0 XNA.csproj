@@ -101,6 +101,12 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Collision\Shapes\CircleShape.cs">
       <Link>Collision\Shapes\CircleShape.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Collision\Shapes\EdgeShape.cs">
+      <Link>Collision\Shapes\EdgeShape.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Collision\Shapes\LoopShape.cs">
+      <Link>Collision\Shapes\LoopShape.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Collision\Shapes\PolygonShape.cs">
       <Link>Collision\Shapes\PolygonShape.cs</Link>
     </Compile>
@@ -124,6 +130,9 @@
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\FixedArray.cs">
       <Link>Common\FixedArray.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\GrowableStack.cs">
+      <Link>Common\GrowableStack.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\LineTools.cs">
       <Link>Common\LineTools.cs</Link>
