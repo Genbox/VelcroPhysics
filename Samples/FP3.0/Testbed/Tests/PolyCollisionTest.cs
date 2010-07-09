@@ -62,8 +62,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            Manifold manifold;
-            CollisionManager.CollidePolygons(out manifold, _polygonA, ref _transformA, _polygonB, ref _transformB);
+            Manifold manifold = new Manifold();
+            CollisionManager.CollidePolygons(ref manifold, _polygonA, ref _transformA, _polygonB, ref _transformB);
 
             WorldManifold worldManifold = new WorldManifold(ref manifold, ref _transformA, _polygonA.Radius,
                                                             ref _transformB, _polygonB.Radius);

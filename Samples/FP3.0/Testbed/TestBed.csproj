@@ -110,6 +110,7 @@
     <Compile Include="Tests\ContinuousTest.cs" />
     <Compile Include="Tests\ControllerTest.cs" />
     <Compile Include="Tests\CharacterCollisionTest.cs" />
+    <Compile Include="Tests\EdgeTest.cs" />
     <Compile Include="Tests\CuttingTest.cs" />
     <Compile Include="Tests\DistanceTest.cs">
       <SubType>Code</SubType>

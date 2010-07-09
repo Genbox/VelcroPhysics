@@ -59,7 +59,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape) fixture.Shape;
+                        CircleShape circle = (CircleShape)fixture.Shape;
 
                         Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
                         float radius = circle.Radius;
@@ -70,7 +70,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape poly = (PolygonShape) fixture.Shape;
+                        PolygonShape poly = (PolygonShape)fixture.Shape;
                         int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
@@ -88,8 +88,10 @@ namespace FarseerPhysics.TestBed.Tests
 
         /// Called for each fixture found in the query AABB.
         /// @return false to terminate the query.
-        public bool ReportFixture(Fixture fixture)
+        public bool ReportFixture(FixtureProxy fixtureProxy)
         {
+            Fixture fixture = fixtureProxy.Fixture;
+
             if (_count == MaxCount)
             {
                 return false;
@@ -101,7 +103,7 @@ namespace FarseerPhysics.TestBed.Tests
             Transform xf;
             body.GetTransform(out xf);
 
-            bool overlap = AABB.TestOverlap(shape, _circle, ref xf, ref _transform);
+            bool overlap = AABB.TestOverlap(shape, 0, _circle, 0, ref xf, ref _transform);
 
             if (overlap)
             {
@@ -150,8 +152,8 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 const float w = 1.0f;
-                float b = w / (2.0f + (float) Math.Sqrt(2.0));
-                float s = (float) Math.Sqrt(2.0) * b;
+                float b = w / (2.0f + (float)Math.Sqrt(2.0));
+                float s = (float)Math.Sqrt(2.0) * b;
 
                 Vertices vertices8 = new Vertices(8);
                 vertices8.Add(new Vector2(0.5f * s, 0.0f));
@@ -277,7 +279,7 @@ namespace FarseerPhysics.TestBed.Tests
             callback._debugDraw = DebugView;
 
             AABB aabb;
-            callback._circle.ComputeAABB(out aabb, ref callback._transform);
+            callback._circle.ComputeAABB(out aabb, ref callback._transform, 0);
 
             World.QueryAABB(callback.ReportFixture, ref aabb);
 

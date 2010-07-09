@@ -27,46 +27,12 @@ using FarseerPhysics.Dynamics.Contacts;
 
 namespace FarseerPhysics.Dynamics
 {
-    /// <summary>
-    /// Pool used to cache objects.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class Pool<T> : Stack<T> where T : new()
-    {
-        public Pool()
-        {
-        }
-
-        public Pool(int size)
-        {
-            for (int i = 0; i < size; i++)
-            {
-                Push(new T());
-            }
-        }
-
-        public T Fetch()
-        {
-            if (Count > 0)
-            {
-                return Pop();
-            }
-            return new T();
-        }
-
-        public void Insert(T item)
-        {
-            Push(item);
-        }
-    }
-
     public class ContactManager
     {
         public BeginContactDelegate BeginContact;
 
-        public Action<Fixture, Fixture> BroadphaseCollision;
-        public CollisionFilterDelegate CollisionFilter;
-        public Pool<Contact> ContactPool;
+        public Action<FixtureProxy, FixtureProxy> BroadphaseCollision;
+        public CollisionFilterDelegate ContactFilter;
 
         /// <summary>
         /// Fires when a contact is deleted
@@ -81,9 +47,6 @@ namespace FarseerPhysics.Dynamics
             ContactList = new List<Contact>(128);
             BroadPhase = new BroadPhase();
             BroadphaseCollision = AddPair;
-
-            //Precreate 128 contacts
-            ContactPool = new Pool<Contact>(128);
         }
 
         public List<Contact> ContactList { get; private set; }
@@ -91,8 +54,14 @@ namespace FarseerPhysics.Dynamics
         public BroadPhase BroadPhase { get; private set; }
 
         // Broad-phase callback.
-        private void AddPair(Fixture fixtureA, Fixture fixtureB)
+        private void AddPair(FixtureProxy proxyA, FixtureProxy proxyB)
         {
+            Fixture fixtureA = proxyA.Fixture;
+            Fixture fixtureB = proxyB.Fixture;
+
+            int indexA = proxyA.ChildIndex;
+            int indexB = proxyB.ChildIndex;
+
             Body bodyA = fixtureA.Body;
             Body bodyB = fixtureB.Body;
 
@@ -110,13 +79,16 @@ namespace FarseerPhysics.Dynamics
                 {
                     Fixture fA = edge.Contact.FixtureA;
                     Fixture fB = edge.Contact.FixtureB;
-                    if (fA == fixtureA && fB == fixtureB)
+                    int iA = edge.Contact.GetChildIndexA();
+                    int iB = edge.Contact.GetChildIndexB();
+
+                    if (fA == fixtureA && fB == fixtureB && iA == indexA && iB == indexB)
                     {
                         // A contact already exists.
                         return;
                     }
 
-                    if (fA == fixtureB && fB == fixtureA)
+                    if (fA == fixtureB && fB == fixtureA && iA == indexB && iB == indexA)
                     {
                         // A contact already exists.
                         return;
@@ -133,19 +105,19 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Check user filtering.
-            if (CollisionFilter != null)
+            if (ContactFilter != null && ContactFilter(fixtureA, fixtureB) == false)
             {
-                if (CollisionFilter(fixtureA, fixtureB) == false)
-                    return;
+                return;
             }
 
             // Call the factory.
-            Contact c = ContactPool.Fetch();
-            c.Create(fixtureA, fixtureB);
+            Contact c = Contact.Create(fixtureA, indexA, fixtureB, indexB);
 
             // Contact creation may swap fixtures.
             fixtureA = c.FixtureA;
             fixtureB = c.FixtureB;
+            indexA = c.GetChildIndexA();
+            indexB = c.GetChildIndexB();
             bodyA = fixtureA.Body;
             bodyB = fixtureB.Body;
 
@@ -181,7 +153,7 @@ namespace FarseerPhysics.Dynamics
 
         internal void FindNewContacts()
         {
-            BroadPhase.UpdatePairs(BroadphaseCollision);
+            BroadPhase.UpdatePairs<FixtureProxy>(BroadphaseCollision);
         }
 
         internal void Destroy(Contact c)
@@ -191,10 +163,9 @@ namespace FarseerPhysics.Dynamics
             Body bodyA = fixtureA.Body;
             Body bodyB = fixtureB.Body;
 
-            if (c.IsTouching())
+            if (EndContact != null && c.IsTouching())
             {
-                if (EndContact != null)
-                    EndContact(c);
+                EndContact(c);
             }
 
             // Remove from the world.
@@ -232,7 +203,7 @@ namespace FarseerPhysics.Dynamics
                 bodyB._contactList = c.NodeB.Next;
             }
 
-            ContactPool.Insert(c);
+            c.Destroy();
         }
 
         internal void Collide()
@@ -244,6 +215,8 @@ namespace FarseerPhysics.Dynamics
 
                 Fixture fixtureA = c.FixtureA;
                 Fixture fixtureB = c.FixtureB;
+                int indexA = c.GetChildIndexA();
+                int indexB = c.GetChildIndexB();
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
 
@@ -263,21 +236,18 @@ namespace FarseerPhysics.Dynamics
                     }
 
                     // Check user filtering.
-                    if (CollisionFilter != null)
+                    if (ContactFilter != null && ContactFilter(fixtureA, fixtureB) == false)
                     {
-                        if (CollisionFilter(fixtureA, fixtureB) == false)
-                        {
-                            Destroy(c);
-                            continue;
-                        }
+                        Destroy(c);
+                        continue;
                     }
 
                     // Clear the filtering flag.
                     c.Flags &= ~ContactFlags.Filter;
                 }
 
-                int proxyIdA = fixtureA.ProxyId;
-                int proxyIdB = fixtureB.ProxyId;
+                int proxyIdA = fixtureA._proxies[indexA].ProxyId;
+                int proxyIdB = fixtureB._proxies[indexB].ProxyId;
 
                 bool overlap = BroadPhase.TestOverlap(proxyIdA, proxyIdB);
 

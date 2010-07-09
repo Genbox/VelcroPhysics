@@ -30,23 +30,18 @@ namespace FarseerPhysics.Collision.Shapes
     /// </summary>
     public enum ShapeType
     {
-        /// <summary>
-        /// The shape type is unknown or not set.
-        /// </summary>
         Unknown = -1,
-        /// <summary>
-        /// The shape type is a circle
-        /// </summary>
         Circle = 0,
-        /// <summary>
-        /// The shape type is a polygon
-        /// </summary>
-        Polygon = 1,
-        TypeCount = 2,
+        Edge = 1,
+        Polygon = 2,
+        Loop = 3,
+        TypeCount = 4,
     }
 
     /// <summary>
-    /// Base class for shapes.
+    /// A shape is used for collision detection. You can create a shape however you like.
+    /// Shapes used for simulation in b2World are created automatically when a b2Fixture
+    /// is created. Shapes may encapsulate a one or more child shapes.
     /// </summary>
     public abstract class Shape
     {
@@ -89,11 +84,14 @@ namespace FarseerPhysics.Collision.Shapes
             ShapeType = ShapeType.Unknown;
         }
 
+        /// Get the number of child primitives.
+        public abstract int GetChildCount();
+
         /// <summary>
         /// Get the type of this shape. You can use this to down cast to the concrete shape.
         /// </summary>
         /// <value>The type of the shape.</value>
-        public ShapeType ShapeType { get; protected set; }
+        public ShapeType ShapeType { get; set; }
 
         /// <summary>
         /// Gets or sets the radius of the shape. Even polygons have a radius.
@@ -130,20 +128,21 @@ namespace FarseerPhysics.Collision.Shapes
         public abstract bool TestPoint(ref Transform transform, Vector2 point);
 
         /// <summary>
-        /// Cast a ray against this shape.
+        /// Cast a ray against a child shape.
         /// </summary>
         /// <param name="output">the ray-cast results.</param>
         /// <param name="input">the ray-cast input parameters.</param>
         /// <param name="transform">the transform to be applied to the shape.</param>
+        /// <param name="childIndex">the child shape index.</param>
         /// <returns>True if the raycast hit something</returns>
-        public abstract bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform);
+        public abstract bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex);
 
         /// <summary>
-        /// Given a transform, compute the associated axis aligned bounding box for this shape.
+        /// Given a transform, compute the associated axis aligned bounding box for a child shape.
         /// </summary>
         /// <param name="aabb">returns the axis aligned box.</param>
         /// <param name="transform">the world transform of the shape.</param>
-        public abstract void ComputeAABB(out AABB aabb, ref Transform transform);
+        public abstract void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex);
 
         /// <summary>
         /// Gets the vertices of the shape. If the shape is not already represented by vertices

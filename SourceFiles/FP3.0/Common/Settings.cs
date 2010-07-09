@@ -54,6 +54,8 @@ namespace FarseerPhysics.Common
         /// of performance.
         public static int PositionIterations = 3;
 
+        public static float MaxManifoldPoints = 2;
+
         /// The maximum number of vertices on a convex polygon.
         public const int MaxPolygonVertices = 32;
 

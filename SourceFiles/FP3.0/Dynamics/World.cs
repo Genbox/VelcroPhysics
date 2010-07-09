@@ -61,8 +61,9 @@ namespace FarseerPhysics.Dynamics
 
         private float _invDt0;
         private Island _island = new Island();
-        private Func<Fixture, bool> _queryAABBCallback;
+        private Func<FixtureProxy, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
+        internal Queue<Contact> ContactPool = new Queue<Contact>(256);
 
         private RayCastCallback _rayCastCallback;
         private RayCastCallbackInternal _rayCastCallbackWrapper;
@@ -280,7 +281,7 @@ namespace FarseerPhysics.Dynamics
                     FixtureRemoved(f);
                 }
 
-                f.DestroyProxy(ContactManager.BroadPhase);
+                f.DestroyProxies(ContactManager.BroadPhase);
                 f.Destroy();
             }
 
@@ -585,7 +586,7 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         /// <param name="callback">a user implemented callback class.</param>
         /// <param name="aabb">the query box.</param>
-        public void QueryAABB(Func<Fixture, bool> callback, ref AABB aabb)
+        public void QueryAABB(Func<FixtureProxy, bool> callback, ref AABB aabb)
         {
             _queryAABBCallback = callback;
             ContactManager.BroadPhase.Query(_queryAABBCallbackWrapper, ref aabb);
@@ -594,8 +595,8 @@ namespace FarseerPhysics.Dynamics
 
         private bool QueryAABBCallbackWrapper(int proxyId)
         {
-            Fixture fixture = ContactManager.BroadPhase.GetUserData<Fixture>(proxyId);
-            return _queryAABBCallback(fixture);
+            FixtureProxy proxy = ContactManager.BroadPhase.GetUserData<FixtureProxy>(proxyId);
+            return _queryAABBCallback(proxy);
         }
 
         /// <summary>
@@ -620,9 +621,11 @@ namespace FarseerPhysics.Dynamics
 
         private float RayCastCallbackWrapper(ref RayCastInput input, int proxyId)
         {
-            Fixture fixture = ContactManager.BroadPhase.GetUserData<Fixture>(proxyId);
+            FixtureProxy proxy = ContactManager.BroadPhase.GetUserData<FixtureProxy>(proxyId);
+            Fixture fixture = proxy.Fixture;
+            int index = proxy.ChildIndex;
             RayCastOutput output;
-            bool hit = fixture.RayCast(out output, ref input);
+            bool hit = fixture.RayCast(out output, ref input, index);
 
             if (hit)
             {
@@ -805,7 +808,7 @@ namespace FarseerPhysics.Dynamics
                 Body b = BodyList[i];
 
                 // If a body was not in an island then it did not move.
-                if ((b._flags & BodyFlags.Island) == 0)
+                if ((b._flags & BodyFlags.Island) != BodyFlags.Island)
                 {
                     continue;
                 }
@@ -889,6 +892,8 @@ namespace FarseerPhysics.Dynamics
 
                     Fixture fixtureA = contact.FixtureA;
                     Fixture fixtureB = contact.FixtureB;
+                    int indexA = contact._indexA;
+                    int indexB = contact._indexB;
 
                     // Cull sensors.
                     if (fixtureA.IsSensor || fixtureB.IsSensor)
@@ -901,8 +906,8 @@ namespace FarseerPhysics.Dynamics
 
                     // Compute the time of impact in interval [0, minTOI]
                     TOIInput input = new TOIInput();
-                    input.ProxyA.Set(fixtureA.Shape);
-                    input.ProxyB.Set(fixtureB.Shape);
+                    input.ProxyA.Set(fixtureA.Shape, indexA);
+                    input.ProxyB.Set(fixtureB.Shape, indexB);
                     input.SweepA = bodyA._sweep;
                     input.SweepB = bodyB._sweep;
                     input.TMax = toi;
@@ -973,7 +978,7 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // The contact likely has some new contact points. The listener
-                // gives the user a chance to disable the contact;
+                // gives the user a chance to disable the contact.
                 if (contact != toiContact)
                 {
                     contact.Update(ContactManager);
@@ -998,7 +1003,7 @@ namespace FarseerPhysics.Dynamics
             // Reduce the TOI body's overlap with the contact island.
             _toiSolver.Initialize(_toiContacts, count, body);
 
-            const float k_toiBaumgarte = 0.75f;
+            float k_toiBaumgarte = 0.75f;
             //bool solved = false;
             for (int i = 0; i < 20; ++i)
             {
@@ -1037,10 +1042,10 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < BodyList.Count; i++)
             {
                 Body body = BodyList[i];
-                // Kinematic, and static bodies will not be affected by the TOI event.
-                // If a body was not in an island then it did not move.
+		        // Kinematic, and static bodies will not be affected by the TOI event.
+		        // If a body was not in an island then it did not move.
                 if ((body._flags & BodyFlags.Island) == 0 || body.BodyType == BodyType.Kinematic || body.BodyType == BodyType.Static)
-                {
+		        {
                     body._flags |= BodyFlags.Toi;
                 }
                 else
@@ -1053,7 +1058,8 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < BodyList.Count; i++)
             {
                 Body body = BodyList[i];
-                if ((body._flags & BodyFlags.Toi) == BodyFlags.Toi)
+#warning Watch out here - inconsistent change.
+                if ((body._flags & BodyFlags.Toi) != BodyFlags.None)
                 {
                     continue;
                 }
@@ -1072,7 +1078,8 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < BodyList.Count; i++)
             {
                 Body body = BodyList[i];
-                if ((body._flags & BodyFlags.Toi) == BodyFlags.Toi)
+#warning Watch out here - inconsistent change.
+                if ((body._flags & BodyFlags.Toi) != BodyFlags.None)
                 {
                     continue;
                 }

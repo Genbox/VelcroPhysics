@@ -107,7 +107,8 @@ namespace FarseerPhysics.Collision
             _nodes[proxyId].Aabb.LowerBound = aabb.LowerBound - r;
             _nodes[proxyId].Aabb.UpperBound = aabb.UpperBound + r;
             _nodes[proxyId].UserData = userData;
-            _nodes[proxyId].LeafCount = 0;
+#warning was LeafCount = 0
+            _nodes[proxyId].LeafCount = 1;
 
             InsertLeaf(proxyId);
 
@@ -203,7 +204,10 @@ namespace FarseerPhysics.Collision
                 while (_nodes[node].IsLeaf() == false)
                 {
                     // Child selector based on a bit in the path
-                    node = ((_path >> bit) & 1) == 0 ? _nodes[node].Child1 : _nodes[node].Child2;
+                    int selector = (_path >> bit) & 1;
+
+                    // Select the child nod
+                    node = (selector == 0) ? _nodes[node].Child1 : _nodes[node].Child2;
 
                     // Keep bit between 0 and 31 because _path has 32 bits
                     // bit = (bit + 1) % 31
@@ -238,11 +242,13 @@ namespace FarseerPhysics.Collision
             fatAABB = _nodes[proxyId].Aabb;
         }
 
+        static Stack<int> stack = new Stack<int>(256);
+
         /// Query an AABB for overlapping proxies. The callback class
         /// is called for each proxy that overlaps the supplied AABB.
         public void Query(Func<int, bool> callback, ref AABB aabb)
         {
-            Stack<int> stack = new Stack<int>(256);
+            stack.Clear();
             stack.Push(_root);
 
             while (stack.Count > 0)
@@ -306,7 +312,7 @@ namespace FarseerPhysics.Collision
                 segmentAABB.UpperBound = Vector2.Max(p1, t);
             }
 
-            Stack<int> stack = new Stack<int>(256);
+            stack.Clear();
             stack.Push(_root);
 
             while (stack.Count > 0)
@@ -464,7 +470,7 @@ namespace FarseerPhysics.Collision
             int oldParent = _nodes[sibling].ParentOrNext;
             int newParent = AllocateNode();
             _nodes[newParent].ParentOrNext = oldParent;
-            //_nodes[node2].UserData = 0;
+            _nodes[newParent].UserData = null;
             _nodes[newParent].Aabb.Combine(ref leafAABB, ref _nodes[sibling].Aabb);
             _nodes[newParent].LeafCount = _nodes[sibling].LeafCount + 1;
 
@@ -558,6 +564,8 @@ namespace FarseerPhysics.Collision
             return ComputeHeight(_root);
         }
 
+        /// Compute the height of the binary tree in O(N) time. Should not be
+        /// called often.
         private int ComputeHeight(int nodeId)
         {
             if (nodeId == NullNode)

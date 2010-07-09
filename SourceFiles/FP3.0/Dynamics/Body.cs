@@ -256,7 +256,7 @@ namespace FarseerPhysics.Dynamics
                     for (int j = 0; j < _fixtureList.Count; j++)
                     {
                         Fixture f = _fixtureList[j];
-                        f.CreateProxy(broadPhase, ref _xf);
+                        f.CreateProxies(broadPhase, ref _xf);
                     }
 
                     // Contacts are created the next time step.
@@ -270,7 +270,7 @@ namespace FarseerPhysics.Dynamics
                     for (int j = 0; j < _fixtureList.Count; j++)
                     {
                         Fixture f = _fixtureList[j];
-                        f.DestroyProxy(broadPhase);
+                        f.DestroyProxies(broadPhase);
                     }
 
                     // Destroy the attached contacts.
@@ -515,7 +515,7 @@ namespace FarseerPhysics.Dynamics
             if ((_flags & BodyFlags.Enabled) == BodyFlags.Enabled)
             {
                 BroadPhase broadPhase = World.ContactManager.BroadPhase;
-                fixture.CreateProxy(broadPhase, ref _xf);
+                fixture.CreateProxies(broadPhase, ref _xf);
             }
 
             _fixtureList.Add(fixture);
@@ -583,11 +583,7 @@ namespace FarseerPhysics.Dynamics
                 Debug.Assert(fixture.ProxyId != BroadPhase.NullProxy);
 
                 BroadPhase broadPhase = World.ContactManager.BroadPhase;
-                fixture.DestroyProxy(broadPhase);
-            }
-            else
-            {
-                Debug.Assert(fixture.ProxyId == BroadPhase.NullProxy);
+                fixture.DestroyProxies(broadPhase);
             }
 
             fixture.Destroy();

@@ -139,6 +139,21 @@ namespace FarseerPhysics.Common
             MultiplyT(ref T.R, ref tempVector1, out r);
         }
 
+        // A^T * B
+        public static void MultiplyT(ref Mat22 A, ref Mat22 B, out Mat22 C)
+        {
+            Vector2 c1 = new Vector2(Vector2.Dot(A.Col1, B.Col1), Vector2.Dot(A.Col2, B.Col1));
+            Vector2 c2 = new Vector2(Vector2.Dot(A.Col1, B.Col2), Vector2.Dot(A.Col2, B.Col2));
+            C = new Mat22(c1, c2);
+        }
+
+        public static void MultiplyT(ref Transform A, ref Transform B, out Transform C)
+        {
+            Mat22 R;
+            MultiplyT(ref A.R, ref B.R, out R);
+            C = new Transform(B.Position - A.Position, ref R);
+        }
+
         public static void Swap<T>(ref T a, ref T b)
         {
             T tmp = a;
@@ -453,6 +468,7 @@ namespace FarseerPhysics.Common
             Angle0 = (1.0f - t) * Angle0 + t * Angle;
         }
 
+        /// Normalize the angles.
         public void Normalize()
         {
             const float twoPi = 2.0f * Settings.Pi;
