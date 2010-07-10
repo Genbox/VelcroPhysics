@@ -790,7 +790,7 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 Mass += f.Shape.Mass;
-                center += f.Shape.Mass * f.Shape.Center;
+                center += f.Shape.Mass * f.Shape.Centroid;
                 _I += f.Shape.Inertia;
             }
 

@@ -53,6 +53,7 @@ namespace FarseerPhysics.TestBed.Tests
             squareCharacter.Body.FixedRotation = true;
             squareCharacter.Body.AllowSleep = false;
 
+#if false
             // Hexagon character
             float angle = 0.0f;
             const float delta = Settings.Pi / 3.0f;
@@ -76,6 +77,7 @@ namespace FarseerPhysics.TestBed.Tests
             circleCharacter.Body.BodyType = BodyType.Dynamic;
             circleCharacter.Body.FixedRotation = true;
             circleCharacter.Body.AllowSleep = false;
+#endif
         }
 
         public static Test Create()

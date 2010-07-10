@@ -68,7 +68,7 @@ namespace FarseerPhysics.Collision.Shapes
             clone.Radius = Radius;
             clone.Area = Area;
             clone.Mass = Mass;
-            clone.Center = Center;
+            clone.Centroid = Centroid;
             clone.Inertia = Inertia;
             clone.Vertices = Vertices;
             clone.Normals = Normals;
@@ -391,7 +391,7 @@ namespace FarseerPhysics.Collision.Shapes
             // A line segment has zero mass.
             if (Vertices.Count == 2)
             {
-                Center = 0.5f * (Vertices[0] + Vertices[1]);
+                Centroid = 0.5f * (Vertices[0] + Vertices[1]);
                 Mass = 0.0f;
                 Inertia = 0.0f;
                 return;
@@ -446,7 +446,7 @@ namespace FarseerPhysics.Collision.Shapes
             // Center of mass
             Debug.Assert(area > Settings.Epsilon);
             center *= 1.0f / area;
-            Center = center;
+            Centroid = center;
 
             // Inertia tensor relative to the local origin.
             Inertia = Density * I;

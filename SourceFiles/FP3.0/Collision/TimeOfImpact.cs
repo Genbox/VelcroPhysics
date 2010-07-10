@@ -119,6 +119,7 @@ namespace FarseerPhysics.Collision
                 if (s < 0.0f)
                 {
                     _axis = -_axis;
+                    s = -s;
                 }
                 return;
             }
@@ -143,6 +144,7 @@ namespace FarseerPhysics.Collision
                 if (s < 0.0f)
                 {
                     _axis = -_axis;
+                    s = -s;
                 }
                 return;
             }
@@ -298,6 +300,7 @@ namespace FarseerPhysics.Collision
         {
             ++ToiCalls;
 
+            output = new TOIOutput();
             output.State = TOIOutputState.Unknown;
             output.t = input.TMax;
 

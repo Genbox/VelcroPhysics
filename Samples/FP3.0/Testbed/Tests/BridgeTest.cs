@@ -39,16 +39,12 @@ namespace FarseerPhysics.TestBed.Tests
             Body ground;
             {
                 ground = BodyFactory.CreateBody(World);
-
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
-                ground.CreateFixture(shape);
+                FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
             }
 
             {
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 20.0f);
-
 
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
@@ -63,10 +59,6 @@ namespace FarseerPhysics.TestBed.Tests
                     Vector2 anchor = new Vector2(-0.5f, 0.0f);
                     RevoluteJoint jd = new RevoluteJoint(prevBody, body, anchor);
                     World.Add(jd);
-
-                    if (i == (Count >> 1))
-                    {
-                    }
 
                     prevBody = body;
                 }

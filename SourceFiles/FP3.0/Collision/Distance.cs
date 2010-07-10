@@ -36,7 +36,7 @@ namespace FarseerPhysics.Collision
     {
         internal float Radius;
         private Vertices _vertices;
-        internal Vector2[] _buffer;
+        private Vector2[] _buffer;
 
         /// <summary>
         /// Initialize the proxy using the given shape. The shape
@@ -49,7 +49,7 @@ namespace FarseerPhysics.Collision
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape) shape;
+                        CircleShape circle = (CircleShape)shape;
                         _vertices = new Vertices(1);
                         _vertices.Add(circle.Position);
                         Radius = circle.Radius;
@@ -58,7 +58,7 @@ namespace FarseerPhysics.Collision
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape polygon = (PolygonShape) shape;
+                        PolygonShape polygon = (PolygonShape)shape;
                         _vertices = polygon.Vertices;
                         Radius = polygon.Radius;
                     }
@@ -87,7 +87,6 @@ namespace FarseerPhysics.Collision
                 case ShapeType.Edge:
                     {
                         EdgeShape edge = (EdgeShape)shape;
-
                         _vertices = new Vertices(2);
                         _vertices.Add(edge._vertex1);
                         _vertices.Add(edge._vertex2);
@@ -156,10 +155,17 @@ namespace FarseerPhysics.Collision
         }
     }
 
+    /// <summary>
     /// Used to warm start ComputeDistance.
     /// Set count to zero on first call.
+    /// </summary>
     public struct SimplexCache
     {
+        /// <summary>
+        /// length or area
+        /// </summary>
+        public float Metric;
+
         public ushort Count;
 
         /// <summary>
@@ -171,16 +177,13 @@ namespace FarseerPhysics.Collision
         /// vertices on shape B
         /// </summary>
         public FixedArray3<byte> IndexB;
-
-        /// <summary>
-        /// length or area
-        /// </summary>
-        public float Metric;
     }
 
+    /// <summary>
     /// Input for ComputeDistance.
     /// You have to option to use the shape radii
     /// in the computation. Even 
+    /// </summary>
     public struct DistanceInput
     {
         public DistanceProxy ProxyA;
@@ -190,7 +193,9 @@ namespace FarseerPhysics.Collision
         public bool UseRadii;
     }
 
+    /// <summary>
     /// Output for ComputeDistance.
+    /// </summary>
     public struct DistanceOutput
     {
         public float Distance;
@@ -303,11 +308,11 @@ namespace FarseerPhysics.Collision
         internal void WriteCache(ref SimplexCache cache)
         {
             cache.Metric = GetMetric();
-            cache.Count = (ushort) Count;
+            cache.Count = (ushort)Count;
             for (int i = 0; i < Count; ++i)
             {
-                cache.IndexA[i] = (byte) (V[i].IndexA);
-                cache.IndexB[i] = (byte) (V[i].IndexB);
+                cache.IndexA[i] = (byte)(V[i].IndexA);
+                cache.IndexB[i] = (byte)(V[i].IndexB);
             }
         }
 
@@ -327,9 +332,11 @@ namespace FarseerPhysics.Collision
                             // Origin is left of e12.
                             return MathUtils.Cross(1.0f, e12);
                         }
-
-                        // Origin is right of e12.
-                        return MathUtils.Cross(e12, 1.0f);
+                        else
+                        {
+                            // Origin is right of e12.
+                            return MathUtils.Cross(e12, 1.0f);
+                        }
                     }
 
                 default:
@@ -715,6 +722,7 @@ namespace FarseerPhysics.Collision
                 SimplexVertex vertex = simplex.V[simplex.Count];
                 vertex.IndexA = input.ProxyA.GetSupport(MathUtils.MultiplyT(ref input.TransformA.R, -d));
                 vertex.WA = MathUtils.Multiply(ref input.TransformA, input.ProxyA.GetVertex(vertex.IndexA));
+                
                 vertex.IndexB = input.ProxyB.GetSupport(MathUtils.MultiplyT(ref input.TransformB.R, d));
                 vertex.WB = MathUtils.Multiply(ref input.TransformB, input.ProxyB.GetVertex(vertex.IndexB));
                 vertex.W = vertex.WB - vertex.WA;

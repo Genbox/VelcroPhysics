@@ -133,7 +133,7 @@ namespace FarseerPhysics.Collision.Shapes
         protected override void ComputeProperties()
         {
             Mass = 0.0f;
-            Center = Vector2.Zero;
+            Centroid = Vector2.Zero;
             Inertia = 0.0f;
         }
 
