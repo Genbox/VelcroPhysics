@@ -65,7 +65,7 @@ namespace FarseerPhysics.Collision.Shapes
             shape.Position = Position;
             shape.Area = Area;
             shape.Mass = Mass;
-            shape.Center = Center;
+            shape.Centroid = Centroid;
             shape.Inertia = Inertia;
 
             return shape;
@@ -173,7 +173,7 @@ namespace FarseerPhysics.Collision.Shapes
             float area = Settings.Pi * (Radius * Radius);
             Area = area;
             Mass = Density * area;
-            Center = Position;
+            Centroid = Position;
 
             // inertia about the local origin
             Inertia = Mass * (0.5f * (Radius * Radius) + Vector2.Dot(Position, Position));

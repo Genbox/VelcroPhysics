@@ -29,8 +29,7 @@ namespace FarseerPhysics.Collision
     {
         public int proxyIdA;
         public int proxyIdB;
-
-        #region IComparable<Pair> Members
+        public int next;
 
         public int CompareTo(Pair other)
         {
@@ -54,8 +53,6 @@ namespace FarseerPhysics.Collision
 
             return 1;
         }
-
-        #endregion
     }
 
     /// <summary>
@@ -241,6 +238,15 @@ namespace FarseerPhysics.Collision
             _tree.RayCast(callback, ref input);
         }
 
+        /// <summary>
+        /// Compute the height of the embedded tree.
+        /// </summary>
+        /// <returns></returns>
+        public int ComputeHeight()
+        {
+            return _tree.ComputeHeight();
+        }
+
         private void BufferMove(int proxyId)
         {
             if (_moveCount == _moveCapacity)
@@ -291,9 +297,5 @@ namespace FarseerPhysics.Collision
             return true;
         }
 
-        public int ComputeHeight()
-        {
-            return _tree.ComputeHeight();
-        }
     }
 }

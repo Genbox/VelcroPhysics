@@ -90,6 +90,8 @@ namespace FarseerPhysics.Collision
             }
             _nodes[_nodeCapacity - 1].ParentOrNext = NullNode;
             _freeList = 0;
+
+            _path = 0;
         }
 
         /// <summary>
@@ -107,7 +109,6 @@ namespace FarseerPhysics.Collision
             _nodes[proxyId].Aabb.LowerBound = aabb.LowerBound - r;
             _nodes[proxyId].Aabb.UpperBound = aabb.UpperBound + r;
             _nodes[proxyId].UserData = userData;
-#warning was LeafCount = 0
             _nodes[proxyId].LeafCount = 1;
 
             InsertLeaf(proxyId);
@@ -140,6 +141,7 @@ namespace FarseerPhysics.Collision
         public bool MoveProxy(int proxyId, ref AABB aabb, Vector2 displacement)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
+
             Debug.Assert(_nodes[proxyId].IsLeaf());
 
             if (_nodes[proxyId].Aabb.Contains(ref aabb))
@@ -240,6 +242,13 @@ namespace FarseerPhysics.Collision
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
             fatAABB = _nodes[proxyId].Aabb;
+        }
+
+        /// Compute the height of the binary tree in O(N) time. Should not be
+        /// called often.
+        public int ComputeHeight()
+        {
+            return ComputeHeight(_root);
         }
 
         static Stack<int> stack = new Stack<int>(256);
@@ -406,6 +415,34 @@ namespace FarseerPhysics.Collision
             return nodeId;
         }
 
+        private int CountLeaves(int nodeId)
+        {
+            if (nodeId == NullNode)
+            {
+                return 0;
+            }
+
+            Debug.Assert(0 <= nodeId && nodeId < _nodeCapacity);
+            DynamicTreeNode node = _nodes[nodeId];
+
+            if (node.IsLeaf())
+            {
+                Debug.Assert(node.LeafCount == 1);
+                return 1;
+            }
+
+            int count1 = CountLeaves(node.Child1);
+            int count2 = CountLeaves(node.Child2);
+            int count = count1 + count2;
+            Debug.Assert(count == node.LeafCount);
+            return count;
+        }
+
+        private void Validate()
+        {
+            CountLeaves(_root);
+        }
+
         private void FreeNode(int nodeId)
         {
             Debug.Assert(0 <= nodeId && nodeId < _nodeCapacity);
@@ -450,8 +487,8 @@ namespace FarseerPhysics.Collision
                 // Surface area heuristic
                 AABB aabb1 = new AABB();
                 AABB aabb2 = new AABB();
-                aabb1.Combine(ref  leafAABB, ref _nodes[child1].Aabb);
-                aabb2.Combine(ref  leafAABB, ref _nodes[child2].Aabb);
+                aabb1.Combine(ref leafAABB, ref _nodes[child1].Aabb);
+                aabb2.Combine(ref leafAABB, ref _nodes[child2].Aabb);
                 float norm1 = (_nodes[child1].LeafCount + 1) * aabb1.GetPerimeter();
                 float norm2 = (_nodes[child2].LeafCount + 1) * aabb2.GetPerimeter();
 #endif
@@ -477,7 +514,7 @@ namespace FarseerPhysics.Collision
             if (oldParent != NullNode)
             {
                 // The sibling was not the root.
-                if (_nodes[_nodes[sibling].ParentOrNext].Child1 == sibling)
+                if (_nodes[oldParent].Child1 == sibling)
                 {
                     _nodes[oldParent].Child1 = newParent;
                 }
@@ -524,7 +561,7 @@ namespace FarseerPhysics.Collision
 
             if (grandParent != NullNode)
             {
-                // Destroy node2 and connect node1 to sibling.
+                // Destroy parent and connect sibling to grandParent.
                 if (_nodes[grandParent].Child1 == parent)
                 {
                     _nodes[grandParent].Child1 = sibling;
@@ -540,11 +577,11 @@ namespace FarseerPhysics.Collision
                 parent = grandParent;
                 while (parent != NullNode)
                 {
+                    AABB oldAABB = _nodes[parent].Aabb;
                     _nodes[parent].Aabb.Combine(ref _nodes[_nodes[parent].Child1].Aabb, ref _nodes[_nodes[parent].Child2].Aabb);
 
                     Debug.Assert(_nodes[parent].LeafCount > 0);
                     _nodes[parent].LeafCount -= 1;
-
 
                     parent = _nodes[parent].ParentOrNext;
                 }
@@ -557,15 +594,6 @@ namespace FarseerPhysics.Collision
             }
         }
 
-        /// Compute the height of the binary tree in O(N) time. Should not be
-        /// called often.
-        public int ComputeHeight()
-        {
-            return ComputeHeight(_root);
-        }
-
-        /// Compute the height of the binary tree in O(N) time. Should not be
-        /// called often.
         private int ComputeHeight(int nodeId)
         {
             if (nodeId == NullNode)
@@ -578,34 +606,6 @@ namespace FarseerPhysics.Collision
             int height1 = ComputeHeight(node.Child1);
             int height2 = ComputeHeight(node.Child2);
             return 1 + Math.Max(height1, height2);
-        }
-
-        public int CountLeaves(int nodeId)
-        {
-            if (nodeId == NullNode)
-            {
-                return 0;
-            }
-
-            Debug.Assert(0 <= nodeId && nodeId < _nodeCapacity);
-            DynamicTreeNode node = _nodes[nodeId];
-
-            if (node.IsLeaf())
-            {
-                Debug.Assert(node.LeafCount == 1);
-                return 1;
-            }
-
-            int count1 = CountLeaves(node.Child1);
-            int count2 = CountLeaves(node.Child2);
-            int count = count1 + count2;
-            Debug.Assert(count == node.LeafCount);
-            return count;
-        }
-
-        public void Validate()
-        {
-            CountLeaves(_root);
         }
     }
 }
