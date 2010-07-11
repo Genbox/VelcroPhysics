@@ -57,12 +57,12 @@ namespace FarseerPhysics.Dynamics
         None = 0,
         Island = (1 << 0),
         Awake = (1 << 1),
-        AllowSleep = (1 << 2),
+        AutoSleep = (1 << 2),
         Bullet = (1 << 3),
         FixedRotation = (1 << 4),
         Enabled = (1 << 5),
-        IgnoreGravity = (1 << 6),
-        Toi = (1 << 7),
+        Toi = (1 << 6),
+        IgnoreGravity = (1 << 7),
     }
 
     public class Body
@@ -175,13 +175,13 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public bool AllowSleep
         {
-            get { return (_flags & BodyFlags.AllowSleep) == BodyFlags.AllowSleep; }
+            get { return (_flags & BodyFlags.AutoSleep) == BodyFlags.AutoSleep; }
             set
             {
                 if (value)
-                    _flags |= BodyFlags.AllowSleep;
+                    _flags |= BodyFlags.AutoSleep;
                 else
-                    _flags &= ~BodyFlags.AllowSleep;
+                    _flags &= ~BodyFlags.AutoSleep;
             }
         }
 
@@ -614,7 +614,6 @@ namespace FarseerPhysics.Dynamics
             _sweep.Angle0 = _sweep.Angle = angle;
 
             BroadPhase broadPhase = World.ContactManager.BroadPhase;
-
             for (int i = 0; i < _fixtureList.Count; i++)
             {
                 Fixture f = _fixtureList[i];
@@ -818,6 +817,7 @@ namespace FarseerPhysics.Dynamics
             {
                 // Center the inertia about the center of mass.
                 _I -= Mass * Vector2.Dot(center, center);
+
                 Debug.Assert(_I > 0.0f);
                 _invI = 1.0f / _I;
             }
