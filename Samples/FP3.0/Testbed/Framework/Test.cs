@@ -383,7 +383,8 @@ namespace FarseerPhysics.TestBed.Framework
 
         public virtual void PreSolve(Contact contact, ref Manifold oldManifold)
         {
-            Manifold manifold = contact.Manifold;
+            Manifold manifold;
+            contact.GetManifold(out manifold);
 
             if (manifold.PointCount == 0)
             {

@@ -36,23 +36,23 @@ namespace FarseerPhysics.Dynamics
     {
         public Body[] Bodies;
         public int BodyCount;
-        public int ContactCount;
-        public Contact[] Contacts;
-        public int JointCapacity;
-        public int JointCount;
-        public Joint[] Joints;
+        private int ContactCount;
+        private Contact[] Contacts;
+        private int _jointCapacity;
+        private int _jointCount;
+        private Joint[] Joints;
         private int _bodyCapacity;
         private ContactManager _contactManager;
         private ContactSolver _contactSolver = new ContactSolver();
+        private int _contactCapacity;
 
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
         {
             _bodyCapacity = bodyCapacity;
-            JointCapacity = jointCapacity;
-
+            _jointCapacity = jointCapacity;
+            _contactCapacity = contactCapacity;
             BodyCount = 0;
-            ContactCount = 0;
-            JointCount = 0;
+            _jointCount = 0;
 
             _contactManager = contactManager;
 
@@ -76,7 +76,7 @@ namespace FarseerPhysics.Dynamics
         {
             BodyCount = 0;
             ContactCount = 0;
-            JointCount = 0;
+            _jointCount = 0;
         }
 
         public void Solve(ref TimeStep step, Vector2 gravity, bool allowSleep)
@@ -137,7 +137,7 @@ namespace FarseerPhysics.Dynamics
             _contactSolver.Reset(Contacts, ContactCount, step.DtRatio);
             _contactSolver.WarmStart();
 
-            for (int i = 0; i < JointCount; ++i)
+            for (int i = 0; i < _jointCount; ++i)
             {
                 Joints[i].InitVelocityConstraints(ref step);
             }
@@ -145,7 +145,7 @@ namespace FarseerPhysics.Dynamics
             // Solve velocity constraints.
             for (int i = 0; i < Settings.VelocityIterations; ++i)
             {
-                for (int j = 0; j < JointCount; ++j)
+                for (int j = 0; j < _jointCount; ++j)
                 {
                     Joints[j].SolveVelocityConstraints(ref step);
                 }
@@ -201,7 +201,7 @@ namespace FarseerPhysics.Dynamics
                 bool contactsOkay = _contactSolver.SolvePositionConstraints(Settings.ContactBaumgarte);
 
                 bool jointsOkay = true;
-                for (int j = 0; j < JointCount; ++j)
+                for (int j = 0; j < _jointCount; ++j)
                 {
                     bool jointOkay = Joints[j].SolvePositionConstraints();
                     jointsOkay = jointsOkay && jointOkay;
@@ -233,18 +233,13 @@ namespace FarseerPhysics.Dynamics
                         continue;
                     }
 
-                    if (b._invMass == 0.0f)
-                    {
-                        continue;
-                    }
-
-                    if ((b._flags & BodyFlags.AllowSleep) == 0)
+                    if ((b._flags & BodyFlags.AutoSleep) == 0)
                     {
                         b._sleepTime = 0.0f;
                         minSleepTime = 0.0f;
                     }
 
-                    if ((b._flags & BodyFlags.AllowSleep) == 0 ||
+                    if ((b._flags & BodyFlags.AutoSleep) == 0 ||
                         b._angularVelocity * b._angularVelocity > angTolSqr ||
                         Vector2.Dot(b._linearVelocity, b._linearVelocity) > linTolSqr)
                     {
@@ -277,13 +272,14 @@ namespace FarseerPhysics.Dynamics
 
         public void Add(Contact contact)
         {
+            Debug.Assert(ContactCount < _contactCapacity);
             Contacts[ContactCount++] = contact;
         }
 
         public void Add(Joint joint)
         {
-            Debug.Assert(JointCount < JointCapacity);
-            Joints[JointCount++] = joint;
+            Debug.Assert(_jointCount < _jointCapacity);
+            Joints[_jointCount++] = joint;
         }
 
         private void Report(ContactConstraint[] constraints)

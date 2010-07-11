@@ -21,6 +21,7 @@
 */
 
 using System;
+using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
@@ -99,7 +100,10 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Should the body break?
             float maxImpulse = 0.0f;
-            for (int i = 0; i < contact.Manifold.PointCount; ++i)
+            Manifold manifold;
+            contact.GetManifold(out manifold);
+
+            for (int i = 0; i < manifold.PointCount; ++i)
             {
                 maxImpulse = Math.Max(maxImpulse, impulse.normalImpulses[i]);
             }

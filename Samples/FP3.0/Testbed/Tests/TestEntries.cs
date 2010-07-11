@@ -28,6 +28,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {
+                new TestEntry {Name = "Bridge", CreateFcn = BridgeTest.Create},
                 new TestEntry {Name = "Character collision", CreateFcn = CharacterCollisionTest.Create},               
                 new TestEntry {Name = "Edge Test", CreateFcn = EdgeTest.Create},
                 new TestEntry {Name = "Tiles", CreateFcn = TilesTest.Create},
@@ -49,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Apply Force", CreateFcn = ApplyForceTest.Create},
                 new TestEntry {Name = "Cantilever", CreateFcn = CantileverTest.Create},
                 new TestEntry {Name = "SphereStack", CreateFcn = SphereStackTest.Create},
-                new TestEntry {Name = "Bridge", CreateFcn = BridgeTest.Create},
+                //new TestEntry {Name = "Bridge", CreateFcn = BridgeTest.Create},
                 new TestEntry {Name = "Breakable", CreateFcn = BreakableTest.Create},
                 new TestEntry {Name = "Chain", CreateFcn = ChainTest.Create},
                 new TestEntry {Name = "Collision Filtering", CreateFcn = CollisionFilteringTest.Create},

@@ -661,14 +661,13 @@ namespace FarseerPhysics.Dynamics
 
             // Build and simulate all awake islands.
             int stackSize = BodyList.Count;
-
-            if (_stack.Length < stackSize)
-                _stack = new Body[BodyList.Count];
+            if (stackSize > _stack.Length)
+                _stack = new Body[Math.Max(_stack.Length * 2, stackSize)];
 
             for (int j = 0; j < BodyList.Count; j++)
             {
                 Body seed = BodyList[j];
-                if ((seed._flags & (BodyFlags.Island)) == BodyFlags.Island)
+                if ((seed._flags & (BodyFlags.Island)) != BodyFlags.None)
                 {
                     continue;
                 }
@@ -1003,7 +1002,7 @@ namespace FarseerPhysics.Dynamics
             // Reduce the TOI body's overlap with the contact island.
             _toiSolver.Initialize(_toiContacts, count, body);
 
-            float k_toiBaumgarte = 0.75f;
+            const float k_toiBaumgarte = 0.75f;
             //bool solved = false;
             for (int i = 0; i < 20; ++i)
             {
@@ -1058,7 +1057,6 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < BodyList.Count; i++)
             {
                 Body body = BodyList[i];
-#warning Watch out here - inconsistent change.
                 if ((body._flags & BodyFlags.Toi) != BodyFlags.None)
                 {
                     continue;
@@ -1078,7 +1076,6 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < BodyList.Count; i++)
             {
                 Body body = BodyList[i];
-#warning Watch out here - inconsistent change.
                 if ((body._flags & BodyFlags.Toi) != BodyFlags.None)
                 {
                     continue;

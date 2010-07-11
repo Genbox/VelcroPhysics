@@ -131,9 +131,6 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\FixedArray.cs">
       <Link>Common\FixedArray.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\GrowableStack.cs">
-      <Link>Common\GrowableStack.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\LineTools.cs">
       <Link>Common\LineTools.cs</Link>
     </Compile>
