@@ -66,10 +66,6 @@ namespace FarseerPhysics.Dynamics.Contacts
         internal ContactConstraint[] Constraints;
         private Contact[] _contacts;
 
-        private Vector2 _normal;
-        private Vector2 _point;
-        private float _separation;
-
         public void Reset(Contact[] contacts, int contactCount, float impulseRatio)
         {
             _contacts = contacts;

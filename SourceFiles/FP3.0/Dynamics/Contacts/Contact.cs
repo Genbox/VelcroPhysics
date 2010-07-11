@@ -117,6 +117,9 @@ namespace FarseerPhysics.Dynamics.Contacts
 
             _manifold.PointCount = 0;
 
+            _prev = null;
+            _next = null;
+
             NodeA.Contact = null;
             NodeA.Prev = null;
             NodeA.Next = null;
@@ -188,6 +191,8 @@ namespace FarseerPhysics.Dynamics.Contacts
             Flags |= ContactFlags.Filter;
         }
 
+        // Update the contact manifold and touching status.
+        // Note: do not assume the fixture AABBs are overlapping or are valid.
         internal void Update(ContactManager contactManager)
         {
             Manifold oldManifold = _manifold;
@@ -433,6 +438,11 @@ namespace FarseerPhysics.Dynamics.Contacts
         {
             FixtureA._body.World.ContactPool.Enqueue(this);
             Reset(null, 0, null, 0);
+        }
+
+        public Contact GetNext()
+        {
+            return _next;
         }
     }
 

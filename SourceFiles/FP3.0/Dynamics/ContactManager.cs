@@ -44,12 +44,14 @@ namespace FarseerPhysics.Dynamics
 
         internal ContactManager()
         {
-            ContactList = new List<Contact>(128);
+            _contactList = null;
+            _contactCount = 0;
             BroadPhase = new BroadPhase();
             BroadphaseCollision = AddPair;
         }
 
-        public List<Contact> ContactList { get; private set; }
+        public Contact _contactList;
+        public int _contactCount;
 
         public BroadPhase BroadPhase { get; private set; }
 
@@ -122,7 +124,13 @@ namespace FarseerPhysics.Dynamics
             bodyB = fixtureB.Body;
 
             // Insert into the world.
-            ContactList.Add(c);
+            c._prev = null;
+            c._next = _contactList;
+            if (_contactList != null)
+            {
+                _contactList._prev = c;
+            }
+            _contactList = c;
 
             // Connect to island graph.
 
@@ -149,6 +157,8 @@ namespace FarseerPhysics.Dynamics
                 bodyB._contactList.Prev = c.NodeB;
             }
             bodyB._contactList = c.NodeB;
+
+            ++_contactCount;
         }
 
         internal void FindNewContacts()
@@ -169,7 +179,20 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Remove from the world.
-            ContactList.Remove(c);
+            if (c._prev != null)
+            {
+                c._prev._next = c._next;
+            }
+
+            if (c._next != null)
+            {
+                c._next._prev = c._prev;
+            }
+
+            if (c == _contactList)
+            {
+                _contactList = c._next;
+            }
 
             // Remove from body 1
             if (c.NodeA.Prev != null)
@@ -204,15 +227,16 @@ namespace FarseerPhysics.Dynamics
             }
 
             c.Destroy();
+
+            --_contactCount;
         }
 
         internal void Collide()
         {
             // Update awake contacts.
-            for (int i = 0; i < ContactList.Count; i++)
+            Contact c = _contactList;
+            while (c != null)
             {
-                Contact c = ContactList[i];
-
                 Fixture fixtureA = c.FixtureA;
                 Fixture fixtureB = c.FixtureB;
                 int indexA = c.GetChildIndexA();
@@ -222,6 +246,7 @@ namespace FarseerPhysics.Dynamics
 
                 if (bodyA.Awake == false && bodyB.Awake == false)
                 {
+                    c = c.GetNext();
                     continue;
                 }
 
@@ -231,6 +256,8 @@ namespace FarseerPhysics.Dynamics
                     // Should these bodies collide?
                     if (bodyB.ShouldCollide(bodyA) == false)
                     {
+                        Contact cNuke = c;
+                        c = cNuke.GetNext();
                         Destroy(c);
                         continue;
                     }
@@ -238,6 +265,8 @@ namespace FarseerPhysics.Dynamics
                     // Check user filtering.
                     if (ContactFilter != null && ContactFilter(fixtureA, fixtureB) == false)
                     {
+                        Contact cNuke = c;
+                        c = cNuke.GetNext();
                         Destroy(c);
                         continue;
                     }
@@ -254,12 +283,15 @@ namespace FarseerPhysics.Dynamics
                 // Here we destroy contacts that cease to overlap in the broad-phase.
                 if (overlap == false)
                 {
+                    Contact cNuke = c;
+                    c = cNuke.GetNext();
                     Destroy(c);
                     continue;
                 }
 
                 // The contact persists.
                 c.Update(this);
+                c = c.GetNext();
             }
         }
     }

@@ -56,8 +56,6 @@ namespace FarseerPhysics.TestBed
         private Vector2 _viewCenter = new Vector2(0.0f, 20.0f);
         private float _viewZoom = 1.0f;
         private int _width = 640;
-        //public bool TraceEnabled;
-        //public bool DebugViewEnabled;
 
         public Game1()
         {

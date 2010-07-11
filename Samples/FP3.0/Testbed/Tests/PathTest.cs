@@ -20,7 +20,6 @@ namespace FarseerPhysics.TestBed.Tests
             movingBody.Position = new Vector2(-25, 25);
             movingBody.BodyType = BodyType.Dynamic;
             movingBody.CreateFixture(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f), 1));
-            World.Add(movingBody);
 
             //Static shape made up of bodies
             path = new Path();
@@ -64,7 +63,6 @@ namespace FarseerPhysics.TestBed.Tests
             path.Translate(ref xform);
 
             PathFactory.ConvertPathToPolygon(path, body, 1, 50);
-            World.Add(body);
         }
 
         float time;
