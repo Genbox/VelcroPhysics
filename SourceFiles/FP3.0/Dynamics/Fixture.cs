@@ -98,14 +98,13 @@ namespace FarseerPhysics.Dynamics
         public CollisionEventHandler OnCollision;
         public SeparationEventHandler OnSeparation;
 
-#warning Box2D.XNA has internal _aabb
-
         internal Body _body;
         private CollisionCategory _collidesWith;
         private CollisionCategory _collisionCategories;
         private short _collisionGroup;
         private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
         private Shape _shape;
+        public Fixture _next;
 
         public FixtureProxy[] _proxies;
         public int _proxyCount;
@@ -131,6 +130,7 @@ namespace FarseerPhysics.Dynamics
             IsSensor = false;
 
             _body = body;
+            _next = null;
 
             _shape = shape.Clone();
 

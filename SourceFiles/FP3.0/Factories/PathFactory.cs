@@ -74,11 +74,10 @@ namespace FarseerPhysics.Factories
             List<Vector3> centers = path.SubdivideEvenly(copies);
             List<Body> bodyList = new List<Body>();
 
-            Body b;
 
             for (int i = 0; i < centers.Count; i++)
             {
-                b = new Body(world);
+                Body b = BodyFactory.CreateBody(world);
                 // copy the type from original body
                 b.BodyType = type;
                 b.Position = new Vector2(centers[i].X, centers[i].Y);
@@ -88,8 +87,6 @@ namespace FarseerPhysics.Factories
                 {
                     b.CreateFixture(shape);
                 }
-
-                world.Add(b);
 
                 bodyList.Add(b);
             }

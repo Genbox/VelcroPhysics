@@ -197,7 +197,7 @@ namespace FarseerPhysics.TestBed.Framework
                 if (settings.DrawStats > 0)
                 {
                     DebugView.DrawString(50, TextLine, "bodies/contacts/joints/proxies = {0:n}/{1:n}/{2:n}/{3:n}",
-                                         World.BodyList.Count, World.ContactList.Count, World.JointList.Count,
+                                         World._bodyCount, World.ContactManager._contactCount, World._jointCount,
                                          World.ProxyCount);
                     TextLine += 15;
                 }
@@ -258,11 +258,11 @@ namespace FarseerPhysics.TestBed.Framework
 
                 if (settings.DrawPolygonPoints == 1)
                 {
-                    foreach (Body body in World.BodyList)
+                    for (Body body = World._bodyList; body != null; body = body.GetNext())
                     {
-                        foreach (Fixture fixture in body.FixtureList)
+                        for (Fixture f = body._fixtureList; f != null; f = f._next)
                         {
-                            PolygonShape polygon = fixture.Shape as PolygonShape;
+                            PolygonShape polygon = f.Shape as PolygonShape;
                             if (polygon != null)
                             {
                                 Transform xf;

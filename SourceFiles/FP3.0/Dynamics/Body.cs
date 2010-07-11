@@ -21,7 +21,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
@@ -71,7 +70,6 @@ namespace FarseerPhysics.Dynamics
         internal float _angularVelocity;
         private BodyType _bodyType;
         internal ContactEdge _contactList;
-        internal List<Fixture> _fixtureList = new List<Fixture>(32);
         internal BodyFlags _flags;
         internal Vector2 _force;
         internal float _invI;
@@ -82,6 +80,9 @@ namespace FarseerPhysics.Dynamics
         internal Sweep _sweep; // the swept motion for CCD
         internal float _torque;
         internal Transform _xf; // the body origin transform
+        internal Body _prev;
+        internal Body _next;
+        public Fixture _fixtureList;
 
         private Body()
         {
@@ -253,9 +254,8 @@ namespace FarseerPhysics.Dynamics
 
                     // Create all proxies.
                     BroadPhase broadPhase = World.ContactManager.BroadPhase;
-                    for (int j = 0; j < _fixtureList.Count; j++)
+                    for (Fixture f = _fixtureList; f != null; f = f._next)
                     {
-                        Fixture f = _fixtureList[j];
                         f.CreateProxies(broadPhase, ref _xf);
                     }
 
@@ -267,9 +267,8 @@ namespace FarseerPhysics.Dynamics
 
                     // Destroy all proxies.
                     BroadPhase broadPhase = World.ContactManager.BroadPhase;
-                    for (int j = 0; j < _fixtureList.Count; j++)
+                    for (Fixture f = _fixtureList; f != null; f = f._next)
                     {
-                        Fixture f = _fixtureList[j];
                         f.DestroyProxies(broadPhase);
                     }
 
@@ -375,6 +374,7 @@ namespace FarseerPhysics.Dynamics
         public float Mass { get; internal set; }
 
         private float _I;
+        public int _fixtureCount;
 
         /// <summary>
         /// Get the rotational inertia of the body about the local origin.
@@ -407,11 +407,6 @@ namespace FarseerPhysics.Dynamics
         {
             set { _angularDamping = value; }
             get { return _angularDamping; }
-        }
-
-        public List<Fixture> FixtureList
-        {
-            get { return _fixtureList; }
         }
 
         /// <summary>
@@ -518,7 +513,11 @@ namespace FarseerPhysics.Dynamics
                 fixture.CreateProxies(broadPhase, ref _xf);
             }
 
-            _fixtureList.Add(fixture);
+            fixture._next = _fixtureList;
+            _fixtureList = fixture;
+            ++_fixtureCount;
+
+            fixture._body = this;
 
             // Adjust mass properties if needed.
             if (fixture.Shape.Density > 0.0f)
@@ -553,12 +552,23 @@ namespace FarseerPhysics.Dynamics
             Debug.Assert(fixture._body == this);
 
             // Remove the fixture from this body's singly linked list.
-            Debug.Assert(_fixtureList.Count > 0);
+            Debug.Assert(_fixtureCount > 0);
+            Fixture node = _fixtureList;
+            bool found = false;
+            while (node != null)
+            {
+                if (node == fixture)
+                {
+                    _fixtureList = fixture._next;
+                    found = true;
+                    break;
+                }
+
+                node = node._next;
+            }
 
             // You tried to remove a shape that is not attached to this body.
-            Debug.Assert(_fixtureList.Contains(fixture));
-
-            _fixtureList.Remove(fixture);
+            Debug.Assert(found);
 
             // Destroy any contacts associated with the fixture.
             ContactEdge edge = _contactList;
@@ -588,6 +598,10 @@ namespace FarseerPhysics.Dynamics
 
             fixture.Destroy();
             fixture._body = null;
+            fixture._next = null;
+            
+            --_fixtureCount;
+
 
             ResetMassData();
         }
@@ -614,9 +628,8 @@ namespace FarseerPhysics.Dynamics
             _sweep.Angle0 = _sweep.Angle = angle;
 
             BroadPhase broadPhase = World.ContactManager.BroadPhase;
-            for (int i = 0; i < _fixtureList.Count; i++)
+            for (Fixture f = _fixtureList; f != null; f = f._next)
             {
-                Fixture f = _fixtureList[i];
                 f.Synchronize(broadPhase, ref _xf, ref _xf);
             }
 
@@ -769,20 +782,19 @@ namespace FarseerPhysics.Dynamics
             _invI = 0.0f;
             _sweep.LocalCenter = Vector2.Zero;
 
-            // Kinematic bodies have zero mass.
-            if (_bodyType == BodyType.Kinematic)
+            // Static and kinematic bodies have zero mass.
+            if (BodyType == BodyType.Static || BodyType == BodyType.Kinematic)
             {
                 _sweep.Center0 = _sweep.Center = _xf.Position;
                 return;
             }
 
-            Debug.Assert(_bodyType == BodyType.Dynamic || _bodyType == BodyType.Static);
+            Debug.Assert(BodyType == BodyType.Dynamic);
 
             // Accumulate mass over all fixtures.
             Vector2 center = Vector2.Zero;
-            for (int i = 0; i < _fixtureList.Count; i++)
+            for (Fixture f = _fixtureList; f != null; f = f._next)
             {
-                Fixture f = _fixtureList[i];
                 if (f.Shape.Density == 0.0f)
                 {
                     continue;
@@ -791,13 +803,6 @@ namespace FarseerPhysics.Dynamics
                 Mass += f.Shape.Mass;
                 center += f.Shape.Mass * f.Shape.Centroid;
                 _I += f.Shape.Inertia;
-            }
-
-            //Static bodies only have mass, they don't have other properties. A little hacky tho...
-            if (_bodyType == BodyType.Static)
-            {
-                _sweep.Center0 = _sweep.Center = _xf.Position;
-                return;
             }
 
             // Compute center of mass.
@@ -903,9 +908,8 @@ namespace FarseerPhysics.Dynamics
             xf1.Position = _sweep.Center0 - MathUtils.Multiply(ref xf1.R, _sweep.LocalCenter);
 
             BroadPhase broadPhase = World.ContactManager.BroadPhase;
-            for (int i = 0; i < _fixtureList.Count; i++)
+            for (Fixture f = _fixtureList; f != null; f = f._next)
             {
-                Fixture f = _fixtureList[i];
                 f.Synchronize(broadPhase, ref xf1, ref _xf);
             }
         }
@@ -952,6 +956,12 @@ namespace FarseerPhysics.Dynamics
             _sweep.Center = _sweep.Center0;
             _sweep.Angle = _sweep.Angle0;
             SynchronizeTransform();
+        }
+
+        /// Get the next body in the world's body list.
+        public Body GetNext()
+        {
+            return _next;
         }
     }
 }

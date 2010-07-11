@@ -36,12 +36,14 @@ namespace FarseerPhysics.TestBed.Tests
 
         private BridgeTest()
         {
-            Body ground;
+            Body ground = null;
             {
-                ground = BodyFactory.CreateBody(World);
-                FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
-            }
+                ground = World.Add();
 
+                PolygonShape shape = new PolygonShape(0);
+                shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape);
+            }
             {
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 20.0f);
