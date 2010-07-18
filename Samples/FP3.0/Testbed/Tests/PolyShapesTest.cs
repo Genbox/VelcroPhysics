@@ -44,7 +44,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private const int MaxCount = 4;
 
-        internal CircleShape _circle = new CircleShape(0, 0);
+        internal CircleShape _circle = new CircleShape(0);
         private int _count;
         internal DebugViewXNA.DebugViewXNA _debugDraw;
         internal Transform _transform;
@@ -120,7 +120,7 @@ namespace FarseerPhysics.TestBed.Tests
         private const int MaxBodies = 256;
         private Body[] _bodies = new Body[MaxBodies];
         private int _bodyIndex;
-        private CircleShape _circle = new CircleShape(0, 0);
+        private CircleShape _circle = new CircleShape(0);
         private PolygonShape[] _polygons = new PolygonShape[4];
 
         private PolyShapesTest()
@@ -130,7 +130,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body ground = BodyFactory.CreateBody(World);
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
+                PolygonShape shape = new PolygonShape(edge);
                 ground.CreateFixture(shape);
             }
 
@@ -139,7 +139,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-0.5f, 0.0f));
                 vertices.Add(new Vector2(0.5f, 0.0f));
                 vertices.Add(new Vector2(0.0f, 1.5f));
-                _polygons[0] = new PolygonShape(vertices, 0);
+                _polygons[0] = new PolygonShape(vertices);
             }
 
             {
@@ -147,7 +147,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices3.Add(new Vector2(-0.1f, 0.0f));
                 vertices3.Add(new Vector2(0.1f, 0.0f));
                 vertices3.Add(new Vector2(0.0f, 1.5f));
-                _polygons[1] = new PolygonShape(vertices3, 0);
+                _polygons[1] = new PolygonShape(vertices3);
             }
 
             {
@@ -165,12 +165,12 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices8.Add(new Vector2(-0.5f * w, b));
                 vertices8.Add(new Vector2(-0.5f * s, 0.0f));
 
-                _polygons[2] = new PolygonShape(vertices8, 0);
+                _polygons[2] = new PolygonShape(vertices8);
             }
 
             {
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
-                _polygons[3] = new PolygonShape(box, 0);
+                _polygons[3] = new PolygonShape(box);
             }
 
             {
@@ -184,7 +184,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (_bodies[_bodyIndex] != null)
             {
-                World.Remove(_bodies[_bodyIndex]);
+                World.DestroyBody(_bodies[_bodyIndex]);
                 _bodies[_bodyIndex] = null;
             }
 
@@ -222,7 +222,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_bodies[i] != null)
                 {
-                    World.Remove(_bodies[i]);
+                    World.DestroyBody(_bodies[i]);
                     _bodies[i] = null;
                     return;
                 }
@@ -257,8 +257,8 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     if (_bodies[i] != null)
                     {
-                        bool active = _bodies[i].Enabled;
-                        _bodies[i].Enabled = !active;
+                        bool active = _bodies[i].Active;
+                        _bodies[i].Active = !active;
                     }
                 }
             }

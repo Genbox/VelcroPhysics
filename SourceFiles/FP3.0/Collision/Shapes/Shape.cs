@@ -25,9 +25,19 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Collision.Shapes
 {
-    /// <summary>
-    /// Type of shape
-    /// </summary>
+    /// This holds the mass data computed for a shape.
+    public struct MassData
+    {
+        /// The mass of the shape, usually in kilograms.
+        public float Mass;
+
+        /// The position of the shape's centroid relative to the shape's origin.
+        public Vector2 Center;
+
+        /// The rotational inertia of the shape about the local origin.
+        public float Inertia;
+    }
+
     public enum ShapeType
     {
         Unknown = -1,
@@ -38,127 +48,50 @@ namespace FarseerPhysics.Collision.Shapes
         TypeCount = 4,
     }
 
-    /// <summary>
     /// A shape is used for collision detection. You can create a shape however you like.
     /// Shapes used for simulation in b2World are created automatically when a b2Fixture
     /// is created. Shapes may encapsulate a one or more child shapes.
-    /// </summary>
     public abstract class Shape
     {
-        /// <summary>
-        /// Area of the shape
-        /// </summary>
-        public float Area;
-
-        /// <summary>
-        /// The position of the shape's centroid relative to the shape's origin.
-        /// </summary>
-        public Vector2 Centroid;
-
-        /// <summary>
-        /// The rotational inertia of the shape about the local origin.
-        /// </summary>
-        public float Inertia;
-
-        /// <summary>
-        /// The mass of the shape, usually in kilograms.
-        /// </summary>
-        public float Mass;
-
-        private float _density;
-
-        protected Shape(float radius, float density)
-        {
-            _density = density;
-            Radius = radius;
-            ShapeType = ShapeType.Unknown;
-        }
-
-        protected Shape(float radius)
-        {
-            Radius = radius;
-        }
-
-        protected Shape()
+        public Shape()
         {
             ShapeType = ShapeType.Unknown;
         }
+
+        /// Clone the concrete shape using the provided allocator.
+        public abstract Shape Clone();
+
+        /// Get the type of this shape. You can use this to down cast to the concrete shape.
+        /// @return the shape type.
+        public ShapeType ShapeType { get; internal set; }
 
         /// Get the number of child primitives.
         public abstract int GetChildCount();
 
-        /// <summary>
-        /// Get the type of this shape. You can use this to down cast to the concrete shape.
-        /// </summary>
-        /// <value>The type of the shape.</value>
-        public ShapeType ShapeType { get; set; }
-
-        /// <summary>
-        /// Gets or sets the radius of the shape. Even polygons have a radius.
-        /// </summary>
-        /// <value>The radius.</value>
-        public float Radius { get; set; }
-
-        /// <summary>
-        /// The density in kilograms per meter squared.
-        /// </summary>
-        /// <value>The density.</value>
-        public float Density
-        {
-            get { return _density; }
-            set
-            {
-                _density = value;
-                ComputeProperties();
-            }
-        }
-
-        /// <summary>
-        /// Clone the concrete shape.
-        /// </summary>
-        /// <returns></returns>
-        public abstract Shape Clone();
-
-        /// <summary>
         /// Test a point for containment in this shape. This only works for convex shapes.
-        /// </summary>
-        /// <param name="transform">the shape world transform.</param>
-        /// <param name="point">a point in world coordinates.</param>
-        /// <returns></returns>
-        public abstract bool TestPoint(ref Transform transform, Vector2 point);
+        /// @param xf the shape world transform.
+        /// @param p a point in world coordinates.
+        public abstract bool TestPoint(ref Transform xf, Vector2 p);
 
-        /// <summary>
         /// Cast a ray against a child shape.
-        /// </summary>
-        /// <param name="output">the ray-cast results.</param>
-        /// <param name="input">the ray-cast input parameters.</param>
-        /// <param name="transform">the transform to be applied to the shape.</param>
-        /// <param name="childIndex">the child shape index.</param>
-        /// <returns>True if the raycast hit something</returns>
+        /// @param output the ray-cast results.
+        /// @param input the ray-cast input parameters.
+        /// @param transform the transform to be applied to the shape.
+        /// @param childIndex the child shape index
         public abstract bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex);
 
-        /// <summary>
+
         /// Given a transform, compute the associated axis aligned bounding box for a child shape.
-        /// </summary>
-        /// <param name="aabb">returns the axis aligned box.</param>
-        /// <param name="transform">the world transform of the shape.</param>
-        public abstract void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex);
+        /// @param aabb returns the axis aligned box.
+        /// @param xf the world transform of the shape.
+        public abstract void ComputeAABB(out AABB aabb, ref Transform xf, int childIndex);
 
-        /// <summary>
-        /// Gets the vertices of the shape. If the shape is not already represented by vertices
-        /// an approximation will be made.
-        /// </summary>
-        /// <returns></returns>
-        public abstract Vertices GetVertices();
+        /// Compute the mass properties of this shape using its dimensions and density.
+        /// The inertia tensor is computed about the local origin, not the centroid.
+        /// @param massData returns the mass data for this shape.
+        /// @param density the density in kilograms per meter squared.
+        public abstract void ComputeMass(out MassData massData, float density);
 
-        /// <summary>
-        /// Computes the properties of the shape
-        /// The following properties are computed:
-        /// - Area
-        /// - Mass
-        /// - Center of shape
-        /// - Interia
-        /// </summary>
-        protected abstract void ComputeProperties();
+        public float Radius;
     }
 }

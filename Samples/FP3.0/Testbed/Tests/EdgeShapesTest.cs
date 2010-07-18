@@ -57,9 +57,9 @@ namespace FarseerPhysics.TestBed.Tests
                     float x2 = x1 + 0.5f;
                     float y2 = 2.0f * (float) Math.Cos(x2 / 10.0f * (float) Math.PI);
 
-                    PolygonShape shape = new PolygonShape(1);
+                    PolygonShape shape = new PolygonShape();
                     shape.SetAsEdge(new Vector2(x1, y1), new Vector2(x2, y2));
-                    ground.CreateFixture(shape);
+                    ground.CreateFixture(shape,1);
 
                     x1 = x2;
                     y1 = y2;
@@ -71,7 +71,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-0.5f, 0.0f));
                 vertices.Add(new Vector2(0.5f, 0.0f));
                 vertices.Add(new Vector2(0.0f, 1.5f));
-                _polygons[0] = new PolygonShape(20.0f);
+                _polygons[0] = new PolygonShape();
                 _polygons[0].Set(vertices);
             }
 
@@ -80,7 +80,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-0.1f, 0.0f));
                 vertices.Add(new Vector2(0.1f, 0.0f));
                 vertices.Add(new Vector2(0.0f, 1.5f));
-                _polygons[1] = new PolygonShape(20.0f);
+                _polygons[1] = new PolygonShape();
                 _polygons[1].Set(vertices);
             }
 
@@ -98,17 +98,17 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-0.5f * w, b + s));
                 vertices.Add(new Vector2(-0.5f * w, b));
                 vertices.Add(new Vector2(-0.5f * s, 0.0f));
-                _polygons[2] = new PolygonShape(20.0f);
+                _polygons[2] = new PolygonShape();
                 _polygons[2].Set(vertices);
             }
 
             {
-                _polygons[3] = new PolygonShape(20.0f);
+                _polygons[3] = new PolygonShape();
                 _polygons[3].SetAsBox(0.5f, 0.5f);
             }
 
             {
-                _circle = new CircleShape(0.5f, 1);
+                _circle = new CircleShape(0.5f);
             }
 
             _bodyIndex = 0;
@@ -119,7 +119,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (_bodies[_bodyIndex] != null)
             {
-                World.Remove(_bodies[_bodyIndex]);
+                World.DestroyBody(_bodies[_bodyIndex]);
                 _bodies[_bodyIndex] = null;
             }
 
@@ -137,12 +137,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (index < 4)
             {
-                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_polygons[index]);
+                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_polygons[index], 20.0f);
                 fixture.Friction = 0.3f;
             }
             else
             {
-                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_circle);
+                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_circle,1);
                 fixture.Friction = 0.3f;
             }
 
@@ -155,7 +155,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_bodies[i] != null)
                 {
-                    World.Remove(_bodies[i]);
+                    World.DestroyBody(_bodies[i]);
                     _bodies[i] = null;
                     return;
                 }

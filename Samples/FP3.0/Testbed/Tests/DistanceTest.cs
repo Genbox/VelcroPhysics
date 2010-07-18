@@ -45,7 +45,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _transformA.SetIdentity();
                 _transformA.Position = new Vector2(0.0f, -0.2f);
                 Vertices vertices = PolygonTools.CreateRectangle(10.0f, 0.2f);
-                _polygonA = new PolygonShape(vertices, 0);
+                _polygonA = new PolygonShape(vertices);
             }
 
             {
@@ -54,7 +54,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _transformB.Set(_positionB, _angleB);
 
                 Vertices vertices = PolygonTools.CreateRectangle(2.0f, 0.1f);
-                _polygonB = new PolygonShape(vertices, 0);
+                _polygonB = new PolygonShape(vertices);
             }
         }
 
@@ -74,7 +74,7 @@ namespace FarseerPhysics.TestBed.Tests
             input.TransformB = _transformB;
             input.UseRadii = true;
             SimplexCache cache;
-            cache.Count = 0;
+            cache.count = 0;
             DistanceOutput output;
             Distance.ComputeDistance(out output, out cache, ref input);
 

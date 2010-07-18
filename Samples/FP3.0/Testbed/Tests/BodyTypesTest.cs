@@ -49,8 +49,8 @@ namespace FarseerPhysics.TestBed.Tests
                 _attachment.Position = new Vector2(0.0f, 3.0f);
 
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 2.0f);
-                PolygonShape shape = new PolygonShape(box, 2.0f);
-                _attachment.CreateFixture(shape);
+                PolygonShape shape = new PolygonShape(box);
+                _attachment.CreateFixture(shape,2.0f);
             }
 
             // Define platform
@@ -60,15 +60,15 @@ namespace FarseerPhysics.TestBed.Tests
                 _platform.Position = new Vector2(0.0f, 5.0f);
 
                 Vertices box = PolygonTools.CreateRectangle(4.0f, 0.5f);
-                PolygonShape shape = new PolygonShape(box, 2.0f);
+                PolygonShape shape = new PolygonShape(box);
 
-                Fixture fixture = _platform.CreateFixture(shape);
+                Fixture fixture = _platform.CreateFixture(shape, 2.0f);
                 fixture.Friction = 0.6f;
 
                 RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform, new Vector2(0.0f, 0.0f));
                 rjd.MaxMotorTorque = 50.0f;
                 rjd.MotorEnabled = true;
-                World.Add(rjd);
+                World.AddJoint(rjd);
 
                 FixedPrismaticJoint pjd = new FixedPrismaticJoint(_platform, new Vector2(0.0f, 5.0f),
                                                                   new Vector2(1.0f, 0.0f));
@@ -78,7 +78,7 @@ namespace FarseerPhysics.TestBed.Tests
                 pjd.UpperLimit = 10.0f;
                 pjd.LimitEnabled = true;
 
-                World.Add(pjd);
+                World.AddJoint(pjd);
 
                 _speed = 3.0f;
             }
@@ -90,9 +90,9 @@ namespace FarseerPhysics.TestBed.Tests
                 body.Position = new Vector2(0.0f, 8.0f);
 
                 Vertices box = PolygonTools.CreateRectangle(0.75f, 0.75f);
-                PolygonShape shape = new PolygonShape(box, 2.0f);
+                PolygonShape shape = new PolygonShape(box);
 
-                Fixture fixture = body.CreateFixture(shape);
+                Fixture fixture = body.CreateFixture(shape, 2.0f);
                 fixture.Friction = 0.6f;
             }
         }

@@ -24,7 +24,14 @@ namespace FarseerPhysics.Common.PolygonManipulation
         {
             Vector2 localEntryPoint = fixture.Body.GetLocalPoint(entryPoint);
             Vector2 localExitPoint = fixture.Body.GetLocalPoint(exitPoint);
-            Vertices vertices = fixture.Shape.GetVertices();
+
+            PolygonShape shape = fixture.Shape as PolygonShape;
+            
+            //TODO: Fix
+            //if (shape == null)
+            //    return;
+
+            Vertices vertices = shape.Vertices;
             Vertices[] newPolygon = new Vertices[2];
 
             for (int i = 0; i < newPolygon.Length; i++)
@@ -127,18 +134,18 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
             //Get the entry points
             world.RayCast((f, p, n, fr) =>
-                              {
-                                  fixtures.Add(f);
-                                  entryPoints.Add(p);
-                                  return 1;
-                              }, start, end);
+            {
+                fixtures.Add(f);
+                entryPoints.Add(p);
+                return 1;
+            }, start, end);
 
             //Reverse the ray to get the exitpoints
             world.RayCast((f, p, n, fr) =>
-                              {
-                                  exitPoints.Add(p);
-                                  return 1;
-                              }, end, start);
+            {
+                exitPoints.Add(p);
+                return 1;
+            }, end, start);
 
             //We only have a single point. We need at least 2
             if (entryPoints.Count + exitPoints.Count < 2)
@@ -173,21 +180,22 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 {
                     SplitShape(fixtures[i], entryPoints[i], exitPoints[i], thickness, out first, out second);
 
-//TODO: Fix
                     //Delete the original shape and create two new. Retain the properties of the body.
-                    Body body1 = fixtures[i].Body.Clone(world);
+                    
+                    //TODO: Fix
+                    //Body body1 = fixtures[i].Body.Clone(world);
                     //world.Add(body1);
 
-                    PolygonShape shape1 = new PolygonShape(first, fixtures[i].Shape.Density);
-                    body1.CreateFixture(shape1);
+                    //PolygonShape shape1 = new PolygonShape(first, fixtures[i].Shape.Density);
+                    //body1.CreateFixture(shape1);
 
-                    Body body2 = fixtures[i].Body.Clone(world);
+                    //Body body2 = fixtures[i].Body.Clone(world);
                     //world.Add(body2);
 
-                    PolygonShape shape2 = new PolygonShape(second, fixtures[i].Shape.Density);
-                    body2.CreateFixture(shape2);
+                    //PolygonShape shape2 = new PolygonShape(second, fixtures[i].Shape.Density);
+                    //body2.CreateFixture(shape2);
 
-                    world.Remove(fixtures[i].Body);
+                    //world.Remove(fixtures[i].Body);
                 }
             }
         }

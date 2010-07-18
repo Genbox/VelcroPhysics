@@ -91,7 +91,7 @@ namespace FarseerPhysics.Common.ConvexHull
             }
 
             //Not sure if we need this
-            //returnVal.MergeParallelEdges(Settings.AngularSlop);
+            //returnVal.MergeParallelEdges(Settings.b2_angularSlop);
 
             return returnVal;
         }

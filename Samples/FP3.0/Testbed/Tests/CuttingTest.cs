@@ -26,7 +26,7 @@ namespace FarseerPhysics.TestBed.Tests
             FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
-            PolygonShape shape = new PolygonShape(box, 5);
+            PolygonShape shape = new PolygonShape(box);
 
             Vector2 x = new Vector2(-7.0f, 0.75f);
             Vector2 deltaX = new Vector2(0.5625f, 1.25f);
@@ -41,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = y;
-                    body.CreateFixture(shape);
+                    body.CreateFixture(shape, 5);
 
                     y += deltaY;
                 }

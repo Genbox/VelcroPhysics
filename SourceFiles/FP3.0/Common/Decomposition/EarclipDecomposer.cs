@@ -61,7 +61,7 @@ namespace FarseerPhysics.Common.Decomposition
         public static List<Vertices> ConvexPartition(Vertices vertices, int maxPolys, float tolerance)
         {
             if (vertices.Count < 3)
-                return new List<Vertices> { vertices };
+                return new List<Vertices> {vertices};
 
             List<Triangle> triangulated;
 

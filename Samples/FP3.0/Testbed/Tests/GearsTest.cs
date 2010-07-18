@@ -43,49 +43,49 @@ namespace FarseerPhysics.TestBed.Tests
         {
             {
                 // First circle
-                CircleShape circle1 = new CircleShape(1.0f, 5);
+                CircleShape circle1 = new CircleShape(1.0f);
                 Body body1 = BodyFactory.CreateBody(World);
                 body1.BodyType = BodyType.Dynamic;
                 body1.Position = new Vector2(-3.0f, 12.0f);
-                body1.CreateFixture(circle1);
+                body1.CreateFixture(circle1, 5);
 
                 // Second circle
-                CircleShape circle2 = new CircleShape(2.0f, 5);
+                CircleShape circle2 = new CircleShape(2.0f);
                 Body body2 = BodyFactory.CreateBody(World);
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(0.0f, 12.0f);
-                body2.CreateFixture(circle2);
+                body2.CreateFixture(circle2, 5);
 
                 // Rectangle
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 5.0f);
-                PolygonShape polygonBox = new PolygonShape(box, 5);
+                PolygonShape polygonBox = new PolygonShape(box);
                 Body body3 = BodyFactory.CreateBody(World);
                 body3.BodyType = BodyType.Dynamic;
                 body3.Position = new Vector2(2.5f, 12.0f);
-                body3.CreateFixture(polygonBox);
+                body3.CreateFixture(polygonBox, 5);
 
                 // Fix first circle
                 _joint1 = new FixedRevoluteJoint(body1, body1.Position);
-                World.Add(_joint1);
+                World.AddJoint(_joint1);
 
                 // Fix second circle
                 _joint2 = new FixedRevoluteJoint(body2, body2.Position);
-                World.Add(_joint2);
+                World.AddJoint(_joint2);
 
                 // Fix rectangle
                 _joint3 = new FixedPrismaticJoint(body3, body3.Position, new Vector2(0.0f, 1.0f));
                 _joint3.LowerLimit = -5.0f;
                 _joint3.UpperLimit = 5.0f;
                 _joint3.LimitEnabled = true;
-                World.Add(_joint3);
+                World.AddJoint(_joint3);
 
                 // Attach first and second circle together with a gear joint
                 _joint4 = new GearJoint(_joint1, _joint2, circle2.Radius / circle1.Radius);
-                World.Add(_joint4);
+                World.AddJoint(_joint4);
 
                 // Attach second and rectangle together with a gear joint
                 _joint5 = new GearJoint(_joint2, _joint3, -1.0f / circle2.Radius);
-                World.Add(_joint5);
+                World.AddJoint(_joint5);
             }
         }
 

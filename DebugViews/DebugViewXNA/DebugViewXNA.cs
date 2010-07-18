@@ -4,7 +4,6 @@ using System.Diagnostics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
-using FarseerPhysics.Controllers.Buoyancy;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
@@ -44,9 +43,9 @@ namespace FarseerPhysics.DebugViewXNA
                 {
                     Transform xf;
                     b.GetTransform(out xf);
-                    for (Fixture f = b._fixtureList; f != null; f = f._next)
+                    for (Fixture f = b._fixtureList; f != null; f = f.Next)
                     {
-                        if (b.Enabled == false)
+                        if (b.Active == false)
                         {
                             DrawShape(f, xf, new Color(0.5f, 0.5f, 0.3f));
                         }
@@ -81,7 +80,7 @@ namespace FarseerPhysics.DebugViewXNA
             if ((Flags & DebugViewFlags.Pair) == DebugViewFlags.Pair)
             {
                 Color color = new Color(0.3f, 0.9f, 0.9f);
-                for (Contact c = World.ContactManager._contactList; c != null; c = c.GetNext())
+                for (Contact c = World._contactManager.ContactList; c != null; c = c.GetNext())
                 {
                     Fixture fixtureA = c.FixtureA;
                     Fixture fixtureB = c.FixtureB;
@@ -91,8 +90,8 @@ namespace FarseerPhysics.DebugViewXNA
                     AABB aabbB;
                     fixtureB.GetAABB(out aabbB, 1);
 
-                    Vector2 cA = aabbA.Center;
-                    Vector2 cB = aabbB.Center;
+                    Vector2 cA = aabbA.GetCenter();
+                    Vector2 cB = aabbB.GetCenter();
 
                     DrawSegment(cA, cB, color);
                 }
@@ -101,16 +100,16 @@ namespace FarseerPhysics.DebugViewXNA
             if ((Flags & DebugViewFlags.AABB) == DebugViewFlags.AABB)
             {
                 Color color = new Color(0.9f, 0.3f, 0.9f);
-                BroadPhase bp = World.ContactManager.BroadPhase;
+                BroadPhase bp = World._contactManager.BroadPhase;
 
                 for (Body b = World._bodyList; b != null; b = b.GetNext())
                 {
-                    if (b.Enabled == false)
+                    if (b.Active == false)
                     {
                         continue;
                     }
 
-                    for (Fixture f = b._fixtureList; f != null; f = f._next)
+                    for (Fixture f = b._fixtureList; f != null; f = f.Next)
                     {
 
                         for (int t = 0; t < f._proxyCount; ++t)
@@ -137,21 +136,9 @@ namespace FarseerPhysics.DebugViewXNA
 
                     Transform xf;
                     b.GetTransform(out xf);
-                    xf.Position = b.WorldCenter;
+                    xf.Position = b.GetWorldCenter();
                     DrawTransform(ref xf);
                 }
-            }
-        }
-
-        //TODO: Visualize controllers in general
-        public void DrawWaveContainer(WaveContainer waveContainer)
-        {
-            for (int i = 0; i < waveContainer.NodeCount; i++)
-            {
-                DrawCircle(
-                    new Vector2(waveContainer.XPosition[i],
-                                waveContainer.Position.Y + waveContainer.Height + waveContainer.YPosition[i]), 0.1f,
-                    Color.Red);
             }
         }
 
@@ -235,7 +222,7 @@ namespace FarseerPhysics.DebugViewXNA
 
         private void DrawShape(Fixture fixture, Transform xf, Color color)
         {
-            switch (fixture.Shape.ShapeType)
+            switch (fixture.ShapeType)
             {
                 case ShapeType.Circle:
                     {
@@ -243,7 +230,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                         Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
                         float radius = circle.Radius;
-                        Vector2 axis = xf.R.Col1;
+                        Vector2 axis = xf.R.col1;
 
                         DrawSolidCircle(center, radius, axis, color);
                     }
@@ -443,10 +430,10 @@ namespace FarseerPhysics.DebugViewXNA
             const float axisScale = 0.4f;
             Vector2 p1 = xf.Position;
 
-            Vector2 p2 = p1 + axisScale * xf.R.Col1;
+            Vector2 p2 = p1 + axisScale * xf.R.col1;
             DrawSegment(p1, p2, Color.Red);
 
-            p2 = p1 + axisScale * xf.R.Col2;
+            p2 = p1 + axisScale * xf.R.col2;
             DrawSegment(p1, p2, Color.Green);
         }
 

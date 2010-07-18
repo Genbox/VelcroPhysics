@@ -25,8 +25,8 @@ namespace FarseerPhysics.Dynamics
     /// This is an internal structure.
     public struct TimeStep
     {
-        public float DeltaTime; // time step
-        public float DtRatio; // dt * inv_dt0
-        public float Inv_DeltaTime; // inverse time step (0 if dt == 0).
+        public float dt;			// time step
+        public float inv_dt;		// inverse time step (0 if dt == 0).
+        public float dtRatio;	    // dt * inv_dt0
     }
 }

@@ -29,6 +29,7 @@ namespace FarseerPhysics.TestBed.Tests
         public static TestEntry[] g_testEntries =
             {
                 new TestEntry {Name = "Bridge", CreateFcn = BridgeTest.Create},
+                new TestEntry {Name = "Varying Friction", CreateFcn = VaryingFrictionTest.Create},
                 new TestEntry {Name = "Character collision", CreateFcn = CharacterCollisionTest.Create},               
                 new TestEntry {Name = "Edge Test", CreateFcn = EdgeTest.Create},
                 new TestEntry {Name = "Tiles", CreateFcn = TilesTest.Create},
@@ -66,13 +67,12 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Sensor Test", CreateFcn = SensorTest.Create},
                 new TestEntry {Name = "Shape Editing", CreateFcn = ShapeEditingTest.Create},
                 new TestEntry {Name = "Slider Crank", CreateFcn = SliderCrankTest.Create},
-                new TestEntry {Name = "Varying Friction", CreateFcn = VaryingFrictionTest.Create},
             
                 //FPE 3.0 specific tests
                 new TestEntry {Name = "Path Test", CreateFcn = PathTest.Create},
-                new TestEntry {Name = "Buoyancy controller", CreateFcn = BuoyancyTest.Create},
+                //new TestEntry {Name = "Buoyancy controller", CreateFcn = BuoyancyTest.Create},
                 new TestEntry {Name = "Cutting of polygons", CreateFcn = CuttingTest.Create},
-                new TestEntry {Name = "Controllers", CreateFcn = ControllerTest.Create},
+                //new TestEntry {Name = "Controllers", CreateFcn = ControllerTest.Create},
                 new TestEntry {Name = "Boolean polygon", CreateFcn = BooleanPolygonTest.Create},
                 new TestEntry {Name = "Texture to Vertices", CreateFcn = TextureVerticesTest.Create},
                 new TestEntry {Name = "Polygon shapes", CreateFcn = PolygonShapesTest.Create},

@@ -47,7 +47,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body body = BodyFactory.CreateBody(World);
                 body.Position = new Vector2(0.0f, 10.0f);
 
-                PolygonShape shape = new PolygonShape(0.0f);
+                PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(3.0f, 0.5f);
                 _platform = body.CreateFixture(shape);
 
@@ -61,8 +61,8 @@ namespace FarseerPhysics.TestBed.Tests
                 body.Position = new Vector2(0.0f, 12.0f);
 
                 _radius = 0.5f;
-                CircleShape shape = new CircleShape(_radius, 20);
-                _character = body.CreateFixture(shape);
+                CircleShape shape = new CircleShape(_radius);
+                _character = body.CreateFixture(shape, 20);
 
                 body.LinearVelocity = new Vector2(0.0f, -50.0f);
             }
@@ -89,7 +89,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (position.Y < _top + _radius - 3.0f * Settings.LinearSlop)
             {
-                contact.IsEnabled = false;
+                contact.Enabled = false;
             }
         }
 

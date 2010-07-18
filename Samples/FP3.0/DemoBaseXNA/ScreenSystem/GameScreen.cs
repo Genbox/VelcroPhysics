@@ -320,8 +320,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             // Make a small box.
             AABB aabb;
             Vector2 d = new Vector2(0.001f, 0.001f);
-            aabb.LowerBound = p - d;
-            aabb.UpperBound = p + d;
+            aabb.lowerBound = p - d;
+            aabb.upperBound = p + d;
 
             Fixture _fixture = null;
 
@@ -329,13 +329,13 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             World.QueryAABB(
                 fixture =>
                 {
-                    Body body = fixture.Fixture.Body;
-                    if (body.BodyType == BodyType.Dynamic)
+                    Body body = fixture.fixture.GetBody();
+                    if (body.GetType() == BodyType.Dynamic)
                     {
-                        bool inside = fixture.Fixture.TestPoint(ref p);
+                        bool inside = fixture.fixture.TestPoint(p);
                         if (inside)
                         {
-                            _fixture = fixture.Fixture;
+                            _fixture = fixture.fixture;
 
                             // We are done, terminate the query.
                             return false;
@@ -348,11 +348,11 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             if (_fixture != null)
             {
-                Body body = _fixture.Body;
+                Body body = _fixture.GetBody();
                 _fixedMouseJoint = new FixedMouseJoint(body, p);
-                _fixedMouseJoint.MaxForce = 1000.0f * body.Mass;
-                World.Add(_fixedMouseJoint);
-                body.Awake = true;
+                _fixedMouseJoint.MaxForce = 1000.0f * body.GetMass();
+                World.AddJoint(_fixedMouseJoint);
+                body.SetAwake(true);
             }
         }
 
@@ -360,7 +360,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             if (_fixedMouseJoint != null)
             {
-                World.Remove(_fixedMouseJoint);
+                World.DestroyJoint(_fixedMouseJoint);
                 _fixedMouseJoint = null;
             }
         }

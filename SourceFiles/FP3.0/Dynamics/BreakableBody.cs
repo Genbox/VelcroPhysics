@@ -52,10 +52,10 @@ namespace FarseerPhysics.Dynamics
             if (!Broken)
             {
                 float maxImpulse = 0.0f;
-                for (int i = 0; i < contactConstraint.Manifold.PointCount; ++i)
+                for (int i = 0; i < contactConstraint.manifold.PointCount; ++i)
                 {
-                    maxImpulse = Math.Max(maxImpulse, contactConstraint.Manifold.Points[0].NormalImpulse);
-                    maxImpulse = Math.Max(maxImpulse, contactConstraint.Manifold.Points[1].NormalImpulse);
+                    maxImpulse = Math.Max(maxImpulse, contactConstraint.manifold.Points[0].NormalImpulse);
+                    maxImpulse = Math.Max(maxImpulse, contactConstraint.manifold.Points[1].NormalImpulse);
                 }
 
                 if (maxImpulse > Strength)
@@ -112,7 +112,9 @@ namespace FarseerPhysics.Dynamics
                 body.BodyType = BodyType.Dynamic;
                 body.Position = MainBody.Position;
                 body.Rotation = MainBody.GetAngle();
-                body.CreateFixture(shape);
+
+                //TODO: Get density of shape
+                body.CreateFixture(shape, 0);
 
                 body.AngularVelocity = _angularVelocitiesCache[i];
                 body.LinearVelocity = _velocitiesCache[i];

@@ -20,14 +20,17 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+
+
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
-
 namespace FarseerPhysics.Collision.Shapes
 {
+    /// <summary>
     /// A line segment (edge) Shape. These can be connected in chains or loops
     /// to other edge Shapes. The connectivity information is used to ensure
     /// correct contact normals.
+    /// </summary>
     public class EdgeShape : Shape
     {
         public EdgeShape()
@@ -143,7 +146,6 @@ namespace FarseerPhysics.Collision.Shapes
             return true;
         }
 
-        /// @see Shape::ComputeAABB
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
             aabb = new AABB();
@@ -158,20 +160,12 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound = upper + r;
         }
 
-        public override Vertices GetVertices()
+        public override void ComputeMass(out MassData massData, float density)
         {
-            Vertices vertices = new Vertices(2);
-            vertices.Add(_vertex1);
-            vertices.Add(_vertex2);
-            return vertices;
-        }
-
-        /// @see Shape::ComputeMass
-        protected override void ComputeProperties()
-        {
-            Mass = 0.0f;
-            Centroid = 0.5f * (_vertex1 + _vertex2);
-            Inertia = 0.0f;
+            massData = new MassData();
+            massData.Mass = 0.0f;
+            massData.Center = 0.5f * (_vertex1 + _vertex2);
+            massData.Inertia = 0.0f;
         }
 
         /// These are the edge vertices

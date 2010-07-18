@@ -115,8 +115,8 @@ namespace FarseerPhysics.Common
             //There are too many vertices in the rounded rectangle. We decompose it
             if (vertices.Count >= Settings.MaxPolygonVertices)
                 return EarclipDecomposer.ConvexPartition(vertices);
-            
-            return new List<Vertices> { vertices };
+
+            return new List<Vertices> {vertices};
         }
 
         /// <summary>
@@ -253,8 +253,8 @@ namespace FarseerPhysics.Common
             //There are too many vertices in the capsule. We decompose it.
             if (vertices.Count >= Settings.MaxPolygonVertices)
                 return EarclipDecomposer.ConvexPartition(vertices);
-            
-            return new List<Vertices> { vertices };
+
+            return new List<Vertices> {vertices};
         }
 
         /// <summary>

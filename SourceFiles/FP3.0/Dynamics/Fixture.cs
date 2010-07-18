@@ -31,6 +31,7 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics
 {
+
     [Flags]
     public enum CollisionCategory
     {
@@ -72,63 +73,145 @@ namespace FarseerPhysics.Dynamics
     /// This proxy is used internally to connect fixtures to the broad-phase.
     public class FixtureProxy
     {
-        public AABB Aabb;
+        public AABB AABB;
         public Fixture Fixture;
         public int ChildIndex;
         public int ProxyId;
     }
 
-    /// <summary>
-    /// A fixture is used to attach a shape to a body for collision detection. A fixture
+    /// A fixture is used to attach a Shape to a body for collision detection. A fixture
     /// inherits its transform from its parent. Fixtures hold additional non-geometric data
     /// such as friction, collision filters, etc.
     /// Fixtures are created via Body.CreateFixture.
     /// @warning you cannot reuse fixtures.
-    /// </summary>
     public class Fixture
     {
-        #region Delegates
+        public Action<ContactConstraint> PostSolve;
 
-        public delegate bool CollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Manifold manifold);
+        /// Get the type of the child Shape. You can use this to down cast to the concrete Shape.
+        /// @return the Shape type.
+        public ShapeType ShapeType
+        {
+            get { return _shape.ShapeType; }
+        }
 
-        public delegate void SeparationEventHandler(Fixture fixtureA, Fixture fixtureB);
+        /// Get the child Shape. You can modify the child Shape, however you should not change the
+        /// number of vertices because this will crash some collision caching mechanisms.
+        public Shape Shape
+        {
+            get { return _shape; }
+        }
 
-        #endregion
+        /// Set if this fixture is a sensor.
+        public bool IsSensor
+        {
+            set { _isSensor = value; }
+            get { return _isSensor; }
+        }
 
-        public CollisionEventHandler OnCollision;
-        public SeparationEventHandler OnSeparation;
+        /// Get the parent body of this fixture. This is null if the fixture is not attached.
+        /// @return the parent body.
+        public Body Body
+        {
+            get { return _body; }
+        }
 
-        internal Body _body;
-        private CollisionCategory _collidesWith;
-        private CollisionCategory _collisionCategories;
-        private short _collisionGroup;
-        private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
-        private Shape _shape;
-        public Fixture _next;
+        /// Get the next fixture in the parent body's fixture list.
+        /// @return the next Shape.
+        public Fixture Next
+        {
+            get { return _next; }
+        }
 
-        public FixtureProxy[] _proxies;
-        public int _proxyCount;
+        /// Set the user data. Use this to store your application specific data.
+        public object UserData
+        {
+            set { _userData = value; }
+            get { return _userData; }
+        }
+
+        public float Density
+        {
+            set
+            {
+                Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
+                _density = value;
+            }
+            get { return _density; }
+        }
+
+        /// Test a point for containment in this fixture.
+        /// @param xf the Shape world transform.
+        /// @param p a point in world coordinates.
+        public bool TestPoint(Vector2 p)
+        {
+            Transform xf;
+            _body.GetTransform(out xf);
+            return _shape.TestPoint(ref xf, p);
+        }
+
+        /// Cast a ray against this Shape.
+        /// @param output the ray-cast results.
+        /// @param input the ray-cast input parameters.
+        public bool RayCast(out RayCastOutput output, ref RayCastInput input, int childIndex)
+        {
+            Transform xf;
+            _body.GetTransform(out xf);
+            return _shape.RayCast(out output, ref input, ref xf, childIndex);
+        }
+
+        /// Get the mass data for this fixture. The mass data is based on the density and
+        /// the Shape. The rotational inertia is about the Shape's origin.
+        public void GetMassData(out MassData massData)
+        {
+            _shape.ComputeMass(out massData, _density);
+        }
+
+        /// Set the coefficient of friction.
+        public float Friction
+        {
+            set { _friction = value; }
+            get { return _friction; }
+        }
+
+        /// Set the coefficient of restitution.
+        public float Restitution
+        {
+            set { _restitution = value; }
+            get { return _restitution; }
+        }
+
+        /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
+        /// If you need a more accurate AABB, compute it using the Shape and
+        /// the body transform.
+        public void GetAABB(out AABB aabb, int childIndex)
+        {
+            Debug.Assert(0 <= childIndex && childIndex < _proxyCount);
+            aabb = _proxies[childIndex].AABB;
+        }
+
+        private static int _fixtureIdCounter;
+        private int _fixtureId;
 
         internal Fixture()
         {
-        }
-
-        /// <summary>
-        /// We need separation create/destroy functions from the constructor/destructor because
-        /// the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
-        /// </summary>
-        /// <param name="body">The body.</param>
-        /// <param name="shape">The shape.</param>
-        internal Fixture(Body body, Shape shape)
-        {
-            ProxyId = BroadPhase.NullProxy;
-
             //Fixture defaults
             Friction = 0.2f;
             _collisionCategories = CollisionCategory.All;
             _collidesWith = CollisionCategory.All;
             IsSensor = false;
 
+            _userData = null;
+            _body = null;
+            _next = null;
+            _proxyId = BroadPhase.NullProxy;
+            _shape = null;
+        }
+
+        // We need separation create/destroy functions from the constructor/destructor because
+        // the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
+        internal void Create(Body body, Shape shape, float density)
+        {
             _body = body;
             _next = null;
 
@@ -145,198 +228,9 @@ namespace FarseerPhysics.Dynamics
             }
             _proxyCount = 0;
 
-        }
+            _density = density;
 
-        /// <summary>
-        /// Get the child shape. You can modify the child shape, however you should not change the
-        /// number of vertices because this will crash some collision caching mechanisms.
-        /// Manipulating the shape may lead to non-physical behavior.
-        /// </summary>
-        /// <value></value>
-        public Shape Shape
-        {
-            get { return _shape; }
-        }
-
-        /// <summary>
-        /// Set if this fixture is a sensor.
-        /// </summary>
-        /// <value>
-        ///   if set to &lt;c&gt;true&lt;/c&gt; [sensor].
-        /// </value>
-        public bool IsSensor { get; set; }
-
-        /// <summary>
-        /// Collision groups allow a certain group of objects to never collide (negative)
-        /// or always collide (positive). Zero means no collision group. Non-zero group
-        /// filtering always wins against the mask bits.
-        /// Warning: The filter will not take effect until next step.
-        /// </summary>
-        public short CollisionGroup
-        {
-            set
-            {
-                if (_body == null)
-                    return;
-
-                if (_collisionGroup == value)
-                    return;
-
-                _collisionGroup = value;
-                FilterChanged();
-            }
-            get { return _collisionGroup; }
-        }
-
-        /// <summary>
-        /// The collision mask bits. This states the categories that this
-        /// shape would accept for collision.
-        /// </summary>
-        public CollisionCategory CollidesWith
-        {
-            get { return _collidesWith; }
-
-            set
-            {
-                if (_body == null)
-                    return;
-
-                if (_collidesWith == value)
-                    return;
-
-                _collidesWith = value;
-                FilterChanged();
-            }
-        }
-
-        /// <summary>
-        /// The collision category bits. Normally you would just set one bit.
-        /// </summary>
-        public CollisionCategory CollisionCategories
-        {
-            get { return _collisionCategories; }
-
-            set
-            {
-                if (_body == null)
-                    return;
-
-                if (_collisionCategories == value)
-                    return;
-
-                _collisionCategories = value;
-                FilterChanged();
-            }
-        }
-
-        /// <summary>
-        /// Get the parent body of this fixture. This is null if the fixture is not attached.
-        /// </summary>
-        /// <value>the parent body.</value>
-        public Body Body
-        {
-            get { return _body; }
-        }
-
-        /// <summary>
-        /// Set the user data. Use this to store your application specific data.
-        /// </summary>
-        /// <value>The data.</value>
-        public object UserData { get; set; }
-
-        public int ProxyId { get; private set; }
-
-        /// <summary>
-        /// Set the coefficient of friction.
-        /// </summary>
-        /// <value>The friction.</value>
-        public float Friction { get; set; }
-
-        /// <summary>
-        /// Get the coefficient of restitution.
-        /// </summary>
-        /// <value></value>
-        public float Restitution { get; set; }
-
-        /// <summary>
-        /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
-        /// If you need a more accurate AABB, compute it using the shape and
-        /// the body transform.
-        /// </summary>
-        public void GetAABB(out AABB aabb, int childIndex)
-        {
-            Debug.Assert(0 <= childIndex && childIndex < _proxyCount);
-            aabb = _proxies[childIndex].Aabb;
-        }
-
-        public void RestoreCollisionWith(Fixture fixture)
-        {
-            if (_collisionIgnores.ContainsKey(fixture.ProxyId))
-            {
-                _collisionIgnores[fixture.ProxyId] = false;
-                FilterChanged();
-            }
-        }
-
-        public void IgnoreCollisionWith(Fixture fixture)
-        {
-            if (_collisionIgnores.ContainsKey(fixture.ProxyId))
-                _collisionIgnores[fixture.ProxyId] = true;
-            else
-                _collisionIgnores.Add(fixture.ProxyId, true);
-
-            FilterChanged();
-        }
-
-        public bool IsGeometryIgnored(Fixture fixture)
-        {
-            if (_collisionIgnores.ContainsKey(fixture.ProxyId))
-                return _collisionIgnores[fixture.ProxyId];
-
-            return false;
-        }
-
-        private void FilterChanged()
-        {
-            // Flag associated contacts for filtering.
-            ContactEdge edge = _body.ContactList;
-            while (edge != null)
-            {
-                Contact contact = edge.Contact;
-                Fixture fixtureA = contact.FixtureA;
-                Fixture fixtureB = contact.FixtureB;
-                if (fixtureA == this || fixtureB == this)
-                {
-                    contact.FlagForFiltering();
-                }
-
-                edge = edge.Next;
-            }
-        }
-
-        /// <summary>
-        /// Test a point for containment in this fixture.
-        /// </summary>
-        /// <param name="p">a point in world coordinates.</param>
-        /// <returns></returns>
-        public bool TestPoint(ref Vector2 p)
-        {
-            Transform xf;
-            _body.GetTransform(out xf);
-            return _shape.TestPoint(ref xf, p);
-        }
-
-        /// <summary>
-        /// Cast a ray against this shape.
-        /// </summary>
-        /// <param name="output">the ray-cast results.</param>
-        /// <param name="input">the ray-cast input parameters.</param>
-        /// <returns></returns>
-        public bool RayCast(out RayCastOutput output, ref RayCastInput input, int childIndex)
-        {
-            Transform xf;
-            _body.GetTransform(out xf);
-            return _shape.RayCast(out output, ref input, ref xf, childIndex);
+            _fixtureId = _fixtureIdCounter++;
         }
 
         internal void Destroy()
@@ -361,10 +255,10 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < _proxyCount; ++i)
             {
                 FixtureProxy proxy = _proxies[i];
-                _shape.ComputeAABB(out proxy.Aabb, ref xf, i);
+                _shape.ComputeAABB(out proxy.AABB, ref xf, i);
                 proxy.Fixture = this;
                 proxy.ChildIndex = i;
-                proxy.ProxyId = broadPhase.CreateProxy(ref proxy.Aabb, proxy);
+                proxy.ProxyId = broadPhase.CreateProxy(ref proxy.AABB, proxy);
 
                 _proxies[i] = proxy;
             }
@@ -382,6 +276,7 @@ namespace FarseerPhysics.Dynamics
             _proxyCount = 0;
         }
 
+
         internal void Synchronize(BroadPhase broadPhase, ref Transform transform1, ref Transform transform2)
         {
             if (_proxyCount == 0)
@@ -398,14 +293,147 @@ namespace FarseerPhysics.Dynamics
                 _shape.ComputeAABB(out aabb1, ref transform1, proxy.ChildIndex);
                 _shape.ComputeAABB(out aabb2, ref transform2, proxy.ChildIndex);
 
-                proxy.Aabb.Combine(ref aabb1, ref aabb2);
+                proxy.AABB.Combine(ref aabb1, ref aabb2);
 
                 Vector2 displacement = transform2.Position - transform1.Position;
 
-                broadPhase.MoveProxy(proxy.ProxyId, ref proxy.Aabb, displacement);
+                broadPhase.MoveProxy(proxy.ProxyId, ref proxy.AABB, displacement);
+            }
+
+        }
+        
+        /// <summary>
+        /// Collision groups allow a certain group of objects to never collide (negative)
+        /// or always collide (positive). Zero means no collision group. Non-zero group
+        /// filtering always wins against the mask bits.
+        /// Warning: The filter will not take effect until next step.
+        /// </summary>
+        public short CollisionGroup
+        {
+            set
+            {
+                if (_body == null)
+                    return;
+
+                if (_collisionGroup == value)
+                    return;
+
+                _collisionGroup = value;
+                FilterChanged();
+            }
+            get { return _collisionGroup; }
+        }
+        
+        /// <summary>
+        /// The collision mask bits. This states the categories that this
+        /// shape would accept for collision.
+        /// </summary>
+        public CollisionCategory CollidesWith
+        {
+            get { return _collidesWith; }
+
+            set
+            {
+                if (_body == null)
+                    return;
+
+                if (_collidesWith == value)
+                    return;
+
+                _collidesWith = value;
+                FilterChanged();
             }
         }
 
-        public Action<ContactConstraint> PostSolve;
+        public int FixtureId { get { return _fixtureId; } }
+
+        public void RestoreCollisionWith(Fixture fixture)
+        {
+            if (_collisionIgnores.ContainsKey(fixture.FixtureId))
+            {
+                _collisionIgnores[fixture.FixtureId] = false;
+                FilterChanged();
+            }
+        }
+
+        public void IgnoreCollisionWith(Fixture fixture)
+        {
+            if (_collisionIgnores.ContainsKey(fixture.FixtureId))
+                _collisionIgnores[fixture.FixtureId] = true;
+            else
+                _collisionIgnores.Add(fixture.FixtureId, true);
+
+            FilterChanged();
+        }
+
+        public bool IsGeometryIgnored(Fixture fixture)
+        {
+            if (_collisionIgnores.ContainsKey(fixture.FixtureId))
+                return _collisionIgnores[fixture.FixtureId];
+
+            return false;
+        }
+        private void FilterChanged()
+        {
+            // Flag associated contacts for filtering.
+            ContactEdge edge = _body.ContactList;
+            while (edge != null)
+            {
+                Contact contact = edge.Contact;
+                Fixture fixtureA = contact.FixtureA;
+                Fixture fixtureB = contact.FixtureB;
+                if (fixtureA == this || fixtureB == this)
+                {
+                    contact.FlagForFiltering();
+                }
+
+                edge = edge.Next;
+            }
+        }
+
+
+        /// <summary>
+        /// The collision category bits. Normally you would just set one bit.
+        /// </summary>
+        public CollisionCategory CollisionCategories
+        {
+            get { return _collisionCategories; }
+
+            set
+            {
+                if (_body == null)
+                    return;
+
+                if (_collisionCategories == value)
+                    return;
+
+                _collisionCategories = value;
+                FilterChanged();
+            }
+        }
+
+        public FixtureProxy[] _proxies;
+        public int _proxyCount;
+
+        internal float _density;
+
+        internal Fixture _next;
+        internal Body _body;
+        private CollisionCategory _collidesWith;
+        private CollisionCategory _collisionCategories;
+        private short _collisionGroup;
+        private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
+
+        internal Shape _shape;
+
+        internal float _friction;
+        internal float _restitution;
+
+        internal int _proxyId;
+
+        internal bool _isSensor;
+
+        internal object _userData;
     }
+
 }

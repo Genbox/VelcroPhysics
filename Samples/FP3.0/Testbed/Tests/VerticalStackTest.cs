@@ -47,7 +47,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             for (int j = 0; j < ColumnCount; ++j)
             {
-                PolygonShape shape = new PolygonShape(1);
+                PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(0.5f, 0.5f);
 
                 for (int i = 0; i < RowCount; ++i)
@@ -65,7 +65,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.UserData = _indices[n];
                     _bodies[n] = body;
 
-                    Fixture fixture = body.CreateFixture(shape);
+                    Fixture fixture = body.CreateFixture(shape,1);
                     fixture.Friction = 0.3f;
                 }
             }
@@ -79,19 +79,19 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_bullet != null)
                 {
-                    World.Remove(_bullet);
+                    World.DestroyBody(_bullet);
                     _bullet = null;
                 }
 
                 {
-                    CircleShape shape = new CircleShape(0.25f, 20);
+                    CircleShape shape = new CircleShape(0.25f);
 
                     _bullet = BodyFactory.CreateBody(World);
                     _bullet.BodyType = BodyType.Dynamic;
                     _bullet.IsBullet = true;
                     _bullet.Position = new Vector2(-31.0f, 5.0f);
 
-                    Fixture fixture = _bullet.CreateFixture(shape);
+                    Fixture fixture = _bullet.CreateFixture(shape, 20);
                     fixture.Restitution = 0.05f;
 
                     _bullet.LinearVelocity = new Vector2(400.0f, 0.0f);

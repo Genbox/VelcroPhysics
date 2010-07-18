@@ -161,18 +161,6 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Vertices.cs">
       <Link>Common\Vertices.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP3.0\Controllers\Buoyancy\AABBContainer.cs">
-      <Link>Controllers\Buoyancy\AABBContainer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP3.0\Controllers\Buoyancy\FluidDragController.cs">
-      <Link>Controllers\Buoyancy\FluidDragController.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP3.0\Controllers\Buoyancy\IFluidContainer.cs">
-      <Link>Controllers\Buoyancy\IFluidContainer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP3.0\Controllers\Buoyancy\WaveContainer.cs">
-      <Link>Controllers\Buoyancy\WaveContainer.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Controllers\Controller.cs">
       <Link>Controllers\Controller.cs</Link>
     </Compile>

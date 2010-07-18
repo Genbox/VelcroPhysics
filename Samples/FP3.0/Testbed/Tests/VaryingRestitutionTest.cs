@@ -36,7 +36,7 @@ namespace FarseerPhysics.TestBed.Tests
             FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             {
-                CircleShape shape = new CircleShape(1.0f, 1);
+                CircleShape shape = new CircleShape(1.0f);
 
                 float[] restitution = new[] {0.0f, 0.1f, 0.3f, 0.5f, 0.75f, 0.9f, 1.0f};
 
@@ -46,7 +46,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
 
-                    Fixture fixture = body.CreateFixture(shape);
+                    Fixture fixture = body.CreateFixture(shape,1);
                     fixture.Restitution = restitution[i];
                 }
             }

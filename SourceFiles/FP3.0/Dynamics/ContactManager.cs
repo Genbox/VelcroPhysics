@@ -21,7 +21,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics.Contacts;
 
@@ -44,19 +43,16 @@ namespace FarseerPhysics.Dynamics
 
         internal ContactManager()
         {
-            _contactList = null;
-            _contactCount = 0;
-            BroadPhase = new BroadPhase();
+            _addPair = AddPair;
+
+            ContactList = null;
+            ContactCount = 0;
+
             BroadphaseCollision = AddPair;
         }
 
-        public Contact _contactList;
-        public int _contactCount;
-
-        public BroadPhase BroadPhase { get; private set; }
-
         // Broad-phase callback.
-        private void AddPair(FixtureProxy proxyA, FixtureProxy proxyB)
+        internal void AddPair(FixtureProxy proxyA, FixtureProxy proxyB)
         {
             Fixture fixtureA = proxyA.Fixture;
             Fixture fixtureB = proxyB.Fixture;
@@ -81,8 +77,8 @@ namespace FarseerPhysics.Dynamics
                 {
                     Fixture fA = edge.Contact.FixtureA;
                     Fixture fB = edge.Contact.FixtureB;
-                    int iA = edge.Contact.GetChildIndexA();
-                    int iB = edge.Contact.GetChildIndexB();
+                    int iA = edge.Contact.ChildIndexA;
+                    int iB = edge.Contact.ChildIndexB;
 
                     if (fA == fixtureA && fB == fixtureB && iA == indexA && iB == indexB)
                     {
@@ -118,52 +114,52 @@ namespace FarseerPhysics.Dynamics
             // Contact creation may swap fixtures.
             fixtureA = c.FixtureA;
             fixtureB = c.FixtureB;
-            indexA = c.GetChildIndexA();
-            indexB = c.GetChildIndexB();
+            indexA = c.ChildIndexA;
+            indexB = c.ChildIndexB;
             bodyA = fixtureA.Body;
             bodyB = fixtureB.Body;
 
             // Insert into the world.
             c._prev = null;
-            c._next = _contactList;
-            if (_contactList != null)
+            c._next = ContactList;
+            if (ContactList != null)
             {
-                _contactList._prev = c;
+                ContactList._prev = c;
             }
-            _contactList = c;
+            ContactList = c;
 
             // Connect to island graph.
 
             // Connect to body A
-            c.NodeA.Contact = c;
-            c.NodeA.Other = bodyB;
+            c._nodeA.Contact = c;
+            c._nodeA.Other = bodyB;
 
-            c.NodeA.Prev = null;
-            c.NodeA.Next = bodyA._contactList;
+            c._nodeA.Prev = null;
+            c._nodeA.Next = bodyA._contactList;
             if (bodyA._contactList != null)
             {
-                bodyA._contactList.Prev = c.NodeA;
+                bodyA._contactList.Prev = c._nodeA;
             }
-            bodyA._contactList = c.NodeA;
+            bodyA._contactList = c._nodeA;
 
             // Connect to body B
-            c.NodeB.Contact = c;
-            c.NodeB.Other = bodyA;
+            c._nodeB.Contact = c;
+            c._nodeB.Other = bodyA;
 
-            c.NodeB.Prev = null;
-            c.NodeB.Next = bodyB._contactList;
+            c._nodeB.Prev = null;
+            c._nodeB.Next = bodyB._contactList;
             if (bodyB._contactList != null)
             {
-                bodyB._contactList.Prev = c.NodeB;
+                bodyB._contactList.Prev = c._nodeB;
             }
-            bodyB._contactList = c.NodeB;
+            bodyB._contactList = c._nodeB;
 
-            ++_contactCount;
+            ++ContactCount;
         }
 
         internal void FindNewContacts()
         {
-            BroadPhase.UpdatePairs<FixtureProxy>(BroadphaseCollision);
+            BroadPhase.UpdatePairs<FixtureProxy>(_addPair);
         }
 
         internal void Destroy(Contact c)
@@ -189,58 +185,58 @@ namespace FarseerPhysics.Dynamics
                 c._next._prev = c._prev;
             }
 
-            if (c == _contactList)
+            if (c == ContactList)
             {
-                _contactList = c._next;
+                ContactList = c._next;
             }
 
             // Remove from body 1
-            if (c.NodeA.Prev != null)
+            if (c._nodeA.Prev != null)
             {
-                c.NodeA.Prev.Next = c.NodeA.Next;
+                c._nodeA.Prev.Next = c._nodeA.Next;
             }
 
-            if (c.NodeA.Next != null)
+            if (c._nodeA.Next != null)
             {
-                c.NodeA.Next.Prev = c.NodeA.Prev;
+                c._nodeA.Next.Prev = c._nodeA.Prev;
             }
 
-            if (c.NodeA == bodyA._contactList)
+            if (c._nodeA == bodyA._contactList)
             {
-                bodyA._contactList = c.NodeA.Next;
+                bodyA._contactList = c._nodeA.Next;
             }
 
             // Remove from body 2
-            if (c.NodeB.Prev != null)
+            if (c._nodeB.Prev != null)
             {
-                c.NodeB.Prev.Next = c.NodeB.Next;
+                c._nodeB.Prev.Next = c._nodeB.Next;
             }
 
-            if (c.NodeB.Next != null)
+            if (c._nodeB.Next != null)
             {
-                c.NodeB.Next.Prev = c.NodeB.Prev;
+                c._nodeB.Next.Prev = c._nodeB.Prev;
             }
 
-            if (c.NodeB == bodyB._contactList)
+            if (c._nodeB == bodyB._contactList)
             {
-                bodyB._contactList = c.NodeB.Next;
+                bodyB._contactList = c._nodeB.Next;
             }
 
             c.Destroy();
 
-            --_contactCount;
+            --ContactCount;
         }
 
         internal void Collide()
         {
             // Update awake contacts.
-            Contact c = _contactList;
+            Contact c = ContactList;
             while (c != null)
             {
                 Fixture fixtureA = c.FixtureA;
                 Fixture fixtureB = c.FixtureB;
-                int indexA = c.GetChildIndexA();
-                int indexB = c.GetChildIndexB();
+                int indexA = c.ChildIndexA;
+                int indexB = c.ChildIndexB;
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
 
@@ -251,14 +247,14 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Is this contact flagged for filtering?
-                if ((c.Flags & ContactFlags.Filter) == ContactFlags.Filter)
+                if ((c._flags & ContactFlags.Filter) == ContactFlags.Filter)
                 {
                     // Should these bodies collide?
                     if (bodyB.ShouldCollide(bodyA) == false)
                     {
                         Contact cNuke = c;
                         c = cNuke.GetNext();
-                        Destroy(c);
+                        Destroy(cNuke);
                         continue;
                     }
 
@@ -267,12 +263,12 @@ namespace FarseerPhysics.Dynamics
                     {
                         Contact cNuke = c;
                         c = cNuke.GetNext();
-                        Destroy(c);
+                        Destroy(cNuke);
                         continue;
                     }
 
                     // Clear the filtering flag.
-                    c.Flags &= ~ContactFlags.Filter;
+                    c._flags &= ~ContactFlags.Filter;
                 }
 
                 int proxyIdA = fixtureA._proxies[indexA].ProxyId;
@@ -285,7 +281,7 @@ namespace FarseerPhysics.Dynamics
                 {
                     Contact cNuke = c;
                     c = cNuke.GetNext();
-                    Destroy(c);
+                    Destroy(cNuke);
                     continue;
                 }
 
@@ -294,5 +290,11 @@ namespace FarseerPhysics.Dynamics
                 c = c.GetNext();
             }
         }
+
+        public BroadPhase BroadPhase = new BroadPhase();
+        public Contact ContactList;
+        public int ContactCount;
+
+        Action<FixtureProxy, FixtureProxy> _addPair;
     }
 }

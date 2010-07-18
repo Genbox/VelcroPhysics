@@ -98,21 +98,21 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Body body = BodyFactory.CreateBody(World, new Vector2(-0.5f, 0.5f));
                 body.BodyType = BodyType.Dynamic;
-                body.AllowSleep = false;
+                body.SleepingAllowed = false;
 
-                CircleShape shape = new CircleShape(0.5f,1);
-                body.CreateFixture(shape);
+                CircleShape shape = new CircleShape(0.5f);
+                body.CreateFixture(shape, 1);
             }
 
             {
                 Body body = BodyFactory.CreateBody(World, new Vector2(0.5f, 0.5f));
                 body.BodyType = BodyType.Dynamic;
-                body.AllowSleep = false;
+                body.SleepingAllowed = false;
 
-                PolygonShape shape = new PolygonShape(1);
+                PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(0.5f, 0.5f);
 
-                body.CreateFixture(shape);
+                body.CreateFixture(shape, 1);
             }
         }
 
