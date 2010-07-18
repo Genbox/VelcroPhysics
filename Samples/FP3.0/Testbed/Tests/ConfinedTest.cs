@@ -42,25 +42,25 @@ namespace FarseerPhysics.TestBed.Tests
 
                 // Floor
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
+                PolygonShape shape = new PolygonShape(edge);
 
-                ground.CreateFixture(shape);
+                ground.CreateFixture(shape, 0);
 
                 // Left wall
                 shape.Set(PolygonTools.CreateEdge(new Vector2(-10.0f, 0.0f), new Vector2(-10.0f, 20.0f)));
-                ground.CreateFixture(shape);
+                ground.CreateFixture(shape, 0);
 
                 // Right wall
                 shape.Set(PolygonTools.CreateEdge(new Vector2(10.0f, 0.0f), new Vector2(10.0f, 20.0f)));
-                ground.CreateFixture(shape);
+                ground.CreateFixture(shape, 0);
 
                 // Roof
                 shape.Set(PolygonTools.CreateEdge(new Vector2(-10.0f, 20.0f), new Vector2(10.0f, 20.0f)));
-                ground.CreateFixture(shape);
+                ground.CreateFixture(shape,0);
             }
 
             const float radius = 0.5f;
-            CircleShape shape2 = new CircleShape(radius, 1);
+            CircleShape shape2 = new CircleShape(radius);
             shape2.Position = Vector2.Zero;
 
             for (int j = 0; j < ColumnCount; ++j)
@@ -72,7 +72,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
                                                 (2.0f * i + 1.0f) * radius);
 
-                    Fixture fixture = body.CreateFixture(shape2);
+                    Fixture fixture = body.CreateFixture(shape2, 1);
                     fixture.Friction = 0.1f;
                 }
             }
@@ -83,14 +83,14 @@ namespace FarseerPhysics.TestBed.Tests
         private void CreateCircle()
         {
             const float radius = 2f;
-            CircleShape shape = new CircleShape(radius, 1);
+            CircleShape shape = new CircleShape(radius);
             shape.Position = Vector2.Zero;
 
             Body body = BodyFactory.CreateBody(World);
             body.BodyType = BodyType.Dynamic;
             body.Position = new Vector2(Rand.RandomFloat(), 3.0f + Rand.RandomFloat());
 
-            Fixture fixture = body.CreateFixture(shape);
+            Fixture fixture = body.CreateFixture(shape, 1);
             fixture.Friction = 0;
         }
 

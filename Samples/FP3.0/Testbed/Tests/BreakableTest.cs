@@ -58,13 +58,13 @@ namespace FarseerPhysics.TestBed.Tests
 
             Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
 
-            _shape1 = new PolygonShape(box, 1.0f);
-            _piece1 = _body1.CreateFixture(_shape1);
+            _shape1 = new PolygonShape(box);
+            _piece1 = _body1.CreateFixture(_shape1, 1.0f);
 
             box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(0.5f, 0.0f), 0.0f);
-            _shape2 = new PolygonShape(box, 1.0f);
+            _shape2 = new PolygonShape(box);
 
-            _piece2 = _body1.CreateFixture(_shape2);
+            _piece2 = _body1.CreateFixture(_shape2, 1.0f);
 
             _break = false;
             _broke = false;
@@ -119,7 +119,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Create two bodies from one.
             Body body1 = _piece1.Body;
-            Vector2 center = body1.WorldCenter;
+            Vector2 center = body1.GetWorldCenter();
 
             body1.DestroyFixture(_piece2);
             _piece2 = null;
@@ -129,12 +129,12 @@ namespace FarseerPhysics.TestBed.Tests
             body2.Position = body1.Position;
             body2.Rotation = body1.GetAngle();
 
-            _piece2 = body2.CreateFixture(_shape2);
+            _piece2 = body2.CreateFixture(_shape2,0);
 
             // Compute consistent velocities for new bodies based on
             // cached velocity.
-            Vector2 center1 = body1.WorldCenter;
-            Vector2 center2 = body2.WorldCenter;
+            Vector2 center1 = body1.GetWorldCenter();
+            Vector2 center2 = body2.GetWorldCenter();
 
             Vector2 velocity1 = _velocity + MathUtils.Cross(_angularVelocity, center1 - center);
             Vector2 velocity2 = _velocity + MathUtils.Cross(_angularVelocity, center2 - center);

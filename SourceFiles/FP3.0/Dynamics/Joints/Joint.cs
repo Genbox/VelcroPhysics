@@ -206,7 +206,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </value>
         public bool Active
         {
-            get { return BodyA.Enabled && BodyB.Enabled; }
+            get { return BodyA.Active && BodyB.Active; }
         }
 
         /// <summary>

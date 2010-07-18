@@ -17,13 +17,13 @@ namespace FarseerPhysics.Factories
     {
         public static Body CreateBody(World world)
         {
-            Body body = world.Add();
+            Body body = world.CreateBody();
             return body;
         }
 
         public static Body CreateBody(World world, Vector2 position)
         {
-            Body body = world.Add();           
+            Body body = world.CreateBody();           
             body.Position = position;
             return body;
         }

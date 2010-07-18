@@ -44,13 +44,13 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 //The big fixed wheel
-                CircleShape shape = new CircleShape(5.0f, 5);
+                CircleShape shape = new CircleShape(5.0f);
 
                 Body body = BodyFactory.CreateBody(World);
                 body.Position = new Vector2(0.0f, 15.0f);
                 body.BodyType = BodyType.Dynamic;
 
-                body.CreateFixture(shape);
+                body.CreateFixture(shape,5);
 
                 _fixedJoint = new FixedRevoluteJoint(body, body.Position);
                 _fixedJoint.MotorSpeed = 0.25f * Settings.Pi;
@@ -60,7 +60,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _fixedJoint.UpperLimit = 0.5f * Settings.Pi;
                 _fixedJoint.LimitEnabled = false;
 
-                World.Add(_fixedJoint);
+                World.AddJoint(_fixedJoint);
 
                 // The small gear attached to the big one
                 List<Fixture> fixtures = FixtureFactory.CreateGear(World, 1.5f, 10, 0.1f, 1, 1);
@@ -76,7 +76,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _joint.LimitEnabled = false;
                 _joint.CollideConnected = false;
 
-                World.Add(_joint);
+                World.AddJoint(_joint);
             }
         }
 

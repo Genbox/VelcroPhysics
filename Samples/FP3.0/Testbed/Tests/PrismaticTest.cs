@@ -41,19 +41,19 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 ground = BodyFactory.CreateBody(World);
 
-                PolygonShape shape3 = new PolygonShape(0);
+                PolygonShape shape3 = new PolygonShape();
                 shape3.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 ground.CreateFixture(shape3);
             }
 
-            PolygonShape shape = new PolygonShape(5.0f);
+            PolygonShape shape = new PolygonShape();
             shape.SetAsBox(2.0f, 0.5f);
 
             Body body = BodyFactory.CreateBody(World);
             body.BodyType = BodyType.Dynamic;
             body.Position = new Vector2(0.0f, 10.0f);
 
-            body.CreateFixture(shape);
+            body.CreateFixture(shape, 5.0f);
 
             _fixedJoint = new FixedPrismaticJoint(body, body.Position, new Vector2(0.5f, 1.0f));
             _fixedJoint.MotorSpeed = 5.0f;
@@ -63,16 +63,16 @@ namespace FarseerPhysics.TestBed.Tests
             _fixedJoint.UpperLimit = 20.0f;
             _fixedJoint.LimitEnabled = true;
 
-            World.Add(_fixedJoint);
+            World.AddJoint(_fixedJoint);
 
-            PolygonShape shape2 = new PolygonShape(5.0f);
+            PolygonShape shape2 = new PolygonShape();
             shape2.SetAsBox(2.0f, 0.5f);
 
             Body body2 = BodyFactory.CreateBody(World);
             body2.BodyType = BodyType.Dynamic;
             body2.Position = new Vector2(10.0f, 10.0f);
 
-            body2.CreateFixture(shape2);
+            body2.CreateFixture(shape2, 5.0f);
 
             _joint = new PrismaticJoint(ground, body2, new Vector2(0.0f, 0.0f), new Vector2(0.5f, 1.0f));
             _joint.MotorSpeed = 5.0f;
@@ -82,7 +82,7 @@ namespace FarseerPhysics.TestBed.Tests
             _joint.UpperLimit = 20.0f;
             _joint.LimitEnabled = true;
 
-            World.Add(_joint);
+            World.AddJoint(_joint);
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)

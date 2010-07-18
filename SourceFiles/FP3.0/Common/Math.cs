@@ -21,129 +21,61 @@
 */
 
 using System;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common
 {
     public static class MathUtils
     {
-        private static float tempFloat1;
-        private static float tempFloat2;
-        private static Vector2 tempVector1;
-
         public static float Cross(Vector2 a, Vector2 b)
         {
-            Cross(ref a, ref b, out tempFloat1);
-            return tempFloat1;
+            return a.X * b.Y - a.Y * b.X;
         }
 
         public static Vector2 Cross(Vector2 a, float s)
         {
-            Cross(ref a, s, out tempVector1);
-            return tempVector1;
+            return new Vector2(s * a.Y, -s * a.X);
         }
 
         public static Vector2 Cross(float s, Vector2 a)
         {
-            Cross(s, ref a, out tempVector1);
-            return tempVector1;
-        }
-
-        //Ref versions
-        public static Vector2 Cross(float s, ref Vector2 a)
-        {
-            Cross(s, ref a, out tempVector1);
-            return tempVector1;
-        }
-
-        public static void Cross(ref Vector2 a, ref Vector2 b, out float c)
-        {
-            c = a.X * b.Y - a.Y * b.X;
-        }
-
-        public static void Cross(ref Vector2 a, float s, out Vector2 b)
-        {
-            b = new Vector2(s * a.Y, -s * a.X);
-        }
-
-        public static void Cross(float s, ref Vector2 a, out Vector2 b)
-        {
-            b = new Vector2(-s * a.Y, s * a.X);
+            return new Vector2(-s * a.Y, s * a.X);
         }
 
         public static Vector2 Abs(Vector2 v)
         {
-            Abs(ref v, out tempVector1);
-            return tempVector1;
-        }
-
-        public static float Abs(float value)
-        {
-            return Math.Abs(value);
-        }
-
-        //Ref versions
-        public static void Abs(ref Vector2 v, out Vector2 r)
-        {
-            r = new Vector2(Math.Abs(v.X), Math.Abs(v.Y));
+            return new Vector2(Math.Abs(v.X), Math.Abs(v.Y));
         }
 
         public static Vector2 Multiply(ref Mat22 A, Vector2 v)
         {
-            return new Vector2(A.Col1.X * v.X + A.Col2.X * v.Y, A.Col1.Y * v.X + A.Col2.Y * v.Y);
-        }
-
-        public static Vector2 Multiply(ref Transform T, Vector2 v)
-        {
-            return new Vector2(T.Position.X + T.R.Col1.X * v.X + T.R.Col2.X * v.Y,
-                               T.Position.Y + T.R.Col1.Y * v.X + T.R.Col2.Y * v.Y);
+            return new Vector2(A.col1.X * v.X + A.col2.X * v.Y, A.col1.Y * v.X + A.col2.Y * v.Y);
         }
 
         public static Vector2 MultiplyT(ref Mat22 A, Vector2 v)
         {
-            MultiplyT(ref A, ref v, out tempVector1);
-            return tempVector1;
+            return new Vector2(Vector2.Dot(v, A.col1), Vector2.Dot(v, A.col2));
+        }
+
+        public static Vector2 Multiply(ref Transform T, Vector2 v)
+        {
+            float x = T.Position.X + T.R.col1.X * v.X + T.R.col2.X * v.Y;
+            float y = T.Position.Y + T.R.col1.Y * v.X + T.R.col2.Y * v.Y;
+
+            return new Vector2(x, y);
         }
 
         public static Vector2 MultiplyT(ref Transform T, Vector2 v)
         {
-            MultiplyT(ref T, ref v, out tempVector1);
-            return tempVector1;
-        }
-
-        //Ref versions
-        public static void Multiply(ref Mat22 A, ref Vector2 v, out Vector2 r)
-        {
-            r = new Vector2(A.Col1.X * v.X + A.Col2.X * v.Y, A.Col1.Y * v.X + A.Col2.Y * v.Y);
-        }
-
-        public static void Multiply(ref Transform T, ref Vector2 v, out Vector2 r)
-        {
-            float x = T.Position.X + T.R.Col1.X * v.X + T.R.Col2.X * v.Y;
-            float y = T.Position.Y + T.R.Col1.Y * v.X + T.R.Col2.Y * v.Y;
-
-            r = new Vector2(x, y);
-        }
-
-        public static void MultiplyT(ref Mat22 A, ref Vector2 v, out Vector2 r)
-        {
-            Vector2.Dot(ref v, ref A.Col1, out tempFloat1);
-            Vector2.Dot(ref v, ref A.Col2, out tempFloat2);
-
-            r = new Vector2(tempFloat1, tempFloat2);
-        }
-
-        public static void MultiplyT(ref Transform T, ref Vector2 v, out Vector2 r)
-        {
-            Vector2.Subtract(ref v, ref T.Position, out tempVector1);
-            MultiplyT(ref T.R, ref tempVector1, out r);
+            return MultiplyT(ref T.R, v - T.Position);
         }
 
         // A^T * B
         public static void MultiplyT(ref Mat22 A, ref Mat22 B, out Mat22 C)
         {
-            Vector2 c1 = new Vector2(Vector2.Dot(A.Col1, B.Col1), Vector2.Dot(A.Col2, B.Col1));
-            Vector2 c2 = new Vector2(Vector2.Dot(A.Col1, B.Col2), Vector2.Dot(A.Col2, B.Col2));
+            Vector2 c1 = new Vector2(Vector2.Dot(A.col1, B.col1), Vector2.Dot(A.col2, B.col1));
+            Vector2 c2 = new Vector2(Vector2.Dot(A.col1, B.col2), Vector2.Dot(A.col2, B.col2));
             C = new Mat22(c1, c2);
         }
 
@@ -179,6 +111,28 @@ namespace FarseerPhysics.Common
             return IsValid(x.X) && IsValid(x.Y);
         }
 
+        [StructLayout(LayoutKind.Explicit)]
+        internal struct FloatConverter
+        {
+            [FieldOffset(0)]
+            public float x;
+            [FieldOffset(0)]
+            public int i;
+        }
+
+
+        /// This is a approximate yet fast inverse square-root.
+        public static float InvSqrt(float x)
+        {
+            FloatConverter convert = new FloatConverter();
+            convert.x = x;
+            float xhalf = 0.5f * x;
+            convert.i = 0x5f3759df - (convert.i >> 1);
+            x = convert.x;
+            x = x * (1.5f - xhalf * x * x);
+            return x;
+        }
+
         public static int Clamp(int a, int low, int high)
         {
             return Math.Max(low, Math.Min(a, high));
@@ -194,11 +148,9 @@ namespace FarseerPhysics.Common
             return Vector2.Max(low, Vector2.Min(a, high));
         }
 
-        public static float Sqdist(Vector2 a, Vector2 b)
+        public static void Cross(ref Vector2 a, ref Vector2 b, out float c)
         {
-            float dx = b.X - a.X;
-            float dy = b.Y - a.Y;
-            return dx * dx + dy * dy;
+            c = a.X * b.Y - a.Y * b.X;
         }
 
         public static float Area(Vector2 a, Vector2 b, Vector2 c)
@@ -222,42 +174,47 @@ namespace FarseerPhysics.Common
         {
             return Area(a, b, c) <= tolerance;
         }
+
+
+        public static void Cross(float s, ref Vector2 a, out Vector2 b)
+        {
+            b = new Vector2(-s * a.Y, s * a.X);
+        }
+
     }
 
     /// A 2-by-2 matrix. Stored in column-major order.
     public struct Mat22
     {
-        public Vector2 Col1, Col2;
-
-        /// Construct this matrix using columns.
+        /// construct this matrix using columns.
         public Mat22(Vector2 c1, Vector2 c2)
         {
-            Col1 = c1;
-            Col2 = c2;
+            col1 = c1;
+            col2 = c2;
         }
 
-        /// Construct this matrix using scalars.
+        /// construct this matrix using scalars.
         public Mat22(float a11, float a12, float a21, float a22)
         {
-            Col1 = new Vector2(a11, a21);
-            Col2 = new Vector2(a12, a22);
+            col1 = new Vector2(a11, a21);
+            col2 = new Vector2(a12, a22);
         }
 
-        /// Construct this matrix using an angle. This matrix becomes
+        /// construct this matrix using an angle. This matrix becomes
         /// an orthonormal rotation matrix.
         public Mat22(float angle)
         {
             // TODO_ERIN compute sin+cos together.
             float c = (float)Math.Cos(angle), s = (float)Math.Sin(angle);
-            Col1 = new Vector2(c, s);
-            Col2 = new Vector2(-s, c);
+            col1 = new Vector2(c, s);
+            col2 = new Vector2(-s, c);
         }
 
         /// Initialize this matrix using columns.
         public void Set(Vector2 c1, Vector2 c2)
         {
-            Col1 = c1;
-            Col2 = c2;
+            col1 = c1;
+            col2 = c2;
         }
 
         /// Initialize this matrix using an angle. This matrix becomes
@@ -265,40 +222,34 @@ namespace FarseerPhysics.Common
         public void Set(float angle)
         {
             float c = (float)Math.Cos(angle), s = (float)Math.Sin(angle);
-            Col1.X = c;
-            Col2.X = -s;
-            Col1.Y = s;
-            Col2.Y = c;
+            col1.X = c; col2.X = -s;
+            col1.Y = s; col2.Y = c;
         }
 
         /// Set this to the identity matrix.
         public void SetIdentity()
         {
-            Col1.X = 1.0f;
-            Col2.X = 0.0f;
-            Col1.Y = 0.0f;
-            Col2.Y = 1.0f;
+            col1.X = 1.0f; col2.X = 0.0f;
+            col1.Y = 0.0f; col2.Y = 1.0f;
         }
 
         /// Set this matrix to all zeros.
         public void SetZero()
         {
-            Col1.X = 0.0f;
-            Col2.X = 0.0f;
-            Col1.Y = 0.0f;
-            Col2.Y = 0.0f;
+            col1.X = 0.0f; col2.X = 0.0f;
+            col1.Y = 0.0f; col2.Y = 0.0f;
         }
 
         /// Extract the angle from this matrix (assumed to be
         /// a rotation matrix).
         public float GetAngle()
         {
-            return (float)Math.Atan2(Col1.Y, Col1.X);
+            return (float)Math.Atan2(col1.Y, col1.X);
         }
 
         public Mat22 GetInverse()
         {
-            float a = Col1.X, b = Col2.X, c = Col1.Y, d = Col2.Y;
+            float a = col1.X, b = col2.X, c = col1.Y, d = col2.Y;
             float det = a * d - b * c;
             if (det != 0.0f)
             {
@@ -312,7 +263,7 @@ namespace FarseerPhysics.Common
         /// than computing the inverse in one-shot cases.
         public Vector2 Solve(Vector2 b)
         {
-            float a11 = Col1.X, a12 = Col2.X, a21 = Col1.Y, a22 = Col2.Y;
+            float a11 = col1.X, a12 = col2.X, a21 = col1.Y, a22 = col2.Y;
             float det = a11 * a22 - a12 * a21;
             if (det != 0.0f)
             {
@@ -324,44 +275,45 @@ namespace FarseerPhysics.Common
 
         public static void Add(ref Mat22 A, ref Mat22 B, out Mat22 R)
         {
-            R = new Mat22(A.Col1 + B.Col1, A.Col2 + B.Col2);
+            R = new Mat22(A.col1 + B.col1, A.col2 + B.col2);
         }
+
+        public Vector2 col1, col2;
     }
 
     /// A 3-by-3 matrix. Stored in column-major order.
     public struct Mat33
     {
-        public Vector3 Col1, Col2, Col3;
 
-        /// Construct this matrix using columns.
+        /// construct this matrix using columns.
         public Mat33(Vector3 c1, Vector3 c2, Vector3 c3)
         {
-            Col1 = c1;
-            Col2 = c2;
-            Col3 = c3;
+            col1 = c1;
+            col2 = c2;
+            col3 = c3;
         }
 
         /// Set this matrix to all zeros.
         public void SetZero()
         {
-            Col1 = Vector3.Zero;
-            Col2 = Vector3.Zero;
-            Col3 = Vector3.Zero;
+            col1 = Vector3.Zero;
+            col2 = Vector3.Zero;
+            col3 = Vector3.Zero;
         }
 
         /// Solve A * x = b, where b is a column vector. This is more efficient
         /// than computing the inverse in one-shot cases.
         public Vector3 Solve33(Vector3 b)
         {
-            float det = Vector3.Dot(Col1, Vector3.Cross(Col2, Col3));
+            float det = Vector3.Dot(col1, Vector3.Cross(col2, col3));
             if (det != 0.0f)
             {
                 det = 1.0f / det;
             }
 
-            return new Vector3(det * Vector3.Dot(b, Vector3.Cross(Col2, Col3)),
-                               det * Vector3.Dot(Col1, Vector3.Cross(b, Col3)),
-                               det * Vector3.Dot(Col1, Vector3.Cross(Col2, b)));
+            return new Vector3(det * Vector3.Dot(b, Vector3.Cross(col2, col3)),
+                                det * Vector3.Dot(col1, Vector3.Cross(b, col3)),
+                                det * Vector3.Dot(col1, Vector3.Cross(col2, b)));
         }
 
         /// Solve A * x = b, where b is a column vector. This is more efficient
@@ -369,7 +321,7 @@ namespace FarseerPhysics.Common
         /// 2-by-2 matrix equation.
         public Vector2 Solve22(Vector2 b)
         {
-            float a11 = Col1.X, a12 = Col2.X, a21 = Col1.Y, a22 = Col2.Y;
+            float a11 = col1.X, a12 = col2.X, a21 = col1.Y, a22 = col2.Y;
             float det = a11 * a22 - a12 * a21;
 
             if (det != 0.0f)
@@ -379,15 +331,14 @@ namespace FarseerPhysics.Common
 
             return new Vector2(det * (a22 * b.X - a12 * b.Y), det * (a11 * b.Y - a21 * b.X));
         }
+
+        public Vector3 col1, col2, col3;
     }
 
     /// A transform contains translation and rotation. It is used to represent
     /// the position and orientation of rigid frames.
     public struct Transform
     {
-        public Vector2 Position;
-        public Mat22 R;
-
         /// Initialize using a position vector and a rotation matrix.
         public Transform(Vector2 position, ref Mat22 r)
         {
@@ -412,8 +363,11 @@ namespace FarseerPhysics.Common
         /// Calculate the angle that the rotation matrix represents.
         public float GetAngle()
         {
-            return (float)Math.Atan2(R.Col1.Y, R.Col1.X);
+            return (float)Math.Atan2((double)R.col1.Y, (double)R.col1.X);
         }
+
+        public Vector2 Position;
+        public Mat22 R;
     }
 
     /// This describes the motion of a body/shape for TOI computation.
@@ -422,59 +376,38 @@ namespace FarseerPhysics.Common
     /// we must interpolate the center of mass position.
     public struct Sweep
     {
-        /// <summary>
-        /// world angles
-        /// </summary>
-        public float Angle;
-
-        /// <summary>
-        /// world angles
-        /// </summary>
-        public float Angle0;
-
-        /// <summary>
-        /// Center world positions
-        /// </summary>
-        public Vector2 Center;
-
-        /// <summary>
-        /// Center world positions
-        /// </summary>
-        public Vector2 Center0;
-
-        /// <summary>
-        /// local center of mass position
-        /// </summary>
-        public Vector2 LocalCenter;
-
         /// Get the interpolated transform at a specific time.
         /// @param alpha is a factor in [0,1], where 0 indicates t0.
         public void GetTransform(out Transform xf, float alpha)
         {
             xf = new Transform();
-            xf.Position = (1.0f - alpha) * Center0 + alpha * Center;
-            float angle = (1.0f - alpha) * Angle0 + alpha * Angle;
+            xf.Position = (1.0f - alpha) * c0 + alpha * c;
+            float angle = (1.0f - alpha) * a0 + alpha * a;
             xf.R.Set(angle);
 
             // Shift to origin
-            xf.Position -= MathUtils.Multiply(ref xf.R, LocalCenter);
+            xf.Position -= MathUtils.Multiply(ref xf.R, localCenter);
         }
 
         /// Advance the sweep forward, yielding a new initial state.
         /// @param t the new initial time.
         public void Advance(float t)
         {
-            Center0 = (1.0f - t) * Center0 + t * Center;
-            Angle0 = (1.0f - t) * Angle0 + t * Angle;
+            c0 = (1.0f - t) * c0 + t * c;
+            a0 = (1.0f - t) * a0 + t * a;
         }
 
         /// Normalize the angles.
         public void Normalize()
         {
-            const float twoPi = 2.0f * Settings.Pi;
-            float d = twoPi * (float)Math.Floor(Angle0 / twoPi);
-            Angle0 -= d;
-            Angle -= d;
+            float twoPi = 2.0f * (float)Math.PI;
+            float d = twoPi * (float)Math.Floor(a0 / twoPi);
+            a0 -= d;
+            a -= d;
         }
+
+        public Vector2 localCenter;	///< local center of mass position
+        public Vector2 c0, c;		///< center world positions
+        public float a0, a;		///< world angles
     }
 }

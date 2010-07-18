@@ -48,7 +48,7 @@ namespace FarseerPhysics.TestBed.Tests
                     position.X = -N * a;
                     for (int i = 0; i < N; ++i)
                     {
-                        PolygonShape shape = new PolygonShape(0);
+                        PolygonShape shape = new PolygonShape();
                         shape.SetAsBox(a, a, position, 0.0f);
                         ground.CreateFixture(shape);
                         position.X += 2.0f * a;
@@ -59,7 +59,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
-                PolygonShape shape = new PolygonShape(box, 5);
+                PolygonShape shape = new PolygonShape(box);
 
                 Vector2 x = new Vector2(-7.0f, 0.75f);
                 Vector2 deltaX = new Vector2(0.5625f, 1.25f);
@@ -74,7 +74,7 @@ namespace FarseerPhysics.TestBed.Tests
                         Body body = BodyFactory.CreateBody(World);
                         body.BodyType = BodyType.Dynamic;
                         body.Position = y;
-                        body.CreateFixture(shape);
+                        body.CreateFixture(shape, 5);
 
                         y += deltaY;
                     }
@@ -86,7 +86,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            ContactManager cm = World.ContactManager;
+            ContactManager cm = World.GetContactManager();
             int height = cm.BroadPhase.ComputeHeight();
             int leafCount = cm.BroadPhase.ProxyCount;
             int minimumNodeCount = 2 * leafCount - 1;

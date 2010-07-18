@@ -79,14 +79,12 @@ namespace FarseerPhysics.Collision.Shapes
             edge._vertex2 = _vertices[i2];
             edge._vertex3 = _vertices[i3];
         }
-        /// This always return false.
-        /// @see Shape::TestPoint
+
         public override bool TestPoint(ref Transform transform, Vector2 p)
         {
             return false;
         }
 
-        /// Implement Shape.
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input,
                         ref Transform transform, int childIndex)
         {
@@ -105,7 +103,6 @@ namespace FarseerPhysics.Collision.Shapes
             return s_edgeShape.RayCast(out output, ref input, ref transform, 0);
         }
 
-        /// @see Shape::ComputeAABB
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
             Debug.Assert(childIndex < _count);
@@ -125,16 +122,13 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound = Vector2.Max(v1, v2);
         }
 
-        public override Vertices GetVertices()
+        /// Chains have zero mass.
+        public override void ComputeMass(out MassData massData, float density)
         {
-            return new Vertices(ref _vertices);
-        }
-
-        protected override void ComputeProperties()
-        {
-            Mass = 0.0f;
-            Centroid = Vector2.Zero;
-            Inertia = 0.0f;
+            massData = new MassData();
+            massData.Mass = 0.0f;
+            massData.Center = Vector2.Zero;
+            massData.Inertia = 0.0f;
         }
 
         /// The vertices. These are not owned/freed by the loop Shape.
@@ -143,6 +137,6 @@ namespace FarseerPhysics.Collision.Shapes
         /// The vertex count.
         public int _count;
 
-        public static EdgeShape s_edgeShape = new EdgeShape();
+        private static EdgeShape s_edgeShape = new EdgeShape();
     }
 }

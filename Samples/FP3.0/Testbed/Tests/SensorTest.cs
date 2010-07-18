@@ -44,12 +44,12 @@ namespace FarseerPhysics.TestBed.Tests
 
                 {
                     Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                    PolygonShape shape = new PolygonShape(edge, 0);
+                    PolygonShape shape = new PolygonShape(edge);
                     ground.CreateFixture(shape);
                 }
 
                 {
-                    CircleShape shape = new CircleShape(5.0f, 0);
+                    CircleShape shape = new CircleShape(5.0f);
                     shape.Position = new Vector2(0.0f, 10.0f);
 
                     _sensor = ground.CreateFixture(shape);
@@ -58,7 +58,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                CircleShape shape = new CircleShape(1.0f, 1);
+                CircleShape shape = new CircleShape(1.0f);
 
                 for (int i = 0; i < Count; ++i)
                 {
@@ -68,7 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
                     _bodies[i].Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
                     _bodies[i].UserData = i;
 
-                    _bodies[i].CreateFixture(shape);
+                    _bodies[i].CreateFixture(shape,1);
                 }
             }
         }

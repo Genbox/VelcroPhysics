@@ -140,20 +140,20 @@ namespace FarseerPhysics.Dynamics.Joints
             // magic formulas
             // gamma has units of inverse mass.
             // beta has units of inverse time.
-            Debug.Assert(d + step.DeltaTime * k > Settings.Epsilon);
+            Debug.Assert(d + step.dt * k > Settings.Epsilon);
 
-            _gamma = step.DeltaTime * (d + step.DeltaTime * k);
+            _gamma = step.dt * (d + step.dt * k);
             if (_gamma != 0.0f)
             {
                 _gamma = 1.0f / _gamma;
             }
 
-            _beta = step.DeltaTime * k * _gamma;
+            _beta = step.dt * k * _gamma;
 
             // Compute the effective mass matrix.
             Transform xf1;
             b.GetTransform(out xf1);
-            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b.LocalCenter);
+            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b.GetLocalCenter());
 
             // K    = [(1/m1 + 1/m2) * eye(2) - skew(r1) * invI1 * skew(r1) - skew(r2) * invI2 * skew(r2)]
             //      = [1/m1+1/m2     0    ] + invI1 * [r1.Y*r1.Y -r1.X*r1.Y] + invI2 * [r1.Y*r1.Y -r1.X*r1.Y]
@@ -168,18 +168,18 @@ namespace FarseerPhysics.Dynamics.Joints
             Mat22 K;
             Mat22.Add(ref K1, ref K2, out K);
 
-            K.Col1.X += _gamma;
-            K.Col2.Y += _gamma;
+            K.col1.X += _gamma;
+            K.col2.Y += _gamma;
 
             _mass = K.GetInverse();
 
-            _C = b._sweep.Center + r - LocalAnchorB;
+            _C = b._sweep.c + r - LocalAnchorB;
 
             // Cheat with some damping
             b._angularVelocity *= 0.98f;
 
             // Warm starting.
-            _impulse *= step.DtRatio;
+            _impulse *= step.dtRatio;
             b._linearVelocity += invMass * _impulse;
             b._angularVelocity += invI * MathUtils.Cross(r, _impulse);
         }
@@ -191,7 +191,7 @@ namespace FarseerPhysics.Dynamics.Joints
             Transform xf1;
             b.GetTransform(out xf1);
 
-            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b.LocalCenter);
+            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b.GetLocalCenter());
 
             // Cdot = v + cross(w, r)
             Vector2 Cdot = b._linearVelocity + MathUtils.Cross(b._angularVelocity, r);
@@ -199,7 +199,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             Vector2 oldImpulse = _impulse;
             _impulse += impulse;
-            float maxImpulse = step.DeltaTime * MaxForce;
+            float maxImpulse = step.dt * MaxForce;
             if (_impulse.LengthSquared() > maxImpulse * maxImpulse)
             {
                 _impulse *= maxImpulse / _impulse.Length();

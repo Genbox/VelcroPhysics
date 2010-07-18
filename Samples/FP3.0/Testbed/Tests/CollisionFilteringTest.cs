@@ -60,13 +60,13 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-1.0f, 0.0f));
                 vertices.Add(new Vector2(1.0f, 0.0f));
                 vertices.Add(new Vector2(0.0f, 2.0f));
-                PolygonShape polygon = new PolygonShape(vertices, 1);
+                PolygonShape polygon = new PolygonShape(vertices);
 
                 Body body1 = BodyFactory.CreateBody(World);
                 body1.BodyType = BodyType.Dynamic;
                 body1.Position = new Vector2(-5.0f, 2.0f);
 
-                Fixture body1Fixture = body1.CreateFixture(polygon);
+                Fixture body1Fixture = body1.CreateFixture(polygon, 1);
                 body1Fixture.CollisionGroup = SmallGroup;
                 body1Fixture.CollisionCategories = TriangleCategory;
                 body1Fixture.CollidesWith = TriangleMask;
@@ -82,7 +82,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body2.Position = new Vector2(-5.0f, 6.0f);
                 body2.FixedRotation = true; // look at me!
 
-                Fixture body2Fixture = body2.CreateFixture(polygon);
+                Fixture body2Fixture = body2.CreateFixture(polygon, 1);
                 body2Fixture.CollisionGroup = LargeGroup;
 
                 {
@@ -91,15 +91,15 @@ namespace FarseerPhysics.TestBed.Tests
                     body.Position = new Vector2(-5.0f, 10.0f);
 
                     Vertices box = PolygonTools.CreateRectangle(0.5f, 1.0f);
-                    PolygonShape p = new PolygonShape(box, 1);
-                    body.CreateFixture(p);
+                    PolygonShape p = new PolygonShape(box);
+                    body.CreateFixture(p, 1);
 
                     PrismaticJoint jd = new PrismaticJoint(body2, body, new Vector2(0.0f, 0.0f), new Vector2(0.0f, 1.0f));
                     jd.LimitEnabled = true;
                     jd.LowerLimit = -1.0f;
                     jd.UpperLimit = 1.0f;
 
-                    World.Add(jd);
+                    World.AddJoint(jd);
                 }
 
                 // Small box
@@ -110,7 +110,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body3.BodyType = BodyType.Dynamic;
                 body3.Position = new Vector2(0.0f, 2.0f);
 
-                Fixture body3Fixture = body3.CreateFixture(polygon);
+                Fixture body3Fixture = body3.CreateFixture(polygon,0);
                 body3Fixture.Restitution = 0.1f;
                 body3Fixture.CollisionGroup = SmallGroup;
                 body3Fixture.CollisionCategories = BoxCategory;
@@ -124,17 +124,17 @@ namespace FarseerPhysics.TestBed.Tests
                 body4.BodyType = BodyType.Dynamic;
                 body4.Position = new Vector2(0.0f, 6.0f);
 
-                Fixture body4Fixture = body4.CreateFixture(polygon);
+                Fixture body4Fixture = body4.CreateFixture(polygon,0);
                 body4Fixture.CollisionGroup = LargeGroup;
 
                 // Small circle
-                CircleShape circle = new CircleShape(1.0f, 1);
+                CircleShape circle = new CircleShape(1.0f);
 
                 Body body5 = BodyFactory.CreateBody(World);
                 body5.BodyType = BodyType.Dynamic;
                 body5.Position = new Vector2(5.0f, 2.0f);
 
-                Fixture body5Fixture = body5.CreateFixture(circle);
+                Fixture body5Fixture = body5.CreateFixture(circle, 1);
                 body5Fixture.CollisionGroup = SmallGroup;
                 body5Fixture.CollisionCategories = CircleCategory;
                 body5Fixture.CollidesWith = CircleMask;
@@ -146,7 +146,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body6.BodyType = BodyType.Dynamic;
                 body6.Position = new Vector2(5.0f, 6.0f);
 
-                Fixture body6Fixture = body6.CreateFixture(circle);
+                Fixture body6Fixture = body6.CreateFixture(circle, 1);
                 body6Fixture.CollisionGroup = LargeGroup;
 
                 // Large circle - Ignore with other large circle
@@ -154,7 +154,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body7.BodyType = BodyType.Dynamic;
                 body7.Position = new Vector2(6.0f, 9.0f);
 
-                Fixture body7Fixture = body7.CreateFixture(circle);
+                Fixture body7Fixture = body7.CreateFixture(circle, 1);
                 body7Fixture.IgnoreCollisionWith(body6Fixture);
             }
         }

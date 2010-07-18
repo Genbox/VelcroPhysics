@@ -95,91 +95,50 @@
     <Compile Include="Tests\BooleanPolygonTest.cs" />
     <Compile Include="Tests\BreakableTest.cs" />
     <Compile Include="Tests\BridgeTest.cs" />
-    <Compile Include="Tests\BuoyancyTest.cs" />
     <Compile Include="Tests\CantileverTest.cs" />
     <Compile Include="Tests\ChainTest.cs" />
+    <Compile Include="Tests\CharacterCollisionTest.cs" />
     <Compile Include="Tests\CollisionFilteringTest.cs" />
-    <Compile Include="Tests\CollisionProcessingTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\CompoundShapes.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\ConfinedTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Tests\CollisionProcessingTest.cs" />
+    <Compile Include="Tests\CompoundShapes.cs" />
+    <Compile Include="Tests\ConfinedTest.cs" />
     <Compile Include="Tests\ContinuousTest.cs" />
     <Compile Include="Tests\ControllerTest.cs" />
-    <Compile Include="Tests\CharacterCollisionTest.cs" />
-    <Compile Include="Tests\EdgeTest.cs" />
     <Compile Include="Tests\CuttingTest.cs" />
-    <Compile Include="Tests\DistanceTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\DominosTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\DynamicTreeTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Tests\DistanceTest.cs" />
+    <Compile Include="Tests\DominosTest.cs" />
+    <Compile Include="Tests\DynamicTreeTest.cs" />
     <Compile Include="Tests\EdgeShapesTest.cs" />
-    <Compile Include="Tests\GearsTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Tests\EdgeTest.cs" />
+    <Compile Include="Tests\GearsTest.cs" />
     <Compile Include="Tests\LineJointTest.cs" />
     <Compile Include="Tests\OneSidedPlatformTest.cs" />
     <Compile Include="Tests\PathTest.cs" />
-    <Compile Include="Tests\PolyCollisionTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Tests\PolyCollisionTest.cs" />
     <Compile Include="Tests\PolygonShapesTest.cs" />
-    <Compile Include="Tests\PolyShapesTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\PrismaticTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\PulleysTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Tests\PolyShapesTest.cs" />
+    <Compile Include="Tests\PrismaticTest.cs" />
+    <Compile Include="Tests\PulleysTest.cs" />
     <Compile Include="Tests\PyramidTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\RaycastTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\RevoluteTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\SensorTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\ShapeEditingTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\SliderCrankTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Tests\RaycastTest.cs" />
+    <Compile Include="Tests\RevoluteTest.cs" />
+    <Compile Include="Tests\SensorTest.cs" />
+    <Compile Include="Tests\ShapeEditingTest.cs" />
+    <Compile Include="Tests\SliderCrankTest.cs" />
     <Compile Include="Tests\SphereStackTest.cs" />
     <Compile Include="Tests\TestEntries.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\TextureVerticesTest.cs" />
-    <Compile Include="Tests\TheoJansenTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Tests\TheoJansenTest.cs" />
     <Compile Include="Tests\TilesTest.cs" />
-    <Compile Include="Tests\TimeOfImpactTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Tests\TimeOfImpactTest.cs" />
     <Compile Include="Tests\VaryingFrictionTest.cs" />
     <Compile Include="Tests\VaryingRestitutionTest.cs" />
-    <Compile Include="Tests\VerticalStackTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\WebTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Tests\VerticalStackTest.cs" />
+    <Compile Include="Tests\WebTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

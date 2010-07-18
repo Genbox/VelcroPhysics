@@ -45,8 +45,8 @@ namespace FarseerPhysics.TestBed.Tests
             _body.Position = new Vector2(0.0f, 10.0f);
 
             Vertices box = PolygonTools.CreateRectangle(4.0f, 4.0f);
-            PolygonShape shape2 = new PolygonShape(box, 10);
-            _body.CreateFixture(shape2);
+            PolygonShape shape2 = new PolygonShape(box);
+            _body.CreateFixture(shape2, 10);
 
             _fixture2 = null;
         }
@@ -55,9 +55,9 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (state.IsKeyDown(Keys.C) && oldState.IsKeyUp(Keys.C) && _fixture2 == null)
             {
-                CircleShape shape = new CircleShape(3.0f, 10);
+                CircleShape shape = new CircleShape(3.0f);
                 shape.Position = new Vector2(0.5f, -4.0f);
-                _fixture2 = _body.CreateFixture(shape);
+                _fixture2 = _body.CreateFixture(shape, 10);
                 _body.Awake = true;
             }
 

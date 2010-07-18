@@ -114,10 +114,10 @@ namespace FarseerPhysics.TestBed.Framework
             TextLine = 30;
 
             World.JointRemoved += JointRemoved;
-            World.ContactManager.PreSolve += PreSolve;
-            World.ContactManager.PostSolve += PostSolve;
-            World.ContactManager.BeginContact += BeginContact;
-            World.ContactManager.EndContact += EndContact;
+            World._contactManager.PreSolve += PreSolve;
+            World._contactManager.PostSolve += PostSolve;
+            World._contactManager.BeginContact += BeginContact;
+            World._contactManager.EndContact += EndContact;
 
             StepCount = 0;
         }
@@ -197,7 +197,7 @@ namespace FarseerPhysics.TestBed.Framework
                 if (settings.DrawStats > 0)
                 {
                     DebugView.DrawString(50, TextLine, "bodies/contacts/joints/proxies = {0:n}/{1:n}/{2:n}/{3:n}",
-                                         World._bodyCount, World.ContactManager._contactCount, World._jointCount,
+                                         World._bodyCount, World._contactManager.ContactCount, World._jointCount,
                                          World.ProxyCount);
                     TextLine += 15;
                 }
@@ -260,7 +260,7 @@ namespace FarseerPhysics.TestBed.Framework
                 {
                     for (Body body = World._bodyList; body != null; body = body.GetNext())
                     {
-                        for (Fixture f = body._fixtureList; f != null; f = f._next)
+                        for (Fixture f = body._fixtureList; f != null; f = f.Next)
                         {
                             PolygonShape polygon = f.Shape as PolygonShape;
                             if (polygon != null)
@@ -326,7 +326,7 @@ namespace FarseerPhysics.TestBed.Framework
                     Body body = fixture.Fixture.Body;
                     if (body.BodyType == BodyType.Dynamic)
                     {
-                        bool inside = fixture.Fixture.TestPoint(ref p);
+                        bool inside = fixture.Fixture.TestPoint(p);
                         if (inside)
                         {
                             myFixture = fixture.Fixture;
@@ -345,7 +345,7 @@ namespace FarseerPhysics.TestBed.Framework
                 Body body = myFixture.Body;
                 _fixedMouseJoint = new FixedMouseJoint(body, p);
                 _fixedMouseJoint.MaxForce = 1000.0f * body.Mass;
-                World.Add(_fixedMouseJoint);
+                World.AddJoint(_fixedMouseJoint);
                 body.Awake = true;
             }
         }
@@ -354,7 +354,7 @@ namespace FarseerPhysics.TestBed.Framework
         {
             if (_fixedMouseJoint != null)
             {
-                World.Remove(_fixedMouseJoint);
+                World.DestroyJoint(_fixedMouseJoint);
                 _fixedMouseJoint = null;
             }
         }
@@ -395,7 +395,7 @@ namespace FarseerPhysics.TestBed.Framework
             Fixture fixtureB = contact.FixtureB;
 
             FixedArray2<PointState> state1, state2;
-            CollisionManager.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
+            Collision.Collision.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
 
             WorldManifold worldManifold;
             contact.GetWorldManifold(out worldManifold);

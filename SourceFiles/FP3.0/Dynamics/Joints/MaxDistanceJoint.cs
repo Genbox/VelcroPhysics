@@ -125,9 +125,9 @@ namespace FarseerPhysics.Dynamics.Joints
             b2.GetTransform(out xf2);
 
             // Compute the effective mass matrix.
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
-            _u = b2._sweep.Center + r2 - b1._sweep.Center - r1;
+            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.GetLocalCenter());
+            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.GetLocalCenter());
+            _u = b2._sweep.c + r2 - b1._sweep.c - r1;
 
             // Handle singularity.
             float length = _u.Length();
@@ -166,9 +166,9 @@ namespace FarseerPhysics.Dynamics.Joints
                 float k = _mass * omega * omega;
 
                 // magic formulas
-                _gamma = step.DeltaTime * (d + step.DeltaTime * k);
+                _gamma = step.dt * (d + step.dt * k);
                 _gamma = _gamma != 0.0f ? 1.0f / _gamma : 0.0f;
-                _bias = C * step.DeltaTime * k * _gamma;
+                _bias = C * step.dt * k * _gamma;
 
                 _mass = invMass + _gamma;
                 _mass = _mass != 0.0f ? 1.0f / _mass : 0.0f;
@@ -177,7 +177,7 @@ namespace FarseerPhysics.Dynamics.Joints
             if (Settings.EnableWarmstarting)
             {
                 // Scale the impulse to support a variable time step.
-                _impulse *= step.DtRatio;
+                _impulse *= step.dtRatio;
 
                 Vector2 P = _impulse * _u;
                 b1._linearVelocity -= b1._invMass * P;
@@ -200,10 +200,10 @@ namespace FarseerPhysics.Dynamics.Joints
             b1.GetTransform(out xf1);
             b2.GetTransform(out xf2);
 
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.GetLocalCenter());
+            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.GetLocalCenter());
 
-            Vector2 d = b2._sweep.Center + r2 - b1._sweep.Center - r1;
+            Vector2 d = b2._sweep.c + r2 - b1._sweep.c - r1;
 
             float length = d.Length();
 
@@ -242,10 +242,10 @@ namespace FarseerPhysics.Dynamics.Joints
             b1.GetTransform(out xf1);
             b2.GetTransform(out xf2);
 
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.GetLocalCenter());
+            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.GetLocalCenter());
 
-            Vector2 d = b2._sweep.Center + r2 - b1._sweep.Center - r1;
+            Vector2 d = b2._sweep.c + r2 - b1._sweep.c - r1;
 
             float length = d.Length();
 
@@ -265,10 +265,10 @@ namespace FarseerPhysics.Dynamics.Joints
             _u = d;
             Vector2 P = impulse * _u;
 
-            b1._sweep.Center -= b1._invMass * P;
-            b1._sweep.Angle -= b1._invI * MathUtils.Cross(r1, P);
-            b2._sweep.Center += b2._invMass * P;
-            b2._sweep.Angle += b2._invI * MathUtils.Cross(r2, P);
+            b1._sweep.c -= b1._invMass * P;
+            b1._sweep.a -= b1._invI * MathUtils.Cross(r1, P);
+            b2._sweep.c += b2._invMass * P;
+            b2._sweep.a += b2._invI * MathUtils.Cross(r2, P);
 
             b1.SynchronizeTransform();
             b2.SynchronizeTransform();

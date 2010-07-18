@@ -15,48 +15,48 @@ namespace FarseerPhysics.TestBed.Tests
             Fixture ground = FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
 
             // Collinear edges
-            PolygonShape shape = new PolygonShape(0);
+            PolygonShape shape = new PolygonShape();
             shape.SetAsEdge(new Vector2(-8.0f, 1.0f), new Vector2(-6.0f, 1.0f));
-            ground.Body.CreateFixture(shape);
+            ground.Body.CreateFixture(shape, 0);
             shape.SetAsEdge(new Vector2(-6.0f, 1.0f), new Vector2(-4.0f, 1.0f));
-            ground.Body.CreateFixture(shape);
+            ground.Body.CreateFixture(shape, 0);
             shape.SetAsEdge(new Vector2(-4.0f, 1.0f), new Vector2(-2.0f, 1.0f));
-            ground.Body.CreateFixture(shape);
+            ground.Body.CreateFixture(shape, 0);
 
             // Square tiles
-            PolygonShape tile = new PolygonShape(0);
+            PolygonShape tile = new PolygonShape();
             tile.SetAsBox(1.0f, 1.0f, new Vector2(4.0f, 3.0f), 0.0f);
-            ground.Body.CreateFixture(tile);
+            ground.Body.CreateFixture(tile, 0);
             tile.SetAsBox(1.0f, 1.0f, new Vector2(6.0f, 3.0f), 0.0f);
-            ground.Body.CreateFixture(tile);
+            ground.Body.CreateFixture(tile, 0);
             tile.SetAsBox(1.0f, 1.0f, new Vector2(8.0f, 3.0f), 0.0f);
-            ground.Body.CreateFixture(tile);
+            ground.Body.CreateFixture(tile, 0);
 
             // Square made from edges notice how the edges are shrunk to account
             // for the polygon radius. This makes it so the square character does
             // not get snagged. However, ray casts can now go through the cracks.
-            PolygonShape square = new PolygonShape(0);
+            PolygonShape square = new PolygonShape();
             const float d = 2.0f * Settings.PolygonRadius;
             square.SetAsEdge(new Vector2(-1.0f + d, 3.0f), new Vector2(1.0f - d, 3.0f));
-            ground.Body.CreateFixture(square);
+            ground.Body.CreateFixture(square, 0);
             square.SetAsEdge(new Vector2(1.0f, 3.0f + d), new Vector2(1.0f, 5.0f - d));
-            ground.Body.CreateFixture(square);
+            ground.Body.CreateFixture(square, 0);
             square.SetAsEdge(new Vector2(1.0f - d, 5.0f), new Vector2(-1.0f + d, 5.0f));
-            ground.Body.CreateFixture(square);
+            ground.Body.CreateFixture(square, 0);
             square.SetAsEdge(new Vector2(-1.0f, 5.0f - d), new Vector2(-1.0f, 3.0f + d));
-            ground.Body.CreateFixture(square);
+            ground.Body.CreateFixture(square, 0);
 
             // Square character
             Fixture squareCharacter = FixtureFactory.CreateRectangle(World, 1, 1, 20);
             squareCharacter.Body.Position = new Vector2(-3.0f, 5.0f);
             squareCharacter.Body.BodyType = BodyType.Dynamic;
             squareCharacter.Body.FixedRotation = true;
-            squareCharacter.Body.AllowSleep = false;
+            squareCharacter.Body.SleepingAllowed = false;
 
 #if false
             // Hexagon character
             float angle = 0.0f;
-            const float delta = Settings.Pi / 3.0f;
+            const float delta = Settings.b2_pi / 3.0f;
             Vertices vertices = new Vertices();
 
             for (int i = 0; i < 6; ++i)

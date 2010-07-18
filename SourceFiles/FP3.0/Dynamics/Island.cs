@@ -29,62 +29,50 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics
 {
-    /// <summary>
     /// This is an internal class.
-    /// </summary>
-    internal class Island
+    class Island
     {
-        public Body[] Bodies;
-        public int BodyCount;
-        private int ContactCount;
-        private Contact[] Contacts;
-        private int _jointCapacity;
-        private int _jointCount;
-        private Joint[] Joints;
-        private int _bodyCapacity;
-        private ContactManager _contactManager;
-        private ContactSolver _contactSolver = new ContactSolver();
-        private int _contactCapacity;
+        public Island() { }
 
-        public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
+        public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager listener)
         {
             _bodyCapacity = bodyCapacity;
-            _jointCapacity = jointCapacity;
             _contactCapacity = contactCapacity;
-            BodyCount = 0;
+            _jointCapacity = jointCapacity;
+            _bodyCount = 0;
             _jointCount = 0;
 
-            _contactManager = contactManager;
+            _listener = listener;
 
-            if (Bodies == null || Bodies.Length < bodyCapacity)
+            if (_bodies == null || _bodies.Length < bodyCapacity)
             {
-                Bodies = new Body[bodyCapacity];
+                _bodies = new Body[bodyCapacity];
             }
 
-            if (Contacts == null || Contacts.Length < contactCapacity)
+            if (_contacts == null || _contacts.Length < contactCapacity)
             {
-                Contacts = new Contact[contactCapacity * 2];
+                _contacts = new Contact[contactCapacity * 2];
             }
 
-            if (Joints == null || Joints.Length < jointCapacity)
+            if (_joints == null || _joints.Length < jointCapacity)
             {
-                Joints = new Joint[jointCapacity * 2];
+                _joints = new Joint[jointCapacity * 2];
             }
         }
 
         public void Clear()
         {
-            BodyCount = 0;
-            ContactCount = 0;
+            _bodyCount = 0;
+            _contactCount = 0;
             _jointCount = 0;
         }
 
-        public void Solve(ref TimeStep step, Vector2 gravity, bool allowSleep)
+        public void Solve(ref TimeStep step, Vector2 gravity)
         {
             // Integrate velocities and apply damping.
-            for (int i = 0; i < BodyCount; ++i)
+            for (int i = 0; i < _bodyCount; ++i)
             {
-                Body b = Bodies[i];
+                Body b = _bodies[i];
 
                 if (b.BodyType != BodyType.Dynamic)
                 {
@@ -94,13 +82,13 @@ namespace FarseerPhysics.Dynamics
                 // Integrate velocities. Only apply gravity if the body wants it.
                 if (b.IgnoreGravity)
                 {
-                    b._linearVelocity += step.DeltaTime * (b._invMass * b._force);
-                    b._angularVelocity += step.DeltaTime * b._invI * b._torque;
+                    b._linearVelocity += step.dt * (b._invMass * b._force);
+                    b._angularVelocity += step.dt * b._invI * b._torque;
                 }
                 else
                 {
-                    b._linearVelocity += step.DeltaTime * (gravity + b._invMass * b._force);
-                    b._angularVelocity += step.DeltaTime * b._invI * b._torque;
+                    b._linearVelocity += step.dt * (gravity + b._invMass * b._force);
+                    b._angularVelocity += step.dt * b._invI * b._torque;
                 }
 
                 // Apply damping.
@@ -110,16 +98,16 @@ namespace FarseerPhysics.Dynamics
                 // v2 = exp(-c * dt) * v1
                 // Taylor expansion:
                 // v2 = (1.0f - c * dt) * v1
-                b._linearVelocity *= MathUtils.Clamp(1.0f - step.DeltaTime * b.LinearDamping, 0.0f, 1.0f);
-                b._angularVelocity *= MathUtils.Clamp(1.0f - step.DeltaTime * b._angularDamping, 0.0f, 1.0f);
+                b._linearVelocity *= MathUtils.Clamp(1.0f - step.dt * b._linearDamping, 0.0f, 1.0f);
+                b._angularVelocity *= MathUtils.Clamp(1.0f - step.dt * b._angularDamping, 0.0f, 1.0f);
             }
 
             // Partition contacts so that contacts with static bodies are solved last.
             int i1 = -1;
-            for (int i2 = 0; i2 < ContactCount; ++i2)
+            for (int i2 = 0; i2 < _contactCount; ++i2)
             {
-                Fixture fixtureA = Contacts[i2].FixtureA;
-                Fixture fixtureB = Contacts[i2].FixtureB;
+                Fixture fixtureA = _contacts[i2].FixtureA;
+                Fixture fixtureB = _contacts[i2].FixtureB;
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
                 bool nonStatic = bodyA.BodyType != BodyType.Static && bodyB.BodyType != BodyType.Static;
@@ -127,19 +115,19 @@ namespace FarseerPhysics.Dynamics
                 {
                     ++i1;
                     //b2Swap(_contacts[i1], _contacts[i2]);
-                    Contact temp = Contacts[i1];
-                    Contacts[i1] = Contacts[i2];
-                    Contacts[i2] = temp;
+                    Contact temp = _contacts[i1];
+                    _contacts[i1] = _contacts[i2];
+                    _contacts[i2] = temp;
                 }
             }
 
             // Initialize velocity constraints.
-            _contactSolver.Reset(Contacts, ContactCount, step.DtRatio);
+            _contactSolver.Reset(_contacts, _contactCount, step.dtRatio);
             _contactSolver.WarmStart();
 
             for (int i = 0; i < _jointCount; ++i)
             {
-                Joints[i].InitVelocityConstraints(ref step);
+                _joints[i].InitVelocityConstraints(ref step);
             }
 
             // Solve velocity constraints.
@@ -147,7 +135,7 @@ namespace FarseerPhysics.Dynamics
             {
                 for (int j = 0; j < _jointCount; ++j)
                 {
-                    Joints[j].SolveVelocityConstraints(ref step);
+                    _joints[j].SolveVelocityConstraints(ref step);
                 }
 
                 _contactSolver.SolveVelocityConstraints();
@@ -157,9 +145,9 @@ namespace FarseerPhysics.Dynamics
             _contactSolver.StoreImpulses();
 
             // Integrate positions.
-            for (int i = 0; i < BodyCount; ++i)
+            for (int i = 0; i < _bodyCount; ++i)
             {
-                Body b = Bodies[i];
+                Body b = _bodies[i];
 
                 if (b.BodyType == BodyType.Static)
                 {
@@ -167,14 +155,14 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Check for large velocities.
-                Vector2 translation = step.DeltaTime * b._linearVelocity;
+                Vector2 translation = step.dt * b._linearVelocity;
                 if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
                 {
                     float ratio = Settings.MaxTranslation / translation.Length();
                     b._linearVelocity *= ratio;
                 }
 
-                float rotation = step.DeltaTime * b._angularVelocity;
+                float rotation = step.dt * b._angularVelocity;
                 if (rotation * rotation > Settings.MaxRotationSquared)
                 {
                     float ratio = Settings.MaxRotation / Math.Abs(rotation);
@@ -182,12 +170,12 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Store positions for continuous collision.
-                b._sweep.Center0 = b._sweep.Center;
-                b._sweep.Angle0 = b._sweep.Angle;
+                b._sweep.c0 = b._sweep.c;
+                b._sweep.a0 = b._sweep.a;
 
                 // Integrate
-                b._sweep.Center += step.DeltaTime * b._linearVelocity;
-                b._sweep.Angle += step.DeltaTime * b._angularVelocity;
+                b._sweep.c += step.dt * b._linearVelocity;
+                b._sweep.a += step.dt * b._angularVelocity;
 
                 // Compute new transform
                 b.SynchronizeTransform();
@@ -203,7 +191,7 @@ namespace FarseerPhysics.Dynamics
                 bool jointsOkay = true;
                 for (int j = 0; j < _jointCount; ++j)
                 {
-                    bool jointOkay = Joints[j].SolvePositionConstraints();
+                    bool jointOkay = _joints[j].SolvePositionConstraints();
                     jointsOkay = jointsOkay && jointOkay;
                 }
 
@@ -214,20 +202,18 @@ namespace FarseerPhysics.Dynamics
                 }
             }
 
-            //We only report using the postsolve delegate. If no one wants the data, we don't collect it.
-            if (_contactManager.PostSolve != null)
-                Report(_contactSolver.Constraints);
+            Report(_contactSolver._constraints);
 
-            if (allowSleep)
+            if (Settings.AllowSleep)
             {
                 float minSleepTime = Settings.MaxFloat;
 
                 const float linTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
                 const float angTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
 
-                for (int i = 0; i < BodyCount; ++i)
+                for (int i = 0; i < _bodyCount; ++i)
                 {
-                    Body b = Bodies[i];
+                    Body b = _bodies[i];
                     if (b.BodyType == BodyType.Static)
                     {
                         continue;
@@ -248,16 +234,16 @@ namespace FarseerPhysics.Dynamics
                     }
                     else
                     {
-                        b._sleepTime += step.DeltaTime;
+                        b._sleepTime += step.dt;
                         minSleepTime = Math.Min(minSleepTime, b._sleepTime);
                     }
                 }
 
                 if (minSleepTime >= Settings.TimeToSleep)
                 {
-                    for (int i = 0; i < BodyCount; ++i)
+                    for (int i = 0; i < _bodyCount; ++i)
                     {
-                        Body b = Bodies[i];
+                        Body b = _bodies[i];
                         b.Awake = false;
                     }
                 }
@@ -266,39 +252,61 @@ namespace FarseerPhysics.Dynamics
 
         public void Add(Body body)
         {
-            Debug.Assert(BodyCount < _bodyCapacity);
-            Bodies[BodyCount++] = body;
+            Debug.Assert(_bodyCount < _bodyCapacity);
+            _bodies[_bodyCount++] = body;
         }
 
         public void Add(Contact contact)
         {
-            Debug.Assert(ContactCount < _contactCapacity);
-            Contacts[ContactCount++] = contact;
+            Debug.Assert(_contactCount < _contactCapacity);
+            _contacts[_contactCount++] = contact;
         }
 
         public void Add(Joint joint)
         {
             Debug.Assert(_jointCount < _jointCapacity);
-            Joints[_jointCount++] = joint;
+            _joints[_jointCount++] = joint;
         }
 
-        private void Report(ContactConstraint[] constraints)
+        public void Report(ContactConstraint[] constraints)
         {
-            for (int i = 0; i < ContactCount; ++i)
+            if (_listener == null)
             {
-                Contact c = Contacts[i];
-                ContactConstraint cc = constraints[i];
-                ContactImpulse impulse = new ContactImpulse();
+                return;
+            }
 
-                for (int j = 0; j < cc.PointCount; ++j)
+            for (int i = 0; i < _contactCount; ++i)
+            {
+                Contact c = _contacts[i];
+
+                ContactConstraint cc = constraints[i];
+
+                ContactImpulse impulse = new ContactImpulse();
+                for (int j = 0; j < cc.pointCount; ++j)
                 {
-                    impulse.normalImpulses[j] = cc.Points[j].NormalImpulse;
-                    impulse.tangentImpulses[j] = cc.Points[j].TangentImpulse;
+                    impulse.normalImpulses[j] = cc.points[j].normalImpulse;
+                    impulse.tangentImpulses[j] = cc.points[j].tangentImpulse;
                 }
 
-                //The Report method does not run unless someone is subscribed to the PostSolve delegate
-                _contactManager.PostSolve(c, ref impulse);
+                _listener.PostSolve(c, ref impulse);
             }
         }
+
+        private ContactSolver _contactSolver = new ContactSolver();
+        public ContactManager _listener;
+
+        public Body[] _bodies;
+        public Contact[] _contacts;
+        public Joint[] _joints;
+
+        public int _bodyCount;
+        public int _contactCount;
+        public int _jointCount;
+
+        public int _bodyCapacity;
+        public int _contactCapacity;
+        public int _jointCapacity;
+
+        public int _positionIterationCount;
     }
 }

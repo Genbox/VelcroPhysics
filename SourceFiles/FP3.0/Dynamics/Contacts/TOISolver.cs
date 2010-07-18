@@ -103,7 +103,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         internal Vector2 normal;
         internal Vector2 point;
         internal float separation;
-    };
+    }
 
 
     internal class TOISolver
@@ -163,8 +163,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                 Body bodyA = c.bodyA;
                 Body bodyB = c.bodyB;
 
-                float massA = bodyA.Mass;
-                float massB = bodyB.Mass;
+                float massA = bodyA._mass;
+                float massB = bodyB._mass;
 
                 // Only the TOI body should move.
                 if (bodyA == _toiBody)
@@ -190,8 +190,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                     Vector2 point = psm.point;
                     float separation = psm.separation;
 
-                    Vector2 rA = point - bodyA._sweep.Center;
-                    Vector2 rB = point - bodyB._sweep.Center;
+                    Vector2 rA = point - bodyA._sweep.c;
+                    Vector2 rB = point - bodyB._sweep.c;
 
                     // Track max constraint error.
                     minSeparation = Math.Min(minSeparation, separation);
@@ -209,12 +209,12 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                     Vector2 P = impulse * normal;
 
-                    bodyA._sweep.Center -= invMassA * P;
-                    bodyA._sweep.Angle -= invIA * MathUtils.Cross(rA, P);
+                    bodyA._sweep.c -= invMassA * P;
+                    bodyA._sweep.a -= invIA * MathUtils.Cross(rA, P);
                     bodyA.SynchronizeTransform();
 
-                    bodyB._sweep.Center += invMassB * P;
-                    bodyB._sweep.Angle += invIB * MathUtils.Cross(rB, P);
+                    bodyB._sweep.c += invMassB * P;
+                    bodyB._sweep.a += invIB * MathUtils.Cross(rB, P);
                     bodyB.SynchronizeTransform();
                 }
             }

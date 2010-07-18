@@ -42,7 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 ground = BodyFactory.CreateBody(World);
 
-                PolygonShape shape = new PolygonShape(0);
+                PolygonShape shape = new PolygonShape();
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 ground.CreateFixture(shape);
             }
@@ -52,73 +52,73 @@ namespace FarseerPhysics.TestBed.Tests
 
                 // Define crank.
                 {
-                    PolygonShape shape = new PolygonShape(2);
+                    PolygonShape shape = new PolygonShape();
                     shape.SetAsBox(0.5f, 2.0f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 7.0f);
 
-                    body.CreateFixture(shape);
+                    body.CreateFixture(shape,2);
 
                     _joint1 = new RevoluteJoint(prevBody, body, new Vector2(0.0f, -2.0f));
                     _joint1.MotorSpeed = 1.0f * Settings.Pi;
                     _joint1.MaxMotorTorque = 10000.0f;
                     _joint1.MotorEnabled = true;
-                    World.Add(_joint1);
+                    World.AddJoint(_joint1);
 
                     prevBody = body;
                 }
 
                 // Define follower.
                 {
-                    PolygonShape shape = new PolygonShape(2);
+                    PolygonShape shape = new PolygonShape();
                     shape.SetAsBox(0.5f, 4.0f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 13.0f);
 
-                    body.CreateFixture(shape);
+                    body.CreateFixture(shape,2);
 
                     RevoluteJoint rjd3 = new RevoluteJoint(prevBody, body, new Vector2(0.0f, -4.0f));
                     rjd3.MotorEnabled = false;
-                    World.Add(rjd3);
+                    World.AddJoint(rjd3);
 
                     prevBody = body;
                 }
 
                 // Define piston
                 {
-                    PolygonShape shape = new PolygonShape(2);
+                    PolygonShape shape = new PolygonShape();
                     shape.SetAsBox(1.5f, 1.5f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 17.0f);
 
-                    body.CreateFixture(shape);
+                    body.CreateFixture(shape,2);
 
                     RevoluteJoint rjd2 = new RevoluteJoint(prevBody, body, new Vector2(0.0f, 0.0f));
-                    World.Add(rjd2);
+                    World.AddJoint(rjd2);
 
                     _joint2 = new FixedPrismaticJoint(body, new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f));
                     _joint2.MaxMotorForce = 1000.0f;
                     _joint2.MotorEnabled = true;
 
-                    World.Add(_joint2);
+                    World.AddJoint(_joint2);
                 }
 
                 // Create a payload
                 {
-                    PolygonShape shape = new PolygonShape(2);
+                    PolygonShape shape = new PolygonShape();
                     shape.SetAsBox(1.5f, 1.5f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 23.0f);
 
-                    body.CreateFixture(shape);
+                    body.CreateFixture(shape,2);
                 }
             }
         }

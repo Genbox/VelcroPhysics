@@ -24,7 +24,7 @@ namespace SimpleSamplesXNA.Demo1
         public override void LoadContent()
         {
             Fixture rectangle = FixtureFactory.CreateRectangle(World, 2, 2, 1);
-            rectangle.Body.BodyType = BodyType.Dynamic;
+            rectangle.GetBody().SetType(BodyType.Dynamic);
 
             base.LoadContent();
         }

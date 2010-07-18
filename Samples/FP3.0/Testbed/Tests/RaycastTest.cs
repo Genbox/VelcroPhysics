@@ -59,7 +59,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-0.5f, 0.0f));
                 vertices.Add(new Vector2(0.5f, 0.0f));
                 vertices.Add(new Vector2(0.0f, 1.5f));
-                _polygons[0] = new PolygonShape(vertices, 0);
+                _polygons[0] = new PolygonShape(vertices);
             }
 
             {
@@ -67,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices2.Add(new Vector2(-0.1f, 0.0f));
                 vertices2.Add(new Vector2(0.1f, 0.0f));
                 vertices2.Add(new Vector2(0.0f, 1.5f));
-                _polygons[1] = new PolygonShape(vertices2, 0);
+                _polygons[1] = new PolygonShape(vertices2);
             }
 
             {
@@ -84,16 +84,16 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices3.Add(new Vector2(-0.5f * w, b + s));
                 vertices3.Add(new Vector2(-0.5f * w, b));
                 vertices3.Add(new Vector2(-0.5f * s, 0.0f));
-                _polygons[2] = new PolygonShape(vertices3, 0);
+                _polygons[2] = new PolygonShape(vertices3);
             }
 
             {
-                _polygons[3] = new PolygonShape(0);
+                _polygons[3] = new PolygonShape();
                 _polygons[3].SetAsBox(0.5f, 0.5f);
             }
 
             {
-                _circle = new CircleShape(0.5f, 0);
+                _circle = new CircleShape(0.5f);
             }
 
             _bodyIndex = 0;
@@ -153,7 +153,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_bodies[i] != null)
                 {
-                    World.Remove(_bodies[i]);
+                    World.DestroyBody(_bodies[i]);
                     _bodies[i] = null;
                     return;
                 }
@@ -298,7 +298,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (_bodies[_bodyIndex] != null)
             {
-                World.Remove(_bodies[_bodyIndex]);
+                World.DestroyBody(_bodies[_bodyIndex]);
                 _bodies[_bodyIndex] = null;
             }
 
@@ -318,12 +318,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (index < 4)
             {
-                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_polygons[index]);
+                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_polygons[index],0);
                 fixture.Friction = 0.3f;
             }
             else
             {
-                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_circle);
+                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_circle,0);
                 fixture.Friction = 0.3f;
             }
 

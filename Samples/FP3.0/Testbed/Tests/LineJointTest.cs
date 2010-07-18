@@ -43,7 +43,7 @@ namespace FarseerPhysics.TestBed.Tests
                 ground = BodyFactory.CreateBody(World);
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
+                PolygonShape shape = new PolygonShape(edge);
                 ground.CreateFixture(shape);
             }
 
@@ -51,11 +51,11 @@ namespace FarseerPhysics.TestBed.Tests
             // FixedLineJoint example
             //-------------------------
             {
-                PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 2.0f), 1);
+                PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 2.0f));
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 7.0f);
-                body.CreateFixture(shape);
+                body.CreateFixture(shape, 1);
 
                 Vector2 axis = new Vector2(2.0f, 1.0f);
                 axis.Normalize();
@@ -67,18 +67,18 @@ namespace FarseerPhysics.TestBed.Tests
                 _fixedLineJoint.LowerLimit = -4.0f;
                 _fixedLineJoint.UpperLimit = 4.0f;
                 _fixedLineJoint.EnableLimit = true;
-                World.Add(_fixedLineJoint);
+                World.AddJoint(_fixedLineJoint);
             }
 
             //-------------------------
             // LineJoint example
             //-------------------------
             {
-                PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 2.0f), 1);
+                PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 2.0f));
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(10.0f, 7.0f);
-                body.CreateFixture(shape);
+                body.CreateFixture(shape, 1);
 
                 Vector2 axis = new Vector2(2.0f, 1.0f);
                 axis.Normalize();
@@ -90,7 +90,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _lineJoint.LowerLimit = -4.0f;
                 _lineJoint.UpperLimit = 4.0f;
                 _lineJoint.EnableLimit = true;
-                World.Add(_lineJoint);
+                World.AddJoint(_lineJoint);
             }
         }
 

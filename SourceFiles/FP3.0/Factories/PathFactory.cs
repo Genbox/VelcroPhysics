@@ -27,12 +27,12 @@ namespace FarseerPhysics.Factories
 
             for (int i = 1; i < verts.Count; i++)
             {
-                body.CreateFixture(new PolygonShape(PolygonTools.CreateEdge(verts[i], verts[i - 1]), 0));
+                body.CreateFixture(new PolygonShape(PolygonTools.CreateEdge(verts[i], verts[i - 1])), 0);
             }
 
             if (path.Closed)
             {
-                body.CreateFixture(new PolygonShape(PolygonTools.CreateEdge(verts[verts.Count - 1], verts[0]), 0));
+                body.CreateFixture(new PolygonShape(PolygonTools.CreateEdge(verts[verts.Count - 1], verts[0])), 0);
             }
         }
 
@@ -56,7 +56,7 @@ namespace FarseerPhysics.Factories
 
             foreach (var item in decomposedVerts)
             {
-                body.CreateFixture(new PolygonShape(item, density));
+                body.CreateFixture(new PolygonShape(item), density);
             }
         }
 
@@ -79,13 +79,13 @@ namespace FarseerPhysics.Factories
             {
                 Body b = BodyFactory.CreateBody(world);
                 // copy the type from original body
-                b.BodyType = type;
+                b._type = type;
                 b.Position = new Vector2(centers[i].X, centers[i].Y);
                 b.Rotation = centers[i].Z;
 
                 foreach (Shape shape in shapes)
                 {
-                    b.CreateFixture(shape);
+                    b.CreateFixture(shape, 0);
                 }
 
                 bodyList.Add(b);
@@ -145,7 +145,7 @@ namespace FarseerPhysics.Factories
                 joint.LocalAnchorA = localAnchorA;
                 joint.LocalAnchorB = localAnchorB;
                 joint.CollideConnected = collideConnected;
-                world.Add(joint);
+                world.AddJoint(joint);
             }
 
             if (connectFirstAndLast)
@@ -154,7 +154,7 @@ namespace FarseerPhysics.Factories
                 lastjoint.LocalAnchorA = localAnchorA;
                 lastjoint.LocalAnchorB = localAnchorB;
                 lastjoint.CollideConnected = collideConnected;
-                world.Add(lastjoint);
+                world.AddJoint(lastjoint);
             }
         }
     }

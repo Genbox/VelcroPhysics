@@ -18,8 +18,8 @@ namespace FarseerPhysics.Factories
         {
             Body body = BodyFactory.CreateBody(world);
             Vertices edgeVertices = PolygonTools.CreateEdge(start, end);
-            PolygonShape rectangleShape = new PolygonShape(edgeVertices, density);
-            return body.CreateFixture(rectangleShape);
+            PolygonShape rectangleShape = new PolygonShape(edgeVertices);
+            return body.CreateFixture(rectangleShape, density);
         }
 
         public static Fixture CreateRectangle(World world, float width, float height, float density)
@@ -40,8 +40,8 @@ namespace FarseerPhysics.Factories
 
             Body body = BodyFactory.CreateBody(world, position);
             Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
-            PolygonShape rectangleShape = new PolygonShape(rectangleVertices, density);
-            return body.CreateFixture(rectangleShape);
+            PolygonShape rectangleShape = new PolygonShape(rectangleVertices);
+            return body.CreateFixture(rectangleShape, density);
         }
 
         public static Fixture CreateCircle(World world, float radius, float density)
@@ -58,8 +58,8 @@ namespace FarseerPhysics.Factories
                 throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
 
             Body body = BodyFactory.CreateBody(world, position);
-            CircleShape circleShape = new CircleShape(radius, density);
-            return body.CreateFixture(circleShape);
+            CircleShape circleShape = new CircleShape(radius);
+            return body.CreateFixture(circleShape, density);
         }
 
         public static Fixture CreateEllipse(World world, float xRadius, float yRadius, int edges, float density)
@@ -80,8 +80,8 @@ namespace FarseerPhysics.Factories
 
             Body body = BodyFactory.CreateBody(world, position);
             Vertices ellipseVertices = PolygonTools.CreateEllipse(xRadius, yRadius, edges);
-            PolygonShape polygonShape = new PolygonShape(ellipseVertices, density);
-            return body.CreateFixture(polygonShape);
+            PolygonShape polygonShape = new PolygonShape(ellipseVertices);
+            return body.CreateFixture(polygonShape, density);
         }
 
         public static Fixture CreatePolygon(World world, Vertices vertices, float density)
@@ -95,8 +95,8 @@ namespace FarseerPhysics.Factories
                 throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
 
             Body body = BodyFactory.CreateBody(world, position);
-            PolygonShape polygonShape = new PolygonShape(vertices, density);
-            return body.CreateFixture(polygonShape);
+            PolygonShape polygonShape = new PolygonShape(vertices);
+            return body.CreateFixture(polygonShape,density);
         }
 
         public static List<Fixture> CreateCompundPolygon(World world, List<Vertices> list, float density)
@@ -109,8 +109,8 @@ namespace FarseerPhysics.Factories
             //Then we create several fixtures using the body
             foreach (Vertices vertices in list)
             {
-                PolygonShape shape = new PolygonShape(vertices, density);
-                fixtures.Add(polygonBody.CreateFixture(shape));
+                PolygonShape shape = new PolygonShape(vertices);
+                fixtures.Add(polygonBody.CreateFixture(shape, density));
             }
 
             return fixtures;
@@ -145,13 +145,13 @@ namespace FarseerPhysics.Factories
             List<Fixture> fixtures = CreateCompundPolygon(world, list, density);
 
             //Create the two circles
-            CircleShape topCircle = new CircleShape(endRadius, density);
+            CircleShape topCircle = new CircleShape(endRadius);
             topCircle.Position = new Vector2(0, height / 2);
-            fixtures.Add(fixtures[0].Body.CreateFixture(topCircle));
+            fixtures.Add(fixtures[0].Body.CreateFixture(topCircle,density));
 
-            CircleShape bottomCircle = new CircleShape(endRadius, density);
+            CircleShape bottomCircle = new CircleShape(endRadius);
             bottomCircle.Position = new Vector2(0, -(height / 2));
-            fixtures.Add(fixtures[0].Body.CreateFixture(bottomCircle));
+            fixtures.Add(fixtures[0].Body.CreateFixture(bottomCircle, density));
             return fixtures;
         }
 
@@ -176,6 +176,7 @@ namespace FarseerPhysics.Factories
             return CreateRoundedRectangle(world, width, height, xRadius, yRadius, segments, density, Vector2.Zero);
         }
 
+
         public static BreakableBody CreateBreakableBody(World world, Vertices vertices, float density)
         {
             return CreateBreakableBody(world, vertices, density, Vector2.Zero);
@@ -197,13 +198,14 @@ namespace FarseerPhysics.Factories
 
             foreach (Vertices triangle in triangles)
             {
-                PolygonShape polygonShape = new PolygonShape(triangle, density);
-                Fixture f = breakableBody.MainBody.CreateFixture(polygonShape);
+                PolygonShape polygonShape = new PolygonShape(triangle);
+                Fixture f = breakableBody.MainBody.CreateFixture(polygonShape, density);
                 breakableBody.AddPart(f);
             }
 
             breakableBody.MainBody.Position = position;
-            world.Add(breakableBody);
+            //TODO: Fix
+            //world.Add(breakableBody);
 
             return breakableBody;
         }

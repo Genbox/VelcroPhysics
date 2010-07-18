@@ -199,8 +199,8 @@ namespace FarseerPhysics.TestBed.Tests
             aabb = new AABB();
 
             Vector2 w = new Vector2(2.0f * _proxyExtent, 2.0f * _proxyExtent);
-            //aabb.lowerBound.x = -_proxyExtent;
-            //aabb.lowerBound.y = -_proxyExtent + _worldExtent;
+            //aabb.LowerBound.x = -_proxyExtent;
+            //aabb.LowerBound.y = -_proxyExtent + _worldExtent;
             aabb.LowerBound.X = Rand.RandomFloat(-_worldExtent, _worldExtent);
             aabb.LowerBound.Y = Rand.RandomFloat(0.0f, 2.0f * _worldExtent);
             aabb.UpperBound = aabb.LowerBound + w;
@@ -268,7 +268,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 AABB aabb0 = actor.aabb;
                 MoveAABB(ref actor.aabb);
-                Vector2 displacement = actor.aabb.Center - aabb0.Center;
+                Vector2 displacement = actor.aabb.GetCenter() - aabb0.GetCenter();
                 _tree.MoveProxy(actor.proxyId, ref actor.aabb, displacement);
                 return;
             }

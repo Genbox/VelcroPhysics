@@ -64,25 +64,25 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Update(settings, gameTime);
 
-            if (Distance.GjkCalls > 0)
+            if (Distance.GJKCalls > 0)
             {
                 DebugView.DrawString(50, TextLine, "gjk calls = {0:n}, ave gjk iters = {1:n}, max gjk iters = {2:n}",
-                                     Distance.GjkCalls, Distance.GjkIters / (float)Distance.GjkCalls,
-                                     Distance.GjkMaxIters);
+                                     Distance.GJKCalls, Distance.GJKIters / (float)Distance.GJKCalls,
+                                     Distance.GJKMaxIters);
                 TextLine += 15;
             }
 
-            if (TimeOfImpact.ToiCalls > 0)
+            if (TimeOfImpact.TOICalls > 0)
             {
                 DebugView.DrawString(50, TextLine, "toi calls = {0:n}, ave toi iters = {1:n}, max toi iters = {2:n}",
-                                      TimeOfImpact.ToiCalls, TimeOfImpact.ToiIters / (float)TimeOfImpact.ToiCalls, TimeOfImpact.ToiMaxRootIters);
+                                      TimeOfImpact.TOICalls, TimeOfImpact.TOIIters / (float)TimeOfImpact.TOICalls, TimeOfImpact.TOIMaxRootIters);
                 TextLine += 15;
 
                 DebugView.DrawString(50, TextLine, "ave toi root iters = {0:n}, max toi root iters = {1:n}",
-                                      TimeOfImpact.ToiRootIters / (float)TimeOfImpact.ToiCalls, TimeOfImpact.ToiMaxRootIters);
+                                      TimeOfImpact.TOIRootIters / (float)TimeOfImpact.TOICalls, TimeOfImpact.TOIMaxRootIters);
                 TextLine += 15;
 
-                DebugView.DrawString(50, TextLine, "max toi opt iters = {0:n}", TimeOfImpact.ToiMaxOptIters);
+                DebugView.DrawString(50, TextLine, "max toi opt iters = {0:n}", TimeOfImpact.TOIMaxOptIters);
                 TextLine += 15;
             }
 

@@ -38,60 +38,60 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 Vertices box = PolygonTools.CreateRectangle(13.0f, 0.25f);
-                PolygonShape shape = new PolygonShape(box, 0);
+                PolygonShape shape = new PolygonShape(box);
 
                 Body ground = BodyFactory.CreateBody(World);
                 ground.Position = new Vector2(-4.0f, 22.0f);
                 ground.Rotation = -0.25f;
 
-                ground.CreateFixture(shape);
+                ground.CreateFixture(shape,0);
             }
 
             {
                 Vertices box = PolygonTools.CreateRectangle(0.25f, 1.0f);
-                PolygonShape shape = new PolygonShape(box, 0);
+                PolygonShape shape = new PolygonShape(box);
 
                 Body ground = BodyFactory.CreateBody(World);
                 ground.Position = new Vector2(10.5f, 19.0f);
 
-                ground.CreateFixture(shape);
+                ground.CreateFixture(shape,0);
             }
 
             {
                 Vertices box = PolygonTools.CreateRectangle(13.0f, 0.25f);
-                PolygonShape shape = new PolygonShape(box, 0);
+                PolygonShape shape = new PolygonShape(box);
 
                 Body ground = BodyFactory.CreateBody(World);
                 ground.Position = new Vector2(4.0f, 14.0f);
                 ground.Rotation = 0.25f;
 
-                ground.CreateFixture(shape);
+                ground.CreateFixture(shape,0);
             }
 
             {
                 Vertices box = PolygonTools.CreateRectangle(0.25f, 1.0f);
-                PolygonShape shape = new PolygonShape(box, 0);
+                PolygonShape shape = new PolygonShape(box);
 
                 Body ground = BodyFactory.CreateBody(World);
                 ground.Position = new Vector2(-10.5f, 11.0f);
 
-                ground.CreateFixture(shape);
+                ground.CreateFixture(shape,0);
             }
 
             {
                 Vertices box = PolygonTools.CreateRectangle(13f, 1.0f);
-                PolygonShape shape = new PolygonShape(box, 0);
+                PolygonShape shape = new PolygonShape(box);
 
                 Body ground = BodyFactory.CreateBody(World);
                 ground.Position = new Vector2(-4.0f, 6.0f);
                 ground.Rotation = -0.25f;
 
-                ground.CreateFixture(shape);
+                ground.CreateFixture(shape,0);
             }
 
             {
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
-                PolygonShape shape = new PolygonShape(box, 25);
+                PolygonShape shape = new PolygonShape(box);
 
                 float[] friction = new[] {0.75f, 0.5f, 0.35f, 0.1f, 0.0f};
 
@@ -101,7 +101,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-15.0f + 4.0f * i, 28.0f);
 
-                    Fixture fixture = body.CreateFixture(shape);
+                    Fixture fixture = body.CreateFixture(shape,25);
                     fixture.Friction = friction[i];
                 }
             }

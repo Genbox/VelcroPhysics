@@ -86,9 +86,9 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // In the case of a prismatic and revolute joint, the first body must be static.
             if (type1 == JointType.Revolute || type1 == JointType.Prismatic)
-                Debug.Assert(jointA.BodyA.BodyType == BodyType.Static);
+                Debug.Assert(jointA.BodyA._type == BodyType.Static);
             if (type2 == JointType.Revolute || type2 == JointType.Prismatic)
-                Debug.Assert(jointB.BodyA.BodyType == BodyType.Static);
+                Debug.Assert(jointB.BodyA._type == BodyType.Static);
 
             float coordinate1 = 0.0f, coordinate2 = 0.0f;
 
@@ -192,7 +192,7 @@ namespace FarseerPhysics.Dynamics.Joints
             Transform xf1;
             BodyB.GetTransform(out xf1);
 
-            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchor2 - BodyB.LocalCenter);
+            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchor2 - BodyB.GetLocalCenter());
             Vector2 P = _impulse * _J.LinearB;
             float L = _impulse * _J.AngularB - MathUtils.Cross(r, P);
             return inv_dt * L;
@@ -225,7 +225,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 //g1.GetTransform(out xfg1);
 
 
-                Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchor1 - b1.LocalCenter);
+                Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchor1 - b1.GetLocalCenter());
                 float crug = MathUtils.Cross(r, ug);
                 _J.LinearA = -ug;
                 _J.AngularA = -crug;
@@ -249,7 +249,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 //g1.GetTransform(out xfg1);
                 b2.GetTransform(out xf2);
 
-                Vector2 r = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.LocalCenter);
+                Vector2 r = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.GetLocalCenter());
                 float crug = MathUtils.Cross(r, ug);
                 _J.LinearB = -Ratio * ug;
                 _J.AngularB = -Ratio * crug;
@@ -337,10 +337,10 @@ namespace FarseerPhysics.Dynamics.Joints
 
             float impulse = _mass * (-C);
 
-            b1._sweep.Center += b1._invMass * impulse * _J.LinearA;
-            b1._sweep.Angle += b1._invI * impulse * _J.AngularA;
-            b2._sweep.Center += b2._invMass * impulse * _J.LinearB;
-            b2._sweep.Angle += b2._invI * impulse * _J.AngularB;
+            b1._sweep.c += b1._invMass * impulse * _J.LinearA;
+            b1._sweep.a += b1._invI * impulse * _J.AngularA;
+            b2._sweep.c += b2._invMass * impulse * _J.LinearB;
+            b2._sweep.a += b2._invI * impulse * _J.AngularB;
 
             b1.SynchronizeTransform();
             b2.SynchronizeTransform();

@@ -44,26 +44,26 @@ namespace FarseerPhysics.TestBed.Tests
                 const float y = 16.0f;
                 const float L = 12.0f;
 
-                PolygonShape shape = new PolygonShape(5);
+                PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(a, b);
 
                 Body body1 = BodyFactory.CreateBody(World);
                 body1.BodyType = BodyType.Dynamic;
                 body1.Position = new Vector2(-10.0f, y);
-                body1.CreateFixture(shape);
+                body1.CreateFixture(shape, 5.0f);
 
                 Body body2 = BodyFactory.CreateBody(World);
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(10.0f, y);
 
-                body2.CreateFixture(shape);
+                body2.CreateFixture(shape, 5.0f);
 
                 Vector2 anchor1 = new Vector2(-10.0f, y + b);
                 Vector2 anchor2 = new Vector2(10.0f, y + b);
                 Vector2 groundAnchor1 = new Vector2(-10.0f, y + b + L);
                 Vector2 groundAnchor2 = new Vector2(10.0f, y + b + L);
                 _joint1 = new PulleyJoint(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2, 2.0f);
-                World.Add(_joint1);
+                World.AddJoint(_joint1);
             }
         }
 

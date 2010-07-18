@@ -31,43 +31,27 @@ namespace FarseerPhysics.Common
         public const float Pi = 3.14159265359f;
 
         public static bool EnableDiagnostics = true;
-
-        /// Set this to true if you want the bodies to go to sleep when they are moving
-        /// under a certain tolerance.
-        public static bool EnableSleeping = true;
-
-        /// Enable continuous physics solver. If this is true, time of impact algorithms will be
-        /// enabled to prevent tunneling issues.
-        public static bool EnableContinuousPhysics = true;
-
-        /// If this is set to true, a warmstarting technique will be used to make the engine better
-        /// at guessing the state of bodies. It can make the engine more precise and give a performance boost.
-        public static bool EnableWarmstarting = true;
-
-        /// The number of velocity iterations. Used in the velocity constraint solver.
-        /// Higher number of iterations means a more precise simulation at the cost
-        /// of performance.
         public static int VelocityIterations = 8;
-
-        /// The number of position iterations. Used in the position constraint solver.
-        /// Higher number of iterations means a more precise simulation at the cost
-        /// of performance.
         public static int PositionIterations = 3;
+        public static bool ContinuousPhysics = true;
+        public static bool EnableWarmstarting = true;
+        public static bool AllowSleep = true;
 
-        public static float MaxManifoldPoints = 2;
+        /// The maximum number of contact points between two convex shapes.
+        public const int MaxManifoldPoints = 2;
 
         /// The maximum number of vertices on a convex polygon.
-        public const int MaxPolygonVertices = 32;
+        public const int MaxPolygonVertices = 8;
 
         /// This is used to fatten AABBs in the dynamic tree. This allows proxies
         /// to move by a small amount without triggering a tree adjustment.
         /// This is in meters.
-        public const float AabbExtension = 0.1f;
+        public const float AABBExtension = 0.1f;
 
         /// This is used to fatten AABBs in the dynamic tree. This is used to predict
         /// the future position based on the current displacement.
         /// This is a dimensionless multiplier.
-        public const float AabbMultiplier = 2.0f;
+        public const float AABBMultiplier = 2.0f;
 
         /// A small length used as a collision and constraint tolerance. Usually it is
         /// chosen to be numerically significant, but visually insignificant.
@@ -84,7 +68,7 @@ namespace FarseerPhysics.Common
 
         // Dynamics
 
-        /// Maximum number of contacts to be handled to solve a TOI island.
+        /// Maximum number of contacts to be handled to solve a TOI impact.
         public const int MaxTOIContacts = 32;
 
         /// A velocity threshold for elastic collisions. Any collision with a relative linear
@@ -101,15 +85,13 @@ namespace FarseerPhysics.Common
 
         /// The maximum linear velocity of a body. This limit is very large and is used
         /// to prevent numerical problems. You shouldn't need to adjust this.
-        public const float MaxTranslation = 2.0f;
-
-        public const float MaxTranslationSquared = (MaxTranslation * MaxTranslation);
+        public static float MaxTranslation = 2.0f;
+        public static float MaxTranslationSquared = (MaxTranslation * MaxTranslation);
 
         /// The maximum angular velocity of a body. This limit is very large and is used
         /// to prevent numerical problems. You shouldn't need to adjust this.
-        public const float MaxRotation = (0.5f * Pi);
-
-        public const float MaxRotationSquared = (MaxRotation * MaxRotation);
+        public static float MaxRotation = (0.5f * Pi);
+        public static float MaxRotationSquared = (MaxRotation * MaxRotation);
 
         /// This scale factor controls how fast overlap is resolved. Ideally this would be 1 so
         /// that overlap is removed in one time step. However using values close to 1 often lead
@@ -128,13 +110,13 @@ namespace FarseerPhysics.Common
         public const float AngularSleepTolerance = (2.0f / 180.0f * Pi);
 
         /// Friction mixing law. Feel free to customize this.
-        public static float MixFriction(float friction1, float friction2)
+        public static float b2MixFriction(float friction1, float friction2)
         {
-            return (float) Math.Sqrt((friction1 * friction2));
+            return (float)Math.Sqrt(friction1 * friction2);
         }
 
         /// Restitution mixing law. Feel free to customize this.
-        public static float MixRestitution(float restitution1, float restitution2)
+        public static float b2MixRestitution(float restitution1, float restitution2)
         {
             return restitution1 > restitution2 ? restitution1 : restitution2;
         }

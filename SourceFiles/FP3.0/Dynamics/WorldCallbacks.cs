@@ -58,20 +58,14 @@ namespace FarseerPhysics.Dynamics
 
     public delegate bool CollisionFilterDelegate(Fixture fixtureA, Fixture fixtureB);
 
-    public struct ContactImpulse
-    {
-        public FixedArray2<float> normalImpulses;
-        public FixedArray2<float> tangentImpulses;
-    }
-
     public class DefaultContactFilter
     {
         public DefaultContactFilter(World world)
         {
-            world.ContactManager.ContactFilter += ShouldCollide;
+            world._contactManager.ContactFilter += ShouldCollide;
         }
 
-        public static bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)
+        public bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)
         {
             if ((fixtureA.CollisionGroup == fixtureB.CollisionGroup) && fixtureA.CollisionGroup != 0 &&
                 fixtureB.CollisionGroup != 0)
@@ -86,5 +80,11 @@ namespace FarseerPhysics.Dynamics
 
             return true;
         }
+    }
+
+    public struct ContactImpulse
+    {
+        public FixedArray2<float> normalImpulses;
+        public FixedArray2<float> tangentImpulses;
     }
 }

@@ -69,12 +69,12 @@ namespace FarseerPhysics.TestBed.Tests
                 default:
                     List<Vertices> verts = PolygonTools.CreateRoundedRectangle(10, 10, 2.5F, 2.5F, segments);
                     for (int i = 0; i < verts.Count; i++)
-                        body.CreateFixture(new PolygonShape(verts[i], 10));
+                        body.CreateFixture(new PolygonShape(verts[i]), 10);
                     break;
                 case 1:
                     List<Vertices> verts2 = PolygonTools.CreateCapsule(10, 2, (int)MathHelper.Max(segments, 1), 3, (int)MathHelper.Max(segments, 1));
                     for (int i = 0; i < verts2.Count; i++)
-                        body.CreateFixture(new PolygonShape(verts2[i], 10));
+                        body.CreateFixture(new PolygonShape(verts2[i]), 10);
                     break;
             }
         }
