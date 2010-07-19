@@ -65,7 +65,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.UserData = _indices[n];
                     _bodies[n] = body;
 
-                    Fixture fixture = body.CreateFixture(shape,1);
+                    Fixture fixture = body.CreateFixture(shape, 1);
                     fixture.Friction = 0.3f;
                 }
             }

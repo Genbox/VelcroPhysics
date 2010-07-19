@@ -25,6 +25,7 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
+
 namespace FarseerPhysics.TestBed.Tests
 {
     public class EdgeTest : Test
@@ -116,7 +117,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        static internal Test Create()
+        internal static Test Create()
         {
             return new EdgeTest();
         }

@@ -129,7 +129,7 @@ namespace FarseerPhysics.TestBed.Tests
             body2.Position = body1.Position;
             body2.Rotation = body1.GetAngle();
 
-            _piece2 = body2.CreateFixture(_shape2,0);
+            _piece2 = body2.CreateFixture(_shape2, 0);
 
             // Compute consistent velocities for new bodies based on
             // cached velocity.

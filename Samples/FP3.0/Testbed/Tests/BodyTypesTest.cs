@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 2.0f);
                 PolygonShape shape = new PolygonShape(box);
-                _attachment.CreateFixture(shape,2.0f);
+                _attachment.CreateFixture(shape, 2.0f);
             }
 
             // Define platform

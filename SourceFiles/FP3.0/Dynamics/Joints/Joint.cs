@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
@@ -121,8 +120,8 @@ namespace FarseerPhysics.Dynamics.Joints
         protected float _invMassB;
         internal bool _islandFlag;
         protected Vector2 _localCenterA, _localCenterB;
-        internal Joint _prev;
         internal Joint _next;
+        internal Joint _prev;
 
         protected Joint(Body bodyA, Body bodyB)
         {

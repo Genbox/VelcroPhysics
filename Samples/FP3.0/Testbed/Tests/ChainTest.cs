@@ -54,7 +54,8 @@ namespace FarseerPhysics.TestBed.Tests
             World.AddJoint(fixedJoint);
 
             //Attach all the chainlinks together with a revolute joint
-            PathFactory.AttachBodiesWithRevoluteJoint(World, chainLinks, new Vector2(0, -0.6f), new Vector2(0, 0.6f), false, false);
+            PathFactory.AttachBodiesWithRevoluteJoint(World, chainLinks, new Vector2(0, -0.6f), new Vector2(0, 0.6f),
+                                                      false, false);
         }
 
         internal static Test Create()

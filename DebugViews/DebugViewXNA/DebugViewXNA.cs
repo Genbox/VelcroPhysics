@@ -111,7 +111,6 @@ namespace FarseerPhysics.DebugViewXNA
 
                     for (Fixture f = b._fixtureList; f != null; f = f.Next)
                     {
-
                         for (int t = 0; t < f._proxyCount; ++t)
                         {
                             FixtureProxy proxy = f._proxies[t];
@@ -133,7 +132,6 @@ namespace FarseerPhysics.DebugViewXNA
             {
                 for (Body b = World._bodyList; b != null; b = b.GetNext())
                 {
-
                     Transform xf;
                     b.GetTransform(out xf);
                     xf.Position = b.GetWorldCenter();
@@ -174,7 +172,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case JointType.Pulley:
                     {
-                        PulleyJoint pulley = (PulleyJoint)joint;
+                        PulleyJoint pulley = (PulleyJoint) joint;
                         Vector2 s1 = pulley.GroundAnchorA;
                         Vector2 s2 = pulley.GroundAnchorB;
                         DrawSegment(s1, p1, color);
@@ -226,7 +224,7 @@ namespace FarseerPhysics.DebugViewXNA
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape)fixture.Shape;
+                        CircleShape circle = (CircleShape) fixture.Shape;
 
                         Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
                         float radius = circle.Radius;
@@ -238,7 +236,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape poly = (PolygonShape)fixture.Shape;
+                        PolygonShape poly = (PolygonShape) fixture.Shape;
                         int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
@@ -255,7 +253,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case ShapeType.Edge:
                     {
-                        EdgeShape edge = (EdgeShape)fixture.Shape;
+                        EdgeShape edge = (EdgeShape) fixture.Shape;
                         Vector2 v1 = MathUtils.Multiply(ref xf, edge._vertex1);
                         Vector2 v2 = MathUtils.Multiply(ref xf, edge._vertex2);
                         DrawSegment(v1, v2, color);
@@ -264,7 +262,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case ShapeType.Loop:
                     {
-                        LoopShape loop = (LoopShape)fixture.Shape;
+                        LoopShape loop = (LoopShape) fixture.Shape;
                         int count = loop._count;
 
                         Vector2 v1 = MathUtils.Multiply(ref xf, loop._vertices[count - 1]);
@@ -355,10 +353,10 @@ namespace FarseerPhysics.DebugViewXNA
 
             for (int i = 0; i < segments; i++)
             {
-                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
+                Vector2 v1 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
                 Vector2 v2 = center +
                              radius *
-                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
+                             new Vector2((float) Math.Cos(theta + increment), (float) Math.Sin(theta + increment));
 
                 _vertsLines[_lineCount * 2].Position = new Vector3(v1, 0.0f);
                 _vertsLines[_lineCount * 2].Color = color;
@@ -384,15 +382,15 @@ namespace FarseerPhysics.DebugViewXNA
 
             Color colorFill = new Color(color, 0.5f);
 
-            Vector2 v0 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
+            Vector2 v0 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
             theta += increment;
 
             for (int i = 1; i < segments - 1; i++)
             {
-                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
+                Vector2 v1 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
                 Vector2 v2 = center +
                              radius *
-                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
+                             new Vector2((float) Math.Cos(theta + increment), (float) Math.Sin(theta + increment));
 
                 _vertsFill[_fillCount * 3].Position = new Vector3(v0, 0.0f);
                 _vertsFill[_fillCount * 3].Color = colorFill;

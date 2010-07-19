@@ -28,14 +28,14 @@ namespace FarseerPhysics.Collision.Shapes
     /// This holds the mass data computed for a shape.
     public struct MassData
     {
-        /// The mass of the shape, usually in kilograms.
-        public float Mass;
-
         /// The position of the shape's centroid relative to the shape's origin.
         public Vector2 Center;
 
         /// The rotational inertia of the shape about the local origin.
         public float Inertia;
+
+        /// The mass of the shape, usually in kilograms.
+        public float Mass;
     }
 
     public enum ShapeType
@@ -53,17 +53,19 @@ namespace FarseerPhysics.Collision.Shapes
     /// is created. Shapes may encapsulate a one or more child shapes.
     public abstract class Shape
     {
+        public float Radius;
+
         public Shape()
         {
             ShapeType = ShapeType.Unknown;
         }
 
-        /// Clone the concrete shape using the provided allocator.
-        public abstract Shape Clone();
-
         /// Get the type of this shape. You can use this to down cast to the concrete shape.
         /// @return the shape type.
         public ShapeType ShapeType { get; internal set; }
+
+        /// Clone the concrete shape using the provided allocator.
+        public abstract Shape Clone();
 
         /// Get the number of child primitives.
         public abstract int GetChildCount();
@@ -78,7 +80,8 @@ namespace FarseerPhysics.Collision.Shapes
         /// @param input the ray-cast input parameters.
         /// @param transform the transform to be applied to the shape.
         /// @param childIndex the child shape index
-        public abstract bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex);
+        public abstract bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform,
+                                     int childIndex);
 
 
         /// Given a transform, compute the associated axis aligned bounding box for a child shape.
@@ -91,7 +94,5 @@ namespace FarseerPhysics.Collision.Shapes
         /// @param massData returns the mass data for this shape.
         /// @param density the density in kilograms per meter squared.
         public abstract void ComputeMass(out MassData massData, float density);
-
-        public float Radius;
     }
 }

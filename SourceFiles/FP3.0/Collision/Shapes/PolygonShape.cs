@@ -28,6 +28,10 @@ namespace FarseerPhysics.Collision.Shapes
 {
     public class PolygonShape : Shape
     {
+        public Vector2 Centroid;
+        public Vertices Normals = new Vertices();
+        public Vertices Vertices = new Vertices();
+
         public PolygonShape(Vertices vertices)
         {
             ShapeType = ShapeType.Polygon;
@@ -88,25 +92,25 @@ namespace FarseerPhysics.Collision.Shapes
             // is to the left of each edge.
             for (int i = 0; i < Vertices.Count; ++i)
             {
-	            int i1 = i;
+                int i1 = i;
                 int i2 = i + 1 < Vertices.Count ? i + 1 : 0;
-	            Vector2 edge = Vertices[i2] - Vertices[i1];
+                Vector2 edge = Vertices[i2] - Vertices[i1];
 
                 for (int j = 0; j < Vertices.Count; ++j)
-	            {
-		            // Don't check vertices on the current edge.
-		            if (j == i1 || j == i2)
-		            {
-			            continue;
-		            }
-        			
-		            Vector2 r = Vertices[j] - Vertices[i1];
+                {
+                    // Don't check vertices on the current edge.
+                    if (j == i1 || j == i2)
+                    {
+                        continue;
+                    }
 
-		            // Your polygon is non-convex (it has an indentation) or
-		            // has colinear edges.
-		            float s = MathUtils.Cross(edge, r);
-		            Debug.Assert(s > 0.0f);
-	            }
+                    Vector2 r = Vertices[j] - Vertices[i1];
+
+                    // Your polygon is non-convex (it has an indentation) or
+                    // has colinear edges.
+                    float s = MathUtils.Cross(edge, r);
+                    Debug.Assert(s > 0.0f);
+                }
             }
 #endif
 
@@ -114,7 +118,7 @@ namespace FarseerPhysics.Collision.Shapes
             Centroid = ComputeCentroid(Vertices);
         }
 
-        static Vector2 ComputeCentroid(Vertices vs)
+        private static Vector2 ComputeCentroid(Vertices vs)
         {
             Debug.Assert(vs.Count >= 2);
 
@@ -131,7 +135,7 @@ namespace FarseerPhysics.Collision.Shapes
             // It's location doesn't change the result (except for rounding error).
             Vector2 pRef = new Vector2(0.0f, 0.0f);
 #if false
-	        // This code would put the reference point inside the polygon.
+    // This code would put the reference point inside the polygon.
 	        for (int i = 0; i < count; ++i)
 	        {
 		        pRef += vs[i];
@@ -452,8 +456,10 @@ namespace FarseerPhysics.Collision.Shapes
                 float ex1 = e1.X, ey1 = e1.Y;
                 float ex2 = e2.X, ey2 = e2.Y;
 
-                float intx2 = k_inv3 * (0.25f * (ex1 * ex1 + ex2 * ex1 + ex2 * ex2) + (px * ex1 + px * ex2)) + 0.5f * px * px;
-                float inty2 = k_inv3 * (0.25f * (ey1 * ey1 + ey2 * ey1 + ey2 * ey2) + (py * ey1 + py * ey2)) + 0.5f * py * py;
+                float intx2 = k_inv3 * (0.25f * (ex1 * ex1 + ex2 * ex1 + ex2 * ex2) + (px * ex1 + px * ex2)) +
+                              0.5f * px * px;
+                float inty2 = k_inv3 * (0.25f * (ey1 * ey1 + ey2 * ey1 + ey2 * ey2) + (py * ey1 + py * ey2)) +
+                              0.5f * py * py;
 
                 I += D * (intx2 + inty2);
             }
@@ -469,9 +475,5 @@ namespace FarseerPhysics.Collision.Shapes
             // Inertia tensor relative to the local origin.
             massData.Inertia = density * I;
         }
-
-        public Vector2 Centroid;
-        public Vertices Vertices = new Vertices();
-        public Vertices Normals = new Vertices();
     }
 }

@@ -31,7 +31,6 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics
 {
-
     [Flags]
     public enum CollisionCategory
     {
@@ -74,8 +73,8 @@ namespace FarseerPhysics.Dynamics
     public class FixtureProxy
     {
         public AABB AABB;
-        public Fixture Fixture;
         public int ChildIndex;
+        public Fixture Fixture;
         public int ProxyId;
     }
 
@@ -86,7 +85,39 @@ namespace FarseerPhysics.Dynamics
     /// @warning you cannot reuse fixtures.
     public class Fixture
     {
+        private static int _fixtureIdCounter;
         public Action<ContactConstraint> PostSolve;
+        internal Body _body;
+        private CollisionCategory _collidesWith;
+        private CollisionCategory _collisionCategories;
+        private short _collisionGroup;
+        private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
+        internal float _density;
+        private int _fixtureId;
+        internal float _friction;
+        internal bool _isSensor;
+        internal Fixture _next;
+        public FixtureProxy[] _proxies;
+        public int _proxyCount;
+        internal int _proxyId;
+        internal float _restitution;
+        internal Shape _shape;
+        internal object _userData;
+
+        internal Fixture()
+        {
+            //Fixture defaults
+            Friction = 0.2f;
+            _collisionCategories = CollisionCategory.All;
+            _collidesWith = CollisionCategory.All;
+            IsSensor = false;
+
+            _userData = null;
+            _body = null;
+            _next = null;
+            _proxyId = BroadPhase.NullProxy;
+            _shape = null;
+        }
 
         /// Get the type of the child Shape. You can use this to down cast to the concrete Shape.
         /// @return the Shape type.
@@ -140,6 +171,88 @@ namespace FarseerPhysics.Dynamics
             get { return _density; }
         }
 
+        /// Set the coefficient of friction.
+        public float Friction
+        {
+            set { _friction = value; }
+            get { return _friction; }
+        }
+
+        /// Set the coefficient of restitution.
+        public float Restitution
+        {
+            set { _restitution = value; }
+            get { return _restitution; }
+        }
+
+        /// <summary>
+        /// Collision groups allow a certain group of objects to never collide (negative)
+        /// or always collide (positive). Zero means no collision group. Non-zero group
+        /// filtering always wins against the mask bits.
+        /// Warning: The filter will not take effect until next step.
+        /// </summary>
+        public short CollisionGroup
+        {
+            set
+            {
+                if (_body == null)
+                    return;
+
+                if (_collisionGroup == value)
+                    return;
+
+                _collisionGroup = value;
+                FilterChanged();
+            }
+            get { return _collisionGroup; }
+        }
+
+        /// <summary>
+        /// The collision mask bits. This states the categories that this
+        /// shape would accept for collision.
+        /// </summary>
+        public CollisionCategory CollidesWith
+        {
+            get { return _collidesWith; }
+
+            set
+            {
+                if (_body == null)
+                    return;
+
+                if (_collidesWith == value)
+                    return;
+
+                _collidesWith = value;
+                FilterChanged();
+            }
+        }
+
+        public int FixtureId
+        {
+            get { return _fixtureId; }
+        }
+
+        /// <summary>
+        /// The collision category bits. Normally you would just set one bit.
+        /// </summary>
+        public CollisionCategory CollisionCategories
+        {
+            get { return _collisionCategories; }
+
+            set
+            {
+                if (_body == null)
+                    return;
+
+                if (_collisionCategories == value)
+                    return;
+
+                _collisionCategories = value;
+                FilterChanged();
+            }
+        }
+
         /// Test a point for containment in this fixture.
         /// @param xf the Shape world transform.
         /// @param p a point in world coordinates.
@@ -167,20 +280,6 @@ namespace FarseerPhysics.Dynamics
             _shape.ComputeMass(out massData, _density);
         }
 
-        /// Set the coefficient of friction.
-        public float Friction
-        {
-            set { _friction = value; }
-            get { return _friction; }
-        }
-
-        /// Set the coefficient of restitution.
-        public float Restitution
-        {
-            set { _restitution = value; }
-            get { return _restitution; }
-        }
-
         /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
         /// If you need a more accurate AABB, compute it using the Shape and
         /// the body transform.
@@ -188,24 +287,6 @@ namespace FarseerPhysics.Dynamics
         {
             Debug.Assert(0 <= childIndex && childIndex < _proxyCount);
             aabb = _proxies[childIndex].AABB;
-        }
-
-        private static int _fixtureIdCounter;
-        private int _fixtureId;
-
-        internal Fixture()
-        {
-            //Fixture defaults
-            Friction = 0.2f;
-            _collisionCategories = CollisionCategory.All;
-            _collidesWith = CollisionCategory.All;
-            IsSensor = false;
-
-            _userData = null;
-            _body = null;
-            _next = null;
-            _proxyId = BroadPhase.NullProxy;
-            _shape = null;
         }
 
         // We need separation create/destroy functions from the constructor/destructor because
@@ -299,53 +380,7 @@ namespace FarseerPhysics.Dynamics
 
                 broadPhase.MoveProxy(proxy.ProxyId, ref proxy.AABB, displacement);
             }
-
         }
-        
-        /// <summary>
-        /// Collision groups allow a certain group of objects to never collide (negative)
-        /// or always collide (positive). Zero means no collision group. Non-zero group
-        /// filtering always wins against the mask bits.
-        /// Warning: The filter will not take effect until next step.
-        /// </summary>
-        public short CollisionGroup
-        {
-            set
-            {
-                if (_body == null)
-                    return;
-
-                if (_collisionGroup == value)
-                    return;
-
-                _collisionGroup = value;
-                FilterChanged();
-            }
-            get { return _collisionGroup; }
-        }
-        
-        /// <summary>
-        /// The collision mask bits. This states the categories that this
-        /// shape would accept for collision.
-        /// </summary>
-        public CollisionCategory CollidesWith
-        {
-            get { return _collidesWith; }
-
-            set
-            {
-                if (_body == null)
-                    return;
-
-                if (_collidesWith == value)
-                    return;
-
-                _collidesWith = value;
-                FilterChanged();
-            }
-        }
-
-        public int FixtureId { get { return _fixtureId; } }
 
         public void RestoreCollisionWith(Fixture fixture)
         {
@@ -373,6 +408,7 @@ namespace FarseerPhysics.Dynamics
 
             return false;
         }
+
         private void FilterChanged()
         {
             // Flag associated contacts for filtering.
@@ -390,50 +426,5 @@ namespace FarseerPhysics.Dynamics
                 edge = edge.Next;
             }
         }
-
-
-        /// <summary>
-        /// The collision category bits. Normally you would just set one bit.
-        /// </summary>
-        public CollisionCategory CollisionCategories
-        {
-            get { return _collisionCategories; }
-
-            set
-            {
-                if (_body == null)
-                    return;
-
-                if (_collisionCategories == value)
-                    return;
-
-                _collisionCategories = value;
-                FilterChanged();
-            }
-        }
-
-        public FixtureProxy[] _proxies;
-        public int _proxyCount;
-
-        internal float _density;
-
-        internal Fixture _next;
-        internal Body _body;
-        private CollisionCategory _collidesWith;
-        private CollisionCategory _collisionCategories;
-        private short _collisionGroup;
-        private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
-
-        internal Shape _shape;
-
-        internal float _friction;
-        internal float _restitution;
-
-        internal int _proxyId;
-
-        internal bool _isSensor;
-
-        internal object _userData;
     }
-
 }

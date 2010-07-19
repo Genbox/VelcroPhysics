@@ -31,18 +31,22 @@ namespace FarseerPhysics.Dynamics.Contacts
 {
     internal struct TOIConstraint
     {
-        public FixedArray2<Vector2> localPoints;
-        public Vector2 localNormal;
-        public Vector2 localPoint;
-        public ManifoldType type;
-        public float radius;
-        public int pointCount;
         public Body bodyA;
         public Body bodyB;
+        public Vector2 localNormal;
+        public Vector2 localPoint;
+        public FixedArray2<Vector2> localPoints;
+        public int pointCount;
+        public float radius;
+        public ManifoldType type;
     }
 
     internal struct TOISolverManifold
     {
+        internal Vector2 normal;
+        internal Vector2 point;
+        internal float separation;
+
         public TOISolverManifold(ref TOIConstraint cc, int index)
         {
             Debug.Assert(cc.pointCount > 0);
@@ -99,16 +103,14 @@ namespace FarseerPhysics.Dynamics.Contacts
                     break;
             }
         }
-
-        internal Vector2 normal;
-        internal Vector2 point;
-        internal float separation;
     }
 
 
     internal class TOISolver
     {
-        public TOISolver() { }
+        private TOIConstraint[] _constraints = new TOIConstraint[8];
+        private int _count;
+        private Body _toiBody;
 
         public void Initialize(Contact[] contacts, int count, Body toiBody)
         {
@@ -197,7 +199,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                     minSeparation = Math.Min(minSeparation, separation);
 
                     // Prevent large corrections and allow slop.
-                    float C = MathUtils.Clamp(baumgarte * (separation + Settings.LinearSlop), -Settings.MaxLinearCorrection, 0.0f);
+                    float C = MathUtils.Clamp(baumgarte * (separation + Settings.LinearSlop),
+                                              -Settings.MaxLinearCorrection, 0.0f);
 
                     // Compute the effective mass.
                     float rnA = MathUtils.Cross(rA, normal);
@@ -223,9 +226,5 @@ namespace FarseerPhysics.Dynamics.Contacts
             // push the separation above -b2_linearSlop.
             return minSeparation >= -1.5f * Settings.LinearSlop;
         }
-
-        TOIConstraint[] _constraints = new TOIConstraint[8];
-        int _count;
-        Body _toiBody;
     }
 }

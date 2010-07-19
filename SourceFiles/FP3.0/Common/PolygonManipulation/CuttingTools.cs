@@ -26,7 +26,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
             Vector2 localExitPoint = fixture.Body.GetLocalPoint(exitPoint);
 
             PolygonShape shape = fixture.Shape as PolygonShape;
-            
+
             //TODO: Fix
             //if (shape == null)
             //    return;
@@ -134,18 +134,18 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
             //Get the entry points
             world.RayCast((f, p, n, fr) =>
-            {
-                fixtures.Add(f);
-                entryPoints.Add(p);
-                return 1;
-            }, start, end);
+                              {
+                                  fixtures.Add(f);
+                                  entryPoints.Add(p);
+                                  return 1;
+                              }, start, end);
 
             //Reverse the ray to get the exitpoints
             world.RayCast((f, p, n, fr) =>
-            {
-                exitPoints.Add(p);
-                return 1;
-            }, end, start);
+                              {
+                                  exitPoints.Add(p);
+                                  return 1;
+                              }, end, start);
 
             //We only have a single point. We need at least 2
             if (entryPoints.Count + exitPoints.Count < 2)
@@ -181,7 +181,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                     SplitShape(fixtures[i], entryPoints[i], exitPoints[i], thickness, out first, out second);
 
                     //Delete the original shape and create two new. Retain the properties of the body.
-                    
+
                     //TODO: Fix
                     //Body body1 = fixtures[i].Body.Clone(world);
                     //world.Add(body1);

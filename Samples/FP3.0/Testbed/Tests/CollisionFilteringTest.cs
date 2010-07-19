@@ -110,7 +110,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body3.BodyType = BodyType.Dynamic;
                 body3.Position = new Vector2(0.0f, 2.0f);
 
-                Fixture body3Fixture = body3.CreateFixture(polygon,0);
+                Fixture body3Fixture = body3.CreateFixture(polygon, 0);
                 body3Fixture.Restitution = 0.1f;
                 body3Fixture.CollisionGroup = SmallGroup;
                 body3Fixture.CollisionCategories = BoxCategory;
@@ -124,7 +124,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body4.BodyType = BodyType.Dynamic;
                 body4.Position = new Vector2(0.0f, 6.0f);
 
-                Fixture body4Fixture = body4.CreateFixture(polygon,0);
+                Fixture body4Fixture = body4.CreateFixture(polygon, 0);
                 body4Fixture.CollisionGroup = LargeGroup;
 
                 // Small circle

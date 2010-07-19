@@ -56,7 +56,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 // Roof
                 shape.Set(PolygonTools.CreateEdge(new Vector2(-10.0f, 20.0f), new Vector2(10.0f, 20.0f)));
-                ground.CreateFixture(shape,0);
+                ground.CreateFixture(shape, 0);
             }
 
             const float radius = 0.5f;
@@ -107,7 +107,6 @@ namespace FarseerPhysics.TestBed.Tests
             bool sleeping = true;
             for (Body b = World._bodyList; b != null; b = b.GetNext())
             {
-
                 if (b.BodyType != BodyType.Dynamic)
                 {
                     continue;

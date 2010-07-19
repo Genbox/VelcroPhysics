@@ -20,9 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System.Diagnostics;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
-using System.Diagnostics;
 
 namespace FarseerPhysics.Collision.Shapes
 {
@@ -32,6 +32,14 @@ namespace FarseerPhysics.Collision.Shapes
     /// Therefore, you may use any winding order.
     public class LoopShape : Shape
     {
+        private static EdgeShape s_edgeShape = new EdgeShape();
+
+        /// The vertex count.
+        public int _count;
+
+        /// The vertices. These are not owned/freed by the loop Shape.
+        public Vector2[] _vertices;
+
         public LoopShape()
         {
             ShapeType = ShapeType.Loop;
@@ -46,7 +54,7 @@ namespace FarseerPhysics.Collision.Shapes
             var loop = new LoopShape();
             loop._count = _count;
             loop.Radius = Radius;
-            loop._vertices = (Vector2[])_vertices.Clone();
+            loop._vertices = (Vector2[]) _vertices.Clone();
             return loop;
         }
 
@@ -55,6 +63,7 @@ namespace FarseerPhysics.Collision.Shapes
         {
             return _count;
         }
+
         /// Get a child edge.
         public void GetChildEdge(ref EdgeShape edge, int index)
         {
@@ -86,7 +95,7 @@ namespace FarseerPhysics.Collision.Shapes
         }
 
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input,
-                        ref Transform transform, int childIndex)
+                                     ref Transform transform, int childIndex)
         {
             Debug.Assert(childIndex < _count);
 
@@ -130,13 +139,5 @@ namespace FarseerPhysics.Collision.Shapes
             massData.Center = Vector2.Zero;
             massData.Inertia = 0.0f;
         }
-
-        /// The vertices. These are not owned/freed by the loop Shape.
-        public Vector2[] _vertices;
-
-        /// The vertex count.
-        public int _count;
-
-        private static EdgeShape s_edgeShape = new EdgeShape();
     }
 }

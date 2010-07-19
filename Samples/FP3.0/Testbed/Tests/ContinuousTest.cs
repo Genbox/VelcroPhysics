@@ -32,8 +32,8 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class ContinuousTest : Test
     {
-        private Fixture _box;
         private float _angularVelocity;
+        private Fixture _box;
 
         private ContinuousTest()
         {
@@ -67,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
             if (Distance.GJKCalls > 0)
             {
                 DebugView.DrawString(50, TextLine, "gjk calls = {0:n}, ave gjk iters = {1:n}, max gjk iters = {2:n}",
-                                     Distance.GJKCalls, Distance.GJKIters / (float)Distance.GJKCalls,
+                                     Distance.GJKCalls, Distance.GJKIters / (float) Distance.GJKCalls,
                                      Distance.GJKMaxIters);
                 TextLine += 15;
             }
@@ -75,11 +75,13 @@ namespace FarseerPhysics.TestBed.Tests
             if (TimeOfImpact.TOICalls > 0)
             {
                 DebugView.DrawString(50, TextLine, "toi calls = {0:n}, ave toi iters = {1:n}, max toi iters = {2:n}",
-                                      TimeOfImpact.TOICalls, TimeOfImpact.TOIIters / (float)TimeOfImpact.TOICalls, TimeOfImpact.TOIMaxRootIters);
+                                     TimeOfImpact.TOICalls, TimeOfImpact.TOIIters / (float) TimeOfImpact.TOICalls,
+                                     TimeOfImpact.TOIMaxRootIters);
                 TextLine += 15;
 
                 DebugView.DrawString(50, TextLine, "ave toi root iters = {0:n}, max toi root iters = {1:n}",
-                                      TimeOfImpact.TOIRootIters / (float)TimeOfImpact.TOICalls, TimeOfImpact.TOIMaxRootIters);
+                                     TimeOfImpact.TOIRootIters / (float) TimeOfImpact.TOICalls,
+                                     TimeOfImpact.TOIMaxRootIters);
                 TextLine += 15;
 
                 DebugView.DrawString(50, TextLine, "max toi opt iters = {0:n}", TimeOfImpact.TOIMaxOptIters);

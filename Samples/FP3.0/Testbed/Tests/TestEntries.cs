@@ -30,7 +30,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 new TestEntry {Name = "Bridge", CreateFcn = BridgeTest.Create},
                 new TestEntry {Name = "Varying Friction", CreateFcn = VaryingFrictionTest.Create},
-                new TestEntry {Name = "Character collision", CreateFcn = CharacterCollisionTest.Create},               
+                new TestEntry {Name = "Character collision", CreateFcn = CharacterCollisionTest.Create},
                 new TestEntry {Name = "Edge Test", CreateFcn = EdgeTest.Create},
                 new TestEntry {Name = "Tiles", CreateFcn = TilesTest.Create},
                 new TestEntry {Name = "Web", CreateFcn = WebTest.Create},
@@ -67,7 +67,6 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Sensor Test", CreateFcn = SensorTest.Create},
                 new TestEntry {Name = "Shape Editing", CreateFcn = ShapeEditingTest.Create},
                 new TestEntry {Name = "Slider Crank", CreateFcn = SliderCrankTest.Create},
-            
                 //FPE 3.0 specific tests
                 new TestEntry {Name = "Path Test", CreateFcn = PathTest.Create},
                 //new TestEntry {Name = "Buoyancy controller", CreateFcn = BuoyancyTest.Create},

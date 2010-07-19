@@ -53,6 +53,8 @@ namespace FarseerPhysics.Dynamics.Joints
         private float _gamma;
         private float _impulse;
         private float _mass;
+        private float _tmpFloat1;
+        private Vector2 _tmpVector1;
         private Vector2 _u;
 
         /// <summary>
@@ -126,7 +128,6 @@ namespace FarseerPhysics.Dynamics.Joints
             return 0.0f;
         }
 
-        private float _tmpFloat1;
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
             Body b1 = BodyA;
@@ -189,10 +190,10 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 P = _impulse * _u;
                 b1._linearVelocity -= b1._invMass * P;
                 MathUtils.Cross(ref r1, ref P, out _tmpFloat1);
-                b1._angularVelocity -= b1._invI * /* r1 x P */_tmpFloat1;
+                b1._angularVelocity -= b1._invI * /* r1 x P */ _tmpFloat1;
                 b2._linearVelocity += b2._invMass * P;
                 MathUtils.Cross(ref r2, ref P, out _tmpFloat1);
-                b2._angularVelocity += b2._invI * /* r2 x P */_tmpFloat1;
+                b2._angularVelocity += b2._invI * /* r2 x P */ _tmpFloat1;
             }
             else
             {
@@ -200,7 +201,6 @@ namespace FarseerPhysics.Dynamics.Joints
             }
         }
 
-        private Vector2 _tmpVector1;
         internal override void SolveVelocityConstraints(ref TimeStep step)
         {
             Body b1 = BodyA;

@@ -58,6 +58,55 @@ namespace FarseerPhysics.Dynamics
 
     public class Body
     {
+        internal float _I;
+        internal float _angularDamping;
+        internal float _angularVelocity;
+        internal ContactEdge _contactList;
+        internal int _fixtureCount;
+        public Fixture _fixtureList;
+        internal BodyFlags _flags;
+        internal Vector2 _force;
+        internal float _invI;
+        internal float _invMass;
+        internal JointEdge _jointList;
+        internal float _linearDamping;
+        internal Vector2 _linearVelocity;
+        internal float _mass;
+        internal Body _next;
+        internal Body _prev;
+        internal float _sleepTime;
+        internal Sweep _sweep; // the swept motion for CCD
+        internal float _torque;
+        internal BodyType _type;
+        internal object _userData;
+        internal World _world;
+        internal Transform _xf; // the body origin transform
+
+        internal Body(World world)
+        {
+            //Debug.Assert(bd.position.IsValid());
+            //Debug.Assert(bd.linearVelocity.IsValid());
+            //Debug.Assert(MathUtils.IsValid(bd.angle));
+            //Debug.Assert(MathUtils.IsValid(bd.angularVelocity));
+            //Debug.Assert(MathUtils.IsValid(bd.inertiaScale) && bd.inertiaScale >= 0.0f);
+            //Debug.Assert(MathUtils.IsValid(bd.angularDamping) && bd.angularDamping >= 0.0f);
+            //Debug.Assert(MathUtils.IsValid(bd.linearDamping) && bd.linearDamping >= 0.0f);
+
+            _world = world;
+
+            _xf.Position = Vector2.Zero;
+            _xf.R.Set(0);
+
+            _sweep.a0 = _sweep.a = 0;
+            _sweep.c0 = _sweep.c = MathUtils.Multiply(ref _xf, _sweep.localCenter);
+
+            //if (_type == BodyType.Dynamic)
+            //{
+            //    _mass = 1.0f;
+            //    _invMass = 1.0f;
+            //}
+        }
+
         /// Get the type of this body.
         public BodyType BodyType
         {
@@ -92,6 +141,289 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// Set the linear velocity of the center of mass.
+        /// @param v the new linear velocity of the center of mass.
+        public Vector2 LinearVelocity
+        {
+            set
+            {
+                if (_type == BodyType.Static)
+                {
+                    return;
+                }
+
+                if (Vector2.Dot(value, value) > 0.0f)
+                {
+                    Awake = true;
+                }
+
+                _linearVelocity = value;
+            }
+            get { return _linearVelocity; }
+        }
+
+        /// Set the angular velocity.
+        /// @param omega the new angular velocity in radians/second.
+        public float AngularVelocity
+        {
+            set
+            {
+                if (_type == BodyType.Static)
+                {
+                    return;
+                }
+
+                if (value * value > 0.0f)
+                {
+                    Awake = true;
+                }
+
+                _angularVelocity = value;
+            }
+            get { return _angularVelocity; }
+        }
+
+        /// Get the total mass of the body.
+        /// @return the mass, usually in kilograms (kg).
+        public float Mass
+        {
+            get { return _mass; }
+        }
+
+        /// Get the rotational inertia of the body about the local origin.
+        /// @return the rotational inertia, usually in kg-m^2.
+        public float Inertia
+        {
+            get { return _I + _mass * Vector2.Dot(_sweep.localCenter, _sweep.localCenter); }
+        }
+
+        /// Get the linear damping of the body.
+        public float LinearDamping
+        {
+            get { return _linearDamping; }
+            set { _linearDamping = value; }
+        }
+
+        /// Get the angular damping of the body.
+        public float AngularDamping
+        {
+            get { return _angularDamping; }
+            set { _angularDamping = value; }
+        }
+
+        /// Should this body be treated like a bullet for continuous collision detection?
+        public bool IsBullet
+        {
+            set
+            {
+                if (value)
+                {
+                    _flags |= BodyFlags.Bullet;
+                }
+                else
+                {
+                    _flags &= ~BodyFlags.Bullet;
+                }
+            }
+            get { return (_flags & BodyFlags.Bullet) == BodyFlags.Bullet; }
+        }
+
+        /// You can disable sleeping on this body. If you disable sleeping, the
+        /// body will be woken.
+        public bool SleepingAllowed
+        {
+            set
+            {
+                if (value)
+                {
+                    _flags |= BodyFlags.AutoSleep;
+                }
+                else
+                {
+                    _flags &= ~BodyFlags.AutoSleep;
+                    Awake = true;
+                }
+            }
+            get { return (_flags & BodyFlags.AutoSleep) == BodyFlags.AutoSleep; }
+        }
+
+
+        /// Set the sleep state of the body. A sleeping body has very
+        /// low CPU cost.
+        /// @param flag set to true to put body to sleep, false to wake it.
+        public bool Awake
+        {
+            set
+            {
+                if (value)
+                {
+                    if ((_flags & BodyFlags.Awake) == 0)
+                    {
+                        _flags |= BodyFlags.Awake;
+                        _sleepTime = 0.0f;
+                    }
+                }
+                else
+                {
+                    _flags &= ~BodyFlags.Awake;
+                    _sleepTime = 0.0f;
+                    _linearVelocity = Vector2.Zero;
+                    _angularVelocity = 0.0f;
+                    _force = Vector2.Zero;
+                    _torque = 0.0f;
+                }
+            }
+            get { return (_flags & BodyFlags.Awake) == BodyFlags.Awake; }
+        }
+
+        /// Set the active state of the body. An inactive body is not
+        /// simulated and cannot be collided with or woken up.
+        /// If you pass a flag of true, all fixtures will be added to the
+        /// broad-phase.
+        /// If you pass a flag of false, all fixtures will be removed from
+        /// the broad-phase and all contacts will be destroyed.
+        /// Fixtures and joints are otherwise unaffected. You may continue
+        /// to create/destroy fixtures and joints on inactive bodies.
+        /// Fixtures on an inactive body are implicitly inactive and will
+        /// not participate in collisions, ray-casts, or queries.
+        /// Joints connected to an inactive body are implicitly inactive.
+        /// An inactive body is still owned by a b2World object and remains
+        /// in the body list.
+        public bool Active
+        {
+            set
+            {
+                if (value == Active)
+                {
+                    return;
+                }
+
+                if (value)
+                {
+                    _flags |= BodyFlags.Active;
+
+                    // Create all proxies.
+                    BroadPhase broadPhase = _world._contactManager.BroadPhase;
+                    for (Fixture f = _fixtureList; f != null; f = f._next)
+                    {
+                        f.CreateProxies(broadPhase, ref _xf);
+                    }
+
+                    // Contacts are created the next time step.
+                }
+                else
+                {
+                    _flags &= ~BodyFlags.Active;
+
+                    // Destroy all proxies.
+                    BroadPhase broadPhase = _world._contactManager.BroadPhase;
+                    for (Fixture f = _fixtureList; f != null; f = f._next)
+                    {
+                        f.DestroyProxies(broadPhase);
+                    }
+
+                    // Destroy the attached contacts.
+                    ContactEdge ce = _contactList;
+                    while (ce != null)
+                    {
+                        ContactEdge ce0 = ce;
+                        ce = ce.Next;
+                        _world._contactManager.Destroy(ce0.Contact);
+                    }
+                    _contactList = null;
+                }
+            }
+            get { return (_flags & BodyFlags.Active) == BodyFlags.Active; }
+        }
+
+        /// Set this body to have fixed rotation. This causes the mass
+        /// to be reset.
+        public bool FixedRotation
+        {
+            set
+            {
+                if (value)
+                {
+                    _flags |= BodyFlags.FixedRotation;
+                }
+                else
+                {
+                    _flags &= ~BodyFlags.FixedRotation;
+                }
+
+                ResetMassData();
+            }
+            get { return (_flags & BodyFlags.FixedRotation) == BodyFlags.FixedRotation; }
+        }
+
+        public Fixture FixtureList
+        {
+            get { return _fixtureList; }
+        }
+
+        /// Get the list of all joints attached to this body.
+        public JointEdge JointList
+        {
+            get { return _jointList; }
+        }
+
+        /// Get the list of all contacts attached to this body.
+        /// @warning this list changes during the time step and you may
+        /// miss some collisions if you don't use ContactListener.
+        public ContactEdge ContactList
+        {
+            get { return _contactList; }
+        }
+
+        /// Set the user data. Use this to store your application specific data.
+        public object UserData
+        {
+            set { _userData = value; }
+            get { return _userData; }
+        }
+
+        /// <summary>
+        /// Get the world body origin position.
+        /// </summary>
+        /// <returns>Return the world position of the body's origin.</returns>
+        public Vector2 Position
+        {
+            get { return _xf.Position; }
+            set { SetTransform(value, Rotation); }
+        }
+
+        /// <summary>
+        /// Get the angle in radians.
+        /// </summary>
+        /// <returns>Return the current world rotation angle in radians.</returns>
+        public float Rotation
+        {
+            get { return _sweep.a; }
+            set { SetTransform(Position, value); }
+        }
+
+        public bool IsStatic
+        {
+            get { return _type == BodyType.Static; }
+            set
+            {
+                if (value)
+                    _type = BodyType.Static;
+            }
+        }
+
+        public bool IgnoreGravity
+        {
+            get { return (_flags & BodyFlags.IgnoreGravity) == BodyFlags.IgnoreGravity; }
+            set
+            {
+                if (value)
+                    _flags |= BodyFlags.IgnoreGravity;
+                else
+                    _flags &= ~BodyFlags.IgnoreGravity;
+            }
+        }
+
         /// Creates a fixture and attach it to this body. Use this function if you need
         /// to set some fixture parameters, like friction. Otherwise you can create the
         /// fixture directly from a shape.
@@ -102,7 +434,7 @@ namespace FarseerPhysics.Dynamics
         public Fixture CreateFixture(Shape shape, float density)
         {
             Debug.Assert(_world.IsLocked == false);
-            if (_world.IsLocked == true)
+            if (_world.IsLocked)
             {
                 return null;
             }
@@ -151,7 +483,7 @@ namespace FarseerPhysics.Dynamics
         public void DestroyFixture(Fixture fixture)
         {
             Debug.Assert(_world.IsLocked == false);
-            if (_world.IsLocked == true)
+            if (_world.IsLocked)
             {
                 return;
             }
@@ -221,7 +553,7 @@ namespace FarseerPhysics.Dynamics
         public void SetTransform(Vector2 position, float angle)
         {
             Debug.Assert(_world.IsLocked == false);
-            if (_world.IsLocked == true)
+            if (_world.IsLocked)
             {
                 return;
             }
@@ -245,7 +577,7 @@ namespace FarseerPhysics.Dynamics
         public void SetTransformIgnoreContacts(Vector2 position, float angle)
         {
             Debug.Assert(_world.IsLocked == false);
-            if (_world.IsLocked == true)
+            if (_world.IsLocked)
             {
                 return;
             }
@@ -294,48 +626,6 @@ namespace FarseerPhysics.Dynamics
         public Vector2 GetLocalCenter()
         {
             return _sweep.localCenter;
-        }
-
-        /// Set the linear velocity of the center of mass.
-        /// @param v the new linear velocity of the center of mass.
-        public Vector2 LinearVelocity
-        {
-            set
-            {
-                if (_type == BodyType.Static)
-                {
-                    return;
-                }
-
-                if (Vector2.Dot(value, value) > 0.0f)
-                {
-                    Awake = true;
-                }
-
-                _linearVelocity = value;
-            }
-            get { return _linearVelocity; }
-        }
-
-        /// Set the angular velocity.
-        /// @param omega the new angular velocity in radians/second.
-        public float AngularVelocity
-        {
-            set
-            {
-                if (_type == BodyType.Static)
-                {
-                    return;
-                }
-
-                if (value * value > 0.0f)
-                {
-                    Awake = true;
-                }
-
-                _angularVelocity = value;
-            }
-            get { return _angularVelocity; }
         }
 
         /// <summary>
@@ -432,20 +722,6 @@ namespace FarseerPhysics.Dynamics
             _angularVelocity += _invI * impulse;
         }
 
-        /// Get the total mass of the body.
-        /// @return the mass, usually in kilograms (kg).
-        public float Mass
-        {
-            get { return _mass; }
-        }
-
-        /// Get the rotational inertia of the body about the local origin.
-        /// @return the rotational inertia, usually in kg-m^2.
-        public float Inertia
-        {
-            get { return _I + _mass * Vector2.Dot(_sweep.localCenter, _sweep.localCenter); }
-        }
-
         /// Get the mass data of the body.
         /// @return a struct containing the mass, inertia and center of the body.
         public void GetMassData(out MassData massData)
@@ -464,7 +740,7 @@ namespace FarseerPhysics.Dynamics
         public void SetMassData(ref MassData massData)
         {
             Debug.Assert(_world.IsLocked == false);
-            if (_world.IsLocked == true)
+            if (_world.IsLocked)
             {
                 return;
             }
@@ -625,232 +901,16 @@ namespace FarseerPhysics.Dynamics
             return GetLinearVelocityFromWorldPoint(GetWorldPoint(localPoint));
         }
 
-        /// Get the linear damping of the body.
-        public float LinearDamping
-        {
-            get { return _linearDamping; }
-            set { _linearDamping = value; }
-        }
-
-        /// Get the angular damping of the body.
-        public float AngularDamping
-        {
-            get { return _angularDamping; }
-            set { _angularDamping = value; }
-        }
-
-        /// Should this body be treated like a bullet for continuous collision detection?
-        public bool IsBullet
-        {
-            set
-            {
-                if (value)
-                {
-                    _flags |= BodyFlags.Bullet;
-                }
-                else
-                {
-                    _flags &= ~BodyFlags.Bullet;
-                }
-            }
-            get
-            {
-                return (_flags & BodyFlags.Bullet) == BodyFlags.Bullet;
-            }
-        }
-
-        /// You can disable sleeping on this body. If you disable sleeping, the
-        /// body will be woken.
-        public bool SleepingAllowed
-        {
-            set
-            {
-                if (value)
-                {
-                    _flags |= BodyFlags.AutoSleep;
-                }
-                else
-                {
-                    _flags &= ~BodyFlags.AutoSleep;
-                    Awake = true;
-                }
-            }
-            get
-            {
-                return (_flags & BodyFlags.AutoSleep) == BodyFlags.AutoSleep;
-            }
-        }
-
-
-        /// Set the sleep state of the body. A sleeping body has very
-        /// low CPU cost.
-        /// @param flag set to true to put body to sleep, false to wake it.
-        public bool Awake
-        {
-            set
-            {
-                if (value)
-                {
-                    if ((_flags & BodyFlags.Awake) == 0)
-                    {
-                        _flags |= BodyFlags.Awake;
-                        _sleepTime = 0.0f;
-                    }
-                }
-                else
-                {
-                    _flags &= ~BodyFlags.Awake;
-                    _sleepTime = 0.0f;
-                    _linearVelocity = Vector2.Zero;
-                    _angularVelocity = 0.0f;
-                    _force = Vector2.Zero;
-                    _torque = 0.0f;
-                }
-            }
-            get { return (_flags & BodyFlags.Awake) == BodyFlags.Awake; }
-        }
-
-        /// Set the active state of the body. An inactive body is not
-        /// simulated and cannot be collided with or woken up.
-        /// If you pass a flag of true, all fixtures will be added to the
-        /// broad-phase.
-        /// If you pass a flag of false, all fixtures will be removed from
-        /// the broad-phase and all contacts will be destroyed.
-        /// Fixtures and joints are otherwise unaffected. You may continue
-        /// to create/destroy fixtures and joints on inactive bodies.
-        /// Fixtures on an inactive body are implicitly inactive and will
-        /// not participate in collisions, ray-casts, or queries.
-        /// Joints connected to an inactive body are implicitly inactive.
-        /// An inactive body is still owned by a b2World object and remains
-        /// in the body list.
-        public bool Active
-        {
-            set
-            {
-                if (value == Active)
-                {
-                    return;
-                }
-
-                if (value)
-                {
-                    _flags |= BodyFlags.Active;
-
-                    // Create all proxies.
-                    BroadPhase broadPhase = _world._contactManager.BroadPhase;
-                    for (Fixture f = _fixtureList; f != null; f = f._next)
-                    {
-                        f.CreateProxies(broadPhase, ref _xf);
-                    }
-
-                    // Contacts are created the next time step.
-                }
-                else
-                {
-                    _flags &= ~BodyFlags.Active;
-
-                    // Destroy all proxies.
-                    BroadPhase broadPhase = _world._contactManager.BroadPhase;
-                    for (Fixture f = _fixtureList; f != null; f = f._next)
-                    {
-                        f.DestroyProxies(broadPhase);
-                    }
-
-                    // Destroy the attached contacts.
-                    ContactEdge ce = _contactList;
-                    while (ce != null)
-                    {
-                        ContactEdge ce0 = ce;
-                        ce = ce.Next;
-                        _world._contactManager.Destroy(ce0.Contact);
-                    }
-                    _contactList = null;
-                }
-            }
-            get { return (_flags & BodyFlags.Active) == BodyFlags.Active; }
-        }
-
-        /// Set this body to have fixed rotation. This causes the mass
-        /// to be reset.
-        public bool FixedRotation
-        {
-            set
-            {
-                if (value)
-                {
-                    _flags |= BodyFlags.FixedRotation;
-                }
-                else
-                {
-                    _flags &= ~BodyFlags.FixedRotation;
-                }
-
-                ResetMassData();
-            }
-            get { return (_flags & BodyFlags.FixedRotation) == BodyFlags.FixedRotation; }
-        }
-
-        public Fixture FixtureList
-        {
-            get { return _fixtureList; }
-        }
-
-        /// Get the list of all joints attached to this body.
-        public JointEdge JointList
-        {
-            get { return _jointList; }
-        }
-
-        /// Get the list of all contacts attached to this body.
-        /// @warning this list changes during the time step and you may
-        /// miss some collisions if you don't use ContactListener.
-        public ContactEdge ContactList
-        {
-            get { return _contactList; }
-        }
-
         /// Get the next body in the world's body list.
         public Body GetNext()
         {
             return _next;
         }
 
-        /// Set the user data. Use this to store your application specific data.
-        public object UserData
-        {
-            set { _userData = value; }
-            get { return _userData; }
-        }
-
         /// Get the parent world of this body.
         public World GetWorld()
         {
             return _world;
-        }
-
-        internal Body(World world)
-        {
-            //Debug.Assert(bd.position.IsValid());
-            //Debug.Assert(bd.linearVelocity.IsValid());
-            //Debug.Assert(MathUtils.IsValid(bd.angle));
-            //Debug.Assert(MathUtils.IsValid(bd.angularVelocity));
-            //Debug.Assert(MathUtils.IsValid(bd.inertiaScale) && bd.inertiaScale >= 0.0f);
-            //Debug.Assert(MathUtils.IsValid(bd.angularDamping) && bd.angularDamping >= 0.0f);
-            //Debug.Assert(MathUtils.IsValid(bd.linearDamping) && bd.linearDamping >= 0.0f);
-
-            _world = world;
-
-            _xf.Position = Vector2.Zero;
-            _xf.R.Set(0);
-
-            _sweep.a0 = _sweep.a = 0;
-            _sweep.c0 = _sweep.c = MathUtils.Multiply(ref _xf, _sweep.localCenter);
-
-            //if (_type == BodyType.Dynamic)
-            //{
-            //    _mass = 1.0f;
-            //    _invMass = 1.0f;
-            //}
         }
 
         internal void SynchronizeFixtures()
@@ -905,93 +965,5 @@ namespace FarseerPhysics.Dynamics
             _sweep.a = _sweep.a0;
             SynchronizeTransform();
         }
-
-        /// <summary>
-        /// Get the world body origin position.
-        /// </summary>
-        /// <returns>Return the world position of the body's origin.</returns>
-        public Vector2 Position
-        {
-            get
-            {
-                return _xf.Position;
-            }
-            set
-            {
-                SetTransform(value, Rotation);
-            }
-        }
-
-        /// <summary>
-        /// Get the angle in radians.
-        /// </summary>
-        /// <returns>Return the current world rotation angle in radians.</returns>
-        public float Rotation
-        {
-            get
-            {
-                return _sweep.a;
-            }
-            set
-            {
-                SetTransform(Position, value);
-            }
-        }
-
-        public bool IsStatic
-        {
-            get { return _type == BodyType.Static; }
-            set
-            {
-                if (value)
-                    _type = BodyType.Static;
-            }
-        }
-
-        public bool IgnoreGravity
-        {
-            get { return (_flags & BodyFlags.IgnoreGravity) == BodyFlags.IgnoreGravity; }
-            set
-            {
-                if (value)
-                    _flags |= BodyFlags.IgnoreGravity;
-                else
-                    _flags &= ~BodyFlags.IgnoreGravity;
-            }
-        }
-
-        internal BodyFlags _flags;
-        internal BodyType _type;
-
-        internal Transform _xf;		// the body origin transform
-        internal Sweep _sweep;	// the swept motion for CCD
-
-        internal Vector2 _linearVelocity;
-        internal float _angularVelocity;
-
-        internal Vector2 _force;
-        internal float _torque;
-
-        internal World _world;
-        internal Body _prev;
-        internal Body _next;
-
-        public Fixture _fixtureList;
-        internal int _fixtureCount;
-
-        internal JointEdge _jointList;
-        internal ContactEdge _contactList;
-
-        internal float _mass, _invMass;
-
-        // Rotational inertia about the center of mass.
-        internal float _I, _invI;
-
-        internal float _linearDamping;
-        internal float _angularDamping;
-
-        internal float _sleepTime;
-
-        internal object _userData;
     }
 }

@@ -21,6 +21,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
@@ -28,7 +29,6 @@ using FarseerPhysics.Controllers;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
 namespace FarseerPhysics.Dynamics
 {
@@ -46,14 +46,32 @@ namespace FarseerPhysics.Dynamics
     public class World
     {
         /// <summary>
+        /// Called whenever a Fixture is removed
+        /// </summary>
+        public FixtureRemovedDelegate FixtureRemoved;
+
+        /// <summary>
         /// Called whenever a Joint is removed
         /// </summary>
         public JointRemovedDelegate JointRemoved;
 
-        /// <summary>
-        /// Called whenever a Fixture is removed
-        /// </summary>
-        public FixtureRemovedDelegate FixtureRemoved;
+        public int _bodyCount;
+        public Body _bodyList;
+        public ContactManager _contactManager = new ContactManager();
+        internal Queue<Contact> _contactPool = new Queue<Contact>(256);
+        internal WorldFlags _flags;
+        internal float _inv_dt0;
+        internal Island _island = new Island();
+        public int _jointCount;
+        public Joint _jointList;
+        private Func<FixtureProxy, bool> _queryAABBCallback;
+        private Func<int, bool> _queryAABBCallbackWrapper;
+        private RayCastCallback _rayCastCallback;
+        private RayCastCallbackInternal _rayCastCallbackWrapper;
+        private Contact[] _toiContacts = new Contact[Settings.MaxTOIContacts];
+        private TOISolver _toiSolver = new TOISolver();
+        private Stopwatch _watch = new Stopwatch();
+        private Body[] stack = new Body[64];
 
         /// ruct a world object.
         /// @param gravity the world gravity vector.
@@ -73,6 +91,62 @@ namespace FarseerPhysics.Dynamics
         }
 
         public List<Controller> Controllers { get; private set; }
+
+        public float UpdateTime { get; private set; }
+
+        public float ContinuousPhysicsTime { get; private set; }
+
+        public float NewContactsTime { get; private set; }
+
+        public float ControllersUpdateTime { get; private set; }
+
+        public float ContactsUpdateTime { get; private set; }
+
+        public float SolveUpdateTime { get; private set; }
+
+        /// Get the number of broad-phase proxies.
+        public int ProxyCount
+        {
+            get { return _contactManager.BroadPhase.ProxyCount; }
+        }
+
+        /// Get the number of bodies.
+        public int BodyCount
+        {
+            get { return _bodyCount; }
+        }
+
+        /// Get the number of joints.
+        public int JointCount
+        {
+            get { return _jointCount; }
+        }
+
+        /// Get the number of contacts (each may have 0 or more contact points).
+        public int ContactCount
+        {
+            get { return _contactManager.ContactCount; }
+        }
+
+        /// Change the global gravity vector.
+        public Vector2 Gravity { get; set; }
+
+        /// Is the world locked (in the middle of a time step).
+        public bool IsLocked
+        {
+            get { return (_flags & WorldFlags.Locked) == WorldFlags.Locked; }
+            set
+            {
+                if (value)
+                {
+                    _flags |= WorldFlags.Locked;
+                }
+                else
+                {
+                    _flags &= ~WorldFlags.Locked;
+                }
+            }
+        }
 
         /// Create a rigid body given a definition. No reference to the definition
         /// is retained.
@@ -176,18 +250,6 @@ namespace FarseerPhysics.Dynamics
 
             --_bodyCount;
         }
-
-        public float UpdateTime { get; private set; }
-
-        public float ContinuousPhysicsTime { get; private set; }
-
-        public float NewContactsTime { get; private set; }
-
-        public float ControllersUpdateTime { get; private set; }
-
-        public float ContactsUpdateTime { get; private set; }
-
-        public float SolveUpdateTime { get; private set; }
 
         /// Create a joint to rain bodies together. No reference to the definition
         /// is retained. This may cause the connected bodies to cease colliding.
@@ -321,7 +383,7 @@ namespace FarseerPhysics.Dynamics
             j._edgeA.Prev = null;
             j._edgeA.Next = null;
 
-                        // WIP David
+            // WIP David
             if (!j.IsFixedType())
             {
                 // Remove from body 2
@@ -368,8 +430,6 @@ namespace FarseerPhysics.Dynamics
                 }
             }
         }
-
-        Stopwatch _watch = new Stopwatch();
 
         /// Take a time step. This performs collision detection, integration,
         /// and raint solution.
@@ -479,7 +539,7 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// Set flag to control automatic clearing of forces after each time step.
-        void SetAutoClearForces(bool flag)
+        private void SetAutoClearForces(bool flag)
         {
             if (flag)
             {
@@ -492,7 +552,7 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// Get the flag that controls automatic clearing of forces after each time step.
-        bool GetAutoClearForces()
+        private bool GetAutoClearForces()
         {
             return (_flags & WorldFlags.ClearForces) == WorldFlags.ClearForces;
         }
@@ -514,10 +574,7 @@ namespace FarseerPhysics.Dynamics
             _queryAABBCallback = null;
         }
 
-        Func<FixtureProxy, bool> _queryAABBCallback;
-        Func<int, bool> _queryAABBCallbackWrapper;
-
-        bool QueryAABBCallbackWrapper(int proxyId)
+        private bool QueryAABBCallbackWrapper(int proxyId)
         {
             FixtureProxy proxy = _contactManager.BroadPhase.GetUserData<FixtureProxy>(proxyId);
             return _queryAABBCallback(proxy);
@@ -541,10 +598,7 @@ namespace FarseerPhysics.Dynamics
             _rayCastCallback = null;
         }
 
-        RayCastCallback _rayCastCallback;
-        RayCastCallbackInternal _rayCastCallbackWrapper;
-
-        float RayCastCallbackWrapper(ref RayCastInput input, int proxyId)
+        private float RayCastCallbackWrapper(ref RayCastInput input, int proxyId)
         {
             FixtureProxy proxy = _contactManager.BroadPhase.GetUserData<FixtureProxy>(proxyId);
             Fixture fixture = proxy.Fixture;
@@ -587,65 +641,7 @@ namespace FarseerPhysics.Dynamics
             return _contactManager.ContactList;
         }
 
-        /// Get the number of broad-phase proxies.
-        public int ProxyCount
-        {
-            get
-            {
-                return _contactManager.BroadPhase.ProxyCount;
-            }
-        }
-
-        /// Get the number of bodies.
-        public int BodyCount
-        {
-            get
-            {
-                return _bodyCount;
-            }
-        }
-
-        /// Get the number of joints.
-        public int JointCount
-        {
-            get
-            {
-                return _jointCount;
-            }
-        }
-        /// Get the number of contacts (each may have 0 or more contact points).
-        public int ContactCount
-        {
-            get
-            {
-                return _contactManager.ContactCount;
-            }
-        }
-
-        /// Change the global gravity vector.
-        public Vector2 Gravity { get; set; }
-
-        /// Is the world locked (in the middle of a time step).
-        public bool IsLocked
-        {
-            get
-            {
-                return (_flags & WorldFlags.Locked) == WorldFlags.Locked;
-            }
-            set
-            {
-                if (value)
-                {
-                    _flags |= WorldFlags.Locked;
-                }
-                else
-                {
-                    _flags &= ~WorldFlags.Locked;
-                }
-            }
-        }
-
-        void Solve(ref TimeStep step)
+        private void Solve(ref TimeStep step)
         {
             // Size the island for the worst case.
             _island.Reset(_bodyCount,
@@ -701,7 +697,7 @@ namespace FarseerPhysics.Dynamics
                 {
                     // Grab the next body off the stack and add it to the island.
                     Body b = stack[--stackCount];
-                    Debug.Assert(b.Active == true);
+                    Debug.Assert(b.Active);
                     _island.Add(b);
 
                     // Make sure the body is awake.
@@ -758,7 +754,7 @@ namespace FarseerPhysics.Dynamics
                     // Search all joints connect to this body.
                     for (JointEdge je = b._jointList; je != null; je = je.Next)
                     {
-                        if (je.Joint._islandFlag == true)
+                        if (je.Joint._islandFlag)
                         {
                             continue;
                         }
@@ -769,7 +765,6 @@ namespace FarseerPhysics.Dynamics
                         //Enter here when it's a non-fixed joint. Non-fixed joints have a other body.
                         if (other != null)
                         {
-
                             // Don't simulate joints connected to inactive bodies.
                             if (other.Active == false)
                             {
@@ -834,7 +829,7 @@ namespace FarseerPhysics.Dynamics
 
         // Advance a dynamic body to its first time of contact
         // and adjust the position to ensure clearance.
-        void SolveTOI(Body body)
+        private void SolveTOI(Body body)
         {
             // Find the minimum contact.
             Contact toiContact = null;
@@ -864,7 +859,7 @@ namespace FarseerPhysics.Dynamics
                     BodyType type = other.BodyType;
 
                     // Only bullets perform TOI with dynamic bodies.
-                    if (bullet == true)
+                    if (bullet)
                     {
                         // Bullets only perform TOI with bodies that have their TOI resolved.
                         if ((other._flags & BodyFlags.Toi) == 0)
@@ -1030,7 +1025,7 @@ namespace FarseerPhysics.Dynamics
         // Sequentially solve TOIs for each body. We bring each
         // body to the time of contact and perform some position correction.
         // Time is not conserved.
-        void SolveTOI()
+        private void SolveTOI()
         {
             // Prepare all contacts.
             for (Contact c = _contactManager.ContactList; c != null; c = c._next)
@@ -1047,7 +1042,8 @@ namespace FarseerPhysics.Dynamics
             {
                 // Kinematic, and static bodies will not be affected by the TOI event.
                 // If a body was not in an island then it did not move.
-                if ((body._flags & BodyFlags.Island) == 0 || body.BodyType == BodyType.Kinematic || body.BodyType == BodyType.Static)
+                if ((body._flags & BodyFlags.Island) == 0 || body.BodyType == BodyType.Kinematic ||
+                    body.BodyType == BodyType.Static)
                 {
                     body._flags |= BodyFlags.Toi;
                 }
@@ -1065,7 +1061,7 @@ namespace FarseerPhysics.Dynamics
                     continue;
                 }
 
-                if (body.IsBullet == true)
+                if (body.IsBullet)
                 {
                     continue;
                 }
@@ -1093,26 +1089,6 @@ namespace FarseerPhysics.Dynamics
                 body._flags |= BodyFlags.Toi;
             }
         }
-
-        TOISolver _toiSolver = new TOISolver();
-        Contact[] _toiContacts = new Contact[Settings.MaxTOIContacts];
-        internal Island _island = new Island();
-        internal WorldFlags _flags;
-
-        public ContactManager _contactManager = new ContactManager();
-        internal Queue<Contact> _contactPool = new Queue<Contact>(256);
-
-        public Body _bodyList;
-        public Joint _jointList;
-
-        public int _bodyCount;
-        public int _jointCount;
-
-        // This is used to compute the time step ratio to
-        // support a variable time step.
-        internal float _inv_dt0;
-
-        Body[] stack = new Body[64];
 
         public void AddController(Controller controller)
         {

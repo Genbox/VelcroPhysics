@@ -59,7 +59,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape)fixture.Shape;
+                        CircleShape circle = (CircleShape) fixture.Shape;
 
                         Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
                         float radius = circle.Radius;
@@ -70,7 +70,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape poly = (PolygonShape)fixture.Shape;
+                        PolygonShape poly = (PolygonShape) fixture.Shape;
                         int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
@@ -152,8 +152,8 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 const float w = 1.0f;
-                float b = w / (2.0f + (float)Math.Sqrt(2.0));
-                float s = (float)Math.Sqrt(2.0) * b;
+                float b = w / (2.0f + (float) Math.Sqrt(2.0));
+                float s = (float) Math.Sqrt(2.0) * b;
 
                 Vertices vertices8 = new Vertices(8);
                 vertices8.Add(new Vector2(0.5f * s, 0.0f));

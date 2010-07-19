@@ -39,10 +39,10 @@ namespace FarseerPhysics.TestBed.Tests
         private AABB _queryAABB;
         private Actor _rayActor = new Actor();
         private RayCastInput _rayCastInput;
+        private RayCastOutput _rayCastOutput;
         private int _stepCount;
         private DynamicTree _tree = new DynamicTree();
         private float _worldExtent;
-        private RayCastOutput _rayCastOutput;
 
         private DynamicTreeTest()
         {
@@ -338,7 +338,7 @@ namespace FarseerPhysics.TestBed.Tests
                     input.MaxFraction = output.Fraction;
                 }
             }
-            
+
             if (bruteActor != null)
             {
                 Debug.Assert(bruteOutput.Fraction == _rayCastOutput.Fraction);

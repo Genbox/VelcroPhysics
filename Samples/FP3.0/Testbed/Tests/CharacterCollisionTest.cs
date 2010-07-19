@@ -1,5 +1,4 @@
-﻿using System;
-using FarseerPhysics.Collision.Shapes;
+﻿using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
@@ -54,7 +53,7 @@ namespace FarseerPhysics.TestBed.Tests
             squareCharacter.Body.SleepingAllowed = false;
 
 #if false
-            // Hexagon character
+    // Hexagon character
             float angle = 0.0f;
             const float delta = Settings.b2_pi / 3.0f;
             Vertices vertices = new Vertices();

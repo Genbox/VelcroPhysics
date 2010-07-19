@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Common.PolygonManipulation;
-using FarseerPhysics.Dynamics;
+﻿using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Factories
@@ -23,7 +16,7 @@ namespace FarseerPhysics.Factories
 
         public static Body CreateBody(World world, Vector2 position)
         {
-            Body body = world.CreateBody();           
+            Body body = world.CreateBody();
             body.Position = position;
             return body;
         }
