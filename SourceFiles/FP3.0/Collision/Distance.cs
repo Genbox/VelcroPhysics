@@ -41,8 +41,8 @@ namespace FarseerPhysics.Collision
                 case ShapeType.Circle:
                     {
                         CircleShape circle = (CircleShape)shape;
-                        _vertices[0] = circle.Position;
-                        _count = 1;
+                        _vertices = new Vertices(1);
+                        _vertices.Add(circle.Position);
                         _radius = circle.Radius;
                     }
                     break;
@@ -51,7 +51,6 @@ namespace FarseerPhysics.Collision
                     {
                         PolygonShape polygon = (PolygonShape)shape;
                         _vertices = polygon.Vertices;
-                        _count = polygon.Vertices.Count;
                         _radius = polygon.Radius;
                     }
                     break;
@@ -71,9 +70,9 @@ namespace FarseerPhysics.Collision
                             _buffer[1] = loop._vertices[0];
                         }
 
-                        _vertices[0] = _buffer[0];
-                        _vertices[1] = _buffer[1];
-                        _count = 2;
+                        _vertices = new Vertices(2);
+                        _vertices.Add(_buffer[0]);
+                        _vertices.Add(_buffer[1]);
                         _radius = loop.Radius;
                     }
                     break;
@@ -81,9 +80,9 @@ namespace FarseerPhysics.Collision
                 case ShapeType.Edge:
                     {
                         EdgeShape edge = (EdgeShape)shape;
-                        _vertices[0] = edge._vertex1;
-                        _vertices[1] = edge._vertex2;
-                        _count = 2;
+                        _vertices = new Vertices(2);
+                        _vertices.Add(edge._vertex1);
+                        _vertices.Add(edge._vertex2);
                         _radius = edge.Radius;
                     }
                     break;
@@ -92,7 +91,6 @@ namespace FarseerPhysics.Collision
                     Debug.Assert(false);
                     break;
             }
-
         }
 
         /// Get the supporting vertex index in the given direction.
@@ -100,7 +98,7 @@ namespace FarseerPhysics.Collision
         {
             int bestIndex = 0;
             float bestValue = Vector2.Dot(_vertices[0], d);
-            for (int i = 1; i < _count; ++i)
+            for (int i = 1; i < _vertices.Count; ++i)
             {
                 float value = Vector2.Dot(_vertices[i], d);
                 if (value > bestValue)
@@ -118,7 +116,7 @@ namespace FarseerPhysics.Collision
         {
             int bestIndex = 0;
             float bestValue = Vector2.Dot(_vertices[0], d);
-            for (int i = 1; i < _count; ++i)
+            for (int i = 1; i < _vertices.Count; ++i)
             {
                 float value = Vector2.Dot(_vertices[i], d);
                 if (value > bestValue)
@@ -131,26 +129,17 @@ namespace FarseerPhysics.Collision
             return _vertices[bestIndex];
         }
 
-        /// Get the vertex count.
-        public int GetVertexCount()
-        {
-            return _count;
-        }
-
         /// Get a vertex by index. Used by b2Distance.
         public Vector2 GetVertex(int index)
         {
-            Debug.Assert(0 <= index && index < _count);
+            Debug.Assert(0 <= index && index < _vertices.Count);
             return _vertices[index];
         }
 
         internal Vertices _vertices;
         internal FixedArray2<Vector2> _buffer;
-        internal int _count;
         internal float _radius;
     }
-
-
 
     /// Used to warm start ComputeDistance.
     /// Set count to zero on first call.

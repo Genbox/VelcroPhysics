@@ -24,6 +24,7 @@ using System;
 using System.Diagnostics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
+using FarseerPhysics.Controllers;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
@@ -67,7 +68,11 @@ namespace FarseerPhysics.Dynamics
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
 
             new DefaultContactFilter(this);
+
+            Controllers = new List<Controller>();
         }
+
+        public List<Controller> Controllers { get; private set; }
 
         /// Create a rigid body given a definition. No reference to the definition
         /// is retained.
@@ -290,7 +295,12 @@ namespace FarseerPhysics.Dynamics
 
             // Wake up connected bodies.
             bodyA.Awake = true;
-            bodyB.Awake = true;
+
+            // WIP David
+            if (!j.IsFixedType())
+            {
+                bodyB.Awake = true;
+            }
 
             // Remove from body 1.
             if (j._edgeA.Prev != null)
@@ -311,42 +321,50 @@ namespace FarseerPhysics.Dynamics
             j._edgeA.Prev = null;
             j._edgeA.Next = null;
 
-            // Remove from body 2
-            if (j._edgeB.Prev != null)
+                        // WIP David
+            if (!j.IsFixedType())
             {
-                j._edgeB.Prev.Next = j._edgeB.Next;
-            }
+                // Remove from body 2
+                if (j._edgeB.Prev != null)
+                {
+                    j._edgeB.Prev.Next = j._edgeB.Next;
+                }
 
-            if (j._edgeB.Next != null)
-            {
-                j._edgeB.Next.Prev = j._edgeB.Prev;
-            }
+                if (j._edgeB.Next != null)
+                {
+                    j._edgeB.Next.Prev = j._edgeB.Prev;
+                }
 
-            if (j._edgeB == bodyB._jointList)
-            {
-                bodyB._jointList = j._edgeB.Next;
-            }
+                if (j._edgeB == bodyB._jointList)
+                {
+                    bodyB._jointList = j._edgeB.Next;
+                }
 
-            j._edgeB.Prev = null;
-            j._edgeB.Next = null;
+                j._edgeB.Prev = null;
+                j._edgeB.Next = null;
+            }
 
             Debug.Assert(_jointCount > 0);
             --_jointCount;
 
-            // If the joint prevents collisions, then flag any contacts for filtering.
-            if (collideConnected == false)
+            // WIP David
+            if (!j.IsFixedType())
             {
-                ContactEdge edge = bodyB.ContactList;
-                while (edge != null)
+                // If the joint prevents collisions, then flag any contacts for filtering.
+                if (collideConnected == false)
                 {
-                    if (edge.Other == bodyA)
+                    ContactEdge edge = bodyB.ContactList;
+                    while (edge != null)
                     {
-                        // Flag the contact for filtering at the next time step (where either
-                        // body is awake).
-                        edge.Contact.FlagForFiltering();
-                    }
+                        if (edge.Other == bodyA)
+                        {
+                            // Flag the contact for filtering at the next time step (where either
+                            // body is awake).
+                            edge.Contact.FlagForFiltering();
+                        }
 
-                    edge = edge.Next;
+                        edge = edge.Next;
+                    }
                 }
             }
         }
@@ -388,17 +406,13 @@ namespace FarseerPhysics.Dynamics
             step.dtRatio = _inv_dt0 * dt;
 
             //Update controllers
-            //TODO:
-            //foreach (Controller controller in Controllers)
-            //{
-            //    controller.Update(dt);
-            //}
+            foreach (Controller controller in Controllers)
+            {
+                controller.Update(dt);
+            }
 
-            //if (Settings.EnableDiagnostics)
-            //    ControllersUpdateTime = _watch.ElapsedTicks - NewContactsTime;
-
-
-
+            if (Settings.EnableDiagnostics)
+                ControllersUpdateTime = _watch.ElapsedTicks - NewContactsTime;
 
             // Update contacts. This is where some contacts are destroyed.
             _contactManager.Collide();
@@ -751,23 +765,34 @@ namespace FarseerPhysics.Dynamics
 
                         Body other = je.Other;
 
-                        // Don't simulate joints connected to inactive bodies.
-                        if (other.Active == false)
+                        // WIP David
+                        //Enter here when it's a non-fixed joint. Non-fixed joints have a other body.
+                        if (other != null)
                         {
-                            continue;
+
+                            // Don't simulate joints connected to inactive bodies.
+                            if (other.Active == false)
+                            {
+                                continue;
+                            }
+
+                            _island.Add(je.Joint);
+                            je.Joint._islandFlag = true;
+
+                            if ((other._flags & BodyFlags.Island) != BodyFlags.None)
+                            {
+                                continue;
+                            }
+
+                            Debug.Assert(stackCount < stackSize);
+                            stack[stackCount++] = other;
+                            other._flags |= BodyFlags.Island;
                         }
-
-                        _island.Add(je.Joint);
-                        je.Joint._islandFlag = true;
-
-                        if ((other._flags & BodyFlags.Island) != BodyFlags.None)
+                        else
                         {
-                            continue;
+                            _island.Add(je.Joint);
+                            je.Joint._islandFlag = true;
                         }
-
-                        Debug.Assert(stackCount < stackSize);
-                        stack[stackCount++] = other;
-                        other._flags |= BodyFlags.Island;
                     }
                 }
 
@@ -1088,5 +1113,19 @@ namespace FarseerPhysics.Dynamics
         internal float _inv_dt0;
 
         Body[] stack = new Body[64];
+
+        public void AddController(Controller controller)
+        {
+            Debug.Assert(!Controllers.Contains(controller));
+
+            controller.World = this;
+            Controllers.Add(controller);
+        }
+
+        public void RemoveController(Controller controller)
+        {
+            if (Controllers.Contains(controller))
+                Controllers.Remove(controller);
+        }
     }
 }

@@ -72,7 +72,7 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Path Test", CreateFcn = PathTest.Create},
                 //new TestEntry {Name = "Buoyancy controller", CreateFcn = BuoyancyTest.Create},
                 new TestEntry {Name = "Cutting of polygons", CreateFcn = CuttingTest.Create},
-                //new TestEntry {Name = "Controllers", CreateFcn = ControllerTest.Create},
+                new TestEntry {Name = "Controllers", CreateFcn = ControllerTest.Create},
                 new TestEntry {Name = "Boolean polygon", CreateFcn = BooleanPolygonTest.Create},
                 new TestEntry {Name = "Texture to Vertices", CreateFcn = TextureVerticesTest.Create},
                 new TestEntry {Name = "Polygon shapes", CreateFcn = PolygonShapesTest.Create},
