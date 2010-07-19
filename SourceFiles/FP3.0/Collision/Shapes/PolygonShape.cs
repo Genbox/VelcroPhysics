@@ -175,15 +175,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// @param hy the half-height.
         public void SetAsBox(float hx, float hy)
         {
-            Vertices.Add(new Vector2(-hx, -hy));
-            Vertices.Add(new Vector2(hx, -hy));
-            Vertices.Add(new Vector2(hx, hy));
-            Vertices.Add(new Vector2(-hx, hy));
-            Normals.Add(new Vector2(0.0f, -1.0f));
-            Normals.Add(new Vector2(1.0f, 0.0f));
-            Normals.Add(new Vector2(0.0f, 1.0f));
-            Normals.Add(new Vector2(-1.0f, 0.0f));
-            Centroid = Vector2.Zero;
+            Set(PolygonTools.CreateRectangle(hx, hy));
         }
 
         /// Build vertices to represent an oriented box.
@@ -193,40 +185,13 @@ namespace FarseerPhysics.Collision.Shapes
         /// @param angle the rotation of the box in local coordinates.
         public void SetAsBox(float hx, float hy, Vector2 center, float angle)
         {
-            Vertices.Add(new Vector2(-hx, -hy));
-            Vertices.Add(new Vector2(hx, -hy));
-            Vertices.Add(new Vector2(hx, hy));
-            Vertices.Add(new Vector2(-hx, hy));
-            Normals.Add(new Vector2(0.0f, -1.0f));
-            Normals.Add(new Vector2(1.0f, 0.0f));
-            Normals.Add(new Vector2(0.0f, 1.0f));
-            Normals.Add(new Vector2(-1.0f, 0.0f));
-            Centroid = center;
-
-            Transform xf = new Transform();
-            xf.Position = center;
-            xf.R.Set(angle);
-
-            // Transform vertices and normals.
-            for (int i = 0; i < Vertices.Count; ++i)
-            {
-                Vertices[i] = MathUtils.Multiply(ref xf, Vertices[i]);
-                Normals[i] = MathUtils.Multiply(ref xf.R, Normals[i]);
-            }
+            Set(PolygonTools.CreateRectangle(hx, hy, center, angle));
         }
 
         /// Set this as a single edge.
-        public void SetAsEdge(Vector2 v1, Vector2 v2)
+        public void SetAsEdge(Vector2 start, Vector2 end)
         {
-            Vertices.Add(v1);
-            Vertices.Add(v2);
-            Centroid = 0.5f * (v1 + v2);
-
-            Vector2 temp = MathUtils.Cross(v2 - v1, 1.0f);
-            temp.Normalize();
-            Normals.Add(temp);
-
-            Normals.Add(-Normals[0]);
+            Set(PolygonTools.CreateEdge(start, end));
         }
 
         public override bool TestPoint(ref Transform xf, Vector2 p)

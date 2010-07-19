@@ -16,20 +16,20 @@ namespace FarseerPhysics.TestBed.Tests
             // Collinear edges
             PolygonShape shape = new PolygonShape();
             shape.SetAsEdge(new Vector2(-8.0f, 1.0f), new Vector2(-6.0f, 1.0f));
-            ground.Body.CreateFixture(shape, 0);
+            ground.Body.CreateFixture(shape);
             shape.SetAsEdge(new Vector2(-6.0f, 1.0f), new Vector2(-4.0f, 1.0f));
-            ground.Body.CreateFixture(shape, 0);
+            ground.Body.CreateFixture(shape);
             shape.SetAsEdge(new Vector2(-4.0f, 1.0f), new Vector2(-2.0f, 1.0f));
-            ground.Body.CreateFixture(shape, 0);
+            ground.Body.CreateFixture(shape);
 
             // Square tiles
             PolygonShape tile = new PolygonShape();
             tile.SetAsBox(1.0f, 1.0f, new Vector2(4.0f, 3.0f), 0.0f);
-            ground.Body.CreateFixture(tile, 0);
+            ground.Body.CreateFixture(tile);
             tile.SetAsBox(1.0f, 1.0f, new Vector2(6.0f, 3.0f), 0.0f);
-            ground.Body.CreateFixture(tile, 0);
+            ground.Body.CreateFixture(tile);
             tile.SetAsBox(1.0f, 1.0f, new Vector2(8.0f, 3.0f), 0.0f);
-            ground.Body.CreateFixture(tile, 0);
+            ground.Body.CreateFixture(tile);
 
             // Square made from edges notice how the edges are shrunk to account
             // for the polygon radius. This makes it so the square character does
@@ -37,13 +37,13 @@ namespace FarseerPhysics.TestBed.Tests
             PolygonShape square = new PolygonShape();
             const float d = 2.0f * Settings.PolygonRadius;
             square.SetAsEdge(new Vector2(-1.0f + d, 3.0f), new Vector2(1.0f - d, 3.0f));
-            ground.Body.CreateFixture(square, 0);
+            ground.Body.CreateFixture(square);
             square.SetAsEdge(new Vector2(1.0f, 3.0f + d), new Vector2(1.0f, 5.0f - d));
-            ground.Body.CreateFixture(square, 0);
+            ground.Body.CreateFixture(square);
             square.SetAsEdge(new Vector2(1.0f - d, 5.0f), new Vector2(-1.0f + d, 5.0f));
-            ground.Body.CreateFixture(square, 0);
+            ground.Body.CreateFixture(square);
             square.SetAsEdge(new Vector2(-1.0f, 5.0f - d), new Vector2(-1.0f, 3.0f + d));
-            ground.Body.CreateFixture(square, 0);
+            ground.Body.CreateFixture(square);
 
             // Square character
             Fixture squareCharacter = FixtureFactory.CreateRectangle(World, 1, 1, 20);
