@@ -31,13 +31,13 @@ namespace FarseerPhysics.Dynamics
 {
     public class BreakableBody
     {
+        public bool Broken;
+        public Body MainBody;
         public List<Fixture> Parts = new List<Fixture>(8);
         public float Strength = 500.0f;
-        public bool Broken;
+        public float[] _angularVelocitiesCache = new float[8];
         private bool _break;
         public Vector2[] _velocitiesCache = new Vector2[8];
-        public float[] _angularVelocitiesCache = new float[8];
-        public Body MainBody;
         private World _world;
 
         public BreakableBody(World world)

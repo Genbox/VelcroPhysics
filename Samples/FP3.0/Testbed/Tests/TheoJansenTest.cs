@@ -172,10 +172,10 @@ namespace FarseerPhysics.TestBed.Tests
             body2.Position = p4 + _offset;
             body2.AngularDamping = 10.0f;
 
-            Fixture f1 = body1.CreateFixture(poly1,1);
+            Fixture f1 = body1.CreateFixture(poly1, 1);
             f1.CollisionGroup = -1;
 
-            Fixture f2 = body2.CreateFixture(poly2,2);
+            Fixture f2 = body2.CreateFixture(poly2, 2);
             f2.CollisionGroup = -1;
 
             // Using a soft distanceraint can reduce some jitter.

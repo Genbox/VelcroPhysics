@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
@@ -67,7 +66,8 @@ namespace FarseerPhysics.Factories
             return CreateEllipse(world, xRadius, yRadius, edges, density, Vector2.Zero);
         }
 
-        public static Fixture CreateEllipse(World world, float xRadius, float yRadius, int edges, float density, Vector2 position)
+        public static Fixture CreateEllipse(World world, float xRadius, float yRadius, int edges, float density,
+                                            Vector2 position)
         {
             if (xRadius <= 0)
                 throw new ArgumentOutOfRangeException("xRadius", "X-radius must be more than 0");
@@ -96,7 +96,7 @@ namespace FarseerPhysics.Factories
 
             Body body = BodyFactory.CreateBody(world, position);
             PolygonShape polygonShape = new PolygonShape(vertices);
-            return body.CreateFixture(polygonShape,density);
+            return body.CreateFixture(polygonShape, density);
         }
 
         public static List<Fixture> CreateCompundPolygon(World world, List<Vertices> list, float density)
@@ -116,7 +116,8 @@ namespace FarseerPhysics.Factories
             return fixtures;
         }
 
-        public static List<Fixture> CreateGear(World world, float radius, int numberOfTeeth, float tipPercentage, float toothHeight, float density)
+        public static List<Fixture> CreateGear(World world, float radius, int numberOfTeeth, float tipPercentage,
+                                               float toothHeight, float density)
         {
             Vertices gearPolygon = PolygonTools.CreateGear(radius, numberOfTeeth, tipPercentage, toothHeight);
 
@@ -147,7 +148,7 @@ namespace FarseerPhysics.Factories
             //Create the two circles
             CircleShape topCircle = new CircleShape(endRadius);
             topCircle.Position = new Vector2(0, height / 2);
-            fixtures.Add(fixtures[0].Body.CreateFixture(topCircle,density));
+            fixtures.Add(fixtures[0].Body.CreateFixture(topCircle, density));
 
             CircleShape bottomCircle = new CircleShape(endRadius);
             bottomCircle.Position = new Vector2(0, -(height / 2));
@@ -155,8 +156,9 @@ namespace FarseerPhysics.Factories
             return fixtures;
         }
 
-        public static List<Fixture> CreateRoundedRectangle(World world, float width, float height, float xRadius, float yRadius,
-                                                              int segments, float density, Vector2 position)
+        public static List<Fixture> CreateRoundedRectangle(World world, float width, float height, float xRadius,
+                                                           float yRadius,
+                                                           int segments, float density, Vector2 position)
         {
             List<Vertices> verts = PolygonTools.CreateRoundedRectangle(width, height, xRadius, yRadius, segments);
             List<Fixture> fixture = new List<Fixture>(verts.Count);
@@ -170,8 +172,9 @@ namespace FarseerPhysics.Factories
             return fixture;
         }
 
-        public static List<Fixture> CreateRoundedRectangle(World world, float width, float height, float xRadius, float yRadius,
-                                                      int segments, float density)
+        public static List<Fixture> CreateRoundedRectangle(World world, float width, float height, float xRadius,
+                                                           float yRadius,
+                                                           int segments, float density)
         {
             return CreateRoundedRectangle(world, width, height, xRadius, yRadius, segments, density, Vector2.Zero);
         }

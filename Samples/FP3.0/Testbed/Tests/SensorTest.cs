@@ -68,7 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
                     _bodies[i].Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
                     _bodies[i].UserData = i;
 
-                    _bodies[i].CreateFixture(shape,1);
+                    _bodies[i].CreateFixture(shape, 1);
                 }
             }
         }

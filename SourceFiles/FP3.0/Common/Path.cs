@@ -17,17 +17,9 @@ namespace FarseerPhysics.Common
     public class Path
     {
         /// <summary>
-        /// True if the curve is closed.
-        /// </summary>
-        /// <value><c>true</c> if closed; otherwise, <c>false</c>.</value>
-        [XmlElement("Closed")]
-        public bool Closed { get; set; }
-
-        /// <summary>
         /// All the points that makes up the curve
         /// </summary>
-        [XmlElement("ControlPoints")]
-        public List<Vector2> ControlPoints;
+        [XmlElement("ControlPoints")] public List<Vector2> ControlPoints;
 
         private float delta_t;
 
@@ -64,6 +56,13 @@ namespace FarseerPhysics.Common
                 Add(vertices[i]);
             }
         }
+
+        /// <summary>
+        /// True if the curve is closed.
+        /// </summary>
+        /// <value><c>true</c> if closed; otherwise, <c>false</c>.</value>
+        [XmlElement("Closed")]
+        public bool Closed { get; set; }
 
         /// <summary>
         /// Gets the next index of a controlpoint
@@ -174,17 +173,21 @@ namespace FarseerPhysics.Common
 
                 delta_t = 1f / (ControlPoints.Count - 1);
 
-                int p = (int)(time / delta_t);
+                int p = (int) (time / delta_t);
 
                 // use a circular indexing system
                 int p0 = p - 1;
-                if (p0 < 0) p0 = p0 + (ControlPoints.Count - 1); else if (p0 >= ControlPoints.Count - 1) p0 = p0 - (ControlPoints.Count - 1);
+                if (p0 < 0) p0 = p0 + (ControlPoints.Count - 1);
+                else if (p0 >= ControlPoints.Count - 1) p0 = p0 - (ControlPoints.Count - 1);
                 int p1 = p;
-                if (p1 < 0) p1 = p1 + (ControlPoints.Count - 1); else if (p1 >= ControlPoints.Count - 1) p1 = p1 - (ControlPoints.Count - 1);
+                if (p1 < 0) p1 = p1 + (ControlPoints.Count - 1);
+                else if (p1 >= ControlPoints.Count - 1) p1 = p1 - (ControlPoints.Count - 1);
                 int p2 = p + 1;
-                if (p2 < 0) p2 = p2 + (ControlPoints.Count - 1); else if (p2 >= ControlPoints.Count - 1) p2 = p2 - (ControlPoints.Count - 1);
+                if (p2 < 0) p2 = p2 + (ControlPoints.Count - 1);
+                else if (p2 >= ControlPoints.Count - 1) p2 = p2 - (ControlPoints.Count - 1);
                 int p3 = p + 2;
-                if (p3 < 0) p3 = p3 + (ControlPoints.Count - 1); else if (p3 >= ControlPoints.Count - 1) p3 = p3 - (ControlPoints.Count - 1);
+                if (p3 < 0) p3 = p3 + (ControlPoints.Count - 1);
+                else if (p3 >= ControlPoints.Count - 1) p3 = p3 - (ControlPoints.Count - 1);
 
                 // relative time
                 float lt = (time - delta_t * p) / delta_t;
@@ -195,17 +198,21 @@ namespace FarseerPhysics.Common
             }
             else
             {
-                int p = (int)(time / delta_t);
+                int p = (int) (time / delta_t);
 
                 // 
                 int p0 = p - 1;
-                if (p0 < 0) p0 = 0; else if (p0 >= ControlPoints.Count - 1) p0 = ControlPoints.Count - 1;
+                if (p0 < 0) p0 = 0;
+                else if (p0 >= ControlPoints.Count - 1) p0 = ControlPoints.Count - 1;
                 int p1 = p;
-                if (p1 < 0) p1 = 0; else if (p1 >= ControlPoints.Count - 1) p1 = ControlPoints.Count - 1;
+                if (p1 < 0) p1 = 0;
+                else if (p1 >= ControlPoints.Count - 1) p1 = ControlPoints.Count - 1;
                 int p2 = p + 1;
-                if (p2 < 0) p2 = 0; else if (p2 >= ControlPoints.Count - 1) p2 = ControlPoints.Count - 1;
+                if (p2 < 0) p2 = 0;
+                else if (p2 >= ControlPoints.Count - 1) p2 = ControlPoints.Count - 1;
                 int p3 = p + 2;
-                if (p3 < 0) p3 = 0; else if (p3 >= ControlPoints.Count - 1) p3 = ControlPoints.Count - 1;
+                if (p3 < 0) p3 = 0;
+                else if (p3 >= ControlPoints.Count - 1) p3 = ControlPoints.Count - 1;
 
                 // relative time
                 float lt = (time - delta_t * p) / delta_t;
@@ -303,7 +310,7 @@ namespace FarseerPhysics.Common
             for (int i = 1; i < divisions; i++)
             {
                 Vector2 normal = GetPositionNormal(t);
-                float angle = (float)Math.Atan2(normal.Y, normal.X);
+                float angle = (float) Math.Atan2(normal.Y, normal.X);
 
                 verts.Add(new Vector3(end, angle));
 

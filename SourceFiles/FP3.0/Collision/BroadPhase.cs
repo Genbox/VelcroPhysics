@@ -27,9 +27,11 @@ namespace FarseerPhysics.Collision
 {
     internal struct Pair : IComparable<Pair>
     {
+        public int next;
         public int proxyIdA;
         public int proxyIdB;
-        public int next;
+
+        #region IComparable<Pair> Members
 
         public int CompareTo(Pair other)
         {
@@ -51,6 +53,8 @@ namespace FarseerPhysics.Collision
 
             return 1;
         }
+
+        #endregion
     }
 
     /// The broad-phase is used for computing pairs and performing volume queries and ray casts.
@@ -59,6 +63,17 @@ namespace FarseerPhysics.Collision
     public class BroadPhase
     {
         internal const int NullProxy = -1;
+        internal int[] _moveBuffer;
+        internal int _moveCapacity;
+        internal int _moveCount;
+
+        internal Pair[] _pairBuffer;
+        internal int _pairCapacity;
+        internal int _pairCount;
+        internal int _proxyCount;
+        private Func<int, bool> _queryCallback;
+        internal int _queryProxyId;
+        internal DynamicTree _tree = new DynamicTree();
 
         public BroadPhase()
         {
@@ -73,6 +88,12 @@ namespace FarseerPhysics.Collision
             _moveCapacity = 16;
             _moveCount = 0;
             _moveBuffer = new int[_moveCapacity];
+        }
+
+        /// Get the number of proxies.
+        public int ProxyCount
+        {
+            get { return _proxyCount; }
         }
 
         /// Create a proxy with an initial AABB. Pairs are not reported until
@@ -124,15 +145,6 @@ namespace FarseerPhysics.Collision
         }
 
 
-        /// Get the number of proxies.
-        public int ProxyCount
-        {
-            get
-            {
-                return _proxyCount;
-            }
-        }
-
         /// Update the pairs. This results in pair callbacks. This can only add pairs.
         public void UpdatePairs<T>(Action<T, T> callback)
         {
@@ -171,7 +183,7 @@ namespace FarseerPhysics.Collision
                 object userDataA = _tree.GetUserData<T>(primaryPair.proxyIdA);
                 object userDataB = _tree.GetUserData<T>(primaryPair.proxyIdB);
 
-                callback((T)userDataA, (T)userDataB);
+                callback((T) userDataA, (T) userDataB);
                 ++i;
 
                 // Skip any duplicate pairs.
@@ -257,21 +269,5 @@ namespace FarseerPhysics.Collision
 
             return true;
         }
-
-        internal DynamicTree _tree = new DynamicTree();
-
-        internal int _proxyCount;
-
-        internal int[] _moveBuffer;
-        internal int _moveCapacity;
-        internal int _moveCount;
-
-        internal Pair[] _pairBuffer;
-        internal int _pairCapacity;
-        internal int _pairCount;
-
-        internal int _queryProxyId;
-
-        Func<int, bool> _queryCallback;
     }
 }

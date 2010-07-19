@@ -46,7 +46,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _bodies[0].BodyType = BodyType.Dynamic;
                 _bodies[0].Position = new Vector2(-5.0f, 5.0f);
 
-                _bodies[0].CreateFixture(shape,5);
+                _bodies[0].CreateFixture(shape, 5);
 
                 _bodies[1] = BodyFactory.CreateBody(World);
                 _bodies[1].BodyType = BodyType.Dynamic;

@@ -80,7 +80,7 @@ namespace FarseerPhysics.Common.Decomposition
                 //Still no luck?  Oh well...
                 throw new Exception("Can't triangulate your polygon.");
             }
-            
+
             List<Vertices> polygonizedTriangles = PolygonizeTriangles(triangulated, maxPolys, tolerance);
 
             //The polygonized triangles are not guaranteed to be without collinear points. We remove

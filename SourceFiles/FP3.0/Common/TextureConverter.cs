@@ -37,7 +37,7 @@ namespace FarseerPhysics.Common
         }
 
         public static List<Vertices> CreateVertices(uint[] data, int width, int height, float hullTolerance,
-                                                   byte alphaTolerance, bool multiPartDetection, bool holeDetection)
+                                                    byte alphaTolerance, bool multiPartDetection, bool holeDetection)
         {
             PolygonCreationAssistance pca = new PolygonCreationAssistance(data, width, height);
             pca.HullTolerance = hullTolerance;

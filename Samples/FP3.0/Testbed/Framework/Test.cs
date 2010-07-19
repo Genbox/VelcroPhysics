@@ -40,13 +40,13 @@ namespace FarseerPhysics.TestBed.Framework
         /// Random number in range [-1,1]
         public static float RandomFloat()
         {
-            return (float)(Random.NextDouble() * 2.0 - 1.0);
+            return (float) (Random.NextDouble() * 2.0 - 1.0);
         }
 
         /// Random floating point number in range [lo, hi]
         public static float RandomFloat(float lo, float hi)
         {
-            float r = (float)Random.NextDouble();
+            float r = (float) Random.NextDouble();
             r = (hi - lo) * r + lo;
             return r;
         }
@@ -62,9 +62,9 @@ namespace FarseerPhysics.TestBed.Framework
         public uint DrawFrictionForces;
         public uint DrawJoints;
         public uint DrawPairs;
+        public uint DrawPolygonPoints;
         public uint DrawShapes;
         public uint DrawStats;
-        public uint DrawPolygonPoints;
         public float Hz;
         public bool Pause;
         public bool SingleStep;
@@ -153,7 +153,7 @@ namespace FarseerPhysics.TestBed.Framework
             //float timeStep = settings.Hz > 0.0f ? 1.0f / settings.Hz : 0.0f;
 
             // added
-            float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
+            float timeStep = Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
 
             if (settings.Pause)
             {
@@ -173,12 +173,12 @@ namespace FarseerPhysics.TestBed.Framework
             if (GameInstance.DebugViewEnabled)
             {
                 uint flags = 0;
-                flags += settings.DrawShapes * (uint)DebugViewFlags.Shape;
-                flags += settings.DrawJoints * (uint)DebugViewFlags.Joint;
-                flags += settings.DrawAABBs * (uint)DebugViewFlags.AABB;
-                flags += settings.DrawPairs * (uint)DebugViewFlags.Pair;
-                flags += settings.DrawCOMs * (uint)DebugViewFlags.CenterOfMass;
-                DebugView.Flags = (DebugViewFlags)flags;
+                flags += settings.DrawShapes * (uint) DebugViewFlags.Shape;
+                flags += settings.DrawJoints * (uint) DebugViewFlags.Joint;
+                flags += settings.DrawAABBs * (uint) DebugViewFlags.AABB;
+                flags += settings.DrawPairs * (uint) DebugViewFlags.Pair;
+                flags += settings.DrawCOMs * (uint) DebugViewFlags.CenterOfMass;
+                DebugView.Flags = (DebugViewFlags) flags;
             }
 
             PointCount = 0;
@@ -251,8 +251,6 @@ namespace FarseerPhysics.TestBed.Framework
                             //Vector2 p2 = p1 + k_forceScale * point.tangentForce * tangent;
                             //DrawSegment(p1, p2, Color(0.9f, 0.9f, 0.3f));
                         }
-
-
                     }
                 }
 
@@ -322,23 +320,23 @@ namespace FarseerPhysics.TestBed.Framework
             // Query the world for overlapping shapes.
             World.QueryAABB(
                 fixture =>
-                {
-                    Body body = fixture.Fixture.Body;
-                    if (body.BodyType == BodyType.Dynamic)
                     {
-                        bool inside = fixture.Fixture.TestPoint(p);
-                        if (inside)
+                        Body body = fixture.Fixture.Body;
+                        if (body.BodyType == BodyType.Dynamic)
                         {
-                            myFixture = fixture.Fixture;
+                            bool inside = fixture.Fixture.TestPoint(p);
+                            if (inside)
+                            {
+                                myFixture = fixture.Fixture;
 
-                            // We are done, terminate the query.
-                            return false;
+                                // We are done, terminate the query.
+                                return false;
+                            }
                         }
-                    }
 
-                    // Continue the query.
-                    return true;
-                }, ref aabb);
+                        // Continue the query.
+                        return true;
+                    }, ref aabb);
 
             if (myFixture != null)
             {

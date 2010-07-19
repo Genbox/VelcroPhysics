@@ -59,7 +59,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     PolygonShape shape = new PolygonShape();
                     shape.SetAsEdge(new Vector2(x1, y1), new Vector2(x2, y2));
-                    ground.CreateFixture(shape,1);
+                    ground.CreateFixture(shape, 1);
 
                     x1 = x2;
                     y1 = y2;
@@ -142,7 +142,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
             else
             {
-                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_circle,1);
+                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_circle, 1);
                 fixture.Friction = 0.3f;
             }
 

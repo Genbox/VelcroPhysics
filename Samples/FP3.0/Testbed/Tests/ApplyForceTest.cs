@@ -52,23 +52,23 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(edge);
 
                 // Left vertical
-                Fixture fixture = ground.CreateFixture(shape,0);
+                Fixture fixture = ground.CreateFixture(shape, 0);
                 fixture.Restitution = k_restitution;
 
                 // Right vertical
                 edge = PolygonTools.CreateEdge(new Vector2(20.0f, -20.0f), new Vector2(20.0f, 20.0f));
                 shape.Set(edge);
-                ground.CreateFixture(shape,0);
+                ground.CreateFixture(shape, 0);
 
                 // Top horizontal
                 edge = PolygonTools.CreateEdge(new Vector2(-20.0f, 20.0f), new Vector2(20.0f, 20.0f));
                 shape.Set(edge);
-                ground.CreateFixture(shape,0);
+                ground.CreateFixture(shape, 0);
 
                 // Bottom horizontal
                 edge = PolygonTools.CreateEdge(new Vector2(-20.0f, -20.0f), new Vector2(20.0f, -20.0f));
                 shape.Set(edge);
-                ground.CreateFixture(shape,0);
+                ground.CreateFixture(shape, 0);
             }
 
             {
@@ -115,7 +115,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.Position = new Vector2(0.0f, 5.0f + 1.54f * i);
                     body.BodyType = BodyType.Dynamic;
 
-                    Fixture fixture = body.CreateFixture(shape,1);
+                    Fixture fixture = body.CreateFixture(shape, 1);
                     fixture.Friction = 0.3f;
 
                     const float gravity = 10.0f;

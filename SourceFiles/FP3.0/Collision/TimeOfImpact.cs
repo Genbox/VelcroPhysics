@@ -61,10 +61,17 @@ namespace FarseerPhysics.Collision
 
     public struct SeparationFunction
     {
+        private Vector2 _axis;
+        private Vector2 _localPoint;
+        private DistanceProxy _proxyA;
+        private DistanceProxy _proxyB;
+        private Sweep _sweepA, _sweepB;
+        private SeparationFunctionType _type;
+
         public SeparationFunction(ref SimplexCache cache,
-            ref DistanceProxy proxyA, ref Sweep sweepA,
-            ref DistanceProxy proxyB, ref Sweep sweepB,
-            float t1)
+                                  ref DistanceProxy proxyA, ref Sweep sweepA,
+                                  ref DistanceProxy proxyB, ref Sweep sweepB,
+                                  float t1)
         {
             _localPoint = Vector2.Zero;
             _proxyA = proxyA;
@@ -266,21 +273,20 @@ namespace FarseerPhysics.Collision
                     return 0.0f;
             }
         }
-
-        DistanceProxy _proxyA;
-        DistanceProxy _proxyB;
-        Sweep _sweepA, _sweepB;
-        SeparationFunctionType _type;
-        Vector2 _localPoint;
-        Vector2 _axis;
     }
-
 
 
     public static class TimeOfImpact
     {
         // CCD via the local separating axis method. This seeks progression
         // by computing the largest time at which separation is maintained.
+
+        public static int TOICalls, TOIIters, TOIMaxIters;
+        public static int TOIRootIters, TOIMaxRootIters;
+
+        //TODO: Is this used in Box2d?
+        public static int TOIMaxOptIters;
+
         /// Compute the upper bound on time before two shapes penetrate. Time is represented as
         /// a fraction between [0,tMax]. This uses a swept separating axis and may miss some intermediate,
         /// non-tunneling collision. If you change the time interval, you should call this function
@@ -322,7 +328,7 @@ namespace FarseerPhysics.Collision
 
             // The outer loop progressively attempts to compute new separating axes.
             // This loop terminates when an axis is repeated (no progress is made).
-            for (; ; )
+            for (;;)
             {
                 Transform xfA, xfB;
                 sweepA.GetTransform(out xfA, t1);
@@ -352,14 +358,15 @@ namespace FarseerPhysics.Collision
                     break;
                 }
 
-                SeparationFunction fcn = new SeparationFunction(ref cache, ref input.proxyA, ref sweepA, ref input.proxyB, ref sweepB, t1);
+                SeparationFunction fcn = new SeparationFunction(ref cache, ref input.proxyA, ref sweepA,
+                                                                ref input.proxyB, ref sweepB, t1);
 
                 // Compute the TOI on the separating axis. We do this by successively
                 // resolving the deepest point. This loop is bounded by the number of vertices.
                 bool done = false;
                 float t2 = tMax;
                 int pushBackIter = 0;
-                for (; ; )
+                for (;;)
                 {
                     // Find the deepest point at t2. Store the witness point indices.
                     int indexA, indexB;
@@ -409,7 +416,7 @@ namespace FarseerPhysics.Collision
                     // Compute 1D root of: f(x) - target = 0
                     int rootIterCount = 0;
                     float a1 = t1, a2 = t2;
-                    for (; ; )
+                    for (;;)
                     {
                         // Use a mix of the secant rule and bisection.
                         float t;
@@ -483,11 +490,5 @@ namespace FarseerPhysics.Collision
 
             TOIMaxIters = Math.Max(TOIMaxIters, iter);
         }
-
-        public static int TOICalls, TOIIters, TOIMaxIters;
-        public static int TOIRootIters, TOIMaxRootIters;
-        
-        //TODO: Is this used in Box2d?
-        public static int TOIMaxOptIters;
     }
 }

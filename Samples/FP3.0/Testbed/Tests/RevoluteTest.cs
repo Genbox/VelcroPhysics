@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body.Position = new Vector2(0.0f, 15.0f);
                 body.BodyType = BodyType.Dynamic;
 
-                body.CreateFixture(shape,5);
+                body.CreateFixture(shape, 5);
 
                 _fixedJoint = new FixedRevoluteJoint(body, body.Position);
                 _fixedJoint.MotorSpeed = 0.25f * Settings.Pi;

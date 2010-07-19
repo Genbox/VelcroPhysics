@@ -59,7 +59,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 7.0f);
 
-                    body.CreateFixture(shape,2);
+                    body.CreateFixture(shape, 2);
 
                     _joint1 = new RevoluteJoint(prevBody, body, new Vector2(0.0f, -2.0f));
                     _joint1.MotorSpeed = 1.0f * Settings.Pi;
@@ -79,7 +79,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 13.0f);
 
-                    body.CreateFixture(shape,2);
+                    body.CreateFixture(shape, 2);
 
                     RevoluteJoint rjd3 = new RevoluteJoint(prevBody, body, new Vector2(0.0f, -4.0f));
                     rjd3.MotorEnabled = false;
@@ -97,7 +97,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 17.0f);
 
-                    body.CreateFixture(shape,2);
+                    body.CreateFixture(shape, 2);
 
                     RevoluteJoint rjd2 = new RevoluteJoint(prevBody, body, new Vector2(0.0f, 0.0f));
                     World.AddJoint(rjd2);
@@ -118,7 +118,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 23.0f);
 
-                    body.CreateFixture(shape,2);
+                    body.CreateFixture(shape, 2);
                 }
             }
         }

@@ -28,6 +28,9 @@ namespace FarseerPhysics.Collision.Shapes
 {
     public class CircleShape : Shape
     {
+        /// Position
+        public Vector2 Position;
+
         public CircleShape(float radius)
         {
             ShapeType = ShapeType.Circle;
@@ -68,7 +71,8 @@ namespace FarseerPhysics.Collision.Shapes
         // From Section 3.1.2
         // x = s + a * r
         // norm(x) = radius
-        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex)
+        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform,
+                                     int childIndex)
         {
             output = new RayCastOutput();
 
@@ -89,7 +93,7 @@ namespace FarseerPhysics.Collision.Shapes
             }
 
             // Find the point of intersection of the line with the circle.
-            float a = -(c + (float)Math.Sqrt((double)sigma));
+            float a = -(c + (float) Math.Sqrt(sigma));
 
             // Is the intersection point on the segment?
             if (0.0f <= a && a <= input.MaxFraction * rr)
@@ -122,8 +126,5 @@ namespace FarseerPhysics.Collision.Shapes
             // inertia about the local origin
             massData.Inertia = massData.Mass * (0.5f * Radius * Radius + Vector2.Dot(Position, Position));
         }
-
-        /// Position
-        public Vector2 Position;
     }
 }

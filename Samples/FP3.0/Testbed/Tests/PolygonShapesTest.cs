@@ -20,6 +20,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
@@ -27,13 +28,12 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 
 namespace FarseerPhysics.TestBed.Tests
 {
     public class PolygonShapesTest : Test
     {
-        int segments = 3;
+        private int segments = 3;
 
         private PolygonShapesTest()
         {
@@ -72,7 +72,8 @@ namespace FarseerPhysics.TestBed.Tests
                         body.CreateFixture(new PolygonShape(verts[i]), 10);
                     break;
                 case 1:
-                    List<Vertices> verts2 = PolygonTools.CreateCapsule(10, 2, (int)MathHelper.Max(segments, 1), 3, (int)MathHelper.Max(segments, 1));
+                    List<Vertices> verts2 = PolygonTools.CreateCapsule(10, 2, (int) MathHelper.Max(segments, 1), 3,
+                                                                       (int) MathHelper.Max(segments, 1));
                     for (int i = 0; i < verts2.Count; i++)
                         body.CreateFixture(new PolygonShape(verts2[i]), 10);
                     break;
@@ -82,7 +83,9 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine, "Segments: " + segments + "\nPress: 'A' to increase segments, 'S' decrease segments\n'D' to create rectangle. 'F' to create capsule.");
+            DebugView.DrawString(50, TextLine,
+                                 "Segments: " + segments +
+                                 "\nPress: 'A' to increase segments, 'S' decrease segments\n'D' to create rectangle. 'F' to create capsule.");
             TextLine += 15;
         }
 

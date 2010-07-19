@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.PolygonManipulation
@@ -10,6 +7,11 @@ namespace FarseerPhysics.Common.PolygonManipulation
     public static class SimplifyTools
     {
         //Simplify() from DrDeth - distance test removed
+
+        //Code originated from NTS NetTopologySuite
+        private static bool[] _usePt;
+        private static double _distanceTolerance;
+
         /// <summary>
         /// Removes all collinear points on the polygon.
         /// </summary>
@@ -53,10 +55,6 @@ namespace FarseerPhysics.Common.PolygonManipulation
         {
             return CollinearSimplify(vertices, 0);
         }
-
-        //Code originated from NTS NetTopologySuite
-        private static bool[] _usePt;
-        private static double _distanceTolerance;
 
         /// <summary>
         /// Ramer-Douglas-Peucker polygon simplification algorithm. This is the general recursive version that does not use the
@@ -139,8 +137,8 @@ namespace FarseerPhysics.Common.PolygonManipulation
 	        */
 
             double r = ((p.X - A.X) * (B.X - A.X) + (p.Y - A.Y) * (B.Y - A.Y))
-                        /
-                        ((B.X - A.X) * (B.X - A.X) + (B.Y - A.Y) * (B.Y - A.Y));
+                       /
+                       ((B.X - A.X) * (B.X - A.X) + (B.Y - A.Y) * (B.Y - A.Y));
 
             if (r <= 0.0) return DistancePointPoint(p, A);
             if (r >= 1.0) return DistancePointPoint(p, B);
@@ -155,8 +153,8 @@ namespace FarseerPhysics.Common.PolygonManipulation
 	        */
 
             double s = ((A.Y - p.Y) * (B.X - A.X) - (A.X - p.X) * (B.Y - A.Y))
-                        /
-                        ((B.X - A.X) * (B.X - A.X) + (B.Y - A.Y) * (B.Y - A.Y));
+                       /
+                       ((B.X - A.X) * (B.X - A.X) + (B.Y - A.Y) * (B.Y - A.Y));
 
             return Math.Abs(s) * Math.Sqrt(((B.X - A.X) * (B.X - A.X) + (B.Y - A.Y) * (B.Y - A.Y)));
         }
@@ -167,7 +165,10 @@ namespace FarseerPhysics.Common.PolygonManipulation
             if (vertices.Count <= 3)
                 return vertices;
 
-            if (areaTolerance < 0) { throw new ArgumentOutOfRangeException("areaTolerance", "must be equal to or greater then zero."); }
+            if (areaTolerance < 0)
+            {
+                throw new ArgumentOutOfRangeException("areaTolerance", "must be equal to or greater then zero.");
+            }
 
             Vertices result = new Vertices();
             Vector2 v1, v2, v3;
@@ -179,10 +180,16 @@ namespace FarseerPhysics.Common.PolygonManipulation
             {
                 if (index == vertices.Count - 1)
                 {
-                    if (result.Count == 0) { throw new ArgumentOutOfRangeException("areaTolerance", "The tolerance is too high!"); }
+                    if (result.Count == 0)
+                    {
+                        throw new ArgumentOutOfRangeException("areaTolerance", "The tolerance is too high!");
+                    }
                     v3 = result[0];
                 }
-                else { v3 = vertices[index]; }
+                else
+                {
+                    v3 = vertices[index];
+                }
                 MathUtils.Cross(ref v1, ref v2, out old1);
                 MathUtils.Cross(ref v2, ref v3, out old2);
                 MathUtils.Cross(ref v1, ref v3, out new1);
@@ -219,8 +226,8 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 float dy0 = vertices[middle].Y - vertices[lower].Y;
                 float dx1 = vertices[upper].Y - vertices[middle].X;
                 float dy1 = vertices[upper].Y - vertices[middle].Y;
-                float norm0 = (float)Math.Sqrt(dx0 * dx0 + dy0 * dy0);
-                float norm1 = (float)Math.Sqrt(dx1 * dx1 + dy1 * dy1);
+                float norm0 = (float) Math.Sqrt(dx0 * dx0 + dy0 * dy0);
+                float norm1 = (float) Math.Sqrt(dx1 * dx1 + dy1 * dy1);
 
                 if (!(norm0 > 0.0f && norm1 > 0.0f) && newNVertices > 3)
                 {
@@ -298,7 +305,6 @@ namespace FarseerPhysics.Common.PolygonManipulation
             }
 
             return simplified;
-
         }
 
         /// <summary>
@@ -317,7 +323,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 return vertices;
 
             Vertices result = new Vertices(vertices.Count);
-            
+
             for (int i = 0; i < vertices.Count; i++)
             {
                 if (i % Nth == 0)

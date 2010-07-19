@@ -40,16 +40,9 @@ namespace FarseerPhysics.TestBed.Tests
         private Body[] _bodies = new Body[MaxBodies];
         private int _bodyIndex;
         private CircleShape _circle;
+
+        private RayCastMode _mode;
         private PolygonShape[] _polygons = new PolygonShape[4];
-
-        enum RayCastMode
-        {
-            Closest,
-            Any,
-            Multiple,
-        }
-
-        RayCastMode _mode;
 
 
         private RayCastTest()
@@ -164,8 +157,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             bool advanceRay = settings.Pause == false || settings.SingleStep;
 
-            base.Update(settings,gameTime);
-            
+            base.Update(settings, gameTime);
+
             DebugView.DrawString(50, TextLine, "Press 1-5 to drop stuff, m to change the mode");
             TextLine += 15;
             DebugView.DrawString(50, TextLine, string.Format("Mode = {0}", _mode));
@@ -173,7 +166,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             const float L = 11.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);
-            Vector2 d = new Vector2(L * (float)Math.Cos(_angle), L * (float)Math.Sin(_angle));
+            Vector2 d = new Vector2(L * (float) Math.Cos(_angle), L * (float) Math.Sin(_angle));
             Vector2 point2 = point1 + d;
 
             Vector2 point = Vector2.Zero, normal = Vector2.Zero;
@@ -183,23 +176,23 @@ namespace FarseerPhysics.TestBed.Tests
                 case RayCastMode.Closest:
                     bool hitClosest = false;
                     World.RayCast((f, p, n, fr) =>
-                    {
-                        Body body = f.Body;
-                        if (body.UserData != null)
-                        {
-                            int index = (int)body.UserData;
-                            if (index == 0)
-                            {
-                                // filter
-                                return -1.0f;
-                            }
-                        }
+                                      {
+                                          Body body = f.Body;
+                                          if (body.UserData != null)
+                                          {
+                                              int index = (int) body.UserData;
+                                              if (index == 0)
+                                              {
+                                                  // filter
+                                                  return -1.0f;
+                                              }
+                                          }
 
-                        hitClosest = true;
-                        point = p;
-                        normal = n;
-                        return fr;
-                    }, point1, point2);
+                                          hitClosest = true;
+                                          point = p;
+                                          normal = n;
+                                          return fr;
+                                      }, point1, point2);
 
                     if (hitClosest)
                     {
@@ -219,23 +212,23 @@ namespace FarseerPhysics.TestBed.Tests
                 case RayCastMode.Any:
                     bool hitAny = false;
                     World.RayCast((f, p, n, fr) =>
-                    {
-                        Body body = f.Body;
-                        if (body.UserData != null)
-                        {
-                            int index = (int)body.UserData;
-                            if (index == 0)
-                            {
-                                // filter
-                                return -1.0f;
-                            }
-                        }
+                                      {
+                                          Body body = f.Body;
+                                          if (body.UserData != null)
+                                          {
+                                              int index = (int) body.UserData;
+                                              if (index == 0)
+                                              {
+                                                  // filter
+                                                  return -1.0f;
+                                              }
+                                          }
 
-                        hitAny = true;
-                        point = p;
-                        normal = n;
-                        return 0;
-                    }, point1, point2);
+                                          hitAny = true;
+                                          point = p;
+                                          normal = n;
+                                          return 0;
+                                      }, point1, point2);
 
                     if (hitAny)
                     {
@@ -255,22 +248,22 @@ namespace FarseerPhysics.TestBed.Tests
                     var points = new List<Vector2>();
                     var normals = new List<Vector2>();
                     World.RayCast((f, p, n, fr) =>
-                    {
-                        Body body = f.Body;
-                        if (body.UserData != null)
-                        {
-                            int index = (int) body.UserData;
-                            if (index == 0)
-                            {
-                                // filter
-                                return -1.0f;
-                            }
-                        }
+                                      {
+                                          Body body = f.Body;
+                                          if (body.UserData != null)
+                                          {
+                                              int index = (int) body.UserData;
+                                              if (index == 0)
+                                              {
+                                                  // filter
+                                                  return -1.0f;
+                                              }
+                                          }
 
-                        points.Add(p);
-                        normals.Add(n);
-                        return 1.0f;
-                    }, point1, point2);
+                                          points.Add(p);
+                                          normals.Add(n);
+                                          return 1.0f;
+                                      }, point1, point2);
 
                     DebugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
 
@@ -318,12 +311,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (index < 4)
             {
-                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_polygons[index],0);
+                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_polygons[index], 0);
                 fixture.Friction = 0.3f;
             }
             else
             {
-                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_circle,0);
+                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_circle, 0);
                 fixture.Friction = 0.3f;
             }
 
@@ -334,5 +327,16 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new RayCastTest();
         }
+
+        #region Nested type: RayCastMode
+
+        private enum RayCastMode
+        {
+            Closest,
+            Any,
+            Multiple,
+        }
+
+        #endregion
     }
 }

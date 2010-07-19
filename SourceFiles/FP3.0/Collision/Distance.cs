@@ -32,6 +32,10 @@ namespace FarseerPhysics.Collision
     /// It encapsulates any shape.
     public struct DistanceProxy
     {
+        internal FixedArray2<Vector2> _buffer;
+        internal float _radius;
+        internal Vertices _vertices;
+
         /// Initialize the proxy using the given shape. The shape
         /// must remain in scope while the proxy is in use.
         public void Set(Shape shape, int index)
@@ -40,7 +44,7 @@ namespace FarseerPhysics.Collision
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape)shape;
+                        CircleShape circle = (CircleShape) shape;
                         _vertices = new Vertices(1);
                         _vertices.Add(circle.Position);
                         _radius = circle.Radius;
@@ -49,7 +53,7 @@ namespace FarseerPhysics.Collision
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape polygon = (PolygonShape)shape;
+                        PolygonShape polygon = (PolygonShape) shape;
                         _vertices = polygon.Vertices;
                         _radius = polygon.Radius;
                     }
@@ -57,7 +61,7 @@ namespace FarseerPhysics.Collision
 
                 case ShapeType.Loop:
                     {
-                        LoopShape loop = (LoopShape)shape;
+                        LoopShape loop = (LoopShape) shape;
                         Debug.Assert(0 <= index && index < loop._count);
 
                         _buffer[0] = loop._vertices[index];
@@ -79,7 +83,7 @@ namespace FarseerPhysics.Collision
 
                 case ShapeType.Edge:
                     {
-                        EdgeShape edge = (EdgeShape)shape;
+                        EdgeShape edge = (EdgeShape) shape;
                         _vertices = new Vertices(2);
                         _vertices.Add(edge._vertex1);
                         _vertices.Add(edge._vertex2);
@@ -135,20 +139,21 @@ namespace FarseerPhysics.Collision
             Debug.Assert(0 <= index && index < _vertices.Count);
             return _vertices[index];
         }
-
-        internal Vertices _vertices;
-        internal FixedArray2<Vector2> _buffer;
-        internal float _radius;
     }
 
     /// Used to warm start ComputeDistance.
     /// Set count to zero on first call.
     public struct SimplexCache
     {
-        public float metric;		///< length or area
+        ///< length or area
         public UInt16 count;
-        public FixedArray3<byte> indexA;	///< vertices on shape A
-        public FixedArray3<byte> indexB;	///< vertices on shape B
+
+        public FixedArray3<byte> indexA;
+
+        ///< vertices on shape A
+        public FixedArray3<byte> indexB; ///< vertices on shape B
+
+        public float metric;
     }
 
     /// Input for ComputeDistance.
@@ -166,6 +171,13 @@ namespace FarseerPhysics.Collision
     /// Output for ComputeDistance.
     public struct DistanceOutput
     {
+        public float Distance;
+
+        /// <summary>
+        /// Number of GJK iterations used
+        /// </summary>
+        public int Iterations;
+
         /// <summary>
         /// Closest point on shapeA
         /// </summary>
@@ -174,30 +186,27 @@ namespace FarseerPhysics.Collision
         /// <summary>
         /// Closest point on shapeB
         /// </summary>
-        public Vector2 PointB;		
-        public float Distance;
-
-        /// <summary>
-        /// Number of GJK iterations used
-        /// </summary>
-        public int Iterations;
+        public Vector2 PointB;
     }
 
     internal struct SimplexVertex
     {
-        public Vector2 wA;		// support point in proxyA
-        public Vector2 wB;		// support point in proxyB
-        public Vector2 w;		// wB - wA
-        public float a;		// barycentric coordinate for closest point
-        public int indexA;	// wA index
-        public int indexB;	// wB index
+        public float a; // barycentric coordinate for closest point
+        public int indexA; // wA index
+        public int indexB; // wB index
+        public Vector2 w; // wB - wA
+        public Vector2 wA; // support point in proxyA
+        public Vector2 wB; // support point in proxyB
     }
 
     internal struct Simplex
     {
+        internal int _count;
+        internal FixedArray3<SimplexVertex> _v;
+
         internal void ReadCache(ref SimplexCache cache,
-                        ref DistanceProxy proxyA, ref Transform transformA,
-                        ref DistanceProxy proxyB, ref Transform transformB)
+                                ref DistanceProxy proxyA, ref Transform transformA,
+                                ref DistanceProxy proxyB, ref Transform transformB)
         {
             Debug.Assert(cache.count <= 3);
 
@@ -249,11 +258,11 @@ namespace FarseerPhysics.Collision
         internal void WriteCache(ref SimplexCache cache)
         {
             cache.metric = GetMetric();
-            cache.count = (UInt16)_count;
+            cache.count = (UInt16) _count;
             for (int i = 0; i < _count; ++i)
             {
-                cache.indexA[i] = (byte)(_v[i].indexA);
-                cache.indexB[i] = (byte)(_v[i].indexB);
+                cache.indexA[i] = (byte) (_v[i].indexA);
+                cache.indexB[i] = (byte) (_v[i].indexB);
             }
         }
 
@@ -565,13 +574,12 @@ namespace FarseerPhysics.Collision
             _v[2] = v2_7;
             _count = 3;
         }
-
-        internal FixedArray3<SimplexVertex> _v;
-        internal int _count;
     }
 
     public static class Distance
     {
+        public static int GJKCalls, GJKIters, GJKMaxIters;
+
         public static void ComputeDistance(out DistanceOutput output,
                                            out SimplexCache cache,
                                            ref DistanceInput input)
@@ -730,7 +738,5 @@ namespace FarseerPhysics.Collision
                 }
             }
         }
-
-        public static int GJKCalls, GJKIters, GJKMaxIters;
     }
 }

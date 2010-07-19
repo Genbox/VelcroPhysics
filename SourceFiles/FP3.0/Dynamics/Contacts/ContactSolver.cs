@@ -23,7 +23,6 @@
 //#define MATH_OVERLOADS
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
@@ -35,35 +34,37 @@ namespace FarseerPhysics.Dynamics.Contacts
     public struct ContactConstraintPoint
     {
         public Vector2 localPoint;
+        public float normalImpulse;
+        public float normalMass;
         public Vector2 rA;
         public Vector2 rB;
-        public float normalImpulse;
         public float tangentImpulse;
-        public float normalMass;
         public float tangentMass;
         public float velocityBias;
     }
 
     public struct ContactConstraint
     {
-        public FixedArray2<ContactConstraintPoint> points;
-        public Vector2 localNormal;
-        public Vector2 localPoint;
-        public Vector2 normal;
-        public Mat22 normalMass;
         public Mat22 K;
         public Body bodyA;
         public Body bodyB;
-        public ManifoldType type;
-        public float radius;
         public float friction;
-        public int pointCount;
+        public Vector2 localNormal;
+        public Vector2 localPoint;
         public Manifold manifold;
+        public Vector2 normal;
+        public Mat22 normalMass;
+        public int pointCount;
+        public FixedArray2<ContactConstraintPoint> points;
+        public float radius;
+        public ManifoldType type;
     }
 
     public class ContactSolver
     {
-        public ContactSolver() { }
+        public int _constraintCount; // collection can be bigger.
+        public ContactConstraint[] _constraints;
+        private Contact[] _contacts;
 
         public void Reset(Contact[] contacts, int contactCount, float impulseRatio)
         {
@@ -102,7 +103,8 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                 Debug.Assert(manifold.PointCount > 0);
 
-                WorldManifold worldManifold = new WorldManifold(ref manifold, ref bodyA._xf, radiusA, ref bodyB._xf, radiusB);
+                WorldManifold worldManifold = new WorldManifold(ref manifold, ref bodyA._xf, radiusA, ref bodyB._xf,
+                                                                radiusB);
 
                 ContactConstraint cc = _constraints[i];
                 cc.bodyA = bodyA;
@@ -165,7 +167,8 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                     // Setup a velocity bias for restitution.
                     ccp.velocityBias = 0.0f;
-                    float vRel = Vector2.Dot(cc.normal, vB + MathUtils.Cross(wB, ccp.rB) - vA - MathUtils.Cross(wA, ccp.rA));
+                    float vRel = Vector2.Dot(cc.normal,
+                                             vB + MathUtils.Cross(wB, ccp.rB) - vA - MathUtils.Cross(wA, ccp.rA));
                     if (vRel < -Settings.VelocityThreshold)
                     {
                         ccp.velocityBias = -restitution * vRel;
@@ -299,7 +302,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     ContactConstraintPoint ccp = c.points[j];
 
 #if MATH_OVERLOADS
-			        // Relative velocity at contact
+    // Relative velocity at contact
 			        Vector2 dv = vB + MathUtils.Cross(wB, ccp.rB) - vA - MathUtils.Cross(wA, ccp.rA);
 
 			        // Compute tangent force
@@ -320,7 +323,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     lambda = newImpulse - ccp.tangentImpulse;
 
 #if MATH_OVERLOADS
-			        // Apply contact impulse
+    // Apply contact impulse
 			        Vector2 P = lambda * tangent;
 
 			        vA -= invMassA * P;
@@ -350,7 +353,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     ContactConstraintPoint ccp = c.points[0];
 
 #if MATH_OVERLOADS
-			        // Relative velocity at contact
+    // Relative velocity at contact
 			        Vector2 dv = vB + MathUtils.Cross(wB, ccp.rB) - vA - MathUtils.Cross(wA, ccp.rA);
 
 			        // Compute normal impulse
@@ -432,7 +435,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     Debug.Assert(a.X >= 0.0f && a.Y >= 0.0f);
 
 #if MATH_OVERLOADS
-			        // Relative velocity at contact
+    // Relative velocity at contact
 			        Vector2 dv1 = vB + MathUtils.Cross(wB, cp1.rB) - vA - MathUtils.Cross(wA, cp1.rA);
 			        Vector2 dv2 = vB + MathUtils.Cross(wB, cp2.rB) - vA - MathUtils.Cross(wA, cp2.rA);
 
@@ -472,7 +475,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                         if (x.X >= 0.0f && x.Y >= 0.0f)
                         {
 #if MATH_OVERLOADS
-					        // Resubstitute for the incremental impulse
+    // Resubstitute for the incremental impulse
 					        Vector2 d = x - a;
 
 					        // Apply incremental impulse
@@ -536,7 +539,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                         if (x.X >= 0.0f && vn2 >= 0.0f)
                         {
 #if MATH_OVERLOADS
-					        // Resubstitute for the incremental impulse
+    // Resubstitute for the incremental impulse
 					        Vector2 d = x - a;
 
 					        // Apply incremental impulse
@@ -569,7 +572,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                             cp2.normalImpulse = x.Y;
 
 #if B2_DEBUG_SOLVER 
-					        // Postconditions
+    // Postconditions
 					        dv1 = vB + MathUtils.Cross(wB, cp1.rB) - vA - MathUtils.Cross(wA, cp1.rA);
 
 					        // Compute normal velocity
@@ -595,7 +598,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                         if (x.Y >= 0.0f && vn1 >= 0.0f)
                         {
 #if MATH_OVERLOADS
-					        // Resubstitute for the incremental impulse
+    // Resubstitute for the incremental impulse
 					        Vector2 d = x - a;
 
 					        // Apply incremental impulse
@@ -628,7 +631,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                             cp2.normalImpulse = x.Y;
 
 #if B2_DEBUG_SOLVER 
-					        // Postconditions
+    // Postconditions
 					        dv2 = vB + MathUtils.Cross(wB, cp2.rB) - vA - MathUtils.Cross(wA, cp2.rA);
 
 					        // Compute normal velocity
@@ -652,7 +655,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                         if (vn1 >= 0.0f && vn2 >= 0.0f)
                         {
 #if MATH_OVERLOADS
-					        // Resubstitute for the incremental impulse
+    // Resubstitute for the incremental impulse
 					        Vector2 d = x - a;
 
 					        // Apply incremental impulse
@@ -761,7 +764,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                     minSeparation = Math.Min(minSeparation, separation);
 
                     // Prevent large corrections and allow slop.
-                    float C = MathUtils.Clamp(baumgarte * (separation + Settings.LinearSlop), -Settings.MaxLinearCorrection, 0.0f);
+                    float C = MathUtils.Clamp(baumgarte * (separation + Settings.LinearSlop),
+                                              -Settings.MaxLinearCorrection, 0.0f);
 
                     // Compute the effective mass.
                     float rnA = MathUtils.Cross(rA, normal);
@@ -799,14 +803,14 @@ namespace FarseerPhysics.Dynamics.Contacts
             // push the separation above -Settings.b2_linearSlop.
             return minSeparation >= -1.5f * Settings.LinearSlop;
         }
-
-        public ContactConstraint[] _constraints;
-        public int _constraintCount; // collection can be bigger.
-        private Contact[] _contacts;
     }
 
     internal struct PositionSolverManifold
     {
+        internal Vector2 _normal;
+        internal Vector2 _point;
+        internal float _separation;
+
         internal PositionSolverManifold(ref ContactConstraint cc, int index)
         {
             Debug.Assert(cc.pointCount > 0);
@@ -863,9 +867,5 @@ namespace FarseerPhysics.Dynamics.Contacts
                     break;
             }
         }
-
-        internal Vector2 _normal;
-        internal Vector2 _point;
-        internal float _separation;
     }
 }

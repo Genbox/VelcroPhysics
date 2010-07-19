@@ -21,9 +21,9 @@
 */
 
 
-
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
+
 namespace FarseerPhysics.Collision.Shapes
 {
     /// <summary>
@@ -33,6 +33,17 @@ namespace FarseerPhysics.Collision.Shapes
     /// </summary>
     public class EdgeShape : Shape
     {
+        public bool _hasVertex0, _hasVertex3;
+
+        /// Optional adjacent vertices. These are used for smooth collision.
+        public Vector2 _vertex0;
+
+        /// These are the edge vertices
+        public Vector2 _vertex1, _vertex2;
+
+        /// Optional adjacent vertices. These are used for smooth collision.
+        public Vector2 _vertex3;
+
         public EdgeShape()
         {
             ShapeType = ShapeType.Edge;
@@ -78,14 +89,13 @@ namespace FarseerPhysics.Collision.Shapes
 
         /// Implement Shape.
         /// 
-
         // p = p1 + t * d
         // v = v1 + s * e
         // p1 + t * d = v1 + s * e
         // s * e - t * d = p1 - v1
         // 
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input,
-                            ref Transform transform, int childIndex)
+                                     ref Transform transform, int childIndex)
         {
             output = new RayCastOutput();
 
@@ -167,12 +177,5 @@ namespace FarseerPhysics.Collision.Shapes
             massData.Center = 0.5f * (_vertex1 + _vertex2);
             massData.Inertia = 0.0f;
         }
-
-        /// These are the edge vertices
-        public Vector2 _vertex1, _vertex2;
-
-        /// Optional adjacent vertices. These are used for smooth collision.
-        public Vector2 _vertex0, _vertex3;
-        public bool _hasVertex0, _hasVertex3;
     }
 }

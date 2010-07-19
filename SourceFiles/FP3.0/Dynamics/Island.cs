@@ -30,9 +30,20 @@ using Microsoft.Xna.Framework;
 namespace FarseerPhysics.Dynamics
 {
     /// This is an internal class.
-    class Island
+    internal class Island
     {
-        public Island() { }
+        public Body[] _bodies;
+        public int _bodyCapacity;
+        public int _bodyCount;
+        public int _contactCapacity;
+        public int _contactCount;
+        private ContactSolver _contactSolver = new ContactSolver();
+        public Contact[] _contacts;
+        public int _jointCapacity;
+        public int _jointCount;
+        public Joint[] _joints;
+        public ContactManager _listener;
+        public int _positionIterationCount;
 
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager listener)
         {
@@ -291,22 +302,5 @@ namespace FarseerPhysics.Dynamics
                 _listener.PostSolve(c, ref impulse);
             }
         }
-
-        private ContactSolver _contactSolver = new ContactSolver();
-        public ContactManager _listener;
-
-        public Body[] _bodies;
-        public Contact[] _contacts;
-        public Joint[] _joints;
-
-        public int _bodyCount;
-        public int _contactCount;
-        public int _jointCount;
-
-        public int _bodyCapacity;
-        public int _contactCapacity;
-        public int _jointCapacity;
-
-        public int _positionIterationCount;
     }
 }

@@ -21,35 +21,33 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
 namespace FarseerPhysics.Collision
 {
     /// A dynamic AABB tree broad-phase, inspired by Nathanael Presson's btDbvt.
-
     public delegate float RayCastCallbackInternal(ref RayCastInput input, int userData);
 
     /// A node in the dynamic tree. The client does not interact with this directly.
     internal struct DynamicTreeNode
     {
-        internal bool IsLeaf()
-        {
-            return child1 == DynamicTree.NullNode;
-        }
-
         /// This is the fattened AABB.
         internal AABB aabb;
 
-        internal object userData;
-
-        internal int parentOrNext;
         internal int child1;
         internal int child2;
 
         internal int leafCount;
+        internal int parentOrNext;
+        internal object userData;
+
+        internal bool IsLeaf()
+        {
+            return child1 == DynamicTree.NullNode;
+        }
     }
 
     /// A dynamic tree arranges data in a binary tree to accelerate
@@ -62,6 +60,17 @@ namespace FarseerPhysics.Collision
     public class DynamicTree
     {
         internal static int NullNode = -1;
+        private static Stack<int> stack = new Stack<int>(256);
+        private int _freeList;
+        private int _insertionCount;
+        private int _nodeCapacity;
+        private int _nodeCount;
+        private DynamicTreeNode[] _nodes;
+
+        /// This is used incrementally traverse the tree for re-balancing.
+        private int _path;
+
+        private int _root;
 
         /// ructing the tree initializes the node pool.
         public DynamicTree()
@@ -210,7 +219,7 @@ namespace FarseerPhysics.Collision
         public T GetUserData<T>(int proxyId)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
-            return (T)_nodes[proxyId].userData;
+            return (T) _nodes[proxyId].userData;
         }
 
         /// Get the fat AABB for a proxy.
@@ -226,8 +235,6 @@ namespace FarseerPhysics.Collision
         {
             return ComputeHeight(_root);
         }
-
-        static Stack<int> stack = new Stack<int>(256);
 
         /// Query an AABB for overlapping proxies. The callback class
         /// is called for each proxy that overlaps the supplied AABB.
@@ -453,7 +460,7 @@ namespace FarseerPhysics.Collision
                 int child2 = _nodes[sibling].child2;
 
 #if false
-		        // This seems to create imbalanced trees
+    // This seems to create imbalanced trees
 		        Vector2 delta1 = Math.Abs(_nodes[child1].aabb.GetCenter() - leafCenter);
 		        Vector2 delta2 = Math.Abs(_nodes[child2].aabb.GetCenter() - leafCenter);
 
@@ -554,7 +561,8 @@ namespace FarseerPhysics.Collision
                 while (parent != NullNode)
                 {
                     AABB oldAABB = _nodes[parent].aabb;
-                    _nodes[parent].aabb.Combine(ref _nodes[_nodes[parent].child1].aabb, ref _nodes[_nodes[parent].child2].aabb);
+                    _nodes[parent].aabb.Combine(ref _nodes[_nodes[parent].child1].aabb,
+                                                ref _nodes[_nodes[parent].child2].aabb);
 
                     Debug.Assert(_nodes[parent].leafCount > 0);
                     _nodes[parent].leafCount -= 1;
@@ -583,18 +591,5 @@ namespace FarseerPhysics.Collision
             int height2 = ComputeHeight(node.child2);
             return 1 + Math.Max(height1, height2);
         }
-
-        int _root;
-
-        DynamicTreeNode[] _nodes;
-        int _nodeCount;
-        int _nodeCapacity;
-
-        int _freeList;
-
-        /// This is used incrementally traverse the tree for re-balancing.
-        int _path;
-
-        int _insertionCount;
     }
 }

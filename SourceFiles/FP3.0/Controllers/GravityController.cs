@@ -41,8 +41,7 @@ namespace FarseerPhysics.Controllers
 
             for (Body body1 = World._bodyList; body1 != null; body1 = body1.GetNext())
             {
-
-                if (!body1.Active|| body1.IgnoreGravity || body1.IsStatic)
+                if (!body1.Active || body1.IgnoreGravity || body1.IsStatic)
                     continue;
 
                 foreach (Body body2 in Bodies)
@@ -64,7 +63,7 @@ namespace FarseerPhysics.Controllers
                     switch (GravityType)
                     {
                         case GravityType.DistanceSquared:
-                            f = Strength / r2 / (float)Math.Sqrt(r2) * body1.Mass * body2.Mass * d;
+                            f = Strength / r2 / (float) Math.Sqrt(r2) * body1.Mass * body2.Mass * d;
                             break;
                         case GravityType.Linear:
                             f = Strength / r2 * body1.Mass * body2.Mass * d;
@@ -92,7 +91,7 @@ namespace FarseerPhysics.Controllers
                     switch (GravityType)
                     {
                         case GravityType.DistanceSquared:
-                            f = Strength / r2 / (float)Math.Sqrt(r2) * body1.Mass * d;
+                            f = Strength / r2 / (float) Math.Sqrt(r2) * body1.Mass * d;
                             break;
                         case GravityType.Linear:
                             f = Strength / r2 * body1.Mass * d;

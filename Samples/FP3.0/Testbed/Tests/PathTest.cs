@@ -10,8 +10,10 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class PathTest : Test
     {
-        Body movingBody;
-        Path path;
+        private Body movingBody;
+        private Path path;
+
+        private float time;
 
         private PathTest()
         {
@@ -19,7 +21,7 @@ namespace FarseerPhysics.TestBed.Tests
             movingBody = BodyFactory.CreateBody(World);
             movingBody.Position = new Vector2(-25, 25);
             movingBody.BodyType = BodyType.Dynamic;
-            movingBody.CreateFixture(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f)),1);
+            movingBody.CreateFixture(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f)), 1);
 
             //Static shape made up of bodies
             path = new Path();
@@ -47,7 +49,8 @@ namespace FarseerPhysics.TestBed.Tests
             List<Body> bodies = PathFactory.EvenlyDistibuteShapesAlongPath(World, path, shapes, BodyType.Dynamic, 20);
 
             //Attach the bodies together with revolute joints
-            PathFactory.AttachBodiesWithRevoluteJoint(World, bodies, new Vector2(0, 0.5f), new Vector2(0, -0.5f), true, true);
+            PathFactory.AttachBodiesWithRevoluteJoint(World, bodies, new Vector2(0, 0.5f), new Vector2(0, -0.5f), true,
+                                                      true);
 
             xform = new Vector2(-25, 0);
             path.Translate(ref xform);
@@ -64,8 +67,6 @@ namespace FarseerPhysics.TestBed.Tests
 
             PathFactory.ConvertPathToPolygon(path, body, 1, 50);
         }
-
-        float time;
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
