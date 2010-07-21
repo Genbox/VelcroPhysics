@@ -71,13 +71,13 @@ namespace FarseerPhysics.TestBed.Tests
                 case ShapeType.Polygon:
                     {
                         PolygonShape poly = (PolygonShape) fixture.Shape;
-                        int vertexCount = poly.Vertices.Count;
+                        int vertexCount = poly._vertexCount;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
 
                         for (int i = 0; i < vertexCount; ++i)
                         {
-                            vertices[i] = MathUtils.Multiply(ref xf, poly.Vertices[i]);
+                            vertices[i] = MathUtils.Multiply(ref xf, poly._vertices[i]);
                         }
 
                         _debugDraw.DrawPolygon(ref vertices, vertexCount, color);

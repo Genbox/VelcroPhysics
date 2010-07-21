@@ -29,8 +29,9 @@ namespace FarseerPhysics.Collision.Shapes
     public class PolygonShape : Shape
     {
         public Vector2 Centroid;
-        public Vertices Normals = new Vertices();
-        public Vertices Vertices = new Vertices();
+        public Vector2[] _vertices;
+        public Vector2[] _normals;
+        public int _vertexCount;
 
         public PolygonShape(Vertices vertices)
         {
@@ -38,7 +39,7 @@ namespace FarseerPhysics.Collision.Shapes
             Radius = Settings.PolygonRadius;
             Centroid = Vector2.Zero;
 
-            Set(vertices);
+            Set(vertices.ToArray(), vertices.Count);
         }
 
         public PolygonShape()
@@ -50,12 +51,13 @@ namespace FarseerPhysics.Collision.Shapes
 
         public override Shape Clone()
         {
-            var clone = new PolygonShape();
+            PolygonShape clone = new PolygonShape();
             clone.ShapeType = ShapeType;
             clone.Radius = Radius;
+            clone._vertexCount = _vertexCount;
             clone.Centroid = Centroid;
-            clone.Vertices = Vertices;
-            clone.Normals = Normals;
+            clone._vertices = _vertices;
+            clone._normals = _normals;
 
             return clone;
         }
@@ -65,67 +67,79 @@ namespace FarseerPhysics.Collision.Shapes
             return 1;
         }
 
-        /// Copy vertices. This assumes the vertices define a convex polygon.
-        /// It is assumed that the exterior is the the right of each edge.
         public void Set(Vertices vertices)
         {
-            Debug.Assert(2 <= vertices.Count && vertices.Count <= Settings.MaxPolygonVertices);
+            Set(vertices.ToArray(), vertices.Count);
+        }
+
+        /// Copy vertices. This assumes the vertices define a convex polygon.
+        /// It is assumed that the exterior is the the right of each edge.
+        public void Set(Vector2[] vertices, int count)
+        {
+            Debug.Assert(2 <= count && count <= Settings.MaxPolygonVertices);
+            _vertexCount = count;
+
+            _vertices = new Vector2[count];
+            _normals = new Vector2[count];
 
             // Copy vertices.
-            Vertices = new Vertices(vertices);
-
-            // Compute normals. Ensure the edges have non-zero length.
-            for (int i = 0; i < Vertices.Count; ++i)
+            for (int i = 0; i < _vertexCount; ++i)
             {
-                int i1 = i;
-                int i2 = i + 1 < Vertices.Count ? i + 1 : 0;
-                Vector2 edge = Vertices[i2] - Vertices[i1];
-                Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
-
-                Vector2 temp = MathUtils.Cross(edge, 1.0f);
-                temp.Normalize();
-                Normals.Add(temp);
+                _vertices[i] = vertices[i];
             }
 
-#if DEBUG
-            // Ensure the polygon is convex and the interior
-            // is to the left of each edge.
-            for (int i = 0; i < Vertices.Count; ++i)
+            // Compute normals. Ensure the edges have non-zero length.
+            for (int i = 0; i < _vertexCount; ++i)
             {
                 int i1 = i;
-                int i2 = i + 1 < Vertices.Count ? i + 1 : 0;
-                Vector2 edge = Vertices[i2] - Vertices[i1];
+                int i2 = i + 1 < _vertexCount ? i + 1 : 0;
+                Vector2 edge = _vertices[i2] - _vertices[i1];
+                Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
 
-                for (int j = 0; j < Vertices.Count; ++j)
-                {
-                    // Don't check vertices on the current edge.
-                    if (j == i1 || j == i2)
-                    {
-                        continue;
-                    }
+                var temp = MathUtils.Cross(edge, 1.0f);
+                temp.Normalize();
+                _normals[i] = temp;
+            }
 
-                    Vector2 r = Vertices[j] - Vertices[i1];
+#if _DEBUG
+            // Ensure the polygon is convex and the interior
+            // is to the left of each edge.
+            for (int i = 0; i < _vertexCount; ++i)
+            {
+	            int i1 = i;
+	            int i2 = i + 1 < _vertexCount ? i + 1 : 0;
+	            Vector2 edge = _vertices[i2] - _vertices[i1];
 
-                    // Your polygon is non-convex (it has an indentation) or
-                    // has colinear edges.
-                    float s = MathUtils.Cross(edge, r);
-                    Debug.Assert(s > 0.0f);
-                }
+	            for (int j = 0; j < _vertexCount; ++j)
+	            {
+		            // Don't check vertices on the current edge.
+		            if (j == i1 || j == i2)
+		            {
+			            continue;
+		            }
+        			
+		            Vector2 r = _vertices[j] - _vertices[i1];
+
+		            // Your polygon is non-convex (it has an indentation) or
+		            // has colinear edges.
+		            float s = MathUtils.Cross(edge, r);
+		            Debug.Assert(s > 0.0f);
+	            }
             }
 #endif
 
             // Compute the polygon centroid.
-            Centroid = ComputeCentroid(Vertices);
+            Centroid = ComputeCentroid(_vertices, _vertexCount);
         }
 
-        private static Vector2 ComputeCentroid(Vertices vs)
+        static Vector2 ComputeCentroid(Vector2[] vs, int count)
         {
-            Debug.Assert(vs.Count >= 2);
+            Debug.Assert(count >= 2);
 
             Vector2 c = new Vector2(0.0f, 0.0f);
             float area = 0.0f;
 
-            if (vs.Count == 2)
+            if (count == 2)
             {
                 c = 0.5f * (vs[0] + vs[1]);
                 return c;
@@ -135,7 +149,7 @@ namespace FarseerPhysics.Collision.Shapes
             // It's location doesn't change the result (except for rounding error).
             Vector2 pRef = new Vector2(0.0f, 0.0f);
 #if false
-    // This code would put the reference point inside the polygon.
+	        // This code would put the reference point inside the polygon.
 	        for (int i = 0; i < count; ++i)
 	        {
 		        pRef += vs[i];
@@ -145,12 +159,12 @@ namespace FarseerPhysics.Collision.Shapes
 
             const float inv3 = 1.0f / 3.0f;
 
-            for (int i = 0; i < vs.Count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 // Triangle vertices.
                 Vector2 p1 = pRef;
                 Vector2 p2 = vs[i];
-                Vector2 p3 = i + 1 < vs.Count ? vs[i + 1] : vs[0];
+                Vector2 p3 = i + 1 < count ? vs[i + 1] : vs[0];
 
                 Vector2 e1 = p2 - p1;
                 Vector2 e2 = p3 - p1;
@@ -175,7 +189,18 @@ namespace FarseerPhysics.Collision.Shapes
         /// @param hy the half-height.
         public void SetAsBox(float hx, float hy)
         {
-            Set(PolygonTools.CreateRectangle(hx, hy));
+            _vertexCount = 4;
+            _vertices = new Vector2[4];
+            _vertices[0] = new Vector2(-hx, -hy);
+            _vertices[1] = new Vector2(hx, -hy);
+            _vertices[2] = new Vector2(hx, hy);
+            _vertices[3] = new Vector2(-hx, hy);
+            _normals = new Vector2[4];
+            _normals[0] = new Vector2(0.0f, -1.0f);
+            _normals[1] = new Vector2(1.0f, 0.0f);
+            _normals[2] = new Vector2(0.0f, 1.0f);
+            _normals[3] = new Vector2(-1.0f, 0.0f);
+            Centroid = Vector2.Zero;
         }
 
         /// Build vertices to represent an oriented box.
@@ -185,22 +210,55 @@ namespace FarseerPhysics.Collision.Shapes
         /// @param angle the rotation of the box in local coordinates.
         public void SetAsBox(float hx, float hy, Vector2 center, float angle)
         {
-            Set(PolygonTools.CreateRectangle(hx, hy, center, angle));
+            _vertexCount = 4;
+            _vertices = new Vector2[4];
+            _vertices[0] = new Vector2(-hx, -hy);
+            _vertices[1] = new Vector2(hx, -hy);
+            _vertices[2] = new Vector2(hx, hy);
+            _vertices[3] = new Vector2(-hx, hy);
+            _normals = new Vector2[4];
+            _normals[0] = new Vector2(0.0f, -1.0f);
+            _normals[1] = new Vector2(1.0f, 0.0f);
+            _normals[2] = new Vector2(0.0f, 1.0f);
+            _normals[3] = new Vector2(-1.0f, 0.0f);
+            Centroid = center;
+
+            Transform xf = new Transform();
+            xf.Position = center;
+            xf.R.Set(angle);
+
+            // Transform vertices and normals.
+            for (int i = 0; i < _vertexCount; ++i)
+            {
+                _vertices[i] = MathUtils.Multiply(ref xf, _vertices[i]);
+                _normals[i] = MathUtils.Multiply(ref xf.R, _normals[i]);
+            }
         }
 
         /// Set this as a single edge.
-        public void SetAsEdge(Vector2 start, Vector2 end)
+        public void SetAsEdge(Vector2 v1, Vector2 v2)
         {
-            Set(PolygonTools.CreateEdge(start, end));
+            _vertexCount = 2;
+            _vertices = new Vector2[2];
+            _vertices[0] = v1;
+            _vertices[1] = v2;
+            Centroid = 0.5f * (v1 + v2);
+
+            var temp = MathUtils.Cross(v2 - v1, 1.0f);
+            temp.Normalize();
+            _normals = new Vector2[2];
+            _normals[0] = temp;
+
+            _normals[1] = -_normals[0];
         }
 
         public override bool TestPoint(ref Transform xf, Vector2 p)
         {
             Vector2 pLocal = MathUtils.MultiplyT(ref xf.R, p - xf.Position);
 
-            for (int i = 0; i < Vertices.Count; ++i)
+            for (int i = 0; i < _vertexCount; ++i)
             {
-                float dot = Vector2.Dot(Normals[i], pLocal - Vertices[i]);
+                float dot = Vector2.Dot(_normals[i], pLocal - _vertices[i]);
                 if (dot > 0.0f)
                 {
                     return false;
@@ -219,11 +277,11 @@ namespace FarseerPhysics.Collision.Shapes
             Vector2 p2 = MathUtils.MultiplyT(ref xf.R, input.Point2 - xf.Position);
             Vector2 d = p2 - p1;
 
-            if (Vertices.Count == 2)
+            if (_vertexCount == 2)
             {
-                Vector2 v1 = Vertices[0];
-                Vector2 v2 = Vertices[1];
-                Vector2 normal = Normals[0];
+                Vector2 v1 = _vertices[0];
+                Vector2 v2 = _vertices[1];
+                Vector2 normal = _normals[0];
 
                 // q = p1 + t * d
                 // dot(normal, q - v1) = 0
@@ -276,13 +334,13 @@ namespace FarseerPhysics.Collision.Shapes
 
                 int index = -1;
 
-                for (int i = 0; i < Vertices.Count; ++i)
+                for (int i = 0; i < _vertexCount; ++i)
                 {
                     // p = p1 + a * d
                     // dot(normal, p - v) = 0
                     // dot(normal, p1 - v) + a * dot(normal, d) = 0
-                    float numerator = Vector2.Dot(Normals[i], Vertices[i] - p1);
-                    float denominator = Vector2.Dot(Normals[i], d);
+                    float numerator = Vector2.Dot(_normals[i], _vertices[i] - p1);
+                    float denominator = Vector2.Dot(_normals[i], d);
 
                     if (denominator == 0.0f)
                     {
@@ -327,7 +385,7 @@ namespace FarseerPhysics.Collision.Shapes
                 if (index >= 0)
                 {
                     output.Fraction = lower;
-                    output.Normal = MathUtils.Multiply(ref xf.R, Normals[index]);
+                    output.Normal = MathUtils.Multiply(ref xf.R, _normals[index]);
                     return true;
                 }
             }
@@ -335,14 +393,15 @@ namespace FarseerPhysics.Collision.Shapes
             return false;
         }
 
+        /// @see Shape.ComputeAABB
         public override void ComputeAABB(out AABB aabb, ref Transform xf, int childIndex)
         {
-            Vector2 lower = MathUtils.Multiply(ref xf, Vertices[0]);
+            Vector2 lower = MathUtils.Multiply(ref xf, _vertices[0]);
             Vector2 upper = lower;
 
-            for (int i = 1; i < Vertices.Count; ++i)
+            for (int i = 1; i < _vertexCount; ++i)
             {
-                Vector2 v = MathUtils.Multiply(ref xf, Vertices[i]);
+                Vector2 v = MathUtils.Multiply(ref xf, _vertices[i]);
                 lower = Vector2.Min(lower, v);
                 upper = Vector2.Max(upper, v);
             }
@@ -352,6 +411,7 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound = upper + r;
         }
 
+        /// @see Shape.ComputeMass
         public override void ComputeMass(out MassData massData, float density)
         {
             // Polygon mass, centroid, and inertia.
@@ -378,12 +438,12 @@ namespace FarseerPhysics.Collision.Shapes
             //
             // The rest of the derivation is handled by computer algebra.
 
-            Debug.Assert(Vertices.Count >= 2);
+            Debug.Assert(_vertexCount >= 2);
 
             // A line segment has zero mass.
-            if (Vertices.Count == 2)
+            if (_vertexCount == 2)
             {
-                massData.Center = 0.5f * (Vertices[0] + Vertices[1]);
+                massData.Center = 0.5f * (_vertices[0] + _vertices[1]);
                 massData.Mass = 0.0f;
                 massData.Inertia = 0.0f;
                 return;
@@ -399,12 +459,12 @@ namespace FarseerPhysics.Collision.Shapes
 
             const float k_inv3 = 1.0f / 3.0f;
 
-            for (int i = 0; i < Vertices.Count; ++i)
+            for (int i = 0; i < _vertexCount; ++i)
             {
                 // Triangle vertices.
                 Vector2 p1 = pRef;
-                Vector2 p2 = Vertices[i];
-                Vector2 p3 = i + 1 < Vertices.Count ? Vertices[i + 1] : Vertices[0];
+                Vector2 p2 = _vertices[i];
+                Vector2 p3 = i + 1 < _vertexCount ? _vertices[i + 1] : _vertices[0];
 
                 Vector2 e1 = p2 - p1;
                 Vector2 e2 = p3 - p1;
@@ -421,10 +481,8 @@ namespace FarseerPhysics.Collision.Shapes
                 float ex1 = e1.X, ey1 = e1.Y;
                 float ex2 = e2.X, ey2 = e2.Y;
 
-                float intx2 = k_inv3 * (0.25f * (ex1 * ex1 + ex2 * ex1 + ex2 * ex2) + (px * ex1 + px * ex2)) +
-                              0.5f * px * px;
-                float inty2 = k_inv3 * (0.25f * (ey1 * ey1 + ey2 * ey1 + ey2 * ey2) + (py * ey1 + py * ey2)) +
-                              0.5f * py * py;
+                float intx2 = k_inv3 * (0.25f * (ex1 * ex1 + ex2 * ex1 + ex2 * ex2) + (px * ex1 + px * ex2)) + 0.5f * px * px;
+                float inty2 = k_inv3 * (0.25f * (ey1 * ey1 + ey2 * ey1 + ey2 * ey2) + (py * ey1 + py * ey2)) + 0.5f * py * py;
 
                 I += D * (intx2 + inty2);
             }

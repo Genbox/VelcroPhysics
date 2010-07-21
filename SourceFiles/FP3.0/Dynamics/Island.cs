@@ -42,18 +42,19 @@ namespace FarseerPhysics.Dynamics
         public int _jointCapacity;
         public int _jointCount;
         public Joint[] _joints;
-        public ContactManager _listener;
-        public int _positionIterationCount;
+        public ContactManager _contactManager;
 
-        public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager listener)
+        public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
         {
             _bodyCapacity = bodyCapacity;
             _contactCapacity = contactCapacity;
             _jointCapacity = jointCapacity;
+            
             _bodyCount = 0;
+            _contactCount = 0;
             _jointCount = 0;
 
-            _listener = listener;
+            _contactManager = contactManager;
 
             if (_bodies == null || _bodies.Length < bodyCapacity)
             {
@@ -281,7 +282,7 @@ namespace FarseerPhysics.Dynamics
 
         public void Report(ContactConstraint[] constraints)
         {
-            if (_listener == null)
+            if (_contactManager == null)
             {
                 return;
             }
@@ -299,7 +300,7 @@ namespace FarseerPhysics.Dynamics
                     impulse.tangentImpulses[j] = cc.points[j].tangentImpulse;
                 }
 
-                _listener.PostSolve(c, ref impulse);
+                _contactManager.PostSolve(c, ref impulse);
             }
         }
     }

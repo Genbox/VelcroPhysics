@@ -36,7 +36,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             PathFactory.EvenlyDistibuteShapesAlongPath(World, path, shape, BodyType.Static, 100);
 
-            //Smaller shape that is movable. Created from small rectangles and circles.
+            ////Smaller shape that is movable. Created from small rectangles and circles.
             Vector2 xform = new Vector2(0.5f, 0.5f);
             path.Scale(ref xform);
             xform = new Vector2(5, 5);

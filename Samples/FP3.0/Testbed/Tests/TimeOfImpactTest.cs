@@ -87,11 +87,11 @@ namespace FarseerPhysics.TestBed.Tests
 
             Transform transformA;
             sweepA.GetTransform(out transformA, 0.0f);
-            for (int i = 0; i < _shapeA.Vertices.Count; ++i)
+            for (int i = 0; i < _shapeA._vertexCount; ++i)
             {
-                vertices[i] = MathUtils.Multiply(ref transformA, _shapeA.Vertices[i]);
+                vertices[i] = MathUtils.Multiply(ref transformA, _shapeA._vertices[i]);
             }
-            DebugView.DrawPolygon(ref vertices, _shapeA.Vertices.Count, new Color(0.9f, 0.9f, 0.9f));
+            DebugView.DrawPolygon(ref vertices, _shapeA._vertexCount, new Color(0.9f, 0.9f, 0.9f));
 
             Transform transformB;
             sweepB.GetTransform(out transformB, 0.0f);
@@ -102,25 +102,25 @@ namespace FarseerPhysics.TestBed.Tests
             Vector2 vB = sweepB.c - sweepB.c0;
             Vector2 v = vB + MathUtils.Cross(wB, rB);
 
-            for (int i = 0; i < _shapeB.Vertices.Count; ++i)
+            for (int i = 0; i < _shapeB._vertexCount; ++i)
             {
-                vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
+                vertices[i] = MathUtils.Multiply(ref transformB, _shapeB._vertices[i]);
             }
-            DebugView.DrawPolygon(ref vertices, _shapeB.Vertices.Count, new Color(0.5f, 0.9f, 0.5f));
+            DebugView.DrawPolygon(ref vertices, _shapeB._vertexCount, new Color(0.5f, 0.9f, 0.5f));
 
             sweepB.GetTransform(out transformB, output.t);
-            for (int i = 0; i < _shapeB.Vertices.Count; ++i)
+            for (int i = 0; i < _shapeB._vertexCount; ++i)
             {
-                vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
+                vertices[i] = MathUtils.Multiply(ref transformB, _shapeB._vertices[i]);
             }
-            DebugView.DrawPolygon(ref vertices, _shapeB.Vertices.Count, new Color(0.5f, 0.7f, 0.9f));
+            DebugView.DrawPolygon(ref vertices, _shapeB._vertexCount, new Color(0.5f, 0.7f, 0.9f));
 
             sweepB.GetTransform(out transformB, 1.0f);
-            for (int i = 0; i < _shapeB.Vertices.Count; ++i)
+            for (int i = 0; i < _shapeB._vertexCount; ++i)
             {
-                vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
+                vertices[i] = MathUtils.Multiply(ref transformB, _shapeB._vertices[i]);
             }
-            DebugView.DrawPolygon(ref vertices, _shapeB.Vertices.Count, new Color(0.9f, 0.5f, 0.5f));
+            DebugView.DrawPolygon(ref vertices, _shapeB._vertexCount, new Color(0.9f, 0.5f, 0.5f));
         }
     }
 }

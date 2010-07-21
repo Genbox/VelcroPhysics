@@ -84,27 +84,16 @@ namespace FarseerPhysics.Dynamics
 
         internal Body(World world)
         {
-            //Debug.Assert(bd.position.IsValid());
-            //Debug.Assert(bd.linearVelocity.IsValid());
-            //Debug.Assert(MathUtils.IsValid(bd.angle));
-            //Debug.Assert(MathUtils.IsValid(bd.angularVelocity));
-            //Debug.Assert(MathUtils.IsValid(bd.inertiaScale) && bd.inertiaScale >= 0.0f);
-            //Debug.Assert(MathUtils.IsValid(bd.angularDamping) && bd.angularDamping >= 0.0f);
-            //Debug.Assert(MathUtils.IsValid(bd.linearDamping) && bd.linearDamping >= 0.0f);
-
             _world = world;
 
-            _xf.Position = Vector2.Zero;
+            FixedRotation = false;
+            IsBullet = false;
+            SleepingAllowed = true;
+            Awake = true;
+            BodyType = BodyType.Static;
+            Active = true;
+
             _xf.R.Set(0);
-
-            _sweep.a0 = _sweep.a = 0;
-            _sweep.c0 = _sweep.c = MathUtils.Multiply(ref _xf, _sweep.localCenter);
-
-            //if (_type == BodyType.Dynamic)
-            //{
-            //    _mass = 1.0f;
-            //    _invMass = 1.0f;
-            //}
         }
 
         /// Get the type of this body.
@@ -540,7 +529,6 @@ namespace FarseerPhysics.Dynamics
             fixture._next = null;
 
             --_fixtureCount;
-
 
             ResetMassData();
         }

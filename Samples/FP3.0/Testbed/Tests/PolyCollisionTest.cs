@@ -74,17 +74,17 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Color color = new Color(0.9f, 0.9f, 0.9f);
                 Vector2[] v = new Vector2[Settings.MaxPolygonVertices];
-                for (int i = 0; i < _polygonA.Vertices.Count; ++i)
+                for (int i = 0; i < _polygonA._vertexCount; ++i)
                 {
-                    v[i] = MathUtils.Multiply(ref _transformA, _polygonA.Vertices[i]);
+                    v[i] = MathUtils.Multiply(ref _transformA, _polygonA._vertices[i]);
                 }
-                DebugView.DrawPolygon(ref v, _polygonA.Vertices.Count, color);
+                DebugView.DrawPolygon(ref v, _polygonA._vertexCount, color);
 
-                for (int i = 0; i < _polygonB.Vertices.Count; ++i)
+                for (int i = 0; i < _polygonB._vertexCount; ++i)
                 {
-                    v[i] = MathUtils.Multiply(ref _transformB, _polygonB.Vertices[i]);
+                    v[i] = MathUtils.Multiply(ref _transformB, _polygonB._vertices[i]);
                 }
-                DebugView.DrawPolygon(ref v, _polygonB.Vertices.Count, color);
+                DebugView.DrawPolygon(ref v, _polygonB._vertexCount, color);
             }
 
             for (int i = 0; i < manifold.PointCount; ++i)
