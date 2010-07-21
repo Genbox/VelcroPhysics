@@ -113,7 +113,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(0.5f, 0.5f);
 
-                body.CreateFixture(shape, 1);
+                Fixture fix = body.CreateFixture(shape, 1);
             }
         }
 

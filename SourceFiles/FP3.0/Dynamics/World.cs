@@ -160,7 +160,6 @@ namespace FarseerPhysics.Dynamics
             }
 
             Body b = new Body(this);
-            b.Active = true;
 
             // Add to world doubly linked list.
             b._prev = null;
