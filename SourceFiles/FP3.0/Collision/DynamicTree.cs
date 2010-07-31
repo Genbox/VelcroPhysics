@@ -59,7 +59,7 @@ namespace FarseerPhysics.Collision
     /// Nodes are pooled and relocatable, so we use node indices rather than pointers.
     public class DynamicTree
     {
-        internal static int NullNode = -1;
+        internal const int NullNode = -1;
         private static Stack<int> stack = new Stack<int>(256);
         private int _freeList;
         private int _insertionCount;

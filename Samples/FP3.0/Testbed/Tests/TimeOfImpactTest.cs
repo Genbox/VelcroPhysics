@@ -67,16 +67,16 @@ namespace FarseerPhysics.TestBed.Tests
             //sweepB.a -= 300.0f * b2_pi;
 
             TOIInput input = new TOIInput();
-            input.proxyA.Set(_shapeA, 0);
-            input.proxyB.Set(_shapeB, 0);
-            input.sweepA = sweepA;
-            input.sweepB = sweepB;
-            input.tMax = 1.0f;
+            input.ProxyA.Set(_shapeA, 0);
+            input.ProxyB.Set(_shapeB, 0);
+            input.SweepA = sweepA;
+            input.SweepB = sweepB;
+            input.TMax = 1.0f;
 
             TOIOutput output;
             TimeOfImpact.CalculateTimeOfImpact(out output, ref input);
 
-            DebugView.DrawString(50, TextLine, "toi = {0:n}", output.t);
+            DebugView.DrawString(50, TextLine, "toi = {0:n}", output.T);
             TextLine += 15;
 
             DebugView.DrawString(50, TextLine, "max toi iters = {0:n}, max root iters = {1:n}", TimeOfImpact.TOIMaxIters,
@@ -108,7 +108,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
             DebugView.DrawPolygon(ref vertices, _shapeB._vertexCount, new Color(0.5f, 0.9f, 0.5f));
 
-            sweepB.GetTransform(out transformB, output.t);
+            sweepB.GetTransform(out transformB, output.T);
             for (int i = 0; i < _shapeB._vertexCount; ++i)
             {
                 vertices[i] = MathUtils.Multiply(ref transformB, _shapeB._vertices[i]);

@@ -28,7 +28,6 @@ namespace FarseerPhysics.Collision.Shapes
 {
     public class CircleShape : Shape
     {
-        /// Position
         public Vector2 Position;
 
         public CircleShape(float radius)
@@ -109,7 +108,6 @@ namespace FarseerPhysics.Collision.Shapes
             return false;
         }
 
-        /// @see Shape.ComputeAABB
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
             Vector2 p = transform.Position + MathUtils.Multiply(ref transform.R, Position);
@@ -117,7 +115,6 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound = new Vector2(p.X + Radius, p.Y + Radius);
         }
 
-        /// @see Shape.ComputeMass
         public override void ComputeMass(out MassData massData, float density)
         {
             massData.Mass = density * Settings.Pi * Radius * Radius;

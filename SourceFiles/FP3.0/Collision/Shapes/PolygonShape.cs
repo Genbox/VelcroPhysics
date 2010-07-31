@@ -393,7 +393,6 @@ namespace FarseerPhysics.Collision.Shapes
             return false;
         }
 
-        /// @see Shape.ComputeAABB
         public override void ComputeAABB(out AABB aabb, ref Transform xf, int childIndex)
         {
             Vector2 lower = MathUtils.Multiply(ref xf, _vertices[0]);
@@ -411,7 +410,6 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound = upper + r;
         }
 
-        /// @see Shape.ComputeMass
         public override void ComputeMass(out MassData massData, float density)
         {
             // Polygon mass, centroid, and inertia.

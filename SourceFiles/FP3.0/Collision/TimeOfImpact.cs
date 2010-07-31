@@ -30,11 +30,11 @@ namespace FarseerPhysics.Collision
     /// Input parameters for CalculateTimeOfImpact
     public struct TOIInput
     {
-        public DistanceProxy proxyA;
-        public DistanceProxy proxyB;
-        public Sweep sweepA;
-        public Sweep sweepB;
-        public float tMax; // defines sweep interval [0, tMax]
+        public DistanceProxy ProxyA;
+        public DistanceProxy ProxyB;
+        public Sweep SweepA;
+        public Sweep SweepB;
+        public float TMax; // defines sweep interval [0, tMax]
     }
 
     public enum TOIOutputState
@@ -49,7 +49,7 @@ namespace FarseerPhysics.Collision
     public struct TOIOutput
     {
         public TOIOutputState State;
-        public float t;
+        public float T;
     }
 
     public enum SeparationFunctionType
@@ -298,19 +298,19 @@ namespace FarseerPhysics.Collision
 
             output = new TOIOutput();
             output.State = TOIOutputState.Unknown;
-            output.t = input.tMax;
+            output.T = input.TMax;
 
-            Sweep sweepA = input.sweepA;
-            Sweep sweepB = input.sweepB;
+            Sweep sweepA = input.SweepA;
+            Sweep sweepB = input.SweepB;
 
             // Large rotations can make the root finder fail, so we normalize the
             // sweep angles.
             sweepA.Normalize();
             sweepB.Normalize();
 
-            float tMax = input.tMax;
+            float tMax = input.TMax;
 
-            float totalRadius = input.proxyA._radius + input.proxyB._radius;
+            float totalRadius = input.ProxyA._radius + input.ProxyB._radius;
             float target = Math.Max(Settings.LinearSlop, totalRadius - 3.0f * Settings.LinearSlop);
             float tolerance = 0.25f * Settings.LinearSlop;
             Debug.Assert(target > tolerance);
@@ -322,8 +322,8 @@ namespace FarseerPhysics.Collision
             // Prepare input for distance query.
             SimplexCache cache;
             DistanceInput distanceInput;
-            distanceInput.ProxyA = input.proxyA;
-            distanceInput.ProxyB = input.proxyB;
+            distanceInput.ProxyA = input.ProxyA;
+            distanceInput.ProxyB = input.ProxyB;
             distanceInput.UseRadii = false;
 
             // The outer loop progressively attempts to compute new separating axes.
@@ -346,7 +346,7 @@ namespace FarseerPhysics.Collision
                 {
                     // Failure!
                     output.State = TOIOutputState.Overlapped;
-                    output.t = 0.0f;
+                    output.T = 0.0f;
                     break;
                 }
 
@@ -354,12 +354,12 @@ namespace FarseerPhysics.Collision
                 {
                     // Victory!
                     output.State = TOIOutputState.Touching;
-                    output.t = t1;
+                    output.T = t1;
                     break;
                 }
 
-                SeparationFunction fcn = new SeparationFunction(ref cache, ref input.proxyA, ref sweepA,
-                                                                ref input.proxyB, ref sweepB, t1);
+                SeparationFunction fcn = new SeparationFunction(ref cache, ref input.ProxyA, ref sweepA,
+                                                                ref input.ProxyB, ref sweepB, t1);
 
                 // Compute the TOI on the separating axis. We do this by successively
                 // resolving the deepest point. This loop is bounded by the number of vertices.
@@ -377,7 +377,7 @@ namespace FarseerPhysics.Collision
                     {
                         // Victory!
                         output.State = TOIOutputState.Seperated;
-                        output.t = tMax;
+                        output.T = tMax;
                         done = true;
                         break;
                     }
@@ -398,7 +398,7 @@ namespace FarseerPhysics.Collision
                     if (s1 < target - tolerance)
                     {
                         output.State = TOIOutputState.Failed;
-                        output.t = t1;
+                        output.T = t1;
                         done = true;
                         break;
                     }
@@ -408,7 +408,7 @@ namespace FarseerPhysics.Collision
                     {
                         // Victory! t1 should hold the TOI (could be 0.0).
                         output.State = TOIOutputState.Touching;
-                        output.t = t1;
+                        output.T = t1;
                         done = true;
                         break;
                     }
@@ -483,7 +483,7 @@ namespace FarseerPhysics.Collision
                 {
                     // Root finder got stuck. Semi-victory.
                     output.State = TOIOutputState.Failed;
-                    output.t = t1;
+                    output.T = t1;
                     break;
                 }
             }

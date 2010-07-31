@@ -61,7 +61,6 @@ namespace FarseerPhysics.Collision.Shapes
             _hasVertex3 = false;
         }
 
-        /// Implement Shape.
         public override Shape Clone()
         {
             var edge = new EdgeShape();
@@ -75,13 +74,11 @@ namespace FarseerPhysics.Collision.Shapes
             return edge;
         }
 
-        /// @see Shape::GetChildCount
         public override int GetChildCount()
         {
             return 1;
         }
 
-        /// @see Shape::TestPoint
         public override bool TestPoint(ref Transform transform, Vector2 p)
         {
             return false;

@@ -48,7 +48,6 @@ namespace FarseerPhysics.Collision.Shapes
             _count = 0;
         }
 
-        /// Implement Shape.
         public override Shape Clone()
         {
             var loop = new LoopShape();
@@ -58,7 +57,6 @@ namespace FarseerPhysics.Collision.Shapes
             return loop;
         }
 
-        /// @see Shape::GetChildCount
         public override int GetChildCount()
         {
             return _count;
