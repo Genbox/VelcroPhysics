@@ -39,7 +39,7 @@ namespace FarseerPhysics.DebugViewXNA
         {
             if ((Flags & DebugViewFlags.Shape) == DebugViewFlags.Shape)
             {
-                for (Body b = World._bodyList; b != null; b = b.GetNext())
+                for (Body b = World._bodyList; b != null; b = b.Next)
                 {
                     Transform xf;
                     b.GetTransform(out xf);
@@ -102,7 +102,7 @@ namespace FarseerPhysics.DebugViewXNA
                 Color color = new Color(0.9f, 0.3f, 0.9f);
                 BroadPhase bp = World._contactManager.BroadPhase;
 
-                for (Body b = World._bodyList; b != null; b = b.GetNext())
+                for (Body b = World._bodyList; b != null; b = b.Next)
                 {
                     if (b.Active == false)
                     {
@@ -130,7 +130,7 @@ namespace FarseerPhysics.DebugViewXNA
 
             if ((Flags & DebugViewFlags.CenterOfMass) == DebugViewFlags.CenterOfMass)
             {
-                for (Body b = World._bodyList; b != null; b = b.GetNext())
+                for (Body b = World._bodyList; b != null; b = b.Next)
                 {
                     Transform xf;
                     b.GetTransform(out xf);

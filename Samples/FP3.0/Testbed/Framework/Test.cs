@@ -256,7 +256,7 @@ namespace FarseerPhysics.TestBed.Framework
 
                 if (settings.DrawPolygonPoints == 1)
                 {
-                    for (Body body = World._bodyList; body != null; body = body.GetNext())
+                    for (Body body = World._bodyList; body != null; body = body.Next)
                     {
                         for (Fixture f = body._fixtureList; f != null; f = f.Next)
                         {

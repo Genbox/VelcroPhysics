@@ -43,12 +43,9 @@ namespace FarseerPhysics.Dynamics
 
         public PostSolveDelegate PostSolve;
         public PreSolveDelegate PreSolve;
-        private Action<FixtureProxy, FixtureProxy> _addPair;
 
         internal ContactManager()
         {
-            _addPair = AddPair;
-
             ContactList = null;
             ContactCount = 0;
 
@@ -163,7 +160,7 @@ namespace FarseerPhysics.Dynamics
 
         internal void FindNewContacts()
         {
-            BroadPhase.UpdatePairs(_addPair);
+            BroadPhase.UpdatePairs(BroadphaseCollision);
         }
 
         internal void Destroy(Contact c)

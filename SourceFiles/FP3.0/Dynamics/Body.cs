@@ -890,15 +890,9 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// Get the next body in the world's body list.
-        public Body GetNext()
+        public Body Next
         {
-            return _next;
-        }
-
-        /// Get the parent world of this body.
-        public World GetWorld()
-        {
-            return _world;
+            get { return _next; }
         }
 
         internal void SynchronizeFixtures()

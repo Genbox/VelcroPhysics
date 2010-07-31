@@ -530,7 +530,7 @@ namespace FarseerPhysics.Dynamics
         /// @see SetAutoClearForces
         public void ClearForces()
         {
-            for (Body body = _bodyList; body != null; body = body.GetNext())
+            for (Body body = _bodyList; body != null; body = body.Next)
             {
                 body._force = Vector2.Zero;
                 body._torque = 0.0f;
@@ -805,7 +805,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Synchronize fixtures, check for out of range bodies.
-            for (Body b = _bodyList; b != null; b = b.GetNext())
+            for (Body b = _bodyList; b != null; b = b.Next)
             {
                 // If a body was not in an island then it did not move.
                 if ((b._flags & BodyFlags.Island) != BodyFlags.Island)
