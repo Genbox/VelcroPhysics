@@ -144,7 +144,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
             }
 
-            DebugView.DrawString(5, TextLine, "Press 'c' to create a circle.");
+            DebugView.DrawString(50, TextLine, "Press 'c' to create a circle.");
             TextLine += 15;
         }
 

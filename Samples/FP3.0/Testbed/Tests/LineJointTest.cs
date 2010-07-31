@@ -97,16 +97,7 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine + 200, "Keys: (l) limits on/off, (m) motor on/off");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine + 200, "_lineJoint.JointSpeed:{0:n}", _lineJoint.JointSpeed);
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine + 200, "_fixedLineJoint.JointSpeed:{0:n}", _fixedLineJoint.JointSpeed);
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine + 200, "_lineJoint.JointTranslation:{0:n}", _lineJoint.JointTranslation);
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine + 200, "_fixedLineJoint.JointTranslation:{0:n}",
-                                 _fixedLineJoint.JointTranslation);
+            DebugView.DrawString(50, TextLine, "Keys: (l) limits on/off, (m) motor on/off");
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)

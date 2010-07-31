@@ -107,18 +107,8 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine + 200, "Keys: (l) limits, (m) motors, (p) speed");
+            DebugView.DrawString(50, TextLine, "Keys: (l) limits, (m) motors, (p) speed");
             TextLine += 15;
-            //float force = _fixedJoint.MotorForce;
-            //DebugView.DrawString(50, TextLine + 200, "Motor Force = {0:n}", force);
-            /*TextLine += 15;
-            DebugView.DrawString(50, TextLine + 200, "_fixedJoint joint translation = {0:n}", _fixedJoint.JointTranslation);
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine + 200, "_joint joint translation = {0:n}", _joint.JointTranslation);
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine + 200, "_fixedJoint joint JointSpeed = {0:n}", _fixedJoint.JointSpeed);
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine + 200, "_joint joint JointSpeed = {0:n}", _joint.JointSpeed);*/
         }
 
         internal static Test Create()

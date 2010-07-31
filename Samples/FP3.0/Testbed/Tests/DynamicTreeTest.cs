@@ -142,7 +142,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 int height = _tree.ComputeHeight();
-                DebugView.DrawString(50, TextLine, "dynamic tree height = {0}", height);
+                DebugView.DrawString(50, TextLine, "Dynamic tree height = {0}", height);
                 TextLine += 15;
             }
 

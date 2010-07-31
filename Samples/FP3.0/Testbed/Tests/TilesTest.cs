@@ -91,7 +91,7 @@ namespace FarseerPhysics.TestBed.Tests
             int leafCount = cm.BroadPhase.ProxyCount;
             int minimumNodeCount = 2 * leafCount - 1;
             float minimumHeight = (float) Math.Ceiling(Math.Log(minimumNodeCount) / Math.Log(2.0f));
-            DebugView.DrawString(50, TextLine, "dynamic tree height = {0}, min = {1}", height, minimumHeight);
+            DebugView.DrawString(50, TextLine, "Dynamic tree height = {0}, min = {1}", height, minimumHeight);
             TextLine += 15;
 
             base.Update(settings, gameTime);

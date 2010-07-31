@@ -68,7 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
             WorldManifold worldManifold = new WorldManifold(ref manifold, ref _transformA, _polygonA.Radius,
                                                             ref _transformB, _polygonB.Radius);
 
-            DebugView.DrawString(50, TextLine, "point count = {0:n}", manifold.PointCount);
+            DebugView.DrawString(50, TextLine, "Point count = {0:n}", manifold.PointCount);
             TextLine += 15;
 
             {
