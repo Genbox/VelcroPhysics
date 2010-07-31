@@ -906,19 +906,19 @@ namespace FarseerPhysics.Dynamics
 
                     // Compute the time of impact in interval [0, minTOI]
                     TOIInput input = new TOIInput();
-                    input.proxyA.Set(fixtureA.Shape, indexA);
-                    input.proxyB.Set(fixtureB.Shape, indexB);
-                    input.sweepA = bodyA._sweep;
-                    input.sweepB = bodyB._sweep;
-                    input.tMax = toi;
+                    input.ProxyA.Set(fixtureA.Shape, indexA);
+                    input.ProxyB.Set(fixtureB.Shape, indexB);
+                    input.SweepA = bodyA._sweep;
+                    input.SweepB = bodyB._sweep;
+                    input.TMax = toi;
 
                     TOIOutput output;
                     TimeOfImpact.CalculateTimeOfImpact(out output, ref input);
 
-                    if (output.State == TOIOutputState.Touching && output.t < toi)
+                    if (output.State == TOIOutputState.Touching && output.T < toi)
                     {
                         toiContact = contact;
-                        toi = output.t;
+                        toi = output.T;
                         toiOther = other;
                         found = true;
                     }

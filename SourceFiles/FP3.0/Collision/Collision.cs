@@ -39,28 +39,30 @@ namespace FarseerPhysics.Collision
     /// This must be 4 bytes or less.
     public struct ContactFeature
     {
-        internal byte indexA;
+        /// Feature index on ShapeA
+        internal byte IndexA;
 
-        ///< Feature index on ShapeA
-        internal byte indexB;
+        /// Feature index on ShapeB
+        internal byte IndexB;
 
-        ///< Feature index on ShapeB
-        internal byte typeA;
+        /// The feature type on ShapeA
+        internal byte TypeA;
 
-        ///< The feature type on ShapeA
-        internal byte typeB; ///< The feature type on ShapeB
+        /// The feature type on ShapeB
+        internal byte TypeB;
     }
 
     /// Contact ids to facilitate warm starting.
     [StructLayout(LayoutKind.Explicit)]
     public struct ContactID
     {
+        /// The features that intersect to form the contact point
         [FieldOffset(0)]
         public ContactFeature Features;
 
-        /// The features that intersect to form the contact point
+        /// Used to quickly compare contact ids.
         [FieldOffset(0)]
-        public uint Key; ///< Used to quickly compare contact ids.
+        public uint Key; 
     }
 
     /// A manifold point is a contact point belonging to a contact
@@ -75,15 +77,13 @@ namespace FarseerPhysics.Collision
     /// provide reliable contact forces, especially for high speed collisions.
     public struct ManifoldPoint
     {
-        ///< the friction impulse
-        public ContactID Id; ///< uniquely identifies a contact point between two Shapes
+        /// uniquely identifies a contact point between two Shapes
+        public ContactID Id; 
 
         public Vector2 LocalPoint;
 
-        ///< usage depends on manifold type
         public float NormalImpulse;
 
-        ///< the non-penetration impulse
         public float TangentImpulse;
     }
 
@@ -147,10 +147,11 @@ namespace FarseerPhysics.Collision
     /// This is used to compute the current state of a contact manifold.
     public struct WorldManifold
     {
+        /// world vector pointing from A to B
         public Vector2 Normal;
 
-        ///< world vector pointing from A to B
-        public FixedArray2<Vector2> Points; ///< world contact point (point of intersection)
+        /// world contact point (point of intersection)
+        public FixedArray2<Vector2> Points; 
 
         /// Evaluate the manifold with supplied transforms. This assumes
         /// modest motion from the original state. This does not change the
@@ -816,10 +817,10 @@ namespace FarseerPhysics.Collision
                     {
                         // Swap features
                         ContactFeature cf = cp.Id.Features;
-                        cp.Id.Features.indexA = cf.indexB;
-                        cp.Id.Features.indexB = cf.indexA;
-                        cp.Id.Features.typeA = cf.typeB;
-                        cp.Id.Features.typeB = cf.typeA;
+                        cp.Id.Features.IndexA = cf.IndexB;
+                        cp.Id.Features.IndexB = cf.IndexA;
+                        cp.Id.Features.TypeA = cf.TypeB;
+                        cp.Id.Features.TypeB = cf.TypeA;
                     }
 
                     manifold.Points[pointCount] = cp;
@@ -852,8 +853,8 @@ namespace FarseerPhysics.Collision
             float radius = edgeA.Radius + circleB.Radius;
 
             ContactFeature cf;
-            cf.indexB = 0;
-            cf.typeB = (byte)ContactFeatureType.Vertex;
+            cf.IndexB = 0;
+            cf.TypeB = (byte)ContactFeatureType.Vertex;
 
             Vector2 P, d;
 
@@ -883,8 +884,8 @@ namespace FarseerPhysics.Collision
                     }
                 }
 
-                cf.indexA = 0;
-                cf.typeA = (byte)ContactFeatureType.Vertex;
+                cf.IndexA = 0;
+                cf.TypeA = (byte)ContactFeatureType.Vertex;
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.Circles;
                 manifold.LocalNormal = Vector2.Zero;
@@ -923,8 +924,8 @@ namespace FarseerPhysics.Collision
                     }
                 }
 
-                cf.indexA = 1;
-                cf.typeA = (byte)ContactFeatureType.Vertex;
+                cf.IndexA = 1;
+                cf.TypeA = (byte)ContactFeatureType.Vertex;
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.Circles;
                 manifold.LocalNormal = Vector2.Zero;
@@ -955,8 +956,8 @@ namespace FarseerPhysics.Collision
             }
             n.Normalize();
 
-            cf.indexA = 0;
-            cf.typeA = (byte)ContactFeatureType.Face;
+            cf.IndexA = 0;
+            cf.TypeA = (byte)ContactFeatureType.Face;
             manifold.PointCount = 1;
             manifold.Type = ManifoldType.FaceA;
             manifold.LocalNormal = n;
@@ -1045,17 +1046,17 @@ namespace FarseerPhysics.Collision
 
             ClipVertex ctemp = new ClipVertex();
             ctemp.v = poly2._vertices[i1];
-            ctemp.id.Features.indexA = (byte)edge1;
-            ctemp.id.Features.indexB = (byte)i1;
-            ctemp.id.Features.typeA = (byte)ContactFeatureType.Face;
-            ctemp.id.Features.typeB = (byte)ContactFeatureType.Vertex;
+            ctemp.id.Features.IndexA = (byte)edge1;
+            ctemp.id.Features.IndexB = (byte)i1;
+            ctemp.id.Features.TypeA = (byte)ContactFeatureType.Face;
+            ctemp.id.Features.TypeB = (byte)ContactFeatureType.Vertex;
             c[0] = ctemp;
 
             ctemp.v = poly2._vertices[i2];
-            ctemp.id.Features.indexA = (byte)edge1;
-            ctemp.id.Features.indexB = (byte)i2;
-            ctemp.id.Features.typeA = (byte)ContactFeatureType.Face;
-            ctemp.id.Features.typeB = (byte)ContactFeatureType.Vertex;
+            ctemp.id.Features.IndexA = (byte)edge1;
+            ctemp.id.Features.IndexB = (byte)i2;
+            ctemp.id.Features.TypeA = (byte)ContactFeatureType.Face;
+            ctemp.id.Features.TypeB = (byte)ContactFeatureType.Vertex;
             c[1] = ctemp;
         }
 
@@ -1321,15 +1322,15 @@ namespace FarseerPhysics.Collision
                     else
                     {
                         cp.LocalPoint = clipPoints2[i].v;
-                        cp.Id.Features.typeA = clipPoints2[i].id.Features.typeB;
-                        cp.Id.Features.typeB = clipPoints2[i].id.Features.typeA;
-                        cp.Id.Features.indexA = clipPoints2[i].id.Features.indexB;
-                        cp.Id.Features.indexB = clipPoints2[i].id.Features.indexA;
+                        cp.Id.Features.TypeA = clipPoints2[i].id.Features.TypeB;
+                        cp.Id.Features.TypeB = clipPoints2[i].id.Features.TypeA;
+                        cp.Id.Features.IndexA = clipPoints2[i].id.Features.IndexB;
+                        cp.Id.Features.IndexB = clipPoints2[i].id.Features.IndexA;
                     }
 
                     manifold.Points[pointCount] = cp;
-                    if (cp.Id.Features.typeA == (byte)ContactFeatureType.Vertex &&
-                        types[cp.Id.Features.indexA] == EdgeType.Flat)
+                    if (cp.Id.Features.TypeA == (byte)ContactFeatureType.Vertex &&
+                        types[cp.Id.Features.IndexA] == EdgeType.Flat)
                     {
                         continue;
                     }
@@ -1369,10 +1370,10 @@ namespace FarseerPhysics.Collision
                 cv.v = vIn[0].v + interp * (vIn[1].v - vIn[0].v);
 
                 // VertexA is hitting edgeB.
-                cv.id.Features.indexA = (byte)vertexIndexA;
-                cv.id.Features.indexB = vIn[0].id.Features.indexB;
-                cv.id.Features.typeA = (byte)ContactFeatureType.Vertex;
-                cv.id.Features.typeB = (byte)ContactFeatureType.Face;
+                cv.id.Features.IndexA = (byte)vertexIndexA;
+                cv.id.Features.IndexB = vIn[0].id.Features.IndexB;
+                cv.id.Features.TypeA = (byte)ContactFeatureType.Vertex;
+                cv.id.Features.TypeB = (byte)ContactFeatureType.Face;
 
                 vOut[numOut] = cv;
 
@@ -1561,19 +1562,19 @@ namespace FarseerPhysics.Collision
             var cv0 = c[0];
 
             cv0.v = MathUtils.Multiply(ref xf2, poly2._vertices[i1]);
-            cv0.id.Features.indexA = (byte)edge1;
-            cv0.id.Features.indexB = (byte)i1;
-            cv0.id.Features.typeA = (byte)ContactFeatureType.Face;
-            cv0.id.Features.typeB = (byte)ContactFeatureType.Vertex;
+            cv0.id.Features.IndexA = (byte)edge1;
+            cv0.id.Features.IndexB = (byte)i1;
+            cv0.id.Features.TypeA = (byte)ContactFeatureType.Face;
+            cv0.id.Features.TypeB = (byte)ContactFeatureType.Vertex;
 
             c[0] = cv0;
 
             var cv1 = c[1];
             cv1.v = MathUtils.Multiply(ref xf2, poly2._vertices[i2]);
-            cv1.id.Features.indexA = (byte)edge1;
-            cv1.id.Features.indexB = (byte)i2;
-            cv1.id.Features.typeA = (byte)ContactFeatureType.Face;
-            cv1.id.Features.typeB = (byte)ContactFeatureType.Vertex;
+            cv1.id.Features.IndexA = (byte)edge1;
+            cv1.id.Features.IndexB = (byte)i2;
+            cv1.id.Features.TypeA = (byte)ContactFeatureType.Face;
+            cv1.id.Features.TypeB = (byte)ContactFeatureType.Vertex;
 
             c[1] = cv1;
         }

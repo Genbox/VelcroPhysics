@@ -77,6 +77,7 @@ namespace FarseerPhysics.Collision
                             _buffer[1] = loop._vertices[0];
                         }
 
+                        _vertices = new Vector2[2];
                         _vertices[0] = _buffer[0];
                         _vertices[1] = _buffer[1];
                         _count = 2;
@@ -150,13 +151,14 @@ namespace FarseerPhysics.Collision
     /// Set count to zero on first call.
     public struct SimplexCache
     {
-        ///< length or area
+        /// Length or area
         public UInt16 count;
 
+        /// Vertices on shape A
         public FixedArray3<byte> indexA;
 
-        ///< vertices on shape A
-        public FixedArray3<byte> indexB; ///< vertices on shape B
+        /// Vertices on shape B
+        public FixedArray3<byte> indexB;
 
         public float metric;
     }
@@ -597,7 +599,7 @@ namespace FarseerPhysics.Collision
             simplex.ReadCache(ref cache, ref input.ProxyA, ref input.TransformA, ref input.ProxyB, ref input.TransformB);
 
             // Get simplex vertices as an array.
-            int k_maxIters = 20;
+            const int k_maxIters = 20;
 
             // These store the vertices of the last simplex so that we
             // can check for duplicates and prevent cycling.

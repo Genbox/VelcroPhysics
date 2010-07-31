@@ -27,25 +27,25 @@ namespace FarseerPhysics.Collision
 {
     internal struct Pair : IComparable<Pair>
     {
-        public int next;
-        public int proxyIdA;
-        public int proxyIdB;
+        public int Next;
+        public int ProxyIdA;
+        public int ProxyIdB;
 
         #region IComparable<Pair> Members
 
         public int CompareTo(Pair other)
         {
-            if (proxyIdA < other.proxyIdA)
+            if (ProxyIdA < other.ProxyIdA)
             {
                 return -1;
             }
-            else if (proxyIdA == other.proxyIdA)
+            else if (ProxyIdA == other.ProxyIdA)
             {
-                if (proxyIdB < other.proxyIdB)
+                if (ProxyIdB < other.ProxyIdB)
                 {
                     return -1;
                 }
-                else if (proxyIdB == other.proxyIdB)
+                else if (ProxyIdB == other.ProxyIdB)
                 {
                     return 0;
                 }
@@ -63,17 +63,17 @@ namespace FarseerPhysics.Collision
     public class BroadPhase
     {
         internal const int NullProxy = -1;
-        internal int[] _moveBuffer;
-        internal int _moveCapacity;
-        internal int _moveCount;
+        private int[] _moveBuffer;
+        private int _moveCapacity;
+        private int _moveCount;
 
-        internal Pair[] _pairBuffer;
-        internal int _pairCapacity;
-        internal int _pairCount;
-        internal int _proxyCount;
+        private Pair[] _pairBuffer;
+        private int _pairCapacity;
+        private int _pairCount;
+        private int _proxyCount;
         private Func<int, bool> _queryCallback;
-        internal int _queryProxyId;
-        internal DynamicTree _tree = new DynamicTree();
+        private int _queryProxyId;
+        private DynamicTree _tree = new DynamicTree();
 
         public BroadPhase()
         {
@@ -180,8 +180,8 @@ namespace FarseerPhysics.Collision
             while (i < _pairCount)
             {
                 Pair primaryPair = _pairBuffer[i];
-                object userDataA = _tree.GetUserData<T>(primaryPair.proxyIdA);
-                object userDataB = _tree.GetUserData<T>(primaryPair.proxyIdB);
+                object userDataA = _tree.GetUserData<T>(primaryPair.ProxyIdA);
+                object userDataB = _tree.GetUserData<T>(primaryPair.ProxyIdB);
 
                 callback((T) userDataA, (T) userDataB);
                 ++i;
@@ -190,7 +190,7 @@ namespace FarseerPhysics.Collision
                 while (i < _pairCount)
                 {
                     Pair pair = _pairBuffer[i];
-                    if (pair.proxyIdA != primaryPair.proxyIdA || pair.proxyIdB != primaryPair.proxyIdB)
+                    if (pair.ProxyIdA != primaryPair.ProxyIdA || pair.ProxyIdB != primaryPair.ProxyIdB)
                     {
                         break;
                     }
@@ -263,8 +263,8 @@ namespace FarseerPhysics.Collision
                 Array.Copy(oldBuffer, _pairBuffer, _pairCount);
             }
 
-            _pairBuffer[_pairCount].proxyIdA = Math.Min(proxyId, _queryProxyId);
-            _pairBuffer[_pairCount].proxyIdB = Math.Max(proxyId, _queryProxyId);
+            _pairBuffer[_pairCount].ProxyIdA = Math.Min(proxyId, _queryProxyId);
+            _pairBuffer[_pairCount].ProxyIdB = Math.Max(proxyId, _queryProxyId);
             ++_pairCount;
 
             return true;
