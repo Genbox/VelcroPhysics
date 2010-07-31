@@ -84,9 +84,12 @@ namespace FarseerPhysics.Dynamics
             new DefaultContactFilter(this);
 
             Controllers = new List<Controller>();
+            BreakableBodyList = new List<BreakableBody>();
         }
 
         public List<Controller> Controllers { get; private set; }
+
+        public List<BreakableBody> BreakableBodyList { get; private set; }
 
         public float UpdateTime { get; private set; }
 
@@ -546,11 +549,11 @@ namespace FarseerPhysics.Dynamics
                 _watch.Reset();
             }
 
-            //TODO: Fix and introduce timing
-            //foreach (BreakableBody breakableBody in BreakableBodyList)
-            //{
-            //breakableBody.Update();
-            //}
+            //TODO: introduce timing
+            foreach (BreakableBody breakableBody in BreakableBodyList)
+            {
+                breakableBody.Update();
+            }
         }
 
         /// Call this after you are done with time steps to clear the forces. You normally
@@ -1080,6 +1083,11 @@ namespace FarseerPhysics.Dynamics
         {
             if (Controllers.Contains(controller))
                 Controllers.Remove(controller);
+        }
+
+        public void AddBreakableBody(BreakableBody breakableBody)
+        {
+            BreakableBodyList.Add(breakableBody);
         }
     }
 }
