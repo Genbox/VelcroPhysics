@@ -84,7 +84,7 @@ namespace FarseerPhysics.Dynamics
 
     public struct ContactImpulse
     {
-        public FixedArray2<float> normalImpulses;
-        public FixedArray2<float> tangentImpulses;
+        public FixedArray2<float> NormalImpulses;
+        public FixedArray2<float> TangentImpulses;
     }
 }

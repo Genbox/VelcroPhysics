@@ -86,9 +86,9 @@ namespace FarseerPhysics.DebugViewXNA
                     Fixture fixtureB = c.FixtureB;
 
                     AABB aabbA;
-                    fixtureA.GetAABB(out aabbA, 1);
+                    fixtureA.GetAABB(out aabbA, 0);
                     AABB aabbB;
-                    fixtureB.GetAABB(out aabbB, 1);
+                    fixtureB.GetAABB(out aabbB, 0);
 
                     Vector2 cA = aabbA.GetCenter();
                     Vector2 cB = aabbB.GetCenter();

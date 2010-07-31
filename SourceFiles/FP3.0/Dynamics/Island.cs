@@ -49,7 +49,7 @@ namespace FarseerPhysics.Dynamics
             _bodyCapacity = bodyCapacity;
             _contactCapacity = contactCapacity;
             _jointCapacity = jointCapacity;
-            
+
             _bodyCount = 0;
             _contactCount = 0;
             _jointCount = 0;
@@ -296,11 +296,12 @@ namespace FarseerPhysics.Dynamics
                 ContactImpulse impulse = new ContactImpulse();
                 for (int j = 0; j < cc.PointCount; ++j)
                 {
-                    impulse.normalImpulses[j] = cc.Points[j].NormalImpulse;
-                    impulse.tangentImpulses[j] = cc.Points[j].TangentImpulse;
+                    impulse.NormalImpulses[j] = cc.Points[j].NormalImpulse;
+                    impulse.TangentImpulses[j] = cc.Points[j].TangentImpulse;
                 }
 
-                _contactManager.PostSolve(c, ref impulse);
+                if (_contactManager.PostSolve != null)
+                    _contactManager.PostSolve(c, ref impulse);
             }
         }
     }
