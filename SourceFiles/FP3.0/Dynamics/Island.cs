@@ -33,16 +33,16 @@ namespace FarseerPhysics.Dynamics
     internal class Island
     {
         public Body[] _bodies;
-        public int _bodyCapacity;
+        private int _bodyCapacity;
         public int _bodyCount;
-        public int _contactCapacity;
-        public int _contactCount;
+        private int _contactCapacity;
+        private int _contactCount;
         private ContactSolver _contactSolver = new ContactSolver();
-        public Contact[] _contacts;
-        public int _jointCapacity;
-        public int _jointCount;
-        public Joint[] _joints;
-        public ContactManager _contactManager;
+        private Contact[] _contacts;
+        private int _jointCapacity;
+        private int _jointCount;
+        private Joint[] _joints;
+        private ContactManager _contactManager;
 
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
         {
@@ -214,7 +214,7 @@ namespace FarseerPhysics.Dynamics
                 }
             }
 
-            Report(_contactSolver._constraints);
+            Report(_contactSolver.Constraints);
 
             if (Settings.AllowSleep)
             {
@@ -294,10 +294,10 @@ namespace FarseerPhysics.Dynamics
                 ContactConstraint cc = constraints[i];
 
                 ContactImpulse impulse = new ContactImpulse();
-                for (int j = 0; j < cc.pointCount; ++j)
+                for (int j = 0; j < cc.PointCount; ++j)
                 {
-                    impulse.normalImpulses[j] = cc.points[j].normalImpulse;
-                    impulse.tangentImpulses[j] = cc.points[j].tangentImpulse;
+                    impulse.normalImpulses[j] = cc.Points[j].NormalImpulse;
+                    impulse.tangentImpulses[j] = cc.Points[j].TangentImpulse;
                 }
 
                 _contactManager.PostSolve(c, ref impulse);

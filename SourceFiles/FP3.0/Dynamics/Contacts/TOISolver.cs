@@ -31,75 +31,75 @@ namespace FarseerPhysics.Dynamics.Contacts
 {
     internal struct TOIConstraint
     {
-        public Body bodyA;
-        public Body bodyB;
-        public Vector2 localNormal;
-        public Vector2 localPoint;
-        public FixedArray2<Vector2> localPoints;
-        public int pointCount;
-        public float radius;
-        public ManifoldType type;
+        public Body BodyA;
+        public Body BodyB;
+        public Vector2 LocalNormal;
+        public Vector2 LocalPoint;
+        public FixedArray2<Vector2> LocalPoints;
+        public int PointCount;
+        public float Radius;
+        public ManifoldType Type;
     }
 
     internal struct TOISolverManifold
     {
-        internal Vector2 normal;
-        internal Vector2 point;
-        internal float separation;
+        internal Vector2 Normal;
+        internal Vector2 Point;
+        internal float Separation;
 
         public TOISolverManifold(ref TOIConstraint cc, int index)
         {
-            Debug.Assert(cc.pointCount > 0);
+            Debug.Assert(cc.PointCount > 0);
 
-            switch (cc.type)
+            switch (cc.Type)
             {
                 case ManifoldType.Circles:
                     {
-                        Vector2 pointA = cc.bodyA.GetWorldPoint(cc.localPoint);
-                        Vector2 pointB = cc.bodyB.GetWorldPoint(cc.localPoints[0]);
+                        Vector2 pointA = cc.BodyA.GetWorldPoint(cc.LocalPoint);
+                        Vector2 pointB = cc.BodyB.GetWorldPoint(cc.LocalPoints[0]);
                         if ((pointA - pointB).LengthSquared() > Settings.Epsilon * Settings.Epsilon)
                         {
-                            normal = pointB - pointA;
-                            normal.Normalize();
+                            Normal = pointB - pointA;
+                            Normal.Normalize();
                         }
                         else
                         {
-                            normal = new Vector2(1.0f, 0.0f);
+                            Normal = new Vector2(1.0f, 0.0f);
                         }
 
-                        point = 0.5f * (pointA + pointB);
-                        separation = Vector2.Dot(pointB - pointA, normal) - cc.radius;
+                        Point = 0.5f * (pointA + pointB);
+                        Separation = Vector2.Dot(pointB - pointA, Normal) - cc.Radius;
                     }
                     break;
 
                 case ManifoldType.FaceA:
                     {
-                        normal = cc.bodyA.GetWorldVector(cc.localNormal);
-                        Vector2 planePoint = cc.bodyA.GetWorldPoint(cc.localPoint);
+                        Normal = cc.BodyA.GetWorldVector(cc.LocalNormal);
+                        Vector2 planePoint = cc.BodyA.GetWorldPoint(cc.LocalPoint);
 
-                        Vector2 clipPoint = cc.bodyB.GetWorldPoint(cc.localPoints[index]);
-                        separation = Vector2.Dot(clipPoint - planePoint, normal) - cc.radius;
-                        point = clipPoint;
+                        Vector2 clipPoint = cc.BodyB.GetWorldPoint(cc.LocalPoints[index]);
+                        Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
+                        Point = clipPoint;
                     }
                     break;
 
                 case ManifoldType.FaceB:
                     {
-                        normal = cc.bodyB.GetWorldVector(cc.localNormal);
-                        Vector2 planePoint = cc.bodyB.GetWorldPoint(cc.localPoint);
+                        Normal = cc.BodyB.GetWorldVector(cc.LocalNormal);
+                        Vector2 planePoint = cc.BodyB.GetWorldPoint(cc.LocalPoint);
 
-                        Vector2 clipPoint = cc.bodyA.GetWorldPoint(cc.localPoints[index]);
-                        separation = Vector2.Dot(clipPoint - planePoint, normal) - cc.radius;
-                        point = clipPoint;
+                        Vector2 clipPoint = cc.BodyA.GetWorldPoint(cc.LocalPoints[index]);
+                        Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
+                        Point = clipPoint;
 
                         // Ensure normal points from A to B
-                        normal = -normal;
+                        Normal = -Normal;
                     }
                     break;
                 default:
-                    normal = Vector2.UnitY;
-                    point = Vector2.Zero;
-                    separation = 0.0f;
+                    Normal = Vector2.UnitY;
+                    Point = Vector2.Zero;
+                    Separation = 0.0f;
                     break;
             }
         }
@@ -137,17 +137,17 @@ namespace FarseerPhysics.Dynamics.Contacts
                 Debug.Assert(manifold.PointCount > 0);
 
                 TOIConstraint constraint = _constraints[i];
-                constraint.bodyA = bodyA;
-                constraint.bodyB = bodyB;
-                constraint.localNormal = manifold.LocalNormal;
-                constraint.localPoint = manifold.LocalPoint;
-                constraint.type = manifold.Type;
-                constraint.pointCount = manifold.PointCount;
-                constraint.radius = radiusA + radiusB;
+                constraint.BodyA = bodyA;
+                constraint.BodyB = bodyB;
+                constraint.LocalNormal = manifold.LocalNormal;
+                constraint.LocalPoint = manifold.LocalPoint;
+                constraint.Type = manifold.Type;
+                constraint.PointCount = manifold.PointCount;
+                constraint.Radius = radiusA + radiusB;
 
-                for (int j = 0; j < constraint.pointCount; ++j)
+                for (int j = 0; j < constraint.PointCount; ++j)
                 {
-                    constraint.localPoints[j] = manifold.Points[j].LocalPoint;
+                    constraint.LocalPoints[j] = manifold.Points[j].LocalPoint;
                 }
 
                 _constraints[i] = constraint;
@@ -162,8 +162,8 @@ namespace FarseerPhysics.Dynamics.Contacts
             for (int i = 0; i < _count; ++i)
             {
                 TOIConstraint c = _constraints[i];
-                Body bodyA = c.bodyA;
-                Body bodyB = c.bodyB;
+                Body bodyA = c.BodyA;
+                Body bodyB = c.BodyB;
 
                 float massA = bodyA._mass;
                 float massB = bodyB._mass;
@@ -184,13 +184,13 @@ namespace FarseerPhysics.Dynamics.Contacts
                 float invIB = massB * bodyB._invI;
 
                 // Solve normal constraints
-                for (int j = 0; j < c.pointCount; ++j)
+                for (int j = 0; j < c.PointCount; ++j)
                 {
                     TOISolverManifold psm = new TOISolverManifold(ref c, j);
 
-                    Vector2 normal = psm.normal;
-                    Vector2 point = psm.point;
-                    float separation = psm.separation;
+                    Vector2 normal = psm.Normal;
+                    Vector2 point = psm.Point;
+                    float separation = psm.Separation;
 
                     Vector2 rA = point - bodyA._sweep.c;
                     Vector2 rB = point - bodyB._sweep.c;

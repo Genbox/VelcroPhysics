@@ -35,9 +35,9 @@ namespace FarseerPhysics.Dynamics
         public Body MainBody;
         public List<Fixture> Parts = new List<Fixture>(8);
         public float Strength = 500.0f;
-        public float[] _angularVelocitiesCache = new float[8];
+        private float[] _angularVelocitiesCache = new float[8];
         private bool _break;
-        public Vector2[] _velocitiesCache = new Vector2[8];
+        private Vector2[] _velocitiesCache = new Vector2[8];
         private World _world;
 
         public BreakableBody(World world)
@@ -52,10 +52,10 @@ namespace FarseerPhysics.Dynamics
             if (!Broken)
             {
                 float maxImpulse = 0.0f;
-                for (int i = 0; i < contactConstraint.manifold.PointCount; ++i)
+                for (int i = 0; i < contactConstraint.Manifold.PointCount; ++i)
                 {
-                    maxImpulse = Math.Max(maxImpulse, contactConstraint.manifold.Points[0].NormalImpulse);
-                    maxImpulse = Math.Max(maxImpulse, contactConstraint.manifold.Points[1].NormalImpulse);
+                    maxImpulse = Math.Max(maxImpulse, contactConstraint.Manifold.Points[0].NormalImpulse);
+                    maxImpulse = Math.Max(maxImpulse, contactConstraint.Manifold.Points[1].NormalImpulse);
                 }
 
                 if (maxImpulse > Strength)

@@ -35,15 +35,16 @@ namespace FarseerPhysics.Dynamics.Contacts
     /// nodes, one for each attached body.
     public class ContactEdge
     {
-        ///< provides quick access to the other body attached.
+        /// the contact
         public Contact Contact;
 
-        ///< the previous contact edge in the body's contact list
-        public ContactEdge Next; ///< the next contact edge in the body's contact list
+        /// the next contact edge in the body's contact list
+        public ContactEdge Next; 
 
+        /// provides quick access to the other body attached.
         public Body Other;
 
-        ///< the contact
+        /// the previous contact edge in the body's contact list
         public ContactEdge Prev;
     }
 
