@@ -27,12 +27,12 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics.Joints
 {
-    /// A distance joint rains two points on two bodies
+    /// A distance joint contrains two points on two bodies
     /// to remain at a fixed distance from each other. You can view
     /// this as a massless, rigid rod.
     public class MaxDistanceJoint : Joint
     {
-        // 1-D rained system
+        // 1-D constrained system
         // m (v2 - v1) = lambda
         // v2 + (beta/h) * x1 + gamma * lambda = 0, gamma has units of inverse mass.
         // x2 = x1 + h * v2
