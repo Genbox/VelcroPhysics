@@ -113,8 +113,7 @@ namespace FarseerPhysics.Dynamics
                 body.Position = MainBody.Position;
                 body.Rotation = MainBody.Angle;
 
-                //TODO: Get density of shape
-                body.CreateFixture(shape, 1);
+                body.CreateFixture(shape, fixture.Density);
 
                 body.AngularVelocity = _angularVelocitiesCache[i];
                 body.LinearVelocity = _velocitiesCache[i];

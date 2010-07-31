@@ -21,9 +21,11 @@
 */
 
 using System;
+using System.Collections.Generic;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
+using FarseerPhysics.Common.Decomposition;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
@@ -72,20 +74,20 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Initialize()
         {
-            ////load texture that will represent the physics body
-            //Texture2D polygonTexture = GameInstance.Content.Load<Texture2D>("rock");
+            //load texture that will represent the physics body
+            Texture2D polygonTexture = GameInstance.Content.Load<Texture2D>("rock");
 
-            ////Create an array to hold the data from the texture
-            //uint[] data = new uint[polygonTexture.Width * polygonTexture.Height];
+            //Create an array to hold the data from the texture
+            uint[] data = new uint[polygonTexture.Width * polygonTexture.Height];
 
-            ////Transfer the texture data to the array
-            //polygonTexture.GetData(data);
+            //Transfer the texture data to the array
+            polygonTexture.GetData(data);
 
-            //Vertices verts = PolygonTools.CreatePolygon(data, polygonTexture.Width, polygonTexture.Height);
-            //Vector2 scale = new Vector2(0.07f, 0.07f);
-            //verts.Scale(ref scale);
+            Vertices verts = PolygonTools.CreatePolygon(data, polygonTexture.Width, polygonTexture.Height);
+            Vector2 scale = new Vector2(0.07f, 0.07f);
+            verts.Scale(ref scale);
 
-            //FixtureFactory.CreateBreakableBody(World, verts, 50, new Vector2(-10, 25));
+            FixtureFactory.CreateBreakableBody(World, verts, 50, new Vector2(-10, 25));
 
             base.Initialize();
         }

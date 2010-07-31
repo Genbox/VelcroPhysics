@@ -207,8 +207,7 @@ namespace FarseerPhysics.Factories
             }
 
             breakableBody.MainBody.Position = position;
-            //TODO: Fix
-            //world.Add(breakableBody);
+            world.AddBreakableBody(breakableBody);
 
             return breakableBody;
         }
