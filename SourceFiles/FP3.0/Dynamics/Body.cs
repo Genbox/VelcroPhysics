@@ -468,9 +468,15 @@ namespace FarseerPhysics.Dynamics
             return fixture;
         }
 
+        /// <summary>
+        /// Creates a fixture with the supplied shape.
+        /// Note: Default density is 1
+        /// </summary>
+        /// <param name="shape">The shape</param>
+        /// <returns></returns>
         public Fixture CreateFixture(Shape shape)
         {
-            return CreateFixture(shape, 0);
+            return CreateFixture(shape, 1);
         }
 
         /// Destroy a fixture. This removes the fixture from the broad-phase and
@@ -529,8 +535,6 @@ namespace FarseerPhysics.Dynamics
 
             if ((_flags & BodyFlags.Active) == BodyFlags.Active)
             {
-                Debug.Assert(fixture._proxyId != BroadPhase.NullProxy);
-
                 BroadPhase broadPhase = _world._contactManager.BroadPhase;
                 fixture.DestroyProxies(broadPhase);
             }
