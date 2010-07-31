@@ -62,7 +62,7 @@ namespace FarseerPhysics.Dynamics
     {
         public DefaultContactFilter(World world)
         {
-            world._contactManager.ContactFilter += ShouldCollide;
+            world.ContactManager.ContactFilter += ShouldCollide;
         }
 
         public bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)

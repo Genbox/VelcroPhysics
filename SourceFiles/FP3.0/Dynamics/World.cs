@@ -55,15 +55,10 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public JointRemovedDelegate JointRemoved;
 
-        public int _bodyCount;
-        public Body _bodyList;
-        public ContactManager _contactManager = new ContactManager();
-        internal Queue<Contact> _contactPool = new Queue<Contact>(256);
-        internal WorldFlags _flags;
-        internal float _inv_dt0;
-        internal Island _island = new Island();
-        public int _jointCount;
-        public Joint _jointList;
+        internal Queue<Contact> ContactPool = new Queue<Contact>(256);
+        internal WorldFlags Flags;
+        private float _inv_dt0;
+        private Island _island = new Island();
         private Func<FixtureProxy, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
         private RayCastCallback _rayCastCallback;
@@ -71,16 +66,17 @@ namespace FarseerPhysics.Dynamics
         private Contact[] _toiContacts = new Contact[Settings.MaxTOIContacts];
         private TOISolver _toiSolver = new TOISolver();
         private Stopwatch _watch = new Stopwatch();
-        private Body[] stack = new Body[64];
+        private Body[] _stack = new Body[64];
 
         /// ruct a world object.
         /// @param gravity the world gravity vector.
         /// @param doSleep improve performance by not simulating inactive bodies.
         public World(Vector2 gravity)
         {
+            ContactManager = new ContactManager();
             Gravity = gravity;
 
-            _flags = WorldFlags.ClearForces;
+            Flags = WorldFlags.ClearForces;
 
             _queryAABBCallbackWrapper = QueryAABBCallbackWrapper;
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
@@ -107,25 +103,19 @@ namespace FarseerPhysics.Dynamics
         /// Get the number of broad-phase proxies.
         public int ProxyCount
         {
-            get { return _contactManager.BroadPhase.ProxyCount; }
+            get { return ContactManager.BroadPhase.ProxyCount; }
         }
 
         /// Get the number of bodies.
-        public int BodyCount
-        {
-            get { return _bodyCount; }
-        }
+        public int BodyCount { get; private set; }
 
         /// Get the number of joints.
-        public int JointCount
-        {
-            get { return _jointCount; }
-        }
+        public int JointCount { get; private set; }
 
         /// Get the number of contacts (each may have 0 or more contact points).
         public int ContactCount
         {
-            get { return _contactManager.ContactCount; }
+            get { return ContactManager.ContactCount; }
         }
 
         /// Change the global gravity vector.
@@ -134,16 +124,16 @@ namespace FarseerPhysics.Dynamics
         /// Is the world locked (in the middle of a time step).
         public bool IsLocked
         {
-            get { return (_flags & WorldFlags.Locked) == WorldFlags.Locked; }
+            get { return (Flags & WorldFlags.Locked) == WorldFlags.Locked; }
             set
             {
                 if (value)
                 {
-                    _flags |= WorldFlags.Locked;
+                    Flags |= WorldFlags.Locked;
                 }
                 else
                 {
-                    _flags &= ~WorldFlags.Locked;
+                    Flags &= ~WorldFlags.Locked;
                 }
             }
         }
@@ -155,37 +145,28 @@ namespace FarseerPhysics.Dynamics
             {
                 if (value)
                 {
-                    _flags |= WorldFlags.ClearForces;
+                    Flags |= WorldFlags.ClearForces;
                 }
                 else
                 {
-                    _flags &= ~WorldFlags.ClearForces;
+                    Flags &= ~WorldFlags.ClearForces;
                 }
             }
-            get { return (_flags & WorldFlags.ClearForces) == WorldFlags.ClearForces; }
+            get { return (Flags & WorldFlags.ClearForces) == WorldFlags.ClearForces; }
         }
 
         /// Get the contact manager for testing.
-        public ContactManager ContactManager
-        {
-            get { return _contactManager; }
-        }
+        public ContactManager ContactManager { get; set; }
 
         /// Get the world body list. With the returned body, use Body.GetNext to get
         /// the next body in the world list. A null body indicates the end of the list.
         /// @return the head of the world body list.
-        public Body BodyList
-        {
-            get { return _bodyList; }
-        }
+        public Body BodyList { get; set; }
 
         /// Get the world joint list. With the returned joint, use Joint.GetNext to get
         /// the next joint in the world list. A null joint indicates the end of the list.
         /// @return the head of the world joint list.
-        public Joint JointList
-        {
-            get { return _jointList; }
-        }
+        public Joint JointList { get; set; }
 
         /// Get the world contact list. With the returned contact, use Contact.GetNext to get
         /// the next contact in the world list. A null contact indicates the end of the list.
@@ -193,7 +174,7 @@ namespace FarseerPhysics.Dynamics
         /// @warning contacts are 
         public Contact ContactList
         {
-            get { return _contactManager.ContactList; }
+            get { return ContactManager.ContactList; }
         }
 
         /// Create a rigid body given a definition. No reference to the definition
@@ -211,13 +192,13 @@ namespace FarseerPhysics.Dynamics
 
             // Add to world doubly linked list.
             b._prev = null;
-            b._next = _bodyList;
-            if (_bodyList != null)
+            b._next = BodyList;
+            if (BodyList != null)
             {
-                _bodyList._prev = b;
+                BodyList._prev = b;
             }
-            _bodyList = b;
-            ++_bodyCount;
+            BodyList = b;
+            ++BodyCount;
 
             return b;
         }
@@ -228,7 +209,7 @@ namespace FarseerPhysics.Dynamics
         /// @warning This function is locked during callbacks.
         public void DestroyBody(Body b)
         {
-            Debug.Assert(_bodyCount > 0);
+            Debug.Assert(BodyCount > 0);
             Debug.Assert(!IsLocked);
             if (IsLocked)
             {
@@ -257,7 +238,7 @@ namespace FarseerPhysics.Dynamics
             {
                 ContactEdge ce0 = ce;
                 ce = ce.Next;
-                _contactManager.Destroy(ce0.Contact);
+                ContactManager.Destroy(ce0.Contact);
             }
             b._contactList = null;
 
@@ -273,7 +254,7 @@ namespace FarseerPhysics.Dynamics
                     FixtureRemoved(f0);
                 }
 
-                f0.DestroyProxies(_contactManager.BroadPhase);
+                f0.DestroyProxies(ContactManager.BroadPhase);
                 f0.Destroy();
             }
             b.FixtureList = null;
@@ -290,12 +271,12 @@ namespace FarseerPhysics.Dynamics
                 b._next._prev = b._prev;
             }
 
-            if (b == _bodyList)
+            if (b == BodyList)
             {
-                _bodyList = b._next;
+                BodyList = b._next;
             }
 
-            --_bodyCount;
+            --BodyCount;
         }
 
         /// Create a joint to rain bodies together. No reference to the definition
@@ -311,13 +292,13 @@ namespace FarseerPhysics.Dynamics
 
             // Connect to the world list.
             j._prev = null;
-            j._next = _jointList;
-            if (_jointList != null)
+            j._next = JointList;
+            if (JointList != null)
             {
-                _jointList._prev = j;
+                JointList._prev = j;
             }
-            _jointList = j;
-            ++_jointCount;
+            JointList = j;
+            ++JointCount;
 
             // Connect to the bodies' doubly linked lists.
             j._edgeA.Joint = j;
@@ -393,9 +374,9 @@ namespace FarseerPhysics.Dynamics
                 j._next._prev = j._prev;
             }
 
-            if (j == _jointList)
+            if (j == JointList)
             {
-                _jointList = j._next;
+                JointList = j._next;
             }
 
             // Disconnect from island graph.
@@ -453,8 +434,8 @@ namespace FarseerPhysics.Dynamics
                 j._edgeB.Next = null;
             }
 
-            Debug.Assert(_jointCount > 0);
-            --_jointCount;
+            Debug.Assert(JointCount > 0);
+            --JointCount;
 
             // WIP David
             if (!j.IsFixedType())
@@ -489,15 +470,15 @@ namespace FarseerPhysics.Dynamics
                 _watch.Start();
 
             // If new fixtures were added, we need to find the new contacts.
-            if ((_flags & WorldFlags.NewFixture) == WorldFlags.NewFixture)
+            if ((Flags & WorldFlags.NewFixture) == WorldFlags.NewFixture)
             {
-                _contactManager.FindNewContacts();
-                _flags &= ~WorldFlags.NewFixture;
+                ContactManager.FindNewContacts();
+                Flags &= ~WorldFlags.NewFixture;
             }
             if (Settings.EnableDiagnostics)
                 NewContactsTime = _watch.ElapsedTicks;
 
-            _flags |= WorldFlags.Locked;
+            Flags |= WorldFlags.Locked;
 
             TimeStep step;
             step.dt = dt;
@@ -522,7 +503,7 @@ namespace FarseerPhysics.Dynamics
                 ControllersUpdateTime = _watch.ElapsedTicks - NewContactsTime;
 
             // Update contacts. This is where some contacts are destroyed.
-            _contactManager.Collide();
+            ContactManager.Collide();
 
             if (Settings.EnableDiagnostics)
                 ContactsUpdateTime = _watch.ElapsedTicks - (NewContactsTime + ControllersUpdateTime);
@@ -551,12 +532,12 @@ namespace FarseerPhysics.Dynamics
                 _inv_dt0 = step.inv_dt;
             }
 
-            if ((_flags & WorldFlags.ClearForces) != 0)
+            if ((Flags & WorldFlags.ClearForces) != 0)
             {
                 ClearForces();
             }
 
-            _flags &= ~WorldFlags.Locked;
+            Flags &= ~WorldFlags.Locked;
 
             if (Settings.EnableDiagnostics)
             {
@@ -578,7 +559,7 @@ namespace FarseerPhysics.Dynamics
         /// @see SetAutoClearForces
         public void ClearForces()
         {
-            for (Body body = _bodyList; body != null; body = body.Next)
+            for (Body body = BodyList; body != null; body = body.Next)
             {
                 body._force = Vector2.Zero;
                 body._torque = 0.0f;
@@ -592,13 +573,13 @@ namespace FarseerPhysics.Dynamics
         public void QueryAABB(Func<FixtureProxy, bool> callback, ref AABB aabb)
         {
             _queryAABBCallback = callback;
-            _contactManager.BroadPhase.Query(_queryAABBCallbackWrapper, ref aabb);
+            ContactManager.BroadPhase.Query(_queryAABBCallbackWrapper, ref aabb);
             _queryAABBCallback = null;
         }
 
         private bool QueryAABBCallbackWrapper(int proxyId)
         {
-            FixtureProxy proxy = _contactManager.BroadPhase.GetUserData<FixtureProxy>(proxyId);
+            FixtureProxy proxy = ContactManager.BroadPhase.GetUserData<FixtureProxy>(proxyId);
             return _queryAABBCallback(proxy);
         }
 
@@ -616,13 +597,13 @@ namespace FarseerPhysics.Dynamics
             input.Point2 = point2;
 
             _rayCastCallback = callback;
-            _contactManager.BroadPhase.RayCast(_rayCastCallbackWrapper, ref input);
+            ContactManager.BroadPhase.RayCast(_rayCastCallbackWrapper, ref input);
             _rayCastCallback = null;
         }
 
         private float RayCastCallbackWrapper(ref RayCastInput input, int proxyId)
         {
-            FixtureProxy proxy = _contactManager.BroadPhase.GetUserData<FixtureProxy>(proxyId);
+            FixtureProxy proxy = ContactManager.BroadPhase.GetUserData<FixtureProxy>(proxyId);
             Fixture fixture = proxy.Fixture;
             int index = proxy.ChildIndex;
             RayCastOutput output;
@@ -641,31 +622,31 @@ namespace FarseerPhysics.Dynamics
         private void Solve(ref TimeStep step)
         {
             // Size the island for the worst case.
-            _island.Reset(_bodyCount,
-                          _contactManager.ContactCount,
-                          _jointCount,
-                          _contactManager);
+            _island.Reset(BodyCount,
+                          ContactManager.ContactCount,
+                          JointCount,
+                          ContactManager);
 
             // Clear all the island flags.
-            for (Body b = _bodyList; b != null; b = b._next)
+            for (Body b = BodyList; b != null; b = b._next)
             {
                 b._flags &= ~BodyFlags.Island;
             }
-            for (Contact c = _contactManager.ContactList; c != null; c = c._next)
+            for (Contact c = ContactManager.ContactList; c != null; c = c._next)
             {
                 c._flags &= ~ContactFlags.Island;
             }
-            for (Joint j = _jointList; j != null; j = j._next)
+            for (Joint j = JointList; j != null; j = j._next)
             {
                 j._islandFlag = false;
             }
 
             // Build and simulate all awake islands.
-            int stackSize = _bodyCount;
-            if (stackSize > stack.Length)
-                stack = new Body[Math.Max(stack.Length*2, stackSize)];
+            int stackSize = BodyCount;
+            if (stackSize > _stack.Length)
+                _stack = new Body[Math.Max(_stack.Length*2, stackSize)];
 
-            for (Body seed = _bodyList; seed != null; seed = seed._next)
+            for (Body seed = BodyList; seed != null; seed = seed._next)
             {
                 if ((seed._flags & (BodyFlags.Island)) != BodyFlags.None)
                 {
@@ -686,14 +667,14 @@ namespace FarseerPhysics.Dynamics
                 // Reset island and stack.
                 _island.Clear();
                 int stackCount = 0;
-                stack[stackCount++] = seed;
+                _stack[stackCount++] = seed;
                 seed._flags |= BodyFlags.Island;
 
                 // Perform a depth first search (DFS) on the raint graph.
                 while (stackCount > 0)
                 {
                     // Grab the next body off the stack and add it to the island.
-                    Body b = stack[--stackCount];
+                    Body b = _stack[--stackCount];
                     Debug.Assert(b.Active);
                     _island.Add(b);
 
@@ -744,7 +725,7 @@ namespace FarseerPhysics.Dynamics
                         }
 
                         Debug.Assert(stackCount < stackSize);
-                        stack[stackCount++] = other;
+                        _stack[stackCount++] = other;
                         other._flags |= BodyFlags.Island;
                     }
 
@@ -777,7 +758,7 @@ namespace FarseerPhysics.Dynamics
                             }
 
                             Debug.Assert(stackCount < stackSize);
-                            stack[stackCount++] = other;
+                            _stack[stackCount++] = other;
                             other._flags |= BodyFlags.Island;
                         }
                         else
@@ -803,7 +784,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Synchronize fixtures, check for out of range bodies.
-            for (Body b = _bodyList; b != null; b = b.Next)
+            for (Body b = BodyList; b != null; b = b.Next)
             {
                 // If a body was not in an island then it did not move.
                 if ((b._flags & BodyFlags.Island) != BodyFlags.Island)
@@ -821,7 +802,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Look for new contacts.
-            _contactManager.FindNewContacts();
+            ContactManager.FindNewContacts();
         }
 
         // Advance a dynamic body to its first time of contact
@@ -935,7 +916,7 @@ namespace FarseerPhysics.Dynamics
 
             Sweep backup = body._sweep;
             body.Advance(toi);
-            toiContact.Update(_contactManager);
+            toiContact.Update(ContactManager);
             if (toiContact.Enabled == false)
             {
                 // Contact disabled. Backup and recurse.
@@ -979,7 +960,7 @@ namespace FarseerPhysics.Dynamics
                 // gives the user a chance to disable the contact.
                 if (contact != toiContact)
                 {
-                    contact.Update(_contactManager);
+                    contact.Update(ContactManager);
                 }
 
                 // Did the user disable the contact?
@@ -1025,7 +1006,7 @@ namespace FarseerPhysics.Dynamics
         private void SolveTOI()
         {
             // Prepare all contacts.
-            for (Contact c = _contactManager.ContactList; c != null; c = c._next)
+            for (Contact c = ContactManager.ContactList; c != null; c = c._next)
             {
                 // Enable the contact
                 c._flags |= ContactFlags.Enabled;
@@ -1035,7 +1016,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Initialize the TOI flag.
-            for (Body body = _bodyList; body != null; body = body._next)
+            for (Body body = BodyList; body != null; body = body._next)
             {
                 // Kinematic, and static bodies will not be affected by the TOI event.
                 // If a body was not in an island then it did not move.
@@ -1051,7 +1032,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Collide non-bullets.
-            for (Body body = _bodyList; body != null; body = body._next)
+            for (Body body = BodyList; body != null; body = body._next)
             {
                 if ((body._flags & BodyFlags.Toi) != BodyFlags.None)
                 {
@@ -1069,7 +1050,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Collide bullets.
-            for (Body body = _bodyList; body != null; body = body._next)
+            for (Body body = BodyList; body != null; body = body._next)
             {
                 if ((body._flags & BodyFlags.Toi) != BodyFlags.None)
                 {

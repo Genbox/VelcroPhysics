@@ -73,7 +73,7 @@ namespace FarseerPhysics.TestBed.Tests
                                   return 1;
                               }, _end, _start);
 
-            DebugView.DrawString(50, 50, "Fixtures: " + fixtures.Count);
+            DebugView.DrawString(50, TextLine, "Fixtures: " + fixtures.Count);
 
             foreach (Vector2 entryPoint in entryPoints)
             {
