@@ -111,7 +111,7 @@ namespace FarseerPhysics.Dynamics
                 Body body = BodyFactory.CreateBody(_world);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = MainBody.Position;
-                body.Rotation = MainBody.GetAngle();
+                body.Rotation = MainBody.Angle;
 
                 //TODO: Get density of shape
                 body.CreateFixture(shape, 0);

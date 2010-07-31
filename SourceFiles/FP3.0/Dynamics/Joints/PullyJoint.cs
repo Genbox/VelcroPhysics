@@ -187,8 +187,8 @@ namespace FarseerPhysics.Dynamics.Joints
             b1.GetTransform(out xf1);
             b2.GetTransform(out xf2);
 
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.GetLocalCenter());
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.GetLocalCenter());
+            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
+            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
             Vector2 p1 = b1._sweep.c + r1;
             Vector2 p2 = b2._sweep.c + r2;
@@ -298,8 +298,8 @@ namespace FarseerPhysics.Dynamics.Joints
             b1.GetTransform(out xf1);
             b2.GetTransform(out xf2);
 
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.GetLocalCenter());
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.GetLocalCenter());
+            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
+            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
             if (_state == LimitState.AtUpper)
             {
@@ -367,8 +367,8 @@ namespace FarseerPhysics.Dynamics.Joints
                 b1.GetTransform(out xf1);
                 b2.GetTransform(out xf2);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.GetLocalCenter());
-                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.GetLocalCenter());
+                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
+                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
                 Vector2 p1 = b1._sweep.c + r1;
                 Vector2 p2 = b2._sweep.c + r2;
@@ -421,7 +421,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 Transform xf1;
                 b1.GetTransform(out xf1);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.GetLocalCenter());
+                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
                 Vector2 p1 = b1._sweep.c + r1;
 
                 _u1 = p1 - s1;
@@ -453,7 +453,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 Transform xf2;
                 b2.GetTransform(out xf2);
 
-                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.GetLocalCenter());
+                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
                 Vector2 p2 = b2._sweep.c + r2;
 
                 _u2 = p2 - s2;

@@ -101,8 +101,8 @@ namespace FarseerPhysics.Dynamics.Joints
             bB.GetTransform(out xfB);
 
             // Compute the effective mass matrix.
-            Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.GetLocalCenter());
-            Vector2 rB = MathUtils.Multiply(ref xfB.R, LocalAnchorB - bB.GetLocalCenter());
+            Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.LocalCenter);
+            Vector2 rB = MathUtils.Multiply(ref xfB.R, LocalAnchorB - bB.LocalCenter);
 
             // J = [-I -r1_skew I r2_skew]
             //     [ 0       -1 0       1]
@@ -184,8 +184,8 @@ namespace FarseerPhysics.Dynamics.Joints
             bA.GetTransform(out xfA);
             bB.GetTransform(out xfB);
 
-            Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.GetLocalCenter());
-            Vector2 rB = MathUtils.Multiply(ref xfB.R, LocalAnchorB - bB.GetLocalCenter());
+            Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.LocalCenter);
+            Vector2 rB = MathUtils.Multiply(ref xfB.R, LocalAnchorB - bB.LocalCenter);
 
             // Solve angular friction
             {

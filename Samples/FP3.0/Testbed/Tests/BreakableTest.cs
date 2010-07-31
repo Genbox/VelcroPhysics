@@ -119,7 +119,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Create two bodies from one.
             Body body1 = _piece1.Body;
-            Vector2 center = body1.GetWorldCenter();
+            Vector2 center = body1.WorldCenter;
 
             body1.DestroyFixture(_piece2);
             _piece2 = null;
@@ -127,14 +127,14 @@ namespace FarseerPhysics.TestBed.Tests
             Body body2 = BodyFactory.CreateBody(World);
             body2.BodyType = BodyType.Dynamic;
             body2.Position = body1.Position;
-            body2.Rotation = body1.GetAngle();
+            body2.Rotation = body1.Angle;
 
             _piece2 = body2.CreateFixture(_shape2, 0);
 
             // Compute consistent velocities for new bodies based on
             // cached velocity.
-            Vector2 center1 = body1.GetWorldCenter();
-            Vector2 center2 = body2.GetWorldCenter();
+            Vector2 center1 = body1.WorldCenter;
+            Vector2 center2 = body2.WorldCenter;
 
             Vector2 velocity1 = _velocity + MathUtils.Cross(_angularVelocity, center1 - center);
             Vector2 velocity2 = _velocity + MathUtils.Cross(_angularVelocity, center2 - center);

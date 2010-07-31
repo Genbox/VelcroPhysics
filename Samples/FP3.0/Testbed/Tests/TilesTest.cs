@@ -86,7 +86,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            ContactManager cm = World.GetContactManager();
+            ContactManager cm = World.ContactManager;
             int height = cm.BroadPhase.ComputeHeight();
             int leafCount = cm.BroadPhase.ProxyCount;
             int minimumNodeCount = 2 * leafCount - 1;

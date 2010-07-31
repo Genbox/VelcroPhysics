@@ -43,7 +43,7 @@ namespace FarseerPhysics.DebugViewXNA
                 {
                     Transform xf;
                     b.GetTransform(out xf);
-                    for (Fixture f = b._fixtureList; f != null; f = f.Next)
+                    for (Fixture f = b.FixtureList; f != null; f = f.Next)
                     {
                         if (b.Active == false)
                         {
@@ -109,7 +109,7 @@ namespace FarseerPhysics.DebugViewXNA
                         continue;
                     }
 
-                    for (Fixture f = b._fixtureList; f != null; f = f.Next)
+                    for (Fixture f = b.FixtureList; f != null; f = f.Next)
                     {
                         for (int t = 0; t < f._proxyCount; ++t)
                         {
@@ -134,7 +134,7 @@ namespace FarseerPhysics.DebugViewXNA
                 {
                     Transform xf;
                     b.GetTransform(out xf);
-                    xf.Position = b.GetWorldCenter();
+                    xf.Position = b.WorldCenter;
                     DrawTransform(ref xf);
                 }
             }

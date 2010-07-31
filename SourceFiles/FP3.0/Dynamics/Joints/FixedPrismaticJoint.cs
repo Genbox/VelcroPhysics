@@ -137,7 +137,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             _localXAxis1 = axis; // BodyA.GetLocalVector(axis);
             _localYAxis1 = MathUtils.Cross(1.0f, _localXAxis1);
-            _refAngle = BodyB.GetAngle(); // -BodyA.GetAngle();
+            _refAngle = BodyB.Angle; // -BodyA.GetAngle();
 
             _limitState = LimitState.Inactive;
         }
@@ -184,7 +184,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 BodyB.GetTransform(out xf2);
 
                 Vector2 r1 = LocalAnchorA; // MathUtils.Multiply(ref xf1.R, LocalAnchorA - BodyA.LocalCenter);
-                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - BodyB.GetLocalCenter());
+                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - BodyB.LocalCenter);
                 Vector2 p1 = /*BodyA._sweep.Center +*/ r1;
                 Vector2 p2 = BodyB._sweep.c + r2;
                 Vector2 d = p2 - p1;
@@ -324,7 +324,7 @@ namespace FarseerPhysics.Dynamics.Joints
             Body b2 = BodyB;
 
             _localCenterA = Vector2.Zero; // b1.LocalCenter;
-            _localCenterB = b2.GetLocalCenter();
+            _localCenterB = b2.LocalCenter;
 
             Transform /*xf1,*/ xf2;
             //b1.GetTransform(out xf1);

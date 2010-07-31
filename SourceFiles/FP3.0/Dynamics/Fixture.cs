@@ -93,16 +93,11 @@ namespace FarseerPhysics.Dynamics
         private short _collisionGroup;
         private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
         internal float _density;
-        private int _fixtureId;
-        internal float _friction;
-        internal bool _isSensor;
         internal Fixture _next;
         public FixtureProxy[] _proxies;
         public int _proxyCount;
         internal int _proxyId;
-        internal float _restitution;
         internal Shape _shape;
-        internal object _userData;
 
         internal Fixture()
         {
@@ -112,7 +107,7 @@ namespace FarseerPhysics.Dynamics
             _collidesWith = CollisionCategory.All;
             IsSensor = false;
 
-            _userData = null;
+            UserData = null;
             _body = null;
             _next = null;
             _proxyId = BroadPhase.NullProxy;
@@ -134,11 +129,7 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// Set if this fixture is a sensor.
-        public bool IsSensor
-        {
-            set { _isSensor = value; }
-            get { return _isSensor; }
-        }
+        public bool IsSensor { get; set; }
 
         /// Get the parent body of this fixture. This is null if the fixture is not attached.
         /// @return the parent body.
@@ -155,11 +146,7 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// Set the user data. Use this to store your application specific data.
-        public object UserData
-        {
-            set { _userData = value; }
-            get { return _userData; }
-        }
+        public object UserData { get; set; }
 
         public float Density
         {
@@ -172,18 +159,10 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// Set the coefficient of friction.
-        public float Friction
-        {
-            set { _friction = value; }
-            get { return _friction; }
-        }
+        public float Friction { get; set; }
 
         /// Set the coefficient of restitution.
-        public float Restitution
-        {
-            set { _restitution = value; }
-            get { return _restitution; }
-        }
+        public float Restitution { get; set; }
 
         /// <summary>
         /// Collision groups allow a certain group of objects to never collide (negative)
@@ -228,10 +207,7 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
-        public int FixtureId
-        {
-            get { return _fixtureId; }
-        }
+        public int FixtureId { get; private set; }
 
         /// <summary>
         /// The collision category bits. Normally you would just set one bit.
@@ -311,7 +287,7 @@ namespace FarseerPhysics.Dynamics
 
             _density = density;
 
-            _fixtureId = _fixtureIdCounter++;
+            FixtureId = _fixtureIdCounter++;
         }
 
         internal void Destroy()
