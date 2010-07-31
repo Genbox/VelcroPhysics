@@ -148,6 +148,54 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// Set flag to control automatic clearing of forces after each time step.
+        private bool AutoClearForces
+        {
+            set
+            {
+                if (value)
+                {
+                    _flags |= WorldFlags.ClearForces;
+                }
+                else
+                {
+                    _flags &= ~WorldFlags.ClearForces;
+                }
+            }
+            get { return (_flags & WorldFlags.ClearForces) == WorldFlags.ClearForces; }
+        }
+
+        /// Get the contact manager for testing.
+        public ContactManager ContactManager
+        {
+            get { return _contactManager; }
+        }
+
+        /// Get the world body list. With the returned body, use Body.GetNext to get
+        /// the next body in the world list. A null body indicates the end of the list.
+        /// @return the head of the world body list.
+        public Body BodyList
+        {
+            get { return _bodyList; }
+        }
+
+        /// Get the world joint list. With the returned joint, use Joint.GetNext to get
+        /// the next joint in the world list. A null joint indicates the end of the list.
+        /// @return the head of the world joint list.
+        public Joint JointList
+        {
+            get { return _jointList; }
+        }
+
+        /// Get the world contact list. With the returned contact, use Contact.GetNext to get
+        /// the next contact in the world list. A null contact indicates the end of the list.
+        /// @return the head of the world contact list.
+        /// @warning contacts are 
+        public Contact ContactList
+        {
+            get { return _contactManager.ContactList; }
+        }
+
         /// Create a rigid body given a definition. No reference to the definition
         /// is retained.
         /// @warning This function is locked during callbacks.
@@ -188,7 +236,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Delete the attached joints.
-            JointEdge je = b._jointList;
+            JointEdge je = b.JointList;
             while (je != null)
             {
                 JointEdge je0 = je;
@@ -201,7 +249,7 @@ namespace FarseerPhysics.Dynamics
 
                 DestroyJoint(je0.Joint);
             }
-            b._jointList = null;
+            b.JointList = null;
 
             // Delete the attached contacts.
             ContactEdge ce = b._contactList;
@@ -214,7 +262,7 @@ namespace FarseerPhysics.Dynamics
             b._contactList = null;
 
             // Delete the attached fixtures. This destroys broad-phase proxies.
-            Fixture f = b._fixtureList;
+            Fixture f = b.FixtureList;
             while (f != null)
             {
                 Fixture f0 = f;
@@ -228,7 +276,7 @@ namespace FarseerPhysics.Dynamics
                 f0.DestroyProxies(_contactManager.BroadPhase);
                 f0.Destroy();
             }
-            b._fixtureList = null;
+            b.FixtureList = null;
             b._fixtureCount = 0;
 
             // Remove world body list.
@@ -275,12 +323,12 @@ namespace FarseerPhysics.Dynamics
             j._edgeA.Joint = j;
             j._edgeA.Other = j.BodyB;
             j._edgeA.Prev = null;
-            j._edgeA.Next = j.BodyA._jointList;
+            j._edgeA.Next = j.BodyA.JointList;
 
-            if (j.BodyA._jointList != null)
-                j.BodyA._jointList.Prev = j._edgeA;
+            if (j.BodyA.JointList != null)
+                j.BodyA.JointList.Prev = j._edgeA;
 
-            j.BodyA._jointList = j._edgeA;
+            j.BodyA.JointList = j._edgeA;
 
             // WIP David
             if (!j.IsFixedType())
@@ -288,12 +336,12 @@ namespace FarseerPhysics.Dynamics
                 j._edgeB.Joint = j;
                 j._edgeB.Other = j.BodyA;
                 j._edgeB.Prev = null;
-                j._edgeB.Next = j.BodyB._jointList;
+                j._edgeB.Next = j.BodyB.JointList;
 
-                if (j.BodyB._jointList != null)
-                    j.BodyB._jointList.Prev = j._edgeB;
+                if (j.BodyB.JointList != null)
+                    j.BodyB.JointList.Prev = j._edgeB;
 
-                j.BodyB._jointList = j._edgeB;
+                j.BodyB.JointList = j._edgeB;
             }
 
             // WIP David
@@ -374,9 +422,9 @@ namespace FarseerPhysics.Dynamics
                 j._edgeA.Next.Prev = j._edgeA.Prev;
             }
 
-            if (j._edgeA == bodyA._jointList)
+            if (j._edgeA == bodyA.JointList)
             {
-                bodyA._jointList = j._edgeA.Next;
+                bodyA.JointList = j._edgeA.Next;
             }
 
             j._edgeA.Prev = null;
@@ -396,9 +444,9 @@ namespace FarseerPhysics.Dynamics
                     j._edgeB.Next.Prev = j._edgeB.Prev;
                 }
 
-                if (j._edgeB == bodyB._jointList)
+                if (j._edgeB == bodyB.JointList)
                 {
-                    bodyB._jointList = j._edgeB.Next;
+                    bodyB.JointList = j._edgeB.Next;
                 }
 
                 j._edgeB.Prev = null;
@@ -455,14 +503,14 @@ namespace FarseerPhysics.Dynamics
             step.dt = dt;
             if (dt > 0.0f)
             {
-                step.inv_dt = 1.0f / dt;
+                step.inv_dt = 1.0f/dt;
             }
             else
             {
                 step.inv_dt = 0.0f;
             }
 
-            step.dtRatio = _inv_dt0 * dt;
+            step.dtRatio = _inv_dt0*dt;
 
             //Update controllers
             foreach (Controller controller in Controllers)
@@ -537,31 +585,6 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
-        /// Set flag to control automatic clearing of forces after each time step.
-        private void SetAutoClearForces(bool flag)
-        {
-            if (flag)
-            {
-                _flags |= WorldFlags.ClearForces;
-            }
-            else
-            {
-                _flags &= ~WorldFlags.ClearForces;
-            }
-        }
-
-        /// Get the flag that controls automatic clearing of forces after each time step.
-        private bool GetAutoClearForces()
-        {
-            return (_flags & WorldFlags.ClearForces) == WorldFlags.ClearForces;
-        }
-
-        /// Get the contact manager for testing.
-        public ContactManager GetContactManager()
-        {
-            return _contactManager;
-        }
-
         /// Query the world for all fixtures that potentially overlap the
         /// provided AABB.
         /// @param callback a user implemented callback class.
@@ -608,36 +631,11 @@ namespace FarseerPhysics.Dynamics
             if (hit)
             {
                 float fraction = output.Fraction;
-                Vector2 point = (1.0f - fraction) * input.Point1 + fraction * input.Point2;
+                Vector2 point = (1.0f - fraction)*input.Point1 + fraction*input.Point2;
                 return _rayCastCallback(fixture, point, output.Normal, fraction);
             }
 
             return input.MaxFraction;
-        }
-
-        /// Get the world body list. With the returned body, use Body.GetNext to get
-        /// the next body in the world list. A null body indicates the end of the list.
-        /// @return the head of the world body list.
-        public Body GetBodyList()
-        {
-            return _bodyList;
-        }
-
-        /// Get the world joint list. With the returned joint, use Joint.GetNext to get
-        /// the next joint in the world list. A null joint indicates the end of the list.
-        /// @return the head of the world joint list.
-        public Joint GetJointList()
-        {
-            return _jointList;
-        }
-
-        /// Get the world contact list. With the returned contact, use Contact.GetNext to get
-        /// the next contact in the world list. A null contact indicates the end of the list.
-        /// @return the head of the world contact list.
-        /// @warning contacts are 
-        public Contact GetContactList()
-        {
-            return _contactManager.ContactList;
         }
 
         private void Solve(ref TimeStep step)
@@ -665,7 +663,7 @@ namespace FarseerPhysics.Dynamics
             // Build and simulate all awake islands.
             int stackSize = _bodyCount;
             if (stackSize > stack.Length)
-                stack = new Body[Math.Max(stack.Length * 2, stackSize)];
+                stack = new Body[Math.Max(stack.Length*2, stackSize)];
 
             for (Body seed = _bodyList; seed != null; seed = seed._next)
             {
@@ -727,8 +725,8 @@ namespace FarseerPhysics.Dynamics
                         }
 
                         // Skip sensors.
-                        bool sensorA = contact._fixtureA._isSensor;
-                        bool sensorB = contact._fixtureB._isSensor;
+                        bool sensorA = contact._fixtureA.IsSensor;
+                        bool sensorB = contact._fixtureB.IsSensor;
                         if (sensorA || sensorB)
                         {
                             continue;
@@ -751,7 +749,7 @@ namespace FarseerPhysics.Dynamics
                     }
 
                     // Search all joints connect to this body.
-                    for (JointEdge je = b._jointList; je != null; je = je.Next)
+                    for (JointEdge je = b.JointList; je != null; je = je.Next)
                     {
                         if (je.Joint._islandFlag)
                         {

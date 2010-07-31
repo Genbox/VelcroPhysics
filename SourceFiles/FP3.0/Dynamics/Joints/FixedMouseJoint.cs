@@ -153,7 +153,7 @@ namespace FarseerPhysics.Dynamics.Joints
             // Compute the effective mass matrix.
             Transform xf1;
             b.GetTransform(out xf1);
-            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b.GetLocalCenter());
+            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b.LocalCenter);
 
             // K    = [(1/m1 + 1/m2) * eye(2) - skew(r1) * invI1 * skew(r1) - skew(r2) * invI2 * skew(r2)]
             //      = [1/m1+1/m2     0    ] + invI1 * [r1.Y*r1.Y -r1.X*r1.Y] + invI2 * [r1.Y*r1.Y -r1.X*r1.Y]
@@ -191,7 +191,7 @@ namespace FarseerPhysics.Dynamics.Joints
             Transform xf1;
             b.GetTransform(out xf1);
 
-            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b.GetLocalCenter());
+            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b.LocalCenter);
 
             // Cdot = v + cross(w, r)
             Vector2 Cdot = b._linearVelocity + MathUtils.Cross(b._angularVelocity, r);

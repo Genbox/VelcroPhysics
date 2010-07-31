@@ -76,7 +76,7 @@ namespace FarseerPhysics.Dynamics.Joints
             LocalAnchorA = BodyA.GetLocalPoint(anchor);
             LocalAnchorB = anchor; // BodyB.GetLocalPoint(anchor);
 
-            ReferenceAngle = /*BodyB.GetAngle() */ - BodyA.GetAngle();
+            ReferenceAngle = /*BodyB.GetAngle() */ - BodyA.Angle;
 
             _impulse = Vector3.Zero;
 
@@ -247,7 +247,7 @@ namespace FarseerPhysics.Dynamics.Joints
             b1.GetTransform(out xf1);
             //b2.GetTransform(out xf2);
 
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.GetLocalCenter());
+            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
             Vector2 r2 = LocalAnchorB; // MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
             // J = [-I -r1_skew I r2_skew]
@@ -372,7 +372,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 b1.GetTransform(out xf1);
                 //b2.GetTransform(out xf2);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.GetLocalCenter());
+                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
                 Vector2 r2 = LocalAnchorB; // MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
                 // Solve point-to-point constraint
@@ -429,7 +429,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 b1.GetTransform(out xf1);
                 //b2.GetTransform(out xf2);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.GetLocalCenter());
+                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
                 Vector2 r2 = LocalAnchorB; // MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
                 // Solve point-to-point constraint
@@ -508,7 +508,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 b1.GetTransform(out xf1);
                 //b2.GetTransform(out xf2);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.GetLocalCenter());
+                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
                 Vector2 r2 = LocalAnchorB; // MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
                 Vector2 C = new Vector2(0, 0) /*b2._sweep.Center*/+ r2 - b1._sweep.c - r1;

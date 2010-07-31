@@ -125,8 +125,8 @@ namespace FarseerPhysics.Dynamics.Joints
             b2.GetTransform(out xf2);
 
             // Compute the effective mass matrix.
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.GetLocalCenter());
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.GetLocalCenter());
+            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
+            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
             _u = b2._sweep.c + r2 - b1._sweep.c - r1;
 
             // Handle singularity.
@@ -200,8 +200,8 @@ namespace FarseerPhysics.Dynamics.Joints
             b1.GetTransform(out xf1);
             b2.GetTransform(out xf2);
 
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.GetLocalCenter());
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.GetLocalCenter());
+            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
+            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
             Vector2 d = b2._sweep.c + r2 - b1._sweep.c - r1;
 
@@ -242,8 +242,8 @@ namespace FarseerPhysics.Dynamics.Joints
             b1.GetTransform(out xf1);
             b2.GetTransform(out xf2);
 
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.GetLocalCenter());
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.GetLocalCenter());
+            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
+            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
             Vector2 d = b2._sweep.c + r2 - b1._sweep.c - r1;
 

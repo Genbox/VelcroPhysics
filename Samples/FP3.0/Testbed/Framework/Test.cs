@@ -258,7 +258,7 @@ namespace FarseerPhysics.TestBed.Framework
                 {
                     for (Body body = World._bodyList; body != null; body = body.Next)
                     {
-                        for (Fixture f = body._fixtureList; f != null; f = f.Next)
+                        for (Fixture f = body.FixtureList; f != null; f = f.Next)
                         {
                             PolygonShape polygon = f.Shape as PolygonShape;
                             if (polygon != null)

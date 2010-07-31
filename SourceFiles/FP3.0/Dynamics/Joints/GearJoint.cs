@@ -192,7 +192,7 @@ namespace FarseerPhysics.Dynamics.Joints
             Transform xf1;
             BodyB.GetTransform(out xf1);
 
-            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchor2 - BodyB.GetLocalCenter());
+            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchor2 - BodyB.LocalCenter);
             Vector2 P = _impulse * _J.LinearB;
             float L = _impulse * _J.AngularB - MathUtils.Cross(r, P);
             return inv_dt * L;
@@ -225,7 +225,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 //g1.GetTransform(out xfg1);
 
 
-                Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchor1 - b1.GetLocalCenter());
+                Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchor1 - b1.LocalCenter);
                 float crug = MathUtils.Cross(r, ug);
                 _J.LinearA = -ug;
                 _J.AngularA = -crug;
@@ -249,7 +249,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 //g1.GetTransform(out xfg1);
                 b2.GetTransform(out xf2);
 
-                Vector2 r = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.GetLocalCenter());
+                Vector2 r = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.LocalCenter);
                 float crug = MathUtils.Cross(r, ug);
                 _J.LinearB = -Ratio * ug;
                 _J.AngularB = -Ratio * crug;
