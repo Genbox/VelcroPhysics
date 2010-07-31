@@ -399,7 +399,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             Debug.Assert(ShapeType.Unknown < type2 && type2 < ShapeType.TypeCount);
 
             Contact c;
-            var pool = fixtureA._body._world._contactPool;
+            var pool = fixtureA._body._world.ContactPool;
             if (pool.Count > 0)
             {
                 c = pool.Dequeue();
@@ -436,7 +436,7 @@ namespace FarseerPhysics.Dynamics.Contacts
 
         internal void Destroy()
         {
-            _fixtureA._body._world._contactPool.Enqueue(this);
+            _fixtureA._body._world.ContactPool.Enqueue(this);
             Reset(null, 0, null, 0);
         }
 

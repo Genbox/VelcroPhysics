@@ -30,6 +30,13 @@ namespace FarseerPhysics.Common
         public const float Epsilon = 1.192092896e-07f;
         public const float Pi = 3.14159265359f;
 
+        public static bool EnableDiagnostics = true;
+        public static int VelocityIterations = 8;
+        public static int PositionIterations = 3;
+        public static bool ContinuousPhysics = true;
+        public static bool EnableWarmstarting = true;
+        public static bool AllowSleep = true;
+
         /// The maximum number of contact points between two convex shapes.
         public const int MaxManifoldPoints = 2;
 
@@ -91,13 +98,6 @@ namespace FarseerPhysics.Common
 
         /// A body cannot sleep if its angular velocity is above this tolerance.
         public const float AngularSleepTolerance = (2.0f / 180.0f * Pi);
-
-        public static bool EnableDiagnostics = true;
-        public static int VelocityIterations = 8;
-        public static int PositionIterations = 3;
-        public static bool ContinuousPhysics = true;
-        public static bool EnableWarmstarting = true;
-        public static bool AllowSleep = true;
 
         /// The maximum linear velocity of a body. This limit is very large and is used
         /// to prevent numerical problems. You shouldn't need to adjust this.

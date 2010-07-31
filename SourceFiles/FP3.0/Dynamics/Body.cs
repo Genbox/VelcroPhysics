@@ -288,7 +288,7 @@ namespace FarseerPhysics.Dynamics
                     _flags |= BodyFlags.Active;
 
                     // Create all proxies.
-                    BroadPhase broadPhase = _world._contactManager.BroadPhase;
+                    BroadPhase broadPhase = _world.ContactManager.BroadPhase;
                     for (Fixture f = FixtureList; f != null; f = f._next)
                     {
                         f.CreateProxies(broadPhase, ref _xf);
@@ -301,7 +301,7 @@ namespace FarseerPhysics.Dynamics
                     _flags &= ~BodyFlags.Active;
 
                     // Destroy all proxies.
-                    BroadPhase broadPhase = _world._contactManager.BroadPhase;
+                    BroadPhase broadPhase = _world.ContactManager.BroadPhase;
                     for (Fixture f = FixtureList; f != null; f = f._next)
                     {
                         f.DestroyProxies(broadPhase);
@@ -313,7 +313,7 @@ namespace FarseerPhysics.Dynamics
                     {
                         ContactEdge ce0 = ce;
                         ce = ce.Next;
-                        _world._contactManager.Destroy(ce0.Contact);
+                        _world.ContactManager.Destroy(ce0.Contact);
                     }
                     _contactList = null;
                 }
@@ -444,7 +444,7 @@ namespace FarseerPhysics.Dynamics
 
             if ((_flags & BodyFlags.Active) == BodyFlags.Active)
             {
-                BroadPhase broadPhase = _world._contactManager.BroadPhase;
+                BroadPhase broadPhase = _world.ContactManager.BroadPhase;
                 fixture.CreateProxies(broadPhase, ref _xf);
             }
 
@@ -463,7 +463,7 @@ namespace FarseerPhysics.Dynamics
 
             // Let the world know we have a new fixture. This will cause new contacts
             // to be created at the beginning of the next time step.
-            _world._flags |= WorldFlags.NewFixture;
+            _world.Flags |= WorldFlags.NewFixture;
 
             return fixture;
         }
@@ -529,13 +529,13 @@ namespace FarseerPhysics.Dynamics
                 {
                     // This destroys the contact and removes it from
                     // this body's contact list.
-                    _world._contactManager.Destroy(c);
+                    _world.ContactManager.Destroy(c);
                 }
             }
 
             if ((_flags & BodyFlags.Active) == BodyFlags.Active)
             {
-                BroadPhase broadPhase = _world._contactManager.BroadPhase;
+                BroadPhase broadPhase = _world.ContactManager.BroadPhase;
                 fixture.DestroyProxies(broadPhase);
             }
 
@@ -567,13 +567,13 @@ namespace FarseerPhysics.Dynamics
             _sweep.c0 = _sweep.c = MathUtils.Multiply(ref _xf, _sweep.localCenter);
             _sweep.a0 = _sweep.a = angle;
 
-            BroadPhase broadPhase = _world._contactManager.BroadPhase;
+            BroadPhase broadPhase = _world.ContactManager.BroadPhase;
             for (Fixture f = FixtureList; f != null; f = f._next)
             {
                 f.Synchronize(broadPhase, ref _xf, ref _xf);
             }
 
-            _world._contactManager.FindNewContacts();
+            _world.ContactManager.FindNewContacts();
         }
 
         // For teleporting a body without considering new contacts immediately.
@@ -591,7 +591,7 @@ namespace FarseerPhysics.Dynamics
             _sweep.c0 = _sweep.c = MathUtils.Multiply(ref _xf, _sweep.localCenter);
             _sweep.a0 = _sweep.a = angle;
 
-            BroadPhase broadPhase = _world._contactManager.BroadPhase;
+            BroadPhase broadPhase = _world.ContactManager.BroadPhase;
             for (Fixture f = FixtureList; f != null; f = f._next)
             {
                 f.Synchronize(broadPhase, ref _xf, ref _xf);
@@ -884,7 +884,7 @@ namespace FarseerPhysics.Dynamics
             xf1.R.Set(_sweep.a0);
             xf1.Position = _sweep.c0 - MathUtils.Multiply(ref xf1.R, _sweep.localCenter);
 
-            BroadPhase broadPhase = _world._contactManager.BroadPhase;
+            BroadPhase broadPhase = _world.ContactManager.BroadPhase;
             for (Fixture f = FixtureList; f != null; f = f._next)
             {
                 f.Synchronize(broadPhase, ref xf1, ref _xf);

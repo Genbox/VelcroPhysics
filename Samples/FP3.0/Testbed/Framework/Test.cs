@@ -114,10 +114,10 @@ namespace FarseerPhysics.TestBed.Framework
             TextLine = 30;
 
             World.JointRemoved += JointRemoved;
-            World._contactManager.PreSolve += PreSolve;
-            World._contactManager.PostSolve += PostSolve;
-            World._contactManager.BeginContact += BeginContact;
-            World._contactManager.EndContact += EndContact;
+            World.ContactManager.PreSolve += PreSolve;
+            World.ContactManager.PostSolve += PostSolve;
+            World.ContactManager.BeginContact += BeginContact;
+            World.ContactManager.EndContact += EndContact;
 
             StepCount = 0;
         }
@@ -197,7 +197,7 @@ namespace FarseerPhysics.TestBed.Framework
                 if (settings.DrawStats > 0)
                 {
                     DebugView.DrawString(50, TextLine, "bodies/contacts/joints/proxies = {0:n}/{1:n}/{2:n}/{3:n}",
-                                         World._bodyCount, World._contactManager.ContactCount, World._jointCount,
+                                         World.BodyCount, World.ContactManager.ContactCount, World.JointCount,
                                          World.ProxyCount);
                     TextLine += 15;
                 }
@@ -256,7 +256,7 @@ namespace FarseerPhysics.TestBed.Framework
 
                 if (settings.DrawPolygonPoints == 1)
                 {
-                    for (Body body = World._bodyList; body != null; body = body.Next)
+                    for (Body body = World.BodyList; body != null; body = body.Next)
                     {
                         for (Fixture f = body.FixtureList; f != null; f = f.Next)
                         {

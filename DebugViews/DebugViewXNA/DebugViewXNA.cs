@@ -39,7 +39,7 @@ namespace FarseerPhysics.DebugViewXNA
         {
             if ((Flags & DebugViewFlags.Shape) == DebugViewFlags.Shape)
             {
-                for (Body b = World._bodyList; b != null; b = b.Next)
+                for (Body b = World.BodyList; b != null; b = b.Next)
                 {
                     Transform xf;
                     b.GetTransform(out xf);
@@ -71,7 +71,7 @@ namespace FarseerPhysics.DebugViewXNA
 
             if ((Flags & DebugViewFlags.Joint) == DebugViewFlags.Joint)
             {
-                for (Joint j = World._jointList; j != null; j = j.GetNext())
+                for (Joint j = World.JointList; j != null; j = j.GetNext())
                 {
                     DrawJoint(j);
                 }
@@ -80,7 +80,7 @@ namespace FarseerPhysics.DebugViewXNA
             if ((Flags & DebugViewFlags.Pair) == DebugViewFlags.Pair)
             {
                 Color color = new Color(0.3f, 0.9f, 0.9f);
-                for (Contact c = World._contactManager.ContactList; c != null; c = c.GetNext())
+                for (Contact c = World.ContactManager.ContactList; c != null; c = c.GetNext())
                 {
                     Fixture fixtureA = c.FixtureA;
                     Fixture fixtureB = c.FixtureB;
@@ -100,9 +100,9 @@ namespace FarseerPhysics.DebugViewXNA
             if ((Flags & DebugViewFlags.AABB) == DebugViewFlags.AABB)
             {
                 Color color = new Color(0.9f, 0.3f, 0.9f);
-                BroadPhase bp = World._contactManager.BroadPhase;
+                BroadPhase bp = World.ContactManager.BroadPhase;
 
-                for (Body b = World._bodyList; b != null; b = b.Next)
+                for (Body b = World.BodyList; b != null; b = b.Next)
                 {
                     if (b.Active == false)
                     {
@@ -130,7 +130,7 @@ namespace FarseerPhysics.DebugViewXNA
 
             if ((Flags & DebugViewFlags.CenterOfMass) == DebugViewFlags.CenterOfMass)
             {
-                for (Body b = World._bodyList; b != null; b = b.Next)
+                for (Body b = World.BodyList; b != null; b = b.Next)
                 {
                     Transform xf;
                     b.GetTransform(out xf);
