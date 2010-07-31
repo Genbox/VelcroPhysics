@@ -78,10 +78,10 @@ namespace FarseerPhysics.TestBed.Tests
             DistanceOutput output;
             Distance.ComputeDistance(out output, out cache, ref input);
 
-            DebugView.DrawString(50, TextLine, "distance = {0:n7}", output.Distance);
+            DebugView.DrawString(50, TextLine, "Distance = {0:n7}", output.Distance);
             TextLine += 15;
 
-            DebugView.DrawString(50, TextLine, "iterations = {0:n0}", output.Iterations);
+            DebugView.DrawString(50, TextLine, "Iterations = {0:n0}", output.Iterations);
             TextLine += 15;
 
             {
