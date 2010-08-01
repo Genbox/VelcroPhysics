@@ -769,14 +769,14 @@ namespace FarseerPhysics.Dynamics
             _invI = 0.0f;
             _sweep.localCenter = Vector2.Zero;
 
-            // Static and kinematic bodies have zero mass.
-            if (_type == BodyType.Static || _type == BodyType.Kinematic)
+            // Kinematic bodies have zero mass.
+            if (BodyType == BodyType.Kinematic)
             {
                 _sweep.c0 = _sweep.c = _xf.Position;
                 return;
             }
 
-            Debug.Assert(_type == BodyType.Dynamic);
+            Debug.Assert(BodyType == BodyType.Dynamic || BodyType == BodyType.Static);
 
             // Accumulate mass over all fixtures.
             Vector2 center = Vector2.Zero;
@@ -792,6 +792,13 @@ namespace FarseerPhysics.Dynamics
                 _mass += massData.Mass;
                 center += massData.Mass*massData.Center;
                 _I += massData.Inertia;
+            }
+
+            //Static bodies only have mass, they don't have other properties. A little hacky tho...
+            if (BodyType == BodyType.Static)
+            {
+                _sweep.c0 = _sweep.c = _xf.Position;
+                return;
             }
 
             // Compute center of mass.
