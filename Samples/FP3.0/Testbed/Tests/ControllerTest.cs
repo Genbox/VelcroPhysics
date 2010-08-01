@@ -37,6 +37,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body circle = BodyFactory.CreateBody(World);
                 circle.BodyType = BodyType.Dynamic;
                 circle.Position = startPosition + offset * i;
+                circle.SleepingAllowed = false;
 
                 CircleShape circleShape = new CircleShape(1);
                 circle.CreateFixture(circleShape, 0.1f);
