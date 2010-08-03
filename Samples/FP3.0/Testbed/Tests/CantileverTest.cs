@@ -60,7 +60,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.CreateFixture(shape, 20.0f);
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 5.0f);
-                    WeldJoint jd = new WeldJoint(prevBody, body, anchor);
+                    WeldJoint jd = new WeldJoint(prevBody, body, prevBody.GetLocalPoint(anchor), body.GetLocalPoint(anchor));
                     World.AddJoint(jd);
 
                     prevBody = body;
@@ -81,7 +81,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.CreateFixture(shape, 20.0f);
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 15.0f);
-                    WeldJoint jd = new WeldJoint(prevBody, body, anchor);
+                    WeldJoint jd = new WeldJoint(prevBody, body, prevBody.GetLocalPoint(anchor), body.GetLocalPoint(anchor));
                     World.AddJoint(jd);
 
                     prevBody = body;
@@ -105,7 +105,7 @@ namespace FarseerPhysics.TestBed.Tests
                     if (i > 0)
                     {
                         Vector2 anchor = new Vector2(-5.0f + 1.0f * i, 5.0f);
-                        WeldJoint jd = new WeldJoint(prevBody, body, anchor);
+                        WeldJoint jd = new WeldJoint(prevBody, body, prevBody.GetLocalPoint(anchor), body.GetLocalPoint(anchor));
                         World.AddJoint(jd);
                     }
 
@@ -130,7 +130,7 @@ namespace FarseerPhysics.TestBed.Tests
                     if (i > 0)
                     {
                         Vector2 anchor = new Vector2(5.0f + 1.0f * i, 10.0f);
-                        WeldJoint jd = new WeldJoint(prevBody, body, anchor);
+                        WeldJoint jd = new WeldJoint(prevBody, body, prevBody.GetLocalPoint(anchor), body.GetLocalPoint(anchor));
                         World.AddJoint(jd);
                     }
 
