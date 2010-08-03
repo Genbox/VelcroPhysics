@@ -78,9 +78,6 @@ namespace FarseerPhysics.Dynamics.Joints
             LocalAnchorA = anchorA;
             LocalAnchorB = anchorB;
 
-            //LocalAnchorA = BodyA.GetLocalPoint(anchor);
-            //LocalAnchorB = BodyB.GetLocalPoint(anchor);
-
             ReferenceAngle = BodyB.Angle - BodyA.Angle;
 
             _impulse = Vector3.Zero;
