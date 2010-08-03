@@ -69,14 +69,14 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
         /// <param name="anchor"></param>
-        public RevoluteJoint(Body bodyA, Body bodyB, Vector2 anchor)
+        public RevoluteJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Revolute;
 
             // Changed to local coordinates.
-            LocalAnchorA = BodyA.GetLocalPoint(BodyB.GetWorldPoint(anchor));
-            LocalAnchorB = anchor;
+            LocalAnchorA = anchorA;
+            LocalAnchorB = anchorB;
 
             //LocalAnchorA = BodyA.GetLocalPoint(anchor);
             //LocalAnchorB = BodyB.GetLocalPoint(anchor);

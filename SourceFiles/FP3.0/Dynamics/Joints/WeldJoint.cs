@@ -60,13 +60,13 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
         /// <param name="anchor">The anchor point relative to the bodies</param>
-        public WeldJoint(Body bodyA, Body bodyB, Vector2 anchor)
+        public WeldJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Weld;
 
-            LocalAnchorA = BodyA.GetLocalPoint(anchor);
-            LocalAnchorB = BodyB.GetLocalPoint(anchor);
+            LocalAnchorA = anchorA;
+            LocalAnchorB = anchorB;
             ReferenceAngle = BodyB.Angle - BodyA.Angle;
         }
 

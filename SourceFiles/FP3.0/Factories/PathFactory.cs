@@ -142,18 +142,14 @@ namespace FarseerPhysics.Factories
         {
             for (int i = 1; i < bodies.Count; i++)
             {
-                RevoluteJoint joint = new RevoluteJoint(bodies[i], bodies[i - 1], new Vector2());
-                joint.LocalAnchorA = localAnchorA;
-                joint.LocalAnchorB = localAnchorB;
+                RevoluteJoint joint = new RevoluteJoint(bodies[i], bodies[i - 1], localAnchorA, localAnchorB);
                 joint.CollideConnected = collideConnected;
                 world.AddJoint(joint);
             }
 
             if (connectFirstAndLast)
             {
-                RevoluteJoint lastjoint = new RevoluteJoint(bodies[0], bodies[bodies.Count - 1], new Vector2());
-                lastjoint.LocalAnchorA = localAnchorA;
-                lastjoint.LocalAnchorB = localAnchorB;
+                RevoluteJoint lastjoint = new RevoluteJoint(bodies[0], bodies[bodies.Count - 1], localAnchorA, localAnchorB);
                 lastjoint.CollideConnected = collideConnected;
                 world.AddJoint(lastjoint);
             }
