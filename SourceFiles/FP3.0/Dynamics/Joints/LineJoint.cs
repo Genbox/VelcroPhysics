@@ -68,7 +68,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <param name="bodyB"></param>
         /// <param name="anchor"></param>
         /// <param name="axis"></param>
-        public LineJoint(Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis)
+        public LineJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, Vector2 axis)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Line;
@@ -76,8 +76,8 @@ namespace FarseerPhysics.Dynamics.Joints
             BodyA = bodyA;
             BodyB = bodyB;
 
-            LocalAnchorA = BodyA.GetLocalPoint(BodyB.GetWorldPoint(anchor));
-            LocalAnchorB = anchor;
+            LocalAnchorA = anchorA;
+            LocalAnchorB = anchorB;
 
             _localXAxis1 = bodyA.GetLocalVector(axis);
             _localYAxis1 = MathUtils.Cross(1.0f, _localXAxis1);

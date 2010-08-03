@@ -80,13 +80,13 @@ namespace FarseerPhysics.Dynamics.Joints
 
             GroundAnchorA = groundAnchorA;
             GroundAnchorB = groundAnchorB;
-            LocalAnchorA = BodyA.GetLocalPoint(anchorA);
-            LocalAnchorB = BodyB.GetLocalPoint(anchorB);
+            LocalAnchorA = anchorA;
+            LocalAnchorB = anchorB;
 
-            Vector2 d1 = anchorA - groundAnchorA;
+            Vector2 d1 = BodyA.GetWorldPoint(anchorA) - groundAnchorA;
             _lengthA = d1.Length();
 
-            Vector2 d2 = anchorB - groundAnchorB;
+            Vector2 d2 = BodyB.GetWorldPoint(anchorB) - groundAnchorB;
             _lengthB = d2.Length();
 
             Debug.Assert(ratio != 0.0f);
