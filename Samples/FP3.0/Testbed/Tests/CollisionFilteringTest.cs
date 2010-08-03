@@ -94,7 +94,7 @@ namespace FarseerPhysics.TestBed.Tests
                     PolygonShape p = new PolygonShape(box);
                     body.CreateFixture(p, 1);
 
-                    PrismaticJoint jd = new PrismaticJoint(body2, body, new Vector2(0.0f, 0.0f), new Vector2(0.0f, 1.0f));
+                    PrismaticJoint jd = new PrismaticJoint(body2, body, body2.GetLocalPoint(body.Position), new Vector2(0.0f, 0.0f), new Vector2(0.0f, 1.0f));
                     jd.LimitEnabled = true;
                     jd.LowerLimit = -1.0f;
                     jd.UpperLimit = 1.0f;

@@ -65,11 +65,11 @@ namespace FarseerPhysics.TestBed.Tests
                 body3.CreateFixture(polygonBox, 5);
 
                 // Fix first circle
-                _joint1 = new FixedRevoluteJoint(body1, body1.Position);
+                _joint1 = new FixedRevoluteJoint(body1, Vector2.Zero, body1.Position);
                 World.AddJoint(_joint1);
 
                 // Fix second circle
-                _joint2 = new FixedRevoluteJoint(body2, body2.Position);
+                _joint2 = new FixedRevoluteJoint(body2, Vector2.Zero, body2.Position);
                 World.AddJoint(_joint2);
 
                 // Fix rectangle

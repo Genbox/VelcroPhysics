@@ -83,7 +83,8 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 axis = new Vector2(2.0f, 1.0f);
                 axis.Normalize();
 
-                _lineJoint = new LineJoint(ground, body, new Vector2(0.0f, 1.5f), axis);
+                Vector2 anchor = new Vector2(0.0f, 1.5f);
+                _lineJoint = new LineJoint(ground, body, ground.GetLocalPoint(body.GetWorldPoint(anchor)), anchor, axis);
                 _lineJoint.MotorSpeed = 100.0f;
                 _lineJoint.MaxMotorForce = 100.0f;
                 _lineJoint.MotorEnabled = false;

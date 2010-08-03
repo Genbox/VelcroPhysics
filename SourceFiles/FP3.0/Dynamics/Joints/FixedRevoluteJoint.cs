@@ -67,16 +67,16 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
         /// <param name="anchor"></param>
-        public FixedRevoluteJoint(Body bodyA /*, Body bodyB*/, Vector2 anchor)
+        public FixedRevoluteJoint(Body bodyA, Vector2 bodyanchor, Vector2 worldanchor)
             : base(bodyA /*, bodyB*/)
         {
             JointType = JointType.FixedRevolute;
 
             // Changed to local coordinates.
-            LocalAnchorA = BodyA.GetLocalPoint(anchor);
-            LocalAnchorB = anchor; // BodyB.GetLocalPoint(anchor);
+            LocalAnchorA = bodyanchor;
+            LocalAnchorB = worldanchor;
 
-            ReferenceAngle = /*BodyB.GetAngle() */ - BodyA.Angle;
+            ReferenceAngle = - BodyA.Angle;
 
             _impulse = Vector3.Zero;
 

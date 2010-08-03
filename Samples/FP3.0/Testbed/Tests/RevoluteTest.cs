@@ -52,7 +52,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 body.CreateFixture(shape, 5);
 
-                _fixedJoint = new FixedRevoluteJoint(body, body.Position);
+                _fixedJoint = new FixedRevoluteJoint(body, Vector2.Zero, body.Position);
                 _fixedJoint.MotorSpeed = 0.25f * Settings.Pi;
                 _fixedJoint.MaxMotorTorque = 5000.0f;
                 _fixedJoint.MotorEnabled = true;

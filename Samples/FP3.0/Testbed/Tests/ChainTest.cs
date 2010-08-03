@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
             List<Body> chainLinks = PathFactory.EvenlyDistibuteShapesAlongPath(World, path, shape, BodyType.Dynamic, 20);
 
             //Fix the first chainlink to the world
-            FixedRevoluteJoint fixedJoint = new FixedRevoluteJoint(chainLinks[0], chainLinks[0].Position);
+            FixedRevoluteJoint fixedJoint = new FixedRevoluteJoint(chainLinks[0], Vector2.Zero, chainLinks[0].Position);
             World.AddJoint(fixedJoint);
 
             //Attach all the chainlinks together with a revolute joint
