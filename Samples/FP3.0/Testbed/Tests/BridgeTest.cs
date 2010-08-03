@@ -59,7 +59,7 @@ namespace FarseerPhysics.TestBed.Tests
                     fixture.Friction = 0.2f;
 
                     Vector2 anchor = new Vector2(-0.5f, 0.0f);
-                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, prevBody.GetLocalPoint(prevBody.GetWorldPoint(anchor)), anchor);
+                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, prevBody.GetLocalPoint(body.GetWorldPoint(anchor)), anchor);
                     World.AddJoint(jd);
 
                     prevBody = body;

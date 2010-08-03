@@ -100,7 +100,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 //_motorJoint = new RevoluteJoint(_wheel, _chassis, pivot + _offset);
-                _motorJoint = new RevoluteJoint(_wheel, _chassis, Vector2.Zero);
+                _motorJoint = new RevoluteJoint(_wheel, _chassis, _wheel.GetLocalPoint(_chassis.Position), Vector2.Zero);
                 _motorJoint.CollideConnected = false;
                 _motorJoint.MotorSpeed = _motorSpeed;
                 _motorJoint.MaxMotorTorque = 400.0f;
@@ -209,7 +209,8 @@ namespace FarseerPhysics.TestBed.Tests
 
             World.AddJoint(djd4);
 
-            RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, p4 - new Vector2(0.0f, 0.8f) /*+ _offset*/);
+            Vector2 anchor = p4 - new Vector2(0.0f, 0.8f) /*+ _offset*/;
+            RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, body2.GetLocalPoint(_chassis.GetWorldPoint(anchor)), anchor);
             World.AddJoint(rjd);
         }
 

@@ -67,8 +67,8 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             JointType = JointType.MaxDistance;
 
-            LocalAnchorA = bodyA.GetLocalPoint(anchorA);
-            LocalAnchorB = bodyB.GetLocalPoint(anchorB);
+            LocalAnchorA = anchorA;
+            LocalAnchorB = anchorB;
             Length = maxlength;
         }
 
