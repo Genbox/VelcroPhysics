@@ -30,13 +30,6 @@ namespace FarseerPhysics.Common
         public const float Epsilon = 1.192092896e-07f;
         public const float Pi = 3.14159265359f;
 
-        public static bool EnableDiagnostics = true;
-        public static int VelocityIterations = 8;
-        public static int PositionIterations = 3;
-        public static bool ContinuousPhysics = true;
-        public static bool EnableWarmstarting = true;
-        public static bool AllowSleep = true;
-
         /// The maximum number of contact points between two convex shapes.
         public const int MaxManifoldPoints = 2;
 
@@ -59,12 +52,12 @@ namespace FarseerPhysics.Common
 
         /// A small angle used as a collision and constraint tolerance. Usually it is
         /// chosen to be numerically significant, but visually insignificant.
-        public const float AngularSlop = (2.0f / 180.0f * Pi);
+        public const float AngularSlop = (2.0f/180.0f*Pi);
 
         /// The radius of the polygon/edge shape skin. This should not be modified. Making
         /// this smaller means polygons will have an insufficient buffer for continuous collision.
         /// Making it larger may create artifacts for vertex collision.
-        public const float PolygonRadius = (2.0f * LinearSlop);
+        public const float PolygonRadius = (2.0f*LinearSlop);
 
         // Dynamics
 
@@ -81,7 +74,7 @@ namespace FarseerPhysics.Common
 
         /// The maximum angular position correction used when solving constraints. This helps to
         /// prevent overshoot.
-        public const float MaxAngularCorrection = (8.0f / 180.0f * Pi);
+        public const float MaxAngularCorrection = (8.0f/180.0f*Pi);
 
         /// This scale factor controls how fast overlap is resolved. Ideally this would be 1 so
         /// that overlap is removed in one time step. However using values close to 1 often lead
@@ -97,24 +90,31 @@ namespace FarseerPhysics.Common
         public const float LinearSleepTolerance = 0.01f;
 
         /// A body cannot sleep if its angular velocity is above this tolerance.
-        public const float AngularSleepTolerance = (2.0f / 180.0f * Pi);
+        public const float AngularSleepTolerance = (2.0f/180.0f*Pi);
+
+        public static bool EnableDiagnostics = true;
+        public static int VelocityIterations = 8;
+        public static int PositionIterations = 3;
+        public static bool ContinuousPhysics = true;
+        public static bool EnableWarmstarting = true;
+        public static bool AllowSleep = true;
 
         /// The maximum linear velocity of a body. This limit is very large and is used
         /// to prevent numerical problems. You shouldn't need to adjust this.
         public static float MaxTranslation = 2.0f;
 
-        public static float MaxTranslationSquared = (MaxTranslation * MaxTranslation);
+        public static float MaxTranslationSquared = (MaxTranslation*MaxTranslation);
 
         /// The maximum angular velocity of a body. This limit is very large and is used
         /// to prevent numerical problems. You shouldn't need to adjust this.
-        public static float MaxRotation = (0.5f * Pi);
+        public static float MaxRotation = (0.5f*Pi);
 
-        public static float MaxRotationSquared = (MaxRotation * MaxRotation);
+        public static float MaxRotationSquared = (MaxRotation*MaxRotation);
 
         /// Friction mixing law. Feel free to customize this.
         public static float b2MixFriction(float friction1, float friction2)
         {
-            return (float) Math.Sqrt(friction1 * friction2);
+            return (float) Math.Sqrt(friction1*friction2);
         }
 
         /// Restitution mixing law. Feel free to customize this.

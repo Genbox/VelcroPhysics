@@ -32,17 +32,17 @@ namespace FarseerPhysics.Dynamics
     /// This is an internal class.
     internal class Island
     {
-        public Body[] _bodies;
+        public Body[] Bodies;
+        public int BodyCount;
+        public int ContactCount;
+        public int JointCount;
         private int _bodyCapacity;
-        public int _bodyCount;
         private int _contactCapacity;
-        private int _contactCount;
+        private ContactManager _contactManager;
         private ContactSolver _contactSolver = new ContactSolver();
         private Contact[] _contacts;
         private int _jointCapacity;
-        private int _jointCount;
         private Joint[] _joints;
-        private ContactManager _contactManager;
 
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
         {
@@ -50,41 +50,41 @@ namespace FarseerPhysics.Dynamics
             _contactCapacity = contactCapacity;
             _jointCapacity = jointCapacity;
 
-            _bodyCount = 0;
-            _contactCount = 0;
-            _jointCount = 0;
+            BodyCount = 0;
+            ContactCount = 0;
+            JointCount = 0;
 
             _contactManager = contactManager;
 
-            if (_bodies == null || _bodies.Length < bodyCapacity)
+            if (Bodies == null || Bodies.Length < bodyCapacity)
             {
-                _bodies = new Body[bodyCapacity];
+                Bodies = new Body[bodyCapacity];
             }
 
             if (_contacts == null || _contacts.Length < contactCapacity)
             {
-                _contacts = new Contact[contactCapacity * 2];
+                _contacts = new Contact[contactCapacity*2];
             }
 
             if (_joints == null || _joints.Length < jointCapacity)
             {
-                _joints = new Joint[jointCapacity * 2];
+                _joints = new Joint[jointCapacity*2];
             }
         }
 
         public void Clear()
         {
-            _bodyCount = 0;
-            _contactCount = 0;
-            _jointCount = 0;
+            BodyCount = 0;
+            ContactCount = 0;
+            JointCount = 0;
         }
 
         public void Solve(ref TimeStep step, Vector2 gravity)
         {
             // Integrate velocities and apply damping.
-            for (int i = 0; i < _bodyCount; ++i)
+            for (int i = 0; i < BodyCount; ++i)
             {
-                Body b = _bodies[i];
+                Body b = Bodies[i];
 
                 if (b.BodyType != BodyType.Dynamic)
                 {
@@ -94,13 +94,13 @@ namespace FarseerPhysics.Dynamics
                 // Integrate velocities. Only apply gravity if the body wants it.
                 if (b.IgnoreGravity)
                 {
-                    b._linearVelocity += step.dt * (b._invMass * b._force);
-                    b._angularVelocity += step.dt * b._invI * b._torque;
+                    b.LinearVelocityInternal += step.dt*(b.InvMass*b.Force);
+                    b.AngularVelocityInternal += step.dt*b.InvI*b.Torque;
                 }
                 else
                 {
-                    b._linearVelocity += step.dt * (gravity + b._invMass * b._force);
-                    b._angularVelocity += step.dt * b._invI * b._torque;
+                    b.LinearVelocityInternal += step.dt*(gravity + b.InvMass*b.Force);
+                    b.AngularVelocityInternal += step.dt*b.InvI*b.Torque;
                 }
 
                 // Apply damping.
@@ -110,13 +110,13 @@ namespace FarseerPhysics.Dynamics
                 // v2 = exp(-c * dt) * v1
                 // Taylor expansion:
                 // v2 = (1.0f - c * dt) * v1
-                b._linearVelocity *= MathUtils.Clamp(1.0f - step.dt * b._linearDamping, 0.0f, 1.0f);
-                b._angularVelocity *= MathUtils.Clamp(1.0f - step.dt * b._angularDamping, 0.0f, 1.0f);
+                b.LinearVelocityInternal *= MathUtils.Clamp(1.0f - step.dt*b.LinearDamping, 0.0f, 1.0f);
+                b.AngularVelocityInternal *= MathUtils.Clamp(1.0f - step.dt*b.AngularDamping, 0.0f, 1.0f);
             }
 
             // Partition contacts so that contacts with static bodies are solved last.
             int i1 = -1;
-            for (int i2 = 0; i2 < _contactCount; ++i2)
+            for (int i2 = 0; i2 < ContactCount; ++i2)
             {
                 Fixture fixtureA = _contacts[i2].FixtureA;
                 Fixture fixtureB = _contacts[i2].FixtureB;
@@ -134,10 +134,10 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Initialize velocity constraints.
-            _contactSolver.Reset(_contacts, _contactCount, step.dtRatio);
+            _contactSolver.Reset(_contacts, ContactCount, step.dtRatio);
             _contactSolver.WarmStart();
 
-            for (int i = 0; i < _jointCount; ++i)
+            for (int i = 0; i < JointCount; ++i)
             {
                 _joints[i].InitVelocityConstraints(ref step);
             }
@@ -145,7 +145,7 @@ namespace FarseerPhysics.Dynamics
             // Solve velocity constraints.
             for (int i = 0; i < Settings.VelocityIterations; ++i)
             {
-                for (int j = 0; j < _jointCount; ++j)
+                for (int j = 0; j < JointCount; ++j)
                 {
                     _joints[j].SolveVelocityConstraints(ref step);
                 }
@@ -157,9 +157,9 @@ namespace FarseerPhysics.Dynamics
             _contactSolver.StoreImpulses();
 
             // Integrate positions.
-            for (int i = 0; i < _bodyCount; ++i)
+            for (int i = 0; i < BodyCount; ++i)
             {
-                Body b = _bodies[i];
+                Body b = Bodies[i];
 
                 if (b.BodyType == BodyType.Static)
                 {
@@ -167,27 +167,27 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Check for large velocities.
-                Vector2 translation = step.dt * b._linearVelocity;
+                Vector2 translation = step.dt*b.LinearVelocityInternal;
                 if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
                 {
-                    float ratio = Settings.MaxTranslation / translation.Length();
-                    b._linearVelocity *= ratio;
+                    float ratio = Settings.MaxTranslation/translation.Length();
+                    b.LinearVelocityInternal *= ratio;
                 }
 
-                float rotation = step.dt * b._angularVelocity;
-                if (rotation * rotation > Settings.MaxRotationSquared)
+                float rotation = step.dt*b.AngularVelocityInternal;
+                if (rotation*rotation > Settings.MaxRotationSquared)
                 {
-                    float ratio = Settings.MaxRotation / Math.Abs(rotation);
-                    b._angularVelocity *= ratio;
+                    float ratio = Settings.MaxRotation/Math.Abs(rotation);
+                    b.AngularVelocityInternal *= ratio;
                 }
 
                 // Store positions for continuous collision.
-                b._sweep.c0 = b._sweep.c;
-                b._sweep.a0 = b._sweep.a;
+                b.Sweep.c0 = b.Sweep.c;
+                b.Sweep.a0 = b.Sweep.a;
 
                 // Integrate
-                b._sweep.c += step.dt * b._linearVelocity;
-                b._sweep.a += step.dt * b._angularVelocity;
+                b.Sweep.c += step.dt*b.LinearVelocityInternal;
+                b.Sweep.a += step.dt*b.AngularVelocityInternal;
 
                 // Compute new transform
                 b.SynchronizeTransform();
@@ -201,7 +201,7 @@ namespace FarseerPhysics.Dynamics
                 bool contactsOkay = _contactSolver.SolvePositionConstraints(Settings.ContactBaumgarte);
 
                 bool jointsOkay = true;
-                for (int j = 0; j < _jointCount; ++j)
+                for (int j = 0; j < JointCount; ++j)
                 {
                     bool jointOkay = _joints[j].SolvePositionConstraints();
                     jointsOkay = jointsOkay && jointOkay;
@@ -220,42 +220,42 @@ namespace FarseerPhysics.Dynamics
             {
                 float minSleepTime = Settings.MaxFloat;
 
-                const float linTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
-                const float angTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
+                const float linTolSqr = Settings.LinearSleepTolerance*Settings.LinearSleepTolerance;
+                const float angTolSqr = Settings.AngularSleepTolerance*Settings.AngularSleepTolerance;
 
-                for (int i = 0; i < _bodyCount; ++i)
+                for (int i = 0; i < BodyCount; ++i)
                 {
-                    Body b = _bodies[i];
+                    Body b = Bodies[i];
                     if (b.BodyType == BodyType.Static)
                     {
                         continue;
                     }
 
-                    if ((b._flags & BodyFlags.AutoSleep) == 0)
+                    if ((b.Flags & BodyFlags.AutoSleep) == 0)
                     {
-                        b._sleepTime = 0.0f;
+                        b.SleepTime = 0.0f;
                         minSleepTime = 0.0f;
                     }
 
-                    if ((b._flags & BodyFlags.AutoSleep) == 0 ||
-                        b._angularVelocity * b._angularVelocity > angTolSqr ||
-                        Vector2.Dot(b._linearVelocity, b._linearVelocity) > linTolSqr)
+                    if ((b.Flags & BodyFlags.AutoSleep) == 0 ||
+                        b.AngularVelocityInternal*b.AngularVelocityInternal > angTolSqr ||
+                        Vector2.Dot(b.LinearVelocityInternal, b.LinearVelocityInternal) > linTolSqr)
                     {
-                        b._sleepTime = 0.0f;
+                        b.SleepTime = 0.0f;
                         minSleepTime = 0.0f;
                     }
                     else
                     {
-                        b._sleepTime += step.dt;
-                        minSleepTime = Math.Min(minSleepTime, b._sleepTime);
+                        b.SleepTime += step.dt;
+                        minSleepTime = Math.Min(minSleepTime, b.SleepTime);
                     }
                 }
 
                 if (minSleepTime >= Settings.TimeToSleep)
                 {
-                    for (int i = 0; i < _bodyCount; ++i)
+                    for (int i = 0; i < BodyCount; ++i)
                     {
-                        Body b = _bodies[i];
+                        Body b = Bodies[i];
                         b.Awake = false;
                     }
                 }
@@ -264,20 +264,20 @@ namespace FarseerPhysics.Dynamics
 
         public void Add(Body body)
         {
-            Debug.Assert(_bodyCount < _bodyCapacity);
-            _bodies[_bodyCount++] = body;
+            Debug.Assert(BodyCount < _bodyCapacity);
+            Bodies[BodyCount++] = body;
         }
 
         public void Add(Contact contact)
         {
-            Debug.Assert(_contactCount < _contactCapacity);
-            _contacts[_contactCount++] = contact;
+            Debug.Assert(ContactCount < _contactCapacity);
+            _contacts[ContactCount++] = contact;
         }
 
         public void Add(Joint joint)
         {
-            Debug.Assert(_jointCount < _jointCapacity);
-            _joints[_jointCount++] = joint;
+            Debug.Assert(JointCount < _jointCapacity);
+            _joints[JointCount++] = joint;
         }
 
         public void Report(ContactConstraint[] constraints)
@@ -287,7 +287,7 @@ namespace FarseerPhysics.Dynamics
                 return;
             }
 
-            for (int i = 0; i < _contactCount; ++i)
+            for (int i = 0; i < ContactCount; ++i)
             {
                 Contact c = _contacts[i];
 

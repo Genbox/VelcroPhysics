@@ -81,13 +81,13 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 GetReactionForce(float inv_dt)
         {
-            Vector2 F = (inv_dt * _linearImpulse);
+            Vector2 F = (inv_dt*_linearImpulse);
             return F;
         }
 
         public override float GetReactionTorque(float inv_dt)
         {
-            float F = (inv_dt * _angularImpulse);
+            float F = (inv_dt*_angularImpulse);
             return F;
         }
 
@@ -113,8 +113,8 @@ namespace FarseerPhysics.Dynamics.Joints
             //     [  -r1y*iA*r1x-r2y*iB*r2x, mA+r1x^2*iA+mB+r2x^2*iB,           r1x*iA+r2x*iB]
             //     [          -r1y*iA-r2y*iB,           r1x*iA+r2x*iB,                   iA+iB]
 
-            float mA = bA._invMass, mB = bB._invMass;
-            float iA = bA._invI, iB = bB._invI;
+            float mA = bA.InvMass, mB = bB.InvMass;
+            float iA = bA.InvI, iB = bB.InvI;
 
             Mat22 K1 = new Mat22();
             K1.col1.X = mA + mB;
@@ -123,16 +123,16 @@ namespace FarseerPhysics.Dynamics.Joints
             K1.col2.Y = mA + mB;
 
             Mat22 K2 = new Mat22();
-            K2.col1.X = iA * rA.Y * rA.Y;
-            K2.col2.X = -iA * rA.X * rA.Y;
-            K2.col1.Y = -iA * rA.X * rA.Y;
-            K2.col2.Y = iA * rA.X * rA.X;
+            K2.col1.X = iA*rA.Y*rA.Y;
+            K2.col2.X = -iA*rA.X*rA.Y;
+            K2.col1.Y = -iA*rA.X*rA.Y;
+            K2.col2.Y = iA*rA.X*rA.X;
 
             Mat22 K3 = new Mat22();
-            K3.col1.X = iB * rB.Y * rB.Y;
-            K3.col2.X = -iB * rB.X * rB.Y;
-            K3.col1.Y = -iB * rB.X * rB.Y;
-            K3.col2.Y = iB * rB.X * rB.X;
+            K3.col1.X = iB*rB.Y*rB.Y;
+            K3.col2.X = -iB*rB.X*rB.Y;
+            K3.col1.Y = -iB*rB.X*rB.Y;
+            K3.col2.Y = iB*rB.X*rB.X;
 
             Mat22 K12;
             Mat22.Add(ref K1, ref K2, out K12);
@@ -143,7 +143,7 @@ namespace FarseerPhysics.Dynamics.Joints
             _angularMass = iA + iB;
             if (_angularMass > 0.0f)
             {
-                _angularMass = 1.0f / _angularMass;
+                _angularMass = 1.0f/_angularMass;
             }
 
             if (Settings.EnableWarmstarting)
@@ -154,11 +154,11 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 Vector2 P = new Vector2(_linearImpulse.X, _linearImpulse.Y);
 
-                bA._linearVelocity -= mA * P;
-                bA._angularVelocity -= iA * (MathUtils.Cross(rA, P) + _angularImpulse);
+                bA.LinearVelocityInternal -= mA*P;
+                bA.AngularVelocityInternal -= iA*(MathUtils.Cross(rA, P) + _angularImpulse);
 
-                bB._linearVelocity += mB * P;
-                bB._angularVelocity += iB * (MathUtils.Cross(rB, P) + _angularImpulse);
+                bB.LinearVelocityInternal += mB*P;
+                bB.AngularVelocityInternal += iB*(MathUtils.Cross(rB, P) + _angularImpulse);
             }
             else
             {
@@ -172,13 +172,13 @@ namespace FarseerPhysics.Dynamics.Joints
             Body bA = BodyA;
             Body bB = BodyB;
 
-            Vector2 vA = bA._linearVelocity;
-            float wA = bA._angularVelocity;
-            Vector2 vB = bB._linearVelocity;
-            float wB = bB._angularVelocity;
+            Vector2 vA = bA.LinearVelocityInternal;
+            float wA = bA.AngularVelocityInternal;
+            Vector2 vB = bB.LinearVelocityInternal;
+            float wB = bB.AngularVelocityInternal;
 
-            float mA = bA._invMass, mB = bB._invMass;
-            float iA = bA._invI, iB = bB._invI;
+            float mA = bA.InvMass, mB = bB.InvMass;
+            float iA = bA.InvI, iB = bB.InvI;
 
             Transform xfA, xfB;
             bA.GetTransform(out xfA);
@@ -190,15 +190,15 @@ namespace FarseerPhysics.Dynamics.Joints
             // Solve angular friction
             {
                 float Cdot = wB - wA;
-                float impulse = -_angularMass * Cdot;
+                float impulse = -_angularMass*Cdot;
 
                 float oldImpulse = _angularImpulse;
-                float maxImpulse = step.dt * MaxTorque;
+                float maxImpulse = step.dt*MaxTorque;
                 _angularImpulse = MathUtils.Clamp(_angularImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = _angularImpulse - oldImpulse;
 
-                wA -= iA * impulse;
-                wB += iB * impulse;
+                wA -= iA*impulse;
+                wB += iB*impulse;
             }
 
             // Solve linear friction
@@ -209,9 +209,9 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 oldImpulse = _linearImpulse;
                 _linearImpulse += impulse;
 
-                float maxImpulse = step.dt * MaxForce;
+                float maxImpulse = step.dt*MaxForce;
 
-                if (_linearImpulse.LengthSquared() > maxImpulse * maxImpulse)
+                if (_linearImpulse.LengthSquared() > maxImpulse*maxImpulse)
                 {
                     _linearImpulse.Normalize();
                     _linearImpulse *= maxImpulse;
@@ -219,17 +219,17 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 impulse = _linearImpulse - oldImpulse;
 
-                vA -= mA * impulse;
-                wA -= iA * MathUtils.Cross(rA, impulse);
+                vA -= mA*impulse;
+                wA -= iA*MathUtils.Cross(rA, impulse);
 
-                vB += mB * impulse;
-                wB += iB * MathUtils.Cross(rB, impulse);
+                vB += mB*impulse;
+                wB += iB*MathUtils.Cross(rB, impulse);
             }
 
-            bA._linearVelocity = vA;
-            bA._angularVelocity = wA;
-            bB._linearVelocity = vB;
-            bB._angularVelocity = wB;
+            bA.LinearVelocityInternal = vA;
+            bA.AngularVelocityInternal = wA;
+            bB.LinearVelocityInternal = vB;
+            bB.AngularVelocityInternal = wB;
         }
 
         internal override bool SolvePositionConstraints()

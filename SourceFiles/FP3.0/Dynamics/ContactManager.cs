@@ -32,8 +32,11 @@ namespace FarseerPhysics.Dynamics
         public BroadPhase BroadPhase = new BroadPhase();
 
         public Action<FixtureProxy, FixtureProxy> BroadphaseCollision;
+
         public int ContactCount;
+
         public CollisionFilterDelegate ContactFilter;
+
         public Contact ContactList;
 
         /// <summary>
@@ -121,39 +124,39 @@ namespace FarseerPhysics.Dynamics
             bodyB = fixtureB.Body;
 
             // Insert into the world.
-            c._prev = null;
-            c._next = ContactList;
+            c.Prev = null;
+            c.Next = ContactList;
             if (ContactList != null)
             {
-                ContactList._prev = c;
+                ContactList.Prev = c;
             }
             ContactList = c;
 
             // Connect to island graph.
 
             // Connect to body A
-            c._nodeA.Contact = c;
-            c._nodeA.Other = bodyB;
+            c.NodeA.Contact = c;
+            c.NodeA.Other = bodyB;
 
-            c._nodeA.Prev = null;
-            c._nodeA.Next = bodyA._contactList;
-            if (bodyA._contactList != null)
+            c.NodeA.Prev = null;
+            c.NodeA.Next = bodyA.ContactList;
+            if (bodyA.ContactList != null)
             {
-                bodyA._contactList.Prev = c._nodeA;
+                bodyA.ContactList.Prev = c.NodeA;
             }
-            bodyA._contactList = c._nodeA;
+            bodyA.ContactList = c.NodeA;
 
             // Connect to body B
-            c._nodeB.Contact = c;
-            c._nodeB.Other = bodyA;
+            c.NodeB.Contact = c;
+            c.NodeB.Other = bodyA;
 
-            c._nodeB.Prev = null;
-            c._nodeB.Next = bodyB._contactList;
-            if (bodyB._contactList != null)
+            c.NodeB.Prev = null;
+            c.NodeB.Next = bodyB.ContactList;
+            if (bodyB.ContactList != null)
             {
-                bodyB._contactList.Prev = c._nodeB;
+                bodyB.ContactList.Prev = c.NodeB;
             }
-            bodyB._contactList = c._nodeB;
+            bodyB.ContactList = c.NodeB;
 
             ++ContactCount;
         }
@@ -176,51 +179,51 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Remove from the world.
-            if (c._prev != null)
+            if (c.Prev != null)
             {
-                c._prev._next = c._next;
+                c.Prev.Next = c.Next;
             }
 
-            if (c._next != null)
+            if (c.Next != null)
             {
-                c._next._prev = c._prev;
+                c.Next.Prev = c.Prev;
             }
 
             if (c == ContactList)
             {
-                ContactList = c._next;
+                ContactList = c.Next;
             }
 
             // Remove from body 1
-            if (c._nodeA.Prev != null)
+            if (c.NodeA.Prev != null)
             {
-                c._nodeA.Prev.Next = c._nodeA.Next;
+                c.NodeA.Prev.Next = c.NodeA.Next;
             }
 
-            if (c._nodeA.Next != null)
+            if (c.NodeA.Next != null)
             {
-                c._nodeA.Next.Prev = c._nodeA.Prev;
+                c.NodeA.Next.Prev = c.NodeA.Prev;
             }
 
-            if (c._nodeA == bodyA._contactList)
+            if (c.NodeA == bodyA.ContactList)
             {
-                bodyA._contactList = c._nodeA.Next;
+                bodyA.ContactList = c.NodeA.Next;
             }
 
             // Remove from body 2
-            if (c._nodeB.Prev != null)
+            if (c.NodeB.Prev != null)
             {
-                c._nodeB.Prev.Next = c._nodeB.Next;
+                c.NodeB.Prev.Next = c.NodeB.Next;
             }
 
-            if (c._nodeB.Next != null)
+            if (c.NodeB.Next != null)
             {
-                c._nodeB.Next.Prev = c._nodeB.Prev;
+                c.NodeB.Next.Prev = c.NodeB.Prev;
             }
 
-            if (c._nodeB == bodyB._contactList)
+            if (c.NodeB == bodyB.ContactList)
             {
-                bodyB._contactList = c._nodeB.Next;
+                bodyB.ContactList = c.NodeB.Next;
             }
 
             c.Destroy();
@@ -248,7 +251,7 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Is this contact flagged for filtering?
-                if ((c._flags & ContactFlags.Filter) == ContactFlags.Filter)
+                if ((c.Flags & ContactFlags.Filter) == ContactFlags.Filter)
                 {
                     // Should these bodies collide?
                     if (bodyB.ShouldCollide(bodyA) == false)
@@ -269,11 +272,11 @@ namespace FarseerPhysics.Dynamics
                     }
 
                     // Clear the filtering flag.
-                    c._flags &= ~ContactFlags.Filter;
+                    c.Flags &= ~ContactFlags.Filter;
                 }
 
-                int proxyIdA = fixtureA._proxies[indexA].ProxyId;
-                int proxyIdB = fixtureB._proxies[indexB].ProxyId;
+                int proxyIdA = fixtureA.Proxies[indexA].ProxyId;
+                int proxyIdB = fixtureB.Proxies[indexB].ProxyId;
 
                 bool overlap = BroadPhase.TestOverlap(proxyIdA, proxyIdB);
 

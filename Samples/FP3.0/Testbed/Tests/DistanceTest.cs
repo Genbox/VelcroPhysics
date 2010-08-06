@@ -74,7 +74,7 @@ namespace FarseerPhysics.TestBed.Tests
             input.TransformB = _transformB;
             input.UseRadii = true;
             SimplexCache cache;
-            cache.count = 0;
+            cache.Count = 0;
             DistanceOutput output;
             Distance.ComputeDistance(out output, out cache, ref input);
 

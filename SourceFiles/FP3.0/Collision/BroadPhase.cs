@@ -220,7 +220,7 @@ namespace FarseerPhysics.Collision
             return _tree.ComputeHeight();
         }
 
-        internal void BufferMove(int proxyId)
+        private void BufferMove(int proxyId)
         {
             if (_moveCount == _moveCapacity)
             {
@@ -234,7 +234,7 @@ namespace FarseerPhysics.Collision
             ++_moveCount;
         }
 
-        internal void UnBufferMove(int proxyId)
+        private void UnBufferMove(int proxyId)
         {
             for (int i = 0; i < _moveCount; ++i)
             {
@@ -246,7 +246,7 @@ namespace FarseerPhysics.Collision
             }
         }
 
-        internal bool QueryCallback(int proxyId)
+        private bool QueryCallback(int proxyId)
         {
             // A proxy cannot form a pair with itself.
             if (proxyId == _queryProxyId)

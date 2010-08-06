@@ -87,17 +87,12 @@ namespace FarseerPhysics.Dynamics
     {
         private static int _fixtureIdCounter;
         public Action<ContactConstraint> PostSolve;
-        internal Body _body;
+        public FixtureProxy[] Proxies;
+        public int ProxyCount;
         private CollisionCategory _collidesWith;
         private CollisionCategory _collisionCategories;
         private short _collisionGroup;
         private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
-        internal float _density;
-        internal Fixture _next;
-        public FixtureProxy[] _proxies;
-        public int _proxyCount;
-        internal int _proxyId;
-        internal Shape _shape;
 
         internal Fixture()
         {
@@ -108,55 +103,37 @@ namespace FarseerPhysics.Dynamics
             IsSensor = false;
 
             UserData = null;
-            _body = null;
-            _next = null;
-            _proxyId = BroadPhase.NullProxy;
-            _shape = null;
+            Body = null;
+            Next = null;
+            Shape = null;
         }
 
         /// Get the type of the child Shape. You can use this to down cast to the concrete Shape.
         /// @return the Shape type.
         public ShapeType ShapeType
         {
-            get { return _shape.ShapeType; }
+            get { return Shape.ShapeType; }
         }
 
         /// Get the child Shape. You can modify the child Shape, however you should not change the
         /// number of vertices because this will crash some collision caching mechanisms.
-        public Shape Shape
-        {
-            get { return _shape; }
-        }
+        public Shape Shape { get; internal set; }
 
         /// Set if this fixture is a sensor.
         public bool IsSensor { get; set; }
 
         /// Get the parent body of this fixture. This is null if the fixture is not attached.
         /// @return the parent body.
-        public Body Body
-        {
-            get { return _body; }
-        }
+        public Body Body { get; internal set; }
 
         /// Get the next fixture in the parent body's fixture list.
         /// @return the next Shape.
-        public Fixture Next
-        {
-            get { return _next; }
-        }
+        public Fixture Next { get; internal set; }
 
         /// Set the user data. Use this to store your application specific data.
         public object UserData { get; set; }
 
-        public float Density
-        {
-            set
-            {
-                Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
-                _density = value;
-            }
-            get { return _density; }
-        }
+        public float Density { get; set; }
 
         /// Set the coefficient of friction.
         public float Friction { get; set; }
@@ -174,7 +151,7 @@ namespace FarseerPhysics.Dynamics
         {
             set
             {
-                if (_body == null)
+                if (Body == null)
                     return;
 
                 if (_collisionGroup == value)
@@ -196,7 +173,7 @@ namespace FarseerPhysics.Dynamics
 
             set
             {
-                if (_body == null)
+                if (Body == null)
                     return;
 
                 if (_collidesWith == value)
@@ -218,7 +195,7 @@ namespace FarseerPhysics.Dynamics
 
             set
             {
-                if (_body == null)
+                if (Body == null)
                     return;
 
                 if (_collisionCategories == value)
@@ -235,8 +212,8 @@ namespace FarseerPhysics.Dynamics
         public bool TestPoint(Vector2 p)
         {
             Transform xf;
-            _body.GetTransform(out xf);
-            return _shape.TestPoint(ref xf, p);
+            Body.GetTransform(out xf);
+            return Shape.TestPoint(ref xf, p);
         }
 
         /// Cast a ray against this Shape.
@@ -245,15 +222,15 @@ namespace FarseerPhysics.Dynamics
         public bool RayCast(out RayCastOutput output, ref RayCastInput input, int childIndex)
         {
             Transform xf;
-            _body.GetTransform(out xf);
-            return _shape.RayCast(out output, ref input, ref xf, childIndex);
+            Body.GetTransform(out xf);
+            return Shape.RayCast(out output, ref input, ref xf, childIndex);
         }
 
         /// Get the mass data for this fixture. The mass data is based on the density and
         /// the Shape. The rotational inertia is about the Shape's origin.
         public void GetMassData(out MassData massData)
         {
-            _shape.ComputeMass(out massData, _density);
+            Shape.ComputeMass(out massData, Density);
         }
 
         /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
@@ -261,31 +238,31 @@ namespace FarseerPhysics.Dynamics
         /// the body transform.
         public void GetAABB(out AABB aabb, int childIndex)
         {
-            Debug.Assert(0 <= childIndex && childIndex < _proxyCount);
-            aabb = _proxies[childIndex].AABB;
+            Debug.Assert(0 <= childIndex && childIndex < ProxyCount);
+            aabb = Proxies[childIndex].AABB;
         }
 
         // We need separation create/destroy functions from the constructor/destructor because
         // the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
         internal void Create(Body body, Shape shape, float density)
         {
-            _body = body;
-            _next = null;
+            Body = body;
+            Next = null;
 
-            _shape = shape.Clone();
+            Shape = shape.Clone();
 
             // Reserve proxy space
-            int childCount = _shape.GetChildCount();
-            _proxies = new FixtureProxy[childCount];
+            int childCount = Shape.GetChildCount();
+            Proxies = new FixtureProxy[childCount];
             for (int i = 0; i < childCount; ++i)
             {
-                _proxies[i] = new FixtureProxy();
-                _proxies[i].Fixture = null;
-                _proxies[i].ProxyId = BroadPhase.NullProxy;
+                Proxies[i] = new FixtureProxy();
+                Proxies[i].Fixture = null;
+                Proxies[i].ProxyId = BroadPhase.NullProxy;
             }
-            _proxyCount = 0;
+            ProxyCount = 0;
 
-            _density = density;
+            Density = density;
 
             FixtureId = _fixtureIdCounter++;
         }
@@ -293,62 +270,62 @@ namespace FarseerPhysics.Dynamics
         internal void Destroy()
         {
             // The proxies must be destroyed before calling this.
-            Debug.Assert(_proxyCount == 0);
+            Debug.Assert(ProxyCount == 0);
 
             // Free the proxy array.
-            _proxies = null;
+            Proxies = null;
 
-            _shape = null;
+            Shape = null;
         }
 
         // These support body activation/deactivation.
         internal void CreateProxies(BroadPhase broadPhase, ref Transform xf)
         {
-            Debug.Assert(_proxyCount == 0);
+            Debug.Assert(ProxyCount == 0);
 
             // Create proxies in the broad-phase.
-            _proxyCount = _shape.GetChildCount();
+            ProxyCount = Shape.GetChildCount();
 
-            for (int i = 0; i < _proxyCount; ++i)
+            for (int i = 0; i < ProxyCount; ++i)
             {
-                FixtureProxy proxy = _proxies[i];
-                _shape.ComputeAABB(out proxy.AABB, ref xf, i);
+                FixtureProxy proxy = Proxies[i];
+                Shape.ComputeAABB(out proxy.AABB, ref xf, i);
                 proxy.Fixture = this;
                 proxy.ChildIndex = i;
                 proxy.ProxyId = broadPhase.CreateProxy(ref proxy.AABB, proxy);
 
-                _proxies[i] = proxy;
+                Proxies[i] = proxy;
             }
         }
 
         internal void DestroyProxies(BroadPhase broadPhase)
         {
             // Destroy proxies in the broad-phase.
-            for (int i = 0; i < _proxyCount; ++i)
+            for (int i = 0; i < ProxyCount; ++i)
             {
-                broadPhase.DestroyProxy(_proxies[i].ProxyId);
-                _proxies[i].ProxyId = BroadPhase.NullProxy;
+                broadPhase.DestroyProxy(Proxies[i].ProxyId);
+                Proxies[i].ProxyId = BroadPhase.NullProxy;
             }
 
-            _proxyCount = 0;
+            ProxyCount = 0;
         }
 
 
         internal void Synchronize(BroadPhase broadPhase, ref Transform transform1, ref Transform transform2)
         {
-            if (_proxyCount == 0)
+            if (ProxyCount == 0)
             {
                 return;
             }
 
-            for (int i = 0; i < _proxyCount; ++i)
+            for (int i = 0; i < ProxyCount; ++i)
             {
-                FixtureProxy proxy = _proxies[i];
+                FixtureProxy proxy = Proxies[i];
 
                 // Compute an AABB that covers the swept Shape (may miss some rotation effect).
                 AABB aabb1, aabb2;
-                _shape.ComputeAABB(out aabb1, ref transform1, proxy.ChildIndex);
-                _shape.ComputeAABB(out aabb2, ref transform2, proxy.ChildIndex);
+                Shape.ComputeAABB(out aabb1, ref transform1, proxy.ChildIndex);
+                Shape.ComputeAABB(out aabb2, ref transform2, proxy.ChildIndex);
 
                 proxy.AABB.Combine(ref aabb1, ref aabb2);
 
@@ -388,7 +365,7 @@ namespace FarseerPhysics.Dynamics
         private void FilterChanged()
         {
             // Flag associated contacts for filtering.
-            ContactEdge edge = _body.ContactList;
+            ContactEdge edge = Body.ContactList;
             while (edge != null)
             {
                 Contact contact = edge.Contact;

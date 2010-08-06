@@ -76,7 +76,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public float Compute(Vector2 x1, float a1, Vector2 x2, float a2)
         {
-            return Vector2.Dot(LinearA, x1) + AngularA * a1 + Vector2.Dot(LinearB, x2) + AngularB * a2;
+            return Vector2.Dot(LinearA, x1) + AngularA*a1 + Vector2.Dot(LinearB, x2) + AngularB*a2;
         }
     }
 
