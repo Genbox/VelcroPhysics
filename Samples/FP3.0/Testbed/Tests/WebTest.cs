@@ -132,7 +132,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     if (_bodies[i] != null)
                     {
-                        World.DestroyBody(_bodies[i]);
+                        World.RemoveBody(_bodies[i]);
                         _bodies[i] = null;
                         break;
                     }
@@ -145,7 +145,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     if (_joints[i] != null)
                     {
-                        World.DestroyJoint(_joints[i]);
+                        World.RemoveJoint(_joints[i]);
                         _joints[i] = null;
                         break;
                     }

@@ -156,7 +156,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 if (b != null && !dupes.Contains(b))
                 {
-                    World.DestroyBody(b);
+                    World.RemoveBody(b);
                     dupes.Add(b);
                 }
             }

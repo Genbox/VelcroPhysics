@@ -352,7 +352,7 @@ namespace FarseerPhysics.TestBed.Framework
         {
             if (_fixedMouseJoint != null)
             {
-                World.DestroyJoint(_fixedMouseJoint);
+                World.RemoveJoint(_fixedMouseJoint);
                 _fixedMouseJoint = null;
             }
         }
