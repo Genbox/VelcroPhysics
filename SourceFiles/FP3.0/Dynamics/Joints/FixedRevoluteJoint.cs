@@ -76,7 +76,7 @@ namespace FarseerPhysics.Dynamics.Joints
             LocalAnchorA = bodyanchor;
             LocalAnchorB = worldanchor;
 
-            ReferenceAngle = - BodyA.Angle;
+            ReferenceAngle = -BodyA.Rotation;
 
             _impulse = Vector3.Zero;
 

@@ -67,7 +67,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             LocalAnchorA = anchorA;
             LocalAnchorB = anchorB;
-            ReferenceAngle = BodyB.Angle - BodyA.Angle;
+            ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
         }
 
         public Vector2 LocalAnchorA { get; private set; }

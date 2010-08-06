@@ -134,7 +134,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             _localXAxis1 = BodyA.GetLocalVector(axis);
             _localYAxis1 = MathUtils.Cross(1.0f, _localXAxis1);
-            _refAngle = BodyB.Angle - BodyA.Angle;
+            _refAngle = BodyB.Rotation - BodyA.Rotation;
 
             _limitState = LimitState.Inactive;
         }
