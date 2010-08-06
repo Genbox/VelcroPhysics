@@ -74,9 +74,9 @@ namespace FarseerPhysics.Dynamics.Contacts
     /// that has no contact points.
     public class Contact
     {
-        private static EdgeShape s_edge = new EdgeShape();
+        private static EdgeShape _edge = new EdgeShape();
 
-        private static ContactType[,] s_registers = new[,]
+        private static ContactType[,] _registers = new[,]
                                                         {
                                                             {
                                                                 ContactType.Circle,
@@ -238,7 +238,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             // Re-enable this contact.
             Flags |= ContactFlags.Enabled;
 
-            bool touching = false;
+            bool touching;
             bool wasTouching = (Flags & ContactFlags.Touching) == ContactFlags.Touching;
 
             bool sensorA = FixtureA.IsSensor;
@@ -314,14 +314,32 @@ namespace FarseerPhysics.Dynamics.Contacts
                 Flags &= ~ContactFlags.Touching;
             }
 
-            if (wasTouching == false && touching && null != contactManager)
+            if (wasTouching == false && touching)
             {
+                //Report the collision to both participants:
+                if (FixtureA.OnCollision != null)
+                    Enabled = FixtureA.OnCollision(FixtureA, FixtureB, Manifold);
+
+                //Reverse the order of the reported fixtures. The first fixture is always the one that the
+                //user subscribed to.
+                if (FixtureB.OnCollision != null)
+                    Enabled = FixtureB.OnCollision(FixtureB, FixtureA, Manifold);
+
                 if (contactManager.BeginContact != null)
                     contactManager.BeginContact(this);
             }
 
-            if (wasTouching && touching == false && null != contactManager)
+            if (wasTouching && touching == false)
             {
+                //Report the separation to both participants:
+                if (FixtureA.OnSeparation != null)
+                    FixtureA.OnSeparation(FixtureA, FixtureB);
+
+                //Reverse the order of the reported fixtures. The first fixture is always the one that the
+                //user subscribed to.
+                if (FixtureB.OnSeparation != null)
+                    FixtureB.OnSeparation(FixtureB, FixtureA);
+
                 if (contactManager.EndContact != null)
                     contactManager.EndContact(this);
             }
@@ -360,14 +378,14 @@ namespace FarseerPhysics.Dynamics.Contacts
                     break;
                 case ContactType.LoopAndCircle:
                     var loop = (LoopShape) FixtureA.Shape;
-                    loop.GetChildEdge(ref s_edge, IndexA);
-                    Collision.Collision.CollideEdgeAndCircle(ref manifold, s_edge, ref xfA,
+                    loop.GetChildEdge(ref _edge, IndexA);
+                    Collision.Collision.CollideEdgeAndCircle(ref manifold, _edge, ref xfA,
                                                              (CircleShape) FixtureB.Shape, ref xfB);
                     break;
                 case ContactType.LoopAndPolygon:
                     var loop2 = (LoopShape) FixtureA.Shape;
-                    loop2.GetChildEdge(ref s_edge, IndexA);
-                    Collision.Collision.CollideEdgeAndPolygon(ref manifold, s_edge, ref xfA,
+                    loop2.GetChildEdge(ref _edge, IndexA);
+                    Collision.Collision.CollideEdgeAndPolygon(ref manifold, _edge, ref xfA,
                                                               (PolygonShape) FixtureB.Shape, ref xfB);
                     break;
                 case ContactType.Circle:
@@ -417,7 +435,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                 }
             }
 
-            c._type = s_registers[(int) type1, (int) type2];
+            c._type = _registers[(int) type1, (int) type2];
 
             return c;
         }
