@@ -106,17 +106,6 @@ namespace FarseerPhysics.Collision
 
             InsertLeaf(proxyId);
 
-            // Rebalance if necessary.
-            int iterationCount = _nodeCount >> 4;
-            int tryCount = 0;
-            int height = ComputeHeight();
-            while (height > 64 && tryCount < 10)
-            {
-                Rebalance(iterationCount);
-                height = ComputeHeight();
-                ++tryCount;
-            }
-
             return proxyId;
         }
 
