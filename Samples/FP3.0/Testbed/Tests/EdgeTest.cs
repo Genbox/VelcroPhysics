@@ -102,7 +102,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body.SleepingAllowed = false;
 
                 CircleShape shape = new CircleShape(0.5f);
-                body.CreateFixture(shape, 1);
+                _circleFixture = body.CreateFixture(shape, 1);
             }
 
             {
@@ -113,8 +113,19 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(0.5f, 0.5f);
 
-                Fixture fix = body.CreateFixture(shape, 1);
+                body.CreateFixture(shape, 1);
             }
+        }
+
+        private Fixture _circleFixture;
+
+        public override void Update(GameSettings settings, GameTime gameTime)
+        {
+            DebugView.DrawString(50, TextLine, "Rotation: " + _circleFixture.Body.Rotation);
+            TextLine += 15;
+            DebugView.DrawString(50, TextLine, "Revolutions: " + _circleFixture.Body.Revolutions);
+
+            base.Update(settings, gameTime);
         }
 
         internal static Test Create()

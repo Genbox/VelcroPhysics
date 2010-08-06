@@ -99,6 +99,12 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
+        /// Gets the total number revolutions the body has made.
+        /// </summary>
+        /// <value>The revolutions.</value>
+        public float Revolutions { get { return Rotation / (float)Math.PI; } }
+
+        /// <summary>
         /// Gets or sets the body type.
         /// </summary>
         /// <value>The type of body.</value>
