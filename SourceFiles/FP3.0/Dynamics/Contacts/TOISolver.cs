@@ -57,7 +57,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     {
                         Vector2 pointA = cc.BodyA.GetWorldPoint(cc.LocalPoint);
                         Vector2 pointB = cc.BodyB.GetWorldPoint(cc.LocalPoints[0]);
-                        if ((pointA - pointB).LengthSquared() > Settings.Epsilon*Settings.Epsilon)
+                        if ((pointA - pointB).LengthSquared() > Settings.Epsilon * Settings.Epsilon)
                         {
                             Normal = pointB - pointA;
                             Normal.Normalize();
@@ -67,7 +67,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                             Normal = new Vector2(1.0f, 0.0f);
                         }
 
-                        Point = 0.5f*(pointA + pointB);
+                        Point = 0.5f * (pointA + pointB);
                         Separation = Vector2.Dot(pointB - pointA, Normal) - cc.Radius;
                     }
                     break;
@@ -116,7 +116,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             _count = count;
             _toiBody = toiBody;
             if (_constraints.Length < _count)
-                _constraints = new TOIConstraint[Math.Max(_constraints.Length*2, _count)];
+                _constraints = new TOIConstraint[Math.Max(_constraints.Length * 2, _count)];
 
             for (int i = 0; i < _count; ++i)
             {
@@ -153,7 +153,11 @@ namespace FarseerPhysics.Dynamics.Contacts
             }
         }
 
-        // Perform one solver iteration. Returns true if converged.
+        /// <summary>
+        /// Perform one solver iteration. Returns true if converged.
+        /// </summary>
+        /// <param name="baumgarte">The baumgarte value.</param>
+        /// <returns></returns>
         public bool Solve(float baumgarte)
         {
             float minSeparation = 0.0f;
@@ -177,10 +181,10 @@ namespace FarseerPhysics.Dynamics.Contacts
                     massA = 0.0f;
                 }
 
-                float invMassA = massA*bodyA.InvMass;
-                float invIA = massA*bodyA.InvI;
-                float invMassB = massB*bodyB.InvMass;
-                float invIB = massB*bodyB.InvI;
+                float invMassA = massA * bodyA.InvMass;
+                float invIA = massA * bodyA.InvI;
+                float invMassB = massB * bodyB.InvMass;
+                float invIB = massB * bodyB.InvI;
 
                 // Solve normal constraints
                 for (int j = 0; j < c.PointCount; ++j)
@@ -198,32 +202,32 @@ namespace FarseerPhysics.Dynamics.Contacts
                     minSeparation = Math.Min(minSeparation, separation);
 
                     // Prevent large corrections and allow slop.
-                    float C = MathUtils.Clamp(baumgarte*(separation + Settings.LinearSlop),
+                    float C = MathUtils.Clamp(baumgarte * (separation + Settings.LinearSlop),
                                               -Settings.MaxLinearCorrection, 0.0f);
 
                     // Compute the effective mass.
                     float rnA = MathUtils.Cross(rA, normal);
                     float rnB = MathUtils.Cross(rB, normal);
-                    float K = invMassA + invMassB + invIA*rnA*rnA + invIB*rnB*rnB;
+                    float K = invMassA + invMassB + invIA * rnA * rnA + invIB * rnB * rnB;
 
                     // Compute normal impulse
-                    float impulse = K > 0.0f ? -C/K : 0.0f;
+                    float impulse = K > 0.0f ? -C / K : 0.0f;
 
-                    Vector2 P = impulse*normal;
+                    Vector2 P = impulse * normal;
 
-                    bodyA.Sweep.c -= invMassA*P;
-                    bodyA.Sweep.a -= invIA*MathUtils.Cross(rA, P);
+                    bodyA.Sweep.c -= invMassA * P;
+                    bodyA.Sweep.a -= invIA * MathUtils.Cross(rA, P);
                     bodyA.SynchronizeTransform();
 
-                    bodyB.Sweep.c += invMassB*P;
-                    bodyB.Sweep.a += invIB*MathUtils.Cross(rB, P);
+                    bodyB.Sweep.c += invMassB * P;
+                    bodyB.Sweep.a += invIB * MathUtils.Cross(rB, P);
                     bodyB.SynchronizeTransform();
                 }
             }
 
             // We can't expect minSpeparation >= -b2_linearSlop because we don't
             // push the separation above -b2_linearSlop.
-            return minSeparation >= -1.5f*Settings.LinearSlop;
+            return minSeparation >= -1.5f * Settings.LinearSlop;
         }
     }
 }

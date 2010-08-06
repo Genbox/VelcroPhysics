@@ -752,10 +752,10 @@ namespace FarseerPhysics.Dynamics.Contacts
                 for (int j = 0; j < c.PointCount; ++j)
                 {
                     PositionSolverManifold psm = new PositionSolverManifold(ref c, j);
-                    Vector2 normal = psm._normal;
+                    Vector2 normal = psm.Normal;
 
-                    Vector2 point = psm._point;
-                    float separation = psm._separation;
+                    Vector2 point = psm.Point;
+                    float separation = psm.Separation;
 
                     Vector2 rA = point - bodyA.Sweep.c;
                     Vector2 rB = point - bodyB.Sweep.c;
@@ -807,9 +807,9 @@ namespace FarseerPhysics.Dynamics.Contacts
 
     internal struct PositionSolverManifold
     {
-        internal Vector2 _normal;
-        internal Vector2 _point;
-        internal float _separation;
+        internal Vector2 Normal;
+        internal Vector2 Point;
+        internal float Separation;
 
         internal PositionSolverManifold(ref ContactConstraint cc, int index)
         {
@@ -823,47 +823,47 @@ namespace FarseerPhysics.Dynamics.Contacts
                         Vector2 pointB = cc.BodyB.GetWorldPoint(cc.Points[0].LocalPoint);
                         if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon*Settings.Epsilon)
                         {
-                            _normal = pointB - pointA;
-                            _normal.Normalize();
+                            Normal = pointB - pointA;
+                            Normal.Normalize();
                         }
                         else
                         {
-                            _normal = new Vector2(1.0f, 0.0f);
+                            Normal = new Vector2(1.0f, 0.0f);
                         }
 
-                        _point = 0.5f*(pointA + pointB);
-                        _separation = Vector2.Dot(pointB - pointA, _normal) - cc.Radius;
+                        Point = 0.5f*(pointA + pointB);
+                        Separation = Vector2.Dot(pointB - pointA, Normal) - cc.Radius;
                     }
                     break;
 
                 case ManifoldType.FaceA:
                     {
-                        _normal = cc.BodyA.GetWorldVector(cc.LocalNormal);
+                        Normal = cc.BodyA.GetWorldVector(cc.LocalNormal);
                         Vector2 planePoint = cc.BodyA.GetWorldPoint(cc.LocalPoint);
 
                         Vector2 clipPoint = cc.BodyB.GetWorldPoint(cc.Points[index].LocalPoint);
-                        _separation = Vector2.Dot(clipPoint - planePoint, _normal) - cc.Radius;
-                        _point = clipPoint;
+                        Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
+                        Point = clipPoint;
                     }
                     break;
 
                 case ManifoldType.FaceB:
                     {
-                        _normal = cc.BodyB.GetWorldVector(cc.LocalNormal);
+                        Normal = cc.BodyB.GetWorldVector(cc.LocalNormal);
                         Vector2 planePoint = cc.BodyB.GetWorldPoint(cc.LocalPoint);
 
                         Vector2 clipPoint = cc.BodyA.GetWorldPoint(cc.Points[index].LocalPoint);
-                        _separation = Vector2.Dot(clipPoint - planePoint, _normal) - cc.Radius;
-                        _point = clipPoint;
+                        Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
+                        Point = clipPoint;
 
                         // Ensure normal points from A to B
-                        _normal = -_normal;
+                        Normal = -Normal;
                     }
                     break;
                 default:
-                    _normal = Vector2.Zero;
-                    _point = Vector2.Zero;
-                    _separation = 0.0f;
+                    Normal = Vector2.Zero;
+                    Point = Vector2.Zero;
+                    Separation = 0.0f;
                     break;
             }
         }
