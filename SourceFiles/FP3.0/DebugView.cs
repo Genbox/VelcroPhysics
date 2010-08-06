@@ -30,15 +30,20 @@ namespace FarseerPhysics
     [Flags]
     public enum DebugViewFlags
     {
+        /// Draw shapes
         Shape = (1 << 0),
-        ///< draw shapes
+
+        /// Draw joint connections
         Joint = (1 << 1),
-        ///< draw joint connections
+
+        /// Draw axis aligned bounding boxes
         AABB = (1 << 2),
-        ///< draw axis aligned bounding boxes
+
+        /// Draw broad-phase pairs
         Pair = (1 << 3),
-        ///< draw broad-phase pairs
-        CenterOfMass = (1 << 4), ///< draw center of mass frame
+        
+        /// Draw center of mass frame
+        CenterOfMass = (1 << 4), 
     }
 
     /// Implement and register this class with a World to provide debug drawing of physics
@@ -50,40 +55,88 @@ namespace FarseerPhysics
             World = world;
         }
 
-        protected World World { get; set; }
+        protected World World { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the debug view flags.
+        /// </summary>
+        /// <value>The flags.</value>
         public DebugViewFlags Flags { get; set; }
 
+        /// <summary>
         /// Append flags to the current flags.
+        /// </summary>
+        /// <param name="flags">The flags.</param>
         public void AppendFlags(DebugViewFlags flags)
         {
             Flags |= flags;
         }
 
-        /// Clear flags from the current flags.
-        public void ClearFlags(DebugViewFlags flags)
+        /// <summary>
+        /// Remove flags from the current flags.
+        /// </summary>
+        /// <param name="flags">The flags.</param>
+        public void RemoveFlags(DebugViewFlags flags)
         {
             Flags &= ~flags;
         }
 
+        /// <summary>
         /// Draw a closed polygon provided in CCW order.
+        /// </summary>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="count">The vertex count.</param>
+        /// <param name="red">The red value.</param>
+        /// <param name="blue">The blue value.</param>
+        /// <param name="green">The green value.</param>
         public abstract void DrawPolygon(ref Vector2[] vertices, int count, float red, float blue, float green);
 
+        /// <summary>
         /// Draw a solid closed polygon provided in CCW order.
+        /// </summary>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="count">The vertex count.</param>
+        /// <param name="red">The red value.</param>
+        /// <param name="blue">The blue value.</param>
+        /// <param name="green">The green value.</param>
         public abstract void DrawSolidPolygon(ref Vector2[] vertices, int count, float red, float blue, float green);
 
+        /// <summary>
         /// Draw a circle.
+        /// </summary>
+        /// <param name="center">The center.</param>
+        /// <param name="radius">The radius.</param>
+        /// <param name="red">The red value.</param>
+        /// <param name="blue">The blue value.</param>
+        /// <param name="green">The green value.</param>
         public abstract void DrawCircle(Vector2 center, float radius, float red, float blue, float green);
 
+        /// <summary>
         /// Draw a solid circle.
+        /// </summary>
+        /// <param name="center">The center.</param>
+        /// <param name="radius">The radius.</param>
+        /// <param name="axis">The axis.</param>
+        /// <param name="red">The red value.</param>
+        /// <param name="blue">The blue value.</param>
+        /// <param name="green">The green value.</param>
         public abstract void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, float red, float blue,
                                              float green);
 
+        /// <summary>
         /// Draw a line segment.
-        public abstract void DrawSegment(Vector2 p1, Vector2 p2, float red, float blue, float green);
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="red">The red value.</param>
+        /// <param name="blue">The blue value.</param>
+        /// <param name="green">The green value.</param>
+        public abstract void DrawSegment(Vector2 start, Vector2 end, float red, float blue, float green);
 
+        /// <summary>
         /// Draw a transform. Choose your own length scale.
-        /// @param xf a transform.
-        public abstract void DrawTransform(ref Transform xf);
+        /// </summary>
+        /// <param name="transform">The transform.</param>
+        public abstract void DrawTransform(ref Transform transform);
     }
 }

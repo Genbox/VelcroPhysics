@@ -13,15 +13,20 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.DebugViewXNA
 {
+    /// <summary>
+    /// A debug view that works in XNA.
+    /// A debug view shows you what happens inside the physics engine. You can view
+    /// bodies, 
+    /// </summary>
     public class DebugViewXNA : DebugView
     {
         private static VertexPositionColor[] _vertsLines;
         private static VertexPositionColor[] _vertsFill;
         private static int _lineCount;
         private static int _fillCount;
-        public static SpriteBatch Batch;
-        public static SpriteFont Font;
-        public static GraphicsDevice Device;
+        private static SpriteBatch _batch;
+        private static SpriteFont _font;
+        private static GraphicsDevice _device;
 
         private static List<StringData> _stringData;
         private static VertexDeclaration _vertexDeclaration;
@@ -34,7 +39,9 @@ namespace FarseerPhysics.DebugViewXNA
             _vertsFill = new VertexPositionColor[1000000];
         }
 
+        /// <summary>
         /// Call this to draw shapes and other debug draw data.
+        /// </summary>
         public void DrawDebugData()
         {
             if ((Flags & DebugViewFlags.Shape) == DebugViewFlags.Shape)
@@ -410,28 +417,28 @@ namespace FarseerPhysics.DebugViewXNA
             DrawSegment(center, center + axis * radius, color);
         }
 
-        public override void DrawSegment(Vector2 p1, Vector2 p2, float red, float green, float blue)
+        public override void DrawSegment(Vector2 start, Vector2 end, float red, float green, float blue)
         {
-            DrawSegment(p1, p2, new Color(red, green, blue));
+            DrawSegment(start, end, new Color(red, green, blue));
         }
 
-        public void DrawSegment(Vector2 p1, Vector2 p2, Color color)
+        public void DrawSegment(Vector2 start, Vector2 end, Color color)
         {
-            _vertsLines[_lineCount * 2].Position = new Vector3(p1, 0.0f);
-            _vertsLines[_lineCount * 2 + 1].Position = new Vector3(p2, 0.0f);
+            _vertsLines[_lineCount * 2].Position = new Vector3(start, 0.0f);
+            _vertsLines[_lineCount * 2 + 1].Position = new Vector3(end, 0.0f);
             _vertsLines[_lineCount * 2].Color = _vertsLines[_lineCount * 2 + 1].Color = color;
             _lineCount++;
         }
 
-        public override void DrawTransform(ref Transform xf)
+        public override void DrawTransform(ref Transform transform)
         {
             const float axisScale = 0.4f;
-            Vector2 p1 = xf.Position;
+            Vector2 p1 = transform.Position;
 
-            Vector2 p2 = p1 + axisScale * xf.R.col1;
+            Vector2 p2 = p1 + axisScale * transform.R.col1;
             DrawSegment(p1, p2, Color.Red);
 
-            p2 = p1 + axisScale * xf.R.col2;
+            p2 = p1 + axisScale * transform.R.col2;
             DrawSegment(p1, p2, Color.Green);
         }
 
@@ -455,11 +462,11 @@ namespace FarseerPhysics.DebugViewXNA
         public void RenderDebugData(ref Matrix projection)
         {
             // set the cull mode? should be unnecessary
-            Device.RenderState.CullMode = CullMode.None;
+            _device.RenderState.CullMode = CullMode.None;
             // turn alpha blending on
-            Device.RenderState.AlphaBlendEnable = true;
+            _device.RenderState.AlphaBlendEnable = true;
             // set the vertex declaration...this ensures if window resizes occur...rendering continues ;)
-            Device.VertexDeclaration = _vertexDeclaration;
+            _device.VertexDeclaration = _vertexDeclaration;
             // set the effects projection matrix
             _effect.Projection = projection;
             // begin the effect
@@ -468,25 +475,25 @@ namespace FarseerPhysics.DebugViewXNA
             _effect.Techniques[0].Passes[0].Begin();
             // make sure we have stuff to draw
             if (_fillCount > 0)
-                Device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
+                _device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
             // make sure we have lines to draw
             if (_lineCount > 0)
-                Device.DrawUserPrimitives(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
+                _device.DrawUserPrimitives(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
 
             // end the pass and effect
             _effect.Techniques[0].Passes[0].End();
             _effect.End();
 
             // begin the sprite batch effect
-            Batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None, Matrix.Identity);
+            _batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None, Matrix.Identity);
             // draw any strings we have
             for (int i = 0; i < _stringData.Count; i++)
             {
-                Batch.DrawString(Font, string.Format(_stringData[i].S, _stringData[i].Args),
+                _batch.DrawString(_font, string.Format(_stringData[i].S, _stringData[i].Args),
                                  new Vector2(_stringData[i].X, _stringData[i].Y), _stringData[i].Color);
             }
             // end the sprite batch effect
-            Batch.End();
+            _batch.End();
 
             _stringData.Clear();
             _lineCount = _fillCount = 0;
@@ -494,45 +501,8 @@ namespace FarseerPhysics.DebugViewXNA
 
         public void RenderDebugData(ref Matrix projection, ref Matrix view)
         {
-            // set the cull mode? should be unnecessary
-            Device.RenderState.CullMode = CullMode.None;
-            // turn alpha blending on
-            Device.RenderState.AlphaBlendEnable = true;
-            // set the vertex declaration...this ensures if window resizes occur...rendering continues ;)
-            Device.VertexDeclaration = _vertexDeclaration;
-            // set the effects projection matrix
-            _effect.Projection = projection;
-            // set the effects view matrix
             _effect.View = view;
-
-            // begin the effect
-            _effect.Begin();
-            // we should have only 1 technique and 1 pass
-            _effect.Techniques[0].Passes[0].Begin();
-            // make sure we have stuff to draw
-            if (_fillCount > 0)
-                Device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
-            // make sure we have lines to draw
-            if (_lineCount > 0)
-                Device.DrawUserPrimitives(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
-
-            // end the pass and effect
-            _effect.Techniques[0].Passes[0].End();
-            _effect.End();
-
-            // begin the sprite batch effect
-            Batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None, Matrix.Identity);
-            // draw any strings we have
-            for (int i = 0; i < _stringData.Count; i++)
-            {
-                Batch.DrawString(Font, string.Format(_stringData[i].S, _stringData[i].Args),
-                                 new Vector2(_stringData[i].X, _stringData[i].Y), _stringData[i].Color);
-            }
-            // end the sprite batch effect
-            Batch.End();
-
-            _stringData.Clear();
-            _lineCount = _fillCount = 0;
+            RenderDebugData(ref projection);
         }
 
         public void DrawAABB(ref AABB aabb, Color color)
@@ -549,10 +519,10 @@ namespace FarseerPhysics.DebugViewXNA
         public static void LoadContent(GraphicsDevice device, ContentManager content)
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            Batch = new SpriteBatch(device);
-            Font = content.Load<SpriteFont>("font");
+            _batch = new SpriteBatch(device);
+            _font = content.Load<SpriteFont>("font");
             _vertexDeclaration = new VertexDeclaration(device, VertexPositionColor.VertexElements);
-            Device = device;
+            _device = device;
             _effect = new BasicEffect(device, null);
             _effect.VertexColorEnabled = true;
             _stringData = new List<StringData>();
