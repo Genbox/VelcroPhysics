@@ -246,7 +246,7 @@ namespace FarseerPhysics.Dynamics
 
                 if (bodyA.Awake == false && bodyB.Awake == false)
                 {
-                    c = c.GetNext();
+                    c = c.Next;
                     continue;
                 }
 
@@ -257,7 +257,7 @@ namespace FarseerPhysics.Dynamics
                     if (bodyB.ShouldCollide(bodyA) == false)
                     {
                         Contact cNuke = c;
-                        c = cNuke.GetNext();
+                        c = cNuke.Next;
                         Destroy(cNuke);
                         continue;
                     }
@@ -266,7 +266,7 @@ namespace FarseerPhysics.Dynamics
                     if (ContactFilter != null && ContactFilter(fixtureA, fixtureB) == false)
                     {
                         Contact cNuke = c;
-                        c = cNuke.GetNext();
+                        c = cNuke.Next;
                         Destroy(cNuke);
                         continue;
                     }
@@ -284,14 +284,14 @@ namespace FarseerPhysics.Dynamics
                 if (overlap == false)
                 {
                     Contact cNuke = c;
-                    c = cNuke.GetNext();
+                    c = cNuke.Next;
                     Destroy(cNuke);
                     continue;
                 }
 
                 // The contact persists.
                 c.Update(this);
-                c = c.GetNext();
+                c = c.Next;
             }
         }
     }

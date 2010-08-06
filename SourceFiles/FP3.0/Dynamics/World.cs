@@ -876,8 +876,8 @@ namespace FarseerPhysics.Dynamics
 
                     Fixture fixtureA = contact.FixtureA;
                     Fixture fixtureB = contact.FixtureB;
-                    int indexA = contact.IndexA;
-                    int indexB = contact.IndexB;
+                    int indexA = contact.ChildIndexA;
+                    int indexB = contact.ChildIndexB;
 
                     // Cull sensors.
                     if (fixtureA.IsSensor || fixtureB.IsSensor)
