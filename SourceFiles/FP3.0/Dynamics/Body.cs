@@ -444,15 +444,6 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Get the angle in radians.
-        /// </summary>
-        /// <value>The current world rotation angle in radians.</value>
-        public float Angle
-        {
-            get { return Sweep.a; }
-        }
-
-        /// <summary>
         /// Get the world position of the center of mass.
         /// </summary>
         /// <value>The world position.</value>
@@ -615,9 +606,9 @@ namespace FarseerPhysics.Dynamics
         /// This breaks any contacts and wakes the other bodies.
         /// Manipulating a body's transform may cause non-physical behavior.
         /// </summary>
-        /// <param name="position">The  world position of the body's local origin.</param>
-        /// <param name="angle">The world rotation in radians.</param>
-        public void SetTransform(Vector2 position, float angle)
+        /// <param name="position">The world position of the body's local origin.</param>
+        /// <param name="rotation">The world rotation in radians.</param>
+        public void SetTransform(Vector2 position, float rotation)
         {
             Debug.Assert(World.IsLocked == false);
             if (World.IsLocked)
@@ -625,11 +616,11 @@ namespace FarseerPhysics.Dynamics
                 return;
             }
 
-            Xf.R.Set(angle);
+            Xf.R.Set(rotation);
             Xf.Position = position;
 
             Sweep.c0 = Sweep.c = MathUtils.Multiply(ref Xf, Sweep.localCenter);
-            Sweep.a0 = Sweep.a = angle;
+            Sweep.a0 = Sweep.a = rotation;
 
             BroadPhase broadPhase = World.ContactManager.BroadPhase;
             for (Fixture f = FixtureList; f != null; f = f.Next)

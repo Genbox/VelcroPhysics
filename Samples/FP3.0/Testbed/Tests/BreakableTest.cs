@@ -129,7 +129,7 @@ namespace FarseerPhysics.TestBed.Tests
             Body body2 = BodyFactory.CreateBody(World);
             body2.BodyType = BodyType.Dynamic;
             body2.Position = body1.Position;
-            body2.Rotation = body1.Angle;
+            body2.Rotation = body1.Rotation;
 
             _piece2 = body2.CreateFixture(_shape2, 1);
 
