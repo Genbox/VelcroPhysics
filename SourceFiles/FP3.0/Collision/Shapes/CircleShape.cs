@@ -59,10 +59,10 @@ namespace FarseerPhysics.Collision.Shapes
             return 1;
         }
 
-        public override bool TestPoint(ref Transform transform, Vector2 p)
+        public override bool TestPoint(ref Transform transform, Vector2 point)
         {
             Vector2 center = transform.Position + MathUtils.Multiply(ref transform.R, Position);
-            Vector2 d = p - center;
+            Vector2 d = point - center;
             return Vector2.Dot(d, d) <= Radius*Radius;
         }
 

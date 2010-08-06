@@ -261,9 +261,9 @@ namespace FarseerPhysics.TestBed.Framework
                                 Transform xf;
                                 body.GetTransform(out xf);
 
-                                for (int i = 0; i < polygon._vertexCount; i++)
+                                for (int i = 0; i < polygon.VertexCount; i++)
                                 {
-                                    Vector2 tmp = MathUtils.Multiply(ref xf, polygon._vertices[i]);
+                                    Vector2 tmp = MathUtils.Multiply(ref xf, polygon.Vertices[i]);
                                     DebugView.DrawPoint(tmp, 0.05f, Color.Red);
                                 }
                             }

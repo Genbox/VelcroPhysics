@@ -87,7 +87,7 @@ namespace FarseerPhysics.Collision.Shapes
             edge._vertex3 = _vertices[i3];
         }
 
-        public override bool TestPoint(ref Transform transform, Vector2 p)
+        public override bool TestPoint(ref Transform transform, Vector2 point)
         {
             return false;
         }

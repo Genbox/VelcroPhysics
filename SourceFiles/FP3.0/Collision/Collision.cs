@@ -594,11 +594,11 @@ namespace FarseerPhysics.Collision
             int normalIndex = 0;
             float separation = -Settings.MaxFloat;
             float radius = polygonA.Radius + circleB.Radius;
-            int vertexCount = polygonA._vertexCount;
+            int vertexCount = polygonA.VertexCount;
 
             for (int i = 0; i < vertexCount; ++i)
             {
-                float s = Vector2.Dot(polygonA._normals[i], cLocal - polygonA._vertices[i]);
+                float s = Vector2.Dot(polygonA.Normals[i], cLocal - polygonA.Vertices[i]);
 
                 if (s > radius)
                 {
@@ -616,15 +616,15 @@ namespace FarseerPhysics.Collision
             // Vertices that subtend the incident face.
             int vertIndex1 = normalIndex;
             int vertIndex2 = vertIndex1 + 1 < vertexCount ? vertIndex1 + 1 : 0;
-            Vector2 v1 = polygonA._vertices[vertIndex1];
-            Vector2 v2 = polygonA._vertices[vertIndex2];
+            Vector2 v1 = polygonA.Vertices[vertIndex1];
+            Vector2 v2 = polygonA.Vertices[vertIndex2];
 
             // If the center is inside the polygon ...
             if (separation < Settings.Epsilon)
             {
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.FaceA;
-                manifold.LocalNormal = polygonA._normals[normalIndex];
+                manifold.LocalNormal = polygonA.Normals[normalIndex];
                 manifold.LocalPoint = 0.5f*(v1 + v2);
 
                 var p0 = manifold.Points[0];
@@ -683,7 +683,7 @@ namespace FarseerPhysics.Collision
             else
             {
                 Vector2 faceCenter = 0.5f*(v1 + v2);
-                float separation2 = Vector2.Dot(cLocal - faceCenter, polygonA._normals[vertIndex1]);
+                float separation2 = Vector2.Dot(cLocal - faceCenter, polygonA.Normals[vertIndex1]);
                 if (separation2 > radius)
                 {
                     return;
@@ -691,7 +691,7 @@ namespace FarseerPhysics.Collision
 
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.FaceA;
-                manifold.LocalNormal = polygonA._normals[vertIndex1];
+                manifold.LocalNormal = polygonA.Normals[vertIndex1];
                 manifold.LocalPoint = faceCenter;
 
                 var p0d = manifold.Points[0];
@@ -753,13 +753,13 @@ namespace FarseerPhysics.Collision
             FixedArray2<ClipVertex> incidentEdge;
             FindIncidentEdge(out incidentEdge, poly1, ref xf1, edge1, poly2, ref xf2);
 
-            int count1 = poly1._vertexCount;
+            int count1 = poly1.VertexCount;
 
             int iv1 = edge1;
             int iv2 = edge1 + 1 < count1 ? edge1 + 1 : 0;
 
-            Vector2 v11 = poly1._vertices[iv1];
-            Vector2 v12 = poly1._vertices[iv2];
+            Vector2 v11 = poly1.Vertices[iv1];
+            Vector2 v12 = poly1.Vertices[iv2];
 
             Vector2 localTangent = v12 - v11;
             localTangent.Normalize();
@@ -977,10 +977,10 @@ namespace FarseerPhysics.Collision
             EPAxis axis;
             axis.Type = EPAxisType.EdgeA;
             axis.Index = 0;
-            axis.Separation = Vector2.Dot(n, polygonB._vertices[0] - v1);
-            for (int i = 1; i < polygonB._vertexCount; ++i)
+            axis.Separation = Vector2.Dot(n, polygonB.Vertices[0] - v1);
+            for (int i = 1; i < polygonB.VertexCount; ++i)
             {
-                float s = Vector2.Dot(n, polygonB._vertices[i] - v1);
+                float s = Vector2.Dot(n, polygonB.Vertices[i] - v1);
                 if (s < axis.Separation)
                 {
                     axis.Separation = s;
@@ -998,10 +998,10 @@ namespace FarseerPhysics.Collision
             axis.Type = EPAxisType.EdgeB;
             axis.Index = 0;
             axis.Separation = float.MinValue;
-            for (int i = 0; i < polygonB._vertexCount; ++i)
+            for (int i = 0; i < polygonB.VertexCount; ++i)
             {
-                float s1 = Vector2.Dot(polygonB._normals[i], v1 - polygonB._vertices[i]);
-                float s2 = Vector2.Dot(polygonB._normals[i], v2 - polygonB._vertices[i]);
+                float s1 = Vector2.Dot(polygonB.Normals[i], v1 - polygonB.Vertices[i]);
+                float s2 = Vector2.Dot(polygonB.Normals[i], v2 - polygonB.Vertices[i]);
                 float s = Math.Min(s1, s2);
                 if (s > axis.Separation)
                 {
@@ -1020,20 +1020,20 @@ namespace FarseerPhysics.Collision
         private static void FindIncidentEdge(ref FixedArray2<ClipVertex> c, PolygonShape poly1, int edge1,
                                              PolygonShape poly2)
         {
-            int count1 = poly1._vertexCount;
-            int count2 = poly2._vertexCount;
+            int count1 = poly1.VertexCount;
+            int count2 = poly2.VertexCount;
 
             Debug.Assert(0 <= edge1 && edge1 < count1);
 
             // Get the normal of the reference edge in poly2's frame.
-            Vector2 normal1 = poly1._normals[edge1];
+            Vector2 normal1 = poly1.Normals[edge1];
 
             // Find the incident edge on poly2.
             int index = 0;
             float minDot = float.MaxValue;
             for (int i = 0; i < count2; ++i)
             {
-                float dot = Vector2.Dot(normal1, poly2._normals[i]);
+                float dot = Vector2.Dot(normal1, poly2.Normals[i]);
                 if (dot < minDot)
                 {
                     minDot = dot;
@@ -1046,14 +1046,14 @@ namespace FarseerPhysics.Collision
             int i2 = i1 + 1 < count2 ? i1 + 1 : 0;
 
             ClipVertex ctemp = new ClipVertex();
-            ctemp.V = poly2._vertices[i1];
+            ctemp.V = poly2.Vertices[i1];
             ctemp.ID.Features.IndexA = (byte) edge1;
             ctemp.ID.Features.IndexB = (byte) i1;
             ctemp.ID.Features.TypeA = (byte) ContactFeatureType.Face;
             ctemp.ID.Features.TypeB = (byte) ContactFeatureType.Vertex;
             c[0] = ctemp;
 
-            ctemp.V = poly2._vertices[i2];
+            ctemp.V = poly2.Vertices[i2];
             ctemp.ID.Features.IndexA = (byte) edge1;
             ctemp.ID.Features.IndexB = (byte) i2;
             ctemp.ID.Features.TypeA = (byte) ContactFeatureType.Face;
@@ -1090,14 +1090,14 @@ namespace FarseerPhysics.Collision
 
             // Build polygonB in frame A
             s_polygonB.Radius = polygonB_in.Radius;
-            s_polygonB._vertexCount = polygonB_in._vertexCount;
+            s_polygonB.VertexCount = polygonB_in.VertexCount;
             s_polygonB.Centroid = MathUtils.Multiply(ref xf, polygonB_in.Centroid);
-            s_polygonB._vertices = new Vector2[polygonB_in._vertexCount];
-            s_polygonB._normals = new Vector2[polygonB_in._vertexCount];
-            for (int i = 0; i < polygonB_in._vertexCount; ++i)
+            s_polygonB.Vertices = new Vector2[polygonB_in.VertexCount];
+            s_polygonB.Normals = new Vector2[polygonB_in.VertexCount];
+            for (int i = 0; i < polygonB_in.VertexCount; ++i)
             {
-                s_polygonB._vertices[i] = MathUtils.Multiply(ref xf, polygonB_in._vertices[i]);
-                s_polygonB._normals[i] = MathUtils.Multiply(ref xf.R, polygonB_in._normals[i]);
+                s_polygonB.Vertices[i] = MathUtils.Multiply(ref xf, polygonB_in.Vertices[i]);
+                s_polygonB.Normals[i] = MathUtils.Multiply(ref xf.R, polygonB_in.Normals[i]);
             }
 
             float totalRadius = s_polygonA.Radius + s_polygonB.Radius;
@@ -1250,12 +1250,12 @@ namespace FarseerPhysics.Collision
 
             FixedArray2<ClipVertex> incidentEdge = new FixedArray2<ClipVertex>();
             FindIncidentEdge(ref incidentEdge, poly1, primaryAxis.Index, poly2);
-            int count1 = poly1._vertexCount;
+            int count1 = poly1.VertexCount;
             int iv1 = edge1;
             int iv2 = edge1 + 1 < count1 ? edge1 + 1 : 0;
 
-            Vector2 v11 = poly1._vertices[iv1];
-            Vector2 v12 = poly1._vertices[iv2];
+            Vector2 v11 = poly1.Vertices[iv1];
+            Vector2 v12 = poly1.Vertices[iv2];
 
             Vector2 tangent = v12 - v11;
             tangent.Normalize();
@@ -1387,8 +1387,8 @@ namespace FarseerPhysics.Collision
         private static float EdgeSeparation(PolygonShape poly1, ref Transform xf1, int edge1,
                                             PolygonShape poly2, ref Transform xf2)
         {
-            int count1 = poly1._vertexCount;
-            int count2 = poly2._vertexCount;
+            int count1 = poly1.VertexCount;
+            int count2 = poly2.VertexCount;
 
             Debug.Assert(0 <= edge1 && edge1 < count1);
 
@@ -1397,7 +1397,7 @@ namespace FarseerPhysics.Collision
             Vector2 normal1World = MathUtils.Multiply(ref xf1.R, poly1._normals[edge1]);
             Vector2 normal1 = MathUtils.MultiplyT(ref xf2.R, normal1World);
 #else
-            Vector2 p1n = poly1._normals[edge1];
+            Vector2 p1n = poly1.Normals[edge1];
             Vector2 normal1World = new Vector2(xf1.R.col1.X*p1n.X + xf1.R.col2.X*p1n.Y,
                                                xf1.R.col1.Y*p1n.X + xf1.R.col2.Y*p1n.Y);
             Vector2 normal1 = new Vector2(normal1World.X*xf2.R.col1.X + normal1World.Y*xf2.R.col1.Y,
@@ -1411,7 +1411,7 @@ namespace FarseerPhysics.Collision
             {
 #if !MATH_OVERLOADS
                 // inlining this made it 1ms slower
-                float dot = Vector2.Dot(poly2._vertices[i], normal1);
+                float dot = Vector2.Dot(poly2.Vertices[i], normal1);
 #else
                 Vector2 p2vi = poly2._vertices[i];
                 float dot = p2vi.X * normal1.X + p2vi.Y * normal1.Y;
@@ -1427,8 +1427,8 @@ namespace FarseerPhysics.Collision
 	        Vector2 v1 = MathUtils.Multiply(ref xf1, poly1._vertices[edge1]);
 	        Vector2 v2 = MathUtils.Multiply(ref xf2, poly2._vertices[index]);
 #else
-            Vector2 p1ve = poly1._vertices[edge1];
-            Vector2 p2vi = poly2._vertices[index];
+            Vector2 p1ve = poly1.Vertices[edge1];
+            Vector2 p2vi = poly2.Vertices[index];
             Vector2 v1 = new Vector2(xf1.Position.X + xf1.R.col1.X*p1ve.X + xf1.R.col2.X*p1ve.Y,
                                      xf1.Position.Y + xf1.R.col1.Y*p1ve.X + xf1.R.col2.Y*p1ve.Y);
             Vector2 v2 = new Vector2(xf2.Position.X + xf2.R.col1.X*p2vi.X + xf2.R.col2.X*p2vi.Y,
@@ -1451,7 +1451,7 @@ namespace FarseerPhysics.Collision
                                                PolygonShape poly2, ref Transform xf2)
         {
             edgeIndex = -1;
-            int count1 = poly1._vertexCount;
+            int count1 = poly1.VertexCount;
 
             // Vector pointing from the centroid of poly1 to the centroid of poly2.
             Vector2 d = MathUtils.Multiply(ref xf2, poly2.Centroid) - MathUtils.Multiply(ref xf1, poly1.Centroid);
@@ -1462,7 +1462,7 @@ namespace FarseerPhysics.Collision
             float maxDot = -Settings.MaxFloat;
             for (int i = 0; i < count1; ++i)
             {
-                float dot = Vector2.Dot(poly1._normals[i], dLocal1);
+                float dot = Vector2.Dot(poly1.Normals[i], dLocal1);
                 if (dot > maxDot)
                 {
                     maxDot = dot;
@@ -1534,20 +1534,20 @@ namespace FarseerPhysics.Collision
         {
             c = new FixedArray2<ClipVertex>();
 
-            int count1 = poly1._vertexCount;
-            int count2 = poly2._vertexCount;
+            int count1 = poly1.VertexCount;
+            int count2 = poly2.VertexCount;
 
             Debug.Assert(0 <= edge1 && edge1 < count1);
 
             // Get the normal of the reference edge in poly2's frame.
-            Vector2 normal1 = MathUtils.MultiplyT(ref xf2.R, MathUtils.Multiply(ref xf1.R, poly1._normals[edge1]));
+            Vector2 normal1 = MathUtils.MultiplyT(ref xf2.R, MathUtils.Multiply(ref xf1.R, poly1.Normals[edge1]));
 
             // Find the incident edge on poly2.
             int index = 0;
             float minDot = Settings.MaxFloat;
             for (int i = 0; i < count2; ++i)
             {
-                float dot = Vector2.Dot(normal1, poly2._normals[i]);
+                float dot = Vector2.Dot(normal1, poly2.Normals[i]);
                 if (dot < minDot)
                 {
                     minDot = dot;
@@ -1561,7 +1561,7 @@ namespace FarseerPhysics.Collision
 
             var cv0 = c[0];
 
-            cv0.V = MathUtils.Multiply(ref xf2, poly2._vertices[i1]);
+            cv0.V = MathUtils.Multiply(ref xf2, poly2.Vertices[i1]);
             cv0.ID.Features.IndexA = (byte) edge1;
             cv0.ID.Features.IndexB = (byte) i1;
             cv0.ID.Features.TypeA = (byte) ContactFeatureType.Face;
@@ -1570,7 +1570,7 @@ namespace FarseerPhysics.Collision
             c[0] = cv0;
 
             var cv1 = c[1];
-            cv1.V = MathUtils.Multiply(ref xf2, poly2._vertices[i2]);
+            cv1.V = MathUtils.Multiply(ref xf2, poly2.Vertices[i2]);
             cv1.ID.Features.IndexA = (byte) edge1;
             cv1.ID.Features.IndexB = (byte) i2;
             cv1.ID.Features.TypeA = (byte) ContactFeatureType.Face;

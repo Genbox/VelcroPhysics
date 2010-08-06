@@ -79,7 +79,7 @@ namespace FarseerPhysics.Collision.Shapes
             return 1;
         }
 
-        public override bool TestPoint(ref Transform transform, Vector2 p)
+        public override bool TestPoint(ref Transform transform, Vector2 point)
         {
             return false;
         }
