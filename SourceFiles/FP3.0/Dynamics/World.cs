@@ -212,7 +212,7 @@ namespace FarseerPhysics.Dynamics
         /// is retained. This function is locked during callbacks.
         /// @warning This automatically deletes all associated shapes and joints.
         /// @warning This function is locked during callbacks.
-        public void DestroyBody(Body b)
+        public void RemoveBody(Body b)
         {
             Debug.Assert(BodyCount > 0);
             Debug.Assert(!IsLocked);
@@ -233,7 +233,7 @@ namespace FarseerPhysics.Dynamics
                     JointRemoved(je0.Joint);
                 }
 
-                DestroyJoint(je0.Joint);
+                RemoveJoint(je0.Joint);
             }
             b.JointList = null;
 
@@ -358,7 +358,7 @@ namespace FarseerPhysics.Dynamics
 
         /// Destroy a joint. This may cause the connected bodies to begin colliding.
         /// @warning This function is locked during callbacks.
-        public void DestroyJoint(Joint j)
+        public void RemoveJoint(Joint j)
         {
             Debug.Assert(!IsLocked);
             if (IsLocked)

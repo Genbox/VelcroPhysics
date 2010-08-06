@@ -79,7 +79,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_bullet != null)
                 {
-                    World.DestroyBody(_bullet);
+                    World.RemoveBody(_bullet);
                     _bullet = null;
                 }
 

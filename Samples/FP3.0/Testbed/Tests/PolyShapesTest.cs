@@ -184,7 +184,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (_bodies[_bodyIndex] != null)
             {
-                World.DestroyBody(_bodies[_bodyIndex]);
+                World.RemoveBody(_bodies[_bodyIndex]);
                 _bodies[_bodyIndex] = null;
             }
 
@@ -222,7 +222,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 if (_bodies[i] != null)
                 {
-                    World.DestroyBody(_bodies[i]);
+                    World.RemoveBody(_bodies[i]);
                     _bodies[i] = null;
                     return;
                 }
