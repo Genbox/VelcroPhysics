@@ -844,7 +844,7 @@ namespace FarseerPhysics.Collision
             // Compute circle in frame of edge
             Vector2 Q = MathUtils.MultiplyT(ref xfA, MathUtils.Multiply(ref xfB, circleB.Position));
 
-            Vector2 A = edgeA._vertex1, B = edgeA._vertex2;
+            Vector2 A = edgeA.Vertex1, B = edgeA.Vertex2;
             Vector2 e = B - A;
 
             // Barycentric coordinates
@@ -871,9 +871,9 @@ namespace FarseerPhysics.Collision
                 }
 
                 // Is there an edge connected to A?
-                if (edgeA._hasVertex0)
+                if (edgeA.HasVertex0)
                 {
-                    Vector2 A1 = edgeA._vertex0;
+                    Vector2 A1 = edgeA.Vertex0;
                     Vector2 B1 = A;
                     Vector2 e1 = B1 - A1;
                     float u1 = Vector2.Dot(e1, B1 - Q);
@@ -911,9 +911,9 @@ namespace FarseerPhysics.Collision
                 }
 
                 // Is there an edge connected to B?
-                if (edgeA._hasVertex3)
+                if (edgeA.HasVertex3)
                 {
-                    Vector2 B2 = edgeA._vertex3;
+                    Vector2 B2 = edgeA.Vertex3;
                     Vector2 A2 = B;
                     Vector2 e2 = B2 - A2;
                     float v2 = Vector2.Dot(e2, Q - A2);
@@ -1086,7 +1086,7 @@ namespace FarseerPhysics.Collision
             MathUtils.MultiplyT(ref xfA, ref xfB, out xf);
 
             // Create a polygon for edge shape A
-            s_polygonA.SetAsEdge(edgeA._vertex1, edgeA._vertex2);
+            s_polygonA.SetAsEdge(edgeA.Vertex1, edgeA.Vertex2);
 
             // Build polygonB in frame A
             s_polygonB.Radius = polygonB_in.Radius;
@@ -1103,8 +1103,8 @@ namespace FarseerPhysics.Collision
             float totalRadius = s_polygonA.Radius + s_polygonB.Radius;
 
             // Edge geometry
-            Vector2 v1 = edgeA._vertex1;
-            Vector2 v2 = edgeA._vertex2;
+            Vector2 v1 = edgeA.Vertex1;
+            Vector2 v2 = edgeA.Vertex2;
             Vector2 e = v2 - v1;
             Vector2 edgeNormal = new Vector2(e.Y, -e.X);
             edgeNormal.Normalize();
@@ -1128,9 +1128,9 @@ namespace FarseerPhysics.Collision
             FixedArray2<EdgeType> types = new FixedArray2<EdgeType>();
             //types[0] = EdgeType.Isolated;
             //types[1] = EdgeType.Isolated;
-            if (edgeA._hasVertex0)
+            if (edgeA.HasVertex0)
             {
-                Vector2 v0 = edgeA._vertex0;
+                Vector2 v0 = edgeA.Vertex0;
                 float s = Vector2.Dot(edgeNormal, v0 - v1);
 
                 if (s > 0.1f*Settings.LinearSlop)
@@ -1147,9 +1147,9 @@ namespace FarseerPhysics.Collision
                 }
             }
 
-            if (edgeA._hasVertex3)
+            if (edgeA.HasVertex3)
             {
-                Vector2 v3 = edgeA._vertex3;
+                Vector2 v3 = edgeA.Vertex3;
                 float s = Vector2.Dot(edgeNormal, v3 - v2);
                 if (s > 0.1f*Settings.LinearSlop)
                 {
@@ -1168,7 +1168,7 @@ namespace FarseerPhysics.Collision
             if (types[0] == EdgeType.Convex)
             {
                 // Check separation on previous edge.
-                Vector2 v0 = edgeA._vertex0;
+                Vector2 v0 = edgeA.Vertex0;
                 Vector2 e0 = v1 - v0;
 
                 Vector2 n0 = new Vector2(e0.Y, -e0.X);
@@ -1189,7 +1189,7 @@ namespace FarseerPhysics.Collision
             if (types[1] == EdgeType.Convex)
             {
                 // Check separation on next edge.
-                Vector2 v3 = edgeA._vertex3;
+                Vector2 v3 = edgeA.Vertex3;
                 Vector2 e2 = v3 - v2;
 
                 Vector2 n2 = new Vector2(e2.Y, -e2.X);

@@ -59,31 +59,46 @@ namespace FarseerPhysics.Collision.Shapes
             return 1;
         }
 
+        /// <summary>
+        /// Test a point for containment in this shape. This only works for convex shapes.
+        /// </summary>
+        /// <param name="transform">The shape world transform.</param>
+        /// <param name="point">a point in world coordinates.</param>
+        /// <returns>True if the point is inside the shape</returns>
         public override bool TestPoint(ref Transform transform, Vector2 point)
         {
             Vector2 center = transform.Position + MathUtils.Multiply(ref transform.R, Position);
             Vector2 d = point - center;
-            return Vector2.Dot(d, d) <= Radius*Radius;
+            return Vector2.Dot(d, d) <= Radius * Radius;
         }
 
-        // Collision Detection in Interactive 3D Environments by Gino van den Bergen
-        // From Section 3.1.2
-        // x = s + a * r
-        // norm(x) = radius
+        /// <summary>
+        /// Cast a ray against a child shape.
+        /// </summary>
+        /// <param name="output">The ray-cast results.</param>
+        /// <param name="input">The ray-cast input parameters.</param>
+        /// <param name="transform">The transform to be applied to the shape.</param>
+        /// <param name="childIndex">The child shape index.</param>
+        /// <returns>True if the ray-cast hits the shape</returns>
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform,
                                      int childIndex)
         {
+            // Collision Detection in Interactive 3D Environments by Gino van den Bergen
+            // From Section 3.1.2
+            // x = s + a * r
+            // norm(x) = radius
+
             output = new RayCastOutput();
 
             Vector2 position = transform.Position + MathUtils.Multiply(ref transform.R, Position);
             Vector2 s = input.Point1 - position;
-            float b = Vector2.Dot(s, s) - Radius*Radius;
+            float b = Vector2.Dot(s, s) - Radius * Radius;
 
             // Solve quadratic equation.
             Vector2 r = input.Point2 - input.Point1;
             float c = Vector2.Dot(s, r);
             float rr = Vector2.Dot(r, r);
-            float sigma = c*c - rr*b;
+            float sigma = c * c - rr * b;
 
             // Check for negative discriminant and short segment.
             if (sigma < 0.0f || rr < Settings.Epsilon)
@@ -92,14 +107,14 @@ namespace FarseerPhysics.Collision.Shapes
             }
 
             // Find the point of intersection of the line with the circle.
-            float a = -(c + (float) Math.Sqrt(sigma));
+            float a = -(c + (float)Math.Sqrt(sigma));
 
             // Is the intersection point on the segment?
-            if (0.0f <= a && a <= input.MaxFraction*rr)
+            if (0.0f <= a && a <= input.MaxFraction * rr)
             {
                 a /= rr;
                 output.Fraction = a;
-                Vector2 norm = (s + a*r);
+                Vector2 norm = (s + a * r);
                 norm.Normalize();
                 output.Normal = norm;
                 return true;
@@ -108,6 +123,12 @@ namespace FarseerPhysics.Collision.Shapes
             return false;
         }
 
+        /// <summary>
+        /// Given a transform, compute the associated axis aligned bounding box for a child shape.
+        /// </summary>
+        /// <param name="aabb">The aabb results.</param>
+        /// <param name="transform">The world transform of the shape.</param>
+        /// <param name="childIndex">The child shape index.</param>
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
             Vector2 p = transform.Position + MathUtils.Multiply(ref transform.R, Position);
@@ -115,13 +136,19 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound = new Vector2(p.X + Radius, p.Y + Radius);
         }
 
+        /// <summary>
+        /// Compute the mass properties of this shape using its dimensions and density.
+        /// The inertia tensor is computed about the local origin, not the centroid.
+        /// </summary>
+        /// <param name="massData">Returns the mass data for this shape.</param>
+        /// <param name="density">The density in kilograms per meter squared.</param>
         public override void ComputeMass(out MassData massData, float density)
         {
-            massData.Mass = density*Settings.Pi*Radius*Radius;
+            massData.Mass = density * Settings.Pi * Radius * Radius;
             massData.Center = Position;
 
             // inertia about the local origin
-            massData.Inertia = massData.Mass*(0.5f*Radius*Radius + Vector2.Dot(Position, Position));
+            massData.Inertia = massData.Mass * (0.5f * Radius * Radius + Vector2.Dot(Position, Position));
         }
     }
 }

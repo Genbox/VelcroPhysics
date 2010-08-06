@@ -65,16 +65,16 @@ namespace FarseerPhysics.Collision
                 case ShapeType.Loop:
                     {
                         LoopShape loop = (LoopShape) shape;
-                        Debug.Assert(0 <= index && index < loop._count);
+                        Debug.Assert(0 <= index && index < loop.Count);
 
-                        Buffer[0] = loop._vertices[index];
-                        if (index + 1 < loop._count)
+                        Buffer[0] = loop.Vertices[index];
+                        if (index + 1 < loop.Count)
                         {
-                            Buffer[1] = loop._vertices[index + 1];
+                            Buffer[1] = loop.Vertices[index + 1];
                         }
                         else
                         {
-                            Buffer[1] = loop._vertices[0];
+                            Buffer[1] = loop.Vertices[0];
                         }
 
                         Vertices = new Vector2[2];
@@ -89,8 +89,8 @@ namespace FarseerPhysics.Collision
                     {
                         EdgeShape edge = (EdgeShape) shape;
                         Vertices = new Vector2[2];
-                        Vertices[0] = edge._vertex1;
-                        Vertices[1] = edge._vertex2;
+                        Vertices[0] = edge.Vertex1;
+                        Vertices[1] = edge.Vertex2;
                         Count = 2;
                         Radius = edge.Radius;
                     }

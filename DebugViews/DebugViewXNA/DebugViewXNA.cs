@@ -261,8 +261,8 @@ namespace FarseerPhysics.DebugViewXNA
                 case ShapeType.Edge:
                     {
                         EdgeShape edge = (EdgeShape) fixture.Shape;
-                        Vector2 v1 = MathUtils.Multiply(ref xf, edge._vertex1);
-                        Vector2 v2 = MathUtils.Multiply(ref xf, edge._vertex2);
+                        Vector2 v1 = MathUtils.Multiply(ref xf, edge.Vertex1);
+                        Vector2 v2 = MathUtils.Multiply(ref xf, edge.Vertex2);
                         DrawSegment(v1, v2, color);
                     }
                     break;
@@ -270,12 +270,12 @@ namespace FarseerPhysics.DebugViewXNA
                 case ShapeType.Loop:
                     {
                         LoopShape loop = (LoopShape) fixture.Shape;
-                        int count = loop._count;
+                        int count = loop.Count;
 
-                        Vector2 v1 = MathUtils.Multiply(ref xf, loop._vertices[count - 1]);
+                        Vector2 v1 = MathUtils.Multiply(ref xf, loop.Vertices[count - 1]);
                         for (int i = 0; i < count; ++i)
                         {
-                            Vector2 v2 = MathUtils.Multiply(ref xf, loop._vertices[i]);
+                            Vector2 v2 = MathUtils.Multiply(ref xf, loop.Vertices[i]);
                             DrawSegment(v1, v2, color);
                             v1 = v2;
                         }
