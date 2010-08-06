@@ -33,44 +33,54 @@ namespace FarseerPhysics.Collision.Shapes
     /// </summary>
     public class EdgeShape : Shape
     {
-        public bool _hasVertex0, _hasVertex3;
+        public bool HasVertex0, HasVertex3;
 
+        /// <summary>
         /// Optional adjacent vertices. These are used for smooth collision.
-        public Vector2 _vertex0;
+        /// </summary>
+        public Vector2 Vertex0;
 
+        /// <summary>
         /// These are the edge vertices
-        public Vector2 _vertex1, _vertex2;
+        /// </summary>
+        public Vector2 Vertex1, Vertex2;
 
+        /// <summary>
         /// Optional adjacent vertices. These are used for smooth collision.
-        public Vector2 _vertex3;
+        /// </summary>
+        public Vector2 Vertex3;
 
         public EdgeShape()
         {
             ShapeType = ShapeType.Edge;
             Radius = Settings.PolygonRadius;
-            _hasVertex0 = false;
-            _hasVertex3 = false;
+            HasVertex0 = false;
+            HasVertex3 = false;
         }
 
+        /// <summary>
         /// Set this as an isolated edge.
-        public void Set(Vector2 v1, Vector2 v2)
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        public void Set(Vector2 start, Vector2 end)
         {
-            _vertex1 = v1;
-            _vertex2 = v2;
-            _hasVertex0 = false;
-            _hasVertex3 = false;
+            Vertex1 = start;
+            Vertex2 = end;
+            HasVertex0 = false;
+            HasVertex3 = false;
         }
 
         public override Shape Clone()
         {
             var edge = new EdgeShape();
-            edge._hasVertex0 = _hasVertex0;
-            edge._hasVertex3 = _hasVertex3;
+            edge.HasVertex0 = HasVertex0;
+            edge.HasVertex3 = HasVertex3;
             edge.Radius = Radius;
-            edge._vertex0 = _vertex0;
-            edge._vertex1 = _vertex1;
-            edge._vertex2 = _vertex2;
-            edge._vertex3 = _vertex3;
+            edge.Vertex0 = Vertex0;
+            edge.Vertex1 = Vertex1;
+            edge.Vertex2 = Vertex2;
+            edge.Vertex3 = Vertex3;
             return edge;
         }
 
@@ -79,21 +89,34 @@ namespace FarseerPhysics.Collision.Shapes
             return 1;
         }
 
+        /// <summary>
+        /// Test a point for containment in this shape. This only works for convex shapes.
+        /// </summary>
+        /// <param name="transform">The shape world transform.</param>
+        /// <param name="point">a point in world coordinates.</param>
+        /// <returns>True if the point is inside the shape</returns>
         public override bool TestPoint(ref Transform transform, Vector2 point)
         {
             return false;
         }
 
+        /// <summary>
+        /// Cast a ray against a child shape.
+        /// </summary>
+        /// <param name="output">The ray-cast results.</param>
+        /// <param name="input">The ray-cast input parameters.</param>
+        /// <param name="transform">The transform to be applied to the shape.</param>
+        /// <param name="childIndex">The child shape index.</param>
+        /// <returns>True if the ray-cast hits the shape</returns>
         /// Implement Shape.
-        /// 
-        // p = p1 + t * d
-        // v = v1 + s * e
-        // p1 + t * d = v1 + s * e
-        // s * e - t * d = p1 - v1
-        // 
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input,
                                      ref Transform transform, int childIndex)
         {
+            // p = p1 + t * d
+            // v = v1 + s * e
+            // p1 + t * d = v1 + s * e
+            // s * e - t * d = p1 - v1
+
             output = new RayCastOutput();
 
             // Put the ray into the edge's frame of reference.
@@ -101,8 +124,8 @@ namespace FarseerPhysics.Collision.Shapes
             Vector2 p2 = MathUtils.MultiplyT(ref transform.R, input.Point2 - transform.Position);
             Vector2 d = p2 - p1;
 
-            Vector2 v1 = _vertex1;
-            Vector2 v2 = _vertex2;
+            Vector2 v1 = Vertex1;
+            Vector2 v2 = Vertex2;
             Vector2 e = v2 - v1;
             Vector2 normal = new Vector2(e.Y, -e.X);
             normal.Normalize();
@@ -153,11 +176,17 @@ namespace FarseerPhysics.Collision.Shapes
             return true;
         }
 
+        /// <summary>
+        /// Given a transform, compute the associated axis aligned bounding box for a child shape.
+        /// </summary>
+        /// <param name="aabb">The aabb results.</param>
+        /// <param name="transform">The world transform of the shape.</param>
+        /// <param name="childIndex">The child shape index.</param>
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
             aabb = new AABB();
-            Vector2 v1 = MathUtils.Multiply(ref transform, _vertex1);
-            Vector2 v2 = MathUtils.Multiply(ref transform, _vertex2);
+            Vector2 v1 = MathUtils.Multiply(ref transform, Vertex1);
+            Vector2 v2 = MathUtils.Multiply(ref transform, Vertex2);
 
             Vector2 lower = Vector2.Min(v1, v2);
             Vector2 upper = Vector2.Max(v1, v2);
@@ -167,11 +196,17 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound = upper + r;
         }
 
+        /// <summary>
+        /// Compute the mass properties of this shape using its dimensions and density.
+        /// The inertia tensor is computed about the local origin, not the centroid.
+        /// </summary>
+        /// <param name="massData">Returns the mass data for this shape.</param>
+        /// <param name="density">The density in kilograms per meter squared.</param>
         public override void ComputeMass(out MassData massData, float density)
         {
             massData = new MassData();
             massData.Mass = 0.0f;
-            massData.Center = 0.5f*(_vertex1 + _vertex2);
+            massData.Center = 0.5f*(Vertex1 + Vertex2);
             massData.Inertia = 0.0f;
         }
     }

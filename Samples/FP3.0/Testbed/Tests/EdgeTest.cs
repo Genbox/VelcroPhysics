@@ -48,51 +48,51 @@ namespace FarseerPhysics.TestBed.Tests
                 shape.Set(v1, v2);
                 //shape._index1 = 0;
                 //shape._index2 = 1;
-                shape._hasVertex3 = true;
-                shape._vertex3 = v3;
+                shape.HasVertex3 = true;
+                shape.Vertex3 = v3;
                 ground.CreateFixture(shape);
 
                 shape.Set(v2, v3);
                 //shape._index1 = 1;
                 //shape._index2 = 2;
-                shape._hasVertex0 = true;
-                shape._hasVertex3 = true;
-                shape._vertex0 = v1;
-                shape._vertex3 = v4;
+                shape.HasVertex0 = true;
+                shape.HasVertex3 = true;
+                shape.Vertex0 = v1;
+                shape.Vertex3 = v4;
                 ground.CreateFixture(shape);
 
                 shape.Set(v3, v4);
                 //shape._index1 = 2;
                 //shape._index2 = 3;
-                shape._hasVertex0 = true;
-                shape._hasVertex3 = true;
-                shape._vertex0 = v2;
-                shape._vertex3 = v5;
+                shape.HasVertex0 = true;
+                shape.HasVertex3 = true;
+                shape.Vertex0 = v2;
+                shape.Vertex3 = v5;
                 ground.CreateFixture(shape);
 
                 shape.Set(v4, v5);
                 //shape._index1 = 3;
                 //shape._index2 = 4;
-                shape._hasVertex0 = true;
-                shape._hasVertex3 = true;
-                shape._vertex0 = v3;
-                shape._vertex3 = v6;
+                shape.HasVertex0 = true;
+                shape.HasVertex3 = true;
+                shape.Vertex0 = v3;
+                shape.Vertex3 = v6;
                 ground.CreateFixture(shape);
 
                 shape.Set(v5, v6);
                 //shape._index1 = 4;
                 //shape._index2 = 5;
-                shape._hasVertex0 = true;
-                shape._hasVertex3 = true;
-                shape._vertex0 = v4;
-                shape._vertex3 = v7;
+                shape.HasVertex0 = true;
+                shape.HasVertex3 = true;
+                shape.Vertex0 = v4;
+                shape.Vertex3 = v7;
                 ground.CreateFixture(shape);
 
                 shape.Set(v6, v7);
                 //shape._index1 = 5;
                 //shape._index2 = 6;
-                shape._hasVertex0 = true;
-                shape._vertex0 = v5;
+                shape.HasVertex0 = true;
+                shape.Vertex0 = v5;
                 ground.CreateFixture(shape);
             }
 
