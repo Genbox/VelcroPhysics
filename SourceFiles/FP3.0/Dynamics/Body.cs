@@ -31,14 +31,22 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics
 {
+    /// <summary>
     /// The body type.
-    /// static: zero mass, zero velocity, may be manually moved
-    /// kinematic: zero mass, non-zero velocity set by user, moved by solver
-    /// dynamic: positive mass, non-zero velocity determined by forces, moved by solver
+    /// </summary>
     public enum BodyType
     {
+        /// <summary>
+        /// Zero velocity, may be manually moved. Note: even static bodies have mass.
+        /// </summary>
         Static,
+        /// <summary>
+        /// Zero mass, non-zero velocity set by user, moved by solver
+        /// </summary>
         Kinematic,
+        /// <summary>
+        /// Positive mass, non-zero velocity determined by forces, moved by solver
+        /// </summary>
         Dynamic,
     }
 
@@ -56,13 +64,16 @@ namespace FarseerPhysics.Dynamics
         IgnoreGravity = (1 << 7),
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class Body
     {
         internal float AngularVelocityInternal;
         internal int FixtureCount;
         internal BodyFlags Flags;
         internal Vector2 Force;
-        internal float I;
+        private float _inertia;
         internal float InvI;
         internal float InvMass;
         internal Vector2 LinearVelocityInternal;
@@ -87,7 +98,10 @@ namespace FarseerPhysics.Dynamics
             Xf.R.Set(0);
         }
 
-        /// Get the type of this body.
+        /// <summary>
+        /// Gets or sets the body type.
+        /// </summary>
+        /// <value>The type of body.</value>
         public BodyType BodyType
         {
             get { return Type; }
@@ -121,8 +135,10 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
         /// Set the linear velocity of the center of mass.
-        /// @param v the new linear velocity of the center of mass.
+        /// </summary>
+        /// <value>The linear velocity.</value>
         public Vector2 LinearVelocity
         {
             set
@@ -142,8 +158,10 @@ namespace FarseerPhysics.Dynamics
             get { return LinearVelocityInternal; }
         }
 
-        /// Set the angular velocity.
-        /// @param omega the new angular velocity in radians/second.
+        /// <summary>
+        /// Gets or sets the angular velocity. Radians/second.
+        /// </summary>
+        /// <value>The angular velocity.</value>
         public float AngularVelocity
         {
             set
@@ -153,7 +171,7 @@ namespace FarseerPhysics.Dynamics
                     return;
                 }
 
-                if (value*value > 0.0f)
+                if (value * value > 0.0f)
                 {
                     Awake = true;
                 }
@@ -163,24 +181,38 @@ namespace FarseerPhysics.Dynamics
             get { return AngularVelocityInternal; }
         }
 
-        /// Get the total mass of the body.
-        /// @return the mass, usually in kilograms (kg).
+        /// <summary>
+        /// Gets or sets the mass. Usually in kilograms (kg).
+        /// </summary>
+        /// <value>The mass.</value>
         public float Mass { get; internal set; }
 
-        /// Get the rotational inertia of the body about the local origin.
-        /// @return the rotational inertia, usually in kg-m^2.
+        /// <summary>
+        /// Get or set the rotational inertia of the body about the local origin. usually in kg-m^2.
+        /// </summary>
+        /// <value>The inertia.</value>
         public float Inertia
         {
-            get { return I + Mass*Vector2.Dot(Sweep.localCenter, Sweep.localCenter); }
+            get { return _inertia + Mass * Vector2.Dot(Sweep.localCenter, Sweep.localCenter); }
+            set { _inertia = value; }
         }
 
-        /// Get the linear damping of the body.
+        /// <summary>
+        /// Gets or sets the linear damping.
+        /// </summary>
+        /// <value>The linear damping.</value>
         public float LinearDamping { get; set; }
 
-        /// Get the angular damping of the body.
+        /// <summary>
+        /// Gets or sets the angular damping.
+        /// </summary>
+        /// <value>The angular damping.</value>
         public float AngularDamping { get; set; }
 
-        /// Should this body be treated like a bullet for continuous collision detection?
+        /// <summary>
+        /// Gets or sets a value indicating whether this body should be included in the CCD solver.
+        /// </summary>
+        /// <value><c>true</c> if this instance is included in CCD; otherwise, <c>false</c>.</value>
         public bool IsBullet
         {
             set
@@ -197,8 +229,11 @@ namespace FarseerPhysics.Dynamics
             get { return (Flags & BodyFlags.Bullet) == BodyFlags.Bullet; }
         }
 
+        /// <summary>
         /// You can disable sleeping on this body. If you disable sleeping, the
         /// body will be woken.
+        /// </summary>
+        /// <value><c>true</c> if sleeping is allowed; otherwise, <c>false</c>.</value>
         public bool SleepingAllowed
         {
             set
@@ -216,9 +251,11 @@ namespace FarseerPhysics.Dynamics
             get { return (Flags & BodyFlags.AutoSleep) == BodyFlags.AutoSleep; }
         }
 
+        /// <summary>
         /// Set the sleep state of the body. A sleeping body has very
         /// low CPU cost.
-        /// @param flag set to true to put body to sleep, false to wake it.
+        /// </summary>
+        /// <value><c>true</c> if awake; otherwise, <c>false</c>.</value>
         public bool Awake
         {
             set
@@ -244,6 +281,7 @@ namespace FarseerPhysics.Dynamics
             get { return (Flags & BodyFlags.Awake) == BodyFlags.Awake; }
         }
 
+        /// <summary>
         /// Set the active state of the body. An inactive body is not
         /// simulated and cannot be collided with or woken up.
         /// If you pass a flag of true, all fixtures will be added to the
@@ -257,6 +295,8 @@ namespace FarseerPhysics.Dynamics
         /// Joints connected to an inactive body are implicitly inactive.
         /// An inactive body is still owned by a b2World object and remains
         /// in the body list.
+        /// </summary>
+        /// <value><c>true</c> if active; otherwise, <c>false</c>.</value>
         public bool Active
         {
             set
@@ -304,8 +344,11 @@ namespace FarseerPhysics.Dynamics
             get { return (Flags & BodyFlags.Active) == BodyFlags.Active; }
         }
 
+        /// <summary>
         /// Set this body to have fixed rotation. This causes the mass
         /// to be reset.
+        /// </summary>
+        /// <value><c>true</c> if it has fixed rotation; otherwise, <c>false</c>.</value>
         public bool FixedRotation
         {
             set
@@ -324,17 +367,30 @@ namespace FarseerPhysics.Dynamics
             get { return (Flags & BodyFlags.FixedRotation) == BodyFlags.FixedRotation; }
         }
 
-        public Fixture FixtureList { get; set; }
+        /// <summary>
+        /// Gets all the fixtures attached to this body.
+        /// </summary>
+        /// <value>The fixture list.</value>
+        public Fixture FixtureList { get; internal set; }
 
+        /// <summary>
         /// Get the list of all joints attached to this body.
+        /// </summary>
+        /// <value>The joint list.</value>
         public JointEdge JointList { get; internal set; }
 
+        /// <summary>
         /// Get the list of all contacts attached to this body.
-        /// @warning this list changes during the time step and you may
+        /// Warning: this list changes during the time step and you may
         /// miss some collisions if you don't use ContactListener.
+        /// </summary>
+        /// <value>The contact list.</value>
         public ContactEdge ContactList { get; internal set; }
 
+        /// <summary>
         /// Set the user data. Use this to store your application specific data.
+        /// </summary>
+        /// <value>The user data.</value>
         public object UserData { get; set; }
 
         /// <summary>
@@ -357,6 +413,10 @@ namespace FarseerPhysics.Dynamics
             set { SetTransform(Position, value); }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this body is static.
+        /// </summary>
+        /// <value><c>true</c> if this instance is static; otherwise, <c>false</c>.</value>
         public bool IsStatic
         {
             get { return Type == BodyType.Static; }
@@ -367,6 +427,10 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this body ignores gravity.
+        /// </summary>
+        /// <value><c>true</c> if  it ignores gravity; otherwise, <c>false</c>.</value>
         public bool IgnoreGravity
         {
             get { return (Flags & BodyFlags.IgnoreGravity) == BodyFlags.IgnoreGravity; }
@@ -379,37 +443,54 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
         /// Get the angle in radians.
-        /// @return the current world rotation angle in radians.
+        /// </summary>
+        /// <value>The current world rotation angle in radians.</value>
         public float Angle
         {
             get { return Sweep.a; }
         }
 
+        /// <summary>
         /// Get the world position of the center of mass.
+        /// </summary>
+        /// <value>The world position.</value>
         public Vector2 WorldCenter
         {
             get { return Sweep.c; }
         }
 
+        /// <summary>
         /// Get the local position of the center of mass.
+        /// </summary>
+        /// <value>The local position.</value>
         public Vector2 LocalCenter
         {
             get { return Sweep.localCenter; }
         }
 
+        /// <summary>
         /// Get the next body in the world's body list.
+        /// </summary>
+        /// <value>The next.</value>
         public Body Next { get; internal set; }
 
+        /// <summary>
+        /// Get the previous body in the world's body list.
+        /// </summary>
+        /// <value>The prev.</value>
         public Body Prev { get; internal set; }
 
-        /// Creates a fixture and attach it to this body. Use this function if you need
-        /// to set some fixture parameters, like friction. Otherwise you can create the
-        /// fixture directly from a shape.
+        /// <summary>
+        /// Creates a fixture and attach it to this body.
         /// If the density is non-zero, this function automatically updates the mass of the body.
         /// Contacts are not created until the next time step.
-        /// @param def the fixture definition.
-        /// @warning This function is locked during callbacks.
+        /// Warning: This function is locked during callbacks.
+        /// </summary>
+        /// <param name="shape">The shape.</param>
+        /// <param name="density">The density.</param>
+        /// <returns></returns>
         public Fixture CreateFixture(Shape shape, float density)
         {
             Debug.Assert(World.IsLocked == false);
@@ -458,13 +539,15 @@ namespace FarseerPhysics.Dynamics
             return CreateFixture(shape, 1);
         }
 
+        /// <summary>
         /// Destroy a fixture. This removes the fixture from the broad-phase and
-        /// destroys all contacts associated with this fixture. This will	
+        /// destroys all contacts associated with this fixture. This will
         /// automatically adjust the mass of the body if the body is dynamic and the
         /// fixture has positive density.
         /// All fixtures attached to a body are implicitly destroyed when the body is destroyed.
-        /// @param fixture the fixture to be removed.
-        /// @warning This function is locked during callbacks.
+        /// Warning: This function is locked during callbacks.
+        /// </summary>
+        /// <param name="fixture">The fixture to be removed.</param>
         public void DestroyFixture(Fixture fixture)
         {
             Debug.Assert(World.IsLocked == false);
@@ -527,11 +610,13 @@ namespace FarseerPhysics.Dynamics
             ResetMassData();
         }
 
+        /// <summary>
         /// Set the position of the body's origin and rotation.
         /// This breaks any contacts and wakes the other bodies.
         /// Manipulating a body's transform may cause non-physical behavior.
-        /// @param position the world position of the body's local origin.
-        /// @param angle the world rotation in radians.
+        /// </summary>
+        /// <param name="position">The  world position of the body's local origin.</param>
+        /// <param name="angle">The world rotation in radians.</param>
         public void SetTransform(Vector2 position, float angle)
         {
             Debug.Assert(World.IsLocked == false);
@@ -555,7 +640,11 @@ namespace FarseerPhysics.Dynamics
             World.ContactManager.FindNewContacts();
         }
 
+        /// <summary>
         // For teleporting a body without considering new contacts immediately.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <param name="angle">The angle.</param>
         public void SetTransformIgnoreContacts(Vector2 position, float angle)
         {
             Debug.Assert(World.IsLocked == false);
@@ -577,11 +666,13 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
         /// Get the body transform for the body's origin.
-        /// @return the world transform of the body's origin.
-        public void GetTransform(out Transform xf)
+        /// </summary>
+        /// <param name="transform">The transform of the body's origin.</param>
+        public void GetTransform(out Transform transform)
         {
-            xf = Xf;
+            transform = Xf;
         }
 
         /// <summary>
@@ -589,28 +680,38 @@ namespace FarseerPhysics.Dynamics
         /// applied at the center of mass, it will generate a torque and
         /// affect the angular velocity. This wakes up the body.
         /// </summary>
-        /// <param name="force">the world force vector, usually in Newtons (N).</param>
-        /// <param name="point">the world position of the point of application.</param>
+        /// <param name="force">The world force vector, usually in Newtons (N).</param>
+        /// <param name="point">The world position of the point of application.</param>
         public void ApplyForce(Vector2 force, Vector2 point)
         {
             ApplyForce(ref force, ref point);
         }
 
+        /// <summary>
+        /// Applies a force at the center of mass.
+        /// </summary>
+        /// <param name="force">The force.</param>
         public void ApplyForce(ref Vector2 force)
         {
             ApplyForce(ref force, ref Xf.Position);
         }
 
+        /// <summary>
+        /// Applies a force at the center of mass.
+        /// </summary>
+        /// <param name="force">The force.</param>
         public void ApplyForce(Vector2 force)
         {
             ApplyForce(ref force, ref Xf.Position);
         }
 
+        /// <summary>
         /// Apply a force at a world point. If the force is not
         /// applied at the center of mass, it will generate a torque and
         /// affect the angular velocity. This wakes up the body.
-        /// @param force the world force vector, usually in Newtons (N).
-        /// @param point the world position of the point of application.
+        /// </summary>
+        /// <param name="force">The world force vector, usually in Newtons (N).</param>
+        /// <param name="point">The world position of the point of application.</param>
         public void ApplyForce(ref Vector2 force, ref Vector2 point)
         {
             if (Type == BodyType.Dynamic)
@@ -625,10 +726,12 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
         /// Apply a torque. This affects the angular velocity
         /// without affecting the linear velocity of the center of mass.
         /// This wakes up the body.
-        /// @param torque about the z-axis (out of the screen), usually in N-m.
+        /// </summary>
+        /// <param name="torque">The torque about the z-axis (out of the screen), usually in N-m.</param>
         public void ApplyTorque(float torque)
         {
             if (Type == BodyType.Dynamic)
@@ -642,11 +745,14 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
         /// Apply an impulse at a point. This immediately modifies the velocity.
         /// It also modifies the angular velocity if the point of application
-        /// is not at the center of mass. This wakes up the body.
-        /// @param impulse the world impulse vector, usually in N-seconds or kg-m/s.
-        /// @param point the world position of the point of application.
+        /// is not at the center of mass.
+        /// This wakes up the body.
+        /// </summary>
+        /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
+        /// <param name="point">The world position of the point of application.</param>
         public void ApplyLinearImpulse(Vector2 impulse, Vector2 point)
         {
             if (Type != BodyType.Dynamic)
@@ -657,12 +763,14 @@ namespace FarseerPhysics.Dynamics
             {
                 Awake = true;
             }
-            LinearVelocityInternal += InvMass*impulse;
-            AngularVelocityInternal += InvI*MathUtils.Cross(point - Sweep.c, impulse);
+            LinearVelocityInternal += InvMass * impulse;
+            AngularVelocityInternal += InvI * MathUtils.Cross(point - Sweep.c, impulse);
         }
 
-        /// Apply an angular impulse.  
-        /// @param impulse the angular impulse in units of kg*m*m/s  
+        /// <summary>
+        /// Apply an angular impulse.
+        /// </summary>
+        /// <param name="impulse">The angular impulse in units of kg*m*m/s.</param>
         public void ApplyAngularImpulse(float impulse)
         {
             if (Type != BodyType.Dynamic)
@@ -675,24 +783,28 @@ namespace FarseerPhysics.Dynamics
                 Awake = true;
             }
 
-            AngularVelocityInternal += InvI*impulse;
+            AngularVelocityInternal += InvI * impulse;
         }
 
+        /// <summary>
         /// Get the mass data of the body.
-        /// @return a struct containing the mass, inertia and center of the body.
+        /// </summary>
+        /// <param name="massData">A struct containing the mass, inertia and center of the body.</param>
         public void GetMassData(out MassData massData)
         {
             massData = new MassData();
             massData.Mass = Mass;
-            massData.Inertia = I + Mass*Vector2.Dot(Sweep.localCenter, Sweep.localCenter);
+            massData.Inertia = _inertia + Mass * Vector2.Dot(Sweep.localCenter, Sweep.localCenter);
             massData.Center = Sweep.localCenter;
         }
 
+        /// <summary>
         /// Set the mass properties to override the mass properties of the fixtures.
         /// Note that this changes the center of mass position.
         /// Note that creating or destroying fixtures can also alter the mass.
         /// This function has no effect if the body isn't dynamic.
-        /// @param massData the mass properties.
+        /// </summary>
+        /// <param name="massData">The mass data.</param>
         public void SetMassData(ref MassData massData)
         {
             Debug.Assert(World.IsLocked == false);
@@ -707,7 +819,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             InvMass = 0.0f;
-            I = 0.0f;
+            _inertia = 0.0f;
             InvI = 0.0f;
 
             Mass = massData.Mass;
@@ -717,14 +829,14 @@ namespace FarseerPhysics.Dynamics
                 Mass = 1.0f;
             }
 
-            InvMass = 1.0f/Mass;
+            InvMass = 1.0f / Mass;
 
 
             if (massData.Inertia > 0.0f && (Flags & BodyFlags.FixedRotation) == 0)
             {
-                I = massData.Inertia - Mass*Vector2.Dot(massData.Center, massData.Center);
-                Debug.Assert(I > 0.0f);
-                InvI = 1.0f/I;
+                _inertia = massData.Inertia - Mass * Vector2.Dot(massData.Center, massData.Center);
+                Debug.Assert(_inertia > 0.0f);
+                InvI = 1.0f / _inertia;
             }
 
             // Move center of mass.
@@ -736,15 +848,17 @@ namespace FarseerPhysics.Dynamics
             LinearVelocityInternal += MathUtils.Cross(AngularVelocityInternal, Sweep.c - oldCenter);
         }
 
+        /// <summary>
         /// This resets the mass properties to the sum of the mass properties of the fixtures.
         /// This normally does not need to be called unless you called SetMassData to override
         /// the mass and you later want to reset the mass.
+        /// </summary>
         public void ResetMassData()
         {
             // Compute mass data from shapes. Each shape has its own density.
             Mass = 0.0f;
             InvMass = 0.0f;
-            I = 0.0f;
+            _inertia = 0.0f;
             InvI = 0.0f;
             Sweep.localCenter = Vector2.Zero;
 
@@ -769,8 +883,8 @@ namespace FarseerPhysics.Dynamics
                 MassData massData;
                 f.GetMassData(out massData);
                 Mass += massData.Mass;
-                center += massData.Mass*massData.Center;
-                I += massData.Inertia;
+                center += massData.Mass * massData.Center;
+                _inertia += massData.Inertia;
             }
 
             //Static bodies only have mass, they don't have other properties. A little hacky tho...
@@ -783,7 +897,7 @@ namespace FarseerPhysics.Dynamics
             // Compute center of mass.
             if (Mass > 0.0f)
             {
-                InvMass = 1.0f/Mass;
+                InvMass = 1.0f / Mass;
                 center *= InvMass;
             }
             else
@@ -793,17 +907,17 @@ namespace FarseerPhysics.Dynamics
                 InvMass = 1.0f;
             }
 
-            if (I > 0.0f && (Flags & BodyFlags.FixedRotation) == 0)
+            if (_inertia > 0.0f && (Flags & BodyFlags.FixedRotation) == 0)
             {
                 // Center the inertia about the center of mass.
-                I -= Mass*Vector2.Dot(center, center);
+                _inertia -= Mass * Vector2.Dot(center, center);
 
-                Debug.Assert(I > 0.0f);
-                InvI = 1.0f/I;
+                Debug.Assert(_inertia > 0.0f);
+                InvI = 1.0f / _inertia;
             }
             else
             {
-                I = 0.0f;
+                _inertia = 0.0f;
                 InvI = 0.0f;
             }
 
@@ -816,49 +930,61 @@ namespace FarseerPhysics.Dynamics
             LinearVelocityInternal += MathUtils.Cross(AngularVelocityInternal, Sweep.c - oldCenter);
         }
 
+        /// <summary>
         /// Get the world coordinates of a point given the local coordinates.
-        /// @param localPoint a point on the body measured relative the the body's origin.
-        /// @return the same point expressed in world coordinates.
+        /// </summary>
+        /// <param name="localPoint">A point on the body measured relative the the body's origin.</param>
+        /// <returns>The same point expressed in world coordinates.</returns>
         public Vector2 GetWorldPoint(Vector2 localPoint)
         {
             return MathUtils.Multiply(ref Xf, localPoint);
         }
 
+        /// <summary>
         /// Get the world coordinates of a vector given the local coordinates.
-        /// @param localVector a vector fixed in the body.
-        /// @return the same vector expressed in world coordinates.
+        /// </summary>
+        /// <param name="localVector">A vector fixed in the body.</param>
+        /// <returns>The same vector expressed in world coordinates.</returns>
         public Vector2 GetWorldVector(Vector2 localVector)
         {
             return MathUtils.Multiply(ref Xf.R, localVector);
         }
 
+        /// <summary>
         /// Gets a local point relative to the body's origin given a world point.
-        /// @param a point in world coordinates.
-        /// @return the corresponding local point relative to the body's origin.
+        /// </summary>
+        /// <param name="worldPoint">A point in world coordinates.</param>
+        /// <returns>The corresponding local point relative to the body's origin.</returns>
         public Vector2 GetLocalPoint(Vector2 worldPoint)
         {
             return MathUtils.MultiplyT(ref Xf, worldPoint);
         }
 
+        /// <summary>
         /// Gets a local vector given a world vector.
-        /// @param a vector in world coordinates.
-        /// @return the corresponding local vector.
+        /// </summary>
+        /// <param name="worldVector">A vector in world coordinates.</param>
+        /// <returns>The corresponding local vector.</returns>
         public Vector2 GetLocalVector(Vector2 worldVector)
         {
             return MathUtils.MultiplyT(ref Xf.R, worldVector);
         }
 
+        /// <summary>
         /// Get the world linear velocity of a world point attached to this body.
-        /// @param a point in world coordinates.
-        /// @return the world velocity of a point.
+        /// </summary>
+        /// <param name="worldPoint">A point in world coordinates.</param>
+        /// <returns>The world velocity of a point.</returns>
         public Vector2 GetLinearVelocityFromWorldPoint(Vector2 worldPoint)
         {
             return LinearVelocityInternal + MathUtils.Cross(AngularVelocityInternal, worldPoint - Sweep.c);
         }
 
+        /// <summary>
         /// Get the world velocity of a local point.
-        /// @param a point in local coordinates.
-        /// @return the world velocity of a point.
+        /// </summary>
+        /// <param name="localPoint">A point in local coordinates.</param>
+        /// <returns>The world velocity of a point.</returns>
         public Vector2 GetLinearVelocityFromLocalPoint(Vector2 localPoint)
         {
             return GetLinearVelocityFromWorldPoint(GetWorldPoint(localPoint));
@@ -883,8 +1009,12 @@ namespace FarseerPhysics.Dynamics
             Xf.Position = Sweep.c - MathUtils.Multiply(ref Xf.R, Sweep.localCenter);
         }
 
+        /// <summary>
         // This is used to prevent connected bodies from colliding.
         // It may lie, depending on the collideConnected flag.
+        /// </summary>
+        /// <param name="other">The other body.</param>
+        /// <returns></returns>
         internal bool ShouldCollide(Body other)
         {
             // At least one body should be dynamic.
