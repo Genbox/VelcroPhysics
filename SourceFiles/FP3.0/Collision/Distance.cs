@@ -56,8 +56,8 @@ namespace FarseerPhysics.Collision
                 case ShapeType.Polygon:
                     {
                         PolygonShape polygon = (PolygonShape) shape;
-                        Vertices = polygon._vertices;
-                        Count = polygon._vertexCount;
+                        Vertices = polygon.Vertices;
+                        Count = polygon.VertexCount;
                         Radius = polygon.Radius;
                     }
                     break;

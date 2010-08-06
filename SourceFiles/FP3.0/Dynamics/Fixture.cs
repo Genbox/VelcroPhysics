@@ -93,7 +93,16 @@ namespace FarseerPhysics.Dynamics
 
         #endregion
 
+        /// <summary>
+        /// Fires when two shapes collide and a contact is created between them.
+        /// Note that the first fixture argument is always the fixture that the delegate is subscribed to.
+        /// </summary>
         public CollisionEventHandler OnCollision;
+
+        /// <summary>
+        /// Fires when two shapes separate and a contact is removed between them.
+        /// Note that the first fixture argument is always the fixture that the delegate is subscribed to.
+        /// </summary>
         public SeparationEventHandler OnSeparation;
 
         private static int _fixtureIdCounter;

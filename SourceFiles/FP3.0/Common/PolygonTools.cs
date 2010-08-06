@@ -122,13 +122,13 @@ namespace FarseerPhysics.Common
         /// <summary>
         /// Set this as a single edge.
         /// </summary>
-        /// <param name="v1">The first point.</param>
-        /// <param name="v2">The second point.</param>
-        public static Vertices CreateEdge(Vector2 v1, Vector2 v2)
+        /// <param name="start">The first point.</param>
+        /// <param name="end">The second point.</param>
+        public static Vertices CreateEdge(Vector2 start, Vector2 end)
         {
             Vertices vertices = new Vertices(2);
-            vertices.Add(v1);
-            vertices.Add(v2);
+            vertices.Add(start);
+            vertices.Add(end);
 
             return vertices;
         }
