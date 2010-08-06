@@ -59,7 +59,7 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public JointRemovedDelegate JointRemoved;
 
-        private float _inv_dt0;
+        private float _invDt0;
         private Island _island = new Island();
         private Func<FixtureProxy, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
@@ -489,14 +489,14 @@ namespace FarseerPhysics.Dynamics
             step.dt = dt;
             if (dt > 0.0f)
             {
-                step.inv_dt = 1.0f/dt;
+                step.inv_dt = 1.0f / dt;
             }
             else
             {
                 step.inv_dt = 0.0f;
             }
 
-            step.dtRatio = _inv_dt0*dt;
+            step.dtRatio = _invDt0 * dt;
 
             //Update controllers
             foreach (Controller controller in Controllers)
@@ -534,7 +534,7 @@ namespace FarseerPhysics.Dynamics
 
             if (step.dt > 0.0f)
             {
-                _inv_dt0 = step.inv_dt;
+                _invDt0 = step.inv_dt;
             }
 
             if ((Flags & WorldFlags.ClearForces) != 0)
@@ -617,7 +617,7 @@ namespace FarseerPhysics.Dynamics
             if (hit)
             {
                 float fraction = output.Fraction;
-                Vector2 point = (1.0f - fraction)*input.Point1 + fraction*input.Point2;
+                Vector2 point = (1.0f - fraction) * input.Point1 + fraction * input.Point2;
                 return _rayCastCallback(fixture, point, output.Normal, fraction);
             }
 
@@ -649,7 +649,7 @@ namespace FarseerPhysics.Dynamics
             // Build and simulate all awake islands.
             int stackSize = BodyCount;
             if (stackSize > _stack.Length)
-                _stack = new Body[Math.Max(_stack.Length*2, stackSize)];
+                _stack = new Body[Math.Max(_stack.Length * 2, stackSize)];
 
             for (Body seed = BodyList; seed != null; seed = seed.Next)
             {
@@ -1090,6 +1090,14 @@ namespace FarseerPhysics.Dynamics
         public void AddBreakableBody(BreakableBody breakableBody)
         {
             BreakableBodyList.Add(breakableBody);
+        }
+
+        public void RemoveBreakableBody(BreakableBody breakableBody)
+        {
+            //The breakable body list does not contain the body you tried to remove.
+            Debug.Assert(BreakableBodyList.Contains(breakableBody));
+
+            BreakableBodyList.Remove(breakableBody);
         }
     }
 }
