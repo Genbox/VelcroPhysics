@@ -172,13 +172,8 @@ namespace FarseerPhysics.TestBed.Framework
 
             if (GameInstance.DebugViewEnabled)
             {
-                uint flags = 0;
-                flags += settings.DrawShapes * (uint) DebugViewFlags.Shape;
-                flags += settings.DrawJoints * (uint) DebugViewFlags.Joint;
-                flags += settings.DrawAABBs * (uint) DebugViewFlags.AABB;
-                flags += settings.DrawPairs * (uint) DebugViewFlags.Pair;
-                flags += settings.DrawCOMs * (uint) DebugViewFlags.CenterOfMass;
-                DebugView.Flags = (DebugViewFlags) flags;
+                DebugView.AppendFlags(DebugViewFlags.Shape);
+                DebugView.AppendFlags(DebugViewFlags.Joint);
             }
 
             PointCount = 0;
