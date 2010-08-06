@@ -90,13 +90,13 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 GetReactionForce(float inv_dt)
         {
-            Vector2 F = (inv_dt * new Vector2(_impulse.X, _impulse.Y));
+            Vector2 F = (inv_dt*new Vector2(_impulse.X, _impulse.Y));
             return F;
         }
 
         public override float GetReactionTorque(float inv_dt)
         {
-            float F = (inv_dt * _impulse.Z);
+            float F = (inv_dt*_impulse.Z);
             return F;
         }
 
@@ -122,15 +122,15 @@ namespace FarseerPhysics.Dynamics.Joints
             //     [  -r1y*iA*r1x-r2y*iB*r2x, mA+r1x^2*iA+mB+r2x^2*iB,           r1x*iA+r2x*iB]
             //     [          -r1y*iA-r2y*iB,           r1x*iA+r2x*iB,                   iA+iB]
 
-            float mA = bA._invMass, mB = bB._invMass;
-            float iA = bA._invI, iB = bB._invI;
+            float mA = bA.InvMass, mB = bB.InvMass;
+            float iA = bA.InvI, iB = bB.InvI;
 
-            _mass.col1.X = mA + mB + rA.Y * rA.Y * iA + rB.Y * rB.Y * iB;
-            _mass.col2.X = -rA.Y * rA.X * iA - rB.Y * rB.X * iB;
-            _mass.col3.X = -rA.Y * iA - rB.Y * iB;
+            _mass.col1.X = mA + mB + rA.Y*rA.Y*iA + rB.Y*rB.Y*iB;
+            _mass.col2.X = -rA.Y*rA.X*iA - rB.Y*rB.X*iB;
+            _mass.col3.X = -rA.Y*iA - rB.Y*iB;
             _mass.col1.Y = _mass.col2.X;
-            _mass.col2.Y = mA + mB + rA.X * rA.X * iA + rB.X * rB.X * iB;
-            _mass.col3.Y = rA.X * iA + rB.X * iB;
+            _mass.col2.Y = mA + mB + rA.X*rA.X*iA + rB.X*rB.X*iB;
+            _mass.col3.Y = rA.X*iA + rB.X*iB;
             _mass.col1.Z = _mass.col3.X;
             _mass.col2.Z = _mass.col3.Y;
             _mass.col3.Z = iA + iB;
@@ -142,11 +142,11 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 Vector2 P = new Vector2(_impulse.X, _impulse.Y);
 
-                bA._linearVelocity -= mA * P;
-                bA._angularVelocity -= iA * (MathUtils.Cross(rA, P) + _impulse.Z);
+                bA.LinearVelocityInternal -= mA*P;
+                bA.AngularVelocityInternal -= iA*(MathUtils.Cross(rA, P) + _impulse.Z);
 
-                bB._linearVelocity += mB * P;
-                bB._angularVelocity += iB * (MathUtils.Cross(rB, P) + _impulse.Z);
+                bB.LinearVelocityInternal += mB*P;
+                bB.AngularVelocityInternal += iB*(MathUtils.Cross(rB, P) + _impulse.Z);
             }
             else
             {
@@ -159,13 +159,13 @@ namespace FarseerPhysics.Dynamics.Joints
             Body bA = BodyA;
             Body bB = BodyB;
 
-            Vector2 vA = bA._linearVelocity;
-            float wA = bA._angularVelocity;
-            Vector2 vB = bB._linearVelocity;
-            float wB = bB._angularVelocity;
+            Vector2 vA = bA.LinearVelocityInternal;
+            float wA = bA.AngularVelocityInternal;
+            Vector2 vB = bB.LinearVelocityInternal;
+            float wB = bB.AngularVelocityInternal;
 
-            float mA = bA._invMass, mB = bB._invMass;
-            float iA = bA._invI, iB = bB._invI;
+            float mA = bA.InvMass, mB = bB.InvMass;
+            float iA = bA.InvI, iB = bB.InvI;
 
             Transform xfA, xfB;
             bA.GetTransform(out xfA);
@@ -184,16 +184,16 @@ namespace FarseerPhysics.Dynamics.Joints
 
             Vector2 P = new Vector2(impulse.X, impulse.Y);
 
-            vA -= mA * P;
-            wA -= iA * (MathUtils.Cross(rA, P) + impulse.Z);
+            vA -= mA*P;
+            wA -= iA*(MathUtils.Cross(rA, P) + impulse.Z);
 
-            vB += mB * P;
-            wB += iB * (MathUtils.Cross(rB, P) + impulse.Z);
+            vB += mB*P;
+            wB += iB*(MathUtils.Cross(rB, P) + impulse.Z);
 
-            bA._linearVelocity = vA;
-            bA._angularVelocity = wA;
-            bB._linearVelocity = vB;
-            bB._angularVelocity = wB;
+            bA.LinearVelocityInternal = vA;
+            bA.AngularVelocityInternal = wA;
+            bB.LinearVelocityInternal = vB;
+            bB.AngularVelocityInternal = wB;
         }
 
         internal override bool SolvePositionConstraints()
@@ -201,8 +201,8 @@ namespace FarseerPhysics.Dynamics.Joints
             Body bA = BodyA;
             Body bB = BodyB;
 
-            float mA = bA._invMass, mB = bB._invMass;
-            float iA = bA._invI, iB = bB._invI;
+            float mA = bA.InvMass, mB = bB.InvMass;
+            float iA = bA.InvI, iB = bB.InvI;
 
             Transform xfA;
             Transform xfB;
@@ -212,11 +212,11 @@ namespace FarseerPhysics.Dynamics.Joints
             Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.LocalCenter);
             Vector2 rB = MathUtils.Multiply(ref xfB.R, LocalAnchorB - bB.LocalCenter);
 
-            Vector2 C1 = bB._sweep.c + rB - bA._sweep.c - rA;
-            float C2 = bB._sweep.a - bA._sweep.a - ReferenceAngle;
+            Vector2 C1 = bB.Sweep.c + rB - bA.Sweep.c - rA;
+            float C2 = bB.Sweep.a - bA.Sweep.a - ReferenceAngle;
 
             // Handle large detachment.
-            const float k_allowedStretch = 10.0f * Settings.LinearSlop;
+            const float k_allowedStretch = 10.0f*Settings.LinearSlop;
             float positionError = C1.Length();
             float angularError = Math.Abs(C2);
             if (positionError > k_allowedStretch)
@@ -225,12 +225,12 @@ namespace FarseerPhysics.Dynamics.Joints
                 iB *= 1.0f;
             }
 
-            _mass.col1.X = mA + mB + rA.Y * rA.Y * iA + rB.Y * rB.Y * iB;
-            _mass.col2.X = -rA.Y * rA.X * iA - rB.Y * rB.X * iB;
-            _mass.col3.X = -rA.Y * iA - rB.Y * iB;
+            _mass.col1.X = mA + mB + rA.Y*rA.Y*iA + rB.Y*rB.Y*iB;
+            _mass.col2.X = -rA.Y*rA.X*iA - rB.Y*rB.X*iB;
+            _mass.col3.X = -rA.Y*iA - rB.Y*iB;
             _mass.col1.Y = _mass.col2.X;
-            _mass.col2.Y = mA + mB + rA.X * rA.X * iA + rB.X * rB.X * iB;
-            _mass.col3.Y = rA.X * iA + rB.X * iB;
+            _mass.col2.Y = mA + mB + rA.X*rA.X*iA + rB.X*rB.X*iB;
+            _mass.col3.Y = rA.X*iA + rB.X*iB;
             _mass.col1.Z = _mass.col3.X;
             _mass.col2.Z = _mass.col3.Y;
             _mass.col3.Z = iA + iB;
@@ -241,11 +241,11 @@ namespace FarseerPhysics.Dynamics.Joints
 
             Vector2 P = new Vector2(impulse.X, impulse.Y);
 
-            bA._sweep.c -= mA * P;
-            bA._sweep.a -= iA * (MathUtils.Cross(rA, P) + impulse.Z);
+            bA.Sweep.c -= mA*P;
+            bA.Sweep.a -= iA*(MathUtils.Cross(rA, P) + impulse.Z);
 
-            bB._sweep.c += mB * P;
-            bB._sweep.a += iB * (MathUtils.Cross(rB, P) + impulse.Z);
+            bB.Sweep.c += mB*P;
+            bB.Sweep.a += iB*(MathUtils.Cross(rB, P) + impulse.Z);
 
             bA.SynchronizeTransform();
             bB.SynchronizeTransform();

@@ -76,55 +76,55 @@ namespace FarseerPhysics.Dynamics.Contacts
     {
         private static EdgeShape s_edge = new EdgeShape();
 
-        internal static ContactType[,] s_registers = new[,]
-                                                         {
-                                                             {
-                                                                 ContactType.Circle,
-                                                                 ContactType.EdgeAndCircle,
-                                                                 ContactType.PolygonAndCircle,
-                                                                 ContactType.LoopAndCircle,
-                                                             },
-                                                             {
-                                                                 ContactType.EdgeAndCircle,
-                                                                 ContactType.EdgeAndCircle,
-                                                                 // 1,1 is invalid (no ContactType.Edge)
-                                                                 ContactType.EdgeAndPolygon,
-                                                                 ContactType.EdgeAndPolygon,
-                                                                 // 1,3 is invalid (no ContactType.EdgeAndLoop)
-                                                             },
-                                                             {
-                                                                 ContactType.PolygonAndCircle,
-                                                                 ContactType.EdgeAndPolygon,
-                                                                 ContactType.Polygon,
-                                                                 ContactType.LoopAndPolygon,
-                                                             },
-                                                             {
-                                                                 ContactType.LoopAndCircle,
-                                                                 ContactType.LoopAndCircle,
-                                                                 // 3,1 is invalid (no ContactType.EdgeAndLoop)
-                                                                 ContactType.LoopAndPolygon,
-                                                                 ContactType.LoopAndPolygon,
-                                                                 // 3,3 is invalid (no ContactType.Loop)
-                                                             },
-                                                         };
+        private static ContactType[,] s_registers = new[,]
+                                                        {
+                                                            {
+                                                                ContactType.Circle,
+                                                                ContactType.EdgeAndCircle,
+                                                                ContactType.PolygonAndCircle,
+                                                                ContactType.LoopAndCircle,
+                                                            },
+                                                            {
+                                                                ContactType.EdgeAndCircle,
+                                                                ContactType.EdgeAndCircle,
+                                                                // 1,1 is invalid (no ContactType.Edge)
+                                                                ContactType.EdgeAndPolygon,
+                                                                ContactType.EdgeAndPolygon,
+                                                                // 1,3 is invalid (no ContactType.EdgeAndLoop)
+                                                            },
+                                                            {
+                                                                ContactType.PolygonAndCircle,
+                                                                ContactType.EdgeAndPolygon,
+                                                                ContactType.Polygon,
+                                                                ContactType.LoopAndPolygon,
+                                                            },
+                                                            {
+                                                                ContactType.LoopAndCircle,
+                                                                ContactType.LoopAndCircle,
+                                                                // 3,1 is invalid (no ContactType.EdgeAndLoop)
+                                                                ContactType.LoopAndPolygon,
+                                                                ContactType.LoopAndPolygon,
+                                                                // 3,3 is invalid (no ContactType.Loop)
+                                                            },
+                                                        };
 
-        internal Fixture _fixtureA;
-        internal Fixture _fixtureB;
-        internal ContactFlags _flags;
-        internal int _indexA;
-        internal int _indexB;
+        public Fixture FixtureA;
+        public Fixture FixtureB;
+        internal ContactFlags Flags;
+        internal int IndexA;
+        internal int IndexB;
 
-        internal Manifold _manifold;
-        internal Contact _next;
+        internal Manifold Manifold;
+        internal Contact Next;
 
         // Nodes for connecting bodies.
-        internal ContactEdge _nodeA = new ContactEdge();
-        internal ContactEdge _nodeB = new ContactEdge();
-        internal Contact _prev;
-        internal int _toiCount;
+        internal ContactEdge NodeA = new ContactEdge();
+        internal ContactEdge NodeB = new ContactEdge();
+        internal Contact Prev;
+        internal int TOICount;
         private ContactType _type;
 
-        internal Contact(Fixture fA, int indexA, Fixture fB, int indexB)
+        private Contact(Fixture fA, int indexA, Fixture fB, int indexB)
         {
             Reset(fA, indexA, fB, indexB);
         }
@@ -138,127 +138,115 @@ namespace FarseerPhysics.Dynamics.Contacts
             {
                 if (value)
                 {
-                    _flags |= ContactFlags.Enabled;
+                    Flags |= ContactFlags.Enabled;
                 }
                 else
                 {
-                    _flags &= ~ContactFlags.Enabled;
+                    Flags &= ~ContactFlags.Enabled;
                 }
             }
 
-            get { return (_flags & ContactFlags.Enabled) == ContactFlags.Enabled; }
-        }
-
-        /// Get fixture A in this contact.
-        public Fixture FixtureA
-        {
-            get { return _fixtureA; }
-        }
-
-        /// Get fixture B in this contact.
-        public Fixture FixtureB
-        {
-            get { return _fixtureB; }
+            get { return (Flags & ContactFlags.Enabled) == ContactFlags.Enabled; }
         }
 
         /// Get the child primitive index for fixture A.
         public int ChildIndexA
         {
-            get { return _indexA; }
+            get { return IndexA; }
         }
 
         /// Get the child primitive index for fixture B.
         public int ChildIndexB
         {
-            get { return _indexB; }
+            get { return IndexB; }
         }
 
         /// Get the contact manifold. Do not modify the manifold unless you understand the
         /// internals of Box2D.
         public void GetManifold(out Manifold manifold)
         {
-            manifold = _manifold;
+            manifold = Manifold;
         }
 
         /// Get the world manifold.
         public void GetWorldManifold(out WorldManifold worldManifold)
         {
-            Body bodyA = _fixtureA.Body;
-            Body bodyB = _fixtureB.Body;
-            Shape shapeA = _fixtureA.Shape;
-            Shape shapeB = _fixtureB.Shape;
+            Body bodyA = FixtureA.Body;
+            Body bodyB = FixtureB.Body;
+            Shape shapeA = FixtureA.Shape;
+            Shape shapeB = FixtureB.Shape;
 
             Transform xfA, xfB;
             bodyA.GetTransform(out xfA);
             bodyB.GetTransform(out xfB);
 
-            worldManifold = new WorldManifold(ref _manifold, ref xfA, shapeA.Radius, ref xfB, shapeB.Radius);
+            worldManifold = new WorldManifold(ref Manifold, ref xfA, shapeA.Radius, ref xfB, shapeB.Radius);
         }
 
         /// Is this contact touching?
         public bool IsTouching()
         {
-            return (_flags & ContactFlags.Touching) == ContactFlags.Touching;
+            return (Flags & ContactFlags.Touching) == ContactFlags.Touching;
         }
 
         /// Get the next contact in the world's contact list.
         public Contact GetNext()
         {
-            return _next;
+            return Next;
         }
 
         /// Flag this contact for filtering. Filtering will occur the next time step.
         public void FlagForFiltering()
         {
-            _flags |= ContactFlags.Filter;
+            Flags |= ContactFlags.Filter;
         }
 
-        internal void Reset(Fixture fA, int indexA, Fixture fB, int indexB)
+        private void Reset(Fixture fA, int indexA, Fixture fB, int indexB)
         {
-            _flags = ContactFlags.Enabled;
+            Flags = ContactFlags.Enabled;
 
-            _fixtureA = fA;
-            _fixtureB = fB;
+            FixtureA = fA;
+            FixtureB = fB;
 
-            _indexA = indexA;
-            _indexB = indexB;
+            IndexA = indexA;
+            IndexB = indexB;
 
-            _manifold.PointCount = 0;
+            Manifold.PointCount = 0;
 
-            _prev = null;
-            _next = null;
+            Prev = null;
+            Next = null;
 
-            _nodeA.Contact = null;
-            _nodeA.Prev = null;
-            _nodeA.Next = null;
-            _nodeA.Other = null;
+            NodeA.Contact = null;
+            NodeA.Prev = null;
+            NodeA.Next = null;
+            NodeA.Other = null;
 
-            _nodeB.Contact = null;
-            _nodeB.Prev = null;
-            _nodeB.Next = null;
-            _nodeB.Other = null;
+            NodeB.Contact = null;
+            NodeB.Prev = null;
+            NodeB.Next = null;
+            NodeB.Other = null;
 
-            _toiCount = 0;
+            TOICount = 0;
         }
 
         // Update the contact manifold and touching status.
         // Note: do not assume the fixture AABBs are overlapping or are valid.
         internal void Update(ContactManager contactManager)
         {
-            Manifold oldManifold = _manifold;
+            Manifold oldManifold = Manifold;
 
             // Re-enable this contact.
-            _flags |= ContactFlags.Enabled;
+            Flags |= ContactFlags.Enabled;
 
             bool touching = false;
-            bool wasTouching = (_flags & ContactFlags.Touching) == ContactFlags.Touching;
+            bool wasTouching = (Flags & ContactFlags.Touching) == ContactFlags.Touching;
 
-            bool sensorA = _fixtureA.IsSensor;
-            bool sensorB = _fixtureB.IsSensor;
+            bool sensorA = FixtureA.IsSensor;
+            bool sensorB = FixtureB.IsSensor;
             bool sensor = sensorA || sensorB;
 
-            Body bodyA = _fixtureA.Body;
-            Body bodyB = _fixtureB.Body;
+            Body bodyA = FixtureA.Body;
+            Body bodyB = FixtureB.Body;
             Transform xfA;
             bodyA.GetTransform(out xfA);
             Transform xfB;
@@ -267,23 +255,23 @@ namespace FarseerPhysics.Dynamics.Contacts
             // Is this contact a sensor?
             if (sensor)
             {
-                Shape shapeA = _fixtureA.Shape;
-                Shape shapeB = _fixtureB.Shape;
-                touching = AABB.TestOverlap(shapeA, _indexA, shapeB, _indexB, ref xfA, ref xfB);
+                Shape shapeA = FixtureA.Shape;
+                Shape shapeB = FixtureB.Shape;
+                touching = AABB.TestOverlap(shapeA, IndexA, shapeB, IndexB, ref xfA, ref xfB);
 
                 // Sensors don't generate manifolds.
-                _manifold.PointCount = 0;
+                Manifold.PointCount = 0;
             }
             else
             {
-                Evaluate(ref _manifold, ref xfA, ref xfB);
-                touching = _manifold.PointCount > 0;
+                Evaluate(ref Manifold, ref xfA, ref xfB);
+                touching = Manifold.PointCount > 0;
 
                 // Match old contact ids to new contact ids and copy the
                 // stored impulses to warm start the solver.
-                for (int i = 0; i < _manifold.PointCount; ++i)
+                for (int i = 0; i < Manifold.PointCount; ++i)
                 {
-                    ManifoldPoint mp2 = _manifold.Points[i];
+                    ManifoldPoint mp2 = Manifold.Points[i];
                     mp2.NormalImpulse = 0.0f;
                     mp2.TangentImpulse = 0.0f;
                     ContactID id2 = mp2.Id;
@@ -307,7 +295,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                         mp2.TangentImpulse = 0.0f;
                     }
 
-                    _manifold.Points[i] = mp2;
+                    Manifold.Points[i] = mp2;
                 }
 
                 if (touching != wasTouching)
@@ -319,11 +307,11 @@ namespace FarseerPhysics.Dynamics.Contacts
 
             if (touching)
             {
-                _flags |= ContactFlags.Touching;
+                Flags |= ContactFlags.Touching;
             }
             else
             {
-                _flags &= ~ContactFlags.Touching;
+                Flags &= ~ContactFlags.Touching;
             }
 
             if (wasTouching == false && touching && null != contactManager)
@@ -346,46 +334,46 @@ namespace FarseerPhysics.Dynamics.Contacts
         }
 
         /// Evaluate this contact with your own manifold and transforms.   
-        internal void Evaluate(ref Manifold manifold, ref Transform xfA, ref Transform xfB)
+        private void Evaluate(ref Manifold manifold, ref Transform xfA, ref Transform xfB)
         {
             switch (_type)
             {
                 case ContactType.Polygon:
                     Collision.Collision.CollidePolygons(ref manifold,
-                                                        (PolygonShape)_fixtureA.Shape, ref xfA,
-                                                        (PolygonShape)_fixtureB.Shape, ref xfB);
+                                                        (PolygonShape) FixtureA.Shape, ref xfA,
+                                                        (PolygonShape) FixtureB.Shape, ref xfB);
                     break;
                 case ContactType.PolygonAndCircle:
                     Collision.Collision.CollidePolygonAndCircle(ref manifold,
-                                                                (PolygonShape)_fixtureA.Shape, ref xfA,
-                                                                (CircleShape)_fixtureB.Shape, ref xfB);
+                                                                (PolygonShape) FixtureA.Shape, ref xfA,
+                                                                (CircleShape) FixtureB.Shape, ref xfB);
                     break;
                 case ContactType.EdgeAndCircle:
                     Collision.Collision.CollideEdgeAndCircle(ref manifold,
-                                                             (EdgeShape)_fixtureA.Shape, ref xfA,
-                                                             (CircleShape)_fixtureB.Shape, ref xfB);
+                                                             (EdgeShape) FixtureA.Shape, ref xfA,
+                                                             (CircleShape) FixtureB.Shape, ref xfB);
                     break;
                 case ContactType.EdgeAndPolygon:
                     Collision.Collision.CollideEdgeAndPolygon(ref manifold,
-                                                              (EdgeShape)_fixtureA.Shape, ref xfA,
-                                                              (PolygonShape)_fixtureB.Shape, ref xfB);
+                                                              (EdgeShape) FixtureA.Shape, ref xfA,
+                                                              (PolygonShape) FixtureB.Shape, ref xfB);
                     break;
                 case ContactType.LoopAndCircle:
-                    var loop = (LoopShape)_fixtureA.Shape;
-                    loop.GetChildEdge(ref s_edge, _indexA);
+                    var loop = (LoopShape) FixtureA.Shape;
+                    loop.GetChildEdge(ref s_edge, IndexA);
                     Collision.Collision.CollideEdgeAndCircle(ref manifold, s_edge, ref xfA,
-                                                             (CircleShape)_fixtureB.Shape, ref xfB);
+                                                             (CircleShape) FixtureB.Shape, ref xfB);
                     break;
                 case ContactType.LoopAndPolygon:
-                    var loop2 = (LoopShape)_fixtureA.Shape;
-                    loop2.GetChildEdge(ref s_edge, _indexA);
+                    var loop2 = (LoopShape) FixtureA.Shape;
+                    loop2.GetChildEdge(ref s_edge, IndexA);
                     Collision.Collision.CollideEdgeAndPolygon(ref manifold, s_edge, ref xfA,
-                                                              (PolygonShape)_fixtureB.Shape, ref xfB);
+                                                              (PolygonShape) FixtureB.Shape, ref xfB);
                     break;
                 case ContactType.Circle:
                     Collision.Collision.CollideCircles(ref manifold,
-                                                       (CircleShape)_fixtureA.Shape, ref xfA,
-                                                       (CircleShape)_fixtureB.Shape, ref xfB);
+                                                       (CircleShape) FixtureA.Shape, ref xfA,
+                                                       (CircleShape) FixtureB.Shape, ref xfB);
                     break;
             }
         }
@@ -399,7 +387,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             Debug.Assert(ShapeType.Unknown < type2 && type2 < ShapeType.TypeCount);
 
             Contact c;
-            var pool = fixtureA._body._world.ContactPool;
+            var pool = fixtureA.Body.World.ContactPool;
             if (pool.Count > 0)
             {
                 c = pool.Dequeue();
@@ -429,14 +417,14 @@ namespace FarseerPhysics.Dynamics.Contacts
                 }
             }
 
-            c._type = s_registers[(int)type1, (int)type2];
+            c._type = s_registers[(int) type1, (int) type2];
 
             return c;
         }
 
         internal void Destroy()
         {
-            _fixtureA._body._world.ContactPool.Enqueue(this);
+            FixtureA.Body.World.ContactPool.Enqueue(this);
             Reset(null, 0, null, 0);
         }
 

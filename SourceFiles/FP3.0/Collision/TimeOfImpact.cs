@@ -76,7 +76,7 @@ namespace FarseerPhysics.Collision
             _localPoint = Vector2.Zero;
             _proxyA = proxyA;
             _proxyB = proxyB;
-            int count = cache.count;
+            int count = cache.Count;
             Debug.Assert(0 < count && count < 3);
 
             _sweepA = sweepA;
@@ -89,29 +89,29 @@ namespace FarseerPhysics.Collision
             if (count == 1)
             {
                 _type = SeparationFunctionType.Points;
-                Vector2 localPointA = _proxyA.GetVertex(cache.indexA[0]);
-                Vector2 localPointB = _proxyB.GetVertex(cache.indexB[0]);
+                Vector2 localPointA = _proxyA.GetVertex(cache.IndexA[0]);
+                Vector2 localPointB = _proxyB.GetVertex(cache.IndexB[0]);
                 Vector2 pointA = MathUtils.Multiply(ref xfA, localPointA);
                 Vector2 pointB = MathUtils.Multiply(ref xfB, localPointB);
                 _axis = pointB - pointA;
                 _axis.Normalize();
                 return;
             }
-            else if (cache.indexA[0] == cache.indexA[1])
+            else if (cache.IndexA[0] == cache.IndexA[1])
             {
                 // Two points on B and one on A.
                 _type = SeparationFunctionType.FaceB;
-                Vector2 localPointB1 = proxyB.GetVertex(cache.indexB[0]);
-                Vector2 localPointB2 = proxyB.GetVertex(cache.indexB[1]);
+                Vector2 localPointB1 = proxyB.GetVertex(cache.IndexB[0]);
+                Vector2 localPointB2 = proxyB.GetVertex(cache.IndexB[1]);
 
                 _axis = MathUtils.Cross(localPointB2 - localPointB1, 1.0f);
                 _axis.Normalize();
                 Vector2 normal = MathUtils.Multiply(ref xfB.R, _axis);
 
-                _localPoint = 0.5f * (localPointB1 + localPointB2);
+                _localPoint = 0.5f*(localPointB1 + localPointB2);
                 Vector2 pointB = MathUtils.Multiply(ref xfB, _localPoint);
 
-                Vector2 localPointA = proxyA.GetVertex(cache.indexA[0]);
+                Vector2 localPointA = proxyA.GetVertex(cache.IndexA[0]);
                 Vector2 pointA = MathUtils.Multiply(ref xfA, localPointA);
 
                 float s = Vector2.Dot(pointA - pointB, normal);
@@ -126,17 +126,17 @@ namespace FarseerPhysics.Collision
             {
                 // Two points on A and one or two points on B.
                 _type = SeparationFunctionType.FaceA;
-                Vector2 localPointA1 = _proxyA.GetVertex(cache.indexA[0]);
-                Vector2 localPointA2 = _proxyA.GetVertex(cache.indexA[1]);
+                Vector2 localPointA1 = _proxyA.GetVertex(cache.IndexA[0]);
+                Vector2 localPointA2 = _proxyA.GetVertex(cache.IndexA[1]);
 
                 _axis = MathUtils.Cross(localPointA2 - localPointA1, 1.0f);
                 _axis.Normalize();
                 Vector2 normal = MathUtils.Multiply(ref xfA.R, _axis);
 
-                _localPoint = 0.5f * (localPointA1 + localPointA2);
+                _localPoint = 0.5f*(localPointA1 + localPointA2);
                 Vector2 pointA = MathUtils.Multiply(ref xfA, _localPoint);
 
-                Vector2 localPointB = _proxyB.GetVertex(cache.indexB[0]);
+                Vector2 localPointB = _proxyB.GetVertex(cache.IndexB[0]);
                 Vector2 pointB = MathUtils.Multiply(ref xfB, localPointB);
 
                 float s = Vector2.Dot(pointB - pointA, normal);
@@ -310,13 +310,13 @@ namespace FarseerPhysics.Collision
 
             float tMax = input.TMax;
 
-            float totalRadius = input.ProxyA._radius + input.ProxyB._radius;
-            float target = Math.Max(Settings.LinearSlop, totalRadius - 3.0f * Settings.LinearSlop);
-            float tolerance = 0.25f * Settings.LinearSlop;
+            float totalRadius = input.ProxyA.Radius + input.ProxyB.Radius;
+            float target = Math.Max(Settings.LinearSlop, totalRadius - 3.0f*Settings.LinearSlop);
+            const float tolerance = 0.25f*Settings.LinearSlop;
             Debug.Assert(target > tolerance);
 
             float t1 = 0.0f;
-            int k_maxIterations = 20;
+            const int k_maxIterations = 20;
             int iter = 0;
 
             // Prepare input for distance query.
@@ -423,12 +423,12 @@ namespace FarseerPhysics.Collision
                         if ((rootIterCount & 1) != 0)
                         {
                             // Secant rule to improve convergence.
-                            t = a1 + (target - s1) * (a2 - a1) / (s2 - s1);
+                            t = a1 + (target - s1)*(a2 - a1)/(s2 - s1);
                         }
                         else
                         {
                             // Bisection to guarantee progress.
-                            t = 0.5f * (a1 + a2);
+                            t = 0.5f*(a1 + a2);
                         }
 
                         float s = fcn.Evaluate(indexA, indexB, t);

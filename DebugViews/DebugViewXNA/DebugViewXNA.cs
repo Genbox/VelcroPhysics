@@ -111,9 +111,9 @@ namespace FarseerPhysics.DebugViewXNA
 
                     for (Fixture f = b.FixtureList; f != null; f = f.Next)
                     {
-                        for (int t = 0; t < f._proxyCount; ++t)
+                        for (int t = 0; t < f.ProxyCount; ++t)
                         {
-                            FixtureProxy proxy = f._proxies[t];
+                            FixtureProxy proxy = f.Proxies[t];
                             AABB aabb;
                             bp.GetFatAABB(proxy.ProxyId, out aabb);
                             Vector2[] vs = new Vector2[4];

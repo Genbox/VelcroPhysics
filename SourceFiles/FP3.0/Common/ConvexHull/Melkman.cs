@@ -124,7 +124,7 @@ namespace FarseerPhysics.Common.ConvexHull
         private static float IsLeft(Vector2 a, Vector2 b, Vector2 c)
         {
             //cross product
-            return (b.X - a.X) * (c.Y - a.Y) - (c.X - a.X) * (b.Y - a.Y);
+            return (b.X - a.X)*(c.Y - a.Y) - (c.X - a.X)*(b.Y - a.Y);
         }
     }
 }

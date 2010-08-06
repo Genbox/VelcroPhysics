@@ -45,28 +45,30 @@ namespace FarseerPhysics.Dynamics
     /// management facilities.
     public class World
     {
+        internal Queue<Contact> ContactPool = new Queue<Contact>(256);
+
         /// <summary>
         /// Called whenever a Fixture is removed
         /// </summary>
         public FixtureRemovedDelegate FixtureRemoved;
+
+        internal WorldFlags Flags;
 
         /// <summary>
         /// Called whenever a Joint is removed
         /// </summary>
         public JointRemovedDelegate JointRemoved;
 
-        internal Queue<Contact> ContactPool = new Queue<Contact>(256);
-        internal WorldFlags Flags;
         private float _inv_dt0;
         private Island _island = new Island();
         private Func<FixtureProxy, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
         private RayCastCallback _rayCastCallback;
         private RayCastCallbackInternal _rayCastCallbackWrapper;
+        private Body[] _stack = new Body[64];
         private Contact[] _toiContacts = new Contact[Settings.MaxTOIContacts];
         private TOISolver _toiSolver = new TOISolver();
         private Stopwatch _watch = new Stopwatch();
-        private Body[] _stack = new Body[64];
 
         /// ruct a world object.
         /// @param gravity the world gravity vector.
@@ -194,11 +196,11 @@ namespace FarseerPhysics.Dynamics
             Body b = new Body(this);
 
             // Add to world doubly linked list.
-            b._prev = null;
-            b._next = BodyList;
+            b.Prev = null;
+            b.Next = BodyList;
             if (BodyList != null)
             {
-                BodyList._prev = b;
+                BodyList.Prev = b;
             }
             BodyList = b;
             ++BodyCount;
@@ -236,21 +238,21 @@ namespace FarseerPhysics.Dynamics
             b.JointList = null;
 
             // Delete the attached contacts.
-            ContactEdge ce = b._contactList;
+            ContactEdge ce = b.ContactList;
             while (ce != null)
             {
                 ContactEdge ce0 = ce;
                 ce = ce.Next;
                 ContactManager.Destroy(ce0.Contact);
             }
-            b._contactList = null;
+            b.ContactList = null;
 
             // Delete the attached fixtures. This destroys broad-phase proxies.
             Fixture f = b.FixtureList;
             while (f != null)
             {
                 Fixture f0 = f;
-                f = f._next;
+                f = f.Next;
 
                 if (FixtureRemoved != null)
                 {
@@ -261,22 +263,22 @@ namespace FarseerPhysics.Dynamics
                 f0.Destroy();
             }
             b.FixtureList = null;
-            b._fixtureCount = 0;
+            b.FixtureCount = 0;
 
             // Remove world body list.
-            if (b._prev != null)
+            if (b.Prev != null)
             {
-                b._prev._next = b._next;
+                b.Prev.Next = b.Next;
             }
 
-            if (b._next != null)
+            if (b.Next != null)
             {
-                b._next._prev = b._prev;
+                b.Next.Prev = b.Prev;
             }
 
             if (b == BodyList)
             {
-                BodyList = b._next;
+                BodyList = b.Next;
             }
 
             --BodyCount;
@@ -564,8 +566,8 @@ namespace FarseerPhysics.Dynamics
         {
             for (Body body = BodyList; body != null; body = body.Next)
             {
-                body._force = Vector2.Zero;
-                body._torque = 0.0f;
+                body.Force = Vector2.Zero;
+                body.Torque = 0.0f;
             }
         }
 
@@ -631,13 +633,13 @@ namespace FarseerPhysics.Dynamics
                           ContactManager);
 
             // Clear all the island flags.
-            for (Body b = BodyList; b != null; b = b._next)
+            for (Body b = BodyList; b != null; b = b.Next)
             {
-                b._flags &= ~BodyFlags.Island;
+                b.Flags &= ~BodyFlags.Island;
             }
-            for (Contact c = ContactManager.ContactList; c != null; c = c._next)
+            for (Contact c = ContactManager.ContactList; c != null; c = c.Next)
             {
-                c._flags &= ~ContactFlags.Island;
+                c.Flags &= ~ContactFlags.Island;
             }
             for (Joint j = JointList; j != null; j = j._next)
             {
@@ -649,9 +651,9 @@ namespace FarseerPhysics.Dynamics
             if (stackSize > _stack.Length)
                 _stack = new Body[Math.Max(_stack.Length*2, stackSize)];
 
-            for (Body seed = BodyList; seed != null; seed = seed._next)
+            for (Body seed = BodyList; seed != null; seed = seed.Next)
             {
-                if ((seed._flags & (BodyFlags.Island)) != BodyFlags.None)
+                if ((seed.Flags & (BodyFlags.Island)) != BodyFlags.None)
                 {
                     continue;
                 }
@@ -671,7 +673,7 @@ namespace FarseerPhysics.Dynamics
                 _island.Clear();
                 int stackCount = 0;
                 _stack[stackCount++] = seed;
-                seed._flags |= BodyFlags.Island;
+                seed.Flags |= BodyFlags.Island;
 
                 // Perform a depth first search (DFS) on the raint graph.
                 while (stackCount > 0)
@@ -692,12 +694,12 @@ namespace FarseerPhysics.Dynamics
                     }
 
                     // Search all contacts connected to this body.
-                    for (ContactEdge ce = b._contactList; ce != null; ce = ce.Next)
+                    for (ContactEdge ce = b.ContactList; ce != null; ce = ce.Next)
                     {
                         Contact contact = ce.Contact;
 
                         // Has this contact already been added to an island?
-                        if ((contact._flags & ContactFlags.Island) != ContactFlags.None)
+                        if ((contact.Flags & ContactFlags.Island) != ContactFlags.None)
                         {
                             continue;
                         }
@@ -709,27 +711,27 @@ namespace FarseerPhysics.Dynamics
                         }
 
                         // Skip sensors.
-                        bool sensorA = contact._fixtureA.IsSensor;
-                        bool sensorB = contact._fixtureB.IsSensor;
+                        bool sensorA = contact.FixtureA.IsSensor;
+                        bool sensorB = contact.FixtureB.IsSensor;
                         if (sensorA || sensorB)
                         {
                             continue;
                         }
 
                         _island.Add(contact);
-                        contact._flags |= ContactFlags.Island;
+                        contact.Flags |= ContactFlags.Island;
 
                         Body other = ce.Other;
 
                         // Was the other body already added to this island?
-                        if ((other._flags & BodyFlags.Island) != BodyFlags.None)
+                        if ((other.Flags & BodyFlags.Island) != BodyFlags.None)
                         {
                             continue;
                         }
 
                         Debug.Assert(stackCount < stackSize);
                         _stack[stackCount++] = other;
-                        other._flags |= BodyFlags.Island;
+                        other.Flags |= BodyFlags.Island;
                     }
 
                     // Search all joints connect to this body.
@@ -755,14 +757,14 @@ namespace FarseerPhysics.Dynamics
                             _island.Add(je.Joint);
                             je.Joint._islandFlag = true;
 
-                            if ((other._flags & BodyFlags.Island) != BodyFlags.None)
+                            if ((other.Flags & BodyFlags.Island) != BodyFlags.None)
                             {
                                 continue;
                             }
 
                             Debug.Assert(stackCount < stackSize);
                             _stack[stackCount++] = other;
-                            other._flags |= BodyFlags.Island;
+                            other.Flags |= BodyFlags.Island;
                         }
                         else
                         {
@@ -775,13 +777,13 @@ namespace FarseerPhysics.Dynamics
                 _island.Solve(ref step, Gravity);
 
                 // Post solve cleanup.
-                for (int i = 0; i < _island._bodyCount; ++i)
+                for (int i = 0; i < _island.BodyCount; ++i)
                 {
                     // Allow static bodies to participate in other islands.
-                    Body b = _island._bodies[i];
+                    Body b = _island.Bodies[i];
                     if (b.BodyType == BodyType.Static)
                     {
-                        b._flags &= ~BodyFlags.Island;
+                        b.Flags &= ~BodyFlags.Island;
                     }
                 }
             }
@@ -790,7 +792,7 @@ namespace FarseerPhysics.Dynamics
             for (Body b = BodyList; b != null; b = b.Next)
             {
                 // If a body was not in an island then it did not move.
-                if ((b._flags & BodyFlags.Island) != BodyFlags.Island)
+                if ((b.Flags & BodyFlags.Island) != BodyFlags.Island)
                 {
                     continue;
                 }
@@ -829,7 +831,7 @@ namespace FarseerPhysics.Dynamics
             {
                 count = 0;
                 found = false;
-                for (ContactEdge ce = body._contactList; ce != null; ce = ce.Next)
+                for (ContactEdge ce = body.ContactList; ce != null; ce = ce.Next)
                 {
                     if (ce.Contact == toiContact)
                     {
@@ -843,13 +845,13 @@ namespace FarseerPhysics.Dynamics
                     if (bullet)
                     {
                         // Bullets only perform TOI with bodies that have their TOI resolved.
-                        if ((other._flags & BodyFlags.Toi) == 0)
+                        if ((other.Flags & BodyFlags.Toi) == 0)
                         {
                             continue;
                         }
 
                         // No repeated hits on non-static bodies
-                        if (type != BodyType.Static && (ce.Contact._flags & ContactFlags.BulletHit) != 0)
+                        if (type != BodyType.Static && (ce.Contact.Flags & ContactFlags.BulletHit) != 0)
                         {
                             continue;
                         }
@@ -867,15 +869,15 @@ namespace FarseerPhysics.Dynamics
                     }
 
                     // Prevent infinite looping.
-                    if (contact._toiCount > 10)
+                    if (contact.TOICount > 10)
                     {
                         continue;
                     }
 
-                    Fixture fixtureA = contact._fixtureA;
-                    Fixture fixtureB = contact._fixtureB;
-                    int indexA = contact._indexA;
-                    int indexB = contact._indexB;
+                    Fixture fixtureA = contact.FixtureA;
+                    Fixture fixtureB = contact.FixtureB;
+                    int indexA = contact.IndexA;
+                    int indexB = contact.IndexB;
 
                     // Cull sensors.
                     if (fixtureA.IsSensor || fixtureB.IsSensor)
@@ -883,15 +885,15 @@ namespace FarseerPhysics.Dynamics
                         continue;
                     }
 
-                    Body bodyA = fixtureA._body;
-                    Body bodyB = fixtureB._body;
+                    Body bodyA = fixtureA.Body;
+                    Body bodyB = fixtureB.Body;
 
                     // Compute the time of impact in interval [0, minTOI]
                     TOIInput input = new TOIInput();
                     input.ProxyA.Set(fixtureA.Shape, indexA);
                     input.ProxyB.Set(fixtureB.Shape, indexB);
-                    input.SweepA = bodyA._sweep;
-                    input.SweepB = bodyB._sweep;
+                    input.SweepA = bodyA.Sweep;
+                    input.SweepB = bodyB.Sweep;
                     input.TMax = toi;
 
                     TOIOutput output;
@@ -917,21 +919,21 @@ namespace FarseerPhysics.Dynamics
                 return;
             }
 
-            Sweep backup = body._sweep;
+            Sweep backup = body.Sweep;
             body.Advance(toi);
             toiContact.Update(ContactManager);
             if (toiContact.Enabled == false)
             {
                 // Contact disabled. Backup and recurse.
-                body._sweep = backup;
+                body.Sweep = backup;
                 SolveTOI(body);
             }
 
-            ++toiContact._toiCount;
+            ++toiContact.TOICount;
 
             // Update all the valid contacts on this body and build a contact island.
             count = 0;
-            for (ContactEdge ce = body._contactList; (ce != null) && (count < Settings.MaxTOIContacts); ce = ce.Next)
+            for (ContactEdge ce = body.ContactList; (ce != null) && (count < Settings.MaxTOIContacts); ce = ce.Next)
             {
                 Body other = ce.Other;
                 BodyType type = other.BodyType;
@@ -950,8 +952,8 @@ namespace FarseerPhysics.Dynamics
                     continue;
                 }
 
-                Fixture fixtureA = contact._fixtureA;
-                Fixture fixtureB = contact._fixtureB;
+                Fixture fixtureA = contact.FixtureA;
+                Fixture fixtureB = contact.FixtureB;
 
                 // Cull sensors.
                 if (fixtureA.IsSensor || fixtureB.IsSensor)
@@ -985,7 +987,7 @@ namespace FarseerPhysics.Dynamics
             // Reduce the TOI body's overlap with the contact island.
             _toiSolver.Initialize(_toiContacts, count, body);
 
-            float k_toiBaumgarte = 0.75f;
+            const float k_toiBaumgarte = 0.75f;
             //bool solved = false;
             for (int i = 0; i < 20; ++i)
             {
@@ -999,7 +1001,7 @@ namespace FarseerPhysics.Dynamics
 
             if (toiOther.BodyType != BodyType.Static)
             {
-                toiContact._flags |= ContactFlags.BulletHit;
+                toiContact.Flags |= ContactFlags.BulletHit;
             }
         }
 
@@ -1009,35 +1011,35 @@ namespace FarseerPhysics.Dynamics
         private void SolveTOI()
         {
             // Prepare all contacts.
-            for (Contact c = ContactManager.ContactList; c != null; c = c._next)
+            for (Contact c = ContactManager.ContactList; c != null; c = c.Next)
             {
                 // Enable the contact
-                c._flags |= ContactFlags.Enabled;
+                c.Flags |= ContactFlags.Enabled;
 
                 // Set the number of TOI events for this contact to zero.
-                c._toiCount = 0;
+                c.TOICount = 0;
             }
 
             // Initialize the TOI flag.
-            for (Body body = BodyList; body != null; body = body._next)
+            for (Body body = BodyList; body != null; body = body.Next)
             {
                 // Kinematic, and static bodies will not be affected by the TOI event.
                 // If a body was not in an island then it did not move.
-                if ((body._flags & BodyFlags.Island) == 0 || body.BodyType == BodyType.Kinematic ||
+                if ((body.Flags & BodyFlags.Island) == 0 || body.BodyType == BodyType.Kinematic ||
                     body.BodyType == BodyType.Static)
                 {
-                    body._flags |= BodyFlags.Toi;
+                    body.Flags |= BodyFlags.Toi;
                 }
                 else
                 {
-                    body._flags &= ~BodyFlags.Toi;
+                    body.Flags &= ~BodyFlags.Toi;
                 }
             }
 
             // Collide non-bullets.
-            for (Body body = BodyList; body != null; body = body._next)
+            for (Body body = BodyList; body != null; body = body.Next)
             {
-                if ((body._flags & BodyFlags.Toi) != BodyFlags.None)
+                if ((body.Flags & BodyFlags.Toi) != BodyFlags.None)
                 {
                     continue;
                 }
@@ -1049,13 +1051,13 @@ namespace FarseerPhysics.Dynamics
 
                 SolveTOI(body);
 
-                body._flags |= BodyFlags.Toi;
+                body.Flags |= BodyFlags.Toi;
             }
 
             // Collide bullets.
-            for (Body body = BodyList; body != null; body = body._next)
+            for (Body body = BodyList; body != null; body = body.Next)
             {
-                if ((body._flags & BodyFlags.Toi) != BodyFlags.None)
+                if ((body.Flags & BodyFlags.Toi) != BodyFlags.None)
                 {
                     continue;
                 }
@@ -1067,7 +1069,7 @@ namespace FarseerPhysics.Dynamics
 
                 SolveTOI(body);
 
-                body._flags |= BodyFlags.Toi;
+                body.Flags |= BodyFlags.Toi;
             }
         }
 

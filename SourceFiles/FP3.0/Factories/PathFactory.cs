@@ -69,7 +69,8 @@ namespace FarseerPhysics.Factories
         /// <param name="type">The type.</param>
         /// <param name="copies">The copies.</param>
         /// <returns></returns>
-        public static List<Body> EvenlyDistibuteShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes, BodyType type, int copies)
+        public static List<Body> EvenlyDistibuteShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes,
+                                                                BodyType type, int copies)
         {
             List<Vector3> centers = path.SubdivideEvenly(copies);
             List<Body> bodyList = new List<Body>();
@@ -104,7 +105,8 @@ namespace FarseerPhysics.Factories
         /// <param name="type">The type.</param>
         /// <param name="copies">The copies.</param>
         /// <returns></returns>
-        public static List<Body> EvenlyDistibuteShapesAlongPath(World world, Path path, Shape shape, BodyType type, int copies)
+        public static List<Body> EvenlyDistibuteShapesAlongPath(World world, Path path, Shape shape, BodyType type,
+                                                                int copies)
         {
             List<Shape> shapes = new List<Shape>(1);
             shapes.Add(shape);
@@ -124,7 +126,7 @@ namespace FarseerPhysics.Factories
         {
             Vector2 destination = path.GetPosition(time);
             Vector2 positionDelta = body.Position - destination;
-            Vector2 velocity = (positionDelta / timeStep) * strength;
+            Vector2 velocity = (positionDelta/timeStep)*strength;
 
             body.LinearVelocity = -velocity;
         }
@@ -138,7 +140,9 @@ namespace FarseerPhysics.Factories
         /// <param name="localAnchorB">The local anchor B.</param>
         /// <param name="connectFirstAndLast">if set to <c>true</c> [connect first and last].</param>
         /// <param name="collideConnected">if set to <c>true</c> [collide connected].</param>
-        public static void AttachBodiesWithRevoluteJoint(World world, List<Body> bodies, Vector2 localAnchorA, Vector2 localAnchorB, bool connectFirstAndLast, bool collideConnected)
+        public static void AttachBodiesWithRevoluteJoint(World world, List<Body> bodies, Vector2 localAnchorA,
+                                                         Vector2 localAnchorB, bool connectFirstAndLast,
+                                                         bool collideConnected)
         {
             for (int i = 1; i < bodies.Count; i++)
             {
@@ -149,7 +153,8 @@ namespace FarseerPhysics.Factories
 
             if (connectFirstAndLast)
             {
-                RevoluteJoint lastjoint = new RevoluteJoint(bodies[0], bodies[bodies.Count - 1], localAnchorA, localAnchorB);
+                RevoluteJoint lastjoint = new RevoluteJoint(bodies[0], bodies[bodies.Count - 1], localAnchorA,
+                                                            localAnchorB);
                 lastjoint.CollideConnected = collideConnected;
                 world.AddJoint(lastjoint);
             }

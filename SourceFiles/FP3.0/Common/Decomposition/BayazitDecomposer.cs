@@ -15,7 +15,7 @@ namespace FarseerPhysics.Common.Decomposition
         private static Vector2 At(int i, Vertices vertices)
         {
             int s = vertices.Count;
-            return vertices[i < 0 ? s - (-i % s) : i % s];
+            return vertices[i < 0 ? s - (-i%s) : i%s];
         }
 
         private static Vertices Copy(int i, int j, Vertices vertices)
@@ -93,10 +93,10 @@ namespace FarseerPhysics.Common.Decomposition
                             }
                         }
                     }
-                    if (ind1 == (ind2 + 1) % vertices.Count)
+                    if (ind1 == (ind2 + 1)%vertices.Count)
                     {
                         // no vertices in range
-                        Vector2 sp = ((ip1 + ip2) / 2);
+                        Vector2 sp = ((ip1 + ip2)/2);
                         poly1 = Copy(i, ind2, vertices);
                         poly1.Add(sp);
                         poly2 = Copy(ind1, i, vertices);
@@ -110,7 +110,7 @@ namespace FarseerPhysics.Common.Decomposition
                         {
                             if (CanSee(i, j, vertices))
                             {
-                                double score = 1 / (SquareDist(At(i, vertices), At(j, vertices)) + 1);
+                                double score = 1/(SquareDist(At(i, vertices), At(j, vertices)) + 1);
                                 if (Reflex(j, vertices))
                                 {
                                     if (RightOn(At(j - 1, vertices), At(j, vertices), At(i, vertices)) &&
@@ -146,8 +146,8 @@ namespace FarseerPhysics.Common.Decomposition
             // polygon is already convex
             if (vertices.Count > Settings.MaxPolygonVertices)
             {
-                poly1 = Copy(0, vertices.Count / 2, vertices);
-                poly2 = Copy(vertices.Count / 2, 0, vertices);
+                poly1 = Copy(0, vertices.Count/2, vertices);
+                poly2 = Copy(vertices.Count/2, 0, vertices);
                 list.AddRange(ConvexPartition(poly1));
                 list.AddRange(ConvexPartition(poly2));
             }
@@ -188,7 +188,7 @@ namespace FarseerPhysics.Common.Decomposition
             }
             for (int k = 0; k < vertices.Count; ++k)
             {
-                if ((k + 1) % vertices.Count == i || k == i || (k + 1) % vertices.Count == j || k == j)
+                if ((k + 1)%vertices.Count == i || k == i || (k + 1)%vertices.Count == j || k == j)
                 {
                     continue; // ignore incident edges
                 }
@@ -215,7 +215,7 @@ namespace FarseerPhysics.Common.Decomposition
 
         private static float Area(Vector2 a, Vector2 b, Vector2 c)
         {
-            return ((b.X - a.X) * (c.Y - a.Y) - ((c.X - a.X) * (b.Y - a.Y)));
+            return ((b.X - a.X)*(c.Y - a.Y) - ((c.X - a.X)*(b.Y - a.Y)));
         }
 
         private static bool Left(Vector2 a, Vector2 b, Vector2 c)
@@ -242,7 +242,7 @@ namespace FarseerPhysics.Common.Decomposition
         {
             float dx = b.X - a.X;
             float dy = b.Y - a.Y;
-            return dx * dx + dy * dy;
+            return dx*dx + dy*dy;
         }
     }
 }

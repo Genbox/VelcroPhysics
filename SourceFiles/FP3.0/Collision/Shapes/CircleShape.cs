@@ -63,7 +63,7 @@ namespace FarseerPhysics.Collision.Shapes
         {
             Vector2 center = transform.Position + MathUtils.Multiply(ref transform.R, Position);
             Vector2 d = p - center;
-            return Vector2.Dot(d, d) <= Radius * Radius;
+            return Vector2.Dot(d, d) <= Radius*Radius;
         }
 
         // Collision Detection in Interactive 3D Environments by Gino van den Bergen
@@ -77,13 +77,13 @@ namespace FarseerPhysics.Collision.Shapes
 
             Vector2 position = transform.Position + MathUtils.Multiply(ref transform.R, Position);
             Vector2 s = input.Point1 - position;
-            float b = Vector2.Dot(s, s) - Radius * Radius;
+            float b = Vector2.Dot(s, s) - Radius*Radius;
 
             // Solve quadratic equation.
             Vector2 r = input.Point2 - input.Point1;
             float c = Vector2.Dot(s, r);
             float rr = Vector2.Dot(r, r);
-            float sigma = c * c - rr * b;
+            float sigma = c*c - rr*b;
 
             // Check for negative discriminant and short segment.
             if (sigma < 0.0f || rr < Settings.Epsilon)
@@ -95,11 +95,11 @@ namespace FarseerPhysics.Collision.Shapes
             float a = -(c + (float) Math.Sqrt(sigma));
 
             // Is the intersection point on the segment?
-            if (0.0f <= a && a <= input.MaxFraction * rr)
+            if (0.0f <= a && a <= input.MaxFraction*rr)
             {
                 a /= rr;
                 output.Fraction = a;
-                Vector2 norm = (s + a * r);
+                Vector2 norm = (s + a*r);
                 norm.Normalize();
                 output.Normal = norm;
                 return true;
@@ -117,11 +117,11 @@ namespace FarseerPhysics.Collision.Shapes
 
         public override void ComputeMass(out MassData massData, float density)
         {
-            massData.Mass = density * Settings.Pi * Radius * Radius;
+            massData.Mass = density*Settings.Pi*Radius*Radius;
             massData.Center = Position;
 
             // inertia about the local origin
-            massData.Inertia = massData.Mass * (0.5f * Radius * Radius + Vector2.Dot(Position, Position));
+            massData.Inertia = massData.Mass*(0.5f*Radius*Radius + Vector2.Dot(Position, Position));
         }
     }
 }

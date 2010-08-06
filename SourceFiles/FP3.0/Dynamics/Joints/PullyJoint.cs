@@ -93,15 +93,15 @@ namespace FarseerPhysics.Dynamics.Joints
             Debug.Assert(ratio > Settings.Epsilon);
             Ratio = ratio;
 
-            float C = _lengthA + Ratio * _lengthB;
+            float C = _lengthA + Ratio*_lengthB;
 
-            _maxLengthA = C - Ratio * MinPulleyLength;
-            _maxLengthB = (C - MinPulleyLength) / Ratio;
+            _maxLengthA = C - Ratio*MinPulleyLength;
+            _maxLengthB = (C - MinPulleyLength)/Ratio;
 
-            _ant = _lengthA + Ratio * _lengthB;
+            _ant = _lengthA + Ratio*_lengthB;
 
-            _maxLengthA = Math.Min(_maxLengthA, _ant - Ratio * MinPulleyLength);
-            _maxLengthB = Math.Min(_maxLengthB, (_ant - MinPulleyLength) / Ratio);
+            _maxLengthA = Math.Min(_maxLengthA, _ant - Ratio*MinPulleyLength);
+            _maxLengthB = Math.Min(_maxLengthB, (_ant - MinPulleyLength)/Ratio);
 
             _impulse = 0.0f;
             _limitImpulse1 = 0.0f;
@@ -169,8 +169,8 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 GetReactionForce(float inv_dt)
         {
-            Vector2 P = _impulse * _u2;
-            return inv_dt * P;
+            Vector2 P = _impulse*_u2;
+            return inv_dt*P;
         }
 
         public override float GetReactionTorque(float inv_dt)
@@ -190,8 +190,8 @@ namespace FarseerPhysics.Dynamics.Joints
             Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
             Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
-            Vector2 p1 = b1._sweep.c + r1;
-            Vector2 p2 = b2._sweep.c + r2;
+            Vector2 p1 = b1.Sweep.c + r1;
+            Vector2 p2 = b2.Sweep.c + r2;
 
             Vector2 s1 = GroundAnchorA;
             Vector2 s2 = GroundAnchorB;
@@ -205,7 +205,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             if (length1 > Settings.LinearSlop)
             {
-                _u1 *= 1.0f / length1;
+                _u1 *= 1.0f/length1;
             }
             else
             {
@@ -214,14 +214,14 @@ namespace FarseerPhysics.Dynamics.Joints
 
             if (length2 > Settings.LinearSlop)
             {
-                _u2 *= 1.0f / length2;
+                _u2 *= 1.0f/length2;
             }
             else
             {
                 _u2 = Vector2.Zero;
             }
 
-            float C = _ant - length1 - Ratio * length2;
+            float C = _ant - length1 - Ratio*length2;
             if (C > 0.0f)
             {
                 _state = LimitState.Inactive;
@@ -256,15 +256,15 @@ namespace FarseerPhysics.Dynamics.Joints
             float cr1u1 = MathUtils.Cross(r1, _u1);
             float cr2u2 = MathUtils.Cross(r2, _u2);
 
-            _limitMass1 = b1._invMass + b1._invI * cr1u1 * cr1u1;
-            _limitMass2 = b2._invMass + b2._invI * cr2u2 * cr2u2;
-            _pulleyMass = _limitMass1 + Ratio * Ratio * _limitMass2;
+            _limitMass1 = b1.InvMass + b1.InvI*cr1u1*cr1u1;
+            _limitMass2 = b2.InvMass + b2.InvI*cr2u2*cr2u2;
+            _pulleyMass = _limitMass1 + Ratio*Ratio*_limitMass2;
             Debug.Assert(_limitMass1 > Settings.Epsilon);
             Debug.Assert(_limitMass2 > Settings.Epsilon);
             Debug.Assert(_pulleyMass > Settings.Epsilon);
-            _limitMass1 = 1.0f / _limitMass1;
-            _limitMass2 = 1.0f / _limitMass2;
-            _pulleyMass = 1.0f / _pulleyMass;
+            _limitMass1 = 1.0f/_limitMass1;
+            _limitMass2 = 1.0f/_limitMass2;
+            _pulleyMass = 1.0f/_pulleyMass;
 
             if (Settings.EnableWarmstarting)
             {
@@ -274,12 +274,12 @@ namespace FarseerPhysics.Dynamics.Joints
                 _limitImpulse2 *= step.dtRatio;
 
                 // Warm starting.
-                Vector2 P1 = -(_impulse + _limitImpulse1) * _u1;
-                Vector2 P2 = (-Ratio * _impulse - _limitImpulse2) * _u2;
-                b1._linearVelocity += b1._invMass * P1;
-                b1._angularVelocity += b1._invI * MathUtils.Cross(r1, P1);
-                b2._linearVelocity += b2._invMass * P2;
-                b2._angularVelocity += b2._invI * MathUtils.Cross(r2, P2);
+                Vector2 P1 = -(_impulse + _limitImpulse1)*_u1;
+                Vector2 P2 = (-Ratio*_impulse - _limitImpulse2)*_u2;
+                b1.LinearVelocityInternal += b1.InvMass*P1;
+                b1.AngularVelocityInternal += b1.InvI*MathUtils.Cross(r1, P1);
+                b2.LinearVelocityInternal += b2.InvMass*P2;
+                b2.AngularVelocityInternal += b2.InvI*MathUtils.Cross(r2, P2);
             }
             else
             {
@@ -303,51 +303,51 @@ namespace FarseerPhysics.Dynamics.Joints
 
             if (_state == LimitState.AtUpper)
             {
-                Vector2 v1 = b1._linearVelocity + MathUtils.Cross(b1._angularVelocity, r1);
-                Vector2 v2 = b2._linearVelocity + MathUtils.Cross(b2._angularVelocity, r2);
+                Vector2 v1 = b1.LinearVelocityInternal + MathUtils.Cross(b1.AngularVelocityInternal, r1);
+                Vector2 v2 = b2.LinearVelocityInternal + MathUtils.Cross(b2.AngularVelocityInternal, r2);
 
-                float Cdot = -Vector2.Dot(_u1, v1) - Ratio * Vector2.Dot(_u2, v2);
-                float impulse = _pulleyMass * (-Cdot);
+                float Cdot = -Vector2.Dot(_u1, v1) - Ratio*Vector2.Dot(_u2, v2);
+                float impulse = _pulleyMass*(-Cdot);
                 float oldImpulse = _impulse;
                 _impulse = Math.Max(0.0f, _impulse + impulse);
                 impulse = _impulse - oldImpulse;
 
-                Vector2 P1 = -impulse * _u1;
-                Vector2 P2 = -Ratio * impulse * _u2;
-                b1._linearVelocity += b1._invMass * P1;
-                b1._angularVelocity += b1._invI * MathUtils.Cross(r1, P1);
-                b2._linearVelocity += b2._invMass * P2;
-                b2._angularVelocity += b2._invI * MathUtils.Cross(r2, P2);
+                Vector2 P1 = -impulse*_u1;
+                Vector2 P2 = -Ratio*impulse*_u2;
+                b1.LinearVelocityInternal += b1.InvMass*P1;
+                b1.AngularVelocityInternal += b1.InvI*MathUtils.Cross(r1, P1);
+                b2.LinearVelocityInternal += b2.InvMass*P2;
+                b2.AngularVelocityInternal += b2.InvI*MathUtils.Cross(r2, P2);
             }
 
             if (_limitState1 == LimitState.AtUpper)
             {
-                Vector2 v1 = b1._linearVelocity + MathUtils.Cross(b1._angularVelocity, r1);
+                Vector2 v1 = b1.LinearVelocityInternal + MathUtils.Cross(b1.AngularVelocityInternal, r1);
 
                 float Cdot = -Vector2.Dot(_u1, v1);
-                float impulse = -_limitMass1 * Cdot;
+                float impulse = -_limitMass1*Cdot;
                 float oldImpulse = _limitImpulse1;
                 _limitImpulse1 = Math.Max(0.0f, _limitImpulse1 + impulse);
                 impulse = _limitImpulse1 - oldImpulse;
 
-                Vector2 P1 = -impulse * _u1;
-                b1._linearVelocity += b1._invMass * P1;
-                b1._angularVelocity += b1._invI * MathUtils.Cross(r1, P1);
+                Vector2 P1 = -impulse*_u1;
+                b1.LinearVelocityInternal += b1.InvMass*P1;
+                b1.AngularVelocityInternal += b1.InvI*MathUtils.Cross(r1, P1);
             }
 
             if (_limitState2 == LimitState.AtUpper)
             {
-                Vector2 v2 = b2._linearVelocity + MathUtils.Cross(b2._angularVelocity, r2);
+                Vector2 v2 = b2.LinearVelocityInternal + MathUtils.Cross(b2.AngularVelocityInternal, r2);
 
                 float Cdot = -Vector2.Dot(_u2, v2);
-                float impulse = -_limitMass2 * Cdot;
+                float impulse = -_limitMass2*Cdot;
                 float oldImpulse = _limitImpulse2;
                 _limitImpulse2 = Math.Max(0.0f, _limitImpulse2 + impulse);
                 impulse = _limitImpulse2 - oldImpulse;
 
-                Vector2 P2 = -impulse * _u2;
-                b2._linearVelocity += b2._invMass * P2;
-                b2._angularVelocity += b2._invI * MathUtils.Cross(r2, P2);
+                Vector2 P2 = -impulse*_u2;
+                b2.LinearVelocityInternal += b2.InvMass*P2;
+                b2.AngularVelocityInternal += b2.InvI*MathUtils.Cross(r2, P2);
             }
         }
 
@@ -370,8 +370,8 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
                 Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
-                Vector2 p1 = b1._sweep.c + r1;
-                Vector2 p2 = b2._sweep.c + r2;
+                Vector2 p1 = b1.Sweep.c + r1;
+                Vector2 p2 = b2.Sweep.c + r2;
 
                 // Get the pulley axes.
                 _u1 = p1 - s1;
@@ -382,7 +382,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 if (length1 > Settings.LinearSlop)
                 {
-                    _u1 *= 1.0f / length1;
+                    _u1 *= 1.0f/length1;
                 }
                 else
                 {
@@ -391,26 +391,26 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 if (length2 > Settings.LinearSlop)
                 {
-                    _u2 *= 1.0f / length2;
+                    _u2 *= 1.0f/length2;
                 }
                 else
                 {
                     _u2 = Vector2.Zero;
                 }
 
-                float C = _ant - length1 - Ratio * length2;
+                float C = _ant - length1 - Ratio*length2;
                 linearError = Math.Max(linearError, -C);
 
                 C = MathUtils.Clamp(C + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
-                float impulse = -_pulleyMass * C;
+                float impulse = -_pulleyMass*C;
 
-                Vector2 P1 = -impulse * _u1;
-                Vector2 P2 = -Ratio * impulse * _u2;
+                Vector2 P1 = -impulse*_u1;
+                Vector2 P2 = -Ratio*impulse*_u2;
 
-                b1._sweep.c += b1._invMass * P1;
-                b1._sweep.a += b1._invI * MathUtils.Cross(r1, P1);
-                b2._sweep.c += b2._invMass * P2;
-                b2._sweep.a += b2._invI * MathUtils.Cross(r2, P2);
+                b1.Sweep.c += b1.InvMass*P1;
+                b1.Sweep.a += b1.InvI*MathUtils.Cross(r1, P1);
+                b2.Sweep.c += b2.InvMass*P2;
+                b2.Sweep.a += b2.InvI*MathUtils.Cross(r2, P2);
 
                 b1.SynchronizeTransform();
                 b2.SynchronizeTransform();
@@ -422,14 +422,14 @@ namespace FarseerPhysics.Dynamics.Joints
                 b1.GetTransform(out xf1);
 
                 Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-                Vector2 p1 = b1._sweep.c + r1;
+                Vector2 p1 = b1.Sweep.c + r1;
 
                 _u1 = p1 - s1;
                 float length1 = _u1.Length();
 
                 if (length1 > Settings.LinearSlop)
                 {
-                    _u1 *= 1.0f / length1;
+                    _u1 *= 1.0f/length1;
                 }
                 else
                 {
@@ -439,11 +439,11 @@ namespace FarseerPhysics.Dynamics.Joints
                 float C = _maxLengthA - length1;
                 linearError = Math.Max(linearError, -C);
                 C = MathUtils.Clamp(C + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
-                float impulse = -_limitMass1 * C;
+                float impulse = -_limitMass1*C;
 
-                Vector2 P1 = -impulse * _u1;
-                b1._sweep.c += b1._invMass * P1;
-                b1._sweep.a += b1._invI * MathUtils.Cross(r1, P1);
+                Vector2 P1 = -impulse*_u1;
+                b1.Sweep.c += b1.InvMass*P1;
+                b1.Sweep.a += b1.InvI*MathUtils.Cross(r1, P1);
 
                 b1.SynchronizeTransform();
             }
@@ -454,14 +454,14 @@ namespace FarseerPhysics.Dynamics.Joints
                 b2.GetTransform(out xf2);
 
                 Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
-                Vector2 p2 = b2._sweep.c + r2;
+                Vector2 p2 = b2.Sweep.c + r2;
 
                 _u2 = p2 - s2;
                 float length2 = _u2.Length();
 
                 if (length2 > Settings.LinearSlop)
                 {
-                    _u2 *= 1.0f / length2;
+                    _u2 *= 1.0f/length2;
                 }
                 else
                 {
@@ -471,11 +471,11 @@ namespace FarseerPhysics.Dynamics.Joints
                 float C = _maxLengthB - length2;
                 linearError = Math.Max(linearError, -C);
                 C = MathUtils.Clamp(C + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
-                float impulse = -_limitMass2 * C;
+                float impulse = -_limitMass2*C;
 
-                Vector2 P2 = -impulse * _u2;
-                b2._sweep.c += b2._invMass * P2;
-                b2._sweep.a += b2._invI * MathUtils.Cross(r2, P2);
+                Vector2 P2 = -impulse*_u2;
+                b2.Sweep.c += b2.InvMass*P2;
+                b2.Sweep.a += b2.InvI*MathUtils.Cross(r2, P2);
 
                 b2.SynchronizeTransform();
             }
