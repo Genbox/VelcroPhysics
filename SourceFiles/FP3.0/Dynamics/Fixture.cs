@@ -85,6 +85,17 @@ namespace FarseerPhysics.Dynamics
     /// @warning you cannot reuse fixtures.
     public class Fixture
     {
+        #region Delegates
+
+        public delegate bool CollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Manifold manifold);
+
+        public delegate void SeparationEventHandler(Fixture fixtureA, Fixture fixtureB);
+
+        #endregion
+
+        public CollisionEventHandler OnCollision;
+        public SeparationEventHandler OnSeparation;
+
         private static int _fixtureIdCounter;
         public Action<ContactConstraint> PostSolve;
         public FixtureProxy[] Proxies;

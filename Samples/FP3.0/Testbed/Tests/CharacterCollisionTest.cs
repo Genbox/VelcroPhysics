@@ -1,4 +1,5 @@
-﻿using FarseerPhysics.Collision.Shapes;
+﻿using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
@@ -52,6 +53,9 @@ namespace FarseerPhysics.TestBed.Tests
             squareCharacter.Body.FixedRotation = true;
             squareCharacter.Body.SleepingAllowed = false;
 
+            squareCharacter.OnCollision += CharacterOnCollision;
+            squareCharacter.OnSeparation += CharacterOnSeparation;
+
 #if false
     // Hexagon character
             float angle = 0.0f;
@@ -77,6 +81,33 @@ namespace FarseerPhysics.TestBed.Tests
             circleCharacter.Body.FixedRotation = true;
             circleCharacter.Body.AllowSleep = false;
 #endif
+        }
+
+        private bool _collision;
+
+        private bool CharacterOnCollision(Fixture fixtureA, Fixture fixtureB, Manifold manifold)
+        {
+            _collision = true;
+            return true;
+        }
+
+        private void CharacterOnSeparation(Fixture fixtureA, Fixture fixtureB)
+        {
+            _collision = false;
+        }
+
+        public override void Update(GameSettings settings, GameTime gameTime)
+        {
+            if (_collision)
+            {
+                DebugView.DrawString(50, TextLine, "OnCollision fired");
+            }
+            else
+            {
+                DebugView.DrawString(50, TextLine, "OnSeparation fired");
+            }
+
+            base.Update(settings, gameTime);
         }
 
         public static Test Create()
