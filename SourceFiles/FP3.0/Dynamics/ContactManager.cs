@@ -28,10 +28,13 @@ namespace FarseerPhysics.Dynamics
 {
     public class ContactManager
     {
+        /// <summary>
+        /// Fires when a contact is created
+        /// </summary>
         public BeginContactDelegate BeginContact;
         public BroadPhase BroadPhase = new BroadPhase();
 
-        public Action<FixtureProxy, FixtureProxy> BroadphaseCollision;
+        public Action<FixtureProxy, FixtureProxy> OnBroadphaseCollision;
 
         public int ContactCount;
 
@@ -44,7 +47,14 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public EndContactDelegate EndContact;
 
+        /// <summary>
+        /// Fires after the solver has run
+        /// </summary>
         public PostSolveDelegate PostSolve;
+        
+        /// <summary>
+        /// Fires before the solver runs
+        /// </summary>
         public PreSolveDelegate PreSolve;
 
         internal ContactManager()
@@ -52,11 +62,11 @@ namespace FarseerPhysics.Dynamics
             ContactList = null;
             ContactCount = 0;
 
-            BroadphaseCollision = AddPair;
+            OnBroadphaseCollision = AddPair;
         }
 
         // Broad-phase callback.
-        internal void AddPair(FixtureProxy proxyA, FixtureProxy proxyB)
+        private void AddPair(FixtureProxy proxyA, FixtureProxy proxyB)
         {
             Fixture fixtureA = proxyA.Fixture;
             Fixture fixtureB = proxyB.Fixture;
@@ -163,7 +173,7 @@ namespace FarseerPhysics.Dynamics
 
         internal void FindNewContacts()
         {
-            BroadPhase.UpdatePairs(BroadphaseCollision);
+            BroadPhase.UpdatePairs(OnBroadphaseCollision);
         }
 
         internal void Destroy(Contact c)

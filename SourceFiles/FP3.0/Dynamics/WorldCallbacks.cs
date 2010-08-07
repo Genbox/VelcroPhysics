@@ -75,7 +75,7 @@ namespace FarseerPhysics.Dynamics
                 ((fixtureB.CollisionCategories & fixtureA.CollidesWith) == CollisionCategory.None))
                 return false;
 
-            if (fixtureA.IsGeometryIgnored(fixtureB) || fixtureB.IsGeometryIgnored(fixtureA))
+            if (fixtureA.IsFixtureIgnored(fixtureB) || fixtureB.IsFixtureIgnored(fixtureA))
                 return false;
 
             return true;
