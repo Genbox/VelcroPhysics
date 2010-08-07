@@ -756,7 +756,7 @@ namespace FarseerPhysics.Dynamics
                 _stack[stackCount++] = seed;
                 seed.Flags |= BodyFlags.Island;
 
-                // Perform a depth first search (DFS) on the raint graph.
+                // Perform a depth first search (DFS) on the constraint graph.
                 while (stackCount > 0)
                 {
                     // Grab the next body off the stack and add it to the island.

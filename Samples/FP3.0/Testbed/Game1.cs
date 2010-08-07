@@ -35,11 +35,9 @@ namespace FarseerPhysics.TestBed
     /// </summary>
     public class Game1 : Game
     {
-        private const float k_SettingsHz = 60.0f;
+        private const float SettingsHz = 60.0f;
         public bool DebugViewEnabled = true;
-        public bool TraceEnabled = true;
         private TestEntry _entry;
-        private IEventTrace _et;
         private GraphicsDeviceManager _graphics;
         private int _height = 480;
         private GamePadState _oldGamePad;
@@ -69,16 +67,6 @@ namespace FarseerPhysics.TestBed
             _graphics.SynchronizeWithVerticalRetrace = false;
         }
 
-        public Vector2 ViewCenter
-        {
-            get { return _viewCenter; }
-            set
-            {
-                _viewCenter = value;
-                Resize(_width, _height);
-            }
-        }
-
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -91,10 +79,7 @@ namespace FarseerPhysics.TestBed
 
             //Set window defaults. Parent game can override in constructor
             Window.AllowUserResizing = true;
-            Window.ClientSizeChanged += Window_ClientSizeChanged;
-
-            _et = new EventTrace(this);
-            TraceEvents.Register(_et);
+            Window.ClientSizeChanged += WindowClientSizeChanged;
 
             _testCount = 0;
             while (TestEntries.g_testEntries[_testCount].CreateFcn != null)
@@ -123,8 +108,7 @@ namespace FarseerPhysics.TestBed
         /// </summary>
         protected override void LoadContent()
         {
-            if (DebugViewEnabled)
-                DebugViewXNA.DebugViewXNA.LoadContent(GraphicsDevice, Content);
+            DebugViewXNA.DebugViewXNA.LoadContent(GraphicsDevice, Content);
 
             _oldKeyboardState = Keyboard.GetState();
             _oldMouseState = Mouse.GetState();
@@ -141,9 +125,6 @@ namespace FarseerPhysics.TestBed
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (TraceEnabled)
-                _et.BeginTrace(TraceEvents.UpdateEventId);
-
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
@@ -158,13 +139,13 @@ namespace FarseerPhysics.TestBed
                 _viewZoom = Math.Min(1.1f * _viewZoom, 20.0f);
                 Resize(_width, _height);
             }
-                // Press 'x' to zoom in.
+            // Press 'x' to zoom in.
             else if (newKeyboardState.IsKeyDown(Keys.X))
             {
                 _viewZoom = Math.Max(0.9f * _viewZoom, 0.02f);
                 Resize(_width, _height);
             }
-                // Press 'r' to reset.
+            // Press 'r' to reset.
             else if (newKeyboardState.IsKeyDown(Keys.R) && _oldKeyboardState.IsKeyUp(Keys.R))
             {
                 Restart();
@@ -174,7 +155,7 @@ namespace FarseerPhysics.TestBed
             {
                 _settings.Pause = !_settings.Pause;
             }
-                // Press I to prev test.
+            // Press I to prev test.
             else if ((newKeyboardState.IsKeyDown(Keys.I) && _oldKeyboardState.IsKeyUp(Keys.I)) ||
                      newGamePad.IsButtonDown(Buttons.LeftShoulder) && _oldGamePad.IsButtonUp(Buttons.LeftShoulder))
             {
@@ -184,7 +165,7 @@ namespace FarseerPhysics.TestBed
                     _testSelection = _testCount - 1;
                 }
             }
-                // Press O to next test.
+            // Press O to next test.
             else if ((newKeyboardState.IsKeyDown(Keys.O) && _oldKeyboardState.IsKeyUp(Keys.O)) ||
                      newGamePad.IsButtonDown(Buttons.RightShoulder) && _oldGamePad.IsButtonUp(Buttons.RightShoulder))
             {
@@ -194,31 +175,31 @@ namespace FarseerPhysics.TestBed
                     _testSelection = 0;
                 }
             }
-                // Press left to pan left.
+            // Press left to pan left.
             else if (newKeyboardState.IsKeyDown(Keys.Left))
             {
                 _viewCenter.X -= 0.5f;
                 Resize(_width, _height);
             }
-                // Press right to pan right.
+            // Press right to pan right.
             else if (newKeyboardState.IsKeyDown(Keys.Right))
             {
                 _viewCenter.X += 0.5f;
                 Resize(_width, _height);
             }
-                // Press down to pan down.
+            // Press down to pan down.
             else if (newKeyboardState.IsKeyDown(Keys.Down))
             {
                 _viewCenter.Y -= 0.5f;
                 Resize(_width, _height);
             }
-                // Press up to pan up.
+            // Press up to pan up.
             else if (newKeyboardState.IsKeyDown(Keys.Up))
             {
                 _viewCenter.Y += 0.5f;
                 Resize(_width, _height);
             }
-                // Press home to reset the view.
+            // Press home to reset the view.
             else if (newKeyboardState.IsKeyDown(Keys.Home) && _oldKeyboardState.IsKeyUp(Keys.Home))
             {
                 _viewZoom = 1.0f;
@@ -227,7 +208,7 @@ namespace FarseerPhysics.TestBed
             }
             else if (newKeyboardState.IsKeyDown(Keys.F1) && _oldKeyboardState.IsKeyUp(Keys.F1))
             {
-                TraceEnabled = !TraceEnabled;
+                DebugViewEnabled = !DebugViewEnabled;
             }
             else
             {
@@ -249,8 +230,13 @@ namespace FarseerPhysics.TestBed
             _oldMouseState = newMouseState;
             _oldGamePad = newGamePad;
 
-            if (TraceEnabled)
-                _et.EndTrace(TraceEvents.UpdateEventId);
+            _settings.Hz = SettingsHz;
+
+            if (_test != null)
+            {
+                _test.TextLine = 30;
+                _test.Update(_settings, gameTime);
+            }
         }
 
         /// <summary>
@@ -259,24 +245,9 @@ namespace FarseerPhysics.TestBed
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            if (TraceEnabled)
-                _et.BeginTrace(TraceEvents.DrawEventId);
-
             GraphicsDevice.Clear(Color.Black);
 
-            _test.SetTextLine(30);
-            _settings.Hz = k_SettingsHz;
-
-            if (TraceEnabled)
-                _et.BeginTrace(TraceEvents.PhysicsEventId);
-
-            _test.Update(_settings, gameTime);
-
-            if (TraceEnabled)
-                _et.EndTrace(TraceEvents.PhysicsEventId);
-
-            if (DebugViewEnabled)
-                _test.DrawTitle(50, 15, _entry.Name);
+            _test.DrawTitle(50, 15, _entry.Name);
 
             if (_testSelection != _testIndex)
             {
@@ -287,18 +258,10 @@ namespace FarseerPhysics.TestBed
                 Resize(_width, _height);
             }
 
-            if (DebugViewEnabled)
-                _test.DebugView.RenderDebugData(ref _projection);
+            _test.Draw(gameTime);
+            _test.DebugView.RenderDebugData(ref _projection);
 
             base.Draw(gameTime);
-
-            if (TraceEnabled)
-            {
-                _et.EndTrace(TraceEvents.DrawEventId);
-                _et.EndTrace(TraceEvents.FrameEventId);
-                _et.ResetFrame();
-                _et.BeginTrace(TraceEvents.FrameEventId);
-            }
         }
 
         private void Resize(int w, int h)
@@ -309,7 +272,7 @@ namespace FarseerPhysics.TestBed
             _tw = GraphicsDevice.Viewport.Width;
             _th = GraphicsDevice.Viewport.Height;
 
-            float ratio = _tw / (float) _th;
+            float ratio = _tw / (float)_th;
 
             Vector2 extents = new Vector2(ratio * 25.0f, 25.0f);
             extents *= _viewZoom;
@@ -323,10 +286,10 @@ namespace FarseerPhysics.TestBed
 
         public Vector2 ConvertScreenToWorld(int x, int y)
         {
-            float u = x / (float) _tw;
-            float v = (_th - y) / (float) _th;
+            float u = x / (float)_tw;
+            float v = (_th - y) / (float)_th;
 
-            float ratio = _tw / (float) _th;
+            float ratio = _tw / (float)_th;
             Vector2 extents = new Vector2(ratio * 25.0f, 25.0f);
             extents *= _viewZoom;
 
@@ -345,18 +308,7 @@ namespace FarseerPhysics.TestBed
             Resize(_width, _height);
         }
 
-        //private void Pause()
-        //{
-        //    _settings.Pause = (uint)(_settings.Pause > 0 ? 0 : 1);
-        //}
-
-        //private void SingleStep()
-        //{
-        //    _settings.Pause = 1;
-        //    _settings.SingleStep = 1;
-        //}
-
-        private void Window_ClientSizeChanged(object sender, EventArgs e)
+        private void WindowClientSizeChanged(object sender, EventArgs e)
         {
             if (Window.ClientBounds.Width > 0 && Window.ClientBounds.Height > 0)
             {

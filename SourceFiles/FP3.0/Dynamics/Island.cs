@@ -282,7 +282,7 @@ namespace FarseerPhysics.Dynamics
             _joints[JointCount++] = joint;
         }
 
-        public void Report(ContactConstraint[] constraints)
+        private void Report(ContactConstraint[] constraints)
         {
             if (_contactManager == null)
             {

@@ -181,7 +181,7 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(50, TextLine, "Joints removed: " + _removedJoints);
         }
 
-        public override void JointDestroyed(Joint joint)
+        protected override void JointRemoved(Joint joint)
         {
             for (int i = 0; i < 8; ++i)
             {
@@ -191,6 +191,8 @@ namespace FarseerPhysics.TestBed.Tests
                     break;
                 }
             }
+
+            base.JointRemoved(joint);
         }
 
         internal static Test Create()
