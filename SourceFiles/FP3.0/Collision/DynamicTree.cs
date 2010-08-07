@@ -144,7 +144,7 @@ namespace FarseerPhysics.Collision
             b.UpperBound = b.UpperBound + r;
 
             // Predict AABB displacement.
-            Vector2 d = Settings.AABBMultiplier*displacement;
+            Vector2 d = Settings.AABBMultiplier * displacement;
 
             if (d.X < 0.0f)
             {
@@ -288,7 +288,7 @@ namespace FarseerPhysics.Collision
             // Build a bounding box for the segment.
             AABB segmentAABB = new AABB();
             {
-                Vector2 t = p1 + maxFraction*(p2 - p1);
+                Vector2 t = p1 + maxFraction * (p2 - p1);
                 segmentAABB.LowerBound = Vector2.Min(p1, t);
                 segmentAABB.UpperBound = Vector2.Max(p1, t);
             }
@@ -340,7 +340,7 @@ namespace FarseerPhysics.Collision
                     {
                         // Update segment bounding box.
                         maxFraction = value;
-                        Vector2 t = p1 + maxFraction*(p2 - p1);
+                        Vector2 t = p1 + maxFraction * (p2 - p1);
                         segmentAABB.LowerBound = Vector2.Min(p1, t);
                         segmentAABB.UpperBound = Vector2.Max(p1, t);
                     }
@@ -461,8 +461,8 @@ namespace FarseerPhysics.Collision
                 AABB aabb2 = new AABB();
                 aabb1.Combine(ref leafAABB, ref _nodes[child1].AABB);
                 aabb2.Combine(ref leafAABB, ref _nodes[child2].AABB);
-                float norm1 = (_nodes[child1].LeafCount + 1)*aabb1.GetPerimeter();
-                float norm2 = (_nodes[child2].LeafCount + 1)*aabb2.GetPerimeter();
+                float norm1 = (_nodes[child1].LeafCount + 1) * aabb1.GetPerimeter();
+                float norm2 = (_nodes[child2].LeafCount + 1) * aabb2.GetPerimeter();
 #endif
 
                 if (norm1 < norm2)

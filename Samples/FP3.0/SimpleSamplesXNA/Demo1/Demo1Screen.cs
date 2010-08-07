@@ -11,45 +11,7 @@ namespace SimpleSamplesXNA.Demo1
 {
     internal class Demo1Screen : GameScreen, IDemoScreen
     {
-        public override void Initialize()
-        {
-            World = new World(new Vector2(0, 0));
-
-            base.Initialize();
-
-            DebugViewEnabled = true;
-            DebugView.AppendFlags(DebugViewFlags.Shape);
-        }
-
-        public override void LoadContent()
-        {
-            Fixture rectangle = FixtureFactory.CreateRectangle(World, 2, 2, 1);
-            rectangle.GetBody().SetType(BodyType.Dynamic);
-
-            base.LoadContent();
-        }
-        
-        public override void Draw(GameTime gameTime)
-        {
-            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            ScreenManager.SpriteBatch.End();
-
-            base.Draw(gameTime);
-        }
-
-        public override void HandleInput(InputState input)
-        {
-            //if (input.CurrentGamePadState.IsConnected)
-            //{
-            //    HandleGamePadInput(input);
-            //}
-            //else
-            //{
-            //    HandleKeyboardInput(input);
-            //}
-
-            base.HandleInput(input);
-        }
+        #region IDemoScreen Members
 
         public string GetTitle()
         {
@@ -70,6 +32,48 @@ namespace SimpleSamplesXNA.Demo1
             sb.AppendLine("  -Rotate: left and right arrows");
             sb.AppendLine("  -Move: A,S,D,W");
             return sb.ToString();
+        }
+
+        #endregion
+
+        public override void Initialize()
+        {
+            World = new World(new Vector2(0, 0));
+
+            base.Initialize();
+
+            DebugViewEnabled = true;
+            DebugView.AppendFlags(DebugViewFlags.Shape);
+        }
+
+        public override void LoadContent()
+        {
+            Fixture rectangle = FixtureFactory.CreateRectangle(World, 2, 2, 1);
+            rectangle.Body.BodyType = BodyType.Dynamic;
+
+            base.LoadContent();
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+            ScreenManager.SpriteBatch.End();
+
+            base.Draw(gameTime);
+        }
+
+        public override void HandleInput(InputState input)
+        {
+            //if (input.CurrentGamePadState.IsConnected)
+            //{
+            //    HandleGamePadInput(input);
+            //}
+            //else
+            //{
+            //    HandleKeyboardInput(input);
+            //}
+
+            base.HandleInput(input);
         }
     }
 }

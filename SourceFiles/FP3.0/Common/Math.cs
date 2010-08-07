@@ -30,17 +30,17 @@ namespace FarseerPhysics.Common
     {
         public static float Cross(Vector2 a, Vector2 b)
         {
-            return a.X*b.Y - a.Y*b.X;
+            return a.X * b.Y - a.Y * b.X;
         }
 
         public static Vector2 Cross(Vector2 a, float s)
         {
-            return new Vector2(s*a.Y, -s*a.X);
+            return new Vector2(s * a.Y, -s * a.X);
         }
 
         public static Vector2 Cross(float s, Vector2 a)
         {
-            return new Vector2(-s*a.Y, s*a.X);
+            return new Vector2(-s * a.Y, s * a.X);
         }
 
         public static Vector2 Abs(Vector2 v)
@@ -50,7 +50,7 @@ namespace FarseerPhysics.Common
 
         public static Vector2 Multiply(ref Mat22 A, Vector2 v)
         {
-            return new Vector2(A.col1.X*v.X + A.col2.X*v.Y, A.col1.Y*v.X + A.col2.Y*v.Y);
+            return new Vector2(A.col1.X * v.X + A.col2.X * v.Y, A.col1.Y * v.X + A.col2.Y * v.Y);
         }
 
         public static Vector2 MultiplyT(ref Mat22 A, Vector2 v)
@@ -60,8 +60,8 @@ namespace FarseerPhysics.Common
 
         public static Vector2 Multiply(ref Transform T, Vector2 v)
         {
-            float x = T.Position.X + T.R.col1.X*v.X + T.R.col2.X*v.Y;
-            float y = T.Position.Y + T.R.col1.Y*v.X + T.R.col2.Y*v.Y;
+            float x = T.Position.X + T.R.col1.X * v.X + T.R.col2.X * v.Y;
+            float y = T.Position.Y + T.R.col1.Y * v.X + T.R.col2.Y * v.Y;
 
             return new Vector2(x, y);
         }
@@ -117,10 +117,10 @@ namespace FarseerPhysics.Common
         {
             FloatConverter convert = new FloatConverter();
             convert.x = x;
-            float xhalf = 0.5f*x;
+            float xhalf = 0.5f * x;
             convert.i = 0x5f3759df - (convert.i >> 1);
             x = convert.x;
-            x = x*(1.5f - xhalf*x*x);
+            x = x * (1.5f - xhalf * x * x);
             return x;
         }
 
@@ -141,12 +141,12 @@ namespace FarseerPhysics.Common
 
         public static void Cross(ref Vector2 a, ref Vector2 b, out float c)
         {
-            c = a.X*b.Y - a.Y*b.X;
+            c = a.X * b.Y - a.Y * b.X;
         }
 
         public static float Area(Vector2 a, Vector2 b, Vector2 c)
         {
-            return (((b.X - a.X)*(c.Y - a.Y)) - ((c.X - a.X)*(b.Y - a.Y)));
+            return (((b.X - a.X) * (c.Y - a.Y)) - ((c.X - a.X) * (b.Y - a.Y)));
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace FarseerPhysics.Common
 
         public static void Cross(float s, ref Vector2 a, out Vector2 b)
         {
-            b = new Vector2(-s*a.Y, s*a.X);
+            b = new Vector2(-s * a.Y, s * a.X);
         }
 
         #region Nested type: FloatConverter
@@ -259,13 +259,13 @@ namespace FarseerPhysics.Common
         public Mat22 GetInverse()
         {
             float a = col1.X, b = col2.X, c = col1.Y, d = col2.Y;
-            float det = a*d - b*c;
+            float det = a * d - b * c;
             if (det != 0.0f)
             {
-                det = 1.0f/det;
+                det = 1.0f / det;
             }
 
-            return new Mat22(new Vector2(det*d, -det*c), new Vector2(-det*b, det*a));
+            return new Mat22(new Vector2(det * d, -det * c), new Vector2(-det * b, det * a));
         }
 
         /// Solve A * x = b, where b is a column vector. This is more efficient
@@ -273,13 +273,13 @@ namespace FarseerPhysics.Common
         public Vector2 Solve(Vector2 b)
         {
             float a11 = col1.X, a12 = col2.X, a21 = col1.Y, a22 = col2.Y;
-            float det = a11*a22 - a12*a21;
+            float det = a11 * a22 - a12 * a21;
             if (det != 0.0f)
             {
-                det = 1.0f/det;
+                det = 1.0f / det;
             }
 
-            return new Vector2(det*(a22*b.X - a12*b.Y), det*(a11*b.Y - a21*b.X));
+            return new Vector2(det * (a22 * b.X - a12 * b.Y), det * (a11 * b.Y - a21 * b.X));
         }
 
         public static void Add(ref Mat22 A, ref Mat22 B, out Mat22 R)
@@ -316,12 +316,12 @@ namespace FarseerPhysics.Common
             float det = Vector3.Dot(col1, Vector3.Cross(col2, col3));
             if (det != 0.0f)
             {
-                det = 1.0f/det;
+                det = 1.0f / det;
             }
 
-            return new Vector3(det*Vector3.Dot(b, Vector3.Cross(col2, col3)),
-                               det*Vector3.Dot(col1, Vector3.Cross(b, col3)),
-                               det*Vector3.Dot(col1, Vector3.Cross(col2, b)));
+            return new Vector3(det * Vector3.Dot(b, Vector3.Cross(col2, col3)),
+                               det * Vector3.Dot(col1, Vector3.Cross(b, col3)),
+                               det * Vector3.Dot(col1, Vector3.Cross(col2, b)));
         }
 
         /// Solve A * x = b, where b is a column vector. This is more efficient
@@ -330,14 +330,14 @@ namespace FarseerPhysics.Common
         public Vector2 Solve22(Vector2 b)
         {
             float a11 = col1.X, a12 = col2.X, a21 = col1.Y, a22 = col2.Y;
-            float det = a11*a22 - a12*a21;
+            float det = a11 * a22 - a12 * a21;
 
             if (det != 0.0f)
             {
-                det = 1.0f/det;
+                det = 1.0f / det;
             }
 
-            return new Vector2(det*(a22*b.X - a12*b.Y), det*(a11*b.Y - a21*b.X));
+            return new Vector2(det * (a22 * b.X - a12 * b.Y), det * (a11 * b.Y - a21 * b.X));
         }
     }
 
@@ -403,8 +403,8 @@ namespace FarseerPhysics.Common
         public void GetTransform(out Transform xf, float alpha)
         {
             xf = new Transform();
-            xf.Position = (1.0f - alpha)*c0 + alpha*c;
-            float angle = (1.0f - alpha)*a0 + alpha*a;
+            xf.Position = (1.0f - alpha) * c0 + alpha * c;
+            float angle = (1.0f - alpha) * a0 + alpha * a;
             xf.R.Set(angle);
 
             // Shift to origin
@@ -415,15 +415,15 @@ namespace FarseerPhysics.Common
         /// @param t the new initial time.
         public void Advance(float t)
         {
-            c0 = (1.0f - t)*c0 + t*c;
-            a0 = (1.0f - t)*a0 + t*a;
+            c0 = (1.0f - t) * c0 + t * c;
+            a0 = (1.0f - t) * a0 + t * a;
         }
 
         /// Normalize the angles.
         public void Normalize()
         {
-            float twoPi = 2.0f*(float) Math.PI;
-            float d = twoPi*(float) Math.Floor(a0/twoPi);
+            float twoPi = 2.0f * (float) Math.PI;
+            float d = twoPi * (float) Math.Floor(a0 / twoPi);
             a0 -= d;
             a -= d;
         }

@@ -30,6 +30,8 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class EdgeTest : Test
     {
+        private Fixture _circleFixture;
+
         public EdgeTest()
         {
             {
@@ -116,8 +118,6 @@ namespace FarseerPhysics.TestBed.Tests
                 body.CreateFixture(shape, 1);
             }
         }
-
-        private Fixture _circleFixture;
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {

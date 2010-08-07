@@ -65,12 +65,12 @@ namespace FarseerPhysics.Dynamics
 
             if (_contacts == null || _contacts.Length < contactCapacity)
             {
-                _contacts = new Contact[contactCapacity*2];
+                _contacts = new Contact[contactCapacity * 2];
             }
 
             if (_joints == null || _joints.Length < jointCapacity)
             {
-                _joints = new Joint[jointCapacity*2];
+                _joints = new Joint[jointCapacity * 2];
             }
         }
 
@@ -96,13 +96,13 @@ namespace FarseerPhysics.Dynamics
                 // Integrate velocities. Only apply gravity if the body wants it.
                 if (b.IgnoreGravity)
                 {
-                    b.LinearVelocityInternal += step.dt*(b.InvMass*b.Force);
-                    b.AngularVelocityInternal += step.dt*b.InvI*b.Torque;
+                    b.LinearVelocityInternal += step.dt * (b.InvMass * b.Force);
+                    b.AngularVelocityInternal += step.dt * b.InvI * b.Torque;
                 }
                 else
                 {
-                    b.LinearVelocityInternal += step.dt*(gravity + b.InvMass*b.Force);
-                    b.AngularVelocityInternal += step.dt*b.InvI*b.Torque;
+                    b.LinearVelocityInternal += step.dt * (gravity + b.InvMass * b.Force);
+                    b.AngularVelocityInternal += step.dt * b.InvI * b.Torque;
                 }
 
                 // Apply damping.
@@ -112,8 +112,8 @@ namespace FarseerPhysics.Dynamics
                 // v2 = exp(-c * dt) * v1
                 // Taylor expansion:
                 // v2 = (1.0f - c * dt) * v1
-                b.LinearVelocityInternal *= MathUtils.Clamp(1.0f - step.dt*b.LinearDamping, 0.0f, 1.0f);
-                b.AngularVelocityInternal *= MathUtils.Clamp(1.0f - step.dt*b.AngularDamping, 0.0f, 1.0f);
+                b.LinearVelocityInternal *= MathUtils.Clamp(1.0f - step.dt * b.LinearDamping, 0.0f, 1.0f);
+                b.AngularVelocityInternal *= MathUtils.Clamp(1.0f - step.dt * b.AngularDamping, 0.0f, 1.0f);
             }
 
             // Partition contacts so that contacts with static bodies are solved last.
@@ -169,17 +169,17 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Check for large velocities.
-                Vector2 translation = step.dt*b.LinearVelocityInternal;
+                Vector2 translation = step.dt * b.LinearVelocityInternal;
                 if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
                 {
-                    float ratio = Settings.MaxTranslation/translation.Length();
+                    float ratio = Settings.MaxTranslation / translation.Length();
                     b.LinearVelocityInternal *= ratio;
                 }
 
-                float rotation = step.dt*b.AngularVelocityInternal;
-                if (rotation*rotation > Settings.MaxRotationSquared)
+                float rotation = step.dt * b.AngularVelocityInternal;
+                if (rotation * rotation > Settings.MaxRotationSquared)
                 {
-                    float ratio = Settings.MaxRotation/Math.Abs(rotation);
+                    float ratio = Settings.MaxRotation / Math.Abs(rotation);
                     b.AngularVelocityInternal *= ratio;
                 }
 
@@ -188,8 +188,8 @@ namespace FarseerPhysics.Dynamics
                 b.Sweep.a0 = b.Sweep.a;
 
                 // Integrate
-                b.Sweep.c += step.dt*b.LinearVelocityInternal;
-                b.Sweep.a += step.dt*b.AngularVelocityInternal;
+                b.Sweep.c += step.dt * b.LinearVelocityInternal;
+                b.Sweep.a += step.dt * b.AngularVelocityInternal;
 
                 // Compute new transform
                 b.SynchronizeTransform();
@@ -222,8 +222,8 @@ namespace FarseerPhysics.Dynamics
             {
                 float minSleepTime = Settings.MaxFloat;
 
-                const float linTolSqr = Settings.LinearSleepTolerance*Settings.LinearSleepTolerance;
-                const float angTolSqr = Settings.AngularSleepTolerance*Settings.AngularSleepTolerance;
+                const float linTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
+                const float angTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
 
                 for (int i = 0; i < BodyCount; ++i)
                 {
@@ -240,7 +240,7 @@ namespace FarseerPhysics.Dynamics
                     }
 
                     if ((b.Flags & BodyFlags.AutoSleep) == 0 ||
-                        b.AngularVelocityInternal*b.AngularVelocityInternal > angTolSqr ||
+                        b.AngularVelocityInternal * b.AngularVelocityInternal > angTolSqr ||
                         Vector2.Dot(b.LinearVelocityInternal, b.LinearVelocityInternal) > linTolSqr)
                     {
                         b.SleepTime = 0.0f;

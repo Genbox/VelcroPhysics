@@ -126,7 +126,7 @@ namespace FarseerPhysics.Factories
         {
             Vector2 destination = path.GetPosition(time);
             Vector2 positionDelta = body.Position - destination;
-            Vector2 velocity = (positionDelta/timeStep)*strength;
+            Vector2 velocity = (positionDelta / timeStep) * strength;
 
             body.LinearVelocity = -velocity;
         }
