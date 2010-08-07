@@ -23,12 +23,16 @@
 using System;
 using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics
 {
+    /// <summary>
+    /// A type of body that supports multiple fixtures that can break apart.
+    /// </summary>
     public class BreakableBody
     {
         public bool Broken;
@@ -40,11 +44,19 @@ namespace FarseerPhysics.Dynamics
         private Vector2[] _velocitiesCache = new Vector2[8];
         private World _world;
 
-        public BreakableBody(World world)
+        public BreakableBody(List<Vertices> vertices, World world, float density)
         {
             _world = world;
-            MainBody = new Body(world);
+            MainBody = _world.CreateBody();
             MainBody.BodyType = BodyType.Dynamic;
+
+            foreach (Vertices part in vertices)
+            {
+                PolygonShape polygonShape = new PolygonShape(part);
+                Fixture fixture = MainBody.CreateFixture(polygonShape, density);
+                fixture.PostSolve += PostSolve;
+                Parts.Add(fixture);
+            }
         }
 
         private void PostSolve(ContactConstraint contactConstraint)
@@ -64,12 +76,6 @@ namespace FarseerPhysics.Dynamics
                     _break = true;
                 }
             }
-        }
-
-        public void AddPart(Fixture fixture)
-        {
-            fixture.PostSolve += PostSolve;
-            Parts.Add(fixture);
         }
 
         public void Update()
@@ -105,7 +111,12 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < Parts.Count; i++)
             {
                 Fixture fixture = Parts[i];
+                
+                //Unsubsribe from the PostSolve delegate
+                fixture.PostSolve -= PostSolve;
+                
                 Shape shape = fixture.Shape.Clone();
+
                 MainBody.DestroyFixture(fixture);
 
                 Body body = BodyFactory.CreateBody(_world);

@@ -38,7 +38,7 @@ namespace FarseerPhysics.Factories
                 throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
 
             Body body = BodyFactory.CreateBody(world, position);
-            Vertices rectangleVertices = PolygonTools.CreateRectangle(width/2, height/2);
+            Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
             PolygonShape rectangleShape = new PolygonShape(rectangleVertices);
             return body.CreateFixture(rectangleShape, density);
         }
@@ -138,7 +138,7 @@ namespace FarseerPhysics.Factories
         public static List<Fixture> CreateCapsule(World world, float height, float endRadius, float density)
         {
             //Create the middle rectangle
-            Vertices rectangle = PolygonTools.CreateRectangle(endRadius, height/2);
+            Vertices rectangle = PolygonTools.CreateRectangle(endRadius, height / 2);
 
             List<Vertices> list = new List<Vertices>();
             list.Add(rectangle);
@@ -147,11 +147,11 @@ namespace FarseerPhysics.Factories
 
             //Create the two circles
             CircleShape topCircle = new CircleShape(endRadius);
-            topCircle.Position = new Vector2(0, height/2);
+            topCircle.Position = new Vector2(0, height / 2);
             fixtures.Add(fixtures[0].Body.CreateFixture(topCircle, density));
 
             CircleShape bottomCircle = new CircleShape(endRadius);
-            bottomCircle.Position = new Vector2(0, -(height/2));
+            bottomCircle.Position = new Vector2(0, -(height / 2));
             fixtures.Add(fixtures[0].Body.CreateFixture(bottomCircle, density));
             return fixtures;
         }
@@ -197,15 +197,7 @@ namespace FarseerPhysics.Factories
         {
             List<Vertices> triangles = EarclipDecomposer.ConvexPartition(vertices);
 
-            BreakableBody breakableBody = new BreakableBody(world);
-
-            foreach (Vertices triangle in triangles)
-            {
-                PolygonShape polygonShape = new PolygonShape(triangle);
-                Fixture f = breakableBody.MainBody.CreateFixture(polygonShape, density);
-                breakableBody.AddPart(f);
-            }
-
+            BreakableBody breakableBody = new BreakableBody(triangles, world, density);
             breakableBody.MainBody.Position = position;
             world.AddBreakableBody(breakableBody);
 
