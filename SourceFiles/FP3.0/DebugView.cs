@@ -44,6 +44,9 @@ namespace FarseerPhysics
 
         /// Draw center of mass frame
         CenterOfMass = (1 << 4),
+
+        /// Draw useful debug data
+        DebugData = (1 << 5)
     }
 
     /// Implement and register this class with a World to provide debug drawing of physics

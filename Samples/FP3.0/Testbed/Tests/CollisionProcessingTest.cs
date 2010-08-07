@@ -20,7 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
 using System.Collections.Generic;
+using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
@@ -54,7 +56,8 @@ namespace FarseerPhysics.TestBed.Tests
             body1.BodyType = BodyType.Dynamic;
             body1.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
-            body1.CreateFixture(polygon, 1);
+            Fixture fixture = body1.CreateFixture(polygon, 1);
+            fixture.OnCollision += OnCollision;
 
             // Large triangle (recycle definitions)
             vertices[0] *= 2.0f;
@@ -65,7 +68,8 @@ namespace FarseerPhysics.TestBed.Tests
             Body body2 = BodyFactory.CreateBody(World);
             body2.BodyType = BodyType.Dynamic;
             body2.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
-            body2.CreateFixture(polygon, 1);
+            fixture = body2.CreateFixture(polygon, 1);
+            fixture.OnCollision += OnCollision;
 
             // Small box
             Vertices smallBox = PolygonTools.CreateRectangle(1.0f, 0.5f);
@@ -74,7 +78,8 @@ namespace FarseerPhysics.TestBed.Tests
             Body body3 = BodyFactory.CreateBody(World);
             body3.BodyType = BodyType.Dynamic;
             body3.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
-            body3.CreateFixture(polygon, 1);
+            fixture = body3.CreateFixture(polygon, 1);
+            fixture.OnCollision += OnCollision;
 
             // Large box (recycle definitions)
             Vertices largeBox = PolygonTools.CreateRectangle(2.0f, 1.0f);
@@ -83,7 +88,8 @@ namespace FarseerPhysics.TestBed.Tests
             Body body4 = BodyFactory.CreateBody(World);
             body4.BodyType = BodyType.Dynamic;
             body4.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
-            body4.CreateFixture(polygon, 1);
+            fixture = body4.CreateFixture(polygon, 1);
+            fixture.OnCollision += OnCollision;
 
             // Small circle
             CircleShape circle = new CircleShape(1.0f);
@@ -91,7 +97,8 @@ namespace FarseerPhysics.TestBed.Tests
             Body body5 = BodyFactory.CreateBody(World);
             body5.BodyType = BodyType.Dynamic;
             body5.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
-            body5.CreateFixture(circle, 1);
+            fixture = body5.CreateFixture(circle, 1);
+            fixture.OnCollision += OnCollision;
 
             // Large circle
             circle.Radius *= 2.0f;
@@ -99,68 +106,121 @@ namespace FarseerPhysics.TestBed.Tests
             Body body6 = BodyFactory.CreateBody(World);
             body6.BodyType = BodyType.Dynamic;
             body6.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
-            body6.CreateFixture(circle, 1);
+            fixture = body6.CreateFixture(circle, 1);
+            fixture.OnCollision += OnCollision;
+        }
+
+        private List<Body> _removeBodies = new List<Body>();
+
+        private bool OnCollision(Fixture fixtureA, Fixture fixtureB, Manifold manifold)
+        {
+            Body body1 = fixtureA.Body;
+            Body body2 = fixtureB.Body;
+            float mass1 = body1.Mass;
+            float mass2 = body2.Mass;
+
+            if (mass1 > 0.0f && mass2 > 0.0f)
+            {
+                if (mass2 > mass1)
+                {
+                    if (!_removeBodies.Contains(body1))
+                        _removeBodies.Add(body1);
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
 
-            // We are going to destroy some bodies according to contact
-            // points. We must buffer the bodies that should be destroyed
-            // because they may belong to multiple contact points.
-            const int k_maxNuke = 6;
-            Body[] nuke = new Body[k_maxNuke];
-            int nukeCount = 0;
-
-            // Traverse the contact results. Destroy bodies that
-            // are touching heavier bodies.
-            for (int i = 0; i < PointCount; ++i)
+            for (int i = 0; i < _removeBodies.Count; i++)
             {
-                ContactPoint point = Points[i];
-
-                Body body1 = point.FixtureA.Body;
-                Body body2 = point.FixtureB.Body;
-                float mass1 = body1.Mass;
-                float mass2 = body2.Mass;
-
-                if (mass1 > 0.0f && mass2 > 0.0f)
-                {
-                    if (mass2 > mass1)
-                    {
-                        nuke[nukeCount++] = body1;
-                    }
-                    else
-                    {
-                        nuke[nukeCount++] = body2;
-                    }
-
-                    if (nukeCount == k_maxNuke)
-                    {
-                        break;
-                    }
-                }
-            }
-
-            List<Body> dupes = new List<Body>();
-
-            // Destroy the bodies, skipping duplicates.
-            int j = 0;
-            while (j < nukeCount)
-            {
-                Body b = nuke[j++];
-                while (j < nukeCount && nuke[j] == b)
-                {
-                    ++j;
-                }
-
-                if (b != null && !dupes.Contains(b))
-                {
-                    World.RemoveBody(b);
-                    dupes.Add(b);
-                }
+                World.RemoveBody(_removeBodies[i]);
             }
         }
+
+        //private Fixture _fixtureA;
+        //private Fixture _fixtureB;
+        //private int _pointCount;
+
+        //public override void PreSolve(Dynamics.Contacts.Contact contact, ref Manifold oldManifold)
+        //{
+        //    Manifold manifold;
+        //    contact.GetManifold(out manifold);
+
+        //    _pointCount = manifold.PointCount;
+
+        //    if (_pointCount == 0)
+        //    {
+        //        return;
+        //    }
+
+        //    _fixtureA = contact.FixtureA;
+        //    _fixtureB = contact.FixtureB;
+
+        //    base.PreSolve(contact, ref oldManifold);
+        //}
+
+        //public override void Update(GameSettings settings, GameTime gameTime)
+        //{
+        //    base.Update(settings, gameTime);
+
+        //    // We are going to destroy some bodies according to contact
+        //    // points. We must buffer the bodies that should be destroyed
+        //    // because they may belong to multiple contact points.
+        //    const int maxNuke = 6;
+        //    Body[] nuke = new Body[maxNuke];
+        //    int nukeCount = 0;
+
+        //    // Traverse the contact results. Destroy bodies that
+        //    // are touching heavier bodies.
+        //    for (int i = 0; i < _pointCount; ++i)
+        //    {
+        //        Body body1 = _fixtureA.Body;
+        //        Body body2 = _fixtureB.Body;
+        //        float mass1 = body1.Mass;
+        //        float mass2 = body2.Mass;
+
+        //        if (mass1 > 0.0f && mass2 > 0.0f)
+        //        {
+        //            if (mass2 > mass1)
+        //            {
+        //                nuke[nukeCount++] = body1;
+        //            }
+        //            else
+        //            {
+        //                nuke[nukeCount++] = body2;
+        //            }
+
+        //            if (nukeCount == maxNuke)
+        //            {
+        //                break;
+        //            }
+        //        }
+        //    }
+
+        //    List<Body> dupes = new List<Body>();
+
+        //    // Destroy the bodies, skipping duplicates.
+        //    int j = 0;
+        //    while (j < nukeCount)
+        //    {
+        //        Body b = nuke[j++];
+        //        while (j < nukeCount && nuke[j] == b)
+        //        {
+        //            ++j;
+        //        }
+
+        //        if (b != null && !dupes.Contains(b))
+        //        {
+        //            World.RemoveBody(b);
+        //            dupes.Add(b);
+        //        }
+        //    }
+        //}
 
         internal static Test Create()
         {

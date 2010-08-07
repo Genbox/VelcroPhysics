@@ -84,9 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Framework\EventTrace.cs" />
     <Compile Include="Framework\Test.cs" />
-    <Compile Include="Framework\TraceEvents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />

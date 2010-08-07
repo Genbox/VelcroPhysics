@@ -31,12 +31,18 @@ namespace FarseerPhysics.DebugViewXNA
         private static List<StringData> _stringData;
         private static VertexDeclaration _vertexDeclaration;
         private static BasicEffect _effect;
+        private Vector2[] _panel = new Vector2[4];
 
         public DebugViewXNA(World world)
             : base(world)
         {
             _vertsLines = new VertexPositionColor[1000000];
             _vertsFill = new VertexPositionColor[1000000];
+
+            _panel[0] = new Vector2(20, 10);
+            _panel[1] = new Vector2(20, 20);
+            _panel[2] = new Vector2(10, 20);
+            _panel[3] = new Vector2(10, 10);
         }
 
         /// <summary>
@@ -44,6 +50,75 @@ namespace FarseerPhysics.DebugViewXNA
         /// </summary>
         public void DrawDebugData()
         {
+            //if (settings.DrawContactPoints > 0)
+            //{
+            //    const float axisScale = 0.3f;
+
+            //    for (int i = 0; i < PointCount; ++i)
+            //    {
+            //        ContactPoint point = Points[i];
+
+            //        if (point.State == PointState.Add)
+            //        {
+            //            // Add
+            //            DebugView.DrawPoint(point.Position, 1.5f, new Color(0.3f, 0.95f, 0.3f));
+            //        }
+            //        else if (point.State == PointState.Persist)
+            //        {
+            //            // Persist
+            //            DebugView.DrawPoint(point.Position, 0.65f, new Color(0.3f, 0.3f, 0.95f));
+            //        }
+
+            //        if (settings.DrawContactNormals == 1)
+            //        {
+            //            Vector2 p1 = point.Position;
+            //            Vector2 p2 = p1 + axisScale * point.Normal;
+            //            DebugView.DrawSegment(p1, p2, new Color(0.4f, 0.9f, 0.4f));
+            //        }
+            //        else if (settings.DrawContactForces == 1)
+            //        {
+            //            //Vector2 p1 = point.position;
+            //            //Vector2 p2 = p1 + k_forceScale * point.normalForce * point.normal;
+            //            //DrawSegment(p1, p2, Color(0.9f, 0.9f, 0.3f));
+            //        }
+
+            //        if (settings.DrawFrictionForces == 1)
+            //        {
+            //            //Vector2 tangent = b2Cross(point.normal, 1.0f);
+            //            //Vector2 p1 = point.position;
+            //            //Vector2 p2 = p1 + k_forceScale * point.tangentForce * tangent;
+            //            //DrawSegment(p1, p2, Color(0.9f, 0.9f, 0.3f));
+            //        }
+            //    }
+            //}
+
+            //if (settings.DrawPolygonPoints == 1)
+            //{
+            //    for (Body body = World.BodyList; body != null; body = body.Next)
+            //    {
+            //        for (Fixture f = body.FixtureList; f != null; f = f.Next)
+            //        {
+            //            PolygonShape polygon = f.Shape as PolygonShape;
+            //            if (polygon != null)
+            //            {
+            //                Transform xf;
+            //                body.GetTransform(out xf);
+
+            //                for (int i = 0; i < polygon.VertexCount; i++)
+            //                {
+            //                    Vector2 tmp = MathUtils.Multiply(ref xf, polygon.Vertices[i]);
+            //                    DebugView.DrawPoint(tmp, 0.05f, Color.Red);
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+
+            if ((Flags & DebugViewFlags.DebugData) == DebugViewFlags.DebugData)
+            {
+                //DrawDebugPanel();
+            }
+
             if ((Flags & DebugViewFlags.Shape) == DebugViewFlags.Shape)
             {
                 for (Body b = World.BodyList; b != null; b = b.Next)
@@ -147,6 +222,22 @@ namespace FarseerPhysics.DebugViewXNA
             }
         }
 
+
+        private void DrawDebugPanel()
+        {
+            DrawSolidPolygon(ref _panel, 4, Color.Red);
+
+            DrawPoint(new Vector2(0, 0), 1, Color.Yellow);
+
+            //if (settings.DrawStats > 0)
+            //{
+            //    DebugView.DrawString(50, TextLine, "bodies/contacts/joints/proxies = {0:n}/{1:n}/{2:n}/{3:n}",
+            //                         World.BodyCount, World.ContactManager.ContactCount, World.JointCount,
+            //                         World.ProxyCount);
+            //    TextLine += 15;
+            //}
+        }
+
         private void DrawJoint(Joint joint)
         {
             Body b1 = joint.BodyA;
@@ -155,7 +246,6 @@ namespace FarseerPhysics.DebugViewXNA
             b1.GetTransform(out xf1);
 
             Vector2 x2 = new Vector2();
-            Vector2 p2 = new Vector2();
 
             // WIP David
             if (!joint.IsFixedType())
@@ -163,7 +253,7 @@ namespace FarseerPhysics.DebugViewXNA
                 b2.GetTransform(out xf2);
                 x2 = xf2.Position;
             }
-            p2 = joint.WorldAnchorB;
+            Vector2 p2 = joint.WorldAnchorB;
 
             Vector2 x1 = xf1.Position;
 
@@ -179,7 +269,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case JointType.Pulley:
                     {
-                        PulleyJoint pulley = (PulleyJoint) joint;
+                        PulleyJoint pulley = (PulleyJoint)joint;
                         Vector2 s1 = pulley.GroundAnchorA;
                         Vector2 s2 = pulley.GroundAnchorB;
                         DrawSegment(s1, p1, color);
@@ -189,7 +279,12 @@ namespace FarseerPhysics.DebugViewXNA
                     break;
 
                 case JointType.FixedMouse:
-                    // don't draw this
+
+                    FixedMouseJoint fixedMouseJoint = (FixedMouseJoint)joint;
+                    p1 = fixedMouseJoint.Target;
+
+                    DrawPoint(p2, 0.5f, new Color(0.0f, 1.0f, 0.0f));
+                    DrawSegment(p1, p2, new Color(0.8f, 0.8f, 0.8f));
                     break;
                 case JointType.Revolute:
                     //DrawSegment(x2, p1, color);
@@ -231,7 +326,7 @@ namespace FarseerPhysics.DebugViewXNA
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape) fixture.Shape;
+                        CircleShape circle = (CircleShape)fixture.Shape;
 
                         Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
                         float radius = circle.Radius;
@@ -243,7 +338,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape poly = (PolygonShape) fixture.Shape;
+                        PolygonShape poly = (PolygonShape)fixture.Shape;
                         int vertexCount = poly.VertexCount;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
@@ -260,7 +355,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case ShapeType.Edge:
                     {
-                        EdgeShape edge = (EdgeShape) fixture.Shape;
+                        EdgeShape edge = (EdgeShape)fixture.Shape;
                         Vector2 v1 = MathUtils.Multiply(ref xf, edge.Vertex1);
                         Vector2 v2 = MathUtils.Multiply(ref xf, edge.Vertex2);
                         DrawSegment(v1, v2, color);
@@ -269,7 +364,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case ShapeType.Loop:
                     {
-                        LoopShape loop = (LoopShape) fixture.Shape;
+                        LoopShape loop = (LoopShape)fixture.Shape;
                         int count = loop.Count;
 
                         Vector2 v1 = MathUtils.Multiply(ref xf, loop.Vertices[count - 1]);
@@ -360,10 +455,10 @@ namespace FarseerPhysics.DebugViewXNA
 
             for (int i = 0; i < segments; i++)
             {
-                Vector2 v1 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
+                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
                 Vector2 v2 = center +
                              radius *
-                             new Vector2((float) Math.Cos(theta + increment), (float) Math.Sin(theta + increment));
+                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
 
                 _vertsLines[_lineCount * 2].Position = new Vector3(v1, 0.0f);
                 _vertsLines[_lineCount * 2].Color = color;
@@ -389,15 +484,15 @@ namespace FarseerPhysics.DebugViewXNA
 
             Color colorFill = new Color(color, 0.5f);
 
-            Vector2 v0 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
+            Vector2 v0 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
             theta += increment;
 
             for (int i = 1; i < segments - 1; i++)
             {
-                Vector2 v1 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
+                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
                 Vector2 v2 = center +
                              radius *
-                             new Vector2((float) Math.Cos(theta + increment), (float) Math.Sin(theta + increment));
+                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
 
                 _vertsFill[_fillCount * 3].Position = new Vector3(v0, 0.0f);
                 _vertsFill[_fillCount * 3].Color = colorFill;
