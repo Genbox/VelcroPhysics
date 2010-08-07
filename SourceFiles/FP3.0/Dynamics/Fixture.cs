@@ -130,8 +130,11 @@ namespace FarseerPhysics.Dynamics
             Body = body;
             Next = null;
 
+#if ConserveMemory            
+            Shape = shape;
+#else
             Shape = shape.Clone();
-
+#endif
             // Reserve proxy space
             int childCount = Shape.GetChildCount();
             Proxies = new FixtureProxy[childCount];
