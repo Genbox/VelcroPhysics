@@ -69,7 +69,9 @@ namespace FarseerPhysics.Dynamics
         Cat31 = 1073741824
     }
 
+    /// <summary>
     /// This proxy is used internally to connect fixtures to the broad-phase.
+    /// </summary>
     public class FixtureProxy
     {
         public AABB AABB;
@@ -78,11 +80,13 @@ namespace FarseerPhysics.Dynamics
         public int ProxyId;
     }
 
+    /// <summary>
     /// A fixture is used to attach a Shape to a body for collision detection. A fixture
     /// inherits its transform from its parent. Fixtures hold additional non-geometric data
     /// such as friction, collision filters, etc.
     /// Fixtures are created via Body.CreateFixture.
-    /// @warning you cannot reuse fixtures.
+    /// Warning: You cannot reuse fixtures.
+    /// </summary>
     public class Fixture
     {
         #region Delegates
@@ -114,7 +118,7 @@ namespace FarseerPhysics.Dynamics
         private short _collisionGroup;
         private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
 
-        internal Fixture()
+        internal Fixture(Body body, Shape shape, float density)
         {
             //Fixture defaults
             Friction = 0.2f;
@@ -122,43 +126,83 @@ namespace FarseerPhysics.Dynamics
             _collidesWith = CollisionCategory.All;
             IsSensor = false;
 
-            UserData = null;
-            Body = null;
+            Body = body;
             Next = null;
-            Shape = null;
+
+            Shape = shape.Clone();
+
+            // Reserve proxy space
+            int childCount = Shape.GetChildCount();
+            Proxies = new FixtureProxy[childCount];
+            for (int i = 0; i < childCount; ++i)
+            {
+                Proxies[i] = new FixtureProxy();
+                Proxies[i].Fixture = null;
+                Proxies[i].ProxyId = BroadPhase.NullProxy;
+            }
+            ProxyCount = 0;
+
+            Density = density;
+
+            FixtureId = _fixtureIdCounter++;
         }
 
+        /// <summary>
         /// Get the type of the child Shape. You can use this to down cast to the concrete Shape.
-        /// @return the Shape type.
+        /// </summary>
+        /// <value>The type of the shape.</value>
         public ShapeType ShapeType
         {
             get { return Shape.ShapeType; }
         }
 
+        /// <summary>
         /// Get the child Shape. You can modify the child Shape, however you should not change the
         /// number of vertices because this will crash some collision caching mechanisms.
-        public Shape Shape { get; internal set; }
+        /// </summary>
+        /// <value>The shape.</value>
+        public Shape Shape { get; private set; }
 
-        /// Set if this fixture is a sensor.
+        /// <summary>
+        /// Gets or sets a value indicating whether this fixture is a sensor.
+        /// </summary>
+        /// <value><c>true</c> if this instance is a sensor; otherwise, <c>false</c>.</value>
         public bool IsSensor { get; set; }
 
+        /// <summary>
         /// Get the parent body of this fixture. This is null if the fixture is not attached.
-        /// @return the parent body.
+        /// </summary>
+        /// <value>The body.</value>
         public Body Body { get; internal set; }
 
+        /// <summary>
         /// Get the next fixture in the parent body's fixture list.
-        /// @return the next Shape.
+        /// </summary>
+        /// <value>The next.</value>
         public Fixture Next { get; internal set; }
 
+        /// <summary>
         /// Set the user data. Use this to store your application specific data.
+        /// </summary>
+        /// <value>The user data.</value>
         public object UserData { get; set; }
 
+        /// <summary>
+        /// Gets or sets the density.
+        /// </summary>
+        /// <value>The density.</value>
         public float Density { get; set; }
 
-        /// Set the coefficient of friction.
+        /// <summary>
+        /// Get or set the coefficient of friction.
+        /// </summary>
+        /// <value>The friction.</value>
         public float Friction { get; set; }
 
-        /// Set the coefficient of restitution.
+        /// <summary>
+        /// Get or set the coefficient of restitution.
+        /// </summary>
+        /// <value>The restitution.</value>
         public float Restitution { get; set; }
 
         /// <summary>
@@ -226,19 +270,25 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
         /// Test a point for containment in this fixture.
-        /// @param xf the Shape world transform.
-        /// @param p a point in world coordinates.
-        public bool TestPoint(Vector2 p)
+        /// </summary>
+        /// <param name="point">A point in world coordinates.</param>
+        /// <returns></returns>
+        public bool TestPoint(Vector2 point)
         {
             Transform xf;
             Body.GetTransform(out xf);
-            return Shape.TestPoint(ref xf, p);
+            return Shape.TestPoint(ref xf, point);
         }
 
+        /// <summary>
         /// Cast a ray against this Shape.
-        /// @param output the ray-cast results.
-        /// @param input the ray-cast input parameters.
+        /// </summary>
+        /// <param name="output">The ray-cast results.</param>
+        /// <param name="input">The ray-cast input parameters.</param>
+        /// <param name="childIndex">Index of the child.</param>
+        /// <returns></returns>
         public bool RayCast(out RayCastOutput output, ref RayCastInput input, int childIndex)
         {
             Transform xf;
@@ -246,45 +296,27 @@ namespace FarseerPhysics.Dynamics
             return Shape.RayCast(out output, ref input, ref xf, childIndex);
         }
 
+        /// <summary>
         /// Get the mass data for this fixture. The mass data is based on the density and
         /// the Shape. The rotational inertia is about the Shape's origin.
+        /// </summary>
+        /// <param name="massData">The mass data.</param>
         public void GetMassData(out MassData massData)
         {
             Shape.ComputeMass(out massData, Density);
         }
 
+        /// <summary>
         /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
         /// If you need a more accurate AABB, compute it using the Shape and
         /// the body transform.
+        /// </summary>
+        /// <param name="aabb">The aabb.</param>
+        /// <param name="childIndex">Index of the child.</param>
         public void GetAABB(out AABB aabb, int childIndex)
         {
             Debug.Assert(0 <= childIndex && childIndex < ProxyCount);
             aabb = Proxies[childIndex].AABB;
-        }
-
-        // We need separation create/destroy functions from the constructor/destructor because
-        // the destructor cannot access the allocator or broad-phase (no destructor arguments allowed by C++).
-        internal void Create(Body body, Shape shape, float density)
-        {
-            Body = body;
-            Next = null;
-
-            Shape = shape.Clone();
-
-            // Reserve proxy space
-            int childCount = Shape.GetChildCount();
-            Proxies = new FixtureProxy[childCount];
-            for (int i = 0; i < childCount; ++i)
-            {
-                Proxies[i] = new FixtureProxy();
-                Proxies[i].Fixture = null;
-                Proxies[i].ProxyId = BroadPhase.NullProxy;
-            }
-            ProxyCount = 0;
-
-            Density = density;
-
-            FixtureId = _fixtureIdCounter++;
         }
 
         internal void Destroy()
@@ -330,7 +362,6 @@ namespace FarseerPhysics.Dynamics
             ProxyCount = 0;
         }
 
-
         internal void Synchronize(BroadPhase broadPhase, ref Transform transform1, ref Transform transform2)
         {
             if (ProxyCount == 0)
@@ -355,6 +386,10 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
+        /// Restores collisions between this fixture and the provided fixture.
+        /// </summary>
+        /// <param name="fixture">The fixture.</param>
         public void RestoreCollisionWith(Fixture fixture)
         {
             if (_collisionIgnores.ContainsKey(fixture.FixtureId))
@@ -364,6 +399,10 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
+        /// Ignores collisions between this fixture and the provided fixture.
+        /// </summary>
+        /// <param name="fixture">The fixture.</param>
         public void IgnoreCollisionWith(Fixture fixture)
         {
             if (_collisionIgnores.ContainsKey(fixture.FixtureId))
@@ -374,7 +413,14 @@ namespace FarseerPhysics.Dynamics
             FilterChanged();
         }
 
-        public bool IsGeometryIgnored(Fixture fixture)
+        /// <summary>
+        /// Determines whether collisions are ignored between this fixture and the provided fixture.
+        /// </summary>
+        /// <param name="fixture">The fixture.</param>
+        /// <returns>
+        /// 	<c>true</c> if the fixture is ignored; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsFixtureIgnored(Fixture fixture)
         {
             if (_collisionIgnores.ContainsKey(fixture.FixtureId))
                 return _collisionIgnores[fixture.FixtureId];

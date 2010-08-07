@@ -496,8 +496,7 @@ namespace FarseerPhysics.Dynamics
                 return null;
             }
 
-            Fixture fixture = new Fixture();
-            fixture.Create(this, shape, density);
+            Fixture fixture = new Fixture(this, shape, density);
 
             if ((Flags & BodyFlags.Active) == BodyFlags.Active)
             {
