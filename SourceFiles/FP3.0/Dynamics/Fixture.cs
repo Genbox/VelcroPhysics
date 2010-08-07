@@ -328,6 +328,11 @@ namespace FarseerPhysics.Dynamics
             Proxies = null;
 
             Shape = null;
+
+            if (Body.World.FixtureRemoved != null)
+            {
+                Body.World.FixtureRemoved(this);
+            }
         }
 
         // These support body activation/deactivation.

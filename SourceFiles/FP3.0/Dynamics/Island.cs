@@ -29,7 +29,9 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics
 {
+    /// <summary>
     /// This is an internal class.
+    /// </summary>
     internal class Island
     {
         public Body[] Bodies;

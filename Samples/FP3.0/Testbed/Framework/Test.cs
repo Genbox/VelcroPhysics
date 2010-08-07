@@ -98,10 +98,10 @@ namespace FarseerPhysics.TestBed.Framework
 
     public class Test
     {
-        private const int k_MaxContactPoints = 2048;
+        private const int MaxContactPoints = 2048;
         internal DebugViewXNA.DebugViewXNA DebugView;
         internal int PointCount;
-        internal ContactPoint[] Points = new ContactPoint[k_MaxContactPoints];
+        internal ContactPoint[] Points = new ContactPoint[MaxContactPoints];
         internal int StepCount;
         internal int TextLine;
         internal World World;
@@ -393,7 +393,7 @@ namespace FarseerPhysics.TestBed.Framework
             WorldManifold worldManifold;
             contact.GetWorldManifold(out worldManifold);
 
-            for (int i = 0; i < manifold.PointCount && PointCount < k_MaxContactPoints; ++i)
+            for (int i = 0; i < manifold.PointCount && PointCount < MaxContactPoints; ++i)
             {
                 if (fixtureA == null)
                 {

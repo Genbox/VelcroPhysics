@@ -20,6 +20,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
@@ -36,8 +37,14 @@ namespace FarseerPhysics.TestBed.Tests
         private Body[] _bodies = new Body[4];
         private Joint[] _joints = new Joint[8];
 
+        private int _removedBodies;
+        private int _removedJoints;
+
         private WebTest()
         {
+            World.JointRemoved += JointRemovedFired;
+            World.BodyRemoved += BodyRemovedFired;
+
             {
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(0.5f, 0.5f);
@@ -124,6 +131,16 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
+        private void BodyRemovedFired(Body body)
+        {
+            _removedBodies++;
+        }
+
+        private void JointRemovedFired(Joint joint)
+        {
+            _removedJoints++;
+        }
+
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
         {
             if (state.IsKeyDown(Keys.B) && oldState.IsKeyUp(Keys.B))
@@ -160,6 +177,9 @@ namespace FarseerPhysics.TestBed.Tests
             TextLine += 15;
             DebugView.DrawString(50, TextLine, "Press: (b) to delete a body, (j) to delete a joint");
             TextLine += 15;
+            DebugView.DrawString(50, TextLine, "Bodies removed: " + _removedBodies);
+            TextLine += 15;
+            DebugView.DrawString(50, TextLine, "Joints removed: " + _removedJoints);
         }
 
         public override void JointDestroyed(Joint joint)

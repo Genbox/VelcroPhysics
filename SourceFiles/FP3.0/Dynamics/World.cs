@@ -35,30 +35,61 @@ namespace FarseerPhysics.Dynamics
     [Flags]
     public enum WorldFlags
     {
+        /// <summary>
+        /// Flag that indicates a new fixture has been added to the world.
+        /// </summary>
         NewFixture = (1 << 0),
+
+        /// <summary>
+        /// Flag that determines if the world is locked.
+        /// </summary>
         Locked = (1 << 1),
+
+        /// <summary>
+        /// Flag that clear the forces after each time step.
+        /// </summary>
         ClearForces = (1 << 2),
     }
 
+    /// <summary>
     /// The world class manages all physics entities, dynamic simulation,
-    /// and asynchronous queries. The world also contains efficient memory
-    /// management facilities.
+    /// and asynchronous queries.
+    /// </summary>
     public class World
     {
         internal Queue<Contact> ContactPool = new Queue<Contact>(256);
 
         /// <summary>
-        /// Called whenever a Fixture is removed
+        /// Fires whenever a fixture has been removed
         /// </summary>
-        public FixtureRemovedDelegate FixtureRemoved;
-
-        internal WorldFlags Flags;
+        public FixtureDelegate FixtureRemoved;
 
         /// <summary>
-        /// Called whenever a Joint is removed
+        /// Fires whenever a fixture has been added
         /// </summary>
-        public JointRemovedDelegate JointRemoved;
+        public FixtureDelegate FixtureAdded;
 
+        /// <summary>
+        /// Fires whenever a body has been removed
+        /// </summary>
+        public BodyDelegate BodyRemoved;
+
+        /// <summary>
+        /// Fires whenever a body has been added
+        /// </summary>
+        public BodyDelegate BodyAdded;
+
+        /// <summary>
+        /// Fires whenever a joint has been removed
+        /// </summary>
+        public JointDelegate JointRemoved;
+
+        /// <summary>
+        /// Fires whenever a joint has been added
+        /// </summary>
+        public JointDelegate JointAdded;
+
+        internal WorldFlags Flags;
         private float _invDt0;
         private Island _island = new Island();
         private Func<FixtureProxy, bool> _queryAABBCallback;
@@ -70,9 +101,10 @@ namespace FarseerPhysics.Dynamics
         private TOISolver _toiSolver = new TOISolver();
         private Stopwatch _watch = new Stopwatch();
 
-        /// ruct a world object.
-        /// @param gravity the world gravity vector.
-        /// @param doSleep improve performance by not simulating inactive bodies.
+        /// <summary>
+        /// Initializes a new instance of the <see cref="World"/> class.
+        /// </summary>
+        /// <param name="gravity">The gravity.</param>
         public World(Vector2 gravity)
         {
             ContactManager = new ContactManager();
@@ -105,28 +137,46 @@ namespace FarseerPhysics.Dynamics
 
         public float SolveUpdateTime { get; private set; }
 
+        /// <summary>
         /// Get the number of broad-phase proxies.
+        /// </summary>
+        /// <value>The proxy count.</value>
         public int ProxyCount
         {
             get { return ContactManager.BroadPhase.ProxyCount; }
         }
 
+        /// <summary>
         /// Get the number of bodies.
+        /// </summary>
+        /// <value>The body count.</value>
         public int BodyCount { get; private set; }
 
+        /// <summary>
         /// Get the number of joints.
+        /// </summary>
+        /// <value>The joint count.</value>
         public int JointCount { get; private set; }
 
+        /// <summary>
         /// Get the number of contacts (each may have 0 or more contact points).
+        /// </summary>
+        /// <value>The contact count.</value>
         public int ContactCount
         {
             get { return ContactManager.ContactCount; }
         }
 
+        /// <summary>
         /// Change the global gravity vector.
+        /// </summary>
+        /// <value>The gravity.</value>
         public Vector2 Gravity { get; set; }
 
+        /// <summary>
         /// Is the world locked (in the middle of a time step).
+        /// </summary>
+        /// <value><c>true</c> if this instance is locked; otherwise, <c>false</c>.</value>
         public bool IsLocked
         {
             get { return (Flags & WorldFlags.Locked) == WorldFlags.Locked; }
@@ -143,7 +193,10 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
         /// Set flag to control automatic clearing of forces after each time step.
+        /// </summary>
+        /// <value><c>true</c> if it should auto clear forces; otherwise, <c>false</c>.</value>
         private bool AutoClearForces
         {
             set
@@ -160,31 +213,41 @@ namespace FarseerPhysics.Dynamics
             get { return (Flags & WorldFlags.ClearForces) == WorldFlags.ClearForces; }
         }
 
+        /// <summary>
         /// Get the contact manager for testing.
-        public ContactManager ContactManager { get; set; }
+        /// </summary>
+        /// <value>The contact manager.</value>
+        public ContactManager ContactManager { get; private set; }
 
-        /// Get the world body list. With the returned body, use Body.GetNext to get
+        /// <summary>
+        /// Get the world body list. With the returned body, use Body.Next to get
         /// the next body in the world list. A null body indicates the end of the list.
-        /// @return the head of the world body list.
+        /// </summary>
+        /// <value>Thehead of the world body list.</value>
         public Body BodyList { get; set; }
 
+        /// <summary>
         /// Get the world joint list. With the returned joint, use Joint.GetNext to get
         /// the next joint in the world list. A null joint indicates the end of the list.
-        /// @return the head of the world joint list.
+        /// </summary>
+        /// <value>The head of the world joint list.</value>
         public Joint JointList { get; set; }
 
+        /// <summary>
         /// Get the world contact list. With the returned contact, use Contact.GetNext to get
         /// the next contact in the world list. A null contact indicates the end of the list.
-        /// @return the head of the world contact list.
-        /// @warning contacts are 
+        /// </summary>
+        /// <value>The head of the world contact list.</value>
         public Contact ContactList
         {
             get { return ContactManager.ContactList; }
         }
 
-        /// Create a rigid body given a definition. No reference to the definition
-        /// is retained.
-        /// @warning This function is locked during callbacks.
+        /// <summary>
+        /// Create a rigid body.
+        /// Warning: This function is locked during callbacks.
+        /// </summary>
+        /// <returns></returns>
         public Body CreateBody()
         {
             Debug.Assert(!IsLocked);
@@ -193,26 +256,31 @@ namespace FarseerPhysics.Dynamics
                 return null;
             }
 
-            Body b = new Body(this);
+            Body body = new Body(this);
 
             // Add to world doubly linked list.
-            b.Prev = null;
-            b.Next = BodyList;
+            body.Prev = null;
+            body.Next = BodyList;
             if (BodyList != null)
             {
-                BodyList.Prev = b;
+                BodyList.Prev = body;
             }
-            BodyList = b;
+            BodyList = body;
             ++BodyCount;
 
-            return b;
+            if (BodyAdded != null)
+                BodyAdded(body);
+
+            return body;
         }
 
-        /// Destroy a rigid body given a definition. No reference to the definition
-        /// is retained. This function is locked during callbacks.
-        /// @warning This automatically deletes all associated shapes and joints.
-        /// @warning This function is locked during callbacks.
-        public void RemoveBody(Body b)
+        /// <summary>
+        /// Destroy a rigid body.
+        /// Warning: This function is locked during callbacks.
+        /// Warning: This automatically deletes all associated shapes and joints.
+        /// </summary>
+        /// <param name="body">The body.</param>
+        public void RemoveBody(Body body)
         {
             Debug.Assert(BodyCount > 0);
             Debug.Assert(!IsLocked);
@@ -222,72 +290,67 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Delete the attached joints.
-            JointEdge je = b.JointList;
+            JointEdge je = body.JointList;
             while (je != null)
             {
                 JointEdge je0 = je;
                 je = je.Next;
 
-                if (JointRemoved != null)
-                {
-                    JointRemoved(je0.Joint);
-                }
-
                 RemoveJoint(je0.Joint);
             }
-            b.JointList = null;
+            body.JointList = null;
 
             // Delete the attached contacts.
-            ContactEdge ce = b.ContactList;
+            ContactEdge ce = body.ContactList;
             while (ce != null)
             {
                 ContactEdge ce0 = ce;
                 ce = ce.Next;
                 ContactManager.Destroy(ce0.Contact);
             }
-            b.ContactList = null;
+            body.ContactList = null;
 
             // Delete the attached fixtures. This destroys broad-phase proxies.
-            Fixture f = b.FixtureList;
+            Fixture f = body.FixtureList;
             while (f != null)
             {
                 Fixture f0 = f;
                 f = f.Next;
 
-                if (FixtureRemoved != null)
-                {
-                    FixtureRemoved(f0);
-                }
-
                 f0.DestroyProxies(ContactManager.BroadPhase);
                 f0.Destroy();
             }
-            b.FixtureList = null;
-            b.FixtureCount = 0;
+            body.FixtureList = null;
+            body.FixtureCount = 0;
 
             // Remove world body list.
-            if (b.Prev != null)
+            if (body.Prev != null)
             {
-                b.Prev.Next = b.Next;
+                body.Prev.Next = body.Next;
             }
 
-            if (b.Next != null)
+            if (body.Next != null)
             {
-                b.Next.Prev = b.Prev;
+                body.Next.Prev = body.Prev;
             }
 
-            if (b == BodyList)
+            if (body == BodyList)
             {
-                BodyList = b.Next;
+                BodyList = body.Next;
             }
 
             --BodyCount;
+
+            if (BodyRemoved != null)
+                BodyRemoved(body);
         }
 
-        /// Create a joint to rain bodies together. No reference to the definition
-        /// is retained. This may cause the connected bodies to cease colliding.
-        /// @warning This function is locked during callbacks.
-        public void AddJoint(Joint j)
+        /// <summary>
+        /// Create a joint to constrain bodies together. This may cause the connected bodies to cease colliding.
+        /// Warning: This function is locked during callbacks.
+        /// </summary>
+        /// <param name="joint">The joint.</param>
+        public void AddJoint(Joint joint)
         {
             Debug.Assert(!IsLocked);
             if (IsLocked)
@@ -296,48 +359,48 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Connect to the world list.
-            j._prev = null;
-            j._next = JointList;
+            joint._prev = null;
+            joint._next = JointList;
             if (JointList != null)
             {
-                JointList._prev = j;
+                JointList._prev = joint;
             }
-            JointList = j;
+            JointList = joint;
             ++JointCount;
 
             // Connect to the bodies' doubly linked lists.
-            j._edgeA.Joint = j;
-            j._edgeA.Other = j.BodyB;
-            j._edgeA.Prev = null;
-            j._edgeA.Next = j.BodyA.JointList;
+            joint._edgeA.Joint = joint;
+            joint._edgeA.Other = joint.BodyB;
+            joint._edgeA.Prev = null;
+            joint._edgeA.Next = joint.BodyA.JointList;
 
-            if (j.BodyA.JointList != null)
-                j.BodyA.JointList.Prev = j._edgeA;
+            if (joint.BodyA.JointList != null)
+                joint.BodyA.JointList.Prev = joint._edgeA;
 
-            j.BodyA.JointList = j._edgeA;
+            joint.BodyA.JointList = joint._edgeA;
 
             // WIP David
-            if (!j.IsFixedType())
+            if (!joint.IsFixedType())
             {
-                j._edgeB.Joint = j;
-                j._edgeB.Other = j.BodyA;
-                j._edgeB.Prev = null;
-                j._edgeB.Next = j.BodyB.JointList;
+                joint._edgeB.Joint = joint;
+                joint._edgeB.Other = joint.BodyA;
+                joint._edgeB.Prev = null;
+                joint._edgeB.Next = joint.BodyB.JointList;
 
-                if (j.BodyB.JointList != null)
-                    j.BodyB.JointList.Prev = j._edgeB;
+                if (joint.BodyB.JointList != null)
+                    joint.BodyB.JointList.Prev = joint._edgeB;
 
-                j.BodyB.JointList = j._edgeB;
+                joint.BodyB.JointList = joint._edgeB;
             }
 
             // WIP David
-            if (!j.IsFixedType())
+            if (!joint.IsFixedType())
             {
-                Body bodyA = j.BodyA;
-                Body bodyB = j.BodyB;
+                Body bodyA = joint.BodyA;
+                Body bodyB = joint.BodyB;
 
                 // If the joint prevents collisions, then flag any contacts for filtering.
-                if (j.CollideConnected == false)
+                if (joint.CollideConnected == false)
                 {
                     ContactEdge edge = bodyB.ContactList;
                     while (edge != null)
@@ -353,12 +416,19 @@ namespace FarseerPhysics.Dynamics
                     }
                 }
             }
+
+            if (JointAdded != null)
+                JointAdded(joint);
+
             // Note: creating a joint doesn't wake the bodies.
         }
 
+        /// <summary>
         /// Destroy a joint. This may cause the connected bodies to begin colliding.
-        /// @warning This function is locked during callbacks.
-        public void RemoveJoint(Joint j)
+        /// Warning: This function is locked during callbacks.
+        /// </summary>
+        /// <param name="joint">The joint.</param>
+        public void RemoveJoint(Joint joint)
         {
             Debug.Assert(!IsLocked);
             if (IsLocked)
@@ -366,84 +436,84 @@ namespace FarseerPhysics.Dynamics
                 return;
             }
 
-            bool collideConnected = j.CollideConnected;
+            bool collideConnected = joint.CollideConnected;
 
             // Remove from the doubly linked list.
-            if (j._prev != null)
+            if (joint._prev != null)
             {
-                j._prev._next = j._next;
+                joint._prev._next = joint._next;
             }
 
-            if (j._next != null)
+            if (joint._next != null)
             {
-                j._next._prev = j._prev;
+                joint._next._prev = joint._prev;
             }
 
-            if (j == JointList)
+            if (joint == JointList)
             {
-                JointList = j._next;
+                JointList = joint._next;
             }
 
             // Disconnect from island graph.
-            Body bodyA = j.BodyA;
-            Body bodyB = j.BodyB;
+            Body bodyA = joint.BodyA;
+            Body bodyB = joint.BodyB;
 
             // Wake up connected bodies.
             bodyA.Awake = true;
 
             // WIP David
-            if (!j.IsFixedType())
+            if (!joint.IsFixedType())
             {
                 bodyB.Awake = true;
             }
 
             // Remove from body 1.
-            if (j._edgeA.Prev != null)
+            if (joint._edgeA.Prev != null)
             {
-                j._edgeA.Prev.Next = j._edgeA.Next;
+                joint._edgeA.Prev.Next = joint._edgeA.Next;
             }
 
-            if (j._edgeA.Next != null)
+            if (joint._edgeA.Next != null)
             {
-                j._edgeA.Next.Prev = j._edgeA.Prev;
+                joint._edgeA.Next.Prev = joint._edgeA.Prev;
             }
 
-            if (j._edgeA == bodyA.JointList)
+            if (joint._edgeA == bodyA.JointList)
             {
-                bodyA.JointList = j._edgeA.Next;
+                bodyA.JointList = joint._edgeA.Next;
             }
 
-            j._edgeA.Prev = null;
-            j._edgeA.Next = null;
+            joint._edgeA.Prev = null;
+            joint._edgeA.Next = null;
 
             // WIP David
-            if (!j.IsFixedType())
+            if (!joint.IsFixedType())
             {
                 // Remove from body 2
-                if (j._edgeB.Prev != null)
+                if (joint._edgeB.Prev != null)
                 {
-                    j._edgeB.Prev.Next = j._edgeB.Next;
+                    joint._edgeB.Prev.Next = joint._edgeB.Next;
                 }
 
-                if (j._edgeB.Next != null)
+                if (joint._edgeB.Next != null)
                 {
-                    j._edgeB.Next.Prev = j._edgeB.Prev;
+                    joint._edgeB.Next.Prev = joint._edgeB.Prev;
                 }
 
-                if (j._edgeB == bodyB.JointList)
+                if (joint._edgeB == bodyB.JointList)
                 {
-                    bodyB.JointList = j._edgeB.Next;
+                    bodyB.JointList = joint._edgeB.Next;
                 }
 
-                j._edgeB.Prev = null;
-                j._edgeB.Next = null;
+                joint._edgeB.Prev = null;
+                joint._edgeB.Next = null;
             }
 
             Debug.Assert(JointCount > 0);
             --JointCount;
 
             // WIP David
-            if (!j.IsFixedType())
+            if (!joint.IsFixedType())
             {
                 // If the joint prevents collisions, then flag any contacts for filtering.
                 if (collideConnected == false)
@@ -462,13 +532,18 @@ namespace FarseerPhysics.Dynamics
                     }
                 }
             }
+
+            if (JointRemoved != null)
+            {
+                JointRemoved(joint);
+            }
         }
 
+        /// <summary>
         /// Take a time step. This performs collision detection, integration,
-        /// and raint solution.
-        /// @param timeStep the amount of time to simulate, this should not vary.
-        /// @param velocityIterations for the velocity raint solver.
-        /// @param positionIterations for the position raint solver.
+        /// and consraint solution.
+        /// </summary>
+        /// <param name="dt">The amount of time to simulate, this should not vary.</param>
         public void Step(float dt)
         {
             if (Settings.EnableDiagnostics)
@@ -558,10 +633,11 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
         /// Call this after you are done with time steps to clear the forces. You normally
         /// call this after each call to Step, unless you are performing sub-steps. By default,
         /// forces will be automatically cleared, so you don't need to call this function.
-        /// @see SetAutoClearForces
+        /// </summary>
         public void ClearForces()
         {
             for (Body body = BodyList; body != null; body = body.Next)
@@ -571,10 +647,12 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
         /// Query the world for all fixtures that potentially overlap the
         /// provided AABB.
-        /// @param callback a user implemented callback class.
-        /// @param aabb the query box.
+        /// </summary>
+        /// <param name="callback">A user implemented callback class.</param>
+        /// <param name="aabb">The aabb query box.</param>
         public void QueryAABB(Func<FixtureProxy, bool> callback, ref AABB aabb)
         {
             _queryAABBCallback = callback;
@@ -588,12 +666,14 @@ namespace FarseerPhysics.Dynamics
             return _queryAABBCallback(proxy);
         }
 
+        /// <summary>
         /// Ray-cast the world for all fixtures in the path of the ray. Your callback
         /// controls whether you get the closest point, any point, or n-points.
         /// The ray-cast ignores shapes that contain the starting point.
-        /// @param callback a user implemented callback class.
-        /// @param point1 the ray starting point
-        /// @param point2 the ray ending point
+        /// </summary>
+        /// <param name="callback">A user implemented callback class.</param>
+        /// <param name="point1">The ray starting point.</param>
+        /// <param name="point2">The ray ending point.</param>
         public void RayCast(RayCastCallback callback, Vector2 point1, Vector2 point2)
         {
             RayCastInput input = new RayCastInput();

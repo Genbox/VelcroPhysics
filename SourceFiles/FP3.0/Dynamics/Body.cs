@@ -521,6 +521,11 @@ namespace FarseerPhysics.Dynamics
             // to be created at the beginning of the next time step.
             World.Flags |= WorldFlags.NewFixture;
 
+            if (World.FixtureAdded != null)
+            {
+                World.FixtureAdded(fixture);
+            }
+
             return fixture;
         }
 
