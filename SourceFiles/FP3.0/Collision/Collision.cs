@@ -173,15 +173,15 @@ namespace FarseerPhysics.Collision
                         Vector2 pointA = MathUtils.Multiply(ref xfA, manifold.LocalPoint);
                         Vector2 pointB = MathUtils.Multiply(ref xfB, manifold.Points[0].LocalPoint);
                         Normal = new Vector2(1.0f, 0.0f);
-                        if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon*Settings.Epsilon)
+                        if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
                         {
                             Normal = pointB - pointA;
                             Normal.Normalize();
                         }
 
-                        Vector2 cA = pointA + radiusA*Normal;
-                        Vector2 cB = pointB - radiusB*Normal;
-                        Points[0] = 0.5f*(cA + cB);
+                        Vector2 cA = pointA + radiusA * Normal;
+                        Vector2 cB = pointB - radiusB * Normal;
+                        Points[0] = 0.5f * (cA + cB);
                     }
                     break;
 
@@ -193,9 +193,9 @@ namespace FarseerPhysics.Collision
                         for (int i = 0; i < manifold.PointCount; ++i)
                         {
                             Vector2 clipPoint = MathUtils.Multiply(ref xfB, manifold.Points[i].LocalPoint);
-                            Vector2 cA = clipPoint + (radiusA - Vector2.Dot(clipPoint - planePoint, Normal))*Normal;
-                            Vector2 cB = clipPoint - radiusB*Normal;
-                            Points[i] = 0.5f*(cA + cB);
+                            Vector2 cA = clipPoint + (radiusA - Vector2.Dot(clipPoint - planePoint, Normal)) * Normal;
+                            Vector2 cB = clipPoint - radiusB * Normal;
+                            Points[i] = 0.5f * (cA + cB);
                         }
                     }
                     break;
@@ -208,9 +208,9 @@ namespace FarseerPhysics.Collision
                         for (int i = 0; i < manifold.PointCount; ++i)
                         {
                             Vector2 clipPoint = MathUtils.Multiply(ref xfA, manifold.Points[i].LocalPoint);
-                            Vector2 cA = clipPoint - radiusA*Normal;
-                            Vector2 cB = clipPoint + (radiusB - Vector2.Dot(clipPoint - planePoint, Normal))*Normal;
-                            Points[i] = 0.5f*(cA + cB);
+                            Vector2 cA = clipPoint - radiusA * Normal;
+                            Vector2 cB = clipPoint + (radiusB - Vector2.Dot(clipPoint - planePoint, Normal)) * Normal;
+                            Points[i] = 0.5f * (cA + cB);
                         }
                         // Ensure normal points from A to B.
                         Normal *= -1;
@@ -294,13 +294,13 @@ namespace FarseerPhysics.Collision
         /// Get the center of the AABB.
         public Vector2 GetCenter()
         {
-            return 0.5f*(LowerBound + UpperBound);
+            return 0.5f * (LowerBound + UpperBound);
         }
 
         /// Get the extents of the AABB (half-widths).
         public Vector2 GetExtents()
         {
-            return 0.5f*(UpperBound - LowerBound);
+            return 0.5f * (UpperBound - LowerBound);
         }
 
         /// Get the perimeter length
@@ -308,7 +308,7 @@ namespace FarseerPhysics.Collision
         {
             float wx = UpperBound.X - LowerBound.X;
             float wy = UpperBound.Y - LowerBound.Y;
-            return 2.0f*(wx + wy);
+            return 2.0f * (wx + wy);
         }
 
         /// Combine an AABB into this one.
@@ -385,7 +385,7 @@ namespace FarseerPhysics.Collision
             DistanceOutput output;
             Distance.ComputeDistance(out output, out cache, ref input);
 
-            return output.Distance < 10.0f*Settings.Epsilon;
+            return output.Distance < 10.0f * Settings.Epsilon;
         }
 
 
@@ -422,9 +422,9 @@ namespace FarseerPhysics.Collision
                 {
                     float d_i = i == 0 ? d.X : d.Y;
 
-                    float inv_d = 1.0f/d_i;
-                    float t1 = (lowerBound_i - p_i)*inv_d;
-                    float t2 = (upperBound_i - p_i)*inv_d;
+                    float inv_d = 1.0f / d_i;
+                    float t1 = (lowerBound_i - p_i) * inv_d;
+                    float t2 = (upperBound_i - p_i) * inv_d;
 
                     // Sign of the normal vector.
                     float s = -1.0f;
@@ -561,7 +561,7 @@ namespace FarseerPhysics.Collision
             float rA = circleA.Radius;
             float rB = circleB.Radius;
             float radius = rA + rB;
-            if (distSqr > radius*radius)
+            if (distSqr > radius * radius)
             {
                 return;
             }
@@ -625,7 +625,7 @@ namespace FarseerPhysics.Collision
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.FaceA;
                 manifold.LocalNormal = polygonA.Normals[normalIndex];
-                manifold.LocalPoint = 0.5f*(v1 + v2);
+                manifold.LocalPoint = 0.5f * (v1 + v2);
 
                 var p0 = manifold.Points[0];
 
@@ -642,7 +642,7 @@ namespace FarseerPhysics.Collision
             float u2 = Vector2.Dot(cLocal - v2, v1 - v2);
             if (u1 <= 0.0f)
             {
-                if (Vector2.DistanceSquared(cLocal, v1) > radius*radius)
+                if (Vector2.DistanceSquared(cLocal, v1) > radius * radius)
                 {
                     return;
                 }
@@ -662,7 +662,7 @@ namespace FarseerPhysics.Collision
             }
             else if (u2 <= 0.0f)
             {
-                if (Vector2.DistanceSquared(cLocal, v2) > radius*radius)
+                if (Vector2.DistanceSquared(cLocal, v2) > radius * radius)
                 {
                     return;
                 }
@@ -682,7 +682,7 @@ namespace FarseerPhysics.Collision
             }
             else
             {
-                Vector2 faceCenter = 0.5f*(v1 + v2);
+                Vector2 faceCenter = 0.5f * (v1 + v2);
                 float separation2 = Vector2.Dot(cLocal - faceCenter, polygonA.Normals[vertIndex1]);
                 if (separation2 > radius)
                 {
@@ -729,7 +729,7 @@ namespace FarseerPhysics.Collision
             const float k_relativeTol = 0.98f;
             const float k_absoluteTol = 0.001f;
 
-            if (separationB > k_relativeTol*separationA + k_absoluteTol)
+            if (separationB > k_relativeTol * separationA + k_absoluteTol)
             {
                 poly1 = polyB;
                 poly2 = polyA;
@@ -765,7 +765,7 @@ namespace FarseerPhysics.Collision
             localTangent.Normalize();
 
             Vector2 localNormal = MathUtils.Cross(localTangent, 1.0f);
-            Vector2 planePoint = 0.5f*(v11 + v12);
+            Vector2 planePoint = 0.5f * (v11 + v12);
 
             Vector2 tangent = MathUtils.Multiply(ref xf1.R, localTangent);
             Vector2 normal = MathUtils.Cross(tangent, 1.0f);
@@ -865,7 +865,7 @@ namespace FarseerPhysics.Collision
                 P = A;
                 d = Q - P;
                 float dd = Vector2.Dot(d, d);
-                if (dd > radius*radius)
+                if (dd > radius * radius)
                 {
                     return;
                 }
@@ -905,7 +905,7 @@ namespace FarseerPhysics.Collision
                 P = B;
                 d = Q - P;
                 float dd = Vector2.Dot(d, d);
-                if (dd > radius*radius)
+                if (dd > radius * radius)
                 {
                     return;
                 }
@@ -942,10 +942,10 @@ namespace FarseerPhysics.Collision
             // Region AB
             float den = Vector2.Dot(e, e);
             Debug.Assert(den > 0.0f);
-            P = (1.0f/den)*(u*A + v*B);
+            P = (1.0f / den) * (u * A + v * B);
             d = Q - P;
             float dd2 = Vector2.Dot(d, d);
-            if (dd2 > radius*radius)
+            if (dd2 > radius * radius)
             {
                 return;
             }
@@ -1133,11 +1133,11 @@ namespace FarseerPhysics.Collision
                 Vector2 v0 = edgeA.Vertex0;
                 float s = Vector2.Dot(edgeNormal, v0 - v1);
 
-                if (s > 0.1f*Settings.LinearSlop)
+                if (s > 0.1f * Settings.LinearSlop)
                 {
                     types[0] = EdgeType.Concave;
                 }
-                else if (s >= -0.1f*Settings.LinearSlop)
+                else if (s >= -0.1f * Settings.LinearSlop)
                 {
                     types[0] = EdgeType.Flat;
                 }
@@ -1151,11 +1151,11 @@ namespace FarseerPhysics.Collision
             {
                 Vector2 v3 = edgeA.Vertex3;
                 float s = Vector2.Dot(edgeNormal, v3 - v2);
-                if (s > 0.1f*Settings.LinearSlop)
+                if (s > 0.1f * Settings.LinearSlop)
                 {
                     types[1] = EdgeType.Concave;
                 }
-                else if (s >= -0.1f*Settings.LinearSlop)
+                else if (s >= -0.1f * Settings.LinearSlop)
                 {
                     types[1] = EdgeType.Flat;
                 }
@@ -1218,7 +1218,7 @@ namespace FarseerPhysics.Collision
             const float k_absoluteTol = 0.001f;
 
             EPAxis primaryAxis;
-            if (polygonAxis.Separation > k_relativeTol*edgeAxis.Separation + k_absoluteTol)
+            if (polygonAxis.Separation > k_relativeTol * edgeAxis.Separation + k_absoluteTol)
             {
                 primaryAxis = polygonAxis;
             }
@@ -1261,7 +1261,7 @@ namespace FarseerPhysics.Collision
             tangent.Normalize();
 
             Vector2 normal = MathUtils.Cross(tangent, 1.0f);
-            Vector2 planePoint = 0.5f*(v11 + v12);
+            Vector2 planePoint = 0.5f * (v11 + v12);
 
             // Face offset.
             float frontOffset = Vector2.Dot(normal, v11);
@@ -1360,14 +1360,14 @@ namespace FarseerPhysics.Collision
             if (distance1 <= 0.0f) vOut[numOut++] = vIn[1];
 
             // If the points are on different sides of the plane
-            if (distance0*distance1 < 0.0f)
+            if (distance0 * distance1 < 0.0f)
             {
                 // Find intersection point of edge and plane
-                float interp = distance0/(distance0 - distance1);
+                float interp = distance0 / (distance0 - distance1);
 
                 var cv = vOut[numOut];
 
-                cv.V = vIn[0].V + interp*(vIn[1].V - vIn[0].V);
+                cv.V = vIn[0].V + interp * (vIn[1].V - vIn[0].V);
 
                 // VertexA is hitting edgeB.
                 cv.ID.Features.IndexA = (byte) vertexIndexA;
@@ -1398,10 +1398,10 @@ namespace FarseerPhysics.Collision
             Vector2 normal1 = MathUtils.MultiplyT(ref xf2.R, normal1World);
 #else
             Vector2 p1n = poly1.Normals[edge1];
-            Vector2 normal1World = new Vector2(xf1.R.col1.X*p1n.X + xf1.R.col2.X*p1n.Y,
-                                               xf1.R.col1.Y*p1n.X + xf1.R.col2.Y*p1n.Y);
-            Vector2 normal1 = new Vector2(normal1World.X*xf2.R.col1.X + normal1World.Y*xf2.R.col1.Y,
-                                          normal1World.X*xf2.R.col2.X + normal1World.Y*xf2.R.col2.Y);
+            Vector2 normal1World = new Vector2(xf1.R.col1.X * p1n.X + xf1.R.col2.X * p1n.Y,
+                                               xf1.R.col1.Y * p1n.X + xf1.R.col2.Y * p1n.Y);
+            Vector2 normal1 = new Vector2(normal1World.X * xf2.R.col1.X + normal1World.Y * xf2.R.col1.Y,
+                                          normal1World.X * xf2.R.col2.X + normal1World.Y * xf2.R.col2.Y);
 #endif
             // Find support vertex on poly2 for -normal.
             int index = 0;
@@ -1429,10 +1429,10 @@ namespace FarseerPhysics.Collision
 #else
             Vector2 p1ve = poly1.Vertices[edge1];
             Vector2 p2vi = poly2.Vertices[index];
-            Vector2 v1 = new Vector2(xf1.Position.X + xf1.R.col1.X*p1ve.X + xf1.R.col2.X*p1ve.Y,
-                                     xf1.Position.Y + xf1.R.col1.Y*p1ve.X + xf1.R.col2.Y*p1ve.Y);
-            Vector2 v2 = new Vector2(xf2.Position.X + xf2.R.col1.X*p2vi.X + xf2.R.col2.X*p2vi.Y,
-                                     xf2.Position.Y + xf2.R.col1.Y*p2vi.X + xf2.R.col2.Y*p2vi.Y);
+            Vector2 v1 = new Vector2(xf1.Position.X + xf1.R.col1.X * p1ve.X + xf1.R.col2.X * p1ve.Y,
+                                     xf1.Position.Y + xf1.R.col1.Y * p1ve.X + xf1.R.col2.Y * p1ve.Y);
+            Vector2 v2 = new Vector2(xf2.Position.X + xf2.R.col1.X * p2vi.X + xf2.R.col2.X * p2vi.Y,
+                                     xf2.Position.Y + xf2.R.col1.Y * p2vi.X + xf2.R.col2.Y * p2vi.Y);
 #endif
 
 #if !MATH_OVERLOADS

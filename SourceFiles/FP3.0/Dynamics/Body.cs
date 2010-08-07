@@ -73,7 +73,6 @@ namespace FarseerPhysics.Dynamics
         internal int FixtureCount;
         internal BodyFlags Flags;
         internal Vector2 Force;
-        private float _inertia;
         internal float InvI;
         internal float InvMass;
         internal Vector2 LinearVelocityInternal;
@@ -83,6 +82,7 @@ namespace FarseerPhysics.Dynamics
         internal BodyType Type;
         internal World World;
         internal Transform Xf; // the body origin transform
+        private float _inertia;
 
         internal Body(World world)
         {
@@ -102,7 +102,10 @@ namespace FarseerPhysics.Dynamics
         /// Gets the total number revolutions the body has made.
         /// </summary>
         /// <value>The revolutions.</value>
-        public float Revolutions { get { return Rotation / (float)Math.PI; } }
+        public float Revolutions
+        {
+            get { return Rotation / (float) Math.PI; }
+        }
 
         /// <summary>
         /// Gets or sets the body type.

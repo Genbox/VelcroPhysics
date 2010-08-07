@@ -99,36 +99,36 @@ namespace FarseerPhysics.Dynamics.Contacts
         private static EdgeShape _edge = new EdgeShape();
 
         private static ContactType[,] _registers = new[,]
-                                                        {
-                                                            {
-                                                                ContactType.Circle,
-                                                                ContactType.EdgeAndCircle,
-                                                                ContactType.PolygonAndCircle,
-                                                                ContactType.LoopAndCircle,
-                                                            },
-                                                            {
-                                                                ContactType.EdgeAndCircle,
-                                                                ContactType.EdgeAndCircle,
-                                                                // 1,1 is invalid (no ContactType.Edge)
-                                                                ContactType.EdgeAndPolygon,
-                                                                ContactType.EdgeAndPolygon,
-                                                                // 1,3 is invalid (no ContactType.EdgeAndLoop)
-                                                            },
-                                                            {
-                                                                ContactType.PolygonAndCircle,
-                                                                ContactType.EdgeAndPolygon,
-                                                                ContactType.Polygon,
-                                                                ContactType.LoopAndPolygon,
-                                                            },
-                                                            {
-                                                                ContactType.LoopAndCircle,
-                                                                ContactType.LoopAndCircle,
-                                                                // 3,1 is invalid (no ContactType.EdgeAndLoop)
-                                                                ContactType.LoopAndPolygon,
-                                                                ContactType.LoopAndPolygon,
-                                                                // 3,3 is invalid (no ContactType.Loop)
-                                                            },
-                                                        };
+                                                       {
+                                                           {
+                                                               ContactType.Circle,
+                                                               ContactType.EdgeAndCircle,
+                                                               ContactType.PolygonAndCircle,
+                                                               ContactType.LoopAndCircle,
+                                                           },
+                                                           {
+                                                               ContactType.EdgeAndCircle,
+                                                               ContactType.EdgeAndCircle,
+                                                               // 1,1 is invalid (no ContactType.Edge)
+                                                               ContactType.EdgeAndPolygon,
+                                                               ContactType.EdgeAndPolygon,
+                                                               // 1,3 is invalid (no ContactType.EdgeAndLoop)
+                                                           },
+                                                           {
+                                                               ContactType.PolygonAndCircle,
+                                                               ContactType.EdgeAndPolygon,
+                                                               ContactType.Polygon,
+                                                               ContactType.LoopAndPolygon,
+                                                           },
+                                                           {
+                                                               ContactType.LoopAndCircle,
+                                                               ContactType.LoopAndCircle,
+                                                               // 3,1 is invalid (no ContactType.EdgeAndLoop)
+                                                               ContactType.LoopAndPolygon,
+                                                               ContactType.LoopAndPolygon,
+                                                               // 3,3 is invalid (no ContactType.Loop)
+                                                           },
+                                                       };
 
         public Fixture FixtureA;
         public Fixture FixtureB;
@@ -180,6 +180,18 @@ namespace FarseerPhysics.Dynamics.Contacts
         public int ChildIndexB { get; internal set; }
 
         /// <summary>
+        /// Get the next contact in the world's contact list.
+        /// </summary>
+        /// <value>The next.</value>
+        public Contact Next { get; internal set; }
+
+        /// <summary>
+        /// Get the previous contact in the world's contact list.
+        /// </summary>
+        /// <value>The prev.</value>
+        public Contact Prev { get; internal set; }
+
+        /// <summary>
         /// Get the contact manifold. Do not modify the manifold unless you understand the
         /// internals of Box2D.
         /// </summary>
@@ -217,18 +229,6 @@ namespace FarseerPhysics.Dynamics.Contacts
         {
             return (Flags & ContactFlags.Touching) == ContactFlags.Touching;
         }
-
-        /// <summary>
-        /// Get the next contact in the world's contact list.
-        /// </summary>
-        /// <value>The next.</value>
-        public Contact Next { get; internal set; }
-
-        /// <summary>
-        /// Get the previous contact in the world's contact list.
-        /// </summary>
-        /// <value>The prev.</value>
-        public Contact Prev { get; internal set; }
 
         /// <summary>
         /// Flag this contact for filtering. Filtering will occur the next time step.

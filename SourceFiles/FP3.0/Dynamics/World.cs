@@ -57,12 +57,17 @@ namespace FarseerPhysics.Dynamics
     /// </summary>
     public class World
     {
-        internal Queue<Contact> ContactPool = new Queue<Contact>(256);
+        /// <summary>
+        /// Fires whenever a body has been added
+        /// </summary>
+        public BodyDelegate BodyAdded;
 
         /// <summary>
-        /// Fires whenever a fixture has been removed
+        /// Fires whenever a body has been removed
         /// </summary>
-        public FixtureDelegate FixtureRemoved;
+        public BodyDelegate BodyRemoved;
+
+        internal Queue<Contact> ContactPool = new Queue<Contact>(256);
 
         /// <summary>
         /// Fires whenever a fixture has been added
@@ -70,26 +75,22 @@ namespace FarseerPhysics.Dynamics
         public FixtureDelegate FixtureAdded;
 
         /// <summary>
-        /// Fires whenever a body has been removed
+        /// Fires whenever a fixture has been removed
         /// </summary>
-        public BodyDelegate BodyRemoved;
+        public FixtureDelegate FixtureRemoved;
 
-        /// <summary>
-        /// Fires whenever a body has been added
-        /// </summary>
-        public BodyDelegate BodyAdded;
-
-        /// <summary>
-        /// Fires whenever a joint has been removed
-        /// </summary>
-        public JointDelegate JointRemoved;
+        internal WorldFlags Flags;
 
         /// <summary>
         /// Fires whenever a joint has been added
         /// </summary>
         public JointDelegate JointAdded;
 
-        internal WorldFlags Flags;
+        /// <summary>
+        /// Fires whenever a joint has been removed
+        /// </summary>
+        public JointDelegate JointRemoved;
+
         private float _invDt0;
         private Island _island = new Island();
         private Func<FixtureProxy, bool> _queryAABBCallback;

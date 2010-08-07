@@ -70,9 +70,9 @@ namespace FarseerPhysics.Common
 
             for (i = 0; i < Count; i++)
             {
-                int j = (i + 1)%Count;
-                area += this[i].X*this[j].Y;
-                area -= this[i].Y*this[j].X;
+                int j = (i + 1) % Count;
+                area += this[i].X * this[j].Y;
+                area -= this[i].Y * this[j].X;
             }
             area /= 2.0f;
             return area;
@@ -89,9 +89,9 @@ namespace FarseerPhysics.Common
 
             for (i = 0; i < Count; i++)
             {
-                int j = (i + 1)%Count;
-                area += this[i].X*this[j].Y;
-                area -= this[i].Y*this[j].X;
+                int j = (i + 1) % Count;
+                area += this[i].X * this[j].Y;
+                area -= this[i].Y * this[j].X;
             }
             area /= 2.0f;
             return (area < 0 ? -area : area);
@@ -108,7 +108,7 @@ namespace FarseerPhysics.Common
             Vector2 c = Vector2.Zero;
             float area = 0.0f;
 
-            const float inv3 = 1.0f/3.0f;
+            const float inv3 = 1.0f / 3.0f;
             Vector2 pRef = new Vector2(0.0f, 0.0f);
             for (int i = 0; i < Count; ++i)
             {
@@ -122,15 +122,15 @@ namespace FarseerPhysics.Common
 
                 float D = MathUtils.Cross(e1, e2);
 
-                float triangleArea = 0.5f*D;
+                float triangleArea = 0.5f * D;
                 area += triangleArea;
 
                 // Area weighted centroid
-                c += triangleArea*inv3*(p1 + p2 + p3);
+                c += triangleArea * inv3 * (p1 + p2 + p3);
             }
 
             // Centroid
-            c *= 1.0f/area;
+            c *= 1.0f / area;
             return c;
         }
 
@@ -188,7 +188,7 @@ namespace FarseerPhysics.Common
                 float dx1 = this[upper].X - this[middle].X;
                 float dy1 = this[upper].Y - this[middle].Y;
 
-                float cross = dx0*dy1 - dx1*dy0;
+                float cross = dx0 * dy1 - dx1 * dy0;
                 // Cross product should have same sign
                 // for each vertex if poly is convex.
                 bool newIsP = (cross >= 0) ? true : false;
@@ -316,7 +316,7 @@ namespace FarseerPhysics.Common
                 //Too skinny check
                 for (int j = 0; j < Count; ++j)
                 {
-                    if (j == i || j == (i + 1)%Count)
+                    if (j == i || j == (i + 1) % Count)
                     {
                         continue;
                     }
@@ -403,7 +403,7 @@ namespace FarseerPhysics.Common
         /// <returns></returns>
         public Vertices TraceEdge(Vertices verts)
         {
-            PolyNode[] nodes = new PolyNode[verts.Count*verts.Count];
+            PolyNode[] nodes = new PolyNode[verts.Count * verts.Count];
             //overkill, but sufficient (order of mag. is right)
             int nNodes = 0;
 
@@ -510,7 +510,7 @@ namespace FarseerPhysics.Common
                     {
                         if (nodes[j].nConnected == 0) continue;
                         Vector2 diff = nodes[i].position - nodes[j].position;
-                        if (diff.LengthSquared() <= Settings.Epsilon*Settings.Epsilon)
+                        if (diff.LengthSquared() <= Settings.Epsilon * Settings.Epsilon)
                         {
                             if (nActive <= 3)
                                 return new Vertices();
@@ -591,7 +591,7 @@ namespace FarseerPhysics.Common
             }
 
             Vector2 origDir = new Vector2(1.0f, 0.0f);
-            Vector2[] resultVecs = new Vector2[4*nNodes];
+            Vector2[] resultVecs = new Vector2[4 * nNodes];
             // nodes may be visited more than once, unfortunately - change to growable array!
             int nResultVecs = 0;
             PolyNode currentNode = nodes[minYIndex];
@@ -615,7 +615,7 @@ namespace FarseerPhysics.Common
             ++nResultVecs;
             while (nextNode != startNode)
             {
-                if (nResultVecs > 4*nNodes)
+                if (nResultVecs > 4 * nNodes)
                 {
                     /*
                     printf("%d, %d, %d\n",(int)startNode,(int)currentNode,(int)nextNode);
@@ -702,7 +702,7 @@ namespace FarseerPhysics.Common
             //Fix for obnoxious behavior for the % operator for negative numbers...
             private int remainder(int x, int modulus)
             {
-                int rem = x%modulus;
+                int rem = x % modulus;
                 while (rem < 0)
                 {
                     rem += modulus;
@@ -803,7 +803,7 @@ namespace FarseerPhysics.Common
                         printf("That one has %d\n",connected[i].nConnected);
                         if (this == connected[i]) printf("This points at itself.\n");
                     }*/
-                    Debug.Assert(testLengthSqr >= Settings.Epsilon*Settings.Epsilon);
+                    Debug.Assert(testLengthSqr >= Settings.Epsilon * Settings.Epsilon);
                     float myCos = Vector2.Dot(inDir, testDir);
                     float mySin = MathUtils.Cross(inDir, testDir);
                     if (result != null)

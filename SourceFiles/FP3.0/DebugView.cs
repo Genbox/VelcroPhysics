@@ -41,9 +41,9 @@ namespace FarseerPhysics
 
         /// Draw broad-phase pairs
         Pair = (1 << 3),
-        
+
         /// Draw center of mass frame
-        CenterOfMass = (1 << 4), 
+        CenterOfMass = (1 << 4),
     }
 
     /// Implement and register this class with a World to provide debug drawing of physics

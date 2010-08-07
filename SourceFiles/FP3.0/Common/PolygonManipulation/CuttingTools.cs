@@ -100,7 +100,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 }
                 offset.Normalize();
 
-                newPolygon[n][cutAdded[n]] += splitSize*offset;
+                newPolygon[n][cutAdded[n]] += splitSize * offset;
 
                 if (cutAdded[n] < newPolygon[n].Count - 2)
                 {
@@ -112,7 +112,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 }
                 offset.Normalize();
 
-                newPolygon[n][cutAdded[n] + 1] += splitSize*offset;
+                newPolygon[n][cutAdded[n] + 1] += splitSize * offset;
             }
 
             first = newPolygon[0];

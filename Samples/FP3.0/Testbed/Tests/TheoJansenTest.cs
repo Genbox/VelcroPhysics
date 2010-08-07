@@ -210,7 +210,8 @@ namespace FarseerPhysics.TestBed.Tests
             World.AddJoint(djd4);
 
             Vector2 anchor = p4 - new Vector2(0.0f, 0.8f) /*+ _offset*/;
-            RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, body2.GetLocalPoint(_chassis.GetWorldPoint(anchor)), anchor);
+            RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, body2.GetLocalPoint(_chassis.GetWorldPoint(anchor)),
+                                                  anchor);
             World.AddJoint(rjd);
         }
 

@@ -32,9 +32,8 @@ namespace FarseerPhysics.Dynamics
         /// Fires when a contact is created
         /// </summary>
         public BeginContactDelegate BeginContact;
-        public BroadPhase BroadPhase = new BroadPhase();
 
-        public Action<FixtureProxy, FixtureProxy> OnBroadphaseCollision;
+        public BroadPhase BroadPhase = new BroadPhase();
 
         public int ContactCount;
 
@@ -47,11 +46,13 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public EndContactDelegate EndContact;
 
+        public Action<FixtureProxy, FixtureProxy> OnBroadphaseCollision;
+
         /// <summary>
         /// Fires after the solver has run
         /// </summary>
         public PostSolveDelegate PostSolve;
-        
+
         /// <summary>
         /// Fires before the solver runs
         /// </summary>

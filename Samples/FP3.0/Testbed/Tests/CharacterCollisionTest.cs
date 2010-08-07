@@ -10,6 +10,8 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class CharacterCollisionTest : Test
     {
+        private bool _collision;
+
         private CharacterCollisionTest()
         {
             Fixture ground = FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
@@ -82,8 +84,6 @@ namespace FarseerPhysics.TestBed.Tests
             circleCharacter.Body.AllowSleep = false;
 #endif
         }
-
-        private bool _collision;
 
         private bool CharacterOnCollision(Fixture fixtureA, Fixture fixtureB, Manifold manifold)
         {

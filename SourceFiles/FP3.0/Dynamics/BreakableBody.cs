@@ -111,10 +111,10 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < Parts.Count; i++)
             {
                 Fixture fixture = Parts[i];
-                
+
                 //Unsubsribe from the PostSolve delegate
                 fixture.PostSolve -= PostSolve;
-                
+
                 Shape shape = fixture.Shape.Clone();
 
                 MainBody.DestroyFixture(fixture);

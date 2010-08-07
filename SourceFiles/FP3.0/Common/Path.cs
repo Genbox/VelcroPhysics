@@ -150,7 +150,7 @@ namespace FarseerPhysics.Common
         {
             List<Vector2> verts = new List<Vector2>();
 
-            float timeStep = 1f/divisions;
+            float timeStep = 1f / divisions;
 
             for (float i = 0; i < 1f; i += timeStep)
             {
@@ -171,9 +171,9 @@ namespace FarseerPhysics.Common
             {
                 Add(ControlPoints[0]);
 
-                delta_t = 1f/(ControlPoints.Count - 1);
+                delta_t = 1f / (ControlPoints.Count - 1);
 
-                int p = (int) (time/delta_t);
+                int p = (int) (time / delta_t);
 
                 // use a circular indexing system
                 int p0 = p - 1;
@@ -190,7 +190,7 @@ namespace FarseerPhysics.Common
                 else if (p3 >= ControlPoints.Count - 1) p3 = p3 - (ControlPoints.Count - 1);
 
                 // relative time
-                float lt = (time - delta_t*p)/delta_t;
+                float lt = (time - delta_t * p) / delta_t;
 
                 temp = Vector2.CatmullRom(ControlPoints[p0], ControlPoints[p1], ControlPoints[p2], ControlPoints[p3], lt);
 
@@ -198,7 +198,7 @@ namespace FarseerPhysics.Common
             }
             else
             {
-                int p = (int) (time/delta_t);
+                int p = (int) (time / delta_t);
 
                 // 
                 int p0 = p - 1;
@@ -215,7 +215,7 @@ namespace FarseerPhysics.Common
                 else if (p3 >= ControlPoints.Count - 1) p3 = ControlPoints.Count - 1;
 
                 // relative time
-                float lt = (time - delta_t*p)/delta_t;
+                float lt = (time - delta_t * p) / delta_t;
 
                 temp = Vector2.CatmullRom(ControlPoints[p0], ControlPoints[p1], ControlPoints[p2], ControlPoints[p3], lt);
             }
@@ -250,24 +250,24 @@ namespace FarseerPhysics.Common
         public void Add(Vector2 point)
         {
             ControlPoints.Add(point);
-            delta_t = 1f/(ControlPoints.Count - 1);
+            delta_t = 1f / (ControlPoints.Count - 1);
         }
 
         public void Remove(Vector2 point)
         {
             ControlPoints.Remove(point);
-            delta_t = 1f/(ControlPoints.Count - 1);
+            delta_t = 1f / (ControlPoints.Count - 1);
         }
 
         public void RemoveAt(int index)
         {
             ControlPoints.RemoveAt(index);
-            delta_t = 1f/(ControlPoints.Count - 1);
+            delta_t = 1f / (ControlPoints.Count - 1);
         }
 
         public float GetLength()
         {
-            List<Vector2> verts = GetVertices(ControlPoints.Count*25);
+            List<Vector2> verts = GetVertices(ControlPoints.Count * 25);
             float length = 0;
 
             for (int i = 1; i < verts.Count; i++)
@@ -287,7 +287,7 @@ namespace FarseerPhysics.Common
 
             float length = GetLength();
 
-            float deltaLength = length/divisions + 0.001f;
+            float deltaLength = length / divisions + 0.001f;
             float t = 0.000f;
 
             // we always start at the first control point
@@ -295,7 +295,7 @@ namespace FarseerPhysics.Common
             Vector2 end = GetPosition(t);
 
             // increment t until we are at half the distance
-            while (deltaLength*0.5f >= Vector2.Distance(start, end))
+            while (deltaLength * 0.5f >= Vector2.Distance(start, end))
             {
                 end = GetPosition(t);
                 t += 0.0001f;

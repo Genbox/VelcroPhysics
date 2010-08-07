@@ -87,7 +87,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         public byte TransitionAlpha
         {
-            get { return (byte)(255 - TransitionPosition * 255); }
+            get { return (byte) (255 - TransitionPosition * 255); }
         }
 
         /// <summary>
@@ -215,8 +215,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 if (World != null)
                 {
                     // variable time step but never less then 30 Hz
-                    World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f,
-                                                   (1f / 30f)));
+                    World.Step(Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f,
+                                        (1f / 30f)));
                     Settings.VelocityIterations = 5;
                     Settings.PositionIterations = 3;
                 }
@@ -234,7 +234,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             if (time == TimeSpan.Zero)
                 transitionDelta = 1;
             else
-                transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
+                transitionDelta = (float) (gameTime.ElapsedGameTime.TotalMilliseconds /
                                            time.TotalMilliseconds);
 
             // Update the transition position.
@@ -320,39 +320,39 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             // Make a small box.
             AABB aabb;
             Vector2 d = new Vector2(0.001f, 0.001f);
-            aabb.lowerBound = p - d;
-            aabb.upperBound = p + d;
+            aabb.LowerBound = p - d;
+            aabb.UpperBound = p + d;
 
             Fixture _fixture = null;
 
             // Query the world for overlapping shapes.
             World.QueryAABB(
                 fixture =>
-                {
-                    Body body = fixture.fixture.GetBody();
-                    if (body.GetType() == BodyType.Dynamic)
                     {
-                        bool inside = fixture.fixture.TestPoint(p);
-                        if (inside)
+                        Body body = fixture.Fixture.Body;
+                        if (body.BodyType == BodyType.Dynamic)
                         {
-                            _fixture = fixture.fixture;
+                            bool inside = fixture.Fixture.TestPoint(p);
+                            if (inside)
+                            {
+                                _fixture = fixture.Fixture;
 
-                            // We are done, terminate the query.
-                            return false;
+                                // We are done, terminate the query.
+                                return false;
+                            }
                         }
-                    }
 
-                    // Continue the query.
-                    return true;
-                }, ref aabb);
+                        // Continue the query.
+                        return true;
+                    }, ref aabb);
 
             if (_fixture != null)
             {
-                Body body = _fixture.GetBody();
+                Body body = _fixture.Body;
                 _fixedMouseJoint = new FixedMouseJoint(body, p);
-                _fixedMouseJoint.MaxForce = 1000.0f * body.GetMass();
+                _fixedMouseJoint.MaxForce = 1000.0f * body.Mass;
                 World.AddJoint(_fixedMouseJoint);
-                body.SetAwake(true);
+                body.Awake = true;
             }
         }
 
@@ -360,7 +360,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             if (_fixedMouseJoint != null)
             {
-                World.DestroyJoint(_fixedMouseJoint);
+                World.RemoveJoint(_fixedMouseJoint);
                 _fixedMouseJoint = null;
             }
         }
@@ -383,7 +383,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             {
                 if (DebugViewEnabled)
                 {
-                    float aspect = (float)ScreenManager.ScreenWidth / ScreenManager.ScreenHeight;
+                    float aspect = (float) ScreenManager.ScreenWidth / ScreenManager.ScreenHeight;
 
                     Projection = Matrix.CreateOrthographic(40 * aspect, 40, 0, 1);
 

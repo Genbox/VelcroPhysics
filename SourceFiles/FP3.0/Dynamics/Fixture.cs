@@ -97,6 +97,8 @@ namespace FarseerPhysics.Dynamics
 
         #endregion
 
+        private static int _fixtureIdCounter;
+
         /// <summary>
         /// Fires when two shapes collide and a contact is created between them.
         /// Note that the first fixture argument is always the fixture that the delegate is subscribed to.
@@ -109,7 +111,6 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public SeparationEventHandler OnSeparation;
 
-        private static int _fixtureIdCounter;
         public Action<ContactConstraint> PostSolve;
         public FixtureProxy[] Proxies;
         public int ProxyCount;
