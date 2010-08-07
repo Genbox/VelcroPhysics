@@ -134,7 +134,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         public Fixture FixtureB;
         internal ContactFlags Flags;
 
-        internal Manifold Manifold;
+        public Manifold Manifold;
 
         // Nodes for connecting bodies.
         internal ContactEdge NodeA = new ContactEdge();

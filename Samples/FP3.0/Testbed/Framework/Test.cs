@@ -22,13 +22,10 @@
 
 using System;
 using FarseerPhysics.Collision;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Framework
@@ -100,6 +97,12 @@ namespace FarseerPhysics.TestBed.Framework
             DebugView = new DebugViewXNA.DebugViewXNA(World);
             DebugView.AppendFlags(DebugViewFlags.Shape);
             DebugView.AppendFlags(DebugViewFlags.Joint);
+            //DebugView.AppendFlags(DebugViewFlags.AABB);
+            //DebugView.AppendFlags(DebugViewFlags.CenterOfMass);
+            //DebugView.AppendFlags(DebugViewFlags.Pair);
+            //DebugView.AppendFlags(DebugViewFlags.ContactPoints);
+            //DebugView.AppendFlags(DebugViewFlags.ContactNormals);
+            DebugView.AppendFlags(DebugViewFlags.PolygonPoints);
         }
 
         protected virtual void JointRemoved(Joint joint)
@@ -121,11 +124,11 @@ namespace FarseerPhysics.TestBed.Framework
 
             if (GameInstance.DebugViewEnabled)
             {
-                DebugView.AppendFlags(DebugViewFlags.DebugData);
+                DebugView.AppendFlags(DebugViewFlags.DebugPanel);
             }
             else
             {
-                DebugView.RemoveFlags(DebugViewFlags.DebugData);
+                DebugView.RemoveFlags(DebugViewFlags.DebugPanel);
             }
 
             // added

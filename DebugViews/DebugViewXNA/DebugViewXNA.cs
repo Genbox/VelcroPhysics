@@ -31,7 +31,16 @@ namespace FarseerPhysics.DebugViewXNA
         private static List<StringData> _stringData;
         private static VertexDeclaration _vertexDeclaration;
         private static BasicEffect _effect;
-        private Vector2[] _panel = new Vector2[4];
+        private const int MaxContactPoints = 2048;
+        private ContactPoint[] Points = new ContactPoint[MaxContactPoints];
+        private int PointCount;
+
+        public struct ContactPoint
+        {
+            public Vector2 Normal;
+            public Vector2 Position;
+            public PointState State;
+        }
 
         public DebugViewXNA(World world)
             : base(world)
@@ -39,10 +48,43 @@ namespace FarseerPhysics.DebugViewXNA
             _vertsLines = new VertexPositionColor[1000000];
             _vertsFill = new VertexPositionColor[1000000];
 
-            _panel[0] = new Vector2(20, 10);
-            _panel[1] = new Vector2(20, 20);
-            _panel[2] = new Vector2(10, 20);
-            _panel[3] = new Vector2(10, 10);
+            //TODO: Remember to remove subscription inside dispose
+            world.ContactManager.PreSolve += PreSolve;
+        }
+
+        private void PreSolve(Contact contact, ref Manifold oldManifold)
+        {
+            if ((Flags & DebugViewFlags.ContactPoints) == DebugViewFlags.ContactPoints)
+            {
+                Manifold manifold = contact.Manifold;
+
+                if (manifold.PointCount == 0)
+                {
+                    return;
+                }
+
+                Fixture fixtureA = contact.FixtureA;
+
+                FixedArray2<PointState> state1, state2;
+                Collision.Collision.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
+
+                WorldManifold worldManifold;
+                contact.GetWorldManifold(out worldManifold);
+
+                for (int i = 0; i < manifold.PointCount && PointCount < MaxContactPoints; ++i)
+                {
+                    if (fixtureA == null)
+                    {
+                        Points[i] = new ContactPoint();
+                    }
+                    ContactPoint cp = Points[PointCount];
+                    cp.Position = worldManifold.Points[i];
+                    cp.Normal = worldManifold.Normal;
+                    cp.State = state2[i];
+                    Points[PointCount] = cp;
+                    ++PointCount;
+                }
+            }
         }
 
         /// <summary>
@@ -50,73 +92,61 @@ namespace FarseerPhysics.DebugViewXNA
         /// </summary>
         public void DrawDebugData()
         {
-            //if (settings.DrawContactPoints > 0)
-            //{
-            //    const float axisScale = 0.3f;
-
-            //    for (int i = 0; i < PointCount; ++i)
-            //    {
-            //        ContactPoint point = Points[i];
-
-            //        if (point.State == PointState.Add)
-            //        {
-            //            // Add
-            //            DebugView.DrawPoint(point.Position, 1.5f, new Color(0.3f, 0.95f, 0.3f));
-            //        }
-            //        else if (point.State == PointState.Persist)
-            //        {
-            //            // Persist
-            //            DebugView.DrawPoint(point.Position, 0.65f, new Color(0.3f, 0.3f, 0.95f));
-            //        }
-
-            //        if (settings.DrawContactNormals == 1)
-            //        {
-            //            Vector2 p1 = point.Position;
-            //            Vector2 p2 = p1 + axisScale * point.Normal;
-            //            DebugView.DrawSegment(p1, p2, new Color(0.4f, 0.9f, 0.4f));
-            //        }
-            //        else if (settings.DrawContactForces == 1)
-            //        {
-            //            //Vector2 p1 = point.position;
-            //            //Vector2 p2 = p1 + k_forceScale * point.normalForce * point.normal;
-            //            //DrawSegment(p1, p2, Color(0.9f, 0.9f, 0.3f));
-            //        }
-
-            //        if (settings.DrawFrictionForces == 1)
-            //        {
-            //            //Vector2 tangent = b2Cross(point.normal, 1.0f);
-            //            //Vector2 p1 = point.position;
-            //            //Vector2 p2 = p1 + k_forceScale * point.tangentForce * tangent;
-            //            //DrawSegment(p1, p2, Color(0.9f, 0.9f, 0.3f));
-            //        }
-            //    }
-            //}
-
-            //if (settings.DrawPolygonPoints == 1)
-            //{
-            //    for (Body body = World.BodyList; body != null; body = body.Next)
-            //    {
-            //        for (Fixture f = body.FixtureList; f != null; f = f.Next)
-            //        {
-            //            PolygonShape polygon = f.Shape as PolygonShape;
-            //            if (polygon != null)
-            //            {
-            //                Transform xf;
-            //                body.GetTransform(out xf);
-
-            //                for (int i = 0; i < polygon.VertexCount; i++)
-            //                {
-            //                    Vector2 tmp = MathUtils.Multiply(ref xf, polygon.Vertices[i]);
-            //                    DebugView.DrawPoint(tmp, 0.05f, Color.Red);
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-
-            if ((Flags & DebugViewFlags.DebugData) == DebugViewFlags.DebugData)
+            if ((Flags & DebugViewFlags.ContactPoints) == DebugViewFlags.ContactPoints)
             {
-                //DrawDebugPanel();
+                const float axisScale = 0.3f;
+
+                for (int i = 0; i < PointCount; ++i)
+                {
+                    ContactPoint point = Points[i];
+
+                    if (point.State == PointState.Add)
+                    {
+                        // Add
+                        DrawPoint(point.Position, 0.65f, new Color(0.3f, 0.95f, 0.3f));
+                    }
+                    else if (point.State == PointState.Persist)
+                    {
+                        // Persist
+                        DrawPoint(point.Position, 0.65f, new Color(0.3f, 0.3f, 0.95f));
+                    }
+
+                    if ((Flags & DebugViewFlags.ContactNormals) == DebugViewFlags.ContactNormals)
+                    {
+                        Vector2 p1 = point.Position;
+                        Vector2 p2 = p1 + axisScale * point.Normal;
+                        DrawSegment(p1, p2, new Color(0.4f, 0.9f, 0.4f));
+                    }
+                }
+
+                PointCount = 0;
+            }
+
+            if ((Flags & DebugViewFlags.PolygonPoints) == DebugViewFlags.PolygonPoints)
+            {
+                for (Body body = World.BodyList; body != null; body = body.Next)
+                {
+                    for (Fixture f = body.FixtureList; f != null; f = f.Next)
+                    {
+                        PolygonShape polygon = f.Shape as PolygonShape;
+                        if (polygon != null)
+                        {
+                            Transform xf;
+                            body.GetTransform(out xf);
+
+                            for (int i = 0; i < polygon.VertexCount; i++)
+                            {
+                                Vector2 tmp = MathUtils.Multiply(ref xf, polygon.Vertices[i]);
+                                DrawPoint(tmp, 0.05f, Color.Red);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ((Flags & DebugViewFlags.DebugPanel) == DebugViewFlags.DebugPanel)
+            {
+                DrawDebugPanel();
             }
 
             if ((Flags & DebugViewFlags.Shape) == DebugViewFlags.Shape)
@@ -222,20 +252,21 @@ namespace FarseerPhysics.DebugViewXNA
             }
         }
 
-
         private void DrawDebugPanel()
         {
-            DrawSolidPolygon(ref _panel, 4, Color.Red);
+            DrawString(50, 100, "Bodies: " + World.BodyCount);
 
-            DrawPoint(new Vector2(0, 0), 1, Color.Yellow);
+            //TODO: Is the number of contacts reliable?
+            DrawString(50, 115, "Contacts: " + World.ContactCount);
+            DrawString(50, 130, "Joints: " + World.JointCount);
+            DrawString(50, 145, "Proxies: " + World.ProxyCount);
 
-            //if (settings.DrawStats > 0)
-            //{
-            //    DebugView.DrawString(50, TextLine, "bodies/contacts/joints/proxies = {0:n}/{1:n}/{2:n}/{3:n}",
-            //                         World.BodyCount, World.ContactManager.ContactCount, World.JointCount,
-            //                         World.ProxyCount);
-            //    TextLine += 15;
-            //}
+            DrawString(150, 100, "New contacts: " + World.NewContactsTime);
+            DrawString(150, 115, "Controllers: " + World.ControllersUpdateTime);
+            DrawString(150, 130, "Contacts: " + World.ContactsUpdateTime);
+            DrawString(150, 145, "Solve: " + World.SolveUpdateTime);
+            DrawString(150, 160, "CCD: " + World.ContinuousPhysicsTime);
+            DrawString(150, 175, "Total: " + World.UpdateTime);
         }
 
         private void DrawJoint(Joint joint)
