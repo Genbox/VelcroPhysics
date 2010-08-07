@@ -564,6 +564,8 @@ namespace FarseerPhysics.Dynamics
 
             // Remove the fixture from this body's singly linked list.
             Debug.Assert(FixtureCount > 0);
+
+#if DEBUG
             Fixture node = FixtureList;
             bool found = false;
             while (node != null)
@@ -580,6 +582,7 @@ namespace FarseerPhysics.Dynamics
 
             // You tried to remove a shape that is not attached to this body.
             Debug.Assert(found);
+#endif
 
             // Destroy any contacts associated with the fixture.
             ContactEdge edge = ContactList;

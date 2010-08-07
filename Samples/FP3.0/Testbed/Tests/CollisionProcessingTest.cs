@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using System.Collections.Generic;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
@@ -140,87 +139,9 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 World.RemoveBody(_removeBodies[i]);
             }
+
+            _removeBodies.Clear();
         }
-
-        //private Fixture _fixtureA;
-        //private Fixture _fixtureB;
-        //private int _pointCount;
-
-        //public override void PreSolve(Dynamics.Contacts.Contact contact, ref Manifold oldManifold)
-        //{
-        //    Manifold manifold;
-        //    contact.GetManifold(out manifold);
-
-        //    _pointCount = manifold.PointCount;
-
-        //    if (_pointCount == 0)
-        //    {
-        //        return;
-        //    }
-
-        //    _fixtureA = contact.FixtureA;
-        //    _fixtureB = contact.FixtureB;
-
-        //    base.PreSolve(contact, ref oldManifold);
-        //}
-
-        //public override void Update(GameSettings settings, GameTime gameTime)
-        //{
-        //    base.Update(settings, gameTime);
-
-        //    // We are going to destroy some bodies according to contact
-        //    // points. We must buffer the bodies that should be destroyed
-        //    // because they may belong to multiple contact points.
-        //    const int maxNuke = 6;
-        //    Body[] nuke = new Body[maxNuke];
-        //    int nukeCount = 0;
-
-        //    // Traverse the contact results. Destroy bodies that
-        //    // are touching heavier bodies.
-        //    for (int i = 0; i < _pointCount; ++i)
-        //    {
-        //        Body body1 = _fixtureA.Body;
-        //        Body body2 = _fixtureB.Body;
-        //        float mass1 = body1.Mass;
-        //        float mass2 = body2.Mass;
-
-        //        if (mass1 > 0.0f && mass2 > 0.0f)
-        //        {
-        //            if (mass2 > mass1)
-        //            {
-        //                nuke[nukeCount++] = body1;
-        //            }
-        //            else
-        //            {
-        //                nuke[nukeCount++] = body2;
-        //            }
-
-        //            if (nukeCount == maxNuke)
-        //            {
-        //                break;
-        //            }
-        //        }
-        //    }
-
-        //    List<Body> dupes = new List<Body>();
-
-        //    // Destroy the bodies, skipping duplicates.
-        //    int j = 0;
-        //    while (j < nukeCount)
-        //    {
-        //        Body b = nuke[j++];
-        //        while (j < nukeCount && nuke[j] == b)
-        //        {
-        //            ++j;
-        //        }
-
-        //        if (b != null && !dupes.Contains(b))
-        //        {
-        //            World.RemoveBody(b);
-        //            dupes.Add(b);
-        //        }
-        //    }
-        //}
 
         internal static Test Create()
         {

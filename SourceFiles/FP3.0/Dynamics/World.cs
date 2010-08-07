@@ -285,10 +285,13 @@ namespace FarseerPhysics.Dynamics
         {
             Debug.Assert(BodyCount > 0);
             Debug.Assert(!IsLocked);
+
             if (IsLocked)
             {
                 return;
             }
+
+            //TODO: Check if the body you are about to delete is in the body linked list
 
             // Delete the attached joints.
             JointEdge je = body.JointList;
