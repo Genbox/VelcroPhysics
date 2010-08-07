@@ -52,9 +52,11 @@ namespace FarseerPhysics.Dynamics
 
     public delegate void PostSolveDelegate(Contact contact, ref ContactImpulse impulse);
 
-    public delegate void FixtureRemovedDelegate(Fixture fixture);
+    public delegate void FixtureDelegate(Fixture fixture);
 
-    public delegate void JointRemovedDelegate(Joint joint);
+    public delegate void JointDelegate(Joint joint);
+
+    public delegate void BodyDelegate(Body body);
 
     public delegate bool CollisionFilterDelegate(Fixture fixtureA, Fixture fixtureB);
 
