@@ -28,6 +28,7 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics
 {
+    /// <summary>
     /// Called for each fixture found in the query. You control how the ray cast
     /// proceeds by returning a float:
     /// return -1: ignore this fixture and continue
@@ -39,6 +40,7 @@ namespace FarseerPhysics.Dynamics
     /// @param normal the normal vector at the point of intersection
     /// @return -1 to filter, 0 to terminate, fraction to clip the ray for
     /// closest hit, 1 to continue
+    /// </summary>
     public delegate float RayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction);
 
     /// <summary>
@@ -46,6 +48,9 @@ namespace FarseerPhysics.Dynamics
     /// </summary>
     public delegate void EndContactDelegate(Contact contact);
 
+    /// <summary>
+    /// This delegate is called when a contact is created
+    /// </summary>
     public delegate void BeginContactDelegate(Contact contact);
 
     public delegate void PreSolveDelegate(Contact contact, ref Manifold oldManifold);
