@@ -32,8 +32,8 @@ namespace FarseerPhysics.DebugViewXNA
         private static VertexDeclaration _vertexDeclaration;
         private static BasicEffect _effect;
         private const int MaxContactPoints = 2048;
-        private ContactPoint[] Points = new ContactPoint[MaxContactPoints];
-        private int PointCount;
+        private ContactPoint[] _points = new ContactPoint[MaxContactPoints];
+        private int _pointCount;
 
         public struct ContactPoint
         {
@@ -71,18 +71,18 @@ namespace FarseerPhysics.DebugViewXNA
                 WorldManifold worldManifold;
                 contact.GetWorldManifold(out worldManifold);
 
-                for (int i = 0; i < manifold.PointCount && PointCount < MaxContactPoints; ++i)
+                for (int i = 0; i < manifold.PointCount && _pointCount < MaxContactPoints; ++i)
                 {
                     if (fixtureA == null)
                     {
-                        Points[i] = new ContactPoint();
+                        _points[i] = new ContactPoint();
                     }
-                    ContactPoint cp = Points[PointCount];
+                    ContactPoint cp = _points[_pointCount];
                     cp.Position = worldManifold.Points[i];
                     cp.Normal = worldManifold.Normal;
                     cp.State = state2[i];
-                    Points[PointCount] = cp;
-                    ++PointCount;
+                    _points[_pointCount] = cp;
+                    ++_pointCount;
                 }
             }
         }
@@ -96,9 +96,9 @@ namespace FarseerPhysics.DebugViewXNA
             {
                 const float axisScale = 0.3f;
 
-                for (int i = 0; i < PointCount; ++i)
+                for (int i = 0; i < _pointCount; ++i)
                 {
-                    ContactPoint point = Points[i];
+                    ContactPoint point = _points[i];
 
                     if (point.State == PointState.Add)
                     {
@@ -119,7 +119,7 @@ namespace FarseerPhysics.DebugViewXNA
                     }
                 }
 
-                PointCount = 0;
+                _pointCount = 0;
             }
 
             if ((Flags & DebugViewFlags.PolygonPoints) == DebugViewFlags.PolygonPoints)
