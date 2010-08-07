@@ -30,23 +30,50 @@ namespace FarseerPhysics
     [Flags]
     public enum DebugViewFlags
     {
-        /// Draw shapes
+        /// <summary>
+        /// Draw shapes.
+        /// </summary>
         Shape = (1 << 0),
 
-        /// Draw joint connections
+        /// <summary>
+        /// Draw joint connections.
+        /// </summary>
         Joint = (1 << 1),
 
-        /// Draw axis aligned bounding boxes
+        /// <summary>
+        /// Draw axis aligned bounding boxes.
+        /// </summary>
         AABB = (1 << 2),
 
-        /// Draw broad-phase pairs
+        /// <summary>
+        /// Draw broad-phase pairs.
+        /// </summary>
         Pair = (1 << 3),
 
-        /// Draw center of mass frame
+        /// <summary>
+        /// Draw center of mass frame.
+        /// </summary>
         CenterOfMass = (1 << 4),
 
-        /// Draw useful debug data
-        DebugData = (1 << 5)
+        /// <summary>
+        /// Draw useful debug data such as timings and number of bodies, joints, contacts and more.
+        /// </summary>
+        DebugPanel = (1 << 5),
+
+        /// <summary>
+        /// Draw contact points between colliding bodies.
+        /// </summary>
+        ContactPoints = (1 << 6),
+
+        /// <summary>
+        /// Draw contact normals. Need ContactPoints to be enabled first.
+        /// </summary>
+        ContactNormals = (1 << 7),
+        
+        /// <summary>
+        /// Draws the vertices of polygons
+        /// </summary>
+        PolygonPoints = (1 << 8),
     }
 
     /// Implement and register this class with a World to provide debug drawing of physics
