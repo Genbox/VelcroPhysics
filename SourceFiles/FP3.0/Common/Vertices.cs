@@ -135,6 +135,25 @@ namespace FarseerPhysics.Common
         }
 
         /// <summary>
+        /// Gets the radius based on area.
+        /// </summary>
+        /// <returns></returns>
+        public float GetRadius()
+        {
+            float radius;
+            float area = GetSignedArea();
+
+            double radiusSqrd = (double)area / MathHelper.Pi;
+            if (radiusSqrd < 0)
+            {
+                radiusSqrd *= -1;
+            }
+
+            radius = (float)System.Math.Sqrt(radiusSqrd);
+            return radius;
+        }
+
+        /// <summary>
         /// Translates the vertices with the specified vector.
         /// </summary>
         /// <param name="vector">The vector.</param>
