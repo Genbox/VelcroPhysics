@@ -20,12 +20,13 @@ namespace FarseerPhysics.TestBed.Tests
         {
             _messages = new List<TextMessage>();
 
-            _left = PolygonTools.CreateGear(5, 10, 40, 5);
+            //_left = PolygonTools.CreateGear(5, 10, 40, 5);
 
-            //_left.Add(new Vector2(0.5f, 0.5f));
-            //_left.Add(new Vector2(2, -2));
-            //_left.Add(new Vector2(2, 2));
-            //_left.Add(new Vector2(-2, 2));
+            _left = new Vertices(4);
+            _left.Add(new Vector2(-2, -2));
+            _left.Add(new Vector2(2, -2));
+            _left.Add(new Vector2(2, 2));
+            _left.Add(new Vector2(-2, 2));
 
             base.Initialize();
         }
@@ -45,13 +46,13 @@ namespace FarseerPhysics.TestBed.Tests
             if (_left != null)
             {
                 Vector2[] array = _left.ToArray();
-                DebugView.DrawSolidPolygon(ref array, _left.Count, Color.Red);
+                DebugView.DrawPolygon(ref array, _left.Count, Color.Red);
             }
 
             if (_right != null)
             {
                 Vector2[] array = _right.ToArray();
-                DebugView.DrawSolidPolygon(ref array, _right.Count, Color.Red);
+                DebugView.DrawPolygon(ref array, _right.Count, Color.Red);
             }
 
             DebugView.DrawString(50, TextLine, "A,S,D = Create Rectangle");
