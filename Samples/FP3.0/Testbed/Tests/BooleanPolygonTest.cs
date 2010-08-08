@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using FarseerPhysics.Common;
+using FarseerPhysics.Collision;
 using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
@@ -13,6 +14,7 @@ namespace FarseerPhysics.TestBed.Tests
         private Vertices _left;
         private List<TextMessage> _messages;
         private Vertices _right;
+        private Vertices _selectedVertice;
 
         public override void Initialize()
         {
@@ -158,23 +160,69 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Mouse(MouseState state, MouseState oldState)
         {
+
+            Vector2 position = GameInstance.ConvertScreenToWorld(state.X, state.Y);
+
             if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
             {
+                AABB aabbM, aabbL, aabbR;
+
+                Vector2 d = new Vector2(0.001f, 0.001f);
+
+                aabbM.LowerBound = position - d;
+                aabbM.UpperBound = position + d;
+
+                if (_left != null)
+                {
+                    Vector2 centerL = _left.GetCentroid();
+                    float leftD = _left.GetRadius();
+                    Vector2 lD = new Vector2(leftD, leftD);
+                    aabbL.LowerBound = centerL - lD;
+                    aabbL.UpperBound = centerL + lD;
+
+                    if (AABB.TestOverlap(ref aabbM, ref aabbL))
+                    {
+                        _selectedVertice = _left;
+                    }
+                }
+
+                if (_right != null)
+                {
+                    Vector2 centerR = _right.GetCentroid();
+                    float rightD = _right.GetRadius();
+                    Vector2 rD = new Vector2(rightD, rightD);
+                    aabbR.LowerBound = centerR - rD;
+                    aabbR.UpperBound = centerR + rD;
+
+                    if (AABB.TestOverlap(ref aabbM, ref aabbR))
+                    {
+                        _selectedVertice = _right;
+                    }
+                }
+
+
             }
 
-            //if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
-            //{
-            //    _selectedGeom = null;
-            //}
+            if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
+            {
+                _selectedVertice = null;
+            }
 
-            //if (_selectedGeom != null)
-            //{
-            //    _selectedGeom.Body.Position = new Vector2(
-            //        _selectedGeom.Body.Position.X + (state.X - state.X),
-            //        _selectedGeom.Body.Position.Y + (state.Y - state.Y));
-            //}
-
+            MouseMove(state, oldState, position);
             base.Mouse(state, oldState);
+        }
+
+        private void MouseMove(MouseState state, MouseState oldState, Vector2 mousePos)
+        {
+            if (_selectedVertice != null)
+            {
+                for (int i = 0; i < _selectedVertice.Count; i++)
+                {
+                    _selectedVertice[i] = new Vector2(
+                        _selectedVertice[i].X + ((float)(state.X - oldState.X) / 10.5f),
+                        _selectedVertice[i].Y + ((float)(oldState.Y - state.Y) / 10.5f));
+                }
+            }
         }
 
         private void DoUnion()
