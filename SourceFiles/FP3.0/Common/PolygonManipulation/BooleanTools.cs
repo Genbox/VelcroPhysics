@@ -351,9 +351,9 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
             // Make a copy of the polygons so that we dont modify the originals, and
             // force vertices to integer (pixel) values.
-            poly1 = polygon1;
+            poly1 = Round(polygon1);
 
-            poly2 = polygon2;
+            poly2 = Round(polygon2);
 
             // Find intersection points
             if (!VerticesIntersect(poly1, poly2, out intersections))
@@ -503,13 +503,13 @@ namespace FarseerPhysics.Common.PolygonManipulation
         /// </summary>
         /// <param name="polygon">The polygon whose vertices should be rounded.</param>
         /// <returns>A new polygon with rounded vertices.</returns>
-        //public static Vertices Round(Vertices polygon)
-        //{
-        //    Vertices returnPoly = new Vertices();
-        //    for (int i = 0; i < polygon.Count; i++)
-        //        returnPoly.Add(new Vector2((float)Math.Round(polygon[i].X, 0), (float)Math.Round(polygon[i].Y, 0)));
-        //    return returnPoly;
-        //}
+        public static Vertices Round(Vertices polygon)
+        {
+            Vertices returnPoly = new Vertices();
+            for (int i = 0; i < polygon.Count; i++)
+                returnPoly.Add(new Vector2((float)Math.Round(polygon[i].X, 0), (float)Math.Round(polygon[i].Y, 0)));
+            return returnPoly;
+        }
     }
 
     /// <summary>
