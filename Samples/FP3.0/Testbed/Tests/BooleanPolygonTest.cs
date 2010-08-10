@@ -20,13 +20,12 @@ namespace FarseerPhysics.TestBed.Tests
         {
             _messages = new List<TextMessage>();
 
-            //_left = PolygonTools.CreateGear(5, 10, 40, 5);
+            _left = PolygonTools.CreateGear(5, 10, 40, 5);
 
-            _left = new Vertices(4);
-            _left.Add(new Vector2(-2, -2));
+            /*_left.Add(new Vector2(0.5f, 0.5f));
             _left.Add(new Vector2(2, -2));
             _left.Add(new Vector2(2, 2));
-            _left.Add(new Vector2(-2, 2));
+            _left.Add(new Vector2(-2, 2));*/
 
             base.Initialize();
         }
@@ -178,8 +177,12 @@ namespace FarseerPhysics.TestBed.Tests
                     Vector2 centerL = _left.GetCentroid();
                     float leftD = _left.GetRadius();
                     Vector2 lD = new Vector2(leftD, leftD);
+
                     aabbL.LowerBound = centerL - lD;
                     aabbL.UpperBound = centerL + lD;
+
+                    //View the area that is selectable.
+                    DebugView.DrawCircle(centerL, leftD, new Color(0.0f, 1.0f, 0.0f));
 
                     if (AABB.TestOverlap(ref aabbM, ref aabbL))
                     {
@@ -192,8 +195,12 @@ namespace FarseerPhysics.TestBed.Tests
                     Vector2 centerR = _right.GetCentroid();
                     float rightD = _right.GetRadius();
                     Vector2 rD = new Vector2(rightD, rightD);
+
                     aabbR.LowerBound = centerR - rD;
                     aabbR.UpperBound = centerR + rD;
+
+                    //View the area that is selectable.
+                    DebugView.DrawCircle(centerR, rightD, new Color(0.0f, 1.0f, 0.0f));
 
                     if (AABB.TestOverlap(ref aabbM, ref aabbR))
                     {
@@ -220,8 +227,8 @@ namespace FarseerPhysics.TestBed.Tests
                 for (int i = 0; i < _selectedVertice.Count; i++)
                 {
                     _selectedVertice[i] = new Vector2(
-                        _selectedVertice[i].X + ((float)(state.X - oldState.X) / 10.5f),
-                        _selectedVertice[i].Y + ((float)(oldState.Y - state.Y) / 10.5f));
+                        _selectedVertice[i].X + ((float)(state.X - oldState.X) / 12.0f),
+                        _selectedVertice[i].Y + ((float)(oldState.Y - state.Y) / 12.0f));
                 }
             }
         }
