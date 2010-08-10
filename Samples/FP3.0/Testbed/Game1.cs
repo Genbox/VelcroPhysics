@@ -49,11 +49,13 @@ namespace FarseerPhysics.TestBed
         private int _testCount;
         private int _testIndex;
         private int _testSelection;
-        private int _th;
-        private int _tw;
+        private int _viewportHeight;
+        private int _viewportWidth;
         private Vector2 _viewCenter = new Vector2(0.0f, 20.0f);
         private float _viewZoom = 1.0f;
         private int _width = 640;
+        private Vector2 _lower;
+        private Vector2 _upper;
 
         public Game1()
         {
@@ -269,36 +271,30 @@ namespace FarseerPhysics.TestBed
             _width = w;
             _height = h;
 
-            _tw = GraphicsDevice.Viewport.Width;
-            _th = GraphicsDevice.Viewport.Height;
+            _viewportWidth = GraphicsDevice.Viewport.Width;
+            _viewportHeight = GraphicsDevice.Viewport.Height;
 
-            float ratio = _tw / (float)_th;
+            float ratio = _viewportWidth / (float)_viewportHeight;
 
             Vector2 extents = new Vector2(ratio * 25.0f, 25.0f);
             extents *= _viewZoom;
 
-            Vector2 lower = _viewCenter - extents;
-            Vector2 upper = _viewCenter + extents;
+            _lower = _viewCenter - extents;
+            _upper = _viewCenter + extents;
 
             // L/R/B/T
-            _projection = Matrix.CreateOrthographicOffCenter(lower.X, upper.X, lower.Y, upper.Y, -1, 1);
+            _projection = Matrix.CreateOrthographicOffCenter(_lower.X, _upper.X, _lower.Y, _upper.Y, -1, 1);
         }
 
         public Vector2 ConvertScreenToWorld(int x, int y)
         {
-            float u = x / (float)_tw;
-            float v = (_th - y) / (float)_th;
-
-            float ratio = _tw / (float)_th;
-            Vector2 extents = new Vector2(ratio * 25.0f, 25.0f);
-            extents *= _viewZoom;
-
-            Vector2 lower = _viewCenter - extents;
-            Vector2 upper = _viewCenter + extents;
+            float u = x / (float)_viewportWidth;
+            float v = (_viewportHeight - y) / (float)_viewportHeight;
 
             Vector2 p = new Vector2();
-            p.X = (1.0f - u) * lower.X + u * upper.X;
-            p.Y = (1.0f - v) * lower.Y + v * upper.Y;
+            p.X = (1.0f - u) * _lower.X + u * _upper.X;
+            p.Y = (1.0f - v) * _lower.Y + v * _upper.Y;
+
             return p;
         }
 
