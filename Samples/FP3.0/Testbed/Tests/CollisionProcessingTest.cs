@@ -21,10 +21,10 @@
 */
 
 using System.Collections.Generic;
-using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
@@ -111,7 +111,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         private List<Body> _removeBodies = new List<Body>();
 
-        private bool OnCollision(Fixture fixtureA, Fixture fixtureB, Manifold manifold)
+        private bool OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
             Body body1 = fixtureA.Body;
             Body body2 = fixtureB.Body;
