@@ -92,8 +92,6 @@ namespace FarseerPhysics.TestBed
             _testIndex = MathUtils.Clamp(_testIndex, 0, _testCount - 1);
             _testSelection = _testIndex;
             StartTest(_testIndex);
-
-            //settings.drawAABBs = 1;
         }
 
         private void StartTest(int index)

@@ -91,7 +91,7 @@ namespace FarseerPhysics.Dynamics
     {
         #region Delegates
 
-        public delegate bool CollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Manifold manifold);
+        public delegate bool CollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Contact manifold);
 
         public delegate void SeparationEventHandler(Fixture fixtureA, Fixture fixtureB);
 

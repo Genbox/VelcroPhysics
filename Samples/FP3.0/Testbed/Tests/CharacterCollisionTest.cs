@@ -1,7 +1,7 @@
-﻿using FarseerPhysics.Collision;
-using FarseerPhysics.Collision.Shapes;
+﻿using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
@@ -85,7 +85,7 @@ namespace FarseerPhysics.TestBed.Tests
 #endif
         }
 
-        private bool CharacterOnCollision(Fixture fixtureA, Fixture fixtureB, Manifold manifold)
+        private bool CharacterOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
             _collision = true;
             return true;
