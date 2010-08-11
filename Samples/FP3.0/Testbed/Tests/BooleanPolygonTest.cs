@@ -175,7 +175,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 if (_left != null)
                 {
-                    aabbL = _left.getCollisionBox();
+                    aabbL = _left.GetCollisionBox();
 
                     if (AABB.TestOverlap(ref aabbM, ref aabbL))
                     {
@@ -185,7 +185,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 if (_right != null)
                 {
-                    aabbR = _right.getCollisionBox();
+                    aabbR = _right.GetCollisionBox();
 
                     if (AABB.TestOverlap(ref aabbM, ref aabbR))
                     {
