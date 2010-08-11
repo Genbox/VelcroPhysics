@@ -12,9 +12,15 @@ namespace FarseerPhysics.TestBed.Tests
     public class BooleanPolygonTest : Test
     {
         private Vertices _left;
-        private List<TextMessage> _messages;
         private Vertices _right;
-        private Vertices _selectedVertice;
+        private Vertices _selectedVertex;
+
+        private AABB aabbM, aabbL, aabbR;
+
+        private Vector2 d = new Vector2(0.001f, 0.001f);
+
+        private List<TextMessage> _messages;
+
 
         public override void Initialize()
         {
@@ -160,51 +166,30 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Mouse(MouseState state, MouseState oldState)
         {
-
             Vector2 position = GameInstance.ConvertScreenToWorld(state.X, state.Y);
 
             if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
             {
-                AABB aabbM, aabbL, aabbR;
-
-                Vector2 d = new Vector2(0.001f, 0.001f);
-
                 aabbM.LowerBound = position - d;
                 aabbM.UpperBound = position + d;
 
                 if (_left != null)
                 {
-                    Vector2 centerL = _left.GetCentroid();
-                    float leftD = _left.GetRadius();
-                    Vector2 lD = new Vector2(leftD, leftD);
-
-                    aabbL.LowerBound = centerL - lD;
-                    aabbL.UpperBound = centerL + lD;
-
-                    //View the area that is selectable.
-                    DebugView.DrawCircle(centerL, leftD, new Color(0.0f, 1.0f, 0.0f));
+                    aabbL = _left.getCollisionBox();
 
                     if (AABB.TestOverlap(ref aabbM, ref aabbL))
                     {
-                        _selectedVertice = _left;
+                        _selectedVertex = _left;
                     }
                 }
 
                 if (_right != null)
                 {
-                    Vector2 centerR = _right.GetCentroid();
-                    float rightD = _right.GetRadius();
-                    Vector2 rD = new Vector2(rightD, rightD);
-
-                    aabbR.LowerBound = centerR - rD;
-                    aabbR.UpperBound = centerR + rD;
-
-                    //View the area that is selectable.
-                    DebugView.DrawCircle(centerR, rightD, new Color(0.0f, 1.0f, 0.0f));
+                    aabbR = _right.getCollisionBox();
 
                     if (AABB.TestOverlap(ref aabbM, ref aabbR))
                     {
-                        _selectedVertice = _right;
+                        _selectedVertex = _right;
                     }
                 }
 
@@ -213,7 +198,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
             {
-                _selectedVertice = null;
+                _selectedVertex = null;
             }
 
             MouseMove(state, oldState, position);
@@ -221,14 +206,14 @@ namespace FarseerPhysics.TestBed.Tests
         }
 
         private void MouseMove(MouseState state, MouseState oldState, Vector2 mousePos)
-        {
-            if (_selectedVertice != null)
+        {   
+            if (_selectedVertex != null)
             {
-                for (int i = 0; i < _selectedVertice.Count; i++)
+                for (int i = 0; i < _selectedVertex.Count; i++)
                 {
-                    _selectedVertice[i] = new Vector2(
-                        _selectedVertice[i].X + ((float)(state.X - oldState.X) / 12.0f),
-                        _selectedVertice[i].Y + ((float)(oldState.Y - state.Y) / 12.0f));
+                    _selectedVertex[i] = new Vector2(
+                        _selectedVertex[i].X + ((float)(state.X - oldState.X) / 12.0f),
+                        _selectedVertex[i].Y + ((float)(oldState.Y - state.Y) / 12.0f));
                 }
             }
         }
