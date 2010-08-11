@@ -239,6 +239,9 @@ namespace FarseerPhysics.Common
 
             Vector2.Subtract(ref a, ref b, out temp);
 
+#if (XBOX360)
+output = new Vector2();
+#endif
             output.X = -temp.Y;
             output.Y = temp.X;
 

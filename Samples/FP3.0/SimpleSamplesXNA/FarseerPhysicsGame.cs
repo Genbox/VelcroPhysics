@@ -4,6 +4,7 @@ using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SimpleSamplesXNA.Demo1;
+using SimpleSamplesXNA.Demo2;
 
 namespace SimpleSamplesXNA
 {
@@ -22,7 +23,7 @@ namespace SimpleSamplesXNA
             _graphics.SynchronizeWithVerticalRetrace = false;
 
             TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 16);
-            IsFixedTimeStep = false;
+            IsFixedTimeStep = true;
 
             Content.RootDirectory = "Content";
 
@@ -57,23 +58,15 @@ namespace SimpleSamplesXNA
             Components.Add(frameRateCounter);
 
             Demo1Screen demo1 = new Demo1Screen();
+            Demo2Screen demo2 = new Demo2Screen();
+            Demo2Screen demo3 = new Demo2Screen();
             ScreenManager.MainMenuScreen.AddMainMenuItem(demo1.GetTitle(), demo1);
-
-            /*
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo2Screen.GetTitle(), new Demo2Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo3Screen.GetTitle(), new Demo3Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo4Screen.GetTitle(), new Demo4Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo5Screen.GetTitle(), new Demo5Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo6Screen.GetTitle(), new Demo6Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo7Screen.GetTitle(), new Demo7Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo8Screen.GetTitle(), new Demo8Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo9Screen.GetTitle(), new Demo9Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo10Screen.GetTitle(), new Demo10Screen());
-             * */
+            ScreenManager.MainMenuScreen.AddMainMenuItem(demo2.GetTitle(), demo2);
+            ScreenManager.MainMenuScreen.AddMainMenuItem(demo3.GetTitle(), demo3);
             ScreenManager.MainMenuScreen.AddMainMenuItem("Exit", null, true);
 
             //ScreenManager.GoToMainMenu();
-            ScreenManager.AddScreen(new Demo1Screen());
+            ScreenManager.AddScreen(new Demo2Screen());
         }
 
         public ScreenManager ScreenManager { get; set; }
