@@ -35,6 +35,13 @@ namespace FarseerPhysics.DebugViewXNA
         private ContactPoint[] _points = new ContactPoint[MaxContactPoints];
         private int _pointCount;
 
+        public Color InactiveShapeColor = new Color(0.5f, 0.5f, 0.3f);
+        public Color StaticShapeColor = new Color(0.5f, 0.9f, 0.5f);
+        public Color SleepingShapeColor = new Color(0.6f, 0.6f, 0.6f);
+        public Color KinematicShapeColor = new Color(0.5f, 0.5f, 0.9f);
+        public Color DefaultShapeColor = new Color(0.9f, 0.7f, 0.7f);
+        public Color TextColor = Color.White;
+
         public struct ContactPoint
         {
             public Vector2 Normal;
@@ -50,6 +57,9 @@ namespace FarseerPhysics.DebugViewXNA
 
             //TODO: Remember to remove subscription inside dispose
             world.ContactManager.PreSolve += PreSolve;
+
+            //Default flags
+            AppendFlags(DebugViewFlags.Shape);
         }
 
         private void PreSolve(Contact contact, ref Manifold oldManifold)
@@ -159,23 +169,23 @@ namespace FarseerPhysics.DebugViewXNA
                     {
                         if (b.Active == false)
                         {
-                            DrawShape(f, xf, new Color(0.5f, 0.5f, 0.3f));
+                            DrawShape(f, xf, InactiveShapeColor);
                         }
                         else if (b.BodyType == BodyType.Static)
                         {
-                            DrawShape(f, xf, new Color(0.5f, 0.9f, 0.5f));
+                            DrawShape(f, xf, StaticShapeColor);
                         }
                         else if (b.BodyType == BodyType.Kinematic)
                         {
-                            DrawShape(f, xf, new Color(0.5f, 0.5f, 0.9f));
+                            DrawShape(f, xf, KinematicShapeColor);
                         }
                         else if (b.Awake == false)
                         {
-                            DrawShape(f, xf, new Color(0.6f, 0.6f, 0.6f));
+                            DrawShape(f, xf, SleepingShapeColor);
                         }
                         else
                         {
-                            DrawShape(f, xf, new Color(0.9f, 0.7f, 0.7f));
+                            DrawShape(f, xf, DefaultShapeColor);
                         }
                     }
                 }
@@ -260,13 +270,15 @@ namespace FarseerPhysics.DebugViewXNA
             DrawString(50, 115, "Contacts: " + World.ContactCount);
             DrawString(50, 130, "Joints: " + World.JointCount);
             DrawString(50, 145, "Proxies: " + World.ProxyCount);
+            DrawString(50, 160, "Breakable: " + World.BreakableBodyList.Count);
+            DrawString(50, 175, "Controllers: " + World.Controllers.Count);
 
-            DrawString(150, 100, "New contacts: " + World.NewContactsTime);
-            DrawString(150, 115, "Controllers: " + World.ControllersUpdateTime);
-            DrawString(150, 130, "Contacts: " + World.ContactsUpdateTime);
-            DrawString(150, 145, "Solve: " + World.SolveUpdateTime);
-            DrawString(150, 160, "CCD: " + World.ContinuousPhysicsTime);
-            DrawString(150, 175, "Total: " + World.UpdateTime);
+            DrawString(160, 100, "New contacts: " + World.NewContactsTime);
+            DrawString(160, 115, "Controllers: " + World.ControllersUpdateTime);
+            DrawString(160, 130, "Contacts: " + World.ContactsUpdateTime);
+            DrawString(160, 145, "Solve: " + World.SolveUpdateTime);
+            DrawString(160, 160, "CCD: " + World.ContinuousPhysicsTime);
+            DrawString(160, 175, "Total: " + World.UpdateTime);
         }
 
         private void DrawJoint(Joint joint)
@@ -582,7 +594,7 @@ namespace FarseerPhysics.DebugViewXNA
 
         public void DrawString(int x, int y, string s, params object[] args)
         {
-            _stringData.Add(new StringData(x, y, s, args));
+            _stringData.Add(new StringData(x, y, s, args, TextColor));
         }
 
         public void RenderDebugData(ref Matrix projection)
