@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.Xna.Framework;
+using FarseerPhysics.Collision;
 
 namespace FarseerPhysics.Common
 {
@@ -151,6 +152,34 @@ namespace FarseerPhysics.Common
 
             radius = (float)System.Math.Sqrt(radiusSqrd);
             return radius;
+        }
+
+        /// <summary>
+        /// Returns an AABB for vertex.
+        /// </summary>
+        /// <returns></returns>
+        public AABB GetCollisionBox()
+        {
+            AABB aabb;
+            float lowX = 9999, highX = -9999, lowY = 9999, highY = -9999;
+
+            for (int i = 0; i < this.Count; i++)
+            {
+                if (this[i].X < lowX)
+                    lowX = this[i].X;
+                else if (this[i].X > highX)
+                    highX = this[i].X;
+
+                if (this[i].Y < lowY)
+                    lowY = this[i].Y;
+                else if (this[i].Y > highY)
+                    highY = this[i].Y;
+            }
+
+            aabb.LowerBound = new Vector2(lowX, lowY);
+            aabb.UpperBound = new Vector2(highX, highY);
+
+            return aabb;
         }
 
         /// <summary>
