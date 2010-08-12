@@ -104,7 +104,7 @@ namespace FarseerPhysics.Dynamics
         /// <value>The revolutions.</value>
         public float Revolutions
         {
-            get { return Rotation / (float) Math.PI; }
+            get { return Rotation / (float)Math.PI; }
         }
 
         /// <summary>
@@ -882,7 +882,7 @@ namespace FarseerPhysics.Dynamics
             Vector2 center = Vector2.Zero;
             for (Fixture f = FixtureList; f != null; f = f.Next)
             {
-                if (f.Density == 0.0f)
+                if (MathUtils.FloatEquals(f.Density, 0))
                 {
                     continue;
                 }

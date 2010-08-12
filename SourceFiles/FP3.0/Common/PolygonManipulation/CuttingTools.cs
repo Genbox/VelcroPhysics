@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.PolygonManipulation
@@ -39,7 +40,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 newPolygon[i] = new Vertices(vertices.Count);
             }
 
-            int[] cutAdded = {-1, -1};
+            int[] cutAdded = { -1, -1 };
             int last = -1;
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -173,29 +174,21 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 if (fixtures[i].Shape.ShapeType != ShapeType.Polygon)
                     continue;
 
-                //Split the shape up into two shapes
-                Vertices first;
-                Vertices second;
                 if (fixtures[i].Body.BodyType != BodyType.Static)
                 {
+                    //Split the shape up into two shapes
+                    Vertices first;
+                    Vertices second;
                     SplitShape(fixtures[i], entryPoints[i], exitPoints[i], thickness, out first, out second);
 
                     //Delete the original shape and create two new. Retain the properties of the body.
+                    Fixture firstFixture = FixtureFactory.CreatePolygon(world, first, fixtures[i].Density, fixtures[i].Body.Position);
+                    firstFixture.Body.BodyType = BodyType.Dynamic;
 
-                    //TODO: Fix
-                    //Body body1 = fixtures[i].Body.Clone(world);
-                    //world.Add(body1);
+                    Fixture secondFixture = FixtureFactory.CreatePolygon(world, second, fixtures[i].Density, fixtures[i].Body.Position);
+                    secondFixture.Body.BodyType = BodyType.Dynamic;
 
-                    //PolygonShape shape1 = new PolygonShape(first, fixtures[i].Shape.Density);
-                    //body1.CreateFixture(shape1);
-
-                    //Body body2 = fixtures[i].Body.Clone(world);
-                    //world.Add(body2);
-
-                    //PolygonShape shape2 = new PolygonShape(second, fixtures[i].Shape.Density);
-                    //body2.CreateFixture(shape2);
-
-                    //world.Remove(fixtures[i].Body);
+                    world.RemoveBody(fixtures[i].Body);
                 }
             }
         }
