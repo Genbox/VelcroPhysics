@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.PolygonManipulation
 {
-    public enum PolyClipType
+    internal enum PolyClipType
     {
-        Intersection,
+        Intersect,
         Union,
         Difference
     }
@@ -17,12 +17,30 @@ namespace FarseerPhysics.Common.PolygonManipulation
         None,
         DegeneratedOutput,
         NonSimpleInput,
-        BrokenResult
+        BrokenResult,
+        NoIntersections,
+        Poly1InsidePoly2,
+        InfiniteLoop
     }
 
     public static class YuPengClipper
     {
         private const float ClipperEpsilon = 1.192092896e-07f;
+
+        public static List<Vertices> Union(Vertices polygon1, Vertices polygon2, out PolyClipError error)
+        {
+            return Execute(polygon1, polygon2, PolyClipType.Union, out error);
+        }
+
+        public static List<Vertices> Difference(Vertices polygon1, Vertices polygon2, out PolyClipError error)
+        {
+            return Execute(polygon1, polygon2, PolyClipType.Difference, out error);
+        }
+
+        public static List<Vertices> Intersect(Vertices polygon1, Vertices polygon2, out PolyClipError error)
+        {
+            return Execute(polygon1, polygon2, PolyClipType.Intersect, out error);
+        }
 
         /// <summary>Implements "A new algorithm for Boolean operations on general polygons" 
         /// available here: http://liama.ia.ac.cn/wiki/_media/user:dong:dong_cg_05.pdf
@@ -38,7 +56,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
         /// <param name="error">The error generated (if any)</param>
         /// <returns>A list of closed polygons, which make up the result of the clipping operation.
         /// Outer contours are ordered counter clockwise, holes are ordered clockwise.</returns>
-        public static List<Vertices> Execute(Vertices subject, Vertices clip,
+        private static List<Vertices> Execute(Vertices subject, Vertices clip,
                                              PolyClipType clipType, out PolyClipError error)
         {
             if (!subject.IsSimple() || !clip.IsSimple())
@@ -274,7 +292,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
             for (int i = 0; i < poly1Simplicies.Count; ++i)
             {
-                if (clipType == PolyClipType.Intersection)
+                if (clipType == PolyClipType.Intersect)
                 {
                     if (poly1Char[i] == 1f)
                     {
@@ -291,7 +309,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
             }
             for (int i = 0; i < poly2Simplicies.Count; ++i)
             {
-                if (clipType == PolyClipType.Intersection || clipType == PolyClipType.Difference)
+                if (clipType == PolyClipType.Intersect || clipType == PolyClipType.Difference)
                 {
                     if (poly2Char[i] == 1f)
                     {
@@ -410,12 +428,12 @@ namespace FarseerPhysics.Common.PolygonManipulation
             {
                 return -1f;
             }
-            
+
             if (isLeft > 0f)
             {
                 return 1f;
             }
-            
+
             return 0f;
         }
 
