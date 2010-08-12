@@ -135,6 +135,37 @@ namespace FarseerPhysics.Factories
             return fixtures;
         }
 
+        /// <summary>
+        /// Creates a capsule.
+        /// Note: Automatically decomposes the capsule if it contains too many vertices (controlled by Settings.MaxPolygonVertices)
+        /// </summary>
+        /// <param name="world">The world.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="topRadius">The top radius.</param>
+        /// <param name="topEdges">The top edges.</param>
+        /// <param name="bottomRadius">The bottom radius.</param>
+        /// <param name="bottomEdges">The bottom edges.</param>
+        /// <param name="density">The density.</param>
+        /// <param name="position">The position.</param>
+        /// <returns></returns>
+        public static List<Fixture> CreateCapsule(World world, float height, float topRadius, int topEdges, float bottomRadius,
+                                                   int bottomEdges, float density, Vector2 position)
+        {
+            Vertices verts = PolygonTools.CreateCapsule(height,topRadius,topEdges,bottomRadius,bottomEdges);
+
+                        //There are too many vertices in the capsule. We decompose it.
+            if (verts.Count >= Settings.MaxPolygonVertices)
+            {
+                List<Vertices> vertList = EarclipDecomposer.ConvexPartition(verts);
+                List<Fixture> fixtureList = CreateCompundPolygon(world, vertList, density);
+                fixtureList[0].Body.Position = position;
+
+                return fixtureList;
+            }
+
+            return new List<Fixture> { CreatePolygon(world, verts, density) };
+        }
+
         public static List<Fixture> CreateCapsule(World world, float height, float endRadius, float density)
         {
             //Create the middle rectangle
@@ -156,20 +187,35 @@ namespace FarseerPhysics.Factories
             return fixtures;
         }
 
+        /// <summary>
+        /// Creates a rounded rectangle.
+        /// Note: Automatically decomposes the capsule if it contains too many vertices (controlled by Settings.MaxPolygonVertices)
+        /// </summary>
+        /// <param name="world">The world.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="xRadius">The x radius.</param>
+        /// <param name="yRadius">The y radius.</param>
+        /// <param name="segments">The segments.</param>
+        /// <param name="density">The density.</param>
+        /// <param name="position">The position.</param>
+        /// <returns></returns>
         public static List<Fixture> CreateRoundedRectangle(World world, float width, float height, float xRadius,
                                                            float yRadius,
                                                            int segments, float density, Vector2 position)
         {
-            List<Vertices> verts = PolygonTools.CreateRoundedRectangle(width, height, xRadius, yRadius, segments);
-            List<Fixture> fixture = new List<Fixture>(verts.Count);
-            for (int i = 0; i < verts.Count; i++)
+            Vertices verts = PolygonTools.CreateRoundedRectangle(width, height, xRadius, yRadius, segments);
+
+            //There are too many vertices in the capsule. We decompose it.
+            if (verts.Count >= Settings.MaxPolygonVertices)
             {
-                Fixture fix = CreatePolygon(world, verts[i], density);
-                fix.Body.Position = position;
-                fixture.Add(fix);
+                List<Vertices> vertList = EarclipDecomposer.ConvexPartition(verts);
+                List<Fixture> fixtureList = CreateCompundPolygon(world, vertList, density);
+                fixtureList[0].Body.Position = position;
+                return fixtureList;
             }
 
-            return fixture;
+            return new List<Fixture> { CreatePolygon(world, verts, density) };
         }
 
         public static List<Fixture> CreateRoundedRectangle(World world, float width, float height, float xRadius,
