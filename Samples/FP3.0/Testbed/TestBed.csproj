@@ -138,6 +138,7 @@
     <Compile Include="Tests\VaryingRestitutionTest.cs" />
     <Compile Include="Tests\VerticalStackTest.cs" />
     <Compile Include="Tests\WebTest.cs" />
+    <Compile Include="Tests\YuPengPolygonTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
