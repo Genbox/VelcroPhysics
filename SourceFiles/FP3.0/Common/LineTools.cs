@@ -106,45 +106,13 @@ namespace FarseerPhysics.Common
             float c2 = a2 * q1.X + b2 * q1.Y;
             float det = a1 * b2 - a2 * b1;
 
-            if (!FloatEquals(det, 0))
+            if (!MathUtils.FloatEquals(det, 0))
             {
                 // lines are not parallel
                 i.X = (b2 * c1 - b1 * c2) / det;
                 i.Y = (a1 * c2 - a2 * c1) / det;
             }
             return i;
-        }
-
-        public static bool FloatEquals(float value1, float value2)
-        {
-            return Math.Abs(value1 - value2) <= 1e-8;
-        }
-
-        /// <summary>
-        /// Checks if a floating point Value is equal to another,
-        /// within a certain tolerance.
-        /// </summary>
-        /// <param name="value1">The first floating point Value.</param>
-        /// <param name="value2">The second floating point Value.</param>
-        /// <param name="delta">The floating point tolerance.</param>
-        /// <returns>True if the values are "equal", false otherwise.</returns>
-        public static bool FloatEquals(float value1, float value2, float delta)
-        {
-            return FloatInRange(value1, value2 - delta, value2 + delta);
-        }
-
-        /// <summary>
-        /// Checks if a floating point Value is within a specified
-        /// range of values (inclusive).
-        /// </summary>
-        /// <param name="value">The Value to check.</param>
-        /// <param name="min">The minimum Value.</param>
-        /// <param name="max">The maximum Value.</param>
-        /// <returns>True if the Value is within the range specified,
-        /// false otherwise.</returns>
-        public static bool FloatInRange(float value, float min, float max)
-        {
-            return (value >= min && value <= max);
         }
 
         /// <summary>
