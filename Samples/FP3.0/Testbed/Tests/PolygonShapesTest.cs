@@ -21,8 +21,6 @@
 */
 
 using System.Collections.Generic;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
@@ -33,7 +31,7 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class PolygonShapesTest : Test
     {
-        private int segments = 3;
+        private int _segments = 3;
 
         private PolygonShapesTest()
         {
@@ -46,10 +44,10 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
         {
             if (state.IsKeyDown(Keys.A) && oldState.IsKeyUp(Keys.A))
-                segments++;
+                _segments++;
 
-            if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S) && segments > 0)
-                segments--;
+            if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S) && _segments > 0)
+                _segments--;
 
             if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D))
                 Create(0);
@@ -59,23 +57,18 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void Create(int type)
         {
-            Body body = BodyFactory.CreateBody(World);
-            body.BodyType = BodyType.Dynamic;
-            body.Position = new Vector2(0, 30);
-            body.Awake = true;
+            Vector2 position = new Vector2(0, 30);
 
             switch (type)
             {
                 default:
-                    List<Vertices> verts = PolygonTools.CreateRoundedRectangle(10, 10, 2.5F, 2.5F, segments);
-                    for (int i = 0; i < verts.Count; i++)
-                        body.CreateFixture(new PolygonShape(verts[i]), 10);
+                    List<Fixture> rounded = FixtureFactory.CreateRoundedRectangle(World, 10, 10, 2.5F, 2.5F, _segments, 10, position);
+                    rounded[0].Body.BodyType = BodyType.Dynamic;
                     break;
                 case 1:
-                    List<Vertices> verts2 = PolygonTools.CreateCapsule(10, 2, (int) MathHelper.Max(segments, 1), 3,
-                                                                       (int) MathHelper.Max(segments, 1));
-                    for (int i = 0; i < verts2.Count; i++)
-                        body.CreateFixture(new PolygonShape(verts2[i]), 10);
+                    List<Fixture> capsule = FixtureFactory.CreateCapsule(World, 10, 2, (int)MathHelper.Max(_segments, 1), 3,
+                                                     (int)MathHelper.Max(_segments, 1), 10, position);
+                    capsule[0].Body.BodyType = BodyType.Dynamic;
                     break;
             }
         }
@@ -84,7 +77,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Update(settings, gameTime);
             DebugView.DrawString(50, TextLine,
-                                 "Segments: " + segments +
+                                 "Segments: " + _segments +
                                  "\nPress: 'A' to increase segments, 'S' decrease segments\n'D' to create rectangle. 'F' to create capsule.");
             TextLine += 15;
         }
