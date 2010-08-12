@@ -68,7 +68,8 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
-        /// <param name="anchor"></param>
+        /// <param name="anchorA"></param>
+        /// <param name="anchorB"></param>
         public RevoluteJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
             : base(bodyA, bodyB)
         {

@@ -65,8 +65,8 @@ namespace FarseerPhysics.Dynamics.Joints
         ///    the joints will be broken.
         /// </summary>
         /// <param name="bodyA"></param>
-        /// <param name="bodyB"></param>
-        /// <param name="anchor"></param>
+        /// <param name="bodyanchor"></param>
+        /// <param name="worldanchor"></param>
         public FixedRevoluteJoint(Body bodyA, Vector2 bodyanchor, Vector2 worldanchor)
             : base(bodyA /*, bodyB*/)
         {
