@@ -937,5 +937,40 @@ namespace FarseerPhysics.Common
                 }
             }
         }
+
+        /// <summary>Winding number test for a point in a polygon.</summary>
+        /// <param name="point">The point to be tested.</param>
+        /// <param name="polygon">The polygon that the point is tested against.</param>
+        /// <returns>False if the winding number is even and the point is outside
+        /// the polygon and True otherwise.</returns>
+        public bool PointInPolygon(Vector2 point)
+        {
+            // Winding number
+            int wn = 0;
+
+            // Iterate through polygon's edges
+            for (int i = 0; i < Count; i++)
+            {
+                // Get points
+                Vector2 p1 = this[i];
+                Vector2 p2 = this[NextIndex(i)];
+                // Test edge for intersection with ray from point
+                if (p1.Y <= point.Y)
+                {
+                    if (p2.Y > point.Y && MathUtils.Area(p1, p2, point) > 0f)
+                    {
+                        ++wn;
+                    }
+                }
+                else
+                {
+                    if (p2.Y <= point.Y && MathUtils.Area(p1, p2, point) < 0f)
+                    {
+                        --wn;
+                    }
+                }
+            }
+            return (wn % 2 != 0);
+        }
     }
 }

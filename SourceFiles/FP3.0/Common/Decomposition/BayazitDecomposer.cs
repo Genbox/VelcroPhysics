@@ -213,29 +213,24 @@ namespace FarseerPhysics.Common.Decomposition
             return Right(At(i - 1, vertices), At(i, vertices), At(i + 1, vertices));
         }
 
-        private static float Area(Vector2 a, Vector2 b, Vector2 c)
-        {
-            return ((b.X - a.X) * (c.Y - a.Y) - ((c.X - a.X) * (b.Y - a.Y)));
-        }
-
         private static bool Left(Vector2 a, Vector2 b, Vector2 c)
         {
-            return Area(a, b, c) > 0;
+            return MathUtils.Area(a, b, c) > 0;
         }
 
         private static bool LeftOn(Vector2 a, Vector2 b, Vector2 c)
         {
-            return Area(a, b, c) >= 0;
+            return MathUtils.Area(a, b, c) >= 0;
         }
 
         private static bool Right(Vector2 a, Vector2 b, Vector2 c)
         {
-            return Area(a, b, c) < 0;
+            return MathUtils.Area(a, b, c) < 0;
         }
 
         private static bool RightOn(Vector2 a, Vector2 b, Vector2 c)
         {
-            return Area(a, b, c) <= 0;
+            return MathUtils.Area(a, b, c) <= 0;
         }
 
         private static float SquareDist(Vector2 a, Vector2 b)

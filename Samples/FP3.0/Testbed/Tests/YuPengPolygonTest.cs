@@ -112,7 +112,7 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(500, TextLine, "Holes are colored light blue");
             TextLine += 15;
 
-            DebugView.DrawString(500, TextLine, "#polygons: " + _polygons.Count.ToString());
+            DebugView.DrawString(500, TextLine, "#polygons: " + _polygons.Count);
             TextLine += 15;
 
             //DebugView.DrawString(50, TextLine, "Enter = Add to Simulation");
@@ -210,13 +210,12 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Mouse(MouseState state, MouseState oldState)
         {
-
             Vector2 position = GameInstance.ConvertScreenToWorld(state.X, state.Y);
 
             if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released) {
                 for (int i = 0; i < _polygons.Count; ++i) {
                     if (_polygons[i] != null) {
-                        if (YuPengClipper.PointInPolygon(position, _polygons[i])) {
+                        if (_polygons[i].PointInPolygon(position)) {
                             _selected = _polygons[i];
                             break;
                         }
@@ -228,15 +227,15 @@ namespace FarseerPhysics.TestBed.Tests
                 _selected = null;
             }
 
-            MouseMove(state, oldState, position);
+            MouseMove(state, oldState);
             base.Mouse(state, oldState);
         }
 
-        private void MouseMove(MouseState state, MouseState oldState, Vector2 mousePos)
+        private void MouseMove(MouseState state, MouseState oldState)
         {
             if (_selected != null) {
-                Vector2 trans = new Vector2((float)(state.X - oldState.X) / 12f,
-                                            (float)(oldState.Y - state.Y) / 12f);
+                Vector2 trans = new Vector2((state.X - oldState.X) / 12f,
+                                            (oldState.Y - state.Y) / 12f);
                 _selected.Translate(ref trans);
             }
         }

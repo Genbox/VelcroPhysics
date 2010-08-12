@@ -21,6 +21,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 
@@ -144,9 +145,14 @@ namespace FarseerPhysics.Common
             c = a.X * b.Y - a.Y * b.X;
         }
 
+        public static Stopwatch s = new Stopwatch();
+
+        /// <summary>Returns a positive number if c is to the left of the line going from a to b.</summary>
+        /// <returns>Positive number if point is left, negative if point is right, 
+        /// and 0 if points are collinear.</returns>
         public static float Area(Vector2 a, Vector2 b, Vector2 c)
         {
-            return (((b.X - a.X) * (c.Y - a.Y)) - ((c.X - a.X) * (b.Y - a.Y)));
+            return a.X * (b.Y - c.Y) + b.X * (c.Y - a.Y) + c.X * (a.Y - b.Y);
         }
 
         /// <summary>
@@ -163,13 +169,44 @@ namespace FarseerPhysics.Common
 
         public static bool Collinear(Vector2 a, Vector2 b, Vector2 c, float tolerance)
         {
-            return Area(a, b, c) <= tolerance;
+            return FloatInRange(Area(a, b, c), -tolerance, tolerance);
         }
-
 
         public static void Cross(float s, ref Vector2 a, out Vector2 b)
         {
             b = new Vector2(-s * a.Y, s * a.X);
+        }
+
+        public static bool FloatEquals(float value1, float value2)
+        {
+            return Math.Abs(value1 - value2) <= 1e-8;
+        }
+
+        /// <summary>
+        /// Checks if a floating point Value is equal to another,
+        /// within a certain tolerance.
+        /// </summary>
+        /// <param name="value1">The first floating point Value.</param>
+        /// <param name="value2">The second floating point Value.</param>
+        /// <param name="delta">The floating point tolerance.</param>
+        /// <returns>True if the values are "equal", false otherwise.</returns>
+        public static bool FloatEquals(float value1, float value2, float delta)
+        {
+            return FloatInRange(value1, value2 - delta, value2 + delta);
+        }
+
+        /// <summary>
+        /// Checks if a floating point Value is within a specified
+        /// range of values (inclusive).
+        /// </summary>
+        /// <param name="value">The Value to check.</param>
+        /// <param name="min">The minimum Value.</param>
+        /// <param name="max">The maximum Value.</param>
+        /// <returns>True if the Value is within the range specified,
+        /// false otherwise.</returns>
+        public static bool FloatInRange(float value, float min, float max)
+        {
+            return (value >= min && value <= max);
         }
 
         #region Nested type: FloatConverter
@@ -177,8 +214,10 @@ namespace FarseerPhysics.Common
         [StructLayout(LayoutKind.Explicit)]
         internal struct FloatConverter
         {
-            [FieldOffset(0)] public float x;
-            [FieldOffset(0)] public int i;
+            [FieldOffset(0)]
+            public float x;
+            [FieldOffset(0)]
+            public int i;
         }
 
         #endregion
@@ -208,7 +247,7 @@ namespace FarseerPhysics.Common
         public Mat22(float angle)
         {
             // TODO_ERIN compute sin+cos together.
-            float c = (float) Math.Cos(angle), s = (float) Math.Sin(angle);
+            float c = (float)Math.Cos(angle), s = (float)Math.Sin(angle);
             col1 = new Vector2(c, s);
             col2 = new Vector2(-s, c);
         }
@@ -224,7 +263,7 @@ namespace FarseerPhysics.Common
         /// an orthonormal rotation matrix.
         public void Set(float angle)
         {
-            float c = (float) Math.Cos(angle), s = (float) Math.Sin(angle);
+            float c = (float)Math.Cos(angle), s = (float)Math.Sin(angle);
             col1.X = c;
             col2.X = -s;
             col1.Y = s;
@@ -253,7 +292,7 @@ namespace FarseerPhysics.Common
         /// a rotation matrix).
         public float GetAngle()
         {
-            return (float) Math.Atan2(col1.Y, col1.X);
+            return (float)Math.Atan2(col1.Y, col1.X);
         }
 
         public Mat22 GetInverse()
@@ -372,7 +411,7 @@ namespace FarseerPhysics.Common
         /// Calculate the angle that the rotation matrix represents.
         public float GetAngle()
         {
-            return (float) Math.Atan2(R.col1.Y, R.col1.X);
+            return (float)Math.Atan2(R.col1.Y, R.col1.X);
         }
     }
 
@@ -422,8 +461,8 @@ namespace FarseerPhysics.Common
         /// Normalize the angles.
         public void Normalize()
         {
-            float twoPi = 2.0f * (float) Math.PI;
-            float d = twoPi * (float) Math.Floor(a0 / twoPi);
+            float twoPi = 2.0f * (float)Math.PI;
+            float d = twoPi * (float)Math.Floor(a0 / twoPi);
             a0 -= d;
             a -= d;
         }
