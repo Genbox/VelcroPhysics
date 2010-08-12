@@ -107,8 +107,8 @@ namespace FarseerPhysics.Common
                         phase--;
                     }
 
-                    vertices.Add(posOffset + new Vector2(xRadius * (float) Math.Cos(stepSize * -(i + phase)),
-                                                         -yRadius * (float) Math.Sin(stepSize * -(i + phase))));
+                    vertices.Add(posOffset + new Vector2(xRadius * (float)Math.Cos(stepSize * -(i + phase)),
+                                                         -yRadius * (float)Math.Sin(stepSize * -(i + phase))));
                 }
             }
 
@@ -116,7 +116,7 @@ namespace FarseerPhysics.Common
             if (vertices.Count >= Settings.MaxPolygonVertices)
                 return EarclipDecomposer.ConvexPartition(vertices);
 
-            return new List<Vertices> {vertices};
+            return new List<Vertices> { vertices };
         }
 
         /// <summary>
@@ -158,9 +158,9 @@ namespace FarseerPhysics.Common
             float stepSize = MathHelper.TwoPi / numberOfEdges;
 
             vertices.Add(new Vector2(xRadius, 0));
-            for (int i = 1; i < numberOfEdges; i++)
-                vertices.Add(new Vector2(xRadius * (float) Math.Cos(stepSize * i),
-                                         -yRadius * (float) Math.Sin(stepSize * i)));
+            for (int i = numberOfEdges - 1; i > 0; --i)
+                vertices.Add(new Vector2(xRadius * (float)Math.Cos(stepSize * i),
+                                         -yRadius * (float)Math.Sin(stepSize * i)));
 
             return vertices;
         }
@@ -232,8 +232,8 @@ namespace FarseerPhysics.Common
             float stepSize = MathHelper.Pi / topEdges;
             for (int i = 1; i < topEdges; i++)
             {
-                vertices.Add(new Vector2(topRadius * (float) Math.Cos(stepSize * i),
-                                         topRadius * (float) Math.Sin(stepSize * i) + newHeight));
+                vertices.Add(new Vector2(topRadius * (float)Math.Cos(stepSize * i),
+                                         topRadius * (float)Math.Sin(stepSize * i) + newHeight));
             }
 
             vertices.Add(new Vector2(-topRadius, newHeight));
@@ -244,8 +244,8 @@ namespace FarseerPhysics.Common
             stepSize = MathHelper.Pi / bottomEdges;
             for (int i = 1; i < bottomEdges; i++)
             {
-                vertices.Add(new Vector2(-bottomRadius * (float) Math.Cos(stepSize * i),
-                                         -bottomRadius * (float) Math.Sin(stepSize * i) - newHeight));
+                vertices.Add(new Vector2(-bottomRadius * (float)Math.Cos(stepSize * i),
+                                         -bottomRadius * (float)Math.Sin(stepSize * i) - newHeight));
             }
 
             vertices.Add(new Vector2(bottomRadius, -newHeight));
@@ -254,7 +254,7 @@ namespace FarseerPhysics.Common
             if (vertices.Count >= Settings.MaxPolygonVertices)
                 return EarclipDecomposer.ConvexPartition(vertices);
 
-            return new List<Vertices> {vertices};
+            return new List<Vertices> { vertices };
         }
 
         /// <summary>
@@ -270,30 +270,36 @@ namespace FarseerPhysics.Common
             Vertices vertices = new Vertices();
 
             float stepSize = MathHelper.TwoPi / numberOfTeeth;
-
+            tipPercentage /= 100f;
+            MathHelper.Clamp(tipPercentage, 0f, 1f);
             float toothTipStepSize = (stepSize / 2f) * tipPercentage;
 
             float toothAngleStepSize = (stepSize - (toothTipStepSize * 2f)) / 2f;
 
-            for (int i = 0; i < numberOfTeeth; i++)
+            for (int i = numberOfTeeth - 1; i >= 0; --i)
             {
-                vertices.Add(new Vector2((radius) * (float) Math.Cos(stepSize * i),
-                                         -(radius) * (float) Math.Sin(stepSize * i)));
+                if (toothTipStepSize > 0f)
+                {
+                    vertices.Add(
+                        new Vector2(radius *
+                                   (float)Math.Cos(stepSize * i + toothAngleStepSize * 2f + toothTipStepSize),
+                                  -radius *
+                                   (float)Math.Sin(stepSize * i + toothAngleStepSize * 2f + toothTipStepSize)));
 
-                vertices.Add(new Vector2((radius + toothHeight) * (float) Math.Cos((stepSize * i) + toothAngleStepSize),
-                                         -(radius + toothHeight) * (float) Math.Sin((stepSize * i) + toothAngleStepSize)));
+                    vertices.Add(
+                        new Vector2((radius + toothHeight) *
+                                    (float)Math.Cos(stepSize * i + toothAngleStepSize + toothTipStepSize),
+                                   -(radius + toothHeight) *
+                                    (float)Math.Sin(stepSize * i + toothAngleStepSize + toothTipStepSize)));
+                }
 
-                vertices.Add(
-                    new Vector2(
-                        (radius + toothHeight) *
-                        (float) Math.Cos((stepSize * i) + toothAngleStepSize + toothTipStepSize),
-                        -(radius + toothHeight) *
-                        (float) Math.Sin((stepSize * i) + toothAngleStepSize + toothTipStepSize)));
+                vertices.Add(new Vector2((radius + toothHeight) *
+                                         (float)Math.Cos(stepSize * i + toothAngleStepSize),
+                                        -(radius + toothHeight) *
+                                         (float)Math.Sin(stepSize * i + toothAngleStepSize)));
 
-                vertices.Add(
-                    new Vector2(
-                        (radius) * (float) Math.Cos((stepSize * i) + (toothAngleStepSize * 2f) + toothTipStepSize),
-                        -(radius) * (float) Math.Sin((stepSize * i) + (toothAngleStepSize * 2f) + toothTipStepSize)));
+                vertices.Add(new Vector2(radius * (float)Math.Cos(stepSize * i),
+                                        -radius * (float)Math.Sin(stepSize * i)));
             }
 
             return vertices;
