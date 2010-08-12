@@ -195,7 +195,7 @@ namespace FarseerPhysics.Common
 
         public static bool FloatEquals(float value1, float value2)
         {
-            return Math.Abs(value1 - value2) <= 1e-8;
+            return Math.Abs(value1 - value2) <= Settings.Epsilon;
         }
 
         /// <summary>
