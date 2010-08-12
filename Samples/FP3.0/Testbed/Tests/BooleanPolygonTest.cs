@@ -221,22 +221,22 @@ namespace FarseerPhysics.TestBed.Tests
         private void DoUnion()
         {
             // Do the union
-            PolyUnionError error;
-            Vertices vertices = BooleanTools.Union(_left, _right, out error);
+            PolyClipError error;
+            Vertices vertices = TraceClipper.Union(_left, _right, out error);
 
             // Check for errors.
             switch (error)
             {
-                case PolyUnionError.NoIntersections:
+                case PolyClipError.NoIntersections:
                     WriteMessage("ERROR: Polygons do not intersect!");
                     return;
-                case PolyUnionError.Poly1InsidePoly2:
+                case PolyClipError.Poly1InsidePoly2:
                     WriteMessage("Polygon 1 completely inside polygon 2.");
                     return;
-                case PolyUnionError.InfiniteLoop:
+                case PolyClipError.InfiniteLoop:
                     WriteMessage("Infinite Loop detected.");
                     break;
-                case PolyUnionError.None:
+                case PolyClipError.None:
                     WriteMessage("No errors with union.");
                     break;
             }
@@ -247,25 +247,25 @@ namespace FarseerPhysics.TestBed.Tests
         private void DoSubtract()
         {
             // Do the subtraction.
-            PolyUnionError error;
-            Vertices subtract = BooleanTools.Subtract(_left, _right, out error);
+            PolyClipError error;
+            Vertices subtract = TraceClipper.Difference(_left, _right, out error);
 
             // Check for errors
             switch (error)
             {
-                case PolyUnionError.NoIntersections:
+                case PolyClipError.NoIntersections:
                     WriteMessage("ERROR: Polygons do not intersect!");
                     return;
 
-                case PolyUnionError.Poly1InsidePoly2:
+                case PolyClipError.Poly1InsidePoly2:
                     WriteMessage("Polygon 1 completely inside polygon 2.");
                     return;
 
-                case PolyUnionError.InfiniteLoop:
+                case PolyClipError.InfiniteLoop:
                     WriteMessage("Infinite Loop detected.");
                     break;
 
-                case PolyUnionError.None:
+                case PolyClipError.None:
                     WriteMessage("No errors with subtraction.");
                     break;
             }

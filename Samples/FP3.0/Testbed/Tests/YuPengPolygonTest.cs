@@ -10,11 +10,12 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class YuPengPolygonTest : Test
     {
-        private List<Vertices> _polygons;
-        private List<TextMessage> _messages;
-        private Vertices _subject;
         private Vertices _clip;
+        private PolyClipError _err;
+        private List<TextMessage> _messages;
+        private List<Vertices> _polygons;
         private Vertices _selected;
+        private Vertices _subject;
 
         public override void Initialize()
         {
@@ -31,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
             _polygons[1].Translate(ref trans);
 
             _polygons.Add(PolygonTools.CreateGear(5f, 10, 50f, 5f));
-            
+
             trans.X = 22f;
             trans.Y = 17f;
             _polygons[2].Translate(ref trans);
@@ -54,31 +55,48 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             //If the message times out, remove it from the list.
-            for (int i = _messages.Count - 1; i >= 0; i--) {
+            for (int i = _messages.Count - 1; i >= 0; i--)
+            {
                 _messages[i].ElapsedTime += settings.Hz;
-                if (_messages[i].ElapsedTime > 5) {
+                if (_messages[i].ElapsedTime > 5)
+                {
                     _messages.Remove(_messages[i]);
                 }
             }
 
-            for (int i = 0; i < _polygons.Count; ++i) {
-                if (_polygons[i] != null) {
+            for (int i = 0; i < _polygons.Count; ++i)
+            {
+                if (_polygons[i] != null)
+                {
                     Vector2[] array = _polygons[i].ToArray();
                     Color col = Color.SteelBlue;
-                    if (!_polygons[i].IsCounterClockWise()) {
+                    if (!_polygons[i].IsCounterClockWise())
+                    {
                         col = Color.Aquamarine;
                     }
-                    if (_polygons[i] == _selected) { col = Color.LightBlue; }
-                    if (_polygons[i] == _subject) {
-                        col = Color.Green;
-                        if (_polygons[i] == _selected) { col = Color.LightGreen; }
+                    if (_polygons[i] == _selected)
+                    {
+                        col = Color.LightBlue;
                     }
-                    if (_polygons[i] == _clip) {
+                    if (_polygons[i] == _subject)
+                    {
+                        col = Color.Green;
+                        if (_polygons[i] == _selected)
+                        {
+                            col = Color.LightGreen;
+                        }
+                    }
+                    if (_polygons[i] == _clip)
+                    {
                         col = Color.DarkRed;
-                        if (_polygons[i] == _selected) { col = Color.IndianRed; }
+                        if (_polygons[i] == _selected)
+                        {
+                            col = Color.IndianRed;
+                        }
                     }
                     DebugView.DrawPolygon(ref array, _polygons[i].Count, col);
-                    for (int j = 0; j < _polygons[i].Count; ++j) {
+                    for (int j = 0; j < _polygons[i].Count; ++j)
+                    {
                         DebugView.DrawPoint(_polygons[i][j], .2f, Color.Red);
                     }
                 }
@@ -118,7 +136,8 @@ namespace FarseerPhysics.TestBed.Tests
             //DebugView.DrawString(50, TextLine, "Enter = Add to Simulation");
             //TextLine += 15;
 
-            for (int i = _messages.Count - 1; i >= 0; i--) {
+            for (int i = _messages.Count - 1; i >= 0; i--)
+            {
                 DebugView.DrawString(50, TextLine, _messages[i].Text);
                 TextLine += 15;
             }
@@ -129,60 +148,75 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
         {
             // Add Circles
-            if (state.IsKeyDown(Keys.Q) && oldState.IsKeyUp(Keys.Q)) {
+            if (state.IsKeyDown(Keys.Q) && oldState.IsKeyUp(Keys.Q))
+            {
                 AddCircle(3, 8);
             }
 
             // Add Circles
-            if (state.IsKeyDown(Keys.W) && oldState.IsKeyUp(Keys.W)) {
+            if (state.IsKeyDown(Keys.W) && oldState.IsKeyUp(Keys.W))
+            {
                 AddCircle(4, 16);
             }
 
             // Add Circles
-            if (state.IsKeyDown(Keys.E) && oldState.IsKeyUp(Keys.E)) {
+            if (state.IsKeyDown(Keys.E) && oldState.IsKeyUp(Keys.E))
+            {
                 AddCircle(5, 32);
             }
 
             // Add Rectangle
-            if (state.IsKeyDown(Keys.A) && oldState.IsKeyUp(Keys.A)) {
+            if (state.IsKeyDown(Keys.A) && oldState.IsKeyUp(Keys.A))
+            {
                 AddRectangle(4, 8);
             }
 
             // Add Rectangle
-            if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S)) {
+            if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
+            {
                 AddRectangle(5, 2);
             }
 
             // Add Rectangle
-            if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D)) {
+            if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D))
+            {
                 AddRectangle(2, 5);
             }
 
             // Perform a Union
-            if (state.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space)) {
-                if (_subject != null && _clip != null) {
-                    DoBooleanOperation(PolyClipType.Union);
+            if (state.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
+            {
+                if (_subject != null && _clip != null)
+                {
+                    DoBooleanOperation(YuPengClipper.Union(_subject, _clip, out _err));
                 }
             }
 
             // Perform a Subtraction
-            if (state.IsKeyDown(Keys.Back) && oldState.IsKeyUp(Keys.Back)) {
-                if (_subject != null && _clip != null) {
-                    DoBooleanOperation(PolyClipType.Difference);
+            if (state.IsKeyDown(Keys.Back) && oldState.IsKeyUp(Keys.Back))
+            {
+                if (_subject != null && _clip != null)
+                {
+                    DoBooleanOperation(YuPengClipper.Difference(_subject, _clip, out _err));
                 }
             }
 
             // Perform a Intersection
-            if (state.IsKeyDown(Keys.LeftShift) && oldState.IsKeyUp(Keys.LeftShift)) {
-                if (_subject != null && _clip != null) {
-                    DoBooleanOperation(PolyClipType.Intersection);
+            if (state.IsKeyDown(Keys.LeftShift) && oldState.IsKeyUp(Keys.LeftShift))
+            {
+                if (_subject != null && _clip != null)
+                {
+                    DoBooleanOperation(YuPengClipper.Intersect(_subject, _clip, out _err));
                 }
             }
 
             // Select Subject
-            if (state.IsKeyDown(Keys.D1) && oldState.IsKeyUp(Keys.D1)) {
-                if (_selected != null) {
-                    if (_clip == _selected) {
+            if (state.IsKeyDown(Keys.D1) && oldState.IsKeyUp(Keys.D1))
+            {
+                if (_selected != null)
+                {
+                    if (_clip == _selected)
+                    {
                         _clip = null;
                     }
                     _subject = _selected;
@@ -190,9 +224,12 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             // Select Clip
-            if (state.IsKeyDown(Keys.D2) && oldState.IsKeyUp(Keys.D2)) {
-                if (_selected != null) {
-                    if (_subject == _selected) {
+            if (state.IsKeyDown(Keys.D2) && oldState.IsKeyUp(Keys.D2))
+            {
+                if (_selected != null)
+                {
+                    if (_subject == _selected)
+                    {
                         _subject = null;
                     }
                     _clip = _selected;
@@ -212,10 +249,14 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Vector2 position = GameInstance.ConvertScreenToWorld(state.X, state.Y);
 
-            if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released) {
-                for (int i = 0; i < _polygons.Count; ++i) {
-                    if (_polygons[i] != null) {
-                        if (_polygons[i].PointInPolygon(position)) {
+            if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
+            {
+                for (int i = 0; i < _polygons.Count; ++i)
+                {
+                    if (_polygons[i] != null)
+                    {
+                        if (_polygons[i].PointInPolygon(position))
+                        {
                             _selected = _polygons[i];
                             break;
                         }
@@ -223,7 +264,8 @@ namespace FarseerPhysics.TestBed.Tests
                 }
             }
 
-            if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed) {
+            if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
+            {
                 _selected = null;
             }
 
@@ -233,18 +275,17 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void MouseMove(MouseState state, MouseState oldState)
         {
-            if (_selected != null) {
+            if (_selected != null)
+            {
                 Vector2 trans = new Vector2((state.X - oldState.X) / 12f,
                                             (oldState.Y - state.Y) / 12f);
                 _selected.Translate(ref trans);
             }
         }
 
-        private void DoBooleanOperation(PolyClipType pType)
+        private void DoBooleanOperation(List<Vertices> result)
         {
             // Do the union
-            PolyClipError err;
-            List<Vertices> result = YuPengClipper.Execute(_subject, _clip, pType, out err);
             _polygons.Remove(_subject);
             _polygons.Remove(_clip);
             _polygons.AddRange(result);

@@ -940,7 +940,6 @@ namespace FarseerPhysics.Common
 
         /// <summary>Winding number test for a point in a polygon.</summary>
         /// <param name="point">The point to be tested.</param>
-        /// <param name="polygon">The polygon that the point is tested against.</param>
         /// <returns>False if the winding number is even and the point is outside
         /// the polygon and True otherwise.</returns>
         public bool PointInPolygon(Vector2 point)
@@ -972,5 +971,33 @@ namespace FarseerPhysics.Common
             }
             return (wn % 2 != 0);
         }
+
+        /// <summary>
+        /// * ref: http://ozviz.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/  - Solution 2 
+        /// * Compute the sum of the angles made between the test point and each pair of points making up the polygon. 
+        /// * If this sum is 2pi then the point is an interior point, if 0 then the point is an exterior point. 
+        /// </summary>
+        public bool PointInPolygonAngle(Vector2 point)
+        {
+            double angle = 0;
+
+            // Iterate through polygon's edges
+            for (int i = 0; i < Count; i++)
+            {
+                // Get points
+                Vector2 p1 = this[i] - point;
+                Vector2 p2 = this[NextIndex(i)] - point;
+
+                angle += MathUtils.VectorAngle(ref p1, ref p2);
+            }
+
+            if (Math.Abs(angle) < Math.PI)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
     }
 }

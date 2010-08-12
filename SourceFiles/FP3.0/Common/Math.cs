@@ -145,7 +145,23 @@ namespace FarseerPhysics.Common
             c = a.X * b.Y - a.Y * b.X;
         }
 
-        public static Stopwatch s = new Stopwatch();
+        /// <summary>
+        /// Return the angle between two vectors on a plane
+        /// The angle is from vector 1 to vector 2, positive anticlockwise
+        /// The result is between -pi -> pi
+        /// </summary>
+        public static double VectorAngle(ref Vector2 p1, ref Vector2 p2)
+        {
+            double theta1 = Math.Atan2(p1.Y, p1.X);
+            double theta2 = Math.Atan2(p2.Y, p2.X);
+            double dtheta = theta2 - theta1;
+            while (dtheta > Math.PI)
+                dtheta -= (2 * Math.PI);
+            while (dtheta < -Math.PI)
+                dtheta += (2 * Math.PI);
+
+            return (dtheta);
+        }
 
         /// <summary>Returns a positive number if c is to the left of the line going from a to b.</summary>
         /// <returns>Positive number if point is left, negative if point is right, 

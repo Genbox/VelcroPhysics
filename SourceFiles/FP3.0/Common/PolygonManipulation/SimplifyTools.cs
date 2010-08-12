@@ -6,9 +6,6 @@ namespace FarseerPhysics.Common.PolygonManipulation
 {
     public static class SimplifyTools
     {
-        //Simplify() from DrDeth - distance test removed
-
-        //Code originated from NTS NetTopologySuite
         private static bool[] _usePt;
         private static double _distanceTolerance;
 
@@ -206,7 +203,8 @@ namespace FarseerPhysics.Common.PolygonManipulation
         /// <summary>
         /// Merges all parallel edges in the list of vertices
         /// </summary>
-        /// <param name="tolerance"></param>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="tolerance">The tolerance.</param>
         public static void MergeParallelEdges(Vertices vertices, float tolerance)
         {
             if (vertices.Count <= 3)
@@ -286,7 +284,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
             if (vertices.Count < 3)
                 return vertices;
 
-            distance *= 2;
+            distance *= distance;
 
             Vertices simplified = new Vertices();
 
@@ -311,22 +309,22 @@ namespace FarseerPhysics.Common.PolygonManipulation
         /// Reduces the polygon by removing the Nth vertex in the vertices list.
         /// </summary>
         /// <param name="vertices">The vertices.</param>
-        /// <param name="Nth">The Nth point to remove. Example: 5.</param>
+        /// <param name="nth">The Nth point to remove. Example: 5.</param>
         /// <returns></returns>
-        public static Vertices ReduceByNth(Vertices vertices, int Nth)
+        public static Vertices ReduceByNth(Vertices vertices, int nth)
         {
             //We can't simplify polygons under 3 vertices
             if (vertices.Count < 3)
                 return vertices;
 
-            if (Nth == 0)
+            if (nth == 0)
                 return vertices;
 
             Vertices result = new Vertices(vertices.Count);
 
             for (int i = 0; i < vertices.Count; i++)
             {
-                if (i % Nth == 0)
+                if (i % nth == 0)
                     continue;
 
                 result.Add(vertices[i]);

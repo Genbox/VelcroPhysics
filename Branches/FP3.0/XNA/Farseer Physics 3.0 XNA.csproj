@@ -140,14 +140,14 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Path.cs">
       <Link>Common\Path.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\PolygonManipulation\BooleanTools.cs">
-      <Link>Common\PolygonManipulation\BooleanTools.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\PolygonManipulation\CuttingTools.cs">
       <Link>Common\PolygonManipulation\CuttingTools.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\PolygonManipulation\SimplifyTools.cs">
       <Link>Common\PolygonManipulation\SimplifyTools.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\PolygonManipulation\TraceClipper.cs">
+      <Link>Common\PolygonManipulation\TraceClipper.cs</Link>
     </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\PolygonManipulation\YuPengClipper.cs">
       <Link>Common\PolygonManipulation\YuPengClipper.cs</Link>
