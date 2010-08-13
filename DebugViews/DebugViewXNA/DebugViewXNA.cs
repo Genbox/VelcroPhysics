@@ -62,7 +62,7 @@ namespace FarseerPhysics.DebugViewXNA
             AppendFlags(DebugViewFlags.Joint);
         }
 
-        private void PreSolve(Contact contact, Manifold oldManifold)
+        private void PreSolve(Contact contact, ref Manifold oldManifold)
         {
             if ((Flags & DebugViewFlags.ContactPoints) == DebugViewFlags.ContactPoints)
             {

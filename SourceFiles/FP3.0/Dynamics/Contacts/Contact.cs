@@ -21,7 +21,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
@@ -135,10 +134,6 @@ namespace FarseerPhysics.Dynamics.Contacts
         public Fixture FixtureB;
         internal ContactFlags Flags;
 
-        /// <summary>
-        /// Get the contact manifold. Do not modify the manifold unless you understand the
-        /// internals of Box2D.
-        /// </summary>
         public Manifold Manifold;
 
         // Nodes for connecting bodies.
@@ -197,6 +192,16 @@ namespace FarseerPhysics.Dynamics.Contacts
         public Contact Prev { get; internal set; }
 
         /// <summary>
+        /// Get the contact manifold. Do not modify the manifold unless you understand the
+        /// internals of Box2D.
+        /// </summary>
+        /// <param name="manifold">The manifold.</param>
+        public void GetManifold(out Manifold manifold)
+        {
+            manifold = Manifold;
+        }
+
+        /// <summary>
         /// Gets the world manifold.
         /// </summary>
         /// <param name="worldManifold">The world manifold.</param>
@@ -243,6 +248,8 @@ namespace FarseerPhysics.Dynamics.Contacts
             ChildIndexA = indexA;
             ChildIndexB = indexB;
 
+            Manifold.PointCount = 0;
+
             Prev = null;
             Next = null;
 
@@ -259,8 +266,6 @@ namespace FarseerPhysics.Dynamics.Contacts
             TOICount = 0;
         }
 
-        private Manifold oldManifold = new Manifold();
-
         /// <summary>
         // Update the contact manifold and touching status.
         // Note: do not assume the fixture AABBs are overlapping or are valid.
@@ -268,7 +273,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         /// <param name="contactManager">The contact manager.</param>
         internal void Update(ContactManager contactManager)
         {
-            Manifold.CloneTo(oldManifold);
+            Manifold oldManifold = Manifold;
 
             // Re-enable this contact.
             Flags |= ContactFlags.Enabled;
@@ -299,7 +304,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             }
             else
             {
-                Evaluate(Manifold, ref xfA, ref xfB);
+                Evaluate(ref Manifold, ref xfA, ref xfB);
                 touching = Manifold.PointCount > 0;
 
                 // Match old contact ids to new contact ids and copy the
@@ -387,7 +392,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             if (sensor == false)
             {
                 if (contactManager.PreSolve != null)
-                    contactManager.PreSolve(this, oldManifold);
+                    contactManager.PreSolve(this, ref oldManifold);
             }
         }
 
@@ -397,7 +402,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         /// <param name="manifold">The manifold.</param>
         /// <param name="transformA">The first transform.</param>
         /// <param name="transformB">The second transform.</param>
-        private void Evaluate(Manifold manifold, ref Transform transformA, ref Transform transformB)
+        private void Evaluate(ref Manifold manifold, ref Transform transformA, ref Transform transformB)
         {
             switch (_type)
             {
@@ -450,8 +455,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             Debug.Assert(ShapeType.Unknown < type2 && type2 < ShapeType.TypeCount);
 
             Contact c;
-            Queue<Contact> pool = fixtureA.Body.World.ContactPool;
-
+            var pool = fixtureA.Body.World.ContactPool;
             if (pool.Count > 0)
             {
                 c = pool.Dequeue();
@@ -479,8 +483,6 @@ namespace FarseerPhysics.Dynamics.Contacts
                 {
                     c = new Contact(fixtureB, indexB, fixtureA, indexA);
                 }
-
-                c.Manifold = new Manifold();
             }
 
             c._type = _registers[(int)type1, (int)type2];
