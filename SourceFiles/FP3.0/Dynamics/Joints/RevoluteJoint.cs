@@ -448,8 +448,8 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 _tmpVector1 = LocalAnchorA - b1.LocalCenter;
                 _tmpVector2 = LocalAnchorB - b2.LocalCenter;
-                Vector2 r1 = MathUtils.Multiply(ref b1.Xf.R, _tmpVector1);
-                Vector2 r2 = MathUtils.Multiply(ref b2.Xf.R, _tmpVector2);
+                Vector2 r1 = MathUtils.Multiply(ref b1.Xf.R, ref _tmpVector1);
+                Vector2 r2 = MathUtils.Multiply(ref b2.Xf.R, ref _tmpVector2);
 
                 // Solve point-to-point constraint
                 MathUtils.Cross(w2, ref r2, out _tmpVector2);

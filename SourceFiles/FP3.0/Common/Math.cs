@@ -51,6 +51,11 @@ namespace FarseerPhysics.Common
 
         public static Vector2 Multiply(ref Mat22 A, Vector2 v)
         {
+            return Multiply(ref A, ref v);
+        }
+
+        public static Vector2 Multiply(ref Mat22 A, ref Vector2 v)
+        {
             return new Vector2(A.col1.X * v.X + A.col2.X * v.Y, A.col1.Y * v.X + A.col2.Y * v.Y);
         }
 
@@ -60,6 +65,11 @@ namespace FarseerPhysics.Common
         }
 
         public static Vector2 Multiply(ref Transform T, Vector2 v)
+        {
+            return Multiply(ref T, ref v);
+        }
+
+        public static Vector2 Multiply(ref Transform T, ref Vector2 v)
         {
             float x = T.Position.X + T.R.col1.X * v.X + T.R.col2.X * v.Y;
             float y = T.Position.Y + T.R.col1.Y * v.X + T.R.col2.Y * v.Y;
