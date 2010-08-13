@@ -936,7 +936,7 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The same vector expressed in world coordinates.</returns>
         public Vector2 GetWorldVector(Vector2 localVector)
         {
-            return MathUtils.Multiply(ref Xf.R, localVector);
+            return MathUtils.Multiply(ref Xf.R, ref localVector);
         }
 
         /// <summary>
@@ -983,7 +983,7 @@ namespace FarseerPhysics.Dynamics
         {
             Transform xf1 = new Transform();
             xf1.R.Set(Sweep.a0);
-            xf1.Position = Sweep.c0 - MathUtils.Multiply(ref xf1.R, Sweep.localCenter);
+            xf1.Position = Sweep.c0 - MathUtils.Multiply(ref xf1.R, ref Sweep.localCenter);
 
             BroadPhase broadPhase = World.ContactManager.BroadPhase;
             foreach (Fixture f in FixtureList)
@@ -995,12 +995,12 @@ namespace FarseerPhysics.Dynamics
         internal void SynchronizeTransform()
         {
             Xf.R.Set(Sweep.a);
-            Xf.Position = Sweep.c - MathUtils.Multiply(ref Xf.R, Sweep.localCenter);
+            Xf.Position = Sweep.c - MathUtils.Multiply(ref Xf.R, ref Sweep.localCenter);
         }
 
         /// <summary>
-        // This is used to prevent connected bodies from colliding.
-        // It may lie, depending on the collideConnected flag.
+        /// This is used to prevent connected bodies from colliding.
+        /// It may lie, depending on the collideConnected flag.
         /// </summary>
         /// <param name="other">The other body.</param>
         /// <returns></returns>
