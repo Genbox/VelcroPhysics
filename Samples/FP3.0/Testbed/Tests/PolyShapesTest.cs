@@ -71,7 +71,7 @@ namespace FarseerPhysics.TestBed.Tests
                 case ShapeType.Polygon:
                     {
                         PolygonShape poly = (PolygonShape) fixture.Shape;
-                        int vertexCount = poly.VertexCount;
+                        int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
 

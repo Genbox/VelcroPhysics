@@ -143,7 +143,7 @@ namespace FarseerPhysics.DebugViewXNA
                             Transform xf;
                             body.GetTransform(out xf);
 
-                            for (int i = 0; i < polygon.VertexCount; i++)
+                            for (int i = 0; i < polygon.Vertices.Count; i++)
                             {
                                 Vector2 tmp = MathUtils.Multiply(ref xf, polygon.Vertices[i]);
                                 DrawPoint(tmp, 0.05f, Color.Red);
@@ -381,7 +381,7 @@ namespace FarseerPhysics.DebugViewXNA
                 case ShapeType.Polygon:
                     {
                         PolygonShape poly = (PolygonShape)fixture.Shape;
-                        int vertexCount = poly.VertexCount;
+                        int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
 

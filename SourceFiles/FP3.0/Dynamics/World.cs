@@ -564,6 +564,9 @@ namespace FarseerPhysics.Dynamics
                 ClearForces();
             }
 
+            //We have to unlock the world here to support breakable bodies.
+            Flags &= ~WorldFlags.Locked;
+
             if (Settings.EnableDiagnostics)
                 BreakableBodyTime = _watch.ElapsedTicks -
                                         (NewContactsTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime + ContinuousPhysicsTime);
@@ -572,8 +575,6 @@ namespace FarseerPhysics.Dynamics
             {
                 breakableBody.Update();
             }
-
-            Flags &= ~WorldFlags.Locked;
 
             if (Settings.EnableDiagnostics)
             {

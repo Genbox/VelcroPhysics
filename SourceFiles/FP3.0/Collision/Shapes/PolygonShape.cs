@@ -29,9 +29,8 @@ namespace FarseerPhysics.Collision.Shapes
     public class PolygonShape : Shape
     {
         public Vector2 Centroid;
-        public Vector2[] Normals;
-        public int VertexCount;
-        public Vector2[] Vertices;
+        public Vertices Normals;
+        public Vertices Vertices;
 
         public PolygonShape(Vertices vertices)
         {
@@ -39,7 +38,7 @@ namespace FarseerPhysics.Collision.Shapes
             Radius = Settings.PolygonRadius;
             Centroid = Vector2.Zero;
 
-            Set(vertices.ToArray(), vertices.Count);
+            Set(vertices);
         }
 
         public PolygonShape()
@@ -54,9 +53,12 @@ namespace FarseerPhysics.Collision.Shapes
             PolygonShape clone = new PolygonShape();
             clone.ShapeType = ShapeType;
             clone.Radius = Radius;
-            clone.VertexCount = VertexCount;
             clone.Centroid = Centroid;
-            clone.Vertices = Vertices;
+#if ConverveMemory
+            clone.Vertices  = Vertices;
+#else
+            clone.Vertices = new Vertices(Vertices);
+#endif
             clone.Normals = Normals;
 
             return clone;
@@ -67,54 +69,46 @@ namespace FarseerPhysics.Collision.Shapes
             return 1;
         }
 
-        public void Set(Vertices vertices)
-        {
-            Set(vertices.ToArray(), vertices.Count);
-        }
-
         /// <summary>
         /// Copy vertices. This assumes the vertices define a convex polygon.
         /// It is assumed that the exterior is the the right of each edge.
         /// </summary>
         /// <param name="vertices">The vertices.</param>
-        /// <param name="count">The vertex count.</param>
-        public void Set(Vector2[] vertices, int count)
+        public void Set(Vertices vertices)
         {
-            Debug.Assert(2 <= count && count <= Settings.MaxPolygonVertices);
-            VertexCount = count;
+            Debug.Assert(2 <= vertices.Count && vertices.Count <= Settings.MaxPolygonVertices);
 
-            Vertices = new Vector2[count];
-            Normals = new Vector2[count];
-
+#if ConverveMemory
+            Vertices = vertices;
+#else
             // Copy vertices.
-            for (int i = 0; i < VertexCount; ++i)
-            {
-                Vertices[i] = vertices[i];
-            }
+            Vertices = new Vertices(vertices);
+#endif
+            Normals = new Vertices(vertices.Count);
 
             // Compute normals. Ensure the edges have non-zero length.
-            for (int i = 0; i < VertexCount; ++i)
+            for (int i = 0; i < vertices.Count; ++i)
             {
                 int i1 = i;
-                int i2 = i + 1 < VertexCount ? i + 1 : 0;
+                int i2 = i + 1 < vertices.Count ? i + 1 : 0;
                 Vector2 edge = Vertices[i2] - Vertices[i1];
                 Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
 
-                var temp = MathUtils.Cross(edge, 1.0f);
+                Vector2 temp = MathUtils.Cross(edge, 1.0f);
                 temp.Normalize();
-                Normals[i] = temp;
+                Normals.Add(temp);
             }
 
 #if DEBUG
             // Ensure the polygon is convex and the interior
             // is to the left of each edge.
-            for (int i = 0; i < VertexCount; ++i)
+            for (int i = 0; i < vertices.Count; ++i)
             {
                 int i1 = i;
-                int i2 = i + 1 < VertexCount ? i + 1 : 0;
+                int i2 = i + 1 < vertices.Count ? i + 1 : 0;
                 Vector2 edge = Vertices[i2] - Vertices[i1];
 
-                for (int j = 0; j < VertexCount; ++j)
+                for (int j = 0; j < vertices.Count; ++j)
                 {
                     // Don't check vertices on the current edge.
                     if (j == i1 || j == i2)
@@ -133,17 +127,17 @@ namespace FarseerPhysics.Collision.Shapes
 #endif
 
             // Compute the polygon centroid.
-            Centroid = ComputeCentroid(Vertices, VertexCount);
+            Centroid = ComputeCentroid(Vertices);
         }
 
-        private static Vector2 ComputeCentroid(Vector2[] vs, int count)
+        private static Vector2 ComputeCentroid(Vertices vs)
         {
-            Debug.Assert(count >= 2);
+            Debug.Assert(vs.Count >= 2);
 
             Vector2 c = new Vector2(0.0f, 0.0f);
             float area = 0.0f;
 
-            if (count == 2)
+            if (vs.Count == 2)
             {
                 c = 0.5f * (vs[0] + vs[1]);
                 return c;
@@ -163,12 +157,12 @@ namespace FarseerPhysics.Collision.Shapes
 
             const float inv3 = 1.0f / 3.0f;
 
-            for (int i = 0; i < count; ++i)
+            for (int i = 0; i < vs.Count; ++i)
             {
                 // Triangle vertices.
                 Vector2 p1 = pRef;
                 Vector2 p2 = vs[i];
-                Vector2 p3 = i + 1 < count ? vs[i + 1] : vs[0];
+                Vector2 p3 = i + 1 < vs.Count ? vs[i + 1] : vs[0];
 
                 Vector2 e1 = p2 - p1;
                 Vector2 e2 = p3 - p1;
@@ -230,7 +224,7 @@ namespace FarseerPhysics.Collision.Shapes
         {
             Vector2 pLocal = MathUtils.MultiplyT(ref transform.R, point - transform.Position);
 
-            for (int i = 0; i < VertexCount; ++i)
+            for (int i = 0; i < Vertices.Count; ++i)
             {
                 float dot = Vector2.Dot(Normals[i], pLocal - Vertices[i]);
                 if (dot > 0.0f)
@@ -260,7 +254,7 @@ namespace FarseerPhysics.Collision.Shapes
             Vector2 p2 = MathUtils.MultiplyT(ref transform.R, input.Point2 - transform.Position);
             Vector2 d = p2 - p1;
 
-            if (VertexCount == 2)
+            if (Vertices.Count == 2)
             {
                 Vector2 v1 = Vertices[0];
                 Vector2 v2 = Vertices[1];
@@ -317,7 +311,7 @@ namespace FarseerPhysics.Collision.Shapes
 
                 int index = -1;
 
-                for (int i = 0; i < VertexCount; ++i)
+                for (int i = 0; i < Vertices.Count; ++i)
                 {
                     // p = p1 + a * d
                     // dot(normal, p - v) = 0
@@ -387,7 +381,7 @@ namespace FarseerPhysics.Collision.Shapes
             Vector2 lower = MathUtils.Multiply(ref transform, Vertices[0]);
             Vector2 upper = lower;
 
-            for (int i = 1; i < VertexCount; ++i)
+            for (int i = 1; i < Vertices.Count; ++i)
             {
                 Vector2 v = MathUtils.Multiply(ref transform, Vertices[i]);
                 lower = Vector2.Min(lower, v);
@@ -431,10 +425,10 @@ namespace FarseerPhysics.Collision.Shapes
             //
             // The rest of the derivation is handled by computer algebra.
 
-            Debug.Assert(VertexCount >= 2);
+            Debug.Assert(Vertices.Count >= 2);
 
             // A line segment has zero mass.
-            if (VertexCount == 2)
+            if (Vertices.Count == 2)
             {
                 massData.Center = 0.5f * (Vertices[0] + Vertices[1]);
                 massData.Mass = 0.0f;
@@ -452,12 +446,12 @@ namespace FarseerPhysics.Collision.Shapes
 
             const float inv3 = 1.0f / 3.0f;
 
-            for (int i = 0; i < VertexCount; ++i)
+            for (int i = 0; i < Vertices.Count; ++i)
             {
                 // Triangle vertices.
                 Vector2 p1 = pRef;
                 Vector2 p2 = Vertices[i];
-                Vector2 p3 = i + 1 < VertexCount ? Vertices[i + 1] : Vertices[0];
+                Vector2 p3 = i + 1 < Vertices.Count ? Vertices[i + 1] : Vertices[0];
 
                 Vector2 e1 = p2 - p1;
                 Vector2 e2 = p3 - p1;
