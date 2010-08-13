@@ -216,7 +216,8 @@ namespace FarseerPhysics.Dynamics
                 }
             }
 
-            Report(_contactSolver.Constraints);
+            if (_contactManager.PostSolve != null)
+                Report(_contactSolver.Constraints);
 
             if (Settings.AllowSleep)
             {
@@ -302,8 +303,7 @@ namespace FarseerPhysics.Dynamics
                     impulse.TangentImpulses[j] = cc.Points[j].TangentImpulse;
                 }
 
-                if (_contactManager.PostSolve != null)
-                    _contactManager.PostSolve(c, ref impulse);
+                _contactManager.PostSolve(c, ref impulse);
             }
         }
     }
