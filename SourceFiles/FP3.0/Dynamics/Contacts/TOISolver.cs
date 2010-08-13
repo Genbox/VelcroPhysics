@@ -55,7 +55,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             {
                 case ManifoldType.Circles:
                     {
-                        Vector2 pointA = cc.BodyA.GetWorldPoint(cc.LocalPoint);
+                        Vector2 pointA = cc.BodyA.GetWorldPoint(ref cc.LocalPoint);
                         Vector2 pointB = cc.BodyB.GetWorldPoint(cc.LocalPoints[0]);
                         if ((pointA - pointB).LengthSquared() > Settings.Epsilon * Settings.Epsilon)
                         {
@@ -74,8 +74,8 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                 case ManifoldType.FaceA:
                     {
-                        Normal = cc.BodyA.GetWorldVector(cc.LocalNormal);
-                        Vector2 planePoint = cc.BodyA.GetWorldPoint(cc.LocalPoint);
+                        Normal = cc.BodyA.GetWorldVector(ref cc.LocalNormal);
+                        Vector2 planePoint = cc.BodyA.GetWorldPoint(ref cc.LocalPoint);
 
                         Vector2 clipPoint = cc.BodyB.GetWorldPoint(cc.LocalPoints[index]);
                         Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
@@ -85,8 +85,8 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                 case ManifoldType.FaceB:
                     {
-                        Normal = cc.BodyB.GetWorldVector(cc.LocalNormal);
-                        Vector2 planePoint = cc.BodyB.GetWorldPoint(cc.LocalPoint);
+                        Normal = cc.BodyB.GetWorldVector(ref cc.LocalNormal);
+                        Vector2 planePoint = cc.BodyB.GetWorldPoint(ref cc.LocalPoint);
 
                         Vector2 clipPoint = cc.BodyA.GetWorldPoint(cc.LocalPoints[index]);
                         Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.Radius;

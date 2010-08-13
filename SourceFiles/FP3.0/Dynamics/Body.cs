@@ -107,7 +107,7 @@ namespace FarseerPhysics.Dynamics
         /// <value>The revolutions.</value>
         public float Revolutions
         {
-            get { return Rotation / (float) Math.PI; }
+            get { return Rotation / (float)Math.PI; }
         }
 
         /// <summary>
@@ -396,7 +396,7 @@ namespace FarseerPhysics.Dynamics
         public Vector2 Position
         {
             get { return Xf.Position; }
-            set { SetTransform(value, Rotation); }
+            set { SetTransform(ref value, Rotation); }
         }
 
         /// <summary>
@@ -406,7 +406,7 @@ namespace FarseerPhysics.Dynamics
         public float Rotation
         {
             get { return Sweep.a; }
-            set { SetTransform(Position, value); }
+            set { SetTransform(ref Xf.Position, value); }
         }
 
         /// <summary>
@@ -659,27 +659,23 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         /// <param name="position">The world position of the body's local origin.</param>
         /// <param name="rotation">The world rotation in radians.</param>
-        public void SetTransform(Vector2 position, float rotation)
+        public void SetTransform(ref Vector2 position, float rotation)
         {
-            Debug.Assert(World.IsLocked == false);
-            if (World.IsLocked)
-            {
-                return;
-            }
-
-            Xf.R.Set(rotation);
-            Xf.Position = position;
-
-            Sweep.c0 = Sweep.c = MathUtils.Multiply(ref Xf, Sweep.localCenter);
-            Sweep.a0 = Sweep.a = rotation;
-
-            BroadPhase broadPhase = World.ContactManager.BroadPhase;
-            foreach (Fixture f in FixtureList)
-            {
-                f.Synchronize(broadPhase, ref Xf, ref Xf);
-            }
+            SetTransformIgnoreContacts(ref position, rotation);
 
             World.ContactManager.FindNewContacts();
+        }
+
+        /// <summary>
+        /// Set the position of the body's origin and rotation.
+        /// This breaks any contacts and wakes the other bodies.
+        /// Manipulating a body's transform may cause non-physical behavior.
+        /// </summary>
+        /// <param name="position">The world position of the body's local origin.</param>
+        /// <param name="rotation">The world rotation in radians.</param>
+        public void SetTransform(Vector2 position, float rotation)
+        {
+            SetTransform(ref position, rotation);
         }
 
         /// <summary>
@@ -687,7 +683,7 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         /// <param name="position">The position.</param>
         /// <param name="angle">The angle.</param>
-        public void SetTransformIgnoreContacts(Vector2 position, float angle)
+        public void SetTransformIgnoreContacts(ref Vector2 position, float angle)
         {
             Debug.Assert(World.IsLocked == false);
             if (World.IsLocked)
@@ -915,9 +911,30 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         /// <param name="localPoint">A point on the body measured relative the the body's origin.</param>
         /// <returns>The same point expressed in world coordinates.</returns>
-        public Vector2 GetWorldPoint(Vector2 localPoint)
+        public Vector2 GetWorldPoint(ref Vector2 localPoint)
         {
             return MathUtils.Multiply(ref Xf, ref localPoint);
+        }
+
+        /// <summary>
+        /// Get the world coordinates of a point given the local coordinates.
+        /// </summary>
+        /// <param name="localPoint">A point on the body measured relative the the body's origin.</param>
+        /// <returns>The same point expressed in world coordinates.</returns>
+        public Vector2 GetWorldPoint(Vector2 localPoint)
+        {
+            return GetWorldPoint(ref localPoint);
+        }
+
+        /// <summary>
+        /// Get the world coordinates of a vector given the local coordinates.
+        /// </summary>
+        /// <param name="localVector">A vector fixed in the body.</param>
+        /// <returns>The same vector expressed in world coordinates.</returns>
+        public Vector2 GetWorldVector(ref Vector2 localVector)
+        {
+            return MathUtils.Multiply(ref Xf.R, ref localVector);
+
         }
 
         /// <summary>
@@ -927,7 +944,17 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The same vector expressed in world coordinates.</returns>
         public Vector2 GetWorldVector(Vector2 localVector)
         {
-            return MathUtils.Multiply(ref Xf.R, ref localVector);
+            return GetWorldVector(ref localVector);
+        }
+
+        /// <summary>
+        /// Gets a local point relative to the body's origin given a world point.
+        /// </summary>
+        /// <param name="worldPoint">A point in world coordinates.</param>
+        /// <returns>The corresponding local point relative to the body's origin.</returns>
+        public Vector2 GetLocalPoint(ref Vector2 worldPoint)
+        {
+            return MathUtils.MultiplyT(ref Xf, ref worldPoint);
         }
 
         /// <summary>
@@ -937,7 +964,17 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The corresponding local point relative to the body's origin.</returns>
         public Vector2 GetLocalPoint(Vector2 worldPoint)
         {
-            return MathUtils.MultiplyT(ref Xf, worldPoint);
+            return GetLocalPoint(ref worldPoint);
+        }
+
+        /// <summary>
+        /// Gets a local vector given a world vector.
+        /// </summary>
+        /// <param name="worldVector">A vector in world coordinates.</param>
+        /// <returns>The corresponding local vector.</returns>
+        public Vector2 GetLocalVector(ref Vector2 worldVector)
+        {
+            return MathUtils.MultiplyT(ref Xf.R, ref worldVector);
         }
 
         /// <summary>
@@ -947,7 +984,7 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The corresponding local vector.</returns>
         public Vector2 GetLocalVector(Vector2 worldVector)
         {
-            return MathUtils.MultiplyT(ref Xf.R, worldVector);
+            return GetLocalVector(ref worldVector);
         }
 
         /// <summary>
@@ -956,6 +993,16 @@ namespace FarseerPhysics.Dynamics
         /// <param name="worldPoint">A point in world coordinates.</param>
         /// <returns>The world velocity of a point.</returns>
         public Vector2 GetLinearVelocityFromWorldPoint(Vector2 worldPoint)
+        {
+            return GetLinearVelocityFromWorldPoint(ref worldPoint);
+        }
+
+        /// <summary>
+        /// Get the world linear velocity of a world point attached to this body.
+        /// </summary>
+        /// <param name="worldPoint">A point in world coordinates.</param>
+        /// <returns>The world velocity of a point.</returns>
+        public Vector2 GetLinearVelocityFromWorldPoint(ref Vector2 worldPoint)
         {
             return LinearVelocityInternal + MathUtils.Cross(AngularVelocityInternal, worldPoint - Sweep.c);
         }
@@ -967,7 +1014,17 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The world velocity of a point.</returns>
         public Vector2 GetLinearVelocityFromLocalPoint(Vector2 localPoint)
         {
-            return GetLinearVelocityFromWorldPoint(GetWorldPoint(localPoint));
+            return GetLinearVelocityFromLocalPoint(ref localPoint);
+        }
+
+        /// <summary>
+        /// Get the world velocity of a local point.
+        /// </summary>
+        /// <param name="localPoint">A point in local coordinates.</param>
+        /// <returns>The world velocity of a point.</returns>
+        public Vector2 GetLinearVelocityFromLocalPoint(ref Vector2 localPoint)
+        {
+            return GetLinearVelocityFromWorldPoint(GetWorldPoint(ref localPoint));
         }
 
         internal void SynchronizeFixtures()

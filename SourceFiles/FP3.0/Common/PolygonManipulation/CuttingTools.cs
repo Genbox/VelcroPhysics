@@ -23,8 +23,8 @@ namespace FarseerPhysics.Common.PolygonManipulation
         public static void SplitShape(Fixture fixture, Vector2 entryPoint, Vector2 exitPoint, float splitSize,
                                       out Vertices first, out Vertices second)
         {
-            Vector2 localEntryPoint = fixture.Body.GetLocalPoint(entryPoint);
-            Vector2 localExitPoint = fixture.Body.GetLocalPoint(exitPoint);
+            Vector2 localEntryPoint = fixture.Body.GetLocalPoint(ref entryPoint);
+            Vector2 localExitPoint = fixture.Body.GetLocalPoint(ref exitPoint);
 
             PolygonShape shape = fixture.Shape as PolygonShape;
 
