@@ -53,7 +53,7 @@ namespace FarseerPhysics.Dynamics
     /// </summary>
     public delegate void BeginContactDelegate(Contact contact);
 
-    public delegate void PreSolveDelegate(Contact contact, ref Manifold oldManifold);
+    public delegate void PreSolveDelegate(Contact contact, Manifold oldManifold);
 
     public delegate void PostSolveDelegate(Contact contact, ref ContactImpulse impulse);
 

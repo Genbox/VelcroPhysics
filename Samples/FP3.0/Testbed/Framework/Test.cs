@@ -155,6 +155,9 @@ namespace FarseerPhysics.TestBed.Framework
             {
                 ++StepCount;
             }
+
+            //if (StepCount == 10000)
+            //    GameInstance.Exit();
         }
 
         public virtual void Keyboard(KeyboardState state, KeyboardState oldState)
@@ -258,7 +261,7 @@ namespace FarseerPhysics.TestBed.Framework
         {
         }
 
-        public virtual void PreSolve(Contact contact, ref Manifold oldManifold)
+        public virtual void PreSolve(Contact contact, Manifold oldManifold)
         {
 
         }
