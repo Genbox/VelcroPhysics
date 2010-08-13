@@ -120,8 +120,6 @@ namespace FarseerPhysics.Dynamics.Joints
         protected float _invMassB;
         internal bool _islandFlag;
         protected Vector2 _localCenterA, _localCenterB;
-        internal Joint _next;
-        internal Joint _prev;
 
         protected Joint(Body bodyA, Body bodyB)
         {
@@ -178,18 +176,6 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         /// <value></value>
         public abstract Vector2 WorldAnchorB { get; }
-
-        /// <summary>
-        /// Get the next joint the world joint list.
-        /// </summary>
-        /// <value></value>
-        public Joint Next { get; internal set; }
-
-        /// <summary>
-        /// Get the previous joint the world joint list.
-        /// </summary>
-        /// <value></value>
-        public Joint Prev { get; set; }
 
         /// <summary>
         /// Set the user data pointer.
@@ -253,11 +239,5 @@ namespace FarseerPhysics.Dynamics.Joints
 
         // This returns true if the position errors are within tolerance.
         internal abstract bool SolvePositionConstraints();
-
-        /// Get the next joint the world joint list.
-        public Joint GetNext()
-        {
-            return _next;
-        }
     }
 }

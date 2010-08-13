@@ -105,7 +105,7 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             bool sleeping = true;
-            for (Body b = World.BodyList; b != null; b = b.Next)
+            foreach (Body b in World.BodyList)
             {
                 if (b.BodyType != BodyType.Dynamic)
                 {
@@ -130,7 +130,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             base.Update(settings, gameTime);
 
-            for (Body b = World.BodyList; b != null; b = b.Next)
+            foreach (Body b in World.BodyList)
             {
                 if (b.BodyType != BodyType.Dynamic)
                 {
