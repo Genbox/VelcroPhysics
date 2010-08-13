@@ -23,6 +23,10 @@ namespace FarseerPhysics.Common.PolygonManipulation
         InfiniteLoop
     }
 
+    //
+    //Clipper contributed by Helge Backhaus
+    //
+
     public static class YuPengClipper
     {
         private const float ClipperEpsilonSquared = 1.192092896e-07f;
