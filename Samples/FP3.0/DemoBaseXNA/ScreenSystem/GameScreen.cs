@@ -349,7 +349,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     Body body = fixture.Fixture.Body;
                     if (body.BodyType == BodyType.Dynamic)
                     {
-                        bool inside = fixture.Fixture.TestPoint(p);
+                        bool inside = fixture.Fixture.TestPoint(ref p);
                         if (inside)
                         {
                             _fixture = fixture.Fixture;
