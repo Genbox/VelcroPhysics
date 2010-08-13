@@ -138,6 +138,8 @@ namespace FarseerPhysics.Dynamics
 
         public float SolveUpdateTime { get; private set; }
 
+        public float BreakableBodyTime { get; private set; }
+
         /// <summary>
         /// Get the number of broad-phase proxies.
         /// </summary>
@@ -621,6 +623,15 @@ namespace FarseerPhysics.Dynamics
                 ClearForces();
             }
 
+            if (Settings.EnableDiagnostics)
+                BreakableBodyTime = _watch.ElapsedTicks -
+                                        (NewContactsTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime + ContinuousPhysicsTime);
+
+            foreach (BreakableBody breakableBody in BreakableBodyList)
+            {
+                breakableBody.Update();
+            }
+
             Flags &= ~WorldFlags.Locked;
 
             if (Settings.EnableDiagnostics)
@@ -628,12 +639,6 @@ namespace FarseerPhysics.Dynamics
                 _watch.Stop();
                 UpdateTime = _watch.ElapsedTicks;
                 _watch.Reset();
-            }
-
-            //TODO: introduce timing
-            foreach (BreakableBody breakableBody in BreakableBodyList)
-            {
-                breakableBody.Update();
             }
         }
 

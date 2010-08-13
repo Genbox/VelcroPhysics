@@ -42,8 +42,7 @@ namespace FarseerPhysics.Common.Decomposition
         /// <returns></returns>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            //TODO: Move tolerance to settings file or give epsilon as tolerance
-            return ConvexPartition(vertices, int.MaxValue, 0);
+            return ConvexPartition(vertices, int.MaxValue, Settings.Epsilon);
         }
 
         /// <summary>

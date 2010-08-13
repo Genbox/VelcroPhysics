@@ -18,7 +18,7 @@ namespace FarseerPhysics.DebugViewXNA
     /// A debug view shows you what happens inside the physics engine. You can view
     /// bodies, 
     /// </summary>
-    public class DebugViewXNA : DebugView
+    public class DebugViewXNA : DebugView, IDisposable
     {
         private static VertexPositionColor[] _vertsLines;
         private static VertexPositionColor[] _vertsFill;
@@ -55,7 +55,6 @@ namespace FarseerPhysics.DebugViewXNA
             _vertsLines = new VertexPositionColor[1000000];
             _vertsFill = new VertexPositionColor[1000000];
 
-            //TODO: Remember to remove subscription inside dispose
             world.ContactManager.PreSolve += PreSolve;
 
             //Default flags
@@ -664,6 +663,11 @@ namespace FarseerPhysics.DebugViewXNA
             _effect = new BasicEffect(device, null);
             _effect.VertexColorEnabled = true;
             _stringData = new List<StringData>();
+        }
+
+        public void Dispose()
+        {
+            World.ContactManager.PreSolve -= PreSolve;
         }
 
         #region Nested type: StringData
