@@ -261,7 +261,7 @@ namespace FarseerPhysics.TestBed.Framework
         {
         }
 
-        public virtual void PreSolve(Contact contact, Manifold oldManifold)
+        public virtual void PreSolve(Contact contact, ref Manifold oldManifold)
         {
 
         }
