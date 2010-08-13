@@ -473,18 +473,6 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Get the next body in the world's body list.
-        /// </summary>
-        /// <value>The next.</value>
-        public Body Next { get; internal set; }
-
-        /// <summary>
-        /// Get the previous body in the world's body list.
-        /// </summary>
-        /// <value>The prev.</value>
-        public Body Prev { get; internal set; }
-
-        /// <summary>
         /// Creates a fixture and attach it to this body.
         /// If the density is non-zero, this function automatically updates the mass of the body.
         /// Contacts are not created until the next time step.
@@ -630,7 +618,7 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        // For teleporting a body without considering new contacts immediately.
+        /// For teleporting a body without considering new contacts immediately.
         /// </summary>
         /// <param name="position">The position.</param>
         /// <param name="angle">The angle.</param>
