@@ -31,7 +31,7 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics.Contacts
 {
-    public struct ContactConstraintPoint
+    public class ContactConstraintPoint
     {
         public Vector2 LocalPoint;
         public float NormalImpulse;
@@ -43,7 +43,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         public float VelocityBias;
     }
 
-    public struct ContactConstraint
+    public class ContactConstraint
     {
         public Body BodyA;
         public Body BodyB;
@@ -58,6 +58,12 @@ namespace FarseerPhysics.Dynamics.Contacts
         public FixedArray2<ContactConstraintPoint> Points;
         public float Radius;
         public ManifoldType Type;
+
+        public ContactConstraint()
+        {
+            Points[0] = new ContactConstraintPoint();
+            Points[1] = new ContactConstraintPoint();
+        }
     }
 
     public class ContactSolver
@@ -76,6 +82,11 @@ namespace FarseerPhysics.Dynamics.Contacts
             if (Constraints == null || Constraints.Length < _constraintCount)
             {
                 Constraints = new ContactConstraint[_constraintCount * 2];
+
+                for (int i = 0; i < _constraintCount * 2; i++)
+                {
+                    Constraints[i] = new ContactConstraint();
+                }
             }
 
             for (int i = 0; i < _constraintCount; ++i)
@@ -173,8 +184,6 @@ namespace FarseerPhysics.Dynamics.Contacts
                     {
                         ccp.VelocityBias = -restitution * vRel;
                     }
-
-                    cc.Points[j] = ccp;
                 }
 
                 // If we have two points, then prepare the block solver.
@@ -212,8 +221,6 @@ namespace FarseerPhysics.Dynamics.Contacts
                         cc.PointCount = 1;
                     }
                 }
-
-                Constraints[i] = cc;
 
                 if (fixtureA.PostSolve != null)
                     fixtureA.PostSolve(cc);
@@ -263,10 +270,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     bodyB.LinearVelocityInternal.X += invMassB * P.X;
                     bodyB.LinearVelocityInternal.Y += invMassB * P.Y;
 #endif
-                    c.Points[j] = ccp;
                 }
-
-                Constraints[i] = c;
             }
         }
 
@@ -344,7 +348,6 @@ namespace FarseerPhysics.Dynamics.Contacts
                     wB += invIB * (ccp.RB.X * P.Y - ccp.RB.Y * P.X);
 #endif
                     ccp.TangentImpulse = newImpulse;
-                    c.Points[j] = ccp;
                 }
 
                 // Solve normal constraints
@@ -396,7 +399,6 @@ namespace FarseerPhysics.Dynamics.Contacts
                     wB += invIB * (ccp.RB.X * P.Y - ccp.RB.Y * P.X);
 #endif
                     ccp.NormalImpulse = newImpulse;
-                    c.Points[0] = ccp;
                 }
                 else
                 {
@@ -457,7 +459,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     float vn2 = dv2.X * normal.X + dv2.Y * normal.Y;
 
                     Vector2 b = new Vector2(vn1 - cp1.VelocityBias, vn2 - cp2.VelocityBias);
-                    b -= MathUtils.Multiply(ref c.K, a); // Inlining didn't help for the multiply.
+                    b -= MathUtils.Multiply(ref c.K, ref a); // Inlining didn't help for the multiply.
 #endif
                     while (true)
                     {
@@ -470,7 +472,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                         //
                         // x' = - inv(A) * b'
                         //
-                        Vector2 x = -MathUtils.Multiply(ref c.NormalMass, b);
+                        Vector2 x = -MathUtils.Multiply(ref c.NormalMass, ref b);
 
                         if (x.X >= 0.0f && x.Y >= 0.0f)
                         {
@@ -693,12 +695,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                         // No solution, give up. This is hit sometimes, but it doesn't seem to matter.
                         break;
                     }
-
-                    c.Points[0] = cp1;
-                    c.Points[1] = cp2;
                 }
-
-                Constraints[i] = c;
 
                 bodyA.LinearVelocityInternal = vA;
                 bodyA.AngularVelocityInternal = wA;
@@ -725,9 +722,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     m.Points[j] = pj;
                 }
 
-                // TODO: look for better ways of doing this.
                 c.Manifold = m;
-                Constraints[i] = c;
                 _contacts[i].Manifold = m;
             }
         }
