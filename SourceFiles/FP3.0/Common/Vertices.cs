@@ -948,6 +948,7 @@ namespace FarseerPhysics.Common
         }
 
         /// <summary>Winding number test for a point in a polygon.</summary>
+        /// See more info about the algorithm here: http://softsurfer.com/Archive/algorithm_0103/algorithm_0103.htm
         /// <param name="point">The point to be tested.</param>
         /// <returns>False if the winding number is even and the point is outside
         /// the polygon and True otherwise.</returns>
