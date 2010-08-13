@@ -28,9 +28,12 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
             PolygonShape shape = fixture.Shape as PolygonShape;
 
-            //TODO: Fix
-            //if (shape == null)
-            //    return;
+            if (shape == null)
+            {
+                first = new Vertices();
+                second = new Vertices();
+                return;
+            }
 
             Vertices vertices = new Vertices(ref shape.Vertices);
             Vertices[] newPolygon = new Vertices[2];

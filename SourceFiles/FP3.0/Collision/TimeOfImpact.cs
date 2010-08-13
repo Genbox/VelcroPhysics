@@ -283,8 +283,6 @@ namespace FarseerPhysics.Collision
 
         public static int TOICalls, TOIIters, TOIMaxIters;
         public static int TOIRootIters, TOIMaxRootIters;
-
-        //TODO: Is this used in Box2d?
         public static int TOIMaxOptIters;
 
         /// Compute the upper bound on time before two shapes penetrate. Time is represented as
