@@ -33,9 +33,8 @@ namespace FarseerPhysics.Collision
     public struct DistanceProxy
     {
         internal FixedArray2<Vector2> Buffer;
-        internal int Count;
         internal float Radius;
-        internal Vector2[] Vertices;
+        internal Vertices Vertices;
 
         /// Initialize the proxy using the given shape. The shape
         /// must remain in scope while the proxy is in use.
@@ -46,9 +45,8 @@ namespace FarseerPhysics.Collision
                 case ShapeType.Circle:
                     {
                         CircleShape circle = (CircleShape) shape;
-                        Vertices = new Vector2[1];
-                        Vertices[0] = circle.Position;
-                        Count = 1;
+                        Vertices = new Vertices(1);
+                        Vertices.Add(circle.Position);
                         Radius = circle.Radius;
                     }
                     break;
@@ -57,7 +55,6 @@ namespace FarseerPhysics.Collision
                     {
                         PolygonShape polygon = (PolygonShape) shape;
                         Vertices = polygon.Vertices;
-                        Count = polygon.VertexCount;
                         Radius = polygon.Radius;
                     }
                     break;
@@ -77,10 +74,9 @@ namespace FarseerPhysics.Collision
                             Buffer[1] = loop.Vertices[0];
                         }
 
-                        Vertices = new Vector2[2];
-                        Vertices[0] = Buffer[0];
-                        Vertices[1] = Buffer[1];
-                        Count = 2;
+                        Vertices = new Vertices(2);
+                        Vertices.Add(Buffer[0]);
+                        Vertices.Add(Buffer[1]);
                         Radius = loop.Radius;
                     }
                     break;
@@ -88,10 +84,9 @@ namespace FarseerPhysics.Collision
                 case ShapeType.Edge:
                     {
                         EdgeShape edge = (EdgeShape) shape;
-                        Vertices = new Vector2[2];
-                        Vertices[0] = edge.Vertex1;
-                        Vertices[1] = edge.Vertex2;
-                        Count = 2;
+                        Vertices = new Vertices(2);
+                        Vertices.Add(edge.Vertex1);
+                        Vertices.Add(edge.Vertex2);
                         Radius = edge.Radius;
                     }
                     break;
@@ -107,7 +102,7 @@ namespace FarseerPhysics.Collision
         {
             int bestIndex = 0;
             float bestValue = Vector2.Dot(Vertices[0], d);
-            for (int i = 1; i < Count; ++i)
+            for (int i = 1; i < Vertices.Count; ++i)
             {
                 float value = Vector2.Dot(Vertices[i], d);
                 if (value > bestValue)
@@ -125,7 +120,7 @@ namespace FarseerPhysics.Collision
         {
             int bestIndex = 0;
             float bestValue = Vector2.Dot(Vertices[0], d);
-            for (int i = 1; i < Count; ++i)
+            for (int i = 1; i < Vertices.Count; ++i)
             {
                 float value = Vector2.Dot(Vertices[i], d);
                 if (value > bestValue)
@@ -141,7 +136,7 @@ namespace FarseerPhysics.Collision
         /// Get a vertex by index. Used by b2Distance.
         public Vector2 GetVertex(int index)
         {
-            Debug.Assert(0 <= index && index < Count);
+            Debug.Assert(0 <= index && index < Vertices.Count);
             return Vertices[index];
         }
     }
