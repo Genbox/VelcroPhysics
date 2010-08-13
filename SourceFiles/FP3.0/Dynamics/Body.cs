@@ -83,6 +83,7 @@ namespace FarseerPhysics.Dynamics
         internal World World;
         internal Transform Xf; // the body origin transform
         private float _inertia;
+        private float _mass;
 
         internal Body(World world)
         {
@@ -106,7 +107,7 @@ namespace FarseerPhysics.Dynamics
         /// <value>The revolutions.</value>
         public float Revolutions
         {
-            get { return Rotation / (float)Math.PI; }
+            get { return Rotation / (float) Math.PI; }
         }
 
         /// <summary>
@@ -190,22 +191,6 @@ namespace FarseerPhysics.Dynamics
                 AngularVelocityInternal = value;
             }
             get { return AngularVelocityInternal; }
-        }
-
-        /// <summary>
-        /// Gets or sets the mass. Usually in kilograms (kg).
-        /// </summary>
-        /// <value>The mass.</value>
-        public float Mass { get; internal set; }
-
-        /// <summary>
-        /// Get or set the rotational inertia of the body about the local origin. usually in kg-m^2.
-        /// </summary>
-        /// <value>The inertia.</value>
-        public float Inertia
-        {
-            get { return _inertia + Mass * Vector2.Dot(Sweep.localCenter, Sweep.localCenter); }
-            set { _inertia = value; }
         }
 
         /// <summary>
@@ -470,6 +455,86 @@ namespace FarseerPhysics.Dynamics
         public Vector2 LocalCenter
         {
             get { return Sweep.localCenter; }
+            set
+            {
+                Debug.Assert(World.IsLocked == false);
+                if (World.IsLocked)
+                {
+                    return;
+                }
+
+                if (Type != BodyType.Dynamic)
+                {
+                    return;
+                }
+
+                // Move center of mass.
+                Vector2 oldCenter = Sweep.c;
+                Sweep.localCenter = value;
+                Sweep.c0 = Sweep.c = MathUtils.Multiply(ref Xf, Sweep.localCenter);
+
+                // Update center of mass velocity.
+                LinearVelocityInternal += MathUtils.Cross(AngularVelocityInternal, Sweep.c - oldCenter);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the mass. Usually in kilograms (kg).
+        /// </summary>
+        /// <value>The mass.</value>
+        public float Mass
+        {
+            get { return _mass; }
+            set
+            {
+                Debug.Assert(World.IsLocked == false);
+                if (World.IsLocked)
+                {
+                    return;
+                }
+
+                if (Type != BodyType.Dynamic)
+                {
+                    return;
+                }
+
+                _mass = value;
+                if (_mass <= 0.0f)
+                {
+                    _mass = 1.0f;
+                }
+
+                InvMass = 1.0f / _mass;
+            }
+        }
+
+        /// <summary>
+        /// Get or set the rotational inertia of the body about the local origin. usually in kg-m^2.
+        /// </summary>
+        /// <value>The inertia.</value>
+        public float Inertia
+        {
+            get { return _inertia + Mass * Vector2.Dot(Sweep.localCenter, Sweep.localCenter); }
+            set
+            {
+                Debug.Assert(World.IsLocked == false);
+                if (World.IsLocked)
+                {
+                    return;
+                }
+
+                if (Type != BodyType.Dynamic)
+                {
+                    return;
+                }
+
+                if (value > 0.0f && (Flags & BodyFlags.FixedRotation) == 0)
+                {
+                    _inertia = value - Mass * Vector2.Dot(LocalCenter, LocalCenter);
+                    Debug.Assert(_inertia > 0.0f);
+                    InvI = 1.0f / _inertia;
+                }
+            }
         }
 
         /// <summary>
@@ -764,68 +829,6 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Get the mass data of the body.
-        /// </summary>
-        /// <param name="massData">A struct containing the mass, inertia and center of the body.</param>
-        public void GetMassData(out MassData massData)
-        {
-            massData = new MassData();
-            massData.Mass = Mass;
-            massData.Inertia = _inertia + Mass * Vector2.Dot(Sweep.localCenter, Sweep.localCenter);
-            massData.Center = Sweep.localCenter;
-        }
-
-        /// <summary>
-        /// Set the mass properties to override the mass properties of the fixtures.
-        /// Note that this changes the center of mass position.
-        /// Note that creating or destroying fixtures can also alter the mass.
-        /// This function has no effect if the body isn't dynamic.
-        /// </summary>
-        /// <param name="massData">The mass data.</param>
-        public void SetMassData(ref MassData massData)
-        {
-            Debug.Assert(World.IsLocked == false);
-            if (World.IsLocked)
-            {
-                return;
-            }
-
-            if (Type != BodyType.Dynamic)
-            {
-                return;
-            }
-
-            InvMass = 0.0f;
-            _inertia = 0.0f;
-            InvI = 0.0f;
-
-            Mass = massData.Mass;
-
-            if (Mass <= 0.0f)
-            {
-                Mass = 1.0f;
-            }
-
-            InvMass = 1.0f / Mass;
-
-
-            if (massData.Inertia > 0.0f && (Flags & BodyFlags.FixedRotation) == 0)
-            {
-                _inertia = massData.Inertia - Mass * Vector2.Dot(massData.Center, massData.Center);
-                Debug.Assert(_inertia > 0.0f);
-                InvI = 1.0f / _inertia;
-            }
-
-            // Move center of mass.
-            Vector2 oldCenter = Sweep.c;
-            Sweep.localCenter = massData.Center;
-            Sweep.c0 = Sweep.c = MathUtils.Multiply(ref Xf, Sweep.localCenter);
-
-            // Update center of mass velocity.
-            LinearVelocityInternal += MathUtils.Cross(AngularVelocityInternal, Sweep.c - oldCenter);
-        }
-
-        /// <summary>
         /// This resets the mass properties to the sum of the mass properties of the fixtures.
         /// This normally does not need to be called unless you called SetMassData to override
         /// the mass and you later want to reset the mass.
@@ -833,7 +836,7 @@ namespace FarseerPhysics.Dynamics
         public void ResetMassData()
         {
             // Compute mass data from shapes. Each shape has its own density.
-            Mass = 0.0f;
+            _mass = 0.0f;
             InvMass = 0.0f;
             _inertia = 0.0f;
             InvI = 0.0f;
@@ -859,7 +862,7 @@ namespace FarseerPhysics.Dynamics
 
                 MassData massData;
                 f.GetMassData(out massData);
-                Mass += massData.Mass;
+                _mass += massData.Mass;
                 center += massData.Mass * massData.Center;
                 _inertia += massData.Inertia;
             }
@@ -872,22 +875,22 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Compute center of mass.
-            if (Mass > 0.0f)
+            if (_mass > 0.0f)
             {
-                InvMass = 1.0f / Mass;
+                InvMass = 1.0f / _mass;
                 center *= InvMass;
             }
             else
             {
                 // Force all dynamic bodies to have a positive mass.
-                Mass = 1.0f;
+                _mass = 1.0f;
                 InvMass = 1.0f;
             }
 
             if (_inertia > 0.0f && (Flags & BodyFlags.FixedRotation) == 0)
             {
                 // Center the inertia about the center of mass.
-                _inertia -= Mass * Vector2.Dot(center, center);
+                _inertia -= _mass * Vector2.Dot(center, center);
 
                 Debug.Assert(_inertia > 0.0f);
                 InvI = 1.0f / _inertia;
