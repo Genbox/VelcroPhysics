@@ -118,7 +118,7 @@ namespace FarseerPhysics.Collision
     /// account for movement, which is critical for continuous physics.
     /// All contact scenarios must be expressed in one of these types.
     /// This structure is stored across time steps, so we keep it small.
-    public class Manifold
+    public struct Manifold
     {
         /// <summary>
         /// Not use for Type.SeparationFunction.Points
@@ -141,23 +141,6 @@ namespace FarseerPhysics.Collision
         public FixedArray2<ManifoldPoint> Points;
 
         public ManifoldType Type;
-
-        public void Reset()
-        {
-            LocalNormal = Vector2.Zero;
-            LocalPoint = Vector2.Zero;
-            PointCount = 0;
-            Points = new FixedArray2<ManifoldPoint>();
-        }
-
-        public void CloneTo(Manifold manifold)
-        {
-            manifold.LocalNormal = LocalNormal;
-            manifold.LocalPoint = LocalPoint;
-            manifold.PointCount = PointCount;
-            manifold.Points = Points;
-            manifold.Type = Type;
-        }
     }
 
     /// This is used to compute the current state of a contact manifold.

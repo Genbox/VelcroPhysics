@@ -68,9 +68,9 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void PreSolve(Contact contact, Manifold oldManifold)
+        public override void PreSolve(Contact contact, ref Manifold oldManifold)
         {
-            base.PreSolve(contact, oldManifold);
+            base.PreSolve(contact, ref oldManifold);
 
             Fixture fixtureA = contact.FixtureA;
             Fixture fixtureB = contact.FixtureB;
