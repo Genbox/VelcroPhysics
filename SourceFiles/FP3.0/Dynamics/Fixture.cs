@@ -128,7 +128,6 @@ namespace FarseerPhysics.Dynamics
             IsSensor = false;
 
             Body = body;
-            Next = null;
 
 #if ConserveMemory            
             Shape = shape;
@@ -178,12 +177,6 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         /// <value>The body.</value>
         public Body Body { get; internal set; }
-
-        /// <summary>
-        /// Get the next fixture in the parent body's fixture list.
-        /// </summary>
-        /// <value>The next.</value>
-        public Fixture Next { get; internal set; }
 
         /// <summary>
         /// Set the user data. Use this to store your application specific data.

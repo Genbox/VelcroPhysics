@@ -35,7 +35,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 return;
             }
 
-            Vertices vertices = new Vertices(ref shape.Vertices);
+            Vertices vertices = new Vertices(shape.Vertices);
             Vertices[] newPolygon = new Vertices[2];
 
             for (int i = 0; i < newPolygon.Length; i++)

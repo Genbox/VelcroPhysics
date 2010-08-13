@@ -42,7 +42,7 @@ namespace FarseerPhysics.Common.Decomposition
         /// <returns></returns>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            return ConvexPartition(vertices, int.MaxValue, Settings.Epsilon);
+            return ConvexPartition(vertices, int.MaxValue, 0);
         }
 
         /// <summary>

@@ -133,9 +133,9 @@ namespace FarseerPhysics.DebugViewXNA
 
             if ((Flags & DebugViewFlags.PolygonPoints) == DebugViewFlags.PolygonPoints)
             {
-                for (Body body = World.BodyList; body != null; body = body.Next)
+                foreach (Body body in World.BodyList)
                 {
-                    for (Fixture f = body.FixtureList; f != null; f = f.Next)
+                    foreach (Fixture f in body.FixtureList)
                     {
                         PolygonShape polygon = f.Shape as PolygonShape;
                         if (polygon != null)
@@ -160,11 +160,11 @@ namespace FarseerPhysics.DebugViewXNA
 
             if ((Flags & DebugViewFlags.Shape) == DebugViewFlags.Shape)
             {
-                for (Body b = World.BodyList; b != null; b = b.Next)
+                foreach (Body b in World.BodyList)
                 {
                     Transform xf;
                     b.GetTransform(out xf);
-                    for (Fixture f = b.FixtureList; f != null; f = f.Next)
+                    foreach (Fixture f in b.FixtureList)
                     {
                         if (b.Active == false)
                         {
@@ -192,7 +192,7 @@ namespace FarseerPhysics.DebugViewXNA
 
             if ((Flags & DebugViewFlags.Joint) == DebugViewFlags.Joint)
             {
-                for (Joint j = World.JointList; j != null; j = j.GetNext())
+                foreach (Joint j in World.JointList)
                 {
                     DrawJoint(j);
                 }
@@ -223,14 +223,14 @@ namespace FarseerPhysics.DebugViewXNA
                 Color color = new Color(0.9f, 0.3f, 0.9f);
                 BroadPhase bp = World.ContactManager.BroadPhase;
 
-                for (Body b = World.BodyList; b != null; b = b.Next)
+                foreach (Body b in World.BodyList)
                 {
                     if (b.Active == false)
                     {
                         continue;
                     }
 
-                    for (Fixture f = b.FixtureList; f != null; f = f.Next)
+                    foreach (Fixture f in b.FixtureList)
                     {
                         for (int t = 0; t < f.ProxyCount; ++t)
                         {
@@ -251,7 +251,7 @@ namespace FarseerPhysics.DebugViewXNA
 
             if ((Flags & DebugViewFlags.CenterOfMass) == DebugViewFlags.CenterOfMass)
             {
-                for (Body b = World.BodyList; b != null; b = b.Next)
+                foreach (Body b in World.BodyList)
                 {
                     Transform xf;
                     b.GetTransform(out xf);
@@ -263,11 +263,11 @@ namespace FarseerPhysics.DebugViewXNA
 
         private void DrawDebugPanel()
         {
-            DrawString(50, 100, "Bodies: " + World.BodyCount);
+            DrawString(50, 100, "Bodies: " + World.BodyList.Count);
 
             //TODO: Is the number of contacts reliable?
             DrawString(50, 115, "Contacts: " + World.ContactCount);
-            DrawString(50, 130, "Joints: " + World.JointCount);
+            DrawString(50, 130, "Joints: " + World.JointList.Count);
             DrawString(50, 145, "Proxies: " + World.ProxyCount);
             DrawString(50, 160, "Breakable: " + World.BreakableBodyList.Count);
             DrawString(50, 175, "Controllers: " + World.Controllers.Count);

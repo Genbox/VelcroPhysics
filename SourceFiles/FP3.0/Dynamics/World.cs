@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
 using FarseerPhysics.Controllers;
@@ -120,6 +121,8 @@ namespace FarseerPhysics.Dynamics
 
             Controllers = new List<Controller>();
             BreakableBodyList = new List<BreakableBody>();
+            BodyList = new List<Body>(32);
+            JointList = new List<Joint>(32);
         }
 
         public List<Controller> Controllers { get; private set; }
@@ -148,18 +151,6 @@ namespace FarseerPhysics.Dynamics
         {
             get { return ContactManager.BroadPhase.ProxyCount; }
         }
-
-        /// <summary>
-        /// Get the number of bodies.
-        /// </summary>
-        /// <value>The body count.</value>
-        public int BodyCount { get; private set; }
-
-        /// <summary>
-        /// Get the number of joints.
-        /// </summary>
-        /// <value>The joint count.</value>
-        public int JointCount { get; private set; }
 
         /// <summary>
         /// Get the number of contacts (each may have 0 or more contact points).
@@ -227,14 +218,9 @@ namespace FarseerPhysics.Dynamics
         /// the next body in the world list. A null body indicates the end of the list.
         /// </summary>
         /// <value>Thehead of the world body list.</value>
-        public Body BodyList { get; set; }
+        public List<Body> BodyList { get; private set; }
 
-        /// <summary>
-        /// Get the world joint list. With the returned joint, use Joint.GetNext to get
-        /// the next joint in the world list. A null joint indicates the end of the list.
-        /// </summary>
-        /// <value>The head of the world joint list.</value>
-        public Joint JointList { get; set; }
+        public List<Joint> JointList { get; private set; }
 
         /// <summary>
         /// Get the world contact list. With the returned contact, use Contact.GetNext to get
@@ -262,14 +248,7 @@ namespace FarseerPhysics.Dynamics
             Body body = new Body(this);
 
             // Add to world doubly linked list.
-            body.Prev = null;
-            body.Next = BodyList;
-            if (BodyList != null)
-            {
-                BodyList.Prev = body;
-            }
-            BodyList = body;
-            ++BodyCount;
+            BodyList.Add(body);
 
             if (BodyAdded != null)
                 BodyAdded(body);
@@ -285,7 +264,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="body">The body.</param>
         public void RemoveBody(Body body)
         {
-            Debug.Assert(BodyCount > 0);
+            Debug.Assert(BodyList.Count > 0);
             Debug.Assert(!IsLocked);
 
             if (IsLocked)
@@ -293,7 +272,10 @@ namespace FarseerPhysics.Dynamics
                 return;
             }
 
-            //TODO: Check if the body you are about to delete is in the body linked list
+#if DEBUG
+            // You tried to remove a shape that is not attached to this body.
+            Debug.Assert(BodyList.Contains(body));
+#endif
 
             // Delete the attached joints.
             JointEdge je = body.JointList;
@@ -317,35 +299,17 @@ namespace FarseerPhysics.Dynamics
             body.ContactList = null;
 
             // Delete the attached fixtures. This destroys broad-phase proxies.
-            Fixture f = body.FixtureList;
-            while (f != null)
-            {
-                Fixture f0 = f;
-                f = f.Next;
 
-                f0.DestroyProxies(ContactManager.BroadPhase);
-                f0.Destroy();
+            foreach (Fixture fixture in body.FixtureList)
+            {
+                fixture.DestroyProxies(ContactManager.BroadPhase);
+                fixture.Destroy();
             }
+            
             body.FixtureList = null;
-            body.FixtureCount = 0;
 
             // Remove world body list.
-            if (body.Prev != null)
-            {
-                body.Prev.Next = body.Next;
-            }
-
-            if (body.Next != null)
-            {
-                body.Next.Prev = body.Prev;
-            }
-
-            if (body == BodyList)
-            {
-                BodyList = body.Next;
-            }
-
-            --BodyCount;
+            BodyList.Remove(body);
 
             if (BodyRemoved != null)
                 BodyRemoved(body);
@@ -365,14 +329,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Connect to the world list.
-            joint._prev = null;
-            joint._next = JointList;
-            if (JointList != null)
-            {
-                JointList._prev = joint;
-            }
-            JointList = joint;
-            ++JointCount;
+            JointList.Add(joint);
 
             // Connect to the bodies' doubly linked lists.
             joint._edgeA.Joint = joint;
@@ -444,21 +401,8 @@ namespace FarseerPhysics.Dynamics
 
             bool collideConnected = joint.CollideConnected;
 
-            // Remove from the doubly linked list.
-            if (joint._prev != null)
-            {
-                joint._prev._next = joint._next;
-            }
-
-            if (joint._next != null)
-            {
-                joint._next._prev = joint._prev;
-            }
-
-            if (joint == JointList)
-            {
-                JointList = joint._next;
-            }
+            // Remove from the world list.
+            JointList.Remove(joint);
 
             // Disconnect from island graph.
             Body bodyA = joint.BodyA;
@@ -514,9 +458,6 @@ namespace FarseerPhysics.Dynamics
                 joint._edgeB.Prev = null;
                 joint._edgeB.Next = null;
             }
-
-            Debug.Assert(JointCount > 0);
-            --JointCount;
 
             // WIP David
             if (!joint.IsFixedType())
@@ -649,7 +590,7 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public void ClearForces()
         {
-            for (Body body = BodyList; body != null; body = body.Next)
+            foreach (Body body in BodyList)
             {
                 body.Force = Vector2.Zero;
                 body.Torque = 0.0f;
@@ -716,13 +657,13 @@ namespace FarseerPhysics.Dynamics
         private void Solve(ref TimeStep step)
         {
             // Size the island for the worst case.
-            _island.Reset(BodyCount,
+            _island.Reset(BodyList.Count,
                           ContactManager.ContactCount,
-                          JointCount,
+                          JointList.Count,
                           ContactManager);
 
             // Clear all the island flags.
-            for (Body b = BodyList; b != null; b = b.Next)
+            foreach (Body b in BodyList)
             {
                 b.Flags &= ~BodyFlags.Island;
             }
@@ -730,18 +671,19 @@ namespace FarseerPhysics.Dynamics
             {
                 c.Flags &= ~ContactFlags.Island;
             }
-            for (Joint j = JointList; j != null; j = j._next)
+            foreach (Joint j in JointList)
             {
                 j._islandFlag = false;
             }
 
             // Build and simulate all awake islands.
-            int stackSize = BodyCount;
+            int stackSize = BodyList.Count;
             if (stackSize > _stack.Length)
                 _stack = new Body[Math.Max(_stack.Length * 2, stackSize)];
 
-            for (Body seed = BodyList; seed != null; seed = seed.Next)
+            for (int index = BodyList.Count - 1; index >= 0; index--)
             {
+                Body seed = BodyList[index];
                 if ((seed.Flags & (BodyFlags.Island)) != BodyFlags.None)
                 {
                     continue;
@@ -878,7 +820,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Synchronize fixtures, check for out of range bodies.
-            for (Body b = BodyList; b != null; b = b.Next)
+            foreach (Body b in BodyList)
             {
                 // If a body was not in an island then it did not move.
                 if ((b.Flags & BodyFlags.Island) != BodyFlags.Island)
@@ -1110,7 +1052,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Initialize the TOI flag.
-            for (Body body = BodyList; body != null; body = body.Next)
+            foreach (Body body in BodyList)
             {
                 // Kinematic, and static bodies will not be affected by the TOI event.
                 // If a body was not in an island then it did not move.
@@ -1126,7 +1068,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Collide non-bullets.
-            for (Body body = BodyList; body != null; body = body.Next)
+            foreach (Body body in BodyList)
             {
                 if ((body.Flags & BodyFlags.Toi) != BodyFlags.None)
                 {
@@ -1144,7 +1086,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Collide bullets.
-            for (Body body = BodyList; body != null; body = body.Next)
+            foreach (Body body in BodyList)
             {
                 if ((body.Flags & BodyFlags.Toi) != BodyFlags.None)
                 {
