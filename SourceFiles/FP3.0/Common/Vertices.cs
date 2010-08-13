@@ -161,23 +161,32 @@ namespace FarseerPhysics.Common
         public AABB GetCollisionBox()
         {
             AABB aabb;
-            float lowX = 9999, highX = -9999, lowY = 9999, highY = -9999;
+            Vector2 lowerBound = new Vector2(float.MaxValue, float.MaxValue);
+            Vector2 upperBound = new Vector2(float.MinValue, float.MinValue);
 
-            for (int i = 0; i < this.Count; i++)
+            for (int i = 0; i < this.Count; ++i)
             {
-                if (this[i].X < lowX)
-                    lowX = this[i].X;
-                else if (this[i].X > highX)
-                    highX = this[i].X;
+                if (this[i].X < lowerBound.X)
+                {
+                    lowerBound.X = this[i].X;
+                }
+                else if (this[i].X > upperBound.X)
+                {
+                    upperBound.X = this[i].X;
+                }
 
-                if (this[i].Y < lowY)
-                    lowY = this[i].Y;
-                else if (this[i].Y > highY)
-                    highY = this[i].Y;
+                if (this[i].Y < lowerBound.Y)
+                {
+                    lowerBound.Y = this[i].Y;
+                }
+                else if (this[i].Y > upperBound.Y)
+                {
+                    upperBound.Y = this[i].Y;
+                }
             }
 
-            aabb.LowerBound = new Vector2(lowX, lowY);
-            aabb.UpperBound = new Vector2(highX, highY);
+            aabb.LowerBound = lowerBound;
+            aabb.UpperBound = upperBound;
 
             return aabb;
         }
@@ -354,7 +363,7 @@ namespace FarseerPhysics.Common
                 //Parallel sides check
                 float cross = MathUtils.Cross(normals[iminus], normals[i]);
                 cross = MathUtils.Clamp(cross, -1.0f, 1.0f);
-                float angle = (float) Math.Asin(cross);
+                float angle = (float)Math.Asin(cross);
                 if (angle <= Settings.AngularSlop)
                 {
                     error = 4;
@@ -525,7 +534,7 @@ namespace FarseerPhysics.Common
                         }
                     }
                 }
-                SkipOut:
+            SkipOut:
                 ++counter;
                 //if (counter > 100) printf("Counter: %d\n",counter);
             }
@@ -779,7 +788,7 @@ namespace FarseerPhysics.Common
                 {
                     if (fromMe == connected[i])
                     {
-//.position == connected[i].position){
+                        //.position == connected[i].position){
                         isFound = true;
                         foundIndex = i;
                         break;
@@ -811,7 +820,7 @@ namespace FarseerPhysics.Common
                 {
                     if (me == connected[i])
                     {
-//.position == connected[i].position){
+                        //.position == connected[i].position){
                         isFound = true;
                         break;
                     }
@@ -969,7 +978,7 @@ namespace FarseerPhysics.Common
                     }
                 }
             }
-            return (wn % 2 != 0);
+            return (wn != 0);
         }
 
         /// <summary>
@@ -998,6 +1007,5 @@ namespace FarseerPhysics.Common
 
             return true;
         }
-
     }
 }

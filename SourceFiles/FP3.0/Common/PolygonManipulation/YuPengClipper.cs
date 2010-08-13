@@ -25,7 +25,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
     public static class YuPengClipper
     {
-        private const float ClipperEpsilon = 1.192092896e-07f;
+        private const float ClipperEpsilonSquared = 1.192092896e-07f;
 
         public static List<Vertices> Union(Vertices polygon1, Vertices polygon2, out PolyClipError error)
         {
@@ -75,30 +75,11 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
             // Translate polygons into upper right quadrant
             // as the algorithm depends on it
-            Vector2 minimum = Vector2.One;
-            for (int i = 0; i < subject.Count; ++i)
-            {
-                if (subject[i].X < minimum.X)
-                {
-                    minimum.X = subject[i].X;
-                }
-                if (subject[i].Y < minimum.Y)
-                {
-                    minimum.Y = subject[i].Y;
-                }
-            }
-            for (int i = 0; i < clip.Count; ++i)
-            {
-                if (clip[i].X < minimum.X)
-                {
-                    minimum.X = clip[i].X;
-                }
-                if (clip[i].Y < minimum.Y)
-                {
-                    minimum.Y = clip[i].Y;
-                }
-            }
-            Vector2 translate = Vector2.One - minimum;
+            Vector2 lbSubject = subject.GetCollisionBox().LowerBound;
+            Vector2 lbClip = clip.GetCollisionBox().LowerBound;
+            Vector2 translate;
+            Vector2.Min(ref lbSubject, ref lbClip, out translate);
+            translate = Vector2.One - translate;
             if (translate != Vector2.Zero)
             {
                 slicedSubject.Translate(ref translate);
@@ -201,12 +182,11 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 }
             }
             // Check for very small edges
-            const float minDistanceSquared = ClipperEpsilon;
             for (int i = 0; i < slicedPoly1.Count; ++i)
             {
                 int iNext = slicedPoly1.NextIndex(i);
                 //If they are closer than the distance remove vertex
-                if ((slicedPoly1[iNext] - slicedPoly1[i]).LengthSquared() <= minDistanceSquared)
+                if ((slicedPoly1[iNext] - slicedPoly1[i]).LengthSquared() <= ClipperEpsilonSquared)
                 {
                     slicedPoly1.RemoveAt(i);
                     --i;
@@ -216,7 +196,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
             {
                 int iNext = slicedPoly2.NextIndex(i);
                 //If they are closer than the distance remove vertex
-                if ((slicedPoly2[iNext] - slicedPoly2[i]).LengthSquared() <= minDistanceSquared)
+                if ((slicedPoly2[iNext] - slicedPoly2[i]).LengthSquared() <= ClipperEpsilonSquared)
                 {
                     slicedPoly2.RemoveAt(i);
                     --i;
@@ -464,7 +444,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
         private static bool VectorEqual(Vector2 vec1, Vector2 vec2)
         {
-            return (vec2 - vec1).LengthSquared() <= ClipperEpsilon;
+            return (vec2 - vec1).LengthSquared() <= ClipperEpsilonSquared;
         }
 
         #region Nested type: Edge
