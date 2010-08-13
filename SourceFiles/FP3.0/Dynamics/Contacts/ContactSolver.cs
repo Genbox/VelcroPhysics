@@ -814,8 +814,8 @@ namespace FarseerPhysics.Dynamics.Contacts
             {
                 case ManifoldType.Circles:
                     {
-                        Vector2 pointA = cc.BodyA.GetWorldPoint(cc.LocalPoint);
-                        Vector2 pointB = cc.BodyB.GetWorldPoint(cc.Points[0].LocalPoint);
+                        Vector2 pointA = cc.BodyA.GetWorldPoint(ref cc.LocalPoint);
+                        Vector2 pointB = cc.BodyB.GetWorldPoint(ref cc.Points[0].LocalPoint);
                         if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
                         {
                             Normal = pointB - pointA;
@@ -833,10 +833,10 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                 case ManifoldType.FaceA:
                     {
-                        Normal = cc.BodyA.GetWorldVector(cc.LocalNormal);
-                        Vector2 planePoint = cc.BodyA.GetWorldPoint(cc.LocalPoint);
+                        Normal = cc.BodyA.GetWorldVector(ref cc.LocalNormal);
+                        Vector2 planePoint = cc.BodyA.GetWorldPoint(ref cc.LocalPoint);
 
-                        Vector2 clipPoint = cc.BodyB.GetWorldPoint(cc.Points[index].LocalPoint);
+                        Vector2 clipPoint = cc.BodyB.GetWorldPoint(ref cc.Points[index].LocalPoint);
                         Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
                         Point = clipPoint;
                     }
@@ -844,10 +844,10 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                 case ManifoldType.FaceB:
                     {
-                        Normal = cc.BodyB.GetWorldVector(cc.LocalNormal);
-                        Vector2 planePoint = cc.BodyB.GetWorldPoint(cc.LocalPoint);
+                        Normal = cc.BodyB.GetWorldVector(ref cc.LocalNormal);
+                        Vector2 planePoint = cc.BodyB.GetWorldPoint(ref cc.LocalPoint);
 
-                        Vector2 clipPoint = cc.BodyA.GetWorldPoint(cc.Points[index].LocalPoint);
+                        Vector2 clipPoint = cc.BodyA.GetWorldPoint(ref cc.Points[index].LocalPoint);
                         Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
                         Point = clipPoint;
 

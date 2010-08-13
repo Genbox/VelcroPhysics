@@ -207,7 +207,7 @@ namespace FarseerPhysics.Dynamics.Joints
             get
             {
                 Vector2 d = BodyB.GetWorldPoint(LocalAnchorB) - BodyA.GetWorldPoint(LocalAnchorA);
-                Vector2 axis = BodyA.GetWorldVector(_localXAxis1);
+                Vector2 axis = BodyA.GetWorldVector(ref _localXAxis1);
 
                 return Vector2.Dot(d, axis);
             }
@@ -230,7 +230,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 p1 = BodyA.Sweep.c + r1;
                 Vector2 p2 = BodyB.Sweep.c + r2;
                 Vector2 d = p2 - p1;
-                Vector2 axis = BodyA.GetWorldVector(_localXAxis1);
+                Vector2 axis = BodyA.GetWorldVector(ref _localXAxis1);
 
                 Vector2 v1 = BodyA.LinearVelocityInternal;
                 Vector2 v2 = BodyB.LinearVelocityInternal;
