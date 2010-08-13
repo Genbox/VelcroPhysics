@@ -95,14 +95,14 @@ namespace FarseerPhysics.TestBed.Framework
         public virtual void Initialize()
         {
             DebugView = new DebugViewXNA.DebugViewXNA(World);
-            DebugView.AppendFlags(DebugViewFlags.Shape);
-            DebugView.AppendFlags(DebugViewFlags.Joint);
+            //DebugView.AppendFlags(DebugViewFlags.Shape);
+            //DebugView.AppendFlags(DebugViewFlags.Joint);
             //DebugView.AppendFlags(DebugViewFlags.AABB);
             //DebugView.AppendFlags(DebugViewFlags.CenterOfMass);
             //DebugView.AppendFlags(DebugViewFlags.Pair);
             //DebugView.AppendFlags(DebugViewFlags.ContactPoints);
             //DebugView.AppendFlags(DebugViewFlags.ContactNormals);
-            DebugView.AppendFlags(DebugViewFlags.PolygonPoints);
+            //DebugView.AppendFlags(DebugViewFlags.PolygonPoints);
         }
 
         protected virtual void JointRemoved(Joint joint)

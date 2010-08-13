@@ -59,6 +59,7 @@ namespace FarseerPhysics.DebugViewXNA
 
             //Default flags
             AppendFlags(DebugViewFlags.Shape);
+            AppendFlags(DebugViewFlags.Joint);
         }
 
         private void PreSolve(Contact contact, ref Manifold oldManifold)
@@ -146,7 +147,7 @@ namespace FarseerPhysics.DebugViewXNA
                             for (int i = 0; i < polygon.Vertices.Count; i++)
                             {
                                 Vector2 tmp = MathUtils.Multiply(ref xf, polygon.Vertices[i]);
-                                DrawPoint(tmp, 0.05f, Color.Red);
+                                DrawPoint(tmp, 0.1f, Color.Red);
                             }
                         }
                     }
