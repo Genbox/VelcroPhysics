@@ -211,7 +211,7 @@ namespace FarseerPhysics.TestBed.Framework
                     Body body = fixture.Fixture.Body;
                     if (body.BodyType == BodyType.Dynamic)
                     {
-                        bool inside = fixture.Fixture.TestPoint(p);
+                        bool inside = fixture.Fixture.TestPoint(ref p);
                         if (inside)
                         {
                             myFixture = fixture.Fixture;

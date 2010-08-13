@@ -97,7 +97,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// <param name="transform">The shape world transform.</param>
         /// <param name="point">a point in world coordinates.</param>
         /// <returns>True if the point is inside the shape</returns>
-        public abstract bool TestPoint(ref Transform transform, Vector2 point);
+        public abstract bool TestPoint(ref Transform transform, ref Vector2 point);
 
         /// <summary>
         /// Cast a ray against a child shape.
@@ -109,7 +109,6 @@ namespace FarseerPhysics.Collision.Shapes
         /// <returns>True if the ray-cast hits the shape</returns>
         public abstract bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform,
                                      int childIndex);
-
 
         /// <summary>
         /// Given a transform, compute the associated axis aligned bounding box for a child shape.

@@ -272,11 +272,11 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         /// <param name="point">A point in world coordinates.</param>
         /// <returns></returns>
-        public bool TestPoint(Vector2 point)
+        public bool TestPoint(ref Vector2 point)
         {
             Transform xf;
             Body.GetTransform(out xf);
-            return Shape.TestPoint(ref xf, point);
+            return Shape.TestPoint(ref xf, ref point);
         }
 
         /// <summary>

@@ -130,16 +130,16 @@ namespace FarseerPhysics.Collision.Shapes
             Centroid = ComputeCentroid(Vertices);
         }
 
-        private static Vector2 ComputeCentroid(Vertices vs)
+        private static Vector2 ComputeCentroid(Vertices vertices)
         {
-            Debug.Assert(vs.Count >= 2);
+            Debug.Assert(vertices.Count >= 2);
 
             Vector2 c = new Vector2(0.0f, 0.0f);
             float area = 0.0f;
 
-            if (vs.Count == 2)
+            if (vertices.Count == 2)
             {
-                c = 0.5f * (vs[0] + vs[1]);
+                c = 0.5f * (vertices[0] + vertices[1]);
                 return c;
             }
 
@@ -157,12 +157,12 @@ namespace FarseerPhysics.Collision.Shapes
 
             const float inv3 = 1.0f / 3.0f;
 
-            for (int i = 0; i < vs.Count; ++i)
+            for (int i = 0; i < vertices.Count; ++i)
             {
                 // Triangle vertices.
                 Vector2 p1 = pRef;
-                Vector2 p2 = vs[i];
-                Vector2 p3 = i + 1 < vs.Count ? vs[i + 1] : vs[0];
+                Vector2 p2 = vertices[i];
+                Vector2 p3 = i + 1 < vertices.Count ? vertices[i + 1] : vertices[0];
 
                 Vector2 e1 = p2 - p1;
                 Vector2 e2 = p3 - p1;
@@ -220,7 +220,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// <param name="transform">The shape world transform.</param>
         /// <param name="point">a point in world coordinates.</param>
         /// <returns>True if the point is inside the shape</returns>
-        public override bool TestPoint(ref Transform transform, Vector2 point)
+        public override bool TestPoint(ref Transform transform, ref Vector2 point)
         {
             Vector2 pLocal = MathUtils.MultiplyT(ref transform.R, point - transform.Position);
 
