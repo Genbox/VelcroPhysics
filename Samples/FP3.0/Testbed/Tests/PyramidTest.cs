@@ -63,15 +63,6 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        //Genbox: I use this in performance profiling to get consistant values from each run
-        //public override void Update(Framework.Settings settings)
-        //{
-        //    if (StepCount == 10000)
-        //        GameInstance.Exit();
-
-        //    base.Update(settings);
-        //}
-
         public static Test Create()
         {
             return new PyramidTest();

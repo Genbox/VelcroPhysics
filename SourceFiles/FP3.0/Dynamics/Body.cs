@@ -926,7 +926,7 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The same point expressed in world coordinates.</returns>
         public Vector2 GetWorldPoint(Vector2 localPoint)
         {
-            return MathUtils.Multiply(ref Xf, localPoint);
+            return MathUtils.Multiply(ref Xf, ref localPoint);
         }
 
         /// <summary>

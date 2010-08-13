@@ -101,8 +101,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                 float radiusB = shapeB.Radius;
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
-                Manifold manifold;
-                contact.GetManifold(out manifold);
+                Manifold manifold = contact.Manifold;
 
                 float friction = Settings.b2MixFriction(fixtureA.Friction, fixtureB.Friction);
                 float restitution = Settings.b2MixRestitution(fixtureA.Restitution, fixtureB.Restitution);
@@ -721,9 +720,6 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                     m.Points[j] = pj;
                 }
-
-                c.Manifold = m;
-                _contacts[i].Manifold = m;
             }
         }
 
@@ -746,11 +742,11 @@ namespace FarseerPhysics.Dynamics.Contacts
                 // Solve normal constraints
                 for (int j = 0; j < c.PointCount; ++j)
                 {
-                    PositionSolverManifold psm = new PositionSolverManifold(ref c, j);
-                    Vector2 normal = psm.Normal;
+                    Vector2 normal;
+                    Vector2 point;
+                    float separation;
 
-                    Vector2 point = psm.Point;
-                    float separation = psm.Separation;
+                    PositionSolverManifold.CalculatePositionSolverManifold(c, j, out normal, out separation, out point);
 
                     Vector2 rA = point - bodyA.Sweep.c;
                     Vector2 rB = point - bodyB.Sweep.c;
@@ -800,13 +796,9 @@ namespace FarseerPhysics.Dynamics.Contacts
         }
     }
 
-    internal struct PositionSolverManifold
+    internal static class PositionSolverManifold
     {
-        internal Vector2 Normal;
-        internal Vector2 Point;
-        internal float Separation;
-
-        internal PositionSolverManifold(ref ContactConstraint cc, int index)
+        public static void CalculatePositionSolverManifold(ContactConstraint cc, int index, out Vector2 normal, out float separation, out Vector2 point)
         {
             Debug.Assert(cc.PointCount > 0);
 
@@ -818,47 +810,47 @@ namespace FarseerPhysics.Dynamics.Contacts
                         Vector2 pointB = cc.BodyB.GetWorldPoint(cc.Points[0].LocalPoint);
                         if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
                         {
-                            Normal = pointB - pointA;
-                            Normal.Normalize();
+                            normal = pointB - pointA;
+                            normal.Normalize();
                         }
                         else
                         {
-                            Normal = new Vector2(1.0f, 0.0f);
+                            normal = new Vector2(1.0f, 0.0f);
                         }
 
-                        Point = 0.5f * (pointA + pointB);
-                        Separation = Vector2.Dot(pointB - pointA, Normal) - cc.Radius;
+                        point = 0.5f * (pointA + pointB);
+                        separation = Vector2.Dot(pointB - pointA, normal) - cc.Radius;
                     }
                     break;
 
                 case ManifoldType.FaceA:
                     {
-                        Normal = cc.BodyA.GetWorldVector(cc.LocalNormal);
+                        normal = cc.BodyA.GetWorldVector(cc.LocalNormal);
                         Vector2 planePoint = cc.BodyA.GetWorldPoint(cc.LocalPoint);
 
                         Vector2 clipPoint = cc.BodyB.GetWorldPoint(cc.Points[index].LocalPoint);
-                        Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
-                        Point = clipPoint;
+                        separation = Vector2.Dot(clipPoint - planePoint, normal) - cc.Radius;
+                        point = clipPoint;
                     }
                     break;
 
                 case ManifoldType.FaceB:
                     {
-                        Normal = cc.BodyB.GetWorldVector(cc.LocalNormal);
+                        normal = cc.BodyB.GetWorldVector(cc.LocalNormal);
                         Vector2 planePoint = cc.BodyB.GetWorldPoint(cc.LocalPoint);
 
                         Vector2 clipPoint = cc.BodyA.GetWorldPoint(cc.Points[index].LocalPoint);
-                        Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
-                        Point = clipPoint;
+                        separation = Vector2.Dot(clipPoint - planePoint, normal) - cc.Radius;
+                        point = clipPoint;
 
                         // Ensure normal points from A to B
-                        Normal = -Normal;
+                        normal = -normal;
                     }
                     break;
                 default:
-                    Normal = Vector2.Zero;
-                    Point = Vector2.Zero;
-                    Separation = 0.0f;
+                    normal = Vector2.Zero;
+                    point = Vector2.Zero;
+                    separation = 0.0f;
                     break;
             }
         }
