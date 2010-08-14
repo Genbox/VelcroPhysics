@@ -10,18 +10,24 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class YuPengPolygonTest : Test
     {
+        private enum AlgorithmUsed
+        {
+            YuPeng,
+            Trace
+        }
+
         private Vertices _clip;
         private PolyClipError _err;
         private List<TextMessage> _messages;
         private List<Vertices> _polygons;
         private Vertices _selected;
         private Vertices _subject;
-        private char algorithm;
+        private AlgorithmUsed _algorithm;
 
         public override void Initialize()
-        { 
-            algorithm = 'y';
-            Game1.isDynamicTitle = true;
+        {
+            _algorithm = AlgorithmUsed.YuPeng;
+
             Vector2 trans = new Vector2();
             _messages = new List<TextMessage>();
             _polygons = new List<Vertices>();
@@ -53,6 +59,9 @@ namespace FarseerPhysics.TestBed.Tests
             _clip = _polygons[1];
 
             base.Initialize();
+
+            //Removing debugpanel - this is a tools only simulation
+            GameInstance.DebugViewEnabled = false;
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
@@ -104,7 +113,7 @@ namespace FarseerPhysics.TestBed.Tests
                     }
                 }
             }
-            
+
             DebugView.DrawString(500, TextLine, "A,S,D = Create Rectangle");
             TextLine += 15;
 
@@ -126,14 +135,19 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(500, TextLine, "Backspace = Subtract");
             TextLine += 15;
 
-            if (algorithm == 'y')
+            DebugView.DrawString(500, TextLine, "Shift = Intersect");
+            TextLine += 15;
+
+            DebugView.DrawString(500, TextLine, "Tab = Change algorithm");
+            TextLine += 15;
+
+            if (_algorithm == AlgorithmUsed.YuPeng)
             {
-                Game1.dynamicTitle = "YuPeng Polygon";
-                DebugView.DrawString(500, TextLine, "Shift = Intersection");
+                DebugView.DrawString(50, 35, "Using: YuPengClipper");
             }
             else
             {
-                Game1.dynamicTitle = "Boolean Polygon";
+                DebugView.DrawString(50, 35, "Using: TraceClipper");
             }
 
             TextLine += 15;
@@ -198,7 +212,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Perform a Union
             if (state.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
             {
-                if (algorithm == 'y')
+                if (_algorithm == AlgorithmUsed.YuPeng)
                 {
                     if (_subject != null && _clip != null)
                     {
@@ -217,14 +231,14 @@ namespace FarseerPhysics.TestBed.Tests
             // Perform a Subtraction
             if (state.IsKeyDown(Keys.Back) && oldState.IsKeyUp(Keys.Back))
             {
-                if (algorithm == 'y')
+                if (_algorithm == AlgorithmUsed.YuPeng)
                 {
                     if (_subject != null && _clip != null)
                     {
                         DoBooleanOperation(YuPengClipper.Difference(_subject, _clip, out _err));
                     }
                 }
-                else 
+                else
                 {
                     if (_subject != null && _clip != null)
                     {
@@ -236,11 +250,18 @@ namespace FarseerPhysics.TestBed.Tests
             // Perform a Intersection
             if (state.IsKeyDown(Keys.LeftShift) && oldState.IsKeyUp(Keys.LeftShift))
             {
-                if (algorithm == 'y')
+                if (_algorithm == AlgorithmUsed.YuPeng)
                 {
                     if (_subject != null && _clip != null)
                     {
                         DoBooleanOperation(YuPengClipper.Intersect(_subject, _clip, out _err));
+                    }
+                }
+                else
+                {
+                    if (_subject != null && _clip != null)
+                    {
+                        DoIntersect();
                     }
                 }
             }
@@ -278,19 +299,50 @@ namespace FarseerPhysics.TestBed.Tests
             }*/
 
             //Determine which algorithm to use y=Yupeng || b=Boolean
-            if(state.IsKeyDown(Keys.Tab) && oldState.IsKeyUp(Keys.Tab))
+            if (state.IsKeyDown(Keys.Tab) && oldState.IsKeyUp(Keys.Tab))
             {
-                if(algorithm == 'y')
+                if (_algorithm == AlgorithmUsed.YuPeng)
                 {
-                    algorithm = 'b';
+                    _algorithm = AlgorithmUsed.Trace;
                 }
                 else
                 {
-                    algorithm = 'y';
+                    _algorithm = AlgorithmUsed.YuPeng;
                 }
             }
 
             base.Keyboard(state, oldState);
+        }
+
+        private void DoIntersect()
+        {
+            // Do the union
+            PolyClipError error;
+            Vertices intersect = TraceClipper.Intersect(_subject, _clip, out error);
+
+            // Check for errors.
+            switch (error)
+            {
+                case PolyClipError.NoIntersections:
+                    WriteMessage("ERROR: Polygons do not intersect!");
+                    return;
+                case PolyClipError.Poly1InsidePoly2:
+                    WriteMessage("Polygon 1 completely inside polygon 2.");
+                    return;
+                case PolyClipError.InfiniteLoop:
+                    WriteMessage("Infinite Loop detected.");
+                    break;
+                case PolyClipError.None:
+                    WriteMessage("No errors with union.");
+                    break;
+            }
+
+            _polygons.Add(intersect);
+            _polygons.Remove(_subject);
+            _polygons.Remove(_clip);
+            _subject = null;
+            _clip = null;
+            _selected = null;
         }
 
         public override void Mouse(MouseState state, MouseState oldState)
@@ -418,7 +470,7 @@ namespace FarseerPhysics.TestBed.Tests
             Vertices verts = PolygonTools.CreateRectangle(width, height);
             _polygons.Add(verts);
         }
-  
+
         private void WriteMessage(string message)
         {
             _messages.Add(new TextMessage(message));
