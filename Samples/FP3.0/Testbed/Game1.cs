@@ -56,6 +56,8 @@ namespace FarseerPhysics.TestBed
         private int _width = 640;
         private Vector2 _lower;
         private Vector2 _upper;
+        public static string dynamicTitle;
+        public static bool isDynamicTitle;
 
         public Game1()
         {
@@ -88,6 +90,9 @@ namespace FarseerPhysics.TestBed
             {
                 ++_testCount;
             }
+
+            dynamicTitle = "";
+            isDynamicTitle = false;
 
             _testIndex = MathUtils.Clamp(_testIndex, 0, _testCount - 1);
             _testSelection = _testIndex;
@@ -164,6 +169,7 @@ namespace FarseerPhysics.TestBed
                 {
                     _testSelection = _testCount - 1;
                 }
+                isDynamicTitle = false;
             }
             // Press O to next test.
             else if ((newKeyboardState.IsKeyDown(Keys.O) && _oldKeyboardState.IsKeyUp(Keys.O)) ||
@@ -174,6 +180,7 @@ namespace FarseerPhysics.TestBed
                 {
                     _testSelection = 0;
                 }
+                isDynamicTitle = false;
             }
             // Press left to pan left.
             else if (newKeyboardState.IsKeyDown(Keys.Left))
@@ -246,6 +253,11 @@ namespace FarseerPhysics.TestBed
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
+
+            if (isDynamicTitle)
+            {
+                _entry.Name = dynamicTitle;
+            }
 
             _test.DrawTitle(50, 15, _entry.Name);
 
