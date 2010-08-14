@@ -16,9 +16,12 @@ namespace FarseerPhysics.TestBed.Tests
         private List<Vertices> _polygons;
         private Vertices _selected;
         private Vertices _subject;
+        private char algorithm;
 
         public override void Initialize()
-        {
+        { 
+            algorithm = 'y';
+            Game1.isDynamicTitle = true;
             Vector2 trans = new Vector2();
             _messages = new List<TextMessage>();
             _polygons = new List<Vertices>();
@@ -101,7 +104,7 @@ namespace FarseerPhysics.TestBed.Tests
                     }
                 }
             }
-
+            
             DebugView.DrawString(500, TextLine, "A,S,D = Create Rectangle");
             TextLine += 15;
 
@@ -123,7 +126,16 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(500, TextLine, "Backspace = Subtract");
             TextLine += 15;
 
-            DebugView.DrawString(500, TextLine, "Shift = Intersection");
+            if (algorithm == 'y')
+            {
+                Game1.dynamicTitle = "YuPeng Polygon";
+                DebugView.DrawString(500, TextLine, "Shift = Intersection");
+            }
+            else
+            {
+                Game1.dynamicTitle = "Boolean Polygon";
+            }
+
             TextLine += 15;
             TextLine += 15;
 
@@ -186,27 +198,50 @@ namespace FarseerPhysics.TestBed.Tests
             // Perform a Union
             if (state.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
             {
-                if (_subject != null && _clip != null)
+                if (algorithm == 'y')
                 {
-                    DoBooleanOperation(YuPengClipper.Union(_subject, _clip, out _err));
+                    if (_subject != null && _clip != null)
+                    {
+                        DoBooleanOperation(YuPengClipper.Union(_subject, _clip, out _err));
+                    }
+                }
+                else
+                {
+                    if (_subject != null && _clip != null)
+                    {
+                        DoUnion();
+                    }
                 }
             }
 
             // Perform a Subtraction
             if (state.IsKeyDown(Keys.Back) && oldState.IsKeyUp(Keys.Back))
             {
-                if (_subject != null && _clip != null)
+                if (algorithm == 'y')
                 {
-                    DoBooleanOperation(YuPengClipper.Difference(_subject, _clip, out _err));
+                    if (_subject != null && _clip != null)
+                    {
+                        DoBooleanOperation(YuPengClipper.Difference(_subject, _clip, out _err));
+                    }
+                }
+                else 
+                {
+                    if (_subject != null && _clip != null)
+                    {
+                        DoSubtract();
+                    }
                 }
             }
 
             // Perform a Intersection
             if (state.IsKeyDown(Keys.LeftShift) && oldState.IsKeyUp(Keys.LeftShift))
             {
-                if (_subject != null && _clip != null)
+                if (algorithm == 'y')
                 {
-                    DoBooleanOperation(YuPengClipper.Intersect(_subject, _clip, out _err));
+                    if (_subject != null && _clip != null)
+                    {
+                        DoBooleanOperation(YuPengClipper.Intersect(_subject, _clip, out _err));
+                    }
                 }
             }
 
@@ -241,6 +276,19 @@ namespace FarseerPhysics.TestBed.Tests
                 if (_left != null) {
                 }
             }*/
+
+            //Determine which algorithm to use y=Yupeng || b=Boolean
+            if(state.IsKeyDown(Keys.Tab) && oldState.IsKeyUp(Keys.Tab))
+            {
+                if(algorithm == 'y')
+                {
+                    algorithm = 'b';
+                }
+                else
+                {
+                    algorithm = 'y';
+                }
+            }
 
             base.Keyboard(state, oldState);
         }
@@ -294,6 +342,71 @@ namespace FarseerPhysics.TestBed.Tests
             _selected = null;
         }
 
+        private void DoUnion()
+        {
+            // Do the union
+            PolyClipError error;
+            Vertices union = TraceClipper.Union(_subject, _clip, out error);
+
+            // Check for errors.
+            switch (error)
+            {
+                case PolyClipError.NoIntersections:
+                    WriteMessage("ERROR: Polygons do not intersect!");
+                    return;
+                case PolyClipError.Poly1InsidePoly2:
+                    WriteMessage("Polygon 1 completely inside polygon 2.");
+                    return;
+                case PolyClipError.InfiniteLoop:
+                    WriteMessage("Infinite Loop detected.");
+                    break;
+                case PolyClipError.None:
+                    WriteMessage("No errors with union.");
+                    break;
+            }
+
+            _polygons.Add(union);
+            _polygons.Remove(_subject);
+            _polygons.Remove(_clip);
+            _subject = null;
+            _clip = null;
+            _selected = null;
+        }
+
+        private void DoSubtract()
+        {
+            // Do the subtraction.
+            PolyClipError error;
+            Vertices subtract = TraceClipper.Difference(_subject, _clip, out error);
+
+            // Check for errors
+            switch (error)
+            {
+                case PolyClipError.NoIntersections:
+                    WriteMessage("ERROR: Polygons do not intersect!");
+                    return;
+
+                case PolyClipError.Poly1InsidePoly2:
+                    WriteMessage("Polygon 1 completely inside polygon 2.");
+                    return;
+
+                case PolyClipError.InfiniteLoop:
+                    WriteMessage("Infinite Loop detected.");
+                    break;
+
+                case PolyClipError.None:
+                    WriteMessage("No errors with subtraction.");
+                    break;
+            }
+
+            _polygons.Add(subtract);
+            _polygons.Remove(_subject);
+            _polygons.Remove(_clip);
+            _subject = null;
+            _clip = null;
+            _selected = null;
+        }
+
         private void AddCircle(int radius, int numSides)
         {
             Vertices verts = PolygonTools.CreateCircle(radius, numSides);
@@ -305,7 +418,7 @@ namespace FarseerPhysics.TestBed.Tests
             Vertices verts = PolygonTools.CreateRectangle(width, height);
             _polygons.Add(verts);
         }
-
+  
         private void WriteMessage(string message)
         {
             _messages.Add(new TextMessage(message));
