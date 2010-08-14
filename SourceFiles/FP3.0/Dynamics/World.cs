@@ -567,14 +567,14 @@ namespace FarseerPhysics.Dynamics
             //We have to unlock the world here to support breakable bodies.
             Flags &= ~WorldFlags.Locked;
 
-            if (Settings.EnableDiagnostics)
-                BreakableBodyTime = _watch.ElapsedTicks -
-                                        (NewContactsTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime + ContinuousPhysicsTime);
-
             foreach (BreakableBody breakableBody in BreakableBodyList)
             {
                 breakableBody.Update();
             }
+
+            if (Settings.EnableDiagnostics)
+                BreakableBodyTime = _watch.ElapsedTicks -
+                                        (NewContactsTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime + ContinuousPhysicsTime);
 
             if (Settings.EnableDiagnostics)
             {
