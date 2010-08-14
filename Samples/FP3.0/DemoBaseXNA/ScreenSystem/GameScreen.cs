@@ -151,8 +151,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 new Border(World, 55, 42.5f, 2);
 
                 DebugViewXNA.DebugViewXNA.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
-
-                Settings.EnableDiagnostics = true;
             }
         }
 
@@ -281,6 +279,11 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             {
                 DebugViewEnabled = !DebugViewEnabled;
                 Settings.EnableDiagnostics = DebugViewEnabled;
+            }
+
+            if (!input.LastKeyboardState.IsKeyDown(Keys.Escape) && input.CurrentKeyboardState.IsKeyDown(Keys.Escape))
+            {
+                ScreenManager.GoToMainMenu();
             }
 
             if (DebugViewEnabled)

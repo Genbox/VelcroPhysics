@@ -42,8 +42,6 @@ namespace SimpleSamplesXNA.Demo1
             World = new World(new Vector2(0, 0));
 
             base.Initialize();
-
-            DebugViewEnabled = true;
         }
 
         public override void LoadContent()
