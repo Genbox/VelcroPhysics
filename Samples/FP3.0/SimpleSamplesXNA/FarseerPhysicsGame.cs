@@ -5,6 +5,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SimpleSamplesXNA.Demo1;
 using SimpleSamplesXNA.Demo2;
+using SimpleSamplesXNA.Demo3;
+using SimpleSamplesXNA.Demo4;
+using SimpleSamplesXNA.Demo5;
+using SimpleSamplesXNA.Demo6;
+using SimpleSamplesXNA.Demo7;
+using SimpleSamplesXNA.Demo8;
+using SimpleSamplesXNA.Demo9;
 
 namespace SimpleSamplesXNA
 {
@@ -59,14 +66,26 @@ namespace SimpleSamplesXNA
 
             Demo1Screen demo1 = new Demo1Screen();
             Demo2Screen demo2 = new Demo2Screen();
-            Demo2Screen demo3 = new Demo2Screen();
+            Demo3Screen demo3 = new Demo3Screen();
+            Demo4Screen demo4 = new Demo4Screen();
+            Demo5Screen demo5 = new Demo5Screen();
+            Demo6Screen demo6 = new Demo6Screen();
+            Demo7Screen demo7 = new Demo7Screen();
+            Demo8Screen demo8 = new Demo8Screen();
+            Demo9Screen demo9 = new Demo9Screen();
             ScreenManager.MainMenuScreen.AddMainMenuItem(demo1.GetTitle(), demo1);
             ScreenManager.MainMenuScreen.AddMainMenuItem(demo2.GetTitle(), demo2);
             ScreenManager.MainMenuScreen.AddMainMenuItem(demo3.GetTitle(), demo3);
+            ScreenManager.MainMenuScreen.AddMainMenuItem(demo4.GetTitle(), demo4);
+            ScreenManager.MainMenuScreen.AddMainMenuItem(demo5.GetTitle(), demo5);
+            ScreenManager.MainMenuScreen.AddMainMenuItem(demo6.GetTitle(), demo6);
+            ScreenManager.MainMenuScreen.AddMainMenuItem(demo7.GetTitle(), demo7);
+            ScreenManager.MainMenuScreen.AddMainMenuItem(demo8.GetTitle(), demo8);
+            ScreenManager.MainMenuScreen.AddMainMenuItem(demo9.GetTitle(), demo9);
             ScreenManager.MainMenuScreen.AddMainMenuItem("Exit", null, true);
 
-            //ScreenManager.GoToMainMenu();
-            ScreenManager.AddScreen(new Demo2Screen());
+            ScreenManager.GoToMainMenu();
+            //ScreenManager.AddScreen(new Demo2Screen());
         }
 
         public ScreenManager ScreenManager { get; set; }

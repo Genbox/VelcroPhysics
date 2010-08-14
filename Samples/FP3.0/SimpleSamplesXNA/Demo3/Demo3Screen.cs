@@ -1,169 +1,140 @@
-﻿//using System.Text;
-//using FarseerPhysics.DemoBaseXNA.DemoShare;
-//using FarseerPhysics.DemoBaseXNA.DrawingSystem;
-//using FarseerPhysics.DemoBaseXNA.ScreenSystem;
-//using FarseerPhysics.Dynamics;
-//using FarseerPhysics.Factories;
-//using Microsoft.Xna.Framework;
-//using Microsoft.Xna.Framework.Graphics;
-//using Microsoft.Xna.Framework.Input;
+﻿using System.Text;
+using FarseerPhysics.DemoBaseXNA.ScreenSystem;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
-//namespace SimpleSamplesXNA.Demo3
-//{
-//    internal class Demo3Screen : GameScreen
-//    {
-//        private Agent _agent;
-//        private Fixture[] _obstacles = new Fixture[5];
-//        private RectangleBrush _obstacleBrush;
+namespace SimpleSamplesXNA.Demo3
+{
+    internal class Demo3Screen : GameScreen
+    {
+        //private Agent _agent;
+        private Fixture[] _obstacles = new Fixture[5];
 
-//        public override void Initialize()
-//        {
-//            World = new World(new Vector2(0, -200));
+        public override void Initialize()
+        {
+            World = new World(new Vector2(0, -200));
 
-//            base.Initialize();
+            base.Initialize();
+        }
 
-//            DebugViewEnabled = true;
-//        }
+        public override void LoadContent()
+        {
+            //_agent = new Agent(new Vector2(ScreenManager.ScreenCenter.X, 100));
+            //_agent.Load(ScreenManager.GraphicsDevice, World);
 
-//        public override void LoadContent()
-//        {
-//            _agent = new Agent(new Vector2(ScreenManager.ScreenCenter.X, 100));
-//            _agent.Load(ScreenManager.GraphicsDevice, World);
+            LoadObstacles();
 
-//            LoadObstacles();
+            base.LoadContent();
+        }
 
-//            base.LoadContent();
-//        }
+        private void LoadObstacles()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                _obstacles[i] = FixtureFactory.CreateRectangle(World, 10, 2, 1);
+                _obstacles[i].Body.IsStatic = true;
 
-//        private void LoadObstacles()
-//        {
-//            _obstacleBrush = new RectangleBrush(128, 32, Color.White, Color.Black);
-//            _obstacleBrush.Load(ScreenManager.GraphicsDevice);
+                if (i == 0)
+                {
+                    _obstacles[i].Restitution = .2f;
+                    _obstacles[i].Friction = .2f;
+                }
+            }
 
-//            for (int i = 0; i < 5; i++)
-//            {
-//                _obstacles[i] = FixtureFactory.CreateRectangle(World, 10, 2, 1);
-//                _obstacles[i].Body.IsStatic = true;
+            _obstacles[0].Body.Position = ScreenManager.ScreenCenter + new Vector2(-5, -20);
+            _obstacles[1].Body.Position = ScreenManager.ScreenCenter + new Vector2(15, -10);
+            _obstacles[2].Body.Position = ScreenManager.ScreenCenter + new Vector2(10, 5);
+            _obstacles[3].Body.Position = ScreenManager.ScreenCenter + new Vector2(-10, 20);
+            _obstacles[4].Body.Position = ScreenManager.ScreenCenter + new Vector2(-17, 0);
+        }
 
-//                if (i == 0)
-//                {
-//                    _obstacles[i].Restitution = .2f;
-//                    _obstacles[i].Friction = .2f;
-//                }
-//            }
+        public override void HandleInput(InputState input)
+        {
+            if (firstRun)
+            {
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
+                firstRun = false;
+            }
+            if (input.PauseGame)
+            {
+                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
+            }
 
-//            _obstacles[0].Body.Position = ScreenManager.ScreenCenter + new Vector2(-5, -20);
-//            _obstacles[1].Body.Position = ScreenManager.ScreenCenter + new Vector2(15, -10);
-//            _obstacles[2].Body.Position = ScreenManager.ScreenCenter + new Vector2(10, 5);
-//            _obstacles[3].Body.Position = ScreenManager.ScreenCenter + new Vector2(-10, 20);
-//            _obstacles[4].Body.Position = ScreenManager.ScreenCenter + new Vector2(-17, 0);
-//        }
+            if (input.CurrentGamePadState.IsConnected)
+            {
+                HandleGamePadInput(input);
+            }
+            else
+            {
+                HandleKeyboardInput(input);
+            }
+            base.HandleInput(input);
+        }
 
-//        public override void Draw(GameTime gameTime)
-//        {
-//            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-//            DrawObstacles();
+        private void HandleGamePadInput(InputState input)
+        {
+            Vector2 force = 800 * input.CurrentGamePadState.ThumbSticks.Left;
+            force.Y = -force.Y;
+            //_agent.Body.ApplyForce(force);
 
-//            _agent.Draw(ScreenManager.SpriteBatch);
+            float rotation = -8000 * input.CurrentGamePadState.Triggers.Left;
+            //_agent.Body.ApplyTorque(rotation);
 
-//            ScreenManager.SpriteBatch.End();
+            rotation = 8000 * input.CurrentGamePadState.Triggers.Right;
+            //_agent.Body.ApplyTorque(rotation);
+        }
 
-//            base.Draw(gameTime);
-//        }
+        private void HandleKeyboardInput(InputState input)
+        {
+            const float forceAmount = 800;
+            Vector2 force = Vector2.Zero;
+            force.Y = -force.Y;
 
-//        private void DrawObstacles()
-//        {
-//            for (int i = 0; i < 5; i++)
-//            {
-//                _obstacleBrush.Draw(ScreenManager.SpriteBatch, _obstacles[i].Body.Position, _obstacles[i].Body.Rotation);
-//            }
-//        }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.A)) { force += new Vector2(-forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { force += new Vector2(0, forceAmount); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { force += new Vector2(forceAmount, 0); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, -forceAmount); }
 
-//        public override void HandleInput(InputState input)
-//        {
-//            if (firstRun)
-//            {
-//                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
-//                firstRun = false;
-//            }
-//            if (input.PauseGame)
-//            {
-//                ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
-//            }
+            //_agent.Body.ApplyForce(force);
 
-//            if (input.CurrentGamePadState.IsConnected)
-//            {
-//                HandleGamePadInput(input);
-//            }
-//            else
-//            {
-//                HandleKeyboardInput(input);
-//            }
-//            base.HandleInput(input);
-//        }
+            const float torqueAmount = 8000;
+            float torque = 0;
 
-//        private void HandleGamePadInput(InputState input)
-//        {
-//            Vector2 force = 800 * input.CurrentGamePadState.ThumbSticks.Left;
-//            force.Y = -force.Y;
-//            _agent.Body.ApplyForce(force);
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque -= torqueAmount; }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque += torqueAmount; }
 
-//            float rotation = -8000 * input.CurrentGamePadState.Triggers.Left;
-//            _agent.Body.ApplyTorque(rotation);
+            //_agent.Body.ApplyTorque(torque);
+        }
 
-//            rotation = 8000 * input.CurrentGamePadState.Triggers.Right;
-//            _agent.Body.ApplyTorque(rotation);
-//        }
+        public string GetTitle()
+        {
+            return "Demo3: Multiple geometries and static bodies";
+        }
 
-//        private void HandleKeyboardInput(InputState input)
-//        {
-//            const float forceAmount = 800;
-//            Vector2 force = Vector2.Zero;
-//            force.Y = -force.Y;
-
-//            if (input.CurrentKeyboardState.IsKeyDown(Keys.A)) { force += new Vector2(-forceAmount, 0); }
-//            if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { force += new Vector2(0, forceAmount); }
-//            if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { force += new Vector2(forceAmount, 0); }
-//            if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, -forceAmount); }
-
-//            _agent.Body.ApplyForce(force);
-
-//            const float torqueAmount = 8000;
-//            float torque = 0;
-
-//            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque -= torqueAmount; }
-//            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque += torqueAmount; }
-
-//            _agent.Body.ApplyTorque(torque);
-//        }
-
-//        public static string GetTitle()
-//        {
-//            return "Demo3: Multiple geometries and static bodies";
-//        }
-
-//        private static string GetDetails()
-//        {
-//            StringBuilder sb = new StringBuilder();
-//            sb.AppendLine("This demo shows a single body with multiple geometry");
-//            sb.AppendLine("objects attached.  The yellow circles are offset");
-//            sb.AppendLine("from the bodies center. The body itself is created");
-//            sb.AppendLine("using 'CreateRectangleBody' so that it's moment of");
-//            sb.AppendLine("inertia is that of a rectangle.");
-//            sb.AppendLine(string.Empty);
-//            sb.AppendLine("This demo also shows the use of static bodies.");
-//            sb.AppendLine(string.Empty);
-//            sb.AppendLine("GamePad:");
-//            sb.AppendLine("  -Rotate: left and right triggers");
-//            sb.AppendLine("  -Move: left thumbstick");
-//            sb.AppendLine(string.Empty);
-//            sb.AppendLine("Keyboard:");
-//            sb.AppendLine("  -Rotate: left and right arrows");
-//            sb.AppendLine("  -Move: A,S,D,W");
-//            sb.AppendLine(string.Empty);
-//            sb.AppendLine("Mouse");
-//            sb.AppendLine("  -Hold down left button and drag");
-//            return sb.ToString();
-//        }
-//    }
-//}
+        private string GetDetails()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("This demo shows a single body with multiple geometry");
+            sb.AppendLine("objects attached.  The yellow circles are offset");
+            sb.AppendLine("from the bodies center. The body itself is created");
+            sb.AppendLine("using 'CreateRectangleBody' so that it's moment of");
+            sb.AppendLine("inertia is that of a rectangle.");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("This demo also shows the use of static bodies.");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  -Rotate: left and right triggers");
+            sb.AppendLine("  -Move: left thumbstick");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("Keyboard:");
+            sb.AppendLine("  -Rotate: left and right arrows");
+            sb.AppendLine("  -Move: A,S,D,W");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("Mouse");
+            sb.AppendLine("  -Hold down left button and drag");
+            return sb.ToString();
+        }
+    }
+}
