@@ -90,6 +90,7 @@
     <Compile Include="ConvertUnits.cs" />
     <Compile Include="DemoShare\Agent.cs" />
     <Compile Include="DemoShare\Border.cs" />
+    <Compile Include="DemoShare\Objects.cs" />
     <Compile Include="DrawingSystem\CircleBrush.cs" />
     <Compile Include="DrawingSystem\DrawingHelper.cs" />
     <Compile Include="DrawingSystem\EllipseBrush.cs" />
