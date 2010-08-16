@@ -78,6 +78,7 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Controllers", CreateFcn = ControllerTest.Create},
                 new TestEntry {Name = "Texture to Vertices", CreateFcn = TextureVerticesTest.Create},
                 new TestEntry {Name = "Polygon shapes", CreateFcn = PolygonShapesTest.Create},
+                new TestEntry {Name = "Anglejoint", CreateFcn = AngleJointTest.Create},
                 new TestEntry {Name = null, CreateFcn = null}
             };
     }

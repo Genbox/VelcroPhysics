@@ -41,6 +41,7 @@ namespace FarseerPhysics.Dynamics.Joints
         FixedLine,
         FixedPrismatic,
         MaxDistance,
+        Angle,
     }
 
     public enum LimitState
