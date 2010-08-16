@@ -96,6 +96,7 @@
     <Compile Include="DrawingSystem\LineBrush.cs" />
     <Compile Include="DrawingSystem\RectangleBrush.cs" />
     <Compile Include="IDemoScreen.cs" />
+    <Compile Include="Materials.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScreenSystem\GameScreen.cs" />
     <Compile Include="ScreenSystem\InputState.cs" />
