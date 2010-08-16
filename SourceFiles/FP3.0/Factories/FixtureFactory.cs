@@ -23,10 +23,15 @@ namespace FarseerPhysics.Factories
 
         public static Fixture CreateRectangle(World world, float width, float height, float density)
         {
-            return CreateRectangle(world, width, height, density, Vector2.Zero);
+            return CreateRectangle(world, width, height, density, Vector2.Zero, null);
         }
 
         public static Fixture CreateRectangle(World world, float width, float height, float density, Vector2 position)
+        {
+            return CreateRectangle(world, width, height, density, position, null);
+        }
+
+        public static Fixture CreateRectangle(World world, float width, float height, float density, Vector2 offset, Body body)
         {
             if (width <= 0)
                 throw new ArgumentOutOfRangeException("width", "Width must be more than 0");
@@ -37,18 +42,33 @@ namespace FarseerPhysics.Factories
             if (density <= 0)
                 throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
 
-            Body body = BodyFactory.CreateBody(world, position);
-            Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
-            PolygonShape rectangleShape = new PolygonShape(rectangleVertices);
-            return body.CreateFixture(rectangleShape, density);
+            if (body != null)
+            {
+                Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
+                rectangleVertices.Translate(ref offset);
+                PolygonShape rectangleShape = new PolygonShape(rectangleVertices);
+                return body.CreateFixture(rectangleShape, density);
+            }
+            else
+            {
+                Body newBody = BodyFactory.CreateBody(world, offset);
+                Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
+                PolygonShape rectangleShape = new PolygonShape(rectangleVertices);
+                return newBody.CreateFixture(rectangleShape, density);
+            }
         }
 
         public static Fixture CreateCircle(World world, float radius, float density)
         {
-            return CreateCircle(world, radius, density, Vector2.Zero);
+            return CreateCircle(world, radius, density, Vector2.Zero, null);
         }
 
         public static Fixture CreateCircle(World world, float radius, float density, Vector2 position)
+        {
+            return CreateCircle(world, radius, density, position, null);
+        }
+
+        public static Fixture CreateCircle(World world, float radius, float density, Vector2 offset, Body body)
         {
             if (radius <= 0)
                 throw new ArgumentOutOfRangeException("radius", "Radius must be more than 0");
@@ -56,9 +76,18 @@ namespace FarseerPhysics.Factories
             if (density <= 0)
                 throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
 
-            Body body = BodyFactory.CreateBody(world, position);
-            CircleShape circleShape = new CircleShape(radius);
-            return body.CreateFixture(circleShape, density);
+            if (body != null)
+            {
+                CircleShape circleShape = new CircleShape(radius);
+                circleShape.Position = offset;
+                return body.CreateFixture(circleShape, density);
+            }
+            else
+            {
+                Body newBody = BodyFactory.CreateBody(world, offset);
+                CircleShape circleShape = new CircleShape(radius);
+                return newBody.CreateFixture(circleShape, density);
+            }
         }
 
         public static Fixture CreateEllipse(World world, float xRadius, float yRadius, int edges, float density)
@@ -151,9 +180,9 @@ namespace FarseerPhysics.Factories
         public static List<Fixture> CreateCapsule(World world, float height, float topRadius, int topEdges, float bottomRadius,
                                                    int bottomEdges, float density, Vector2 position)
         {
-            Vertices verts = PolygonTools.CreateCapsule(height,topRadius,topEdges,bottomRadius,bottomEdges);
+            Vertices verts = PolygonTools.CreateCapsule(height, topRadius, topEdges, bottomRadius, bottomEdges);
 
-                        //There are too many vertices in the capsule. We decompose it.
+            //There are too many vertices in the capsule. We decompose it.
             if (verts.Count >= Settings.MaxPolygonVertices)
             {
                 List<Vertices> vertList = EarclipDecomposer.ConvexPartition(verts);

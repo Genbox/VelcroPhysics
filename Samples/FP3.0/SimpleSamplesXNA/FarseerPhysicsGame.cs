@@ -84,8 +84,8 @@ namespace SimpleSamplesXNA
             ScreenManager.MainMenuScreen.AddMainMenuItem(demo9.GetTitle(), demo9);
             ScreenManager.MainMenuScreen.AddMainMenuItem("Exit", null, true);
 
-            ScreenManager.GoToMainMenu();
-            //ScreenManager.AddScreen(new Demo2Screen());
+            //ScreenManager.GoToMainMenu();
+            ScreenManager.AddScreen(new Demo3Screen());
         }
 
         public ScreenManager ScreenManager { get; set; }

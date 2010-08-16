@@ -1,104 +1,41 @@
-﻿//using FarseerPhysics.DemoBaseXNA.DrawingSystem;
-//using FarseerPhysics.Dynamics;
-//using FarseerPhysics.Factories;
-//using Microsoft.Xna.Framework;
-//using Microsoft.Xna.Framework.Graphics;
+﻿using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
+using Microsoft.Xna.Framework;
 
-//namespace FarseerPhysics.DemoBaseXNA.DemoShare
-//{
-//    public class Agent
-//    {
-//        private Body _agentBody;
-//        private Vector2 _agentCrossBeamOrigin;
-//        private Texture2D _agentCrossBeamTexture;
-//        private Vector2 _agentOrigin;
-//        private Texture2D _agentTexture;
+namespace FarseerPhysics.DemoBaseXNA.DemoShare
+{
+    public class Agent
+    {
+        private Body _agentBody;
 
-//        private Vector2 _position;
+        public Agent(World world, Vector2 position)
+        {
+            _agentBody = BodyFactory.CreateBody(world, position);
+            _agentBody.BodyType = BodyType.Dynamic;
 
-//        public Agent(Vector2 position)
-//        {
-//            CollidesWith = CollisionCategory.All;
-//            CollisionCategory = CollisionCategory.All;
-//            _position = position;
-//        }
+            //Center
+            FixtureFactory.CreateCircle(world, 1, 1, Vector2.Zero, _agentBody);
 
-//        public Body Body
-//        {
-//            get { return _agentBody; }
-//        }
+            //Left arm
+            FixtureFactory.CreateRectangle(world, 3, 0.8f, 1, new Vector2(-2, 0), _agentBody);
+            FixtureFactory.CreateCircle(world, 1, 1, new Vector2(-4, 0), _agentBody);
 
-//        public CollisionCategory CollisionCategory { get; set; }
+            //Right arm
+            FixtureFactory.CreateRectangle(world, 3, 0.8f, 1, new Vector2(2, 0), _agentBody);
+            FixtureFactory.CreateCircle(world, 1, 1, new Vector2(4, 0), _agentBody);
 
-//        public CollisionCategory CollidesWith { get; set; }
+            //Top arm
+            FixtureFactory.CreateRectangle(world, 0.8f, 3, 1, new Vector2(0, 2), _agentBody);
+            FixtureFactory.CreateCircle(world, 1, 1, new Vector2(0, 4), _agentBody);
 
-//        public void ApplyForce(Vector2 force)
-//        {
-//            _agentBody.ApplyForce(force);
-//        }
+            //Bottom arm
+            FixtureFactory.CreateRectangle(world, 0.8f, 3, 1, new Vector2(0, -2), _agentBody);
+            FixtureFactory.CreateCircle(world, 1, 1, new Vector2(0, -4), _agentBody);
+        }
 
-//        public void ApplyTorque(float torque)
-//        {
-//            _agentBody.ApplyTorque(torque);
-//        }
-
-//        public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
-//        {
-//            _agentTexture = DrawingHelper.CreateCircleTexture(graphicsDevice, 16, Color.Gold, Color.Black);
-//            _agentOrigin = new Vector2(_agentTexture.Width / 2f, _agentTexture.Height / 2f);
-
-//            _agentCrossBeamTexture = DrawingHelper.CreateRectangleTexture(graphicsDevice, 16, 120, Color.DarkGray,
-//                                                                          Color.Black);
-//            _agentCrossBeamOrigin = new Vector2(_agentCrossBeamTexture.Width / 2f, _agentCrossBeamTexture.Height / 2f);
-
-//            _agentBody = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, 80, 80, 5);
-//            _agentBody.Position = _position;
-
-//            _agentGeom = new Geom[7];
-//            _agentGeom[0] = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _agentBody, 16, 10,
-//                                                                  new Vector2(-40, -40), 0);
-//            _agentGeom[0].RestitutionCoefficient = .4f;
-//            _agentGeom[0].FrictionCoefficient = .2f;
-//            _agentGeom[0].CollisionGroup = 1;
-//            _agentGeom[0].CollisionCategories = CollisionCategory;
-//            _agentGeom[0].CollidesWith = CollidesWith;
-//            _agentGeom[1] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0],
-//                                                            new Vector2(-40, 40), 0);
-//            _agentGeom[2] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0],
-//                                                            new Vector2(40, -40), 0);
-//            _agentGeom[3] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0],
-//                                                            new Vector2(40, 40), 0);
-//            _agentGeom[4] = GeomFactory.Instance.CreateGeom(physicsSimulator, _agentBody, _agentGeom[0],
-//                                                            new Vector2(0, 0),
-//                                                            0);
-
-//            _agentGeom[5] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _agentBody, 16, 120, Vector2.Zero,
-//                                                                     MathHelper.PiOver4);
-//            _agentGeom[5].CollisionGroup = 1;
-//            _agentGeom[5].CollisionCategories = CollisionCategory;
-//            _agentGeom[5].CollidesWith = CollidesWith;
-
-//            _agentGeom[6] = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _agentBody, 16, 120, Vector2.Zero,
-//                                                                     -MathHelper.PiOver4);
-//            _agentGeom[6].CollisionGroup = 1;
-//            _agentGeom[6].CollisionCategories = CollisionCategory;
-//            _agentGeom[6].CollidesWith = CollidesWith;
-//        }
-
-//        public void Draw(SpriteBatch spriteBatch)
-//        {
-//            for (int i = 5; i < 7; i++)
-//            {
-//                spriteBatch.Draw(_agentCrossBeamTexture, _agentGeom[i].Position, null, Color.White,
-//                                 _agentGeom[i].Rotation,
-//                                 _agentCrossBeamOrigin, 1, SpriteEffects.None, 0f);
-//            }
-//            for (int i = 0; i < 5; i++)
-//            {
-//                spriteBatch.Draw(_agentTexture, _agentGeom[i].Position, null, Color.White, _agentGeom[i].Rotation,
-//                                 _agentOrigin, 1, SpriteEffects.None, 0f);
-//            }
-//        }
-//    }
-
-//}
+        public Body Body
+        {
+            get { return _agentBody; }
+        }
+    }
+}
