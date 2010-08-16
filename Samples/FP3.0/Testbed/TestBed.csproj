@@ -101,6 +101,7 @@
     <Compile Include="Tests\ConfinedTest.cs" />
     <Compile Include="Tests\ContinuousTest.cs" />
     <Compile Include="Tests\ControllerTest.cs" />
+    <Compile Include="Tests\AngleJointTest.cs" />
     <Compile Include="Tests\CuttingTest.cs" />
     <Compile Include="Tests\DistanceTest.cs" />
     <Compile Include="Tests\DominosTest.cs" />

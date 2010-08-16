@@ -197,6 +197,9 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Island.cs">
       <Link>Dynamics\Island.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\AngleJoint.cs">
+      <Link>Dynamics\Joints\AngleJoint.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\DistanceJoint.cs">
       <Link>Dynamics\Joints\DistanceJoint.cs</Link>
     </Compile>
