@@ -44,6 +44,13 @@ namespace FarseerPhysics.TestBed.Tests
             AngleJoint joint = new AngleJoint(fA.Body, fB.Body);
             joint.TargetAngle = (float) Math.PI / 2;
             World.AddJoint(joint);
+
+            Fixture fC = FixtureFactory.CreateRectangle(World, 4, 4, 1, new Vector2(10, 4));
+            fC.Body.BodyType = BodyType.Dynamic;
+
+            FixedAngleJoint fixedJoint = new FixedAngleJoint(fC.Body);
+            fixedJoint.TargetAngle = (float)Math.PI / 3;
+            World.AddJoint(fixedJoint);
         }
 
         internal static Test Create()

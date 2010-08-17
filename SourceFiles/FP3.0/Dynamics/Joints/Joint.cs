@@ -42,6 +42,7 @@ namespace FarseerPhysics.Dynamics.Joints
         FixedPrismatic,
         MaxDistance,
         Angle,
+        FixedAngle
     }
 
     public enum LimitState
@@ -232,7 +233,8 @@ namespace FarseerPhysics.Dynamics.Joints
                    JointType == JointType.FixedDistance ||
                    JointType == JointType.FixedPrismatic ||
                    JointType == JointType.FixedLine ||
-                   JointType == JointType.FixedMouse;
+                   JointType == JointType.FixedMouse ||
+                   JointType == JointType.FixedAngle;
         }
 
         internal abstract void InitVelocityConstraints(ref TimeStep step);
