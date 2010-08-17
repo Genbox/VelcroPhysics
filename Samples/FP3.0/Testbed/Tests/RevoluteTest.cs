@@ -20,6 +20,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
 using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
@@ -56,10 +57,6 @@ namespace FarseerPhysics.TestBed.Tests
                 _fixedJoint.MotorSpeed = 0.25f * Settings.Pi;
                 _fixedJoint.MaxMotorTorque = 5000.0f;
                 _fixedJoint.MotorEnabled = true;
-                _fixedJoint.LowerLimit = -0.25f * Settings.Pi;
-                _fixedJoint.UpperLimit = 0.5f * Settings.Pi;
-                _fixedJoint.LimitEnabled = false;
-
                 World.AddJoint(_fixedJoint);
 
                 // The small gear attached to the big one
@@ -72,9 +69,6 @@ namespace FarseerPhysics.TestBed.Tests
                 _joint.MotorSpeed = 1.0f * Settings.Pi;
                 _joint.MaxMotorTorque = 5000.0f;
                 _joint.MotorEnabled = true;
-                _joint.LowerLimit = -0.25f * Settings.Pi;
-                _joint.UpperLimit = 0.5f * Settings.Pi;
-                _joint.LimitEnabled = false;
                 _joint.CollideConnected = false;
 
                 World.AddJoint(_joint);
