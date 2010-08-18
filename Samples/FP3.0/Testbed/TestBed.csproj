@@ -103,6 +103,7 @@
     <Compile Include="Tests\ControllerTest.cs" />
     <Compile Include="Tests\AngleJointTest.cs" />
     <Compile Include="Tests\CuttingTest.cs" />
+    <Compile Include="Tests\SliderJointTest.cs" />
     <Compile Include="Tests\DistanceTest.cs" />
     <Compile Include="Tests\DominosTest.cs" />
     <Compile Include="Tests\DynamicTreeTest.cs" />
