@@ -17,11 +17,11 @@ namespace FarseerPhysics.Factories
         /// <param name="world"></param>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
-        /// <param name="localanchorA"></param>
+        /// <param name="localanchorB"></param>
         /// <returns></returns>
-        public static RevoluteJoint CreateRevoluteJoint(Body bodyA, Body bodyB, Vector2 localanchorA)
+        public static RevoluteJoint CreateRevoluteJoint(Body bodyA, Body bodyB, Vector2 localanchorB)
         {
-            Vector2 localanchorB = bodyB.GetLocalPoint(bodyA.GetWorldPoint(localanchorA));
+            Vector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(localanchorB));
             RevoluteJoint joint = new RevoluteJoint(bodyA, bodyB, localanchorA, localanchorB);
             return joint;
         }
@@ -32,11 +32,11 @@ namespace FarseerPhysics.Factories
         /// <param name="world"></param>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
-        /// <param name="localanchorA"></param>
+        /// <param name="localanchorB"></param>
         /// <returns></returns>
-        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, Vector2 localanchorA)
+        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, Vector2 localanchorB)
         {
-            RevoluteJoint joint = CreateRevoluteJoint(bodyA, bodyB, localanchorA);
+            RevoluteJoint joint = CreateRevoluteJoint(bodyA, bodyB, localanchorB);
             world.AddJoint(joint);
             return joint;
         }
@@ -49,12 +49,44 @@ namespace FarseerPhysics.Factories
         /// <param name="world"></param>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
-        /// <param name="localanchorA"></param>
+        /// <param name="localanchorB"></param>
         /// <returns></returns>
-        public static WeldJoint CreateWeldJoint(Body bodyA, Body bodyB, Vector2 localanchorA)
+        public static WeldJoint CreateWeldJoint(Body bodyA, Body bodyB, Vector2 localanchorB)
         {
-            Vector2 localanchorB = bodyB.GetLocalPoint(bodyA.GetWorldPoint(localanchorA));
+            Vector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(localanchorB));
             WeldJoint joint = new WeldJoint(bodyA, bodyB, localanchorA, localanchorB);
+            return joint;
+        }
+
+        /// <summary>
+        /// Creates a weld joint and adds it to the world
+        /// </summary>
+        /// <param name="world"></param>
+        /// <param name="bodyA"></param>
+        /// <param name="bodyB"></param>
+        /// <param name="localanchorB"></param>
+        /// <returns></returns>
+        public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, Vector2 localanchorB)
+        {
+            WeldJoint joint = CreateWeldJoint(bodyA, bodyB, localanchorB);
+            world.AddJoint(joint);
+            return joint;
+        }
+        #endregion
+
+        #region Prismatic Joint
+        /// <summary>
+        /// Creates a weld joint
+        /// </summary>
+        /// <param name="world"></param>
+        /// <param name="bodyA"></param>
+        /// <param name="bodyB"></param>
+        /// <param name="localanchorB"></param>
+        /// <returns></returns>
+        public static PrismaticJoint CreatePrismaticJoint(Body bodyA, Body bodyB, Vector2 localanchorB, Vector2 axis)
+        {
+            Vector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(localanchorB));
+            PrismaticJoint joint = new PrismaticJoint(bodyA, bodyB, localanchorA, localanchorB, axis);
             return joint;
         }
 
@@ -66,9 +98,9 @@ namespace FarseerPhysics.Factories
         /// <param name="bodyB"></param>
         /// <param name="localanchorA"></param>
         /// <returns></returns>
-        public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, Vector2 localanchorA)
+        public static PrismaticJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, Vector2 localanchorB, Vector2 axis)
         {
-            WeldJoint joint = CreateWeldJoint(bodyA, bodyB, localanchorA);
+            PrismaticJoint joint = CreatePrismaticJoint(bodyA, bodyB, localanchorB, axis);
             world.AddJoint(joint);
             return joint;
         }
