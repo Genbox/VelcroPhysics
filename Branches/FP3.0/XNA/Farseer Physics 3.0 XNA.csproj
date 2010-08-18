@@ -245,6 +245,9 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\RevoluteJoint.cs">
       <Link>Dynamics\Joints\RevoluteJoint.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\SliderJoint.cs">
+      <Link>Dynamics\Joints\SliderJoint.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\WeldJoint.cs">
       <Link>Dynamics\Joints\WeldJoint.cs</Link>
     </Compile>
