@@ -141,6 +141,30 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             }
         }
 
+        Vector2 _viewCenter = new Vector2(0, 0);
+
+        public Vector2 ConvertScreenToWorld(int x, int y)
+        {
+            float viewportWidth = ScreenManager.GraphicsDevice.Viewport.Width;
+            float viewportHeight = ScreenManager.GraphicsDevice.Viewport.Height;
+
+            float aspectRatio = ScreenManager.GraphicsDevice.Viewport.AspectRatio;
+
+            Vector2 extents = new Vector2(aspectRatio * 40, 40);
+
+            Vector2 lower = _viewCenter - extents;
+            Vector2 upper = _viewCenter + extents;
+
+            float u = x / viewportWidth;
+            float v = (viewportHeight - y) / viewportHeight;
+
+            Vector2 p = new Vector2();
+            p.X = (1.0f - u) * lower.X + u * upper.X;
+            p.Y = (1.0f - v) * lower.Y + v * upper.Y;
+
+            return p;
+        }
+
         /// <summary>
         /// Load graphics content for the screen.
         /// </summary>
@@ -148,9 +172,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             if (World != null)
             {
-                new Border(World, 55, 42.5f, 2);
-
                 DebugViewXNA.DebugViewXNA.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
+
+                Vector2 gameWorld = ConvertScreenToWorld(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight);
+
+                new Border(World, gameWorld.X, -gameWorld.Y, 2);
+
             }
         }
 
@@ -268,8 +295,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 Settings.EnableDiagnostics = DebugViewEnabled;
             }
 
-            if (input.LastGamePadState.Buttons.Back != ButtonState.Pressed &&
-                input.CurrentGamePadState.Buttons.Back == ButtonState.Pressed)
+            if (input.LastGamePadState.Buttons.B != ButtonState.Pressed &&
+                input.CurrentGamePadState.Buttons.B == ButtonState.Pressed)
             {
                 ScreenManager.GoToMainMenu();
             }
@@ -301,16 +328,18 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 #if !XBOX
             if (World != null)
             {
-                HandleMouseInput(input);
+                Mouse(input.CurrentMouseState, input.LastMouseState);
+            }
+#else
+            if (World != null)
+            {
+                GamePad(input.CurrentGamePadState, input.LastGamePadState);
             }
 #endif
+
         }
 
 #if !XBOX
-        private void HandleMouseInput(InputState input)
-        {
-            Mouse(input.CurrentMouseState, input.LastMouseState);
-        }
 
         private void Mouse(MouseState state, MouseState oldState)
         {
@@ -329,6 +358,44 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             MouseMove(position);
         }
+
+        private void MouseMove(Vector2 p)
+        {
+            if (_fixedMouseJoint != null)
+            {
+                _fixedMouseJoint.Target = p;
+            }
+        }
+#else
+        private void GamePad(GamePadState state, GamePadState oldState)
+        {
+            Vector3 worldPosition = ScreenManager.GraphicsDevice.Viewport.Unproject(new Vector3(state.ThumbSticks.Left.X, state.ThumbSticks.Left.Y, 0),
+                                                                                    Projection, View, Matrix.Identity);
+            Vector2 position = new Vector2(worldPosition.X, worldPosition.Y);
+
+            if (state.Buttons.A == ButtonState.Released && oldState.Buttons.A == ButtonState.Pressed)
+            {
+                MouseUp();
+            }
+            else if (state.Buttons.A == ButtonState.Pressed && oldState.Buttons.A == ButtonState.Released)
+            {
+                MouseDown(position);
+            }
+
+            GamePadMove(position);
+        }
+
+
+        private void GamePadMove(Vector2 p)
+        {
+            DebugView.DrawPoint(p, 1, Color.Black);
+
+            if (_fixedMouseJoint != null)
+            {
+                _fixedMouseJoint.Target = p;
+            }
+        }
+#endif
 
         private void MouseDown(Vector2 p)
         {
@@ -384,15 +451,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 _fixedMouseJoint = null;
             }
         }
-
-        private void MouseMove(Vector2 p)
-        {
-            if (_fixedMouseJoint != null)
-            {
-                _fixedMouseJoint.Target = p;
-            }
-        }
-#endif
 
         /// <summary>
         /// This is called when the screen should draw itself.

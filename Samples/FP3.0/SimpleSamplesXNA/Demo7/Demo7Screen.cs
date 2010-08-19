@@ -1,15 +1,34 @@
 ﻿using System.Text;
+using FarseerPhysics.DemoBaseXNA;
 using FarseerPhysics.DemoBaseXNA.DemoShare;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 
 namespace SimpleSamplesXNA.Demo7
 {
-    public class Demo7Screen : GameScreen
+    internal class Demo7Screen : GameScreen, IDemoScreen
     {
-        private Agent _agent;
-        private Spider[] _spiders;
+        #region IDemoScreen Members
+
+        public string GetTitle()
+        {
+            return "Demo7: Ragdoll";
+        }
+
+        public string GetDetails()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("This demo shows how to combine physics objects");
+            sb.AppendLine("to create a ragdoll.");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("Mouse");
+            sb.AppendLine("  -Hold down left button and drag");
+            return sb.ToString();
+        }
+
+        #endregion
 
         public override void Initialize()
         {
@@ -19,53 +38,23 @@ namespace SimpleSamplesXNA.Demo7
 
         public override void LoadContent()
         {
-            _agent = new Agent(World, new Vector2(0, -10));
-            _spiders = new Spider[8];
-
-            for (int i = 0; i < _spiders.Length; i++)
-            {
-                _spiders[i] = new Spider(World, new Vector2(0, ((i + 1) * 3) - 7));
-            }
-
+            new Ragdoll(World, new Vector2(0, 0));
+            CreateObstacles();
             base.LoadContent();
         }
 
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        private void CreateObstacles()
         {
-            if (IsActive)
+            Fixture[] rect = new Fixture[4];
+
+            for (int i = 0; i < 4; i++)
             {
-                for (int i = 0; i < _spiders.Length; i++)
-                {
-                    _spiders[i].Update(gameTime);
-                }
+                rect[i] = FixtureFactory.CreateRectangle(World, 6, 1.5f, 1);
             }
-
-            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
-        }
-
-        public string GetTitle()
-        {
-            return "Demo7: Dynamic Angle Joints";
-        }
-
-        private string GetDetails()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo demonstrates the use of revolute joints ");
-            sb.AppendLine("combined with angle joints that have a dynamic ");
-            sb.AppendLine("target angle");
-            sb.AppendLine(string.Empty);
-            sb.AppendLine("GamePad:");
-            sb.AppendLine("  -Rotate: left and right triggers");
-            sb.AppendLine("  -Move: left thumbstick");
-            sb.AppendLine(string.Empty);
-            sb.AppendLine("Keyboard:");
-            sb.AppendLine("  -Rotate: left and right arrows");
-            sb.AppendLine("  -Move: A,S,D,W");
-            sb.AppendLine(string.Empty);
-            sb.AppendLine("Mouse");
-            sb.AppendLine("  -Hold down left button and drag");
-            return sb.ToString();
+            rect[0].Body.Position = new Vector2(-9, -5);
+            rect[1].Body.Position = new Vector2(-8, 7);
+            rect[2].Body.Position = new Vector2(9, -7);
+            rect[3].Body.Position = new Vector2(7, 5);
         }
     }
 }

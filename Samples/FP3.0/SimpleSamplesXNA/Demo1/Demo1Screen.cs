@@ -14,14 +14,14 @@ namespace SimpleSamplesXNA.Demo1
 
         public string GetTitle()
         {
-            return "Demo1: A Single Body";
+            return "Demo1: A Single Fixture";
         }
 
         public string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows a single body with no geometry");
-            sb.AppendLine("attached. Note that it does not collide with the borders.");
+            sb.AppendLine("This demo shows a single fixture.");
+            sb.AppendLine("A fixture is a combination of a body and a shape.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("GamePad:");
             sb.AppendLine("  -Rotate: left and right triggers");

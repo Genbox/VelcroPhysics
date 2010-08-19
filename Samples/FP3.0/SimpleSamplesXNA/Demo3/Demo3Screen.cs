@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using FarseerPhysics.DemoBaseXNA;
 using FarseerPhysics.DemoBaseXNA.DemoShare;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using FarseerPhysics.Dynamics;
@@ -7,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace SimpleSamplesXNA.Demo3
 {
-    internal class Demo3Screen : GameScreen
+    internal class Demo3Screen : GameScreen, IDemoScreen
     {
         private Fixture[] _obstacles = new Fixture[5];
 
@@ -50,17 +51,14 @@ namespace SimpleSamplesXNA.Demo3
 
         public string GetTitle()
         {
-            return "Demo3: Multiple geometries and static bodies";
+            return "Demo3: Multiple fixtures and static bodies";
         }
 
-        private string GetDetails()
+        public string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows a single body with multiple geometry");
-            sb.AppendLine("objects attached.  The yellow circles are offset");
-            sb.AppendLine("from the bodies center. The body itself is created");
-            sb.AppendLine("using 'CreateRectangleBody' so that it's moment of");
-            sb.AppendLine("inertia is that of a rectangle.");
+            sb.AppendLine("This demo shows a single body with multiple shapes");
+            sb.AppendLine("attached.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("This demo also shows the use of static bodies.");
             sb.AppendLine(string.Empty);
