@@ -10,8 +10,6 @@ using SimpleSamplesXNA.Demo4;
 using SimpleSamplesXNA.Demo5;
 using SimpleSamplesXNA.Demo6;
 using SimpleSamplesXNA.Demo7;
-using SimpleSamplesXNA.Demo8;
-using SimpleSamplesXNA.Demo9;
 
 namespace SimpleSamplesXNA
 {
@@ -34,11 +32,10 @@ namespace SimpleSamplesXNA
 
             Content.RootDirectory = "Content";
 
-#if !XBOX
             //windowed
-            _graphics.PreferredBackBufferWidth = 800;
-            _graphics.PreferredBackBufferHeight = 600;
-            _graphics.IsFullScreen = false;
+            _graphics.PreferredBackBufferWidth = 1024;
+            _graphics.PreferredBackBufferHeight = 768;
+            _graphics.IsFullScreen = true;
 
             //fullscreen
             //_graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
@@ -46,11 +43,6 @@ namespace SimpleSamplesXNA
             //_graphics.IsFullScreen = true;
 
             IsMouseVisible = true;
-#else
-            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            _graphics.IsFullScreen = true;
-#endif
 
             //Set window defaults. Parent game can override in constructor
             Window.AllowUserResizing = true;
@@ -71,8 +63,6 @@ namespace SimpleSamplesXNA
             Demo5Screen demo5 = new Demo5Screen();
             Demo6Screen demo6 = new Demo6Screen();
             Demo7Screen demo7 = new Demo7Screen();
-            Demo8Screen demo8 = new Demo8Screen();
-            Demo9Screen demo9 = new Demo9Screen();
             ScreenManager.MainMenuScreen.AddMainMenuItem(demo1.GetTitle(), demo1);
             ScreenManager.MainMenuScreen.AddMainMenuItem(demo2.GetTitle(), demo2);
             ScreenManager.MainMenuScreen.AddMainMenuItem(demo3.GetTitle(), demo3);
@@ -80,12 +70,9 @@ namespace SimpleSamplesXNA
             ScreenManager.MainMenuScreen.AddMainMenuItem(demo5.GetTitle(), demo5);
             ScreenManager.MainMenuScreen.AddMainMenuItem(demo6.GetTitle(), demo6);
             ScreenManager.MainMenuScreen.AddMainMenuItem(demo7.GetTitle(), demo7);
-            ScreenManager.MainMenuScreen.AddMainMenuItem(demo8.GetTitle(), demo8);
-            ScreenManager.MainMenuScreen.AddMainMenuItem(demo9.GetTitle(), demo9);
             ScreenManager.MainMenuScreen.AddMainMenuItem("Exit", null, true);
 
-            //ScreenManager.GoToMainMenu();
-            ScreenManager.AddScreen(new Demo7Screen());
+            ScreenManager.GoToMainMenu();
         }
 
         public ScreenManager ScreenManager { get; set; }

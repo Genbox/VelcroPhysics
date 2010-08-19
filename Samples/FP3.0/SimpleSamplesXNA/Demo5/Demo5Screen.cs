@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using FarseerPhysics.DemoBaseXNA;
 using FarseerPhysics.DemoBaseXNA.DemoShare;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using FarseerPhysics.Dynamics;
@@ -6,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace SimpleSamplesXNA.Demo5
 {
-    internal class Demo5Screen : GameScreen
+    internal class Demo5Screen : GameScreen, IDemoScreen
     {
         private Agent _agent;
         private Objects _circles;
@@ -30,16 +31,16 @@ namespace SimpleSamplesXNA.Demo5
             //Collide with all but cat4
             _agent.CollidesWith = CollisionCategory.All & ~CollisionCategory.Cat4;
 
-            Vector2 startPosition = new Vector2(-20, 17);
-            Vector2 endPosition = new Vector2(20, 17);
+            Vector2 startPosition = new Vector2(-20, 16);
+            Vector2 endPosition = new Vector2(20, 16);
             _circles = new Objects(World, startPosition, endPosition, 15, 1, ObjectType.Circle);
             _circles.CollisionCategories = (CollisionCategory.Cat1);
 
-            //Collide with stars and gears
-            _circles.CollidesWith = (CollisionCategory.Cat3 | CollisionCategory.Cat4);
+            //Collide with circles (itself only)
+            _circles.CollidesWith = (CollisionCategory.Cat1);
 
-            startPosition = new Vector2(-20, -17);
-            endPosition = new Vector2(20, -17);
+            startPosition = new Vector2(-20, -16);
+            endPosition = new Vector2(20, -16);
             _rectangles = new Objects(World, startPosition, endPosition, 15, 2, ObjectType.Rectangle);
             _rectangles.CollisionCategories = (CollisionCategory.Cat2);
 
@@ -52,7 +53,7 @@ namespace SimpleSamplesXNA.Demo5
             _gears.CollisionCategories = (CollisionCategory.Cat3);
 
             //Collides with itself (gears) and stars
-            _gears.CollidesWith = (CollisionCategory.Cat3 | CollisionCategory.Cat4);
+            _gears.CollidesWith = (CollisionCategory.Cat3);
 
             startPosition = new Vector2(20, -10);
             endPosition = new Vector2(20, 10);
@@ -60,7 +61,7 @@ namespace SimpleSamplesXNA.Demo5
             _stars.CollisionCategories = (CollisionCategory.Cat4);
 
             //Collides with gears and itself (stars)
-            _stars.CollidesWith = (CollisionCategory.Cat3 | CollisionCategory.Cat4);
+            _stars.CollidesWith = (CollisionCategory.All);
 
             base.LoadContent();
         }
@@ -70,31 +71,18 @@ namespace SimpleSamplesXNA.Demo5
             return "Demo5: Collision Categories";
         }
 
-        private string GetDetails()
+        public string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows how to setup complex collision");
             sb.AppendLine("scenerios.");
             sb.AppendLine("In this demo:");
-            sb.AppendLine("-Red, Green, and Blue are set to only collide with");
-            sb.AppendLine(" their own color.");
-            sb.AppendLine("-Black is set to collide with itself, Red, Green, ");
-            sb.AppendLine(" and Blue.");
+            sb.AppendLine("-Circles, rectangles, and gears are set to only collide with");
+            sb.AppendLine(" their own shape.");
+            sb.AppendLine("-Stars is set to collide with itself, circles, rectangles, ");
+            sb.AppendLine(" and gears.");
             sb.AppendLine("-The 'Agent' (the cross thing) is set to collide");
-            sb.AppendLine(" with all but Black");
-            sb.AppendLine(string.Empty);
-            sb.AppendLine("NOTE: If two objects define conflicting");
-            sb.AppendLine("collision status, collide wins over not colliding.");
-            sb.AppendLine("This is the case with Black vs. the Red, Green, ");
-            sb.AppendLine("and Blue circles");
-            sb.AppendLine(string.Empty);
-            sb.AppendLine("GamePad:");
-            sb.AppendLine("  -Rotate: left and right triggers");
-            sb.AppendLine("  -Move: left thumbstick");
-            sb.AppendLine(string.Empty);
-            sb.AppendLine("Keyboard:");
-            sb.AppendLine("  -Rotate: left and right arrows");
-            sb.AppendLine("  -Move: A,S,D,W");
+            sb.AppendLine(" with all but stars");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Mouse");
             sb.AppendLine("  -Hold down left button and drag");

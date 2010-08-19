@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using FarseerPhysics.Common;
+using FarseerPhysics.DemoBaseXNA;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
@@ -9,20 +10,19 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SimpleSamplesXNA.Demo2
 {
-    internal class Demo2Screen : GameScreen
+    internal class Demo2Screen : GameScreen, IDemoScreen
     {
         #region IDemoScreen Members
 
         public string GetTitle()
         {
-            return "Demo2: Two Bodies with one fixture";
+            return "Demo2: Two fixtures with one body";
         }
 
         public string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows a single body with no geometry");
-            sb.AppendLine("attached. Note that it does not collide with the borders.");
+            sb.AppendLine("This demo shows two shapes attached to a single body");
             sb.AppendLine(string.Empty);
             sb.AppendLine("GamePad:");
             sb.AppendLine("  -Rotate: left and right triggers");
