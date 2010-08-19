@@ -21,7 +21,6 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
         private float _shoulderTargetAngle = .2f;
         private Vector2 _upperLegSize = new Vector2(3, 0.5f); //x=width, y=height
 
-        //00:26:F2:68:84:A2
         public Spider(World world, Vector2 position)
         {
             //Load bodies
@@ -48,23 +47,19 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             JointFactory.CreateRevoluteJoint(world, circle.Body, leftUpper.Body, new Vector2(SpiderBodyRadius, 0));
 
             _leftShoulderAngleJoint = JointFactory.CreateAngleJoint(world, circle.Body, leftUpper.Body);
-            _leftShoulderAngleJoint.TargetAngle = -.4f;
             _leftShoulderAngleJoint.MaxImpulse = 3;
 
             JointFactory.CreateRevoluteJoint(world, circle.Body, rightUpper.Body, new Vector2(-SpiderBodyRadius, 0));
 
             _rightShoulderAngleJoint = JointFactory.CreateAngleJoint(world, circle.Body, rightUpper.Body);
-            _rightShoulderAngleJoint.TargetAngle = .4f;
             _rightShoulderAngleJoint.MaxImpulse = 3;
 
             JointFactory.CreateRevoluteJoint(world, leftUpper.Body, leftLower.Body, new Vector2(_upperLegSize.X / 2, 0));
             _leftKneeAngleJoint = JointFactory.CreateAngleJoint(world, leftUpper.Body, leftLower.Body);
-            _leftKneeAngleJoint.TargetAngle = -_kneeTargetAngle;
             _leftKneeAngleJoint.MaxImpulse = 3;
 
             JointFactory.CreateRevoluteJoint(world, rightUpper.Body, rightLower.Body, -new Vector2(_upperLegSize.X / 2, 0));
             _rightKneeAngleJoint = JointFactory.CreateAngleJoint(world, rightUpper.Body, rightLower.Body);
-            _rightKneeAngleJoint.TargetAngle = _kneeTargetAngle;
             _rightKneeAngleJoint.MaxImpulse = 3;
         }
 
@@ -89,11 +84,11 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
                     _shoulderTargetAngle = .2f;
             }
 
-            _leftKneeAngleJoint.TargetAngle = -_kneeTargetAngle;
-            _rightKneeAngleJoint.TargetAngle = _kneeTargetAngle;
+            _leftKneeAngleJoint.TargetAngle = _kneeTargetAngle;
+            _rightKneeAngleJoint.TargetAngle = -_kneeTargetAngle;
 
-            _leftShoulderAngleJoint.TargetAngle = -_shoulderTargetAngle;
-            _rightShoulderAngleJoint.TargetAngle = _shoulderTargetAngle;
+            _leftShoulderAngleJoint.TargetAngle = _shoulderTargetAngle;
+            _rightShoulderAngleJoint.TargetAngle = -_shoulderTargetAngle;
         }
     }
 }
