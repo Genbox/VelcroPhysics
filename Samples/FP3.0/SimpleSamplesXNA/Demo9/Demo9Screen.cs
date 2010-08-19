@@ -5,12 +5,9 @@ using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace SimpleSamplesXNA.Demo9
 {
-
-    
     internal class Demo9Screen : GameScreen, IDemoScreen
     {
         #region IDemoScreen Members
@@ -33,8 +30,6 @@ namespace SimpleSamplesXNA.Demo9
 
         #endregion 
 
-        Ragdoll _ragdoll;
-
         public override void Initialize()
         {
             World = new World(new Vector2(0,0));
@@ -44,7 +39,7 @@ namespace SimpleSamplesXNA.Demo9
 
         public override void LoadContent()
         {
-            _ragdoll = new Ragdoll(World,new Vector2(0,0));
+            new Ragdoll(World, new Vector2(0, 0));
             CreateObstacles();
             base.LoadContent();
         }
@@ -61,7 +56,6 @@ namespace SimpleSamplesXNA.Demo9
             rect[1].Body.Position = new Vector2(-8, 7);
             rect[2].Body.Position = new Vector2(9, -7);
             rect[3].Body.Position = new Vector2(7, 5);
-            
         }
     }
 }

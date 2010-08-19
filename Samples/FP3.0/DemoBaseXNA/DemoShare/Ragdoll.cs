@@ -1,37 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FarseerPhysics.Factories;
+﻿using System.Collections.Generic;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
-using FarseerPhysics.Common;
-using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.DemoBaseXNA.DemoShare
 {
     public class Ragdoll
     {
-        private Fixture _head;
-
-        private List<Fixture> _body;
-
-        private List<Fixture> _lowerLeftArm;
-        private List<Fixture> _upperLeftArm;
-
-        private List<Fixture> _lowerRightArm;
-        private List<Fixture> _upperRightArm;
-
-        private List<Fixture> _lowerLeftLeg;
-        private List<Fixture> _upperLeftLeg;
-
-        private List<Fixture> _lowerRightLeg;
-        private List<Fixture> _upperRightLeg;
-
         private const float armDensity = 10;
         private const float legDensity = 15f;
         private const float limbAngularDamping = 10f;
+        private List<Fixture> _body;
+        private Fixture _head;
+
+        private List<Fixture> _lowerLeftArm;
+
+        private List<Fixture> _lowerLeftLeg;
+        private List<Fixture> _lowerRightArm;
+
+        private List<Fixture> _lowerRightLeg;
+        private List<Fixture> _upperLeftArm;
+        private List<Fixture> _upperLeftLeg;
+        private List<Fixture> _upperRightArm;
+        private List<Fixture> _upperRightLeg;
 
 
         public Ragdoll(World world, Vector2 position)
@@ -63,7 +55,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             _lowerLeftArm[0].Body.AngularDamping = limbAngularDamping;
             _lowerLeftArm[0].Body.Mass = 2;
             _lowerLeftArm[0].Body.Position = position + new Vector2(-4, -1);
-            
+
             _upperLeftArm = FixtureFactory.CreateCapsule(world, 1, .45f, armDensity);
             _upperLeftArm[0].Body.BodyType = BodyType.Dynamic;
             _upperLeftArm[0].Body.AngularDamping = limbAngularDamping;
@@ -113,10 +105,11 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
         //JOINTS
         private void CreateJoints(World world)
         {
-            float dp = 1;
-            float frequency = 25;
+            const float dp = 1;
+            const float frequency = 25;
             //head -> body
-            DistanceJoint jHeadBody = new DistanceJoint(_head.Body, _body[0].Body, new Vector2(0, -1), new Vector2(0, 2f));
+            DistanceJoint jHeadBody = new DistanceJoint(_head.Body, _body[0].Body, new Vector2(0, -1),
+                                                        new Vector2(0, 2f));
             jHeadBody.CollideConnected = true;
             jHeadBody.DampingRatio = dp;
             jHeadBody.Frequency = frequency;
@@ -124,7 +117,8 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             world.AddJoint(jHeadBody);
 
             //lowerLeftArm -> upperLeftArm
-            DistanceJoint jLeftArm = new DistanceJoint(_lowerLeftArm[0].Body, _upperLeftArm[0].Body, new Vector2(0, 1), new Vector2(0, -1f));
+            DistanceJoint jLeftArm = new DistanceJoint(_lowerLeftArm[0].Body, _upperLeftArm[0].Body, new Vector2(0, 1),
+                                                       new Vector2(0, -1f));
             jLeftArm.CollideConnected = true;
             jLeftArm.DampingRatio = dp;
             jLeftArm.Frequency = frequency;
@@ -132,7 +126,8 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             world.AddJoint(jLeftArm);
 
             //upperLeftArm -> body
-            DistanceJoint jLeftArmBody = new DistanceJoint(_upperLeftArm[0].Body, _body[0].Body, new Vector2(0, 1), new Vector2(-1, 1.5f));
+            DistanceJoint jLeftArmBody = new DistanceJoint(_upperLeftArm[0].Body, _body[0].Body, new Vector2(0, 1),
+                                                           new Vector2(-1, 1.5f));
             jLeftArmBody.CollideConnected = true;
             jLeftArmBody.DampingRatio = dp;
             jLeftArmBody.Frequency = frequency;
@@ -140,7 +135,8 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             world.AddJoint(jLeftArmBody);
 
             //lowerRightArm -> upperRightArm
-            DistanceJoint jRightArm = new DistanceJoint(_lowerRightArm[0].Body, _upperRightArm[0].Body, new Vector2(0, 1), new Vector2(0, -1));
+            DistanceJoint jRightArm = new DistanceJoint(_lowerRightArm[0].Body, _upperRightArm[0].Body,
+                                                        new Vector2(0, 1), new Vector2(0, -1));
             jRightArm.CollideConnected = true;
             jRightArm.DampingRatio = dp;
             jRightArm.Frequency = frequency;
@@ -148,7 +144,8 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             world.AddJoint(jRightArm);
 
             //upperRightArm -> body
-            DistanceJoint jRightArmBody = new DistanceJoint(_upperRightArm[0].Body, _body[0].Body, new Vector2(0, 1), new Vector2(1, 1.5f));
+            DistanceJoint jRightArmBody = new DistanceJoint(_upperRightArm[0].Body, _body[0].Body, new Vector2(0, 1),
+                                                            new Vector2(1, 1.5f));
             jRightArmBody.CollideConnected = true;
             jRightArmBody.DampingRatio = dp;
             jRightArmBody.Frequency = 25;
@@ -156,7 +153,8 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             world.AddJoint(jRightArmBody);
 
             //lowerLeftLeg -> upperLeftLeg
-            DistanceJoint jLeftLeg = new DistanceJoint(_lowerLeftLeg[0].Body, _upperLeftLeg[0].Body, new Vector2(0, 1.1f), new Vector2(0, -1));
+            DistanceJoint jLeftLeg = new DistanceJoint(_lowerLeftLeg[0].Body, _upperLeftLeg[0].Body,
+                                                       new Vector2(0, 1.1f), new Vector2(0, -1));
             jLeftLeg.CollideConnected = true;
             jLeftLeg.DampingRatio = dp;
             jLeftLeg.Frequency = frequency;
@@ -164,7 +162,8 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             world.AddJoint(jLeftLeg);
 
             //upperLeftLeg -> body
-            DistanceJoint jLeftLegBody = new DistanceJoint(_upperLeftLeg[0].Body, _body[0].Body, new Vector2(0, 1.1f), new Vector2(-0.8f, -1.9f));
+            DistanceJoint jLeftLegBody = new DistanceJoint(_upperLeftLeg[0].Body, _body[0].Body, new Vector2(0, 1.1f),
+                                                           new Vector2(-0.8f, -1.9f));
             jLeftLegBody.CollideConnected = true;
             jLeftLegBody.DampingRatio = dp;
             jLeftLegBody.Frequency = frequency;
@@ -172,7 +171,8 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             world.AddJoint(jLeftLegBody);
 
             //lowerRightleg -> upperRightleg
-            DistanceJoint jRightLeg = new DistanceJoint(_lowerRightLeg[0].Body, _upperRightLeg[0].Body, new Vector2(0, 1.1f), new Vector2(0, -1));
+            DistanceJoint jRightLeg = new DistanceJoint(_lowerRightLeg[0].Body, _upperRightLeg[0].Body,
+                                                        new Vector2(0, 1.1f), new Vector2(0, -1));
             jRightLeg.CollideConnected = true;
             jRightLeg.DampingRatio = dp;
             jRightLeg.Frequency = frequency;
@@ -180,15 +180,13 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             world.AddJoint(jRightLeg);
 
             //upperRightleg -> body
-            DistanceJoint jRightLegBody = new DistanceJoint(_upperRightLeg[0].Body, _body[0].Body, new Vector2(0, 1.1f), new Vector2(0.8f, -1.9f));
+            DistanceJoint jRightLegBody = new DistanceJoint(_upperRightLeg[0].Body, _body[0].Body, new Vector2(0, 1.1f),
+                                                            new Vector2(0.8f, -1.9f));
             jRightLegBody.CollideConnected = true;
             jRightLegBody.DampingRatio = dp;
             jRightLegBody.Frequency = frequency;
             jRightLegBody.Length = 0.05f;
             world.AddJoint(jRightLegBody);
-
         }
-
     }
-
 }
