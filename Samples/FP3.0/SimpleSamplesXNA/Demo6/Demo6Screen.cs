@@ -11,6 +11,27 @@ namespace SimpleSamplesXNA.Demo6
     {
         private Spider[] _spiders;
 
+        #region IDemoScreen Members
+
+        public string GetTitle()
+        {
+            return "Demo6: Dynamic Angle Joints";
+        }
+
+        public string GetDetails()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("This demo demonstrates the use of revolute joints ");
+            sb.AppendLine("combined with angle joints that have a dynamic ");
+            sb.AppendLine("target angle");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("Mouse");
+            sb.AppendLine("  -Hold down left button and drag");
+            return sb.ToString();
+        }
+
+        #endregion
+
         public override void Initialize()
         {
             World = new World(new Vector2(0, -20));
@@ -41,23 +62,6 @@ namespace SimpleSamplesXNA.Demo6
             }
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
-        }
-
-        public string GetTitle()
-        {
-            return "Demo6: Dynamic Angle Joints";
-        }
-
-        public string GetDetails()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo demonstrates the use of revolute joints ");
-            sb.AppendLine("combined with angle joints that have a dynamic ");
-            sb.AppendLine("target angle");
-            sb.AppendLine(string.Empty);
-            sb.AppendLine("Mouse");
-            sb.AppendLine("  -Hold down left button and drag");
-            return sb.ToString();
         }
     }
 }

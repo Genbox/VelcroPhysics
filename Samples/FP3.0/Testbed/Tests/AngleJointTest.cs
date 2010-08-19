@@ -49,7 +49,7 @@ namespace FarseerPhysics.TestBed.Tests
             fC.Body.BodyType = BodyType.Dynamic;
 
             FixedAngleJoint fixedJoint = new FixedAngleJoint(fC.Body);
-            fixedJoint.TargetAngle = (float)Math.PI / 3;
+            fixedJoint.TargetAngle = (float) Math.PI / 3;
             World.AddJoint(fixedJoint);
         }
 

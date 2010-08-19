@@ -10,19 +10,13 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class YuPengPolygonTest : Test
     {
-        private enum AlgorithmUsed
-        {
-            YuPeng,
-            Trace
-        }
-
+        private AlgorithmUsed _algorithm;
         private Vertices _clip;
         private PolyClipError _err;
         private List<TextMessage> _messages;
         private List<Vertices> _polygons;
         private Vertices _selected;
         private Vertices _subject;
-        private AlgorithmUsed _algorithm;
 
         public override void Initialize()
         {
@@ -480,6 +474,16 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new YuPengPolygonTest();
         }
+
+        #region Nested type: AlgorithmUsed
+
+        private enum AlgorithmUsed
+        {
+            YuPeng,
+            Trace
+        }
+
+        #endregion
 
         #region Nested type: TextMessage
 

@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
 using FarseerPhysics.Controllers;
@@ -305,7 +304,7 @@ namespace FarseerPhysics.Dynamics
                 fixture.DestroyProxies(ContactManager.BroadPhase);
                 fixture.Destroy();
             }
-            
+
             body.FixtureList = null;
 
             // Remove world body list.
@@ -574,7 +573,8 @@ namespace FarseerPhysics.Dynamics
 
             if (Settings.EnableDiagnostics)
                 BreakableBodyTime = _watch.ElapsedTicks -
-                                        (NewContactsTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime + ContinuousPhysicsTime);
+                                    (NewContactsTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime +
+                                     ContinuousPhysicsTime);
 
             if (Settings.EnableDiagnostics)
             {

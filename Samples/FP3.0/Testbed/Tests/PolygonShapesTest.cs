@@ -62,12 +62,15 @@ namespace FarseerPhysics.TestBed.Tests
             switch (type)
             {
                 default:
-                    List<Fixture> rounded = FixtureFactory.CreateRoundedRectangle(World, 10, 10, 2.5F, 2.5F, _segments, 10, position);
+                    List<Fixture> rounded = FixtureFactory.CreateRoundedRectangle(World, 10, 10, 2.5F, 2.5F, _segments,
+                                                                                  10, position);
                     rounded[0].Body.BodyType = BodyType.Dynamic;
                     break;
                 case 1:
-                    List<Fixture> capsule = FixtureFactory.CreateCapsule(World, 10, 2, (int)MathHelper.Max(_segments, 1), 3,
-                                                     (int)MathHelper.Max(_segments, 1), 10, position);
+                    List<Fixture> capsule = FixtureFactory.CreateCapsule(World, 10, 2,
+                                                                         (int) MathHelper.Max(_segments, 1), 3,
+                                                                         (int) MathHelper.Max(_segments, 1), 10,
+                                                                         position);
                     capsule[0].Body.BodyType = BodyType.Dynamic;
                     break;
             }

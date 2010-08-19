@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("Farseer Physics 3.0 XNA")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("Farseer Physics")]
-[assembly: AssemblyCopyright("Copyright © Farseer Physics 2009")]
+[assembly: AssemblyCopyright("Copyright © Farseer Physics 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

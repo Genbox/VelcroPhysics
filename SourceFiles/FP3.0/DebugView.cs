@@ -69,7 +69,7 @@ namespace FarseerPhysics
         /// Draw contact normals. Need ContactPoints to be enabled first.
         /// </summary>
         ContactNormals = (1 << 7),
-        
+
         /// <summary>
         /// Draws the vertices of polygons
         /// </summary>

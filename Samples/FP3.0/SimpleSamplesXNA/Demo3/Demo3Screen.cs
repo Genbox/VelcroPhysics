@@ -12,6 +12,36 @@ namespace SimpleSamplesXNA.Demo3
     {
         private Fixture[] _obstacles = new Fixture[5];
 
+        #region IDemoScreen Members
+
+        public string GetTitle()
+        {
+            return "Demo3: Multiple fixtures and static bodies";
+        }
+
+        public string GetDetails()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("This demo shows a single body with multiple shapes");
+            sb.AppendLine("attached.");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("This demo also shows the use of static bodies.");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  -Rotate: left and right triggers");
+            sb.AppendLine("  -Move: left thumbstick");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("Keyboard:");
+            sb.AppendLine("  -Rotate: left and right arrows");
+            sb.AppendLine("  -Move: A,S,D,W");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("Mouse");
+            sb.AppendLine("  -Hold down left button and drag");
+            return sb.ToString();
+        }
+
+        #endregion
+
         public override void Initialize()
         {
             World = new World(new Vector2(0, -20));
@@ -47,32 +77,6 @@ namespace SimpleSamplesXNA.Demo3
             _obstacles[2].Body.Position = new Vector2(10, 5);
             _obstacles[3].Body.Position = new Vector2(-10, 15);
             _obstacles[4].Body.Position = new Vector2(-17, 0);
-        }
-
-        public string GetTitle()
-        {
-            return "Demo3: Multiple fixtures and static bodies";
-        }
-
-        public string GetDetails()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows a single body with multiple shapes");
-            sb.AppendLine("attached.");
-            sb.AppendLine(string.Empty);
-            sb.AppendLine("This demo also shows the use of static bodies.");
-            sb.AppendLine(string.Empty);
-            sb.AppendLine("GamePad:");
-            sb.AppendLine("  -Rotate: left and right triggers");
-            sb.AppendLine("  -Move: left thumbstick");
-            sb.AppendLine(string.Empty);
-            sb.AppendLine("Keyboard:");
-            sb.AppendLine("  -Rotate: left and right arrows");
-            sb.AppendLine("  -Move: A,S,D,W");
-            sb.AppendLine(string.Empty);
-            sb.AppendLine("Mouse");
-            sb.AppendLine("  -Hold down left button and drag");
-            return sb.ToString();
         }
     }
 }

@@ -37,13 +37,13 @@ namespace FarseerPhysics.TestBed.Framework
         /// Random number in range [-1,1]
         public static float RandomFloat()
         {
-            return (float)(Random.NextDouble() * 2.0 - 1.0);
+            return (float) (Random.NextDouble() * 2.0 - 1.0);
         }
 
         /// Random floating point number in range [lo, hi]
         public static float RandomFloat(float lo, float hi)
         {
-            float r = (float)Random.NextDouble();
+            float r = (float) Random.NextDouble();
             r = (hi - lo) * r + lo;
             return r;
         }
@@ -132,7 +132,7 @@ namespace FarseerPhysics.TestBed.Framework
             }
 
             // added
-            float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
+            float timeStep = Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
 
             if (settings.Pause)
             {
@@ -207,23 +207,23 @@ namespace FarseerPhysics.TestBed.Framework
             // Query the world for overlapping shapes.
             World.QueryAABB(
                 fixture =>
-                {
-                    Body body = fixture.Fixture.Body;
-                    if (body.BodyType == BodyType.Dynamic)
                     {
-                        bool inside = fixture.Fixture.TestPoint(ref p);
-                        if (inside)
+                        Body body = fixture.Fixture.Body;
+                        if (body.BodyType == BodyType.Dynamic)
                         {
-                            myFixture = fixture.Fixture;
+                            bool inside = fixture.Fixture.TestPoint(ref p);
+                            if (inside)
+                            {
+                                myFixture = fixture.Fixture;
 
-                            // We are done, terminate the query.
-                            return false;
+                                // We are done, terminate the query.
+                                return false;
+                            }
                         }
-                    }
 
-                    // Continue the query.
-                    return true;
-                }, ref aabb);
+                        // Continue the query.
+                        return true;
+                    }, ref aabb);
 
             if (myFixture != null)
             {
@@ -263,7 +263,6 @@ namespace FarseerPhysics.TestBed.Framework
 
         public virtual void PreSolve(Contact contact, ref Manifold oldManifold)
         {
-
         }
 
         public virtual void PostSolve(Contact contact, ref ContactImpulse impulse)

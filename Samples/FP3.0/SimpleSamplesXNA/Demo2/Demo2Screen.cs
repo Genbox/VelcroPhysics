@@ -12,6 +12,8 @@ namespace SimpleSamplesXNA.Demo2
 {
     internal class Demo2Screen : GameScreen, IDemoScreen
     {
+        private List<Fixture> _rectangles;
+
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -36,8 +38,6 @@ namespace SimpleSamplesXNA.Demo2
 
         #endregion
 
-        private List<Fixture> _rectangles;
-
         public override void Initialize()
         {
             World = new World(new Vector2(0, 0));
@@ -50,9 +50,9 @@ namespace SimpleSamplesXNA.Demo2
             Vertices rect1 = PolygonTools.CreateRectangle(2, 2);
             Vertices rect2 = PolygonTools.CreateRectangle(2, 2);
 
-            Vector2 trans = new Vector2(-2,0);
+            Vector2 trans = new Vector2(-2, 0);
             rect1.Translate(ref trans);
-            trans = new Vector2(2,0);
+            trans = new Vector2(2, 0);
             rect2.Translate(ref trans);
 
             List<Vertices> vertices = new List<Vertices>(2);
@@ -97,18 +97,36 @@ namespace SimpleSamplesXNA.Demo2
             Vector2 force = Vector2.Zero;
             force.Y = -force.Y;
 
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.A)) { force += new Vector2(-forceAmount, 0); }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { force += new Vector2(0, -forceAmount); }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { force += new Vector2(forceAmount, 0); }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, forceAmount); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.A))
+            {
+                force += new Vector2(-forceAmount, 0);
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.S))
+            {
+                force += new Vector2(0, -forceAmount);
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.D))
+            {
+                force += new Vector2(forceAmount, 0);
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.W))
+            {
+                force += new Vector2(0, forceAmount);
+            }
 
             _rectangles[0].Body.ApplyForce(force);
 
             const float torqueAmount = 200;
             float torque = 0;
 
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque += torqueAmount; }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque -= torqueAmount; }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left))
+            {
+                torque += torqueAmount;
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right))
+            {
+                torque -= torqueAmount;
+            }
 
             _rectangles[0].Body.ApplyTorque(torque);
         }

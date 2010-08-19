@@ -1,5 +1,4 @@
 using System.Text;
-using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;

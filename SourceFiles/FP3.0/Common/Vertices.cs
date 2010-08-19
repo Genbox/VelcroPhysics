@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using Microsoft.Xna.Framework;
 using FarseerPhysics.Collision;
+using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common
 {
@@ -144,13 +144,13 @@ namespace FarseerPhysics.Common
             float radius;
             float area = GetSignedArea();
 
-            double radiusSqrd = (double)area / MathHelper.Pi;
+            double radiusSqrd = (double) area / MathHelper.Pi;
             if (radiusSqrd < 0)
             {
                 radiusSqrd *= -1;
             }
 
-            radius = (float)System.Math.Sqrt(radiusSqrd);
+            radius = (float) Math.Sqrt(radiusSqrd);
             return radius;
         }
 
@@ -164,7 +164,7 @@ namespace FarseerPhysics.Common
             Vector2 lowerBound = new Vector2(float.MaxValue, float.MaxValue);
             Vector2 upperBound = new Vector2(float.MinValue, float.MinValue);
 
-            for (int i = 0; i < this.Count; ++i)
+            for (int i = 0; i < Count; ++i)
             {
                 if (this[i].X < lowerBound.X)
                 {
@@ -363,7 +363,7 @@ namespace FarseerPhysics.Common
                 //Parallel sides check
                 float cross = MathUtils.Cross(normals[iminus], normals[i]);
                 cross = MathUtils.Clamp(cross, -1.0f, 1.0f);
-                float angle = (float)Math.Asin(cross);
+                float angle = (float) Math.Asin(cross);
                 if (angle <= Settings.AngularSlop)
                 {
                     error = 4;
@@ -534,7 +534,7 @@ namespace FarseerPhysics.Common
                         }
                     }
                 }
-            SkipOut:
+                SkipOut:
                 ++counter;
                 //if (counter > 100) printf("Counter: %d\n",counter);
             }

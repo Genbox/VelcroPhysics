@@ -10,6 +10,8 @@ namespace SimpleSamplesXNA.Demo1
 {
     internal class Demo1Screen : GameScreen, IDemoScreen
     {
+        private Fixture _rectangle;
+
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -34,8 +36,6 @@ namespace SimpleSamplesXNA.Demo1
         }
 
         #endregion
-
-        private Fixture _rectangle;
 
         public override void Initialize()
         {
@@ -84,18 +84,36 @@ namespace SimpleSamplesXNA.Demo1
             Vector2 force = Vector2.Zero;
             force.Y = -force.Y;
 
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.A)) { force += new Vector2(-forceAmount, 0); }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.S)) { force += new Vector2(0, -forceAmount); }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.D)) { force += new Vector2(forceAmount, 0); }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.W)) { force += new Vector2(0, forceAmount); }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.A))
+            {
+                force += new Vector2(-forceAmount, 0);
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.S))
+            {
+                force += new Vector2(0, -forceAmount);
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.D))
+            {
+                force += new Vector2(forceAmount, 0);
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.W))
+            {
+                force += new Vector2(0, forceAmount);
+            }
 
             _rectangle.Body.ApplyForce(force);
 
             const float torqueAmount = 40;
             float torque = 0;
 
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) { torque += torqueAmount; }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) { torque -= torqueAmount; }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left))
+            {
+                torque += torqueAmount;
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right))
+            {
+                torque -= torqueAmount;
+            }
 
             _rectangle.Body.ApplyTorque(torque);
         }

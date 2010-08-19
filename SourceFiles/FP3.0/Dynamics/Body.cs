@@ -107,7 +107,7 @@ namespace FarseerPhysics.Dynamics
         /// <value>The revolutions.</value>
         public float Revolutions
         {
-            get { return Rotation / (float)Math.PI; }
+            get { return Rotation / (float) Math.PI; }
         }
 
         /// <summary>
@@ -934,7 +934,6 @@ namespace FarseerPhysics.Dynamics
         public Vector2 GetWorldVector(ref Vector2 localVector)
         {
             return MathUtils.Multiply(ref Xf.R, ref localVector);
-
         }
 
         /// <summary>

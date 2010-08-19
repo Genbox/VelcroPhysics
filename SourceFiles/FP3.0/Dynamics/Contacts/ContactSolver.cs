@@ -36,11 +36,11 @@ namespace FarseerPhysics.Dynamics.Contacts
         public Vector2 LocalPoint;
         public float NormalImpulse;
         public float NormalMass;
-        public Vector2 rA;
-        public Vector2 rB;
         public float TangentImpulse;
         public float TangentMass;
         public float VelocityBias;
+        public Vector2 rA;
+        public Vector2 rB;
     }
 
     public class ContactConstraint

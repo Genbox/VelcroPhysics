@@ -34,9 +34,9 @@ namespace FarseerPhysics.TestBed.Tests
     /// This tests bullet collision and provides an example of a gameplay scenario.
     public class PinballTest : Test
     {
+        private Body _ball;
         private RevoluteJoint _leftJoint;
         private RevoluteJoint _rightJoint;
-        private Body _ball;
 
         private PinballTest()
         {

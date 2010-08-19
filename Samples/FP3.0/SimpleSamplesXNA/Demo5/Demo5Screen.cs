@@ -11,9 +11,36 @@ namespace SimpleSamplesXNA.Demo5
     {
         private Agent _agent;
         private Objects _circles;
-        private Objects _rectangles;
         private Objects _gears;
+        private Objects _rectangles;
         private Objects _stars;
+
+        #region IDemoScreen Members
+
+        public string GetTitle()
+        {
+            return "Demo5: Collision Categories";
+        }
+
+        public string GetDetails()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("This demo shows how to setup complex collision");
+            sb.AppendLine("scenerios.");
+            sb.AppendLine("In this demo:");
+            sb.AppendLine("-Circles, rectangles, and gears are set to only collide with");
+            sb.AppendLine(" their own shape.");
+            sb.AppendLine("-Stars is set to collide with itself, circles, rectangles, ");
+            sb.AppendLine(" and gears.");
+            sb.AppendLine("-The 'Agent' (the cross thing) is set to collide");
+            sb.AppendLine(" with all but stars");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("Mouse");
+            sb.AppendLine("  -Hold down left button and drag");
+            return sb.ToString();
+        }
+
+        #endregion
 
         public override void Initialize()
         {
@@ -65,29 +92,5 @@ namespace SimpleSamplesXNA.Demo5
 
             base.LoadContent();
         }
-
-        public string GetTitle()
-        {
-            return "Demo5: Collision Categories";
-        }
-
-        public string GetDetails()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows how to setup complex collision");
-            sb.AppendLine("scenerios.");
-            sb.AppendLine("In this demo:");
-            sb.AppendLine("-Circles, rectangles, and gears are set to only collide with");
-            sb.AppendLine(" their own shape.");
-            sb.AppendLine("-Stars is set to collide with itself, circles, rectangles, ");
-            sb.AppendLine(" and gears.");
-            sb.AppendLine("-The 'Agent' (the cross thing) is set to collide");
-            sb.AppendLine(" with all but stars");
-            sb.AppendLine(string.Empty);
-            sb.AppendLine("Mouse");
-            sb.AppendLine("  -Hold down left button and drag");
-            return sb.ToString();
-        }
-
     }
 }

@@ -33,6 +33,8 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class CollisionProcessingTest : Test
     {
+        private List<Body> _removeBodies = new List<Body>();
+
         private CollisionProcessingTest()
         {
             //Ground
@@ -108,8 +110,6 @@ namespace FarseerPhysics.TestBed.Tests
             fixture = body6.CreateFixture(circle, 1);
             fixture.OnCollision += OnCollision;
         }
-
-        private List<Body> _removeBodies = new List<Body>();
 
         private bool OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {

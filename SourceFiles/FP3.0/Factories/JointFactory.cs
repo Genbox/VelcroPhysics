@@ -1,7 +1,5 @@
-﻿using System;
-using FarseerPhysics.Dynamics;
+﻿using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
-
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Factories
@@ -12,6 +10,7 @@ namespace FarseerPhysics.Factories
     public static class JointFactory
     {
         #region Revolute Joint
+
         /// <summary>
         /// Creates a revolute joint and adds it to the world
         /// </summary>
@@ -40,9 +39,11 @@ namespace FarseerPhysics.Factories
             world.AddJoint(joint);
             return joint;
         }
+
         #endregion
 
         #region Weld Joint
+
         /// <summary>
         /// Creates a weld joint
         /// </summary>
@@ -72,9 +73,11 @@ namespace FarseerPhysics.Factories
             world.AddJoint(joint);
             return joint;
         }
+
         #endregion
 
         #region Prismatic Joint
+
         /// <summary>
         /// Creates a prsimatic joint
         /// </summary>
@@ -99,15 +102,18 @@ namespace FarseerPhysics.Factories
         /// <param name="localanchorB"></param>
         /// <param name="axis"></param>
         /// <returns></returns>
-        public static PrismaticJoint CreatePrismaticJoint(World world, Body bodyA, Body bodyB, Vector2 localanchorB, Vector2 axis)
+        public static PrismaticJoint CreatePrismaticJoint(World world, Body bodyA, Body bodyB, Vector2 localanchorB,
+                                                          Vector2 axis)
         {
             PrismaticJoint joint = CreatePrismaticJoint(bodyA, bodyB, localanchorB, axis);
             world.AddJoint(joint);
             return joint;
         }
+
         #endregion
 
         #region Line Joint
+
         /// <summary>
         /// Creates a line joint
         /// </summary>
@@ -138,6 +144,7 @@ namespace FarseerPhysics.Factories
             world.AddJoint(joint);
             return joint;
         }
+
         #endregion
 
         public static AngleJoint CreateAngleJoint(World world, Body bodyA, Body bodyB)

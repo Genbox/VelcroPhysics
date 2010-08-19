@@ -20,6 +20,7 @@ namespace FarseerPhysics.DebugViewXNA
     /// </summary>
     public class DebugViewXNA : DebugView, IDisposable
     {
+        private const int MaxContactPoints = 2048;
         private static VertexPositionColor[] _vertsLines;
         private static VertexPositionColor[] _vertsFill;
         private static int _lineCount;
@@ -31,23 +32,15 @@ namespace FarseerPhysics.DebugViewXNA
         private static List<StringData> _stringData;
         private static VertexDeclaration _vertexDeclaration;
         private static BasicEffect _effect;
-        private const int MaxContactPoints = 2048;
-        private ContactPoint[] _points = new ContactPoint[MaxContactPoints];
-        private int _pointCount;
+        public Color DefaultShapeColor = new Color(0.9f, 0.7f, 0.7f);
 
         public Color InactiveShapeColor = new Color(0.5f, 0.5f, 0.3f);
-        public Color StaticShapeColor = new Color(0.5f, 0.9f, 0.5f);
-        public Color SleepingShapeColor = new Color(0.6f, 0.6f, 0.6f);
         public Color KinematicShapeColor = new Color(0.5f, 0.5f, 0.9f);
-        public Color DefaultShapeColor = new Color(0.9f, 0.7f, 0.7f);
+        public Color SleepingShapeColor = new Color(0.6f, 0.6f, 0.6f);
+        public Color StaticShapeColor = new Color(0.5f, 0.9f, 0.5f);
         public Color TextColor = Color.White;
-
-        public struct ContactPoint
-        {
-            public Vector2 Normal;
-            public Vector2 Position;
-            public PointState State;
-        }
+        private int _pointCount;
+        private ContactPoint[] _points = new ContactPoint[MaxContactPoints];
 
         public DebugViewXNA(World world)
             : base(world)
@@ -61,6 +54,15 @@ namespace FarseerPhysics.DebugViewXNA
             AppendFlags(DebugViewFlags.Shape);
             AppendFlags(DebugViewFlags.Joint);
         }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            World.ContactManager.PreSolve -= PreSolve;
+        }
+
+        #endregion
 
         private void PreSolve(Contact contact, ref Manifold oldManifold)
         {
@@ -312,7 +314,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case JointType.Pulley:
                     {
-                        PulleyJoint pulley = (PulleyJoint)joint;
+                        PulleyJoint pulley = (PulleyJoint) joint;
                         Vector2 s1 = pulley.GroundAnchorA;
                         Vector2 s2 = pulley.GroundAnchorB;
                         DrawSegment(s1, p1, color);
@@ -323,7 +325,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case JointType.FixedMouse:
 
-                    FixedMouseJoint fixedMouseJoint = (FixedMouseJoint)joint;
+                    FixedMouseJoint fixedMouseJoint = (FixedMouseJoint) joint;
                     p1 = fixedMouseJoint.Target;
 
                     DrawPoint(p2, 0.5f, new Color(0.0f, 1.0f, 0.0f));
@@ -369,7 +371,7 @@ namespace FarseerPhysics.DebugViewXNA
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape)fixture.Shape;
+                        CircleShape circle = (CircleShape) fixture.Shape;
 
                         Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
                         float radius = circle.Radius;
@@ -381,7 +383,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape poly = (PolygonShape)fixture.Shape;
+                        PolygonShape poly = (PolygonShape) fixture.Shape;
                         int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
@@ -398,7 +400,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case ShapeType.Edge:
                     {
-                        EdgeShape edge = (EdgeShape)fixture.Shape;
+                        EdgeShape edge = (EdgeShape) fixture.Shape;
                         Vector2 v1 = MathUtils.Multiply(ref xf, edge.Vertex1);
                         Vector2 v2 = MathUtils.Multiply(ref xf, edge.Vertex2);
                         DrawSegment(v1, v2, color);
@@ -407,7 +409,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case ShapeType.Loop:
                     {
-                        LoopShape loop = (LoopShape)fixture.Shape;
+                        LoopShape loop = (LoopShape) fixture.Shape;
                         int count = loop.Count;
 
                         Vector2 v1 = MathUtils.Multiply(ref xf, loop.Vertices[count - 1]);
@@ -498,10 +500,10 @@ namespace FarseerPhysics.DebugViewXNA
 
             for (int i = 0; i < segments; i++)
             {
-                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
+                Vector2 v1 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
                 Vector2 v2 = center +
                              radius *
-                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
+                             new Vector2((float) Math.Cos(theta + increment), (float) Math.Sin(theta + increment));
 
                 _vertsLines[_lineCount * 2].Position = new Vector3(v1, 0.0f);
                 _vertsLines[_lineCount * 2].Color = color;
@@ -527,15 +529,15 @@ namespace FarseerPhysics.DebugViewXNA
 
             Color colorFill = new Color(color, 0.5f);
 
-            Vector2 v0 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
+            Vector2 v0 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
             theta += increment;
 
             for (int i = 1; i < segments - 1; i++)
             {
-                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
+                Vector2 v1 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
                 Vector2 v2 = center +
                              radius *
-                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
+                             new Vector2((float) Math.Cos(theta + increment), (float) Math.Sin(theta + increment));
 
                 _vertsFill[_fillCount * 3].Position = new Vector3(v0, 0.0f);
                 _vertsFill[_fillCount * 3].Color = colorFill;
@@ -666,10 +668,16 @@ namespace FarseerPhysics.DebugViewXNA
             _stringData = new List<StringData>();
         }
 
-        public void Dispose()
+        #region Nested type: ContactPoint
+
+        public struct ContactPoint
         {
-            World.ContactManager.PreSolve -= PreSolve;
+            public Vector2 Normal;
+            public Vector2 Position;
+            public PointState State;
         }
+
+        #endregion
 
         #region Nested type: StringData
 
