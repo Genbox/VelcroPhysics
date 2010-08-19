@@ -385,11 +385,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             GamePadMove(position);
         }
 
-
         private void GamePadMove(Vector2 p)
         {
-            DebugView.DrawPoint(p, 1, Color.Black);
-
             if (_fixedMouseJoint != null)
             {
                 _fixedMouseJoint.Target = p;
