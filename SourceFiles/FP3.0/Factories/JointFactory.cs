@@ -1,4 +1,5 @@
-﻿using FarseerPhysics.Dynamics;
+﻿using System;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 
 using Microsoft.Xna.Framework;
@@ -14,7 +15,6 @@ namespace FarseerPhysics.Factories
         /// <summary>
         /// Creates a revolute joint and adds it to the world
         /// </summary>
-        /// <param name="world"></param>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
         /// <param name="localanchorB"></param>
@@ -139,6 +139,13 @@ namespace FarseerPhysics.Factories
             return joint;
         }
         #endregion
-        
+
+        public static AngleJoint CreateAngleJoint(World world, Body bodyA, Body bodyB)
+        {
+            AngleJoint angleJoint = new AngleJoint(bodyA, bodyB);
+            world.AddJoint(angleJoint);
+
+            return angleJoint;
+        }
     }
 }
