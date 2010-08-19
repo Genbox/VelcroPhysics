@@ -81,14 +81,12 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 GetReactionForce(float inv_dt)
         {
-            Vector2 F = (inv_dt * _linearImpulse);
-            return F;
+            return inv_dt * _linearImpulse;
         }
 
         public override float GetReactionTorque(float inv_dt)
         {
-            float F = (inv_dt * _angularImpulse);
-            return F;
+            return inv_dt * _angularImpulse;
         }
 
         internal override void InitVelocityConstraints(ref TimeStep step)

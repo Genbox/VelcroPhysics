@@ -117,15 +117,20 @@ namespace FarseerPhysics.Dynamics.Joints
         private float _upperTranslation;
 
         /// <summary>
-        ///This requires defining a line of
+        /// This requires defining a line of
         /// motion using an axis and an anchor point. The definition uses local
         /// anchor points and a local axis so that the initial configuration
         /// can violate the constraint slightly. The joint translation is zero
         /// when the local anchor points coincide in world space. Using local
         /// anchors and a local axis helps when saving and loading a game.
-        /// </summary>        
-        public PrismaticJoint(Body b1, Body b2, Vector2 anchorA, Vector2 anchorB, Vector2 axis)
-            : base(b1, b2)
+        /// </summary>
+        /// <param name="bodyA">The first body.</param>
+        /// <param name="bodyB">The second body.</param>
+        /// <param name="anchorA">The first body anchor.</param>
+        /// <param name="anchorB">The second body anchor.</param>
+        /// <param name="axis">The axis.</param>
+        public PrismaticJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, Vector2 axis)
+            : base(bodyA, bodyB)
         {
             JointType = JointType.Prismatic;
 
@@ -201,9 +206,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Is the joint limit enabled?
         /// </summary>
-        /// <value>
-        ///   &lt;c&gt;true&lt;/c&gt; if [is limit enabled]; otherwise, &lt;c&gt;false&lt;/c&gt;.
-        /// </value>
+        /// <value><c>true</c> if [limit enabled]; otherwise, <c>false</c>.</value>
         public bool LimitEnabled
         {
             get { return _enableLimit; }
@@ -245,9 +248,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Is the joint motor enabled?
         /// </summary>
-        /// <value>
-        ///   &lt;c&gt;true&lt;/c&gt; if [is motor enabled]; otherwise, &lt;c&gt;false&lt;/c&gt;.
-        /// </value>
+        /// <value><c>true</c> if [motor enabled]; otherwise, <c>false</c>.</value>
         public bool MotorEnabled
         {
             get { return _enableMotor; }

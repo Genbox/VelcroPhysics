@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics.Joints
 {
+    /// <summary>
+    /// Maintains a fixed angle between two bodies
+    /// </summary>
     public class AngleJoint : Joint
     {
         public float BiasFactor;
@@ -50,7 +53,7 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             //TODO
             //return _inv_dt * _impulse;
-            return new Vector2(0, 0);
+            return Vector2.Zero;
         }
 
         public override float GetReactionTorque(float inv_dt)
@@ -61,7 +64,6 @@ namespace FarseerPhysics.Dynamics.Joints
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
             _jointError = (BodyB.Sweep.a - BodyA.Sweep.a - TargetAngle);
-            //_jointError = (BodyB.GetAngle() - BodyA.GetAngle() - _targetAngle);
 
             _bias = -BiasFactor * step.inv_dt * _jointError;
 

@@ -50,7 +50,7 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             //TODO
             //return _inv_dt * _impulse;
-            return new Vector2(0, 0);
+            return Vector2.Zero;
         }
 
         public override float GetReactionTorque(float inv_dt)

@@ -40,7 +40,6 @@ namespace FarseerPhysics.Dynamics.Joints
     // J = [0 0 -1 0 0 1]
     // K = invI1 + invI2
 
-
     /// <summary>
     /// A weld joint essentially glues two bodies together. A weld joint may
     /// distort somewhat because the island constraint solver is approximate.
@@ -59,7 +58,8 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
-        /// <param name="anchor">The anchor point relative to the bodies</param>
+        /// <param name="anchorA">The first body anchor.</param>
+        /// <param name="anchorB">The second body anchor.</param>
         public WeldJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
             : base(bodyA, bodyB)
         {
@@ -90,14 +90,12 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 GetReactionForce(float inv_dt)
         {
-            Vector2 F = (inv_dt * new Vector2(_impulse.X, _impulse.Y));
-            return F;
+            return inv_dt * new Vector2(_impulse.X, _impulse.Y);
         }
 
         public override float GetReactionTorque(float inv_dt)
         {
-            float F = (inv_dt * _impulse.Z);
-            return F;
+            return inv_dt * _impulse.Z;
         }
 
         internal override void InitVelocityConstraints(ref TimeStep step)

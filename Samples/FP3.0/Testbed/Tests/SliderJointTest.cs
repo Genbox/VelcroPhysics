@@ -40,9 +40,7 @@ namespace FarseerPhysics.TestBed.Tests
             Fixture fB = FixtureFactory.CreateRectangle(World, 4, 4, 1, new Vector2(5, 4));
             fB.Body.BodyType = BodyType.Dynamic;
 
-            SliderJoint joint = new SliderJoint(fA.Body, fB.Body, Vector2.Zero, Vector2.Zero, 10);
-            joint.UpperLength = 10;
-            joint.LowerLength = 5;
+            SliderJoint joint = new SliderJoint(fA.Body, fB.Body, Vector2.Zero, Vector2.Zero, 5, 10);
             World.AddJoint(joint);
         }
 

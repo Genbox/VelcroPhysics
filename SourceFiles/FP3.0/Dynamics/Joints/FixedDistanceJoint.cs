@@ -63,11 +63,11 @@ namespace FarseerPhysics.Dynamics.Joints
         /// slightly. This helps when saving and loading a game.
         /// @warning Do not use a zero or short length.
         /// </summary>
-        /// <param name="bodyA"></param>
-        /// <param name="bodyAnchor"></param>
-        /// <param name="worldAnchor"></param>
-        public FixedDistanceJoint(Body bodyA, Vector2 bodyAnchor, Vector2 worldAnchor)
-            : base(bodyA)
+        /// <param name="body">The body.</param>
+        /// <param name="bodyAnchor">The body anchor.</param>
+        /// <param name="worldAnchor">The world anchor.</param>
+        public FixedDistanceJoint(Body body, Vector2 bodyAnchor, Vector2 worldAnchor)
+            : base(body)
         {
             JointType = JointType.FixedDistance;
 

@@ -65,17 +65,17 @@ namespace FarseerPhysics.Dynamics.Joints
         /// slightly. This helps when saving and loading a game.
         /// @warning Do not use a zero or short length.
         /// </summary>
-        /// <param name="bodyA"></param>
-        /// <param name="bodyB"></param>
-        /// <param name="anchor1"></param>
-        /// <param name="anchor2"></param>
-        public DistanceJoint(Body bodyA, Body bodyB, Vector2 anchor1, Vector2 anchor2)
+        /// <param name="bodyA">The first body</param>
+        /// <param name="bodyB">The second body</param>
+        /// <param name="anchorA">The first body anchor</param>
+        /// <param name="anchorB">The second body anchor</param>
+        public DistanceJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Distance;
 
-            LocalAnchorA = anchor1;
-            LocalAnchorB = anchor2;
+            LocalAnchorA = anchorA;
+            LocalAnchorB = anchorB;
 
             Vector2 d = WorldAnchorB - WorldAnchorA;
             Length = d.Length();
@@ -132,10 +132,6 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             Body b1 = BodyA;
             Body b2 = BodyB;
-
-            /*Transform xf1, xf2;
-            b1.GetTransform(out xf1);
-            b2.GetTransform(out xf2);*/
 
             // Compute the effective mass matrix.
             Vector2 r1 = MathUtils.Multiply(ref b1.Xf.R, LocalAnchorA - b1.LocalCenter);

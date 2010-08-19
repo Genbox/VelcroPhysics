@@ -63,13 +63,13 @@ namespace FarseerPhysics.Dynamics.Joints
         /// two dynamic body anchor points, max lengths for each side,
         /// and a pulley ratio.
         /// </summary>
-        /// <param name="bodyA"></param>
-        /// <param name="bodyB"></param>
-        /// <param name="groundAnchorA"></param>
-        /// <param name="groundAnchorB"></param>
-        /// <param name="anchorA"></param>
-        /// <param name="anchorB"></param>
-        /// <param name="ratio"></param>
+        /// <param name="bodyA">The first body.</param>
+        /// <param name="bodyB">The second body.</param>
+        /// <param name="groundAnchorA">The ground anchor for the first body.</param>
+        /// <param name="groundAnchorB">The ground anchor for the second body.</param>
+        /// <param name="anchorA">The first body anchor.</param>
+        /// <param name="anchorB">The second body anchor.</param>
+        /// <param name="ratio">The ratio.</param>
         public PulleyJoint(Body bodyA, Body bodyB,
                            Vector2 groundAnchorA, Vector2 groundAnchorB,
                            Vector2 anchorA, Vector2 anchorB,
