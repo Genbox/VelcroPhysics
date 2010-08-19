@@ -28,12 +28,11 @@ namespace SimpleSamplesXNA.Demo9
             return sb.ToString();
         }
 
-        #endregion 
+        #endregion
 
         public override void Initialize()
         {
-            World = new World(new Vector2(0,0));
-            World.Gravity = new Vector2(0, -20);
+            World = new World(new Vector2(0, -20));
             base.Initialize();
         }
 
