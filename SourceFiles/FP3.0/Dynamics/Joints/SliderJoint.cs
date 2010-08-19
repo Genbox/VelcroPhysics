@@ -27,9 +27,11 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics.Joints
 {
+    /// <summary>
     /// A distance joint contrains two points on two bodies
     /// to remain at a fixed distance from each other. You can view
     /// this as a massless, rigid rod.
+    /// </summary>
     public class SliderJoint : Joint
     {
         // 1-D constrained system
@@ -54,23 +56,24 @@ namespace FarseerPhysics.Dynamics.Joints
         private Vector2 _u;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MaxDistanceJoint"/> class.
+        /// Initializes a new instance of the <see cref="SliderJoint"/> class.
+        /// Warning: Do not use a zero or short length.
         /// </summary>
-        /// <param name="bodyA">The body A.</param>
-        /// <param name="bodyB">The body B.</param>
-        /// <param name="anchorA">The anchor A.</param>
-        /// <param name="anchorB">The anchor B.</param>
-        /// <param name="maxlength">The maxlength.</param>
-        /// @warning Do not use a zero or short length.
-        public SliderJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, float maxlength)
+        /// <param name="bodyA">The first body.</param>
+        /// <param name="bodyB">The second body.</param>
+        /// <param name="anchorA">The first body anchor.</param>
+        /// <param name="anchorB">The second body anchor.</param>
+        /// <param name="minLength">The minimum length between anchorpoints</param>
+        /// <param name="maxlength">The maximum length between anchorpoints.</param>
+        public SliderJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, float minLength, float maxlength)
             : base(bodyA, bodyB)
         {
             JointType = JointType.MaxDistance;
 
             LocalAnchorA = anchorA;
             LocalAnchorB = anchorB;
-            UpperLength = maxlength;
-            LowerLength = 0;
+            MaxLength = maxlength;
+            MinLength = minLength;
         }
 
         public Vector2 LocalAnchorA { get; set; }
@@ -78,16 +81,16 @@ namespace FarseerPhysics.Dynamics.Joints
         public Vector2 LocalAnchorB { get; set; }
 
         /// <summary>
-        /// The natural length between the anchor points.
+        /// The maximum length between the anchor points.
         /// </summary>
         /// <value>The length.</value>
-        public float UpperLength { get; set; }
+        public float MaxLength { get; set; }
 
         /// <summary>
-        /// The natural length between the anchor points.
+        /// The minimal length between the anchor points.
         /// </summary>
         /// <value>The length.</value>
-        public float LowerLength { get; set; }
+        public float MinLength { get; set; }
 
         /// <summary>
         /// The mass-spring-damper frequency in Hertz.
@@ -139,7 +142,7 @@ namespace FarseerPhysics.Dynamics.Joints
             // Handle singularity.
             float length = _u.Length();
 
-            if (length < UpperLength && length > LowerLength)
+            if (length < MaxLength && length > MinLength)
             {
                 return;
             }
@@ -161,7 +164,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             if (Frequency > 0.0f)
             {
-                float C = length - UpperLength;
+                float C = length - MaxLength;
 
                 // Frequency
                 float omega = 2.0f * Settings.Pi * Frequency;
@@ -214,7 +217,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             float length = d.Length();
 
-            if (length < UpperLength && length > LowerLength)
+            if (length < MaxLength && length > MinLength)
             {
                 return;
             }
@@ -256,7 +259,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             float length = d.Length();
 
-            if (length < UpperLength && length > LowerLength)
+            if (length < MaxLength && length > MinLength)
             {
                 return true;
             }
@@ -265,7 +268,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 return true;
 
             d /= length;
-            float C = length - UpperLength;
+            float C = length - MaxLength;
             C = MathUtils.Clamp(C, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
 
             float impulse = -_mass * C;

@@ -123,11 +123,11 @@ namespace FarseerPhysics.Dynamics.Joints
         internal bool _islandFlag;
         protected Vector2 _localCenterA, _localCenterB;
 
-        protected Joint(Body bodyA, Body bodyB)
+        protected Joint(Body body, Body bodyB)
         {
-            Debug.Assert(bodyA != bodyB);
+            Debug.Assert(body != bodyB);
 
-            BodyA = bodyA;
+            BodyA = body;
             _edgeA = new JointEdge();
             BodyB = bodyB;
             _edgeB = new JointEdge();
@@ -139,9 +139,9 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Constructor for fixed joint
         /// </summary>
-        protected Joint(Body bodyA)
+        protected Joint(Body body)
         {
-            BodyA = bodyA;
+            BodyA = body;
 
             //Connected bodies should not collide by default
             CollideConnected = false;
@@ -188,9 +188,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Short-cut function to determine if either body is inactive.
         /// </summary>
-        /// <value>
-        ///   &lt;c&gt;true&lt;/c&gt; if this instance is active; otherwise, &lt;c&gt;false&lt;/c&gt;.
-        /// </value>
+        /// <value><c>true</c> if active; otherwise, <c>false</c>.</value>
         public bool Active
         {
             get { return BodyA.Active && BodyB.Active; }

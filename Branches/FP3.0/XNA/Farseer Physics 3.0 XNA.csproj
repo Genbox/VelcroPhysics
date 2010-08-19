@@ -233,9 +233,6 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\LineJoint.cs">
       <Link>Dynamics\Joints\LineJoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\MaxDistanceJoint.cs">
-      <Link>Dynamics\Joints\MaxDistanceJoint.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\PrismaticJoint.cs">
       <Link>Dynamics\Joints\PrismaticJoint.cs</Link>
     </Compile>

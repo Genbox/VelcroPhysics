@@ -46,7 +46,6 @@ namespace FarseerPhysics.Dynamics.Joints
         private FixedPrismaticJoint _fixedPrismatic2;
         private FixedRevoluteJoint _fixedRevolute1;
         private FixedRevoluteJoint _fixedRevolute2;
-        //private Body _ground1;
         private float _impulse;
         private float _mass;
         private PrismaticJoint _prismatic1;
@@ -54,15 +53,13 @@ namespace FarseerPhysics.Dynamics.Joints
         private RevoluteJoint _revolute1;
         private RevoluteJoint _revolute2;
 
-
         /// <summary>
-        /// requires two existing
-        /// revolute or prismatic joints (any combination will work).
+        /// Requires two existing revolute or prismatic joints (any combination will work).
         /// The provided joints must attach a dynamic body to a static body.
         /// </summary>
-        /// <param name="jointA"></param>
-        /// <param name="jointB"></param>
-        /// <param name="ratio"></param>
+        /// <param name="jointA">The first joint.</param>
+        /// <param name="jointB">The second joint.</param>
+        /// <param name="ratio">The ratio.</param>
         public GearJoint(Joint jointA, Joint jointB, float ratio)
             : base(jointA.BodyA, jointA.BodyB)
         {
@@ -91,8 +88,6 @@ namespace FarseerPhysics.Dynamics.Joints
                 Debug.Assert(jointB.BodyA.Type == BodyType.Static);
 
             float coordinate1 = 0.0f, coordinate2 = 0.0f;
-
-            //_ground1 = jointA.BodyA;
 
             switch (type1)
             {
@@ -200,7 +195,6 @@ namespace FarseerPhysics.Dynamics.Joints
 
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
-            //Body g1 = _ground1;
             Body b1 = BodyA;
             Body b2 = BodyB;
 

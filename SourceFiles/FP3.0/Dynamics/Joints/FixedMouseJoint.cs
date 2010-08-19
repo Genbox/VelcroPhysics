@@ -57,9 +57,6 @@ namespace FarseerPhysics.Dynamics.Joints
             DampingRatio = 0.7f;
 
             Debug.Assert(target.IsValid());
-            //Debug.Assert(MathUtils.IsValid(def.MaxForce) && def.MaxForce >= 0.0f);
-            //Debug.Assert(MathUtils.IsValid(def.FrequencyHz) && def.FrequencyHz >= 0.0f);
-            //Debug.Assert(MathUtils.IsValid(def.DampingRatio) && def.DampingRatio >= 0.0f);
 
             Transform xf1;
             BodyA.GetTransform(out xf1);

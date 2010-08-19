@@ -64,10 +64,11 @@ namespace FarseerPhysics.Dynamics.Joints
         /// when the local anchor points coincide in world space. Using local
         /// anchors and a local axis helps when saving and loading a game.
         /// </summary>
-        /// <param name="bodyA"></param>
-        /// <param name="bodyB"></param>
-        /// <param name="anchor"></param>
-        /// <param name="axis"></param>
+        /// <param name="bodyA">The first body.</param>
+        /// <param name="bodyB">The second body.</param>
+        /// <param name="anchorA">The first body anchor.</param>
+        /// <param name="anchorB">The second body anchor.</param>
+        /// <param name="axis">The axis.</param>
         public LineJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, Vector2 axis)
             : base(bodyA, bodyB)
         {
@@ -99,7 +100,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Enable/disable the joint limit.
         /// </summary>
-        /// <value>if set to &lt;c&gt;true&lt;/c&gt; [flag].</value>
+        /// <value><c>true</c> if [enable limit]; otherwise, <c>false</c>.</value>
         public bool EnableLimit
         {
             set
@@ -139,9 +140,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Enable/disable the joint motor.
         /// </summary>
-        /// <value>
-        ///   &lt;c&gt;true&lt;/c&gt; if [is motor enabled]; otherwise, &lt;c&gt;false&lt;/c&gt;.
-        /// </value>
+        /// <value><c>true</c> if [motor enabled]; otherwise, <c>false</c>.</value>
         public bool MotorEnabled
         {
             get { return _enableMotor; }

@@ -40,6 +40,21 @@ namespace FarseerPhysics.Factories
             return joint;
         }
 
+        /// <summary>
+        /// Creates the fixed revolute joint.
+        /// </summary>
+        /// <param name="world">The world.</param>
+        /// <param name="body">The body.</param>
+        /// <param name="bodyAnchor">The body anchor.</param>
+        /// <param name="worldAnchor">The world anchor.</param>
+        /// <returns></returns>
+        public static FixedRevoluteJoint CreateFixedRevoluteJoint(World world, Body body, Vector2 bodyAnchor, Vector2 worldAnchor)
+        {
+            FixedRevoluteJoint fixedRevoluteJoint = new FixedRevoluteJoint(body, bodyAnchor, worldAnchor);
+            world.AddJoint(fixedRevoluteJoint);
+            return fixedRevoluteJoint;
+        }
+
         #endregion
 
         #region Weld Joint
@@ -147,6 +162,14 @@ namespace FarseerPhysics.Factories
 
         #endregion
 
+        #region Angle Joint
+        /// <summary>
+        /// Creates an angle joint.
+        /// </summary>
+        /// <param name="world">The world.</param>
+        /// <param name="bodyA">The first body.</param>
+        /// <param name="bodyB">The second body.</param>
+        /// <returns></returns>
         public static AngleJoint CreateAngleJoint(World world, Body bodyA, Body bodyB)
         {
             AngleJoint angleJoint = new AngleJoint(bodyA, bodyB);
@@ -154,5 +177,20 @@ namespace FarseerPhysics.Factories
 
             return angleJoint;
         }
+
+        /// <summary>
+        /// Creates a fixed angle joint.
+        /// </summary>
+        /// <param name="world">The world.</param>
+        /// <param name="body">The body.</param>
+        /// <returns></returns>
+        public static FixedAngleJoint CreateFixedAngleJoint(World world, Body body)
+        {
+            FixedAngleJoint angleJoint = new FixedAngleJoint(body);
+            world.AddJoint(angleJoint);
+
+            return angleJoint;
+        }
+        #endregion
     }
 }
