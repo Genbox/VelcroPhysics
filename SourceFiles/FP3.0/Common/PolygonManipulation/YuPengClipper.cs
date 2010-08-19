@@ -61,7 +61,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
         /// <returns>A list of closed polygons, which make up the result of the clipping operation.
         /// Outer contours are ordered counter clockwise, holes are ordered clockwise.</returns>
         private static List<Vertices> Execute(Vertices subject, Vertices clip,
-                                             PolyClipType clipType, out PolyClipError error)
+                                              PolyClipType clipType, out PolyClipError error)
         {
             if (!subject.IsSimple() || !clip.IsSimple())
             {

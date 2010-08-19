@@ -31,7 +31,8 @@ namespace FarseerPhysics.Factories
             return CreateRectangle(world, width, height, density, position, null);
         }
 
-        public static Fixture CreateRectangle(World world, float width, float height, float density, Vector2 offset, Body body)
+        public static Fixture CreateRectangle(World world, float width, float height, float density, Vector2 offset,
+                                              Body body)
         {
             if (width <= 0)
                 throw new ArgumentOutOfRangeException("width", "Width must be more than 0");
@@ -177,8 +178,9 @@ namespace FarseerPhysics.Factories
         /// <param name="density">The density.</param>
         /// <param name="position">The position.</param>
         /// <returns></returns>
-        public static List<Fixture> CreateCapsule(World world, float height, float topRadius, int topEdges, float bottomRadius,
-                                                   int bottomEdges, float density, Vector2 position)
+        public static List<Fixture> CreateCapsule(World world, float height, float topRadius, int topEdges,
+                                                  float bottomRadius,
+                                                  int bottomEdges, float density, Vector2 position)
         {
             Vertices verts = PolygonTools.CreateCapsule(height, topRadius, topEdges, bottomRadius, bottomEdges);
 
@@ -192,7 +194,7 @@ namespace FarseerPhysics.Factories
                 return fixtureList;
             }
 
-            return new List<Fixture> { CreatePolygon(world, verts, density) };
+            return new List<Fixture> {CreatePolygon(world, verts, density)};
         }
 
         public static List<Fixture> CreateCapsule(World world, float height, float endRadius, float density)
@@ -244,7 +246,7 @@ namespace FarseerPhysics.Factories
                 return fixtureList;
             }
 
-            return new List<Fixture> { CreatePolygon(world, verts, density) };
+            return new List<Fixture> {CreatePolygon(world, verts, density)};
         }
 
         public static List<Fixture> CreateRoundedRectangle(World world, float width, float height, float xRadius,

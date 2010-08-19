@@ -12,11 +12,12 @@ namespace SimpleSamplesXNA.Demo4
     internal class Demo4Screen : GameScreen, IDemoScreen
     {
 #if XBOX
-        //Xbox360 can't handle as many geometries
+    //Xbox360 can't handle as many geometries
         private const int PyramidBaseBodyCount = 8;
 #else
         private const int PyramidBaseBodyCount = 16;
 #endif
+
         public override void Initialize()
         {
             World = new World(new Vector2(0, -20));

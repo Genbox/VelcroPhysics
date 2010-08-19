@@ -43,7 +43,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 newPolygon[i] = new Vertices(vertices.Count);
             }
 
-            int[] cutAdded = { -1, -1 };
+            int[] cutAdded = {-1, -1};
             int last = -1;
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -185,10 +185,12 @@ namespace FarseerPhysics.Common.PolygonManipulation
                     SplitShape(fixtures[i], entryPoints[i], exitPoints[i], thickness, out first, out second);
 
                     //Delete the original shape and create two new. Retain the properties of the body.
-                    Fixture firstFixture = FixtureFactory.CreatePolygon(world, first, fixtures[i].Density, fixtures[i].Body.Position);
+                    Fixture firstFixture = FixtureFactory.CreatePolygon(world, first, fixtures[i].Density,
+                                                                        fixtures[i].Body.Position);
                     firstFixture.Body.BodyType = BodyType.Dynamic;
 
-                    Fixture secondFixture = FixtureFactory.CreatePolygon(world, second, fixtures[i].Density, fixtures[i].Body.Position);
+                    Fixture secondFixture = FixtureFactory.CreatePolygon(world, second, fixtures[i].Density,
+                                                                         fixtures[i].Body.Position);
                     secondFixture.Body.BodyType = BodyType.Dynamic;
 
                     world.RemoveBody(fixtures[i].Body);

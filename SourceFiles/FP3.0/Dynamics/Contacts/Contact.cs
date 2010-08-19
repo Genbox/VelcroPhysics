@@ -408,40 +408,40 @@ namespace FarseerPhysics.Dynamics.Contacts
             {
                 case ContactType.Polygon:
                     Collision.Collision.CollidePolygons(ref manifold,
-                                                        (PolygonShape)FixtureA.Shape, ref transformA,
-                                                        (PolygonShape)FixtureB.Shape, ref transformB);
+                                                        (PolygonShape) FixtureA.Shape, ref transformA,
+                                                        (PolygonShape) FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.PolygonAndCircle:
                     Collision.Collision.CollidePolygonAndCircle(ref manifold,
-                                                                (PolygonShape)FixtureA.Shape, ref transformA,
-                                                                (CircleShape)FixtureB.Shape, ref transformB);
+                                                                (PolygonShape) FixtureA.Shape, ref transformA,
+                                                                (CircleShape) FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.EdgeAndCircle:
                     Collision.Collision.CollideEdgeAndCircle(ref manifold,
-                                                             (EdgeShape)FixtureA.Shape, ref transformA,
-                                                             (CircleShape)FixtureB.Shape, ref transformB);
+                                                             (EdgeShape) FixtureA.Shape, ref transformA,
+                                                             (CircleShape) FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.EdgeAndPolygon:
                     Collision.Collision.CollideEdgeAndPolygon(ref manifold,
-                                                              (EdgeShape)FixtureA.Shape, ref transformA,
-                                                              (PolygonShape)FixtureB.Shape, ref transformB);
+                                                              (EdgeShape) FixtureA.Shape, ref transformA,
+                                                              (PolygonShape) FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.LoopAndCircle:
-                    var loop = (LoopShape)FixtureA.Shape;
+                    var loop = (LoopShape) FixtureA.Shape;
                     loop.GetChildEdge(ref _edge, ChildIndexA);
                     Collision.Collision.CollideEdgeAndCircle(ref manifold, _edge, ref transformA,
-                                                             (CircleShape)FixtureB.Shape, ref transformB);
+                                                             (CircleShape) FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.LoopAndPolygon:
-                    var loop2 = (LoopShape)FixtureA.Shape;
+                    var loop2 = (LoopShape) FixtureA.Shape;
                     loop2.GetChildEdge(ref _edge, ChildIndexA);
                     Collision.Collision.CollideEdgeAndPolygon(ref manifold, _edge, ref transformA,
-                                                              (PolygonShape)FixtureB.Shape, ref transformB);
+                                                              (PolygonShape) FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.Circle:
                     Collision.Collision.CollideCircles(ref manifold,
-                                                       (CircleShape)FixtureA.Shape, ref transformA,
-                                                       (CircleShape)FixtureB.Shape, ref transformB);
+                                                       (CircleShape) FixtureA.Shape, ref transformA,
+                                                       (CircleShape) FixtureB.Shape, ref transformB);
                     break;
             }
         }
@@ -485,7 +485,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                 }
             }
 
-            c._type = _registers[(int)type1, (int)type2];
+            c._type = _registers[(int) type1, (int) type2];
 
             return c;
         }

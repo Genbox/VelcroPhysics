@@ -28,19 +28,29 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             circle.Body.BodyType = BodyType.Dynamic;
 
             //Left upper leg
-            Fixture leftUpper = FixtureFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 1, circle.Body.Position - new Vector2(SpiderBodyRadius, 0) - new Vector2(_upperLegSize.X / 2, 0));
+            Fixture leftUpper = FixtureFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 1,
+                                                               circle.Body.Position - new Vector2(SpiderBodyRadius, 0) -
+                                                               new Vector2(_upperLegSize.X / 2, 0));
             leftUpper.Body.BodyType = BodyType.Dynamic;
 
             //Left lower leg
-            Fixture leftLower = FixtureFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 1, circle.Body.Position - new Vector2(SpiderBodyRadius, 0) - new Vector2(_upperLegSize.X, 0) - new Vector2(_lowerLegSize.X / 2, 0));
+            Fixture leftLower = FixtureFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 1,
+                                                               circle.Body.Position - new Vector2(SpiderBodyRadius, 0) -
+                                                               new Vector2(_upperLegSize.X, 0) -
+                                                               new Vector2(_lowerLegSize.X / 2, 0));
             leftLower.Body.BodyType = BodyType.Dynamic;
 
             //Right upper leg
-            Fixture rightUpper = FixtureFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 1, circle.Body.Position + new Vector2(SpiderBodyRadius, 0) + new Vector2(_upperLegSize.X / 2, 0));
+            Fixture rightUpper = FixtureFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 1,
+                                                                circle.Body.Position + new Vector2(SpiderBodyRadius, 0) +
+                                                                new Vector2(_upperLegSize.X / 2, 0));
             rightUpper.Body.BodyType = BodyType.Dynamic;
 
             //Right lower leg
-            Fixture rightLower = FixtureFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 1, circle.Body.Position + new Vector2(SpiderBodyRadius, 0) + new Vector2(_upperLegSize.X, 0) + new Vector2(_lowerLegSize.X / 2, 0));
+            Fixture rightLower = FixtureFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 1,
+                                                                circle.Body.Position + new Vector2(SpiderBodyRadius, 0) +
+                                                                new Vector2(_upperLegSize.X, 0) +
+                                                                new Vector2(_lowerLegSize.X / 2, 0));
             rightLower.Body.BodyType = BodyType.Dynamic;
 
             //Create joints
@@ -58,7 +68,8 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             _leftKneeAngleJoint = JointFactory.CreateAngleJoint(world, leftUpper.Body, leftLower.Body);
             _leftKneeAngleJoint.MaxImpulse = 3;
 
-            JointFactory.CreateRevoluteJoint(world, rightUpper.Body, rightLower.Body, -new Vector2(_upperLegSize.X / 2, 0));
+            JointFactory.CreateRevoluteJoint(world, rightUpper.Body, rightLower.Body,
+                                             -new Vector2(_upperLegSize.X / 2, 0));
             _rightKneeAngleJoint = JointFactory.CreateAngleJoint(world, rightUpper.Body, rightLower.Body);
             _rightKneeAngleJoint.MaxImpulse = 3;
         }

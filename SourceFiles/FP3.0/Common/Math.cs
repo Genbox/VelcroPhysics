@@ -21,7 +21,6 @@
 */
 
 using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 
@@ -250,10 +249,8 @@ namespace FarseerPhysics.Common
         [StructLayout(LayoutKind.Explicit)]
         internal struct FloatConverter
         {
-            [FieldOffset(0)]
-            public float x;
-            [FieldOffset(0)]
-            public int i;
+            [FieldOffset(0)] public float x;
+            [FieldOffset(0)] public int i;
         }
 
         #endregion
@@ -283,7 +280,7 @@ namespace FarseerPhysics.Common
         public Mat22(float angle)
         {
             // TODO_ERIN compute sin+cos together.
-            float c = (float)Math.Cos(angle), s = (float)Math.Sin(angle);
+            float c = (float) Math.Cos(angle), s = (float) Math.Sin(angle);
             col1 = new Vector2(c, s);
             col2 = new Vector2(-s, c);
         }
@@ -299,7 +296,7 @@ namespace FarseerPhysics.Common
         /// an orthonormal rotation matrix.
         public void Set(float angle)
         {
-            float c = (float)Math.Cos(angle), s = (float)Math.Sin(angle);
+            float c = (float) Math.Cos(angle), s = (float) Math.Sin(angle);
             col1.X = c;
             col2.X = -s;
             col1.Y = s;
@@ -328,7 +325,7 @@ namespace FarseerPhysics.Common
         /// a rotation matrix).
         public float GetAngle()
         {
-            return (float)Math.Atan2(col1.Y, col1.X);
+            return (float) Math.Atan2(col1.Y, col1.X);
         }
 
         public Mat22 GetInverse()
@@ -447,7 +444,7 @@ namespace FarseerPhysics.Common
         /// Calculate the angle that the rotation matrix represents.
         public float GetAngle()
         {
-            return (float)Math.Atan2(R.col1.Y, R.col1.X);
+            return (float) Math.Atan2(R.col1.Y, R.col1.X);
         }
     }
 
@@ -497,8 +494,8 @@ namespace FarseerPhysics.Common
         /// Normalize the angles.
         public void Normalize()
         {
-            float twoPi = 2.0f * (float)Math.PI;
-            float d = twoPi * (float)Math.Floor(a0 / twoPi);
+            float twoPi = 2.0f * (float) Math.PI;
+            float d = twoPi * (float) Math.Floor(a0 / twoPi);
             a0 -= d;
             a -= d;
         }
