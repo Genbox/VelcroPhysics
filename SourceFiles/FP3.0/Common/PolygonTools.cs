@@ -73,6 +73,7 @@ namespace FarseerPhysics.Common
         }
 
         //Contributed by Jonathan Smars - jsmars@gmail.com
+      
         /// <summary>
         /// Creates a rounded rectangle with the specified width and height.
         /// </summary>
@@ -186,6 +187,7 @@ namespace FarseerPhysics.Common
         }
 
         //Contributed by Yobiv
+      
         /// <summary>
         /// Creates an capsule with the specified height, radius and number of edges.
         /// A capsule has the same form as a pill capsule.

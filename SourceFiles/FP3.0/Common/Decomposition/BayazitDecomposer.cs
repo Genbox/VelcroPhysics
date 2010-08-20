@@ -215,22 +215,22 @@ namespace FarseerPhysics.Common.Decomposition
 
         private static bool Left(Vector2 a, Vector2 b, Vector2 c)
         {
-            return MathUtils.Area(a, b, c) > 0;
+            return MathUtils.Area(ref a, ref b, ref c) > 0;
         }
 
         private static bool LeftOn(Vector2 a, Vector2 b, Vector2 c)
         {
-            return MathUtils.Area(a, b, c) >= 0;
+            return MathUtils.Area(ref a, ref b, ref c) >= 0;
         }
 
         private static bool Right(Vector2 a, Vector2 b, Vector2 c)
         {
-            return MathUtils.Area(a, b, c) < 0;
+            return MathUtils.Area(ref a, ref b, ref c) < 0;
         }
 
         private static bool RightOn(Vector2 a, Vector2 b, Vector2 c)
         {
-            return MathUtils.Area(a, b, c) <= 0;
+            return MathUtils.Area(ref a, ref b, ref c) <= 0;
         }
 
         private static float SquareDist(Vector2 a, Vector2 b)

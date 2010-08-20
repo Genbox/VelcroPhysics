@@ -407,7 +407,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
         /// <remarks>Used by method <c>CalculateSimplicalChain()</c>.</remarks>
         private static float CalculateSimplexCoefficient(Vector2 a, Vector2 b, Vector2 c)
         {
-            float isLeft = MathUtils.Area(a, b, c);
+            float isLeft = MathUtils.Area(ref a, ref b, ref c);
             if (isLeft < 0f)
             {
                 return -1f;
@@ -433,7 +433,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
             polygon.Add(Vector2.Zero);
             polygon.Add(edge.EdgeStart);
             polygon.Add(edge.EdgeEnd);
-            return polygon.PointInPolygon(point);
+            return polygon.PointInPolygon(ref point);
         }
 
         /// <summary>Tests if a point lies on a line segment.</summary>
@@ -441,7 +441,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
         private static bool PoinOnLineSegment(Vector2 start, Vector2 end, Vector2 point)
         {
             Vector2 segment = end - start;
-            return MathUtils.Area(start, end, point) == 0f &&
+            return MathUtils.Area(ref start, ref end, ref point) == 0f &&
                    Vector2.Dot(point - start, segment) >= 0f &&
                    Vector2.Dot(point - end, segment) <= 0f;
         }

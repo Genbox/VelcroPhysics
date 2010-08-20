@@ -457,7 +457,7 @@ namespace FarseerPhysics.Dynamics
         /// <value>The local position.</value>
         public Vector2 LocalCenter
         {
-            get { return Sweep.localCenter; }
+            get { return Sweep.LocalCenter; }
             set
             {
                 Debug.Assert(World.IsLocked == false);
@@ -473,8 +473,8 @@ namespace FarseerPhysics.Dynamics
 
                 // Move center of mass.
                 Vector2 oldCenter = Sweep.c;
-                Sweep.localCenter = value;
-                Sweep.c0 = Sweep.c = MathUtils.Multiply(ref Xf, Sweep.localCenter);
+                Sweep.LocalCenter = value;
+                Sweep.c0 = Sweep.c = MathUtils.Multiply(ref Xf, Sweep.LocalCenter);
 
                 // Update center of mass velocity.
                 LinearVelocityInternal += MathUtils.Cross(AngularVelocityInternal, Sweep.c - oldCenter);
@@ -517,7 +517,7 @@ namespace FarseerPhysics.Dynamics
         /// <value>The inertia.</value>
         public float Inertia
         {
-            get { return _inertia + Mass * Vector2.Dot(Sweep.localCenter, Sweep.localCenter); }
+            get { return _inertia + Mass * Vector2.Dot(Sweep.LocalCenter, Sweep.LocalCenter); }
             set
             {
                 Debug.Assert(World.IsLocked == false);
@@ -697,7 +697,7 @@ namespace FarseerPhysics.Dynamics
             Xf.R.Set(angle);
             Xf.Position = position;
 
-            Sweep.c0 = Sweep.c = MathUtils.Multiply(ref Xf, Sweep.localCenter);
+            Sweep.c0 = Sweep.c = MathUtils.Multiply(ref Xf, Sweep.LocalCenter);
             Sweep.a0 = Sweep.a = angle;
 
             BroadPhase broadPhase = World.ContactManager.BroadPhase;
@@ -839,7 +839,7 @@ namespace FarseerPhysics.Dynamics
             InvMass = 0.0f;
             _inertia = 0.0f;
             InvI = 0.0f;
-            Sweep.localCenter = Vector2.Zero;
+            Sweep.LocalCenter = Vector2.Zero;
 
             // Kinematic bodies have zero mass.
             if (BodyType == BodyType.Kinematic)
@@ -902,8 +902,8 @@ namespace FarseerPhysics.Dynamics
 
             // Move center of mass.
             Vector2 oldCenter = Sweep.c;
-            Sweep.localCenter = center;
-            Sweep.c0 = Sweep.c = MathUtils.Multiply(ref Xf, Sweep.localCenter);
+            Sweep.LocalCenter = center;
+            Sweep.c0 = Sweep.c = MathUtils.Multiply(ref Xf, Sweep.LocalCenter);
 
             // Update center of mass velocity.
             LinearVelocityInternal += MathUtils.Cross(AngularVelocityInternal, Sweep.c - oldCenter);
@@ -1033,7 +1033,7 @@ namespace FarseerPhysics.Dynamics
         {
             Transform xf1 = new Transform();
             xf1.R.Set(Sweep.a0);
-            xf1.Position = Sweep.c0 - MathUtils.Multiply(ref xf1.R, ref Sweep.localCenter);
+            xf1.Position = Sweep.c0 - MathUtils.Multiply(ref xf1.R, ref Sweep.LocalCenter);
 
             BroadPhase broadPhase = World.ContactManager.BroadPhase;
             foreach (Fixture f in FixtureList)
@@ -1045,7 +1045,7 @@ namespace FarseerPhysics.Dynamics
         internal void SynchronizeTransform()
         {
             Xf.R.Set(Sweep.a);
-            Xf.Position = Sweep.c - MathUtils.Multiply(ref Xf.R, ref Sweep.localCenter);
+            Xf.Position = Sweep.c - MathUtils.Multiply(ref Xf.R, ref Sweep.LocalCenter);
         }
 
         /// <summary>

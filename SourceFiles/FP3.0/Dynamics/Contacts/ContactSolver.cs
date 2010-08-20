@@ -107,8 +107,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                 Manifold manifold;
                 contact.GetManifold(out manifold);
 
-                float friction = Settings.b2MixFriction(fixtureA.Friction, fixtureB.Friction);
-                float restitution = Settings.b2MixRestitution(fixtureA.Restitution, fixtureB.Restitution);
+                float friction = Settings.MixFriction(fixtureA.Friction, fixtureB.Friction);
+                float restitution = Settings.MixRestitution(fixtureA.Restitution, fixtureB.Restitution);
 
                 Vector2 vA = bodyA.LinearVelocityInternal;
                 Vector2 vB = bodyB.LinearVelocityInternal;

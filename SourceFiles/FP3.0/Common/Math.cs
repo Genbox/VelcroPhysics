@@ -116,8 +116,14 @@ namespace FarseerPhysics.Common
             b = tmp;
         }
 
+        /// <summary>
         /// This function is used to ensure that a floating point number is
         /// not a NaN or infinity.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified x is valid; otherwise, <c>false</c>.
+        /// </returns>
         public static bool IsValid(float x)
         {
             if (float.IsNaN(x))
@@ -134,8 +140,11 @@ namespace FarseerPhysics.Common
             return IsValid(x.X) && IsValid(x.Y);
         }
 
-
+        /// <summary>
         /// This is a approximate yet fast inverse square-root.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <returns></returns>
         public static float InvSqrt(float x)
         {
             FloatConverter convert = new FloatConverter();
@@ -185,10 +194,12 @@ namespace FarseerPhysics.Common
             return (dtheta);
         }
 
-        /// <summary>Returns a positive number if c is to the left of the line going from a to b.</summary>
+        /// <summary>
+        /// Returns a positive number if c is to the left of the line going from a to b.
+        /// </summary>
         /// <returns>Positive number if point is left, negative if point is right, 
         /// and 0 if points are collinear.</returns>
-        public static float Area(Vector2 a, Vector2 b, Vector2 c)
+        public static float Area(ref Vector2 a, ref Vector2 b, ref Vector2 c)
         {
             return a.X * (b.Y - c.Y) + b.X * (c.Y - a.Y) + c.X * (a.Y - b.Y);
         }
@@ -200,14 +211,14 @@ namespace FarseerPhysics.Common
         /// <param name="b">Second vertex</param>
         /// <param name="c">Third vertex</param>
         /// <returns></returns>
-        public static bool Collinear(Vector2 a, Vector2 b, Vector2 c)
+        public static bool Collinear(ref Vector2 a, ref Vector2 b, ref Vector2 c)
         {
-            return Collinear(a, b, c, 0);
+            return Collinear(ref a, ref b, ref c, 0);
         }
 
-        public static bool Collinear(Vector2 a, Vector2 b, Vector2 c, float tolerance)
+        public static bool Collinear(ref Vector2 a, ref Vector2 b, ref Vector2 c, float tolerance)
         {
-            return FloatInRange(Area(a, b, c), -tolerance, tolerance);
+            return FloatInRange(Area(ref a, ref b, ref c), -tolerance, tolerance);
         }
 
         public static void Cross(float s, ref Vector2 a, out Vector2 b)
@@ -252,61 +263,87 @@ namespace FarseerPhysics.Common
         [StructLayout(LayoutKind.Explicit)]
         internal struct FloatConverter
         {
-            [FieldOffset(0)] public float x;
-            [FieldOffset(0)] public int i;
+            [FieldOffset(0)]
+            public float x;
+            [FieldOffset(0)]
+            public int i;
         }
 
         #endregion
     }
 
+    /// <summary>
     /// A 2-by-2 matrix. Stored in column-major order.
+    /// </summary>
     public struct Mat22
     {
         public Vector2 col1, col2;
 
+        /// <summary>
         /// construct this matrix using columns.
+        /// </summary>
+        /// <param name="c1">The c1.</param>
+        /// <param name="c2">The c2.</param>
         public Mat22(Vector2 c1, Vector2 c2)
         {
             col1 = c1;
             col2 = c2;
         }
 
+        /// <summary>
         /// construct this matrix using scalars.
+        /// </summary>
+        /// <param name="a11">The a11.</param>
+        /// <param name="a12">The a12.</param>
+        /// <param name="a21">The a21.</param>
+        /// <param name="a22">The a22.</param>
         public Mat22(float a11, float a12, float a21, float a22)
         {
             col1 = new Vector2(a11, a21);
             col2 = new Vector2(a12, a22);
         }
 
+        /// <summary>
         /// construct this matrix using an angle. This matrix becomes
         /// an orthonormal rotation matrix.
+        /// </summary>
+        /// <param name="angle">The angle.</param>
         public Mat22(float angle)
         {
             // TODO_ERIN compute sin+cos together.
-            float c = (float) Math.Cos(angle), s = (float) Math.Sin(angle);
+            float c = (float)Math.Cos(angle), s = (float)Math.Sin(angle);
             col1 = new Vector2(c, s);
             col2 = new Vector2(-s, c);
         }
 
+        /// <summary>
         /// Initialize this matrix using columns.
+        /// </summary>
+        /// <param name="c1">The c1.</param>
+        /// <param name="c2">The c2.</param>
         public void Set(Vector2 c1, Vector2 c2)
         {
             col1 = c1;
             col2 = c2;
         }
 
+        /// <summary>
         /// Initialize this matrix using an angle. This matrix becomes
         /// an orthonormal rotation matrix.
+        /// </summary>
+        /// <param name="angle">The angle.</param>
         public void Set(float angle)
         {
-            float c = (float) Math.Cos(angle), s = (float) Math.Sin(angle);
+            float c = (float)Math.Cos(angle), s = (float)Math.Sin(angle);
             col1.X = c;
             col2.X = -s;
             col1.Y = s;
             col2.Y = c;
         }
 
+        /// <summary>
         /// Set this to the identity matrix.
+        /// </summary>
         public void SetIdentity()
         {
             col1.X = 1.0f;
@@ -315,7 +352,9 @@ namespace FarseerPhysics.Common
             col2.Y = 1.0f;
         }
 
+        /// <summary>
         /// Set this matrix to all zeros.
+        /// </summary>
         public void SetZero()
         {
             col1.X = 0.0f;
@@ -324,11 +363,14 @@ namespace FarseerPhysics.Common
             col2.Y = 0.0f;
         }
 
+        /// <summary>
         /// Extract the angle from this matrix (assumed to be
         /// a rotation matrix).
+        /// </summary>
+        /// <returns></returns>
         public float GetAngle()
         {
-            return (float) Math.Atan2(col1.Y, col1.X);
+            return (float)Math.Atan2(col1.Y, col1.X);
         }
 
         public Mat22 GetInverse()
@@ -343,8 +385,12 @@ namespace FarseerPhysics.Common
             return new Mat22(new Vector2(det * d, -det * c), new Vector2(-det * b, det * a));
         }
 
+        /// <summary>
         /// Solve A * x = b, where b is a column vector. This is more efficient
         /// than computing the inverse in one-shot cases.
+        /// </summary>
+        /// <param name="b">The b.</param>
+        /// <returns></returns>
         public Vector2 Solve(Vector2 b)
         {
             float a11 = col1.X, a12 = col2.X, a21 = col1.Y, a22 = col2.Y;
@@ -363,12 +409,19 @@ namespace FarseerPhysics.Common
         }
     }
 
+    /// <summary>
     /// A 3-by-3 matrix. Stored in column-major order.
+    /// </summary>
     public struct Mat33
     {
         public Vector3 col1, col2, col3;
 
-        /// construct this matrix using columns.
+        /// <summary>
+        /// Construct this matrix using columns.
+        /// </summary>
+        /// <param name="c1">The c1.</param>
+        /// <param name="c2">The c2.</param>
+        /// <param name="c3">The c3.</param>
         public Mat33(Vector3 c1, Vector3 c2, Vector3 c3)
         {
             col1 = c1;
@@ -376,7 +429,9 @@ namespace FarseerPhysics.Common
             col3 = c3;
         }
 
+        /// <summary>
         /// Set this matrix to all zeros.
+        /// </summary>
         public void SetZero()
         {
             col1 = Vector3.Zero;
@@ -384,8 +439,12 @@ namespace FarseerPhysics.Common
             col3 = Vector3.Zero;
         }
 
+        /// <summary>
         /// Solve A * x = b, where b is a column vector. This is more efficient
         /// than computing the inverse in one-shot cases.
+        /// </summary>
+        /// <param name="b">The b.</param>
+        /// <returns></returns>
         public Vector3 Solve33(Vector3 b)
         {
             float det = Vector3.Dot(col1, Vector3.Cross(col2, col3));
@@ -399,9 +458,13 @@ namespace FarseerPhysics.Common
                                det * Vector3.Dot(col1, Vector3.Cross(col2, b)));
         }
 
+        /// <summary>
         /// Solve A * x = b, where b is a column vector. This is more efficient
         /// than computing the inverse in one-shot cases. Solve only the upper
         /// 2-by-2 matrix equation.
+        /// </summary>
+        /// <param name="b">The b.</param>
+        /// <returns></returns>
         public Vector2 Solve22(Vector2 b)
         {
             float a11 = col1.X, a12 = col2.X, a21 = col1.Y, a22 = col2.Y;
@@ -416,65 +479,85 @@ namespace FarseerPhysics.Common
         }
     }
 
+    /// <summary>
     /// A transform contains translation and rotation. It is used to represent
     /// the position and orientation of rigid frames.
+    /// </summary>
     public struct Transform
     {
         public Vector2 Position;
         public Mat22 R;
 
+        /// <summary>
         /// Initialize using a position vector and a rotation matrix.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <param name="r">The r.</param>
         public Transform(Vector2 position, ref Mat22 r)
         {
             Position = position;
             R = r;
         }
 
+        /// <summary>
         /// Set this to the identity transform.
+        /// </summary>
         public void SetIdentity()
         {
             Position = Vector2.Zero;
             R.SetIdentity();
         }
 
+        /// <summary>
         /// Set this based on the position and angle.
-        public void Set(Vector2 p, float angle)
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <param name="angle">The angle.</param>
+        public void Set(Vector2 position, float angle)
         {
-            Position = p;
+            Position = position;
             R.Set(angle);
         }
 
+        /// <summary>
         /// Calculate the angle that the rotation matrix represents.
+        /// </summary>
+        /// <returns></returns>
         public float GetAngle()
         {
-            return (float) Math.Atan2(R.col1.Y, R.col1.X);
+            return (float)Math.Atan2(R.col1.Y, R.col1.X);
         }
     }
 
+    /// <summary>
     /// This describes the motion of a body/shape for TOI computation.
     /// Shapes are defined with respect to the body origin, which may
     /// no coincide with the center of mass. However, to support dynamics
     /// we must interpolate the center of mass position.
+    /// </summary>
     public struct Sweep
     {
-        ///< center world positions
+        /// <summary>
+        /// World angles
+        /// </summary>
         public float a;
 
-        ///< world angles
-        ///< center world positions
         public float a0;
 
-        ///< world angles
-        ///< local center of mass position
         public Vector2 c;
 
-        ///< local center of mass position
         public Vector2 c0;
 
-        public Vector2 localCenter;
+        /// <summary>
+        /// Local center of mass position
+        /// </summary>
+        public Vector2 LocalCenter;
 
+        /// <summary>
         /// Get the interpolated transform at a specific time.
-        /// @param alpha is a factor in [0,1], where 0 indicates t0.
+        /// </summary>
+        /// <param name="xf">The xf.</param>
+        /// <param name="alpha">alpha is a factor in [0,1], where 0 indicates t0..</param>
         public void GetTransform(out Transform xf, float alpha)
         {
             xf = new Transform();
@@ -483,22 +566,26 @@ namespace FarseerPhysics.Common
             xf.R.Set(angle);
 
             // Shift to origin
-            xf.Position -= MathUtils.Multiply(ref xf.R, localCenter);
+            xf.Position -= MathUtils.Multiply(ref xf.R, LocalCenter);
         }
 
+        /// <summary>
         /// Advance the sweep forward, yielding a new initial state.
-        /// @param t the new initial time.
+        /// </summary>
+        /// <param name="t">new initial time..</param>
         public void Advance(float t)
         {
             c0 = (1.0f - t) * c0 + t * c;
             a0 = (1.0f - t) * a0 + t * a;
         }
 
+        /// <summary>
         /// Normalize the angles.
+        /// </summary>
         public void Normalize()
         {
-            float twoPi = 2.0f * (float) Math.PI;
-            float d = twoPi * (float) Math.Floor(a0 / twoPi);
+            float twoPi = 2.0f * (float)Math.PI;
+            float d = twoPi * (float)Math.Floor(a0 / twoPi);
             a0 -= d;
             a -= d;
         }
