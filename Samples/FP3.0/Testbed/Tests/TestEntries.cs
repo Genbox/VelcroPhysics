@@ -28,13 +28,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {
-                new TestEntry {Name = "Revolute", CreateFcn = RevoluteTest.Create},
-                new TestEntry {Name = "Slider Joint", CreateFcn = SliderJointTest.Create},
-                new TestEntry {Name = "YuPeng Polygon", CreateFcn = YuPengPolygonTest.Create},
-                new TestEntry {Name = "Pinball", CreateFcn = PinballTest.Create},
-                new TestEntry {Name = "Web", CreateFcn = WebTest.Create},
-                new TestEntry {Name = "Breakable", CreateFcn = BreakableTest.Create},
-                //original
+                //Original tests
                 new TestEntry {Name = "Character collision", CreateFcn = CharacterCollisionTest.Create},
                 new TestEntry {Name = "Edge Test", CreateFcn = EdgeTest.Create},
                 new TestEntry {Name = "Tiles", CreateFcn = TilesTest.Create},
@@ -57,7 +51,6 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Cantilever", CreateFcn = CantileverTest.Create},
                 new TestEntry {Name = "SphereStack", CreateFcn = SphereStackTest.Create},
                 new TestEntry {Name = "Bridge", CreateFcn = BridgeTest.Create},
-                //new TestEntry {Name = "Breakable", CreateFcn = BreakableTest.Create},
                 new TestEntry {Name = "Chain", CreateFcn = ChainTest.Create},
                 new TestEntry {Name = "Collision Filtering", CreateFcn = CollisionFilteringTest.Create},
                 new TestEntry {Name = "Collision Processing", CreateFcn = CollisionProcessingTest.Create},
@@ -73,14 +66,20 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Shape Editing", CreateFcn = ShapeEditingTest.Create},
                 new TestEntry {Name = "Slider Crank", CreateFcn = SliderCrankTest.Create},
                 new TestEntry {Name = "Varying Friction", CreateFcn = VaryingFrictionTest.Create},
+                new TestEntry {Name = "Pinball", CreateFcn = PinballTest.Create},
+                new TestEntry {Name = "Web", CreateFcn = WebTest.Create},
+                new TestEntry {Name = "Revolute", CreateFcn = RevoluteTest.Create},
+
                 //FPE 3.0 specific tests
+                new TestEntry {Name = "YuPeng Polygon", CreateFcn = YuPengPolygonTest.Create},
                 new TestEntry {Name = "Path Test", CreateFcn = PathTest.Create},
-                //new TestEntry {Name = "Buoyancy controller", CreateFcn = BuoyancyTest.Create},
                 new TestEntry {Name = "Cutting of polygons", CreateFcn = CuttingTest.Create},
                 new TestEntry {Name = "Controllers", CreateFcn = ControllerTest.Create},
                 new TestEntry {Name = "Texture to Vertices", CreateFcn = TextureVerticesTest.Create},
                 new TestEntry {Name = "Polygon shapes", CreateFcn = PolygonShapesTest.Create},
-                new TestEntry {Name = "Anglejoint", CreateFcn = AngleJointTest.Create},
+                new TestEntry {Name = "Angle Joint", CreateFcn = AngleJointTest.Create},
+                new TestEntry {Name = "Slider Joint", CreateFcn = SliderJointTest.Create},
+                new TestEntry {Name = "Breakable", CreateFcn = BreakableTest.Create},
                 new TestEntry {Name = null, CreateFcn = null}
             };
     }
