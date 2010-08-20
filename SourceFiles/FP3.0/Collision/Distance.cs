@@ -31,23 +31,29 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Collision
 {
+    /// <summary>
     /// A distance proxy is used by the GJK algorithm.
     /// It encapsulates any shape.
+    /// </summary>
     public struct DistanceProxy
     {
         internal FixedArray2<Vector2> Buffer;
         internal float Radius;
         internal Vertices Vertices;
 
+        /// <summary>
         /// Initialize the proxy using the given shape. The shape
         /// must remain in scope while the proxy is in use.
+        /// </summary>
+        /// <param name="shape">The shape.</param>
+        /// <param name="index">The index.</param>
         public void Set(Shape shape, int index)
         {
             switch (shape.ShapeType)
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape) shape;
+                        CircleShape circle = (CircleShape)shape;
                         Vertices = new Vertices(1);
                         Vertices.Add(circle.Position);
                         Radius = circle.Radius;
@@ -56,7 +62,7 @@ namespace FarseerPhysics.Collision
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape polygon = (PolygonShape) shape;
+                        PolygonShape polygon = (PolygonShape)shape;
                         Vertices = polygon.Vertices;
                         Radius = polygon.Radius;
                     }
@@ -64,7 +70,7 @@ namespace FarseerPhysics.Collision
 
                 case ShapeType.Loop:
                     {
-                        LoopShape loop = (LoopShape) shape;
+                        LoopShape loop = (LoopShape)shape;
                         Debug.Assert(0 <= index && index < loop.Count);
 
                         Buffer[0] = loop.Vertices[index];
@@ -86,7 +92,7 @@ namespace FarseerPhysics.Collision
 
                 case ShapeType.Edge:
                     {
-                        EdgeShape edge = (EdgeShape) shape;
+                        EdgeShape edge = (EdgeShape)shape;
                         Vertices = new Vertices(2);
                         Vertices.Add(edge.Vertex1);
                         Vertices.Add(edge.Vertex2);
@@ -100,14 +106,18 @@ namespace FarseerPhysics.Collision
             }
         }
 
+        /// <summary>
         /// Get the supporting vertex index in the given direction.
-        public int GetSupport(Vector2 d)
+        /// </summary>
+        /// <param name="direction">The direction.</param>
+        /// <returns></returns>
+        public int GetSupport(Vector2 direction)
         {
             int bestIndex = 0;
-            float bestValue = Vector2.Dot(Vertices[0], d);
+            float bestValue = Vector2.Dot(Vertices[0], direction);
             for (int i = 1; i < Vertices.Count; ++i)
             {
-                float value = Vector2.Dot(Vertices[i], d);
+                float value = Vector2.Dot(Vertices[i], direction);
                 if (value > bestValue)
                 {
                     bestIndex = i;
@@ -118,14 +128,18 @@ namespace FarseerPhysics.Collision
             return bestIndex;
         }
 
+        /// <summary>
         /// Get the supporting vertex in the given direction.
-        public Vector2 GetSupportVertex(Vector2 d)
+        /// </summary>
+        /// <param name="direction">The direction.</param>
+        /// <returns></returns>
+        public Vector2 GetSupportVertex(Vector2 direction)
         {
             int bestIndex = 0;
-            float bestValue = Vector2.Dot(Vertices[0], d);
+            float bestValue = Vector2.Dot(Vertices[0], direction);
             for (int i = 1; i < Vertices.Count; ++i)
             {
-                float value = Vector2.Dot(Vertices[i], d);
+                float value = Vector2.Dot(Vertices[i], direction);
                 if (value > bestValue)
                 {
                     bestIndex = i;
@@ -136,7 +150,11 @@ namespace FarseerPhysics.Collision
             return Vertices[bestIndex];
         }
 
+        /// <summary>
         /// Get a vertex by index. Used by b2Distance.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns></returns>
         public Vector2 GetVertex(int index)
         {
             Debug.Assert(0 <= index && index < Vertices.Count);
@@ -144,25 +162,35 @@ namespace FarseerPhysics.Collision
         }
     }
 
+    /// <summary>
     /// Used to warm start ComputeDistance.
     /// Set count to zero on first call.
+    /// </summary>
     public struct SimplexCache
     {
+        /// <summary>
         /// Length or area
-        public UInt16 Count;
+        /// </summary>
+        public ushort Count;
 
+        /// <summary>
         /// Vertices on shape A
+        /// </summary>
         public FixedArray3<byte> IndexA;
 
+        /// <summary>
         /// Vertices on shape B
+        /// </summary>
         public FixedArray3<byte> IndexB;
 
         public float Metric;
     }
 
+    /// <summary>
     /// Input for ComputeDistance.
     /// You have to option to use the shape radii
-    /// in the computation. Even 
+    /// in the computation. 
+    /// </summary>
     public struct DistanceInput
     {
         public DistanceProxy ProxyA;
@@ -172,7 +200,9 @@ namespace FarseerPhysics.Collision
         public bool UseRadii;
     }
 
+    /// <summary>
     /// Output for ComputeDistance.
+    /// </summary>
     public struct DistanceOutput
     {
         public float Distance;
@@ -195,12 +225,35 @@ namespace FarseerPhysics.Collision
 
     internal struct SimplexVertex
     {
-        public float A; // barycentric coordinate for closest point
-        public int IndexA; // wA index
-        public int IndexB; // wB index
-        public Vector2 W; // wB - wA
-        public Vector2 WA; // support point in proxyA
-        public Vector2 WB; // support point in proxyB
+        /// <summary>
+        /// Barycentric coordinate for closest point 
+        /// </summary>
+        public float A;
+
+        /// <summary>
+        /// wA index
+        /// </summary>
+        public int IndexA;
+
+        /// <summary>
+        /// wB index
+        /// </summary>
+        public int IndexB;
+
+        /// <summary>
+        /// wB - wA
+        /// </summary>
+        public Vector2 W;
+
+        /// <summary>
+        /// Support point in proxyA
+        /// </summary>
+        public Vector2 WA;
+
+        /// <summary>
+        /// Support point in proxyB
+        /// </summary>
+        public Vector2 WB;
     }
 
     internal struct Simplex
@@ -262,11 +315,11 @@ namespace FarseerPhysics.Collision
         internal void WriteCache(ref SimplexCache cache)
         {
             cache.Metric = GetMetric();
-            cache.Count = (UInt16) Count;
+            cache.Count = (UInt16)Count;
             for (int i = 0; i < Count; ++i)
             {
-                cache.IndexA[i] = (byte) (V[i].IndexA);
-                cache.IndexB[i] = (byte) (V[i].IndexB);
+                cache.IndexA[i] = (byte)(V[i].IndexA);
+                cache.IndexB[i] = (byte)(V[i].IndexB);
             }
         }
 
@@ -602,7 +655,6 @@ namespace FarseerPhysics.Collision
             // can check for duplicates and prevent cycling.
             FixedArray3<int> saveA = new FixedArray3<int>();
             FixedArray3<int> saveB = new FixedArray3<int>();
-            int saveCount = 0;
 
             Vector2 closestPoint = simplex.GetClosestPoint();
             float distanceSqr1 = closestPoint.LengthSquared();
@@ -613,7 +665,7 @@ namespace FarseerPhysics.Collision
             while (iter < k_maxIters)
             {
                 // Copy simplex so we can identify duplicates.
-                saveCount = simplex.Count;
+                int saveCount = simplex.Count;
                 for (int i = 0; i < saveCount; ++i)
                 {
                     saveA[i] = simplex.V[i].IndexA;

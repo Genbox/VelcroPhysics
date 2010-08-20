@@ -30,7 +30,9 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Collision
 {
+    /// <summary>
     /// Input parameters for CalculateTimeOfImpact
+    /// </summary>
     public struct TOIInput
     {
         public DistanceProxy ProxyA;
@@ -288,11 +290,15 @@ namespace FarseerPhysics.Collision
         public static int TOIRootIters, TOIMaxRootIters;
         public static int TOIMaxOptIters;
 
+        /// <summary>
         /// Compute the upper bound on time before two shapes penetrate. Time is represented as
         /// a fraction between [0,tMax]. This uses a swept separating axis and may miss some intermediate,
         /// non-tunneling collision. If you change the time interval, you should call this function
         /// again.
-        /// Note: use b2Distance to compute the contact point and normal at the time of impact.
+        /// Note: use Distance() to compute the contact point and normal at the time of impact.
+        /// </summary>
+        /// <param name="output">The output.</param>
+        /// <param name="input">The input.</param>
         public static void CalculateTimeOfImpact(out TOIOutput output, ref TOIInput input)
         {
             ++TOICalls;

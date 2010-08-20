@@ -38,34 +38,51 @@ namespace FarseerPhysics.Collision
         Face = 1,
     }
 
+    /// <summary>
     /// The features that intersect to form the contact point
     /// This must be 4 bytes or less.
+    /// </summary>
     public struct ContactFeature
     {
+        /// <summary>
         /// Feature index on ShapeA
+        /// </summary>
         internal byte IndexA;
 
+        /// <summary>
         /// Feature index on ShapeB
+        /// </summary>
         internal byte IndexB;
 
+        /// <summary>
         /// The feature type on ShapeA
+        /// </summary>
         internal byte TypeA;
 
+        /// <summary>
         /// The feature type on ShapeB
+        /// </summary>
         internal byte TypeB;
     }
 
+    /// <summary>
     /// Contact ids to facilitate warm starting.
+    /// </summary>
     [StructLayout(LayoutKind.Explicit)]
     public struct ContactID
     {
+        /// <summary>
         /// The features that intersect to form the contact point
+        /// </summary>
         [FieldOffset(0)] public ContactFeature Features;
 
+        /// <summary>
         /// Used to quickly compare contact ids.
+        /// </summary>
         [FieldOffset(0)] public uint Key;
     }
 
+    /// <summary>
     /// A manifold point is a contact point belonging to a contact
     /// manifold. It holds details related to the geometry and dynamics
     /// of the contact points.
@@ -76,9 +93,12 @@ namespace FarseerPhysics.Collision
     /// This structure is stored across time steps, so we keep it small.
     /// Note: the impulses are used for internal caching and may not
     /// provide reliable contact forces, especially for high speed collisions.
+    /// </summary>
     public struct ManifoldPoint
     {
+        /// <summary>
         /// Uniquely identifies a contact point between two Shapes
+        /// </summary>
         public ContactID Id;
 
         public Vector2 LocalPoint;
@@ -103,6 +123,7 @@ namespace FarseerPhysics.Collision
         Convex
     }
 
+    /// <summary>
     /// A manifold for two touching convex Shapes.
     /// Box2D supports multiple types of contact:
     /// - clip point versus plane with radius
@@ -119,6 +140,7 @@ namespace FarseerPhysics.Collision
     /// account for movement, which is critical for continuous physics.
     /// All contact scenarios must be expressed in one of these types.
     /// This structure is stored across time steps, so we keep it small.
+    /// </summary>
     public struct Manifold
     {
         /// <summary>
@@ -144,22 +166,35 @@ namespace FarseerPhysics.Collision
         public ManifoldType Type;
     }
 
+    /// <summary>
     /// This is used to compute the current state of a contact manifold.
+    /// </summary>
     public struct WorldManifold
     {
+        /// <summary>
         /// world vector pointing from A to B
+        /// </summary>
         public Vector2 Normal;
 
+        /// <summary>
         /// world contact point (point of intersection)
+        /// </summary>
         public FixedArray2<Vector2> Points;
 
+        /// <summary>
         /// Evaluate the manifold with supplied transforms. This assumes
         /// modest motion from the original state. This does not change the
         /// point count, impulses, etc. The radii must come from the Shapes
         /// that generated the manifold.
+        /// </summary>
+        /// <param name="manifold">The manifold.</param>
+        /// <param name="transformA">The transform for A.</param>
+        /// <param name="radiusA">The radius for A.</param>
+        /// <param name="transformB">The transform for B.</param>
+        /// <param name="radiusB">The radius for B.</param>
         public WorldManifold(ref Manifold manifold,
-                             ref Transform xfA, float radiusA,
-                             ref Transform xfB, float radiusB)
+                             ref Transform transformA, float radiusA,
+                             ref Transform transformB, float radiusB)
         {
             Points = new FixedArray2<Vector2>();
 
@@ -173,8 +208,8 @@ namespace FarseerPhysics.Collision
             {
                 case ManifoldType.Circles:
                     {
-                        Vector2 pointA = MathUtils.Multiply(ref xfA, manifold.LocalPoint);
-                        Vector2 pointB = MathUtils.Multiply(ref xfB, manifold.Points[0].LocalPoint);
+                        Vector2 pointA = MathUtils.Multiply(ref transformA, manifold.LocalPoint);
+                        Vector2 pointB = MathUtils.Multiply(ref transformB, manifold.Points[0].LocalPoint);
                         Normal = new Vector2(1.0f, 0.0f);
                         if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
                         {
@@ -190,12 +225,12 @@ namespace FarseerPhysics.Collision
 
                 case ManifoldType.FaceA:
                     {
-                        Normal = MathUtils.Multiply(ref xfA.R, manifold.LocalNormal);
-                        Vector2 planePoint = MathUtils.Multiply(ref xfA, manifold.LocalPoint);
+                        Normal = MathUtils.Multiply(ref transformA.R, manifold.LocalNormal);
+                        Vector2 planePoint = MathUtils.Multiply(ref transformA, manifold.LocalPoint);
 
                         for (int i = 0; i < manifold.PointCount; ++i)
                         {
-                            Vector2 clipPoint = MathUtils.Multiply(ref xfB, manifold.Points[i].LocalPoint);
+                            Vector2 clipPoint = MathUtils.Multiply(ref transformB, manifold.Points[i].LocalPoint);
                             Vector2 cA = clipPoint + (radiusA - Vector2.Dot(clipPoint - planePoint, Normal)) * Normal;
                             Vector2 cB = clipPoint - radiusB * Normal;
                             Points[i] = 0.5f * (cA + cB);
@@ -205,12 +240,12 @@ namespace FarseerPhysics.Collision
 
                 case ManifoldType.FaceB:
                     {
-                        Normal = MathUtils.Multiply(ref xfB.R, manifold.LocalNormal);
-                        Vector2 planePoint = MathUtils.Multiply(ref xfB, manifold.LocalPoint);
+                        Normal = MathUtils.Multiply(ref transformB.R, manifold.LocalNormal);
+                        Vector2 planePoint = MathUtils.Multiply(ref transformB, manifold.LocalPoint);
 
                         for (int i = 0; i < manifold.PointCount; ++i)
                         {
-                            Vector2 clipPoint = MathUtils.Multiply(ref xfA, manifold.Points[i].LocalPoint);
+                            Vector2 clipPoint = MathUtils.Multiply(ref transformA, manifold.Points[i].LocalPoint);
                             Vector2 cA = clipPoint - radiusA * Normal;
                             Vector2 cB = clipPoint + (radiusB - Vector2.Dot(clipPoint - planePoint, Normal)) * Normal;
                             Points[i] = 0.5f * (cA + cB);
@@ -226,51 +261,73 @@ namespace FarseerPhysics.Collision
         }
     }
 
+    /// <summary>
     /// This is used for determining the state of contact points.
+    /// </summary>
     public enum PointState
     {
+        /// <summary>
         /// Point does not exist
+        /// </summary>
         Null,
 
+        /// <summary>
         /// Point was added in the update
+        /// </summary>
         Add,
 
+        /// <summary>
         /// Point persisted across the update
+        /// </summary>
         Persist,
 
+        /// <summary>
         /// Point was removed in the update
+        /// </summary>
         Remove,
     }
 
+    /// <summary>
     /// Used for computing contact manifolds.
+    /// </summary>
     public struct ClipVertex
     {
         public ContactID ID;
         public Vector2 V;
     }
 
+    /// <summary>
     /// Ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).
+    /// </summary>
     public struct RayCastInput
     {
         public float MaxFraction;
         public Vector2 Point1, Point2;
     }
 
+    /// <summary>
     /// Ray-cast output data.  The ray hits at p1 + fraction * (p2 - p1), where p1 and p2
     /// come from RayCastInput. 
+    /// </summary>
     public struct RayCastOutput
     {
         public float Fraction;
         public Vector2 Normal;
     }
 
+    /// <summary>
     /// An axis aligned bounding box.
+    /// </summary>
     public struct AABB
     {
+        /// <summary>
         /// The lower vertex
+        /// </summary>
         public Vector2 LowerBound;
 
+        /// <summary>
         /// The upper vertex
+        /// </summary>
         public Vector2 UpperBound;
 
         public AABB(ref Vector2 min, ref Vector2 max)
@@ -285,7 +342,12 @@ namespace FarseerPhysics.Collision
             UpperBound = new Vector2(position.X + width, position.Y + height);
         }
 
+        /// <summary>
         /// Verify that the bounds are sorted.
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if this instance is valid; otherwise, <c>false</c>.
+        /// </returns>
         public bool IsValid()
         {
             Vector2 d = UpperBound - LowerBound;
@@ -294,19 +356,28 @@ namespace FarseerPhysics.Collision
             return valid;
         }
 
+        /// <summary>
         /// Get the center of the AABB.
+        /// </summary>
+        /// <returns></returns>
         public Vector2 GetCenter()
         {
             return 0.5f * (LowerBound + UpperBound);
         }
 
+        /// <summary>
         /// Get the extents of the AABB (half-widths).
+        /// </summary>
+        /// <returns></returns>
         public Vector2 GetExtents()
         {
             return 0.5f * (UpperBound - LowerBound);
         }
 
+        /// <summary>
         /// Get the perimeter length
+        /// </summary>
+        /// <returns></returns>
         public float GetPerimeter()
         {
             float wx = UpperBound.X - LowerBound.X;
@@ -314,22 +385,34 @@ namespace FarseerPhysics.Collision
             return 2.0f * (wx + wy);
         }
 
+        /// <summary>
         /// Combine an AABB into this one.
+        /// </summary>
+        /// <param name="aabb">The aabb.</param>
         public void Combine(ref AABB aabb)
         {
             LowerBound = Vector2.Min(LowerBound, aabb.LowerBound);
             UpperBound = Vector2.Max(UpperBound, aabb.UpperBound);
         }
 
-
+        /// <summary>
         /// Combine two AABBs into this one.
+        /// </summary>
+        /// <param name="aabb1">The aabb1.</param>
+        /// <param name="aabb2">The aabb2.</param>
         public void Combine(ref AABB aabb1, ref AABB aabb2)
         {
             LowerBound = Vector2.Min(aabb1.LowerBound, aabb2.LowerBound);
             UpperBound = Vector2.Max(aabb1.UpperBound, aabb2.UpperBound);
         }
 
+        /// <summary>
         /// Does this aabb contain the provided AABB.
+        /// </summary>
+        /// <param name="aabb">The aabb.</param>
+        /// <returns>
+        /// 	<c>true</c> if it contains the specified aabb; otherwise, <c>false</c>.
+        /// </returns>
         public bool Contains(ref AABB aabb)
         {
             bool result = true;
@@ -360,9 +443,8 @@ namespace FarseerPhysics.Collision
 
         public static bool TestOverlap(ref AABB a, ref AABB b)
         {
-            Vector2 d1, d2;
-            d1 = b.LowerBound - a.UpperBound;
-            d2 = a.LowerBound - b.UpperBound;
+            Vector2 d1 = b.LowerBound - a.UpperBound;
+            Vector2 d2 = a.LowerBound - b.UpperBound;
 
             if (d1.X > 0.0f || d1.Y > 0.0f)
                 return false;
@@ -582,16 +664,23 @@ namespace FarseerPhysics.Collision
             manifold.Points[0] = p0;
         }
 
+        /// <summary>
         /// Compute the collision manifold between a polygon and a circle.
+        /// </summary>
+        /// <param name="manifold">The manifold.</param>
+        /// <param name="polygonA">The polygon A.</param>
+        /// <param name="transformA">The transform of A.</param>
+        /// <param name="circleB">The circle B.</param>
+        /// <param name="transformB">The transform of B.</param>
         public static void CollidePolygonAndCircle(ref Manifold manifold,
-                                                   PolygonShape polygonA, ref Transform xfA,
-                                                   CircleShape circleB, ref Transform xfB)
+                                                   PolygonShape polygonA, ref Transform transformA,
+                                                   CircleShape circleB, ref Transform transformB)
         {
             manifold.PointCount = 0;
 
             // Compute circle position in the frame of the polygon.
-            Vector2 c = MathUtils.Multiply(ref xfB, circleB.Position);
-            Vector2 cLocal = MathUtils.MultiplyT(ref xfA, c);
+            Vector2 c = MathUtils.Multiply(ref transformB, circleB.Position);
+            Vector2 cLocal = MathUtils.MultiplyT(ref transformA, c);
 
             // Find the min separating edge.
             int normalIndex = 0;
@@ -706,21 +795,28 @@ namespace FarseerPhysics.Collision
             }
         }
 
+        /// <summary>
         /// Compute the collision manifold between two polygons.
+        /// </summary>
+        /// <param name="manifold">The manifold.</param>
+        /// <param name="polyA">The poly A.</param>
+        /// <param name="transformA">The transform A.</param>
+        /// <param name="polyB">The poly B.</param>
+        /// <param name="transformB">The transform B.</param>
         public static void CollidePolygons(ref Manifold manifold,
-                                           PolygonShape polyA, ref Transform xfA,
-                                           PolygonShape polyB, ref Transform xfB)
+                                           PolygonShape polyA, ref Transform transformA,
+                                           PolygonShape polyB, ref Transform transformB)
         {
             manifold.PointCount = 0;
             float totalRadius = polyA.Radius + polyB.Radius;
 
             int edgeA = 0;
-            float separationA = FindMaxSeparation(out edgeA, polyA, ref xfA, polyB, ref xfB);
+            float separationA = FindMaxSeparation(out edgeA, polyA, ref transformA, polyB, ref transformB);
             if (separationA > totalRadius)
                 return;
 
             int edgeB = 0;
-            float separationB = FindMaxSeparation(out edgeB, polyB, ref xfB, polyA, ref xfA);
+            float separationB = FindMaxSeparation(out edgeB, polyB, ref transformB, polyA, ref transformA);
             if (separationB > totalRadius)
                 return;
 
@@ -736,8 +832,8 @@ namespace FarseerPhysics.Collision
             {
                 poly1 = polyB;
                 poly2 = polyA;
-                xf1 = xfB;
-                xf2 = xfA;
+                xf1 = transformB;
+                xf2 = transformA;
                 edge1 = edgeB;
                 manifold.Type = ManifoldType.FaceB;
                 flip = true;
@@ -746,8 +842,8 @@ namespace FarseerPhysics.Collision
             {
                 poly1 = polyA;
                 poly2 = polyB;
-                xf1 = xfA;
-                xf2 = xfB;
+                xf1 = transformA;
+                xf2 = transformB;
                 edge1 = edgeA;
                 manifold.Type = ManifoldType.FaceA;
                 flip = false;
@@ -836,16 +932,23 @@ namespace FarseerPhysics.Collision
             manifold.PointCount = pointCount;
         }
 
+        /// <summary>
         // Compute contact points for edge versus circle.
         // This accounts for edge connectivity.
+        /// </summary>
+        /// <param name="manifold">The manifold.</param>
+        /// <param name="edgeA">The edge A.</param>
+        /// <param name="transformA">The transform A.</param>
+        /// <param name="circleB">The circle B.</param>
+        /// <param name="transformB">The transform B.</param>
         public static void CollideEdgeAndCircle(ref Manifold manifold,
-                                                EdgeShape edgeA, ref Transform xfA,
-                                                CircleShape circleB, ref Transform xfB)
+                                                EdgeShape edgeA, ref Transform transformA,
+                                                CircleShape circleB, ref Transform transformB)
         {
             manifold.PointCount = 0;
 
             // Compute circle in frame of edge
-            Vector2 Q = MathUtils.MultiplyT(ref xfA, MathUtils.Multiply(ref xfB, circleB.Position));
+            Vector2 Q = MathUtils.MultiplyT(ref transformA, MathUtils.Multiply(ref transformB, circleB.Position));
 
             Vector2 A = edgeA.Vertex1, B = edgeA.Vertex2;
             Vector2 e = B - A;
@@ -973,11 +1076,9 @@ namespace FarseerPhysics.Collision
             manifold.Points[0] = mp2;
         }
 
-        private static EPAxis ComputeEdgeSeperation(Vector2 v1, Vector2 v2, Vector2 n, PolygonShape polygonB,
-                                                    float radius)
+        private static void ComputeEdgeSeperation(ref Vector2 v1, ref Vector2 n, PolygonShape polygonB, out EPAxis axis)
         {
             // EdgeA separation
-            EPAxis axis;
             axis.Type = EPAxisType.EdgeA;
             axis.Index = 0;
             axis.Separation = Vector2.Dot(n, polygonB.Vertices[0] - v1);
@@ -989,15 +1090,12 @@ namespace FarseerPhysics.Collision
                     axis.Separation = s;
                 }
             }
-
-            return axis;
         }
 
-        private static EPAxis ComputePolygonSeperation(Vector2 v1, Vector2 v2, Vector2 n, PolygonShape polygonB,
-                                                       float radius)
+        private static void ComputePolygonSeperation(ref Vector2 v1, ref Vector2 v2, PolygonShape polygonB,
+                                                       float radius, out EPAxis axis)
         {
             // PolygonB separation
-            EPAxis axis;
             axis.Type = EPAxisType.EdgeB;
             axis.Index = 0;
             axis.Separation = float.MinValue;
@@ -1012,12 +1110,10 @@ namespace FarseerPhysics.Collision
                     axis.Separation = s;
                     if (s > radius)
                     {
-                        return axis;
+                        break;
                     }
                 }
             }
-
-            return axis;
         }
 
         private static void FindIncidentEdge(ref FixedArray2<ClipVertex> c, PolygonShape poly1, int edge1,
@@ -1064,21 +1160,28 @@ namespace FarseerPhysics.Collision
             c[1] = ctemp;
         }
 
-        // Collide and edge and polygon. This uses the SAT and clipping to produce up to 2 contact points.
-        // Edge adjacency is handle to produce locally valid contact points and normals. This is intended
-        // to allow the polygon to slide smoothly over an edge chain.
-        //
-        // Algorithm
-        // 1. Classify front-side or back-side collision with edge.
-        // 2. Compute separation
-        // 3. Process adjacent edges
-        // 4. Classify adjacent edge as convex, flat, null, or concave
-        // 5. Skip null or concave edges. Concave edges get a separate manifold.
-        // 6. If the edge is flat, compute contact points as normal. Discard boundary points.
-        // 7. If the edge is convex, compute it's separation.
-        // 8. Use the minimum separation of up to three edges. If the minimum separation
-        //    is not the primary edge, return.
-        // 9. If the minimum separation is the primary edge, compute the contact points and return.
+        /// <summary>
+        /// Collide and edge and polygon. This uses the SAT and clipping to produce up to 2 contact points.
+        /// Edge adjacency is handle to produce locally valid contact points and normals. This is intended
+        /// to allow the polygon to slide smoothly over an edge chain.
+        ///
+        /// Algorithm
+        /// 1. Classify front-side or back-side collision with edge.
+        /// 2. Compute separation
+        /// 3. Process adjacent edges
+        /// 4. Classify adjacent edge as convex, flat, null, or concave
+        /// 5. Skip null or concave edges. Concave edges get a separate manifold.
+        /// 6. If the edge is flat, compute contact points as normal. Discard boundary points.
+        /// 7. If the edge is convex, compute it's separation.
+        /// 8. Use the minimum separation of up to three edges. If the minimum separation
+        ///    is not the primary edge, return.
+        /// 9. If the minimum separation is the primary edge, compute the contact points and return.
+        /// </summary>
+        /// <param name="manifold">The manifold.</param>
+        /// <param name="edgeA">The edge A.</param>
+        /// <param name="xfA">The xf A.</param>
+        /// <param name="polygonB_in">The polygon b_in.</param>
+        /// <param name="xfB">The xf B.</param>
         public static void CollideEdgeAndPolygon(ref Manifold manifold,
                                                  EdgeShape edgeA, ref Transform xfA,
                                                  PolygonShape polygonB_in, ref Transform xfB)
@@ -1119,7 +1222,10 @@ namespace FarseerPhysics.Collision
             }
 
             // Compute primary separating axis
-            EPAxis edgeAxis = ComputeEdgeSeperation(v1, v2, edgeNormal, s_polygonB, totalRadius);
+            EPAxis edgeAxis;
+            
+            ComputeEdgeSeperation(ref v1, ref edgeNormal, s_polygonB, out edgeAxis);
+            
             if (edgeAxis.Separation > totalRadius)
             {
                 // Shapes are separated
@@ -1180,7 +1286,9 @@ namespace FarseerPhysics.Collision
                     n0 = -n0;
                 }
 
-                EPAxis axis1 = ComputeEdgeSeperation(v0, v1, n0, s_polygonB, totalRadius);
+                EPAxis axis1;
+                
+                ComputeEdgeSeperation(ref v0, ref n0, s_polygonB, out axis1);
                 if (axis1.Separation > edgeAxis.Separation)
                 {
                     // The polygon should collide with previous edge
@@ -1201,7 +1309,10 @@ namespace FarseerPhysics.Collision
                     n2 = -n2;
                 }
 
-                EPAxis axis2 = ComputeEdgeSeperation(v2, v3, n2, s_polygonB, totalRadius);
+                EPAxis axis2;
+                
+                ComputeEdgeSeperation(ref v2, ref n2, s_polygonB, out axis2);
+                
                 if (axis2.Separation > edgeAxis.Separation)
                 {
                     // The polygon should collide with the next edge
@@ -1209,7 +1320,8 @@ namespace FarseerPhysics.Collision
                 }
             }
 
-            EPAxis polygonAxis = ComputePolygonSeperation(v1, v2, edgeNormal, s_polygonB, totalRadius);
+            EPAxis polygonAxis;
+            ComputePolygonSeperation(ref v1, ref v2, s_polygonB, totalRadius, out polygonAxis);
             if (polygonAxis.Separation > totalRadius)
             {
                 return;
@@ -1275,10 +1387,9 @@ namespace FarseerPhysics.Collision
             // Clip incident edge against extruded edge1 side edges.
             FixedArray2<ClipVertex> clipPoints1;
             FixedArray2<ClipVertex> clipPoints2;
-            int np;
 
             // Clip to box side 1
-            np = ClipSegmentToLine(out clipPoints1, ref incidentEdge, -tangent, sideOffset1, iv1);
+            int np = ClipSegmentToLine(out clipPoints1, ref incidentEdge, -tangent, sideOffset1, iv1);
 
             if (np < Settings.MaxManifoldPoints)
             {
@@ -1308,9 +1419,7 @@ namespace FarseerPhysics.Collision
             int pointCount = 0;
             for (int i = 0; i < Settings.MaxManifoldPoints; ++i)
             {
-                float separation;
-
-                separation = Vector2.Dot(normal, clipPoints2[i].V) - frontOffset;
+                float separation = Vector2.Dot(normal, clipPoints2[i].V) - frontOffset;
 
                 if (separation <= totalRadius)
                 {
@@ -1344,7 +1453,15 @@ namespace FarseerPhysics.Collision
             manifold.PointCount = pointCount;
         }
 
+        /// <summary>
         /// Clipping for contact manifolds.
+        /// </summary>
+        /// <param name="vOut">The v out.</param>
+        /// <param name="vIn">The v in.</param>
+        /// <param name="normal">The normal.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="vertexIndexA">The vertex index A.</param>
+        /// <returns></returns>
         public static int ClipSegmentToLine(out FixedArray2<ClipVertex> vOut, ref FixedArray2<ClipVertex> vIn,
                                             Vector2 normal, float offset, int vertexIndexA)
         {
@@ -1385,7 +1502,15 @@ namespace FarseerPhysics.Collision
             return numOut;
         }
 
-        // Find the separation between poly1 and poly2 for a give edge normal on poly1.
+        /// <summary>
+        /// Find the separation between poly1 and poly2 for a give edge normal on poly1.
+        /// </summary>
+        /// <param name="poly1">The poly1.</param>
+        /// <param name="xf1">The XF1.</param>
+        /// <param name="edge1">The edge1.</param>
+        /// <param name="poly2">The poly2.</param>
+        /// <param name="xf2">The XF2.</param>
+        /// <returns></returns>
         private static float EdgeSeparation(PolygonShape poly1, ref Transform xf1, int edge1,
                                             PolygonShape poly2, ref Transform xf2)
         {
@@ -1447,7 +1572,15 @@ namespace FarseerPhysics.Collision
             return separation;
         }
 
+        /// <summary>
         // Find the max separation between poly1 and poly2 using edge normals from poly1.
+        /// </summary>
+        /// <param name="edgeIndex">Index of the edge.</param>
+        /// <param name="poly1">The poly1.</param>
+        /// <param name="xf1">The XF1.</param>
+        /// <param name="poly2">The poly2.</param>
+        /// <param name="xf2">The XF2.</param>
+        /// <returns></returns>
         private static float FindMaxSeparation(out int edgeIndex,
                                                PolygonShape poly1, ref Transform xf1,
                                                PolygonShape poly2, ref Transform xf2)

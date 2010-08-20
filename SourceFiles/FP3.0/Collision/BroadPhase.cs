@@ -30,7 +30,6 @@ namespace FarseerPhysics.Collision
 {
     internal struct Pair : IComparable<Pair>
     {
-        public int Next;
         public int ProxyIdA;
         public int ProxyIdB;
 
@@ -60,9 +59,11 @@ namespace FarseerPhysics.Collision
         #endregion
     }
 
+    /// <summary>
     /// The broad-phase is used for computing pairs and performing volume queries and ray casts.
     /// This broad-phase does not persist pairs. Instead, this reports potentially new pairs.
     /// It is up to the client to consume the new pairs and to track subsequent overlap.
+    /// </summary>
     public class BroadPhase
     {
         internal const int NullProxy = -1;
@@ -93,14 +94,22 @@ namespace FarseerPhysics.Collision
             _moveBuffer = new int[_moveCapacity];
         }
 
+        /// <summary>
         /// Get the number of proxies.
+        /// </summary>
+        /// <value>The proxy count.</value>
         public int ProxyCount
         {
             get { return _proxyCount; }
         }
 
+        /// <summary>
         /// Create a proxy with an initial AABB. Pairs are not reported until
         /// UpdatePairs is called.
+        /// </summary>
+        /// <param name="aabb">The aabb.</param>
+        /// <param name="userData">The user data.</param>
+        /// <returns></returns>
         public int CreateProxy(ref AABB aabb, object userData)
         {
             int proxyId = _tree.CreateProxy(ref aabb, userData);
@@ -109,7 +118,10 @@ namespace FarseerPhysics.Collision
             return proxyId;
         }
 
+        /// <summary>
         /// Destroy a proxy. It is up to the client to remove any pairs.
+        /// </summary>
+        /// <param name="proxyId">The proxy id.</param>
         public void DestroyProxy(int proxyId)
         {
             UnBufferMove(proxyId);
@@ -126,19 +138,33 @@ namespace FarseerPhysics.Collision
             }
         }
 
+        /// <summary>
         /// Get the AABB for a proxy.
+        /// </summary>
+        /// <param name="proxyId">The proxy id.</param>
+        /// <param name="aabb">The aabb.</param>
         public void GetFatAABB(int proxyId, out AABB aabb)
         {
             _tree.GetFatAABB(proxyId, out aabb);
         }
 
+        /// <summary>
         /// Get user data from a proxy. Returns null if the id is invalid.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="proxyId">The proxy id.</param>
+        /// <returns></returns>
         public T GetUserData<T>(int proxyId)
         {
             return _tree.GetUserData<T>(proxyId);
         }
 
+        /// <summary>
         /// Test overlap of fat AABBs.
+        /// </summary>
+        /// <param name="proxyIdA">The proxy id A.</param>
+        /// <param name="proxyIdB">The proxy id B.</param>
+        /// <returns></returns>
         public bool TestOverlap(int proxyIdA, int proxyIdB)
         {
             AABB aabbA, aabbB;
@@ -147,8 +173,11 @@ namespace FarseerPhysics.Collision
             return AABB.TestOverlap(ref aabbA, ref aabbB);
         }
 
-
+        /// <summary>
         /// Update the pairs. This results in pair callbacks. This can only add pairs.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="callback">The callback.</param>
         public void UpdatePairs<T>(Action<T, T> callback)
         {
             // Reset pair buffer
@@ -205,8 +234,12 @@ namespace FarseerPhysics.Collision
             _tree.Rebalance(4);
         }
 
+        /// <summary>
         /// Query an AABB for overlapping proxies. The callback class
         /// is called for each proxy that overlaps the supplied AABB.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="aabb">The aabb.</param>
         public void Query(Func<int, bool> callback, ref AABB aabb)
         {
             _tree.Query(callback, ref aabb);
@@ -217,7 +250,10 @@ namespace FarseerPhysics.Collision
             _tree.RayCast(callback, ref input);
         }
 
+        /// <summary>
         /// Compute the height of the embedded tree.
+        /// </summary>
+        /// <returns></returns>
         public int ComputeHeight()
         {
             return _tree.ComputeHeight();

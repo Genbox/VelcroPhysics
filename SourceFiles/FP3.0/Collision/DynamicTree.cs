@@ -31,13 +31,19 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Collision
 {
+    /// <summary>
     /// A dynamic AABB tree broad-phase, inspired by Nathanael Presson's btDbvt.
+    /// </summary>
     public delegate float RayCastCallbackInternal(ref RayCastInput input, int userData);
 
+    /// <summary>
     /// A node in the dynamic tree. The client does not interact with this directly.
+    /// </summary>
     internal struct DynamicTreeNode
     {
+        /// <summary>
         /// This is the fattened AABB.
+        /// </summary>
         internal AABB AABB;
 
         internal int Child1;
@@ -53,6 +59,7 @@ namespace FarseerPhysics.Collision
         }
     }
 
+    /// <summary>
     /// A dynamic tree arranges data in a binary tree to accelerate
     /// queries such as volume queries and ray casts. Leafs are proxies
     /// with an AABB. In the tree we expand the proxy AABB by Settings.b2_fatAABBFactor
@@ -60,6 +67,7 @@ namespace FarseerPhysics.Collision
     /// object to move by small amounts without triggering a tree update.
     ///
     /// Nodes are pooled and relocatable, so we use node indices rather than pointers.
+    /// </summary>
     public class DynamicTree
     {
         internal const int NullNode = -1;
@@ -70,12 +78,16 @@ namespace FarseerPhysics.Collision
         private int _nodeCount;
         private DynamicTreeNode[] _nodes;
 
+        /// <summary>
         /// This is used incrementally traverse the tree for re-balancing.
+        /// </summary>
         private int _path;
 
         private int _root;
 
-        /// ructing the tree initializes the node pool.
+        /// <summary>
+        /// constructing the tree initializes the node pool.
+        /// </summary>
         public DynamicTree()
         {
             _root = NullNode;
@@ -95,7 +107,12 @@ namespace FarseerPhysics.Collision
             _path = 0;
         }
 
+        /// <summary>
         /// Create a proxy. Provide a tight fitting AABB and a userData pointer.
+        /// </summary>
+        /// <param name="aabb">The aabb.</param>
+        /// <param name="userData">The user data.</param>
+        /// <returns></returns>
         public int CreateProxy(ref AABB aabb, object userData)
         {
             int proxyId = AllocateNode();
@@ -112,7 +129,10 @@ namespace FarseerPhysics.Collision
             return proxyId;
         }
 
+        /// <summary>
         /// Destroy a proxy. This asserts if the id is invalid.
+        /// </summary>
+        /// <param name="proxyId">The proxy id.</param>
         public void DestroyProxy(int proxyId)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
@@ -122,10 +142,15 @@ namespace FarseerPhysics.Collision
             FreeNode(proxyId);
         }
 
+        /// <summary>
         /// Move a proxy with a swepted AABB. If the proxy has moved outside of its fattened AABB,
         /// then the proxy is removed from the tree and re-inserted. Otherwise
         /// the function returns immediately.
-        /// @return true if the proxy was re-inserted.
+        /// </summary>
+        /// <param name="proxyId">The proxy id.</param>
+        /// <param name="aabb">The aabb.</param>
+        /// <param name="displacement">The displacement.</param>
+        /// <returns>true if the proxy was re-inserted.</returns>
         public bool MoveProxy(int proxyId, ref AABB aabb, Vector2 displacement)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
@@ -174,7 +199,10 @@ namespace FarseerPhysics.Collision
             return true;
         }
 
+        /// <summary>
         /// Perform some iterations to re-balance the tree.
+        /// </summary>
+        /// <param name="iterations">The iterations.</param>
         public void Rebalance(int iterations)
         {
             if (_root == NullNode)
@@ -206,30 +234,45 @@ namespace FarseerPhysics.Collision
             }
         }
 
+        /// <summary>
         /// Get proxy user data.
-        /// @return the proxy user data or 0 if the id is invalid.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="proxyId">The proxy id.</param>
+        /// <returns>the proxy user data or 0 if the id is invalid.</returns>
         public T GetUserData<T>(int proxyId)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
             return (T) _nodes[proxyId].UserData;
         }
 
+        /// <summary>
         /// Get the fat AABB for a proxy.
+        /// </summary>
+        /// <param name="proxyId">The proxy id.</param>
+        /// <param name="fatAABB">The fat AABB.</param>
         public void GetFatAABB(int proxyId, out AABB fatAABB)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
             fatAABB = _nodes[proxyId].AABB;
         }
 
+        /// <summary>
         /// Compute the height of the binary tree in O(N) time. Should not be
         /// called often.
+        /// </summary>
+        /// <returns></returns>
         public int ComputeHeight()
         {
             return ComputeHeight(_root);
         }
 
+        /// <summary>
         /// Query an AABB for overlapping proxies. The callback class
         /// is called for each proxy that overlaps the supplied AABB.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <param name="aabb">The aabb.</param>
         public void Query(Func<int, bool> callback, ref AABB aabb)
         {
             _stack.Clear();
@@ -264,13 +307,15 @@ namespace FarseerPhysics.Collision
             }
         }
 
+        /// <summary>
         /// Ray-cast against the proxies in the tree. This relies on the callback
         /// to perform a exact ray-cast in the case were the proxy contains a Shape.
         /// The callback also performs the any collision filtering. This has performance
         /// roughly equal to k * log(n), where k is the number of collisions and n is the
         /// number of proxies in the tree.
-        /// @param input the ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).
-        /// @param callback a callback class that is called for each proxy that is hit by the ray.
+        /// </summary>
+        /// <param name="callback">a callback class that is called for each proxy that is hit by the ray.</param>
+        /// <param name="input">the ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).</param>
         public void RayCast(RayCastCallbackInternal callback, ref RayCastInput input)
         {
             Vector2 p1 = input.Point1;
@@ -281,7 +326,7 @@ namespace FarseerPhysics.Collision
 
             // v is perpendicular to the segment.
             Vector2 v = MathUtils.Cross(1.0f, r);
-            Vector2 abs_v = MathUtils.Abs(v);
+            Vector2 absV = MathUtils.Abs(v);
 
             // Separating axis for segment (Gino, p80).
             // |dot(v, p1 - c)| > dot(|v|, h)
@@ -318,7 +363,7 @@ namespace FarseerPhysics.Collision
                 // |dot(v, p1 - c)| > dot(|v|, h)
                 Vector2 c = node.AABB.GetCenter();
                 Vector2 h = node.AABB.GetExtents();
-                float separation = Math.Abs(Vector2.Dot(v, p1 - c)) - Vector2.Dot(abs_v, h);
+                float separation = Math.Abs(Vector2.Dot(v, p1 - c)) - Vector2.Dot(absV, h);
                 if (separation > 0.0f)
                 {
                     continue;
@@ -440,7 +485,6 @@ namespace FarseerPhysics.Collision
 
             // Find the best sibling for this node
             AABB leafAABB = _nodes[leaf].AABB;
-            Vector2 leafCenter = leafAABB.GetCenter();
             int sibling = _root;
             while (_nodes[sibling].IsLeaf() == false)
             {
@@ -552,7 +596,6 @@ namespace FarseerPhysics.Collision
                 parent = grandParent;
                 while (parent != NullNode)
                 {
-                    AABB oldAABB = _nodes[parent].AABB;
                     _nodes[parent].AABB.Combine(ref _nodes[_nodes[parent].Child1].AABB,
                                                 ref _nodes[_nodes[parent].Child2].AABB);
 
