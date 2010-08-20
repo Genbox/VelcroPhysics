@@ -21,7 +21,7 @@ namespace FarseerPhysics.Common
             Capacity = capacity;
         }
 
-        public Vertices(ref Vector2[] vector2)
+        public Vertices(Vector2[] vector2)
         {
             for (int i = 0; i < vector2.Length; i++)
             {
@@ -141,17 +141,15 @@ namespace FarseerPhysics.Common
         /// <returns></returns>
         public float GetRadius()
         {
-            float radius;
             float area = GetSignedArea();
 
-            double radiusSqrd = (double) area / MathHelper.Pi;
+            double radiusSqrd = (double)area / MathHelper.Pi;
             if (radiusSqrd < 0)
             {
                 radiusSqrd *= -1;
             }
 
-            radius = (float) Math.Sqrt(radiusSqrd);
-            return radius;
+            return (float)Math.Sqrt(radiusSqrd);
         }
 
         /// <summary>
@@ -310,17 +308,17 @@ namespace FarseerPhysics.Common
         }
 
         // From Eric Jordan's convex decomposition library
+
         /// <summary>
         /// Checks if polygon is valid for use in Box2d engine.
-        ///Last ditch effort to ensure no invalid polygons are
-        ///added to world geometry.
+        /// Last ditch effort to ensure no invalid polygons are
+        /// added to world geometry.
         ///
-        ///Performs a full check, for simplicity, convexity,
-        ///orientation, minimum angle, and volume.  This won't
-        ///be very efficient, and a lot of it is redundant when
-        ///other tools in this section are used.
+        /// Performs a full check, for simplicity, convexity,
+        /// orientation, minimum angle, and volume.  This won't
+        /// be very efficient, and a lot of it is redundant when
+        /// other tools in this section are used.
         /// </summary>
-        /// <param name="printErrors"></param>
         /// <returns></returns>
         public bool CheckPolygon()
         {
@@ -363,7 +361,7 @@ namespace FarseerPhysics.Common
                 //Parallel sides check
                 float cross = MathUtils.Cross(normals[iminus], normals[i]);
                 cross = MathUtils.Clamp(cross, -1.0f, 1.0f);
-                float angle = (float) Math.Asin(cross);
+                float angle = (float)Math.Asin(cross);
                 if (angle <= Settings.AngularSlop)
                 {
                     error = 4;
@@ -439,24 +437,23 @@ namespace FarseerPhysics.Common
         }
 
         // From Eric Jordan's convex decomposition library
+
         /// <summary>
         /// Trace the edge of a non-simple polygon and return a simple polygon.
         /// 
-        ///Method:
-        ///Start at vertex with minimum y (pick maximum x one if there are two).  
-        ///We aim our "lastDir" vector at (1.0, 0)
-        ///We look at the two rays going off from our start vertex, and follow whichever
-        ///has the smallest angle (in -Pi . Pi) wrt lastDir ("rightest" turn)
-        ///
-        ///Loop until we hit starting vertex:
-        ///
-        ///We add our current vertex to the list.
-        ///We check the seg from current vertex to next vertex for intersections
-        ///  - if no intersections, follow to next vertex and continue
-        ///  - if intersections, pick one with minimum distance
-        ///    - if more than one, pick one with "rightest" next point (two possibilities for each)
+        /// Method:
+        /// Start at vertex with minimum y (pick maximum x one if there are two).
+        /// We aim our "lastDir" vector at (1.0, 0)
+        /// We look at the two rays going off from our start vertex, and follow whichever
+        /// has the smallest angle (in -Pi . Pi) wrt lastDir ("rightest" turn)
+        /// Loop until we hit starting vertex:
+        /// We add our current vertex to the list.
+        /// We check the seg from current vertex to next vertex for intersections
+        /// - if no intersections, follow to next vertex and continue
+        /// - if intersections, pick one with minimum distance
+        /// - if more than one, pick one with "rightest" next point (two possibilities for each)
         /// </summary>
-        /// <param name="verts"></param>
+        /// <param name="verts">The vertices.</param>
         /// <returns></returns>
         public Vertices TraceEdge(Vertices verts)
         {
@@ -468,7 +465,7 @@ namespace FarseerPhysics.Common
             for (int i = 0; i < verts.Count; ++i)
             {
                 Vector2 pos = new Vector2(verts[i].X, verts[i].Y);
-                nodes[i].position = pos;
+                nodes[i].Position = pos;
                 ++nNodes;
                 int iplus = (i == verts.Count - 1) ? 0 : i + 1;
                 int iminus = (i == 0) ? verts.Count - 1 : i - 1;
@@ -484,39 +481,31 @@ namespace FarseerPhysics.Common
                 dirty = false;
                 for (int i = 0; i < nNodes; ++i)
                 {
-                    for (int j = 0; j < nodes[i].nConnected; ++j)
+                    for (int j = 0; j < nodes[i].NConnected; ++j)
                     {
                         for (int k = 0; k < nNodes; ++k)
                         {
-                            if (k == i || nodes[k] == nodes[i].connected[j]) continue;
-                            for (int l = 0; l < nodes[k].nConnected; ++l)
+                            if (k == i || nodes[k] == nodes[i].Connected[j]) continue;
+                            for (int l = 0; l < nodes[k].NConnected; ++l)
                             {
-                                if (nodes[k].connected[l] == nodes[i].connected[j] ||
-                                    nodes[k].connected[l] == nodes[i]) continue;
+                                if (nodes[k].Connected[l] == nodes[i].Connected[j] ||
+                                    nodes[k].Connected[l] == nodes[i]) continue;
+
                                 //Check intersection
                                 Vector2 intersectPt;
-                                //if (counter > 100) printf("checking intersection: %d, %d, %d, %d\n",i,j,k,l);
-                                bool crosses = LineTools.LineIntersect(nodes[i].position, nodes[i].connected[j].position,
-                                                                       nodes[k].position, nodes[k].connected[l].position,
+
+                                bool crosses = LineTools.LineIntersect(nodes[i].Position, nodes[i].Connected[j].Position,
+                                                                       nodes[k].Position, nodes[k].Connected[l].Position,
                                                                        out intersectPt);
                                 if (crosses)
                                 {
-                                    /*if (counter > 100) {
-                                        printf("Found crossing at %f, %f\n",intersectPt.x, intersectPt.y);
-                                        printf("Locations: %f,%f - %f,%f | %f,%f - %f,%f\n",
-                                                        nodes[i].position.x, nodes[i].position.y,
-                                                        nodes[i].connected[j].position.x, nodes[i].connected[j].position.y,
-                                                        nodes[k].position.x,nodes[k].position.y,
-                                                        nodes[k].connected[l].position.x,nodes[k].connected[l].position.y);
-                                        printf("Memory addresses: %d, %d, %d, %d\n",(int)&nodes[i],(int)nodes[i].connected[j],(int)&nodes[k],(int)nodes[k].connected[l]);
-                                    }*/
                                     dirty = true;
                                     //Destroy and re-hook connections at crossing point
-                                    PolyNode connj = nodes[i].connected[j];
-                                    PolyNode connl = nodes[k].connected[l];
-                                    nodes[i].connected[j].RemoveConnection(nodes[i]);
+                                    PolyNode connj = nodes[i].Connected[j];
+                                    PolyNode connl = nodes[k].Connected[l];
+                                    nodes[i].Connected[j].RemoveConnection(nodes[i]);
                                     nodes[i].RemoveConnection(connj);
-                                    nodes[k].connected[l].RemoveConnection(nodes[k]);
+                                    nodes[k].Connected[l].RemoveConnection(nodes[k]);
                                     nodes[k].RemoveConnection(connl);
                                     nodes[nNodes] = new PolyNode(intersectPt);
                                     nodes[nNodes].AddConnection(nodes[i]);
@@ -534,25 +523,9 @@ namespace FarseerPhysics.Common
                         }
                     }
                 }
-                SkipOut:
+            SkipOut:
                 ++counter;
-                //if (counter > 100) printf("Counter: %d\n",counter);
             }
-
-            /*
-            // Debugging: check for connection consistency
-            for (int i=0; i<nNodes; ++i) {
-                int nConn = nodes[i].nConnected;
-                for (int j=0; j<nConn; ++j) {
-                    if (nodes[i].connected[j].nConnected == 0) Assert(false);
-                    PolyNode* connect = nodes[i].connected[j];
-                    bool found = false;
-                    for (int k=0; k<connect.nConnected; ++k) {
-                        if (connect.connected[k] == &nodes[i]) found = true;
-                    }
-                    Assert(found);
-                }
-            }*/
 
             //Collapse duplicate points
             bool foundDupe = true;
@@ -562,11 +535,11 @@ namespace FarseerPhysics.Common
                 foundDupe = false;
                 for (int i = 0; i < nNodes; ++i)
                 {
-                    if (nodes[i].nConnected == 0) continue;
+                    if (nodes[i].NConnected == 0) continue;
                     for (int j = i + 1; j < nNodes; ++j)
                     {
-                        if (nodes[j].nConnected == 0) continue;
-                        Vector2 diff = nodes[i].position - nodes[j].position;
+                        if (nodes[j].NConnected == 0) continue;
+                        Vector2 diff = nodes[i].Position - nodes[j].Position;
                         if (diff.LengthSquared() <= Settings.Epsilon * Settings.Epsilon)
                         {
                             if (nActive <= 3)
@@ -578,10 +551,10 @@ namespace FarseerPhysics.Common
                             PolyNode inode = nodes[i];
                             PolyNode jnode = nodes[j];
                             //Move all of j's connections to i, and orphan j
-                            int njConn = jnode.nConnected;
+                            int njConn = jnode.NConnected;
                             for (int k = 0; k < njConn; ++k)
                             {
-                                PolyNode knode = jnode.connected[k];
+                                PolyNode knode = jnode.Connected[k];
                                 Debug.Assert(knode != jnode);
                                 if (knode != inode)
                                 {
@@ -589,42 +562,12 @@ namespace FarseerPhysics.Common
                                     knode.AddConnection(inode);
                                 }
                                 knode.RemoveConnection(jnode);
-                                //printf("knode %d on node %d now has %d connections\n",k,j,knode.nConnected);
-                                //printf("Found duplicate point.\n");
                             }
-                            //printf("Orphaning node at address %d\n",(int)jnode);
-                            //for (int k=0; k<njConn; ++k) {
-                            //	if (jnode.connected[k].IsConnectedTo(*jnode)) printf("Problem!!!\n");
-                            //}
-                            /*
-                            for (int k=0; k < njConn; ++k){
-                                jnode.RemoveConnectionByIndex(k);
-                            }*/
-                            jnode.nConnected = 0;
+                            jnode.NConnected = 0;
                         }
                     }
                 }
             }
-
-            /*
-            // Debugging: check for connection consistency
-            for (int i=0; i<nNodes; ++i) {
-                int nConn = nodes[i].nConnected;
-                printf("Node %d has %d connections\n",i,nConn);
-                for (int j=0; j<nConn; ++j) {
-                    if (nodes[i].connected[j].nConnected == 0) {
-                        printf("Problem with node %d connection at address %d\n",i,(int)(nodes[i].connected[j]));
-                        Assert(false);
-                    }
-                    PolyNode* connect = nodes[i].connected[j];
-                    bool found = false;
-                    for (int k=0; k<connect.nConnected; ++k) {
-                        if (connect.connected[k] == &nodes[i]) found = true;
-                    }
-                    if (!found) printf("Connection %d (of %d) on node %d (of %d) did not have reciprocal connection.\n",j,nConn,i,nNodes);
-                    Assert(found);
-                }
-            }//*/
 
             //Now walk the edge of the list
 
@@ -634,16 +577,16 @@ namespace FarseerPhysics.Common
             int minYIndex = -1;
             for (int i = 0; i < nNodes; ++i)
             {
-                if (nodes[i].position.Y < minY && nodes[i].nConnected > 1)
+                if (nodes[i].Position.Y < minY && nodes[i].NConnected > 1)
                 {
-                    minY = nodes[i].position.Y;
+                    minY = nodes[i].Position.Y;
                     minYIndex = i;
-                    maxX = nodes[i].position.X;
+                    maxX = nodes[i].Position.X;
                 }
-                else if (nodes[i].position.Y == minY && nodes[i].position.X > maxX && nodes[i].nConnected > 1)
+                else if (nodes[i].Position.Y == minY && nodes[i].Position.X > maxX && nodes[i].NConnected > 1)
                 {
                     minYIndex = i;
-                    maxX = nodes[i].position.X;
+                    maxX = nodes[i].Position.X;
                 }
             }
 
@@ -653,7 +596,7 @@ namespace FarseerPhysics.Common
             int nResultVecs = 0;
             PolyNode currentNode = nodes[minYIndex];
             PolyNode startNode = currentNode;
-            Debug.Assert(currentNode.nConnected > 0);
+            Debug.Assert(currentNode.NConnected > 0);
             PolyNode nextNode = currentNode.GetRightestConnection(origDir);
             if (nextNode == null)
             {
@@ -668,37 +611,17 @@ namespace FarseerPhysics.Common
             }
 
             // Borked, clean up our mess and return
-            resultVecs[0] = startNode.position;
+            resultVecs[0] = startNode.Position;
             ++nResultVecs;
             while (nextNode != startNode)
             {
                 if (nResultVecs > 4 * nNodes)
                 {
-                    /*
-                    printf("%d, %d, %d\n",(int)startNode,(int)currentNode,(int)nextNode);
-                    printf("%f, %f . %f, %f\n",currentNode.position.x,currentNode.position.y, nextNode.position.x, nextNode.position.y);
-                        verts.printFormatted();
-                        printf("Dumping connection graph: \n");
-                        for (int i=0; i<nNodes; ++i) {
-                            printf("nodex[%d] = %f; nodey[%d] = %f;\n",i,nodes[i].position.x,i,nodes[i].position.y);
-                            printf("//connected to\n");
-                            for (int j=0; j<nodes[i].nConnected; ++j) {
-                                printf("connx[%d][%d] = %f; conny[%d][%d] = %f;\n",i,j,nodes[i].connected[j].position.x, i,j,nodes[i].connected[j].position.y);
-                            }
-                        }
-                        printf("Dumping results thus far: \n");
-                        for (int i=0; i<nResultVecs; ++i) {
-                            printf("x[%d]=map(%f,-3,3,0,width); y[%d] = map(%f,-3,3,height,0);\n",i,resultVecs[i].x,i,resultVecs[i].y);
-                        }
-                    //*/
                     Debug.Assert(false);
-                    //nodes should never be visited four times apiece (proof?), so we've probably hit a loop...crap
                 }
-                resultVecs[nResultVecs++] = nextNode.position;
+                resultVecs[nResultVecs++] = nextNode.Position;
                 PolyNode oldNode = currentNode;
                 currentNode = nextNode;
-                //printf("Old node connections = %d; address %d\n",oldNode.nConnected, (int)oldNode);
-                //printf("Current node connections = %d; address %d\n",currentNode.nConnected, (int)currentNode);
                 nextNode = currentNode.GetRightestConnection(oldNode);
                 if (nextNode == null)
                 {
@@ -710,7 +633,6 @@ namespace FarseerPhysics.Common
                     return vertices;
                 }
                 // There was a problem, so jump out of the loop and use whatever garbage we've generated so far
-                //printf("nextNode address: %d\n",(int)nextNode);
             }
 
             return new Vertices();
@@ -724,22 +646,14 @@ namespace FarseerPhysics.Common
              * Given sines and cosines, tells if A's angle is less than B's on -Pi, Pi
              * (in other words, is A "righter" than B)
              */
-            public PolyNode[] connected = new PolyNode[MaxConnected];
-            public int nConnected;
-            public Vector2 position;
-            private bool visited;
-
-            public PolyNode()
-            {
-                nConnected = 0;
-                visited = false;
-            }
+            public PolyNode[] Connected = new PolyNode[MaxConnected];
+            public int NConnected;
+            public Vector2 Position;
 
             public PolyNode(Vector2 pos)
             {
-                position = pos;
-                nConnected = 0;
-                visited = false;
+                Position = pos;
+                NConnected = 0;
             }
 
             private bool IsRighter(float sinA, float cosA, float sinB, float cosB)
@@ -756,37 +670,26 @@ namespace FarseerPhysics.Common
                 }
             }
 
-            //Fix for obnoxious behavior for the % operator for negative numbers...
-            private int remainder(int x, int modulus)
-            {
-                int rem = x % modulus;
-                while (rem < 0)
-                {
-                    rem += modulus;
-                }
-                return rem;
-            }
-
             public void AddConnection(PolyNode toMe)
             {
-                Debug.Assert(nConnected < MaxConnected);
+                Debug.Assert(NConnected < MaxConnected);
 
                 // Ignore duplicate additions
-                for (int i = 0; i < nConnected; ++i)
+                for (int i = 0; i < NConnected; ++i)
                 {
-                    if (connected[i] == toMe) return;
+                    if (Connected[i] == toMe) return;
                 }
-                connected[nConnected] = toMe;
-                ++nConnected;
+                Connected[NConnected] = toMe;
+                ++NConnected;
             }
 
             public void RemoveConnection(PolyNode fromMe)
             {
                 bool isFound = false;
                 int foundIndex = -1;
-                for (int i = 0; i < nConnected; ++i)
+                for (int i = 0; i < NConnected; ++i)
                 {
-                    if (fromMe == connected[i])
+                    if (fromMe == Connected[i])
                     {
                         //.position == connected[i].position){
                         isFound = true;
@@ -795,43 +698,17 @@ namespace FarseerPhysics.Common
                     }
                 }
                 Debug.Assert(isFound);
-                --nConnected;
-                //printf("nConnected: %d\n",nConnected);
-                for (int i = foundIndex; i < nConnected; ++i)
+                --NConnected;
+                for (int i = foundIndex; i < NConnected; ++i)
                 {
-                    connected[i] = connected[i + 1];
+                    Connected[i] = Connected[i + 1];
                 }
-            }
-
-            private void RemoveConnectionByIndex(int index)
-            {
-                --nConnected;
-                //printf("New nConnected = %d\n",nConnected);
-                for (int i = index; i < nConnected; ++i)
-                {
-                    connected[i] = connected[i + 1];
-                }
-            }
-
-            private bool IsConnectedTo(PolyNode me)
-            {
-                bool isFound = false;
-                for (int i = 0; i < nConnected; ++i)
-                {
-                    if (me == connected[i])
-                    {
-                        //.position == connected[i].position){
-                        isFound = true;
-                        break;
-                    }
-                }
-                return isFound;
             }
 
             public PolyNode GetRightestConnection(PolyNode incoming)
             {
-                if (nConnected == 0) Debug.Assert(false); // This means the connection graph is inconsistent
-                if (nConnected == 1)
+                if (NConnected == 0) Debug.Assert(false); // This means the connection graph is inconsistent
+                if (NConnected == 1)
                 {
                     //b2Assert(false);
                     // Because of the possibility of collapsing nearby points,
@@ -839,7 +716,7 @@ namespace FarseerPhysics.Common
                     // The correct behavior here is to turn around.
                     return incoming;
                 }
-                Vector2 inDir = position - incoming.position;
+                Vector2 inDir = Position - incoming.Position;
 
                 float inLength = inDir.Length();
                 inDir.Normalize();
@@ -847,47 +724,32 @@ namespace FarseerPhysics.Common
                 Debug.Assert(inLength > Settings.Epsilon);
 
                 PolyNode result = null;
-                for (int i = 0; i < nConnected; ++i)
+                for (int i = 0; i < NConnected; ++i)
                 {
-                    if (connected[i] == incoming) continue;
-                    Vector2 testDir = connected[i].position - position;
+                    if (Connected[i] == incoming) continue;
+                    Vector2 testDir = Connected[i].Position - Position;
                     float testLengthSqr = testDir.LengthSquared();
                     testDir.Normalize();
-                    /*
-                    if (testLengthSqr < COLLAPSE_DIST_SQR) {
-                        printf("Problem with connection %d\n",i);
-                        printf("This node has %d connections\n",nConnected);
-                        printf("That one has %d\n",connected[i].nConnected);
-                        if (this == connected[i]) printf("This points at itself.\n");
-                    }*/
                     Debug.Assert(testLengthSqr >= Settings.Epsilon * Settings.Epsilon);
                     float myCos = Vector2.Dot(inDir, testDir);
                     float mySin = MathUtils.Cross(inDir, testDir);
                     if (result != null)
                     {
-                        Vector2 resultDir = result.position - position;
+                        Vector2 resultDir = result.Position - Position;
                         resultDir.Normalize();
                         float resCos = Vector2.Dot(inDir, resultDir);
                         float resSin = MathUtils.Cross(inDir, resultDir);
                         if (IsRighter(mySin, myCos, resSin, resCos))
                         {
-                            result = connected[i];
+                            result = Connected[i];
                         }
                     }
                     else
                     {
-                        result = connected[i];
+                        result = Connected[i];
                     }
                 }
 
-                //if (B2_POLYGON_REPORT_ERRORS && result != null)
-                //{
-                //    printf("nConnected = %d\n", nConnected);
-                //    for (int i = 0; i < nConnected; ++i)
-                //    {
-                //        printf("connected[%d] @ %d\n", i, (int)connected[i]);
-                //    }
-                //}
                 Debug.Assert(result != null);
 
                 return result;
@@ -895,7 +757,7 @@ namespace FarseerPhysics.Common
 
             public PolyNode GetRightestConnection(Vector2 incomingDir)
             {
-                Vector2 diff = position - incomingDir;
+                Vector2 diff = Position - incomingDir;
                 PolyNode temp = new PolyNode(diff);
                 PolyNode res = GetRightestConnection(temp);
                 Debug.Assert(res != null);
@@ -947,12 +809,14 @@ namespace FarseerPhysics.Common
             }
         }
 
-        /// <summary>Winding number test for a point in a polygon.</summary>
+        /// <summary>
+        /// Winding number test for a point in a polygon.
+        /// </summary>
         /// See more info about the algorithm here: http://softsurfer.com/Archive/algorithm_0103/algorithm_0103.htm
         /// <param name="point">The point to be tested.</param>
         /// <returns>False if the winding number is even and the point is outside
         /// the polygon and True otherwise.</returns>
-        public bool PointInPolygon(Vector2 point)
+        public bool PointInPolygon(ref Vector2 point)
         {
             // Winding number
             int wn = 0;
@@ -966,14 +830,14 @@ namespace FarseerPhysics.Common
                 // Test edge for intersection with ray from point
                 if (p1.Y <= point.Y)
                 {
-                    if (p2.Y > point.Y && MathUtils.Area(p1, p2, point) > 0f)
+                    if (p2.Y > point.Y && MathUtils.Area(ref p1, ref p2, ref point) > 0f)
                     {
                         ++wn;
                     }
                 }
                 else
                 {
-                    if (p2.Y <= point.Y && MathUtils.Area(p1, p2, point) < 0f)
+                    if (p2.Y <= point.Y && MathUtils.Area(ref p1, ref p2, ref point) < 0f)
                     {
                         --wn;
                     }
@@ -983,11 +847,11 @@ namespace FarseerPhysics.Common
         }
 
         /// <summary>
-        /// * ref: http://ozviz.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/  - Solution 2 
-        /// * Compute the sum of the angles made between the test point and each pair of points making up the polygon. 
-        /// * If this sum is 2pi then the point is an interior point, if 0 then the point is an exterior point. 
+        /// Compute the sum of the angles made between the test point and each pair of points making up the polygon. 
+        /// If this sum is 2pi then the point is an interior point, if 0 then the point is an exterior point. 
+        /// ref: http://ozviz.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/  - Solution 2 
         /// </summary>
-        public bool PointInPolygonAngle(Vector2 point)
+        public bool PointInPolygonAngle(ref Vector2 point)
         {
             double angle = 0;
 

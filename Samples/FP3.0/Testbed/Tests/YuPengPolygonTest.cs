@@ -251,7 +251,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     if (_polygons[i] != null)
                     {
-                        if (_polygons[i].PointInPolygon(position))
+                        if (_polygons[i].PointInPolygon(ref position))
                         {
                             _selected = _polygons[i];
                             break;

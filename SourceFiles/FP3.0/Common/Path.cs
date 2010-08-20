@@ -23,7 +23,7 @@ namespace FarseerPhysics.Common
         /// </summary>
         [XmlElement("ControlPoints")] public List<Vector2> ControlPoints;
 
-        private float delta_t;
+        private float _deltaT;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Path"/> class.
@@ -37,9 +37,10 @@ namespace FarseerPhysics.Common
         /// Initializes a new instance of the <see cref="Path"/> class.
         /// </summary>
         /// <param name="vertices">The vertices to created the path from.</param>
-        public Path(ref Vector2[] vertices)
+        public Path(Vector2[] vertices)
         {
-            ControlPoints = new List<Vector2>();
+            ControlPoints = new List<Vector2>(vertices.Length);
+
             for (int i = 0; i < vertices.Length; i++)
             {
                 Add(vertices[i]);
@@ -52,7 +53,7 @@ namespace FarseerPhysics.Common
         /// <param name="vertices">The vertices to created the path from.</param>
         public Path(IList<Vector2> vertices)
         {
-            ControlPoints = new List<Vector2>();
+            ControlPoints = new List<Vector2>(vertices.Count);
             for (int i = 0; i < vertices.Count; i++)
             {
                 Add(vertices[i]);
@@ -173,9 +174,9 @@ namespace FarseerPhysics.Common
             {
                 Add(ControlPoints[0]);
 
-                delta_t = 1f / (ControlPoints.Count - 1);
+                _deltaT = 1f / (ControlPoints.Count - 1);
 
-                int p = (int) (time / delta_t);
+                int p = (int) (time / _deltaT);
 
                 // use a circular indexing system
                 int p0 = p - 1;
@@ -192,7 +193,7 @@ namespace FarseerPhysics.Common
                 else if (p3 >= ControlPoints.Count - 1) p3 = p3 - (ControlPoints.Count - 1);
 
                 // relative time
-                float lt = (time - delta_t * p) / delta_t;
+                float lt = (time - _deltaT * p) / _deltaT;
 
                 temp = Vector2.CatmullRom(ControlPoints[p0], ControlPoints[p1], ControlPoints[p2], ControlPoints[p3], lt);
 
@@ -200,7 +201,7 @@ namespace FarseerPhysics.Common
             }
             else
             {
-                int p = (int) (time / delta_t);
+                int p = (int) (time / _deltaT);
 
                 // 
                 int p0 = p - 1;
@@ -217,7 +218,7 @@ namespace FarseerPhysics.Common
                 else if (p3 >= ControlPoints.Count - 1) p3 = ControlPoints.Count - 1;
 
                 // relative time
-                float lt = (time - delta_t * p) / delta_t;
+                float lt = (time - _deltaT * p) / _deltaT;
 
                 temp = Vector2.CatmullRom(ControlPoints[p0], ControlPoints[p1], ControlPoints[p2], ControlPoints[p3], lt);
             }
@@ -255,19 +256,19 @@ output = new Vector2();
         public void Add(Vector2 point)
         {
             ControlPoints.Add(point);
-            delta_t = 1f / (ControlPoints.Count - 1);
+            _deltaT = 1f / (ControlPoints.Count - 1);
         }
 
         public void Remove(Vector2 point)
         {
             ControlPoints.Remove(point);
-            delta_t = 1f / (ControlPoints.Count - 1);
+            _deltaT = 1f / (ControlPoints.Count - 1);
         }
 
         public void RemoveAt(int index)
         {
             ControlPoints.RemoveAt(index);
-            delta_t = 1f / (ControlPoints.Count - 1);
+            _deltaT = 1f / (ControlPoints.Count - 1);
         }
 
         public float GetLength()

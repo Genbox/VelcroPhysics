@@ -33,7 +33,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 Vector2 next = vertices[nextId];
 
                 //If they collinear, continue
-                if (MathUtils.Collinear(prev, current, next, collinearityTolerance))
+                if (MathUtils.Collinear(ref prev, ref current, ref next, collinearityTolerance))
                     continue;
 
                 simplified.Add(current);
