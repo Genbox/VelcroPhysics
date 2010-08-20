@@ -31,9 +31,6 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {
-                new TestEntry {Name = "Tiles", CreateFcn = TilesTest.Create},
-                new TestEntry {Name = "YuPeng Polygon", CreateFcn = YuPengPolygonTest.Create},
-
                 //Original tests
                 new TestEntry {Name = "Character collision", CreateFcn = CharacterCollisionTest.Create},
                 new TestEntry {Name = "Edge Test", CreateFcn = EdgeTest.Create},
@@ -67,13 +64,11 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Gears", CreateFcn = GearsTest.Create},
                 new TestEntry {Name = "Line Joint", CreateFcn = LineJointTest.Create},
                 new TestEntry {Name = "Pulleys", CreateFcn = PulleysTest.Create},
-                new TestEntry {Name = "Revolute", CreateFcn = RevoluteTest.Create},
                 new TestEntry {Name = "Sensor Test", CreateFcn = SensorTest.Create},
                 new TestEntry {Name = "Shape Editing", CreateFcn = ShapeEditingTest.Create},
                 new TestEntry {Name = "Slider Crank", CreateFcn = SliderCrankTest.Create},
                 new TestEntry {Name = "Varying Friction", CreateFcn = VaryingFrictionTest.Create},
                 new TestEntry {Name = "Pinball", CreateFcn = PinballTest.Create},
-                new TestEntry {Name = "Web", CreateFcn = WebTest.Create},
                 new TestEntry {Name = "Revolute", CreateFcn = RevoluteTest.Create},
 
                 //FPE 3.0 specific tests
