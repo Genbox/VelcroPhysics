@@ -10,7 +10,6 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class YuPengPolygonTest : Test
     {
-        private AlgorithmUsed _algorithm;
         private Vertices _clip;
         private PolyClipError _err;
         private List<TextMessage> _messages;
@@ -20,8 +19,6 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Initialize()
         {
-            _algorithm = AlgorithmUsed.YuPeng;
-
             Vector2 trans = new Vector2();
             _messages = new List<TextMessage>();
             _polygons = new List<Vertices>();
@@ -132,29 +129,8 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(500, TextLine, "Shift = Intersect");
             TextLine += 15;
 
-            DebugView.DrawString(500, TextLine, "Tab = Change algorithm");
-            TextLine += 15;
-
-            if (_algorithm == AlgorithmUsed.YuPeng)
-            {
-                DebugView.DrawString(50, 35, "Using: YuPengClipper");
-            }
-            else
-            {
-                DebugView.DrawString(50, 35, "Using: TraceClipper");
-            }
-
-            TextLine += 15;
-            TextLine += 15;
-
             DebugView.DrawString(500, TextLine, "Holes are colored light blue");
             TextLine += 15;
-
-            DebugView.DrawString(500, TextLine, "#polygons: " + _polygons.Count);
-            TextLine += 15;
-
-            //DebugView.DrawString(50, TextLine, "Enter = Add to Simulation");
-            //TextLine += 15;
 
             for (int i = _messages.Count - 1; i >= 0; i--)
             {
@@ -206,58 +182,34 @@ namespace FarseerPhysics.TestBed.Tests
             // Perform a Union
             if (state.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
             {
-                if (_algorithm == AlgorithmUsed.YuPeng)
-                {
+
                     if (_subject != null && _clip != null)
                     {
                         DoBooleanOperation(YuPengClipper.Union(_subject, _clip, out _err));
                     }
-                }
-                else
-                {
-                    if (_subject != null && _clip != null)
-                    {
-                        DoUnion();
-                    }
-                }
+
             }
 
             // Perform a Subtraction
             if (state.IsKeyDown(Keys.Back) && oldState.IsKeyUp(Keys.Back))
             {
-                if (_algorithm == AlgorithmUsed.YuPeng)
-                {
+
                     if (_subject != null && _clip != null)
                     {
                         DoBooleanOperation(YuPengClipper.Difference(_subject, _clip, out _err));
                     }
-                }
-                else
-                {
-                    if (_subject != null && _clip != null)
-                    {
-                        DoSubtract();
-                    }
-                }
+
             }
 
             // Perform a Intersection
             if (state.IsKeyDown(Keys.LeftShift) && oldState.IsKeyUp(Keys.LeftShift))
             {
-                if (_algorithm == AlgorithmUsed.YuPeng)
-                {
+
                     if (_subject != null && _clip != null)
                     {
                         DoBooleanOperation(YuPengClipper.Intersect(_subject, _clip, out _err));
                     }
-                }
-                else
-                {
-                    if (_subject != null && _clip != null)
-                    {
-                        DoIntersect();
-                    }
-                }
+
             }
 
             // Select Subject
@@ -286,57 +238,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
             }
 
-            // Add to Simulation
-            /*if (state.IsKeyDown(Keys.Enter) && oldState.IsKeyUp(Keys.Enter)) {
-                if (_left != null) {
-                }
-            }*/
-
-            //Determine which algorithm to use y=Yupeng || b=Boolean
-            if (state.IsKeyDown(Keys.Tab) && oldState.IsKeyUp(Keys.Tab))
-            {
-                if (_algorithm == AlgorithmUsed.YuPeng)
-                {
-                    _algorithm = AlgorithmUsed.Trace;
-                }
-                else
-                {
-                    _algorithm = AlgorithmUsed.YuPeng;
-                }
-            }
-
             base.Keyboard(state, oldState);
-        }
-
-        private void DoIntersect()
-        {
-            // Do the union
-            PolyClipError error;
-            Vertices intersect = TraceClipper.Intersect(_subject, _clip, out error);
-
-            // Check for errors.
-            switch (error)
-            {
-                case PolyClipError.NoIntersections:
-                    WriteMessage("ERROR: Polygons do not intersect!");
-                    return;
-                case PolyClipError.Poly1InsidePoly2:
-                    WriteMessage("Polygon 1 completely inside polygon 2.");
-                    return;
-                case PolyClipError.InfiniteLoop:
-                    WriteMessage("Infinite Loop detected.");
-                    break;
-                case PolyClipError.None:
-                    WriteMessage("No errors with union.");
-                    break;
-            }
-
-            _polygons.Add(intersect);
-            _polygons.Remove(_subject);
-            _polygons.Remove(_clip);
-            _subject = null;
-            _clip = null;
-            _selected = null;
         }
 
         public override void Mouse(MouseState state, MouseState oldState)
@@ -388,69 +290,28 @@ namespace FarseerPhysics.TestBed.Tests
             _selected = null;
         }
 
-        private void DoUnion()
+        public Vertices CreateRectangle(float width, float height)
         {
-            // Do the union
-            PolyClipError error;
-            Vertices union = TraceClipper.Union(_subject, _clip, out error);
+            //Note: The rectangle has vertices along the edges. This is to support the distance grid better.
+            Vertices vertices = new Vertices();
+            vertices.Add(new Vector2(-width * .5f, -height * .5f));
+            vertices.Add(new Vector2(-width * .5f, -height * .25f));
+            vertices.Add(new Vector2(-width * .5f, 0));
+            vertices.Add(new Vector2(-width * .5f, height * .25f));
+            vertices.Add(new Vector2(-width * .5f, height * .5f));
+            vertices.Add(new Vector2(-width * .25f, height * .5f));
+            vertices.Add(new Vector2(0, height * .5f));
+            vertices.Add(new Vector2(width * .25f, height * .5f));
+            vertices.Add(new Vector2(width * .5f, height * .5f));
+            vertices.Add(new Vector2(width * .5f, height * .25f));
+            vertices.Add(new Vector2(width * .5f, 0));
+            vertices.Add(new Vector2(width * .5f, -height * .25f));
+            vertices.Add(new Vector2(width * .5f, -height * .5f));
+            vertices.Add(new Vector2(width * .25f, -height * .5f));
+            vertices.Add(new Vector2(0, -height * .5f));
+            vertices.Add(new Vector2(-width * .25f, -height * .5f));
 
-            // Check for errors.
-            switch (error)
-            {
-                case PolyClipError.NoIntersections:
-                    WriteMessage("ERROR: Polygons do not intersect!");
-                    return;
-                case PolyClipError.Poly1InsidePoly2:
-                    WriteMessage("Polygon 1 completely inside polygon 2.");
-                    return;
-                case PolyClipError.InfiniteLoop:
-                    WriteMessage("Infinite Loop detected.");
-                    break;
-                case PolyClipError.None:
-                    WriteMessage("No errors with union.");
-                    break;
-            }
-
-            _polygons.Add(union);
-            _polygons.Remove(_subject);
-            _polygons.Remove(_clip);
-            _subject = null;
-            _clip = null;
-            _selected = null;
-        }
-
-        private void DoSubtract()
-        {
-            // Do the subtraction.
-            PolyClipError error;
-            Vertices subtract = TraceClipper.Difference(_subject, _clip, out error);
-
-            // Check for errors
-            switch (error)
-            {
-                case PolyClipError.NoIntersections:
-                    WriteMessage("ERROR: Polygons do not intersect!");
-                    return;
-
-                case PolyClipError.Poly1InsidePoly2:
-                    WriteMessage("Polygon 1 completely inside polygon 2.");
-                    return;
-
-                case PolyClipError.InfiniteLoop:
-                    WriteMessage("Infinite Loop detected.");
-                    break;
-
-                case PolyClipError.None:
-                    WriteMessage("No errors with subtraction.");
-                    break;
-            }
-
-            _polygons.Add(subtract);
-            _polygons.Remove(_subject);
-            _polygons.Remove(_clip);
-            _subject = null;
-            _clip = null;
-            _selected = null;
+            return vertices;
         }
 
         private void AddCircle(int radius, int numSides)
@@ -461,7 +322,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void AddRectangle(int width, int height)
         {
-            Vertices verts = PolygonTools.CreateRectangle(width, height);
+            Vertices verts = CreateRectangle(width, height);//PolygonTools.CreateRectangle(width, height);
             _polygons.Add(verts);
         }
 
