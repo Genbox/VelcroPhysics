@@ -14,6 +14,8 @@ namespace FarseerPhysics.Factories
     /// </summary>
     public static class PathFactory
     {
+        //Contributed by Matthew Bettcher
+
         /// <summary>
         /// Convert a path into a set of edges and attaches them to the specified body.
         /// Note: use only for static edges.

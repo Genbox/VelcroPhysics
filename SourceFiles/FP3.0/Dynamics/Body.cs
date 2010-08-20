@@ -68,9 +68,6 @@ namespace FarseerPhysics.Dynamics
         IgnoreGravity = (1 << 7),
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
     public class Body
     {
         internal float AngularVelocityInternal;

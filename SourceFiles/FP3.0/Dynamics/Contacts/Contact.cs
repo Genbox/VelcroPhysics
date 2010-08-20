@@ -270,8 +270,8 @@ namespace FarseerPhysics.Dynamics.Contacts
         }
 
         /// <summary>
-        // Update the contact manifold and touching status.
-        // Note: do not assume the fixture AABBs are overlapping or are valid.
+        /// Update the contact manifold and touching status.
+        /// Note: do not assume the fixture AABBs are overlapping or are valid.
         /// </summary>
         /// <param name="contactManager">The contact manager.</param>
         internal void Update(ContactManager contactManager)

@@ -180,67 +180,67 @@ namespace FarseerPhysics.Dynamics
             BroadPhase.UpdatePairs(OnBroadphaseCollision);
         }
 
-        internal void Destroy(Contact c)
+        internal void Destroy(Contact contact)
         {
-            Fixture fixtureA = c.FixtureA;
-            Fixture fixtureB = c.FixtureB;
+            Fixture fixtureA = contact.FixtureA;
+            Fixture fixtureB = contact.FixtureB;
             Body bodyA = fixtureA.Body;
             Body bodyB = fixtureB.Body;
 
-            if (EndContact != null && c.IsTouching())
+            if (EndContact != null && contact.IsTouching())
             {
-                EndContact(c);
+                EndContact(contact);
             }
 
             // Remove from the world.
-            if (c.Prev != null)
+            if (contact.Prev != null)
             {
-                c.Prev.Next = c.Next;
+                contact.Prev.Next = contact.Next;
             }
 
-            if (c.Next != null)
+            if (contact.Next != null)
             {
-                c.Next.Prev = c.Prev;
+                contact.Next.Prev = contact.Prev;
             }
 
-            if (c == ContactList)
+            if (contact == ContactList)
             {
-                ContactList = c.Next;
+                ContactList = contact.Next;
             }
 
             // Remove from body 1
-            if (c.NodeA.Prev != null)
+            if (contact.NodeA.Prev != null)
             {
-                c.NodeA.Prev.Next = c.NodeA.Next;
+                contact.NodeA.Prev.Next = contact.NodeA.Next;
             }
 
-            if (c.NodeA.Next != null)
+            if (contact.NodeA.Next != null)
             {
-                c.NodeA.Next.Prev = c.NodeA.Prev;
+                contact.NodeA.Next.Prev = contact.NodeA.Prev;
             }
 
-            if (c.NodeA == bodyA.ContactList)
+            if (contact.NodeA == bodyA.ContactList)
             {
-                bodyA.ContactList = c.NodeA.Next;
+                bodyA.ContactList = contact.NodeA.Next;
             }
 
             // Remove from body 2
-            if (c.NodeB.Prev != null)
+            if (contact.NodeB.Prev != null)
             {
-                c.NodeB.Prev.Next = c.NodeB.Next;
+                contact.NodeB.Prev.Next = contact.NodeB.Next;
             }
 
-            if (c.NodeB.Next != null)
+            if (contact.NodeB.Next != null)
             {
-                c.NodeB.Next.Prev = c.NodeB.Prev;
+                contact.NodeB.Next.Prev = contact.NodeB.Prev;
             }
 
-            if (c.NodeB == bodyB.ContactList)
+            if (contact.NodeB == bodyB.ContactList)
             {
-                bodyB.ContactList = c.NodeB.Next;
+                bodyB.ContactList = contact.NodeB.Next;
             }
 
-            c.Destroy();
+            contact.Destroy();
 
             --ContactCount;
         }
