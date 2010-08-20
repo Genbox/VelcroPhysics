@@ -30,7 +30,7 @@ namespace FarseerPhysics.Common.ConvexHull
 
             //Start by placing first 3 vertices in convex CCW order
             int startIndex = 3;
-            float k = IsLeft(vertices[0], vertices[1], vertices[2]);
+            float k = MathUtils.Area(vertices[0], vertices[1], vertices[2]);
             if (k == 0)
             {
                 //Vertices are collinear.
@@ -41,9 +41,12 @@ namespace FarseerPhysics.Common.ConvexHull
 
                 //Go until the end of the collinear sequence of vertices
                 for (startIndex = 3; startIndex < vertices.Count; startIndex++)
-                    if (IsLeft(deque[0], deque[1], vertices[startIndex]) == 0) //This point is also collinear
+                {
+                    Vector2 tmp = vertices[startIndex];
+                    if (MathUtils.Area(ref deque[0], ref deque[1], ref tmp) == 0) //This point is also collinear
                         deque[1] = vertices[startIndex];
                     else break;
+                }
             }
             else
             {
@@ -71,12 +74,12 @@ namespace FarseerPhysics.Common.ConvexHull
                 Vector2 nextPt = vertices[i];
 
                 //Ignore if it is already within the convex hull we have constructed
-                if (IsLeft(deque[qfm1], deque[qf], nextPt) > 0 &&
-                    IsLeft(deque[qb], deque[qbm1], nextPt) > 0)
+                if (MathUtils.Area(ref deque[qfm1],ref  deque[qf],ref  nextPt) > 0 &&
+                    MathUtils.Area(ref deque[qb],ref  deque[qbm1],ref  nextPt) > 0)
                     continue;
 
                 //Pop front until convex
-                while (!(IsLeft(deque[qfm1], deque[qf], nextPt) > 0))
+                while (!(MathUtils.Area(ref deque[qfm1], ref deque[qf], ref nextPt) > 0))
                 {
                     //Pop the front element from the queue
                     qf = qfm1; //qf--;
@@ -88,7 +91,7 @@ namespace FarseerPhysics.Common.ConvexHull
                 deque[qf] = nextPt;
 
                 //Pop back until convex
-                while (!(IsLeft(deque[qb], deque[qbm1], nextPt) > 0))
+                while (!(MathUtils.Area(ref deque[qb], ref deque[qbm1], ref  nextPt) > 0))
                 {
                     //Pop the back element from the queue
                     qb = qbm1; //qb++;
@@ -113,18 +116,6 @@ namespace FarseerPhysics.Common.ConvexHull
                     convexHull.Add(deque[i]);
             }
             return convexHull;
-        }
-
-        /// <summary>
-        /// Returns a positive number if c is to the left of the line going from a to b.
-        /// </summary>
-        /// <remarks>Used by method <c>GetConvexHull()</c>.</remarks>
-        /// <returns>Positive number if points arc left, negative if points arc right, 
-        /// and 0 if points are collinear.</returns>
-        private static float IsLeft(Vector2 a, Vector2 b, Vector2 c)
-        {
-            //cross product
-            return (b.X - a.X) * (c.Y - a.Y) - (c.X - a.X) * (b.Y - a.Y);
         }
     }
 }
