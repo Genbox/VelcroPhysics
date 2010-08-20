@@ -25,10 +25,16 @@
 
 using System.Diagnostics;
 using FarseerPhysics.Common;
+using FarseerPhysics.Common.Decomposition;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Collision.Shapes
 {
+    /// <summary>
+    /// Represents a simple non-selfintersecting convex polygon.
+    /// If you want to have concave polygons, you will have to use the <see cref="BayazitDecomposer"/> or the <see cref="EarclipDecomposer"/>
+    /// to decompose the concave polygon into 2 or more convex polygons.
+    /// </summary>
     public class PolygonShape : Shape
     {
         public Vector2 Centroid;
@@ -170,9 +176,9 @@ namespace FarseerPhysics.Collision.Shapes
                 Vector2 e1 = p2 - p1;
                 Vector2 e2 = p3 - p1;
 
-                float D = MathUtils.Cross(e1, e2);
+                float d = MathUtils.Cross(e1, e2);
 
-                float triangleArea = 0.5f * D;
+                float triangleArea = 0.5f * d;
                 area += triangleArea;
 
                 // Area weighted centroid
@@ -308,66 +314,63 @@ namespace FarseerPhysics.Collision.Shapes
                 }
                 return true;
             }
-            else
+            float lower = 0.0f, upper = input.MaxFraction;
+
+            int index = -1;
+
+            for (int i = 0; i < Vertices.Count; ++i)
             {
-                float lower = 0.0f, upper = input.MaxFraction;
+                // p = p1 + a * d
+                // dot(normal, p - v) = 0
+                // dot(normal, p1 - v) + a * dot(normal, d) = 0
+                float numerator = Vector2.Dot(Normals[i], Vertices[i] - p1);
+                float denominator = Vector2.Dot(Normals[i], d);
 
-                int index = -1;
-
-                for (int i = 0; i < Vertices.Count; ++i)
+                if (denominator == 0.0f)
                 {
-                    // p = p1 + a * d
-                    // dot(normal, p - v) = 0
-                    // dot(normal, p1 - v) + a * dot(normal, d) = 0
-                    float numerator = Vector2.Dot(Normals[i], Vertices[i] - p1);
-                    float denominator = Vector2.Dot(Normals[i], d);
-
-                    if (denominator == 0.0f)
-                    {
-                        if (numerator < 0.0f)
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        // Note: we want this predicate without division:
-                        // lower < numerator / denominator, where denominator < 0
-                        // Since denominator < 0, we have to flip the inequality:
-                        // lower < numerator / denominator <==> denominator * lower > numerator.
-                        if (denominator < 0.0f && numerator < lower * denominator)
-                        {
-                            // Increase lower.
-                            // The segment enters this half-space.
-                            lower = numerator / denominator;
-                            index = i;
-                        }
-                        else if (denominator > 0.0f && numerator < upper * denominator)
-                        {
-                            // Decrease upper.
-                            // The segment exits this half-space.
-                            upper = numerator / denominator;
-                        }
-                    }
-
-                    // The use of epsilon here causes the assert on lower to trip
-                    // in some cases. Apparently the use of epsilon was to make edge
-                    // shapes work, but now those are handled separately.
-                    //if (upper < lower - b2_epsilon)
-                    if (upper < lower)
+                    if (numerator < 0.0f)
                     {
                         return false;
                     }
                 }
-
-                Debug.Assert(0.0f <= lower && lower <= input.MaxFraction);
-
-                if (index >= 0)
+                else
                 {
-                    output.Fraction = lower;
-                    output.Normal = MathUtils.Multiply(ref transform.R, Normals[index]);
-                    return true;
+                    // Note: we want this predicate without division:
+                    // lower < numerator / denominator, where denominator < 0
+                    // Since denominator < 0, we have to flip the inequality:
+                    // lower < numerator / denominator <==> denominator * lower > numerator.
+                    if (denominator < 0.0f && numerator < lower * denominator)
+                    {
+                        // Increase lower.
+                        // The segment enters this half-space.
+                        lower = numerator / denominator;
+                        index = i;
+                    }
+                    else if (denominator > 0.0f && numerator < upper * denominator)
+                    {
+                        // Decrease upper.
+                        // The segment exits this half-space.
+                        upper = numerator / denominator;
+                    }
                 }
+
+                // The use of epsilon here causes the assert on lower to trip
+                // in some cases. Apparently the use of epsilon was to make edge
+                // shapes work, but now those are handled separately.
+                //if (upper < lower - b2_epsilon)
+                if (upper < lower)
+                {
+                    return false;
+                }
+            }
+
+            Debug.Assert(0.0f <= lower && lower <= input.MaxFraction);
+
+            if (index >= 0)
+            {
+                output.Fraction = lower;
+                output.Normal = MathUtils.Multiply(ref transform.R, Normals[index]);
+                return true;
             }
 
             return false;
@@ -459,9 +462,9 @@ namespace FarseerPhysics.Collision.Shapes
                 Vector2 e1 = p2 - p1;
                 Vector2 e2 = p3 - p1;
 
-                float D = MathUtils.Cross(e1, e2);
+                float d = MathUtils.Cross(e1, e2);
 
-                float triangleArea = 0.5f * D;
+                float triangleArea = 0.5f * d;
                 area += triangleArea;
 
                 // Area weighted centroid
@@ -476,7 +479,7 @@ namespace FarseerPhysics.Collision.Shapes
                 float inty2 = inv3 * (0.25f * (ey1 * ey1 + ey2 * ey1 + ey2 * ey2) + (py * ey1 + py * ey2)) +
                               0.5f * py * py;
 
-                I += D * (intx2 + inty2);
+                I += d * (intx2 + inty2);
             }
 
             // Total mass
