@@ -323,21 +323,21 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             Body b2 = BodyB;
 
-            _localCenterA = Vector2.Zero; 
-            _localCenterB = b2.LocalCenter;
+            LocalCenterA = Vector2.Zero; 
+            LocalCenterB = b2.LocalCenter;
 
             Transform xf2;
             b2.GetTransform(out xf2);
 
             // Compute the effective masses.
             Vector2 r1 = LocalAnchorA; 
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - _localCenterB);
+            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - LocalCenterB);
             Vector2 d = b2.Sweep.c + r2 - /* b1._sweep.Center - */ r1;
 
-            _invMassA = 0.0f; 
-            _invIA = 0.0f;
-            _invMassB = b2.InvMass;
-            _invIB = b2.InvI;
+            InvMassA = 0.0f; 
+            InvIA = 0.0f;
+            InvMassB = b2.InvMass;
+            InvIB = b2.InvI;
 
             // Compute motor Jacobian and effective mass.
             {
@@ -345,7 +345,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 _a1 = MathUtils.Cross(d + r1, _axis);
                 _a2 = MathUtils.Cross(r2, _axis);
 
-                _motorMass = _invMassA + _invMassB + _invIA * _a1 * _a1 + _invIB * _a2 * _a2;
+                _motorMass = InvMassA + InvMassB + InvIA * _a1 * _a1 + InvIB * _a2 * _a2;
 
                 if (_motorMass > Settings.Epsilon)
                 {
@@ -360,8 +360,8 @@ namespace FarseerPhysics.Dynamics.Joints
                 _s1 = MathUtils.Cross(d + r1, _perp);
                 _s2 = MathUtils.Cross(r2, _perp);
 
-                float m1 = _invMassA, m2 = _invMassB;
-                float i1 = _invIA, i2 = _invIB;
+                float m1 = InvMassA, m2 = InvMassB;
+                float i1 = InvIA, i2 = InvIB;
 
                 float k11 = m1 + m2 + i1 * _s1 * _s1 + i2 * _s2 * _s2;
                 float k12 = i1 * _s1 + i2 * _s2;
@@ -424,8 +424,8 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 P = _impulse.X * _perp + (_motorImpulse + _impulse.Z) * _axis;
                 float L2 = _impulse.X * _s2 + _impulse.Y + (_motorImpulse + _impulse.Z) * _a2;
 
-                b2.LinearVelocityInternal += _invMassB * P;
-                b2.AngularVelocityInternal += _invIB * L2;
+                b2.LinearVelocityInternal += InvMassB * P;
+                b2.AngularVelocityInternal += InvIB * L2;
             }
             else
             {
@@ -457,11 +457,11 @@ namespace FarseerPhysics.Dynamics.Joints
                 float L1 = impulse * _a1;
                 float L2 = impulse * _a2;
 
-                v1 -= _invMassA * P;
-                w1 -= _invIA * L1;
+                v1 -= InvMassA * P;
+                w1 -= InvIA * L1;
 
-                v2 += _invMassB * P;
-                w2 += _invIB * L2;
+                v2 += InvMassB * P;
+                w2 += InvIB * L2;
             }
 
             Vector2 Cdot1 = new Vector2(Vector2.Dot(_perp, v2 - v1) + _s2 * w2 - _s1 * w1, w2 - w1);
@@ -496,8 +496,8 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 P = df.X * _perp + df.Z * _axis;
                 float L2 = df.X * _s2 + df.Y + df.Z * _a2;
 
-                v2 += _invMassB * P;
-                w2 += _invIB * L2;
+                v2 += InvMassB * P;
+                w2 += InvIB * L2;
             }
             else
             {
@@ -509,8 +509,8 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 P = df.X * _perp;
                 float L2 = df.X * _s2 + df.Y;
 
-                v2 += _invMassB * P;
-                w2 += _invIB * L2;
+                v2 += InvMassB * P;
+                w2 += InvIB * L2;
             }
 
             b2.LinearVelocityInternal = v2;
@@ -536,8 +536,8 @@ namespace FarseerPhysics.Dynamics.Joints
             Mat22 R1 = new Mat22(a1);
             Mat22 R2 = new Mat22(a2);
 
-            Vector2 r1 = MathUtils.Multiply(ref R1, LocalAnchorA - _localCenterA);
-            Vector2 r2 = MathUtils.Multiply(ref R2, LocalAnchorB - _localCenterB);
+            Vector2 r1 = MathUtils.Multiply(ref R1, LocalAnchorA - LocalCenterA);
+            Vector2 r2 = MathUtils.Multiply(ref R2, LocalAnchorB - LocalCenterB);
             Vector2 d = c2 + r2 - c1 - r1;
 
             if (_enableLimit)
@@ -586,8 +586,8 @@ namespace FarseerPhysics.Dynamics.Joints
 
             if (active)
             {
-                float m1 = _invMassA, m2 = _invMassB;
-                float i1 = _invIA, i2 = _invIB;
+                float m1 = InvMassA, m2 = InvMassB;
+                float i1 = InvIA, i2 = InvIB;
 
                 float k11 = m1 + m2 + i1 * _s1 * _s1 + i2 * _s2 * _s2;
                 float k12 = i1 * _s1 + i2 * _s2;
@@ -605,8 +605,8 @@ namespace FarseerPhysics.Dynamics.Joints
             }
             else
             {
-                float m1 = _invMassA, m2 = _invMassB;
-                float i1 = _invIA, i2 = _invIB;
+                float m1 = InvMassA, m2 = InvMassB;
+                float i1 = InvIA, i2 = InvIB;
 
                 float k11 = m1 + m2 + i1 * _s1 * _s1 + i2 * _s2 * _s2;
                 float k12 = i1 * _s1 + i2 * _s2;
@@ -625,10 +625,10 @@ namespace FarseerPhysics.Dynamics.Joints
             float L1 = impulse.X * _s1 + impulse.Y + impulse.Z * _a1;
             float L2 = impulse.X * _s2 + impulse.Y + impulse.Z * _a2;
 
-            c1 -= _invMassA * P;
-            a1 -= _invIA * L1;
-            c2 += _invMassB * P;
-            a2 += _invIB * L2;
+            c1 -= InvMassA * P;
+            a1 -= InvIA * L1;
+            c2 += InvMassB * P;
+            a2 += InvIB * L2;
 
             // TODO_ERIN remove need for this.
             //b1._sweep.Center = c1;

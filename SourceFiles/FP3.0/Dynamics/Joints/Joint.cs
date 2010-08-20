@@ -117,23 +117,23 @@ namespace FarseerPhysics.Dynamics.Joints
 
     public abstract class Joint
     {
-        internal JointEdge _edgeA;
-        internal JointEdge _edgeB;
-        protected float _invIA;
-        protected float _invIB;
-        protected float _invMassA;
-        protected float _invMassB;
-        internal bool _islandFlag;
-        protected Vector2 _localCenterA, _localCenterB;
+        internal JointEdge EdgeA;
+        internal JointEdge EdgeB;
+        protected float InvIA;
+        protected float InvIB;
+        protected float InvMassA;
+        protected float InvMassB;
+        internal bool IslandFlag;
+        protected Vector2 LocalCenterA, LocalCenterB;
 
         protected Joint(Body body, Body bodyB)
         {
             Debug.Assert(body != bodyB);
 
             BodyA = body;
-            _edgeA = new JointEdge();
+            EdgeA = new JointEdge();
             BodyB = bodyB;
-            _edgeB = new JointEdge();
+            EdgeB = new JointEdge();
 
             //Connected bodies should not collide by default
             CollideConnected = false;
@@ -149,7 +149,7 @@ namespace FarseerPhysics.Dynamics.Joints
             //Connected bodies should not collide by default
             CollideConnected = false;
 
-            _edgeA = new JointEdge();
+            EdgeA = new JointEdge();
         }
 
         /// <summary>
@@ -241,7 +241,10 @@ namespace FarseerPhysics.Dynamics.Joints
         internal abstract void InitVelocityConstraints(ref TimeStep step);
         internal abstract void SolveVelocityConstraints(ref TimeStep step);
 
-        // This returns true if the position errors are within tolerance.
+        /// <summary>
+        /// Solves the position constraints.
+        /// </summary>
+        /// <returns>returns true if the position errors are within tolerance.</returns>
         internal abstract bool SolvePositionConstraints();
     }
 }

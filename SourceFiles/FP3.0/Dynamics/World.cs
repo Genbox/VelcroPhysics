@@ -193,7 +193,7 @@ namespace FarseerPhysics.Dynamics
         /// Set flag to control automatic clearing of forces after each time step.
         /// </summary>
         /// <value><c>true</c> if it should auto clear forces; otherwise, <c>false</c>.</value>
-        private bool AutoClearForces
+        public bool AutoClearForces
         {
             set
             {
@@ -333,28 +333,28 @@ namespace FarseerPhysics.Dynamics
             JointList.Add(joint);
 
             // Connect to the bodies' doubly linked lists.
-            joint._edgeA.Joint = joint;
-            joint._edgeA.Other = joint.BodyB;
-            joint._edgeA.Prev = null;
-            joint._edgeA.Next = joint.BodyA.JointList;
+            joint.EdgeA.Joint = joint;
+            joint.EdgeA.Other = joint.BodyB;
+            joint.EdgeA.Prev = null;
+            joint.EdgeA.Next = joint.BodyA.JointList;
 
             if (joint.BodyA.JointList != null)
-                joint.BodyA.JointList.Prev = joint._edgeA;
+                joint.BodyA.JointList.Prev = joint.EdgeA;
 
-            joint.BodyA.JointList = joint._edgeA;
+            joint.BodyA.JointList = joint.EdgeA;
 
             // WIP David
             if (!joint.IsFixedType())
             {
-                joint._edgeB.Joint = joint;
-                joint._edgeB.Other = joint.BodyA;
-                joint._edgeB.Prev = null;
-                joint._edgeB.Next = joint.BodyB.JointList;
+                joint.EdgeB.Joint = joint;
+                joint.EdgeB.Other = joint.BodyA;
+                joint.EdgeB.Prev = null;
+                joint.EdgeB.Next = joint.BodyB.JointList;
 
                 if (joint.BodyB.JointList != null)
-                    joint.BodyB.JointList.Prev = joint._edgeB;
+                    joint.BodyB.JointList.Prev = joint.EdgeB;
 
-                joint.BodyB.JointList = joint._edgeB;
+                joint.BodyB.JointList = joint.EdgeB;
             }
 
             // WIP David
@@ -419,45 +419,45 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Remove from body 1.
-            if (joint._edgeA.Prev != null)
+            if (joint.EdgeA.Prev != null)
             {
-                joint._edgeA.Prev.Next = joint._edgeA.Next;
+                joint.EdgeA.Prev.Next = joint.EdgeA.Next;
             }
 
-            if (joint._edgeA.Next != null)
+            if (joint.EdgeA.Next != null)
             {
-                joint._edgeA.Next.Prev = joint._edgeA.Prev;
+                joint.EdgeA.Next.Prev = joint.EdgeA.Prev;
             }
 
-            if (joint._edgeA == bodyA.JointList)
+            if (joint.EdgeA == bodyA.JointList)
             {
-                bodyA.JointList = joint._edgeA.Next;
+                bodyA.JointList = joint.EdgeA.Next;
             }
 
-            joint._edgeA.Prev = null;
-            joint._edgeA.Next = null;
+            joint.EdgeA.Prev = null;
+            joint.EdgeA.Next = null;
 
             // WIP David
             if (!joint.IsFixedType())
             {
                 // Remove from body 2
-                if (joint._edgeB.Prev != null)
+                if (joint.EdgeB.Prev != null)
                 {
-                    joint._edgeB.Prev.Next = joint._edgeB.Next;
+                    joint.EdgeB.Prev.Next = joint.EdgeB.Next;
                 }
 
-                if (joint._edgeB.Next != null)
+                if (joint.EdgeB.Next != null)
                 {
-                    joint._edgeB.Next.Prev = joint._edgeB.Prev;
+                    joint.EdgeB.Next.Prev = joint.EdgeB.Prev;
                 }
 
-                if (joint._edgeB == bodyB.JointList)
+                if (joint.EdgeB == bodyB.JointList)
                 {
-                    bodyB.JointList = joint._edgeB.Next;
+                    bodyB.JointList = joint.EdgeB.Next;
                 }
 
-                joint._edgeB.Prev = null;
-                joint._edgeB.Next = null;
+                joint.EdgeB.Prev = null;
+                joint.EdgeB.Next = null;
             }
 
             // WIP David
@@ -676,7 +676,7 @@ namespace FarseerPhysics.Dynamics
             }
             foreach (Joint j in JointList)
             {
-                j._islandFlag = false;
+                j.IslandFlag = false;
             }
 
             // Build and simulate all awake islands.
@@ -771,7 +771,7 @@ namespace FarseerPhysics.Dynamics
                     // Search all joints connect to this body.
                     for (JointEdge je = b.JointList; je != null; je = je.Next)
                     {
-                        if (je.Joint._islandFlag)
+                        if (je.Joint.IslandFlag)
                         {
                             continue;
                         }
@@ -789,7 +789,7 @@ namespace FarseerPhysics.Dynamics
                             }
 
                             _island.Add(je.Joint);
-                            je.Joint._islandFlag = true;
+                            je.Joint.IslandFlag = true;
 
                             if ((other.Flags & BodyFlags.Island) != BodyFlags.None)
                             {
@@ -803,7 +803,7 @@ namespace FarseerPhysics.Dynamics
                         else
                         {
                             _island.Add(je.Joint);
-                            je.Joint._islandFlag = true;
+                            je.Joint.IslandFlag = true;
                         }
                     }
                 }
@@ -844,8 +844,11 @@ namespace FarseerPhysics.Dynamics
             ContactManager.FindNewContacts();
         }
 
+        /// <summary>
         // Advance a dynamic body to its first time of contact
         // and adjust the position to ensure clearance.
+        /// </summary>
+        /// <param name="body">The body.</param>
         private void SolveTOI(Body body)
         {
             // Find the minimum contact.
@@ -1039,9 +1042,11 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
         // Sequentially solve TOIs for each body. We bring each
         // body to the time of contact and perform some position correction.
         // Time is not conserved.
+        /// </summary>
         private void SolveTOI()
         {
             // Prepare all contacts.
