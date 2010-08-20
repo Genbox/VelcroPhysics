@@ -85,7 +85,6 @@ namespace HelloWorld
             Matrix proj = Matrix.CreateOrthographic(50 * _graphics.GraphicsDevice.Viewport.AspectRatio, 50, 0, 1);
             Matrix view = Matrix.Identity;
 
-            _debugView.DrawDebugData();
             _debugView.RenderDebugData(ref proj, ref view);
 
             base.Draw(gameTime);

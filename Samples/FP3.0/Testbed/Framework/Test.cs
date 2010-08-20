@@ -158,18 +158,10 @@ namespace FarseerPhysics.TestBed.Framework
             {
                 ++StepCount;
             }
-
-            //if (StepCount == 10000)
-            //    GameInstance.Exit();
         }
 
         public virtual void Keyboard(KeyboardState state, KeyboardState oldState)
         {
-        }
-
-        public void Draw(GameTime gameTime)
-        {
-            DebugView.DrawDebugData();
         }
 
         public virtual void Gamepad(GamePadState state, GamePadState oldState)
