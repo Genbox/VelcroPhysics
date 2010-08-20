@@ -71,7 +71,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void PreSolve(Contact contact, ref Manifold oldManifold)
+        protected override void PreSolve(Contact contact, ref Manifold oldManifold)
         {
             base.PreSolve(contact, ref oldManifold);
 

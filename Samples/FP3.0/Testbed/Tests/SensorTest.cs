@@ -77,7 +77,7 @@ namespace FarseerPhysics.TestBed.Tests
         }
 
         // Implement contact listener.
-        public override void BeginContact(Contact contact)
+        protected override void BeginContact(Contact contact)
         {
             Fixture fixtureA = contact.FixtureA;
             Fixture fixtureB = contact.FixtureB;
@@ -94,7 +94,7 @@ namespace FarseerPhysics.TestBed.Tests
         }
 
         // Implement contact listener.
-        public override void EndContact(Contact contact)
+        protected override void EndContact(Contact contact)
         {
             Fixture fixtureA = contact.FixtureA;
             Fixture fixtureB = contact.FixtureB;

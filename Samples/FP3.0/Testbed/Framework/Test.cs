@@ -37,13 +37,21 @@ namespace FarseerPhysics.TestBed.Framework
     {
         public static Random Random = new Random(0x2eed2eed);
 
+        /// <summary>
         /// Random number in range [-1,1]
+        /// </summary>
+        /// <returns></returns>
         public static float RandomFloat()
         {
             return (float) (Random.NextDouble() * 2.0 - 1.0);
         }
 
+        /// <summary>
         /// Random floating point number in range [lo, hi]
+        /// </summary>
+        /// <param name="lo">The lo.</param>
+        /// <param name="hi">The hi.</param>
+        /// <returns></returns>
         public static float RandomFloat(float lo, float hi)
         {
             float r = (float) Random.NextDouble();
@@ -248,19 +256,19 @@ namespace FarseerPhysics.TestBed.Framework
         }
 
         // Callbacks for derived classes.
-        public virtual void BeginContact(Contact contact)
+        protected virtual void BeginContact(Contact contact)
         {
         }
 
-        public virtual void EndContact(Contact contact)
+        protected virtual void EndContact(Contact contact)
         {
         }
 
-        public virtual void PreSolve(Contact contact, ref Manifold oldManifold)
+        protected virtual void PreSolve(Contact contact, ref Manifold oldManifold)
         {
         }
 
-        public virtual void PostSolve(Contact contact, ref ContactImpulse impulse)
+        protected virtual void PostSolve(Contact contact, ref ContactImpulse impulse)
         {
         }
     }

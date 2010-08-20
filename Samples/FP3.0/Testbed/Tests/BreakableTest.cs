@@ -93,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
             base.Initialize();
         }
 
-        public override void PostSolve(Contact contact, ref ContactImpulse impulse)
+        protected override void PostSolve(Contact contact, ref ContactImpulse impulse)
         {
             if (_broke)
             {

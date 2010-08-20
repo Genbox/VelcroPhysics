@@ -103,7 +103,7 @@ namespace FarseerPhysics.Collision.Shapes
                 Vector2 edge = Vertices[i2] - Vertices[i1];
                 Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
 
-                Vector2 temp = MathUtils.Cross(edge, 1.0f);
+                Vector2 temp = new Vector2(1.0f * edge.Y, -1.0f * edge.X);
                 temp.Normalize();
                 Normals.Add(temp);
             }
@@ -129,7 +129,9 @@ namespace FarseerPhysics.Collision.Shapes
 
                     // Your polygon is non-convex (it has an indentation) or
                     // has colinear edges.
-                    float s = MathUtils.Cross(edge, r);
+                    float s;
+                    MathUtils.Cross(ref edge, ref  r, out s);
+
                     Debug.Assert(s > 0.0f);
                 }
             }
@@ -462,7 +464,8 @@ namespace FarseerPhysics.Collision.Shapes
                 Vector2 e1 = p2 - p1;
                 Vector2 e2 = p3 - p1;
 
-                float d = MathUtils.Cross(e1, e2);
+                float d;
+                MathUtils.Cross(ref e1, ref e2, out d);
 
                 float triangleArea = 0.5f * d;
                 area += triangleArea;
