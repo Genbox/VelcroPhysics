@@ -458,7 +458,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
                 Projection = Matrix.CreateOrthographic(40 * aspect, 40, 0, 1);
 
-                DebugView.DrawDebugData();
                 DebugView.RenderDebugData(ref Projection, ref View);
 
                 ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);

@@ -261,7 +261,6 @@ namespace FarseerPhysics.TestBed
                 Resize(_width, _height);
             }
 
-            _test.Draw(gameTime);
             _test.DebugView.RenderDebugData(ref _projection);
 
             base.Draw(gameTime);

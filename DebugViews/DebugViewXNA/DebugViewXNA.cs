@@ -102,7 +102,7 @@ namespace FarseerPhysics.DebugViewXNA
         /// <summary>
         /// Call this to draw shapes and other debug draw data.
         /// </summary>
-        public void DrawDebugData()
+        private void DrawDebugData()
         {
             if ((Flags & DebugViewFlags.ContactPoints) == DebugViewFlags.ContactPoints)
             {
@@ -601,6 +601,8 @@ namespace FarseerPhysics.DebugViewXNA
 
         public void RenderDebugData(ref Matrix projection)
         {
+            DrawDebugData();
+
             // set the cull mode? should be unnecessary
             _device.RenderState.CullMode = CullMode.None;
             // turn alpha blending on
