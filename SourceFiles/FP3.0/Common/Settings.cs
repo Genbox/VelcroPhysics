@@ -30,6 +30,40 @@ namespace FarseerPhysics.Common
         public const float Epsilon = 1.192092896e-07f;
         public const float Pi = 3.14159265359f;
 
+        // Common
+
+        /// <summary>
+        /// Enabling diagnistics causes the engine to gather timing information.
+        /// You can see how much time it took to solve the contacts, solve CCD and
+        /// even how long it took to update the controllers.
+        /// </summary>
+        public static bool EnableDiagnostics = true;
+
+        /// <summary>
+        /// The number of velocity iterations used in the solver.
+        /// </summary>
+        public static int VelocityIterations = 8;
+
+        /// <summary>
+        /// The number of position iterations used in the solver.
+        /// </summary>
+        public static int PositionIterations = 3;
+
+        /// <summary>
+        /// Enable/Disable CCD
+        /// </summary>
+        public static bool ContinuousPhysics = true;
+
+        /// <summary>
+        /// Enable/Disable warmstarting
+        /// </summary>
+        public static bool EnableWarmstarting = true;
+
+        /// <summary>
+        /// Enable/Disable sleeping
+        /// </summary>
+        public static bool AllowSleep = true;
+
         /// The maximum number of contact points between two convex shapes.
         public const int MaxManifoldPoints = 2;
 
@@ -92,24 +126,17 @@ namespace FarseerPhysics.Common
         /// A body cannot sleep if its angular velocity is above this tolerance.
         public const float AngularSleepTolerance = (2.0f / 180.0f * Pi);
 
-        public static bool EnableDiagnostics = true;
-        public static int VelocityIterations = 8;
-        public static int PositionIterations = 3;
-        public static bool ContinuousPhysics = true;
-        public static bool EnableWarmstarting = true;
-        public static bool AllowSleep = true;
-
         /// The maximum linear velocity of a body. This limit is very large and is used
         /// to prevent numerical problems. You shouldn't need to adjust this.
-        public static float MaxTranslation = 2.0f;
+        public const float MaxTranslation = 2.0f;
 
-        public static float MaxTranslationSquared = (MaxTranslation * MaxTranslation);
+        public const float MaxTranslationSquared = (MaxTranslation * MaxTranslation);
 
         /// The maximum angular velocity of a body. This limit is very large and is used
         /// to prevent numerical problems. You shouldn't need to adjust this.
-        public static float MaxRotation = (0.5f * Pi);
+        public const float MaxRotation = (0.5f * Pi);
 
-        public static float MaxRotationSquared = (MaxRotation * MaxRotation);
+        public const float MaxRotationSquared = (MaxRotation * MaxRotation);
 
         /// Friction mixing law. Feel free to customize this.
         public static float b2MixFriction(float friction1, float friction2)
