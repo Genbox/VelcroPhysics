@@ -192,5 +192,78 @@ namespace FarseerPhysics.Factories
             return angleJoint;
         }
         #endregion
+
+        #region Distance Joint
+
+        public static DistanceJoint CreateDistanceJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
+        {
+            DistanceJoint distanceJoint = new DistanceJoint(bodyA, bodyB, anchorA, anchorB);
+            world.AddJoint(distanceJoint);
+            return distanceJoint;
+        }
+
+        public static FixedDistanceJoint CreateFixedDistanceJoint(World world, Body body, Vector2 localAnchor, Vector2 worldAnchor)
+        {
+            FixedDistanceJoint distanceJoint = new FixedDistanceJoint(body, localAnchor, worldAnchor);
+            world.AddJoint(distanceJoint);
+            return distanceJoint;
+        }
+
+        #endregion
+
+        #region Friction Joint
+
+        public static FrictionJoint CreateFrictionJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
+        {
+            FrictionJoint frictionJoint = new FrictionJoint(bodyA, bodyB, anchorA, anchorB);
+            world.AddJoint(frictionJoint);
+            return frictionJoint;
+        }
+
+        #endregion
+
+        #region Gear Joint
+
+        public static GearJoint CreateGearJoint(World world, Joint jointA, Joint jointB, float ratio)
+        {
+            GearJoint gearJoint = new GearJoint(jointA, jointB, ratio);
+            world.AddJoint(gearJoint);
+            return gearJoint;
+        }
+
+        #endregion
+
+        #region Pully Joint
+
+        public static PulleyJoint CreatePullyJoint(World world, Body bodyA, Body bodyB, Vector2 groundAnchorA, Vector2 groundAnchorB, Vector2 anchorA, Vector2 anchorB, float ratio)
+        {
+            PulleyJoint pulleyJoint = new PulleyJoint(bodyA, bodyB, groundAnchorA, groundAnchorB, anchorA, anchorB, ratio);
+            world.AddJoint(pulleyJoint);
+            return pulleyJoint;
+        }
+
+        #endregion
+
+        #region Weld Joint
+
+        public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
+        {
+            WeldJoint weldJoint = new WeldJoint(bodyA, bodyB, anchorA, anchorB);
+            world.AddJoint(weldJoint);
+            return weldJoint;
+        }
+
+        #endregion
+
+        #region Slider Joint
+
+        public static SliderJoint CreateSliderJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, float minLength, float maxLength)
+        {
+            SliderJoint sliderJoint = new SliderJoint(bodyA, bodyB, anchorA, anchorB, minLength, maxLength);
+            world.AddJoint(sliderJoint);
+            return sliderJoint;
+        }
+
+        #endregion
     }
 }
