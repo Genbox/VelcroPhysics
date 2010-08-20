@@ -10,6 +10,8 @@ namespace SimpleSamplesXNA.Demo7
 {
     internal class Demo7Screen : GameScreen, IDemoScreen
     {
+        private Ragdoll _ragdoll;
+
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -22,6 +24,10 @@ namespace SimpleSamplesXNA.Demo7
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows how to combine physics objects");
             sb.AppendLine("to create a ragdoll.");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  -Rotate: left and right triggers");
+            sb.AppendLine("  -Move: left thumbstick");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Mouse");
             sb.AppendLine("  -Hold down left button and drag");
@@ -38,7 +44,7 @@ namespace SimpleSamplesXNA.Demo7
 
         public override void LoadContent()
         {
-            new Ragdoll(World, new Vector2(0, 0));
+            _ragdoll = new Ragdoll(World, new Vector2(0, 0));
             CreateObstacles();
             base.LoadContent();
         }
@@ -55,6 +61,23 @@ namespace SimpleSamplesXNA.Demo7
             rect[1].Body.Position = new Vector2(-8, 7);
             rect[2].Body.Position = new Vector2(9, -7);
             rect[3].Body.Position = new Vector2(7, 5);
+        }
+
+        public override void HandleInput(InputState input)
+        {
+            if (input.CurrentGamePadState.IsConnected)
+            {
+                Vector2 force = 1000 * input.CurrentGamePadState.ThumbSticks.Left;
+                _ragdoll.Body.ApplyForce(force);
+
+                float rotation = 4000 * input.CurrentGamePadState.Triggers.Left;
+                _ragdoll.Body.ApplyTorque(rotation);
+
+                rotation = -4000 * input.CurrentGamePadState.Triggers.Right;
+                _ragdoll.Body.ApplyTorque(rotation);
+            }
+
+            base.HandleInput(input);
         }
     }
 }

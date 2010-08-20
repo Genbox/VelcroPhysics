@@ -11,6 +11,7 @@ namespace SimpleSamplesXNA.Demo3
     internal class Demo3Screen : GameScreen, IDemoScreen
     {
         private Fixture[] _obstacles = new Fixture[5];
+        private Agent _agent;
 
         #region IDemoScreen Members
 
@@ -51,7 +52,7 @@ namespace SimpleSamplesXNA.Demo3
 
         public override void LoadContent()
         {
-            new Agent(World, new Vector2(5, 10));
+            _agent = new Agent(World, new Vector2(5, 10));
 
             LoadObstacles();
 
@@ -77,6 +78,23 @@ namespace SimpleSamplesXNA.Demo3
             _obstacles[2].Body.Position = new Vector2(10, 5);
             _obstacles[3].Body.Position = new Vector2(-10, 15);
             _obstacles[4].Body.Position = new Vector2(-17, 0);
+        }
+
+        public override void HandleInput(InputState input)
+        {
+            if (input.CurrentGamePadState.IsConnected)
+            {
+                Vector2 force = 1000 * input.CurrentGamePadState.ThumbSticks.Left;
+                _agent.Body.ApplyForce(force);
+
+                float rotation = 400 * input.CurrentGamePadState.Triggers.Left;
+                _agent.Body.ApplyTorque(rotation);
+
+                rotation = -400 * input.CurrentGamePadState.Triggers.Right;
+                _agent.Body.ApplyTorque(rotation);
+            }
+
+            base.HandleInput(input);
         }
     }
 }

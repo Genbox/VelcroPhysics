@@ -92,5 +92,22 @@ namespace SimpleSamplesXNA.Demo5
 
             base.LoadContent();
         }
+
+        public override void HandleInput(InputState input)
+        {
+            if (input.CurrentGamePadState.IsConnected)
+            {
+                Vector2 force = 1000 * input.CurrentGamePadState.ThumbSticks.Left;
+                _agent.Body.ApplyForce(force);
+
+                float rotation = 400 * input.CurrentGamePadState.Triggers.Left;
+                _agent.Body.ApplyTorque(rotation);
+
+                rotation = -400 * input.CurrentGamePadState.Triggers.Right;
+                _agent.Body.ApplyTorque(rotation);
+            }
+
+            base.HandleInput(input);
+        }
     }
 }
