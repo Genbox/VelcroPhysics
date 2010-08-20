@@ -10,6 +10,7 @@ namespace SimpleSamplesXNA.Demo6
     public class Demo6Screen : GameScreen, IDemoScreen
     {
         private Spider[] _spiders;
+        private Agent _agent;
 
         #region IDemoScreen Members
 
@@ -24,6 +25,10 @@ namespace SimpleSamplesXNA.Demo6
             sb.AppendLine("This demo demonstrates the use of revolute joints ");
             sb.AppendLine("combined with angle joints that have a dynamic ");
             sb.AppendLine("target angle");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  -Rotate: left and right triggers");
+            sb.AppendLine("  -Move: left thumbstick");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Mouse");
             sb.AppendLine("  -Hold down left button and drag");
@@ -40,7 +45,7 @@ namespace SimpleSamplesXNA.Demo6
 
         public override void LoadContent()
         {
-            new Agent(World, new Vector2(0, -10));
+            _agent = new Agent(World, new Vector2(0, -10));
             _spiders = new Spider[8];
 
             for (int i = 0; i < _spiders.Length; i++)
@@ -62,6 +67,23 @@ namespace SimpleSamplesXNA.Demo6
             }
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+        }
+
+        public override void HandleInput(InputState input)
+        {
+            if (input.CurrentGamePadState.IsConnected)
+            {
+                Vector2 force = 1000 * input.CurrentGamePadState.ThumbSticks.Left;
+                _agent.Body.ApplyForce(force);
+
+                float rotation = 400 * input.CurrentGamePadState.Triggers.Left;
+                _agent.Body.ApplyTorque(rotation);
+
+                rotation = -400 * input.CurrentGamePadState.Triggers.Right;
+                _agent.Body.ApplyTorque(rotation);
+            }
+
+            base.HandleInput(input);
         }
     }
 }

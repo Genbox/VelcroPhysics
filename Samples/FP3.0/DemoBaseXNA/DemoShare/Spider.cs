@@ -24,30 +24,30 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
         public Spider(World world, Vector2 position)
         {
             //Load bodies
-            Fixture circle = FixtureFactory.CreateCircle(world, SpiderBodyRadius, 1, position);
+            Fixture circle = FixtureFactory.CreateCircle(world, SpiderBodyRadius, 0.1f, position);
             circle.Body.BodyType = BodyType.Dynamic;
 
             //Left upper leg
-            Fixture leftUpper = FixtureFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 1,
+            Fixture leftUpper = FixtureFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f,
                                                                circle.Body.Position - new Vector2(SpiderBodyRadius, 0) -
                                                                new Vector2(_upperLegSize.X / 2, 0));
             leftUpper.Body.BodyType = BodyType.Dynamic;
 
             //Left lower leg
-            Fixture leftLower = FixtureFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 1,
+            Fixture leftLower = FixtureFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f,
                                                                circle.Body.Position - new Vector2(SpiderBodyRadius, 0) -
                                                                new Vector2(_upperLegSize.X, 0) -
                                                                new Vector2(_lowerLegSize.X / 2, 0));
             leftLower.Body.BodyType = BodyType.Dynamic;
 
             //Right upper leg
-            Fixture rightUpper = FixtureFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 1,
+            Fixture rightUpper = FixtureFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f,
                                                                 circle.Body.Position + new Vector2(SpiderBodyRadius, 0) +
                                                                 new Vector2(_upperLegSize.X / 2, 0));
             rightUpper.Body.BodyType = BodyType.Dynamic;
 
             //Right lower leg
-            Fixture rightLower = FixtureFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 1,
+            Fixture rightLower = FixtureFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f,
                                                                 circle.Body.Position + new Vector2(SpiderBodyRadius, 0) +
                                                                 new Vector2(_upperLegSize.X, 0) +
                                                                 new Vector2(_lowerLegSize.X / 2, 0));
