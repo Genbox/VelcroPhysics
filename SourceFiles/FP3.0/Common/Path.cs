@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common
 {
+    //Contributed by Matthew Bettcher
+
     /// <summary>
     /// Path:
     /// Very similar to Vertices, but this
