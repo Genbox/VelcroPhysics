@@ -31,6 +31,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] g_testEntries =
             {
+                new TestEntry {Name = "Tiles", CreateFcn = TilesTest.Create},
                 new TestEntry {Name = "YuPeng Polygon", CreateFcn = YuPengPolygonTest.Create},
 
                 //Original tests

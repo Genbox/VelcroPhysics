@@ -12,6 +12,10 @@ namespace HelloWorld
     /// </summary>
     public class Game1 : Game
     {
+        // Usage:
+        //
+        // Press A or D to rotate the ball
+
         private GraphicsDeviceManager _graphics;
 
         //The most important object of them all; the world.
