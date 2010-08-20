@@ -271,10 +271,9 @@ namespace FarseerPhysics.Dynamics
                 return;
             }
 
-#if DEBUG
-            // You tried to remove a shape that is not attached to this body.
+            // You tried to remove a body that is not contained in the BodyList.
+            // Are you removing the body more than once?
             Debug.Assert(BodyList.Contains(body));
-#endif
 
             // Delete the attached joints.
             JointEdge je = body.JointList;
