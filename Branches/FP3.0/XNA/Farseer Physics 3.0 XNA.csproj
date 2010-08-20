@@ -146,9 +146,6 @@
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\PolygonManipulation\SimplifyTools.cs">
       <Link>Common\PolygonManipulation\SimplifyTools.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\PolygonManipulation\TraceClipper.cs">
-      <Link>Common\PolygonManipulation\TraceClipper.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\SourceFiles\FP3.0\Common\PolygonManipulation\YuPengClipper.cs">
       <Link>Common\PolygonManipulation\YuPengClipper.cs</Link>
     </Compile>
