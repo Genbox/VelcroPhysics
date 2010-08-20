@@ -78,18 +78,18 @@ namespace FarseerPhysics.Common.PolygonManipulation
             return result;
         }
 
-        private static void SimplifySection(Vertices pts, int i, int j)
+        private static void SimplifySection(Vertices vertices, int i, int j)
         {
             if ((i + 1) == j)
                 return;
 
-            Vector2 A = pts[i];
-            Vector2 B = pts[j];
+            Vector2 A = vertices[i];
+            Vector2 B = vertices[j];
             double maxDistance = -1.0;
             int maxIndex = i;
             for (int k = i + 1; k < j; k++)
             {
-                double distance = DistancePointLine(pts[k], A, B);
+                double distance = DistancePointLine(vertices[k], A, B);
 
                 if (distance > maxDistance)
                 {
@@ -102,8 +102,8 @@ namespace FarseerPhysics.Common.PolygonManipulation
                     _usePt[k] = false;
             else
             {
-                SimplifySection(pts, i, maxIndex);
-                SimplifySection(pts, maxIndex, j);
+                SimplifySection(vertices, i, maxIndex);
+                SimplifySection(vertices, maxIndex, j);
             }
         }
 
@@ -200,6 +200,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
         }
 
         //From Eric Jordan's convex decomposition library
+        
         /// <summary>
         /// Merges all parallel edges in the list of vertices
         /// </summary>
@@ -272,6 +273,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
         }
 
         //Misc
+        
         /// <summary>
         /// Reduces the polygon by distance.
         /// </summary>

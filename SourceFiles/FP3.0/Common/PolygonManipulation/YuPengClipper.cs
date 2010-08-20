@@ -17,15 +17,10 @@ namespace FarseerPhysics.Common.PolygonManipulation
         None,
         DegeneratedOutput,
         NonSimpleInput,
-        BrokenResult,
-        NoIntersections,
-        Poly1InsidePoly2,
-        InfiniteLoop
+        BrokenResult
     }
 
-    //
     //Clipper contributed by Helge Backhaus
-    //
 
     public static class YuPengClipper
     {
@@ -46,12 +41,14 @@ namespace FarseerPhysics.Common.PolygonManipulation
             return Execute(polygon1, polygon2, PolyClipType.Intersect, out error);
         }
 
-        /// <summary>Implements "A new algorithm for Boolean operations on general polygons" 
+        /// <summary>
+        /// Implements "A new algorithm for Boolean operations on general polygons" 
         /// available here: http://liama.ia.ac.cn/wiki/_media/user:dong:dong_cg_05.pdf
         /// Merges two polygons, a subject and a clip with the specified operation. Polygons may not be 
         /// self-intersecting.
         /// 
-        /// Warning: May yield incorrect results or even crash if polygons contain colinear points.</summary>
+        /// Warning: May yield incorrect results or even crash if polygons contain colinear points.
+        /// </summary>
         /// <param name="subject">The subject polygon.</param>
         /// <param name="clip">The clip polygon, which is added, 
         /// substracted or intersected with the subject</param>
@@ -128,7 +125,9 @@ namespace FarseerPhysics.Common.PolygonManipulation
             return result;
         }
 
-        /// <summary>Calculates all intersections between two polygons.</summary>
+        /// <summary>
+        /// Calculates all intersections between two polygons.
+        /// </summary>
         /// <param name="polygon1">The first polygon.</param>
         /// <param name="polygon2">The second polygon.</param>
         /// <param name="slicedPoly1">Returns the first polygon with added intersection points.</param>
@@ -208,7 +207,9 @@ namespace FarseerPhysics.Common.PolygonManipulation
             }
         }
 
-        /// <summary>Calculates the simplical chain corresponding to the input polygon.</summary>
+        /// <summary>
+        /// Calculates the simplical chain corresponding to the input polygon.
+        /// </summary>
         /// <remarks>Used by method <c>Execute()</c>.</remarks>
         private static void CalculateSimplicalChain(Vertices poly, out List<float> coeff,
                                                     out List<Edge> simplicies)
@@ -222,8 +223,10 @@ namespace FarseerPhysics.Common.PolygonManipulation
             }
         }
 
-        /// <summary>Calculates the characteristics function for all edges of
-        /// a given simplical chain.</summary>
+        /// <summary>
+        /// Calculates the characteristics function for all edges of
+        /// a given simplical chain.
+        /// </summary>
         /// <remarks>Used by method <c>Execute()</c>.</remarks>
         private static void CalculateEdgeCharacter(List<float> poly1Coeff, List<Edge> poly1Simplicies,
                                                    List<float> poly2Coeff, List<Edge> poly2Simplicies,
@@ -265,8 +268,10 @@ namespace FarseerPhysics.Common.PolygonManipulation
             }
         }
 
-        /// <summary>Calculates the result between the subject and clip simplical chains,
-        /// based on the provided operation.</summary>
+        /// <summary>
+        /// Calculates the result between the subject and clip simplical chains,
+        /// based on the provided operation.
+        /// </summary>
         /// <remarks>Used by method <c>Execute()</c>.</remarks>
         private static void CalculateResultChain(List<Edge> poly1Simplicies, List<float> poly1Char,
                                                  List<Edge> poly2Simplicies, List<float> poly2Char,
@@ -310,7 +315,9 @@ namespace FarseerPhysics.Common.PolygonManipulation
             }
         }
 
-        /// <summary>Calculates the polygon(s) from the result simplical chain.</summary>
+        /// <summary>
+        /// Calculates the polygon(s) from the result simplical chain.
+        /// </summary>
         /// <remarks>Used by method <c>Execute()</c>.</remarks>
         private static PolyClipError BuildPolygonsFromChain(List<Edge> simplicies, out List<Vertices> result)
         {
@@ -379,7 +386,9 @@ namespace FarseerPhysics.Common.PolygonManipulation
             return errVal;
         }
 
-        /// <summary>Needed to calculate the characteristics function of a simplex.</summary>
+        /// <summary>
+        /// Needed to calculate the characteristics function of a simplex.
+        /// </summary>
         /// <remarks>Used by method <c>CalculateEdgeCharacter()</c>.</remarks>
         private static float CalculateBeta(Vector2 point, Edge e, float coefficient)
         {
@@ -396,14 +405,18 @@ namespace FarseerPhysics.Common.PolygonManipulation
             return result;
         }
 
-        /// <summary>Needed for sorting multiple intersections points on the same edge.</summary>
+        /// <summary>
+        /// Needed for sorting multiple intersections points on the same edge.
+        /// </summary>
         /// <remarks>Used by method <c>CalculateIntersections()</c>.</remarks>
         private static float GetAlpha(Vector2 start, Vector2 end, Vector2 point)
         {
             return (point - start).LengthSquared() / (end - start).LengthSquared();
         }
 
-        /// <summary>Returns the coefficient of a simplex.</summary>
+        /// <summary>
+        /// Returns the coefficient of a simplex.
+        /// </summary>
         /// <remarks>Used by method <c>CalculateSimplicalChain()</c>.</remarks>
         private static float CalculateSimplexCoefficient(Vector2 a, Vector2 b, Vector2 c)
         {
@@ -421,8 +434,9 @@ namespace FarseerPhysics.Common.PolygonManipulation
             return 0f;
         }
 
-
-        /// <summary>Winding number test for a point in a simplex.</summary>
+        /// <summary>
+        /// Winding number test for a point in a simplex.
+        /// </summary>
         /// <param name="point">The point to be tested.</param>
         /// <param name="edge">The edge that the point is tested against.</param>
         /// <returns>False if the winding number is even and the point is outside
@@ -436,7 +450,9 @@ namespace FarseerPhysics.Common.PolygonManipulation
             return polygon.PointInPolygon(ref point);
         }
 
-        /// <summary>Tests if a point lies on a line segment.</summary>
+        /// <summary>
+        /// Tests if a point lies on a line segment.
+        /// </summary>
         /// <remarks>Used by method <c>CalculateBeta()</c>.</remarks>
         private static bool PoinOnLineSegment(Vector2 start, Vector2 end, Vector2 point)
         {
