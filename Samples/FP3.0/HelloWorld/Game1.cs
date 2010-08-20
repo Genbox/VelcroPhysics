@@ -72,6 +72,15 @@ namespace HelloWorld
             if (s.IsKeyDown(Keys.D))
                 _circleFixture.Body.ApplyTorque(-100);
 
+            //You can rotate the circle using the triggers on the Xbox360 controller.
+            GamePadState gamepad = GamePad.GetState(PlayerIndex.One);
+
+            float rotation = 40 * gamepad.Triggers.Left;
+            _circleFixture.Body.ApplyTorque(rotation);
+
+            rotation = -40 * gamepad.Triggers.Right;
+            _circleFixture.Body.ApplyTorque(rotation);
+
             //We update the world
             _world.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
 
