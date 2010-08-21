@@ -12,8 +12,8 @@ namespace FarseerPhysics.TestBed.Tests
     public class TextureVerticesTest : Test
     {
         private Texture2D _polygonTexture;
-        private List<Vertices> list;
-        private Vertices verts;
+        private List<Vertices> _list;
+        private Vertices _verts;
 
         private TextureVerticesTest()
         {
@@ -33,17 +33,17 @@ namespace FarseerPhysics.TestBed.Tests
             _polygonTexture.GetData(data);
 
             //Find the vertices that makes up the outline of the shape in the texture
-            verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height, true);
+            _verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height, true);
 
             //For now we need to scale the vertices (result is in pixels, we use meters)
             Vector2 scale = new Vector2(0.07f, 0.07f);
-            verts.Scale(ref scale);
+            _verts.Scale(ref scale);
 
             //Since it is a concave polygon, we need to partition it into several smaller convex polygons
-            list = BayazitDecomposer.ConvexPartition(verts);
+            _list = BayazitDecomposer.ConvexPartition(_verts);
 
             //Create a single body with multiple fixtures
-            List<Fixture> compund = FixtureFactory.CreateCompundPolygon(World, list, 1);
+            List<Fixture> compund = FixtureFactory.CreateCompundPolygon(World, _list, 1);
             compund[0].Body.BodyType = BodyType.Dynamic;
 
             List<Fixture> fixtures = FixtureFactory.CreateCapsule(World, 3, 1, 1);

@@ -13,12 +13,12 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class CuttingTest : Test
     {
-        private const float moveAmount = 0.1f;
+        private const float MoveAmount = 0.1f;
 
         private const int Count = 20;
         private Vector2 _end = new Vector2(6, 5);
         private Vector2 _start = new Vector2(-6, 5);
-        private bool switched;
+        private bool _switched;
 
         private CuttingTest()
         {
@@ -52,6 +52,13 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
+            DebugView.DrawString(50, TextLine, "Press A,S,W,D move endpoint");
+            TextLine += 15;
+            DebugView.DrawString(50, TextLine, "Press Enter to cut");
+            TextLine += 15;
+            DebugView.DrawString(50, TextLine, "Press TAB to change endpoint");
+            TextLine += 15;
+
             DebugView.DrawSegment(_start, _end, Color.Red);
 
             List<Fixture> fixtures = new List<Fixture>();
@@ -91,38 +98,38 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
         {
             if (state.IsKeyDown(Keys.Tab) && oldState.IsKeyUp(Keys.Tab))
-                switched = !switched;
+                _switched = !_switched;
 
             if (state.IsKeyDown(Keys.Enter) && oldState.IsKeyUp(Keys.Enter))
                 CuttingTools.Cut(World, _start, _end, 0.001f);
 
-            if (switched)
+            if (_switched)
             {
                 if (state.IsKeyDown(Keys.A))
-                    _start.X -= moveAmount;
+                    _start.X -= MoveAmount;
 
                 if (state.IsKeyDown(Keys.S))
-                    _start.Y -= moveAmount;
+                    _start.Y -= MoveAmount;
 
                 if (state.IsKeyDown(Keys.W))
-                    _start.Y += moveAmount;
+                    _start.Y += MoveAmount;
 
                 if (state.IsKeyDown(Keys.D))
-                    _start.X += moveAmount;
+                    _start.X += MoveAmount;
             }
             else
             {
                 if (state.IsKeyDown(Keys.A))
-                    _end.X -= moveAmount;
+                    _end.X -= MoveAmount;
 
                 if (state.IsKeyDown(Keys.S))
-                    _end.Y -= moveAmount;
+                    _end.Y -= MoveAmount;
 
                 if (state.IsKeyDown(Keys.W))
-                    _end.Y += moveAmount;
+                    _end.Y += MoveAmount;
 
                 if (state.IsKeyDown(Keys.D))
-                    _end.X += moveAmount;
+                    _end.X += MoveAmount;
             }
 
             base.Keyboard(state, oldState);

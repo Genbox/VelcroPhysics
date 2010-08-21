@@ -138,8 +138,8 @@ namespace FarseerPhysics.TestBed.Tests
                 }
 
                 d.Normalize();
-                Vector2 F = 100.0f * d;
-                body.ApplyForce(F, position);
+                Vector2 f = 100.0f * d;
+                body.ApplyForce(f, position);
             }
         }
 
