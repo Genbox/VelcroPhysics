@@ -271,7 +271,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 AABB aabb0 = actor.AABB;
                 MoveAABB(ref actor.AABB);
-                Vector2 displacement = actor.AABB.GetCenter() - aabb0.GetCenter();
+                Vector2 displacement = actor.AABB.Center - aabb0.Center;
                 _tree.MoveProxy(actor.ProxyId, ref actor.AABB, displacement);
                 return;
             }

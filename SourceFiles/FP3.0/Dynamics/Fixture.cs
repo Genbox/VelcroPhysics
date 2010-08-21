@@ -134,7 +134,7 @@ namespace FarseerPhysics.Dynamics
             Shape = shape.Clone();
 #endif
             // Reserve proxy space
-            int childCount = Shape.GetChildCount();
+            int childCount = Shape.ChildCount;
             Proxies = new FixtureProxy[childCount];
             for (int i = 0; i < childCount; ++i)
             {
@@ -337,7 +337,7 @@ namespace FarseerPhysics.Dynamics
             Debug.Assert(ProxyCount == 0);
 
             // Create proxies in the broad-phase.
-            ProxyCount = Shape.GetChildCount();
+            ProxyCount = Shape.ChildCount;
 
             for (int i = 0; i < ProxyCount; ++i)
             {

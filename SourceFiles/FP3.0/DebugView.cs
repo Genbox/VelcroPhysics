@@ -122,7 +122,7 @@ namespace FarseerPhysics
         /// <param name="red">The red value.</param>
         /// <param name="blue">The blue value.</param>
         /// <param name="green">The green value.</param>
-        public abstract void DrawPolygon(ref Vector2[] vertices, int count, float red, float blue, float green);
+        public abstract void DrawPolygon(Vector2[] vertices, int count, float red, float blue, float green);
 
         /// <summary>
         /// Draw a solid closed polygon provided in CCW order.
@@ -132,7 +132,7 @@ namespace FarseerPhysics
         /// <param name="red">The red value.</param>
         /// <param name="blue">The blue value.</param>
         /// <param name="green">The green value.</param>
-        public abstract void DrawSolidPolygon(ref Vector2[] vertices, int count, float red, float blue, float green);
+        public abstract void DrawSolidPolygon(Vector2[] vertices, int count, float red, float blue, float green);
 
         /// <summary>
         /// Draw a circle.

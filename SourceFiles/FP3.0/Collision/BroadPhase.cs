@@ -84,14 +84,10 @@ namespace FarseerPhysics.Collision
         {
             _queryCallback = new Func<int, bool>(QueryCallback);
 
-            _proxyCount = 0;
-
             _pairCapacity = 16;
-            _pairCount = 0;
             _pairBuffer = new Pair[_pairCapacity];
 
             _moveCapacity = 16;
-            _moveCount = 0;
             _moveBuffer = new int[_moveCapacity];
         }
 

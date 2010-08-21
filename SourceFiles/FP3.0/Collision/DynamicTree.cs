@@ -93,7 +93,6 @@ namespace FarseerPhysics.Collision
             _root = NullNode;
 
             _nodeCapacity = 16;
-            _nodeCount = 0;
             _nodes = new DynamicTreeNode[_nodeCapacity];
 
             // Build a linked list for the free list.
@@ -102,9 +101,6 @@ namespace FarseerPhysics.Collision
                 _nodes[i].ParentOrNext = i + 1;
             }
             _nodes[_nodeCapacity - 1].ParentOrNext = NullNode;
-            _freeList = 0;
-
-            _path = 0;
         }
 
         /// <summary>
@@ -361,8 +357,8 @@ namespace FarseerPhysics.Collision
 
                 // Separating axis for segment (Gino, p80).
                 // |dot(v, p1 - c)| > dot(|v|, h)
-                Vector2 c = node.AABB.GetCenter();
-                Vector2 h = node.AABB.GetExtents();
+                Vector2 c = node.AABB.Center;
+                Vector2 h = node.AABB.Extents;
                 float separation = Math.Abs(Vector2.Dot(v, p1 - c)) - Vector2.Dot(absV, h);
                 if (separation > 0.0f)
                 {
@@ -508,8 +504,8 @@ namespace FarseerPhysics.Collision
                 AABB aabb2 = new AABB();
                 aabb1.Combine(ref leafAABB, ref _nodes[child1].AABB);
                 aabb2.Combine(ref leafAABB, ref _nodes[child2].AABB);
-                float norm1 = (_nodes[child1].LeafCount + 1) * aabb1.GetPerimeter();
-                float norm2 = (_nodes[child2].LeafCount + 1) * aabb2.GetPerimeter();
+                float norm1 = (_nodes[child1].LeafCount + 1) * aabb1.Perimeter;
+                float norm2 = (_nodes[child2].LeafCount + 1) * aabb2.Perimeter;
 #endif
 
                 if (norm1 < norm2)

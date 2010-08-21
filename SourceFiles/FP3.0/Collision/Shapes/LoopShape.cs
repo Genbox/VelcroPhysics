@@ -53,22 +53,20 @@ namespace FarseerPhysics.Collision.Shapes
         {
             ShapeType = ShapeType.Loop;
             Radius = Settings.PolygonRadius;
-            Vertices = null;
-            Count = 0;
         }
 
         public override Shape Clone()
         {
-            var loop = new LoopShape();
+            LoopShape loop = new LoopShape();
             loop.Count = Count;
             loop.Radius = Radius;
             loop.Vertices = (Vector2[]) Vertices.Clone();
             return loop;
         }
 
-        public override int GetChildCount()
+        public override int ChildCount
         {
-            return Count;
+            get { return Count; }
         }
 
         /// <summary>

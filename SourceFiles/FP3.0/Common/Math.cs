@@ -377,22 +377,25 @@ namespace FarseerPhysics.Common
         /// Extract the angle from this matrix (assumed to be
         /// a rotation matrix).
         /// </summary>
-        /// <returns></returns>
-        public float GetAngle()
+        /// <value></value>
+        public float Angle
         {
-            return (float)Math.Atan2(col1.Y, col1.X);
+            get { return (float) Math.Atan2(col1.Y, col1.X); }
         }
 
-        public Mat22 GetInverse()
+        public Mat22 Inverse
         {
-            float a = col1.X, b = col2.X, c = col1.Y, d = col2.Y;
-            float det = a * d - b * c;
-            if (det != 0.0f)
+            get
             {
-                det = 1.0f / det;
-            }
+                float a = col1.X, b = col2.X, c = col1.Y, d = col2.Y;
+                float det = a * d - b * c;
+                if (det != 0.0f)
+                {
+                    det = 1.0f / det;
+                }
 
-            return new Mat22(new Vector2(det * d, -det * c), new Vector2(-det * b, det * a));
+                return new Mat22(new Vector2(det * d, -det * c), new Vector2(-det * b, det * a));
+            }
         }
 
         /// <summary>
@@ -532,10 +535,10 @@ namespace FarseerPhysics.Common
         /// <summary>
         /// Calculate the angle that the rotation matrix represents.
         /// </summary>
-        /// <returns></returns>
-        public float GetAngle()
+        /// <value></value>
+        public float Angle
         {
-            return (float)Math.Atan2(R.col1.Y, R.col1.X);
+            get { return (float) Math.Atan2(R.col1.Y, R.col1.X); }
         }
     }
 

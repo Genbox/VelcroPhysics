@@ -73,9 +73,9 @@ namespace FarseerPhysics.Collision.Shapes
             return clone;
         }
 
-        public override int GetChildCount()
+        public override int ChildCount
         {
-            return 1;
+            get { return 1; }
         }
 
         /// <summary>
@@ -196,23 +196,23 @@ namespace FarseerPhysics.Collision.Shapes
         /// <summary>
         /// Build vertices to represent an axis-aligned box.
         /// </summary>
-        /// <param name="hx">The half-width.</param>
-        /// <param name="hy">The half-height.</param>
-        public void SetAsBox(float hx, float hy)
+        /// <param name="halfWidth">The half-width.</param>
+        /// <param name="halfHeight">The half-height.</param>
+        public void SetAsBox(float halfWidth, float halfHeight)
         {
-            Set(PolygonTools.CreateRectangle(hx, hy));
+            Set(PolygonTools.CreateRectangle(halfWidth, halfHeight));
         }
 
         /// <summary>
         /// Build vertices to represent an oriented box.
         /// </summary>
-        /// <param name="hx">The half-width..</param>
-        /// <param name="hy">The half-height.</param>
+        /// <param name="halfWidth">The half-width..</param>
+        /// <param name="halfHeight">The half-height.</param>
         /// <param name="center">The center of the box in local coordinates.</param>
         /// <param name="angle">The rotation of the box in local coordinates.</param>
-        public void SetAsBox(float hx, float hy, Vector2 center, float angle)
+        public void SetAsBox(float halfWidth, float halfHeight, Vector2 center, float angle)
         {
-            Set(PolygonTools.CreateRectangle(hx, hy, center, angle));
+            Set(PolygonTools.CreateRectangle(halfWidth, halfHeight, center, angle));
         }
 
         /// <summary>

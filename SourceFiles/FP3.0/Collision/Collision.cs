@@ -359,30 +359,33 @@ namespace FarseerPhysics.Collision
         /// <summary>
         /// Get the center of the AABB.
         /// </summary>
-        /// <returns></returns>
-        public Vector2 GetCenter()
+        /// <value></value>
+        public Vector2 Center
         {
-            return 0.5f * (LowerBound + UpperBound);
+            get { return 0.5f * (LowerBound + UpperBound); }
         }
 
         /// <summary>
         /// Get the extents of the AABB (half-widths).
         /// </summary>
-        /// <returns></returns>
-        public Vector2 GetExtents()
+        /// <value></value>
+        public Vector2 Extents
         {
-            return 0.5f * (UpperBound - LowerBound);
+            get { return 0.5f * (UpperBound - LowerBound); }
         }
 
         /// <summary>
         /// Get the perimeter length
         /// </summary>
-        /// <returns></returns>
-        public float GetPerimeter()
+        /// <value></value>
+        public float Perimeter
         {
-            float wx = UpperBound.X - LowerBound.X;
-            float wy = UpperBound.Y - LowerBound.Y;
-            return 2.0f * (wx + wy);
+            get
+            {
+                float wx = UpperBound.X - LowerBound.X;
+                float wy = UpperBound.Y - LowerBound.Y;
+                return 2.0f * (wx + wy);
+            }
         }
 
         /// <summary>
@@ -561,15 +564,18 @@ namespace FarseerPhysics.Collision
         /// <summary>
         /// Gets the vertices of the AABB.
         /// </summary>
-        /// <returns>The corners of the AABB</returns>
-        public Vertices GetVertices()
+        /// <value>The corners of the AABB</value>
+        public Vertices Vertices
         {
-            Vertices vertices = new Vertices();
-            vertices.Add(LowerBound);
-            vertices.Add(new Vector2(LowerBound.X, UpperBound.Y));
-            vertices.Add(UpperBound);
-            vertices.Add(new Vector2(UpperBound.X, LowerBound.Y));
-            return vertices;
+            get
+            {
+                Vertices vertices = new Vertices();
+                vertices.Add(LowerBound);
+                vertices.Add(new Vector2(LowerBound.X, UpperBound.Y));
+                vertices.Add(UpperBound);
+                vertices.Add(new Vector2(UpperBound.X, LowerBound.Y));
+                return vertices;
+            }
         }
     }
 

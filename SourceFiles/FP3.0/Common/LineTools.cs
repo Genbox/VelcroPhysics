@@ -302,7 +302,7 @@ namespace FarseerPhysics.Common
         public static void LineSegmentAABBIntersect(ref Vector2 point1, ref Vector2 point2, AABB aabb,
                                                     ref List<Vector2> intersectionPoints)
         {
-            LineSegmentVerticesIntersect(ref point1, ref point2, aabb.GetVertices(), ref intersectionPoints);
+            LineSegmentVerticesIntersect(ref point1, ref point2, aabb.Vertices, ref intersectionPoints);
         }
     }
 }
