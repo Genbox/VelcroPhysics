@@ -23,7 +23,7 @@ namespace HelloWorld
 
         private Fixture _rectangleFixture;
         private Fixture _circleFixture;
-        
+
         private DebugViewXNA _debugView;
 
         public Game1()
@@ -75,11 +75,14 @@ namespace HelloWorld
             //You can rotate the circle using the triggers on the Xbox360 controller.
             GamePadState gamepad = GamePad.GetState(PlayerIndex.One);
 
-            float rotation = 40 * gamepad.Triggers.Left;
-            _circleFixture.Body.ApplyTorque(rotation);
+            if (gamepad.IsConnected)
+            {
+                float rotation = 40 * gamepad.Triggers.Left;
+                _circleFixture.Body.ApplyTorque(rotation);
 
-            rotation = -40 * gamepad.Triggers.Right;
-            _circleFixture.Body.ApplyTorque(rotation);
+                rotation = -40 * gamepad.Triggers.Right;
+                _circleFixture.Body.ApplyTorque(rotation);
+            }
 
             //We update the world
             _world.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
