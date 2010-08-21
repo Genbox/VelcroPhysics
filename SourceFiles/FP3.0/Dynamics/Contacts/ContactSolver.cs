@@ -215,7 +215,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     {
                         // K is safe to invert.
                         cc.K = new Mat22(new Vector2(k11, k12), new Vector2(k12, k22));
-                        cc.NormalMass = cc.K.GetInverse();
+                        cc.NormalMass = cc.K.Inverse;
                     }
                     else
                     {

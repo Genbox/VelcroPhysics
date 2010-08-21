@@ -139,7 +139,7 @@ namespace FarseerPhysics.Dynamics.Joints
             Mat22.Add(ref K1, ref K2, out K12);
             Mat22 K;
             Mat22.Add(ref K12, ref K3, out K);
-            _linearMass = K.GetInverse();
+            _linearMass = K.Inverse;
 
             _angularMass = iA + iB;
             if (_angularMass > 0.0f)

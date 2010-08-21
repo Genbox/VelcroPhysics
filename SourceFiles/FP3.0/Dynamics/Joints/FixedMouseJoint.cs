@@ -171,7 +171,7 @@ namespace FarseerPhysics.Dynamics.Joints
             K.col1.X += _gamma;
             K.col2.Y += _gamma;
 
-            _mass = K.GetInverse();
+            _mass = K.Inverse;
 
             _C = b.Sweep.c + r - LocalAnchorB;
 

@@ -214,8 +214,8 @@ namespace FarseerPhysics.DebugViewXNA
                     AABB aabbB;
                     fixtureB.GetAABB(out aabbB, 0);
 
-                    Vector2 cA = aabbA.GetCenter();
-                    Vector2 cB = aabbB.GetCenter();
+                    Vector2 cA = aabbA.Center;
+                    Vector2 cB = aabbB.Center;
 
                     DrawSegment(cA, cB, color);
                 }
@@ -424,7 +424,7 @@ namespace FarseerPhysics.DebugViewXNA
             }
         }
 
-        public override void DrawPolygon(ref Vector2[] vertices, int count, float red, float green, float blue)
+        public override void DrawPolygon(Vector2[] vertices, int count, float red, float green, float blue)
         {
             DrawPolygon(ref vertices, count, new Color(red, green, blue));
         }
@@ -447,7 +447,7 @@ namespace FarseerPhysics.DebugViewXNA
             _lineCount++;
         }
 
-        public override void DrawSolidPolygon(ref Vector2[] vertices, int count, float red, float green, float blue)
+        public override void DrawSolidPolygon(Vector2[] vertices, int count, float red, float green, float blue)
         {
             DrawSolidPolygon(ref vertices, count, new Color(red, green, blue), true);
         }

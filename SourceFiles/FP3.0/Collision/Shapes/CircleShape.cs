@@ -57,9 +57,9 @@ namespace FarseerPhysics.Collision.Shapes
             return shape;
         }
 
-        public override int GetChildCount()
+        public override int ChildCount
         {
-            return 1;
+            get { return 1; }
         }
 
         /// <summary>

@@ -91,8 +91,8 @@ namespace FarseerPhysics.Collision.Shapes
         /// <summary>
         /// Get the number of child primitives.
         /// </summary>
-        /// <returns></returns>
-        public abstract int GetChildCount();
+        /// <value></value>
+        public abstract int ChildCount { get; }
 
         /// <summary>
         /// Test a point for containment in this shape. This only works for convex shapes.
