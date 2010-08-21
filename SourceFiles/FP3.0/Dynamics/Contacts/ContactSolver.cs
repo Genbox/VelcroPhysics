@@ -34,7 +34,7 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics.Contacts
 {
-    public class ContactConstraintPoint
+    public sealed class ContactConstraintPoint
     {
         public Vector2 LocalPoint;
         public float NormalImpulse;

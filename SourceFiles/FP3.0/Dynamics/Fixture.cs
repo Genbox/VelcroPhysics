@@ -75,7 +75,7 @@ namespace FarseerPhysics.Dynamics
     /// <summary>
     /// This proxy is used internally to connect fixtures to the broad-phase.
     /// </summary>
-    public class FixtureProxy
+    public struct FixtureProxy
     {
         public AABB AABB;
         public int ChildIndex;

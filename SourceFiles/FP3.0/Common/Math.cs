@@ -271,7 +271,7 @@ namespace FarseerPhysics.Common
         #region Nested type: FloatConverter
 
         [StructLayout(LayoutKind.Explicit)]
-        internal struct FloatConverter
+        private struct FloatConverter
         {
             [FieldOffset(0)]
             public float x;

@@ -577,7 +577,7 @@ namespace FarseerPhysics.Collision
     {
         #region EPAxisType enum
 
-        public enum EPAxisType
+        private enum EPAxisType
         {
             Unknown,
             EdgeA,

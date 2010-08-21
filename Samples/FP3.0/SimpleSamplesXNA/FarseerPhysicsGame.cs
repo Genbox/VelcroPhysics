@@ -3,13 +3,6 @@ using FarseerPhysics.DemoBaseXNA.Components;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SimpleSamplesXNA.Demo1;
-using SimpleSamplesXNA.Demo2;
-using SimpleSamplesXNA.Demo3;
-using SimpleSamplesXNA.Demo4;
-using SimpleSamplesXNA.Demo5;
-using SimpleSamplesXNA.Demo6;
-using SimpleSamplesXNA.Demo7;
 
 namespace SimpleSamplesXNA
 {

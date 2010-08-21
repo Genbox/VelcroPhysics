@@ -672,7 +672,7 @@ namespace FarseerPhysics.DebugViewXNA
 
         #region Nested type: ContactPoint
 
-        public struct ContactPoint
+        private struct ContactPoint
         {
             public Vector2 Normal;
             public Vector2 Position;
