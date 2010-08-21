@@ -470,7 +470,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
         #region Nested type: Edge
 
         /// <summary>Specifies an Edge. Edges are used to represent simplicies in simplical chains</summary>
-        private class Edge
+        private sealed class Edge
         {
             public Edge(Vector2 edgeStart, Vector2 edgeEnd)
             {

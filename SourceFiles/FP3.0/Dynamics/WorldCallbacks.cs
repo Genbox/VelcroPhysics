@@ -68,14 +68,14 @@ namespace FarseerPhysics.Dynamics
 
     public delegate bool CollisionFilterDelegate(Fixture fixtureA, Fixture fixtureB);
 
-    public class DefaultContactFilter
+    public sealed class DefaultContactFilter
     {
         public DefaultContactFilter(World world)
         {
             world.ContactManager.ContactFilter += ShouldCollide;
         }
 
-        public bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)
+        private static bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)
         {
             if ((fixtureA.CollisionGroup == fixtureB.CollisionGroup) && fixtureA.CollisionGroup != 0 &&
                 fixtureB.CollisionGroup != 0)

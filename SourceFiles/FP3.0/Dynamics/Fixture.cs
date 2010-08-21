@@ -83,6 +83,10 @@ namespace FarseerPhysics.Dynamics
         public int ProxyId;
     }
 
+    public delegate bool CollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Contact manifold);
+
+    public delegate void SeparationEventHandler(Fixture fixtureA, Fixture fixtureB);
+
     /// <summary>
     /// A fixture is used to attach a Shape to a body for collision detection. A fixture
     /// inherits its transform from its parent. Fixtures hold additional non-geometric data
@@ -92,14 +96,6 @@ namespace FarseerPhysics.Dynamics
     /// </summary>
     public class Fixture
     {
-        #region Delegates
-
-        public delegate bool CollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Contact manifold);
-
-        public delegate void SeparationEventHandler(Fixture fixtureA, Fixture fixtureB);
-
-        #endregion
-
         private static int _fixtureIdCounter;
 
         /// <summary>

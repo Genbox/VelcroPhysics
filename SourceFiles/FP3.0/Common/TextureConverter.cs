@@ -873,7 +873,7 @@ namespace FarseerPhysics.Common
         Horizontal = 1
     }
 
-    public class CrossingEdgeInfo : IComparable
+    public sealed class CrossingEdgeInfo : IComparable
     {
         #region Attributes
 
@@ -967,7 +967,7 @@ namespace FarseerPhysics.Common
     /// <summary>
     /// Class used as a data container and helper for the texture-to-vertices code.
     /// </summary>
-    public class PolygonCreationAssistance
+    public sealed class PolygonCreationAssistance
     {
         private byte _alphaTolerance;
         private uint _alphaToleranceRealValue;
