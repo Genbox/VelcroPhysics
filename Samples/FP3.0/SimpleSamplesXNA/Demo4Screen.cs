@@ -8,7 +8,7 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 
-namespace SimpleSamplesXNA.Demo4
+namespace SimpleSamplesXNA
 {
     internal class Demo4Screen : GameScreen, IDemoScreen
     {

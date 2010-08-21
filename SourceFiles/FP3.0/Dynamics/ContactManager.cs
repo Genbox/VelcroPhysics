@@ -29,6 +29,8 @@ using FarseerPhysics.Dynamics.Contacts;
 
 namespace FarseerPhysics.Dynamics
 {
+    public delegate void BroadphaseDelegate(ref FixtureProxy proxyA, ref FixtureProxy proxyB);
+
     public class ContactManager
     {
         /// <summary>
@@ -49,7 +51,7 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public EndContactDelegate EndContact;
 
-        public Action<FixtureProxy, FixtureProxy> OnBroadphaseCollision;
+        public BroadphaseDelegate OnBroadphaseCollision;
 
         /// <summary>
         /// Fires after the solver has run
@@ -70,7 +72,7 @@ namespace FarseerPhysics.Dynamics
         }
 
         // Broad-phase callback.
-        private void AddPair(FixtureProxy proxyA, FixtureProxy proxyB)
+        private void AddPair(ref FixtureProxy proxyA, ref FixtureProxy proxyB)
         {
             Fixture fixtureA = proxyA.Fixture;
             Fixture fixtureB = proxyB.Fixture;
@@ -177,7 +179,7 @@ namespace FarseerPhysics.Dynamics
 
         internal void FindNewContacts()
         {
-            BroadPhase.UpdatePairs(OnBroadphaseCollision);
+            BroadPhase.UpdatePairs<FixtureProxy>(OnBroadphaseCollision);
         }
 
         internal void Destroy(Contact contact)

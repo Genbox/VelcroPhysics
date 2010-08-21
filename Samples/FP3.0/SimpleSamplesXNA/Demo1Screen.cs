@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using FarseerPhysics.Common;
+﻿using System.Text;
 using FarseerPhysics.DemoBaseXNA;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using FarseerPhysics.Dynamics;
@@ -8,23 +6,24 @@ using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace SimpleSamplesXNA.Demo2
+namespace SimpleSamplesXNA
 {
-    internal class Demo2Screen : GameScreen, IDemoScreen
+    internal class Demo1Screen : GameScreen, IDemoScreen
     {
-        private List<Fixture> _rectangles;
+        private Fixture _rectangle;
 
         #region IDemoScreen Members
 
         public string GetTitle()
         {
-            return "Demo2: Two fixtures with one body";
+            return "Demo1: A Single Fixture";
         }
 
         public string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows two shapes attached to a single body");
+            sb.AppendLine("This demo shows a single fixture.");
+            sb.AppendLine("A fixture is a combination of a body and a shape.");
             sb.AppendLine(string.Empty);
             sb.AppendLine("GamePad:");
             sb.AppendLine("  -Rotate: left and right triggers");
@@ -47,20 +46,8 @@ namespace SimpleSamplesXNA.Demo2
 
         public override void LoadContent()
         {
-            Vertices rect1 = PolygonTools.CreateRectangle(2, 2);
-            Vertices rect2 = PolygonTools.CreateRectangle(2, 2);
-
-            Vector2 trans = new Vector2(-2, 0);
-            rect1.Translate(ref trans);
-            trans = new Vector2(2, 0);
-            rect2.Translate(ref trans);
-
-            List<Vertices> vertices = new List<Vertices>(2);
-            vertices.Add(rect1);
-            vertices.Add(rect2);
-
-            _rectangles = FixtureFactory.CreateCompundPolygon(World, vertices, 1);
-            _rectangles[0].Body.BodyType = BodyType.Dynamic;
+            _rectangle = FixtureFactory.CreateRectangle(World, 5, 5, 1);
+            _rectangle.Body.BodyType = BodyType.Dynamic;
 
             base.LoadContent();
         }
@@ -81,19 +68,19 @@ namespace SimpleSamplesXNA.Demo2
 
         private void HandleGamePadInput(InputState input)
         {
-            Vector2 force = 100 * input.CurrentGamePadState.ThumbSticks.Left;
-            _rectangles[0].Body.ApplyForce(force);
+            Vector2 force = 50 * input.CurrentGamePadState.ThumbSticks.Left;
+            _rectangle.Body.ApplyForce(force);
 
-            float rotation = 200 * input.CurrentGamePadState.Triggers.Left;
-            _rectangles[0].Body.ApplyTorque(rotation);
+            float rotation = 40 * input.CurrentGamePadState.Triggers.Left;
+            _rectangle.Body.ApplyTorque(rotation);
 
-            rotation = -200 * input.CurrentGamePadState.Triggers.Right;
-            _rectangles[0].Body.ApplyTorque(rotation);
+            rotation = -40 * input.CurrentGamePadState.Triggers.Right;
+            _rectangle.Body.ApplyTorque(rotation);
         }
 
         private void HandleKeyboardInput(InputState input)
         {
-            const float forceAmount = 100;
+            const float forceAmount = 60;
             Vector2 force = Vector2.Zero;
             force.Y = -force.Y;
 
@@ -114,9 +101,9 @@ namespace SimpleSamplesXNA.Demo2
                 force += new Vector2(0, forceAmount);
             }
 
-            _rectangles[0].Body.ApplyForce(force);
+            _rectangle.Body.ApplyForce(force);
 
-            const float torqueAmount = 200;
+            const float torqueAmount = 40;
             float torque = 0;
 
             if (input.CurrentKeyboardState.IsKeyDown(Keys.Left))
@@ -128,7 +115,7 @@ namespace SimpleSamplesXNA.Demo2
                 torque -= torqueAmount;
             }
 
-            _rectangles[0].Body.ApplyTorque(torque);
+            _rectangle.Body.ApplyTorque(torque);
         }
     }
 }

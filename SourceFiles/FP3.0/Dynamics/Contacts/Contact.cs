@@ -38,7 +38,7 @@ namespace FarseerPhysics.Dynamics.Contacts
     /// maintained in each attached body. Each contact has two contact
     /// nodes, one for each attached body.
     /// </summary>
-    public class ContactEdge
+    public sealed class ContactEdge
     {
         /// <summary>
         /// The contact

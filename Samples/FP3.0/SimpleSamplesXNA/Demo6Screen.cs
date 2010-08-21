@@ -5,7 +5,7 @@ using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
-namespace SimpleSamplesXNA.Demo6
+namespace SimpleSamplesXNA
 {
     public class Demo6Screen : GameScreen, IDemoScreen
     {

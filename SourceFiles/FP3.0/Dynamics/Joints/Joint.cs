@@ -92,7 +92,7 @@ namespace FarseerPhysics.Dynamics.Joints
     /// maintained in each attached body. Each joint has two joint
     /// nodes, one for each attached body.
     /// </summary>
-    public class JointEdge
+    public sealed class JointEdge
     {
         /// <summary>
         /// The joint.

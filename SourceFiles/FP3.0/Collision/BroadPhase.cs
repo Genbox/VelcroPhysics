@@ -24,6 +24,7 @@
 */
 
 using System;
+using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Collision
@@ -178,7 +179,7 @@ namespace FarseerPhysics.Collision
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="callback">The callback.</param>
-        public void UpdatePairs<T>(Action<T, T> callback)
+        public void UpdatePairs<T>(BroadphaseDelegate callback)
         {
             // Reset pair buffer
             _pairCount = 0;
@@ -212,10 +213,10 @@ namespace FarseerPhysics.Collision
             while (i < _pairCount)
             {
                 Pair primaryPair = _pairBuffer[i];
-                object userDataA = _tree.GetUserData<T>(primaryPair.ProxyIdA);
-                object userDataB = _tree.GetUserData<T>(primaryPair.ProxyIdB);
+                FixtureProxy userDataA = _tree.GetUserData<FixtureProxy>(primaryPair.ProxyIdA);
+                FixtureProxy userDataB = _tree.GetUserData<FixtureProxy>(primaryPair.ProxyIdB);
 
-                callback((T) userDataA, (T) userDataB);
+                callback(ref userDataA, ref userDataB);
                 ++i;
 
                 // Skip any duplicate pairs.

@@ -57,8 +57,8 @@ namespace FarseerPhysics.TestBed.Tests
                 _actors[i] = new Actor();
 
                 Actor actor = _actors[i];
-                GetRandomAABB(out actor.aabb);
-                actor.proxyId = _tree.CreateProxy(ref actor.aabb, actor);
+                GetRandomAABB(out actor.AABB);
+                actor.ProxyId = _tree.CreateProxy(ref actor.AABB, actor);
             }
 
             _stepCount = 0;
@@ -86,8 +86,8 @@ namespace FarseerPhysics.TestBed.Tests
             _rayActor = null;
             for (int i = 0; i < ActorCount; ++i)
             {
-                _actors[i].fraction = 1.0f;
-                _actors[i].overlap = false;
+                _actors[i].Fraction = 1.0f;
+                _actors[i].Overlap = false;
             }
 
             if (_automated)
@@ -106,11 +106,11 @@ namespace FarseerPhysics.TestBed.Tests
             for (int i = 0; i < ActorCount; ++i)
             {
                 Actor actor = _actors[i];
-                if (actor.proxyId == -1)
+                if (actor.ProxyId == -1)
                     continue;
 
                 Color ca = new Color(0.9f, 0.9f, 0.9f);
-                if (actor == _rayActor && actor.overlap)
+                if (actor == _rayActor && actor.Overlap)
                 {
                     ca = new Color(0.9f, 0.6f, 0.6f);
                 }
@@ -118,12 +118,12 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     ca = new Color(0.6f, 0.9f, 0.6f);
                 }
-                else if (actor.overlap)
+                else if (actor.Overlap)
                 {
                     ca = new Color(0.6f, 0.6f, 0.9f);
                 }
 
-                DebugView.DrawAABB(ref actor.aabb, ca);
+                DebugView.DrawAABB(ref actor.AABB, ca);
             }
 
             Color c = new Color(0.7f, 0.7f, 0.7f);
@@ -139,7 +139,7 @@ namespace FarseerPhysics.TestBed.Tests
             if (_rayActor != null)
             {
                 Color cr = new Color(0.2f, 0.2f, 0.9f);
-                Vector2 p = _rayCastInput.Point1 + _rayActor.fraction * (_rayCastInput.Point2 - _rayCastInput.Point1);
+                Vector2 p = _rayCastInput.Point1 + _rayActor.Fraction * (_rayCastInput.Point2 - _rayCastInput.Point1);
                 DebugView.DrawPoint(p, 0.1f, cr);
             }
 
@@ -175,7 +175,7 @@ namespace FarseerPhysics.TestBed.Tests
         private bool QueryCallback(int proxyid)
         {
             Actor actor = _tree.GetUserData<Actor>(proxyid);
-            actor.overlap = AABB.TestOverlap(ref _queryAABB, ref actor.aabb);
+            actor.Overlap = AABB.TestOverlap(ref _queryAABB, ref actor.AABB);
             return true;
         }
 
@@ -184,13 +184,13 @@ namespace FarseerPhysics.TestBed.Tests
             Actor actor = _tree.GetUserData<Actor>(proxyid);
 
             RayCastOutput output;
-            bool hit = actor.aabb.RayCast(out output, ref input);
+            bool hit = actor.AABB.RayCast(out output, ref input);
 
             if (hit)
             {
                 _rayCastOutput = output;
                 _rayActor = actor;
-                actor.fraction = output.Fraction;
+                actor.Fraction = output.Fraction;
                 return output.Fraction;
             }
 
@@ -234,10 +234,10 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 int j = Rand.Random.Next() % ActorCount;
                 Actor actor = _actors[j];
-                if (actor.proxyId == -1)
+                if (actor.ProxyId == -1)
                 {
-                    GetRandomAABB(out actor.aabb);
-                    actor.proxyId = _tree.CreateProxy(ref actor.aabb, actor);
+                    GetRandomAABB(out actor.AABB);
+                    actor.ProxyId = _tree.CreateProxy(ref actor.AABB, actor);
                     return;
                 }
             }
@@ -249,10 +249,10 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 int j = Rand.Random.Next() % ActorCount;
                 Actor actor = _actors[j];
-                if (actor.proxyId != -1)
+                if (actor.ProxyId != -1)
                 {
-                    _tree.DestroyProxy(actor.proxyId);
-                    actor.proxyId = -1;
+                    _tree.DestroyProxy(actor.ProxyId);
+                    actor.ProxyId = -1;
                     return;
                 }
             }
@@ -264,15 +264,15 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 int j = Rand.Random.Next() % ActorCount;
                 Actor actor = _actors[j];
-                if (actor.proxyId == -1)
+                if (actor.ProxyId == -1)
                 {
                     continue;
                 }
 
-                AABB aabb0 = actor.aabb;
-                MoveAABB(ref actor.aabb);
-                Vector2 displacement = actor.aabb.GetCenter() - aabb0.GetCenter();
-                _tree.MoveProxy(actor.proxyId, ref actor.aabb, displacement);
+                AABB aabb0 = actor.AABB;
+                MoveAABB(ref actor.AABB);
+                Vector2 displacement = actor.AABB.GetCenter() - aabb0.GetCenter();
+                _tree.MoveProxy(actor.ProxyId, ref actor.AABB, displacement);
                 return;
             }
         }
@@ -303,13 +303,13 @@ namespace FarseerPhysics.TestBed.Tests
 
             for (int i = 0; i < ActorCount; ++i)
             {
-                if (_actors[i].proxyId == -1)
+                if (_actors[i].ProxyId == -1)
                 {
                     continue;
                 }
 
-                bool overlap = AABB.TestOverlap(ref _queryAABB, ref _actors[i].aabb);
-                Debug.Assert(overlap == _actors[i].overlap);
+                bool overlap = AABB.TestOverlap(ref _queryAABB, ref _actors[i].AABB);
+                Debug.Assert(overlap == _actors[i].Overlap);
             }
         }
 
@@ -327,13 +327,13 @@ namespace FarseerPhysics.TestBed.Tests
             RayCastOutput bruteOutput = new RayCastOutput();
             for (int i = 0; i < ActorCount; ++i)
             {
-                if (_actors[i].proxyId == -1)
+                if (_actors[i].ProxyId == -1)
                 {
                     continue;
                 }
 
                 RayCastOutput output;
-                bool hit = _actors[i].aabb.RayCast(out output, ref input);
+                bool hit = _actors[i].AABB.RayCast(out output, ref input);
                 if (hit)
                 {
                     bruteActor = _actors[i];
@@ -350,12 +350,12 @@ namespace FarseerPhysics.TestBed.Tests
 
         #region Nested type: Actor
 
-        private class Actor
+        private sealed class Actor
         {
-            internal AABB aabb;
-            internal float fraction;
-            internal bool overlap;
-            internal int proxyId;
+            internal AABB AABB;
+            internal float Fraction;
+            internal bool Overlap;
+            internal int ProxyId;
         }
 
         #endregion
