@@ -167,9 +167,9 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(50, TextLine, string.Format("Mode = {0}", _mode));
             TextLine += 15;
 
-            const float L = 11.0f;
+            const float l = 11.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);
-            Vector2 d = new Vector2(L * (float) Math.Cos(_angle), L * (float) Math.Sin(_angle));
+            Vector2 d = new Vector2(l * (float) Math.Cos(_angle), l * (float) Math.Sin(_angle));
             Vector2 point2 = point1 + d;
 
             Vector2 point = Vector2.Zero, normal = Vector2.Zero;

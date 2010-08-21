@@ -37,9 +37,9 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class EdgeShapes : Test
     {
-        private const int e_maxBodies = 256;
+        private const int MaxBodies = 256;
         private float _angle;
-        private Body[] _bodies = new Body[e_maxBodies];
+        private Body[] _bodies = new Body[MaxBodies];
         private int _bodyIndex;
         private CircleShape _circle;
         private Fixture _fixture;
@@ -149,12 +149,12 @@ namespace FarseerPhysics.TestBed.Tests
                 fixture.Friction = 0.3f;
             }
 
-            _bodyIndex = (_bodyIndex + 1) % e_maxBodies;
+            _bodyIndex = (_bodyIndex + 1) % MaxBodies;
         }
 
         private void DestroyBody()
         {
-            for (int i = 0; i < e_maxBodies; ++i)
+            for (int i = 0; i < MaxBodies; ++i)
             {
                 if (_bodies[i] != null)
                 {
@@ -202,9 +202,9 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(50, TextLine, "Press 1-5 to drop stuff");
             TextLine += 15;
 
-            const float L = 25.0f;
+            const float l = 25.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);
-            Vector2 d = new Vector2(L * (float) Math.Cos(_angle), -L * Math.Abs((float) Math.Sin(_angle)));
+            Vector2 d = new Vector2(l * (float) Math.Cos(_angle), -l * Math.Abs((float) Math.Sin(_angle)));
             Vector2 point2 = point1 + d;
 
             World.RayCast((fixture, point, normal, fraction) =>

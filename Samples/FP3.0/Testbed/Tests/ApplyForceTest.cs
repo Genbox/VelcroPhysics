@@ -43,7 +43,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             World.Gravity = Vector2.Zero;
 
-            const float k_restitution = 0.4f;
+            const float restitution = 0.4f;
 
             Body ground;
             {
@@ -56,7 +56,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 // Left vertical
                 Fixture fixture = ground.CreateFixture(shape, 0);
-                fixture.Restitution = k_restitution;
+                fixture.Restitution = restitution;
 
                 // Right vertical
                 edge = PolygonTools.CreateEdge(new Vector2(20.0f, -20.0f), new Vector2(20.0f, 20.0f));

@@ -87,7 +87,7 @@ namespace FarseerPhysics.TestBed
             Window.ClientSizeChanged += WindowClientSizeChanged;
 
             _testCount = 0;
-            while (TestEntries.g_testEntries[_testCount].CreateFcn != null)
+            while (TestEntries.TestList[_testCount].CreateFcn != null)
             {
                 ++_testCount;
             }
@@ -99,7 +99,7 @@ namespace FarseerPhysics.TestBed
 
         private void StartTest(int index)
         {
-            _entry = TestEntries.g_testEntries[index];
+            _entry = TestEntries.TestList[index];
             _test = _entry.CreateFcn();
             _test.GameInstance = this;
             _test.Initialize();

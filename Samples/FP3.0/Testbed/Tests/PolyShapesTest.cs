@@ -47,10 +47,10 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private const int MaxCount = 4;
 
-        internal CircleShape _circle = new CircleShape(0);
+        internal CircleShape Circle = new CircleShape(0);
         private int _count;
-        internal DebugViewXNA.DebugViewXNA _debugDraw;
-        internal Transform _transform;
+        internal DebugViewXNA.DebugViewXNA DebugDraw;
+        internal Transform Transform;
 
         private void DrawFixture(Fixture fixture)
         {
@@ -67,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
                         Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
                         float radius = circle.Radius;
 
-                        _debugDraw.DrawCircle(center, radius, color);
+                        DebugDraw.DrawCircle(center, radius, color);
                     }
                     break;
 
@@ -83,7 +83,7 @@ namespace FarseerPhysics.TestBed.Tests
                             vertices[i] = MathUtils.Multiply(ref xf, poly.Vertices[i]);
                         }
 
-                        _debugDraw.DrawPolygon(ref vertices, vertexCount, color);
+                        DebugDraw.DrawPolygon(ref vertices, vertexCount, color);
                     }
                     break;
             }
@@ -106,7 +106,7 @@ namespace FarseerPhysics.TestBed.Tests
             Transform xf;
             body.GetTransform(out xf);
 
-            bool overlap = AABB.TestOverlap(shape, 0, _circle, 0, ref xf, ref _transform);
+            bool overlap = AABB.TestOverlap(shape, 0, Circle, 0, ref xf, ref Transform);
 
             if (overlap)
             {
@@ -276,18 +276,18 @@ namespace FarseerPhysics.TestBed.Tests
             base.Update(settings, gameTime);
 
             PolyShapesCallback callback = new PolyShapesCallback();
-            callback._circle.Radius = 2.0f;
-            callback._circle.Position = new Vector2(0.0f, 2.1f);
-            callback._transform.SetIdentity();
-            callback._debugDraw = DebugView;
+            callback.Circle.Radius = 2.0f;
+            callback.Circle.Position = new Vector2(0.0f, 2.1f);
+            callback.Transform.SetIdentity();
+            callback.DebugDraw = DebugView;
 
             AABB aabb;
-            callback._circle.ComputeAABB(out aabb, ref callback._transform, 0);
+            callback.Circle.ComputeAABB(out aabb, ref callback.Transform, 0);
 
             World.QueryAABB(callback.ReportFixture, ref aabb);
 
             Color color = new Color(0.4f, 0.7f, 0.8f);
-            DebugView.DrawCircle(callback._circle.Position, callback._circle.Radius, color);
+            DebugView.DrawCircle(callback.Circle.Position, callback.Circle.Radius, color);
 
             DebugView.DrawString(50, TextLine, "Press 1-5 to drop stuff");
             TextLine += 15;

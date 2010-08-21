@@ -12,7 +12,6 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private Vertices _clip;
         private PolyClipError _err;
-        private List<TextMessage> _messages;
         private List<Vertices> _polygons;
         private Vertices _selected;
         private Vertices _subject;
@@ -20,7 +19,6 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Initialize()
         {
             Vector2 trans = new Vector2();
-            _messages = new List<TextMessage>();
             _polygons = new List<Vertices>();
 
             _polygons.Add(PolygonTools.CreateGear(5f, 10, 0f, 6f));
@@ -57,16 +55,6 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            //If the message times out, remove it from the list.
-            for (int i = _messages.Count - 1; i >= 0; i--)
-            {
-                _messages[i].ElapsedTime += settings.Hz;
-                if (_messages[i].ElapsedTime > 5)
-                {
-                    _messages.Remove(_messages[i]);
-                }
-            }
-
             for (int i = 0; i < _polygons.Count; ++i)
             {
                 if (_polygons[i] != null)
@@ -131,12 +119,6 @@ namespace FarseerPhysics.TestBed.Tests
 
             DebugView.DrawString(500, TextLine, "Holes are colored light blue");
             TextLine += 15;
-
-            for (int i = _messages.Count - 1; i >= 0; i--)
-            {
-                DebugView.DrawString(50, TextLine, _messages[i].Text);
-                TextLine += 15;
-            }
 
             base.Update(settings, gameTime);
         }
@@ -326,40 +308,9 @@ namespace FarseerPhysics.TestBed.Tests
             _polygons.Add(verts);
         }
 
-        private void WriteMessage(string message)
-        {
-            _messages.Add(new TextMessage(message));
-        }
-
         public static Test Create()
         {
             return new YuPengPolygonTest();
         }
-
-        #region Nested type: AlgorithmUsed
-
-        private enum AlgorithmUsed
-        {
-            YuPeng,
-            Trace
-        }
-
-        #endregion
-
-        #region Nested type: TextMessage
-
-        private class TextMessage
-        {
-            public float ElapsedTime;
-            public string Text;
-
-            public TextMessage(string text)
-            {
-                Text = text;
-                ElapsedTime = 0;
-            }
-        }
-
-        #endregion
     }
 }

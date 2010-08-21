@@ -42,14 +42,14 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 const float a = 0.5f;
                 Body ground = BodyFactory.CreateBody(World, new Vector2(0, -a));
-                const int N = 200;
-                const int M = 10;
+                const int n = 200;
+                const int m = 10;
                 Vector2 position = new Vector2();
                 position.Y = 0.0f;
-                for (int j = 0; j < M; ++j)
+                for (int j = 0; j < m; ++j)
                 {
-                    position.X = -N * a;
-                    for (int i = 0; i < N; ++i)
+                    position.X = -n * a;
+                    for (int i = 0; i < n; ++i)
                     {
                         PolygonShape shape = new PolygonShape();
                         shape.SetAsBox(a, a, position, 0.0f);

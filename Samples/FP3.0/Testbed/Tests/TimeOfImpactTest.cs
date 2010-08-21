@@ -99,12 +99,6 @@ namespace FarseerPhysics.TestBed.Tests
             Transform transformB;
             sweepB.GetTransform(out transformB, 0.0f);
 
-            Vector2 localPoint = new Vector2(2.0f, -0.1f);
-            Vector2 rB = MathUtils.Multiply(ref transformB, localPoint) - sweepB.c0;
-            float wB = sweepB.a - sweepB.a0;
-            Vector2 vB = sweepB.c - sweepB.c0;
-            Vector2 v = vB + MathUtils.Cross(wB, rB);
-
             for (int i = 0; i < _shapeB.Vertices.Count; ++i)
             {
                 vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);

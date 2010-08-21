@@ -29,7 +29,7 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public static class TestEntries
     {
-        public static TestEntry[] g_testEntries =
+        public static TestEntry[] TestList =
             {
                 //Original tests
                 new TestEntry {Name = "Character collision", CreateFcn = CharacterCollisionTest.Create},

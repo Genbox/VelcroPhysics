@@ -45,7 +45,7 @@ namespace FarseerPhysics.TestBed.Tests
                 const float a = 2.0f;
                 const float b = 4.0f;
                 const float y = 16.0f;
-                const float L = 12.0f;
+                const float l = 12.0f;
 
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(a, b);
@@ -63,8 +63,8 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Vector2 anchor1 = new Vector2(-10.0f, y + b);
                 Vector2 anchor2 = new Vector2(10.0f, y + b);
-                Vector2 groundAnchor1 = new Vector2(-10.0f, y + b + L);
-                Vector2 groundAnchor2 = new Vector2(10.0f, y + b + L);
+                Vector2 groundAnchor1 = new Vector2(-10.0f, y + b + l);
+                Vector2 groundAnchor2 = new Vector2(10.0f, y + b + l);
                 _joint1 = new PulleyJoint(body1, body2, groundAnchor1, groundAnchor2, body1.GetLocalPoint(anchor1),
                                           body2.GetLocalPoint(anchor2), 2.0f);
                 World.AddJoint(_joint1);
@@ -76,8 +76,8 @@ namespace FarseerPhysics.TestBed.Tests
             base.Update(settings, gameTime);
 
             float ratio = _joint1.Ratio;
-            float L = _joint1.LengthA + ratio * _joint1.LengthB;
-            DebugView.DrawString(50, TextLine, "L1 + {0:n} * L2 = {1:n}", ratio, L);
+            float l = _joint1.LengthA + ratio * _joint1.LengthB;
+            DebugView.DrawString(50, TextLine, "L1 + {0:n} * L2 = {1:n}", ratio, l);
             TextLine += 15;
         }
 
