@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("Farseer Physics 3.0")]
+[assembly: AssemblyTitle("Farseer Physics Engine 3.0")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Farseer Physics 3.0")]
-[assembly: AssemblyCopyright("Copyright © 2009")]
+[assembly: AssemblyProduct("Farseer Physics Engine 3.0")]
+[assembly: AssemblyCopyright("Copyright © Farseer Physics 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
