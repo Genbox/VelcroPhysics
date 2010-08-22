@@ -110,6 +110,9 @@
     <Compile Include="..\..\..\..\sourcefiles\fp3.0\common\Path.cs">
       <Link>Common\Path.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\..\SourceFiles\FP3.0\Common\PathManager.cs">
+      <Link>Common\PathManager.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\..\sourcefiles\fp3.0\common\polygonmanipulation\CuttingTools.cs">
       <Link>Common\PolygonManipulation\CuttingTools.cs</Link>
     </Compile>
@@ -239,8 +242,8 @@
     <Compile Include="..\..\..\..\sourcefiles\fp3.0\factories\JointFactory.cs">
       <Link>Factories\JointFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\..\sourcefiles\fp3.0\factories\PathFactory.cs">
-      <Link>Factories\PathFactory.cs</Link>
+    <Compile Include="..\..\..\..\SourceFiles\FP3.0\Factories\LinkFactory.cs">
+      <Link>Factories\LinkFactory.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

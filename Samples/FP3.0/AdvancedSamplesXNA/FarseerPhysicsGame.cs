@@ -1,5 +1,4 @@
 using System;
-using AdvancedSamplesXNA.Demo1;
 using FarseerPhysics.DemoBaseXNA.Components;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
@@ -22,27 +21,16 @@ namespace AdvancedSamplesXNA
             _graphics.SynchronizeWithVerticalRetrace = false;
 
             TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 16);
-            IsFixedTimeStep = false;
+            IsFixedTimeStep = true;
 
             Content.RootDirectory = "Content";
 
-#if !XBOX
             //windowed
-            _graphics.PreferredBackBufferWidth = 800;
-            _graphics.PreferredBackBufferHeight = 800;
+            _graphics.PreferredBackBufferWidth = 1024;
+            _graphics.PreferredBackBufferHeight = 768;
             _graphics.IsFullScreen = false;
 
-            //fullscreen
-            //_graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            //_graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            //_graphics.IsFullScreen = true;
-
             IsMouseVisible = true;
-#else
-            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            _graphics.IsFullScreen = true;
-#endif
 
             //Set window defaults. Parent game can override in constructor
             Window.AllowUserResizing = true;
@@ -56,18 +44,17 @@ namespace AdvancedSamplesXNA
             frameRateCounter.DrawOrder = 101;
             Components.Add(frameRateCounter);
 
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo1Screen.GetTitle(), new Demo1Screen());
-            /*
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo2Screen.GetTitle(), new Demo2Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo3Screen.GetTitle(), new Demo3Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo4Screen.GetTitle(), new Demo4Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo5Screen.GetTitle(), new Demo5Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo6Screen.GetTitle(), new Demo6Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo7Screen.GetTitle(), new Demo7Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo8Screen.GetTitle(), new Demo8Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo9Screen.GetTitle(), new Demo9Screen());
-            ScreenManager.MainMenuScreen.AddMainMenuItem(Demo10Screen.GetTitle(), new Demo10Screen());
-             * */
+            Demo1Screen demo1 = new Demo1Screen();
+            Demo2Screen demo2 = new Demo2Screen();
+            Demo3Screen demo3 = new Demo3Screen();
+            Demo4Screen demo4 = new Demo4Screen();
+            Demo5Screen demo5 = new Demo5Screen();
+
+            ScreenManager.MainMenuScreen.AddMainMenuItem(demo1.GetTitle(), demo1);
+            ScreenManager.MainMenuScreen.AddMainMenuItem(demo2.GetTitle(), demo2);
+            ScreenManager.MainMenuScreen.AddMainMenuItem(demo3.GetTitle(), demo3);
+            ScreenManager.MainMenuScreen.AddMainMenuItem(demo4.GetTitle(), demo4);
+            ScreenManager.MainMenuScreen.AddMainMenuItem(demo5.GetTitle(), demo5);
             ScreenManager.MainMenuScreen.AddMainMenuItem("Exit", null, true);
 
             ScreenManager.GoToMainMenu();
