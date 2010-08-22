@@ -10,10 +10,16 @@ using Microsoft.Xna.Framework;
 namespace FarseerPhysics.Factories
 {
     /// <summary>
-    /// An easy to use factory for using paths.
+    /// An easy to use manager for creating paths.
     /// </summary>
-    public static class PathFactory
+    public static class PathManager
     {
+        public enum LinkType
+        {
+            Revolute,
+            Slider
+        }
+
         //Contributed by Matthew Bettcher
 
         /// <summary>
@@ -72,7 +78,7 @@ namespace FarseerPhysics.Factories
         /// <param name="copies">The copies.</param>
         /// <returns></returns>
         public static List<Body> EvenlyDistibuteShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes,
-                                                                BodyType type, int copies)
+                                                                BodyType type, int copies, float density)
         {
             List<Vector3> centers = path.SubdivideEvenly(copies);
             List<Body> bodyList = new List<Body>();
@@ -89,7 +95,7 @@ namespace FarseerPhysics.Factories
 
                 foreach (Shape shape in shapes)
                 {
-                    b.CreateFixture(shape);
+                    b.CreateFixture(shape, density);
                 }
 
                 bodyList.Add(b);
@@ -106,14 +112,15 @@ namespace FarseerPhysics.Factories
         /// <param name="shape">The shape.</param>
         /// <param name="type">The type.</param>
         /// <param name="copies">The copies.</param>
+        /// <param name="density">The density.</param>
         /// <returns></returns>
         public static List<Body> EvenlyDistibuteShapesAlongPath(World world, Path path, Shape shape, BodyType type,
-                                                                int copies)
+                                                                int copies, float density)
         {
             List<Shape> shapes = new List<Shape>(1);
             shapes.Add(shape);
 
-            return EvenlyDistibuteShapesAlongPath(world, path, shapes, type, copies);
+            return EvenlyDistibuteShapesAlongPath(world, path, shapes, type, copies, density);
         }
 
         /// <summary>
@@ -157,6 +164,34 @@ namespace FarseerPhysics.Factories
             {
                 RevoluteJoint lastjoint = new RevoluteJoint(bodies[0], bodies[bodies.Count - 1], localAnchorA,
                                                             localAnchorB);
+                lastjoint.CollideConnected = collideConnected;
+                world.AddJoint(lastjoint);
+            }
+        }
+
+        /// <summary>
+        /// Attaches the bodies with revolute joints.
+        /// </summary>
+        /// <param name="world">The world.</param>
+        /// <param name="bodies">The bodies.</param>
+        /// <param name="localAnchorA">The local anchor A.</param>
+        /// <param name="localAnchorB">The local anchor B.</param>
+        /// <param name="connectFirstAndLast">if set to <c>true</c> [connect first and last].</param>
+        /// <param name="collideConnected">if set to <c>true</c> [collide connected].</param>
+        public static void AttachBodiesWithSliderJoint(World world, List<Body> bodies, Vector2 localAnchorA,
+                                                         Vector2 localAnchorB, bool connectFirstAndLast,
+                                                         bool collideConnected, float minLength, float maxLength)
+        {
+            for (int i = 1; i < bodies.Count; i++)
+            {
+                SliderJoint joint = new SliderJoint(bodies[i], bodies[i - 1], localAnchorA, localAnchorB, minLength, maxLength);
+                joint.CollideConnected = collideConnected;
+                world.AddJoint(joint);
+            }
+
+            if (connectFirstAndLast)
+            {
+                SliderJoint lastjoint = new SliderJoint(bodies[0], bodies[bodies.Count - 1], localAnchorA, localAnchorB, minLength, maxLength);
                 lastjoint.CollideConnected = collideConnected;
                 world.AddJoint(lastjoint);
             }

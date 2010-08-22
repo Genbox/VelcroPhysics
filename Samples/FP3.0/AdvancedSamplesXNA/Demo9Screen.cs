@@ -1,4 +1,4 @@
-namespace AdvancedSamplesXNA.Demo9
+namespace AdvancedSamplesXNA
 {
     internal class Demo9Screen
     {

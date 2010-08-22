@@ -34,7 +34,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             CircleShape shape = new CircleShape(0.25f);
 
-            PathFactory.EvenlyDistibuteShapesAlongPath(World, _path, shape, BodyType.Static, 100);
+            PathManager.EvenlyDistibuteShapesAlongPath(World, _path, shape, BodyType.Static, 100, 1);
 
             ////Smaller shape that is movable. Created from small rectangles and circles.
             Vector2 xform = new Vector2(0.5f, 0.5f);
@@ -46,10 +46,10 @@ namespace FarseerPhysics.TestBed.Tests
             shapes.Add(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.1f, 0), 0)));
             shapes.Add(new CircleShape(0.5f));
 
-            List<Body> bodies = PathFactory.EvenlyDistibuteShapesAlongPath(World, _path, shapes, BodyType.Dynamic, 20);
+            List<Body> bodies = PathManager.EvenlyDistibuteShapesAlongPath(World, _path, shapes, BodyType.Dynamic, 20, 1);
 
             //Attach the bodies together with revolute joints
-            PathFactory.AttachBodiesWithRevoluteJoint(World, bodies, new Vector2(0, 0.5f), new Vector2(0, -0.5f), true,
+            PathManager.AttachBodiesWithRevoluteJoint(World, bodies, new Vector2(0, 0.5f), new Vector2(0, -0.5f), true,
                                                       true);
 
             xform = new Vector2(-25, 0);
@@ -59,13 +59,13 @@ namespace FarseerPhysics.TestBed.Tests
             body.BodyType = BodyType.Static;
 
             //Static shape made up of edges
-            PathFactory.ConvertPathToEdges(_path, body, 25);
+            PathManager.ConvertPathToEdges(_path, body, 25);
             body.Position -= new Vector2(0, 10);
 
             xform = new Vector2(0, 15);
             _path.Translate(ref xform);
 
-            PathFactory.ConvertPathToPolygon(_path, body, 1, 50);
+            PathManager.ConvertPathToPolygon(_path, body, 1, 50);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
@@ -74,7 +74,7 @@ namespace FarseerPhysics.TestBed.Tests
             if (_time > 1f)
                 _time = 0;
 
-            PathFactory.MoveBodyOnPath(_path, _movingBody, _time, 1f, 1f / 60f);
+            PathManager.MoveBodyOnPath(_path, _movingBody, _time, 1f, 1f / 60f);
 
             base.Update(settings, gameTime);
         }

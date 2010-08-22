@@ -50,14 +50,14 @@ namespace FarseerPhysics.TestBed.Tests
             PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.125f, 0.6f));
 
             //Use PathFactory to create all the chainlinks based on the chainlink created before.
-            List<Body> chainLinks = PathFactory.EvenlyDistibuteShapesAlongPath(World, path, shape, BodyType.Dynamic, 20);
+            List<Body> chainLinks = PathManager.EvenlyDistibuteShapesAlongPath(World, path, shape, BodyType.Dynamic, 20, 1);
 
             //Fix the first chainlink to the world
             FixedRevoluteJoint fixedJoint = new FixedRevoluteJoint(chainLinks[0], Vector2.Zero, chainLinks[0].Position);
             World.AddJoint(fixedJoint);
 
             //Attach all the chainlinks together with a revolute joint
-            PathFactory.AttachBodiesWithRevoluteJoint(World, chainLinks, new Vector2(0, -0.6f), new Vector2(0, 0.6f),
+            PathManager.AttachBodiesWithRevoluteJoint(World, chainLinks, new Vector2(0, -0.6f), new Vector2(0, 0.6f),
                                                       false, false);
         }
 
