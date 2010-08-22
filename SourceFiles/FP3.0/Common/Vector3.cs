@@ -37,7 +37,9 @@ using System.Text;
 
 namespace Microsoft.Xna.Framework
 {
+#if (!SILVERLIGHT)
     [Serializable]
+#endif
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector3 : IEquatable<Vector3>
     {

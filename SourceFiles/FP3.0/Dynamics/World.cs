@@ -103,7 +103,10 @@ namespace FarseerPhysics.Dynamics
         private Body[] _stack = new Body[64];
         private Contact[] _toiContacts = new Contact[Settings.MaxTOIContacts];
         private TOISolver _toiSolver = new TOISolver();
+
+#if (!SILVERLIGHT)
         private Stopwatch _watch = new Stopwatch();
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="World"/> class.
@@ -494,8 +497,10 @@ namespace FarseerPhysics.Dynamics
         /// <param name="dt">The amount of time to simulate, this should not vary.</param>
         public void Step(float dt)
         {
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 _watch.Start();
+#endif
 
             // If new fixtures were added, we need to find the new contacts.
             if ((Flags & WorldFlags.NewFixture) == WorldFlags.NewFixture)
@@ -503,8 +508,11 @@ namespace FarseerPhysics.Dynamics
                 ContactManager.FindNewContacts();
                 Flags &= ~WorldFlags.NewFixture;
             }
+
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 NewContactsTime = _watch.ElapsedTicks;
+#endif
 
             Flags |= WorldFlags.Locked;
 
@@ -527,23 +535,28 @@ namespace FarseerPhysics.Dynamics
                 controller.Update(dt);
             }
 
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 ControllersUpdateTime = _watch.ElapsedTicks - NewContactsTime;
+#endif
 
             // Update contacts. This is where some contacts are destroyed.
             ContactManager.Collide();
 
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 ContactsUpdateTime = _watch.ElapsedTicks - (NewContactsTime + ControllersUpdateTime);
-
+#endif
             // Integrate velocities, solve velocity raints, and integrate positions.
             if (step.dt > 0.0f)
             {
                 Solve(ref step);
             }
 
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 SolveUpdateTime = _watch.ElapsedTicks - (NewContactsTime + ControllersUpdateTime + ContactsUpdateTime);
+#endif
 
             // Handle TOI events.
             if (Settings.ContinuousPhysics && step.dt > 0.0f)
@@ -551,10 +564,11 @@ namespace FarseerPhysics.Dynamics
                 SolveTOI();
             }
 
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 ContinuousPhysicsTime = _watch.ElapsedTicks -
                                         (NewContactsTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
-
+#endif
             if (step.dt > 0.0f)
             {
                 _invDt0 = step.inv_dt;
@@ -573,6 +587,7 @@ namespace FarseerPhysics.Dynamics
                 breakableBody.Update();
             }
 
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 BreakableBodyTime = _watch.ElapsedTicks -
                                     (NewContactsTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime +
@@ -584,6 +599,7 @@ namespace FarseerPhysics.Dynamics
                 UpdateTime = _watch.ElapsedTicks;
                 _watch.Reset();
             }
+#endif
         }
 
         /// <summary>
