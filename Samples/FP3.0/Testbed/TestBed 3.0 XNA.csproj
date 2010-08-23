@@ -1,17 +1,17 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
-    <ProjectGuid>{97B14E03-8D1A-4AE3-8661-29006DDFB92D}</ProjectGuid>
+    <ProjectGuid>{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AdvancedSamplesXNA</RootNamespace>
-    <AssemblyName>AdvancedSamplesXNA</AssemblyName>
+    <RootNamespace>FarseerPhysics.TestBed</RootNamespace>
+    <AssemblyName>FarseerPhysics.TestBed</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaCrossPlatformGroupID>e6a4bd27-221b-43a5-836e-bac7a62ce093</XnaCrossPlatformGroupID>
+    <XnaCrossPlatformGroupID>8fde964d-fceb-4883-8a34-2221b894199d</XnaCrossPlatformGroupID>
     <ApplicationIcon>Game.ico</ApplicationIcon>
     <Thumbnail>GameThumbnail.png</Thumbnail>
     <PublishUrl>publish\</PublishUrl>
@@ -46,6 +46,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>x86</PlatformTarget>
     <XnaCompressContent>false</XnaCompressContent>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
@@ -74,32 +75,71 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml">
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Demo1Screen.cs" />
-    <Compile Include="Demo2Screen.cs" />
-    <Compile Include="Demo3Screen.cs" />
-    <Compile Include="Demo4Screen.cs" />
-    <Compile Include="Demo5Screen.cs" />
-    <Compile Include="Demo6Screen.cs" />
-    <Compile Include="Demo7Screen.cs" />
-    <Compile Include="Demo8Screen.cs" />
-    <Compile Include="Demo9Screen.cs" />
+    <Compile Include="Framework\Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="FarseerPhysicsGame.cs" />
+    <Compile Include="Game1.cs" />
+    <Compile Include="Tests\ApplyForceTest.cs" />
+    <Compile Include="Tests\BodyTypesTest.cs" />
+    <Compile Include="Tests\BreakableTest.cs" />
+    <Compile Include="Tests\BridgeTest.cs" />
+    <Compile Include="Tests\CantileverTest.cs" />
+    <Compile Include="Tests\ChainTest.cs" />
+    <Compile Include="Tests\CharacterCollisionTest.cs" />
+    <Compile Include="Tests\CollisionFilteringTest.cs" />
+    <Compile Include="Tests\CollisionProcessingTest.cs" />
+    <Compile Include="Tests\CompoundShapes.cs" />
+    <Compile Include="Tests\ConfinedTest.cs" />
+    <Compile Include="Tests\ContinuousTest.cs" />
+    <Compile Include="Tests\ControllerTest.cs" />
+    <Compile Include="Tests\AngleJointTest.cs" />
+    <Compile Include="Tests\CuttingTest.cs" />
+    <Compile Include="Tests\SliderJointTest.cs" />
+    <Compile Include="Tests\DistanceTest.cs" />
+    <Compile Include="Tests\DominosTest.cs" />
+    <Compile Include="Tests\DynamicTreeTest.cs" />
+    <Compile Include="Tests\EdgeShapesTest.cs" />
+    <Compile Include="Tests\EdgeTest.cs" />
+    <Compile Include="Tests\GearsTest.cs" />
+    <Compile Include="Tests\LineJointTest.cs" />
+    <Compile Include="Tests\OneSidedPlatformTest.cs" />
+    <Compile Include="Tests\PathTest.cs" />
+    <Compile Include="Tests\PinballTest.cs" />
+    <Compile Include="Tests\PolyCollisionTest.cs" />
+    <Compile Include="Tests\PolygonShapesTest.cs" />
+    <Compile Include="Tests\PolyShapesTest.cs" />
+    <Compile Include="Tests\PrismaticTest.cs" />
+    <Compile Include="Tests\PulleysTest.cs" />
+    <Compile Include="Tests\PyramidTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\RaycastTest.cs" />
+    <Compile Include="Tests\RevoluteTest.cs" />
+    <Compile Include="Tests\SensorTest.cs" />
+    <Compile Include="Tests\ShapeEditingTest.cs" />
+    <Compile Include="Tests\SliderCrankTest.cs" />
+    <Compile Include="Tests\SphereStackTest.cs" />
+    <Compile Include="Tests\TestEntries.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\TextureVerticesTest.cs" />
+    <Compile Include="Tests\TheoJansenTest.cs" />
+    <Compile Include="Tests\TilesTest.cs" />
+    <Compile Include="Tests\TimeOfImpactTest.cs" />
+    <Compile Include="Tests\VaryingFrictionTest.cs" />
+    <Compile Include="Tests\VaryingRestitutionTest.cs" />
+    <Compile Include="Tests\VerticalStackTest.cs" />
+    <Compile Include="Tests\WebTest.cs" />
+    <Compile Include="Tests\YuPengPolygonTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
@@ -107,16 +147,11 @@
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content\Content.contentproj">
-      <Project>55369745-a678-4bb3-b22e-3d727f9110b5</Project>
+      <Project>d56ce43b-5255-4e09-9bf0-d1f000dbb9d4</Project>
       <Visible>False</Visible>
     </NestedContentProject>
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
       <Visible>False</Visible>
       <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
@@ -130,11 +165,6 @@
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
@@ -153,13 +183,9 @@
       <Project>{0A850700-1ABB-4288-A391-6726B90EBEB9}</Project>
       <Name>Farseer Physics 3.0 XNA</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\DebugViews\DebugViewXNA\DebugViewXNA.csproj">
+    <ProjectReference Include="..\..\..\DebugViews\DebugViewXNA\DebugView 3.0 XNA.csproj">
       <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
-      <Name>DebugViewXNA</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DemoBaseXNA\DemoBaseXNA.csproj">
-      <Project>{46487979-1F6B-4F55-A377-3D80BCB248CE}</Project>
-      <Name>DemoBaseXNA</Name>
+      <Name>DebugView 3.0 XNA</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
