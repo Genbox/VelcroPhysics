@@ -1,4 +1,4 @@
-namespace AdvancedSamplesXNA
+namespace FarseerPhysics.AdvancedSamplesXNA
 {
     internal static class Program
     {

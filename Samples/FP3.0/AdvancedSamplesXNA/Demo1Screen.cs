@@ -9,7 +9,7 @@ using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace AdvancedSamplesXNA
+namespace FarseerPhysics.AdvancedSamplesXNA
 {
     internal class Demo1Screen : GameScreen, IDemoScreen
     {

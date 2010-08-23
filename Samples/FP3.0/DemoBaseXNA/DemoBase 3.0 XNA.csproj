@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FarseerPhysics.DemoBaseXNA</RootNamespace>
-    <AssemblyName>FarseerPhysics.DemoBaseXNA</AssemblyName>
+    <AssemblyName>DemoBaseXNA</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>

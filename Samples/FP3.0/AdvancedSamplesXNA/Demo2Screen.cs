@@ -1,15 +1,11 @@
-using System.Collections.Generic;
 using System.Text;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
 using FarseerPhysics.DemoBaseXNA;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 
-namespace AdvancedSamplesXNA
+namespace FarseerPhysics.AdvancedSamplesXNA
 {
     internal class Demo2Screen : GameScreen, IDemoScreen
     {

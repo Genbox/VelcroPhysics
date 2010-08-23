@@ -2,7 +2,7 @@ using System.Text;
 using FarseerPhysics.DemoBaseXNA;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 
-namespace AdvancedSamplesXNA
+namespace FarseerPhysics.AdvancedSamplesXNA
 {
     internal class Demo5Screen : GameScreen, IDemoScreen
     {
