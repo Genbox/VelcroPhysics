@@ -8,22 +8,21 @@ namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
     {
         public static Texture2D CreateLineTexture(GraphicsDevice graphicsDevice, int lineThickness)
         {
-            Texture2D texture2D = new Texture2D(graphicsDevice, 2, lineThickness + 2, 1, TextureUsage.None,
-                                                SurfaceFormat.Color);
+            Texture2D texture2D = new Texture2D(graphicsDevice, 2, lineThickness + 2, false, SurfaceFormat.Color);
 
             //Texture2D texture2D = new Texture2D(graphicsDevice, 2, lineWidth + 2);
             int count = 2 * (lineThickness + 2);
             Color[] colorArray = new Color[count];
-            colorArray[0] = Color.TransparentWhite;
-            colorArray[1] = Color.TransparentWhite;
+            colorArray[0] = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+            colorArray[1] = new Color(1.0f, 1.0f, 1.0f, 0.0f);
 
             for (int i = 2; i < count - 2; i++)
             {
                 colorArray[i] = Color.White;
             }
 
-            colorArray[count - 2] = Color.TransparentWhite;
-            colorArray[count - 1] = Color.TransparentWhite;
+            colorArray[count - 2] = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+            colorArray[count - 1] = new Color(1.0f, 1.0f, 1.0f, 0.0f);
             texture2D.SetData(colorArray);
             return texture2D;
         }
@@ -53,8 +52,7 @@ namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
             int diameter = (radius + 2) * 2;
             Vector2 center = new Vector2((diameter - 1) / 2f, (diameter - 1) / 2f);
 
-            Texture2D circle = new Texture2D(graphicsDevice, diameter, diameter, 1, TextureUsage.None,
-                                             SurfaceFormat.Color);
+            Texture2D circle = new Texture2D(graphicsDevice, diameter, diameter, false, SurfaceFormat.Color);
             Color[] colors = new Color[diameter * diameter];
 
             for (int i = 0; i < colors.Length; i++)
@@ -71,14 +69,13 @@ namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
 
                 if (length > radius)
                 {
-                    colors[i] = Color.TransparentBlack;
+                    colors[i] = new Color(0.0f, 0.0f, 0.0f, 0.0f);
                 }
                 else if (length >= radius - borderOuterTransitionWidth)
                 {
-                    float transitionAmount = (length - (radius - borderOuterTransitionWidth)) /
-                                             borderOuterTransitionWidth;
+                    float transitionAmount = (length - (radius - borderOuterTransitionWidth)) / borderOuterTransitionWidth;
                     transitionAmount = 255 * (1 - transitionAmount);
-                    colors[i] = new Color(borderColor.R, borderColor.G, borderColor.B, (byte) transitionAmount);
+                    colors[i] = new Color(borderColor.R, borderColor.G, borderColor.B, (byte)transitionAmount);
                 }
                 else if (length > radius - (borderWidth + borderOuterTransitionWidth))
                 {
@@ -90,9 +87,9 @@ namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
                                               (radius -
                                                (borderWidth + borderOuterTransitionWidth + borderInnerTransitionWidth))) /
                                              (borderInnerTransitionWidth + 1);
-                    colors[i] = new Color((byte) MathHelper.Lerp(color.R, borderColor.R, transitionAmount),
-                                          (byte) MathHelper.Lerp(color.G, borderColor.G, transitionAmount),
-                                          (byte) MathHelper.Lerp(color.B, borderColor.B, transitionAmount));
+                    colors[i] = new Color((byte)MathHelper.Lerp(color.R, borderColor.R, transitionAmount),
+                                          (byte)MathHelper.Lerp(color.G, borderColor.G, transitionAmount),
+                                          (byte)MathHelper.Lerp(color.B, borderColor.B, transitionAmount));
                 }
                 else
                 {
@@ -124,7 +121,7 @@ namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
                                                        int borderWidth, int borderInnerTransitionWidth,
                                                        int borderOuterTransitionWidth, Color color, Color borderColor)
         {
-            Texture2D texture2D = new Texture2D(graphicsDevice, width, height, 1, TextureUsage.None, SurfaceFormat.Color);
+            Texture2D texture2D = new Texture2D(graphicsDevice, width, height, false, SurfaceFormat.Color);
 
             int y = -1;
             int j;
@@ -135,8 +132,8 @@ namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
 
             for (j = 0; j < borderOuterTransitionWidth; j++)
             {
-                transitionAmount = (j) / (float) (borderOuterTransitionWidth);
-                shellColor[j] = new Color(borderColor.R, borderColor.G, borderColor.B, (byte) (255 * transitionAmount));
+                transitionAmount = (j) / (float)(borderOuterTransitionWidth);
+                shellColor[j] = new Color(borderColor.R, borderColor.G, borderColor.B, (byte)(255 * transitionAmount));
             }
             for (j = borderOuterTransitionWidth; j < borderWidth + borderOuterTransitionWidth; j++)
             {
@@ -148,10 +145,10 @@ namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
             {
                 transitionAmount = 1 -
                                    (j - (borderWidth + borderOuterTransitionWidth) + 1) /
-                                   (float) (borderInnerTransitionWidth + 1);
-                shellColor[j] = new Color((byte) MathHelper.Lerp(color.R, borderColor.R, transitionAmount),
-                                          (byte) MathHelper.Lerp(color.G, borderColor.G, transitionAmount),
-                                          (byte) MathHelper.Lerp(color.B, borderColor.B, transitionAmount));
+                                   (float)(borderInnerTransitionWidth + 1);
+                shellColor[j] = new Color((byte)MathHelper.Lerp(color.R, borderColor.R, transitionAmount),
+                                          (byte)MathHelper.Lerp(color.G, borderColor.G, transitionAmount),
+                                          (byte)MathHelper.Lerp(color.B, borderColor.B, transitionAmount));
             }
 
 
@@ -185,29 +182,25 @@ namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
             return texture2D;
         }
 
-        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius,
-                                                     Color color)
+        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius, Color color)
         {
             return CreateEllipseTexture(graphicsDevice, xRadius, yRadius, 0, 0, 2, color, color);
         }
 
-        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius,
-                                                     Color color,
+        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius, Color color,
                                                      Color borderColor)
         {
             return CreateEllipseTexture(graphicsDevice, xRadius, yRadius, 1, 1, 1, color, borderColor);
         }
 
-        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius,
-                                                     int borderWidth,
+        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius, int borderWidth,
                                                      Color color, Color borderColor)
         {
             return CreateEllipseTexture(graphicsDevice, xRadius, yRadius, borderWidth, 1, 2, color, borderColor);
         }
 
 
-        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius,
-                                                     int borderWidth,
+        public static Texture2D CreateEllipseTexture(GraphicsDevice graphicsDevice, int xRadius, int yRadius, int borderWidth,
                                                      int borderInnerTransitionWidth, int borderOuterTransitionWidth,
                                                      Color color, Color borderColor)
         {
@@ -224,12 +217,11 @@ namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
             int diameterY = (height + 8);
             Vector2 center = new Vector2((diameterX - 4) / 2f, (diameterY - 4) / 2f);
 
-            Texture2D ellipse = new Texture2D(graphicsDevice, diameterX, diameterY, 1, TextureUsage.None,
-                                              SurfaceFormat.Color);
+            Texture2D ellipse = new Texture2D(graphicsDevice, diameterX, diameterY, false, SurfaceFormat.Color);
 
             //Just calculate the upper left quarter of the ellipse
             //(it's axis-symmetric)
-            Color[,] ulColors = new Color[diameterX / 2 + 1,diameterY / 2 + 1];
+            Color[,] ulColors = new Color[diameterX / 2 + 1, diameterY / 2 + 1];
 
             //Create a description of the ellipse boundary
 
@@ -269,12 +261,12 @@ namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
                     // calculate angle of a straight line intersecting the center of the ellipse and the current point
                     Vector2 lineFromCurPointToCenter = curPoint - center;
                     float gradient = lineFromCurPointToCenter.Y / lineFromCurPointToCenter.X;
-                    float angle = (float) Math.Atan(gradient * width / height);
+                    float angle = (float)Math.Atan(gradient * width / height);
 
                     // find out where the line intersecting the center of the ellipse and the current point 
                     // intersects the ellipse
-                    Vector2 intersectionPoint = center + new Vector2(xRadius * (float) Math.Cos(angle),
-                                                                     yRadius * (float) Math.Sin(angle));
+                    Vector2 intersectionPoint = center + new Vector2(xRadius * (float)Math.Cos(angle),
+                                                                     yRadius * (float)Math.Sin(angle));
                     // calculate squared distance from intersection point to center
                     float distanceFromIntersectionPointToCenter = (intersectionPoint - center).LengthSquared();
                     // calculate squared distance from current point to center of ellipse
@@ -293,31 +285,28 @@ namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
                     if (distanceFromCurToBoundary > 0)
                     {
                         // outside of ellipse
-                        ulColors[x, y] = Color.TransparentBlack;
+                        ulColors[x, y] = new Color(0.0f, 0.0f, 0.0f, 0.0f);
                     }
                     else if (distanceFromCurToBoundary > -borderOuterTransitionWidth)
                     {
                         // outside of border, where the border color fades to transparent
                         float transitionAmount = (-distanceFromCurToBoundary) / borderOuterTransitionWidth;
                         transitionAmount = 255 * transitionAmount;
-                        ulColors[x, y] = new Color(borderColor.R, borderColor.G, borderColor.B, (byte) transitionAmount);
+                        ulColors[x, y] = new Color(borderColor.R, borderColor.G, borderColor.B, (byte)transitionAmount);
                     }
                     else if (distanceFromCurToBoundary > -(borderWidth + borderOuterTransitionWidth))
                     {
                         // on border
                         ulColors[x, y] = borderColor;
                     }
-                    else if (distanceFromCurToBoundary >=
-                             -(borderWidth + borderOuterTransitionWidth + borderInnerTransitionWidth))
+                    else if (distanceFromCurToBoundary >= -(borderWidth + borderOuterTransitionWidth + borderInnerTransitionWidth))
                     {
                         // inside of border, where the border color fades to the fill color
-                        float transitionAmount = (-distanceFromCurToBoundary -
-                                                  (borderWidth + borderOuterTransitionWidth)) /
-                                                 (borderInnerTransitionWidth + 1);
+                        float transitionAmount = (-distanceFromCurToBoundary - (borderWidth + borderOuterTransitionWidth)) / (borderInnerTransitionWidth + 1);
                         transitionAmount = 1 - transitionAmount;
-                        ulColors[x, y] = new Color((byte) MathHelper.Lerp(color.R, borderColor.R, transitionAmount),
-                                                   (byte) MathHelper.Lerp(color.G, borderColor.G, transitionAmount),
-                                                   (byte) MathHelper.Lerp(color.B, borderColor.B, transitionAmount));
+                        ulColors[x, y] = new Color((byte)MathHelper.Lerp(color.R, borderColor.R, transitionAmount),
+                                                   (byte)MathHelper.Lerp(color.G, borderColor.G, transitionAmount),
+                                                   (byte)MathHelper.Lerp(color.B, borderColor.B, transitionAmount));
                     }
                     else
                     {
@@ -393,8 +382,8 @@ namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
 
             // calculate points
             for (int i = 0; i < count; i++)
-                vectorCache[i] = center + new Vector2(halfWidth * (float) Math.Cos(i * accuracy),
-                                                      halfHeight * (float) Math.Sin(i * accuracy));
+                vectorCache[i] = center + new Vector2(halfWidth * (float)Math.Cos(i * accuracy),
+                                                      halfHeight * (float)Math.Sin(i * accuracy));
 
             return vectorCache;
         }

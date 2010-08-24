@@ -87,7 +87,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         public byte TransitionAlpha
         {
-            get { return (byte) (255 - TransitionPosition * 255); }
+            get { return (byte)(255 - TransitionPosition * 255); }
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 if (World != null)
                 {
                     // variable time step but never less then 30 Hz
-                    World.Step(Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f,
+                    World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f,
                                         (1f / 30f)));
                     Settings.VelocityIterations = 5;
                     Settings.PositionIterations = 3;
@@ -263,7 +263,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             if (time == TimeSpan.Zero)
                 transitionDelta = 1;
             else
-                transitionDelta = (float) (gameTime.ElapsedGameTime.TotalMilliseconds /
+                transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
                                            time.TotalMilliseconds);
 
             // Update the transition position.
@@ -410,23 +410,23 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             // Query the world for overlapping shapes.
             World.QueryAABB(
                 fixture =>
+                {
+                    Body body = fixture.Fixture.Body;
+                    if (body.BodyType == BodyType.Dynamic)
                     {
-                        Body body = fixture.Fixture.Body;
-                        if (body.BodyType == BodyType.Dynamic)
+                        bool inside = fixture.Fixture.TestPoint(ref p);
+                        if (inside)
                         {
-                            bool inside = fixture.Fixture.TestPoint(ref p);
-                            if (inside)
-                            {
-                                _fixture = fixture.Fixture;
+                            _fixture = fixture.Fixture;
 
-                                // We are done, terminate the query.
-                                return false;
-                            }
+                            // We are done, terminate the query.
+                            return false;
                         }
+                    }
 
-                        // Continue the query.
-                        return true;
-                    }, ref aabb);
+                    // Continue the query.
+                    return true;
+                }, ref aabb);
 
             if (_fixture != null)
             {
@@ -454,15 +454,11 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             if (World != null)
             {
-                float aspect = (float) ScreenManager.ScreenWidth / ScreenManager.ScreenHeight;
+                float aspect = (float)ScreenManager.ScreenWidth / ScreenManager.ScreenHeight;
 
                 Projection = Matrix.CreateOrthographic(40 * aspect, 40, 0, 1);
 
                 DebugView.RenderDebugData(ref Projection, ref View);
-
-                ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-
-                ScreenManager.SpriteBatch.End();
             }
         }
 
