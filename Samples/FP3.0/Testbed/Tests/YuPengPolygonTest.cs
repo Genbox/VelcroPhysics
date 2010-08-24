@@ -85,7 +85,7 @@ namespace FarseerPhysics.TestBed.Tests
                             col = Color.IndianRed;
                         }
                     }
-                    DebugView.DrawPolygon(ref array, _polygons[i].Count, col);
+                    DebugView.DrawPolygon(array, _polygons[i].Count, col);
                     for (int j = 0; j < _polygons[i].Count; ++j)
                     {
                         DebugView.DrawPoint(_polygons[i][j], .2f, Color.Red);

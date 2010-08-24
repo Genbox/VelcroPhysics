@@ -83,7 +83,7 @@ namespace FarseerPhysics.TestBed.Tests
                             vertices[i] = MathUtils.Multiply(ref xf, poly.Vertices[i]);
                         }
 
-                        DebugDraw.DrawPolygon(ref vertices, vertexCount, color);
+                        DebugDraw.DrawPolygon(vertices, vertexCount, color);
                     }
                     break;
             }

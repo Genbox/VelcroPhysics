@@ -81,13 +81,13 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     v[i] = MathUtils.Multiply(ref _transformA, _polygonA.Vertices[i]);
                 }
-                DebugView.DrawPolygon(ref v, _polygonA.Vertices.Count, color);
+                DebugView.DrawPolygon(v, _polygonA.Vertices.Count, color);
 
                 for (int i = 0; i < _polygonB.Vertices.Count; ++i)
                 {
                     v[i] = MathUtils.Multiply(ref _transformB, _polygonB.Vertices[i]);
                 }
-                DebugView.DrawPolygon(ref v, _polygonB.Vertices.Count, color);
+                DebugView.DrawPolygon(v, _polygonB.Vertices.Count, color);
             }
 
             for (int i = 0; i < manifold.PointCount; ++i)

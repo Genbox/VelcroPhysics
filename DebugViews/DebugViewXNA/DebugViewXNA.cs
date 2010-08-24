@@ -246,7 +246,7 @@ namespace FarseerPhysics.DebugViewXNA
                             vs[2] = new Vector2(aabb.UpperBound.X, aabb.UpperBound.Y);
                             vs[3] = new Vector2(aabb.LowerBound.X, aabb.UpperBound.Y);
 
-                            DrawPolygon(ref vs, 4, color);
+                            DrawPolygon(vs, 4, color);
                         }
                     }
                 }
@@ -393,7 +393,7 @@ namespace FarseerPhysics.DebugViewXNA
                             vertices[i] = MathUtils.Multiply(ref xf, poly.Vertices[i]);
                         }
 
-                        DrawSolidPolygon(ref vertices, vertexCount, color);
+                        DrawSolidPolygon(vertices, vertexCount, color);
                     }
                     break;
 
@@ -426,10 +426,10 @@ namespace FarseerPhysics.DebugViewXNA
 
         public override void DrawPolygon(Vector2[] vertices, int count, float red, float green, float blue)
         {
-            DrawPolygon(ref vertices, count, new Color(red, green, blue));
+            DrawPolygon(vertices, count, new Color(red, green, blue));
         }
 
-        public void DrawPolygon(ref Vector2[] vertices, int count, Color color)
+        public void DrawPolygon(Vector2[] vertices, int count, Color color)
         {
             for (int i = 0; i < count - 1; i++)
             {
@@ -449,19 +449,19 @@ namespace FarseerPhysics.DebugViewXNA
 
         public override void DrawSolidPolygon(Vector2[] vertices, int count, float red, float green, float blue)
         {
-            DrawSolidPolygon(ref vertices, count, new Color(red, green, blue), true);
+            DrawSolidPolygon(vertices, count, new Color(red, green, blue), true);
         }
 
-        public void DrawSolidPolygon(ref Vector2[] vertices, int count, Color color)
+        public void DrawSolidPolygon(Vector2[] vertices, int count, Color color)
         {
-            DrawSolidPolygon(ref vertices, count, color, true);
+            DrawSolidPolygon(vertices, count, color, true);
         }
 
-        public void DrawSolidPolygon(ref Vector2[] vertices, int count, Color color, bool outline)
+        public void DrawSolidPolygon(Vector2[] vertices, int count, Color color, bool outline)
         {
             if (count == 2)
             {
-                DrawPolygon(ref vertices, count, color);
+                DrawPolygon(vertices, count, color);
                 return;
             }
 
@@ -483,7 +483,7 @@ namespace FarseerPhysics.DebugViewXNA
 
             if (outline)
             {
-                DrawPolygon(ref vertices, count, color);
+                DrawPolygon(vertices, count, color);
             }
         }
 
@@ -591,7 +591,7 @@ namespace FarseerPhysics.DebugViewXNA
             verts[2] = p + new Vector2(hs, hs);
             verts[3] = p + new Vector2(-hs, hs);
 
-            DrawSolidPolygon(ref verts, 4, color, true);
+            DrawSolidPolygon(verts, 4, color, true);
         }
 
         public void DrawString(int x, int y, string s, params object[] args)
@@ -606,16 +606,10 @@ namespace FarseerPhysics.DebugViewXNA
             _device.RasterizerState = RasterizerState.CullNone;
 
             // turn alpha blending on
-            _device.BlendState = BlendState.AlphaBlend;
-
-            // set the vertex declaration...this ensures if window resizes occur...rendering continues ;)
-            //_device.VertexDeclaration = _vertexDeclaration;
+            _device.BlendState = BlendState.NonPremultiplied;
 
             // set the effects projection matrix
             _effect.Projection = projection;
-
-            // begin the effect
-            //_effect.Begin();
 
             // we should have only 1 technique and 1 pass
             _effect.Techniques[0].Passes[0].Apply();
@@ -627,12 +621,7 @@ namespace FarseerPhysics.DebugViewXNA
             if (_lineCount > 0)
                 _device.DrawUserPrimitives(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
 
-            // end the pass and effect
-            //_effect.Techniques[0].Passes[0].End();
-            //_effect.End();
-
             // begin the sprite batch effect
-            //_batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None, Matrix.Identity);
             _batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Matrix.Identity);
 
             // draw any strings we have
@@ -662,7 +651,7 @@ namespace FarseerPhysics.DebugViewXNA
             verts[2] = new Vector2(aabb.UpperBound.X, aabb.UpperBound.Y);
             verts[3] = new Vector2(aabb.LowerBound.X, aabb.UpperBound.Y);
 
-            DrawPolygon(ref verts, 4, color);
+            DrawPolygon(verts, 4, color);
         }
 
         public static void LoadContent(GraphicsDevice device, ContentManager content)
