@@ -48,7 +48,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             ScreenManager.GraphicsDevice.Clear(Color.White);
 
             const byte fade = 255; // TransitionAlpha;               
-            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+            ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             Color tint = new Color(fade, fade, fade, fade);
             ScreenManager.SpriteBatch.Draw(_farseerLogoTexture, ScreenManager.ScreenCenter, null, tint, 0, _origin,
                                            Vector2.One, SpriteEffects.None, 0);

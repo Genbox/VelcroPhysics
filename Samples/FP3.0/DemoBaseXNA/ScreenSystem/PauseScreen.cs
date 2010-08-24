@@ -67,10 +67,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         public override void Draw(GameTime gameTime)
         {
-            ScreenManager.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None,
-                                            Matrix.CreateTranslation(
-                                                (float) Math.Pow(TransitionPosition, 2) * ScreenManager.ScreenWidth, 0,
-                                                0));
+            ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
             Vector2 panelOrigin = new Vector2(_panelTexture.Width / 2f, _panelTexture.Height / 2f);
             ScreenManager.SpriteBatch.Draw(_panelTexture, ScreenManager.ScreenCenter, null, _panelColor, 0, panelOrigin,
                                            Vector2.One, SpriteEffects.None, 0);

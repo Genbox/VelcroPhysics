@@ -16,7 +16,7 @@ namespace FarseerPhysics.DebugViewXNA
     /// <summary>
     /// A debug view that works in XNA.
     /// A debug view shows you what happens inside the physics engine. You can view
-    /// bodies, 
+    /// bodies, joints, fixtures and more.
     /// </summary>
     public class DebugViewXNA : DebugView, IDisposable
     {
@@ -314,7 +314,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case JointType.Pulley:
                     {
-                        PulleyJoint pulley = (PulleyJoint) joint;
+                        PulleyJoint pulley = (PulleyJoint)joint;
                         Vector2 s1 = pulley.GroundAnchorA;
                         Vector2 s2 = pulley.GroundAnchorB;
                         DrawSegment(s1, p1, color);
@@ -325,7 +325,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case JointType.FixedMouse:
 
-                    FixedMouseJoint fixedMouseJoint = (FixedMouseJoint) joint;
+                    FixedMouseJoint fixedMouseJoint = (FixedMouseJoint)joint;
                     p1 = fixedMouseJoint.Target;
 
                     DrawPoint(p2, 0.5f, new Color(0.0f, 1.0f, 0.0f));
@@ -371,7 +371,7 @@ namespace FarseerPhysics.DebugViewXNA
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape) fixture.Shape;
+                        CircleShape circle = (CircleShape)fixture.Shape;
 
                         Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
                         float radius = circle.Radius;
@@ -383,7 +383,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape poly = (PolygonShape) fixture.Shape;
+                        PolygonShape poly = (PolygonShape)fixture.Shape;
                         int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
@@ -400,7 +400,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case ShapeType.Edge:
                     {
-                        EdgeShape edge = (EdgeShape) fixture.Shape;
+                        EdgeShape edge = (EdgeShape)fixture.Shape;
                         Vector2 v1 = MathUtils.Multiply(ref xf, edge.Vertex1);
                         Vector2 v2 = MathUtils.Multiply(ref xf, edge.Vertex2);
                         DrawSegment(v1, v2, color);
@@ -409,7 +409,7 @@ namespace FarseerPhysics.DebugViewXNA
 
                 case ShapeType.Loop:
                     {
-                        LoopShape loop = (LoopShape) fixture.Shape;
+                        LoopShape loop = (LoopShape)fixture.Shape;
                         int count = loop.Count;
 
                         Vector2 v1 = MathUtils.Multiply(ref xf, loop.Vertices[count - 1]);
@@ -465,7 +465,7 @@ namespace FarseerPhysics.DebugViewXNA
                 return;
             }
 
-            Color colorFill = new Color(color, outline ? 0.5f : 1.0f);
+            Color colorFill = new Color(color.R, color.G, color.B, outline ? 0.5f : 1.0f);
 
             for (int i = 1; i < count - 1; i++)
             {
@@ -500,10 +500,10 @@ namespace FarseerPhysics.DebugViewXNA
 
             for (int i = 0; i < segments; i++)
             {
-                Vector2 v1 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
+                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
                 Vector2 v2 = center +
                              radius *
-                             new Vector2((float) Math.Cos(theta + increment), (float) Math.Sin(theta + increment));
+                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
 
                 _vertsLines[_lineCount * 2].Position = new Vector3(v1, 0.0f);
                 _vertsLines[_lineCount * 2].Color = color;
@@ -527,17 +527,17 @@ namespace FarseerPhysics.DebugViewXNA
             const double increment = Math.PI * 2.0 / segments;
             double theta = 0.0;
 
-            Color colorFill = new Color(color, 0.5f);
+            Color colorFill = new Color(color.R, color.G, color.B, 0.5f);
 
-            Vector2 v0 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
+            Vector2 v0 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
             theta += increment;
 
             for (int i = 1; i < segments - 1; i++)
             {
-                Vector2 v1 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
+                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
                 Vector2 v2 = center +
                              radius *
-                             new Vector2((float) Math.Cos(theta + increment), (float) Math.Sin(theta + increment));
+                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
 
                 _vertsFill[_fillCount * 3].Position = new Vector3(v0, 0.0f);
                 _vertsFill[_fillCount * 3].Color = colorFill;
@@ -603,18 +603,23 @@ namespace FarseerPhysics.DebugViewXNA
         {
             DrawDebugData();
 
-            // set the cull mode? should be unnecessary
-            _device.RenderState.CullMode = CullMode.None;
+            _device.RasterizerState = RasterizerState.CullNone;
+
             // turn alpha blending on
-            _device.RenderState.AlphaBlendEnable = true;
+            _device.BlendState = BlendState.AlphaBlend;
+
             // set the vertex declaration...this ensures if window resizes occur...rendering continues ;)
-            _device.VertexDeclaration = _vertexDeclaration;
+            //_device.VertexDeclaration = _vertexDeclaration;
+
             // set the effects projection matrix
             _effect.Projection = projection;
+
             // begin the effect
-            _effect.Begin();
+            //_effect.Begin();
+
             // we should have only 1 technique and 1 pass
-            _effect.Techniques[0].Passes[0].Begin();
+            _effect.Techniques[0].Passes[0].Apply();
+
             // make sure we have stuff to draw
             if (_fillCount > 0)
                 _device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
@@ -623,11 +628,13 @@ namespace FarseerPhysics.DebugViewXNA
                 _device.DrawUserPrimitives(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
 
             // end the pass and effect
-            _effect.Techniques[0].Passes[0].End();
-            _effect.End();
+            //_effect.Techniques[0].Passes[0].End();
+            //_effect.End();
 
             // begin the sprite batch effect
-            _batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None, Matrix.Identity);
+            //_batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.None, Matrix.Identity);
+            _batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Matrix.Identity);
+
             // draw any strings we have
             for (int i = 0; i < _stringData.Count; i++)
             {
@@ -663,9 +670,9 @@ namespace FarseerPhysics.DebugViewXNA
             // Create a new SpriteBatch, which can be used to draw textures.
             _batch = new SpriteBatch(device);
             _font = content.Load<SpriteFont>("font");
-            _vertexDeclaration = new VertexDeclaration(device, VertexPositionColor.VertexElements);
+            //_vertexDeclaration = new VertexDeclaration(device, VertexPositionColor.VertexElements);
             _device = device;
-            _effect = new BasicEffect(device, null);
+            _effect = new BasicEffect(device);
             _effect.VertexColorEnabled = true;
             _stringData = new List<StringData>();
         }
