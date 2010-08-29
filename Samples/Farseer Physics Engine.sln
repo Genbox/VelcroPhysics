@@ -1,23 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics 3.0 XNA", "..\..\Branches\FP3.0\XNA\Farseer Physics 3.0 XNA.csproj", "{0A850700-1ABB-4288-A391-6726B90EBEB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics XNA", "..\Branches\XNA\Farseer Physics XNA.csproj", "{0A850700-1ABB-4288-A391-6726B90EBEB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugView 3.0 XNA", "..\..\DebugViews\DebugViewXNA\DebugView 3.0 XNA.csproj", "{FC7845FA-13FE-4FF8-822A-A577F3F59B00}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugView XNA", "..\DebugViews\DebugViewXNA\DebugView XNA.csproj", "{FC7845FA-13FE-4FF8-822A-A577F3F59B00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed 3.0 XNA", "Testbed\TestBed 3.0 XNA.csproj", "{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed XNA", "TestbedXNA\TestBed XNA.csproj", "{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoBase 3.0 XNA", "DemoBaseXNA\DemoBase 3.0 XNA.csproj", "{46487979-1F6B-4F55-A377-3D80BCB248CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoBase XNA", "DemoBaseXNA\DemoBase XNA.csproj", "{46487979-1F6B-4F55-A377-3D80BCB248CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSamples 3.0 XNA", "SimpleSamplesXNA\SimpleSamples 3.0 XNA.csproj", "{12A1D5C7-34BF-4D26-B77D-A05B32F67B6E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSamples XNA", "SimpleSamplesXNA\SimpleSamples XNA.csproj", "{12A1D5C7-34BF-4D26-B77D-A05B32F67B6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedSamples 3.0 XNA", "AdvancedSamplesXNA\AdvancedSamples 3.0 XNA.csproj", "{97B14E03-8D1A-4AE3-8661-29006DDFB92D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedSamples XNA", "AdvancedSamplesXNA\AdvancedSamples XNA.csproj", "{97B14E03-8D1A-4AE3-8661-29006DDFB92D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld 3.0 XNA", "HelloWorld\HelloWorld 3.0 XNA.csproj", "{888F3EFD-A11A-4F24-988C-3791299CB35A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld XNA", "HelloWorldXNA\HelloWorld XNA.csproj", "{888F3EFD-A11A-4F24-988C-3791299CB35A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics 3.0", "..\..\Branches\FP3.0\Class\Farseer Physics 3.0.csproj", "{A4610E4C-DD34-428B-BABB-779CA0B5993A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics", "..\Branches\Class\Farseer Physics.csproj", "{A4610E4C-DD34-428B-BABB-779CA0B5993A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics 3.0 Silverlight", "..\..\Branches\FP3.0\Silverlight\Farseer Physics 3.0 Silverlight.csproj", "{56A15171-9270-4C9F-A700-302F38ACFF2D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics Silverlight", "..\Branches\Silverlight\Farseer Physics Silverlight.csproj", "{56A15171-9270-4C9F-A700-302F38ACFF2D}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -25,33 +25,33 @@ Global
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs01
 		SccLocalPath0 = .
-		SccProjectUniqueName1 = ..\\..\\Branches\\FP3.0\\Class\\Farseer\u0020Physics\u00203.0.csproj
-		SccProjectName1 = ../../Branches/FP3.0/Class
-		SccLocalPath1 = ..\\..\\Branches\\FP3.0\\Class
-		SccProjectUniqueName2 = ..\\..\\Branches\\FP3.0\\Silverlight\\Farseer\u0020Physics\u00203.0\u0020Silverlight.csproj
-		SccProjectName2 = ../../Branches/FP3.0/Silverlight
-		SccLocalPath2 = ..\\..\\Branches\\FP3.0\\Silverlight
-		SccProjectUniqueName3 = ..\\..\\Branches\\FP3.0\\XNA\\Farseer\u0020Physics\u00203.0\u0020XNA.csproj
-		SccProjectName3 = ../../Branches/FP3.0/XNA
-		SccLocalPath3 = ..\\..\\Branches\\FP3.0\\XNA
-		SccProjectUniqueName4 = ..\\..\\DebugViews\\DebugViewXNA\\DebugView\u00203.0\u0020XNA.csproj
-		SccProjectName4 = ../../DebugViews/DebugViewXNA
-		SccLocalPath4 = ..\\..\\DebugViews\\DebugViewXNA
-		SccProjectUniqueName5 = Testbed\\TestBed\u00203.0\u0020XNA.csproj
-		SccProjectName5 = Testbed
-		SccLocalPath5 = Testbed
-		SccProjectUniqueName6 = DemoBaseXNA\\DemoBase\u00203.0\u0020XNA.csproj
-		SccProjectName6 = DemoBaseXNA
-		SccLocalPath6 = DemoBaseXNA
-		SccProjectUniqueName7 = SimpleSamplesXNA\\SimpleSamples\u00203.0\u0020XNA.csproj
-		SccProjectName7 = SimpleSamplesXNA
-		SccLocalPath7 = SimpleSamplesXNA
-		SccProjectUniqueName8 = AdvancedSamplesXNA\\AdvancedSamples\u00203.0\u0020XNA.csproj
-		SccProjectName8 = AdvancedSamplesXNA
-		SccLocalPath8 = AdvancedSamplesXNA
-		SccProjectUniqueName9 = HelloWorld\\HelloWorld\u00203.0\u0020XNA.csproj
-		SccProjectName9 = HelloWorld
-		SccLocalPath9 = HelloWorld
+		SccProjectUniqueName1 = AdvancedSamplesXNA\\AdvancedSamples\u0020XNA.csproj
+		SccProjectName1 = AdvancedSamplesXNA
+		SccLocalPath1 = AdvancedSamplesXNA
+		SccProjectUniqueName2 = ..\\DebugViews\\DebugViewXNA\\DebugView\u0020XNA.csproj
+		SccProjectName2 = ../DebugViews/DebugViewXNA
+		SccLocalPath2 = ..\\DebugViews\\DebugViewXNA
+		SccProjectUniqueName3 = DemoBaseXNA\\DemoBase\u0020XNA.csproj
+		SccProjectName3 = DemoBaseXNA
+		SccLocalPath3 = DemoBaseXNA
+		SccProjectUniqueName4 = ..\\Branches\\Silverlight\\Farseer\u0020Physics\u0020Silverlight.csproj
+		SccProjectName4 = ../Branches/Silverlight
+		SccLocalPath4 = ..\\Branches\\Silverlight
+		SccProjectUniqueName5 = ..\\Branches\\Class\\Farseer\u0020Physics.csproj
+		SccProjectName5 = ../Branches/Class
+		SccLocalPath5 = ..\\Branches\\Class
+		SccProjectUniqueName6 = ..\\Branches\\XNA\\Farseer\u0020Physics\u0020XNA.csproj
+		SccProjectName6 = ../Branches/XNA
+		SccLocalPath6 = ..\\Branches\\XNA
+		SccProjectUniqueName7 = HelloWorldXNA\\HelloWorld\u0020XNA.csproj
+		SccProjectName7 = HelloWorldXNA
+		SccLocalPath7 = HelloWorldXNA
+		SccProjectUniqueName8 = TestbedXNA\\TestBed\u0020XNA.csproj
+		SccProjectName8 = TestbedXNA
+		SccLocalPath8 = TestbedXNA
+		SccProjectUniqueName9 = SimpleSamplesXNA\\SimpleSamples\u0020XNA.csproj
+		SccProjectName9 = SimpleSamplesXNA
+		SccLocalPath9 = SimpleSamplesXNA
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

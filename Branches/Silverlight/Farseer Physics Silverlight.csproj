@@ -173,9 +173,6 @@
     <Compile Include="..\..\..\sourcefiles\fp3.0\controllers\GravityController.cs">
       <Link>Controllers\GravityController.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\SourceFiles\FP3.0\DebugView.cs">
-      <Link>DebugView.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\sourcefiles\fp3.0\dynamics\Body.cs">
       <Link>Dynamics\Body.cs</Link>
     </Compile>
