@@ -29,7 +29,7 @@ namespace HelloWorld
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            //Content.RootDirectory = "Content";
             _debugView = new DebugViewXNA(_world);
         }
 
