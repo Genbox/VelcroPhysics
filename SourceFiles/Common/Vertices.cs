@@ -110,7 +110,7 @@ namespace FarseerPhysics.Common
             float area = 0.0f;
 
             const float inv3 = 1.0f / 3.0f;
-            Vector2 pRef = new Vector2(0.0f, 0.0f);
+            Vector2 pRef = Vector2.Zero;
             for (int i = 0; i < Count; ++i)
             {
                 // Triangle vertices.

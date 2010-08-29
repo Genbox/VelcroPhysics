@@ -106,7 +106,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     body.CreateFixture(shape, 2);
 
-                    Vector2 anchor = new Vector2(0.0f, 0.0f);
+                    Vector2 anchor = Vector2.Zero;
                     RevoluteJoint rjd2 = new RevoluteJoint(prevBody, body,
                                                            prevBody.GetLocalPoint(body.GetWorldPoint(anchor)), anchor);
                     World.AddJoint(rjd2);

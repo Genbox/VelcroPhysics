@@ -98,7 +98,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.CreateFixture(p, 1);
 
                     PrismaticJoint jd = new PrismaticJoint(body2, body, body2.GetLocalPoint(body.Position),
-                                                           new Vector2(0.0f, 0.0f), new Vector2(0.0f, 1.0f));
+                                                           Vector2.Zero, new Vector2(0.0f, 1.0f));
                     jd.LimitEnabled = true;
                     jd.LowerLimit = -1.0f;
                     jd.UpperLimit = 1.0f;

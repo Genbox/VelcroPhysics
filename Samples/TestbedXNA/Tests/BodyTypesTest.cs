@@ -70,7 +70,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform,
                                                       _attachment.GetLocalPoint(_platform.Position),
-                                                      new Vector2(0.0f, 0.0f));
+                                                      Vector2.Zero);
                 rjd.MaxMotorTorque = 50.0f;
                 rjd.MotorEnabled = true;
                 World.AddJoint(rjd);

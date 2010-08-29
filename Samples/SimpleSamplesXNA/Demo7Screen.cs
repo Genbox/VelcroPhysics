@@ -44,7 +44,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
         public override void LoadContent()
         {
-            _ragdoll = new Ragdoll(World, new Vector2(0, 0));
+            _ragdoll = new Ragdoll(World, Vector2.Zero);
             CreateObstacles();
             base.LoadContent();
         }

@@ -141,7 +141,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             }
         }
 
-        private Vector2 _viewCenter = new Vector2(0, 0);
+        private Vector2 _viewCenter = Vector2.Zero;
 
         public Vector2 ConvertScreenToWorld(int x, int y)
         {

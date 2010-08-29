@@ -41,7 +41,7 @@ namespace HelloWorld
         {
             DebugViewXNA.LoadContent(_graphics.GraphicsDevice, Content);
 
-            _rectangleFixture = FixtureFactory.CreateRectangle(_world, 50, 5, 1, new Vector2(0, 0));
+            _rectangleFixture = FixtureFactory.CreateRectangle(_world, 50, 5, 1, Vector2.Zero);
             _rectangleFixture.Body.IsStatic = true;
 
             //Give it some bounce and friction

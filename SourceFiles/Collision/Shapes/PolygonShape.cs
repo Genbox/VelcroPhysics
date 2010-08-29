@@ -145,7 +145,7 @@ namespace FarseerPhysics.Collision.Shapes
         {
             Debug.Assert(vertices.Count >= 2);
 
-            Vector2 c = new Vector2(0.0f, 0.0f);
+            Vector2 c = Vector2.Zero;
             float area = 0.0f;
 
             if (vertices.Count == 2)
@@ -156,7 +156,7 @@ namespace FarseerPhysics.Collision.Shapes
 
             // pRef is the reference point for forming triangles.
             // It's location doesn't change the result (except for rounding error).
-            Vector2 pRef = new Vector2(0.0f, 0.0f);
+            Vector2 pRef = Vector2.Zero;
 #if false
     // This code would put the reference point inside the polygon.
 	        for (int i = 0; i < count; ++i)
@@ -444,13 +444,13 @@ namespace FarseerPhysics.Collision.Shapes
                 return;
             }
 
-            Vector2 center = new Vector2(0.0f, 0.0f);
+            Vector2 center = Vector2.Zero;
             float area = 0.0f;
             float I = 0.0f;
 
             // pRef is the reference point for forming triangles.
             // It's location doesn't change the result (except for rounding error).
-            Vector2 pRef = new Vector2(0.0f, 0.0f);
+            Vector2 pRef = Vector2.Zero;
 
             const float inv3 = 1.0f / 3.0f;
 

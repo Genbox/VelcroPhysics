@@ -205,7 +205,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // Cdot = dot(u, v + cross(w, r))
             Vector2 v1 = b1.LinearVelocityInternal + MathUtils.Cross(b1.AngularVelocityInternal, r1);
-            Vector2 v2 = new Vector2(0, 0);
+            Vector2 v2 = Vector2.Zero;
             float Cdot = Vector2.Dot(_u, v2 - v1);
 
             float impulse = -_mass * (Cdot + _bias + _gamma * _impulse);

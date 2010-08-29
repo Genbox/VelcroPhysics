@@ -156,7 +156,7 @@ namespace FarseerPhysics.Dynamics.Joints
             }
             else
             {
-                _u = new Vector2(0.0f, 0.0f);
+                _u = Vector2.Zero;
             }
 
             float cr1u = MathUtils.Cross(r1, _u);
