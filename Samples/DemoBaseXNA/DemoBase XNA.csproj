@@ -174,7 +174,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\DebugViews\DebugViewXNA\DebugView 3.0 XNA.csproj">
+    <ProjectReference Include="..\..\DebugViews\DebugViewXNA\DebugView XNA.csproj">
       <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
       <Name>DebugView 3.0 XNA</Name>
     </ProjectReference>
