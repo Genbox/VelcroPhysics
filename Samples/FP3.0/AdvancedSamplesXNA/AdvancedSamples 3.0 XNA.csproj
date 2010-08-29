@@ -180,11 +180,6 @@
       <Project>{46487979-1F6B-4F55-A377-3D80BCB248CE}</Project>
       <Name>DemoBase 3.0 XNA</Name>
     </ProjectReference>
-    <ProjectReference Include="Content\AdvancedSamples 3.0 XNAContent.contentproj">
-      <Project>{55369745-A678-4BB3-B22E-3D727F9110B5}</Project>
-      <Name>AdvancedSamples 3.0 XNAContent %28Content%29</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
