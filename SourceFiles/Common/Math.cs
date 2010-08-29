@@ -140,6 +140,7 @@ namespace FarseerPhysics.Common
             return IsValid(x.X) && IsValid(x.Y);
         }
 
+#if (!SILVERLIGHT)
         /// <summary>
         /// This is a approximate yet fast inverse square-root.
         /// </summary>
@@ -155,6 +156,7 @@ namespace FarseerPhysics.Common
             x = x * (1.5f - xhalf * x * x);
             return x;
         }
+#endif
 
         public static int Clamp(int a, int low, int high)
         {
@@ -270,6 +272,7 @@ namespace FarseerPhysics.Common
 
         #region Nested type: FloatConverter
 
+#if (!SILVERLIGHT)
         [StructLayout(LayoutKind.Explicit)]
         private struct FloatConverter
         {
@@ -278,7 +281,7 @@ namespace FarseerPhysics.Common
             [FieldOffset(0)]
             public int i;
         }
-
+#endif
         #endregion
     }
 
@@ -380,7 +383,7 @@ namespace FarseerPhysics.Common
         /// <value></value>
         public float Angle
         {
-            get { return (float) Math.Atan2(col1.Y, col1.X); }
+            get { return (float)Math.Atan2(col1.Y, col1.X); }
         }
 
         public Mat22 Inverse
@@ -538,7 +541,7 @@ namespace FarseerPhysics.Common
         /// <value></value>
         public float Angle
         {
-            get { return (float) Math.Atan2(R.col1.Y, R.col1.X); }
+            get { return (float)Math.Atan2(R.col1.Y, R.col1.X); }
         }
     }
 
