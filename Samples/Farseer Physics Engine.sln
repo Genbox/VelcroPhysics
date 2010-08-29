@@ -23,11 +23,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugView XNA Content", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed XNA Content", "TestbedXNA\Content\TestBed XNA Content.contentproj", "{301F9A16-7581-4461-A369-D59064FB740E}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "DemoBase XNA Content", "DemoBaseXNA\Content\DemoBase XNA Content.contentproj", "{9E6F45A4-EA9B-4568-A48F-090CAAD036F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoBase XNA Content", "DemoBaseXNA\Content\DemoBase XNA Content.contentproj", "{9E6F45A4-EA9B-4568-A48F-090CAAD036F6}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "AdvancedSamples XNA Content", "AdvancedSamplesXNA\Content\AdvancedSamples XNA Content.contentproj", "{1FCC5A90-3EDE-4A8B-B7DB-58E406D9B926}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 13
+		SccNumberOfProjects = 14
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs01
 		SccLocalPath0 = .
@@ -67,6 +69,9 @@ Global
 		SccProjectUniqueName12 = DemoBaseXNA\\Content\\DemoBase\u0020XNA\u0020Content.contentproj
 		SccProjectName12 = DemoBaseXNA/Content
 		SccLocalPath12 = DemoBaseXNA\\Content
+		SccProjectUniqueName13 = AdvancedSamplesXNA\\Content\\AdvancedSamples\u0020XNA\u0020Content.contentproj
+		SccProjectName13 = AdvancedSamplesXNA/Content
+		SccLocalPath13 = AdvancedSamplesXNA\\Content
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -211,6 +216,14 @@ Global
 		{9E6F45A4-EA9B-4568-A48F-090CAAD036F6}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{9E6F45A4-EA9B-4568-A48F-090CAAD036F6}.Release|x86.ActiveCfg = Debug|Any CPU
 		{9E6F45A4-EA9B-4568-A48F-090CAAD036F6}.Release|Xbox 360.ActiveCfg = Debug|Any CPU
+		{1FCC5A90-3EDE-4A8B-B7DB-58E406D9B926}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FCC5A90-3EDE-4A8B-B7DB-58E406D9B926}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1FCC5A90-3EDE-4A8B-B7DB-58E406D9B926}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1FCC5A90-3EDE-4A8B-B7DB-58E406D9B926}.Debug|Xbox 360.ActiveCfg = Debug|Any CPU
+		{1FCC5A90-3EDE-4A8B-B7DB-58E406D9B926}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FCC5A90-3EDE-4A8B-B7DB-58E406D9B926}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1FCC5A90-3EDE-4A8B-B7DB-58E406D9B926}.Release|x86.ActiveCfg = Debug|Any CPU
+		{1FCC5A90-3EDE-4A8B-B7DB-58E406D9B926}.Release|Xbox 360.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
