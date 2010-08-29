@@ -64,6 +64,7 @@ namespace FarseerPhysics.TestBed
         {
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferMultiSampling = true;
+            Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
             IsFixedTimeStep = true;

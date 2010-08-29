@@ -659,7 +659,6 @@ namespace FarseerPhysics.DebugViewXNA
             // Create a new SpriteBatch, which can be used to draw textures.
             _batch = new SpriteBatch(device);
             _font = content.Load<SpriteFont>("font");
-            //_vertexDeclaration = new VertexDeclaration(device, VertexPositionColor.VertexElements);
             _device = device;
             _effect = new BasicEffect(device);
             _effect.VertexColorEnabled = true;

@@ -22,7 +22,7 @@
     </XnaUpgrade>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaOutputType>Library</XnaOutputType>
-    <XnaProfile>HiDef</XnaProfile>
+    <XnaProfile>Reach</XnaProfile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -181,6 +181,11 @@
     <ProjectReference Include="..\..\DebugViews\DebugViewXNA\DebugView XNA.csproj">
       <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
       <Name>DebugView XNA</Name>
+    </ProjectReference>
+    <ProjectReference Include="Content\DemoBase XNA Content.contentproj">
+      <Project>{9E6F45A4-EA9B-4568-A48F-090CAAD036F6}</Project>
+      <Name>DemoBase XNA Content %28Content%29</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

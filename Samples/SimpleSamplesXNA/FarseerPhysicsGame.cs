@@ -28,7 +28,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
             //windowed
             _graphics.PreferredBackBufferWidth = 1024;
             _graphics.PreferredBackBufferHeight = 768;
-            _graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = false;
 
             //fullscreen
             //_graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
