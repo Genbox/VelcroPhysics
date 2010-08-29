@@ -217,11 +217,6 @@
       <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
       <Name>DebugView 3.0 XNA</Name>
     </ProjectReference>
-    <ProjectReference Include="Content\TestBed 3.0 XNAContent.contentproj">
-      <Project>{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}</Project>
-      <Name>TestBed 3.0 XNAContent %28Content%29</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
