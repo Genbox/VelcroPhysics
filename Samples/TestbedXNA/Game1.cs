@@ -63,7 +63,6 @@ namespace FarseerPhysics.TestBed
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
             _graphics.PreferMultiSampling = true;
             IsMouseVisible = true;
 
