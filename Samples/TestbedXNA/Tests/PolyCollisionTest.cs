@@ -47,7 +47,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             {
                 _polygonA.SetAsEdge(new Vector2(20.0f, 0.0f), new Vector2(20.0f, 20.0f));
-                _transformA.Set(new Vector2(0.0f, 0.0f), 0.0f);
+                _transformA.Set(Vector2.Zero, 0.0f);
             }
 
             {

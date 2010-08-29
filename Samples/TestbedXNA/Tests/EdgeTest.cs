@@ -43,7 +43,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 v1 = new Vector2(-10.0f, 0.0f);
                 Vector2 v2 = new Vector2(-7.0f, -1.0f);
                 Vector2 v3 = new Vector2(-4.0f, 0.0f);
-                Vector2 v4 = new Vector2(0.0f, 0.0f);
+                Vector2 v4 = Vector2.Zero;
                 Vector2 v5 = new Vector2(4.0f, 0.0f);
                 Vector2 v6 = new Vector2(7.0f, 1.0f);
                 Vector2 v7 = new Vector2(10.0f, 0.0f);

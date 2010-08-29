@@ -39,7 +39,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
         public override void Initialize()
         {
-            World = new World(new Vector2(0, 0));
+            World = new World(Vector2.Zero);
 
             base.Initialize();
         }

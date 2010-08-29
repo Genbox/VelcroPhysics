@@ -67,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
                 fixtures[0].Body.BodyType = BodyType.Dynamic;
 
                 _joint = new RevoluteJoint(body, fixtures[0].Body, body.GetLocalPoint(fixtures[0].Body.Position),
-                                           new Vector2(0.0f, 0.0f));
+                                           Vector2.Zero);
                 _joint.MotorSpeed = 1.0f * Settings.Pi;
                 _joint.MaxMotorTorque = 5000.0f;
                 _joint.MotorEnabled = true;
