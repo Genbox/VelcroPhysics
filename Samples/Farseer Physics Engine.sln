@@ -19,11 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics", "..\Branc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics Silverlight", "..\Branches\Silverlight\Farseer Physics Silverlight.csproj", "{56A15171-9270-4C9F-A700-302F38ACFF2D}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "DebugView XNA Content", "..\DebugViews\DebugViewXNA Content\DebugView XNA Content.contentproj", "{3D5BF8F6-3288-4D02-B689-B6C490CFBB69}"
-EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
+		SccNumberOfProjects = 10
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs01
 		SccLocalPath0 = .
@@ -54,9 +52,6 @@ Global
 		SccProjectUniqueName9 = SimpleSamplesXNA\\SimpleSamples\u0020XNA.csproj
 		SccProjectName9 = SimpleSamplesXNA
 		SccLocalPath9 = SimpleSamplesXNA
-		SccProjectUniqueName10 = ..\\DebugViews\\DebugViewXNA\u0020Content\\DebugView\u0020XNA\u0020Content.contentproj
-		SccProjectName10 = ../DebugViews/DebugViewXNA\u0020Content
-		SccLocalPath10 = ..\\DebugViews\\DebugViewXNA\u0020Content
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -177,14 +172,6 @@ Global
 		{56A15171-9270-4C9F-A700-302F38ACFF2D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{56A15171-9270-4C9F-A700-302F38ACFF2D}.Release|x86.ActiveCfg = Release|Any CPU
 		{56A15171-9270-4C9F-A700-302F38ACFF2D}.Release|Xbox 360.ActiveCfg = Release|Any CPU
-		{3D5BF8F6-3288-4D02-B689-B6C490CFBB69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D5BF8F6-3288-4D02-B689-B6C490CFBB69}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{3D5BF8F6-3288-4D02-B689-B6C490CFBB69}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3D5BF8F6-3288-4D02-B689-B6C490CFBB69}.Debug|Xbox 360.ActiveCfg = Debug|Any CPU
-		{3D5BF8F6-3288-4D02-B689-B6C490CFBB69}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D5BF8F6-3288-4D02-B689-B6C490CFBB69}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{3D5BF8F6-3288-4D02-B689-B6C490CFBB69}.Release|x86.ActiveCfg = Debug|Any CPU
-		{3D5BF8F6-3288-4D02-B689-B6C490CFBB69}.Release|Xbox 360.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
