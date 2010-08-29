@@ -1,0 +1,241 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{9A010234-D0F7-4490-8E53-B592A47A9CF0}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FarseerPhysics</RootNamespace>
+    <AssemblyName>Farseer Physics 3.0 XNA</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
+    <XnaPlatform>Xbox 360</XnaPlatform>
+    <XnaCrossPlatformGroupID>32c529b3-4d9c-486f-a24f-ba66de6fc565</XnaCrossPlatformGroupID>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
+    <OutputPath>bin\Xbox 360\Debug</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE;XBOX;XBOX360</DefineConstants>
+    <XnaCompressContent>true</XnaCompressContent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Xbox 360' ">
+    <OutputPath>bin\Xbox 360\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE;XBOX;XBOX360</DefineConstants>
+    <XnaCompressContent>true</XnaCompressContent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Collision\BroadPhase.cs">
+      <Link>Collision\BroadPhase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Collision\Collision.cs">
+      <Link>Collision\Collision.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Collision\Distance.cs">
+      <Link>Collision\Distance.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Collision\DynamicTree.cs">
+      <Link>Collision\DynamicTree.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Collision\Shapes\CircleShape.cs">
+      <Link>Collision\Shapes\CircleShape.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Collision\Shapes\PolygonShape.cs">
+      <Link>Collision\Shapes\PolygonShape.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Collision\Shapes\Shape.cs">
+      <Link>Collision\Shapes\Shape.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Collision\TimeOfImpact.cs">
+      <Link>Collision\TimeOfImpact.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\FixedArray.cs">
+      <Link>Common\FixedArray.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Math.cs">
+      <Link>Common\Math.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\PolygonTools.cs">
+      <Link>Common\PolygonTools.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Settings.cs">
+      <Link>Common\Settings.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Common\Vertices.cs">
+      <Link>Common\Vertices.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\DebugView.cs">
+      <Link>DebugView.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Body.cs">
+      <Link>Dynamics\Body.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\ContactManager.cs">
+      <Link>Dynamics\ContactManager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\CirlceContact.cs">
+      <Link>Dynamics\Contacts\CirlceContact.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\Contact.cs">
+      <Link>Dynamics\Contacts\Contact.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\ContactSolver.cs">
+      <Link>Dynamics\Contacts\ContactSolver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\PolygonAndCircleContact.cs">
+      <Link>Dynamics\Contacts\PolygonAndCircleContact.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Contacts\PolygonContact.cs">
+      <Link>Dynamics\Contacts\PolygonContact.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Fixture.cs">
+      <Link>Dynamics\Fixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Island.cs">
+      <Link>Dynamics\Island.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\DistanceJoint.cs">
+      <Link>Dynamics\Joints\DistanceJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\FrictionJoint.cs">
+      <Link>Dynamics\Joints\FrictionJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\GearJoint.cs">
+      <Link>Dynamics\Joints\GearJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\Joint.cs">
+      <Link>Dynamics\Joints\Joint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\LineJoint.cs">
+      <Link>Dynamics\Joints\LineJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\MouseJoint.cs">
+      <Link>Dynamics\Joints\MouseJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\PrismaticJoint.cs">
+      <Link>Dynamics\Joints\PrismaticJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\PullyJoint.cs">
+      <Link>Dynamics\Joints\PullyJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\RevoluteJoint.cs">
+      <Link>Dynamics\Joints\RevoluteJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\Joints\WeldJoint.cs">
+      <Link>Dynamics\Joints\WeldJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\TimeStep.cs">
+      <Link>Dynamics\TimeStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\World.cs">
+      <Link>Dynamics\World.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SourceFiles\FP3.0\Dynamics\WorldCallbacks.cs">
+      <Link>Dynamics\WorldCallbacks.cs</Link>
+    </Compile>
+    <Compile Include="Common\Decomposition\Steiner.cs" />
+    <Compile Include="Common\LineTools.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <NestedContentProject Include="Content\Content.contentproj">
+      <Project>129ef00a-26e6-4835-8db3-848cb89276da</Project>
+      <Visible>False</Visible>
+    </NestedContentProject>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Xna.Framework.3.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft XNA Framework Redistributable 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <Private>False</Private>
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <Private>False</Private>
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
